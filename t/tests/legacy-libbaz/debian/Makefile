@@ -2,6 +2,7 @@
 
 CC=gcc
 CFLAGS=-g -Wall -Winline -O2
+LDFLAGS=-Wl,--no-as-needed
 
 OBJS=baz.o extra.o
 SHOBJS=baz.sho extra.sho
@@ -17,27 +18,27 @@ libbaz2.so.1.0: libbaz2.so.1.0.3b
 
 # Oops, forget the soname altogether
 libbaz1.so.1.0.3b: $(NOPICOBJS)
-	$(CC) -o $@ -shared $^ -lc
+	$(CC) $(LDFLAGS) -o $@ -shared $^ -lc
 
 libbaz2.so.1.0.3b: $(SHOBJS)
-	$(CC) -o $@ -shared -Wl,-soname,libbaz2.so.1.0 $^ -lc
+	$(CC) $(LDFLAGS) -o $@ -shared -Wl,-soname,libbaz2.so.1.0 $^ -lc
 
 # Non-PIC. We can't test this on all architectures
 libbaz3.so.1.0.3b: $(NOPICOBJS)
-	$(CC) -o $@ -shared -Wl,-soname,libbaz3.so.1 $^ -lc
+	$(CC) $(LDFLAGS) -o $@ -shared -Wl,-soname,libbaz3.so.1 $^ -lc
 
 # Non-versioned SONAME.
 libbaz.so: $(SHOBJS)
-	$(CC) -o $@ -shared -Wl,-soname,libbaz.so $^ -lc
+	$(CC) $(LDFLAGS) -o $@ -shared -Wl,-soname,libbaz.so $^ -lc
 
 #%.o-noreentrant: %.c
-#	$(CC) $(CFLAGS) -o $@ -c $<
+#	$(CC) $(LDFLAGS) $(CFLAGS) -o $@ -c $<
 
 %.sho: %.c
-	$(CC) $(CFLAGS) -D_REENTRANT -fPIC -o $@ -c $<
+	$(CC) $(LDFLAGS) $(CFLAGS) -D_REENTRANT -fPIC -o $@ -c $<
 
 %.o: %.c
-	$(CC) $(CFLAGS) -D_REENTRANT -o $@ -c $<
+	$(CC) $(LDFLAGS) $(CFLAGS) -D_REENTRANT -o $@ -c $<
 
 libbaz2.a: $(OBJS)
 	ar cq $@ $(OBJS)

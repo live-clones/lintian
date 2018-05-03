@@ -61,7 +61,9 @@ lintian (2.5.85) UNRELEASED; urgency=medium
     + [CL] Add support for derivative-specific "Changed-By" validation to
       enforce additional restrictions on the uploader.
 
-  * t/tests/{binaries-libc-link,legacy-libbaz}/desc:
+  * t/tests/*:
+    + [CL] Apply patch from Adam Conrad adding "-Wl,--no-as-needed" to fix
+      testsuite failures with Ubuntu's ld(1).  (Closes: #897639)
     + [CL] Mark currently-failing tests as requiring file (<= 5.33) to
       ensure the testsuite passes whilst we wait for a resolution on the
       changes made in file 5.34 around shared library permissions affecting
