@@ -60,6 +60,8 @@ lintian (2.5.85) UNRELEASED; urgency=medium
   * lib/Lintian/Check.pm:
     + [CL] Add support for derivative-specific "Changed-By" validation to
       enforce additional restrictions on the uploader.
+  * lib/Lintian/Collect/Package.pm:
+    + [CL] croak() a meaningful message we cannot parse an index data line.
 
   * t/tests/*:
     + [CL] Apply patch from Adam Conrad adding "-Wl,--no-as-needed" to fix
