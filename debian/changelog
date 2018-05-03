@@ -42,8 +42,8 @@ lintian (2.5.85) UNRELEASED; urgency=medium
       Tille for the report.  (Closes: #897082)
 
   * data/java/constants:
-    + [CL] Update bytecode checks for OpenJDK 10 add bytecode number for
-      OpenJDK 11.  (Closes: #897424)
+    + [CL] Apply patches from Bas Couwenberg to update the bytecode checks
+      for OpenJDK 10 add bytecode number for OpenJDK 11.  (Closes: #897424)
 
   * doc/releases.md:
     + [CL] Clarify that we should add an extra bit of whitespace for
