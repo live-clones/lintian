@@ -5,7 +5,6 @@ E: scripts-interpreters: script-without-interpreter usr/bin/no-interpreter
 E: scripts-interpreters: shell-script-fails-syntax-check usr/bin/syntax
 E: scripts-interpreters: wrong-path-for-interpreter usr/bin/not-absolute (#!perl != /usr/bin/perl)
 E: scripts-interpreters: wrong-path-for-interpreter usr/bin/wrong-perl-path (#!/bin/perl != /usr/bin/perl)
-I: scripts-interpreters: dependency-on-python-version-marked-for-end-of-life (Depends: python2.7)
 I: scripts-interpreters: example-interpreter-not-absolute usr/share/doc/scripts-interpreters/examples/not-absolute #!perl
 I: scripts-interpreters: example-script-uses-bin-env usr/share/doc/scripts-interpreters/examples/bin-env
 I: scripts-interpreters: example-script-without-interpreter usr/share/doc/scripts-interpreters/examples/no-interpreter
@@ -18,3 +17,4 @@ W: scripts-interpreters: csh-considered-harmful usr/bin/csh-shell
 W: scripts-interpreters: interpreter-not-absolute usr/bin/not-absolute #!perl
 W: scripts-interpreters: script-uses-bin-env usr/bin/bin-env
 W: scripts-interpreters: unusual-interpreter usr/bin/unusual #!/usr/bin/lintian
+X: scripts-interpreters: dependency-on-python-version-marked-for-end-of-life (Depends: python2.7)

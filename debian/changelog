@@ -27,6 +27,12 @@ lintian (2.5.85) UNRELEASED; urgency=medium
   * checks/patch-systems.pm:
     + [CL] Ignore templated ".in" files in debian/patches for the
       patch-file-present-but-not-mentioned-in-series tag.
+  * checks/python.desc:
+    + [CL] Mark dependency-on-python-version-marked-for-end-of-life as
+      "experimental" and with a "pedantic" severity, thus essentially
+      hiding it from all Lintian users yet allowing us to continue to
+      continue collect statistics and making it easier to re-introduce
+      after the release of buster.  (Closes: #897213)
   * checks/watch-file.desc:
     + [CL] Update description of debian-watch-uses-insecure-uri to clarify
       what to do if there is currently no secure URI.  Thanks to Andreas
