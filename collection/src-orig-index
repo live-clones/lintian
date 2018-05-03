@@ -115,7 +115,7 @@ sub index_orig {
         # on filenames while we're reading the tar output.  We
         # intentionally don't parallelize this job because we need to
         # use the output below.
-        my @tar_options = ('-tvf', '--full-time');
+        my @tar_options = ('-tvf', '--utc', '--full-time');
         my $last = '';
         my $collect;
         if ($tarball =~ /\.(lzma|xz)\z/) {

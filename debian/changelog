@@ -52,6 +52,7 @@ lintian (2.5.85) UNRELEASED; urgency=medium
   * collection/src-orig-index:
     + [CL] Pass --full-date to tar(1) to ensure that we get a consistent
       output in the presence of spaces in other fields.  (Closes: #897248)
+    + [CL] Pass --utc to tar(1) to ensure reproducible date parsing.
 
   * data/java/constants:
     + [CL] Apply patches from Bas Couwenberg to update the bytecode checks
