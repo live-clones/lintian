@@ -63,7 +63,8 @@ sub run {
     foreach my $file ($info->sorted_index) {
         next if not $file->is_file;
         my $fileinfo = $file->file_info;
-        if ($fileinfo =~ m/^[^,]*\bELF\b/ && $fileinfo =~ m/shared object/) {
+        if (   $fileinfo =~ m/^[^,]*\bELF\b/
+            && $fileinfo =~ m/(?:shared object|pie executable)/) {
             my $perm = $file->operm;
             my $debug = defined $objdump->{$file}{DEBUG};
             if ($debug and $perm & 0111 and $file !~ m/\.so(?:\.|$)/) {

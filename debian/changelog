@@ -2,6 +2,11 @@ lintian (2.5.85) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
+  * checks/{binaries,shared-libs.pm}:
+    + [CL] Update shared object detection for file >= 5.33 as this version
+      will identify shared objects as a "pie executable" or "shared object"
+      depending on the file's executable bit.  Thanks to Paul Gevers, Doug
+      Freed, Christoph Biedl & Mattia Rizzolo.  (Closes: #896840)
   * checks/changelog-file.pm:
     + [CL] Prevent false-positives in the non-consecutive-debian-revision
       and possible-new-upstream-release-without-new-version tags by
@@ -77,11 +82,6 @@ lintian (2.5.85) UNRELEASED; urgency=medium
   * t/tests/*:
     + [CL] Apply patch from Adam Conrad adding "-Wl,--no-as-needed" to fix
       testsuite failures with Ubuntu's ld(1).  (Closes: #897639)
-    + [CL] Mark currently-failing tests as requiring file (<= 5.33) to
-      ensure the testsuite passes whilst we wait for a resolution on the
-      changes made in file 5.34 around shared library permissions affecting
-      the output of $fileinfo.  This does not resolve the underlying issue,
-      however.  See #896840 for more info.
     + [CL] Correct the "files-" (should be "fields-") prefix of the
       files-orphaned-package-not-maintained-in-debian-infrastructure test.
 

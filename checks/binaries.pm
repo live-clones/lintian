@@ -514,7 +514,7 @@ sub run {
 
         # statically linked?
         if (!exists($objdump->{NEEDED})) {
-            if ($fileinfo =~ m/shared object/o) {
+            if ($fileinfo =~ m/(shared object|pie executable)/o) {
                 # Some exceptions: kernel modules, syslinux modules, detached
                 # debugging information and the dynamic loader (which itself
                 # has no dependencies).
@@ -556,7 +556,7 @@ sub run {
             my $is_shared = 0;
             my @needed;
             $needs_depends_line = 1;
-            $is_shared = 1 if index($fileinfo, 'shared object') != -1;
+            $is_shared = 1 if $fileinfo =~ m/(shared object|pie executable)/;
             @needed = @{$objdump->{NEEDED}} if exists($objdump->{NEEDED});
             for my $lib (@needed) {
                 if ($lib =~ /^libc\.so\.(\d+.*)/) {
