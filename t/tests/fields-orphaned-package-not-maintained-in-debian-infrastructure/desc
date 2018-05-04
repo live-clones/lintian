@@ -5,4 +5,3 @@ Test-For:
  orphaned-package-not-maintained-in-debian-infrastructure
 Test-Against:
  changelog-should-mention-qa
- fields-orphaned-package-not-maintained-in-debian-infrastructure
