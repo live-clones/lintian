@@ -57,6 +57,9 @@ lintian (2.5.85) UNRELEASED; urgency=medium
   * data/java/constants:
     + [CL] Apply patches from Bas Couwenberg to update the bytecode checks
       for OpenJDK 10 add bytecode number for OpenJDK 11.  (Closes: #897424)
+  * data/files/python-generic-modules:
+    + [CL] Add "scripts" and "script" to the list of overly generic Python
+      module names.  Thanks, Andreas Beckmann.  (Closes: #897692)
 
   * doc/releases.md:
     + [CL] Clarify that we should add an extra bit of whitespace for
