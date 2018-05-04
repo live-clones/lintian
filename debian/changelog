@@ -79,6 +79,8 @@ lintian (2.5.85) UNRELEASED; urgency=medium
       changes made in file 5.34 around shared library permissions affecting
       the output of $fileinfo.  This does not resolve the underlying issue,
       however.  See #896840 for more info.
+    + [CL] Correct the "files-" (should be "fields-") prefix of the
+      files-orphaned-package-not-maintained-in-debian-infrastructure test.
 
   * vendors/ubuntu/main/data/changes-file/known-dists:
     + [CL] Apply patch from Adam Conrad to add cosmic as a known Ubuntu
