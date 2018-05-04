@@ -922,23 +922,6 @@ Info: You depend/recommend/build-depend on packaging-dev, which is
 Severity: normal
 Certainty: certain
 
-Tag: malformed-python-version
-Severity: important
-Certainty: certain
-Ref: python-policy 3.4
-Info: The Python-Version control field is not in one of the valid
- formats.  It should be in one of the following formats:
- .
-     all
-     current
-     current, &gt;= X.Y
-     &gt;= X.Y
-     &gt;= A.B, &lt;&lt; X.Y
-     A.B, X.Y
- .
- (One or more specific versions may be listed with the last form.)  A.B
- and X.Y should be Python versions.
-
 Tag: malformed-dm-upload-allowed
 Severity: important
 Certainty: certain
@@ -1232,13 +1215,6 @@ Info: Package should not suggest or recommend libservlet-java
  .
  If there is otherwise a valid reason for this suggestion or recommendation,
  please override the tag.
-
-# Imported from lintian4python (python/helpers)
-Tag: python-version-current-is-deprecated
-Severity: normal
-Certainty: certain
-Info: The use of "current" in the Python-Version field is deprecated.
-Ref: python-policy 3.4
 
 # Imported from pkg-perl-tools
 Tag: libmodule-build-perl-needs-to-be-in-build-depends

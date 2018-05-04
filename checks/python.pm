@@ -99,6 +99,43 @@ sub _run_source {
         }
     }
 
+    if (defined(my $pyversion = $info->field('python-version'))) {
+        my @valid = (
+            ['\d+\.\d+', '\d+\.\d+'],['\d+\.\d+'],
+            ['\>=\s*\d+\.\d+', '\<\<\s*\d+\.\d+'],['\>=\s*\d+\.\d+'],
+            ['current', '\>=\s*\d+\.\d+'],['current'],
+            ['all']);
+
+        my @pyversion = split(/\s*,\s*/, $pyversion);
+
+        if ($pyversion =~ m/^current/) {
+            tag 'python-version-current-is-deprecated';
+        }
+
+        if (@pyversion > 2) {
+            if (any { !/^\d+\.\d+$/ } @pyversion) {
+                tag 'malformed-python-version', $pyversion;
+            }
+        } else {
+            my $okay = 0;
+            for my $rule (@valid) {
+                if (
+                    $pyversion[0] =~ /^$rule->[0]$/
+                    && ((
+                               $pyversion[1]
+                            && $rule->[1]
+                            && $pyversion[1] =~ /^$rule->[1]$/
+                        )
+                        || (!$pyversion[1] && !$rule->[1]))
+                  ) {
+                    $okay = 1;
+                    last;
+                }
+            }
+            tag 'malformed-python-version', $pyversion unless $okay;
+        }
+    }
+
     return;
 }
 

@@ -7,7 +7,7 @@ XS-Python-Version: current 2.6
 Build-Depends: {$build_depends}
 Rules-Requires-Root: no
 
-Package: {$source}
+Package: not-{$source}
 Architecture: all
 Depends: $\{misc:Depends\}
 Description: {$description}

@@ -1,2 +1,0 @@
-E: fields-malformed-py-version source: malformed-python-version current 2.6
-W: fields-malformed-py-version source: python-version-current-is-deprecated
