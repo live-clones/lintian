@@ -35,6 +35,9 @@ lintian (2.5.85) UNRELEASED; urgency=medium
     + [CL] Correct a default-mta-dependency-not-listed-first false-
       positive where we incorrect emitted the tag for, e.g.
       "Depends: a, default-mta | b".  (Closes: #897166)
+    + [CL] Fix orphaned-package-not-maintained-in-debian-infrastructure
+      false positives for https://git.dgit.debian.org Vcs-* fields.
+      Thanks to Thorsten Alteholz for the report.  (Closes: #897915)
   * checks/patch-systems.pm:
     + [CL] Ignore templated ".in" files in debian/patches for the
       patch-file-present-but-not-mentioned-in-series tag.
