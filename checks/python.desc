@@ -129,8 +129,8 @@ Tag: malformed-python-version
 Severity: important
 Certainty: certain
 Ref: python-policy 3.4
-Info: The Python-Version control field is not in one of the valid
- formats.  It should be in one of the following formats:
+Info: The Python-Version or Python3-Version control field is not in one
+ of the valid formats.  It should be in one of the following:
  .
      all
      current
@@ -145,5 +145,6 @@ Info: The Python-Version control field is not in one of the valid
 Tag: python-version-current-is-deprecated
 Severity: normal
 Certainty: certain
-Info: The use of "current" in the Python-Version field is deprecated.
+Info: The use of "current" in the Python-Version or Python3-Version
+ field is deprecated.
 Ref: python-policy 3.4

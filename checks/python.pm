@@ -47,7 +47,7 @@ my %MISMATCHED_SUBSTVARS = (
     '^python2?-.+' => '${python3:Depends}',
 );
 
-my @VERSION_FIELDS = qw(x-python-version xs-python-version);
+my @VERSION_FIELDS = qw(x-python-version xs-python-version x-python3-version);
 
 sub run {
     my ($pkg, $type, $info) = @_;
