@@ -1,2 +1,2 @@
-E: python-malformed-py-version source: malformed-python-version current 2.6
-W: python-malformed-py-version source: python-version-current-is-deprecated
+E: python-malformed-py-version source: malformed-python-version xs-python-version current 2.6
+W: python-malformed-py-version source: python-version-current-is-deprecated xs-python-version

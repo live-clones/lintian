@@ -114,12 +114,12 @@ sub _run_source {
         my @pyversion = split(/\s*,\s*/, $pyversion);
 
         if ($pyversion =~ m/^current/) {
-            tag 'python-version-current-is-deprecated';
+            tag 'python-version-current-is-deprecated', $field;
         }
 
         if (@pyversion > 2) {
             if (any { !/^\d+\.\d+$/ } @pyversion) {
-                tag 'malformed-python-version', $pyversion;
+                tag 'malformed-python-version', $field, $pyversion;
             }
         } else {
             my $okay = 0;
@@ -137,7 +137,7 @@ sub _run_source {
                     last;
                 }
             }
-            tag 'malformed-python-version', $pyversion unless $okay;
+            tag 'malformed-python-version', $field, $pyversion unless $okay;
         }
     }
 
