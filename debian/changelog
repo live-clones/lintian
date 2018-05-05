@@ -82,6 +82,8 @@ lintian (2.5.85) UNRELEASED; urgency=medium
   * data/files/python-generic-modules:
     + [CL] Add "scripts" and "script" to the list of overly generic Python
       module names.  Thanks, Andreas Beckmann.  (Closes: #897692)
+  * data/spelling/corrections:
+    + [CL] Add a "CBDS" → "CDBS" correction.
 
   * doc/releases.md:
     + [CL] Clarify that we should add an extra bit of whitespace for
