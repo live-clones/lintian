@@ -53,7 +53,8 @@ lintian (2.5.85) UNRELEASED; urgency=medium
       continue collect statistics and making it easier to re-introduce
       after the release of buster.  (Closes: #897213)
     + [CL] Migrate the malformed-python-version and
-      python-version-current-is-deprecated tags from fields.pm.
+      python-version-current-is-deprecated tags from fields.pm and refactor
+      to use $info->source_field over $info->field.
   * checks/watch-file.desc:
     + [CL] Update description of debian-watch-uses-insecure-uri to clarify
       what to do if there is currently no secure URI.  Thanks to Andreas

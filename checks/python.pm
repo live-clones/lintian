@@ -47,6 +47,8 @@ my %MISMATCHED_SUBSTVARS = (
     '^python2?-.+' => '${python3:Depends}',
 );
 
+my @VERSION_FIELDS = qw(x-python-version xs-python-version);
+
 sub run {
     my ($pkg, $type, $info) = @_;
 
@@ -99,7 +101,10 @@ sub _run_source {
         }
     }
 
-    if (defined(my $pyversion = $info->field('python-version'))) {
+    foreach my $field (@VERSION_FIELDS) {
+        my $pyversion = $info->source_field($field);
+        next unless defined($pyversion);
+
         my @valid = (
             ['\d+\.\d+', '\d+\.\d+'],['\d+\.\d+'],
             ['\>=\s*\d+\.\d+', '\<\<\s*\d+\.\d+'],['\>=\s*\d+\.\d+'],
