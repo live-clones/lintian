@@ -71,10 +71,19 @@ sub run {
     check_script($pkg, scalar $info->control_index('prerm'), \%prerm);
     check_script($pkg, scalar $info->control_index('postrm'), \%postrm);
 
+    # Populate all_{files,links} from current package and its dependencies
+    foreach my $bin ($group->get_binary_processables) {
+        next
+          unless $info->name eq $bin->pkg_name
+          or $info->relation('strong')->implies($bin->pkg_name);
+        for my $file ($bin->info->sorted_index) {
+            add_file_link_info($bin->info, $file->name, \%all_files,
+                \%all_links);
+        }
+    }
+
     # read package contents
     for my $file ($info->sorted_index) {
-
-        add_file_link_info($info, $file->name, \%all_files, \%all_links);
         my $operm = $file->operm;
 
         if ($file->is_file) { # file checks

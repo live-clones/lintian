@@ -43,6 +43,9 @@ lintian (2.5.85) UNRELEASED; urgency=medium
     + [CL] Fix orphaned-package-not-maintained-in-debian-infrastructure
       false positives for https://git.dgit.debian.org Vcs-* fields.
       Thanks to Thorsten Alteholz for the report.  (Closes: #897915)
+  * checks/menus.pm:
+    + [CL] Also look in a package's dependencies for files listed in a
+      doc-base control file.  (Closes: #897244)
   * checks/patch-systems.pm:
     + [CL] Ignore templated ".in" files in debian/patches for the
       patch-file-present-but-not-mentioned-in-series tag.
