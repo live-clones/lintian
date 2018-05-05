@@ -27,6 +27,7 @@ use List::MoreUtils qw(any none);
 
 use Lintian::Tags qw(tag);
 use Lintian::Relation qw(:constants);
+use Lintian::Relation::Version qw(versions_lte);
 
 my @FIELDS = qw(Depends Pre-Depends Recommends Suggests);
 my @IGNORE = qw(-dev$ -docs?$ -common$ -tools$);
@@ -47,6 +48,7 @@ my %MISMATCHED_SUBSTVARS = (
     '^python2?-.+' => '${python3:Depends}',
 );
 
+my $VERSIONS = Lintian::Data->new('python/versions', qr/\s*=\s*/o);
 my @VERSION_FIELDS = qw(x-python-version xs-python-version x-python3-version);
 
 sub run {
@@ -138,6 +140,18 @@ sub _run_source {
                 }
             }
             tag 'malformed-python-version', $field, $pyversion unless $okay;
+        }
+
+        if ($pyversion =~ /\b(([23])\.\d+)$/) {
+            my ($v, $major) = ($1, $2);
+            my $old = $VERSIONS->value("stable-python$major");
+            my $ancient = $VERSIONS->value("oldstable-python$major");
+
+            if (versions_lte($v, $ancient)) {
+                tag 'ancient-python-version-field', $field, $v;
+            } elsif (versions_lte($v, $old)) {
+                tag 'old-python-version-field', $field, $v;
+            }
         }
     }
 

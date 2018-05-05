@@ -1,0 +1,5 @@
+stable-python2 = 2.7
+stable-python3 = 3.5
+
+oldstable-python2 = 2.7
+oldstable-python3 = 3.4

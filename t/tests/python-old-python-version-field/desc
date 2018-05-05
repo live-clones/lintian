@@ -1,0 +1,8 @@
+Testname: python-old-python-version-field
+Version: 1.0
+Description: Test for old python-version fields
+Options: -I -E --pedantic
+Skeleton: pedantic
+Test-For:
+ ancient-python-version-field
+ old-python-version-field

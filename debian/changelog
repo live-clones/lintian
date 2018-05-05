@@ -57,6 +57,8 @@ lintian (2.5.85) UNRELEASED; urgency=medium
       to use $info->source_field over $info->field, include the
       offending field name in the output, and also warn about the Python
       3.x variant of this field.
+    + [CL] Warn about ancient and old X-Python{,3}-Version fields.  Thanks
+      to Scott Kitterman.  (Closes: #892304)
   * checks/watch-file.desc:
     + [CL] Update description of debian-watch-uses-insecure-uri to clarify
       what to do if there is currently no secure URI.  Thanks to Andreas
