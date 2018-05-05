@@ -26,8 +26,10 @@ lintian (2.5.85) UNRELEASED; urgency=medium
     + [CL] Disable the duplicate word "spelling" detection in copyright
       files to their extensive use of headings and other structures causing
       false positives.  Thanks, Stuart Prescott.  (Closes: #897402)
-  * checks/debhelper.pm:
+  * checks/debhelper.{pm,desc}:
     + [CL] Don't use $. out-of-context when reporting on dh --parallel.
+    + [CL] Add a pedantic warning for packages that do not use debhelper or
+      CBDS.  (Closes: #884499)
   * checks/description.pm:
     + [CL] Rework the description-synopsis-might-not-be-phrased-properly
       tag to ensure we do not cause false-positives for literal "e.g.",

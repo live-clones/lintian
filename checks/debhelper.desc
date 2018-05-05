@@ -442,3 +442,15 @@ Info: The <tt>debian/rules</tt> file passes the specified argument to
  .
  Please remove the argument from the call to <tt>dh(1)</tt>.
 Ref: debhelper(7), dh(1)
+
+Tag: package-does-not-use-debhelper-or-cdbs
+Severity: pedantic
+Certainty: certain
+Info: This package does not appear to use a build system helper such as
+ debhelper or cdbs.
+ .
+ It is recommended that packages use such tools as they avoid a large
+ number of common errors and tedious boilerplate as well as permit
+ distribution-wide changes to packages and reduce the "bus factor" &
+ barriers to entry from external contributors.
+Ref: debhelper(7), dh(1), https://build-common.alioth.debian.org/

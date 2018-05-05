@@ -253,7 +253,10 @@ sub run {
         tag 'debian-build-system', 'other';
     }
 
-    return unless $seencommand;
+    unless ($seencommand) {
+        tag 'package-does-not-use-debhelper-or-cdbs';
+        return;
+    }
 
     my @pkgs = $info->binaries;
     my $single_pkg = '';
