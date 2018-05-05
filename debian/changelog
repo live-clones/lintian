@@ -84,6 +84,7 @@ lintian (2.5.85) UNRELEASED; urgency=medium
       module names.  Thanks, Andreas Beckmann.  (Closes: #897692)
   * data/spelling/corrections:
     + [CL] Add a "CBDS" → "CDBS" correction.
+    + [CL] Add a "DSFG" → "DFSG" correction.
 
   * doc/releases.md:
     + [CL] Clarify that we should add an extra bit of whitespace for
