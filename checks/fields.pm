@@ -54,6 +54,8 @@ our $KNOWN_UDEB_FIELDS = Lintian::Data->new('fields/udeb-fields');
 our $KNOWN_BUILD_PROFILES = Lintian::Data->new('fields/build-profiles');
 our $KNOWN_VCS_BROWSERS
   = Lintian::Data->new('fields/vcs-browsers', qr/\s*~~\s*/, sub { $_[1]; });
+my $KNOWN_INSECURE_HOMEPAGE_URIS
+  = Lintian::Data->new('fields/insecure-homepage-uris');
 
 our %KNOWN_ARCHIVE_PARTS = map { $_ => 1 } ('non-free', 'contrib');
 
@@ -675,11 +677,10 @@ sub run {
         if ($homepage=~ m,bioconductor\.org/packages/.*/bioc/html/.*\.html*$,){
             tag 'homepage-for-bioconductor-package-not-canonical', $orig;
         }
-        if (   $homepage =~ m,^ftp://,
-            or $homepage
-            =~m,^http://(?:[^\.]+\.)?(?:github\.com|metacpan\.org|debian\.org|cran\.r-project\.org|bioconductor\.org)/,
-          ){
+        foreach my $re ($KNOWN_INSECURE_HOMEPAGE_URIS->all) {
+            next unless $homepage =~ m/$re/;
             tag 'homepage-field-uses-insecure-uri', $orig;
+            last;
         }
     } elsif (not $info->native) {
         if ($type eq 'source') {
