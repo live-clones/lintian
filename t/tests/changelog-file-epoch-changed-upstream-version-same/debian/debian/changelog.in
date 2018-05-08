@@ -1,10 +1,10 @@
 {$source} (2:{$version}) unstable; urgency=low
 
-  * This changelog entry bumps the version.
+  * This changelog entry bumps the epoch but not the upstream version number,
 
  -- {$author}  {$date}
 
-{$source} (1:99999999) unstable; urgency=low
+{$source} (1:{$version}) unstable; urgency=low
 
   * Initial upload.
 

@@ -27,6 +27,7 @@ Test-For:
  duplicated-compressed-file
  embedded-feedparser-library
  embedded-javascript-library
+ epoch-changed-but-upstream-version-did-not-go-backwards
  executable-not-elf-or-script
  extra-license-file
  file-in-etc-not-marked-as-conffile

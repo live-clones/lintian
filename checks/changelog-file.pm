@@ -366,6 +366,13 @@ sub run {
                 tag 'epoch-change-without-comment',
                   "$second_epoch -> $first_epoch"
                   unless $entries[0]->Changes =~ /\bepoch\b/im;
+
+                my ($first_no_epoch) = ($first_upstream =~ s/^([^:]+)://r);
+                my ($second_no_epoch) = ($second_upstream =~ s/^([^:]+)://r);
+                tag
+                  'epoch-changed-but-upstream-version-did-not-go-backwards',
+                  "$first_no_epoch >= $second_no_epoch"
+                  unless versions_gt($second_no_epoch, $first_no_epoch);
             }
         }
 

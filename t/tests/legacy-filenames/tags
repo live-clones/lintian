@@ -8,6 +8,7 @@ E: filenames: dir-or-file-in-opt opt/foo/bar
 E: filenames: dir-or-file-in-srv srv/foo/
 E: filenames: dir-or-file-in-srv srv/foo/bar
 E: filenames: dir-or-file-in-var-www var/www/foo
+E: filenames: epoch-changed-but-upstream-version-did-not-go-backwards 12 >= 11
 E: filenames: file-in-etc-not-marked-as-conffile etc/gconf/schemas/test.schema
 E: filenames: file-name-is-not-valid-UTF-8 usr/share/doc/filenames/bokm?l
 E: filenames: file-name-is-not-valid-UTF-8 usr/share/doc/filenames/bokm\?l

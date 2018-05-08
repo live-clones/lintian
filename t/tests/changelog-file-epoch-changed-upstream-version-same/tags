@@ -1,0 +1,2 @@
+E: changelog-file-epoch-changed-upstream-version-same: epoch-changed-but-upstream-version-did-not-go-backwards 1.0 >= 1.0
+W: changelog-file-epoch-changed-upstream-version-same: latest-debian-changelog-entry-without-new-version

@@ -5,7 +5,7 @@
 
  -- {$author}  {$date}
 
-{$source} (1:{$version}) unstable; urgency=low
+{$source} (1:999999) unstable; urgency=low
 
   * Initial upload.
 
