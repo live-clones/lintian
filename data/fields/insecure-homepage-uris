@@ -8,3 +8,4 @@
 ^http://(?:[^\.]+\.)?debian\.org
 ^http://(?:[^\.]+\.)?cran\.r-project\.org
 ^http://(?:[^\.]+\.)?bioconductor\.org
+^http://(www\.)?gnu\.org
