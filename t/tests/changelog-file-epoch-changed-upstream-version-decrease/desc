@@ -1,8 +1,7 @@
 Testname: changelog-file-epoch-changed-upstream-version-decrease
 Version: 1.0
 Description: Check changelog for accidental epoch changes (decrease)
-Test-For:
- latest-debian-changelog-entry-without-new-version
 Test-Against:
  epoch-change-without-comment
  epoch-changed-but-upstream-version-did-not-go-backwards
+ latest-debian-changelog-entry-without-new-version

@@ -9,6 +9,6 @@ W: changelog-file-general: debian-changelog-file-contains-obsolete-user-emacs-se
 W: changelog-file-general: debian-changelog-line-too-long line 15
 W: changelog-file-general: debian-changelog-line-too-long line 8
 W: changelog-file-general: improbable-bug-number-in-closes 1234
-W: changelog-file-general: latest-debian-changelog-entry-without-new-version
+W: changelog-file-general: latest-debian-changelog-entry-reuses-existing-version 1:1.0-1 == 1.0-1 (last used: CURRENT)
 W: changelog-file-general: misspelled-closes-bug #666666
 X: changelog-file-general: bad-intended-distribution intended to experimental but uploaded to unstable

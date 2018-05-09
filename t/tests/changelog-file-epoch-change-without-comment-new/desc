@@ -3,6 +3,6 @@ Version: 1.0
 Description: Check changelog for accidental epoch changes
 Test-For:
  epoch-change-without-comment
- latest-debian-changelog-entry-without-new-version
 Test-Against:
  epoch-changed-but-upstream-version-did-not-go-backwards
+ latest-debian-changelog-entry-without-new-version

@@ -6,6 +6,9 @@ lintian (2.5.86) UNRELEASED; urgency=medium
     + [CL] Emit an error when a package bumps the epoch but the upstream
       version did not go "backwards".  Thanks to Raphael Hertzog for the
       idea.  (Closes: #889816)
+    + [CL] Correctly warn about packages that re-use a previous version
+      number.  Thanks to Raphael Hertzog for spotting this issue and the
+      follow-ups.  (Closes: #889991)
   * checks/fields.pm:
     + [CL] Move homepage-field-uses-insecure-uri regex into a separate data
       file now it is getting unwieldy.

@@ -1,0 +1,45 @@
+{$source} (3:{$version}) unstable; urgency=low
+
+  * Third use of {$version}.
+  * This changelog entry bumps the epoch and references the word in the
+    changelog.
+
+ -- {$author}  {$date}
+
+{$source} (3:0) unstable; urgency=low
+
+  * Bumping epoch to inject a changelog entry to ensure we check later entries.
+
+ -- {$author}  Fri, 06 Feb 2010 22:22:37 -0800
+
+other ({$version}) unstable; urgency=low
+
+  * This has the same version but different source and is thus a
+    false-positive.
+
+ -- {$author}  Fri, 06 Feb 2009 22:22:37 -0800
+
+{$source} (2:{$version}) unstable; urgency=low
+
+  * Second use of version {$version}. True positive.
+
+ -- {$author}  Fri, 06 Feb 2008 22:22:37 -0800
+
+{$source} (2:0) unstable; urgency=low
+
+  * Bumping epoch to inject a changelog entry to ensure we check later entries.
+
+ -- {$author}  Fri, 06 Feb 2007 22:22:37 -0800
+
+{$source} (1:{$version}) unstable; urgency=low
+
+  * Initial use of version {$version}. This is a false positive as we should
+  * stop after 2:{$version}.
+
+ -- {$author}  Fri, 06 Feb 2006 22:22:37 -0800
+
+{$source} (1:0) unstable; urgency=low
+
+  * Add epoch.
+
+ -- {$author}  Fri, 06 Feb 2005 22:22:37 -0800

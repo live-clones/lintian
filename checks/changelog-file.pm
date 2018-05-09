@@ -318,14 +318,23 @@ sub run {
             my $second_version = $entries[1]->Version;
             if ($first_version and $second_version) {
                 tag 'latest-debian-changelog-entry-without-new-version'
-                  unless versions_gt(
-                    $first_version =~ s/^([^:]+)://r,
-                    $second_version =~ s/^([^:]+)://r
-                  )
+                  unless versions_gt($first_version, $second_version)
                   or $entries[0]->Changes =~ /backport/i
                   or $entries[0]->Source ne $entries[1]->Source;
                 tag 'latest-debian-changelog-entry-changed-to-native'
                   if $native_pkg and $second_version =~ m/-/;
+            }
+            my $first_version_without_epoch = $first_version =~ s/^([^:]+)://r;
+            foreach my $entry (@entries[1..$#entries]) {
+                my $version_without_epoch = $entry->Version =~ s/^([^:]+)://r;
+                if (    $first_version_without_epoch eq $version_without_epoch
+                    and $entries[0]->Source eq $entry->Source) {
+                    tag
+                      'latest-debian-changelog-entry-reuses-existing-version',
+                      "$first_version == $entry->{Version}",
+                      "(last used: $entry->{Date})";
+                    last;
+                }
             }
 
             my $first_upstream = $first_version;
