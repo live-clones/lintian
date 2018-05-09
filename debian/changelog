@@ -1,6 +1,11 @@
-lintian (2.5.86) UNRELEASED; urgency=medium
+lintian (2.5.86) unstable; urgency=medium
 
-  XXX: generate tag summary
+  * Summary of tag changes:
+    + Added:
+      - epoch-changed-but-upstream-version-did-not-go-backwards
+      - latest-debian-changelog-entry-reuses-existing-version
+    + Removed:
+      - depends-on-mail-transport-agent-without-alternatives
 
   * checks/changelog-file.{desc,pm}:
     + [CL] Emit an error when a package bumps the epoch but the upstream
@@ -23,8 +28,10 @@ lintian (2.5.86) UNRELEASED; urgency=medium
     + [CL] Add non-HTTPS gnu.org to the list of sites we should warn about
       for homepage-field-uses-insecure-uri.  Thanks to Mattia Rizzolo for
       the report.  (Closes: #898160)
+  * data/spelling/corrections:
+    + [PW] Add a number of corrections.
 
- -- Chris Lamb <lamby@debian.org>  Sat, 05 May 2018 16:57:18 -0700
+ -- Chris Lamb <lamby@debian.org>  Tue, 08 May 2018 22:09:58 -0700
 
 lintian (2.5.85) unstable; urgency=medium
 
