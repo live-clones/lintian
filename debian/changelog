@@ -12,6 +12,9 @@ lintian (2.5.86) UNRELEASED; urgency=medium
   * checks/fields.pm:
     + [CL] Move homepage-field-uses-insecure-uri regex into a separate data
       file now it is getting unwieldy.
+    + [CL] Drop depends-on-mail-transport-agent-without-alternatives as it
+      only consists of false-positives.  Thanks to Paul Wise and Russ
+      Allbery.  (Closes: #898136)
 
   * data/debhelper/dh_addons-manual:
     + [CL] Also permit python-scour to satisfy the requirement for the

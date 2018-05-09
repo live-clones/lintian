@@ -242,7 +242,6 @@ our $OBSOLETE_PACKAGES
   = Lintian::Data->new('fields/obsolete-packages',qr/\s*=>\s*/);
 our $VIRTUAL_PACKAGES   = Lintian::Data->new('fields/virtual-packages');
 our $SOURCE_FIELDS      = Lintian::Data->new('common/source-fields');
-our $MAIL_TRANSPORT_AGENTS= Lintian::Data->new('fields/mail-transport-agents');
 
 sub run {
     my ($pkg, $type, $info, $proc, $group) = @_;
@@ -792,11 +791,6 @@ sub run {
                 tag 'depends-on-old-emacs', "$field: $alternatives[0][0]"
                   if ( &$is_dep_field($field)
                     && $known_obsolete_emacs{$alternatives[0][0]});
-
-                tag 'depends-on-mail-transport-agent-without-alternatives',
-                  $dep
-                  if &$is_dep_field($field)
-                  and $MAIL_TRANSPORT_AGENTS->known($dep);
 
                 for my $part_d (@alternatives) {
                     my ($d_pkg, undef, $d_version, undef, undef, $rest,
