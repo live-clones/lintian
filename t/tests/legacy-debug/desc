@@ -20,6 +20,7 @@ Test-For:
  duplicate-entry-in-symbols-control-file
  invalid-template-id-in-symbols-file
  latest-debian-changelog-entry-without-new-version
+ latest-debian-changelog-entry-reuses-existing-version
  missing-dependency-on-libc
  package-uses-deprecated-debhelper-compat-version
  pkg-has-symbols-control-file-but-no-shared-libs

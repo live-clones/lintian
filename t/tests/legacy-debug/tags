@@ -38,16 +38,21 @@ W: debug source: dh-clean-k-is-deprecated
 W: debug source: package-uses-deprecated-debhelper-compat-version 5
 W: debug source: timewarp-standards-version (2006-04-04 < 2006-04-26)
 W: hello-dbg: debug-file-with-no-debug-symbols usr/lib/debug/usr/bin/hello
+W: hello-hello-dbg: latest-debian-changelog-entry-reuses-existing-version 1.0 == 1.0 (last used: Sat,  4 Mar 2006 21:31:06 -0800)
 W: hello-hello-dbg: latest-debian-changelog-entry-without-new-version
 W: hello: binary-without-manpage usr/bin/hello
 W: hello: binary-without-manpage usr/bin/hello.dbg
+W: hello: latest-debian-changelog-entry-reuses-existing-version 1.0 == 1.0 (last used: Sat,  4 Mar 2006 21:31:06 -0800)
 W: hello: latest-debian-changelog-entry-without-new-version
+W: hi-dbg: latest-debian-changelog-entry-reuses-existing-version 1.0 == 1.0 (last used: Sat,  4 Mar 2006 21:31:06 -0800)
 W: hi-dbg: latest-debian-changelog-entry-without-new-version
 W: libhello0-dbg: debug-file-should-use-detached-symbols usr/lib/debug/lib/libhello.so.0.0
 W: libhello0-dbg: debug-file-with-no-debug-symbols usr/lib/debug/lib/libhello.so.0.0
 W: libhello0-dbg: debug-file-with-no-debug-symbols usr/lib/debug/usr/lib/libhello.so.0.0
+W: libhello0-dbg: latest-debian-changelog-entry-reuses-existing-version 1.0 == 1.0 (last used: Sat,  4 Mar 2006 21:31:06 -0800)
 W: libhello0-dbg: latest-debian-changelog-entry-without-new-version
 W: libhello0-dbg: shared-lib-without-dependency-information usr/lib/libhello.so.dbg
+W: libhello0: latest-debian-changelog-entry-reuses-existing-version 1.0 == 1.0 (last used: Sat,  4 Mar 2006 21:31:06 -0800)
 W: libhello0: latest-debian-changelog-entry-without-new-version
 W: libhello0: symbols-declares-dependency-on-other-package foobar (= 1.2)
 W: libhello0: symbols-declares-dependency-on-other-package hello-dbg
