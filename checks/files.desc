@@ -1783,6 +1783,9 @@ Severity: important
 Certainty: certain
 Info: This package installs a Python module with an overly generic name to
  a global namespace.
+ .
+ This was either a mistake and/or likely to cause conflicts with other
+ packages.
 
 Tag: multiarch-foreign-cmake-file
 Severity: important
@@ -1914,3 +1917,12 @@ Info: This package ships the specified file under <tt>/etc/skel</tt>. Files
  Please remove the installation of this file, ensuring this package
  can automatically create them or can otherwise function without them.
 Ref: policy 10.7.5
+
+Tag: header-has-overly-generic-name
+Severity: important
+Certainty: certain
+Info: This package installs a header to the <tt>/usr/include</tt> global
+ namespace with an overly generic name.
+ .
+ This was either a mistake and/or likely to cause conflicts with other
+ packages.

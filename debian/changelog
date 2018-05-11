@@ -2,11 +2,14 @@ lintian (2.5.87) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
-  * checks/files.pm:
+  * checks/fields.{desc,pm}:
     + [BR] Detect privacy breaches in Internet Explorer "<!--[if IE 8]>"
       conditional comments.
     + [CL] Rename python-generic-modules data file to
       generic-python-modules.
+    + [CL] Warn about packages that install files under /usr/include with
+      overly-generic filenames.  Thanks to Andreas Beckmann for the report.
+      (Closes: #898377)
   * data/rules/rules-should-not-use:
     + [CL] Add a pedantic-level warning about possibly complete automatic
       debug symbol migrations.  Thanks to Graham Inggs for the report.

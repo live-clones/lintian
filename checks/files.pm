@@ -38,6 +38,7 @@ my $LOCALE_CODES = Lintian::Data->new('files/locale-codes', qr/\s++/);
 my $INCORRECT_LOCALE_CODES
   = Lintian::Data->new('files/incorrect-locale-codes', qr/\s++/);
 my $MULTIARCH_DIRS = Lintian::Data->new('common/multiarch-dirs', qr/\s++/);
+my $GENERIC_HEADER_FILES = Lintian::Data->new('files/generic-header-files');
 my $GENERIC_PYTHON_MODULES= Lintian::Data->new('files/generic-python-modules');
 
 my $PRIVACY_BREAKER_WEBSITES= Lintian::Data->new(
@@ -600,8 +601,15 @@ sub run {
         }
         # ---------------- /usr
         elsif ($fname =~ m,^usr/,) {
-            # ---------------- /usr/share/doc
-            if ($fname =~ m,^usr/share/doc/\S,) {
+            # ---------------- /usr/include
+            if ($fname =~ m,^usr/include/(.+),) {
+                my $rest = $1;
+                for my $regex ($GENERIC_HEADER_FILES->all) {
+                    tag 'header-has-overly-generic-name', $fname,
+                      if $rest =~ m,$regex,i;
+                }
+                # ---------------- /usr/share/doc
+            } elsif ($fname =~ m,^usr/share/doc/\S,) {
                 if ($type eq 'udeb') {
                     tag 'udeb-contains-documentation-file', $file;
                 } else {
