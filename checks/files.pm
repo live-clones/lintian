@@ -2195,7 +2195,7 @@ sub detect_privacy_breach {
 
     while (my $block = $sfd->readwindow) {
         # Strip comments
-        for my $x (qw(<!--.*?--\s*> /\*.*?\*/)) {
+        for my $x (qw(<!--(?!\[if).*?--\s*> /\*(?!@cc_on).*?\*/)) {
             $block =~ s@$x@@gs;
         }
         # try generic fragment tagging

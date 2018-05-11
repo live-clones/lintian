@@ -66,6 +66,7 @@ W: files-privacybreach: privacy-breach-generic usr/share/files-privacy-breach/pr
 W: files-privacybreach: privacy-breach-generic usr/share/files-privacy-breach/privacy-breach-generic/frame.html [<frame src="http://1984.os/trackme_frame_c.htm">] (http://1984.os/trackme_frame_c.htm)
 W: files-privacybreach: privacy-breach-generic usr/share/files-privacy-breach/privacy-breach-generic/genericwebsite.html [<script type="text/javascript" src="http://www.example.com/trackme.js">] (http://www.example.com/trackme.js)
 W: files-privacybreach: privacy-breach-generic usr/share/files-privacy-breach/privacy-breach-generic/googlefontapi.html [@import url("http://fonts.googleapis.com/css?family=open+sans");] (http://fonts.googleapis.com/css?family=open+sans)
+W: files-privacybreach: privacy-breach-generic usr/share/files-privacy-breach/privacy-breach-generic/ieconditional.xml [<link href="http://evil.com/ie8only.css" rel="stylesheet">] (http://evil.com/ie8only.css)
 W: files-privacybreach: privacy-breach-generic usr/share/files-privacy-breach/privacy-breach-generic/iframe.html [<iframe src="http://1984.ow/bigbrotheriswatchingyou.html">] (http://1984.ow/bigbrotheriswatchingyou.html)
 W: files-privacybreach: privacy-breach-generic usr/share/files-privacy-breach/privacy-breach-generic/import.css [@import url("http://1984.wo/importtracking.css");] (http://1984.wo/importtracking.css)
 W: files-privacybreach: privacy-breach-generic usr/share/files-privacy-breach/privacy-breach-generic/importcss.html [@import url("http://trackme.css/track.css");] (http://trackme.css/track.css)
