@@ -4,6 +4,8 @@ lintian (2.5.87) UNRELEASED; urgency=medium
 
   * checks/files.pm:
     + [BR] Redetect privacy breach in IE comment.
+    + [CL] Rename python-generic-modules data file to
+      generic-python-modules.
   * data/rules/rules-should-not-use:
     + [CL] Add a pedantic-level warning about possibly complete automatic
       debug symbol migrations.  Thanks to Graham Inggs for the report.
