@@ -10,7 +10,7 @@ Certainty: certain
 Ref: http://dep.debian.net/deps/dep12/
 Info: The DEP 12 metadata file in the source is not readable.  This
  could be caused by a dangling symlink, or that the name is used
- by some none file directory entry.
+ by some non-file directory entry.
 
 Tag: upstream-metadata-yaml-invalid
 Severity: normal
