@@ -3,7 +3,8 @@ lintian (2.5.87) UNRELEASED; urgency=medium
   XXX: generate tag summary
 
   * checks/files.pm:
-    + [BR] Redetect privacy breach in IE comment.
+    + [BR] Detect privacy breaches in Internet Explorer "<!--[if IE 8]>"
+      conditional comments.
     + [CL] Rename python-generic-modules data file to
       generic-python-modules.
   * data/rules/rules-should-not-use:
