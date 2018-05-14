@@ -8,6 +8,7 @@ Test-For:
  build-depends-on-obsolete-package
  copyright-contains-dh_make-todo-boilerplate
  debian-pycompat-is-obsolete
+ debian-pyversions-is-obsolete
  debian-rules-calls-debhelper-in-odd-order
  debian-rules-sets-DH_COMPAT
  declares-possibly-conflicting-debhelper-compat-versions

@@ -2,6 +2,9 @@ lintian (2.5.87) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
+  * checks/cruft.{desc,pm}:
+    + [CL] Apply patch from Joseph Herlant to warn about use of obsolete
+      debian/pyversion files.  Thanks!  (Closes: #898592)
   * checks/fields.{desc,pm}:
     + [BR] Detect privacy breaches in Internet Explorer "<!--[if IE 8]>"
       conditional comments.

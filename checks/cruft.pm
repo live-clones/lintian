@@ -417,6 +417,10 @@ sub run {
         tag 'debian-pycompat-is-obsolete' if $pycompat->is_file;
     }
 
+    if (my $pyversions = $info->index_resolved_path('debian/pyversions')) {
+        tag 'debian-pyversions-is-obsolete' if $pyversions->is_file;
+    }
+
     # Report any error messages from tar while unpacking the source
     # package if it isn't just tar cruft.
     for my $file (keys %ERRORS) {

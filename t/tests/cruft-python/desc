@@ -6,5 +6,6 @@ Options: --pedantic -I -E
 Architecture: any
 Test-For:
  debian-pycompat-is-obsolete
+ debian-pyversions-is-obsolete
  source-contains-prebuilt-python-object
  source-is-missing
