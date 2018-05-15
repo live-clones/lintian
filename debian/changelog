@@ -13,6 +13,9 @@ lintian (2.5.87) UNRELEASED; urgency=medium
     + [CL] Warn about packages that install files under /usr/include with
       overly-generic filenames.  Thanks to Andreas Beckmann for the report.
       (Closes: #898377)
+    + [CL] Apply patch from Ian Jackson to not detect
+      https://browse.dgit.debian.org/example.git as a VCS deprecated in the
+      Debian infrastucture.  (Closes: #898708)
   * checks/files.pm:
     + [BR] Add "umd" as a possible suffix for minified Javascript.
       (alongside "lite", "min", "pack", etc.)

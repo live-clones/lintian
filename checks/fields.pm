@@ -1350,7 +1350,7 @@ sub run {
             }
             if ($uri =~ m{//(.+)\.debian\.org/}) {
                 tag 'vcs-deprecated-in-debian-infrastructure', "vcs-$vcs", $uri
-                  unless $1 =~ m{^(?:salsa|git\.dgit)$};
+                  unless $1 =~ m{^(?:salsa|.*\.dgit)$};
             } else {
                 tag 'orphaned-package-not-maintained-in-debian-infrastructure',
                   "vcs-$vcs", $uri
