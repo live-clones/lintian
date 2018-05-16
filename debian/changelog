@@ -5,6 +5,9 @@ lintian (2.5.87) UNRELEASED; urgency=medium
   * checks/cruft.{desc,pm}:
     + [CL] Apply patch from Joseph Herlant to warn about use of obsolete
       debian/pyversion files.  Thanks!  (Closes: #898592)
+  * checks/debhelper.pm:
+    + [CL] Prevent false-positives with comments and newlines when checking
+      debhelper-compat-file-contains-multiple-levels.  (Closes: #898799)
   * checks/fields.{desc,pm}:
     + [BR] Detect privacy breaches in Internet Explorer "<!--[if IE 8]>"
       conditional comments.

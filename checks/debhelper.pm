@@ -283,10 +283,16 @@ sub run {
     # of the other files since we use the compat value when checking
     # for brace expansion.
     if ($compat_file and $compat_file->is_open_ok) {
-        my $compat_file = $compat_file->file_contents;
-        ($compat) = my @lines = split(/\n/, $compat_file);
-        tag 'debhelper-compat-file-contains-multiple-levels' if @lines > 1;
-        strip($compat);
+        my $fd = $compat_file->open;
+        while (<$fd>) {
+            if ($. == 1) {
+                $compat = strip($_);
+            } elsif (m/^\d/) {
+                tag 'debhelper-compat-file-contains-multiple-levels',
+                  "(line $.)";
+            }
+        }
+        close($fd);
         if ($compat ne '') {
             my $compat_value = $compat;
             if ($compat !~ m/^\d+$/) {
