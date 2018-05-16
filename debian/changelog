@@ -27,7 +27,7 @@ lintian (2.5.87) UNRELEASED; urgency=medium
       description of the upstream-metadata-is-not-a-file tag.
 
   * data/files/js-libraries:
-    + [BR] Detect uses of the libjs-normalize.css reset css helper.
+    + [BR] Detect uses of the libjs-normalize.css CSS "style reset" helper.
   * data/files/privacy-breaker-websites:
     + [BR] Detect uses of the "libjs-rx" API for asynchronous programming.
   * data/rules/rules-should-not-use:
