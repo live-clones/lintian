@@ -96,7 +96,7 @@ my $DEPRECATED_DESKTOP_KEYS
 my $KDE_DESKTOP_KEYS = Lintian::Data->new('menu-format/kde-desktop-keys');
 
 # Known types of desktop entries.
-# https://specifications.freedesktop.org/desktop-entry-spec/latest/ar01s05.html
+# https://specifications.freedesktop.org/desktop-entry-spec/latest/ar01s06.html
 my %known_desktop_types = map { $_ => 1 } qw(
   Application
   Link

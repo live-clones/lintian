@@ -22,6 +22,9 @@ lintian (2.5.87) UNRELEASED; urgency=medium
   * checks/files.pm:
     + [BR] Add "umd" as a possible suffix for minified Javascript.
       (alongside "lite", "min", "pack", etc.)
+  * checks/menu-format.{desc,pm}:
+    + [CL] Apply patch from Ross Vandegrift to update specification URIs.
+      (Closes: #899134)
   * checks/upstream-metadata.desc:
     + [CL] Correct a "non-file directory entry" grammatical error in the
       description of the upstream-metadata-is-not-a-file tag.
