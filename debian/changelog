@@ -2,9 +2,10 @@ lintian (2.5.88) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
-  * data/files/generic-header-files:
-    + [CL] Only warn about about (eg.) /usr/include/util.h when checking
-      for overly generic header names.  (Closes: #899192)
+  * checks/files.pm:
+    + [CL] Only warn about (eg.) "/usr/include/util.h" and
+      "/usr/include/<multiarch-dir>/util.h" when checking for overly
+      generic header names.  (Closes: #899192)
 
  -- Chris Lamb <lamby@debian.org>  Sat, 19 May 2018 22:17:31 +0200
 

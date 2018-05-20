@@ -310,6 +310,12 @@ sub run {
     my $multiarch_dir = $MULTIARCH_DIRS->value($arch);
     my $ppkg = quotemeta($pkg);
 
+    my %header_dirs = ('usr/include/' => 1);
+    foreach my $x ($MULTIARCH_DIRS->all) {
+        my $dir = $MULTIARCH_DIRS->value($x);
+        $header_dirs{"usr/include/$dir/"} = 1;
+    }
+
     # get the last changelog timestamp
     # if for some weird reasons the timestamp does
     # not exist, it will remain 0
@@ -602,11 +608,12 @@ sub run {
         # ---------------- /usr
         elsif ($fname =~ m,^usr/,) {
             # ---------------- /usr/include
-            if ($fname =~ m,^usr/include/(.+),) {
-                my $rest = $1;
-                for my $regex ($GENERIC_HEADER_FILES->all) {
-                    tag 'header-has-overly-generic-name', $fname,
-                      if $rest =~ m,$regex,i;
+            if ($fname =~ m,^usr/include/,) {
+                if ($file->is_file and $header_dirs{$file->dirname}) {
+                    for my $regex ($GENERIC_HEADER_FILES->all) {
+                        tag 'header-has-overly-generic-name', $fname,
+                          if $file->basename =~ m,$regex,i;
+                    }
                 }
                 # ---------------- /usr/share/doc
             } elsif ($fname =~ m,^usr/share/doc/\S,) {

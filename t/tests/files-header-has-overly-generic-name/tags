@@ -1,1 +1,2 @@
 E: files-header-has-overly-generic-name: header-has-overly-generic-name usr/include/util.h
+E: files-header-has-overly-generic-name: header-has-overly-generic-name usr/include/x86_64-linux-gnu/util.h
