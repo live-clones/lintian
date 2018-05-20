@@ -2,6 +2,10 @@ lintian (2.5.88) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
+  * checks/elpa.desc:
+    + [CL] Apply patch from Sean Whitton to update references to
+      emacsen-team's website since the move from Alioth to Salsa.
+      Thank!  (Closes: #899214)
   * checks/files.pm:
     + [CL] Only warn about (eg.) "/usr/include/util.h" and
       "/usr/include/<multiarch-dir>/util.h" when checking for overly
