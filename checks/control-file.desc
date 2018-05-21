@@ -385,7 +385,7 @@ Info: This source package does not specify a <tt>XS-Go-Import-Path</tt>
  package to the Debian archive in an easily machine-readable form which
  is then used by tools such as <tt>dh-make-golang(1)</tt> to resolve
  dependencies, avoid accidental duplication in the archive, or in
- https://pkg-go.alioth.debian.org/ci.html.
+ https://go-team.pages.debian.net/ci.html.
  .
  For packages using <tt>dh-golang</tt>, the field should be set to the same
  value as the <tt>DH_GOPKG</tt> variable in <tt>debian/rules</tt>.
@@ -396,5 +396,5 @@ Info: This source package does not specify a <tt>XS-Go-Import-Path</tt>
  not publish the source in a way that is compatible with <tt>go get</tt>
  and hence does not have a canonical import path) it is preferred to
  set a fake import path. Please contact the pkg-go team at
- https://pkg-go.alioth.debian.org/ for more specific advice in this
+ https://go-team.pages.debian.net/ for more specific advice in this
  situation.

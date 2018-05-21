@@ -5,6 +5,8 @@ lintian (2.5.88) UNRELEASED; urgency=medium
   * checks/application-not-library.desc:
     + [CL] Update references to pkg-perl's homepages since the Salsa
       migration.
+  * checks/control-file.desc:
+    + [CL] Update references to Go team's homepages for the Salsa move.
   * checks/elpa.desc:
     + [CL] Apply patch from Sean Whitton to update references to
       emacsen-team's website since the move from Alioth to Salsa.
