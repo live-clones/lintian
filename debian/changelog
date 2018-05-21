@@ -15,6 +15,7 @@ lintian (2.5.88) UNRELEASED; urgency=medium
     + [CL] Only warn about (eg.) "/usr/include/util.h" and
       "/usr/include/<multiarch-dir>/util.h" when checking for overly
       generic header names.  (Closes: #899192)
+
   * data/spelling/corrections:
     + [EB] Add some more corrections.
 
