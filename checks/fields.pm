@@ -920,7 +920,7 @@ sub run {
                     tag 'binary-package-depends-on-toolchain-package',
                       "$field: $part_d_orig"
                       if $KNOWN_TOOLCHAIN->known($d_pkg)
-                      and $is_dep_field
+                      and &$is_dep_field($field)
                       and not $pkg =~ m/^dh-/
                       and not $pkg =~ m/-(source|src)$/
                       and not $DH_ADDONS_VALUES{$pkg};
