@@ -1,3 +1,9 @@
+lintian (2.5.89) UNRELEASED; urgency=medium
+
+  XXX: generate tag summary
+
+ -- Chris Lamb <lamby@debian.org>  Tue, 22 May 2018 11:25:09 +0200
+
 lintian (2.5.88) unstable; urgency=medium
 
   * checks/application-not-library.desc:
