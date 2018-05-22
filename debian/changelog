@@ -1,6 +1,4 @@
-lintian (2.5.88) UNRELEASED; urgency=medium
-
-  XXX: generate tag summary
+lintian (2.5.88) unstable; urgency=medium
 
   * checks/application-not-library.desc:
     + [CL] Update references to pkg-perl's homepages since the Salsa
@@ -21,9 +19,10 @@ lintian (2.5.88) UNRELEASED; urgency=medium
       generic header names.  (Closes: #899192)
 
   * data/spelling/corrections:
+    + [PW] Add a number of corrections.
     + [EB] Add some more corrections.
 
- -- Chris Lamb <lamby@debian.org>  Sat, 19 May 2018 22:17:31 +0200
+ -- Chris Lamb <lamby@debian.org>  Tue, 22 May 2018 08:57:28 +0000
 
 lintian (2.5.87) unstable; urgency=medium
 
