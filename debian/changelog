@@ -2,6 +2,8 @@ lintian (2.5.89) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
+  * checks/cruft.pm:
+    + [BR] Detect minified javascript in html files.
   * checks/files.pm:
     + [BR] Detect privacy breach in html5 files.
 
