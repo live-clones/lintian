@@ -989,6 +989,7 @@ sub full_text_check {
             \%licenseproblemhash
         );
 
+        # check html
         if($ishtml && !$skiphtml) {
             if(
                 _check_html_cruft(
@@ -1019,7 +1020,7 @@ sub _check_html_cruft {
 
     if($blocknumber == 0) {
         if(index($block,'<meta name="generator"') > -1) {
-            if($block =~ m,<meta \s+ name="generator" \s+ content="Doxygen,ismx) {
+            if($block =~ m,<meta \s+ name="generator" \s+ content="doxygen,smx) {
                 tag 'source-contains-prebuilt-doxygen-documentation', $entry;
                 return -1;
             }
@@ -1029,12 +1030,12 @@ sub _check_html_cruft {
     while(($indexscript = index($blockscript, '<script')) > -1) {
         $blockscript = substr($blockscript,$indexscript);
         # sourced script ok
-        if($blockscript =~  m,\A<script\s+[^>]*src="[^"]+?"[^>]*>,ism) {
+        if($blockscript =~  m,\A<script\s+[^>]*?src="[^"]+?"[^>]*?>,sm) {
             $blockscript = substr($blockscript,$+[0]);
             next;
         }
         # extract script
-        if($blockscript =~ m,<script[^>]*>(.*?)<script>,ism) {
+        if($blockscript =~ m,<script[^>]*?>(.*?)<script\s*/>,sm) {
             $blockscript = substr($blockscript,$+[0]);
             if(_linelength_test($entry,$info,$name,$basename,$dirname,$1)) {
                 return 0;
@@ -1042,10 +1043,9 @@ sub _check_html_cruft {
             next;
         }
         # here we know that we have partial script. Do the check nevertheless
-        if($blockscript =~ m,<script\s+[^>]*>(.*?)(?!<script\s*/>)\Z,ism) {
-            _linelength_test($entry,$info,$name,$basename,$dirname,$1);
-            return 0;
-        }
+        $blockscript =~ s,<script[^>]*?>,,sm;
+        _linelength_test($entry,$info,$name,$basename,$dirname,$blockscript);
+        return 0;
     }
     return 1;
 }
