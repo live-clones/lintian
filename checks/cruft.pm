@@ -946,6 +946,7 @@ sub full_text_check {
     }
 
     my $ishtml = ($basename =~ m,\.(?:x?html?\d?|xht)$,i);
+    my $skiphtml = 0;
 
     # some js file comments are really really long
     my $sfd= Lintian::SlidingWindow->new($fd, \&lc_block, BLOCKSIZE);
@@ -972,7 +973,7 @@ sub full_text_check {
                 \%matchedkeyword,\%licenseproblemhash
             )
           ){
-            return;
+            last BLOCK;
         }
 
         # Skip the rest of the license checks for non-free
@@ -988,9 +989,15 @@ sub full_text_check {
             \%licenseproblemhash
         );
 
-        if($ishtml) {
-            _check_html_cruft($entry, $info, $source_pkg,$name,$basename,
-                $dirname,$block,$blocknumber);
+        if($ishtml && !$skiphtml) {
+            if(
+                _check_html_cruft(
+                    $entry, $info, $source_pkg,$name,
+                    $basename,$dirname,$block,$blocknumber
+                ) < 0
+              ) {
+                $skiphtml = 1;
+            }
         }
         # check only in block 0
         if($blocknumber == 0) {
@@ -1010,6 +1017,15 @@ sub _check_html_cruft {
     my $blockscript = $block;
     my $indexscript;
 
+    if($blocknumber == 0) {
+        if(index($block,'<meta name="generator"') > -1) {
+            if($block =~ m,<meta \s+ name="generator" \s+ content="Doxygen,ismx) {
+                tag 'source-contains-prebuilt-doxygen-documentation', $entry;
+                return -1;
+            }
+        }
+    }
+
     while(($indexscript = index($blockscript, '<script')) > -1) {
         $blockscript = substr($blockscript,$indexscript);
         # sourced script ok
@@ -1021,16 +1037,17 @@ sub _check_html_cruft {
         if($blockscript =~ m,<script[^>]*>(.*?)<script>,ism) {
             $blockscript = substr($blockscript,$+[0]);
             if(_linelength_test($entry,$info,$name,$basename,$dirname,$1)) {
-                return;
+                return 0;
             }
             next;
         }
         # here we know that we have partial script. Do the check nevertheless
         if($blockscript =~ m,<script\s+[^>]*>(.*?)(?!<script\s*/>)\Z,ism) {
             _linelength_test($entry,$info,$name,$basename,$dirname,$1);
-            return;
+            return 0;
         }
     }
+    return 1;
 }
 
 # check if file is javascript but not minified

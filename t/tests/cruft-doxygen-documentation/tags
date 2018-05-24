@@ -1,2 +1,4 @@
 P: cruft-doxygen-documentation source: source-contains-prebuilt-doxygen-documentation src/doc/html/
+P: cruft-doxygen-documentation source: source-contains-prebuilt-doxygen-documentation src/doc/html/files.html
+P: cruft-doxygen-documentation source: source-contains-prebuilt-doxygen-documentation src/doc/html/index.html
 P: cruft-doxygen-documentation source: source-contains-prebuilt-doxygen-documentation src/doc/latex/
