@@ -1535,7 +1535,7 @@ sub run {
             }
 
             # ---------------- html/javascript
-            if ($fname =~ m,\.(?:x?html?|js|xht|xml|css)$,i) {
+            if ($fname =~ m,\.(?:x?html?\d?|js|xht|xml|css)$,i) {
                 if(     $source_pkg eq 'josm'
                     and $file->basename eq 'defaultpresets.xml') {
                     # false positive
