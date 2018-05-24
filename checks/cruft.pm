@@ -1168,7 +1168,7 @@ sub _linelength_test {
         if($linelength) {
             _warn_prebuilt_javascript($entry, $info, $name, $basename,
                 $dirname,$linelength,INSANE_LINE_LENGTH);
-            return;
+            return 1;
         }
     }
     # Now try to be more clever and work only on the 8192 character
@@ -1188,16 +1188,16 @@ sub _linelength_test {
           = _linelength_test_maxlength($nextblock,SAFE_LINE_LENGTH);
         # no long line
         unless($linelength) {
-            return;
+            return 0;
         }
         # compute number of ;
         if(($line =~ tr/;/;/) > 1) {
             _warn_prebuilt_javascript($entry, $info, $name, $basename,
                 $dirname,$linelength,SAFE_LINE_LENGTH);
-            return;
+            return 1;
         }
     }
-    return;
+    return 0;
 }
 
 sub _tag_gfdl {
