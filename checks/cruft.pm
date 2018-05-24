@@ -1013,7 +1013,7 @@ sub _check_html_cruft {
     while(($indexscript = index($blockscript, '<script')) > -1) {
         $blockscript = substr($blockscript,$indexscript);
         # sourced script ok
-        if($blockscript =~  m,\A<script\s+[^>]*src="[^"]+"[^>]*>,ism) {
+        if($blockscript =~  m,\A<script\s+[^>]*src="[^"]+?"[^>]*>,ism) {
             $blockscript = substr($blockscript,$+[0]);
             next;
         }
