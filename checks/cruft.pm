@@ -1035,7 +1035,7 @@ sub _check_html_cruft {
             next;
         }
         # extract script
-        if($blockscript =~ m,<script[^>]*?>(.*?)<script\s*/>,sm) {
+        if($blockscript =~ m,<script[^>]*?>(.*?)</script>,sm) {
             $blockscript = substr($blockscript,$+[0]);
             if(_linelength_test($entry,$info,$name,$basename,$dirname,$1)) {
                 return 0;
@@ -1043,8 +1043,13 @@ sub _check_html_cruft {
             next;
         }
         # here we know that we have partial script. Do the check nevertheless
-        $blockscript =~ s,<script[^>]*?>,,sm;
-        _linelength_test($entry,$info,$name,$basename,$dirname,$blockscript);
+        # first check if we have the full <script> tag and do the check
+        # if we get <script src="  "
+        # then skip
+        if($blockscript =~ m,\A<script[^>]*?>,sm) {
+            $blockscript = substr($blockscript,$+[0]);
+            _linelength_test($entry,$info,$name,$basename,$dirname,$blockscript);
+        }
         return 0;
     }
     return 1;

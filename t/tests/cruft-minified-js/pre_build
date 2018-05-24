@@ -45,7 +45,7 @@ cat > $srcdir/src/js/foo.html <<EOF
 EOF
 cat "$uglyjson" >> $srcdir/src/js/foo.html
 cat >> $srcdir/src/js/foo.html <<EOF
-<script/>
+</script>
 </head>
 </html>
 EOF
