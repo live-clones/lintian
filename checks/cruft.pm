@@ -945,6 +945,8 @@ sub full_text_check {
         return;
     }
 
+    my $ishtml = ($basename =~ m,\.(?:x?html?\d?|xht)$,i);
+
     # some js file comments are really really long
     my $sfd= Lintian::SlidingWindow->new($fd, \&lc_block, BLOCKSIZE);
     my %licenseproblemhash;
@@ -986,6 +988,10 @@ sub full_text_check {
             \%licenseproblemhash
         );
 
+        if($ishtml) {
+            _check_html_cruft($entry, $info, $source_pkg,$name,$basename,
+                $dirname,$block,$blocknumber);
+        }
         # check only in block 0
         if($blocknumber == 0) {
             _search_in_block0($entry, $info, $name, $basename, $dirname,
@@ -994,6 +1000,37 @@ sub full_text_check {
     }
     close($fd);
     return;
+}
+
+# check javascript in html file
+sub _check_html_cruft {
+    my ($entry, $info, $source_pkg,$name,$basename,$dirname,$block,
+        $blocknumber)=@_;
+
+    my $blockscript = $block;
+    my $indexscript;
+
+    while(($indexscript = index($blockscript, '<script')) > -1) {
+        $blockscript = substr($blockscript,$indexscript);
+        # sourced script ok
+        if($blockscript =~  m,\A<script\s+[^>]*src="[^"]+"[^>]*>,ism) {
+            $blockscript = substr($blockscript,$+[0]);
+            next;
+        }
+        # extract script
+        if($blockscript =~ m,<script[^>]*>(.*?)<script>,ism) {
+            $blockscript = substr($blockscript,$+[0]);
+            if(_linelength_test($entry,$info,$name,$basename,$dirname,$1)) {
+                return;
+            }
+            next;
+        }
+        # here we know that we have partial script. Do the check nevertheless
+        if($blockscript =~ m,<script\s+[^>]*>(.*?)(?!<script\s*/>)\Z,ism) {
+            _linelength_test($entry,$info,$name,$basename,$dirname,$1);
+            return;
+        }
+    }
 }
 
 # check if file is javascript but not minified
@@ -1083,13 +1120,12 @@ sub _warn_prebuilt_javascript{
     # for the source file in well known directories
     if($basename =~ m,\.js$,i) {
         check_missing_source($entry,$info,$name,$basename,$dirname,
-                             [['(?i)\.js$','.debug.js'],['(?i)\.js$','-debug.js'],['','']],
-                             $extratext);
+            [['(?i)\.js$','.debug.js'],['(?i)\.js$','-debug.js'],['','']],
+            $extratext);
     } else  {
         # html file
         check_missing_source($entry,$info,$name,$basename,$dirname,
-                             [['$','.fragment.js']],
-                             $extratext);
+            [['$','.fragment.js']],$extratext);
     }
     return;
 }

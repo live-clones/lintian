@@ -37,3 +37,15 @@ cp "$json" "$jsdir/sourced_variant/sourced_orig.js"
 # sourced in parent's parent
 cp "$uglyjson" "$srcdir/build/js/foo.min.js"
 cp "$json" "$srcdir/src/js/foo.js"
+
+cat > $srcdir/src/js/foo.html <<EOF
+<html>
+<head>
+<script>
+EOF
+cat "$uglyjson" >> $srcdir/src/js/foo.html
+cat >> $srcdir/src/js/foo.html <<EOF
+<script>
+</head>
+</html>
+EOF
