@@ -1081,9 +1081,16 @@ sub _warn_prebuilt_javascript{
     tag 'source-contains-prebuilt-javascript-object',$name,$extratext;
     # Check for missing source.  It will check
     # for the source file in well known directories
-    check_missing_source($entry,$info,$name,$basename,$dirname,
-        [['(?i)\.js$','.debug.js'],['(?i)\.js$','-debug.js'],['','']],
-        $extratext);
+    if($basename =~ m,\.js$,i) {
+        check_missing_source($entry,$info,$name,$basename,$dirname,
+                             [['(?i)\.js$','.debug.js'],['(?i)\.js$','-debug.js'],['','']],
+                             $extratext);
+    } else  {
+        # html file
+        check_missing_source($entry,$info,$name,$basename,$dirname,
+                             [['$','.fragment.js']],
+                             $extratext);
+    }
     return;
 }
 
