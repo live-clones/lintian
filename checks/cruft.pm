@@ -177,6 +177,14 @@ sub _minified_javascript_name_regexp {
       : qr/(?i)[-._](?:min|pack(?:ed)?)\.js$/;
 }
 
+# get browserified regexp
+my $BROWSERIFY_REGEX =  Lintian::Data->new(
+    'cruft/browserify-regex',
+    qr/\s*\~\~\s*/,
+    sub {
+        return qr/$_[1]/xms;
+    });
+
 sub _get_license_check_file {
     my ($filename) = @_;
     my $data = Lintian::Data->new(
@@ -1190,6 +1198,20 @@ sub _strip_c_comments {
     return $block;
 }
 
+# detect browserified javascript (comment are removed here and code is stripped)
+sub _detect_browserify {
+    my ($entry, $info, $name, $basename, $dirname, $block) = @_;
+    $block =~ s,\n, ,msg;
+    foreach my $browserifyregex ($BROWSERIFY_REGEX->all) {
+        my $regex = $BROWSERIFY_REGEX->value($browserifyregex);
+        if($block =~ m{$regex}) {
+            my $extra = (defined $1) ? 'code fragment:'.$1 : '';
+            tag 'source-contains-browserified-javascript', $name, $extra;
+            last
+        }
+    }
+}
+
 # try to detect non human source based on line length
 sub _linelength_test {
     my ($entry, $info, $name, $basename, $dirname, $block) = @_;
@@ -1222,6 +1244,9 @@ sub _linelength_test {
         # remove last \n
         $block =~ s/\n\Z//m;
 
+        # detect browserification
+        _detect_browserify($entry, $info, $name, $basename, $dirname, $block);
+
         # retry insane line length test now: if insane length likely minified
         ($linelength)= _linelength_test_maxlength($block,INSANE_LINE_LENGTH);
 
@@ -1242,6 +1267,10 @@ sub _linelength_test {
     # remove last \n
     $strip =~ s/\n\Z//m;
     $nextblock = $strip;
+
+    # detect browserified
+    _detect_browserify($entry, $info, $name, $basename, $dirname, $nextblock);
+
     while(length($nextblock)) {
         # check line above > SAFE_LINE_LENGTH
         ($linelength,$line,$nextblock)

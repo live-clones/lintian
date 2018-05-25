@@ -7,6 +7,7 @@ Architecture: any
 Test-For:
  insane-line-length-in-source-file
  source-contains-prebuilt-javascript-object
+ source-contains-browserified-javascript
  source-contains-prebuilt-pandoc-documentation
  source-is-missing
 
