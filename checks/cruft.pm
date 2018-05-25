@@ -1210,6 +1210,7 @@ sub _detect_browserify {
             last
         }
     }
+    return;
 }
 
 # try to detect non human source based on line length
