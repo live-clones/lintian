@@ -1020,7 +1020,8 @@ sub _check_html_cruft {
 
     if($blocknumber == 0) {
         if(index($block,'<meta name="generator"') > -1) {
-            if($block =~ m,<meta \s+ name="generator" \s+ content="doxygen,smx) {
+            if($block =~ m,<meta \s+ name="generator" \s+ content="doxygen,smx)
+            {
                 tag 'source-contains-prebuilt-doxygen-documentation', $entry;
                 return -1;
             }
@@ -1048,7 +1049,8 @@ sub _check_html_cruft {
         # then skip
         if($blockscript =~ m,\A<script[^>]*?>,sm) {
             $blockscript = substr($blockscript,$+[0]);
-            _linelength_test($entry,$info,$name,$basename,$dirname,$blockscript);
+            _linelength_test($entry,$info,$name,$basename,$dirname,
+                $blockscript);
         }
         return 0;
     }
