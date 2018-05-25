@@ -1,2 +1,3 @@
 # detect browserify stuff name ~~ lower case regex (?x) modifier first capture group is displayed
 browserify-lite ~~ ([(] \s* function \s* [(] \s* modules \s* , \s* cache \s* , \s* entry \s* [)] \s* \{ .{0,30})
+webpack         ~~ ([(] \s* function \s* webpackuniversalmoduledefinition \s* [(] \s* root \s* , \s* factory [)] .{0,30})
