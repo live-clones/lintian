@@ -17,7 +17,8 @@ foo override_dh_installdebs bar override_dh_installxmlcatalog: # combining regul
 # Don't worry about anything beyond a colon even if wrong; it will fail anyway.
 override_dh_testdirs: override_dh_ucfs
 
-# Specifically check for missing "auto"; is usually too "distant" to match.
+# Specifically check for missing "auto" ("dh_override_auto_build" has a
+# distance of "5" to "dh_override_build")
 override_dh_build:
 
 # Good
