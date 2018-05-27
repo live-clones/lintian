@@ -196,15 +196,16 @@ sub run {
             my $targets = $1;
             $needbuilddepends = 1;
             # Can be multiple targets per rule.
-            while ($targets =~ /\boverride_(dh_[^\s]+)/g) {
-                my $dhcommand = $1;
+            while ($targets =~ /\boverride_dh_([^\s]+)/g) {
+                my $cmd = $1;
+                my $dhcommand = "dh_$cmd";
                 $overrides{$dhcommand} = $.;
                 # If maintainer is using wildcards, it's unlikely to be a typo.
                 next if ($dhcommand =~ /%/);
                 next if ($dh_commands_depends->known($dhcommand));
                 # Unknown command, so check for likely misspellings
                 foreach my $x (sort $dh_commands_depends->all) {
-                    if (distance($dhcommand, $x) < 3) {
+                    if ("dh_auto_$cmd" eq $x or distance($dhcommand, $x) < 3) {
                         tag 'typo-in-debhelper-override-target',
                           "override_$dhcommand", '->', "override_$x",
                           "(line $.)";
