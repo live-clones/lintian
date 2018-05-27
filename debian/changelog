@@ -11,6 +11,10 @@ lintian (2.5.89) UNRELEASED; urgency=medium
   * data/obsolete-sites/obsolete-sites:
     + [PW] Add search.cpan.org
 
+  * vendors/pureos/main/data/fields/derivative-fields:
+    + [CL] Update the Vcs-* checks for PureOS now that code has moved to a
+      GitLab instance.
+
  -- Chris Lamb <lamby@debian.org>  Tue, 22 May 2018 11:25:09 +0200
 
 lintian (2.5.88) unstable; urgency=medium
