@@ -3,13 +3,14 @@ lintian (2.5.89) UNRELEASED; urgency=medium
   XXX: generate tag summary
 
   * checks/cruft.pm:
-    + [BR] Detects minified javascript in html files.
-    + [BR] Detects browserified javascript.
+    + [BR] Detect minified Javascript in HTML files.
+    + [BR] Detect browserified Javascript.
   * checks/files.pm:
-    + [BR] Detect privacy breach in html5 files.
+    + [BR] Detect privacy breaches in HTML5 files.
 
   * data/obsolete-sites/obsolete-sites:
-    + [PW] Add search.cpan.org
+    + [PW] Add search.cpan.org to the list of obsolete sites; it has been
+      replaced by metacpan.org.
 
   * vendors/pureos/main/data/fields/derivative-fields:
     + [CL] Update the Vcs-* checks for PureOS now that code has moved to a
