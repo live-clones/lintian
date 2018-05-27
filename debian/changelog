@@ -7,6 +7,10 @@ lintian (2.5.89) UNRELEASED; urgency=medium
     + [BR] Detect browserified Javascript.
   * checks/files.pm:
     + [BR] Detect privacy breaches in HTML5 files.
+  * checks/group-checks.pm:
+    + [CL] Prevent false-positives when checking debug-package-for-multi-
+      arch-same-pkg-not-coinstallable by ignoring Python "debug" packages.
+      (Closes: #900122)
 
   * data/obsolete-sites/obsolete-sites:
     + [PW] Add search.cpan.org to the list of obsolete sites; it has been

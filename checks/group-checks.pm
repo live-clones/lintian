@@ -23,9 +23,14 @@ use strict;
 use warnings;
 use autodie;
 
+use List::MoreUtils qw(any);
+
 use Lintian::Data;
 use Lintian::Relation;
 use Lintian::Tags qw(tag);
+
+my $KNOWN_DBG_PACKAGE = Lintian::Data->new('common/dbg-pkg',qr/\s*\~\~\s*/,
+    sub { return qr/$_[0]/xms; });
 
 sub run {
 
@@ -150,7 +155,9 @@ sub _check_multiarch {
                 # possible to install debug symbols for all
                 # (architecture) variants of the binaries.
                 tag 'debug-package-for-multi-arch-same-pkg-not-coinstallable',
-                  $proc->pkg_name . ' => ' . $dep->pkg_name;
+                  $proc->pkg_name . ' => ' . $dep->pkg_name
+                  unless any { $proc->pkg_name =~ m/$_/xms }
+                $KNOWN_DBG_PACKAGE->all;
             }
         }
     }
