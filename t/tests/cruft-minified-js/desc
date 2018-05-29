@@ -10,4 +10,4 @@ Test-For:
  source-contains-browserified-javascript
  source-contains-prebuilt-pandoc-documentation
  source-is-missing
-
+ embedded-script-includes-copyright-statement

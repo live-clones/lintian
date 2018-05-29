@@ -42,6 +42,7 @@ cat > $srcdir/src/js/foo.html <<EOF
 <html>
 <head>
 <script>
+// Copyright someone
 EOF
 cat "$uglyjson" >> $srcdir/src/js/foo.html
 cat >> $srcdir/src/js/foo.html <<EOF

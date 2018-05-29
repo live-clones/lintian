@@ -5,6 +5,7 @@ lintian (2.5.89) UNRELEASED; urgency=medium
   * checks/cruft.pm:
     + [BR] Detect minified Javascript in HTML files.
     + [BR] Detect browserified Javascript.
+    + [BR] Detect scripts in HTML files that include copyright statements.
   * checks/debhelper.pm:
     + [CL] Specifically check for missing "auto" in (for example)
       "override_dh_build".  Thanks to Mattia Rizzolo for the idea.

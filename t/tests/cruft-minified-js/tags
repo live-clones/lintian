@@ -2,6 +2,7 @@ E: cruft-minified-js source: source-is-missing deployJava/deployJava.js
 E: cruft-minified-js source: source-is-missing src/js/foo.html line length is NUMBER characters (>CUTOFF)
 E: cruft-minified-js source: source-is-missing usr/share/javascript/jswithoutminextwithoutsource/jsonnotsourced.js line length is NUMBER characters (>CUTOFF)
 E: cruft-minified-js source: source-is-missing usr/share/javascript/minwithoutsource/notsourced.min.js
+P: cruft-minified-js source: embedded-script-includes-copyright-statement src/js/foo.html extract of copyright statement: COPYRIGHT
 P: cruft-minified-js source: insane-line-length-in-source-file oldfalsepositives/jslint.js line length is NUMBER characters (>CUTOFF)
 P: cruft-minified-js source: insane-line-length-in-source-file oldfalsepositives/longlicensetext.js line length is NUMBER characters (>CUTOFF)
 P: cruft-minified-js source: insane-line-length-in-source-file src/js/foo.html line length is NUMBER characters (>CUTOFF)

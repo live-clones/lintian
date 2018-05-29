@@ -454,6 +454,16 @@ Info: The source tarball contains a prebuilt (minified) JavaScript object.
  cleaning the source directory first.  You may want to report this as
  an upstream bug, in case there is no sign that this was intended.
 
+Tag: embedded-script-includes-copyright-statement
+Severity: pedantic
+Certainty: possible
+Info: A script in this file includes a copyright statement.
+ The script was likely copied pasted and likely need to be rebuilt
+ from source
+ .
+ This script may be also outdated and may need from a security point of
+ view need to be updated.
+
 Tag: source-contains-prebuilt-ms-help-file
 Severity: serious
 Certainty: possible

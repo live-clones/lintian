@@ -5,7 +5,7 @@
 # Copyright (C) 2000 Sean 'Shaleh' Perry
 # Copyright (C) 2002 Josip Rodin
 # Copyright (C) 2007 Russ Allbery
-# Copyright (C) 2013-2014 Bastien ROUCARIÈS
+# Copyright (C) 2013-2018 Bastien ROUCARIÈS
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -1046,7 +1046,7 @@ sub _check_html_cruft {
         # extract script
         if($blockscript =~ m,<script[^>]*?>(.*?)</script>,sm) {
             $blockscript = substr($blockscript,$+[0]);
-            if(_linelength_test($entry,$info,$name,$basename,$dirname,$1)) {
+            if(_check_js_script($entry,$info,$name,$basename,$dirname,$1)) {
                 return 0;
             }
             next;
@@ -1057,12 +1057,33 @@ sub _check_html_cruft {
         # then skip
         if($blockscript =~ m,\A<script[^>]*?>,sm) {
             $blockscript = substr($blockscript,$+[0]);
-            _linelength_test($entry,$info,$name,$basename,$dirname,
+            _check_js_script($entry,$info,$name,$basename,$dirname,
                 $blockscript);
         }
         return 0;
     }
     return 1;
+}
+
+# check if js script is minified
+sub _check_js_script {
+    my ($entry, $info, $name,$basename,$dirname,$lcscript) = @_;
+    my $firstline = '';
+    use Data::Dumper;
+    foreach (split /\n/, $lcscript) {
+        if ($_ =~ m/^\s*$/) {
+            next
+        }else {
+            $firstline=$_;
+            last;
+        }
+    }
+    if ($firstline =~ m/((?:\bcopyright\b|[\(]c[\)]|©).{0,30})/) {
+        tag 'embedded-script-includes-copyright-statement', $name,
+          'extract of copyright statement:',
+          $1;
+    }
+    return _linelength_test($entry,$info,$name,$basename,$dirname,$lcscript);
 }
 
 # check if file is javascript but not minified
