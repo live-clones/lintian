@@ -1069,7 +1069,6 @@ sub _check_html_cruft {
 sub _check_js_script {
     my ($entry, $info, $name,$basename,$dirname,$lcscript) = @_;
     my $firstline = '';
-    use Data::Dumper;
     foreach (split /\n/, $lcscript) {
         if ($_ =~ m/^\s*$/) {
             next
