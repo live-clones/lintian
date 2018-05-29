@@ -7,7 +7,7 @@ Info: This script checks the upstream/metadata file for problems.
 Tag: upstream-metadata-is-not-a-file
 Severity: normal
 Certainty: certain
-Ref: http://dep.debian.net/deps/dep12/
+Ref: https://dep-team.pages.debian.net/deps/dep12/
 Info: The DEP 12 metadata file in the source is not readable.  This
  could be caused by a dangling symlink, or that the name is used
  by some non-file directory entry.
@@ -15,7 +15,7 @@ Info: The DEP 12 metadata file in the source is not readable.  This
 Tag: upstream-metadata-yaml-invalid
 Severity: normal
 Certainty: certain
-Ref: http://dep.debian.net/deps/dep12/
+Ref: https://dep-team.pages.debian.net/deps/dep12/
 Info: The DEP 12 metadata file is not well formed.  The formatting
  need to be adjusted to match the YAML specification.
 
@@ -23,7 +23,7 @@ Tag: upstream-metadata-file-is-missing
 Severity: pedantic
 Certainty: certain
 Experimental: yes
-Ref: http://dep.debian.net/deps/dep12/, https://wiki.debian.org/UpstreamMetadata
+Ref: https://dep-team.pages.debian.net/deps/dep12/, https://wiki.debian.org/UpstreamMetadata
 Info: This source package is not Debian-native but it does not have a
  <tt>debian/upstream/metadata</tt> file.
  . 

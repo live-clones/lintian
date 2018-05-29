@@ -108,7 +108,7 @@ sub _find_dep5_version {
           and $version = "$version~$1";
         return $version;
     }
-    if ($uri =~ m,^https?://dep\.debian\.net/deps/dep5/?$,) {
+    if ($uri =~ m,^https?://dep(-team\.pages)?\.debian\.net/deps/dep5/?$,) {
         $version = '0+svn';
         return $version;
     }
