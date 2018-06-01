@@ -1539,7 +1539,8 @@ sub _clean_block {
     # breaks
     $text =~ s{</?citetitle[^>]*?>}{ }gxms;   # DocBook citation title
     $text =~ s{</?div[^>]*?>}{ }gxms;         # html style
-    $text =~ s{</?font[^>]*?>}{ }gxms;        # font
+    $text =~ s{</?font[^>]*?>}{ }gxms;        # bold
+    $text =~ s{</?b[^>]*?>}{ }gxms;           # italic
     $text =~ s{</?i[^>]*?>}{ }gxms;           # italic
     $text =~ s{</?link[^>]*?>}{ }gxms;        # xml link
     $text =~ s{</?p[^>]*?>}{ }gxms;           # html paragraph
