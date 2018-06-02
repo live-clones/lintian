@@ -1077,10 +1077,12 @@ sub _check_js_script {
             last;
         }
     }
-    if ($firstline =~ m/((?:\bcopyright\b|[\(]c[\)]|©).{0,30})/) {
+    if ($firstline =~ m/.{0,20}((?:\bcopyright\b|[\(]c[\)]\s*\w|©).{0,50})/) {
+        my $extract = $1;
+        $extract =~ s/^\s+|\s+$//g;
         tag 'embedded-script-includes-copyright-statement', $name,
           'extract of copyright statement:',
-          $1;
+          $extract;
     }
     return _linelength_test($entry,$info,$name,$basename,$dirname,$lcscript);
 }
