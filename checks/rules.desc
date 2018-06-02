@@ -340,7 +340,6 @@ Info: The debian/rules file appears to be an unmodified or insufficiently
 Tag: override_dh_auto_test-does-not-check-DEB_BUILD_OPTIONS
 Severity: wishlist
 Certainty: wild-guess
-Experimental: yes
 Info: The <tt>debian/rules</tt> file for this package has an
  <tt>override_dh_auto_test</tt> target that does not appear to
  check <tt>DEB_BUILD_OPTIONS</tt> against <tt>nocheck</tt>.
