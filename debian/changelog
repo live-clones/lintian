@@ -5,6 +5,10 @@ lintian (2.5.90) UNRELEASED; urgency=medium
   * checks/cruft.pm:
     + [BR] Remove bold tag in license checking.
 
+  * data/files/js-libraries:
+    + [BR] Detect libjs-jquery-ui, a set of user interface interactions,
+      effects, widgets, and themes built on top of the jQuery
+      JavaScript Library.
   * data/spelling/corrections-multiword:
     + [CL] Drop "some system" from the list of multiword spelling
       corrections.  (Closes: #900670)

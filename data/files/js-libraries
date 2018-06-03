@@ -36,6 +36,7 @@ libjs-jquery-opacityrollover ~~ (?i)/jquery\.opacityrollover$EXT
 libjs-jquery-tablesorter     ~~ (?i)/jquery\.tablesorter$EXT
 libjs-jquery-tipsy           ~~ (?i)/jquery\.tipsy$EXT
 libjs-jquery-treetable       ~~ (?i)/jquery\.treetable$EXT
+libjs-jquery-ui              ~~ (?i)/jquery[\.-](?:-[\d\.]+)?ui(?:\.structure)?$EXT
 libjs-mochikit               ~~ (?i)/mochikit$EXT
 libjs-mootools               ~~ (?i)/mootools(?:(?:\.v|-)[\d\.]+)?(?:-(?:(?:core(?:-server)?)|more)(?:-(?:yc|jm|nc))?)?$EXT
 libjs-mustache               ~~ (?i)/mustache$EXT

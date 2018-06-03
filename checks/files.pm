@@ -164,7 +164,7 @@ sub _load_file_package_list_mapping {
 }
 
 my $JS_EXT
-  = '(?:(?i)[-._]?(?:compiled|lite|min|pack(?:ed)?|prod|umd|yc)?\.js(?:\.gz)?)$';
+  = '(?:(?i)[-._]?(?:compiled|lite|min|pack(?:ed)?|prod|umd|yc)?\.(js|css)(?:\.gz)?)$';
 my $PHP_EXT = '(?i)\.(?:php|inc|dtd)$';
 my @FILE_PACKAGE_MAPPING = (
     _load_file_package_list_mapping(
