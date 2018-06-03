@@ -5,6 +5,10 @@ lintian (2.5.90) UNRELEASED; urgency=medium
   * checks/cruft.pm:
     + [BR] Remove bold tag in license checking.
 
+  * data/spelling/corrections-multiword:
+    + [CL] Drop "some system" from the list of multiword spelling
+      corrections.  (Closes: #900670)
+
  -- Chris Lamb <lamby@debian.org>  Fri, 01 Jun 2018 14:59:51 +0100
 
 lintian (2.5.89) unstable; urgency=medium
