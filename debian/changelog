@@ -4,6 +4,10 @@ lintian (2.5.90) UNRELEASED; urgency=medium
 
   * checks/cruft.pm:
     + [BR] Remove bold tag in license checking.
+  * checks/version-substvars.pm:
+    + [CL] Fix a false-positives in version-substvar-for-external-package
+      when the "external" package is actually a "Provides" in the current
+      source package.  (Closes: #833608)
 
   * data/files/js-libraries:
     + [BR] Detect libjs-jquery-ui, a set of user interface interactions,

@@ -39,6 +39,8 @@ use strict;
 use warnings;
 use autodie;
 
+use List::MoreUtils qw(any);
+
 use Lintian::Relation qw(:constants);
 use Lintian::Tags qw(tag);
 use Lintian::Util qw($PKGNAME_REGEX);
@@ -49,6 +51,7 @@ sub run {
 
     my @dep_fields
       = qw(depends pre-depends recommends suggests conflicts replaces);
+    my @provided = map { $info->binary_field($_, 'provides', '') } $info->binaries;
 
     foreach my $pkg1 ($info->binaries) {
         my ($pkg1_is_any, $pkg2, $pkg2_is_any, $substvar_strips_binNMU);
@@ -78,6 +81,7 @@ sub run {
                     tag 'version-substvar-for-external-package',
                       "$pkg1 -> $other"
                       unless $info->binary_field($other, 'architecture')
+                      or grep { $other eq $_ } @provided
                       or $other =~ /\$\{\S+\}/;
                 }
             };
