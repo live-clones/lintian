@@ -3,7 +3,7 @@ lintian (2.5.90) UNRELEASED; urgency=medium
   XXX: generate tag summary
 
   * checks/cruft.pm:
-    + [BR] Remove bold tag in license checking
+    + [BR] Remove bold tag in license checking.
 
  -- Chris Lamb <lamby@debian.org>  Fri, 01 Jun 2018 14:59:51 +0100
 
