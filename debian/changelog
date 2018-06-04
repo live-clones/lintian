@@ -3,18 +3,18 @@ lintian (2.5.90) UNRELEASED; urgency=medium
   XXX: generate tag summary
 
   * checks/cruft.pm:
-    + [BR] Remove bold tag in license checking.
+    + [BR] Ignore HTML bold tags (eg. <b>) during license checking.
   * checks/version-substvars.pm:
     + [CL] Fix a false-positives in version-substvar-for-external-package
       when the "external" package is actually a "Provides" in the current
       source package.  (Closes: #833608)
 
   * data/fields/obsolete-packages:
-    + [BR] Detect obsolete adobe flash packages
+    + [BR] Detect obsolete Adobe Flash packages.
   * data/files/js-libraries:
     + [BR] Detect libjs-jquery-ui, a set of user interface interactions,
-      effects, widgets, and themes built on top of the jQuery
-      JavaScript Library.
+      effects, widgets, and themes built on top of the jQuery Javascript
+      library.
   * data/spelling/corrections-multiword:
     + [CL] Drop "some system" from the list of multiword spelling
       corrections.  (Closes: #900670)

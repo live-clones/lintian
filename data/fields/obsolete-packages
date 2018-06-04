@@ -117,6 +117,6 @@ libmysqlclient-dev => default-libmysqlclient-dev
 # Deprecated in Stretch (#872076)
 dh-systemd => use debhelper (>= 9.20160709)
 
-# no adobe flash please
+# Adobe Flash
 mtasc
 libjs-swfobject
