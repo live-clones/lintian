@@ -19,6 +19,10 @@ lintian (2.5.90) UNRELEASED; urgency=medium
     + [CL] Drop "some system" from the list of multiword spelling
       corrections.  (Closes: #900670)
 
+  * vendors/pureos/main/data/fields/derivative-fields:
+    + [CL] Update the Vcs-* checks for PureOS now that repo structure has
+      introduced sub-groups.
+
  -- Chris Lamb <lamby@debian.org>  Fri, 01 Jun 2018 14:59:51 +0100
 
 lintian (2.5.89) unstable; urgency=medium

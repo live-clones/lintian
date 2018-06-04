@@ -4,5 +4,5 @@ xsbc-original-maintainer	~~	.							~~ must be set to original Maintainer field
 vcs-cvs				~~	^-$							~~ field must be empty
 vcs-hg				~~	^-$							~~ field must be empty
 vcs-svn				~~	^-$							~~ field must be empty
-vcs-git				~~	^https://source.puri.sm/pureos/.+\.git$			~~ must point to source.puri.sm
-vcs-browser			~~	^https://source.puri.sm/pureos/.+(?!\.git)$		~~ must point to source.puri.sm
+vcs-git				~~	^https://source.puri.sm/pureos/([^/]+)/([^/]+)+\.git$	~~ must point to https://source.puri.sm/pureos/group/pkg.git
+vcs-browser			~~	^https://source.puri.sm/pureos/([^/]+)/([^/]+)$		~~ must point to https://source.puri.sm/pureos/group/pkg
