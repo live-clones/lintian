@@ -82,7 +82,7 @@ sub run {
                     tag 'version-substvar-for-external-package',
                       "$pkg1 -> $other"
                       unless $info->binary_field($other, 'architecture')
-                      or grep { $other eq $_ } @provided
+                      or any { $other eq $_ } @provided
                       or $other =~ /\$\{\S+\}/;
                 }
             };
