@@ -9,6 +9,8 @@ lintian (2.5.90) UNRELEASED; urgency=medium
       when the "external" package is actually a "Provides" in the current
       source package.  (Closes: #833608)
 
+  * data/fields/obsolete-packages
+    + [BR] Detect obsolete adobe flash packages
   * data/files/js-libraries:
     + [BR] Detect libjs-jquery-ui, a set of user interface interactions,
       effects, widgets, and themes built on top of the jQuery
