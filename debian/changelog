@@ -4,6 +4,8 @@ lintian (2.5.90) UNRELEASED; urgency=medium
 
   * checks/cruft.pm:
     + [BR] Ignore HTML bold tags (eg. <b>) during license checking.
+  * checks/systemd.pm:
+    + [CL] Don't use potentially-undefined value in invalid .service files.
   * checks/version-substvars.pm:
     + [CL] Fix a false-positives in version-substvar-for-external-package
       when the "external" package is actually a "Provides" in the current
