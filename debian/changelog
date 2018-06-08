@@ -11,6 +11,9 @@ lintian (2.5.90) UNRELEASED; urgency=medium
       when the "external" package is actually a "Provides" in the current
       source package.  (Closes: #833608)
 
+  * data/*:
+    + [CL] Update and expand the documentation of
+      derivative-{changed-by,versions} to match the implementation.
   * data/fields/obsolete-packages:
     + [BR] Detect obsolete Adobe Flash packages.
   * data/files/js-libraries:

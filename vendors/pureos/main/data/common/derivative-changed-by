@@ -1,6 +1,6 @@
 # Derivative-specific changed-by validation.
 #
-# Checked in order, any must match.
+# Checked in order, warns with $explanation if $regex does not match
 #
 # format: $regex ~~ explanation
 
