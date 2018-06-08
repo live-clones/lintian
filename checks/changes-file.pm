@@ -259,8 +259,7 @@ sub run {
     # Check version field
     my $version = $info->field('version');
     foreach my $re ($DERIVATIVE_VERSIONS->all) {
-        next if $info->native;
-        next if $info->native or $version =~ m/$re/;
+        next if $version =~ m/$re/;
         my $explanation = $DERIVATIVE_VERSIONS->value($re);
         tag 'invalid-version-number-for-derivative', $version,"($explanation)";
     }

@@ -210,8 +210,8 @@ Info: The packaging includes an upstream signing key but the corresponding
 Tag: invalid-version-number-for-derivative
 Severity: serious
 Certainty: certain
-Info: The version number for this non-native package does not comply
- with the required format for this Debian derivative.
+Info: The version number for this package does not comply with the
+ required format for this Debian derivative.
  .
  Derivative distributions of Debian may enforce additional restrictions
  on the version in order to ensure that forked (or packages that are
