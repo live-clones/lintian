@@ -40,6 +40,7 @@ my $INCORRECT_LOCALE_CODES
 my $MULTIARCH_DIRS = Lintian::Data->new('common/multiarch-dirs', qr/\s++/);
 my $GENERIC_HEADER_FILES = Lintian::Data->new('files/generic-header-files');
 my $GENERIC_PYTHON_MODULES= Lintian::Data->new('files/generic-python-modules');
+my $ALLOWED_ANCIENT_FILES = Lintian::Data->new('files/allowed-ancient-files');
 
 my $PRIVACY_BREAKER_WEBSITES= Lintian::Data->new(
     'files/privacy-breaker-websites',
@@ -451,7 +452,9 @@ sub run {
         }
 
         my ($year) = ($file->date =~ /^(\d{4})/);
-        if ($year <= 1975) { # value from dak CVS: Dinstall::PastCutOffYear
+        if ($year <= 1975 # value from dak CVS: Dinstall::PastCutOffYear
+            && !$ALLOWED_ANCIENT_FILES->matches_any($fname)
+           ) {
             tag 'package-contains-ancient-file', $file, $file->date;
         }
 

@@ -7,6 +7,11 @@ all:
 	env TZ=GMT touch -t 197001010000 \
 	    root/usr/share/doc/$(name)/changelog.gz
 
+	mkdir -p root/usr/share/cargo/registry/$(name)
+	echo '{}' > root/usr/share/cargo/registry/$(name)/.cargo_vcs_info.json
+	env TZ=GMT touch -t 197001010000 \
+	    root/usr/share/cargo/registry/$(name)/.cargo_vcs_info.json
+
 	chown 0:0 control
 	chmod 644 control
 	env TZ=GMT touch -d@-1 control
