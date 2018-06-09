@@ -4,6 +4,10 @@ lintian (2.5.90) UNRELEASED; urgency=medium
 
   * checks/cruft.pm:
     + [BR] Ignore HTML bold tags (eg. <b>) during license checking.
+  * checks/fields.{desc,pm}:
+    + [CL] Move invalid-version-number-for-derivative to a "source" type
+      check so we have access to $info->native to prevent false-positives
+      when checking derivative versions.
   * checks/systemd.pm:
     + [CL] Don't use potentially-undefined value in invalid .service files.
   * checks/version-substvars.pm:

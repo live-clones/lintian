@@ -56,6 +56,8 @@ our $KNOWN_VCS_BROWSERS
   = Lintian::Data->new('fields/vcs-browsers', qr/\s*~~\s*/, sub { $_[1]; });
 my $KNOWN_INSECURE_HOMEPAGE_URIS
   = Lintian::Data->new('fields/insecure-homepage-uris');
+my $DERIVATIVE_VERSIONS= Lintian::Data->new('fields/derivative-versions',
+    qr/\s*~~\s*/, sub { $_[1]; });
 
 our %KNOWN_ARCHIVE_PARTS = map { $_ => 1 } ('non-free', 'contrib');
 
@@ -349,6 +351,15 @@ sub run {
                     tag 'dfsg-version-with-period', $version;
                 } elsif ($version =~ /dsfg/) {
                     tag 'dfsg-version-misspelled', $version;
+                }
+            }
+
+            if (!$info->native) {
+                foreach my $re ($DERIVATIVE_VERSIONS->all) {
+                    next if $version =~ m/$re/;
+                    my $explanation = $DERIVATIVE_VERSIONS->value($re);
+                    tag 'invalid-version-number-for-derivative', $version,
+                      "($explanation)";
                 }
             }
 

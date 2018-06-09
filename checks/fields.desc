@@ -1482,3 +1482,13 @@ Info: The specified field in <tt>debian/control</tt> does not match the
      pointing to the correct, updated location.
    - Fields that become misleading in the context of a derivative are
      removed.
+
+Tag: invalid-version-number-for-derivative
+Severity: serious
+Certainty: certain
+Info: The version number for this package does not comply with the
+ required format for this Debian derivative.
+ .
+ Derivative distributions of Debian may enforce additional restrictions
+ on the version in order to ensure that forked (or packages that are
+ otherwise modified) are marked as such.
