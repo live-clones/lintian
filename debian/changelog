@@ -2,6 +2,10 @@ lintian (2.5.90) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
+  * checks/binaries.pm:
+    + [CL] Ignore .debuginfo files under /usr/lib/jvm to prevent false-
+      positives in shared-lib-without-dependency-information.
+      (Closes: #900268)
   * checks/cruft.pm:
     + [BR] Ignore HTML bold tags (eg. <b>) during license checking.
   * checks/fields.{desc,pm}:

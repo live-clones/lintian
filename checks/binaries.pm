@@ -522,6 +522,7 @@ sub run {
                 next if ($fname =~ m%^lib/modules/%);
                 next if ($fname =~ m%^usr/lib/debug/%);
                 next if ($fname =~ m%\.(?:[ce]32|e64)$%);
+                next if ($fname =~ m%^usr/lib/jvm/.*\.debuginfo$%);
                 next
                   if (
                     $fname =~ m{
