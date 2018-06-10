@@ -1918,6 +1918,16 @@ Info: This package ships the specified file under <tt>/etc/skel</tt>. Files
  can automatically create them or can otherwise function without them.
 Ref: policy 10.7.5
 
+Tag: package-contains-eslint-config-file
+Severity: important
+Certainty: certain
+Info: This package ships a eslint config file.
+ This file is a configuration file for ESLint a pluggable linting utility
+ for JavaScript.
+ .
+ Even if these files are useful for modifying source they do not belong to
+ installed packages.
+
 Tag: header-has-overly-generic-name
 Severity: important
 Certainty: certain

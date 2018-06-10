@@ -12,6 +12,10 @@ lintian (2.5.90) UNRELEASED; urgency=medium
     + [CL] Move invalid-version-number-for-derivative to a "source" type
       check so we have access to $info->native to prevent false-positives
       when checking derivative versions.
+  * checks/files.desc:
+    + [BR] Detect ESLint config file installed in the tree. ESLint is
+      pluggable linting utility for JavaScript. This kind of files belong
+      to source not to installed package.
   * checks/systemd.pm:
     + [CL] Don't use potentially-undefined value in invalid .service files.
   * checks/version-substvars.pm:
