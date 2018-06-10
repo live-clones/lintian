@@ -44,6 +44,11 @@ lintian (2.5.90) UNRELEASED; urgency=medium
     + [CL] Drop "some system" from the list of multiword spelling
       corrections.  (Closes: #900670)
 
+  * helpers/coll/objdump-info-helper:
+    + [CL] Ignore low ASCII characters in ELF headers such as RPATH and
+      SONAME to avoid false-positives in, for example, Go libraries.
+      (Closes: #898809)
+
   * vendors/pureos/main/data/fields/derivative-fields:
     + [CL] Update the Vcs-* checks for PureOS now that repo structure has
       introduced sub-groups.

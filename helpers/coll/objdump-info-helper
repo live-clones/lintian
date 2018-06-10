@@ -164,7 +164,8 @@ while (my $line = <$readelf>) {
         print " $section\n"
           if exists($COLLECT_SECTIONS{$section})
           or$section =~ $COLLECT_SECTIONS_REGEX;
-    } elsif ($line =~ m/^\s*0x(?:[0-9A-F]+)\s+\((.*?)\)\s+(\S.*)\Z/i
+    } elsif ($line
+        =~ m/^\s*0x(?:[0-9A-F]+)\s+\((.*?)\)\s+([\x21-\x7f][\x20-\x7f]*)\Z/i
         and $section eq 'DS') {
         my ($type, $value) = ($1, $2);
         my $keep = 0;
