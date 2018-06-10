@@ -16,7 +16,8 @@ lintian (2.5.90) UNRELEASED; urgency=medium
     + [BR] Detect ESLint config file installed in the tree. ESLint is
       pluggable linting utility for JavaScript. This kind of files belong
       to source not to installed package.
-    + [BR] Detect woff, eot file as fonts.
+    + [BR] Detects woff, eot file as fonts.
+    + [BR] Detects installing fonts outside /usr/share/fonts
   * checks/systemd.pm:
     + [CL] Don't use potentially-undefined value in invalid .service files.
   * checks/version-substvars.pm:
