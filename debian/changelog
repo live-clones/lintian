@@ -6,6 +6,7 @@ lintian (2.5.92) UNRELEASED; urgency=medium
     + [BR] Detect ESLint config files installed in the tree. ESLint is
       pluggable linting utility for JavaScript. This kind of files belong
       to source not to installed package.
+    + [BR] Detect .woff, .woff2 and .eot files as fonts.
 
  -- Chris Lamb <lamby@debian.org>  Sat, 16 Jun 2018 20:30:43 +0200
 

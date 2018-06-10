@@ -1544,7 +1544,8 @@ sub run {
                 }
             }
             # ---------------- fonts
-            elsif ($fname =~ m,/([\w-]+\.(?:[to]tf|pfb))$,i) {
+            elsif (
+                $fname =~ m,/([\w-]+\.(?:[to]tf|pfb|woff2?|eot)(?:\.gz)?)$,i) {
                 my $font = lc $1;
                 if (my $font_owner = $FONT_PACKAGES->value($font)) {
                     tag 'duplicate-font-file', "$fname also in", $font_owner
