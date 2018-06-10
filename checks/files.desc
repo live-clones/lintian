@@ -1937,6 +1937,17 @@ Info: This package ships an ESLint config file. This file is
  .
  Please remove this file from your package.
 
+Tag: package-contains-npm-ignore-file
+Severity: important
+Certainty: certain
+Info: This package ships an .npmignore file. This file is a
+ configuration file for the npm command, the Node.js package manager.
+ .
+ This file instructs npm command to keep files out of
+ node package and is therefore unnecessary in a Debian package.
+ .
+ Please remove this file from your package.
+
 Tag: header-has-overly-generic-name
 Severity: important
 Certainty: certain

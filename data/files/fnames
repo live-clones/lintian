@@ -8,3 +8,4 @@ package-contains-python-doctree-file                 ~~ \.doctree(\.gz)?$
 package-contains-python-hypothesis-example           ~~ /\.hypothesis/examples/[^\)]+/.+
 package-contains-python-tests-in-global-namespace    ~~ ^usr/lib/python[^\/]+/(dist|site)-packages/test_.+\.py$
 package-contains-eslint-config-file                  ~~ \.eslintrc(?:\.[^/]+)?$
+package-contains-npm-ignore-file                     ~~ \.npmignore$
