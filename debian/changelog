@@ -20,6 +20,7 @@ lintian (2.5.90) UNRELEASED; urgency=medium
     + [BR] Detect installing fonts outside /usr/share/fonts
     + [BR] Detect .npmignore file installed in the tree. .npmignore files
       help npm the node package manager to keep files out of npm package.
+    + [BR] Detect documentation files outside /usr/share/doc
   * checks/systemd.pm:
     + [CL] Don't use potentially-undefined value in invalid .service files.
   * checks/version-substvars.pm:

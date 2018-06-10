@@ -4,6 +4,7 @@ E: files-package-contains-foo: package-contains-cmake-private-file usr/share/cma
 W: files-package-contains-foo: macos-ds-store-file-in-package usr/share/files-package-contains-foo/.DS_Store
 W: files-package-contains-foo: macos-resource-fork-file-in-package usr/share/files-package-contains-foo/._stuff
 W: files-package-contains-foo: package-contains-bts-control-dir usr/share/files-package-contains-foo/.be/
+W: files-package-contains-foo: package-contains-documentation-outside-usr-share-doc usr/share/cargo/registry/crate-1.0.0/LICENSE
 W: files-package-contains-foo: package-contains-linda-override usr/share/linda/overrides/files-package-contains-foo
 W: files-package-contains-foo: package-contains-readme-for-other-platform-or-distro usr/share/doc/files-package-contains-foo/README.mac
 W: files-package-contains-foo: package-contains-readme-for-other-platform-or-distro usr/share/doc/files-package-contains-foo/README.windows

@@ -1473,6 +1473,24 @@ sub run {
                 tag 'nfs-temporary-file-in-package', $file;
             }
 
+            # ---------------- documentation files
+            if(
+                lc($fname)
+                =~ m,/(?:readme(?:first)?|
+                         patents?|
+                         licen[cs]e|
+                         contribut(?:e|ing)|
+                         code_of_conduct|
+                         todos?)
+                      (?:\.(?:txt|r?md|markdown))?(?:\.gz)?$,x
+                or $fname =~ m,\.(?:md|MD)$,
+              ) {
+                unless($fname =~ m,^etc/, or $fname =~ m,^usr/share/doc/,) {
+                    tag 'package-contains-documentation-outside-usr-share-doc',
+                      $fname;
+                }
+            }
+
             # ---------------- vcs control files
             if (    $fname =~ m,$VCS_FILES_OR_ALL,
                 and $fname !~ m,^usr/share/cargo/registry/,) {
