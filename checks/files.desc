@@ -1936,6 +1936,15 @@ Info: This package ships a eslint config file.
  Even if these files are useful for modifying source they do not belong to
  installed packages.
 
+Tag: package-contains-npmignore-file
+Severity: important
+Certainty: certain
+Info: This package ships a .npmignore file
+ This file is a configuration file npm the node package manager.
+ .
+ This file informs npm to keep files out of npm package, and thus
+ is useless inside a debian package.
+
 Tag: header-has-overly-generic-name
 Severity: important
 Certainty: certain

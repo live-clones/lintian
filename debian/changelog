@@ -18,6 +18,8 @@ lintian (2.5.90) UNRELEASED; urgency=medium
       to source not to installed package.
     + [BR] Detects woff, eot file as fonts.
     + [BR] Detects installing fonts outside /usr/share/fonts
+    + [BR] Detects .npmignore file installed in the tree. .npmignore files
+      help npm the node package manager to keep files out of npm package.
   * checks/systemd.pm:
     + [CL] Don't use potentially-undefined value in invalid .service files.
   * checks/version-substvars.pm:
