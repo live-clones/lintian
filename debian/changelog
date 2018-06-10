@@ -28,6 +28,10 @@ lintian (2.5.90) UNRELEASED; urgency=medium
     + [BR] Detect libjs-jquery-ui, a set of user interface interactions,
       effects, widgets, and themes built on top of the jQuery Javascript
       library.
+  * data/scripts/interpreters:
+    + [CL] Avoid #!/usr/bin/r false-positives when checking the
+      missing-dep-for-interpreter tag as r-cran-littler also "Provides"
+      this package.  (Closes: #901228)
   * data/spelling/corrections-multiword:
     + [CL] Drop "some system" from the list of multiword spelling
       corrections.  (Closes: #900670)
