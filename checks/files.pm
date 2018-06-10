@@ -1553,6 +1553,9 @@ sub run {
                 } elsif ($pkg !~ m/^(?:[ot]tf|t1|x?fonts)-/) {
                     tag 'font-in-non-font-package', $file;
                 }
+                tag 'font-outside-font-dir', $file
+                  unless $fname =~ m,^usr/share/fonts/,;
+
                 my $finfo = $file->file_info;
                 if ($finfo =~ m/PostScript Type 1 font program data/) {
                     my $path = $file->fs_path;
