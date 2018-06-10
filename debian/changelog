@@ -11,6 +11,8 @@ lintian (2.5.92) UNRELEASED; urgency=medium
     + [BR] Detect .npmignore files installed in the tree. These files
       help npm the Node.js package manager to keep files
       out of npm package.
+    + [BR] Detect documentation files outside /usr/share/doc.
+      (Closes: #901274)
 
  -- Chris Lamb <lamby@debian.org>  Sat, 16 Jun 2018 20:30:43 +0200
 

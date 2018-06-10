@@ -94,6 +94,10 @@ my $PKG_CONFIG_BAD_REGEX
   = Lintian::Data->new('files/pkg-config-bad-regex',qr/~~~~~/,
     sub { return  qr/$_[0]/xsm;});
 
+my $DOCUMENTATION_FILE_REGEX
+  = Lintian::Data->new('files/documentation-file-regex',
+    qr/~~~~~/,sub { return  qr/$_[0]/xi;});
+
 my $COMPRESS_FILE_EXTENSIONS
   = Lintian::Data->new('files/compressed-file-extensions',
     qr/\s++/,sub { return qr/\Q$_[0]\E/ });
@@ -1471,6 +1475,20 @@ sub run {
             }
             if ($fname =~ m,/\.nfs[^/]+$,) {
                 tag 'nfs-temporary-file-in-package', $file;
+            }
+
+            # ---------------- documentation files
+            unless($fname =~ m,^etc/, or $fname =~ m,^usr/share/doc/,) {
+                foreach my $taboo ($DOCUMENTATION_FILE_REGEX->all) {
+                    my $regex = $DOCUMENTATION_FILE_REGEX->value($taboo);
+                    if($file->basename =~ m{$regex}xi) {
+                        #<<< No perltidy - tag name too long
+                        tag 'package-contains-documentation-outside-usr-share-doc',
+                            $fname;
+                        #>>>
+                        last;
+                    }
+                }
             }
 
             # ---------------- vcs control files

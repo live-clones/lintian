@@ -1,0 +1,10 @@
+# a list of regex for detecting documentation file checked against basename
+# regex (xi)
+\.markdown$
+\.r?md$
+^readme(?:first)?
+^patents?(?:\.|$)
+^licen[sc]es?(?:\.|$)
+^contribut(?:e|ing)(?:\.|$)
+^code[-_]of
+^todos?(?:\.|$)

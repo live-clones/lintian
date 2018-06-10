@@ -1948,6 +1948,14 @@ Info: This package ships an .npmignore file. This file is a
  .
  Please remove this file from your package.
 
+Tag: package-contains-documentation-outside-usr-share-doc
+Severity: normal
+Certainty: wild-guess
+Info: This package ships a documentation file outside /usr/share/doc
+ Documentation files are normally installed inside <tt>/usr/share/doc</tt>.
+ .
+ Please move this files to <tt>/usr/share/doc/</tt> or remove it.
+
 Tag: header-has-overly-generic-name
 Severity: important
 Certainty: certain

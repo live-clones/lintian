@@ -1,6 +1,7 @@
 E: files-package-contains-foo: package-contains-cmake-private-file usr/share/cmake-3.1/FindFoo.cmake
 E: files-package-contains-foo: package-contains-cmake-private-file usr/share/cmake-3.1/Modules/
 E: files-package-contains-foo: package-contains-cmake-private-file usr/share/cmake-3.1/Modules/FindVar.cmake
+I: files-package-contains-foo: package-contains-documentation-outside-usr-share-doc usr/share/cargo/registry/crate-1.0.0/LICENSE
 W: files-package-contains-foo: macos-ds-store-file-in-package usr/share/files-package-contains-foo/.DS_Store
 W: files-package-contains-foo: macos-resource-fork-file-in-package usr/share/files-package-contains-foo/._stuff
 W: files-package-contains-foo: package-contains-bts-control-dir usr/share/files-package-contains-foo/.be/

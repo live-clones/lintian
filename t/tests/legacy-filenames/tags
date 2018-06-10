@@ -43,6 +43,9 @@ I: filenames: extra-license-file usr/share/pixmaps/COPYING
 I: filenames: extra-license-file usr/share/pixmaps/license.foo
 I: filenames: extra-license-file usr/share/pixmaps/license.txt
 I: filenames: no-md5sums-control-file
+I: filenames: package-contains-documentation-outside-usr-share-doc usr/lib/menu/README
+I: filenames: package-contains-documentation-outside-usr-share-doc usr/share/menu/README
+I: filenames: package-contains-documentation-outside-usr-share-doc usr/share/pixmaps/license.txt
 I: filenames: package-contains-empty-directory usr/lib/ma-dir/perl/version/.arch-ids/
 I: filenames: package-contains-empty-directory usr/lib/ma-dir/perl/version/.be/
 I: filenames: package-contains-empty-directory usr/lib/ma-dir/perl/version/.bzr/
