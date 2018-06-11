@@ -1252,14 +1252,6 @@ Info: This package appears to contain development files only meaningful to
  were usually accidentally included by copying complete directories from the
  source tarball.
 
-Tag: font-outside-font-dir
-Severity: wishlist
-Certainty: possible
-Info: This package contains a *.ttf, *.otf, or *.pfb file,
- extensions used by TrueType, OpenType, or Type 1 fonts, but the package
- does not install the font under /usr/share/fonts/.
-Ref: https://wiki.debian.org/Fonts/PackagingPolicy
-
 Tag: font-in-non-font-package
 Severity: wishlist
 Certainty: possible
@@ -1925,29 +1917,6 @@ Info: This package ships the specified file under <tt>/etc/skel</tt>. Files
  Please remove the installation of this file, ensuring this package
  can automatically create them or can otherwise function without them.
 Ref: policy 10.7.5
-
-Tag: package-contains-eslint-config-file
-Severity: important
-Certainty: certain
-Info: This package ships an ESLint config file.
- This file is a configuration file for the ESLint a pluggable linting utility
- for JavaScript.
- .
- Even if these files are useful for modifying the source
- they do not belong in installed packages.
- .
- Please remove this file from your package.
-
-Tag: package-contains-npmignore-file
-Severity: important
-Certainty: certain
-Info: This package ships an .npmignore file
- This file is a configuration file for npm the NodeJS package manager.
- .
- This file tells npm to keep files out of the npm package
- and is therefore unnecessary in a Debian package.
- .
- Please remove this file from your package.
 
 Tag: header-has-overly-generic-name
 Severity: important

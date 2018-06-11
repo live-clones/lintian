@@ -1544,17 +1544,13 @@ sub run {
                 }
             }
             # ---------------- fonts
-            elsif (
-                $fname =~ m,/([\w-]+\.(?:[to]tf|pfb|woff2?|eot)(?:\.gz)?)$,i) {
+            elsif ($fname =~ m,/([\w-]+\.(?:[to]tf|pfb))$,i) {
                 my $font = lc $1;
                 if (my $font_owner = $FONT_PACKAGES->value($font)) {
                     tag 'duplicate-font-file', "$fname also in", $font_owner
                       if ($pkg ne $font_owner and $type ne 'udeb');
                 } elsif ($pkg !~ m/^(?:[ot]tf|t1|x?fonts)-/) {
                     tag 'font-in-non-font-package', $file;
-                }
-                if ($fname !~ m,^usr/share/fonts/,) {
-                    tag 'font-outside-font-dir', $file;
                 }
                 my $finfo = $file->file_info;
                 if ($finfo =~ m/PostScript Type 1 font program data/) {
