@@ -1,6 +1,5 @@
-lintian (2.5.90) UNRELEASED; urgency=medium
+lintian (2.5.90) unstable; urgency=medium
 
-  XXX: generate tag summary
 
   * checks/binaries.pm:
     + [CL] Ignore .debuginfo files under /usr/lib/jvm to prevent false-
@@ -32,6 +31,8 @@ lintian (2.5.90) UNRELEASED; urgency=medium
     + [CL] Avoid #!/usr/bin/r false-positives when checking the
       missing-dep-for-interpreter tag as r-cran-littler also "Provides"
       this package.  (Closes: #901228)
+  * data/spelling/corrections:
+    + [PW] Add a number of corrections.
   * data/spelling/corrections-multiword:
     + [CL] Drop "some system" from the list of multiword spelling
       corrections.  (Closes: #900670)
@@ -45,7 +46,7 @@ lintian (2.5.90) UNRELEASED; urgency=medium
     + [CL] Update the Vcs-* checks for PureOS now that repo structure has
       introduced sub-groups.
 
- -- Chris Lamb <lamby@debian.org>  Fri, 01 Jun 2018 14:59:51 +0100
+ -- Chris Lamb <lamby@debian.org>  Wed, 13 Jun 2018 18:58:43 +0000
 
 lintian (2.5.89) unstable; urgency=medium
 
