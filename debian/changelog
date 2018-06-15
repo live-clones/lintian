@@ -6,7 +6,6 @@ lintian (2.5.91) UNRELEASED; urgency=medium
 
 lintian (2.5.90) unstable; urgency=medium
 
-
   * checks/binaries.pm:
     + [CL] Ignore .debuginfo files under /usr/lib/jvm to prevent false-
       positives in shared-lib-without-dependency-information.
