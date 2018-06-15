@@ -2,6 +2,11 @@ lintian (2.5.91) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
+  * checks/rules.desc:
+    + [CL] Replace DH_BUILD_MAINT_OPTIONS with DEB_BUILD_MAINT_OPTIONS
+      in tag description.  Thanks to Drew Parsons for the report.
+      (Closes: #901581)
+
  -- Chris Lamb <lamby@debian.org>  Wed, 13 Jun 2018 21:35:31 +0200
 
 lintian (2.5.90) unstable; urgency=medium
