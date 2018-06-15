@@ -26,7 +26,7 @@ use Lintian::Tags qw(tag);
 use Lintian::Util qw(rstrip);
 
 our $PYTHON_DEPEND
-  = 'python:any | python-dev:any | python-all:any | python-all-dev:any';
+  = 'python:any | python-dev:any | python-all:any | python-all-dev:any | python2:any | python2-dev:any';
 our $PYTHON3_DEPEND
   = 'python3:any | python3-dev:any | python3-all:any | python3-all-dev:any';
 our $PYTHON2X_DEPEND = 'python2.7:any | python2.7-dev:any';
