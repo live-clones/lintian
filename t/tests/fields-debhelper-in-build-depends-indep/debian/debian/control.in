@@ -2,7 +2,7 @@ Source: {$source}
 Priority: optional
 Section: {$section}
 Maintainer: {$author}
-Build-Depends-Indep: debhelper (>= 11)
+Build-Depends-Indep: debhelper (>= 11), dh-elpa
 Standards-Version: {$standards_version}
 Rules-Requires-Root: no
 

@@ -1515,3 +1515,25 @@ Info: This package specifies a build-dependency on <tt>debhelper(7)</tt>
  Please move the <tt>debhelper</tt> dependency to the
  <tt>Build-Depends</tt> field.
 Ref: policy 7.7, debhelper(7)
+
+Tag: debhelper-addon-needs-to-be-in-build-depends
+Severity: normal
+Certainty: certain
+Info: This package specifies a build-dependency on a
+ <tt>debhelper(7)</tt> addon via the specified field.
+ .
+ If a package only provides <tt>Architecture: all</tt> binaries, a
+ maintainer might put addons in <tt>Build-Depends-Indep</tt>.
+ (Alternatively, if the package builds no <tt>Architecture: all</tt>
+ binaries, maintainers may place the addon in
+ <tt>Build-Depends-Arch</tt>). However, this may result in the follow
+ command to fail:
+ .
+  sbuild --dist=unstable --source --no-arch-any .
+ .
+ This is because packages that use debhelper normally invoke it in their
+ <tt>clean</tt> target which can only rely on having the contents of
+ <tt>Build-Depends</tt> available.
+ .
+ Please move the addon to the <tt>Build-Depends</tt> field.
+Ref: policy 7.7, debhelper(7)

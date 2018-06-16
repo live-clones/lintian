@@ -1,1 +1,2 @@
-W: fields-debhelper-in-build-depends-indep source: debhelper-needs-to-be-in-build-depends build-depends-indep
+W: fields-debhelper-in-build-depends-indep source: debhelper-addon-needs-to-be-in-build-depends Build-Depends-Indep: dh-elpa
+W: fields-debhelper-in-build-depends-indep source: debhelper-needs-to-be-in-build-depends Build-Depends-Indep: debhelper

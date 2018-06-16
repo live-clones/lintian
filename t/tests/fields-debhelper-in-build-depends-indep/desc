@@ -2,4 +2,5 @@ Testname: fields-debhelper-in-build-depends-indep
 Version: 1.0
 Description: Test that debhelper is not in Build-Depends-Indep
 Test-For:
+ debhelper-addon-needs-to-be-in-build-depends
  debhelper-needs-to-be-in-build-depends

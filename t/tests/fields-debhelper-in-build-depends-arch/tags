@@ -1,2 +1,3 @@
 E: fields-debhelper-in-build-depends-arch source: build-depends-arch-without-arch-dependent-binary
-W: fields-debhelper-in-build-depends-arch source: debhelper-needs-to-be-in-build-depends build-depends-arch
+W: fields-debhelper-in-build-depends-arch source: debhelper-addon-needs-to-be-in-build-depends Build-Depends-Arch: dh-elpa
+W: fields-debhelper-in-build-depends-arch source: debhelper-needs-to-be-in-build-depends Build-Depends-Arch: debhelper
