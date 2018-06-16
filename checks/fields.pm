@@ -1277,16 +1277,11 @@ sub run {
           ->implies('libmodule-build-tiny-perl')
           && !$bdepends->implies('libmodule-build-tiny-perl');
 
-        foreach my $field (qw(Build-Depends-Arch Build-Depends-Indep)) {
-            my $rel = $info->relation(lc($field));
-
-            foreach my $pkg (sort keys %DH_ADDONS_VALUES) {
-                my $name = 'debhelper-addon-needs-to-be-in-build-depends';
-                $name = 'debhelper-needs-to-be-in-build-depends'
-                  if $pkg eq 'debhelper';
-                tag $name, "$field: $pkg"
-                  if $rel->implies($pkg) && !$bdepends->implies($pkg);
-            }
+        foreach my $field (qw(build-depends-arch build-depends-indep)) {
+            my $rel = $info->relation($field);
+            tag 'debhelper-needs-to-be-in-build-depends', $field
+              if $rel->implies('debhelper')
+              && !$bdepends->implies('debhelper');
         }
     }
 

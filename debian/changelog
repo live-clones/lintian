@@ -5,8 +5,6 @@ lintian (2.5.91) UNRELEASED; urgency=medium
   * checks/fields.{desc,pm}:
     + [CL] Warn if debhelper is in Build-Depends-{Arch,Indep} but not
       Build-Depends.  (Closes: #901507)
-    + [CL] Warn if a debhelper addon is in Build-Depends-{Arch,Indep} but
-      not in Build-Depends.  (Closes: #901631)
   * checks/rules.desc:
     + [CL] Replace DH_BUILD_MAINT_OPTIONS with DEB_BUILD_MAINT_OPTIONS
       in tag description.  Thanks to Drew Parsons for the report.
