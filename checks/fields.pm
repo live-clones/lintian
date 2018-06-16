@@ -1262,27 +1262,26 @@ sub run {
             tag 'build-depends-on-python-dev-with-no-arch-any';
         }
 
+        my $bdepends = $info->relation('build-depends');
+
         # libmodule-build-perl
         # matches() instead of implies() because of possible OR relation
-        if ($info->relation('build-depends-indep')
-            ->matches(qr/^libmodule-build-perl$/, VISIT_PRED_NAME)
-            && !$info->relation('build-depends')
-            ->matches(qr/^libmodule-build-perl$/, VISIT_PRED_NAME)) {
-            tag 'libmodule-build-perl-needs-to-be-in-build-depends';
-        }
+        tag 'libmodule-build-perl-needs-to-be-in-build-depends'
+          if $info->relation('build-depends-indep')
+          ->matches(qr/^libmodule-build-perl$/, VISIT_PRED_NAME)
+          && !$bdepends->matches(qr/^libmodule-build-perl$/,VISIT_PRED_NAME);
 
         # libmodule-build-tiny-perl
-        if ($info->relation('build-depends-indep')
-            ->implies('libmodule-build-tiny-perl')
-            && !$info->relation('build-depends')
-            ->implies('libmodule-build-tiny-perl')) {
-            tag 'libmodule-build-tiny-perl-needs-to-be-in-build-depends';
-        }
+        tag 'libmodule-build-tiny-perl-needs-to-be-in-build-depends'
+          if $info->relation('build-depends-indep')
+          ->implies('libmodule-build-tiny-perl')
+          && !$bdepends->implies('libmodule-build-tiny-perl');
 
         foreach my $field (qw(build-depends-arch build-depends-indep)) {
+            my $rel = $info->relation($field);
             tag 'debhelper-needs-to-be-in-build-depends', $field
-              if $info->relation($field)->implies('debhelper')
-              && !$info->relation('build-depends')->implies('debhelper');
+              if $rel->implies('debhelper')
+              && !$bdepends->implies('debhelper');
         }
     }
 
