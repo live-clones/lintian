@@ -2,11 +2,6 @@ lintian (2.5.91) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
-  * checks/rules.{pm,desc}, data/*:
-    + [CL] Also permit "python2" and suffixed variants as substitutes for
-      "python" (etc.) to avoid false-positives in the
-      missing-dep-for-interpreter, missing-build-dependency-for-dh-addon
-      and missing-python-build-dependency tags.  (Closes: #901075)
   * checks/files.{desc,pm}:
     + [CL] Warn if debhelper is in Build-Depends-{Arch,Indep} but not
       Build-Depends.  (Closes: #901507)
@@ -14,6 +9,11 @@ lintian (2.5.91) UNRELEASED; urgency=medium
     + [CL] Replace DH_BUILD_MAINT_OPTIONS with DEB_BUILD_MAINT_OPTIONS
       in tag description.  Thanks to Drew Parsons for the report.
       (Closes: #901581)
+  * checks/rules.{pm,desc}, data/*:
+    + [CL] Also permit "python2" and suffixed variants as substitutes for
+      "python" (etc.) to avoid false-positives in the
+      missing-dep-for-interpreter, missing-build-dependency-for-dh-addon
+      and missing-python-build-dependency tags.  (Closes: #901075)
 
  -- Chris Lamb <lamby@debian.org>  Wed, 13 Jun 2018 21:35:31 +0200
 
