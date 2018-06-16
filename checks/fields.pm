@@ -1276,13 +1276,6 @@ sub run {
           if $info->relation('build-depends-indep')
           ->implies('libmodule-build-tiny-perl')
           && !$bdepends->implies('libmodule-build-tiny-perl');
-
-        foreach my $field (qw(build-depends-arch build-depends-indep)) {
-            my $rel = $info->relation($field);
-            tag 'debhelper-needs-to-be-in-build-depends', $field
-              if $rel->implies('debhelper')
-              && !$bdepends->implies('debhelper');
-        }
     }
 
     #----- Origin
