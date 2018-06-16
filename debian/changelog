@@ -2,7 +2,7 @@ lintian (2.5.91) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
-  * checks/files.{desc,pm}:
+  * checks/fields.{desc,pm}:
     + [CL] Warn if debhelper is in Build-Depends-{Arch,Indep} but not
       Build-Depends.  (Closes: #901507)
   * checks/rules.desc:
