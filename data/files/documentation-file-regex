@@ -4,7 +4,7 @@
 \.r?md$
 ^readme(?:first)?
 ^patents?(?:\.|$)
-^licen[sc]es?(?:\.|$)
+^licen[sc]es?(?:\.txt|$)
 ^contribut(?:e|ing)(?:\.|$)
 ^code[-_]of
 ^todos?(?:\.|$)
