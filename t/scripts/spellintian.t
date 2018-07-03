@@ -63,9 +63,9 @@ while (my $corr = <$sp_fh>) {
     # Check for corrections equal to original
     if ($wrong eq $good) {
         $equal++;
-    # Check if case sensitive corrections have been added to the wrong
-    # file (data/spelling/corrections, not data/spelling/corrections-case).
-    # Bad example from #883041: german||German
+        # Check if case sensitive corrections have been added to the wrong
+        # file (data/spelling/corrections, not data/spelling/corrections-case).
+        # Bad example from #883041: german||German
     } elsif ($wrong eq lc($good)) {
         $case_sen++;
     }
