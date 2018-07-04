@@ -1,6 +1,13 @@
-lintian (2.5.92) UNRELEASED; urgency=medium
+lintian (2.5.92) unstable; urgency=medium
 
-  XXX: generate tag summary
+  The "Policy 4.1.5" release.
+
+  * Summary of tag changes:
+    + Added:
+      - font-outside-font-dir
+      - package-contains-documentation-outside-usr-share-doc
+      - package-contains-eslint-config-file
+      - package-contains-npm-ignore-file
 
   * checks/files.{desc,pm}:
     + [BR] Detect ESLint config files installed in the tree. ESLint is
@@ -28,6 +35,7 @@ lintian (2.5.92) UNRELEASED; urgency=medium
       these are seemingly legitimate.  See
       <https://github.com/systemd/systemd/pull/9321> for the background and
       further discussion.
+    + [PW] Add a number of corrections.
   * data/standards-version/release-dates:
     + [CL] Add 4.1.5 as a known Standards-Version.
 
@@ -41,7 +49,7 @@ lintian (2.5.92) UNRELEASED; urgency=medium
       corrections.
     + [CL] Bump test count.
 
- -- Chris Lamb <lamby@debian.org>  Sat, 16 Jun 2018 20:30:43 +0200
+ -- Chris Lamb <lamby@debian.org>  Wed, 04 Jul 2018 15:31:11 +0000
 
 lintian (2.5.91) unstable; urgency=medium
 
