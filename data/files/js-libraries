@@ -47,7 +47,7 @@ libjs-strophe                ~~ (?i)/strophe$EXT
 libjs-twitter-bootstrap      ~~ (?i)/bootstrap(?:-[\d\.]+)?$EXT$ ~~ var (Carousel|Typeahead)
 libjs-underscore             ~~ (?i)/underscore$EXT
 libjs-yui                    ~~ (?i)/(?:yahoo|yui)-(?:dom-event)?$EXT
-libjs-normalize.css          ~~ (?i)/normalize(?:\.min)?\.css
+node-normalize.css           ~~ (?i)/normalize(?:\.min)?\.css
 # Disabled due to false positives.  Needs a content check adding to verify
 # that the file being checked is /the/ yahoo.js
 # libjs-yui                  ~~ (?i)/yahoo\.js(\.gz)?$EXT

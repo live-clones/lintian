@@ -14,6 +14,10 @@ lintian (2.5.92) UNRELEASED; urgency=medium
     + [BR] Detect documentation files outside /usr/share/doc.
       (Closes: #901274)
 
+  * data/files/{js-libraries,privacy-breaker-websites}:
+    + [CL] Replace references to an unknown "libjs-normalize.css" package
+      with node-normalize.css package.  Thanks to Lumin for the report.
+      (Closes: #902926)
   * data/spelling/corrections:
     + [CL] Drop non-hyphenated versions of "re-enable" and "re-enabled";
       these are seemingly legitimate.  See
