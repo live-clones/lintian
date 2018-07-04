@@ -100,7 +100,7 @@ endif
 	dh_clean -X "$(TEST_WORK_DIR)"
 
 override_dh_install:
-	dh_install
+	dh_install -Xdata/README
 # some manual work
 	perl -p -i -e 's/my \$$LINTIAN_VERSION;/my \$$LINTIAN_VERSION = q{$(VER)};/;' \
 	     -e 's@my \$$INIT_ROOT(\s*=.*)?;@my \$$INIT_ROOT = q{/usr/share/lintian};@;' \

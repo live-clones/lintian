@@ -31,6 +31,11 @@ lintian (2.5.92) UNRELEASED; urgency=medium
   * data/standards-version/release-dates:
     + [CL] Add 4.1.5 as a known Standards-Version.
 
+  * debian/rules:
+    + [CL] Don't install /usr/share/lintian/data/README; it's not very
+      useful at runtime and avoids a
+      package-contains-documentation-outside-usr-share-doc warning.
+
   * t/scripts/spellintian.t:
     + [PW] Differentiate between no-op corrections and case sensitive
       corrections.
