@@ -2094,6 +2094,8 @@ sub _check_tag_url_privacy_breach {
                 'author'            => 1, # #891301
                 'bookmark'          => 1, # #746656
                 'canonical'         => 1, # #762753
+                'copyright'         => 1, # #902919
+                'edituri'           => 1, # #902919
                 'generator'         => 1, # #891301
                 'generator-home'    => 1, # texinfo
                 'help'              => 1, # #891301

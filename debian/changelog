@@ -13,6 +13,9 @@ lintian (2.5.92) UNRELEASED; urgency=medium
       out of npm package.
     + [BR] Detect documentation files outside /usr/share/doc.
       (Closes: #901274)
+    + [CL] Apply patches from Jonathan Dowland (jmtd) to ignore
+      rel="edituri" and rel="copyright" URIs when checking external URIs
+      embedded in HTML files.  (Closes: #902919)
 
   * data/files/{js-libraries,privacy-breaker-websites}:
     + [CL] Replace references to an unknown "libjs-normalize.css" package
