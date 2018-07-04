@@ -19,6 +19,7 @@ bar usr/foo
 bar usr/lib/debug/
 bar usr/lib32
 bar usr/lib64
+bar usr/libexec
 bar usr/libx32
 bar usr/lib/perl/
 bar usr/lib/python2.7/

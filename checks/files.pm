@@ -988,7 +988,8 @@ sub run {
                             tag 'non-multi-arch-lib-dir', $file;
                         }
                     } else {
-                        tag 'non-standard-dir-in-usr', $file;
+                        tag 'non-standard-dir-in-usr', $file
+                          unless $fname =~ m,^usr/libexec/,; # #834607
                     }
 
                 }
@@ -1143,6 +1144,7 @@ sub run {
                 or $fname =~ m,^(?:bin|boot|dev|etc|sbin)/,
                 # non-FHS, but still usual
                 or $fname =~ m,^usr/[^/]+-linux[^/]*/,
+                or $fname =~ m,^usr/libexec/, # FHS 3.0 / #834607
                 or $fname =~ m,^usr/iraf/,
                 # not allowed, but tested individually
                 or $fname =~ m{\A (?:

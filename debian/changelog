@@ -16,6 +16,8 @@ lintian (2.5.92) UNRELEASED; urgency=medium
     + [CL] Apply patches from Jonathan Dowland (jmtd) to ignore
       rel="edituri" and rel="copyright" URIs when checking external URIs
       embedded in HTML files.  (Closes: #902919)
+    + [CL] Policy 4.1.5 adopts FHS 3.0 so permit files/dirs in
+      /usr/libexec.  (Closes: #834607)
 
   * data/files/{js-libraries,privacy-breaker-websites}:
     + [CL] Replace references to an unknown "libjs-normalize.css" package
