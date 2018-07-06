@@ -2,6 +2,10 @@ lintian (2.5.93) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
+  * checks/fields.pm:
+    + [CL] Add support and update tests for the "Vcs-Git: uri [subdir]"
+      syntax.  (Closes: #903103)
+
  -- Chris Lamb <lamby@debian.org>  Wed, 04 Jul 2018 21:04:44 +0200
 
 lintian (2.5.92) unstable; urgency=medium

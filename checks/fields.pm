@@ -131,8 +131,9 @@ my %VCS_EXTRACT = (
     cvs     => sub { return shift =~ /^(.+?)(?:\s+(\S*))?$/;},
     darcs   => sub { return @_;},
     hg      => sub { return @_;},
-    # git uri followed by optional " -b " + branchname:
-    git     => sub { return shift =~ /^(.+?)(?:\s+-b\s+(\S*))?$/;},
+    # git uri followed by optional "[subdir]", "-b branchname" etc.
+    git     =>
+      sub { return shift =~ /^(.+?)(?:\s+\[(\S*)\])?(?:\s+-b\s+(\S*))?$/;},
     svn     => sub { return @_;},
     # New "mtn://host?branch" uri or deprecated "host branch".
     mtn     => sub { return shift =~ /^(.+?)(?:\s+\S+)?$/;},
