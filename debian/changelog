@@ -9,6 +9,9 @@ lintian (2.5.93) UNRELEASED; urgency=medium
     + [CL] Add support and update tests for the "Vcs-Git: uri [subdir]"
       syntax.  (Closes: #903103)
     + [CL] Check for mismatched Vcs-* fields.  (Closes: #903690)
+  * checks/gir.pm:
+    + [CL] Apply patch from Simon McVittie to don't warn about wrong
+      section for "oldlibs".
 
   * lib/Lintian/Collect/Package.pm:
     + [CL] Support parsing the filename component of tar -tvf output when

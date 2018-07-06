@@ -88,13 +88,13 @@ sub _run_binary {
         push @typelibs, $dir->children;
     }
 
-    if ($section ne 'libdevel') {
+    if ($section ne 'libdevel' && $section ne 'oldlibs') {
         foreach my $gir (@girs) {
             tag('gir-section-not-libdevel', $gir, $section);
         }
     }
 
-    if ($section ne 'introspection') {
+    if ($section ne 'introspection' && $section ne 'oldlibs') {
         foreach my $typelib (@typelibs) {
             tag('typelib-section-not-introspection', $typelib, $section);
         }
