@@ -6,6 +6,11 @@ lintian (2.5.93) UNRELEASED; urgency=medium
     + [CL] Add support and update tests for the "Vcs-Git: uri [subdir]"
       syntax.  (Closes: #903103)
 
+  * lib/Lintian/Collect/Package.pm:
+    + [CL] Support parsing the filename component of tar -tvf output when
+      delimited by multiple spaces (not just a single one) to prevent
+      source-contains-empty-directory false positives.  (Closes: #903307)
+
  -- Chris Lamb <lamby@debian.org>  Wed, 04 Jul 2018 21:04:44 +0200
 
 lintian (2.5.92) unstable; urgency=medium

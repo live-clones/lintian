@@ -445,7 +445,7 @@ sub _fetch_index_data {
         # "fake" dates.
         ($perm,$ownership,$size,$date,$time,$name)
           = $line
-          =~ /^(.{10}) (.*?) (\d+) ([-\d]{10}) ([:\d]{5,8}(?:.\d+)?) (.*)$/;
+          =~ /^(.{10}) (.*?) (\d+) ([-\d]{10}) ([:\d]{5,8}(?:.\d+)?)[ ]+(.*)$/;
         croak "cannot parse tar output from $index: $line"
           unless defined $perm;
         $ownership =~ s/\s+$//;
