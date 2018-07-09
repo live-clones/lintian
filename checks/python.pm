@@ -144,8 +144,8 @@ sub _run_source {
 
         if ($pyversion =~ /\b(([23])\.\d+)$/) {
             my ($v, $major) = ($1, $2);
-            my $old = $VERSIONS->value("stable-python$major");
-            my $ancient = $VERSIONS->value("oldstable-python$major");
+            my $old = $VERSIONS->value("old-python$major");
+            my $ancient = $VERSIONS->value("ancient-python$major");
 
             if (versions_lte($v, $ancient)) {
                 tag 'ancient-python-version-field', $field, $v;
