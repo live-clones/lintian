@@ -2,6 +2,9 @@ lintian (2.5.93) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
+  * checks/cruft.pm:
+    + [CL] Don't emit r-data-without-readme-source by checking that .rda
+      (etc.) files aren't actually R data files.  (Closes: #903435)
   * checks/fields.pm:
     + [CL] Add support and update tests for the "Vcs-Git: uri [subdir]"
       syntax.  (Closes: #903103)

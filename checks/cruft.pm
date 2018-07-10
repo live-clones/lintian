@@ -45,7 +45,7 @@ use List::MoreUtils qw(any);
 use Lintian::Data;
 use Lintian::Relation ();
 use Lintian::Tags qw(tag);
-use Lintian::Util qw(internal_error normalize_pkg_path strip);
+use Lintian::Util qw(internal_error normalize_pkg_path strip open_gz);
 use Lintian::SlidingWindow;
 
 our $LIBTOOL = Lintian::Relation->new('libtool | dh-autoreconf');
@@ -712,8 +712,13 @@ sub find_cruft {
         # Ensure we have a README.source for R data files
         if (   $basename =~ m,\.(?:rda|Rda|rdata|Rdata|RData)$,
             && $entry->is_file
+            && $entry->is_open_ok
+            && $file_info =~ /gzip compressed data/
             && !$info->index_resolved_path('debian/README.source')) {
-            tag 'r-data-without-readme-source', $name;
+            my $fd = $entry->open_gz;
+            read($fd, my $magic, 4);
+            close($fd);
+            tag 'r-data-without-readme-source', $name if $magic eq "RDX2";
         }
 
         if (   $name =~ m,configure.(in|ac)$,
