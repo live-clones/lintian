@@ -718,7 +718,7 @@ sub find_cruft {
             my $fd = $entry->open_gz;
             read($fd, my $magic, 4);
             close($fd);
-            tag 'r-data-without-readme-source', $name if $magic eq "RDX2";
+            tag 'r-data-without-readme-source', $name if $magic eq 'RDX2';
         }
 
         if (   $name =~ m,configure.(in|ac)$,
