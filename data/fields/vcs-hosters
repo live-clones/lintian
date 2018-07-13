@@ -1,4 +1,4 @@
-# List of Vcs-* fields that should have a Vcs-Browser equivalent
+# List of hosting services with their corresponding VCS
 #
 # Format:
 #   ^regex \x\s) ~~ vcs

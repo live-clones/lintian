@@ -2,6 +2,8 @@ lintian (2.5.93) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
+  * checks/fields.{desc,pm}:
+    + [CL] Check for mismatched Vcs-* fields.  (Closes: #903690)
   * checks/cruft.pm:
     + [CL] Don't emit r-data-without-readme-source by checking that .rda
       (etc.) files aren't actually R data files.  (Closes: #903435)

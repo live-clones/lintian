@@ -1021,6 +1021,16 @@ Certainty: possible
 Info: The VCS-* field uses an URI which doesn't match any known format.
  You might have forgotten the protocol before the hostname.
 
+Tag: vcs-field-mismatch
+Severity: normal
+Certainty: possible
+Info: The VCS-* field name appears to mismatch the target URI.
+ .
+ You might have moved the Debian packaging to another version control
+ system but have not updated the field name. For example, using the
+ Vcs-Svn field to point to a Git repository now hosted on
+ salsa.debian.org.
+
 Tag: vcs-field-has-unexpected-spaces
 Severity: normal
 Certainty: possible
