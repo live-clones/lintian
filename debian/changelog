@@ -2,14 +2,13 @@ lintian (2.5.93) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
-  * checks/fields.{desc,pm}:
-    + [CL] Check for mismatched Vcs-* fields.  (Closes: #903690)
   * checks/cruft.pm:
     + [CL] Don't emit r-data-without-readme-source by checking that .rda
       (etc.) files aren't actually R data files.  (Closes: #903435)
-  * checks/fields.pm:
+  * checks/fields.{desc,pm}:
     + [CL] Add support and update tests for the "Vcs-Git: uri [subdir]"
       syntax.  (Closes: #903103)
+    + [CL] Check for mismatched Vcs-* fields.  (Closes: #903690)
 
   * lib/Lintian/Collect/Package.pm:
     + [CL] Support parsing the filename component of tar -tvf output when
