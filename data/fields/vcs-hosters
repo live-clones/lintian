@@ -28,4 +28,4 @@ git://gitorious\.org/				~~ git
 git://[a-zA-Z0-9]+\.branchable\.com/		~~ git
 git://repo\.or\.cz/				~~ git
 https?://repo\.or\.cz/				~~ git
-https?://bitbucket\.org/			~~ git.hg
+https?://bitbucket\.org/			~~ git,hg
