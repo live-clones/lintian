@@ -52,8 +52,13 @@ our $known_build_essential
 our $KNOWN_BINARY_FIELDS = Lintian::Data->new('fields/binary-fields');
 our $KNOWN_UDEB_FIELDS = Lintian::Data->new('fields/udeb-fields');
 our $KNOWN_BUILD_PROFILES = Lintian::Data->new('fields/build-profiles');
-our $KNOWN_VCS_HOSTERS
-  = Lintian::Data->new('fields/vcs-hosters', qr/\s*~~\s*/, sub { $_[1]; });
+our $KNOWN_VCS_HOSTERS= Lintian::Data->new(
+    'fields/vcs-hosters',
+    qr/\s*~~\s*/,
+    sub {
+        my @ret = split(',', $_[1]);
+        return \@ret;
+    });
 my $KNOWN_INSECURE_HOMEPAGE_URIS
   = Lintian::Data->new('fields/insecure-homepage-uris');
 my $DERIVATIVE_VERSIONS= Lintian::Data->new('fields/derivative-versions',
@@ -1358,13 +1363,15 @@ sub run {
             } else {
                 $seen_vcs{$vcs}++;
                 foreach my $regex ($KNOWN_VCS_HOSTERS->all) {
-                    my $re_vcs = $KNOWN_VCS_HOSTERS->value($regex);
-                    if (   $uri =~ m/^($regex.*)/xi
-                        && $vcs ne $re_vcs
-                        && $vcs ne 'browser') {
-                        tag 'vcs-field-mismatch', "vcs-$vcs != vcs-$re_vcs",
-                          $uri;
-                        last;
+                    foreach my $re_vcs (@{$KNOWN_VCS_HOSTERS->value($regex)}) {
+                        if (   $uri =~ m/^($regex.*)/xi
+                            && $vcs ne $re_vcs
+                            && $vcs ne 'browser') {
+                            tag 'vcs-field-mismatch',
+                              "vcs-$vcs != vcs-$re_vcs",
+                              $uri;
+                            last;
+                        }
                     }
                 }
             }
@@ -1391,7 +1398,7 @@ sub run {
     # Check for missing Vcs-Browser headers
     if (!defined $info->field('vcs-browser')) {
         foreach my $regex ($KNOWN_VCS_HOSTERS->all) {
-            my $vcs = $KNOWN_VCS_HOSTERS->value($regex);
+            my $vcs = @{$KNOWN_VCS_HOSTERS->value($regex)}[0];
             if ($info->field("vcs-$vcs", '') =~ m/^($regex.*)/xi) {
                 tag 'missing-vcs-browser-field', "vcs-$vcs", $1;
                 last; # Only warn once

@@ -1,7 +1,7 @@
 # List of hosting services with their corresponding VCS
 #
 # Format:
-#   ^regex \x\s) ~~ vcs
+#   ^regex \x\s) ~~ vcs,vcs1,vcs2
 
 git://anonscm\.debian\.org/			~~ git
 https?://anonscm\.debian\.org/git/		~~ git
@@ -28,4 +28,4 @@ git://gitorious\.org/				~~ git
 git://[a-zA-Z0-9]+\.branchable\.com/		~~ git
 git://repo\.or\.cz/				~~ git
 https?://repo\.or\.cz/				~~ git
-https?://bitbucket\.org/			~~ git
+https?://bitbucket\.org/			~~ git.hg
