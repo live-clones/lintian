@@ -1,6 +1,8 @@
-lintian (2.5.93) UNRELEASED; urgency=medium
+lintian (2.5.93) unstable; urgency=medium
 
-  XXX: generate tag summary
+  * Summary of tag changes:
+    + Added:
+      - vcs-field-mismatch
 
   * checks/cruft.pm:
     + [CL] Don't emit r-data-without-readme-source by checking that .rda
@@ -13,12 +15,15 @@ lintian (2.5.93) UNRELEASED; urgency=medium
     + [CL] Apply patch from Simon McVittie to don't warn about wrong
       section for "oldlibs".
 
+  * data/spelling/corrections:
+    + [PW] Add a number of corrections.
+
   * lib/Lintian/Collect/Package.pm:
     + [CL] Support parsing the filename component of tar -tvf output when
       delimited by multiple spaces (not just a single one) to prevent
       source-contains-empty-directory false positives.  (Closes: #903307)
 
- -- Chris Lamb <lamby@debian.org>  Wed, 04 Jul 2018 21:04:44 +0200
+ -- Chris Lamb <lamby@debian.org>  Mon, 16 Jul 2018 09:39:46 +0000
 
 lintian (2.5.92) unstable; urgency=medium
 
