@@ -4,6 +4,8 @@ E: scripts-interpreters: missing-dep-for-interpreter pike7.6 => pike7.6 | pike7.
 E: scripts-interpreters: script-without-interpreter usr/bin/no-interpreter
 E: scripts-interpreters: shell-script-fails-syntax-check usr/bin/syntax
 E: scripts-interpreters: wrong-path-for-interpreter usr/bin/not-absolute (#!perl != /usr/bin/perl)
+E: scripts-interpreters: wrong-path-for-interpreter usr/bin/usr-bin-env-perl (#!/usr/bin/env != /usr/bin/perl)
+E: scripts-interpreters: wrong-path-for-interpreter usr/bin/usr-local-bin-perl (#!/usr/local/bin/perl != /usr/bin/perl)
 E: scripts-interpreters: wrong-path-for-interpreter usr/bin/wrong-perl-path (#!/bin/perl != /usr/bin/perl)
 I: scripts-interpreters: example-interpreter-not-absolute usr/share/doc/scripts-interpreters/examples/not-absolute #!perl
 I: scripts-interpreters: example-script-uses-bin-env usr/share/doc/scripts-interpreters/examples/bin-env
