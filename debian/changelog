@@ -8,6 +8,10 @@ lintian (2.5.94) UNRELEASED; urgency=medium
       (Closes: #904420)
     + [CL] Warn about mispellings of Rules-Requires-Root.  Thanks to Axel
       Beckert for the idea.  (Closes: #904522)
+  * checks/cruft.{desc,pm}:
+    + [CL] Correctly warn about packages using sensible-utils without a
+      relationship by checking all files instead of just maintainer
+      scripts.  Thanks to Guillem Jover.  (Closes: #872611)
   * checks/scripts.pm:
     + [CL] Policy 10.4 states that Perl scripts must use /usr/bin/perl
       directly and not via /usr/bin/env, etc.  (Closes: #904414)

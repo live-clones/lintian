@@ -341,6 +341,8 @@ sub run {
     # Check if package is empty
     my $is_dummy = $info->is_pkg_class('any-meta');
 
+    my $has_sensible_utils = $info->relation('all')->implies('sensible-utils');
+
     # read data from objdump-info file
     foreach my $file (sort keys %{$info->objdump_info}) {
         my $objdump = $info->objdump_info->{$file};
@@ -1479,6 +1481,10 @@ sub run {
                 tag 'nfs-temporary-file-in-package', $file;
             }
 
+            # ---------------- using sensible-utils w/o dependency
+            tag 'missing-depends-on-sensible-utils', $file
+              if not $has_sensible_utils and detect_sensible_utils($file);
+
             # ---------------- documentation files
             unless($fname =~ m,^etc/, or $fname =~ m,^usr/share/doc/,) {
                 foreach my $taboo ($DOCUMENTATION_FILE_REGEX->all) {
@@ -1969,6 +1975,20 @@ sub run {
         }
     }
 
+    # Maintainer scripts
+    open(my $fd, '<', $info->lab_data_path('control-scripts'));
+    while (<$fd>) {
+        m/^\S* (.*)$/
+          or internal_error("bad line in control-scripts file: $_");
+
+        my $file = $info->control_index_resolved_path($1);
+        next if not $file or not $file->is_open_ok;
+
+        tag 'missing-depends-on-sensible-utils', $file
+          if not $has_sensible_utils and detect_sensible_utils($file);
+    }
+    close($fd);
+
     if (!$is_dummy && !$arch_dep_files && $arch ne 'all') {
         tag 'package-contains-no-arch-dependent-files'
           unless $type eq 'udeb';
@@ -2263,6 +2283,20 @@ sub detect_privacy_breach {
             detect_generic_privacy_breach($block,\%privacybreachhash,$file);
             last;
         }
+    }
+    close($fd);
+    return;
+}
+
+sub detect_sensible_utils {
+    my ($file) = @_;
+
+    my $fd = $file->open(':raw');
+    my $sfd = Lintian::SlidingWindow->new($fd, sub { $_= lc($_); }, BLOCKSIZE);
+
+    while (my $block = $sfd->readwindow) {
+        return 1
+          if $block=~ m/(?:select-editor|sensible-(?:browser|editor|pager))\b/;
     }
     close($fd);
     return;

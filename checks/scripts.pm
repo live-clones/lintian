@@ -247,10 +247,6 @@ sub run {
     my $all_parsed = Lintian::Relation->and($info->relation('all'),
         $info->relation('provides'),$pkg);
     my $str_deps = $info->relation('strong');
-    my $has_sensible_utils
-      =Lintian::Relation->and($str_deps, $info->relation('recommends'))
-      ->implies('sensible-utils')
-      || ($pkg eq 'sensible-utils');
 
     for my $filename (sort keys %{$info->scripts}) {
         my $interpreter = $info->scripts->{$filename}{interpreter};
@@ -360,8 +356,6 @@ sub run {
                 if (check_script_syntax($interpreter, $path)) {
                     script_tag('shell-script-fails-syntax-check', $filename);
                 }
-                check_script_uses_sensible_utils($path)
-                  unless $has_sensible_utils;
             }
         }
 
@@ -640,8 +634,6 @@ sub run {
                 if (check_script_syntax("/bin/${base}", $path)) {
                     tag 'maintainer-shell-script-fails-syntax-check', $file;
                 }
-                check_script_uses_sensible_utils($path)
-                  unless $has_sensible_utils;
             }
         }
 
@@ -1304,20 +1296,6 @@ sub check_script_syntax {
         waitpid $pid, 0;
     }
     return $?;
-}
-
-sub check_script_uses_sensible_utils {
-    my ($path) = @_;
-    my $fd = $path->open;
-    while (<$fd>) {
-        if (m/${LEADIN}(?:select-editor|sensible-(?:browser|editor|pager))\b/){
-            tag 'script-needs-depends-on-sensible-utils',
-              $path->name, "(line $.)";
-            last;
-        }
-    }
-    close($fd);
-    return;
 }
 
 sub remove_comments {
