@@ -2,6 +2,9 @@ lintian (2.5.95) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
+  * checks/control-file.desc:
+    + [AB] Fix duplicate word "the" in tag description.
+
  -- Chris Lamb <lamby@debian.org>  Wed, 25 Jul 2018 20:34:15 +0800
 
 lintian (2.5.94) unstable; urgency=medium

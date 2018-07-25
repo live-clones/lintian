@@ -405,4 +405,4 @@ Certainty: certain
 Info: This source package attempts to specify a
  <tt>Rules-Requires-Root</tt> field but appears to mispell the field.
  .
- Please rename the the field to <tt>Rules-Requires-Root</tt>.
+ Please rename the field to <tt>Rules-Requires-Root</tt>.
