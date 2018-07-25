@@ -108,6 +108,11 @@ sub run {
             if (/^\Q$field\E: \s* \Q$field\E \s* :/xsmi) {
                 tag 'debian-control-repeats-field-name-in-value', "line $.";
             }
+            if (    $field =~ /^Rules?-Requires?-Roots?$/i
+                and $field ne 'rules-requires-root') {
+                tag 'spelling-error-in-rules-requires-root', $field,
+                  "(line $.)";
+            }
         }
     }
     close($fd);
