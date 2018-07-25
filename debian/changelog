@@ -1,6 +1,11 @@
-lintian (2.5.94) UNRELEASED; urgency=medium
+lintian (2.5.94) unstable; urgency=medium
 
-  XXX: generate tag summary
+  * Summary of tag changes:
+    + Added:
+      - spelling-error-in-rules-requires-root
+    + Renamed:
+      - missing-depends-on-sensible-utils =>
+        script-needs-depends-on-sensible-utils
 
   * checks/control-file.desc:
     + [CL] Raise the severity of the debian-control-has-empty-field tag
@@ -19,8 +24,10 @@ lintian (2.5.94) UNRELEASED; urgency=medium
   * data/scripts/interpreters:
     + [CL] Add the Julia language as a known interpreter via
       #!/usr/bin/julia.  (Closes: #904140)
+  * data/spelling/corrections:
+    + [PW] Add a number of corrections.
 
- -- Chris Lamb <lamby@debian.org>  Mon, 16 Jul 2018 11:00:58 +0100
+ -- Chris Lamb <lamby@debian.org>  Wed, 25 Jul 2018 12:11:14 +0000
 
 lintian (2.5.93) unstable; urgency=medium
 
