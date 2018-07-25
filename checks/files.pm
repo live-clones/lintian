@@ -1483,7 +1483,9 @@ sub run {
 
             # ---------------- using sensible-utils w/o dependency
             tag 'missing-depends-on-sensible-utils', $file
-              if not $has_sensible_utils and detect_sensible_utils($file);
+              if not $has_sensible_utils
+              and $source_pkg ne 'lintian'
+              and detect_sensible_utils($file);
 
             # ---------------- documentation files
             unless($fname =~ m,^etc/, or $fname =~ m,^usr/share/doc/,) {
