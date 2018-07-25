@@ -2,5 +2,5 @@ Testname: fields-unknown-fields
 Version: 1.0
 Description: General tests for unknown fields
 Test-For:
+ spelling-error-in-rules-requires-root
  unknown-field-in-dsc
- misspelled-rules-requires-root-field-name

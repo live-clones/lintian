@@ -46,6 +46,7 @@ Test-For:
  maintainer-script-ignores-errors
  missing-build-dependency
  missing-dep-for-interpreter
+ missing-depends-on-sensible-utils
  no-md5sums-control-file
  non-standard-executable-perm
  non-standard-setuid-executable-perm
