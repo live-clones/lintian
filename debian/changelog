@@ -5,6 +5,10 @@ lintian (2.5.95) UNRELEASED; urgency=medium
   * checks/control-file.desc:
     + [AB] Fix duplicate word "the" in tag description.
 
+  * debian/rules:
+    + [CL] Apply a patch from Felix Lechner which fixes a typo which was
+      preventing the 'runtests' target relying on test descriptions.
+
  -- Chris Lamb <lamby@debian.org>  Wed, 25 Jul 2018 20:34:15 +0800
 
 lintian (2.5.94) unstable; urgency=medium
