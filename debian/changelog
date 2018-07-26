@@ -4,6 +4,9 @@ lintian (2.5.95) UNRELEASED; urgency=medium
 
   * checks/control-file.desc:
     + [AB] Fix duplicate word "the" in tag description.
+  * checks/testsuite.pm:
+    + [CL] Move list of known fields, "Restriction" fields and testsuites
+      to files under data/testsuite/.
 
   * debian/rules:
     + [CL] Apply a patch from Felix Lechner which fixes a typo which was

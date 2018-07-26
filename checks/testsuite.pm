@@ -23,6 +23,7 @@ use strict;
 use warnings;
 use autodie;
 
+use Lintian::Data;
 use Lintian::Relation;
 use Lintian::Tags qw(tag);
 use Lintian::Util qw(
@@ -32,43 +33,12 @@ use Lintian::Util qw(
 );
 
 # empty because it is test xor test-command
-my @MANDATORY_FIELDS = qw(
-);
+my @MANDATORY_FIELDS = qw();
 
-my %KNOWN_FIELDS = map { $_ => 1 } qw(
-  tests
-  restrictions
-  features
-  depends
-  tests-directory
-  test-command
-);
-my %KNOWN_FEATURES = map { $_ => 1 } qw(
-);
-my %KNOWN_RESTRICTIONS = map { $_ => 1 } qw(
-  allow-stderr
-  breaks-testbed
-  build-needed
-  isolation-container
-  isolation-machine
-  needs-reboot
-  needs-recommends
-  needs-root
-  rw-build-tree
-);
-
-my %KNOWN_TESTSUITES = map { $_ => 1 } qw(
-  autopkgtest
-  autopkgtest-pkg-dkms
-  autopkgtest-pkg-elpa
-  autopkgtest-pkg-go
-  autopkgtest-pkg-nodejs
-  autopkgtest-pkg-octave
-  autopkgtest-pkg-perl
-  autopkgtest-pkg-python
-  autopkgtest-pkg-r
-  autopkgtest-pkg-ruby
-);
+my %$NOWN_FEATURES = map { $_ => 1 } qw();
+my $KNOWN_FIELDS = Lintian::Data->new('testsuite/known-fields');
+my $KNOWN_RESTRICTIONS = Lintian::Data->new('testsuite/known-restrictions');
+my $KNOWN_TESTSUITES = Lintian::Data->new('testsuite/known-testsuites');
 
 my %KNOWN_SPECIAL_DEPENDS = map { $_ => 1 } qw(
   @
@@ -84,9 +54,9 @@ sub run {
     tag 'testsuite-autopkgtest-missing' if ($testsuites !~ /autopkgtest/);
 
     for my $testsuite (split(m/\s*,\s*/o, $testsuites)) {
-        if (not exists($KNOWN_TESTSUITES{$testsuite})) {
-            tag 'unknown-testsuite', $testsuite;
-        }
+        tag 'unknown-testsuite', $testsuite
+          unless $KNOWN_TESTSUITES->known($testsuite);
+
         $needs_control = 1 if $testsuite eq 'autopkgtest';
     }
     if ($needs_control xor defined($control)) {
@@ -152,10 +122,9 @@ sub check_control_paragraph {
     }
 
     for my $fieldname (sort(keys(%{$paragraph}))) {
-        if (not exists $KNOWN_FIELDS{$fieldname}) {
-            tag 'unknown-runtime-tests-field', $fieldname,
-              'paragraph starting at line', $line;
-        }
+        tag 'unknown-runtime-tests-field', $fieldname,
+          'paragraph starting at line', $line
+          unless $KNOWN_FIELDS->known($fieldname);
     }
 
     if (exists $paragraph->{'features'}) {
@@ -171,10 +140,9 @@ sub check_control_paragraph {
     if (exists $paragraph->{'restrictions'}) {
         my $restrictions = strip($paragraph->{'restrictions'});
         for my $restriction (split(/\s*,\s*|\s+/ms, $restrictions)) {
-            if (not exists $KNOWN_RESTRICTIONS{$restriction}) {
-                tag 'unknown-runtime-tests-restriction', $restriction,
-                  'paragraph starting at line', $line;
-            }
+            tag 'unknown-runtime-tests-restriction', $restriction,
+              'paragraph starting at line', $line
+              unless $KNOWN_RESTRICTIONS->known($restriction);
         }
     }
 

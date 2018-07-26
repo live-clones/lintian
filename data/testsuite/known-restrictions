@@ -1,0 +1,10 @@
+# Known Restrictions in debian/tests/control
+
+breaks-testbed
+build-needed
+isolation-container
+isolation-machine
+needs-reboot
+needs-recommends
+needs-root
+rw-build-tree
