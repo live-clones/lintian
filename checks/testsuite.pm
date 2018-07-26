@@ -35,7 +35,7 @@ use Lintian::Util qw(
 # empty because it is test xor test-command
 my @MANDATORY_FIELDS = qw();
 
-my %$NOWN_FEATURES = map { $_ => 1 } qw();
+my %KNOWN_FEATURES = map { $_ => 1 } qw();
 my $KNOWN_FIELDS = Lintian::Data->new('testsuite/known-fields');
 my $KNOWN_RESTRICTIONS = Lintian::Data->new('testsuite/known-restrictions');
 my $KNOWN_TESTSUITES = Lintian::Data->new('testsuite/known-testsuites');
