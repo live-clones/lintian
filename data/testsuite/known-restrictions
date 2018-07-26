@@ -2,9 +2,11 @@
 
 breaks-testbed
 build-needed
+flaky
 isolation-container
 isolation-machine
 needs-reboot
 needs-recommends
 needs-root
 rw-build-tree
+skippable

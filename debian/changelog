@@ -8,6 +8,11 @@ lintian (2.5.95) UNRELEASED; urgency=medium
     + [CL] Move list of known fields, "Restriction" fields and testsuites
       to files under data/testsuite/.
 
+  * data/testsuite/known-restrictions:
+    + Add "flaky" and "skippable" to the list of known Restrictions in
+      testsuite definitions.  Thanks to Rebecca N. Palmer.
+      (Closes: #904623)
+
   * debian/rules:
     + [CL] Apply a patch from Felix Lechner which fixes a typo which was
       preventing the 'runtests' target relying on test descriptions.
