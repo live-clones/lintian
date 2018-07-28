@@ -19,6 +19,9 @@ lintian (2.5.95) UNRELEASED; urgency=medium
       (Closes: #904936)
     + [CL] Add Suggests and Pre-Depends as potential relations with the
       sensible-utils package.  Thanks to Guillem Jover for the idea.
+  * checks/python.{desc,pm}:
+    + [CL] Check for Python packages that have a relation on both Python 2
+      and Python 3.  (Closes: #904817)
   * checks/testsuite.{desc,pm}:
     + [CL] Warn about packages that have a single, no-op autopkgtest.
       (Closes: #905030)

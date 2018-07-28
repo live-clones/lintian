@@ -32,6 +32,7 @@ use Lintian::Relation::Version qw(versions_lte);
 my @FIELDS = qw(Depends Pre-Depends Recommends Suggests);
 my @IGNORE = qw(-dev$ -docs?$ -common$ -tools$);
 my @PYTHON2 = qw(python python2.7 python-dev);
+my @PYTHON3 = qw(python3 python3-dev);
 
 my %DJANGO_PACKAGES = (
     '^python3-django-' => 'python3-django',
@@ -174,6 +175,20 @@ sub _run_binary {
                 and not $deps->implies($REQUIRED_DEPENDS{$+{version}})) {
                 tag 'python-package-missing-depends-on-python';
                 last;
+            }
+        }
+    }
+
+    # Check for duplicate dependencies
+    for my $field (@FIELDS) {
+        my $dep = $info->relation($field);
+      FIELD: for my $py2 (@PYTHON2) {
+            for my $py3 (@PYTHON3) {
+                if ($dep->implies("$py2:any") and $dep->implies("$py3:any")) {
+                    tag 'depends-on-python2-and-python3',
+                      "$field: $py2, [..], $py3";
+                    last FIELD;
+                }
             }
         }
     }
