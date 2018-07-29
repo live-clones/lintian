@@ -128,17 +128,22 @@ Ref: https://salsa.debian.org/ci-team/autopkgtest/tree/master/doc/README.package
 Tag: testsuite-autopkgtest-missing
 Severity: wishlist
 Certainty: certain
-Info: This package does not declare a test suite. Having a test suite helps with
- automated QA in response to changes in the archive. For example, if your
- package has a test suite, it is possible to re-execute that test suite when
- any of the package dependencies has a new version and check whether that
- update caused problems for your package.
+Info: This package does not declare a test suite.
  .
- To declare a test suite, please add a <tt>debian/tests/control</tt> file to
- your package.
+ Having a test suite aids with automated quality assurance of the
+ archive outside of your package. For example, if your package has a
+ test suite it is possible to re-run that test suite when any of your
+ package's dependencies have a new version and check whether that update
+ causes problems for your package.
  .
- For more information on how to add functional tests to your package, browse to
- https://ci.debian.net/doc/.
+ In addition, since May 2018 such tests now influence migration from
+ unstable to testing:
+ .
+  https://lists.debian.org/debian-devel-announce/2018/05/msg00001.html
+ .
+ Please add a <tt>debian/tests/control</tt> file to your package to
+ declare a testsuite.
+Ref: https://ci.debian.net/doc/
 
 Tag: unnecessary-testsuite-autopkgtest-field
 Severity: normal

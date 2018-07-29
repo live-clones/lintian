@@ -4,9 +4,12 @@ lintian (2.5.95) UNRELEASED; urgency=medium
 
   * checks/control-file.desc:
     + [AB] Fix duplicate word "the" in tag description.
-  * checks/testsuite.pm:
+  * checks/testsuite.{desc,pm}:
     + [CL] Move list of known fields, "Restriction" fields and testsuites
       to files under data/testsuite/.
+    + [CL] Improve the long description of the
+      testsuite-autopkgtest-missing tag; in particular, reference that
+      autopkgtest results now influence migration from unstable to testing.
 
   * data/testsuite/known-restrictions:
     + Add "flaky" and "skippable" to the list of known Restrictions in
