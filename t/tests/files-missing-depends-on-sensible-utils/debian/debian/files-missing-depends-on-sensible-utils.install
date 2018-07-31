@@ -1,1 +1,2 @@
 test-script var/lib/test
+test-script usr/share/locale

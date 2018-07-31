@@ -8,6 +8,9 @@ lintian (2.5.95) UNRELEASED; urgency=medium
     + [CL] Warn about R packages incorrectly set to "Architecture:
       any".  (Closes: #904985)
   * checks/files.{desc,pm}:
+    + [CL] Whitelist files in /usr/share/doc and /usr/share/locale for the
+      missing-depends-on-sensible-utils tag and update testsuite to match.
+      (Closes: #904936)
     + [CL] Add Suggests and Pre-Depends as potential relations with the
       sensible-utils package.  Thanks to Guillem Jover for the idea.
   * checks/testsuite.{desc,pm}:

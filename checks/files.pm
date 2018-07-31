@@ -1484,6 +1484,7 @@ sub run {
             # ---------------- using sensible-utils w/o dependency
             tag 'missing-depends-on-sensible-utils', $file
               if not $has_sensible_utils
+              and $fname !~ m,^usr/share/(?:doc|locale)/,
               and $source_pkg ne 'lintian'
               and detect_sensible_utils($file);
 
