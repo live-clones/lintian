@@ -1976,5 +1976,6 @@ Info: The listed file appears to use one or more of the binaries
  <tt>debianutils</tt>, the remaining <tt>Depends</tt> from
  <tt>debianutils</tt> was removed in version 4.8.2.
  .
- In most cases you will need to add a <tt>Depends</tt> or
- <tt>Recommends</tt> on <tt>sensible-utils</tt>.
+ In most cases you will need to add a <tt>Depends</tt>,
+ <tt>Recommends</tt>, <tt>Pre-Depends</tt> or <tt>Suggests</tt>
+ on <tt>sensible-utils</tt>.
