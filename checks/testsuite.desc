@@ -141,8 +141,9 @@ Info: This package does not declare a test suite.
  .
   https://lists.debian.org/debian-devel-announce/2018/05/msg00001.html
  .
- Please add a <tt>debian/tests/control</tt> file to your package to
- declare a testsuite.
+ Please add a <tt>debian/tests/control</tt> file to your package to declare a
+ testsuite, but please make sure to only add autopkgtests if they provide
+ meaningful coverage of your package.
 Ref: https://ci.debian.net/doc/
 
 Tag: unnecessary-testsuite-autopkgtest-field
