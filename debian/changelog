@@ -4,6 +4,9 @@ lintian (2.5.95) UNRELEASED; urgency=medium
 
   * checks/control-file.desc:
     + [AB] Fix duplicate word "the" in tag description.
+  * checks/fields.{desc.pm}:
+    + [CL] Warn about R packages incorrectly set to "Architecture:
+      any".  (Closes: #904985)
   * checks/testsuite.{desc,pm}:
     + [CL] Move list of known fields, "Restriction" fields and testsuites
       to files under data/testsuite/.

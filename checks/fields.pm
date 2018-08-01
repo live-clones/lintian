@@ -455,6 +455,15 @@ sub run {
                 if ($pkg =~ /-docs?$/ && $archs[0] ne 'all') {
                     tag 'documentation-package-not-architecture-independent';
                 }
+                if ($pkg =~ /^r-(?:cran|bioc|other)-/ and $archs[0] ne 'all') {
+                    for my $file ($info->sorted_index) {
+                        next if $file->is_dir;
+                        next if $file !~ m,^usr/lib/R/.*/DESCRIPTION,;
+                        tag 'r-package-not-arch-all'
+                          if $file->file_contents =~ m/NeedsCompilation: no/m;
+                        last;
+                    }
+                }
             }
         }
         # Used for later tests.
