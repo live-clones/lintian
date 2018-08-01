@@ -14,6 +14,8 @@ lintian (2.5.95) UNRELEASED; urgency=medium
     + [CL] Add Suggests and Pre-Depends as potential relations with the
       sensible-utils package.  Thanks to Guillem Jover for the idea.
   * checks/testsuite.{desc,pm}:
+    + [CL] Warn about packages that have a single, no-op autopkgtest.
+      (Closes: #905030)
     + [CL] Move list of known fields, "Restriction" fields and testsuites
       to files under data/testsuite/.
     + [CL] Improve the long description of the

@@ -96,6 +96,10 @@ sub check_control_contents {
             check_control_paragraph($info, $paragraph,
                 $lines[$index]{'START-OF-PARAGRAPH'});
         }
+        if (scalar(@paragraphs) == 1) {
+            my $cmd = $paragraphs[0]->{'test-command'} // '';
+            tag 'no-op-testsuite' if $cmd =~ m,^\s*(/bin/)?true,;
+        }
     }
     return;
 }
