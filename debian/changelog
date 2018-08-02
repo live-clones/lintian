@@ -22,6 +22,8 @@ lintian (2.5.95) UNRELEASED; urgency=medium
       testsuite-autopkgtest-missing tag; in particular, reference that
       autopkgtest results now influence migration from unstable to testing.
 
+  * data/standards-version/release-dates:
+    + [CL] Add 4.2.0 as a known Standards-Version.
   * data/testsuite/known-restrictions:
     + Add "flaky" and "skippable" to the list of known Restrictions in
       testsuite definitions.  Thanks to Rebecca N. Palmer.
