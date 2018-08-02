@@ -6,6 +6,10 @@
 # To get the date of a new standards version, try:
 #
 #     date '+%s' -d '<date of release>'
+#
+# You can get the release date from:
+#
+#     https://salsa.debian.org/dbnpolicy/policy/blob/master/debian/changelog
 
 4.1.5  1530701350
 4.1.4  1522944496
