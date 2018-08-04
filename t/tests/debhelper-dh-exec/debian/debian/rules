@@ -3,10 +3,10 @@
 %:
 	dh $@
 
-# Ignore the "docs" file as we do not really depend on dh-exec and we
+# Ignore the "mime" file as we do not really depend on dh-exec and we
 # do not really need the files listed there for the test.
-override_dh_installdocs:
-	dh_installdocs --ignore debian/docs
+override_dh_installmime:
+
 
 override_dh_installman:
 
