@@ -22,6 +22,8 @@ lintian (2.5.95) UNRELEASED; urgency=medium
       testsuite-autopkgtest-missing tag; in particular, reference that
       autopkgtest results now influence migration from unstable to testing.
 
+  * data/debhelper/filename-config-files:
+    + [NT] Add mime and sharedmimeinfo as known debhelper config files.
   * data/scripts/interpreters:
     + [CL] Prevent ruby-script-but-no-ruby-dep false positives by also
       accepting ruby:any as a dependency.  Thanks to Marc Dequènes for the
