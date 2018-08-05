@@ -2,6 +2,9 @@ lintian (2.5.95) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
+  * checks/changes-file.{desc,pm}:
+    + [CL] Detect source-only uploads to non-free uploads that will not be
+      autobuilt by default.  (Closes: #905467)
   * checks/control-file.desc:
     + [AB] Fix duplicate word "the" in tag description.
   * checks/fields.{desc.pm}:

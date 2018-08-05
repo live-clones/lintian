@@ -23,7 +23,7 @@ use strict;
 use warnings;
 use autodie;
 
-use List::MoreUtils qw(none);
+use List::MoreUtils qw(none any);
 
 use Lintian::Tags qw(tag);
 use Lintian::Check qw(check_maintainer);
@@ -243,6 +243,12 @@ sub run {
                 tag 'checksum-mismatch-in-changes-file', $alg, $file;
             }
         }
+    }
+
+    if (    any { $files->{$_}->{section} =~ m,^non-free/.+, } keys %$files
+        and $info->field('autobuild', '') ne 'yes'
+        and $info->field('architecture', '') eq 'source') {
+        tag 'source-only-upload-to-non-free-without-autobuild';
     }
 
     # Check that we have a consistent number of checksums and files
