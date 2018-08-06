@@ -287,7 +287,7 @@ sub run {
         $compatvirtual = 1;
         tag 'debhelper-compat-virtual-relation', $compatvirtual;
         #<<< no perltidy - tag name too long
-        tag 'debhelper-and-debhelper-compat-virtual-relation-with-unsupported-version'
+        tag 'debhelper-compat-virtual-relation-with-unsupported-version'
           if $level >= 10
           and $bdepends->implies('debhelper')
           and not $bdepends->implies('debhelper (>= 11.3.6~)');

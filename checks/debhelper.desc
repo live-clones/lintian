@@ -473,7 +473,7 @@ Info: This package does not appear to use a build system helper such as
  barriers to entry from external contributors.
 Ref: debhelper(7), dh(1), https://build-common.alioth.debian.org/
 
-Tag: debhelper-and-debhelper-compat-virtual-relation-with-unsupported-version
+Tag: debhelper-compat-virtual-relation-with-unsupported-version
 Severity: serious
 Certainty: certain
 Ref: debhelper(7)
