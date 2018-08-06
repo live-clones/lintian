@@ -27,7 +27,7 @@ use List::MoreUtils qw(any);
 use Text::Levenshtein qw(distance);
 
 use Lintian::Data;
-use Lintian::Relation;
+use Lintian::Relation qw(:constants);
 use Lintian::Tags qw(tag);
 use Lintian::Util qw(strip);
 
@@ -63,6 +63,7 @@ sub run {
     my $inclcdbs = 0;
 
     my ($bdepends_noarch, $bdepends, %build_systems, $uses_autotools_dev_dh);
+    $bdepends = $info->relation('build-depends-all');
     my $seen_dh = 0;
     my $seen_dh_parallel = 0;
     my $seen_python_helper = 0;
@@ -242,7 +243,6 @@ sub run {
     close($rules_fd);
 
     unless ($inclcdbs){
-        my $bdepends = $info->relation('build-depends-all');
         # Okay - d/rules does not include any file in /usr/share/cdbs/
         tag 'unused-build-dependency-on-cdbs' if ($bdepends->implies('cdbs'));
     }
@@ -279,7 +279,23 @@ sub run {
     }
 
     my $compatnan = 0;
+    my $compatvirtual;
     my $compat_file = $droot->child('compat');
+    my $visit = sub {
+        return 0 unless m,^debhelper-compat \(= (\d+)\)$,;
+        $level = $1;
+        $compatvirtual = 1;
+        tag 'debhelper-compat-virtual-relation', $compatvirtual;
+        #<<< no perltidy - tag name too long
+        tag 'debhelper-and-debhelper-compat-virtual-relation-with-unsupported-version'
+          if $level >= 10
+          and $bdepends->implies('debhelper')
+          and not $bdepends->implies('debhelper (>= 11.3.6~)');
+        #>>>
+        return 1;
+    };
+    $bdepends->visit($visit, VISIT_PRED_FULL | VISIT_STOP_FIRST_MATCH);
+
     # Check the compat file.  Do this separately from looping over all
     # of the other files since we use the compat value when checking
     # for brace expansion.
@@ -315,7 +331,7 @@ sub run {
             tag 'debhelper-compat-file-is-empty';
         }
     } else {
-        tag 'debhelper-compat-file-is-missing';
+        tag 'debhelper-compat-file-is-missing' unless $compatvirtual;
     }
 
     if (defined($level) and $level !~ m/^\d+$/ and not $compatnan) {
@@ -457,8 +473,10 @@ sub run {
 
     $bdepends_noarch = $info->relation_noarch('build-depends-all');
     $bdepends = $info->relation('build-depends-all');
-    if ($needbuilddepends && !$bdepends->implies('debhelper')) {
-        tag 'package-uses-debhelper-but-lacks-build-depends';
+    if ($needbuilddepends) {
+        tag 'package-uses-debhelper-but-lacks-build-depends'
+          unless $bdepends->implies('debhelper')
+          or $bdepends->implies('debhelper-compat');
     }
     if ($needdhexecbuilddepends && !$bdepends->implies('dh-exec')) {
         tag 'package-uses-dh-exec-but-lacks-build-depends';
@@ -488,7 +506,8 @@ sub run {
     }
 
     $dh_bd_version = $level if not defined($dh_bd_version);
-    unless ($bdepends->implies("debhelper (>= ${dh_bd_version}~)")){
+    unless ($bdepends->implies("debhelper (>= ${dh_bd_version}~)")
+        or $bdepends->implies("debhelper-compat (= ${dh_bd_version})")){
         my $tagname = 'package-needs-versioned-debhelper-build-depends';
         my @extra = ($level);
         $tagname = 'package-lacks-versioned-build-depends-on-debhelper'

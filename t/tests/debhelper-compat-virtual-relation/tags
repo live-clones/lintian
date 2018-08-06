@@ -1,0 +1,2 @@
+C: debhelper-compat-virtual-relation source: debhelper-compat-virtual-relation 1
+C: debhelper-compat-virtual-relation source: debian-build-system dh

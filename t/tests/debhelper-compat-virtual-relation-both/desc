@@ -1,0 +1,7 @@
+Testname: debhelper-compat-virtual-relation-both
+Version: 1.0
+Description: Test both debhelper and debhelper-compat as a build-dependency
+Test-Depends:
+ debhelper (>= 11.3~)
+Test-Against:
+ debhelper-and-debhelper-compat-virtual-relation-with-unsupported-version

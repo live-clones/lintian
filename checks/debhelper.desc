@@ -18,7 +18,11 @@ Tag: package-uses-debhelper-but-lacks-build-depends
 Severity: important
 Certainty: possible
 Info: If a package uses debhelper, it must declare a Build-Depends
- on debhelper.
+ on debhelper or on the debhelper-compat virtual package. For example:
+ .
+  Build-Depends: debhelper (>= 11~)
+ .
+  Build-Depends: debhelper-compat (= 11)
 
 Tag: package-lacks-versioned-build-depends-on-debhelper
 Severity: pedantic
@@ -50,6 +54,11 @@ Info: The package either doesn't declare a versioned build dependency on
  used by the package, even if the versioned dependency isn't strictly
  necessary.  Having a versioned dependency also helps with backports to
  older releases and correct builds on partially updated systems.
+ .
+ Packages may alternatively Build-Depend on the debhelper-compat
+ package, for example:
+ .
+  Build-Depends: debhelper-compat (= 11)
  .
  Note if you are using a compat level, which is marked as experimental,
  such as compat 9 in debhelper 8.1.3, then please override this tag.
@@ -322,8 +331,11 @@ Info: The package uses dh-exec for things it is not needed for.
 Tag: debhelper-compat-file-is-missing
 Severity: normal
 Certainty: certain
-Info: The package uses debhelper but does not ship a compat file.
- This is deprecated and eventually cause the package to FTBFS.
+Info: The package build-depends on debhelper but does not ship a compat
+ file. Packages may alternatively Build-Depend on the debhelper-compat
+ virtual package, For example:
+ .
+  Build-Depends: debhelper-compat (= 11)
  .
  Please refer to the debhelper documentation on how to create the
  compat file and the differences between each compat level.
@@ -361,6 +373,12 @@ Severity: classification
 Certainty: certain
 Info: This is the build system that Lintian believes the package is
  using.
+
+Tag: debhelper-compat-virtual-relation
+Severity: classification
+Certainty: certain
+Info: This package is using the <tt>debhelper-compat</tt> virtual
+ package as a build-dependency.
 
 Tag: typo-in-debhelper-override-target
 Severity: normal
@@ -454,3 +472,13 @@ Info: This package does not appear to use a build system helper such as
  distribution-wide changes to packages and reduce the "bus factor" &
  barriers to entry from external contributors.
 Ref: debhelper(7), dh(1), https://build-common.alioth.debian.org/
+
+Tag: debhelper-and-debhelper-compat-virtual-relation-with-unsupported-version
+Severity: serious
+Certainty: certain
+Ref: debhelper(7)
+Info: This package appears to be using the <tt>debhelper-compat</tt>
+ virtual package as a build-dependency as well as <tt>debhelper</tt>.
+ However, this requires a debhelper 11.3.6 or later.
+ .
+ Please add a versioned build-depends on "debhelper (>= 11.3.6~)".

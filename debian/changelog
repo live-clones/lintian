@@ -2,6 +2,9 @@ lintian (2.5.95) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
+  * checks/debhelper.{desc,pm}:
+    + [CL] Support "debhelper-compat (= X)" build-dependency as a
+      replacement for "debhelper (>= X~)".  (Closes: #904886)
   * checks/changes-file.{desc,pm}:
     + [CL] Detect source-only uploads to non-free uploads that will not be
       autobuilt by default.  (Closes: #905467)
