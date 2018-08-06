@@ -20,7 +20,7 @@ Certainty: possible
 Info: If a package uses debhelper, it must declare a Build-Depends
  on debhelper or on the debhelper-compat virtual package. For example:
  .
-  Build-Depends: debhelper (>= 11~)
+  Build-Depends: debhelper (&gt;= 11~)
  .
   Build-Depends: debhelper-compat (= 11)
 
@@ -481,4 +481,4 @@ Info: This package appears to be using the <tt>debhelper-compat</tt>
  virtual package as a build-dependency as well as <tt>debhelper</tt>.
  However, this requires a debhelper 11.3.6 or later.
  .
- Please add a versioned build-depends on "debhelper (>= 11.3.6~)".
+ Please add a versioned build-depends on "debhelper (&gt;= 11.3.6~)".
