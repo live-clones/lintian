@@ -472,13 +472,3 @@ Info: This package does not appear to use a build system helper such as
  distribution-wide changes to packages and reduce the "bus factor" &
  barriers to entry from external contributors.
 Ref: debhelper(7), dh(1), https://build-common.alioth.debian.org/
-
-Tag: debhelper-compat-virtual-relation-with-unsupported-version
-Severity: serious
-Certainty: certain
-Ref: debhelper(7)
-Info: This package appears to be using the <tt>debhelper-compat</tt>
- virtual package as a build-dependency as well as <tt>debhelper</tt>.
- However, this requires a debhelper 11.3.6 or later.
- .
- Please add a versioned build-depends on "debhelper (&gt;= 11.3.6~)".

@@ -286,12 +286,6 @@ sub run {
         $level = $1;
         $compatvirtual = $level;
         tag 'debhelper-compat-virtual-relation', $compatvirtual;
-        #<<< no perltidy - tag name too long
-        tag 'debhelper-compat-virtual-relation-with-unsupported-version'
-          if $level >= 10
-          and $bdepends->implies('debhelper')
-          and not $bdepends->implies('debhelper (>= 11.3.6~)');
-        #>>>
         return 1;
     };
     $bdepends->visit($visit, VISIT_PRED_FULL | VISIT_STOP_FIRST_MATCH);
