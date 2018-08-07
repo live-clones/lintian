@@ -284,7 +284,7 @@ sub run {
     my $visit = sub {
         return 0 unless m,^debhelper-compat \(= (\d+)\)$,;
         $level = $1;
-        $compatvirtual = 1;
+        $compatvirtual = $level;
         tag 'debhelper-compat-virtual-relation', $compatvirtual;
         #<<< no perltidy - tag name too long
         tag 'debhelper-compat-virtual-relation-with-unsupported-version'
