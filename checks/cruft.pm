@@ -802,6 +802,7 @@ sub find_cruft {
             # debian/changelog
             if (   $short ne 'changelog'
                 && $name !~ m{^debian/patches/.*$}
+                && $name !~ m{^debian/(?:.+\.)?install$}
                 && $entry->is_file
                 && $entry->is_open_ok) {
                 my $contents = $entry->file_contents;

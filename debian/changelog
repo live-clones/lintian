@@ -10,6 +10,10 @@ lintian (2.5.95) UNRELEASED; urgency=medium
       autobuilt by default.  (Closes: #905467)
   * checks/control-file.desc:
     + [AB] Fix duplicate word "the" in tag description.
+  * checks/cruft.pm:
+    + [CL] Don't emit mentions-deprecated-usr-lib-perl5-directory for
+      debian/*.install files as they are used as source directories.
+      (Closes: #905635)
   * checks/fields.{desc.pm}:
     + [CL] Warn about R packages incorrectly set to "Architecture:
       any".  (Closes: #904985)
