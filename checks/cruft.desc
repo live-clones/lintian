@@ -601,13 +601,13 @@ Tag: license-problem-cc-by-nc-sa
 Severity: serious
 Certainty: possible
 Info: The given source file is copyrighted under the non-free
- license creative commons non-commercial share-alike.
+ Creative Commons Non-Commercial Share-Alike (CC-NC-SA) license.
 
 Tag: license-problem-non-free-img-lenna
 Severity: serious
 Certainty: possible
 Ref: https://en.wikipedia.org/wiki/Lenna, https://www.debian.org/vote/2012/vote_002, #771191
-Info: The given source file is cropped from playboy centerfold.
+Info: The given source file is cropped from a Playboy centerfold.
  .
  This image is a picture of Lena Söderberg,
  shot by photographer Dwight Hooker, cropped from
@@ -624,9 +624,8 @@ Info: The given source file is cropped from playboy centerfold.
  .
  Please use well known and free test images.
  .
- Please also submit md5sum, sha1sum, and sha256 of this file
+ Please also submit the md5sum, sha1sum, and sha256 of this file
  as a bug report for Lintian.
-
 
 Tag: license-problem-bad-php-license
 Severity: serious
