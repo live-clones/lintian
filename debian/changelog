@@ -1,6 +1,12 @@
-lintian (2.5.95) UNRELEASED; urgency=medium
+lintian (2.5.95) unstable; urgency=medium
 
-  XXX: generate tag summary
+  * Summary of tag changes:
+    + Added:
+      - debhelper-compat-virtual-relation
+      - depends-on-python2-and-python3
+      - no-op-testsuite
+      - r-package-not-arch-all
+      - source-only-upload-to-non-free-without-autobuild
 
   * checks/debhelper.{desc,pm}:
     + [CL] Support "debhelper-compat (= X)" build-dependency as a
@@ -41,6 +47,8 @@ lintian (2.5.95) UNRELEASED; urgency=medium
     + [CL] Prevent ruby-script-but-no-ruby-dep false positives by also
       accepting ruby:any as a dependency.  Thanks to Marc Dequènes for the
       bug report.  (Closes: #905258)
+  * data/spelling/corrections:
+    + [PW] Add a number of corrections.
   * data/standards-version/release-dates:
     + [CL] Add 4.2.0 as a known Standards-Version.
   * data/testsuite/known-restrictions:
@@ -56,7 +64,7 @@ lintian (2.5.95) UNRELEASED; urgency=medium
     + [CL] Apply a patch from Felix Lechner which fixes a typo which was
       preventing the 'runtests' target relying on test descriptions.
 
- -- Chris Lamb <lamby@debian.org>  Wed, 25 Jul 2018 20:34:15 +0800
+ -- Chris Lamb <lamby@debian.org>  Tue, 07 Aug 2018 13:02:08 +0000
 
 lintian (2.5.94) unstable; urgency=medium
 
