@@ -840,3 +840,17 @@ Info: The specified maintainer script uses <tt>set -e</tt> but seems to
  Please guard the return code of the call via wrapping it in a suitable
  <tt>if</tt> construct or by appending <tt>|| true</tt>.
 Ref: #890224, udevadm(8)
+
+Tag: maintainer-script-should-not-use-dpkg-database-directly
+Severity: normal
+Certainty: possible
+Info: The specified maintainer script appears to access the
+ <tt>dpkg(1)</tt> database directly.
+ .
+ The entire dpkg database, its layout and files are an internal
+ interface to dpkg and no program or package should be accessing it
+ other than dpkg itself and any of the dpkg suite tools.
+ .
+ Whilst the editable by a dmin, that's a supported (but unrecommended)
+ feature reserved for humans and not for automatic tools.
+Ref: dpkg(1), #905469

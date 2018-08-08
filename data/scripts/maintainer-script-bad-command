@@ -32,6 +32,7 @@ maintainer-script-should-not-modify-netbase-managed-file        ~~ 0 ~~         
 maintainer-script-should-not-use-adduser-system-without-home    ~~ 1 ~~                    ~~          ~~(adduser\s(?:(?!.*(?<=\s)--home\s.*\s--system).*(?<=\s)--system(?=\s)(?!.*\s--home\s+(?:["]?/(?!home/)|["]?\$[\(\[\{]?))|--home\s+["]?/home/.*\s--system(?:\s|$)).*)
 maintainer-script-should-not-use-deprecated-chown-usage         ~~ 0 ~~                    ~~          ~~(chown(?:\s+--?[A-Za-z-]+)*\s+[-_A-Za-z0-9]+\.[-_A-Za-z0-9]+)\s+
 maintainer-script-should-not-use-dpkg-status-directly           ~~ 1 ~~^(base-files|dpkg)$ ~~          ~~/var/lib/dpkg/status\b
+maintainer-script-should-not-use-dpkg-database-directly         ~~ 1 ~~^(base-files|dpkg)$ ~~          ~~(/var/lib/dpkg/(?:triggers/.+|info/[^\.]+\.(?:md5sums|list|conffiles|shlibs|(?:pre|post)inst)\b))
 maintainer-script-should-not-use-fc-cache                       ~~ 0 ~~^(fontconfig)$      ~~          ~~${LEADIN}(?:/usr/bin/)?fc-cache(?:\s|\Z)
 maintainer-script-should-not-use-gconftool                      ~~ 1 ~~^(gconf\d)$         ~~          ~~(?:/usr/bin/)?gconftool(?:-\d)?(?:\s|\Z)
 maintainer-script-should-not-use-install-sgmlcatalog            ~~ 1 ~~                    ~~          ~~\binstall-sgmlcatalog\b
@@ -42,5 +43,3 @@ maintainer-script-should-not-use-update-alternatives-remove     ~~ 1 ~~         
 maintainer-script-should-not-use-update-alternatives-set        ~~ 1 ~~                    ~~          ~~^(?!\s*echo\s+["'][^'"]*)\bupdate\-alternatives\s+\-\-(?:set|set\-selections|config)\b
 trailing-slash-for-dpkg-maintscript-helper-symlink_to_dir       ~~ 1 ~~                    ~~          ~~ dpkg-maintscript-helper\s+symlink_to_dir\s+[^\s]+/\s
 maintainer-script-may-use-dir_to_symlink_helper                 ~~ 1 ~~                    ~~          ~~ ln[ ]*-f?s.*doc
-
-

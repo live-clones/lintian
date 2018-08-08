@@ -219,4 +219,12 @@ chmod --recursive 777 /bad
 find /bad -maxdepth 2 -type d -exec chown root:root {} \; # (#895370)
 find /bad -maxdepth 2 -type d -exec chmod 777  # (#895370)
 
+echo /var/lib/dpkg/info/other-package.conffiles
+echo /var/lib/dpkg/info/other-package.md5sums
+echo /var/lib/dpkg/info/other-package.shlibs
+echo /var/lib/dpkg/info/other-package.postinst
+echo /var/lib/dpkg/info/other-package.preinst
+echo /var/lib/dpkg/info/other-package.list
+echo /var/lib/dpkg/triggers/other-package
+
 #DEBHELPER#
