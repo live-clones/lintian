@@ -81,8 +81,13 @@ sub run {
 
     if ($copyright_path->is_open_ok) {
         my $contents = $copyright_path->file_contents;
+
         _check_dep5_copyright($info, $contents);
         _check_apache_notice_files($info, $group, $contents);
+
+        tag 'incomplete-creative-commons-license'
+          if $contents =~ m/\nLicense: CC-/m
+          and $contents !~ m/not a law firm/i;
     }
     return;
 }

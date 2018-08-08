@@ -5,6 +5,9 @@ lintian (2.5.96) UNRELEASED; urgency=medium
   * checks/cruft.desc:
     + [CL] Tidy the description of the license-problem-cc-by-nc-sa and
       license-problem-non-free-img-lenna tags.
+  * checks/source-copyright.{desc,pm}:
+    + [CL] Check for Creative Commons license texts that use the incomplete
+      "human-readable" summary.  (Closes: #903470)
 
   * data/scripts/maintainer-script-bad-command:
     + [CL] Warn about packages that directly query the dpkg database in
