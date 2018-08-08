@@ -848,9 +848,9 @@ Info: The specified maintainer script appears to access the
  <tt>dpkg(1)</tt> database directly.
  .
  The entire dpkg database, its layout and files are an internal
- interface to dpkg and no program or package should be accessing it
- other than dpkg itself and any of the dpkg suite tools.
+ interface and no program or package should be accessing it, other
+ than dpkg itself and the suite of dpkg tools.
  .
- Whilst the editable by a dmin, that's a supported (but unrecommended)
- feature reserved for humans and not for automatic tools.
+ Whilst the files may be editable by an admin, that's a supported (but
+ unrecommended) feature reserved for humans and not for automatic tools.
 Ref: dpkg(1), #905469
