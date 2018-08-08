@@ -80,8 +80,9 @@ sub run {
     }
 
     if ($copyright_path->is_open_ok) {
-        _check_dep5_copyright($info, $copyright_path);
-        _check_apache_notice_files($info, $group, $copyright_path);
+        my $contents = $copyright_path->file_contents;
+        _check_dep5_copyright($info, $contents);
+        _check_apache_notice_files($info, $group, $contents);
     }
     return;
 }
@@ -147,11 +148,11 @@ sub _find_dep5_version {
 }
 
 sub _check_apache_notice_files {
-    my ($info, $group, $copyright_path) = @_;
+    my ($info, $group, $contents) = @_;
 
     my @procs = $group->get_processables('binary');
     return if not @procs;
-    return if $copyright_path->file_contents !~ m/apache[-\s]+2\./i;
+    return if $contents !~ m/apache[-\s]+2\./i;
 
     my @notice_files = grep {
               $_->basename =~ m/^NOTICE(\.txt)?$/
@@ -175,8 +176,7 @@ sub _check_apache_notice_files {
 }
 
 sub _check_dep5_copyright {
-    my ($info, $copyright_path) = @_;
-    my $contents = $copyright_path->file_contents;
+    my ($info, $contents) = @_;
     my (@dep5, @lines);
 
     if (    $contents =~ m/^Files-Excluded:/
