@@ -5,6 +5,9 @@ lintian (2.5.96) UNRELEASED; urgency=medium
   * checks/cruft.desc:
     + [CL] Tidy the description of the license-problem-cc-by-nc-sa and
       license-problem-non-free-img-lenna tags.
+  * checks/files.{desc,pm}:
+    + [BR] Improve package-contains-documentation-outside-usr-share-doc
+      by checking if README includes 'this directory' (Closes: #904852)
   * checks/source-copyright.{desc,pm}:
     + [CL] Check for Creative Commons license texts that use the incomplete
       "human-readable" summary.  (Closes: #903470)
