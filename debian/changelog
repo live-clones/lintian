@@ -1,6 +1,13 @@
-lintian (2.5.96) UNRELEASED; urgency=medium
+lintian (2.5.96) unstable; urgency=medium
 
-  XXX: generate tag summary
+  * Summary of tag changes:
+    + Added:
+      - incomplete-creative-commons-license
+      - maintainer-script-should-not-use-dpkg-database-directly
+      - package-contains-upstream-installation-documentation
+    + Removed:
+      - no-upstream-changelog
+      - package-contains-upstream-install-documentation
 
   * checks/changelog-file.{desc,pm}:
     + [CL] Drop no-upstream-changelog; it is rarely actionable and simply
@@ -22,8 +29,10 @@ lintian (2.5.96) UNRELEASED; urgency=medium
   * data/scripts/maintainer-script-bad-command:
     + [CL] Warn about packages that directly query the dpkg database in
       their maintainer scripts.  Thanks, Guillem Jover!  (Closes: #905469)
+  * data/spelling/corrections:
+    + [PW] Add a number of corrections.
 
- -- Chris Lamb <lamby@debian.org>  Tue, 07 Aug 2018 21:41:06 +0800
+ -- Chris Lamb <lamby@debian.org>  Thu, 09 Aug 2018 13:44:29 +0000
 
 lintian (2.5.95) unstable; urgency=medium
 
