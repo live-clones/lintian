@@ -4,6 +4,7 @@ Description: Misc errors related to minified javascript
 Skeleton: pedantic
 Options: --pedantic -I -E
 Architecture: any
+Test-Depends: uglifyjs
 Test-For:
  insane-line-length-in-source-file
  source-contains-prebuilt-javascript-object
