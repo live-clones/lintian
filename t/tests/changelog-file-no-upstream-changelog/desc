@@ -1,7 +1,0 @@
-Testname: changelog-file-no-upstream-changelog
-Type: non-native
-Version: 1.0-1
-Skeleton: pedantic
-Options: --pedantic -IE
-Description: Check a package without an upstream changelog
-Test-For: no-upstream-changelog

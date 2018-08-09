@@ -14,7 +14,6 @@ P: generic-dh-make-2008 source: file-contains-trailing-whitespace debian/rules (
 P: generic-dh-make-2008 source: file-contains-trailing-whitespace debian/rules (line 63)
 P: generic-dh-make-2008 source: no-dep5-copyright
 P: generic-dh-make-2008: copyright-with-old-dh-make-debian-copyright
-P: generic-dh-make-2008: no-upstream-changelog
 W: generic-dh-make-2008 source: ancient-standards-version 3.7.3 (released 2007-12-03) (current is CURRENT)
 W: generic-dh-make-2008 source: bad-homepage <insert the upstream URL, if relevant>
 W: generic-dh-make-2008 source: debian-rules-missing-recommended-target build-arch

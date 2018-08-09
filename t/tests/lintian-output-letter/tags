@@ -9,7 +9,6 @@ I[W ]: lintian-output-letter: package-contains-empty-directory usr/local/share/l
 I[W!]: lintian-output-letter source: binary-control-field-duplicates-source field "section" in package lintian-output-letter
 I[W?]: lintian-output-letter: description-possibly-contains-homepage http://www.example.com/.
 O[M!]: lintian-output-letter source: dfsg-version-misspelled 1.0+dsfg-1.1
-O[P?]: lintian-output-letter: no-upstream-changelog
 P[P ]: lintian-output-letter source: no-homepage-field
 P[P ]: lintian-output-letter: example-unusual-interpreter usr/share/doc/lintian-output-letter/examples/example #!/usr/bin/foo
 P[P!]: lintian-output-letter source: debian-control-has-unusual-field-spacing line 12

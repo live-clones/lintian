@@ -16,7 +16,6 @@
 <tag severity="pedantic" certainty="certain" name="package-uses-deprecated-source-override-location" />
 <tag severity="pedantic" certainty="possible" name="example-unusual-interpreter">usr/share/doc/lintian-output-xml/examples/example #!/usr/bin/foo</tag>
 <tag severity="pedantic" certainty="possible" name="no-homepage-field" />
-<tag severity="pedantic" certainty="wild-guess" flags="overridden" name="no-upstream-changelog" />
 <tag severity="serious" certainty="certain" name="dir-in-usr-local">usr/local/share/</tag>
 <tag severity="serious" certainty="certain" name="dir-in-usr-local">usr/local/share/lintian/</tag>
 <tag severity="serious" certainty="possible" name="dir-or-file-in-var-lock">var/lock/lintian/</tag>

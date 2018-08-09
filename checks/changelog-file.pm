@@ -189,18 +189,12 @@ sub run {
             # everything is fine
         } else {
             # search for changelogs with wrong file name
-            my $found = 0;
             for (@doc_files) {
                 if (m/^change/i and not m/debian/i) {
                     tag 'wrong-name-for-upstream-changelog',
                       "usr/share/doc/$pkg/$_";
-                    $found = 1;
                     last;
                 }
-            }
-            if (not $found) {
-                tag 'no-upstream-changelog'
-                  unless $info->is_pkg_class('transitional');
             }
         }
 
