@@ -1494,24 +1494,12 @@ sub run {
                     my $regex = $DOCUMENTATION_FILE_REGEX->value($taboo);
                     if($file->basename =~ m{$regex}xi) {
                         # see #904852
-                        if ($file->basename =~ m{^README}xi) {
-                            my $fd = $file->open(':raw');
-                            my $sfd = Lintian::SlidingWindow->new($fd,sub { $_=lc($_); },BLOCKSIZE);
-                            my $block = $sfd->readwindow;
-                            if($block) {
-                                #<<< No perltidy - tag name too long
-                                tag 'package-contains-documentation-outside-usr-share-doc',
-                                    $fname unless index($block,'this directory') > -1;
-                                #>>>
-                            }
-                            close($fd);
-                        }
-                        else {
-                            #<<< No perltidy - tag name too long
-                            tag 'package-contains-documentation-outside-usr-share-doc',
-                                    $fname;
-                            #>>>
-                        }
+                        #<<< No perltidy - tag name too long
+                        tag 'package-contains-documentation-outside-usr-share-doc',
+                          $fname
+                          unless $file->basename =~ m{^README}xi
+                          and $file->file_contents =~ m,this directory,i;
+                        #>>>
                         last;
                     }
                 }
