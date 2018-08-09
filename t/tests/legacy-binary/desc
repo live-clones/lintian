@@ -73,7 +73,7 @@ Test-For:
  not-binnmuable-all-depends-any
  old-fsf-address-in-copyright-file
  package-contains-hardlink
- package-contains-upstream-install-documentation
+ package-contains-upstream-installation-documentation
  possible-gpl-code-linked-with-openssl
  postinst-does-not-call-updatemenus
  postrm-does-not-call-updatemenus

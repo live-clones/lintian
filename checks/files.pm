@@ -681,9 +681,10 @@ sub run {
 
                     # contains an INSTALL file?
                     if ($fname =~ m,^usr/share/doc/$ppkg/INSTALL(?:\..+)*$,){
-                        tag
-                          'package-contains-upstream-install-documentation',
+                        #<<< No perltidy - tag name too long
+                        tag 'package-contains-upstream-installation-documentation',
                           $file;
+                        #>>>
                     }
 
                     # contains a README for another distribution/platform?

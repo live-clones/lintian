@@ -709,7 +709,7 @@ Info: The following file is an old style config file,
  .
  You should change the package to arch: any.
 
-Tag: package-contains-upstream-install-documentation
+Tag: package-contains-upstream-installation-documentation
 Severity: normal
 Certainty: possible
 Ref: policy 12.3

@@ -25,7 +25,7 @@ binaries binary-with-bad-dynamic-table
 
 files desktop-file-in-wrong-dir
 files package-contains-devhelp-file-without-symlink
-files package-contains-upstream-install-documentation
+files package-contains-upstream-installation-documentation
 files script-in-usr-share-doc
 files script-with-language-extension
 files use-of-compat-symlink
@@ -106,7 +106,7 @@ binary
   menu-item-needs-tag-has-unknown-value
   menu-method-should-include-menu-h
   non-wm-module-in-wm-modules-menu-section
-  package-contains-upstream-install-documentation
+  package-contains-upstream-installation-documentation
   postinst-does-not-call-updatemenus
   postrm-does-not-call-updatemenus
   su-to-root-with-usr-sbin
