@@ -127,11 +127,14 @@ else
     zgrep -E "$dh_regex" Contents-i386.gz > dh_entries
     cat dh_entries \
         | perl -n -w -E 's#'"$dh_command_perl_regex"'#$1=$2# and print' \
+        | sed 's/=debhelper$/=debhelper | debhelper-compat/' \
         > dh_commands
     cat dh_entries \
         | perl -n -w -E 's#'"$dh_addon_perl_regex"'#$1=$2# and print' \
+        | sed 's/=debhelper$/=debhelper | debhelper-compat/' \
         > dh_addons
     cat dh_commands \
+        | cut -d '|' -f 1 | sed 's/\s*$//' \
         | cut -d '=' -f 2 | sort -u > dh_packages
 
     for f in commands packages; do

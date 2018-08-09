@@ -2,6 +2,10 @@ lintian (2.5.97) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
+  * private/refresh-debhelper-data:
+    + [NT] Add debhelper-compat an alternative to debhelper in
+      the data files.
+
  -- Chris Lamb <lamby@debian.org>  Thu, 09 Aug 2018 16:06:28 +0200
 
 lintian (2.5.96) unstable; urgency=medium
