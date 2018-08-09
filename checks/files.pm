@@ -1498,7 +1498,7 @@ sub run {
                         tag 'package-contains-documentation-outside-usr-share-doc',
                           $fname
                           unless $file->basename =~ m{^README}xi
-                          and $file->file_contents =~ m,this directory,i;
+                          and $file->file_contents =~ m{this directory}xi;
                         #>>>
                         last;
                     }
