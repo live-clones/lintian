@@ -815,12 +815,9 @@ sub find_cruft {
             }
         }
 
-        if (   $basename eq 'doxygen.png'
-            or $basename eq 'doxygen.sty') {
-            unless ($source_pkg eq 'doxygen') {
-                tag 'source-contains-prebuilt-doxygen-documentation', $dirname;
-            }
-        }
+        tag 'source-contains-prebuilt-doxygen-documentation', $dirname
+          if $basename =~ m{^doxygen.(?:png|sty)$}
+          and $source_pkg ne 'doxygen';
 
         unless ($warned->{$name}) {
             for my $rule (@file_checks) {
