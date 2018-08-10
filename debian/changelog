@@ -2,6 +2,10 @@ lintian (2.5.97) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
+  * data/testsuite/known-restrictions:
+    + [CL] Re-add "allow-stderr" accidentally dropped in 0cb688fb.
+      (Closes: #905843)
+
   * private/refresh-debhelper-data:
     + [NT] Add debhelper-compat an alternative to debhelper in
       the data files.
