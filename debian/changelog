@@ -14,10 +14,11 @@ lintian (2.5.96) unstable; urgency=medium
     + Added:
       - incomplete-creative-commons-license
       - maintainer-script-should-not-use-dpkg-database-directly
-      - package-contains-upstream-installation-documentation
     + Removed:
       - no-upstream-changelog
-      - package-contains-upstream-install-documentation
+    + Renamed:
+      - package-contains-upstream-install-documentation ->
+        package-contains-upstream-installation-documentation
 
   * checks/changelog-file.{desc,pm}:
     + [CL] Drop no-upstream-changelog; it is rarely actionable and simply
