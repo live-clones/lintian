@@ -98,7 +98,7 @@ lintian (2.5.95) unstable; urgency=medium
   * data/standards-version/release-dates:
     + [CL] Add 4.2.0 as a known Standards-Version.
   * data/testsuite/known-restrictions:
-    + Add "flaky" and "skippable" to the list of known Restrictions in
+    + [CL] Add "flaky" and "skippable" to the list of known Restrictions in
       testsuite definitions.  Thanks to Rebecca N. Palmer.
       (Closes: #904623)
 
