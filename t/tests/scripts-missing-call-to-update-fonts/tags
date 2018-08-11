@@ -1,0 +1,2 @@
+W: scripts-missing-call-to-update-fonts source: maintainer-script-lacks-debhelper-token debian/postinst
+W: scripts-missing-call-to-update-fonts: missing-call-to-update-fonts usr/share/fonts/X11/Type1/foo.afm

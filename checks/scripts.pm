@@ -136,6 +136,7 @@ my @depends_needed = (
     [$update_inetd => '\bupdate-inetd\s'],
     [ucf           => '\bucf\s'],
     ['xml-core'    => '\bupdate-xmlcatalog\s'],
+    ['xfonts-utils' => '\bupdate-fonts-(?:scale|dir)\s'],
 );
 
 my @bashism_single_quote_regexs = (
@@ -247,6 +248,10 @@ sub run {
     my $all_parsed = Lintian::Relation->and($info->relation('all'),
         $info->relation('provides'),$pkg);
     my $str_deps = $info->relation('strong');
+
+    my @x11_fonts
+      = grep {m,^usr/share/fonts/X11/.*\.(?:afm|pcf|pfa|pfb)(?:\.gz)?$,}
+      $info->sorted_index;
 
     for my $filename (sort keys %{$info->scripts}) {
         my $interpreter = $info->scripts->{$filename}{interpreter};
@@ -645,7 +650,7 @@ sub run {
             $saw_debconf,$saw_bange,
             $saw_sete, $has_code,
             $saw_statoverride_list, $saw_statoverride_add,
-            $saw_udevadm_guard
+            $saw_udevadm_guard, $saw_update_fonts
         );
         my %warned;
         my $cat_string = '';
@@ -713,6 +718,9 @@ sub run {
                 $seen_helper_cmds{$cmd} = () unless $seen_helper_cmds{$cmd};
                 $seen_helper_cmds{$cmd}{$file} = 1;
             }
+
+            $saw_update_fonts = 1
+              if m,$LEADIN(?:/usr/bin/)?update-fonts-(?:scale|dir)\s(\S+),;
 
             $saw_udevadm_guard = 1 if m/\b(if|which|command)\s+.*udevadm/g;
             if (m,$LEADIN(?:/bin/)?udevadm\s, and $saw_sete) {
@@ -1030,6 +1038,11 @@ sub run {
                     internal_error("\$mode has unknown value: $mode");
                 }
             }
+        }
+
+        foreach my $font (@x11_fonts) {
+            tag 'missing-call-to-update-fonts', $font
+              if $file eq 'postinst' and not $saw_update_fonts;
         }
 
         if ($saw_init && !$saw_invoke) {

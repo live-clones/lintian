@@ -464,6 +464,16 @@ Info: This script calls update-xmlcatalog, which comes from the xml-core
  dh_installxmlcatalogs, add a dependency on ${misc:Depends} and
  dh_installxmlcatalogs will take care of this for you.
 
+Tag: maintainer-script-needs-depends-on-xfonts-utils
+Severity: normal
+Certainty: certain
+Info: This script calls update-fonts-scale or update-fonts-utils, which
+ comes from the xfonts-utils package but does not depend or pre-depend on
+ xml-core.  Packages that call update-fonts-scale or update-fonts-utils
+ need to depend on xfonts-utils.  If you are using dh_installxfonts, add
+ a dependency on ${misc:Depends} and dh_installxfonts will take care of
+ this for you.
+
 Tag: maintainer-script-should-not-use-update-alternatives-remove
 Severity: normal
 Certainty: certain
@@ -854,3 +864,14 @@ Info: The specified maintainer script appears to access the
  Whilst the files may be editable by an admin, that's a supported (but
  unrecommended) feature reserved for humans and not for automatic tools.
 Ref: dpkg(1), #905469
+
+Tag: missing-call-to-update-fonts
+Severity: normal
+Certainty: possible
+Info: The maintainer script ships the specified X11 font but does not
+ appear to call update-fonts-scale or update-fonts-dir in its postinst
+ script.
+ .
+ If you are using dh_installxfonts, add a dependency on ${misc:Depends}
+ and dh_installxfonts will take care of this for you.
+Ref: https://lists.debian.org/msgid-search/CAJqvfD-A1EPXxF_mS=_BaQ0FtqygVwRUf+23WqSqrkSmYgVAtA@mail.gmail.com

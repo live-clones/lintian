@@ -2,6 +2,11 @@ lintian (2.5.97) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
+  * checks/scripts.{desc,pm}:
+    + [CL] Check for packages that contain X11 fonts but do not run
+      update-fonts-* in their postinst or depend on xfonts-utils.
+      (Closes: #905879)
+
   * data/testsuite/known-restrictions:
     + [CL] Re-add "allow-stderr" accidentally dropped in 0cb688fb.
       (Closes: #905843)
