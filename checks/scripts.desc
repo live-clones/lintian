@@ -467,12 +467,14 @@ Info: This script calls update-xmlcatalog, which comes from the xml-core
 Tag: maintainer-script-needs-depends-on-xfonts-utils
 Severity: normal
 Certainty: certain
-Info: This script calls update-fonts-scale or update-fonts-utils, which
- comes from the xfonts-utils package but does not depend or pre-depend on
- xml-core.  Packages that call update-fonts-scale or update-fonts-utils
- need to depend on xfonts-utils.  If you are using dh_installxfonts, add
- a dependency on ${misc:Depends} and dh_installxfonts will take care of
- this for you.
+Info: This script calls a utility provided by the xfonts-utils package
+ but does not depend or pre-depend on this package.
+ .
+ Packages that call update-fonts-scale, update-fonts-dir (etc.) need to
+ depend on xfonts-utils.If you are using debhelper.
+ .
+ Please add a dependency on ${misc:Depends} and dh_installxfonts will
+ take care of this for you.
 
 Tag: maintainer-script-should-not-use-update-alternatives-remove
 Severity: normal
