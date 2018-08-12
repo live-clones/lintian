@@ -718,11 +718,11 @@ sub create {
     unless (-d "$dir/pool") {
         unless (mkdir "$dir/pool", $mode) {
             my $err = $!; # store the error
-            # Remove the info dir if we made it.  This attempts to
-            # prevent a semi-created lab that the API cannot remove
-            # again.
-            #
-            # ignore the error (if any) - we can only do so much
+             # Remove the info dir if we made it.  This attempts to
+             # prevent a semi-created lab that the API cannot remove
+             # again.
+             #
+             # ignore the error (if any) - we can only do so much
             rmdir "$dir/info" if $mid;
             $! = $err;
             croak "mkdir $dir/pool: $!";

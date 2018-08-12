@@ -69,7 +69,7 @@ sub run {
         next LINE if $line =~ m/^\s*$/;
         if ($line
             =~ m{^(?'escaped'\\)?(?'md5sum'[a-f0-9]+)\s*(?:\./)?(?'name'\S.*)$}
-          ) {
+        ) {
             my $md5sum = $+{'md5sum'};
             if(length($md5sum) != 32) {
                 tag 'malformed-md5sums-control-file', "line $.";

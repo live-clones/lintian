@@ -62,7 +62,7 @@ for my $desc (
         join(q{ },
             't/tests/*/desc', 't/changes/*.desc',
             't/debs/*/desc', 't/source/*/desc'))
-  ) {
+) {
     my ($data) = read_dpkg_control($desc);
     my $testname = $data->{'testname'};
     if ($testname =~ s{\A legacy- }{}xsm) {

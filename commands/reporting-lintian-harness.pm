@@ -478,7 +478,7 @@ sub update_lintian_log {
                 m/^N: [ ] Processing [ ] (binary|udeb|source) [ ]
                        package [ ] (\S+) [ ] \(version [ ] (\S+), [ ]
                        arch [ ] (\S+)\)[ ]\.\.\./oxsm
-              ) {
+            ) {
                 my ($type, $pkg, $ver, $arch) = ($1,$2, $3, $4);
                 my $k = "$type:$pkg/$ver";
                 $k .= "/$arch" if $type ne 'source';

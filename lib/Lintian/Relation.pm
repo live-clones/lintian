@@ -122,7 +122,7 @@ sub parse_element {
           \s* >                         # closing bracket
         )?                              # end of optional restriction
     \s* $/x
-      ) {
+    ) {
         # store the element as-is, so we can unparse it.
         return ['PRED-UNPARSABLE', $element];
     }

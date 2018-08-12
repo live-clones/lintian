@@ -58,7 +58,7 @@ sub run {
                 or ($path eq 'usr/bin/mh/')
                 or ($path eq 'usr/sbin/')
                 or ($path eq 'usr/games/'))
-          ) {
+        ) {
 
             my $bin = $fname;
             $binary{$bin} = $file;
@@ -146,7 +146,7 @@ sub run {
                     or $link =~ m,^\.\./\.\./\.\./share/man/man[237]/undocumented\.[237]\.gz$,o
                     or $link =~ m,^\.\./\.\./\.\./\.\./usr/share/man/man[237]/undocumented\.[237]\.gz$,o
                     #>>>
-                  ) {
+                ) {
                     tag 'link-to-undocumented-manpage', $file;
                 } else {
                     tag 'bad-link-to-undocumented-manpage', $file;

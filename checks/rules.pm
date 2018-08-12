@@ -209,7 +209,7 @@ sub run {
         # Check for problems that can occur anywhere in debian/rules.
         if (   m/^\t\s*-(?:\$[\(\{]MAKE[\}\)]|make)\s.*(?:dist)?clean/s
             || m/^\t\s*(?:\$[\(\{]MAKE[\}\)]|make)\s(?:.*\s)?-(\w*)i.*(?:dist)?clean/s
-          ) {
+        ) {
             # Ignore "-C<dir>" (#671537)
             if (not $1 or $1 !~ m,^C,) {
                 tag 'debian-rules-ignores-make-clean-error', "line $.";
@@ -226,7 +226,7 @@ sub run {
                 (DEB_(?:HOST|BUILD|TARGET)_(?:ARCH|MULTIARCH|GNU)[A-Z_]*)\s*:?=
             /x
             && keys(%seen) == 0
-          ) {
+        ) {
             tag 'debian-rules-sets-dpkg-architecture-variable', "$1 (line $.)";
         }
 

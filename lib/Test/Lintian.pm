@@ -645,8 +645,8 @@ sub load_profile_for_test {
       if $PROFILE and $PROFILE->name ne $profname;
 
     return if $PROFILE; # Already loaded? stop here
-    # We just need it for spell checking, so debian/main should
-    # do just fine...
+     # We just need it for spell checking, so debian/main should
+     # do just fine...
     $profname ||= 'debian/main';
 
     unless (@inc) {
@@ -681,7 +681,7 @@ sub _check_reference {
         if (   $reference =~ m,^https?://bugs.debian.org/(\d++)$,
             or $reference
             =~ m,^https?://bugs.debian.org/cgi-bin/bugreport.cgi\?/.*bug=(\d++).*$,
-          ) {
+        ) {
             push @issues, "replace \"$reference\" with \"#$1\"";
         } elsif (exists $URLS{$reference}) {
             push @issues, "replace \"$reference\" with \"$URLS{$reference}\"";

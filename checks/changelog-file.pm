@@ -173,7 +173,7 @@ sub run {
                 m/^changelog\.debian(?:\.gz)$/i;
             }
             @doc_files
-          ) {
+        ) {
             tag 'wrong-name-for-changelog-of-native-package',
               "usr/share/doc/$pkg/$chg";
         } else {
@@ -206,7 +206,7 @@ sub run {
                 m/^changelog\.debian(?:\.gz)?$/i;
             }
             @doc_files
-          ) {
+        ) {
             tag 'wrong-name-for-debian-changelog-file',
               "usr/share/doc/$pkg/$chg";
         } else {
@@ -405,7 +405,7 @@ sub run {
         if (
             $changes =~ /uploads? \s+ to \s+
                             (?'intended'testing|unstable|experimental|sid)/xi
-          ){
+        ){
             my $intended = lc($+{intended});
             if($intended eq 'sid') {
                 $intended = 'unstable';
@@ -542,7 +542,7 @@ sub check_dch {
             || m/closes:\s*(?:bug)?\#?\s?\d+
               (?:,\s*(?:bug)?\#?\s?\d+)*
               (?:,\s*(((?:bug)?\#?\s?\d*)[[:alpha:]]\w*))/iox
-          ) {
+        ) {
             tag 'wrong-bug-number-in-closes', "l$.:$1" if $2;
         }
 

@@ -437,7 +437,7 @@ sub visit_dpkg_paragraph {
         # empty line?
         if ($_ eq '' || (!$debconf && m/^\s*$/)) {
             if ($open_section) { # end of current section
-                # pass the current section to the handler
+                 # pass the current section to the handler
                 $code->($section, $lines);
                 $section = {};
                 $lines = {};
@@ -1005,7 +1005,7 @@ sub perm2oct {
                     ([-r])([-w])([-xsS])     # group
                     ([-r])([-w])([-xtT])     # other
                /xsmo
-      ) {
+    ) {
         croak "$t does not appear to be a permission string";
     }
 

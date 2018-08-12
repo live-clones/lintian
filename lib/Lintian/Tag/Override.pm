@@ -154,8 +154,8 @@ sub _init  {
         my $pattern = $extra;
         my $end = ''; # Trailing "match anything" (if any)
         my $pat = ''; # The rest of the pattern
-        # Split does not help us if $pattern ends with *
-        # so we deal with that now
+         # Split does not help us if $pattern ends with *
+         # so we deal with that now
         if ($pattern =~ s/\Q*\E+\z//o){
             $end = '.*';
         }

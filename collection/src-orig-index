@@ -92,7 +92,7 @@ sub gather_tarballs {
         #    even when this would be a tarball.
         if ($t[2]
             =~ /^(?:\Q$base\E\.orig(?:-(.*))?|\Q$baserev\E)\.tar\.(?:gz|bz2|lzma|xz)$/
-          ) {
+        ) {
             push @tarballs, [$t[2], $1//''];
         }
     }

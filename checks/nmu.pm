@@ -62,7 +62,7 @@ sub run {
                 m/
                         (?:ackno|\back\b|confir|incorporat).*
                         (?:\bnmu\b|non-maintainer)/xi
-              ) {
+            ) {
                 $changelog_mentions_nmu = 1;
             }
         }

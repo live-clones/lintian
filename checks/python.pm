@@ -135,7 +135,7 @@ sub _run_source {
                             && $pyversion[1] =~ /^$rule->[1]$/
                         )
                         || (!$pyversion[1] && !$rule->[1]))
-                  ) {
+                ) {
                     $okay = 1;
                     last;
                 }

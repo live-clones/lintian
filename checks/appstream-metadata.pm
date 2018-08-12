@@ -46,7 +46,7 @@ sub run {
     if (
         defined(
             my $dir = $info->index_resolved_path('usr/share/applications/'))
-      ) {
+    ) {
         for my $file ($dir->children('breadth-first')) {
             $desktopfiles{$file} = 1 if ($file->is_file);
         }

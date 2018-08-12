@@ -65,7 +65,7 @@ for my $module (@MODULES) {
                m/^\s*\#\s*sub\s+(\w+)\s+Needs-Info\s+(.*)$/
             or m/^\s*Needs-Info\s+requirements\s+for\s+using\s+
                   I\<(\w+)\>\s*:\s*(.*)\s*$/x
-          ) {
+        ) {
             my ($sub, $all_info) = ($1, $2);
             $seen_needsinfo{$sub} = 1;
             # Allow some L<> linking - it makes the generated

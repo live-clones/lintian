@@ -108,7 +108,7 @@ sub _find_dep5_version {
     if (
         $uri =~ s{ https?://wiki\.debian\.org/
                                 Proposals/CopyrightFormat\b}{}xsm
-      ){
+    ){
         $version = '0~wiki';
         $uri =~ m,^\?action=recall&rev=(\d+)$,
           and $version = "$version~$1";
@@ -121,7 +121,7 @@ sub _find_dep5_version {
     if (
         $uri =~ s{\A https?://svn\.debian\.org/
                                   wsvn/dep/web/deps/dep5\.mdwn\b}{}xsm
-      ){
+    ){
         $version = '0+svn';
         $uri =~ m,^\?(?:\S+[&;])?rev=(\d+)(?:[&;]\S+)?$,
           and $version = "$version~$1";
@@ -130,7 +130,7 @@ sub _find_dep5_version {
     if (
         $uri =~ s{ \A https?://(?:svn|anonscm)\.debian\.org/
                                     viewvc/dep/web/deps/dep5\.mdwn\b}{}xsm
-      ){
+    ){
         $version = '0+svn';
         $uri =~ m{\A \? (?:\S+[&;])?
                              (?:pathrev|revision|rev)=(\d+)(?:[&;]\S+)?
@@ -143,7 +143,7 @@ sub _find_dep5_version {
                        https?://www\.debian\.org/doc/
                        (?:packaging-manuals/)?copyright-format/(\d+\.\d+)/?
                    \Z}xsm
-      ){
+    ){
         $version = $1;
         return $version;
     }
@@ -200,7 +200,7 @@ sub _check_dep5_copyright {
                  | /copyright-format/ | CopyrightFormat
                  | VERSIONED_FORMAT_URL
                ) }x
-      ){
+    ){
 
         tag 'no-dep5-copyright';
         return;

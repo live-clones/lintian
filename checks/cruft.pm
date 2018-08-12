@@ -670,7 +670,7 @@ sub find_cruft {
                 $name, $md5sum, $NON_DISTRIBUTABLE_FILES,
                 'license-problem-md5sum-non-distributable-file'
             )
-          ) {
+        ) {
             next ENTRY;
         }
         unless ($info->is_non_free) {
@@ -779,7 +779,7 @@ sub find_cruft {
             if (
                 index($contents,
                     'You WILL either need to modify or delete this file') >= 0
-              ) {
+            ) {
                 tag 'readme-source-is-dh_make-template';
             }
         }
@@ -983,7 +983,7 @@ sub full_text_check {
                 $blocknumber,\$cleanedblock,
                 \%matchedkeyword,\%licenseproblemhash
             )
-          ){
+        ){
             last BLOCK;
         }
 
@@ -1007,7 +1007,7 @@ sub full_text_check {
                     $entry, $info, $source_pkg,$name,
                     $basename,$dirname,$block,$blocknumber
                 ) < 0
-              ) {
+            ) {
                 $skiphtml = 1;
             }
         }
@@ -1074,7 +1074,7 @@ sub _check_js_script {
     my $firstline = '';
     foreach (split /\n/, $lcscript) {
         if ($_ =~ m/^\s*$/) {
-            next
+            next;
         }else {
             $firstline=$_;
             last;
@@ -1232,7 +1232,7 @@ sub _detect_browserify {
         if($block =~ m{$regex}) {
             my $extra = (defined $1) ? 'code fragment:'.$1 : '';
             tag 'source-contains-browserified-javascript', $name, $extra;
-            last
+            last;
         }
     }
     return;
@@ -1371,7 +1371,7 @@ sub _check_gfdl_license_problem {
     unless(
         defined(
             $licenseproblemhash->{'license-problem-gfdl-invariants-empty'})
-      ) {
+    ) {
         if ($gfdlsections eq '') {
             # lie in order to check more part
             tag 'license-problem-gfdl-invariants-empty', $name;
@@ -1387,7 +1387,7 @@ sub _check_gfdl_license_problem {
                           [ ]? no [ ] front(?:[ ]?-[ ]?|[ ])cover [ ] texts[ ]?,?
                           [ ]? and [ ] no [ ] back(?:[ ]?-?[ ]?|[ ])cover [ ] texts
                           \Z/xso
-      ) {
+    ) {
         return 0;
     }
 
@@ -1399,7 +1399,7 @@ sub _check_gfdl_license_problem {
                              (?:[ ] using [ ] all [ ] the [ ] features? [ ] of [ ] the [ ] gfdl)?
                             )?
                            )? [ ]? [,:]? \Z/xso
-      ){
+    ){
         return 0;
     }
 
@@ -1541,7 +1541,7 @@ sub _clean_block {
 
     $text =~ s{</?a[^>]*?>}{ }gxms;           # a link
     $text =~ s{<br\s*/?>}{ }gxms;             # (X)?HTML line
-    # breaks
+     # breaks
     $text =~ s{</?citetitle[^>]*?>}{ }gxms;   # DocBook citation title
     $text =~ s{</?div[^>]*?>}{ }gxms;         # html style
     $text =~ s{</?font[^>]*?>}{ }gxms;        # bold

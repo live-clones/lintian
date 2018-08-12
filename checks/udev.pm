@@ -66,7 +66,7 @@ sub check_rule {
         && $rule !~ m/ENV\{ID_SMARTCARD_READER\}/
         && $rule !~ m/ENV\{ID_SOFTWARE_RADIO\}/
         && $rule !~ m/TAG\+="uaccess"/
-      ) {
+    ) {
         tag(
             'udev-rule-missing-uaccess',
             "$file:$linenum",

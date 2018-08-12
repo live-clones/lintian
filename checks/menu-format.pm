@@ -328,7 +328,7 @@ sub verify_line {
             )
            )
            /ogcx
-      ) {
+    ) {
         my $tag = $1;
         my $value = $2;
 

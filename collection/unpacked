@@ -66,7 +66,7 @@ sub collect {
                 spawn(
                     $opts,
                     ['dpkg-source', @args, '-x', "$dir/dsc", "$dir/unpacked"])
-              ) {
+            ) {
                 dump_errors("$dir/unpacked-errors");
                 internal_error('dpkg-source -x failed with status ',
                     $opts->{harness}->result);

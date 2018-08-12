@@ -219,7 +219,7 @@ sub run {
                          |home\s+page|further\s+information|more\s+info
                          |official\s+site|project\s+home/xi
             and $description =~ m,\b(https?://[a-z0-9][^>\s]+),i
-          ) {
+        ) {
             tag 'description-possibly-contains-homepage', $1;
         } elsif ($description =~ m,\b(https?://[a-z0-9][^>\s]+)>?\.?\s*\z,i) {
             tag 'description-possibly-contains-homepage', $1;

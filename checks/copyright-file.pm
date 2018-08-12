@@ -201,7 +201,7 @@ sub run {
                     \QDISTRIBUTION AND MODIFICATION\E\b/mx
             or (    m/\bGNU GENERAL PUBLIC LICENSE\s*Version 3/
                 and m/\bTERMS AND CONDITIONS\s/))
-      ) {
+    ) {
         tag 'copyright-file-contains-full-gpl-license';
         $gpl = 1;
     }
@@ -246,27 +246,27 @@ sub run {
             || m/means\s+either\s+the\s+GNU\s+General\s+Public\s+License/
             || $wrong_directory_detected
         )
-      ) {
+    ) {
         if (
             check_names_texts(
                 qr/\b(?:GFDL|gnu[-_]free[-_]documentation[-_]license)\b/i,
                 qr/GNU Free Documentation License|(?-i:\bGFDL\b)/i
             )
-          ) {
+        ) {
             tag 'copyright-should-refer-to-common-license-file-for-gfdl';
         }elsif (
             check_names_texts(
 qr/\b(?:LGPL|gnu[-_](?:lesser|library)[-_]general[-_]public[-_]license)\b/i,
 qr/GNU (?:Lesser|Library) General Public License|(?-i:\bLGPL\b)/i
             )
-          ) {
+        ) {
             tag 'copyright-should-refer-to-common-license-file-for-lgpl';
         }elsif (
             check_names_texts(
                 qr/\b(?:GPL|gnu[-_]general[-_]public[-_]license)\b/i,
                 qr/GNU General Public License|(?-i:\bGPL\b)/i
             )
-          ) {
+        ) {
             tag 'copyright-should-refer-to-common-license-file-for-gpl';
             $gpl = 1;
         }elsif (
@@ -274,7 +274,7 @@ qr/GNU (?:Lesser|Library) General Public License|(?-i:\bLGPL\b)/i
                 qr/\bapache[-_]2/i,
                 qr/\bApache License\s*,?\s*Version 2|\b(?-i:Apache)-2/i
             )
-          ) {
+        ) {
             tag 'copyright-should-refer-to-common-license-file-for-apache-2';
         }
     }
@@ -286,7 +286,7 @@ qr/GNU (?:Lesser|Library) General Public License|(?-i:\bLGPL\b)/i
                 /(?:under )?(?:the )?(?:same )?(?:terms )?as Perl itself\b/i
                   &&!m,usr/share/common-licenses/,;
             })
-      ) {
+    ) {
         tag 'copyright-file-lacks-pointer-to-perl-license';
     }
 
@@ -306,7 +306,7 @@ qr/GNU (?:Lesser|Library) General Public License|(?-i:\bLGPL\b)/i
              \Qin control file>\E,ox
         or m,\<Including paragraphs\>,o
         or m,\<likewise for another author\>,o
-      ) {
+    ) {
         tag 'helper-templates-in-copyright';
     }
 

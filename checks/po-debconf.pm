@@ -196,7 +196,7 @@ sub run {
                     '--gettext-package=test','--pot'
                 );
             }
-          ) {
+        ) {
             tag 'invalid-potfiles-in';
             return;
         }

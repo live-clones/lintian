@@ -87,7 +87,7 @@ sub run {
         my $operm = $file->operm;
 
         if ($file->is_file) { # file checks
-            # menu file?
+             # menu file?
             if ($file =~ m,^usr/(lib|share)/menu/\S,o) { # correct permissions?
                 if ($operm & 0111) {
                     tag 'executable-menu-file',
@@ -136,7 +136,7 @@ sub run {
                 $file =~ m{ \A usr/share/doc/(?:[^/]+/)?
                                  (.+\.(?:html|pdf))(?:\.gz)?
                           \Z}xsmo
-              ) {
+            ) {
                 my $name = $1;
                 unless ($name =~ m/^changelog\.html$/o
                     or $name =~ m/^README[.-]/o
@@ -615,7 +615,7 @@ sub check_script {
         if ($interp =~ m,^\#\!\s*(.+),) {
             $interp = $1;
         } else { # hmm, doesn't seem to start with #!
-            # is it a binary? look for ELF header
+             # is it a binary? look for ELF header
             if ($interp =~ m/^\177ELF/) {
                 return; # nothing to do here
             }
@@ -647,7 +647,7 @@ sub check_script {
             m{ (?:^\s*|[;&|]\s*|(?:then|do|exec)\s+)
                (?:\/usr\/bin\/)?update-menus
                (?:\s|[;&|<>]|\Z)}xsm
-          ) {
+        ) {
             # yes, it does.
             $pres->{'calls-updatemenus'} = 1;
 
@@ -674,7 +674,7 @@ sub check_script {
             m{ (?:^\s*|[;&|]\s*|(?:then|do)\s+)
                (?:\/usr\/sbin\/)?install-docs
                (?:\s|[;&|<>]|\Z) }xsm
-          ) {
+        ) {
             # yes, it does.  Does it remove or add a doc?
             if (m/install-docs\s+(?:-r|--remove)\s/) {
                 $pres->{'calls-installdocs-r'} = 1;

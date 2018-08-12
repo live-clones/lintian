@@ -68,7 +68,7 @@ sub run {
                     |-compiler-libs
                   )?
            )\Z/xsm
-      ){
+    ){
         $is_dev_package = 1;
     }
 

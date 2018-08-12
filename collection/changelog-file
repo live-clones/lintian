@@ -59,7 +59,7 @@ sub collect {
 
     if (-d "$dir/unpacked/usr/share/doc/$pkg"
         && !is_ancestor_of("$dir/unpacked", "$dir/unpacked/usr/share/doc/$pkg")
-      ) {
+    ) {
         # If the parent dir is outside this package, pretend we didn't find
         # anything.
         return;

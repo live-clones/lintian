@@ -97,7 +97,7 @@ sub run {
                         m{\A \s* <
                            (php|extsrc|extbin|zendextsrc|zendextbin)
                            release \s* /? > }xsm
-                      ) {
+                    ) {
                         $package_type = $1;
                         last;
                     }
@@ -152,7 +152,7 @@ sub run {
             || defined($package2_xml)
             || defined($channel_xml)
             || defined($composer_json))
-      ) {
+    ) {
         my $rules = $info->index_resolved_path('debian/rules');
         if ($rules and $rules->is_open_ok) {
             my $has_buildsystem_phppear = 0;
@@ -167,7 +167,7 @@ sub run {
                 next if /^\s*\#/;
                 if (
 m/^\t\s*dh\s.*--buildsystem(?:=|\s+)(?:\S+,)*phppear(?:,\S+)*\s/
-                  ) {
+                ) {
                     $has_buildsystem_phppear = 1;
                 }
                 if (m/^\t\s*dh\s.*--with(?:=|\s+)(?:\S+,)*phppear(?:,\S+)*\s/){
@@ -175,7 +175,7 @@ m/^\t\s*dh\s.*--buildsystem(?:=|\s+)(?:\S+,)*phppear(?:,\S+)*\s/
                 }
                 if (
 m/^\t\s*dh\s.*--with(?:=|\s+)(?:\S+,)*phpcomposer(?:,\S+)*\s/
-                  ) {
+                ) {
                     $has_addon_phpcomposer = 1;
                 }
                 if (m/^\t\s*dh\s.*--with(?:=|\s+)(?:\S+,)*php(?:,\S+)*\s/) {

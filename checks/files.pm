@@ -464,7 +464,7 @@ sub run {
                    $file->gid < 100
                 || $file->gid == 65_534
                 || ($file->gid >= 60_000 && $file->gid < 65_000))
-          ) {
+        ) {
             tag 'wrong-file-owner-uid-or-gid', $file,
               $file->uid . '/' . $file->gid;
         }
@@ -498,7 +498,7 @@ sub run {
             if(index($fname,'oui') > -1 || index($fname,'iab') > -1) {
                 if($fname
                     =~ m,/(?:[^/]-)?(?:oui|iab)(?:\.(txt|idx|db))?(?:\.$COMPRESS_FILE_EXTENSIONS_OR_ALL)?\Z,x
-                  ) {
+                ) {
                     unless ($source_pkg eq 'ieee-data') {
                         tag 'package-installs-ieee-data', $file;
                     }
@@ -531,7 +531,7 @@ sub run {
             # ---------------- /etc/cron.daily, etc.
             elsif ($fname
                 =~ m,^etc/cron\.(?:daily|hourly|monthly|weekly|d)/[^\.].*[\+\.],
-              ) {
+            ) {
                 # NB: cron ships ".placeholder" files, which shouldn't be run.
                 tag 'run-parts-cron-filename-contains-illegal-chars', $file;
             }
@@ -695,7 +695,7 @@ sub run {
                                |macosx|netbsd|openbsd|osf|redhat|sco|sgi
                                |solaris|suse|sun|vms|win32|win9x|windows
                              )(?:\.txt)?(?:\.gz)?$,xi
-                      ) {
+                    ) {
                         #<<< No tidy (tag name too long)
                         tag 'package-contains-readme-for-other-platform-or-distro',
                           $file;
@@ -773,7 +773,7 @@ sub run {
                 if (   $file->is_file
                     && $fname
                     =~ m,^usr/lib/debug/usr/lib/pyshared/(python\d?(?:\.\d+))/(.++)$,o
-                  ) {
+                ) {
                     my $correct = "usr/lib/debug/usr/lib/pymodules/$1/$2";
                     tag 'python-debug-in-wrong-location', $file, $correct;
                 }
@@ -888,7 +888,7 @@ sub run {
                 && $fname !~ m{\A usr/share/p11-kit/modules/
                                   [[:alnum:]][[:alnum:]_.-]*\.module\Z
                               }xsm
-              ) {
+            ) {
                 tag 'incorrect-naming-of-pkcs11-module', $file;
             }
             # ---------------- /usr/share/vim
@@ -927,7 +927,7 @@ sub run {
                         and (  index($block,'flag')>-1
                             or index($block,'/include/') > -1
                             or index($block,'pkg-config')  > -1)
-                      ) {
+                    ) {
                         tag 'old-style-config-script',$file;
                         # could be ok but only if multi-arch: no
                         if($multiarch ne 'no' or $arch eq 'all') {
@@ -977,7 +977,7 @@ sub run {
                                     lib|
                                     local|sbin|share|
                                     src|spool|tmp)/,x
-                  ) {
+                ) {
                     if ($fname =~ m,^usr/lib(?'libsuffix'64|x?32)/,) {
                         my $libsuffix = $+{libsuffix};
                         # eglibc exception is due to FHS. Other are
@@ -1043,7 +1043,7 @@ sub run {
                                 |lock|log|opt|run|spool|state
                                 |tmp|www|yp)/
              }xsm
-              ) {
+            ) {
 
                 tag 'non-standard-dir-in-var', $file;
             }
@@ -1104,7 +1104,7 @@ sub run {
                  |mnt|opt|root|run|sbin|srv|sys
                  |tmp|usr|var)  /
           }oxsm
-          ) {
+        ) {
             # Make an exception for the base-files package here and
             # other similar packages because they install a slew of
             # top-level directories for setting up the base system.
@@ -1153,7 +1153,7 @@ sub run {
                 or $fname =~ m{\A (?:
                         build|home|mnt|opt|root|run|srv
                        |(?:(?:usr|var)/)?tmp)|var/www/}xsm
-              ) {
+            ) {
                 tag 'file-in-unusual-dir', $file;
             }
 
@@ -1202,7 +1202,7 @@ sub run {
             && (   $fname =~ m,^usr/lib/python\d+(?:\.\d+/),o
                 || $fname =~ m,^usr/lib/pyshared,o
                 || $fname =~ m,^usr/share/,o)
-          ) {
+        ) {
             tag 'package-installs-python-egg', $file;
         }
 
@@ -1269,7 +1269,7 @@ sub run {
                           # ... so they end with ".pl" rather than ".pm"
                           \.pl['"]
                }xsm
-                      ) {
+                    ) {
                         tag 'perl-module-uses-perl4-libs-without-dep',
                           "$file:$. ${1}.pl";
                     }
@@ -1335,7 +1335,7 @@ sub run {
             and not defined $link
             # Sphinx includes various license files
             and not $fname =~ m,/_sources/license(\.rst)?\.txt$,oi
-          ) {
+        ) {
 
             # okay, we cannot rule it out based on file name; but if
             # it is an elf or a static library, we also skip it.  (In
@@ -1353,7 +1353,7 @@ sub run {
             # check later to see if it's in a symlinked directory.
             and not $fname =~ m,^usr/share/(?:devhelp/books|gtk-doc/html)/,
             and not $fname =~ m,^usr/share/doc/[^/]+/examples/,
-          ) {
+        ) {
             push(@devhelp, $fname);
         }
 
@@ -1387,7 +1387,7 @@ sub run {
         if (
             $fname =~ m,^usr/share/doc/(?:.+/)?(?:doxygen|html)/
                          .*\.map\.$COMPRESS_FILE_EXTENSIONS_OR_ALL,x
-          ) {
+        ) {
             tag 'file-should-not-be-compressed', $file;
         }
 
@@ -1410,7 +1410,7 @@ sub run {
                   usr/lib/python (\d+(?:\.\d+)?)/
                         (site|dist)-packages/(.++)
         \Z}oxsm
-          ){
+        ){
             my ($debug, $pyver, $loc, $rest) = ($1, $2, $3, $4);
             my ($pmaj, $pmin) = split(m/\./o, $pyver, 2);
             my @correction;
@@ -1526,7 +1526,7 @@ sub run {
                            (?:usr/)?(?:s?bin|games)/[^/]+\.
                            (?:p[ly]|php|rb|[bc]?sh|tcl)
                          \Z}xsm
-              ) {
+            ) {
                 tag 'script-with-language-extension', $file;
             }
 
@@ -1600,7 +1600,7 @@ sub run {
                                 $line =~ m{\A [%\s]*
                                    All\s*Rights\s*Reserved\.?\s*
                                        \Z}xsmi
-                              ) {
+                            ) {
                                 #<<< No perltidy - tag name too long
                                 tag 'license-problem-font-adobe-copyrighted-fragment',
                                   $file;
@@ -1615,7 +1615,7 @@ sub run {
                                [%\s]*Copyright\s*\(c\) \s*
                                19\d{2}[\-\s]19\d{2}\s*
                                Adobe\s*Systems\s*Incorporated\.?\s*\Z}xsmi
-                          ) {
+                        ) {
                             $foundadobeline = 1;
                         }
                         # If copy pasted from black book they are
@@ -1797,7 +1797,7 @@ sub run {
                 )
                 and $operm == 01777
                 and $owner eq 'root/root'
-              ) {
+            ) {
                 # actually shipping files here is warned about elsewhere
             } elsif ($fname eq 'usr/src/'
                 and $operm == 02775
@@ -2285,7 +2285,7 @@ sub detect_privacy_breach {
             qw(src="http src="ftp src="// data-href="http data-href="ftp
             data-href="// codebase="http codebase="ftp codebase="// data="http
             data="ftp data="// poster="http poster="ftp poster="// <link @import)
-          ) {
+        ) {
             next if index($block, $x) == -1;
             detect_generic_privacy_breach($block,\%privacybreachhash,$file);
             last;

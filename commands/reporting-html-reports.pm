@@ -253,7 +253,7 @@ sub load_templates {
     for my $template (
         qw/head foot clean index maintainer maintainers packages tag
         tags tags-severity tag-not-seen tags-all/
-      ) {
+    ) {
         open(my $fd, '<:encoding(UTF-8)', "${template_dir}/$template.tmpl");
         my %options = (TYPE => 'FILEHANDLE', SOURCE => $fd);
         $templates{$template} = Text::Template->new(%options)
@@ -332,7 +332,7 @@ sub process_data {
         for my $source (
             keys %{ $by_maint{$maintainer} },
             keys %{ $by_uploader{$maintainer} }
-          ) {
+        ) {
             my $versions = $by_maint{$maintainer}{$source}
               || $by_uploader{$maintainer}{$source};
             for my $version (keys %$versions) {

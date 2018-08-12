@@ -97,7 +97,7 @@ sub run {
             exists $SONAME{$cur_file}
             or (defined $normalized_target
                 and exists $SONAME{$normalized_target})
-          ) {
+        ) {
             # yes!!
             my ($real_file, $perm);
             if (exists $SONAME{$cur_file}) {

@@ -356,7 +356,7 @@ sub run {
                 and $filename !~ m,\.erb$,
                 # exclude some shells. zsh -n is broken, see #485885
                 and $base !~ m/^(?:z|t?c)sh$/
-              ) {
+            ) {
 
                 if (check_script_syntax($interpreter, $path)) {
                     script_tag('shell-script-fails-syntax-check', $filename);
@@ -425,7 +425,7 @@ sub run {
             $base eq 'perl'
             &&!$str_deps->implies(
                 'libperl4-corelibs-perl | perl (<< 5.12.3-7)')
-          ) {
+        ) {
             my $fd = $path->open;
             while (<$fd>) {
                 if (
@@ -441,7 +441,7 @@ sub run {
                           # ... so they end with ".pl" rather than ".pm"
                           \.pl['"]
                }xsm
-                  ) {
+                ) {
                     tag 'script-uses-perl4-libs-without-dep',
                       "$filename:$. ${1}.pl";
                 }
@@ -474,7 +474,7 @@ sub run {
                     $base eq 'ocamlrun'
                     && $all_parsed->matches(
                         qr/^ocaml(?:-base)?(?:-nox)?-\d\.[\d.]+/)
-                  ) {
+                ) {
                     # ABI-versioned virtual packages for ocaml
                 } elsif ($base eq 'escript'
                     && $all_parsed->matches(qr/^erlang-abi-[\d+\.]+$/)) {
@@ -775,7 +775,7 @@ sub run {
                       ($known_shells_regex)\s+-c\s*.+
                     }xsm
                     and $1 ne 'sh'
-                  ) {
+                ) {
                     $within_another_shell = 1;
                 }
                 # if cat_string is set, we are in a HERE document and need not
@@ -795,7 +795,7 @@ sub run {
                                    (?:\"[^\"]+\"|\'[^\']+\')\s*
                                    (?:\&|\||\d?>|<|;|\Z)}xsm
                         and m/^\s*(\.\s+[^\s;\`:]+\s+([^\s;]+))/
-                      ) {
+                    ) {
 
                         my $extra;
                         ($match, $extra) = ($1, $2);
@@ -886,7 +886,7 @@ sub run {
                     # avoid false positives.
                     if ($cat_line
                         =~ m/(?:^|[^<])\<\<\-?\s*(?:[\\]?(\w+)|[\'\"](.*?)[\'\"])/
-                      ) {
+                    ) {
                         $cat_string = $1;
                         $cat_string = $2 if not defined $cat_string;
                     }
@@ -928,7 +928,7 @@ sub run {
                             $cmd =~ m{ $LEADIN
                                       (/(?:usr/)?s?bin/[\w.+-]+)
                                       (?:\s|;|\Z)}xsm
-                          ) {
+                        ) {
                             tag 'command-with-path-in-maintainer-script',
                               "$file:$. $1";
                         }
@@ -940,7 +940,7 @@ sub run {
                           (?:!\s+)? -x \s+
                           (/(?:usr/)?s?bin/[\w.+-]+)
                           \s+ \]}xsm
-                      ){
+                    ){
                         tag 'command-with-path-in-maintainer-script',
                           "$file:$. $1";
                     }
@@ -1261,7 +1261,7 @@ sub script_is_evil_and_wrong {
             # which do not pass on their parameters (i.e. after re-execing
             # they take their parameters (and potentially data) from stdin
             .?(?:\$[{]1:?\+.?)?(?:\$[\@\*])?~x
-          ) {
+        ) {
             $ret = 1;
             last;
         } elsif (/^\s*(\w+)=\$0;/) {
@@ -1276,7 +1276,7 @@ sub script_is_evil_and_wrong {
             .?\$$var.?\s*
             (?:--\s*)?
             .?(?:\$[{]1:?\+.?)?(?:\$[\@\*])?.?\s*\&~x
-          ) {
+        ) {
 
             $backgrounded = 1;
         } elsif (
@@ -1285,7 +1285,7 @@ sub script_is_evil_and_wrong {
             # the exec should either be "eval"ed or a new statement
             (?:^\s*|\beval\s*[\'\"]|(?:;|&&|\b(?:then|else))\s*)
             exec\s+true(?:\s|\Z)~x
-          ) {
+        ) {
 
             $ret = 1;
             last;

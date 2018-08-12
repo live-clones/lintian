@@ -48,7 +48,7 @@ sub run {
             if (my ($reason, $doc, $line, $col)
                 = $@
                 =~ m/\AYAML::XS::Load Error: The problem:\n\n ++(.+)\n\nwas found at document: (\d+), line: (\d+), column: (\d+)\n/
-              ) {
+            ) {
                 $msg = "$reason (at document $doc, line $line, column $col)";
             }
             tag('upstream-metadata-yaml-invalid', $msg);

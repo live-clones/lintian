@@ -81,7 +81,7 @@ sub run {
                                 ||($distribution eq 'wheezy-backports-sloppy'
                                     && $distnumber ne '7')
                                 ||($dist eq 'jessie' && $distnumber ne '8')
-                              ) {
+                            ) {
                                 tag
 'backports-upload-has-incorrect-version-number',
                                   $info->field('version'),
@@ -107,7 +107,7 @@ sub run {
                       # parse code here
                                 if ($change_line
                                     =~ m/^\s*(?:\w[-+0-9a-z.]*) \((?:[^\(\) \t]+)\)(?:(?:\s+[-+0-9a-z.]+)+)\;\s*(?:.*)$/i
-                                  ) {
+                                ) {
                                     $changes_versions++;
                                 }
                             }
@@ -134,7 +134,7 @@ sub run {
 
                     if ($changes
                         =~ m/^\s*(?:\w[-+0-9a-z.]*)\s*\([^\(\) \t]+\)\s*([-+0-9A-Za-z.]+)\s*;/
-                      ) {
+                    ) {
                         my $changesdist = $1;
                         if ($changesdist eq 'UNRELEASED') {
                             tag 'unreleased-changes';

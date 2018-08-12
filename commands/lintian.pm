@@ -82,7 +82,7 @@ my @ENV_VARS = (
 ### "Normal" application variables
 my %conf_opt;                   #names of options set in the cfg file
 my %opt = (                     #hash of some flags from cmd or cfg
-    # Init some cmd-line value defaults
+     # Init some cmd-line value defaults
     'debug'             => 0,
 );
 
@@ -674,7 +674,7 @@ sub main {
     if (
         not(   ($action eq 'unpack')
             or ($action eq 'check'))
-      ) {
+    ) {
         fatal_error("invalid action $action specified");
     }
 

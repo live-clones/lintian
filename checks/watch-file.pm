@@ -136,7 +136,7 @@ sub run {
                               /project/showfiles\.php}xsm
                 or m{https?://(?:www\.)?(?:sourceforge|sf)\.net
                               /projects/.+/files}xsm
-              ) {
+            ) {
                 tag 'debian-watch-file-should-use-sf-redirector', "line $.";
             } elsif (m%((?:http|ftp):(?!//sf.net/)\S+)%) {
                 tag 'debian-watch-uses-insecure-uri',$1;

@@ -213,7 +213,7 @@ sub check_systemd_service_file {
 
     for my $key (
         qw(ExecStart ExecStartPre ExecStartPost ExecReload ExecStop ExecStopPost)
-      ) {
+    ) {
         tag 'systemd-service-file-wraps-init-script', $file, $key
           if any { m,^/etc/init\.d/, }
         extract_service_file_values($file, 'Service', $key, 1);

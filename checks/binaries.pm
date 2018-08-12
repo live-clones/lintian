@@ -316,7 +316,7 @@ sub run {
         if ($multiarch eq 'same') {
             unless ($fname
                 =~ m,\b$gnu_triplet_re(?:\b|_)|/(?:$ruby_triplet_re|java-\d+-openjdk-\Q$arch\E|\.build-id)/,
-              ) {
+            ) {
                 tag 'arch-dependent-file-not-in-arch-specific-directory',$file;
             }
         }
@@ -483,7 +483,7 @@ sub run {
             $fname =~ m,usr/lib/(?:pyshared/)?python2\.\d+/.*(?<!_d)\.so$,
             or(     $fname =~ m,usr/lib/python3/.+\.cpython-\d+([a-z]+)\.so$,
                 and $1 !~ /d/)
-          ) {
+        ) {
             if (index($strings, 'numpy') > -1 and $strings =~ NUMPY_REGEX) {
                 $uses_numpy_c_abi = 1;
             }

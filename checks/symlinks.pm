@@ -36,7 +36,7 @@ sub run {
         if ($file->is_symlink){
             my $target = $file->link//''; # the link target
             my $path; # the target (from the pkg root)
-            # Should not happen (too often) - but just in case
+             # Should not happen (too often) - but just in case
             next unless $target;
             $path = $file->link_normalized;
             if (not defined $path) {

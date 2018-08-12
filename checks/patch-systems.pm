@@ -204,7 +204,7 @@ sub run {
             }
         }
         if ($quilt_format) { # 3.0 (quilt) specific checks
-            # Format 3.0 packages may generate a debian-changes-$version patch
+             # Format 3.0 packages may generate a debian-changes-$version patch
             my $version = $info->field('version');
             my $patch_header = $droot->resolve_path('source/patch-header');
             my $versioned_patch;

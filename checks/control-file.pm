@@ -77,7 +77,7 @@ sub run {
             m{\A \# \s* Vcs-(?:Git|Browser): \s*
                   (?:git|http)://git\.debian\.org/
                   (?:\?p=)?collab-maint/<pkg>\.git}osmx
-          ) {
+        ) {
             # Emit it only once per package
             tag 'control-file-contains-dh_make-vcs-comment'
               unless $seen_vcs_comment++;
@@ -189,7 +189,7 @@ sub run {
     for my $field (
         qw(build-depends build-depends-indep
         build-conflicts build-conflicts-indep)
-      ) {
+    ) {
         my $raw = $info->source_field($field);
         my $rel;
         next unless $raw;
@@ -201,7 +201,7 @@ sub run {
         for my $field (
             qw(pre-depends depends recommends suggests breaks
             conflicts provides replaces enhances)
-          ) {
+        ) {
             my $raw = $info->binary_field($bin, $field);
             my $rel;
             next unless $raw;
@@ -357,7 +357,7 @@ sub run {
                      )*                # zero or more additional lists
                      \s*$              # trailing spaces at the end
               }x
-          ) {
+        ) {
             tag 'invalid-restriction-formula-in-build-profiles-field', $raw,
               $bin;
         } else {
@@ -523,7 +523,7 @@ sub check_dev_depends {
                 && $versions[1] =~ m/^\s*>[=>]\s* \$\{
                         (?: (?:binary|source):(?:Upstream-)?Version
                         |Source-Version)\}/xsm
-              ) {
+            ) {
                 tag 'weak-library-dev-dependency',
                   "$package on $depends[0], $depends[1]";
             }
@@ -554,7 +554,7 @@ sub check_relation {
                 (?:\w[^\s,|\$\(]+|\$\{\S+:Depends\})\s*
                 (?:\([^\)]*\)\s*)?
                    )/x
-      ) {
+    ) {
         my ($prev, $next) = ($1, $2);
         for ($prev, $next) {
             rstrip;

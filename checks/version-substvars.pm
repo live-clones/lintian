@@ -74,7 +74,7 @@ sub run {
                        \(\s*[\>\<]?[=\>\<]\s*                  # REL 
                         \$[{](?:Source-|source:|binary:)Version[}] # {subvar}
                      /x
-                  ) {
+                ) {
                     my $other = $1;
                     # We can't test dependencies on packages whose names are
                     # formed via substvars expanded during the build.  Assume
@@ -95,7 +95,7 @@ sub run {
                 (
                         $info->binary_field($pkg1, 'pre-depends', '').', '
                       . $info->binary_field($pkg1, 'depends', '')))
-          ) {
+        ) {
             next
               unless m/($PKGNAME_REGEX)(?: :any)? \s*               # pkg-name
                        \(\s*(\>)?=\s*                               # rel

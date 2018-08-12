@@ -167,7 +167,7 @@ my %VCS_CANONIFY = (
         if (
             $_[0] =~ s{\@(?:cvs\.alioth|anonscm)\.debian\.org:/cvsroot/}
                       {\@anonscm.debian.org:/cvs/}
-          ) {
+        ) {
             $_[1] = 'vcs-field-bitrotted';
         }
         $_[0]=~ s{\@\Qcvs.alioth.debian.org:/cvs/}{\@anonscm.debian.org:/cvs/};
@@ -186,7 +186,7 @@ my %VCS_CANONIFY = (
         if (
             $_[0] =~ s{git://(?:git|anonscm)\.debian\.org/~}
                       {https://anonscm.debian.org/git/users/}
-          ) {
+        ) {
             $_[1] = 'vcs-git-uses-invalid-user-uri';
         }
         $_[0] =~ s{https?\Q://git.debian.org/\E(?:git/?)?}
@@ -311,7 +311,7 @@ sub run {
                     && $debian =~ m/\A
                             (?:[^.]+ubuntu[^.]+)(?:\.\d+){1,3}(\..*)?
                     \Z/oxsm
-                  ) {
+                ) {
                     $ubuntu = 1;
                     $extra = $1;
                 }
@@ -333,7 +333,7 @@ sub run {
                     (rc|alpha|beta|pre(?:view|release)?)
                    ([^a-z].*|\Z)
                  /xsm
-              ) {
+            ) {
                 my $expected = $upstream;
                 my $rc = $1;
                 my $rest = $2//'';
@@ -553,7 +553,7 @@ sub run {
             \s*
             # Optional Version e.g. (1.0)
             (?:\((?:\d+:)?(?:[-\.+:a-zA-Z0-9~]+?)(?:-[\.+a-zA-Z0-9~]+)?\))?\s*$/x
-          ) {
+        ) {
             tag 'source-field-malformed', $source;
         }
     }
@@ -762,7 +762,7 @@ sub run {
         $javalib = 1 if($pkg =~ m/^lib.*-java$/o);
         for my $field (
             qw(depends pre-depends recommends suggests conflicts provides enhances replaces breaks)
-          ) {
+        ) {
             next unless defined $info->field($field);
             #Get data and clean it
             my $data = $info->field($field);
@@ -1076,7 +1076,7 @@ sub run {
         my %depend;
         for my $field (
             qw(build-depends build-depends-indep build-depends-arch build-conflicts build-conflicts-indep build-conflicts-arch)
-          ) {
+        ) {
             if (defined $info->field($field)) {
                 #Get data and clean it
                 my $data = $info->field($field);
@@ -1236,7 +1236,7 @@ sub run {
             $depend{'build-conflicts'},
             $depend{'build-conflicts-indep'},
             $depend{'build-conflicts-arch'}
-          ) {
+        ) {
             next unless $_;
             for my $conflict (split /\s*,\s*/, $_) {
                 if ($build_all->implies($conflict)) {

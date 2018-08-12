@@ -149,7 +149,7 @@ sub run {
                         && $jar_file!~m#\.source_[^/]+.jar#
                     )
                     || $cp
-                  ) {
+                ) {
                     tag 'codeless-jar', $jar_file;
                 }
             }

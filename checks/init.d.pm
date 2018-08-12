@@ -191,7 +191,7 @@ sub run {
             not $initd_path
             or (    not $info->is_conffile($initd_path->name)
                 and not $initd_path->is_symlink)
-          ) {
+        ) {
             tag 'init.d-script-not-marked-as-conffile',
               "etc/init.d/$initd_file";
         }
@@ -441,7 +441,7 @@ sub check_init {
             if (
                 none { /^(?:\$(?:local|remote)_fs|\$all|umountn?fs)\z/ }
                 @required
-              ) {
+            ) {
                 tag 'init.d-script-missing-dependency-on-local_fs',
                   "${initd_path}: required-stop";
             }

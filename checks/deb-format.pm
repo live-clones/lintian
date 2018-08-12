@@ -61,7 +61,7 @@ sub run {
                 substr($_, 0, 1) eq '_';
             }
             @members
-          ) {
+        ) {
             # Fairly common case - if there are only 3 members without
             # "_", we can trivially determine their (expected)
             # positions.  We only use this case when there are no
@@ -122,7 +122,7 @@ sub run {
             if (
                 $ctrl_member !~ m/\A
                      control\.tar(?:\.(?:gz|xz))?  \Z/xsm
-              ) {
+            ) {
                 tag 'malformed-deb-archive',
                   join(' ',
                     "second (official) member $ctrl_member",
@@ -145,7 +145,7 @@ sub run {
             if (
                 $data_member !~ m/\A
                      data\.tar(?:\.(?:gz|bz2|xz|lzma))?  \Z/xsm
-              ) {
+            ) {
                 # wasn't okay after all
                 tag 'malformed-deb-archive',
                   join(' ',

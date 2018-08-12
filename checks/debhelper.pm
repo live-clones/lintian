@@ -226,7 +226,7 @@ sub run {
                   |blends-dev/rules
                  )
               }xsm
-          ) {
+        ) {
             # All of these indirectly use dh.
             $build_systems{'dh'} = 1;
             delete($build_systems{'debhelper'});
@@ -235,7 +235,7 @@ sub run {
               ^include \s+
                  /usr/share/pkg-kde-tools/qt-kde-team/\d+/debian-qt-kde\.mk
               }xsm
-          ) {
+        ) {
             $build_systems{'dhmk'} = 1;
             delete($build_systems{'debhelper'});
         }
@@ -580,7 +580,7 @@ sub _check_dh_exec {
                        ARCH (?: _OS|_CPU|_BITS|_ENDIAN )?
                       |GNU_ (?:CPU|SYSTEM|TYPE)|MULTIARCH
              ) \Z}xsm
-              ) {
+            ) {
                 tag 'dh-exec-subst-unknown-variable', $path, $sv;
             }
         }
@@ -601,7 +601,7 @@ sub _check_dh_exec {
                        ARCH (?: _OS|_CPU|_BITS|_ENDIAN )?
                       |GNU_ (?:CPU|SYSTEM|TYPE)|MULTIARCH
              ) \Z}xsm
-              ) {
+            ) {
                 if (defined($dv)) {
                     $dhe_useless = ($sv eq $dv);
                 } else {

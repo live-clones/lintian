@@ -323,7 +323,7 @@ sub cleanup_group_state {
         exists($group_data->{'processing-errors'})
         and (not exists($group_data->{'last-error-by'})
             or $group_data->{'last-error-by'} ne $OPT{'desired-version'})
-      ) {
+    ) {
         log_debug(
             "Clearing error-counter for ${group_id}: New version of lintian");
         delete($group_data->{'processing-errors'});

@@ -91,7 +91,7 @@ while (my $line = <$readelf>) {
         =~ m/^readelf: Error: Unable to read in 0x[0-9a-fA-F]+ bytes of/
         or $line
         =~ m/^readelf: Error: .*: Failed to read .*(?:magic number|file header)/
-      ) {
+    ) {
        # Various errors for corrupt / broken files.  Note, readelf may spit out
        # multiple errors per file, hence the "unless".
         print "Broken: yes\n" unless $truncated++;

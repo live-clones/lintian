@@ -548,7 +548,7 @@ sub file_overrides {
                 :\s++)?                             # end optional part
                 ([\-\+\.a-zA-Z_0-9]+ (?:\s.+)?)     # <tag-name> [extra] -> $4
                    \Z/xsm
-          ) {
+        ) {
             # Valid - so far at least
             my ($archlist, $opkg_type, $tagdata)= ($1, $2, $3, $4);
             my ($rawtag, $extra) = split(m/ /o, $tagdata, 2);
@@ -661,7 +661,7 @@ sub file_overrides {
 
                 if ($override
                     =~ m/^($PKGNAME_REGEX)?(?: (?:binary|changes|source|udeb))? ?:/o
-                  ) {
+                ) {
                     my $opkg = $1;
                     # Looks like a wrong package name - technically,
                     # $opkg could be a tag if the tag information is

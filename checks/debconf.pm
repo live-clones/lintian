@@ -299,7 +299,7 @@ sub run {
                     $short
                     && (   $short !~ m/:$/
                         || $short =~ m/^(what|who|when|where|which|how)/i)
-                  ) {
+                ) {
                     tag 'malformed-prompt-in-templates', $template->{template};
                 }
             }
@@ -332,7 +332,7 @@ sub run {
             if (defined $template->{description}) {
                 if ($template->{description}
                     =~ /(\A|\s)(I|[Mm]y|[Ww]e|[Oo]ur|[Oo]urs|mine|myself|ourself|me|us)(\Z|\s)/
-                  ) {
+                ) {
                     tag 'using-first-person-in-templates',
                       $template->{template};
                 }
@@ -403,7 +403,7 @@ sub run {
                     not $obsoleteconfmodule
                     and m,(/usr/share/debconf/confmodule\.sh|
                    Debian::DebConf::Client::ConfModule),x
-                  ) {
+                ) {
                     my $cmod = $1;
                     tag 'loads-obsolete-confmodule', "$file:$. $cmod";
                     $usesconfmodule = 1;
@@ -427,7 +427,7 @@ sub run {
                 if (
                     m/\A \s*(?:db_input|db_text)\s+
                      [\"\']? (\S+?) [\"\']? \s+ (\S+)\s/xsm
-                  ) {
+                ) {
                     my ($priority, $template) = ($1, $2);
                     $templates_used{$template} = 1;
                     if ($priority !~ /^\$\S+$/) {
@@ -446,7 +446,7 @@ sub run {
                 if (
                     m/ \A \s* (?:db_get|db_set(?:title)?) \s+ 
                        [\"\']? (\S+?) [\"\']? (?:\s|\Z)/xsm
-                  ) {
+                ) {
                     $templates_used{$1} = 1;
                 }
                 # Try to handle Perl somewhat.

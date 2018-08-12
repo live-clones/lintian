@@ -130,7 +130,7 @@ sub run {
             or (    $major == $CURRENT[0]
                 and $minor == $CURRENT[1]
                 and $patch > $CURRENT[2])
-          ) {
+        ) {
             tag 'newer-standards-version', $tag;
         } else {
             tag 'invalid-standards-version', $version;
