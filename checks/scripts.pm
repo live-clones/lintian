@@ -136,7 +136,7 @@ my @depends_needed = (
     [$update_inetd => '\bupdate-inetd\s'],
     [ucf           => '\bucf\s'],
     ['xml-core'    => '\bupdate-xmlcatalog\s'],
-    ['xfonts-utils' => '\bupdate-fonts-(?:scale|dir)\s'],
+    ['xfonts-utils' => '\bupdate-fonts-(?:alias|dir|scale)\s'],
 );
 
 my @bashism_single_quote_regexs = (
@@ -720,7 +720,8 @@ sub run {
             }
 
             $saw_update_fonts = 1
-              if m,$LEADIN(?:/usr/bin/)?update-fonts-(?:scale|dir)\s(\S+),;
+              if
+              m,$LEADIN(?:/usr/bin/)?update-fonts-(?:alias|dir|scale)\s(\S+),;
 
             $saw_udevadm_guard = 1 if m/\b(if|which|command)\s+.*udevadm/g;
             if (m,$LEADIN(?:/bin/)?udevadm\s, and $saw_sete) {
