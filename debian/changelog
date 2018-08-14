@@ -7,6 +7,10 @@ lintian (2.5.97) UNRELEASED; urgency=medium
       update-fonts-* in their postinst or depend on xfonts-utils.
       (Closes: #905881)
 
+  * data/common/dh_addons:
+    + [NT] Refresh data.
+  * data/debhelper/dh_{commands,packages}:
+    + [NT] Refresh data.
   * data/testsuite/known-restrictions:
     + [CL] Re-add "allow-stderr" accidentally dropped in 0cb688fb.
       (Closes: #905843)

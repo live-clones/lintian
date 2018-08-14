@@ -1,5 +1,5 @@
 # This file is generated from private/refresh-debhelper-data.
-# It was generated on 2018-03-12 00:09
+# It was generated on 2018-08-09 15:25
 
 apache2-dev
 autotools-dev
@@ -18,6 +18,7 @@ dh-consoledata
 dh-di
 dh-dist-zilla
 dh-elpa
+dh-fortran-mod
 dh-golang
 dh-kpatches
 dh-linktree
@@ -41,7 +42,6 @@ dictionaries-common-dev
 dkms
 doxygen
 dpatch
-gcj-jdk
 gem2deb
 germinate
 gnome-pkg-tools
@@ -68,11 +68,11 @@ pkg-php-tools
 postgresql-server-dev-all
 ppp-dev
 pyppd
-python
 python-numpy
 python-ply
 python-sip-dev
 python-van.pydeb
+python2
 python3-numpy
 python3-ply
 python3-sip-dev
@@ -87,4 +87,5 @@ vdr-dev
 xml-core
 xserver-xorg-dev
 yorick-dev
+zathura-dev
 zope-debhelper
