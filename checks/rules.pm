@@ -61,8 +61,8 @@ our @GLOBAL_CLEAN_DEPENDS = (
     [cdbs => qr'^include\s+/usr/share/R/debian/r-cran\.mk'],
     [dbs => qr'^include\s+/usr/share/dbs/'],
     ['dh-make-php' => qr'^include\s+/usr/share/cdbs/1/class/pear\.mk'],
-    [debhelper => qr'^include\s+/usr/share/cdbs/1/rules/debhelper\.mk'],
-    [debhelper => qr'^include\s+/usr/share/R/debian/r-cran\.mk'],
+    ['debhelper | debhelper-compat' => qr'^include\s+/usr/share/cdbs/1/rules/debhelper\.mk'],
+    ['debhelper | debhelper-compat' => qr'^include\s+/usr/share/R/debian/r-cran\.mk'],
     [dpatch => qr'^include\s+/usr/share/cdbs/1/rules/dpatch\.mk'],
     ['gnome-pkg-tools' => qr'^include\s+/usr/share/gnome-pkg-tools/'],
     [quilt => qr'^include\s+/usr/share/cdbs/1/rules/patchsys-quilt\.mk'],
@@ -89,7 +89,7 @@ my @GLOBAL_DEPENDS=(
 # depend on, this package is allowed (and required) in Build-Depends.
 my @RULE_CLEAN_DEPENDS =(
     [ant => qr'^\t\s*(\S+=\S+\s+)*ant\s'],
-    [debhelper => qr'^\t\s*dh_.+'],
+    ['debhelper | debhelper-compat' => qr'^\t\s*dh_.+'],
     ['dh-ocaml, ocaml-nox | ocaml' => qr'^\t\s*dh_ocamlinit\s'],
     [dpatch => qr'^\t\s*(\S+=\S+\s+)*dpatch\s'],
     ['po-debconf' => qr'^\t\s*debconf-updatepo\s'],
