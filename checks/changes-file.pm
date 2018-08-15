@@ -120,6 +120,11 @@ sub run {
                             }
                         }
                     }
+                } else {
+                    tag
+                      'upload-has-backports-version-number',
+                      $info->field('version'), $distribution
+                      if $info->field('version') =~ m/~bpo(\d+)\+(\d+)$/;
                 }
                 if (!$KNOWN_DISTS->known($dist)) {
                     # bad distribution entry

@@ -2,6 +2,10 @@ lintian (2.5.97) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
+  * checks/changes-file.{desc,pm}:
+    + [CL] Apply patch from Julien Cristau (with test) to warn about
+      uploads that have a version containing "~bpo" but their target
+      distribution is not *-backports.  (Closes: #906155)
   * checks/scripts.{desc,pm}:
     + [CL] Check for packages that contain X11 fonts but do not run
       update-fonts-* in their postinst or depend on xfonts-utils.

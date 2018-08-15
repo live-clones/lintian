@@ -154,6 +154,12 @@ Info: The version number doesn't comply with the standard backport version
  the target distribution.
 Ref: http://backports.debian.org/Contribute/
 
+Tag: upload-has-backports-version-number
+Severity: serious
+Certainty: certain
+Info: The version number looks like a backport, but the upload's target
+ distribution is not a backport suite.
+
 Tag: distribution-and-changes-mismatch
 Severity: normal
 Certainty: possible
