@@ -249,9 +249,6 @@ sub read_test_desc {
     if ($filename =~ m{/desc$}) {
         # t/<suite>/<testname>/desc
         $expected_name = basename(dirname($filename));
-    } else {
-        # t/changes/<testname>.desc
-        $expected_name = basename($filename, '.desc');
     }
 
     if (!exists $testdata->{'testname'}) {

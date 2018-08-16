@@ -5,6 +5,10 @@ lintian (2.5.99) UNRELEASED; urgency=medium
   * checks/crufts.desc:
     + [FL] Improve tag description for 'package-does-not-install-examples'.
 
+  * t/tests/changes:
+    + [FL] Place all tests for the 'changes' suite into their own
+      directories.
+
  -- Chris Lamb <lamby@debian.org>  Sun, 26 Aug 2018 11:28:38 +0200
 
 lintian (2.5.98) unstable; urgency=medium
