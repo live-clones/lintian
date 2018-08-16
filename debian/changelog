@@ -26,6 +26,10 @@ lintian (2.5.97) UNRELEASED; urgency=medium
     + [NT] Add debhelper-compat an alternative to debhelper in
       the data files.
 
+  * t/scripts/01-critic/runner.pl:
+    + [CL] Bump perltidy test dependencies to prevent a failing build in
+      backports, etc.
+
  -- Chris Lamb <lamby@debian.org>  Thu, 09 Aug 2018 16:06:28 +0200
 
 lintian (2.5.96) unstable; urgency=medium
