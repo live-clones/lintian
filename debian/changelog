@@ -10,6 +10,9 @@ lintian (2.5.97) UNRELEASED; urgency=medium
     + [CL] Check for packages that contain X11 fonts but do not run
       update-fonts-* in their postinst or depend on xfonts-utils.
       (Closes: #905881)
+  * checks/source-changelog.{desc.pm}:
+    + [FL] Rework, centralise and improve version parsing.
+      (Closes: #886036)
 
   * data/common/dh_addons:
     + [NT] Refresh data.

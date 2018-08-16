@@ -2,6 +2,10 @@ Testname: changelog-file-general
 Type: non-native
 Version: 1.0-1
 Description: General tests for changelog-file tags
+Test-Against:
+ malformed-debian-changelog-version
+ hyphen-in-native-debian-changelog-version
+ debian-changelog-version-requires-debian-revision
 Test-For:
  bad-intended-distribution
  changelog-not-compressed-with-max-compression

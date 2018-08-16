@@ -2,4 +2,7 @@ Testname: cruft-native-dash-version
 Version: 1.0-1
 Type: native
 Description: Test for native packages with dash version
-Test-For: native-package-with-dash-version
+Test-For:
+ hyphen-in-native-debian-changelog-version
+Test-Against:
+ malformed-debian-changelog-version

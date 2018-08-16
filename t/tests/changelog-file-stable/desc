@@ -5,3 +5,4 @@ Description: Test a stable-proposed-updates package
 Test-Against:
  bad-distribution-in-changes-file
  version-refers-to-distribution
+ malformed-debian-changelog-version

@@ -1,4 +1,7 @@
 Testname: nmu-team-upload
 Version: 1.0+nmu1
 Description: Test for versioning of a team upload
-Test-For: team-upload-has-incorrect-version-number
+Test-Against:
+ malformed-debian-changelog-version
+Test-For:
+ team-upload-has-incorrect-version-number

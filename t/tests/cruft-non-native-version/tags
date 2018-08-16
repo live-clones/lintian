@@ -1,1 +1,1 @@
-W: cruft-non-native-version source: non-native-package-with-native-version
+E: cruft-non-native-version source: debian-changelog-version-requires-debian-revision 1.0

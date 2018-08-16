@@ -14,7 +14,7 @@ Test-For:
  depends-on-python-minimal
  essential-no-not-needed
  missing-build-dependency
- native-package-with-dash-version
+ hyphen-in-native-debian-changelog-version
  new-essential-package
  no-copyright-file
  package-uses-debhelper-but-lacks-build-depends

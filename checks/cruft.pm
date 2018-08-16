@@ -357,20 +357,6 @@ sub run {
     tag 'package-uses-deprecated-source-override-location'
       if $info->index_resolved_path('debian/source.lintian-overrides');
 
-    # This doesn't really belong here, but there isn't a better place at the
-    # moment to put this check.
-    my $version = $info->field('version', '0-1');
-
-    if ($info->native) {
-        if ($version =~ /-/) {
-            tag 'native-package-with-dash-version';
-        }
-    }else {
-        if ($version !~ /-/) {
-            tag 'non-native-package-with-native-version';
-        }
-    }
-
     # Check if the package build-depends on autotools-dev, automake,
     # or libtool.
     my $ltinbd  = $info->relation('build-depends-all')->implies($LIBTOOL);

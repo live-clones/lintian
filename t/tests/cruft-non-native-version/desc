@@ -2,4 +2,7 @@ Testname: cruft-non-native-version
 Type: non-native
 Version: 1.0
 Description: Test non-native package with native version
-Test-For: non-native-package-with-native-version
+Test-For:
+ debian-changelog-version-requires-debian-revision
+Test-Against:
+ malformed-debian-changelog-version

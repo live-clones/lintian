@@ -50,7 +50,7 @@ W: libbaz source: debhelper-but-no-misc-depends libbaz1-dev
 W: libbaz source: debhelper-but-no-misc-depends libbaz2
 W: libbaz source: debhelper-but-no-misc-depends libbaz2-dbg
 W: libbaz source: debhelper-but-no-misc-depends libbaz2-dev
-W: libbaz source: native-package-with-dash-version
+W: libbaz source: hyphen-in-native-debian-changelog-version 1-1
 W: libbaz source: package-uses-deprecated-debhelper-compat-version 6
 W: libbaz source: source-nmu-has-incorrect-version-number 1-1
 W: libbaz1: dev-pkg-without-shlib-symlink usr/lib/libbaz.so usr/lib/libbaz.so

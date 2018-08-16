@@ -25,7 +25,7 @@ Test-For:
  missing-dependency-on-libc
  missing-dependency-on-perlapi
  missing-depends-line
- native-package-with-dash-version
+ hyphen-in-native-debian-changelog-version
  new-package-should-close-itp-bug
  no-md5sums-control-file
  no-symbols-control-file
