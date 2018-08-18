@@ -1,6 +1,17 @@
-lintian (2.5.97) UNRELEASED; urgency=medium
+lintian (2.5.97) unstable; urgency=medium
 
-  XXX: generate tag summary
+  * Summary of tag changes:
+    + Added:
+      - debian-changelog-version-requires-debian-revision
+      - maintainer-script-needs-depends-on-xfonts-utils
+      - malformed-debian-changelog-version
+      - missing-call-to-update-fonts
+      - upload-has-backports-version-number
+    + Renamed:
+      - native-package-with-dash-version ->
+        hyphen-in-native-debian-changelog-version
+      - non-native-package-with-native-version ->
+        hyphen-in-upstream-part-of-debian-changelog-version
 
   * checks/changes-file.{desc,pm}:
     + [CL] Apply patch from Julien Cristau (with test) to warn about
@@ -18,6 +29,8 @@ lintian (2.5.97) UNRELEASED; urgency=medium
     + [NT] Refresh data.
   * data/debhelper/dh_{commands,packages}:
     + [NT] Refresh data.
+  * data/spelling/corrections:
+    + [PW] Add a number of corrections.
   * data/testsuite/known-restrictions:
     + [CL] Re-add "allow-stderr" accidentally dropped in 0cb688fb.
       (Closes: #905843)
@@ -30,7 +43,7 @@ lintian (2.5.97) UNRELEASED; urgency=medium
     + [CL] Bump perltidy test dependencies to prevent a failing build in
       backports, etc.
 
- -- Chris Lamb <lamby@debian.org>  Thu, 09 Aug 2018 16:06:28 +0200
+ -- Chris Lamb <lamby@debian.org>  Sat, 18 Aug 2018 08:47:03 +0000
 
 lintian (2.5.96) unstable; urgency=medium
 
