@@ -42,6 +42,7 @@ our $EXCLUDE =join(
       ^wrong-debian-qa-address-set-as-maintainer$
       ^wrong-debian-qa-group-name$
       ^changed-by-invalid-for-derivative$
+      ^debian-rules-passes-version-info-to-dh_shlibdeps$
       ^debug-symbol-migration-possibly-complete$
       ^example.*interpreter.*
       ^example-script-.*$
