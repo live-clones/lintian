@@ -2,6 +2,10 @@ lintian (2.5.98) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
+  * data/rules/rules-should-not-use:
+    + [CL] Check for packages that pass -V to dh_shlibdeps instead of
+      dh_makeshlibs.  (Closes: #906722)
+
  -- Chris Lamb <lamby@debian.org>  Sat, 18 Aug 2018 10:13:53 +0100
 
 lintian (2.5.97) unstable; urgency=medium
