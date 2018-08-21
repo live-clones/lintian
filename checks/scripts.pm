@@ -285,7 +285,7 @@ sub run {
         # As a special-exception, Policy 10.4 states that Perl scripts must use
         # /usr/bin/perl directly and not via /usr/bin/env, etc.
         tag 'wrong-path-for-interpreter', $filename,
-          '(#!/usr/bin/env != /usr/bin/perl)'
+          '(#!/usr/bin/env perl != /usr/bin/perl)'
           if defined $calls_env and $interpreter eq 'perl';
 
         # Skip files that have the #! line, but are not executable and

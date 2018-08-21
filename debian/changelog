@@ -2,6 +2,10 @@ lintian (2.5.98) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
+  * checks/scripts.desc:
+    + [CL] Expand the description to explain why we emit
+      wrong-path-for-interpreter for #!/usr/bin/env perl.
+
   * data/rules/rules-should-not-use:
     + [CL] Check for packages that pass -V to dh_shlibdeps instead of
       dh_makeshlibs.  (Closes: #906722)
