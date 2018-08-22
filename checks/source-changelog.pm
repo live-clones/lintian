@@ -39,7 +39,7 @@ sub parse_version {
     my $upstream_pattern   = qr/(\S+?)/;
     my $debian_pattern     = qr/([^-\s]+?)/;
     my $source_nmu_pattern = qr/(\S+)/;
-    my $bin_nmu_pattern    = qr/(\S+)/;
+    my $bin_nmu_pattern    = qr/([0-9]+)/;
 
     my $revision_pattern;
 
