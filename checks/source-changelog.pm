@@ -61,15 +61,15 @@ sub parse_version {
 
     my $revision = '';
 
-    $revision = "+nmu$source_nmu" if $native && $source_nmu;
-    $revision = "-$debian" . ($source_nmu ? ".$source_nmu" : '')
-      if !$native && $debian;
+    $revision = "+nmu$source_nmu" if $native && length $source_nmu;
+    $revision = "-$debian" . (length $source_nmu ? ".$source_nmu" : '')
+      if !$native && length $debian;
 
     my $reconstructed
-      = ($epoch ? "$epoch:" : '')
+      = (length $epoch ? "$epoch:" : '')
       . $upstream
       . $revision
-      . ($binary_nmu ? "+b$binary_nmu" : '');
+      . (length $binary_nmu ? "+b$binary_nmu" : '');
 
     my $version = {
         Literal => $literal,
@@ -107,7 +107,7 @@ sub run {
 
         tag 'debian-changelog-version-requires-debian-revision',
           $latest_version->{Literal}
-          unless $latest_version->{Debian} || $info->native;
+          unless length $latest_version->{Debian} || $info->native;
     }
 
     if (@entries > 1) {

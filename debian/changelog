@@ -5,6 +5,9 @@ lintian (2.5.98) UNRELEASED; urgency=medium
   * checks/scripts.desc:
     + [CL] Expand the description to explain why we emit
       wrong-path-for-interpreter for #!/usr/bin/env perl.
+  * checks/source-changelog.pm:
+    + [FL] Fix false positives in version parsing, especially
+      when some components are "0".  (Closes: #906957)
 
   * data/rules/rules-should-not-use:
     + [CL] Check for packages that pass -V to dh_shlibdeps instead of
