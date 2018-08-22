@@ -2,6 +2,9 @@ lintian (2.5.99) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
+  * checks/crufts.desc:
+    + [FL] Improve tag description for 'package-does-not-install-examples'.
+
  -- Chris Lamb <lamby@debian.org>  Sun, 26 Aug 2018 11:28:38 +0200
 
 lintian (2.5.98) unstable; urgency=medium
