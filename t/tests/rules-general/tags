@@ -1,4 +1,4 @@
-E: rules-general source: clean-should-be-satisfied-by-build-depends debhelper
+E: rules-general source: clean-should-be-satisfied-by-build-depends debhelper | debhelper-compat
 E: rules-general source: debian-rules-is-dh_make-template
 E: rules-general source: debian-rules-should-not-automatically-update-control line 6
 W: rules-general source: debian-rules-passes-version-info-to-dh_shlibdeps line 23
