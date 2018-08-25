@@ -16,6 +16,8 @@ lintian (2.5.98) UNRELEASED; urgency=medium
   * data/rules/rules-should-not-use:
     + [CL] Check for packages that pass -V to dh_shlibdeps instead of
       dh_makeshlibs.  (Closes: #906722)
+  * data/standards-version/release-dates:
+    + [CL] Add 4.2.1 as a known Standards-Version.
 
  -- Chris Lamb <lamby@debian.org>  Sat, 18 Aug 2018 10:13:53 +0100
 
