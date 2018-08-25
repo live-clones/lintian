@@ -61,8 +61,14 @@ our @GLOBAL_CLEAN_DEPENDS = (
     [cdbs => qr'^include\s+/usr/share/R/debian/r-cran\.mk'],
     [dbs => qr'^include\s+/usr/share/dbs/'],
     ['dh-make-php' => qr'^include\s+/usr/share/cdbs/1/class/pear\.mk'],
-    ['debhelper | debhelper-compat' => qr'^include\s+/usr/share/cdbs/1/rules/debhelper\.mk'],
-    ['debhelper | debhelper-compat' => qr'^include\s+/usr/share/R/debian/r-cran\.mk'],
+    [
+        'debhelper | debhelper-compat' =>
+          qr'^include\s+/usr/share/cdbs/1/rules/debhelper\.mk'
+    ],
+    [
+        'debhelper | debhelper-compat' =>
+          qr'^include\s+/usr/share/R/debian/r-cran\.mk'
+    ],
     [dpatch => qr'^include\s+/usr/share/cdbs/1/rules/dpatch\.mk'],
     ['gnome-pkg-tools' => qr'^include\s+/usr/share/gnome-pkg-tools/'],
     [quilt => qr'^include\s+/usr/share/cdbs/1/rules/patchsys-quilt\.mk'],
