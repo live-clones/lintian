@@ -2,11 +2,14 @@ lintian (2.5.98) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
+
   * checks/rules.pm:
     + [CL] Apply patch from Peter Pentchev to fix false-positives for
       missing Build-Depends on debhelper when using debhelper-compat
       commands.  (Closes: #907261)
-  * checks/scripts.desc:
+  * checks/scripts.{desc,pm}:
+    + [CL] Warn about Multi-Arch: same packages that use pycompile or
+      py3compile in their maintainer scripts.  (Closes: #907276)
     + [CL] Expand the description to explain why we emit
       wrong-path-for-interpreter for #!/usr/bin/env perl.
   * checks/source-changelog.pm:

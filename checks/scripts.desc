@@ -882,3 +882,22 @@ Info: The maintainer script ships the specified X11 font but does not
  If you are using dh_installxfonts, add a dependency on ${misc:Depends}
  and dh_installxfonts will take care of this for you.
 Ref: https://lists.debian.org/msgid-search/CAJqvfD-A1EPXxF_mS=_BaQ0FtqygVwRUf+23WqSqrkSmYgVAtA@mail.gmail.com
+
+Tag: multi-arch-same-package-calls-pycompile
+Severity: normal
+Certainty: possible
+Info: This <tt>Multi-Arch: same</tt> package uses <tt>pycompile</tt> or
+ <tt>py3compile</tt> in the specified maintainer script.
+ .
+ <tt>py{,3}compile</tt> are tools used to byte-compile Python source
+ files. It is typically run on installation of Debian packages that ship
+ Python modules. However, they do not support installing several
+ architectures of the same package and this is not Multi-Arch: safe.
+ .
+ If the contents of the package is not architecture dependent, it should
+ usually be made binary-all.
+ .
+ If the contents of the package is architecture dependent, it should
+ usually get a dependency on the Python interpreter for the same
+ architecture.
+Ref: pycompile(1), py3compile(1), #812228

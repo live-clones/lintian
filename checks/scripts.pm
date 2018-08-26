@@ -901,6 +901,10 @@ sub run {
                         tag 'read-in-maintainer-script', "$file:$.";
                     }
 
+                    tag 'multi-arch-same-package-calls-pycompile', "$file:$."
+                      if m/^\s*py3?compile(?:\s|\z)/
+                      and $info->field('multi-arch', 'no') eq 'same';
+
                     if (m,>\s*/etc/inetd\.conf(?:\s|\Z),) {
                         tag 'maintainer-script-modifies-inetd-conf',"$file:$."
                           unless $info->relation('provides')
