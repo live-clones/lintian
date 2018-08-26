@@ -1,0 +1,4 @@
+W: pkg-same: empty-binary-package
+W: pkg-same: multi-arch-same-package-calls-pycompile postinst:7
+W: pkg-same: multi-arch-same-package-calls-pycompile postinst:8
+X: pkg-same: package-contains-no-arch-dependent-files
