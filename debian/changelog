@@ -14,7 +14,6 @@ lintian (2.5.98) unstable; urgency=medium
       - debian-rules-passes-version-info-to-dh_shlibdeps
       - multi-arch-same-package-calls-pycompile
 
-
   * checks/rules.pm:
     + [CL] Apply patch from Peter Pentchev to fix false-positives for
       missing Build-Depends on debhelper when using debhelper-compat
