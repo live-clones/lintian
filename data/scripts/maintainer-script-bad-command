@@ -6,7 +6,7 @@
 #   - tag is the tag to emit
 #   - when in cat string is true check in HERE document
 #   - package exception is a regexp for checking only in some package
-#     Use empty string for checking in all package.
+#     Use empty string for checking in all packages.
 #   - only in file is a regexp for checking only in some maintainer script
 #     Empty means check in all files.
 #   - regexp is the regexp to check. First group ($1) will be printed if found as extra tag info

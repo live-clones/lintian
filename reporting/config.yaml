@@ -12,7 +12,7 @@ defaults:
 archives:
    ## A name given to the archive
   debian:
-    ## Name of the tracefile to use for determine how up to date
+    ## Name of the tracefile to use to determine how up to date
     ## the archive is.
     tracefile: ftp-master.debian.org
     ## Where the archive is placed on the file system
@@ -37,7 +37,7 @@ archives:
 storage:
 ## Path to the log files
   log-dir: /srv/lintian.debian.org/logs
-## Path to directory hold temporary data used by lintian.
+## Path to a directory to hold temporary data used by lintian.
 ## Used as TMPDIR for lintian and will also hold temporary labs
 ## - Can be /var/tmp or /tmp as long as they have space enough
 ## - Can be cleaned automatically.  Either on boot or via a

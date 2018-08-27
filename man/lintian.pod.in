@@ -444,7 +444,7 @@ have a similar layout to the LINTIAN_ROOT (if it exists), but does not
 need to be a full self-contained root.
 
 B<lintian> will check this directory for (additional) profiles, data
-files, support libraries and checks.  The latter two implies that
+files, support libraries and checks.  The latter two imply that
 Lintian may attempt to I<load and execute code> from this directory.
 
 This option may appear more than once; each time adding an additional

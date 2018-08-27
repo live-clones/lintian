@@ -71,7 +71,7 @@ Lintian::Output is used for all interaction between lintian and the user.
 It is designed to be easily extensible via subclassing.
 
 To simplify usage in the most common cases, many Lintian::Output methods
-can be used as class methods and will therefor automatically use the object
+can be used as class methods and will therefore automatically use the object
 $Lintian::Output::GLOBAL unless their first argument C<isa('Lintian::Output')>.
 
 =cut
