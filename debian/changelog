@@ -5,6 +5,10 @@ lintian (2.5.99) UNRELEASED; urgency=medium
   * checks/crufts.desc:
     + [FL] Improve tag description for 'package-does-not-install-examples'.
 
+  * data/cruft/warn-file-type:
+    + [CL] Match (for example) foo_o.golden with foo.cc to avoid
+      source-is-missing false-positives.  (Closes: #907475)
+
   * t/tests/changes:
     + [FL] Place all tests for the 'changes' suite into their own
       directories.
