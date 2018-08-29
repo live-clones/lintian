@@ -1,8 +1,8 @@
-Testname: fields-vcs-deprecated-in-debian-infrastructure-unrel
+Testname: fields-vcs-obsolete-in-debian-infrastructure-unrel
 Version: 1.0
 Description: Check for false positives with deprecated Vcs-* fields
 Options: -I -E --pedantic
 Skeleton: pedantic
 Test-Against:
- vcs-deprecated-in-debian-infrastructure
+ vcs-obsolete-in-debian-infrastructure
  vcs-field-not-canonical

@@ -2,6 +2,10 @@ lintian (2.5.100) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
+  * checks/fields.{desc.pm}:
+    + [CL] Rename vcs-deprecated-in-debian-infrastructure and update the
+      documentation to match.  (Closes: #907578)
+
  -- Chris Lamb <lamby@debian.org>  Wed, 29 Aug 2018 16:42:18 +0100
 
 lintian (2.5.99) unstable; urgency=medium
