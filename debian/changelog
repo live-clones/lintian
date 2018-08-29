@@ -6,7 +6,6 @@ lintian (2.5.100) UNRELEASED; urgency=medium
 
 lintian (2.5.99) unstable; urgency=medium
 
-
   * checks/crufts.desc:
     + [FL] Improve tag description for 'package-does-not-install-examples'.
   * checks/source-copyright.desc:
