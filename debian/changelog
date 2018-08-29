@@ -4,6 +4,9 @@ lintian (2.5.99) UNRELEASED; urgency=medium
 
   * checks/crufts.desc:
     + [FL] Improve tag description for 'package-does-not-install-examples'.
+  * checks/source-copyright.desc:
+    + [CL] Correct "may be" typo in the long description for the
+      'incomplete-creative-commons-license' tag.
 
   * data/cruft/warn-file-type:
     + [CL] Match (for example) foo_o.golden with foo.cc to avoid
