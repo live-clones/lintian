@@ -12,6 +12,10 @@ lintian (2.5.100) UNRELEASED; urgency=medium
     + [CL] Apply patch from Paul Gevers to emit warnings for deprecated
       test features.
 
+  * data/testsuite/known-restrictions:
+    + [CL] Apply patch from Paul Gevers to add hint-testsuite-triggers and
+      skip-not-installable to the list of known autopkgtest restrictions.
+
   * Miscellaneous:
     + [CL] Apply patch Daniele Forsi fixing a large number of typos in the
       codebase, documentation, etc.

@@ -4,10 +4,12 @@ allow-stderr
 breaks-testbed
 build-needed
 flaky
+hint-testsuite-triggers
 isolation-container
 isolation-machine
 needs-reboot
 needs-recommends
 needs-root
 rw-build-tree
+skip-not-installable
 skippable
