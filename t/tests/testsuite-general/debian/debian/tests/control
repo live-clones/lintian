@@ -22,7 +22,7 @@ Test-Command: /bin/true
 Depends: @, missing a comma
 
 Test-Command: /bin/true
-Features: unknownfeature
+Features: unknownfeature, test-name=false-positive
 Restrictions: unknownrestriction
 
 Test-Command: /bin/true

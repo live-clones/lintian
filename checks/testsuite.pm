@@ -134,7 +134,8 @@ sub check_control_paragraph {
     if (exists $paragraph->{'features'}) {
         my $features = strip($paragraph->{'features'});
         for my $feature (split(/\s*,\s*|\s+/ms, $features)) {
-            if (not exists $KNOWN_FEATURES{$feature}) {
+            if (not exists $KNOWN_FEATURES{$feature}
+                and $feature !~ m/^test-name=\S+/) {
                 tag 'unknown-runtime-tests-feature', $feature,
                   'paragraph starting at line', $line;
             }
