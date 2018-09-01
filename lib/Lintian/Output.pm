@@ -20,6 +20,7 @@ package Lintian::Output;
 
 use strict;
 use warnings;
+use CGI qw(escapeHTML);
 
 use v5.8.0; # for PerlIO
 use parent qw(Class::Accessor::Fast);
@@ -355,10 +356,8 @@ sub print_tag {
     }
     if ($self->_do_color) {
         if ($self->color eq 'html') {
-            my $escaped = $tag_name;
-            $escaped =~ s/&/&amp;/g;
-            $escaped =~ s/</&lt;/g;
-            $escaped =~ s/>/&gt;/g;
+            my $escaped = escapeHTML($tag_name);
+            $information = escapeHTML($information);
             $tag .= qq(<span style="color: $tag_color">$escaped</span>);
         } else {
             $tag .= Term::ANSIColor::colored($tag_name, $tag_color);

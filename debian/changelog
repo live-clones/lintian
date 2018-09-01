@@ -16,6 +16,11 @@ lintian (2.5.100) UNRELEASED; urgency=medium
     + [CL] Apply patch from Paul Gevers to add hint-testsuite-triggers and
       skip-not-installable to the list of known autopkgtest restrictions.
 
+  * lib/Lintian/Output.pm:
+    + [CL] Escape output if --color=html is used.  This prevents browsers
+      loading images/stylesheets from foreign websites that are part of
+      warning messages.  (Closes: #907667)
+
   * Miscellaneous:
     + [CL] Apply patch Daniele Forsi fixing a large number of typos in the
       codebase, documentation, etc.
