@@ -21,6 +21,9 @@ lintian (2.5.101) UNRELEASED; urgency=medium
     + [CL] Avoid false positives in init.d-script-possible-missing-stop
       when checking initscripts in "early boot" packages such as udev, etc.
       (Closes: #908185)
+  * checks/scripts.desc:
+    + [CL] Apply a patch from Adrian Bunk to improve the long description
+      of the multi-arch-same-package-calls-pycompile tag.
 
  -- Chris Lamb <lamby@debian.org>  Thu, 06 Sep 2018 15:09:21 +0100
 
