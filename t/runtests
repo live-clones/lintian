@@ -556,25 +556,29 @@ sub test_changes {
     $test_state->progress('setup');
 
     my $test = $testdata->{source};
-    my $testdir = "$TESTSET/changes";
-    my $file = "$testdir/$test.changes";
+    my $testdir = "$TESTSET/changes/$test";
+    # lintian refuses changes files without a dot
+    my $file = "$testdir/test.changes";
+    my $rundir = "$RUNDIR/changes/$test";
+
     # Check if we need to copy these files over.
     if (!-e $file && -e "$file.in") {
         my @files;
         $test_state->progress('building');
         # copy all files but "tags" and desc.  Usually this will only
-        # be ".changes.in", but in rare cases we have "other files"
+        # be "test.changes.in", but in rare cases we have "other files"
         # as well.
-        @files = grep { !/\.(?:desc|tags)$/o } glob("$testdir/$test.*");
-        runsystem('cp', '-f', @files, "$RUNDIR/changes");
-        $file = "$RUNDIR/changes/${test}.changes";
+        @files = grep { !/(?:desc|tags)$/o } glob("$testdir/*");
+        make_path("$rundir");
+        runsystem('cp', '-f', @files, "$rundir");
+        $file = "$rundir/test.changes";
         fill_in_tmpl($file, $testdata);
     }
 
-    run_lintian($test_state, $testdata, $file, "$RUNDIR/changes/tags.$test");
+    run_lintian($test_state, $testdata, $file, "$rundir/tags");
 
-    return _check_result($test_state, $testdata, "$testdir/$test.tags",
-        "$RUNDIR/changes/tags.$test");
+    return _check_result($test_state, $testdata, "$testdir/tags",
+        "$rundir/tags");
 }
 
 # generic_test_runner($dir, $ext, $test)
@@ -673,7 +677,7 @@ sub generic_test_runner {
 
 sub find_tests_to_run {
     my @test_suite_info = (
-        ['changes', "$TESTSET/changes/*.desc"],
+        ['changes', "$TESTSET/changes/*/desc"],
         ['debs', "$TESTSET/debs/*/desc",],
         ['source', "$TESTSET/source/*/desc",],
         ['tests', "$TESTSET/tests/*/desc"]);

@@ -1,28 +1,30 @@
 WRITING A TEST
 ==============
 
-A test in this framework consists of three components: a .desc file
-with basic metadata, a .changes (or a .changes.in) file on which
-lintian is run and a .tags file giving the (sorted) expected output of
-lintian when run on that .changes file.  All files should have the
-same name prior to the extension.  If the .changes(.in) file
-references additional files, they should also have the same name up to
-the extension and shouldn't end in .desc, .changes(.in) or .tags.
+A test in this framework consists of three components: a 'desc' file
+with basic metadata, a 'test.changes' (or a 'test.changes.in') file on
+which lintian is run and a 'tags' file giving the (sorted) expected
+output of lintian when run on that 'test.changes' file.  All files
+should be placed in a directory bearing the name of the test.  If the
+'test.changes(.in)' file references additional files, they have names
+other than 'desc', 'test.changes(.in)' or 'tags'.
 
 This framework should be used to test the checks performed by the
-lintian front-end itself on the .changes file.  Do not include .deb,
-.dsc, .orig.tar.gz, .tar.gz, or .diff.gz files in this test framework.
-To build a complete package, the tests framework is more appropriate.
+lintian front-end itself on the 'test.changes' file.  Do not include
+.deb, .dsc, .orig.tar.gz, .tar.gz, or .diff.gz files in this test
+framework.  To build a complete package, the tests framework is more
+appropriate.
 
-If the test provides a .changes file, this will be tested as is.
-Otherwise, if it provides a .changes.in, the .in file will be
-considered a template and the fields from the .desc file can be
-expanded in the .changes file.
-  This is particularly useful, since the test-runner provides values
-for a lot of common variables.  This feature is (and the variables)
-inherited from the "t/tests" framework.  The .desc file is described
-in detail in "t/tests/README".
-  Please note that there is no "skeleton" for this framework, since it
+If the test provides a 'test.changes' file, this will be tested as is.
+Otherwise, if it provides a 'test.changes.in', the .in file will be
+considered a template and the fields from the 'desc' file will be
+expanded into a 'test.changes' file.  This is particularly useful,
+since the test-runner provides values for a lot of common variables.
+This feature is (and the variables are) inherited from the "t/tests"
+framework.  The 'desc' file is described in detail in
+"t/tests/README".
+
+Please note that there is no "skeleton" for this framework, since it
 does not make sense to have them for this suite. :)
 
 TEST NAMING CONVENTIONS
@@ -32,8 +34,8 @@ Try to avoid naming conflicts between checks in this directory and
 checks in the other frameworks.  For tests to trigger certain tags,
 please use the check name as a prefix.  Otherwise, there is no strict
 naming convention here since there are few enough tags to check that
-require a custom .changes file that there shouldn't be too many tests
-in this framework.
+require a custom 'test.changes' file that there shouldn't be too many
+tests in this framework.
 
 
 RUNNING THE TEST SUITE
@@ -55,7 +57,7 @@ particular tag.  To do that, run:
 
     debian/rules runtests onlyrun=tag:<tag>
 
-This will run all tests that list that tag in the .tags file.
+This will run all tests that list that tag in the 'tags' file.
 
 
 TEST WRITING TIPS

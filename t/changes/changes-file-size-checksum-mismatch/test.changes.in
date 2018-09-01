@@ -2,17 +2,17 @@ Format: 1.8
 Date: {$date}
 Source: {$source}
 Binary: {$source}
-Architecture: source
+Architecture: source all
 Version: {$version}
 Distribution: unstable
 Urgency: low
 Maintainer: {$author}
 Changed-By: {$author}
 Files:
- 8de2b87704ef0a11144b57d243db88ec 12 non-free/optional optional {$source}.log
+ d41d8cd98f00b204e9800998ecf8427e 0 devel optional log
 Checksums-Sha1:
- c54c65218154f15c32ca252946786e0ad09aa99b 12 {$source}.log
+ da39a3ee5e6b4b0d3255bfef95601890afd80709 0 log
 Checksums-Sha256:
- e6c1396639c0b79bebc94e4448cfe2700b871d45d0d38d98df6ee9da3f09d35c 12 {$source}.log
+ e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855 0 log
 Description:
  {$source} - {$description}
