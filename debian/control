@@ -34,7 +34,7 @@ Build-Depends: aspell <!nocheck>,
                javahelper <!nocheck>,
                libapt-pkg-perl <!nocheck>,
                libarchive-zip-perl <!nocheck>,
-               libcgi-pm-perl <!nocheck>
+               libcgi-pm-perl <!nocheck>,
                libclass-accessor-perl <!nocheck>,
                libclone-perl <!nocheck>,
                libdpkg-perl <!nocheck>,
