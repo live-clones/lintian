@@ -347,7 +347,7 @@ sub run {
         tag 'dh-clean-k-is-deprecated';
     }
 
-    for my $suffix (qw(enable start)) {
+    for my $suffix (qw(enable start enable-arch start-arch)) {
         my $line = $overrides{"dh_systemd_$suffix"};
         tag 'debian-rules-uses-deprecated-systemd-override',
           "override_dh_systemd_$suffix", "(line $line)"

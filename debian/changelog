@@ -2,6 +2,9 @@ lintian (2.5.100) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
+  * checks/debhelper.pm:
+    + [CL] Also check override_dh_systemd_<action>-arch for
+      debian-rules-uses-deprecated-systemd-override.  (Closes: #907845)
   * checks/fields.{desc.pm}:
     + [CL] Rename vcs-deprecated-in-debian-infrastructure and update the
       documentation to match.  (Closes: #907578)
