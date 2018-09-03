@@ -197,10 +197,11 @@ sub run {
             my $targets = $1;
             $needbuilddepends = 1;
             # Can be multiple targets per rule.
-            while ($targets =~ /\boverride_dh_([^\s]+)/g) {
+            while ($targets =~ /\boverride_dh_([^\s]+?)(-arch|-indep|)\b/g) {
                 my $cmd = $1;
+                my $arch = $2;
                 my $dhcommand = "dh_$cmd";
-                $overrides{$dhcommand} = $.;
+                $overrides{$dhcommand} = [$., $arch];
                 # If maintainer is using wildcards, it's unlikely to be a typo.
                 next if ($dhcommand =~ /%/);
                 next if ($dh_commands_depends->known($dhcommand));
@@ -347,10 +348,10 @@ sub run {
         tag 'dh-clean-k-is-deprecated';
     }
 
-    for my $suffix (qw(enable start enable-arch start-arch)) {
-        my $line = $overrides{"dh_systemd_$suffix"};
+    for my $suffix (qw(enable start)) {
+        my ($line, $arch) = @{$overrides{"dh_systemd_$suffix"}};
         tag 'debian-rules-uses-deprecated-systemd-override',
-          "override_dh_systemd_$suffix", "(line $line)"
+          "override_dh_systemd_$suffix$arch", "(line $line)"
           if $line and $level >= 11;
     }
 
