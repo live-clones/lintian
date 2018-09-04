@@ -349,7 +349,7 @@ sub run {
     }
 
     for my $suffix (qw(enable start)) {
-        my ($line, $arch) = @{$overrides{"dh_systemd_$suffix"}};
+        my ($line, $arch) = @{$overrides{"dh_systemd_$suffix"} // []};
         tag 'debian-rules-uses-deprecated-systemd-override',
           "override_dh_systemd_$suffix$arch", "(line $line)"
           if $line and $level >= 11;
