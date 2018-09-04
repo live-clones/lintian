@@ -85,9 +85,13 @@ sub run {
         _check_dep5_copyright($info, $contents);
         _check_apache_notice_files($info, $group, $contents);
 
-        tag 'incomplete-creative-commons-license'
-          if $contents =~ m/\nLicense: CC-/m
-          and $contents !~ m/not a law firm/i;
+        my $i = 0;
+        for my $line (split(/\n/, $contents)) {
+            tag 'incomplete-creative-commons-license', $copyright_path,
+              "(line $i)"
+              if $line =~ m/License: CC-/m and $contents !~ m/not a law firm/i;
+            $i++;
+        }
     }
     return;
 }
