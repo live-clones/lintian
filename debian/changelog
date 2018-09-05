@@ -2,6 +2,10 @@ lintian (2.5.100) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
+  * checks/control-file.{desc.pm}:
+    + [CL] Don't check the .dsc for "XS-Autobuild"; check the control file
+      itself.  This fixes source-only-upload-to-non-free-without-autobuild.
+      (Closes: #907681)
   * checks/debhelper.pm:
     + [CL] Also check override_dh_systemd_<action>-arch and -indep for
       debian-rules-uses-deprecated-systemd-override.  (Closes: #907845)

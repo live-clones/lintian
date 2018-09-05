@@ -452,6 +452,13 @@ sub run {
           unless $info->source_field('xs-go-import-path', '');
     }
 
+    foreach my $c ($group->get_processables('changes')) {
+        tag 'source-only-upload-to-non-free-without-autobuild'
+          if $c->info->field('architecture', 'source')
+          and $info->is_non_free
+          and $info->source_field('xs-autobuild', 'no') eq 'no';
+    }
+
     return;
 }
 

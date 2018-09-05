@@ -250,12 +250,6 @@ sub run {
         }
     }
 
-    if (    any { $files->{$_}->{section} =~ m,^non-free/.+, } keys %$files
-        and $info->field('autobuild', '') ne 'yes'
-        and $info->field('architecture', '') eq 'source') {
-        tag 'source-only-upload-to-non-free-without-autobuild';
-    }
-
     # Check that we have a consistent number of checksums and files
     foreach my $alg (keys %num_checksums) {
         my $seen = $num_checksums{$alg};
