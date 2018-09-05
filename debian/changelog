@@ -16,8 +16,8 @@ lintian (2.5.100) UNRELEASED; urgency=medium
       test features.
 
   * data/files/fnames:
-    + [CL] Check for ".pytest_cache/foo" files in binary packages.
-      (Closes: #907870)
+    + [CL] Check for "dot" directories in Python packaging such as
+      ".cache", etc; they are usually an error.  (Closes: #907870)
   * data/testsuite/known-restrictions:
     + [CL] Apply patch from Paul Gevers to add hint-testsuite-triggers and
       skip-not-installable to the list of known autopkgtest restrictions.
