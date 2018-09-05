@@ -845,6 +845,17 @@ Info: Python eggs should not be installed, since the Debian package is
  .
  The egg may contain pre-compiled Python bytecode or shared libraries.
 
+Tag: package-contains-pytest-cache
+Severity: normal
+Certainty: certain
+Info: The package contains a file that looks like cruft/cache from the
+ Python "pytest" testing tool.
+ .
+ As they are unlikely to be of utility to end-users these files should not
+ be shipped in the final binary package. They could also conflict with
+ files from other packages and/or affect the reproducibility of your
+ package.
+
 Tag: package-contains-python-coverage-file
 Severity: normal
 Certainty: certain

@@ -1,0 +1,2 @@
+W: files-pytest-cache: package-contains-pytest-cache usr/share/files-pytest-cache/.pytest_cache/bar
+W: files-pytest-cache: package-contains-pytest-cache usr/share/files-pytest-cache/.pytest_cache/foo

@@ -15,6 +15,9 @@ lintian (2.5.100) UNRELEASED; urgency=medium
     + [CL] Apply patch from Paul Gevers to emit warnings for deprecated
       test features.
 
+  * data/files/fnames:
+    + [CL] Check for ".pytest_cache/foo" files in binary packages.
+      (Closes: #907870)
   * data/testsuite/known-restrictions:
     + [CL] Apply patch from Paul Gevers to add hint-testsuite-triggers and
       skip-not-installable to the list of known autopkgtest restrictions.

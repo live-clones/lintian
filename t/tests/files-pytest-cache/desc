@@ -1,0 +1,5 @@
+Testname: files-pytest-cache
+Version: 1.0
+Description: Check for Python .pytest_cache files
+Test-For:
+ package-contains-pytest-cache
