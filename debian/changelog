@@ -2,6 +2,10 @@ lintian (2.5.101) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
+  * checks/changelog-file.{desc,pm}:
+    + [CL] Check that .changes and debian/changelog distribution are
+      identical.  (Closes: #906610)
+
  -- Chris Lamb <lamby@debian.org>  Thu, 06 Sep 2018 15:09:21 +0100
 
 lintian (2.5.100) unstable; urgency=medium

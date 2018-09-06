@@ -363,6 +363,14 @@ sub run {
                 }
             }
 
+            my $changes = $group->get_changes_processable;
+            if ($changes) {
+                my $changes_dist = $changes->info->field('distribution', '');
+                tag 'changelog-distribution-does-not-match-changes-file',
+                  "($first_dist != $changes_dist)"
+                  if $first_dist ne $changes_dist;
+            }
+
             my ($first_epoch) = ($first_version =~ /^([^:]+):/, '(none)');
             my ($second_epoch) = ($second_version =~ /^([^:]+):/, '(none)');
             if ($first_epoch and $second_epoch ne $first_epoch) {
