@@ -12,6 +12,9 @@ lintian (2.5.100) UNRELEASED; urgency=medium
   * checks/fields.{desc.pm}:
     + [CL] Rename vcs-deprecated-in-debian-infrastructure and update the
       documentation to match.  (Closes: #907578)
+  * checks/scripts.{desc.pm}:
+    + [CL] Check for "invoke-rc.d --skip-systemd-native" without a suitable
+      Pre-Depends.  (Closes: #907836)
   * checks/testsuite.{desc,pm}:
     + [CL] Don't emit unknown-runtime-tests-feature for autopkgtest
       "Features:" entries that use the "test-name=foo" nomenclature.

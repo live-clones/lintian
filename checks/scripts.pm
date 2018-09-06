@@ -985,6 +985,11 @@ sub run {
 
             generic_check_bad_command($_, $file, $., $pkg, 1);
 
+            my $pdepends = $info->relation('pre-depends');
+            tag 'skip-systemd-native-flag-missing-pre-depends', "$file:$."
+              if m/invoke-rc.d\b.*--skip-systemd-native\b/
+              && !$pdepends->implies('init-system-helpers (>= 1.54~)');
+
             if (m,$LEADIN(?:/usr/sbin/)?dpkg-divert\s,
                 && !/--(?:help|list|truename|version)/) {
                 if (/--local/) {
