@@ -1,3 +1,4 @@
+E: scripts-bashisms: maintainer-shell-script-fails-syntax-check postinst
 E: scripts-bashisms: maintainer-shell-script-fails-syntax-check prerm
 E: scripts-bashisms: read-in-maintainer-script postinst:14
 E: scripts-bashisms: read-in-maintainer-script prerm:162

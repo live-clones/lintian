@@ -34,6 +34,7 @@ lintian (2.5.100) UNRELEASED; urgency=medium
   * Miscellaneous:
     + [CL] Apply patch Daniele Forsi fixing a large number of typos in the
       codebase, documentation, etc.
+    + [CL] Update tests to support dash 0.5.10.2.
 
  -- Chris Lamb <lamby@debian.org>  Wed, 29 Aug 2018 16:42:18 +0100
 

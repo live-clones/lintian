@@ -19,6 +19,7 @@ E: maintainer-scripts: maintainer-script-should-not-use-install-sgmlcatalog post
 E: maintainer-scripts: maintainer-script-should-not-use-install-sgmlcatalog postinst:99
 E: maintainer-scripts: maintainer-script-should-not-use-install-sgmlcatalog postrm:47
 E: maintainer-scripts: maintainer-script-should-not-use-install-sgmlcatalog prerm:58
+E: maintainer-scripts: maintainer-shell-script-fails-syntax-check postinst
 E: maintainer-scripts: maintainer-shell-script-fails-syntax-check prerm
 E: maintainer-scripts: no-copyright-file
 E: maintainer-scripts: postrm-contains-additional-updaterc.d-calls etc/init.d/bar
