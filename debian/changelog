@@ -1,6 +1,13 @@
-lintian (2.5.100) UNRELEASED; urgency=medium
+lintian (2.5.100) unstable; urgency=medium
 
-  XXX: generate tag summary
+  * Summary of tag changes:
+    + Added:
+      - obsolete-runtime-tests-restriction
+      - package-contains-python-dot-directory
+      - skip-systemd-native-flag-missing-pre-depends
+      - vcs-obsolete-in-debian-infrastructure
+    + Removed:
+      - vcs-deprecated-in-debian-infrastructure
 
   * checks/control-file.{desc.pm}:
     + [CL] Don't check the .dsc for "XS-Autobuild"; check the control file
@@ -25,6 +32,8 @@ lintian (2.5.100) UNRELEASED; urgency=medium
   * data/files/fnames:
     + [CL] Check for "dot" directories in Python packaging such as
       ".cache", etc; they are usually an error.  (Closes: #907870)
+  * data/spelling/corrections:
+    + [PW] Add a number of corrections.
   * data/testsuite/known-restrictions:
     + [CL] Apply patch from Paul Gevers to add hint-testsuite-triggers and
       skip-not-installable to the list of known autopkgtest restrictions.
@@ -39,7 +48,7 @@ lintian (2.5.100) UNRELEASED; urgency=medium
       codebase, documentation, etc.
     + [CL] Update tests to support dash 0.5.10.2.
 
- -- Chris Lamb <lamby@debian.org>  Wed, 29 Aug 2018 16:42:18 +0100
+ -- Chris Lamb <lamby@debian.org>  Thu, 06 Sep 2018 12:09:56 +0000
 
 lintian (2.5.99) unstable; urgency=medium
 
