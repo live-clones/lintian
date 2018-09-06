@@ -11,9 +11,9 @@ lintian (2.5.100) unstable; urgency=medium
       - obsolete-runtime-tests-restriction
       - package-contains-python-dot-directory
       - skip-systemd-native-flag-missing-pre-depends
-      - vcs-obsolete-in-debian-infrastructure
-    + Removed:
-      - vcs-deprecated-in-debian-infrastructure
+    + Renamed:
+      - vcs-obsolete-in-debian-infrastructure ->
+        vcs-deprecated-in-debian-infrastructure
 
   * checks/control-file.{desc.pm}:
     + [CL] Don't check the .dsc for "XS-Autobuild"; check the control file
