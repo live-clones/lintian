@@ -365,10 +365,10 @@ sub run {
 
             my $changes = $group->get_changes_processable;
             if ($changes) {
-                my $changes_dist = $changes->info->field('distribution', '');
+                my $chgs_dist = lc($changes->info->field('distribution', ''));
                 tag 'changelog-distribution-does-not-match-changes-file',
-                  "($first_dist != $changes_dist)"
-                  if $first_dist ne $changes_dist;
+                  "($first_dist != $chgs_dist)"
+                  if $first_dist ne $chgs_dist;
             }
 
             my ($first_epoch) = ($first_version =~ /^([^:]+):/, '(none)');
