@@ -82,10 +82,11 @@ sub run {
                                     && $distnumber ne '7')
                                 ||($dist eq 'jessie' && $distnumber ne '8')
                             ) {
-                                tag
-'backports-upload-has-incorrect-version-number',
+                                #<<< perltidy doesn't handle this too well
+                                tag 'backports-upload-has-incorrect-version-number',
                                   $info->field('version'),
                                   $distribution;
+                                #>>>
                             }
                             $bpo1 = 0 if ($bpoversion > 1);
                         } else {
