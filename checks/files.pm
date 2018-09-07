@@ -1495,11 +1495,12 @@ sub run {
                     my $regex = $DOCUMENTATION_FILE_REGEX->value($taboo);
                     if($file->basename =~ m{$regex}xi) {
                         # see #904852
+                        next
+                          if $file->basename =~ m{^README}xi
+                          and $file->file_contents =~ m{this directory}xi;
                         #<<< No perltidy - tag name too long
                         tag 'package-contains-documentation-outside-usr-share-doc',
-                          $fname
-                          unless $file->basename =~ m{^README}xi
-                          and $file->file_contents =~ m{this directory}xi;
+                          $fname;
                         #>>>
                         last;
                     }
