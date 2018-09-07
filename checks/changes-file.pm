@@ -251,6 +251,14 @@ sub run {
         }
     }
 
+    my %debs = map { m/^([^_]+)_/ => 1 } grep { m/\.deb$/ } keys %$files;
+    foreach my $pkg_name (keys %debs) {
+        if ($pkg_name =~ m/^(.+)-dbgsym$/) {
+            tag 'package-builds-dbg-and-dbgsym-variants', "$1-{dbg,dbgsym}"
+              if exists $debs{"$1-dbg"};
+        }
+    }
+
     # Check that we have a consistent number of checksums and files
     foreach my $alg (keys %num_checksums) {
         my $seen = $num_checksums{$alg};
