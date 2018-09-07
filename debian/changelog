@@ -11,6 +11,9 @@ lintian (2.5.101) UNRELEASED; urgency=medium
   * checks/changelog-file.{desc,pm}:
     + [CL] Check that .changes and debian/changelog distribution are
       identical.  (Closes: #906610)
+  * checks/files.pm:
+    + [CL] Don't emit package-contains-documentation-outside-usr-share-doc
+      for files in "templates" directories.  (Closes: #907734)
   * checks/fields.desc:
     + [CL] Clarify that the target of the dbg-package-missing-depends check
       cannot be "Architecture: all".

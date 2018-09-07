@@ -1495,6 +1495,7 @@ sub run {
                     my $regex = $DOCUMENTATION_FILE_REGEX->value($taboo);
                     if($file->basename =~ m{$regex}xi) {
                         # see #904852
+                        next if $file->dirname =~ m{/templates/};
                         next
                           if $file->basename =~ m{^README}xi
                           and $file->file_contents =~ m{this directory}xi;
