@@ -5,6 +5,10 @@ lintian (2.5.101) UNRELEASED; urgency=medium
   * checks/changelog-file.{desc,pm}:
     + [CL] Check that .changes and debian/changelog distribution are
       identical.  (Closes: #906610)
+  * checks/init.d.pm:
+    + [CL] Avoid false positives in init.d-script-possible-missing-stop
+      when checking initscripts in "early boot" packages such as udev, etc.
+      (Closes: #908185)
 
  -- Chris Lamb <lamby@debian.org>  Thu, 06 Sep 2018 15:09:21 +0100
 
