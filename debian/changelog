@@ -3,7 +3,7 @@ lintian (2.5.101) UNRELEASED; urgency=medium
   XXX: generate tag summary
 
   * checks/changes-file.{desc,pm}:
-    + [CL] Check for packages hat build both foo-dbg and foo-dbgsym debug
+    + [CL] Check for packages that build both foo-dbg and foo-dbgsym debug
       symbol variants.  (Closes: #907423)
   * checks/control-files.desc:
     + [CL] Clarify that checks/control-files.* relates to the "control"
