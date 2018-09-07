@@ -2,6 +2,9 @@ lintian (2.5.101) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
+  * checks/control-files.desc:
+    + [CL] Clarify that checks/control-files.* relates to the "control"
+      tarball, not debian/control in the source tarball.
   * checks/changelog-file.{desc,pm}:
     + [CL] Check that .changes and debian/changelog distribution are
       identical.  (Closes: #906610)
