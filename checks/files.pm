@@ -617,9 +617,8 @@ sub run {
             # ---------------- /usr/include
             if ($fname =~ m,^usr/include/,) {
                 if ($file->is_file and $header_dirs{$file->dirname}) {
-                    for my $regex ($GENERIC_HEADER_FILES->all) {
-                        tag 'header-has-overly-generic-name', $fname,
-                          if $file->basename =~ m,$regex,i;
+                    if ($GENERIC_HEADER_FILES->matches_any($file->basename, "i")) {
+                        tag 'header-has-overly-generic-name', $fname;
                     }
                 }
                 # ---------------- /usr/share/doc

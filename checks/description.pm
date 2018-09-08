@@ -160,9 +160,8 @@ sub run {
             $flagged_homepage = 1;
         }
 
-        foreach my $regex ($PLANNED_FEATURES->all()) {
-            tag 'description-mentions-planned-features', "(line $lines)"
-              if m/$regex/i;
+        if ($PLANNED_FEATURES->matches_any($_, "i")) {
+            tag 'description-mentions-planned-features', "(line $lines)";
         }
 
         if (index(lc($_), DH_MAKE_PERL_TEMPLATE) != -1) {
