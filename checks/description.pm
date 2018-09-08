@@ -160,7 +160,7 @@ sub run {
             $flagged_homepage = 1;
         }
 
-        if ($PLANNED_FEATURES->matches_any($_, "i")) {
+        if ($PLANNED_FEATURES->matches_any($_, 'i')) {
             tag 'description-mentions-planned-features', "(line $lines)";
         }
 

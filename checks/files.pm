@@ -617,7 +617,7 @@ sub run {
             # ---------------- /usr/include
             if ($fname =~ m,^usr/include/,) {
                 if ($file->is_file and $header_dirs{$file->dirname}) {
-                    if ($GENERIC_HEADER_FILES->matches_any($file->basename, "i")) {
+                    if ($GENERIC_HEADER_FILES->matches_any($file->basename, 'i')) {
                         tag 'header-has-overly-generic-name', $fname;
                     }
                 }

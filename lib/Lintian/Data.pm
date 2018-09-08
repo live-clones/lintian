@@ -248,7 +248,7 @@ sub value {
 # Accepts an optional second argument for regex modifiers.
 sub matches_any {
     my ($self, $keyword, $modifiers) = @_;
-    $modifiers //= "";
+    $modifiers //= '';
     for my $regex ($self->all) {
         if ($keyword =~ m,(?$modifiers)$regex,) {
             return 1;
