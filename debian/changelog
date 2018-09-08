@@ -25,6 +25,10 @@ lintian (2.5.101) UNRELEASED; urgency=medium
     + [CL] Apply a patch from Adrian Bunk to improve the long description
       of the multi-arch-same-package-calls-pycompile tag.
 
+  * lib/Lintian/Data.pm:
+    + [CL] Apply a patch from Josh Triplett to add a "matches_any" utility
+      function to Lintian::Data instances.
+
  -- Chris Lamb <lamby@debian.org>  Thu, 06 Sep 2018 15:09:21 +0100
 
 lintian (2.5.100) unstable; urgency=medium
