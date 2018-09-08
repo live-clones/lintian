@@ -32,8 +32,9 @@ lintian (2.5.101) UNRELEASED; urgency=medium
       three-letter dates for June and July.
 
   * lib/Lintian/Data.pm:
-    + [CL] Apply a patch from Josh Triplett to add a "matches_any" utility
-      function to Lintian::Data instances.
+    + [CL] Apply a patch series from Josh Triplett to add a "matches_any"
+      utility function to Lintian::Data instances and ports a number of
+      applicable instances to use it.  Thanks!
 
  -- Chris Lamb <lamby@debian.org>  Thu, 06 Sep 2018 15:09:21 +0100
 
