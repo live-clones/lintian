@@ -452,12 +452,9 @@ sub run {
         }
 
         my ($year) = ($file->date =~ /^(\d{4})/);
-        if (
-            $year <= 1975 # value from dak CVS: Dinstall::PastCutOffYear
-            && !$ALLOWED_ANCIENT_FILES->matches_any($fname)
-        ) {
-            tag 'package-contains-ancient-file', $file, $file->date;
-        }
+        tag 'package-contains-ancient-file', $file, $file->date
+          if $year <= 1975 # value from dak CVS: Dinstall::PastCutOffYear
+          and not $ALLOWED_ANCIENT_FILES->matches_any($fname);
 
         if (
             !(
