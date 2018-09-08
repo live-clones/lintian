@@ -616,11 +616,10 @@ sub run {
         elsif ($fname =~ m,^usr/,) {
             # ---------------- /usr/include
             if ($fname =~ m,^usr/include/,) {
-                if ($file->is_file and $header_dirs{$file->dirname}) {
-                    if ($GENERIC_HEADER_FILES->matches_any($file->basename, 'i')) {
-                        tag 'header-has-overly-generic-name', $fname;
-                    }
-                }
+                tag 'header-has-overly-generic-name', $fname
+                  if $file->is_file
+                  and $header_dirs{$file->dirname}
+                  and $GENERIC_HEADER_FILES->matches_any($file->basename, 'i');
                 # ---------------- /usr/share/doc
             } elsif ($fname =~ m,^usr/share/doc/\S,) {
                 if ($type eq 'udeb') {
