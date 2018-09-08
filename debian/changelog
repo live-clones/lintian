@@ -27,6 +27,10 @@ lintian (2.5.101) UNRELEASED; urgency=medium
     + [CL] Apply a patch from Adrian Bunk to improve the long description
       of the multi-arch-same-package-calls-pycompile tag.
 
+  * data/changelog-file/invalid-dates:
+    + [CL] Merge patch from Josh Triplett to display the correct "short"
+      three-letter dates for June and July.
+
   * lib/Lintian/Data.pm:
     + [CL] Apply a patch from Josh Triplett to add a "matches_any" utility
       function to Lintian::Data instances.
