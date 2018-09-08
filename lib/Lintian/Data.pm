@@ -252,7 +252,7 @@ sub matches_any {
             return 1;
         }
     }
-    return undef;
+    return;
 }
 
 1;
