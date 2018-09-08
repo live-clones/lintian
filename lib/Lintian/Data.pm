@@ -245,10 +245,12 @@ sub value {
 }
 
 # Query a data object for whether a particular keyword matches any regex.
+# Accepts an optional second argument for regex modifiers.
 sub matches_any {
-    my ($self, $keyword) = @_;
+    my ($self, $keyword, $modifiers) = @_;
+    $modifiers //= "";
     for my $regex ($self->all) {
-        if ($keyword =~ m,$regex,) {
+        if ($keyword =~ m,(?$modifiers)$regex,) {
             return 1;
         }
     }
@@ -358,10 +360,10 @@ is loaded.
 Returns all keywords listed in the data file as a list in original order.
 In a scalar context, returns the number of keywords.
 
-=item matches_any(KEYWORD)
+=item matches_any(KEYWORD[, MODIFIERS])
 
 Returns true if KEYWORD matches any regular expression listed in the
-data file.
+data file. The optional MODIFIERS serve as modifiers on all regexes.
 
 =item known(KEYWORD)
 
