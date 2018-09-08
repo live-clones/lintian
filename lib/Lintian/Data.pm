@@ -278,7 +278,7 @@ Lintian::Data - Lintian interface to query lists of keywords
         # do something ...
     }
     my @keywords = $list->all;
-    if ($list->matches_any($keyword) > 1) {
+    if ($list->matches_any($keyword)) {
         # do something ...
     }
 
