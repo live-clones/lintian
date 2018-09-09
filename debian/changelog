@@ -26,6 +26,10 @@ lintian (2.5.101) UNRELEASED; urgency=medium
   * checks/scripts.desc:
     + [CL] Apply a patch from Adrian Bunk to improve the long description
       of the multi-arch-same-package-calls-pycompile tag.
+    + [CL] Update the long description of wrong-path-for-interpreter to
+      reflect the weakening of the /usr/bin/perl "should" requirement
+      and to use "particular" over "special exception".  Thanks to David
+      Bremner.
 
   * data/changelog-file/invalid-dates:
     + [CL] Merge patch from Josh Triplett to display the correct "short"
