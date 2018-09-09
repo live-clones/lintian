@@ -38,7 +38,7 @@ lintian (2.5.101) unstable; urgency=medium
     + [CL] Update the long description of wrong-path-for-interpreter to
       reflect the weakening of the /usr/bin/perl "should" requirement
       and to use "particular" over "special exception".  Thanks to David
-      Bremner.
+      Bremner.  (Closes: #908350)
 
   * data/changelog-file/invalid-dates:
     + [CL] Merge patch from Josh Triplett to display the correct "short"
