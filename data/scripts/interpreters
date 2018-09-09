@@ -6,7 +6,7 @@
 #
 # NB: <dependency-relation> can have the magic value @NODEPS@
 # meaning that the interpreter will be provided by an essential
-# package or otherwise no need a dependency.
+# package or otherwise does not need a dependency.
 #
 # If <dependency-relation> is left out, its value is assumed to
 # be the same as the interpreter itself (saves some typing).

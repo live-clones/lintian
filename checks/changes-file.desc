@@ -221,15 +221,3 @@ Info: The Changed-By field does not match the required format for this
  .
  Derivative distributions of Debian may enforce additional restrictions
  on such fields.
-
-Tag: source-only-upload-to-non-free-without-autobuild
-Severity: serious
-Certainty: certain
-Info: For licensing reasons packages from the non-free section are not
- built by the autobuilders by default, so this source-upload to
- "non-free" will result in the package never appearing in the archive.
- .
- Please either perform a regular binary upload or (after checking the
- license) add <tt>XS-Autobuild: yes</tt> into the header part of
- debian/control and add the package to the "autobuild" whiltelist.
-Ref: devref 5.10.5

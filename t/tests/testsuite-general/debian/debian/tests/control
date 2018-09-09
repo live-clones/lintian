@@ -22,11 +22,11 @@ Test-Command: /bin/true
 Depends: @, missing a comma
 
 Test-Command: /bin/true
-Features: unknownfeature
+Features: unknownfeature, test-name=false-positive
 Restrictions: unknownrestriction
 
 Test-Command: /bin/true
-Restrictions: breaks-testbed, rw-build-tree, needs-root
+Restrictions: breaks-testbed, rw-build-tree, needs-root, needs-recommends
 Depends: @, @builddeps@
 
 Tests: test-1, test-2

@@ -1,4 +1,4 @@
-# Manual maintained list of known makefiles and their
+# Manually maintained list of known makefiles and their
 # (lack of) targets.  This is used to avoid assuming
 # that (e.g.) the quilt makefile provides all needed
 # targets.

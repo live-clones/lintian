@@ -1,5 +1,0 @@
-Testname: changes-file-source-only-non-free
-Version: 1.0
-Description: Test for source-only uploads to non-free
-Test-For:
- source-only-upload-to-non-free-without-autobuild

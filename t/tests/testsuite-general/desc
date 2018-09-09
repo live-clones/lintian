@@ -10,6 +10,7 @@ Test-For:
  exclusive-runtime-tests-field
  illegal-runtime-test-name
  missing-runtime-test-file
+ obsolete-runtime-tests-restriction
  runtime-test-file-is-not-a-regular-file
  testsuite-dependency-has-unparsable-elements
  unknown-runtime-tests-feature

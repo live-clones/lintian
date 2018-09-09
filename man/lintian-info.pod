@@ -82,7 +82,7 @@ B<Note>: This option should be the very first if given.
 
 Use the severities from the vendor profile prof when displaying tags.
 If the profile name does not contain a slash, the default profile for
-than vendor is chosen.
+that vendor is chosen.
 
 If not specified, B<lintian-info> loads the best profile for the
 current vendor.

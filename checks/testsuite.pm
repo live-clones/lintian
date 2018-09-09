@@ -38,6 +38,8 @@ my @MANDATORY_FIELDS = qw();
 my %KNOWN_FEATURES = map { $_ => 1 } qw();
 my $KNOWN_FIELDS = Lintian::Data->new('testsuite/known-fields');
 my $KNOWN_RESTRICTIONS = Lintian::Data->new('testsuite/known-restrictions');
+my $KNOWN_OBSOLETE_RESTRICTIONS
+  = Lintian::Data->new('testsuite/known-obsolete-restrictions');
 my $KNOWN_TESTSUITES = Lintian::Data->new('testsuite/known-testsuites');
 
 my %KNOWN_SPECIAL_DEPENDS = map { $_ => 1 } qw(
@@ -134,7 +136,8 @@ sub check_control_paragraph {
     if (exists $paragraph->{'features'}) {
         my $features = strip($paragraph->{'features'});
         for my $feature (split(/\s*,\s*|\s+/ms, $features)) {
-            if (not exists $KNOWN_FEATURES{$feature}) {
+            if (not exists $KNOWN_FEATURES{$feature}
+                and $feature !~ m/^test-name=\S+/) {
                 tag 'unknown-runtime-tests-feature', $feature,
                   'paragraph starting at line', $line;
             }
@@ -147,6 +150,9 @@ sub check_control_paragraph {
             tag 'unknown-runtime-tests-restriction', $restriction,
               'paragraph starting at line', $line
               unless $KNOWN_RESTRICTIONS->known($restriction);
+            tag 'obsolete-runtime-tests-restriction', $restriction,
+              'paragraph starting at line', $line
+              if $KNOWN_OBSOLETE_RESTRICTIONS->known($restriction);
         }
     }
 

@@ -1,0 +1,1 @@
+W: lintian-color-html: <span style="color: yellow">privacy-breach-generic</span> usr/share/doc/lintian-color-html/foo.xml [&lt;img src=&quot;http://1984.ow/bigbrotheriswatchingyou.png&quot; /&gt;] (http://1984.ow/bigbrotheriswatchingyou.png)

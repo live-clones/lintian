@@ -8,3 +8,6 @@ override_dh_systemd_enable:
 
 override_dh_systemd_start:
 	dh_systemd_start
+
+override_dh_systemd_start-arch:
+	dh_systemd_start

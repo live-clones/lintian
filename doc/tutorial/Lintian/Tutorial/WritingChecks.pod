@@ -98,7 +98,7 @@ L<Lintian::Collect::Source>.
 This is an instance of L<Lintian::Processable> and is useful for
 trivially obtaining very basic package metadata.  Particularly, the
 name of source package and version of source package are readily
-available through this object..
+available through this object.
 
 =item $group - Group of processables from the same source
 

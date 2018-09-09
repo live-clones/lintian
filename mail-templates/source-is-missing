@@ -22,13 +22,13 @@ copyleft licenses such as the GNU GPL. (While sometimes the licence
 allows not to ship the source, the DFSG always mandates source code.)
 
 In order to solve this problem, you could:
-1.  add the source files to "debian/missing-sources" directory.
+1. add the source files to "debian/missing-sources" directory.
 2. repack the origin tarball and add the missing source files to it.
 
-Both way satisfy the requirement to ship all source code. The second option
+Both ways satisfy the requirement to ship all source code. The second option
 might be preferable due to the following reasons [2]:
  - Upstream can do it too and you could even supply a patch to them, thus
-   full filling our social contract [3], see particularly §2.
+   fulfilling our social contract [3], see particularly §2.
  - If source and non-source are in different locations, ftpmasters may
    miss the source and (needlessly) reject the package.
  - The source isn't duplicated in every .diff.gz/.debian.tar.* (though

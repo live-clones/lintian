@@ -1383,16 +1383,16 @@ Info:
  Please move the packaging to under the *.debian.org umbrella or update
  the specified VCS field if it is otherwise wrong.
 
-Tag: vcs-deprecated-in-debian-infrastructure
+Tag: vcs-obsolete-in-debian-infrastructure
 Severity: normal
 Certainty: certain
 Info: The specified Vcs-* field points to an area within the *.debian.org
  infrastructure but refers to a version control system that has been
  deprecated.
  .
- After 1st May 2018, Debian will not offer hosting for any version
- control system other than Git and the Alioth service will become
- read-only in May 2018. Packages should migrate to Git hosting on
+ After 1st May 2018, Debian ceased to offer hosting for any version
+ control system other than Git and the Alioth service became read-only
+ in May 2018. Packages should migrate to Git hosting on
  https://salsa.debian.org.
  .
  For further information about salsa.debian.org, including how to add

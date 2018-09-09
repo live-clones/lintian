@@ -845,6 +845,20 @@ Info: Python eggs should not be installed, since the Debian package is
  .
  The egg may contain pre-compiled Python bytecode or shared libraries.
 
+Tag: package-contains-python-dot-directory
+Severity: normal
+Certainty: certain
+Info: The package contains a file that looks like cruft from the Python
+ build process such as "pytest" cached output or similar.
+ .
+ As such files are unlikely to be of utility to end-users they should
+ not be shipped in the final binary package. They could also conflict
+ with files from other packages and/or affect the reproducibility of
+ your package.
+ .
+ Please rebuild using a newer version of pybuild/dh-python which will
+ automatically remove many of these files.
+
 Tag: package-contains-python-coverage-file
 Severity: normal
 Certainty: certain

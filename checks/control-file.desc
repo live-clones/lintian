@@ -406,3 +406,15 @@ Info: This source package attempts to specify a
  <tt>Rules-Requires-Root</tt> field but appears to mispell the field.
  .
  Please rename the field to <tt>Rules-Requires-Root</tt>.
+
+Tag: source-only-upload-to-non-free-without-autobuild
+Severity: serious
+Certainty: certain
+Info: For licensing reasons packages from the non-free section are not
+ built by the autobuilders by default, so this source-upload to
+ "non-free" will result in the package never appearing in the archive.
+ .
+ Please either perform a regular binary upload or (after checking the
+ license) add <tt>XS-Autobuild: yes</tt> into the header part of
+ debian/control and get the package added to the "autobuild" whitelist.
+Ref: devref 5.10.5

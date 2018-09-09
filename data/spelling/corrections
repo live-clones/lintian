@@ -29,6 +29,7 @@ abigious||ambiguous
 abilties||abilities
 abilty||ability
 abitrate||arbitrate
+aboce||above
 abolute||absolute
 abov||above
 abreviate||abbreviate
@@ -372,6 +373,8 @@ arguement||argument
 arguements||arguments
 argumemnt||argument
 argumemnts||arguments
+argumeng||argument
+argumengs||arguments
 aribtrarily||arbitrarily
 aribtrary||arbitrary
 arithmatic||arithmetic
@@ -559,6 +562,7 @@ betweeen||between
 betwen||between
 beween||between
 bianries||binaries
+binay||binary
 bitwise-orring||bitwise-oring
 bizzare||bizarre
 blindy||blindly
@@ -1063,6 +1067,7 @@ critera||criteria
 criterias||criteria
 criticial||critical
 criticially||critically
+cross-orgin||cross-origin
 crtical||critical
 cryptocraphic||cryptographic
 ctificates||certificates
@@ -1376,6 +1381,10 @@ dislay||display
 dislayed||displayed
 dislaying||displaying
 dislays||displays
+dislpay||display
+dislpayed||displayed
+dislpaying||displaying
+dislpays||displays
 dispath||dispatch
 dispathed||dispatched
 dispathes||dispatches
@@ -1501,6 +1510,7 @@ elminated||eliminated
 elminate||eliminate
 elminates||eliminates
 elminating||eliminating
+emailling||emailing
 embarrasing||embarrassing
 embdedded||embedded
 embeddded||embedded
@@ -2510,6 +2520,9 @@ machanisms||mechanisms
 machinary||machinery
 maching||matching
 macpakge||package
+maillinglist||mailing list
+maillinglists||mailing lists
+mailling||mailing
 maintainance||maintenance
 maintainence||maintenance
 maintaing||maintaining
@@ -2816,11 +2829,29 @@ optmizations||optimizations
 orderd||ordered
 orginally||originally
 orginal||original
+orginals||originals
 orginated||originated
 orginate||originate
 orginates||originates
 orginating||originating
+orginially||originally
+orginial||original
+orginials||originals
+orginiated||originated
+orginiate||originate
+orginiates||originates
+orgininal||original
+orgininals||originals
+orginisation||organisation
+orginisations||organisations
+orginised||organised
+orginization||organization
+orginizations||organizations
+orginized||organized
 orgin||origin
+orgins||origins
+orginx||originx
+orginy||originy
 orientatied||orientated
 oriente||oriented
 orientied||oriented
@@ -3356,6 +3387,8 @@ removeable||removable
 renderering||rendering
 renegotation||renegotiation
 reoport||report
+reorginised||reorganised
+reorginized||reorganized
 repaced||replaced
 repace||replace
 repaces||replaces
@@ -3977,6 +4010,8 @@ thev||the
 theyre||they're
 thier||their
 thie||the
+thouroughly||thoroughly
+thourough||thorough
 threasholds||thresholds
 threashold||threshold
 threds||threads

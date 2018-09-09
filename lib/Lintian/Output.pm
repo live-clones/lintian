@@ -20,6 +20,7 @@ package Lintian::Output;
 
 use strict;
 use warnings;
+use CGI qw(escapeHTML);
 
 use v5.8.0; # for PerlIO
 use parent qw(Class::Accessor::Fast);
@@ -71,7 +72,7 @@ Lintian::Output is used for all interaction between lintian and the user.
 It is designed to be easily extensible via subclassing.
 
 To simplify usage in the most common cases, many Lintian::Output methods
-can be used as class methods and will therefor automatically use the object
+can be used as class methods and will therefore automatically use the object
 $Lintian::Output::GLOBAL unless their first argument C<isa('Lintian::Output')>.
 
 =cut
@@ -355,10 +356,8 @@ sub print_tag {
     }
     if ($self->_do_color) {
         if ($self->color eq 'html') {
-            my $escaped = $tag_name;
-            $escaped =~ s/&/&amp;/g;
-            $escaped =~ s/</&lt;/g;
-            $escaped =~ s/>/&gt;/g;
+            my $escaped = escapeHTML($tag_name);
+            $information = escapeHTML($information);
             $tag .= qq(<span style="color: $tag_color">$escaped</span>);
         } else {
             $tag .= Term::ANSIColor::colored($tag_name, $tag_color);

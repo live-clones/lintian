@@ -16,7 +16,7 @@
 #
 #  source-regex=<srcregex>
 #     - If present, it declares that this library is built from (or
-#       expected in binaries build from) any source package, which
+#       expected in binaries built from) any source package whose
 #       name matches <srcregex>.
 #     - Cannot be used with "source"
 #
