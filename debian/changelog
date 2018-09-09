@@ -1,6 +1,9 @@
-lintian (2.5.101) UNRELEASED; urgency=medium
+lintian (2.5.101) unstable; urgency=medium
 
-  XXX: generate tag summary
+  * Summary of tag changes:
+    + Added:
+      - changelog-distribution-does-not-match-changes-file
+      - package-builds-dbg-and-dbgsym-variants
 
   * checks/changes-file.{desc,pm}:
     + [CL] Check for packages that build both foo-dbg and foo-dbgsym debug
@@ -40,7 +43,7 @@ lintian (2.5.101) UNRELEASED; urgency=medium
       utility function to Lintian::Data instances and ports a number of
       applicable instances to use it.  Thanks!
 
- -- Chris Lamb <lamby@debian.org>  Thu, 06 Sep 2018 15:09:21 +0100
+ -- Chris Lamb <lamby@debian.org>  Sun, 09 Sep 2018 09:34:50 +0000
 
 lintian (2.5.100) unstable; urgency=medium
 
