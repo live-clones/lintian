@@ -19,4 +19,4 @@ I: libphp-fields-wrong-section: wrong-section-according-to-package-name libphp-f
 I: python-fields-wrong-section: wrong-section-according-to-package-name python-fields-wrong-section => python
 I: python3-fields-wrong-section: wrong-section-according-to-package-name python3-fields-wrong-section => python
 I: r-cran-fields-wrong-section: wrong-section-according-to-package-name r-cran-fields-wrong-section => gnu-r
-I: xfonts-fields-wrong-section1: wrong-section-according-to-package-name xfonts-fields-wrong-section1 => x11
+I: xfonts-fields-wrong-section1: wrong-section-according-to-package-name xfonts-fields-wrong-section1 => fonts

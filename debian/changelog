@@ -2,6 +2,12 @@ lintian (2.5.102) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
+  * data/fields/name_section_mappings:
+    + [CL] Reclassify xfonts-foo packages as part of the "fonts" section as
+      nobody was doing this in practice.  This reverts the change requested
+      in #878609 which was released inLintian 2.5.72.  Thanks to Russ
+      Allbery.  (Closes: #907725)
+
  -- Chris Lamb <lamby@debian.org>  Sun, 09 Sep 2018 11:02:24 +0100
 
 lintian (2.5.101) unstable; urgency=medium
