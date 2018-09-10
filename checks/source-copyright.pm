@@ -84,14 +84,6 @@ sub run {
 
         _check_dep5_copyright($info, $contents);
         _check_apache_notice_files($info, $group, $contents);
-
-        my $i = 0;
-        for my $line (split(/\n/, $contents)) {
-            tag 'incomplete-creative-commons-license', $copyright_path,
-              "(line $i)"
-              if $line =~ m/License: CC-/m and $contents !~ m/not a law firm/i;
-            $i++;
-        }
     }
     return;
 }
@@ -337,7 +329,8 @@ sub _parse_dep5 {
         if (defined $license and not defined $files) {
             my (undef, $full_license, $short_license,@short_licenses)
               = parse_license($license, $current_line);
-
+            check_incomplete_creative_commons_license($short_license,
+                $license, $current_line);
             # Standalone license paragraph
             if (defined($short_license) and $short_license =~ /\s++\|\s++/) {
                 tag 'pipe-symbol-used-as-license-disjunction', $short_license,
@@ -434,6 +427,8 @@ sub _parse_dep5 {
 
             my ($found_license, $full_license, $short_license, @short_licenses)
               = parse_license($license, $current_line);
+            check_incomplete_creative_commons_license($short_license,
+                $license, $current_line);
             if (defined($short_license) and $short_license =~ /\s++\|\s++/) {
                 tag 'pipe-symbol-used-as-license-disjunction', $short_license,
                   "(paragraph at line $current_line)";
@@ -690,6 +685,19 @@ sub check_files_excluded {
               if $srcfile =~ qr/^$wc_value/;
         }
     }
+
+    return;
+}
+
+sub check_incomplete_creative_commons_license {
+    my ($short_license, $license, $current_line) = @_;
+
+    my $num_lines = $license =~ tr/\n//;
+    tag 'incomplete-creative-commons-license', $short_license,
+      "(paragraph at line $current_line)"
+      if $short_license =~ m,^cc-,
+      and $num_lines > 0
+      and $num_lines < 20;
 
     return;
 }

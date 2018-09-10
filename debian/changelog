@@ -38,6 +38,9 @@ lintian (2.5.102) unstable; urgency=medium
       excludes files in directories called (eg.) "autotools_templates" or
       "my-templates.d".  (Closes: #907734)
   * checks/source-copyright.pm:
+    + [CL] Fix a number of false-positives when checking for incomplete
+      Creative Commons licenses.  Thanks to Jonathan Dowland (jmtd) for
+      collecting a corpus of test data.  (Closes: #906284)
     + [CL] Include the line number in the output of the
       incomplete-creative-commons-license tag.
 
