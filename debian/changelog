@@ -4,8 +4,8 @@ lintian (2.5.102) UNRELEASED; urgency=medium
 
   * checks/files.pm:
     + [CL] Ensure package-contains-documentation-outside-usr-share-doc also
-      excludes files in directories called (eg.) "autotools_templates".
-      (Closes: #907734)
+      excludes files in directories called (eg.) "autotools_templates" or
+      "my-templates.d".  (Closes: #907734)
 
   * data/fields/name_section_mappings:
     + [CL] Reclassify xfonts-foo packages as part of the "fonts" section as
