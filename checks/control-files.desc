@@ -2,7 +2,7 @@ Check-Script: control-files
 Author: Christian Schwarz <schwarz@debian.org>
 Abbrev: ctl
 Type: binary, udeb
-Info: Check for unknown control files in the binary package.
+Info: Checks files in the binary package's control.tar.gz, etc.
 Needs-Info: bin-pkg-control
 
 Tag: unknown-control-file

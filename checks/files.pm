@@ -40,6 +40,7 @@ my $INCORRECT_LOCALE_CODES
 my $MULTIARCH_DIRS = Lintian::Data->new('common/multiarch-dirs', qr/\s++/);
 my $GENERIC_HEADER_FILES = Lintian::Data->new('files/generic-header-files');
 my $GENERIC_PYTHON_MODULES= Lintian::Data->new('files/generic-python-modules');
+my $ALLOWED_ANCIENT_FILES = Lintian::Data->new('files/allowed-ancient-files');
 
 my $PRIVACY_BREAKER_WEBSITES= Lintian::Data->new(
     'files/privacy-breaker-websites',
@@ -451,9 +452,9 @@ sub run {
         }
 
         my ($year) = ($file->date =~ /^(\d{4})/);
-        if ($year <= 1975) { # value from dak CVS: Dinstall::PastCutOffYear
-            tag 'package-contains-ancient-file', $file, $file->date;
-        }
+        tag 'package-contains-ancient-file', $file, $file->date
+          if $year <= 1975 # value from dak CVS: Dinstall::PastCutOffYear
+          and not $ALLOWED_ANCIENT_FILES->matches_any($fname);
 
         if (
             !(
@@ -615,12 +616,10 @@ sub run {
         elsif ($fname =~ m,^usr/,) {
             # ---------------- /usr/include
             if ($fname =~ m,^usr/include/,) {
-                if ($file->is_file and $header_dirs{$file->dirname}) {
-                    for my $regex ($GENERIC_HEADER_FILES->all) {
-                        tag 'header-has-overly-generic-name', $fname,
-                          if $file->basename =~ m,$regex,i;
-                    }
-                }
+                tag 'header-has-overly-generic-name', $fname
+                  if $file->is_file
+                  and $header_dirs{$file->dirname}
+                  and $GENERIC_HEADER_FILES->matches_any($file->basename, 'i');
                 # ---------------- /usr/share/doc
             } elsif ($fname =~ m,^usr/share/doc/\S,) {
                 if ($type eq 'udeb') {
@@ -1495,11 +1494,13 @@ sub run {
                     my $regex = $DOCUMENTATION_FILE_REGEX->value($taboo);
                     if($file->basename =~ m{$regex}xi) {
                         # see #904852
+                        next if $file->dirname =~ m{/templates/};
+                        next
+                          if $file->basename =~ m{^README}xi
+                          and $file->file_contents =~ m{this directory}xi;
                         #<<< No perltidy - tag name too long
                         tag 'package-contains-documentation-outside-usr-share-doc',
-                          $fname
-                          unless $file->basename =~ m{^README}xi
-                          and $file->file_contents =~ m{this directory}xi;
+                          $fname;
                         #>>>
                         last;
                     }

@@ -403,7 +403,9 @@ sub check_init {
             my $base = $initd_path->basename;
             if (none { $base eq $_ } qw(killprocs sendsigs halt reboot)) {
                 my @missing = grep { !defined $stop{$_} } qw(0 1 6);
-                tag 'init.d-script-possible-missing-stop',$initd_path,@missing;
+                my $start = join(' ', sort keys %start);
+                tag 'init.d-script-possible-missing-stop',$initd_path,@missing
+                  unless $start eq 's';
             }
         }
     }

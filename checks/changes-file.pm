@@ -82,10 +82,11 @@ sub run {
                                     && $distnumber ne '7')
                                 ||($dist eq 'jessie' && $distnumber ne '8')
                             ) {
-                                tag
-'backports-upload-has-incorrect-version-number',
+                                #<<< perltidy doesn't handle this too well
+                                tag 'backports-upload-has-incorrect-version-number',
                                   $info->field('version'),
                                   $distribution;
+                                #>>>
                             }
                             $bpo1 = 0 if ($bpoversion > 1);
                         } else {
@@ -247,6 +248,14 @@ sub run {
             if ($real_checksum ne $file_info->{checksums}{$alg}{sum}) {
                 tag 'checksum-mismatch-in-changes-file', $alg, $file;
             }
+        }
+    }
+
+    my %debs = map { m/^([^_]+)_/ => 1 } grep { m/\.deb$/ } keys %$files;
+    foreach my $pkg_name (keys %debs) {
+        if ($pkg_name =~ m/^(.+)-dbgsym$/) {
+            tag 'package-builds-dbg-and-dbgsym-variants', "$1-{dbg,dbgsym}"
+              if exists $debs{"$1-dbg"};
         }
     }
 

@@ -9,6 +9,7 @@ I: control-file-general source: debian-control-has-obsolete-dbg-package control-
 I: control-file-general source: duplicate-long-description control-file-general control-file-general-1 control-file-general-2 control-file-general-3 control-file-general-4 control-file-general-5 control-file-general-dbgsym control-file-general-dbg
 I: control-file-general source: duplicate-short-description control-file-general control-file-general-1
 I: control-file-general source: xs-vcs-field-in-debian-control xs-vcs-svn
+W: control-file-general changes: package-builds-dbg-and-dbgsym-variants control-file-general-{dbg,dbgsym}
 W: control-file-general source: control-file-contains-dh_make-vcs-comment
 W: control-file-general source: dbg-package-missing-depends control-file-general-dbg
 W: control-file-general source: debian-control-repeats-field-name-in-value line 101

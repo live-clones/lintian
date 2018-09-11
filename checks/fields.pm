@@ -702,10 +702,8 @@ sub run {
         if ($homepage=~ m,bioconductor\.org/packages/.*/bioc/html/.*\.html*$,){
             tag 'homepage-for-bioconductor-package-not-canonical', $orig;
         }
-        foreach my $re ($KNOWN_INSECURE_HOMEPAGE_URIS->all) {
-            next unless $homepage =~ m/$re/;
+        if ($KNOWN_INSECURE_HOMEPAGE_URIS->matches_any($homepage)) {
             tag 'homepage-field-uses-insecure-uri', $orig;
-            last;
         }
     } elsif (not $info->native) {
         if ($type eq 'source') {

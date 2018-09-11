@@ -1,6 +1,7 @@
 E: init.d-lsb-headers-all: init.d-script-depends-on-all-virtual-facility etc/init.d/init.d-lsb-headers-all required-start
 E: init.d-lsb-headers-all: init.d-script-depends-on-all-virtual-facility etc/init.d/init.d-lsb-headers-all required-stop
 E: init.d-lsb-headers-all: init.d-script-depends-on-all-virtual-facility etc/init.d/init.d-lsb-headers-all should-start
+E: init.d-lsb-headers-early-boot: missing-systemd-service-for-init.d-rcS-script init.d-lsb-headers-early-boot
 E: init.d-lsb-headers-local: init.d-script-missing-dependency-on-local_fs etc/init.d/init.d-lsb-headers-local: required-start
 E: init.d-lsb-headers-parsing: init.d-script-starts-in-stop-runlevel etc/init.d/init.d-lsb-headers-parsing 0
 E: init.d-lsb-headers-virtual: init.d-script-depends-on-all-virtual-facility etc/init.d/init.d-lsb-headers-virtual required-stop

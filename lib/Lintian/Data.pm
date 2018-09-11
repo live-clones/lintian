@@ -244,6 +244,19 @@ sub value {
     return $data->{'dataset'}{$keyword} // undef;
 }
 
+# Query a data object for whether a particular keyword matches any regex.
+# Accepts an optional second argument for regex modifiers.
+sub matches_any {
+    my ($self, $keyword, $modifiers) = @_;
+    $modifiers //= '';
+    for my $regex ($self->all) {
+        if ($keyword =~ m,(?$modifiers)$regex,) {
+            return 1;
+        }
+    }
+    return;
+}
+
 1;
 
 =head1 NAME
@@ -265,6 +278,9 @@ Lintian::Data - Lintian interface to query lists of keywords
         # do something ...
     }
     my @keywords = $list->all;
+    if ($list->matches_any($keyword)) {
+        # do something ...
+    }
 
 =head1 DESCRIPTION
 
@@ -343,6 +359,11 @@ is loaded.
 
 Returns all keywords listed in the data file as a list in original order.
 In a scalar context, returns the number of keywords.
+
+=item matches_any(KEYWORD[, MODIFIERS])
+
+Returns true if KEYWORD matches any regular expression listed in the
+data file. The optional MODIFIERS serve as modifiers on all regexes.
 
 =item known(KEYWORD)
 
