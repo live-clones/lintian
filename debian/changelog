@@ -1,6 +1,4 @@
-lintian (2.5.102) UNRELEASED; urgency=medium
-
-  XXX: generate tag summary
+lintian (2.5.102) unstable; urgency=medium
 
   * checks/files.pm:
     + [CL] Ensure package-contains-documentation-outside-usr-share-doc also
@@ -13,7 +11,7 @@ lintian (2.5.102) UNRELEASED; urgency=medium
       in #878609 which was released inLintian 2.5.72.  Thanks to Russ
       Allbery.  (Closes: #907725)
 
- -- Chris Lamb <lamby@debian.org>  Sun, 09 Sep 2018 11:02:24 +0100
+ -- Chris Lamb <lamby@debian.org>  Tue, 11 Sep 2018 19:33:54 +0000
 
 lintian (2.5.101) unstable; urgency=medium
 
