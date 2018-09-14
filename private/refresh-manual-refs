@@ -110,8 +110,7 @@ my %manuals = (
     'vim-policy' => [
         '/usr/share/doc/vim/vim-policy.html/index.html',
         'http://pkg-vim.alioth.debian.org/vim-policy.html/',
-        $dbk_index_re,
-        $dbk_fields
+        $dbk_index_re,$dbk_fields
     ],
     'lintian' => [
         '/usr/share/doc/lintian/lintian.html/index.html',
