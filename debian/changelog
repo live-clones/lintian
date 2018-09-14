@@ -1,6 +1,5 @@
-lintian (2.5.103) UNRELEASED; urgency=medium
+lintian (2.5.103) unstable; urgency=medium
 
-  XXX: generate tag summary
 
   * private/refresh-manual-refs:
     + [CL] Apply a patch series from Joseph Herlant to update some
@@ -10,7 +9,7 @@ lintian (2.5.103) UNRELEASED; urgency=medium
     + [CL] Apply a patch from Felix Lechner to removed a likely-accidental
       slash in a find(1) call.
 
- -- Chris Lamb <lamby@debian.org>  Tue, 11 Sep 2018 20:57:34 +0100
+ -- Chris Lamb <lamby@debian.org>  Fri, 14 Sep 2018 17:33:43 +0000
 
 lintian (2.5.102) unstable; urgency=medium
 
