@@ -1,5 +1,10 @@
-lintian (2.5.103) unstable; urgency=medium
+lintian (2.5.104) UNRELEASED; urgency=medium
 
+  XXX: generate tag summary
+
+ -- Chris Lamb <lamby@debian.org>  Fri, 14 Sep 2018 18:55:30 +0100
+
+lintian (2.5.103) unstable; urgency=medium
 
   * private/refresh-manual-refs:
     + [CL] Apply a patch series from Joseph Herlant to update some
