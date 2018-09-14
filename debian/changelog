@@ -2,6 +2,10 @@ lintian (2.5.103) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
+  * t/helpers/bin/create-deb:
+    + [CL] Apply a patch from Felix Lechner to removed a likely-accidental
+      slash in a find(1) call.
+
  -- Chris Lamb <lamby@debian.org>  Tue, 11 Sep 2018 20:57:34 +0100
 
 lintian (2.5.102) unstable; urgency=medium
