@@ -55,6 +55,10 @@ override_dh_install:
 	touch $(SHARE)/cargo/registry/crate-1.0.0/.gitignore
 	touch $(SHARE)/cargo/registry/crate-1.0.0/LICENSE
 	touch $(SHARE)/cargo/registry/crate-1.0.0/templates/readme.tmpl
+	mkdir -p $(SHARE)/cargo/registry/crate-1.0.0/foo_templates
+	touch $(SHARE)/cargo/registry/crate-1.0.0/foo_templates/readme.tmpl
+	mkdir -p $(SHARE)/cargo/registry/crate-1.0.0/my-templates.d
+	touch $(SHARE)/cargo/registry/crate-1.0.0/my-templates.d/readme.tmpl
 	echo '#!/bin/sh' > $(SHARE)/cargo/registry/crate-1.0.0/test.sh
 	echo '#!/usr/bin/python' > $(SHARE)/cargo/registry/crate-1.0.0/test.py
 	chmod a+x $(SHARE)/cargo/registry/crate-1.0.0/test.py

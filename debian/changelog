@@ -1,3 +1,18 @@
+lintian (2.5.102) unstable; urgency=medium
+
+  * checks/files.pm:
+    + [CL] Ensure package-contains-documentation-outside-usr-share-doc also
+      excludes files in directories called (eg.) "autotools_templates" or
+      "my-templates.d".  (Closes: #907734)
+
+  * data/fields/name_section_mappings:
+    + [CL] Reclassify xfonts-foo packages as part of the "fonts" section as
+      nobody was doing this in practice.  This reverts the change requested
+      in #878609 which was released inLintian 2.5.72.  Thanks to Russ
+      Allbery.  (Closes: #907725)
+
+ -- Chris Lamb <lamby@debian.org>  Tue, 11 Sep 2018 19:33:54 +0000
+
 lintian (2.5.101~bpo9+1) stretch-backports; urgency=medium
 
   * Rebuild for stretch-backports.
@@ -38,7 +53,7 @@ lintian (2.5.101) unstable; urgency=medium
     + [CL] Update the long description of wrong-path-for-interpreter to
       reflect the weakening of the /usr/bin/perl "should" requirement
       and to use "particular" over "special exception".  Thanks to David
-      Bremner.
+      Bremner.  (Closes: #908350)
 
   * data/changelog-file/invalid-dates:
     + [CL] Merge patch from Josh Triplett to display the correct "short"
