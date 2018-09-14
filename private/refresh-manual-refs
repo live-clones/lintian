@@ -148,8 +148,8 @@ my %manuals = (
         $fields
     ],
     'fhs' => [
-        '/usr/share/doc/debian-policy/fhs/fhs-2.3.html',
-        'http://www.pathname.com/fhs/pub/fhs-2.3.html',
+        '/usr/share/doc/debian-policy/fhs/fhs-3.0.html',
+        'http://www.pathname.com/fhs/pub/fhs-3.0.html',
         qr/<a\s*href="(#.+?)"\s*>([\w\s[:punct:]]+?)<\/a\s*>/i,
         [['section', 'url'], ['title']]
     ],
