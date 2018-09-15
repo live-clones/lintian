@@ -2,6 +2,10 @@ lintian (2.5.104) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
+  * profiles/debian/ftp-master-auto-reject.profile:
+    + [CL] Refresh tags via private/refresh-ftp-master-tags, specifically
+      allowing dir-or-file-in-etc-opt to be overridable.  (Closes: #908911)
+
  -- Chris Lamb <lamby@debian.org>  Fri, 14 Sep 2018 18:55:30 +0100
 
 lintian (2.5.103) unstable; urgency=medium

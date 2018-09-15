@@ -2,7 +2,7 @@
 # be overridden (nonfatal tags).  It is based on the data file retrieved from
 # https://ftp-master.debian.org/static/lintian.tags
 #
-# Last updated: 2016-09-18
+# Last updated: 2018-09-15
 
 arch-dependent-file-in-usr-share
 arch-independent-package-contains-binary-or-object
@@ -11,12 +11,18 @@ binary-or-shlib-defines-rpath
 binary-with-bad-dynamic-table
 control-interpreter-without-depends
 copyright-contains-dh_make-todo-boilerplate
+copyright-contains-dh_make-todo-boilerplate
+dir-or-file-in-etc-opt
 dir-or-file-in-var-www
 embedded-library
 empty-binary-package
+file-name-is-not-valid-UTF-8
 gzip-file-is-not-multi-arch-same-safe
 install-info-used-in-maintainer-script
+license-problem-gfdl-invariants
 license-problem-json-evil
+license-problem-non-free-RFC
+license-problem-nvidia-intellectual
 md5sum-mismatch
 missing-build-dependency
 missing-dependency-on-libc
@@ -24,8 +30,16 @@ mknod-in-maintainer-script
 no-shlibs-control-file
 non-etc-file-marked-as-conffile
 non-standard-toplevel-dir
+not-binnmuable-all-depends-any
+not-binnmuable-any-depends-all
+not-binnmuable-any-depends-any
 package-contains-info-dir-file
+pkg-config-bad-directive
+pkg-config-multi-arch-wrong-dir
 preinst-interpreter-without-predepends
+quilt-series-without-trailing-newline
+source-contains-prebuilt-ms-help-file
+source-contains-prebuilt-silverlight-object
 source-contains-waf-binary
 statically-linked-binary
 usr-share-doc-symlink-without-dependency
