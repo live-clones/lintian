@@ -927,6 +927,7 @@ sub run {
                       and &$is_dep_field($field)
                       and not $pkg =~ m/^dh-/
                       and not $pkg =~ m/-(source|src)$/
+                      and not $info->is_pkg_class('any-meta')
                       and not $DH_ADDONS_VALUES{$pkg};
 
                     # default-jdk-doc must depend on openjdk-X-doc (or

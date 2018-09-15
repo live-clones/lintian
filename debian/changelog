@@ -3,8 +3,9 @@ lintian (2.5.104) UNRELEASED; urgency=medium
   XXX: generate tag summary
 
   * checks/fields.pm:
-    + [CL] Apply patch from Josh Triplett to re-use the metapackage
-      detection logic from Lintian::Collect::Binary.
+    + [CL] Apply patches from Josh Triplett to re-use the metapackage
+      detection logic from Lintian::Collect::Binary and to allow
+      metapackages to depend on toolchain packages.
 
   * private/refresh-ftp-master-tags:
     + [CL] Remove any duplicates from FTPmaster's list of supplied tags
