@@ -732,27 +732,6 @@ sub run {
 
     #---- Package relations (binary package)
 
-    # Check whether the package looks like a metapackage, used for later
-    # dependency checks.  We consider a package to possibly be a metapackage if
-    # it is a binary package with no files outside of /usr/share/doc and a few
-    # other directories found in metapackages.  This also catches documentation
-    # packages, but that doesn't matter for our purposes.
-    my $metapackage = 0;
-    if ($type eq 'binary') {
-        $metapackage = 1;
-        for my $file ($info->sorted_index) {
-            next if $file->is_dir;
-            next if $file =~ m%^usr/share/doc/%;
-            next if $file =~ m%^usr/share/lintian/overrides/%;
-            next if $file =~ m%^usr/share/cdd/%;
-            $metapackage = 0;
-            last;
-        }
-
-        # Packages we say are metapackages are always metapackages even if
-        # they don't look like it.
-        $metapackage = 1 if $KNOWN_METAPACKAGES->known($pkg);
-    }
     if (($type eq 'binary') || ($type eq 'udeb')) {
         my $javalib = 0;
         my $replaces = $info->relation('replaces');
@@ -861,7 +840,8 @@ sub run {
 
                     tag 'depends-on-metapackage', "$field: $part_d_orig"
                       if (  $KNOWN_METAPACKAGES->known($d_pkg)
-                        and not $metapackage
+                        and not $KNOWN_METAPACKAGES->known($pkg)
+                        and not $info->is_pkg_class('any-meta')
                         and &$is_dep_field($field));
 
                     # diffutils is a special case since diff was

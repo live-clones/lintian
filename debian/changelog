@@ -2,6 +2,10 @@ lintian (2.5.104) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
+  * checks/fields.pm:
+    + [CL] Apply patch from Josh Triplett to re-use the metapackage
+      detection logic from Lintian::Collect::Binary.
+
   * private/refresh-ftp-master-tags:
     + [CL] Remove any duplicates from FTPmaster's list of supplied tags
       when automatically generating the ftp-master-{fatal,nonfatal} data
