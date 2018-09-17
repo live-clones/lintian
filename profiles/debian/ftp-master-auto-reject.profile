@@ -9,7 +9,6 @@ Enable-Tags: FSSTND-dir-in-usr, FSSTND-dir-in-var, arch-dependent-file-in-usr-sh
  conflicting-negation-in-source-relation, control-file-has-bad-owner,
  control-file-has-bad-permissions, control-file-is-not-a-file,
  control-interpreter-in-usr-local, control-interpreter-without-depends,
- copyright-contains-dh_make-todo-boilerplate,
  copyright-contains-dh_make-todo-boilerplate, copyright-file-compressed,
  copyright-file-is-symlink, copyright-refers-to-incorrect-directory,
  copyright-refers-to-old-directory,

@@ -2,6 +2,11 @@ lintian (2.5.104) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
+  * private/refresh-ftp-master-tags:
+    + [CL] Remove any duplicates from FTPmaster's list of supplied tags
+      when automatically generating the ftp-master-{fatal,nonfatal} data
+      files.
+
   * profiles/debian/ftp-master-auto-reject.profile:
     + [CL] Refresh tags via private/refresh-ftp-master-tags, specifically
       allowing dir-or-file-in-etc-opt to be overridable.  (Closes: #908911)

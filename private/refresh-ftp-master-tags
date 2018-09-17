@@ -27,6 +27,8 @@ require LWP::Simple;
 LWP::Simple->import(qw(get));
 use POSIX qw(strftime);
 
+use List::MoreUtils qw(uniq);
+
 BEGIN {
     my $LINTIAN_ROOT = $ENV{'LINTIAN_ROOT'};
     if (not $LINTIAN_ROOT) {
@@ -75,7 +77,7 @@ print {$nonfatal} <<"EOH";
 # Last updated: $date
 
 EOH
-print {$nonfatal} join("\n", sort(@nonfatal), '');
+print {$nonfatal} join("\n", sort(uniq(@nonfatal)), '');
 close($nonfatal);
 open(my $fatal, '>', 'private/build-time-data/ftp-master-fatal');
 print {$fatal} <<"EOH";
@@ -86,7 +88,7 @@ print {$fatal} <<"EOH";
 # Last updated: $date
 
 EOH
-print {$fatal} join("\n", sort(@fatal), '');
+print {$fatal} join("\n", sort(uniq(@fatal)), '');
 close($fatal);
 
 # Local Variables:

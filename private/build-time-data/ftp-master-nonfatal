@@ -2,7 +2,7 @@
 # be overridden (nonfatal tags).  It is based on the data file retrieved from
 # https://ftp-master.debian.org/static/lintian.tags
 #
-# Last updated: 2018-09-15
+# Last updated: 2018-09-17
 
 arch-dependent-file-in-usr-share
 arch-independent-package-contains-binary-or-object
@@ -10,7 +10,6 @@ bad-perm-for-file-in-etc-sudoers.d
 binary-or-shlib-defines-rpath
 binary-with-bad-dynamic-table
 control-interpreter-without-depends
-copyright-contains-dh_make-todo-boilerplate
 copyright-contains-dh_make-todo-boilerplate
 dir-or-file-in-etc-opt
 dir-or-file-in-var-www
