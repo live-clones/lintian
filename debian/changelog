@@ -5,7 +5,8 @@ lintian (2.5.104) UNRELEASED; urgency=medium
   * private/refresh-ftp-master-tags:
     + [CL] Remove any duplicates from FTPmaster's list of supplied tags
       when automatically generating the ftp-master-{fatal,nonfatal} data
-      files.
+      files.  This should be fixed upstream via
+      <https://salsa.debian.org/ftp-team/dak/merge_requests/101>.
 
   * profiles/debian/ftp-master-auto-reject.profile:
     + [CL] Refresh tags via private/refresh-ftp-master-tags, specifically
