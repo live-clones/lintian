@@ -141,7 +141,7 @@ if ($val{'md5sums'}) {
     runsystem(
         join(q{ },
             "cd $val{'root'}",
-            '&& find -type f -a -! -ipath etc/ -print0',
+            '&& find -type f -a -! -ipath etc -print0',
             "| xargs -0 md5sum >> $cwd/md5sums"));
     push @ARGV, 'md5sums' if -s 'md5sums'; # only add if it is not empty.
 }

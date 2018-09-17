@@ -1,3 +1,15 @@
+lintian (2.5.103) unstable; urgency=medium
+
+  * private/refresh-manual-refs:
+    + [CL] Apply a patch series from Joseph Herlant to update some
+      locations of manual references.
+
+  * t/helpers/bin/create-deb:
+    + [CL] Apply a patch from Felix Lechner to removed a likely-accidental
+      slash in a find(1) call.
+
+ -- Chris Lamb <lamby@debian.org>  Fri, 14 Sep 2018 17:33:43 +0000
+
 lintian (2.5.102~bpo9+1) stretch-backports; urgency=medium
 
   * Rebuild for stretch-backports.
