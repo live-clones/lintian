@@ -6,6 +6,12 @@ lintian (2.5.104) UNRELEASED; urgency=medium
     + [CL] Apply patches from Josh Triplett to re-use the metapackage
       detection logic from Lintian::Collect::Binary and to allow
       metapackages to depend on toolchain packages.
+  * checks/source-copyright.pm:
+    + [CL] Fix a number of false-positives when checking for incomplete
+      Creative Commons licenses.  Thanks to Jonathan Dowland (jmtd) for
+      collecting a corpus of test data.  (Closes: #906284)
+    + [CL] Include the line number in the output of the
+      incomplete-creative-commons-license tag.
 
   * private/refresh-ftp-master-tags:
     + [CL] Remove any duplicates from FTPmaster's list of supplied tags
@@ -37,12 +43,6 @@ lintian (2.5.102) unstable; urgency=medium
     + [CL] Ensure package-contains-documentation-outside-usr-share-doc also
       excludes files in directories called (eg.) "autotools_templates" or
       "my-templates.d".  (Closes: #907734)
-  * checks/source-copyright.pm:
-    + [CL] Fix a number of false-positives when checking for incomplete
-      Creative Commons licenses.  Thanks to Jonathan Dowland (jmtd) for
-      collecting a corpus of test data.  (Closes: #906284)
-    + [CL] Include the line number in the output of the
-      incomplete-creative-commons-license tag.
 
   * data/fields/name_section_mappings:
     + [CL] Reclassify xfonts-foo packages as part of the "fonts" section as
