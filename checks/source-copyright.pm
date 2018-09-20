@@ -286,7 +286,7 @@ sub _parse_dep5 {
       and none { defined $first_para->{$_} } qw(comment disclaimer);
     tag 'missing-explanation-for-repacked-upstream-tarball'
       if $info->repacked
-      and none { defined $first_para->{$_} } qw(comment files-excluded);
+      and none { defined $first_para->{$_} } qw(comment files-excluded source);
 
     my (undef, $full_license_field, undef,@short_licenses_field)
       =parse_license($first_para->{'license'}, 1);

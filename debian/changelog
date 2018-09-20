@@ -10,6 +10,9 @@ lintian (2.5.104) UNRELEASED; urgency=medium
     + [CL] Fix a number of false-positives when checking for incomplete
       Creative Commons licenses.  Thanks to Jonathan Dowland (jmtd) for
       collecting a corpus of test data.  (Closes: #906284)
+    + [CL] Also check the "Source" field when looking for repack
+      explanations as per section 6.4 of the machine-readable
+      debian/copyright file specification.  (Closes: #909270)
     + [CL] Include the line number in the output of the
       incomplete-creative-commons-license tag.
 
