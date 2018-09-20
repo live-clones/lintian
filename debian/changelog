@@ -2,6 +2,9 @@ lintian (2.5.104) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
+  * checks/description.pm:
+    + [CL] Check for overly-indented paragraph separators in package long
+      descriptions.  (Closes: #909272)
   * checks/fields.pm:
     + [CL] Apply patches from Josh Triplett to re-use the metapackage
       detection logic from Lintian::Collect::Binary and to allow
