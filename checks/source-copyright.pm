@@ -691,6 +691,7 @@ sub check_files_excluded {
 
 sub check_incomplete_creative_commons_license {
     my ($short_license, $license, $current_line) = @_;
+    return unless $short_license and $license;
 
     my $num_lines = $license =~ tr/\n//;
     tag 'incomplete-creative-commons-license', $short_license,
