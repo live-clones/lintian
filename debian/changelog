@@ -1,6 +1,4 @@
-lintian (2.5.104) UNRELEASED; urgency=medium
-
-  XXX: generate tag summary
+lintian (2.5.104) unstable; urgency=medium
 
   * checks/description.pm:
     + [CL] Check for overly-indented paragraph separators in package long
@@ -29,7 +27,7 @@ lintian (2.5.104) UNRELEASED; urgency=medium
     + [CL] Refresh tags via private/refresh-ftp-master-tags, specifically
       allowing dir-or-file-in-etc-opt to be overridable.  (Closes: #908911)
 
- -- Chris Lamb <lamby@debian.org>  Fri, 14 Sep 2018 18:55:30 +0100
+ -- Chris Lamb <lamby@debian.org>  Fri, 21 Sep 2018 08:13:34 +0000
 
 lintian (2.5.103) unstable; urgency=medium
 
