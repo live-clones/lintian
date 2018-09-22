@@ -1,0 +1,2 @@
+W: debian-source-dir-custom-compression-settings source: debian-source-options-has-custom-compression-settings compression = xz (line 1)
+W: debian-source-dir-custom-compression-settings source: debian-source-options-has-custom-compression-settings compression-level = 9 (line 2)

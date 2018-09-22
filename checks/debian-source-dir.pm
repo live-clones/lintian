@@ -96,6 +96,17 @@ sub run {
           unless $KNOWN_FILES->known($file);
     }
 
+    my $options = $info->index_resolved_path('debian/source/options');
+    if ($options and $options->is_open_ok) {
+        my $fd = $options->open;
+        while (<$fd>) {
+            tag 'debian-source-options-has-custom-compression-settings',
+              $1, "(line $.)"
+              if m/^\s*(compression(?:-level)?\s*=\s+\S+)\n/;
+        }
+        close($fd);
+    }
+
     return;
 }
 

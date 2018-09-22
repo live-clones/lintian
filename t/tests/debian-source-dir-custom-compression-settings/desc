@@ -1,0 +1,5 @@
+Testname: debian-source-dir-custom-compression-settings
+Version: 1.0
+Description: Check for custom compression settings in debian/source/format
+Test-For:
+ debian-source-options-has-custom-compression-settings
