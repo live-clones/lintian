@@ -3,9 +3,9 @@ dsc  = some-other-name
 dir  = $(dsc)-1
 
 all:
-	mkdir $(dir)
-	mkdir $(dir)/debian
-	mkdir $(dir)/debian/source
+	-mkdir $(dir)
+	-mkdir $(dir)/debian
+	-mkdir $(dir)/debian/source
 	echo "1.0" > $(dir)/debian/source/format
 	echo $(DEFAULT_DH_COMPAT) > $(dir)/debian/compat
 	cp changelog copyright control rules $(dir)/debian/

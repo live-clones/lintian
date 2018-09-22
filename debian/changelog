@@ -6,6 +6,10 @@ lintian (2.5.105) UNRELEASED; urgency=medium
     + [CL] Do not emit package-does-not-install-examples for example
       directories under "vendor" or "third_party".
 
+  * t/*:
+    + [CL] Apply a patch series from Felix Lechner to support dynamic test
+      rebuilding.
+
  -- Chris Lamb <lamby@debian.org>  Fri, 21 Sep 2018 10:16:22 +0100
 
 lintian (2.5.104) unstable; urgency=medium
