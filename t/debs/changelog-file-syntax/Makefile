@@ -2,9 +2,9 @@ name = changelog-file-syntax
 
 all:
 
-	mkdir -p root/usr/share/doc/$(name)
+	-mkdir -p root/usr/share/doc/$(name)
 	install -m0644 copyright changelog root/usr/share/doc/$(name)
-	gzip -9n root/usr/share/doc/$(name)/changelog
+	gzip -9nf root/usr/share/doc/$(name)/changelog
 	create-deb --root root/ -o $(name).deb control
 
 clean:

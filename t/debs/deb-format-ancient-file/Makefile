@@ -1,13 +1,13 @@
 name = deb-format-ancient-file
 
 all:
-	mkdir -p root/usr/share/doc/$(name)
+	-mkdir -p root/usr/share/doc/$(name)
 	install -m0644 copyright changelog root/usr/share/doc/$(name)
-	gzip -n -9 root/usr/share/doc/$(name)/changelog
+	gzip -n -9 -f root/usr/share/doc/$(name)/changelog
 	env TZ=GMT touch -t 197001010000 \
 	    root/usr/share/doc/$(name)/changelog.gz
 
-	mkdir -p root/usr/share/cargo/registry/$(name)
+	-mkdir -p root/usr/share/cargo/registry/$(name)
 	echo '{}' > root/usr/share/cargo/registry/$(name)/.cargo_vcs_info.json
 	env TZ=GMT touch -t 197001010000 \
 	    root/usr/share/cargo/registry/$(name)/.cargo_vcs_info.json
