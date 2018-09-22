@@ -4,3 +4,4 @@ C: control-file-rules-requires-root-no source: source-format 1.0 [non-native]
 C: control-file-rules-requires-root-no: control-tarball-compression-format gz
 C: control-file-rules-requires-root-no: data-tarball-compression-format gz
 C: control-file-rules-requires-root-no: no-ctrl-scripts
+W: control-file-rules-requires-root-no source: debian-rules-should-not-use-custom-compression-settings dh_builddeb -- -Zgzip (line 7)
