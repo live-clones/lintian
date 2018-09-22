@@ -5,6 +5,9 @@ lintian (2.5.105) UNRELEASED; urgency=medium
   * checks/cruft.pm:
     + [CL] Do not emit package-does-not-install-examples for example
       directories under "vendor" or "third_party".
+  * checks/rules.{desc,pm}:
+    + [CL] Expand and rename xz-compression-level-too-high to warn about
+      all manual adjustments to such settings.  (Closes: #906611)
 
   * commands/lintian.pm:
     + [CL] Show the number of unused overrides in the "N: 1 tag overridden

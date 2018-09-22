@@ -1,4 +1,0 @@
-W: rules-xz-compression-level-too-high source: xz-compression-level-too-high dh_builddeb --  -Zxz  -z 9 (line 7)
-W: rules-xz-compression-level-too-high source: xz-compression-level-too-high dh_builddeb -- -Zxz -Sextreme -z9 (line 11)
-W: rules-xz-compression-level-too-high source: xz-compression-level-too-high dh_builddeb -- -Zxz -z9 (line 12)
-W: rules-xz-compression-level-too-high source: xz-compression-level-too-high dh_builddeb -- -z9 -Z xz (line 8)
