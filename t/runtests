@@ -1075,7 +1075,7 @@ sub check_test_is_sane {
     $data->{'test-for'} ||= '';
     $data->{'test-against'} ||= '';
 
-    $data->{skeleton} ||= 'skel';
+    $data->{skeleton} ||= 'default';
     $data->{options} ||= '-I -E';
     $data->{todo} ||= 'no';
     $data->{'test-depends'} //= '';
