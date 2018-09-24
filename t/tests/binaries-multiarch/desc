@@ -1,7 +1,8 @@
 Testname: binaries-multiarch
 Version: 1.0
 Description: Test of a correct multiarch package
-Architecture: i386 amd64
+Test-Architectures: i386 amd64
+Architecture: any
 Options: --pedantic -I -E
 Test-Depends: debhelper (>= 9.20151004~)
 Test-Against:
