@@ -1,3 +1,9 @@
+lintian (2.5.106) UNRELEASED; urgency=medium
+
+  XXX: generate tag summary
+
+ -- Chris Lamb <lamby@debian.org>  Mon, 24 Sep 2018 11:49:19 +0100
+
 lintian (2.5.105) unstable; urgency=medium
 
   * Summary of tag changes:
