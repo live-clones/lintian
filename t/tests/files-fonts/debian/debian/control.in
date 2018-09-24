@@ -8,7 +8,7 @@ Rules-Requires-Root: no
 Homepage: http://lintian.debian.org/
 
 Package: {$source}
-Architecture: {$architecture}
+Architecture: all
 Depends: $\{misc:Depends\}
 Description: {$description}
  Non-font package containing fonts.
@@ -19,7 +19,7 @@ Description: {$description}
 
 Package: ttf-{$source}
 Section: fonts
-Architecture: {$architecture}
+Architecture: all
 # Due to file-conflict
 Conflicts: {$source}
 Depends: $\{misc:Depends\}

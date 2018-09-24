@@ -7,7 +7,7 @@ Build-Depends: {$build_depends}
 Rules-Requires-Root: no
 
 Package: {$source}
-Architecture: any
+Architecture: {$architecture}
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
 Description: {$description}
  This is a test package designed to exercise some feature or tag of
@@ -17,7 +17,7 @@ Description: {$description}
 
 Package: {$source}-dbg
 Section: debug
-Architecture: {$architecture}
+Architecture: all
 Depends: {$source}, $\{shlibs:Depends\}, $\{misc:Depends\}
 Description: Manual dbg package
  This is a test package designed to exercise some feature or tag of
@@ -27,7 +27,7 @@ Description: Manual dbg package
 
 Package: {$source}-dbgsym
 Section: debug
-Architecture: {$architecture}
+Architecture: all
 Depends: {$source}, $\{shlibs:Depends\}, $\{misc:Depends\}
 Description: Manual dbgsym package
  This is a test package designed to exercise some feature or tag of

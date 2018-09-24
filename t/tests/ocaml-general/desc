@@ -1,8 +1,7 @@
 Testname: ocaml-general
 Version: 1.0
-Skeleton: pedantic
+Skeleton: arch-dependent.pedantic
 Options: -I -E --pedantic
-Architecture: any
 Section: ocaml
 Description: Test the OCaml-related tags
 Test-For:

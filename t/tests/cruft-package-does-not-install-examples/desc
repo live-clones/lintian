@@ -3,6 +3,6 @@ Source: foo
 Version: 1.0
 Description: Detect uninstalled examples
 Options: -I --pedantic
-Skeleton: pedantic
+Skeleton: arch-independent.pedantic
 Test-For:
  package-does-not-install-examples

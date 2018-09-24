@@ -1,5 +1,5 @@
 Testname: binaries-doesnt-match-sonames
-Architecture: any
+Skeleton: arch-dependent
 Version: 1.0
 Test-Depends: debhelper (>= 9.20151004~)
 Description: Test for library package that does not match SONAME

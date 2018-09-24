@@ -1,9 +1,8 @@
 Testname: cruft-python
 Version: 1.0
 Description: Misc errors related to Python
-Skeleton: pedantic
+Skeleton: arch-dependent.pedantic
 Options: --pedantic -I -E
-Architecture: any
 Test-For:
  debian-pycompat-is-obsolete
  debian-pyversions-is-obsolete

@@ -1,5 +1,5 @@
 Testname: strings-elf-detection
 Sequence: 4500
 Version: 1.0
-Architecture: any
+Skeleton: arch-dependent
 Description: Test the ability to detect ELF objects

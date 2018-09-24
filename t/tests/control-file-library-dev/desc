@@ -1,5 +1,5 @@
 Testname: control-file-library-dev
 Version: 1.0
-Architecture: any
+Skeleton: arch-dependent
 Description: Check control file handling of library dev packages
 Test-For: weak-library-dev-dependency

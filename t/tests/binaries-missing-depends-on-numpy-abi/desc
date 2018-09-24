@@ -1,6 +1,6 @@
 Testname: binaries-missing-depends-on-numpy-abi
 Version: 1.0
 Description: Test for missing dependency on python-numpy-abiN
-Architecture: any
+Skeleton: arch-dependent
 Test-For:
  missing-dependency-on-numpy-abi

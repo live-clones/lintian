@@ -7,7 +7,7 @@ Build-Depends: {$build_depends}, javahelper, default-jdk-headless | default-jdk
 Rules-Requires-Root: no
 
 Package: libtest-java
-Architecture: {$architecture}
+Architecture: all
 Depends: $\{misc:Depends\}
 Description: {$description}
  This is a test package designed to test various aspects of the

@@ -9,7 +9,7 @@ Rules-Requires-Root: binary-targets
 
 Package: {$source}
 Essential: yes
-Architecture: {$architecture}
+Architecture: all
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
 Description: {$description}
  This is a test package designed to exercise some feature or tag of
@@ -19,7 +19,7 @@ Description: {$description}
 
 Package: {$source}2
 Essential: maybe
-Architecture: {$architecture}
+Architecture: all
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
 Description: {$description} -- maybe
  This is another test package designed to exercise some feature or tag of
