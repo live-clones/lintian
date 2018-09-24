@@ -11,3 +11,5 @@ Test-For:
  obsolete-field-in-dep5-copyright
  unknown-paragraph-in-dep5-copyright
  unused-license-paragraph-in-dep5-copyright
+Test-Against:
+ incomplete-creative-commons-license

@@ -1,0 +1,5 @@
+Testname: source-copyright-incomplete-creative-commons-b
+Version: 1.0
+Description: Test for incomplete Creative Commons licenses (b)
+Test-For:
+ incomplete-creative-commons-license

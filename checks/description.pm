@@ -142,7 +142,7 @@ sub run {
 
         $lines++;
 
-        if (m/^ \.\s*\S/o) {
+        if (m/^ \.\s*\S/o or m/^ \s+\.\s*$/o) {
             tag 'description-contains-invalid-control-statement';
         } elsif (m/^ [\-\*]/o) {
        # Print it only the second time.  Just one is not enough to be sure that

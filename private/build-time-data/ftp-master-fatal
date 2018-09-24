@@ -2,7 +2,7 @@
 # be overridden.  It is based on the data file retrieved from
 # https://ftp-master.debian.org/static/lintian.tags
 #
-# Last updated: 2016-09-18
+# Last updated: 2018-09-17
 
 FSSTND-dir-in-usr
 FSSTND-dir-in-var
@@ -20,13 +20,14 @@ copyright-file-compressed
 copyright-file-is-symlink
 copyright-refers-to-incorrect-directory
 copyright-refers-to-old-directory
+debian-changelog-file-uses-obsolete-national-encoding
 debian-control-file-uses-obsolete-national-encoding
+debian-copyright-file-uses-obsolete-national-encoding
 debian-rules-missing-required-target
 debian-rules-not-a-makefile
 description-is-dh_make-template
 description-synopsis-is-empty
 dir-or-file-in-build-tree
-dir-or-file-in-etc-opt
 dir-or-file-in-home
 dir-or-file-in-mnt
 dir-or-file-in-opt
@@ -39,6 +40,7 @@ extended-description-is-empty
 file-in-etc-not-marked-as-conffile
 file-in-usr-marked-as-conffile
 forbidden-postrm-interpreter
+latest-debian-changelog-entry-without-new-date
 library-in-debug-or-profile-should-not-be-stripped
 license-problem-md5sum-non-distributable-file
 license-problem-md5sum-non-free-file

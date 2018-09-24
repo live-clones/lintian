@@ -1,0 +1,3 @@
+/: dep5-copyright-license-name-not-unique .*/ d
+/: unused-file-paragraph-in-dep5-copyright .*/ d
+/: wildcard-matches-nothing-in-dep5-copyright .*/ d

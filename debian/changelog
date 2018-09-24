@@ -1,3 +1,34 @@
+lintian (2.5.104) unstable; urgency=medium
+
+  * checks/description.pm:
+    + [CL] Check for overly-indented paragraph separators in package long
+      descriptions.  (Closes: #909272)
+  * checks/fields.pm:
+    + [CL] Apply patches from Josh Triplett to re-use the metapackage
+      detection logic from Lintian::Collect::Binary and to allow
+      metapackages to depend on toolchain packages.
+  * checks/source-copyright.pm:
+    + [CL] Fix a number of false-positives when checking for incomplete
+      Creative Commons licenses.  Thanks to Jonathan Dowland (jmtd) for
+      collecting a corpus of test data.  (Closes: #906284)
+    + [CL] Also check the "Source" field when looking for repack
+      explanations as per section 6.4 of the machine-readable
+      debian/copyright file specification.  (Closes: #909270)
+    + [CL] Include the line number in the output of the
+      incomplete-creative-commons-license tag.
+
+  * private/refresh-ftp-master-tags:
+    + [CL] Remove any duplicates from FTPmaster's list of supplied tags
+      when automatically generating the ftp-master-{fatal,nonfatal} data
+      files.  This should be fixed upstream via
+      <https://salsa.debian.org/ftp-team/dak/merge_requests/101>.
+
+  * profiles/debian/ftp-master-auto-reject.profile:
+    + [CL] Refresh tags via private/refresh-ftp-master-tags, specifically
+      allowing dir-or-file-in-etc-opt to be overridable.  (Closes: #908911)
+
+ -- Chris Lamb <lamby@debian.org>  Fri, 21 Sep 2018 08:13:34 +0000
+
 lintian (2.5.103~bpo9+1) stretch-backports; urgency=medium
 
   * Rebuild for stretch-backports.
