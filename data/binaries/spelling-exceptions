@@ -1,4 +1,4 @@
-# Set of exceptions that should be ingored for spelling-error-in-binary
+# Set of exceptions that should be ignored for spelling-error-in-binary
 
 teH	# From #711207
 tEH	# From #782902
