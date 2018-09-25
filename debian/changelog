@@ -4,7 +4,8 @@ lintian (2.5.106) UNRELEASED; urgency=medium
 
   * checks/files.{desc,pm}:
     + [CL] Apply a patch from Josh Triplett to check for packages that
-      install APT keyrings without being called "foo-keyring".
+      install APT keyrings without being called "foo-archive-keyring" or
+      "foo-apt-source".
     + [CL] Apply a patch from Josh Triplett to allow packages such as
       "foo-apt-source" to install APT sources.
 
