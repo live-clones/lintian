@@ -2,6 +2,10 @@ lintian (2.5.106) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
+  * checks/files.{desc,pm}:
+    + [CL] Apply a patch from Josh Triplett to check for packages that
+      install APT keyrings.
+
   * t/*:
     + [CL] Apply a patch series from Felix Lechner to support wildcards in
       test architecture fields.  Thanks!

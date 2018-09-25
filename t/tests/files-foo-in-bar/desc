@@ -27,6 +27,7 @@ Test-For:
  package-contains-xvpics-dir
  package-contains-thumbnails-dir
  package-installs-file-to-usr-x11r6
+ package-installs-apt-keyring
  package-installs-apt-preferences
  package-installs-apt-sources
  package-installs-deprecated-upstart-configuration

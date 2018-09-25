@@ -528,6 +528,13 @@ sub run {
                         tag 'package-installs-apt-sources', $file;
                     }
                 }
+                # -----------------/etc/apt/trusted.gpg
+                if ($fname =~ m,^etc/apt/trusted\.gpg(?:$|\.d/[^/]+),) {
+                    unless ($source_pkg eq 'apt'
+                        or $pkg =~ /(?:-apt-source|-archive-keyring)$/) {
+                        tag 'package-installs-apt-keyring', $file;
+                    }
+                }
             }
             # ---------------- /etc/cron.daily, etc.
             elsif ($fname
