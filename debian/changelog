@@ -8,6 +8,10 @@ lintian (2.5.106) UNRELEASED; urgency=medium
     + [CL] Apply a patch from Josh Triplett to allow packages whose names
       end in -apt-source to install APT sources.
 
+  * data/binaries/spelling-exceptions:
+    + [CL] Also add "wiH" (alongside "wIH") to the list of
+      "spelling-error-in-binary" exceptions.
+
   * t/*:
     + [CL] Apply a patch series from Felix Lechner to support wildcards in
       test architecture fields.  Thanks!
