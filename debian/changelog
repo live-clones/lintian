@@ -9,6 +9,8 @@ lintian (2.5.106) UNRELEASED; urgency=medium
       overrides in the testsuite; see
       <https://salsa.debian.org/lintian/lintian/merge_requests/38> for more
       information.
+    + [CL] Apply a patch series from Josh Triplett to add "Test-Depends" to
+      a few tests.  (Closes; #908915)
 
  -- Chris Lamb <lamby@debian.org>  Mon, 24 Sep 2018 11:49:19 +0100
 
