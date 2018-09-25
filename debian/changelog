@@ -4,9 +4,9 @@ lintian (2.5.106) UNRELEASED; urgency=medium
 
   * checks/files.{desc,pm}:
     + [CL] Apply a patch from Josh Triplett to check for packages that
-      install APT keyrings.
-    + [CL] Apply a patch from Josh Triplett to allow packages whose names
-      end in -apt-source to install APT sources.
+      install APT keyrings without being called "foo-keyring".
+    + [CL] Apply a patch from Josh Triplett to allow packages such as
+      "foo-apt-source" to install APT sources.
 
   * data/binaries/spelling-exceptions:
     + [CL] Also add "wiH" (alongside "wIH") to the list of
