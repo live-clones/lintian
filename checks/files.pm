@@ -524,7 +524,8 @@ sub run {
                 }
                 # -----------------/etc/apt/sources
                 if ($fname =~ m,^etc/apt/sources\.list(?:$|\.d/[^/]+),) {
-                    unless ($source_pkg eq 'apt') {
+                    unless ($source_pkg eq 'apt'
+                        or $pkg =~ /-apt-source$/) {
                         tag 'package-installs-apt-sources', $file;
                     }
                 }
