@@ -2,9 +2,13 @@ lintian (2.5.106) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
-  * t/runtests:
+  * t/*:
     + [CL] Apply a patch series from Felix Lechner to support wildcards in
       test architecture fields.  Thanks!
+    + [CL] Apply a patch series from Felix Lechner to disable architecture
+      overrides in the testsuite; see
+      <https://salsa.debian.org/lintian/lintian/merge_requests/38> for more
+      information.
 
  -- Chris Lamb <lamby@debian.org>  Mon, 24 Sep 2018 11:49:19 +0100
 
