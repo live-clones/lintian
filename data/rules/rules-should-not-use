@@ -12,4 +12,4 @@ debian-rules-should-not-use-or-modify-user-only-variable ~~ \bDEB_[^_ \t]+FLAGS_
 debian-rules-should-not-use-pwd                          ~~ \$[\(\{]PWD[\)\}]
 debian-rules-should-not-use-sanitize-all-buildflag       ~~ ^\s*(?:export\s+)?DEB_BUILD_MAINT_OPTIONS\s*:?=.*\bsanitize=\+all\b
 debian-rules-should-not-use-underscore-variable          ~~ \$[\(\{]_[\)\}]
-xz-compression-level-too-high                            ~~ (?<info>dh_builddeb\b.*--.*(?:-z\s*9.*-Z\s*xz|-Z\s*xz.*-z\s*9)\S*)
+debian-rules-should-not-use-custom-compression-settings  ~~ (?<info>dh_builddeb\b.*--.*-[zZS].*)\n

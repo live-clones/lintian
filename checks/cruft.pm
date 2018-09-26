@@ -625,7 +625,9 @@ sub find_cruft {
                     }
                 }
                 tag 'package-does-not-install-examples', $entry
-                  if $basename eq 'examples' and not $ships_examples;
+                  if $basename eq 'examples'
+                  and $dirname !~ m{(?:^|/)(?:vendor|third_party)/}
+                  and not $ships_examples;
             }
 
             push(@worklist, $entry->children);

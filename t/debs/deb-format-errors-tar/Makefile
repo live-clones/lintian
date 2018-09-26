@@ -1,9 +1,9 @@
 name = deb-format-errors-tar
 
 all:
-	mkdir -p usr/share/doc/$(name)
+	-mkdir -p usr/share/doc/$(name)
 	install -m0644 copyright changelog usr/share/doc/$(name)
-	gzip -9 -n usr/share/doc/$(name)/changelog
+	gzip -9 -n -f usr/share/doc/$(name)/changelog
 
 	tar --xform 's,^,/,' -czf data.tar.gz usr/
 

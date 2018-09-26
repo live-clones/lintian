@@ -822,7 +822,8 @@ sub main {
         my $warnings = $overrides{warnings} || 0;
         my $info = $overrides{info} || 0;
         my $total = $errors + $warnings + $info;
-        if ($total > 0) {
+        my $unused = $TAGS->{unused_overrides};
+        if ($total > 0 or $unused > 0) {
             my $text
               = ($total == 1)
               ? "$total tag overridden"
@@ -841,7 +842,15 @@ sub main {
             if ($info) {
                 push(@output, "$info info");
             }
-            msg("$text (". join(', ', @output). ')');
+            if (@output) {
+                $text .= ' (' . join(', ', @output). ')';
+            }
+            if ($unused == 1) {
+                $text .= "; $unused unused override";
+            } elsif ($unused > 1) {
+                $text .= "; $unused unused overrides";
+            }
+            msg($text);
         }
     }
 

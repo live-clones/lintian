@@ -1,17 +1,18 @@
 name = unpack-srcpkg-dot-subdir
 
 all:
-	mkdir -p $(name)
+	-mkdir -p $(name)
+	rm -rf $(name)/debian/
 	echo 'Some upstream README' > $(name)/README
 	echo '/* some C program */' > $(name)/foo.c
 	echo '/* some header */' > $(name)/foo.h
 	tar -c -z -f $(name)_1.0.orig.tar.gz ./$(name)
-	mkdir -p $(name)/debian
+	-mkdir -p $(name)/debian
 	cp changelog copyright control rules $(name)/debian/
 	cp -R tests/ $(name)/debian/
 	echo $(DEFAULT_DH_COMPAT) > $(name)/debian/compat
 	echo > $(name)/debian/watch
-	mkdir $(name)/debian/source
+	-mkdir $(name)/debian/source
 	echo 1.0 > $(name)/debian/source/format
 	dpkg-source -sp -b $(name)
 

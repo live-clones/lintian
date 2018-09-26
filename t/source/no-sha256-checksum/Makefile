@@ -2,7 +2,7 @@ name = no-sha256-checksum
 dir  = $(name)-1
 
 all:
-	mkdir -p $(dir)/debian/source
+	-mkdir -p $(dir)/debian/source
 	cp changelog copyright control rules $(dir)/debian/
 	cp -R tests/ $(dir)/debian/
 	echo 9 > $(dir)/debian/compat

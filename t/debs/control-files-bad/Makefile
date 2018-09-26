@@ -1,24 +1,22 @@
 name = control-files-bad
 
 all:
-	mkdir -p root/usr/share/doc/$(name)
+	-mkdir -p root/usr/share/doc/$(name)
 	install -m0644 copyright changelog root/usr/share/doc/$(name)
-	gzip -n -9 root/usr/share/doc/$(name)/changelog
+	gzip -n -9 -f root/usr/share/doc/$(name)/changelog
 
 	chown 0:0 control
 	chmod 644 control
 
 	cd root && md5sum usr/share/doc/$(name)/* > ../md5sums
 	chmod 755 md5sums
-	# create a "special control.tar.gz" ; create-deb will
-	# use it, instead of creating its own.
+	# create a "special control.tar.gz"
 	tar czf control.tar.gz --owner=nobody control md5sums
 
-	# --no-fix-perm and --no-md5sums are not strictly needed
-	# but the former is to make it explicit and the latter
-	# prevents it from re-generating an unused md5sums file
-	create-deb -o $(name).deb --no-fix-perm --no-md5sums \
-           --root root/
+	# cannot use create-deb; create deb manually
+	tar -cf ./data.tar.gz -C root/ .
+	echo 2.0 > debian-binary
+	ar rc $(name).deb debian-binary control.tar.gz data.tar.gz
 
 clean:
 	rm -f *.tar.gz *.deb md5sums debian-binary

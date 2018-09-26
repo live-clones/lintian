@@ -1,8 +1,8 @@
 name = copyright-file-foreign-package
 
 all:
-	mkdir -p root/usr/share/doc/
-	ln -s other-package root/usr/share/doc/$(name)
+	-mkdir -p root/usr/share/doc/
+	ln -sf other-package root/usr/share/doc/$(name)
 
 	create-deb -o $(name).deb --no-md5sums --root root/ control
 

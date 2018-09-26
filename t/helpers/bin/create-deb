@@ -162,19 +162,17 @@ runsystem('tar', '-C', $val{'root'}, @taropt,
 my $ctrl_file = "control.tar.$val{'control-compression'}";
 $ctrl_file = 'control.tar' if $val{'control-compression'} eq 'none';
 
-if (not -e $ctrl_file) {
-    my @comp = @{$TAR_OPTIONS{$val{'control-compression'}}};
-    if ($val{'fix-perm'}) {
-        chown(0, 0, (grep { not -l and -f } @ARGV));
-        foreach my $f (@ARGV) {
-            next if -l $f or not -f $f;
-            if (my $perm = $PERM{$f}) {
-                chmod $perm, $f;
-            }
+my @comp = @{$TAR_OPTIONS{$val{'control-compression'}}};
+if ($val{'fix-perm'}) {
+    chown(0, 0, (grep { not -l and -f } @ARGV));
+    foreach my $f (@ARGV) {
+        next if -l $f or not -f $f;
+        if (my $perm = $PERM{$f}) {
+            chmod $perm, $f;
         }
     }
-    runsystem('tar', @taropt, @comp, '-cf', $ctrl_file, @ARGV);
 }
+runsystem('tar', @taropt, @comp, '-cf', $ctrl_file, @ARGV);
 
 # debian-binary
 open(my $bv, '>', 'debian-binary');

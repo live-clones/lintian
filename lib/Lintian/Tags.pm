@@ -158,6 +158,7 @@ sub new {
         },
         display_source       => {},
         files                => {},
+        unused_overrides     => 0,
         ignored_overrides    => {},
         profile              => undef,
         show_experimental    => 0,
@@ -738,6 +739,7 @@ sub file_end {
             $overrides = $pkg_overrides->{$tag};
             for my $extra (sort(keys %{$overrides})) {
                 next if $overrides->{$extra};
+                $self->{unused_overrides}++;
                 $self->tag('unused-override', $tag, $extra);
             }
         }

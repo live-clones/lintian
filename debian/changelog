@@ -1,3 +1,32 @@
+lintian (2.5.105) unstable; urgency=medium
+
+  * Summary of tag changes:
+    + Added:
+      - debian-rules-should-not-use-custom-compression-settings
+      - debian-source-options-has-custom-compression-settings
+    + Removed:
+      - xz-compression-level-too-high
+
+  * checks/cruft.pm:
+    + [CL] Do not emit package-does-not-install-examples for example
+      directories under "vendor" or "third_party".
+  * checks/debian-source-dir.{desc,pm}:
+    + [CL] Warn about debian/source/options specifying custom compression
+      settings.  (Closes: #906614)
+  * checks/rules.{desc,pm}:
+    + [CL] Expand and rename xz-compression-level-too-high to warn about
+      all manual adjustments to such settings.  (Closes: #906611)
+
+  * commands/lintian.pm:
+    + [CL] Show the number of unused overrides in the "N: 1 tag overridden
+      ..." summary line.  (Closes: #909319)
+
+  * t/*:
+    + [CL] Apply a patch series from Felix Lechner to support dynamic test
+      rebuilding.
+
+ -- Chris Lamb <lamby@debian.org>  Mon, 24 Sep 2018 10:04:39 +0000
+
 lintian (2.5.104~bpo9+1) stretch-backports; urgency=medium
 
   * Rebuild for stretch-backports.

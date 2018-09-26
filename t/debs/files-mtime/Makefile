@@ -2,9 +2,9 @@ name = files-mtime
 
 all:
 
-	mkdir -p root/usr/share/doc/$(name) root/usr/share/$(name)
+	-mkdir -p root/usr/share/doc/$(name) root/usr/share/$(name)
 	install -m0644 copyright changelog root/usr/share/doc/$(name)
-	gzip -9 root/usr/share/doc/$(name)/changelog
+	gzip -9f root/usr/share/doc/$(name)/changelog
 	echo "Hallo World" | gzip -9c > root/usr/share/$(name)/foo.gz
 	# we set the mtime to "right" now.  We use that as "now" to be
 	# more robust about being built in the past/present/future or
