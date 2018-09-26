@@ -2,6 +2,10 @@ lintian (2.5.107) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
+  * checks/changes-file.{desc,pm}:
+    + [CL] Don't emit changelog-empty-entry if distribution is UNRELEASED.
+      (Closes: #909674)
+
  -- Chris Lamb <lamby@debian.org>  Wed, 26 Sep 2018 16:31:48 +0100
 
 lintian (2.5.106) unstable; urgency=medium

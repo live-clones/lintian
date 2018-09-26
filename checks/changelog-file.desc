@@ -35,7 +35,8 @@ Ref: policy 12.7
 Tag: changelog-empty-entry
 Severity: serious
 Certainty: certain
-Info: Changelog entry is empty
+Info: The last changelog entry is empty. Please add a description or use
+ an UNRELEASED version.
 Ref: policy 4.4
 
 Tag: debian-news-file-not-compressed
