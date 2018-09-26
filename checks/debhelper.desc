@@ -472,3 +472,22 @@ Info: This package does not appear to use a build system helper such as
  distribution-wide changes to packages and reduce the "bus factor" &
  barriers to entry from external contributors.
 Ref: debhelper(7), dh(1), https://build-common.alioth.debian.org/
+
+Tag: excessive-debhelper-overrides
+Severity: normal
+Certainty: possible
+Info: The <tt>debian/rules</tt> file appears to include a suspiciously
+ high number of <tt>dh_override_</tt>-style overrides.
+ .
+ It is likely that is this was intended to optimise package builds by
+ introducing "no-op" overrides that avoid specific debhelper commands.
+ .
+ However, whilst using overrides are not a problem per-se, such a list
+ is usually a premature optimisation, subject to constant revision,
+ prevents future debhelper versions fixing archive-wide problems, adds
+ unnecessary noise/distraction for anyone reviewing the package,
+ increases the package's "bus factor" and is typically a premature
+ optimisation. It is, in addition, aesthetically displeasing.
+ .
+ Please remove the unnecessary overrides.
+Ref: debhelper(7), dh(1)
