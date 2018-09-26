@@ -1,6 +1,9 @@
-lintian (2.5.106) UNRELEASED; urgency=medium
+lintian (2.5.106) unstable; urgency=medium
 
-  XXX: generate tag summary
+  * Summary of tag changes:
+    + Added:
+      - excessive-debhelper-overrides
+      - package-installs-apt-keyring
 
   * checks/debhelper.{desc,pm}:
     + [CL] Warn about packages that use an excessive (currently >= 20)
@@ -26,7 +29,7 @@ lintian (2.5.106) UNRELEASED; urgency=medium
     + [CL] Apply a patch series from Josh Triplett to add "Test-Depends" to
       a few tests.  (Closes: #908915)
 
- -- Chris Lamb <lamby@debian.org>  Mon, 24 Sep 2018 11:49:19 +0100
+ -- Chris Lamb <lamby@debian.org>  Wed, 26 Sep 2018 15:04:01 +0000
 
 lintian (2.5.105) unstable; urgency=medium
 
