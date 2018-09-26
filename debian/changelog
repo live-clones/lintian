@@ -3,8 +3,8 @@ lintian (2.5.106) UNRELEASED; urgency=medium
   XXX: generate tag summary
 
   * checks/debhelper.{desc,pm}:
-    + [CL] Warn about packages that use an excessive number of debhelper
-      overrides.
+    + [CL] Warn about packages that use an excessive (currently >= 20)
+      number of debhelper overrides.
   * checks/files.{desc,pm}:
     + [CL] Apply a patch from Josh Triplett to check for packages that
       install APT keyrings without being called "foo-archive-keyring" or
