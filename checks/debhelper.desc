@@ -483,11 +483,11 @@ Info: The <tt>debian/rules</tt> file appears to include a suspiciously
  introducing "no-op" overrides that avoid specific debhelper commands.
  .
  However, whilst using overrides are not a problem per-se, such a list
- is usually a premature optimisation, subject to constant revision,
- prevents future debhelper versions fixing archive-wide problems, adds
- unnecessary noise/distraction for anyone reviewing the package,
- increases the package's "bus factor" and is typically a premature
- optimisation. It is, in addition, aesthetically displeasing.
+ is usually subject to constant revision, prevents future debhelper
+ versions fixing archive-wide problems, adds unnecessary
+ noise/distraction for anyone reviewing the package, increases the
+ package's "bus factor" and is typically a premature optimisation. It
+ is, in addition, aesthetically displeasing.
  .
  Please remove the unnecessary overrides.
 Ref: debhelper(7), dh(1)
