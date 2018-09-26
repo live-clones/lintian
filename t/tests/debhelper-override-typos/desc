@@ -4,3 +4,4 @@ Description: Test for typos in override targets
 Test-For:
  typo-in-debhelper-override-target
  debian-rules-uses-deprecated-systemd-override
+ excessive-debhelper-overrides
