@@ -9,6 +9,10 @@ lintian (2.5.107) UNRELEASED; urgency=medium
     + [CL] Apply patch from Josh Triplett to improve the long description
       of excessive-debhelper-overrides.
 
+  * data/rules/rules-should-not-use:
+    + [CL] Ensure --dbgsym-migration='quoted' is correctly displayed when
+      emitting the debug-symbol-migration-possibly-complete tag.
+
  -- Chris Lamb <lamby@debian.org>  Wed, 26 Sep 2018 16:31:48 +0100
 
 lintian (2.5.106) unstable; urgency=medium
