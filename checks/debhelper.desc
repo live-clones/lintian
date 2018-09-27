@@ -485,9 +485,15 @@ Info: The <tt>debian/rules</tt> file appears to include a suspiciously
  However, whilst using overrides are not a problem per-se, such a list
  is usually subject to constant revision, prevents future debhelper
  versions fixing archive-wide problems, adds unnecessary
- noise/distraction for anyone reviewing the package, increases the
- package's "bus factor" and is typically a premature optimisation. It
- is, in addition, aesthetically displeasing.
+ noise/distraction for anyone reviewing the package, and increases the
+ package's "bus factor". It is, in addition, aesthetically displeasing.
+ .
+ Furthermore, this is typically a premature optimisation. debhelper already
+ includes optimizations to avoid running commands when unnecessary. If you find
+ a debhelper command taking unnecessarily long when it has no work to do,
+ please work with the debhelper developers to help debhelper skip that command
+ in more circumstances, optimizing not only your package build but everyone
+ else's as well.
  .
  Please remove the unnecessary overrides.
 Ref: debhelper(7), dh(1)

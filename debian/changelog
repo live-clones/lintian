@@ -5,6 +5,9 @@ lintian (2.5.107) UNRELEASED; urgency=medium
   * checks/changes-file.{desc,pm}:
     + [CL] Don't emit changelog-empty-entry if distribution is UNRELEASED.
       (Closes: #909674)
+  * checks/debhelper.desc:
+    + [CL] Apply patch from Josh Triplett to improve the long description
+      of excessive-debhelper-overrides.
 
  -- Chris Lamb <lamby@debian.org>  Wed, 26 Sep 2018 16:31:48 +0100
 
