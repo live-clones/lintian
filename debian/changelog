@@ -12,6 +12,10 @@ lintian (2.5.107) UNRELEASED; urgency=medium
   * data/rules/rules-should-not-use:
     + [CL] Ensure --dbgsym-migration='quoted' is correctly displayed when
       emitting the debug-symbol-migration-possibly-complete tag.
+  * data/spelling/corrections:
+    + [CL] Add a suggestion from Sven Joachim to add "practical" and
+      "practically" as spelling corrections for "pratical" and
+      "pratically".  (Closes: #909772)
 
  -- Chris Lamb <lamby@debian.org>  Wed, 26 Sep 2018 16:31:48 +0100
 
