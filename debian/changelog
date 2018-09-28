@@ -8,6 +8,9 @@ lintian (2.5.107) UNRELEASED; urgency=medium
   * checks/debhelper.desc:
     + [CL] Apply patch from Josh Triplett to improve the long description
       of excessive-debhelper-overrides.
+  * checks/scripts.{desc,pm}:
+    + [CL] Don't emit udevadm-called-without-guard if the package has a
+      dependency on udev itself.  (Closes: #909801)
 
   * data/rules/rules-should-not-use:
     + [CL] Ensure --dbgsym-migration='quoted' is correctly displayed when

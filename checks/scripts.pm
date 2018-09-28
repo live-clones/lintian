@@ -726,7 +726,9 @@ sub run {
             $saw_udevadm_guard = 1 if m/\b(if|which|command)\s+.*udevadm/g;
             if (m,$LEADIN(?:/bin/)?udevadm\s, and $saw_sete) {
                 tag 'udevadm-called-without-guard', "$file:$."
-                  unless $saw_udevadm_guard or m/\|\|/;
+                  unless $saw_udevadm_guard
+                  or m/\|\|/
+                  or $str_deps->implies('udev');
             }
 
             if (    m,[^\w](?:(?:/var)?/tmp|\$TMPDIR)/[^)\]}\s],
