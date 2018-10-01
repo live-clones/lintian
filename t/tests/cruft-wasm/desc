@@ -1,9 +1,8 @@
 Testname: cruft-wasm
 Version: 1.0-1
 Description: Misc errors related to wasm
-Skeleton: pedantic
+Skeleton: arch-dependent.pedantic
 Options: --pedantic -I -E
-Architecture: any
 Type: non-native
 Test-For:
  source-contains-prebuilt-wasm-binary

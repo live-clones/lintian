@@ -1,9 +1,8 @@
 Testname: cruft-minified-js
 Version: 1.0
 Description: Misc errors related to minified javascript
-Skeleton: pedantic
+Skeleton: arch-dependent.pedantic
 Options: --pedantic -I -E
-Architecture: any
 Test-Depends: uglifyjs
 Test-For:
  insane-line-length-in-source-file

@@ -1,3 +1,36 @@
+lintian (2.5.106) unstable; urgency=medium
+
+  * Summary of tag changes:
+    + Added:
+      - excessive-debhelper-overrides
+      - package-installs-apt-keyring
+
+  * checks/debhelper.{desc,pm}:
+    + [CL] Warn about packages that use an excessive (currently >= 20)
+      number of debhelper overrides.
+  * checks/files.{desc,pm}:
+    + [CL] Apply a patch from Josh Triplett to check for packages that
+      install APT keyrings without being called "foo-archive-keyring" or
+      "foo-apt-source".
+    + [CL] Apply a patch from Josh Triplett to allow packages such as
+      "foo-apt-source" to install APT sources.
+
+  * data/binaries/spelling-exceptions:
+    + [CL] Also add "wiH" (alongside "wIH") to the list of
+      "spelling-error-in-binary" exceptions.
+
+  * t/*:
+    + [CL] Apply a patch series from Felix Lechner to support wildcards in
+      test architecture fields.  Thanks!
+    + [CL] Apply a patch series from Felix Lechner to disable architecture
+      overrides in the testsuite; see
+      <https://salsa.debian.org/lintian/lintian/merge_requests/38> for more
+      information.
+    + [CL] Apply a patch series from Josh Triplett to add "Test-Depends" to
+      a few tests.  (Closes: #908915)
+
+ -- Chris Lamb <lamby@debian.org>  Wed, 26 Sep 2018 15:04:01 +0000
+
 lintian (2.5.105~bpo9+1) stretch-backports; urgency=medium
 
   * Rebuild for stretch-backports.

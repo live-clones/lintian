@@ -9,7 +9,7 @@ Homepage: https://lintian.debian.org/
 Bugs: mailto:debian-backports@lists.debian.org
 
 Package: {$source}
-Architecture: {$architecture}
+Architecture: all
 Depends: $\{misc:Depends\}
 Description: {$description}
  This is a test package designed to exercise some feature or tag of

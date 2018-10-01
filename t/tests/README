@@ -113,9 +113,9 @@ test or the bug that you're testing for.  This should be one of "Debian
 Bug#nnnn" for a bug report, a URL into the debian-lint-maint mailing list
 archives, or a message ID for the message to the list.
 
-By default, templates/tests/skel and templates/tests/skel.upstream are used
-as the test skeleton and then the files in the specific test directory are
-overlaid.  To start from a different skeleton, use:
+By default, templates/tests/default and templates/tests/default.upstream
+are used as the test skeleton and then the files in the specific test
+directory are overlaid.  To start from a different skeleton, use:
 
     Skeleton: <skeleton to start from>
 
@@ -146,7 +146,7 @@ harness.  The following additional fields are currently supported:
     Section: <section for package>
     Standards-Version: <standard version for control>
 
-See t/runtests and t/templates/skel/{control,changelog}.in for how
+See t/runtests and t/templates/default/{control,changelog}.in for how
 they're used.
 
 The test directory

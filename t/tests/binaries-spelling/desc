@@ -1,5 +1,5 @@
 Testname: binaries-spelling
 Version: 1.0
 Description: Spelling errors in binaries
-Architecture: any
+Skeleton: arch-dependent
 Test-For: spelling-error-in-binary

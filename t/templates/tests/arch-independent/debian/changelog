@@ -1,0 +1,27 @@
+skel (1.2) unstable; urgency=low
+
+  * Raise the default dependency on debhelper to 7.0.50~ so that tests can
+    freely use overrides without a modified control.in.
+
+ -- Russ Allbery <rra@debian.org>  Sat, 15 Aug 2009 19:09:15 -0700
+
+skel (1.1) unstable; urgency=low
+
+  * Parameterize the package section to make it easier to avoid spurious
+    tags for section mismatches when testing some types of packages.
+  * ${shlibs:Depends}, not ${shlib:Depends}, in the control template.
+  * Expand the default long description to three lines to not trigger
+    extended-description-is-probably-too-short.  Tell anyone looking at a
+    test package that it shouldn't be installed like a normal package.
+
+ -- Russ Allbery <rra@debian.org>  Sat, 27 Dec 2008 13:16:40 -0800
+
+skel (1.0) unstable; urgency=low
+
+  * Initial design.
+    Please see changelog.in for the actual changelog
+    that will be used unless it is overwritten in the
+    individual test.
+
+ -- Frank Lichtenheld <djpig@debian.org>  Sun, 03 Aug 2008 16:46:13 +0200
+

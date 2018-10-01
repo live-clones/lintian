@@ -7,7 +7,7 @@ Build-Depends: {$build_depends}
 Rules-Requires-Root: no
 
 Package: {$source}-full-stop
-Architecture: {$architecture}
+Architecture: all
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
 Description: This synopsis ends with a full-stop.
  This description ends with a full-stop.
@@ -18,7 +18,7 @@ Description: This synopsis ends with a full-stop.
  be an empty package.
 
 Package: {$source}-no-full-stop
-Architecture: {$architecture}
+Architecture: all
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
 Description: This synopsis does not end with a full stop
  This description does not end with a full stop
@@ -29,7 +29,7 @@ Description: This synopsis does not end with a full stop
  be an empty package.
 
 Package: {$source}-two-sentences
-Architecture: {$architecture}
+Architecture: all
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
 Description: This synopsis starts a sentence. Then starts another.
  This description starts a sentence. Then starts another.
@@ -40,7 +40,7 @@ Description: This synopsis starts a sentence. Then starts another.
  be an empty package.
 
 Package: {$source}-etc
-Architecture: {$architecture}
+Architecture: all
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
 Description: This synopsis ends with, etc.
  This description ends with, etc.
@@ -51,7 +51,7 @@ Description: This synopsis ends with, etc.
  be an empty package.
 
 Package: {$source}-eg
-Architecture: {$architecture}
+Architecture: all
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
 Description: This synopsis contains, e.g. /foo/bar/baz.conf
  This description contains, e.g. /foo/bar/baz.conf
@@ -62,7 +62,7 @@ Description: This synopsis contains, e.g. /foo/bar/baz.conf
  be an empty package.
 
 Package: {$source}-eg-variant
-Architecture: {$architecture}
+Architecture: all
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
 Description: This synopsis contains, eg. /foo/bar/baz.conf
  This description contains, eg. /foo/bar/baz.conf
@@ -73,7 +73,7 @@ Description: This synopsis contains, eg. /foo/bar/baz.conf
  be an empty package.
 
 Package: {$source}-2-ellipsis
-Architecture: {$architecture}
+Architecture: all
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
 Description: This synopsis contains a 2-ellipsis .. and other words
  This description contains a 2-ellipsis .. and other words
@@ -84,7 +84,7 @@ Description: This synopsis contains a 2-ellipsis .. and other words
  be an empty package.
 
 Package: {$source}-3-ellipsis
-Architecture: {$architecture}
+Architecture: all
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
 Description: This synopsis contains a 3-ellipsis ... and other words
  This description contains a 3-ellipsis ... and other words
@@ -95,7 +95,7 @@ Description: This synopsis contains a 3-ellipsis ... and other words
  be an empty package.
 
 Package: {$source}-4-ellipsis
-Architecture: {$architecture}
+Architecture: all
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
 Description: This synopsis contains a 4-ellipsis .... and other words
  This description contains a 4-ellipsis .... and other words
@@ -106,7 +106,7 @@ Description: This synopsis contains a 4-ellipsis .... and other words
  be an empty package.
 
 Package: {$source}-misspelt
-Architecture: {$architecture}
+Architecture: all
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
 Description: This synopsis ends with mispelling of stretc.
  This description ends with mispelling of stretc.

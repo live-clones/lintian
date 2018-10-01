@@ -19,7 +19,7 @@ Package: {$source}
 Section: {$section}
 Maintainer: {$author}
 Build-Conflicts: foo
-Architecture: {$architecture}
+Architecture: all
 Pre-depends: $\{misc:Pre-depends\}, multiarch-support
 Depends: {$source}, foo, baz, $\{shlibs:Depends\} $\{some:Depends\}, $\{misc:Depends\}
 Recommends: foo, bar, no-match$\{lintian:Foo\}, match$\{lintian:Match\}, no-match$\{lintian:Bar\}-foo
@@ -32,7 +32,7 @@ Description: {$description}
 
 Package: {$source}-1
 Section: {$section}
-Architecture: {$architecture}
+Architecture: all
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
 Breaks: libsqlite3-0 (< 3.6.12)
 Description: {$description}
@@ -43,7 +43,7 @@ Description: {$description}
 
 Package: {$source}-2
 Section: {$section}
-Architecture: {$architecture}
+Architecture: all
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
 Description: {$description} (two)
  This is a test package designed to exercise some feature or tag of
@@ -53,7 +53,7 @@ Description: {$description} (two)
 
 Package: {$source}-3
 Section: {$section}
-Architecture: {$architecture}
+Architecture: all
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}, foo (>= 1),
   baz (<< 2),
   fizz (= 2.0), gcc-$\{pv:gcc\} $\{reqv:gcc\}
@@ -65,7 +65,7 @@ Description: {$description} (three)
 
 Package: {$source}-4
 Section: {$section}
-Architecture: {$architecture}
+Architecture: all
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}, foo |
   bar (>= 1), baz
 Description: {$description} (four)
@@ -76,7 +76,7 @@ Description: {$description} (four)
 
 Package: {$source}-5
 Section: {$section}
-Architecture: {$architecture}
+Architecture: all
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
 Description: Description: {$description}
  This is a test package designed to exercise some feature or tag of
@@ -86,7 +86,7 @@ Description: Description: {$description}
 
 Package: {$source}-dbgsym
 Section: debug
-Architecture: {$architecture}
+Architecture: all
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
 Description: Description: dbg-sym
  This is a test package designed to exercise some feature or tag of
@@ -96,7 +96,7 @@ Description: Description: dbg-sym
 
 Package: {$source}-dbg
 Section: debug
-Architecture: {$architecture}
+Architecture: all
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
 Description: Description: debug
  This is a test package designed to exercise some feature or tag of
@@ -107,7 +107,7 @@ Description: Description: debug
 Package: {$source}-udeb
 Section: debian-installer
 Package-Type: udeb
-Architecture: {$architecture}
+Architecture: all
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
 Description: {$description} (udeb)
  udeb tests.

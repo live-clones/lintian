@@ -1,6 +1,6 @@
 Testname: scripts-maintainer-script-set-e
 Version: 1.0
 Description: Test for using set -e in script body
-Skeleton: pedantic
+Skeleton: arch-independent.pedantic
 Options: --pedantic -I -E
 Test-For: maintainer-script-without-set-e

@@ -1,4 +1,4 @@
 Testname: fields-depends-wildcard
 Version: 1.0
-Architecture: any
+Skeleton: arch-dependent
 Description: Check package dependencies with arch wildcards

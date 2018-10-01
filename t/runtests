@@ -38,7 +38,7 @@ use Getopt::Long qw(GetOptions);
 use IO::Async::Channel;
 use IO::Async::Loop;
 use IO::Async::Routine;
-use List::MoreUtils qw(none);
+use List::MoreUtils qw(none any);
 
 use constant SUITES => qw(scripts changes debs source tests);
 
@@ -1063,7 +1063,8 @@ sub check_test_is_sane {
     $data->{distribution} ||= 'unstable';
     $data->{description} ||= 'No Description Available';
     $data->{author}||= 'Debian Lintian Maintainers <lintian-maint@debian.org>';
-    $data->{architecture} ||= 'all';
+    $data->{'test-architectures'}||= 'any';
+    $data->{architecture} = $ARCHITECTURE;
     $data->{profile} ||= 'debian';
     $data->{section} ||= 'devel';
     $data->{'standards_version'} ||= $STANDARDS_VERSION;
@@ -1074,7 +1075,7 @@ sub check_test_is_sane {
     $data->{'test-for'} ||= '';
     $data->{'test-against'} ||= '';
 
-    $data->{skeleton} ||= 'skel';
+    $data->{skeleton} ||= 'default';
     $data->{options} ||= '-I -E';
     $data->{todo} ||= 'no';
     $data->{'test-depends'} //= '';
@@ -1092,13 +1093,12 @@ sub check_test_is_sane {
     # Allow options relative to the root of the test directory.
     $data->{options} =~ s/TESTSET/$dir/g;
 
-    my @architectures = qw(all any);
-    push @architectures, $ARCHITECTURE;
-
     # Check for arch-specific tests
-    # FIXME: deal with wildcards correctly.
-    if (none { $data->{architecture} =~ m/\b$_\b/ } @architectures) {
-        return 0;
+    if ($data->{'test-architectures'} ne 'any') {
+        my @wildcards = split(/\s+/,$data->{'test-architectures'});
+        my @matches
+          = map { qx{dpkg-architecture -i $_; echo -n \$?} } @wildcards;
+        return 0 unless any { $_ == 0 } @matches;
     }
 
     if ($testdir and -d "${testdir}/lintian-include-dir") {

@@ -2,7 +2,7 @@ Testname: files-foo-in-bar
 Version: 1.0
 Description: Test tags about files or dirs in given paths
 Options: -I -E --pedantic
-Skeleton: pedantic
+Skeleton: arch-independent.pedantic
 Test-For:
  dir-in-usr-local
  dir-or-file-in-build-tree
@@ -27,6 +27,7 @@ Test-For:
  package-contains-xvpics-dir
  package-contains-thumbnails-dir
  package-installs-file-to-usr-x11r6
+ package-installs-apt-keyring
  package-installs-apt-preferences
  package-installs-apt-sources
  package-installs-deprecated-upstart-configuration

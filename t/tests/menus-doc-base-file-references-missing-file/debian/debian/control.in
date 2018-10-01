@@ -7,7 +7,7 @@ Build-Depends: {$build_depends}
 Rules-Requires-Root: no
 
 Package: {$source}
-Architecture: {$architecture}
+Architecture: all
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}, {$source}-dependency
 Description: {$description}
  This is a test package designed to exercise some feature or tag of
@@ -16,7 +16,7 @@ Description: {$description}
  be an empty package.
 
 Package: {$source}-dependency
-Architecture: {$architecture}
+Architecture: all
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
 Description: {$description} (dependency)
  This is a test package designed to exercise some feature or tag of
@@ -27,7 +27,7 @@ Description: {$description} (dependency)
  This is a dependency for {$source}
 
 Package: {$source}-not-a-dependency
-Architecture: {$architecture}
+Architecture: all
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
 Description: {$description} (not a dependency)
  This is a test package designed to exercise some feature or tag of

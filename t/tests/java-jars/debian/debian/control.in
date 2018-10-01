@@ -7,7 +7,7 @@ Build-Depends: {$build_depends}, javahelper, default-jdk-headless | default-jdk
 Rules-Requires-Root: no
 
 Package: libtesta-java
-Architecture: {$architecture}
+Architecture: all
 Depends: $\{misc:Depends\}
 Description: {$description} - part A
  This is a test package designed to test various aspects of the
@@ -16,7 +16,7 @@ Description: {$description} - part A
  This package should not be installed.
 
 Package: libcodeless-java
-Architecture: {$architecture}
+Architecture: all
 Depends: $\{misc:Depends\}
 Description: {$description} - codeless
  This is a test package designed to test various aspects of the
@@ -26,7 +26,7 @@ Description: {$description} - codeless
  This package tests for codeless jars.
 
 Package: libmanifestless-java
-Architecture: {$architecture}
+Architecture: all
 Depends: $\{misc:Depends\}
 Description: {$description} - manifestless
  This is a test package designed to test various aspects of the
@@ -36,7 +36,7 @@ Description: {$description} - manifestless
  This package tests for mainifest-less code jars.
 
 Package: libtestc-java
-Architecture: {$architecture}
+Architecture: all
 Depends: $\{misc:Depends\}
 Description: {$description} - part C
  This is a test package designed to test various aspects of the
@@ -45,7 +45,7 @@ Description: {$description} - part C
  This package should not be installed.
 
 Package: libtest-maven-plugin-java
-Architecture: {$architecture}
+Architecture: all
 Depends: $\{misc:Depends\}
 Description: {$description} - part D
  This is a test package designed to test various aspects of the
@@ -54,7 +54,7 @@ Description: {$description} - part D
  This package should not be installed.
 
 Package: unparsable
-Architecture: {$architecture}
+Architecture: all
 Depends: $\{misc:Depends\}
 Description: {$description} - unparsable
  This is a test package designed to test various aspects of the
@@ -63,7 +63,7 @@ Description: {$description} - unparsable
  This package should not be installed.
 
 Package: libcontains-source-java
-Architecture: {$architecture}
+Architecture: all
 Depends: $\{misc:Depends\}
 Description: {$description} - contains .java source
  This is a test package designed to test various aspects of the

@@ -1,5 +1,5 @@
 Testname: control-file-golang-xs-go-import-path
 Version: 1.0
 Description: False-positive test for XS-Go-Import field
-Architecture: any
+Skeleton: arch-dependent
 Test-Against: missing-xs-go-import-path-for-golang-package

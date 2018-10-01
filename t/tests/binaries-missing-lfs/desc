@@ -2,7 +2,8 @@ Testname: binaries-missing-lfs
 Version: 1.0
 Test-Depends: debhelper (>= 9.20151004~)
 Description: Test for missing lfs
-Architecture: i386 armhf
+Test-Architectures: i386 armhf
+Skeleton: arch-dependent
 Test-For: binary-file-built-without-LFS-support
 Test-Against:
  wrong-section-according-to-package-name

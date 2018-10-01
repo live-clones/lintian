@@ -355,6 +355,10 @@ sub run {
           if $line and $level >= 11;
     }
 
+    my $num_overrides = scalar(%overrides);
+    tag 'excessive-debhelper-overrides', $num_overrides
+      if $num_overrides >= 20;
+
     tag 'debian-rules-uses-unnecessary-dh-argument', 'dh ... --parallel',
       "(line $seen_dh_parallel)"
       if $seen_dh_parallel and $level >= 10;

@@ -11,7 +11,7 @@ Build-Conflicts: bar,
 Rules-Requires-Root: no
 
 Package: {$source}
-Architecture: {$architecture}
+Architecture: all
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}, $\{misc:Depends\}
 Recommends: foo (>> 1.0) | bar, foo
 Suggests: baz (= 1.0), baz, baz (>= 2.0)

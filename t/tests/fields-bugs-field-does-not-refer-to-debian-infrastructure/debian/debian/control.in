@@ -9,7 +9,7 @@ Homepage: https://lintian.debian.org/
 Bugs: https://upstream.org/
 
 Package: {$source}
-Architecture: {$architecture}
+Architecture: all
 Depends: $\{misc:Depends\}
 Description: {$description}
  This is a test package designed to exercise some feature or tag of
@@ -18,7 +18,7 @@ Description: {$description}
  be an empty package.
 
 Package: {$source}-dbgsym
-Architecture: {$architecture}
+Architecture: all
 Section: debug
 Depends: $\{misc:Depends\}
 Description: {$description} (fake dbgsym package)

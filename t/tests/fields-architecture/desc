@@ -1,5 +1,6 @@
 Testname: fields-architecture
 Version: 1.0
 Description: Tests for the Architecture field
-Architecture: linux-any any-i386 kfreebsd-any hurd-any
+Test-Architectures: linux-any any-i386 kfreebsd-any hurd-any
+Skeleton: arch-dependent
 Test-Against: unknown-architecture
