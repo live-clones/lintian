@@ -1,6 +1,5 @@
-lintian (2.5.107) UNRELEASED; urgency=medium
+lintian (2.5.107) unstable; urgency=medium
 
-  XXX: generate tag summary
 
   * checks/changes-file.{desc,pm}:
     + [CL] Don't emit changelog-empty-entry if distribution is UNRELEASED.
@@ -20,8 +19,9 @@ lintian (2.5.107) UNRELEASED; urgency=medium
       "practically" as spelling corrections for "pratical" and
       "pratically".  (Closes: #909772)
     + [CL] Add "practically" as a correction for "practicaly".
+    + [PW] Add a number of corrections.
 
- -- Chris Lamb <lamby@debian.org>  Wed, 26 Sep 2018 16:31:48 +0100
+ -- Chris Lamb <lamby@debian.org>  Mon, 01 Oct 2018 13:46:42 +0000
 
 lintian (2.5.106) unstable; urgency=medium
 
