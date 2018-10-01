@@ -2,9 +2,11 @@ lintian (2.5.108) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
-  * t/source/fields-src-bad-version:
+  * t/source/*:
     + [CL] Apply a patch from Felix Lechner to rename a test target to
       match its name.
+    + [CL] Apply a patch from Felix Lechner to adjust version numbers to
+      match test targets produced.
 
  -- Chris Lamb <lamby@debian.org>  Mon, 01 Oct 2018 15:06:03 +0100
 
