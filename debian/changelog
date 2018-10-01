@@ -6,7 +6,6 @@ lintian (2.5.108) UNRELEASED; urgency=medium
 
 lintian (2.5.107) unstable; urgency=medium
 
-
   * checks/changes-file.{desc,pm}:
     + [CL] Don't emit changelog-empty-entry if distribution is UNRELEASED.
       (Closes: #909674)
