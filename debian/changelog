@@ -1,5 +1,10 @@
-lintian (2.5.107) unstable; urgency=medium
+lintian (2.5.107~bpo9+1) stretch-backports; urgency=medium
 
+  * Rebuild for stretch-backports.
+
+ -- Chris Lamb <lamby@debian.org>  Thu, 04 Oct 2018 09:08:03 +0100
+
+lintian (2.5.107) unstable; urgency=medium
 
   * checks/changes-file.{desc,pm}:
     + [CL] Don't emit changelog-empty-entry if distribution is UNRELEASED.
