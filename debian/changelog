@@ -2,6 +2,9 @@ lintian (2.5.108) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
+  * checks/scripts.{desc,pm}:
+    + [CL] Check for calls to update-inetd(1) that use "--group" without
+      "--add" and "--pattern" with "--add".  (Closes: #909511)
   * checks/testsuite.pm:
     + [CL] Avoid testsuite-dependency-has-unparsable-elements false
       positives when the "Depends" field starts with a newline.  Mattia
