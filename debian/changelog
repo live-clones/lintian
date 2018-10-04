@@ -1,3 +1,28 @@
+lintian (2.5.107) unstable; urgency=medium
+
+
+  * checks/changes-file.{desc,pm}:
+    + [CL] Don't emit changelog-empty-entry if distribution is UNRELEASED.
+      (Closes: #909674)
+  * checks/debhelper.desc:
+    + [CL] Apply patch from Josh Triplett to improve the long description
+      of excessive-debhelper-overrides.
+  * checks/scripts.{desc,pm}:
+    + [CL] Don't emit udevadm-called-without-guard if the package has a
+      dependency on udev itself.  (Closes: #909801)
+
+  * data/rules/rules-should-not-use:
+    + [CL] Ensure --dbgsym-migration='quoted' is correctly displayed when
+      emitting the debug-symbol-migration-possibly-complete tag.
+  * data/spelling/corrections:
+    + [CL] Add a suggestion from Sven Joachim to add "practical" and
+      "practically" as spelling corrections for "pratical" and
+      "pratically".  (Closes: #909772)
+    + [CL] Add "practically" as a correction for "practicaly".
+    + [PW] Add a number of corrections.
+
+ -- Chris Lamb <lamby@debian.org>  Mon, 01 Oct 2018 13:46:42 +0000
+
 lintian (2.5.106~bpo9+1) stretch-backports; urgency=medium
 
   * Rebuild for stretch-backports.

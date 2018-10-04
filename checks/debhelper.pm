@@ -355,7 +355,7 @@ sub run {
           if $line and $level >= 11;
     }
 
-    my $num_overrides = scalar(%overrides);
+    my $num_overrides = scalar(keys %overrides);
     tag 'excessive-debhelper-overrides', $num_overrides
       if $num_overrides >= 20;
 

@@ -434,7 +434,8 @@ sub run {
         my $changesempty = $changes;
         $changesempty =~ s,\W,,gms;
         if (length($changesempty)==0) {
-            tag 'changelog-empty-entry';
+            tag 'changelog-empty-entry'
+              unless $entry->Distribution eq 'UNRELEASED';
         }
 
         my $closes = $entry->Closes;

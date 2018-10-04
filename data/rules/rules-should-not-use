@@ -3,7 +3,7 @@
 #   tag ~~ regex (\x\s)
 # Please sort by alphabetic sort of tags
 #
-debug-symbol-migration-possibly-complete                 ~~ dh_strip\b.*(?<info>--(?:ddeb|dbgsym)-migration=\S*)
+debug-symbol-migration-possibly-complete                 ~~ dh_strip\b.*(?<info>--(?:ddeb|dbgsym)-migration=[\S']*)
 debian-rules-passes-version-info-to-dh_shlibdeps         ~~ dh_shlibdeps\b.*(?:--version-info|-V)\b
 debian-rules-should-not-automatically-update-control     ~~ ^\s*DEB_AUTO_UPDATE_DEBIAN_CONTROL\s*=\s*yes
 debian-rules-should-not-use-DEB_BUILD_OPTS               ~~ \$[\(\{]DEB_BUILD_OPTS[\)\}]
