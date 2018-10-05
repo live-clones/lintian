@@ -1,6 +1,8 @@
-lintian (2.5.108) UNRELEASED; urgency=medium
+lintian (2.5.108) unstable; urgency=medium
 
-  XXX: generate tag summary
+  * Summary of tag changes:
+    + Added:
+      - maintainer-script-has-invalid-update-inetd-options
 
   * checks/scripts.{desc,pm}:
     + [CL] Check for calls to update-inetd(1) that use "--group" without
@@ -10,13 +12,18 @@ lintian (2.5.108) UNRELEASED; urgency=medium
       positives when the "Depends" field starts with a newline.  Thanks to
       Mattia Rizzolo for the report.  (Closes: #910210)
 
-  * t/source/*:
-    + [CL] Apply a patch from Felix Lechner to rename a test target to
-      match its name.
-    + [CL] Apply a patch from Felix Lechner to adjust version numbers to
-      match test targets produced.
+  * data/spelling/corrections:
+    + [PW] Add a number of corrections.
 
- -- Chris Lamb <lamby@debian.org>  Mon, 01 Oct 2018 15:06:03 +0100
+  * debian/control:
+    + [NT] Remove myself from the Uploaders field.
+
+  * t/source/*:
+    + [CL] Apply two patch series from Felix Lechner to rename a test
+      target to match its name and also to adjust version numbers to match
+      test targets produced.
+
+ -- Chris Lamb <lamby@debian.org>  Fri, 05 Oct 2018 11:07:25 +0000
 
 lintian (2.5.107) unstable; urgency=medium
 
