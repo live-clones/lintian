@@ -7,8 +7,8 @@ lintian (2.5.108) UNRELEASED; urgency=medium
       "--add" and "--pattern" with "--add".  (Closes: #909511)
   * checks/testsuite.pm:
     + [CL] Avoid testsuite-dependency-has-unparsable-elements false
-      positives when the "Depends" field starts with a newline.  Mattia
-      Rizzolo for the report.  (Closes: #910210)
+      positives when the "Depends" field starts with a newline.  Thanks to
+      Mattia Rizzolo for the report.  (Closes: #910210)
 
   * t/source/*:
     + [CL] Apply a patch from Felix Lechner to rename a test target to
