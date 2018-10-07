@@ -2,6 +2,10 @@ lintian (2.5.109) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
+  * checks/debhelper.pm:
+    + [CL] Avoid false-positives when using the blends-dev package for the
+      package-does-not-use-debhelper-or-cdbs tag.  (Closes: #910453)
+
   * t/tests/*:
     + [CL] Apply a patch from Felix Lechner to fix some test descriptions
       not parsed correctly due to continuation lines.
