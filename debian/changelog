@@ -1,3 +1,30 @@
+lintian (2.5.108) unstable; urgency=medium
+
+  * Summary of tag changes:
+    + Added:
+      - maintainer-script-has-invalid-update-inetd-options
+
+  * checks/scripts.{desc,pm}:
+    + [CL] Check for calls to update-inetd(1) that use "--group" without
+      "--add" and "--pattern" with "--add".  (Closes: #909511)
+  * checks/testsuite.pm:
+    + [CL] Avoid testsuite-dependency-has-unparsable-elements false
+      positives when the "Depends" field starts with a newline.  Thanks to
+      Mattia Rizzolo for the report.  (Closes: #910210)
+
+  * data/spelling/corrections:
+    + [PW] Add a number of corrections.
+
+  * debian/control:
+    + [NT] Remove myself from the Uploaders field.
+
+  * t/source/*:
+    + [CL] Apply two patch series from Felix Lechner to rename a test
+      target to match its name and also to adjust version numbers to match
+      test targets produced.
+
+ -- Chris Lamb <lamby@debian.org>  Fri, 05 Oct 2018 11:07:25 +0000
+
 lintian (2.5.107~bpo9+1) stretch-backports; urgency=medium
 
   * Rebuild for stretch-backports.

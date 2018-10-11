@@ -987,6 +987,15 @@ sub run {
 
             generic_check_bad_command($_, $file, $., $pkg, 1);
 
+            if (m,$LEADIN(?:/usr/sbin/)?update-inetd\s,) {
+                tag 'maintainer-script-has-invalid-update-inetd-options',
+                  "$file:$.", '(--pattern with --add)'
+                  if /--pattern/ && /--add/;
+                tag 'maintainer-script-has-invalid-update-inetd-options',
+                  "$file:$.", '(--group without --add)'
+                  if /--group/ && !/--add/;
+            }
+
             my $pdepends = $info->relation('pre-depends');
             tag 'skip-systemd-native-flag-missing-pre-depends', "$file:$."
               if m/invoke-rc.d\b.*--skip-systemd-native\b/

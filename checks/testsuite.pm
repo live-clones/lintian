@@ -167,7 +167,7 @@ sub check_control_paragraph {
         }
     }
     if (exists($paragraph->{'depends'})) {
-        my $dep = Lintian::Relation->new($paragraph->{'depends'});
+        my $dep = Lintian::Relation->new(strip($paragraph->{'depends'}));
         for my $unparsable ($dep->unparsable_predicates) {
             # @ is not a valid predicate in general, but autopkgtests
             # allows it.

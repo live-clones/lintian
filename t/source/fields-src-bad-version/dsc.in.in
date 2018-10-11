@@ -1,6 +1,6 @@
 Format: 1.0
-Source: control-file-syntax-error
-Binary: control-file-syntax-error
+Source: fields-src-bad-version
+Binary: fields-src-bad-version
 Architecture: all
 Version: 1
 Maintainer: Debian Lintian Maintainers <lintian-maint@debian.org>
@@ -8,8 +8,8 @@ Standards-Version: {$standards_version}
 Build-Depends: {$build_depends}, g++ (>= s4.0), gcc ((>= 4)
 Testsuite: autopkgtest
 Checksums-Sha1:
- @SHA1@ @SIZE@ control-file-syntax-error_1.tar.gz
+ @SHA1@ @SIZE@ fields-src-bad-version_1.tar.gz
 Checksums-Sha256:
- @SHA256@ @SIZE@ control-file-syntax-error_1.tar.gz
+ @SHA256@ @SIZE@ fields-src-bad-version_1.tar.gz
 Files:
- @MD5@ @SIZE@ control-file-syntax-error_1.tar.gz
+ @MD5@ @SIZE@ fields-src-bad-version_1.tar.gz

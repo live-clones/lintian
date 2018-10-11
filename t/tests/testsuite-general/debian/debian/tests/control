@@ -34,3 +34,8 @@ Depends: @
 
 Tests: asym, asym1, self, self1, broken, lfifo, working
 Depends: @
+
+# Depends line starts on a newline (#910210)
+Tests: test-1
+Depends:
+ @

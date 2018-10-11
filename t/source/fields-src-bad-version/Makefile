@@ -1,4 +1,4 @@
-name = control-file-syntax-error
+name = fields-src-bad-version
 dir  = $(name)-1
 
 all:
