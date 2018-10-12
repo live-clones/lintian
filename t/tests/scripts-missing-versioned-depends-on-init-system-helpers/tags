@@ -1,3 +1,1 @@
-W: scripts-missing-versioned-depends-on-init-system-helpers-with: package-has-long-file-name 75 (84) > 80
 W: scripts-missing-versioned-depends-on-init-system-helpers-without: missing-versioned-depends-on-init-system-helpers postinst:8 "update-rc.d defaults-disabled" needs init-system-helpers >= 1.50
-W: scripts-missing-versioned-depends-on-init-system-helpers-without: package-has-long-file-name 78 (87) > 80

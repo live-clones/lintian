@@ -7,7 +7,7 @@ Build-Depends: {$build_depends}
 Rules-Requires-Root: no
 
 Package: {$source}-with
-Architecture: {$architecture}
+Architecture: all
 Depends: $\{misc:Depends\}, init-system-helpers (>= 1.50)
 Description: {$description} (with)
  This is a test package designed to exercise some feature or tag of
@@ -18,7 +18,7 @@ Description: {$description} (with)
  This package has the dependency.
 
 Package: {$source}-without
-Architecture: {$architecture}
+Architecture: all
 Depends: $\{misc:Depends\}
 Description: {$description} (without)
  This is a test package designed to exercise some feature or tag of
