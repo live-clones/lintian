@@ -14,6 +14,8 @@ lintian (2.5.109) UNRELEASED; urgency=medium
       not parsed correctly due to continuation lines.
     + [CL] Apply a set of patches from Felix Lechner to make various tests
       architecture independent.
+    + [CL] Apply a patch from Felix Lechner to require build dependencies
+      as prerequisites for tests.
 
  -- Chris Lamb <lamby@debian.org>  Fri, 05 Oct 2018 12:49:52 +0100
 
