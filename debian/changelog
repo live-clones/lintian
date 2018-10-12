@@ -12,9 +12,8 @@ lintian (2.5.109) UNRELEASED; urgency=medium
   * t/tests/*:
     + [CL] Apply a patch from Felix Lechner to fix some test descriptions
       not parsed correctly due to continuation lines.
-  * t/tests/scripts-missing-versioned-depends-on-init-system-helpers:
-    + [CL] Apply a patch from Felix Lechner to make this test architecture
-      independent.
+    + [CL] Apply a set of patches from Felix Lechner to make various tests
+      architecture independent.
 
  -- Chris Lamb <lamby@debian.org>  Fri, 05 Oct 2018 12:49:52 +0100
 
