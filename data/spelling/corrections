@@ -593,6 +593,8 @@ bufffers||buffers
 bugus||bogus
 buid||build
 buil||build
+builter||builder
+builters||builders
 buipd||build
 buld||build
 buld||building
@@ -1304,6 +1306,8 @@ diables||disables
 diabling||disabling
 diagnotic||diagnostic
 dianostic||diagnostic
+dictioanries||dictionaries
+dictioanry||dictionary
 dictionay||dictionary
 dictionnary||dictionary
 did'nt||didn't
@@ -1540,6 +1544,8 @@ encosed||enclosed
 encose||enclose
 encoses||encloses
 encosing||enclosing
+encoutner||encounter
+encoutners||encounters
 encrytion||encryption
 encyption||encryption
 endianes||endianness
@@ -2227,6 +2233,7 @@ initalize||initialize
 initalizer||initializer
 initalizes||initializes
 initalizing||initializing
+initals||initials
 initators||initiators
 initializiation||initialization
 initialsed||initialised
