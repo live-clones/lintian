@@ -14,7 +14,7 @@ Vcs-Cvs: :pserver:anonymous@anonscm.debian.org:/cvs/foobar module
 Vcs-Bzr: nosmart+http://anonscm.debian.org/bzr/collab-maint/foobar
 
 Package: {$source}
-Architecture: {$architecture}
+Architecture: {$package_architecture}
 Depends: $\{misc:Depends\}
 Description: {$description}
  This is a test package designed to exercise some feature or tag of

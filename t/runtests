@@ -1073,7 +1073,7 @@ sub check_test_is_sane {
     $data->{description} ||= 'No Description Available';
     $data->{author}||= 'Debian Lintian Maintainers <lintian-maint@debian.org>';
     $data->{'test-architectures'}||= 'any';
-    $data->{architecture} = $ARCHITECTURE;
+    $data->{package_architecture} = $ARCHITECTURE;
     $data->{profile} ||= 'debian';
     $data->{section} ||= 'devel';
     $data->{'standards_version'} ||= $STANDARDS_VERSION;

@@ -9,7 +9,7 @@ Vcs-Git: https://salsa.debian.org/foo/bar
 Vcs-Browser: https://salsa.debian.org/foo/bar.git
 
 Package: {$source}
-Architecture: {$architecture}
+Architecture: {$package_architecture}
 Depends: $\{misc:Depends\}
 Description: {$description}
  This is a test package designed to exercise some feature or tag of

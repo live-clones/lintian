@@ -10,7 +10,7 @@ Homepage: https://lintian.debian.org/
 
 Package: elpa-foo
 Section: lisp
-Architecture: {$architecture}
+Architecture: {$package_architecture}
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}, $\{elpa:Depends\}
 Description: {$description}
  This is a test package designed to exercise some feature or tag of

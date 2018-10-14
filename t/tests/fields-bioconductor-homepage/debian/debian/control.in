@@ -8,7 +8,7 @@ Homepage: https://www.bioconductor.org/packages/release/bioc/html/foo.html
 Rules-Requires-Root: no
 
 Package: {$source}
-Architecture: {$architecture}
+Architecture: {$package_architecture}
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
 Description: {$description}
  This is a test package designed to exercise some feature or tag of

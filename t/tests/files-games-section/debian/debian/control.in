@@ -7,7 +7,7 @@ Build-Depends: {$build_depends}
 Rules-Requires-Root: no
 
 Package: {$source}-both
-Architecture: {$architecture}
+Architecture: {$package_architecture}
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
 Conflicts: {$source}-good, {$source}-wrong, {$source}-no-games
 Description: {$description} (both)
@@ -18,7 +18,7 @@ Description: {$description} (both)
  things.  It should not be installed like a regular package.
 
 Package: {$source}-good
-Architecture: {$architecture}
+Architecture: {$package_architecture}
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
 Description: {$description} (good)
  Games package in games section.
@@ -28,7 +28,7 @@ Description: {$description} (good)
  things.  It should not be installed like a regular package.
 
 Package: {$source}-no-games
-Architecture: {$architecture}
+Architecture: {$package_architecture}
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
 Description: {$description} (no games)
  Games package without any games.
@@ -39,7 +39,7 @@ Description: {$description} (no games)
 
 Package: {$source}-wrong
 Section: devel
-Architecture: {$architecture}
+Architecture: {$package_architecture}
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
 Conflicts: {$source}-good
 Description: {$description} (wrong)

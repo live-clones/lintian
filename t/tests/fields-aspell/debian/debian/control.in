@@ -7,7 +7,7 @@ Build-Depends: {$build_depends}
 Rules-Requires-Root: no
 
 Package: aspell-en
-Architecture: {$architecture}
+Architecture: {$package_architecture}
 Depends: $\{misc:Depends\}, $\{shlibs:Depends\}
 Description: {$description}
  This is a test package designed to exercise some feature or tag of

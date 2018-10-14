@@ -16,6 +16,8 @@ lintian (2.5.109) UNRELEASED; urgency=medium
       architecture independent.
     + [CL] Apply a patch from Felix Lechner to require build dependencies
       as prerequisites for tests.
+    + [CL] Apply a patch from Felix Lechner to clarify the substitution
+      variable name for the test package's Architecture field.
   * t/tests/debhelper-dh-nativejava:
     + [CL] Apply a patch from Felix Lechner to remove this now-obsolete
       test given that -gcj packages are no-longer built.

@@ -8,7 +8,7 @@ Build-Depends: {$build_depends},
 XS-Go-Import-Path: github.com/Debian/lintian-test-package
 
 Package: {$source}
-Architecture: {$architecture}
+Architecture: {$package_architecture}
 Depends: $\{misc:Depends\}
 Built-Using: $\{misc:Built-Using\}
 Description: {$description}

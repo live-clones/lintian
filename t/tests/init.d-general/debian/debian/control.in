@@ -7,7 +7,7 @@ Build-Depends: {$build_depends}
 Rules-Requires-Root: no
 
 Package: {$source}
-Architecture: {$architecture}
+Architecture: {$package_architecture}
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}, lsb-base (>= 3.0-6)
 Description: {$description}
  This is a test package designed to exercise some feature or tag of
@@ -15,7 +15,7 @@ Description: {$description}
  things.  It should not be installed like a regular package.
 
 Package: {$source}-bugs
-Architecture: {$architecture}
+Architecture: {$package_architecture}
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}, lsb-base (>= 3.0-6)
 Description: {$description} -- bugs
  Test some simple bugs in the check
@@ -25,7 +25,7 @@ Description: {$description} -- bugs
  things.  It should not be installed like a regular package.
 
 Package: {$source}-interpreter-in-usr-dir
-Architecture: {$architecture}
+Architecture: {$package_architecture}
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
 Description: {$description} -- bad script interpreter
  Test a check for a /usr dir interpreter used in an init script
@@ -35,7 +35,7 @@ Description: {$description} -- bad script interpreter
  things.  It should not be installed like a regular package.
 
 Package: {$source}-sourcing-without-test
-Architecture: {$architecture}
+Architecture: {$package_architecture}
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}, lsb-base (>= 3.0-6)
 Description: {$description} -- sourcing without test
  Test a check for . /etc/default/foo without checking the existence of

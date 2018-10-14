@@ -7,7 +7,7 @@ Build-Depends: {$build_depends},
  golang-go (>= 2:1.1.1-4)
 
 Package: {$source}
-Architecture: {$architecture}
+Architecture: {$package_architecture}
 Depends: $\{misc:Depends\}
 Built-Using: $\{misc:Built-Using\}
 Description: {$description}

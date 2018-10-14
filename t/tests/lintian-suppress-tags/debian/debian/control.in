@@ -8,5 +8,5 @@ Rules-Requires-Root: no
 
 Package: {$source}
 Section: unknown
-Architecture: {$architecture}
+Architecture: {$package_architecture}
 Description: {$description} (dummy)

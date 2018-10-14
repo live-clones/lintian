@@ -7,7 +7,7 @@ Build-Depends: {$build_depends}
 Rules-Requires-Root: no
 
 Package: libocaml-general-ocaml
-Architecture: {$architecture}
+Architecture: {$package_architecture}
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
 Description: OCaml library package for tests
  This is a test package designed to exercise some feature or tag of
@@ -17,7 +17,7 @@ Description: OCaml library package for tests
  A library package for OCaml checks.
 
 Package: libocaml-general-ocaml-dev
-Architecture: {$architecture}
+Architecture: {$package_architecture}
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
 Description: OCaml dev package for tests
  This is a test package designed to exercise some feature or tag of

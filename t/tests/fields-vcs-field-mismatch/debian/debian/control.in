@@ -12,7 +12,7 @@ Vcs-Svn: https://salsa.debian.org/lintian/lintian.git
 Vcs-Browser: https://salsa.debian.org/lintian/lintian
 
 Package: {$source}
-Architecture: {$architecture}
+Architecture: {$package_architecture}
 Depends: $\{misc:Depends\}
 Description: {$description}
  This is a test package designed to exercise some feature or tag of

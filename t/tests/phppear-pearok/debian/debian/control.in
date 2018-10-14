@@ -7,7 +7,7 @@ Build-Depends: {$build_depends}, pkg-php-tools, php-dev, dh-php
 Rules-Requires-Root: no
 
 Package: {$source}
-Architecture: {$architecture}
+Architecture: {$package_architecture}
 Depends: $\{misc:Depends\}, $\{phppear:Debian-Depends\}
 Recommends: $\{phppear:Debian-Recommends\}
 Breaks: $\{phppear:Debian-Breaks\}

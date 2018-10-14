@@ -7,7 +7,7 @@ Build-Depends: {$build_depends}
 Rules-Requires-Root: no
 
 Package: gir1.1-missing-gir-depends-2.2
-Architecture: {$architecture}
+Architecture: {$package_architecture}
 Depends: $\{misc:Depends\}
 Description: {$description}
  This is a test package designed to exercise some feature or tag of
@@ -18,7 +18,7 @@ Description: {$description}
  This package should be tagged by Lintian.
 
 Package: gir1.1-gir-depends-present-2.2
-Architecture: {$architecture}
+Architecture: {$package_architecture}
 Depends: $\{misc:Depends\}, $\{gir:Depends\}
 Description: {$description}: False
  This is a test package designed to exercise some feature or tag of
