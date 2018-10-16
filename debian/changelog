@@ -12,7 +12,8 @@ lintian (2.5.109) UNRELEASED; urgency=medium
     + [CL] Check for packages missing versioned dependencies on
       init-system-helpers.  (Closes: #910594)
     + [CL] Check for packages that manually parse /etc/passwd or /etc/group
-      using grep.  Thanks to Rhonda D'Vine for the report.  (Closes: #911157)
+      using grep in their maintainer scripts.  Thanks to Rhonda D'Vine for
+      the bug report.  (Closes: #911157)
 
   * t/tests/*:
     + [CL] Apply a patch from Felix Lechner to fix some test descriptions
