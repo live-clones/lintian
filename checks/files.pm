@@ -38,6 +38,7 @@ my $LOCALE_CODES = Lintian::Data->new('files/locale-codes', qr/\s++/);
 my $INCORRECT_LOCALE_CODES
   = Lintian::Data->new('files/incorrect-locale-codes', qr/\s++/);
 my $MULTIARCH_DIRS = Lintian::Data->new('common/multiarch-dirs', qr/\s++/);
+my $ALLOWED_PYTHON_FILES = Lintian::Data->new('files/allowed-python-files');
 my $GENERIC_HEADER_FILES = Lintian::Data->new('files/generic-header-files');
 my $GENERIC_PYTHON_MODULES= Lintian::Data->new('files/generic-python-modules');
 my $ALLOWED_ANCIENT_FILES = Lintian::Data->new('files/allowed-ancient-files');
@@ -1457,6 +1458,10 @@ sub run {
                 tag 'python-module-has-overly-generic-name', $fname, "($1)"
                   if $rest =~ m,^($regex)(?:\.py|/__init__\.py)$,i;
             }
+            tag 'unknown-file-in-python-module-directory', $fname
+              if $file->is_file
+              and $rest eq $file->basename  # "top-level"
+              and not $ALLOWED_PYTHON_FILES->matches_any($file->basename, 'i');
         }
 
         if ($fname =~ m,/icons/[^/]+/(\d+)x(\d+)/(?!animations/).*\.png$,){

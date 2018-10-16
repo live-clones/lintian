@@ -5,6 +5,9 @@ lintian (2.5.109) UNRELEASED; urgency=medium
   * checks/debhelper.pm:
     + [CL] Avoid false-positives when using the blends-dev package for the
       package-does-not-use-debhelper-or-cdbs tag.  (Closes: #910453)
+  * checks/files.{pm,desc}:
+    + [CL] Check for packages that ship non-Python files in top-level
+      Python module directories such as /usr/lib/python3/dist-packages.
   * checks/scripts.{desc,pm}:
     + [CL] Check for packages missing versioned dependencies on
       init-system-helpers.  (Closes: #910594)
