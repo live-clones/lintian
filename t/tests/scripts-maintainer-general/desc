@@ -17,6 +17,7 @@ Test-For:
  maintainer-script-removes-device-files
  maintainer-shell-script-fails-syntax-check
  maintainer-script-should-not-hide-init-failure
+ maintainer-script-should-not-parse-etc-passwd-or-group
  maintainer-script-should-not-use-adduser-system-without-home
  maintainer-script-should-not-use-deprecated-chown-usage
  maintainer-script-should-not-use-dpkg-status-directly
