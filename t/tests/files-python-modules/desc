@@ -3,3 +3,4 @@ Version: 1.0
 Description: Test tags for misplaced Python modules
 Test-For:
  python-module-in-wrong-location
+ unknown-file-in-python-module-directory
