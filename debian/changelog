@@ -1,6 +1,10 @@
-lintian (2.5.109) UNRELEASED; urgency=medium
+lintian (2.5.109) unstable; urgency=medium
 
-  XXX: generate tag summary
+  * Summary of tag changes:
+    + Added:
+      - maintainer-script-should-not-parse-etc-passwd-or-group
+      - missing-versioned-depends-on-init-system-helpers
+      - unknown-file-in-python-module-directory
 
   * checks/debhelper.pm:
     + [CL] Avoid false-positives when using the blends-dev package for the
@@ -28,7 +32,7 @@ lintian (2.5.109) UNRELEASED; urgency=medium
     + [CL] Apply a patch from Felix Lechner to remove this now-obsolete
       test given that -gcj packages are no-longer built.
 
- -- Chris Lamb <lamby@debian.org>  Fri, 05 Oct 2018 12:49:52 +0100
+ -- Chris Lamb <lamby@debian.org>  Wed, 17 Oct 2018 02:38:36 +0000
 
 lintian (2.5.108) unstable; urgency=medium
 
