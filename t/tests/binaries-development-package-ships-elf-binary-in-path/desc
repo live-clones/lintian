@@ -1,8 +1,7 @@
 Testname: binaries-development-package-ships-elf-binary-in-path
 Version: 1.0
 Description: Test for development packages shipping ELF binaries in $PATH
-Skeleton: arch-independent.pedantic
-Options: --pedantic -I -E
 Default-Build-Depends: debhelper (>= 9.20160114~)
+Skeleton: arch-independent
 Test-For:
  development-package-ships-elf-binary-in-path 
