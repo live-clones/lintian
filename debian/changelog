@@ -9,6 +9,10 @@ lintian (2.5.110) UNRELEASED; urgency=medium
     + [CL] Update example experimental combination of using compatibility
       level 9 with debhelper >= 8.1.3 with using level 12 with
       debhelper >= 11.4~.
+  * checks/fields.pm:
+    + [CL] Apply a patch series from Felix Lechner to fix a false-negative
+      in the multi-arch-same-package-has-arch-specific-overrides tag.
+      (Closes: #911355)
 
   * data/binaries/spelling-exceptions:
     + [CL] Add "Nees" to the list of spelling-error-in-binary exceptions to

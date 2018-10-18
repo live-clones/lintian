@@ -28,7 +28,7 @@ use warnings;
 use autodie;
 
 use Dpkg::Version qw(version_check);
-use List::MoreUtils qw(any true);
+use List::MoreUtils qw(any true uniq);
 
 use Lintian::Architecture qw(:all);
 use Lintian::Data ();
@@ -400,11 +400,19 @@ sub run {
 
     if ($type eq 'source') {
         for my $bin ($info->binaries) {
-            my $arch = $info->binary_field($bin, 'architecture');
-            my $fname = "debian/$bin.lintian-overrides.$arch";
             next unless $info->binary_field($bin, 'multi-arch', '') eq 'same';
-            tag 'multi-arch-same-package-has-arch-specific-overrides', $fname
-              if $info->index_resolved_path($fname);
+            my $wildcard = $info->binary_field($bin, 'architecture');
+            my @arches = split(
+                ' ',
+                qx{ dpkg-architecture --match-wildcard $wildcard --list-known }
+            );
+            push(@arches, $wildcard); # original wildcard should be included
+            foreach my $arch (uniq @arches) {
+                my $fname = "debian/$bin.lintian-overrides.$arch";
+                tag 'multi-arch-same-package-has-arch-specific-overrides',
+                  $fname
+                  if $info->index_resolved_path($fname);
+            }
         }
     }
 
