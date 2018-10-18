@@ -2,7 +2,7 @@ Testname: legacy-debug
 Source: debug
 Sequence: 9999
 Version: 1.0
-Test-Depends: debhelper (>= 9.20151004~)
+Default-Build-Depends: debhelper (>= 9.20151004~)
 Description: Legacy test "debug"
 Test-For:
  ancient-standards-version

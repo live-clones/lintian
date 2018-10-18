@@ -1,5 +1,5 @@
 Testname: shared-libs-missing-ldconfig-symlink
 Version: 1.0
-Test-Depends: debhelper (>= 9.20151004~)
+Default-Build-Depends: debhelper (>= 9.20151004~)
 Description: Test for missing ldconfig symlink for shared libs
 Test-For: ldconfig-symlink-missing-for-shlib
