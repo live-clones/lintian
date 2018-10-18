@@ -1099,9 +1099,6 @@ sub check_test_is_sane {
     # Unwrap the options in case we used continuation lines.
     $data->{options} =~ s/\n//g;
 
-    # Allow options relative to the root of the test directory.
-    $data->{options} =~ s/TESTSET/$dir/g;
-
     # Check for arch-specific tests
     if ($data->{'test-architectures'} ne 'any') {
         my @wildcards = split(/\s+/,$data->{'test-architectures'});
