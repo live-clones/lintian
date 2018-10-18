@@ -1108,7 +1108,7 @@ sub check_test_is_sane {
     }
 
     if ($testdir and -d "${testdir}/lintian-include-dir") {
-        $data->{'lintian-include-dir'} = "${testdir}/lintian-include-dir";
+        $data->{'lintian-include-dir'} = './lintian-include-dir';
     }
 
     return 1;
