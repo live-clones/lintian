@@ -166,7 +166,7 @@ debian
     directory for the package and then the contents of this directory
     will be copied over top of it.
 
-upstream
+orig
     For a non-native package, this is the file tree that goes into the
     upstream tarball.  The files here should also be present with the
     same contents in the debian directory unless you're intentionally
