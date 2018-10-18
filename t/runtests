@@ -429,7 +429,8 @@ sub test_package {
     }
 
     my $file = "${pkg}_${epochless_version}_${ARCHITECTURE}.changes";
-    run_lintian($test_state, $testdata, "$rundir/$file", "$rundir/tags.$pkg");
+    run_lintian($test_state, $testdata, "$rundir/$file", $rundir,
+        "$rundir/tags.$pkg");
 
     # Run a sed-script if it exists, for tests that have slightly variable
     # output
@@ -474,7 +475,7 @@ sub _builder_tests {
 }
 
 sub run_lintian {
-    my ($test_state, $testdata, $file, $out) = @_;
+    my ($test_state, $testdata, $file, $rundir, $out) = @_;
     $test_state->progress('testing');
     my @options = split(' ', $testdata->{options}//'');
     unshift(@options, '--allow-root', '--no-cfg');
@@ -525,6 +526,7 @@ sub run_lintian {
             unshift(@cmd, 'perl', $ENV{'LINTIAN_COVERAGE'});
         }
         open(STDERR, '>&', \*STDOUT);
+        chdir($rundir);
         exec @cmd, @options, @LINTIAN_COMMON_OPTIONS, $file
           or internal_error("exec failed: $!");
     }
@@ -582,7 +584,7 @@ sub test_changes {
         fill_in_tmpl($file, $testdata);
     }
 
-    run_lintian($test_state, $testdata, $file, "$rundir/tags");
+    run_lintian($test_state, $testdata, $file, $rundir, "$rundir/tags");
 
     return _check_result($test_state, $testdata, "$testdir/tags",
         "$rundir/tags");
@@ -680,7 +682,8 @@ sub generic_test_runner {
             "$testname produced more than one file",
             "matching \"$targetdir/*.$ext\""))if @matches;
 
-    run_lintian($test_state, $testdata, $file,"$RUNDIR/$suite/tags.$testname");
+    run_lintian($test_state, $testdata, $file, $targetdir,
+        "$RUNDIR/$suite/tags.$testname");
     return _check_result($test_state, $testdata, "$testdir/tags",
         "$RUNDIR/$suite/tags.$testname");
 }
