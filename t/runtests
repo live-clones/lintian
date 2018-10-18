@@ -370,7 +370,7 @@ sub test_package {
         make_path($rundir);
         unless ($is_native) {
             copy_template_dir("$tmpldir/${skel}.upstream",
-                "$origdir/upstream/",$targetdir);
+                "$origdir/orig/",$targetdir);
 
             foreach my $tfile (@{ $TEMPLATES{$suite} }) {
                 if (!-e "$targetdir/$tfile" && -f "$targetdir/${tfile}.in") {
