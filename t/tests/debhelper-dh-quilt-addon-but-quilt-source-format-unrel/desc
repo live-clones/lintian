@@ -1,8 +1,6 @@
 Testname: debhelper-dh-quilt-addon-but-quilt-source-format-unrel
 Version: 1.0
 Description: Test for quilt packages that specify dh --with-quilt (false positive)
-Test-Depends: quilt
-Test-For:
- missing-build-dependency-for-dh-addon
+Extra-Build-Depends: quilt
 Test-Against:
  dh-quilt-addon-but-quilt-source-format

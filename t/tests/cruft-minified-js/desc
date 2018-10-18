@@ -3,7 +3,7 @@ Version: 1.0
 Description: Misc errors related to minified javascript
 Skeleton: arch-independent.pedantic
 Options: --pedantic -I -E
-Test-Depends: uglifyjs
+Extra-Build-Depends: uglifyjs
 Test-For:
  insane-line-length-in-source-file
  source-contains-prebuilt-javascript-object

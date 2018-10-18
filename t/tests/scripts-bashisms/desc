@@ -1,5 +1,5 @@
 Testname: scripts-bashisms
 Version: 1.0
 Description: Check bashism detection
-Test-Depends: dash (>= 0.5.10.2)
+Extra-Build-Depends: dash (>= 0.5.10.2)
 Test-For: possible-bashism-in-maintainer-script
