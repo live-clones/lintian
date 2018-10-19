@@ -18,6 +18,9 @@ lintian (2.5.110) UNRELEASED; urgency=medium
     + [CL] Prevent a false-positive in embedded-javascript-library as
       jquery-ui.structure.css is not shipped by libjs-jquery-ui.
       (Closes: #911311)
+  * data/scripts/interpreters:
+    + [CL] Apply a patch from Luca Boccassi to add /lib/init/init-d-script
+      to the list of known interpreters.  (MR: !56)
 
   * t/tests/*:
     + [CL] Apply a patch series from Felix Lechner to adjust some

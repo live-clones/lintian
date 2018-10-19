@@ -45,6 +45,7 @@ gnuplot        => /usr/bin
 gosh           => /usr/bin, gauche
 hhvm           => /usr/bin
 icmake         => /usr/bin, icmake
+init-d-script  => /lib/init, @NODEPS@
 install-menu   => /usr/bin, @NODEPS@
 ir             => /usr/bin, ironruby
 jed            => /usr/bin
