@@ -14,6 +14,10 @@ lintian (2.5.110) UNRELEASED; urgency=medium
     + [CL] Add "Nees" to the list of spelling-error-in-binary exceptions to
       accomodate instances referencing Georg Nees, an early pioneer of
       computer art and generative graphics.
+  * data/files/js-libraries:
+    + [CL] Prevent a false-positive in embedded-javascript-library as
+      jquery-ui.structure.css is not shipped by libjs-jquery-ui.
+      (Closes: #911311)
 
  -- Chris Lamb <lamby@debian.org>  Tue, 16 Oct 2018 23:06:31 -0400
 
