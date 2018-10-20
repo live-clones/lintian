@@ -397,8 +397,7 @@ sub test_package {
                 }
             }
         }
-        copy_template_dir("$tmpldir/$skel", "$origdir/debian/", $targetdir,
-            ['--exclude=debian/changelog']);
+        copy_template_dir("$tmpldir/$skel", "$origdir/debian/", $targetdir);
 
         foreach my $tfile (@{ $TEMPLATES{$suite} }) {
             my $may_fill = $regen_template{$tfile};
@@ -638,7 +637,7 @@ sub generic_test_runner {
         runsystem('cp', '-rp', $testdir, $targetdir);
 
         copy_template_dir("$tmpldir/$skel", "$testdir/", $targetdir,
-            ['--exclude=changelog'], ['--exclude=desc']);
+            ['--exclude=desc']);
 
         foreach my $tfile (@{ $TEMPLATES{$suite} }) {
             if (not -e "$targetdir/$tfile" and -f "$targetdir/${tfile}.in") {
