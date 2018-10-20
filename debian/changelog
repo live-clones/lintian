@@ -23,6 +23,9 @@ lintian (2.5.110) UNRELEASED; urgency=medium
     + [CL] Apply a patch series from Felix Lechner to adjust some
       build-dependencies that were discovered when backporting to stretch.
       (MR: !51)
+    + [CL] Apply a patch series from Felix Lechner to move data for
+      upstream tarballs to "orig" to facilitate the addition of tests
+      related to upstream signatures.  (MR: !52)
 
  -- Chris Lamb <lamby@debian.org>  Tue, 16 Oct 2018 23:06:31 -0400
 
