@@ -102,7 +102,8 @@ sub copy_template_dir {
     my (@exs, @ext);
     @exs = @$exskel if $exskel;
     @ext = @$extsrc if $extsrc;
-    runsystem('rsync', '-rpc', "$skel/", "$targetdir/", @exs);
+    runsystem('rsync', '-rpc', "$skel/", "$targetdir/", @exs)
+      if -d "$skel/";
     runsystem('rsync', '-rpc', "$tsrc/", "$targetdir/", @ext)
       if -d "$tsrc/";
     return;

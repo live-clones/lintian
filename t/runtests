@@ -381,7 +381,6 @@ sub test_package {
                 }
             }
 
-            unlink "$targetdir/.dummy" if -e "$targetdir/.dummy";
             if (-x "$origdir/pre_upstream") {
                 $test_state->progress('pre_upstream hook');
                 runsystem("$origdir/pre_upstream", $targetdir);
