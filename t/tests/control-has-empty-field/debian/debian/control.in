@@ -13,7 +13,7 @@ Vcs-Browser:
 Vcs-Git: 
 
 Package: {$source}
-Architecture: {$architecture}
+Architecture: {$package_architecture}
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
 Suggests:
 # The following line contains "Provides: \n"

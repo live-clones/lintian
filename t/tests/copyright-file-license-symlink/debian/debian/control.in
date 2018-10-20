@@ -8,7 +8,7 @@ Rules-Requires-Root: no
 Homepage: https://lintian.debian.org/
 
 Package: {$source}-bad
-Architecture: {$architecture}
+Architecture: {$package_architecture}
 Depends: $\{misc:Depends\}
 Description: {$description}
  This is a test package designed to exercise some feature or tag of
@@ -17,7 +17,7 @@ Description: {$description}
  be an empty package.
 
 Package: {$source}-pedantic
-Architecture: {$architecture}
+Architecture: {$package_architecture}
 Depends: $\{misc:Depends\}
 Description: {$description} -- pedantic edition :)
  Checks the pedantic version of the versionless copyright file check.

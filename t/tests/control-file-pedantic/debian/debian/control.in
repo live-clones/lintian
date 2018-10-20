@@ -9,7 +9,7 @@ Homepage: https://lintian.debian.org/
 
 Package: {$source}-udeb
 Section: debian-installer
-Architecture: {$architecture}
+Architecture: {$package_architecture}
 Depends: $\{misc:Depends\}
 XC-Package-Type: udeb
 Description: {$description}

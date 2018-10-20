@@ -1,0 +1,6 @@
+# Regular expressions (/i) of filenames that are allowed in top-level Python
+# directories such as /usr/lib/python3/dist-packages
+
+\.egg-info$
+\.so$
+\.py[ic]?$

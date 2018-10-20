@@ -142,9 +142,13 @@ harness.  The following additional fields are currently supported:
 
     Date: <date for changelog entry>
     Author: <maintainer for control and changelog>
-    Architecture: <architecture for control>
     Section: <section for package>
     Standards-Version: <standard version for control>
+
+The Architecture: field cannot be overridden. It is automatically set
+to equal the host architecture. If you require packages built with
+Architecture: all, please make a copy of the particular template and
+set Architecture: all manually.
 
 See t/runtests and t/templates/default/{control,changelog}.in for how
 they're used.

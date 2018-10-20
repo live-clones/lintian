@@ -8,7 +8,7 @@ Rules-Requires-Root: no
 Homepage: http://lintian.debian.org/
 
 Package: fonts-{$source}
-Architecture: {$architecture}
+Architecture: {$package_architecture}
 Depends: $\{misc:Depends\}
 Multi-Arch: foreign
 Description: {$description}

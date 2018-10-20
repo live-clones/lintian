@@ -229,6 +229,7 @@ sub run {
               }xsm
         ) {
             # All of these indirectly use dh.
+            $seencommand = 1;
             $build_systems{'dh'} = 1;
             delete($build_systems{'debhelper'});
         } elsif (

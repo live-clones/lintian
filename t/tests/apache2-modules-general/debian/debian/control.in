@@ -8,7 +8,7 @@ Build-Depends: {$build_depends}
 Rules-Requires-Root: no
 
 Package: libapache2-mod-foo
-Architecture: {$architecture}
+Architecture: {$package_architecture}
 Depends: $\{shlibs:Depends\},
  $\{misc:Depends\},
  apache2-api-19700101
@@ -19,7 +19,7 @@ Description: {$description}
  be an empty package.
 
 Package: libapache2-modbaz
-Architecture: {$architecture}
+Architecture: {$package_architecture}
 Depends: $\{shlibs:Depends\},
  $\{misc:Depends\},
  apache2.2-common,
@@ -32,7 +32,7 @@ Description: {$description} don't care
  To avoid duplicate description warnings this line differs. Ignore me.
 
 Package: libapache2-mod-foo2
-Architecture: {$architecture}
+Architecture: {$package_architecture}
 Depends: $\{shlibs:Depends\},
  $\{misc:Depends\},
  apache2-api-19700101,

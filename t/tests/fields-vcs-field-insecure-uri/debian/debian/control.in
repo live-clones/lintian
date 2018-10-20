@@ -9,7 +9,7 @@ Vcs-Browser: http://salsa.debian.org/toddy/foobar
 Vcs-Git: git://salsa.debian.org/users/toddy/foobar.git
 
 Package: {$source}
-Architecture: {$architecture}
+Architecture: {$package_architecture}
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
 Description: {$description}
  This is a test package designed to exercise some feature or tag of

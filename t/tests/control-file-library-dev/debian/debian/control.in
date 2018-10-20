@@ -8,7 +8,7 @@ Rules-Requires-Root: no
 
 Package: libcontrol-file-foo1
 Section: libs
-Architecture: {$architecture}
+Architecture: {$package_architecture}
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
 Description: {$description} (shared lib 1)
  First shared library.
@@ -19,7 +19,7 @@ Description: {$description} (shared lib 1)
  be an empty package.
 
 Package: libcontrol-file-bar7ldbl
-Architecture: {$architecture}
+Architecture: {$package_architecture}
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
 Description: {$description} (shared lib 2)
  Second shared library.
@@ -31,7 +31,7 @@ Description: {$description} (shared lib 2)
 
 Package: libcontrol-file-dev
 Section: libdevel
-Architecture: {$architecture}
+Architecture: {$package_architecture}
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\},
  libcontrol-file-foo1 (= $\{binary:Version\}),
  libcontrol-file-bar7ldbl, libcontrol-file-baz9-4 (>= $\{binary:Version\}),
@@ -46,7 +46,7 @@ Description: {$description} (dev package)
 
 Package: libcontrol-file-baz9-4
 Section: libs
-Architecture: {$architecture}
+Architecture: {$package_architecture}
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
 Description: {$description} (shared lib 3)
  Third shared library.
@@ -70,7 +70,7 @@ Description: {$description} (doc package)
 
 Package: libcontrol-file4-dev
 Section: libdevel
-Architecture: {$architecture}
+Architecture: {$package_architecture}
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\},
  libcontrol-file-foo1 (<= $\{source:Upstream-Version\}-99)
  | libcontrol-file-baz9-4 (<= $\{source:Upstream-Version\}-99),
@@ -101,7 +101,7 @@ Description: {$description} (arch: all dev package)
 
 Package: libcontrol-baz-dev
 Section: libdevel
-Architecture: {$architecture}
+Architecture: {$package_architecture}
 Depends:
  libcontrol-file-baz9-4 (= $\{binary:Version\}),
  $\{misc:Depends\},

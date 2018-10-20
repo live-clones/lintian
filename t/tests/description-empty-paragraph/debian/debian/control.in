@@ -7,7 +7,7 @@ Build-Depends: {$build_depends}
 Rules-Requires-Root: no
 
 Package: {$source}
-Architecture: {$architecture}
+Architecture: {$package_architecture}
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
 Description: package to test empty first paragraph
  .
@@ -16,7 +16,7 @@ Description: package to test empty first paragraph
  is empty. It is also an empty package.
 
 Package: {$source}-2
-Architecture: {$architecture}
+Architecture: {$package_architecture}
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
 Description: package to test empty last paragraph
  The last paragraph
@@ -28,7 +28,7 @@ Description: package to test empty last paragraph
  .
 
 Package: {$source}-3
-Architecture: {$architecture}
+Architecture: {$package_architecture}
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
 Description: package to test empty paragraph in the middle
  There is an

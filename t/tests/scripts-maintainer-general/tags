@@ -36,6 +36,12 @@ W: scripts-maintainer-general: maintainer-script-needs-depends-on-gconf2 postins
 W: scripts-maintainer-general: maintainer-script-needs-depends-on-ucf postinst
 W: scripts-maintainer-general: maintainer-script-needs-depends-on-xml-core postinst
 W: scripts-maintainer-general: maintainer-script-should-not-hide-init-failure postinst:31
+W: scripts-maintainer-general: maintainer-script-should-not-parse-etc-passwd-or-group postinst:234 'grep bad /etc/passwd'
+W: scripts-maintainer-general: maintainer-script-should-not-parse-etc-passwd-or-group postinst:235 'grep bad /etc/group'
+W: scripts-maintainer-general: maintainer-script-should-not-parse-etc-passwd-or-group postinst:236 'egrep bad /etc/passwd'
+W: scripts-maintainer-general: maintainer-script-should-not-parse-etc-passwd-or-group postinst:237 'egrep bad /etc/passwd'
+W: scripts-maintainer-general: maintainer-script-should-not-parse-etc-passwd-or-group postinst:238 'fgrep bad /etc/group'
+W: scripts-maintainer-general: maintainer-script-should-not-parse-etc-passwd-or-group postinst:239 'fgrep bad /etc/group'
 W: scripts-maintainer-general: maintainer-script-should-not-use-deprecated-chown-usage postinst:14 'chown root.root'
 W: scripts-maintainer-general: maintainer-script-should-not-use-deprecated-chown-usage postinst:84 'chown -R root.root'
 W: scripts-maintainer-general: maintainer-script-should-not-use-dpkg-database-directly postinst:222 '/var/lib/dpkg/info/other-package.conffiles'

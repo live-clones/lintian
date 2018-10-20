@@ -193,10 +193,21 @@ sub check_test_depends {
 
     # dpkg-checkbuilddeps requires that the Source: field is present.
     print {$test_fd} "Source: bd-test-pkg\n";
-    print {$test_fd} "Build-Depends: $testdata->{'test-depends'}\n"
-      if $testdata->{'test-depends'};
-    print {$test_fd} "Build-Conflicts: $testdata->{'test-conflicts'}\n"
-      if $testdata->{'test-conflicts'};
+
+    my $build_depends = join(', ',
+        grep { $_ }
+          ($testdata->{build_depends}//'',$testdata->{'test-depends'}//''));
+    print {$test_fd} "Build-Depends: $build_depends\n"
+      if length $build_depends;
+
+    my $build_conflicts = join(
+        ', ',
+        grep { $_ }(
+            $testdata->{build_conflicts}//'',$testdata->{'test-conflicts'}//''
+        ));
+    print {$test_fd} "Build-Conflicts: $build_conflicts\n"
+      if length $build_conflicts;
+
     close($test_fd);
 
     $pid = open($fd, '-|');

@@ -7,7 +7,7 @@ Build-Depends: {$build_depends}
 Rules-Requires-Root: no
 
 Package: {$source}
-Architecture: {$architecture}
+Architecture: {$package_architecture}
 Multi-Arch: same
 Depends: $\{misc:Depends\}
 Description: {$description}
@@ -17,7 +17,7 @@ Description: {$description}
  be an empty package.
 
 Package: {$source}-nonrel
-Architecture: {$architecture}
+Architecture: {$package_architecture}
 Depends: $\{misc:Depends\}
 Description: {$description} (false positive)
  This is a test package designed to exercise some feature or tag of

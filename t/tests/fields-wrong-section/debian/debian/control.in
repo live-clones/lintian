@@ -40,7 +40,7 @@ Description: {$description} (debug)
  be an empty package.
 
 Package: lib{$source}-dev
-Architecture: {$architecture}
+Architecture: {$package_architecture}
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
 Description: {$description} (dev)
  Test for libdevel section.
@@ -51,7 +51,7 @@ Description: {$description} (dev)
  be an empty package.
 
 Package: lib{$source}-perl
-Architecture: {$architecture}
+Architecture: {$package_architecture}
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
 Description: {$description} (perl)
  Test for perl section.
@@ -62,7 +62,7 @@ Description: {$description} (perl)
  be an empty package.
 
 Package: python-{$source}
-Architecture: {$architecture}
+Architecture: {$package_architecture}
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
 Description: {$description} (Python)
  Test for Python section.
@@ -73,7 +73,7 @@ Description: {$description} (Python)
  be an empty package.
 
 Package: python3-{$source}
-Architecture: {$architecture}
+Architecture: {$package_architecture}
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
 Description: {$description} (Python 3)
  Test for Python section for Python 3.
@@ -84,7 +84,7 @@ Description: {$description} (Python 3)
  be an empty package.
 
 Package: lib{$source}-ocaml-dev
-Architecture: {$architecture}
+Architecture: {$package_architecture}
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
 Description: {$description} (OCaml)
  Test for OCaml section.
@@ -106,7 +106,7 @@ Description: {$description} (Javascript)
  be an empty package.
 
 Package: libghc-{$source}
-Architecture: {$architecture}
+Architecture: {$package_architecture}
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
 Description: {$description} (Haskell)
  Test for Haskell section.
@@ -117,7 +117,7 @@ Description: {$description} (Haskell)
  be an empty package.
 
 Package: lib{$source}-cil
-Architecture: {$architecture}
+Architecture: {$package_architecture}
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
 Description: {$description} (CLI/Mono)
  Test for CLI/Mono section.
@@ -128,7 +128,7 @@ Description: {$description} (CLI/Mono)
  be an empty package.
 
 Package: libphp-{$source}
-Architecture: {$architecture}
+Architecture: {$package_architecture}
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
 Description: {$description} (PHP)
  Test for PHP section.
@@ -139,7 +139,7 @@ Description: {$description} (PHP)
  be an empty package.
 
 Package: lib{$source}-ruby1.8
-Architecture: {$architecture}
+Architecture: {$package_architecture}
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
 Description: {$description} (Ruby)
  Test for Ruby section.
@@ -150,7 +150,7 @@ Description: {$description} (Ruby)
  be an empty package.
 
 Package: lib{$source}-java
-Architecture: {$architecture}
+Architecture: {$package_architecture}
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
 Description: {$description} (Java)
  Test for Java section.
@@ -161,7 +161,7 @@ Description: {$description} (Java)
  be an empty package.
 
 Package: r-cran-{$source}
-Architecture: {$architecture}
+Architecture: {$package_architecture}
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
 Description: {$description} (GNU R)
  Test for GNU R section.
@@ -172,7 +172,7 @@ Description: {$description} (GNU R)
  be an empty package.
 
 Package: lib{$source}-oldlibs-dev
-Architecture: {$architecture}
+Architecture: {$package_architecture}
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
 Section: oldlibs
 Description: {$description} (oldlibs)

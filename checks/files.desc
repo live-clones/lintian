@@ -2014,3 +2014,12 @@ Info: The listed file appears to use one or more of the binaries
  In most cases you will need to add a <tt>Depends</tt>,
  <tt>Recommends</tt>, <tt>Pre-Depends</tt> or <tt>Suggests</tt>
  on <tt>sensible-utils</tt>.
+
+Tag: unknown-file-in-python-module-directory
+Severity: important
+Certainty: certain
+Info: This package installs the specifiied "non-Python" file in the
+ top-level of a Python library directory.
+ .
+ This was either a mistake and/or will likely to cause conflicts with other
+ packages.

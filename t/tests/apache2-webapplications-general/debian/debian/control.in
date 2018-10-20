@@ -8,7 +8,7 @@ Build-Depends: {$build_depends}
 Rules-Requires-Root: no
 
 Package: phpmyfoo
-Architecture: {$architecture}
+Architecture: {$package_architecture}
 Depends: $\{shlibs:Depends\},
  $\{misc:Depends\},
  apache2,
@@ -20,7 +20,7 @@ Description: {$description}
  be an empty package.
 
 Package: phpmyfoo2
-Architecture: {$architecture}
+Architecture: {$package_architecture}
 Depends: $\{shlibs:Depends\},
  $\{misc:Depends\},
  apache2 | httpd
@@ -33,7 +33,7 @@ Description: {$description} - ignore me
  Ignore me.
 
 Package: phpmyfoo3
-Architecture: {$architecture}
+Architecture: {$package_architecture}
 Depends: $\{shlibs:Depends\},
  $\{misc:Depends\},
  apache2 | lighttpd | httpd

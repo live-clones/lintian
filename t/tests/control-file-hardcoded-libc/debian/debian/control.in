@@ -7,7 +7,7 @@ Build-Depends: {$build_depends}
 Rules-Requires-Root: no
 
 Package: {$source}
-Architecture: {$architecture}
+Architecture: {$package_architecture}
 Pre-Depends: libc0.1
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}, libc6
 Recommends: libc6.1

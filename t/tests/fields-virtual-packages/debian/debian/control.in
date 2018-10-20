@@ -22,7 +22,7 @@ Description: {$description}
  be an empty package.
 
 Package: {$source}2
-Architecture: {$architecture}
+Architecture: {$package_architecture}
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
 Provides: a, iNvAlId-NaMe, versioned (>> 0.1)
 Description: {$description} - bogus

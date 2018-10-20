@@ -7,7 +7,7 @@ Build-Depends: {$build_depends}
 Rules-Requires-Root: no
 
 Package: {$source}-paths
-Architecture: {$architecture}
+Architecture: {$package_architecture}
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
 Description: {$description} (paths)
  Interpreters with bad paths.
@@ -18,7 +18,7 @@ Description: {$description} (paths)
  be an empty package.
 
 Package: {$source}-forbidden
-Architecture: {$architecture}
+Architecture: {$package_architecture}
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
 Description: {$description} (forbidden)
  Forbidden control interpreters.
@@ -29,7 +29,7 @@ Description: {$description} (forbidden)
  be an empty package.
 
 Package: {$source}-unknown
-Architecture: {$architecture}
+Architecture: {$package_architecture}
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
 Description: {$description} (unknown)
  Unknown control interpreters.
@@ -40,7 +40,7 @@ Description: {$description} (unknown)
  be an empty package.
 
 Package: {$source}-python
-Architecture: {$architecture}
+Architecture: {$package_architecture}
 Depends: python, $\{shlibs:Depends\}, $\{misc:Depends\}
 Description: {$description} (Python)
  Python control interpreters with depends.
@@ -51,7 +51,7 @@ Description: {$description} (Python)
  be an empty package.
 
 Package: {$source}-prepython
-Architecture: {$architecture}
+Architecture: {$package_architecture}
 Pre-Depends: python
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
 Description: {$description} (Python preinst)

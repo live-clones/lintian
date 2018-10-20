@@ -7,7 +7,7 @@ Build-Depends: {$build_depends}
 Rules-Requires-Root: no
 
 Package: {$source}
-Architecture: {$architecture}
+Architecture: {$package_architecture}
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
 Description: {$source} is a package which tests lintian's description checks
  missing
@@ -25,7 +25,7 @@ Description: {$source} is a package which tests lintian's description checks
  No, not really... (dummy)
 
 Package: {$source}-2
-Architecture: {$architecture}
+Architecture: {$package_architecture}
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
 Description: Don't use tabs	in the synopsis and restrict yourself to less than 80 characters, otherwise Lintian will complain
     Oh, and don't start the long description with spaces.
@@ -35,7 +35,7 @@ Description: Don't use tabs	in the synopsis and restrict yourself to less than 8
  - not correctly indented. (dummy)
 
 Package: {$source}-3
-Architecture: {$architecture}
+Architecture: {$package_architecture}
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
 Description:
  There should really be a synopsis.
@@ -46,7 +46,7 @@ Description:
  "No, I am am not", he replied (dummy)
 
 Package: {$source}-4
-Architecture: {$architecture}
+Architecture: {$package_architecture}
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
 Description: some Lintian test package
  some Lintian test package
@@ -56,7 +56,7 @@ Description: some Lintian test package
  Homepage: <http://lintian.debian.org/>
 
 Package: {$source}-short
-Architecture: {$architecture}
+Architecture: {$package_architecture}
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
 Description: Short
  The description is too short. One word is not enough.
@@ -65,7 +65,7 @@ Description: Short
  And a third. (dummy)
 
 Package: foo-duplicate
-Architecture: {$architecture}
+Architecture: {$package_architecture}
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
 Description: foo duplicate
  The description is the same as the package name.
@@ -74,7 +74,7 @@ Description: foo duplicate
  And a third. (dummy)
 
 Package: foo-bar-duplicate
-Architecture: {$architecture}
+Architecture: {$package_architecture}
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
 Description: foo bar duplicate
  The description is the same as the package name.
@@ -84,18 +84,18 @@ Description: foo bar duplicate
 
 Package: {$source}-dummy
 Section: oldlibs
-Architecture: {$architecture}
+Architecture: {$package_architecture}
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
 Description: test package (transitional package)
  Transitional packages can have short long descriptions.
 
 Package: {$source}-empty
-Architecture: {$architecture}
+Architecture: {$package_architecture}
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
 Description: test package with empty extended description (dummy)
 
 Package: {$source}-utf8-long
-Architecture: {$architecture}
+Architecture: {$package_architecture}
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
 Description: test package with UTF-8 description (“héhé”“héhé”“héhé”“héhé”)
  Not really too long: “héhé”“héhé”“héhé”“héhé”“héhé”“héhé”
@@ -106,7 +106,7 @@ Description: test package with UTF-8 description (“héhé”“héhé”“hé
  be an empty package.
 
 Package: {$source}-not-dup
-Architecture: {$architecture}
+Architecture: {$package_architecture}
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
 Description: test package with duplicated words that aren't
  Lossless JPEG is defined in ITU-T T.81, ISO/IEC IS 10918-1.
@@ -123,7 +123,7 @@ Description: test package with duplicated words that aren't
  be an empty package.
 
 Package: {$source}-syn-article
-Architecture: {$architecture}
+Architecture: {$package_architecture}
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
 Description: the synopsis starts with an article
  A good synopsis should start not start with "a", "an" and "the"
@@ -135,7 +135,7 @@ Description: the synopsis starts with an article
  be an empty package.
 
 Package: {$source}-syn-spelling
-Architecture: {$architecture}
+Architecture: {$package_architecture}
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
 Description: test for spelling - debian developement
  Some Lintian test package.
@@ -147,7 +147,7 @@ Description: test for spelling - debian developement
  FOO (FOO Owsome Object) is a recursive acronym.
 
 Package: {$source}-control-statements
-Architecture: {$architecture}
+Architecture: {$package_architecture}
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
 Description: test for overly-indented control statements
  Some Lintian test package.

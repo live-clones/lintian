@@ -223,6 +223,17 @@ algoritm||algorithm
 algoritms||algorithms
 algorrithm||algorithm
 algorritm||algorithm
+alha||alpha
+alhabet||alphabet
+alhabetical||alphabetical
+alhabetically||alphabetically
+alhabeticaly||alphabetically
+alhabets||alphabets
+alhapet||alphabet
+alhapetical||alphabetical
+alhapetically||alphabetically
+alhapeticaly||alphabetically
+alhapets||alphabets
 aligne||align
 alignement||alignment
 alignemnt||alignment
@@ -255,6 +266,8 @@ alpabet||alphabet
 alpabetical||alphabetical
 alpabetic||alphabetic
 alpabets||alphabets
+alphabeticaly||alphabetically
+alphapeticaly||alphabetically
 alrady||already
 alraedy||already
 alreay||already
@@ -593,6 +606,8 @@ bufffers||buffers
 bugus||bogus
 buid||build
 buil||build
+builter||builder
+builters||builders
 buipd||build
 buld||build
 buld||building
@@ -714,6 +729,8 @@ choosen||chosen
 chosing||choosing
 chracter||character
 chracters||characters
+cicruit||circuit
+cicruits||circuits
 cilyndre||cylinder
 cilyndres||cylinders
 circut||circuit
@@ -1304,6 +1321,8 @@ diables||disables
 diabling||disabling
 diagnotic||diagnostic
 dianostic||diagnostic
+dictioanries||dictionaries
+dictioanry||dictionary
 dictionay||dictionary
 dictionnary||dictionary
 did'nt||didn't
@@ -1349,7 +1368,9 @@ directy||directly
 diretories||directories
 diretory||directory
 disalb||disable
+disalbed||disabled
 disalbe||disable
+disalbes||disables
 disapeard||disappeared
 disapear||disappear
 disapeared||disappeared
@@ -1528,6 +1549,9 @@ emties||empties
 emtpy||empty
 emty||empty
 emtying||emptying
+enalbed||enabled
+enalbe||enable
+enalbes||enables
 enbaled||enabled
 enbale||enable
 enbales||enables
@@ -1540,6 +1564,8 @@ encosed||enclosed
 encose||enclose
 encoses||encloses
 encosing||enclosing
+encoutner||encounter
+encoutners||encounters
 encrytion||encryption
 encyption||encryption
 endianes||endianness
@@ -2227,6 +2253,7 @@ initalize||initialize
 initalizer||initializer
 initalizes||initializes
 initalizing||initializing
+initals||initials
 initators||initiators
 initializiation||initialization
 initialsed||initialised
@@ -3219,6 +3246,7 @@ psuedo||pseudo
 psychadelic||psychedelic
 publicaly||publicly
 pusehd||pushed
+pytnon||python
 pyton||python
 qouted||quoted
 qoute||quote
@@ -3658,6 +3686,8 @@ shedule||schedule
 shedules||schedules
 sheduling||scheduling
 shiped||shipped
+short-cicruit||short-circuit
+short-cicruits||short-circuits
 shoud||should
 should'nt||shouldn't
 shouldnt||shouldn't

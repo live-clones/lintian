@@ -7,7 +7,7 @@ Build-Depends: {$build_depends}
 Rules-Requires-Root: no
 
 Package: {$source}
-Architecture: {$architecture}
+Architecture: {$package_architecture}
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}, lsb-base (>= 3.0-6)
 Description: {$description}
  This is a test package designed to exercise some feature or tag of
@@ -15,7 +15,7 @@ Description: {$description}
  things.  It should not be installed like a regular package.
 
 Package: {$source}-parsing
-Architecture: {$architecture}
+Architecture: {$package_architecture}
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}, lsb-base (>= 3.0-6)
 Description: {$description} -- headers parsing
  This is a test package designed to exercise the parsing of init scripts
@@ -23,7 +23,7 @@ Description: {$description} -- headers parsing
  things.  It should not be installed like a regular package.
 
 Package: {$source}-remote
-Architecture: {$architecture}
+Architecture: {$package_architecture}
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}, lsb-base (>= 3.0-6)
 Description: {$description} -- using /usr files
  This is a test package designed to exercise the checking of init scripts
@@ -31,7 +31,7 @@ Description: {$description} -- using /usr files
  things.  It should not be installed like a regular package.
 
 Package: {$source}-length
-Architecture: {$architecture}
+Architecture: {$package_architecture}
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}, lsb-base (>= 3.0-6)
 Description: {$description} -- breaking length assumptions
  Test package designed to exercise the checking of init
@@ -39,7 +39,7 @@ Description: {$description} -- breaking length assumptions
  very odd things.  It should not be installed like a regular package.
 
 Package: {$source}-local
-Architecture: {$architecture}
+Architecture: {$package_architecture}
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}, lsb-base (>= 3.0-6)
 Description: {$description} -- using /var files
  This is another test package designed to exercise the checking of init
@@ -47,7 +47,7 @@ Description: {$description} -- using /var files
  very odd things.  It should not be installed like a regular package.
 
 Package: {$source}-missing
-Architecture: {$architecture}
+Architecture: {$package_architecture}
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}, lsb-base (>= 3.0-6)
 Description: {$description} -- missing runlevels
  This is yet another test package designed to exercise the checking of
@@ -55,7 +55,7 @@ Description: {$description} -- missing runlevels
  do very odd things.  It should not be installed like a regular package.
 
 Package: {$source}-virtual
-Architecture: {$architecture}
+Architecture: {$package_architecture}
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}, lsb-base (>= 3.0-6)
 Description: {$description} -- virtual facilities
  Test package to exercise the virtual facilities in init.d scripts
@@ -63,7 +63,7 @@ Description: {$description} -- virtual facilities
  do very odd things.  It should not be installed like a regular package.
 
 Package: {$source}-all
-Architecture: {$architecture}
+Architecture: {$package_architecture}
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}, lsb-base (>= 3.0-6)
 Description: {$description} -- all virtual facilities
  Test package designed to exercise the checking of virtual all facilities
@@ -72,7 +72,7 @@ Description: {$description} -- all virtual facilities
  do very odd things.  It should not be installed like a regular package.
 
 Package: {$source}-early-boot
-Architecture: {$architecture}
+Architecture: {$package_architecture}
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}, lsb-base (>= 3.0-6)
 Description: {$description} -- false positive
  This is yet another test package designed to exercise the checking of

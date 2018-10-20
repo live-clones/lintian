@@ -1,3 +1,39 @@
+lintian (2.5.109) unstable; urgency=medium
+
+  * Summary of tag changes:
+    + Added:
+      - maintainer-script-should-not-parse-etc-passwd-or-group
+      - missing-versioned-depends-on-init-system-helpers
+      - unknown-file-in-python-module-directory
+
+  * checks/debhelper.pm:
+    + [CL] Avoid false-positives when using the blends-dev package for the
+      package-does-not-use-debhelper-or-cdbs tag.  (Closes: #910453)
+  * checks/files.{pm,desc}:
+    + [CL] Check for packages that ship non-Python files in top-level
+      Python module directories such as /usr/lib/python3/dist-packages.
+  * checks/scripts.{desc,pm}:
+    + [CL] Check for packages missing versioned dependencies on
+      init-system-helpers.  (Closes: #910594)
+    + [CL] Check for packages that manually parse /etc/passwd or /etc/group
+      using grep/egrep etc. in their maintainer scripts.  Thanks to Rhonda
+      D'Vine for the bug report.  (Closes: #911157)
+
+  * t/tests/*:
+    + [CL] Apply a patch from Felix Lechner to fix some test descriptions
+      not parsed correctly due to continuation lines.
+    + [CL] Apply a set of patches from Felix Lechner to make various tests
+      architecture independent.
+    + [CL] Apply a patch from Felix Lechner to require build dependencies
+      as prerequisites for tests.
+    + [CL] Apply a patch from Felix Lechner to clarify the substitution
+      variable name for the test package's Architecture field.
+  * t/tests/debhelper-dh-nativejava:
+    + [CL] Apply a patch from Felix Lechner to remove this now-obsolete
+      test given that -gcj packages are no-longer built.
+
+ -- Chris Lamb <lamby@debian.org>  Wed, 17 Oct 2018 02:38:36 +0000
+
 lintian (2.5.108~bpo9+1) stretch-backports; urgency=medium
 
   * Rebuild for stretch-backports.

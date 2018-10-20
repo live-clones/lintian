@@ -8,7 +8,7 @@ Rules-Requires-Root: no
 Homepage: http://lintian.debian.org/
 
 Package: {$source}
-Architecture: {$architecture}
+Architecture: {$package_architecture}
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
 Description: {$description}
  This is a test package designed to exercise some feature or tag of
@@ -20,7 +20,7 @@ Homepage: ttp://lintian.debian.org/
 
 Package: {$source}-dbg
 Section: debug
-Architecture: {$architecture}
+Architecture: {$package_architecture}
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
 Description: {$description} (dbg)
  This is a test package designed to exercise some feature or tag of
@@ -34,7 +34,7 @@ Homepage: <http://lintian.debian.org/>
 
 Package: {$source}-debug
 Section: debug
-Architecture: {$architecture}
+Architecture: {$package_architecture}
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
 Description: {$description} (debug)
  This is a test package designed to exercise some feature or tag of

@@ -8,7 +8,7 @@ Rules-Requires-Root: no
 XS-Testsuite: autopkgtest, golf
 
 Package: {$source}
-Architecture: {$architecture}
+Architecture: {$package_architecture}
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
 Description: {$description}
  This is a test package designed to exercise some feature or tag of

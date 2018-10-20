@@ -9,7 +9,7 @@ Build-Depends: {$build_depends},
 Rules-Requires-Root: no
 
 Package: {$source}-wrong-syntax
-Architecture: {$architecture}
+Architecture: {$package_architecture}
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
 Build-Profiles: <in<valid>
 Description: {$description} (wrong syntax)
@@ -21,7 +21,7 @@ Description: {$description} (wrong syntax)
  be an empty package.
 
 Package: {$source}-unknown-profile
-Architecture: {$architecture}
+Architecture: {$package_architecture}
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
 Build-Profiles: <!stage1 !nocheck> <!unknown> <pkg.{$source}.foo>
 Description: {$description} (unknown profile)
