@@ -38,6 +38,9 @@ lintian (2.5.110) UNRELEASED; urgency=medium
       harness is generally undesirable.  (MR: !54)
     + [CL] Apply a patch series from Felix Lechner to move the templated
       changelogs away from template directory.  (MR: !57)
+    + [CL] Apply a patch series from Felix Lechner to remove the
+      default.upstream placeholder in empty template directories.
+      (MR: !58)
 
  -- Chris Lamb <lamby@debian.org>  Tue, 16 Oct 2018 23:06:31 -0400
 
