@@ -19,6 +19,11 @@ lintian (2.5.110) UNRELEASED; urgency=medium
       jquery-ui.structure.css is not shipped by libjs-jquery-ui.
       (Closes: #911311)
 
+  * t/tests/*:
+    + [CL] Apply a patch series from Felix Lechner to adjust some
+      build-dependencies that were discovered when backporting to stretch.
+      (MR: !51)
+
  -- Chris Lamb <lamby@debian.org>  Tue, 16 Oct 2018 23:06:31 -0400
 
 lintian (2.5.109) unstable; urgency=medium
