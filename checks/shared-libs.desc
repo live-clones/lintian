@@ -449,7 +449,7 @@ Info: The forms "&lt;" and "&gt;" mean "&lt;=" and "&gt;=", not "&lt;&lt;"
  instead.
 
 Tag: symbols-file-missing-build-depends-package
-Severity: pedantic
+Severity: wishlist
 Certainty: certain
 Info: The specified symbols file does not contain a
  <tt>Build-Depends-Package</tt> meta-information field.

@@ -14,7 +14,7 @@ lintian (2.5.110) UNRELEASED; urgency=medium
       in the multi-arch-same-package-has-arch-specific-overrides tag.
       (Closes: #911355)
   * checks/shared-libs.{desc,pm}:
-    + [CL] Emit a pedantic warning for packages that do not specify a
+    + [CL] Emit a "I:" warning for packages that do not specify a
       Build-Depends-Package field in their symbol files.  (Closes: #911451)
 
   * data/files/js-libraries:
