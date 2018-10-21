@@ -33,6 +33,7 @@ use List::MoreUtils qw(any true uniq);
 use Lintian::Architecture qw(:all);
 use Lintian::Data ();
 use Lintian::Check qw(check_maintainer);
+use Lintian::Command qw(safe_qx);
 use Lintian::Relation qw(:constants);
 use Lintian::Relation::Version qw(versions_compare);
 use Lintian::Tags qw(tag);
@@ -404,8 +405,10 @@ sub run {
             my $wildcard = $info->binary_field($bin, 'architecture');
             my @arches = split(
                 ' ',
-                qx{ dpkg-architecture --match-wildcard $wildcard --list-known }
-            );
+                safe_qx(
+                    'dpkg-architecture', '--match-wildcard',
+                    $wildcard, '--list-known'
+                ));
             push(@arches, $wildcard); # original wildcard should be included
             foreach my $arch (uniq @arches) {
                 my $fname = "debian/$bin.lintian-overrides.$arch";
