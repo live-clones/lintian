@@ -447,3 +447,18 @@ Info: The forms "&lt;" and "&gt;" mean "&lt;=" and "&gt;=", not "&lt;&lt;"
  and "&gt;&gt;" as one might expect.  For that reason these forms are
  obsolete, and should not be used in new packages.  Use the longer forms
  instead.
+
+Tag: symbols-file-missing-build-depends-package
+Severity: pedantic
+Certainty: certain
+Info: The specified symbols file does not contain a
+ <tt>Build-Depends-Package</tt> meta-information field.
+ .
+ This field specifies the name of the <tt>-dev</tt> package associated
+ to the library and is used by <tt>dpkg-shlibdeps(1)></tt> to make sure
+ that the dependency generated is at least as strict as the
+ corresponding build dependency.
+ .
+ This is useful as allows packages to not hardcode this information
+ multiple times.
+Ref: deb-symbols(5), dpkg-shlibdeps(1)

@@ -3,6 +3,7 @@ Version: 1.0-1
 Type: non-native
 Default-Build-Depends: debhelper (>= 9.20151004~)
 Description: Test checks related to symbols files
+Options: -I --pedantic
 Test-For: 
  duplicate-entry-in-symbols-control-file
  invalid-template-id-in-symbols-file
@@ -11,4 +12,5 @@ Test-For:
  shlib-missing-in-symbols-control-file
  symbols-file-contains-current-version-with-debian-revision
  symbols-file-contains-debian-revision
+ symbols-file-missing-build-depends-package
  syntax-error-in-symbols-file

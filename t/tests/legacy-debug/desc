@@ -35,3 +35,5 @@ Test-For:
  unstripped-binary-or-object
  unused-shlib-entry-in-symbols-control-file
  version-substvar-for-external-package
+Test-Against:
+ symbols-file-missing-build-depends-package
