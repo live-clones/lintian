@@ -601,7 +601,7 @@ sub run {
             tag 'unused-shlib-entry-in-symbols-control-file', $shlib_name
               unless $symbols_control_used{$shlib_name};
         }
-        tag 'symbols-file-missing-build-depends-package'
+        tag 'symbols-file-missing-build-depends-package-field'
           unless exists $meta_info_seen{'Build-Depends-Package'};
 
         # Check that all of the packages listed as dependencies in the symbols

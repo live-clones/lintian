@@ -448,7 +448,7 @@ Info: The forms "&lt;" and "&gt;" mean "&lt;=" and "&gt;=", not "&lt;&lt;"
  obsolete, and should not be used in new packages.  Use the longer forms
  instead.
 
-Tag: symbols-file-missing-build-depends-package
+Tag: symbols-file-missing-build-depends-package-field
 Severity: wishlist
 Certainty: certain
 Info: The specified symbols file does not contain a
