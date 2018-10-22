@@ -1213,6 +1213,9 @@ dependncies||dependencies
 dependncy||dependency
 depenencies||dependencies
 depenency||dependency
+depenendence||dependence
+depenendencies||dependencies
+depenendency||dependency
 deploied||deployed
 deploiment||deployment
 deploiments||deployments
@@ -3571,6 +3574,11 @@ rouines||routines
 rountine||routine
 rountines||routines
 routins||routines
+rovided||provided
+rovide||provide
+rovider||provider
+rovides||provides
+roviding||providing
 rquested||requested
 rquesting||requesting
 rquest||request
