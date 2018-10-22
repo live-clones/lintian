@@ -3,4 +3,6 @@ Version: 1.0-1
 Type: non-native
 Default-Build-Depends: debhelper (>= 9.20151004~)
 Description: Test against dev symlink fp
+Test-For:
+ symbols-file-missing-build-depends-package-field
 Test-Against: dev-pkg-without-shlib-symlink

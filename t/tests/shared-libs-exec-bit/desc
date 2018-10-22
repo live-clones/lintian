@@ -5,3 +5,4 @@ Description: Test checks related to libs with exec bit
 Test-For:
  shlib-with-bad-permissions
  shlib-with-executable-bit
+ symbols-file-missing-build-depends-package-field

@@ -1,1 +1,2 @@
+I: libfoo: symbols-file-missing-build-depends-package-field
 W: libfoo: shlib-without-versioned-soname usr/lib/libfoo.so libfoo.so

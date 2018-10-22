@@ -8,3 +8,4 @@ Test-Against:
  triplet-dir-and-architecture-mismatch
 Test-For:
  pre-depends-directly-on-multiarch-support
+ symbols-file-missing-build-depends-package-field

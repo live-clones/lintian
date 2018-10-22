@@ -3,4 +3,6 @@ Skeleton: arch-dependent
 Version: 1.0
 Default-Build-Depends: debhelper (>= 9.20151004~)
 Description: Test for library package that does not match SONAME
-Test-For: package-name-doesnt-match-sonames
+Test-For:
+ package-name-doesnt-match-sonames
+ symbols-file-missing-build-depends-package-field

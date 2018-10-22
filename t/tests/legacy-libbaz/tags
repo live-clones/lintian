@@ -34,6 +34,7 @@ I: libbaz1-dev: package-contains-empty-directory usr/include/
 I: libbaz1-dev: wrong-section-according-to-package-name libbaz1-dev => libdevel
 I: libbaz1: binary-has-unneeded-section usr/lib/ma-dir/perl/version/auto/Foo/Foo.so .comment
 I: libbaz1: no-md5sums-control-file
+I: libbaz1: symbols-file-missing-build-depends-package-field
 I: libbaz2-dbg: no-md5sums-control-file
 I: libbaz2-dbg: wrong-section-according-to-package-name libbaz2-dbg => debug
 I: libbaz2-dev: no-md5sums-control-file

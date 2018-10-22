@@ -44,6 +44,7 @@ Test-For:
  symbols-declared-but-not-shlib
  symbols-file-contains-current-version-with-debian-revision
  symbols-file-contains-debian-revision
+ symbols-file-missing-build-depends-package-field
  symlink-should-be-relative
  unstripped-binary-or-object
  unused-shlib-entry-in-control-file

@@ -1,1 +1,2 @@
+I: libfoo1: symbols-file-missing-build-depends-package-field
 W: libfoo1: dev-pkg-without-shlib-symlink usr/lib/libfoo.so.1.0.1 usr/lib/libfoo.so

@@ -4,3 +4,4 @@ Default-Build-Depends: debhelper (>= 9.20151004~)
 Description: Test checks related to libs invoking exit(3)
 Test-For:
  shlib-calls-exit
+ symbols-file-missing-build-depends-package-field

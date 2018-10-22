@@ -3,4 +3,6 @@ Version: 1.0-1
 Type: non-native
 Default-Build-Depends: debhelper (>= 9.20151004~)
 Description: Test ldconfig symlink with wrong target
-Test-For: ldconfig-symlink-referencing-wrong-file
+Test-For:
+ ldconfig-symlink-referencing-wrong-file
+ symbols-file-missing-build-depends-package-field
