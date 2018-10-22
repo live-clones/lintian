@@ -1,6 +1,8 @@
-lintian (2.5.110) UNRELEASED; urgency=medium
+lintian (2.5.110) unstable; urgency=medium
 
-  XXX: generate tag summary
+  * Summary of tag changes:
+    + Added:
+      - symbols-file-missing-build-depends-package-field
 
   * checks/debhelper.desc:
     + [CL] Tidy a number of references regarding the debhelper-compat
@@ -28,6 +30,7 @@ lintian (2.5.110) UNRELEASED; urgency=medium
     + [CL] Move the "needs" entry to the corrections-case file, preventing
       false positives in the spelling-error-in-{binary,changelog} tags
       that reference Georg Nees, an early pioneer of computer art.
+    + [PW] Add a number of corrections.
 
   * t/*:
     + [CL] Apply a patch series from Felix Lechner to adjust some
@@ -45,7 +48,7 @@ lintian (2.5.110) UNRELEASED; urgency=medium
       default.upstream placeholder in empty template directories.
       (MR: !58)
 
- -- Chris Lamb <lamby@debian.org>  Tue, 16 Oct 2018 23:06:31 -0400
+ -- Chris Lamb <lamby@debian.org>  Mon, 22 Oct 2018 01:06:54 +0000
 
 lintian (2.5.109) unstable; urgency=medium
 
