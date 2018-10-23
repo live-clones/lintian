@@ -2,6 +2,10 @@ lintian (2.5.111) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
+  * checks/menu-format.desc:
+    + [CL] Apply a patch from Salvatore Bonaccorso to fix a typo in the
+      description for the desktop-entry-lacks-icon-entry tag.  (MR: !59)
+
  -- Chris Lamb <lamby@debian.org>  Sun, 21 Oct 2018 21:48:28 -0400
 
 lintian (2.5.110) unstable; urgency=medium
