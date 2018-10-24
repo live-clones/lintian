@@ -458,7 +458,7 @@ sub run {
         my %symbols_control_used;
         my @symbols_depends;
         my $dep_templates = 0;
-        my $meta_info_seen = 0;
+        my %meta_info_seen;
         my $warned = 0;
         my $symbol_count = 0;
 
@@ -497,14 +497,13 @@ sub run {
                 }
 
                 $dep_templates = 0;
-                $meta_info_seen = 0;
                 $symbol_count = 0;
             } elsif (m/^\|\s+\S+\s*(?:\(\S+\s+\S+\)|#MINVER#)?/) {
                 # alternative dependency template
 
                 $warned = 0;
 
-                if ($meta_info_seen or not defined $soname) {
+                if (%meta_info_seen or not defined $soname) {
                     tag 'syntax-error-in-symbols-file', $.;
                     $warned = 1;
                 }
@@ -534,7 +533,7 @@ sub run {
                 tag 'syntax-error-in-symbols-file', $.
                   unless defined $soname and $symbol_count == 0;
 
-                $meta_info_seen = 1;
+                $meta_info_seen{$1} = 1;
             } elsif (m/^\s+(\S+)\s(\S+)(?:\s(\S+(?:\s\S+)?))?$/) {
                 # Symbol definition
 
@@ -602,6 +601,8 @@ sub run {
             tag 'unused-shlib-entry-in-symbols-control-file', $shlib_name
               unless $symbols_control_used{$shlib_name};
         }
+        tag 'symbols-file-missing-build-depends-package-field'
+          unless exists $meta_info_seen{'Build-Depends-Package'};
 
         # Check that all of the packages listed as dependencies in the symbols
         # file are satisfied by the current package or its Provides.

@@ -2,7 +2,7 @@ Testname: legacy-libbaz
 Source: libbaz
 Sequence: 9999
 Version: 1-1
-Test-Depends: debhelper (>= 9.20151004~)
+Default-Build-Depends: debhelper (>= 9.20151004~)
 Description: Legacy test "libbaz"
 Test-For:
  ancient-standards-version
@@ -44,6 +44,7 @@ Test-For:
  symbols-declared-but-not-shlib
  symbols-file-contains-current-version-with-debian-revision
  symbols-file-contains-debian-revision
+ symbols-file-missing-build-depends-package-field
  symlink-should-be-relative
  unstripped-binary-or-object
  unused-shlib-entry-in-control-file

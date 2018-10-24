@@ -1,5 +1,7 @@
 Testname: binaries-multiarch-same
 Version: 1.0
-Test-Depends: debhelper (>= 9.20151004~)
+Default-Build-Depends: debhelper (>= 9.20151004~)
 Description: Test of multiarch same package with unsafe binaries
-Test-For: arch-dependent-file-not-in-arch-specific-directory
+Test-For:
+ arch-dependent-file-not-in-arch-specific-directory
+ symbols-file-missing-build-depends-package-field

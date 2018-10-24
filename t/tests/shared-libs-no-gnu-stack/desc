@@ -1,5 +1,7 @@
 Testname: shared-libs-no-gnu-stack
 Version: 1.0
-Test-Depends: debhelper (>= 9.20151004~)
+Default-Build-Depends: debhelper (>= 9.20151004~)
 Description: Test for shared libs without PT_GNU_STACK
-Test-For: shlib-without-PT_GNU_STACK-section
+Test-For:
+ shlib-without-PT_GNU_STACK-section
+ symbols-file-missing-build-depends-package-field

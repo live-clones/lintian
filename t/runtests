@@ -368,9 +368,10 @@ sub test_package {
         $test_state->info_msg(2, "Cleaning up and repopulating $targetdir...");
         runsystem_ok('rm', '-rf', $rundir);
         make_path($rundir);
+        runsystem('cp', '-rp', "$origdir/.", $rundir);
         unless ($is_native) {
             copy_template_dir("$tmpldir/${skel}.upstream",
-                "$origdir/upstream/",$targetdir);
+                "$origdir/orig/",$targetdir);
 
             foreach my $tfile (@{ $TEMPLATES{$suite} }) {
                 if (!-e "$targetdir/$tfile" && -f "$targetdir/${tfile}.in") {
@@ -380,7 +381,6 @@ sub test_package {
                 }
             }
 
-            unlink "$targetdir/.dummy" if -e "$targetdir/.dummy";
             if (-x "$origdir/pre_upstream") {
                 $test_state->progress('pre_upstream hook');
                 runsystem("$origdir/pre_upstream", $targetdir);
@@ -396,8 +396,7 @@ sub test_package {
                 }
             }
         }
-        copy_template_dir("$tmpldir/$skel", "$origdir/debian/", $targetdir,
-            ['--exclude=debian/changelog']);
+        copy_template_dir("$tmpldir/$skel", "$origdir/debian/", $targetdir);
 
         foreach my $tfile (@{ $TEMPLATES{$suite} }) {
             my $may_fill = $regen_template{$tfile};
@@ -428,7 +427,8 @@ sub test_package {
     }
 
     my $file = "${pkg}_${epochless_version}_${ARCHITECTURE}.changes";
-    run_lintian($test_state, $testdata, "$rundir/$file", "$rundir/tags.$pkg");
+    run_lintian($test_state, $testdata, "$rundir/$file", $rundir,
+        "$rundir/tags.$pkg");
 
     # Run a sed-script if it exists, for tests that have slightly variable
     # output
@@ -473,7 +473,7 @@ sub _builder_tests {
 }
 
 sub run_lintian {
-    my ($test_state, $testdata, $file, $out) = @_;
+    my ($test_state, $testdata, $file, $rundir, $out) = @_;
     $test_state->progress('testing');
     my @options = split(' ', $testdata->{options}//'');
     unshift(@options, '--allow-root', '--no-cfg');
@@ -524,6 +524,7 @@ sub run_lintian {
             unshift(@cmd, 'perl', $ENV{'LINTIAN_COVERAGE'});
         }
         open(STDERR, '>&', \*STDOUT);
+        chdir($rundir);
         exec @cmd, @options, @LINTIAN_COMMON_OPTIONS, $file
           or internal_error("exec failed: $!");
     }
@@ -581,7 +582,7 @@ sub test_changes {
         fill_in_tmpl($file, $testdata);
     }
 
-    run_lintian($test_state, $testdata, $file, "$rundir/tags");
+    run_lintian($test_state, $testdata, $file, $rundir, "$rundir/tags");
 
     return _check_result($test_state, $testdata, "$testdir/tags",
         "$rundir/tags");
@@ -635,7 +636,7 @@ sub generic_test_runner {
         runsystem('cp', '-rp', $testdir, $targetdir);
 
         copy_template_dir("$tmpldir/$skel", "$testdir/", $targetdir,
-            ['--exclude=changelog'], ['--exclude=desc']);
+            ['--exclude=desc']);
 
         foreach my $tfile (@{ $TEMPLATES{$suite} }) {
             if (not -e "$targetdir/$tfile" and -f "$targetdir/${tfile}.in") {
@@ -679,7 +680,8 @@ sub generic_test_runner {
             "$testname produced more than one file",
             "matching \"$targetdir/*.$ext\""))if @matches;
 
-    run_lintian($test_state, $testdata, $file,"$RUNDIR/$suite/tags.$testname");
+    run_lintian($test_state, $testdata, $file, $targetdir,
+        "$RUNDIR/$suite/tags.$testname");
     return _check_result($test_state, $testdata, "$testdir/tags",
         "$RUNDIR/$suite/tags.$testname");
 }
@@ -1099,9 +1101,6 @@ sub check_test_is_sane {
     # Unwrap the options in case we used continuation lines.
     $data->{options} =~ s/\n//g;
 
-    # Allow options relative to the root of the test directory.
-    $data->{options} =~ s/TESTSET/$dir/g;
-
     # Check for arch-specific tests
     if ($data->{'test-architectures'} ne 'any') {
         my @wildcards = split(/\s+/,$data->{'test-architectures'});
@@ -1111,7 +1110,7 @@ sub check_test_is_sane {
     }
 
     if ($testdir and -d "${testdir}/lintian-include-dir") {
-        $data->{'lintian-include-dir'} = "${testdir}/lintian-include-dir";
+        $data->{'lintian-include-dir'} = './lintian-include-dir';
     }
 
     return 1;

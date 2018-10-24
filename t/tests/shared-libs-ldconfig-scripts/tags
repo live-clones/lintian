@@ -1,4 +1,7 @@
 E: libfoo1: package-must-activate-ldconfig-trigger usr/lib/libfoo.so.1.0.1
+I: libfish1: symbols-file-missing-build-depends-package-field
+I: libfoo1: symbols-file-missing-build-depends-package-field
+I: libuns1: symbols-file-missing-build-depends-package-field
 W: app: maintscript-calls-ldconfig postinst
 W: app: maintscript-calls-ldconfig postrm
 W: app: package-has-unnecessary-activation-of-ldconfig-trigger

@@ -1,6 +1,8 @@
 Testname: shared-libs-dev-symlink
 Version: 1.0-1
 Type: non-native
-Test-Depends: debhelper (>= 9.20151004~)
+Default-Build-Depends: debhelper (>= 9.20151004~)
 Description: Test checks related to dev symlink
-Test-For: dev-pkg-without-shlib-symlink
+Test-For:
+ dev-pkg-without-shlib-symlink
+ symbols-file-missing-build-depends-package-field

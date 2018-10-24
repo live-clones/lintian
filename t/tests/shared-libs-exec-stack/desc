@@ -1,5 +1,7 @@
 Testname: shared-libs-exec-stack
 Version: 1.0
-Test-Depends: debhelper (>= 9.20151004~)
+Default-Build-Depends: debhelper (>= 9.20151004~)
 Description: Test checks related to libs with exec stack
-Test-For: shlib-with-executable-stack
+Test-For:
+ shlib-with-executable-stack
+ symbols-file-missing-build-depends-package-field

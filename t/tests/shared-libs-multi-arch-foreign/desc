@@ -1,5 +1,7 @@
 Testname: shared-libs-multi-arch-foreign
 Version: 1.0
-Test-Depends: debhelper (>= 9.20151004~)
+Default-Build-Depends: debhelper (>= 9.20151004~)
 Description: Test for shared libs in m-a foreign pkgs
-Test-For: shlib-in-multi-arch-foreign-package
+Test-For:
+ shlib-in-multi-arch-foreign-package
+ symbols-file-missing-build-depends-package-field

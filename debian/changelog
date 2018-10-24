@@ -1,3 +1,55 @@
+lintian (2.5.110) unstable; urgency=medium
+
+  * Summary of tag changes:
+    + Added:
+      - symbols-file-missing-build-depends-package-field
+
+  * checks/debhelper.desc:
+    + [CL] Tidy a number of references regarding the debhelper-compat
+      virtual package, in particular clarifying that this does not work for
+      experimental/beta levels.
+    + [CL] Update example experimental combination of using compatibility
+      level 9 with debhelper >= 8.1.3 with using level 12 with
+      debhelper >= 11.4~.
+  * checks/fields.pm:
+    + [CL] Apply a patch series from Felix Lechner to fix a false-negative
+      in the multi-arch-same-package-has-arch-specific-overrides tag.
+      (Closes: #911355)
+  * checks/shared-libs.{desc,pm}:
+    + [CL] Emit a "I:" warning for packages that do not specify a
+      Build-Depends-Package field in their symbol files.  (Closes: #911451)
+
+  * data/files/js-libraries:
+    + [CL] Prevent a false-positive in embedded-javascript-library as
+      jquery-ui.structure.css is not shipped by libjs-jquery-ui.
+      (Closes: #911311)
+  * data/scripts/interpreters:
+    + [CL] Apply a patch from Luca Boccassi to add /lib/init/init-d-script
+      to the list of known interpreters.  (MR: !56)
+  * data/spelling/*:
+    + [CL] Move the "needs" entry to the corrections-case file, preventing
+      false positives in the spelling-error-in-{binary,changelog} tags
+      that reference Georg Nees, an early pioneer of computer art.
+    + [PW] Add a number of corrections.
+
+  * t/*:
+    + [CL] Apply a patch series from Felix Lechner to adjust some
+      build-dependencies that were discovered when backporting to stretch.
+      (MR: !51)
+    + [CL] Apply a patch series from Felix Lechner to move data for
+      upstream tarballs to "orig" to facilitate the addition of tests
+      related to upstream signatures.  (MR: !52)
+    + [CL] Apply a patch series from Felix Lechner to use relative paths in
+      Lintian options; a tight integration between the test runner and
+      harness is generally undesirable.  (MR: !54)
+    + [CL] Apply a patch series from Felix Lechner to move the templated
+      changelogs away from template directory.  (MR: !57)
+    + [CL] Apply a patch series from Felix Lechner to remove the
+      default.upstream placeholder in empty template directories.
+      (MR: !58)
+
+ -- Chris Lamb <lamby@debian.org>  Mon, 22 Oct 2018 01:06:54 +0000
+
 lintian (2.5.109~bpo9+1) stretch-backports; urgency=medium
 
   * Rebuild for stretch-backports.

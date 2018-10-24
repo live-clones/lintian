@@ -17,6 +17,7 @@ main(void)
     printf("I also have teh broken teh!\n");
     printf("But tEH non-broken tEh needs to be on its own line!\n");
     printf("res.size is okay!\n"); /* #818003 */
+    printf("Georg Nees was early pioneer of computer art and generative graphics.\n");
     hardening_trigger(NULL, 0, NULL);
     return 0;
 }

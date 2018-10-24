@@ -70,6 +70,7 @@ meta-package||metapackage
 mysql||MySQL
 Mysql||MySQL
 MYSQL||MySQL
+nees||needs
 norwegian||Norwegian
 oAuth||OAuth
 ocaml||OCaml

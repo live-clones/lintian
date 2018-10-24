@@ -2,6 +2,8 @@ Testname: shared-libs-unversioned
 Version: 1.0
 Skeleton: arch-dependent
 Description: Test handling of shared libraries without versioned SONAMEs
-Test-For: shlib-without-versioned-soname
+Test-For:
+ shlib-without-versioned-soname
+ symbols-file-missing-build-depends-package-field
 Test-Against: shlib-missing-in-control-file
 References: Debian Bug#506673

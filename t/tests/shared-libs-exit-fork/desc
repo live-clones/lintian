@@ -1,6 +1,8 @@
 Testname: shared-libs-exit-fork
 Version: 1.0
-Test-Depends: debhelper (>= 9.20151004~)
+Default-Build-Depends: debhelper (>= 9.20151004~)
 Description: Test checks related to libs invoking both exit(3) and fork(2)
+Test-For:
+ symbols-file-missing-build-depends-package-field
 Test-Against:
  shlib-calls-exit

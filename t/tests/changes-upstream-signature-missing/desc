@@ -6,4 +6,4 @@ Test-For:
  debian-watch-could-verify-download
  orig-tarball-missing-upstream-signature
 # dpkg 1.18.5 required in order to create multiple tarballs with detached signatures
-Test-Depends: dpkg (>= 1.18.5)
+Extra-Build-Depends: dpkg (>= 1.18.5)

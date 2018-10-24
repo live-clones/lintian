@@ -1,7 +1,7 @@
 Testname: shared-libs-symbols-file
 Version: 1.0-1
 Type: non-native
-Test-Depends: debhelper (>= 9.20151004~)
+Default-Build-Depends: debhelper (>= 9.20151004~)
 Description: Test checks related to symbols files
 Test-For: 
  duplicate-entry-in-symbols-control-file
@@ -11,4 +11,5 @@ Test-For:
  shlib-missing-in-symbols-control-file
  symbols-file-contains-current-version-with-debian-revision
  symbols-file-contains-debian-revision
+ symbols-file-missing-build-depends-package-field
  syntax-error-in-symbols-file
