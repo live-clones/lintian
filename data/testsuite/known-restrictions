@@ -13,3 +13,4 @@ needs-root
 rw-build-tree
 skip-not-installable
 skippable
+superficial
