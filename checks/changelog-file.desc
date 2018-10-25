@@ -461,7 +461,7 @@ Tag: epoch-change-without-comment
 Severity: normal
 Certainty: possible
 Info: The previous version of this package had a different version epoch
- (eg. 2:1.0-1) to the current version and there's no reference to this in
+ (eg. 2:1.0-1) to the current version but there's no reference to this in
  the changelog entry.
  .
  Epochs exist to cope with changes to the upstream version numbering

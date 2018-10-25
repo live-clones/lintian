@@ -2,6 +2,9 @@ lintian (2.5.111) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
+  * checks/changelog-file.desc:
+    + [CL] Clarify the grammatical logic in the long description of the
+      epoch-change-without-comment tag.
   * checks/menu-format.desc:
     + [CL] Apply a patch from Salvatore Bonaccorso to fix a typo in the
       description for the desktop-entry-lacks-icon-entry tag.  (MR: !59)
