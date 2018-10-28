@@ -26,9 +26,9 @@ lintian (2.5.111) UNRELEASED; urgency=medium
       of known restrictions in testsuite definitions.  This was added to
       autopkgtest in #904979.  (MR: !60)
 
-  * reporting/templates/tag.tmpl
+  * reporting/templates/tag.tmpl:
     + [CL] Also show the maintainer name on the tag-specific pages such as
-      <https://lintian.debian.org/tags/ancient-libtool.html>
+      <https://lintian.debian.org/tags/ancient-libtool.html>.
 
  -- Chris Lamb <lamby@debian.org>  Sun, 21 Oct 2018 21:48:28 -0400
 
