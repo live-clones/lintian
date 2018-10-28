@@ -38,6 +38,7 @@ maintainer-script-should-not-use-fc-cache                       ~~ 0 ~~^(fontcon
 maintainer-script-should-not-use-gconftool                      ~~ 1 ~~^(gconf\d)$         ~~          ~~(?:/usr/bin/)?gconftool(?:-\d)?(?:\s|\Z)
 maintainer-script-should-not-use-install-sgmlcatalog            ~~ 1 ~~                    ~~          ~~\binstall-sgmlcatalog\b
 maintainer-script-should-not-use-recursive-chown-or-chmod       ~~ 1 ~~                    ~~          ~~\b(?:(?:chmod|chown).*(?:-R|--recursive)|find.*exec.*(?:chmod|chown))\b
+maintainer-script-should-not-use-piuparts-variable              ~~ 0 ~~                    ~~          ~~(PIUPARTS_(?:TEST|OBJECTS|PHASE|DISTRIBUTION(?:_PREV|_NEXT)?))\b
 maintainer-script-should-not-use-service                        ~~ 1 ~~                    ~~          ~~${LEADIN}service\b
 maintainer-script-should-not-use-start-stop-daemon              ~~ 0 ~~                    ~~          ~~\bstart-stop-daemon(?=\s)(?!.*\s--stop\b)
 maintainer-script-should-not-use-update-alternatives-remove     ~~ 1 ~~                    ~~^postrm$  ~~\b update\-alternatives\s+\-\-remove\b

@@ -240,4 +240,12 @@ fgrep bad /etc/group || true
 # grep /etc/passwd false-positive
 # grep /etc/group false-positive
 
+echo $PIUPARTS_TEST # bad
+echo ${PIUPARTS_OBJECTS}
+echo ${PIUPARTS_PHASE}
+echo ${PIUPARTS_DISTRIBUTION}
+echo ${PIUPARTS_DISTRIBUTION_NEXT}
+echo ${PIUPARTS_DISTRIBUTION_PREV}
+echo $PIUPARTS_IS_AWESOME # good
+
 #DEBHELPER#

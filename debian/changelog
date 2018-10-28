@@ -8,6 +8,9 @@ lintian (2.5.111) UNRELEASED; urgency=medium
   * checks/menu-format.desc:
     + [CL] Apply a patch from Salvatore Bonaccorso to fix a typo in the
       description for the desktop-entry-lacks-icon-entry tag.  (MR: !59)
+  * checks/scripts.desc:
+    + [CL] Warn about packages that use PIUPARTS_TEST (etc.) in their
+      maintainer scripts.  Thanks to Holger Levsen.  (Closes: #912040)
 
   * data/spelling/corrections:
     + [CL] Add a "recognise" connection re. MR: !59.
