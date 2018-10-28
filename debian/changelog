@@ -11,6 +11,9 @@ lintian (2.5.111) UNRELEASED; urgency=medium
   * checks/scripts.desc:
     + [CL] Warn about packages that use PIUPARTS_TEST (etc.) in their
       maintainer scripts.  Thanks to Holger Levsen.  (Closes: #912040)
+    + [CL] Add a note that packages might have added the required
+      dependency for missing-versioned-depends-on-init-system-helpers to
+      Build-Depends instead of the binary package (eg. in src:lbcd).
 
   * data/spelling/corrections:
     + [CL] Add a "recognise" connection re. MR: !59.
