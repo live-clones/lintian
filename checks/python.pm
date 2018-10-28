@@ -156,6 +156,9 @@ sub _run_source {
         }
     }
 
+    tag 'source-package-encodes-python-version'
+      if $info->name =~ m/^python\d-/;
+
     return;
 }
 
