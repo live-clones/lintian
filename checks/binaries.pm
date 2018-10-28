@@ -133,8 +133,7 @@ sub run {
 
     my $src = $group->get_source_processable;
     if (defined($src)) {
-        $built_with_golang
-          = $src->info->relation('build-depends')
+        $built_with_golang = $src->info->relation('build-depends')
           ->implies('golang-go | golang-any');
     }
 
