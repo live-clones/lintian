@@ -135,6 +135,8 @@ sub run {
     if (defined($src)) {
         $built_with_golang = $src->info->relation('build-depends')
           ->implies('golang-go | golang-any');
+    } else {
+        $built_with_golang = $pkg =~ m/^golang-/;
     }
 
     foreach my $file (sort keys %{$info->objdump_info}) {

@@ -2,6 +2,11 @@ lintian (2.5.111) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
+  * checks/binaries.pm:
+    + [CL] Prevent a false-positive when checking statically-linked-binary
+      when we do not have access to the source package to check for a
+      Golang build-dependency by falling-back to checking the package name.
+      Thanks to Jeffrey Cliff for the report.  (Closes: #911864)
   * checks/changelog-file.desc:
     + [CL] Clarify the grammatical logic in the long description of the
       epoch-change-without-comment tag.
