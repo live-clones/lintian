@@ -1,0 +1,10 @@
+Testname: cruft-source-is-missing-unrel
+Version: 1.0-1
+Type: non-native
+Architecture: any
+Description: Check for source-is-missing false positives
+Test-Against:
+ source-is-missing
+Test-For:
+ empty-binary-package
+ package-contains-no-arch-dependent-files

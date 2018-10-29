@@ -866,6 +866,12 @@ sub check_missing_source {
         return;
     }
 
+    # As a special-case, check debian/missing-sources including symlinks, etc.
+    foreach my $ext (($file, $basename)) {
+        my $path = normalize_pkg_path("debian/missing-sources/$ext");
+        return if $path and $info->index_resolved_path($path);
+    }
+
     # try to find for each replacement
   REPLACEMENT:
     foreach my $pair (@replacementspair) {

@@ -10,6 +10,10 @@ lintian (2.5.111) UNRELEASED; urgency=medium
   * checks/changelog-file.desc:
     + [CL] Clarify the grammatical logic in the long description of the
       epoch-change-without-comment tag.
+  * checks/cruft.pm:
+    + [CL] Look for debian/missing-sources/foo for a missing "foo" to
+      prevent source-is-missing false-positives.  Thanks to Daniel Kahn
+      Gillmor for the report.  (Closes: #890468)
   * checks/menu-format.desc:
     + [CL] Apply a patch from Salvatore Bonaccorso to fix a typo in the
       description for the desktop-entry-lacks-icon-entry tag.  (MR: !59)
