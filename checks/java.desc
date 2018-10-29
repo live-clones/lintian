@@ -91,7 +91,7 @@ Info: The package contains a Jar file with Java class files compiled for an
  for a newer version of Java than Lintian knows about.  In the latter case,
  please file a bug against Lintian.
  .
- The latest class version known by Lintian is Java10 (Major version 54).
+ The latest class version known by Lintian is Java11 (Major version 55).
 
 Tag: zip-parse-error
 Severity: normal

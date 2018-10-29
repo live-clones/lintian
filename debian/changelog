@@ -2,6 +2,10 @@ lintian (2.5.112) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
+  * data/java/constants:
+    + [CL] Apply patches from Bas Couwenberg to update the bytecode checks
+      for OpenJDK 10 add bytecode number for OpenJDK 11.  (Closes #912292)
+
  -- Chris Lamb <lamby@debian.org>  Mon, 29 Oct 2018 10:20:27 -0400
 
 lintian (2.5.111) unstable; urgency=medium
