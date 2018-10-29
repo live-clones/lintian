@@ -1,6 +1,9 @@
-lintian (2.5.111) UNRELEASED; urgency=medium
+lintian (2.5.111) unstable; urgency=medium
 
-  XXX: generate tag summary
+  * Summary of tag changes:
+    + Added:
+      - maintainer-script-should-not-use-piuparts-variable
+      - source-package-encodes-python-version
 
   * checks/binaries.pm:
     + [CL] Prevent a false-positive when checking statically-linked-binary
@@ -28,7 +31,8 @@ lintian (2.5.111) UNRELEASED; urgency=medium
       Build-Depends instead of the binary package (eg. in src:lbcd).
 
   * data/spelling/corrections:
-    + [CL] Add a "recognise" connection re. MR: !59.
+    + [PW] Add a number of corrections.
+    + [CL] Add a "recognise" connection. (re. MR: !59).
 
   * data/testsuite/known-restrictions:
     + [CL] Apply a patch from intrigeri to add "superficial" to the list
@@ -39,7 +43,7 @@ lintian (2.5.111) UNRELEASED; urgency=medium
     + [CL] Also show the maintainer name on the tag-specific pages such as
       <https://lintian.debian.org/tags/ancient-libtool.html>.
 
- -- Chris Lamb <lamby@debian.org>  Sun, 21 Oct 2018 21:48:28 -0400
+ -- Chris Lamb <lamby@debian.org>  Mon, 29 Oct 2018 13:51:26 +0000
 
 lintian (2.5.110) unstable; urgency=medium
 
