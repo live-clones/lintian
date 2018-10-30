@@ -9,6 +9,6 @@ Enable-Tags-From-Check: apache2, application-not-library, appstream-metadata, au
  manpages, md5sums, menu-format, menus, nmu, obsolete-sites, ocaml,
  patch-systems, pe, phppear, po-debconf, python, rules, scripts, shared-libs,
  source-changelog, source-copyright, standards-version, symlinks, systemd,
- testsuite, triggers, udev, upstream-metadata, usrmerge, version-substvars,
- watch-file
+ testsuite, triggers, udev, upstream-metadata, upstream-signing-key, usrmerge,
+ version-substvars, watch-file
 
