@@ -1,0 +1,9 @@
+Testname: upstream-key-bloated
+Type: non-native
+Version: 1.0-1
+Description: Check if public upstream signing key contains extra signatures
+Test-For:
+ public-upstream-key-not-minimal
+Test-Against:
+ public-upstream-key-unusable
+ too-many-public-upstream-keys

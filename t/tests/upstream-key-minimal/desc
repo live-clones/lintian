@@ -1,0 +1,9 @@
+Testname: upstream-key-minimal
+Type: non-native
+Version: 1.0-1
+Description: Test with a minimal public upstream signing key (false positive)
+Test-Against:
+ unusable-public-upstream-key
+ non-minimal-public-upstream-key
+ public-upstream-key-in-native-package
+ too-many-public-upstream-keys

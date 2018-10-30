@@ -5,38 +5,45 @@ Needs-Info: unpacked
 Info: This script looks for public upstream signing keys in source packages
  and, if present, checks that they conform to current standards.
  .
- Each source package for which upstream developers sign releases should have
- a watch file and a public key to verify the sources retrieved from downloads.
+ Each source package for which upstream developers sign releases should
+ have a watch file and a public key to verify the sources retrieved from
+ downloads.
 
 Tag: public-upstream-key-in-native-package
 Severity: serious
 Certainty: certain
 Ref: uscan(1)
-Info: The source package contains a public upstream signing key even though
- there is no upstream, as the package is native. Please remove the key.
+Info: The source package contains a public upstream signing key even
+ though there is no upstream as the package is native.
+ .
+ Please remove the key.
 
 Tag: too-many-public-upstream-keys
 Severity: serious
 Certainty: certain
 Ref: uscan(1)
-Info: The source package contains more than one public upstream signing key.
- Please remove all except one.
+Info: The source package contains more than one public upstream signing
+ key.
+ .
+ Please remove all the keys except one.
 
 Tag: public-upstream-key-not-minimal
 Severity: normal
 Certainty: certain
 Ref: uscan(1)
 Info: The package contains a public upstream signing key with extra
- signatures.  The signatures are unnecessary and take up space in the archive.
+ signatures. The signatures are unnecessary and take up space in
+ the archive.
  .
  Please export the upstream key again with the the gnupg option
- 'export-minimal' and use that key instead of the key currently in the source
- package.
+ 'export-minimal' and use that key instead of the key currently in the
+ source package.
 
 Tag: public-upstream-key-unusable
 Severity: serious
 Certainty: certain
 Ref: uscan(1)
 Info: The source package contains a public upstream signing key that
- contains bogus, unexpected or unsuitable data.  Please get the correct
- key from upstream.
+ contains bogus, unexpected or unsuitable data.
+ .
+ Please obtain the correct key from upstream.

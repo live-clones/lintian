@@ -7,6 +7,10 @@ lintian (2.5.112) UNRELEASED; urgency=medium
       tag from "P:" to "W:" and update the description to mention that this
       could be a DFSG violation.
 
+  * checks/upstream-signing-key.{desc,pm}:
+    + [CL] Apply a patch series from Felix Lechner to add multiple tests
+      for upstream GPG keys.  Thanks!  (MR: !62)
+
   * data/java/constants:
     + [CL] Apply patches from Bas Couwenberg to update the bytecode checks
       for OpenJDK 10 add bytecode number for OpenJDK 11.  (Closes: #912292)

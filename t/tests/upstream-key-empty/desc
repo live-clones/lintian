@@ -1,0 +1,10 @@
+Testname: upstream-key-empty
+Type: non-native
+Version: 1.0-1
+Description: Test with an empty public upstream signing key (requires source format 3.0)
+Test-For:
+ public-upstream-key-unusable
+Test-Against:
+ public-upstream-key-not-minimal
+ public-upstream-key-in-native-package
+ too-many-public-upstream-keys
