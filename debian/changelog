@@ -6,6 +6,11 @@ lintian (2.5.112) UNRELEASED; urgency=medium
     + [CL] Apply patches from Bas Couwenberg to update the bytecode checks
       for OpenJDK 10 add bytecode number for OpenJDK 11.  (Closes: #912292)
 
+  * debian/control:
+    + [CL] Apply a patch from Mathieu Parent via MR !61 to add a dependency
+      on dpkg-dev to ensure dpkg-architecture is available.  Thanks!
+      (Closes: #912330)
+
   * vendors/ubuntu/main/data/changes-file/known-dists:
     + [CL] Add "disco" as a known Ubuntu distribution.
 
