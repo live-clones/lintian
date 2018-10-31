@@ -6,6 +6,9 @@ lintian (2.5.112) UNRELEASED; urgency=medium
     + [CL] Apply patches from Bas Couwenberg to update the bytecode checks
       for OpenJDK 10 add bytecode number for OpenJDK 11.  (Closes #912292)
 
+  * vendors/ubuntu/main/data/changes-file/known-dists:
+    + [CL] Add "disco" as a known Ubuntu distribution.
+
  -- Chris Lamb <lamby@debian.org>  Mon, 29 Oct 2018 10:20:27 -0400
 
 lintian (2.5.111) unstable; urgency=medium
