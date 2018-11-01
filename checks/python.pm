@@ -156,6 +156,10 @@ sub _run_source {
         }
     }
 
+    tag 'source-package-encodes-python-version'
+      if $info->name =~ m/^python\d-/
+      and $info->name ne 'python3-defaults';
+
     return;
 }
 

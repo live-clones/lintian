@@ -1,3 +1,50 @@
+lintian (2.5.111) unstable; urgency=medium
+
+  * Summary of tag changes:
+    + Added:
+      - maintainer-script-should-not-use-piuparts-variable
+      - source-package-encodes-python-version
+
+  * checks/binaries.pm:
+    + [CL] Prevent a false-positive when checking statically-linked-binary
+      when we do not have access to the source package to check for a
+      Golang build-dependency by falling-back to checking the package name.
+      Thanks to Jeffrey Cliff for the report.  (Closes: #911864)
+  * checks/changelog-file.desc:
+    + [CL] Clarify the grammatical logic in the long description of the
+      epoch-change-without-comment tag.
+  * checks/cruft.pm:
+    + [CL] Look for debian/missing-sources/foo for a missing "foo" to
+      prevent source-is-missing false-positives.  Thanks to Daniel Kahn
+      Gillmor for the report.  (Closes: #890468)
+  * checks/menu-format.desc:
+    + [CL] Apply a patch from Salvatore Bonaccorso to fix a typo in the
+      description for the desktop-entry-lacks-icon-entry tag.  (MR: !59)
+  * checks/python.{desc,pm}:
+    + [CL] Check for packages that encode a version number in their
+      source package name.
+  * checks/scripts.desc:
+    + [CL] Warn about packages that use PIUPARTS_TEST (etc.) in their
+      maintainer scripts.  Thanks to Holger Levsen.  (Closes: #912040)
+    + [CL] Add a note that packages might have added the required
+      dependency for missing-versioned-depends-on-init-system-helpers to
+      Build-Depends instead of the binary package (eg. in src:lbcd).
+
+  * data/spelling/corrections:
+    + [PW] Add a number of corrections.
+    + [CL] Add a "recognise" connection. (re. MR: !59).
+
+  * data/testsuite/known-restrictions:
+    + [CL] Apply a patch from intrigeri to add "superficial" to the list
+      of known restrictions in testsuite definitions.  This was added to
+      autopkgtest in #904979.  (MR: !60)
+
+  * reporting/templates/tag.tmpl:
+    + [CL] Also show the maintainer name on the tag-specific pages such as
+      <https://lintian.debian.org/tags/ancient-libtool.html>.
+
+ -- Chris Lamb <lamby@debian.org>  Mon, 29 Oct 2018 13:51:26 +0000
+
 lintian (2.5.110~bpo9+1) stretch-backports; urgency=medium
 
   * Rebuild for stretch-backports.

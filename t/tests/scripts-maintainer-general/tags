@@ -54,6 +54,12 @@ W: scripts-maintainer-general: maintainer-script-should-not-use-dpkg-database-di
 W: scripts-maintainer-general: maintainer-script-should-not-use-fc-cache postinst:95
 W: scripts-maintainer-general: maintainer-script-should-not-use-gconftool postinst:155
 W: scripts-maintainer-general: maintainer-script-should-not-use-gconftool postinst:44
+W: scripts-maintainer-general: maintainer-script-should-not-use-piuparts-variable postinst:243 'PIUPARTS_TEST'
+W: scripts-maintainer-general: maintainer-script-should-not-use-piuparts-variable postinst:244 'PIUPARTS_OBJECTS'
+W: scripts-maintainer-general: maintainer-script-should-not-use-piuparts-variable postinst:245 'PIUPARTS_PHASE'
+W: scripts-maintainer-general: maintainer-script-should-not-use-piuparts-variable postinst:246 'PIUPARTS_DISTRIBUTION'
+W: scripts-maintainer-general: maintainer-script-should-not-use-piuparts-variable postinst:247 'PIUPARTS_DISTRIBUTION_NEXT'
+W: scripts-maintainer-general: maintainer-script-should-not-use-piuparts-variable postinst:248 'PIUPARTS_DISTRIBUTION_PREV'
 W: scripts-maintainer-general: maintainer-script-should-not-use-recursive-chown-or-chmod postinst:211
 W: scripts-maintainer-general: maintainer-script-should-not-use-recursive-chown-or-chmod postinst:212
 W: scripts-maintainer-general: maintainer-script-should-not-use-recursive-chown-or-chmod postinst:213

@@ -948,7 +948,9 @@ Certainty: possible
 Ref: update.d(8), #910593
 Info: This package uses a command in the specified maintainer script
  but does not specify an appropriate minimum dependency on the
- <tt>init-system-helpers</tt> package.
+ <tt>init-system-helpers</tt> package. It may have been added to the
+ package's <tt>Build-Depends</tt> instead of the corresponding binary
+ package.
  .
  For example, the <tt>defaults-disabled</tt> option was added to
  <tt>update-rc.d</tt> in <tt>init-system-helpers</tt> version 1.50.
@@ -966,3 +968,16 @@ Info: The maintainer script appears to manually parse <tt>/etc/passwd</tt>
  .
  This bypasses the Name Service Switch (NSS), avoiding querying
  centralised or networked user databases such as LDAP, etc.
+
+Tag: maintainer-script-should-not-use-piuparts-variable
+Severity: normal
+Certainty: possible
+Ref: piuparts(1), https://piuparts.debian.org/doc/README.html
+Info: The maintainer script appears to reference one of the
+ <tt>PIUPARTS_*</tt> variables such as <tt>PIUPARTS_TEST</tt> or
+ <tt>PIUPARTS_PHASE</tt>.
+ .
+ These variables are intended to be used by custom <tt>piuparts(1)</tt>
+ scripts and not by maintainer scripts themselves.
+ .
+ Please remove the references to this variable.

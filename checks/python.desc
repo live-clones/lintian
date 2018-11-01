@@ -180,3 +180,16 @@ Info: The specified Python-Version or Python3-Version field is used to
  .
  Please remove or update the reference. This warning should be ignored
  if you wish to support "sloppy" backports.
+
+Tag: source-package-encodes-python-version
+Severity: normal
+Certainty: certain
+Info: This source package encodes a Python version in its name such
+ as <tt>python2-foo</tt> or <tt>python3-bar</tt>.
+ .
+ This could result in a misleading future situation where this source
+ package supports multiple versions as well unnecessary given that the
+ binary package names will typically encode the supported versions.
+ .
+ Please override this tag with a suitably-commented override if
+ there is no single upstream codebase that supports both versions.

@@ -1047,6 +1047,7 @@ sub parse_lintian_log {
                     anchor       => $anchor,
                     xref         => maintainer_url($maintainer). "#${anchor}",
                     'state_data' => $state_data,
+                    maintainer   => html_quote($maintainer),
                 },
             };
             $last_pi = $info->{pkg_info};
