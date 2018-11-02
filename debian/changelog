@@ -11,6 +11,10 @@ lintian (2.5.112) UNRELEASED; urgency=medium
       on dpkg-dev to ensure dpkg-architecture is available.  Thanks!
       (Closes: #912330)
 
+  * t/tests/basic-non-native-with-epoch/desc:
+    + [CL] Apply a patch from Felix Lechner to correct a test "Type" field.
+      (MR: !63)
+
   * vendors/ubuntu/main/data/changes-file/known-dists:
     + [CL] Add "disco" as a known Ubuntu distribution.
 
