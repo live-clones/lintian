@@ -1,6 +1,7 @@
 Testname: cruft-source-is-missing-unrel
 Version: 1.0-1
 Type: non-native
+Source-Format: 3.0 (quilt)
 Architecture: any
 Description: Check for source-is-missing false positives
 Test-Against:
