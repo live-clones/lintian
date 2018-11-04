@@ -13,7 +13,7 @@ all:
 	echo $(DEFAULT_DH_COMPAT) > $(name)/debian/compat
 	echo > $(name)/debian/watch
 	-mkdir $(name)/debian/source
-	echo 1.0 > $(name)/debian/source/format
+	echo '{$source_format}' > $(name)/debian/source/format
 	dpkg-source -sp -b $(name)
 
 clean:
