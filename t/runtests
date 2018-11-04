@@ -120,8 +120,10 @@ our %TEMPLATES = (
         'debian/source/format'
     ],
     'debs'   => ['changelog', 'control', 'Makefile'],
-    'source' =>
-      ['changelog', 'control', 'dsc.in', 'tests/control', 'tests/test'],
+    'source' =>[
+        'changelog', 'control', 'dsc.in', 'tests/control',
+        'tests/test', 'Makefile'
+    ],
 );
 my $DATE = safe_qx(qw(date -R));
 chomp $DATE;
