@@ -1064,6 +1064,8 @@ sub check_test_is_sane {
 
     $data->{source} ||= $data->{testname};
     $data->{type} ||= 'native';
+    $data->{'source-format'} ||= '1.0';
+    $data->{source_format} = $data->{'source-format'};
     $data->{date} ||= $DATE;
     $data->{prev_date} ||= 'Mon, 01 Jan 1990 00:00:00 +0100';
     if (not $data->{prev_version}) {
