@@ -5,6 +5,9 @@ lintian (2.5.112) UNRELEASED; urgency=medium
   * data/java/constants:
     + [CL] Apply patches from Bas Couwenberg to update the bytecode checks
       for OpenJDK 10 add bytecode number for OpenJDK 11.  (Closes: #912292)
+  * data/rules/rules-should-not-use:
+    + [CL] Ensure --dbgsym-migration='quoted with spaces' is correctly
+      displayed when emitting debug-symbol-migration-possibly-complete.
 
   * debian/control:
     + [CL] Apply a patch from Mathieu Parent via MR !61 to add a dependency
