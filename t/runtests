@@ -383,16 +383,17 @@ sub test_package {
         runsystem('cp', '-rp', "$origdir/.", $rundir);
 
         foreach my $tfile (@{ $TEMPLATES{$suite} }) {
-            if (!-e "$rundir/orig/$tfile" && -f "$rundir/orig/${tfile}.in") {
-                fill_in_tmpl("$rundir/orig/$tfile", $testdata);
+            if (-f "$rundir/orig/${tfile}.in") {
+                fill_in_tmpl("$rundir/orig/$tfile", $testdata)
+                  unless -e "$rundir/orig/$tfile";
                 unlink("$rundir/orig/${tfile}.in");
             }
         }
 
         foreach my $tfile (@{ $TEMPLATES{$suite} }) {
-            if (!-e "$rundir/debian/$tfile" && -f "$rundir/debian/${tfile}.in")
-            {
-                fill_in_tmpl("$rundir/debian/$tfile", $testdata);
+            if (-f "$rundir/debian/${tfile}.in"){
+                fill_in_tmpl("$rundir/debian/$tfile", $testdata)
+                  unless -e "$rundir/debian/$tfile";
                 unlink("$rundir/debian/${tfile}.in");
             }
         }
