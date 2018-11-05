@@ -1,6 +1,7 @@
 Testname: upstream-key-empty
 Type: non-native
 Version: 1.0-1
+Source-Format: 3.0 (quilt)
 Description: Test with an empty public upstream signing key (requires source format 3.0)
 Test-For:
  public-upstream-key-unusable
