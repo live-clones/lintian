@@ -2,6 +2,11 @@ lintian (2.5.112) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
+  * checks/cruft.desc:
+    + [CL] Bump the severity of the source-contains-prebuilt-windows-binary
+      tag from "P:" to "W:" and update the description to mention that this
+      could be a DFSG violation.
+
   * data/java/constants:
     + [CL] Apply patches from Bas Couwenberg to update the bytecode checks
       for OpenJDK 10 add bytecode number for OpenJDK 11.  (Closes: #912292)
