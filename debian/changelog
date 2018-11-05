@@ -19,6 +19,10 @@ lintian (2.5.112) UNRELEASED; urgency=medium
       on dpkg-dev to ensure dpkg-architecture is available.  Thanks!
       (Closes: #912330)
 
+  * t/*:
+    + [CL] Apply a patch series Felix Lechner to parameterise the source
+      format in all applicable tests. The new field in "desc" is called
+      "Source-Format".  (MR: !64)
   * t/tests/basic-non-native-with-epoch/desc:
     + [CL] Apply a patch from Felix Lechner to correct a test "Type" field.
       (MR: !63)
