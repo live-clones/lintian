@@ -354,7 +354,6 @@ sub test_package {
         my $is_native = ($testdata->{type} eq 'native');
         my $pkgdir = "$pkg-$testdata->{version}";
         my $targetdir = "$rundir/$pkgdir";
-        my %regen_template;
 
         # Strip the Debian revision off of the name of the target
         # directory and the *.orig.tar.gz file if the package is
@@ -370,19 +369,34 @@ sub test_package {
 
         $test_state->info_msg(2, "Cleaning up and repopulating $targetdir...");
         runsystem_ok('rm', '-rf', $rundir);
-        make_path($rundir);
-        runsystem('cp', '-rp', "$origdir/.", $rundir);
-        unless ($is_native) {
-            copy_template_dir("$tmpldir/${skel}.upstream",
-                "$origdir/orig/",$targetdir);
 
-            foreach my $tfile (@{ $TEMPLATES{$suite} }) {
-                if (!-e "$targetdir/$tfile" && -f "$targetdir/${tfile}.in") {
-                    fill_in_tmpl("$targetdir/$tfile", $testdata);
-                    unlink("$targetdir/${tfile}.in");
-                    $regen_template{$tfile} = 1;
-                }
+        make_path("$rundir/orig");
+        copy_template_dir("$tmpldir/${skel}.upstream",
+            "$origdir/orig/", "$rundir/orig");
+
+        make_path("$rundir/debian");
+        copy_template_dir("$tmpldir/$skel",
+            "$origdir/debian/", "$rundir/debian");
+
+        runsystem('cp', '-rp', "$origdir/.", $rundir);
+
+        foreach my $tfile (@{ $TEMPLATES{$suite} }) {
+            if (!-e "$rundir/orig/$tfile" && -f "$rundir/orig/${tfile}.in") {
+                fill_in_tmpl("$rundir/orig/$tfile", $testdata);
+                unlink("$rundir/orig/${tfile}.in");
             }
+        }
+
+        foreach my $tfile (@{ $TEMPLATES{$suite} }) {
+            if (!-e "$rundir/debian/$tfile" && -f "$rundir/debian/${tfile}.in")
+            {
+                fill_in_tmpl("$rundir/debian/$tfile", $testdata);
+                unlink("$rundir/debian/${tfile}.in");
+            }
+        }
+
+        unless ($is_native) {
+            runsystem('cp', '-rp', "$rundir/orig/.", $targetdir);
 
             if (-x "$origdir/pre_upstream") {
                 $test_state->progress('pre_upstream hook');
@@ -390,25 +404,16 @@ sub test_package {
             }
             chdir_runcmd($rundir,
                 ['tar', 'czf', "${pkg}_${orig_version}.orig.tar.gz", $pkgdir]);
-            if (-f "$origdir/debian/debian/source/format") {
+            if (-f "$rundir/debian/debian/source/format") {
                 my $format
-                  = slurp_entire_file("$origdir/debian/debian/source/format");
+                  = slurp_entire_file("$rundir/debian/debian/source/format");
                 chomp $format;
                 if ($format =~ m/^3.\d+ \(quilt\)$/) {
                     delete_dir("$targetdir/debian/");
                 }
             }
         }
-        copy_template_dir("$tmpldir/$skel", "$origdir/debian/", $targetdir);
-
-        foreach my $tfile (@{ $TEMPLATES{$suite} }) {
-            my $may_fill = $regen_template{$tfile};
-            $may_fill = 1 if not -e "$targetdir/$tfile";
-            if ($may_fill and -f "$targetdir/${tfile}.in") {
-                fill_in_tmpl("$targetdir/$tfile", $testdata);
-                unlink("$targetdir/${tfile}.in");
-            }
-        }
+        runsystem('cp', '-rp', "$rundir/debian/.", $targetdir);
 
         unless ($is_native || -e "$targetdir/debian/watch") {
             my $f = "$targetdir/debian/watch";
