@@ -65,37 +65,52 @@ sub run {
             next;
         }
 
-        # parse command output into separate packets
-        my @packets = ($output =~ m/(^:.+(?:\n|\z)(?:^\t.+(?:\n|\z))*)/mg);
+        # parse command output into separate keys
+        my @keys
+          = ($output
+              =~ m/(^:public key packet:(?:\n|\z)(?:(?!:public key packet:).+(?:\n|\z))*)/mg
+          );
 
-        # require at least one packet
-        unless (scalar @packets) {
-            tag 'public-upstream-key-unusable', $key_name, 'has no packets';
+        unless (scalar @keys) {
+            tag 'public-upstream-key-unusable', $key_name,'contains no keys';
             next;
         }
 
-        # look for key identifier
-        unless ($packets[0] =~ (qr/\skeyid:\s+(\S+)\s/)) {
-            tag 'public-upstream-key-unusable', $key_name, 'has no keyid';
-            next;
-        }
-        my $keyid = $1;
+        foreach my $key (@keys) {
 
-        # look for third-party signatures
-        my @thirdparty;
-        foreach my $packet (@packets) {
-            if ($packet =~ qr/^:signature packet: algo \d+, keyid (\S*)\n/) {
-                push(@thirdparty, $1) if $1 ne $keyid;
+            # parse each key into separate packets
+            my @packets = ($key =~ m/(^:.+(?:\n|\z)(?:^\t.+(?:\n|\z))*)/mg);
+
+            # require at least one packet
+            unless (scalar @packets) {
+                tag 'public-upstream-key-unusable', $key_name,'has no packets';
+                next;
             }
+
+            # look for key identifier
+            unless ($packets[0] =~ (qr/\skeyid:\s+(\S+)\s/)) {
+                tag 'public-upstream-key-unusable', $key_name, 'has no keyid';
+                next;
+            }
+            my $keyid = $1;
+
+            # look for third-party signatures
+            my @thirdparty;
+            foreach my $packet (@packets) {
+                if ($packet =~ qr/^:signature packet: algo \d+, keyid (\S*)\n/)
+                {
+                    push(@thirdparty, $1) if $1 ne $keyid;
+                }
+            }
+
+            # signatures by parties other than self
+            my $extrasignatures = scalar @thirdparty;
+
+            # export-minimal strips such signatures
+            tag 'public-upstream-key-not-minimal', $key_name,
+              "has $extrasignatures extra signature(s) for keyid $keyid"
+              if $extrasignatures;
         }
-
-        # signatures by parties other than self
-        my $extrasignatures = scalar @thirdparty;
-
-        # export-minimal strips such signatures
-        tag 'public-upstream-key-not-minimal', $key_name,
-          "has $extrasignatures extra signature(s)"
-          if $extrasignatures;
     }
 
     return;
