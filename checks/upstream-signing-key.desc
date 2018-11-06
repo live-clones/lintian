@@ -18,7 +18,7 @@ Info: The source package contains a public upstream signing key even
  .
  Please remove the key.
 
-Tag: too-many-public-upstream-keys
+Tag: public-upstream-keys-in-multiple-locations
 Severity: wishlist
 Certainty: certain
 Ref: uscan(1)
