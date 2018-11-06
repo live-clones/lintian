@@ -6,4 +6,4 @@ Test-Against:
  unusable-public-upstream-key
  non-minimal-public-upstream-key
  public-upstream-key-in-native-package
- too-many-public-upstream-keys
+ public-upstream-keys-in-multiple-locations

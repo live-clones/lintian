@@ -6,4 +6,4 @@ Test-For:
  public-upstream-key-not-minimal
 Test-Against:
  public-upstream-key-unusable
- too-many-public-upstream-keys
+ public-upstream-keys-in-multiple-locations

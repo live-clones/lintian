@@ -1,2 +1,2 @@
-E: changes-upstream-signature-missing-dfsg source: public-upstream-key-unusable upstream/signing-key.asc cannot be processed
+I: changes-upstream-signature-missing-dfsg source: public-upstream-key-unusable upstream/signing-key.asc cannot be processed
 W: changes-upstream-signature-missing-dfsg source: debian-watch-could-verify-download debian/upstream/signing-key.asc
