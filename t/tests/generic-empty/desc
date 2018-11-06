@@ -1,6 +1,7 @@
 Testname: generic-empty
 Sequence: 6500
 Version: 1.0
+Package-Architecture: all
 Description: Pathological empty package
 Test-For:
  bad-urgency-in-changes-file

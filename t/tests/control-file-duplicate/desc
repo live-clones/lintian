@@ -1,5 +1,6 @@
 Testname: control-file-duplicate
 Version: 1.0
+Package-Architecture: all
 Skeleton: pedantic
 Options: --pedantic -I -E
 Description: Pedantic test for duplicate relations

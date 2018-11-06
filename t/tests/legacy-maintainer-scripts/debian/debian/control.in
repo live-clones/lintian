@@ -9,7 +9,7 @@ Rules-Requires-Root: binary-targets
 XS-Dm-Upload-Allowed: Yes
 
 Package: maintainer-scripts
-Architecture: all
+Architecture: {$package_architecture}
 Depends: test
 Description: test lintian's maintainer script checks
  This is a test package designed to exercise some feature or tag of

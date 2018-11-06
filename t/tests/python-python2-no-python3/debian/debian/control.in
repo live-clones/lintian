@@ -7,7 +7,7 @@ Build-Depends: {$build_depends}
 Rules-Requires-Root: no
 
 Package: python-{$source}
-Architecture: all
+Architecture: {$package_architecture}
 Depends: $\{misc:Depends\}, python2.7
 Description: Python 2 package with no corresponding Python 3 package
  This is a test package designed to exercise some feature or tag of

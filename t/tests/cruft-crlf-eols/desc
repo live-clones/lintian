@@ -1,5 +1,6 @@
 Testname: cruft-crlf-eols
 Version: 1.0
+Package-Architecture: all
 Description: Check that control files with CRLF EOLs are reported
 Test-For:
  control-file-with-CRLF-EOLs

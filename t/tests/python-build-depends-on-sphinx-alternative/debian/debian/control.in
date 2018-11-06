@@ -7,7 +7,7 @@ Build-Depends: {$build_depends}, python-sphinx | python3-sphinx
 Rules-Requires-Root: no
 
 Package: python3-{$source}
-Architecture: all
+Architecture: {$package_architecture}
 Depends: $\{misc:Depends\}, python3
 Description: Test package
  This is a test package designed to exercise some feature or tag of
