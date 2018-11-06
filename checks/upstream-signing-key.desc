@@ -38,9 +38,11 @@ Info: The package contains a public upstream signing key with extra
  signatures. The signatures are unnecessary and take up space in
  the archive.
  .
- Please export the upstream key again with the the gnupg option
- 'export-minimal' and use that key instead of the key currently in the
- source package.
+ Please export the upstream key again with the command
+ .
+ 'gpg --armor --export --export-options export-minimal,export-clean'
+ .
+ and use that key instead of the key currently in the source package.
 
 Tag: public-upstream-key-unusable
 Severity: wishlist
