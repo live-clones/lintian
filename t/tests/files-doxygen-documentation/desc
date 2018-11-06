@@ -2,7 +2,6 @@ Testname: files-doxygen-documentation
 Version: 1.0
 Description: Detect doxygen documentation problem
 Skeleton: pedantic
-Package-Architecture: any
 Options: --pedantic -I -E
 Test-For:
  file-should-not-be-compressed

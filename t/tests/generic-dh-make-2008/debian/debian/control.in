@@ -7,7 +7,7 @@ Standards-Version: 3.7.3
 Homepage: <insert the upstream URL, if relevant>
 
 Package: generic-dh-make-2008
-Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}
+Architecture: {$package_architecture}
+Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
 Description: <insert up to 60 chars description>
  <insert long description, indented with spaces>

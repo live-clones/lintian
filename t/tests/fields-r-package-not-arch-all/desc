@@ -3,6 +3,5 @@ Version: 1.0-1
 Type: non-native
 Description: Tests for Architecture of an R package
 Skeleton: default
-Package-Architecture: any
 Test-For:
  r-package-not-arch-all

@@ -8,7 +8,7 @@ Build-Depends-Indep: some-package
 Rules-Requires-Root: no
 
 Package: {$source}
-Architecture: any
+Architecture: {$package_architecture}
 Depends: $\{misc:Depends\},
 Description: {$description}
  This is a test package designed to exercise some feature or tag of

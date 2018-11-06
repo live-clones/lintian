@@ -3,5 +3,4 @@ Sequence: 0700
 Version: 1.0
 Test-Architectures: i386
 Skeleton: default
-Package-Architecture: any
 Description: Test a package that is supposedly i386-specific
