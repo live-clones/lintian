@@ -10,7 +10,7 @@ Info: This script looks for public upstream signing keys in source packages
  downloads.
 
 Tag: public-upstream-key-in-native-package
-Severity: serious
+Severity: wishlist
 Certainty: certain
 Ref: uscan(1)
 Info: The source package contains a public upstream signing key even
@@ -19,7 +19,7 @@ Info: The source package contains a public upstream signing key even
  Please remove the key.
 
 Tag: too-many-public-upstream-keys
-Severity: serious
+Severity: wishlist
 Certainty: certain
 Ref: uscan(1)
 Info: The source package contains more than one public upstream signing
@@ -28,7 +28,7 @@ Info: The source package contains more than one public upstream signing
  Please remove all the keys except one.
 
 Tag: public-upstream-key-not-minimal
-Severity: normal
+Severity: wishlist
 Certainty: certain
 Ref: uscan(1)
 Info: The package contains a public upstream signing key with extra
@@ -40,7 +40,7 @@ Info: The package contains a public upstream signing key with extra
  source package.
 
 Tag: public-upstream-key-unusable
-Severity: serious
+Severity: wishlist
 Certainty: certain
 Ref: uscan(1)
 Info: The source package contains a public upstream signing key that
