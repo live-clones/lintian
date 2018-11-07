@@ -2,7 +2,7 @@ Testname: testsuite-general
 Version: 1.0
 Description: General tests of the autopkgtest control file
 Options: -I -E --pedantic
-Skeleton: arch-independent.pedantic
+Skeleton: pedantic
 Test-Against:
  unnecessary-testsuite-autopkgtest-field
 Test-For:

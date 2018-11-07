@@ -1,7 +1,7 @@
 Testname: changelog-file-backport
 Version: 1.0
 Description: Check backport
-Skeleton: arch-independent.pedantic
+Skeleton: pedantic
 Options: --pedantic -I -E
 # Overrides the "data/changes-file/known-dists"
 # data file to avoid updating the test every release

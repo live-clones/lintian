@@ -1,7 +1,7 @@
 Testname: copyright-file-non-common-license
 Version: 1.0
 Description: Test for false positive for a common license
-Skeleton: arch-independent.pedantic
+Skeleton: pedantic
 Options: -IE --pedantic
 Test-Against:
  copyright-should-refer-to-common-license-file-for-gpl

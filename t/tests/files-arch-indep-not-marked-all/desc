@@ -1,5 +1,5 @@
 Testname: files-arch-indep-not-marked-all
 Version: 1.0
-Skeleton: arch-dependent
+Skeleton: default
 Description: Test of arch indep package not marked arch:all
 Test-For: package-contains-no-arch-dependent-files

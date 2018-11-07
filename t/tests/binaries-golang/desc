@@ -2,7 +2,7 @@ Testname: binaries-golang
 Version: 1.0
 Extra-Build-Depends: golang-go (>= 2:1.1.1-4)
 Description: Misc errors related to golang binaries
-Skeleton: arch-dependent
+Skeleton: default
 Test-Against: statically-linked-binary
 Test-For:
  missing-built-using-field-for-golang-package

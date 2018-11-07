@@ -1,6 +1,6 @@
 Testname: control-file-duplicate
 Version: 1.0
-Skeleton: arch-independent.pedantic
+Skeleton: pedantic
 Options: --pedantic -I -E
 Description: Pedantic test for duplicate relations
 Test-For: duplicate-in-relation-field

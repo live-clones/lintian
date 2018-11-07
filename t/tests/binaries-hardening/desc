@@ -2,7 +2,7 @@ Testname: binaries-hardening
 Version: 1.0
 Description: Check for missing hardening features
 Test-Architectures: amd64 i386 armhf arm64
-Skeleton: arch-dependent
+Skeleton: default
 Test-For:
  hardening-no-bindnow
  hardening-no-fortify-functions

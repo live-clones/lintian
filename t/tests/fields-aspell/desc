@@ -1,5 +1,5 @@
 Testname: fields-aspell
 Version: 1.0
 Description: Tests for Architecture of an aspell package
-Skeleton: arch-dependent
+Skeleton: default
 Test-For: aspell-package-not-arch-all

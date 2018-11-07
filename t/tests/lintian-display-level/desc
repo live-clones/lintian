@@ -2,7 +2,7 @@ Testname: lintian-display-level
 Sequence: 2500
 Type: non-native
 Version: 1.0+dsfg-1.1
-Skeleton: arch-independent.pedantic
+Skeleton: pedantic
 Options: --pedantic -I -E -L -wishlist/certain --display-level -<=wild-guess
  -L +>important -L +normal/wild-guess
 Description: Test Lintian --display-level handling
