@@ -1,0 +1,56 @@
+name = {$source}
+version = {$upstream_version}
+type = {$type}
+
+packagedir = $(name)-$(version)
+underscored = $(name)_$(version)
+
+origdata = orig
+origtargz = $(underscored).orig.tar.gz
+
+formatfile = debian/source/format
+
+watchfile = $(packagedir)/debian/watch
+
+product = $(underscored).dsc
+
+.DEFAULT_GOAL := product
+
+ifeq ($(type),native)
+product: $(watchfile) $(origtargz)
+	cp -rp debian/ $(packagedir)/
+	if [ -x ./pre_build ] ; then ./pre_build $(shell realpath $(packagedir)) ; fi
+	tar cfz $(underscored).tar.gz $(packagedir)
+	subst-dsc $(underscored).tar.gz < dsc.in > $(underscored).dsc
+else
+product: $(watchfile) $(origtargz)
+	cp -rp debian $(packagedir)
+	if [ -x ./pre_build ] ; then ./pre_build $(shell realpath $(packagedir)) ; fi
+	dpkg-source -sp -b $(packagedir)
+endif
+
+ifeq ($(type),native)
+$(watchfile): $(origtargz)
+else
+$(watchfile): $(origtargz)
+	-mkdir -p $(packagedir)/debian
+	if [ ! -f $(watchfile) ] ; then echo '# Empty watch file' > $(watchfile) ; fi
+endif
+
+ifeq ($(type),native)
+$(origtargz): clean
+	-mkdir $(packagedir)
+else
+$(origtargz): clean
+	-mkdir $(origdata)
+	-mkdir $(packagedir)
+	cp -rp $(origdata)/. $(packagedir)
+	if [ -x ./pre_upstream ] ; then ./pre_upstream $(shell realpath $(packagedir)) ; fi
+	tar czf $(origtargz) $(packagedir)
+	if [ -f $(formatfile) ] && grep --quiet "^3\.. (quilt)$$" $(formatfile) ; then rm -rf $(packagedir)/debian ; fi
+endif
+
+.PHONY: clean
+clean:
+	rm -rf $(packagedir)
+	rm -f $(underscored)*
