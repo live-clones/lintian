@@ -2,6 +2,7 @@ Testname: files-multiarch-foreign-files
 Version: 1.0
 Description: Test for files violating Multi-Arch: foreign
 Skeleton: default
+Package-Architecture: any
 Test-for:
  multiarch-foreign-cmake-file
  multiarch-foreign-pkgconfig

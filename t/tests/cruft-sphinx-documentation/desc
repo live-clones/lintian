@@ -2,6 +2,7 @@ Testname: cruft-sphinx-documentation
 Version: 1.0
 Description: Detect sphinx documentation
 Skeleton: pedantic
+Package-Architecture: any
 Options: --pedantic -I -E
 Test-For:
  source-contains-prebuilt-sphinx-documentation

@@ -4,5 +4,6 @@ Default-Build-Depends: debhelper (>= 9.20151004~)
 Description: Multiarch-related tests but not multiarch itself
 Test-Architectures: i386 amd64
 Skeleton: default
+Package-Architecture: any
 Test-For:
  triplet-dir-and-architecture-mismatch

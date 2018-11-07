@@ -2,6 +2,7 @@ Testname: binaries-general
 Version: 1.0
 Description: Misc errors related to binaries
 Skeleton: default
+Package-Architecture: any
 Test-For:
  arch-dependent-file-in-usr-share
  binary-compiled-with-profiling-enabled

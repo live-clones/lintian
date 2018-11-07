@@ -3,5 +3,6 @@ Description: Test for Multi-Arch: same package with arch-specific overrides
 Version: 1.0
 Test-Architectures: amd64
 Skeleton: default
+Package-Architecture: any
 Test-For:
  multi-arch-same-package-has-arch-specific-overrides

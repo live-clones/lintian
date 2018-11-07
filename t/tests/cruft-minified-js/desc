@@ -2,6 +2,7 @@ Testname: cruft-minified-js
 Version: 1.0
 Description: Misc errors related to minified javascript
 Skeleton: pedantic
+Package-Architecture: any
 Options: --pedantic -I -E
 Extra-Build-Depends: uglifyjs
 Test-For:

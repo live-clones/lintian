@@ -2,6 +2,7 @@ Testname: cruft-python
 Version: 1.0
 Description: Misc errors related to Python
 Skeleton: pedantic
+Package-Architecture: any
 Options: --pedantic -I -E
 Extra-Build-Depends: python
 Test-For:

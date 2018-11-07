@@ -3,6 +3,7 @@ Version: 1.0
 Description: Test of a correct multiarch package
 Test-Architectures: i386 amd64
 Skeleton: default
+Package-Architecture: any
 Default-Build-Depends: debhelper (>= 9.20151004~)
 Test-Against:
  triplet-dir-and-architecture-mismatch

@@ -3,6 +3,7 @@ Version: 1.0
 Default-Build-Depends: debhelper (>= 9.20151004~)
 Description: Test for missing libc depends
 Skeleton: default
+Package-Architecture: any
 Test-For:
  missing-dependency-on-libc
  missing-dependency-on-libstdc++

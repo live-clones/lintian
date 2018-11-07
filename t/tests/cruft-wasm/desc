@@ -2,6 +2,7 @@ Testname: cruft-wasm
 Version: 1.0-1
 Description: Misc errors related to wasm
 Skeleton: pedantic
+Package-Architecture: any
 Options: --pedantic -I -E
 Type: non-native
 Test-For:
