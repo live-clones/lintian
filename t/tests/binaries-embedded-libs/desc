@@ -1,5 +1,4 @@
 Testname: binaries-embedded-libs
-Skeleton: default
 Package-Architecture: any
 Version: 1.0
 Description: Package with binary with library-unique strings

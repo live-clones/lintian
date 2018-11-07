@@ -1,6 +1,5 @@
 Testname: shared-libs-unversioned
 Version: 1.0
-Skeleton: default
 Package-Architecture: any
 Description: Test handling of shared libraries without versioned SONAMEs
 Test-For:

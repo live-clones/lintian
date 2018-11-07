@@ -2,7 +2,6 @@ Testname: binaries-missing-depends
 Version: 1.0
 Default-Build-Depends: debhelper (>= 9.20151004~)
 Description: Test for missing depends line
-Skeleton: default
 Package-Architecture: any
 Test-For:
  missing-depends-line

@@ -1,5 +1,4 @@
 Testname: control-file-library-dev
 Version: 1.0
-Skeleton: default
 Description: Check control file handling of library dev packages
 Test-For: weak-library-dev-dependency

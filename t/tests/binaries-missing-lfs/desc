@@ -3,7 +3,6 @@ Version: 1.0
 Default-Build-Depends: debhelper (>= 9.20151004~)
 Description: Test for missing lfs
 Test-Architectures: i386 armhf
-Skeleton: default
 Package-Architecture: any
 Test-For: binary-file-built-without-LFS-support
 Test-Against:

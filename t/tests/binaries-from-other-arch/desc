@@ -1,6 +1,5 @@
 Testname: binaries-from-other-arch
 Test-Architectures: amd64 i386
-Skeleton: default
 Package-Architecture: any
 Version: 1.0
 Description: Test package with a pseudo binary from a different architecture
