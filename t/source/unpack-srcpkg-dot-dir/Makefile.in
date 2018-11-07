@@ -1,4 +1,4 @@
-name = unpack-srcpkg-dot-dir
+name = {$source}
 dir  = $(name)-1.0
 
 all:

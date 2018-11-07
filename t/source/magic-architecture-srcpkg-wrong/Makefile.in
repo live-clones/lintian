@@ -1,4 +1,4 @@
-name = magic-architecture-srcpkg-wrong
+name = {$source}
 dir  = $(name)-1.0
 
 all:

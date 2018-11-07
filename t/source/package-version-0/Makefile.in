@@ -1,4 +1,4 @@
-name = package-version-0
+name = {$source}
 dir  = $(name)-0
 
 all:

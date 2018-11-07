@@ -1,4 +1,4 @@
-name = debian-symlink
+name = {$source}
 dir  = $(name)-1
 
 all:

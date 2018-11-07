@@ -1,4 +1,4 @@
-name = cruft-ancient-file
+name = {$source}
 dir  = $(name)-1.0
 
 all:

@@ -1,4 +1,4 @@
-name = debconf-traversal
+name = {$source}
 dir  = $(name)-1
 
 all:

@@ -1,4 +1,4 @@
-name = fields-src-fields-filename
+name = {$source}
 dsc  = some-other-name
 dir  = $(dsc)-1
 
