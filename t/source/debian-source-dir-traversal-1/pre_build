@@ -1,0 +1,10 @@
+#!/bin/sh
+
+dir="$1"
+
+# link to index file for the lab entry
+# - NB: This should not trigger source-contains-unsafe-symlink
+#   because the link it self is not unsafe (i.e. it is safe
+#   relative to unpacked, but unsafe relative to debfiles)
+
+ln -sf ../../index "$dir/debian/source/git-patches"

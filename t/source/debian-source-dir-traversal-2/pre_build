@@ -1,0 +1,11 @@
+#!/bin/sh
+
+dir="$1"
+
+# Link to the lab entry - should trigger a myriad of
+# "unknown-file-in-debian-source" tags, if lintian is vulnerable
+
+rm -rf "$dir/debian/source"
+ln -sfn ../../ "$dir/debian/source"
+
+rm -f "$dir/debian/compat"
