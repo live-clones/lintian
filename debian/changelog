@@ -6,6 +6,9 @@ lintian (2.5.112) UNRELEASED; urgency=medium
     + [CL] Bump the severity of the source-contains-prebuilt-windows-binary
       tag from "P:" to "W:" and update the description to mention that this
       could be a DFSG violation.
+  * checks/systemd.{desc,pm}
+    + [CL] Warn if a PIDFile in a .service unit references /var/run.
+      (Closes: #913078)
   * checks/upstream-signing-key.{desc,pm}:
     + [CL] Apply a patch series from Felix Lechner to add multiple tests
       for upstream GPG keys.  Thanks!  (MR: !62)

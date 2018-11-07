@@ -182,3 +182,15 @@ Info: The specified systemd service file declares an unusual
  Services that want to be started in rescue or single-user mode should
  instead use <tt>WantedBy=sysinit.target</tt>
 Ref: https://wiki.debian.org/Teams/pkg-systemd/rcSMigration
+
+Tag: systemd-service-file-pidfile-refers-to-var-run
+Severity: wishlist
+Certainty: certain
+Info: The specified systemd service file declares a <tt>PIDFile=</tt>
+ that references <tt>/var/run</tt>.
+ .
+ <tt>/var/run</tt> is now merely a symlink pointing to <tt>/run</tt> and
+ thus it is now considered best practice that packages use <tt>/run</tt>
+ directly.
+ .
+ Please update the specified service file.
