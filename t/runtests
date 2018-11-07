@@ -646,10 +646,11 @@ sub generic_test_runner {
         $test_state->info_msg(2, "Cleaning up and repopulating $targetdir...");
         runsystem_ok('rm', '-rf', $targetdir);
         make_path($targetdir);
-        runsystem('cp', '-rp', $testdir, $targetdir);
 
         copy_template_dir("$tmpldir/$skel", "$testdir/", $targetdir,
             ['--exclude=desc']);
+
+        runsystem('cp', '-rp', $testdir, $targetdir);
 
         foreach my $tfile (@{ $TEMPLATES{$suite} }) {
             if (not -e "$targetdir/$tfile" and -f "$targetdir/${tfile}.in") {
