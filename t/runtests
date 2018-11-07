@@ -1117,6 +1117,10 @@ sub check_test_is_sane {
     # Unwrap the options in case we used continuation lines.
     $data->{options} =~ s/\n//g;
 
+    $data->{upstream_version} = $data->{version};
+    $data->{upstream_version} =~ s/-[^-]+$//;
+    $data->{upstream_version} =~ s/(-|^)(\d+):/$1/;
+
     # Check for arch-specific tests
     if ($data->{'test-architectures'} ne 'any') {
         my @wildcards = split(/\s+/,$data->{'test-architectures'});
