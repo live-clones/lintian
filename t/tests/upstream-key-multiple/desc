@@ -1,6 +1,0 @@
-Testname: upstream-key-multiple
-Type: non-native
-Version: 1.0-1
-Description: Check if multiple upstream signing keys are present
-Test-For:
- public-upstream-keys-in-multiple-locations

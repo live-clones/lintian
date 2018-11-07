@@ -1,2 +1,0 @@
-I: upstream-key-multiple source: public-upstream-keys-in-multiple-locations upstream-signing-key.pgp upstream/signing-key.asc
-W: upstream-key-multiple changes: orig-tarball-missing-upstream-signature upstream-key-multiple_1.0.orig.tar.gz
