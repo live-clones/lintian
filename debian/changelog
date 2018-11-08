@@ -26,6 +26,8 @@ lintian (2.5.112) UNRELEASED; urgency=medium
       (Closes: #912330)
 
   * t/*:
+    + [CL] Apply a patch from Felix Lechner to fix two tests in Ubuntu by
+      lowering the Debhelper compat level.  (Closes: #913099)
     + [CL] Apply a patch series Felix Lechner to parameterise the source
       format in all applicable tests. The new field in "desc" is called
       "Source-Format".  (MR: !64)
