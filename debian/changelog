@@ -1,6 +1,12 @@
-lintian (2.5.112) UNRELEASED; urgency=medium
+lintian (2.5.112) unstable; urgency=medium
 
-  XXX: generate tag summary
+  * Summary of tag changes:
+    + Added:
+      - public-upstream-key-in-native-package
+      - public-upstream-key-not-minimal
+      - public-upstream-key-unusable
+      - public-upstream-keys-in-multiple-locations
+      - systemd-service-file-pidfile-refers-to-var-run
 
   * checks/cruft.desc:
     + [CL] Bump the severity of the source-contains-prebuilt-windows-binary
@@ -19,6 +25,8 @@ lintian (2.5.112) UNRELEASED; urgency=medium
   * data/rules/rules-should-not-use:
     + [CL] Ensure --dbgsym-migration='quoted with spaces' is correctly
       displayed when emitting debug-symbol-migration-possibly-complete.
+  * data/spelling/corrections:
+    + [PW] Add a number of corrections.
 
   * debian/control:
     + [CL] Apply a patch from Mathieu Parent to add a dependency on
@@ -43,7 +51,7 @@ lintian (2.5.112) UNRELEASED; urgency=medium
   * vendors/ubuntu/main/data/changes-file/known-dists:
     + [CL] Add "disco" as a known Ubuntu distribution.
 
- -- Chris Lamb <lamby@debian.org>  Mon, 29 Oct 2018 10:20:27 -0400
+ -- Chris Lamb <lamby@debian.org>  Thu, 08 Nov 2018 22:29:31 +0000
 
 lintian (2.5.111) unstable; urgency=medium
 
