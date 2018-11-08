@@ -32,6 +32,9 @@ lintian (2.5.112) UNRELEASED; urgency=medium
   * t/tests/basic-non-native-with-epoch/desc:
     + [CL] Apply a patch from Felix Lechner to correct a test "Type" field.
       (MR: !63)
+  * t/tests/watch-file-pgpmode-next/*:
+    + [CL] Apply a patch series from Felix Lechner to add missing "-I -E"
+      options to the existing "--pedantic" one.  (MR: !67)
 
   * vendors/ubuntu/main/data/changes-file/known-dists:
     + [CL] Add "disco" as a known Ubuntu distribution.
