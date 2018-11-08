@@ -124,7 +124,7 @@ our %TEMPLATES = (
         'Makefile', 'dsc.in',
         'debian/changelog', 'debian/control',
         'debian/compat', 'debian/source/format',
-        'tests/control','tests/test'
+        'debian/tests/control','debian/tests/test'
     ],
 );
 my $DATE = safe_qx(qw(date -R));
