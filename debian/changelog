@@ -2,6 +2,12 @@ lintian (2.5.113) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
+  * checks/shared-libs.pm:
+    + [CL] Apply a patch from James McCoy to fix a regression that was
+      causing Lintian to incorrectly report the
+      invalid-template-id-in-symbols-file and syntax-error-in-symbols-file
+      tags.  Thanks!  (Closes: #913290)
+
  -- Chris Lamb <lamby@debian.org>  Thu, 08 Nov 2018 23:53:24 +0100
 
 lintian (2.5.112) unstable; urgency=medium

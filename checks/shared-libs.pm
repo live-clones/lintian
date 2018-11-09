@@ -498,6 +498,7 @@ sub run {
 
                 $dep_templates = 0;
                 $symbol_count = 0;
+                undef %meta_info_seen;
             } elsif (m/^\|\s+\S+\s*(?:\(\S+\s+\S+\)|#MINVER#)?/) {
                 # alternative dependency template
 
