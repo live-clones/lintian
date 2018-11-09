@@ -26,6 +26,7 @@ Test-For:
  package-contains-compiled-glib-schema
  package-contains-empty-directory
  package-contains-file-in-etc-skel
+ package-contains-file-in-usr-share-hal
  package-contains-info-dir-file
  package-contains-mime-cache-file
  package-contains-mimeinfo.cache-file

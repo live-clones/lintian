@@ -3,6 +3,7 @@
 file-name-contains-wildcard-character                ~~ [*?]
 package-contains-compiled-glib-schema                ~~ ^usr/share/glib-[^\/]+/schemas/gschemas\.compiled$
 package-contains-file-in-etc-skel                    ~~ ^etc/skel/(?!\.(bash(rc|_logout)|m?kshrc|profile)).
+package-contains-file-in-usr-share-hal               ~~ ^usr/share/hal/(.+)$
 package-contains-python-dot-directory                ~~ ^usr/lib/python[^\/]+/(dist|site)-packages/(|.+/)\.[^\/]+/$
 package-contains-python-coverage-file                ~~ (^|/)\.coverage$
 package-contains-python-doctree-file                 ~~ \.doctree(\.gz)?$

@@ -8,6 +8,11 @@ lintian (2.5.113) UNRELEASED; urgency=medium
       invalid-template-id-in-symbols-file and syntax-error-in-symbols-file
       tags.  Thanks!  (Closes: #913290)
 
+  * data/files/fnames:
+    + [CL] Check for packages that install files to /usr/share/hal as the
+      hal package was removed from Debian in 2014.  Thanks to Paul Wise for
+      the idea.  (Closes: #913280)
+
  -- Chris Lamb <lamby@debian.org>  Thu, 08 Nov 2018 23:53:24 +0100
 
 lintian (2.5.112) unstable; urgency=medium
