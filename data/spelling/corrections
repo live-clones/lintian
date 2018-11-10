@@ -38,6 +38,7 @@ abreviates||abbreviates
 abreviating||abbreviating
 absense||absence
 absolut||absolute
+absolutly||absolutely
 absorbtion||absorption
 absoulte||absolute
 abstact||abstract
@@ -612,6 +613,8 @@ bufffers||buffers
 bugus||bogus
 buid||build
 buil||build
+build-dependancies||build-dependencies
+build-dependancy||build-dependency
 builter||builder
 builters||builders
 buipd||build
@@ -1244,6 +1247,7 @@ depedencies||dependencies
 depedency||dependency
 depencies||dependencies
 depency||dependency
+dependance||dependence
 dependancies||dependencies
 dependancy||dependency
 dependant||dependent
@@ -1697,6 +1701,7 @@ esentially||essentially
 espacially||especially
 especailly||especially
 estbalishment||establishment
+etherenet||ethernet
 etsablishment||establishment
 etsbalishment||establishment
 evalutated||evaluated
@@ -2276,6 +2281,7 @@ indentified||identified
 indentifies||identifies
 indentify||identify
 indentifying||identifying
+independance||independance
 independant||independent
 independantly||independently
 independed||independent
@@ -2674,6 +2680,8 @@ manyal||manual
 manyals||manuals
 mappping||mapping
 mapppings||mappings
+matainer||maintainer
+matainers||maintainers
 matchin||matching
 matcing||matching
 mathimatical||mathematical
@@ -2698,6 +2706,7 @@ mentionned||mentioned
 ment||meant
 menue||menu
 menues||menus
+meny||menu, many,
 merory||memory
 mesage||message
 mesages||messages
@@ -3228,6 +3237,7 @@ precondtions||preconditions
 preconfiged||preconfigured
 predicitons||predictions
 predifined||predefined
+prefectly||perfectly
 prefered||preferred
 preferrable||preferable
 preferrably||preferably
@@ -3354,6 +3364,7 @@ psuedo||pseudo
 psychadelic||psychedelic
 publicaly||publicly
 pusehd||pushed
+pyrhon||python
 pytnon||python
 pyton||python
 qouted||quoted
@@ -3602,6 +3613,8 @@ requsted||requested
 requsting||requesting
 requst||request
 requsts||requests
+resart||restart
+resarts||restarts
 rescource||resource
 rescources||resources
 resemblence||resemblance
@@ -3662,6 +3675,8 @@ retrived||retrieved
 retrive||retrieve
 retrives||retrieves
 retriving||retrieving
+retsart||restart
+retsarts||restarts
 retun||return
 retuns||returns
 retured||returned
@@ -3947,6 +3962,7 @@ sructure||structure
 staically||statically
 standardss||standards
 standar||standard
+standarts||standards
 standart||standard
 staticly||statically
 statictics||statistics
@@ -3960,6 +3976,8 @@ statment||statement
 stength||strength
 stirngs||strings
 stirng||string
+stivks||sticks
+stivk||stick
 stoped||stopped
 stoping||stopping
 stoppped||stopped
@@ -4193,6 +4211,7 @@ thats||that's
 theer||there
 theoreticall||theoretically
 therby||thereby
+therefor||therefore
 theres||there's
 therfore||therefore
 thether||whether
@@ -4306,6 +4325,8 @@ transtions||transitions
 transtion||transition
 transtitions||transitions
 transtition||transition
+trasfers||transfers
+trasfer||transfer
 trasmission||transmission
 treshold||threshold
 trigerring||triggering
