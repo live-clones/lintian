@@ -85,12 +85,12 @@ close($sp_fh);
 ok(
     scalar(@equal) == 0,
     "No no-op correction present in ${spelling_data} ("
-      . join(', ', @equal) . ")"
+      . join(', ', @equal) . ')'
 );
 ok(
     scalar(@case_sen) == 0,
     "No case sensitive correction present in ${spelling_data} ("
-      . join(', ', @case_sen) . ")"
+      . join(', ', @case_sen) . ')'
 );
 ok(
     $iff == 0,
