@@ -13,6 +13,10 @@ lintian (2.5.113) UNRELEASED; urgency=medium
       hal package was removed from Debian in 2014.  Thanks to Paul Wise for
       the idea.  (Closes: #913280)
 
+  * t/scripts/spellintian.t:
+    + [CL] Make the "No no-op correction present..." test failure messages
+      include the offending correction to make it easier to correct.
+
  -- Chris Lamb <lamby@debian.org>  Thu, 08 Nov 2018 23:53:24 +0100
 
 lintian (2.5.112) unstable; urgency=medium
