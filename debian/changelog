@@ -2,6 +2,12 @@ lintian (2.5.113) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
+  * checks/init.d.{pm,desc}:
+    + [CL] Rework the init.d-script-does-not-implement-optional-option tag
+      by renaming it to init.d-script-does-not-implement-status-option
+      and update the description to make the distinction between the LSB
+      (where it is required) and Debian Policy (where currently it is not).
+      Thanks to Andreas Henriksson for the suggestion.  (Closes: #913466)
   * checks/shared-libs.pm:
     + [CL] Apply a patch from James McCoy to fix a regression that was
       causing Lintian to incorrectly report the

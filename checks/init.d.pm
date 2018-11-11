@@ -478,11 +478,8 @@ sub check_init {
           $initd_path, $option;
     }
 
-    for my $option (qw(status)) {
-        $tag{$option}
-          or tag 'init.d-script-does-not-implement-optional-option',
-          $initd_path, $option;
-    }
+    tag 'init.d-script-does-not-implement-status-option', $initd_path
+      unless $tag{'status'};
 
     return;
 }
