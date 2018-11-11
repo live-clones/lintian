@@ -2,6 +2,7 @@ Testname: legacy-scripts
 Source: scripts
 Sequence: 9999
 Version: 6ds-1ubuntu0.5.10.1
+Package-Architecture: all
 Type: non-native
 Description: Legacy test "scripts"
 Test-For:

@@ -1,8 +1,8 @@
 Testname: watch-file-pgpmode-next
 Type: non-native
 Version: 2.0-1
-Options: --pedantic
-Skeleton: arch-independent.pedantic
+Options: --pedantic -I -E
+Skeleton: pedantic
 Description: Watch file with pgpmode=next
 Test-Against: debian-watch-does-not-check-gpg-signature
 References: #841000

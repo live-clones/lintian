@@ -1,0 +1,1 @@
+I: systemd-service-file-pidfile-refers-to-var-run-good: systemd-service-file-pidfile-refers-to-var-run lib/systemd/system/systemd-service-file-pidfile-refers-to-var-run-good.service /var/run/$NAME.pid

@@ -1,0 +1,2 @@
+W: pe-missing-security-features source: source-contains-prebuilt-windows-binary gdbreplay-pe32+.exe
+W: pe-missing-security-features source: source-contains-prebuilt-windows-binary gdbreplay-pe32.exe

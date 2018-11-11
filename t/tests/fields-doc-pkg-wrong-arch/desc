@@ -1,5 +1,6 @@
 Testname: fields-doc-pkg-wrong-arch
 Version: 1.0
+Package-Architecture: any
 Type: native
 Description: Check for doc pkg not being arch all
 Test-For: documentation-package-not-architecture-independent

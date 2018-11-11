@@ -19,9 +19,9 @@ P: cruft-general-upstream source: source-contains-prebuilt-flash-project fakefla
 P: cruft-general-upstream source: source-contains-prebuilt-javascript-object fake.min.js
 P: cruft-general-upstream source: source-contains-prebuilt-python-object fake.pyc
 P: cruft-general-upstream source: source-contains-prebuilt-python-object fake.pyo
-P: cruft-general-upstream source: source-contains-prebuilt-windows-binary fake-win32-bin.exe
 P: cruft-general-upstream source: source-contains-svk-commit-file svk-commit444.tmp
 P: cruft-general-upstream source: source-contains-svn-commit-file svn-commit.tmp
 P: cruft-general-upstream source: source-contains-svn-conflict-file foo.r1352
 P: cruft-general-upstream source: source-contains-svn-control-dir .svn
 W: cruft-general-upstream source: configure-generated-file-in-source config.cache
+W: cruft-general-upstream source: source-contains-prebuilt-windows-binary fake-win32-bin.exe

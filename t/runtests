@@ -114,11 +114,18 @@ my $RUNNER_TS = (stat($0))[9];
 chomp $ARCHITECTURE;
 
 our %TEMPLATES = (
-    'tests'  =>
-      ['debian/changelog', 'debian/control', 'debian/compat', 'debian/tests'],
+    'tests'  =>[
+        'debian/changelog', 'debian/control',
+        'debian/compat', 'debian/tests',
+        'debian/source/format'
+    ],
     'debs'   => ['changelog', 'control', 'Makefile'],
-    'source' =>
-      ['changelog', 'control', 'dsc.in', 'tests/control', 'tests/test'],
+    'source' =>[
+        'Makefile', 'dsc.in',
+        'debian/changelog', 'debian/control',
+        'debian/compat', 'debian/source/format',
+        'debian/tests/control','debian/tests/test'
+    ],
 );
 my $DATE = safe_qx(qw(date -R));
 chomp $DATE;
@@ -351,7 +358,6 @@ sub test_package {
         my $is_native = ($testdata->{type} eq 'native');
         my $pkgdir = "$pkg-$testdata->{version}";
         my $targetdir = "$rundir/$pkgdir";
-        my %regen_template;
 
         # Strip the Debian revision off of the name of the target
         # directory and the *.orig.tar.gz file if the package is
@@ -367,19 +373,35 @@ sub test_package {
 
         $test_state->info_msg(2, "Cleaning up and repopulating $targetdir...");
         runsystem_ok('rm', '-rf', $rundir);
-        make_path($rundir);
-        runsystem('cp', '-rp', "$origdir/.", $rundir);
-        unless ($is_native) {
-            copy_template_dir("$tmpldir/${skel}.upstream",
-                "$origdir/orig/",$targetdir);
 
-            foreach my $tfile (@{ $TEMPLATES{$suite} }) {
-                if (!-e "$targetdir/$tfile" && -f "$targetdir/${tfile}.in") {
-                    fill_in_tmpl("$targetdir/$tfile", $testdata);
-                    unlink("$targetdir/${tfile}.in");
-                    $regen_template{$tfile} = 1;
-                }
+        make_path("$rundir/orig");
+        copy_template_dir("$tmpldir/${skel}.upstream",
+            "$origdir/orig/", "$rundir/orig");
+
+        make_path("$rundir/debian");
+        copy_template_dir("$tmpldir/$skel",
+            "$origdir/debian/", "$rundir/debian");
+
+        runsystem('cp', '-rp', "$origdir/.", $rundir);
+
+        foreach my $tfile (@{ $TEMPLATES{$suite} }) {
+            if (-f "$rundir/orig/${tfile}.in") {
+                fill_in_tmpl("$rundir/orig/$tfile", $testdata)
+                  unless -e "$rundir/orig/$tfile";
+                unlink("$rundir/orig/${tfile}.in");
             }
+        }
+
+        foreach my $tfile (@{ $TEMPLATES{$suite} }) {
+            if (-f "$rundir/debian/${tfile}.in"){
+                fill_in_tmpl("$rundir/debian/$tfile", $testdata)
+                  unless -e "$rundir/debian/$tfile";
+                unlink("$rundir/debian/${tfile}.in");
+            }
+        }
+
+        unless ($is_native) {
+            runsystem('cp', '-rp', "$rundir/orig/.", $targetdir);
 
             if (-x "$origdir/pre_upstream") {
                 $test_state->progress('pre_upstream hook');
@@ -387,25 +409,16 @@ sub test_package {
             }
             chdir_runcmd($rundir,
                 ['tar', 'czf', "${pkg}_${orig_version}.orig.tar.gz", $pkgdir]);
-            if (-f "$origdir/debian/debian/source/format") {
+            if (-f "$rundir/debian/debian/source/format") {
                 my $format
-                  = slurp_entire_file("$origdir/debian/debian/source/format");
+                  = slurp_entire_file("$rundir/debian/debian/source/format");
                 chomp $format;
                 if ($format =~ m/^3.\d+ \(quilt\)$/) {
                     delete_dir("$targetdir/debian/");
                 }
             }
         }
-        copy_template_dir("$tmpldir/$skel", "$origdir/debian/", $targetdir);
-
-        foreach my $tfile (@{ $TEMPLATES{$suite} }) {
-            my $may_fill = $regen_template{$tfile};
-            $may_fill = 1 if not -e "$targetdir/$tfile";
-            if ($may_fill and -f "$targetdir/${tfile}.in") {
-                fill_in_tmpl("$targetdir/$tfile", $testdata);
-                unlink("$targetdir/${tfile}.in");
-            }
-        }
+        runsystem('cp', '-rp', "$rundir/debian/.", $targetdir);
 
         unless ($is_native || -e "$targetdir/debian/watch") {
             my $f = "$targetdir/debian/watch";
@@ -633,10 +646,11 @@ sub generic_test_runner {
         $test_state->info_msg(2, "Cleaning up and repopulating $targetdir...");
         runsystem_ok('rm', '-rf', $targetdir);
         make_path($targetdir);
-        runsystem('cp', '-rp', $testdir, $targetdir);
 
         copy_template_dir("$tmpldir/$skel", "$testdir/", $targetdir,
             ['--exclude=desc']);
+
+        runsystem('cp', '-rp', $testdir, $targetdir);
 
         foreach my $tfile (@{ $TEMPLATES{$suite} }) {
             if (not -e "$targetdir/$tfile" and -f "$targetdir/${tfile}.in") {
@@ -1064,6 +1078,8 @@ sub check_test_is_sane {
 
     $data->{source} ||= $data->{testname};
     $data->{type} ||= 'native';
+    $data->{'source-format'} ||= '1.0';
+    $data->{source_format} = $data->{'source-format'};
     $data->{date} ||= $DATE;
     $data->{prev_date} ||= 'Mon, 01 Jan 1990 00:00:00 +0100';
     if (not $data->{prev_version}) {
@@ -1075,7 +1091,8 @@ sub check_test_is_sane {
     $data->{description} ||= 'No Description Available';
     $data->{author}||= 'Debian Lintian Maintainers <lintian-maint@debian.org>';
     $data->{'test-architectures'}||= 'any';
-    $data->{package_architecture} = $ARCHITECTURE;
+    $data->{'package-architecture'} ||= 'all';
+    $data->{package_architecture} = $data->{'package-architecture'};
     $data->{profile} ||= 'debian';
     $data->{section} ||= 'devel';
     $data->{'standards_version'} ||= $STANDARDS_VERSION;
@@ -1100,6 +1117,10 @@ sub check_test_is_sane {
 
     # Unwrap the options in case we used continuation lines.
     $data->{options} =~ s/\n//g;
+
+    $data->{upstream_version} = $data->{version};
+    $data->{upstream_version} =~ s/-[^-]+$//;
+    $data->{upstream_version} =~ s/(-|^)(\d+):/$1/;
 
     # Check for arch-specific tests
     if ($data->{'test-architectures'} ne 'any') {

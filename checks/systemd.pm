@@ -238,6 +238,11 @@ sub check_systemd_service_file {
           or any { /^oneshot$/ } extract_service_file_values($file, 'Service', 'Type')
           or $file =~ m,@\.service$,;
         #>>>
+        my @pidfile = extract_service_file_values($file,'Service','PIDFile',1);
+        foreach my $x (@pidfile) {
+            tag 'systemd-service-file-pidfile-refers-to-var-run', $file, $x
+              if $x =~ m,^/var/run/,;
+        }
     }
 
     return 1;

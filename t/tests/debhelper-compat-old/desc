@@ -1,7 +1,7 @@
 Testname: debhelper-compat-old
 Version: 1.0
 Description: Test for old debian/compat file
-Skeleton: arch-independent.pedantic
+Skeleton: pedantic
 Options: --pedantic -I -E -L +classification
 Profile: lintian-test
 Test-For:

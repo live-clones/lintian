@@ -1,3 +1,58 @@
+lintian (2.5.112) unstable; urgency=medium
+
+  * Summary of tag changes:
+    + Added:
+      - public-upstream-key-in-native-package
+      - public-upstream-key-not-minimal
+      - public-upstream-key-unusable
+      - public-upstream-keys-in-multiple-locations
+      - systemd-service-file-pidfile-refers-to-var-run
+
+  * checks/cruft.desc:
+    + [CL] Bump the severity of the source-contains-prebuilt-windows-binary
+      tag from "P:" to "W:" and update the description to mention that this
+      could potentially be a DFSG violation.
+  * checks/systemd.{desc,pm}:
+    + [CL] Warn if a PIDFile entry in a .service unit references /var/run.
+      (Closes: #913078)
+  * checks/upstream-signing-key.{desc,pm}:
+    + [CL] Apply a patch series from Felix Lechner to add multiple tests
+      for upstream GPG keys.  Thanks!  (MR: !62)
+
+  * data/java/constants:
+    + [CL] Apply patches from Bas Couwenberg to update the bytecode checks
+      for OpenJDK 11.  (Closes: #912292)
+  * data/rules/rules-should-not-use:
+    + [CL] Ensure --dbgsym-migration='quoted with spaces' is correctly
+      displayed when emitting debug-symbol-migration-possibly-complete.
+  * data/spelling/corrections:
+    + [PW] Add a number of corrections.
+
+  * debian/control:
+    + [CL] Apply a patch from Mathieu Parent to add a dependency on
+      dpkg-dev to ensure dpkg-architecture is available.  Thanks!
+      (Closes: #912330)
+
+  * t/*:
+    + [CL] Apply a patch from Adam Conrad to fix two tests on non-amd64
+      architectures in Ubuntu.  Thanks!  (Closes: #913099)
+    + [CL] Apply a patch series Felix Lechner to parameterise the source
+      format in all applicable tests.  (MR: !64)
+    + [CL] Apply a patch series from Felix Lechner to parameterise the
+      package architecture for all tests that build only single binary
+      package.  (MR: !68)
+  * t/tests/basic-non-native-with-epoch/desc:
+    + [CL] Apply a patch from Felix Lechner to correct a test "Type" field.
+      (MR: !63)
+  * t/tests/watch-file-pgpmode-next/*:
+    + [CL] Apply a patch series from Felix Lechner to add missing "-I -E"
+      options to the existing "--pedantic" one.  (MR: !67)
+
+  * vendors/ubuntu/main/data/changes-file/known-dists:
+    + [CL] Add "disco" as a known Ubuntu distribution.
+
+ -- Chris Lamb <lamby@debian.org>  Thu, 08 Nov 2018 22:29:31 +0000
+
 lintian (2.5.111~bpo9+1) stretch-backports; urgency=medium
 
   * Rebuild for stretch-backports.

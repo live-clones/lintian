@@ -1,0 +1,13 @@
+name = {$source}
+dir  = $(name)-1.0
+
+all:
+	tar -c -z -f $(name)_1.0.orig.tar.gz ./README ./foo.c ./foo.h
+	-mkdir -p $(dir)
+	cp README foo.c foo.h $(dir)
+	cp -rp debian/ $(dir)/
+	dpkg-source -sp -b $(dir)
+
+clean:
+	rm -rf $(dir)
+	rm -f $(name)_1.0*

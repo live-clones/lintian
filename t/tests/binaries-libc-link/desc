@@ -1,7 +1,7 @@
 Testname: binaries-libc-link
 Version: 1.0
 Description: Binaries not linked against libc
-Skeleton: arch-dependent
+Package-Architecture: any
 Test-For:
  library-not-linked-against-libc
  program-not-linked-against-libc

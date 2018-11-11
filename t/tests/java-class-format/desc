@@ -1,6 +1,7 @@
 Testname: java-class-format
 Type: non-native
 Version: 1.0-1
+Package-Architecture: all
 Description: Various checks for Java Class format
 Section: java
 Extra-Build-Depends: javahelper, default-jdk

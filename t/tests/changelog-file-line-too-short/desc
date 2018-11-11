@@ -1,7 +1,7 @@
 Testname: changelog-file-line-too-short
 Type: non-native
 Options: --pedantic
-Skeleton: arch-independent.pedantic
+Skeleton: pedantic
 Version: 1.0-1
 Description: Test for short changelog entries
 Test-For:

@@ -9,7 +9,7 @@ Vcs-Git: https://git.dgit.debian.org/python-ofxhome
 Vcs-Browser: https://browse.dgit.debian.org/python-ofxhome.git
 
 Package: {$source}
-Architecture: all
+Architecture: {$package_architecture}
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
 Description: {$description}
  This is a test package designed to exercise some feature or tag of

@@ -6,9 +6,10 @@
 #     51 -> Java7
 #     52 -> Java8
 #     53 -> Java9
-#     54 -> Java10 - Current max version in Debian unstable
-#     55 -> Java11
-max-bytecode-version = 54
+#     54 -> Java10
+#     55 -> Java11 - Current max version in Debian unstable
+#     56 -> Java12
+max-bytecode-version = 55
 
 max-bytecode-existing-version = 55
 

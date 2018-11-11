@@ -9,7 +9,7 @@ Vcs-Git: https://github.com/user/project
 Vcs-Browser: https://github.com/user/project
 
 Package: {$source}
-Architecture: all
+Architecture: {$package_architecture}
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
 Description: {$description}
  This is a test package designed to exercise some feature or tag of

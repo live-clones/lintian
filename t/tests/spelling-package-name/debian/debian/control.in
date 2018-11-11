@@ -7,7 +7,7 @@ Build-Depends: {$build_depends}
 Rules-Requires-Root: no
 
 Package: nam
-Architecture: all
+Architecture: {$package_architecture}
 Depends: $\{misc:Depends\},
 Description: {$description}
  This is a test to see if the spell checker realizes that nam is

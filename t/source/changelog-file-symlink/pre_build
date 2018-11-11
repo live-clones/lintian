@@ -1,0 +1,6 @@
+#!/bin/sh
+
+dir="$1"
+
+mv "$dir/debian/changelog" "$dir/debian/changelog.old"
+ln -sf changelog.old "$dir/debian/changelog"

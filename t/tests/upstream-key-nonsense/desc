@@ -1,0 +1,6 @@
+Testname: upstream-key-nonsense
+Type: non-native
+Version: 1.0-1
+Description: Check for nonsense data in public upstream signing key
+Test-For:
+ public-upstream-key-unusable

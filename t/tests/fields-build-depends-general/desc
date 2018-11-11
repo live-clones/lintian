@@ -1,5 +1,6 @@
 Testname: fields-build-depends-general
 Version: 1.0
+Package-Architecture: all
 Description: General tests for build dependencies
 Test-For:
  build-conflicts-with-build-dependency

@@ -1,6 +1,7 @@
 Testname: changes-upstream-signature-missing
 Type: non-native
 Version: 1.0-1
+Source-Format: 3.0 (quilt)
 Description: No upstream signature included but package contains a signing key
 Test-For:
  debian-watch-could-verify-download

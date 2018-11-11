@@ -1,5 +1,6 @@
 Testname: debhelper-dh-quilt-addon-but-quilt-source-format-unrel
 Version: 1.0
+Source-Format: 3.0 (native)
 Description: Test for quilt packages that specify dh --with-quilt (false positive)
 Extra-Build-Depends: quilt
 Test-Against:

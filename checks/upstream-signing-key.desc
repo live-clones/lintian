@@ -1,0 +1,54 @@
+Check-Script: upstream-signing-key
+Author: Felix Lechner <felix.lechner@lease-up.com>
+Type: source
+Needs-Info: unpacked
+Info: This script looks for public upstream signing keys in source packages
+ and, if present, checks that they conform to current standards.
+ .
+ Each source package for which upstream developers sign releases should
+ have a watch file and a public key to verify the sources retrieved from
+ downloads.
+
+Tag: public-upstream-key-in-native-package
+Severity: wishlist
+Certainty: certain
+Ref: uscan(1)
+Info: The source package contains a public upstream signing key even
+ though there is no upstream as the package is native.
+ .
+ Please remove the key.
+
+Tag: public-upstream-keys-in-multiple-locations
+Severity: wishlist
+Certainty: certain
+Ref: uscan(1)
+Info: The source package contains public upstream signing keys
+ (or keyrings) in multiple locations. This situation is potentially
+ confusing for uscan(1) or any other tool hoping to verify the
+ integrity and authenticity of upstream sources.
+ .
+ Please remove all keys (or keyrings) except one at the recommended
+ location <tt>debian/upstream/signing-key.asc</tt>.
+
+Tag: public-upstream-key-not-minimal
+Severity: wishlist
+Certainty: certain
+Ref: uscan(1)
+Info: The package contains a public upstream signing key with extra
+ signatures. The signatures are unnecessary and take up space in
+ the archive.
+ .
+ Please export the upstream key again with the command:
+ .
+  $ gpg --armor --export --export-options export-minimal,export-clean
+ .
+ and use that key instead of the key currently in the source package.
+
+Tag: public-upstream-key-unusable
+Severity: wishlist
+Certainty: certain
+Ref: uscan(1)
+Info: The source package contains a public upstream signing key that
+ contains bogus, unexpected or unsuitable data.
+ .
+ Please obtain the correct key from upstream.

@@ -1,7 +1,7 @@
 Testname: cruft-doxygen-documentation
 Version: 1.0
 Description: Detect doxygen documentation
-Skeleton: arch-independent.pedantic
+Skeleton: pedantic
 Options: --pedantic -I -E
 Test-For:
  source-contains-prebuilt-doxygen-documentation

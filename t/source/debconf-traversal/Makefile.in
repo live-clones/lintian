@@ -1,0 +1,13 @@
+name = {$source}
+dir  = $(name)-1
+
+all:
+	-mkdir $(dir)
+	cp -rp debian/ $(dir)/
+	tar cfz $(name)_1.tar.gz $(dir)
+	subst-dsc $(name)_1.tar.gz < dsc.in | \
+	     perl -pe 's/\@NULL\@/\0/g' > $(name)_1.dsc
+
+clean:
+	rm -rf $(dir)
+	rm -f $(name)_1*

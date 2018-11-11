@@ -1,5 +1,6 @@
 Testname: usrmerge-lib
 Version: 1.0
+Package-Architecture: any
 Default-Build-Depends: debhelper (>= 9.20151004~)
 Description: Check for file installed in /usr/lib /lib
 Test-For:

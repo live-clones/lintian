@@ -1,5 +1,5 @@
 Testname: binaries-unsafe-open
-Skeleton: arch-dependent
+Package-Architecture: any
 Version: 1.0
 Description: Test for possible command execution when processing filenames
 Test-For:

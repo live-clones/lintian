@@ -1,7 +1,8 @@
 Testname: overrides
 Sequence: 1500
 Version: 1.0
-Skeleton: arch-dependent.pedantic
+Skeleton: pedantic
+Package-Architecture: any
 Options: --pedantic -I -E
 Description: Test override handling
 Test-For: renamed-tag

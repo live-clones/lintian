@@ -1,0 +1,11 @@
+name = {$source}
+dir  = $(name)-0
+
+all:
+	-mkdir $(dir)
+	cp -rp debian/ $(dir)/
+	dpkg-source -sn -b $(dir)
+
+clean:
+	rm -rf $(dir)
+	rm -f $(name)_0*
