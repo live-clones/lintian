@@ -31,10 +31,10 @@ E: scripts: wrong-path-for-interpreter usr/bin/rubyfoo (#!/bin/ruby1.8 != /usr/b
 I: scripts source: debian-watch-file-should-dversionmangle-not-uversionmangle line 5
 I: scripts source: dpatch-missing-description 02_i_dont_have_a_description.patch
 I: scripts source: dpatch-missing-description 04_i_dont_have_a_description_either.patch
-I: scripts: init.d-script-does-not-implement-optional-option etc/init.d/lsb-broken status
-I: scripts: init.d-script-does-not-implement-optional-option etc/init.d/lsb-other status
-I: scripts: init.d-script-does-not-implement-optional-option etc/init.d/no-lsb status
-I: scripts: init.d-script-does-not-implement-optional-option etc/init.d/skeleton status
+I: scripts: init.d-script-does-not-implement-status-option etc/init.d/lsb-broken
+I: scripts: init.d-script-does-not-implement-status-option etc/init.d/lsb-other
+I: scripts: init.d-script-does-not-implement-status-option etc/init.d/no-lsb
+I: scripts: init.d-script-does-not-implement-status-option etc/init.d/skeleton
 I: scripts: init.d-script-does-not-provide-itself etc/init.d/lsb-broken
 I: scripts: init.d-script-missing-lsb-short-description etc/init.d/lsb-other
 I: scripts: no-md5sums-control-file

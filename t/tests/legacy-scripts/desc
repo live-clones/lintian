@@ -26,8 +26,8 @@ Test-For:
  duplicate-updaterc.d-calls-in-postrm
  executable-is-not-world-readable
  executable-not-elf-or-script
- init.d-script-does-not-implement-optional-option
  init.d-script-does-not-implement-required-option
+ init.d-script-does-not-implement-status-option
  init.d-script-does-not-provide-itself
  init.d-script-does-not-source-init-functions
  init.d-script-has-bad-lsb-line
