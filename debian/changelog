@@ -13,6 +13,10 @@ lintian (2.5.113) UNRELEASED; urgency=medium
       causing Lintian to incorrectly report the
       invalid-template-id-in-symbols-file and syntax-error-in-symbols-file
       tags.  Thanks!  (Closes: #913290)
+  * checks/files.desc, checks/java.desc:
+    + [CL] Clarify distinction between the package-installs-java-bytecode
+      and source-contains-prebuilt-java-object tags.  Thanks to Markus
+      Koschany for the suggestion.  (Closes: #879851)
 
   * collection/java-info:
     + [CL] Prevent an "uninitialized value" warning when processing
