@@ -25,6 +25,8 @@ lintian (2.5.113) UNRELEASED; urgency=medium
 
   * data/fields/name_section_mappings
     + [CL] Tidy file.
+    + [CL] Suggest that hunspell-foo dictionary packages use the "text"
+      section, not "localization".  (Closes: #913723)
 
   * t/scripts/spellintian.t:
     + [CL] Make the "No no-op correction present..." test failure messages
