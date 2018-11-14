@@ -23,10 +23,8 @@ lintian (2.5.113) UNRELEASED; urgency=medium
       empty or otherwise truncated .class files.  Thanks to Branden
       Robinson for the report.  (Closes: #913398)
 
-  * data/files/fnames:
-    + [CL] Check for packages that install files to /usr/share/hal as the
-      hal package was removed from Debian in 2014.  Thanks to Paul Wise for
-      the idea.  (Closes: #913280)
+  * data/fields/name_section_mappings
+    + [CL] Tidy file.
 
   * t/scripts/spellintian.t:
     + [CL] Make the "No no-op correction present..." test failure messages
