@@ -23,7 +23,7 @@ lintian (2.5.113) UNRELEASED; urgency=medium
       empty or otherwise truncated .class files.  Thanks to Branden
       Robinson for the report.  (Closes: #913398)
 
-  * data/fields/name_section_mappings
+  * data/fields/name_section_mappings:
     + [CL] Tidy file.
     + [CL] Suggest that hunspell-foo dictionary packages use the "text"
       section, not "localization".  (Closes: #913723)
