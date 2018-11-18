@@ -12,6 +12,9 @@ lintian (2.5.113) UNRELEASED; urgency=medium
       and update the description to make the distinction between the LSB
       (where it is required) and Debian Policy (where currently it is not).
       Thanks to Andreas Henriksson for the suggestion.  (Closes: #913466)
+  * checks/patch-systems.{desc,pm}:
+    + [CL] Warn about packages that use vendor-specific patch series files
+      since the CTTE decision in #904302.
   * checks/shared-libs.pm:
     + [CL] Apply a patch from James McCoy to fix a regression that was
       causing Lintian to incorrectly report the

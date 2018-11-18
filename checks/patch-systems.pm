@@ -241,6 +241,9 @@ sub run {
                 $known_files{$1}++ if m{^\s*(?:#+\s*)?(\S+)};
             }
             close($fd);
+
+            tag 'package-uses-vendor-specific-patch-series', $file
+              if $file =~ /\.series$/;
         }
 
         foreach my $file ($dpdir->children('breadth-first')) {
