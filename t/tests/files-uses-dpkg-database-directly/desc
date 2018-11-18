@@ -1,0 +1,5 @@
+Testname: files-uses-dpkg-database-directly
+Version: 1.0
+Description: Check for code using dpkg internals
+Test-For:
+ uses-dpkg-database-directly

@@ -31,7 +31,6 @@ Test-For:
  maintainer-script-should-not-hide-init-failure
  maintainer-script-should-not-modify-netbase-managed-file
  maintainer-script-should-not-use-deprecated-chown-usage
- maintainer-script-should-not-use-dpkg-status-directly
  maintainer-script-should-not-use-gconftool
  maintainer-script-should-not-use-install-sgmlcatalog
  maintainer-script-should-not-use-start-stop-daemon
@@ -55,6 +54,7 @@ Test-For:
  prerm-calls-updaterc.d
  qa-upload-has-incorrect-version-number
  read-in-maintainer-script
+ uses-dpkg-database-directly
  uses-implicit-await-trigger
  wrong-debian-qa-group-name
 Test-Against:

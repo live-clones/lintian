@@ -1,0 +1,2 @@
+W: files-uses-dpkg-database-directly: uses-dpkg-database-directly var/lib/test/test-1 /var/lib/dpkg/status
+W: files-uses-dpkg-database-directly: uses-dpkg-database-directly var/lib/test/test-2 /var/lib/dpkg/info/other-package.list

@@ -2035,3 +2035,32 @@ Info: This package installs the specified file under
  in 2014.
  .
  Please remove or otherwise prevent the installation of this file.
+
+Tag: missing-depends-on-sensible-utils
+Severity: important
+Certainty: possible
+Info: The listed file appears to use one or more of the binaries
+ in <tt>sensible-utils</tt> but no binary declares a dependency for
+ this package.
+ .
+ As part of the transition to split <tt>sensible-utils</tt> and
+ <tt>debianutils</tt>, the remaining <tt>Depends</tt> from
+ <tt>debianutils</tt> was removed in version 4.8.2.
+ .
+ In most cases you will need to add a <tt>Depends</tt>,
+ <tt>Recommends</tt>, <tt>Pre-Depends</tt> or <tt>Suggests</tt>
+ on <tt>sensible-utils</tt>.
+
+Tag: uses-dpkg-database-directly
+Severity: normal
+Certainty: possible
+Info: The listed file or maintainer script appears to access the
+ internal database(s) of dpkg.
+ .
+ The entire dpkg database, its layout and files are an internal
+ interface and no program or package should be accessing it, other
+ than dpkg itself and the suite of dpkg tools.
+ .
+ Whilst the files may be editable by an admin, that's a supported (but
+ unrecommended) feature reserved for humans and not for automatic tools.
+Ref: https://wiki.debian.org/DpkgConffileHandling

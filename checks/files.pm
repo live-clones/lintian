@@ -1501,6 +1501,12 @@ sub run {
               and $source_pkg ne 'lintian'
               and detect_sensible_utils($file);
 
+            # ---------------- using dpkg internals
+            if ($fname !~ m,^usr/share/(?:doc|locale)/,
+                and my $match = detect_dpkg_database_usage($source_pkg,$file)){
+                tag 'uses-dpkg-database-directly', $file, $match;
+            }
+
             # ---------------- documentation files
             unless($fname =~ m,^etc/, or $fname =~ m,^usr/share/doc/,) {
                 foreach my $taboo ($DOCUMENTATION_FILE_REGEX->all) {
@@ -2007,6 +2013,10 @@ sub run {
 
         tag 'missing-depends-on-sensible-utils', $file
           if not $has_sensible_utils and detect_sensible_utils($file);
+
+        if (my $match = detect_dpkg_database_usage($source_pkg, $file)) {
+            tag 'uses-dpkg-database-directly', $file, $match;
+        }
     }
     close($fd);
 
@@ -2304,6 +2314,23 @@ sub detect_privacy_breach {
             detect_generic_privacy_breach($block,\%privacybreachhash,$file);
             last;
         }
+    }
+    close($fd);
+    return;
+}
+
+sub detect_dpkg_database_usage {
+    my ($source_pkg, $file) = @_;
+
+    return if $source_pkg eq 'dpkg' or $source_pkg eq 'base-files';
+
+    my $fd = $file->open(':raw');
+    my $sfd = Lintian::SlidingWindow->new($fd, sub { $_= lc($_); }, BLOCKSIZE);
+
+    while (my $block = $sfd->readwindow) {
+        return $1
+          if $block
+          =~m,(/var/lib/dpkg/(?:status|triggers/.+|info/[^\.]+\.(?:md5sums|list|conffiles|shlibs(?:pre|post)inst)\b)),;
     }
     close($fd);
     return;

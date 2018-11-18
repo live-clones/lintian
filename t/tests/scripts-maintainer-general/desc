@@ -20,8 +20,6 @@ Test-For:
  maintainer-script-should-not-parse-etc-passwd-or-group
  maintainer-script-should-not-use-adduser-system-without-home
  maintainer-script-should-not-use-deprecated-chown-usage
- maintainer-script-should-not-use-dpkg-status-directly
- maintainer-script-should-not-use-dpkg-database-directly
  maintainer-script-should-not-use-fc-cache
  maintainer-script-should-not-use-gconftool
  maintainer-script-should-not-use-install-sgmlcatalog
@@ -38,4 +36,5 @@ Test-For:
  read-in-maintainer-script
  trailing-slash-for-dpkg-maintscript-helper-symlink_to_dir
  maintainer-script-may-use-dir_to_symlink_helper
+ uses-dpkg-database-directly
 References: Debian Bug#532984
