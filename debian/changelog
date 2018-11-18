@@ -28,8 +28,7 @@ lintian (2.5.113) UNRELEASED; urgency=medium
     + [CL] Suggest that hunspell-foo dictionary packages use the "text"
       section, not "localization".  (Closes: #913723)
   * data/spelling/corrections:
-    + [AB] Add reduntant → redundant and a bunch of variants around
-      conditial, conditianal → conditional
+    + [AB] Add "redundant" and a bunch of variants around "conditional".
 
   * t/scripts/spellintian.t:
     + [CL] Make the "No no-op correction present..." test failure messages
