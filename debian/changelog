@@ -2,6 +2,10 @@ lintian (2.5.113) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
+  * checks/files.desc, checks/java.desc:
+    + [CL] Clarify distinction between the package-installs-java-bytecode
+      and source-contains-prebuilt-java-object tags.  Thanks to Markus
+      Koschany for the suggestion.  (Closes: #879851)
   * checks/init.d.{pm,desc}:
     + [CL] Rework the init.d-script-does-not-implement-optional-option tag
       by renaming it to init.d-script-does-not-implement-status-option
@@ -13,10 +17,6 @@ lintian (2.5.113) UNRELEASED; urgency=medium
       causing Lintian to incorrectly report the
       invalid-template-id-in-symbols-file and syntax-error-in-symbols-file
       tags.  Thanks!  (Closes: #913290)
-  * checks/files.desc, checks/java.desc:
-    + [CL] Clarify distinction between the package-installs-java-bytecode
-      and source-contains-prebuilt-java-object tags.  Thanks to Markus
-      Koschany for the suggestion.  (Closes: #879851)
 
   * collection/java-info:
     + [CL] Prevent an "uninitialized value" warning when processing
