@@ -27,6 +27,10 @@ lintian (2.5.113) UNRELEASED; urgency=medium
   * checks/systemd.{desc,pm}:
     + [CL] Emit an experimental-level warning for .service files that do
       not appear to use any security/hardening features.  (Closes: #913605)
+  * checks/watch-file.pm:
+    + [CL] Avoid debian-watch-file-should-mangle-version false-positives
+      when the file uses the @DEB_EXT@ or auto dmangleversion features.
+      Thanks to Sebastian Ramacher and Mattia Rizzolo.  (Closes: #913761)
 
   * collection/java-info:
     + [CL] Prevent an "uninitialized value" warning when processing

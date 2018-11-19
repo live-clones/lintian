@@ -96,8 +96,9 @@ sub run {
 
             my (
                 $repack_mangle, $repack_dmangle,
-                $prerelease_mangle, $prerelease_umangle
-            ) = (0, 0, 0, 0);
+                $repack_dmangle_auto,$prerelease_mangle,
+                $prerelease_umangle
+            ) = (0, 0, 0, 0, 0);
             my ($opts, @opts);
             if (   s/^opt(?:ion)?s=\"((?:[^\"]|\\\")+)\"\s+//
                 || s/^opt(?:ion)?s=(\S+)\s+//) {
@@ -116,6 +117,9 @@ sub run {
                     $prerelease_umangle = 1
                       if defined $prerelease
                       and /^uversionmangle\s*=.*$prerelease/;
+                    $repack_dmangle_auto = 1
+                      if $watchver >= 4
+                      and /^dversionmangle\s*=.*(?:s\/\@DEB_EXT\@\/|auto)/;
                     $withgpgverification = 1
                       if /^pgpsigurlmangle\s*=\s*/;
                     $withgpgverification = 1
@@ -160,7 +164,8 @@ sub run {
             # If the version of the package contains dfsg, assume that it needs
             # to be mangled to get reasonable matches with upstream.
             if ($needs_repack_mangling and not $repack_mangle) {
-                tag 'debian-watch-file-should-mangle-version', "line $.";
+                tag 'debian-watch-file-should-mangle-version', "line $."
+                  unless $repack_dmangle_auto;
             }
             if (    $needs_repack_mangling
                 and $repack_mangle
