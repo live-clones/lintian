@@ -24,6 +24,9 @@ lintian (2.5.113) UNRELEASED; urgency=medium
       causing Lintian to incorrectly report the
       invalid-template-id-in-symbols-file and syntax-error-in-symbols-file
       tags.  Thanks!  (Closes: #913290)
+  * checks/systemd.{desc,pm}:
+    + [CL] Emit an experimental-level warning for .service files that do
+      not appear to use any security/hardening features.  (Closes: #913605)
 
   * collection/java-info:
     + [CL] Prevent an "uninitialized value" warning when processing
