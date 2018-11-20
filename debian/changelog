@@ -29,7 +29,7 @@ lintian (2.5.113) UNRELEASED; urgency=medium
       not appear to use any security/hardening features.  (Closes: #913605)
   * checks/watch-file.pm:
     + [CL] Avoid debian-watch-file-should-mangle-version false-positives
-      when the file uses the @DEB_EXT@ or auto dversionmanagle features.
+      when the file uses the @DEB_EXT@ or auto dversionmangle features.
       Thanks to Sebastian Ramacher and Mattia Rizzolo.  (Closes: #913761)
 
   * collection/java-info:
