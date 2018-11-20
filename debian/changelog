@@ -2,6 +2,11 @@ lintian (2.5.113) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
+  * checks/control-file.{desc.pm}:
+    + [CL] Ensure the "Architecture" field in a changes files contains only
+      the string "source" rather than checking whether it is defined or
+      not.  This fixes source-only-upload-to-non-free-without-autobuild
+      false positives.  Thanks to Chuan-kai Lin.  (Closes: #914163)
   * checks/files.{desc,pm}:
     + [CL] Unify all dpkg internal database checks into a single new
       uses-dpkg-database-directly check, extending it to check upstream
