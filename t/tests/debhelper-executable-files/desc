@@ -1,4 +1,5 @@
 Testname: debhelper-executable-files
 Version: 1.0
+Dh-Compat-Level: 8
 Description: Tests related to executable packaging files
 Test-For: package-file-is-executable

@@ -2,5 +2,6 @@ Testname: debhelper-autoreconf-build-depends
 Version: 1.0
 Description: Test for useless autoreconf-related build dependencies
 Default-Build-Depends: debhelper (>= 10)
+Dh-Compat-Level: 10
 Test-For:
  useless-autoreconf-build-depends

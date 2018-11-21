@@ -1,5 +1,6 @@
 Testname: debhelper-dh-exec
 Version: 1.0
+Dh-Compat-Level: 9
 Options: --suppress-tags
  package-needs-versioned-debhelper-build-depends
  --display-info

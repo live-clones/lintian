@@ -1,5 +1,6 @@
 Testname: debhelper-compat-experimental
 Version: 1.0
+Dh-Compat-Level: 12
 Description: Test for old debian/compat file
 # Overrides the "data/debhelper/compat-level"
 Profile: lintian-test

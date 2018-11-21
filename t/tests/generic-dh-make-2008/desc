@@ -4,6 +4,7 @@ Type: non-native
 Author: Russ Allbery <rra@debian.org>
 Version: 1.0-1
 Package-Architecture: any
+Dh-Compat-Level: 7
 Description: Generic dh_make template generated in 2008
 Options: -IE --pedantic
 Test-For:
