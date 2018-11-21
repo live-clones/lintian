@@ -901,7 +901,8 @@ Info: This file appears to contain one or more lines with trailing
  .
  Whilst typically harmless and merely unsightly, they can often cause
  difficult-to-spot issues where tools interpret the whitespace characters
- literally. They are thus best avoided in their entirity.
+ literally as well as introduce unnecessary <tt>diff(1)</tt> noise. They
+ are thus best avoided in their entirity.
  .
  Whitespace at the end of lines may be removed with the following:
  .
