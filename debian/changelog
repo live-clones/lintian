@@ -9,8 +9,9 @@ lintian (2.5.113) UNRELEASED; urgency=medium
       false positives.  Thanks to Chuan-kai Lin.  (Closes: #914163)
   * checks/files.{desc,pm}:
     + [CL] Unify all dpkg internal database checks into a single new
-      uses-dpkg-database-directly check, extending it to check upstream
-      code too.  (Closes: #913974)
+      uses-dpkg-database-directly check, extending it to check all
+      files shipped in package, not just the maintainer scripts.  Thanks to
+      Guillem Jover for the suggestion.  (Closes: #913974)
   * checks/files.desc, checks/java.desc:
     + [CL] Clarify distinction between the package-installs-java-bytecode
       and source-contains-prebuilt-java-object tags.  Thanks to Markus
