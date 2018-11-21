@@ -47,6 +47,8 @@ lintian (2.5.113) UNRELEASED; urgency=medium
       empty or otherwise truncated .class files.  Thanks to Branden
       Robinson for the report.  (Closes: #913398)
 
+  * data/description/planned-features:
+    + [AB] Add "is planned" and "is also planned".
   * data/fields/name_section_mappings:
     + [CL] Tidy file.
   * data/spelling/corrections:
