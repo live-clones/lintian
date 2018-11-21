@@ -29,6 +29,10 @@ lintian (2.5.113) UNRELEASED; urgency=medium
       causing Lintian to incorrectly report the
       invalid-template-id-in-symbols-file and syntax-error-in-symbols-file
       tags.  Thanks!  (Closes: #913290)
+  * checks/source-changelog.{desc,pm}:
+    + [CL] Apply a patch by Felix Lechner from MR !72 to remove the
+      hyphen-in-upstream-part-of-debian-changelog-version tag as versions
+      such as "2018-07-17-1" are legitimate.  (Closes: #914271)
   * checks/systemd.{desc,pm}:
     + [CL] Emit an experimental-level warning for .service files that do
       not appear to use any security/hardening features.  (Closes: #913605)

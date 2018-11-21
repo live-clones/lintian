@@ -55,11 +55,3 @@ Info: Native packaging should only be used if a piece of software was
  from the most recent <tt>debian/changelog</tt> entry. For version 3.0
  packages, check <tt>debian/source/format</tt> for an erroneous
  "(native)" package format.
-
-Tag: hyphen-in-upstream-part-of-debian-changelog-version
-Severity: pedantic
-Certainty: certain
-Info: The upstream version in the debian changelog contains one or more
- hyphens.  While that is okay according to Debian Policy, some tools may
- croak.
-Ref: policy 5.6.12
