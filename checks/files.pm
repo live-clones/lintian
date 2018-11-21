@@ -920,7 +920,7 @@ sub run {
                     and $fname !~ m,^usr/bin/(?:X11|mh)/,) {
                     tag 'subdir-in-usr-bin', $file;
                 }
-                # check old style config script
+                # check old style config scripts
                 elsif ( $file->is_regular_file
                     and $fname =~ m,-config$,
                     and $script{$file}) {
