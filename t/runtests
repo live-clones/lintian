@@ -418,7 +418,7 @@ sub test_package {
         runsystem('cp', '-rp', "$rundir/diff/.", $targetdir)
           if -d "$rundir/diff";
 
-        runsystem('cp', '-rp', "$rundir/debian/.", $targetdir);
+        runsystem('cp', '-rp', "$rundir/debian", $targetdir);
 
         unless ($is_native || -e "$targetdir/debian/watch") {
             my $f = "$targetdir/debian/watch";
