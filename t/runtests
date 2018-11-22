@@ -406,9 +406,8 @@ sub test_package {
             }
             chdir_runcmd($rundir,
                 ['tar', 'czf', "${pkg}_${orig_version}.orig.tar.gz", $pkgdir]);
-            if (-f "$rundir/debian/debian/source/format") {
-                my $format
-                  = slurp_entire_file("$rundir/debian/debian/source/format");
+            if (-f "$rundir/debian/source/format") {
+                my $format= slurp_entire_file("$rundir/debian/source/format");
                 chomp $format;
                 if ($format =~ m/^3.\d+ \(quilt\)$/) {
                     delete_dir("$targetdir/debian/");
