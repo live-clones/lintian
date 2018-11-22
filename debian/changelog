@@ -57,6 +57,8 @@ lintian (2.5.113) UNRELEASED; urgency=medium
   * t/*:
     + [CL] Apply a patch series from Felix Lechner to parameterise
       the debhelper compatibility level in tests.  (MR: !73)
+    + [CL] Apply a patch from Felix Lechner to implement a new file
+      hierarchy for test specifications.  (MR: !74)
   * t/scripts/spellintian.t:
     + [CL] Make the "No no-op correction present..." test failure messages
       include the offending correction to make it easier to correct.
