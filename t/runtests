@@ -114,11 +114,7 @@ my $RUNNER_TS = (stat($0))[9];
 chomp $ARCHITECTURE;
 
 our %TEMPLATES = (
-    'tests'  =>[
-        'debian/changelog', 'debian/control',
-        'debian/compat', 'debian/tests',
-        'debian/source/format'
-    ],
+    'tests'  =>['changelog', 'control','compat', 'tests','source/format'],
     'debs'   => ['changelog', 'control', 'Makefile'],
     'source' =>[
         'Makefile', 'dsc.in',
