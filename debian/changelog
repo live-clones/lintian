@@ -1,6 +1,16 @@
-lintian (2.5.113) UNRELEASED; urgency=medium
+lintian (2.5.113) unstable; urgency=medium
 
-  XXX: generate tag summary
+  * Summary of tag changes:
+    + Added:
+      - package-contains-file-in-usr-share-hal
+      - package-uses-vendor-specific-patch-series
+      - systemd-service-file-missing-hardening-features
+    + Merged:
+      - maintainer-script-should-not-use-dpkg-{database,status}-directly ->
+        uses-dpkg-database-directly
+    + Renamed:
+      - init.d-script-does-not-implement-optional-option ->
+        init.d-script-does-not-implement-status-option
 
   * checks/control-file.{desc.pm}:
     + [CL] Ensure the "Architecture" field in a changes files contains only
@@ -49,6 +59,7 @@ lintian (2.5.113) UNRELEASED; urgency=medium
     + [CL] Tidy file.
   * data/spelling/corrections:
     + [AB] Add "redundant" and a bunch of variants around "conditional".
+    + [PW] Add a number of corrections.
 
   * t/*:
     + [CL] Apply a patch series from Felix Lechner to parameterise
@@ -59,7 +70,7 @@ lintian (2.5.113) UNRELEASED; urgency=medium
     + [CL] Make the "No no-op correction present..." test failure messages
       include the offending correction to make it easier to correct.
 
- -- Chris Lamb <lamby@debian.org>  Thu, 08 Nov 2018 23:53:24 +0100
+ -- Chris Lamb <lamby@debian.org>  Fri, 23 Nov 2018 22:13:47 +0000
 
 lintian (2.5.112) unstable; urgency=medium
 
