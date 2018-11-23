@@ -97,6 +97,9 @@ sub run {
           if $reconstructed ne $latest_version->{Literal};
 
         if ($latest_version->{Upstream} =~ /-/g > 0) {
+            tag 'hyphen-in-upstream-part-of-debian-changelog-version',
+              $latest_version->{Upstream}
+              unless $info->native;
             tag 'hyphen-in-native-debian-changelog-version',
               $latest_version->{Upstream}
               if $info->native;
