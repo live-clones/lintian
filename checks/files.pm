@@ -191,7 +191,7 @@ my $BUILD_PATH_REGEX
   = Lintian::Data->new('files/build-path-regex',qr/~~~~~/,
     sub { return  qr/$_[0]/xsm;});
 
-my @ALLOWED_USES_DPKG_DATABASE = qw(base-files dpkg);
+my @ALLOWED_USES_DPKG_DATABASE = qw(base-files dpkg lintian);
 
 sub _tag_build_tree_path {
     my ($path, $msg) = @_;
