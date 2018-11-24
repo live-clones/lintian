@@ -1,0 +1,7 @@
+May-Generate:
+ changelog
+ control
+ compat
+ source/format
+ tests/control
+ tests/test
