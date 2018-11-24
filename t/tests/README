@@ -70,10 +70,9 @@ For example, to test --show-overrides with the -T option, use:
 
     Options: --show-overrides -T no-copyright-file
 
-The string TESTSET in the Options field will be replaced with the root of
-the test suite (the whole test suite, not the test currently running) so
-that the Lintian options can refer to files in the test suite directory to
-test options like --suppress-tags-from-file.
+The string TESTSET is no longer replaced in the Options field. Instead,
+Lintian is run in the test's directory. Please use a local, relative
+reference to the file or list the tags explicitly with '--suppress-tags'.
 
 By default, the Lintian output is sorted before comparing it to the tags
 file.  To suppress the sort (when, for instance, checking non-standard
@@ -113,20 +112,61 @@ test or the bug that you're testing for.  This should be one of "Debian
 Bug#nnnn" for a bug report, a URL into the debian-lint-maint mailing list
 archives, or a message ID for the message to the list.
 
-By default, templates/tests/default and templates/tests/default.upstream
-are used as the test skeleton and then the files in the specific test
-directory are overlaid.  To start from a different skeleton, use:
+The meaning of skeleton has changed in newer versions of the test runner.
+Previously a skeleton indicated a template set, but now it refers to a
+complete layout of the test working directory. It also defines the
+builder. Please look in t/skeletons for examples.
+
+There are currently two fields available when defining skeletons:
+
+    Template-Sets: DEST_DIR (TEMPLATE_SET)
+
+populates DEST_DIR with the files from TEMPLATE_SET. Please use only
+relative paths. To install into the root of the test working directory
+(which you can find somewhere in ./debian/test-out/) please use a dot.
+multiple declarations must be separated by commas. Continuation lines
+are okay.
+
+    Fill-Targets: DEST_FILE
+    Fill-Targets: DEST_DIR (WHITE_LIST)
+
+In the file form, the declaration allows the filling of the file
+DEST_FILE through the use of DEST_FILE.in. This does not mean that the
+template is always filled. The algorithm considers other factors. No
+filling takes place, for example, when the fill data and the file
+modification time of the template are older than the generated file.
+
+In the directory form, the declaration requires a named template
+whitelist in parentheses. In that case, the template whitelist will
+give the filenames to fill. Please separate multiple declaration with
+a comma. It it okay to use indented continuation lines.
+
+The general order is:
+
+1. Copy template sets to the destinations in the working directory.
+2. Copy the original test details into the working directory.
+3. Delete templates for which originals are present.
+4. Fill whitelisted templates if the generated files are dated.
+
+By default, templates/${suite}/default is used as a skeleton. To
+use a different skeleton, please use:
 
     Skeleton: <skeleton to start from>
 
-The value must match a directory name in the t/templates/tests directory.  If
-this is a non-native package, there must also be a corresponding
-<skeleton>.upstream directory.
+Whitelists only have one field, 'May-Generate:'. It permits the
+generation of the listed file through template completion. Please list
+the generated file and not the template. Multiple files must be
+separated by spaces.
 
-Sometimes tests requires certain packages that are not available in the
-current stable.  In this case, you can use:
+Sometimes tests require the presence of certain packages. Please use
+Extra-Build-Depends in most cases. The specified packages will be
+added to Build-Depends when building the package.
 
-    Test-Depends: <dpkg depends field>
+Please use Test-Depends only in cases when packages must not (or do
+not need to) be added to Build-Depends. That can be helpful when
+testing for missing build dependencies, or when the standard builder
+is overridden and requires other software. The field Test-Depends
+should probably be renamed.
 
 Sometimes tests fail if certain non-required packages are installed.
 If you notice such a case, you can use:
