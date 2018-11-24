@@ -1,0 +1,6 @@
+Template-Sets:
+ . (arch-independent)
+Fill-Targets:
+ dsc.in,
+ debian (debian-packaging),
+ . (make-builder)
