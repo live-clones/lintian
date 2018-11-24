@@ -1,2 +1,5 @@
+Template-Sets:
+ . (builder)
 Fill-Targets:
- test.changes
+ test.changes,
+ . (make-builder)
