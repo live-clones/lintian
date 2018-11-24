@@ -55,6 +55,7 @@ acccessible||accessible
 acceleratoin||acceleration
 accelleration||acceleration
 acceptible||acceptable
+acces||access
 accesing||accessing
 accesnt||accent
 accessable||accessible
@@ -310,6 +311,7 @@ announcment||announcement
 announcments||announcements
 anomolies||anomalies
 anomoly||anomaly
+anothe||another
 ansestor||ancestor
 ansestors||ancestors
 anway||anyway
@@ -585,9 +587,12 @@ bianries||binaries
 binay||binary
 bitwise-orring||bitwise-oring
 bizzare||bizarre
+blanace||blanace
 blindy||blindly
 bofore||before
 bood||boot
+boomark||bookmark
+boomarks||bookmarks
 bootsrap||bootstrap
 bootstap||bootstrap
 bootstapped||bootstrapped
@@ -793,6 +798,7 @@ cloacks||cloaks
 closeing||closing
 coefficent||coefficient
 coefficents||coefficients
+cofidence||confidence
 cofigure||configure
 cofigured||configured
 cofigures||configures
@@ -1898,6 +1904,7 @@ follwing||following
 follwoing||following
 folowing||following
 foppy||floppy
+foppys||floppies
 forbiden||forbidden
 foreing||foreign
 forewarded||forwarded
@@ -1973,6 +1980,7 @@ furthur||further
 furture||future
 futher||further
 futhermore||furthermore
+gard||guard
 gauranteed||guaranteed
 gaurantee||guarantee
 gauranteeing||guaranteeing
@@ -2175,6 +2183,8 @@ implememting||implementing
 implememts||implements
 implemenation||implementation
 implemenations||implementations
+implemend||implement
+implemends||implements
 implementaion||implementation
 implementaions||implementations
 implementaiton||implementation
@@ -2246,6 +2256,7 @@ incompleate||incomplete
 incomptible||incompatible
 inconsisent||inconsistent
 inconsisently||inconsistently
+inconsistancy||inconsistency
 inconsistant||inconsistent
 inconsistenly||inconsistently
 inconvertable||inconvertible
@@ -2653,6 +2664,8 @@ maintainence||maintenance
 maintaing||maintaining
 maintance||maintenance
 maintan||maintain
+maitained||maintained
+maitain||maintain
 makeing||making
 malicously||maliciously
 malicous||malicious
@@ -2825,6 +2838,7 @@ necessay||necessary
 necesserily||necessarily
 necessery||necessary
 nedded||needed
+neede||needed
 neeeded||needed
 neeeding||needing
 neeed||need
@@ -3368,6 +3382,7 @@ psuedo||pseudo
 psychadelic||psychedelic
 publicaly||publicly
 pusehd||pushed
+pyhon||python
 pyrhon||python
 pytnon||python
 pyton||python
@@ -3726,6 +3741,7 @@ runned||ran
 runnig||running
 runnning||running
 sacrifying||sacrificing
+safeing||saving
 safly||safely
 saftey||safety
 safty||safety
@@ -3813,6 +3829,7 @@ seperation||separation
 seperatly||separately
 seperator||separator
 seperators||separators
+seporate||separate
 sepperate||separate
 seprator||separator
 seprators||separators
@@ -3908,6 +3925,7 @@ somes||some
 somethign||something
 someting||something
 somthing||something
+somtimes||sometimes
 sorrounding||surrounding
 souce||source
 souces||sources
@@ -3998,6 +4016,7 @@ strenghts||strengths
 strenght||strength
 strenous||strenuous
 strenth||strength
+strinsg||strings
 strored||stored
 strores||stores
 strore||store
@@ -4314,6 +4333,7 @@ transistion||transition
 transitionned||transitioned
 transitons||transitions
 transiton||transition
+translatied||translated
 transmiters||transmitters
 transmiter||transmitter
 transmiting||transmitting
@@ -4494,6 +4514,7 @@ upater||updater
 upates||updates
 upate||update
 upating||updating
+updateded||updated
 updateing||updating
 updats||updates
 updat||update
@@ -4508,6 +4529,7 @@ upsteam||upstream
 upsteram||upstream
 upstreamedd||upstreamed
 upstrema||upstream
+uptim||uptime
 upto||up to
 uptream||upstream
 usally||usually
@@ -4552,6 +4574,8 @@ vaules||values
 vaule||value
 vauling||valuing
 vebrose||verbose
+venders||vendors
+vender||vendor
 verbouse||verbose
 verbously||verbosely
 verbous||verbose
@@ -4563,6 +4587,7 @@ verifyied||verified
 verions||versions
 verion||version
 verious||various
+verisoned||versioned
 verisons||versions
 verison||version
 veritical||vertical
