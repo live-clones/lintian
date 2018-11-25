@@ -2,7 +2,8 @@
 # regex (xi)
 \.markdown$
 \.r?md$
-^readme(?:first)?
+^readme(?![a-z])
+^readmefirst
 ^patents?(?:\.|$)
 ^licen[sc]es?(?:\.txt|$)
 ^contribut(?:e|ing)(?:\.|$)

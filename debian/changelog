@@ -10,6 +10,12 @@ lintian (2.5.114) UNRELEASED; urgency=medium
     + [CL] Consistently use (eg.) "DEP 5" over "DEP-5" to match the style
       used on dep.debian.net.  (Closes: #914562)
 
+  * data/files/documentation-file-regex:
+    + [CL] Prevent false-positives for files called (eg.) readMesh_off.m
+      for the package-contains-documentation-outside-usr-share-doc tag
+      which was matching an overly-permissive regex.  Thanks to Rafael
+      Laboissière (rafael) for the report.  (Closes: #914500)
+
   * t/*:
     + [CL] Apply a patch series from Felix Lechner to make the templating
       more flexible in tests, re-using the Skeleton: statements in "desc"
