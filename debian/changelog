@@ -2,6 +2,10 @@ lintian (2.5.114) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
+  * checks/*, t/*:
+    + [CL] Consistently use (eg.) "DEP 5" over "DEP-5" to match the style
+      used on dep.debian.net.  (Closes: #914562)
+
  -- Chris Lamb <lamby@debian.org>  Fri, 23 Nov 2018 23:39:18 +0100
 
 lintian (2.5.113) unstable; urgency=medium

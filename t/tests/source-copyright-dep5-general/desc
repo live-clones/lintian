@@ -1,6 +1,6 @@
 Testname: source-copyright-dep5-general
 Version: 1.0
-Description: Test for various errors in DEP-5 copyright files
+Description: Test for various errors in DEP 5 copyright files
 Test-For:
  ambiguous-paragraph-in-dep5-copyright
  bad-exception-format-in-dep5-copyright

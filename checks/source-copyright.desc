@@ -213,7 +213,7 @@ Tag: field-name-typo-in-dep5-copyright
 Severity: normal
 Certainty: possible
 Info: The listed field name is a likely misspelling of one of the documented
- DEP-5 fields.
+ DEP 5 fields.
  .
  Lintian will continue by using the "misspelled" variant, but other parsers
  are unlikely to do so.
@@ -227,7 +227,7 @@ Severity: normal
 Certainty: possible
 Ref: #652380, https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 Info: The paragraph has a "License" and a "Copyright" field, but no
- "Files" field.  Technically, this is a valid paragraph per the DEP-5
+ "Files" field.  Technically, this is a valid paragraph per the DEP 5
  specification.  However, it is mostly likely a mistake.
  .
  If it is a <tt>stand-alone license paragraph</tt>, the "Copyright"

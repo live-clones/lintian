@@ -191,7 +191,7 @@ sub _check_dep5_copyright {
                (?:^ | \n)
                (?i: format(?: [:] |[-\s]spec) )
                (?: . | \n\s+ )*
-               (?: /dep[5s]?\b | \bDEP-?5\b
+               (?: /dep[5s]?\b | \bDEP ?5\b
                  | [Mm]achine-readable\s(?:license|copyright)
                  | /copyright-format/ | CopyrightFormat
                  | VERSIONED_FORMAT_URL
@@ -238,7 +238,7 @@ sub _check_dep5_copyright {
     }
 
     # We are reasonably certain that we're dealing
-    # with an up-to-date DEP-5 format. Let's try to do
+    # with an up-to-date DEP 5 format. Let's try to do
     # more strict checks.
     eval {
         open(my $fd, '<', \$contents);
