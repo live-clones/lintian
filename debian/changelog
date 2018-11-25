@@ -2,6 +2,10 @@ lintian (2.5.114) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
+  * checks/debhelper.pm:
+    + [CL] Apply a patch from Stephen Kitt to avoid false-positives for the
+      package-does-not-use-debhelper-or-cdbs tag if the call to dh(1) is
+      prefixed with "@", "+" or "-".  (Closes: #914538)
   * checks/*, t/*:
     + [CL] Consistently use (eg.) "DEP 5" over "DEP-5" to match the style
       used on dep.debian.net.  (Closes: #914562)
