@@ -114,11 +114,7 @@ my $RUNNER_TS = (stat($0))[9];
 chomp $ARCHITECTURE;
 
 our %TEMPLATES = (
-    'tests'  =>[
-        'debian/changelog', 'debian/control',
-        'debian/compat', 'debian/tests',
-        'debian/source/format'
-    ],
+    'tests'  =>['changelog', 'control','compat', 'tests','source/format'],
     'debs'   => ['changelog', 'control', 'Makefile'],
     'source' =>[
         'Makefile', 'dsc.in',
@@ -385,10 +381,10 @@ sub test_package {
         runsystem('cp', '-rp', "$origdir/.", $rundir);
 
         foreach my $tfile (@{ $TEMPLATES{$suite} }) {
-            if (-f "$rundir/orig/${tfile}.in") {
-                fill_in_tmpl("$rundir/orig/$tfile", $testdata)
-                  unless -e "$rundir/orig/$tfile";
-                unlink("$rundir/orig/${tfile}.in");
+            if (-f "$rundir/orig/debian/${tfile}.in") {
+                fill_in_tmpl("$rundir/orig/debian/$tfile", $testdata)
+                  unless -e "$rundir/orig/debian/$tfile";
+                unlink("$rundir/orig/debian/${tfile}.in");
             }
         }
 
@@ -400,25 +396,28 @@ sub test_package {
             }
         }
 
-        unless ($is_native) {
-            runsystem('cp', '-rp', "$rundir/orig/.", $targetdir);
+        runsystem('cp', '-rp', "$rundir/orig/.", $targetdir)
+          if -d "$rundir/orig";
 
+        unless ($is_native) {
             if (-x "$origdir/pre_upstream") {
                 $test_state->progress('pre_upstream hook');
                 runsystem("$origdir/pre_upstream", $targetdir);
             }
             chdir_runcmd($rundir,
                 ['tar', 'czf', "${pkg}_${orig_version}.orig.tar.gz", $pkgdir]);
-            if (-f "$rundir/debian/debian/source/format") {
-                my $format
-                  = slurp_entire_file("$rundir/debian/debian/source/format");
+            if (-f "$rundir/debian/source/format") {
+                my $format= slurp_entire_file("$rundir/debian/source/format");
                 chomp $format;
                 if ($format =~ m/^3.\d+ \(quilt\)$/) {
                     delete_dir("$targetdir/debian/");
                 }
             }
         }
-        runsystem('cp', '-rp', "$rundir/debian/.", $targetdir);
+        runsystem('cp', '-rp', "$rundir/diff/.", $targetdir)
+          if -d "$rundir/diff";
+
+        runsystem('cp', '-rp', "$rundir/debian", $targetdir);
 
         unless ($is_native || -e "$targetdir/debian/watch") {
             my $f = "$targetdir/debian/watch";
@@ -1107,7 +1106,8 @@ sub check_test_is_sane {
     $data->{options} ||= '-I -E';
     $data->{todo} ||= 'no';
     $data->{'test-depends'} //= '';
-    $data->{'dh_compat_level'} //= '11';
+    $data->{'dh-compat-level'} //= '11';
+    $data->{'dh_compat_level'} = $data->{'dh-compat-level'};
     $data->{'default-build-depends'}
       //= "debhelper (>= $data->{dh_compat_level}~)";
     $data->{'extra-build-depends'} //= '';

@@ -2,6 +2,7 @@ Testname: binaries-multiarch-same
 Version: 1.0
 Package-Architecture: any
 Default-Build-Depends: debhelper (>= 9.20151004~)
+Dh-Compat-Level: 9
 Description: Test of multiarch same package with unsafe binaries
 Test-For:
  arch-dependent-file-not-in-arch-specific-directory

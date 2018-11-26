@@ -1,5 +1,6 @@
 Testname: debhelper-no-depends
 Version: 1.0
+Dh-Compat-Level: 9
 # Overrides the "data/debhelper/compat-level"
 Profile: lintian-test
 Description: Test dependency requirements for debhelper

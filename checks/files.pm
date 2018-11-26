@@ -23,10 +23,12 @@ use strict;
 use warnings;
 use autodie;
 
+use List::MoreUtils qw(none);
+
 use Lintian::Data;
 use Lintian::Tags qw(tag);
 use Lintian::Util qw(drain_pipe internal_error is_string_utf8_encoded open_gz
-  signal_number2name strip normalize_pkg_path);
+  signal_number2name strip normalize_pkg_path slurp_entire_file);
 use Lintian::SlidingWindow;
 
 use constant BLOCKSIZE => 16_384;
@@ -188,6 +190,8 @@ my @FILE_PACKAGE_MAPPING = (
 my $BUILD_PATH_REGEX
   = Lintian::Data->new('files/build-path-regex',qr/~~~~~/,
     sub { return  qr/$_[0]/xsm;});
+
+my @ALLOWED_USES_DPKG_DATABASE = qw(base-files dpkg lintian);
 
 sub _tag_build_tree_path {
     my ($path, $msg) = @_;
@@ -920,7 +924,7 @@ sub run {
                     and $fname !~ m,^usr/bin/(?:X11|mh)/,) {
                     tag 'subdir-in-usr-bin', $file;
                 }
-                # check old style config script
+                # check old style config scripts
                 elsif ( $file->is_regular_file
                     and $fname =~ m,-config$,
                     and $script{$file}) {
@@ -1501,6 +1505,28 @@ sub run {
               and $source_pkg ne 'lintian'
               and detect_sensible_utils($file);
 
+            # ---------------- using dpkg internals
+            if ($fname !~ m,^usr/share/(?:doc|locale)/,
+                and none { $_ eq $source_pkg } @ALLOWED_USES_DPKG_DATABASE) {
+                my $strings = slurp_entire_file($info->strings($file));
+
+                # If we have strings(1) output (eg. we are an ELF
+                # binary) then prefer that.
+                if ($strings) {
+                    tag 'uses-dpkg-database-directly', $file
+                      if $strings =~ m,^/var/lib/dpkg,m;
+                } else {
+                    my $fd = $file->open(':raw');
+                    my $sfd = Lintian::SlidingWindow->new($fd);
+                    while (my $block = $sfd->readwindow) {
+                        next unless $block =~ m,/var/lib/dpkg,;
+                        tag 'uses-dpkg-database-directly', $file;
+                        last;
+                    }
+                    close($fd);
+                }
+            }
+
             # ---------------- documentation files
             unless($fname =~ m,^etc/, or $fname =~ m,^usr/share/doc/,) {
                 foreach my $taboo ($DOCUMENTATION_FILE_REGEX->all) {
@@ -2007,6 +2033,14 @@ sub run {
 
         tag 'missing-depends-on-sensible-utils', $file
           if not $has_sensible_utils and detect_sensible_utils($file);
+
+        my $fd2 = $file->open;
+        while (<$fd2>) {
+            tag 'uses-dpkg-database-directly', $file, "(line $.)"
+              if m,/var/lib/dpkg,
+              and none { $_ eq $source_pkg } @ALLOWED_USES_DPKG_DATABASE;
+        }
+        close($fd2);
     }
     close($fd);
 

@@ -108,6 +108,9 @@ sub collect {
                     my ($contents, $zerr) = $member->contents;
                     next FILE unless $zerr == AZ_OK;
 
+                    # Ensure we can read at least 8 bytes for the unpack.
+                    next if length($contents) < 8;
+
                     # translation of the unpack
                     #  NN NN NN NN, nn nn, nn nn   - bytes read
                     #     $magic  , __ __, $major  - variables

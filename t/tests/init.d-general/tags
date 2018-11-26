@@ -20,6 +20,6 @@ E: init.d-general: init.d-script-should-always-start-service etc/default/init.d-
 E: init.d-general: init.d-script-should-always-start-service etc/default/init.d-general (line 6)
 E: init.d-general: init.d-script-should-always-start-service etc/default/init.d-general (line 7)
 E: init.d-general: init.d-script-should-always-start-service etc/default/init.d-general (line 8)
-I: init.d-general-bugs: init.d-script-does-not-implement-optional-option etc/init.d/init.d-general-bugs status
+I: init.d-general-bugs: init.d-script-does-not-implement-status-option etc/init.d/init.d-general-bugs
 W: init.d-general-interpreter-in-usr-dir: init.d-script-does-not-source-init-functions etc/init.d/init.d-general-interpreter-in-usr-dir
 W: init.d-general-interpreter-in-usr-dir: init.d-script-uses-usr-interpreter etc/init.d/init.d-general-interpreter-in-usr-dir /usr/bin/perl

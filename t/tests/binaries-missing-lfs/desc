@@ -1,6 +1,7 @@
 Testname: binaries-missing-lfs
 Version: 1.0
 Default-Build-Depends: debhelper (>= 9.20151004~)
+Dh-Compat-Level: 9
 Description: Test for missing lfs
 Test-Architectures: i386 armhf
 Package-Architecture: any

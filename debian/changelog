@@ -1,3 +1,77 @@
+lintian (2.5.113) unstable; urgency=medium
+
+  * Summary of tag changes:
+    + Added:
+      - package-contains-file-in-usr-share-hal
+      - package-uses-vendor-specific-patch-series
+      - systemd-service-file-missing-hardening-features
+    + Merged:
+      - maintainer-script-should-not-use-dpkg-{database,status}-directly ->
+        uses-dpkg-database-directly
+    + Renamed:
+      - init.d-script-does-not-implement-optional-option ->
+        init.d-script-does-not-implement-status-option
+
+  * checks/control-file.{desc.pm}:
+    + [CL] Ensure the "Architecture" field in a changes files contains only
+      the string "source" rather than checking whether it is defined or
+      not.  This fixes source-only-upload-to-non-free-without-autobuild
+      false positives.  Thanks to Chuan-kai Lin.  (Closes: #914163)
+  * checks/files.{desc,pm}:
+    + [CL] Unify all dpkg internal database checks into a single new
+      uses-dpkg-database-directly check, extending it to check all
+      files shipped in package, not just the maintainer scripts.  Thanks to
+      Guillem Jover for the suggestion.  (Closes: #913974)
+  * checks/files.desc, checks/java.desc:
+    + [CL] Clarify distinction between the package-installs-java-bytecode
+      and source-contains-prebuilt-java-object tags.  Thanks to Markus
+      Koschany for the suggestion.  (Closes: #879851)
+  * checks/init.d.{pm,desc}:
+    + [CL] Rework the init.d-script-does-not-implement-optional-option tag
+      by renaming it to init.d-script-does-not-implement-status-option
+      and update the description to make the distinction between the LSB
+      (where it is required) and Debian Policy (where currently it is not).
+      Thanks to Andreas Henriksson for the suggestion.  (Closes: #913466)
+  * checks/patch-systems.{desc,pm}:
+    + [CL] Warn about packages that use vendor-specific patch series files
+      since the CTTE decision in #904302.
+  * checks/shared-libs.pm:
+    + [CL] Apply a patch from James McCoy to fix a regression that was
+      causing Lintian to incorrectly report the
+      invalid-template-id-in-symbols-file and syntax-error-in-symbols-file
+      tags.  Thanks!  (Closes: #913290)
+  * checks/systemd.{desc,pm}:
+    + [CL] Emit an experimental-level warning for .service files that do
+      not appear to use any security/hardening features.  (Closes: #913605)
+  * checks/watch-file.pm:
+    + [CL] Avoid debian-watch-file-should-mangle-version false-positives
+      when the file uses the @DEB_EXT@ or auto dversionmangle features.
+      Thanks to Sebastian Ramacher and Mattia Rizzolo.  (Closes: #913761)
+
+  * collection/java-info:
+    + [CL] Prevent an "uninitialized value" warning when processing
+      empty or otherwise truncated .class files.  Thanks to Branden
+      Robinson for the report.  (Closes: #913398)
+
+  * data/description/planned-features:
+    + [AB] Add "is planned" and "is also planned".
+  * data/fields/name_section_mappings:
+    + [CL] Tidy file.
+  * data/spelling/corrections:
+    + [AB] Add "redundant" and a bunch of variants around "conditional".
+    + [PW] Add a number of corrections.
+
+  * t/*:
+    + [CL] Apply a patch series from Felix Lechner to parameterise
+      the debhelper compatibility level in tests.  (MR: !73)
+    + [CL] Apply a patch from Felix Lechner to implement a new file
+      hierarchy for test specifications.  (MR: !74)
+  * t/scripts/spellintian.t:
+    + [CL] Make the "No no-op correction present..." test failure messages
+      include the offending correction to make it easier to correct.
+
+ -- Chris Lamb <lamby@debian.org>  Fri, 23 Nov 2018 22:13:47 +0000
+
 lintian (2.5.112~bpo9+1) stretch-backports; urgency=medium
 
   * Rebuild for stretch-backports.

@@ -4,5 +4,6 @@ Description: Check for missing service files
 Options: -I -E --pedantic
 Test-For:
  missing-systemd-service-for-init.d-script
+ systemd-service-file-missing-hardening-features
 Test-Against:
  omitted-systemd-service-for-init.d-script

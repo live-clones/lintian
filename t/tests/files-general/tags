@@ -37,6 +37,7 @@ W: files-general: icon-size-and-directory-name-mismatch usr/share/apps/lintian/i
 W: files-general: icon-size-and-directory-name-mismatch usr/share/icons/hicolor/22x22/apps/lintian-16x16.png 16x16
 W: files-general: nfs-temporary-file-in-package usr/share/foo/.nfs-fake-tmpfile
 W: files-general: obsolete-comments-style-in-php-ini etc/php/7.0/mods-available/php-foo.ini
+W: files-general: package-contains-file-in-usr-share-hal usr/share/hal/foo.fdi
 W: files-general: package-contains-python-doctree-file usr/share/foo/bar.doctree.gz
 W: files-general: package-contains-python-doctree-file usr/share/foo/foo.doctree
 W: files-general: package-contains-python-tests-in-global-namespace usr/lib/python3/dist-packages/test_foo.py

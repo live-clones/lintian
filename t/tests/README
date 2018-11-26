@@ -159,12 +159,18 @@ The test directory
 The test directory should contain the following files and directories:
 
 debian
-    The file tree forming the unpacked package.  This directory should
-    normally have a debian subdirectory containing any files that are
-    different than the template unless exactly the default template
-    values are used.  The skeleton will be copied to the build
-    directory for the package and then the contents of this directory
-    will be copied over top of it.
+    The Debian packaging files.  This directory will form the ./debian
+    subdirectory in the completed package. During the build process, it
+    will be filled with heavily parameterized templates that are best
+    controlled via settings in 'desc'. You can override both the
+    templates (*.in) and the plain files (but using templates is
+    probably better) by placing files directly into this directory.
+
+diff
+    Files that override those in 'orig' if necessary.  This directory
+    should normally not have a debian subdirectory.  It is mostly
+    useful when testing patch systems.  Very few tests need to use
+    this directory.
 
 orig
     For a non-native package, this is the file tree that goes into the

@@ -565,20 +565,6 @@ Info: This script apparently runs <tt>install-info</tt>.  Updating the
  If debhelper generated the maintainer script fragment, rebuilding the
  package with debhelper 7.2.17 or later will fix this problem.
 
-Tag: maintainer-script-should-not-use-dpkg-status-directly
-Severity: important
-Certainty: certain
-Info: The file /var/lib/dpkg/status is internal to dpkg, may disappear or
- change formats, and is not always a correct and complete record of
- installed packages while dpkg is running.  Maintainer scripts should use
- dpkg-query instead.  For the most common case of retrieving conffile
- information, use:
- .
-  dpkg-query -W -f='${Conffiles}' &lt;package&gt;
- .
- instead.
-Ref: https://wiki.debian.org/DpkgConffileHandling
-
 Tag: maintainer-script-should-not-modify-netbase-managed-file
 Severity: serious
 Certainty: certain
@@ -858,20 +844,6 @@ Info: The specified maintainer script uses <tt>set -e</tt> but seems to
  <tt>if</tt> construct, appending <tt>|| true</tt> or depending on the
  <tt>udev</tt> package.
 Ref: #890224, udevadm(8)
-
-Tag: maintainer-script-should-not-use-dpkg-database-directly
-Severity: normal
-Certainty: possible
-Info: The specified maintainer script appears to access the
- <tt>dpkg(1)</tt> database directly.
- .
- The entire dpkg database, its layout and files are an internal
- interface and no program or package should be accessing it, other
- than dpkg itself and the suite of dpkg tools.
- .
- Whilst the files may be editable by an admin, that's a supported (but
- unrecommended) feature reserved for humans and not for automatic tools.
-Ref: dpkg(1), #905469
 
 Tag: missing-call-to-update-fonts
 Severity: normal

@@ -39,6 +39,9 @@ use Lintian::Data;
 # Init script that do not need a service file
 my $INIT_WHITELIST = Lintian::Data->new('systemd/init-whitelist');
 
+# Known security flags
+my $HARDENING_FLAGS = Lintian::Data->new('systemd/hardening-flags');
+
 # Usual WantedBy= targets
 my $WANTEDBY_WHITELIST = Lintian::Data->new('systemd/wantedby-whitelist');
 
@@ -243,6 +246,14 @@ sub check_systemd_service_file {
             tag 'systemd-service-file-pidfile-refers-to-var-run', $file, $x
               if $x =~ m,^/var/run/,;
         }
+        my $seen_hardening;
+        foreach my $x ($HARDENING_FLAGS->all) {
+            next unless extract_service_file_values($file, 'Service', $x, 1);
+            $seen_hardening = 1;
+            last;
+        }
+        tag 'systemd-service-file-missing-hardening-features', $file
+          unless $seen_hardening;
     }
 
     return 1;

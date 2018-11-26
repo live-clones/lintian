@@ -1,0 +1,16 @@
+# Known hardening flags in [Service] section
+
+CapabilityBoundingSet
+LimitNOFILE
+MemoryDenyWriteExecute
+NoNewPrivileges
+PrivateDevices
+PrivateTmp
+ProtectControlGroups
+ProtectHome
+ProtectKernelModules
+ProtectKernelTunables
+ReadOnlyDirectories
+RestrictAddressFamilies
+RestrictNamespaces
+RestrictRealtime

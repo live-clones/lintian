@@ -1,0 +1,4 @@
+W: files-uses-dpkg-database-directly: binary-without-manpage usr/bin/test
+W: files-uses-dpkg-database-directly: uses-dpkg-database-directly usr/bin/test
+W: files-uses-dpkg-database-directly: uses-dpkg-database-directly var/lib/test/test-1
+W: files-uses-dpkg-database-directly: uses-dpkg-database-directly var/lib/test/test-2

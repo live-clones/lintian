@@ -50,8 +50,8 @@ t($s, "familar -> familiar\nallows to -> allows one to\ngnu -> GNU\n",
 
 my $iff = 0;
 my $publically = 0;
-my $case_sen = 0;
-my $equal = 0;
+my @case_sen;
+my @equal;
 
 open(my $sp_fh, '<', $spelling_data)
   or die "Can't open $spelling_data for reading: $!";
@@ -62,12 +62,12 @@ while (my $corr = <$sp_fh>) {
     my ($wrong, $good) = split(/\|\|/, $corr);
     # Check for corrections equal to original
     if ($wrong eq $good) {
-        $equal++;
+        push @equal, $wrong;
         # Check if case sensitive corrections have been added to the wrong
         # file (data/spelling/corrections, not data/spelling/corrections-case).
         # Bad example from #883041: german||German
     } elsif ($wrong eq lc($good)) {
-        $case_sen++;
+        push @case_sen, $wrong;
     }
 
     # Check if "iff" has been added as correction. See #865055 why
@@ -82,8 +82,16 @@ while (my $corr = <$sp_fh>) {
 }
 close($sp_fh);
 
-ok($equal == 0, "No no-op correction present in ${spelling_data}");
-ok($case_sen == 0, "No case sensitive correction present in ${spelling_data}");
+ok(
+    scalar(@equal) == 0,
+    "No no-op correction present in ${spelling_data} ("
+      . join(', ', @equal) . ')'
+);
+ok(
+    scalar(@case_sen) == 0,
+    "No case sensitive correction present in ${spelling_data} ("
+      . join(', ', @case_sen) . ')'
+);
 ok(
     $iff == 0,
     '"iff" is not present in '

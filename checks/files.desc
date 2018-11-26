@@ -2,7 +2,7 @@ Check-Script: files
 Author: Christian Schwarz <schwarz@debian.org>
 Abbrev: fil
 Type: binary, udeb
-Needs-Info: unpacked, objdump-info, scripts, file-info, bin-pkg-control
+Needs-Info: unpacked, objdump-info, scripts, file-info, bin-pkg-control, strings
 Info: This script checks if a binary package conforms to policy
  WRT to files and directories.
 
@@ -1814,8 +1814,10 @@ Tag: package-installs-java-bytecode
 Severity: normal
 Certainty: certain
 Ref: java-policy 2
-Info: Compiled Java source files must not be included in the package. These
- files should be removed from the package or included in <tt>.jar</tt> archives.
+Info: Compiled Java source files must not be included in the package.
+ This is likely due to a packaging mistake.  These files should be
+ removed from the installed package or included in <tt>.jar</tt>
+ archives to save space.
 
 Tag: python-module-has-overly-generic-name
 Severity: important
@@ -2023,3 +2025,27 @@ Info: This package installs the specifiied "non-Python" file in the
  .
  This was either a mistake and/or will likely to cause conflicts with other
  packages.
+
+Tag: package-contains-file-in-usr-share-hal
+Severity: normal
+Certainty: certain
+Info: This package installs the specified file under
+ <tt>/usr/share/hal/</tt> but this directory is no longer looked at
+ by any package in Debian since the removal of the <tt>hal</tt> package
+ in 2014.
+ .
+ Please remove or otherwise prevent the installation of this file.
+
+Tag: uses-dpkg-database-directly
+Severity: normal
+Certainty: possible
+Info: The listed file or maintainer script appears to access the
+ internal database(s) of dpkg.
+ .
+ The entire dpkg database, its layout and files are an internal
+ interface and no program or package should be accessing it, other
+ than dpkg itself and the suite of dpkg tools.
+ .
+ Whilst the files may be editable by an admin, that's a supported (but
+ unrecommended) feature reserved for humans and not for automatic tools.
+Ref: https://wiki.debian.org/DpkgConffileHandling

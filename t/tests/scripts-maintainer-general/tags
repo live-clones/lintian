@@ -12,7 +12,6 @@ E: scripts-maintainer-general: maintainer-script-should-not-use-adduser-system-w
 E: scripts-maintainer-general: maintainer-script-should-not-use-adduser-system-without-home postinst:152 'adduser --home /home/fnord2 --system fnord2'
 E: scripts-maintainer-general: maintainer-script-should-not-use-adduser-system-without-home postinst:199 'adduser --system --quiet --ingroup ntp --no-create-home ntp'
 E: scripts-maintainer-general: maintainer-script-should-not-use-adduser-system-without-home postinst:200 'adduser festival --quiet --system --ingroup audio --no-create-home'
-E: scripts-maintainer-general: maintainer-script-should-not-use-dpkg-status-directly postinst:56
 E: scripts-maintainer-general: maintainer-script-should-not-use-install-sgmlcatalog postinst:74
 E: scripts-maintainer-general: maintainer-script-should-not-use-install-sgmlcatalog postinst:75
 E: scripts-maintainer-general: maintainer-shell-script-fails-syntax-check prerm
@@ -44,13 +43,6 @@ W: scripts-maintainer-general: maintainer-script-should-not-parse-etc-passwd-or-
 W: scripts-maintainer-general: maintainer-script-should-not-parse-etc-passwd-or-group postinst:239 'fgrep bad /etc/group'
 W: scripts-maintainer-general: maintainer-script-should-not-use-deprecated-chown-usage postinst:14 'chown root.root'
 W: scripts-maintainer-general: maintainer-script-should-not-use-deprecated-chown-usage postinst:84 'chown -R root.root'
-W: scripts-maintainer-general: maintainer-script-should-not-use-dpkg-database-directly postinst:222 '/var/lib/dpkg/info/other-package.conffiles'
-W: scripts-maintainer-general: maintainer-script-should-not-use-dpkg-database-directly postinst:223 '/var/lib/dpkg/info/other-package.md5sums'
-W: scripts-maintainer-general: maintainer-script-should-not-use-dpkg-database-directly postinst:224 '/var/lib/dpkg/info/other-package.shlibs'
-W: scripts-maintainer-general: maintainer-script-should-not-use-dpkg-database-directly postinst:225 '/var/lib/dpkg/info/other-package.postinst'
-W: scripts-maintainer-general: maintainer-script-should-not-use-dpkg-database-directly postinst:226 '/var/lib/dpkg/info/other-package.preinst'
-W: scripts-maintainer-general: maintainer-script-should-not-use-dpkg-database-directly postinst:227 '/var/lib/dpkg/info/other-package.list'
-W: scripts-maintainer-general: maintainer-script-should-not-use-dpkg-database-directly postinst:228 '/var/lib/dpkg/triggers/other-package'
 W: scripts-maintainer-general: maintainer-script-should-not-use-fc-cache postinst:95
 W: scripts-maintainer-general: maintainer-script-should-not-use-gconftool postinst:155
 W: scripts-maintainer-general: maintainer-script-should-not-use-gconftool postinst:44
@@ -76,5 +68,14 @@ W: scripts-maintainer-general: maintainer-script-should-not-use-start-stop-daemo
 W: scripts-maintainer-general: maintainer-script-should-not-use-update-alternatives-remove postrm:7
 W: scripts-maintainer-general: maintainer-script-should-not-use-update-alternatives-set postinst:129
 W: scripts-maintainer-general: possibly-insecure-handling-of-tmp-files-in-maintainer-script postinst:26
+W: scripts-maintainer-general: uses-dpkg-database-directly postinst (line 222)
+W: scripts-maintainer-general: uses-dpkg-database-directly postinst (line 223)
+W: scripts-maintainer-general: uses-dpkg-database-directly postinst (line 224)
+W: scripts-maintainer-general: uses-dpkg-database-directly postinst (line 225)
+W: scripts-maintainer-general: uses-dpkg-database-directly postinst (line 226)
+W: scripts-maintainer-general: uses-dpkg-database-directly postinst (line 227)
+W: scripts-maintainer-general: uses-dpkg-database-directly postinst (line 228)
+W: scripts-maintainer-general: uses-dpkg-database-directly postinst (line 53)
+W: scripts-maintainer-general: uses-dpkg-database-directly postinst (line 56)
 X: scripts-maintainer-general: maintainer-script-may-use-dir_to_symlink_helper postinst:205
 X: scripts-maintainer-general: maintainer-script-should-not-use-service postinst:158

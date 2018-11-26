@@ -13,8 +13,6 @@ E: maintainer-scripts: maintainer-script-removes-device-files postrm:41 '/dev/de
 E: maintainer-scripts: maintainer-script-should-not-modify-netbase-managed-file postinst:84 '/etc/services'
 E: maintainer-scripts: maintainer-script-should-not-modify-netbase-managed-file postinst:85 '/etc/protocols'
 E: maintainer-scripts: maintainer-script-should-not-modify-netbase-managed-file postinst:86 '/etc/rpc'
-E: maintainer-scripts: maintainer-script-should-not-use-dpkg-status-directly postinst:81
-E: maintainer-scripts: maintainer-script-should-not-use-dpkg-status-directly preinst:12
 E: maintainer-scripts: maintainer-script-should-not-use-install-sgmlcatalog postinst:100
 E: maintainer-scripts: maintainer-script-should-not-use-install-sgmlcatalog postinst:99
 E: maintainer-scripts: maintainer-script-should-not-use-install-sgmlcatalog postrm:47
@@ -163,6 +161,9 @@ W: maintainer-scripts: possibly-insecure-handling-of-tmp-files-in-maintainer-scr
 W: maintainer-scripts: possibly-insecure-handling-of-tmp-files-in-maintainer-script postrm:40
 W: maintainer-scripts: postinst-does-not-load-confmodule
 W: maintainer-scripts: postrm-does-not-purge-debconf
+W: maintainer-scripts: uses-dpkg-database-directly postinst (line 78)
+W: maintainer-scripts: uses-dpkg-database-directly postinst (line 81)
+W: maintainer-scripts: uses-dpkg-database-directly preinst (line 12)
 W: maintainer-scripts: uses-implicit-await-trigger activate foo (line 2)
 W: maintainer-scripts: uses-implicit-await-trigger interest bar (line 4)
 X: maintainer-scripts: maintainer-script-may-use-dir_to_symlink_helper postinst:5
