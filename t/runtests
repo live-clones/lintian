@@ -105,29 +105,13 @@ use Test::Lintian::Harness
 use Test::Lintian::ConfigFile qw(read_config);
 use Test::Lintian::Helper qw(copy_dir_contents);
 use Test::Lintian::Templates
-  qw(copy_skeleton_template_sets remove_surplus_templates fill_skeleton_templates);
+  qw(copy_skeleton_template_sets remove_surplus_templates fill_skeleton_templates fill_template);
 
-# --- Global configuration
-our @DPKG_BUILDPACKAGE_CMD = (
-    qw(dpkg-buildpackage -rfakeroot -us -uc -d),
-    qw(-iNEVER_MATCH_ANYTHING -INEVER_MATCH_ANYTHING),
-    qw(--source-option=--auto-commit),
-);
 our $STANDARDS_VERSION = '4.2.1';
 our $ARCHITECTURE = safe_qx(qw(dpkg-architecture -qDEB_HOST_ARCH));
 my $RUNNER_TS = (stat($0))[9];
 chomp $ARCHITECTURE;
 
-our %TEMPLATES = (
-    'tests'  =>['changelog', 'control','compat', 'tests','source/format'],
-    'debs'   => ['changelog', 'control', 'Makefile'],
-    'source' =>[
-        'Makefile', 'dsc.in',
-        'debian/changelog', 'debian/control',
-        'debian/compat', 'debian/source/format',
-        'debian/tests/control','debian/tests/test'
-    ],
-);
 my $DATE = safe_qx(qw(date -R));
 chomp $DATE;
 
@@ -337,6 +321,7 @@ sub test_package {
     my $stampfile = "$rundir/build-stamp";
     my $epochless_version = $orig_version;
     $epochless_version =~ s/^\d+://;
+    $testdata->{no_epoch} = $epochless_version;
 
     if (-f "$origdir/skip") {
         my $reason = skip_reason("$origdir/skip");
@@ -357,6 +342,12 @@ sub test_package {
             return $test_state->skip_test($missing);
         }
     }
+
+    # the skeleton we are working with
+    my $skeletonname = $testdata->{skeleton};
+    my $skeletonpath = "$TESTSET/skeletons/$suite/$skeletonname";
+
+    my $skeleton = read_config($skeletonpath);
 
     if (   $ALWAYS_REBUILD
         or not up_to_date($stampfile, $origdir, $RUNNER_TS)
@@ -388,12 +379,6 @@ sub test_package {
             make_path($rundir);
         }
 
-        # the skeleton we are working with
-        my $skeletonname = $testdata->{skeleton};
-        my $skeletonpath = "$TESTSET/skeletons/$suite/$skeletonname";
-
-        my $skeleton = read_config($skeletonpath);
-
         # populate working directory with specified template sets
         copy_skeleton_template_sets($skeleton->{template_sets},
             $rundir, $suite, $TESTSET)
@@ -407,33 +392,68 @@ sub test_package {
         $test_state->info_msg(2,
             "Copying test specification $offset from $TESTSET to $rundir.");
         copy_dir_contents($origdir, $rundir);
+    }
 
+    # get builder name
+    my $buildername = $testdata->{builder};
+    if (length $buildername) {
+        my $builderpath = "$rundir/$buildername";
+
+        # fill builder if needed
+        my $buildertemplate = "$builderpath.in";
+        fill_template($buildertemplate, $builderpath, $testdata,$RUNNER_TS)
+          if -f $buildertemplate;
+
+        if (-f $builderpath) {
+
+            # read builder
+            my $builder = read_config($builderpath);
+            die 'Could not read builder data.' unless $builder;
+
+            # transfer builder data to test case, but do not override
+            foreach my $key (keys %{$builder}) {
+                $testdata->{$key} = $builder->{$key}
+                  unless exists $testdata->{$key};
+            }
+        }
+    }
+
+    if ($ALWAYS_REBUILD or not up_to_date($stampfile, $origdir, $RUNNER_TS)) {
         # fill remaining templates
         fill_skeleton_templates($skeleton->{fill_targets},
             $testdata, $RUNNER_TS, $rundir, $TESTSET)
           if exists $skeleton->{fill_targets};
+    }
+
+    # get lintian subject
+    return $test_state->test_error(
+        'Could not get subject of Lintian examination.')
+      unless exists $testdata->{build_product};
+    my $subject = "$rundir/$testdata->{build_product}";
+
+    if ($ALWAYS_REBUILD or not up_to_date($stampfile, $origdir, $RUNNER_TS)) {
 
         $test_state->progress('building');
-        my $res
-          = chdir_runcmd($targetdir,
-            ['make',"DEFAULT_DH_COMPAT=$testdata->{dh_compat_level}"],
-            "../build.$testname");
-        if ($res) {
-            $test_state->dump_log("${RUNDIR}/${suite}/build.${testname}")
-              if $DUMP_LOGS;
-            return $test_state->test_error(
-                join(q{ },
-                    "cd $targetdir &&",
-                    "make >../build.$testname 2>&1 failed"));
+
+        if (exists $testdata->{build_command}) {
+            my $command
+              = "cd $rundir; $testdata->{build_command} > ../build.$testname 2>&1";
+            if (system($command)) {
+                $test_state->dump_log("${RUNDIR}/${suite}/build.${testname}")
+                  if $DUMP_LOGS;
+                return $test_state->test_error("$command failed.");
+            }
         }
+
+        return $test_state->test_error('Build was unsuccessful.')
+          unless -f $subject;
+
         touch_file($stampfile);
     } else {
         $test_state->progress('building (cached)');
     }
 
-    my $file = "${pkg}_${epochless_version}_${ARCHITECTURE}.changes";
-    run_lintian($test_state, $testdata, "$rundir/$file", $rundir,
-        "$rundir/tags.$pkg");
+    run_lintian($test_state, $testdata, $subject, $rundir,"$rundir/tags.$pkg");
 
     # Run a sed-script if it exists, for tests that have slightly variable
     # output
@@ -587,15 +607,42 @@ sub test_changes {
         "Copying test specification $offset from $TESTSET to $rundir.");
     copy_dir_contents($testdir, $rundir);
 
+    # get builder name
+    my $buildername = $testdata->{builder};
+    if (length $buildername) {
+        my $builderpath = "$rundir/$buildername";
+
+        # fill builder if needed
+        my $buildertemplate = "$builderpath.in";
+        fill_template($buildertemplate, $builderpath, $testdata,$RUNNER_TS)
+          if -f $buildertemplate;
+
+        if (-f $builderpath) {
+
+            # read builder
+            my $builder = read_config($builderpath);
+            die 'Could not read builder data.' unless $builder;
+
+            # transfer builder data to test case, but do not override
+            foreach my $key (keys %{$builder}) {
+                $testdata->{$key} = $builder->{$key}
+                  unless exists $testdata->{$key};
+            }
+        }
+    }
+
     # fill remaining templates
     fill_skeleton_templates($skeleton->{fill_targets},
         $testdata, $RUNNER_TS, $rundir, $TESTSET)
       if exists $skeleton->{fill_targets};
 
-    # lintian refuses changes files without a dot
-    my $file = "$rundir/test.changes";
+    # get lintian subject
+    return $test_state->test_error(
+        'Could not get subject of Lintian examination.')
+      unless exists $testdata->{build_product};
+    my $subject = "$rundir/$testdata->{build_product}";
 
-    run_lintian($test_state, $testdata, $file, $rundir, "$rundir/tags");
+    run_lintian($test_state, $testdata, $subject, $rundir, "$rundir/tags");
 
     return _check_result($test_state, $testdata, "$testdir/tags",
         "$rundir/tags");
@@ -639,6 +686,12 @@ sub generic_test_runner {
         }
     }
 
+    # the skeleton we are working with
+    my $skeletonname = $testdata->{skeleton};
+    my $skeletonpath = "$TESTSET/skeletons/$suite/$skeletonname";
+
+    my $skeleton = read_config($skeletonpath);
+
     if (   $ALWAYS_REBUILD
         or not up_to_date($stampfile, $testdir, $RUNNER_TS)
         or -e "$targetdir/debian/debian") {
@@ -655,12 +708,6 @@ sub generic_test_runner {
             make_path($targetdir);
         }
 
-        # the skeleton we are working with
-        my $skeletonname = $testdata->{skeleton};
-        my $skeletonpath = "$TESTSET/skeletons/$suite/$skeletonname";
-
-        my $skeleton = read_config($skeletonpath);
-
         # populate working directory with specified template sets
         copy_skeleton_template_sets($skeleton->{template_sets},
             $targetdir, $suite, $TESTSET)
@@ -674,48 +721,69 @@ sub generic_test_runner {
         $test_state->info_msg(2,
             "Copying test specification $offset from $TESTSET to $targetdir.");
         copy_dir_contents($testdir, $targetdir);
+    }
+
+    # get builder name
+    my $buildername = $testdata->{builder};
+    if (length $buildername) {
+        my $builderpath = "$targetdir/$buildername";
+
+        # fill builder if needed
+        my $buildertemplate = "$builderpath.in";
+        fill_template($buildertemplate, $builderpath, $testdata,$RUNNER_TS)
+          if -f $buildertemplate;
+
+        if (-f $builderpath) {
+
+            # read builder
+            my $builder = read_config($builderpath);
+            die 'Could not read builder data.' unless $builder;
+
+            # transfer builder data to test case, but do not override
+            foreach my $key (keys %{$builder}) {
+                $testdata->{$key} = $builder->{$key}
+                  unless exists $testdata->{$key};
+            }
+        }
+    }
+
+    if ($ALWAYS_REBUILD or not up_to_date($stampfile, $testdir, $RUNNER_TS)) {
 
         # fill remaining templates
         fill_skeleton_templates($skeleton->{fill_targets},
             $testdata, $RUNNER_TS, $targetdir, $TESTSET)
           if exists $skeleton->{fill_targets};
+    }
+
+    # get lintian subject
+    return $test_state->test_error(
+        'Could not get subject of Lintian examination.')
+      unless exists $testdata->{build_product};
+    my $subject = "$targetdir/$testdata->{build_product}";
+
+    if ($ALWAYS_REBUILD or not up_to_date($stampfile, $testdir, $RUNNER_TS)) {
 
         $test_state->progress('building');
-        my $res= chdir_runcmd(
-            $targetdir,
-            [
-                'fakeroot', 'make',
-                "DEFAULT_DH_COMPAT=$testdata->{dh_compat_level}"
-            ],
-            "../build.$testname"
-        );
-        if ($res) {
-            $test_state->dump_log("${RUNDIR}/${suite}/build.${testname}")
-              if $DUMP_LOGS;
-            return $test_state->test_error(
-                join(q{ },
-                    "cd $targetdir &&",
-                    "fakeroot make >../build.$testname 2>&1 failed"));
+
+        if (exists $testdata->{build_command}) {
+            my $command
+              = "cd $targetdir; $testdata->{build_command} > ../build.$testname 2>&1";
+            if (system($command)) {
+                $test_state->dump_log("${RUNDIR}/${suite}/build.${testname}")
+                  if $DUMP_LOGS;
+                return $test_state->test_error("$command failed.");
+            }
         }
+
+        return $test_state->test_error('Build was unsuccessful.')
+          unless -f $subject;
+
         touch_file($stampfile);
     } else {
         $test_state->progress('building (cached)');
     }
-    my @matches = glob("$targetdir/*.$ext");
-    my $file = shift @matches;
-    unless ($file && -e $file) {
-        $file //= '<N/A>';
-        return $test_state->test_error(
-            join(q{ },
-                "$testname did not produce any file matching",
-                "\"$targetdir/*.$ext\" ($file)"));
-    }
-    return $test_state->test_error(
-        join(q{ },
-            "$testname produced more than one file",
-            "matching \"$targetdir/*.$ext\""))if @matches;
 
-    run_lintian($test_state, $testdata, $file, $targetdir,
+    run_lintian($test_state, $testdata, $subject, $targetdir,
         "$RUNDIR/$suite/tags.$testname");
     return _check_result($test_state, $testdata, "$testdir/tags",
         "$RUNDIR/$suite/tags.$testname");
@@ -1112,6 +1180,7 @@ sub check_test_is_sane {
     $data->{description} ||= 'No Description Available';
     $data->{author}||= 'Debian Lintian Maintainers <lintian-maint@debian.org>';
     $data->{'test-architectures'}||= 'any';
+    $data->{host_architecture} = $ARCHITECTURE;
     $data->{'package-architecture'} ||= 'all';
     $data->{package_architecture} = $data->{'package-architecture'};
     $data->{profile} ||= 'debian';
@@ -1125,6 +1194,7 @@ sub check_test_is_sane {
     $data->{'test-against'} ||= '';
 
     $data->{skeleton} ||= 'default';
+    $data->{builder} ||= 'builder';
     $data->{options} ||= '-I -E';
     $data->{todo} ||= 'no';
     $data->{'test-depends'} //= '';
