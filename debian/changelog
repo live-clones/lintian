@@ -1,6 +1,4 @@
-lintian (2.5.114) UNRELEASED; urgency=medium
-
-  XXX: generate tag summary
+lintian (2.5.114) unstable; urgency=medium
 
   * checks/debhelper.pm:
     + [CL] Apply a patch from Stephen Kitt to avoid false-positives for the
@@ -15,13 +13,15 @@ lintian (2.5.114) UNRELEASED; urgency=medium
       for the package-contains-documentation-outside-usr-share-doc tag
       which was matching an overly-permissive regex.  Thanks to Rafael
       Laboissière (rafael) for the report.  (Closes: #914500)
+  * data/spelling/corrections:
+    + [PW] Add a number of corrections.
 
   * t/*:
     + [CL] Apply a patch series from Felix Lechner to make the templating
       more flexible in tests, re-using the Skeleton: statements in "desc"
       files for more complex templating logic.  (MR: !75)
 
- -- Chris Lamb <lamby@debian.org>  Fri, 23 Nov 2018 23:39:18 +0100
+ -- Chris Lamb <lamby@debian.org>  Mon, 26 Nov 2018 08:21:31 +0000
 
 lintian (2.5.113) unstable; urgency=medium
 
