@@ -353,7 +353,9 @@ sub test_package {
         }
     }
 
-    if ($ALWAYS_REBUILD or not up_to_date($stampfile, $origdir, $RUNNER_TS)) {
+    if (   $ALWAYS_REBUILD
+        or not up_to_date($stampfile, $origdir, $RUNNER_TS)
+        or -e "$rundir/debian/debian") {
         my $tmpldir = "$TESTSET/templates/$suite/";
         my $skel = $testdata->{skeleton};
         my $is_native = ($testdata->{type} eq 'native');
@@ -669,7 +671,10 @@ sub generic_test_runner {
         }
     }
 
-    if ($ALWAYS_REBUILD or not up_to_date($stampfile, $testdir, $RUNNER_TS)) {
+    if (   $ALWAYS_REBUILD
+        or not up_to_date($stampfile, $testdir, $RUNNER_TS)
+        or -e "$targetdir/debian/debian") {
+
         my $skel = $testdata->{skeleton};
         my $tmpldir = "$TESTSET/templates/$suite/";
 
