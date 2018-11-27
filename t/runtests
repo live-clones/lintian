@@ -101,7 +101,7 @@ use Lintian::Util qw(delete_dir internal_error parse_boolean
 
 use Test::Lintian::Harness
   qw(chdir_runcmd check_test_depends find_tests_for_tag
-  read_test_desc runsystem runsystem_ok skip_reason up_to_date);
+  runsystem runsystem_ok skip_reason up_to_date);
 use Test::Lintian::ConfigFile qw(read_config);
 use Test::Lintian::Helper qw(copy_dir_contents);
 use Test::Lintian::Templates
@@ -305,7 +305,7 @@ sub run_lintian {
     unshift(@options, '--allow-root', '--no-cfg');
     unshift(@options, '--profile', $testdata->{profile});
     unshift(@options, '--no-user-dirs');
-    if (my $incl_dir = $testdata->{'lintian-include-dir'}) {
+    if (my $incl_dir = $testdata->{'lintian_include_dir'}) {
         unshift(@options, '--include-dir', $incl_dir);
     }
     my $pid = open(my $in, '-|');
@@ -335,7 +335,7 @@ sub run_lintian {
 
             $test_state->test_error($msg);
         } else {
-            @data = sort @data if $testdata->{sort};
+            @data = sort @data if $testdata->{sort} eq 'yes';
             open(my $fd, '>', $out);
             print $fd $_ for @data;
             close($fd);
@@ -367,18 +367,59 @@ sub generic_test_runner {
     my $testname = $testdata->{testname};
     my $testdir = "$TESTSET/$suite/$testname";
 
-    if (!check_test_is_sane($TESTSET, $testdir, $testdata)) {
-        return $test_state->skip_test('architecture mismatch');
+    unless ($testdata->{testname} && exists $testdata->{version}) {
+        internal_error('Name or Version missing');
     }
+
+    $testdata->{source} ||= $testdata->{testname};
+
+    $testdata->{date} ||= $DATE;
+
+    if (not $testdata->{prev_version}) {
+        $testdata->{prev_version} = '0.0.1';
+        $testdata->{prev_version} .= '-1'
+          if index($testdata->{version}, '-') > -1;
+    }
+
+    $testdata->{host_architecture} = $ARCHITECTURE;
+    $testdata->{'standards_version'} ||= $STANDARDS_VERSION;
+
+    $testdata->{'dh_compat_level'} //= '11';
+
+    $testdata->{'default_build_depends'}
+      //= "debhelper (>= $testdata->{dh_compat_level}~)";
+
+    $testdata->{'build_depends'} ||= join(
+        ', ',
+        grep { $_ }(
+            $testdata->{'default_build_depends'},
+            $testdata->{'extra_build_depends'}));
+
+    # Check for arch-specific tests
+    if ($testdata->{'test_architectures'} ne 'any') {
+        my @wildcards = split(/\s+/,$testdata->{'test_architectures'});
+        my @matches
+          = map { qx{dpkg-architecture -i $_; echo -n \$?} } @wildcards;
+        return $test_state->skip_test('architecture mismatch')
+          unless any { $_ == 0 } @matches;
+    }
+
+    if ($testdir and -d "${testdir}/lintian-include-dir") {
+        $testdata->{'lintian_include_dir'} = './lintian-include-dir';
+    }
+
+    $testdata->{upstream_version} = $testdata->{version};
+    $testdata->{upstream_version} =~ s/-[^-]+$//;
+    $testdata->{upstream_version} =~ s/(-|^)(\d+):/$1/;
+
+    my $epochless_version = $testdata->{version};
+    $epochless_version =~ s/^\d+://;
+    $testdata->{no_epoch} = $epochless_version;
 
     $test_state->progress('setup');
 
     my $targetdir = "$RUNDIR/$suite/$testname";
     my $stampfile = "$RUNDIR/$suite/$testname-build-stamp";
-
-    my $epochless_version = $testdata->{version};
-    $epochless_version =~ s/^\d+://;
-    $testdata->{no_epoch} = $epochless_version;
 
     if (-f "$testdir/skip") {
         my $reason = skip_reason("$testdir/skip");
@@ -390,8 +431,8 @@ sub generic_test_runner {
             'Outdated test specification (./debian/debian exists).');
     }
 
-    if (   $testdata->{'test-depends'}
-        || $testdata->{'test-conflicts'}
+    if (   $testdata->{'test_depends'}
+        || $testdata->{'test_conflicts'}
         || $testdata->{'build_depends'}
         || $testdata->{'build_conflicts'}) {
         my $missing = check_test_depends($testdata);
@@ -507,7 +548,7 @@ sub generic_test_runner {
     if (-f "$targetdir/post_test") {
         runsystem_ok('sed', '-ri', '-f', "$targetdir/post_test",
             "$targetdir/tags.$pkg");
-        if ($testdata->{'sort'}) {
+        if ($testdata->{'sort'} eq 'yes') {
             # Re-sort as the sed may have changed the order lines
             open(my $rfd, '<', "$targetdir/tags.$pkg");
             my @lines = sort(<$rfd>);
@@ -535,6 +576,21 @@ sub generic_test_runner {
         "$targetdir/tags.$pkg",$origexp);
 }
 
+sub read_desc {
+    my ($path) = @_;
+
+    my $testdata = read_config($path);
+
+    my $defaults = read_config("$TESTSET/defaults/desc");
+
+    foreach my $key (keys %{$defaults}) {
+        $testdata->{$key} = $defaults->{$key}
+          unless exists $testdata->{$key};
+    }
+
+    return $testdata;
+}
+
 sub find_tests_to_run {
     my @test_suite_info = (
         ['changes', "$TESTSET/changes/*/desc"],
@@ -550,21 +606,22 @@ sub find_tests_to_run {
                 my $desc_file = $globstr;
                 $desc_file =~ s/\Q*\E/${part}/;
                 if (-f $desc_file) {
-                    push(@tests, read_test_desc($desc_file));
+                    push(@tests, read_desc($desc_file));
                 } elsif (-f "$LINTIAN_ROOT/checks/${part}.desc"
                     || $part eq 'legacy') {
                     my $check_glob = $globstr;
                     $check_glob =~ s/\Q*\E/${part}-*/;
-                    push(@tests, map { read_test_desc($_) }glob($check_glob));
+                    push(@tests, map { read_desc($_) }glob($check_glob));
                 }
             }
         } elsif ($tag) {
             @tests = find_tests_for_tag($tag, $globstr);
+            @tests = map { read_desc($_) } @tests;
         } elsif ($suites{$suite}) {
             unless (-d "$TESTSET/$suite/") {
                 internal_error("cannot find $TESTSET/$suite: $!");
             }
-            @tests = map { read_test_desc($_) } glob($globstr);
+            @tests = map { read_desc($_) } glob($globstr);
         }
         next if not @tests;
         # Sort the tests relative to others in their own suite.
@@ -796,11 +853,12 @@ sub _check_result {
     # are seen and all Test-Against tags are not.  Skip this part of the test
     # if neither Test-For nor Test-Against are set and Sort is also not set,
     # since in that case we probably have non-standard output.
-    my %test_for = map { $_ => 1 } split(' ', $testdata->{'test-for'});
-    my %test_against = map { $_ => 1 } split(' ', $testdata->{'test-against'});
+    my %test_for = map { $_ => 1 } split(' ', $testdata->{'test_for'}//'');
+    my %test_against
+      = map { $_ => 1 } split(' ', $testdata->{'test_against'}//'');
     if (    not %test_for
         and not %test_against
-        and $testdata->{'output-format'} ne 'EWI') {
+        and $testdata->{'output_format'} ne 'EWI') {
         if ($testdata->{'todo'} eq 'yes') {
             return $test_state->fail_test('marked as TODO but succeeded');
         } else {
@@ -888,77 +946,6 @@ sub handle_dump_log{
     } else {
         print "!!! Could not dump $logf: $!";
     }
-    return 1;
-}
-
-sub check_test_is_sane {
-    my ($dir, $testdir, $data) = @_;
-
-    unless ($data->{testname} && exists $data->{version}) {
-        internal_error('Name or Version missing');
-    }
-
-    $data->{source} ||= $data->{testname};
-    $data->{type} ||= 'native';
-    $data->{'source-format'} ||= '1.0';
-    $data->{source_format} = $data->{'source-format'};
-    $data->{date} ||= $DATE;
-    $data->{prev_date} ||= 'Mon, 01 Jan 1990 00:00:00 +0100';
-    if (not $data->{prev_version}) {
-        $data->{prev_version} = '0.0.1';
-        $data->{prev_version} .= '-1'
-          if index($data->{version}, '-') > -1;
-    }
-    $data->{distribution} ||= 'unstable';
-    $data->{description} ||= 'No Description Available';
-    $data->{author}||= 'Debian Lintian Maintainers <lintian-maint@debian.org>';
-    $data->{'test-architectures'}||= 'any';
-    $data->{host_architecture} = $ARCHITECTURE;
-    $data->{'package-architecture'} ||= 'all';
-    $data->{package_architecture} = $data->{'package-architecture'};
-    $data->{profile} ||= 'debian';
-    $data->{section} ||= 'devel';
-    $data->{'standards_version'} ||= $STANDARDS_VERSION;
-    $data->{sort} ||= 'yes';
-    $data->{sort} = parse_boolean($data->{sort});
-    $data->{'output-format'} ||= 'EWI';
-
-    $data->{'test-for'} ||= '';
-    $data->{'test-against'} ||= '';
-
-    $data->{skeleton} ||= 'default';
-    $data->{builder} ||= 'builder';
-    $data->{options} ||= '-I -E';
-    $data->{todo} ||= 'no';
-    $data->{'test-depends'} //= '';
-    $data->{'dh-compat-level'} //= '11';
-    $data->{'dh_compat_level'} = $data->{'dh-compat-level'};
-    $data->{'default-build-depends'}
-      //= "debhelper (>= $data->{dh_compat_level}~)";
-    $data->{'extra-build-depends'} //= '';
-    $data->{'build_depends'} ||= join(', ',
-        grep { $_ }
-          ($data->{'default-build-depends'}, $data->{'extra-build-depends'}));
-
-    # Unwrap the options in case we used continuation lines.
-    $data->{options} =~ s/\n//g;
-
-    $data->{upstream_version} = $data->{version};
-    $data->{upstream_version} =~ s/-[^-]+$//;
-    $data->{upstream_version} =~ s/(-|^)(\d+):/$1/;
-
-    # Check for arch-specific tests
-    if ($data->{'test-architectures'} ne 'any') {
-        my @wildcards = split(/\s+/,$data->{'test-architectures'});
-        my @matches
-          = map { qx{dpkg-architecture -i $_; echo -n \$?} } @wildcards;
-        return 0 unless any { $_ == 0 } @matches;
-    }
-
-    if ($testdir and -d "${testdir}/lintian-include-dir") {
-        $data->{'lintian-include-dir'} = './lintian-include-dir';
-    }
-
     return 1;
 }
 

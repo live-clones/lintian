@@ -51,6 +51,7 @@ use Text::Template;
 
 use Lintian::Util
   qw(do_fork internal_error read_dpkg_control slurp_entire_file);
+use Test::Lintian::ConfigFile qw(read_config);
 
 our @EXPORT_OK = qw(
   chdir_runcmd
@@ -318,12 +319,12 @@ sub find_tests_for_tag {
         $tag, $glob,
         sub {
             my ($tag, $desc) = @_;
-            my $data = read_test_desc($desc);
-            my $tagnames = $data->{'test-for'}//'';
-            $tagnames .= ' ' . $data->{'test-against'}
+            my $data = read_config($desc);
+            my $tagnames = $data->{'test_for'}//'';
+            $tagnames .= ' ' . $data->{'test_against'}
               if $data->{'test-against'};
             my %table = map { $_ => 1 } split(m/\s++/o, $tagnames);
-            return $data if $table{$tag};
+            return $desc if $table{$tag};
             return 0;
         });
 }
