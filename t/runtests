@@ -343,6 +343,11 @@ sub test_package {
         return $test_state->skip_test("(disabled) $reason");
     }
 
+    if (-e "$origdir/debian/debian") {
+        return $test_state->test_error(
+            'Outdated test specification (./debian/debian exists).');
+    }
+
     if (   $testdata->{'test-depends'}
         || $testdata->{'test-conflicts'}
         || $testdata->{'build_depends'}
