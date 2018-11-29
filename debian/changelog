@@ -5,6 +5,9 @@ lintian (2.5.115) UNRELEASED; urgency=medium
   * t/runtests:
     + [CL] Apply a patch from Felix Lechner to fail tests with outdated
       specifications (ie. ./debian/debian exists).  (MR: !77)
+  * t/tests/{binaries-missing-lfs,deb-format-udeb-compression}:
+    + [CL] Apply a patch from Adam Conrad to fix two typos introduced
+      when parameterising test architectures.  (Closes: #914952)
   * t/tests/files-multiarch-foreign-files:
     + [CL] Apply a patch from James Clarke to fix this test on on non-amd64
       architectures.  (MR: !78)
