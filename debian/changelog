@@ -2,6 +2,11 @@ lintian (2.5.115) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
+  * checks/rules.{desc,pm}:
+    + [CL] Drop the debian-rules-makemaker-prefix-is-deprecated tag as the
+      transition was completed in 2015.  Thanks to Niko Tyni for the
+      update.  (Closes: #914885)
+
   * t/runtests:
     + [CL] Apply a patch from Felix Lechner to fail tests with outdated
       specifications (ie. ./debian/debian exists).  (MR: !77)

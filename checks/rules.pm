@@ -175,7 +175,6 @@ sub run {
     my (%seen, %overridden);
     my ($maybe_skipping, @conditionals);
     my %variables;
-    my $uses_makefile_pl = 0;
     my $includes = 0;
 
     while (<$rules_fd>) {
@@ -203,7 +202,6 @@ sub run {
                   $makefile;
             }
         }
-        $uses_makefile_pl = 1 if m/Makefile\.PL/o;
 
         # Check for DH_COMPAT settings outside of any rule, which are now
         # deprecated.  It's a bit easier structurally to do this here than in
@@ -246,10 +244,6 @@ sub run {
                     tag $bad_construct, "line $.";
                 }
             }
-        }
-
-        if ($uses_makefile_pl && m/install.*PREFIX/s && !/DESTDIR/) {
-            tag 'debian-rules-makemaker-prefix-is-deprecated', "line $.";
         }
 
         # General assignment - save the variable
