@@ -444,6 +444,8 @@ sub run {
                   if $rpath
                   =~ m,^/usr/lib/(?:$madir/)?(?:games/)?(?:\Q$pkg\E|\Q$srcpkg\E)(?:/|\z),;
                 next if $rpath =~ m,^\$\{?ORIGIN\}?,;
+                # GHC in Debian uses a scheme for RPATH. (#914873)
+                next if $rpath =~ m,^/usr/lib/ghc/,;
                 next
                   if $directories{$rpath}
                   and $rpath !~ m,^(?:/usr)?/lib(?:/$madir)?/?\z,;

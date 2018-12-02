@@ -2,6 +2,9 @@ lintian (2.5.115) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
+  * checks/binaries.pm:
+    + [CL] Allow packages to define an RPATH under /usr/lib/ghc/ as the
+      Haskell team have their own scheme for this.  (Closes: #914873)
   * checks/rules.{desc,pm}:
     + [CL] Drop the debian-rules-makemaker-prefix-is-deprecated tag as the
       transition was completed in 2015.  Thanks to Niko Tyni for the
