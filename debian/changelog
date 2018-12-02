@@ -98,6 +98,10 @@ lintian (2.5.113) unstable; urgency=medium
     + [AB] Add "is planned" and "is also planned".
   * data/fields/name_section_mappings:
     + [CL] Tidy file.
+  * data/files/fnames:
+    + [CL] Check for packages that install files to /usr/share/hal as the
+      hal package was removed from Debian in 2014.  Thanks to Paul Wise for
+      the idea.  (Closes: #913280)
   * data/spelling/corrections:
     + [AB] Add "redundant" and a bunch of variants around "conditional".
     + [PW] Add a number of corrections.
