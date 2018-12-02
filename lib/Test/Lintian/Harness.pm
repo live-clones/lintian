@@ -55,8 +55,6 @@ use Lintian::Util
 our @EXPORT_OK = qw(
   chdir_runcmd
   check_test_depends
-  copy_template_dir
-  fill_in_tmpl
   find_tests_for_tag
   generic_find_test_for_tag
   is_tag_in_file
@@ -87,26 +85,6 @@ sub skip_reason {
     chomp($reason) if defined $reason;
     $reason //= 'No reason given in "skip" file';
     return $reason;
-}
-
-=item copy_template_dir(SKEL_DIR, TEST_SRC_DIR, TEST_TARGET_DIR, [EXCL_SKEL[, EXCL_SRC]])
-
-Populate TEST_TARGET_DIR with files/dirs from SKEL_DIR and
-TEST_SRC_DIR.  If given, EXCL_SKEL and EXCL_SRC must be a listref
-containing rsync "--exclude" options.
-
-=cut
-
-sub copy_template_dir {
-    my ($skel, $tsrc, $targetdir, $exskel, $extsrc) = @_;
-    my (@exs, @ext);
-    @exs = @$exskel if $exskel;
-    @ext = @$extsrc if $extsrc;
-    runsystem('rsync', '-rpc', "$skel/", "$targetdir/", @exs)
-      if -d "$skel/";
-    runsystem('rsync', '-rpc', "$tsrc/", "$targetdir/", @ext)
-      if -d "$tsrc/";
-    return;
 }
 
 =item runsystem(CMD...)
@@ -272,29 +250,6 @@ sub read_test_desc {
     }
     $testdata->{'sequence'} //= 6000;
     return $testdata;
-}
-
-=item fill_in_tmpl(FILE, DATA)
-
-Create FILE using "${FILE}.in" as a template and DATA as template
-data.
-
-=cut
-
-sub fill_in_tmpl {
-    my ($file, $data) = @_;
-    my $tmpl = "$file.in";
-
-    my $template = Text::Template->new(TYPE => 'FILE',  SOURCE => $tmpl);
-    internal_error("Cannot read template $tmpl: $Text::Template::ERROR")
-      if not $template;
-    open(my $out, '>', $file);
-
-    unless ($template->fill_in(OUTPUT => $out, HASH => $data)) {
-        internal_error("cannot create $file");
-    }
-    close($out);
-    return;
 }
 
 =item chdir_runcmd(DIR, CMD_REF[, LOG_FILE])

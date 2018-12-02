@@ -62,3 +62,12 @@ override_dh_install:
 	echo '#!/bin/sh' > $(SHARE)/cargo/registry/crate-1.0.0/test.sh
 	echo '#!/usr/bin/python' > $(SHARE)/cargo/registry/crate-1.0.0/test.py
 	chmod a+x $(SHARE)/cargo/registry/crate-1.0.0/test.py
+
+	# Documentation outside /usr/share/doc
+	touch $(DATA)/readme.txt
+	touch $(DATA)/readme1.1.txt
+	touch $(DATA)/readme1.1.txt
+	touch $(DATA)/readme_1.1.txt
+	touch $(DATA)/readme-1.1.txt
+	touch $(DATA)/readmefirst.txt
+	touch $(DATA)/readMesh_off.m  # False-positive from #914500

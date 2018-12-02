@@ -34,6 +34,7 @@ use Carp qw(confess);
 use Cwd();
 
 use File::Path qw(make_path);
+use File::Spec::Functions qw(abs2rel);
 use Getopt::Long qw(GetOptions);
 use IO::Async::Channel;
 use IO::Async::Loop;
@@ -98,9 +99,13 @@ use Lintian::Internal::FrontendUtil qw(default_parallel);
 use Lintian::Util qw(delete_dir internal_error parse_boolean
   rstrip slurp_entire_file touch_file);
 
-use Test::Lintian::Harness qw(chdir_runcmd check_test_depends
-  copy_template_dir fill_in_tmpl find_tests_for_tag
+use Test::Lintian::Harness
+  qw(chdir_runcmd check_test_depends find_tests_for_tag
   read_test_desc runsystem runsystem_ok skip_reason up_to_date);
+use Test::Lintian::ConfigFile qw(read_config);
+use Test::Lintian::Helper qw(copy_dir_contents);
+use Test::Lintian::Templates
+  qw(copy_skeleton_template_sets remove_surplus_templates fill_skeleton_templates);
 
 # --- Global configuration
 our @DPKG_BUILDPACKAGE_CMD = (
@@ -370,31 +375,36 @@ sub test_package {
         $test_state->info_msg(2, "Cleaning up and repopulating $targetdir...");
         runsystem_ok('rm', '-rf', $rundir);
 
-        make_path("$rundir/orig");
-        copy_template_dir("$tmpldir/${skel}.upstream",
-            "$origdir/orig/", "$rundir/orig");
-
-        make_path("$rundir/debian");
-        copy_template_dir("$tmpldir/$skel",
-            "$origdir/debian/", "$rundir/debian");
-
-        runsystem('cp', '-rp', "$origdir/.", $rundir);
-
-        foreach my $tfile (@{ $TEMPLATES{$suite} }) {
-            if (-f "$rundir/orig/debian/${tfile}.in") {
-                fill_in_tmpl("$rundir/orig/debian/$tfile", $testdata)
-                  unless -e "$rundir/orig/debian/$tfile";
-                unlink("$rundir/orig/debian/${tfile}.in");
-            }
+        # create work directory
+        unless (-d $rundir) {
+            $test_state->info_msg(2, "Creating directory $rundir.");
+            make_path($rundir);
         }
 
-        foreach my $tfile (@{ $TEMPLATES{$suite} }) {
-            if (-f "$rundir/debian/${tfile}.in"){
-                fill_in_tmpl("$rundir/debian/$tfile", $testdata)
-                  unless -e "$rundir/debian/$tfile";
-                unlink("$rundir/debian/${tfile}.in");
-            }
-        }
+        # the skeleton we are working with
+        my $skeletonname = $testdata->{skeleton};
+        my $skeletonpath = "$TESTSET/skeletons/$suite/$skeletonname";
+
+        my $skeleton = read_config($skeletonpath);
+
+        # populate working directory with specified template sets
+        copy_skeleton_template_sets($skeleton->{template_sets},
+            $rundir, $suite, $TESTSET)
+          if exists $skeleton->{template_sets};
+
+        # delete templates for which we have originals
+        remove_surplus_templates($origdir, $rundir);
+
+        # copy test specification to working directory
+        my $offset = abs2rel($origdir, $TESTSET);
+        $test_state->info_msg(2,
+            "Copying test specification $offset from $TESTSET to $rundir.");
+        copy_dir_contents($origdir, $rundir);
+
+        # fill remaining templates
+        fill_skeleton_templates($skeleton->{fill_targets},
+            $testdata, $RUNNER_TS, $rundir, $TESTSET)
+          if exists $skeleton->{fill_targets};
 
         runsystem('cp', '-rp', "$rundir/orig/.", $targetdir)
           if -d "$rundir/orig";
@@ -417,7 +427,8 @@ sub test_package {
         runsystem('cp', '-rp', "$rundir/diff/.", $targetdir)
           if -d "$rundir/diff";
 
-        runsystem('cp', '-rp', "$rundir/debian", $targetdir);
+        make_path("$targetdir/debian");
+        runsystem('cp', '-rp', "$rundir/debian/.", "$targetdir/debian");
 
         unless ($is_native || -e "$targetdir/debian/watch") {
             my $f = "$targetdir/debian/watch";
@@ -551,6 +562,8 @@ sub run_lintian {
 sub test_changes {
     my ($test_state, $testdata) = @_;
 
+    my $suite = $testdata->{suite};
+
     if (!check_test_is_sane($TESTSET, undef, $testdata)) {
         return $test_state->skip_test('architecture mismatch');
     }
@@ -576,23 +589,41 @@ sub test_changes {
 
     my $test = $testdata->{source};
     my $testdir = "$TESTSET/changes/$test";
-    # lintian refuses changes files without a dot
-    my $file = "$testdir/test.changes";
     my $rundir = "$RUNDIR/changes/$test";
 
-    # Check if we need to copy these files over.
-    if (!-e $file && -e "$file.in") {
-        my @files;
-        $test_state->progress('building');
-        # copy all files but "tags" and desc.  Usually this will only
-        # be "test.changes.in", but in rare cases we have "other files"
-        # as well.
-        @files = grep { !/(?:desc|tags)$/o } glob("$testdir/*");
-        make_path("$rundir");
-        runsystem('cp', '-f', @files, "$rundir");
-        $file = "$rundir/test.changes";
-        fill_in_tmpl($file, $testdata);
+    # create work directory
+    unless (-d $rundir) {
+        $test_state->info_msg(2, "Creating directory $rundir.");
+        make_path($rundir);
     }
+
+    # the skeleton we are working with
+    my $skeletonname = $testdata->{skeleton};
+    my $skeletonpath = "$TESTSET/skeletons/$suite/$skeletonname";
+
+    my $skeleton = read_config($skeletonpath);
+
+    # populate working directory with specified template sets
+    copy_skeleton_template_sets($skeleton->{template_sets},
+        $rundir, $suite, $TESTSET)
+      if exists $skeleton->{template_sets};
+
+    # delete templates for which we have originals
+    remove_surplus_templates($testdir, $rundir);
+
+    # copy test specification to working directory
+    my $offset = abs2rel($testdir, $TESTSET);
+    $test_state->info_msg(2,
+        "Copying test specification $offset from $TESTSET to $rundir.");
+    copy_dir_contents($testdir, $rundir);
+
+    # fill remaining templates
+    fill_skeleton_templates($skeleton->{fill_targets},
+        $testdata, $RUNNER_TS, $rundir, $TESTSET)
+      if exists $skeleton->{fill_targets};
+
+    # lintian refuses changes files without a dot
+    my $file = "$rundir/test.changes";
 
     run_lintian($test_state, $testdata, $file, $rundir, "$rundir/tags");
 
@@ -644,19 +675,37 @@ sub generic_test_runner {
 
         $test_state->info_msg(2, "Cleaning up and repopulating $targetdir...");
         runsystem_ok('rm', '-rf', $targetdir);
-        make_path($targetdir);
 
-        copy_template_dir("$tmpldir/$skel", "$testdir/", $targetdir,
-            ['--exclude=desc']);
-
-        runsystem('cp', '-rp', $testdir, $targetdir);
-
-        foreach my $tfile (@{ $TEMPLATES{$suite} }) {
-            if (not -e "$targetdir/$tfile" and -f "$targetdir/${tfile}.in") {
-                fill_in_tmpl("$targetdir/$tfile", $testdata);
-                unlink("$targetdir/${tfile}.in");
-            }
+        # create work directory
+        unless (-d $targetdir) {
+            $test_state->info_msg(2, "Creating directory $targetdir.");
+            make_path($targetdir);
         }
+
+        # the skeleton we are working with
+        my $skeletonname = $testdata->{skeleton};
+        my $skeletonpath = "$TESTSET/skeletons/$suite/$skeletonname";
+
+        my $skeleton = read_config($skeletonpath);
+
+        # populate working directory with specified template sets
+        copy_skeleton_template_sets($skeleton->{template_sets},
+            $targetdir, $suite, $TESTSET)
+          if exists $skeleton->{template_sets};
+
+        # delete templates for which we have originals
+        remove_surplus_templates($testdir, $targetdir);
+
+        # copy test specification to working directory
+        my $offset = abs2rel($testdir, $TESTSET);
+        $test_state->info_msg(2,
+            "Copying test specification $offset from $TESTSET to $targetdir.");
+        copy_dir_contents($testdir, $targetdir);
+
+        # fill remaining templates
+        fill_skeleton_templates($skeleton->{fill_targets},
+            $testdata, $RUNNER_TS, $targetdir, $TESTSET)
+          if exists $skeleton->{fill_targets};
 
         $test_state->progress('building');
         my $res= chdir_runcmd(

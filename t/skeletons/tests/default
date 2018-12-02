@@ -1,0 +1,5 @@
+Template-Sets:
+ debian (default),
+Fill-Targets:
+ debian (debian-packaging),
+ orig/debian (debian-packaging),

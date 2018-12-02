@@ -1,3 +1,28 @@
+lintian (2.5.114) unstable; urgency=medium
+
+  * checks/debhelper.pm:
+    + [CL] Apply a patch from Stephen Kitt to avoid false-positives for the
+      package-does-not-use-debhelper-or-cdbs tag if the call to dh(1) is
+      prefixed with "@", "+" or "-".  (Closes: #914538)
+  * checks/*, t/*:
+    + [CL] Consistently use (eg.) "DEP 5" over "DEP-5" to match the style
+      used on dep.debian.net.  (Closes: #914562)
+
+  * data/files/documentation-file-regex:
+    + [CL] Prevent false-positives for files called (eg.) readMesh_off.m
+      for the package-contains-documentation-outside-usr-share-doc tag
+      which was matching an overly-permissive regex.  Thanks to Rafael
+      Laboissière (rafael) for the report.  (Closes: #914500)
+  * data/spelling/corrections:
+    + [PW] Add a number of corrections.
+
+  * t/*:
+    + [CL] Apply a patch series from Felix Lechner to make the templating
+      more flexible in tests, re-using the Skeleton: statements in "desc"
+      files for more complex templating logic.  (MR: !75)
+
+ -- Chris Lamb <lamby@debian.org>  Mon, 26 Nov 2018 08:21:31 +0000
+
 lintian (2.5.113~bpo9+1) stretch-backports; urgency=medium
 
   * Rebuild for stretch-backports.

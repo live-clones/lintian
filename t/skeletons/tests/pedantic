@@ -1,0 +1,6 @@
+Template-Sets:
+ debian (pedantic),
+ orig (pedantic.upstream),
+Fill-Targets:
+ debian (debian-packaging),
+ orig/debian (debian-packaging),
