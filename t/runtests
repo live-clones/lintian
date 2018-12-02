@@ -413,44 +413,19 @@ sub test_package {
             $testdata, $RUNNER_TS, $rundir, $TESTSET)
           if exists $skeleton->{fill_targets};
 
-        runsystem('cp', '-rp', "$rundir/orig/.", $targetdir)
-          if -d "$rundir/orig";
-
-        unless ($is_native) {
-            if (-x "$origdir/pre_upstream") {
-                $test_state->progress('pre_upstream hook');
-                runsystem("$origdir/pre_upstream", $targetdir);
-            }
-            chdir_runcmd($rundir,
-                ['tar', 'czf', "${pkg}_${orig_version}.orig.tar.gz", $pkgdir]);
-            if (-f "$rundir/debian/source/format") {
-                my $format= slurp_entire_file("$rundir/debian/source/format");
-                chomp $format;
-                if ($format =~ m/^3.\d+ \(quilt\)$/) {
-                    delete_dir("$targetdir/debian/");
-                }
-            }
+        $test_state->progress('building');
+        my $res
+          = chdir_runcmd($targetdir,
+            ['make',"DEFAULT_DH_COMPAT=$testdata->{dh_compat_level}"],
+            "../build.$testname");
+        if ($res) {
+            $test_state->dump_log("${RUNDIR}/${suite}/build.${testname}")
+              if $DUMP_LOGS;
+            return $test_state->test_error(
+                join(q{ },
+                    "cd $targetdir &&",
+                    "make >../build.$testname 2>&1 failed"));
         }
-        runsystem('cp', '-rp', "$rundir/diff/.", $targetdir)
-          if -d "$rundir/diff";
-
-        make_path("$targetdir/debian");
-        runsystem('cp', '-rp', "$rundir/debian/.", "$targetdir/debian");
-
-        unless ($is_native || -e "$targetdir/debian/watch") {
-            my $f = "$targetdir/debian/watch";
-            # Create a watch file with "content" as lintian checks for
-            # non-zero file size.
-            open(my $fd, '>', $f);
-            print {$fd} "# Empty watch file\n";
-            close($fd);
-        }
-        if (-x "$origdir/pre_build") {
-            $test_state->progress('pre_build hook');
-            runsystem("$origdir/pre_build", $targetdir);
-        }
-        _builder_tests($test_state, $testdata, "$rundir/$pkgdir",
-            "$rundir/build.$pkg");
         touch_file($stampfile);
     } else {
         $test_state->progress('building (cached)');
@@ -488,18 +463,6 @@ sub test_package {
 
     return _check_result($test_state, $testdata, $expected,
         "$rundir/tags.$pkg",$origexp);
-}
-
-sub _builder_tests {
-    my ($test_state, $testdata, $testdir, $log) = @_;
-    $test_state->progress('building');
-    my $res = chdir_runcmd($testdir, \@DPKG_BUILDPACKAGE_CMD, $log);
-    if ($res){
-        $test_state->dump_log($log) if $DUMP_LOGS;
-        internal_error("cd $testdir && @DPKG_BUILDPACKAGE_CMD >$log 2>&1");
-    }
-
-    return;
 }
 
 sub run_lintian {
