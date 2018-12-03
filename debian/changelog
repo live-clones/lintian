@@ -9,6 +9,9 @@ lintian (2.5.115) UNRELEASED; urgency=medium
     + [CL] Drop the debian-rules-makemaker-prefix-is-deprecated tag as the
       transition was completed in 2015.  Thanks to Niko Tyni for the
       update.  (Closes: #914885)
+  * checks/patch-systems.desc:
+    + [CL] Downgrade package-uses-vendor-specific-patch-series from "E:" to
+      "W:" as they are not RC bugs until the release of buster.
 
   * t/*:
     + [CL] Apply a patch series from Felix Lechner to implement a universal
