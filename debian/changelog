@@ -10,6 +10,9 @@ lintian (2.5.115) UNRELEASED; urgency=medium
       transition was completed in 2015.  Thanks to Niko Tyni for the
       update.  (Closes: #914885)
 
+  * t/*:
+    + [CL] Apply a patch series from Felix Lechner to implement a universal
+      test runner with file-based default values.  (MR: !76)
   * t/runtests:
     + [CL] Apply a patch from Felix Lechner to fail tests with outdated
       specifications (ie. ./debian/debian exists).  (MR: !77)
