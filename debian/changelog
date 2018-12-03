@@ -23,7 +23,7 @@ lintian (2.5.115) UNRELEASED; urgency=medium
     + [CL] Apply a patch from Adam Conrad to fix two typos introduced
       when parameterising test architectures.  (Closes: #914952)
   * t/tests/files-multiarch-foreign-files:
-    + [CL] Apply a patch from James Clarke to fix this test on on non-amd64
+    + [CL] Apply a patch from James Clarke to fix this test on non-amd64
       architectures.  (MR: !78)
 
  -- Chris Lamb <lamby@debian.org>  Mon, 26 Nov 2018 09:43:15 +0100
