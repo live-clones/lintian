@@ -2,6 +2,11 @@ lintian (2.5.116) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
+  * debian/rules:
+    + [CL] Apply a patch from Felix Lechner to remove the "runtests" build
+      stamp mechanism as it blocks runs that should be allowed such as
+      when only the test runner itself has changed.  (MR: !80)
+
  -- Chris Lamb <lamby@debian.org>  Mon, 03 Dec 2018 14:56:06 +0100
 
 lintian (2.5.115) unstable; urgency=medium
