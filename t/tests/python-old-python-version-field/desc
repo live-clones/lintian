@@ -2,7 +2,6 @@ Testname: python-old-python-version-field
 Version: 1.0
 Description: Test for old python-version fields
 Options: -I -E --pedantic
-Skeleton: pedantic
 Test-Against:
  old-python-version-field
 Test-For:

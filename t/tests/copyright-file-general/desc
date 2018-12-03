@@ -1,7 +1,6 @@
 Testname: copyright-file-general
 Version: 1.0
 Description: Test checking of copyright files
-Skeleton: pedantic
 Options: -IE --pedantic
 Test-For:
  FSSTND-dir-in-usr

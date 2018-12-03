@@ -3,7 +3,6 @@ Sequence: 2500
 Type: non-native
 Version: 1.0+dsfg-1.1
 Package-Architecture: all
-Skeleton: pedantic
 Options: --pedantic -I -E --exp-output format=colons --show-overrides
 Output-Format: colons
 Description: Test Lintian colon-separated output format

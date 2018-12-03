@@ -1,7 +1,6 @@
 Testname: cruft-general-upstream
 Version: 1.0-1
 Type: non-native
-Skeleton: pedantic
 Options: --pedantic -I -E
 Extra-Build-Depends: zip
 Description: Check for cruft in the upstream source
