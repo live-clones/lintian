@@ -1,5 +1,5 @@
 Template-Sets:
- debian (default),
+ debian (pedantic),
  . (make-builder)
 Fill-Targets:
  debian (debian-packaging),
