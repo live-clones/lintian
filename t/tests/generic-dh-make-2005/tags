@@ -3,6 +3,7 @@ E: generic-dh-make-2005: description-is-dh_make-template
 E: generic-dh-make-2005: helper-templates-in-copyright
 E: generic-dh-make-2005: section-is-dh_make-template
 I: generic-dh-make-2005 source: debian-watch-file-is-missing
+I: generic-dh-make-2005 source: testsuite-autopkgtest-missing
 I: generic-dh-make-2005: extended-description-is-probably-too-short
 W: generic-dh-make-2005 source: ancient-standards-version 3.6.2 (released 2005-06-17) (current is CURRENT)
 W: generic-dh-make-2005 source: debian-rules-ignores-make-clean-error line 47
@@ -10,6 +11,7 @@ W: generic-dh-make-2005 source: debian-rules-missing-recommended-target build-ar
 W: generic-dh-make-2005 source: debian-rules-missing-recommended-target build-indep
 W: generic-dh-make-2005 source: debian-rules-should-not-set-CFLAGS-from-noopt
 W: generic-dh-make-2005 source: dh-clean-k-is-deprecated
+W: generic-dh-make-2005 source: missing-debian-source-format
 W: generic-dh-make-2005 source: package-uses-deprecated-debhelper-compat-version 5
 W: generic-dh-make-2005: copyright-without-copyright-notice
 W: generic-dh-make-2005: empty-binary-package
