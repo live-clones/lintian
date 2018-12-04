@@ -2,6 +2,11 @@ lintian (2.5.116) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
+  * checks/fields.pm:
+    + [CL] Apply a patch from Felix Lechner to remove the incorrect line in
+      the fields-bugs-field-does-not-refer-to-debian-infrastructure tag's
+      output.  (MR: !83)
+
   * debian/rules:
     + [CL] Apply a patch from Felix Lechner to remove the "runtests" build
       stamp mechanism as it blocks runs that should be allowed such as
