@@ -273,6 +273,10 @@ sub fill_template {
     close($handle)
       or carp "Could not close file $generated: $!";
 
+    # transfer file permissions from template to generated file
+    my $stat = stat($template) or croak "stat $template failed: $!";
+    chmod $stat->mode, $generated or croak "chmod $generated failed: $!";
+
     # delete template
     unlink($template) if -f $generated;
 
