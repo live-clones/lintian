@@ -479,7 +479,7 @@ sub generic_test_runner {
                 $RUNNER_TS)
               if -f $posttemplatetemplate;
 
-            qx{ $posttemplatepath $targetdir }
+            safe_qx($posttemplatepath, $targetdir)
               if -x $posttemplatepath;
         }
 
