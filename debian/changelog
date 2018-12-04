@@ -15,6 +15,8 @@ lintian (2.5.116) UNRELEASED; urgency=medium
   * t/*:
     + [CL] Apply a patch from Felix Lechner to allow debian/rules to be
       generated from templates in tests.  (MR: !81)
+    + [CL] Apply a patch from Felix Lechner to remove pre-existing metadata
+      in the upstream-metadata-is-not-a-file test.  (MR: !84)
 
  -- Chris Lamb <lamby@debian.org>  Mon, 03 Dec 2018 14:56:06 +0100
 

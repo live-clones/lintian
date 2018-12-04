@@ -3,5 +3,9 @@
 set -e
 
 DIR="$1"
-mkdir -p "$DIR/debian/upstream"
-mkfifo "$DIR/debian/upstream/metadata"
+UPSTREAM_DIR="$DIR/debian/upstream"
+METADATA="$UPSTREAM_DIR/metadata"
+
+mkdir -p "$UPSTREAM_DIR"
+rm -f "$METADATA"
+mkfifo "$METADATA"
