@@ -19,7 +19,7 @@ lintian (2.5.116) UNRELEASED; urgency=medium
       in the upstream-metadata-is-not-a-file test.  (MR: !84)
     + [CL] Apply a patch series from Felix Lechner to provide a generalised
       facility to make any test template set independent of the package
-      format.  (MR: !FIXME)
+      format.  (MR: !82)
 
  -- Chris Lamb <lamby@debian.org>  Mon, 03 Dec 2018 14:56:06 +0100
 
