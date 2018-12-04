@@ -11,7 +11,7 @@
 #     56 -> Java12
 max-bytecode-version = 55
 
-max-bytecode-existing-version = 55
+max-bytecode-existing-version = 56
 
 # The following should not change
 min-bytecode-version = 45
