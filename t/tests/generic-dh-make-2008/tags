@@ -4,6 +4,7 @@ E: generic-dh-make-2008: description-is-dh_make-template
 E: generic-dh-make-2008: helper-templates-in-copyright
 E: generic-dh-make-2008: section-is-dh_make-template
 I: generic-dh-make-2008 source: debian-watch-file-is-missing
+I: generic-dh-make-2008 source: testsuite-autopkgtest-missing
 I: generic-dh-make-2008: extended-description-is-probably-too-short
 I: generic-dh-make-2008: package-contains-empty-directory usr/bin/
 I: generic-dh-make-2008: package-contains-empty-directory usr/sbin/
@@ -36,6 +37,7 @@ W: generic-dh-make-2008 source: dh-make-template-in-source debian/postrm.ex
 W: generic-dh-make-2008 source: dh-make-template-in-source debian/preinst.ex
 W: generic-dh-make-2008 source: dh-make-template-in-source debian/prerm.ex
 W: generic-dh-make-2008 source: dh-make-template-in-source debian/watch.ex
+W: generic-dh-make-2008 source: missing-debian-source-format
 W: generic-dh-make-2008 source: package-uses-deprecated-debhelper-compat-version 7
 W: generic-dh-make-2008 source: superfluous-clutter-in-homepage <insert the upstream URL, if relevant>
 W: generic-dh-make-2008: bad-homepage <insert the upstream URL, if relevant>
