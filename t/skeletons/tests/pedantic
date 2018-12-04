@@ -1,8 +1,0 @@
-Template-Sets:
- debian (pedantic),
- orig (pedantic.upstream),
- . (make-builder)
-Fill-Targets:
- debian (debian-packaging),
- orig/debian (debian-packaging),
- . (make-builder)
