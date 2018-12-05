@@ -17,6 +17,8 @@ lintian (2.5.116) UNRELEASED; urgency=medium
       when only the test runner itself has changed.  (MR: !80)
 
   * t/*:
+    + [CL] Apply a patch series from Felix Lechner to make "pedantic"
+      templates the default for all tests.  (MR: !87)
     + [CL] Apply a patch from Felix Lechner to allow debian/rules to be
       generated from templates in tests.  (MR: !81)
     + [CL] Apply a patch from Felix Lechner to remove pre-existing metadata
