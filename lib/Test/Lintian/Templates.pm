@@ -40,6 +40,7 @@ Routines for dealing with templates in Lintian test specifications.
 use strict;
 use warnings;
 use autodie;
+use v5.10;
 
 use Exporter qw(import);
 
@@ -70,6 +71,7 @@ use constant NEWLINE => qq{\n};
 use constant SPACE => q{ };
 use constant DOT => q{.};
 use constant COMMA => q{,};
+use constant COLON => q{:};
 use constant EMPTY => q{};
 
 =head1 FUNCTIONS
@@ -103,6 +105,9 @@ sub copy_skeleton_template_sets {
         my $templatesetpath = "$testset/templates/$name";
         croak "Cannot find template set '$name' at $templatesetpath."
           unless -d $templatesetpath;
+
+        say "Installing template set '$name'"
+          . ($relative ne DOT ? " to ./$relative." : EMPTY);
 
         # create directory
         my $destination = "$runpath/$relative";
@@ -163,10 +168,19 @@ sub fill_skeleton_templates {
             croak "Cannot find template whitelist '$name' at $whitelistpath"
               unless -f $whitelistpath;
 
+            say 'Generate files '
+              . ($relative ne DOT ? "in ./$relative " : EMPTY)
+              . "from templates using whitelist '$name'.";
             my $whitelist = read_config($whitelistpath);
 
             my @candidates = split(SPACE, $whitelist->{may_generate});
             my $destination = "$runpath/$relative";
+
+            say 'Fill templates'
+              . ($relative ne DOT ? " in ./$relative" : EMPTY)
+              . COLON
+              . SPACE
+              . join(SPACE, @candidates);
 
             foreach my $candidate (@candidates) {
                 my $generated = rel2abs($candidate, $destination);
@@ -180,6 +194,8 @@ sub fill_skeleton_templates {
         }else {
 
             # single file
+            say "Filling template: $relative";
+
             my $generated = rel2abs($relative, $runpath);
             my $template = "$generated.in";
 
