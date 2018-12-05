@@ -108,6 +108,7 @@ use Test::Lintian::Filter qw(find_selected_lintian_testpaths);
 use Test::Lintian::Helper qw(copy_dir_contents);
 use Test::Lintian::Templates
   qw(copy_skeleton_template_sets remove_surplus_templates fill_skeleton_templates fill_template);
+use Test::State;
 
 our $STANDARDS_VERSION = '4.2.1';
 our $ARCHITECTURE = safe_qx(qw(dpkg-architecture -qDEB_HOST_ARCH));
@@ -967,69 +968,6 @@ deemed "up-to-date".  This cache can greatly reduce the run time of the
 test suite.
 END
     exit($exitcode//2);
-}
-
-package Test::State;
-
-sub new {
-    my ($class, $metadata, $output) = @_;
-    my $self = {
-        '_output' => $output,
-        '_test_metadata' => $metadata,
-    };
-    return bless($self, $class);
-}
-
-sub info_msg {
-    my ($self, $verbosity, $msg) = @_;
-    return $self->_send('log-msg', $verbosity, $msg);
-}
-
-sub progress {
-    my ($self, $msg) = @_;
-    return $self->_send('progress', $msg);
-}
-
-sub skip_test {
-    my ($self, $reason) = @_;
-    return $self->_send('skip', $reason);
-}
-
-sub pass_test {
-    my ($self) = @_;
-    return $self->_send('pass');
-}
-
-sub pass_todo_test {
-    my ($self, $msg) = @_;
-    return $self->_send('pass-todo', $msg);
-}
-
-sub test_error {
-    my ($self, $msg) = @_;
-    #confess("ERROR $msg\n");
-    return $self->_send('error', $msg);
-}
-
-sub dump_log {
-    my ($self, $logfile) = @_;
-    return $self->_send('dump-file', $logfile);
-}
-
-sub diff_files {
-    my ($self, $original, $actual) = @_;
-    return $self->_send('diff-files', $original, $actual);
-}
-
-sub fail_test {
-    my ($self, $msg, $extra_info_cmd) = @_;
-    return $self->_send('fail', $msg, $extra_info_cmd);
-}
-
-sub _send {
-    my ($self, $msg_type, @msg) = @_;
-    $self->{'_output'}->send([$msg_type, $self->{'_test_metadata'}, @msg]);
-    return;
 }
 
 # Local Variables:
