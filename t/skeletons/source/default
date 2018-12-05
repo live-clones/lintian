@@ -1,6 +1,6 @@
 Template-Sets:
- debian (arch-independent),
- . (make-builder)
+ debian (source-arch-independent),
+ . (source-make-builder)
 Fill-Targets:
  dsc.in,
  debian (debian-packaging),

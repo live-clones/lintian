@@ -1,5 +1,5 @@
 Template-Sets:
- . (make-builder)
+ . (tests-make-builder)
 Fill-Targets:
  pre_build,
  debian (debian-packaging),
