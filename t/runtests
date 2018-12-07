@@ -39,7 +39,6 @@ use Getopt::Long qw(GetOptions);
 use IO::Async::Channel;
 use IO::Async::Loop;
 use IO::Async::Routine;
-use List::MoreUtils qw(none any);
 
 use constant SUITES => qw(scripts changes debs source tests);
 
@@ -106,8 +105,7 @@ use Test::Lintian::Harness
 use Test::Lintian::ConfigFile qw(read_config);
 use Test::Lintian::Filter qw(find_selected_lintian_testpaths);
 use Test::Lintian::Helper qw(copy_dir_contents);
-use Test::Lintian::Templates
-  qw(copy_skeleton_template_sets remove_surplus_templates fill_skeleton_templates fill_template);
+use Test::Lintian::Prepare qw(prepare);
 use Test::State;
 
 our $STANDARDS_VERSION = '4.2.1';
@@ -365,179 +363,6 @@ sub run_lintian {
     return 1;
 }
 
-# prepare
-#
-# Prepares the test called $test assumed to be located in $TESTSET/$dir/$test/.
-#
-sub prepare {
-    my ($test_state, $testdata) = @_;
-    my $suite = $testdata->{suite};
-    my $testname = $testdata->{testname};
-    my $testdir = "$TESTSET/$suite/$testname";
-
-    unless ($testdata->{testname} && exists $testdata->{version}) {
-        die 'Name or Version missing';
-    }
-
-    $testdata->{source} ||= $testdata->{testname};
-
-    $testdata->{date} ||= $DATE;
-
-    if (not $testdata->{prev_version}) {
-        $testdata->{prev_version} = '0.0.1';
-        $testdata->{prev_version} .= '-1'
-          if index($testdata->{version}, '-') > -1;
-    }
-
-    $testdata->{host_architecture} = $ARCHITECTURE;
-    $testdata->{'standards_version'} ||= $STANDARDS_VERSION;
-
-    $testdata->{'dh_compat_level'} //= '11';
-
-    $testdata->{'default_build_depends'}
-      //= "debhelper (>= $testdata->{dh_compat_level}~)";
-
-    $testdata->{'build_depends'} ||= join(
-        ', ',
-        grep { $_ }(
-            $testdata->{'default_build_depends'},
-            $testdata->{'extra_build_depends'}));
-
-    # Check for arch-specific tests
-    if ($testdata->{'test_architectures'} ne 'any') {
-        my @wildcards = split(/\s+/,$testdata->{'test_architectures'});
-        my @matches
-          = map { qx{dpkg-architecture -i $_; echo -n \$?} } @wildcards;
-        unless (any { $_ == 0 } @matches) {
-            $test_state->skip_test('architecture mismatch');
-            return 1;
-        }
-    }
-
-    if ($testdir and -d "${testdir}/lintian-include-dir") {
-        $testdata->{'lintian_include_dir'} = './lintian-include-dir';
-    }
-
-    $testdata->{upstream_version} = $testdata->{version};
-    $testdata->{upstream_version} =~ s/-[^-]+$//;
-    $testdata->{upstream_version} =~ s/(-|^)(\d+):/$1/;
-
-    my $epochless_version = $testdata->{version};
-    $epochless_version =~ s/^\d+://;
-    $testdata->{no_epoch} = $epochless_version;
-
-    $test_state->progress('setup');
-
-    my $targetdir = "$RUNDIR/$suite/$testname";
-    my $stampfile = "$RUNDIR/$suite/$testname-build-stamp";
-
-    if (-f "$testdir/skip") {
-        my $reason = skip_reason("$testdir/skip");
-        $test_state->skip_test("(disabled) $reason");
-        return 1;
-    }
-
-    die 'Outdated test specification (./debian/debian exists).'
-      if -e "$testdir/debian/debian";
-
-    if (   $testdata->{'test_depends'}
-        || $testdata->{'test_conflicts'}
-        || $testdata->{'build_depends'}
-        || $testdata->{'build_conflicts'}) {
-        my $missing = check_test_depends($testdata);
-        if ($missing) {
-            $test_state->skip_test($missing);
-            return 1;
-        }
-    }
-
-    # the skeleton we are working with
-    my $skeletonname = $testdata->{skeleton};
-    my $skeletonpath = "$TESTSET/skeletons/$suite/$skeletonname";
-
-    my $skeleton = read_config($skeletonpath);
-
-    if (   $ALWAYS_REBUILD
-        or not up_to_date($stampfile, $testdir, $RUNNER_TS)
-        or -e "$targetdir/debian/debian") {
-
-        my $skel = $testdata->{skeleton};
-        my $tmpldir = "$TESTSET/templates/$suite/";
-
-        $test_state->info_msg(2, "Cleaning up and repopulating $targetdir...");
-        runsystem_ok('rm', '-rf', $targetdir);
-
-        # create work directory
-        unless (-d $targetdir) {
-            $test_state->info_msg(2, "Creating directory $targetdir.");
-            make_path($targetdir);
-        }
-
-        # populate working directory with specified template sets
-        copy_skeleton_template_sets($skeleton->{template_sets},
-            $targetdir, $TESTSET)
-          if exists $skeleton->{template_sets};
-
-        # get post-template command
-        my $posttemplatename = $testdata->{post_template_command};
-        if (length $posttemplatename) {
-            my $posttemplatepath = "$targetdir/$posttemplatename";
-
-            # fill if needed
-            my $posttemplatetemplate = "$posttemplatepath.in";
-            fill_template($posttemplatetemplate, $posttemplatepath, $testdata,
-                $RUNNER_TS)
-              if -f $posttemplatetemplate;
-
-            safe_qx($posttemplatepath, $targetdir)
-              if -x $posttemplatepath;
-        }
-
-        # delete templates for which we have originals
-        remove_surplus_templates($testdir, $targetdir);
-
-        # copy test specification to working directory
-        my $offset = abs2rel($testdir, $TESTSET);
-        $test_state->info_msg(2,
-            "Copying test specification $offset from $TESTSET to $targetdir.");
-        copy_dir_contents($testdir, $targetdir);
-    }
-
-    # get builder name
-    my $buildername = $testdata->{builder};
-    if (length $buildername) {
-        my $builderpath = "$targetdir/$buildername";
-
-        # fill builder if needed
-        my $buildertemplate = "$builderpath.in";
-        fill_template($buildertemplate, $builderpath, $testdata,$RUNNER_TS)
-          if -f $buildertemplate;
-
-        if (-f $builderpath) {
-
-            # read builder
-            my $builder = read_config($builderpath);
-            die 'Could not read builder data.' unless $builder;
-
-            # transfer builder data to test case, but do not override
-            foreach my $key (keys %{$builder}) {
-                $testdata->{$key} = $builder->{$key}
-                  unless exists $testdata->{$key};
-            }
-        }
-    }
-
-    if ($ALWAYS_REBUILD or not up_to_date($stampfile, $testdir, $RUNNER_TS)) {
-
-        # fill remaining templates
-        fill_skeleton_templates($skeleton->{fill_targets},
-            $testdata, $RUNNER_TS, $targetdir, $TESTSET)
-          if exists $skeleton->{fill_targets};
-    }
-
-    return 0;
-}
-
 # generic_runner
 #
 # Runs the test called $test assumed to be located in $TESTSET/$dir/$test/.
@@ -706,7 +531,15 @@ sub create_child {
                 $0 = "Test worker - processing ${suite}::${testname}";
 
                 my $retval;
-                eval { $retval = prepare($state, $test_data); };
+                eval {
+                    $retval= prepare(
+                        $state, $test_data,
+                        $RUNDIR, $TESTSET,
+                        $RUNNER_TS, $ALWAYS_REBUILD,
+                        $ARCHITECTURE,$STANDARDS_VERSION,
+                        $DATE
+                    );
+                };
                 if (my $err = $@) {
                     $state->test_error($err);
                 }else {
