@@ -7,9 +7,10 @@ lintian (2.5.116) UNRELEASED; urgency=medium
       the fields-bugs-field-does-not-refer-to-debian-infrastructure tag's
       output.  (MR: !83)
 
+  * data/fields/perl-provides:
+    + [CL] Update for Perl 5.028001.
   * data/java/constants:
     + [CL] Apply a patch from Felix Lechner to fix the "maximum existing
-      version" for the Java class file format.  (MR: !86)
 
   * debian/rules:
     + [CL] Apply a patch from Felix Lechner to remove the "runtests" build
