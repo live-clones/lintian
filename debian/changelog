@@ -1,6 +1,4 @@
-lintian (2.5.116) UNRELEASED; urgency=medium
-
-  XXX: generate tag summary
+lintian (2.5.116) unstable; urgency=medium
 
   * checks/fields.pm:
     + [CL] Apply a patch from Felix Lechner to remove the incorrect line in
@@ -30,7 +28,7 @@ lintian (2.5.116) UNRELEASED; urgency=medium
     + [CL] Apply a patch series from Felix Lechner to support
       suite-independent test templates.  (MR: !88)
 
- -- Chris Lamb <lamby@debian.org>  Mon, 03 Dec 2018 14:56:06 +0100
+ -- Chris Lamb <lamby@debian.org>  Fri, 07 Dec 2018 08:59:39 +0000
 
 lintian (2.5.115) unstable; urgency=medium
 
