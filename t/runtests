@@ -30,7 +30,6 @@
 use strict;
 use warnings;
 use autodie;
-use Carp qw(confess);
 use Cwd();
 
 use File::Path qw(make_path);
@@ -42,7 +41,7 @@ use IO::Async::Routine;
 
 use constant SUITES => qw(scripts changes debs source tests);
 
-our ($LINTIAN_ROOT, $LINTIAN, @LINTIAN_CMD, @LINTIAN_COMMON_OPTIONS);
+our ($LINTIAN_ROOT, $LINTIAN);
 
 BEGIN {
     # Whitelist the part of the environment we permit.  This is to
@@ -78,7 +77,6 @@ BEGIN {
     $ENV{'LINTIAN_TEST_ROOT'} = $LINTIAN_ROOT;
     $ENV{'LINTIAN_FRONTEND'} = $LINTIAN;
     $ENV{'LINTIAN_DPLINT_FRONTEND'} = $dplint;
-    @LINTIAN_CMD = ($LINTIAN);
 
     # Ubuntu auto-builders run pkg-mangle which messes with our
     # test packages, so ask it not to do so by default.
@@ -96,8 +94,7 @@ use lib "$LINTIAN_ROOT/lib";
 
 use Lintian::Command qw(safe_qx);
 use Lintian::Internal::FrontendUtil qw(default_parallel);
-use Lintian::Util qw(delete_dir internal_error parse_boolean
-  rstrip slurp_entire_file touch_file);
+use Lintian::Util qw(internal_error);
 
 use Test::Lintian::Harness
   qw(chdir_runcmd check_test_depends find_tests_for_tag
@@ -106,6 +103,7 @@ use Test::Lintian::ConfigFile qw(read_config);
 use Test::Lintian::Filter qw(find_selected_lintian_testpaths);
 use Test::Lintian::Helper qw(copy_dir_contents);
 use Test::Lintian::Prepare qw(prepare);
+use Test::Lintian::Run qw(runner);
 use Test::State;
 
 our $STANDARDS_VERSION = '4.2.1';
@@ -239,25 +237,6 @@ sub parse_args {
 
     $TESTSET = rel2abs($TESTSET);
 
-    if (defined($coverage)) {
-        my $harness_perl_switches = $ENV{'HARNESS_PERL_SWITCHES'}//'';
-        # Only collect coverage for stuff that D::NYTProf and
-        # Test::Pod::Coverage cannot do for us.  This makes cover use less
-        # RAM in the other end.
-        my @criteria = qw(statement branch condition path subroutine);
-        my $coverage_arg
-          = '-MDevel::Cover=-silent,1,+ignore,^(.*/)?t/scripts/.+';
-        $coverage_arg .= ',+ignore,/usr/bin/.*,+ignore,(.*/)?Dpkg';
-        $coverage_arg .= ',-coverage,' . join(',-coverage,', @criteria);
-        $coverage_arg .= ',' . $coverage if $coverage ne '';
-        $ENV{'LINTIAN_COVERAGE'} = $coverage_arg;
-        $harness_perl_switches .= ' ' . $coverage_arg;
-        $ENV{'HARNESS_PERL_SWITCHES'} = $harness_perl_switches;
-        # Coverage has some race conditions (at least when using the same
-        # cover database).
-        push(@LINTIAN_COMMON_OPTIONS, '-j1');
-    }
-
     # Getopt::Long assigns 0 as default value if none was specified
     # (i.e. "-j").  Otherwise, $JOBS can also be -1 if "-j" was not
     # specified at all.
@@ -301,145 +280,6 @@ sub print_test_summary {
             }
         }
     }
-    return;
-}
-
-sub run_lintian {
-    my ($test_state, $testdata, $file, $rundir, $out) = @_;
-    $test_state->progress('testing');
-    my @options = split(' ', $testdata->{options}//'');
-    unshift(@options, '--allow-root', '--no-cfg');
-    unshift(@options, '--profile', $testdata->{profile});
-    unshift(@options, '--no-user-dirs');
-    if (my $incl_dir = $testdata->{'lintian_include_dir'}) {
-        unshift(@options, '--include-dir', $incl_dir);
-    }
-    my $pid = open(my $in, '-|');
-    if ($pid) {
-        my @data = <$in>;
-        my $status = 0;
-        eval {close($in);};
-        if (my $err = $@) {
-            internal_error("close pipe: $!") if $err->errno;
-            $status = ($? >> 8) & 255;
-        }
-        if (defined($coverage)) {
-            # Devel::Cover causes some annoying deep recursion
-            # warnings.  Filter them out, but only during coverage.
-            # - This is not flawless, but it gets most of them
-            @data = grep {
-                !m{^Deep [ ] recursion [ ] on [ ] subroutine [ ]
-                    "[^"]+" [ ] at [ ] .*B/Deparse.pm [ ] line [ ]
-                   \d+}xsm
-            } @data;
-        }
-        unless ($status == 0 or $status == 1) {
-            my $name = $testdata->{testname};
-            #NB: lines in @data have trailing newlines.
-            my $msg = "$LINTIAN @options $file exited with status $status\n";
-            $msg .= join(q{},map { "$name: $_" } @data);
-
-            die $msg;
-        } else {
-            @data = sort @data if $testdata->{sort} eq 'yes';
-            open(my $fd, '>', $out);
-            print $fd $_ for @data;
-            close($fd);
-        }
-    } else {
-        my @cmd = @LINTIAN_CMD;
-        if ($ENV{'LINTIAN_COVERAGE'}) {
-            my $suite = $testdata->{suite};
-            my $name = $testdata->{testname};
-            my $cover_dir = "./cover_db-${suite}-${name}";
-            $ENV{'LINTIAN_COVERAGE'} .= ",-db,${cover_dir}";
-            unshift(@cmd, 'perl', $ENV{'LINTIAN_COVERAGE'});
-        }
-        open(STDERR, '>&', \*STDOUT);
-        chdir($rundir);
-        exec @cmd, @options, @LINTIAN_COMMON_OPTIONS, $file
-          or internal_error("exec failed: $!");
-    }
-    return 1;
-}
-
-# generic_runner
-#
-# Runs the test called $test assumed to be located in $TESTSET/$dir/$test/.
-#
-sub generic_runner {
-    my ($test_state, $testdata) = @_;
-    my $suite = $testdata->{suite};
-    my $testname = $testdata->{testname};
-    my $testdir = "$TESTSET/$suite/$testname";
-
-    my $targetdir = "$RUNDIR/$suite/$testname";
-    my $stampfile = "$RUNDIR/$suite/$testname-build-stamp";
-
-    # get lintian subject
-    die 'Could not get subject of Lintian examination.'
-      unless exists $testdata->{build_product};
-    my $subject = "$targetdir/$testdata->{build_product}";
-
-    if ($ALWAYS_REBUILD or not up_to_date($stampfile, $testdir, $RUNNER_TS)) {
-
-        $test_state->progress('building');
-
-        if (exists $testdata->{build_command}) {
-            my $command
-              = "cd $targetdir; $testdata->{build_command} > ../build.$testname 2>&1";
-            if (system($command)) {
-                $test_state->dump_log("${RUNDIR}/${suite}/build.${testname}")
-                  if $DUMP_LOGS;
-                die "$command failed.";
-            }
-        }
-
-        die 'Build was unsuccessful.'
-          unless -f $subject;
-
-        touch_file($stampfile);
-    } else {
-        $test_state->progress('building (cached)');
-    }
-
-    my $pkg = $testdata->{source};
-
-    run_lintian($test_state, $testdata, $subject, $targetdir,
-        "$targetdir/tags.$pkg");
-
-    # Run a sed-script if it exists, for tests that have slightly variable
-    # output
-    if (-f "$targetdir/post_test") {
-        runsystem_ok('sed', '-ri', '-f', "$targetdir/post_test",
-            "$targetdir/tags.$pkg");
-        if ($testdata->{'sort'} eq 'yes') {
-            # Re-sort as the sed may have changed the order lines
-            open(my $rfd, '<', "$targetdir/tags.$pkg");
-            my @lines = sort(<$rfd>);
-            close($rfd);
-            open(my $wfd, '>', "$targetdir/tags.$pkg");
-            print {$wfd} $_ for @lines;
-            close($wfd);
-        }
-    }
-
-    my $expected = "$testdir/tags";
-    my $origexp = $expected;
-
-    if (-x "$targetdir/test_calibration") {
-        my $calibrated = "$targetdir/expected.$pkg.calibrated";
-        $test_state->progress('test_calibration hook');
-        runsystem_ok(
-            "$targetdir/test_calibration", $expected,
-            "$targetdir/tags.$pkg", $calibrated
-        );
-        $expected = $calibrated if -e $calibrated;
-    }
-
-    _check_result($test_state, $testdata, $expected,
-        "$targetdir/tags.$pkg",$origexp);
-
     return;
 }
 
@@ -544,7 +384,11 @@ sub create_child {
                     $state->test_error($err);
                 }else {
                     unless ($retval) {
-                        eval { generic_runner($state, $test_data); };
+                        eval {
+                            runner($state, $test_data, $RUNDIR, $TESTSET,
+                                $RUNNER_TS, $ALWAYS_REBUILD, $DUMP_LOGS,
+                                $coverage);
+                        };
                         if (my $err = $@) {
                             $state->test_error($err);
                         }
@@ -679,119 +523,6 @@ sub handle_msg_from_child {
         }
     }
     return;
-}
-
-sub _check_result {
-    my ($test_state, $testdata, $expected, $actual, $origexp) = @_;
-    # Compare the output to the expected tags.
-    my $testok = runsystem_ok('cmp', '-s', $expected, $actual);
-
-    if (not $testok) {
-        if ($testdata->{'todo'} eq 'yes') {
-            $test_state->pass_todo_test('failed but marked as TODO');
-            return;
-        } else {
-            $test_state->diff_files($expected, $actual);
-            $test_state->fail_test('output differs!');
-            return;
-        }
-    }
-
-    unless ($testdata) {
-        $test_state->pass_test;
-        return;
-    }
-
-    # Check the output for invalid lines.  Also verify that all Test-For tags
-    # are seen and all Test-Against tags are not.  Skip this part of the test
-    # if neither Test-For nor Test-Against are set and Sort is also not set,
-    # since in that case we probably have non-standard output.
-    my %test_for = map { $_ => 1 } split(' ', $testdata->{'test_for'}//'');
-    my %test_against
-      = map { $_ => 1 } split(' ', $testdata->{'test_against'}//'');
-    if (    not %test_for
-        and not %test_against
-        and $testdata->{'output_format'} ne 'EWI') {
-        if ($testdata->{'todo'} eq 'yes') {
-            $test_state->fail_test('marked as TODO but succeeded');
-            return;
-        } else {
-            $test_state->pass_test;
-            return;
-        }
-    } else {
-        my $okay = 1;
-        my @msgs;
-        open(my $etags, '<', $actual);
-        while (<$etags>) {
-            next if m/^N: /;
-            # Some of the traversal tests creates packages that are
-            # skipped; accept that in the output
-            next if m/tainted/o && m/skipping/o;
-            # Looks for "$code: $package[ $type]: $tag"
-            if (not /^.: \S+(?: (?:changes|source|udeb))?: (\S+)/o) {
-                chomp;
-                push(@msgs, "Invalid line: $_");
-                $okay = 0;
-                next;
-            }
-            my $tag = $1;
-            if ($test_against{$tag}) {
-                push(@msgs, "Tag $tag seen but listed in Test-Against");
-                $okay = 0;
-                # Warn only once about each "test-against" tag
-                delete $test_against{$tag};
-            }
-            delete $test_for{$tag};
-        }
-        close($etags);
-        if (%test_for) {
-            if ($origexp && $origexp ne $expected) {
-                # Test has been calibrated, check if some of the
-                # "Test-For" has been calibrated out.  (Happens with
-                # binaries-hardening on some architectures).
-                open(my $oe, '<', $expected);
-                my %cp_tf = %test_for;
-                while (<$oe>) {
-                    next if m/^N: /;
-                    # Some of the traversal tests creates packages that are
-                    # skipped; accept that in the output
-                    next if m/tainted/o && m/skipping/o;
-                    if (not /^.: \S+(?: (?:changes|source|udeb))?: (\S+)/o) {
-                        chomp;
-                        push(@msgs, "Invalid line: $_");
-                        $okay = 0;
-                        next;
-                    }
-                    delete $cp_tf{$1};
-                }
-                close($oe);
-                # Remove tags that has been calibrated out.
-                foreach my $tag (keys %cp_tf) {
-                    delete $test_for{$tag};
-                }
-            }
-            for my $tag (sort keys %test_for) {
-                push(@msgs, "Tag $tag listed in Test-For but not found");
-                $okay = 0;
-            }
-        }
-        if ($okay) {
-            if ($testdata->{'todo'} eq 'yes') {
-                $test_state->fail_test('marked as TODO but succeeded');
-                return;
-            }
-            $test_state->pass_test;
-            return;
-        } elsif ($testdata->{'todo'} eq 'yes') {
-            $test_state->pass_todo_test(join("\n", @msgs));
-            return;
-        } else {
-            $test_state->fail_test(join("\n", @msgs));
-            return;
-        }
-    }
-    confess("Assertion: This should be unreachable\n");
 }
 
 sub handle_dump_log{
