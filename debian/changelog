@@ -1,3 +1,9 @@
+lintian (2.5.115~bpo9+1) stretch-backports; urgency=medium
+
+  * Rebuild for stretch-backports.
+
+ -- Chris Lamb <lamby@debian.org>  Fri, 07 Dec 2018 09:53:24 +0100
+
 lintian (2.5.115) unstable; urgency=medium
 
   * Summary of tag changes:
