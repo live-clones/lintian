@@ -1,3 +1,38 @@
+lintian (2.5.115) unstable; urgency=medium
+
+  * Summary of tag changes:
+    + Removed:
+      - debian-rules-makemaker-prefix-is-deprecated
+
+  * checks/binaries.pm:
+    + [CL] Allow packages to define an RPATH under /usr/lib/ghc/ as the
+      Haskell team have their own scheme for this.  (Closes: #914873)
+  * checks/rules.{desc,pm}:
+    + [CL] Drop the debian-rules-makemaker-prefix-is-deprecated tag as the
+      transition was completed in 2015.  Thanks to Niko Tyni for the
+      update.  (Closes: #914885)
+  * checks/patch-systems.desc:
+    + [CL] Downgrade package-uses-vendor-specific-patch-series from "E:" to
+      "W:" as they are not RC bugs until the release of buster.
+
+  * data/spelling/corrections:
+    + [PW] Add a number of corrections.
+
+  * t/*:
+    + [CL] Apply a patch series from Felix Lechner to implement a universal
+      test runner with file-based default values.  (MR: !76)
+  * t/runtests:
+    + [CL] Apply a patch from Felix Lechner to fail tests with outdated
+      specifications (ie. ./debian/debian exists).  (MR: !77)
+  * t/tests/{binaries-missing-lfs,deb-format-udeb-compression}:
+    + [CL] Apply a patch from Adam Conrad to fix two typos introduced
+      when parameterising test architectures.  (Closes: #914952)
+  * t/tests/files-multiarch-foreign-files:
+    + [CL] Apply a patch from James Clarke to fix this test on non-amd64
+      architectures.  (MR: !78)
+
+ -- Chris Lamb <lamby@debian.org>  Mon, 03 Dec 2018 13:33:49 +0000
+
 lintian (2.5.114~bpo9+1) stretch-backports; urgency=medium
 
   * Rebuild for stretch-backports.
@@ -94,6 +129,10 @@ lintian (2.5.113) unstable; urgency=medium
     + [AB] Add "is planned" and "is also planned".
   * data/fields/name_section_mappings:
     + [CL] Tidy file.
+  * data/files/fnames:
+    + [CL] Check for packages that install files to /usr/share/hal as the
+      hal package was removed from Debian in 2014.  Thanks to Paul Wise for
+      the idea.  (Closes: #913280)
   * data/spelling/corrections:
     + [AB] Add "redundant" and a bunch of variants around "conditional".
     + [PW] Add a number of corrections.

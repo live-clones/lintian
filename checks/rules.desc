@@ -199,24 +199,6 @@ Info: The specified package is required to run the clean target of
  Build-Depends-Indep, even if no architecture-dependent packages are
  built.
 
-Tag: debian-rules-makemaker-prefix-is-deprecated
-Severity: normal
-Certainty: possible
-Ref: perl-policy 4.3
-Info: The package appears to use an <tt>ExtUtils::MakeMaker</tt>
- (Makefile.PL) build system and sets the temporary installation path by
- overriding <tt>PREFIX</tt> when calling <tt>make install</tt>.  This only
- works because of a Debian-specific change to <tt>ExtUtils::MakeMaker</tt>
- that the maintainers of the Debian perl package intend to remove.
- .
- The correct way to set the installation directory is with DESTDIR.
- Setting PREFIX should not be necessary at all.
- .
- For example, the line
-   make install PREFIX=$(TMP)/usr          # WRONG
- should be replaced with
-   make install DESTDIR=$(TMP)             # RIGHT
-
 Tag: debian-rules-should-not-use-or-modify-user-only-variable
 Severity: normal
 Certainty: possible

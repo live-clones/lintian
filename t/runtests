@@ -101,33 +101,17 @@ use Lintian::Util qw(delete_dir internal_error parse_boolean
 
 use Test::Lintian::Harness
   qw(chdir_runcmd check_test_depends find_tests_for_tag
-  read_test_desc runsystem runsystem_ok skip_reason up_to_date);
+  runsystem runsystem_ok skip_reason up_to_date);
 use Test::Lintian::ConfigFile qw(read_config);
 use Test::Lintian::Helper qw(copy_dir_contents);
 use Test::Lintian::Templates
-  qw(copy_skeleton_template_sets remove_surplus_templates fill_skeleton_templates);
+  qw(copy_skeleton_template_sets remove_surplus_templates fill_skeleton_templates fill_template);
 
-# --- Global configuration
-our @DPKG_BUILDPACKAGE_CMD = (
-    qw(dpkg-buildpackage -rfakeroot -us -uc -d),
-    qw(-iNEVER_MATCH_ANYTHING -INEVER_MATCH_ANYTHING),
-    qw(--source-option=--auto-commit),
-);
 our $STANDARDS_VERSION = '4.2.1';
 our $ARCHITECTURE = safe_qx(qw(dpkg-architecture -qDEB_HOST_ARCH));
 my $RUNNER_TS = (stat($0))[9];
 chomp $ARCHITECTURE;
 
-our %TEMPLATES = (
-    'tests'  =>['changelog', 'control','compat', 'tests','source/format'],
-    'debs'   => ['changelog', 'control', 'Makefile'],
-    'source' =>[
-        'Makefile', 'dsc.in',
-        'debian/changelog', 'debian/control',
-        'debian/compat', 'debian/source/format',
-        'debian/tests/control','debian/tests/test'
-    ],
-);
 my $DATE = safe_qx(qw(date -R));
 chomp $DATE;
 
@@ -314,187 +298,6 @@ sub print_test_summary {
     return;
 }
 
-# Run a package test and show any diffs in the expected tags or any other
-# errors detected.  Takes the description data for the test.  Returns true if
-# the test passes and false if it fails.
-sub test_package {
-    my ($test_state, $testdata) = @_;
-    my $suite = $testdata->{suite};
-    my $testname = $testdata->{testname};
-    my $origdir = "$TESTSET/$suite/$testname";
-
-    if (!check_test_is_sane($TESTSET, $origdir, $testdata)) {
-        return $test_state->skip_test('architecture mismatch');
-    }
-
-    $test_state->progress('setup');
-
-    my $pkg = $testdata->{source};
-    my $rundir = "$RUNDIR/$suite/$pkg";
-    my $orig_version = $testdata->{version};
-    my $expected = "$origdir/tags";
-    my $origexp = $expected;
-    my $stampfile = "$rundir/build-stamp";
-    my $epochless_version = $orig_version;
-    $epochless_version =~ s/^\d+://;
-
-    if (-f "$origdir/skip") {
-        my $reason = skip_reason("$origdir/skip");
-        return $test_state->skip_test("(disabled) $reason");
-    }
-
-    if (   $testdata->{'test-depends'}
-        || $testdata->{'test-conflicts'}
-        || $testdata->{'build_depends'}
-        || $testdata->{'build_conflicts'}) {
-        my $missing = check_test_depends($testdata);
-        if ($missing) {
-            return $test_state->skip_test($missing);
-        }
-    }
-
-    if ($ALWAYS_REBUILD or not up_to_date($stampfile, $origdir, $RUNNER_TS)) {
-        my $tmpldir = "$TESTSET/templates/$suite/";
-        my $skel = $testdata->{skeleton};
-        my $is_native = ($testdata->{type} eq 'native');
-        my $pkgdir = "$pkg-$testdata->{version}";
-        my $targetdir = "$rundir/$pkgdir";
-
-        # Strip the Debian revision off of the name of the target
-        # directory and the *.orig.tar.gz file if the package is
-        # non-native.  Otherwise, it confuses dpkg-source, which then
-        # fails to find the upstream tarball and builds a native
-        # package.
-        unless ($is_native) {
-            for ($orig_version, $pkgdir, $targetdir) {
-                s/-[^-]+$//;
-                s/(-|^)(\d+):/$1/;
-            }
-        }
-
-        $test_state->info_msg(2, "Cleaning up and repopulating $targetdir...");
-        runsystem_ok('rm', '-rf', $rundir);
-
-        # create work directory
-        unless (-d $rundir) {
-            $test_state->info_msg(2, "Creating directory $rundir.");
-            make_path($rundir);
-        }
-
-        # the skeleton we are working with
-        my $skeletonname = $testdata->{skeleton};
-        my $skeletonpath = "$TESTSET/skeletons/$suite/$skeletonname";
-
-        my $skeleton = read_config($skeletonpath);
-
-        # populate working directory with specified template sets
-        copy_skeleton_template_sets($skeleton->{template_sets},
-            $rundir, $suite, $TESTSET)
-          if exists $skeleton->{template_sets};
-
-        # delete templates for which we have originals
-        remove_surplus_templates($origdir, $rundir);
-
-        # copy test specification to working directory
-        my $offset = abs2rel($origdir, $TESTSET);
-        $test_state->info_msg(2,
-            "Copying test specification $offset from $TESTSET to $rundir.");
-        copy_dir_contents($origdir, $rundir);
-
-        # fill remaining templates
-        fill_skeleton_templates($skeleton->{fill_targets},
-            $testdata, $RUNNER_TS, $rundir, $TESTSET)
-          if exists $skeleton->{fill_targets};
-
-        runsystem('cp', '-rp', "$rundir/orig/.", $targetdir)
-          if -d "$rundir/orig";
-
-        unless ($is_native) {
-            if (-x "$origdir/pre_upstream") {
-                $test_state->progress('pre_upstream hook');
-                runsystem("$origdir/pre_upstream", $targetdir);
-            }
-            chdir_runcmd($rundir,
-                ['tar', 'czf', "${pkg}_${orig_version}.orig.tar.gz", $pkgdir]);
-            if (-f "$rundir/debian/source/format") {
-                my $format= slurp_entire_file("$rundir/debian/source/format");
-                chomp $format;
-                if ($format =~ m/^3.\d+ \(quilt\)$/) {
-                    delete_dir("$targetdir/debian/");
-                }
-            }
-        }
-        runsystem('cp', '-rp', "$rundir/diff/.", $targetdir)
-          if -d "$rundir/diff";
-
-        make_path("$targetdir/debian");
-        runsystem('cp', '-rp', "$rundir/debian/.", "$targetdir/debian");
-
-        unless ($is_native || -e "$targetdir/debian/watch") {
-            my $f = "$targetdir/debian/watch";
-            # Create a watch file with "content" as lintian checks for
-            # non-zero file size.
-            open(my $fd, '>', $f);
-            print {$fd} "# Empty watch file\n";
-            close($fd);
-        }
-        if (-x "$origdir/pre_build") {
-            $test_state->progress('pre_build hook');
-            runsystem("$origdir/pre_build", $targetdir);
-        }
-        _builder_tests($test_state, $testdata, "$rundir/$pkgdir",
-            "$rundir/build.$pkg");
-        touch_file($stampfile);
-    } else {
-        $test_state->progress('building (cached)');
-    }
-
-    my $file = "${pkg}_${epochless_version}_${ARCHITECTURE}.changes";
-    run_lintian($test_state, $testdata, "$rundir/$file", $rundir,
-        "$rundir/tags.$pkg");
-
-    # Run a sed-script if it exists, for tests that have slightly variable
-    # output
-    if (-f "$origdir/post_test") {
-        runsystem_ok('sed', '-ri', '-f', "$origdir/post_test",
-            "$rundir/tags.$pkg");
-        if ($testdata->{'sort'}) {
-            # Re-sort as the sed may have changed the order lines
-            open(my $rfd, '<', "$rundir/tags.$pkg");
-            my @lines = sort(<$rfd>);
-            close($rfd);
-            open(my $wfd, '>', "$rundir/tags.$pkg");
-            print {$wfd} $_ for @lines;
-            close($wfd);
-        }
-    }
-
-    if (-x "$origdir/test_calibration") {
-        my $calibrated = "$rundir/expected.$pkg.calibrated";
-        $test_state->progress('test_calibration hook');
-        runsystem_ok(
-            "$origdir/test_calibration", $expected,
-            "$rundir/tags.$pkg", $calibrated
-        );
-        $expected = $calibrated if -e $calibrated;
-    }
-
-    return _check_result($test_state, $testdata, $expected,
-        "$rundir/tags.$pkg",$origexp);
-}
-
-sub _builder_tests {
-    my ($test_state, $testdata, $testdir, $log) = @_;
-    $test_state->progress('building');
-    my $res = chdir_runcmd($testdir, \@DPKG_BUILDPACKAGE_CMD, $log);
-    if ($res){
-        $test_state->dump_log($log) if $DUMP_LOGS;
-        internal_error("cd $testdir && @DPKG_BUILDPACKAGE_CMD >$log 2>&1");
-    }
-
-    return;
-}
-
 sub run_lintian {
     my ($test_state, $testdata, $file, $rundir, $out) = @_;
     $test_state->progress('testing');
@@ -502,7 +305,7 @@ sub run_lintian {
     unshift(@options, '--allow-root', '--no-cfg');
     unshift(@options, '--profile', $testdata->{profile});
     unshift(@options, '--no-user-dirs');
-    if (my $incl_dir = $testdata->{'lintian-include-dir'}) {
+    if (my $incl_dir = $testdata->{'lintian_include_dir'}) {
         unshift(@options, '--include-dir', $incl_dir);
     }
     my $pid = open(my $in, '-|');
@@ -532,7 +335,7 @@ sub run_lintian {
 
             $test_state->test_error($msg);
         } else {
-            @data = sort @data if $testdata->{sort};
+            @data = sort @data if $testdata->{sort} eq 'yes';
             open(my $fd, '>', $out);
             print $fd $_ for @data;
             close($fd);
@@ -554,100 +357,64 @@ sub run_lintian {
     return 1;
 }
 
-# --- Changes file testing
-
-# Run a test on a changes file and show any diffs in the expected tags or any
-# other errors detected.  Takes the test name.  Returns true if the test
-# passes and false if it fails.
-sub test_changes {
-    my ($test_state, $testdata) = @_;
-
-    my $suite = $testdata->{suite};
-
-    if (!check_test_is_sane($TESTSET, undef, $testdata)) {
-        return $test_state->skip_test('architecture mismatch');
-    }
-
-    if (   $testdata->{'test-depends'}
-        || $testdata->{'test-conflicts'}
-        || $testdata->{'build_depends'}
-        || $testdata->{'build_conflicts'}) {
-        # Not sure this makes sense for .changes tests, but at least it
-        # makes it consistent.
-        my $missing = check_test_depends($testdata);
-        if ($missing) {
-            return $test_state->skip_test($missing);
-        }
-    }
-
-    # make_path supports "mkdir -p"-like behaviour where even if multiple
-    # threads can race to create the directory, they will all return
-    # "successful".
-    make_path("$RUNDIR/changes") if not -d "$RUNDIR/changes";
-
-    $test_state->progress('setup');
-
-    my $test = $testdata->{source};
-    my $testdir = "$TESTSET/changes/$test";
-    my $rundir = "$RUNDIR/changes/$test";
-
-    # create work directory
-    unless (-d $rundir) {
-        $test_state->info_msg(2, "Creating directory $rundir.");
-        make_path($rundir);
-    }
-
-    # the skeleton we are working with
-    my $skeletonname = $testdata->{skeleton};
-    my $skeletonpath = "$TESTSET/skeletons/$suite/$skeletonname";
-
-    my $skeleton = read_config($skeletonpath);
-
-    # populate working directory with specified template sets
-    copy_skeleton_template_sets($skeleton->{template_sets},
-        $rundir, $suite, $TESTSET)
-      if exists $skeleton->{template_sets};
-
-    # delete templates for which we have originals
-    remove_surplus_templates($testdir, $rundir);
-
-    # copy test specification to working directory
-    my $offset = abs2rel($testdir, $TESTSET);
-    $test_state->info_msg(2,
-        "Copying test specification $offset from $TESTSET to $rundir.");
-    copy_dir_contents($testdir, $rundir);
-
-    # fill remaining templates
-    fill_skeleton_templates($skeleton->{fill_targets},
-        $testdata, $RUNNER_TS, $rundir, $TESTSET)
-      if exists $skeleton->{fill_targets};
-
-    # lintian refuses changes files without a dot
-    my $file = "$rundir/test.changes";
-
-    run_lintian($test_state, $testdata, $file, $rundir, "$rundir/tags");
-
-    return _check_result($test_state, $testdata, "$testdir/tags",
-        "$rundir/tags");
-}
-
-# generic_test_runner($dir, $ext, $test)
+# generic_test_runner
 #
 # Runs the test called $test assumed to be located in $TESTSET/$dir/$test/.
-# The resulting package produced by the test is assumed to have the extension
-# $ext.
 #
-# Returns a truth value on success, undef on test failure.  May call die/fail
-# if the test is broken.
 sub generic_test_runner {
-    my ($test_state, $testdata, $ext) = @_;
+    my ($test_state, $testdata) = @_;
     my $suite = $testdata->{suite};
     my $testname = $testdata->{testname};
     my $testdir = "$TESTSET/$suite/$testname";
 
-    if (!check_test_is_sane($TESTSET, $testdir, $testdata)) {
-        return $test_state->skip_test('architecture mismatch');
+    unless ($testdata->{testname} && exists $testdata->{version}) {
+        internal_error('Name or Version missing');
     }
+
+    $testdata->{source} ||= $testdata->{testname};
+
+    $testdata->{date} ||= $DATE;
+
+    if (not $testdata->{prev_version}) {
+        $testdata->{prev_version} = '0.0.1';
+        $testdata->{prev_version} .= '-1'
+          if index($testdata->{version}, '-') > -1;
+    }
+
+    $testdata->{host_architecture} = $ARCHITECTURE;
+    $testdata->{'standards_version'} ||= $STANDARDS_VERSION;
+
+    $testdata->{'dh_compat_level'} //= '11';
+
+    $testdata->{'default_build_depends'}
+      //= "debhelper (>= $testdata->{dh_compat_level}~)";
+
+    $testdata->{'build_depends'} ||= join(
+        ', ',
+        grep { $_ }(
+            $testdata->{'default_build_depends'},
+            $testdata->{'extra_build_depends'}));
+
+    # Check for arch-specific tests
+    if ($testdata->{'test_architectures'} ne 'any') {
+        my @wildcards = split(/\s+/,$testdata->{'test_architectures'});
+        my @matches
+          = map { qx{dpkg-architecture -i $_; echo -n \$?} } @wildcards;
+        return $test_state->skip_test('architecture mismatch')
+          unless any { $_ == 0 } @matches;
+    }
+
+    if ($testdir and -d "${testdir}/lintian-include-dir") {
+        $testdata->{'lintian_include_dir'} = './lintian-include-dir';
+    }
+
+    $testdata->{upstream_version} = $testdata->{version};
+    $testdata->{upstream_version} =~ s/-[^-]+$//;
+    $testdata->{upstream_version} =~ s/(-|^)(\d+):/$1/;
+
+    my $epochless_version = $testdata->{version};
+    $epochless_version =~ s/^\d+://;
+    $testdata->{no_epoch} = $epochless_version;
 
     $test_state->progress('setup');
 
@@ -659,8 +426,13 @@ sub generic_test_runner {
         return $test_state->skip_test("(disabled) $reason");
     }
 
-    if (   $testdata->{'test-depends'}
-        || $testdata->{'test-conflicts'}
+    if (-e "$testdir/debian/debian") {
+        return $test_state->test_error(
+            'Outdated test specification (./debian/debian exists).');
+    }
+
+    if (   $testdata->{'test_depends'}
+        || $testdata->{'test_conflicts'}
         || $testdata->{'build_depends'}
         || $testdata->{'build_conflicts'}) {
         my $missing = check_test_depends($testdata);
@@ -669,7 +441,16 @@ sub generic_test_runner {
         }
     }
 
-    if ($ALWAYS_REBUILD or not up_to_date($stampfile, $testdir, $RUNNER_TS)) {
+    # the skeleton we are working with
+    my $skeletonname = $testdata->{skeleton};
+    my $skeletonpath = "$TESTSET/skeletons/$suite/$skeletonname";
+
+    my $skeleton = read_config($skeletonpath);
+
+    if (   $ALWAYS_REBUILD
+        or not up_to_date($stampfile, $testdir, $RUNNER_TS)
+        or -e "$targetdir/debian/debian") {
+
         my $skel = $testdata->{skeleton};
         my $tmpldir = "$TESTSET/templates/$suite/";
 
@@ -681,12 +462,6 @@ sub generic_test_runner {
             $test_state->info_msg(2, "Creating directory $targetdir.");
             make_path($targetdir);
         }
-
-        # the skeleton we are working with
-        my $skeletonname = $testdata->{skeleton};
-        my $skeletonpath = "$TESTSET/skeletons/$suite/$skeletonname";
-
-        my $skeleton = read_config($skeletonpath);
 
         # populate working directory with specified template sets
         copy_skeleton_template_sets($skeleton->{template_sets},
@@ -701,51 +476,119 @@ sub generic_test_runner {
         $test_state->info_msg(2,
             "Copying test specification $offset from $TESTSET to $targetdir.");
         copy_dir_contents($testdir, $targetdir);
+    }
+
+    # get builder name
+    my $buildername = $testdata->{builder};
+    if (length $buildername) {
+        my $builderpath = "$targetdir/$buildername";
+
+        # fill builder if needed
+        my $buildertemplate = "$builderpath.in";
+        fill_template($buildertemplate, $builderpath, $testdata,$RUNNER_TS)
+          if -f $buildertemplate;
+
+        if (-f $builderpath) {
+
+            # read builder
+            my $builder = read_config($builderpath);
+            die 'Could not read builder data.' unless $builder;
+
+            # transfer builder data to test case, but do not override
+            foreach my $key (keys %{$builder}) {
+                $testdata->{$key} = $builder->{$key}
+                  unless exists $testdata->{$key};
+            }
+        }
+    }
+
+    if ($ALWAYS_REBUILD or not up_to_date($stampfile, $testdir, $RUNNER_TS)) {
 
         # fill remaining templates
         fill_skeleton_templates($skeleton->{fill_targets},
             $testdata, $RUNNER_TS, $targetdir, $TESTSET)
           if exists $skeleton->{fill_targets};
+    }
+
+    # get lintian subject
+    return $test_state->test_error(
+        'Could not get subject of Lintian examination.')
+      unless exists $testdata->{build_product};
+    my $subject = "$targetdir/$testdata->{build_product}";
+
+    if ($ALWAYS_REBUILD or not up_to_date($stampfile, $testdir, $RUNNER_TS)) {
 
         $test_state->progress('building');
-        my $res= chdir_runcmd(
-            $targetdir,
-            [
-                'fakeroot', 'make',
-                "DEFAULT_DH_COMPAT=$testdata->{dh_compat_level}"
-            ],
-            "../build.$testname"
-        );
-        if ($res) {
-            $test_state->dump_log("${RUNDIR}/${suite}/build.${testname}")
-              if $DUMP_LOGS;
-            return $test_state->test_error(
-                join(q{ },
-                    "cd $targetdir &&",
-                    "fakeroot make >../build.$testname 2>&1 failed"));
+
+        if (exists $testdata->{build_command}) {
+            my $command
+              = "cd $targetdir; $testdata->{build_command} > ../build.$testname 2>&1";
+            if (system($command)) {
+                $test_state->dump_log("${RUNDIR}/${suite}/build.${testname}")
+                  if $DUMP_LOGS;
+                return $test_state->test_error("$command failed.");
+            }
         }
+
+        return $test_state->test_error('Build was unsuccessful.')
+          unless -f $subject;
+
         touch_file($stampfile);
     } else {
         $test_state->progress('building (cached)');
     }
-    my @matches = glob("$targetdir/*.$ext");
-    my $file = shift @matches;
-    unless ($file && -e $file) {
-        $file //= '<N/A>';
-        return $test_state->test_error(
-            join(q{ },
-                "$testname did not produce any file matching",
-                "\"$targetdir/*.$ext\" ($file)"));
-    }
-    return $test_state->test_error(
-        join(q{ },
-            "$testname produced more than one file",
-            "matching \"$targetdir/*.$ext\""))if @matches;
 
-    run_lintian($test_state, $testdata, $file, $targetdir,
-        "$RUNDIR/$suite/tags.$testname");
-    return _check_result($test_state, $testdata, "$testdir/tags",
-        "$RUNDIR/$suite/tags.$testname");
+    my $pkg = $testdata->{source};
+
+    run_lintian($test_state, $testdata, $subject, $targetdir,
+        "$targetdir/tags.$pkg");
+
+    # Run a sed-script if it exists, for tests that have slightly variable
+    # output
+    if (-f "$targetdir/post_test") {
+        runsystem_ok('sed', '-ri', '-f', "$targetdir/post_test",
+            "$targetdir/tags.$pkg");
+        if ($testdata->{'sort'} eq 'yes') {
+            # Re-sort as the sed may have changed the order lines
+            open(my $rfd, '<', "$targetdir/tags.$pkg");
+            my @lines = sort(<$rfd>);
+            close($rfd);
+            open(my $wfd, '>', "$targetdir/tags.$pkg");
+            print {$wfd} $_ for @lines;
+            close($wfd);
+        }
+    }
+
+    my $expected = "$testdir/tags";
+    my $origexp = $expected;
+
+    if (-x "$targetdir/test_calibration") {
+        my $calibrated = "$targetdir/expected.$pkg.calibrated";
+        $test_state->progress('test_calibration hook');
+        runsystem_ok(
+            "$targetdir/test_calibration", $expected,
+            "$targetdir/tags.$pkg", $calibrated
+        );
+        $expected = $calibrated if -e $calibrated;
+    }
+
+    return _check_result($test_state, $testdata, $expected,
+        "$targetdir/tags.$pkg",$origexp);
+}
+
+sub read_desc {
+    my ($path) = @_;
+
+    my $testdata = read_config($path);
+
+    my $defaults = read_config("$TESTSET/defaults/desc");
+
+    foreach my $key (keys %{$defaults}) {
+        $testdata->{$key} = $defaults->{$key}
+          unless exists $testdata->{$key};
+    }
+
+    return $testdata;
 }
 
 sub find_tests_to_run {
@@ -763,21 +606,22 @@ sub find_tests_to_run {
                 my $desc_file = $globstr;
                 $desc_file =~ s/\Q*\E/${part}/;
                 if (-f $desc_file) {
-                    push(@tests, read_test_desc($desc_file));
+                    push(@tests, read_desc($desc_file));
                 } elsif (-f "$LINTIAN_ROOT/checks/${part}.desc"
                     || $part eq 'legacy') {
                     my $check_glob = $globstr;
                     $check_glob =~ s/\Q*\E/${part}-*/;
-                    push(@tests, map { read_test_desc($_) }glob($check_glob));
+                    push(@tests, map { read_desc($_) }glob($check_glob));
                 }
             }
         } elsif ($tag) {
             @tests = find_tests_for_tag($tag, $globstr);
+            @tests = map { read_desc($_) } @tests;
         } elsif ($suites{$suite}) {
             unless (-d "$TESTSET/$suite/") {
                 internal_error("cannot find $TESTSET/$suite: $!");
             }
-            @tests = map { read_test_desc($_) } glob($globstr);
+            @tests = map { read_desc($_) } glob($globstr);
         }
         next if not @tests;
         # Sort the tests relative to others in their own suite.
@@ -856,20 +700,7 @@ sub create_child {
 
                 $0 = "Test worker - processing ${suite}::${testname}";
 
-                eval {
-                    if ($suite eq 'changes') {
-                        test_changes($state, $test_data);
-                    } elsif ($suite eq 'tests') {
-                        test_package($state, $test_data);
-                    } elsif ($suite eq 'debs' or $suite eq 'source') {
-                        my $ext = 'deb';
-                        $ext = 'dsc' if $suite eq 'source';
-                        generic_test_runner($state, $test_data, $ext);
-                    } else {
-                        $state->test_error(
-                            "Don't know how to handle suite:$suite");
-                    }
-                };
+                eval {generic_test_runner($state, $test_data);};
                 if (my $err = $@) {
                     $state->test_error($err);
                 }
@@ -1022,11 +853,12 @@ sub _check_result {
     # are seen and all Test-Against tags are not.  Skip this part of the test
     # if neither Test-For nor Test-Against are set and Sort is also not set,
     # since in that case we probably have non-standard output.
-    my %test_for = map { $_ => 1 } split(' ', $testdata->{'test-for'});
-    my %test_against = map { $_ => 1 } split(' ', $testdata->{'test-against'});
+    my %test_for = map { $_ => 1 } split(' ', $testdata->{'test_for'}//'');
+    my %test_against
+      = map { $_ => 1 } split(' ', $testdata->{'test_against'}//'');
     if (    not %test_for
         and not %test_against
-        and $testdata->{'output-format'} ne 'EWI') {
+        and $testdata->{'output_format'} ne 'EWI') {
         if ($testdata->{'todo'} eq 'yes') {
             return $test_state->fail_test('marked as TODO but succeeded');
         } else {
@@ -1114,75 +946,6 @@ sub handle_dump_log{
     } else {
         print "!!! Could not dump $logf: $!";
     }
-    return 1;
-}
-
-sub check_test_is_sane {
-    my ($dir, $testdir, $data) = @_;
-
-    unless ($data->{testname} && exists $data->{version}) {
-        internal_error('Name or Version missing');
-    }
-
-    $data->{source} ||= $data->{testname};
-    $data->{type} ||= 'native';
-    $data->{'source-format'} ||= '1.0';
-    $data->{source_format} = $data->{'source-format'};
-    $data->{date} ||= $DATE;
-    $data->{prev_date} ||= 'Mon, 01 Jan 1990 00:00:00 +0100';
-    if (not $data->{prev_version}) {
-        $data->{prev_version} = '0.0.1';
-        $data->{prev_version} .= '-1'
-          if index($data->{version}, '-') > -1;
-    }
-    $data->{distribution} ||= 'unstable';
-    $data->{description} ||= 'No Description Available';
-    $data->{author}||= 'Debian Lintian Maintainers <lintian-maint@debian.org>';
-    $data->{'test-architectures'}||= 'any';
-    $data->{'package-architecture'} ||= 'all';
-    $data->{package_architecture} = $data->{'package-architecture'};
-    $data->{profile} ||= 'debian';
-    $data->{section} ||= 'devel';
-    $data->{'standards_version'} ||= $STANDARDS_VERSION;
-    $data->{sort} ||= 'yes';
-    $data->{sort} = parse_boolean($data->{sort});
-    $data->{'output-format'} ||= 'EWI';
-
-    $data->{'test-for'} ||= '';
-    $data->{'test-against'} ||= '';
-
-    $data->{skeleton} ||= 'default';
-    $data->{options} ||= '-I -E';
-    $data->{todo} ||= 'no';
-    $data->{'test-depends'} //= '';
-    $data->{'dh-compat-level'} //= '11';
-    $data->{'dh_compat_level'} = $data->{'dh-compat-level'};
-    $data->{'default-build-depends'}
-      //= "debhelper (>= $data->{dh_compat_level}~)";
-    $data->{'extra-build-depends'} //= '';
-    $data->{'build_depends'} ||= join(', ',
-        grep { $_ }
-          ($data->{'default-build-depends'}, $data->{'extra-build-depends'}));
-
-    # Unwrap the options in case we used continuation lines.
-    $data->{options} =~ s/\n//g;
-
-    $data->{upstream_version} = $data->{version};
-    $data->{upstream_version} =~ s/-[^-]+$//;
-    $data->{upstream_version} =~ s/(-|^)(\d+):/$1/;
-
-    # Check for arch-specific tests
-    if ($data->{'test-architectures'} ne 'any') {
-        my @wildcards = split(/\s+/,$data->{'test-architectures'});
-        my @matches
-          = map { qx{dpkg-architecture -i $_; echo -n \$?} } @wildcards;
-        return 0 unless any { $_ == 0 } @matches;
-    }
-
-    if ($testdir and -d "${testdir}/lintian-include-dir") {
-        $data->{'lintian-include-dir'} = './lintian-include-dir';
-    }
-
     return 1;
 }
 

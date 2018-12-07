@@ -1,0 +1,56 @@
+package = {$source}
+upstream_version = {$upstream_version}
+type = {$type}
+
+packagedir = $(package)-$(upstream_version)
+
+origdata = orig
+origtargz = $(package)_$(upstream_version).orig.tar.gz
+
+debiandata = debian
+formatfile = $(debiandata)/source/format
+
+diffdata = diff
+
+packagedebiandir = $(packagedir)/debian
+watchfile = $(packagedir)/debian/watch
+
+product = $(package)_{$no_epoch}_{$host_architecture}.changes
+
+.DEFAULT_GOAL := product
+
+product: $(watchfile) $(origtargz)
+	-mkdir -p $(diffdata)
+	cp -rp $(diffdata)/. $(packagedir)
+	-mkdir -p $(debiandata)
+	cp -rp $(debiandata)/. $(packagedebiandir)
+	if [ -x ./pre_build ] ; then ./pre_build $(shell realpath $(packagedir)) ; fi
+	cd $(packagedir) && dpkg-buildpackage -rfakeroot -us -uc -d -iNEVER_MATCH_ANYTHING -INEVER_MATCH_ANYTHING --source-option=--auto-commit
+
+ifeq ($(type),native)
+$(watchfile): $(origtargz)
+else
+$(watchfile): $(origtargz)
+	-mkdir -p $(packagedebiandir)
+	if [ ! -f $(watchfile) ] ; then echo '# Empty watch file' > $(watchfile) ; fi
+endif
+
+ifeq ($(type),native)
+$(origtargz): clean
+	-mkdir $(packagedir)
+	-mkdir $(origdata)
+	cp -rp $(origdata)/. $(packagedir)
+else
+$(origtargz): clean
+	-mkdir $(packagedir)
+	-mkdir $(origdata)
+	cp -rp $(origdata)/. $(packagedir)
+	if [ -x ./pre_upstream ] ; then ./pre_upstream $(shell realpath $(packagedir)) ; fi
+	tar czf $(origtargz) $(packagedir)
+	if [ -f $(formatfile) ] && grep --quiet "^3\.. (quilt)$$" $(formatfile) ; then rm -rf $(packagedir)/debian ; fi
+endif
+
+.PHONY: clean
+clean:
+	rm -rf $(packagedir)
+	if [ "$(type)" = "native" ] ; then rm -f $(origtargz) ; fi

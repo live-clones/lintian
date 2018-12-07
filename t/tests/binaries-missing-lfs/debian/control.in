@@ -7,7 +7,7 @@ Build-Depends: {$build_depends}, perl
 Rules-Requires-Root: no
 
 Package: libbasic2
-Architecture: ${package_architecture}
+Architecture: {$package_architecture}
 Section: libs
 Depends: $\{misc:Depends\}, $\{shlibs:Depends\}
 Description: {$description}
