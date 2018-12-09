@@ -1,5 +1,7 @@
 lintian (2.5.117) UNRELEASED; urgency=medium
 
+  XXX: generate tag summary
+
   * checks/files.pm:
     + [CL] Don't emit uses-dpkg-database-directly for d-i components; they
       likely know what they are doing with no alternatives.
