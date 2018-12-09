@@ -1,6 +1,8 @@
 lintian (2.5.117) UNRELEASED; urgency=medium
 
-  XXX: generate tag summary
+  * checks/watch-file.desc:
+    + [CL] Correct grammar of the debian-watch-does-not-check-gpg-signature
+      tag description.
 
  -- Chris Lamb <lamby@debian.org>  Fri, 07 Dec 2018 10:41:09 +0100
 
