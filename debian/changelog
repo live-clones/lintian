@@ -1,5 +1,8 @@
 lintian (2.5.117) UNRELEASED; urgency=medium
 
+  * checks/files.pm:
+    + [CL] Don't emit uses-dpkg-database-directly for d-i components; they
+      likely know what they are doing with no alternatives.
   * checks/watch-file.desc:
     + [CL] Correct grammar of the debian-watch-does-not-check-gpg-signature
       tag description.

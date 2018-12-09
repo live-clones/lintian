@@ -23,7 +23,7 @@ use strict;
 use warnings;
 use autodie;
 
-use List::MoreUtils qw(none);
+use List::MoreUtils qw(any);
 
 use Lintian::Data;
 use Lintian::Tags qw(tag);
@@ -1507,7 +1507,7 @@ sub run {
 
             # ---------------- using dpkg internals
             if ($fname !~ m,^usr/share/(?:doc|locale)/,
-                and none { $_ eq $source_pkg } @ALLOWED_USES_DPKG_DATABASE) {
+                and check_uses_dpkg($source_pkg, $pkg_section)) {
                 my $strings = slurp_entire_file($info->strings($file));
 
                 # If we have strings(1) output (eg. we are an ELF
@@ -2034,13 +2034,14 @@ sub run {
         tag 'missing-depends-on-sensible-utils', $file
           if not $has_sensible_utils and detect_sensible_utils($file);
 
-        my $fd2 = $file->open;
-        while (<$fd2>) {
-            tag 'uses-dpkg-database-directly', $file, "(line $.)"
-              if m,/var/lib/dpkg,
-              and none { $_ eq $source_pkg } @ALLOWED_USES_DPKG_DATABASE;
+        if (check_uses_dpkg($source_pkg, $pkg_section)) {
+            my $fd2 = $file->open;
+            while (<$fd2>) {
+                tag 'uses-dpkg-database-directly', $file, "(line $.)"
+                  if m,/var/lib/dpkg,;
+            }
+            close($fd2);
         }
-        close($fd2);
     }
     close($fd);
 
@@ -2355,6 +2356,15 @@ sub detect_sensible_utils {
     }
     close($fd);
     return;
+}
+
+sub check_uses_dpkg {
+    my ($source_pkg, $pkg_section) = @_;
+
+    return 0 if $pkg_section eq 'debian-installer';
+    return 0 if any { $_ eq $source_pkg } @ALLOWED_USES_DPKG_DATABASE;
+
+    return 1;
 }
 
 1;
