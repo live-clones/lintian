@@ -22480,5 +22480,3 @@ lintian (0.1.0) unstable; urgency=low
   * First release
 
  -- Christian Schwarz <schwarz@debian.org>  Wed, 11 Feb 1998 23:15:51 +0100
-
-vim: et
