@@ -1,6 +1,6 @@
 Template-Sets:
- . (arch-independent),
- . (make-builder)
+ . (debs-arch-independent),
+ . (debs-make-builder)
 Fill-Targets:
  . (debian-packaging),
  . (make-builder)

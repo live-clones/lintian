@@ -4,7 +4,6 @@ Dh-Compat-Level: 12
 Description: Test for old debian/compat file
 # Overrides the "data/debhelper/compat-level"
 Profile: lintian-test
-Skeleton: pedantic
 Options: --pedantic -I -E
 Test-For:
  package-uses-experimental-debhelper-compat-version

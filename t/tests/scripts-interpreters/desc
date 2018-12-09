@@ -1,7 +1,6 @@
 Testname: scripts-interpreters
 Version: 1.0
 Description: Check various script interpreter issues
-Skeleton: pedantic
 Options: --pedantic -I -E
 Test-For:
  csh-considered-harmful

@@ -1,3 +1,35 @@
+lintian (2.5.116) unstable; urgency=medium
+
+  * checks/fields.pm:
+    + [CL] Apply a patch from Felix Lechner to remove the incorrect line in
+      the fields-bugs-field-does-not-refer-to-debian-infrastructure tag's
+      output.  (MR: !83)
+
+  * data/fields/perl-provides:
+    + [CL] Update for Perl 5.028001.
+  * data/java/constants:
+    + [CL] Apply a patch from Felix Lechner to fix the "maximum existing
+
+  * debian/rules:
+    + [CL] Apply a patch from Felix Lechner to remove the "runtests" build
+      stamp mechanism as it blocks runs that should be allowed such as
+      when only the test runner itself has changed.  (MR: !80)
+
+  * t/*:
+    + [CL] Apply a patch series from Felix Lechner to make "pedantic"
+      templates the default for all tests.  (MR: !87)
+    + [CL] Apply a patch from Felix Lechner to allow debian/rules to be
+      generated from templates in tests.  (MR: !81)
+    + [CL] Apply a patch from Felix Lechner to remove pre-existing metadata
+      in the upstream-metadata-is-not-a-file test.  (MR: !84)
+    + [CL] Apply a patch series from Felix Lechner to provide a generalised
+      facility to make any test template set independent of the package
+      format.  (MR: !82)
+    + [CL] Apply a patch series from Felix Lechner to support
+      suite-independent test templates.  (MR: !88)
+
+ -- Chris Lamb <lamby@debian.org>  Fri, 07 Dec 2018 08:59:39 +0000
+
 lintian (2.5.115~bpo9+1) stretch-backports; urgency=medium
 
   * Rebuild for stretch-backports.

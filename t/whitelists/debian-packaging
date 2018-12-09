@@ -1,4 +1,5 @@
 May-Generate:
+ rules
  changelog
  control
  compat

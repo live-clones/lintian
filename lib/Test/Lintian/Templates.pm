@@ -86,7 +86,7 @@ in parentheses. Multiple such instructions must be separated by commas.
 =cut
 
 sub copy_skeleton_template_sets {
-    my ($instructions, $runpath, $suite, $testset)= @_;
+    my ($instructions, $runpath, $testset)= @_;
 
     # populate working directory with specified template sets
     foreach my $set (split(COMMA, $instructions)) {
@@ -100,7 +100,7 @@ sub copy_skeleton_template_sets {
         croak 'No template set specified in skeleton.'
           unless length $name;
 
-        my $templatesetpath = "$testset/templates/$suite/$name";
+        my $templatesetpath = "$testset/templates/$name";
         croak "Cannot find template set '$name' at $templatesetpath."
           unless -d $templatesetpath;
 
@@ -272,6 +272,10 @@ sub fill_template {
     )or croak("Could not create file $generated from template $template");
     close($handle)
       or carp "Could not close file $generated: $!";
+
+    # transfer file permissions from template to generated file
+    my $stat = stat($template) or croak "stat $template failed: $!";
+    chmod $stat->mode, $generated or croak "chmod $generated failed: $!";
 
     # delete template
     unlink($template) if -f $generated;

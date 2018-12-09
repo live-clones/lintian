@@ -55,6 +55,8 @@ BEGIN {
 }
 
 use Carp;
+use File::Spec::Functions qw(abs2rel rel2abs);
+use File::Path qw(remove_tree);
 use Path::Tiny;
 use POSIX qw(locale_h strftime);
 
@@ -155,7 +157,26 @@ dereferencing links. For an empty directory, no dummy file is required.
 
 sub copy_dir_contents {
     my ($source, $destination) = @_;
+
+    # 'cp -r' cannot overwrite directories with files or vice versa
+    my @paths = File::Find::Rule->in($source);
+    foreach my $path (@paths) {
+
+        my $relative = abs2rel($path, $source);
+        my $prospective = rel2abs($relative, $destination);
+
+        # recursively delete directories to be replaced by a file
+        remove_tree($prospective)
+          if -d $prospective && -f $path;
+
+        # remove files to be replaced by a directory
+        unlink($prospective)
+          if -f $prospective && -d $path;
+    }
+
+    # 'cp -r' with a dot will error without files present
     if (scalar path($source)->children) {
+
         system('cp', '-rp', "$source/.", '-t', $destination)== 0
           or croak("Could not copy $source to $destination: $!");
     }

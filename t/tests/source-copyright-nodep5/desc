@@ -2,6 +2,5 @@ Testname: source-copyright-nodep5
 Version: 1.0
 Description: Test for no dep5 source copyright
 Options: -I -E --pedantic
-Skeleton: pedantic
 Test-For:
  no-dep5-copyright

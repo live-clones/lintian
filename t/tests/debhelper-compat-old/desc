@@ -2,7 +2,6 @@ Testname: debhelper-compat-old
 Version: 1.0
 Description: Test for old debian/compat file
 Dh-Compat-Level: 8
-Skeleton: pedantic
 Options: --pedantic -I -E -L +classification
 Profile: lintian-test
 Test-For:

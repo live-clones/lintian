@@ -2,7 +2,6 @@ Testname: lintian-color-html
 Sequence: 2500
 Type: non-native
 Version: 1.0-1
-Skeleton: pedantic
 Options: -I -E --color=html --show-overrides
 Output-Format: xml
 Description: Test Lintian --color=html output escaping

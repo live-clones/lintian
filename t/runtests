@@ -465,8 +465,23 @@ sub generic_test_runner {
 
         # populate working directory with specified template sets
         copy_skeleton_template_sets($skeleton->{template_sets},
-            $targetdir, $suite, $TESTSET)
+            $targetdir, $TESTSET)
           if exists $skeleton->{template_sets};
+
+        # get post-template command
+        my $posttemplatename = $testdata->{post_template_command};
+        if (length $posttemplatename) {
+            my $posttemplatepath = "$targetdir/$posttemplatename";
+
+            # fill if needed
+            my $posttemplatetemplate = "$posttemplatepath.in";
+            fill_template($posttemplatetemplate, $posttemplatepath, $testdata,
+                $RUNNER_TS)
+              if -f $posttemplatetemplate;
+
+            safe_qx($posttemplatepath, $targetdir)
+              if -x $posttemplatepath;
+        }
 
         # delete templates for which we have originals
         remove_surplus_templates($testdir, $targetdir);

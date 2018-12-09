@@ -44,11 +44,11 @@ $(profiles): $(allchecks) $(autoreject_data) private/generate-profiles.pl
 api-doc:
 	private/generate-html-docs doc/api.html
 
+.PHONY: runtests
 runtests: $(neededfiles) $(allchecks) $(allcollect) $(tagfiles) $(testfiles)
 	@echo .... running tests ....
 	mkdir -p "$(TEST_WORK_DIR)"
 	t/runtests -k $(PAR_ARGS) t "$(TEST_WORK_DIR)" $(onlyrun)
-	if [ "$(onlyrun)" = "" ]; then touch $@; fi
 
 runtests-translation: $(neededfiles) $(allchecks)
 	@echo .... running translation tests ....
