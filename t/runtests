@@ -34,7 +34,7 @@ use Carp qw(confess);
 use Cwd();
 
 use File::Path qw(make_path);
-use File::Spec::Functions qw(abs2rel);
+use File::Spec::Functions qw(abs2rel rel2abs splitpath splitdir);
 use Getopt::Long qw(GetOptions);
 use IO::Async::Channel;
 use IO::Async::Loop;
@@ -104,6 +104,7 @@ use Test::Lintian::Harness
   qw(chdir_runcmd check_test_depends find_tests_for_tag
   runsystem runsystem_ok skip_reason up_to_date);
 use Test::Lintian::ConfigFile qw(read_config);
+use Test::Lintian::Filter qw(find_selected_lintian_testpaths);
 use Test::Lintian::Helper qw(copy_dir_contents);
 use Test::Lintian::Templates
   qw(copy_skeleton_template_sets remove_surplus_templates fill_skeleton_templates fill_template);
@@ -161,6 +162,11 @@ my @failed;
 # anything.
 my $tests_run = 0;
 
+# find test paths
+my @testpaths = find_selected_lintian_testpaths($TESTSET, $test_filter);
+
+@TESTS = map { read_desc("$_/desc") } @testpaths;
+
 if ($test_filter && $test_filter =~ s/^tag://) {
     $tag = $test_filter;
     # clear test_filter to avoid find a "single" test.
@@ -183,8 +189,6 @@ if ($test_filter && $test_filter =~ s/^tag://) {
 if (!$tag) {
     run_prove_tests();
 }
-
-find_tests_to_run();
 
 if (@TESTS) {
     for (0..$JOBS-1) {
@@ -606,52 +610,6 @@ sub read_desc {
     }
 
     return $testdata;
-}
-
-sub find_tests_to_run {
-    my @test_suite_info = (
-        ['changes', "$TESTSET/changes/*/desc"],
-        ['debs', "$TESTSET/debs/*/desc",],
-        ['source', "$TESTSET/source/*/desc",],
-        ['tests', "$TESTSET/tests/*/desc"]);
-
-    foreach my $tsi (@test_suite_info) {
-        my ($suite, $globstr) = @{$tsi};
-        my @tests;
-        if ($test_filter) {
-            for my $part (split(m/,/, $test_filter)) {
-                my $desc_file = $globstr;
-                $desc_file =~ s/\Q*\E/${part}/;
-                if (-f $desc_file) {
-                    push(@tests, read_desc($desc_file));
-                } elsif (-f "$LINTIAN_ROOT/checks/${part}.desc"
-                    || $part eq 'legacy') {
-                    my $check_glob = $globstr;
-                    $check_glob =~ s/\Q*\E/${part}-*/;
-                    push(@tests, map { read_desc($_) }glob($check_glob));
-                }
-            }
-        } elsif ($tag) {
-            @tests = find_tests_for_tag($tag, $globstr);
-            @tests = map { read_desc($_) } @tests;
-        } elsif ($suites{$suite}) {
-            unless (-d "$TESTSET/$suite/") {
-                internal_error("cannot find $TESTSET/$suite: $!");
-            }
-            @tests = map { read_desc($_) } glob($globstr);
-        }
-        next if not @tests;
-        # Sort the tests relative to others in their own suite.
-        @tests = sort {
-                 $a->{sequence} <=> $b->{sequence}
-              || $a->{testname} cmp $b->{testname}
-        } @tests;
-        for my $test (@tests) {
-            $test->{'suite'} = $suite;
-        }
-        push(@TESTS, @tests);
-    }
-    return;
 }
 
 sub run_prove_tests {
