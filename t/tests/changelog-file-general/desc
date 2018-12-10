@@ -1,4 +1,5 @@
 Testname: changelog-file-general
+Skeleton: non-native
 Type: non-native
 Version: 1.0-1
 Description: General tests for changelog-file tags

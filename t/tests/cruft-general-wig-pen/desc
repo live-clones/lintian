@@ -1,5 +1,6 @@
 Testname: cruft-general-wig-pen
 Version: 1.0-1
+Skeleton: non-native
 Type: non-native
 Source-Format: 2.0
 Description: Check for cruft added in a 2.0 package

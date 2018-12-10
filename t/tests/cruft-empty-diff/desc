@@ -1,5 +1,6 @@
 Testname: cruft-empty-diff
 Version: 1.0-1
+Skeleton: non-native
 Type: non-native
 Description: Test an empty Debian diff
 Test-For: empty-debian-diff

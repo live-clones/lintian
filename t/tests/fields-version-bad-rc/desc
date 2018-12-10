@@ -1,6 +1,7 @@
 Testname: fields-version-bad-rc
 Version: 1.0+rc3-1
 Description: Test for bad release candidate versions
+Skeleton: non-native
 Type: non-native
 Test-Against:
  malformed-debian-changelog-version

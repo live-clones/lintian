@@ -1,4 +1,5 @@
 Testname: patch-systems-quilt-general
+Skeleton: non-native
 Type: non-native
 Version: 1.0-1
 Extra-Build-Depends: quilt, dpatch
