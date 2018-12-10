@@ -3,6 +3,5 @@ Version: 1.0-1
 Description: Check for empty directories in source package
 Options: --pedantic -I -E
 Skeleton: non-native
-Type: non-native
 Test-For:
  source-contains-empty-directory

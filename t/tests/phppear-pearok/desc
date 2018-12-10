@@ -10,4 +10,3 @@ Test-Against:
  pear-package-not-using-substvar
  pecl-package-requires-build-dependency
 Skeleton: non-native
-Type: non-native

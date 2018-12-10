@@ -1,6 +1,5 @@
 Testname: watch-file-should-mangle-unrel
 Skeleton: non-native
-Type: non-native
 Version: 1+dfsg-1
 Description: Watch file should mangle version (false-positive)
 Test-Against:

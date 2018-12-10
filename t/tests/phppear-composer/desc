@@ -6,4 +6,3 @@ Test-For:
 Test-Against:
  missing-pkg-php-tools-addon
 Skeleton: non-native
-Type: non-native

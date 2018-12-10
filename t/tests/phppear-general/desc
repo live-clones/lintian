@@ -7,4 +7,3 @@ Test-For:
 Test-Against:
  missing-pkg-php-tools-buildsystem
 Skeleton: non-native
-Type: non-native

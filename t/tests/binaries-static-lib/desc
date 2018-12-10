@@ -2,7 +2,6 @@ Testname: binaries-static-lib
 Version: 1.0-1
 Package-Architecture: any
 Skeleton: non-native
-Type: non-native
 Description: Test checks related to static libs
 Test-For:
  static-library-has-unneeded-section

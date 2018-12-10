@@ -1,7 +1,6 @@
 Testname: lintian-output-colons
 Sequence: 2500
 Skeleton: non-native
-Type: non-native
 Version: 1.0+dsfg-1.1
 Package-Architecture: all
 Options: --pedantic -I -E --exp-output format=colons --show-overrides

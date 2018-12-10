@@ -1,7 +1,6 @@
 Testname: cruft-general-diff
 Version: 1.0-1
 Skeleton: non-native
-Type: non-native
 Description: Check for cruft added in the diff
 Test-For:
  diff-contains-arch-control-dir
