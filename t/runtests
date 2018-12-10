@@ -75,6 +75,7 @@ BEGIN {
         $LINTIAN = "$LINTIAN_ROOT/frontend/lintian";
         $dplint = "$LINTIAN_ROOT/frontend/dplint";
     }
+    $ENV{'LINTIAN_ROOT'} = $LINTIAN_ROOT;
     $ENV{'LINTIAN_TEST_ROOT'} = $LINTIAN_ROOT;
     $ENV{'LINTIAN_FRONTEND'} = $LINTIAN;
     $ENV{'LINTIAN_DPLINT_FRONTEND'} = $dplint;
