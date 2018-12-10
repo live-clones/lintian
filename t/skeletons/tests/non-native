@@ -1,3 +1,4 @@
+Type: non-native
 Template-Sets:
  debian (tests-pedantic),
  debian (tests-watchfile),
