@@ -589,6 +589,15 @@ sub read_desc {
 
     my $testdata = read_config($path);
 
+    # needed for suite calculation
+    my $depth = scalar splitdir((splitpath($TESTSET))[1]);
+
+    # calculate suite from path
+    my $suite = (splitdir((splitpath($path))[1]))[$depth];
+
+    # add suite to data
+    $testdata->{suite} = $suite;
+
     my $defaults = read_config("$TESTSET/defaults/desc");
 
     foreach my $key (keys %{$defaults}) {
