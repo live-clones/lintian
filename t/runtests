@@ -451,9 +451,6 @@ sub generic_test_runner {
         or not up_to_date($stampfile, $testdir, $RUNNER_TS)
         or -e "$targetdir/debian/debian") {
 
-        my $skel = $testdata->{skeleton};
-        my $tmpldir = "$TESTSET/templates/$suite/";
-
         $test_state->info_msg(2, "Cleaning up and repopulating $targetdir...");
         runsystem_ok('rm', '-rf', $targetdir);
 
