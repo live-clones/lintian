@@ -441,11 +441,19 @@ sub generic_test_runner {
         }
     }
 
-    # the skeleton we are working with
-    my $skeletonname = $testdata->{skeleton};
-    my $skeletonpath = "$TESTSET/skeletons/$suite/$skeletonname";
+    # load skeleton
+    if (exists $testdata->{skeleton}) {
 
-    my $skeleton = read_config($skeletonpath);
+        # the skeleton we are working with
+        my $skeletonname = $testdata->{skeleton};
+        my $skeletonpath = "$TESTSET/skeletons/$suite/$skeletonname";
+
+        my $skeleton = read_config($skeletonpath);
+
+        foreach my $key (keys %{$skeleton}) {
+            $testdata->{$key} = $skeleton->{$key};
+        }
+    }
 
     if (   $ALWAYS_REBUILD
         or not up_to_date($stampfile, $testdir, $RUNNER_TS)
@@ -461,9 +469,9 @@ sub generic_test_runner {
         }
 
         # populate working directory with specified template sets
-        copy_skeleton_template_sets($skeleton->{template_sets},
+        copy_skeleton_template_sets($testdata->{template_sets},
             $targetdir, $TESTSET)
-          if exists $skeleton->{template_sets};
+          if exists $testdata->{template_sets};
 
         # delete templates for which we have originals
         remove_surplus_templates($testdir, $targetdir);
@@ -502,9 +510,9 @@ sub generic_test_runner {
     if ($ALWAYS_REBUILD or not up_to_date($stampfile, $testdir, $RUNNER_TS)) {
 
         # fill remaining templates
-        fill_skeleton_templates($skeleton->{fill_targets},
+        fill_skeleton_templates($testdata->{fill_targets},
             $testdata, $RUNNER_TS, $targetdir, $TESTSET)
-          if exists $skeleton->{fill_targets};
+          if exists $testdata->{fill_targets};
     }
 
     # get lintian subject
