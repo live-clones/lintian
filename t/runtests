@@ -234,6 +234,8 @@ sub parse_args {
         internal_error("test set directory $TESTSET does not exist");
     }
 
+    $TESTSET = rel2abs($TESTSET);
+
     if (defined($coverage)) {
         my $harness_perl_switches = $ENV{'HARNESS_PERL_SWITCHES'}//'';
         # Only collect coverage for stuff that D::NYTProf and
