@@ -12,17 +12,24 @@ formatfile = $(debiandata)/source/format
 
 diffdata = diff
 
-packagedebiandir = $(packagedir)/debian
+private_key = upstream/private-key.asc
 
 product = $(package)_{$no_epoch}_{$host_architecture}.changes
 
 .DEFAULT_GOAL := product
 
 product: $(origtargz)
+	if [ -r $(origtargz) -a -r $(private_key) ] ; then \
+	tmpdir=$(shell mktemp -d) ; \
+	gpg --homedir "$$tmpdir" --import $(private_key) ; \
+	gpg --homedir "$$tmpdir" --batch --yes --output $(origtargz).asc --detach-sign $(origtargz) ; \
+	gpg-connect-agent --homedir "$$tmpdir" KILLAGENT /bye ; \
+	rm -rf "$$tmpdir" ; \
+	fi ;
 	-mkdir -p $(diffdata)
 	cp -rp $(diffdata)/. $(packagedir)
 	-mkdir -p $(debiandata)
-	cp -rp $(debiandata)/. $(packagedebiandir)
+	cp -rp $(debiandata)/. $(packagedir)/debian
 	if [ -x ./pre_build ] ; then ./pre_build $(shell realpath $(packagedir)) ; fi
 	cd $(packagedir) && dpkg-buildpackage -rfakeroot -us -uc -d -iNEVER_MATCH_ANYTHING -INEVER_MATCH_ANYTHING --source-option=--auto-commit
 
