@@ -159,7 +159,7 @@ Info: This watch file does not specific a means to verify the upstream
  tarball using a cryptographic signature.
  .
  If upstream distributions provides such signatures, please use the
- <tt>pgpsigurlmangle</tt> options in this watch file's <t>opts=</tt> to
+ <tt>pgpsigurlmangle</tt> options in this watch file's <tt>opts=</tt> to
  generate the URL of an upstream GPG signature. This signature is
  automatically downloaded and verified against a keyring stored in
  <tt>debian/upstream/signing-key.asc</tt>
