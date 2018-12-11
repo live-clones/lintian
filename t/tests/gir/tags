@@ -8,3 +8,5 @@ W: gir1.2-bad: gir-missing-typelib-dependency usr/share/gir-1.0/Bad-23.gir gir1.
 W: gir1.2-bad: gir-section-not-libdevel usr/share/gir-1.0/Bad-23.gir misc
 W: gir1.2-bad: typelib-package-name-does-not-match usr/lib/girepository-1.0/Bad-23.typelib gir1.2-bad-23
 W: gir1.2-bad: typelib-section-not-introspection usr/lib/girepository-1.0/Bad-23.typelib misc
+X: gir1.2-good-42: package-contains-no-arch-dependent-files
+X: gir1.2-perfect-42: package-contains-no-arch-dependent-files
