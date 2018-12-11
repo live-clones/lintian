@@ -15,6 +15,11 @@ lintian (2.5.117) UNRELEASED; urgency=medium
     + [CL] Correct grammar of the debian-watch-does-not-check-gpg-signature
       tag description.
 
+  * t/*:
+    + [CL] Apply a patch series from Felix Lechner to use "skeletons" as
+      test templates, fixing a "exec failed: Text file busy" regression
+      when running tests by tag name.  (Closes: #916087)
+
  -- Chris Lamb <lamby@debian.org>  Fri, 07 Dec 2018 10:41:09 +0100
 
 lintian (2.5.116) unstable; urgency=medium
