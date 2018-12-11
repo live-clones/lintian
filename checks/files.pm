@@ -421,7 +421,10 @@ sub run {
         my $operm = $file->operm;
         my $link = $file->link;
 
-        $arch_dep_files = 1 if $fname !~ m,^usr/share/,o && $fname ne 'usr/';
+        $arch_dep_files = 1
+          if not $file->is_dir
+          and $fname !~ m,^usr/share/,o
+          and $file->file_info !~ m/\bASCII text\b/;
 
         if (exists($PATH_DIRECTORIES{$file->dirname})) {
             $has_public_executable = 1;

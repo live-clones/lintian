@@ -5,6 +5,12 @@ lintian (2.5.117) UNRELEASED; urgency=medium
   * checks/files.pm:
     + [CL] Don't emit uses-dpkg-database-directly for d-i components; they
       likely know what they are doing with no alternatives.
+    + [CL] Use the output from file(1) when determining whether to emit
+      the package-contains-no-arch-dependent-files tag to catch packages
+      that ship (for example) just a Python script under /usr/bin in an
+      architecture-dependent package.  This reverts 6f4bd2fee2 in order to
+      distinguish between "data" and such scripts.  Thanks to Dmitry
+      Bogatov for investigating.  (Closes: #916023)
   * checks/watch-file.desc:
     + [CL] Correct grammar of the debian-watch-does-not-check-gpg-signature
       tag description.
