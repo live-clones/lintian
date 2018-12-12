@@ -22,6 +22,8 @@ lintian (2.5.117) UNRELEASED; urgency=medium
     + [CL] Apply a patch series from Felix Lechner to improve the
       "onlyrun=" test selection feature.  One can now select all tests
       connected to particular Lintian check with "check:foo".  (MR: !90)
+    + [CL] Apply a patch set from Felix Lechner to sign test packages.
+      when a upstream/private-key.asc is present.  (MR: !93)
 
  -- Chris Lamb <lamby@debian.org>  Fri, 07 Dec 2018 10:41:09 +0100
 
