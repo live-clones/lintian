@@ -19,6 +19,9 @@ lintian (2.5.117) UNRELEASED; urgency=medium
     + [CL] Apply a patch series from Felix Lechner to use "skeletons" as
       test templates, fixing a "exec failed: Text file busy" regression
       when running tests by tag name.  (Closes: #916087)
+    + [CL] Apply a patch series from Felix Lechner to improve the
+      "onlyrun=" test selection feature.  One can now select all tests
+      connected to particular Lintian check with "check:foo".  (MR: !90)
 
  -- Chris Lamb <lamby@debian.org>  Fri, 07 Dec 2018 10:41:09 +0100
 
