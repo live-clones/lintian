@@ -297,9 +297,9 @@ my $OBSOLETE_PATHS = Lintian::Data->new(
     });
 
 sub run {
-    my ($pkg, $type, $info, $proc) = @_;
+    my ($pkg, $type, $info, $proc, $group) = @_;
     my ($is_python, $is_perl, $has_binary_perl_file, $has_public_executable,
-        $has_public_shared_library);
+        $has_public_shared_library, $build_path);
     my @nonbinary_perl_files_in_lib;
     my %linked_against_libvga;
     my @devhelp;
@@ -317,6 +317,11 @@ sub run {
     my $multiarch = $info->field('multi-arch', 'no');
     my $multiarch_dir = $MULTIARCH_DIRS->value($arch);
     my $ppkg = quotemeta($pkg);
+
+    my $buildinfo = $group->get_buildinfo_processable;
+    if ($buildinfo) {
+        $build_path = $buildinfo->info->field('build-path', '');
+    }
 
     my %header_dirs = ('usr/include/' => 1);
     foreach my $x ($MULTIARCH_DIRS->all) {
@@ -2343,7 +2348,6 @@ sub detect_privacy_breach {
 
 sub get_checks_for_file {
     my ($info, $file, $source_pkg) = @_;
-
     my %checks;
 
     return %checks if $source_pkg eq 'lintian';
@@ -2357,6 +2361,8 @@ sub get_checks_for_file {
       if $file !~ m,^usr/share/(?:doc|locale)/,
       and $info->field('section', '') ne 'debian-installer'
       and none { $_ eq $source_pkg } qw(base-files dpkg lintian);
+
+    $checks{'file-references-package-build-path'} = $build_path if $build_path;
 
     return %checks;
 }
