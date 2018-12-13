@@ -1,3 +1,4 @@
+I: testsuite-general source: debian-tests-control-and-control-autodep8 debian/tests/control debian/tests/control.autodep8
 I: testsuite-general source: runtime-test-file-is-not-a-regular-file debian/tests/asym
 I: testsuite-general source: runtime-test-file-is-not-a-regular-file debian/tests/asym1
 I: testsuite-general source: runtime-test-file-is-not-a-regular-file debian/tests/broken

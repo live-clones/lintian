@@ -45,6 +45,13 @@ Info: The specified autopkgtest control file is considered obsolete.
  .
  Please merge the specified file into <tt>debian/tests/control</tt>.
 
+Tag: debian-tests-control-and-control-autodep8
+Severity: wishlist
+Certainty: certain
+Info: This package has both a <tt>debian/tests/control</tt> and a
+ <tt>debian/tests/control.autodep8</tt> file. Please merge the contents and
+ remove the latter one.
+
 Tag: illegal-runtime-test-name
 Severity: normal
 Certainty: certain
