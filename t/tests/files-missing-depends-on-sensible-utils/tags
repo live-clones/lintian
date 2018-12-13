@@ -1,2 +1,2 @@
-E: files-missing-depends-on-sensible-utils: missing-depends-on-sensible-utils postinst
+E: files-missing-depends-on-sensible-utils: missing-depends-on-sensible-utils postinst (line 5)
 E: files-missing-depends-on-sensible-utils: missing-depends-on-sensible-utils var/lib/test/test-script

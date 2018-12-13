@@ -23,7 +23,7 @@ use strict;
 use warnings;
 use autodie;
 
-use List::MoreUtils qw(any);
+use List::MoreUtils qw(none);
 
 use Lintian::Data;
 use Lintian::Tags qw(tag);
@@ -191,8 +191,6 @@ my $BUILD_PATH_REGEX
   = Lintian::Data->new('files/build-path-regex',qr/~~~~~/,
     sub { return  qr/$_[0]/xsm;});
 
-my @ALLOWED_USES_DPKG_DATABASE = qw(base-files dpkg lintian);
-
 sub _tag_build_tree_path {
     my ($path, $msg) = @_;
     foreach my $buildpath ($BUILD_PATH_REGEX->all) {
@@ -346,8 +344,6 @@ sub run {
 
     # Check if package is empty
     my $is_dummy = $info->is_pkg_class('any-meta');
-
-    my $has_sensible_utils = $info->relation('all')->implies('sensible-utils');
 
     # read data from objdump-info file
     foreach my $file (sort keys %{$info->objdump_info}) {
@@ -1503,32 +1499,30 @@ sub run {
                 tag 'nfs-temporary-file-in-package', $file;
             }
 
-            # ---------------- using sensible-utils w/o dependency
-            tag 'missing-depends-on-sensible-utils', $file
-              if not $has_sensible_utils
-              and $fname !~ m,^usr/share/(?:doc|locale)/,
-              and $source_pkg ne 'lintian'
-              and detect_sensible_utils($file);
+            # ---------------- contents checks
+            my %checks
+              = get_checks_for_file($info, $file, $source_pkg, $build_path);
 
-            # ---------------- using dpkg internals
-            if ($fname !~ m,^usr/share/(?:doc|locale)/,
-                and check_uses_dpkg($source_pkg, $pkg_section)) {
+            if (%checks) {
                 my $strings = slurp_entire_file($info->strings($file));
 
-                # If we have strings(1) output (eg. we are an ELF
-                # binary) then prefer that.
-                if ($strings) {
-                    tag 'uses-dpkg-database-directly', $file
-                      if $strings =~ m,^/var/lib/dpkg,m;
-                } else {
-                    my $fd = $file->open(':raw');
-                    my $sfd = Lintian::SlidingWindow->new($fd);
-                    while (my $block = $sfd->readwindow) {
-                        next unless $block =~ m,/var/lib/dpkg,;
-                        tag 'uses-dpkg-database-directly', $file;
-                        last;
+                foreach my $tag (sort keys %checks) {
+                    my $regex = $checks{$tag};
+
+                    # If we have strings(1) output (eg. we are an ELF
+                    # binary) then prefer that.
+                    if ($strings) {
+                        tag $tag, $file if $strings =~ m,^\Q$regex\E,m;
+                    } else {
+                        my $fd = $file->open(':raw');
+                        my $sfd = Lintian::SlidingWindow->new($fd);
+                        while (my $block = $sfd->readwindow) {
+                            next unless $block =~ $regex;
+                            tag $tag, $file;
+                            last;
+                        }
+                        close($fd);
                     }
-                    close($fd);
                 }
             }
 
@@ -2036,17 +2030,15 @@ sub run {
         my $file = $info->control_index_resolved_path($1);
         next if not $file or not $file->is_open_ok;
 
-        tag 'missing-depends-on-sensible-utils', $file
-          if not $has_sensible_utils and detect_sensible_utils($file);
-
-        if (check_uses_dpkg($source_pkg, $pkg_section)) {
-            my $fd2 = $file->open;
-            while (<$fd2>) {
-                tag 'uses-dpkg-database-directly', $file, "(line $.)"
-                  if m,/var/lib/dpkg,;
+        my %checks
+          = get_checks_for_file($info, $file, $pkg_section, $build_path);
+        my $fd2 = $file->open;
+        while (<$fd2>) {
+            foreach my $tag (sort keys %checks) {
+                tag $tag, $file, "(line $.)" if $_ =~ $checks{$tag};
             }
-            close($fd2);
         }
+        close($fd2);
     }
     close($fd);
 
@@ -2349,27 +2341,24 @@ sub detect_privacy_breach {
     return;
 }
 
-sub detect_sensible_utils {
-    my ($file) = @_;
+sub get_checks_for_file {
+    my ($info, $file, $source_pkg) = @_;
 
-    my $fd = $file->open(':raw');
-    my $sfd = Lintian::SlidingWindow->new($fd, sub { $_= lc($_); }, BLOCKSIZE);
+    my %checks;
 
-    while (my $block = $sfd->readwindow) {
-        return 1
-          if $block=~ m/(?:select-editor|sensible-(?:browser|editor|pager))\b/;
-    }
-    close($fd);
-    return;
-}
+    return %checks if $source_pkg eq 'lintian';
 
-sub check_uses_dpkg {
-    my ($source_pkg, $pkg_section) = @_;
+    $checks{'missing-depends-on-sensible-utils'}
+      = '(?:select-editor|sensible-(?:browser|editor|pager))\b'
+      if $file !~ m,^usr/share/(?:doc|locale)/,
+      and not $info->relation('all')->implies('sensible-utils');
 
-    return 0 if $pkg_section eq 'debian-installer';
-    return 0 if any { $_ eq $source_pkg } @ALLOWED_USES_DPKG_DATABASE;
+    $checks{'uses-dpkg-database-directly'} = '/var/lib/dpkg'
+      if $file !~ m,^usr/share/(?:doc|locale)/,
+      and $info->field('section', '') ne 'debian-installer'
+      and none { $_ eq $source_pkg } qw(base-files dpkg lintian);
 
-    return 1;
+    return %checks;
 }
 
 1;

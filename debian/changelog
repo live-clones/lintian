@@ -11,6 +11,8 @@ lintian (2.5.117) UNRELEASED; urgency=medium
       architecture-dependent package.  This reverts 6f4bd2fee2 in order to
       distinguish between "data" and such scripts.  Thanks to Dmitry
       Bogatov for investigating.  (Closes: #916023)
+    + [CL] Refactor, tidy and optimise various checks for the contents of
+      files.
   * checks/watch-file.desc:
     + [CL] Correct grammar of the debian-watch-does-not-check-gpg-signature
       tag description.
