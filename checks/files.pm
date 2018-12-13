@@ -425,7 +425,8 @@ sub run {
         $arch_dep_files = 1
           if not $file->is_dir
           and $fname !~ m,^usr/share/,o
-          and $finfo and $finfo !~ m/\bASCII text\b/;
+          and $finfo
+          and $finfo !~ m/\bASCII text\b/;
 
         if (exists($PATH_DIRECTORIES{$file->dirname})) {
             $has_public_executable = 1;
