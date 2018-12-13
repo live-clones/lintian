@@ -108,7 +108,7 @@ use Test::State;
 
 $ENV{'POLICY_VERSION'} = '4.2.1';
 our $ARCHITECTURE = safe_qx(qw(dpkg-architecture -qDEB_HOST_ARCH));
-my $RUNNER_TS = (stat($0))[9];
+$ENV{HARNESS_EPOCH} = (stat($0))[9];
 chomp $ARCHITECTURE;
 
 my $DATE = safe_qx(qw(date -R));
@@ -375,7 +375,7 @@ sub create_child {
                     $retval= prepare(
                         $state, $testcase,
                         $outpath, $testset,
-                        $RUNNER_TS, $force_rebuild,
+                        $force_rebuild,
                         $ARCHITECTURE,
                         $DATE
                     );
@@ -386,8 +386,7 @@ sub create_child {
                     unless ($retval) {
                         eval {
                             runner($state, $testcase, $outpath, $testset,
-                                $RUNNER_TS, $force_rebuild, $dump_logs,
-                                $coverage);
+                                $force_rebuild, $dump_logs,$coverage);
                         };
                         if (my $err = $@) {
                             $state->test_error($err);

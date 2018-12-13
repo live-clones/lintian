@@ -78,7 +78,7 @@ use constant NO => q{no};
 # Runs the test called $test assumed to be located in $testset/$dir/$test/.
 #
 sub runner {
-    my ($test_state, $testcase, $outpath, $testset, $RUNNER_TS,
+    my ($test_state, $testcase, $outpath, $testset,
         $force_rebuild, $dump_logs, $coverage)
       = @_;
     my $suite = $testcase->{suite};
@@ -93,7 +93,8 @@ sub runner {
       unless exists $testcase->{build_product};
     my $subject = "$runpath/$testcase->{build_product}";
 
-    if ($force_rebuild or not up_to_date($stampfile, $specpath, $RUNNER_TS)) {
+    if ($force_rebuild
+        or not up_to_date($stampfile, $specpath, $ENV{HARNESS_EPOCH})) {
 
         $test_state->progress('building');
 

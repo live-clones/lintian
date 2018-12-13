@@ -76,7 +76,7 @@ use constant COMMA => q{,};
 sub prepare {
     my (
         $test_state, $testcase, $outpath,
-        $testset, $RUNNER_TS, $force_rebuild,
+        $testset, $force_rebuild,
         $ARCHITECTURE, $DATE
     ) = @_;
     my $suite = $testcase->{suite};
@@ -174,7 +174,7 @@ sub prepare {
     }
 
     if (   $force_rebuild
-        or not up_to_date($stampfile, $specpath, $RUNNER_TS)
+        or not up_to_date($stampfile, $specpath, $ENV{HARNESS_EPOCH})
         or -e "$runpath/debian/debian") {
 
         my $skel = $testcase->{skeleton};
@@ -211,7 +211,8 @@ sub prepare {
 
         # fill builder if needed
         my $buildertemplate = "$builderpath.in";
-        fill_template($buildertemplate, $builderpath, $testcase,$RUNNER_TS)
+        fill_template($buildertemplate, $builderpath, $testcase,
+            $ENV{HARNESS_EPOCH})
           if -f $buildertemplate;
 
         if (-f $builderpath) {
@@ -228,11 +229,12 @@ sub prepare {
         }
     }
 
-    if ($force_rebuild or not up_to_date($stampfile, $specpath, $RUNNER_TS)) {
+    if ($force_rebuild
+        or not up_to_date($stampfile, $specpath, $ENV{HARNESS_EPOCH})) {
 
         # fill remaining templates
         fill_skeleton_templates($testcase->{fill_targets},
-            $testcase, $RUNNER_TS, $runpath, $testset)
+            $testcase, $ENV{HARNESS_EPOCH}, $runpath, $testset)
           if exists $testcase->{fill_targets};
     }
 
