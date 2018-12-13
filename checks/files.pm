@@ -2347,7 +2347,7 @@ sub detect_privacy_breach {
 }
 
 sub get_checks_for_file {
-    my ($info, $file, $source_pkg) = @_;
+    my ($info, $file, $source_pkg, $build_path) = @_;
     my %checks;
 
     return %checks if $source_pkg eq 'lintian';
