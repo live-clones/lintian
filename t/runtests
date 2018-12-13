@@ -120,21 +120,21 @@ our $IO_LOOP = IO::Async::Loop->new;
 
 # --- Parsed options / arguments
 
-our $VERBOSE = 0;
-our ($RUNDIR, $TESTSET, $ALWAYS_REBUILD);
-our $JOBS = -1;
-our $DUMP_LOGS = 1;
+our $verbose = 0;
+our ($outpath, $testset, $force_rebuild);
+our $numjobs = -1;
+our $dump_logs = 1;
 our @TESTS;
 our $ACTIVE_JOBS = 0;
 
-my ($run_all_tests, $tag, $coverage, $test_filter, %suites);
+my ($run_all_tests, $tag, $coverage, $onlyrun, %suites);
 
 parse_args();
 
-if (-d "$TESTSET/helpers/bin") {
+if (-d "$testset/helpers/bin") {
     # Add the test helpers to PATH
-    my $tpath = Cwd::abs_path("$TESTSET/helpers/bin");
-    internal_error("Cannot resolve $TESTSET/helpers/bin: $!") unless $tpath;
+    my $tpath = Cwd::abs_path("$testset/helpers/bin");
+    internal_error("Cannot resolve $testset/helpers/bin: $!") unless $tpath;
     $ENV{'PATH'} = "$tpath:$ENV{'PATH'}";
 }
 
@@ -160,22 +160,22 @@ my @failed;
 my $tests_run = 0;
 
 # find test paths
-my @testpaths = find_selected_lintian_testpaths($TESTSET, $test_filter);
+my @testpaths = find_selected_lintian_testpaths($testset, $onlyrun);
 
 @TESTS = map { read_desc("$_/desc") } @testpaths;
 
-if ($test_filter && $test_filter =~ s/^tag://) {
-    $tag = $test_filter;
-    # clear test_filter to avoid find a "single" test.
-    $test_filter = '';
-} elsif ($test_filter && $test_filter =~ m/^suite:(.++)/) {
+if ($onlyrun && $onlyrun =~ s/^tag://) {
+    $tag = $onlyrun;
+    # clear onlyrun to avoid find a "single" test.
+    $onlyrun = '';
+} elsif ($onlyrun && $onlyrun =~ m/^suite:(.++)/) {
     my $list = $1;
     %suites = ();
     foreach my $s (split m/\s*+,\s*+/, $list) {
         $suites{$s} = 1;
     }
     # clear singletest to avoid find a "single" test.
-    $test_filter = '';
+    $onlyrun = '';
 } else {
     # run / check all of them
     foreach my $s (SUITES) {
@@ -188,7 +188,7 @@ if (!$tag) {
 }
 
 if (@TESTS) {
-    for (0..$JOBS-1) {
+    for (0..$numjobs-1) {
         create_child($IO_LOOP, \@TESTS)
           or last;
     }
@@ -204,12 +204,12 @@ sub parse_args {
     my ($debug);
     Getopt::Long::Configure('bundling');
     GetOptions(
-        'B'            => \$ALWAYS_REBUILD,
+        'B'            => \$force_rebuild,
         'd|debug+'     => \$debug,
-        'j|jobs:i'     => \$JOBS,
+        'j|jobs:i'     => \$numjobs,
         'k|keep-going' => \$run_all_tests,
-        'dump-logs!'   => \$DUMP_LOGS,
-        'v|verbose'    => \$VERBOSE,
+        'dump-logs!'   => \$dump_logs,
+        'v|verbose'    => \$verbose,
         'coverage:s'   => \$coverage,
         'help|h'       => sub {usage(0); },
     ) or usage();
@@ -218,33 +218,33 @@ sub parse_args {
         usage();
     }
 
-    $VERBOSE = 1 + $debug if $debug;
+    $verbose = 1 + $debug if $debug;
 
-    ($TESTSET, $RUNDIR, $test_filter) = @ARGV;
+    ($testset, $outpath, $onlyrun) = @ARGV;
 
-    if (-d $RUNDIR) {
-        my $abs = Cwd::abs_path($RUNDIR);
-        internal_error("Cannot resolve $RUNDIR: $!")
+    if (-d $outpath) {
+        my $abs = Cwd::abs_path($outpath);
+        internal_error("Cannot resolve $outpath: $!")
           if not defined($abs);
-        $RUNDIR = $abs;
+        $outpath = $abs;
     } else {
-        internal_error("test directory $RUNDIR does not exist");
+        internal_error("test directory $outpath does not exist");
     }
 
-    unless (-d $TESTSET) {
-        internal_error("test set directory $TESTSET does not exist");
+    unless (-d $testset) {
+        internal_error("test set directory $testset does not exist");
     }
 
-    $TESTSET = rel2abs($TESTSET);
+    $testset = rel2abs($testset);
 
     # Getopt::Long assigns 0 as default value if none was specified
-    # (i.e. "-j").  Otherwise, $JOBS can also be -1 if "-j" was not
+    # (i.e. "-j").  Otherwise, $numjobs can also be -1 if "-j" was not
     # specified at all.
-    if ($JOBS <= 0) {
-        $JOBS = default_parallel();
+    if ($numjobs <= 0) {
+        $numjobs = default_parallel();
 
-        print "Doing up to $JOBS concurrent builds/tests\n"
-          if $VERBOSE >= 2;
+        print "Doing up to $numjobs concurrent builds/tests\n"
+          if $verbose >= 2;
     }
 
     return;
@@ -252,7 +252,7 @@ sub parse_args {
 
 sub print_test_summary {
     if (!$tests_run) {
-        if ($test_filter) {
+        if ($onlyrun) {
             print "W: No tests run, did you specify a valid test name?\n";
         } elsif ($tag) {
             print "I: No tests found for that tag.\n";
@@ -286,46 +286,46 @@ sub print_test_summary {
 sub read_desc {
     my ($path) = @_;
 
-    my $testdata = read_config($path);
+    my $testcase = read_config($path);
 
     # needed for suite calculation
-    my $depth = scalar splitdir((splitpath($TESTSET))[1]);
+    my $depth = scalar splitdir((splitpath($testset))[1]);
 
     # calculate suite from path
     my $suite = (splitdir((splitpath($path))[1]))[$depth];
 
     # add suite to data
-    $testdata->{suite} = $suite;
+    $testcase->{suite} = $suite;
 
-    my $defaults = read_config("$TESTSET/defaults/desc");
+    my $defaults = read_config("$testset/defaults/desc");
 
     foreach my $key (keys %{$defaults}) {
-        $testdata->{$key} = $defaults->{$key}
-          unless exists $testdata->{$key};
+        $testcase->{$key} = $defaults->{$key}
+          unless exists $testcase->{$key};
     }
 
-    return $testdata;
+    return $testcase;
 }
 
 sub run_prove_tests {
     my @do_run;
-    if ($test_filter) {
-        for my $part (split(m/,/, $test_filter)) {
-            my $script = "$TESTSET/scripts/${part}.t";
+    if ($onlyrun) {
+        for my $part (split(m/,/, $onlyrun)) {
+            my $script = "$testset/scripts/${part}.t";
             if (-f $script) {
                 push(@do_run, $script);
-            } elsif (-d "$TESTSET/scripts/${part}") {
-                push(@do_run, "$TESTSET/scripts/${part}");
+            } elsif (-d "$testset/scripts/${part}") {
+                push(@do_run, "$testset/scripts/${part}");
             }
         }
     } elsif ($suites{'scripts'}) {
-        unless (-d "$TESTSET/scripts") {
-            internal_error("cannot find $TESTSET/scripts: $!");
+        unless (-d "$testset/scripts") {
+            internal_error("cannot find $testset/scripts: $!");
         }
-        @do_run = ("$TESTSET/scripts");
+        @do_run = ("$testset/scripts");
     }
     if (@do_run) {
-        my $jobs = $JOBS;
+        my $jobs = $numjobs;
         # Devel::Cover + one cover_db + multiple processes is a recipe
         # for corruptions.  Force $jobs to 1 if we are running under
         # coverage.
@@ -335,7 +335,7 @@ sub run_prove_tests {
         print "Test scripts:\n";
         if (system(@prove_cmd, @do_run) != 0) {
             exit 1 unless $run_all_tests;
-            push(@failed, "suite:scripts [Try: prove -lr -j$JOBS t]");
+            push(@failed, "suite:scripts [Try: prove -lr -j$numjobs t]");
             $status = 1;
         }
         $tests_run++;
@@ -363,19 +363,19 @@ sub create_child {
 
         code => sub {
             $0 = 'Test worker - idle';
-            while (my $test_data = $child_in_ch->recv) {
-                my $state = Test::State->new($test_data, $child_out_ch);
-                my $suite = $test_data->{'suite'};
-                my $testname = $test_data->{testname};
+            while (my $testcase = $child_in_ch->recv) {
+                my $state = Test::State->new($testcase, $child_out_ch);
+                my $suite = $testcase->{'suite'};
+                my $testname = $testcase->{testname};
 
                 $0 = "Test worker - processing ${suite}::${testname}";
 
                 my $retval;
                 eval {
                     $retval= prepare(
-                        $state, $test_data,
-                        $RUNDIR, $TESTSET,
-                        $RUNNER_TS, $ALWAYS_REBUILD,
+                        $state, $testcase,
+                        $outpath, $testset,
+                        $RUNNER_TS, $force_rebuild,
                         $ARCHITECTURE,$STANDARDS_VERSION,
                         $DATE
                     );
@@ -385,8 +385,8 @@ sub create_child {
                 }else {
                     unless ($retval) {
                         eval {
-                            runner($state, $test_data, $RUNDIR, $TESTSET,
-                                $RUNNER_TS, $ALWAYS_REBUILD, $DUMP_LOGS,
+                            runner($state, $testcase, $outpath, $testset,
+                                $RUNNER_TS, $force_rebuild, $dump_logs,
                                 $coverage);
                         };
                         if (my $err = $@) {
@@ -409,7 +409,7 @@ sub create_child {
             $ACTIVE_JOBS--;
             if ($ACTIVE_JOBS < 1) {
                 print "Stopping loop, no more active workers\n"
-                  if $VERBOSE >= 2;
+                  if $verbose >= 2;
                 $loop->stop;
             }
             return;
@@ -437,7 +437,7 @@ sub handle_msg_from_child {
     my $suite = $test_metadata->{'suite'};
     my $testname = $test_metadata->{'testname'};
 
-    if ($VERBOSE >= 3) {
+    if ($verbose >= 3) {
         my @dmsg = map { $_ // '<undef>' } @payload;
         print
           "PROTO-MSG [DEBUG] ${msg_type} -- ${suite}::${testname} [@dmsg]\n";
@@ -464,7 +464,7 @@ sub handle_msg_from_child {
         }
         $final_msg = "${msg_type} ${suite}::${testname}";
         $final_msg .= ": ${info_msg}" if defined($info_msg);
-        if (not $output_is_tty and not $VERBOSE) {
+        if (not $output_is_tty and not $verbose) {
             if ($msg_type eq 'pass') {
                 $final_msg = '.';
             } elsif ($msg_type eq 'skip') {
@@ -513,10 +513,10 @@ sub handle_msg_from_child {
     } elsif ($msg_type eq 'progress') {
         my ($new_phase) = @payload;
         print "${suite}::${testname} is now in phase: ${new_phase}\n"
-          if $VERBOSE;
+          if $verbose;
     } elsif ($msg_type eq 'log-msg') {
         my ($verbosity, $msg) = @payload;
-        if ($verbosity <= $VERBOSE) {
+        if ($verbosity <= $verbose) {
             my $level = 'INFO';
             $level = 'DEBUG' if $verbosity > 1;
             print "INFO-MSG [$level] ${suite}::${testname}: $msg\n";

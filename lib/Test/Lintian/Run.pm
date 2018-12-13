@@ -75,34 +75,34 @@ use constant NO => q{no};
 
 # generic_runner
 #
-# Runs the test called $test assumed to be located in $TESTSET/$dir/$test/.
+# Runs the test called $test assumed to be located in $testset/$dir/$test/.
 #
 sub runner {
-    my ($test_state, $testdata, $RUNDIR, $TESTSET, $RUNNER_TS,
-        $ALWAYS_REBUILD, $DUMP_LOGS, $coverage)
+    my ($test_state, $testcase, $outpath, $testset, $RUNNER_TS,
+        $force_rebuild, $dump_logs, $coverage)
       = @_;
-    my $suite = $testdata->{suite};
-    my $testname = $testdata->{testname};
-    my $testdir = "$TESTSET/$suite/$testname";
+    my $suite = $testcase->{suite};
+    my $testname = $testcase->{testname};
+    my $specpath = "$testset/$suite/$testname";
 
-    my $targetdir = "$RUNDIR/$suite/$testname";
-    my $stampfile = "$RUNDIR/$suite/$testname-build-stamp";
+    my $runpath = "$outpath/$suite/$testname";
+    my $stampfile = "$outpath/$suite/$testname-build-stamp";
 
     # get lintian subject
     die 'Could not get subject of Lintian examination.'
-      unless exists $testdata->{build_product};
-    my $subject = "$targetdir/$testdata->{build_product}";
+      unless exists $testcase->{build_product};
+    my $subject = "$runpath/$testcase->{build_product}";
 
-    if ($ALWAYS_REBUILD or not up_to_date($stampfile, $testdir, $RUNNER_TS)) {
+    if ($force_rebuild or not up_to_date($stampfile, $specpath, $RUNNER_TS)) {
 
         $test_state->progress('building');
 
-        if (exists $testdata->{build_command}) {
+        if (exists $testcase->{build_command}) {
             my $command
-              = "cd $targetdir; $testdata->{build_command} > ../build.$testname 2>&1";
+              = "cd $runpath; $testcase->{build_command} > ../build.$testname 2>&1";
             if (system($command)) {
-                $test_state->dump_log("${RUNDIR}/${suite}/build.${testname}")
-                  if $DUMP_LOGS;
+                $test_state->dump_log("${outpath}/${suite}/build.${testname}")
+                  if $dump_logs;
                 die "$command failed.";
             }
         }
@@ -115,54 +115,54 @@ sub runner {
         $test_state->progress('building (cached)');
     }
 
-    my $pkg = $testdata->{source};
+    my $pkg = $testcase->{source};
 
-    run_lintian($test_state, $testdata, $subject, $targetdir,
-        "$targetdir/tags.$pkg", $coverage);
+    run_lintian($test_state, $testcase, $subject, $runpath,
+        "$runpath/tags.$pkg", $coverage);
 
     # Run a sed-script if it exists, for tests that have slightly variable
     # output
-    if (-f "$targetdir/post_test") {
-        runsystem_ok('sed', '-ri', '-f', "$targetdir/post_test",
-            "$targetdir/tags.$pkg");
-        if ($testdata->{'sort'} eq 'yes') {
+    if (-f "$runpath/post_test") {
+        runsystem_ok('sed', '-ri', '-f', "$runpath/post_test",
+            "$runpath/tags.$pkg");
+        if ($testcase->{'sort'} eq 'yes') {
             # Re-sort as the sed may have changed the order lines
-            open(my $rfd, '<', "$targetdir/tags.$pkg");
+            open(my $rfd, '<', "$runpath/tags.$pkg");
             my @lines = sort(<$rfd>);
             close($rfd);
-            open(my $wfd, '>', "$targetdir/tags.$pkg");
+            open(my $wfd, '>', "$runpath/tags.$pkg");
             print {$wfd} $_ for @lines;
             close($wfd);
         }
     }
 
-    my $expected = "$testdir/tags";
+    my $expected = "$specpath/tags";
     my $origexp = $expected;
 
-    if (-x "$targetdir/test_calibration") {
-        my $calibrated = "$targetdir/expected.$pkg.calibrated";
+    if (-x "$runpath/test_calibration") {
+        my $calibrated = "$runpath/expected.$pkg.calibrated";
         $test_state->progress('test_calibration hook');
         runsystem_ok(
-            "$targetdir/test_calibration", $expected,
-            "$targetdir/tags.$pkg", $calibrated
+            "$runpath/test_calibration", $expected,
+            "$runpath/tags.$pkg", $calibrated
         );
         $expected = $calibrated if -e $calibrated;
     }
 
-    check_result($test_state, $testdata, $expected,
-        "$targetdir/tags.$pkg",$origexp);
+    check_result($test_state, $testcase, $expected,
+        "$runpath/tags.$pkg",$origexp);
 
     return;
 }
 
 sub run_lintian {
-    my ($test_state, $testdata, $file, $rundir, $out, $coverage) = @_;
+    my ($test_state, $testcase, $file, $rundir, $out, $coverage) = @_;
     $test_state->progress('testing');
-    my @options = split(' ', $testdata->{options}//'');
+    my @options = split(' ', $testcase->{options}//'');
     unshift(@options, '--allow-root', '--no-cfg');
-    unshift(@options, '--profile', $testdata->{profile});
+    unshift(@options, '--profile', $testcase->{profile});
     unshift(@options, '--no-user-dirs');
-    if (my $incl_dir = $testdata->{'lintian_include_dir'}) {
+    if (my $incl_dir = $testcase->{'lintian_include_dir'}) {
         unshift(@options, '--include-dir', $incl_dir);
     }
     my $pid = open(my $in, '-|');
@@ -185,7 +185,7 @@ sub run_lintian {
             } @data;
         }
         unless ($status == 0 or $status == 1) {
-            my $name = $testdata->{testname};
+            my $name = $testcase->{testname};
             #NB: lines in @data have trailing newlines.
             my $msg
               = "$ENV{'LINTIAN_FRONTEND'} @options $file exited with status $status\n";
@@ -193,7 +193,7 @@ sub run_lintian {
 
             die $msg;
         } else {
-            @data = sort @data if $testdata->{sort} eq 'yes';
+            @data = sort @data if $testcase->{sort} eq 'yes';
             open(my $fd, '>', $out);
             print $fd $_ for @data;
             close($fd);
@@ -224,8 +224,8 @@ sub run_lintian {
         }
 
         if ($ENV{'LINTIAN_COVERAGE'}) {
-            my $suite = $testdata->{suite};
-            my $name = $testdata->{testname};
+            my $suite = $testcase->{suite};
+            my $name = $testcase->{testname};
             my $cover_dir = "./cover_db-${suite}-${name}";
             $ENV{'LINTIAN_COVERAGE'} .= ",-db,${cover_dir}";
             unshift(@cmd, 'perl', $ENV{'LINTIAN_COVERAGE'});
@@ -239,12 +239,12 @@ sub run_lintian {
 }
 
 sub check_result {
-    my ($test_state, $testdata, $expected, $actual, $origexp) = @_;
+    my ($test_state, $testcase, $expected, $actual, $origexp) = @_;
     # Compare the output to the expected tags.
     my $testok = runsystem_ok('cmp', '-s', $expected, $actual);
 
     if (not $testok) {
-        if ($testdata->{'todo'} eq 'yes') {
+        if ($testcase->{'todo'} eq 'yes') {
             $test_state->pass_todo_test('failed but marked as TODO');
             return;
         } else {
@@ -254,7 +254,7 @@ sub check_result {
         }
     }
 
-    unless ($testdata) {
+    unless ($testcase) {
         $test_state->pass_test;
         return;
     }
@@ -263,13 +263,13 @@ sub check_result {
     # are seen and all Test-Against tags are not.  Skip this part of the test
     # if neither Test-For nor Test-Against are set and Sort is also not set,
     # since in that case we probably have non-standard output.
-    my %test_for = map { $_ => 1 } split(' ', $testdata->{'test_for'}//'');
+    my %test_for = map { $_ => 1 } split(' ', $testcase->{'test_for'}//'');
     my %test_against
-      = map { $_ => 1 } split(' ', $testdata->{'test_against'}//'');
+      = map { $_ => 1 } split(' ', $testcase->{'test_against'}//'');
     if (    not %test_for
         and not %test_against
-        and $testdata->{'output_format'} ne 'EWI') {
-        if ($testdata->{'todo'} eq 'yes') {
+        and $testcase->{'output_format'} ne 'EWI') {
+        if ($testcase->{'todo'} eq 'yes') {
             $test_state->fail_test('marked as TODO but succeeded');
             return;
         } else {
@@ -334,13 +334,13 @@ sub check_result {
             }
         }
         if ($okay) {
-            if ($testdata->{'todo'} eq 'yes') {
+            if ($testcase->{'todo'} eq 'yes') {
                 $test_state->fail_test('marked as TODO but succeeded');
                 return;
             }
             $test_state->pass_test;
             return;
-        } elsif ($testdata->{'todo'} eq 'yes') {
+        } elsif ($testcase->{'todo'} eq 'yes') {
             $test_state->pass_todo_test(join("\n", @msgs));
             return;
         } else {

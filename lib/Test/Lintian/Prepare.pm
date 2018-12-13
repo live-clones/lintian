@@ -71,49 +71,49 @@ use constant COMMA => q{,};
 
 # prepare
 #
-# Prepares the test called $test assumed to be located in $TESTSET/$dir/$test/.
+# Prepares the test called $test assumed to be located in $testset/$dir/$test/.
 #
 sub prepare {
     my (
-        $test_state, $testdata, $RUNDIR,
-        $TESTSET, $RUNNER_TS, $ALWAYS_REBUILD,
+        $test_state, $testcase, $outpath,
+        $testset, $RUNNER_TS, $force_rebuild,
         $ARCHITECTURE, $STANDARDS_VERSION, $DATE
     ) = @_;
-    my $suite = $testdata->{suite};
-    my $testname = $testdata->{testname};
-    my $testdir = "$TESTSET/$suite/$testname";
+    my $suite = $testcase->{suite};
+    my $testname = $testcase->{testname};
+    my $specpath = "$testset/$suite/$testname";
 
-    unless ($testdata->{testname} && exists $testdata->{version}) {
+    unless ($testcase->{testname} && exists $testcase->{version}) {
         die 'Name or Version missing';
     }
 
-    $testdata->{source} ||= $testdata->{testname};
+    $testcase->{source} ||= $testcase->{testname};
 
-    $testdata->{date} ||= $DATE;
+    $testcase->{date} ||= $DATE;
 
-    if (not $testdata->{prev_version}) {
-        $testdata->{prev_version} = '0.0.1';
-        $testdata->{prev_version} .= '-1'
-          if index($testdata->{version}, '-') > -1;
+    if (not $testcase->{prev_version}) {
+        $testcase->{prev_version} = '0.0.1';
+        $testcase->{prev_version} .= '-1'
+          if index($testcase->{version}, '-') > -1;
     }
 
-    $testdata->{host_architecture} = $ARCHITECTURE;
-    $testdata->{'standards_version'} ||= $STANDARDS_VERSION;
+    $testcase->{host_architecture} = $ARCHITECTURE;
+    $testcase->{'standards_version'} ||= $STANDARDS_VERSION;
 
-    $testdata->{'dh_compat_level'} //= '11';
+    $testcase->{'dh_compat_level'} //= '11';
 
-    $testdata->{'default_build_depends'}
-      //= "debhelper (>= $testdata->{dh_compat_level}~)";
+    $testcase->{'default_build_depends'}
+      //= "debhelper (>= $testcase->{dh_compat_level}~)";
 
-    $testdata->{'build_depends'} ||= join(
+    $testcase->{'build_depends'} ||= join(
         ', ',
         grep { $_ }(
-            $testdata->{'default_build_depends'},
-            $testdata->{'extra_build_depends'}));
+            $testcase->{'default_build_depends'},
+            $testcase->{'extra_build_depends'}));
 
     # Check for arch-specific tests
-    if ($testdata->{'test_architectures'} ne 'any') {
-        my @wildcards = split(/\s+/,$testdata->{'test_architectures'});
+    if ($testcase->{'test_architectures'} ne 'any') {
+        my @wildcards = split(/\s+/,$testcase->{'test_architectures'});
         my @matches
           = map { qx{dpkg-architecture -i $_; echo -n \$?} } @wildcards;
         unless (any { $_ == 0 } @matches) {
@@ -122,37 +122,37 @@ sub prepare {
         }
     }
 
-    if ($testdir and -d "${testdir}/lintian-include-dir") {
-        $testdata->{'lintian_include_dir'} = './lintian-include-dir';
+    if ($specpath and -d "${specpath}/lintian-include-dir") {
+        $testcase->{'lintian_include_dir'} = './lintian-include-dir';
     }
 
-    $testdata->{upstream_version} = $testdata->{version};
-    $testdata->{upstream_version} =~ s/-[^-]+$//;
-    $testdata->{upstream_version} =~ s/(-|^)(\d+):/$1/;
+    $testcase->{upstream_version} = $testcase->{version};
+    $testcase->{upstream_version} =~ s/-[^-]+$//;
+    $testcase->{upstream_version} =~ s/(-|^)(\d+):/$1/;
 
-    my $epochless_version = $testdata->{version};
+    my $epochless_version = $testcase->{version};
     $epochless_version =~ s/^\d+://;
-    $testdata->{no_epoch} = $epochless_version;
+    $testcase->{no_epoch} = $epochless_version;
 
     $test_state->progress('setup');
 
-    my $targetdir = "$RUNDIR/$suite/$testname";
-    my $stampfile = "$RUNDIR/$suite/$testname-build-stamp";
+    my $runpath = "$outpath/$suite/$testname";
+    my $stampfile = "$outpath/$suite/$testname-build-stamp";
 
-    if (-f "$testdir/skip") {
-        my $reason = skip_reason("$testdir/skip");
+    if (-f "$specpath/skip") {
+        my $reason = skip_reason("$specpath/skip");
         $test_state->skip_test("(disabled) $reason");
         return 1;
     }
 
     die 'Outdated test specification (./debian/debian exists).'
-      if -e "$testdir/debian/debian";
+      if -e "$specpath/debian/debian";
 
-    if (   $testdata->{'test_depends'}
-        || $testdata->{'test_conflicts'}
-        || $testdata->{'build_depends'}
-        || $testdata->{'build_conflicts'}) {
-        my $missing = check_test_depends($testdata);
+    if (   $testcase->{'test_depends'}
+        || $testcase->{'test_conflicts'}
+        || $testcase->{'build_depends'}
+        || $testcase->{'build_conflicts'}) {
+        my $missing = check_test_depends($testcase);
         if ($missing) {
             $test_state->skip_test($missing);
             return 1;
@@ -160,58 +160,58 @@ sub prepare {
     }
 
     # load skeleton
-    if (exists $testdata->{skeleton}) {
+    if (exists $testcase->{skeleton}) {
 
         # the skeleton we are working with
-        my $skeletonname = $testdata->{skeleton};
-        my $skeletonpath = "$TESTSET/skeletons/$suite/$skeletonname";
+        my $skeletonname = $testcase->{skeleton};
+        my $skeletonpath = "$testset/skeletons/$suite/$skeletonname";
 
         my $skeleton = read_config($skeletonpath);
 
         foreach my $key (keys %{$skeleton}) {
-            $testdata->{$key} = $skeleton->{$key};
+            $testcase->{$key} = $skeleton->{$key};
         }
     }
 
-    if (   $ALWAYS_REBUILD
-        or not up_to_date($stampfile, $testdir, $RUNNER_TS)
-        or -e "$targetdir/debian/debian") {
+    if (   $force_rebuild
+        or not up_to_date($stampfile, $specpath, $RUNNER_TS)
+        or -e "$runpath/debian/debian") {
 
-        my $skel = $testdata->{skeleton};
-        my $tmpldir = "$TESTSET/templates/$suite/";
+        my $skel = $testcase->{skeleton};
+        my $tmpldir = "$testset/templates/$suite/";
 
-        $test_state->info_msg(2, "Cleaning up and repopulating $targetdir...");
-        runsystem_ok('rm', '-rf', $targetdir);
+        $test_state->info_msg(2, "Cleaning up and repopulating $runpath...");
+        runsystem_ok('rm', '-rf', $runpath);
 
         # create work directory
-        unless (-d $targetdir) {
-            $test_state->info_msg(2, "Creating directory $targetdir.");
-            make_path($targetdir);
+        unless (-d $runpath) {
+            $test_state->info_msg(2, "Creating directory $runpath.");
+            make_path($runpath);
         }
 
         # populate working directory with specified template sets
-        copy_skeleton_template_sets($testdata->{template_sets},
-            $targetdir, $TESTSET)
-          if exists $testdata->{template_sets};
+        copy_skeleton_template_sets($testcase->{template_sets},
+            $runpath, $testset)
+          if exists $testcase->{template_sets};
 
         # delete templates for which we have originals
-        remove_surplus_templates($testdir, $targetdir);
+        remove_surplus_templates($specpath, $runpath);
 
         # copy test specification to working directory
-        my $offset = abs2rel($testdir, $TESTSET);
+        my $offset = abs2rel($specpath, $testset);
         $test_state->info_msg(2,
-            "Copying test specification $offset from $TESTSET to $targetdir.");
-        copy_dir_contents($testdir, $targetdir);
+            "Copying test specification $offset from $testset to $runpath.");
+        copy_dir_contents($specpath, $runpath);
     }
 
     # get builder name
-    my $buildername = $testdata->{builder};
+    my $buildername = $testcase->{builder};
     if (length $buildername) {
-        my $builderpath = "$targetdir/$buildername";
+        my $builderpath = "$runpath/$buildername";
 
         # fill builder if needed
         my $buildertemplate = "$builderpath.in";
-        fill_template($buildertemplate, $builderpath, $testdata,$RUNNER_TS)
+        fill_template($buildertemplate, $builderpath, $testcase,$RUNNER_TS)
           if -f $buildertemplate;
 
         if (-f $builderpath) {
@@ -222,18 +222,18 @@ sub prepare {
 
             # transfer builder data to test case, but do not override
             foreach my $key (keys %{$builder}) {
-                $testdata->{$key} = $builder->{$key}
-                  unless exists $testdata->{$key};
+                $testcase->{$key} = $builder->{$key}
+                  unless exists $testcase->{$key};
             }
         }
     }
 
-    if ($ALWAYS_REBUILD or not up_to_date($stampfile, $testdir, $RUNNER_TS)) {
+    if ($force_rebuild or not up_to_date($stampfile, $specpath, $RUNNER_TS)) {
 
         # fill remaining templates
-        fill_skeleton_templates($testdata->{fill_targets},
-            $testdata, $RUNNER_TS, $targetdir, $TESTSET)
-          if exists $testdata->{fill_targets};
+        fill_skeleton_templates($testcase->{fill_targets},
+            $testcase, $RUNNER_TS, $runpath, $testset)
+          if exists $testcase->{fill_targets};
     }
 
     return 0;
