@@ -77,7 +77,7 @@ sub prepare {
     my (
         $test_state, $testcase, $outpath,
         $testset, $RUNNER_TS, $force_rebuild,
-        $ARCHITECTURE, $STANDARDS_VERSION, $DATE
+        $ARCHITECTURE, $DATE
     ) = @_;
     my $suite = $testcase->{suite};
     my $testname = $testcase->{testname};
@@ -98,7 +98,7 @@ sub prepare {
     }
 
     $testcase->{host_architecture} = $ARCHITECTURE;
-    $testcase->{'standards_version'} ||= $STANDARDS_VERSION;
+    $testcase->{'standards_version'} ||= $ENV{'POLICY_VERSION'};
 
     $testcase->{'dh_compat_level'} //= '11';
 

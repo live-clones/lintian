@@ -106,7 +106,7 @@ use Test::Lintian::Prepare qw(prepare);
 use Test::Lintian::Run qw(runner);
 use Test::State;
 
-our $STANDARDS_VERSION = '4.2.1';
+$ENV{'POLICY_VERSION'} = '4.2.1';
 our $ARCHITECTURE = safe_qx(qw(dpkg-architecture -qDEB_HOST_ARCH));
 my $RUNNER_TS = (stat($0))[9];
 chomp $ARCHITECTURE;
@@ -376,7 +376,7 @@ sub create_child {
                         $state, $testcase,
                         $outpath, $testset,
                         $RUNNER_TS, $force_rebuild,
-                        $ARCHITECTURE,$STANDARDS_VERSION,
+                        $ARCHITECTURE,
                         $DATE
                     );
                 };
