@@ -451,7 +451,7 @@ Info: The forms "&lt;" and "&gt;" mean "&lt;=" and "&gt;=", not "&lt;&lt;"
 Tag: symbols-file-missing-build-depends-package-field
 Severity: wishlist
 Certainty: certain
-Info: The specified symbols file does not contain a
+Info: The symbols file for this package does not contain a
  <tt>Build-Depends-Package</tt> meta-information field.
  .
  This field specifies the name of the <tt>-dev</tt> package associated

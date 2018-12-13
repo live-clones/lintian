@@ -21,6 +21,9 @@ lintian (2.5.117) UNRELEASED; urgency=medium
     + [CL] Mark debian-watch-does-not-check-gpg-signature as "experimental"
       as it is not actionable in the vast majority of cases and is in
       danger of diluting the output of Lintian.  (Closes: #916207)
+  * checks/shared-libs.desc:
+    + [CL] Clarify that symbols-file-missing-build-depends-package-field is
+      emitted per-package in its long description, not based on a file.
   * checks/systemd.pm:
     + [CL] Don't emit systemd-service-file-missing-hardening-features for
       Type=oneshot "services" such as mdadm(8).
