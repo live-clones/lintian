@@ -3,7 +3,6 @@ E: cruft-general-upstream source: source-contains-prebuilt-silverlight-object fa
 E: cruft-general-upstream source: source-is-missing fake.min.js
 E: cruft-general-upstream source: source-is-missing fakefla.fla
 E: cruft-general-upstream source: source-is-missing fakeflash.swf
-P: cruft-general-upstream source: debian-watch-does-not-check-gpg-signature
 P: cruft-general-upstream source: source-contains-arch-control-dir {arch}
 P: cruft-general-upstream source: source-contains-arch-inventory-file .arch-inventory
 P: cruft-general-upstream source: source-contains-bts-control-dir .be
@@ -25,3 +24,4 @@ P: cruft-general-upstream source: source-contains-svn-conflict-file foo.r1352
 P: cruft-general-upstream source: source-contains-svn-control-dir .svn
 W: cruft-general-upstream source: configure-generated-file-in-source config.cache
 W: cruft-general-upstream source: source-contains-prebuilt-windows-binary fake-win32-bin.exe
+X: cruft-general-upstream source: debian-watch-does-not-check-gpg-signature

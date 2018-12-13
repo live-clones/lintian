@@ -12,8 +12,8 @@ O[M!]: lintian-output-letter source: dfsg-version-misspelled 1.0+dsfg-1.1
 P[P ]: lintian-output-letter source: no-homepage-field
 P[P ]: lintian-output-letter: example-unusual-interpreter usr/share/doc/lintian-output-letter/examples/example #!/usr/bin/foo
 P[P!]: lintian-output-letter source: debian-control-has-unusual-field-spacing line 12
-P[P!]: lintian-output-letter source: debian-watch-does-not-check-gpg-signature
 P[P!]: lintian-output-letter source: direct-changes-in-diff-but-no-patch-system Changes
 P[P!]: lintian-output-letter source: package-uses-deprecated-source-override-location
 W[N ]: lintian-output-letter: binary-without-manpage usr/bin/script
 W[N!]: lintian-output-letter source: maintainer-upload-has-incorrect-version-number 1.0+dsfg-1.1
+X[P!]: lintian-output-letter source: debian-watch-does-not-check-gpg-signature

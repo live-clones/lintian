@@ -1,2 +1,2 @@
 I: source-copyright-missing-repack-explanation source: missing-explanation-for-repacked-upstream-tarball
-P: source-copyright-missing-repack-explanation source: debian-watch-does-not-check-gpg-signature
+X: source-copyright-missing-repack-explanation source: debian-watch-does-not-check-gpg-signature

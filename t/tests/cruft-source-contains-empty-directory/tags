@@ -1,2 +1,2 @@
-P: cruft-source-contains-empty-directory source: debian-watch-does-not-check-gpg-signature
 P: cruft-source-contains-empty-directory source: source-contains-empty-directory empty/
+X: cruft-source-contains-empty-directory source: debian-watch-does-not-check-gpg-signature
