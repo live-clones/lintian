@@ -341,7 +341,7 @@ sub run_lintian {
             my $msg = "$LINTIAN @options $file exited with status $status\n";
             $msg .= join(q{},map { "$name: $_" } @data);
 
-            $test_state->test_error($msg);
+            die $msg;
         } else {
             @data = sort @data if $testdata->{sort} eq 'yes';
             open(my $fd, '>', $out);
@@ -365,18 +365,18 @@ sub run_lintian {
     return 1;
 }
 
-# generic_test_runner
+# prepare
 #
-# Runs the test called $test assumed to be located in $TESTSET/$dir/$test/.
+# Prepares the test called $test assumed to be located in $TESTSET/$dir/$test/.
 #
-sub generic_test_runner {
+sub prepare {
     my ($test_state, $testdata) = @_;
     my $suite = $testdata->{suite};
     my $testname = $testdata->{testname};
     my $testdir = "$TESTSET/$suite/$testname";
 
     unless ($testdata->{testname} && exists $testdata->{version}) {
-        internal_error('Name or Version missing');
+        die 'Name or Version missing';
     }
 
     $testdata->{source} ||= $testdata->{testname};
@@ -408,8 +408,10 @@ sub generic_test_runner {
         my @wildcards = split(/\s+/,$testdata->{'test_architectures'});
         my @matches
           = map { qx{dpkg-architecture -i $_; echo -n \$?} } @wildcards;
-        return $test_state->skip_test('architecture mismatch')
-          unless any { $_ == 0 } @matches;
+        unless (any { $_ == 0 } @matches) {
+            $test_state->skip_test('architecture mismatch');
+            return 1;
+        }
     }
 
     if ($testdir and -d "${testdir}/lintian-include-dir") {
@@ -431,13 +433,12 @@ sub generic_test_runner {
 
     if (-f "$testdir/skip") {
         my $reason = skip_reason("$testdir/skip");
-        return $test_state->skip_test("(disabled) $reason");
+        $test_state->skip_test("(disabled) $reason");
+        return 1;
     }
 
-    if (-e "$testdir/debian/debian") {
-        return $test_state->test_error(
-            'Outdated test specification (./debian/debian exists).');
-    }
+    die 'Outdated test specification (./debian/debian exists).'
+      if -e "$testdir/debian/debian";
 
     if (   $testdata->{'test_depends'}
         || $testdata->{'test_conflicts'}
@@ -445,27 +446,23 @@ sub generic_test_runner {
         || $testdata->{'build_conflicts'}) {
         my $missing = check_test_depends($testdata);
         if ($missing) {
-            return $test_state->skip_test($missing);
+            $test_state->skip_test($missing);
+            return 1;
         }
     }
 
-    # load skeleton
-    if (exists $testdata->{skeleton}) {
+    # the skeleton we are working with
+    my $skeletonname = $testdata->{skeleton};
+    my $skeletonpath = "$TESTSET/skeletons/$suite/$skeletonname";
 
-        # the skeleton we are working with
-        my $skeletonname = $testdata->{skeleton};
-        my $skeletonpath = "$TESTSET/skeletons/$suite/$skeletonname";
-
-        my $skeleton = read_config($skeletonpath);
-
-        foreach my $key (keys %{$skeleton}) {
-            $testdata->{$key} = $skeleton->{$key};
-        }
-    }
+    my $skeleton = read_config($skeletonpath);
 
     if (   $ALWAYS_REBUILD
         or not up_to_date($stampfile, $testdir, $RUNNER_TS)
         or -e "$targetdir/debian/debian") {
+
+        my $skel = $testdata->{skeleton};
+        my $tmpldir = "$TESTSET/templates/$suite/";
 
         $test_state->info_msg(2, "Cleaning up and repopulating $targetdir...");
         runsystem_ok('rm', '-rf', $targetdir);
@@ -477,9 +474,24 @@ sub generic_test_runner {
         }
 
         # populate working directory with specified template sets
-        copy_skeleton_template_sets($testdata->{template_sets},
+        copy_skeleton_template_sets($skeleton->{template_sets},
             $targetdir, $TESTSET)
-          if exists $testdata->{template_sets};
+          if exists $skeleton->{template_sets};
+
+        # get post-template command
+        my $posttemplatename = $testdata->{post_template_command};
+        if (length $posttemplatename) {
+            my $posttemplatepath = "$targetdir/$posttemplatename";
+
+            # fill if needed
+            my $posttemplatetemplate = "$posttemplatepath.in";
+            fill_template($posttemplatetemplate, $posttemplatepath, $testdata,
+                $RUNNER_TS)
+              if -f $posttemplatetemplate;
+
+            safe_qx($posttemplatepath, $targetdir)
+              if -x $posttemplatepath;
+        }
 
         # delete templates for which we have originals
         remove_surplus_templates($testdir, $targetdir);
@@ -518,14 +530,29 @@ sub generic_test_runner {
     if ($ALWAYS_REBUILD or not up_to_date($stampfile, $testdir, $RUNNER_TS)) {
 
         # fill remaining templates
-        fill_skeleton_templates($testdata->{fill_targets},
+        fill_skeleton_templates($skeleton->{fill_targets},
             $testdata, $RUNNER_TS, $targetdir, $TESTSET)
-          if exists $testdata->{fill_targets};
+          if exists $skeleton->{fill_targets};
     }
 
+    return 0;
+}
+
+# generic_runner
+#
+# Runs the test called $test assumed to be located in $TESTSET/$dir/$test/.
+#
+sub generic_runner {
+    my ($test_state, $testdata) = @_;
+    my $suite = $testdata->{suite};
+    my $testname = $testdata->{testname};
+    my $testdir = "$TESTSET/$suite/$testname";
+
+    my $targetdir = "$RUNDIR/$suite/$testname";
+    my $stampfile = "$RUNDIR/$suite/$testname-build-stamp";
+
     # get lintian subject
-    return $test_state->test_error(
-        'Could not get subject of Lintian examination.')
+    die 'Could not get subject of Lintian examination.'
       unless exists $testdata->{build_product};
     my $subject = "$targetdir/$testdata->{build_product}";
 
@@ -539,11 +566,11 @@ sub generic_test_runner {
             if (system($command)) {
                 $test_state->dump_log("${RUNDIR}/${suite}/build.${testname}")
                   if $DUMP_LOGS;
-                return $test_state->test_error("$command failed.");
+                die "$command failed.";
             }
         }
 
-        return $test_state->test_error('Build was unsuccessful.')
+        die 'Build was unsuccessful.'
           unless -f $subject;
 
         touch_file($stampfile);
@@ -585,8 +612,10 @@ sub generic_test_runner {
         $expected = $calibrated if -e $calibrated;
     }
 
-    return _check_result($test_state, $testdata, $expected,
+    _check_result($test_state, $testdata, $expected,
         "$targetdir/tags.$pkg",$origexp);
+
+    return;
 }
 
 sub read_desc {
@@ -676,10 +705,19 @@ sub create_child {
 
                 $0 = "Test worker - processing ${suite}::${testname}";
 
-                eval {generic_test_runner($state, $test_data);};
+                my $retval;
+                eval { $retval = prepare($state, $test_data); };
                 if (my $err = $@) {
                     $state->test_error($err);
+                }else {
+                    unless ($retval) {
+                        eval { generic_runner($state, $test_data); };
+                        if (my $err = $@) {
+                            $state->test_error($err);
+                        }
+                    }
                 }
+
                 $0 = 'Test worker - idle';
 
                 #                my $testname = $ref->{'testname'};
@@ -817,13 +855,19 @@ sub _check_result {
 
     if (not $testok) {
         if ($testdata->{'todo'} eq 'yes') {
-            return $test_state->pass_todo_test('failed but marked as TODO');
+            $test_state->pass_todo_test('failed but marked as TODO');
+            return;
         } else {
             $test_state->diff_files($expected, $actual);
-            return $test_state->fail_test('output differs!');
+            $test_state->fail_test('output differs!');
+            return;
         }
     }
-    return $test_state->pass_test unless $testdata;
+
+    unless ($testdata) {
+        $test_state->pass_test;
+        return;
+    }
 
     # Check the output for invalid lines.  Also verify that all Test-For tags
     # are seen and all Test-Against tags are not.  Skip this part of the test
@@ -836,9 +880,11 @@ sub _check_result {
         and not %test_against
         and $testdata->{'output_format'} ne 'EWI') {
         if ($testdata->{'todo'} eq 'yes') {
-            return $test_state->fail_test('marked as TODO but succeeded');
+            $test_state->fail_test('marked as TODO but succeeded');
+            return;
         } else {
-            return $test_state->pass_test;
+            $test_state->pass_test;
+            return;
         }
     } else {
         my $okay = 1;
@@ -899,13 +945,17 @@ sub _check_result {
         }
         if ($okay) {
             if ($testdata->{'todo'} eq 'yes') {
-                return $test_state->fail_test('marked as TODO but succeeded');
+                $test_state->fail_test('marked as TODO but succeeded');
+                return;
             }
-            return $test_state->pass_test;
+            $test_state->pass_test;
+            return;
         } elsif ($testdata->{'todo'} eq 'yes') {
-            return $test_state->pass_todo_test(join("\n", @msgs));
+            $test_state->pass_todo_test(join("\n", @msgs));
+            return;
         } else {
-            return $test_state->fail_test(join("\n", @msgs));
+            $test_state->fail_test(join("\n", @msgs));
+            return;
         }
     }
     confess("Assertion: This should be unreachable\n");
