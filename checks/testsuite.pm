@@ -51,6 +51,7 @@ sub run {
     my ($pkg, $type, $info) = @_;
     my $testsuites = $info->field('testsuite', '');
     my $control = $info->index('debian/tests/control');
+    my $control_autodep8 = $info->index('debian/tests/control.autodep8');
     my $needs_control = 0;
 
     tag 'testsuite-autopkgtest-missing' if ($testsuites !~ /autopkgtest/);
@@ -82,6 +83,10 @@ sub run {
         tag 'unnecessary-testsuite-autopkgtest-field'
           if $info->source_field('testsuite') // '' eq 'autopkgtest';
     }
+
+    tag 'debian-tests-control-autodep8-is-obsolete', $control_autodep8
+      if defined($control_autodep8);
+
     return;
 }
 
