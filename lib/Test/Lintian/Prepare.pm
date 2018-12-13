@@ -74,11 +74,7 @@ use constant COMMA => q{,};
 # Prepares the test called $test assumed to be located in $testset/$dir/$test/.
 #
 sub prepare {
-    my (
-        $test_state, $testcase, $outpath,
-        $testset, $force_rebuild,
-        $ARCHITECTURE, $DATE
-    ) = @_;
+    my ($test_state, $testcase, $outpath,$testset, $force_rebuild,$DATE) = @_;
     my $suite = $testcase->{suite};
     my $testname = $testcase->{testname};
     my $specpath = "$testset/$suite/$testname";
@@ -97,7 +93,7 @@ sub prepare {
           if index($testcase->{version}, '-') > -1;
     }
 
-    $testcase->{host_architecture} = $ARCHITECTURE;
+    $testcase->{host_architecture} = $ENV{'DEB_HOST_ARCH'};
     $testcase->{'standards_version'} ||= $ENV{'POLICY_VERSION'};
 
     $testcase->{'dh_compat_level'} //= '11';

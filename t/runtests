@@ -107,9 +107,9 @@ use Test::Lintian::Run qw(runner);
 use Test::State;
 
 $ENV{'POLICY_VERSION'} = '4.2.1';
-our $ARCHITECTURE = safe_qx(qw(dpkg-architecture -qDEB_HOST_ARCH));
+$ENV{'DEB_HOST_ARCH'} = safe_qx(qw(dpkg-architecture -qDEB_HOST_ARCH));
 $ENV{HARNESS_EPOCH} = (stat($0))[9];
-chomp $ARCHITECTURE;
+chomp $ENV{'DEB_HOST_ARCH'};
 
 my $DATE = safe_qx(qw(date -R));
 chomp $DATE;
@@ -372,13 +372,9 @@ sub create_child {
 
                 my $retval;
                 eval {
-                    $retval= prepare(
-                        $state, $testcase,
-                        $outpath, $testset,
-                        $force_rebuild,
-                        $ARCHITECTURE,
-                        $DATE
-                    );
+                    $retval
+                      = prepare($state, $testcase,$outpath, $testset,
+                        $force_rebuild,$DATE);
                 };
                 if (my $err = $@) {
                     $state->test_error($err);
