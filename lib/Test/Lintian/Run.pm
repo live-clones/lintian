@@ -91,6 +91,15 @@ sub runner {
     my $suite = $testcase->{suite};
     my $testname = $testcase->{testname};
 
+    # skip test if marked
+    my $skipfile = "$runpath/skip";
+    if (-f $skipfile) {
+        my $reason = path($skipfile)->slurp_utf8 || 'No reason given';
+        say "Skipping test: $reason";
+        $test_state->skip_test("(disabled) $reason");
+        return;
+    }
+
     # get lintian subject
     die 'Could not get subject of Lintian examination.'
       unless exists $testcase->{build_product};

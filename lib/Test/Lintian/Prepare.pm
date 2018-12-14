@@ -157,12 +157,6 @@ sub prepare {
 
     $test_state->progress('setup');
 
-    if (-f "$specpath/skip") {
-        my $reason = skip_reason("$specpath/skip");
-        $test_state->skip_test("(disabled) $reason");
-        return 1;
-    }
-
     die 'Outdated test specification (./debian/debian exists).'
       if -e "$specpath/debian/debian";
 
