@@ -379,23 +379,19 @@ sub create_child {
 
                 $0 = "Test worker - processing ${suite}::${testname}";
 
-                my $retval;
                 eval {
-                    $retval
-                      = prepare($state, $specpath, $runpath, $suite, $outpath,
+                    prepare($specpath, $runpath, $suite,
                         $testset,$force_rebuild);
                 };
                 if (my $err = $@) {
                     $state->test_error($err);
                 }else {
-                    unless ($retval) {
-                        eval {
-                            runner($state, $runpath, $outpath,
-                                $dump_logs, $coverage);
-                        };
-                        if (my $err = $@) {
-                            $state->test_error($err);
-                        }
+                    eval {
+                        runner($state, $runpath, $outpath,
+                            $dump_logs, $coverage);
+                    };
+                    if (my $err = $@) {
+                        $state->test_error($err);
                     }
                 }
 

@@ -73,9 +73,7 @@ use constant COMMA => q{,};
 # Prepares the test called $test assumed to be located in $testset/$dir/$test/.
 #
 sub prepare {
-    my ($test_state, $specpath, $runpath, $suite, $outpath,$testset,
-        $force_rebuild)
-      = @_;
+    my ($specpath, $runpath, $suite, $testset, $force_rebuild)= @_;
 
     # read defaults
     my $defaultspath = "$testset/defaults";
@@ -143,8 +141,6 @@ sub prepare {
     $epochless_version =~ s/^\d+://;
     $testcase->{no_epoch} = $epochless_version;
 
-    $test_state->progress('setup');
-
     die 'Outdated test specification (./debian/debian exists).'
       if -e "$specpath/debian/debian";
 
@@ -165,13 +161,11 @@ sub prepare {
     if ($force_rebuild
         or -e "$runpath/debian/debian") {
 
-        $test_state->info_msg(2, "Cleaning up and repopulating $runpath...");
         runsystem_ok('rm', '-rf', $runpath);
     }
 
     # create work directory
     unless (-d $runpath) {
-        $test_state->info_msg(2, "Creating directory $runpath.");
         make_path($runpath);
     }
 
@@ -184,8 +178,6 @@ sub prepare {
 
     # copy test specification to working directory
     my $offset = abs2rel($specpath, $testset);
-    $test_state->info_msg(2,
-        "Copying test specification $offset from $testset to $runpath.");
     copy_dir_contents($specpath, $runpath);
 
     # get builder name
@@ -226,7 +218,7 @@ sub prepare {
     my $rundesc = path($runpath)->child($files->{test_specification});
     write_config($testcase, $rundesc->stringify);
 
-    return 0;
+    return;
 }
 
 1;
