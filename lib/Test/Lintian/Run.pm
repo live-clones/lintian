@@ -78,43 +78,33 @@ use constant NO => q{no};
 # Runs the test called $test assumed to be located in $testset/$dir/$test/.
 #
 sub runner {
-    my ($test_state, $testcase, $outpath, $testset,
-        $force_rebuild, $dump_logs, $coverage)
-      = @_;
+    my ($test_state, $testcase, $outpath, $testset, $dump_logs, $coverage)= @_;
+
     my $suite = $testcase->{suite};
     my $testname = $testcase->{testname};
     my $specpath = "$testset/$suite/$testname";
 
     my $runpath = "$outpath/$suite/$testname";
-    my $stampfile = "$outpath/$suite/$testname-build-stamp";
 
     # get lintian subject
     die 'Could not get subject of Lintian examination.'
       unless exists $testcase->{build_product};
     my $subject = "$runpath/$testcase->{build_product}";
 
-    if ($force_rebuild
-        or not up_to_date($stampfile, $specpath, $ENV{HARNESS_EPOCH})) {
+    $test_state->progress('building');
 
-        $test_state->progress('building');
-
-        if (exists $testcase->{build_command}) {
-            my $command
-              = "cd $runpath; $testcase->{build_command} > ../build.$testname 2>&1";
-            if (system($command)) {
-                $test_state->dump_log("${outpath}/${suite}/build.${testname}")
-                  if $dump_logs;
-                die "$command failed.";
-            }
+    if (exists $testcase->{build_command}) {
+        my $command
+          = "cd $runpath; $testcase->{build_command} > ../build.$testname 2>&1";
+        if (system($command)) {
+            $test_state->dump_log("${outpath}/${suite}/build.${testname}")
+              if $dump_logs;
+            die "$command failed.";
         }
-
-        die 'Build was unsuccessful.'
-          unless -f $subject;
-
-        touch_file($stampfile);
-    } else {
-        $test_state->progress('building (cached)');
     }
+
+    die 'Build was unsuccessful.'
+      unless -f $subject;
 
     my $pkg = $testcase->{source};
 

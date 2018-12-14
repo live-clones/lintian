@@ -133,7 +133,6 @@ sub prepare {
     $test_state->progress('setup');
 
     my $runpath = "$outpath/$suite/$testname";
-    my $stampfile = "$outpath/$suite/$testname-build-stamp";
 
     if (-f "$specpath/skip") {
         my $reason = skip_reason("$specpath/skip");
@@ -169,36 +168,31 @@ sub prepare {
         }
     }
 
-    if (   $force_rebuild
-        or not up_to_date($stampfile, $specpath, $ENV{HARNESS_EPOCH})
+    if ($force_rebuild
         or -e "$runpath/debian/debian") {
-
-        my $skel = $testcase->{skeleton};
-        my $tmpldir = "$testset/templates/$suite/";
 
         $test_state->info_msg(2, "Cleaning up and repopulating $runpath...");
         runsystem_ok('rm', '-rf', $runpath);
-
-        # create work directory
-        unless (-d $runpath) {
-            $test_state->info_msg(2, "Creating directory $runpath.");
-            make_path($runpath);
-        }
-
-        # populate working directory with specified template sets
-        copy_skeleton_template_sets($testcase->{template_sets},
-            $runpath, $testset)
-          if exists $testcase->{template_sets};
-
-        # delete templates for which we have originals
-        remove_surplus_templates($specpath, $runpath);
-
-        # copy test specification to working directory
-        my $offset = abs2rel($specpath, $testset);
-        $test_state->info_msg(2,
-            "Copying test specification $offset from $testset to $runpath.");
-        copy_dir_contents($specpath, $runpath);
     }
+
+    # create work directory
+    unless (-d $runpath) {
+        $test_state->info_msg(2, "Creating directory $runpath.");
+        make_path($runpath);
+    }
+
+    # populate working directory with specified template sets
+    copy_skeleton_template_sets($testcase->{template_sets},$runpath, $testset)
+      if exists $testcase->{template_sets};
+
+    # delete templates for which we have originals
+    remove_surplus_templates($specpath, $runpath);
+
+    # copy test specification to working directory
+    my $offset = abs2rel($specpath, $testset);
+    $test_state->info_msg(2,
+        "Copying test specification $offset from $testset to $runpath.");
+    copy_dir_contents($specpath, $runpath);
 
     # get builder name
     my $buildername = $testcase->{builder};
@@ -225,14 +219,10 @@ sub prepare {
         }
     }
 
-    if ($force_rebuild
-        or not up_to_date($stampfile, $specpath, $ENV{HARNESS_EPOCH})) {
-
-        # fill remaining templates
-        fill_skeleton_templates($testcase->{fill_targets},
-            $testcase, $ENV{HARNESS_EPOCH}, $runpath, $testset)
-          if exists $testcase->{fill_targets};
-    }
+    # fill remaining templates
+    fill_skeleton_templates($testcase->{fill_targets},
+        $testcase, $ENV{HARNESS_EPOCH}, $runpath, $testset)
+      if exists $testcase->{fill_targets};
 
     return 0;
 }

@@ -378,8 +378,10 @@ sub create_child {
                 }else {
                     unless ($retval) {
                         eval {
-                            runner($state, $testcase, $outpath, $testset,
-                                $force_rebuild, $dump_logs,$coverage);
+                            runner(
+                                $state, $testcase, $outpath,
+                                $testset,$dump_logs, $coverage
+                            );
                         };
                         if (my $err = $@) {
                             $state->test_error($err);
