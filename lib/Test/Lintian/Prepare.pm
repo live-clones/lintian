@@ -52,7 +52,6 @@ use File::Find::Rule;
 use File::Path qw(make_path remove_tree);
 use File::Spec::Functions qw(abs2rel rel2abs splitpath splitdir catpath);
 use File::stat;
-use List::MoreUtils qw(any);
 use List::Util qw(max);
 use Path::Tiny;
 
@@ -131,17 +130,6 @@ sub prepare {
         grep { $_ }(
             $testcase->{'default_build_depends'},
             $testcase->{'extra_build_depends'}));
-
-    # Check for arch-specific tests
-    if ($testcase->{'test_architectures'} ne 'any') {
-        my @wildcards = split(/\s+/,$testcase->{'test_architectures'});
-        my @matches
-          = map { qx{dpkg-architecture -i $_; echo -n \$?} } @wildcards;
-        unless (any { $_ == 0 } @matches) {
-            $test_state->skip_test('architecture mismatch');
-            return 1;
-        }
-    }
 
     if ($specpath and -d "${specpath}/lintian-include-dir") {
         $testcase->{'lintian_include_dir'} = './lintian-include-dir';

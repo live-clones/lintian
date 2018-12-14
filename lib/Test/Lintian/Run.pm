@@ -110,6 +110,23 @@ sub runner {
         return;
     }
 
+    # check test architectures
+    unless (length $ENV{'DEB_HOST_ARCH'}) {
+        die 'DEB_HOST_ARCH is not set.';
+    }
+    my $platforms = $testcase->{test_architectures};
+    if ($platforms ne 'any') {
+        my @wildcards = split(SPACE, $platforms);
+        my @matches= map {
+            qx{dpkg-architecture -a $ENV{'DEB_HOST_ARCH'} -i $_; echo -n \$?}
+        } @wildcards;
+        unless (any { $_ == 0 } @matches) {
+            say 'Architecture mismatch';
+            $test_state->skip_test('Architecture mismatch');
+            return;
+        }
+    }
+
     # get lintian subject
     die 'Could not get subject of Lintian examination.'
       unless exists $testcase->{build_product};
