@@ -101,6 +101,71 @@ sub read_config {
     return $config;
 }
 
+=item write_config(TEST_CASE, PATH)
+
+Write the config described by hash reference TEST_CASE to the file named PATH.
+
+=cut
+
+sub write_config {
+    my ($testcase, $path) = @_;
+
+    my $desc = path($path);
+    $desc->remove;
+
+    foreach my $key (sort keys %{$testcase}) {
+
+        next unless defined $testcase->{$key};
+
+        my $label = $key;
+        $label =~ s/_/-/g;
+        $label =~ s/\b(\w)/\U$1/g;
+
+        my @elements = split(/ /, $testcase->{$key});
+        unless (
+            scalar @elements > 1 && any { $_ eq $label }
+            ('Test-For', 'Test-Against')
+        ) {
+            $desc->append_utf8("$label: $testcase->{$key}" . NEWLINE);
+            next;
+        }
+
+        $desc->append_utf8("$label:" . NEWLINE);
+        foreach my $element (@elements) {
+            $desc->append_utf8(SPACE . $element . NEWLINE);
+        }
+    }
+
+    return;
+}
+
+=item read_field_from_file(FIELD, FILE)
+
+Returns the list of lines from file FILE which start with the string FIELD
+followed by a colon. The string FIELD and the colon are removed from each
+line.
+
+=cut
+
+sub read_field_from_file {
+    my ($requested, $path) = @_;
+
+    croak "Could not find file $path." unless -f $path;
+    my @lines = path($path)->lines_utf8;
+
+    my @values;
+    foreach my $line (@lines) {
+        next if $line =~ /^\s+$/;
+        next if $line =~ /^\s*#/;
+        my ($field, $value) = $line =~ /\s*([^\s:]+):\s+(.*)$/;
+        die "Poorly formatted line in $path." unless length $field;
+        if($field eq $requested) {
+            push(@values, $value);
+        }
+    }
+    return @values;
+}
+
 =back
 
 =cut
