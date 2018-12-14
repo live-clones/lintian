@@ -74,10 +74,35 @@ use constant COMMA => q{,};
 # Prepares the test called $test assumed to be located in $testset/$dir/$test/.
 #
 sub prepare {
-    my ($test_state, $testcase, $outpath,$testset, $force_rebuild) = @_;
-    my $suite = $testcase->{suite};
+    my ($test_state, $specpath, $runpath, $suite, $outpath,$testset,
+        $force_rebuild)
+      = @_;
+
+    # read defaults
+    my $defaultspath = "$testset/defaults";
+
+    # read default file names
+    my $defaultfilespath = "$defaultspath/files";
+    die "Cannot find $defaultfilespath" unless -f $defaultfilespath;
+    my $files = read_config($defaultfilespath);
+
+    # read test data
+    my $descpath = "$specpath/$files->{test_specification}";
+    my $testcase = read_config($descpath);
+
+    # read test defaults
+    my $descdefaultspath = "$defaultspath/$files->{test_specification}";
+    my $defaults = read_config($descdefaultspath);
+
+    foreach my $key (keys %{$defaults}) {
+        $testcase->{$key} = $defaults->{$key}
+          unless exists $testcase->{$key};
+    }
+
+    # record suite
+    $testcase->{suite} = $suite;
+
     my $testname = $testcase->{testname};
-    my $specpath = "$testset/$suite/$testname";
 
     unless ($testcase->{testname} && exists $testcase->{version}) {
         die 'Name or Version missing';
@@ -131,8 +156,6 @@ sub prepare {
     $testcase->{no_epoch} = $epochless_version;
 
     $test_state->progress('setup');
-
-    my $runpath = "$outpath/$suite/$testname";
 
     if (-f "$specpath/skip") {
         my $reason = skip_reason("$specpath/skip");
@@ -223,6 +246,14 @@ sub prepare {
     fill_skeleton_templates($testcase->{fill_targets},
         $testcase, $ENV{HARNESS_EPOCH}, $runpath, $testset)
       if exists $testcase->{fill_targets};
+
+    # write the dynamic file names
+    my $runfiles = path($runpath)->child('files');
+    write_config($files, $runfiles->stringify);
+
+    # write the dynamic test case files
+    my $rundesc = path($runpath)->child($files->{test_specification});
+    write_config($testcase, $rundesc->stringify);
 
     return 0;
 }

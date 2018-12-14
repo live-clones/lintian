@@ -78,13 +78,18 @@ use constant NO => q{no};
 # Runs the test called $test assumed to be located in $testset/$dir/$test/.
 #
 sub runner {
-    my ($test_state, $testcase, $outpath, $testset, $dump_logs, $coverage)= @_;
+    my ($test_state, $runpath, $outpath, $dump_logs, $coverage)= @_;
+
+    # read dynamic file names
+    my $runfiles = "$runpath/files";
+    my $files = read_config($runfiles);
+
+    # read dynamic case data
+    my $rundescpath = "$runpath/$files->{test_specification}";
+    my $testcase = read_config($rundescpath);
 
     my $suite = $testcase->{suite};
     my $testname = $testcase->{testname};
-    my $specpath = "$testset/$suite/$testname";
-
-    my $runpath = "$outpath/$suite/$testname";
 
     # get lintian subject
     die 'Could not get subject of Lintian examination.'
@@ -127,7 +132,7 @@ sub runner {
         }
     }
 
-    my $expected = "$specpath/tags";
+    my $expected = "$runpath/tags";
     my $origexp = $expected;
 
     if (-x "$runpath/test_calibration") {

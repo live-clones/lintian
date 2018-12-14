@@ -368,23 +368,24 @@ sub create_child {
                 my $suite = $testcase->{'suite'};
                 my $testname = $testcase->{testname};
 
+                my $specpath = "$testset/$suite/$testname";
+                my $runpath = "$outpath/$suite/$testname";
+
                 $0 = "Test worker - processing ${suite}::${testname}";
 
                 my $retval;
                 eval {
                     $retval
-                      = prepare($state, $testcase,$outpath, $testset,
-                        $force_rebuild);
+                      = prepare($state, $specpath, $runpath, $suite, $outpath,
+                        $testset,$force_rebuild);
                 };
                 if (my $err = $@) {
                     $state->test_error($err);
                 }else {
                     unless ($retval) {
                         eval {
-                            runner(
-                                $state, $testcase, $outpath,
-                                $testset,$dump_logs, $coverage
-                            );
+                            runner($state, $runpath, $outpath,
+                                $dump_logs, $coverage);
                         };
                         if (my $err = $@) {
                             $state->test_error($err);
