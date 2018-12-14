@@ -102,6 +102,14 @@ sub runner {
         return;
     }
 
+    # skip if missing prerequisites
+    my $missing = find_missing_prerequisites($testcase);
+    if (length $missing) {
+        say "Missing prerequisites: $missing";
+        $test_state->skip_test("Missing prerequisites: $missing");
+        return;
+    }
+
     # get lintian subject
     die 'Could not get subject of Lintian examination.'
       unless exists $testcase->{build_product};

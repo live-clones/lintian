@@ -160,17 +160,6 @@ sub prepare {
     die 'Outdated test specification (./debian/debian exists).'
       if -e "$specpath/debian/debian";
 
-    if (   $testcase->{'test_depends'}
-        || $testcase->{'test_conflicts'}
-        || $testcase->{'build_depends'}
-        || $testcase->{'build_conflicts'}) {
-        my $missing = check_test_depends($testcase);
-        if ($missing) {
-            $test_state->skip_test($missing);
-            return 1;
-        }
-    }
-
     # load skeleton
     if (exists $testcase->{skeleton}) {
 
