@@ -30,8 +30,9 @@
 use strict;
 use warnings;
 use autodie;
-use Cwd();
+use v5.10;
 
+use Cwd();
 use File::Path qw(make_path);
 use File::Spec::Functions qw(abs2rel rel2abs splitpath splitdir);
 use Getopt::Long qw(GetOptions);
@@ -101,15 +102,20 @@ use Test::Lintian::Harness
   runsystem runsystem_ok skip_reason up_to_date);
 use Test::Lintian::ConfigFile qw(read_config);
 use Test::Lintian::Filter qw(find_selected_lintian_testpaths);
-use Test::Lintian::Helper qw(copy_dir_contents);
+use Test::Lintian::Helper
+  qw(rfc822date get_host_architecture get_latest_policy get_required_debhelper_version get_installed_debhelper_version);
 use Test::Lintian::Prepare qw(prepare);
 use Test::Lintian::Run qw(runner);
 use Test::State;
 
-$ENV{'POLICY_VERSION'} = '4.2.1';
 $ENV{'DEB_HOST_ARCH'} = safe_qx(qw(dpkg-architecture -qDEB_HOST_ARCH));
 $ENV{HARNESS_EPOCH} = (stat($0))[9];
 chomp $ENV{'DEB_HOST_ARCH'};
+
+# get latest policy version and date
+($ENV{'POLICY_VERSION'}, $ENV{'POLICY_EPOCH'}) = get_latest_policy();
+say "Latest policy version is $ENV{'POLICY_VERSION'} from "
+  . rfc822date($ENV{'POLICY_EPOCH'});
 
 my $output_is_tty = -t STDOUT;
 
