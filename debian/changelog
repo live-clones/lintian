@@ -1,6 +1,8 @@
-lintian (2.5.117) UNRELEASED; urgency=medium
+lintian (2.5.117) unstable; urgency=medium
 
-  XXX: generate tag summary
+  * Summary of tag changes:
+    + Added:
+      - file-references-package-build-path
 
   * checks/files.pm:
     + [CL] Don't emit uses-dpkg-database-directly for d-i components; they
@@ -28,6 +30,9 @@ lintian (2.5.117) UNRELEASED; urgency=medium
       as it is not actionable in the vast majority of cases and is in
       danger of diluting the output of Lintian.  (Closes: #916207)
 
+  * data/spelling/corrections:
+    + [PW] Add a number of corrections.
+
   * t/*:
     + [CL] Apply a patch series from Felix Lechner to use "skeletons" as
       test templates, fixing a "exec failed: Text file busy" regression
@@ -38,7 +43,7 @@ lintian (2.5.117) UNRELEASED; urgency=medium
     + [CL] Apply a patch set from Felix Lechner to sign test packages.
       when a upstream/private-key.asc is present.  (MR: !93)
 
- -- Chris Lamb <lamby@debian.org>  Fri, 07 Dec 2018 10:41:09 +0100
+ -- Chris Lamb <lamby@debian.org>  Fri, 14 Dec 2018 17:56:27 +0000
 
 lintian (2.5.116) unstable; urgency=medium
 
