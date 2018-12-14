@@ -2,6 +2,11 @@ lintian (2.5.118) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
+  * data/files/js-libraries:
+    + [BR] Detect html5shiv library
+  * data/files/privacy-breaker-websites
+    + [BR] Detect html5shiv library
+
  -- Chris Lamb <lamby@debian.org>  Fri, 14 Dec 2018 19:34:34 +0100
 
 lintian (2.5.117) unstable; urgency=medium
