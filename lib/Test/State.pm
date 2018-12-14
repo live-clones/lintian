@@ -27,6 +27,27 @@
 
 package Test::State;
 
+=head1 NAME
+
+Test::State -- Functions for inter-process communications for tests
+
+=head1 SYNOPSIS
+
+  use Test::State;
+  use IO::Async::Channel;
+
+  my $testcase = {};
+  my $child_out_ch = IO::Async::Channel->new;
+
+  my $state = Test::State->new($testcase, $child_out_ch);
+
+=head1 DESCRIPTION
+
+Functions for permanent test worker threads to communicate with the
+harness.
+
+=cut
+
 use strict;
 use warnings;
 use autodie;
