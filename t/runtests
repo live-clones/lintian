@@ -111,9 +111,6 @@ $ENV{'DEB_HOST_ARCH'} = safe_qx(qw(dpkg-architecture -qDEB_HOST_ARCH));
 $ENV{HARNESS_EPOCH} = (stat($0))[9];
 chomp $ENV{'DEB_HOST_ARCH'};
 
-my $DATE = safe_qx(qw(date -R));
-chomp $DATE;
-
 my $output_is_tty = -t STDOUT;
 
 our $IO_LOOP = IO::Async::Loop->new;
@@ -374,7 +371,7 @@ sub create_child {
                 eval {
                     $retval
                       = prepare($state, $testcase,$outpath, $testset,
-                        $force_rebuild,$DATE);
+                        $force_rebuild);
                 };
                 if (my $err = $@) {
                     $state->test_error($err);

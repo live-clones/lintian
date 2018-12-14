@@ -74,7 +74,7 @@ use constant COMMA => q{,};
 # Prepares the test called $test assumed to be located in $testset/$dir/$test/.
 #
 sub prepare {
-    my ($test_state, $testcase, $outpath,$testset, $force_rebuild,$DATE) = @_;
+    my ($test_state, $testcase, $outpath,$testset, $force_rebuild) = @_;
     my $suite = $testcase->{suite};
     my $testname = $testcase->{testname};
     my $specpath = "$testset/$suite/$testname";
@@ -85,7 +85,7 @@ sub prepare {
 
     $testcase->{source} ||= $testcase->{testname};
 
-    $testcase->{date} ||= $DATE;
+    $testcase->{date} ||= rfc822date(time);
 
     if (not $testcase->{prev_version}) {
         $testcase->{prev_version} = '0.0.1';
