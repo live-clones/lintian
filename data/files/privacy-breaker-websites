@@ -18,7 +18,6 @@ privacy-breach-statistics-website                ~~^(?:(?:[^\./]+\.)?(?:cruel-ca
 privacy-breach-w3c-valid-html                    ~~^(?:(?:[^\./]+\.)?w3.org/(?:icons/valid-|css-validator/images/)(?:[^/]+)?$|validator\.w3\.org(?:/|\Z))
 # already packaged under debian (please alpha sort by package name
 privacy-breach-uses-embedded-file-bootstrap     ~~/bootstrap(?:-(?:\d\.?)+(b\d+)?)?(?:\.min)?\.(?:js|css)\Z                                                     ~~ privacy-breach-uses-embedded-file ~~ You may use the libjs-bootstrap package.
-privacy-breach-uses-embedded-file-html5shiv     ~~/html5shiv(?:-printshiv)?(?:\d+(?:\.\d+)*)?(?:\.min)?\.js\Z                                                   ~~ privacy-breach-uses-embedded-file ~~ You may use the libjs-html5shiv package.
 privacy-breach-uses-embedded-file-jquery        ~~(?:(?!doxygen.*)/jquery(?:-(?:\d\.?)+(b\d+)?)?(?:\.min)?\.js\Z)                                               ~~ privacy-breach-uses-embedded-file ~~ You may use the libjs-jquery package.
 privacy-breach-uses-embedded-file-jquery-flot   ~~(?:/jquery[\.-]flot(?:(?:-(?:\d\.?)+)?(?:\.min)?\.js|\.css)\Z)                                                ~~ privacy-breach-uses-embedded-file ~~ You may use the libjs-jquery-flot package.
 privacy-breach-uses-embedded-file-jquery-mobile ~~(?:/jquery[\.-]mobile(?:(?:-(?:\d\.?)+)?(?:\.min)?\.js|\.css)\Z|^code\.jquery\.com/mobile/)                   ~~ privacy-breach-uses-embedded-file ~~ You may use the libjs-jquery-mobile package.
