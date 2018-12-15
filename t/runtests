@@ -39,6 +39,7 @@ use Getopt::Long qw(GetOptions);
 use IO::Async::Channel;
 use IO::Async::Loop;
 use IO::Async::Routine;
+use Try::Tiny;
 
 use constant SUITES => qw(scripts changes debs source tests);
 
@@ -104,7 +105,7 @@ use Test::Lintian::ConfigFile qw(read_config);
 use Test::Lintian::Filter qw(find_selected_lintian_testpaths);
 use Test::Lintian::Helper
   qw(rfc822date get_host_architecture get_latest_policy get_required_debhelper_version get_installed_debhelper_version);
-use Test::Lintian::Prepare qw(prepare);
+use Test::Lintian::Prepare qw(logged_prepare);
 use Test::Lintian::Run qw(runner);
 use Test::State;
 
@@ -379,21 +380,16 @@ sub create_child {
 
                 $0 = "Test worker - processing ${suite}::${testname}";
 
-                eval {
-                    prepare($specpath, $runpath, $suite,
+                try {
+                    logged_prepare($specpath, $runpath, $suite,
                         $testset,$force_rebuild);
-                };
-                if (my $err = $@) {
-                    $state->test_error($err);
-                }else {
-                    eval {
-                        runner($state, $runpath, $outpath,
-                            $dump_logs, $coverage);
-                    };
-                    if (my $err = $@) {
+                    runner($state, $runpath, $outpath, $dump_logs, $coverage);
+                }
+                catch {
+                    if (my $err = $_) {
                         $state->test_error($err);
                     }
-                }
+                };
 
                 $0 = 'Test worker - idle';
 

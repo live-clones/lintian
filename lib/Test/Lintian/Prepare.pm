@@ -42,10 +42,13 @@ use Exporter qw(import);
 
 BEGIN {
     our @EXPORT_OK = qw(
+      early_logpath
+      logged_prepare
       prepare
     );
 }
 
+use Capture::Tiny qw(capture_merged);
 use Cwd qw(getcwd);
 use File::Copy;
 use File::Find::Rule;
@@ -54,6 +57,7 @@ use File::Spec::Functions qw(abs2rel rel2abs splitpath splitdir catpath);
 use File::stat;
 use List::Util qw(max);
 use Path::Tiny;
+use Try::Tiny;
 
 use Lintian::Command qw(safe_qx);
 
@@ -68,10 +72,79 @@ use constant EMPTY => q{};
 use constant SPACE => q{ };
 use constant COMMA => q{,};
 
-# prepare
-#
-# Prepares the test called $test assumed to be located in $testset/$dir/$test/.
-#
+my $EARLY_LOG_SUFFIX = 'log';
+
+=head1 FUNCTIONS
+
+=over 4
+
+=item early_logpath(RUN_PATH)
+
+Return the path of the early log for the work directory RUN_PATH.
+
+=cut
+
+sub early_logpath {
+    my ($runpath)= @_;
+
+    return "$runpath.$EARLY_LOG_SUFFIX";
+}
+
+=item logged_prepare(SPEC_PATH, RUN_PATH, $SUITE, TEST_SET, REBUILD)
+
+Prepares the work directory RUN_PATH for the test specified in
+SPEC_PATH. The test is assumed to be part of suite SUITE. The optional
+parameter REBUILD can force a rebuild if true.
+
+Captures all output and places it in a file near the work directory.
+The log can be used as a starting point by the runner after copying
+it to a final location.
+
+=cut
+
+sub logged_prepare {
+    my ($specpath, $runpath, $suite, $testset, $force_rebuild)= @_;
+
+    my $log;
+    my $error;
+
+    # capture output
+    $log = capture_merged {
+
+        try {
+            # prepare
+            prepare($specpath, $runpath, $suite, $testset, $force_rebuild);
+        }
+        catch {
+            # catch any error
+            $error = $_;
+        };
+    };
+
+    # save log;
+    if (defined $runpath) {
+        my $logfile = early_logpath($runpath);
+        path($logfile)->spew_utf8($log) if $log;
+    }
+
+    # print something if there was an error
+    if ($error) {
+        print $log if $log;
+        die $error;
+    }
+
+    return;
+}
+
+=item prepare(SPEC_PATH, $RUN_PATH, $SUITE, TEST_SET, REBUILD)
+
+Populates a work directory $RUN_PATH with data from the test located
+in SPEC_PATH, which is assumed to belong to suite SUITE.
+
+The optional parameter REBUILD forces a rebuild if true.
+
+=cut
+
 sub prepare {
     my ($specpath, $runpath, $suite, $testset, $force_rebuild)= @_;
 
@@ -220,5 +293,9 @@ sub prepare {
 
     return;
 }
+
+=back
+
+=cut
 
 1;

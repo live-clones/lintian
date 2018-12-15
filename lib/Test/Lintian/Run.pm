@@ -267,7 +267,7 @@ sub run_lintian {
         exec @cmd, @options, @LINTIAN_COMMON_OPTIONS, $file
           or internal_error("exec failed: $!");
     }
-    return 1;
+    return;
 }
 
 sub check_result {
