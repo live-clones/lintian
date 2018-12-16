@@ -72,17 +72,18 @@ sub run {
                 if (
                     m/^($PKGNAME_REGEX)(?: :[-a-z0-9]+)? \s*   # pkg-name $1
                        \(\s*[\>\<]?[=\>\<]\s*                  # REL 
-                        \$[{](?:Source-|source:|binary:)Version[}] # {subvar}
+                        (\$[{](?:Source-|source:|binary:)Version[}]) # {subvar}
                      /x
                 ) {
                     my $other = $1;
+                    my $substvar = $2;
                     # We can't test dependencies on packages whose names are
                     # formed via substvars expanded during the build.  Assume
                     # those maintainers know what they're doing.
                     tag 'version-substvar-for-external-package',
                       "$pkg1 -> $other"
                       unless $info->binary_field($other, 'architecture')
-                      or any { $other eq $_ } @provided
+                      or any { "$other (= $substvar)" eq $_ } @provided
                       or $other =~ /\$\{\S+\}/;
                 }
             };

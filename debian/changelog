@@ -10,6 +10,10 @@ lintian (2.5.118) UNRELEASED; urgency=medium
   * checks/testsuite.{desc,pm}:
     + [CL] Apply a patch series from Paul Gevers to warn about obsolete
       debian/tests/control.autodep8 files.  (MR: !95)
+  * checks/version-substvars.pm:
+    + [CL] Apply a patch from Matt Kraai (via MR !101) to make the
+      version-substvar-for-external-package tag require versioned provides.
+      (Closes: #833608)
 
  -- Chris Lamb <lamby@debian.org>  Fri, 14 Dec 2018 19:34:34 +0100
 
