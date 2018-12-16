@@ -351,6 +351,9 @@ sub create_child {
     # Usually happens when only running a single thread.
     return if not defined($start_test);
 
+    # files don't close properly when numjobs > 1, this is a kludge
+    $ENV{PERL_PATH_TINY_NO_FLOCK} = 1;
+
     $child_in_ch = IO::Async::Channel->new;
     $child_out_ch  = IO::Async::Channel->new;
 
