@@ -68,7 +68,7 @@ use Test::Lintian::ConfigFile qw(read_config);
 use Test::Lintian::Harness qw(runsystem_ok up_to_date);
 use Test::Lintian::Helper qw(rfc822date);
 use Test::Lintian::Hooks
-  qw(find_missing_prerequisites sed_hook sort_lines calibrate);
+  qw(find_missing_prerequisites run_lintian sed_hook sort_lines calibrate);
 
 use constant SPACE => q{ };
 use constant EMPTY => q{};
@@ -80,7 +80,7 @@ use constant NO => q{no};
 # Runs the test called $test assumed to be located in $testset/$dir/$test/.
 #
 sub runner {
-    my ($test_state, $runpath, $outpath, $dump_logs, $coverage)= @_;
+    my ($test_state, $runpath, $outpath, $dump_logs)= @_;
 
     # read dynamic file names
     my $runfiles = "$runpath/files";
@@ -149,23 +149,28 @@ sub runner {
 
     my $pkg = $testcase->{source};
 
-    run_lintian($test_state, $testcase, $subject, $runpath,
-        "$runpath/tags.$pkg", $coverage);
+    # run lintian
+    my $actual = "$runpath/tags.actual";
+    my $includepath = "$runpath/lintian-include-dir";
+    $ENV{'LINTIAN_COVERAGE'}
+      .= ",-db,./cover_db-$testcase->{suite}-$testcase->{testname}"
+      if exists $ENV{'LINTIAN_COVERAGE'};
+    run_lintian($runpath, $subject, $testcase->{profile}, $includepath,
+        $testcase->{options}, $actual);
 
     # Run a sed-script if it exists, for tests that have slightly variable
     # output
     if (-f "$runpath/post_test") {
-        runsystem_ok('sed', '-ri', '-f', "$runpath/post_test",
-            "$runpath/tags.$pkg");
-        if ($testcase->{'sort'} eq 'yes') {
-            # Re-sort as the sed may have changed the order lines
-            open(my $rfd, '<', "$runpath/tags.$pkg");
-            my @lines = sort(<$rfd>);
-            close($rfd);
-            open(my $wfd, '>', "$runpath/tags.$pkg");
-            print {$wfd} $_ for @lines;
-            close($wfd);
-        }
+        runsystem_ok('sed', '-ri', '-f', "$runpath/post_test",$actual);
+    }
+
+    # sort tags
+    my $sorted = "$runpath/tags.actual.parsed.sorted";
+    if($testcase->{sort} eq 'yes') {
+        sort_lines($actual, $sorted);
+    } else {
+        die"Could not copy parsed tags $actual to $sorted: $!"
+          if(system('cp', '-p', $actual, $sorted));
     }
 
     my $expected = "$runpath/tags";
@@ -174,99 +179,13 @@ sub runner {
     if (-x "$runpath/test_calibration") {
         my $calibrated = "$runpath/expected.$pkg.calibrated";
         $test_state->progress('test_calibration hook');
-        runsystem_ok(
-            "$runpath/test_calibration", $expected,
-            "$runpath/tags.$pkg", $calibrated
-        );
+        runsystem_ok("$runpath/test_calibration",
+            $expected,$sorted, $calibrated);
         $expected = $calibrated if -e $calibrated;
     }
 
-    check_result($test_state, $testcase, $expected,
-        "$runpath/tags.$pkg",$origexp);
+    check_result($test_state, $testcase, $expected,$sorted, $origexp);
 
-    return;
-}
-
-sub run_lintian {
-    my ($test_state, $testcase, $file, $rundir, $out, $coverage) = @_;
-    $test_state->progress('testing');
-    my @options = split(' ', $testcase->{options}//'');
-    unshift(@options, '--allow-root', '--no-cfg');
-    unshift(@options, '--profile', $testcase->{profile});
-    unshift(@options, '--no-user-dirs');
-    if (my $incl_dir = $testcase->{'lintian_include_dir'}) {
-        unshift(@options, '--include-dir', $incl_dir);
-    }
-    my $pid = open(my $in, '-|');
-    if ($pid) {
-        my @data = <$in>;
-        my $status = 0;
-        eval {close($in);};
-        if (my $err = $@) {
-            internal_error("close pipe: $!") if $err->errno;
-            $status = ($? >> 8) & 255;
-        }
-        if (defined($coverage)) {
-            # Devel::Cover causes some annoying deep recursion
-            # warnings.  Filter them out, but only during coverage.
-            # - This is not flawless, but it gets most of them
-            @data = grep {
-                !m{^Deep [ ] recursion [ ] on [ ] subroutine [ ]
-                    "[^"]+" [ ] at [ ] .*B/Deparse.pm [ ] line [ ]
-                   \d+}xsm
-            } @data;
-        }
-        unless ($status == 0 or $status == 1) {
-            my $name = $testcase->{testname};
-            #NB: lines in @data have trailing newlines.
-            my $msg
-              = "$ENV{'LINTIAN_FRONTEND'} @options $file exited with status $status\n";
-            $msg .= join(q{},map { "$name: $_" } @data);
-
-            die $msg;
-        } else {
-            @data = sort @data if $testcase->{sort} eq 'yes';
-            open(my $fd, '>', $out);
-            print $fd $_ for @data;
-            close($fd);
-        }
-    } else {
-        my @LINTIAN_CMD = ($ENV{'LINTIAN_FRONTEND'});
-        my @LINTIAN_COMMON_OPTIONS;
-
-        my @cmd = @LINTIAN_CMD;
-
-        if (defined($coverage)) {
-            my $harness_perl_switches = $ENV{'HARNESS_PERL_SWITCHES'}//'';
-            # Only collect coverage for stuff that D::NYTProf and
-            # Test::Pod::Coverage cannot do for us.  This makes cover use less
-            # RAM in the other end.
-            my @criteria = qw(statement branch condition path subroutine);
-            my $coverage_arg
-              = '-MDevel::Cover=-silent,1,+ignore,^(.*/)?t/scripts/.+';
-            $coverage_arg .= ',+ignore,/usr/bin/.*,+ignore,(.*/)?Dpkg';
-            $coverage_arg .= ',-coverage,' . join(',-coverage,', @criteria);
-            $coverage_arg .= ',' . $coverage if $coverage ne '';
-            $ENV{'LINTIAN_COVERAGE'} = $coverage_arg;
-            $harness_perl_switches .= ' ' . $coverage_arg;
-            $ENV{'HARNESS_PERL_SWITCHES'} = $harness_perl_switches;
-            # Coverage has some race conditions (at least when using the same
-            # cover database).
-            push(@LINTIAN_COMMON_OPTIONS, '-j1');
-        }
-
-        if ($ENV{'LINTIAN_COVERAGE'}) {
-            my $suite = $testcase->{suite};
-            my $name = $testcase->{testname};
-            my $cover_dir = "./cover_db-${suite}-${name}";
-            $ENV{'LINTIAN_COVERAGE'} .= ",-db,${cover_dir}";
-            unshift(@cmd, 'perl', $ENV{'LINTIAN_COVERAGE'});
-        }
-        open(STDERR, '>&', \*STDOUT);
-        chdir($rundir);
-        exec @cmd, @options, @LINTIAN_COMMON_OPTIONS, $file
-          or internal_error("exec failed: $!");
-    }
     return;
 }
 

@@ -109,6 +109,13 @@ use Test::Lintian::Prepare qw(logged_prepare);
 use Test::Lintian::Run qw(runner);
 use Test::State;
 
+use constant SPACE => q{ };
+use constant INDENT => q{    };
+use constant NEWLINE => qq{\n};
+use constant EMPTY => q{};
+use constant YES => q{yes};
+use constant NO => q{no};
+
 $ENV{'DEB_HOST_ARCH'} = safe_qx(qw(dpkg-architecture -qDEB_HOST_ARCH));
 $ENV{HARNESS_EPOCH} = (stat($0))[9];
 chomp $ENV{'DEB_HOST_ARCH'};
@@ -134,6 +141,27 @@ our $ACTIVE_JOBS = 0;
 my ($run_all_tests, $tag, $coverage, $onlyrun, %suites);
 
 parse_args();
+
+# set environment for coverage
+if (defined $coverage) {
+    # Only collect coverage for stuff that D::NYTProf and
+    # Test::Pod::Coverage cannot do for us.  This makes cover use less
+    # RAM in the other end.
+    my @criteria = qw(statement branch condition path subroutine);
+    my $args= '-MDevel::Cover=-silent,1,+ignore,^(.*/)?t/scripts/.+';
+    $args .= ',+ignore,/usr/bin/.*,+ignore,(.*/)?Dpkg';
+    $args .= ',-coverage,' . join(',-coverage,', @criteria);
+    $args .= ',' . $coverage if $coverage ne '';
+    $ENV{'LINTIAN_COVERAGE'} = $args;
+
+    $ENV{'HARNESS_PERL_SWITCHES'} //= EMPTY;
+    $ENV{'HARNESS_PERL_SWITCHES'} .= SPACE . $args;
+}
+
+# Devel::Cover + one cover_db + multiple processes is a recipe
+# for corruptions.  Force $numjobs to 1 if we are running under
+# coverage.
+$numjobs = 1 if exists $ENV{'LINTIAN_COVERAGE'};
 
 if (-d "$testset/helpers/bin") {
     # Add the test helpers to PATH
@@ -383,7 +411,7 @@ sub create_child {
                 try {
                     logged_prepare($specpath, $runpath, $suite,
                         $testset,$force_rebuild);
-                    runner($state, $runpath, $outpath, $dump_logs, $coverage);
+                    runner($state, $runpath, $outpath, $dump_logs);
                 }
                 catch {
                     if (my $err = $_) {
