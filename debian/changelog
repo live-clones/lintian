@@ -31,7 +31,7 @@ lintian (2.5.117) unstable; urgency=medium
     + [CL] Refactor, tidy and optimise various checks for the contents of
       files.
     + [CL] Check files for references to the build path if specified in a
-      .buildinfo.  (Closes: #916021
+      .buildinfo.  (Closes: #916021)
   * checks/shared-libs.desc:
     + [CL] Clarify that symbols-file-missing-build-depends-package-field is
       emitted per-package in its long description, not based on a file.
