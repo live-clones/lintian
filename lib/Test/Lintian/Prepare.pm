@@ -196,10 +196,6 @@ sub prepare {
 
     $testcase->{'dh_compat_level'} //= '11';
 
-    if ($specpath and -d "${specpath}/lintian-include-dir") {
-        $testcase->{'lintian_include_dir'} = './lintian-include-dir';
-    }
-
     # add upstream version
     $testcase->{upstream_version} = $testcase->{version};
     $testcase->{upstream_version} =~ s/-[^-]+$//;
