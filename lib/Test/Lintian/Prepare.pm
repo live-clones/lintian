@@ -185,11 +185,6 @@ sub prepare {
 
     $testcase->{date} ||= rfc822date(time);
 
-    if (not $testcase->{prev_version}) {
-        $testcase->{prev_version} = '0.0.1';
-        $testcase->{prev_version} .= '-1'
-          if index($testcase->{version}, '-') > -1;
-    }
     warn "Cannot override Architecture: in test $testcase->{testname}."
       if length $testcase->{architecture};
 
@@ -214,13 +209,20 @@ sub prepare {
         $testcase->{'lintian_include_dir'} = './lintian-include-dir';
     }
 
+    # add upstream version
     $testcase->{upstream_version} = $testcase->{version};
     $testcase->{upstream_version} =~ s/-[^-]+$//;
     $testcase->{upstream_version} =~ s/(-|^)(\d+):/$1/;
 
-    my $epochless_version = $testcase->{version};
-    $epochless_version =~ s/^\d+://;
-    $testcase->{no_epoch} = $epochless_version;
+    # version without epoch
+    $testcase->{no_epoch} = $testcase->{version};
+    $testcase->{no_epoch} =~ s/^\d+://;
+
+    unless ($testcase->{prev_version}) {
+        $testcase->{prev_version} = '0.0.1';
+        $testcase->{prev_version} .= '-1'
+          if index($testcase->{version}, '-') > -1;
+    }
 
     die 'Outdated test specification (./debian/debian exists).'
       if -e "$specpath/debian/debian";
