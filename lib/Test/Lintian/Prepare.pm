@@ -196,15 +196,6 @@ sub prepare {
 
     $testcase->{'dh_compat_level'} //= '11';
 
-    $testcase->{'default_build_depends'}
-      //= "debhelper (>= $testcase->{dh_compat_level}~)";
-
-    $testcase->{'build_depends'} ||= join(
-        ', ',
-        grep { $_ }(
-            $testcase->{'default_build_depends'},
-            $testcase->{'extra_build_depends'}));
-
     if ($specpath and -d "${specpath}/lintian-include-dir") {
         $testcase->{'lintian_include_dir'} = './lintian-include-dir';
     }
@@ -289,6 +280,18 @@ sub prepare {
         }
     }
 
+    # calculate build dependencies
+    warn 'Cannot override Build-Depends:'
+      if length $testcase->{build_depends};
+    combine_fields($testcase, 'build_depends', COMMA . SPACE,
+        'default_build_depends', 'extra_build_depends');
+
+    # calculate build conflicts
+    warn 'Cannot override Build-Conflicts:'
+      if length $testcase->{build_conflicts};
+    combine_fields($testcase, 'build_conflicts', COMMA . SPACE,
+        'default_build_conflicts', 'extra_build_conflicts');
+
     # fill remaining templates
     fill_skeleton_templates($testcase->{fill_targets},
         $testcase, $ENV{HARNESS_EPOCH}, $runpath, $testset)
@@ -301,6 +304,32 @@ sub prepare {
     # write the dynamic test case files
     my $rundesc = path($runpath)->child($files->{test_specification});
     write_config($testcase, $rundesc->stringify);
+
+    return;
+}
+
+sub combine_fields {
+    my ($testcase, $destination, $delimiter, @sources) = @_;
+
+    return unless length $destination;
+
+    # we are combining these contents
+    my @contents;
+    foreach my $source (@sources) {
+        push(@contents, $testcase->{$source}//EMPTY)
+          if length $source;
+        delete $testcase->{$source};
+    }
+
+    # combine
+    foreach my $content (@contents) {
+        $testcase->{$destination} = join($delimiter,
+            grep { $_ }($testcase->{$destination}//EMPTY,$content));
+    }
+
+    # delete the combined entry if it is empty
+    delete($testcase->{$destination})
+      unless length $testcase->{$destination};
 
     return;
 }
