@@ -128,6 +128,15 @@ sub logged_runner {
 sub runner {
     my ($test_state, $runpath, $outpath)= @_;
 
+    say EMPTY;
+    say '------- Runner starts here -------';
+
+    # bail out if runpath does not exist
+    die "Cannot find test directory $runpath." unless -d $runpath;
+
+    # announce location
+    say "Running test at $runpath.";
+
     # read dynamic file names
     my $runfiles = "$runpath/files";
     my $files = read_config($runfiles);
@@ -135,6 +144,12 @@ sub runner {
     # read dynamic case data
     my $rundescpath = "$runpath/$files->{test_specification}";
     my $testcase = read_config($rundescpath);
+
+    # name of encapsulating directory should be that of test
+    my $expected_name = path($runpath)->basename;
+    die
+"Test in $runpath is called $testcase->{testname} instead of $expected_name"
+      if ($testcase->{testname} ne $expected_name);
 
     my $suite = $testcase->{suite};
     my $testname = $testcase->{testname};

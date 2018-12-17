@@ -148,6 +148,9 @@ The optional parameter REBUILD forces a rebuild if true.
 sub prepare {
     my ($specpath, $runpath, $suite, $testset, $force_rebuild)= @_;
 
+    say '------- Populating starts here -------';
+    say "Work directory is $runpath.";
+
     # read defaults
     my $defaultspath = "$testset/defaults";
 
@@ -187,9 +190,14 @@ sub prepare {
         $testcase->{prev_version} .= '-1'
           if index($testcase->{version}, '-') > -1;
     }
+    warn "Cannot override Architecture: in test $testcase->{testname}."
+      if length $testcase->{architecture};
 
-    $testcase->{host_architecture} = $ENV{'DEB_HOST_ARCH'};
-    $testcase->{'standards_version'} ||= $ENV{'POLICY_VERSION'};
+    $testcase->{host_architecture} = $ENV{'DEB_HOST_ARCH'}
+      //die 'DEB_HOST_ARCH is not set.';
+
+    $testcase->{standards_version} ||= $ENV{'POLICY_VERSION'}
+      //die 'Could not get POLICY_VERSION.';
 
     $testcase->{'dh_compat_level'} //= '11';
 
@@ -251,6 +259,7 @@ sub prepare {
 
     # copy test specification to working directory
     my $offset = abs2rel($specpath, $testset);
+    say "Copying test specification $offset from $testset to $runpath.";
     copy_dir_contents($specpath, $runpath);
 
     # get builder name
