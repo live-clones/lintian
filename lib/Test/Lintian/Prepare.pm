@@ -218,6 +218,32 @@ sub prepare {
     die 'Outdated test specification (./debian/debian exists).'
       if -e "$specpath/debian/debian";
 
+    if (-d $runpath) {
+
+        # check for old build artifacts
+        my $buildstamp = "$runpath/build-stamp";
+        say 'Found old build artifact.' if -f $buildstamp;
+
+        # check for old debian/debian directory
+        my $olddebiandir = "$runpath/debian/debian";
+        say 'Found old debian/debian directory.' if -e $olddebiandir;
+
+        # check for rebuild demand
+        say 'Forcing rebuild.' if $force_rebuild;
+
+        # delete work directory
+        if($force_rebuild || -f $buildstamp || -e $olddebiandir) {
+            say "Removing work directory $runpath.";
+            remove_tree($runpath);
+        }
+    }
+
+    # create work directory
+    unless (-d $runpath) {
+        say "Creating directory $runpath.";
+        make_path($runpath);
+    }
+
     # load skeleton
     if (exists $testcase->{skeleton}) {
 
@@ -230,17 +256,6 @@ sub prepare {
         foreach my $key (keys %{$skeleton}) {
             $testcase->{$key} = $skeleton->{$key};
         }
-    }
-
-    if ($force_rebuild
-        or -e "$runpath/debian/debian") {
-
-        runsystem_ok('rm', '-rf', $runpath);
-    }
-
-    # create work directory
-    unless (-d $runpath) {
-        make_path($runpath);
     }
 
     # populate working directory with specified template sets
