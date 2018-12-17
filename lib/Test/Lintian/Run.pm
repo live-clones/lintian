@@ -45,11 +45,13 @@ use Exporter qw(import);
 
 BEGIN {
     our @EXPORT_OK = qw(
+      logged_runner
       runner
       check_result
     );
 }
 
+use Capture::Tiny qw(capture_merged);
 use Carp qw(confess);
 use Cwd qw(getcwd);
 use File::Basename qw(basename);
@@ -60,6 +62,7 @@ use File::Copy;
 use File::stat;
 use List::Util qw(max min any);
 use Path::Tiny;
+use Try::Tiny;
 
 use Lintian::Command qw(safe_qx);
 use Lintian::Util qw(internal_error touch_file);
@@ -69,11 +72,54 @@ use Test::Lintian::Harness qw(runsystem_ok up_to_date);
 use Test::Lintian::Helper qw(rfc822date);
 use Test::Lintian::Hooks
   qw(find_missing_prerequisites run_lintian sed_hook sort_lines calibrate);
+use Test::Lintian::Prepare qw(early_logpath);
 
 use constant SPACE => q{ };
 use constant EMPTY => q{};
 use constant YES => q{yes};
 use constant NO => q{no};
+
+sub logged_runner {
+    my ($test_state, $runpath)= @_;
+
+    my $betterlogpath = "$runpath/log";
+    my $log;
+    my $error;
+
+    $log = capture_merged {
+        try {
+            # call runner
+            runner($test_state, $runpath)
+
+        }
+        catch {
+            # catch any error
+            $error = $_;
+        };
+    };
+
+    # delete old runner log
+    unlink $betterlogpath if -f $betterlogpath;
+
+    # move the early log for directory preparation to position of runner log
+    my $earlylogpath = early_logpath($runpath);
+    move($earlylogpath, $betterlogpath) if -f $earlylogpath;
+
+    # append runner log to population log
+    path($betterlogpath)->append_utf8($log) if length $log;
+
+    # add error if there was one
+    path($betterlogpath)->append_utf8($error) if length $error;
+
+    # print log and die on error
+    if ($error) {
+        $test_state->dump_log($log)
+          if length $log && $ENV{'DUMP_LOGS'}//NO eq YES;
+        die "Runner died for $runpath: $error";
+    }
+
+    return;
+}
 
 # generic_runner
 #
@@ -135,11 +181,8 @@ sub runner {
     $test_state->progress('building');
 
     if (exists $testcase->{build_command}) {
-        my $command
-          = "cd $runpath; $testcase->{build_command} > ../build.$testname 2>&1";
+        my $command= "cd $runpath; $testcase->{build_command}";
         if (system($command)) {
-            $test_state->dump_log("${outpath}/${suite}/build.${testname}")
-              if $ENV{DUMP_LOGS} eq YES;
             die "$command failed.";
         }
     }

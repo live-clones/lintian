@@ -106,7 +106,7 @@ use Test::Lintian::Filter qw(find_selected_lintian_testpaths);
 use Test::Lintian::Helper
   qw(rfc822date get_host_architecture get_latest_policy get_required_debhelper_version get_installed_debhelper_version);
 use Test::Lintian::Prepare qw(logged_prepare);
-use Test::Lintian::Run qw(runner);
+use Test::Lintian::Run qw(logged_runner);
 use Test::State;
 
 use constant SPACE => q{ };
@@ -413,7 +413,7 @@ sub create_child {
                 try {
                     logged_prepare($specpath, $runpath, $suite,
                         $testset,$force_rebuild);
-                    runner($state, $runpath, $outpath);
+                    logged_runner($state, $runpath, $outpath);
                 }
                 catch {
                     if (my $err = $_) {
