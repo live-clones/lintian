@@ -277,6 +277,9 @@ sub prepare {
                 $testcase->{$key} = $builder->{$key}
                   unless exists $testcase->{$key};
             }
+
+            # delete builder
+            unlink($builderpath);
         }
     }
 
