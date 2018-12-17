@@ -80,7 +80,7 @@ use constant NO => q{no};
 # Runs the test called $test assumed to be located in $testset/$dir/$test/.
 #
 sub runner {
-    my ($test_state, $runpath, $outpath, $dump_logs)= @_;
+    my ($test_state, $runpath, $outpath)= @_;
 
     # read dynamic file names
     my $runfiles = "$runpath/files";
@@ -139,7 +139,7 @@ sub runner {
           = "cd $runpath; $testcase->{build_command} > ../build.$testname 2>&1";
         if (system($command)) {
             $test_state->dump_log("${outpath}/${suite}/build.${testname}")
-              if $dump_logs;
+              if $ENV{DUMP_LOGS} eq YES;
             die "$command failed.";
         }
     }

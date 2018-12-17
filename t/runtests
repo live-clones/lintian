@@ -163,6 +163,8 @@ if (defined $coverage) {
 # coverage.
 $numjobs = 1 if exists $ENV{'LINTIAN_COVERAGE'};
 
+$ENV{'DUMP_LOGS'} = $dump_logs//NO ? YES : NO;
+
 if (-d "$testset/helpers/bin") {
     # Add the test helpers to PATH
     my $tpath = Cwd::abs_path("$testset/helpers/bin");
@@ -411,7 +413,7 @@ sub create_child {
                 try {
                     logged_prepare($specpath, $runpath, $suite,
                         $testset,$force_rebuild);
-                    runner($state, $runpath, $outpath, $dump_logs);
+                    runner($state, $runpath, $outpath);
                 }
                 catch {
                     if (my $err = $_) {
