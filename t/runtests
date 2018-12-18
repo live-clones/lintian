@@ -33,7 +33,6 @@ use autodie;
 use v5.10;
 
 use Cwd();
-use File::Path qw(make_path);
 use File::Spec::Functions qw(abs2rel rel2abs splitpath splitdir);
 use Getopt::Long;
 use IO::Async::Channel;
@@ -90,11 +89,7 @@ use lib "$ENV{'LINTIAN_TEST_ROOT'}/lib";
 
 use Lintian::Command qw(safe_qx);
 use Lintian::Internal::FrontendUtil qw(default_parallel);
-use Lintian::Util qw(internal_error);
 
-use Test::Lintian::Harness
-  qw(chdir_runcmd check_test_depends find_tests_for_tag
-  runsystem runsystem_ok skip_reason up_to_date);
 use Test::Lintian::ConfigFile qw(read_config);
 use Test::Lintian::Filter qw(find_selected_lintian_testpaths);
 use Test::Lintian::Helper

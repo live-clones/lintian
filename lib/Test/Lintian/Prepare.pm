@@ -59,11 +59,7 @@ use List::Util qw(max);
 use Path::Tiny;
 use Try::Tiny;
 
-use Lintian::Command qw(safe_qx);
-
 use Test::Lintian::ConfigFile qw(read_config write_config);
-use Test::Lintian::Harness
-  qw(check_test_depends runsystem_ok skip_reason up_to_date);
 use Test::Lintian::Helper qw(rfc822date copy_dir_contents);
 use Test::Lintian::Templates
   qw(copy_skeleton_template_sets remove_surplus_templates fill_skeleton_templates fill_template);

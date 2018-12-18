@@ -55,7 +55,6 @@ use Capture::Tiny qw(capture_merged);
 use Carp qw(confess);
 use Cwd qw(getcwd);
 use File::Basename qw(basename);
-use File::Path qw(make_path);
 use File::Spec::Functions qw(abs2rel rel2abs splitpath catpath);
 use File::Compare;
 use File::Copy;
@@ -63,9 +62,6 @@ use File::stat;
 use List::Util qw(max min any);
 use Path::Tiny;
 use Try::Tiny;
-
-use Lintian::Command qw(safe_qx);
-use Lintian::Util qw(internal_error touch_file);
 
 use Test::Lintian::ConfigFile qw(read_config);
 use Test::Lintian::Harness qw(runsystem_ok up_to_date);
