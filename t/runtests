@@ -110,14 +110,11 @@ use constant EMPTY => q{};
 use constant YES => q{yes};
 use constant NO => q{no};
 
-$ENV{HARNESS_EPOCH} = (stat($0))[9];
 # display output immediately
 STDOUT->autoflush;
 
 
-my $output_is_tty = -t STDOUT;
 
-our $IO_LOOP = IO::Async::Loop->new;
 
 # --- Parsed options / arguments
 
@@ -131,6 +128,12 @@ our $ACTIVE_JOBS = 0;
 my ($keep_going, $tag, $coverage, $onlyrun, %suites);
 
 parse_args();
+
+$ENV{HARNESS_EPOCH} = (stat($0))[9];
+
+my $output_is_tty = -t STDOUT;
+
+our $IO_LOOP = IO::Async::Loop->new;
 
 # set environment for coverage
 if (defined $coverage) {
