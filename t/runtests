@@ -165,11 +165,10 @@ $numjobs = 1 if exists $ENV{'LINTIAN_COVERAGE'};
 
 $ENV{'DUMP_LOGS'} = $dump_logs//NO ? YES : NO;
 
-if (-d "$testset/helpers/bin") {
-    # Add the test helpers to PATH
-    my $tpath = Cwd::abs_path("$testset/helpers/bin");
-    internal_error("Cannot resolve $testset/helpers/bin: $!") unless $tpath;
-    $ENV{'PATH'} = "$tpath:$ENV{'PATH'}";
+my $helperpath = "$testset/helpers/bin";
+if (-d $helperpath) {
+    my $helpers = rel2abs($helperpath)// die("Cannot resolve $helperpath: $!");
+    $ENV{'PATH'} = "$helpers:$ENV{'PATH'}";
 }
 
 # --- Display output immediately
