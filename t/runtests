@@ -220,10 +220,6 @@ for my $var (@vars) { say INDENT . "$var=$ENV{$var}" }
 
 say EMPTY;
 
-# Exit codes:
-# 0 - success
-# 1 - one or more tests failed
-# 2 - an error prevented proper running of the tests
 my $status = 0;
 
 # Tests that were skipped and why
