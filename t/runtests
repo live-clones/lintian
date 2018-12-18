@@ -112,10 +112,6 @@ use constant NO => q{no};
 
 $ENV{HARNESS_EPOCH} = (stat($0))[9];
 
-# get latest policy version and date
-($ENV{'POLICY_VERSION'}, $ENV{'POLICY_EPOCH'}) = get_latest_policy();
-say "Latest policy version is $ENV{'POLICY_VERSION'} from "
-  . rfc822date($ENV{'POLICY_EPOCH'});
 
 my $output_is_tty = -t STDOUT;
 
@@ -169,7 +165,10 @@ STDOUT->autoflush;
 $ENV{'DEB_HOST_ARCH'} = get_host_architecture();
 say "Host architecture is $ENV{'DEB_HOST_ARCH'}.";
 
-# --- Exit status for the test suite driver
+# get latest policy version and date
+($ENV{'POLICY_VERSION'}, $ENV{'POLICY_EPOCH'}) = get_latest_policy();
+say "Latest policy version is $ENV{'POLICY_VERSION'} from "
+  . rfc822date($ENV{'POLICY_EPOCH'});
 
 say EMPTY;
 
