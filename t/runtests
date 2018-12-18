@@ -35,7 +35,7 @@ use v5.10;
 use Cwd();
 use File::Path qw(make_path);
 use File::Spec::Functions qw(abs2rel rel2abs splitpath splitdir);
-use Getopt::Long qw(GetOptions);
+use Getopt::Long;
 use IO::Async::Channel;
 use IO::Async::Loop;
 use IO::Async::Routine;
@@ -113,21 +113,51 @@ use constant NO => q{no};
 # display output immediately
 STDOUT->autoflush;
 
+# options
+my $coverage;
+my $debug;
+my $dump_logs = 1;
+my $force_rebuild;
+my $numjobs = -1;
+my $keep_going;
+my $verbose = 0;
 
+Getopt::Long::Configure('bundling');
+unless (
+    Getopt::Long::GetOptions(
+        'B'            => \$force_rebuild,
+        'd|debug+'     => \$debug,
+        'j|jobs:i'     => \$numjobs,
+        'k|keep-going' => \$keep_going,
+        'dump-logs!'   => \$dump_logs,
+        'v|verbose'    => \$verbose,
+        'coverage:s'   => \$coverage,
+        'help|h'       => sub {usage(); exit;},
+    )
+) {
+    usage();
+    die;
+}
 
+# check number of arguments
+die('Please use -h for usage information. Thank you!')
+  if @ARGV < 2 || @ARGV > 3;
 
-# --- Parsed options / arguments
+# get arguments
+my ($testset, $outpath, $onlyrun) = @ARGV;
 
-our $verbose = 0;
-our ($outpath, $testset, $force_rebuild);
-our $numjobs = -1;
-our $dump_logs = 1;
-our @TESTS;
-our $ACTIVE_JOBS = 0;
+# check test set directory
+die("Test set directory $testset not set") unless -d $testset;
+$testset = rel2abs($testset) // die("Cannot find $testset: $!");
 
-my ($keep_going, $tag, $coverage, $onlyrun, %suites);
+# check output directory
+die("Test output directory $outpath not set") unless -d $outpath;
+$outpath = rel2abs($outpath) // die("Cannot find $outpath: $!");
 
-parse_args();
+my @TESTS;
+my $ACTIVE_JOBS = 0;
+
+my ($tag, %suites);
 
 $ENV{HARNESS_EPOCH} = (stat($0))[9];
 
@@ -155,6 +185,14 @@ if (defined $coverage) {
 # for corruptions.  Force $numjobs to 1 if we are running under
 # coverage.
 $numjobs = 1 if exists $ENV{'LINTIAN_COVERAGE'};
+
+# tie verbosity to debug
+$verbose = 1 + $debug if $debug;
+
+# can be 0 without value ("-j"), and -1 if option was not specified at all
+$numjobs = default_parallel() if $numjobs <= 0;
+say "Running up to $numjobs tests concurrently"
+  if $numjobs > 1 && $verbose >= 2;
 
 $ENV{'DUMP_LOGS'} = $dump_logs//NO ? YES : NO;
 
@@ -238,57 +276,6 @@ if (@TESTS) {
 print_test_summary();
 
 exit $status;
-
-sub parse_args {
-    my ($debug);
-    Getopt::Long::Configure('bundling');
-    GetOptions(
-        'B'            => \$force_rebuild,
-        'd|debug+'     => \$debug,
-        'j|jobs:i'     => \$numjobs,
-        'k|keep-going' => \$keep_going,
-        'dump-logs!'   => \$dump_logs,
-        'v|verbose'    => \$verbose,
-        'coverage:s'   => \$coverage,
-        'help|h'       => sub {usage(); exit;},
-    ) or { usage(); exit; }
-
-    if (@ARGV < 2 || @ARGV > 3) {
-        usage();
-        exit;
-    }
-
-    $verbose = 1 + $debug if $debug;
-
-    ($testset, $outpath, $onlyrun) = @ARGV;
-
-    if (-d $outpath) {
-        my $abs = Cwd::abs_path($outpath);
-        internal_error("Cannot resolve $outpath: $!")
-          if not defined($abs);
-        $outpath = $abs;
-    } else {
-        internal_error("test directory $outpath does not exist");
-    }
-
-    unless (-d $testset) {
-        internal_error("test set directory $testset does not exist");
-    }
-
-    $testset = rel2abs($testset);
-
-    # Getopt::Long assigns 0 as default value if none was specified
-    # (i.e. "-j").  Otherwise, $numjobs can also be -1 if "-j" was not
-    # specified at all.
-    if ($numjobs <= 0) {
-        $numjobs = default_parallel();
-
-        print "Doing up to $numjobs concurrent builds/tests\n"
-          if $verbose >= 2;
-    }
-
-    return;
-}
 
 sub print_test_summary {
     if (!$tests_run) {
