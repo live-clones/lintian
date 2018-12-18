@@ -110,9 +110,7 @@ use constant EMPTY => q{};
 use constant YES => q{yes};
 use constant NO => q{no};
 
-$ENV{'DEB_HOST_ARCH'} = safe_qx(qw(dpkg-architecture -qDEB_HOST_ARCH));
 $ENV{HARNESS_EPOCH} = (stat($0))[9];
-chomp $ENV{'DEB_HOST_ARCH'};
 
 # get latest policy version and date
 ($ENV{'POLICY_VERSION'}, $ENV{'POLICY_EPOCH'}) = get_latest_policy();
@@ -167,6 +165,9 @@ if (-d $helperpath) {
 
 # --- Display output immediately
 STDOUT->autoflush;
+# get architecture
+$ENV{'DEB_HOST_ARCH'} = get_host_architecture();
+say "Host architecture is $ENV{'DEB_HOST_ARCH'}.";
 
 # --- Exit status for the test suite driver
 
