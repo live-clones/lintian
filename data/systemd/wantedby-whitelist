@@ -1,4 +1,5 @@
 # "Usual" targets for WantedBy
 graphical.target
 multi-user.target
+sleep.target
 sysinit.target

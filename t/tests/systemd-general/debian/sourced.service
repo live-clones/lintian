@@ -6,4 +6,4 @@ Documentation=man:sourced(1)
 ExecStart=/usr/bin/test
 
 [Install]
-WantedBy=multi-user.target
+WantedBy=sleep.target
