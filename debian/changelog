@@ -22,8 +22,8 @@ lintian (2.5.118) UNRELEASED; urgency=medium
       (Closes: #833608)
 
   * data/systemd/wantedby-whitelist:
-    + [CL] Add 'sleep.target' to the list of valid WantedBy systemd
-      targets.
+    + [CL] Add default, network-online and sleep' to the list of valid
+      WantedBy systemd targets.
 
  -- Chris Lamb <lamby@debian.org>  Fri, 14 Dec 2018 19:34:34 +0100
 
