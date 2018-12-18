@@ -126,7 +126,7 @@ our $dump_logs = 1;
 our @TESTS;
 our $ACTIVE_JOBS = 0;
 
-my ($run_all_tests, $tag, $coverage, $onlyrun, %suites);
+my ($keep_going, $tag, $coverage, $onlyrun, %suites);
 
 parse_args();
 
@@ -243,7 +243,7 @@ sub parse_args {
         'B'            => \$force_rebuild,
         'd|debug+'     => \$debug,
         'j|jobs:i'     => \$numjobs,
-        'k|keep-going' => \$run_all_tests,
+        'k|keep-going' => \$keep_going,
         'dump-logs!'   => \$dump_logs,
         'v|verbose'    => \$verbose,
         'coverage:s'   => \$coverage,
@@ -371,7 +371,7 @@ sub run_prove_tests {
 
         print "Test scripts:\n";
         if (system(@prove_cmd, @do_run) != 0) {
-            exit 1 unless $run_all_tests;
+            exit 1 unless $keep_going;
             push(@failed, "suite:scripts [Try: prove -lr -j$numjobs t]");
             $status = 1;
         }
@@ -483,7 +483,7 @@ sub handle_msg_from_child {
 
         if ($is_problem) {
             push(@failed, "${suite}::${testname}");
-            if (not $run_all_tests) {
+            if (not $keep_going) {
                 # Empty the queue, so no further jobs are started
                 $#{$test_queue} = -1;
             }
