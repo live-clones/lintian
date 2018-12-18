@@ -111,6 +111,8 @@ use constant YES => q{yes};
 use constant NO => q{no};
 
 $ENV{HARNESS_EPOCH} = (stat($0))[9];
+# display output immediately
+STDOUT->autoflush;
 
 
 my $output_is_tty = -t STDOUT;
@@ -159,8 +161,6 @@ if (-d $helperpath) {
     $ENV{'PATH'} = "$helpers:$ENV{'PATH'}";
 }
 
-# --- Display output immediately
-STDOUT->autoflush;
 # get architecture
 $ENV{'DEB_HOST_ARCH'} = get_host_architecture();
 say "Host architecture is $ENV{'DEB_HOST_ARCH'}.";
