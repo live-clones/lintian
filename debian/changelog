@@ -25,6 +25,10 @@ lintian (2.5.118) UNRELEASED; urgency=medium
     + [CL] Add default, network-online and sleep' to the list of valid
       WantedBy systemd targets.
 
+  * t/testS:
+    + [CL] Apply a patch from Felix Lechner to remove the "diff" directory
+      and contents for two tests.  (MR: !103)
+
  -- Chris Lamb <lamby@debian.org>  Fri, 14 Dec 2018 19:34:34 +0100
 
 lintian (2.5.117) unstable; urgency=medium
