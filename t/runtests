@@ -574,23 +574,20 @@ Usage: $0 [options] [-j [<jobs>]] <testset-directory> <testing-directory> [<test
     --help, -h  Print this help and exit
 
     The optional 3rd parameter causes runtests to only run tests that match
-    the particular selection.  This parameter can be one of:
+    the particular selection.  This parameter can be a list of selectors:
+    what:<which>[,<what:...>]
 
-      * <testname>
-        - Run the test(s) named exactly <testname>.  Note that each suite
-          can reuse the name of the test, so this may run more than one
-          test.
-      * <dir-in-scripts-suite>
-        - Run all "scripts"-tests within a given dir.  E.g. "01-critic"
-          will run all tests in "t/scripts/01-critic/".
-      * <check-name>
-        - Run all tests related to the given check.  This is based on the
-          name of the test (i.e. it must start with "<check-name>-").
-      * legacy
-        - Run all "legacy" tests (i.e. t/tests/legacy-*), which were
-         imported from the old test suite.
-      * suite:<suite>[,<suite...>]
-        - Run all tests in the listed suites.
+
+      * test:<testname>
+        - Run the named test. Please note that testnames may not be
+          unique, so it may run more than one test.
+      * script:(<script-name> || <dir-in-scripts-suite>)
+        - Run the named code quality script or all in the named directory.
+          E.g. "01-critic" will run all tests in "t/scripts/01-critic/".
+      * check:<check-name>
+        - Run all tests related to the given check.
+      * suite:<suite>
+        - Run all tests in the named suite.
       * tag:<tag-name>
         - Run any test that lists <tag-name> in "Test-For" or
           "Test-Against".
