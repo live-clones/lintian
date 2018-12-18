@@ -10,6 +10,9 @@ lintian (2.5.118) UNRELEASED; urgency=medium
     + [CL] Avoid a number of false-positives in documentation files when
       processing the uses-dpkg-database-directly tag as these are
       invariably legitimate.
+  * checks/systemd.pm:
+    + [CL] Don't emit systemd-service-file-missing-hardening-features for
+      WantedBy=sleep.target "services" such as autosuspend.
   * checks/testsuite.{desc,pm}:
     + [CL] Apply a patch series from Paul Gevers to warn about obsolete
       debian/tests/control.autodep8 files.  (MR: !95)

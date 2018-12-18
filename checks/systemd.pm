@@ -256,7 +256,9 @@ sub check_systemd_service_file {
             last;
         }
         tag 'systemd-service-file-missing-hardening-features', $file
-          unless $seen_hardening or $is_oneshot;
+          unless $seen_hardening
+          or $is_oneshot
+          or any { 'sleep.target' eq $_ } @wanted_by;
     }
 
     return 1;
