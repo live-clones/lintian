@@ -44,24 +44,23 @@ use Try::Tiny;
 use constant SUITES => qw(scripts changes debs source tests);
 
 BEGIN {
-    # Whitelist the part of the environment we permit.  This is to
-    # avoid inheriting things that messes up tests (like CFLAGS,
-    # DH_OPTIONS, DEB_HOST_ARCH etc.)
-    my %PRESERVE_ENV = map { $_ => 1 } qw(
+    # whitelist the environment we permit to avoid things that mess up
+    # tests, like CFLAGS, DH_OPTIONS, DH_COMPAT, DEB_HOST_ARCH
+    my %WHITELIST = map { $_ => 1 } qw(
       LINTIAN_TEST_INSTALLED
       NO_PKG_MANGLE
       PATH
       TMPDIR
     );
-    # TODO: MAKEFLAGS - some of the tests don't cope too well with it
-    for my $key (keys(%ENV)) {
-        delete $ENV{$key}
-          if not exists($PRESERVE_ENV{$key});
 
+    # TODO: MAKEFLAGS - some of the tests don't cope too well with it
+    for my $var (keys %ENV) {
+        delete $ENV{$var} unless exists $WHITELIST{$var};
     }
-    for my $var (sort(keys(%ENV))) {
-        print "ENV[$var]=$ENV{$var}\n";
-    }
+
+    # Ubuntu auto-builders run pkg-mangle which messes up test packages
+    $ENV{'NO_PKG_MANGLE'} = 'true'
+      unless exists($ENV{'NO_PKG_MANGLE'});
 
     $ENV{'LINTIAN_TEST_INSTALLED'} = 'no'
       unless exists $ENV{'LINTIAN_TEST_INSTALLED'};
@@ -77,10 +76,6 @@ BEGIN {
         $ENV{'LINTIAN_FRONTEND'} = "$cwd/frontend/lintian";
     }
 
-    # Ubuntu auto-builders run pkg-mangle which messes with our
-    # test packages, so ask it not to do so by default.
-    $ENV{'NO_PKG_MANGLE'} = 'true'
-      unless exists($ENV{'NO_PKG_MANGLE'});
     $ENV{'LINTIAN_DPLINT_FRONTEND'}
       = "$ENV{'LINTIAN_TEST_ROOT'}/frontend/dplint";
 
@@ -174,6 +169,15 @@ if (-d $helperpath) {
 STDOUT->autoflush;
 
 # --- Exit status for the test suite driver
+
+say EMPTY;
+
+# print environment
+my @vars = sort keys %ENV;
+say 'Environment:' if @vars;
+for my $var (@vars) { say INDENT . "$var=$ENV{$var}" }
+
+say EMPTY;
 
 # Exit codes:
 # 0 - success
