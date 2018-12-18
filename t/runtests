@@ -250,11 +250,12 @@ sub parse_args {
         'dump-logs!'   => \$dump_logs,
         'v|verbose'    => \$verbose,
         'coverage:s'   => \$coverage,
-        'help|h'       => sub {usage(0); },
-    ) or usage();
+        'help|h'       => sub {usage(); exit;},
+    ) or { usage(); exit; }
 
     if (@ARGV < 2 || @ARGV > 3) {
         usage();
+        exit;
     }
 
     $verbose = 1 + $debug if $debug;
@@ -572,7 +573,6 @@ sub handle_dump_log{
 }
 
 sub usage {
-    my ($exitcode) = @_;
     print <<"END";
 Usage: $0 [options] [-j [<jobs>]] <testset-directory> <testing-directory> [<test-selection>]
 
@@ -613,7 +613,7 @@ Test artifacts are cached in <testing-directory> and will be reused if
 deemed "up-to-date".  This cache can greatly reduce the run time of the
 test suite.
 END
-    exit($exitcode//2);
+    return;
 }
 
 # Local Variables:
