@@ -519,7 +519,7 @@ sub handle_msg_from_child {
         print "\n" if $partial_line;
         $partial_line = 0;
         print "${suite}::${testname}: diff -u ${original} ${actual}\n";
-        runsystem_ok('diff', '-u', $original, $actual);
+        safe_qx('diff', '-u', $original, $actual);
     } elsif ($msg_type eq 'dump-file') {
         my ($log_file) = @payload;
         my $prefix = "${suite}::${testname}: ";
