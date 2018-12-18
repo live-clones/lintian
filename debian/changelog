@@ -7,6 +7,9 @@ lintian (2.5.118) UNRELEASED; urgency=medium
       should accept files under "/usr/share/help"; these are being
       installed by a number of GNOME packages.  Thanks to Jeremy Bicha for
       the report.  (Closes: #916497)
+    + [CL] Avoid a number of false-positives in documentation files when
+      processing the uses-dpkg-database-directly tag as these are
+      invariably legitimate.
   * checks/testsuite.{desc,pm}:
     + [CL] Apply a patch series from Paul Gevers to warn about obsolete
       debian/tests/control.autodep8 files.  (MR: !95)

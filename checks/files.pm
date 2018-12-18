@@ -2359,6 +2359,9 @@ sub get_checks_for_file {
 
     $checks{'uses-dpkg-database-directly'} = '/var/lib/dpkg'
       if $file !~ m,^usr/share/(?:doc|locale)/,
+      and $file->basename !~ m/^README(?:\..*)?$/
+      and $file->basename !~ m/^changelog(?:\..*)?$/i
+      and $file->basename !~ m/\.(?:html|txt)$/i
       and $info->field('section', '') ne 'debian-installer'
       and none { $_ eq $source_pkg } qw(base-files dpkg lintian);
 
