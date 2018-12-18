@@ -343,7 +343,7 @@ sub run_prove_tests {
         }
     } elsif ($suites{'scripts'}) {
         unless (-d "$testset/scripts") {
-            internal_error("cannot find $testset/scripts: $!");
+            die "cannot find $testset/scripts: $!";
         }
         @do_run = ("$testset/scripts");
     }
