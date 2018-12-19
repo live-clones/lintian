@@ -2,9 +2,6 @@ lintian (2.5.118) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
-  * checks/appstream-metadata.desc:
-    + [CL] Downgrade the appstream-metadata-missing-modalias-provide tag
-      from "W" to "I".  (Closes: #916735)
   * checks/files.pm:
     + [CL] The package-contains-documentation-outside-usr-share-doc tag
       should accept files under "/usr/share/help"; these are being
