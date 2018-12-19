@@ -23,7 +23,7 @@ Info: AppStream metadata with obsolete &lt;application&gt; root node found.
  It is possible to validate the format using 'appstreamcli validate'.
 
 Tag: appstream-metadata-missing-modalias-provide
-Severity: normal
+Severity: wishlist
 Certainty: certain
 Ref: https://wiki.debian.org/AppStream/Guidelines
 Info: This package contain a udev rule for providing device access to
