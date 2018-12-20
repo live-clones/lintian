@@ -10,6 +10,9 @@ lintian (2.5.118) UNRELEASED; urgency=medium
     + [CL] Avoid a number of false-positives in documentation files when
       processing the uses-dpkg-database-directly tag as these are
       invariably legitimate.
+    + [CL] Prevent package-contains-no-arch-dependent-files false-positives
+      by assuming /usr/lib/*/* files are architecture dependent.
+      (Closes: #916901)
   * checks/systemd.pm:
     + [CL] Don't emit systemd-service-file-missing-hardening-features for
       WantedBy=sleep.target "services" such as autosuspend.
