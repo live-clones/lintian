@@ -12,7 +12,7 @@ lintian (2.5.118) UNRELEASED; urgency=medium
       invariably legitimate.
     + [CL] Prevent package-contains-no-arch-dependent-files false-positives
       by assuming /usr/lib/*/* files are architecture dependent.
-      (Closes: #916901)
+      (Closes: #916901, #917028)
   * checks/systemd.pm:
     + [CL] Don't emit systemd-service-file-missing-hardening-features for
       WantedBy=sleep.target "services" such as autosuspend.
