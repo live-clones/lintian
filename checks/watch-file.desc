@@ -10,9 +10,9 @@ Severity: wishlist
 Certainty: certain
 Ref: policy 4.11, uscan(1)
 Info: This source package is not Debian-native but it does not have a
- <tt>debian/watch</tt> file.  This file is used for automatic detection of
+ <tt>debian/watch</tt> file. This file is used for automatic detection of
  new upstream versions by the Debian External Health Status project and
- other project infrastructure.  If this package is maintained upstream,
+ other project infrastructure. If this package is maintained upstream,
  please consider adding a <tt>debian/watch</tt> file to detect new
  releases.
  .
@@ -27,7 +27,7 @@ Severity: normal
 Certainty: certain
 Ref: uscan(1)
 Info: The <tt>debian/watch</tt> file in this package contains multiple
- lines starting with <tt>version=</tt>.  There should be only one version
+ lines starting with <tt>version=</tt>. There should be only one version
  declaration in a watch file, on the first non-comment line of the file.
 
 Tag: debian-watch-file-unknown-version
@@ -35,7 +35,7 @@ Severity: normal
 Certainty: certain
 Ref: uscan(1)
 Info: The <tt>version=</tt> line in the <tt>debian/watch</tt> file in this
- package declares an unknown version.  The currently known watch file
+ package declares an unknown version. The currently known watch file
  versions are 2, 3 and 4
 
 Tag: debian-watch-file-missing-version
@@ -43,8 +43,8 @@ Severity: normal
 Certainty: certain
 Ref: uscan(1)
 Info: The <tt>debian/watch</tt> file in this package doesn't start a
- <tt>version=</tt> line.  The first non-comment line of
- <tt>debian/watch</tt> should be a <tt>version=</tt> declaration.  This
+ <tt>version=</tt> line. The first non-comment line of
+ <tt>debian/watch</tt> should be a <tt>version=</tt> declaration. This
  may mean that this is an old version one watch file that should be
  updated to the current version.
 
@@ -56,7 +56,7 @@ Info: The version of this package contains <tt>dfsg</tt>, <tt>ds</tt>,
  or <tt>debian</tt>, which normally indicates that the upstream source
  has been repackaged to comply with the Debian Free Software Guidelines
  (or similar reason), but there is no version mangling in the
- <tt>debian/watch</tt> file.  Since the <tt>dfsg</tt> string is not
+ <tt>debian/watch</tt> file. Since the <tt>dfsg</tt> string is not
  part of the upstream version, the <tt>debian/watch</tt> file should
  use the dversionmangle option to remove the <tt>dfsg</tt> before
  version number comparison.
@@ -67,7 +67,7 @@ Certainty: certain
 Ref: https://wiki.debian.org/DEHS
 Info: The version of this package contains <tt>dfsg</tt>, <tt>ds</tt>,
  or <tt>debian</tt>, but a misleading upstream version mangling occurs in
- the <tt>debian/watch</tt> file.  Since the <tt>dfsg</tt> string is not
+ the <tt>debian/watch</tt> file. Since the <tt>dfsg</tt> string is not
  part of the upstream version and its addition is Debian-specific, the
  <tt>debian/watch</tt> file should use the dversionmangle option to
  remove, instead of adding in uversionmangle, the <tt>dfsg</tt> before
@@ -79,7 +79,7 @@ Certainty: certain
 Ref: https://wiki.debian.org/DEHS
 Info: The version of this package contains <tt>alpha</tt>, <tt>beta</tt>,
  or <tt>rc</tt>, but a misleading Debian version mangling occurs in
- the <tt>debian/watch</tt> file.  You should use the uversionmangle
+ the <tt>debian/watch</tt> file. You should use the uversionmangle
  option instead of dversionmangle so that the prerelease is sorted by
  uscan before a possible future final release.
 
@@ -88,7 +88,7 @@ Severity: normal
 Certainty: certain
 Ref: https://wiki.debian.org/DEHS
 Info: The package ships a watch file although it is a Debian native
- package.  DEHS does not process watch files in native packages based on
+ package. DEHS does not process watch files in native packages based on
  the reasoning that native packages do not have upstreams to check for new
  releases.
 
@@ -105,16 +105,16 @@ Severity: normal
 Certainty: certain
 Ref: uscan(1)
 Info: The watch file specifies a SourceForge page or download server
- directly.  This is not recommended; SourceForge changes their download
+ directly. This is not recommended; SourceForge changes their download
  servers and website periodically, requiring watch files to be modified
- every time.  Instead, use the qa.debian.org redirector by using the magic
+ every time. Instead, use the qa.debian.org redirector by using the magic
  URL:
  .
    http://sf.net/&lt;project&gt;/&lt;tar-name&gt;-(.+)\.tar\.gz
  .
  replacing <tt>&lt;project&gt;</tt> with the name of the SourceForge
  project and <tt>&lt;tar-name&gt;</tt> with the name of the tarball
- distributed within that project.  Adjust the filename regex as necessary.
+ distributed within that project. Adjust the filename regex as necessary.
 
 Tag: debian-watch-file-uses-deprecated-githubredir
 Severity: important
@@ -135,9 +135,9 @@ Certainty: certain
 Ref: uscan(1)
 Info: The watch file specifies an upstream version which exactly matches
  the version of a <tt>debian/changelog</tt> entry, this is not a
- native package, and no version mangling is being done.  The version
+ native package, and no version mangling is being done. The version
  field in a watch file should specify the expected upstream version, not
- the version of the Debian package.  Any epochs and Debian revisions
+ the version of the Debian package. Any epochs and Debian revisions
  should be removed first or mangled away.
 
 Tag: debian-watch-file-specifies-old-upstream-version
@@ -146,9 +146,9 @@ Certainty: certain
 Info: The watch file specifies an upstream version number which matches
  the upstream portion of an old <tt>debian/changelog</tt> entry, and the
  current <tt>debian/changelog</tt> entry specifies a newer upstream
- version.  The version number in the watch file is very likely to be
+ version. The version number in the watch file is very likely to be
  incorrect and probably should be replaced with the current expected
- upstream version.  Otherwise, DEHS and similar projects will think the
+ upstream version. Otherwise, DEHS and similar projects will think the
  package is out of date even when it may not be.
 
 Tag: debian-watch-does-not-check-gpg-signature

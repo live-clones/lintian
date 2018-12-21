@@ -47,7 +47,7 @@ Info: Each binary in <tt>/usr/bin</tt>, <tt>/usr/sbin</tt>, <tt>/bin</tt>,
  .
  If the man pages are provided by another package on which this package
  depends, Lintian may not be able to determine that man pages are
- available.  In this case, after confirming that all binaries do have
+ available. In this case, after confirming that all binaries do have
  man pages after this package and its dependencies are installed, please
  add a Lintian override.
 Ref: policy 12.1
@@ -92,14 +92,14 @@ Tag: manpage-has-bad-whatis-entry
 Severity: normal
 Certainty: certain
 Info: Each manual page should start with a "NAME" section, which lists the
- name and a brief description of the page separated by "\-".  The "NAME"
+ name and a brief description of the page separated by "\-". The "NAME"
  section is parsed by lexgrog and used to generate a database that's
- queried by commands like apropos and whatis.  This tag indicates that
+ queried by commands like apropos and whatis. This tag indicates that
  lexgrog was unable to parse the NAME section of this manual page.
  .
  For manual pages that document multiple programs, functions, files, or
  other things, the part before "\-" should list each separated by a comma
- and a space.  Each thing listed must not contain spaces; a man page for a
+ and a space. Each thing listed must not contain spaces; a man page for a
  two-part command like "fs listacl" must use something like "fs_listacl"
  in the "NAME" section so that it can be parsed by lexgrog.
 Ref: lexgrog(1), groff_man(7), groff_mdoc(7)
@@ -113,7 +113,7 @@ Info: The whatis entry for this manual page (the brief description found
   program - manual page for program
  .
  This conveys no information about what the program is for and is
- repetitive.  The short description should contain brief information about
+ repetitive. The short description should contain brief information about
  what the program is for to aid in searching with apropos and similar
  programs.
  .
@@ -124,7 +124,7 @@ Tag: manpage-is-dh_make-template
 Severity: important
 Certainty: certain
 Info: This manual page appears to be an unmodified or insufficiently
- modified copy of the dh_make manual page template.  It has a whatis entry
+ modified copy of the dh_make manual page template. It has a whatis entry
  (the brief description found in the NAME section) of the form:
  .
   package - program to do something
@@ -138,24 +138,24 @@ Certainty: certain
 Info: This man page provokes warnings or errors from man.
  .
  "cannot adjust" or "can't break" are trouble with paragraph filling,
- usually related to long lines.  Adjustment can be helped by left
+ usually related to long lines. Adjustment can be helped by left
  justifying, breaks can be helped with hyphenation, see "Manipulating
  Filling and Adjusting" and "Manipulating Hyphenation" in the groff
  manual (see info groff).
  .
  "can't find numbered character" usually means latin1 etc in the input, and
- this warning indicates characters will be missing from the output.  You can
+ this warning indicates characters will be missing from the output. You can
  change to escapes like \[:a] described on the groff_char man page.
  .
  Other warnings are often formatting typos, like missing quotes around a
- string argument to .IP.  These are likely to result in lost or malformed
- output.  See the groff_man (or groff_mdoc if using mdoc) man page for
+ string argument to .IP. These are likely to result in lost or malformed
+ output. See the groff_man (or groff_mdoc if using mdoc) man page for
  information on macros.
  .
  This test uses <tt>man</tt>'s <tt>--warnings</tt> option to enable groff
  warnings that catch common mistakes, such as putting <tt>.</tt> or
  <tt>'</tt> characters at the start of a line when they are intended as
- literal text rather than groff commands.  This can be fixed either by
+ literal text rather than groff commands. This can be fixed either by
  reformatting the paragraph so that these characters are not at the start of
  a line, or by adding a zero-width space (<tt>\&</tt>) immediately before
  them.
@@ -194,7 +194,7 @@ Tag: manpage-section-mismatch
 Severity: normal
 Certainty: certain
 Info: A man page usually should contain a <tt>.TH</tt> header, specifying the
- section.  The section in this manpage doesn't match with the section in the
+ section. The section in this manpage doesn't match with the section in the
  filename.
 Ref: groff_man(7), man(1)
 
@@ -223,23 +223,23 @@ Severity: normal
 Certainty: certain
 Ref: policy 12.1
 Info: This package installs a manual page in a locale directory that
- includes the country name.  A country name should not be included in the
+ includes the country name. A country name should not be included in the
  directory name unless it indicates a significant difference in the
- language.  The known cases where country names are appropriate are pt_BR
- and zh_*.  Please file a bug against Lintian if this is another case
+ language. The known cases where country names are appropriate are pt_BR
+ and zh_*. Please file a bug against Lintian if this is another case
  where a country name is appropriate.
 
 Tag: spelling-error-in-manpage
 Severity: minor
 Certainty: possible
 Info: Lintian found a spelling error in the manpage. Lintian has a list
- of common misspellings that it looks for.  It does not have a
+ of common misspellings that it looks for. It does not have a
  dictionary like a spelling checker does.
  .
  If the string containing the spelling error is translated with the help
  of gettext (with the help of po4a, for example) or a similar tool,
  please fix the error in the translations as well as the English text to
- avoid making the translations fuzzy.  With gettext, for example, this
+ avoid making the translations fuzzy. With gettext, for example, this
  means you should also fix the spelling mistake in the corresponding
  msgids in the *.po files.
 

@@ -10,7 +10,7 @@ Tag: classpath-contains-relative-path
 Severity: normal
 Certainty: possible
 Info: The classpath listed in the jar file refers to a potential
- missing jar file.  This could be the remnants of a build-time
+ missing jar file. This could be the remnants of a build-time
  classpath that are not relevant for a JAR bundled in a Debian
  package.
  .
@@ -32,7 +32,7 @@ Info: The classpath listed in some of the files references files outside
  private use.
  .
  The rationale is that jar files are in almost all cases architecture
- independent and therefore should be in /usr/share.  If the jar file is
+ independent and therefore should be in /usr/share. If the jar file is
  truly architecture dependent or it cannot be moved since symlinked jar
  files are not accepted by the application, then please override this
  tag.
@@ -79,7 +79,7 @@ Tag: incompatible-java-bytecode-format
 Severity: normal
 Certainty: possible
 Info: The package contains Java class files with a minimum requirement on the
- listed Java version.  This Java version is not supported by the default JVM
+ listed Java version. This Java version is not supported by the default JVM
  in Debian and is therefore likely to be a mistake.
 Ref: #673276
 
@@ -87,8 +87,8 @@ Tag: unknown-java-class-version
 Severity: normal
 Certainty: certain
 Info: The package contains a Jar file with Java class files compiled for an
- unknown Java version.  Most likely the class file is corrupt or compiled
- for a newer version of Java than Lintian knows about.  In the latter case,
+ unknown Java version. Most likely the class file is corrupt or compiled
+ for a newer version of Java than Lintian knows about. In the latter case,
  please file a bug against Lintian.
  .
  The latest class version known by Lintian is Java11 (Major version 55).
@@ -123,7 +123,7 @@ Ref: java-policy 2.4
 Tag: source-contains-prebuilt-java-object
 Severity: pedantic
 Certainty: possible
-Info: The source tarball contains a prebuilt Java class file.  These are often
+Info: The source tarball contains a prebuilt Java class file. These are often
  included by mistake when developers generate a tarball without cleaning
- the source directory first.  If there is no sign this was intended,
+ the source directory first. If there is no sign this was intended,
  consider reporting it as an upstream bug as it may be a DFSG violation.

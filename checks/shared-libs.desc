@@ -33,7 +33,7 @@ Info: The listed shared libraries contain object code that was compiled
  the exception by adding a Lintian override to this package.
  .
  To check whether a shared library has this problem, run <tt>readelf
- -d</tt> on the shared library.  If a tag of type TEXTREL is present, the
+ -d</tt> on the shared library. If a tag of type TEXTREL is present, the
  shared library contains non-PIC code.
 
 Tag: shlib-without-versioned-soname
@@ -42,13 +42,13 @@ Certainty: possible
 Ref: policy 10.2, policy 8.6
 Info: The listed shared library in a public library directory has an
  SONAME that does not contain any versioning information, either after the
- <tt>.so</tt> or before it and set off by a hyphen.  It cannot therefore
+ <tt>.so</tt> or before it and set off by a hyphen. It cannot therefore
  be represented in the shlibs system, and if linked by binaries its
- interface cannot safely change.  There is no backward-compatible way to
+ interface cannot safely change. There is no backward-compatible way to
  migrate programs linked against it to a new ABI.
  .
  Normally, this means the shared library is a private library for a
- particular application and is not meant for general use.  Policy
+ particular application and is not meant for general use. Policy
  recommends that such libraries be installed in a subdirectory of
  <tt>/usr/lib</tt> rather than in a public shared library directory.
  .
@@ -56,7 +56,7 @@ Info: The listed shared library in a public library directory has an
  shared library and look for the tag of type SONAME.
  .
  There are some special stub libraries or special-purpose shared objects
- for which an ABI version is not meaningful.  If this is one of those
+ for which an ABI version is not meaningful. If this is one of those
  cases, please add an override.
 
 Tag: ldconfig-symlink-missing-for-shlib
@@ -78,7 +78,7 @@ Info: A "-dev" package is supposed to install a "libsomething.so" symbolic
  by the linker when other programs are built against this shared library.
  .
  The symlink is generally expected in the same directory as the library
- itself.  The major exception to this rule is if the library is installed
+ itself. The major exception to this rule is if the library is installed
  in (or beneath) <tt>/lib</tt>, where the symlink must be installed in the
  same dir beneath <tt>/usr</tt>.
  .
@@ -109,15 +109,15 @@ Ref: policy 8.4
 Tag: maintscript-calls-ldconfig
 Severity: normal
 Certainty: certain
-Info: The given maintainer script calls ldconfig.  However, explicit
+Info: The given maintainer script calls ldconfig. However, explicit
  calls in maintainer scripts should be replaced by a dpkg trigger.
  .
  Please replace the "ldconfig" call with an <tt>activate-noawait
- ldconfig</tt> trigger.  With debhelper it is usually sufficient
+ ldconfig</tt> trigger. With debhelper it is usually sufficient
  to simply add that line to <tt>debian/&lt;package&gt;.triggers</tt>.
  .
  If you use debhelper, this warning will appear if the package was
- compiled with debhelper before 9.20151004.  Assuming all ldconfig
+ compiled with debhelper before 9.20151004. Assuming all ldconfig
  invocations have been added by debhelper, this warning will
  disappear once the package is rebuilt with a newer version of
  debhelper.
@@ -231,7 +231,7 @@ Info: The package installs shared libraries in a directory controlled by
  <tt>triggers</tt> file in the control member.
  .
  Note this tag may trigger for packages built with debhelper before
- version 9.20151004.  In such case, a simple rebuild will often be
+ version 9.20151004. In such case, a simple rebuild will often be
  sufficient to fix this issue.
 Ref: policy 8.1.1, https://lists.debian.org/debian-devel/2015/08/msg00412.html
 
@@ -239,7 +239,7 @@ Tag: sharedobject-in-library-directory-missing-soname
 Severity: important
 Certainty: possible
 Info: A shared object was identified in a library directory (a directory
- in the standard linker path) which doesn't have a SONAME.  This is
+ in the standard linker path) which doesn't have a SONAME. This is
  usually an error.
  .
  SONAMEs are set with something like <tt>gcc -Wl,-soname,libfoo.so.0</tt>,
@@ -273,7 +273,7 @@ Info: The listed shared library declares the stack as executable.
  section.
  .
  To see the permissions on the stack, run <tt>readelf -l</tt> on the
- shared library and look for the program header of type GNU_STACK.  In the
+ shared library and look for the program header of type GNU_STACK. In the
  flag column, there should not be an E flag set.
 
 Tag: symbols-file-contains-current-version-with-debian-revision
@@ -281,14 +281,14 @@ Severity: important
 Certainty: certain
 Info: Debian revisions should be stripped from versions in symbols files.
  Not doing so leads to dependencies unsatisfiable by backports (1.0-1~bpo
- &lt;&lt; 1.0-1 while 1.0-1~bpo &gt;= 1.0).  If the Debian revision can't
+ &lt;&lt; 1.0-1 while 1.0-1~bpo &gt;= 1.0). If the Debian revision can't
  be stripped because the symbol really appeared between two specific
  Debian revisions, you should postfix the version with a single "~"
  (example: 1.0-3~ if the symbol appeared in 1.0-3).
  .
  This problem normally means that the symbols were added automatically by
- dpkg-gensymbols.  dpkg-gensymbols uses the full version number for the
- dependency associated to any new symbol that it detects.  The maintainer
+ dpkg-gensymbols. dpkg-gensymbols uses the full version number for the
+ dependency associated to any new symbol that it detects. The maintainer
  must update the <tt>debian/&lt;package&gt;.symbols</tt> file by adding
  the new symbols with the corresponding upstream version.
 
@@ -297,7 +297,7 @@ Severity: normal
 Certainty: certain
 Info: Debian revisions should be stripped from versions in symbols files.
  Not doing so leads to dependencies unsatisfiable by backports (1.0-1~bpo
- &lt;&lt; 1.0-1 while 1.0-1~bpo &gt;= 1.0).  If the Debian revision can't
+ &lt;&lt; 1.0-1 while 1.0-1~bpo &gt;= 1.0). If the Debian revision can't
  be stripped because the symbol really appeared between two specific
  Debian revisions, you should postfix the version with a single "~"
  (example: 1.0-3~ if the symbol appeared in 1.0-3).
@@ -411,15 +411,15 @@ Tag: incorrect-libdir-in-la-file
 Severity: important
 Certainty: possible
 Info: The given .la file points to a libdir other than the path where it is
- installed.  This can be caused by resetting <tt>prefix</tt> at make install
- time instead of using <tt>DESTDIR</tt>.  The incorrect path will cause
+ installed. This can be caused by resetting <tt>prefix</tt> at make install
+ time instead of using <tt>DESTDIR</tt>. The incorrect path will cause
  packages linking to this library using libtool to build incorrectly (adding
  incorrect paths to RPATH, for example).
 
 Tag: non-empty-dependency_libs-in-la-file
 Severity: serious
 Certainty: certain
-Info: The dependency_libs field in the .la file has not been cleared.  It has
+Info: The dependency_libs field in the .la file has not been cleared. It has
  long been a release goal to get rid of unneeded .la files and clearing the
  dependency_libs field from the rest of them.
  .
@@ -444,8 +444,8 @@ Ref: policy 7.1
 Severity: normal
 Certainty: certain
 Info: The forms "&lt;" and "&gt;" mean "&lt;=" and "&gt;=", not "&lt;&lt;"
- and "&gt;&gt;" as one might expect.  For that reason these forms are
- obsolete, and should not be used in new packages.  Use the longer forms
+ and "&gt;&gt;" as one might expect. For that reason these forms are
+ obsolete, and should not be used in new packages. Use the longer forms
  instead.
 
 Tag: symbols-file-missing-build-depends-package-field

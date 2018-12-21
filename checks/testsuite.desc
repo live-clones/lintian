@@ -156,7 +156,7 @@ Info: Lintian cannot parse the Depends field for the given autopkgtest.
  Please double check that dependency the syntax is correct.
  .
  Note that Lintian has a whitelist of known "special" dependencies
- permitted by autopkgtest (e.g. @builddep@).  Lintian does not accept
+ permitted by autopkgtest (e.g. @builddep@). Lintian does not accept
  these as a part of an OR-clause.
  .
  If Lintian complains about a new special "@"-dependency, please file

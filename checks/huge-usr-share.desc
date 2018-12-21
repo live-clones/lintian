@@ -11,7 +11,7 @@ Severity: wishlist
 Certainty: certain
 Info: The package has a significant amount of architecture-independent
  data (over 4MB, or over 2MB and more than 50% of the package) in
- <tt>/usr/share</tt> but is an architecture-dependent package.  This is
+ <tt>/usr/share</tt> but is an architecture-dependent package. This is
  wasteful of mirror space and bandwidth since it means distributing
  multiple copies of this data, one for each architecture.
  .

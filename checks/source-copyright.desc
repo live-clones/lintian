@@ -12,7 +12,7 @@ Tag: debian-copyright-is-symlink
 Severity: normal
 Certainty: certain
 Info: The file <tt>debian/copyright</tt> is a symlink instead of a regular
- file.  This makes package checking and manipulation more difficult.
+ file. This makes package checking and manipulation more difficult.
  .
  This problem may have prevented Lintian from performing other checks.
 
@@ -36,8 +36,8 @@ Tag: unknown-copyright-format-uri
 Severity: pedantic
 Certainty: wild-guess
 Info: The copyright file appears to intended as machine-readable, but Lintian
- cannot recognize its format URI.  It could be a typo for a common URI or a
- syntax error in the first paragraph.  Please file a bug against Lintian if you
+ cannot recognize its format URI. It could be a typo for a common URI or a
+ syntax error in the first paragraph. Please file a bug against Lintian if you
  believe that the copyright file in syntactically valid and the URI is
  correct.
 
@@ -45,7 +45,7 @@ Tag: boilerplate-copyright-format-uri
 Severity: normal
 Certainty: possible
 Info: Format URI of the machine-readable copyright file contains
- <tt>VERSIONED_FORMAT_URL</tt> or <tt>REVISION</tt> string.  Please replace it
+ <tt>VERSIONED_FORMAT_URL</tt> or <tt>REVISION</tt> string. Please replace it
  with an actual URI or an actual revision number respectively.
 
 Tag: insecure-copyright-format-uri
@@ -53,7 +53,7 @@ Severity: pedantic
 Certainty: certain
 Ref: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 Info: Format URI of the machine-readable copyright file uses the plain HTTP
- unencrypted transport protocol.  Using HTTPS is preferred since policy 4.0.0.
+ unencrypted transport protocol. Using HTTPS is preferred since policy 4.0.0.
  .
  Please use
  <tt>https://www.debian.org/doc/packaging-manuals/copyright-format/<i>version</i>/</tt>
@@ -65,7 +65,7 @@ Certainty: possible
 Ref: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 Info: Format URI of the machine-readable copyright file refers to Debian Wiki.
  .
- Debian Wiki is not used for the format development anymore.  Please use
+ Debian Wiki is not used for the format development anymore. Please use
  <tt>https://www.debian.org/doc/packaging-manuals/copyright-format/<i>version</i>/</tt>
  as the format URI instead.
 
@@ -116,7 +116,7 @@ Severity: normal
 Certainty: possible
 Ref: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 Info: A list of files in the machine-readable copyright format appears to be
- separated by commas.  The file list should be whitespace separated instead.
+ separated by commas. The file list should be whitespace separated instead.
  .
  Please note this tag is only emitted once per checked copyright file.
 
@@ -199,7 +199,7 @@ Severity: minor
 Certainty: possible
 Ref: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 Info: The license paragraph in the machine-readable copyright file is not
- referenced by any files paragraph.  It could be a typo in the license name or
+ referenced by any files paragraph. It could be a typo in the license name or
  the license paragraph is simply not needed and can be removed.
 
 Tag: unknown-paragraph-in-dep5-copyright
@@ -219,7 +219,7 @@ Info: The listed field name is a likely misspelling of one of the documented
  are unlikely to do so.
  .
  Implementation detail: The typo is detected by using "Levenshtein
- edit distance".  Therefore, if the typo involve several characters,
+ edit distance". Therefore, if the typo involve several characters,
  Lintian may not detect it.
 
 Tag: ambiguous-paragraph-in-dep5-copyright
@@ -227,11 +227,11 @@ Severity: normal
 Certainty: possible
 Ref: #652380, https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 Info: The paragraph has a "License" and a "Copyright" field, but no
- "Files" field.  Technically, this is a valid paragraph per the DEP 5
- specification.  However, it is mostly likely a mistake.
+ "Files" field. Technically, this is a valid paragraph per the DEP 5
+ specification. However, it is mostly likely a mistake.
  .
  If it is a <tt>stand-alone license paragraph</tt>, the "Copyright"
- field is not needed and should be removed.  On the other hand, if it
+ field is not needed and should be removed. On the other hand, if it
  is a <tt>files paragraph</tt>, it is missing the "Files" field.
  .
  Please note that while the "Files" field was optional in some cases
@@ -239,7 +239,7 @@ Info: The paragraph has a "License" and a "Copyright" field, but no
  <tt>files paragraphs</tt> in the current specification.
  .
  Lintian will attempt to guess what you intended and continue based on
- its guess.  If the guess is wrong, you may see spurious tags related
+ its guess. If the guess is wrong, you may see spurious tags related
  to this paragraph.
 
 Tag: pipe-symbol-used-as-license-disjunction
@@ -256,7 +256,7 @@ Severity: normal
 Certainty: possible
 Ref: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 Info: The Files paragraph uses a reference to a license which is
- only defined in the Header paragraph.  The copyright specification
+ only defined in the Header paragraph. The copyright specification
  requires that the Files paragraph either contains the full license
  itself or references a "stand-alone" License paragraph, and not the
  Header paragraph.

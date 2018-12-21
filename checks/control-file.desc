@@ -24,7 +24,7 @@ Certainty: certain
 Ref: policy 5.2
 Info: The control file has a Build-Depends, Build-Depends-Indep,
  Build-Conflicts, or Build-Conflicts-Indep field in a binary
- section.  These specify source package relationships, and should be in
+ section. These specify source package relationships, and should be in
  the source section of the control file.
 
 Tag: debian-control-has-unusual-field-spacing
@@ -32,7 +32,7 @@ Severity: pedantic
 Certainty: certain
 Ref: policy 5.1
 Info: The field on this line of <tt>debian/control</tt> has whitespace
- other than a single space after the colon.  This is explicitly permitted
+ other than a single space after the colon. This is explicitly permitted
  in the syntax of Debian control files, but as Policy says, it is
  conventional to put a single space after the colon.
 
@@ -65,7 +65,7 @@ Severity: normal
 Certainty: possible
 Ref: policy 5.1
 Info: The field on this line of <tt>debian/control</tt> repeats
- the field name in the value of the field.  As an example:
+ the field name in the value of the field. As an example:
  .
    Maintainer: Maintainer: Some Name &lt;maintainer@mail.example.com&gt;
 
@@ -73,9 +73,9 @@ Tag: binary-control-field-duplicates-source
 Severity: wishlist
 Certainty: certain
 Info: In <tt>debian/control</tt>, this field for a binary package
- duplicates the value inherited from the source package paragraph.  This
+ duplicates the value inherited from the source package paragraph. This
  doesn't hurt anything, but you may want to take advantage of the
- inheritance and set the value in only one place.  It prevents missing
+ inheritance and set the value in only one place. It prevents missing
  duplicate places that need to be fixed if the value ever changes.
 
 Tag: debian-control-file-is-a-symlink
@@ -92,7 +92,7 @@ Severity: normal
 Certainty: certain
 Ref: policy 5.2
 Info: The package does not have a "Section:" field in the source package
- section of its control file.  The Section field is required for source
+ section of its control file. The Section field is required for source
  packages at the request of the Debian ftp-masters.
 
 Tag: section-area-mismatch
@@ -100,7 +100,7 @@ Severity: important
 Certainty: certain
 Info: The <tt>debian/control</tt> file places the indicated binary package
  in a different archive area (main, contrib, non-free) than its source
- package or other binary packages built from the same source package.  The
+ package or other binary packages built from the same source package. The
  source package and any binary packages it builds must be in the same
  area of the archive, with the single exception that source packages in
  main may also build binary packages in contrib.
@@ -108,19 +108,19 @@ Info: The <tt>debian/control</tt> file places the indicated binary package
 Tag: xs-vcs-field-in-debian-control
 Severity: wishlist
 Certainty: certain
-Info: There is an XS-Vcs-* field in the <tt>debian/control</tt> file.  As
- of dpkg 1.14.6, the XS- prefix is no longer necessary.  dpkg now
- recognizes these fields and handles them correctly.  Consider removing
+Info: There is an XS-Vcs-* field in the <tt>debian/control</tt> file. As
+ of dpkg 1.14.6, the XS- prefix is no longer necessary. dpkg now
+ recognizes these fields and handles them correctly. Consider removing
  the XS- prefix for this field.
 
 Tag: xs-testsuite-field-in-debian-control
 Severity: wishlist
 Certainty: certain
-Info: There is an XS-Testsuite field in the <tt>debian/control</tt> file.  As
- of dpkg 1.17.10, the XS- prefix is no longer necessary.  dpkg now
- recognizes this field and handles it correctly.  As of dpkg 1.17.11 the
+Info: There is an XS-Testsuite field in the <tt>debian/control</tt> file. As
+ of dpkg 1.17.10, the XS- prefix is no longer necessary. dpkg now
+ recognizes this field and handles it correctly. As of dpkg 1.17.11 the
  field is automatically added by dpkg-source with the value "autopkgtest" if
- there is a non-empty <tt>debian/tests/control</tt> file present.  Consider
+ there is a non-empty <tt>debian/tests/control</tt> file present. Consider
  either removing the XS- prefix for this field or removing the field
  altogether if it contains just the "autopkgtest" value.
 
@@ -131,7 +131,7 @@ Info: The <tt>debian/control</tt> file contains an XC-Package-Type field.
  As of dpkg-dev 1.15.7, the dpkg development utilities recognize
  Package-Type as an official field name and do not add it to binary
  packages (the previous concern with the dpkg-dev-supported Package-Type
- field).  XC-Package-Type should generally now be replaced with
+ field). XC-Package-Type should generally now be replaced with
  Package-Type.
 
 Tag: stronger-dependency-implies-weaker
@@ -140,7 +140,7 @@ Certainty: certain
 Ref: policy 7.2
 Info: In the <tt>debian/control</tt> stanza for the given package, a
  stronger dependency field implies one of the dependencies in a weaker
- dependency field.  In other words, the Depends field of the package
+ dependency field. In other words, the Depends field of the package
  requires that one of the packages listed in Recommends or Suggests be
  installed, or a package is listed in Recommends as well as Suggests.
  .
@@ -154,7 +154,7 @@ Severity: normal
 Certainty: certain
 Ref: policy 7.2
 Info: The given package declares a dependency on itself in its
- <tt>debian/control</tt> stanza.  Current versions of dpkg-gencontrol will
+ <tt>debian/control</tt> stanza. Current versions of dpkg-gencontrol will
  silently fix this problem by removing the dependency, but it may indicate
  a more subtle bug (misspelling or cutting and pasting the wrong package
  name).
@@ -163,7 +163,7 @@ Tag: duplicate-short-description
 Severity: wishlist
 Certainty: possible
 Info: The listed binary packages all share the same short description (the
- first line of the Description control field).  The package names may
+ first line of the Description control field). The package names may
  provide enough additional information to distinguish between the
  packages, but it's common to also add a word or two to the short
  description to clarify the difference.
@@ -181,8 +181,8 @@ Tag: duplicate-in-relation-field
 Severity: pedantic
 Certainty: certain
 Info: The given field in the <tt>debian/control</tt> file contains
- relations that are either identical or imply each other.  The less
- restrictive one can be removed.  This is done automatically by
+ relations that are either identical or imply each other. The less
+ restrictive one can be removed. This is done automatically by
  <tt>dpkg-source</tt> and <tt>dpkg-gencontrol</tt>, so this does not
  affect the generated package.
 
@@ -190,8 +190,8 @@ Tag: missing-separator-between-items
 Severity: important
 Certainty: certain
 Info: The given field in the <tt>debian/control</tt> file contains a list
- of items separated by commas and pipes.  It appears a separator was
- missed between two items.  This can lead to bogus or incomplete
+ of items separated by commas and pipes. It appears a separator was
+ missed between two items. This can lead to bogus or incomplete
  dependencies, conflicts etc.
 
 Tag: obsolete-relation-form-in-source
@@ -199,8 +199,8 @@ Ref: policy 7.1
 Severity: serious
 Certainty: certain
 Info: The forms "&lt;" and "&gt;" mean "&lt;=" and "&gt;=", not "&lt;&lt;"
- and "&gt;&gt;" as one might expect.  These forms were marked obsolete and
- must no longer be used.  Use the longer forms instead.
+ and "&gt;&gt;" as one might expect. These forms were marked obsolete and
+ must no longer be used. Use the longer forms instead.
 
 Tag: package-depends-on-hardcoded-libc
 Severity: normal
@@ -214,7 +214,7 @@ Certainty: possible
 Ref: policy 8.5
 Info: The given package appears to be a shared library -dev package, but
  the dependency on what seems to be a corresponding shared library package
- does not force the same package version.  To ensure that compiling and
+ does not force the same package version. To ensure that compiling and
  linking works properly, and that the symlinks in the -dev package point
  to the correct files in the shared library package, a -dev package should
  normally use <tt>(= ${binary:Version})</tt> for the dependency on the
@@ -222,10 +222,10 @@ Info: The given package appears to be a shared library -dev package, but
  .
  Sometimes, such as for -dev packages that are architecture-independent to
  not break binNMUs or when one doesn't want to force a tight dependency, a
- weaker dependency is warranted.  Something like <tt>(&gt;=
+ weaker dependency is warranted. Something like <tt>(&gt;=
  ${source:Upstream-Version}), (&lt;&lt;
  ${source:Upstream-Version}+1~)</tt>, possibly using
- <tt>${source:Version}</tt> instead, is the right approach.  The goal is to
+ <tt>${source:Version}</tt> instead, is the right approach. The goal is to
  ensure that a new upstream version of the library package doesn't satisfy
  the -dev package dependency, since the minor version of the shared
  library may have changed, breaking the <tt>*.so</tt> links.

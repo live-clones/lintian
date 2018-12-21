@@ -8,7 +8,7 @@ Tag: upstream-metadata-is-not-a-file
 Severity: normal
 Certainty: certain
 Ref: https://dep-team.pages.debian.net/deps/dep12/
-Info: The DEP 12 metadata file in the source is not readable.  This
+Info: The DEP 12 metadata file in the source is not readable. This
  could be caused by a dangling symlink, or that the name is used
  by some non-file directory entry.
 
@@ -16,7 +16,7 @@ Tag: upstream-metadata-yaml-invalid
 Severity: normal
 Certainty: certain
 Ref: https://dep-team.pages.debian.net/deps/dep12/
-Info: The DEP 12 metadata file is not well formed.  The formatting
+Info: The DEP 12 metadata file is not well formed. The formatting
  need to be adjusted to match the YAML specification.
 
 Tag: upstream-metadata-file-is-missing

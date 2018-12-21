@@ -50,10 +50,10 @@ Severity: minor
 Certainty: possible
 Ref: devref 6.2.1, devref 6.2.3
 Info: The extended description (the lines after the first line of the
- "Description:" field) is only one or two lines long.  The extended
+ "Description:" field) is only one or two lines long. The extended
  description should provide a user with enough information to decide
  whether they want to install this package, what it contains, and how it
- compares to similar packages.  One or two lines is normally not enough to
+ compares to similar packages. One or two lines is normally not enough to
  do this.
 
 Tag: description-contains-invalid-control-statement
@@ -61,12 +61,12 @@ Severity: serious
 Certainty: certain
 Info: The description contains an invalid control statement.
  .
- A control statement is a line starting with a dot (.).  The only
+ A control statement is a line starting with a dot (.). The only
  control statement is defined by the policy is a single dot denoting
  an empty line.
  .
  The "empty-line" control statement does not permit any characters
- following it on the same line.  Therefore, the line must consist
+ following it on the same line. Therefore, the line must consist
  entirely of a space followed by a dot.
 Ref: policy 5.6.13
 
@@ -134,7 +134,7 @@ Tag: description-contains-dh-make-perl-template
 Severity: normal
 Certainty: certain
 Info: The extended description contains the statement that it was
- automagically extracted by dh-make-perl.  Please check the description
+ automagically extracted by dh-make-perl. Please check the description
  for correctness and usefulness and remove the dh-make-perl statement
  to signal that you have done so. 
 
@@ -146,7 +146,7 @@ Info: The package synopsis (also known as the "short" description, ie. the
  stop "." character or starts another sentence.
  .
  This is not necessary as the synopsis does not need to be a full
- sentence.  It is recommended that a single descriptive phrase is used
+ sentence. It is recommended that a single descriptive phrase is used
  instead.
  .
  Note also that the synopsis is not part of the rest of the "long"
@@ -164,9 +164,9 @@ Ref: policy 3.4.2
 Tag: spelling-error-in-description-synopsis
 Severity: minor
 Certainty: certain
-Info: Lintian found a spelling error in the package synopsis.  Lintian
- has a list of common misspellings that it looks for.  It does not have a
- dictionary like a spelling checker does.  It is particularly picky about
+Info: Lintian found a spelling error in the package synopsis. Lintian
+ has a list of common misspellings that it looks for. It does not have a
+ dictionary like a spelling checker does. It is particularly picky about
  spelling and capitalization in package descriptions since they're very
  visible to end users.
 
@@ -174,8 +174,8 @@ Tag: capitalization-error-in-description-synopsis
 Severity: minor
 Certainty: wild-guess
 Info: Lintian found a possible capitalization error in the package
- synopsis.  Lintian has a list of common capitalization errors,
- primarily of upstream projects, that it looks for.  It does not have a
+ synopsis. Lintian has a list of common capitalization errors,
+ primarily of upstream projects, that it looks for. It does not have a
  dictionary like a spelling checker does.
 
 Tag: extended-description-line-too-long
@@ -200,9 +200,9 @@ Info: The extended description contains a "Homepage" pseudo-field
 Tag: spelling-error-in-description
 Severity: minor
 Certainty: certain
-Info: Lintian found a spelling error in the package description.  Lintian
- has a list of common misspellings that it looks for.  It does not have a
- dictionary like a spelling checker does.  It is particularly picky about
+Info: Lintian found a spelling error in the package description. Lintian
+ has a list of common misspellings that it looks for. It does not have a
+ dictionary like a spelling checker does. It is particularly picky about
  spelling and capitalization in package descriptions since they're very
  visible to end users.
 
@@ -210,8 +210,8 @@ Tag: capitalization-error-in-description
 Severity: minor
 Certainty: wild-guess
 Info: Lintian found a possible capitalization error in the package
- description.  Lintian has a list of common capitalization errors,
- primarily of upstream projects, that it looks for.  It does not have a
+ description. Lintian has a list of common capitalization errors,
+ primarily of upstream projects, that it looks for. It does not have a
  dictionary like a spelling checker does.
  .
  This is a particularly picky check of capitalization in package
@@ -223,8 +223,8 @@ Tag: using-first-person-in-description
 Severity: minor
 Certainty: possible
 Info: You should avoid the use of first person ("I will do this..." or
- "We recommend...").  The computer is not a person and the description
- does not speak for the maintainer or maintainers.  Instead, use a more
+ "We recommend..."). The computer is not a person and the description
+ does not speak for the maintainer or maintainers. Instead, use a more
  neutral construction and try to rephrase into factual statements about
  the package.
  .
@@ -236,7 +236,7 @@ Tag: description-possibly-contains-homepage
 Severity: wishlist
 Certainty: wild-guess
 Info: This package has no Homepage field but has a URL in the description
- and wording that might indicate this is the package Homepage.  If it is,
+ and wording that might indicate this is the package Homepage. If it is,
  add a Homepage control field containing it rather than mentioning it in
  the package description.
 

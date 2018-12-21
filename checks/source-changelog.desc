@@ -21,7 +21,7 @@ Tag: malformed-debian-changelog-version
 Severity: serious
 Certainty: certain
 Info: The version string in the latest changelog entry was not parsed
- correctly.  Usually, that means it does not conform to policy.
+ correctly. Usually, that means it does not conform to policy.
 Ref: policy 5.6.12
 
 Tag: debian-changelog-version-requires-debian-revision
@@ -32,7 +32,7 @@ Info: This package is not native and requires a Debian revision as part of the
  .
  This error is sometimes also triggered  in packages with a 1.0 source format
  and a stray <tt>*.orig.tar.gz</tt> file in the parent directory, which causes
- <tt>dpkg-source</tt> to believe that the package is non-native.  If that is
+ <tt>dpkg-source</tt> to believe that the package is non-native. If that is
  incorrect, please convert the package to the 3.0 (native) format.
  Alternatively, you can rename or remove the <tt>*.orig.tar.gz</tt> file.
  .
@@ -60,6 +60,6 @@ Tag: hyphen-in-upstream-part-of-debian-changelog-version
 Severity: pedantic
 Certainty: certain
 Info: The upstream version in the debian changelog contains one or more
- hyphens.  While that is okay according to Debian Policy, some tools may
+ hyphens. While that is okay according to Debian Policy, some tools may
  croak.
 Ref: policy 5.6.12

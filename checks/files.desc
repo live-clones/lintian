@@ -22,7 +22,7 @@ Info: Packages using the X Window System should not be configured to install
  X tree which now uses regular FHS paths and all packages should follow.
  .
  Programs that use GNU autoconf and automake are usually easily configured
- at compile time to use /usr/ instead of /usr/X11R6/.  Packages that use
+ at compile time to use /usr/ instead of /usr/X11R6/. Packages that use
  imake must build-depend on xutils-dev (&gt;= 1:1.0.2-2) for the correct
  paths.
 Ref: policy 11.8.7
@@ -30,7 +30,7 @@ Ref: policy 11.8.7
 Tag: config-file-reserved
 Severity: important
 Certainty: certain
-Info: This file is reserved by a specific package.  Please email the
+Info: This file is reserved by a specific package. Please email the
  maintainer of the package in question if you have questions.
 
 Tag: FSSTND-dir-in-usr
@@ -55,8 +55,8 @@ Tag: package-installs-into-etc-gconf-schemas
 Severity: normal
 Certainty: certain
 Info: The package installs files into the <tt>/etc/gconf/schemas</tt>
- directory.  No package should do this; this directory is reserved for
- local overrides.  Instead, schemas should be installed into
+ directory. No package should do this; this directory is reserved for
+ local overrides. Instead, schemas should be installed into
  <tt>/usr/share/gconf/schemas</tt>.
 
 Tag: package-installs-into-etc-rc.d
@@ -185,10 +185,10 @@ Ref: policy 10.9
 Tag: executable-is-not-world-readable
 Severity: normal
 Certainty: certain
-Info: All executables should be readable by any user.  Since anyone can
+Info: All executables should be readable by any user. Since anyone can
  download the Debian package and obtain a copy of the executable, no
  security is gained by making the executable unreadable even for setuid
- binaries.  If only members of a certain group may execute this file,
+ binaries. If only members of a certain group may execute this file,
  remove execute permission for world, but leave read permission.
 Ref: policy 10.9
 
@@ -196,7 +196,7 @@ Tag: non-standard-executable-perm
 Severity: normal
 Certainty: certain
 Info: Executables that are not setuid or setgid should always have a mode
- of 0755.  Since anyone can obtain the executable by downloading the
+ of 0755. Since anyone can obtain the executable by downloading the
  Debian package and extracting it, restricting access serves little
  purpose.
 Ref: policy 10.9
@@ -204,9 +204,9 @@ Ref: policy 10.9
 Tag: non-standard-game-executable-perm
 Severity: normal
 Certainty: certain
-Info: The file is owned by the games group but is not mode 2755.  If a
+Info: The file is owned by the games group but is not mode 2755. If a
  game does not have to be setgid games, it should be owned by the root
- group like any other executable.  This executable is either owned by the
+ group like any other executable. This executable is either owned by the
  wrong group or is not setgid when it should be.
 Ref: policy 11.11
 
@@ -214,8 +214,8 @@ Tag: non-standard-setuid-executable-perm
 Severity: normal
 Certainty: certain
 Info: The file is setuid or setgid and has a mode different from any of
- 2755, 4755, 4754, or 6755.  Any other permissions on setuid executables
- is probably a bug.  In particular, removing root write privileges serves
+ 2755, 4755, 4754, or 6755. Any other permissions on setuid executables
+ is probably a bug. In particular, removing root write privileges serves
  no purpose, group-writable setuid or setgid executables are probably bad
  ideas, and setgid executables that are not world-executable serve little
  purpose.
@@ -298,7 +298,7 @@ Tag: symlink-should-be-relative
 Severity: normal
 Certainty: certain
 Info: Symlinks to files which are in the same top-level directory should be
- relative according to policy.  (In other words, a link in /usr to another
+ relative according to policy. (In other words, a link in /usr to another
  file in /usr should be relative, while a link in /usr to a file in /etc
  should be absolute.)
  .
@@ -325,7 +325,7 @@ Tag: executable-in-usr-share-doc
 Severity: important
 Certainty: certain
 Info: Usually, documentation files in <tt>/usr/share/doc</tt> should have mode
- 0644.  If the executable is an example, it should go in
+ 0644. If the executable is an example, it should go in
  <tt>/usr/share/doc/<i>pkg</i>/examples</tt>.
 
 Tag: script-in-usr-share-doc
@@ -363,8 +363,8 @@ Tag: symlink-contains-spurious-segments
 Severity: important
 Certainty: certain
 Info: The symbolic link has needless segments like ".." and "." in the
- middle.  These are unneeded and make the link longer than it could be,
- which is in violation of policy.  They can also cause problems in the
+ middle. These are unneeded and make the link longer than it could be,
+ which is in violation of policy. They can also cause problems in the
  presence of symlinked directories.
  .
  If you use debhelper, running dh_link after creating the package structure
@@ -438,7 +438,7 @@ Certainty: possible
 Ref: fhs thevarhierarchy
 Info: Debian packages should not install files under <tt>/var/www</tt>.
  This is not one of the <tt>/var</tt> directories in the File Hierarchy
- Standard and is under the control of the local administrator.  Packages
+ Standard and is under the control of the local administrator. Packages
  should not assume that it is the document root for a web server; it is
  very common for users to change the default document root and packages
  should not assume that users will keep any particular setting.
@@ -457,7 +457,7 @@ Tag: dir-or-file-in-tmp
 Severity: serious
 Certainty: certain
 Info: Packages must not install files into <tt>/tmp</tt> or
- <tt>/var/tmp</tt>.  The File Hierarchy Standard specifies that such files
+ <tt>/var/tmp</tt>. The File Hierarchy Standard specifies that such files
  may be removed by the administrator and that programs may not depend on
  any files in <tt>/tmp</tt> being preserved across invocations, which
  combined mean that it makes no sense to ship files in these directories.
@@ -466,7 +466,7 @@ Ref: fhs tmptemporaryfiles, fhs vartmptemporaryfilespreservedbetwee
 Tag: dir-or-file-in-mnt
 Severity: serious
 Certainty: certain
-Info: Packages should not install into <tt>/mnt</tt>.  The FHS states that
+Info: Packages should not install into <tt>/mnt</tt>. The FHS states that
  this directory is reserved for the local system administrator for
  temporary mounts and that it must not be used by installation programs.
 Ref: fhs mntmountpointforatemporarilymount
@@ -488,10 +488,10 @@ Ref: fhs optaddonapplicationsoftwarepackages
 Tag: dir-or-file-in-srv
 Severity: serious
 Certainty: certain
-Info: Debian packages should not install into <tt>/srv</tt>.  The
+Info: Debian packages should not install into <tt>/srv</tt>. The
  specification of <tt>/srv</tt> states that its structure is at the
  discretion of the local administrator and no package should rely on any
- particular structure.  Debian packages that install files directly into
+ particular structure. Debian packages that install files directly into
  <tt>/srv</tt> can't adjust for local policy about its structure and in
  essence force a particular structure.
  .
@@ -507,7 +507,7 @@ Certainty: certain
 Info: Third-party Python packages should install their files in
  <tt>/usr/lib/python<i>VERSION</i>/site-packages</tt> for Python versions
  before 2.6 and <tt>/usr/lib/python<i>VERSION</i>/dist-packages</tt>
- for Python 2.6 and later.  All other directories in
+ for Python 2.6 and later. All other directories in
  <tt>/usr/lib/python<i>VERSION</i></tt> are for use by the core python
  packages.
 Ref: python-policy 2.5
@@ -517,14 +517,14 @@ Severity: important
 Certainty: certain
 Info: Packaged modules must not be installed into the core perl
  directories as those directories change with each upstream perl
- revision.  The vendor directories are provided for this purpose.
+ revision. The vendor directories are provided for this purpose.
 Ref: perl-policy 3.1
 
 Tag: backup-file-in-package
 Severity: normal
 Certainty: certain
 Info: There is a file in the package whose name matches the format emacs
- or vim uses for backup and autosave files.  It may have been installed by
+ or vim uses for backup and autosave files. It may have been installed by
  accident.
 
 Tag: nfs-temporary-file-in-package
@@ -532,7 +532,7 @@ Severity: normal
 Certainty: certain
 Info: There is a file in the package whose name matches the format NFS
  uses to temporarily save files that were deleted while another process
- had them open.  It may have been included in the package by accident
+ had them open. It may have been included in the package by accident
  while building the package in an NFS filesystem.
 
 Tag: windows-thumbnail-database-in-package
@@ -540,7 +540,7 @@ Severity: normal
 Certainty: certain
 Info: There is a file in the package named <tt>Thumbs.db</tt> or
  <tt>Thumbs.db.gz</tt>, which is normally a Windows image thumbnail
- database.  Such databases are generally useless in Debian packages and
+ database. Such databases are generally useless in Debian packages and
  were usually accidentally included by copying complete directories from
  the source tarball.
 
@@ -549,7 +549,7 @@ Severity: normal
 Certainty: certain
 Info: There is a file in the package named <tt>.DS_Store</tt> or
  <tt>.DS_Store.gz</tt>, the file name used by Mac OS X to store folder
- attributes.  Such files are generally useless in Debian packages and were
+ attributes. Such files are generally useless in Debian packages and were
  usually accidentally included by copying complete directories from the
  source tarball.
 
@@ -558,16 +558,16 @@ Severity: normal
 Certainty: certain
 Info: There is a file in the package with a name starting with
  <tt>._</tt>, the file name pattern used by Mac OS X to store resource
- forks in non-native file systems.  Such files are generally useless in
+ forks in non-native file systems. Such files are generally useless in
  Debian packages and were usually accidentally included by copying
  complete directories from the source tarball.
 
 Tag: package-installs-perllocal-pod
 Severity: normal
 Certainty: certain
-Info: This package installs a file <tt>perllocal.pod</tt>.  Since that
+Info: This package installs a file <tt>perllocal.pod</tt>. Since that
  file is intended for local documentation, it is not likely that it is
- a good place for documentation supplied by a Debian package.  In fact,
+ a good place for documentation supplied by a Debian package. In fact,
  installing this package will wipe out whatever local documentation
  existed there.
 
@@ -576,7 +576,7 @@ Severity: wishlist
 Certainty: possible
 Ref: policy 12.5
 Info: All license information should be collected in the
- <tt>debian/copyright</tt> file.  This usually makes it unnecessary
+ <tt>debian/copyright</tt> file. This usually makes it unnecessary
  for the package to install this information in other places as well.
 
 Tag: non-standard-toplevel-dir
@@ -612,7 +612,7 @@ Tag: non-standard-dir-in-usr
 Severity: normal
 Certainty: certain
 Info: The FHS says "No large software packages should use a direct
- subdirectory under the <tt>/usr</tt> hierarchy".  This package contains
+ subdirectory under the <tt>/usr</tt> hierarchy". This package contains
  a directory in <tt>/usr</tt> that is not mentioned in the Filesystem
  Hierarchy Standard.
 Ref: fhs theusrhierarchy
@@ -621,7 +621,7 @@ Tag: non-standard-dir-in-var
 Severity: important
 Certainty: certain
 Info: The FHS says "Applications should generally not add directories to
- the top level of <tt>/var</tt>.  Such directories should only be added
+ the top level of <tt>/var</tt>. Such directories should only be added
  if they have some system-wide implication, and in consultation with the
  FHS mailing list."
 Ref: fhs thevarhierarchy
@@ -644,7 +644,7 @@ Tag: package-installs-packlist
 Severity: important
 Certainty: certain
 Info: Packages built using the perl MakeMaker package will have a file
- named .packlist in them.  Those files are useless, and (in some cases)
+ named .packlist in them. Those files are useless, and (in some cases)
  have the additional problem of creating an architecture-specific
  directory name in an architecture-independent package.
  .
@@ -660,12 +660,12 @@ Tag: zero-byte-file-in-doc-directory
 Severity: normal
 Certainty: possible
 Info: The documentation directory for this package contains an empty
- file.  This is often due to installing an upstream NEWS or README file
+ file. This is often due to installing an upstream NEWS or README file
  without realizing it's empty and hence not useful.
  .
  Files in the examples subdirectory are excluded from this check, but
  there are some cases where empty files are legitimate parts of the
- documentation without being examples.  In those cases, please add an
+ documentation without being examples. In those cases, please add an
  override.
 
 Tag: override-file-in-wrong-location
@@ -783,21 +783,21 @@ Severity: normal
 Certainty: certain
 Info: The package contains a VCS control file such as .(cvs|git|hg)ignore.
  Files such as these are used by revision control systems to, for example,
- specify untracked files it should ignore or inventory files.  This file
+ specify untracked files it should ignore or inventory files. This file
  is generally useless in an installed package and was probably installed
  by accident.
 
 Tag: svn-commit-file-in-package
 Severity: normal
 Certainty: certain
-Info: The package contains an svn-commit(.NNN).tmp file.  This file is
+Info: The package contains an svn-commit(.NNN).tmp file. This file is
  almost certainly a left-over from a failed Subversion commit, and does
  not belong in a Debian package.
 
 Tag: svk-commit-file-in-package
 Severity: normal
 Certainty: certain
-Info: The package contains an svk-commitNNN.tmp file.  This file is almost
+Info: The package contains an svk-commitNNN.tmp file. This file is almost
  certainly a left-over from a failed Subversion commit, and does not
  belong in a Debian package.
 
@@ -823,7 +823,7 @@ Certainty: certain
 Ref: python-policy 2.5
 Info: The directory /usr/lib/site-python has been deprecated as a
  location for installing Python modules and may be dropped from Python's
- module search path in a future version.  Most likely this module is a
+ module search path in a future version. Most likely this module is a
  private module and should be packaged in a directory outside of Python's
  default search path.
 
@@ -841,8 +841,8 @@ Severity: normal
 Certainty: possible
 Ref: #576014
 Info: The package appears to be installing debug modules in
- /usr/lib/debug/usr/lib/pyshared/pythonX.Y/.  However, gdb(1)
- will not look for it there, making it less useful.  The file
+ /usr/lib/debug/usr/lib/pyshared/pythonX.Y/. However, gdb(1)
+ will not look for it there, making it less useful. The file
  should be installed in /usr/lib/debug/usr/lib/pymodules/pythonX.Y/
  instead.
 
@@ -881,8 +881,8 @@ Tag: package-contains-python-coverage-file
 Severity: normal
 Certainty: certain
 Info: The package contains a file that looks like output from the Python
- coverage.py tool.  These are generated by python{,3}-coverage during a test
- run, noting which parts of the code have been executed.  They can then be
+ coverage.py tool. These are generated by python{,3}-coverage during a test
+ run, noting which parts of the code have been executed. They can then be
  subsequently analyzed to identify code that could have been executed but was
  not.
  .
@@ -908,9 +908,9 @@ Info: Ada Library Information (*.ali) files are required to be read-only
  (mode 0444) by GNAT.
  .
  If at least one user can write the *.ali file, GNAT considers whether
- or not to recompile the corresponding source file.  Such recompilation
+ or not to recompile the corresponding source file. Such recompilation
  would fail because normal users don't have write permission on the
- files.  Moreover, such recompilation would defeat the purpose of
+ files. Moreover, such recompilation would defeat the purpose of
  library packages, which provide *.a and *.so libraries to link against).
 
 Tag: package-contains-readme-for-other-platform-or-distro
@@ -918,7 +918,7 @@ Severity: normal
 Certainty: certain
 Info: package contains a README.(platform) file that contains instructions
  specific to a platform or distribution other than Debian and thus can
- most likely be removed.  If it contains information that pertains to
+ most likely be removed. If it contains information that pertains to
  Debian, please consider renaming it, or including it in an already
  existing README file.
 
@@ -936,7 +936,7 @@ Certainty: certain
 Info: When scripts are installed into a directory in the system PATH, the
  script name should not include an extension such as <tt>.sh</tt> or
  <tt>.pl</tt> that denotes the scripting language currently used to
- implement it.  The implementation language may change; if it does,
+ implement it. The implementation language may change; if it does,
  leaving the name the same would be confusing and changing it would be
  disruptive.
 Ref: policy 10.4
@@ -945,15 +945,15 @@ Tag: file-in-usr-lib-sgml
 Severity: normal
 Certainty: certain
 Ref: fhs theusrhierarchy
-Info: This package installs a file in <tt>/usr/lib/sgml</tt>.  This was
- the old location for SGML catalogs and similar flies.  All those files
+Info: This package installs a file in <tt>/usr/lib/sgml</tt>. This was
+ the old location for SGML catalogs and similar flies. All those files
  should now go into <tt>/usr/share/sgml</tt>.
 
 Tag: file-name-ends-in-whitespace
 Severity: normal
 Certainty: possible
 Info: This package installs a file or directory whose name ends in
- whitespace.  This might be intentional but it's normally a mistake.  If
+ whitespace. This might be intentional but it's normally a mistake. If
  it is intentional, add a Lintian override.
  .
  One possible cause is using debhelper 5.0.57 or earlier to install a
@@ -962,8 +962,8 @@ Info: This package installs a file or directory whose name ends in
 Tag: package-contains-empty-directory
 Severity: wishlist
 Certainty: possible
-Info: This package installs an empty directory.  This might be intentional
- but it's normally a mistake.  If it is intentional, add a Lintian override.
+Info: This package installs an empty directory. This might be intentional
+ but it's normally a mistake. If it is intentional, add a Lintian override.
  .
  If a package ships with or installs empty directories, you can remove them
  in debian/rules by calling:
@@ -975,7 +975,7 @@ Severity: important
 Certainty: certain
 Ref: policy 11.11
 Info: This package is marked as part of the section games, but doesn't
- contain files in <tt>/usr/games</tt>.  Binaries of games must be installed
+ contain files in <tt>/usr/games</tt>. Binaries of games must be installed
  in <tt>/usr/games</tt>.
 
 Tag: package-section-games-but-has-usr-bin
@@ -983,14 +983,14 @@ Severity: normal
 Certainty: possible
 Ref: policy 11.11
 Info: This package is marked as part of the section games, but contains
- executables in <tt>/bin</tt> or <tt>/usr/bin/</tt>.  This can be intentional,
+ executables in <tt>/bin</tt> or <tt>/usr/bin/</tt>. This can be intentional,
  but is usually a mistake.
 
 Tag: games-package-should-be-section-games
 Severity: normal
 Certainty: possible
 Info: All the executables in this package are in <tt>/usr/games</tt>, but
- the package is not in section games.  This can be intentional but is
+ the package is not in section games. This can be intentional but is
  usually a mistake.
 
 Tag: package-contains-devhelp-file-without-symlink
@@ -999,7 +999,7 @@ Certainty: certain
 Info: This package contains a *.devhelp or *.devhelp2 file which is not in
  the devhelp search path (<tt>/usr/share/devhelp/books</tt> and
  <tt>/usr/share/gtk-doc/html</tt>) and is apparently not in a directory
- linked into the devhelp search path.  This will prevent devhelp from
+ linked into the devhelp search path. This will prevent devhelp from
  finding the documentation.
  .
  If the devhelp documentation is installed in a path outside the devhelp
@@ -1011,7 +1011,7 @@ Severity: normal
 Certainty: certain
 Info: This package provides at least one file in <tt>/usr/lib/debug</tt>,
  which is intended for detached debugging symbols, but the package name
- does not end in "-dbg".  Detached debugging symbols should be put into a
+ does not end in "-dbg". Detached debugging symbols should be put into a
  separate package, Priority: extra, with a package name ending in "-dbg".
 Ref: devref 6.7.9
 
@@ -1019,8 +1019,8 @@ Tag: package-contains-linda-override
 Severity: normal
 Certainty: certain
 Info: This package contains a linda override file in
- <tt>/usr/share/linda/overrides</tt>.  Linda is obsolete and has been
- removed from the archive as of 2008-03-04.  Linda overrides should
+ <tt>/usr/share/linda/overrides</tt>. Linda is obsolete and has been
+ removed from the archive as of 2008-03-04. Linda overrides should
  probably be dropped from packages.
 
 Tag: wrong-file-owner-uid-or-gid
@@ -1035,7 +1035,7 @@ Info: The user or group ID of the owner of the file is invalid. The
  .
  It's possible for a Policy-compliant package to trigger this tag if the
  user is created in the preinst maintainer script, but this is a very rare
- case and doesn't appear to be necessary.  If you found yourself needing
+ case and doesn't appear to be necessary. If you found yourself needing
  to create a package that works this way, please file a bug against
  Lintian to let the maintainers know.
 Ref: policy 9.2
@@ -1238,7 +1238,7 @@ Info: This package creates a potential privacy breach by fetching W3C
  validation icons.
  .
  These badges may be displayed to tell readers that care has been
- taken to make a page compliant with W3C standards.  Unfortunately,
+ taken to make a page compliant with W3C standards. Unfortunately,
  downloading the image from www.w3.org might expose the reader's IP
  address to potential tracking.
  .
@@ -1255,7 +1255,7 @@ Tag: embedded-feedparser-library
 Severity: normal
 Certainty: certain
 Info: This package contains an embedded copy of Mark Pilgrim's Universal
- Feed Parser.  Please depend on the "python-feedparser" package and use
+ Feed Parser. Please depend on the "python-feedparser" package and use
  the normal Python import mechanism to load it.
 Ref: policy 4.13
 
@@ -1280,7 +1280,7 @@ Tag: windows-devel-file-in-package
 Severity: normal
 Certainty: possible
 Info: This package appears to contain development files only meaningful to
- Windows environments.  Such files are generally useless in Debian packages and
+ Windows environments. Such files are generally useless in Debian packages and
  were usually accidentally included by copying complete directories from the
  source tarball.
 
@@ -1296,10 +1296,10 @@ Severity: wishlist
 Certainty: possible
 Info: This package contains a *.ttf, *.otf, or *.pfb file, file
  extensions used by TrueType, OpenType, or Type 1 fonts, but the package
- does not appear to be a dedicated font package.  Dedicated font package
- names should begin with <tt>fonts-</tt>.  (Type 1 fonts are also allowed
+ does not appear to be a dedicated font package. Dedicated font package
+ names should begin with <tt>fonts-</tt>. (Type 1 fonts are also allowed
  in packages starting with <tt>xfonts-</tt>.)  If the font is already
- packaged, you should depend on that package instead.  Otherwise, normally
+ packaged, you should depend on that package instead. Otherwise, normally
  the font should be packaged separately, since fonts are usually useful
  outside of the package that embeds them.
 
@@ -1307,7 +1307,7 @@ Tag: license-problem-font-adobe-copyrighted-fragment
 Severity: serious
 Certainty: possible
 Info: This type 1 font file includes some postscript fragment with a
- non-free license of Adobe.  In order to check if this tag is genuine
+ non-free license of Adobe. In order to check if this tag is genuine
  please follow the procedure described in the reference.
  .
  Should this be a false-positive, please override the tag.
@@ -1317,7 +1317,7 @@ Tag: license-problem-font-adobe-copyrighted-fragment-no-credit
 Severity: serious
 Certainty: possible
 Info: This type 1 font file includes some postscript fragment with a
- non-free license of Adobe.  In order to check if this tag is genuine
+ non-free license of Adobe. In order to check if this tag is genuine
  please follow the procedure described in the reference.
  .
  Moreover the fragment was likely verbatim copied from black
@@ -1330,13 +1330,13 @@ Tag: duplicate-font-file
 Severity: normal
 Certainty: possible
 Info: This package appears to include a font file that is already provided
- by another package in Debian.  Ideally it should instead depend on the
- relevant font package.  If the application in this package loads the font
+ by another package in Debian. Ideally it should instead depend on the
+ relevant font package. If the application in this package loads the font
  file by name, you may need to include a symlink pointing to the file name
  of the font in its Debian package.
  .
  Sometimes the font package containing the font is huge and you only need
- one font.  In that case, you have a few options: modify the package (in
+ one font. In that case, you have a few options: modify the package (in
  conjunction with upstream) to use libfontconfig to find the font that you
  prefer but fall back on whatever installed font is available, ask that
  the font package be split apart into packages of a more reasonable size,
@@ -1347,7 +1347,7 @@ Tag: icon-size-and-directory-name-mismatch
 Severity: normal
 Certainty: certain
 Info: The icon has a size that differs from the size specified by the name
- of the directory under which it was installed.  The icon was probably
+ of the directory under which it was installed. The icon was probably
  mistakenly installed into the wrong directory.
 
 Tag: raster-image-in-scalable-directory
@@ -1360,8 +1360,8 @@ Tag: gz-file-not-gzip
 Severity: normal
 Certainty: possible
 Info: The given file ends with <tt>.gz</tt>, which normally indicates it
- is compressed with gzip.  However, it doesn't seem to be a
- gzip-compressed file.  gzip will fail with an error on such files.
+ is compressed with gzip. However, it doesn't seem to be a
+ gzip-compressed file. gzip will fail with an error on such files.
  Normally this indicates a mistake in the installation process of the
  package.
 
@@ -1376,7 +1376,7 @@ Severity: important
 Certainty: certain
 Ref: https://lists.debian.org/debian-devel/2009/03/msg00119.html
 Info: Files in <tt>/etc/modprobe.d</tt> should use filenames ending in
- <tt>.conf</tt>.  modprobe silently ignores all files which do not match
+ <tt>.conf</tt>. modprobe silently ignores all files which do not match
  this convention.
  .
  If the file is an example containing only comments, consider installing
@@ -1390,7 +1390,7 @@ Ref: policy 11.8.5
 Info: For historical reasons, use of <tt>PEX</tt>, <tt>CID</tt>,
  <tt>Speedo</tt>, and <tt>cyrillic</tt> subdirectories of
  <tt>/usr/share/fonts/X11</tt> are permitted, but installation of files
- into these directories is discouraged.  Support for the first three font
+ into these directories is discouraged. Support for the first three font
  types is deprecated or no longer available, and Cyrillic fonts should use
  the normal font directories where possible.
 
@@ -1400,7 +1400,7 @@ Certainty: certain
 Ref: policy 11.8.5
 Info: Subdirectories of <tt>/usr/share/fonts/X11</tt> other than
  <tt>100dpi</tt>, <tt>75dpi</tt>, <tt>misc</tt>, <tt>Type1</tt>, and some
- historic exceptions must be neither created nor used.  (The directories
+ historic exceptions must be neither created nor used. (The directories
  <tt>encodings</tt> and <tt>util</tt>, used by some X Window System
  packages, are also permitted by Lintian.)
 
@@ -1408,8 +1408,8 @@ Tag: package-contains-multiple-dpi-fonts
 Severity: normal
 Certainty: certain
 Ref: policy 11.8.5
-Info: This package contains both 100dpi and 75dpi bitmapped fonts.  Both
- versions should not be included in a single package.  If both resolutions
+Info: This package contains both 100dpi and 75dpi bitmapped fonts. Both
+ versions should not be included in a single package. If both resolutions
  are available, they should be provided in separate binary packages with
  <tt>-75dpi</tt> or <tt>-100dpi</tt> appended to the package name for the
  corresponding fonts.
@@ -1419,17 +1419,17 @@ Severity: normal
 Certainty: certain
 Ref: policy 11.8.5
 Info: This package contains both bitmapped fonts for a specific DPI
- (100dpi or 75dpi) and misc bitmapped fonts.  These should not be combined
- in the same package.  Instead, the misc bitmapped fonts should be
+ (100dpi or 75dpi) and misc bitmapped fonts. These should not be combined
+ in the same package. Instead, the misc bitmapped fonts should be
  provided in a separate package with <tt>-misc</tt> appended to its name.
 
 Tag: package-contains-info-dir-file
 Severity: serious
 Certainty: certain
 Info: This package contains a file named <tt>dir</tt> or <tt>dir.old</tt>,
- possibly compressed, in <tt>/usr/share/info</tt>.  This is the directory
+ possibly compressed, in <tt>/usr/share/info</tt>. This is the directory
  (or backup) of info pages and is generated automatically by install-info
- when a package containing info documentation is installed.  Some upstream
+ when a package containing info documentation is installed. Some upstream
  build systems create it automatically, but it must not be included in a
  package since it needs to be generated dynamically based on the installed
  info files on the system.
@@ -1439,7 +1439,7 @@ Severity: serious
 Certainty: certain
 Info: This package contains a cache file generated automatically by
  update-mime-database when a package containing MIME-Info Database
- files is installed.  Some upstream build systems create them
+ files is installed. Some upstream build systems create them
  automatically, but they must not be included in a package since they need
  to be generated dynamically based on the installed MIME-Info Database
  files on the system.
@@ -1448,7 +1448,7 @@ Tag: package-contains-mimeinfo.cache-file
 Severity: serious
 Certainty: certain
 Info: This package contains a file named <tt>mimeinfo.cache</tt>,
- possibly compressed, in <tt>/usr/share/applications</tt>.  This file is
+ possibly compressed, in <tt>/usr/share/applications</tt>. This file is
  generated automatically by update-desktop-database when a package
  containing <tt>.desktop</tt> files associated to MIME types is installed.
  Some upstream build systems create it automatically, but it must not be
@@ -1491,7 +1491,7 @@ Info: This package installs a file in <tt>/etc/ld.so.conf.d</tt>,
  .
  Packages containing shared libraries should either install them into
  <tt>/usr/lib</tt> or should require binaries built against them to set
- RPATH to find the library at run-time.  Installing libraries in a
+ RPATH to find the library at run-time. Installing libraries in a
  different directory and modifying the run-time linker path is equivalent
  to installing them into <tt>/usr/lib</tt> except now conflicting library
  packages may cause random segfaults and difficult-to-debug problems
@@ -1502,13 +1502,13 @@ Severity: important
 Certainty: certain
 Info: This package contains files under <tt>/usr/share/games</tt>, such as
  desktop files, icons, pixmaps, or MIME type entries, that are global
- system data.  The user's desktop environment will only check in the
+ system data. The user's desktop environment will only check in the
  directories directly under <tt>/usr/share</tt> and this information
  should be put in the global directory even if it is for games.
  .
  The most common cause of this problem is using a
  <tt>--datadir=/usr/share/games</tt> argument to configure or an
- equivalent and using the upstream installation rules.  These files need
+ equivalent and using the upstream installation rules. These files need
  to be moved into the corresponding directories directly under
  <tt>/usr/share</tt>.
 
@@ -1517,7 +1517,7 @@ Severity: minor
 Certainty: possible
 Info: The given, apparently compressed, file is shipped in the package
  in addition to another file with the same name without the
- compression-method extension.  Normally this indicates a mistake in the
+ compression-method extension. Normally this indicates a mistake in the
  installation process of the package.
 
 Tag: udev-rule-in-etc
@@ -1544,7 +1544,7 @@ Certainty: possible
 Ref: policy 9.1.1
 Info: This package contains a directory under <tt>/lib</tt> or
  <tt>/usr/lib</tt> which doesn't match the proper triplet for the
- binary package's architecture.  This is very likely to be a mistake
+ binary package's architecture. This is very likely to be a mistake
  when indicating the underlying build system where the files should be
  installed.
 
@@ -1552,7 +1552,7 @@ Tag: empty-binary-package
 Severity: important
 Certainty: wild-guess
 Info: This binary package appears to be empty, and its description does
- not say that it's a metapackage or a transitional package.  This is
+ not say that it's a metapackage or a transitional package. This is
  often due to problems with updating debhelper *.install files during
  package renames or similar problems where installation rules don't put
  files in the correct place.
@@ -1561,8 +1561,8 @@ Info: This binary package appears to be empty, and its description does
  description one of the phrases "metapackage", "dummy", "dependency
  package", or "empty package".
  .
- Previously, Lintian also accepted the use of "virtual package".  This
- was removed to avoid overloading the term.  If you have been relying on
+ Previously, Lintian also accepted the use of "virtual package". This
+ was removed to avoid overloading the term. If you have been relying on
  the phrase "virtual package" to avoid this warning, please replace it
  with one of the others.
 
@@ -1571,7 +1571,7 @@ Severity: minor
 Certainty: wild-guess
 Experimental: yes
 Info: This udeb package appears to be empty, and its description does
- not say that it's a metapackage or a package.  This is often due to
+ not say that it's a metapackage or a package. This is often due to
  problems with updating debhelper *.install files during package
  renames or similar problems where installation rules don't put files
  in the correct place.
@@ -1584,14 +1584,14 @@ Tag: star-file
 Severity: important
 Certainty: possible
 Info: The given file is literally installed as <tt>*</tt> (star
- symbol).  Normally this indicates a mistake in the installation
+ symbol). Normally this indicates a mistake in the installation
  process of the package either when creating symlinks or renaming files.
 
 Tag: hyphen-file
 Severity: important
 Certainty: possible
 Info: The given file is literally installed as <tt>-</tt> (hyphen
- symbol).  Normally this indicates a mistake in the package when
+ symbol). Normally this indicates a mistake in the package when
  attempting to write to standard output.
 Ref: #882638
 
@@ -1601,7 +1601,7 @@ Certainty: possible
 Info: The package appears to ship locales for a language but uses an
  incorrect locale code as a subdirectory of <tt>/usr/share/locale</tt>.
  This usually results in users of the intended target language not
- finding the locale.  The language codes used in the locale directories
+ finding the locale. The language codes used in the locale directories
  are those from the ISO 639-1 and ISO 639-2 standards, not those
  usually used as TLDs (which are from the ISO 3166 standard).
  .
@@ -1618,7 +1618,7 @@ Ref: http://www.loc.gov/standards/iso639-2/php/code_list.php
 Info: The package appears to ship locales for a language but uses an
  unknown locale code as a subdirectory of <tt>/usr/share/locale</tt>.
  This usually results in users of the intended target language not
- finding the locale.  The language codes used in the locale directories
+ finding the locale. The language codes used in the locale directories
  are those from the ISO 639-1 and ISO 639-2 standards, not those
  usually used as TLDs (which are from the ISO 3166 standard).
  .
@@ -1663,7 +1663,7 @@ Tag: vim-addon-within-vim-runtime-path
 Severity: normal
 Certainty: certain
 Info: Vim addons should not be installed directly under a directory contained
- in the Vim runtime path.  Users shall be given the freedom to choose which
+ in the Vim runtime path. Users shall be given the freedom to choose which
  addons they want to have enabled and which they don't.
 Ref: vim-policy 3.1
 
@@ -1671,8 +1671,8 @@ Tag: perl-module-uses-perl4-libs-without-dep
 Severity: normal
 Certainty: possible
 Info: This package includes perl modules using obsoleted perl 4-era
- libraries.  These libraries have been deprecated in perl in 5.14, and
- are likely to be removed from the core in perl 5.16.  Please either
+ libraries. These libraries have been deprecated in perl in 5.14, and
+ are likely to be removed from the core in perl 5.16. Please either
  remove references to these libraries, or add a dependency on
  <tt>libperl4-corelibs-perl | perl (&lt;&lt; 5.12.3-7)</tt> to this package.
 
@@ -1680,7 +1680,7 @@ Tag: gzip-file-is-not-multi-arch-same-safe
 Severity: important
 Certainty: certain
 Info: The gzip file contains a timestamp that will differ between
- architectures.  Multi-Arch: same implies all shared files must be
+ architectures. Multi-Arch: same implies all shared files must be
  byte-for-byte identical.
  .
  This can usually be fixed by passing -n to gzip.
@@ -1755,7 +1755,7 @@ Severity: important
 Certainty: certain
 Info: This package ships a PKCS#11 module configuration file under
  <tt>/usr/share/p11-kit/modules</tt>, but its naming doesn't conform
- to what <tt>p11-kit</tt> expects.  Files in that directory should
+ to what <tt>p11-kit</tt> expects. Files in that directory should
  respect the following convention, case insensitive:
   [a-z0-9][a-z0-9_.-]*.module
  .
@@ -1776,7 +1776,7 @@ Tag: missing-intermediate-directory
 Severity: normal
 Certainty: certain
 Info: The package contains files in the listed directory, but does
- not contain the actual directory itself.  Some tools do not cope
+ not contain the actual directory itself. Some tools do not cope
  very well with this case. Notably Lintian prior to 2.5.32 would
  crash on such packages.
 
@@ -1815,7 +1815,7 @@ Severity: normal
 Certainty: certain
 Ref: java-policy 2
 Info: Compiled Java source files must not be included in the package.
- This is likely due to a packaging mistake.  These files should be
+ This is likely due to a packaging mistake. These files should be
  removed from the installed package or included in <tt>.jar</tt>
  archives to save space.
 

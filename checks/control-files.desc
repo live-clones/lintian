@@ -9,7 +9,7 @@ Tag: unknown-control-file
 Severity: normal
 Certainty: possible
 Ref: policy 2.2*
-Info: The package contains an unknown control file.  Policy says that
+Info: The package contains an unknown control file. Policy says that
  putting additional files in the package control area is not generally a
  good idea.
 

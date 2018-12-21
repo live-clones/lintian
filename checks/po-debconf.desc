@@ -10,8 +10,8 @@ Severity: serious
 Certainty: certain
 Info: This package seems to be using debconf templates, but it does not
  use po-debconf to make translations possible (<tt>debian/po</tt> doesn't
- exist).  Debian Policy requires that all packages using debconf use a
- gettext-based translation system.  If this package uses one other than
+ exist). Debian Policy requires that all packages using debconf use a
+ gettext-based translation system. If this package uses one other than
  po-debconf, please report this as a Lintian bug along with how to detect
  that system.
 Ref: policy 3.9.1
@@ -20,8 +20,8 @@ Tag: untranslatable-debconf-templates
 Severity: serious
 Certainty: possible
 Info: This package seems to be using debconf templates, but some
- descriptions are not translatable.  You should prepend an underscore
- before every translatable field, as described in po-debconf(7).  This
+ descriptions are not translatable. You should prepend an underscore
+ before every translatable field, as described in po-debconf(7). This
  may mean that translators weren't properly warned about new strings.
  .
  Translators may be notified of changes using podebconf-report-po, for
@@ -38,8 +38,8 @@ Tag: stray-translated-debconf-templates
 Severity: normal
 Certainty: certain
 Info: This package contains a file named *templates.XX or
- *templates.XX_XX.  This was the naming convention for the translated
- templates merged using debconf-mergetemplate.  Since the package is using
+ *templates.XX_XX. This was the naming convention for the translated
+ templates merged using debconf-mergetemplate. Since the package is using
  po-debconf, these files should be replaced by language-specific files in
  the <tt>debian/po</tt> directory and should no longer be needed.
 
@@ -85,7 +85,7 @@ Info: This debconf translation is using the general debconf-i18n list as
  .
  The intended purpose of the Language-Team field is to be an additional
  contact for new translation requests in addition to the previous
- translator (as recorded in Last-Translator).  The field should therefore
+ translator (as recorded in Last-Translator). The field should therefore
  point to a mailing list dedicated to the language of this PO file, not
  the general list for translation discussions.
 
@@ -93,9 +93,9 @@ Tag: misnamed-po-file
 Severity: normal
 Certainty: possible
 Info: The name of this PO file doesn't appear to be a valid language
- code.  Any files in <tt>debian/po</tt> ending in <tt>.po</tt> will be
+ code. Any files in <tt>debian/po</tt> ending in <tt>.po</tt> will be
  processed as translations by po2debconf for the language code equal to
- the file name without the trailing <tt>.po</tt>.  If the file name does
+ the file name without the trailing <tt>.po</tt>. If the file name does
  not correctly reflect the language of the translation, the translation
  will not be accessible to users of that language.
  .
@@ -122,9 +122,9 @@ Severity: normal
 Certainty: possible
 Info: You should not mark as translatable "Default:" or "DefaultChoice:"
  fields, unless explicitly needed (e.g. default country, default language,
- etc.).  If this Default field really should be translated, you should
+ etc.). If this Default field really should be translated, you should
  explain translators how they should translate it by using comments or
- brackets.  For example:
+ brackets. For example:
  .
    # Translators: Default language name, but not translated
    _Default: English
@@ -142,7 +142,7 @@ Tag: no-complete-debconf-translation
 Severity: wishlist
 Certainty: possible
 Info: Even though this package provides debconf translation support, there 
- are no translations or none of the translations are complete.  This may
+ are no translations or none of the translations are complete. This may
  mean that translators weren't properly warned about new strings.
  .
  Translators may be notified of changes using podebconf-report-po, for

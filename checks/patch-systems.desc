@@ -10,11 +10,11 @@ Severity: normal
 Certainty: certain
 Info: Using dpatch requires you to explicitly list all patches you want
  to apply in debian/patches/00list. This package build-depends on dpatch,
- but does not provide a patch list.  You should either remove the dpatch
+ but does not provide a patch list. You should either remove the dpatch
  build dependency or add a patch list.
  .
  Note that an empty file cannot be represented in the Debian diff, so an
- empty patch list will disappear in the source package.  If you intended
+ empty patch list will disappear in the source package. If you intended
  for the series file to be empty, add a comment line.
 
 Tag: dpatch-index-references-non-existent-patch
@@ -34,7 +34,7 @@ Info: dpatch files should carry a description of the included patch.
  report (if any), Debian or upstream bugs fixed by it, upstream status,
  the Debian version and date the patch was first included, and any other
  information that would be useful if someone were investigating the
- patch and underlying problem.  Please consider using the DEP 3 format for
+ patch and underlying problem. Please consider using the DEP 3 format for
  this information.
 Ref: https://dep-team.pages.debian.net/deps/dep3/
 
@@ -42,8 +42,8 @@ Tag: quilt-patch-using-template-description
 Severity: wishlist
 Certainty: certain
 Info: The patch contains a standard DEP 3 template description
- included by dpkg-source(1).  Please consider replacing the template
- with a real description.  You can edit the description by using
+ included by dpkg-source(1). Please consider replacing the template
+ with a real description. You can edit the description by using
  <tt>quilt header -e</tt> when the patch is at the top of the stack.
  Alternatively, editing the patch in most text editors should work
  as well.
@@ -53,12 +53,12 @@ Tag: quilt-build-dep-but-no-series-file
 Severity: normal
 Certainty: certain
 Info: Using quilt requires you to explicitly list all patches you want
- to apply in debian/patches/series.  This package build-depends on quilt,
- but does not provide a patch list.  You should either remove the quilt
+ to apply in debian/patches/series. This package build-depends on quilt,
+ but does not provide a patch list. You should either remove the quilt
  build dependency or add a series file.
  .
  Note that an empty file cannot be represented in the Debian diff, so an
- empty series file will disappear in the source package.  If you intended
+ empty series file will disappear in the source package. If you intended
  for the series file to be empty, add a comment line.
 
 Tag: quilt-series-but-no-build-dep
@@ -105,9 +105,9 @@ Info: In the series file listing all your quilt patches, you referenced a
 Tag: quilt-patch-missing-description
 Severity: wishlist
 Certainty: certain
-Info: quilt patch files should start with a description of patch.  All
+Info: quilt patch files should start with a description of patch. All
  lines before the start of the patch itself are considered part of the
- description.  You can edit the description with <tt>quilt header -e</tt>
+ description. You can edit the description with <tt>quilt header -e</tt>
  when the patch is at the top of the stack.
  .
  As well as a description of the purpose and function of the patch, the
@@ -115,7 +115,7 @@ Info: quilt patch files should start with a description of patch.  All
  report (if any), Debian or upstream bugs fixed by it, upstream status,
  the Debian version and date the patch was first included, and any other
  information that would be useful if someone were investigating the
- patch and underlying problem.  Please consider using the DEP 3 format for
+ patch and underlying problem. Please consider using the DEP 3 format for
  this information.
 Ref: https://dep-team.pages.debian.net/deps/dep3/
 
@@ -137,9 +137,9 @@ Severity: minor
 Certainty: certain
 Info: The package uses a patch system, but the Debian diff.gz contains
  changes to files or creation of additional files outside of the
- <tt>debian</tt> directory.  This often indicates accidental changes that
+ <tt>debian</tt> directory. This often indicates accidental changes that
  weren't meant to be in the package or changes that were supposed to be
- separated out into a patch.  The package will also more easily support
+ separated out into a patch. The package will also more easily support
  possible future source package formats if all changes outside the
  <tt>debian</tt> directory are stored as patches.
 
@@ -161,7 +161,7 @@ Severity: minor
 Certainty: certain
 Info: Either the build-dependencies list more than one patch system or the
  package uses the <tt>3.0 (quilt)</tt> source format but also has a
- dependency on <tt>dpatch</tt>.  It's unlikely that you need both patch
+ dependency on <tt>dpatch</tt>. It's unlikely that you need both patch
  systems at the same time, and having multiple patch systems in play
  simultaneously can make understanding and modifying the source package
  unnecessarily complex.
@@ -170,9 +170,9 @@ Tag: direct-changes-in-diff-but-no-patch-system
 Severity: pedantic
 Certainty: certain
 Info: The Debian diff.gz contains changes to files or creation of additional
- files outside the <tt>debian</tt> directory.  Keeping the changes as separate
+ files outside the <tt>debian</tt> directory. Keeping the changes as separate
  patches under the control of a patch system allows for more fine grained
- control over them.  The package will also more easily support  possible
+ control over them. The package will also more easily support  possible
  future source package formats if all changes outside the <tt>debian</tt>
  directory are stored as patches.
  .
@@ -184,13 +184,13 @@ Tag: patch-system-but-no-source-readme
 Severity: normal
 Certainty: certain
 Info: This package build-depends on a patch system such as dpatch or
- quilt, but there is no <tt>debian/README.source</tt> file.  This file is
+ quilt, but there is no <tt>debian/README.source</tt> file. This file is
  recommended for any package where <tt>dpkg-source -x</tt> does not result
  in the preferred form for making modifications to the package.
  .
  If you are using quilt and the package needs no other special handling
  instructions, you may want to add a <tt>debian/README.source</tt>
- referring to <tt>/usr/share/doc/quilt/README.source</tt>.  Similarly, you
+ referring to <tt>/usr/share/doc/quilt/README.source</tt>. Similarly, you
  can refer to <tt>/usr/share/doc/dpatch/README.source.gz</tt> for dpatch.
 Ref: policy 4.14
 

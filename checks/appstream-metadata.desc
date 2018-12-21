@@ -8,7 +8,7 @@ Tag: appstream-metadata-in-legacy-location
 Severity: minor
 Certainty: certain
 Ref: https://wiki.debian.org/AppStream/Guidelines
-Info: AppStream metadata file was found in /usr/share/appdata/.  The
+Info: AppStream metadata file was found in /usr/share/appdata/. The
  AppStream XML files should be placed in /usr/share/metainfo/.
 
 Tag: appstream-metadata-legacy-format
@@ -17,7 +17,7 @@ Certainty: certain
 Ref: https://wiki.debian.org/AppStream/Guidelines,
  https://www.freedesktop.org/software/appstream/docs/chap-Metadata.html#sect-Metadata-GenericComponent
 Info: AppStream metadata with obsolete &lt;application&gt; root node found.
- This indicate a legacy format.  The metadata should follow the format
+ This indicate a legacy format. The metadata should follow the format
  the new outlined on the freedesktop.org homepage.
  .
  It is possible to validate the format using 'appstreamcli validate'.
@@ -36,7 +36,7 @@ Severity: normal
 Certainty: certain
 Ref: https://wiki.debian.org/AppStream/Guidelines
 Info: The modalias matching rule in the AppStream metadata file is
- malformed.  Hexadecimal numbers in vendor and product IDs must be
+ malformed. Hexadecimal numbers in vendor and product IDs must be
  upper case.
 
 Tag: appstream-metadata-invalid

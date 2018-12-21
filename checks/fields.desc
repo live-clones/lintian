@@ -81,7 +81,7 @@ Tag: magic-arch-in-arch-list
 Severity: serious
 Certainty: certain
 Info: The special architecture value "any" only makes sense if it occurs
- alone or (in a *.dsc file) together with "all".  The value "all" may
+ alone or (in a *.dsc file) together with "all". The value "all" may
  appear together with other architectures in a *.dsc file but must
  occur alone if used in a binary package.
 Ref: policy 5.6.8, #626775
@@ -89,9 +89,9 @@ Ref: policy 5.6.8, #626775
 Tag: unknown-architecture
 Severity: normal
 Certainty: possible
-Info: This package claims to be for an unknown architecture.  The
+Info: This package claims to be for an unknown architecture. The
  architecture should be one of the values supported by dpkg or one of the
- special values "all" or "any".  The special value "source" is only used
+ special values "all" or "any". The special value "source" is only used
  in *.changes files and does not make sense in a binary package or a *.dsc
  file.
 
@@ -106,14 +106,14 @@ Tag: arch-wildcard-in-binary-package
 Severity: serious
 Certainty: certain
 Info: Architecture wildcards, including the special architecture value
- "any", do not make sense in a binary package.  A binary package must
+ "any", do not make sense in a binary package. A binary package must
  either be architecture-independent or built for a specific architecture.
 Ref: policy 5.6.8
 
 Tag: unknown-multi-arch-value
 Severity: serious
 Certainty: certain
-Info: The package has an unknown value in its Multi-Arch field.  The
+Info: The package has an unknown value in its Multi-Arch field. The
  value must be one of "no", "same", "foreign" or "allowed".
 
 Tag: illegal-multi-arch-value
@@ -139,7 +139,7 @@ Tag: aspell-package-not-arch-all
 Severity: normal
 Certainty: certain
 Info: This package appears to be an aspell dictionary package, but it is
- not Architecture: all.  The binary hashes should be built at install-time
+ not Architecture: all. The binary hashes should be built at install-time
  by calling aspell-autobuildhash, so the contents of the package should be
  architecture-independent.
 Ref: aspell-autobuildhash(8)
@@ -174,7 +174,7 @@ Severity: serious
 Certainty: certain
 Info: The maintainer field must contain the package maintainer's name and
  email address, with the name followed by the address inside angle
- brackets (&lt; and &gt;).  The address seems to be missing.
+ brackets (&lt; and &gt;). The address seems to be missing.
 Ref: policy 5.6.2
 
 Tag: maintainer-address-malformed
@@ -208,7 +208,7 @@ Tag: maintainer-address-causes-mail-loops-or-bounces
 Severity: serious
 Certainty: certain
 Info: The maintainer e-mail address either loops back to itself because
- it is set to an address which is known to bounce mails.  Policy
+ it is set to an address which is known to bounce mails. Policy
  states: The email address given in the Maintainer control field must
  accept  mail from those role accounts in Debian used to send automated
  mails  regarding the package. This includes non-spam mail from the bug-
@@ -283,7 +283,7 @@ Tag: no-human-maintainers
 Severity: serious
 Certainty: possible
 Info: The Maintainer address for this package is a mailing list and there
- are no Uploaders listed.  Team-maintained packages must list the human
+ are no Uploaders listed. Team-maintained packages must list the human
  maintainers in the Uploaders field.
 Ref: policy 3.3, devref 5.12
 
@@ -291,19 +291,19 @@ Tag: source-field-does-not-match-pkg-name
 Severity: serious
 Certainty: certain
 Info: The source package's filename is not the same as the name given
- in its Source field.  The Source field should name the package.
+ in its Source field. The Source field should name the package.
 Ref: policy 5.6.1
 
 Tag: source-field-malformed
 Severity: serious
 Certainty: certain
 Info: In <tt>debian/control</tt> or a <tt>.dsc</tt> file, the Source field
- must contain only the name of the source package.  In a binary package,
+ must contain only the name of the source package. In a binary package,
  the Source field may also optionally contain the version number of the
  corresponding source package in parentheses.
  .
  Source package names must consist only of lowercase letters, digits,
- plus and minus signs, and periods.  They must be at least two characters
+ plus and minus signs, and periods. They must be at least two characters
  long and must start with an alphanumeric character.
 Ref: policy 5.6.1
 
@@ -340,7 +340,7 @@ Tag: unknown-section
 Severity: normal
 Certainty: certain
 Info: The "Section:" field in this package's control file is not one of
- the sections in use on the ftp archive.  Valid sections are currently
+ the sections in use on the ftp archive. Valid sections are currently
  admin, comm, cli-mono, database, debug, devel, doc,
  editors, electronics, embedded, fonts, games, gnome, gnu-r,
  gnustep, graphics, hamradio, haskell, httpd, interpreters,
@@ -358,7 +358,7 @@ Tag: section-is-dh_make-template
 Severity: serious
 Certainty: certain
 Info: The "Section:" field in this package's control file is set to
- unknown.  This is not a valid section, and usually means a dh_make
+ unknown. This is not a valid section, and usually means a dh_make
  template control file was used and never modified to set the correct
  section.
 Ref: policy 2.4
@@ -408,7 +408,7 @@ Info: The "Homepage:" field in this package's control file does not
 Tag: no-homepage-field
 Severity: pedantic
 Certainty: possible
-Info: This non-native package lacks a <tt>Homepage</tt> field.  If the
+Info: This non-native package lacks a <tt>Homepage</tt> field. If the
  package has an upstream home page that contains useful information or
  resources for the end user, consider adding a <tt>Homepage</tt> control
  field to <tt>debian/control</tt>.
@@ -418,8 +418,8 @@ Tag: homepage-in-binary-package
 Severity: wishlist
 Certainty: possible
 Info: This non-native source package produces at least one binary package
- with a <tt>Homepage</tt> field.  However, the source package itself has
- no <tt>Homepage</tt> field.  Unfortunately, this results in some
+ with a <tt>Homepage</tt> field. However, the source package itself has
+ no <tt>Homepage</tt> field. Unfortunately, this results in some
  source-based tools/services (e.g. the PTS) not linking to the homepage
  of the upstream project.
  .
@@ -432,8 +432,8 @@ Tag: homepage-for-cpan-package-contains-version
 Severity: minor
 Certainty: certain
 Info: The Homepage field for this package points to CPAN and the URL
- includes the version.  It's better to link to the unversioned CPAN page
- so that the URL doesn't have to be updated for each new release.  For
+ includes the version. It's better to link to the unversioned CPAN page
+ so that the URL doesn't have to be updated for each new release. For
  example, use:
  .
    http://search.cpan.org/dist/HTML-Template/
@@ -491,8 +491,8 @@ Ref: policy 7.1
 Severity: normal
 Certainty: certain
 Info: The forms "&lt;" and "&gt;" mean "&lt;=" and "&gt;=", not "&lt;&lt;"
- and "&gt;&gt;" as one might expect.  For that reason these forms are
- obsolete, and should not be used in new packages.  Use the longer forms
+ and "&gt;&gt;" as one might expect. For that reason these forms are
+ obsolete, and should not be used in new packages. Use the longer forms
  instead.
 
 Tag: bad-version-in-relation
@@ -505,7 +505,7 @@ Info: The version number used in this relationship does not match the
 Tag: package-relation-with-self
 Severity: normal
 Certainty: possible
-Info: The package declares a relationship with itself.  This is not very
+Info: The package declares a relationship with itself. This is not very
  useful, except in the case of a package Conflicting with itself, if its
  package name doubles as a virtual package.
 
@@ -519,8 +519,8 @@ Ref: policy 7.1
 Tag: new-essential-package
 Severity: important
 Certainty: possible
-Info: This package has the Essential flag set.  New Essential packages
- are sufficiently rare that it seems worth warning about.  They should
+Info: This package has the Essential flag set. New Essential packages
+ are sufficiently rare that it seems worth warning about. They should
  be discussed on debian-devel first.
 Ref: policy 3.8
 
@@ -530,7 +530,7 @@ Certainty: possible
 Info: The name of this package suggests that it is a documentation package.
  It is usually not desirable for documentation packages to depend on the
  packages they document, because users may want to install the docs before
- they decide whether they want to install the package.  Also, documentation
+ they decide whether they want to install the package. Also, documentation
  packages are often architecture-independent, so on other architectures
  the package on which it depends may not even exist.
 
@@ -577,7 +577,7 @@ Severity: important
 Certainty: possible
 Info: This package is one of the packages that Lintian believes is a
  metapackage: a package that exists for the convenience of users or
- installers to install a set of related packages.  Packages that are not
+ installers to install a set of related packages. Packages that are not
  themselves metapackages must not depend on metapackages, since this may
  prevent the user from removing portions of the package set they don't
  need.
@@ -598,7 +598,7 @@ Severity: important
 Certainty: certain
 Ref: policy 3.5
 Info: The package declares a depends on an essential package, e.g. dpkg,
- without using a versioned depends.  Packages do not need to depend on
+ without using a versioned depends. Packages do not need to depend on
  essential packages; essential means that they will always be present.
  The only reason to list an explicit dependency on an essential package
  is if you need a particular version of that package, in which case the
@@ -609,7 +609,7 @@ Severity: important
 Certainty: certain
 Ref: policy 4.2
 Info: The package declares a build-depends on an essential package, e.g. dpkg,
- without using a versioned depends.  Packages do not need to build-depend on
+ without using a versioned depends. Packages do not need to build-depend on
  essential packages; essential means that they will always be present.
  The only reason to list an explicit dependency on an essential package
  is if you need a particular version of that package, in which case the
@@ -651,9 +651,9 @@ Severity: important
 Certainty: possible
 Ref: policy 5.6.8
 Info: The architecture string in the source relation includes an unknown
- architecture.  This may be a typo, or it may be an architecture that dpkg
- doesn't know about yet.  A common problem is incorrectly separating
- architectures with a comma, such as <tt>[i386, m68k]</tt>.  Architectures
+ architecture. This may be a typo, or it may be an architecture that dpkg
+ doesn't know about yet. A common problem is incorrectly separating
+ architectures with a comma, such as <tt>[i386, m68k]</tt>. Architectures
  are separated by spaces; this should instead be <tt>[i386 m68k]</tt>.
 
 Tag: conflicting-negation-in-source-relation
@@ -662,7 +662,7 @@ Certainty: certain
 Ref: policy 7.1
 Info: The architecture string in this source relation has some
  negated architectures (prepended by <tt>!</tt>) and others that are not
- negated.  This is not permitted by Policy.  Either all architectures must
+ negated. This is not permitted by Policy. Either all architectures must
  be negated or none of them may be.
 
 Tag: invalid-profile-name-in-source-relation
@@ -689,9 +689,9 @@ Severity: important
 Certainty: certain
 Ref: policy 4.2
 Info: The package declares a build-depends on a build essential package
- without using a versioned depends.  Packages do not have to depend on any
- package included in build-essential.  It is the responsibility of anyone
- building packages to have all build-essential packages installed.  The
+ without using a versioned depends. Packages do not have to depend on any
+ package included in build-essential. It is the responsibility of anyone
+ building packages to have all build-essential packages installed. The
  only reason for an explicit dependency on a package included in
  build-essential is if a particular version of that package is required,
  in which case the dependency should include the version.
@@ -738,11 +738,11 @@ Tag: build-depends-on-1-revision
 Severity: normal
 Certainty: possible
 Info: The package declares a build dependency on a version of a package
- with a -1 Debian revision such as "libfoo (&gt;= 1.2-1)".  Such a
+ with a -1 Debian revision such as "libfoo (&gt;= 1.2-1)". Such a
  dependency will not be satisfied by a backport of libfoo 1.2-1 and
- therefore makes backporting unnecessarily difficult.  Normally, the -1
+ therefore makes backporting unnecessarily difficult. Normally, the -1
  version is unneeded and a dependency such as "libfoo (&gt;= 1.2)" would
- be sufficient.  If there was an earlier -0.X version of libfoo that would
+ be sufficient. If there was an earlier -0.X version of libfoo that would
  not satisfy the dependency, use "libfoo (&gt;= 1.2-1~)" instead.
 
 Tag: needlessly-depends-on-awk
@@ -801,15 +801,15 @@ Tag: depends-on-python-minimal
 Severity: important
 Certainty: certain
 Info: The python-minimal package (and versioned variants thereof) exists
- only to possibly become an Essential package.  Depending on it is always
- an error since it should never be installed without python.  If it
+ only to possibly become an Essential package. Depending on it is always
+ an error since it should never be installed without python. If it
  becomes Essential, there is no need to depend on it, and until then,
  packages that require Python must depend on python.
 
 Tag: depends-exclusively-on-makedev
 Severity: normal
 Certainty: certain
-Info: This package depends on makedev without a udev alternative.  This
+Info: This package depends on makedev without a udev alternative. This
  probably means that it doesn't have udev rules and relies on makedev to
  create devices, which won't work if udev is installed and running.
  Alternatively, it may mean that there are udev rules, but udev was not
@@ -819,7 +819,7 @@ Tag: dbg-package-missing-depends
 Severity: normal
 Certainty: certain
 Info: The given binary package has a name of the form of "X-dbg", indicating it
- contains detached debugging symbols for the package X.  If so, it should
+ contains detached debugging symbols for the package X. If so, it should
  depend on the corresponding package, generally with (= ${binary:Version})
  since the debugging symbols are only useful with the binaries created by
  the same build.
@@ -829,7 +829,7 @@ Info: The given binary package has a name of the form of "X-dbg", indicating it
  .
  If this package provides debugging symbols for multiple other
  packages, it should normally depend on all of those packages as
- alternatives.  In other words, <tt>pkga (= ${binary:Version}) | pkgb (=
+ alternatives. In other words, <tt>pkga (= ${binary:Version}) | pkgb (=
  ${binary:Version})</tt> and so forth.
 
 Tag: conflicts-with-dependency
@@ -844,13 +844,13 @@ Severity: normal
 Certainty: possible
 Ref: policy 7.3, policy 7.4, #605744
 Info: This package declares a Breaks relationship with another package
- that has no version number.  Normally, Breaks should be used to indicate
+ that has no version number. Normally, Breaks should be used to indicate
  an incompatibility with a specific version of another package, or with
- all versions predating a fix.  If the two packages can never be installed
+ all versions predating a fix. If the two packages can never be installed
  at the same time, Conflicts should normally be used instead.
  .
  Note this tag can also be issued, if a package has been split into two
- completely new ones.  In this case, this package is missing a Replaces
+ completely new ones. In this case, this package is missing a Replaces
  on the old package.
 
 Tag: conflicts-with-version
@@ -858,11 +858,11 @@ Severity: normal
 Certainty: wild-guess
 Ref: policy 7.4
 Info: An earlier-than version clause is normally an indication that Breaks
- should be used instead of Conflicts.  Breaks is a weaker requirement that
+ should be used instead of Conflicts. Breaks is a weaker requirement that
  provides the package manager more leeway to find a valid upgrade path.
  Conflicts should only be used if two packages can never be unpacked at
  the same time, or for some situations involving virtual packages (where a
- version clause is not appropriate).  In particular, when moving files
+ version clause is not appropriate). In particular, when moving files
  between packages, use Breaks plus Replaces, not Conflicts plus Replaces.
 
 Tag: bad-menu-item
@@ -882,8 +882,8 @@ Severity: normal
 Certainty: certain
 Ref: devref 5.10.2.1
 Info: The version number of your source package ends in +b and a number or
- has a Debian revision containing three parts.  These version numbers are
- used by binary NMUs and should not be used as the source version.  (The
+ has a Debian revision containing three parts. These version numbers are
+ used by binary NMUs and should not be used as the source version. (The
  +b form is the current standard; the three-part version number now
  obsolete.)
 
@@ -891,28 +891,28 @@ Tag: dfsg-version-in-native-package
 Severity: normal
 Certainty: certain
 Info: The version number of this package contains "dfsg", but it's a
- native package.  "dfsg" is conventionally used in the upstream version of
+ native package. "dfsg" is conventionally used in the upstream version of
  packages that are repackaged for Debian Free Software Guidelines
- compliance reasons.  The convention doesn't make sense in native
+ compliance reasons. The convention doesn't make sense in native
  packages.
 
 Tag: dfsg-version-with-period
 Severity: minor
 Certainty: possible
 Info: The version number of this package contains ".dfsg", probably in a
- form like "1.2.dfsg1".  There is a subtle sorting problem with this
- version method: 1.2.dfsg1 is considered a later version than 1.2.1.  If
+ form like "1.2.dfsg1". There is a subtle sorting problem with this
+ version method: 1.2.dfsg1 is considered a later version than 1.2.1. If
  upstream adds another level to its versioning, finding a good version
  number for the next upstream release will be awkward.
  .
  Upstream may never do this, in which case this isn't a problem, but it's
- normally better to use "+dfsg" instead (such as "1.2+dfsg1").  "+" sorts
+ normally better to use "+dfsg" instead (such as "1.2+dfsg1"). "+" sorts
  before ".", so 1.2 &lt; 1.2+dfsg1 &lt; 1.2.1 as normally desired.
 
 Tag: dfsg-version-misspelled
 Severity: minor
 Certainty: certain
-Info: The version number of this package contains "dsfg".  You probably
+Info: The version number of this package contains "dsfg". You probably
  meant "dfsg", the conventional marker for upstream packages that are
  repackaged for Debian Free Software Guidelines compliance reasons.
 
@@ -942,7 +942,7 @@ Severity: important
 Certainty: certain
 Ref: https://www.debian.org/vote/2007/vote_003
 Info: The Dm-Upload-Allowed field in this package is set to something
- other than "yes".  The only standardized value for this field in the
+ other than "yes". The only standardized value for this field in the
  Debian GR is "yes" and other values (including capitalization variants)
  may not work as expected.
 
@@ -958,14 +958,14 @@ Certainty: certain
 Info: The maintainer value also appears on the <tt>Uploaders</tt> field.
  There were some reasons why this was useful when Uploaders support was
  first introduced, but those have long-since been fixed and there is no
- longer any need to list the maintainer in Uploaders.  The duplicate
+ longer any need to list the maintainer in Uploaders. The duplicate
  information should probably be removed.
 
 Tag: duplicate-uploader
 Severity: minor
 Certainty: certain
 Info: The uploader appears more than once in the <tt>Uploaders</tt>
- field.  The duplicate information should be removed.
+ field. The duplicate information should be removed.
 
 Tag: versioned-dependency-satisfied-by-perl
 Severity: normal
@@ -1065,8 +1065,8 @@ Info: The VCS-* field contains an uncanonical URI. Please update to use
  The definition of canonical used here is the URIs announced by the Alioth
  admins (see reference).
  .
- Note that this check is based on a list of known URIs.  Lintian did not
- send an HTTP request to the URI to test this.  Should the canonical URI
+ Note that this check is based on a list of known URIs. Lintian did not
+ send an HTTP request to the URI to test this. Should the canonical URI
  have changed, please file a bug against Lintian so the check can be
  updated accordingly.
 Ref: https://lists.debian.org/debian-devel-announce/2011/05/msg00009.html
@@ -1074,32 +1074,32 @@ Ref: https://lists.debian.org/debian-devel-announce/2011/05/msg00009.html
 Tag: vcs-field-bitrotted
 Severity: normal
 Certainty: certain
-Info: The VCS-* field uses an address which no longer works.  Please
+Info: The VCS-* field uses an address which no longer works. Please
  update it to use the current canonical URI instead.
  .
  Note that this check is based on a list of known URIs or/and
- patterns.  Lintian did not send an HTTP request to the URI to test
- this.  Should the URI actually work, please file a bug against
+ patterns. Lintian did not send an HTTP request to the URI to test
+ this. Should the URI actually work, please file a bug against
  Lintian so the check can be updated accordingly.
 
 Tag: vcs-git-uses-invalid-user-uri
 Severity: normal
 Certainty: certain
 Info: The Vcs-Git field is pointing to a personal repository using
- a git://(git|anonscm).debian.org/~$LOGIN/$PRJ.git style URI.  This is not
+ a git://(git|anonscm).debian.org/~$LOGIN/$PRJ.git style URI. This is not
  recommended since the repository this points is not automatically updated
- when pushing to the personal repository.  The recommended URI for anonymous
+ when pushing to the personal repository. The recommended URI for anonymous
  access is https://anonscm.debian.org/git/users/$LOGIN/$PRJ.git.
 
 Tag: vcs-field-uses-insecure-uri
 Severity: wishlist
 Certainty: certain
 Info: The Vcs-* field uses an unencrypted transport protocol for the
- URI.  It is recommended to use a secure transport such as HTTPS for
+ URI. It is recommended to use a secure transport such as HTTPS for
  anonymous read-only access.
  .
  Note that you can often just exchange e.g. git:// with https:// for
- repositories.  Though, in some cases (bzr's "lp:" or CVS's pserver) it
+ repositories. Though, in some cases (bzr's "lp:" or CVS's pserver) it
  might not be possible to use an alternative url and still have a
  working (anonymous read-only) repository.
 
@@ -1115,12 +1115,12 @@ Tag: lib-recommends-documentation
 Severity: normal
 Certainty: possible
 Info: The given package appears to be a library package, but it recommends
- a documentation package.  Doing this can pull in unwanted (and often
+ a documentation package. Doing this can pull in unwanted (and often
  large) documentation packages since recommends are installed by default
- and library packages are pulled by applications that use them.  Users
+ and library packages are pulled by applications that use them. Users
  usually only care about the library documentation if they're developing
  against the library, not just using it, so the development package should
- recommend the documentation instead.  If there is no development package
+ recommend the documentation instead. If there is no development package
  (for modules for scripting languages, for example), consider Suggests
  instead of Recommends.
 
@@ -1130,7 +1130,7 @@ Certainty: possible
 Info: The given package appears to have a Python development package
  (python-dev, python-all-dev or pythonX.Y-dev) listed in its Build-Depends
  or Build-Depends-Indep fields, but only "Architecture: all" packages are
- built by this source package.  Python applications and modules do not
+ built by this source package. Python applications and modules do not
  usually require those dev packages, so you should consider removing them
  in favour of python, python-all or pythonX.Y.
  .
@@ -1179,7 +1179,7 @@ Severity: normal
 Certainty: possible
 Info: The package build-depends on a versioned development package of
  Berkeley DB (libdbX.Y-dev) instead of versionless package
- (libdb-dev).  Unfortunately this prevents binNMUs when default
+ (libdb-dev). Unfortunately this prevents binNMUs when default
  Berkeley DB version changes.
  .
  Unless the package absolutely have to depend on specific Berkeley DB
@@ -1302,7 +1302,7 @@ Certainty: certain
 Info: The Homepage field for this package points to an uncanonical Bioconductor URL.
  Please update to use the current canonical URL instead. The canonical URL is
  recommended for use in publications, etc., will always redirect to current
- release version (or devel if package is not in release yet).  For example, the
+ release version (or devel if package is not in release yet). For example, the
  link for the package "foo" should be:
  .
  https://bioconductor.org/packages/foo/
@@ -1317,7 +1317,7 @@ Certainty: certain
 Info: The Built-Using field contains invalid fields.
  .
  The Built-Using field must consist of simple <tt>source (=
- version)</tt> clauses.  Notably, it must use a strictly equal in the
+ version)</tt> clauses. Notably, it must use a strictly equal in the
  relation.
  .
  Only first issue is shown.

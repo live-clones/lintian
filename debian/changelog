@@ -2,6 +2,8 @@ lintian (2.5.118) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
+  * checks/*.desc:
+    + [CL] Consistently use a single space after a full-stop/period.
   * checks/files.pm:
     + [CL] The package-contains-documentation-outside-usr-share-doc tag
       should accept files under "/usr/share/help"; these are being

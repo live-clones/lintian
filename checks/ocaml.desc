@@ -22,7 +22,7 @@ Tag: ocaml-dangling-cmxs
 Severity: normal
 Certainty: possible
 Info: This package seems to be a library package, and provides a native
- plugin (<tt>.cmxs</tt>).  If the plugin is meant to be used as a library
+ plugin (<tt>.cmxs</tt>). If the plugin is meant to be used as a library
  for other plugins, it should be shipped as bytecode (<tt>.cma</tt> or
  <tt>.cmo</tt>) as well.
 
@@ -31,14 +31,14 @@ Severity: pedantic
 Certainty: possible
 Info: This development package installs OCaml development files
  (<tt>.cmi</tt>, <tt>.cmx</tt> or <tt>.cmxa</tt>) outside
- <tt>/usr/lib/ocaml</tt>.  Such files are used only by compilation and
+ <tt>/usr/lib/ocaml</tt>. Such files are used only by compilation and
  should be in a subdirectory of OCaml standard library path.
 
 Tag: ocaml-stray-cmo
 Severity: minor
 Certainty: wild-guess
 Info: This package installs a <tt>.cma</tt> file and a <tt>.cmo</tt> file
- with the same base name.  Most of the time, the module provided by the
+ with the same base name. Most of the time, the module provided by the
  <tt>.cmo</tt> file is  also linked in the <tt>.cma</tt> file, so the
  <tt>.cmo</tt> file is useless.
 
@@ -46,8 +46,8 @@ Tag: ocaml-dangling-cmi
 Severity: wishlist
 Certainty: possible
 Info: This package installs a compiled interface (<tt>.cmi</tt>) without
- its text version (<tt>.mli</tt>).  The text version should also be
- installed for documentation purpose.  If the module involved doesn't have
+ its text version (<tt>.mli</tt>). The text version should also be
+ installed for documentation purpose. If the module involved doesn't have
  a <tt>.mli</tt>, its source code (<tt>.ml</tt>) should be installed
  instead.
 
@@ -56,11 +56,11 @@ Severity: pedantic
 Certainty: possible
 Info: This package doesn't appear to be a development package, but
  installs OCaml development files (<tt>.cmi</tt>, <tt>.cmx</tt> or
- <tt>.cmxa</tt>).  These files should be moved to a development package.
+ <tt>.cmxa</tt>). These files should be moved to a development package.
 
 Tag: ocaml-meta-without-suggesting-findlib
 Severity: pedantic
 Certainty: certain
 Info: This development package installs a META file but doesn't depend on
- ocaml-findlib.  Libraries with META file are easier to use with findlib.
+ ocaml-findlib. Libraries with META file are easier to use with findlib.
  The package should at least suggest ocaml-findlib.

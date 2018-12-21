@@ -9,10 +9,10 @@ Info: This script checks if md5sum control files are valid, if they are
 Tag: no-md5sums-control-file
 Severity: wishlist
 Certainty: certain
-Info: This package does not contain an md5sums control file.  This control
+Info: This package does not contain an md5sums control file. This control
  file listing the MD5 checksums of the contents of the package is not
  required, but if present debsums can use it to verify that no files
- shipped with your package have been modified.  Providing it is
+ shipped with your package have been modified. Providing it is
  recommended.
  .
  If you are using debhelper to create your package, just add a call to
@@ -23,7 +23,7 @@ Tag: malformed-md5sums-control-file
 Severity: important
 Certainty: certain
 Info: The indicated line of the md5sums control file for this package was
- malformed.  Each line of an md5sums control file should contain an MD5
+ malformed. Each line of an md5sums control file should contain an MD5
  checksum, some whitespace, and then the path to the file corresponding to
  that checksum.
 
