@@ -1,5 +1,5 @@
 Testname: watch-file-prerelease
-Type: non-native
+Skeleton: non-native
 Version: 1~rc1-1
 Description: Check mangling tags for upstream prereleases
 Test-For: debian-watch-file-should-uversionmangle-not-dversionmangle

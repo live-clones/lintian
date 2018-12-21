@@ -2,6 +2,6 @@ Testname: cruft-source-contains-empty-directory
 Version: 1.0-1
 Description: Check for empty directories in source package
 Options: --pedantic -I -E
-Type: non-native
+Skeleton: non-native
 Test-For:
  source-contains-empty-directory

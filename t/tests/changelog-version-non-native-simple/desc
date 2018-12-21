@@ -1,6 +1,6 @@
 Testname: changelog-version-non-native-simple
 Version: 1-2
 Description: Test for normal versions
-Type: non-native
+Skeleton: non-native
 Test-Against:
  malformed-debian-changelog-version

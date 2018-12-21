@@ -1,5 +1,5 @@
 Testname: patch-systems-no-patch-system
-Type: non-native
+Skeleton: non-native
 Version: 1.0-1
 Description: Diagnose lack of a patch system
 Options: -I -E --pedantic

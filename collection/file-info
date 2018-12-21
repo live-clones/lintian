@@ -57,8 +57,7 @@ sub collect {
         out => $outfile,
         fail => 'never'
     );
-    spawn(\%opts,
-        ['xargs', '-0r', 'file', '-e', 'ascii', '-NF', '', '--print0', '--'],
+    spawn(\%opts,['xargs', '-0r', 'file', '-NF', '', '--print0', '--'],
         '|', [$helper], '|', ['gzip', '-9nc']);
     $opts{pipe_in}->blocking(1);
 

@@ -223,8 +223,13 @@ sub check_systemd_service_file {
     }
 
     if (not $file->is_symlink or $file->link ne '/dev/null') {
+        #<<< no perltidy
         my @wanted_by
-          = extract_service_file_values($file, 'Install', 'WantedBy',1);
+          = extract_service_file_values($file, 'Install', 'WantedBy', 1);
+        my $is_oneshot =
+           any { /^oneshot$/ }
+           extract_service_file_values($file, 'Service', 'Type', 1);
+        #>>>
         foreach my $target (@wanted_by) {
             tag 'systemd-service-file-refers-to-unusual-wantedby-target',
               $file, $target
@@ -233,14 +238,12 @@ sub check_systemd_service_file {
         }
         tag 'systemd-service-file-missing-documentation-key', $file,
           unless extract_service_file_values($file, 'Unit', 'Documentation',1);
-        #<<< no perltidy - These are better formatted one per line
         tag 'systemd-service-file-missing-install-key', $file,
-          unless @wanted_by
+             unless @wanted_by
           or extract_service_file_values($file, 'Install', 'RequiredBy',1)
           or extract_service_file_values($file, 'Install', 'Also',1)
-          or any { /^oneshot$/ } extract_service_file_values($file, 'Service', 'Type')
+          or $is_oneshot
           or $file =~ m,@\.service$,;
-        #>>>
         my @pidfile = extract_service_file_values($file,'Service','PIDFile',1);
         foreach my $x (@pidfile) {
             tag 'systemd-service-file-pidfile-refers-to-var-run', $file, $x
@@ -253,7 +256,7 @@ sub check_systemd_service_file {
             last;
         }
         tag 'systemd-service-file-missing-hardening-features', $file
-          unless $seen_hardening;
+          unless $seen_hardening or $is_oneshot;
     }
 
     return 1;

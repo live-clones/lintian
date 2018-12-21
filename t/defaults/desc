@@ -8,7 +8,6 @@ Package-Architecture: all
 Prev-Date: Mon, 01 Jan 1990 00:00:00 +0100
 Skeleton: default
 Builder: builder
-Post-Template-Command: post_template
 Sequence: 6000
 Profile: debian
 Options: -I -E

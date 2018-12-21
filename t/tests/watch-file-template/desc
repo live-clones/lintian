@@ -1,5 +1,5 @@
 Testname: watch-file-template
-Type: non-native
+Skeleton: non-native
 Version: 1.0-1
 Description: Test for dh_make(1) templates
 Test-For:

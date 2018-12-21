@@ -2049,3 +2049,15 @@ Info: The listed file or maintainer script appears to access the
  Whilst the files may be editable by an admin, that's a supported (but
  unrecommended) feature reserved for humans and not for automatic tools.
 Ref: https://wiki.debian.org/DpkgConffileHandling
+
+Tag: file-references-package-build-path
+Severity: wishlist
+Certainty: possible
+Info: The listed file or maintainer script appears to reference
+ the build path used to build the package as specified in the
+ <tt>Build-Path</tt> field of the <tt>.buildinfo</tt> file.
+ .
+ This is likely to cause the package to be unreproducible, but it may
+ also indicate that the package will not work correctly outside of the
+ maintainer's own system.
+Ref: https://reproducible-builds.org/, dpkg-genbuildinfo(1)

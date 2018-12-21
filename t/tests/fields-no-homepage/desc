@@ -1,5 +1,5 @@
 Testname: fields-no-homepage
-Type: non-native
+Skeleton: non-native
 Description: Test pedantic check for no Homepage field
 Version: 1.0-1
 Options: -I -E --pedantic

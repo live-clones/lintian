@@ -1,6 +1,5 @@
 Testname: generic-dh-make-2005
 Sequence: 6500
-Type: non-native
 Skeleton: builder-only
 Author: Frank Lichtenheld <djpig@debian.org>
 Version: 1-1

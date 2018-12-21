@@ -1,5 +1,5 @@
 Testname: changelog-file-upstream-html-only
-Type: non-native
+Skeleton: non-native
 Version: 1.0-1
 Description: Check HTML-only upstream changelog
 Test-For: html-changelog-without-text-version

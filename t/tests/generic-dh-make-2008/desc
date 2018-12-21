@@ -1,6 +1,5 @@
 Testname: generic-dh-make-2008
 Sequence: 6500
-Type: non-native
 Skeleton: builder-only
 Author: Russ Allbery <rra@debian.org>
 Version: 1.0-1

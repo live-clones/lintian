@@ -1,6 +1,6 @@
 E: cruft-upstream-binaries source: source-is-missing notsourced
-P: cruft-upstream-binaries source: debian-watch-does-not-check-gpg-signature
 P: cruft-upstream-binaries source: source-contains-prebuilt-binary hello
 P: cruft-upstream-binaries source: source-contains-prebuilt-binary notsourced
 P: cruft-upstream-binaries source: source-contains-prebuilt-binary sourced
 P: cruft-upstream-binaries source: source-contains-prebuilt-binary symlink-to-sourced
+X: cruft-upstream-binaries source: debian-watch-does-not-check-gpg-signature

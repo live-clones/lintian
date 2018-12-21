@@ -1,5 +1,5 @@
 Testname: patch-systems-quilt-general
-Type: non-native
+Skeleton: non-native
 Version: 1.0-1
 Extra-Build-Depends: quilt, dpatch
 Description: General tests of a quilt patch system

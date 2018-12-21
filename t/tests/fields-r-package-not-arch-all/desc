@@ -1,6 +1,6 @@
 Testname: fields-r-package-not-arch-all
 Version: 1.0-1
-Type: non-native
+Skeleton: non-native
 Description: Tests for Architecture of an R package
 Test-For:
  r-package-not-arch-all

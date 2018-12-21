@@ -1,6 +1,6 @@
 Testname: cruft-general-test-suite
 Version: 1.0-1
-Type: non-native
+Skeleton: non-native
 Options: --pedantic -I -E
 Description: Check that cruft in test suites is okay
 Test-Against:

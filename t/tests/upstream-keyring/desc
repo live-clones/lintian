@@ -1,5 +1,5 @@
 Testname: upstream-keyring
-Type: non-native
+Skeleton: non-native
 Version: 1.0-1
 Description: Test with a keyring (false positive, from inkscape)
 Test-Against:

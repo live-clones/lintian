@@ -37,7 +37,7 @@ Description: {$description} (unsafe ldc)
  Checks for unsafe ldconfig usage scripts.
 
 Package: app
-Architecture: any
+Architecture: all
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
 Description: {$description} (useless ldc)
  This is a test package designed to exercise some feature or tag of

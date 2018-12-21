@@ -1,5 +1,4 @@
 Testname: scripts-maintainer-general
-Type: native
 Version: 1.0
 Profile: ubuntu/main
 Distribution: precise

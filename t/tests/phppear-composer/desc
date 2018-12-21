@@ -5,4 +5,4 @@ Test-For:
  composer-package-without-pkg-php-tools-builddep
 Test-Against:
  missing-pkg-php-tools-addon
-Type: non-native
+Skeleton: non-native

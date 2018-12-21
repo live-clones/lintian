@@ -1,3 +1,50 @@
+lintian (2.5.117) unstable; urgency=medium
+
+  * Summary of tag changes:
+    + Added:
+      - file-references-package-build-path
+
+  * checks/files.pm:
+    + [CL] Don't emit uses-dpkg-database-directly for d-i components; they
+      likely know what they are doing with no alternatives.
+    + [CL] Use the output from file(1) when determining whether to emit
+      the package-contains-no-arch-dependent-files tag to catch packages
+      that ship (for example) just a Python script under /usr/bin in an
+      architecture-dependent package.  This reverts 6f4bd2fee2 in order to
+      distinguish between "data" and such scripts.  Thanks to Dmitry
+      Bogatov for investigating.  (Closes: #916023)
+    + [CL] Refactor, tidy and optimise various checks for the contents of
+      files.
+    + [CL] Check files for references to the build path if specified in a
+      .buildinfo.  (Closes: #916021
+  * checks/shared-libs.desc:
+    + [CL] Clarify that symbols-file-missing-build-depends-package-field is
+      emitted per-package in its long description, not based on a file.
+  * checks/systemd.pm:
+    + [CL] Don't emit systemd-service-file-missing-hardening-features for
+      Type=oneshot "services" such as mdadm(8).
+  * checks/watch-file.desc:
+    + [CL] Correct grammar of the debian-watch-does-not-check-gpg-signature
+      tag description.
+    + [CL] Mark debian-watch-does-not-check-gpg-signature as "experimental"
+      as it is not actionable in the vast majority of cases and is in
+      danger of diluting the output of Lintian.  (Closes: #916207)
+
+  * data/spelling/corrections:
+    + [PW] Add a number of corrections.
+
+  * t/*:
+    + [CL] Apply a patch series from Felix Lechner to use "skeletons" as
+      test templates, fixing a "exec failed: Text file busy" regression
+      when running tests by tag name.  (Closes: #916087)
+    + [CL] Apply a patch series from Felix Lechner to improve the
+      "onlyrun=" test selection feature.  One can now select all tests
+      connected to particular Lintian check with "check:foo".  (MR: !90)
+    + [CL] Apply a patch set from Felix Lechner to sign test packages.
+      when a upstream/private-key.asc is present.  (MR: !93)
+
+ -- Chris Lamb <lamby@debian.org>  Fri, 14 Dec 2018 17:56:27 +0000
+
 lintian (2.5.116~bpo9+1) stretch-backports; urgency=medium
 
   * Rebuild for stretch-backports.
@@ -22586,5 +22633,3 @@ lintian (0.1.0) unstable; urgency=low
   * First release
 
  -- Christian Schwarz <schwarz@debian.org>  Wed, 11 Feb 1998 23:15:51 +0100
-
-vim: et

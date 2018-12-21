@@ -1,6 +1,5 @@
 Testname: cruft-general-native
 Version: 1.0
-Type: native
 Description: Check for cruft in a native package
 Test-For:
  diff-contains-arch-control-dir

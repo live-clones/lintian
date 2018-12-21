@@ -1,5 +1,5 @@
 Testname: changelog-file-new-upstream
-Type: non-native
+Skeleton: non-native
 Version: 1.0-2
 Description: Check a new upstream version without a version change
 Test-For: possible-new-upstream-release-without-new-version

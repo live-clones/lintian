@@ -1,5 +1,4 @@
 Testname: control-file-source-upload-to-non-free-without-autobuild
-Type: native
 Version: 1.0
 Description: Check for source-only uploads to non-free without autobuild
 Test-Against:

@@ -1,5 +1,5 @@
 Testname: changelog-file-line-too-short
-Type: non-native
+Skeleton: non-native
 Options: --pedantic
 Version: 1.0-1
 Description: Test for short changelog entries
