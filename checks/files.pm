@@ -429,7 +429,9 @@ sub run {
           and $finfo
           and $finfo !~ m/\bASCII text\b/;
 
-        $arch_dep_files = 1 if $file->dirname !~ m,^usr/lib/[^/]+/,o;
+        if ($file->dirname !~ m,^(?:usr)?/lib/([^/]+)/$,) {
+            $arch_dep_files = 1 if $TRIPLETS->known($1 // '');
+        }
 
         if (exists($PATH_DIRECTORIES{$file->dirname})) {
             $has_public_executable = 1;

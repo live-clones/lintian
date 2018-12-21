@@ -13,8 +13,8 @@ lintian (2.5.118) UNRELEASED; urgency=medium
       processing the uses-dpkg-database-directly tag as these are
       invariably legitimate.
     + [CL] Prevent package-contains-no-arch-dependent-files false-positives
-      by assuming /usr/lib/*/* files are architecture dependent.
-      (Closes: #916901, #917028)
+      regarding files under /usr/lib/<gnu-triplet>.  Thanks to Andreas
+      Beckmann.  (Closes: #916901, #917028)
   * checks/systemd.pm:
     + [CL] Don't emit systemd-service-file-missing-hardening-features for
       WantedBy=sleep.target "services" such as autosuspend.
