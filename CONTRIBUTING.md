@@ -9,10 +9,12 @@ that is a section on recommended practices and additional resources.
 Getting started
 ---------------
 
-Please checkout the repository from anonscm.debian.org:
+Please either checkout the repository from [salsa.debian.org][salsa]:
 
     $ git clone https://salsa.debian.org/lintian/lintian.git
     $ cd lintian
+
+Or create your own "fork" of repository [via the web interface][lintian-fork].
 
 You will also need a number of dependencies.  On a very recent Debian
 (e.g. Stretch), you can have apt install these for you via:
@@ -21,6 +23,9 @@ You will also need a number of dependencies.  On a very recent Debian
 
 Otherwise, the full list of dependencies are listed in the `Build-Depends*`
 fields in the `debian/control` file.
+
+[salsa]: https://salsa.debian.org/
+[lintian-fork]: https://salsa.debian.org/lintian/lintian/forks/new
 
 #### API Docs, tutorials and the test suite documentation
 
@@ -78,8 +83,11 @@ For more on best practices on git commit messages, please review
 Submitting changes
 ------------------
 
-Please submit your changes to the Debian Bug Tracker by reporting a bug
-against the `lintian` package.  On a Debian system, this can usually
+Please prefer to submit your changes to Lintian by creating a
+[merge-request][merge-request] on [Salsa][salsa].
+
+Alternatively, submit your changes to the Debian Bug Tracker by reporting
+a bug against the `lintian` package  On a Debian system, this can usually
 be done by using `reportbug`:
 
     $ reportbug lintian
@@ -90,6 +98,9 @@ the first line being `Package: lintian`:
 You are welcome to attach the changes to the bug report or link to a
 git branch.  If you use attachments, please generate the changes via
 the `git format-patch` command.
+
+[merge-request]: https://salsa.debian.org/lintian/lintian/merge_requests
+[salsa]: https://salsa.debian.org/
 
 Recommended practices
 =====================

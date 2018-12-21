@@ -28,6 +28,9 @@ lintian (2.5.118) UNRELEASED; urgency=medium
     + [CL] Add default, network-online and sleep' to the list of valid
       WantedBy systemd targets.
 
+  * CONTRIBUTING.md:
+    + [CL] Update a number of references to Salsa, recommending merge
+      requests, etc.
   * debian/{docs,lintian.install}:
     + [CL] Order lines.
 
