@@ -28,6 +28,9 @@ lintian (2.5.118) UNRELEASED; urgency=medium
     + [CL] Add default, network-online and sleep' to the list of valid
       WantedBy systemd targets.
 
+  * debian/{docs,lintian.install}:
+    + [CL] Order lines.
+
   * t/*:
     + [CL] Apply a patch series from Felix Lechner to capture log output in
       tests using Capture::Tiny as it works better in a multi-threaded
