@@ -214,29 +214,31 @@ sub runner {
 
     # Run a sed-script if it exists, for tests that have slightly variable
     # output
-    if (-f "$runpath/post_test") {
-        runsystem_ok('sed', '-ri', '-f', "$runpath/post_test",$actual);
+    my $parsed = "$runpath/tags.actual.parsed";
+    my $script = "$runpath/post_test";
+    if(-f $script) {
+        sed_hook($script, $actual, $parsed);
+    } else {
+        die"Could not copy actual tags $actual to $parsed: $!"
+          if(system('cp', '-p', $actual, $parsed));
     }
 
     # sort tags
     my $sorted = "$runpath/tags.actual.parsed.sorted";
     if($testcase->{sort} eq 'yes') {
-        sort_lines($actual, $sorted);
+        sort_lines($parsed, $sorted);
     } else {
         die"Could not copy parsed tags $actual to $sorted: $!"
-          if(system('cp', '-p', $actual, $sorted));
+          if(system('cp', '-p', $parsed, $sorted));
     }
 
     my $expected = "$runpath/tags";
     my $origexp = $expected;
 
-    if (-x "$runpath/test_calibration") {
-        my $calibrated = "$runpath/expected.$pkg.calibrated";
-        $test_state->progress('test_calibration hook');
-        runsystem_ok("$runpath/test_calibration",
-            $expected,$sorted, $calibrated);
-        $expected = $calibrated if -e $calibrated;
-    }
+    my $calibrated = "$runpath/expected.$pkg.calibrated";
+    $test_state->progress('test_calibration hook');
+    $expected
+      = calibrate("$runpath/test_calibration",$sorted, $expected, $calibrated);
 
     check_result($test_state, $testcase, $expected,$sorted, $origexp);
 
@@ -246,7 +248,7 @@ sub runner {
 sub check_result {
     my ($test_state, $testcase, $expected, $actual, $origexp) = @_;
     # Compare the output to the expected tags.
-    my $testok = runsystem_ok('cmp', '-s', $expected, $actual);
+    my $testok = !system('cmp', '-s', $expected, $actual);
 
     if (not $testok) {
         if ($testcase->{'todo'} eq 'yes') {
