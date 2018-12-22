@@ -429,7 +429,7 @@ sub run {
           and $finfo
           and $finfo !~ m/\bASCII text\b/;
 
-        if ($file->dirname !~ m,^(?:usr)?/lib/([^/]+)/$,) {
+        if ($file->dirname =~ m,^(?:usr)?/lib/([^/]+)/$,) {
             $arch_dep_files = 1 if $TRIPLETS->known($1 // '');
         }
 
