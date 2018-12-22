@@ -253,7 +253,7 @@ sub check_result {
             $test_state->pass_todo_test('failed but marked as TODO');
             return;
         } else {
-            $test_state->diff_files($expected, $actual);
+            $test_state->diff_files("$testcase->{spec_path}/tags", $actual);
             $test_state->fail_test('output differs!');
             return;
         }
