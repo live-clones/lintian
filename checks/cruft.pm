@@ -1385,6 +1385,13 @@ sub _check_gfdl_license_problem {
         return 0;
     }
 
+    # Some upstreams have modified the text slightly, so allow some variation.
+    return 0 if $gfdlsections =~ m/\A
+                          with [ ] no [ ] invariant [ ] sections[ ]?,
+                          [ ]? no [ ] front(?:[ ]?-[ ]?|[ ])cover [ ] (?:texts)?[ ]?,?
+                          [ ]? and [ ] (?:no [ ])? back(?:[ ]?-?[ ]?|[ ])cover [ ] texts
+                          \Z/xso;
+
     # example are ok
     if (
         $contextbefore =~ m/following [ ] is [ ] an [ ] example

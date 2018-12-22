@@ -7,6 +7,10 @@ lintian (2.5.118) UNRELEASED; urgency=medium
   * checks/changelog-file.{desc,pm}:
     + [CL] Check that 1.2-3~debXuY stanzas follow a 1.2-3 one. Thanks to
       Andreas Beckmann for the suggestion.  (Closes: #916877)
+  * checks/cruft.pm:
+    + [CL] Allow some alternatives in the "invariant sections" regular
+      expressions as some upstream's have modified the official wording.
+      Thanks to Dmitry Bogatov for the patch.  (Closes: #916095)
   * checks/files.pm:
     + [CL] The package-contains-documentation-outside-usr-share-doc tag
       should accept files under "/usr/share/help"; these are being
