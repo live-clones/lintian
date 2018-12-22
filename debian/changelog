@@ -4,6 +4,9 @@ lintian (2.5.118) UNRELEASED; urgency=medium
 
   * checks/*.desc:
     + [CL] Consistently use a single space after a full-stop/period.
+  * checks/changelog-file.{desc,pm}:
+    + [CL] Check that 1.2-3~debXuY stanzas follow a 1.2-3 one. Thanks to
+      Andreas Beckmann for the suggestion.  (Closes: #916877)
   * checks/files.pm:
     + [CL] The package-contains-documentation-outside-usr-share-doc tag
       should accept files under "/usr/share/help"; these are being
