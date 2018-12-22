@@ -64,7 +64,6 @@ use Path::Tiny;
 use Try::Tiny;
 
 use Test::Lintian::ConfigFile qw(read_config);
-use Test::Lintian::Harness qw(runsystem_ok up_to_date);
 use Test::Lintian::Helper qw(rfc822date);
 use Test::Lintian::Hooks
   qw(find_missing_prerequisites run_lintian sed_hook sort_lines calibrate);
