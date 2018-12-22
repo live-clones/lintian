@@ -168,6 +168,9 @@ sub prepare {
           unless exists $testcase->{$key};
     }
 
+    # record path to specification
+    $testcase->{spec_path} = $specpath;
+
     # record suite
     $testcase->{suite} = $suite;
 
