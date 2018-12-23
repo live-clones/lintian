@@ -77,7 +77,7 @@ Build-Depends:
  unzip <!nocheck>,
  xz-utils <!nocheck>,
  zip <!nocheck>,
-Standards-Version: 4.2.1
+Standards-Version: 4.3.0
 Rules-Requires-Root: no
 Vcs-Git: https://salsa.debian.org/lintian/lintian.git
 Vcs-Browser: https://salsa.debian.org/lintian/lintian
@@ -147,4 +147,4 @@ Description: Debian package checker
  should check packages with this tool before uploading them to the
  archive.
  .
- This version of Lintian is calibrated for policy version 4.2.1.
+ This version of Lintian is calibrated for policy version 4.3.0.

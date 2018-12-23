@@ -36,6 +36,8 @@ lintian (2.5.118) UNRELEASED; urgency=medium
   * doc/lintianrc.example:
     + [CL] Clarify that spaces are valid in variable assignments.  Thanks
       to Salvo Tomaselli for the report.  (Closes: #917120)
+  * data/standards-version/release-dates:
+    + [CL] Add 4.3.0 as a known Standards-Version.
   * data/systemd/wantedby-whitelist:
     + [CL] Add default, network-online and sleep' to the list of valid
       WantedBy systemd targets.
