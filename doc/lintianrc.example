@@ -10,6 +10,8 @@
 #    VAR=text
 # or
 #    VAR="text"
+# or
+#    VAR = text
 # It is allowed to use `~' and `$HOME' in the variables, but not other
 # shell/environment variables.
 
