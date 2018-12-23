@@ -1,6 +1,10 @@
-lintian (2.5.118) UNRELEASED; urgency=medium
+lintian (2.5.118) unstable; urgency=medium
 
-  XXX: generate tag summary
+  * Summary of tag changes:
+    + Added:
+      - changelog-file-missing-explicit-entry
+      - debian-tests-control-and-control-autodep8
+      - debian-tests-control-autodep8-is-obsolete
 
   * checks/*.desc:
     + [CL] Consistently use a single space after a full-stop/period.
@@ -33,22 +37,28 @@ lintian (2.5.118) UNRELEASED; urgency=medium
       version-substvar-for-external-package tag require versioned provides.
       (Closes: #833608)
 
-  * doc/lintianrc.example:
-    + [CL] Clarify that spaces are valid in variable assignments.  Thanks
-      to Salvo Tomaselli for the report.  (Closes: #917120)
+  * CONTRIBUTING.md:
+    + [CL] Update a number of references to Salsa, recommending merge
+      requests, etc.
+
   * data/output/manual-references:
     + [CL] Refresh.
+  * data/spelling/corrections:
+    + [PW] Add a number of corrections.
   * data/standards-version/release-dates:
     + [CL] Add 4.3.0 as a known Standards-Version.
   * data/systemd/wantedby-whitelist:
     + [CL] Add default, network-online and sleep' to the list of valid
       WantedBy systemd targets.
+    + [PW] Add a number of corrections.
 
-  * CONTRIBUTING.md:
-    + [CL] Update a number of references to Salsa, recommending merge
-      requests, etc.
   * debian/{docs,lintian.install}:
     + [CL] Order lines.
+      to Salvo Tomaselli for the report.  (Closes: #917120)
+
+  * doc/lintianrc.example:
+    + [CL] Clarify that spaces are valid in variable assignments.  Thanks
+
   * private/refresh-manual-refs:
     + [CL] Update location of the Python policy; it is now shipped in the
       "python3" binary package.
@@ -60,7 +70,7 @@ lintian (2.5.118) UNRELEASED; urgency=medium
     + [CL] Apply a patch from Felix Lechner to remove the "diff" directory
       and contents for two tests.  (MR: !103)
 
- -- Chris Lamb <lamby@debian.org>  Fri, 14 Dec 2018 19:34:34 +0100
+ -- Chris Lamb <lamby@debian.org>  Sun, 23 Dec 2018 16:42:08 +0000
 
 lintian (2.5.117) unstable; urgency=medium
 
