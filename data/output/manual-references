@@ -7,7 +7,7 @@
 # If <section> is empty, that line specifies the title and URL for the whole
 # manual.  If <url> is empty, that manual is not available on the web.
 #
-# Last updated: 2017-10-14
+# Last updated: 2018-12-23
 
 debconf-spec::::Configuration management::https://www.debian.org/doc/packaging-manuals/debconf_specification.html
 debconf-spec::1::Introduction::https://www.debian.org/doc/packaging-manuals/debconf_specification.html#id-1.2
@@ -68,10 +68,6 @@ devref::4.9::Package information::https://www.debian.org/doc/developers-referenc
 devref::4.9.1::On the web::https://www.debian.org/doc/developers-reference/ch04.html#pkg-info-web
 devref::4.9.2::The <strong>dak ls</strong> utility::https://www.debian.org/doc/developers-reference/ch04.html#dak-ls
 devref::4.10::The Debian Package Tracker::https://www.debian.org/doc/developers-reference/ch04.html#pkg-tracker
-devref::4.10.1::The package tracker email interface::https://www.debian.org/doc/developers-reference/ch04.html#pkg-tracker-commands
-devref::4.10.2::Filtering mails from the package tracker::https://www.debian.org/doc/developers-reference/ch04.html#pkg-tracker-mail-filtering
-devref::4.10.3::Forwarding VCS commits to the package tracker::https://www.debian.org/doc/developers-reference/ch04.html#pkg-tracker-vcs-commit
-devref::4.10.4::The package tracker web interface::https://www.debian.org/doc/developers-reference/ch04.html#pts-web
 devref::4.11::Developer's packages overview::https://www.debian.org/doc/developers-reference/ch04.html#ddpo
 devref::4.12::Debian's FusionForge installation: Alioth::https://www.debian.org/doc/developers-reference/ch04.html#alioth
 devref::4.13::Goodies for Debian Developers and Debian Maintainers::https://www.debian.org/doc/developers-reference/ch04.html#developer-misc
@@ -88,7 +84,7 @@ devref::5.6.1::Uploading to <code>ftp-master</code>::https://www.debian.org/doc/
 devref::5.6.2::Delayed uploads::https://www.debian.org/doc/developers-reference/ch05.html#delayed-incoming
 devref::5.6.3::Security uploads::https://www.debian.org/doc/developers-reference/ch05.html#s5.6.4
 devref::5.6.4::Other upload queues::https://www.debian.org/doc/developers-reference/ch05.html#s5.6.5
-devref::5.6.5::Notification that a new package has been installed::https://www.debian.org/doc/developers-reference/ch05.html#upload-notification
+devref::5.6.5::Notifications::https://www.debian.org/doc/developers-reference/ch05.html#upload-notification
 devref::5.7::Specifying the package section, subsection and priority::https://www.debian.org/doc/developers-reference/ch05.html#override-file
 devref::5.8::Handling bugs::https://www.debian.org/doc/developers-reference/ch05.html#bug-handling
 devref::5.8.1::Monitoring bugs::https://www.debian.org/doc/developers-reference/ch05.html#bug-monitoring
@@ -128,19 +124,22 @@ devref::5.11.4::NMUs from the maintainer's point of view::https://www.debian.org
 devref::5.11.5::Source NMUs vs Binary-only NMUs (binNMUs)::https://www.debian.org/doc/developers-reference/ch05.html#nmu-binnmu
 devref::5.11.6::NMUs vs QA uploads::https://www.debian.org/doc/developers-reference/ch05.html#nmu-qa-upload
 devref::5.11.7::NMUs vs team uploads::https://www.debian.org/doc/developers-reference/ch05.html#nmu-team-upload
-devref::5.12::Collaborative maintenance::https://www.debian.org/doc/developers-reference/ch05.html#collaborative-maint
-devref::5.13::The testing distribution::https://www.debian.org/doc/developers-reference/ch05.html#testing
-devref::5.13.1::Basics::https://www.debian.org/doc/developers-reference/ch05.html#testing-basics
-devref::5.13.2::Updates from unstable::https://www.debian.org/doc/developers-reference/ch05.html#testing-unstable
-devref::5.13.2.1::Out-of-date::https://www.debian.org/doc/developers-reference/ch05.html#outdated
-devref::5.13.2.2::Removals from testing::https://www.debian.org/doc/developers-reference/ch05.html#removals
-devref::5.13.2.3::Circular dependencies::https://www.debian.org/doc/developers-reference/ch05.html#circular
-devref::5.13.2.4::Influence of package in testing::https://www.debian.org/doc/developers-reference/ch05.html#s5.13.2.4
-devref::5.13.2.5::Details::https://www.debian.org/doc/developers-reference/ch05.html#details
-devref::5.13.3::Direct updates to testing::https://www.debian.org/doc/developers-reference/ch05.html#t-p-u
-devref::5.13.4::Frequently asked questions::https://www.debian.org/doc/developers-reference/ch05.html#faq
-devref::5.13.4.1::What are release-critical bugs, and how do they get counted?::https://www.debian.org/doc/developers-reference/ch05.html#rc
-devref::5.13.4.2::How could installing a package into <code>testing</code> possibly break other packages?::https://www.debian.org/doc/developers-reference/ch05.html#s5.13.4.2
+devref::5.12::Package Salvaging::https://www.debian.org/doc/developers-reference/ch05.html#package-salvaging
+devref::5.12.1::When a package is eligible for package salvaging::https://www.debian.org/doc/developers-reference/ch05.html#ps-eligibility
+devref::5.12.2::How to salvage a package::https://www.debian.org/doc/developers-reference/ch05.html#ps-guidelines
+devref::5.13::Collaborative maintenance::https://www.debian.org/doc/developers-reference/ch05.html#collaborative-maint
+devref::5.14::The testing distribution::https://www.debian.org/doc/developers-reference/ch05.html#testing
+devref::5.14.1::Basics::https://www.debian.org/doc/developers-reference/ch05.html#testing-basics
+devref::5.14.2::Updates from unstable::https://www.debian.org/doc/developers-reference/ch05.html#testing-unstable
+devref::5.14.2.1::Out-of-date::https://www.debian.org/doc/developers-reference/ch05.html#outdated
+devref::5.14.2.2::Removals from testing::https://www.debian.org/doc/developers-reference/ch05.html#removals
+devref::5.14.2.3::Circular dependencies::https://www.debian.org/doc/developers-reference/ch05.html#circular
+devref::5.14.2.4::Influence of package in testing::https://www.debian.org/doc/developers-reference/ch05.html#s5.13.2.4
+devref::5.14.2.5::Details::https://www.debian.org/doc/developers-reference/ch05.html#details
+devref::5.14.3::Direct updates to testing::https://www.debian.org/doc/developers-reference/ch05.html#t-p-u
+devref::5.14.4::Frequently asked questions::https://www.debian.org/doc/developers-reference/ch05.html#faq
+devref::5.14.4.1::What are release-critical bugs, and how do they get counted?::https://www.debian.org/doc/developers-reference/ch05.html#rc
+devref::5.14.4.2::How could installing a package into <code>testing</code> possibly break other packages?::https://www.debian.org/doc/developers-reference/ch05.html#s5.13.4.2
 devref::6::Best Packaging Practices::https://www.debian.org/doc/developers-reference/ch06.html
 devref::6.1::Best practices for <code>debian/rules</code>::https://www.debian.org/doc/developers-reference/ch06.html#bpp-debian-rules
 devref::6.1.1::Helper scripts::https://www.debian.org/doc/developers-reference/ch06.html#helper-scripts
@@ -156,9 +155,10 @@ devref::6.2.5.1::Vcs-Browser::https://www.debian.org/doc/developers-reference/ch
 devref::6.2.5.2::Vcs-*::https://www.debian.org/doc/developers-reference/ch06.html#s6.2.5.2
 devref::6.3::Best practices for <code>debian/changelog</code>::https://www.debian.org/doc/developers-reference/ch06.html#bpp-debian-changelog
 devref::6.3.1::Writing useful changelog entries::https://www.debian.org/doc/developers-reference/ch06.html#bpp-changelog-do
-devref::6.3.2::Common misconceptions about changelog entries::https://www.debian.org/doc/developers-reference/ch06.html#bpp-changelog-misconceptions
-devref::6.3.3::Common errors in changelog entries::https://www.debian.org/doc/developers-reference/ch06.html#bpp-changelog-errors
-devref::6.3.4::Supplementing changelogs with <code>NEWS.Debian</code> files::https://www.debian.org/doc/developers-reference/ch06.html#bpp-news-debian
+devref::6.3.2::Selecting the upload urgency::https://www.debian.org/doc/developers-reference/ch06.html#bpp-changelog-urgency
+devref::6.3.3::Common misconceptions about changelog entries::https://www.debian.org/doc/developers-reference/ch06.html#bpp-changelog-misconceptions
+devref::6.3.4::Common errors in changelog entries::https://www.debian.org/doc/developers-reference/ch06.html#bpp-changelog-errors
+devref::6.3.5::Supplementing changelogs with <code>NEWS.Debian</code> files::https://www.debian.org/doc/developers-reference/ch06.html#bpp-news-debian
 devref::6.4::Best practices for maintainer scripts::https://www.debian.org/doc/developers-reference/ch06.html#bpp-debian-maint-scripts
 devref::6.5::Configuration management with <code>debconf</code>::https://www.debian.org/doc/developers-reference/ch06.html#bpp-config-mgmt
 devref::6.5.1::Do not abuse debconf::https://www.debian.org/doc/developers-reference/ch06.html#s6.5.1
@@ -182,7 +182,7 @@ devref::6.5.3.1.8::error::https://www.debian.org/doc/developers-reference/ch06.h
 devref::6.5.3.2::Description: short and extended description::https://www.debian.org/doc/developers-reference/ch06.html#s6.5.3.2
 devref::6.5.3.3::Choices::https://www.debian.org/doc/developers-reference/ch06.html#s6.5.3.3
 devref::6.5.3.4::Default::https://www.debian.org/doc/developers-reference/ch06.html#s6.5.3.4
-devref::6.5.4::Templates fields specific style guide::https://www.debian.org/doc/developers-reference/ch06.html#s6.5.4
+devref::6.5.4::Template fields specific style guide::https://www.debian.org/doc/developers-reference/ch06.html#s6.5.4
 devref::6.5.4.1::Type field::https://www.debian.org/doc/developers-reference/ch06.html#s6.5.4.1
 devref::6.5.4.2::Description field::https://www.debian.org/doc/developers-reference/ch06.html#s6.5.4.2
 devref::6.5.4.2.1::String/password templates::https://www.debian.org/doc/developers-reference/ch06.html#s6.5.4.2.1
