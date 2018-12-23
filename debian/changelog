@@ -47,6 +47,9 @@ lintian (2.5.118) UNRELEASED; urgency=medium
       requests, etc.
   * debian/{docs,lintian.install}:
     + [CL] Order lines.
+  * private/refresh-manual-refs:
+    + [CL] Update location of the Python policy; it is now shipped in the
+      "python3" binary package.
 
   * t/*:
     + [CL] Apply a patch series from Felix Lechner to capture log output in
