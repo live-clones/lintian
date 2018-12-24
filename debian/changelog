@@ -6,6 +6,9 @@ lintian (2.5.119) UNRELEASED; urgency=medium
     + [CL] Avoid false-positives in changelog-file-missing-explicit-entry
       when uploading updates to updates such as "1.2-3+nmu2" or
       "1.2-3deb8u2".
+  * checks/cruft.pm:
+    + [BR] Following #916095 tag "invariant sections" modified by upstream
+      versions as non official.
   * checks/python.desc:
     + [CL] Update the dependency-on-python-version-marked-for-end-of-life
       tag's description to mention that a commented override would be
