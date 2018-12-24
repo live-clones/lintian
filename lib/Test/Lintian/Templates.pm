@@ -273,25 +273,27 @@ sub fill_template {
       = length $template && -f $template ? stat($template)->mtime : time;
     my $threshold = max($template_epoch, $data_epoch//time);
 
-    return if $generated_epoch > $threshold;
+    if ($generated_epoch <= $threshold) {
 
-    my $filler= Text::Template->new(TYPE => 'FILE', SOURCE => $template);
-    croak("Cannot read template $template: $Text::Template::ERROR")
-      unless $filler;
+        my $filler= Text::Template->new(TYPE => 'FILE', SOURCE => $template);
+        croak("Cannot read template $template: $Text::Template::ERROR")
+          unless $filler;
 
-    open(my $handle, '>', $generated)
-      or croak "Could not open file $generated: $!";
-    $filler->fill_in(
-        OUTPUT => $handle,
-        HASH => $data,
-        DELIMITERS => $delimiters
-    )or croak("Could not create file $generated from template $template");
-    close($handle)
-      or carp "Could not close file $generated: $!";
+        open(my $handle, '>', $generated)
+          or croak "Could not open file $generated: $!";
+        $filler->fill_in(
+            OUTPUT => $handle,
+            HASH => $data,
+            DELIMITERS => $delimiters
+          )
+          or croak("Could not create file $generated from template $template");
+        close($handle)
+          or carp "Could not close file $generated: $!";
 
-    # transfer file permissions from template to generated file
-    my $stat = stat($template) or croak "stat $template failed: $!";
-    chmod $stat->mode, $generated or croak "chmod $generated failed: $!";
+        # transfer file permissions from template to generated file
+        my $stat = stat($template) or croak "stat $template failed: $!";
+        chmod $stat->mode, $generated or croak "chmod $generated failed: $!";
+    }
 
     # delete template
     unlink($template) if -f $generated;
