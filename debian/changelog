@@ -2,6 +2,11 @@ lintian (2.5.119) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
+  * checks/changelog-file.pm:
+    + [CL] Avoid false-positives in changelog-file-missing-explicit-entry
+      when uploading updates to updates such as "1.2-3+nmu2" or
+      "1.2-3deb8u2".
+
  -- Chris Lamb <lamby@debian.org>  Sun, 23 Dec 2018 17:18:55 +0000
 
 lintian (2.5.118) unstable; urgency=medium
