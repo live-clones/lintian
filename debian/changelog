@@ -6,6 +6,11 @@ lintian (2.5.119) UNRELEASED; urgency=medium
     + [CL] Avoid false-positives in changelog-file-missing-explicit-entry
       when uploading updates to updates such as "1.2-3+nmu2" or
       "1.2-3deb8u2".
+  * checks/python.desc:
+    + [CL] Update the dependency-on-python-version-marked-for-end-of-life
+      tag's description to mention that a commented override would be
+      useful in order to document that the package will not ported to
+      Python 3.x.  Thanks to Scott Kitterman.  (Closes: #917264)
 
  -- Chris Lamb <lamby@debian.org>  Sun, 23 Dec 2018 17:18:55 +0000
 
