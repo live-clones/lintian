@@ -22,6 +22,9 @@ lintian (2.5.119) UNRELEASED; urgency=medium
   * data/files/privacy-breaker-websites:
     + [BR] Detect html5shiv library. Suggest to use libjs-html5shiv
       virtual package.
+    + [BR] Recommend virtual package libjs-normalize instead of
+      node-normalize.css package. libjs-normalize is provided
+      by node-normalize.css, and this is an implementation detail.
 
  -- Chris Lamb <lamby@debian.org>  Sun, 23 Dec 2018 17:18:55 +0000
 
