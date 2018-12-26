@@ -15,6 +15,14 @@ lintian (2.5.119) UNRELEASED; urgency=medium
       useful in order to document that the package will not ported to
       Python 3.x.  Thanks to Scott Kitterman.  (Closes: #917264)
 
+  * data/files/js-libraries:
+    + [BR] Detect html5shiv library. This library is the defacto way
+      to enable use of HTML5 sectioning elements in legacy
+      Internet Explorer.
+  * data/files/privacy-breaker-websites:
+    + [BR] Detect html5shiv library. Suggest to use libjs-html5shiv
+      virtual package.
+
  -- Chris Lamb <lamby@debian.org>  Sun, 23 Dec 2018 17:18:55 +0000
 
 lintian (2.5.118) unstable; urgency=medium
