@@ -21,6 +21,7 @@ lintian (2.5.119) UNRELEASED; urgency=medium
       Internet Explorer.
     + [BR] Detect mocha framework. This is a testing javascript
       framework.
+    + [BR] Detect chai testing framework.
   * data/files/privacy-breaker-websites:
     + [BR] Detect html5shiv library. Suggest to use libjs-html5shiv
       virtual package.
@@ -29,6 +30,7 @@ lintian (2.5.119) UNRELEASED; urgency=medium
       by node-normalize.css, and this is an implementation detail.
     + [BR] Detect mocha framework and recommend libjs-mocha.
     + [BR] Detect libjs-expect.js package and warn about it.
+    + [BR] Detect libjs-chai and warn about it.
 
  -- Chris Lamb <lamby@debian.org>  Sun, 23 Dec 2018 17:18:55 +0000
 
