@@ -18,14 +18,14 @@ Tag: invalid-standards-version
 Severity: important
 Certainty: certain
 Info: The source package refers to a Standards-Version which never
- existed.  Please update your package to latest Policy and set this
+ existed. Please update your package to latest Policy and set this
  control field appropriately.
 
 Tag: newer-standards-version
 Severity: normal
 Certainty: certain
 Info: The source package refers to a Standards-Version which is
- newer than the highest one Lintian is programmed to check.  If the source
+ newer than the highest one Lintian is programmed to check. If the source
  package is correct, then please upgrade Lintian to the newest version.
  (If there is no newer Lintian version, then please bug &maint; to make
  one.)
@@ -35,12 +35,12 @@ Severity: normal
 Certainty: certain
 Ref: https://www.debian.org/doc/packaging-manuals/upgrading-checklist.txt
 Info: The source package refers to a Standards-Version that has been
- obsolete for more than two years.  Please update your package to latest
+ obsolete for more than two years. Please update your package to latest
  Policy and set this control field appropriately.
  .
  If the package is already compliant with the current standards, you don't
  have to re-upload the package just to adjust the Standards-Version
- control field.  However, please remember to update this field next time
+ control field. However, please remember to update this field next time
  you upload the package.
  .
  See <tt>/usr/share/doc/debian-policy/upgrading-checklist.txt.gz</tt> in
@@ -53,13 +53,13 @@ Certainty: certain
 Ref: https://www.debian.org/doc/packaging-manuals/upgrading-checklist.txt
 Info: The source package refers to a Standards-Version older than the one
  that was current at the time the package was created (according to the
- timestamp of the latest <tt>debian/changelog</tt> entry).  Please
+ timestamp of the latest <tt>debian/changelog</tt> entry). Please
  consider updating the package to current Policy and setting this control
  field appropriately.
  .
  If the package is already compliant with the current standards, you don't
  have to re-upload the package just to adjust the Standards-Version
- control field.  However, please remember to update this field next time
+ control field. However, please remember to update this field next time
  you upload the package.
  .
  See <tt>/usr/share/doc/debian-policy/upgrading-checklist.txt.gz</tt> in

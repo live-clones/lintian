@@ -285,18 +285,18 @@ check.
 
 To run a specific test case, run:
 
-    debian/rules runtests onlyrun=<desc-name>
+    debian/rules runtests onlyrun=test:<path>
 
-You can omit the .desc from the end of <desc-name>.  Give only the
-file name, not the full path.
+You can also run groups of tests defined by selectors such as:
 
-It's often more useful to run every test that is relevant to a
-particular tag.  To do that, run:
+    suite: runs all tests in the named suite
+    tag: runs all tests that relate to the named tag
+    check: runs all tests that relate to the named Lintian check
+    script: runs the named code quality script
 
-    debian/rules runtests onlyrun=tag:<tag>
 
-This will run all tests that list that tag in either Test-For or
-Test-Against.
+The runner provides basic output for each test. For greater detail.
+please look at ./debian/test-out/${suite}/${testname}/log.
 
 
 TEST WRITING TIPS

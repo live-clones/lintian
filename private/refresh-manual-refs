@@ -97,7 +97,7 @@ my %manuals = (
         $index_re, $fields
     ],
     'python-policy' => [
-        '/usr/share/doc/python/python-policy.html/index.html',
+        '/usr/share/doc/python3/python-policy.html/index.html',
         'https://www.debian.org/doc/packaging-manuals/python-policy/',
         $index_re, $fields
     ],

@@ -30,58 +30,53 @@
 use strict;
 use warnings;
 use autodie;
-use Cwd();
+use v5.10;
 
-use File::Path qw(make_path);
+use Cwd();
 use File::Spec::Functions qw(abs2rel rel2abs splitpath splitdir);
-use Getopt::Long qw(GetOptions);
+use Getopt::Long;
 use IO::Async::Channel;
 use IO::Async::Loop;
 use IO::Async::Routine;
+use Try::Tiny;
 
 use constant SUITES => qw(scripts changes debs source tests);
 
-our ($LINTIAN_ROOT, $LINTIAN);
-
 BEGIN {
-    # Whitelist the part of the environment we permit.  This is to
-    # avoid inheriting things that messes up tests (like CFLAGS,
-    # DH_OPTIONS, DEB_HOST_ARCH etc.)
-    my $dplint;
-    my %PRESERVE_ENV = map { $_ => 1 } qw(
+    # whitelist the environment we permit to avoid things that mess up
+    # tests, like CFLAGS, DH_OPTIONS, DH_COMPAT, DEB_HOST_ARCH
+    my %WHITELIST = map { $_ => 1 } qw(
       LINTIAN_TEST_INSTALLED
       NO_PKG_MANGLE
       PATH
       TMPDIR
     );
+
     # TODO: MAKEFLAGS - some of the tests don't cope too well with it
-    for my $key (keys(%ENV)) {
-        delete $ENV{$key}
-          if not exists($PRESERVE_ENV{$key});
-
-    }
-    for my $var (sort(keys(%ENV))) {
-        print "ENV[$var]=$ENV{$var}\n";
+    for my $var (keys %ENV) {
+        delete $ENV{$var} unless exists $WHITELIST{$var};
     }
 
-    if (($ENV{'LINTIAN_TEST_INSTALLED'}//'no') eq 'yes') {
-        $LINTIAN_ROOT = '/usr/share/lintian';
-        $LINTIAN = '/usr/bin/lintian';
-        $dplint = '/usr/share/lintian/frontend/dplint';
-    } else {
-        $LINTIAN_ROOT = Cwd::cwd();
-        $LINTIAN = "$LINTIAN_ROOT/frontend/lintian";
-        $dplint = "$LINTIAN_ROOT/frontend/dplint";
-    }
-    $ENV{'LINTIAN_ROOT'} = $LINTIAN_ROOT;
-    $ENV{'LINTIAN_TEST_ROOT'} = $LINTIAN_ROOT;
-    $ENV{'LINTIAN_FRONTEND'} = $LINTIAN;
-    $ENV{'LINTIAN_DPLINT_FRONTEND'} = $dplint;
-
-    # Ubuntu auto-builders run pkg-mangle which messes with our
-    # test packages, so ask it not to do so by default.
+    # Ubuntu auto-builders run pkg-mangle which messes up test packages
     $ENV{'NO_PKG_MANGLE'} = 'true'
       unless exists($ENV{'NO_PKG_MANGLE'});
+
+    $ENV{'LINTIAN_TEST_INSTALLED'} = 'no'
+      unless exists $ENV{'LINTIAN_TEST_INSTALLED'};
+
+    if ($ENV{'LINTIAN_TEST_INSTALLED'} eq 'yes') {
+        $ENV{'LINTIAN_TEST_ROOT'} = '/usr/share/lintian';
+        $ENV{'LINTIAN_ROOT'} = '/usr/share/lintian';
+        $ENV{'LINTIAN_FRONTEND'} = '/usr/bin/lintian';
+    } else {
+        my $cwd = Cwd::getcwd();
+        $ENV{'LINTIAN_TEST_ROOT'} = $cwd;
+        $ENV{'LINTIAN_ROOT'} = $cwd;
+        $ENV{'LINTIAN_FRONTEND'} = "$cwd/frontend/lintian";
+    }
+
+    $ENV{'LINTIAN_DPLINT_FRONTEND'}
+      = "$ENV{'LINTIAN_TEST_ROOT'}/frontend/dplint";
 
     $ENV{'LC_ALL'} = 'C';
 
@@ -90,63 +85,136 @@ BEGIN {
     umask(022);
 }
 
-use lib "$LINTIAN_ROOT/lib";
+use lib "$ENV{'LINTIAN_TEST_ROOT'}/lib";
 
 use Lintian::Command qw(safe_qx);
 use Lintian::Internal::FrontendUtil qw(default_parallel);
-use Lintian::Util qw(internal_error);
 
-use Test::Lintian::Harness
-  qw(chdir_runcmd check_test_depends find_tests_for_tag
-  runsystem runsystem_ok skip_reason up_to_date);
 use Test::Lintian::ConfigFile qw(read_config);
 use Test::Lintian::Filter qw(find_selected_lintian_testpaths);
-use Test::Lintian::Helper qw(copy_dir_contents);
-use Test::Lintian::Prepare qw(prepare);
-use Test::Lintian::Run qw(runner);
+use Test::Lintian::Helper
+  qw(rfc822date get_host_architecture get_latest_policy get_required_debhelper_version get_installed_debhelper_version);
+use Test::Lintian::Prepare qw(logged_prepare);
+use Test::Lintian::Run qw(logged_runner);
 use Test::State;
 
-$ENV{'POLICY_VERSION'} = '4.2.1';
-$ENV{'DEB_HOST_ARCH'} = safe_qx(qw(dpkg-architecture -qDEB_HOST_ARCH));
-$ENV{HARNESS_EPOCH} = (stat($0))[9];
-chomp $ENV{'DEB_HOST_ARCH'};
+use constant SPACE => q{ };
+use constant INDENT => q{    };
+use constant NEWLINE => qq{\n};
+use constant EMPTY => q{};
+use constant YES => q{yes};
+use constant NO => q{no};
 
-my $DATE = safe_qx(qw(date -R));
-chomp $DATE;
+# display output immediately
+STDOUT->autoflush;
+
+# options
+my $coverage;
+my $debug;
+my $dump_logs = 1;
+my $force_rebuild;
+my $numjobs = -1;
+my $keep_going;
+my $verbose = 0;
+
+Getopt::Long::Configure('bundling');
+unless (
+    Getopt::Long::GetOptions(
+        'B'            => \$force_rebuild,
+        'd|debug+'     => \$debug,
+        'j|jobs:i'     => \$numjobs,
+        'k|keep-going' => \$keep_going,
+        'dump-logs!'   => \$dump_logs,
+        'v|verbose'    => \$verbose,
+        'coverage:s'   => \$coverage,
+        'help|h'       => sub {usage(); exit;},
+    )
+) {
+    usage();
+    die;
+}
+
+# check number of arguments
+die('Please use -h for usage information. Thank you!')
+  if @ARGV < 2 || @ARGV > 3;
+
+# get arguments
+my ($testset, $outpath, $onlyrun) = @ARGV;
+
+# check test set directory
+die("Test set directory $testset not set") unless -d $testset;
+$testset = rel2abs($testset) // die("Cannot find $testset: $!");
+
+# check output directory
+die("Test output directory $outpath not set") unless -d $outpath;
+$outpath = rel2abs($outpath) // die("Cannot find $outpath: $!");
+
+my @TESTS;
+my $ACTIVE_JOBS = 0;
+
+my ($tag, %suites);
+
+$ENV{HARNESS_EPOCH} = (stat($0))[9];
 
 my $output_is_tty = -t STDOUT;
 
 our $IO_LOOP = IO::Async::Loop->new;
 
-# --- Parsed options / arguments
+# set environment for coverage
+if (defined $coverage) {
+    # Only collect coverage for stuff that D::NYTProf and
+    # Test::Pod::Coverage cannot do for us.  This makes cover use less
+    # RAM in the other end.
+    my @criteria = qw(statement branch condition path subroutine);
+    my $args= '-MDevel::Cover=-silent,1,+ignore,^(.*/)?t/scripts/.+';
+    $args .= ',+ignore,/usr/bin/.*,+ignore,(.*/)?Dpkg';
+    $args .= ',-coverage,' . join(',-coverage,', @criteria);
+    $args .= ',' . $coverage if $coverage ne '';
+    $ENV{'LINTIAN_COVERAGE'} = $args;
 
-our $verbose = 0;
-our ($outpath, $testset, $force_rebuild);
-our $numjobs = -1;
-our $dump_logs = 1;
-our @TESTS;
-our $ACTIVE_JOBS = 0;
-
-my ($run_all_tests, $tag, $coverage, $onlyrun, %suites);
-
-parse_args();
-
-if (-d "$testset/helpers/bin") {
-    # Add the test helpers to PATH
-    my $tpath = Cwd::abs_path("$testset/helpers/bin");
-    internal_error("Cannot resolve $testset/helpers/bin: $!") unless $tpath;
-    $ENV{'PATH'} = "$tpath:$ENV{'PATH'}";
+    $ENV{'HARNESS_PERL_SWITCHES'} //= EMPTY;
+    $ENV{'HARNESS_PERL_SWITCHES'} .= SPACE . $args;
 }
 
-# --- Display output immediately
-STDOUT->autoflush;
+# Devel::Cover + one cover_db + multiple processes is a recipe
+# for corruptions.  Force $numjobs to 1 if we are running under
+# coverage.
+$numjobs = 1 if exists $ENV{'LINTIAN_COVERAGE'};
 
-# --- Exit status for the test suite driver
+# tie verbosity to debug
+$verbose = 1 + $debug if $debug;
 
-# Exit codes:
-# 0 - success
-# 1 - one or more tests failed
-# 2 - an error prevented proper running of the tests
+# can be 0 without value ("-j"), and -1 if option was not specified at all
+$numjobs = default_parallel() if $numjobs <= 0;
+say "Running up to $numjobs tests concurrently"
+  if $numjobs > 1 && $verbose >= 2;
+
+$ENV{'DUMP_LOGS'} = $dump_logs//NO ? YES : NO;
+
+my $helperpath = "$testset/helpers/bin";
+if (-d $helperpath) {
+    my $helpers = rel2abs($helperpath)// die("Cannot resolve $helperpath: $!");
+    $ENV{'PATH'} = "$helpers:$ENV{'PATH'}";
+}
+
+# get architecture
+$ENV{'DEB_HOST_ARCH'} = get_host_architecture();
+say "Host architecture is $ENV{'DEB_HOST_ARCH'}.";
+
+# get latest policy version and date
+($ENV{'POLICY_VERSION'}, $ENV{'POLICY_EPOCH'}) = get_latest_policy();
+say "Latest policy version is $ENV{'POLICY_VERSION'} from "
+  . rfc822date($ENV{'POLICY_EPOCH'});
+
+say EMPTY;
+
+# print environment
+my @vars = sort keys %ENV;
+say 'Environment:' if @vars;
+for my $var (@vars) { say INDENT . "$var=$ENV{$var}" }
+
+say EMPTY;
+
 my $status = 0;
 
 # Tests that were skipped and why
@@ -199,56 +267,6 @@ if (@TESTS) {
 print_test_summary();
 
 exit $status;
-
-sub parse_args {
-    my ($debug);
-    Getopt::Long::Configure('bundling');
-    GetOptions(
-        'B'            => \$force_rebuild,
-        'd|debug+'     => \$debug,
-        'j|jobs:i'     => \$numjobs,
-        'k|keep-going' => \$run_all_tests,
-        'dump-logs!'   => \$dump_logs,
-        'v|verbose'    => \$verbose,
-        'coverage:s'   => \$coverage,
-        'help|h'       => sub {usage(0); },
-    ) or usage();
-
-    if (@ARGV < 2 || @ARGV > 3) {
-        usage();
-    }
-
-    $verbose = 1 + $debug if $debug;
-
-    ($testset, $outpath, $onlyrun) = @ARGV;
-
-    if (-d $outpath) {
-        my $abs = Cwd::abs_path($outpath);
-        internal_error("Cannot resolve $outpath: $!")
-          if not defined($abs);
-        $outpath = $abs;
-    } else {
-        internal_error("test directory $outpath does not exist");
-    }
-
-    unless (-d $testset) {
-        internal_error("test set directory $testset does not exist");
-    }
-
-    $testset = rel2abs($testset);
-
-    # Getopt::Long assigns 0 as default value if none was specified
-    # (i.e. "-j").  Otherwise, $numjobs can also be -1 if "-j" was not
-    # specified at all.
-    if ($numjobs <= 0) {
-        $numjobs = default_parallel();
-
-        print "Doing up to $numjobs concurrent builds/tests\n"
-          if $verbose >= 2;
-    }
-
-    return;
-}
 
 sub print_test_summary {
     if (!$tests_run) {
@@ -320,7 +338,7 @@ sub run_prove_tests {
         }
     } elsif ($suites{'scripts'}) {
         unless (-d "$testset/scripts") {
-            internal_error("cannot find $testset/scripts: $!");
+            die "cannot find $testset/scripts: $!";
         }
         @do_run = ("$testset/scripts");
     }
@@ -330,11 +348,12 @@ sub run_prove_tests {
         # for corruptions.  Force $jobs to 1 if we are running under
         # coverage.
         $jobs = 1 if $ENV{'LINTIAN_COVERAGE'};
-        my @prove_cmd= ('prove', '-j', $jobs, '-r', '-I', "$LINTIAN_ROOT/lib");
+        my @prove_cmd
+          = ('prove', '-j', $jobs, '-r', '-I', "$ENV{LINTIAN_TEST_ROOT}/lib");
 
         print "Test scripts:\n";
         if (system(@prove_cmd, @do_run) != 0) {
-            exit 1 unless $run_all_tests;
+            exit 1 unless $keep_going;
             push(@failed, "suite:scripts [Try: prove -lr -j$numjobs t]");
             $status = 1;
         }
@@ -354,6 +373,9 @@ sub create_child {
     # Usually happens when only running a single thread.
     return if not defined($start_test);
 
+    # files don't close properly when numjobs > 1, this is a kludge
+    $ENV{PERL_PATH_TINY_NO_FLOCK} = 1;
+
     $child_in_ch = IO::Async::Channel->new;
     $child_out_ch  = IO::Async::Channel->new;
 
@@ -368,27 +390,21 @@ sub create_child {
                 my $suite = $testcase->{'suite'};
                 my $testname = $testcase->{testname};
 
+                my $specpath = "$testset/$suite/$testname";
+                my $runpath = "$outpath/$suite/$testname";
+
                 $0 = "Test worker - processing ${suite}::${testname}";
 
-                my $retval;
-                eval {
-                    $retval
-                      = prepare($state, $testcase,$outpath, $testset,
-                        $force_rebuild,$DATE);
-                };
-                if (my $err = $@) {
-                    $state->test_error($err);
-                }else {
-                    unless ($retval) {
-                        eval {
-                            runner($state, $testcase, $outpath, $testset,
-                                $force_rebuild, $dump_logs,$coverage);
-                        };
-                        if (my $err = $@) {
-                            $state->test_error($err);
-                        }
-                    }
+                try {
+                    logged_prepare($specpath, $runpath, $suite,
+                        $testset,$force_rebuild);
+                    logged_runner($state, $runpath, $outpath);
                 }
+                catch {
+                    if (my $err = $_) {
+                        $state->test_error($err);
+                    }
+                };
 
                 $0 = 'Test worker - idle';
 
@@ -449,7 +465,7 @@ sub handle_msg_from_child {
 
         if ($is_problem) {
             push(@failed, "${suite}::${testname}");
-            if (not $run_all_tests) {
+            if (not $keep_going) {
                 # Empty the queue, so no further jobs are started
                 $#{$test_queue} = -1;
             }
@@ -498,7 +514,7 @@ sub handle_msg_from_child {
         print "\n" if $partial_line;
         $partial_line = 0;
         print "${suite}::${testname}: diff -u ${original} ${actual}\n";
-        runsystem_ok('diff', '-u', $original, $actual);
+        print safe_qx('diff', '-u', $original, $actual);
     } elsif ($msg_type eq 'dump-file') {
         my ($log_file) = @payload;
         my $prefix = "${suite}::${testname}: ";
@@ -535,7 +551,6 @@ sub handle_dump_log{
 }
 
 sub usage {
-    my ($exitcode) = @_;
     print <<"END";
 Usage: $0 [options] [-j [<jobs>]] <testset-directory> <testing-directory> [<test-selection>]
 
@@ -550,23 +565,20 @@ Usage: $0 [options] [-j [<jobs>]] <testset-directory> <testing-directory> [<test
     --help, -h  Print this help and exit
 
     The optional 3rd parameter causes runtests to only run tests that match
-    the particular selection.  This parameter can be one of:
+    the particular selection.  This parameter can be a list of selectors:
+    what:<which>[,<what:...>]
 
-      * <testname>
-        - Run the test(s) named exactly <testname>.  Note that each suite
-          can reuse the name of the test, so this may run more than one
-          test.
-      * <dir-in-scripts-suite>
-        - Run all "scripts"-tests within a given dir.  E.g. "01-critic"
-          will run all tests in "t/scripts/01-critic/".
-      * <check-name>
-        - Run all tests related to the given check.  This is based on the
-          name of the test (i.e. it must start with "<check-name>-").
-      * legacy
-        - Run all "legacy" tests (i.e. t/tests/legacy-*), which were
-         imported from the old test suite.
-      * suite:<suite>[,<suite...>]
-        - Run all tests in the listed suites.
+
+      * test:<testname>
+        - Run the named test. Please note that testnames may not be
+          unique, so it may run more than one test.
+      * script:(<script-name> || <dir-in-scripts-suite>)
+        - Run the named code quality script or all in the named directory.
+          E.g. "01-critic" will run all tests in "t/scripts/01-critic/".
+      * check:<check-name>
+        - Run all tests related to the given check.
+      * suite:<suite>
+        - Run all tests in the named suite.
       * tag:<tag-name>
         - Run any test that lists <tag-name> in "Test-For" or
           "Test-Against".
@@ -576,7 +588,7 @@ Test artifacts are cached in <testing-directory> and will be reused if
 deemed "up-to-date".  This cache can greatly reduce the run time of the
 test suite.
 END
-    exit($exitcode//2);
+    return;
 }
 
 # Local Variables:

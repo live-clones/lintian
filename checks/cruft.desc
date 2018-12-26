@@ -18,11 +18,11 @@ Ref: policy 4.12
 Tag: diff-contains-cmake-cache-file
 Severity: serious
 Certainty: possible
-Info: The Debian diff contains a CMake cache file.  These files embed the
+Info: The Debian diff contains a CMake cache file. These files embed the
  full path of the source tree in which they're created and cause build
  failures if they exist when the source is built under a different path,
- so they will always cause errors on the buildds.  The file was probably
- accidentally included.  If it is present in the upstream source, don't
+ so they will always cause errors on the buildds. The file was probably
+ accidentally included. If it is present in the upstream source, don't
  modify it in the Debian diff; instead, delete it before the build in
  <tt>debian/rules</tt>.
 
@@ -39,17 +39,17 @@ Ref: dpkg-source(1)
 Tag: source-contains-cvs-control-dir
 Severity: pedantic
 Certainty: certain
-Info: The upstream source contains a CVS directory.  It was most likely
+Info: The upstream source contains a CVS directory. It was most likely
  included by accident since CVS directories usually don't belong in
- releases.  When packaging a CVS snapshot, export from CVS rather than use
- a checkout.  If an upstream release tarball contains CVS directories, you
+ releases. When packaging a CVS snapshot, export from CVS rather than use
+ a checkout. If an upstream release tarball contains CVS directories, you
  usually should report this as a bug to upstream.
 
 Tag: diff-contains-svn-control-dir
 Severity: normal
 Certainty: certain
 Info: The Debian diff or native package contains files in an .svn
- directory.  These are usually artifacts of the revision control system
+ directory. These are usually artifacts of the revision control system
  used by the Debian maintainer and not useful in a diff or native package.
  <tt>dpkg-source</tt> will automatically exclude these if it is passed
  <tt>-I</tt> or <tt>-i</tt> for native and non-native packages respectively.
@@ -58,10 +58,10 @@ Ref: dpkg-source(1)
 Tag: source-contains-svn-control-dir
 Severity: pedantic
 Certainty: certain
-Info: The upstream source contains an .svn directory.  It was most likely
+Info: The upstream source contains an .svn directory. It was most likely
  included by accident since Subversion version control directories
- usually don't belong in releases.  When packaging a Subversion snapshot,
- export from Subversion rather than checkout.  If an upstream release
+ usually don't belong in releases. When packaging a Subversion snapshot,
+ export from Subversion rather than checkout. If an upstream release
  tarball contains .svn directories, this should be reported as a bug to
  upstream since it can double the size of the tarball to no purpose.
 
@@ -69,7 +69,7 @@ Tag: diff-contains-bzr-control-dir
 Severity: normal
 Certainty: certain
 Info: The Debian diff or native package contains files in a .bzr
- directory.  These are usually artifacts of the revision control system
+ directory. These are usually artifacts of the revision control system
  used by the Debian maintainer and not useful in a diff or native package.
  <tt>dpkg-source</tt> will automatically exclude these if it is passed
  <tt>-I</tt> or <tt>-i</tt> for native and non-native packages respectively.
@@ -80,8 +80,8 @@ Severity: pedantic
 Certainty: certain
 Info: The upstream source contains a .bzr directory. It was most likely
  included by accident since bazaar-ng version control directories usually
- don't belong in releases and may contain the entire repository.  When
- packaging a bzr snapshot, use bzr export to create a clean tree.  If an
+ don't belong in releases and may contain the entire repository. When
+ packaging a bzr snapshot, use bzr export to create a clean tree. If an
  upstream release tarball contains .bzr directories, you should usually
  report this as a bug upstream.
 
@@ -90,9 +90,9 @@ Severity: normal
 Certainty: certain
 Info: The Debian diff or native package contains files in an {arch} or
  .arch-ids directory or a directory starting with <tt>,,</tt> (used by baz
- for debugging traces).  These are usually artifacts of the revision
+ for debugging traces). These are usually artifacts of the revision
  control system used by the Debian maintainer and not useful in a diff or
- native package.  <tt>dpkg-source</tt> will automatically exclude these if
+ native package. <tt>dpkg-source</tt> will automatically exclude these if
  it is passed <tt>-I</tt> or <tt>-i</tt> for native and non-native
  packages respectively.
 Ref: dpkg-source(1)
@@ -103,7 +103,7 @@ Certainty: certain
 Info: The upstream source contains an {arch} or .arch-ids directory or a
  directory starting with <tt>,,</tt> (used by baz for debugging traces).
  It was most likely included by accident since Arch version control
- directories usually don't belong in releases.  If an upstream release
+ directories usually don't belong in releases. If an upstream release
  tarball contains these directories, you should usually report this as a
  bug upstream.
 
@@ -111,7 +111,7 @@ Tag: diff-contains-git-control-dir
 Severity: normal
 Certainty: certain
 Info: The Debian diff or native package contains files in a .git
- directory.  These are usually artifacts of the revision control system
+ directory. These are usually artifacts of the revision control system
  used by the Debian maintainer and not useful in a diff or native package.
  <tt>dpkg-source</tt> will automatically exclude these if it is passed
  <tt>-I</tt> or <tt>-i</tt> for native and non-native packages respectively.
@@ -122,7 +122,7 @@ Severity: pedantic
 Certainty: certain
 Info: The upstream source contains a .git directory. It was most likely
  included by accident since git version control directories usually don't
- belong in releases and may contain a complete copy of the repository.  If
+ belong in releases and may contain a complete copy of the repository. If
  an upstream release tarball contains .git directories, you should usually
  report this as a bug upstream.
 
@@ -130,7 +130,7 @@ Tag: diff-contains-hg-control-dir
 Severity: normal
 Certainty: certain
 Info: The Debian diff or native package contains files in a .hg
- directory.  These are usually artifacts of the revision control system
+ directory. These are usually artifacts of the revision control system
  used by the Debian maintainer and not useful in a diff or native package.
  <tt>dpkg-source</tt> will automatically exclude these if it is passed
  <tt>-I</tt> or <tt>-i</tt> for native and non-native packages respectively.
@@ -141,7 +141,7 @@ Severity: pedantic
 Certainty: certain
 Info: The upstream source contains a .hg directory. It was most likely
  included by accident since hg version control directories usually don't
- belong in releases and may contain a complete copy of the repository.  If
+ belong in releases and may contain a complete copy of the repository. If
  an upstream release tarball contains .hg directories, you should usually
  report this as a bug upstream.
 
@@ -150,7 +150,7 @@ Severity: normal
 Certainty: certain
 Info: The Debian diff or native package contains files in a directory
  used by a bug tracking system, which are not useful in a diff or native
- package.  <tt>dpkg-source</tt> will automatically exclude these if it
+ package. <tt>dpkg-source</tt> will automatically exclude these if it
  is passed <tt>-I</tt> or <tt>-i</tt> for native and non-native packages
  respectively.
 Ref: dpkg-source(1)
@@ -183,7 +183,7 @@ Tag: source-contains-svn-commit-file
 Severity: pedantic
 Certainty: certain
 Info: The upstream source contains an <tt>svn-commit(.NNN).tmp</tt>,
- almost certainly a left-over from a failed Subversion commit.  You may
+ almost certainly a left-over from a failed Subversion commit. You may
  want to report this as an upstream bug.
 
 Tag: diff-contains-svk-commit-file
@@ -197,38 +197,38 @@ Tag: source-contains-svk-commit-file
 Severity: pedantic
 Certainty: certain
 Info: The upstream source contains an <tt>svk-commitNNN.tmp</tt>,
- almost certainly a left-over from a failed Subversion commit.  You may
+ almost certainly a left-over from a failed Subversion commit. You may
  want to report this as an upstream bug.
 
 Tag: diff-contains-arch-inventory-file
 Severity: normal
 Certainty: certain
 Info: The Debian diff or native package contains an
- <tt>.arch-inventory</tt> file.  This is Arch metadata that should
+ <tt>.arch-inventory</tt> file. This is Arch metadata that should
  normally not be distributed.
 
 Tag: source-contains-arch-inventory-file
 Severity: pedantic
 Certainty: certain
-Info: The upstream source contains an <tt>.arch-inventory</tt> file.  This
- is Arch metadata that should normally not be distributed.  You may want
+Info: The upstream source contains an <tt>.arch-inventory</tt> file. This
+ is Arch metadata that should normally not be distributed. You may want
  to report this as an upstream bug.
 
 Tag: diff-contains-hg-tags-file
 Severity: normal
 Certainty: certain
 Info: The Debian diff or native package contains an <tt>.hgtags</tt>
- file.  This file is Mercurial metadata that should normally not be
- distributed.  It stores hashes of tagged commits in a Mercurial
+ file. This file is Mercurial metadata that should normally not be
+ distributed. It stores hashes of tagged commits in a Mercurial
  repository and isn't therefore useful without the repository.
 
 Tag: source-contains-hg-tags-file
 Severity: pedantic
 Certainty: certain
-Info: The upstream source contains an <tt>.hgtags</tt> file.  This file is
- Mercurial metadata that should normally not be distributed.  It stores
+Info: The upstream source contains an <tt>.hgtags</tt> file. This file is
+ Mercurial metadata that should normally not be distributed. It stores
  hashes of tagged commits in a Mercurial repository and isn't therefore
- useful without the repository.  You may want to report this as an
+ useful without the repository. You may want to report this as an
  upstream bug.
 
 Tag: diff-contains-cvs-conflict-copy
@@ -237,36 +237,36 @@ Certainty: certain
 Info: The Debian diff or native package contains a CVS conflict copy.
  These have file names like <tt>.#file.version</tt> and are generated by
  CVS when a conflict was detected when merging local changes with updates
- from a source repository.  They're useful only while resolving the
+ from a source repository. They're useful only while resolving the
  conflict and should not be included in the package.
 
 Tag: source-contains-cvs-conflict-copy
 Severity: pedantic
 Certainty: certain
-Info: The upstream source contains a CVS conflict copy.  These have file
+Info: The upstream source contains a CVS conflict copy. These have file
  names like <tt>.#file.version</tt> and are generated by CVS when a
  conflict was detected when merging local changes with updates from a
- source repository.  They're useful only while resolving the conflict and
- were probably included by accident.  You may want to report this as an
+ source repository. They're useful only while resolving the conflict and
+ were probably included by accident. You may want to report this as an
  upstream bug.
 
 Tag: diff-contains-svn-conflict-file
 Severity: normal
 Certainty: certain
 Info: The Debian diff or native package contains a file that looks like a
- Subversion conflict file.  These are generated by Subversion when a
+ Subversion conflict file. These are generated by Subversion when a
  conflict was detected while merging local changes with updates from a
- source repository.  Use <tt>svn resolved</tt> to remove them and clear
+ source repository. Use <tt>svn resolved</tt> to remove them and clear
  the Subversion conflict state after you have resolved the conflict.
 
 Tag: source-contains-svn-conflict-file
 Severity: pedantic
 Certainty: certain
 Info: The upstream source contains a file that looks like a Subversion
- conflict file.  These are generated by Subversion when a conflict was
+ conflict file. These are generated by Subversion when a conflict was
  detected while merging local changes with updates from a source
- repository.  They're useful only while resolving the conflict and
- were probably included by accident.  You may want to report this as an
+ repository. They're useful only while resolving the conflict and
+ were probably included by accident. You may want to report this as an
  upstream bug.
 
 Tag: diff-contains-patch-failure-file
@@ -274,8 +274,8 @@ Severity: normal
 Certainty: possible
 Info: The Debian diff or native package contains a file that looks like
  the files left behind by the <tt>patch</tt> utility when it cannot
- completely apply a diff.  This may be left over from a patch applied by
- the maintainer.  Normally such files should not be included in the
+ completely apply a diff. This may be left over from a patch applied by
+ the maintainer. Normally such files should not be included in the
  package.
 
 Tag: diff-contains-editor-backup-file
@@ -284,7 +284,7 @@ Certainty: certain
 Info: The Debian diff or native package contains a file ending in
  <tt>~</tt> or of the form <tt>.xxx.swp</tt>, which is normally either an
  Emacs or vim backup file or a backup file created by programs such as
- <tt>autoheader</tt> or <tt>debconf-updatepo</tt>.  This usually causes no
+ <tt>autoheader</tt> or <tt>debconf-updatepo</tt>. This usually causes no
  harm, but it's messy and bloats the size of the Debian diff to no useful
  purpose.
 
@@ -301,15 +301,15 @@ Tag: empty-debian-diff
 Severity: normal
 Certainty: possible
 Info: The Debian diff of this non-native package appears to be completely
- empty.  This usually indicates a mistake when generating the upstream
+ empty. This usually indicates a mistake when generating the upstream
  tarball, or it may mean that this was intended to be a native package and
  was built non-native by mistake.
  .
  If the Debian packaging is maintained in conjunction with upstream, this
- may be intentional, but it's not recommended best practice.  If the
+ may be intentional, but it's not recommended best practice. If the
  software is only for Debian, it should be a native package; otherwise,
  it's better to omit the <tt>debian</tt> directory from upstream releases
- and add it in the Debian diff.  Otherwise, it can cause problems for some
+ and add it in the Debian diff. Otherwise, it can cause problems for some
  package updates in Debian (files can't be removed from the
  <tt>debian</tt> directory via the diff, for example).
 
@@ -351,42 +351,42 @@ Tag: ancient-libtool
 Severity: normal
 Certainty: possible
 Info: The referenced file seems to be from a libtool version older than
- 1.5.2-2.  This might lead to build errors on some newer architectures not
+ 1.5.2-2. This might lead to build errors on some newer architectures not
  known to this libtool.
  .
  Please ask your upstream maintainer to re-libtoolize the package or do it
- yourself if there is no active upstream.  You will also need to run
- Autoconf to regenerate the configure script.  Usually it is best to do
+ yourself if there is no active upstream. You will also need to run
+ Autoconf to regenerate the configure script. Usually it is best to do
  this during the build by depending on autoconf, libtool, and automake if
  it is used, and then running:
  .
   autoreconf -i --force
  .
- before running configure.  Depending on how old the package is, this may
+ before running configure. Depending on how old the package is, this may
  require additional modifications to <tt>configure.ac</tt> or
- <tt>configure.in</tt> or other work.  If you do this during the build,
+ <tt>configure.in</tt> or other work. If you do this during the build,
  determine which files it will add or update and be sure to remove those
  files in the clean target.
  .
  If you have fixed architecture-specific issues with minimal patches,
  rather than updating libtool, and verified that it builds correctly,
- please override this tag.  Lintian will not be able to verify that.
+ please override this tag. Lintian will not be able to verify that.
 
 Tag: source-contains-prebuilt-binary
 Severity: pedantic
 Certainty: certain
-Info: The source tarball contains a prebuilt ELF object.  They are usually
+Info: The source tarball contains a prebuilt ELF object. They are usually
  left by mistake when generating the tarball by not cleaning the source
- directory first.  You may want to report this as an upstream bug, in case
+ directory first. You may want to report this as an upstream bug, in case
  there is no sign that this was intended.
 
 Tag: source-contains-prebuilt-flash-object
 Severity: pedantic
 Certainty: possible
 Info: The source tarball contains a prebuilt file in the Shockwave Flash (SWF)
- or Flash Video (FLV) format.  These are often included by mistake when
+ or Flash Video (FLV) format. These are often included by mistake when
  developers generate a tarball without cleaning the source directory
- first.  An exception is simple video files, which are their own
+ first. An exception is simple video files, which are their own
  source.
  .
  If there is no sign this was intended, consider reporting it as an
@@ -400,7 +400,7 @@ Tag: source-contains-prebuilt-flash-project
 Severity: pedantic
 Certainty: possible
 Info: The source tarball contains a prebuilt file in the Shockwave Flash
- project (FLA) format.  These are often included by mistake when
+ project (FLA) format. These are often included by mistake when
  developers generate a tarball without cleaning the source directory
  first.
  .
@@ -416,7 +416,7 @@ Severity: pedantic
 Certainty: possible
 Info: The source tarball contains a prebuilt (minified) JavaScript object.
  They are usually left by mistake when generating the tarball by not
- cleaning the source directory first.  You may want to report this as
+ cleaning the source directory first. You may want to report this as
  an upstream bug, in case there is no sign that this was intended.
 
 Tag: embedded-script-includes-copyright-statement
@@ -435,7 +435,7 @@ Tag: source-contains-prebuilt-ms-help-file
 Severity: serious
 Certainty: possible
 Info: The source tarball contains a prebuilt Microsoft precompiled help
- file (CHM file).  These are often included by mistake when developers generate
+ file (CHM file). These are often included by mistake when developers generate
  a tarball without cleaning the source directory first.
  .
  CHM files are mainly produced by proprietary, Windows-specific software.
@@ -454,7 +454,7 @@ Severity: pedantic
 Certainty: possible
 Info: The source tarball contains prebuilt Sphinx documentation.
  This is usually left by mistake when generating the tarball without
- first cleaning the source directory.  You may want to report this as
+ first cleaning the source directory. You may want to report this as
  an upstream bug, if there is no sign that this was intended.
  .
  It is preferable to rebuild documentation directly from source.
@@ -464,7 +464,7 @@ Severity: pedantic
 Certainty: possible
 Info: The source tarball contains prebuilt pandoc documentation.
  This is usually left by mistake when generating the tarball without
- first cleaning the source directory.  You may want to report this as
+ first cleaning the source directory. You may want to report this as
  an upstream bug, if there is no sign that this was intended.
  .
  It is preferable to rebuild documentation directly from source.
@@ -474,7 +474,7 @@ Severity: pedantic
 Certainty: possible
 Info: The source tarball contains prebuilt doxygen documentation.
  This is usually left by mistake when generating the tarball without
- first cleaning the source directory.  You may want to report this as
+ first cleaning the source directory. You may want to report this as
  an upstream bug, if there is no sign that this was intended.
  .
  It is preferable to rebuild documentation directly from source.
@@ -482,9 +482,9 @@ Info: The source tarball contains prebuilt doxygen documentation.
 Tag: source-contains-prebuilt-python-object
 Severity: pedantic
 Certainty: possible
-Info: The source tarball contains a prebuilt Python object.  They are
+Info: The source tarball contains a prebuilt Python object. They are
  usually left by mistake when generating the tarball by not cleaning the
- source directory first.  You may want to report this as an upstream bug,
+ source directory first. You may want to report this as an upstream bug,
  in case there is no sign that this was intended.
 
 Tag: source-contains-prebuilt-silverlight-object
@@ -492,33 +492,33 @@ Severity: serious
 Certainty: possible
 Info: The source tarball contains a prebuilt Silverlight control.
  Unfortunately, the tools used to build such files have non-free
- dependencies and are not present in Debian.  This file must be
+ dependencies and are not present in Debian. This file must be
  completely removed.
 
 Tag: source-contains-prebuilt-windows-binary
 Severity: minor
 Certainty: certain
 Info: The source tarball contains a prebuilt binary for Microsoft Windows.
- They are usually provided for the convenience of users.  These files
+ They are usually provided for the convenience of users. These files
  usually just take up space in the tarball.
  .
  However, they may be a DFSG violation in that the corresponding source
  and build system are not available.
  .
  Check if upstream also provides source-only tarballs that you can use as
- the upstream distribution instead.  If not, you may want to ask upstream
+ the upstream distribution instead. If not, you may want to ask upstream
  to provide source-only tarballs.
 
 Tag: source-contains-prebuilt-wasm-binary
 Severity: pedantic
 Certainty: certain
 Info: The source tarball contains a prebuilt binary wasm object.
- They are usually provided for the convenience of users.  These files
+ They are usually provided for the convenience of users. These files
  usually just take up space in the tarball and need to be rebuilt from
  source.
  .
  Check if upstream also provides source-only tarballs that you can use as
- the upstream distribution instead.  If not, you may want to ask upstream
+ the upstream distribution instead. If not, you may want to ask upstream
  to provide source-only tarballs.
 
 Tag: source-contains-waf-binary
@@ -539,16 +539,16 @@ Ref: https://wiki.debian.org/UnpackWaf, #654523
 Tag: tar-errors-from-source
 Severity: normal
 Certainty: wild-guess
-Info: tar produced an error while unpacking this source package.  This
+Info: tar produced an error while unpacking this source package. This
  probably means there's something broken or at least strange about the way
- the upstream tar file was constructed.  You may want to report this as an
+ the upstream tar file was constructed. You may want to report this as an
  upstream bug.
 
 Tag: control-file-with-CRLF-EOLs
 Severity: important
 Certainty: possible
 Info: The given control file uses <tt>CRLF</tt> as line terminator
- instead of the traditional UNIX <tt>LF</tt> terminator.  Since some
+ instead of the traditional UNIX <tt>LF</tt> terminator. Since some
  tools were only designed with the UNIX end-of-line terminators in mind,
  it is possible that they misbehave or lead to unexpected results.
  .
@@ -610,7 +610,7 @@ Tag: license-problem-php-license
 Severity: serious
 Certainty: possible
 Info: This package appears to be covered by version 3.0 (exactly) of the
- PHP license.  This license is not applicable to anything that is not PHP
+ PHP license. This license is not applicable to anything that is not PHP
  and has no contributions from the PHP Group.
  .
  This tag is not emitted for packages from pecl.php.net as determined by
@@ -747,13 +747,13 @@ Info: The following file is not suitable for main or contrib.
 Tag: source-contains-unsafe-symlink
 Severity: serious
 Certainty: possible
-Info: The source contains an unsafe symlink.  If followed, the link
- will escape the source root.  Note that all absolute symlinks are
+Info: The source contains an unsafe symlink. If followed, the link
+ will escape the source root. Note that all absolute symlinks are
  unconditionally considered "unsafe" in this case (unlike in binary
  packages).
  .
  If it is a part of the package's testsuite, Lintian may have failed
- to recognise it as a test.  In that case, please override the tag.
+ to recognise it as a test. In that case, please override the tag.
 
 Tag: insane-line-length-in-source-file
 Severity: pedantic
@@ -816,11 +816,11 @@ Severity: pedantic
 Certainty: possible
 Info: The following file is autogenerated by Microsoft Visual C++.
  .
- They are usually provided for the convenience of users.  These files
+ They are usually provided for the convenience of users. These files
  usually just take up space in the tarball and are of no use in Debian.
  .
  Check if upstream also provides source-only tarballs that you can use as
- the upstream distribution instead.  If not, you may want to ask upstream
+ the upstream distribution instead. If not, you may want to ask upstream
  to provide source-only tarballs.
 
 Tag: source-contains-autogenerated-gperf-data
@@ -828,18 +828,18 @@ Severity: pedantic
 Certainty: possible
 Info: The following file is autogenerated by gperf
  .
- They are usually provided for the convenience of users.  These files
+ They are usually provided for the convenience of users. These files
  usually just take up space in the tarball.
  .
  Check if upstream also provides source-only tarballs that you can use as
- the upstream distribution instead.  If not, you may want to ask upstream
+ the upstream distribution instead. If not, you may want to ask upstream
  to provide source-only tarballs.
 
 # Imported from lintian4python (python/helpers)
 Tag: debian-pycompat-is-obsolete
 Severity: wishlist
 Certainty: certain
-Info: debian/pycompat is not used by any modern Python helper.  It should be
+Info: debian/pycompat is not used by any modern Python helper. It should be
  safe to remove this file.
 
 Tag: debian-pyversions-is-obsolete
@@ -887,7 +887,7 @@ Tag: file-contains-fixme-placeholder
 Severity: wishlist
 Certainty: certain
 Info: This file appears to be incomplete or insufficiently modified as it
- contains a "FIXME" placeholder text.  These can often be generated by
+ contains a "FIXME" placeholder text. These can often be generated by
  package generation tools such as dh_make or npm2deb.
  .
  Please double-check the file and replace the placeholder with the required

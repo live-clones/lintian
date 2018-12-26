@@ -39,8 +39,8 @@ Tag: pkg-not-in-package-test
 Severity: normal
 Certainty: possible
 Info: This menu item doesn't test to see if the package containing it is
- installed.  The start of any menu item is a conditional testing whether
- the required packages are installed.  Normally this conditional should
+ installed. The start of any menu item is a conditional testing whether
+ the required packages are installed. Normally this conditional should
  always check at least the package containing it, since menu items should
  be included in the package that provides the application the menu refers
  to.
@@ -103,7 +103,7 @@ Tag: menu-item-uses-windowmanagers-section
 Severity: normal
 Certainty: certain
 Info: The menu item has a line that specifies a section under
- "WindowManagers".  This section has been moved to "Window Managers".
+ "WindowManagers". This section has been moved to "Window Managers".
 Ref: menu-policy 2.1
 
 Tag: menu-item-creates-new-section
@@ -111,8 +111,8 @@ Severity: normal
 Certainty: certain
 Info: The menu item has a line that specifies an unknown section or uses a
  section that is intended only as a menu root, not as a section that
- applications should use directly.  Check the spelling of the section and
- check the section against the list in the menu policy.  (The menu
+ applications should use directly. Check the spelling of the section and
+ check the section against the list in the menu policy. (The menu
  sections changed as of June of 2007.)
 Ref: menu-policy 2.1
 
@@ -120,8 +120,8 @@ Tag: menu-item-creates-new-root-section
 Severity: important
 Certainty: certain
 Info: The menu item has a line that specifies a new section to put a menu
- entry in, and this section appears right in the root menu.  This is
- almost certainly an error.  No new sections should be added to the root
+ entry in, and this section appears right in the root menu. This is
+ almost certainly an error. No new sections should be added to the root
  menu without discussion with the author of menu.
 
 Tag: menu-icon-not-in-xpm-format
@@ -130,7 +130,7 @@ Certainty: certain
 Info: Icons in the Debian menu system should be in XPM format.
  .
  While other image types (e.g. png images) appears to "just work",
- window managers are not "required to support them".  Accordingly
+ window managers are not "required to support them". Accordingly
  using non-XPM icons could break interoperability.
 Ref: menu 3.7, #591812
 
@@ -144,14 +144,14 @@ Ref: menu 3.2, #693477
 Tag: menu-icon-missing
 Severity: normal
 Certainty: possible
-Info: This icon file couldn't be found.  If the path to the icon in the
+Info: This icon file couldn't be found. If the path to the icon in the
  menu file is an absolute path, make sure that icon exists at that path in
- the package.  If the path is relative or a simple filename, make sure the
+ the package. If the path is relative or a simple filename, make sure the
  icon is installed in <tt>/usr/share/pixmaps</tt>, the default location.
  .
  If the icon is provided by another package on which this package
  depends, Lintian may not be able to determine that icon pages are
- available.  In this case, after confirming that all icons are
+ available. In this case, after confirming that all icons are
  available after this package and its dependencies are installed,
  please add a Lintian override.
 Ref: menu 3.7
@@ -166,8 +166,8 @@ Ref: menu 3.7
 Tag: menu-icon-cannot-be-parsed
 Severity: normal
 Certainty: certain
-Info: The icon file could not be parsed.  Perhaps this means a bad XPM file,
- or perhaps it means the Lintian parsing needs to be improved.  If the
+Info: The icon file could not be parsed. Perhaps this means a bad XPM file,
+ or perhaps it means the Lintian parsing needs to be improved. If the
  window managers and standard tools accept the file then probably it's the
  latter; please file a bug on Lintian then.
 
@@ -193,10 +193,10 @@ Tag: su-wrapper-not-su-to-root
 Severity: normal
 Certainty: certain
 Info: The menu item or desktop file command uses an su wrapper other than
- su-to-root.  On Debian systems, please use <tt>su-to-root -X</tt>, which
+ su-to-root. On Debian systems, please use <tt>su-to-root -X</tt>, which
  will pick the correct wrapper based on what's installed on the system and
- the current desktop environment.  Using su-to-root is also important for
- Live CD systems which need to use sudo rather than su.  su-to-root
+ the current desktop environment. Using su-to-root is also important for
+ Live CD systems which need to use sudo rather than su. su-to-root
  permits global configuration to use sudo.
 
 Tag: menu-item-needs-dwww
@@ -218,7 +218,7 @@ Severity: important
 Certainty: certain
 Info: The menu item is in the FVWM Modules or Window Maker section but
  does not declare that it needs a specific window manager (using the needs
- key in the menu file).  Modules for Fvwm should have needs="fvwmmodule".
+ key in the menu file). Modules for Fvwm should have needs="fvwmmodule".
  Modules for WindowMaker should have needs="wmmaker".
 
 Tag: unquoted-string-in-menu-item
@@ -238,7 +238,7 @@ Info: The menu item specifies a command which is not available in the package.
 Tag: executable-desktop-file
 Severity: important
 Certainty: certain
-Info: The desktop entry file is marked executable.  Desktop entries are
+Info: The desktop entry file is marked executable. Desktop entries are
  regular files and should be installed mode 0644.
 
 Tag: desktop-entry-file-has-crs
@@ -246,7 +246,7 @@ Severity: normal
 Certainty: certain
 Info: The desktop entry file has lines ending in CRLF instead of just LF.
  The Desktop Entry Specification is explicit that lines should end with
- only LF.  The CR may be taken by some software as part of the field.
+ only LF. The CR may be taken by some software as part of the field.
  .
  Running the following command against the given file removes any
  <tt>CR</tt> character in the file:
@@ -257,7 +257,7 @@ Ref: https://specifications.freedesktop.org/desktop-entry-spec/latest/ar01s03.ht
 Tag: duplicated-key-in-desktop-entry
 Severity: normal
 Certainty: certain
-Info: The desktop entry contains two instances of the same key.  The
+Info: The desktop entry contains two instances of the same key. The
  behavior of such desktop entries is not well-defined by the standard.
  .
  The desktop-file-validate tool in the desktop-file-utils package is
@@ -277,7 +277,7 @@ Severity: minor
 Certainty: certain
 Info: The key on this line of the desktop entry is not one of the standard
  keys defined in the FreeDesktop specification, not one of the legacy KDE
- keywords, and one that does not begin with <tt>X-</tt>.  It's most likely
+ keywords, and one that does not begin with <tt>X-</tt>. It's most likely
  that the key was misspelled.
  .
  The desktop-file-validate tool in the desktop-file-utils package is
@@ -298,7 +298,7 @@ Tag: desktop-entry-contains-encoding-key
 Severity: wishlist
 Certainty: certain
 Info: The Encoding key is now deprecated by the FreeDesktop standard and
- all strings are required to be encoded in UTF-8.  This desktop entry
+ all strings are required to be encoded in UTF-8. This desktop entry
  explicitly specifies an Encoding of UTF-8, which is harmless but no
  longer necessary.
  .
@@ -310,7 +310,7 @@ Tag: desktop-entry-lacks-main-category
 Severity: normal
 Certainty: certain
 Info: The categories for this desktop entry do not contain any Main
- Categories, only Additional Categories.  Additional Categories should
+ Categories, only Additional Categories. Additional Categories should
  only be used on conjunction with one or more Main Categories.
  .
  The desktop-file-validate tool in the desktop-file-utils package is
@@ -354,7 +354,7 @@ Severity: normal
 Certainty: certain
 Info: This desktop entry includes a Reserved Category, one which has a
  desktop-specific meaning that has not yet been standardized, but does not
- include an OnlyShowIn key.  Desktop entries using a Reserved Category
+ include an OnlyShowIn key. Desktop entries using a Reserved Category
  must include an OnlyShowIn key limiting the entry to those environments
  that support the category.
  .
@@ -367,7 +367,7 @@ Severity: normal
 Certainty: certain
 Info: This desktop entry lists a category that is not one of the
  registered Main or Additional Categories in the FreeDesktop
- specification.  Note that case is significant and whitespace is only
+ specification. Note that case is significant and whitespace is only
  allowed immediately before and after the equal sign in the Category key,
  not elsewhere in the field.
  .
@@ -379,8 +379,8 @@ Tag: desktop-command-not-in-package
 Severity: normal
 Certainty: possible
 Info: The desktop entry specifies a command that is not available in the
- package.  In most cases, this is a typo or a forgotten update of the
- desktop file after the install location of the binary was changed.  A
+ package. In most cases, this is a typo or a forgotten update of the
+ desktop file after the install location of the binary was changed. A
  desktop file for a command should be included in the same package as that
  command.
 
@@ -388,7 +388,7 @@ Tag: desktop-contains-deprecated-key
 Severity: normal
 Certainty: certain
 Info: The key on this line of the desktop entry has been deprecated in the
- FreeDesktop specification.  If the key is "KDE Desktop Entry", the right
+ FreeDesktop specification. If the key is "KDE Desktop Entry", the right
  fix is normally changing it to "Desktop Entry".
  .
  The desktop-file-validate tool in the desktop-file-utils package is
@@ -408,11 +408,11 @@ Tag: desktop-entry-limited-to-environments
 Severity: normal
 Certainty: wild-guess
 Info: This desktop entry uses OnlyShowIn to limit the environments in
- which it's displayed but lists multiple environments.  This is often a
+ which it's displayed but lists multiple environments. This is often a
  sign of a desktop file written assuming that only GNOME, KDE, and Xfce
- are in use and the desktop file intended to exclude one of them.  This
+ are in use and the desktop file intended to exclude one of them. This
  unintentionally hides the application from desktop environments such as
- LXDE where it would work fine.  If this application supports any desktop
+ LXDE where it would work fine. If this application supports any desktop
  environment except some specific ones, it should list the unsupported
  environments in the NotShowIn key instead.
 

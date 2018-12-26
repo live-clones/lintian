@@ -429,6 +429,10 @@ sub run {
           and $finfo
           and $finfo !~ m/\bASCII text\b/;
 
+        if ($file->dirname =~ m,^(?:usr)?/lib/([^/]+)/$,) {
+            $arch_dep_files = 1 if $TRIPLETS->known($1 // '');
+        }
+
         if (exists($PATH_DIRECTORIES{$file->dirname})) {
             $has_public_executable = 1;
             tag 'file-name-in-PATH-is-not-ASCII', $file
@@ -1532,7 +1536,7 @@ sub run {
             }
 
             # ---------------- documentation files
-            unless($fname =~ m,^etc/, or $fname =~ m,^usr/share/doc/,) {
+            unless($fname =~ m,^etc/, or $fname =~m,^usr/share/(?:doc|help)/,){
                 foreach my $taboo ($DOCUMENTATION_FILE_REGEX->all) {
                     my $regex = $DOCUMENTATION_FILE_REGEX->value($taboo);
                     if($file->basename =~ m{$regex}xi) {
@@ -2359,6 +2363,9 @@ sub get_checks_for_file {
 
     $checks{'uses-dpkg-database-directly'} = '/var/lib/dpkg'
       if $file !~ m,^usr/share/(?:doc|locale)/,
+      and $file->basename !~ m/^README(?:\..*)?$/
+      and $file->basename !~ m/^changelog(?:\..*)?$/i
+      and $file->basename !~ m/\.(?:html|txt)$/i
       and $info->field('section', '') ne 'debian-installer'
       and none { $_ eq $source_pkg } qw(base-files dpkg lintian);
 

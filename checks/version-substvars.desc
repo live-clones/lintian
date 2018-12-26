@@ -44,21 +44,21 @@ Severity: important
 Certainty: certain
 Info: The first package has a relation on the second package using a
  dpkg-control substitution variable to generate the versioned part of
- the relation.  However the second package is not built from this
- source package.  Usually this means there is a mistake in the package
+ the relation. However the second package is not built from this
+ source package. Usually this means there is a mistake in the package
  name in this dependency.
  .
  Note that this warning can occur if the package name used in the
- relation contains a typo.  In this case, correcting the typo should
+ relation contains a typo. In this case, correcting the typo should
  remove the warning.
 
 Tag: substvar-source-version-is-deprecated
 Severity: normal
 Certainty: certain
 Info: The package uses the now deprecated ${Source-Version} substvar,
- which has misleading semantics.  Please switch to ${binary:Version} or
+ which has misleading semantics. Please switch to ${binary:Version} or
  ${source:Version} as appropriate (introduced in dpkg 1.13.19, released
- with etch).  Support for ${Source-Version} may be removed from dpkg-dev
+ with etch). Support for ${Source-Version} may be removed from dpkg-dev
  in the future.
 
 Tag: maybe-not-arch-all-binnmuable
@@ -68,6 +68,6 @@ Experimental: yes
 Info: Tag to attempt to measure the number of packages that might
  have an issue with arch:all binNMUs.
  .
- At this time, please do <i>not</i> attempt to "fix" the problem.  It
+ At this time, please do <i>not</i> attempt to "fix" the problem. It
  is not clear what the solution is (if any at all),  nor is it clear
  that this is something that will or should be supported.

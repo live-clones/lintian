@@ -21,9 +21,9 @@ Tag: executable-not-elf-or-script
 Severity: normal
 Certainty: certain
 Info: This executable file is not an ELF format binary, and does not start
- with the #! sequence that marks interpreted scripts.  It might be a sh
+ with the #! sequence that marks interpreted scripts. It might be a sh
  script that fails to name /bin/sh as its shell, or it may be incorrectly
- marked as executable.  Sometimes upstream files developed on Windows are
+ marked as executable. Sometimes upstream files developed on Windows are
  marked unnecessarily as executable on other systems.
  .
  If you are using debhelper to build your package, running dh_fixperms will
@@ -49,7 +49,7 @@ Certainty: certain
 Info: This example script uses a relative path to locate its interpreter.
  This path will be taken relative to the caller's current directory, not
  the script's, so a user will probably not be able to run the example
- without modification.  This tag can also be caused by script headers like
+ without modification. This tag can also be caused by script headers like
  <tt>#!@BASH@</tt>, which usually mean that the examples were copied out
  of the source tree before proper Autoconf path substitution.
 
@@ -57,8 +57,8 @@ Tag: unusual-interpreter
 Severity: normal
 Certainty: possible
 Info: This package contains a script for an interpreter that is not shipped
- in the package and is not known to Lintian.  It is possible that there is
- a typo or the interpreter is not executable.  If not, please file a
+ in the package and is not known to Lintian. It is possible that there is
+ a typo or the interpreter is not executable. If not, please file a
  wishlist bug against Lintian, so it can be added to the list of known
  interpreters.
 
@@ -66,7 +66,7 @@ Tag: example-unusual-interpreter
 Severity: pedantic
 Certainty: possible
 Info: This package contains an example script for an interpreter that
- is not shipped in the package and is not known to Lintian.  It is
+ is not shipped in the package and is not known to Lintian. It is
  possible that there is a typo or the interpreter is not executable.
  If not, please file a wishlist bug against Lintian, so it can be
  added to the list of known interpreters.
@@ -75,30 +75,30 @@ Tag: php-script-with-unusual-interpreter
 Severity: normal
 Certainty: possible
 Info: This package contains a php script using an unusual interpreter in the
- shebang line.  The recommended shebang line is either <tt>#!/usr/bin/php</tt>
+ shebang line. The recommended shebang line is either <tt>#!/usr/bin/php</tt>
  or <tt>#!/usr/bin/env php</tt> without any version number.
 
 Tag: script-uses-bin-env
 Severity: normal
 Certainty: certain
 Info: This script uses /bin/env as its interpreter (used to find the
- actual interpreter on the user's path).  There is no /bin/env on Debian
- systems; env is instead installed as /usr/bin/env.  Usually, the path to
+ actual interpreter on the user's path). There is no /bin/env on Debian
+ systems; env is instead installed as /usr/bin/env. Usually, the path to
  env in the script should be changed.
 
 Tag: example-script-uses-bin-env
 Severity: wishlist
 Certainty: certain
 Info: This example script uses /bin/env as its interpreter (used to find
- the actual interpreter on the user's path).  There is no /bin/env on
- Debian systems; env is instead installed as /usr/bin/env.  Usually, the
+ the actual interpreter on the user's path). There is no /bin/env on
+ Debian systems; env is instead installed as /usr/bin/env. Usually, the
  path to env in the script should be changed.
 
 Tag: forbidden-config-interpreter
 Severity: important
 Certainty: certain
 Info: This package contains a <tt>config</tt> script for pre-configuring
- the package.  During pre-configuration, however, only essential packages
+ the package. During pre-configuration, however, only essential packages
  are guaranteed to be installed, so you cannot use a non-essential
  interpreter.
 
@@ -106,7 +106,7 @@ Tag: forbidden-postrm-interpreter
 Severity: serious
 Certainty: certain
 Info: This package contains a <tt>postrm</tt> maintainer script that uses
- an interpreter that isn't essential.  The <tt>purge</tt> action of
+ an interpreter that isn't essential. The <tt>purge</tt> action of
  <tt>postrm</tt> can only rely on essential packages, which means the
  interpreter used by <tt>postrm</tt> must be one of the essential ones
  (<tt>sh</tt>, <tt>bash</tt>, or <tt>perl</tt>).
@@ -116,30 +116,30 @@ Tag: unusual-control-interpreter
 Severity: minor
 Certainty: certain
 Info: This package contains a control script for an interpreter that is
- not normally used for control scripts.  This is permissible but not
- recommended.  It makes it harder for other developers to understand your
+ not normally used for control scripts. This is permissible but not
+ recommended. It makes it harder for other developers to understand your
  package.
 
 Tag: unknown-control-interpreter
 Severity: important
 Certainty: possible
 Info: This package contains a maintainer script that uses an interpreter
- that the Lintian maintainers have not heard of.  This is usually a typo
- for a common interpreter.  If not, please file a wishlist bug on Lintian
+ that the Lintian maintainers have not heard of. This is usually a typo
+ for a common interpreter. If not, please file a wishlist bug on Lintian
  so that the Lintian maintainers can add this interpreter to their list.
 
 Tag: interpreter-in-usr-local
 Severity: important
 Certainty: certain
 Info: This package contains a script that looks for an interpreter in a
- directory in /usr/local.  Since Debian does not install anything in
+ directory in /usr/local. Since Debian does not install anything in
  /usr/local, this is the wrong place to look.
 
 Tag: example-interpreter-in-usr-local
 Severity: pedantic
 Certainty: certain
 Info: This package contains an example script that looks for an
- interpreter in a directory in /usr/local.  Since Debian does not install
+ interpreter in a directory in /usr/local. Since Debian does not install
  anything in /usr/local, the example script would probably need
  modifications before a user could run it.
 
@@ -147,7 +147,7 @@ Tag: control-interpreter-in-usr-local
 Severity: serious
 Certainty: certain
 Info: A control script for this package references an interpreter in a
- directory in <tt>/usr/local</tt>.  Control scripts must use interpreters
+ directory in <tt>/usr/local</tt>. Control scripts must use interpreters
  provided by Debian packages, and Debian packages do not install anything
  in <tt>/usr/local</tt>.
 
@@ -159,7 +159,7 @@ Info: The package contains a <tt>preinst</tt> maintainer script that uses
  pre-dependency on the package that provides this interpreter.
  .
  <tt>preinst</tt> scripts should be written using only essential
- interpreters to avoid additional dependency complexity.  Please do not
+ interpreters to avoid additional dependency complexity. Please do not
  add a pre-dependency without following the policy for doing so (Policy
  section 3.5).
 Ref: policy 7.2
@@ -176,8 +176,8 @@ Tag: missing-dep-for-interpreter
 Severity: important
 Certainty: possible
 Info: You used an interpreter for a script that is not in an essential
- package.  In most cases, you will need to add a Dependency on the
- package that contains the interpreter.  If the dependency is already
+ package. In most cases, you will need to add a Dependency on the
+ package that contains the interpreter. If the dependency is already
  present, please file a bug against Lintian with the details of your
  package so that its database can be updated.
  .
@@ -206,7 +206,7 @@ Tag: example-wrong-path-for-interpreter
 Severity: wishlist
 Certainty: certain
 Info: The interpreter used by this example script is installed at another
- location on Debian systems.  Normally the path should be updated to match
+ location on Debian systems. Normally the path should be updated to match
  the Debian location.
 
 Tag: gawk-script-but-no-gawk-dep
@@ -244,14 +244,14 @@ Tag: python-script-but-no-python-dep
 Severity: important
 Certainty: certain
 Info: Packages with Python scripts should depend on the package
- <tt>python</tt>.  Those with scripts that specify a specific version of
+ <tt>python</tt>. Those with scripts that specify a specific version of
  Python must depend, recommend or suggest on that version of Python
  (exactly).
  .
  For example, if a script in the package uses <tt>#!/usr/bin/python</tt>,
- the package needs a dependency on <tt>python</tt>.  If a script uses
+ the package needs a dependency on <tt>python</tt>. If a script uses
  <tt>#!/usr/bin/python2.6</tt>, the package needs a dependency on
- <tt>python2.6</tt>.  A dependency on <tt>python (>= 2.6)</tt> is not
+ <tt>python2.6</tt>. A dependency on <tt>python (>= 2.6)</tt> is not
  correct, since later versions of Python may not provide the
  <tt>/usr/bin/python2.6</tt> binary.
  .
@@ -306,7 +306,7 @@ Tag: shell-script-fails-syntax-check
 Severity: important
 Certainty: possible
 Info: Running this shell script with the shell's -n option set fails,
- which means that the script has syntax errors.  The most common cause of
+ which means that the script has syntax errors. The most common cause of
  this problem is a script expecting <tt>/bin/sh</tt> to be bash checked on
  a system using dash as <tt>/bin/sh</tt>.
  .
@@ -319,7 +319,7 @@ Tag: example-shell-script-fails-syntax-check
 Severity: pedantic
 Certainty: possible
 Info: Running this shell script with the shell's -n option set fails,
- which means that the script has syntax errors.  The most common cause of
+ which means that the script has syntax errors. The most common cause of
  this problem is a script expecting <tt>/bin/sh</tt> to be bash checked on
  a system using dash as <tt>/bin/sh</tt>.
  .
@@ -350,16 +350,16 @@ Ref: policy 10.4
 Tag: killall-is-dangerous
 Severity: normal
 Certainty: possible
-Info: The maintainer script seems to call <tt>killall</tt>.  Since this
+Info: The maintainer script seems to call <tt>killall</tt>. Since this
  utility kills processes by name, it may well end up killing unrelated
- processes.  Most uses of <tt>killall</tt> should use <tt>invoke-rc.d</tt>
+ processes. Most uses of <tt>killall</tt> should use <tt>invoke-rc.d</tt>
  instead.
 
 Tag: mknod-in-maintainer-script
 Severity: serious
 Certainty: certain
 Ref: policy 10.6
-Info: Maintainer scripts must not create device files directly.  They
+Info: Maintainer scripts must not create device files directly. They
  should call <tt>MAKEDEV</tt> instead.
  .
  If <tt>mknod</tt> is being used to create a FIFO (named pipe), use
@@ -369,7 +369,7 @@ Tag: maintainer-script-should-not-use-start-stop-daemon
 Severity: normal
 Certainty: certain
 Info: The maintainer script seems to call <tt>start-stop-daemon</tt>
- directly.  Long-running daemons should be started and stopped via init
+ directly. Long-running daemons should be started and stopped via init
  scripts using <tt>invoke-rc.d</tt> rather than directly in maintainer
  scripts.
 Ref: policy 9.3.3.2
@@ -394,7 +394,7 @@ Tag: maintainer-script-removes-device-files
 Severity: serious
 Certainty: certain
 Ref: policy 10.6
-Info: Maintainer scripts must not remove device files.  This is left to
+Info: Maintainer scripts must not remove device files. This is left to
  the system administrator.
 
 Tag: read-in-maintainer-script
@@ -402,13 +402,13 @@ Severity: serious
 Certainty: possible
 Ref: policy 3.9.1 
 Info: This maintainer script appears to use read to get information from
- the user.  Prompting in maintainer scripts must be done by communicating
+ the user. Prompting in maintainer scripts must be done by communicating
  through a program such as debconf which conforms to the Debian
  Configuration management specification, version 2 or higher.
  .
  This check can have false positives if read is used in a block with a
  redirection, in a function run in a pipe, or in other ways where
- standard input is provided in inobvious ways.  If this is the case, please
+ standard input is provided in inobvious ways. If this is the case, please
  add an override for this tag.
 
 Tag: possible-bashism-in-maintainer-script
@@ -450,7 +450,7 @@ Tag: maintainer-script-needs-depends-on-gconf2
 Severity: normal
 Certainty: certain
 Info: This script calls gconf-schemas, which comes from the gconf2 package,
- but does not depend or pre-depend on gconf2.  If you are using dh_gconf,
+ but does not depend or pre-depend on gconf2. If you are using dh_gconf,
  add a dependency on ${misc:Depends} and dh_gconf will take care of this
  for you.
 
@@ -464,8 +464,8 @@ Tag: maintainer-script-needs-depends-on-xml-core
 Severity: normal
 Certainty: certain
 Info: This script calls update-xmlcatalog, which comes from the xml-core
- package, but does not depend or pre-depend on xml-core.  Packages that call
- update-xmlcatalog need to depend on xml-core.  If you are using
+ package, but does not depend or pre-depend on xml-core. Packages that call
+ update-xmlcatalog need to depend on xml-core. If you are using
  dh_installxmlcatalogs, add a dependency on ${misc:Depends} and
  dh_installxmlcatalogs will take care of this for you.
 
@@ -485,7 +485,7 @@ Tag: maintainer-script-should-not-use-update-alternatives-remove
 Severity: normal
 Certainty: certain
 Info: <tt>update-alternatives --remove &lt;alternative&gt; foo</tt> is
- called in the postrm.  This can be dangerous because at the time the
+ called in the postrm. This can be dangerous because at the time the
  postrm is executed foo has already been deleted and update-alternatives
  will ignore it while constructing its list of available alternatives.
  Then, if the /etc/alternatives symlink points at foo, update-alternatives
@@ -514,7 +514,7 @@ Tag: maintainer-script-should-not-use-deprecated-chown-usage
 Severity: normal
 Certainty: certain
 Info: <tt>chown user.group</tt> is called in one of the maintainer
- scripts.  The correct syntax is <tt>chown user:group</tt>. Using "." as a
+ scripts. The correct syntax is <tt>chown user:group</tt>. Using "." as a
  separator is still supported by the GNU tools, but it will fail as soon
  as a system uses the "." in user or group names.
 Ref: chown(1)
@@ -523,7 +523,7 @@ Tag: maintainer-script-should-not-hide-init-failure
 Severity: normal
 Certainty: certain
 Info: This script calls invoke-rc.d to run an init script but then, if the
- init script fails, exits successfully (using || exit 0).  If the init
+ init script fails, exits successfully (using || exit 0). If the init
  script fails, the maintainer script should probably fail.
  .
  The most likely cause of this problem is that the package was built with
@@ -535,8 +535,8 @@ Tag: maintainer-script-calls-init-script-directly
 Severity: serious
 Certainty: certain
 Info: This script apparently runs an init script directly rather than
- using invoke-rc.d.  The use of invoke-rc.d to invoke the /etc/init.d/*
- initscripts instead of calling them directly is required.  Maintainer
+ using invoke-rc.d. The use of invoke-rc.d to invoke the /etc/init.d/*
+ initscripts instead of calling them directly is required. Maintainer
  scripts may call the init script directly only if invoke-rc.d is not
  available.
 Ref: policy 9.3.3.2
@@ -544,20 +544,20 @@ Ref: policy 9.3.3.2
 Tag: maintainer-script-should-not-use-gconftool
 Severity: normal
 Certainty: possible
-Info: This script apparently runs gconftool or gconftool-2.  It should
+Info: This script apparently runs gconftool or gconftool-2. It should
  probably be calling gconf-schemas or update-gconf-defaults instead.
 
 Tag: maintainer-script-should-not-use-fc-cache
 Severity: normal
 Certainty: possible
-Info: This script apparently runs fc-cache.  Updating of the fontconfig
+Info: This script apparently runs fc-cache. Updating of the fontconfig
  cache files is now handled automatically by triggers, so running fc-cache
  from maintainer scripts is no longer necessary.
 
 Tag: install-info-used-in-maintainer-script
 Severity: serious
 Certainty: possible
-Info: This script apparently runs <tt>install-info</tt>.  Updating the
+Info: This script apparently runs <tt>install-info</tt>. Updating the
  <tt>/usr/share/info/dir</tt> file is now handled automatically by
  triggers, so running <tt>install-info</tt> from maintainer scripts is no
  longer necessary.
@@ -586,14 +586,14 @@ Tag: maintainer-script-should-not-modify-ld-so-conf
 Severity: important
 Certainty: possible
 Info: This package appears to modify <tt>/etc/ld.so.conf</tt> and does not
- appear to be part of libc.  Packages installing shared libraries in
+ appear to be part of libc. Packages installing shared libraries in
  non-standard locations were previously permitted to modify
  /etc/ld.so.conf to add the non-standard path, but this permission was
  removed in Policy 3.8.3.
  .
  Packages containing shared libraries should either install them into
  <tt>/usr/lib</tt> or should require binaries built against them to set
- RPATH to find the library at run-time.  Installing libraries in a
+ RPATH to find the library at run-time. Installing libraries in a
  different directory and modifying the run-time linker path is equivalent
  to installing them into <tt>/usr/lib</tt> except now conflicting library
  packages may cause random segfaults and difficult-to-debug problems
@@ -656,7 +656,7 @@ Severity: minor
 Certainty: certain
 Info: The maintainer script doesn't seem to contain any code other than
  comments and boilerplate (set -e, exit statements, and the case statement
- to parse options).  While this is harmless in most cases, it is probably
+ to parse options). While this is harmless in most cases, it is probably
  not what you wanted, may mean the package will leave unnecessary files
  behind until purged, and may even lead to problems in rare situations
  where dpkg would fail if no maintainer script was present.
@@ -678,17 +678,17 @@ Certainty: certain
 Ref: policy 10.4
 Info: The maintainer script passes <tt>-e</tt> to the shell on the
  <tt>#!</tt> line rather than using <tt>set -e</tt> in the body of the
- script.  This is fine for normal operation, but if the script is run by
+ script. This is fine for normal operation, but if the script is run by
  hand with <tt>sh /path/to/script</tt> (common in debugging), <tt>-e</tt>
- will not be in effect.  It's therefore better to use <tt>set -e</tt> in
+ will not be in effect. It's therefore better to use <tt>set -e</tt> in
  the body of the script.
 
 Tag: command-with-path-in-maintainer-script
 Severity: normal
 Certainty: certain
 Info: The indicated program run in a maintainer script has a prepended
- path.  Programs called from maintainer scripts normally should not have a
- path prepended.  dpkg ensures that the PATH is set to a reasonable value,
+ path. Programs called from maintainer scripts normally should not have a
+ path prepended. dpkg ensures that the PATH is set to a reasonable value,
  and prepending a path may prevent the local administrator from using a
  replacement version of a command for some local reason.
  .
@@ -707,7 +707,7 @@ Severity: serious
 Certainty: certain
 Ref: policy 3.9
 Info: The maintainer script calls dpkg-divert with <tt>--local</tt> or
- without <tt>--package</tt>.  This option is reserved for local
+ without <tt>--package</tt>. This option is reserved for local
  administrators and must never be used by a Debian package.
 
 Tag: diversion-for-unknown-file
@@ -725,7 +725,7 @@ Info: A diversion was added for the file, but not removed. This means
 Tag: remove-of-unknown-diversion
 Severity: important
 Certainty: certain
-Info: The maintainer script removes a diversion that it didn't add.  If
+Info: The maintainer script removes a diversion that it didn't add. If
  you're cleaning up unnecessary diversions from older versions of the
  package, remove them in <tt>preinst</tt> or <tt>postinst</tt> instead of
  waiting for <tt>postrm</tt> to do it.
@@ -743,7 +743,7 @@ Tag: maintainer-script-has-unexpanded-debhelper-token
 Severity: normal
 Certainty: possible
 Info: Lintian has detected the presence of a #DEBHELPER# token in the
- listed maintainer/control script.  By default, dh_installdeb will remove
+ listed maintainer/control script. By default, dh_installdeb will remove
  the token when it makes a substitution in a script.
  .
  Please note that dh_installdeb does <i>not</i> substitute the #DEBHELPER#
@@ -796,7 +796,7 @@ Info: You used <tt>/usr/bin/nodejs</tt> or <tt>/usr/bin/env nodejs</tt> as an
  .
  The <tt>/usr/bin/node</tt> binary was previously provided by
  <tt>ax25-node</tt> and packages were required to use <tt>/usr/bin/nodejs</tt>
- instead.  <tt>ax25-node</tt> has since been removed from the archive and the
+ instead. <tt>ax25-node</tt> has since been removed from the archive and the
  <tt>nodejs</tt> package now ships the <tt>/usr/bin/node</tt> binary to match
  the rest of the Node.js ecosystem.
  .

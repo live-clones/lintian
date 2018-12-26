@@ -45,210 +45,217 @@ use Exporter qw(import);
 
 BEGIN {
     our @EXPORT_OK = qw(
+      logged_runner
       runner
       check_result
     );
 }
 
+use Capture::Tiny qw(capture_merged);
 use Carp qw(confess);
 use Cwd qw(getcwd);
 use File::Basename qw(basename);
-use File::Path qw(make_path);
 use File::Spec::Functions qw(abs2rel rel2abs splitpath catpath);
 use File::Compare;
 use File::Copy;
 use File::stat;
 use List::Util qw(max min any);
 use Path::Tiny;
-
-use Lintian::Command qw(safe_qx);
-use Lintian::Util qw(internal_error touch_file);
+use Try::Tiny;
 
 use Test::Lintian::ConfigFile qw(read_config);
-use Test::Lintian::Harness qw(runsystem_ok up_to_date);
 use Test::Lintian::Helper qw(rfc822date);
+use Test::Lintian::Hooks
+  qw(find_missing_prerequisites run_lintian sed_hook sort_lines calibrate);
+use Test::Lintian::Prepare qw(early_logpath);
 
 use constant SPACE => q{ };
 use constant EMPTY => q{};
 use constant YES => q{yes};
 use constant NO => q{no};
 
+sub logged_runner {
+    my ($test_state, $runpath)= @_;
+
+    my $betterlogpath = "$runpath/log";
+    my $log;
+    my $error;
+
+    $log = capture_merged {
+        try {
+            # call runner
+            runner($test_state, $runpath)
+
+        }
+        catch {
+            # catch any error
+            $error = $_;
+        };
+    };
+
+    # delete old runner log
+    unlink $betterlogpath if -f $betterlogpath;
+
+    # move the early log for directory preparation to position of runner log
+    my $earlylogpath = early_logpath($runpath);
+    move($earlylogpath, $betterlogpath) if -f $earlylogpath;
+
+    # append runner log to population log
+    path($betterlogpath)->append_utf8($log) if length $log;
+
+    # add error if there was one
+    path($betterlogpath)->append_utf8($error) if length $error;
+
+    # print log and die on error
+    if ($error) {
+        $test_state->dump_log($log)
+          if length $log && $ENV{'DUMP_LOGS'}//NO eq YES;
+        die "Runner died for $runpath: $error";
+    }
+
+    return;
+}
+
 # generic_runner
 #
 # Runs the test called $test assumed to be located in $testset/$dir/$test/.
 #
 sub runner {
-    my ($test_state, $testcase, $outpath, $testset,
-        $force_rebuild, $dump_logs, $coverage)
-      = @_;
+    my ($test_state, $runpath, $outpath)= @_;
+
+    say EMPTY;
+    say '------- Runner starts here -------';
+
+    # bail out if runpath does not exist
+    die "Cannot find test directory $runpath." unless -d $runpath;
+
+    # announce location
+    say "Running test at $runpath.";
+
+    # read dynamic file names
+    my $runfiles = "$runpath/files";
+    my $files = read_config($runfiles);
+
+    # read dynamic case data
+    my $rundescpath = "$runpath/$files->{test_specification}";
+    my $testcase = read_config($rundescpath);
+
+    # name of encapsulating directory should be that of test
+    my $expected_name = path($runpath)->basename;
+    die
+"Test in $runpath is called $testcase->{testname} instead of $expected_name"
+      if ($testcase->{testname} ne $expected_name);
+
     my $suite = $testcase->{suite};
     my $testname = $testcase->{testname};
-    my $specpath = "$testset/$suite/$testname";
 
-    my $runpath = "$outpath/$suite/$testname";
-    my $stampfile = "$outpath/$suite/$testname-build-stamp";
+    # skip test if marked
+    my $skipfile = "$runpath/skip";
+    if (-f $skipfile) {
+        my $reason = path($skipfile)->slurp_utf8 || 'No reason given';
+        say "Skipping test: $reason";
+        $test_state->skip_test("(disabled) $reason");
+        return;
+    }
+
+    # skip if missing prerequisites
+    my $missing = find_missing_prerequisites($testcase);
+    if (length $missing) {
+        say "Missing prerequisites: $missing";
+        $test_state->skip_test("Missing prerequisites: $missing");
+        return;
+    }
+
+    # check test architectures
+    unless (length $ENV{'DEB_HOST_ARCH'}) {
+        die 'DEB_HOST_ARCH is not set.';
+    }
+    my $platforms = $testcase->{test_architectures};
+    if ($platforms ne 'any') {
+        my @wildcards = split(SPACE, $platforms);
+        my @matches= map {
+            qx{dpkg-architecture -a $ENV{'DEB_HOST_ARCH'} -i $_; echo -n \$?}
+        } @wildcards;
+        unless (any { $_ == 0 } @matches) {
+            say 'Architecture mismatch';
+            $test_state->skip_test('Architecture mismatch');
+            return;
+        }
+    }
 
     # get lintian subject
     die 'Could not get subject of Lintian examination.'
       unless exists $testcase->{build_product};
     my $subject = "$runpath/$testcase->{build_product}";
 
-    if ($force_rebuild
-        or not up_to_date($stampfile, $specpath, $ENV{HARNESS_EPOCH})) {
+    $test_state->progress('building');
 
-        $test_state->progress('building');
-
-        if (exists $testcase->{build_command}) {
-            my $command
-              = "cd $runpath; $testcase->{build_command} > ../build.$testname 2>&1";
-            if (system($command)) {
-                $test_state->dump_log("${outpath}/${suite}/build.${testname}")
-                  if $dump_logs;
-                die "$command failed.";
-            }
+    if (exists $testcase->{build_command}) {
+        my $command= "cd $runpath; $testcase->{build_command}";
+        if (system($command)) {
+            die "$command failed.";
         }
-
-        die 'Build was unsuccessful.'
-          unless -f $subject;
-
-        touch_file($stampfile);
-    } else {
-        $test_state->progress('building (cached)');
     }
+
+    die 'Build was unsuccessful.'
+      unless -f $subject;
 
     my $pkg = $testcase->{source};
 
-    run_lintian($test_state, $testcase, $subject, $runpath,
-        "$runpath/tags.$pkg", $coverage);
+    # run lintian
+    my $actual = "$runpath/tags.actual";
+    my $includepath = "$runpath/lintian-include-dir";
+    $ENV{'LINTIAN_COVERAGE'}
+      .= ",-db,./cover_db-$testcase->{suite}-$testcase->{testname}"
+      if exists $ENV{'LINTIAN_COVERAGE'};
+    run_lintian($runpath, $subject, $testcase->{profile}, $includepath,
+        $testcase->{options}, $actual);
 
     # Run a sed-script if it exists, for tests that have slightly variable
     # output
-    if (-f "$runpath/post_test") {
-        runsystem_ok('sed', '-ri', '-f', "$runpath/post_test",
-            "$runpath/tags.$pkg");
-        if ($testcase->{'sort'} eq 'yes') {
-            # Re-sort as the sed may have changed the order lines
-            open(my $rfd, '<', "$runpath/tags.$pkg");
-            my @lines = sort(<$rfd>);
-            close($rfd);
-            open(my $wfd, '>', "$runpath/tags.$pkg");
-            print {$wfd} $_ for @lines;
-            close($wfd);
-        }
+    my $parsed = "$runpath/tags.actual.parsed";
+    my $script = "$runpath/post_test";
+    if(-f $script) {
+        sed_hook($script, $actual, $parsed);
+    } else {
+        die"Could not copy actual tags $actual to $parsed: $!"
+          if(system('cp', '-p', $actual, $parsed));
     }
 
-    my $expected = "$specpath/tags";
+    # sort tags
+    my $sorted = "$runpath/tags.actual.parsed.sorted";
+    if($testcase->{sort} eq 'yes') {
+        sort_lines($parsed, $sorted);
+    } else {
+        die"Could not copy parsed tags $actual to $sorted: $!"
+          if(system('cp', '-p', $parsed, $sorted));
+    }
+
+    my $expected = "$runpath/tags";
     my $origexp = $expected;
 
-    if (-x "$runpath/test_calibration") {
-        my $calibrated = "$runpath/expected.$pkg.calibrated";
-        $test_state->progress('test_calibration hook');
-        runsystem_ok(
-            "$runpath/test_calibration", $expected,
-            "$runpath/tags.$pkg", $calibrated
-        );
-        $expected = $calibrated if -e $calibrated;
-    }
+    my $calibrated = "$runpath/expected.$pkg.calibrated";
+    $test_state->progress('test_calibration hook');
+    $expected
+      = calibrate("$runpath/test_calibration",$sorted, $expected, $calibrated);
 
-    check_result($test_state, $testcase, $expected,
-        "$runpath/tags.$pkg",$origexp);
+    check_result($test_state, $testcase, $expected,$sorted, $origexp);
 
     return;
-}
-
-sub run_lintian {
-    my ($test_state, $testcase, $file, $rundir, $out, $coverage) = @_;
-    $test_state->progress('testing');
-    my @options = split(' ', $testcase->{options}//'');
-    unshift(@options, '--allow-root', '--no-cfg');
-    unshift(@options, '--profile', $testcase->{profile});
-    unshift(@options, '--no-user-dirs');
-    if (my $incl_dir = $testcase->{'lintian_include_dir'}) {
-        unshift(@options, '--include-dir', $incl_dir);
-    }
-    my $pid = open(my $in, '-|');
-    if ($pid) {
-        my @data = <$in>;
-        my $status = 0;
-        eval {close($in);};
-        if (my $err = $@) {
-            internal_error("close pipe: $!") if $err->errno;
-            $status = ($? >> 8) & 255;
-        }
-        if (defined($coverage)) {
-            # Devel::Cover causes some annoying deep recursion
-            # warnings.  Filter them out, but only during coverage.
-            # - This is not flawless, but it gets most of them
-            @data = grep {
-                !m{^Deep [ ] recursion [ ] on [ ] subroutine [ ]
-                    "[^"]+" [ ] at [ ] .*B/Deparse.pm [ ] line [ ]
-                   \d+}xsm
-            } @data;
-        }
-        unless ($status == 0 or $status == 1) {
-            my $name = $testcase->{testname};
-            #NB: lines in @data have trailing newlines.
-            my $msg
-              = "$ENV{'LINTIAN_FRONTEND'} @options $file exited with status $status\n";
-            $msg .= join(q{},map { "$name: $_" } @data);
-
-            die $msg;
-        } else {
-            @data = sort @data if $testcase->{sort} eq 'yes';
-            open(my $fd, '>', $out);
-            print $fd $_ for @data;
-            close($fd);
-        }
-    } else {
-        my @LINTIAN_CMD = ($ENV{'LINTIAN_FRONTEND'});
-        my @LINTIAN_COMMON_OPTIONS;
-
-        my @cmd = @LINTIAN_CMD;
-
-        if (defined($coverage)) {
-            my $harness_perl_switches = $ENV{'HARNESS_PERL_SWITCHES'}//'';
-            # Only collect coverage for stuff that D::NYTProf and
-            # Test::Pod::Coverage cannot do for us.  This makes cover use less
-            # RAM in the other end.
-            my @criteria = qw(statement branch condition path subroutine);
-            my $coverage_arg
-              = '-MDevel::Cover=-silent,1,+ignore,^(.*/)?t/scripts/.+';
-            $coverage_arg .= ',+ignore,/usr/bin/.*,+ignore,(.*/)?Dpkg';
-            $coverage_arg .= ',-coverage,' . join(',-coverage,', @criteria);
-            $coverage_arg .= ',' . $coverage if $coverage ne '';
-            $ENV{'LINTIAN_COVERAGE'} = $coverage_arg;
-            $harness_perl_switches .= ' ' . $coverage_arg;
-            $ENV{'HARNESS_PERL_SWITCHES'} = $harness_perl_switches;
-            # Coverage has some race conditions (at least when using the same
-            # cover database).
-            push(@LINTIAN_COMMON_OPTIONS, '-j1');
-        }
-
-        if ($ENV{'LINTIAN_COVERAGE'}) {
-            my $suite = $testcase->{suite};
-            my $name = $testcase->{testname};
-            my $cover_dir = "./cover_db-${suite}-${name}";
-            $ENV{'LINTIAN_COVERAGE'} .= ",-db,${cover_dir}";
-            unshift(@cmd, 'perl', $ENV{'LINTIAN_COVERAGE'});
-        }
-        open(STDERR, '>&', \*STDOUT);
-        chdir($rundir);
-        exec @cmd, @options, @LINTIAN_COMMON_OPTIONS, $file
-          or internal_error("exec failed: $!");
-    }
-    return 1;
 }
 
 sub check_result {
     my ($test_state, $testcase, $expected, $actual, $origexp) = @_;
     # Compare the output to the expected tags.
-    my $testok = runsystem_ok('cmp', '-s', $expected, $actual);
+    my $testok = !system('cmp', '-s', $expected, $actual);
 
     if (not $testok) {
         if ($testcase->{'todo'} eq 'yes') {
             $test_state->pass_todo_test('failed but marked as TODO');
             return;
         } else {
+            $expected = "$testcase->{spec_path}/tags"
+              if $expected eq $origexp;
             $test_state->diff_files($expected, $actual);
             $test_state->fail_test('output differs!');
             return;

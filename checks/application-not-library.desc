@@ -27,7 +27,7 @@ Info: This package contains a program in $PATH but is named like a
  .
  People tend to skip library-like named packages when looking for
  applications in the package list and hence wouldn't notice this
- package.  See the reference for some (not perl-specific) reasoning.
+ package. See the reference for some (not perl-specific) reasoning.
  .
  In case the program in $PATH is only a helper tool and the package is
  primarily a library, please add a Lintian override for this tag.

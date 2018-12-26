@@ -21,14 +21,14 @@ Tag: html-changelog-without-text-version
 Severity: important
 Certainty: certain
 Info: If the upstream changelog file is HTML formatted, a text version
- should also be accessible as "changelog.gz".  (This can be created by
+ should also be accessible as "changelog.gz". (This can be created by
  "lynx -dump -nolist")
 Ref: policy 12.7
 
 Tag: changelog-file-not-compressed
 Severity: important
 Certainty: certain
-Info: Changelog files should be compressed using "gzip -9".  Even if they
+Info: Changelog files should be compressed using "gzip -9". Even if they
  start out small, they will become large with time.
 Ref: policy 12.7
 
@@ -42,7 +42,7 @@ Ref: policy 4.4
 Tag: debian-news-file-not-compressed
 Severity: normal
 Certainty: certain
-Info: NEWS.Debian files should be compressed using "gzip -9".  The file
+Info: NEWS.Debian files should be compressed using "gzip -9". The file
  must always have the same name.
 Ref: devref 6.3.4
 
@@ -50,7 +50,7 @@ Tag: changelog-is-dh_make-template
 Severity: important
 Certainty: certain
 Info: The changelog file has an instruction left by dh_make, which has
- not been removed.  Example:
+ not been removed. Example:
  .
    * Initial release (Closes: #nnnn)  &lt;nnnn is the bug number of your ITP&gt;
  .
@@ -76,7 +76,7 @@ Tag: changelog-file-missing-in-native-package
 Severity: important
 Certainty: certain
 Info: Each Debian package (which provides a /usr/share/doc/<i>pkg</i>
- directory) has to install a changelog file.  Since this package seems
+ directory) has to install a changelog file. Since this package seems
  to be a native Debian package (i.e., there is no upstream source),
  the file should usually be installed as
  /usr/share/doc/<i>pkg</i>/changelog.gz
@@ -146,7 +146,7 @@ Severity: normal
 Certainty: certain
 Info: The add-log-mailing-address variable is no longer honored in
  debian-changelog-mode, and should not appear in packages' changelog
- files.  Instead, put something like this in your ~/.emacs:
+ files. Instead, put something like this in your ~/.emacs:
  .
  (setq debian-changelog-mailing-address "userid@debian.org")
 
@@ -227,7 +227,7 @@ Certainty: possible
 Info: The most recent changelog entry contains an entry that appears to
  say this is a new upstream release (a comment similar to "new upstream
  release," possibly with a word between "upstream" and "release"), but the
- upstream portion of the package version number didn't change.  This may
+ upstream portion of the package version number didn't change. This may
  indicate that the package version was not updated properly in
  <tt>debian/changelog</tt>.
 
@@ -260,13 +260,13 @@ Ref: #906155, sbuild(1)
 Tag: syntax-error-in-debian-changelog
 Severity: normal
 Certainty: possible
-Info: While parsing the Debian changelog, a syntax error was found.  If
+Info: While parsing the Debian changelog, a syntax error was found. If
  you have old changelog entries that don't follow the current syntax but
  that you want to keep as-is for the historical record, add the line:
  .
    Old Changelog:
  .
- with no leading whitespace before the legacy entries.  This line and
+ with no leading whitespace before the legacy entries. This line and
  everything after it will be ignored.
 Ref: policy 4.4
 
@@ -293,7 +293,7 @@ Tag: possible-missing-colon-in-closes
 Severity: important
 Certainty: possible
 Info: To close a bug in the Debian changelog, the word "closes" must be
- followed by a colon.  This entry looked like it was intended to close a
+ followed by a colon. This entry looked like it was intended to close a
  bug, but there's no colon after "closes".
 Ref: policy 4.4
 
@@ -310,7 +310,7 @@ Tag: debian-news-entry-uses-asterisk
 Severity: wishlist
 Certainty: possible
 Info: The latest entry in NEWS.Debian appears to use asterisks to present
- changes in a bulleted list, similar to the normal changelog syntax.  The
+ changes in a bulleted list, similar to the normal changelog syntax. The
  Debian Developer's Reference recommends using regular paragraphs in
  NEWS.Debian rather than a bulleted list.
 Ref: devref 6.3.4
@@ -320,7 +320,7 @@ Severity: normal
 Certainty: possible
 Info: The version number of the most recent <tt>NEWS.Debian</tt> entry
  does not match any of the version numbers in the changelog file for this
- package.  This usually means the version in <tt>NEWS.Debian</tt> needs to
+ package. This usually means the version in <tt>NEWS.Debian</tt> needs to
  be updated to match a change to package version that happened after the
  <tt>NEWS.Debian</tt> entry was written.
 
@@ -328,7 +328,7 @@ Tag: spelling-error-in-changelog
 Severity: minor
 Certainty: certain
 Info: Lintian found a spelling error in the latest entry of the Debian
- changelog.  Lintian has a list of common misspellings that it looks for.
+ changelog. Lintian has a list of common misspellings that it looks for.
  It does not have a dictionary like a spelling checker does.
  .
  When writing a changelog entry for a spelling fix that includes the
@@ -339,15 +339,15 @@ Tag: spelling-error-in-news-debian
 Severity: minor
 Certainty: certain
 Info: Lintian found a spelling error in the latest entry of the
- NEWS.Debian file.  Lintian has a list of common misspellings that it
- looks for.  It does not have a dictionary like a spelling checker does.
+ NEWS.Debian file. Lintian has a list of common misspellings that it
+ looks for. It does not have a dictionary like a spelling checker does.
 
 Tag: new-package-should-close-itp-bug
 Severity: normal
 Certainty: certain
 Info: This package appears to be the first packaging of a new upstream
  software package (there is only one changelog entry and the Debian
- revision is 1), but it does not close any bugs.  The initial upload of a
+ revision is 1), but it does not close any bugs. The initial upload of a
  new package should close the corresponding ITP bug for that package.
  .
  This warning can be ignored if the package is not intended for Debian or
@@ -359,7 +359,7 @@ Severity: normal
 Certainty: certain
 Info: The given line of the latest changelog entry is over 80 columns.
  Such changelog entries may look poor in terminal windows and mail
- messages and be annoying to read.  Please wrap changelog entries at 80
+ messages and be annoying to read. Please wrap changelog entries at 80
  columns or less where possible.
 
 Tag: debian-changelog-line-too-short
@@ -388,7 +388,7 @@ Tag: changelog-news-debian-mismatch
 Severity: normal
 Certainty: possible
 Info: The latest entries in the Debian changelog file and NEWS.Debian file
- are for the same version but the given field doesn't match.  The
+ are for the same version but the given field doesn't match. The
  changelog information is canonical and the NEWS.Debian information is
  ignored, but it may be confusing to users to have them be different.
 
@@ -418,7 +418,7 @@ Tag: version-refers-to-distribution
 Severity: minor
 Certainty: certain
 Info: The Debian portion of the package version contains a reference to a
- particular Debian release or distribution.  This should only be done for
+ particular Debian release or distribution. This should only be done for
  uploads targeted at a particular release, not at unstable or
  experimental, and should refer to the release by version number or code
  name.
@@ -427,16 +427,16 @@ Info: The Debian portion of the package version contains a reference to a
  testing or stable release is less informative than using the code name or
  version number and may cause annoying version sequencing issues if the
  package doesn't change before the next release cycle starts.
-Ref: devref 5.13.3
+Ref: devref 5.14.3
 
 Tag: debian-changelog-has-wrong-day-of-week
 Severity: normal
 Certainty: certain
 Info: The date in the changelog entry is not consistent with the actual
- day of that week.  Either the date is wrong or the day of week is wrong.
+ day of that week. Either the date is wrong or the day of week is wrong.
  .
  To avoid problems like this, consider using a tool like dch(1) or
- date(1) to generate the date.  Example:
+ date(1) to generate the date. Example:
  .
    $ date -R -ud '2013-11-05 23:59:59'
    Tue, 05 Nov 2013 23:59:59 +0000
@@ -448,11 +448,11 @@ Info: The changelog entry references a temporary security identifier,
  like "TEMP-0000000-2FC21E".
  .
  The TEMP identifier will disappear in the future once a proper CVE
- identifier has been assigned.  Therefore it is useless as an
- external reference.  Even worse, the identifier is not stable and
+ identifier has been assigned. Therefore it is useless as an
+ external reference. Even worse, the identifier is not stable and
  may change even before a CVE is allocated.
  .
- If a CVE has been allocated, please use that instead.  Otherwise,
+ If a CVE has been allocated, please use that instead. Otherwise,
  please replace the TEMP identifier with a short description of the
  issue.
 Ref: #787929, #807892
@@ -523,8 +523,20 @@ Info: The date format in the latest changelog entry file appears to be invalid.
    day-of-week, dd month yyyy hh:mm:ss +zzzz
  .
  To avoid problems like this, consider using a tool like dch(1) or
- date(1) to generate the date.  Example:
+ date(1) to generate the date. Example:
  .
    $ date -R -ud '2013-11-05 23:59:59'
    Tue, 05 Nov 2013 23:59:59 +0000
 Ref: policy 4.4
+
+Tag: changelog-file-missing-explicit-entry
+Severity: normal
+Certainty: certain
+Info: The latest changelog file for this package specifies a version in
+ the form of 1.2-3+deb8u1, 1.2-3+nmu4 (or similar) but this does not
+ follow from a corresponding 1.2-3 changelog stanza.
+ .
+ This suggests that changes were merged into a single entry. This is
+ suboptimal as it makes it more difficult for users to determine which
+ upload fixed a particular bug.
+Ref: devref 5.8.5.4, devref 5.11.2, devref 5.14.3, #916877

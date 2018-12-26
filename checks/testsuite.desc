@@ -23,6 +23,35 @@ Info: The debian/tests/control file should be valid UTF-8, an encoding
   $ iconv -f ISO-8859-1 -t UTF-8 file &gt; file.new
   $ mv file.new file
 
+Tag: debian-tests-control-autodep8-is-obsolete
+Severity: normal
+Certainty: certain
+Ref: autodep8(1)
+Info: The specified autopkgtest control file is considered obsolete.
+ .
+ Before autodep8 version 0.17 and autopkgtest version 5.7, if a
+ maintainer wished to add tests to the set of tests generated
+ by autodep8 they provided those tests in a file named
+ <tt>debian/tests/control.autodep8</tt>.
+ .
+ It is now prefered to declare the additional tests in the regular
+ <tt>debian/tests/control</tt> file so that <tt>dpkg-source</tt> can
+ pick up the test dependencies.
+ .
+ When configured to run autodep8 tests, autopkgtest will run the
+ additional tests and the autodep8 tests when <tt>debian/control</tt>
+ has the proper <tt>Testsuite: autopkgtest-*</tt> in the source
+ headers.
+ .
+ Please merge the specified file into <tt>debian/tests/control</tt>.
+
+Tag: debian-tests-control-and-control-autodep8
+Severity: wishlist
+Certainty: certain
+Info: This package has both a <tt>debian/tests/control</tt> and a
+ <tt>debian/tests/control.autodep8</tt> file. Please merge the contents and
+ remove the latter one.
+
 Tag: illegal-runtime-test-name
 Severity: normal
 Certainty: certain
@@ -127,7 +156,7 @@ Info: Lintian cannot parse the Depends field for the given autopkgtest.
  Please double check that dependency the syntax is correct.
  .
  Note that Lintian has a whitelist of known "special" dependencies
- permitted by autopkgtest (e.g. @builddep@).  Lintian does not accept
+ permitted by autopkgtest (e.g. @builddep@). Lintian does not accept
  these as a part of an OR-clause.
  .
  If Lintian complains about a new special "@"-dependency, please file

@@ -1,3 +1,77 @@
+lintian (2.5.118) unstable; urgency=medium
+
+  * Summary of tag changes:
+    + Added:
+      - changelog-file-missing-explicit-entry
+      - debian-tests-control-and-control-autodep8
+      - debian-tests-control-autodep8-is-obsolete
+
+  * checks/*.desc:
+    + [CL] Consistently use a single space after a full-stop/period.
+  * checks/changelog-file.{desc,pm}:
+    + [CL] Check that 1.2-3~debXuY stanzas follow a 1.2-3 one. Thanks to
+      Andreas Beckmann for the suggestion.  (Closes: #916877)
+  * checks/cruft.pm:
+    + [CL] Allow some alternatives in the "invariant sections" regular
+      expressions as some upstream's have modified the official wording.
+      Thanks to Dmitry Bogatov for the patch.  (Closes: #916095)
+  * checks/files.pm:
+    + [CL] The package-contains-documentation-outside-usr-share-doc tag
+      should accept files under "/usr/share/help"; these are being
+      installed by a number of GNOME packages.  Thanks to Jeremy Bicha for
+      the report.  (Closes: #916497)
+    + [CL] Avoid a number of false-positives in documentation files when
+      processing the uses-dpkg-database-directly tag as these are
+      invariably legitimate.
+    + [CL] Prevent package-contains-no-arch-dependent-files false-positives
+      regarding files under /usr/lib/<gnu-triplet>.  Thanks to Andreas
+      Beckmann.  (Closes: #916901, #917028)
+  * checks/systemd.pm:
+    + [CL] Don't emit systemd-service-file-missing-hardening-features for
+      WantedBy=sleep.target "services" such as autosuspend.
+  * checks/testsuite.{desc,pm}:
+    + [CL] Apply a patch series from Paul Gevers to warn about obsolete
+      debian/tests/control.autodep8 files.  (MR: !95)
+  * checks/version-substvars.pm:
+    + [CL] Apply a patch from Matt Kraai (via MR !101) to make the
+      version-substvar-for-external-package tag require versioned provides.
+      (Closes: #833608)
+
+  * CONTRIBUTING.md:
+    + [CL] Update a number of references to Salsa, recommending merge
+      requests, etc.
+
+  * data/output/manual-references:
+    + [CL] Refresh.
+  * data/spelling/corrections:
+    + [PW] Add a number of corrections.
+  * data/standards-version/release-dates:
+    + [CL] Add 4.3.0 as a known Standards-Version.
+  * data/systemd/wantedby-whitelist:
+    + [CL] Add default, network-online and sleep' to the list of valid
+      WantedBy systemd targets.
+    + [PW] Add a number of corrections.
+
+  * debian/{docs,lintian.install}:
+    + [CL] Order lines.
+      to Salvo Tomaselli for the report.  (Closes: #917120)
+
+  * doc/lintianrc.example:
+    + [CL] Clarify that spaces are valid in variable assignments.  Thanks
+
+  * private/refresh-manual-refs:
+    + [CL] Update location of the Python policy; it is now shipped in the
+      "python3" binary package.
+
+  * t/*:
+    + [CL] Apply a patch series from Felix Lechner to capture log output in
+      tests using Capture::Tiny as it works better in a multi-threaded
+      environment.  (MR: !102)
+    + [CL] Apply a patch from Felix Lechner to remove the "diff" directory
+      and contents for two tests.  (MR: !103)
+
+ -- Chris Lamb <lamby@debian.org>  Sun, 23 Dec 2018 16:42:08 +0000
+
 lintian (2.5.117~bpo9+1) stretch-backports; urgency=medium
 
   * Rebuild for stretch-backports.
@@ -22,7 +96,7 @@ lintian (2.5.117) unstable; urgency=medium
     + [CL] Refactor, tidy and optimise various checks for the contents of
       files.
     + [CL] Check files for references to the build path if specified in a
-      .buildinfo.  (Closes: #916021
+      .buildinfo.  (Closes: #916021)
   * checks/shared-libs.desc:
     + [CL] Clarify that symbols-file-missing-build-depends-package-field is
       emitted per-package in its long description, not based on a file.

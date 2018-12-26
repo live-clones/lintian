@@ -6,8 +6,8 @@ Info: This script checks for various problems with .changes files
 Tag: malformed-changes-file
 Severity: serious
 Certainty: certain
-Info: There is no "Format" field in your .changes file.  This probably
- indicates some serious problem with the file.  Perhaps it's not actually
+Info: There is no "Format" field in your .changes file. This probably
+ indicates some serious problem with the file. Perhaps it's not actually
  a changes file, or it's not in the proper format, or it's PGP-signed
  twice.
  .
@@ -18,7 +18,7 @@ Ref: policy 5.5
 Tag: no-description-in-changes-file
 Severity: serious
 Certainty: certain
-Info: There is no "Description" field in your .changes file.  A
+Info: There is no "Description" field in your .changes file. A
  description is mandatory and is usually constructed from the descriptions
  in the control file of the package by the package build tools.
 Ref: policy 5.5
@@ -27,8 +27,8 @@ Tag: bad-distribution-in-changes-file
 Severity: important
 Certainty: certain
 Info: You've specified an unknown target distribution for your upload in
- the <tt>debian/changelog</tt> file.  It is possible that you are uploading
- for a different distribution than the one Lintian is checking for.  In
+ the <tt>debian/changelog</tt> file. It is possible that you are uploading
+ for a different distribution than the one Lintian is checking for. In
  that case, passing --profile $VENDOR may fix this warning.
  .
  Note that the distributions <tt>non-free</tt> and <tt>contrib</tt> are no
@@ -44,14 +44,14 @@ Info: You've specified more than one target distribution for your upload
  <tt>debian/changelog</tt> file.
  .
  Although this syntax is valid, it is not accepted by the Debian archive
- management software.  This may not be a problem if this upload is
+ management software. This may not be a problem if this upload is
  targeted at an archive other than Debian's.
 Ref: policy 5.6.14
 
 Tag: no-urgency-in-changes-file
 Severity: normal
 Certainty: certain
-Info: There is no "Urgency" field in the .changes file.  This field is
+Info: There is no "Urgency" field in the .changes file. This field is
  recommended by policy and is usually derived from the first line of the
  most recent changelog entry by the package build tools.
 Ref: policy 5.5
@@ -61,7 +61,7 @@ Severity: important
 Certainty: certain
 Info: The keyword value of the "Urgency" field in the .changes file is not
  one of the allowed values of low, medium, high, critical, and emergency
- (case-insensitive).  This value normally taken from the first line of the
+ (case-insensitive). This value normally taken from the first line of the
  most recent entry in <tt>debian/changelog</tt>, which is probably where
  the error is.
 Ref: policy 5.6.17
@@ -107,7 +107,7 @@ Severity: serious
 Certainty: certain
 Info: The Changed-By field should contain the package builder's name and
  email address, with the name followed by the address inside angle
- brackets (&lt; and &gt;).  The address seems to be missing.
+ brackets (&lt; and &gt;). The address seems to be missing.
 Ref: policy 5.6.4
 
 Tag: changed-by-address-malformed
@@ -140,9 +140,9 @@ Info: The Changed-By address includes root user, which is
 Tag: backports-changes-missing
 Severity: wishlist
 Certainty: possible
-Info: The changes file only has changelog entries from a single version.  It
+Info: The changes file only has changelog entries from a single version. It
  is recommended for backports to include all changes since (old)stable or
- the previous backport.  This can be done by adding the '-v' option to the
+ the previous backport. This can be done by adding the '-v' option to the
  build with the appropriate version.
 Ref: http://backports.debian.org/Contribute/, #785084
 

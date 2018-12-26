@@ -1,8 +1,8 @@
-frontend/dplint		usr/share/lintian/frontend
 checks			usr/share/lintian
 collection		usr/share/lintian
 commands                usr/share/lintian
 data		  	usr/share/lintian
+frontend/dplint		usr/share/lintian/frontend
 helpers 		usr/share/lintian
 lib/Lintian		usr/share/perl5
 lib/Test		usr/share/perl5

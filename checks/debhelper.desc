@@ -34,7 +34,7 @@ Info: The package either doesn't declare a versioned build dependency on
  Recommended practice is to always declare an explicit versioned
  dependency on debhelper equal to or greater than the compatibility level
  used by the package, even if the versioned dependency isn't strictly
- necessary.  Having a versioned dependency also helps with backports to
+ necessary. Having a versioned dependency also helps with backports to
  older releases and correct builds on partially updated systems.
 Ref: debhelper(7)
 
@@ -52,7 +52,7 @@ Info: The package either doesn't declare a versioned build dependency on
  The recommended practice is to always declare an explicit versioned
  dependency on debhelper equal to or greater than the compatibility level
  used by the package, even if the versioned dependency isn't strictly
- necessary.  Having a versioned dependency also helps with backports to
+ necessary. Having a versioned dependency also helps with backports to
  older releases and correct builds on partially updated systems.
  .
  Packages not using an experimental or beta compatibility level may
@@ -69,7 +69,7 @@ Tag: dh-make-template-in-source
 Severity: normal
 Certainty: possible
 Info: This package contains debian/*.ex and/or debian/ex.* files
- installed by dh_make.  These are intended to be filled in with the
+ installed by dh_make. These are intended to be filled in with the
  package's details and renamed for use by various debhelper commands.
  If they are not being used, they should be removed.
 
@@ -91,8 +91,8 @@ Tag: debhelper-compat-file-is-empty
 Severity: important
 Certainty: certain
 Ref: debhelper(7)
-Info: The source package has an empty debian/compat file.  This is an error,
- the compat level of debhelper should be in there.  Note that only the first
+Info: The source package has an empty debian/compat file. This is an error,
+ the compat level of debhelper should be in there. Note that only the first
  line of the file is relevant.
 
 Tag: declares-possibly-conflicting-debhelper-compat-versions
@@ -101,7 +101,7 @@ Certainty: certain
 Ref: debhelper(7)
 Info: The source package declares the debhelper compatibility version
  both in the <tt>debian/compat</tt> file and in the <tt>debian/rules</tt>
- file.  If these ever get out of synchronisation, the package may not build
+ file. If these ever get out of synchronisation, the package may not build
  as expected.
 
 Tag: package-uses-deprecated-debhelper-compat-version
@@ -109,12 +109,12 @@ Severity: normal
 Certainty: certain
 Ref: debhelper(7)
 Info: The debhelper compatibility version used by this package is marked
- as deprecated by the debhelper developer.  You should really consider
+ as deprecated by the debhelper developer. You should really consider
  using a newer compatibility version.
  .
  The compatibility version can be set in (preferred)
  <tt>debian/compat</tt> or by setting and exporting DH_COMPAT in
- <tt>debian/rules</tt>.  If it is not set in either place, debhelper
+ <tt>debian/rules</tt>. If it is not set in either place, debhelper
  defaults to the deprecated compatibility version 1.
 
 Tag: package-uses-old-debhelper-compat-version
@@ -122,12 +122,12 @@ Severity: pedantic
 Certainty: certain
 Ref: debhelper(7)
 Info: The debhelper compatibility version used by this package is marked
- as not recommended by the debhelper developer.  You may consider
+ as not recommended by the debhelper developer. You may consider
  using a recommended compatibility version.
  .
  The compatibility version can be set in (preferred)
  <tt>debian/compat</tt> or by setting and exporting DH_COMPAT in
- <tt>debian/rules</tt>.  If it is not set in either place, debhelper
+ <tt>debian/rules</tt>. If it is not set in either place, debhelper
  defaults to the deprecated compatibility version 1.
 
 Tag: package-uses-experimental-debhelper-compat-version
@@ -135,12 +135,12 @@ Severity: pedantic
 Certainty: certain
 Ref: debhelper(7)
 Info: The debhelper compatibility version used by this package is marked
- as experimental by the debhelper developer.  You  may consider
+ as experimental by the debhelper developer. You  may consider
  using a stable compatibility version.
  .
  The compatibility version can be set in (preferred)
  <tt>debian/compat</tt> or by setting and exporting DH_COMPAT in
- <tt>debian/rules</tt>.  If it is not set in either place, debhelper
+ <tt>debian/rules</tt>. If it is not set in either place, debhelper
  defaults to the deprecated compatibility version 1.
 
 Tag: debhelper-but-no-misc-depends
@@ -148,7 +148,7 @@ Severity: normal
 Certainty: possible
 Ref: debhelper(7)
 Info: The source package uses debhelper, but it does not include
- ${misc:Depends} in the given binary package's debian/control entry.  Any
+ ${misc:Depends} in the given binary package's debian/control entry. Any
  debhelper command may add dependencies to ${misc:Depends} that are
  required for the work that it does, so recommended best practice is to
  always add ${misc:Depends} to the dependencies of each binary package if
@@ -158,22 +158,22 @@ Tag: missing-build-dependency-for-dh_-command
 Severity: important
 Certainty: possible
 Info: The source package appears to be using a dh_ command but doesn't build
- depend on the package that actually provides it.  If it uses it, it must
+ depend on the package that actually provides it. If it uses it, it must
  build depend on it.
 
 Tag: missing-build-dependency-for-dh-addon
 Severity: important
 Certainty: possible
 Info: The source package appears to be using a dh addon but doesn't build
- depend on the package that actually provides it.  If it uses it, it must
+ depend on the package that actually provides it. If it uses it, it must
  build depend on it.
 
 Tag: brace-expansion-in-debhelper-config-file
 Severity: normal
 Certainty: possible
 Info: This debhelper config file appears to use shell brace expansion
- (such as <tt>{foo,bar}</tt>) to specify files.  This happens to work due
- to an accident of implementation but is not a supported feature.  Only
+ (such as <tt>{foo,bar}</tt>) to specify files. This happens to work due
+ to an accident of implementation but is not a supported feature. Only
  <tt>?</tt>, <tt>*</tt>, and <tt>[...]</tt> are supported.
 Ref: debhelper(1)
 
@@ -182,7 +182,7 @@ Severity: normal
 Certainty: possible
 Ref: debhelper(7)
 Info: The source package declares a weak dependency on ${misc:Depends} in
- the given binary package's debian/control entry.  A stronger dependency, that
+ the given binary package's debian/control entry. A stronger dependency, that
  is one that ensures the package's installation, is required so that the
  additional commands are available to the maintainer scripts when they are run.
 
@@ -209,9 +209,9 @@ Tag: debhelper-compatibility-level-not-a-number
 Severity: important
 Certainty: possible
 Info: The debhelper compatibility level specified in <tt>debian/rules</tt>
- is not a number.  If you're using make functions or other more complex
+ is not a number. If you're using make functions or other more complex
  methods to generate the compatibility level, write the output into
- <tt>debian/compat</tt> instead of setting DH_COMPAT.  The latter should
+ <tt>debian/compat</tt> instead of setting DH_COMPAT. The latter should
  be available for a user to override temporarily.
 
 Tag: temporary-debhelper-file
@@ -219,7 +219,7 @@ Severity: important
 Certainty: certain
 Ref: dh_clean(1)
 Info: The package contains temporary debhelper files, which are normally
- removed by <tt>dh_clean</tt>.  The most common cause for this is that a
+ removed by <tt>dh_clean</tt>. The most common cause for this is that a
  binary package has been renamed or removed without cleaning the build
  directory first.
 
@@ -233,7 +233,7 @@ Tag: python-depends-but-no-python-helper
 Severity: serious
 Certainty: possible
 Info: The source package declares a dependency on ${python:Depends} in the
- given binary package's debian/control entry.  However, debian/rules doesn't
+ given binary package's debian/control entry. However, debian/rules doesn't
  call any helper that would generate this substitution variable.
  .
  The source package probably needs a call to dh_python2 (possibly via the
@@ -243,13 +243,13 @@ Tag: python3-depends-but-no-python3-helper
 Severity: serious
 Certainty: possible
 Info: The source package declares a dependency on ${python3:Depends} in the
- given binary package's debian/control entry.  However, debian/rules doesn't
+ given binary package's debian/control entry. However, debian/rules doesn't
  call any helper that would generate this substitution variable.
 
 Tag: package-file-is-executable
 Severity: normal
 Certainty: certain
-Info: The packaging file is marked executable.  For control, changelog and
+Info: The packaging file is marked executable. For control, changelog and
  copyright there is no reason for them to be executable.
  .
  This tag is also emitted if a debhelper file is marked executable without
@@ -304,7 +304,7 @@ Certainty: wild-guess
 Info: The package uses a variable in one of its debhelper config
  files, but the variable is not one known to dpkg-architecture.
  .
- It is recommended to use a known subset of variables.  If the package
+ It is recommended to use a known subset of variables. If the package
  needs more than that, and makes sure the variable is exported through
  the build one way or the other, then this tag can be safely ignored
  or overridden.
@@ -348,8 +348,8 @@ Tag: dh-manual-sequence-control-obsolete
 Severity: important
 Certainty: certain
 Info: The package uses one (or more) of the obsolete dh parameters
- to control the debhelper command sequence.  This method has been
- deprecated and is now replaced by override targets.  If you had:
+ to control the debhelper command sequence. This method has been
+ deprecated and is now replaced by override targets. If you had:
  .
   [...]
   install: build
@@ -391,14 +391,14 @@ Info: The listed target in debian/rules command is a likely misspelling.
  silently not being executed by <tt>make</tt>.
  .
  Implementation detail: The typo is detected by using "Levenshtein
- edit distance".  Therefore, if the typo involve several characters,
+ edit distance". Therefore, if the typo involve several characters,
  Lintian may not detect it.
 
 Tag: maintscript-includes-maint-script-parameters
 Severity: normal
 Certainty: possible
 Info: Lines in a <tt>debian/*.maintscript</tt> correspond to
- <tt>dpkg-maintscript-helper(1)</tt> commands and parameters.  However, the
+ <tt>dpkg-maintscript-helper(1)</tt> commands and parameters. However, the
  "maint-script-parameters" should not be included as debhelper will add those
  automatically. See <tt>dh_installdeb(1)</tt> for more information.
 
@@ -419,12 +419,12 @@ Info: The debhelper tools from autotools-dev has been replaced by the tool
  debhelper (&gt;= 9.20160114)
  .
  The <tt>dh_update_autotools_config</tt> is run by default via the <tt>dh</tt>
- command sequencer.  If you are using <tt>dh</tt>, you can probably just remove
+ command sequencer. If you are using <tt>dh</tt>, you can probably just remove
  the uses of the tooling from autotools-dev without doing any further changes.
  .
  If you use the "classic" debhelper style, then please replace all
  calls to <tt>dh_autotools-dev_updateconfig</tt> with
- <tt>dh_update_autotools_config</tt>.  The calls to
+ <tt>dh_update_autotools_config</tt>. The calls to
  <tt>dh_autotools-dev_restoreconfig</tt> are replaced by
  <tt>dh_clean</tt>, so they can most likely just be removed without
  any further changes.

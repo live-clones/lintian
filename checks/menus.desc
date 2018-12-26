@@ -130,14 +130,14 @@ Tag: bad-menu-file-name
 Severity: important
 Certainty: certain
 Info: The package installs a file <tt>/usr/lib/menu/menu</tt>, which is
- already in use by the <tt>menu</tt> package itself.  The menu file should
+ already in use by the <tt>menu</tt> package itself. The menu file should
  be named after the package that installs it.
 
 Tag: doc-base-index-references-multiple-files
 Severity: important
 Certainty: certain
 Info: The Index field in a doc-base file should reference the single index
- file for that document.  Any other files belonging to the same document
+ file for that document. Any other files belonging to the same document
  should be listed in the Files field.
 Ref: doc-base 2.3.2.2
 
@@ -145,7 +145,7 @@ Tag: doc-base-file-references-missing-file
 Severity: important
 Certainty: certain
 Info: One of the files referenced in an Index or Files field in this
- doc-base control file does not exist in the package.  The doc-base
+ doc-base control file does not exist in the package. The doc-base
  control files should be installed by the package that provides the
  documents they are registering.
 
@@ -153,7 +153,7 @@ Tag: doc-base-file-unknown-format
 Severity: normal
 Certainty: certain
 Info: The Format field in this doc-base control file declares a format
- that is not supported.  Recognized formats are "HTML", "Text", "PDF",
+ that is not supported. Recognized formats are "HTML", "Text", "PDF",
  "PostScript", "Info", "DVI", and "DebianDoc-SGML" (case-insensitive).
 Ref: doc-base 2.3.2.2
 
@@ -161,7 +161,7 @@ Tag: doc-base-file-no-format
 Severity: important
 Certainty: certain
 Info: A format section of this doc-base control file didn't specify a
- format.  Each section after the first must specify a format.
+ format. Each section after the first must specify a format.
 Ref: doc-base 2.3.2.2
 
 Tag: doc-base-file-no-format-section
@@ -176,7 +176,7 @@ Severity: important
 Certainty: certain
 Info: Format sections in doc-base control files for HTML or Info documents
  must contain an Index field specifying the starting document for the
- documentation.  Even if the documentation is a single file, this field
+ documentation. Even if the documentation is a single file, this field
  must be present.
 Ref: doc-base 2.3.2.2
 
@@ -192,7 +192,7 @@ Tag: doc-base-document-field-not-in-first-line
 Severity: important
 Certainty: certain
 Info: The Document field in doc-base control file must be located at
- first line of the file.  While unregistering documents, doc-base 0.8
+ first line of the file. While unregistering documents, doc-base 0.8
  and later parses only the first line of the control file for performance
  reasons.
 Ref: doc-base 2.3.2.1
@@ -201,7 +201,7 @@ Tag: doc-base-file-unknown-field
 Severity: important
 Certainty: certain
 Info: The doc-base control file contains field which is either unknown
- or not valid for the section where was found.  Possible reasons for this
+ or not valid for the section where was found. Possible reasons for this
  error are: a typo in field name, missing empty line between control file
  sections, or an extra empty line separating sections.
 Ref: doc-base 2.3.2.1, doc-base 2.3.2.2
@@ -214,7 +214,7 @@ Info: The doc-base control file contains a duplicated field.
 Tag: doc-base-file-duplicated-format
 Severity: important
 Certainty: certain
-Info: The doc-base control file contains a duplicated format.  Doc-base
+Info: The doc-base control file contains a duplicated format. Doc-base
  files must not register different documents in one control file.
 Ref: doc-base 2.3.2.2
 
@@ -229,7 +229,7 @@ Tag: doc-base-invalid-document-field
 Severity: important
 Certainty: certain
 Info: The Document field should consists only of letters (a-z), digits
- (0-9), plus (+) or minus (-) signs, and dots (.).  In particular,
+ (0-9), plus (+) or minus (-) signs, and dots (.). In particular,
  uppercase letters are not allowed.
 Ref: doc-base 2.2
 
@@ -252,7 +252,7 @@ Tag: doc-base-abstract-field-separator-extra-whitespace
 Severity: normal
 Certainty: certain
 Info: Unnecessary spaces were found in the paragraph separator line of the
- doc-base's Abstract field.  The separator line should consist of a single
+ doc-base's Abstract field. The separator line should consist of a single
  space followed by a single dot.
 Ref: doc-base 2.3.2
 
@@ -260,16 +260,16 @@ Tag: spelling-error-in-doc-base-title-field
 Severity: minor
 Certainty: certain
 Info: Lintian found a spelling or capitalization error in the Title field
- of this doc-base control file.  Lintian has a list of common misspellings
- that it looks for.  It does not have a dictionary like a spelling checker
+ of this doc-base control file. Lintian has a list of common misspellings
+ that it looks for. It does not have a dictionary like a spelling checker
  does.
 
 Tag: spelling-error-in-doc-base-abstract-field
 Severity: minor
 Certainty: certain
 Info: Lintian found a spelling or capitalization error in the Abstract
- field of this doc-base control file.  Lintian has a list of common
- misspellings that looks for.  It does not have a dictionary like a
+ field of this doc-base control file. Lintian has a list of common
+ misspellings that looks for. It does not have a dictionary like a
  spelling checker does.
 
 Tag: doc-base-file-syntax-error
@@ -282,7 +282,7 @@ Tag: doc-base-file-separator-extra-whitespace
 Severity: normal
 Certainty: certain
 Info: Unnecessary spaces were found in the doc-base file sections'
- separator.  The section separator is an empty line and should not contain
+ separator. The section separator is an empty line and should not contain
  any whitespace.
 Ref: doc-base 2.3.2
 
@@ -293,7 +293,7 @@ Info: doc-base files must be valid UTF-8, an encoding of the Unicode
  character set.
  .
  There are many ways to convert a doc-base file from an obsolete encoding
- like ISO-8859-1.  You may, for example, use "iconv" like:
+ like ISO-8859-1. You may, for example, use "iconv" like:
  .
   $ iconv -f ISO-8859-1 -t UTF-8 doc-base &gt; doc-base.new
   $ mv doc-base.new doc-base
@@ -312,7 +312,7 @@ Tag: doc-base-unknown-section
 Severity: normal
 Certainty: certain
 Info: The section indicated in this doc-base control file is not one of
- the standard doc-base sections.  The doc-base sections are based on the
+ the standard doc-base sections. The doc-base sections are based on the
  menu sections but are not exactly the same.
 Ref: doc-base 2.3.3, /usr/share/doc/doc-base/doc-base.html/index.html
 
@@ -328,6 +328,6 @@ Severity: wishlist
 Certainty: possible
 Info: The package ships a <tt>.html</tt> or <tt>.pdf</tt> file under
  <tt>/usr/share/doc/</tt>, which are usually documentation, but it does
- not register anything in doc-base.  (Files under an <tt>examples</tt>
+ not register anything in doc-base. (Files under an <tt>examples</tt>
  directory are excluded.)
 Ref: policy 9.10
