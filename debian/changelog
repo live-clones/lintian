@@ -19,12 +19,15 @@ lintian (2.5.119) UNRELEASED; urgency=medium
     + [BR] Detect html5shiv library. This library is the defacto way
       to enable use of HTML5 sectioning elements in legacy
       Internet Explorer.
+    + [BR] Detect mocha framework. This is a testing javascript
+      framework.
   * data/files/privacy-breaker-websites:
     + [BR] Detect html5shiv library. Suggest to use libjs-html5shiv
       virtual package.
     + [BR] Recommend virtual package libjs-normalize instead of
       node-normalize.css package. libjs-normalize is provided
       by node-normalize.css, and this is an implementation detail.
+    + [BR] Detect mocha framework and recommend libjs-mocha.
 
  -- Chris Lamb <lamby@debian.org>  Sun, 23 Dec 2018 17:18:55 +0000
 
