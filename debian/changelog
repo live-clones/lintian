@@ -28,6 +28,7 @@ lintian (2.5.119) UNRELEASED; urgency=medium
       node-normalize.css package. libjs-normalize is provided
       by node-normalize.css, and this is an implementation detail.
     + [BR] Detect mocha framework and recommend libjs-mocha.
+    + [BR] Detect libjs-expect.js package and warn about it.
 
  -- Chris Lamb <lamby@debian.org>  Sun, 23 Dec 2018 17:18:55 +0000
 
