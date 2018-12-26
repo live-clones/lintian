@@ -15,6 +15,7 @@ libjs-async                  ~~ (?i)/async$EXT
 libjs-cropper                ~~ (?i)/cropper(?:\.uncompressed)?$EXT
 libjs-dojo-\w+               ~~ (?i)/(?:dojo|dijit)$EXT
 libjs-excanvas               ~~ (?i)/excanvas(?:-r[0-9]+)?$EXT
+libjs-html5shiv              ~~ (?i)html5shiv(?:-printshiv)?$EXT
 libjs-jac                    ~~ (?i)/jsjac$EXT
 libjs-jquery                 ~~ (?i)/jquery(?:-[\d\.]+)?$EXT
 libjs-jquery-cookie          ~~ (?i)/jquery\.cookie$EXT
