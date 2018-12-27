@@ -14,6 +14,10 @@ lintian (2.5.119) UNRELEASED; urgency=medium
       tag's description to mention that a commented override would be
       useful in order to document that the package will not ported to
       Python 3.x.  Thanks to Scott Kitterman.  (Closes: #917264)
+  * checks/shared-libs.desc:
+    + [CL] Clarify that "Build-Depends-Package" lines should start in
+      column 1 of the file and not be indented to align with the symbols
+      themselves.
 
  -- Chris Lamb <lamby@debian.org>  Sun, 23 Dec 2018 17:18:55 +0000
 

@@ -461,4 +461,8 @@ Info: The symbols file for this package does not contain a
  .
  This is useful as allows packages to not hardcode this information
  multiple times.
+ .
+ Note that the format of <tt>deb-symbols(5)</tt> files requires that the
+ <tt>* Build-Depends-Package:</tt> line should start in column one of
+ the file and not be indented to align with the symbols themselves.
 Ref: deb-symbols(5), dpkg-shlibdeps(1)
