@@ -93,7 +93,7 @@ use Lintian::Internal::FrontendUtil qw(default_parallel);
 use Test::Lintian::ConfigFile qw(read_config);
 use Test::Lintian::Filter qw(find_selected_lintian_testpaths);
 use Test::Lintian::Helper
-  qw(rfc822date get_host_architecture get_latest_policy get_required_debhelper_version get_installed_debhelper_version);
+  qw(rfc822date get_host_architecture get_latest_policy get_recommended_debhelper_version);
 use Test::Lintian::Prepare qw(logged_prepare);
 use Test::Lintian::Run qw(logged_runner);
 use Test::State;
@@ -205,6 +205,11 @@ say "Host architecture is $ENV{'DEB_HOST_ARCH'}.";
 ($ENV{'POLICY_VERSION'}, $ENV{'POLICY_EPOCH'}) = get_latest_policy();
 say "Latest policy version is $ENV{'POLICY_VERSION'} from "
   . rfc822date($ENV{'POLICY_EPOCH'});
+
+# get current debhelper compat level; do not name DH_COMPAT; causes conflict
+$ENV{'DEFAULT_DEBHELPER_COMPAT'} = get_recommended_debhelper_version();
+say
+"Using compat level $ENV{'DEFAULT_DEBHELPER_COMPAT'} as a default for packages built with debhelper.";
 
 say EMPTY;
 
