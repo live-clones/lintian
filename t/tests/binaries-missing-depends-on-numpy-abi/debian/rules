@@ -4,5 +4,4 @@ export DEB_BUILD_MAINT_OPTIONS=hardening=+all,-pie
 export DEB_LDFLAGS_MAINT_APPEND=-Wl,--no-as-needed
 
 %:
-	dh $@
-
+	dh $@ --buildsystem pybuild
