@@ -9,6 +9,10 @@ lintian (2.5.119) UNRELEASED; urgency=medium
   * checks/cruft.pm:
     + [BR] Following #916095, tag "invariant sections" modified by upstream
       versions as non official.
+  * checks/debhelper.desc:
+    + [CL] Include the debhelper-compat method of setting the compatibility
+      level in a number of tag descriptions.  Thanks to Jeremy Bicha for
+      the idea.  (Closes: #917345)
   * checks/python.desc:
     + [CL] Update the dependency-on-python-version-marked-for-end-of-life
       tag's description to mention that a commented override would be
