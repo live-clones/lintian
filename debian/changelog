@@ -30,6 +30,7 @@ lintian (2.5.119) UNRELEASED; urgency=medium
   * data/files/privacy-breaker-websites:
     + [BR] Suggest using libjs-html5shiv over linking to an external
       version.
+    + [BR] Detect the libjs-expect.js package.
 
  -- Chris Lamb <lamby@debian.org>  Sun, 23 Dec 2018 17:18:55 +0000
 
