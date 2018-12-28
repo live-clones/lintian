@@ -47,6 +47,7 @@ BEGIN {
     our @EXPORT_OK = qw(
       get_host_architecture
       get_latest_policy
+      get_recommended_debhelper_version
       get_required_debhelper_version
       get_installed_debhelper_version
       copy_dir_contents
@@ -101,6 +102,22 @@ sub get_latest_policy {
     my $epoch = $STANDARDS[0][1]// die 'Could not get latest policy date.';
 
     return ($version, $epoch);
+}
+
+=item get_recommended_debhelper_version()
+
+Returns the version of debhelper recommended in 'debhelper/compat-level'
+via Lintian::Data, relative to the established LINTIAN_ROOT.
+
+=cut
+
+sub get_recommended_debhelper_version {
+    my $profile = Lintian::Profile->new(undef, [$ENV{'LINTIAN_ROOT'}]);
+    Lintian::Data->set_vendor($profile);
+
+    my $compat_level= Lintian::Data->new('debhelper/compat-level', qr/=/);
+
+    return $compat_level->value('recommended');
 }
 
 =item get_required_debhelper_version()
