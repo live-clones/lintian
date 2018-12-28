@@ -1,6 +1,4 @@
-lintian (2.5.119) UNRELEASED; urgency=medium
-
-  XXX: generate tag summary
+lintian (2.5.119) unstable; urgency=medium
 
   * checks/changelog-file.pm:
     + [CL] Avoid false-positives in changelog-file-missing-explicit-entry
@@ -37,8 +35,10 @@ lintian (2.5.119) UNRELEASED; urgency=medium
       version.
     + [BR] Detect the libjs-chai package.
     + [BR] Detect the libjs-expect.js package.
+  * data/spelling/corrections:
+    + [PW] Add a number of corrections.
 
- -- Chris Lamb <lamby@debian.org>  Sun, 23 Dec 2018 17:18:55 +0000
+ -- Chris Lamb <lamby@debian.org>  Fri, 28 Dec 2018 18:37:31 +0000
 
 lintian (2.5.118) unstable; urgency=medium
 
