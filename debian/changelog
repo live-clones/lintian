@@ -38,6 +38,10 @@ lintian (2.5.119) UNRELEASED; urgency=medium
     + [BR] Detect the libjs-chai package.
     + [BR] Detect the libjs-expect.js package.
 
+  * t/tests/*:
+    + [CL] Apply a patch series from Felix Lechner to update the Debhelper
+      compatibility level in tests.  The value is now read from
+      Lintian::Data and no longer hardcoded.  (MR: !111)
   * t/tests/debhelper-compat-experimental/tags:
     + [CL] Apply a patch from Felix Lechner to remove a tag that is no
       longer emitted.  (MR: !112)
