@@ -38,6 +38,10 @@ lintian (2.5.119) unstable; urgency=medium
   * data/spelling/corrections:
     + [PW] Add a number of corrections.
 
+  * t/tests/debhelper-compat-experimental/tags:
+    + [CL] Apply a patch from Felix Lechner to remove a tag that is no
+      longer emitted.  (MR: !112)
+
  -- Chris Lamb <lamby@debian.org>  Fri, 28 Dec 2018 18:37:31 +0000
 
 lintian (2.5.118) unstable; urgency=medium
