@@ -3,5 +3,4 @@ Testname: manpages-general
 Version: 1.0
 Description: General tests for manpage checks
 Test-Depends: groff-base (>= 1.22.4)
-Test-Against:
 Check: manpages
