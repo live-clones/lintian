@@ -31,6 +31,7 @@ W: manpages-general: link-to-undocumented-manpage usr/share/man/man1/bin-binary.
 W: manpages-general: link-to-undocumented-manpage usr/share/man/man3/function.3.gz
 W: manpages-general: manpage-has-bad-whatis-entry usr/share/man/man1/usr-bin-binary.1
 W: manpages-general: manpage-has-errors-from-man usr/share/man/man1/test.1p.gz 14: warning: macro 'dep' not defined (possibly missing space after 'de')
+W: manpages-general: manpage-has-errors-from-man usr/share/man/man3/include.3.gz man3/included.3:6: warning: macro 'zY' not defined
 W: manpages-general: manpage-has-errors-from-man usr/share/man/man3/included.3.gz 6: warning: macro 'zY' not defined
 W: manpages-general: manpage-has-errors-from-pod2man usr/share/man/man1/test.1p.gz:19
 W: manpages-general: manpage-has-useless-whatis-entry usr/share/man/man1/true.1.gz
