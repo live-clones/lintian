@@ -41,6 +41,9 @@ lintian (2.5.119) UNRELEASED; urgency=medium
     + [BR] Detect the libjs-chai package.
     + [BR] Detect the libjs-expect.js package.
 
+  * debian/control:
+    + [CL] Move to debhelper compatibility level 12.
+
   * t/tests/*:
     + [CL] Apply a patch eries from Felix Lechner to ensure the tests pass
       under groff 1.22.4-1.  (Closes: #917752, #917844)
