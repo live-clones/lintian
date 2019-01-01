@@ -42,6 +42,8 @@ lintian (2.5.119) UNRELEASED; urgency=medium
     + [BR] Detect the libjs-expect.js package.
 
   * t/tests/*:
+    + [CL] Apply a patch eries from Felix Lechner to ensure the tests pass
+      under groff 1.22.4-1.  (Closes: #917752, #917844)
     + [CL] Apply a patch series from Felix Lechner to update the Debhelper
       compatibility level in tests.  The value is now read from
       Lintian::Data and no longer hardcoded.  (MR: !111)
