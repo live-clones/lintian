@@ -34,6 +34,7 @@ use YAML::XS ();
 use constant {
     DCTRL_DEBCONF_TEMPLATE => 1,
     DCTRL_NO_COMMENTS => 2,
+    DCTRL_COMMENTS_AT_EOL => 4,
 };
 
 # Force export as soon as possible, since some of the modules we load also
@@ -43,7 +44,9 @@ our (@EXPORT_OK, %EXPORT_TAGS);
 
 BEGIN {
     %EXPORT_TAGS
-      = (constants => [qw(DCTRL_DEBCONF_TEMPLATE DCTRL_NO_COMMENTS)]);
+      = (constants =>
+          [qw(DCTRL_DEBCONF_TEMPLATE DCTRL_NO_COMMENTS DCTRL_COMMENTS_AT_EOL)]
+      );
 
     eval { require PerlIO::gzip };
     if ($@) {
@@ -576,6 +579,7 @@ sub visit_dpkg_paragraph {
                 # of a particular field name.
                 die "syntax error at line $.: Duplicate field $tag.\n";
             }
+            $value =~ s/#.*$// if $flags & DCTRL_COMMENTS_AT_EOL;
             $section->{$tag} = $value;
             $lines->{$tag} = $.;
 
@@ -594,6 +598,7 @@ sub visit_dpkg_paragraph {
             # trailing spaces or tabs at the end of individual lines of a
             # field value are ignored.
             my $value = rstrip($1);
+            $value =~ s/#.*$// if $flags & DCTRL_COMMENTS_AT_EOL;
             $section->{$last_tag} .= "\n" . $value;
         }
         # None of the above => syntax error

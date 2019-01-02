@@ -2,6 +2,10 @@ lintian (2.5.120) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
+  * lib/Lintian/Util.pm:
+    + [CL] Add optional support for stripping comments at EOL in
+      read_dpkg_control via DCTRL_COMMENTS_AT_EOL.  (Closes: #917964)
+
  -- Chris Lamb <lamby@debian.org>  Tue, 01 Jan 2019 15:10:19 +0000
 
 lintian (2.5.119) unstable; urgency=medium
