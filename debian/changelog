@@ -2,6 +2,10 @@ lintian (2.5.120) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
+  * checks/fields.{desc,pm}:
+    + [CL] Drop versioned-dependency-satisfied-by-perl; Perl now provides
+      its dual-lived module packages with versions.  (Closes: #917967)
+
   * lib/Lintian/Util.pm:
     + [CL] Add optional support for stripping comments at EOL in
       read_dpkg_control via DCTRL_COMMENTS_AT_EOL.  (Closes: #917964)

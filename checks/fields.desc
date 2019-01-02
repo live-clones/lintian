@@ -967,34 +967,6 @@ Certainty: certain
 Info: The uploader appears more than once in the <tt>Uploaders</tt>
  field. The duplicate information should be removed.
 
-Tag: versioned-dependency-satisfied-by-perl
-Severity: normal
-Certainty: certain
-Info: This package declares an unnecessary versioned dependency
- on a package that is also provided by one of the Perl core packages
- (perl, perl-base, perl-modules) with at least the required version.
- .
- As versioned dependencies are not satisfied by provided packages,
- this unnecessarily pulls in a separately packaged newer version
- of the module.
- .
- The recommended way to express the dependency without needless
- complications on backporting packages is to use alternative dependencies.
- The perl package should be the preferred alternative and the
- versioned dependency a secondary one.
- .
- Example: perl (&gt;= 5.10.0) | libmodule-build-perl (&gt;= 0.26)
- .
- An exception to this is when the dependency is only satisfied in a
- version of perl in experimental. In this case, the dependency on perl
- should come second.
- .
- Example: libextutils-parsexs-perl (&gt;= 2.210000) | perl (&gt;= 5.14)
- .
- Running <tt>cme fix dpkg -from control -filter Depends</tt> should be able
- to update these dependencies.
-Ref: policy 7.5
-
 Tag: package-superseded-by-perl
 Severity: normal
 Certainty: certain
