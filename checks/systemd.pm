@@ -178,7 +178,7 @@ sub get_systemd_service_names {
 
     for my $file (@{$files_ref}) {
         my $name = $file->basename;
-        $name =~ s/\.service$//;
+        $name =~ s/@?\.service$//;
         $safe_add_service->($name);
 
         my @aliases= extract_service_file_values($file, 'Install', 'Alias', 1);

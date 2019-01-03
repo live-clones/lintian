@@ -8,6 +8,9 @@ lintian (2.5.120) UNRELEASED; urgency=medium
   * checks/{menus,patch-systems}.desc:
     + [CL] Clarify that spelling-* tags also correct various grammatical
       errors too.
+  * checks/systemd.pm:
+    + [CL] Apply a patch from Robin Jarry to handle service
+      templates for missing init scripts.  (MR: !115)
 
   * lib/Lintian/Util.pm:
     + [CL] Add optional support for stripping comments at EOL in
