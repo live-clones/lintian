@@ -5,6 +5,9 @@ lintian (2.5.120) UNRELEASED; urgency=medium
   * checks/fields.{desc,pm}:
     + [CL] Drop versioned-dependency-satisfied-by-perl; Perl now provides
       its dual-lived module packages with versions.  (Closes: #917967)
+  * checks/{menus,patch-systems}.desc:
+    + [CL] Clarify that spelling-* tags also correct various grammatical
+      errors too.
 
   * lib/Lintian/Util.pm:
     + [CL] Add optional support for stripping comments at EOL in
