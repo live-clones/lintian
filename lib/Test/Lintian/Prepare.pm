@@ -193,7 +193,8 @@ sub prepare {
     $testcase->{standards_version} ||= $ENV{'POLICY_VERSION'}
       //die 'Could not get POLICY_VERSION.';
 
-    $testcase->{'dh_compat_level'} //= '11';
+    $testcase->{dh_compat_level} //= $ENV{'DEFAULT_DEBHELPER_COMPAT'}
+      //die 'Could not get DEFAULT_DEBHELPER_COMPAT.';
 
     # add upstream version
     $testcase->{upstream_version} = $testcase->{version};

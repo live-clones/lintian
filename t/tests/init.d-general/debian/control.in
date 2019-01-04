@@ -8,6 +8,7 @@ Rules-Requires-Root: no
 
 Package: {$source}
 Architecture: {$package_architecture}
+Pre-Depends: $\{misc:Pre-Depends\}
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}, lsb-base (>= 3.0-6)
 Description: {$description}
  This is a test package designed to exercise some feature or tag of
@@ -16,6 +17,7 @@ Description: {$description}
 
 Package: {$source}-bugs
 Architecture: {$package_architecture}
+Pre-Depends: $\{misc:Pre-Depends\}
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}, lsb-base (>= 3.0-6)
 Description: {$description} -- bugs
  Test some simple bugs in the check
@@ -26,6 +28,7 @@ Description: {$description} -- bugs
 
 Package: {$source}-interpreter-in-usr-dir
 Architecture: {$package_architecture}
+Pre-Depends: $\{misc:Pre-Depends\}
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
 Description: {$description} -- bad script interpreter
  Test a check for a /usr dir interpreter used in an init script
@@ -36,6 +39,7 @@ Description: {$description} -- bad script interpreter
 
 Package: {$source}-sourcing-without-test
 Architecture: {$package_architecture}
+Pre-Depends: $\{misc:Pre-Depends\}
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}, lsb-base (>= 3.0-6)
 Description: {$description} -- sourcing without test
  Test a check for . /etc/default/foo without checking the existence of

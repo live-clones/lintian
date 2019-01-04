@@ -340,7 +340,7 @@ sub run {
             my $second_debian =substr $second_version,length($second_upstream);
             $second_debian =~ s/-([^-]+)$/$1/ if length($second_debian) > 0;
 
-            if ($first_version =~ /((?:[~+]deb\d+u\d+|\+nmu\d+)$)/) {
+            if ($first_version =~ /((?:[~+]deb\d+u1|\+nmu1)$)/) {
                 my $expected = substr($first_version, 0, -length($1));
                 tag 'changelog-file-missing-explicit-entry',
                   "$second_version -> $expected (missing) -> $first_version"

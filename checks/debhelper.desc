@@ -20,9 +20,9 @@ Certainty: possible
 Info: If a package uses debhelper, it must declare a Build-Depends
  on debhelper or on the debhelper-compat virtual package. For example:
  .
-  Build-Depends: debhelper (&gt;= 11~)
+  Build-Depends: debhelper (&gt;= 12~)
  .
-  Build-Depends: debhelper-compat (= 11)
+  Build-Depends: debhelper-compat (= 12)
 
 Tag: package-lacks-versioned-build-depends-on-debhelper
 Severity: pedantic
@@ -59,7 +59,7 @@ Info: The package either doesn't declare a versioned build dependency on
  alternatively Build-Depend on the debhelper-compat virtual package, for
  example:
  .
-  Build-Depends: debhelper-compat (= 11)
+  Build-Depends: debhelper-compat (= 12)
  .
  Note if you are using a compat level marked as experimental (such as
  compat 12 in debhelper 11.4~) please explicitly override this tag.
@@ -112,10 +112,12 @@ Info: The debhelper compatibility version used by this package is marked
  as deprecated by the debhelper developer. You should really consider
  using a newer compatibility version.
  .
- The compatibility version can be set in (preferred)
- <tt>debian/compat</tt> or by setting and exporting DH_COMPAT in
- <tt>debian/rules</tt>. If it is not set in either place, debhelper
- defaults to the deprecated compatibility version 1.
+ The compatibility version can be set by specifying
+ <tt>debhelper-compat (= 12)</tt> in your package's
+ <tt>Build-Depends</tt>, by the legacy <tt>debian/compat</tt> file or
+ even by setting and exporting DH_COMPAT in <tt>debian/rules</tt>. If it
+ is not set in either place, debhelper defaults to the deprecated
+ compatibility version 1.
 
 Tag: package-uses-old-debhelper-compat-version
 Severity: pedantic
@@ -125,23 +127,27 @@ Info: The debhelper compatibility version used by this package is marked
  as not recommended by the debhelper developer. You may consider
  using a recommended compatibility version.
  .
- The compatibility version can be set in (preferred)
- <tt>debian/compat</tt> or by setting and exporting DH_COMPAT in
- <tt>debian/rules</tt>. If it is not set in either place, debhelper
- defaults to the deprecated compatibility version 1.
+ The compatibility version can be set by specifying
+ <tt>debhelper-compat (= 12)</tt> in your package's
+ <tt>Build-Depends</tt>, by the legacy <tt>debian/compat</tt> file or
+ even by setting and exporting DH_COMPAT in <tt>debian/rules</tt>. If it
+ is not set in either place, debhelper defaults to the deprecated
+ compatibility version 1.
 
 Tag: package-uses-experimental-debhelper-compat-version
 Severity: pedantic
 Certainty: certain
 Ref: debhelper(7)
 Info: The debhelper compatibility version used by this package is marked
- as experimental by the debhelper developer. You  may consider
- using a stable compatibility version.
+ as experimental by the debhelper developer. You should consider using a
+ stable compatibility version instead.
  .
- The compatibility version can be set in (preferred)
- <tt>debian/compat</tt> or by setting and exporting DH_COMPAT in
- <tt>debian/rules</tt>. If it is not set in either place, debhelper
- defaults to the deprecated compatibility version 1.
+ The compatibility version can be set by specifying
+ <tt>debhelper-compat (= 12)</tt> in your package's
+ <tt>Build-Depends</tt>, by the legacy <tt>debian/compat</tt> file or
+ even by setting and exporting DH_COMPAT in <tt>debian/rules</tt>. If it
+ is not set in either place, debhelper defaults to the deprecated
+ compatibility version 1.
 
 Tag: debhelper-but-no-misc-depends
 Severity: normal
@@ -337,7 +343,7 @@ Info: The package build-depends on debhelper but does not ship a compat
  may alternatively Build-Depend on the debhelper-compat virtual package,
  For example:
  .
-  Build-Depends: debhelper-compat (= 11)
+  Build-Depends: debhelper-compat (= 12)
  .
  Please refer to the debhelper documentation on how to create the
  compat file and the differences between each compat level.

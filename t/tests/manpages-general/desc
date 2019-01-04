@@ -1,6 +1,7 @@
 Testname: manpages-general
 Version: 1.0
 Description: General tests for manpage checks
+Test-Depends: groff-base (>= 1.22.4)
 Test-For:
  FSSTND-dir-in-manual-page
  bad-link-to-undocumented-manpage

@@ -17,7 +17,7 @@ Build-Depends:
  binutils <!nocheck>,
  bzip2 <!nocheck>,
  cdbs <!nocheck>,
- debhelper (>= 11~),
+ debhelper-compat (= 12),
  default-jdk-headless <!nocheck> | default-jdk <!nocheck>,
  dh-elpa <!nocheck> | bash (<< 4.4) <!nocheck>,
  dh-python <!nocheck>,

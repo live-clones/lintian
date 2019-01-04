@@ -12,9 +12,11 @@
 ckeditor                     ~~ (?i)/ckeditor$EXT
 fckeditor                    ~~ (?i)/fckeditor$EXT
 libjs-async                  ~~ (?i)/async$EXT
+libjs-chai                   ~~ (?i)/chai$EXT
 libjs-cropper                ~~ (?i)/cropper(?:\.uncompressed)?$EXT
 libjs-dojo-\w+               ~~ (?i)/(?:dojo|dijit)$EXT
 libjs-excanvas               ~~ (?i)/excanvas(?:-r[0-9]+)?$EXT
+libjs-html5shiv              ~~ (?i)html5shiv(?:-printshiv)?$EXT
 libjs-jac                    ~~ (?i)/jsjac$EXT
 libjs-jquery                 ~~ (?i)/jquery(?:-[\d\.]+)?$EXT
 libjs-jquery-cookie          ~~ (?i)/jquery\.cookie$EXT
@@ -37,9 +39,12 @@ libjs-jquery-tablesorter     ~~ (?i)/jquery\.tablesorter$EXT
 libjs-jquery-tipsy           ~~ (?i)/jquery\.tipsy$EXT
 libjs-jquery-treetable       ~~ (?i)/jquery\.treetable$EXT
 libjs-jquery-ui              ~~ (?i)/jquery[\.-](?:-[\d\.]+)?ui$EXT
+libjs-mocha                  ~~ (?i)/mocha(?:\.css$|$EXT)
 libjs-mochikit               ~~ (?i)/mochikit$EXT
 libjs-mootools               ~~ (?i)/mootools(?:(?:\.v|-)[\d\.]+)?(?:-(?:(?:core(?:-server)?)|more)(?:-(?:yc|jm|nc))?)?$EXT
 libjs-mustache               ~~ (?i)/mustache$EXT
+# libjs-normalize is provided by node-normalize.css but this is an implementation detail
+libjs-normalize              ~~ (?i)/normalize(?:\.min)?\.css
 libjs-prototype              ~~ (?i)/prototype(?:-[\d\.]+)?$EXT
 libjs-raphael                ~~ (?i)/raphael(?:[\.-]min)?$EXT
 libjs-scriptaculous          ~~ (?i)/scriptaculous$EXT
@@ -47,7 +52,6 @@ libjs-strophe                ~~ (?i)/strophe$EXT
 libjs-twitter-bootstrap      ~~ (?i)/bootstrap(?:-[\d\.]+)?$EXT$ ~~ var (Carousel|Typeahead)
 libjs-underscore             ~~ (?i)/underscore$EXT
 libjs-yui                    ~~ (?i)/(?:yahoo|yui)-(?:dom-event)?$EXT
-node-normalize.css           ~~ (?i)/normalize(?:\.min)?\.css
 # Disabled due to false positives.  Needs a content check adding to verify
 # that the file being checked is /the/ yahoo.js
 # libjs-yui                  ~~ (?i)/yahoo\.js(\.gz)?$EXT

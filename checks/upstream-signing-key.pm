@@ -23,6 +23,8 @@ use strict;
 use warnings;
 use autodie;
 
+use File::Temp;
+
 use Lintian::Tags qw(tag);
 use Lintian::Data;
 use Lintian::Command qw(safe_qx);
@@ -53,10 +55,17 @@ sub run {
             next;
         }
 
+        # set up a temporary directory for gpg
+        my $tempdir = File::Temp->newdir();
+
         # get keys packets from gpg
         my $opts = {'in' => '/dev/null', 'err' => '/dev/null'};
-        my $output = safe_qx($opts,
-            ['gpg', '--list-packets', $key_locations{$key_name}]);
+        my $output = safe_qx(
+            $opts,
+            [
+                'gpg', '--homedir',
+                $tempdir, '--list-packets',
+                $key_locations{$key_name}]);
 
         # error if key cannot be processed
         unless ($opts->{success}) {

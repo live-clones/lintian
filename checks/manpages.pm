@@ -382,9 +382,10 @@ sub process_man_output {
               and ($contents->[$1 - 1] =~ m,(?:https?|ftp|file)://.+,i
                 or $contents->[$1 - 1] =~ m,^\s*\.\s*UE\b,);
             # ignore common undefined macros from pod2man << Perl 5.10
-            next if /warning: (?:macro )?\`(?:Tr|IX)\' not defined/;
+            next if /warning: (?:macro )?\'(?:Tr|IX)\' not defined/;
             chomp;
-            s/^[^:]+://o;
+            s/^[^:]+: //o;
+            s/^<standard input>://o;
             tag 'manpage-has-errors-from-man', $file, $_;
             last;
         }

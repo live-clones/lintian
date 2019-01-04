@@ -1,3 +1,61 @@
+lintian (2.5.119) unstable; urgency=medium
+
+  * checks/changelog-file.pm:
+    + [CL] Avoid false-positives in changelog-file-missing-explicit-entry
+      when uploading updates to updates such as "1.2-3+nmu2" or
+      "1.2-3deb8u2".
+  * checks/cruft.pm:
+    + [BR] Following #916095, tag "invariant sections" modified by upstream
+      versions as non official.
+  * checks/debhelper.desc:
+    + [CL] Include the debhelper-compat method of setting the compatibility
+      level in a number of tag descriptions.  Thanks to Jeremy Bicha for
+      the idea.  (Closes: #917345)
+  * checks/python.desc:
+    + [CL] Update the dependency-on-python-version-marked-for-end-of-life
+      tag's description to mention that a commented override would be
+      useful in order to document that the package will not ported to
+      Python 3.x.  Thanks to Scott Kitterman.  (Closes: #917264)
+  * checks/shared-libs.desc:
+    + [CL] Clarify that "Build-Depends-Package" lines should start in
+      column 1 of the file and not be indented to align with the symbols
+      themselves.
+  * checks/upstream-signing-key.pm:
+    + [CL] Apply a patch from Felix Lechner to provide writable temporary
+      home directory for GPG.  (Closes: #913930)
+
+  * data/debhelper/compat-level:
+    + [CL] Bump the recommended and experimental debhelper compat levels to
+      12 and 13 respectfully.  (Closes: #917344)
+  * data/files/js-libraries:
+    + [BR] Detect the html5shiv library. This library is the de facto way
+      to enable the use of HTML5 "sectioning" elements in legacy Internet
+      Explorer.
+    + [BR] Detect the mocha testing framework and recommend libjs-mocha.
+    + [BR] Detect the "chai" testing framework, recommending libjs-chai.
+  * data/files/privacy-breaker-websites:
+    + [BR] Suggest using libjs-html5shiv over linking to an external
+      version.
+    + [BR] Detect the libjs-chai package.
+    + [BR] Detect the libjs-expect.js package.
+  * data/spelling/corrections:
+    + [PW] Add a number of corrections.
+
+  * debian/control:
+    + [CL] Move to debhelper compatibility level 12.
+
+  * t/tests/*:
+    + [CL] Apply a patch eries from Felix Lechner to ensure the tests pass
+      under groff 1.22.4-1.  (Closes: #917752, #917844)
+    + [CL] Apply a patch series from Felix Lechner to update the Debhelper
+      compatibility level in tests.  The value is now read from
+      Lintian::Data and no longer hardcoded.  (MR: !111)
+  * t/tests/debhelper-compat-experimental/tags:
+    + [CL] Apply a patch from Felix Lechner to remove a tag that is no
+      longer emitted.  (MR: !112)
+
+ -- Chris Lamb <lamby@debian.org>  Tue, 01 Jan 2019 14:55:01 +0000
+
 lintian (2.5.118~bpo9+1) stretch-backports; urgency=medium
 
   * Rebuild for stretch-backports.
