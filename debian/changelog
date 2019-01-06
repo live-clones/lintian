@@ -23,6 +23,11 @@ lintian (2.5.120) UNRELEASED; urgency=medium
     + [CL] Add "brightness" to the list of initscripts that do not need a
       corresponding service file.  (Closes: #918459)
 
+  * debian/control:
+    + [AB] Build-conflict with libperl-critic-pulp-perl (except with
+      nocheck build profile) as it adds additional perlcritic rules which
+      cause several checks under t/scripts/01-critic/ to fail.
+
   * lib/Lintian/Util.pm:
     + [CL] Add optional support for stripping comments at EOL in
       read_dpkg_control via DCTRL_COMMENTS_AT_EOL.  (Closes: #917964)

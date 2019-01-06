@@ -77,6 +77,8 @@ Build-Depends:
  unzip <!nocheck>,
  xz-utils <!nocheck>,
  zip <!nocheck>,
+Build-Conflicts:
+ libperl-critic-pulp-perl <!nocheck>,
 Standards-Version: 4.3.0
 Rules-Requires-Root: no
 Vcs-Git: https://salsa.debian.org/lintian/lintian.git
