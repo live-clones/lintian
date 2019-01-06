@@ -2,6 +2,9 @@ lintian (2.5.120) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
+  * checks/binaries.pm:
+    + [CL] Guile object files do not objdump/strip correctly so exclude
+      them from a number of tests.  (Closes: #918444)
   * checks/fields.{desc,pm}:
     + [CL] Drop versioned-dependency-satisfied-by-perl; Perl now provides
       its dual-lived module packages with versions.  (Closes: #917967)
