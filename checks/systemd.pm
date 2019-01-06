@@ -36,7 +36,7 @@ use Lintian::Util qw(internal_error lstrip rstrip);
 
 use Lintian::Data;
 
-# Init script that do not need a service file
+# Init scripts that do not need a service file
 my $INIT_WHITELIST = Lintian::Data->new('systemd/init-whitelist');
 
 # Known security flags
