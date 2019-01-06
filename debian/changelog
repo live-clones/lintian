@@ -11,6 +11,10 @@ lintian (2.5.120) UNRELEASED; urgency=medium
   * checks/{menus,patch-systems}.desc:
     + [CL] Clarify that spelling-* tags also correct various grammatical
       errors too.
+  * checks/rules.desc:
+    + [AB] override_dh_auto_test-does-not-check-DEB_BUILD_OPTIONS: Replace
+      misleading "profile" with "option" in long description. See #889746
+      and https://lists.debian.org/debian-devel/2019/01/msg00047.html
   * checks/systemd.pm:
     + [CL] Apply a patch from Robin Jarry to handle service
       templates for missing init scripts.  (MR: !115)
