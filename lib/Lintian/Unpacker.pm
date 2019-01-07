@@ -255,7 +255,8 @@ sub prepare_tasks {
     $self->{'worktable'} = \%worklists;
     if (not $self->{'coll-priorities'}) {
         my $coll2priority = $self->{'coll2priority'};
-        my @priorities = sort { $coll2priority->{$a} <=> $coll2priority->{$b} } keys(%{$coll2priority});
+        my @priorities = sort { $coll2priority->{$a} <=> $coll2priority->{$b} }
+          keys(%{$coll2priority});
         $self->{'coll-priorities'} = \@priorities;
     }
     return 1;
@@ -372,7 +373,8 @@ sub process_tasks {
     my %failed;
     my $debug_enabled = $Lintian::Output::GLOBAL->debug;
     my %active = map { $_ => 1 } keys %$worklists;
-    my $find_next_task = $self->_generate_find_next_tasks_sub(\%active, $worklists, $colls);
+    my $find_next_task
+      = $self->_generate_find_next_tasks_sub(\%active, $worklists, $colls);
     my $schedule_task = sub {
         my ($task_id, $cs, $lpkg, $cmap) = @_;
         my $coll = $cs->name;
@@ -482,7 +484,6 @@ sub process_tasks {
     return;
 }
 
-
 sub _generate_find_next_tasks_sub {
     my ($self, $active_procs, $worklists, $colls) = @_;
     my (@queue);
@@ -499,7 +500,10 @@ sub _generate_find_next_tasks_sub {
 
     return sub {
         if (@queue) {
-            debug_msg(4, 'QUEUE non-empty queue with ' . scalar(@queue) . ' item(s).  Taking one.')
+            debug_msg(4,
+                    'QUEUE non-empty queue with '
+                  . scalar(@queue)
+                  . ' item(s).  Taking one.')
               if $debug_enabled;
             return @{shift(@queue)};
         }
@@ -540,14 +544,16 @@ sub _generate_find_next_tasks_sub {
                 $wlist->{'changed'} = 1;
                 debug_msg(3, "READY ${coll}-${procid}") if $debug_enabled;
                 push(@queue, ["${coll}-${procid}", $cs, $lpkg, $cmap]);
-                # If we are dealing with the highest priority type of task, then
-                # keep filling the cache (i.e. $i == 0).  Otherwise, stop here
-                # to avoid priority inversion due to filling the queue with
-                # unimportant tasks.
+               # If we are dealing with the highest priority type of task, then
+               # keep filling the cache (i.e. $i == 0).  Otherwise, stop here
+               # to avoid priority inversion due to filling the queue with
+               # unimportant tasks.
                 last if $i;
             }
             if (not keys(%{$procs})) {
-                debug_msg(3, "DISCARD $coll (all instances have been scheduled)") if $debug_enabled;
+                debug_msg(3,
+                    "DISCARD $coll (all instances have been scheduled)")
+                  if $debug_enabled;
                 splice(@coll_priorities, $i, 1);
                 $i--;
             }
@@ -555,7 +561,11 @@ sub _generate_find_next_tasks_sub {
         }
 
         if (@queue) {
-            debug_msg(4, 'QUEUE refilled with ' . scalar(@queue) . ' item(s).  Taking one.') if $debug_enabled;
+            debug_msg(4,
+                    'QUEUE refilled with '
+                  . scalar(@queue)
+                  . ' item(s).  Taking one.')
+              if $debug_enabled;
             return @{shift(@queue)};
         }
         return;

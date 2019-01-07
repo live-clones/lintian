@@ -249,7 +249,8 @@ sub remove_async {
                 $self->{lab}->_entry_removed($self);
                 $future->done();
             } else {
-                my $msg = 'Error: Removing lab entry ' . $self->identifier . ' failed';
+                my $msg
+                  = 'Error: Removing lab entry '. $self->identifier. ' failed';
                 if ($dollarbang) {
                     $msg = "$msg: $dollarbang";
                 } else {

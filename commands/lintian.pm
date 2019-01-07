@@ -727,7 +727,7 @@ sub main {
     # these two variables are used by process_package
     #  and need to persist between invocations.
     $async_loop = IO::Async::Loop->new;
-    $unpacker = Lintian::Unpacker->new($async_loop, $collmap, \%unpack_options);
+    $unpacker= Lintian::Unpacker->new($async_loop, $collmap, \%unpack_options);
 
     if ($action eq 'check') {
         # Ensure all checks can actually be loaded...
