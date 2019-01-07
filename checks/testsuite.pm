@@ -82,7 +82,7 @@ sub run {
         }
 
         tag 'unnecessary-testsuite-autopkgtest-field'
-          if $info->source_field('testsuite') // '' eq 'autopkgtest';
+          if ($info->source_field('testsuite') // '') eq 'autopkgtest';
 
         tag 'debian-tests-control-and-control-autodep8', $control,
           $control_autodep8

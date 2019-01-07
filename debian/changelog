@@ -18,6 +18,10 @@ lintian (2.5.120) UNRELEASED; urgency=medium
   * checks/systemd.pm:
     + [CL] Apply a patch from Robin Jarry to handle service
       templates for missing init scripts.  (MR: !115)
+  * checks/testsuite.pm:
+    + [CL] Apply a patch from Ondřej Nový fix false-positives in the
+      unnecessary-testsuite-autopkgtest-field tag with non-"autopkgtest"
+      values in the Testsuite control field.  (Closes: #918621)
 
   * data/systemd/init-whitelist:
     + [CL] Add "brightness" to the list of initscripts that do not need a
