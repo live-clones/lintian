@@ -2,6 +2,11 @@ lintian (2.5.121) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
+  * t/*:
+    + [CL] Apply a patch from Felix Lechner to ensure the
+      debhelper-compat-experimental tag is run after the upgrade to
+      debhelper compat level 12.  (MR: !117)
+
  -- Chris Lamb <lamby@debian.org>  Mon, 07 Jan 2019 23:35:43 +0100
 
 lintian (2.5.120) unstable; urgency=medium
