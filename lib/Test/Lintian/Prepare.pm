@@ -144,8 +144,11 @@ The optional parameter REBUILD forces a rebuild if true.
 sub prepare {
     my ($specpath, $runpath, $suite, $testset, $force_rebuild)= @_;
 
-    say '------- Populating starts here -------';
+    say '------- Preparation starts here -------';
     say "Work directory is $runpath.";
+
+    # for template fill, earliest date without timewarp warning
+    my $data_epoch = max($ENV{HARNESS_EPOCH}//time,$ENV{'POLICY_EPOCH'}//time);
 
     # read defaults
     my $defaultspath = "$testset/defaults";
@@ -153,15 +156,20 @@ sub prepare {
     # read default file names
     my $defaultfilespath = "$defaultspath/files";
     die "Cannot find $defaultfilespath" unless -f $defaultfilespath;
+
+    # read file and adjust data age threshold
     my $files = read_config($defaultfilespath);
+    $data_epoch= max($data_epoch, stat($defaultfilespath)->mtime);
 
     # read test data
     my $descpath = "$specpath/$files->{test_specification}";
     my $testcase = read_config($descpath);
+    $data_epoch= max($data_epoch, stat($descpath)->mtime);
 
     # read test defaults
     my $descdefaultspath = "$defaultspath/$files->{test_specification}";
     my $defaults = read_config($descdefaultspath);
+    $data_epoch= max($data_epoch, stat($descdefaultspath)->mtime);
 
     foreach my $key (keys %{$defaults}) {
         $testcase->{$key} = $defaults->{$key}
@@ -181,8 +189,6 @@ sub prepare {
     }
 
     $testcase->{source} ||= $testcase->{testname};
-
-    $testcase->{date} ||= rfc822date(time);
 
     warn "Cannot override Architecture: in test $testcase->{testname}."
       if length $testcase->{architecture};
@@ -254,6 +260,8 @@ sub prepare {
         }
     }
 
+    say EMPTY;
+
     # populate working directory with specified template sets
     copy_skeleton_template_sets($testcase->{template_sets},$runpath, $testset)
       if exists $testcase->{template_sets};
@@ -261,9 +269,11 @@ sub prepare {
     # delete templates for which we have originals
     remove_surplus_templates($specpath, $runpath);
 
+    say EMPTY;
+
     # copy test specification to working directory
     my $offset = abs2rel($specpath, $testset);
-    say "Copying test specification $offset from $testset to $runpath.";
+    say "Copy test specification $offset from $testset to $runpath.";
     copy_dir_contents($specpath, $runpath);
 
     # get builder name
@@ -273,8 +283,7 @@ sub prepare {
 
         # fill builder if needed
         my $buildertemplate = "$builderpath.in";
-        fill_template($buildertemplate, $builderpath, $testcase,
-            $ENV{HARNESS_EPOCH})
+        fill_template($buildertemplate, $builderpath, $testcase, $data_epoch)
           if -f $buildertemplate;
 
         if (-f $builderpath) {
@@ -282,6 +291,9 @@ sub prepare {
             # read builder
             my $builder = read_config($builderpath);
             die 'Could not read builder data.' unless $builder;
+
+            # adjust age threshold
+            $data_epoch= max($data_epoch, stat($builderpath)->mtime);
 
             # transfer builder data to test case, but do not override
             foreach my $key (keys %{$builder}) {
@@ -306,18 +318,32 @@ sub prepare {
     combine_fields($testcase, 'build_conflicts', COMMA . SPACE,
         'default_build_conflicts', 'extra_build_conflicts');
 
+    # record our effective data age as date, unless given
+    $testcase->{date} ||= rfc822date($data_epoch);
+
     # fill remaining templates
     fill_skeleton_templates($testcase->{fill_targets},
-        $testcase, $ENV{HARNESS_EPOCH}, $runpath, $testset)
+        $testcase, $data_epoch, $runpath, $testset)
       if exists $testcase->{fill_targets};
 
     # write the dynamic file names
     my $runfiles = path($runpath)->child('files');
     write_config($files, $runfiles->stringify);
 
-    # write the dynamic test case files
+    # set mtime for dynamic file names
+    $runfiles->touch($data_epoch);
+
+    # write the dynamic test case file
     my $rundesc = path($runpath)->child($files->{test_specification});
     write_config($testcase, $rundesc->stringify);
+
+    # set mtime for dynamic test data
+    $rundesc->touch($data_epoch);
+
+    say EMPTY;
+
+    # announce data age
+    say 'Data epoch is : '. rfc822date($data_epoch);
 
     return;
 }
