@@ -68,6 +68,7 @@ use Test::Lintian::Helper qw(rfc822date);
 use Test::Lintian::Hooks
   qw(find_missing_prerequisites run_lintian sed_hook sort_lines calibrate);
 use Test::Lintian::Prepare qw(early_logpath);
+use Test::StagedFileProducer;
 
 use constant SPACE => q{ };
 use constant EMPTY => q{};
@@ -216,61 +217,96 @@ sub runner {
         }
     }
 
+    my $producer = Test::StagedFileProducer->new(path => $runpath);
+    $producer->exclude(@exclude);
+
     # get lintian subject
     die 'Could not get subject of Lintian examination.'
       unless exists $testcase->{build_product};
     my $subject = "$runpath/$testcase->{build_product}";
 
-    $test_state->progress('building');
+    # build subject for lintian examination
+    $producer->add_stage(
+        products => [$subject],
+        minimum_epoch => $threshold,
+        build =>sub {
+            if(exists $testcase->{build_command}) {
+                $test_state->progress('building');
+                my $command= "cd $runpath; $testcase->{build_command}";
+                die "$command failed" if system($command);
+            }
 
-    if (exists $testcase->{build_command}) {
-        my $command= "cd $runpath; $testcase->{build_command}";
-        if (system($command)) {
-            die "$command failed.";
-        }
-    }
-
-    die 'Build was unsuccessful.'
-      unless -f $subject;
-
-    my $pkg = $testcase->{source};
+            die 'Build was unsuccessful.'
+              unless -f $subject;
+        });
 
     # run lintian
     my $actual = "$runpath/tags.actual";
-    my $includepath = "$runpath/lintian-include-dir";
-    $ENV{'LINTIAN_COVERAGE'}
-      .= ",-db,./cover_db-$testcase->{suite}-$testcase->{testname}"
-      if exists $ENV{'LINTIAN_COVERAGE'};
-    run_lintian($runpath, $subject, $testcase->{profile}, $includepath,
-        $testcase->{options}, $actual);
+    $producer->add_stage(
+        products => [$actual],
+        minimum_epoch => $lintian_epoch,
+        build =>sub {
+            my $includepath = "$runpath/lintian-include-dir";
+            $ENV{'LINTIAN_COVERAGE'}
+              .= ",-db,./cover_db-$testcase->{suite}-$testcase->{testname}"
+              if exists $ENV{'LINTIAN_COVERAGE'};
+            run_lintian($runpath, $subject, $testcase->{profile}, $includepath,
+                $testcase->{options}, $actual);
 
-    # Run a sed-script if it exists, for tests that have slightly variable
-    # output
+        });
+
+    # run a sed-script if it exists
     my $parsed = "$runpath/tags.actual.parsed";
-    my $script = "$runpath/post_test";
-    if(-f $script) {
-        sed_hook($script, $actual, $parsed);
-    } else {
-        die"Could not copy actual tags $actual to $parsed: $!"
-          if(system('cp', '-p', $actual, $parsed));
-    }
+    $producer->add_stage(
+        products => [$parsed],
+        build =>sub {
+            my $script = "$runpath/post_test";
+            if(-f $script) {
+                sed_hook($script, $actual, $parsed);
+            } else {
+                die"Could not copy actual tags $actual to $parsed: $!"
+                  if(system('cp', '-p', $actual, $parsed));
+            }
+        });
 
     # sort tags
     my $sorted = "$runpath/tags.actual.parsed.sorted";
-    if($testcase->{sort} eq 'yes') {
-        sort_lines($parsed, $sorted);
-    } else {
-        die"Could not copy parsed tags $actual to $sorted: $!"
-          if(system('cp', '-p', $parsed, $sorted));
+    $producer->add_stage(
+        products => [$sorted],
+        build =>sub {
+            if($testcase->{sort} eq 'yes') {
+                sort_lines($parsed, $sorted);
+            } else {
+                die"Could not copy parsed tags $parsed to $sorted: $!"
+                  if(system('cp', '-p', $parsed, $sorted));
+            }
+        });
+
+    my $specified = "$runpath/tags";
+
+    # calibrate tags; may write to $sorted
+    my $calibrated = "$runpath/tags.specified.calibrated";
+    $producer->add_stage(
+        products => [$calibrated],
+        build =>sub {
+            my $script = "$runpath/test_calibration";
+            if(-x $script) {
+                $test_state->progress('test_calibration hook');
+                calibrate($script, $sorted, $specified, $calibrated);
+            } else {
+                die"Could not copy expected tags $specified to $calibrated: $!"
+                  if(system('cp', '-p', $specified, $calibrated));
+            }
+        });
+
+    say EMPTY;
+    $producer->run(verbose => 1);
+
     }
 
     my $expected = "$runpath/tags";
     my $origexp = $expected;
 
-    my $calibrated = "$runpath/expected.$pkg.calibrated";
-    $test_state->progress('test_calibration hook');
-    $expected
-      = calibrate("$runpath/test_calibration",$sorted, $expected, $calibrated);
 
     check_result($test_state, $testcase, $expected,$sorted, $origexp);
 
