@@ -267,6 +267,11 @@ my @runscripts;
 # add code quality scripts
 push(@runscripts, find_selected_code_quality_scripts($testset, $onlyrun));
 
+# always add internal harness tests
+my @internalscripts
+  = sort File::Find::Rule->file()->name('*.t')->in("$testset/harness");
+push(@runscripts, @internalscripts);
+
 # find test paths
 my @testpaths = find_selected_lintian_testpaths($testset, $onlyrun);
 
