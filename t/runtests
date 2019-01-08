@@ -4,6 +4,7 @@
 # Copyright © 2008 Frank Lichtenheld
 # Copyright © 2008, 2009 Russ Allbery
 # Copyright © 2014 Niels Thykier
+# Copyright © 2018 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -40,6 +41,7 @@ use List::Util qw(max);
 use IO::Async::Channel;
 use IO::Async::Loop;
 use IO::Async::Routine;
+use TAP::Harness;
 use Try::Tiny;
 
 use constant SUITES => qw(scripts changes debs source tests);
@@ -87,7 +89,8 @@ use Lintian::Command qw(safe_qx);
 use Lintian::Internal::FrontendUtil qw(default_parallel);
 
 use Test::Lintian::ConfigFile qw(read_config);
-use Test::Lintian::Filter qw(find_selected_lintian_testpaths);
+use Test::Lintian::Filter
+  qw(find_selected_code_quality_scripts find_selected_lintian_testpaths);
 use Test::Lintian::Helper
   qw(rfc822date get_host_architecture get_latest_policy get_recommended_debhelper_version);
 use Test::Lintian::Prepare qw(logged_prepare);
@@ -253,6 +256,17 @@ my @failed;
 # anything.
 my $tests_run = 0;
 
+my $harness = TAP::Harness->new({
+    jobs => $numjobs,
+    lib => ["$ENV{'LINTIAN_TEST_ROOT'}/lib"],
+    color => 1,
+});
+
+my @runscripts;
+
+# add code quality scripts
+push(@runscripts, find_selected_code_quality_scripts($testset, $onlyrun));
+
 # find test paths
 my @testpaths = find_selected_lintian_testpaths($testset, $onlyrun);
 
@@ -277,9 +291,13 @@ if ($onlyrun && $onlyrun =~ s/^tag://) {
     }
 }
 
-if (!$tag) {
-    run_prove_tests();
-}
+# make all paths relative
+@runscripts = map { abs2rel($_, Cwd::getcwd) } @runscripts;
+
+# run scripts through harness
+my $aggregator= $harness->runtests(@runscripts);
+
+say EMPTY;
 
 if (@TESTS) {
     for (0..$numjobs-1) {
@@ -290,40 +308,34 @@ if (@TESTS) {
     $IO_LOOP->run;
 }
 
-print_test_summary();
+print_test_summary()
+  if scalar @testpaths;
 
 exit $status;
 
+# program is done
+
 sub print_test_summary {
-    if (!$tests_run) {
-        if ($onlyrun) {
-            print "W: No tests run, did you specify a valid test name?\n";
-        } elsif ($tag) {
-            print "I: No tests found for that tag.\n";
-        } else {
-            print
-              "E: No tests run, did you specify a valid testset directory?\n";
-        }
-    } else {
-        if (%skipped) {
-            print "\nSkipped/disabled tests:\n";
-            for my $suite (SUITES) {
-                if (exists($skipped{$suite})) {
-                    print "  [$suite]\n";
-                    for my $testname (sort(keys(%{ $skipped{$suite} }))) {
-                        my $reason = $skipped{$suite}{$testname};
-                        print "    $testname: $reason\n";
-                    }
+
+    if (%skipped) {
+        print "\nSkipped/disabled tests:\n";
+        for my $suite (SUITES) {
+            if (exists($skipped{$suite})) {
+                print "  [$suite]\n";
+                for my $testname (sort(keys(%{ $skipped{$suite} }))) {
+                    my $reason = $skipped{$suite}{$testname};
+                    print "    $testname: $reason\n";
                 }
             }
         }
-        if (my $number = @failed) {
-            print "\nFailed tests ($number)\n";
-            for my $test (@failed) {
-                print "    $test\n";
-            }
+    }
+    if (my $number = @failed) {
+        print "\nFailed tests ($number)\n";
+        for my $test (@failed) {
+            print "    $test\n";
         }
     }
+
     return;
 }
 
@@ -349,45 +361,6 @@ sub read_desc {
     }
 
     return $testcase;
-}
-
-sub run_prove_tests {
-    my @do_run;
-    if ($onlyrun) {
-        for my $part (split(m/,/, $onlyrun)) {
-            my $script = "$testset/scripts/${part}.t";
-            if (-f $script) {
-                push(@do_run, $script);
-            } elsif (-d "$testset/scripts/${part}") {
-                push(@do_run, "$testset/scripts/${part}");
-            }
-        }
-    } elsif ($suites{'scripts'}) {
-        unless (-d "$testset/scripts") {
-            die "cannot find $testset/scripts: $!";
-        }
-        @do_run = ("$testset/scripts");
-    }
-    if (@do_run) {
-        my $jobs = $numjobs;
-        # Devel::Cover + one cover_db + multiple processes is a recipe
-        # for corruptions.  Force $jobs to 1 if we are running under
-        # coverage.
-        $jobs = 1 if $ENV{'LINTIAN_COVERAGE'};
-        my @prove_cmd
-          = ('prove', '-j', $jobs, '-r', '-I', "$ENV{LINTIAN_TEST_ROOT}/lib");
-
-        print "Test scripts:\n";
-        if (system(@prove_cmd, @do_run) != 0) {
-            exit 1 unless $keep_going;
-            push(@failed, "suite:scripts [Try: prove -lr -j$numjobs t]");
-            $status = 1;
-        }
-        $tests_run++;
-
-        print "\n";
-    }
-    return;
 }
 
 sub create_child {
