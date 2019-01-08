@@ -226,6 +226,18 @@ say 'Harness modified on '. rfc822date($ENV{'HARNESS_EPOCH'});
 # in current runner implementation, RUNNER_EPOCH equals HARNESS_EPOCH
 $ENV{'RUNNER_EPOCH'}= $ENV{'HARNESS_EPOCH'};
 
+# get lintian date
+my @lintianparts = (
+    'checks', 'collection', 'commands', 'data',
+    'frontend', 'profiles', 'vendors', 'lib/Lintian'
+);
+my @lintianfiles
+  = map { File::Find::Rule->file->in("$ENV{'LINTIAN_ROOT'}/$_") }@lintianparts;
+push(@lintianfiles, $ENV{'LINTIAN_FRONTEND'});
+push(@lintianfiles, $ENV{'LINTIAN_DPLINT_FRONTEND'});
+$ENV{'LINTIAN_EPOCH'} = max(map { stat($_)->mtime; } @lintianfiles);
+say 'Lintian modified on '. rfc822date($ENV{'LINTIAN_EPOCH'});
+
 say EMPTY;
 
 # print environment
