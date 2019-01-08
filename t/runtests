@@ -32,9 +32,11 @@ use warnings;
 use autodie;
 use v5.10;
 
-use Cwd();
+use Cwd;
 use File::Spec::Functions qw(abs2rel rel2abs splitpath splitdir);
+use File::stat;
 use Getopt::Long;
+use List::Util qw(max);
 use IO::Async::Channel;
 use IO::Async::Loop;
 use IO::Async::Routine;
@@ -96,6 +98,7 @@ use Test::Lintian::Helper
   qw(rfc822date get_host_architecture get_latest_policy get_recommended_debhelper_version);
 use Test::Lintian::Prepare qw(logged_prepare);
 use Test::Lintian::Run qw(logged_runner);
+use Test::ScriptAge qw(perl_modification_epoch our_modification_epoch);
 use Test::State;
 
 use constant SPACE => q{ };
@@ -154,8 +157,6 @@ my $ACTIVE_JOBS = 0;
 
 my ($tag, %suites);
 
-$ENV{HARNESS_EPOCH} = (stat($0))[9];
-
 my $output_is_tty = -t STDOUT;
 
 our $IO_LOOP = IO::Async::Loop->new;
@@ -210,6 +211,17 @@ say "Latest policy version is $ENV{'POLICY_VERSION'} from "
 $ENV{'DEFAULT_DEBHELPER_COMPAT'} = get_recommended_debhelper_version();
 say
 "Using compat level $ENV{'DEFAULT_DEBHELPER_COMPAT'} as a default for packages built with debhelper.";
+
+# get harness date, including templates, skeletons and whitelists
+my @harnessparts
+  = ('t/helpers', 't/runners', 't/templates', 't/skeletons', 't/whitelists');
+my @harnessfiles
+  = map { File::Find::Rule->file->in("$ENV{'LINTIAN_TEST_ROOT'}/$_") }
+  @harnessparts;
+my $harness_files_epoch = max(map { stat($_)->mtime } @harnessfiles);
+$ENV{'HARNESS_EPOCH'}
+  = max(our_modification_epoch, perl_modification_epoch, $harness_files_epoch);
+say 'Harness modified on '. rfc822date($ENV{'HARNESS_EPOCH'});
 
 say EMPTY;
 
