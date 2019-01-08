@@ -28,7 +28,6 @@ I: debug source: debian-control-has-obsolete-dbg-package hello-dbg
 I: debug source: debian-control-has-obsolete-dbg-package hello-hello-dbg
 I: debug source: debian-control-has-obsolete-dbg-package hi-dbg
 I: debug source: debian-control-has-obsolete-dbg-package libhello0-dbg
-I: libhello0: symbols-file-missing-build-depends-package-field
 W: debug source: ancient-standards-version 3.7.0 (released 2006-04-26) (current is CURRENT)
 W: debug source: changelog-should-not-mention-nmu
 W: debug source: dbg-package-missing-depends hi-dbg

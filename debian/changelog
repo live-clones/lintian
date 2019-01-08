@@ -2,6 +2,10 @@ lintian (2.5.121) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
+  * checks/shared-libs.pm:
+    + [CL] Fix symbols-file-missing-build-depends-package-field
+      false-positives when a package contains more than one library.
+      Thanks to Mike Gabriel for the bug report.  (Closes: #918473)
   * checks/scripts.pm:
     + [CL] Check for manual calls to dpkg-maintscript-helper(1) in
       maintainer scripts; recommend using dh_installdeb .maintscript
