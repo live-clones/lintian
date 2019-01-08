@@ -52,7 +52,6 @@ BEGIN {
 }
 
 use Capture::Tiny qw(capture_merged);
-use Carp qw(confess);
 use Cwd qw(getcwd);
 use File::Basename qw(basename);
 use File::Spec::Functions qw(abs2rel rel2abs splitpath catpath);
@@ -318,130 +317,132 @@ sub runner {
     say EMPTY;
     $producer->run(verbose => 1);
 
+    my @errors = check_result($testcase, $sorted, $calibrated, $specified);
+    my $okay = !scalar @errors;
+
+    if($testcase->{todo} eq 'yes') {
+
+        if ($okay) {
+            $test_state->fail_test('marked as TODO but succeeded');
+        } else {
+            $test_state->pass_todo_test('failed but marked as TODO');
+        }
+
+        return;
     }
 
-    my $expected = "$runpath/tags";
-    my $origexp = $expected;
+    $test_state->info_msg(0, $_) for @errors;
 
+    # for uncalibrated tests, use tags in spec path for cut & paste
+    $calibrated = "$testcase->{spec_path}/tags"
+      unless -e "$runpath/test_calibration";
 
-    check_result($test_state, $testcase, $expected,$sorted, $origexp);
+    $test_state->diff_files($calibrated, $sorted)
+      unless $okay;
+
+    if ($okay) {
+        $test_state->pass_test;
+    } else {
+        $test_state->fail_test('output differs!');
+    }
 
     return;
 }
 
+=item check_result(DESC, ACTUAL, EXPECTED, ORIGINAL)
+
+This routine checks if the EXPECTED tags match the calibrated ACTUAL for the
+test described by DESC. For some additional checks, also need the ORIGINAL
+tags before calibration. Returns a list of errors, if there are any.
+
+=cut
+
 sub check_result {
-    my ($test_state, $testcase, $expected, $actual, $origexp) = @_;
-    # Compare the output to the expected tags.
-    my $testok = !system('cmp', '-s', $expected, $actual);
+    my ($testcase, $actual, $expected, $originaltags) = @_;
 
-    if (not $testok) {
-        if ($testcase->{'todo'} eq 'yes') {
-            $test_state->pass_todo_test('failed but marked as TODO');
-            return;
-        } else {
-            $expected = "$testcase->{spec_path}/tags"
-              if $expected eq $origexp;
-            $test_state->diff_files($expected, $actual);
-            $test_state->fail_test('output differs!');
-            return;
+    # fail if tags do not match
+    return 'Tags do not match' if (compare($actual, $expected) != 0);
+
+    # no further investigation on unusual output formats
+    return unless $testcase->{output_format} eq 'EWI';
+
+    # check all Test-For tags were seen and all Test-Against tags were not
+    my %test_for = map { $_ => 1 } split SPACE, $testcase->{test_for}//EMPTY;
+    my %test_against =map { $_ => 1 } split SPACE,
+      $testcase->{test_against}//EMPTY;
+
+    return unless (%test_for || %test_against);
+
+    my @errors;
+
+    # look through actual tags
+    my @lines = path($actual)->lines_utf8;
+    chomp @lines;
+    foreach my $line (@lines) {
+
+        # no tag available
+        next if $line =~ /^N: /;
+
+        # some traversal tests create packages that are skipped
+        next if $line =~ /tainted/ && $line =~ /skipping/;
+
+        # look for "EWI: package[ type]: tag"
+        my ($tag) = $line =~ qr/^.: \S+(?: (?:changes|source|udeb))?: (\S+)/o;
+        unless (length $tag) {
+            push(@errors, "Invalid line: $line");
+            next;
         }
+
+        # check if tag was blacklisted
+        if ($test_against{$tag}) {
+
+            # warn just once about a tag
+            delete $test_against{$tag};
+            push(@errors, "Tag $tag seen but listed in Test-Against");
+        }
+
+        # mark as seen
+        delete $test_for{$tag};
     }
 
-    unless ($testcase) {
-        $test_state->pass_test;
-        return;
-    }
+    # check if test was calibrated
+    if (defined $originaltags && compare($originaltags, $expected) != 0) {
 
-    # Check the output for invalid lines.  Also verify that all Test-For tags
-    # are seen and all Test-Against tags are not.  Skip this part of the test
-    # if neither Test-For nor Test-Against are set and Sort is also not set,
-    # since in that case we probably have non-standard output.
-    my %test_for = map { $_ => 1 } split(' ', $testcase->{'test_for'}//'');
-    my %test_against
-      = map { $_ => 1 } split(' ', $testcase->{'test_against'}//'');
-    if (    not %test_for
-        and not %test_against
-        and $testcase->{'output_format'} ne 'EWI') {
-        if ($testcase->{'todo'} eq 'yes') {
-            $test_state->fail_test('marked as TODO but succeeded');
-            return;
-        } else {
-            $test_state->pass_test;
-            return;
-        }
-    } else {
-        my $okay = 1;
-        my @msgs;
-        open(my $etags, '<', $actual);
-        while (<$etags>) {
-            next if m/^N: /;
-            # Some of the traversal tests creates packages that are
-            # skipped; accept that in the output
-            next if m/tainted/o && m/skipping/o;
-            # Looks for "$code: $package[ $type]: $tag"
-            if (not /^.: \S+(?: (?:changes|source|udeb))?: (\S+)/o) {
-                chomp;
-                push(@msgs, "Invalid line: $_");
-                $okay = 0;
+        # tags lost in calibration; like binaries-hardening on some arches
+        my %lost = %test_for;
+
+        # parse original output
+        my @origlines = path($originaltags)->lines_utf8;
+        chomp @origlines;
+        foreach my $line (@origlines) {
+
+            # not tag in this line
+            next if $line =~ /^N: /;
+
+            # some traversal tests create packages that are skipped
+            next if $line =~ /tainted/ && $line =~ /skipping/;
+
+            # look for "EWI: package[ type]: tag"
+            my ($tag)= $line =~ /^.: \S+(?: (?:changes|source|udeb))?: (\S+)/o;
+            unless (length $tag) {
+                push(@errors, "Invalid line: $line");
                 next;
             }
-            my $tag = $1;
-            if ($test_against{$tag}) {
-                push(@msgs, "Tag $tag seen but listed in Test-Against");
-                $okay = 0;
-                # Warn only once about each "test-against" tag
-                delete $test_against{$tag};
-            }
+            delete $lost{$tag};
+        }
+
+        # remove tags that were calibrated out
+        foreach my $tag (keys %lost) {
             delete $test_for{$tag};
         }
-        close($etags);
-        if (%test_for) {
-            if ($origexp && $origexp ne $expected) {
-                # Test has been calibrated, check if some of the
-                # "Test-For" has been calibrated out.  (Happens with
-                # binaries-hardening on some architectures).
-                open(my $oe, '<', $expected);
-                my %cp_tf = %test_for;
-                while (<$oe>) {
-                    next if m/^N: /;
-                    # Some of the traversal tests creates packages that are
-                    # skipped; accept that in the output
-                    next if m/tainted/o && m/skipping/o;
-                    if (not /^.: \S+(?: (?:changes|source|udeb))?: (\S+)/o) {
-                        chomp;
-                        push(@msgs, "Invalid line: $_");
-                        $okay = 0;
-                        next;
-                    }
-                    delete $cp_tf{$1};
-                }
-                close($oe);
-                # Remove tags that has been calibrated out.
-                foreach my $tag (keys %cp_tf) {
-                    delete $test_for{$tag};
-                }
-            }
-            for my $tag (sort keys %test_for) {
-                push(@msgs, "Tag $tag listed in Test-For but not found");
-                $okay = 0;
-            }
-        }
-        if ($okay) {
-            if ($testcase->{'todo'} eq 'yes') {
-                $test_state->fail_test('marked as TODO but succeeded');
-                return;
-            }
-            $test_state->pass_test;
-            return;
-        } elsif ($testcase->{'todo'} eq 'yes') {
-            $test_state->pass_todo_test(join("\n", @msgs));
-            return;
-        } else {
-            $test_state->fail_test(join("\n", @msgs));
-            return;
-        }
     }
-    confess("Assertion: This should be unreachable\n");
+
+    # check if the test missed any tags
+    for my $tag (sort keys %test_for) {
+        push(@errors, "Tag $tag listed in Test-For but not found");
+    }
+
+    return @errors;
 }
 
 =back
