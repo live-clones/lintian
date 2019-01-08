@@ -374,6 +374,17 @@ Info: The maintainer script seems to call <tt>start-stop-daemon</tt>
  scripts.
 Ref: policy 9.3.3.2
 
+Tag: maintainer-script-should-not-use-dpkg-maintscript-helper
+Severity: minor
+Certainty: certain
+Info: The maintainer script seems to make manual calls to the
+ <tt>dpkg-maintscript-helper(1)</tt> utility.
+ .
+ Please use <tt>package.maintscript</tt> files instead; the
+ <tt>dh_installdeb(1)</tt> tool will do some basic validation of some of
+ the commands listed in this file to catch common mistakes.
+Ref: dpkg-maintscript-helper(1), dh_installdeb(1)
+
 Tag: trailing-slash-for-dpkg-maintscript-helper-symlink_to_dir
 Severity: serious
 Certainty: certain

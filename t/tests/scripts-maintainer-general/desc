@@ -19,6 +19,7 @@ Test-For:
  maintainer-script-should-not-parse-etc-passwd-or-group
  maintainer-script-should-not-use-adduser-system-without-home
  maintainer-script-should-not-use-deprecated-chown-usage
+ maintainer-script-should-not-use-dpkg-maintscript-helper
  maintainer-script-should-not-use-fc-cache
  maintainer-script-should-not-use-gconftool
  maintainer-script-should-not-use-install-sgmlcatalog
