@@ -223,6 +223,9 @@ $ENV{'HARNESS_EPOCH'}
   = max(our_modification_epoch, perl_modification_epoch, $harness_files_epoch);
 say 'Harness modified on '. rfc822date($ENV{'HARNESS_EPOCH'});
 
+# in current runner implementation, RUNNER_EPOCH equals HARNESS_EPOCH
+$ENV{'RUNNER_EPOCH'}= $ENV{'HARNESS_EPOCH'};
+
 say EMPTY;
 
 # print environment
