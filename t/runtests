@@ -316,6 +316,12 @@ if (@TESTS) {
 print_test_summary()
   if scalar @testpaths;
 
+# give a hint if not enough tests were run
+unless (scalar @runscripts + scalar @testpaths - scalar @internalscripts
+    || $onlyrun eq 'harness:') {
+    quick_hint($onlyrun);
+}
+
 exit $status;
 
 # program is done
@@ -591,6 +597,25 @@ Usage: $0 [options] [-j [<jobs>]] <testset-directory> <testing-directory> [<test
 Test artifacts are cached in <testing-directory> and will be reused if
 deemed "up-to-date".  This cache can greatly reduce the run time of the
 test suite.
+END
+    return;
+}
+
+sub quick_hint {
+    my ($selection) = @_;
+    print <<"END";
+
+Sorry, could not determine what you meant with:
+
+    $selection
+
+To select your tests, please use an appropriate argument with a
+selector like:
+
+    'suite:', 'test:', 'check:', 'tag:', or 'script:'
+
+You can also use 'harness:', which runs only the internal tests
+for the harness. Thank you!
 END
     return;
 }
