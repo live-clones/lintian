@@ -47,7 +47,6 @@ The desc file is formatted like a Debian control file.  The required
 fields are:
 
     Testname: <should match the directory name>
-    Sequence: <sequence number>
     Version: <version number of package>
     Description: <description of the purpose of the test>
 
