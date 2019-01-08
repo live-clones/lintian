@@ -75,6 +75,17 @@ use constant EMPTY => q{};
 use constant YES => q{yes};
 use constant NO => q{no};
 
+=head1 FUNCTIONS
+
+=over 4
+
+=item logged_runner(RUN_PATH)
+
+Starts the generic test runner for the test located in RUN_PATH
+and logs the output.
+
+=cut
+
 sub logged_runner {
     my ($test_state, $runpath)= @_;
 
@@ -85,7 +96,7 @@ sub logged_runner {
     $log = capture_merged {
         try {
             # call runner
-            runner($test_state, $runpath)
+            runner($test_state, $runpath, $betterlogpath)
 
         }
         catch {
@@ -117,12 +128,17 @@ sub logged_runner {
     return;
 }
 
-# generic_runner
-#
-# Runs the test called $test assumed to be located in $testset/$dir/$test/.
-#
+=item runner(RUN_PATH)
+
+This routine provides the basic structure for all runners and runs the
+test located in RUN_PATH. Different objects are than instantiated
+depending on the suite the test case belongs to. Those classes contain
+the code that varies from suite to suite.
+
+=cut
+
 sub runner {
-    my ($test_state, $runpath, $outpath)= @_;
+    my ($test_state, $runpath, @exclude)= @_;
 
     # set a predictable locale
     $ENV{'LC_ALL'} = 'C';
@@ -428,5 +444,8 @@ sub check_result {
     confess("Assertion: This should be unreachable\n");
 }
 
-1;
+=back
 
+=cut
+
+1;
