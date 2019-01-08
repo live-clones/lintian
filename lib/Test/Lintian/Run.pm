@@ -195,9 +195,6 @@ sub runner {
 "Test in $runpath is called $testcase->{testname} instead of $expected_name"
       if ($testcase->{testname} ne $expected_name);
 
-    my $suite = $testcase->{suite};
-    my $testname = $testcase->{testname};
-
     # skip test if marked
     my $skipfile = "$runpath/skip";
     if (-f $skipfile) {

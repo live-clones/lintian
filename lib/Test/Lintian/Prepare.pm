@@ -182,8 +182,6 @@ sub prepare {
     # record suite
     $testcase->{suite} = $suite;
 
-    my $testname = $testcase->{testname};
-
     unless ($testcase->{testname} && exists $testcase->{version}) {
         die 'Name or Version missing';
     }
