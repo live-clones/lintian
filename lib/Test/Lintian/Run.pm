@@ -123,6 +123,12 @@ sub logged_runner {
 sub runner {
     my ($test_state, $runpath, $outpath)= @_;
 
+    # set a predictable locale
+    $ENV{'LC_ALL'} = 'C';
+
+    # many tests create files via debian/rules
+    umask(022);
+
     say EMPTY;
     say '------- Runner starts here -------';
 

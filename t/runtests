@@ -79,12 +79,6 @@ BEGIN {
 
     $ENV{'LINTIAN_DPLINT_FRONTEND'}
       = "$ENV{'LINTIAN_TEST_ROOT'}/frontend/dplint";
-
-    $ENV{'LC_ALL'} = 'C';
-
-    # Set standard umask because many of the test packages rely on this
-    # when creating files from the debian/rules script.
-    umask(022);
 }
 
 use lib "$ENV{'LINTIAN_TEST_ROOT'}/lib";
