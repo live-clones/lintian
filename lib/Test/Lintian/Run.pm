@@ -142,9 +142,36 @@ sub runner {
     my $runfiles = "$runpath/files";
     my $files = read_config($runfiles);
 
+    # get file age
+    my $spec_epoch = stat($runfiles)->mtime;
+
     # read dynamic case data
     my $rundescpath = "$runpath/$files->{test_specification}";
     my $testcase = read_config($rundescpath);
+
+    # get data age
+    $spec_epoch = max(stat($rundescpath)->mtime, $spec_epoch);
+    say 'Specification is from : '. rfc822date($spec_epoch);
+
+    say EMPTY;
+
+    # age of runner executable
+    my $runner_epoch = $ENV{'RUNNER_EPOCH'}//time;
+    say 'Runner modified on   : '. rfc822date($runner_epoch);
+
+    # age of harness executable
+    my $harness_epoch = $ENV{'HARNESS_EPOCH'}//time;
+    say 'Harness modified on  : '. rfc822date($harness_epoch);
+
+    # calculate rebuild threshold
+    my $threshold= max($spec_epoch, $runner_epoch, $harness_epoch);
+    say 'Rebuild threshold is : '. rfc822date($threshold);
+
+    say EMPTY;
+
+    # age of Lintian executable
+    my $lintian_epoch = $ENV{'LINTIAN_EPOCH'}//time;
+    say 'Lintian modified on  : '. rfc822date($lintian_epoch);
 
     # name of encapsulating directory should be that of test
     my $expected_name = path($runpath)->basename;
