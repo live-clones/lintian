@@ -13,6 +13,10 @@ lintian (2.5.121) UNRELEASED; urgency=medium
     + [CL] Check for packages that have maintainer scripts that ship
       support code for legacy versions of Debian.  (Closes: #917566)
 
+  * data/debhelper/compat-level:
+    + [CL] Don't emit a pedantic warning for compat level 12 "until
+      bullseye to avoid having to revert that change in case you need an
+      unblock for the buster release".  (Closes: #918809)
   * data/scripts/interpreters:
     + [CL] Apply a patch from Mo Zhou to fix the Julia interpreter path.
       (MR: !120)
