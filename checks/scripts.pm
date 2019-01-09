@@ -88,6 +88,10 @@ my $LEADINSTR
   = '(?:(?:^|[`&;(|{])\s*|(?:if|then|do|while|!)\s+|env(?:\s+[[:alnum:]_]+=(?:\S+|\"[^"]*\"|\'[^\']*\'))*\s+)';
 my $LEADIN = qr/$LEADINSTR/;
 
+# date --date="Sun, 26 Apr 2015 10:28:05 +0800" +%s"
+# <https://lists.debian.org/debian-announce/2015/msg00001.html>
+my $OLDSTABLE_RELEASE = 1430015285;
+
 #forbidden command in maintainer scripts
 my $BAD_MAINT_CMD = Lintian::Data->new(
     'scripts/maintainer-script-bad-command',
@@ -252,6 +256,10 @@ sub run {
     my @x11_fonts
       = grep {m,^usr/share/fonts/X11/.*\.(?:afm|pcf|pfa|pfb)(?:\.gz)?$,}
       $info->sorted_index;
+
+    my %old_versions
+      = map { $_->Version => 1 } grep {$_->Timestamp < $OLDSTABLE_RELEASE }
+      ($info->changelog ? $info->changelog->data : ());
 
     for my $filename (sort keys %{$info->scripts}) {
         my $interpreter = $info->scripts->{$filename}{interpreter};
@@ -986,6 +994,17 @@ sub run {
             }
 
             generic_check_bad_command($_, $file, $., $pkg, 1);
+
+            for my $ver (sort keys %old_versions) {
+                next if $ver =~ /^\d+$/;
+                #<<< no perltidy
+                if (m,$LEADIN(?:/usr/bin/)?dpkg\s+--compare-versions\s+.*\b\Q$ver\E\b,) {
+                    tag 'maintainer-script-supports-ancient-package-version',
+                      "$file:$.", $ver;
+                    last;
+                }
+                #>>>
+            }
 
             if (m,$LEADIN(?:/usr/sbin/)?update-inetd\s,) {
                 tag 'maintainer-script-has-invalid-update-inetd-options',

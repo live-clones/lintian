@@ -6,10 +6,12 @@ lintian (2.5.121) UNRELEASED; urgency=medium
     + [CL] Fix symbols-file-missing-build-depends-package-field
       false-positives when a package contains more than one library.
       Thanks to Mike Gabriel for the bug report.  (Closes: #918473)
-  * checks/scripts.pm:
+  * checks/scripts.{desc,pm}:
     + [CL] Check for manual calls to dpkg-maintscript-helper(1) in
       maintainer scripts; recommend using dh_installdeb .maintscript
       files instead.  (Closes: #917567)
+    + [CL] Check for packages that have maintainer scripts that ship
+      support code for legacy versions of Debian.  (Closes: #917566)
 
   * data/scripts/interpreters:
     + [CL] Apply a patch from Mo Zhou to fix the Julia interpreter path.

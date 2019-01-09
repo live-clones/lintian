@@ -964,3 +964,13 @@ Info: The maintainer script appears to reference one of the
  scripts and not by maintainer scripts themselves.
  .
  Please remove the references to this variable.
+
+Tag: maintainer-script-supports-ancient-package-version
+Severity: minor
+Certainty: possible
+Experimental: yes
+Info: The maintainer script appears to detect the specified version
+ which was prepared prior to the release of oldstable.
+ .
+ Please remove the code/check for this version as such upgrades
+ (etc.) are unsupported.
