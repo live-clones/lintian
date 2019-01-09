@@ -22,6 +22,8 @@ lintian (2.5.121) UNRELEASED; urgency=medium
     + [CL] Apply a patch series from Felix Lechner to support adaptive
       rebuilding, speeding up the test test suite speeds up by a factor of
       17 (excluding "scripts" tests).  (MR: !118)
+    + [CL] Apply a patch series from Felix Lechner to add a number of
+      "internal" tests for the test apparatus itself.  (MR: !119)
 
  -- Chris Lamb <lamby@debian.org>  Mon, 07 Jan 2019 23:35:43 +0100
 
