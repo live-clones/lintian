@@ -302,6 +302,12 @@ if ($onlyrun && $onlyrun =~ s/^tag://) {
 # run scripts through harness
 my $aggregator= $harness->runtests(@runscripts);
 
+unless ($aggregator->all_passed) {
+    exit 1 unless $keep_going;
+    $status = 1;
+    push(@failed, "suite:scripts [Try: prove -lr -j$numjobs t]");
+}
+
 say EMPTY;
 
 if (@TESTS) {
