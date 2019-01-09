@@ -276,7 +276,7 @@ my @testpaths = find_selected_lintian_testpaths($testset, $onlyrun);
 say 'Preparing ' . scalar @testpaths . ' work directories.'
   if @testpaths;
 
-my @TESTS = @testpaths;
+my @TESTS = map { abs2rel($_, Cwd::getcwd) } @testpaths;
 
 # make all paths relative
 @runscripts = map { abs2rel($_, Cwd::getcwd) } @runscripts;
@@ -360,16 +360,14 @@ sub create_child {
                 my $specpath = $metadata;
 
                 # get suite
-                my $depth = scalar splitdir((splitpath($testset))[1]);
-                my $suite = (splitdir((splitpath($specpath))[1]))[$depth];
+                my $suite = (split('/', $specpath))[1];
 
                 # get runpath
                 my $relative = abs2rel($specpath, $testset);
                 my $runpath = rel2abs($relative, $outpath);
 
                 # get process label
-                my $label = $relative;
-                $label =~ s/\//::/;
+                my $label = $specpath;
 
                 $0 = "Test worker - processing $label";
 
@@ -422,8 +420,7 @@ sub handle_msg_from_child {
     my $specpath = $test_metadata;
 
     # get process label
-    my $label = abs2rel($specpath, $testset);
-    $label =~ s/\//::/;
+    my $label = $specpath;
 
     if ($verbose >= 3) {
         my @dmsg = map { $_ // '<undef>' } @payload;
