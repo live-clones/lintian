@@ -103,7 +103,7 @@ lintian (2.5.119) unstable; urgency=medium
 
   * data/debhelper/compat-level:
     + [CL] Bump the recommended and experimental debhelper compat levels to
-      11 and 12 respectfully.  (Closes: #917344)
+      12 and 13 respectfully.  (Closes: #917344)
   * data/files/js-libraries:
     + [BR] Detect the html5shiv library. This library is the de facto way
       to enable the use of HTML5 "sectioning" elements in legacy Internet
