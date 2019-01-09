@@ -107,6 +107,11 @@ sub fail_test {
     return $self->_send('fail', $msg, $extra_info_cmd);
 }
 
+sub done {
+    my ($self) = @_;
+    return $self->_send('done');
+}
+
 sub _send {
     my ($self, $msg_type, @msg) = @_;
     $self->{'_output'}->send([$msg_type, $self->{'_test_metadata'}, @msg]);

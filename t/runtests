@@ -249,10 +249,6 @@ my %skipped;
 # Tests that failed
 my @failed;
 
-# If we don't run any tests, we'll want to warn that we couldn't find
-# anything.
-my $tests_run = 0;
-
 my $harness = TAP::Harness->new({
     jobs => $numjobs,
     lib => ["$ENV{'LINTIAN_TEST_ROOT'}/lib"],
@@ -276,7 +272,21 @@ my @testpaths = find_selected_lintian_testpaths($testset, $onlyrun);
 say 'Preparing ' . scalar @testpaths . ' work directories.'
   if @testpaths;
 
-my @TESTS = map { abs2rel($_, Cwd::getcwd) } @testpaths;
+my @prepqueue = map { abs2rel($_) } @testpaths;
+
+if (@prepqueue) {
+    for (0..$numjobs-1) {
+        create_preparation_child($IO_LOOP, \@prepqueue)
+          or last;
+    }
+
+    $IO_LOOP->run;
+}
+
+say "Preparation failed: $_" for @failed;
+exit 1 if scalar @failed;
+
+say EMPTY;
 
 # make all paths relative
 @runscripts = map { abs2rel($_, Cwd::getcwd) } @runscripts;
@@ -292,9 +302,12 @@ unless ($aggregator->all_passed) {
 
 say EMPTY;
 
+my @workpaths = map { rel2abs(abs2rel($_, $testset), $outpath) } @testpaths;
+my @TESTS = map { abs2rel($_) } @workpaths;
+
 if (@TESTS) {
     for (0..$numjobs-1) {
-        create_child($IO_LOOP, \@TESTS)
+        create_runner_child($IO_LOOP, \@TESTS)
           or last;
     }
 
@@ -333,7 +346,7 @@ sub print_test_summary {
     return;
 }
 
-sub create_child {
+sub create_preparation_child {
     my ($loop, $tests) = @_;
     my ($child_in_ch, $child_out_ch, $routine);
     my $start_test = shift(@{$tests});
@@ -374,7 +387,77 @@ sub create_child {
                 try {
                     logged_prepare($specpath, $runpath, $suite,
                         $testset,$force_rebuild);
-                    logged_runner($state, $runpath, $outpath);
+                    $state->done;
+                }
+                catch {
+                    if (my $err = $_) {
+                        $state->test_error($err);
+                    }
+                };
+
+                $0 = 'Test worker - idle';
+            }
+            return;
+        },
+
+        on_finish => sub {
+            $ACTIVE_JOBS--;
+            if ($ACTIVE_JOBS < 1) {
+                print "Stopping loop, no more active workers\n"
+                  if $verbose >= 2;
+                $loop->stop;
+            }
+            return;
+        },
+    );
+
+    $loop->add($routine);
+    $ACTIVE_JOBS++;
+    $child_in_ch->send($start_test);
+
+    $child_out_ch->configure(
+        'on_recv' => sub {
+            my (undef, $from_child) = @_;
+            handle_msg_from_child($child_in_ch, $tests, @{$from_child});
+            return;
+        },
+    );
+    return 1;
+}
+
+sub create_runner_child {
+    my ($loop, $tests) = @_;
+    my ($child_in_ch, $child_out_ch, $routine);
+    my $start_test = shift(@{$tests});
+
+    # If there are no more tests, don't spawn a routine for it
+    # Usually happens when only running a single thread.
+    return if not defined($start_test);
+
+    # files don't close properly when numjobs > 1, this is a kludge
+    $ENV{PERL_PATH_TINY_NO_FLOCK} = 1;
+
+    $child_in_ch = IO::Async::Channel->new;
+    $child_out_ch  = IO::Async::Channel->new;
+
+    $routine = IO::Async::Routine->new(
+        channels_in  => [$child_in_ch],
+        channels_out => [$child_out_ch],
+
+        code => sub {
+            $0 = 'Test worker - idle';
+            while (my $metadata = $child_in_ch->recv) {
+                my $state = Test::State->new($metadata, $child_out_ch);
+
+                my $runpath = $metadata;
+
+                # get process label
+                my $label = $runpath;
+
+                $0 = "Test worker - processing $label";
+
+                try {
+                    logged_runner($state, rel2abs($runpath));
                 }
                 catch {
                     if (my $err = $_) {
@@ -415,16 +498,16 @@ sub create_child {
 my $partial_line = 0;  ## no critic (it is reachable)
 
 sub handle_msg_from_child {
-    my ($child_in_ch, $test_queue, $msg_type, $test_metadata, @payload) = @_;
+    my ($child_in_ch, $queue, $msg_type, $metadata, @payload) = @_;
 
-    my $specpath = $test_metadata;
+    my $path = $metadata;
 
     # get process label
-    my $label = $specpath;
+    my $label = $path;
 
     if ($verbose >= 3) {
         my @dmsg = map { $_ // '<undef>' } @payload;
-        print "PROTO-MSG [DEBUG] $msg_type -- $label [@dmsg]\n";
+        say "PROTO-MSG [DEBUG] $msg_type -- $label [@dmsg]";
     }
 
     if (   $msg_type eq 'pass'
@@ -440,7 +523,7 @@ sub handle_msg_from_child {
             push(@failed, $label);
             if (not $keep_going) {
                 # Empty the queue, so no further jobs are started
-                $#{$test_queue} = -1;
+                $#{$queue} = -1;
             }
             $status = 1 if not $status;
         } elsif ($msg_type eq 'skip') {
@@ -474,53 +557,65 @@ sub handle_msg_from_child {
         }
         print $final_msg;
 
-        $test = shift(@{$test_queue});
+        $test = shift(@{$queue});
 
-        $tests_run++;
         if (defined($test)) {
             $child_in_ch->send($test);
         } else {
             $child_in_ch->close;
         }
+        return;
+
     } elsif ($msg_type eq 'diff-files') {
-        my ($original, $actual) = @payload;
+        my ($expected, $actual) = @payload;
         print "\n" if $partial_line;
         $partial_line = 0;
-        print "$label: diff -u $original $actual\n";
-        print safe_qx('diff', '-u', $original, $actual);
+        say "$label: diff -u $expected $actual";
+        print safe_qx('diff', '-u', $expected, $actual);
+        return;
+
     } elsif ($msg_type eq 'dump-file') {
-        my ($log_file) = @payload;
+        my ($path) = @payload;
         my $prefix = "$label: ";
         print "\n" if $partial_line;
         $partial_line = 0;
-        handle_dump_log($prefix, $log_file);
-    } elsif ($msg_type eq 'progress') {
-        my ($new_phase) = @payload;
-        print "$label is now in phase: $new_phase\n"
-          if $verbose;
-    } elsif ($msg_type eq 'log-msg') {
-        my ($verbosity, $msg) = @payload;
-        if ($verbosity <= $verbose) {
-            my $level = 'INFO';
-            $level = 'DEBUG' if $verbosity > 1;
-            print "INFO-MSG [$level] $label: $msg\n";
+        no autodie qw(open);
+        if (open(my $log, '<', $path)){
+            say "$label: ---- START BUILD LOG";
+            print "$label: $_" while (<$log>);
+            say "$label: ---- END BUILD LOG";
+            close($log);
+        } else {
+            print "!!! Could not dump $path: $!";
         }
-    }
-    return;
-}
+        return;
 
-sub handle_dump_log{
-    my ($prefix, $logf) = @_;
-    no autodie qw(open);
-    if (open(my $log, '<', $logf)){
-        print "${prefix}---- START BUILD LOG\n";
-        print "${prefix}$_" while (<$log>);
-        print "${prefix}---- END BUILD LOG\n";
-        close($log);
-    } else {
-        print "!!! Could not dump $logf: $!";
+    } elsif ($msg_type eq 'progress') {
+        my ($phase) = @payload;
+        say "$label is now in phase: $phase"
+          if $verbose;
+        return;
+
+    } elsif ($msg_type eq 'log-msg') {
+        my ($level, $msg) = @payload;
+        my $indicator = $level > 1 ? 'DEBUG' : 'INFO';
+        say "INFO-MSG [$indicator] $label: $msg"
+          if $level <= $verbose;
+        return;
+
+    } elsif ($msg_type eq 'done') {
+        while (scalar @{$queue}) {
+            my $job = shift @{$queue};
+            next unless defined $job;
+
+            $child_in_ch->send($job);
+            return;
+        }
+        $child_in_ch->close;
+        return;
     }
-    return 1;
+
+    die "ERROR: Unknown message type '$msg_type' from $label";
 }
 
 sub usage {
