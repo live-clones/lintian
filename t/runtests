@@ -135,7 +135,7 @@ unless (
 }
 
 # check number of arguments
-die('Please use -h for usage information. Thank you!')
+die('Please use -h for usage information.')
   if @ARGV < 2 || @ARGV > 3;
 
 # get arguments
@@ -615,7 +615,7 @@ selector like:
     'suite:', 'test:', 'check:', 'tag:', or 'script:'
 
 You can also use 'harness:', which runs only the internal tests
-for the harness. Thank you!
+for the harness.
 END
     return;
 }
