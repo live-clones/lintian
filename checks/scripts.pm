@@ -90,7 +90,7 @@ my $LEADIN = qr/$LEADINSTR/;
 
 # date --date="Sun, 26 Apr 2015 10:28:05 +0800" +%s"
 # <https://lists.debian.org/debian-announce/2015/msg00001.html>
-my $OLDSTABLE_RELEASE = 1430015285;
+my $OLDSTABLE_RELEASE = 1_430_015_285;
 
 #forbidden command in maintainer scripts
 my $BAD_MAINT_CMD = Lintian::Data->new(
