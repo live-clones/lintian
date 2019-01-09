@@ -11,6 +11,10 @@ lintian (2.5.121) UNRELEASED; urgency=medium
       maintainer scripts; recommend using dh_installdeb .maintscript
       files instead.  (Closes: #917567)
 
+  * data/scripts/interpreters:
+    + [CL] Apply a patch from Mo Zhou to fix the Julia interpreter path.
+      (MR: !120)
+
   * t/*:
     + [CL] Apply a patch from Felix Lechner to ensure the
       debhelper-compat-experimental tag is run after the upgrade to
