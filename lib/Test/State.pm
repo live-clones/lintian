@@ -73,23 +73,33 @@ sub progress {
 
 sub skip_test {
     my ($self, $reason) = @_;
-    return $self->_send('skip', $reason);
+    $self->announce('skip', $reason);
+    $self->mark_skipped($reason);
+    $self->done;
+    return;
 }
 
 sub pass_test {
     my ($self) = @_;
-    return $self->_send('pass');
+    $self->announce('pass');
+    $self->done;
+    return;
 }
 
 sub pass_todo_test {
     my ($self, $msg) = @_;
-    return $self->_send('pass-todo', $msg);
+    $self->announce('pass-todo', $msg);
+    $self->done;
+    return;
 }
 
 sub test_error {
     my ($self, $msg) = @_;
-    #confess('ERROR $msg' . NEWLINE);
-    return $self->_send('error', $msg);
+    $self->announce('error', $msg);
+    $self->mark_failed;
+    $self->stop_others;
+    $self->done;
+    return;
 }
 
 sub dump_log {
@@ -97,19 +107,49 @@ sub dump_log {
     return $self->_send('dump-file', $logfile);
 }
 
-sub diff_files {
-    my ($self, $original, $actual) = @_;
-    return $self->_send('diff-files', $original, $actual);
+sub fail_test {
+    my ($self, @args) = @_;
+    $self->announce('fail', @args);
+    $self->mark_failed;
+    $self->stop_others;
+    $self->done;
+    return;
 }
 
-sub fail_test {
-    my ($self, $msg, $extra_info_cmd) = @_;
-    return $self->_send('fail', $msg, $extra_info_cmd);
+sub announce {
+    my ($self, @args) = @_;
+    $self->_send('announce', @args);
+    return;
+}
+
+sub mark_skipped {
+    my ($self, @args) = @_;
+    $self->_send('mark-skipped', @args);
+    return;
+}
+
+sub mark_failed {
+    my ($self) = @_;
+    $self->_send('mark-failed');
+    return;
+}
+
+sub diff_files {
+    my ($self, @args) = @_;
+    $self->_send('diff-files', @args);
+    return;
+}
+
+sub stop_others {
+    my ($self) = @_;
+    $self->_send('stop-others');
+    return;
 }
 
 sub done {
     my ($self) = @_;
-    return $self->_send('done');
+    $self->_send('done');
+    return;
 }
 
 sub _send {

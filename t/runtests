@@ -505,65 +505,50 @@ sub handle_msg_from_child {
     # get process label
     my $label = $path;
 
+    # debug mode, show everything
     if ($verbose >= 3) {
         my @dmsg = map { $_ // '<undef>' } @payload;
         say "PROTO-MSG [DEBUG] $msg_type -- $label [@dmsg]";
     }
 
-    if (   $msg_type eq 'pass'
-        or $msg_type eq 'skip'
-        or $msg_type eq 'fail'
-        or $msg_type eq 'error'
-        or $msg_type eq 'pass-todo') {
-        my $is_problem = ($msg_type eq 'fail' or $msg_type eq 'error');
-        my ($info_msg) = @payload;
-        my ($test, $final_msg, $show_msg);
+    if ($msg_type eq 'announce') {
+        my ($result, $info_msg) = @payload;
 
-        if ($is_problem) {
-            push(@failed, $label);
-            if (not $keep_going) {
-                # Empty the queue, so no further jobs are started
-                $#{$queue} = -1;
-            }
-            $status = 1 if not $status;
-        } elsif ($msg_type eq 'skip') {
-            $skipped{$label} = $payload[0];
+        my $short;
+
+        if ($result eq 'pass') {
+            $short = '.';
+        } elsif ($result eq 'skip') {
+            $short = 'S';
+        } elsif ($result eq 'pass-todo') {
+            $short = 'T';
         }
-        $final_msg = "$msg_type $label";
-        $final_msg .= ": ${info_msg}" if defined($info_msg);
-        if (not $output_is_tty and not $verbose) {
-            if ($msg_type eq 'pass') {
-                $final_msg = '.';
-            } elsif ($msg_type eq 'skip') {
-                $final_msg = 'S';
-            } elsif ($msg_type eq 'pass-todo') {
-                $final_msg = 'T';
-            } else {
-                $show_msg = 1;
-            }
-        } else {
-            $show_msg = 1;
-        }
-        if ($show_msg) {
-            $final_msg .= "\n";
-            print "\n" if $partial_line;
-            $partial_line = 0;
-        } else {
+
+        unless ($verbose || $output_is_tty || !defined $short) {
             $partial_line++;
             if ($partial_line > 79) {
-                $final_msg .= "\n";
+                $short .= NEWLINE;
                 $partial_line = 0;
             }
+            print $short;
+            return;
         }
-        print $final_msg;
 
-        $test = shift(@{$queue});
+        print NEWLINE if $partial_line;
+        $partial_line = 0;
 
-        if (defined($test)) {
-            $child_in_ch->send($test);
-        } else {
-            $child_in_ch->close;
-        }
+        my $long = "$result $label";
+        $long .= ": $info_msg" if defined $info_msg;
+        say $long;
+        return;
+
+    } elsif ($msg_type eq 'mark-skipped') {
+        my ($reason) = @payload;
+        $skipped{$label} = $reason;
+        return;
+
+    } elsif ($msg_type eq 'mark-failed') {
+        push(@failed, $label);
         return;
 
     } elsif ($msg_type eq 'diff-files') {
@@ -585,9 +570,9 @@ sub handle_msg_from_child {
             print "$label: $_" while (<$log>);
             say "$label: ---- END BUILD LOG";
             close($log);
-        } else {
-            print "!!! Could not dump $path: $!";
+            return;
         }
+        say "!!! Could not dump $path: $!";
         return;
 
     } elsif ($msg_type eq 'progress') {
@@ -601,6 +586,13 @@ sub handle_msg_from_child {
         my $indicator = $level > 1 ? 'DEBUG' : 'INFO';
         say "INFO-MSG [$indicator] $label: $msg"
           if $level <= $verbose;
+        return;
+
+    } elsif ($msg_type eq 'stop-others') {
+        # empty queue; start no other jobs
+        $#{$queue} = -1
+          unless $keep_going;
+        $status = 1 unless $status;
         return;
 
     } elsif ($msg_type eq 'done') {
