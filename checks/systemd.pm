@@ -36,7 +36,7 @@ use Lintian::Util qw(internal_error lstrip rstrip);
 
 use Lintian::Data;
 
-# Init script that do not need a service file
+# Init scripts that do not need a service file
 my $INIT_WHITELIST = Lintian::Data->new('systemd/init-whitelist');
 
 # Known security flags
@@ -178,7 +178,7 @@ sub get_systemd_service_names {
 
     for my $file (@{$files_ref}) {
         my $name = $file->basename;
-        $name =~ s/\.service$//;
+        $name =~ s/@?\.service$//;
         $safe_add_service->($name);
 
         my @aliases= extract_service_file_values($file, 'Install', 'Alias', 1);

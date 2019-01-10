@@ -29,6 +29,10 @@ use constant NUMPY_REGEX => qr/
     \Q but this version of numpy is \E (?:0x)?%x
 /xo;
 
+# Guile object files do not objdump/strip correctly, so exclude them
+# from a number of tests. (#918444)
+use constant GUILE_PATH_REGEX => qr,^usr/lib/[^/]+/[^/]+/guile/[^/]+/.+\.go$,o;
+
 # These are the ones file(1) looks for.  The ".zdebug_info" being the
 # compressed version of .debug_info.
 # - Technically, file(1) also looks for .symtab, but that is apparently
@@ -373,6 +377,9 @@ sub run {
             } elsif ($fname =~ m,^usr/lib/debug/\.build-id/,) {
                 # Detached debug symbols could be for a biarch library.
                 $bad = 0;
+            } elsif ($fname =~ GUILE_PATH_REGEX) {
+                # Guile binaries do not objdump/strip (etc.) correctly.
+                $bad = 0;
             } elsif ($ARCH_64BIT_EQUIVS->known($arch)
                 && $fname =~ m,^lib/modules/,) {
                 my $arch64re
@@ -405,6 +412,7 @@ sub run {
                 or $pkg =~ m/-dbg$/
                 or $pkg =~ m/debug/
                 or $fname =~ m,/lib/debug/,
+                or $fname =~ GUILE_PATH_REGEX
                 or $fname =~ m,\.gox$,o) {
                 if (    $fileinfo =~ m/executable/
                     and $strings =~ m/^Caml1999X0[0-9][0-9]$/m) {
@@ -526,6 +534,7 @@ sub run {
                 next if ($fname =~ m%^usr/lib/debug/%);
                 next if ($fname =~ m%\.(?:[ce]32|e64)$%);
                 next if ($fname =~ m%^usr/lib/jvm/.*\.debuginfo$%);
+                next if ($fname =~ GUILE_PATH_REGEX);
                 next
                   if (
                     $fname =~ m{

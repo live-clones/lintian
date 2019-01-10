@@ -1,3 +1,45 @@
+lintian (2.5.120) unstable; urgency=medium
+
+  * Summary of tag changes:
+    + Removed:
+      - versioned-dependency-satisfied-by-perl
+
+  * checks/binaries.pm:
+    + [CL] Guile object files do not objdump/strip correctly so exclude
+      them from a number of tests.  (Closes: #918444)
+  * checks/fields.{desc,pm}:
+    + [CL] Drop versioned-dependency-satisfied-by-perl; Perl now provides
+      its dual-lived module packages with versions.  (Closes: #917967)
+  * checks/{menus,patch-systems}.desc:
+    + [CL] Clarify that spelling-* tags also correct various grammatical
+      errors too.
+  * checks/rules.desc:
+    + [AB] override_dh_auto_test-does-not-check-DEB_BUILD_OPTIONS: Replace
+      misleading "profile" with "option" in long description. See #889746
+      and https://lists.debian.org/debian-devel/2019/01/msg00047.html
+  * checks/systemd.pm:
+    + [CL] Apply a patch from Robin Jarry to handle service
+      templates for missing init scripts.  (MR: !115)
+  * checks/testsuite.pm:
+    + [CL] Apply a patch from Ondřej Nový fix false-positives in the
+      unnecessary-testsuite-autopkgtest-field tag with non-"autopkgtest"
+      values in the Testsuite control field.  (Closes: #918621)
+
+  * data/systemd/init-whitelist:
+    + [CL] Add "brightness" to the list of initscripts that do not need a
+      corresponding service file.  (Closes: #918459)
+
+  * debian/control:
+    + [AB] Build-conflict with libperl-critic-pulp-perl (except with
+      nocheck build profile) as it adds additional perlcritic rules which
+      cause several checks under t/scripts/01-critic/ to fail.
+
+  * lib/Lintian/Util.pm:
+    + [CL] Add optional support for stripping comments at EOL in
+      read_dpkg_control via DCTRL_COMMENTS_AT_EOL.  (Closes: #917964)
+
+ -- Chris Lamb <lamby@debian.org>  Mon, 07 Jan 2019 22:19:07 +0000
+
 lintian (2.5.119~bpo9+1) stretch-backports; urgency=medium
 
   * Rebuild for stretch-backports.

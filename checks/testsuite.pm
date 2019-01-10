@@ -28,6 +28,7 @@ use Lintian::Relation;
 use Lintian::Tags qw(tag);
 use Lintian::Util qw(
   file_is_encoded_in_non_utf8
+  DCTRL_COMMENTS_AT_EOL
   read_dpkg_control
   strip
 );
@@ -81,7 +82,7 @@ sub run {
         }
 
         tag 'unnecessary-testsuite-autopkgtest-field'
-          if $info->source_field('testsuite') // '' eq 'autopkgtest';
+          if ($info->source_field('testsuite') // '') eq 'autopkgtest';
 
         tag 'debian-tests-control-and-control-autodep8', $control,
           $control_autodep8
@@ -98,7 +99,12 @@ sub check_control_contents {
     my ($info, $path) = @_;
 
     my (@paragraphs, @lines);
-    if (not eval { @paragraphs = read_dpkg_control($path, 0, \@lines); }) {
+    if (
+        not eval {
+            @paragraphs
+              = read_dpkg_control($path, DCTRL_COMMENTS_AT_EOL, \@lines);
+        }
+    ) {
         chomp $@;
         $@ =~ s/^syntax error at //;
         tag 'syntax-error-in-debian-tests-control', $@;

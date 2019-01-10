@@ -906,14 +906,6 @@ sub run {
                       if ("$d_pkg-doc" eq $pkg
                         && $field =~ /^(?:pre-)?depends$/);
 
-                    # only trigger this for the preferred alternative
-                    tag 'versioned-dependency-satisfied-by-perl',
-                      "$field: $part_d_orig"
-                      if $alternatives[0][-1] eq $part_d_orig
-                      && &$is_dep_field($field)
-                      && perl_core_has_version($d_pkg, $d_version->[0],
-                        $d_version->[1]);
-
                     tag 'package-relation-with-perl-modules', "$field: $d_pkg"
                       # matches "perl-modules" (<= 5.20) as well as
                       # perl-modules-5.xx (>> 5.20)
@@ -1182,14 +1174,6 @@ sub run {
                           # perl-modules-5.xx (>> 5.20)
                           if $d_pkg =~ /^perl-modules/
                           && $proc->pkg_src ne 'perl';
-
-                        # only trigger this for the preferred alternative
-                        tag 'versioned-dependency-satisfied-by-perl',
-                          "$field: $part_d_orig"
-                          if $alternatives[0][-1] eq $part_d_orig
-                          && &$is_dep_field($field)
-                          && perl_core_has_version($d_pkg, $d_version->[0],
-                            $d_version->[1]);
                     }
 
                     my $all_obsolete = 0;

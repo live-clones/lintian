@@ -325,7 +325,7 @@ Info: The <tt>debian/rules</tt> file for this package has an
  .
  As this check is not automatically performed by debhelper(1), the
  specified testsuite is run regardless of another maintainer using
- the <tt>nocheck</tt> build profile.
+ the <tt>nocheck</tt> build option.
  .
  Please add a check such as:
  .
