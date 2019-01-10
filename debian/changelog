@@ -30,6 +30,8 @@ lintian (2.5.121) UNRELEASED; urgency=medium
       17 (excluding "scripts" tests).  (MR: !118)
     + [CL] Apply a patch series from Felix Lechner to add a number of
       "internal" tests for the test apparatus itself.  (MR: !119)
+    + [CL] Apply a patch series from Felix Lechner to split the
+      preparation of tests from the test runner itself.  (MR: !122)
 
  -- Chris Lamb <lamby@debian.org>  Mon, 07 Jan 2019 23:35:43 +0100
 
