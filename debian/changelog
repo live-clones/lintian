@@ -1,6 +1,9 @@
-lintian (2.5.121) UNRELEASED; urgency=medium
+lintian (2.5.121) unstable; urgency=medium
 
-  XXX: generate tag summary
+  * Summary of tag changes:
+    + Added:
+      - maintainer-script-should-not-use-dpkg-maintscript-helper
+      - maintainer-script-supports-ancient-package-version
 
   * checks/shared-libs.pm:
     + [CL] Fix symbols-file-missing-build-depends-package-field
@@ -33,7 +36,7 @@ lintian (2.5.121) UNRELEASED; urgency=medium
     + [CL] Apply a patch series from Felix Lechner to split the
       preparation of tests from the test runner itself.  (MR: !122)
 
- -- Chris Lamb <lamby@debian.org>  Mon, 07 Jan 2019 23:35:43 +0100
+ -- Chris Lamb <lamby@debian.org>  Thu, 10 Jan 2019 21:16:24 +0000
 
 lintian (2.5.120) unstable; urgency=medium
 
