@@ -60,7 +60,10 @@ use File::Copy;
 use File::stat;
 use List::Util qw(max min any);
 use Path::Tiny;
+use Test::More;
 use Try::Tiny;
+
+use Lintian::Command qw(safe_qx);
 
 use Test::Lintian::ConfigFile qw(read_config);
 use Test::Lintian::Helper qw(rfc822date);
@@ -86,7 +89,7 @@ and logs the output.
 =cut
 
 sub logged_runner {
-    my ($test_state, $runpath)= @_;
+    my ($runpath) = @_;
 
     my $betterlogpath = "$runpath/log";
     my $log;
@@ -95,7 +98,7 @@ sub logged_runner {
     $log = capture_merged {
         try {
             # call runner
-            runner($test_state, $runpath, $betterlogpath)
+            runner($runpath, $betterlogpath)
 
         }
         catch {
@@ -119,8 +122,7 @@ sub logged_runner {
 
     # print log and die on error
     if ($error) {
-        $test_state->dump_log($log)
-          if length $log && $ENV{'DUMP_LOGS'}//NO eq YES;
+        print $log if length $log && $ENV{'DUMP_LOGS'}//NO eq YES;
         die "Runner died for $runpath: $error";
     }
 
@@ -137,7 +139,7 @@ the code that varies from suite to suite.
 =cut
 
 sub runner {
-    my ($test_state, $runpath, @exclude)= @_;
+    my ($runpath, @exclude)= @_;
 
     # set a predictable locale
     $ENV{'LC_ALL'} = 'C';
@@ -149,7 +151,7 @@ sub runner {
     say '------- Runner starts here -------';
 
     # bail out if runpath does not exist
-    die "Cannot find test directory $runpath." unless -d $runpath;
+    BAIL_OUT("Cannot find test directory $runpath.") unless -d $runpath;
 
     # announce location
     say "Running test at $runpath.";
@@ -200,21 +202,20 @@ sub runner {
     if (-f $skipfile) {
         my $reason = path($skipfile)->slurp_utf8 || 'No reason given';
         say "Skipping test: $reason";
-        $test_state->skip_test("(disabled) $reason");
-        return;
+        plan skip_all => "(disabled) $reason";
     }
 
     # skip if missing prerequisites
     my $missing = find_missing_prerequisites($testcase);
     if (length $missing) {
         say "Missing prerequisites: $missing";
-        $test_state->skip_test("Missing prerequisites: $missing");
-        return;
+        plan skip_all => $missing;
     }
 
     # check test architectures
     unless (length $ENV{'DEB_HOST_ARCH'}) {
-        die 'DEB_HOST_ARCH is not set.';
+        say 'DEB_HOST_ARCH is not set.';
+        BAIL_OUT('DEB_HOST_ARCH is not set.');
     }
     my $platforms = $testcase->{test_architectures};
     if ($platforms ne 'any') {
@@ -224,10 +225,12 @@ sub runner {
         } @wildcards;
         unless (any { $_ == 0 } @matches) {
             say 'Architecture mismatch';
-            $test_state->skip_test('Architecture mismatch');
-            return;
+            plan skip_all => 'Architecture mismatch';
         }
     }
+
+    # set the testing plan
+    plan tests => 1;
 
     my $producer = Test::StagedFileProducer->new(path => $runpath);
     $producer->exclude(@exclude);
@@ -243,7 +246,6 @@ sub runner {
         minimum_epoch => $threshold,
         build =>sub {
             if(exists $testcase->{build_command}) {
-                $test_state->progress('building');
                 my $command= "cd $runpath; $testcase->{build_command}";
                 die "$command failed" if system($command);
             }
@@ -303,7 +305,6 @@ sub runner {
         build =>sub {
             my $script = "$runpath/test_calibration";
             if(-x $script) {
-                $test_state->progress('test_calibration hook');
                 calibrate($script, $sorted, $specified, $calibrated);
             } else {
                 die"Could not copy expected tags $specified to $calibrated: $!"
@@ -318,30 +319,22 @@ sub runner {
     my $okay = !scalar @errors;
 
     if($testcase->{todo} eq 'yes') {
-
-        if ($okay) {
-            $test_state->fail_test('marked as TODO but succeeded');
-        } else {
-            $test_state->pass_todo_test('failed but marked as TODO');
+      TODO: {
+            local $TODO = 'Test marked as TODO.';
+            ok($okay, 'Lintian tags match for test marked TODO.');
         }
-
         return;
     }
 
-    $test_state->info_msg(0, $_) for @errors;
+    diag @errors;
 
     # for uncalibrated tests, use tags in spec path for cut & paste
     $calibrated = "$testcase->{spec_path}/tags"
       unless -e "$runpath/test_calibration";
 
-    $test_state->diff_files($calibrated, $sorted)
+    diag safe_qx('diff', '-u', $calibrated, $sorted)
       unless $okay;
-
-    if ($okay) {
-        $test_state->pass_test;
-    } else {
-        $test_state->fail_test('output differs!');
-    }
+    ok($okay, "Lintian tags match for $testcase->{testname}");
 
     return;
 }
