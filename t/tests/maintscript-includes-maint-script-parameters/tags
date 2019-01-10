@@ -1,3 +1,19 @@
 W: maintscript-includes-maint-script-parameters source: maintscript-includes-maint-script-parameters maintscript (line 2)
 W: maintscript-includes-maint-script-parameters source: maintscript-includes-maint-script-parameters maintscript (line 3)
 W: maintscript-includes-maint-script-parameters source: maintscript-includes-maint-script-parameters maintscript (line 4)
+W: maintscript-includes-maint-script-parameters: maintainer-script-should-not-use-dpkg-maintscript-helper postinst:4
+W: maintscript-includes-maint-script-parameters: maintainer-script-should-not-use-dpkg-maintscript-helper postinst:5
+W: maintscript-includes-maint-script-parameters: maintainer-script-should-not-use-dpkg-maintscript-helper postinst:6
+W: maintscript-includes-maint-script-parameters: maintainer-script-should-not-use-dpkg-maintscript-helper postinst:7
+W: maintscript-includes-maint-script-parameters: maintainer-script-should-not-use-dpkg-maintscript-helper postrm:4
+W: maintscript-includes-maint-script-parameters: maintainer-script-should-not-use-dpkg-maintscript-helper postrm:5
+W: maintscript-includes-maint-script-parameters: maintainer-script-should-not-use-dpkg-maintscript-helper postrm:6
+W: maintscript-includes-maint-script-parameters: maintainer-script-should-not-use-dpkg-maintscript-helper postrm:7
+W: maintscript-includes-maint-script-parameters: maintainer-script-should-not-use-dpkg-maintscript-helper preinst:4
+W: maintscript-includes-maint-script-parameters: maintainer-script-should-not-use-dpkg-maintscript-helper preinst:5
+W: maintscript-includes-maint-script-parameters: maintainer-script-should-not-use-dpkg-maintscript-helper preinst:6
+W: maintscript-includes-maint-script-parameters: maintainer-script-should-not-use-dpkg-maintscript-helper preinst:7
+W: maintscript-includes-maint-script-parameters: maintainer-script-should-not-use-dpkg-maintscript-helper prerm:4
+W: maintscript-includes-maint-script-parameters: maintainer-script-should-not-use-dpkg-maintscript-helper prerm:5
+W: maintscript-includes-maint-script-parameters: maintainer-script-should-not-use-dpkg-maintscript-helper prerm:6
+W: maintscript-includes-maint-script-parameters: maintainer-script-should-not-use-dpkg-maintscript-helper prerm:7
