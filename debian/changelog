@@ -1,6 +1,6 @@
 lintian (2.5.122) UNRELEASED; urgency=medium
 
-  XXX: generate tag summary
+  XXX: generate tag summary & fill in with gbp dch
 
  -- Chris Lamb <lamby@debian.org>  Thu, 10 Jan 2019 22:24:09 +0000
 
