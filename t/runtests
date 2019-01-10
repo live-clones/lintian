@@ -370,7 +370,7 @@ sub create_preparation_child {
             while (my $metadata = $child_in_ch->recv) {
                 my $state = Test::State->new($metadata, $child_out_ch);
 
-                my $specpath = $metadata;
+                my $specpath = ${$metadata};
 
                 # get suite
                 my $suite = (split('/', $specpath))[1];
@@ -413,7 +413,7 @@ sub create_preparation_child {
 
     $loop->add($routine);
     $ACTIVE_JOBS++;
-    $child_in_ch->send($start_test);
+    $child_in_ch->send(\$start_test);
 
     $child_out_ch->configure(
         'on_recv' => sub {
@@ -449,7 +449,7 @@ sub create_runner_child {
             while (my $metadata = $child_in_ch->recv) {
                 my $state = Test::State->new($metadata, $child_out_ch);
 
-                my $runpath = $metadata;
+                my $runpath = ${$metadata};
 
                 # get process label
                 my $label = $runpath;
@@ -483,7 +483,7 @@ sub create_runner_child {
 
     $loop->add($routine);
     $ACTIVE_JOBS++;
-    $child_in_ch->send($start_test);
+    $child_in_ch->send(\$start_test);
 
     $child_out_ch->configure(
         'on_recv' => sub {
@@ -500,7 +500,7 @@ my $partial_line = 0;  ## no critic (it is reachable)
 sub handle_msg_from_child {
     my ($child_in_ch, $queue, $msg_type, $metadata, @payload) = @_;
 
-    my $path = $metadata;
+    my $path = ${$metadata};
 
     # get process label
     my $label = $path;
@@ -600,7 +600,7 @@ sub handle_msg_from_child {
             my $job = shift @{$queue};
             next unless defined $job;
 
-            $child_in_ch->send($job);
+            $child_in_ch->send(\$job);
             return;
         }
         $child_in_ch->close;
