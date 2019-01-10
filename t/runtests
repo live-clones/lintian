@@ -44,8 +44,6 @@ use IO::Async::Routine;
 use TAP::Harness;
 use Try::Tiny;
 
-use constant SUITES => qw(scripts changes debs source tests);
-
 BEGIN {
     # whitelist the environment we permit to avoid things that mess up
     # tests, like CFLAGS, DH_OPTIONS, DH_COMPAT, DEB_HOST_ARCH
@@ -88,7 +86,6 @@ use lib "$ENV{'LINTIAN_TEST_ROOT'}/lib";
 use Lintian::Command qw(safe_qx);
 use Lintian::Internal::FrontendUtil qw(default_parallel);
 
-use Test::Lintian::ConfigFile qw(read_config);
 use Test::Lintian::Filter
   qw(find_selected_code_quality_scripts find_selected_lintian_testpaths);
 use Test::Lintian::Helper
@@ -217,9 +214,6 @@ $ENV{'HARNESS_EPOCH'}
   = max(our_modification_epoch, perl_modification_epoch, $harness_files_epoch);
 say 'Harness modified on '. rfc822date($ENV{'HARNESS_EPOCH'});
 
-# in current runner implementation, RUNNER_EPOCH equals HARNESS_EPOCH
-$ENV{'RUNNER_EPOCH'}= $ENV{'HARNESS_EPOCH'};
-
 # get lintian date
 my @lintianparts = (
     'checks', 'collection', 'commands', 'data',
@@ -243,10 +237,9 @@ say EMPTY;
 
 my $status = 0;
 
-# Tests that were skipped and why
-# - $suite => $testname => $reason
+# tests that were skipped and why
 my %skipped;
-# Tests that failed
+# tests that failed
 my @failed;
 
 my $harness = TAP::Harness->new({
@@ -288,8 +281,16 @@ exit 1 if scalar @failed;
 
 say EMPTY;
 
+# these are the generated tests
+my @workpaths = map { rel2abs(abs2rel($_, $testset), $outpath) } @testpaths;
+
+# add the scripts in generated tests to be run
+my @workscripts
+  = map { File::Find::Rule->file->name('*.t')->in($_) } @workpaths;
+push(@runscripts, @workscripts);
+
 # make all paths relative
-@runscripts = map { abs2rel($_, Cwd::getcwd) } @runscripts;
+@runscripts = map { abs2rel($_) } @runscripts;
 
 # run scripts through harness
 my $aggregator= $harness->runtests(@runscripts);
@@ -297,25 +298,7 @@ my $aggregator= $harness->runtests(@runscripts);
 unless ($aggregator->all_passed) {
     exit 1 unless $keep_going;
     $status = 1;
-    push(@failed, "suite:scripts [Try: prove -lr -j$numjobs t]");
 }
-
-say EMPTY;
-
-my @workpaths = map { rel2abs(abs2rel($_, $testset), $outpath) } @testpaths;
-my @TESTS = map { abs2rel($_) } @workpaths;
-
-if (@TESTS) {
-    for (0..$numjobs-1) {
-        create_runner_child($IO_LOOP, \@TESTS)
-          or last;
-    }
-
-    $IO_LOOP->run;
-}
-
-print_test_summary()
-  if scalar @testpaths;
 
 # give a hint if not enough tests were run
 unless (scalar @runscripts + scalar @testpaths - scalar @internalscripts
