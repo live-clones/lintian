@@ -68,6 +68,8 @@ my $fields = [['url'], ['section'], ['title']];
 my $dbk_index_re
   = qr/([\d.]+?)\.\s+<a\s*href="(.+?)"\s*>([\w\s[:punct:]]+?)<\/a\s*>/i;
 my $dbk_fields = [['section'], ['url'], ['title']];
+my $dbk_index_re2
+  = qr/<a\s*href="(.+?)"\s*>([\d.]+?) ([\w\s[:punct:]]+?)<\/a\s*>/i;
 
 my %manuals = (
     'policy' => [
@@ -104,8 +106,7 @@ my %manuals = (
     'java-policy' => [
         '/usr/share/doc/java-policy/debian-java-policy/index.html',
         'https://www.debian.org/doc/packaging-manuals/java-policy/',
-        $dbk_index_re,
-        $dbk_fields
+        $dbk_index_re2,$fields
     ],
     'vim-policy' => [
         '/usr/share/doc/vim/vim-policy.html/index.html',
