@@ -59,11 +59,13 @@ my $LINTIAN_ROOT = $ENV{'LINTIAN_ROOT'};
 # additional regex can be defined to match possible references on other pages
 # of the manual.
 
-my $title_re = qr/<title\s?>(.+?)(?:\s+v[\d.]+)?<\/title\s?>/i;
+my $title_re = qr/<title\s?>(.+?)(?:\s+&#8212.+|\s+v[\d.]+)?<\/title\s?>/i;
 my $link_re
   = qr/<link href="(.+?)" rel="[\w]+" title="([A-Z]|[A-Z]?[\d\.]+?)\.?\s+([\w\s[:punct:]]+?)">/;
 my $index_re
   = qr/<a href="(.+?)">\s*([A-Z]|[A-Z]?[\d\.]+?)\.?\s+([\w\s[:punct:]]+?)\s*<\/a>/;
+my $sphinx_re
+  = qr/<a class="reference internal" href="(.+)">([\d\.]+)\.\s+(.*)<\/a>/;
 my $fields = [['url'], ['section'], ['title']];
 my $dbk_index_re
   = qr/([\d.]+?)\.\s+<a\s*href="(.+?)"\s*>([\w\s[:punct:]]+?)<\/a\s*>/i;
@@ -75,18 +77,7 @@ my %manuals = (
     'policy' => [
         '/usr/share/doc/debian-policy/policy.html/index.html',
         'https://www.debian.org/doc/debian-policy/',
-        # $index_re would match the Policy's TOC and work otherwise, but
-        # the TOC is generated only up to 3 levels deep as of 4.1.1.1, and
-        # we want refs to all levels.
-        qr{
-              <(h[2-5])>\s*
-              ([A-Z]|[A-Z]?[\d\.]+?)
-              \.?\s+
-              ([\w\s[:punct:]]+?)
-              <a\s(?:[^>]*?)\bhref="([^"]+)".+?</a>
-              </\1>
-        }x,
-        [['_ignored'], ['section'], ['title'], ['url']]
+        $sphinx_re, $fields
     ],
     'menu-policy' => [
         '/usr/share/doc/debian-policy/menu-policy.html/index.html',
