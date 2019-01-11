@@ -91,11 +91,16 @@ and logs the output.
 sub logged_runner {
     my ($runpath) = @_;
 
-    my $betterlogpath = "$runpath/log";
-    my $log;
     my $error;
 
-    $log = capture_merged {
+    # read dynamic file names
+    my $runfiles = "$runpath/files";
+    my $files = read_config($runfiles);
+
+    # set path to logfile
+    my $betterlogpath = "$runpath/$files->{log}";
+
+    my $log = capture_merged {
         try {
             # call runner
             runner($runpath, $betterlogpath)
