@@ -97,12 +97,12 @@ my $BAD_MAINT_CMD = Lintian::Data->new(
     'scripts/maintainer-script-bad-command',
     qr/\s*\~\~/,
     sub {
-        my @sliptline = split(/\s*\~\~/, $_[1], 4);
-        if(scalar(@sliptline) != 4) {
+        my @sliptline = split(/\s*\~\~/, $_[1], 5);
+        if(scalar(@sliptline) != 5) {
             internal_error(
                 'Syntax error in scripts/maintainer-script-bad-command:', $.);
         }
-        my ($incat,$exceptinpackage,$inscript,$regexp) = @sliptline;
+        my ($incat,$inauto,$exceptinpackage,$inscript,$regexp) = @sliptline;
         $regexp =~ s/\$[{]LEADIN[}]/$LEADINSTR/;
    # allow empty $exceptinpackage and set it synonymous to check in all package
         $exceptinpackage
@@ -117,6 +117,7 @@ my $BAD_MAINT_CMD = Lintian::Data->new(
         }
         return {
             # use not not to normalize boolean
+            'ignore_automatically_added' => not(not(strip($inauto))),
             'in_cat_string' => not(not(strip($incat))),
             'in_package' => qr/$exceptinpackage/x,
             'in_script' => qr/$inscript/x,
@@ -664,6 +665,7 @@ sub run {
         my $cat_string = '';
 
         my $previous_line = '';
+        my $in_automatic_section = 0;
         while (<$fd>) {
             if ($. == 1 && $shellscript && m,/$base\s*.*\s-\w*e\w*\b,) {
                 $saw_bange = 1;
@@ -678,7 +680,10 @@ sub run {
                 $dh_cmd =~ s/:++$//g;
                 tag 'debhelper-autoscript-in-maintainer-scripts', $dh_cmd
                   if not $dh_cmd_substs{$dh_cmd}++;
+                $in_automatic_section = 1;
             }
+            $in_automatic_section = 0
+              if $_ eq '# End automatically added section';
 
             next if m,^\s*$,;  # skip empty lines
             next if m,^\s*\#,; # skip comment lines
@@ -902,7 +907,8 @@ sub run {
                     }
                 }
                 if (!$cat_string) {
-                    generic_check_bad_command($_, $file, $., $pkg, 0);
+                    generic_check_bad_command($_, $file, $., $pkg, 0,
+                        $in_automatic_section);
 
                     if (m,/usr/share/debconf/confmodule,) {
                         $saw_debconf = 1;
@@ -993,7 +999,8 @@ sub run {
                 }
             }
 
-            generic_check_bad_command($_, $file, $., $pkg, 1);
+            generic_check_bad_command($_, $file, $., $pkg, 1,
+                $in_automatic_section);
 
             for my $ver (sort keys %old_versions) {
                 next if $ver =~ /^\d+$/;
@@ -1243,12 +1250,16 @@ sub run {
 
 # try generic bad maintainer script command tagging
 sub generic_check_bad_command {
-    my ($line, $file, $lineno, $pkg, $findincatstring) = @_;
+    my ($line, $file, $lineno, $pkg, $findincatstring, $in_automatic_section)
+      = @_;
     # try generic bad maintainer script command tagging
   BAD_CMD:
     foreach my $bad_cmd_tag ($BAD_MAINT_CMD->all) {
         my $bad_cmd_data = $BAD_MAINT_CMD->value($bad_cmd_tag);
         my $inscript = $bad_cmd_data->{'in_script'};
+        next
+          if $in_automatic_section
+          and $bad_cmd_data->{'ignore_automatically_added'};
         my $incat;
         if ($file !~ m{$inscript}) {
             next BAD_CMD;
