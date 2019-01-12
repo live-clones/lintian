@@ -97,7 +97,8 @@ my %manuals = (
     'java-policy' => [
         '/usr/share/doc/java-policy/debian-java-policy/index.html',
         'https://www.debian.org/doc/packaging-manuals/java-policy/',
-        $dbk_index_re2,$fields
+        $dbk_index_re2,
+        $fields
     ],
     'vim-policy' => [
         '/usr/share/doc/vim/vim-policy.html/index.html',
