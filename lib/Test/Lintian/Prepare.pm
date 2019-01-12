@@ -273,7 +273,7 @@ sub prepare {
     copy_dir_contents($specpath, $runpath);
 
     # get builder name
-    my $buildername = $testcase->{builder};
+    my $buildername = $files->{builder};
     if (length $buildername) {
         my $builderpath = "$runpath/$buildername";
 
