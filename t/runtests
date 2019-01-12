@@ -210,7 +210,8 @@ my @harnessparts
 my @harnessfiles
   = map { File::Find::Rule->file->in("$ENV{'LINTIAN_TEST_ROOT'}/$_") }
   @harnessparts;
-my $harness_files_epoch = max(map { stat($_)->mtime } @harnessfiles);
+my $harness_files_epoch
+  = max(map { -e $_ ? stat($_)->mtime : time } @harnessfiles);
 $ENV{'HARNESS_EPOCH'}
   = max(our_modification_epoch, perl_modification_epoch, $harness_files_epoch);
 say 'Harness modified on '. rfc822date($ENV{'HARNESS_EPOCH'});
@@ -224,7 +225,8 @@ my @lintianfiles
   = map { File::Find::Rule->file->in("$ENV{'LINTIAN_ROOT'}/$_") }@lintianparts;
 push(@lintianfiles, $ENV{'LINTIAN_FRONTEND'});
 push(@lintianfiles, $ENV{'LINTIAN_DPLINT_FRONTEND'});
-$ENV{'LINTIAN_EPOCH'} = max(map { stat($_)->mtime; } @lintianfiles);
+$ENV{'LINTIAN_EPOCH'}
+  = max(map { -e $_ ? stat($_)->mtime : time } @lintianfiles);
 say 'Lintian modified on '. rfc822date($ENV{'LINTIAN_EPOCH'});
 
 say EMPTY;
