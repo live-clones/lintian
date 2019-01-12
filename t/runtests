@@ -76,8 +76,7 @@ BEGIN {
         $ENV{'LINTIAN_FRONTEND'} = "$cwd/frontend/lintian";
     }
 
-    $ENV{'LINTIAN_DPLINT_FRONTEND'}
-      = "$ENV{'LINTIAN_TEST_ROOT'}/frontend/dplint";
+    $ENV{'LINTIAN_DPLINT_FRONTEND'}= "$ENV{'LINTIAN_ROOT'}/frontend/dplint";
 
     $ENV{'LINTIAN_TEST_ROOT'} = $cwd;
 }
