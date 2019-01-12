@@ -208,6 +208,39 @@ Certainty: certain
 Info: The interpreter used by this example script is installed at another
  location on Debian systems. Normally the path should be updated to match
  the Debian location.
+ .
+ Note that, as a particular exception, Debian Policy § 10.4 states that
+ Perl scripts should use <tt>/usr/bin/perl</tt> directly and not
+ <tt>/usr/bin/env</tt>, etc.
+
+Tag: incorrect-path-for-interpreter
+Severity: normal
+Certainty: certain
+Info: The interpreter you used is installed at another location on Debian
+ systems.
+ .
+ Whilst the script may work, it is in violation of Debian Policy. This
+ may have been caused by usrmerge.
+ .
+ Note that, as a particular exception, Debian Policy § 10.4 states that
+ Perl scripts should use <tt>/usr/bin/perl</tt> directly and not
+ <tt>/usr/bin/env</tt>, etc.
+Ref: policy 10.4, https://wiki.debian.org/UsrMerge
+
+Tag: example-incorrect-path-for-interpreter
+Severity: wishlist
+Certainty: certain
+Info: The interpreter used by this example script is installed at another
+ location on Debian systems. Normally the path should be updated to match
+ the Debian location.
+ .
+ Whilst the script may work, it is in violation of Debian Policy. This
+ may have been caused by usrmerge.
+ .
+ Note that, as a particular exception, Debian Policy § 10.4 states that
+ Perl scripts should use <tt>/usr/bin/perl</tt> directly and not
+ <tt>/usr/bin/env</tt>, etc.
+Ref: policy 10.4, https://wiki.debian.org/UsrMerge
 
 Tag: gawk-script-but-no-gawk-dep
 Severity: important

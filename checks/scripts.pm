@@ -293,8 +293,8 @@ sub run {
 
         # As a special-exception, Policy 10.4 states that Perl scripts must use
         # /usr/bin/perl directly and not via /usr/bin/env, etc.
-        tag 'wrong-path-for-interpreter', $filename,
-          '(#!/usr/bin/env perl != /usr/bin/perl)'
+        script_tag(bad_interpreter_tag_name('/usr/bin/env perl'),
+            $filename, '(#!/usr/bin/env perl != /usr/bin/perl)')
           if defined $calls_env and $interpreter eq 'perl';
 
         # Skip files that have the #! line, but are not executable and
@@ -391,8 +391,8 @@ sub run {
         if ($data) {
             my $expected = $data->[0] . '/' . $base;
             unless ($interpreter eq $expected or defined $calls_env) {
-                script_tag('wrong-path-for-interpreter', $filename,
-                    "(#!$interpreter != $expected)");
+                script_tag(bad_interpreter_tag_name($expected),
+                    $filename, "(#!$interpreter != $expected)");
             }
         } elsif ($interpreter =~ m,/usr/local/,) {
             script_tag('interpreter-in-usr-local', $filename,"#!$interpreter");
@@ -589,9 +589,9 @@ sub run {
               "#!$interpreter";
         } elsif ($base eq 'sh' or $base eq 'bash' or $base eq 'perl') {
             my $expected = ($INTERPRETERS->value($base))->[0] . '/' . $base;
-            tag 'wrong-path-for-interpreter', "#!$interpreter != $expected",
-              "(control/$file)"
-              unless ($interpreter eq $expected);
+            tag bad_interpreter_tag_name($expected),
+              "#!$interpreter != $expected","(control/$file)"
+              unless $interpreter eq $expected;
         } elsif ($file eq 'config') {
             tag 'forbidden-config-interpreter', "#!$interpreter";
         } elsif ($file eq 'postrm') {
@@ -600,7 +600,7 @@ sub run {
             my $data = $INTERPRETERS->value($base);
             my $expected = $data->[0] . '/' . $base;
             unless ($interpreter eq $expected) {
-                tag 'wrong-path-for-interpreter',
+                tag bad_interpreter_tag_name($expected),
                   "#!$interpreter != $expected",
                   "(control/$file)";
             }
@@ -1433,6 +1433,15 @@ sub _parse_versioned_interpreters {
                 "for versioned interpreter $interpreter"));
     }
     return [$path, $deprel, qr/^$regex$/, $deptmp, \@versions];
+}
+
+sub bad_interpreter_tag_name {
+    my ($interpreter) = @_;
+
+    return 'incorrect-path-for-interpreter'
+      if $interpreter eq '/usr/bin/env perl';
+
+    return 'wrong-path-for-interpreter';
 }
 
 1;

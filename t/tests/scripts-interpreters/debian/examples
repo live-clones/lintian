@@ -4,5 +4,6 @@ not-absolute
 syntax
 unusual
 unversioned-pike
+usr-bin-env-perl
 usr-local
 wrong-perl-path
