@@ -134,7 +134,7 @@ Description: Debian package checker
  violations. It contains automated checks for many aspects of Debian
  policy as well as some checks for common errors.
  .
- It uses an archive directory, called laboratory, in which it stores
+ It uses an archive directory, called a "laboratory", in which it stores
  information about the packages it examines.  It can keep this
  information between multiple invocations in order to avoid repeating
  expensive data-collection operations. This makes it possible to check the
