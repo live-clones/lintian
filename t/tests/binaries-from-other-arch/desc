@@ -1,3 +1,4 @@
+Skeleton: upload-native
 Testname: binaries-from-other-arch
 Test-Architectures: amd64 i386
 Package-Architecture: any

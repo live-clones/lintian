@@ -1,3 +1,4 @@
+Skeleton: upload-native
 Testname: symlinks-broken
 Version: 1.0
 Description: General tests broken symlinks

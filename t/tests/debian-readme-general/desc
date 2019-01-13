@@ -1,3 +1,4 @@
+Skeleton: upload-native
 Testname: debian-readme-general
 Version: 1.0
 Description: General tests for README.Debian

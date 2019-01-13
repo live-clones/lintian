@@ -1,3 +1,4 @@
+Skeleton: upload-native
 Testname: description-homepage
 Version: 1.0
 Options: --pedantic -I -E

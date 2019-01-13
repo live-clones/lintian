@@ -1,3 +1,4 @@
+Skeleton: upload-native
 Testname: scripts-calls-init-script
 Version: 1.0
 Description: Test proper use of invoke-rc.d

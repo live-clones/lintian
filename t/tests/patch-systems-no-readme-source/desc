@@ -1,3 +1,4 @@
+Skeleton: upload-native
 Testname: patch-systems-no-readme-source
 Version: 1.0
 Description: Patch system with no README.source

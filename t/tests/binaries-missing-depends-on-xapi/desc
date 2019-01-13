@@ -1,3 +1,4 @@
+Skeleton: upload-native
 Testname: binaries-missing-depends-on-xapi
 Version: 1.0
 Description: Test for missing perlapi depends

@@ -1,3 +1,4 @@
+Skeleton: upload-native
 Testname: scripts-missing-dep-fp
 Version: 1.0
 Description: Check F-P missing dep on various script interpreters

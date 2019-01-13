@@ -1,3 +1,4 @@
+Skeleton: upload-native
 Testname: files-multiarch-foreign-files
 Version: 1.0
 Description: Test for files violating Multi-Arch: foreign

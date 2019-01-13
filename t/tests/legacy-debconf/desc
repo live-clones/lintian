@@ -1,3 +1,4 @@
+Skeleton: upload-native
 Testname: legacy-debconf
 Source: debconf
 Sequence: 9999

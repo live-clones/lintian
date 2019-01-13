@@ -1,3 +1,4 @@
+Skeleton: upload-native
 Testname: python-source-package-encodes-python-version
 Source: python3-foo
 Version: 1.0

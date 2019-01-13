@@ -1,3 +1,4 @@
+Skeleton: upload-native
 Testname: binaries-missing-depends-on-numpy-abi
 Version: 1.0
 Description: Test for missing dependency on python-numpy-abiN

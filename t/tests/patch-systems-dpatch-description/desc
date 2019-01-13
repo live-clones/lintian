@@ -1,3 +1,4 @@
+Skeleton: upload-native
 Testname: patch-systems-dpatch-description
 Version: 1.0
 Description: Test patch-system tags for a dpatch package

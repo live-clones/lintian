@@ -1,3 +1,4 @@
+Skeleton: upload-native
 Testname: legacy-etcfiles
 Source: etcfiles
 Sequence: 9999

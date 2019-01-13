@@ -1,3 +1,4 @@
+Skeleton: upload-native
 Testname: debhelper-package-uses-debhelper-with-prefix-plus
 Version: 1.0
 Description: Test for packages using debhelper with a + prefix

@@ -1,3 +1,4 @@
+Skeleton: upload-native
 Testname: files-arch-indep-not-marked-all
 Version: 1.0
 Package-Architecture: any

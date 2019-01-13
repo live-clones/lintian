@@ -1,3 +1,4 @@
+Skeleton: upload-native
 Testname: shared-libs-non-pic-i386
 Version: 1.0
 Test-Architectures: i386

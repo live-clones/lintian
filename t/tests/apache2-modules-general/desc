@@ -1,3 +1,4 @@
+Skeleton: upload-native
 Testname: apache2-modules-general
 Version: 1.0
 Description: Several tests related to Apache2 module packages

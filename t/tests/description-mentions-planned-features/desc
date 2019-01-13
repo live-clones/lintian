@@ -1,3 +1,4 @@
+Skeleton: upload-native
 Testname: description-mentions-planned-features
 Version: 1.0
 Options: --pedantic -I -E

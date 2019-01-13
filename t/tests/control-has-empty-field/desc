@@ -1,3 +1,4 @@
+Skeleton: upload-native
 Testname: control-has-empty-field
 Version: 1.0
 Options: -I -E --pedantic

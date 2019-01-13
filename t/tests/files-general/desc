@@ -1,3 +1,4 @@
+Skeleton: upload-native
 Testname: files-general
 Version: 1.0
 Description: Test tags for file paths, names, and modes

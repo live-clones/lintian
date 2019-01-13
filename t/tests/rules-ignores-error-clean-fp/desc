@@ -1,3 +1,4 @@
+Skeleton: upload-native
 Testname: rules-ignores-error-clean-fp
 Version: 1.0
 Description: Check against Lintian false-positive error

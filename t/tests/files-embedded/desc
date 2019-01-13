@@ -1,3 +1,4 @@
+Skeleton: upload-native
 Testname: files-embedded
 Version: 1.0
 Description: Check for detection of embedded PEAR modules

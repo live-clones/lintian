@@ -1,3 +1,4 @@
+Skeleton: upload-native
 Testname: rules-unnecessary-source-date-epoch
 Version: 1.0
 Dh-Compat-Level: 10

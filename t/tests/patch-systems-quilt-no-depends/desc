@@ -1,3 +1,4 @@
+Skeleton: upload-native
 Testname: patch-systems-quilt-no-depends
 Version: 1.0
 Description: Test for quilt series but no B-D on quilt

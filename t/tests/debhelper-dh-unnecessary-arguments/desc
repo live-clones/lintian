@@ -1,3 +1,4 @@
+Skeleton: upload-native
 Testname: debhelper-dh-unnecessary-arguments
 Version: 1.0
 Description: Check for packages using --parallel

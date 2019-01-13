@@ -1,3 +1,4 @@
+Skeleton: upload-native
 Testname: cruft-gfdl-invariants
 Version: 1.0
 Description: Check for GFDL invariants sections

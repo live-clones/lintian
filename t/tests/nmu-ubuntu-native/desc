@@ -1,3 +1,4 @@
+Skeleton: upload-native
 Testname: nmu-ubuntu-native
 Version: 1.0
 Description: Test NMU tag suppression for Ubuntu native packages

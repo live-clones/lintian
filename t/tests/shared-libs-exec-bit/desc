@@ -1,3 +1,4 @@
+Skeleton: upload-native
 Testname: shared-libs-exec-bit
 Version: 1.0
 Package-Architecture: any

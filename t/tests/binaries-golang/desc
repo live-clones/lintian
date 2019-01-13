@@ -1,3 +1,4 @@
+Skeleton: upload-native
 Testname: binaries-golang
 Version: 1.0
 Extra-Build-Depends: golang-go (>= 2:1.1.1-4)

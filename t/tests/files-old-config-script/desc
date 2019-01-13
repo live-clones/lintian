@@ -1,3 +1,4 @@
+Skeleton: upload-native
 Testname: files-old-config-script
 Version: 1.0
 Description: Check for detection of old style config script

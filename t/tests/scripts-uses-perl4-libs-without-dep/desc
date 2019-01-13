@@ -1,3 +1,4 @@
+Skeleton: upload-native
 Testname: scripts-uses-perl4-libs-without-dep
 Version: 1.0
 Description: Check that script-uses-perl4-libs-without-dep works (positive)

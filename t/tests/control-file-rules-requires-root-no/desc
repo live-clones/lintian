@@ -1,3 +1,4 @@
+Skeleton: upload-native
 Testname: control-file-rules-requires-root-no
 Version: 1.0
 Description: Test for "Rules-Requires-Root: no"

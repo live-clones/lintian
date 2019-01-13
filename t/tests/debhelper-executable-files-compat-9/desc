@@ -1,3 +1,4 @@
+Skeleton: upload-native
 Testname: debhelper-executable-files-compat-9
 Version: 1.0
 Options: --suppress-tags

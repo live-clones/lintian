@@ -1,3 +1,4 @@
+Skeleton: upload-native
 Testname: scripts-exec
 Version: 1.0
 Description: Check for exec bit related issues for scripts

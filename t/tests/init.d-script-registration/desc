@@ -1,3 +1,4 @@
+Skeleton: upload-native
 Testname: init.d-script-registration
 Version: 1.0
 Description: Test tags related to the registration of init scripts

@@ -1,3 +1,4 @@
+Skeleton: upload-native
 Testname: debhelper-unused-cdbs
 Version: 1.0
 Extra-Build-Depends: cdbs

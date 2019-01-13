@@ -1,3 +1,4 @@
+Skeleton: upload-native
 Testname: binaries-embedded-libs
 Package-Architecture: any
 Version: 1.0

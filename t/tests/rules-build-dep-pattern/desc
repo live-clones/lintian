@@ -1,3 +1,4 @@
+Skeleton: upload-native
 Testname: rules-build-dep-pattern
 Version: 1.0
 Description: Check recognition of pattern dependencies

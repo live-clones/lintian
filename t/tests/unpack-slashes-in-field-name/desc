@@ -1,3 +1,4 @@
+Skeleton: upload-native
 Testname: unpack-slashes-in-field-name
 Sequence: 3500
 Version: 1.0

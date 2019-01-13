@@ -1,3 +1,4 @@
+Skeleton: upload-native
 Testname: files-bad-perm-owner
 Version: 1.0
 Description: General permissions and owner tests

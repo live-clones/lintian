@@ -1,3 +1,4 @@
+Skeleton: upload-native
 Testname: nmu-not-a-nmu
 Version: 1.0
 Description: Test for MU declared as NMU

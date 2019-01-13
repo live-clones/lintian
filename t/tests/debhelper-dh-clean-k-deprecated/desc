@@ -1,3 +1,4 @@
+Skeleton: upload-native
 Testname: debhelper-dh-clean-k-deprecated
 Version: 1.0
 Dh-Compat-Level: 11

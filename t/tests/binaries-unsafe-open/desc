@@ -1,3 +1,4 @@
+Skeleton: upload-native
 Testname: binaries-unsafe-open
 Package-Architecture: any
 Version: 1.0

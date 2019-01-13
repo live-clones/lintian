@@ -1,3 +1,4 @@
+Skeleton: upload-native
 Testname: scripts-ocamlrun
 Version: 1.0
 Description: Test correct handling of ocamlrun scripts

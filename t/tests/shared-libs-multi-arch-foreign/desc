@@ -1,3 +1,4 @@
+Skeleton: upload-native
 Testname: shared-libs-multi-arch-foreign
 Version: 1.0
 Package-Architecture: any

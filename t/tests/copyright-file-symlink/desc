@@ -1,3 +1,4 @@
+Skeleton: upload-native
 Testname: copyright-file-symlink
 Version: 1.0
 Description: Test for symlinked doc directories

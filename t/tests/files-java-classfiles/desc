@@ -1,3 +1,4 @@
+Skeleton: upload-native
 Testname: files-java-classfiles
 Version: 1.0
 Description: Test Java classfile related tags

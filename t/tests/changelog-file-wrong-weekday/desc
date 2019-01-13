@@ -1,3 +1,4 @@
+Skeleton: upload-native
 Testname: changelog-file-wrong-weekday
 Version: 1.0
 Profile: lintian-test

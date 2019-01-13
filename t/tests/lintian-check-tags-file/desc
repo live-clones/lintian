@@ -1,3 +1,4 @@
+Skeleton: upload-native
 Testname: lintian-check-tags-file
 Sequence: 2500
 Version: 1.0

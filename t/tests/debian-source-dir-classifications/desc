@@ -1,3 +1,4 @@
+Skeleton: upload-native
 Testname: debian-source-dir-classifications
 Version: 1.0
 Options: -L +classification -C debian-source-dir

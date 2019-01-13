@@ -1,3 +1,4 @@
+Skeleton: upload-native
 Testname: binaries-doesnt-match-sonames
 Version: 1.0
 Default-Build-Depends: debhelper (>= 9.20151004~)

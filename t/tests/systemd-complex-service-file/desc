@@ -1,3 +1,4 @@
+Skeleton: upload-native
 Testname: systemd-complex-service-file
 Version: 1.0
 Dh-Compat-Level: 9

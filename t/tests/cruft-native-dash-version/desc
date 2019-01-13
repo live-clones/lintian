@@ -1,3 +1,4 @@
+Skeleton: upload-native
 Testname: cruft-native-dash-version
 Version: 1.0-1
 Description: Test for native packages with dash version

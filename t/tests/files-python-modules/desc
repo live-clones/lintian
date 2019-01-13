@@ -1,3 +1,4 @@
+Skeleton: upload-native
 Testname: files-python-modules
 Version: 1.0
 Description: Test tags for misplaced Python modules

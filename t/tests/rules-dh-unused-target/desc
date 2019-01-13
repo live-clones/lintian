@@ -1,3 +1,4 @@
+Skeleton: upload-native
 Testname: rules-dh-unused-target
 Version: 1.0
 Description: Allow dh in unused targets

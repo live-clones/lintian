@@ -1,3 +1,4 @@
+Skeleton: upload-native
 Testname: md5sums-missing
 Version: 1.0
 Description: Test of missing md5sums file

@@ -1,3 +1,4 @@
+Skeleton: upload-native
 Testname: cruft-package-does-not-install-examples
 Source: foo
 Version: 1.0

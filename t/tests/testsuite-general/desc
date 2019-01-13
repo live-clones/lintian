@@ -1,3 +1,4 @@
+Skeleton: upload-native
 Testname: testsuite-general
 Version: 1.0
 Description: General tests of the autopkgtest control file

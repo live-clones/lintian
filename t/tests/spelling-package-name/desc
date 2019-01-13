@@ -1,3 +1,4 @@
+Skeleton: upload-native
 Testname: spelling-package-name
 Version: 1.0
 Description: Spell check test for excluding package name

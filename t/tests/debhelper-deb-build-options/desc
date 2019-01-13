@@ -1,3 +1,4 @@
+Skeleton: upload-native
 Testname: debhelper-deb-build-options
 Version: 1.0
 Description: Test the value of DEB_BUILD_OPTIONS

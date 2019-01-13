@@ -1,3 +1,4 @@
+Skeleton: upload-native
 Testname: binaries-hardening
 Version: 1.0
 Description: Check for missing hardening features

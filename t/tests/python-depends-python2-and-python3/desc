@@ -1,3 +1,4 @@
+Skeleton: upload-native
 Testname: python-depends-python2-and-python3
 Sequence: 6000
 Version: 1.0

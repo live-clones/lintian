@@ -1,3 +1,4 @@
+Skeleton: upload-native
 Testname: binaries-multiarch
 Version: 1.0
 Description: Test of a correct multiarch package

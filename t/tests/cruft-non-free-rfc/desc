@@ -1,3 +1,4 @@
+Skeleton: upload-native
 Testname: cruft-non-free-rfc
 Version: 1.0
 Description: Check for the rfc

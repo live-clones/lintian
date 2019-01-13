@@ -1,3 +1,4 @@
+Skeleton: upload-native
 Testname: rules-parses-dpkg-parsechangelog
 Sequence: 6000
 Version: 1.0

@@ -1,3 +1,4 @@
+Skeleton: upload-native
 Testname: files-wrong-ma-foreign
 Version: 1.0
 Description: Test for wrong usage of Multi-Arch foreign

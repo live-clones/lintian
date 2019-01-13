@@ -1,3 +1,4 @@
+Skeleton: upload-native
 Testname: changelog-file-epoch-change-without-comment-same
 Version: 1.0
 Description: Check changelog for accidental epoch changes (false positive)

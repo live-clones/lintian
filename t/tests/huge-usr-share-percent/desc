@@ -1,3 +1,4 @@
+Skeleton: upload-native
 Testname: huge-usr-share-percent
 Version: 1.0
 Description: Check passing the percentage limit of /usr/share data

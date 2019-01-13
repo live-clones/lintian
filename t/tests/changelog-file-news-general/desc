@@ -1,3 +1,4 @@
+Skeleton: upload-native
 Testname: changelog-file-news-general
 Version: 1.0
 Description: General checks for NEWS.Debian

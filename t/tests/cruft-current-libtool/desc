@@ -1,3 +1,4 @@
+Skeleton: upload-native
 Testname: cruft-current-libtool
 Version: 1.0
 Description: Test that a current ltmain.sh is detected correctly

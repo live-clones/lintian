@@ -1,3 +1,4 @@
+Skeleton: upload-native
 Testname: legacy-libbaz
 Source: libbaz
 Sequence: 9999

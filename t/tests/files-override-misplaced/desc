@@ -1,3 +1,4 @@
+Skeleton: upload-native
 Testname: files-override-misplaced
 Version: 1.0
 Description: Check for misplaced override file detection

@@ -1,3 +1,4 @@
+Skeleton: upload-native
 Testname: debhelper-compat-empty
 Version: 1.0
 Description: Test empty debian/compat file

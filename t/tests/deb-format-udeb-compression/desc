@@ -1,3 +1,4 @@
+Skeleton: upload-native
 Testname: deb-format-udeb-compression
 Version: 1.0
 Package-Architecture: all
