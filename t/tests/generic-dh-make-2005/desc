@@ -1,6 +1,6 @@
 Testname: generic-dh-make-2005
 Sequence: 6500
-Skeleton: builder-only
+Skeleton: upload-builder-only
 Author: Frank Lichtenheld <djpig@debian.org>
 Version: 1-1
 Package-Architecture: any

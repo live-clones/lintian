@@ -1,6 +1,6 @@
 Testname: generic-dh-make-2008
 Sequence: 6500
-Skeleton: builder-only
+Skeleton: upload-builder-only
 Author: Russ Allbery <rra@debian.org>
 Version: 1.0-1
 Package-Architecture: any
