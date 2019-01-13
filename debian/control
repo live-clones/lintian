@@ -3,13 +3,9 @@ Section: devel
 Priority: optional
 Maintainer: Debian Lintian Maintainers <lintian-maint@debian.org>
 Uploaders:
- Josip Rodin <joy-packages@debian.org>,
  Colin Watson <cjwatson@debian.org>,
  Russ Allbery <rra@debian.org>,
  Adam D. Barratt <adam@adam-barratt.org.uk>,
- Raphael Geissert <geissert@debian.org>,
- Bastien Roucariès <roucaries.bastien+debian@gmail.com>,
- Axel Beckert <abe@debian.org>,
  Chris Lamb <lamby@debian.org>,
 Build-Depends:
  aspell <!nocheck>,
