@@ -132,9 +132,7 @@ sub logged_runner {
 =item runner(RUN_PATH)
 
 This routine provides the basic structure for all runners and runs the
-test located in RUN_PATH. Different objects are than instantiated
-depending on the suite the test case belongs to. Those classes contain
-the code that varies from suite to suite.
+test located in RUN_PATH.
 
 =cut
 
@@ -261,8 +259,7 @@ sub runner {
         minimum_epoch => $lintian_epoch,
         build =>sub {
             my $includepath = "$runpath/lintian-include-dir";
-            $ENV{'LINTIAN_COVERAGE'}
-              .= ",-db,./cover_db-$testcase->{suite}-$testcase->{testname}"
+            $ENV{'LINTIAN_COVERAGE'}.= ",-db,./cover_db-$testcase->{testname}"
               if exists $ENV{'LINTIAN_COVERAGE'};
             run_lintian($runpath, $subject, $testcase->{profile}, $includepath,
                 $testcase->{options}, $actual);

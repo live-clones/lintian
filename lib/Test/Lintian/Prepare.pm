@@ -86,11 +86,10 @@ sub early_logpath {
     return "$runpath.$EARLY_LOG_SUFFIX";
 }
 
-=item logged_prepare(SPEC_PATH, RUN_PATH, $SUITE, TEST_SET, REBUILD)
+=item logged_prepare(SPEC_PATH, RUN_PATH, TEST_SET, REBUILD)
 
 Prepares the work directory RUN_PATH for the test specified in
-SPEC_PATH. The test is assumed to be part of suite SUITE. The optional
-parameter REBUILD can force a rebuild if true.
+SPEC_PATH. The optional parameter REBUILD forces a rebuild if true.
 
 Captures all output and places it in a file near the work directory.
 The log can be used as a starting point by the runner after copying
@@ -99,7 +98,7 @@ it to a final location.
 =cut
 
 sub logged_prepare {
-    my ($specpath, $runpath, $suite, $testset, $force_rebuild)= @_;
+    my ($specpath, $runpath, $testset, $force_rebuild)= @_;
 
     my $log;
     my $error;
@@ -109,7 +108,7 @@ sub logged_prepare {
 
         try {
             # prepare
-            prepare($specpath, $runpath, $suite, $testset, $force_rebuild);
+            prepare($specpath, $runpath, $testset, $force_rebuild);
         }
         catch {
             # catch any error
@@ -132,17 +131,15 @@ sub logged_prepare {
     return;
 }
 
-=item prepare(SPEC_PATH, $RUN_PATH, $SUITE, TEST_SET, REBUILD)
+=item prepare(SPEC_PATH, RUN_PATH, TEST_SET, REBUILD)
 
-Populates a work directory $RUN_PATH with data from the test located
-in SPEC_PATH, which is assumed to belong to suite SUITE.
-
-The optional parameter REBUILD forces a rebuild if true.
+Populates a work directory RUN_PATH with data from the test located
+in SPEC_PATH. The optional parameter REBUILD forces a rebuild if true.
 
 =cut
 
 sub prepare {
-    my ($specpath, $runpath, $suite, $testset, $force_rebuild)= @_;
+    my ($specpath, $runpath, $testset, $force_rebuild)= @_;
 
     say '------- Preparation starts here -------';
     say "Work directory is $runpath.";
@@ -178,9 +175,6 @@ sub prepare {
 
     # record path to specification
     $testcase->{spec_path} = $specpath;
-
-    # record suite
-    $testcase->{suite} = $suite;
 
     unless ($testcase->{testname} && exists $testcase->{version}) {
         die 'Name or Version missing';
@@ -249,7 +243,7 @@ sub prepare {
 
         # the skeleton we are working with
         my $skeletonname = $testcase->{skeleton};
-        my $skeletonpath = "$testset/skeletons/$suite/$skeletonname";
+        my $skeletonpath = "$testset/skeletons/$skeletonname";
 
         my $skeleton = read_config($skeletonpath);
 
