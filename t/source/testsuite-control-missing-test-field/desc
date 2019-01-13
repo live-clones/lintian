@@ -1,3 +1,4 @@
+Skeleton: dsc
 Testname: testsuite-control-missing-test-field
 Version: 1
 Description: Detection of missing test/test-command fields

@@ -1,3 +1,4 @@
+Skeleton: dsc
 Testname: debconf-traversal
 Version: 1
 Description: Test for traversal issues via debconf templates

@@ -1,3 +1,4 @@
+Skeleton: dsc
 Testname: changelog-file-symlink
 Version: 1
 Source-Format: 3.0 (quilt)

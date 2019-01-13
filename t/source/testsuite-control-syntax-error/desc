@@ -1,3 +1,4 @@
+Skeleton: dsc
 Testname: testsuite-control-syntax-error
 Version: 1
 Description: Detection of syntax errors in autopkgtest control file

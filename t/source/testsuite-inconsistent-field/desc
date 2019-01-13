@@ -1,3 +1,4 @@
+Skeleton: dsc
 Testname: testsuite-inconsistent-field
 Version: 1
 Description: Test a source with inconsistent Testsuite field
