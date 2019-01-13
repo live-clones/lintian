@@ -1,5 +1,5 @@
 Testname: changes-upstream-signature-not-missing
-Skeleton: non-native
+Skeleton: upload-non-native
 Version: 1.0-1
 Source-Format: 3.0 (quilt)
 Description: Upstream signature included

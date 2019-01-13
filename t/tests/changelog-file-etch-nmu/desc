@@ -1,5 +1,5 @@
 Testname: changelog-file-etch-nmu
-Skeleton: non-native
+Skeleton: upload-non-native
 Version: 1.0-1etch1.1
 Description: Test for a code name in an unstable upload
 Test-Against:

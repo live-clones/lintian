@@ -1,6 +1,6 @@
 Testname: lintian-color-html
 Sequence: 2500
-Skeleton: non-native
+Skeleton: upload-non-native
 Version: 1.0-1
 Options: -I -E --color=html --show-overrides
 Output-Format: xml

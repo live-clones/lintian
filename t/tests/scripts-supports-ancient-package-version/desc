@@ -1,5 +1,5 @@
 Testname: scripts-supports-ancient-package-version
-Skeleton: non-native
+Skeleton: upload-non-native
 Version: 1.0-1
 Description: Check for maintainer scripts supporting old versions
 Options: --pedantic -I -E

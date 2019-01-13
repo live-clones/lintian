@@ -1,5 +1,5 @@
 Testname: java-classpath
-Skeleton: non-native
+Skeleton: upload-non-native
 Version: 1.0-1
 Description: Various checks about JAR files
 Author: Vincent Fourmond <fourmond@debian.org>

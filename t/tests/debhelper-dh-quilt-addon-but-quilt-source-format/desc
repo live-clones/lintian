@@ -1,6 +1,6 @@
 Testname: debhelper-dh-quilt-addon-but-quilt-source-format
 Version: 1.0-1
-Skeleton: non-native
+Skeleton: upload-non-native
 Source-Format: 3.0 (quilt)
 Description: Test for quilt packages that specify dh --with-quilt
 Extra-Build-Depends: quilt

@@ -3,7 +3,7 @@ Source: scripts
 Sequence: 9999
 Version: 6ds-1ubuntu0.5.10.1
 Package-Architecture: all
-Skeleton: non-native
+Skeleton: upload-non-native
 Description: Legacy test "scripts"
 Test-For:
  ancient-standards-version

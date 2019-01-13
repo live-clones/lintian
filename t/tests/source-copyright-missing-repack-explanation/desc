@@ -1,5 +1,5 @@
 Testname: source-copyright-missing-repack-explanation
-Skeleton: non-native
+Skeleton: upload-non-native
 Version: 1+dfsg-1
 Description: Test for missing repack explanations
 Options: -I -E --pedantic

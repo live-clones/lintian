@@ -1,7 +1,7 @@
 Testname: patch-systems-quilt-debian-changes
 Version: 1.0-1
 Description: Test a 3.0 (quilt) package which has a debian-changes-XXX patch
-Skeleton: non-native
+Skeleton: upload-non-native
 Source-Format: 3.0 (quilt)
 Test-For:
  format-3.0-but-debian-changes-patch

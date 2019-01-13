@@ -6,4 +6,4 @@ Test-For:
  pear-package-without-pkg-php-tools-builddep
 Test-Against:
  missing-pkg-php-tools-buildsystem
-Skeleton: non-native
+Skeleton: upload-non-native

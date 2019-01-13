@@ -1,7 +1,7 @@
 Testname: fields-version-bad
 Version: 0-.3
 Description: Test for weird versions
-Skeleton: non-native
+Skeleton: upload-non-native
 Test-Against:
  malformed-debian-changelog-version
 Test-For:
