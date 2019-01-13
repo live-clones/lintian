@@ -57,13 +57,10 @@ use Lintian::Profile;
 
 use Test::Lintian::ConfigFile qw(read_config);
 
-use constant CHANGES => 'changes';
-use constant DEBS => 'debs';
-use constant SOURCE => 'source';
-use constant TESTS => 'tests';
+use constant TAGS => 'tags';
 use constant SCRIPTS => 'scripts';
 
-my @LINTIAN_SUITES = (CHANGES, DEBS, SOURCE, TESTS);
+my @LINTIAN_SUITES = (TAGS);
 
 use constant DESC => 'desc';
 use constant TWO_SEPARATED_BY_COLON => qr/([^:]+):([^:]+)/;
