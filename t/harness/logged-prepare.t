@@ -51,6 +51,7 @@ $specpath->mkpath;
 my $desctext =<<EOSTR;
 Testname: $TESTNAME
 Version: 1.0-2
+Skeleton: upload-native
 Test-Architectures: any-amd64 any-i386
 Package-Architecture: any
 Test-Depends: debhelper (>= 9.20151004~)
@@ -63,7 +64,7 @@ $descpath->spew($desctext);
 my $runpath = $tempdir->child('run')->child($TESTNAME);
 $runpath->mkpath;
 
-logged_prepare($specpath->stringify, $runpath->stringify, 'tests', 't');
+logged_prepare($specpath->stringify, $runpath->stringify, 't');
 
 # read resulting test description
 my $testcase = read_config($runpath->child('desc')->stringify);
@@ -71,7 +72,7 @@ my $testcase = read_config($runpath->child('desc')->stringify);
 my @testarches = split(/\s+/, $testcase->{'test_architectures'});
 
 # test plan
-plan tests => 26 + scalar @testarches;
+plan tests => 25 + scalar @testarches;
 
 is($testcase->{testname}, $TESTNAME, 'Correct name');
 
@@ -91,8 +92,7 @@ isnt($testcase->{host_architecture}, $testcase->{'test-architectures'}, 'Test an
 is($testcase->{package_architecture}, 'any', 'Changed package architecture');
 isnt($testcase->{package_architecture}, 'all', 'Not the default package architecture');
 
-is($testcase->{skeleton}, 'default', 'Default skeleton');
-isnt($testcase->{skeleton}, 'pedantic', 'Not the pedantic skeleton');
+is($testcase->{skeleton}, 'upload-native', 'Correct skeleton');
 
 is($testcase->{'test_depends'}, 'debhelper (>= 9.20151004~)', 'Correct test dependencies');
 

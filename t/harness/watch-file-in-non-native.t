@@ -49,7 +49,7 @@ $specpath->mkpath;
 my $desctext =<<EOSTR;
 Testname: $TESTNAME
 Version: 1-1
-Skeleton: non-native
+Skeleton: upload-non-native
 EOSTR
 my $descpath = $specpath->child('desc');
 $descpath->spew($desctext);
@@ -57,7 +57,7 @@ $descpath->spew($desctext);
 my $runpath = $tempdir->child('run')->child($TESTNAME);
 $runpath->mkpath;
 
-logged_prepare($specpath->stringify, $runpath->stringify, 'tests', 't');
+logged_prepare($specpath->stringify, $runpath->stringify, 't');
 
 # test plan
 plan tests => 1;
