@@ -147,8 +147,7 @@ The general order is:
 3. Delete templates for which originals are present.
 4. Fill whitelisted templates if the generated files are dated.
 
-By default, templates/${suite}/default is used as a skeleton. To
-use a different skeleton, please use:
+To use a skeleton, please use:
 
     Skeleton: <skeleton to start from>
 
@@ -297,8 +296,8 @@ You can also run groups of tests defined by selectors such as:
 The internal harness tests cannot be disabled. They make sure that
 essential components behave as expected.
 
-The runner provides basic output for each test. For greater detail.
-please look at ./debian/test-out/${suite}/${testname}/log.
+The runner provides a detailed log for each test. For details
+please look at ./debian/test-out/${testpath}/log.
 
 
 TEST WRITING TIPS
