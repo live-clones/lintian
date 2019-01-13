@@ -1,3 +1,4 @@
+Skeleton: deb
 Testname: deb-format-wrong-order
 Version: 1.0
 Description: Test package for an ar archive in the wrong order

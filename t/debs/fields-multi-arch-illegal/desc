@@ -1,3 +1,4 @@
+Skeleton: deb
 Testname: fields-multi-arch-illegal
 Version: 1.0
 Description: Test package with illegal Multi-arch value

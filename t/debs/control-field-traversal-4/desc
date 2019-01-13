@@ -1,3 +1,4 @@
+Skeleton: deb
 Testname: control-field-traversal-4
 Version: 1.0
 Description: Test for directory traversal issues via field names or values

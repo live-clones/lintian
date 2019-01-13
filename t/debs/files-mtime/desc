@@ -1,3 +1,4 @@
+Skeleton: deb
 Testname: files-mtime
 Version: 1.0
 Description: Test for mod time in the deb tarballs

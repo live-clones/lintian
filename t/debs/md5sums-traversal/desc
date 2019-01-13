@@ -1,3 +1,4 @@
+Skeleton: deb
 Testname: md5sums-traversal
 Version: 1.0
 Description: Test for traversals via md5sums symlink
