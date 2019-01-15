@@ -447,6 +447,11 @@ sub run {
             tag $tag, $file if $fname =~ m/$regex/;
         }
 
+        tag 'package-contains-real-file-outside-usr', $file
+          if $fname =~ m,^(?:bin|sbin|lib.*)/.+$,
+          and not $file->is_symlink
+          and $link !~ m,^usr/$fname$,;
+
         if ($file->is_hardlink) {
             my $link_target_dir = $link;
             $link_target_dir =~ s,[^/]*$,,;
