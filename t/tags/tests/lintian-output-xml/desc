@@ -5,4 +5,5 @@ Version: 1.0+dsfg-1.1
 Package-Architecture: all
 Options: --pedantic -I -E --exp-output format=xml --show-overrides
 Output-Format: xml
+Sort: no
 Description: Test Lintian XML output format
