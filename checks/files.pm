@@ -437,6 +437,8 @@ sub run {
             $has_public_executable = 1;
             tag 'file-name-in-PATH-is-not-ASCII', $file
               if $file->basename !~ m{\A [[:ascii:]]++ \Z}xsm;
+            tag 'zero-byte-executable-in-path', $file
+              if $file->is_regular_file and $file->is_executable;
         } elsif (!is_string_utf8_encoded($fname)) {
             tag 'file-name-is-not-valid-UTF-8', $file;
         }
