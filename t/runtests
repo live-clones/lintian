@@ -640,7 +640,7 @@ sub quick_hint {
     my ($selection) = @_;
     print <<"END";
 
-Sorry, could not determine what you meant with:
+Could not determine what you meant by:
 
     $selection
 
