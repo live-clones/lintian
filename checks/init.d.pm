@@ -248,12 +248,14 @@ sub check_init {
     my $fd = $initd_path->open;
     while (my $l = <$fd>) {
         if ($. == 1) {
-            if ($l =~ m,^\#!\s*(/usr/[^\s]+),) {
-                tag 'init.d-script-uses-usr-interpreter',$initd_path, $1;
-            } elsif ($l =~ m{^ [#]! \s* /lib/init/init-d-script}xsm) {
+            if ($l
+                =~ m{^ [#]! \s* (?:/usr/bin/env)? \s* /lib/init/init-d-script}xsm
+            ) {
                 for my $arg (qw(start stop restart force-reload status)) {
                     $tag{$arg} = 1;
                 }
+            } elsif ($l =~ m,^\#!\s*(/usr/[^\s]+),) {
+                tag 'init.d-script-uses-usr-interpreter',$initd_path, $1;
             }
         }
         if ($l =~ m/Please remove the "Author" lines|Example initscript/) {
