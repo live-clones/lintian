@@ -46,6 +46,7 @@ E: binary: su-wrapper-without--c usr/share/menu/binary:2 su-to-root
 E: binary: su-wrapper-without--c usr/share/menu/binary:3 sux
 E: binary: symlink-contains-spurious-segments usr/share/doc/binary/html/ch2.html ../html/./ch1.html
 E: binary: unstripped-binary-or-object usr/bin/hello
+E: binary: zero-byte-executable-in-path usr/bin/iminusrbin
 I: binary source: binary-control-field-duplicates-source field "vcs-svn" in package binary
 I: binary source: vcs-field-uses-insecure-uri vcs-browser http://svn.wolffelaar.nl/lintian/trunk
 I: binary source: vcs-field-uses-insecure-uri vcs-svn http://svn.wolffelaar.nl/lintian/trunk
