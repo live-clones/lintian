@@ -306,6 +306,7 @@ unless ($aggregator->all_passed) {
 unless (scalar @runscripts + scalar @testpaths - scalar @internalscripts
     || $onlyrun eq 'harness:') {
     quick_hint($onlyrun);
+    exit 1;
 }
 
 exit $status;
