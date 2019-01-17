@@ -7,7 +7,7 @@
 # If <section> is empty, that line specifies the title and URL for the whole
 # manual.  If <url> is empty, that manual is not available on the web.
 #
-# Last updated: 2019-01-11
+# Last updated: 2019-01-17
 
 debconf-spec::::Configuration management::https://www.debian.org/doc/packaging-manuals/debconf_specification.html
 debconf-spec::1::Introduction::https://www.debian.org/doc/packaging-manuals/debconf_specification.html#id-1.2
@@ -442,16 +442,16 @@ fhs::scope::Scope::http://www.pathname.com/fhs/pub/fhs-2.3.html#SCOPE
 fhs::acknowledgments::Acknowledgments::http://www.pathname.com/fhs/pub/fhs-2.3.html#ACKNOWLEDGMENTS
 fhs::contributors::Contributors::http://www.pathname.com/fhs/pub/fhs-2.3.html#CONTRIBUTORS
 java-policy::::Debian policy for Java::https://www.debian.org/doc/packaging-manuals/java-policy/
-java-policy::1.::Background::https://www.debian.org/doc/packaging-manuals/java-policy/ch01.html
-java-policy::2.::Policy::https://www.debian.org/doc/packaging-manuals/java-policy/ch02.html
-java-policy::2.1.::Virtual machines::https://www.debian.org/doc/packaging-manuals/java-policy/ch02.html#policy-vm
-java-policy::2.2.::Building Java packages::https://www.debian.org/doc/packaging-manuals/java-policy/ch02.html#build-pkg
-java-policy::2.3.::Java programs::https://www.debian.org/doc/packaging-manuals/java-policy/ch02.html#policy-programs
-java-policy::2.4.::Java libraries::https://www.debian.org/doc/packaging-manuals/java-policy/ch02.html#policy-libraries
-java-policy::2.5.::Native Java Bytecode (gcj packages)::https://www.debian.org/doc/packaging-manuals/java-policy/ch02.html#policy-gcj-native
-java-policy::2.6.::Main, contrib or non-free::https://www.debian.org/doc/packaging-manuals/java-policy/ch02.html#policy-politics
-java-policy::3.::Issues to discuss::https://www.debian.org/doc/packaging-manuals/java-policy/ch03.html
-java-policy::4.::Advices to Java packagers::https://www.debian.org/doc/packaging-manuals/java-policy/ch04.html
+java-policy::1::Background::https://www.debian.org/doc/packaging-manuals/java-policy/ch01.html
+java-policy::2::Policy::https://www.debian.org/doc/packaging-manuals/java-policy/ch02.html
+java-policy::2.1::Virtual machines::https://www.debian.org/doc/packaging-manuals/java-policy/ch02.html#policy-vm
+java-policy::2.2::Building Java packages::https://www.debian.org/doc/packaging-manuals/java-policy/ch02.html#build-pkg
+java-policy::2.3::Java programs::https://www.debian.org/doc/packaging-manuals/java-policy/ch02.html#policy-programs
+java-policy::2.4::Java libraries::https://www.debian.org/doc/packaging-manuals/java-policy/ch02.html#policy-libraries
+java-policy::2.5::Native Java Bytecode (gcj packages)::https://www.debian.org/doc/packaging-manuals/java-policy/ch02.html#policy-gcj-native
+java-policy::2.6::Main, contrib or non-free::https://www.debian.org/doc/packaging-manuals/java-policy/ch02.html#policy-politics
+java-policy::3::Issues to discuss::https://www.debian.org/doc/packaging-manuals/java-policy/ch03.html
+java-policy::4::Advices to Java packagers::https://www.debian.org/doc/packaging-manuals/java-policy/ch04.html
 lintian::::Lintian User's Manual::https://lintian.debian.org/manual/
 lintian::1::Introduction::https://lintian.debian.org/manual/chapter-1.html
 lintian::1.1::About Lintian::https://lintian.debian.org/manual/chapter-1.html#section-1.1

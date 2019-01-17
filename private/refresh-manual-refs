@@ -71,7 +71,7 @@ my $dbk_index_re
   = qr/([\d.]+?)\.\s+<a\s*href="(.+?)"\s*>([\w\s[:punct:]]+?)<\/a\s*>/i;
 my $dbk_fields = [['section'], ['url'], ['title']];
 my $dbk_index_re2
-  = qr/<a\s*href="(.+?)"\s*>([\d.]+?) ([\w\s[:punct:]]+?)<\/a\s*>/i;
+  = qr/<a\s*href="(.+?)"\s*>([\d.]+?)\.\s+([\w\s[:punct:]]+?)<\/a\s*>/i;
 
 my %manuals = (
     'policy' => [
