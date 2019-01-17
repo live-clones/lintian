@@ -1,8 +1,57 @@
-lintian (2.5.122) UNRELEASED; urgency=medium
+lintian (2.5.122) unstable; urgency=medium
 
-  XXX: generate tag summary & fill in with gbp dch
+  * Summary of tag changes:
+    + Added:
+      - example-incorrect-path-for-interpreter
+      - incorrect-path-for-interpreter
+      - package-contains-real-file-outside-usr
+      - zero-byte-executable-in-path
 
- -- Chris Lamb <lamby@debian.org>  Thu, 10 Jan 2019 22:24:09 +0000
+  [ Chris Lamb ]
+  * Add a check for empty executable files in PATH; these files do not do
+    anything and produce no error message. (Closes: #919458)
+  * Prevent false-positives in the
+    maintainer-script-should-not-use-dpkg-maintscript-helper tag by adding
+    optional support for ignoring sections automatically added by
+    debhelper. (Closes: #917567)
+  * Split the wrong-path-for-interpreter tag into "wrong" and "incorrect"
+    variants, the latter with a reduced severity and capturing incorrect
+    (but working) shebangs such as "#!/usr/bin/env perl". Thanks to Ivo De
+    Decker for the report. (Closes: #917790)
+  * Update Debian Policy regex and manual references since this document
+    moved to Sphinx. (Closes: #918963)
+  * Also update the Java policy references as a new version of Docbook
+    generates different HTML links.
+  * Tests:
+    - Tidy "sorry" message in t/runtests.
+    - Drop changelog-format.t tests now we are trialling using gbp-dch.
+    - Add a note that using a "maintainer-script-should-not-" tag prefix
+      ensures that the tag will automatically pass the internal coverage
+      tests.
+  * debian/control:
+    - Clarify some grammar in the package long description.
+    - Prune Uploaders field to the current members of the "lintian" LDAP
+      group. With thanks to all who have contributed in the past.
+
+  [ Felix Lechner ]
+  * Always use the extracted testing code in autopkgtests. (Closes: #919096)
+  * Exit test runner with error code after parsing errors on the command line.
+  * Convert test modules to the "Test Anything Protocol" (TAP).
+    - Run TAP scripts for all tests through TAP::Harness. (MR: !124)
+    - Add a generic test script for TAP::Harness.
+    - Add name of the generic TAP script to the default settings.
+    - Install generic TAP script into work directories during preparation.
+  * Make harness timestamp calculation more robust for non-existent files.
+  * Always use the installed "dplint" in autopkgtests.
+
+  [ Josh Triplett ]
+  * Add a pedantic-level package-contains-real-file-outside-usr tag to
+    detect files installed to /. (MR: !128)
+
+  [ Paul Wise ]
+  * Add several spelling corrections.
+
+ -- Chris Lamb <lamby@debian.org>  Thu, 17 Jan 2019 15:52:23 +0000
 
 lintian (2.5.121) unstable; urgency=medium
 
