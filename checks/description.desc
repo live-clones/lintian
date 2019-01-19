@@ -73,7 +73,7 @@ Ref: policy 5.6.13
 Tag: description-too-long
 Severity: minor
 Certainty: certain
-Info: The first line of the "Description:" must not exceed 80 characters.
+Info: The first line of the "Description:" must be less than 80 characters.
 Ref: policy 3.4.1
 
 Tag: description-starts-with-package-name
