@@ -1,0 +1,6 @@
+Testname: files-package-contains-real-file-outside-usr
+Version: 1.0
+Description: Test for "real" files outside of /usr
+Options: -I -E --pedantic
+Test-For:
+ package-contains-real-file-outside-usr
