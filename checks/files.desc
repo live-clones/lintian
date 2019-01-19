@@ -2073,9 +2073,8 @@ Info: The listed file or maintainer script appears to reference
 Ref: https://reproducible-builds.org/, dpkg-genbuildinfo(1)
 
 Tag: package-contains-real-file-outside-usr
-Severity: pedantic
+Severity: classification
 Certainty: certain
-Experimental: yes
 Info: The package installs the listed file to a directory in / (the
  filesystem root) rather than to the corresponding directory inside /usr.
  .
