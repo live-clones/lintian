@@ -102,7 +102,6 @@ W: files-foo-in-bar: package-installs-perllocal-pod usr/lib/perl-foo/perllocal.p
 W: files-foo-in-bar: third-party-package-in-python-dir usr/lib/python2.7/bar
 W: files-foo-in-bar: vim-addon-within-vim-runtime-path usr/share/vim/vim73/bar
 W: files-foo-in-bar: vim-addon-within-vim-runtime-path usr/share/vim/vimcurrent/bar
-X: files-foo-in-bar: package-contains-real-file-outside-usr bin/foo/
 X: files-foo-in-bar: package-contains-real-file-outside-usr bin/foo/bar
 X: files-foo-in-bar: package-contains-real-file-outside-usr lib32/bar
 X: files-foo-in-bar: package-contains-real-file-outside-usr lib64/bar

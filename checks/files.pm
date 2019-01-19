@@ -454,6 +454,7 @@ sub run {
         tag 'package-contains-real-file-outside-usr', $file
           if $fname =~ m,^(?:bin|sbin|lib.*)/.+$,
           and not $file->is_symlink
+          and not $file->is_dir
           and ($link // '') !~ m,^usr/$fname$,;
 
         if ($file->is_hardlink) {

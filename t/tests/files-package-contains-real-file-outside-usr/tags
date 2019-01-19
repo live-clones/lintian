@@ -1,3 +1,2 @@
 E: files-package-contains-real-file-outside-usr: subdir-in-bin bin/subdir/
-X: files-package-contains-real-file-outside-usr: package-contains-real-file-outside-usr bin/subdir/
 X: files-package-contains-real-file-outside-usr: package-contains-real-file-outside-usr bin/subdir/file-outside-usr
