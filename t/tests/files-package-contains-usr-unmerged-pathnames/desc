@@ -1,6 +1,6 @@
-Testname: files-package-contains-real-file-outside-usr
+Testname: files-package-contains-usr-unmerged-pathnames
 Version: 1.0
 Description: Test for "real" files outside of /usr
 Options: -EI -L +classification -C files
 Test-For:
- package-contains-real-file-outside-usr
+ package-contains-usr-unmerged-pathnames

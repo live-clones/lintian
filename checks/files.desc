@@ -2072,7 +2072,7 @@ Info: The listed file or maintainer script appears to reference
  maintainer's own system.
 Ref: https://reproducible-builds.org/, dpkg-genbuildinfo(1)
 
-Tag: package-contains-real-file-outside-usr
+Tag: package-contains-usr-unmerged-pathnames
 Severity: classification
 Certainty: certain
 Info: The package installs the listed file to a directory in / (the

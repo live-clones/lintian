@@ -451,7 +451,7 @@ sub run {
             tag $tag, $file if $fname =~ m/$regex/;
         }
 
-        tag 'package-contains-real-file-outside-usr', $file
+        tag 'package-contains-usr-unmerged-pathnames', $file
           if $fname =~ m,^(?:bin|sbin|lib.*)/.+$,
           and not $file->is_symlink
           and not $file->is_dir
