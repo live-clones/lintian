@@ -1,5 +1,5 @@
 Template-Sets:
- . (debs-arch-independent),
+ . (DEBIAN),
  . (debs-make-builder)
 Fill-Targets:
  . (debian-packaging),
