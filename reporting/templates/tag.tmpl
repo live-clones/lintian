@@ -82,7 +82,11 @@
         if ($info->{extra}) {
             $tag .= qq{    <li class="type-$info->{code}">};
             $tag .= qq{<span class="type-O">O</span> } if $info->{code} eq 'O';
-            $tag .= "$info->{extra}</li>\n";
+            $tag .= $info->{extra};
+            my $archsref = $info->{archs};
+            my @archs = sort keys %{$$archsref};
+            $tag .= " <tt>[" . join(', ', @archs) . "]</tt>" if @archs > 1;
+            $tag .= "</li>";
         }
     }
     my $overridden = $has_nonoverridden ? '' : qq{ <span class="type-O">overridden</span>};
