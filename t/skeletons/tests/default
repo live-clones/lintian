@@ -1,5 +1,5 @@
 Template-Sets:
- debian (tests-pedantic),
+ debian (debian-native),
  . (tests-make-builder)
 Fill-Targets:
  debian (debian-packaging),
