@@ -246,6 +246,11 @@ sub _run_binary {
         }
     }
 
+    for ($info->sorted_index) {
+        tag 'package-ships-python-header-in-incorrect-directory', $_
+          if m,^usr/include/python3[\d\.]+/.+\.h$,;
+    }
+
     return;
 }
 
