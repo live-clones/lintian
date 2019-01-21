@@ -1047,7 +1047,7 @@ sub parse_lintian_log {
                 tag_info     => $tag_info,
                 # extra is unsafe in general, but we already quote it above.
                 extra        => $extra,
-                archs        => \$arch_map{$arch_key},
+                archs        => $arch_map{$arch_key},
 
                 # Shareable data
                 pkg_info     => {

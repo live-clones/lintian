@@ -179,8 +179,7 @@
                         $OUT .= qq(      <ul class="extra">);
                     }
                     $OUT .= "<li>$info->{extra}";
-                    my $archsref = $info->{archs};
-                    my @archs = sort keys %{$$archsref};
+                    my @archs = sort keys %{ $info->{archs} };
                     $OUT .= " <tt>[" . join(', ', @archs) . "]</tt>" if @archs > 1;
                     $OUT .= "</li>";
                 }

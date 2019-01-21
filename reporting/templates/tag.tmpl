@@ -83,8 +83,7 @@
             $tag .= qq{    <li class="type-$info->{code}">};
             $tag .= qq{<span class="type-O">O</span> } if $info->{code} eq 'O';
             $tag .= $info->{extra};
-            my $archsref = $info->{archs};
-            my @archs = sort keys %{$$archsref};
+            my @archs = sort keys %{ $info->{archs} };
             $tag .= " <tt>[" . join(', ', @archs) . "]</tt>" if @archs > 1;
             $tag .= "</li>";
         }
