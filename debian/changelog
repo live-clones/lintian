@@ -1,8 +1,58 @@
-lintian (2.5.123) UNRELEASED; urgency=medium
+lintian (2.5.123) unstable; urgency=medium
 
-  * WIP
+  * Summary of tag changes:
+    + Added:
+      - inconsistent-appstream-metadata-license
+      - package-contains-python-header-in-incorrect-directory
+    + Renamed:
+      - package-contains-usr-unmerged-pathnames ->
+        package-contains-real-file-outside-usr
 
- -- Chris Lamb <lamby@debian.org>  Thu, 17 Jan 2019 16:55:41 +0000
+  [ Chris Lamb ]
+  * Group warnings that only differ on the architecture in the HTML
+    reports. (Closes: #919162)
+  * Prevent a large number false-positives when checking "new style" init
+    scripts that use "#!/usr/bin/env /lib/init/init-d-script" as their
+    shebang. (Closes: #919604)
+  * Check for packages that ship headers in /usr/include/python3.x.
+    (Closes: #919979)
+  * Check for inconsistencies between debian/copyright and the information
+    embedded/duplicated in AppStream metadata files. Thanks to Daniel Kahn
+    Gillmor for the idea. (Closes: #907072)
+  * package-contains-usr-unmerged-pathnames tag:
+    - Prevent false-positives for leading directories. (Closes: #919839)
+    - Rename from package-contains-real-file-outside-usr.
+    - Move to "Classification" severity instead of a pedantic/experimental
+      combination.
+  * Use a verb in the debian-changelog-line-too-short tag description.
+  * Use "state cache" vs "state-cache" consistently between source and
+    binary packages when printing warnings during report generation.
+  * Update added/removed tag summary generation code to match "WIP" now we
+    are using gbp-dch(1).
+
+  [ Niels Thykier ]
+  * lib/lintian: Do entry removals asynchroniously in temp labs.
+  * Lintian::Unpacker:
+    * Migrate to use IO::Async.
+    * Refactor to extract a "find_next_task"-sub(-generator).
+    * Add a simple queue to avoid some overhead.
+    * Support prioritizing unpacking by collections.
+
+  [ Felix Lechner ]
+  * Template cleanup: (MR: !131)
+    - Rename tests-watchfile and tests-pedantic.
+    - Use renamed template sets in skeletons for suite tests.
+    - Move upstream/metadata from debian-native to debian-extra-non-native.
+    - Delete unused template set source-arch-independent.
+
+  [ Mike Miller ]
+  * Reword the description of the description-too-long tag to match the
+    actual check. (Closes: #919740)
+
+  [ Paul Wise ]
+  * Add several spelling corrections.
+
+ -- Chris Lamb <lamby@debian.org>  Mon, 21 Jan 2019 18:53:24 +0000
 
 lintian (2.5.122) unstable; urgency=medium
 
