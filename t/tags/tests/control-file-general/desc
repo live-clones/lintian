@@ -2,7 +2,7 @@ Skeleton: upload-native
 Testname: control-file-general
 Version: 1.0
 Description: Various problems with debian/control
-Options: --pedantic -I -E
+Options: --pedantic
 Test-For:
  binary-control-field-duplicates-source
  build-info-in-binary-control-file-section

@@ -2,7 +2,7 @@ Testname: upstream-metadata-is-missing
 Skeleton: upload-non-native
 Version: 1.0-1
 Description: Tests for missing upstream metadata file
-Options: --pedantic -I -E
+Options: --pedantic
 Test-For:
  debian-watch-does-not-check-gpg-signature
  upstream-metadata-file-is-missing

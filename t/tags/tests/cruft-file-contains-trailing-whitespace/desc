@@ -2,6 +2,6 @@ Skeleton: upload-native
 Testname: cruft-file-contains-trailing-whitespace
 Version: 1.0
 Description: Check for files containing trailing whitespace characters
-Options: -I -E --pedantic
+Options: --pedantic
 Test-For:
  file-contains-trailing-whitespace

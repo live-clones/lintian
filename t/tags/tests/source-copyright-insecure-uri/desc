@@ -2,6 +2,6 @@ Skeleton: upload-native
 Testname: source-copyright-insecure-uri
 Version: 1.0
 Description: Test for insecure Format: URIs
-Options: -I -E --pedantic
+Options: --pedantic
 Test-For:
  insecure-copyright-format-uri

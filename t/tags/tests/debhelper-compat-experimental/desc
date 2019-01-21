@@ -6,6 +6,6 @@ Default-Build-Depends: debhelper (>= 12~)
 Description: Test for old debian/compat file
 # Overrides the "data/debhelper/compat-level"
 Profile: lintian-test
-Options: --pedantic -I -E
+Options: --include-dir ./lintian-include-dir --pedantic
 Test-For:
  package-uses-experimental-debhelper-compat-version

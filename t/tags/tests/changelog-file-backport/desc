@@ -2,7 +2,7 @@ Skeleton: upload-native
 Testname: changelog-file-backport
 Version: 1.0
 Description: Check backport
-Options: --pedantic -I -E
+Options: --include-dir ./lintian-include-dir --pedantic
 # Overrides the "data/changes-file/known-dists"
 # data file to avoid updating the test every release
 Profile: lintian-test

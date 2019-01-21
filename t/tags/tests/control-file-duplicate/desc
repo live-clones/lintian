@@ -2,6 +2,6 @@ Skeleton: upload-native
 Testname: control-file-duplicate
 Version: 1.0
 Package-Architecture: all
-Options: --pedantic -I -E
+Options: --pedantic
 Description: Pedantic test for duplicate relations
 Test-For: duplicate-in-relation-field

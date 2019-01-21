@@ -2,7 +2,7 @@ Skeleton: upload-native
 Testname: cruft-minified-js
 Version: 1.0
 Description: Misc errors related to minified javascript
-Options: --pedantic -I -E
+Options: --pedantic
 Extra-Build-Depends: uglifyjs
 Test-For:
  insane-line-length-in-source-file

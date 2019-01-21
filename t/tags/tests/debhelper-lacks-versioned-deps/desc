@@ -3,6 +3,6 @@ Testname: debhelper-lacks-versioned-deps
 Version: 1.0
 Dh-Compat-Level: 9
 Description: Test pedantic dependency requirements for debhelper
-Options: -I -E --pedantic
+Options: --pedantic
 Test-For:
  package-lacks-versioned-build-depends-on-debhelper

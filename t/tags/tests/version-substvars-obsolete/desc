@@ -2,7 +2,7 @@ Skeleton: upload-native
 Testname: version-substvars-obsolete
 Version: 1.0
 Description: Test of substvars
-Options: -I -E --pedantic
+Options: --pedantic
 Test-For:
  maybe-not-arch-all-binnmuable
  not-binnmuable-all-depends-any

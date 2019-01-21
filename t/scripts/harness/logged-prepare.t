@@ -73,7 +73,7 @@ my $testcase = read_config($runpath->child('desc')->stringify);
 my @testarches = split(/\s+/, $testcase->{'test_architectures'});
 
 # test plan
-plan tests => 25 + scalar @testarches;
+plan tests => 26 + scalar @testarches;
 
 is($testcase->{testname}, $TESTNAME, 'Correct name');
 
@@ -132,7 +132,12 @@ isnt($testcase->{type}, 'yes', 'Native type not yes.');
 
 is($testcase->{'output_format'}, 'EWI', 'Output format is EWI');
 
-is($testcase->{options}, undef, 'No extra lintian options');
+is($testcase->{options}, undef, 'No extra Lintian options');
+is(
+    $testcase->{default_lintian_options},
+    '--display-info --display-experimental',
+    'Default Lintian options'
+);
 
 is(
     $testcase->{'dh_compat_level'},

@@ -2,5 +2,5 @@ Skeleton: deb
 Testname: control-files-traversal
 Version: 1.0
 Description: Test for bad owner of control files
-Options: -C conffiles,md5sums,control-files -IE
+Options: -C conffiles,md5sums,control-files
 Test-For: control-file-is-not-a-file

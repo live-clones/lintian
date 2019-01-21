@@ -3,7 +3,7 @@ Testname: patch-systems-dpatch-description
 Version: 1.0
 Description: Test patch-system tags for a dpatch package
 Extra-Build-Depends: dpatch
-Options: --pedantic -I
+Options: --pedantic
 Test-For:
  build-depends-on-obsolete-package
  dpatch-index-references-non-existent-patch

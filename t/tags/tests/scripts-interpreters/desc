@@ -2,7 +2,7 @@ Skeleton: upload-native
 Testname: scripts-interpreters
 Version: 1.0
 Description: Check various script interpreter issues
-Options: --pedantic -I -E
+Options: --pedantic
 Test-For:
  csh-considered-harmful
  dependency-on-python-version-marked-for-end-of-life

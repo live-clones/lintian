@@ -4,7 +4,6 @@ Version: 1.0
 Dh-Compat-Level: 9
 Options: --suppress-tags
  package-needs-versioned-debhelper-build-depends
- --display-info
 Description: Tests related to executable, dh-exec using packaging files
 Test-For:
  dh-exec-install-not-allowed-here

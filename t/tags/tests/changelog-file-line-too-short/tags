@@ -1,3 +1,4 @@
 P: changelog-file-line-too-short: debian-changelog-line-too-short 12345 (line 8)
 P: changelog-file-line-too-short: debian-changelog-line-too-short R³ (line 6)
 P: changelog-file-line-too-short: debian-changelog-line-too-short dh 11 (line 7)
+X: changelog-file-line-too-short source: debian-watch-does-not-check-gpg-signature

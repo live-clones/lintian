@@ -2,7 +2,7 @@ Skeleton: upload-native
 Testname: ocaml-general
 Version: 1.0
 Package-Architecture: any
-Options: -I -E --pedantic
+Options: --pedantic
 Section: ocaml
 Description: Test the OCaml-related tags
 Test-For:

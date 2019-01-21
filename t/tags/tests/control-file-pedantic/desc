@@ -1,7 +1,7 @@
 Skeleton: upload-native
 Testname: control-file-pedantic
 Version: 1.0
-Options: --pedantic -I -E
+Options: --pedantic
 Description: Pedantic tests for control file issues
 Test-For:
  xc-package-type-in-debian-control

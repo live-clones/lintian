@@ -2,7 +2,7 @@ Skeleton: upload-native
 Testname: copyright-file-general
 Version: 1.0
 Description: Test checking of copyright files
-Options: -IE --pedantic
+Options: --pedantic
 Test-For:
  FSSTND-dir-in-usr
  copyright-contains-automatically-extracted-boilerplate

@@ -2,7 +2,7 @@ Skeleton: upload-native
 Testname: copyright-file-non-common-license
 Version: 1.0
 Description: Test for false positive for a common license
-Options: -IE --pedantic
+Options: --pedantic
 Test-Against:
  copyright-should-refer-to-common-license-file-for-gpl
  copyright-should-refer-to-common-license-file-for-gfdl

@@ -2,6 +2,6 @@ Skeleton: upload-native
 Testname: source-copyright-wiki-uri
 Version: 1.0
 Description: Test for wiki.debian.org DEP 5-like URI
-Options: -I -E --pedantic
+Options: --pedantic
 Test-For:
  wiki-copyright-format-uri

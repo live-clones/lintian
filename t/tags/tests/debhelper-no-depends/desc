@@ -4,6 +4,7 @@ Version: 1.0
 Dh-Compat-Level: 9
 # Overrides the "data/debhelper/compat-level"
 Profile: lintian-test
+Options: --include-dir ./lintian-include-dir
 Description: Test dependency requirements for debhelper
 Test-For:
  dh-manual-sequence-control-obsolete
