@@ -482,15 +482,16 @@ sub _parse_dep5 {
         foreach my $srcfile (sort keys %file_licenses) {
             next unless $srcfile =~ /\.xml$/;
             my $file = $info->index_resolved_path($srcfile);
-            my $xml
-              = eval { XMLin($file->fs_path, ForceArray => [], KeyAttr => []); };
-            next if $@; # Let appstream-metadata-invalid catch errors
-            my $seen = lc($xml->{'metadata_license'} // '');
-            my $wanted = $file_licenses{$srcfile};
+            my $seen = eval {
+                my $xml
+                  = XMLin($file->fs_path, ForceArray => [], KeyAttr => []);
+                lc($xml->{'metadata_license'} // '');
+            };
             next unless $seen;
+            my $wanted = $file_licenses{$srcfile};
             tag 'inconsistent-appstream-metadata-license', $srcfile,
               "($seen != $wanted)"
-              unless $seen eq $wanted;
+              unless $seen eq $wanted or $info->name eq 'lintian';
         }
         foreach my $srcfile (sort keys %file_coverage) {
             my $i = $file_coverage{$srcfile};
