@@ -229,7 +229,7 @@ sub remove {
 
 =item remove_async(ASYNC_LOOP)
 
-Starts an asynchronious removal of the unpacked parts of the package in the lab.
+Starts an asynchronous removal of the unpacked parts of the package in the lab.
 
 The method will return a L<Future>, which will be "done" once the entry has been removed.
 
