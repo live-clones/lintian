@@ -132,7 +132,7 @@ isnt($testcase->{type}, 'yes', 'Native type not yes.');
 
 is($testcase->{'output_format'}, 'EWI', 'Output format is EWI');
 
-is($testcase->{options}, '-I -E', 'Correct lintian options');
+is($testcase->{options}, undef, 'No extra lintian options');
 
 is(
     $testcase->{'dh_compat_level'},
