@@ -1,1 +1,1 @@
-W: files-package-contains-python-header-in-incorrect-directory: package-contains-python-header-in-incorrect-directory usr/include/python3.7/bad.h
+E: files-package-contains-python-header-in-incorrect-directory: package-contains-python-header-in-incorrect-directory usr/include/python3.7/bad.h

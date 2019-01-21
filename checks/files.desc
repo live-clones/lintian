@@ -900,7 +900,7 @@ Info: The package contains a file that looks like output from the Python
  be shipped in the final binary package.
 
 Tag: package-contains-python-header-in-incorrect-directory
-Severity: normal
+Severity: serious
 Certainty: certain
 Info: This package ships a header file such as
  <tt>/usr/include/python3.7/foo/bar.h</tt>. However,
