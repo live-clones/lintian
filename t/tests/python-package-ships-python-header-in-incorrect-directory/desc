@@ -1,8 +1,0 @@
-Testname: python-package-ships-python-header-in-incorrect-directory
-Sequence: 6000
-Section: python
-Version: 1.0
-Description: Check for packages installing headers incorrectly
-Test-For:
- python-foo-but-no-python3-foo
- package-ships-python-header-in-incorrect-directory
