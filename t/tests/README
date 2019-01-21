@@ -47,7 +47,6 @@ The desc file is formatted like a Debian control file.  The required
 fields are:
 
     Testname: <should match the directory name>
-    Sequence: <sequence number>
     Version: <version number of package>
     Description: <description of the purpose of the test>
 
@@ -293,7 +292,10 @@ You can also run groups of tests defined by selectors such as:
     tag: runs all tests that relate to the named tag
     check: runs all tests that relate to the named Lintian check
     script: runs the named code quality script
+    harness: runs only the internal harness tests
 
+The internal harness tests cannot be disabled. They make sure that
+essential components behave as expected.
 
 The runner provides basic output for each test. For greater detail.
 please look at ./debian/test-out/${suite}/${testname}/log.

@@ -43,6 +43,8 @@ W: scripts-maintainer-general: maintainer-script-should-not-parse-etc-passwd-or-
 W: scripts-maintainer-general: maintainer-script-should-not-parse-etc-passwd-or-group postinst:239 'fgrep bad /etc/group'
 W: scripts-maintainer-general: maintainer-script-should-not-use-deprecated-chown-usage postinst:14 'chown root.root'
 W: scripts-maintainer-general: maintainer-script-should-not-use-deprecated-chown-usage postinst:84 'chown -R root.root'
+W: scripts-maintainer-general: maintainer-script-should-not-use-dpkg-maintscript-helper postinst:190
+W: scripts-maintainer-general: maintainer-script-should-not-use-dpkg-maintscript-helper postinst:196
 W: scripts-maintainer-general: maintainer-script-should-not-use-fc-cache postinst:95
 W: scripts-maintainer-general: maintainer-script-should-not-use-gconftool postinst:155
 W: scripts-maintainer-general: maintainer-script-should-not-use-gconftool postinst:44

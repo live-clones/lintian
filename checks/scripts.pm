@@ -88,17 +88,21 @@ my $LEADINSTR
   = '(?:(?:^|[`&;(|{])\s*|(?:if|then|do|while|!)\s+|env(?:\s+[[:alnum:]_]+=(?:\S+|\"[^"]*\"|\'[^\']*\'))*\s+)';
 my $LEADIN = qr/$LEADINSTR/;
 
+# date --date="Sun, 26 Apr 2015 10:28:05 +0800" +%s"
+# <https://lists.debian.org/debian-announce/2015/msg00001.html>
+my $OLDSTABLE_RELEASE = 1_430_015_285;
+
 #forbidden command in maintainer scripts
 my $BAD_MAINT_CMD = Lintian::Data->new(
     'scripts/maintainer-script-bad-command',
     qr/\s*\~\~/,
     sub {
-        my @sliptline = split(/\s*\~\~/, $_[1], 4);
-        if(scalar(@sliptline) != 4) {
+        my @sliptline = split(/\s*\~\~/, $_[1], 5);
+        if(scalar(@sliptline) != 5) {
             internal_error(
                 'Syntax error in scripts/maintainer-script-bad-command:', $.);
         }
-        my ($incat,$exceptinpackage,$inscript,$regexp) = @sliptline;
+        my ($incat,$inauto,$exceptinpackage,$inscript,$regexp) = @sliptline;
         $regexp =~ s/\$[{]LEADIN[}]/$LEADINSTR/;
    # allow empty $exceptinpackage and set it synonymous to check in all package
         $exceptinpackage
@@ -113,6 +117,7 @@ my $BAD_MAINT_CMD = Lintian::Data->new(
         }
         return {
             # use not not to normalize boolean
+            'ignore_automatically_added' => not(not(strip($inauto))),
             'in_cat_string' => not(not(strip($incat))),
             'in_package' => qr/$exceptinpackage/x,
             'in_script' => qr/$inscript/x,
@@ -253,6 +258,10 @@ sub run {
       = grep {m,^usr/share/fonts/X11/.*\.(?:afm|pcf|pfa|pfb)(?:\.gz)?$,}
       $info->sorted_index;
 
+    my %old_versions
+      = map { $_->Version => 1 } grep {$_->Timestamp < $OLDSTABLE_RELEASE }
+      ($info->changelog ? $info->changelog->data : ());
+
     for my $filename (sort keys %{$info->scripts}) {
         my $interpreter = $info->scripts->{$filename}{interpreter};
         my $calls_env = $info->scripts->{$filename}{calls_env};
@@ -284,8 +293,8 @@ sub run {
 
         # As a special-exception, Policy 10.4 states that Perl scripts must use
         # /usr/bin/perl directly and not via /usr/bin/env, etc.
-        tag 'wrong-path-for-interpreter', $filename,
-          '(#!/usr/bin/env perl != /usr/bin/perl)'
+        script_tag(bad_interpreter_tag_name('/usr/bin/env perl'),
+            $filename, '(#!/usr/bin/env perl != /usr/bin/perl)')
           if defined $calls_env and $interpreter eq 'perl';
 
         # Skip files that have the #! line, but are not executable and
@@ -382,8 +391,8 @@ sub run {
         if ($data) {
             my $expected = $data->[0] . '/' . $base;
             unless ($interpreter eq $expected or defined $calls_env) {
-                script_tag('wrong-path-for-interpreter', $filename,
-                    "(#!$interpreter != $expected)");
+                script_tag(bad_interpreter_tag_name($expected),
+                    $filename, "(#!$interpreter != $expected)");
             }
         } elsif ($interpreter =~ m,/usr/local/,) {
             script_tag('interpreter-in-usr-local', $filename,"#!$interpreter");
@@ -580,9 +589,9 @@ sub run {
               "#!$interpreter";
         } elsif ($base eq 'sh' or $base eq 'bash' or $base eq 'perl') {
             my $expected = ($INTERPRETERS->value($base))->[0] . '/' . $base;
-            tag 'wrong-path-for-interpreter', "#!$interpreter != $expected",
-              "(control/$file)"
-              unless ($interpreter eq $expected);
+            tag bad_interpreter_tag_name($expected),
+              "#!$interpreter != $expected","(control/$file)"
+              unless $interpreter eq $expected;
         } elsif ($file eq 'config') {
             tag 'forbidden-config-interpreter', "#!$interpreter";
         } elsif ($file eq 'postrm') {
@@ -591,7 +600,7 @@ sub run {
             my $data = $INTERPRETERS->value($base);
             my $expected = $data->[0] . '/' . $base;
             unless ($interpreter eq $expected) {
-                tag 'wrong-path-for-interpreter',
+                tag bad_interpreter_tag_name($expected),
                   "#!$interpreter != $expected",
                   "(control/$file)";
             }
@@ -656,6 +665,7 @@ sub run {
         my $cat_string = '';
 
         my $previous_line = '';
+        my $in_automatic_section = 0;
         while (<$fd>) {
             if ($. == 1 && $shellscript && m,/$base\s*.*\s-\w*e\w*\b,) {
                 $saw_bange = 1;
@@ -670,7 +680,10 @@ sub run {
                 $dh_cmd =~ s/:++$//g;
                 tag 'debhelper-autoscript-in-maintainer-scripts', $dh_cmd
                   if not $dh_cmd_substs{$dh_cmd}++;
+                $in_automatic_section = 1;
             }
+            $in_automatic_section = 0
+              if $_ eq '# End automatically added section';
 
             next if m,^\s*$,;  # skip empty lines
             next if m,^\s*\#,; # skip comment lines
@@ -894,7 +907,8 @@ sub run {
                     }
                 }
                 if (!$cat_string) {
-                    generic_check_bad_command($_, $file, $., $pkg, 0);
+                    generic_check_bad_command($_, $file, $., $pkg, 0,
+                        $in_automatic_section);
 
                     if (m,/usr/share/debconf/confmodule,) {
                         $saw_debconf = 1;
@@ -985,7 +999,19 @@ sub run {
                 }
             }
 
-            generic_check_bad_command($_, $file, $., $pkg, 1);
+            generic_check_bad_command($_, $file, $., $pkg, 1,
+                $in_automatic_section);
+
+            for my $ver (sort keys %old_versions) {
+                next if $ver =~ /^\d+$/;
+                #<<< no perltidy
+                if (m,$LEADIN(?:/usr/bin/)?dpkg\s+--compare-versions\s+.*\b\Q$ver\E\b,) {
+                    tag 'maintainer-script-supports-ancient-package-version',
+                      "$file:$.", $ver;
+                    last;
+                }
+                #>>>
+            }
 
             if (m,$LEADIN(?:/usr/sbin/)?update-inetd\s,) {
                 tag 'maintainer-script-has-invalid-update-inetd-options',
@@ -1224,12 +1250,16 @@ sub run {
 
 # try generic bad maintainer script command tagging
 sub generic_check_bad_command {
-    my ($line, $file, $lineno, $pkg, $findincatstring) = @_;
+    my ($line, $file, $lineno, $pkg, $findincatstring, $in_automatic_section)
+      = @_;
     # try generic bad maintainer script command tagging
   BAD_CMD:
     foreach my $bad_cmd_tag ($BAD_MAINT_CMD->all) {
         my $bad_cmd_data = $BAD_MAINT_CMD->value($bad_cmd_tag);
         my $inscript = $bad_cmd_data->{'in_script'};
+        next
+          if $in_automatic_section
+          and $bad_cmd_data->{'ignore_automatically_added'};
         my $incat;
         if ($file !~ m{$inscript}) {
             next BAD_CMD;
@@ -1403,6 +1433,15 @@ sub _parse_versioned_interpreters {
                 "for versioned interpreter $interpreter"));
     }
     return [$path, $deprel, qr/^$regex$/, $deptmp, \@versions];
+}
+
+sub bad_interpreter_tag_name {
+    my ($interpreter) = @_;
+
+    return 'incorrect-path-for-interpreter'
+      if $interpreter eq '/usr/bin/env perl';
+
+    return 'wrong-path-for-interpreter';
 }
 
 1;

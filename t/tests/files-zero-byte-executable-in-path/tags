@@ -1,0 +1,3 @@
+E: files-zero-byte-executable-in-path: zero-byte-executable-in-path usr/bin/empty-executable
+W: files-zero-byte-executable-in-path: binary-without-manpage usr/bin/empty-executable
+W: files-zero-byte-executable-in-path: executable-not-elf-or-script usr/bin/empty-executable

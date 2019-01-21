@@ -208,6 +208,39 @@ Certainty: certain
 Info: The interpreter used by this example script is installed at another
  location on Debian systems. Normally the path should be updated to match
  the Debian location.
+ .
+ Note that, as a particular exception, Debian Policy § 10.4 states that
+ Perl scripts should use <tt>/usr/bin/perl</tt> directly and not
+ <tt>/usr/bin/env</tt>, etc.
+
+Tag: incorrect-path-for-interpreter
+Severity: normal
+Certainty: certain
+Info: The interpreter you used is installed at another location on Debian
+ systems.
+ .
+ Whilst the script may work, it is in violation of Debian Policy. This
+ may have been caused by usrmerge.
+ .
+ Note that, as a particular exception, Debian Policy § 10.4 states that
+ Perl scripts should use <tt>/usr/bin/perl</tt> directly and not
+ <tt>/usr/bin/env</tt>, etc.
+Ref: policy 10.4, https://wiki.debian.org/UsrMerge
+
+Tag: example-incorrect-path-for-interpreter
+Severity: wishlist
+Certainty: certain
+Info: The interpreter used by this example script is installed at another
+ location on Debian systems. Normally the path should be updated to match
+ the Debian location.
+ .
+ Whilst the script may work, it is in violation of Debian Policy. This
+ may have been caused by usrmerge.
+ .
+ Note that, as a particular exception, Debian Policy § 10.4 states that
+ Perl scripts should use <tt>/usr/bin/perl</tt> directly and not
+ <tt>/usr/bin/env</tt>, etc.
+Ref: policy 10.4, https://wiki.debian.org/UsrMerge
 
 Tag: gawk-script-but-no-gawk-dep
 Severity: important
@@ -373,6 +406,17 @@ Info: The maintainer script seems to call <tt>start-stop-daemon</tt>
  scripts using <tt>invoke-rc.d</tt> rather than directly in maintainer
  scripts.
 Ref: policy 9.3.3.2
+
+Tag: maintainer-script-should-not-use-dpkg-maintscript-helper
+Severity: minor
+Certainty: certain
+Info: The maintainer script seems to make manual calls to the
+ <tt>dpkg-maintscript-helper(1)</tt> utility.
+ .
+ Please use <tt>package.maintscript</tt> files instead; the
+ <tt>dh_installdeb(1)</tt> tool will do some basic validation of some of
+ the commands listed in this file to catch common mistakes.
+Ref: dpkg-maintscript-helper(1), dh_installdeb(1)
 
 Tag: trailing-slash-for-dpkg-maintscript-helper-symlink_to_dir
 Severity: serious
@@ -953,3 +997,13 @@ Info: The maintainer script appears to reference one of the
  scripts and not by maintainer scripts themselves.
  .
  Please remove the references to this variable.
+
+Tag: maintainer-script-supports-ancient-package-version
+Severity: minor
+Certainty: possible
+Experimental: yes
+Info: The maintainer script appears to detect the specified version
+ which was prepared prior to the release of oldstable.
+ .
+ Please remove the code/check for this version as such upgrades
+ (etc.) are unsupported.

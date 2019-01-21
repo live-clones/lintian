@@ -668,6 +668,16 @@ Info: The documentation directory for this package contains an empty
  documentation without being examples. In those cases, please add an
  override.
 
+Tag: zero-byte-executable-in-path
+Severity: important
+Certainty: certain
+Info: This package installs the specified empty executable file to the
+ system's PATH. These files do not do anything and produce no error
+ message when run.
+ .
+ This was likely caused by an error in the package build process.
+Ref: #919341
+
 Tag: override-file-in-wrong-location
 Severity: important
 Certainty: certain
@@ -2061,3 +2071,22 @@ Info: The listed file or maintainer script appears to reference
  also indicate that the package will not work correctly outside of the
  maintainer's own system.
 Ref: https://reproducible-builds.org/, dpkg-genbuildinfo(1)
+
+Tag: package-contains-real-file-outside-usr
+Severity: pedantic
+Certainty: certain
+Experimental: yes
+Info: The package installs the listed file to a directory in / (the
+ filesystem root) rather than to the corresponding directory inside /usr.
+ .
+ Debian requires systems to mount /usr prior to invoking init (using an
+ initramfs if necessary) so any executables, libraries, or other files
+ placed in / for use by early portions of the system init no longer need
+ to do so.
+ .
+ Moving a file from / to /usr (especially an executable in /bin or
+ /sbin) will often require a compatibility symlink to the new location,
+ as other software may invoke it by absolute path.
+ .
+ A compatibility symlink to the corresponding file in /usr will not
+ trigger this warning but a symlink to anywhere else will.

@@ -52,7 +52,6 @@ BEGIN {
 }
 
 use Capture::Tiny qw(capture_merged);
-use Carp qw(confess);
 use Cwd qw(getcwd);
 use File::Basename qw(basename);
 use File::Spec::Functions qw(abs2rel rel2abs splitpath catpath);
@@ -61,21 +60,36 @@ use File::Copy;
 use File::stat;
 use List::Util qw(max min any);
 use Path::Tiny;
+use Test::More;
 use Try::Tiny;
+
+use Lintian::Command qw(safe_qx);
 
 use Test::Lintian::ConfigFile qw(read_config);
 use Test::Lintian::Helper qw(rfc822date);
 use Test::Lintian::Hooks
   qw(find_missing_prerequisites run_lintian sed_hook sort_lines calibrate);
 use Test::Lintian::Prepare qw(early_logpath);
+use Test::StagedFileProducer;
 
 use constant SPACE => q{ };
 use constant EMPTY => q{};
 use constant YES => q{yes};
 use constant NO => q{no};
 
+=head1 FUNCTIONS
+
+=over 4
+
+=item logged_runner(RUN_PATH)
+
+Starts the generic test runner for the test located in RUN_PATH
+and logs the output.
+
+=cut
+
 sub logged_runner {
-    my ($test_state, $runpath)= @_;
+    my ($runpath) = @_;
 
     my $betterlogpath = "$runpath/log";
     my $log;
@@ -84,7 +98,7 @@ sub logged_runner {
     $log = capture_merged {
         try {
             # call runner
-            runner($test_state, $runpath)
+            runner($runpath, $betterlogpath)
 
         }
         catch {
@@ -108,26 +122,36 @@ sub logged_runner {
 
     # print log and die on error
     if ($error) {
-        $test_state->dump_log($log)
-          if length $log && $ENV{'DUMP_LOGS'}//NO eq YES;
+        print $log if length $log && $ENV{'DUMP_LOGS'}//NO eq YES;
         die "Runner died for $runpath: $error";
     }
 
     return;
 }
 
-# generic_runner
-#
-# Runs the test called $test assumed to be located in $testset/$dir/$test/.
-#
+=item runner(RUN_PATH)
+
+This routine provides the basic structure for all runners and runs the
+test located in RUN_PATH. Different objects are than instantiated
+depending on the suite the test case belongs to. Those classes contain
+the code that varies from suite to suite.
+
+=cut
+
 sub runner {
-    my ($test_state, $runpath, $outpath)= @_;
+    my ($runpath, @exclude)= @_;
+
+    # set a predictable locale
+    $ENV{'LC_ALL'} = 'C';
+
+    # many tests create files via debian/rules
+    umask(022);
 
     say EMPTY;
     say '------- Runner starts here -------';
 
     # bail out if runpath does not exist
-    die "Cannot find test directory $runpath." unless -d $runpath;
+    BAIL_OUT("Cannot find test directory $runpath.") unless -d $runpath;
 
     # announce location
     say "Running test at $runpath.";
@@ -136,9 +160,36 @@ sub runner {
     my $runfiles = "$runpath/files";
     my $files = read_config($runfiles);
 
+    # get file age
+    my $spec_epoch = stat($runfiles)->mtime;
+
     # read dynamic case data
     my $rundescpath = "$runpath/$files->{test_specification}";
     my $testcase = read_config($rundescpath);
+
+    # get data age
+    $spec_epoch = max(stat($rundescpath)->mtime, $spec_epoch);
+    say 'Specification is from : '. rfc822date($spec_epoch);
+
+    say EMPTY;
+
+    # age of runner executable
+    my $runner_epoch = $ENV{'RUNNER_EPOCH'}//time;
+    say 'Runner modified on   : '. rfc822date($runner_epoch);
+
+    # age of harness executable
+    my $harness_epoch = $ENV{'HARNESS_EPOCH'}//time;
+    say 'Harness modified on  : '. rfc822date($harness_epoch);
+
+    # calculate rebuild threshold
+    my $threshold= max($spec_epoch, $runner_epoch, $harness_epoch);
+    say 'Rebuild threshold is : '. rfc822date($threshold);
+
+    say EMPTY;
+
+    # age of Lintian executable
+    my $lintian_epoch = $ENV{'LINTIAN_EPOCH'}//time;
+    say 'Lintian modified on  : '. rfc822date($lintian_epoch);
 
     # name of encapsulating directory should be that of test
     my $expected_name = path($runpath)->basename;
@@ -146,29 +197,25 @@ sub runner {
 "Test in $runpath is called $testcase->{testname} instead of $expected_name"
       if ($testcase->{testname} ne $expected_name);
 
-    my $suite = $testcase->{suite};
-    my $testname = $testcase->{testname};
-
     # skip test if marked
     my $skipfile = "$runpath/skip";
     if (-f $skipfile) {
         my $reason = path($skipfile)->slurp_utf8 || 'No reason given';
         say "Skipping test: $reason";
-        $test_state->skip_test("(disabled) $reason");
-        return;
+        plan skip_all => "(disabled) $reason";
     }
 
     # skip if missing prerequisites
     my $missing = find_missing_prerequisites($testcase);
     if (length $missing) {
         say "Missing prerequisites: $missing";
-        $test_state->skip_test("Missing prerequisites: $missing");
-        return;
+        plan skip_all => $missing;
     }
 
     # check test architectures
     unless (length $ENV{'DEB_HOST_ARCH'}) {
-        die 'DEB_HOST_ARCH is not set.';
+        say 'DEB_HOST_ARCH is not set.';
+        BAIL_OUT('DEB_HOST_ARCH is not set.');
     }
     my $platforms = $testcase->{test_architectures};
     if ($platforms ne 'any') {
@@ -178,186 +225,218 @@ sub runner {
         } @wildcards;
         unless (any { $_ == 0 } @matches) {
             say 'Architecture mismatch';
-            $test_state->skip_test('Architecture mismatch');
-            return;
+            plan skip_all => 'Architecture mismatch';
         }
     }
+
+    # set the testing plan
+    plan tests => 1;
+
+    my $producer = Test::StagedFileProducer->new(path => $runpath);
+    $producer->exclude(@exclude);
 
     # get lintian subject
     die 'Could not get subject of Lintian examination.'
       unless exists $testcase->{build_product};
     my $subject = "$runpath/$testcase->{build_product}";
 
-    $test_state->progress('building');
+    # build subject for lintian examination
+    $producer->add_stage(
+        products => [$subject],
+        minimum_epoch => $threshold,
+        build =>sub {
+            if(exists $testcase->{build_command}) {
+                my $command= "cd $runpath; $testcase->{build_command}";
+                die "$command failed" if system($command);
+            }
 
-    if (exists $testcase->{build_command}) {
-        my $command= "cd $runpath; $testcase->{build_command}";
-        if (system($command)) {
-            die "$command failed.";
-        }
-    }
-
-    die 'Build was unsuccessful.'
-      unless -f $subject;
-
-    my $pkg = $testcase->{source};
+            die 'Build was unsuccessful.'
+              unless -f $subject;
+        });
 
     # run lintian
     my $actual = "$runpath/tags.actual";
-    my $includepath = "$runpath/lintian-include-dir";
-    $ENV{'LINTIAN_COVERAGE'}
-      .= ",-db,./cover_db-$testcase->{suite}-$testcase->{testname}"
-      if exists $ENV{'LINTIAN_COVERAGE'};
-    run_lintian($runpath, $subject, $testcase->{profile}, $includepath,
-        $testcase->{options}, $actual);
+    $producer->add_stage(
+        products => [$actual],
+        minimum_epoch => $lintian_epoch,
+        build =>sub {
+            my $includepath = "$runpath/lintian-include-dir";
+            $ENV{'LINTIAN_COVERAGE'}
+              .= ",-db,./cover_db-$testcase->{suite}-$testcase->{testname}"
+              if exists $ENV{'LINTIAN_COVERAGE'};
+            run_lintian($runpath, $subject, $testcase->{profile}, $includepath,
+                $testcase->{options}, $actual);
 
-    # Run a sed-script if it exists, for tests that have slightly variable
-    # output
+        });
+
+    # run a sed-script if it exists
     my $parsed = "$runpath/tags.actual.parsed";
-    my $script = "$runpath/post_test";
-    if(-f $script) {
-        sed_hook($script, $actual, $parsed);
-    } else {
-        die"Could not copy actual tags $actual to $parsed: $!"
-          if(system('cp', '-p', $actual, $parsed));
-    }
+    $producer->add_stage(
+        products => [$parsed],
+        build =>sub {
+            my $script = "$runpath/post_test";
+            if(-f $script) {
+                sed_hook($script, $actual, $parsed);
+            } else {
+                die"Could not copy actual tags $actual to $parsed: $!"
+                  if(system('cp', '-p', $actual, $parsed));
+            }
+        });
 
     # sort tags
     my $sorted = "$runpath/tags.actual.parsed.sorted";
-    if($testcase->{sort} eq 'yes') {
-        sort_lines($parsed, $sorted);
-    } else {
-        die"Could not copy parsed tags $actual to $sorted: $!"
-          if(system('cp', '-p', $parsed, $sorted));
+    $producer->add_stage(
+        products => [$sorted],
+        build =>sub {
+            if($testcase->{sort} eq 'yes') {
+                sort_lines($parsed, $sorted);
+            } else {
+                die"Could not copy parsed tags $parsed to $sorted: $!"
+                  if(system('cp', '-p', $parsed, $sorted));
+            }
+        });
+
+    my $specified = "$runpath/tags";
+
+    # calibrate tags; may write to $sorted
+    my $calibrated = "$runpath/tags.specified.calibrated";
+    $producer->add_stage(
+        products => [$calibrated],
+        build =>sub {
+            my $script = "$runpath/test_calibration";
+            if(-x $script) {
+                calibrate($script, $sorted, $specified, $calibrated);
+            } else {
+                die"Could not copy expected tags $specified to $calibrated: $!"
+                  if(system('cp', '-p', $specified, $calibrated));
+            }
+        });
+
+    say EMPTY;
+    $producer->run(verbose => 1);
+
+    my @errors = check_result($testcase, $sorted, $calibrated, $specified);
+    my $okay = !scalar @errors;
+
+    if($testcase->{todo} eq 'yes') {
+      TODO: {
+            local $TODO = 'Test marked as TODO.';
+            ok($okay, 'Lintian tags match for test marked TODO.');
+        }
+        return;
     }
 
-    my $expected = "$runpath/tags";
-    my $origexp = $expected;
+    diag @errors;
 
-    my $calibrated = "$runpath/expected.$pkg.calibrated";
-    $test_state->progress('test_calibration hook');
-    $expected
-      = calibrate("$runpath/test_calibration",$sorted, $expected, $calibrated);
+    # for uncalibrated tests, use tags in spec path for cut & paste
+    $calibrated = "$testcase->{spec_path}/tags"
+      unless -e "$runpath/test_calibration";
 
-    check_result($test_state, $testcase, $expected,$sorted, $origexp);
+    diag safe_qx('diff', '-u', $calibrated, $sorted)
+      unless $okay;
+    ok($okay, "Lintian tags match for $testcase->{testname}");
 
     return;
 }
 
+=item check_result(DESC, ACTUAL, EXPECTED, ORIGINAL)
+
+This routine checks if the EXPECTED tags match the calibrated ACTUAL for the
+test described by DESC. For some additional checks, also need the ORIGINAL
+tags before calibration. Returns a list of errors, if there are any.
+
+=cut
+
 sub check_result {
-    my ($test_state, $testcase, $expected, $actual, $origexp) = @_;
-    # Compare the output to the expected tags.
-    my $testok = !system('cmp', '-s', $expected, $actual);
+    my ($testcase, $actual, $expected, $originaltags) = @_;
 
-    if (not $testok) {
-        if ($testcase->{'todo'} eq 'yes') {
-            $test_state->pass_todo_test('failed but marked as TODO');
-            return;
-        } else {
-            $expected = "$testcase->{spec_path}/tags"
-              if $expected eq $origexp;
-            $test_state->diff_files($expected, $actual);
-            $test_state->fail_test('output differs!');
-            return;
+    # fail if tags do not match
+    return 'Tags do not match' if (compare($actual, $expected) != 0);
+
+    # no further investigation on unusual output formats
+    return unless $testcase->{output_format} eq 'EWI';
+
+    # check all Test-For tags were seen and all Test-Against tags were not
+    my %test_for = map { $_ => 1 } split SPACE, $testcase->{test_for}//EMPTY;
+    my %test_against =map { $_ => 1 } split SPACE,
+      $testcase->{test_against}//EMPTY;
+
+    return unless (%test_for || %test_against);
+
+    my @errors;
+
+    # look through actual tags
+    my @lines = path($actual)->lines_utf8;
+    chomp @lines;
+    foreach my $line (@lines) {
+
+        # no tag available
+        next if $line =~ /^N: /;
+
+        # some traversal tests create packages that are skipped
+        next if $line =~ /tainted/ && $line =~ /skipping/;
+
+        # look for "EWI: package[ type]: tag"
+        my ($tag) = $line =~ qr/^.: \S+(?: (?:changes|source|udeb))?: (\S+)/o;
+        unless (length $tag) {
+            push(@errors, "Invalid line: $line");
+            next;
         }
+
+        # check if tag was blacklisted
+        if ($test_against{$tag}) {
+
+            # warn just once about a tag
+            delete $test_against{$tag};
+            push(@errors, "Tag $tag seen but listed in Test-Against");
+        }
+
+        # mark as seen
+        delete $test_for{$tag};
     }
 
-    unless ($testcase) {
-        $test_state->pass_test;
-        return;
-    }
+    # check if test was calibrated
+    if (defined $originaltags && compare($originaltags, $expected) != 0) {
 
-    # Check the output for invalid lines.  Also verify that all Test-For tags
-    # are seen and all Test-Against tags are not.  Skip this part of the test
-    # if neither Test-For nor Test-Against are set and Sort is also not set,
-    # since in that case we probably have non-standard output.
-    my %test_for = map { $_ => 1 } split(' ', $testcase->{'test_for'}//'');
-    my %test_against
-      = map { $_ => 1 } split(' ', $testcase->{'test_against'}//'');
-    if (    not %test_for
-        and not %test_against
-        and $testcase->{'output_format'} ne 'EWI') {
-        if ($testcase->{'todo'} eq 'yes') {
-            $test_state->fail_test('marked as TODO but succeeded');
-            return;
-        } else {
-            $test_state->pass_test;
-            return;
-        }
-    } else {
-        my $okay = 1;
-        my @msgs;
-        open(my $etags, '<', $actual);
-        while (<$etags>) {
-            next if m/^N: /;
-            # Some of the traversal tests creates packages that are
-            # skipped; accept that in the output
-            next if m/tainted/o && m/skipping/o;
-            # Looks for "$code: $package[ $type]: $tag"
-            if (not /^.: \S+(?: (?:changes|source|udeb))?: (\S+)/o) {
-                chomp;
-                push(@msgs, "Invalid line: $_");
-                $okay = 0;
+        # tags lost in calibration; like binaries-hardening on some arches
+        my %lost = %test_for;
+
+        # parse original output
+        my @origlines = path($originaltags)->lines_utf8;
+        chomp @origlines;
+        foreach my $line (@origlines) {
+
+            # not tag in this line
+            next if $line =~ /^N: /;
+
+            # some traversal tests create packages that are skipped
+            next if $line =~ /tainted/ && $line =~ /skipping/;
+
+            # look for "EWI: package[ type]: tag"
+            my ($tag)= $line =~ /^.: \S+(?: (?:changes|source|udeb))?: (\S+)/o;
+            unless (length $tag) {
+                push(@errors, "Invalid line: $line");
                 next;
             }
-            my $tag = $1;
-            if ($test_against{$tag}) {
-                push(@msgs, "Tag $tag seen but listed in Test-Against");
-                $okay = 0;
-                # Warn only once about each "test-against" tag
-                delete $test_against{$tag};
-            }
+            delete $lost{$tag};
+        }
+
+        # remove tags that were calibrated out
+        foreach my $tag (keys %lost) {
             delete $test_for{$tag};
         }
-        close($etags);
-        if (%test_for) {
-            if ($origexp && $origexp ne $expected) {
-                # Test has been calibrated, check if some of the
-                # "Test-For" has been calibrated out.  (Happens with
-                # binaries-hardening on some architectures).
-                open(my $oe, '<', $expected);
-                my %cp_tf = %test_for;
-                while (<$oe>) {
-                    next if m/^N: /;
-                    # Some of the traversal tests creates packages that are
-                    # skipped; accept that in the output
-                    next if m/tainted/o && m/skipping/o;
-                    if (not /^.: \S+(?: (?:changes|source|udeb))?: (\S+)/o) {
-                        chomp;
-                        push(@msgs, "Invalid line: $_");
-                        $okay = 0;
-                        next;
-                    }
-                    delete $cp_tf{$1};
-                }
-                close($oe);
-                # Remove tags that has been calibrated out.
-                foreach my $tag (keys %cp_tf) {
-                    delete $test_for{$tag};
-                }
-            }
-            for my $tag (sort keys %test_for) {
-                push(@msgs, "Tag $tag listed in Test-For but not found");
-                $okay = 0;
-            }
-        }
-        if ($okay) {
-            if ($testcase->{'todo'} eq 'yes') {
-                $test_state->fail_test('marked as TODO but succeeded');
-                return;
-            }
-            $test_state->pass_test;
-            return;
-        } elsif ($testcase->{'todo'} eq 'yes') {
-            $test_state->pass_todo_test(join("\n", @msgs));
-            return;
-        } else {
-            $test_state->fail_test(join("\n", @msgs));
-            return;
-        }
     }
-    confess("Assertion: This should be unreachable\n");
+
+    # check if the test missed any tags
+    for my $tag (sort keys %test_for) {
+        push(@errors, "Tag $tag listed in Test-For but not found");
+    }
+
+    return @errors;
 }
 
-1;
+=back
 
+=cut
+
+1;

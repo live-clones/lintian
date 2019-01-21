@@ -2,5 +2,6 @@
 
 set -e
 
-echo "E: runtests-calibration source: lintian-says-goodbye" >> "$2"
+# a previous version appended here but it breaks repeat runs
+echo "E: runtests-calibration source: lintian-says-goodbye" > "$2"
 echo "E: runtests-calibration source: lintian-says-goodbye" > "$3"

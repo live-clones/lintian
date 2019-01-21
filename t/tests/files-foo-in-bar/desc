@@ -24,6 +24,7 @@ Test-For:
  non-standard-toplevel-dir
  package-contains-mime-file-outside-package-dir
  package-contains-xvpics-dir
+ package-contains-real-file-outside-usr
  package-contains-thumbnails-dir
  package-installs-file-to-usr-x11r6
  package-installs-apt-keyring

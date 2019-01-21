@@ -52,11 +52,12 @@ BEGIN {
 use Capture::Tiny qw(capture_merged);
 use Carp;
 use Cwd qw(getcwd);
-use File::Path;
+use File::Basename;
 use File::Find::Rule;
-use File::Temp qw(tempfile);
+use File::Path;
 use File::stat;
 use Path::Tiny;
+use File::Temp qw(tempfile);
 use Text::Template;
 
 use constant NEWLINE => qq{\n};
@@ -238,7 +239,7 @@ sub run_lintian {
         SINGLEQ . join(SINGLEQ . SPACE . SINGLEQ, @customized) . SINGLEQ);
 
     # add file to be examined
-    push(@cmd, $subject);
+    push(@cmd, basename($subject));
 
     # run lintian
     my $command = join(SPACE, @cmd);

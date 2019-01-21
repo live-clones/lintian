@@ -1,4 +1,4 @@
-W: fields-mua source: default-mta-dependency-does-not-specify-mail-transport-agent build-depends: debhelper (>= 12~), default-mta
+W: fields-mua source: default-mta-dependency-does-not-specify-mail-transport-agent build-depends: debhelper (>= 11~), default-mta
 W: fields-mua source: stronger-dependency-implies-weaker fields-mua-bad-1 depends -> recommends default-mta
 W: fields-mua source: stronger-dependency-implies-weaker fields-mua-bad-1 depends -> suggests exim4 | mail-transport-agent
 W: fields-mua source: stronger-dependency-implies-weaker fields-mua-bad-1 pre-depends -> recommends mail-transport-agent

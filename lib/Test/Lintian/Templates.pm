@@ -168,6 +168,8 @@ sub fill_skeleton_templates {
             croak "Cannot find template whitelist '$name' at $whitelistpath"
               unless -f $whitelistpath;
 
+            say EMPTY;
+
             say 'Generate files '
               . ($relative ne DOT ? "in ./$relative " : EMPTY)
               . "from templates using whitelist '$name'.";
@@ -293,6 +295,9 @@ sub fill_template {
         # transfer file permissions from template to generated file
         my $stat = stat($template) or croak "stat $template failed: $!";
         chmod $stat->mode, $generated or croak "chmod $generated failed: $!";
+
+        # set mtime to $threshold
+        path($generated)->touch($threshold);
     }
 
     # delete template

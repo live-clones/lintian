@@ -437,6 +437,10 @@ sub run {
             $has_public_executable = 1;
             tag 'file-name-in-PATH-is-not-ASCII', $file
               if $file->basename !~ m{\A [[:ascii:]]++ \Z}xsm;
+            tag 'zero-byte-executable-in-path', $file
+              if $file->is_regular_file
+              and $file->is_executable
+              and $file->size == 0;
         } elsif (!is_string_utf8_encoded($fname)) {
             tag 'file-name-is-not-valid-UTF-8', $file;
         }
@@ -446,6 +450,11 @@ sub run {
             my $regex = $FNAMES->value($tag);
             tag $tag, $file if $fname =~ m/$regex/;
         }
+
+        tag 'package-contains-real-file-outside-usr', $file
+          if $fname =~ m,^(?:bin|sbin|lib.*)/.+$,
+          and not $file->is_symlink
+          and ($link // '') !~ m,^usr/$fname$,;
 
         if ($file->is_hardlink) {
             my $link_target_dir = $link;

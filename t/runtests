@@ -4,6 +4,7 @@
 # Copyright © 2008 Frank Lichtenheld
 # Copyright © 2008, 2009 Russ Allbery
 # Copyright © 2014 Niels Thykier
+# Copyright © 2018 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -32,15 +33,16 @@ use warnings;
 use autodie;
 use v5.10;
 
-use Cwd();
+use Cwd;
 use File::Spec::Functions qw(abs2rel rel2abs splitpath splitdir);
+use File::stat;
 use Getopt::Long;
+use List::Util qw(max);
 use IO::Async::Channel;
 use IO::Async::Loop;
 use IO::Async::Routine;
+use TAP::Harness;
 use Try::Tiny;
-
-use constant SUITES => qw(scripts changes debs source tests);
 
 BEGIN {
     # whitelist the environment we permit to avoid things that mess up
@@ -64,25 +66,19 @@ BEGIN {
     $ENV{'LINTIAN_TEST_INSTALLED'} = 'no'
       unless exists $ENV{'LINTIAN_TEST_INSTALLED'};
 
+    my $cwd = Cwd::getcwd();
+
     if ($ENV{'LINTIAN_TEST_INSTALLED'} eq 'yes') {
-        $ENV{'LINTIAN_TEST_ROOT'} = '/usr/share/lintian';
         $ENV{'LINTIAN_ROOT'} = '/usr/share/lintian';
         $ENV{'LINTIAN_FRONTEND'} = '/usr/bin/lintian';
     } else {
-        my $cwd = Cwd::getcwd();
-        $ENV{'LINTIAN_TEST_ROOT'} = $cwd;
         $ENV{'LINTIAN_ROOT'} = $cwd;
         $ENV{'LINTIAN_FRONTEND'} = "$cwd/frontend/lintian";
     }
 
-    $ENV{'LINTIAN_DPLINT_FRONTEND'}
-      = "$ENV{'LINTIAN_TEST_ROOT'}/frontend/dplint";
+    $ENV{'LINTIAN_DPLINT_FRONTEND'}= "$ENV{'LINTIAN_ROOT'}/frontend/dplint";
 
-    $ENV{'LC_ALL'} = 'C';
-
-    # Set standard umask because many of the test packages rely on this
-    # when creating files from the debian/rules script.
-    umask(022);
+    $ENV{'LINTIAN_TEST_ROOT'} = $cwd;
 }
 
 use lib "$ENV{'LINTIAN_TEST_ROOT'}/lib";
@@ -90,12 +86,13 @@ use lib "$ENV{'LINTIAN_TEST_ROOT'}/lib";
 use Lintian::Command qw(safe_qx);
 use Lintian::Internal::FrontendUtil qw(default_parallel);
 
-use Test::Lintian::ConfigFile qw(read_config);
-use Test::Lintian::Filter qw(find_selected_lintian_testpaths);
+use Test::Lintian::Filter
+  qw(find_selected_code_quality_scripts find_selected_lintian_testpaths);
 use Test::Lintian::Helper
   qw(rfc822date get_host_architecture get_latest_policy get_recommended_debhelper_version);
 use Test::Lintian::Prepare qw(logged_prepare);
 use Test::Lintian::Run qw(logged_runner);
+use Test::ScriptAge qw(perl_modification_epoch our_modification_epoch);
 use Test::State;
 
 use constant SPACE => q{ };
@@ -135,7 +132,7 @@ unless (
 }
 
 # check number of arguments
-die('Please use -h for usage information. Thank you!')
+die('Please use -h for usage information.')
   if @ARGV < 2 || @ARGV > 3;
 
 # get arguments
@@ -149,12 +146,7 @@ $testset = rel2abs($testset) // die("Cannot find $testset: $!");
 die("Test output directory $outpath not set") unless -d $outpath;
 $outpath = rel2abs($outpath) // die("Cannot find $outpath: $!");
 
-my @TESTS;
 my $ACTIVE_JOBS = 0;
-
-my ($tag, %suites);
-
-$ENV{HARNESS_EPOCH} = (stat($0))[9];
 
 my $output_is_tty = -t STDOUT;
 
@@ -211,6 +203,31 @@ $ENV{'DEFAULT_DEBHELPER_COMPAT'} = get_recommended_debhelper_version();
 say
 "Using compat level $ENV{'DEFAULT_DEBHELPER_COMPAT'} as a default for packages built with debhelper.";
 
+# get harness date, including templates, skeletons and whitelists
+my @harnessparts
+  = ('t/helpers', 't/runners', 't/templates', 't/skeletons', 't/whitelists');
+my @harnessfiles
+  = map { File::Find::Rule->file->in("$ENV{'LINTIAN_TEST_ROOT'}/$_") }
+  @harnessparts;
+my $harness_files_epoch
+  = max(map { -e $_ ? stat($_)->mtime : time } @harnessfiles);
+$ENV{'HARNESS_EPOCH'}
+  = max(our_modification_epoch, perl_modification_epoch, $harness_files_epoch);
+say 'Harness modified on '. rfc822date($ENV{'HARNESS_EPOCH'});
+
+# get lintian date
+my @lintianparts = (
+    'checks', 'collection', 'commands', 'data',
+    'frontend', 'profiles', 'vendors', 'lib/Lintian'
+);
+my @lintianfiles
+  = map { File::Find::Rule->file->in("$ENV{'LINTIAN_ROOT'}/$_") }@lintianparts;
+push(@lintianfiles, $ENV{'LINTIAN_FRONTEND'});
+push(@lintianfiles, $ENV{'LINTIAN_DPLINT_FRONTEND'});
+$ENV{'LINTIAN_EPOCH'}
+  = max(map { -e $_ ? stat($_)->mtime : time } @lintianfiles);
+say 'Lintian modified on '. rfc822date($ENV{'LINTIAN_EPOCH'});
+
 say EMPTY;
 
 # print environment
@@ -222,154 +239,100 @@ say EMPTY;
 
 my $status = 0;
 
-# Tests that were skipped and why
-# - $suite => $testname => $reason
+# tests that were skipped and why
 my %skipped;
-# Tests that failed
+# tests that failed
 my @failed;
 
-# If we don't run any tests, we'll want to warn that we couldn't find
-# anything.
-my $tests_run = 0;
+my $harness = TAP::Harness->new({
+    jobs => $numjobs,
+    lib => ["$ENV{'LINTIAN_TEST_ROOT'}/lib"],
+    color => 1,
+});
+
+my @runscripts;
+
+# add code quality scripts
+push(@runscripts, find_selected_code_quality_scripts($testset, $onlyrun));
+
+# always add internal harness tests
+my @internalscripts
+  = sort File::Find::Rule->file()->name('*.t')->in("$testset/harness");
+push(@runscripts, @internalscripts);
 
 # find test paths
 my @testpaths = find_selected_lintian_testpaths($testset, $onlyrun);
 
-@TESTS = map { read_desc("$_/desc") } @testpaths;
+# prepare output directories
+say 'Preparing ' . scalar @testpaths . ' work directories.'
+  if @testpaths;
 
-if ($onlyrun && $onlyrun =~ s/^tag://) {
-    $tag = $onlyrun;
-    # clear onlyrun to avoid find a "single" test.
-    $onlyrun = '';
-} elsif ($onlyrun && $onlyrun =~ m/^suite:(.++)/) {
-    my $list = $1;
-    %suites = ();
-    foreach my $s (split m/\s*+,\s*+/, $list) {
-        $suites{$s} = 1;
-    }
-    # clear singletest to avoid find a "single" test.
-    $onlyrun = '';
-} else {
-    # run / check all of them
-    foreach my $s (SUITES) {
-        $suites{$s} = 1;
-    }
-}
+my @prepqueue = map { abs2rel($_) } @testpaths;
 
-if (!$tag) {
-    run_prove_tests();
-}
-
-if (@TESTS) {
+if (@prepqueue) {
     for (0..$numjobs-1) {
-        create_child($IO_LOOP, \@TESTS)
+        create_preparation_child($IO_LOOP, \@prepqueue)
           or last;
     }
 
     $IO_LOOP->run;
 }
 
-print_test_summary();
+say "Preparation failed: $_" for @failed;
+exit 1 if scalar @failed;
+
+say EMPTY;
+
+# these are the generated tests
+my @workpaths = map { rel2abs(abs2rel($_, $testset), $outpath) } @testpaths;
+
+# add the scripts in generated tests to be run
+my @workscripts
+  = map { File::Find::Rule->file->name('*.t')->in($_) } @workpaths;
+push(@runscripts, @workscripts);
+
+# make all paths relative
+@runscripts = map { abs2rel($_) } @runscripts;
+
+# run scripts through harness
+my $aggregator= $harness->runtests(@runscripts);
+
+unless ($aggregator->all_passed) {
+    exit 1 unless $keep_going;
+    $status = 1;
+}
+
+# give a hint if not enough tests were run
+unless (scalar @runscripts + scalar @testpaths - scalar @internalscripts
+    || $onlyrun eq 'harness:') {
+    quick_hint($onlyrun);
+    exit 1;
+}
 
 exit $status;
 
+# program is done
+
 sub print_test_summary {
-    if (!$tests_run) {
-        if ($onlyrun) {
-            print "W: No tests run, did you specify a valid test name?\n";
-        } elsif ($tag) {
-            print "I: No tests found for that tag.\n";
-        } else {
-            print
-              "E: No tests run, did you specify a valid testset directory?\n";
-        }
-    } else {
-        if (%skipped) {
-            print "\nSkipped/disabled tests:\n";
-            for my $suite (SUITES) {
-                if (exists($skipped{$suite})) {
-                    print "  [$suite]\n";
-                    for my $testname (sort(keys(%{ $skipped{$suite} }))) {
-                        my $reason = $skipped{$suite}{$testname};
-                        print "    $testname: $reason\n";
-                    }
-                }
-            }
-        }
-        if (my $number = @failed) {
-            print "\nFailed tests ($number)\n";
-            for my $test (@failed) {
-                print "    $test\n";
-            }
+
+    if (%skipped) {
+        print "\nSkipped/disabled tests:\n";
+        for my $label (sort keys %skipped) {
+            my $reason = $skipped{$label};
+            print "    $label: $reason\n";
         }
     }
+    if (my $number = @failed) {
+        print "\nFailed tests ($number)\n";
+        for my $test (@failed) {
+            print "    $test\n";
+        }
+    }
+
     return;
 }
 
-sub read_desc {
-    my ($path) = @_;
-
-    my $testcase = read_config($path);
-
-    # needed for suite calculation
-    my $depth = scalar splitdir((splitpath($testset))[1]);
-
-    # calculate suite from path
-    my $suite = (splitdir((splitpath($path))[1]))[$depth];
-
-    # add suite to data
-    $testcase->{suite} = $suite;
-
-    my $defaults = read_config("$testset/defaults/desc");
-
-    foreach my $key (keys %{$defaults}) {
-        $testcase->{$key} = $defaults->{$key}
-          unless exists $testcase->{$key};
-    }
-
-    return $testcase;
-}
-
-sub run_prove_tests {
-    my @do_run;
-    if ($onlyrun) {
-        for my $part (split(m/,/, $onlyrun)) {
-            my $script = "$testset/scripts/${part}.t";
-            if (-f $script) {
-                push(@do_run, $script);
-            } elsif (-d "$testset/scripts/${part}") {
-                push(@do_run, "$testset/scripts/${part}");
-            }
-        }
-    } elsif ($suites{'scripts'}) {
-        unless (-d "$testset/scripts") {
-            die "cannot find $testset/scripts: $!";
-        }
-        @do_run = ("$testset/scripts");
-    }
-    if (@do_run) {
-        my $jobs = $numjobs;
-        # Devel::Cover + one cover_db + multiple processes is a recipe
-        # for corruptions.  Force $jobs to 1 if we are running under
-        # coverage.
-        $jobs = 1 if $ENV{'LINTIAN_COVERAGE'};
-        my @prove_cmd
-          = ('prove', '-j', $jobs, '-r', '-I', "$ENV{LINTIAN_TEST_ROOT}/lib");
-
-        print "Test scripts:\n";
-        if (system(@prove_cmd, @do_run) != 0) {
-            exit 1 unless $keep_going;
-            push(@failed, "suite:scripts [Try: prove -lr -j$numjobs t]");
-            $status = 1;
-        }
-        $tests_run++;
-
-        print "\n";
-    }
-    return;
-}
-
-sub create_child {
+sub create_preparation_child {
     my ($loop, $tests) = @_;
     my ($child_in_ch, $child_out_ch, $routine);
     my $start_test = shift(@{$tests});
@@ -390,20 +353,27 @@ sub create_child {
 
         code => sub {
             $0 = 'Test worker - idle';
-            while (my $testcase = $child_in_ch->recv) {
-                my $state = Test::State->new($testcase, $child_out_ch);
-                my $suite = $testcase->{'suite'};
-                my $testname = $testcase->{testname};
+            while (my $metadata = $child_in_ch->recv) {
+                my $state = Test::State->new($metadata, $child_out_ch);
 
-                my $specpath = "$testset/$suite/$testname";
-                my $runpath = "$outpath/$suite/$testname";
+                my $specpath = ${$metadata};
 
-                $0 = "Test worker - processing ${suite}::${testname}";
+                # get suite
+                my $suite = (split('/', $specpath))[1];
+
+                # get runpath
+                my $relative = abs2rel($specpath, $testset);
+                my $runpath = rel2abs($relative, $outpath);
+
+                # get process label
+                my $label = $specpath;
+
+                $0 = "Test worker - processing $label";
 
                 try {
                     logged_prepare($specpath, $runpath, $suite,
                         $testset,$force_rebuild);
-                    logged_runner($state, $runpath, $outpath);
+                    $state->done;
                 }
                 catch {
                     if (my $err = $_) {
@@ -412,11 +382,6 @@ sub create_child {
                 };
 
                 $0 = 'Test worker - idle';
-
-                #                my $testname = $ref->{'testname'};
-                #                print STDERR "$child_no: $suite::$testname\n";
-                # Can only send references
-                #                $child_out_ch->send( $ref );
             }
             return;
         },
@@ -434,7 +399,77 @@ sub create_child {
 
     $loop->add($routine);
     $ACTIVE_JOBS++;
-    $child_in_ch->send($start_test);
+    $child_in_ch->send(\$start_test);
+
+    $child_out_ch->configure(
+        'on_recv' => sub {
+            my (undef, $from_child) = @_;
+            handle_msg_from_child($child_in_ch, $tests, @{$from_child});
+            return;
+        },
+    );
+    return 1;
+}
+
+sub create_runner_child {
+    my ($loop, $tests) = @_;
+    my ($child_in_ch, $child_out_ch, $routine);
+    my $start_test = shift(@{$tests});
+
+    # If there are no more tests, don't spawn a routine for it
+    # Usually happens when only running a single thread.
+    return if not defined($start_test);
+
+    # files don't close properly when numjobs > 1, this is a kludge
+    $ENV{PERL_PATH_TINY_NO_FLOCK} = 1;
+
+    $child_in_ch = IO::Async::Channel->new;
+    $child_out_ch  = IO::Async::Channel->new;
+
+    $routine = IO::Async::Routine->new(
+        channels_in  => [$child_in_ch],
+        channels_out => [$child_out_ch],
+
+        code => sub {
+            $0 = 'Test worker - idle';
+            while (my $metadata = $child_in_ch->recv) {
+                my $state = Test::State->new($metadata, $child_out_ch);
+
+                my $runpath = ${$metadata};
+
+                # get process label
+                my $label = $runpath;
+
+                $0 = "Test worker - processing $label";
+
+                try {
+                    logged_runner($state, rel2abs($runpath));
+                }
+                catch {
+                    if (my $err = $_) {
+                        $state->test_error($err);
+                    }
+                };
+
+                $0 = 'Test worker - idle';
+            }
+            return;
+        },
+
+        on_finish => sub {
+            $ACTIVE_JOBS--;
+            if ($ACTIVE_JOBS < 1) {
+                print "Stopping loop, no more active workers\n"
+                  if $verbose >= 2;
+                $loop->stop;
+            }
+            return;
+        },
+    );
+
+    $loop->add($routine);
+    $ACTIVE_JOBS++;
+    $child_in_ch->send(\$start_test);
 
     $child_out_ch->configure(
         'on_recv' => sub {
@@ -449,110 +484,116 @@ sub create_child {
 my $partial_line = 0;  ## no critic (it is reachable)
 
 sub handle_msg_from_child {
-    my ($child_in_ch, $test_queue, $msg_type, $test_metadata, @payload) = @_;
-    my $suite = $test_metadata->{'suite'};
-    my $testname = $test_metadata->{'testname'};
+    my ($child_in_ch, $queue, $msg_type, $metadata, @payload) = @_;
 
+    my $path = ${$metadata};
+
+    # get process label
+    my $label = $path;
+
+    # debug mode, show everything
     if ($verbose >= 3) {
         my @dmsg = map { $_ // '<undef>' } @payload;
-        print
-          "PROTO-MSG [DEBUG] ${msg_type} -- ${suite}::${testname} [@dmsg]\n";
+        say "PROTO-MSG [DEBUG] $msg_type -- $label [@dmsg]";
     }
 
-    if (   $msg_type eq 'pass'
-        or $msg_type eq 'skip'
-        or $msg_type eq 'fail'
-        or $msg_type eq 'error'
-        or $msg_type eq 'pass-todo') {
-        my $is_problem = ($msg_type eq 'fail' or $msg_type eq 'error');
-        my ($info_msg) = @payload;
-        my ($test, $final_msg, $show_msg);
+    if ($msg_type eq 'announce') {
+        my ($result, $info_msg) = @payload;
 
-        if ($is_problem) {
-            push(@failed, "${suite}::${testname}");
-            if (not $keep_going) {
-                # Empty the queue, so no further jobs are started
-                $#{$test_queue} = -1;
-            }
-            $status = 1 if not $status;
-        } elsif ($msg_type eq 'skip') {
-            $skipped{$suite}{$testname} = $payload[0];
+        my $short;
+
+        if ($result eq 'pass') {
+            $short = '.';
+        } elsif ($result eq 'skip') {
+            $short = 'S';
+        } elsif ($result eq 'pass-todo') {
+            $short = 'T';
         }
-        $final_msg = "${msg_type} ${suite}::${testname}";
-        $final_msg .= ": ${info_msg}" if defined($info_msg);
-        if (not $output_is_tty and not $verbose) {
-            if ($msg_type eq 'pass') {
-                $final_msg = '.';
-            } elsif ($msg_type eq 'skip') {
-                $final_msg = 'S';
-            } elsif ($msg_type eq 'pass-todo') {
-                $final_msg = 'T';
-            } else {
-                $show_msg = 1;
-            }
-        } else {
-            $show_msg = 1;
-        }
-        if ($show_msg) {
-            $final_msg .= "\n";
-            print "\n" if $partial_line;
-            $partial_line = 0;
-        } else {
+
+        unless ($verbose || $output_is_tty || !defined $short) {
             $partial_line++;
             if ($partial_line > 79) {
-                $final_msg .= "\n";
+                $short .= NEWLINE;
                 $partial_line = 0;
             }
+            print $short;
+            return;
         }
-        print $final_msg;
 
-        $test = shift(@{$test_queue});
+        print NEWLINE if $partial_line;
+        $partial_line = 0;
 
-        $tests_run++;
-        if (defined($test)) {
-            $child_in_ch->send($test);
-        } else {
-            $child_in_ch->close;
-        }
+        my $long = "$result $label";
+        $long .= ": $info_msg" if defined $info_msg;
+        say $long;
+        return;
+
+    } elsif ($msg_type eq 'mark-skipped') {
+        my ($reason) = @payload;
+        $skipped{$label} = $reason;
+        return;
+
+    } elsif ($msg_type eq 'mark-failed') {
+        push(@failed, $label);
+        return;
+
     } elsif ($msg_type eq 'diff-files') {
-        my ($original, $actual) = @payload;
+        my ($expected, $actual) = @payload;
         print "\n" if $partial_line;
         $partial_line = 0;
-        print "${suite}::${testname}: diff -u ${original} ${actual}\n";
-        print safe_qx('diff', '-u', $original, $actual);
-    } elsif ($msg_type eq 'dump-file') {
-        my ($log_file) = @payload;
-        my $prefix = "${suite}::${testname}: ";
-        print "\n" if $partial_line;
-        $partial_line = 0;
-        handle_dump_log($prefix, $log_file);
-    } elsif ($msg_type eq 'progress') {
-        my ($new_phase) = @payload;
-        print "${suite}::${testname} is now in phase: ${new_phase}\n"
-          if $verbose;
-    } elsif ($msg_type eq 'log-msg') {
-        my ($verbosity, $msg) = @payload;
-        if ($verbosity <= $verbose) {
-            my $level = 'INFO';
-            $level = 'DEBUG' if $verbosity > 1;
-            print "INFO-MSG [$level] ${suite}::${testname}: $msg\n";
-        }
-    }
-    return;
-}
+        say "$label: diff -u $expected $actual";
+        print safe_qx('diff', '-u', $expected, $actual);
+        return;
 
-sub handle_dump_log{
-    my ($prefix, $logf) = @_;
-    no autodie qw(open);
-    if (open(my $log, '<', $logf)){
-        print "${prefix}---- START BUILD LOG\n";
-        print "${prefix}$_" while (<$log>);
-        print "${prefix}---- END BUILD LOG\n";
-        close($log);
-    } else {
-        print "!!! Could not dump $logf: $!";
+    } elsif ($msg_type eq 'dump-file') {
+        my ($path) = @payload;
+        my $prefix = "$label: ";
+        print "\n" if $partial_line;
+        $partial_line = 0;
+        no autodie qw(open);
+        if (open(my $log, '<', $path)){
+            say "$label: ---- START BUILD LOG";
+            print "$label: $_" while (<$log>);
+            say "$label: ---- END BUILD LOG";
+            close($log);
+            return;
+        }
+        say "!!! Could not dump $path: $!";
+        return;
+
+    } elsif ($msg_type eq 'progress') {
+        my ($phase) = @payload;
+        say "$label is now in phase: $phase"
+          if $verbose;
+        return;
+
+    } elsif ($msg_type eq 'log-msg') {
+        my ($level, $msg) = @payload;
+        my $indicator = $level > 1 ? 'DEBUG' : 'INFO';
+        say "INFO-MSG [$indicator] $label: $msg"
+          if $level <= $verbose;
+        return;
+
+    } elsif ($msg_type eq 'stop-others') {
+        # empty queue; start no other jobs
+        $#{$queue} = -1
+          unless $keep_going;
+        $status = 1 unless $status;
+        return;
+
+    } elsif ($msg_type eq 'done') {
+        while (scalar @{$queue}) {
+            my $job = shift @{$queue};
+            next unless defined $job;
+
+            $child_in_ch->send(\$job);
+            return;
+        }
+        $child_in_ch->close;
+        return;
     }
-    return 1;
+
+    die "ERROR: Unknown message type '$msg_type' from $label";
 }
 
 sub usage {
@@ -592,6 +633,25 @@ Usage: $0 [options] [-j [<jobs>]] <testset-directory> <testing-directory> [<test
 Test artifacts are cached in <testing-directory> and will be reused if
 deemed "up-to-date".  This cache can greatly reduce the run time of the
 test suite.
+END
+    return;
+}
+
+sub quick_hint {
+    my ($selection) = @_;
+    print <<"END";
+
+Could not determine what you meant by:
+
+    $selection
+
+To select your tests, please use an appropriate argument with a
+selector like:
+
+    'suite:', 'test:', 'check:', 'tag:', or 'script:'
+
+You can also use 'harness:', which runs only the internal tests
+for the harness.
 END
     return;
 }

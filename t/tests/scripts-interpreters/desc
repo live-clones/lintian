@@ -5,6 +5,7 @@ Options: --pedantic -I -E
 Test-For:
  csh-considered-harmful
  dependency-on-python-version-marked-for-end-of-life
+ example-incorrect-path-for-interpreter
  example-interpreter-in-usr-local
  example-interpreter-not-absolute
  example-script-uses-bin-env
@@ -12,6 +13,7 @@ Test-For:
  example-shell-script-fails-syntax-check
  example-unusual-interpreter
  example-wrong-path-for-interpreter
+ incorrect-path-for-interpreter
  interpreter-in-usr-local
  interpreter-not-absolute
  missing-dep-for-interpreter
