@@ -939,7 +939,7 @@ sub parse_lintian_log {
             $source = $package;
             $source_version = $version;
             if (not defined($state_data)) {
-                warn "Source package ${member_id} not found in state cache!\n";
+                warn "Source package ${member_id} not found in state-cache!\n";
                 $unknown_member_id{$member_id} = 1;
             }
         } elsif (defined($state_data)) {
