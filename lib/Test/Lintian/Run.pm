@@ -74,6 +74,7 @@ use Test::StagedFileProducer;
 
 use constant SPACE => q{ };
 use constant EMPTY => q{};
+use constant NEWLINE => qq{\n};
 use constant YES => q{yes};
 use constant NO => q{no};
 
@@ -263,12 +264,35 @@ sub runner {
         products => [$actual],
         minimum_epoch => $lintian_epoch,
         build =>sub {
-            my $includepath = "$runpath/lintian-include-dir";
             $ENV{'LINTIAN_COVERAGE'}.= ",-db,./cover_db-$testcase->{testname}"
               if exists $ENV{'LINTIAN_COVERAGE'};
-            run_lintian($runpath, $subject, $testcase->{profile}, $includepath,
-                $testcase->{options}, $actual);
 
+            my $lintian = read_config("$runpath/lintian-command");
+            my $command
+              = "cd $runpath; $ENV{'LINTIAN_FRONTEND'} $lintian->{options} $lintian->{subject}";
+            my ($output, $status) = capture_merged { system($command); };
+            $status = ($status >> 8) & 255;
+
+            my @lines = split(NEWLINE, $output);
+
+            if (exists $ENV{LINTIAN_COVERAGE}) {
+                # Devel::Cover causes deep recursion warnings.
+                @lines = grep {
+                    !m{^Deep [ ] recursion [ ] on [ ] subroutine [ ]
+                   "[^"]+" [ ] at [ ] .*B/Deparse.pm [ ] line [ ]
+                   \d+}xsm
+                } @lines;
+            }
+
+            unless ($status == 0 || $status == 1) {
+                unshift(@lines, "$command exited with status $status");
+                die join(NEWLINE, @lines);
+            }
+
+            # do not forget the final newline, or sorting will fail
+            my $contents
+              = scalar @lines ? join(NEWLINE, @lines) . NEWLINE : EMPTY;
+            path($actual)->spew($contents);
         });
 
     # run a sed-script if it exists
