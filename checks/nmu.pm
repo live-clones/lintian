@@ -49,7 +49,7 @@ sub run {
 
     # Get some data from the changelog file.
     my ($entry) = $info->changelog->data;
-    my $uploader = canonicalize($entry->Maintainer);
+    my $uploader = canonicalize($entry->Maintainer // '');
     my $changes = $entry->Changes;
     $changes =~ s/^(\s*\n)+//;
     my $firstline = first { /^\s*\*/ } split('\n', $changes);
