@@ -104,6 +104,9 @@ sub run {
         my @uploaders = map { canonicalize($_) } split />\K\s*,\s*/,$uploaders;
         $upload_is_nmu = 0 if any { $_ eq $uploader } @uploaders;
     }
+    # If the changelog entry is missing a maintainer (eg. "-- <blank>")
+    # assume it's an upload still work in progress.
+    $upload_is_nmu = 0 if not $uploader;
 
     if ($maintainer =~ /packages\@qa.debian.org/) {
         tag 'orphaned-package-should-not-have-uploaders'
