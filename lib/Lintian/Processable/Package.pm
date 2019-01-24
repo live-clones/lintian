@@ -77,6 +77,8 @@ sub new {
     if (not defined $pkg_type) {
         if ($file =~ m/\.dsc$/o) {
             $pkg_type = 'source';
+        } elsif ($file =~ m/\.buildinfo$/o) {
+            $pkg_type = 'buildinfo';
         } elsif ($file =~ m/\.deb$/o) {
             $pkg_type = 'binary';
         } elsif ($file =~ m/\.udeb$/o) {

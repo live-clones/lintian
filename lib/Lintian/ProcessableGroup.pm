@@ -123,7 +123,9 @@ sub _init_group_from_file {
             exit 2;
         }
 
-        if ($file !~ /\.u?deb$/o and $file !~ m/\.dsc$/o) {
+        if (    $file !~ /\.u?deb$/o
+            and $file !~ m/\.dsc$/o
+            and $file !~ m/\.buildinfo$/o) {
             # Some file we do not care about (at least not here).
             next;
         }
@@ -213,7 +215,7 @@ sub get_processables {
     my @result;
     if (defined $type){
         # We only want $type
-        if ($type eq 'changes' or $type eq 'source'){
+        if ($type eq 'changes' or $type eq 'source' or $type eq 'buildinfo'){
             return $self->{$type}  if defined $self->{$type};
         }
         return values %{$self->{$type}}
@@ -221,12 +223,12 @@ sub get_processables {
           or $type eq 'udeb';
         internal_error("Unknown type of processable: $type");
     }
-    # We return changes, dsc, debs and udebs in that order,
+    # We return changes, dsc, buildinfo, debs and udebs in that order,
     # because that is the order lintian used to process a changes
     # file (modulo debs<->udebs ordering).
     #
     # Also correctness of other parts rely on this order.
-    foreach my $type (qw(changes source)){
+    foreach my $type (qw(changes source buildinfo)){
         push @result, $self->{$type} if (exists $self->{$type});
     }
     foreach my $type (qw(binary udeb)){
@@ -244,7 +246,9 @@ Removes $proc from $group
 sub remove_processable {
     my ($self, $proc) = @_;
     my $pkg_type = $proc->pkg_type;
-    if ($pkg_type eq 'source' or $pkg_type eq 'changes'){
+    if (   $pkg_type eq 'source'
+        or $pkg_type eq 'changes'
+        or $pkg_type eq 'buildinfo'){
         delete $self->{$pkg_type};
     } elsif (defined $self->{$pkg_type}) {
         my $phash = $self->{$pkg_type};
