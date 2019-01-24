@@ -491,7 +491,8 @@ sub _parse_dep5 {
             my $wanted = $file_licenses{$srcfile};
             tag 'inconsistent-appstream-metadata-license', $srcfile,
               "($seen != $wanted)"
-              unless $seen eq $wanted or $info->name eq 'lintian';
+              unless $seen eq $wanted
+              or $info->name eq 'lintian';
         }
         foreach my $srcfile (sort keys %file_coverage) {
             my $i = $file_coverage{$srcfile};
