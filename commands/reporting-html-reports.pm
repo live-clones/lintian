@@ -107,6 +107,11 @@ my (%statistics, %tag_statistics);
 #                            xref      => 'rra@debian.org.html#gnubg_0.15~20061120-1'
 #             },
 #             tag_info  => $tag_info,  # an instance of Lintian::Tag::Info
+#             archs     => {
+#                            # Architectures we have seen this tag for
+#                            'amd64'   => 1,
+#                            'i386'    => 1,
+#                          },
 #             extra     => 'gnubg-data'
 #           } ] } }
 #
@@ -887,7 +892,7 @@ sub parse_lintian_log {
     # The "last_*" are optimizations to avoid computing the same
     # things over and over again when a package have multiple tags.
     my (%seen, $last_info, $last_maintainer, %unknown_member_id, $info,
-        $last_pi, %map_maint);
+        $last_pi, %map_maint, %arch_map);
     my %expanded_code = (
         E => 'errors',
         W => 'warnings',
@@ -934,7 +939,7 @@ sub parse_lintian_log {
             $source = $package;
             $source_version = $version;
             if (not defined($state_data)) {
-                warn "Source package ${member_id} not found in state cache!\n";
+                warn "Source package ${member_id} not found in state-cache!\n";
                 $unknown_member_id{$member_id} = 1;
             }
         } elsif (defined($state_data)) {
@@ -972,6 +977,14 @@ sub parse_lintian_log {
         } else {
             $extra = '';
         }
+
+        # Store binary architectures
+        my $arch_key = join(':', $package, $type, $version, $tag, $extra);
+        $arch_map{$arch_key}{$arch} = 1
+          unless $arch eq 'all' or $arch eq 'source';
+
+        # Don't duplicate entries if they only differ on architecture
+        next if scalar(keys %{$arch_map{$arch_key}}) > 1;
 
         # Add the tag information to our hashes.  Share the data
         # between the hashes to save space (which means we can't later
@@ -1034,6 +1047,7 @@ sub parse_lintian_log {
                 tag_info     => $tag_info,
                 # extra is unsafe in general, but we already quote it above.
                 extra        => $extra,
+                archs        => $arch_map{$arch_key},
 
                 # Shareable data
                 pkg_info     => {

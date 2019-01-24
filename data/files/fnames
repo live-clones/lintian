@@ -7,6 +7,7 @@ package-contains-file-in-usr-share-hal               ~~ ^usr/share/hal/(.+)$
 package-contains-python-dot-directory                ~~ ^usr/lib/python[^\/]+/(dist|site)-packages/(|.+/)\.[^\/]+/$
 package-contains-python-coverage-file                ~~ (^|/)\.coverage$
 package-contains-python-doctree-file                 ~~ \.doctree(\.gz)?$
+package-contains-python-header-in-incorrect-directory~~ ^usr/include/python3[\d\.]+/.+\.h$
 package-contains-python-hypothesis-example           ~~ /\.hypothesis/examples/[^\)]+/.+
 package-contains-python-tests-in-global-namespace    ~~ ^usr/lib/python[^\/]+/(dist|site)-packages/test_.+\.py$
 package-contains-eslint-config-file                  ~~ \.eslintrc(?:\.[^/]+)?$

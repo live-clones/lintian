@@ -1,0 +1,4 @@
+Testname: source-copyright-inconsistent-appstream-metadata-license
+Version: 1.0
+Test-For:
+ inconsistent-appstream-metadata-license

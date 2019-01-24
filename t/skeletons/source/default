@@ -1,5 +1,5 @@
 Template-Sets:
- debian (source-arch-independent),
+ debian (debian-native),
  . (source-make-builder)
 Fill-Targets:
  dsc.in,

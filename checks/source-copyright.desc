@@ -436,3 +436,12 @@ Info: The package appears to be licensed under a Creative Commons
  .
   https://creativecommons.org/2014/01/07/plaintext-versions-of-creative-commons-4-0-licenses/
 Ref: #903470, #795402
+
+Tag: inconsistent-appstream-metadata-license
+Severity: normal
+Certainty: possible
+Info: The specified AppStream metadata file specifies a
+ <tt>metadata_license</tt> field but this does not match the file#s in
+ <tt>debian/copyright</tt>.
+Ref: https://wiki.debian.org/AppStream/Guidelines,
+ https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/

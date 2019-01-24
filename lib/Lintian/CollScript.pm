@@ -74,6 +74,7 @@ sub new {
         'version' => $header->{'version'},
         'type-table' => {},
         'auto_remove' => 0,
+        'priority' => $header->{'priority'} // 8192,
         'interface' => $header->{'interface'}//'exec',
         '_collect_sub' => undef,
     };
@@ -180,7 +181,7 @@ the "exec" interface (see above).
 
 Lintian::CollScript->mk_ro_accessors(
     qw(name type version auto_remove
-      script_path interface
+      script_path interface priority
       ));
 
 =item needs_info ([COND])

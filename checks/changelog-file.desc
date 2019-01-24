@@ -382,7 +382,7 @@ Info: The given line of the latest changelog entry appears to contain a
  could be expanded to, for example:
  .
   * Switch to debhelper compat 11.
-  * Rules-Requires-Root: no
+  * Set Rules-Requires-Root: no.
 
 Tag: changelog-news-debian-mismatch
 Severity: normal

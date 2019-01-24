@@ -118,9 +118,9 @@ sub check_init_script {
     my $fh = $file->open;
     while (<$fh>) {
         lstrip;
-        if ($. == 1 and m{\A [#]! \s*/lib/init/init-d-script}xsm) {
-            $lsb_source_seen = 1;
-        }
+        $lsb_source_seen = 1
+          if $. == 1
+          and m{\A [#]! \s* (?:/usr/bin/env)? \s* /lib/init/init-d-script}xsm;
         if (m,#.*Default-Start:.*S,) {
             $is_rcs_script = 1;
         }

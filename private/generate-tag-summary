@@ -13,9 +13,7 @@ use lib "$ENV{'LINTIAN_ROOT'}/lib/";
 use Lintian::Command qw(safe_qx);
 
 my $RE = qr{
-    \A [ ]{2,}  XXX: [ ] generate [ ] tag [ ] summary
-    (?:[ ] with [ ] private/generate-tag-summary)?
-    (?:[ ] & [ ] fill [ ] in [ ] with [ ] gbp [ ] dch)? \s* \n \Z
+    WIP
 }xsm;
 my (%added, %removed, %opt);
 

@@ -178,7 +178,10 @@
                         $has_extra = 1;
                         $OUT .= qq(      <ul class="extra">);
                     }
-                    $OUT .= "<li>$info->{extra}</li>";
+                    $OUT .= "<li>$info->{extra}";
+                    my @archs = sort keys %{ $info->{archs} };
+                    $OUT .= " <tt>[" . join(', ', @archs) . "]</tt>" if @archs > 1;
+                    $OUT .= "</li>";
                 }
 
                 $first = 0;

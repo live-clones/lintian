@@ -899,6 +899,21 @@ Info: The package contains a file that looks like output from the Python
  As they are unlikely to be of utility to end-users, these files should not
  be shipped in the final binary package.
 
+Tag: package-contains-python-header-in-incorrect-directory
+Severity: serious
+Certainty: certain
+Info: This package ships a header file such as
+ <tt>/usr/include/python3.7/foo/bar.h</tt>. However,
+ <tt>/usr/include/python3.7</tt> is a symlink to <tt>python3.7m</tt> in
+ <tt>libpython3.7-dev</tt>.
+ .
+ This may result in silent file overwrites or, depending on the unpacking
+ order (if <tt>/usr/include/python3.7</tt> is a directory), separating
+ the headers into two independent trees.
+ .
+ These header files should be shipped in
+ <tt>/usr/include/python3.7m</tt> instead.
+
 Tag: package-installs-python-pycache-dir
 Severity: serious
 Certainty: certain
@@ -2072,10 +2087,9 @@ Info: The listed file or maintainer script appears to reference
  maintainer's own system.
 Ref: https://reproducible-builds.org/, dpkg-genbuildinfo(1)
 
-Tag: package-contains-real-file-outside-usr
-Severity: pedantic
+Tag: package-contains-usr-unmerged-pathnames
+Severity: classification
 Certainty: certain
-Experimental: yes
 Info: The package installs the listed file to a directory in / (the
  filesystem root) rather than to the corresponding directory inside /usr.
  .

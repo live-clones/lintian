@@ -32,6 +32,7 @@ use constant {
 
 use List::MoreUtils qw(any none);
 use Text::Levenshtein qw(distance);
+use XML::Simple qw(:strict);
 
 use Lintian::Relation::Version qw(versions_compare);
 use Lintian::Tags qw(tag);
@@ -303,7 +304,7 @@ sub _parse_dep5 {
         }
     }
 
-    my (@commas_in_files, %file_para_coverage);
+    my (@commas_in_files, %file_para_coverage, %file_licenses);
     my %file_coverage = map { $_ => 0 } get_all_files($info);
     my $i = 0;
     my $current_line = 0;
@@ -369,6 +370,9 @@ sub _parse_dep5 {
                 @commas_in_files = ($i, $files_fname);
             }
 
+            my ($found_license, $full_license, $short_license, @short_licenses)
+              = parse_license($license, $current_line);
+
             # only attempt to evaluate globbing if commas could be legal
             if (not @commas_in_files or $commas_in_files) {
                 my @wildcards = split /[\n\t ]+/, $files;
@@ -392,6 +396,7 @@ sub _parse_dep5 {
                         if (exists($file_coverage{$wc_value})) {
                             $used = 1;
                             $file_coverage{$wildcard} = $current_line;
+                            $file_licenses{$wildcard} = $short_license;
                         }
                     } elsif ($wc_type eq WC_TYPE_DECENDANTS) {
                         my @wlist;
@@ -408,12 +413,14 @@ sub _parse_dep5 {
                         }
                         for my $entry (@wlist) {
                             $file_coverage{$entry->name} = $current_line;
+                            $file_licenses{$entry->name} = $short_license;
                         }
                     } else {
                         for my $srcfile (%file_coverage) {
                             if ($srcfile =~ $wc_value) {
                                 $used = 1;
                                 $file_coverage{$srcfile} = $current_line;
+                                $file_licenses{$srcfile} = $short_license;
                             }
                         }
                     }
@@ -426,8 +433,6 @@ sub _parse_dep5 {
                 }
             }
 
-            my ($found_license, $full_license, $short_license, @short_licenses)
-              = parse_license($license, $current_line);
             check_incomplete_creative_commons_license($short_license,
                 $license, $current_line);
             if (defined($short_license) and $short_license =~ /\s++\|\s++/) {
@@ -474,6 +479,20 @@ sub _parse_dep5 {
           'paragraph at line',
           $lines[$paragraph_no]{$field_name};
     } else {
+        foreach my $srcfile (sort keys %file_licenses) {
+            next unless $srcfile =~ /\.xml$/;
+            my $file = $info->index_resolved_path($srcfile);
+            my $seen = eval {
+                my $xml
+                  = XMLin($file->fs_path, ForceArray => [], KeyAttr => []);
+                lc($xml->{'metadata_license'} // '');
+            };
+            next unless $seen;
+            my $wanted = $file_licenses{$srcfile};
+            tag 'inconsistent-appstream-metadata-license', $srcfile,
+              "($seen != $wanted)"
+              unless $seen eq $wanted or $info->name eq 'lintian';
+        }
         foreach my $srcfile (sort keys %file_coverage) {
             my $i = $file_coverage{$srcfile};
             if ($srcfile =~ '^\.pc/') {
