@@ -109,6 +109,8 @@ our $HARDENING= Lintian::Data->new('binaries/hardening-tags', qr/\s*\|\|\s*/o,
     \&_split_hash);
 our $HARDENED_FUNCTIONS = Lintian::Data->new('binaries/hardened-functions');
 our $LFS_SYMBOLS = Lintian::Data->new('binaries/lfs-symbols');
+our $OBSOLETE_CRYPT_FUNCTIONS
+  = Lintian::Data->new('binaries/obsolete-crypt-functions', qr/\s*\|\|\s*/o);
 
 our $ARCH_32_REGEX;
 
@@ -193,6 +195,13 @@ sub run {
                     $has_lfs = 0;
                 }
             }
+
+            if ($foo eq 'UND' and $OBSOLETE_CRYPT_FUNCTIONS->known($sym)) {
+                # Using an obsolete DES encryption function.
+                my $tag = $OBSOLETE_CRYPT_FUNCTIONS->value($sym);
+                tag $tag, $file;
+            }
+
             next if $is_profiled;
             # According to the binutils documentation[1], the profiling symbol
             # can be named "mcount", "_mcount" or even "__mcount".
