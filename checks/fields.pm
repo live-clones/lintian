@@ -136,7 +136,8 @@ my %VCS_EXTRACT = (
     # cvs rootdir followed by optional module name:
     cvs     => sub { return shift =~ /^(.+?)(?:\s+(\S*))?$/;},
     darcs   => sub { return @_;},
-    hg      => sub { return @_;},
+    # hg uri followed by optional -b branchname
+    hg      => sub { return shift =~ /^(.+?)(?:\s+-b\s+(\S*))?$/;},
     # git uri followed by optional "[subdir]", "-b branchname" etc.
     git     =>
       sub { return shift =~ /^(.+?)(?:\s+\[(\S*)\])?(?:\s+-b\s+(\S*))?$/;},
