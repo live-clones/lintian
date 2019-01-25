@@ -1,8 +1,33 @@
-lintian (2.5.124) UNRELEASED; urgency=medium
+lintian (2.5.124) unstable; urgency=medium
 
-  * WIP
+  * Summary of tag changes:
+    + Added:
+      - obsolete-crypt-alias
+      - obsolete-des-encryption
 
- -- Chris Lamb <lamby@debian.org>  Mon, 21 Jan 2019 21:28:19 +0000
+  [ Chris Lamb ]
+  * Locate and process .buildinfo files if mentioned in a .changes file;
+    previously it was only examined if explicitly referenced. Thanks to
+    James Clarke. (Closes: #920228)
+  * If the changelog entry is missing a maintainer (eg. " -- <missing>"),
+    don't assume that it's an NMU. (Closes: #920184)
+  * Permit "-b" branch specifications in Mercurial Vcs-Hg control fields.
+    (Closes: #920355)
+  * Really fix summary generation code to match the "WIP" entry in the
+    changelog after moving to gbp-dch(1).
+  * Add "could break" as a spelling correction.
+
+  [ Felix Lechner ]
+  * Allow tests to be freely organised such as by check. (MR: !132, !134)
+
+  [ Zack Weinberg ]
+  * Add a check for binaries using obsolete DES encryption.
+    (Closes: #920376)
+
+  [ Paul Wise ]
+  * Add several spelling corrections.
+
+ -- Chris Lamb <lamby@debian.org>  Thu, 24 Jan 2019 23:47:53 +0100
 
 lintian (2.5.123) unstable; urgency=medium
 
