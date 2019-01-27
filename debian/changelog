@@ -18,7 +18,7 @@ lintian (2.5.124) unstable; urgency=medium
   * If the changelog entry is missing a maintainer (eg. " -- <missing>"),
     don't assume that it's an NMU. (Closes: #920184)
   * Permit "-b" branch specifications in Mercurial Vcs-Hg control fields.
-    (Closes: #920355)
+    (Closes: #920314)
   * Really fix summary generation code to match the "WIP" entry in the
     changelog after moving to gbp-dch(1).
   * Add "could break" as a spelling correction.
