@@ -10,5 +10,6 @@ package-contains-python-doctree-file                 ~~ \.doctree(\.gz)?$
 package-contains-python-header-in-incorrect-directory~~ ^usr/include/python3[\d\.]+/.+\.h$
 package-contains-python-hypothesis-example           ~~ /\.hypothesis/examples/[^\)]+/.+
 package-contains-python-tests-in-global-namespace    ~~ ^usr/lib/python[^\/]+/(dist|site)-packages/test_.+\.py$
+package-contains-sass-cache-directory                ~~ /\.sass-cache/
 package-contains-eslint-config-file                  ~~ \.eslintrc(?:\.[^/]+)?$
 package-contains-npm-ignore-file                     ~~ \.npmignore$
