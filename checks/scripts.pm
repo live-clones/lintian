@@ -258,9 +258,11 @@ sub run {
       = grep {m,^usr/share/fonts/X11/.*\.(?:afm|pcf|pfa|pfb)(?:\.gz)?$,}
       $info->sorted_index;
 
-    my %old_versions= map { $_->Version => 1 }
-      grep {$_->Timestamp // 0 < $OLDSTABLE_RELEASE }
-      ($info->changelog ? $info->changelog->data : ());
+    my %old_versions;
+    for my $entry ($info->changelog ? $info->changelog->data : ()) {
+        $old_versions{$entry->Version} = 1
+          if ($entry->Timestamp // $OLDSTABLE_RELEASE) < $OLDSTABLE_RELEASE;
+    }
 
     for my $filename (sort keys %{$info->scripts}) {
         my $interpreter = $info->scripts->{$filename}{interpreter};
