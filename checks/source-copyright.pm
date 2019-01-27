@@ -480,6 +480,7 @@ sub _parse_dep5 {
           $lines[$paragraph_no]{$field_name};
     } else {
         foreach my $srcfile (sort keys %file_licenses) {
+            next if $srcfile =~ '^\.pc/';
             next unless $srcfile =~ /\.xml$/;
             my $file = $info->index_resolved_path($srcfile);
             my $seen = eval {
