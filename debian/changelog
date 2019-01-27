@@ -1283,6 +1283,9 @@ lintian (2.5.93) unstable; urgency=medium
     + [CL] Apply patch from Simon McVittie to don't warn about wrong
       section for "oldlibs".
 
+  * data/python/versions:
+    + [CL] Don't emit old-python-version-field for X-Python3-Version 3.5
+      just yet. (Closes: #903399)
   * data/spelling/corrections:
     + [PW] Add a number of corrections.
 
