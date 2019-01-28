@@ -2379,7 +2379,8 @@ sub get_checks_for_file {
       and $info->field('section', '') ne 'debian-installer'
       and none { $_ eq $source_pkg } qw(base-files dpkg lintian);
 
-    $checks{'file-references-package-build-path'} = $build_path if $build_path;
+    $checks{'file-references-package-build-path'} = $build_path
+      if $build_path =~ m,^/.+,g;
 
     return %checks;
 }
