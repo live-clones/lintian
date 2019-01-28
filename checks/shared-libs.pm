@@ -56,14 +56,12 @@ sub run {
 
     # 1st step: get info about shared libraries installed by this package
     foreach my $file (sort keys %{$objdump}) {
-        next unless exists($objdump->{$file}{SONAME});
-        my $soname = $objdump->{$file}{SONAME}[0];
-        my ($short, $version) = split(' ', format_soname($soname));
-        $SONAME{$file} = $soname;
-        $SONAMES{$short} = $version;
+        $SONAME{$file} = $objdump->{$file}{SONAME}[0]
+          if exists($objdump->{$file}{SONAME});
     }
 
     foreach my $file ($info->sorted_index) {
+        $SONAMES{$1} = 1 if $file =~ m,.*\/lib([^/]+)\.so$,;
         next if not $file->is_file;
         my $fileinfo = $file->file_info;
         if (   $fileinfo =~ m/^[^,]*\bELF\b/
@@ -72,6 +70,7 @@ sub run {
             my $debug = defined $objdump->{$file}{DEBUG};
             if ($debug and $perm & 0111 and $file !~ m/\.so(?:\.|$)/) {
                 # position-independent executable
+                warn $file;
             } else {
                 $sharedobject{$file} = 1;
             }
