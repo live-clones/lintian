@@ -1470,7 +1470,7 @@ sub configure_output {
     if ($opt{'debug'}) {
         $opt{'verbose'} = 1;
         $ENV{'LINTIAN_DEBUG'} = $opt{'debug'};
-        $SIG{ __DIE__ } = sub { Carp::confess( @_ ) };
+        $SIG{__DIE__} = sub { Carp::confess(@_) };
         if ($opt{'debug'} > 2) {
             eval {
                 require Devel::Size;
