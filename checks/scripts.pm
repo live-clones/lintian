@@ -27,6 +27,7 @@ use strict;
 use warnings;
 use autodie;
 
+use POSIX qw(strftime);
 use List::MoreUtils qw(any);
 
 use Lintian::Check qw($known_shells_regex);
@@ -260,8 +261,9 @@ sub run {
 
     my %old_versions;
     for my $entry ($info->changelog ? $info->changelog->data : ()) {
-        $old_versions{$entry->Version} = 1
-          if ($entry->Timestamp // $OLDSTABLE_RELEASE) < $OLDSTABLE_RELEASE;
+        my $timestamp = $entry->Timestamp // $OLDSTABLE_RELEASE;
+        $old_versions{$entry->Version} = $timestamp
+          if $timestamp < $OLDSTABLE_RELEASE;
     }
 
     for my $filename (sort keys %{$info->scripts}) {
@@ -1008,8 +1010,10 @@ sub run {
                 next if $ver =~ /^\d+$/;
                 #<<< no perltidy
                 if (m,$LEADIN(?:/usr/bin/)?dpkg\s+--compare-versions\s+.*\b\Q$ver\E\b,) {
+                    my $date = strftime('%Y-%m-%d', gmtime $old_versions{$ver});
+                    my $epoch = strftime('%Y-%m-%d', gmtime $OLDSTABLE_RELEASE);
                     tag 'maintainer-script-supports-ancient-package-version',
-                      "$file:$.", $ver;
+                      "$file:$.", $ver, "($date < $epoch)";
                     last;
                 }
                 #>>>
