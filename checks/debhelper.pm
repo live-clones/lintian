@@ -69,6 +69,7 @@ sub run {
     my %seen = (
         'python2' => 0,
         'python3' => 0,
+        'runit'   => 0,
     );
     my %overrides;
 
@@ -269,6 +270,7 @@ sub run {
 
     for my $binpkg (@pkgs) {
         next if $info->binary_package_type($binpkg) ne 'deb';
+        my $breaks = $info->binary_relation($binpkg, 'breaks');
         my $strong = $info->binary_relation($binpkg, 'strong');
         my $all = $info->binary_relation($binpkg, 'all');
 
@@ -279,6 +281,10 @@ sub run {
               unless $strong->implies($MISC_DEPENDS);
         }
 
+        tag 'package-uses-dh-runit-but-lacks-breaks-substvar',$binpkg
+          if $seen{'runit'}
+          and $strong->implies('runit')
+          and not $breaks->implies('${runit:Breaks}');
     }
 
     my $compatnan = 0;
