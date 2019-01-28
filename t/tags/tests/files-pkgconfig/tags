@@ -40,3 +40,5 @@ W: pkgconfig-all: pkg-config-unavailable-for-cross-compilation usr/lib/pkgconfig
 W: pkgconfig-all: pkg-config-unavailable-for-cross-compilation usr/lib/pkgconfig/indep-include-arch-2.pc
 W: pkgconfig-all: pkg-config-unavailable-for-cross-compilation usr/lib/pkgconfig/indep-include-arch-3.pc
 W: pkgconfig-all: pkg-config-unavailable-for-cross-compilation usr/lib/pkgconfig/indep-really-bad.pc
+W: pkgconfig-any: pkg-config-references-unknown-shared-library usr/lib/ARCH/pkgconfig/arch-include-arch.pc -ldoesnotexist (line 5)
+W: pkgconfig-any: pkg-config-references-unknown-shared-library usr/lib/ARCH/pkgconfig/arch-include-arch.pc -lotherdoesnotexist (line 5)

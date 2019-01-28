@@ -466,3 +466,16 @@ Info: The symbols file for this package does not contain a
  <tt>* Build-Depends-Package:</tt> line should start in column one of
  the file and not be indented to align with the symbols themselves.
 Ref: deb-symbols(5), dpkg-shlibdeps(1)
+
+Tag: pkg-config-references-unknown-shared-library
+Severity: normal
+Certainty: possible
+Info: The specified <tt>pkg-config(1)</tt> file references a shared
+ object via, for example, <tt>Libs: -llibname</tt> but this package
+ appears to not ship the associated "libname" shared library.
+ .
+ This will result in a linker error and was likely caused by a missing
+ installation step.
+ . 
+ Please ensure that your package ships the "libname.so" shared object.
+Ref: pkg-config(1), #919180
