@@ -249,3 +249,7 @@ echo ${PIUPARTS_DISTRIBUTION_PREV}
 echo $PIUPARTS_IS_AWESOME # good
 
 #DEBHELPER#
+
+# Automatically added by dh_dummy/12
+true `/usr/bin/false-positive "$0"`
+# End automatically added section

@@ -954,7 +954,8 @@ sub run {
                                       (?:\s|;|\Z)}xsm
                         ) {
                             tag 'command-with-path-in-maintainer-script',
-                              "$file:$. $1";
+                              "$file:$. $1"
+                              unless $in_automatic_section;
                         }
                     }
                     my $cmd = $_;
@@ -966,14 +967,16 @@ sub run {
                           \s+ \]}xsm
                     ){
                         tag 'command-with-path-in-maintainer-script',
-                          "$file:$. $1";
+                          "$file:$. $1"
+                          unless $in_automatic_section;
                     }
 
                     $cmd =~ s/\`[^\`]+\`//g;
                     if ($cmd =~ m,$LEADIN(/(?:usr/)?s?bin/[\w.+-]+)(?:\s|;|$),)
                     {
                         tag 'command-with-path-in-maintainer-script',
-                          "$file:$. $1";
+                          "$file:$. $1"
+                          unless $in_automatic_section;
                     }
                 }
             }
