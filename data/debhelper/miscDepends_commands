@@ -21,7 +21,6 @@ dh_linktree
 dh_lisp
 dh_makefont
 dh_nativejava
-dh_nodejs
 dh_octave_make
 dh_phppear
 dh_pidgin
