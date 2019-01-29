@@ -43,7 +43,7 @@ use Exporter qw(import);
 
 BEGIN {
     our @EXPORT_OK = qw(
-      find_selected_code_quality_scripts
+      find_selected_scripts
       find_selected_lintian_testpaths
     );
 }
@@ -58,7 +58,6 @@ use Lintian::Profile;
 use Test::Lintian::ConfigFile qw(read_config);
 
 use constant TAGS => 'tags';
-use constant SCRIPTS => 'scripts';
 
 my @LINTIAN_SUITES = (TAGS);
 
@@ -87,23 +86,22 @@ sub get_suitepath {
     return $suitepath;
 }
 
-=item find_selected_code_quality_scripts(TEST_SET, ONLY_RUN)
+=item find_selected_scripts(SCRIPT_PATH, ONLY_RUN)
 
-Find all test scripts in test set TEST_SET that are related to code
-quality and are identified by the user's selection string ONLY_RUN.
+Find all test scripts in SCRIPT_PATH that are identified by the
+user's selection string ONLY_RUN.
 
 =cut
 
-sub find_selected_code_quality_scripts {
-    my ($testset, $onlyrun) = @_;
+sub find_selected_scripts {
+    my ($scriptpath, $onlyrun) = @_;
 
-    my $suitepath = get_suitepath($testset, SCRIPTS);
     my @found;
 
     my @selectors = split(m/\s*,\s*/, $onlyrun//EMPTY);
 
     if ((any { $_ eq 'suite:scripts' } @selectors) || !length $onlyrun) {
-        @found = File::Find::Rule->file()->name('*.t')->in($suitepath);
+        @found = File::Find::Rule->file()->name('*.t')->in($scriptpath);
     } else {
         foreach my $selector (@selectors) {
             my ($prefix, $lookfor) = ($selector =~ TWO_SEPARATED_BY_COLON);
@@ -112,11 +110,11 @@ sub find_selected_code_quality_scripts {
             $lookfor = $selector unless defined $prefix;
 
             # look for files with the standard suffix
-            my $withsuffix = rel2abs("$lookfor.t", $suitepath);
+            my $withsuffix = rel2abs("$lookfor.t", $scriptpath);
             push(@found, $withsuffix) if (-f $withsuffix);
 
             # look for script with exact name
-            my $exactpath = rel2abs($lookfor, $suitepath);
+            my $exactpath = rel2abs($lookfor, $scriptpath);
             push(@found, $exactpath) if (-f $exactpath);
 
             # also add entire directory if name matches

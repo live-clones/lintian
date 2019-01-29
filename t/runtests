@@ -37,7 +37,7 @@ use Cwd;
 use File::Spec::Functions qw(abs2rel rel2abs splitpath splitdir);
 use File::stat;
 use Getopt::Long;
-use List::Util qw(max);
+use List::Util qw(max uniq);
 use IO::Async::Channel;
 use IO::Async::Loop;
 use IO::Async::Routine;
@@ -87,7 +87,7 @@ use Lintian::Command qw(safe_qx);
 use Lintian::Internal::FrontendUtil qw(default_parallel);
 
 use Test::Lintian::Filter
-  qw(find_selected_code_quality_scripts find_selected_lintian_testpaths);
+  qw(find_selected_scripts find_selected_lintian_testpaths);
 use Test::Lintian::Helper
   qw(rfc822date get_host_architecture get_latest_policy get_recommended_debhelper_version);
 use Test::Lintian::Prepare qw(logged_prepare);
@@ -251,14 +251,18 @@ my $harness = TAP::Harness->new({
 });
 
 my @runscripts;
+my $scriptpath = "$testset/scripts";
 
-# add code quality scripts
-push(@runscripts, find_selected_code_quality_scripts($testset, $onlyrun));
+# add selected scripts
+push(@runscripts, find_selected_scripts($scriptpath, $onlyrun));
 
 # always add internal harness tests
-my @internalscripts
-  = sort File::Find::Rule->file()->name('*.t')->in("$testset/harness");
-push(@runscripts, @internalscripts);
+my @requiredscripts
+  = sort File::Find::Rule->file()->name('*.t')->in("$scriptpath/harness");
+push(@runscripts, @requiredscripts);
+
+# remove any duplicates
+@runscripts = uniq @runscripts;
 
 # find test paths
 my @testpaths = find_selected_lintian_testpaths($testset, $onlyrun);
