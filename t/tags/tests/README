@@ -291,10 +291,10 @@ You can also run groups of tests defined by selectors such as:
     tag: runs all tests that relate to the named tag
     check: runs all tests that relate to the named Lintian check
     script: runs the named code quality script
-    harness: runs only the internal harness tests
+    minimal: runs only required internal tests
 
-The internal harness tests cannot be disabled. They make sure that
-essential components behave as expected.
+The internal tests cannot be disabled. They make sure that essential
+components behave as expected.
 
 The runner provides a detailed log for each test. For details
 please look at ./debian/test-out/${testpath}/log.

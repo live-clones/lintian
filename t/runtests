@@ -307,8 +307,8 @@ unless ($aggregator->all_passed) {
 }
 
 # give a hint if not enough tests were run
-unless (scalar @runscripts + scalar @testpaths - scalar @internalscripts
-    || $onlyrun eq 'harness:') {
+unless (scalar @runscripts + scalar @testpaths - scalar @requiredscripts
+    || $onlyrun eq 'minimal:') {
     quick_hint($onlyrun);
     exit 1;
 }
@@ -651,8 +651,8 @@ selector like:
 
     'suite:', 'test:', 'check:', 'tag:', or 'script:'
 
-You can also use 'harness:', which runs only the internal tests
-for the harness.
+You can also use 'minimal:', which runs only the tests that cannot
+be turned off, such as the internal tests for the harness.
 END
     return;
 }
