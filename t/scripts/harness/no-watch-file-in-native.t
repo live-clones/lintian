@@ -50,7 +50,7 @@ $specpath->mkpath;
 my $desctext =<<EOSTR;
 Testname: $TESTNAME
 Version: 1
-Type: upload-native
+Skeleton: upload-native
 EOSTR
 my $descpath = $specpath->child('desc');
 $descpath->spew($desctext);
