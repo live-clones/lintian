@@ -48,12 +48,12 @@ api-doc:
 runtests: $(neededfiles) $(allchecks) $(allcollect) $(tagfiles) $(testfiles)
 	@echo .... running tests ....
 	mkdir -p "$(TEST_WORK_DIR)"
-	t/runtests -k $(PAR_ARGS) t "$(TEST_WORK_DIR)" $(onlyrun)
+	t/bin/runtests -k $(PAR_ARGS) t "$(TEST_WORK_DIR)" $(onlyrun)
 
 runtests-translation: $(neededfiles) $(allchecks)
 	@echo .... running translation tests ....
 	mkdir -p "$(TEST_WORK_DIR)"
-	t/runtests -k $(PAR_ARGS) t "$(TEST_WORK_DIR)" \
+	t/bin/runtests -k $(PAR_ARGS) t "$(TEST_WORK_DIR)" \
 	  translation-check-descs
 
 # this target is only run manually
