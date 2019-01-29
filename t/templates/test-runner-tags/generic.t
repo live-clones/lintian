@@ -23,7 +23,8 @@ use warnings;
 use autodie;
 
 BEGIN {
-  die('Cannot find LINTIAN_TEST_ROOT') unless length $ENV{'LINTIAN_TEST_ROOT'};
+    die('Cannot find LINTIAN_TEST_ROOT')
+      unless length $ENV{'LINTIAN_TEST_ROOT'};
 }
 
 use Cwd qw(realpath);
