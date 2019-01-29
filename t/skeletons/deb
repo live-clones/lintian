@@ -1,6 +1,7 @@
 Template-Sets:
  . (DEBIAN),
- . (debs-make-builder)
+ . (debs-make-builder),
+ . (test-runner-tags)
 Fill-Targets:
  . (debian-packaging),
  . (make-builder)

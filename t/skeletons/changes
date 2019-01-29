@@ -1,5 +1,6 @@
 Template-Sets:
- . (changes-builder)
+ . (changes-builder),
+ . (test-runner-tags)
 Fill-Targets:
  test.changes,
  . (make-builder)

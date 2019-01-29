@@ -1,6 +1,7 @@
 Template-Sets:
  debian (debian-native),
- . (tests-make-builder)
+ . (tests-make-builder),
+ . (test-runner-tags)
 Fill-Targets:
  debian (debian-packaging),
  orig/debian (debian-packaging),

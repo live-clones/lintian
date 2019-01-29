@@ -2,7 +2,8 @@ Type: non-native
 Template-Sets:
  debian (debian-native),
  debian (debian-extra-non-native),
- . (tests-make-builder)
+ . (tests-make-builder),
+ . (test-runner-tags)
 Fill-Targets:
  debian (debian-packaging),
  orig/debian (debian-packaging),
