@@ -23,7 +23,8 @@ use warnings;
 use autodie;
 
 BEGIN {
-  die('Cannot find LINTIAN_TEST_ROOT') unless length $ENV{'LINTIAN_TEST_ROOT'};
+    die('Cannot find LINTIAN_TEST_ROOT')
+      unless length $ENV{'LINTIAN_TEST_ROOT'};
 }
 
 use File::Basename qw(basename);
@@ -87,14 +88,16 @@ my $match = $testpath->child('tags.match');
 $match->spew($expected->slurp);
 
 # read test defaults
-my $defaultspath = "t/defaults/desc";
+my $defaultspath = 't/defaults/desc';
 my $testcase = read_config($defaultspath);
 
 # test plan
 plan tests => 2;
 
 # check when tags match
-ok(!scalar check_result($testcase, $match, $expected, $expected), 'Same tags match');
+ok(!scalar check_result($testcase, $match, $expected, $expected),
+    'Same tags match');
 
 # check tags do not match
-ok(scalar check_result($testcase, $nomatch, $expected, $expected), 'Different tags do not match');
+ok(scalar check_result($testcase, $nomatch, $expected, $expected),
+    'Different tags do not match');

@@ -23,7 +23,8 @@ use warnings;
 use autodie;
 
 BEGIN {
-  die('Cannot find LINTIAN_TEST_ROOT') unless length $ENV{'LINTIAN_TEST_ROOT'};
+    die('Cannot find LINTIAN_TEST_ROOT')
+      unless length $ENV{'LINTIAN_TEST_ROOT'};
 }
 
 use File::Basename qw(basename);
@@ -62,4 +63,5 @@ logged_prepare($specpath->stringify, $runpath->stringify, 't');
 # test plan
 plan tests => 1;
 
-ok(-f $runpath->child('debian')->child('watch')->stringify, 'Watch file present');
+ok(-f $runpath->child('debian')->child('watch')->stringify,
+    'Watch file present');

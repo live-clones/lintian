@@ -23,7 +23,8 @@ use warnings;
 use autodie;
 
 BEGIN {
-  die('Cannot find LINTIAN_TEST_ROOT') unless length $ENV{'LINTIAN_TEST_ROOT'};
+    die('Cannot find LINTIAN_TEST_ROOT')
+      unless length $ENV{'LINTIAN_TEST_ROOT'};
 }
 
 use File::Basename qw(basename);
@@ -79,29 +80,48 @@ is($testcase->{testname}, $TESTNAME, 'Correct name');
 is($testcase->{version}, '1.0-2', 'Correct version');
 is($testcase->{'upstream_version'}, '1.0', 'Correct upstream version');
 
-is($testcase->{'test_architectures'}, 'any-amd64 any-i386', 'Correct test architectures');
+is(
+    $testcase->{'test_architectures'},
+    'any-amd64 any-i386',
+    'Correct test architectures'
+);
 isnt($testcase->{'test_architectures'}, 'any', 'Correct test architectures');
 foreach my $testarch (@testarches) {
-  my @known = qx{dpkg-architecture --list-known --match-wildcard $testarch};
-  cmp_ok(scalar @known, '>', 1, "Known test architecture $testarch");
+    my @known = qx{dpkg-architecture --list-known --match-wildcard $testarch};
+    cmp_ok(scalar @known, '>', 1, "Known test architecture $testarch");
 }
 
-is($testcase->{host_architecture}, $ENV{'DEB_HOST_ARCH'}, 'Correct host architecture');
-isnt($testcase->{host_architecture}, $testcase->{'test-architectures'}, 'Test and host architectures are different');
+is($testcase->{host_architecture},
+    $ENV{'DEB_HOST_ARCH'}, 'Correct host architecture');
+isnt(
+    $testcase->{host_architecture},
+    $testcase->{'test-architectures'},
+    'Test and host architectures are different'
+);
 
 is($testcase->{package_architecture}, 'any', 'Changed package architecture');
-isnt($testcase->{package_architecture}, 'all', 'Not the default package architecture');
+isnt($testcase->{package_architecture},
+    'all', 'Not the default package architecture');
 
 is($testcase->{skeleton}, 'upload-native', 'Correct skeleton');
 
-is($testcase->{'test_depends'}, 'debhelper (>= 9.20151004~)', 'Correct test dependencies');
+is(
+    $testcase->{'test_depends'},
+    'debhelper (>= 9.20151004~)',
+    'Correct test dependencies'
+);
 
 is($testcase->{'test_for'}, 'shlib-with-non-pic-code', 'Correct Test-For');
 is($testcase->{'test_against'}, undef, 'Correct Test-Against');
 
-is($testcase->{'standards_version'}, $ENV{'POLICY_VERSION'}, 'Correct policy version');
+is($testcase->{'standards_version'},
+    $ENV{'POLICY_VERSION'}, 'Correct policy version');
 
-is($testcase->{date}, rfc822date(max(stat($descpath)->mtime, $ENV{'POLICY_EPOCH'})), 'Correct policy date');
+is(
+    $testcase->{date},
+    rfc822date(max(stat($descpath)->mtime, $ENV{'POLICY_EPOCH'})),
+    'Correct policy date'
+);
 
 is($testcase->{sort}, 'yes', 'Sort boolean was not converted from string');
 
@@ -114,9 +134,25 @@ is($testcase->{'output_format'}, 'EWI', 'Output format is EWI');
 
 is($testcase->{options}, '-I -E', 'Correct lintian options');
 
-is($testcase->{'dh_compat_level'}, $ENV{'DEFAULT_DEBHELPER_COMPAT'}, 'Default debhelper compat level');
+is(
+    $testcase->{'dh_compat_level'},
+    $ENV{'DEFAULT_DEBHELPER_COMPAT'},
+    'Default debhelper compat level'
+);
 
-is($testcase->{description}, 'Test checks related to non-pic code', 'Correct description');
-isnt($testcase->{description}, 'No Description Available', 'Not default description');
+is(
+    $testcase->{description},
+    'Test checks related to non-pic code',
+    'Correct description'
+);
+isnt(
+    $testcase->{description},
+    'No Description Available',
+    'Not default description'
+);
 
-is($testcase->{author}, 'Debian Lintian Maintainers <lintian-maint@debian.org>', 'Default author');
+is(
+    $testcase->{author},
+    'Debian Lintian Maintainers <lintian-maint@debian.org>',
+    'Default author'
+);
