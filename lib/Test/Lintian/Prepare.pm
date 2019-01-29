@@ -238,6 +238,10 @@ sub prepare {
         make_path($runpath);
     }
 
+    # delete old test scripts
+    my @oldrunners = File::Find::Rule->file->name('*.t')->in($runpath);
+    unlink(@oldrunners);
+
     # load skeleton
     if (exists $testcase->{skeleton}) {
 
@@ -318,16 +322,10 @@ sub prepare {
         $testcase, $data_epoch, $runpath, $testset)
       if exists $testcase->{fill_targets};
 
-    # delete previous test scripts
-    my @oldrunners = File::Find::Rule->file->name('*.t')->in($runpath);
-    unlink(@oldrunners);
-
-    # copy test script
-    my $runnerpath = "$testset/runners/$testcase->{runner}";
+    # make sure we installed a runner
+    my $runnerpath = "$runpath/$testcase->{runner}";
     die "No runner found at $runnerpath"
       unless -f $runnerpath;
-    die "Could not install runner: $!"
-      if(system('cp', '-p', $runnerpath, "$runpath/"));
 
     # write the dynamic file names
     my $runfiles = path($runpath)->child('files');
