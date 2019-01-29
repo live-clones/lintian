@@ -70,7 +70,6 @@ sub run {
             my $debug = defined $objdump->{$file}{DEBUG};
             if ($debug and $perm & 0111 and $file !~ m/\.so(?:\.|$)/) {
                 # position-independent executable
-                warn $file;
             } else {
                 $sharedobject{$file} = 1;
             }
