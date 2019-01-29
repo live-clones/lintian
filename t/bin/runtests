@@ -183,7 +183,7 @@ say "Running up to $numjobs tests concurrently"
 
 $ENV{'DUMP_LOGS'} = $dump_logs//NO ? YES : NO;
 
-my $helperpath = "$testset/helpers/bin";
+my $helperpath = "$testset/bin";
 if (-d $helperpath) {
     my $helpers = rel2abs($helperpath)// die("Cannot resolve $helperpath: $!");
     $ENV{'PATH'} = "$helpers:$ENV{'PATH'}";
@@ -205,7 +205,7 @@ say
 
 # get harness date, including templates, skeletons and whitelists
 my @harnessparts
-  = ('t/helpers', 't/runners', 't/templates', 't/skeletons', 't/whitelists');
+  = ('t/bin', 't/runners', 't/templates', 't/skeletons', 't/whitelists');
 my @harnessfiles
   = map { File::Find::Rule->file->in("$ENV{'LINTIAN_TEST_ROOT'}/$_") }
   @harnessparts;
