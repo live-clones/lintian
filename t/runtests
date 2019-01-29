@@ -276,12 +276,12 @@ if (@prepqueue) {
     }
 
     $IO_LOOP->run;
+
+    say EMPTY;
 }
 
 say "Preparation failed: $_" for @failed;
 exit 1 if scalar @failed;
-
-say EMPTY;
 
 # these are the generated tests
 my @workpaths = map { rel2abs(abs2rel($_, $testset), $outpath) } @testpaths;
