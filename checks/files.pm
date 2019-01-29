@@ -2380,7 +2380,7 @@ sub get_checks_for_file {
       and none { $_ eq $source_pkg } qw(base-files dpkg lintian);
 
     $checks{'file-references-package-build-path'} = $build_path
-      if $build_path =~ m,^/.+,g;
+      if defined $build_path && $build_path =~ m,^/.+,g;
 
     return %checks;
 }
