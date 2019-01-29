@@ -59,6 +59,7 @@ Build-Depends:
  libtry-tiny-perl <!nocheck>,
  libunicode-utf8-perl <!nocheck>,
  liburi-perl <!nocheck>,
+ libxml-libxml-perl <!nocheck>,
  libxml-simple-perl <!nocheck>,
  libyaml-libyaml-perl <!nocheck>,
  man-db <!nocheck>,
