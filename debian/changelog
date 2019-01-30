@@ -1,8 +1,8 @@
-lintian (2.5.125) UNRELEASED; urgency=medium
+lintian (2.5.125) unstable; urgency=medium
 
   * WIP
 
- -- Chris Lamb <lamby@debian.org>  Fri, 25 Jan 2019 09:40:59 +0100
+ -- Chris Lamb <lamby@debian.org>  Wed, 30 Jan 2019 16:01:09 +0100
 
 lintian (2.5.124) unstable; urgency=medium
 
