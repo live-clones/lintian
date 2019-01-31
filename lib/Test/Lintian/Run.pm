@@ -61,6 +61,7 @@ use File::stat;
 use List::Util qw(max min any);
 use Path::Tiny;
 use Test::More;
+use Text::CSV;
 use Try::Tiny;
 
 use Lintian::Command qw(safe_qx);
@@ -338,10 +339,34 @@ sub runner {
             }
         });
 
+    # extract expected tags
+    my $expected = "$runpath/tags.specified.calibrated.extracted";
+    $producer->add_stage(
+        products => [$expected],
+        build =>sub {
+            my @command = ('tagextract', '-f', 'EWI', $calibrated, $expected);
+            die 'Error executing: ' . join(SPACE, @command) . ": $!"
+              if system(@command);
+        });
+
+    # extract actual tags
+    my $extracted = "$runpath/tags.actual.parsed.sorted.extracted";
+    $producer->add_stage(
+        products => [$extracted],
+        build =>sub {
+            my @command = (
+                'tagextract', '-f', $testcase->{output_format},
+                $sorted, $extracted
+            );
+            die 'Error executing: ' . join(SPACE, @command) . ": $!"
+              if system(@command);
+        });
+
     say EMPTY;
     $producer->run(verbose => 1);
 
-    my @errors = check_result($testcase, $sorted, $calibrated, $specified);
+    my @errors = check_result($testcase, $extracted, $expected, $specified);
+
     my $okay = !scalar @errors;
 
     if($testcase->{todo} eq 'yes') {
@@ -352,15 +377,27 @@ sub runner {
         return;
     }
 
-    diag @errors;
-
-    # for uncalibrated tests, use tags in spec path for cut & paste
-    $calibrated = "$testcase->{spec_path}/tags"
-      unless -e "$runpath/test_calibration";
-
-    diag safe_qx('diff', '-u', $calibrated, $sorted)
-      unless $okay;
     ok($okay, "Lintian tags match for $testcase->{testname}");
+
+    diag $_ . NEWLINE for @errors;
+
+    #    for uncalibrated tests, use tags in spec path, for cut & paste
+    #      $expected = rel2abs("$testcase->{spec_path}/tags")
+    #      unless -e "$runpath/test_calibration";
+
+    unless($okay) {
+        my @command = ('tagdiff', $expected, $extracted);
+        my ($diff, $status) = capture_merged { system(@command); };
+        $status = ($status >> 8) & 255;
+        die 'Error executing: ' . join(SPACE, @command) . ": $!"
+          if $status;
+
+        if (length $diff) {
+            diag '--- ' . abs2rel($expected);
+            diag '+++ ' . abs2rel($extracted);
+            diag $diff;
+        }
+    }
 
     return;
 }
@@ -379,9 +416,6 @@ sub check_result {
     # fail if tags do not match
     return 'Tags do not match' if (compare($actual, $expected) != 0);
 
-    # no further investigation on unusual output formats
-    return unless $testcase->{output_format} eq 'EWI';
-
     # check all Test-For tags were seen and all Test-Against tags were not
     my %test_for = map { $_ => 1 } split SPACE, $testcase->{test_for}//EMPTY;
     my %test_against =map { $_ => 1 } split SPACE,
@@ -391,45 +425,60 @@ sub check_result {
 
     my @errors;
 
+    my $csv = Text::CSV->new({ sep_char => '|' });
+
     # look through actual tags
-    my @lines = path($actual)->lines_utf8;
-    chomp @lines;
+    my @lines = path($actual)->lines_utf8({ chomp => 1 });
     foreach my $line (@lines) {
 
-        # no tag available
-        next if $line =~ /^N: /;
+        my $status = $csv->parse($line);
+        die "Cannot parse line $line: " . $csv->error_diag
+          unless $status;
+        my ($type, $package, $name, $details) = $csv->fields;
 
-        # some traversal tests create packages that are skipped
-        next if $line =~ /tainted/ && $line =~ /skipping/;
-
-        # look for "EWI: package[ type]: tag"
-        my ($tag) = $line =~ qr/^.: \S+(?: (?:changes|source|udeb))?: (\S+)/o;
-        unless (length $tag) {
-            push(@errors, "Invalid line: $line");
+        unless (length $type && length $package && length $name) {
+            push(@errors, "Invalid line in $actual: $line");
             next;
         }
 
         # check if tag was blacklisted
-        if ($test_against{$tag}) {
+        if ($test_against{$name}) {
 
             # warn just once about a tag
-            delete $test_against{$tag};
-            push(@errors, "Tag $tag seen but listed in Test-Against");
+            delete $test_against{$name};
+            push(@errors, "Tag $name seen but listed in Test-Against");
         }
 
         # mark as seen
-        delete $test_for{$tag};
+        delete $test_for{$name};
     }
 
     # check if test was calibrated
     if (defined $originaltags && compare($originaltags, $expected) != 0) {
 
         # tags lost in calibration; like binaries-hardening on some arches
-        my %lost = %test_for;
+        my %lost;
 
-        # parse original output
-        my @origlines = path($originaltags)->lines_utf8;
-        chomp @origlines;
+        # parse expected tags
+        my @lines = path($expected)->lines_utf8({ chomp => 1 });
+        foreach my $line (@lines) {
+
+            my $status = $csv->parse($line);
+            die "Cannot parse line $line: " . $csv->error_diag
+              unless $status;
+            my ($type, $package, $name, $details) = $csv->fields;
+
+            unless (length $type && length $package && length $name) {
+                push(@errors, "Invalid line in $expected: $line");
+                next;
+            }
+
+            # mark as seen
+            $lost{$name} = 1;
+        }
+
+        # parse original expected tags
+        my @origlines = path($originaltags)->lines_utf8({ chomp => 1 });
         foreach my $line (@origlines) {
 
             # not tag in this line
@@ -439,23 +488,24 @@ sub check_result {
             next if $line =~ /tainted/ && $line =~ /skipping/;
 
             # look for "EWI: package[ type]: tag"
-            my ($tag)= $line =~ /^.: \S+(?: (?:changes|source|udeb))?: (\S+)/o;
-            unless (length $tag) {
+            my ($name)
+              = $line =~ /^.: \S+(?: (?:changes|source|udeb))?: (\S+)/o;
+            unless (length $name) {
                 push(@errors, "Invalid line: $line");
                 next;
             }
-            delete $lost{$tag};
+            delete $lost{$name};
         }
 
         # remove tags that were calibrated out
-        foreach my $tag (keys %lost) {
-            delete $test_for{$tag};
+        foreach my $name (keys %lost) {
+            delete $test_for{$name};
         }
     }
 
     # check if the test missed any tags
-    for my $tag (sort keys %test_for) {
-        push(@errors, "Tag $tag listed in Test-For but not found");
+    for my $name (sort keys %test_for) {
+        push(@errors, "Tag $name listed in Test-For but not found");
     }
 
     return @errors;
