@@ -123,7 +123,7 @@ is(
     'Correct policy date'
 );
 
-is($testcase->{sort}, 'yes', 'Sort boolean was not converted from string');
+is($testcase->{sort}, 'no', 'Sort boolean was not converted from string');
 
 is($testcase->{todo}, 'no', 'Todo disabled');
 

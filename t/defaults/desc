@@ -11,6 +11,6 @@ Sequence: 6000
 Profile: debian
 Output-Format: EWI
 Default-Lintian-Options: --display-info --display-experimental
-Sort: yes
+Sort: no
 Todo: no
 Test-Architectures: any
