@@ -1,19 +1,19 @@
-E[I ]: lintian-output-letter: new-essential-package
-E[S ]: lintian-output-letter: dir-or-file-in-var-lock var/lock/lintian/
-E[S!]: lintian-output-letter: dir-in-usr-local usr/local/share/
-E[S!]: lintian-output-letter: dir-in-usr-local usr/local/share/lintian/
-E[S?]: lintian-output-letter: possible-gpl-code-linked-with-openssl
-I[M ]: lintian-output-letter: description-synopsis-might-not-be-phrased-properly "Test Lintian letter qualifier output format."
-I[N?]: lintian-output-letter: desktop-entry-limited-to-environments usr/share/applications/script.desktop
-I[W ]: lintian-output-letter: package-contains-empty-directory usr/local/share/lintian/
-I[W!]: lintian-output-letter source: binary-control-field-duplicates-source field "section" in package lintian-output-letter
-I[W?]: lintian-output-letter: description-possibly-contains-homepage http://www.example.com/.
-O[M!]: lintian-output-letter source: dfsg-version-misspelled 1.0+dsfg-1.1
-P[P ]: lintian-output-letter source: no-homepage-field
-P[P ]: lintian-output-letter: example-unusual-interpreter usr/share/doc/lintian-output-letter/examples/example #!/usr/bin/foo
-P[P!]: lintian-output-letter source: debian-control-has-unusual-field-spacing line 12
-P[P!]: lintian-output-letter source: direct-changes-in-diff-but-no-patch-system Changes
-P[P!]: lintian-output-letter source: package-uses-deprecated-source-override-location
-W[N ]: lintian-output-letter: binary-without-manpage usr/bin/script
-W[N!]: lintian-output-letter source: maintainer-upload-has-incorrect-version-number 1.0+dsfg-1.1
-X[P!]: lintian-output-letter source: debian-watch-does-not-check-gpg-signature
+E: lintian-output-letter: dir-in-usr-local usr/local/share/
+E: lintian-output-letter: dir-in-usr-local usr/local/share/lintian/
+E: lintian-output-letter: dir-or-file-in-var-lock var/lock/lintian/
+E: lintian-output-letter: new-essential-package
+E: lintian-output-letter: possible-gpl-code-linked-with-openssl
+I: lintian-output-letter source: binary-control-field-duplicates-source field "section" in package lintian-output-letter
+I: lintian-output-letter: description-possibly-contains-homepage http://www.example.com/.
+I: lintian-output-letter: description-synopsis-might-not-be-phrased-properly "Test Lintian letter qualifier output format."
+I: lintian-output-letter: desktop-entry-limited-to-environments usr/share/applications/script.desktop
+I: lintian-output-letter: package-contains-empty-directory usr/local/share/lintian/
+O: lintian-output-letter source: dfsg-version-misspelled 1.0+dsfg-1.1
+P: lintian-output-letter source: debian-control-has-unusual-field-spacing line 12
+P: lintian-output-letter source: direct-changes-in-diff-but-no-patch-system Changes
+P: lintian-output-letter source: no-homepage-field
+P: lintian-output-letter source: package-uses-deprecated-source-override-location
+P: lintian-output-letter: example-unusual-interpreter usr/share/doc/lintian-output-letter/examples/example #!/usr/bin/foo
+W: lintian-output-letter source: maintainer-upload-has-incorrect-version-number 1.0+dsfg-1.1
+W: lintian-output-letter: binary-without-manpage usr/bin/script
+X: lintian-output-letter source: debian-watch-does-not-check-gpg-signature
