@@ -7,3 +7,4 @@ Options: --tags-from-file ./tag-list
 Test-For:
  debhelper-but-no-misc-depends
  section-is-dh_make-template
+Test-Against:

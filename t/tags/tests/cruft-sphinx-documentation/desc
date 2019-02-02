@@ -5,3 +5,4 @@ Description: Detect sphinx documentation
 Options: --pedantic
 Test-For:
  source-contains-prebuilt-sphinx-documentation
+Test-Against:

@@ -8,3 +8,4 @@ Test-For:
  postinst-does-not-load-confmodule
  postinst-uses-db-input
  postrm-does-not-purge-debconf
+Test-Against:

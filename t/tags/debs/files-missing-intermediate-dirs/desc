@@ -4,3 +4,4 @@ Version: 1.0
 Description: Test for tarballs without intermediate dirs
 Test-For:
  missing-intermediate-directory
+Test-Against:

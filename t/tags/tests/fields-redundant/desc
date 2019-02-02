@@ -5,3 +5,4 @@ Description: General tests redundant fields
 Test-For:
  redundant-bugs-field
  redundant-origin-field
+Test-Against:

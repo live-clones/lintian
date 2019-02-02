@@ -7,3 +7,4 @@ Description: Test for library package that does not match SONAME
 Test-For:
  package-name-doesnt-match-sonames
  symbols-file-missing-build-depends-package-field
+Test-Against:

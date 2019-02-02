@@ -5,3 +5,4 @@ Description: Test for wiki.debian.org DEP 5-like URI
 Options: --pedantic
 Test-For:
  wiki-copyright-format-uri
+Test-Against:

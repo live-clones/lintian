@@ -7,3 +7,4 @@ Test-for:
  multiarch-foreign-cmake-file
  multiarch-foreign-pkgconfig
  multiarch-foreign-static-library
+Test-Against:

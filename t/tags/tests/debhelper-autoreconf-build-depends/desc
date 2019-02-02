@@ -6,3 +6,4 @@ Default-Build-Depends: debhelper (>= 10)
 Dh-Compat-Level: 10
 Test-For:
  useless-autoreconf-build-depends
+Test-Against:

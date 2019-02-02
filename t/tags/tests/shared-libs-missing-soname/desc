@@ -7,3 +7,4 @@ Dh-Compat-Level: 9
 Description: Test for shlib without SONAME
 Test-For:
  sharedobject-in-library-directory-missing-soname
+Test-Against:

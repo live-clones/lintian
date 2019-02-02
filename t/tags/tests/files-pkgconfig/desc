@@ -8,3 +8,4 @@ Test-For:
  multiarch-foreign-pkgconfig
  pkg-config-references-unknown-shared-library
  pkg-config-unavailable-for-cross-compilation
+Test-Against:

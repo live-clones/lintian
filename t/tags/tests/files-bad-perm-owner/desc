@@ -18,3 +18,4 @@ Test-For:
  setgid-binary
  setuid-binary
  setuid-gid-binary
+Test-Against:

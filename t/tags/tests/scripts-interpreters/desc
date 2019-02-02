@@ -24,3 +24,4 @@ Test-For:
  unusual-interpreter
  wrong-path-for-interpreter
 References: Debian Bug#543873
+Test-Against:

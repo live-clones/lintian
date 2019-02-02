@@ -39,3 +39,4 @@ Test-For:
  stray-directory-in-manpage-directory
  windows-devel-file-in-package
  package-contains-compiled-font-file
+Test-Against:

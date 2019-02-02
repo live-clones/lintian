@@ -6,3 +6,4 @@ Test-For:
  usr-share-doc-symlink-points-outside-of-usr-share-doc 
  usr-share-doc-symlink-to-foreign-package
  usr-share-doc-symlink-without-dependency
+Test-Against:

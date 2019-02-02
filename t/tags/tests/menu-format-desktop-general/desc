@@ -17,3 +17,4 @@ Test-For:
  duplicated-key-in-desktop-entry
  executable-desktop-file
 References: Debian Bug#537737
+Test-Against:

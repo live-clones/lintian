@@ -7,3 +7,4 @@ Test-For:
  readme-debian-mentions-usr-doc
  spelling-error-in-readme-debian
 References: Debian Bug#556456
+Test-Against:

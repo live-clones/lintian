@@ -14,3 +14,4 @@ Test-For:
  package-needs-versioned-debhelper-build-depends
  package-uses-debhelper-but-lacks-build-depends
  weak-dependency-on-misc-depends
+Test-Against:

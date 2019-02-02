@@ -9,3 +9,4 @@ Test-For:
  hardening-no-fortify-functions
  hardening-no-pie
  hardening-no-relro
+Test-Against:

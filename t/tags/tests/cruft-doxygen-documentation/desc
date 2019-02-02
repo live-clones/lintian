@@ -5,3 +5,4 @@ Description: Detect doxygen documentation
 Options: --pedantic
 Test-For:
  source-contains-prebuilt-doxygen-documentation
+Test-Against:

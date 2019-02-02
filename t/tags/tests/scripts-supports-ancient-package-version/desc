@@ -5,3 +5,4 @@ Description: Check for maintainer scripts supporting old versions
 Options: --pedantic
 Test-For:
  maintainer-script-supports-ancient-package-version
+Test-Against:

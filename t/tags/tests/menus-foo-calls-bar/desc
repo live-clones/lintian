@@ -13,3 +13,4 @@ Test-For:
  preinst-calls-updatemenus
  prerm-calls-updatemenus
  prerm-has-useless-call-to-install-docs
+Test-Against:

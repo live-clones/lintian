@@ -3,3 +3,4 @@ Testname: files-hardlinks
 Version: 1.0
 Description: Test for (stable) handling of hardlinks
 Test-For: package-contains-hardlink
+Test-Against:

@@ -5,3 +5,4 @@ Description: Test proper use of invoke-rc.d
 Test-For:
  maintainer-script-calls-init-script-directly
 References: Debian Bug#381485
+Test-Against:

@@ -12,3 +12,4 @@ Test-For:
  shlibs-uses-obsolete-relation
  symbols-file-missing-build-depends-package-field
  unused-shlib-entry-in-control-file
+Test-Against:

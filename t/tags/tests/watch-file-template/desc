@@ -5,3 +5,4 @@ Description: Test for dh_make(1) templates
 Test-For:
  debian-watch-contains-dh_make-template
  debian-watch-uses-insecure-uri
+Test-Against:

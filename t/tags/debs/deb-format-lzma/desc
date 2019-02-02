@@ -5,3 +5,4 @@ Description: Test package with LZMA compression
 Test-For:
  lzma-deb-archive
  uses-deprecated-compression-for-data-tarball
+Test-Against:

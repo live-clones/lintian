@@ -6,3 +6,4 @@ Test-For:
  uses-no-compression-for-control-tarball
  uses-no-compression-for-data-tarball
 Extra-Build-Depends: dpkg (>= 1.17.6)
+Test-Against:

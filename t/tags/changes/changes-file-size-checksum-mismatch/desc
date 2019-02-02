@@ -5,3 +5,4 @@ Description: Test for file size and checksums check
 Test-For:
  checksum-mismatch-in-changes-file
  file-size-mismatch-in-changes-file
+Test-Against:

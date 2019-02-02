@@ -15,3 +15,4 @@ Test-For:
  ocaml-custom-executable
  statically-linked-binary
  unstripped-binary-or-object
+Test-Against:

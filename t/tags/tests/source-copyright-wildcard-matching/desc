@@ -7,3 +7,4 @@ Test-For:
  wildcard-matches-nothing-in-dep5-copyright
  file-without-copyright-information
  unused-file-paragraph-in-dep5-copyright
+Test-Against:

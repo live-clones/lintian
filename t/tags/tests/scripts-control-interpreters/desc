@@ -11,3 +11,4 @@ Test-For: control-interpreter-in-usr-local
  control-interpreter-without-depends
  unknown-control-interpreter
 References: Debian Bug#508307
+Test-Against:

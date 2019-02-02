@@ -3,3 +3,4 @@ Testname: control-file-duplicate-field
 Version: 1
 Description: Test for d/control containing duplicate fields
 Test-For: syntax-error-in-control-file
+Test-Against:

@@ -20,3 +20,4 @@ Test-For:
  readme-debian-contains-debmake-template
  section-is-dh_make-template
  wrong-bug-number-in-closes
+Test-Against:

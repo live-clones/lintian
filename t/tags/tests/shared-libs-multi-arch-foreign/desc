@@ -8,3 +8,4 @@ Description: Test for shared libs in m-a foreign pkgs
 Test-For:
  shlib-in-multi-arch-foreign-package
  symbols-file-missing-build-depends-package-field
+Test-Against:

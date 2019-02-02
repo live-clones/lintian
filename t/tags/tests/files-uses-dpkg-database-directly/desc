@@ -6,3 +6,4 @@ Package-Architecture: any
 Test-For:
  package-contains-documentation-outside-usr-share-doc
  uses-dpkg-database-directly
+Test-Against:

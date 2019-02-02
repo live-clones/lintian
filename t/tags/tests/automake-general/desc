@@ -4,3 +4,4 @@ Version: 1.0
 Description: Test if the package uses the deprecated configure.in for automake
 Test-For:
  deprecated-configure-filename
+Test-Against:

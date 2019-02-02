@@ -5,3 +5,4 @@ Description: Test for malformed python-version field
 Test-For:
  malformed-python-version
  python-version-current-is-deprecated
+Test-Against:

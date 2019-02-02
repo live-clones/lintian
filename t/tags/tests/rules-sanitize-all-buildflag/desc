@@ -4,3 +4,4 @@ Version: 1.0
 Description: Test for sanitize=+all
 Test-For:
  debian-rules-should-not-use-sanitize-all-buildflag
+Test-Against:

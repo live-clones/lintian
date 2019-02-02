@@ -4,3 +4,4 @@ Version: 1.0
 Description: Check for missing binary dependencies on ${gir:Depends}
 Test-For:
  gobject-instrospection-package-missing-depends-on-gir-depends
+Test-Against:

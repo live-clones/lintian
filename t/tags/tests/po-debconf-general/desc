@@ -12,3 +12,4 @@ Test-For:
  translated-default-field
  untranslatable-debconf-templates
  unused-debconf-template
+Test-Against:

@@ -8,3 +8,4 @@ Description: Test ldconfig symlink not being a symlink
 Test-For:
  ldconfig-symlink-is-not-a-symlink
  symbols-file-missing-build-depends-package-field
+Test-Against:

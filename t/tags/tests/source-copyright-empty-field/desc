@@ -5,3 +5,4 @@ Description: Test for empty required field
 Test-For:
  empty-short-license-in-dep5-copyright
  missing-field-in-dep5-copyright
+Test-Against:

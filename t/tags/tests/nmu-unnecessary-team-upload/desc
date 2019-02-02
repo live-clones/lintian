@@ -4,3 +4,4 @@ Version: 1.0
 Description: Test for unnecessary team uploads
 Test-For:
  unnecessary-team-upload
+Test-Against:

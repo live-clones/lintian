@@ -5,3 +5,4 @@ Options: --pedantic
 Description: Pedantic tests for control file issues
 Test-For:
  xc-package-type-in-debian-control
+Test-Against:

@@ -6,3 +6,4 @@ Package-Architecture: any
 Options: --pedantic
 Description: Test override handling
 Test-For: renamed-tag
+Test-Against:

@@ -5,3 +5,4 @@ Version: 1.0
 Description: Test for possible command execution when processing filenames
 Test-For:
  binary-without-manpage
+Test-Against:

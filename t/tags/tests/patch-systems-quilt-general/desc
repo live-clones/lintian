@@ -13,3 +13,4 @@ Test-For:
  quilt-series-references-non-existent-patch
  package-uses-vendor-specific-patch-series
  patch-file-present-but-not-mentioned-in-series
+Test-Against:

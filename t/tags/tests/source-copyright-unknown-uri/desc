@@ -5,3 +5,4 @@ Description: Test for unknown DEP 5-like URI
 Options: --pedantic
 Test-For:
  unknown-copyright-format-uri
+Test-Against:

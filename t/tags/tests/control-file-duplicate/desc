@@ -5,3 +5,4 @@ Package-Architecture: all
 Options: --pedantic
 Description: Pedantic test for duplicate relations
 Test-For: duplicate-in-relation-field
+Test-Against:

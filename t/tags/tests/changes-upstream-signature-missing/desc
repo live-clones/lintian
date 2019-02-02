@@ -8,3 +8,4 @@ Test-For:
  orig-tarball-missing-upstream-signature
 # dpkg 1.18.5 required in order to create multiple tarballs with detached signatures
 Extra-Build-Depends: dpkg (>= 1.18.5)
+Test-Against:

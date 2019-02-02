@@ -6,3 +6,4 @@ Description: Test checks related to static libs
 Test-For:
  static-library-has-unneeded-section
  unstripped-static-library
+Test-Against:

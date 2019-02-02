@@ -6,3 +6,4 @@ Skeleton: upload-non-native
 Test-For:
  source-contains-prebuilt-wasm-binary
 Extra-Build-Depends: file (>= 1:5.32)
+Test-Against:

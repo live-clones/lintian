@@ -5,3 +5,4 @@ Description: Test for multi-arch issues
 Test-For:
  debug-package-for-multi-arch-same-pkg-not-coinstallable
  dependency-is-not-multi-archified
+Test-Against:

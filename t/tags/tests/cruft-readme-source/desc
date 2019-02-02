@@ -5,3 +5,4 @@ Version: 1.0
 Description: Check for cruft in README.source
 Test-For:
  readme-source-is-dh_make-template
+Test-Against:

@@ -5,3 +5,4 @@ Description: General tests for unknown fields
 Test-For:
  spelling-error-in-rules-requires-root
  unknown-field-in-dsc
+Test-Against:

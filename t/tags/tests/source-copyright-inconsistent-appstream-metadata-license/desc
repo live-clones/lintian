@@ -3,3 +3,4 @@ Skeleton: upload-native
 Version: 1.0
 Test-For:
  inconsistent-appstream-metadata-license
+Test-Against:

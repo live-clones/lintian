@@ -9,3 +9,4 @@ Test-For:
  package-has-unnecessary-activation-of-ldconfig-trigger
  package-must-activate-ldconfig-trigger
  symbols-file-missing-build-depends-package-field
+Test-Against:

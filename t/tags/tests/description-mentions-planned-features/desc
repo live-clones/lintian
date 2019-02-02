@@ -5,3 +5,4 @@ Options: --pedantic
 Description: Test for a packages mentioning upcoming features
 Test-For:
  description-mentions-planned-features
+Test-Against:

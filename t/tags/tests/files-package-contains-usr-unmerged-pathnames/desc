@@ -5,3 +5,4 @@ Description: Test for "real" files outside of /usr
 Options: -L +classification -C files
 Test-For:
  package-contains-usr-unmerged-pathnames
+Test-Against:

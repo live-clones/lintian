@@ -5,3 +5,4 @@ Description: Test for packages not using debhelper or CDBS
 Options: --pedantic
 Test-For:
  package-does-not-use-debhelper-or-cdbs
+Test-Against:

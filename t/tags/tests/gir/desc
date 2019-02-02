@@ -11,3 +11,4 @@ Test-For:
  typelib-in-arch-all-package
  typelib-not-in-multiarch-directory
  typelib-missing-gir-depends
+Test-Against:

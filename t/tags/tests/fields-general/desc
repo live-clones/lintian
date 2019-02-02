@@ -8,3 +8,4 @@ Test-For:
  debian-control-has-obsolete-dbg-package
  superfluous-clutter-in-homepage
  wrong-section-according-to-package-name
+Test-Against:

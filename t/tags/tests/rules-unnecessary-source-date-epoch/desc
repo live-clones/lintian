@@ -6,3 +6,4 @@ Description: Test for unnecessary SOURCE_DATE_EPOCH assignments
 Test-For:
  debian-rules-parses-dpkg-parsechangelog
  unnecessary-source-date-epoch-assignment
+Test-Against:

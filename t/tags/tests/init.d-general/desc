@@ -10,3 +10,4 @@ Test-For:
  init.d-script-sourcing-without-test
  init.d-script-does-not-source-init-functions
  init.d-script-uses-usr-interpreter
+Test-Against:

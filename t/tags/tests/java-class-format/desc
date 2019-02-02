@@ -8,3 +8,4 @@ Extra-Build-Depends: javahelper, default-jdk
 Test-For:
  incompatible-java-bytecode-format
  unknown-java-class-version
+Test-Against:

@@ -3,3 +3,4 @@ Testname: menus-doc-base-registration
 Version: 1.0
 Description: Test some doc-base registration related tags
 Test-For: possible-documentation-but-no-doc-base-registration
+Test-Against:

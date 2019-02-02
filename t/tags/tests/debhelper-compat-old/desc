@@ -12,3 +12,4 @@ Test-For:
  package-uses-old-debhelper-compat-version
  debian-build-system
  rules-does-not-require-root
+Test-Against:

@@ -5,3 +5,4 @@ Description: Test for insecure Format: URIs
 Options: --pedantic
 Test-For:
  insecure-copyright-format-uri
+Test-Against:

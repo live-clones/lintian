@@ -7,3 +7,4 @@ Extra-Build-Depends: cdbs
 Test-Conflicts: dh-buildinfo
 Test-For:
  debian-rules-uses-deprecated-makefile
+Test-Against:

@@ -6,3 +6,4 @@ References: Debian Bug#794674
 Extra-Build-Depends: dpkg (<< 1.18.2)
 Test-For:
  syntax-error-in-debian-changelog
+Test-Against:

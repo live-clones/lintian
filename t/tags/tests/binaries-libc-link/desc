@@ -7,3 +7,4 @@ Test-For:
  library-not-linked-against-libc
  program-not-linked-against-libc
  shared-lib-without-dependency-information
+Test-Against:

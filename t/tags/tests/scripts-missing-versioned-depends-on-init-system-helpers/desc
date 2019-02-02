@@ -4,3 +4,4 @@ Version: 1.0
 Description: Test for packages that are missing init-system-helpers depends
 Test-For:
  missing-versioned-depends-on-init-system-helpers
+Test-Against:

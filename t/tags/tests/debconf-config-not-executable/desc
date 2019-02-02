@@ -6,3 +6,4 @@ Description: Test for debian/config not being executable
 Extra-Build-Depends: dpkg (<< 1.19.0)
 Test-For:
  debconf-config-not-executable
+Test-Against:

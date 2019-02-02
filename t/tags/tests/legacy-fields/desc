@@ -21,3 +21,4 @@ Test-For:
  package-uses-debhelper-but-lacks-build-depends
  source-nmu-has-incorrect-version-number
  unknown-section
+Test-Against:

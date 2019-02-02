@@ -12,3 +12,4 @@ Test-For:
  symlink-should-be-absolute
  symlink-should-be-relative
  dir-or-file-in-build-tree
+Test-Against:

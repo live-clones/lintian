@@ -8,3 +8,4 @@ Description: Test for missing ldconfig symlink for shared libs
 Test-For:
  ldconfig-symlink-missing-for-shlib
  symbols-file-missing-build-depends-package-field
+Test-Against:

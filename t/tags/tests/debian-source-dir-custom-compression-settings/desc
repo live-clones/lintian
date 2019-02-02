@@ -5,3 +5,4 @@ Source-Format: 3.0 (native)
 Description: Check for custom compression settings in debian/source/format
 Test-For:
  debian-source-options-has-custom-compression-settings
+Test-Against:

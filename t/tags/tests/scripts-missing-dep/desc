@@ -12,3 +12,4 @@ Test-For: wish-script-but-no-wish-dep
  php-script-but-no-php-cli-dep
  python-script-but-no-python-dep
  tclsh-script-but-no-tclsh-dep
+Test-Against:

@@ -5,3 +5,4 @@ Description: General length of package file names
 Test-For:
  package-has-long-file-name
  source-package-component-has-long-file-name
+Test-Against:

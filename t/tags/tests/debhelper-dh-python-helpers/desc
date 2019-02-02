@@ -6,3 +6,4 @@ Description: Check if helpers that substitute python:Depends and
 Test-For:
  python-depends-but-no-python-helper
  python3-depends-but-no-python3-helper
+Test-Against:

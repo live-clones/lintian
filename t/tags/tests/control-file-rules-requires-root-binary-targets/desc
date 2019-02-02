@@ -8,3 +8,4 @@ Test-For:
  debian-rules-should-not-use-custom-compression-settings
  control-tarball-compression-format
  rules-requires-root-explicitly
+Test-Against:

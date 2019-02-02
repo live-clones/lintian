@@ -7,3 +7,4 @@ Dh-Compat-Level: 9
 Test-for:
  multiarch-foreign-shared-library
  symbols-file-missing-build-depends-package-field
+Test-Against:

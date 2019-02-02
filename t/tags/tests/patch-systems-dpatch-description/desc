@@ -10,3 +10,4 @@ Test-For:
  dpatch-missing-description
  package-uses-deprecated-dpatch-patch-system
  patch-file-present-but-not-mentioned-in-series
+Test-Against:

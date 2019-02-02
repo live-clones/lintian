@@ -9,3 +9,4 @@ Test-For:
  debian-news-file-uses-obsolete-national-encoding
  spelling-error-in-news-debian
  syntax-error-in-debian-news-file
+Test-Against:

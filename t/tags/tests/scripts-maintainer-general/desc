@@ -39,3 +39,4 @@ Test-For:
  maintainer-script-may-use-dir_to_symlink_helper
  uses-dpkg-database-directly
 References: Debian Bug#532984
+Test-Against:

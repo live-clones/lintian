@@ -5,3 +5,4 @@ Version: 1.0-1
 Description: Test for short changelog entries
 Test-For:
  debian-changelog-line-too-short
+Test-Against:

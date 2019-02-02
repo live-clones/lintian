@@ -44,3 +44,4 @@ Test-For:
  timewarp-standards-version
  usr-share-doc-symlink-without-dependency
  virtual-package-depends-without-real-package-depends
+Test-Against:

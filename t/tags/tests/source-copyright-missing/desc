@@ -5,3 +5,4 @@ Description: Test for missing copyright
 Test-For:
  no-copyright-file
  no-debian-copyright
+Test-Against:

@@ -6,3 +6,4 @@ Description: Test pedantic dependency requirements for debhelper
 Options: --pedantic
 Test-For:
  package-lacks-versioned-build-depends-on-debhelper
+Test-Against:

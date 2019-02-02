@@ -7,3 +7,4 @@ Test-For:
  games-package-should-be-section-games
  package-section-games-but-contains-no-game
  package-section-games-but-has-usr-bin
+Test-Against:

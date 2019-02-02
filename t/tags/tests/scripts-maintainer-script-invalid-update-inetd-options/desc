@@ -5,3 +5,4 @@ Description: Check for incorrect calls to update-inetd
 Test-For:
  maintainer-script-has-invalid-update-inetd-options
  maintainer-script-needs-depends-on-update-inetd
+Test-Against:

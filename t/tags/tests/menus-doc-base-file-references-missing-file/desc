@@ -4,3 +4,4 @@ Version: 1.0
 Description: check for missing files in doc-base
 Test-For:
  doc-base-file-references-missing-file
+Test-Against:

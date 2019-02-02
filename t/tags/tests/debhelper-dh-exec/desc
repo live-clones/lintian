@@ -12,3 +12,4 @@ Test-For:
  dh-exec-subst-unknown-variable
  dh-exec-useless-usage
  package-uses-dh-exec-but-lacks-build-depends
+Test-Against:

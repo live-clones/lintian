@@ -6,3 +6,4 @@ Test-Architectures: amd64
 Package-Architecture: any
 Test-For:
  multi-arch-same-package-has-arch-specific-overrides
+Test-Against:

@@ -8,3 +8,4 @@ Test-For:
   package-depends-on-multiple-tcl-versions
   package-depends-on-multiple-tclx-versions
   package-depends-on-multiple-tk-versions
+Test-Against:

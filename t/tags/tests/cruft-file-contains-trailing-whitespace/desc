@@ -5,3 +5,4 @@ Description: Check for files containing trailing whitespace characters
 Options: --pedantic
 Test-For:
  file-contains-trailing-whitespace
+Test-Against:

@@ -11,3 +11,4 @@ Test-For:
     file-in-usr-marked-as-conffile
     non-etc-file-marked-as-conffile
     relative-conffile
+Test-Against:

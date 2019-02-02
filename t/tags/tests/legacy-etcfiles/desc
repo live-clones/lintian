@@ -20,3 +20,4 @@ Test-For:
  package-contains-hardlink
  readme-debian-mentions-usr-doc
  run-parts-cron-filename-contains-illegal-chars
+Test-Against:

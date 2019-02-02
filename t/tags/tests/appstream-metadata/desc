@@ -9,3 +9,4 @@ Test-For:
  appstream-metadata-malformed-modalias-provide
  appstream-metadata-invalid
  inconsistent-appstream-metadata-license
+Test-Against:

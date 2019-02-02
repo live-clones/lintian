@@ -4,3 +4,4 @@ Version: 1.0
 Description: Test if Debian changelog is a symlink
 Test-For:
  debian-changelog-file-is-a-symlink
+Test-Against:

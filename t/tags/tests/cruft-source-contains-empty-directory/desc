@@ -5,3 +5,4 @@ Options: --pedantic
 Skeleton: upload-non-native
 Test-For:
  source-contains-empty-directory
+Test-Against:

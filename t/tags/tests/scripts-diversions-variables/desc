@@ -7,3 +7,4 @@ Test-For:
  package-uses-local-diversion
  orphaned-diversion
  remove-of-unknown-diversion
+Test-Against:

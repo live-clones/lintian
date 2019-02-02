@@ -4,3 +4,4 @@ Version: 1.2-3~deb9u1
 Description: Test for missing (stable update, etc.) entries
 Test-For:
  changelog-file-missing-explicit-entry
+Test-Against:

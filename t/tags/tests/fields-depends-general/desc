@@ -23,3 +23,4 @@ Test-For:
  package-depends-on-itself
  package-relation-with-perl-modules
  package-relation-with-self
+Test-Against:

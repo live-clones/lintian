@@ -5,3 +5,4 @@ Description: Test checks related to libtool .la files
 Test-For:
  incorrect-libdir-in-la-file
  non-empty-dependency_libs-in-la-file
+Test-Against:

@@ -7,3 +7,4 @@ Test-For:
  vcs-field-not-canonical
  vcs-git-uses-invalid-user-uri
  vcs-fields-use-more-than-one-vcs
+Test-Against:

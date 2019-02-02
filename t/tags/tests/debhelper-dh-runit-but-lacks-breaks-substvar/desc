@@ -6,3 +6,4 @@ Test-Depends:
  dh-runit
 Test-For:
  package-uses-dh-runit-but-lacks-breaks-substvar
+Test-Against:

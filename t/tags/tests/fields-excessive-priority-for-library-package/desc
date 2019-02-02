@@ -4,3 +4,4 @@ Version: 1.0
 Description: Library packages with excessive Priority field
 Test-For:
  excessive-priority-for-library-package
+Test-Against:

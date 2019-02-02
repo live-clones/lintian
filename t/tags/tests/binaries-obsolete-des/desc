@@ -6,3 +6,4 @@ Package-Architecture: any
 Test-For:
   obsolete-des-encryption
   obsolete-crypt-alias
+Test-Against:

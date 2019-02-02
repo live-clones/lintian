@@ -3,3 +3,4 @@ Testname: debconf-is-not-registry
 Version: 1.0
 Description: Test for using debconf as a registry
 Test-For: debconf-is-not-a-registry
+Test-Against:

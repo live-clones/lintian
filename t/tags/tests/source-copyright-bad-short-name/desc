@@ -5,3 +5,4 @@ Description: Test for bad short name
 Test-For:
  invalid-short-name-in-dep5-copyright
  space-in-std-shortname-in-dep5-copyright
+Test-Against:

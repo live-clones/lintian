@@ -5,3 +5,4 @@ Description: General tests for debian/source/* checks
 Test-For:
  missing-debian-source-format
  unknown-file-in-debian-source
+Test-Against:

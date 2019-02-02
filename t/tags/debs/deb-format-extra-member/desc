@@ -3,3 +3,4 @@ Testname: deb-format-extra-member
 Version: 1.0
 Description: Test package for an ar archive in the wrong order
 Test-For: misplaced-extra-member-in-deb
+Test-Against:

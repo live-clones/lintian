@@ -5,3 +5,4 @@ Description: Test tags related to the registration of init scripts
 Test-For:
  init.d-script-missing-lsb-section
  script-in-etc-init.d-not-registered-via-update-rc.d
+Test-Against:

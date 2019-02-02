@@ -5,3 +5,4 @@ Description: Test for bad owner of control files
 Test-For:
  control-file-has-bad-owner
  control-file-has-bad-permissions
+Test-Against:

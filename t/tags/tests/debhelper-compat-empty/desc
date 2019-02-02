@@ -6,3 +6,4 @@ Default-Build-Depends: debhelper (<< 9.20151101~)
 Test-For:
  debhelper-compat-file-is-empty
  package-uses-deprecated-debhelper-compat-version
+Test-Against:

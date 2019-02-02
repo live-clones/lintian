@@ -4,3 +4,4 @@ Version: 1.0
 Description: Check for PIDFile=/var/run/foo
 Test-For:
  systemd-service-file-pidfile-refers-to-var-run
+Test-Against:

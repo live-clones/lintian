@@ -5,3 +5,4 @@ Description: CPAN Homepage URLs shouldn't have versions
 Test-For:
  homepage-for-cpan-package-contains-version
  obsolete-url-in-packaging
+Test-Against:

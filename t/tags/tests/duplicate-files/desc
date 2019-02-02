@@ -6,3 +6,4 @@ Options: -L +pedantic
 Test-For:
  duplicate-changelog-files
  duplicate-files
+Test-Against:

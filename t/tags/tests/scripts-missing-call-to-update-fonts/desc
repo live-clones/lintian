@@ -4,3 +4,4 @@ Version: 1.0
 Description: Check missing calls to update-fonts
 Test-For:
  missing-call-to-update-fonts
+Test-Against:

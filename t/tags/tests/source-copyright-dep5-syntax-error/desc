@@ -4,3 +4,4 @@ Version: 1.0
 Description: Test for DEP 5 syntax error
 Test-For:
  syntax-error-in-dep5-copyright
+Test-Against:

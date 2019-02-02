@@ -14,3 +14,4 @@ Test-For:
  symbols-file-contains-debian-revision
  symbols-file-missing-build-depends-package-field
  syntax-error-in-symbols-file
+Test-Against:

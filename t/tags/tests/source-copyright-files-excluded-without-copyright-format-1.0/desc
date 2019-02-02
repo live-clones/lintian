@@ -4,3 +4,4 @@ Skeleton: upload-non-native
 Description: Test for files listed in Files-Excluded
 Test-For:
  files-excluded-without-copyright-format-1.0
+Test-Against:

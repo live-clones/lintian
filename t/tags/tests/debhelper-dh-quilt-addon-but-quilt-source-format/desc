@@ -6,3 +6,4 @@ Description: Test for quilt packages that specify dh --with-quilt
 Extra-Build-Depends: quilt
 Test-For:
  dh-quilt-addon-but-quilt-source-format
+Test-Against:

@@ -8,3 +8,4 @@ Description: Test of multiarch same package with unsafe binaries
 Test-For:
  arch-dependent-file-not-in-arch-specific-directory
  symbols-file-missing-build-depends-package-field
+Test-Against:

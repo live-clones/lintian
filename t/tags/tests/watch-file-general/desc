@@ -16,3 +16,4 @@ Test-For:
  debian-watch-uses-insecure-uri
  debian-watch-could-verify-download
 References: Debian Bug#510398
+Test-Against:

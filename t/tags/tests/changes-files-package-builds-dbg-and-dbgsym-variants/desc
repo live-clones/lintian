@@ -7,3 +7,4 @@ Test-For:
  debian-control-has-dbgsym-package
  debian-control-has-obsolete-dbg-package
  package-builds-dbg-and-dbgsym-variants
+Test-Against:

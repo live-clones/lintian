@@ -10,3 +10,4 @@ Test-For:
  package-contains-multiple-dpi-fonts
  package-mixes-misc-and-dpi-fonts
  font-outside-font-dir
+Test-Against:

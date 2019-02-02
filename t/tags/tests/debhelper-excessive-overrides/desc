@@ -4,3 +4,4 @@ Version: 1.0
 Description: Test for excessive number of overrides
 Test-For:
  excessive-debhelper-overrides
+Test-Against:

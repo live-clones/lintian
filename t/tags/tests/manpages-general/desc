@@ -24,3 +24,4 @@ Test-For:
  manpage-not-compressed-with-max-compression
  manpage-section-mismatch
  spelling-error-in-manpage
+Test-Against:

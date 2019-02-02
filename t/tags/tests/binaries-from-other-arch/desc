@@ -7,3 +7,4 @@ Description: Test package with a pseudo binary from a different architecture
 Test-For:
  apparently-corrupted-elf-binary
  binary-from-other-architecture
+Test-Against:

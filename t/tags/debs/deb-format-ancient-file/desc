@@ -4,3 +4,4 @@ Version: 1.0
 Description: Test package containing an ancient file
 Test-For:
  package-contains-ancient-file
+Test-Against:

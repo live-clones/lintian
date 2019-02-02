@@ -5,3 +5,4 @@ Description: Test for no dep5 source copyright
 Options: --pedantic
 Test-For:
  no-dep5-copyright
+Test-Against:

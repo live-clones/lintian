@@ -7,3 +7,4 @@ Options: --pedantic --show-overrides
 Sort: no
 Description: Test override handling
 Test-For: renamed-tag
+Test-Against:

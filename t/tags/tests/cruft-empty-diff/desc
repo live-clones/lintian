@@ -4,3 +4,4 @@ Skeleton: upload-non-native
 Description: Test an empty Debian diff
 Test-For: empty-debian-diff
 References: Debian Bug#498668
+Test-Against:

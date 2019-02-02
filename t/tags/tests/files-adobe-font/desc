@@ -5,3 +5,4 @@ Description: Test for adobe font license issues
 Test-For:
  license-problem-font-adobe-copyrighted-fragment
  license-problem-font-adobe-copyrighted-fragment-no-credit
+Test-Against:

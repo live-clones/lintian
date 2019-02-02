@@ -7,3 +7,4 @@ Test-For:
  malformed-md5sums-control-file
  md5sum-mismatch
  md5sums-lists-nonexistent-file
+Test-Against:

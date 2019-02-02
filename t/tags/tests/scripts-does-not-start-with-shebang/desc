@@ -6,3 +6,4 @@ Description: Check for maintainer scripts that do not start with #!
 Test-For:
  script-without-interpreter
  elf-maintainer-script
+Test-Against:

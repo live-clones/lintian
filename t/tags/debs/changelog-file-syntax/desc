@@ -3,3 +3,4 @@ Testname: changelog-file-syntax
 Version: 1.0
 Description: Test for syntax errors in changelogs
 Test-For: syntax-error-in-debian-changelog
+Test-Against:

@@ -8,3 +8,4 @@ Description: Test checks related to dev symlink
 Test-For:
  non-dev-pkg-with-shlib-symlink
  symbols-file-missing-build-depends-package-field
+Test-Against:

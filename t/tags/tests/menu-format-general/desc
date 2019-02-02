@@ -21,3 +21,4 @@ Test-For:
  non-wm-in-windowmanager-menu-section
  pkg-not-in-package-test
  unparsable-menu-item
+Test-Against:

@@ -3,3 +3,4 @@ Testname: group-checks-circular-deps
 Version: 1.0
 Description: Test for circular dependencies
 Test-For: intra-source-package-circular-dependency
+Test-Against:

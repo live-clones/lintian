@@ -7,3 +7,4 @@ Test-For:
  isdefault-flag-is-deprecated
  possible-debconf-note-abuse
  unknown-debconf-priority
+Test-Against:

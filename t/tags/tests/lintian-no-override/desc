@@ -6,3 +6,4 @@ Description: Test no-override option
 Options: --no-override
 Test-For:
  non-standard-dir-in-usr
+Test-Against:

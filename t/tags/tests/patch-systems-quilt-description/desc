@@ -6,3 +6,4 @@ Extra-Build-Depends: quilt
 Test-For: quilt-patch-missing-description
           quilt-patch-using-template-description
 References: Debian Bug #498892
+Test-Against:

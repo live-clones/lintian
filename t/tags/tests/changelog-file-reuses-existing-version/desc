@@ -4,3 +4,4 @@ Version: 1.0
 Description: Check changelog for re-used version numbers
 Test-For:
  latest-debian-changelog-entry-reuses-existing-version
+Test-Against:
