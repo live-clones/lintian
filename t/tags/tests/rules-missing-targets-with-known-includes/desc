@@ -7,3 +7,4 @@ Test-For:
  debian-rules-missing-required-target
  debian-rules-missing-recommended-target
 Test-Against:
+Check: rules

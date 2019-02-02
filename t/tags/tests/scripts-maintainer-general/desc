@@ -40,3 +40,6 @@ Test-For:
  uses-dpkg-database-directly
 References: Debian Bug#532984
 Test-Against:
+Check:
+ scripts
+ files

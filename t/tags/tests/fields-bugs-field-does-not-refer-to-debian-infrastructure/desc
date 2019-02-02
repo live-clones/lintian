@@ -5,3 +5,4 @@ Description: Check for packages with invalid Bugs fields
 Test-For:
  bugs-field-does-not-refer-to-debian-infrastructure
 Test-Against:
+Check: fields

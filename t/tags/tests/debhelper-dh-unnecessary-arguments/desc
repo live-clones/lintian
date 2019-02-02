@@ -5,3 +5,4 @@ Description: Check for packages using --parallel
 Test-For:
  debian-rules-uses-unnecessary-dh-argument
 Test-Against:
+Check: debhelper

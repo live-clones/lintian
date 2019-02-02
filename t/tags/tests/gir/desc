@@ -12,3 +12,4 @@ Test-For:
  typelib-not-in-multiarch-directory
  typelib-missing-gir-depends
 Test-Against:
+Check: gir

@@ -11,3 +11,7 @@ Test-For:
  symbols-file-missing-build-depends-package-field
 Test-Against:
  wrong-section-according-to-package-name
+Check:
+ binaries
+ shared-libs
+ fields

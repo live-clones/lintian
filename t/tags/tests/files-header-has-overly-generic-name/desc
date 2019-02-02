@@ -5,3 +5,4 @@ Description: Test tags for headers with overly generic names
 Test-For:
  header-has-overly-generic-name
 Test-Against:
+Check: files

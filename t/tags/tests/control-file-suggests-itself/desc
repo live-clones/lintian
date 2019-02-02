@@ -4,3 +4,4 @@ Version: 1.0
 Description: Test a package Suggesting itself
 Test-For: package-depends-on-itself
 Test-Against:
+Check: control-file

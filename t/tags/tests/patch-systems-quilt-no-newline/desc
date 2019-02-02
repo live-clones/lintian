@@ -5,3 +5,4 @@ Description: Patch system with no debian/series that does not end with newline
 Extra-Build-Depends: quilt
 Test-For: quilt-series-without-trailing-newline
 Test-Against:
+Check: patch-systems

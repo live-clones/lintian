@@ -5,3 +5,4 @@ Description: Tests for Architecture of an R package
 Test-For:
  r-package-not-arch-all
 Test-Against:
+Check: fields

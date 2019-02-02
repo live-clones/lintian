@@ -7,3 +7,6 @@ Test-For:
  debian-watch-does-not-check-gpg-signature
  upstream-metadata-file-is-missing
 Test-Against:
+Check:
+ watch-file
+ upstream-metadata

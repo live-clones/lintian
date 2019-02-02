@@ -6,3 +6,4 @@ Description: Check for packages missing depends on Python
 Test-For:
  python-package-missing-depends-on-python
 Test-Against:
+Check: python

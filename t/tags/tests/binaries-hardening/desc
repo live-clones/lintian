@@ -10,3 +10,4 @@ Test-For:
  hardening-no-pie
  hardening-no-relro
 Test-Against:
+Check: binaries

@@ -5,3 +5,4 @@ Description: Test for incomplete Creative Commons licenses
 Test-For:
  incomplete-creative-commons-license
 Test-Against:
+Check: source-copyright

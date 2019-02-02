@@ -13,3 +13,4 @@ Test-For:
  debian-rules-should-not-use-pwd
  debian-rules-should-not-use-underscore-variable
 Test-Against:
+Check: rules

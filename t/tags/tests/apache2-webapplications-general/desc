@@ -14,3 +14,4 @@ Test-For:
  apache2-unparsable-dependency
  apache2-deprecated-auth-config
 Test-Against:
+Check: apache2

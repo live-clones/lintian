@@ -20,3 +20,4 @@ Test-For:
  ored-build-depends-on-obsolete-package
 References: Debian Bug#540594, Debian Bug#551793
 Test-Against:
+Check: fields

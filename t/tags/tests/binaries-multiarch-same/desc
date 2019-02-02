@@ -9,3 +9,6 @@ Test-For:
  arch-dependent-file-not-in-arch-specific-directory
  symbols-file-missing-build-depends-package-field
 Test-Against:
+Check:
+ binaries
+ shared-libs

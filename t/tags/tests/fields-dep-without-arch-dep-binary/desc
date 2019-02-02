@@ -6,3 +6,4 @@ Description: Test for B-D-A and no architecture-dependent pkgs
 Test-For:
  build-depends-arch-without-arch-dependent-binary
 Test-Against:
+Check: fields

@@ -9,3 +9,6 @@ Test-For:
  missing-depends-line
  symbols-file-missing-build-depends-package-field
 Test-Against:
+Check:
+ binaries
+ shared-libs

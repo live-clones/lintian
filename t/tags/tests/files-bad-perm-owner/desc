@@ -19,3 +19,4 @@ Test-For:
  setuid-binary
  setuid-gid-binary
 Test-Against:
+Check: files

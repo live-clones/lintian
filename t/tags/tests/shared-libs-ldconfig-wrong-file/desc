@@ -9,3 +9,4 @@ Test-For:
  ldconfig-symlink-referencing-wrong-file
  symbols-file-missing-build-depends-package-field
 Test-Against:
+Check: shared-libs

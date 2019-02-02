@@ -8,3 +8,4 @@ Test-For:
  vcs-git-uses-invalid-user-uri
  vcs-fields-use-more-than-one-vcs
 Test-Against:
+Check: fields

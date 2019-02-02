@@ -5,3 +5,4 @@ Description: Test for unnecessary get-orig-source targets
 Test-For:
  debian-rules-contains-unnecessary-get-orig-source-target
 Test-Against:
+Check: rules

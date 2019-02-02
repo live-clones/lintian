@@ -8,3 +8,6 @@ Test-for:
  multiarch-foreign-shared-library
  symbols-file-missing-build-depends-package-field
 Test-Against:
+Check:
+ files
+ shared-libs

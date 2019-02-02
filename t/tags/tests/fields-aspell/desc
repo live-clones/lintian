@@ -5,3 +5,4 @@ Description: Tests for Architecture of an aspell package
 Package-Architecture: any
 Test-For: aspell-package-not-arch-all
 Test-Against:
+Check: fields

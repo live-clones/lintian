@@ -6,3 +6,4 @@ Options: --pedantic
 Test-For:
  missing-explanation-for-repacked-upstream-tarball
 Test-Against:
+Check: source-copyright

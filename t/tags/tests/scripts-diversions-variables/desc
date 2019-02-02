@@ -8,3 +8,4 @@ Test-For:
  orphaned-diversion
  remove-of-unknown-diversion
 Test-Against:
+Check: scripts

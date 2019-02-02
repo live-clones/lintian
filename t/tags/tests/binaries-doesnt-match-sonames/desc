@@ -8,3 +8,6 @@ Test-For:
  package-name-doesnt-match-sonames
  symbols-file-missing-build-depends-package-field
 Test-Against:
+Check:
+ binaries
+ shared-libs

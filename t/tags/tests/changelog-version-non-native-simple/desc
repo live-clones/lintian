@@ -4,3 +4,4 @@ Description: Test for normal versions
 Skeleton: upload-non-native
 Test-Against:
  malformed-debian-changelog-version
+Check: source-changelog

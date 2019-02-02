@@ -6,3 +6,4 @@ Description: Test for debhelper >=7 packages using dh_clean -k
 Test-For:
  dh-clean-k-is-deprecated
 Test-Against:
+Check: debhelper

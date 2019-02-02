@@ -10,3 +10,4 @@ Test-For:
  spelling-error-in-news-debian
  syntax-error-in-debian-news-file
 Test-Against:
+Check: changelog-file

@@ -19,3 +19,12 @@ Test-For:
  package-has-no-description
  source-nmu-has-incorrect-version-number
 Test-Against:
+Check:
+ changes-file
+ nmu
+ rules
+ fields
+ copyright-file
+ control-file
+ standards-version
+ description

@@ -5,3 +5,6 @@ Description: Test for a code name in an unstable upload
 Test-Against:
  malformed-debian-changelog-version
  version-refers-to-distribution
+Check:
+ source-changelog
+ changelog-file

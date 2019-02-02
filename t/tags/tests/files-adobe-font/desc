@@ -6,3 +6,4 @@ Test-For:
  license-problem-font-adobe-copyrighted-fragment
  license-problem-font-adobe-copyrighted-fragment-no-credit
 Test-Against:
+Check: files

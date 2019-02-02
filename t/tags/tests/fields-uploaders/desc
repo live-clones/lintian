@@ -7,3 +7,4 @@ Test-For:
  uploader-address-looks-weird
  uploader-address-malformed
 Test-Against:
+Check: fields

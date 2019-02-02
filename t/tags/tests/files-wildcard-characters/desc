@@ -6,3 +6,4 @@ Description: Check for wildcard characters in filenames
 Test-For:
  file-name-contains-wildcard-character
 Test-Against:
+Check: files

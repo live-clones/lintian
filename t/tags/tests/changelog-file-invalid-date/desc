@@ -6,3 +6,4 @@ Test-For:
  invalid-date-in-debian-changelog
 Test-Against:
  debian-changelog-has-wrong-day-of-week
+Check: changelog-file

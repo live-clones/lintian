@@ -21,3 +21,12 @@ Test-For:
  section-is-dh_make-template
  wrong-bug-number-in-closes
 Test-Against:
+Check:
+ standards-version
+ changelog-file
+ copyright-file
+ rules
+ watch-file
+ description
+ debian-readme
+ fields

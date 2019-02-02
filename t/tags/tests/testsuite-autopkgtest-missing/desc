@@ -5,3 +5,4 @@ Description: Verify if Testsuite field and autopkgtest are used
 Test-For:
   testsuite-autopkgtest-missing
 Test-Against:
+Check: testsuite

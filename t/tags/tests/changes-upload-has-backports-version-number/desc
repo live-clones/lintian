@@ -5,3 +5,4 @@ Description: Check for backports that have an incorrect Distribution
 Test-For:
  upload-has-backports-version-number
 Test-Against:
+Check: changes-file

@@ -7,3 +7,4 @@ Test-For:
  invalid-versioned-provides
  virtual-package-depends-without-real-package-depends
 Test-Against:
+Check: fields

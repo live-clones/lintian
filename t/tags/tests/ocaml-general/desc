@@ -15,3 +15,4 @@ Test-For:
  ocaml-meta-without-suggesting-findlib
  ocaml-stray-cmo
 Test-Against:
+Check: ocaml

@@ -3,3 +3,4 @@ Skeleton: upload-non-native
 Version: 1.0-1
 Description: Check a package with ChangeLog and changelog.gz
 Test-Against: changelog-file-not-compressed
+Check: changelog-file

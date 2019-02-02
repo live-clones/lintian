@@ -6,3 +6,4 @@ Description: Test for UNRELEASED package uploaded to unstable
 Test-For:
  unreleased-changes
 Test-Against:
+Check: changes-file

@@ -6,3 +6,4 @@ Description: Checks for R statistical data files
 Test-For:
  r-data-without-readme-source
 Test-Against:
+Check: cruft

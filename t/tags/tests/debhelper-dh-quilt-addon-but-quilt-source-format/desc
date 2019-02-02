@@ -7,3 +7,4 @@ Extra-Build-Depends: quilt
 Test-For:
  dh-quilt-addon-but-quilt-source-format
 Test-Against:
+Check: debhelper

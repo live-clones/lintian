@@ -11,3 +11,7 @@ Test-Against:
 Test-For:
  pre-depends-directly-on-multiarch-support
  symbols-file-missing-build-depends-package-field
+Check:
+ control-file
+ shared-libs
+ files

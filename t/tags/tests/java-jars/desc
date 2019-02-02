@@ -18,3 +18,4 @@ Test-For:
  missing-dep-on-jarwrapper
  missing-manifest
  zip-parse-error
+Check: java

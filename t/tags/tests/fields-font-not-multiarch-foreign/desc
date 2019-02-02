@@ -6,3 +6,4 @@ Description: Font package Multi-Arch checks
 Test-For:
  font-package-not-multi-arch-foreign
 Test-Against:
+Check: fields

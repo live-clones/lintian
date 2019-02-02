@@ -5,3 +5,4 @@ Description: Check for Python packages with mismatched substvars.
 Test-For:
  mismatched-python-substvar
 Test-Against:
+Check: python

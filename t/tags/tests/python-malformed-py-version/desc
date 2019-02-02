@@ -6,3 +6,4 @@ Test-For:
  malformed-python-version
  python-version-current-is-deprecated
 Test-Against:
+Check: python

@@ -4,3 +4,4 @@ Description: Test for +bzr in version (vs binNMU)
 Skeleton: upload-non-native
 Test-Against:
  debian-changelog-version-requires-debian-revision
+Check: source-changelog

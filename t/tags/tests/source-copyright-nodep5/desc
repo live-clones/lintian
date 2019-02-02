@@ -6,3 +6,4 @@ Options: --pedantic
 Test-For:
  no-dep5-copyright
 Test-Against:
+Check: source-copyright

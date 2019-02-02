@@ -6,3 +6,4 @@ Test-For:
  dm-upload-allowed-is-obsolete
  malformed-dm-upload-allowed
 Test-Against:
+Check: fields

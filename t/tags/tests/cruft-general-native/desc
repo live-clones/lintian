@@ -19,3 +19,4 @@ Test-For:
  diff-contains-svn-conflict-file
  diff-contains-svn-control-dir
 Test-Against:
+Check: cruft

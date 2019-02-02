@@ -16,3 +16,4 @@ Test-For:
  unknown-runtime-tests-feature
  unknown-runtime-tests-field
  unknown-runtime-tests-restriction
+Check: testsuite

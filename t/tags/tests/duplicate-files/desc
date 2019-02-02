@@ -7,3 +7,4 @@ Test-For:
  duplicate-changelog-files
  duplicate-files
 Test-Against:
+Check: duplicate-files

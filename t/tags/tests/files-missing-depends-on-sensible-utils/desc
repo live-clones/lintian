@@ -5,3 +5,4 @@ Description: Check missing dep on sensible-utils
 Test-For:
  missing-depends-on-sensible-utils
 Test-Against:
+Check: files

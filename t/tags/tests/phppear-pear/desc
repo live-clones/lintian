@@ -11,3 +11,4 @@ Test-For:
  pecl-package-requires-build-dependency
 Skeleton: upload-non-native
 Test-Against:
+Check: phppear

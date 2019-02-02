@@ -7,3 +7,4 @@ Test-For:
  script-without-interpreter
  elf-maintainer-script
 Test-Against:
+Check: scripts

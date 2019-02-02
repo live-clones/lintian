@@ -6,3 +6,4 @@ Options: --pedantic
 Test-For: experimental-to-unstable-without-comment
  non-consecutive-debian-revision
 Test-Against:
+Check: changelog-file

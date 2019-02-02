@@ -30,3 +30,6 @@ Test-For:
  no-copyright-file
  old-fsf-address-in-copyright-file
 Test-Against:
+Check:
+ files
+ copyright-file

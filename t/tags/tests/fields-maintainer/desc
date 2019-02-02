@@ -7,3 +7,4 @@ Test-For:
  maintainer-address-looks-weird
  maintainer-address-malformed
 Test-Against:
+Check: fields

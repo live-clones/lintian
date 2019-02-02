@@ -5,3 +5,4 @@ Description: Test for over-eager tarball compression etc.
 Test-For:
  debian-rules-should-not-use-custom-compression-settings
 Test-Against:
+Check: rules

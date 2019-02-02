@@ -5,3 +5,4 @@ Description: Check bashism detection
 Extra-Build-Depends: dash (>= 0.5.10.2)
 Test-For: possible-bashism-in-maintainer-script
 Test-Against:
+Check: scripts

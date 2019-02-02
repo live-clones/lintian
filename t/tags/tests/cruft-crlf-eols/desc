@@ -6,3 +6,4 @@ Description: Check that control files with CRLF EOLs are reported
 Test-For:
  control-file-with-CRLF-EOLs
 Test-Against:
+Check: cruft

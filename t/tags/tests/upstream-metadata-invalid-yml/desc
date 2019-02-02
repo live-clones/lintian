@@ -5,3 +5,4 @@ Description: Tests for upstream-metadata being invalid yml
 Extra-Build-Depends: libyaml-libyaml-perl (>= 0.69)
 Test-For: upstream-metadata-yaml-invalid
 Test-Against:
+Check: upstream-metadata

@@ -16,3 +16,4 @@ Test-For:
  unknown-field-in-control
  unknown-priority
 Test-Against:
+Check: fields

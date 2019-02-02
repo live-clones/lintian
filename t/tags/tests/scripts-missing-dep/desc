@@ -13,3 +13,4 @@ Test-For: wish-script-but-no-wish-dep
  python-script-but-no-python-dep
  tclsh-script-but-no-tclsh-dep
 Test-Against:
+Check: scripts

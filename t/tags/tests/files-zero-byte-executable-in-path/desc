@@ -6,3 +6,6 @@ Test-For:
  executable-not-elf-or-script
  zero-byte-executable-in-path
 Test-Against:
+Check:
+ scripts
+ files

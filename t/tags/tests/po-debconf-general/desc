@@ -13,3 +13,6 @@ Test-For:
  untranslatable-debconf-templates
  unused-debconf-template
 Test-Against:
+Check:
+ po-debconf
+ debconf

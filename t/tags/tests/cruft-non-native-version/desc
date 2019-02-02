@@ -6,3 +6,4 @@ Test-For:
  debian-changelog-version-requires-debian-revision
 Test-Against:
  malformed-debian-changelog-version
+Check: source-changelog

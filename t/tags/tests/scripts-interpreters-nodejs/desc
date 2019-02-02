@@ -7,3 +7,4 @@ Test-For:
  script-uses-deprecated-nodejs-location
  example-script-uses-deprecated-nodejs-location
 Test-Against:
+Check: scripts

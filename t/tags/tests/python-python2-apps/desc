@@ -6,3 +6,4 @@ Options: --pedantic
 Test-For:
  dependency-on-python-version-marked-for-end-of-life
 Test-Against:
+Check: python

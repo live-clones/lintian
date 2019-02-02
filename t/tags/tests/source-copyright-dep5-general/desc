@@ -14,3 +14,4 @@ Test-For:
  unused-license-paragraph-in-dep5-copyright
 Test-Against:
  incomplete-creative-commons-license
+Check: source-copyright

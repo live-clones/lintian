@@ -4,3 +4,4 @@ Version: 1.0-1
 Description: Check a wrong name for an upstream changelog
 Test-For: wrong-name-for-upstream-changelog
 Test-Against:
+Check: changelog-file

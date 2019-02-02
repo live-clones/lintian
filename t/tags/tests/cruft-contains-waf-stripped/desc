@@ -3,3 +3,4 @@ Version: 1.0-1
 Skeleton: upload-non-native
 Description: Check for sources with waf
 Test-Against: source-contains-waf-binary
+Check: cruft

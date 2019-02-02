@@ -8,3 +8,4 @@ Test-For:
  systemd-service-file-missing-hardening-features
 Test-Against:
  omitted-systemd-service-for-init.d-script
+Check: systemd

@@ -5,3 +5,4 @@ Description: Test a package with version 0
 Test-Against:
  malformed-debian-changelog-version
  debian-changelog-version-requires-debian-revision
+Check: source-changelog

@@ -10,3 +10,4 @@ Test-For:
  package-must-activate-ldconfig-trigger
  symbols-file-missing-build-depends-package-field
 Test-Against:
+Check: shared-libs

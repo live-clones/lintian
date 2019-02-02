@@ -15,3 +15,6 @@ Test-For:
  package-uses-debhelper-but-lacks-build-depends
  weak-dependency-on-misc-depends
 Test-Against:
+Check:
+ debhelper
+ rules

@@ -4,3 +4,4 @@ Version: 2.0-1
 Description: Watch file with old upstream version
 Test-For: debian-watch-file-specifies-old-upstream-version
 Test-Against:
+Check: watch-file

@@ -7,3 +7,4 @@ Test-For:
  mail-transport-agent-dependency-does-not-specify-default-mta
  default-mta-dependency-not-listed-first
 Test-Against:
+Check: fields

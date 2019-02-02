@@ -6,3 +6,4 @@ Default-Build-Depends: debhelper (<< 9.20151101~)
 Dh-Compat-Level: [9-
 Test-For: debhelper-compat-not-a-number
 Test-Against:
+Check: debhelper

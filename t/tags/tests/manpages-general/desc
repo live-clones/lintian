@@ -25,3 +25,4 @@ Test-For:
  manpage-section-mismatch
  spelling-error-in-manpage
 Test-Against:
+Check: manpages

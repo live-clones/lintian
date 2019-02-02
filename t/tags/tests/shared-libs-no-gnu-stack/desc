@@ -9,3 +9,4 @@ Test-For:
  shlib-without-PT_GNU_STACK-section
  symbols-file-missing-build-depends-package-field
 Test-Against:
+Check: shared-libs

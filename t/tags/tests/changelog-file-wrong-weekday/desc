@@ -6,3 +6,4 @@ Options: --include-dir ./lintian-include-dir
 Description: Test for wrong weekday in changelog date
 Test-For: debian-changelog-has-wrong-day-of-week
 Test-Against:
+Check: changelog-file

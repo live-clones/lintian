@@ -8,3 +8,6 @@ Test-For:
  debian-rules-sets-DH_COMPAT
  declares-possibly-conflicting-debhelper-compat-versions
 Test-Against:
+Check:
+ rules
+ debhelper

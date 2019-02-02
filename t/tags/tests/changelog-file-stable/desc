@@ -6,3 +6,7 @@ Test-Against:
  bad-distribution-in-changes-file
  version-refers-to-distribution
  malformed-debian-changelog-version
+Check:
+ changes-file
+ changelog-file
+ source-changelog

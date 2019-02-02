@@ -5,3 +5,4 @@ Description: Test for built-using field
 Test-For:
  invalid-value-in-built-using-field
 Test-Against:
+Check: fields

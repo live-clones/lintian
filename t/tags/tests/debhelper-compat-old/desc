@@ -13,3 +13,8 @@ Test-For:
  debian-build-system
  rules-does-not-require-root
 Test-Against:
+Check:
+ deb-format
+ rules
+ debhelper
+ control-file

@@ -5,3 +5,4 @@ Package-Architecture: any
 Description: Test for issues handling gz in Multi-Arch same pkgs
 Test-for: gzip-file-is-not-multi-arch-same-safe
 Test-Against:
+Check: files

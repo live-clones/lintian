@@ -5,3 +5,4 @@ Description: Test the value of DEB_BUILD_OPTIONS
 Test-For:
  debian-rules-sets-DEB_BUILD_OPTIONS
 Test-Against:
+Check: rules

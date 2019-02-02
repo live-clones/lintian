@@ -7,3 +7,4 @@ Test-For:
  debhelper-tools-from-autotools-dev-are-deprecated
  dh_installmanpages-is-obsolete
 Test-Against:
+Check: debhelper

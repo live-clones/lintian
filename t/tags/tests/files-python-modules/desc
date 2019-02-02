@@ -6,3 +6,4 @@ Test-For:
  python-module-in-wrong-location
  unknown-file-in-python-module-directory
 Test-Against:
+Check: files

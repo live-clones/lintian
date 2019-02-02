@@ -8,3 +8,6 @@ Test-For:
  udev-rule-missing-uaccess
  udev-rule-missing-subsystem
 Test-Against:
+Check:
+ source-copyright
+ udev

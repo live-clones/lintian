@@ -6,3 +6,4 @@ Options: --pedantic
 Test-For:
  package-does-not-use-debhelper-or-cdbs
 Test-Against:
+Check: debhelper

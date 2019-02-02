@@ -5,3 +5,4 @@ Description: Check dependency requirements for dh --with quilt
 Test-Depends: quilt
 Test-For: missing-build-dependency-for-dh-addon
 Test-Against:
+Check: debhelper

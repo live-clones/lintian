@@ -4,3 +4,4 @@ Version: 1.0-1
 Description: Watch file with no version
 Test-For: debian-watch-file-missing-version
 Test-Against:
+Check: watch-file

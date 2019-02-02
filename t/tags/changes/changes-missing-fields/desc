@@ -6,3 +6,4 @@ Test-For:
  no-description-in-changes-file
  no-urgency-in-changes-file
 Test-Against:
+Check: changes-file

@@ -7,3 +7,4 @@ Test-For:
  dbus-policy-excessively-broad
  dbus-policy-without-send-destination
 Test-Against:
+Check: dbus

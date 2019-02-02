@@ -6,3 +6,4 @@ Description: Test for quilt packages that specify dh --with-quilt (false positiv
 Extra-Build-Depends: quilt
 Test-Against:
  dh-quilt-addon-but-quilt-source-format
+Check: debhelper

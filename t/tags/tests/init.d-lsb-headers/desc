@@ -19,3 +19,4 @@ Test-For:
  init.d-script-starts-in-stop-runlevel
  init.d-script-depends-on-all-virtual-facility
 Test-Against:
+Check: init.d

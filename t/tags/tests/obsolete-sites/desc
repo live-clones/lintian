@@ -4,3 +4,4 @@ Skeleton: upload-non-native
 Description: Test cases where packages contain links to frozen, closing or closed hosters
 Test-For: obsolete-url-in-packaging
 Test-Against:
+Check: obsolete-sites

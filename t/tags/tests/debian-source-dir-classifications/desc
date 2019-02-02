@@ -5,3 +5,4 @@ Options: -L +classification -C debian-source-dir
 Description: Test for d-s-d classifications tags
 Test-For: source-format
 Test-Against:
+Check: debian-source-dir

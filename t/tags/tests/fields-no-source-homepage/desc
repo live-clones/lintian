@@ -4,3 +4,4 @@ Description: Test check for no Homepage field in source
 Version: 1.0-1
 Test-For: homepage-in-binary-package
 Test-Against:
+Check: fields

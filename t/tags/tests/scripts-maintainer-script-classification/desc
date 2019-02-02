@@ -6,3 +6,4 @@ Options: -L +classification -C scripts
 Test-For: debhelper-autoscript-in-maintainer-scripts
  maintainer-script-interpreter
 Test-Against:
+Check: scripts

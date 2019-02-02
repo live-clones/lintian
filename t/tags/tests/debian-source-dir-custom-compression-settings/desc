@@ -6,3 +6,4 @@ Description: Check for custom compression settings in debian/source/format
 Test-For:
  debian-source-options-has-custom-compression-settings
 Test-Against:
+Check: debian-source-dir

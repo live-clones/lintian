@@ -9,3 +9,4 @@ Package-Architecture: any
 Test-For:
  triplet-dir-and-architecture-mismatch
 Test-Against:
+Check: files

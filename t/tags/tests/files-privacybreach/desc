@@ -16,3 +16,4 @@ Test-For:
  privacy-breach-w3c-valid-html
  privacy-breach-uses-embedded-file
 Test-Against:
+Check: files

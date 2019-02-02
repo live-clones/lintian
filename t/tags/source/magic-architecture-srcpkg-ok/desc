@@ -4,3 +4,4 @@ Version: 1.0-1
 Type: non-native
 Description: Test package for "all" plus specific arch in .dscs
 Test-Against: magic-arch-in-arch-list
+Check: fields

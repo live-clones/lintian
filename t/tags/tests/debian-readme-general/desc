@@ -8,3 +8,4 @@ Test-For:
  spelling-error-in-readme-debian
 References: Debian Bug#556456
 Test-Against:
+Check: debian-readme

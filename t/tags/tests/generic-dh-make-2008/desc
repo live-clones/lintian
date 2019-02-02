@@ -29,3 +29,14 @@ Test-For:
 Test-Against:
  homepage-field-uses-insecure-uri
 References: Debian Bug#497347
+Check:
+ standards-version
+ fields
+ changelog-file
+ copyright-file
+ watch-file
+ description
+ debhelper
+ files
+ debian-readme
+ upstream-metadata

@@ -6,3 +6,4 @@ Test-For:
  license-problem-non-free-RFC
  license-problem-non-free-RFC-BCP78
 Test-Against:
+Check: cruft

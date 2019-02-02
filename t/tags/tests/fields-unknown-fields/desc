@@ -6,3 +6,6 @@ Test-For:
  spelling-error-in-rules-requires-root
  unknown-field-in-dsc
 Test-Against:
+Check:
+ control-file
+ fields

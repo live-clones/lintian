@@ -10,3 +10,4 @@ Test-For:
  not-binnmuable-any-depends-any
  version-substvar-for-external-package
 Test-Against:
+Check: version-substvars

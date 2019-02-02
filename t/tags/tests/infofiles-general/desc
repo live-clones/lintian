@@ -12,3 +12,4 @@ Test-For:
  info-document-not-compressed-with-max-compression
 References: Bug#534640
 Test-Against:
+Check: infofiles

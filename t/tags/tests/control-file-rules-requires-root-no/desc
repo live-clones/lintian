@@ -9,3 +9,7 @@ Test-For:
  debian-rules-should-not-use-custom-compression-settings
  rules-does-not-require-root
 Test-Against:
+Check:
+ deb-format
+ rules
+ control-file

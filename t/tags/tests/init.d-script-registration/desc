@@ -6,3 +6,4 @@ Test-For:
  init.d-script-missing-lsb-section
  script-in-etc-init.d-not-registered-via-update-rc.d
 Test-Against:
+Check: init.d

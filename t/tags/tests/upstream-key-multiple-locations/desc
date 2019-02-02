@@ -5,3 +5,4 @@ Description: Check if upstream signing keys are present in multiple locations
 Test-For:
  public-upstream-keys-in-multiple-locations
 Test-Against:
+Check: upstream-signing-key

@@ -5,3 +5,4 @@ Description: Test for tarballs without intermediate dirs
 Test-For:
  missing-intermediate-directory
 Test-Against:
+Check: files

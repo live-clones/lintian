@@ -8,3 +8,4 @@ Test-For:
  old-style-config-script-multiarch-path
  old-style-config-script-multiarch-path-arch-all
 Test-Against:
+Check: files

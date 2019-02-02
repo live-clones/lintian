@@ -17,3 +17,4 @@ Test-For:
  debian-watch-could-verify-download
 References: Debian Bug#510398
 Test-Against:
+Check: watch-file

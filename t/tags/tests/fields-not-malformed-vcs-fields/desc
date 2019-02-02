@@ -6,3 +6,4 @@ Test-For:
  vcs-field-uses-not-recommended-uri-format
 Test-Against:
  vcs-field-uses-unknown-uri-format
+Check: fields

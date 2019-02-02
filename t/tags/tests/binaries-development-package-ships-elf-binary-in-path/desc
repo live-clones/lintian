@@ -7,3 +7,4 @@ Dh-Compat-Level: 9
 Test-For:
  development-package-ships-elf-binary-in-path
 Test-Against:
+Check: binaries

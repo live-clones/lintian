@@ -6,3 +6,4 @@ Description: Check for placeholders in various maintainer scripts
 Test-For:
  file-contains-fixme-placeholder
 Test-Against:
+Check: cruft

@@ -4,3 +4,4 @@ Version: 1.0
 Description: Test for unnecessary SOURCE_DATE_EPOCH assignments (false positive)
 Test-Against:
  unnecessary-source-date-epoch-assignment
+Check: rules

@@ -5,3 +5,4 @@ Description: Test for the QA in Maintainer field
 Test-For:
  wrong-debian-qa-address-set-as-maintainer
 Test-Against:
+Check: fields

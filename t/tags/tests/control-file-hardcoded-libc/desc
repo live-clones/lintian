@@ -5,3 +5,4 @@ Description: Test hard-coded dependencies on libc
 Test-For: package-depends-on-hardcoded-libc
 References: Debian Bug#512196
 Test-Against:
+Check: control-file

@@ -7,3 +7,4 @@ Test-For:
  missing-dependency-on-perlapi
  missing-dependency-on-phpapi
 Test-Against:
+Check: binaries

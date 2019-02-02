@@ -5,3 +5,4 @@ Description: Test for missing (stable update, etc.) entries
 Test-For:
  changelog-file-missing-explicit-entry
 Test-Against:
+Check: changelog-file

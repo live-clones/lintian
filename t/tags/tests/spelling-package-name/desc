@@ -4,3 +4,4 @@ Version: 1.0
 Description: Spell check test for excluding package name
 Test-Against:
  spelling-error-in-description
+Check: description

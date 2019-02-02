@@ -6,3 +6,4 @@ Test-Against:
  unknown-file-in-python-module-directory
 Test-For:
  python-module-has-overly-generic-name
+Check: files

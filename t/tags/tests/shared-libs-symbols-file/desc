@@ -15,3 +15,4 @@ Test-For:
  symbols-file-missing-build-depends-package-field
  syntax-error-in-symbols-file
 Test-Against:
+Check: shared-libs

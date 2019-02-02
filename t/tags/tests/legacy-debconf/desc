@@ -54,3 +54,15 @@ Test-For:
  using-imperative-form-in-templates
  using-question-in-extended-description-in-templates
 Test-Against:
+Check:
+ standards-version
+ fields
+ copyright-file
+ cruft
+ rules
+ debhelper
+ patch-systems
+ description
+ po-debconf
+ debconf
+ shared-libs

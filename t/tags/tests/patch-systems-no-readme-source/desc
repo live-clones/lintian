@@ -6,3 +6,4 @@ Extra-Build-Depends: quilt
 Test-For: patch-system-but-no-source-readme
 References: Debian Bug #537969
 Test-Against:
+Check: patch-systems

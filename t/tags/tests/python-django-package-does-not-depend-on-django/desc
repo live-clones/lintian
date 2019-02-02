@@ -6,3 +6,4 @@ Description: Check for Django packages that do not specify a Django Depends
 Test-For:
  django-package-does-not-depend-on-django
 Test-Against:
+Check: python

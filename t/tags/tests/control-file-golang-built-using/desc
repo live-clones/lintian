@@ -8,3 +8,4 @@ Test-Against:
 Test-For:
  built-using-field-on-arch-all-package
  missing-xs-go-import-path-for-golang-package
+Check: control-file

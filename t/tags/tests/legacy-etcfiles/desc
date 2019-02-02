@@ -21,3 +21,14 @@ Test-For:
  readme-debian-mentions-usr-doc
  run-parts-cron-filename-contains-illegal-chars
 Test-Against:
+Check:
+ standards-version
+ changelog-file
+ rules
+ description
+ conffiles
+ md5sums
+ copyright-file
+ version-substvars
+ files
+ debian-readme

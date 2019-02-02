@@ -6,3 +6,4 @@ Test-For:
  changed-by-address-malformed
  changed-by-address-looks-weird
 Test-Against:
+Check: changes-file

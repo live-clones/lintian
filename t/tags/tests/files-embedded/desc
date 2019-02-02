@@ -9,3 +9,4 @@ Test-For:
  embedded-php-library
  embedded-pear-module
 Test-Against:
+Check: files

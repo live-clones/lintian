@@ -5,3 +5,4 @@ Description: Misc errors related to Perl
 Test-For:
  mentions-deprecated-usr-lib-perl5-directory
 Test-Against:
+Check: cruft

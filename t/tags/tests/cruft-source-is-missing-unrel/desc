@@ -9,3 +9,6 @@ Test-Against:
 Test-For:
  empty-binary-package
  package-contains-no-arch-dependent-files
+Check:
+ files
+ cruft

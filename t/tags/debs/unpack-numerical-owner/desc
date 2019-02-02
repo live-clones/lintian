@@ -5,3 +5,6 @@ Description: Test for tarballs with numerical owner only
 Test-Against:
  bad-owner-for-doc-file
  control-file-has-bad-owner
+Check:
+ files
+ control-files

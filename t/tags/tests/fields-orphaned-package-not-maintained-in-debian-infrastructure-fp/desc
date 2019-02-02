@@ -6,3 +6,6 @@ Package-Architecture: all
 Test-Against:
  changelog-should-mention-qa
  orphaned-package-not-maintained-in-debian-infrastructure
+Check:
+ nmu
+ fields

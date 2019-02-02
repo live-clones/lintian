@@ -7,3 +7,4 @@ Test-For:
  python-depends-but-no-python-helper
  python3-depends-but-no-python3-helper
 Test-Against:
+Check: debhelper

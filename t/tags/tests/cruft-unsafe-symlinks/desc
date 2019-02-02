@@ -4,3 +4,4 @@ Version: 1.0
 Description: General tests of unsafe symlinks
 Test-For: source-contains-unsafe-symlink
 Test-Against:
+Check: cruft

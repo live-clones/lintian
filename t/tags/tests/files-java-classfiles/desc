@@ -5,3 +5,4 @@ Description: Test Java classfile related tags
 Test-For:
  package-installs-java-bytecode
 Test-Against:
+Check: files

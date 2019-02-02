@@ -6,3 +6,4 @@ Options: --pedantic
 Test-For:
  debug-symbol-migration-possibly-complete
 Test-Against:
+Check: rules

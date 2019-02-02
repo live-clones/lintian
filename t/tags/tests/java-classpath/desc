@@ -8,3 +8,4 @@ Extra-Build-Depends: javahelper, default-jdk
 Test-For:
  classpath-contains-relative-path
 Test-Against:
+Check: java

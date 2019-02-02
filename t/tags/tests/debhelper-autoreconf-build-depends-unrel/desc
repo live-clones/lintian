@@ -9,3 +9,4 @@ Test-Against:
  useless-autoreconf-build-depends
 Test-For:
  debhelper-tools-from-autotools-dev-are-deprecated
+Check: debhelper

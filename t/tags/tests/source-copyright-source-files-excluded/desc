@@ -7,3 +7,4 @@ Test-Against:
  files-excluded-without-copyright-format-1.0
 Test-For:
  source-includes-file-in-files-excluded
+Check: source-copyright

@@ -6,3 +6,4 @@ Description: Check detection of zero-byte files in doc directories
 Test-For: zero-byte-file-in-doc-directory
 References: Debian Bug#507273
 Test-Against:
+Check: files

@@ -8,3 +8,4 @@ Test-For:
   no-package-name
   no-version-field
 Test-Against:
+Check: fields

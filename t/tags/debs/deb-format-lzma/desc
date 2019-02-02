@@ -6,3 +6,4 @@ Test-For:
  lzma-deb-archive
  uses-deprecated-compression-for-data-tarball
 Test-Against:
+Check: deb-format

@@ -7,3 +7,6 @@ Test-For:
  orphaned-package-not-maintained-in-debian-infrastructure
 Test-Against:
  changelog-should-mention-qa
+Check:
+ fields
+ nmu

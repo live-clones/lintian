@@ -5,3 +5,4 @@ Description: Test for override_dh_systemd_enable with compat levels 11
 Test-For:
  debian-rules-uses-deprecated-systemd-override
 Test-Against:
+Check: debhelper

@@ -7,3 +7,4 @@ Options: --no-override
 Test-For:
  non-standard-dir-in-usr
 Test-Against:
+Check: files

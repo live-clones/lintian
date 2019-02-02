@@ -6,3 +6,6 @@ Test-For:
  section-area-mismatch
  unknown-section
 Test-Against:
+Check:
+ control-file
+ fields

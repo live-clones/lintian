@@ -6,3 +6,4 @@ Test-For:
 Test-Against:
  missing-pkg-php-tools-addon
 Skeleton: upload-non-native
+Check: phppear

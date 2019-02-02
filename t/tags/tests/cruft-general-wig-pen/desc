@@ -23,3 +23,7 @@ Test-For:
  unsupported-source-format
 Test-Against:
  patch-file-present-but-not-mentioned-in-series
+Check:
+ cruft
+ fields
+ patch-systems

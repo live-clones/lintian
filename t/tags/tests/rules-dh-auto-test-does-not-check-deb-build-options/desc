@@ -5,3 +5,4 @@ Description: Test for missing checks for DEB_BUILD_PROFILES
 Test-For:
  override_dh_auto_test-does-not-check-DEB_BUILD_OPTIONS
 Test-Against:
+Check: rules

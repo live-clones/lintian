@@ -7,3 +7,4 @@ Test-For:
  debian-rules-uses-deprecated-systemd-override
  excessive-debhelper-overrides
 Test-Against:
+Check: debhelper

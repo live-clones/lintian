@@ -6,3 +6,4 @@ Description: Test for trivial series file in git-patches-not-exported
 Test-For:
  git-patches-not-exported
 Test-Against:
+Check: debian-source-dir

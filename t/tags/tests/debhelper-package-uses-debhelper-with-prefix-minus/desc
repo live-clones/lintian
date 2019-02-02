@@ -5,3 +5,4 @@ Description: Test for packages using debhelper with a - prefix
 Options: --pedantic
 Test-Against:
  package-does-not-use-debhelper-or-cdbs
+Check: debhelper

@@ -6,3 +6,4 @@ Options: --pedantic
 Test-For:
  vcs-obsolete-in-debian-infrastructure
 Test-Against:
+Check: fields

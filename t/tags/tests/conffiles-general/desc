@@ -12,3 +12,4 @@ Test-For:
     non-etc-file-marked-as-conffile
     relative-conffile
 Test-Against:
+Check: conffiles

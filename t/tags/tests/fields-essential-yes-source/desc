@@ -5,3 +5,4 @@ Description: Canary test for Essential field-related checks and assumptions
 Test-Against:
     new-essential-package
     essential-in-source-package
+Check: fields

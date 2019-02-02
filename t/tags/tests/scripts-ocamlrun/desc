@@ -6,3 +6,6 @@ Test-Against: missing-dep-for-interpreter
 References: Debian Bug#495431
 Test-For:
  binary-without-manpage
+Check:
+ manpages
+ scripts

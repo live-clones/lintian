@@ -8,3 +8,4 @@ Test-For:
  program-not-linked-against-libc
  shared-lib-without-dependency-information
 Test-Against:
+Check: binaries

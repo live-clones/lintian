@@ -10,3 +10,4 @@ Options: --include-dir ./lintian-include-dir --pedantic
 Test-For:
  package-uses-experimental-debhelper-compat-version
 Test-Against:
+Check: debhelper

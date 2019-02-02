@@ -5,3 +5,4 @@ Source-Format: 3.0 (unknown-format)
 Description: Test for d/changelog being a symlink
 Test-For: unknown-source-format
 Test-Against:
+Check: debian-source-dir

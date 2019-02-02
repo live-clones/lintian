@@ -6,3 +6,4 @@ Test-For:
  incorrect-libdir-in-la-file
  non-empty-dependency_libs-in-la-file
 Test-Against:
+Check: shared-libs

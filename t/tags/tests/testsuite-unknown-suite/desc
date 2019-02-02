@@ -6,3 +6,6 @@ Test-For:
  unknown-testsuite
  xs-testsuite-field-in-debian-control
 Test-Against:
+Check:
+ testsuite
+ control-file

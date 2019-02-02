@@ -7,3 +7,4 @@ Options: --pedantic
 Test-For:
  package-lacks-versioned-build-depends-on-debhelper
 Test-Against:
+Check: debhelper

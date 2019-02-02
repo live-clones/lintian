@@ -5,3 +5,4 @@ Description: Test for unnecessary team uploads
 Test-For:
  unnecessary-team-upload
 Test-Against:
+Check: nmu

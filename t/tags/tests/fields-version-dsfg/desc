@@ -6,3 +6,6 @@ Test-Against:
  malformed-debian-changelog-version
 Test-For:
  dfsg-version-misspelled
+Check:
+ fields
+ source-changelog

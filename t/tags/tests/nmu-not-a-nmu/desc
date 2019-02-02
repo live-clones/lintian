@@ -5,3 +5,4 @@ Description: Test for MU declared as NMU
 Author: Niels Thykier <niels@thykier.net>
 Test-For: changelog-should-not-mention-nmu
 Test-Against:
+Check: nmu

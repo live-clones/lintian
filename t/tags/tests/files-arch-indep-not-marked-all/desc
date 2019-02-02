@@ -5,3 +5,4 @@ Package-Architecture: any
 Description: Test of arch indep package not marked arch:all
 Test-For: package-contains-no-arch-dependent-files
 Test-Against:
+Check: files

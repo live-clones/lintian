@@ -5,3 +5,4 @@ Description: Test for quilt patches with no series
 Extra-Build-Depends: quilt
 Test-For: quilt-build-dep-but-no-series-file
 Test-Against:
+Check: patch-systems

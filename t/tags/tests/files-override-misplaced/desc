@@ -6,3 +6,4 @@ Test-For:
  override-file-in-wrong-location
  override-file-in-wrong-package
 Test-Against:
+Check: files

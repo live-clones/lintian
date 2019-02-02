@@ -5,3 +5,4 @@ Description: Packages placed in the wrong sections
 Test-For:
  wrong-section-according-to-package-name
 Test-Against:
+Check: fields

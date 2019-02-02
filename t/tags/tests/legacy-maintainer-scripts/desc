@@ -60,3 +60,18 @@ Test-For:
  wrong-debian-qa-group-name
 Test-Against:
  init.d-script-not-marked-as-conffile
+Check:
+ standards-version
+ nmu
+ scripts
+ debconf
+ debhelper
+ changelog-file
+ watch-file
+ fields
+ init.d
+ shared-libs
+ copyright-file
+ md5sums
+ files
+ triggers

@@ -5,3 +5,4 @@ Description: Watch file that caused undef warning
 Test-For:
  orig-tarball-missing-upstream-signature
 Test-Against:
+Check: changes-file

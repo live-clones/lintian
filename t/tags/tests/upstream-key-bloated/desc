@@ -7,3 +7,4 @@ Test-For:
 Test-Against:
  public-upstream-key-unusable
  public-upstream-keys-in-multiple-locations
+Check: upstream-signing-key

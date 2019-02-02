@@ -6,3 +6,6 @@ Test-Against:
  malformed-debian-changelog-version
 Test-For:
  version-refers-to-distribution
+Check:
+ changelog-file
+ source-changelog

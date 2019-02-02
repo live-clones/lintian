@@ -7,3 +7,4 @@ Extra-Build-Depends: dpkg (<< 1.19.0)
 Test-For:
  debconf-config-not-executable
 Test-Against:
+Check: debconf

@@ -4,3 +4,4 @@ Version: 1.0-1
 Description: Check HTML-only upstream changelog
 Test-For: html-changelog-without-text-version
 Test-Against:
+Check: changelog-file

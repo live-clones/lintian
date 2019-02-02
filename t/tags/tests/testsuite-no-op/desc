@@ -5,3 +5,4 @@ Description: Test for no-op autopkgtests
 Test-For:
  no-op-testsuite
 Test-Against:
+Check: testsuite

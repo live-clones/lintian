@@ -8,3 +8,4 @@ Test-For:
  vcs-field-has-unexpected-spaces
  vcs-fields-use-more-than-one-vcs
 Test-Against:
+Check: fields

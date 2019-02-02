@@ -25,3 +25,6 @@ Test-For:
  wrong-path-for-interpreter
 References: Debian Bug#543873
 Test-Against:
+Check:
+ scripts
+ python

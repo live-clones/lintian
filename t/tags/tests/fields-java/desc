@@ -10,3 +10,4 @@ Test-For:
  needless-dependency-on-jre
  needless-suggest-recommend-libservlet-java
 Test-Against:
+Check: fields

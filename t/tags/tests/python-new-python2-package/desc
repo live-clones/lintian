@@ -6,3 +6,4 @@ Description: Check various Python 2 issues
 Test-For:
  new-package-should-not-package-python2-module
 Test-Against:
+Check: python

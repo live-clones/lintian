@@ -12,3 +12,4 @@ Test-For:
  source-is-missing
  embedded-script-includes-copyright-statement
 Test-Against:
+Check: cruft

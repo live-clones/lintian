@@ -27,3 +27,6 @@ Test-For:
  using-imperative-form-in-templates
  using-question-in-extended-description-in-templates
 Test-Against:
+Check:
+ debconf
+ po-debconf

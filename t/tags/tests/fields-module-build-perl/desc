@@ -7,3 +7,4 @@ Test-For:
  libmodule-build-perl-needs-to-be-in-build-depends
  libmodule-build-tiny-perl-needs-to-be-in-build-depends
 Test-Against:
+Check: fields

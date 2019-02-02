@@ -6,3 +6,4 @@ Package-Architecture: any
 Extra-Build-Depends: dh-python
 Test-Against:
  missing-build-dependency-for-dh-addon
+Check: debhelper

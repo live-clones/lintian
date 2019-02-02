@@ -7,3 +7,6 @@ Test-Against:
 Test-For:
  debian-revision-not-well-formed
  debian-revision-should-not-be-zero
+Check:
+ fields
+ source-changelog

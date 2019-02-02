@@ -7,3 +7,6 @@ Test-Against:
  source-nmu-has-incorrect-version-number
  malformed-debian-changelog-version
 References: Debian Bug#501523
+Check:
+ nmu
+ source-changelog

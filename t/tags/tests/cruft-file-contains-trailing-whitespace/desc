@@ -6,3 +6,4 @@ Options: --pedantic
 Test-For:
  file-contains-trailing-whitespace
 Test-Against:
+Check: cruft

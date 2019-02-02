@@ -5,3 +5,4 @@ Package-Architecture: any
 Description: Check for doc pkg not being arch all
 Test-For: documentation-package-not-architecture-independent
 Test-Against:
+Check: fields

@@ -5,3 +5,4 @@ Description: Check for nodejs problems
 Test-For:
  node-package-install-in-nodejs-rootdir
 Test-Against:
+Check: files

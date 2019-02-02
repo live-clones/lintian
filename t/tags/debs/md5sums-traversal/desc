@@ -7,3 +7,6 @@ Test-For: control-file-is-not-a-file
 Test-Against:
  file-missing-in-md5sums
  malformed-md5sums-control-file
+Check:
+ control-files
+ md5sums

@@ -5,3 +5,4 @@ Description: Test for packages that use --skip-systemd-native
 Test-For:
  skip-systemd-native-flag-missing-pre-depends
 Test-Against:
+Check: scripts

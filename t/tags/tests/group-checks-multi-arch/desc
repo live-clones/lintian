@@ -6,3 +6,4 @@ Test-For:
  debug-package-for-multi-arch-same-pkg-not-coinstallable
  dependency-is-not-multi-archified
 Test-Against:
+Check: group-checks

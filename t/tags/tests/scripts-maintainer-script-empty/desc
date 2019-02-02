@@ -4,3 +4,4 @@ Version: 1.0
 Description: Test for empty maintainer scripts
 Test-For: maintainer-script-empty
 Test-Against:
+Check: scripts

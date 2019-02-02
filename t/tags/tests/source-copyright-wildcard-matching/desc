@@ -8,3 +8,4 @@ Test-For:
  file-without-copyright-information
  unused-file-paragraph-in-dep5-copyright
 Test-Against:
+Check: source-copyright

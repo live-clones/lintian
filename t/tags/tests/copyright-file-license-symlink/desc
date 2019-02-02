@@ -7,3 +7,4 @@ Test-For:
  copyright-refers-to-symlink-license
  copyright-refers-to-versionless-license-file
 Test-Against:
+Check: copyright-file

@@ -7,3 +7,4 @@ Extra-Build-Depends: python-all-dev, python-numpy, dh-python
 Test-For:
  missing-dependency-on-numpy-abi
 Test-Against:
+Check: binaries

@@ -6,3 +6,6 @@ Test-Against:
  latest-changelog-entry-without-new-date
  latest-debian-changelog-entry-without-new-date
 References: Debian Bug#560149
+Check:
+ changelog-file
+ source-changelog

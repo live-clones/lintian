@@ -6,3 +6,4 @@ Test-For:
  redundant-bugs-field
  redundant-origin-field
 Test-Against:
+Check: fields

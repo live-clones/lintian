@@ -5,3 +5,4 @@ Description: Test for extra license files
 Test-For:
  extra-license-file
 Test-Against:
+Check: files

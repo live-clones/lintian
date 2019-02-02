@@ -5,3 +5,4 @@ Description: Test for control-files classifications
 Options: -L +=classification -C control-files
 Test-For: no-ctrl-scripts
 Test-Against:
+Check: control-files

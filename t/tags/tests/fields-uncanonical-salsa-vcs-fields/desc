@@ -5,3 +5,4 @@ Version: 1.0
 Test-For:
  vcs-field-not-canonical
 Test-Against:
+Check: fields

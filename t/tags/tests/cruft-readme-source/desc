@@ -6,3 +6,4 @@ Description: Check for cruft in README.source
 Test-For:
  readme-source-is-dh_make-template
 Test-Against:
+Check: cruft

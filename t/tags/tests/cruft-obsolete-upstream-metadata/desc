@@ -4,3 +4,4 @@ Version: 1.0
 Description: Check for obsolete path for debian/upstream/metadata
 Test-For: debian-upstream-obsolete-path
 Test-Against:
+Check: cruft

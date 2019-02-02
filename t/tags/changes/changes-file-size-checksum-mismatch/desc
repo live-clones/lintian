@@ -6,3 +6,4 @@ Test-For:
  checksum-mismatch-in-changes-file
  file-size-mismatch-in-changes-file
 Test-Against:
+Check: changes-file

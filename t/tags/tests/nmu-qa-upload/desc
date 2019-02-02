@@ -9,3 +9,6 @@ Test-For:
  qa-upload-has-incorrect-version-number
 Test-Against:
  orphaned-package-not-maintained-in-debian-infrastructure
+Check:
+ nmu
+ fields

@@ -4,3 +4,4 @@ Version: 1.0
 Description: Test newer standards version with old changelog date
 Test-For: timewarp-standards-version
 Test-Against:
+Check: standards-version

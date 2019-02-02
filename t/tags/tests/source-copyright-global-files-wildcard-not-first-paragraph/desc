@@ -5,3 +5,4 @@ Description: Test for Files: * not being the first paragraph
 Test-For:
  global-files-wildcard-not-first-paragraph-in-dep5-copyright
 Test-Against:
+Check: source-copyright

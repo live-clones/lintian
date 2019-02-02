@@ -4,3 +4,4 @@ Version: 1.0
 Test-For:
  inconsistent-appstream-metadata-license
 Test-Against:
+Check: source-copyright

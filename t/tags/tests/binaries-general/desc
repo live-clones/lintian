@@ -16,3 +16,6 @@ Test-For:
  statically-linked-binary
  unstripped-binary-or-object
 Test-Against:
+Check:
+ binaries
+ files

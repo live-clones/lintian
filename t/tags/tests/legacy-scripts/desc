@@ -69,3 +69,19 @@ Test-For:
  unusual-interpreter
  wrong-path-for-interpreter
 Test-Against:
+Check:
+ standards-version
+ rules
+ manpages
+ fields
+ nmu
+ control-files
+ copyright-file
+ debhelper
+ watch-file
+ patch-systems
+ init.d
+ files
+ scripts
+ systemd
+ md5sums

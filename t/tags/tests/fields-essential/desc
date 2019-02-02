@@ -8,3 +8,4 @@ Test-For:
  new-essential-package
  unknown-essential-value
 Test-Against:
+Check: fields

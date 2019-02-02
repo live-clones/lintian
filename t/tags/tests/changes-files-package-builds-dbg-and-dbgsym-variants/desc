@@ -8,3 +8,6 @@ Test-For:
  debian-control-has-obsolete-dbg-package
  package-builds-dbg-and-dbgsym-variants
 Test-Against:
+Check:
+ control-file
+ changes-file

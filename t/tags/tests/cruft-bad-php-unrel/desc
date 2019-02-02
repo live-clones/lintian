@@ -5,3 +5,4 @@ Description: Check for the bad php license (false-positives)
 Test-Against:
  license-problem-php-license
  license-problem-bad-php-license
+Check: cruft

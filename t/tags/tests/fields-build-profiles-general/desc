@@ -9,3 +9,6 @@ Test-For:
  invalid-restriction-formula-in-build-profiles-field
 References: Debian Bug#540594, Debian Bug#551793
 Test-Against:
+Check:
+ fields
+ control-file

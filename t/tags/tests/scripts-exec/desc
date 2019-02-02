@@ -6,3 +6,4 @@ Test-For:
  executable-not-elf-or-script
  script-not-executable
 Test-Against:
+Check: scripts

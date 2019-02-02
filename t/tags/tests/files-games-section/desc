@@ -8,3 +8,4 @@ Test-For:
  package-section-games-but-contains-no-game
  package-section-games-but-has-usr-bin
 Test-Against:
+Check: files

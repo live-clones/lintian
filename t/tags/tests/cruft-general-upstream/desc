@@ -29,3 +29,6 @@ Test-For:
  source-contains-svn-conflict-file
  source-contains-svn-control-dir
  source-is-missing
+Check:
+ cruft
+ java

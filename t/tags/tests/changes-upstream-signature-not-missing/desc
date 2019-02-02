@@ -5,3 +5,4 @@ Source-Format: 3.0 (quilt)
 Description: Upstream signature included
 Test-Against:
  orig-tarball-missing-upstream-signature
+Check: changes-file

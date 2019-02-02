@@ -6,3 +6,6 @@ Test-For:
  no-copyright-file
  no-debian-copyright
 Test-Against:
+Check:
+ copyright-file
+ source-copyright

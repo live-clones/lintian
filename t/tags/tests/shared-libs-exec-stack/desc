@@ -9,3 +9,4 @@ Test-For:
  shlib-with-executable-stack
  symbols-file-missing-build-depends-package-field
 Test-Against:
+Check: shared-libs

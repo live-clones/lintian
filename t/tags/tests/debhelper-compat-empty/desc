@@ -7,3 +7,4 @@ Test-For:
  debhelper-compat-file-is-empty
  package-uses-deprecated-debhelper-compat-version
 Test-Against:
+Check: debhelper

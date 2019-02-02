@@ -8,3 +8,4 @@ Test-For:
  multiple-distributions-in-changes-file
 References: Debian Bug#514853
 Test-Against:
+Check: changes-file

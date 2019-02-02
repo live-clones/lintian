@@ -5,3 +5,4 @@ Description: Tests for fullstop detection
 Test-For:
  description-synopsis-might-not-be-phrased-properly
 Test-Against:
+Check: description

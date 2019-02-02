@@ -5,3 +5,4 @@ Description: Test for missing repack explanations (false-positive)
 Options: --pedantic
 Test-Against:
  missing-explanation-for-repacked-upstream-tarball
+Check: source-copyright

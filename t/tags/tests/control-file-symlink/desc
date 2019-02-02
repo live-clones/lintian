@@ -5,3 +5,4 @@ Description: Test if debian/control is a symlink
 Test-For:
  debian-control-file-is-a-symlink
 Test-Against:
+Check: control-file

@@ -4,3 +4,4 @@ Version: 1.0
 Description: Test for symlinked debian/copyright
 Test-For: debian-copyright-is-symlink
 Test-Against:
+Check: source-copyright

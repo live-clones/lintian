@@ -9,3 +9,6 @@ Test-For:
  license-problem-gfdl-invariants
  license-problem-gfdl-invariants-empty
  license-problem-gfdl-non-official-text
+Check:
+ cruft
+ source-copyright

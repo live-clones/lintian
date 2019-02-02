@@ -4,3 +4,4 @@ Version: 1.0
 Description: Check changelog empty entry
 Test-For: changelog-empty-entry
 Test-Against:
+Check: changelog-file

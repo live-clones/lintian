@@ -4,3 +4,4 @@ Version: 1.0
 Description: Test package emitting errors from tar
 Test-For: tar-errors-from-data
 Test-Against:
+Check: deb-format

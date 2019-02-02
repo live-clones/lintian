@@ -49,3 +49,4 @@ Test-For:
  udev-rule-in-etc
  vim-addon-within-vim-runtime-path
 Test-Against:
+Check: files

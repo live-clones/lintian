@@ -10,3 +10,4 @@ Test-For:
  source-contains-prebuilt-python-object
  source-is-missing
 Test-Against:
+Check: cruft

@@ -6,3 +6,4 @@ Test-Depends: dh-python
 Test-For:
  missing-build-dependency-for-dh-addon
 Test-Against:
+Check: debhelper

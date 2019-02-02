@@ -6,3 +6,4 @@ Options: --pedantic
 Test-For:
  maintainer-script-supports-ancient-package-version
 Test-Against:
+Check: scripts

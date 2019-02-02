@@ -5,3 +5,4 @@ Description: Test for bad owner of control files
 Options: -C conffiles,md5sums,control-files
 Test-For: control-file-is-not-a-file
 Test-Against:
+Check: control-files

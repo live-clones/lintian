@@ -4,3 +4,4 @@ Version: 1.0
 Description: Test for no packages missing Apache NOTICE files (false-positive)
 Test-Against:
  missing-notice-file-for-apache-license
+Check: source-copyright

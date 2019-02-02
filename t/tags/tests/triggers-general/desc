@@ -8,3 +8,4 @@ Test-For:
  unknown-trigger
  uses-implicit-await-trigger
 Test-Against:
+Check: triggers

@@ -7,3 +7,4 @@ Test-For:
  debian-rules-parses-dpkg-parsechangelog
  unnecessary-source-date-epoch-assignment
 Test-Against:
+Check: rules

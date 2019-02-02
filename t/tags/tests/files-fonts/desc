@@ -11,3 +11,4 @@ Test-For:
  package-mixes-misc-and-dpi-fonts
  font-outside-font-dir
 Test-Against:
+Check: files

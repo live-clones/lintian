@@ -7,3 +7,4 @@ Test-For:
  control-file-is-empty
  unknown-control-file
 Test-Against:
+Check: control-files

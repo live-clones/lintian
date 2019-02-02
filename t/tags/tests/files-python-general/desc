@@ -12,3 +12,6 @@ Test-For:
  python-debug-in-wrong-location
 Test-Against:
   debian-control-has-obsolete-dbg-package
+Check:
+ files
+ control-file

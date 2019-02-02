@@ -5,3 +5,4 @@ Version: 1.0-1
 Options: --pedantic
 Test-For: no-homepage-field
 Test-Against: homepage-field-uses-insecure-uri
+Check: fields

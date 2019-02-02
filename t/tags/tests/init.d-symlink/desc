@@ -7,3 +7,4 @@ Test-Against:
  init.d-script-not-marked-as-conffile
 Test-For:
  upstart-job-in-etc-init.d-not-registered-via-update-rc.d
+Check: init.d

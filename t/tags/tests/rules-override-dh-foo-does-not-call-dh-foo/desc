@@ -6,3 +6,4 @@ Test-For:
  override_dh_clean-does-not-call-dh_clean
  override_dh_fixperms-does-not-call-dh_fixperms
 Test-Against:
+Check: rules

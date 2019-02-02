@@ -6,3 +6,4 @@ Options: --pedantic
 Test-For:
  homepage-field-uses-insecure-uri
 Test-Against:
+Check: fields

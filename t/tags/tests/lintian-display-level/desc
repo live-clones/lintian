@@ -19,3 +19,13 @@ Test-For:
 Test-Against:
  binary-control-field-duplicates-source
  description-possibly-contains-homepage
+Check:
+ manpages
+ control-file
+ description
+ menu-format
+ fields
+ files
+ scripts
+ nmu
+ copyright-file

@@ -13,3 +13,4 @@ Test-For:
  dh-exec-useless-usage
  package-uses-dh-exec-but-lacks-build-depends
 Test-Against:
+Check: debhelper

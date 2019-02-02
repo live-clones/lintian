@@ -6,3 +6,4 @@ Test-For:
  empty-binary-package
  empty-udeb-package
 Test-Against:
+Check: files

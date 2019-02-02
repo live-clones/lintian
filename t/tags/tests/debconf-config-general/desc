@@ -8,3 +8,4 @@ Test-For:
  possible-debconf-note-abuse
  unknown-debconf-priority
 Test-Against:
+Check: debconf

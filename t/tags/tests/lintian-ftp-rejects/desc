@@ -9,3 +9,4 @@ Test-For:
  dir-or-file-in-var-lock
  empty-binary-package
 Test-Against:
+Check: files

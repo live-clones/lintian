@@ -5,3 +5,4 @@ Description: Check for file installed in /usr/bin /bin
 Test-For:
  file-in-root-and-usr
 Test-Against:
+Check: usrmerge

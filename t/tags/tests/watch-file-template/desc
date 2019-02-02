@@ -6,3 +6,4 @@ Test-For:
  debian-watch-contains-dh_make-template
  debian-watch-uses-insecure-uri
 Test-Against:
+Check: watch-file

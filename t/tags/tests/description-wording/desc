@@ -5,3 +5,4 @@ Description: Tests for description wording
 Test-For:
  using-first-person-in-description
 Test-Against:
+Check: description

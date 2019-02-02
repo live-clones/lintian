@@ -45,3 +45,11 @@ Test-For:
  usr-share-doc-symlink-without-dependency
  virtual-package-depends-without-real-package-depends
 Test-Against:
+Check:
+ standards-version
+ fields
+ changelog-file
+ description
+ copyright-file
+ control-file
+ patch-systems

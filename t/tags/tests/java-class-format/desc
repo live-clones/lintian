@@ -9,3 +9,4 @@ Test-For:
  incompatible-java-bytecode-format
  unknown-java-class-version
 Test-Against:
+Check: java

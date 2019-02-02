@@ -6,3 +6,4 @@ Test-For:
  maintainer-address-is-root-user
  uploader-address-is-root-user
 Test-Against:
+Check: fields

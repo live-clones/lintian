@@ -6,3 +6,4 @@ Test-For:
  bad-menu-item
  wrong-section-for-udeb
 Test-Against:
+Check: fields

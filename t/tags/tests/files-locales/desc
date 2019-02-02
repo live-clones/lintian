@@ -6,3 +6,4 @@ Test-For:
  incorrect-locale-code
  unknown-locale-code
 Test-Against:
+Check: files

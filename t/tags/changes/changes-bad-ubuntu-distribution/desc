@@ -6,3 +6,4 @@ Profile: ubuntu/main
 Test-For:
  bad-distribution-in-changes-file
 Test-Against:
+Check: changes-file

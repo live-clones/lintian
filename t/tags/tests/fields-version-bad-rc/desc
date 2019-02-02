@@ -6,3 +6,6 @@ Test-Against:
  malformed-debian-changelog-version
 Test-For:
  rc-version-greater-than-expected-version
+Check:
+ fields
+ source-changelog

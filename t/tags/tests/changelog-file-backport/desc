@@ -11,3 +11,4 @@ Test-Against:
 Test-For:
  backports-upload-has-incorrect-version-number
  backports-changes-missing
+Check: changes-file

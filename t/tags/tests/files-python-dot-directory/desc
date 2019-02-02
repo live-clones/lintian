@@ -5,3 +5,4 @@ Description: Check for Python .foo dirs
 Test-For:
  package-contains-python-dot-directory
 Test-Against:
+Check: files

@@ -6,3 +6,4 @@ Options: --suppress-tags
 Description: Tests related to executable packaging files
 Test-For: executable-debhelper-file-without-being-executable
 Test-Against:
+Check: debhelper

@@ -4,3 +4,4 @@ Version: 1
 Description: Test a source with inconsistent Testsuite field
 Test-For: inconsistent-testsuite-field
 Test-Against:
+Check: testsuite

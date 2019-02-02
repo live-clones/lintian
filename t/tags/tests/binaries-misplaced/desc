@@ -6,3 +6,4 @@ Test-For:
  arch-independent-package-contains-binary-or-object
  binary-in-etc
 Test-Against:
+Check: binaries

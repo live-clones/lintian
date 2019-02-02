@@ -6,3 +6,4 @@ Test-For:
  changelog-file-not-compressed
  debian-news-file-not-compressed
 Test-Against:
+Check: changelog-file

@@ -5,3 +5,4 @@ Description: Test for no packages missing Apache NOTICE files
 Test-For:
  missing-notice-file-for-apache-license
 Test-Against:
+Check: source-copyright

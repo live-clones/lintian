@@ -6,3 +6,4 @@ Description: Test for unstable package to be installed in stable
 Test-For:
  distribution-and-changes-mismatch
 Test-Against:
+Check: changes-file

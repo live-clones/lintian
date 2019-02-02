@@ -14,3 +14,6 @@ Test-For:
  package-uses-vendor-specific-patch-series
  patch-file-present-but-not-mentioned-in-series
 Test-Against:
+Check:
+ fields
+ patch-systems

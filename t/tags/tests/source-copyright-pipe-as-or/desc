@@ -5,3 +5,4 @@ Description: Test for the pipe symbol being used as an "or"
 Test-For:
  pipe-symbol-used-as-license-disjunction
 Test-Against:
+Check: source-copyright

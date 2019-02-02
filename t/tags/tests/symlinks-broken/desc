@@ -5,3 +5,4 @@ Description: General tests broken symlinks
 Test-For:
  package-contains-broken-symlink-wildcard
 Test-Against:
+Check: symlinks

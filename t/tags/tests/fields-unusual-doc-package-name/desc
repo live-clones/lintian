@@ -6,3 +6,4 @@ Description: Check for -docs packages
 Test-For:
  unusual-documentation-package-name
 Test-Against:
+Check: fields

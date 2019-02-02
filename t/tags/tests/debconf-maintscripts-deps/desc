@@ -9,3 +9,4 @@ Test-For:
  postinst-uses-db-input
  postrm-does-not-purge-debconf
 Test-Against:
+Check: debconf

@@ -11,3 +11,6 @@ Test-For:
  package-uses-deprecated-dpatch-patch-system
  patch-file-present-but-not-mentioned-in-series
 Test-Against:
+Check:
+ fields
+ patch-systems

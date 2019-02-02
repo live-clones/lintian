@@ -5,3 +5,4 @@ Description: Test Changed-By field with missing name
 Test-For:
  changed-by-name-missing
 Test-Against:
+Check: changes-file

@@ -7,3 +7,4 @@ Options: --pedantic
 Description: Test override handling
 Test-For: renamed-tag
 Test-Against:
+Check: lintian

@@ -13,3 +13,4 @@ Test-For:
  symbols-file-missing-build-depends-package-field
  unused-shlib-entry-in-control-file
 Test-Against:
+Check: shared-libs

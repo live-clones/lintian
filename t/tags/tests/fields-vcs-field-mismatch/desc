@@ -5,3 +5,4 @@ Description: Check for packages with mismatched Vcs-* fields
 Test-For:
  vcs-field-mismatch
 Test-Against:
+Check: fields

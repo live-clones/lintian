@@ -7,3 +7,4 @@ References: Debian Bug#488832, Debian Bug#525133, #757383, #760677
 Test-For:
  desktop-mime-but-no-exec-code
 Test-Against:
+Check: menu-format

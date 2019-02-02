@@ -7,3 +7,4 @@ Test-For:
 Test-Against:
  epoch-change-without-comment
  latest-debian-changelog-entry-without-new-version
+Check: changelog-file

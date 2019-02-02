@@ -14,3 +14,4 @@ Test-For:
  prerm-calls-updatemenus
  prerm-has-useless-call-to-install-docs
 Test-Against:
+Check: menus

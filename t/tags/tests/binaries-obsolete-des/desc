@@ -7,3 +7,4 @@ Test-For:
   obsolete-des-encryption
   obsolete-crypt-alias
 Test-Against:
+Check: binaries

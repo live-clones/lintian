@@ -4,3 +4,4 @@ Version: 1.0
 Description: Test for typo in DEP 5 field name
 Test-For: field-name-typo-in-dep5-copyright
 Test-Against:
+Check: source-copyright

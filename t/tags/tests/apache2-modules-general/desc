@@ -11,3 +11,4 @@ Test-For:
  apache2-configuration-files-need-conf-suffix
  apache2-unparsable-dependency
 Test-Against:
+Check: apache2

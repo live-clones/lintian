@@ -5,3 +5,4 @@ Skeleton: upload-non-native
 Options: --pedantic
 Test-Against:
  malformed-debian-changelog-version
+Check: source-changelog

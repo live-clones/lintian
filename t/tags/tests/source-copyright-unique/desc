@@ -5,3 +5,4 @@ Description: Test if standalone paragraph name are unique
 Test-For:
  dep5-copyright-license-name-not-unique
 Test-Against:
+Check: source-copyright

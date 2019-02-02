@@ -8,3 +8,6 @@ Test-For:
 Test-Against:
  new-essential-package
 Options: -C standards-version
+Check:
+ standards-version
+ fields

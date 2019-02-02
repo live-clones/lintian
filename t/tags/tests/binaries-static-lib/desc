@@ -7,3 +7,4 @@ Test-For:
  static-library-has-unneeded-section
  unstripped-static-library
 Test-Against:
+Check: binaries

@@ -9,3 +9,7 @@ Test-For:
  control-tarball-compression-format
  rules-requires-root-explicitly
 Test-Against:
+Check:
+ deb-format
+ rules
+ control-file

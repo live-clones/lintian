@@ -6,3 +6,6 @@ Test-Against:
  malformed-debian-changelog-version
 Test-For:
  team-upload-has-incorrect-version-number
+Check:
+ nmu
+ source-changelog

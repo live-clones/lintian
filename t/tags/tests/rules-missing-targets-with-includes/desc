@@ -4,3 +4,4 @@ Version: 1.0
 Description: Test a debian/rules with targets included from another file
 Test-Against: debian-rules-missing-required-target
 References: Debian Bug#607281
+Check: rules

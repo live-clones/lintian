@@ -8,3 +8,4 @@ Test-For:
  md5sum-mismatch
  md5sums-lists-nonexistent-file
 Test-Against:
+Check: md5sums

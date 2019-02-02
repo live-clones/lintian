@@ -16,3 +16,4 @@ Test-For:
  svn-commit-file-in-package
  windows-thumbnail-database-in-package
 Test-Against:
+Check: files

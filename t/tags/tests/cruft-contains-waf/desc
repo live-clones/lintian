@@ -4,3 +4,4 @@ Skeleton: upload-non-native
 Description: Check for sources with waf
 Test-For: source-contains-waf-binary
 Test-Against:
+Check: cruft

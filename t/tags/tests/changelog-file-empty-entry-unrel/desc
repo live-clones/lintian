@@ -3,3 +3,4 @@ Testname: changelog-file-empty-entry-unrel
 Version: 1.0
 Description: Check changelog empty entry (UNRELEASED)
 Test-Against: changelog-empty-entry
+Check: changelog-file

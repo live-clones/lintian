@@ -7,3 +7,4 @@ Options: --pedantic
 Test-For:
  package-does-not-install-examples
 Test-Against:
+Check: cruft

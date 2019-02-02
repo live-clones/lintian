@@ -82,3 +82,18 @@ Test-For:
  zero-byte-file-in-doc-directory
 Test-Against:
  epoch-change-without-comment
+Check:
+ standards-version
+ menus
+ files
+ manpages
+ changelog-file
+ fields
+ cruft
+ scripts
+ conffiles
+ copyright-file
+ md5sums
+ control-file
+ symlinks
+ description

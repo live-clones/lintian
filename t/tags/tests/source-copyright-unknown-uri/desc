@@ -6,3 +6,4 @@ Options: --pedantic
 Test-For:
  unknown-copyright-format-uri
 Test-Against:
+Check: source-copyright

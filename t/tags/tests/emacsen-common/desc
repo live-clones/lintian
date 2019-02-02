@@ -5,3 +5,4 @@ Description: Tests for emacsen-common packages not using dh-elpa
 Test-For:
  emacsen-common-without-dh-elpa
 Test-Against:
+Check: elpa

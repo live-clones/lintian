@@ -6,3 +6,4 @@ Options: --pedantic
 Test-Against:
  vcs-obsolete-in-debian-infrastructure
  vcs-field-not-canonical
+Check: fields

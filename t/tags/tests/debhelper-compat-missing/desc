@@ -4,3 +4,4 @@ Version: 1.0
 Description: Test for missing debian/compat
 Test-For: debhelper-compat-file-is-missing
 Test-Against:
+Check: debhelper

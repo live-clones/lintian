@@ -10,3 +10,4 @@ Test-For:
  shlib-with-executable-bit
  symbols-file-missing-build-depends-package-field
 Test-Against:
+Check: shared-libs

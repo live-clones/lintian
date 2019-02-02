@@ -13,3 +13,4 @@ Test-For:
  doc-base-file-syntax-error
  doc-base-uses-applications-section
 References: Debian Bug#495836
+Check: menus

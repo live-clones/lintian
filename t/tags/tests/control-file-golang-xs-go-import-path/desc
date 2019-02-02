@@ -4,3 +4,4 @@ Version: 1.0
 Description: False-positive test for XS-Go-Import field
 Package-Architecture: any
 Test-Against: missing-xs-go-import-path-for-golang-package
+Check: control-file

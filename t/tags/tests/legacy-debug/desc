@@ -39,3 +39,14 @@ Test-For:
  unstripped-binary-or-object
  unused-shlib-entry-in-symbols-control-file
  version-substvar-for-external-package
+Check:
+ standards-version
+ binaries
+ manpages
+ fields
+ changelog-file
+ nmu
+ debhelper
+ control-file
+ shared-libs
+ version-substvars

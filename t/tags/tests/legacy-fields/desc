@@ -22,3 +22,12 @@ Test-For:
  source-nmu-has-incorrect-version-number
  unknown-section
 Test-Against:
+Check:
+ standards-version
+ nmu
+ debhelper
+ changelog-file
+ fields
+ rules
+ source-changelog
+ copyright-file

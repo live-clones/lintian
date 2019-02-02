@@ -8,3 +8,6 @@ Test-Against: statically-linked-binary
 Test-For:
  missing-built-using-field-for-golang-package
  missing-xs-go-import-path-for-golang-package
+Check:
+ control-file
+ binaries

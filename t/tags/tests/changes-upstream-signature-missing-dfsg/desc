@@ -6,3 +6,6 @@ Test-For:
  debian-watch-could-verify-download
 Test-Against:
  orig-tarball-missing-upstream-signature
+Check:
+ watch-file
+ changes-file

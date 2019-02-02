@@ -20,3 +20,6 @@ Test-For:
  latest-debian-changelog-entry-reuses-existing-version
  misspelled-closes-bug
  possible-missing-colon-in-closes
+Check:
+ changelog-file
+ source-changelog

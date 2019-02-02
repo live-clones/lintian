@@ -21,3 +21,6 @@ Test-Against:
  source-contains-svn-control-dir
 Test-For:
  debian-watch-does-not-check-gpg-signature
+Check:
+ watch-file
+ cruft

@@ -8,3 +8,4 @@ Test-For:
  dev-pkg-without-shlib-symlink
  symbols-file-missing-build-depends-package-field
 Test-Against:
+Check: shared-libs

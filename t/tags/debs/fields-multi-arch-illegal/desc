@@ -4,3 +4,4 @@ Version: 1.0
 Description: Test package with illegal Multi-arch value
 Test-For: illegal-multi-arch-value
 Test-Against:
+Check: fields

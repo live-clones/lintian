@@ -6,3 +6,6 @@ Test-For:
  homepage-for-cpan-package-contains-version
  obsolete-url-in-packaging
 Test-Against:
+Check:
+ fields
+ obsolete-sites

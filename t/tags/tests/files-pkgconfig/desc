@@ -9,3 +9,6 @@ Test-For:
  pkg-config-references-unknown-shared-library
  pkg-config-unavailable-for-cross-compilation
 Test-Against:
+Check:
+ files
+ shared-libs

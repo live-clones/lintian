@@ -9,3 +9,4 @@ Test-Against:
  copyright-should-refer-to-common-license-file-for-lgpl
  copyright-should-refer-to-common-license-file-for-apache-2
  copyright-file-lacks-pointer-to-perl-license
+Check: copyright-file

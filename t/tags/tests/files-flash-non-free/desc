@@ -4,3 +4,4 @@ Version: 1.0
 Description: non-free flash files
 Test-For: non-free-flash
 Test-Against:
+Check: files

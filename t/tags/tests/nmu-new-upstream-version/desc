@@ -4,3 +4,4 @@ Description: Test for new upstream NMU versions
 Skeleton: upload-non-native
 Test-Against:
  malformed-debian-changelog-version
+Check: source-changelog

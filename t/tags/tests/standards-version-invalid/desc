@@ -4,3 +4,4 @@ Version: 1.0
 Description: Test invalid standards version
 Test-For: invalid-standards-version
 Test-Against:
+Check: standards-version

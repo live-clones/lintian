@@ -4,3 +4,4 @@ Version: 1.0
 Description: Test too-new standards version
 Test-For: newer-standards-version
 Test-Against:
+Check: standards-version

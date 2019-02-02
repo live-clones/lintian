@@ -24,3 +24,6 @@ Test-For:
  package-relation-with-perl-modules
  package-relation-with-self
 Test-Against:
+Check:
+ fields
+ control-file

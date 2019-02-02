@@ -5,3 +5,4 @@ Description: Spelling errors in binaries
 Package-Architecture: any
 Test-For: spelling-error-in-binary
 Test-Against:
+Check: binaries

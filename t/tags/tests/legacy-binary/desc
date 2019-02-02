@@ -96,3 +96,23 @@ Test-For:
  xs-vcs-field-in-debian-control
 Test-Against:
  arch-dep-package-has-big-usr-share
+Check:
+ standards-version
+ control-file
+ binaries
+ manpages
+ description
+ changelog-file
+ menu-format
+ copyright-file
+ rules
+ fields
+ menus
+ files
+ scripts
+ group-checks
+ nmu
+ source-changelog
+ md5sums
+ version-substvars
+ huge-usr-share

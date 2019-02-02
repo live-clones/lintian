@@ -12,3 +12,4 @@ Test-For: control-interpreter-in-usr-local
  unknown-control-interpreter
 References: Debian Bug#508307
 Test-Against:
+Check: scripts
