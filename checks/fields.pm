@@ -191,6 +191,7 @@ my %VCS_CANONIFY = (
         ) {
             $_[1] = 'vcs-git-uses-invalid-user-uri';
         }
+        $_[0] =~ s{(https?://.*?\.git)(?:\.git)+$}{$1};
         $_[0] =~ s{https?\Q://git.debian.org/\E(?:git/?)?}
                   {https://anonscm.debian.org/git/};
         $_[0] =~ s{https?\Q://anonscm.debian.org/git/git/\E}
