@@ -3,7 +3,5 @@ Testname: rules-parses-dpkg-parsechangelog
 Sequence: 6000
 Version: 1.0
 Description: Test for debian/rules manually parsing dpkg-parsechangelog
-Test-For:
- debian-rules-parses-dpkg-parsechangelog
 Test-Against:
 Check: rules

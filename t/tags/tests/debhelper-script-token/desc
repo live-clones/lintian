@@ -2,6 +2,5 @@ Skeleton: upload-native
 Testname: debhelper-script-token
 Version: 1.0
 Description: Check debhelper script token with rule minimization
-Test-For: maintainer-script-lacks-debhelper-token
 Test-Against:
 Check: debhelper

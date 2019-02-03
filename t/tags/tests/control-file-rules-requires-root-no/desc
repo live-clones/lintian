@@ -3,11 +3,6 @@ Testname: control-file-rules-requires-root-no
 Version: 1.0
 Description: Test for "Rules-Requires-Root: no"
 Options: -L +classification
-Test-For:
- control-tarball-compression-format
- data-tarball-compression-format
- debian-rules-should-not-use-custom-compression-settings
- rules-does-not-require-root
 Test-Against:
 Check:
  deb-format

@@ -5,13 +5,6 @@ Description: Test for old debian/compat file
 Dh-Compat-Level: 8
 Options: --include-dir ./lintian-include-dir --pedantic --display-level +classification
 Profile: lintian-test
-Test-For:
- control-tarball-compression-format
- data-tarball-compression-format
- debian-rules-should-not-use-custom-compression-settings
- package-uses-old-debhelper-compat-version
- debian-build-system
- rules-does-not-require-root
 Test-Against:
 Check:
  deb-format

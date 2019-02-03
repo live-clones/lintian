@@ -2,7 +2,5 @@ Skeleton: upload-native
 Testname: fields-missing-vcs-browser
 Version: 1.0
 Description: Check for packages missing Vcs-Browser
-Test-For:
- missing-vcs-browser-field
 Test-Against:
 Check: fields

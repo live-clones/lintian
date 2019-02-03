@@ -3,7 +3,5 @@ Testname: changes-experimental-mismatch
 Sequence: 6000
 Version: 1.0
 Description: Test for experimental package to be installed in unstable
-Test-For:
- distribution-and-experimental-mismatch
 Test-Against:
 Check: changes-file

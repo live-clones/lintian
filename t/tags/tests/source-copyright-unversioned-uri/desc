@@ -3,7 +3,5 @@ Testname: source-copyright-unversioned-uri
 Version: 1.0
 Description: Test for unversioned DEP 5-like URI
 Options: --pedantic
-Test-For:
- unversioned-copyright-format-uri
 Test-Against:
 Check: source-copyright

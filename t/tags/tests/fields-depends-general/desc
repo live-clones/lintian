@@ -2,27 +2,6 @@ Skeleton: upload-native
 Testname: fields-depends-general
 Version: 1.0
 Description: General tests for binary package dependencies
-Test-For:
- binary-package-depends-on-toolchain-package
- breaks-without-version
- conflicts-with-dependency
- conflicts-with-version
- depends-on-essential-package-without-using-version
- depends-exclusively-on-makedev
- depends-on-libdb1-compat
- depends-on-metapackage
- depends-on-obsolete-package
- depends-on-old-emacs
- depends-on-packaging-dev
- depends-on-python-minimal
- doc-package-depends-on-main-package
- lib-recommends-documentation
- needlessly-depends-on-awk
- ored-depends-on-obsolete-package
- package-depends-on-an-x-font-package
- package-depends-on-itself
- package-relation-with-perl-modules
- package-relation-with-self
 Test-Against:
 Check:
  fields

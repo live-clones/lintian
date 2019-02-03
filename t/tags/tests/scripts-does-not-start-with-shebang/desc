@@ -3,8 +3,5 @@ Testname: scripts-does-not-start-with-shebang
 Version: 1.0
 Options: -L +classification -C scripts
 Description: Check for maintainer scripts that do not start with #!
-Test-For:
- script-without-interpreter
- elf-maintainer-script
 Test-Against:
 Check: scripts

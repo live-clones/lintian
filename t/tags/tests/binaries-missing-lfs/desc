@@ -6,9 +6,6 @@ Dh-Compat-Level: 9
 Description: Test for missing lfs
 Test-Architectures: i386 armhf
 Package-Architecture: any
-Test-For:
- binary-file-built-without-LFS-support
- symbols-file-missing-build-depends-package-field
 Test-Against:
  wrong-section-according-to-package-name
 Check:

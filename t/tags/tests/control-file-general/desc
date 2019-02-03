@@ -3,22 +3,6 @@ Testname: control-file-general
 Version: 1.0
 Description: Various problems with debian/control
 Options: --pedantic
-Test-For:
- binary-control-field-duplicates-source
- build-info-in-binary-control-file-section
- control-file-contains-dh_make-vcs-comment
- debian-control-has-dbgsym-package
- debian-control-has-obsolete-dbg-package
- debian-control-repeats-field-name-in-value
- duplicate-long-description
- duplicate-short-description
- missing-separator-between-items
- no-section-field-for-source
- obsolete-relation-form-in-source
- package-depends-on-itself
- pre-depends-directly-on-multiarch-support
- stronger-dependency-implies-weaker
- xs-vcs-field-in-debian-control
 References: Debian Bug#30020, Debian Bug#409099, Debian Bug#516706,
  Debian Bug#533202, Debian Bug#557971, Debian Bug#573399, Debian Bug#580494,
  Debian Bug#657110

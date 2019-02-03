@@ -2,7 +2,5 @@ Skeleton: changes
 Testname: changed-by-no-name
 Version: 1.0
 Description: Test Changed-By field with missing name
-Test-For:
- changed-by-name-missing
 Test-Against:
 Check: changes-file

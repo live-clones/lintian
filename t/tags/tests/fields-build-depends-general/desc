@@ -3,21 +3,6 @@ Testname: fields-build-depends-general
 Version: 1.0
 Package-Architecture: all
 Description: General tests for build dependencies
-Test-For:
- build-conflicts-with-build-dependency
- build-depends-on-1-revision
- build-depends-on-build-essential
- build-depends-on-essential-package-without-using-version
- build-depends-on-metapackage
- build-depends-on-non-build-package
- build-depends-on-obsolete-package
- build-depends-on-python-dev-with-no-arch-any
- build-depends-on-versioned-berkeley-db
- conflicting-negation-in-source-relation
- build-depends-on-build-essential-package-without-using-version
- depends-on-packaging-dev
- invalid-arch-string-in-source-relation
- ored-build-depends-on-obsolete-package
 References: Debian Bug#540594, Debian Bug#551793
 Test-Against:
 Check: fields

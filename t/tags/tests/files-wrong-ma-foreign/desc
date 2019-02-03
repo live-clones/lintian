@@ -4,9 +4,6 @@ Version: 1.0
 Description: Test for wrong usage of Multi-Arch foreign
 Default-Build-Depends: debhelper (>= 9.20151004~)
 Dh-Compat-Level: 9
-Test-for:
- multiarch-foreign-shared-library
- symbols-file-missing-build-depends-package-field
 Test-Against:
 Check:
  files

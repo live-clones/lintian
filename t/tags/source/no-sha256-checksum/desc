@@ -4,6 +4,5 @@ Version: 1
 Source-Format: 3.0 (native)
 Dh-Compat-Level: 9
 Description: Test for missing Checksums-Sha256 field
-Test-For: no-strong-digests-in-dsc
 Test-Against:
 Check: fields

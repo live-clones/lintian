@@ -2,8 +2,5 @@ Skeleton: upload-native
 Testname: dbus-services
 Version: 1.0
 Description: test D-Bus .service files
-Test-For:
- dbus-session-service-wrong-name
- dbus-system-service-wrong-name
 Test-Against:
 Check: dbus

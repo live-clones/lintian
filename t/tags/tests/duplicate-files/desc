@@ -3,8 +3,5 @@ Testname: duplicate-files
 Version: 1.0
 Description: Test for duplicate files
 Options: -L +pedantic
-Test-For:
- duplicate-changelog-files
- duplicate-files
 Test-Against:
 Check: duplicate-files

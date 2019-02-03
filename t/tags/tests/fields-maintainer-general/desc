@@ -2,12 +2,5 @@ Skeleton: upload-native
 Testname: fields-maintainer-general
 Version: 1.0
 Description: Tests of various maintainer and uploader tags
-Test-For:
- duplicate-uploader
- maintainer-also-in-uploaders
- maintainer-name-missing
- uploader-address-malformed
- uploader-name-missing
- uploader-address-causes-mail-loops-or-bounces
 Test-Against:
 Check: fields

@@ -5,6 +5,4 @@ Description: Test for old python-version fields
 Options: --pedantic
 Test-Against:
  old-python-version-field
-Test-For:
- ancient-python-version-field
 Check: python

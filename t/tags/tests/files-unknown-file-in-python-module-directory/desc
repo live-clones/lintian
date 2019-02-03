@@ -2,7 +2,5 @@ Skeleton: upload-native
 Testname: files-unknown-file-in-python-module-directory
 Version: 1.0
 Description: Test for invalid files in Python module directory
-Test-For:
- unknown-file-in-python-module-directory
 Test-Against:
 Check: files

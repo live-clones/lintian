@@ -1,9 +1,6 @@
 Testname: phppear-general
 Version: 1.0-1
 Description: General phppear tests
-Test-For:
- pear-channel-without-pkg-php-tools-builddep
- pear-package-without-pkg-php-tools-builddep
 Test-Against:
  missing-pkg-php-tools-buildsystem
 Skeleton: upload-non-native

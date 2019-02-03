@@ -4,7 +4,5 @@ Sequence: 6000
 Section: python
 Version: 1.0
 Description: Check for packages installing headers incorrectly
-Test-For:
- package-contains-python-header-in-incorrect-directory
 Test-Against:
 Check: files

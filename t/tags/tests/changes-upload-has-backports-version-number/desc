@@ -2,7 +2,5 @@ Skeleton: upload-native
 Testname: changes-upload-has-backports-version-number
 Version: 1.0~bpo9+1
 Description: Check for backports that have an incorrect Distribution
-Test-For:
- upload-has-backports-version-number
 Test-Against:
 Check: changes-file

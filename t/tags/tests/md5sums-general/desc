@@ -2,10 +2,5 @@ Skeleton: upload-native
 Testname: md5sums-general
 Version: 1.0
 Description: Test of md5sums related tags
-Test-For:
- file-missing-in-md5sums
- malformed-md5sums-control-file
- md5sum-mismatch
- md5sums-lists-nonexistent-file
 Test-Against:
 Check: md5sums

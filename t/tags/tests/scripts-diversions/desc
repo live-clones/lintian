@@ -2,10 +2,5 @@ Skeleton: upload-native
 Testname: scripts-diversions
 Version: 1.0
 Description: Tests of dpkg-divert checks
-Test-For:
- diversion-for-unknown-file
- package-uses-local-diversion
- orphaned-diversion
- remove-of-unknown-diversion
 Test-Against:
 Check: scripts

@@ -6,14 +6,6 @@ Dh-Compat-Level: 9
 Profile: lintian-test
 Options: --include-dir ./lintian-include-dir
 Description: Test dependency requirements for debhelper
-Test-For:
- dh-manual-sequence-control-obsolete
- debhelper-but-no-misc-depends
- missing-build-dependency
- missing-build-dependency-for-dh_-command
- package-needs-versioned-debhelper-build-depends
- package-uses-debhelper-but-lacks-build-depends
- weak-dependency-on-misc-depends
 Test-Against:
 Check:
  debhelper

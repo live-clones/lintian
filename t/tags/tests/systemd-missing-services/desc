@@ -3,9 +3,6 @@ Testname: systemd-missing-services
 Version: 1.0
 Description: Check for missing service files
 Options: --pedantic
-Test-For:
- missing-systemd-service-for-init.d-script
- systemd-service-file-missing-hardening-features
 Test-Against:
  omitted-systemd-service-for-init.d-script
 Check: systemd

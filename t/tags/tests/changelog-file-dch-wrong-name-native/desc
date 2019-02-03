@@ -2,6 +2,5 @@ Skeleton: upload-native
 Testname: changelog-file-dch-wrong-name-native
 Version: 1.0
 Description: Test if Debian changelog has the wrong name
-Test-For: wrong-name-for-changelog-of-native-package
 Test-Against:
 Check: changelog-file

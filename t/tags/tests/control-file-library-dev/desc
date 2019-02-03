@@ -2,6 +2,5 @@ Skeleton: upload-native
 Testname: control-file-library-dev
 Version: 1.0
 Description: Check control file handling of library dev packages
-Test-For: weak-library-dev-dependency
 Test-Against:
 Check: control-file

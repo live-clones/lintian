@@ -4,9 +4,6 @@ Description: Test for weird versions
 Skeleton: upload-non-native
 Test-Against:
  malformed-debian-changelog-version
-Test-For:
- debian-revision-not-well-formed
- debian-revision-should-not-be-zero
 Check:
  fields
  source-changelog

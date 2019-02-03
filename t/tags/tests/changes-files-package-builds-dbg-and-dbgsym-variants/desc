@@ -3,10 +3,6 @@ Testname: changes-files-package-builds-dbg-and-dbgsym-variants
 Version: 1.0
 Package-Architecture: any
 Description: Package builds -dbg and -dbgsym
-Test-For:
- debian-control-has-dbgsym-package
- debian-control-has-obsolete-dbg-package
- package-builds-dbg-and-dbgsym-variants
 Test-Against:
 Check:
  control-file

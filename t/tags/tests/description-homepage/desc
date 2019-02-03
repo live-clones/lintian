@@ -3,6 +3,5 @@ Testname: description-homepage
 Version: 1.0
 Options: --pedantic
 Description: Test for a homepage reference in the description
-Test-For: description-possibly-contains-homepage
 Test-Against:
 Check: description

@@ -2,9 +2,5 @@ Skeleton: upload-native
 Testname: debhelper-override-typos
 Version: 1.0
 Description: Test for typos in override targets
-Test-For:
- typo-in-debhelper-override-target
- debian-rules-uses-deprecated-systemd-override
- excessive-debhelper-overrides
 Test-Against:
 Check: debhelper

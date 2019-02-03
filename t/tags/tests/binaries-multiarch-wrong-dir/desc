@@ -6,7 +6,5 @@ Dh-Compat-Level: 9
 Description: Multiarch-related tests but not multiarch itself
 Test-Architectures: i386 amd64
 Package-Architecture: any
-Test-For:
- triplet-dir-and-architecture-mismatch
 Test-Against:
 Check: files

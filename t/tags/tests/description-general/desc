@@ -4,26 +4,4 @@ Version: 1.0
 Description: Tests of various description tags
 Test-Against:
  description-synopsis-might-not-be-phrased-properly
-Test-For:
- capitalization-error-in-description
- capitalization-error-in-description-synopsis
- description-contains-dh-make-perl-template
- description-contains-homepage
- description-contains-invalid-control-statement
- description-contains-tabs
- description-is-debmake-template
- description-is-pkg-name
- description-starts-with-leading-spaces
- description-starts-with-package-name
- description-synopsis-is-duplicated
- description-synopsis-is-empty
- description-synopsis-starts-with-article
- description-too-long
- description-too-short
- extended-description-is-empty
- extended-description-line-too-long
- possible-unindented-list-in-extended-description
- spelling-error-in-description
- spelling-error-in-description-synopsis
- using-first-person-in-description
 Check: description

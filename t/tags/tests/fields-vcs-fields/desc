@@ -8,9 +8,4 @@ Test-Against:
  vcs-field-not-canonical
  vcs-field-uses-unknown-uri-format
  vcs-git-uses-invalid-user-uri
-Test-For:
- vcs-field-uses-insecure-uri
- vcs-field-uses-not-recommended-uri-format
- vcs-browser-links-to-empty-view
- vcs-fields-use-more-than-one-vcs
 Check: fields

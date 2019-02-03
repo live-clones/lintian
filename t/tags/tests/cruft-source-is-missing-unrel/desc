@@ -6,9 +6,6 @@ Package-Architecture: any
 Description: Check for source-is-missing false positives
 Test-Against:
  source-is-missing
-Test-For:
- empty-binary-package
- package-contains-no-arch-dependent-files
 Check:
  files
  cruft

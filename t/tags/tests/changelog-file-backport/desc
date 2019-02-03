@@ -8,7 +8,4 @@ Options: --include-dir ./lintian-include-dir --pedantic
 Profile: lintian-test
 Test-Against:
  upload-has-backports-version-number
-Test-For:
- backports-upload-has-incorrect-version-number
- backports-changes-missing
 Check: changes-file

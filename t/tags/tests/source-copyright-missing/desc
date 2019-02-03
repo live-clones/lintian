@@ -2,9 +2,6 @@ Skeleton: upload-native
 Testname: source-copyright-missing
 Version: 1.0
 Description: Test for missing copyright
-Test-For:
- no-copyright-file
- no-debian-copyright
 Test-Against:
 Check:
  copyright-file

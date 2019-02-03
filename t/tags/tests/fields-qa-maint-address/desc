@@ -2,7 +2,5 @@ Skeleton: upload-native
 Testname: fields-qa-maint-address
 Version: 1.0
 Description: Test for the QA in Maintainer field
-Test-For:
- wrong-debian-qa-address-set-as-maintainer
 Test-Against:
 Check: fields

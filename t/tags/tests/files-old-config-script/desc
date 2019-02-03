@@ -3,9 +3,5 @@ Testname: files-old-config-script
 Version: 1.0
 Description: Check for detection of old style config script
 Options: --pedantic
-Test-For:
- old-style-config-script
- old-style-config-script-multiarch-path
- old-style-config-script-multiarch-path-arch-all
 Test-Against:
 Check: files

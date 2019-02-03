@@ -3,7 +3,5 @@ Testname: python-package-depends-on-package-from-other-python-variant
 Sequence: 6000
 Version: 1.0
 Description: Check for Python packages that depend on variants of themselves
-Test-For:
- python-package-depends-on-package-from-other-python-variant
 Test-Against:
 Check: python

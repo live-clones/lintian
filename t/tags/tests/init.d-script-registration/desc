@@ -2,8 +2,5 @@ Skeleton: upload-native
 Testname: init.d-script-registration
 Version: 1.0
 Description: Test tags related to the registration of init scripts
-Test-For:
- init.d-script-missing-lsb-section
- script-in-etc-init.d-not-registered-via-update-rc.d
 Test-Against:
 Check: init.d

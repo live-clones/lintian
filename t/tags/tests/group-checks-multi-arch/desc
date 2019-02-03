@@ -2,8 +2,5 @@ Skeleton: upload-native
 Testname: group-checks-multi-arch
 Version: 1.0
 Description: Test for multi-arch issues
-Test-For:
- debug-package-for-multi-arch-same-pkg-not-coinstallable
- dependency-is-not-multi-archified
 Test-Against:
 Check: group-checks

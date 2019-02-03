@@ -2,11 +2,6 @@ Skeleton: upload-native
 Testname: udev-rules
 Version: 1.0
 Description: Check udev rules for mistakes
-Test-For:
- inconsistent-appstream-metadata-license
- udev-rule-unreadable
- udev-rule-missing-uaccess
- udev-rule-missing-subsystem
 Test-Against:
 Check:
  source-copyright

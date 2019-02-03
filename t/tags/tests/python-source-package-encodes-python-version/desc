@@ -3,7 +3,5 @@ Testname: python-source-package-encodes-python-version
 Source: python3-foo
 Version: 1.0
 Description: Check packages that encode their Python version in their name
-Test-For:
- source-package-encodes-python-version
 Test-Against:
 Check: python

@@ -3,8 +3,6 @@ Testname: fields-orphaned-package-not-maintained-in-debian-infrastructure
 Description: Test for orphaned package not maintained in Debian infrastucture
 Version: 1.0
 Package-Architecture: all
-Test-For:
- orphaned-package-not-maintained-in-debian-infrastructure
 Test-Against:
  changelog-should-mention-qa
 Check:

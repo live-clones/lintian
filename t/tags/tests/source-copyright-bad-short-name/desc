@@ -2,8 +2,5 @@ Skeleton: upload-native
 Testname: source-copyright-bad-short-name
 Version: 1.0
 Description: Test for bad short name
-Test-For:
- invalid-short-name-in-dep5-copyright
- space-in-std-shortname-in-dep5-copyright
 Test-Against:
 Check: source-copyright

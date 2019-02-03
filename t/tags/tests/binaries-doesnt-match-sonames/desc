@@ -4,9 +4,6 @@ Version: 1.0
 Default-Build-Depends: debhelper (>= 9.20151004~)
 Dh-Compat-Level: 9
 Description: Test for library package that does not match SONAME
-Test-For:
- package-name-doesnt-match-sonames
- symbols-file-missing-build-depends-package-field
 Test-Against:
 Check:
  binaries

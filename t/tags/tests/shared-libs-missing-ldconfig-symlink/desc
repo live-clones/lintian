@@ -5,8 +5,5 @@ Package-Architecture: any
 Default-Build-Depends: debhelper (>= 9.20151004~)
 Dh-Compat-Level: 9
 Description: Test for missing ldconfig symlink for shared libs
-Test-For:
- ldconfig-symlink-missing-for-shlib
- symbols-file-missing-build-depends-package-field
 Test-Against:
 Check: shared-libs

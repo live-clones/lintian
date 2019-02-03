@@ -4,8 +4,6 @@ Version: 1.0.dfsg1
 Description: Use of dfsg in a native package
 Test-Against:
  malformed-debian-changelog-version
-Test-For:
- dfsg-version-in-native-package
 Check:
  fields
  source-changelog

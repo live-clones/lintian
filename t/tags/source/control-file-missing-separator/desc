@@ -2,6 +2,5 @@ Skeleton: dsc
 Testname: control-file-missing-separator
 Version: 1
 Description: Test for missing separators in control files
-Test-For: missing-separator-between-items
 Test-Against:
 Check: control-file

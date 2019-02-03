@@ -3,8 +3,5 @@ Testname: files-uses-dpkg-database-directly
 Version: 1.0
 Description: Check for code using dpkg internals
 Package-Architecture: any
-Test-For:
- package-contains-documentation-outside-usr-share-doc
- uses-dpkg-database-directly
 Test-Against:
 Check: files

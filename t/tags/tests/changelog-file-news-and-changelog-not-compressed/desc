@@ -2,8 +2,5 @@ Skeleton: upload-native
 Testname: changelog-file-news-and-changelog-not-compressed
 Version: 1.0
 Description: General tests for changelog-file tags
-Test-For:
- changelog-file-not-compressed
- debian-news-file-not-compressed
 Test-Against:
 Check: changelog-file

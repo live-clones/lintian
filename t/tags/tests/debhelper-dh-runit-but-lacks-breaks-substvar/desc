@@ -4,7 +4,5 @@ Version: 1.0
 Description: Check Breaks requirements for dh --with dh_runit
 Test-Depends:
  dh-runit
-Test-For:
- package-uses-dh-runit-but-lacks-breaks-substvar
 Test-Against:
 Check: debhelper

@@ -2,6 +2,5 @@ Skeleton: upload-native
 Testname: control-file-national-encoding
 Version: 1.0
 Description: Test for control with national encoding
-Test-For: debian-control-file-uses-obsolete-national-encoding
 Test-Against:
 Check: control-file

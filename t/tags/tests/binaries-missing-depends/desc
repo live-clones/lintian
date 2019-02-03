@@ -5,9 +5,6 @@ Default-Build-Depends: debhelper (>= 9.20151004~)
 Dh-Compat-Level: 9
 Description: Test for missing depends line
 Package-Architecture: any
-Test-For:
- missing-depends-line
- symbols-file-missing-build-depends-package-field
 Test-Against:
 Check:
  binaries

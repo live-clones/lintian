@@ -4,8 +4,6 @@ Version: 1.0.dfsg1-1
 Description: Use of ".dfsg"
 Test-Against:
  malformed-debian-changelog-version
-Test-For:
- dfsg-version-with-period
 Check:
  fields
  source-changelog

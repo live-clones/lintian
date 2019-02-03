@@ -2,6 +2,5 @@ Skeleton: upload-native
 Testname: changelog-file-no-dch-native
 Version: 1.0
 Description: Test if Debian changelog is missing in native pkg
-Test-For: changelog-file-missing-in-native-package
 Test-Against:
 Check: changelog-file

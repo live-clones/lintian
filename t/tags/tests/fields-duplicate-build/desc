@@ -3,6 +3,5 @@ Testname: fields-duplicate-build
 Version: 1.0
 Package-Architecture: all
 Description: Check for duplicate build relations
-Test-For: package-has-a-duplicate-build-relation
 Test-Against:
 Check: fields

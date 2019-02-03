@@ -2,7 +2,5 @@ Skeleton: upload-native
 Testname: fields-vcs-field-insecure-uri
 Description: Test for VCS-* fields using insecure URIs
 Version: 1.0
-Test-For:
- vcs-field-uses-insecure-uri
 Test-Against:
 Check: fields

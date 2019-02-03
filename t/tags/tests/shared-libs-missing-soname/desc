@@ -5,7 +5,5 @@ Package-Architecture: any
 Default-Build-Depends: debhelper (>= 9.20151004~)
 Dh-Compat-Level: 9
 Description: Test for shlib without SONAME
-Test-For:
- sharedobject-in-library-directory-missing-soname
 Test-Against:
 Check: shared-libs

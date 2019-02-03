@@ -2,18 +2,5 @@ Skeleton: upload-native
 Testname: files-privacybreach
 Version: 1.0
 Description: Check for different html privacy breach
-Test-For:
- privacy-breach-generic
- privacy-breach-google-adsense
- privacy-breach-google-cse
- privacy-breach-google-plus
- privacy-breach-donation
- privacy-breach-facebook
- privacy-breach-logo
- privacy-breach-piwik
- privacy-breach-statistics-website
- privacy-breach-twitter
- privacy-breach-w3c-valid-html
- privacy-breach-uses-embedded-file
 Test-Against:
 Check: files

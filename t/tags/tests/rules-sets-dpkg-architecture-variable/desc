@@ -2,7 +2,5 @@ Skeleton: upload-native
 Testname: rules-sets-dpkg-architecture-variable
 Version: 1.0
 Description: Test for unnecessary dpkg-architecture assignments
-Test-For:
- debian-rules-sets-dpkg-architecture-variable
 Test-Against:
 Check: rules

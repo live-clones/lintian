@@ -2,7 +2,5 @@ Skeleton: upload-native
 Testname: cruft-non-free-img
 Version: 1.0
 Description: Test of non free image like lenna
-Test-For:
- license-problem-non-free-img-lenna
 Test-Against:
 Check: cruft

@@ -3,6 +3,5 @@ Testname: magic-architecture-srcpkg-wrong
 Version: 1.0-1
 Type: non-native
 Description: Test package for "any" plus specific arch in .dscs
-Test-For: magic-arch-in-arch-list
 Test-Against:
 Check: fields

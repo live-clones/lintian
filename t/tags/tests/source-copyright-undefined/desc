@@ -2,8 +2,5 @@ Skeleton: upload-native
 Testname: source-copyright-undefined
 Version: 1.0
 Description: Test for fixme/todo/unknown
-Test-For:
- dep5-copyright-license-name-not-unique
- license-problem-undefined-license
 Test-Against:
 Check: source-copyright

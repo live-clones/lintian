@@ -3,7 +3,5 @@ Skeleton: upload-non-native
 Version: 1+dfsg-1
 Description: Test for missing repack explanations
 Options: --pedantic
-Test-For:
- missing-explanation-for-repacked-upstream-tarball
 Test-Against:
 Check: source-copyright

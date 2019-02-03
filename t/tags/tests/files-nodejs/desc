@@ -2,7 +2,5 @@ Skeleton: upload-native
 Testname: files-nodejs
 Version: 1.0
 Description: Check for nodejs problems
-Test-For:
- node-package-install-in-nodejs-rootdir
 Test-Against:
 Check: files

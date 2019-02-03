@@ -2,7 +2,6 @@ Skeleton: upload-native
 Testname: rules-build-dep-pattern
 Version: 1.0
 Description: Check recognition of pattern dependencies
-Test-For: missing-python-build-dependency
 References: Bug#536405
 Test-Against:
 Check: rules

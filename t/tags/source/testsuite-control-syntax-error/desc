@@ -2,6 +2,5 @@ Skeleton: dsc
 Testname: testsuite-control-syntax-error
 Version: 1
 Description: Detection of syntax errors in autopkgtest control file
-Test-For: syntax-error-in-debian-tests-control
 Test-Against:
 Check: testsuite

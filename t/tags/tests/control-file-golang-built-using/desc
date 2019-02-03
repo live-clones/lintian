@@ -5,7 +5,4 @@ Description: False-positive test for Built-Using field
 Package-Architecture: any
 Test-Against:
  missing-built-using-field-for-golang-package
-Test-For:
- built-using-field-on-arch-all-package
- missing-xs-go-import-path-for-golang-package
 Check: control-file

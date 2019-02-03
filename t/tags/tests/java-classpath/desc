@@ -5,7 +5,5 @@ Description: Various checks about JAR files
 Author: Vincent Fourmond <fourmond@debian.org>
 Section: java
 Extra-Build-Depends: javahelper, default-jdk
-Test-For:
- classpath-contains-relative-path
 Test-Against:
 Check: java

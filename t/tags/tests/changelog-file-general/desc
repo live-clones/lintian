@@ -6,20 +6,6 @@ Test-Against:
  malformed-debian-changelog-version
  hyphen-in-native-debian-changelog-version
  debian-changelog-version-requires-debian-revision
-Test-For:
- bad-intended-distribution
- changelog-not-compressed-with-max-compression
- changelog-references-temp-security-identifier
- debian-changelog-file-contains-invalid-email-address
- debian-changelog-file-contains-obsolete-user-emacs-settings
- debian-changelog-line-too-long
- epoch-changed-but-upstream-version-did-not-go-backwards
- improbable-bug-number-in-closes
- latest-changelog-entry-without-new-date
- latest-debian-changelog-entry-without-new-date
- latest-debian-changelog-entry-reuses-existing-version
- misspelled-closes-bug
- possible-missing-colon-in-closes
 Check:
  changelog-file
  source-changelog

@@ -3,7 +3,5 @@ Skeleton: upload-native
 Version: 1.0
 Description: Test for "real" files outside of /usr
 Options: -L +classification -C files
-Test-For:
- package-contains-usr-unmerged-pathnames
 Test-Against:
 Check: files

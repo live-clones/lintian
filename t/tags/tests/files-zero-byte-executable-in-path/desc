@@ -2,9 +2,6 @@ Testname: files-zero-byte-executable-in-path
 Skeleton: upload-native
 Version: 1.0
 Description: Check detection of zero-byte executables in PATH
-Test-For:
- executable-not-elf-or-script
- zero-byte-executable-in-path
 Test-Against:
 Check:
  scripts

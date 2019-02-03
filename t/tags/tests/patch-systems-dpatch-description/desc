@@ -4,12 +4,6 @@ Version: 1.0
 Description: Test patch-system tags for a dpatch package
 Extra-Build-Depends: dpatch
 Options: --pedantic
-Test-For:
- build-depends-on-obsolete-package
- dpatch-index-references-non-existent-patch
- dpatch-missing-description
- package-uses-deprecated-dpatch-patch-system
- patch-file-present-but-not-mentioned-in-series
 Test-Against:
 Check:
  fields

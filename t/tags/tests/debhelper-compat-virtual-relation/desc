@@ -5,9 +5,6 @@ Description: Test debhelper-compat as a build-dependency
 Options: -L +classification -C debhelper
 Default-Build-Depends:
  debhelper (>= 11.3~)
-Test-For:
- debian-build-system
- debhelper-compat-virtual-relation
 Test-Against:
  package-uses-debhelper-but-lacks-build-depends
  package-lacks-versioned-build-depends-on-debhelper

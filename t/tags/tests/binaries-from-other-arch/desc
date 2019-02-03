@@ -4,8 +4,5 @@ Test-Architectures: amd64 i386
 Package-Architecture: any
 Version: 1.0
 Description: Test package with a pseudo binary from a different architecture
-Test-For:
- apparently-corrupted-elf-binary
- binary-from-other-architecture
 Test-Against:
 Check: binaries

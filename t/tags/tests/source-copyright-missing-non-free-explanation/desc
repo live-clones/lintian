@@ -3,7 +3,5 @@ Testname: source-copyright-missing-non-free-explanation
 Version: 1.0
 Description: Test for missing contrib/non-free explanations
 Section: contrib/doc
-Test-For:
- missing-explanation-for-contrib-or-non-free-package
 Test-Against:
 Check: source-copyright

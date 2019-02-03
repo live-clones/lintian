@@ -3,14 +3,5 @@ Testname: rules-general
 Version: 1.0
 Package-Architecture: all
 Description: Test various debian/rules checks
-Test-For:
- clean-should-be-satisfied-by-build-depends
- debian-rules-is-dh_make-template
- debian-rules-passes-version-info-to-dh_shlibdeps
- debian-rules-should-not-automatically-update-control
- debian-rules-should-not-use-DEB_BUILD_OPTS
- debian-rules-should-not-use-DH_EXTRA_ADDONS
- debian-rules-should-not-use-pwd
- debian-rules-should-not-use-underscore-variable
 Test-Against:
 Check: rules

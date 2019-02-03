@@ -3,7 +3,5 @@ Testname: changes-bad-ubuntu-distribution
 Version: 1.0+ubuntu2
 Description: Test for invalid Ubuntu distribution
 Profile: ubuntu/main
-Test-For:
- bad-distribution-in-changes-file
 Test-Against:
 Check: changes-file

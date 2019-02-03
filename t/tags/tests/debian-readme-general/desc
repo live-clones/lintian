@@ -2,10 +2,6 @@ Skeleton: upload-native
 Testname: debian-readme-general
 Version: 1.0
 Description: General tests for README.Debian
-Test-For:
- readme-debian-contains-invalid-email-address
- readme-debian-mentions-usr-doc
- spelling-error-in-readme-debian
 References: Debian Bug#556456
 Test-Against:
 Check: debian-readme

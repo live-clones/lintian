@@ -2,7 +2,5 @@ Skeleton: upload-native
 Testname: md5sums-missing
 Version: 1.0
 Description: Test of missing md5sums file
-Test-For:
- no-md5sums-control-file
 Test-Against:
 Check: md5sums

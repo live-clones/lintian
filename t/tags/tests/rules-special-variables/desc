@@ -2,6 +2,5 @@ Skeleton: upload-native
 Testname: rules-special-variables
 Version: 1.0
 Description: Test for debian/rules using special variables
-Test-For: debian-rules-should-not-use-or-modify-user-only-variable
 Test-Against:
 Check: rules

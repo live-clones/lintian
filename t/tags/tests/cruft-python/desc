@@ -4,10 +4,5 @@ Version: 1.0
 Description: Misc errors related to Python
 Options: --pedantic
 Extra-Build-Depends: python
-Test-For:
- debian-pycompat-is-obsolete
- debian-pyversions-is-obsolete
- source-contains-prebuilt-python-object
- source-is-missing
 Test-Against:
 Check: cruft

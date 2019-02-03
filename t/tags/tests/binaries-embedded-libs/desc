@@ -3,7 +3,5 @@ Testname: binaries-embedded-libs
 Package-Architecture: any
 Version: 1.0
 Description: Package with binary with library-unique strings
-Test-For:
- embedded-library
 Test-Against:
 Check: binaries

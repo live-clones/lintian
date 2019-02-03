@@ -2,12 +2,5 @@ Skeleton: upload-native
 Testname: fields-java
 Version: 1.0
 Description: General tests for java package (build) dependencies
-Test-For:
- build-depends-on-obsolete-package
- build-depends-on-specific-java-doc-package
- build-depends-on-an-obsolete-java-package
- depends-on-specific-java-doc-package
- needless-dependency-on-jre
- needless-suggest-recommend-libservlet-java
 Test-Against:
 Check: fields

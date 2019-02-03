@@ -3,7 +3,5 @@ Testname: python-package-missing-depends-on-python
 Sequence: 6000
 Version: 1.0
 Description: Check for packages missing depends on Python
-Test-For:
- python-package-missing-depends-on-python
 Test-Against:
 Check: python

@@ -4,13 +4,5 @@ Version: 1.0
 Default-Build-Depends: debhelper (>= 9.20151004~)
 Dh-Compat-Level: 9
 Description: Test checks related to shlibs files
-Test-For: 
- duplicate-entry-in-shlibs-control-file
- no-shlibs-control-file
- shlib-missing-in-control-file
- shlibs-declares-dependency-on-other-package
- shlibs-uses-obsolete-relation
- symbols-file-missing-build-depends-package-field
- unused-shlib-entry-in-control-file
 Test-Against:
 Check: shared-libs

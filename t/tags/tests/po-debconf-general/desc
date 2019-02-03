@@ -2,16 +2,6 @@ Skeleton: upload-native
 Testname: po-debconf-general
 Version: 1.0
 Description: General tests for debconf translations
-Test-For:
- invalid-po-file
- misnamed-po-file
- missing-file-from-potfiles-in
- no-complete-debconf-translation
- no-debconf-config
- stray-translated-debconf-templates
- translated-default-field
- untranslatable-debconf-templates
- unused-debconf-template
 Test-Against:
 Check:
  po-debconf

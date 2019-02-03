@@ -2,8 +2,5 @@ Skeleton: upload-native
 Testname: scripts-missing-call-to-dpkg-maintscript-helper
 Version: 1.0
 Description: Test for packages that miss calls to dpkg-maintscript-helper(1)
-Test-For:
- maintainer-script-should-not-use-dpkg-maintscript-helper
- missing-call-to-dpkg-maintscript-helper
 Test-Against:
 Check: scripts

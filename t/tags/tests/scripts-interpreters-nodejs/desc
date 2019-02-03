@@ -2,9 +2,5 @@ Skeleton: upload-native
 Testname: scripts-interpreters-nodejs
 Version: 1.0
 Description: Check various NodeJS issues
-Test-For:
- missing-dep-for-interpreter
- script-uses-deprecated-nodejs-location
- example-script-uses-deprecated-nodejs-location
 Test-Against:
 Check: scripts

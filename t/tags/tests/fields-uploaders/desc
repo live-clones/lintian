@@ -2,9 +2,5 @@ Skeleton: upload-native
 Testname: fields-uploaders
 Version: 1.0
 Description: General tests of the uploaders field
-Test-For:
- uploader-address-is-on-localhost
- uploader-address-looks-weird
- uploader-address-malformed
 Test-Against:
 Check: fields

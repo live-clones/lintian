@@ -5,6 +5,4 @@ Source-Format: 3.0 (quilt)
 Description: Test for files listed in Files-Excluded
 Test-Against:
  files-excluded-without-copyright-format-1.0
-Test-For:
- source-includes-file-in-files-excluded
 Check: source-copyright

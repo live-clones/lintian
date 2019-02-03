@@ -3,7 +3,5 @@ Testname: source-copyright-ood-uri
 Version: 1.0
 Description: Test for out-of-date DEP 5-like URI
 Options: --pedantic
-Test-For:
- out-of-date-copyright-format-uri
 Test-Against:
 Check: source-copyright

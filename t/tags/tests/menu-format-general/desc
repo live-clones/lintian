@@ -2,24 +2,5 @@ Skeleton: upload-native
 Testname: menu-format-general
 Version: 1.0
 Description: Test menu file tags
-Test-For:
- bad-test-in-menu-item
- command-in-menu-file-and-desktop-file
- duplicated-tag-in-menu-item
- menu-command-not-in-package
- menu-icon-cannot-be-parsed
- menu-icon-missing
- menu-icon-not-in-xpm-format
- menu-icon-too-big
- menu-item-creates-new-root-section
- menu-item-creates-new-section
- menu-item-uses-apps-games-section
- menu-item-uses-apps-section
- menu-item-uses-icon-none
- menu-icon-uses-relative-path
- menu-item-uses-windowmanagers-section
- non-wm-in-windowmanager-menu-section
- pkg-not-in-package-test
- unparsable-menu-item
 Test-Against:
 Check: menu-format

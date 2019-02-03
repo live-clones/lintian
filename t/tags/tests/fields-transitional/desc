@@ -2,6 +2,5 @@ Skeleton: upload-native
 Testname: fields-transitional
 Version: 1.0
 Description: Test for transitional package in wrong section
-Test-For: transitional-package-should-be-oldlibs-optional
 Test-Against:
 Check: fields

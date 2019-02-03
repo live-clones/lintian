@@ -2,6 +2,5 @@ Skeleton: upload-native
 Testname: description-perl
 Version: 1.0
 Description: Tests of perl-related description tags
-Test-For: perl-module-name-not-mentioned-in-description
 Test-Against:
 Check: description

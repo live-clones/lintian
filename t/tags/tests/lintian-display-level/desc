@@ -3,19 +3,6 @@ Sequence: 2500
 Skeleton: upload-non-native
 Version: 1.0+dsfg-1.1
 Description: Test Lintian --display-level handling
-Test-For:
- binary-without-manpage
- debian-control-has-unusual-field-spacing
- description-synopsis-might-not-be-phrased-properly
- desktop-entry-limited-to-environments
- dfsg-version-misspelled
- dir-in-usr-local
- dir-or-file-in-var-lock
- example-unusual-interpreter
- maintainer-upload-has-incorrect-version-number
- new-essential-package
- no-homepage-field
- possible-gpl-code-linked-with-openssl
 Test-Against:
  binary-control-field-duplicates-source
  description-possibly-contains-homepage

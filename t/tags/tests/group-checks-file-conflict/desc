@@ -2,6 +2,5 @@ Skeleton: upload-native
 Testname: group-checks-file-conflict
 Version: 1.0
 Description: Test for overlapping files
-Test-For: binaries-have-file-conflict
 Test-Against:
 Check: group-checks

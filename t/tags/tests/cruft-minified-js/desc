@@ -4,12 +4,5 @@ Version: 1.0
 Description: Misc errors related to minified javascript
 Options: --pedantic
 Extra-Build-Depends: uglifyjs
-Test-For:
- insane-line-length-in-source-file
- source-contains-prebuilt-javascript-object
- source-contains-browserified-javascript
- source-contains-prebuilt-pandoc-documentation
- source-is-missing
- embedded-script-includes-copyright-statement
 Test-Against:
 Check: cruft

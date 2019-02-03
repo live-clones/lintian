@@ -2,7 +2,5 @@ Skeleton: upload-native
 Testname: files-hyphen-file
 Version: 1.0
 Description: Test for files called "-"
-Test-For:
- hyphen-file
 Test-Against:
 Check: files

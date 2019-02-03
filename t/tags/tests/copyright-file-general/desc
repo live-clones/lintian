@@ -3,32 +3,6 @@ Testname: copyright-file-general
 Version: 1.0
 Description: Test checking of copyright files
 Options: --pedantic
-Test-For:
- FSSTND-dir-in-usr
- copyright-contains-automatically-extracted-boilerplate
- copyright-does-not-refer-to-common-license-file
- copyright-file-compressed
- copyright-file-contains-full-apache-2-license
- copyright-file-contains-full-gfdl-license
- copyright-file-contains-full-gpl-license
- copyright-file-is-symlink
- copyright-file-lacks-pointer-to-perl-license
- copyright-has-crs
- copyright-has-url-from-dh_make-boilerplate
- copyright-refers-to-compressed-license
- copyright-refers-to-deprecated-bsd-license-file
- copyright-refers-to-incorrect-directory
- copyright-refers-to-nonexistent-license-file
- copyright-refers-to-old-directory
- copyright-should-refer-to-common-license-file-for-apache-2
- copyright-should-refer-to-common-license-file-for-gfdl
- copyright-should-refer-to-common-license-file-for-gpl
- copyright-should-refer-to-common-license-file-for-lgpl
- copyright-without-copyright-notice
- debian-copyright-file-uses-obsolete-national-encoding
- helper-templates-in-copyright
- no-copyright-file
- old-fsf-address-in-copyright-file
 Test-Against:
 Check:
  files

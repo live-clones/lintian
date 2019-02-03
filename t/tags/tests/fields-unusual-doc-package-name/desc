@@ -3,7 +3,5 @@ Testname: fields-unusual-doc-package-name
 Version: 1.0
 Package-Architecture: all
 Description: Check for -docs packages
-Test-For:
- unusual-documentation-package-name
 Test-Against:
 Check: fields
