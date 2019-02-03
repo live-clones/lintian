@@ -58,19 +58,22 @@ use File::Spec::Functions qw(abs2rel rel2abs splitpath catpath);
 use File::Compare;
 use File::Copy;
 use File::stat;
-use List::Util qw(max min any);
+use List::Compare;
+use List::Util qw(max min any all);
 use Path::Tiny;
 use Test::More;
 use Text::CSV;
 use Try::Tiny;
 
 use Lintian::Command qw(safe_qx);
+use Lintian::Profile;
 
 use Test::Lintian::ConfigFile qw(read_config);
 use Test::Lintian::Helper qw(rfc822date);
 use Test::Lintian::Hooks
   qw(find_missing_prerequisites run_lintian sed_hook sort_lines calibrate);
 use Test::Lintian::Prepare qw(early_logpath);
+use Test::Lintian::UniversalTags qw(get_tagnames);
 use Test::StagedFileProducer;
 
 use constant SPACE => q{ };
@@ -365,7 +368,7 @@ sub runner {
     say EMPTY;
     $producer->run(verbose => 1);
 
-    my @errors = check_result($testcase, $extracted, $expected, $specified);
+    my @errors = check_result($testcase, $extracted, $expected);
 
     my $okay = !scalar @errors;
 
@@ -411,102 +414,81 @@ tags before calibration. Returns a list of errors, if there are any.
 =cut
 
 sub check_result {
-    my ($testcase, $actual, $expected, $originaltags) = @_;
+    my ($testcase, $actualpath, $expectedpath) = @_;
 
     # fail if tags do not match
-    return 'Tags do not match' if (compare($actual, $expected) != 0);
+    return 'Tags do not match' if (compare($actualpath, $expectedpath) != 0);
 
-    # check all Test-For tags were seen and all Test-Against tags were not
-    my %test_for = map { $_ => 1 } split SPACE, $testcase->{test_for}//EMPTY;
-    my %test_against =map { $_ => 1 } split SPACE,
-      $testcase->{test_against}//EMPTY;
-
-    return unless (%test_for || %test_against);
+    # no furter checks if the test is not about tags
+    return unless length $testcase->{check};
 
     my @errors;
 
-    my $csv = Text::CSV->new({ sep_char => '|' });
+    my $profile = Lintian::Profile->new(undef, [$ENV{LINTIAN_ROOT}]);
 
-    # look through actual tags
-    my @lines = path($actual)->lines_utf8({ chomp => 1 });
-    foreach my $line (@lines) {
+    # get tags for checks
+    my @related;
+    my @checks = split(SPACE, $testcase->{check});
+    foreach my $check (@checks) {
+        my $checkscript = $profile->get_script($check);
+        die "Unknown Lintian check $check"
+          unless defined $checkscript;
 
-        my $status = $csv->parse($line);
-        die "Cannot parse line $line: " . $csv->error_diag
-          unless $status;
-        my ($type, $package, $name, $details) = $csv->fields;
-
-        unless (length $type && length $package && length $name) {
-            push(@errors, "Invalid line in $actual: $line");
-            next;
-        }
-
-        # check if tag was blacklisted
-        if ($test_against{$name}) {
-
-            # warn just once about a tag
-            delete $test_against{$name};
-            push(@errors, "Tag $name seen but listed in Test-Against");
-        }
-
-        # mark as seen
-        delete $test_for{$name};
+        push(@related, $checkscript->tags);
     }
 
-    # check if test was calibrated
-    if (defined $originaltags && compare($originaltags, $expected) != 0) {
+    @related = sort @related;
 
-        # tags lost in calibration; like binaries-hardening on some arches
-        my %lost;
+    #diag "#Related tag: $_" for @related;
 
-        # parse expected tags
-        my @lines = path($expected)->lines_utf8({ chomp => 1 });
-        foreach my $line (@lines) {
+    # get expected tags
+    my @expected = sort +get_tagnames($expectedpath);
 
-            my $status = $csv->parse($line);
-            die "Cannot parse line $line: " . $csv->error_diag
-              unless $status;
-            my ($type, $package, $name, $details) = $csv->fields;
+    #diag "=Expected tag: $_" for @expected;
 
-            unless (length $type && length $package && length $name) {
-                push(@errors, "Invalid line in $expected: $line");
-                next;
-            }
+    # calculate Test-For and Test-Against; results are sorted
+    my $material = List::Compare->new(\@expected, \@related);
+    my @test_for = $material->get_intersection;
+    my @test_against = $material->get_Ronly;
 
-            # mark as seen
-            $lost{$name} = 1;
-        }
+    #diag "+Test-For: $_" for @test_for;
+    #diag "-Test-Against (calculated): $_" for @test_against;
 
-        # parse original expected tags
-        my @origlines = path($originaltags)->lines_utf8({ chomp => 1 });
-        foreach my $line (@origlines) {
+    # get Test-Against if present, and override
+    if (exists $testcase->{test_against}) {
+        my @override = sort +split(SPACE, $testcase->{test_against});
 
-            # not tag in this line
-            next if $line =~ /^N: /;
+        #diag "&Test-Against (override): $_" for @override;
 
-            # some traversal tests create packages that are skipped
-            next if $line =~ /tainted/ && $line =~ /skipping/;
+        diag
+"$testcase->{testname}: Explicit Test-Against matches computed value."
+          if List::Compare->new(\@test_against, \@override)->is_LequivalentR();
 
-            # look for "EWI: package[ type]: tag"
-            my ($name)
-              = $line =~ /^.: \S+(?: (?:changes|source|udeb))?: (\S+)/o;
-            unless (length $name) {
-                push(@errors, "Invalid line: $line");
-                next;
-            }
-            delete $lost{$name};
-        }
-
-        # remove tags that were calibrated out
-        foreach my $name (keys %lost) {
-            delete $test_for{$name};
-        }
+        # override
+        @test_against = @override;
     }
 
-    # check if the test missed any tags
-    for my $name (sort keys %test_for) {
-        push(@errors, "Tag $name listed in Test-For but not found");
-    }
+    # get actual tags from output
+    my @actual = sort +get_tagnames($actualpath);
+
+    #diag "*Actual tag found: $_" for @actual;
+
+    # find tags not seen; result is sorted
+    my @missing = List::Compare->new(\@test_for, \@actual)->get_Lonly;
+
+    # check for blacklisted tags; result is sorted
+    my @unexpected
+      = List::Compare->new(\@test_against, \@actual)->get_intersection;
+
+    # warn about unexpected tags
+    push(@errors, "Tag $_ seen but listed in Test-Against")for @unexpected;
+
+    # warn about missing tags
+    push(@errors, "Tag $_ listed in Test-For but not seen")for @missing;
+
+    push(@errors,
+'Test-Against is empty (requiring tags in Test-For) but no tags are expected'
+    )unless scalar @test_against || scalar @expected;
 
     return @errors;
 }

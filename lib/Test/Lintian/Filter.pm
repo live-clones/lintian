@@ -51,7 +51,8 @@ BEGIN {
 use Carp;
 use File::Spec::Functions qw(rel2abs splitpath catpath);
 use File::Find::Rule;
-use List::MoreUtils qw(uniq any);
+use List::Util qw(uniq any all);
+use Text::CSV;
 
 use Lintian::Profile;
 
@@ -64,6 +65,7 @@ my @LINTIAN_SUITES = (TAGS);
 use constant DESC => 'desc';
 use constant TWO_SEPARATED_BY_COLON => qr/([^:]+):([^:]+)/;
 use constant EMPTY => q{};
+use constant SPACE => q{ };
 
 =head1 FUNCTIONS
 
@@ -184,27 +186,28 @@ sub find_selected_lintian_testpaths {
             push(@insuite, @withtests);
         }
 
-        # find tests for selected tags and checks
-        if (scalar @{$filter->{tag}} || scalar @{$filter->{check}}) {
+        # find tests for selected checks and tags
+        if (scalar @{$filter->{check}} || scalar @{$filter->{tag}}) {
 
-            my @combined_tags = @{$filter->{tag}};
+            my %wanted = map { $_ => 1 } @{$filter->{check}};
 
-            foreach my $check (@{$filter->{check}}) {
-                my $checkscript = $profile->get_script($check);
-                die("Cannot find check $check")
-                  unless defined $checkscript;
-                push(@combined_tags, $checkscript->tags);
+            for my $tag (@{$filter->{tag}}) {
+                my $taginfo = $profile->get_tag($tag);
+                unless ($taginfo) {
+                    say "Tag $tag not found";
+                    return;
+                }
+                $wanted{$taginfo->script} = 1;
             }
 
-            my %tag_wanted = map { $_ => 1 } @combined_tags;
-
             for my $testpath (find_all_testpaths($suitepath)) {
-
                 my $desc = read_config("$testpath/" . DESC);
-                foreach my $tag (find_all_tags($desc)) {
 
+                next unless exists $desc->{check};
+
+                foreach my $check (split(SPACE, $desc->{check})) {
                     push(@insuite, $testpath)
-                      if $tag_wanted{$tag};
+                      if exists $wanted{$check};
                 }
             }
         }
@@ -266,21 +269,72 @@ sub find_testpaths_by_name {
     return @testpaths;
 }
 
-=item find_all_tags(DESC)
+=item find_all_tags(TEST_PATH)
 
 Returns an array containing all tags that somehow concern the test
-described by hash DESC.
+located in TEST_PATH.
 
 =cut
 
 sub find_all_tags {
-    my ($desc) = @_;
+    my ($testpath) = @_;
 
-    my $tagnames = $desc->{test_for}//'';
-    $tagnames .= ' ' . $desc->{test_against}
-      if $desc->{test_against};
+    my $desc = read_config("$testpath/" . DESC);
 
-    return split(/\s+/, $tagnames);
+    return EMPTY unless length $desc->{check};
+
+    my %tags;
+
+    my $LINTIAN_ROOT = $ENV{'LINTIAN_ROOT'}//die('Cannot find LINTIAN_ROOT');
+    my $profile = Lintian::Profile->new(undef, [$LINTIAN_ROOT]);
+
+    my @checks = split(SPACE, $desc->{check});
+    foreach my $check (@checks) {
+        my $checkscript = $profile->get_script($check);
+        die "Unknown Lintian check $check"
+          unless defined $checkscript;
+
+        $tags{$_} = 1 for $checkscript->tags;
+    }
+
+    return keys %tags
+      unless length $desc->{test_against};
+
+    # read tags from specification
+    my $temp = Path::Tiny->tempfile;
+    die "tagextract failed: $!"
+      if system('t/bin/tagextract', '-f', 'EWI', "$testpath/tags",
+        $temp->stringify);
+    my @lines = $temp->lines_utf8({ chomp => 1 });
+
+    my $csv = Text::CSV->new({ sep_char => '|' });
+
+    my %expected;
+    foreach my $line (@lines) {
+
+        my $status = $csv->parse($line);
+        die "Cannot parse line $line: " . $csv->error_diag
+          unless $status;
+
+        my ($type, $package, $name, $details) = $csv->fields;
+
+        die "Cannot parse line $line"
+          unless all { length } ($type, $package, $name);
+
+        $expected{$name} = 1;
+    }
+
+    # remove tags not appearing in specification
+    foreach my $name (keys %tags) {
+        delete $tags{$name}
+          unless $expected{$name};
+    }
+
+    # add tags listed in Test-Against
+    my @test_against = split(SPACE, $desc->{test_against});
+    $tags{$_} = 1 for @test_against;
+
+    return keys %tags;
 }
 
 =back
