@@ -2,9 +2,4 @@ Testname: upstream-key-minimal
 Skeleton: upload-non-native
 Version: 1.0-1
 Description: Test with a minimal public upstream signing key (false positive)
-Test-Against:
- public-upstream-key-unusable
- public-upstream-key-not-minimal
- public-upstream-key-in-native-package
- public-upstream-keys-in-multiple-locations
 Check: upstream-signing-key

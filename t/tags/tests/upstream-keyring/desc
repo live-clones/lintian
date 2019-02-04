@@ -2,9 +2,4 @@ Testname: upstream-keyring
 Skeleton: upload-non-native
 Version: 1.0-1
 Description: Test with a keyring (false positive, from inkscape)
-Test-Against:
- public-upstream-key-unusable
- public-upstream-key-not-minimal
- public-upstream-key-in-native-package
- public-upstream-keys-in-multiple-locations
 Check: upstream-signing-key

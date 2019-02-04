@@ -5,5 +5,4 @@ Package-Architecture: any
 Options: --pedantic
 Section: ocaml
 Description: Test the OCaml-related tags
-Test-Against:
 Check: ocaml

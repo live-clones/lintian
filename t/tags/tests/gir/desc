@@ -2,5 +2,4 @@ Skeleton: upload-native
 Testname: gir
 Version: 1.0
 Description: test GObject-Introspection
-Test-Against:
 Check: gir

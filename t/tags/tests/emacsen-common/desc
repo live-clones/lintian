@@ -2,5 +2,4 @@ Testname: emacsen-common
 Skeleton: upload-non-native
 Version: 1.0-1
 Description: Tests for emacsen-common packages not using dh-elpa
-Test-Against:
 Check: elpa

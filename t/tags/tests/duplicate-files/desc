@@ -3,5 +3,4 @@ Testname: duplicate-files
 Version: 1.0
 Description: Test for duplicate files
 Options: -L +pedantic
-Test-Against:
 Check: duplicate-files

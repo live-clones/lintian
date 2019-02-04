@@ -3,8 +3,4 @@ Skeleton: upload-non-native
 Version: 1.0-1
 Source-Format: 3.0 (quilt)
 Description: Test with an empty public upstream signing key (requires source format 3.0)
-Test-Against:
- public-upstream-key-not-minimal
- public-upstream-key-in-native-package
- public-upstream-keys-in-multiple-locations
 Check: upstream-signing-key
