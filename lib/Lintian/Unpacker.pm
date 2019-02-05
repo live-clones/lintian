@@ -439,17 +439,15 @@ sub process_tasks {
                         # failed ...
                         $failed{$procid} = 1;
                         delete $active{$procid};
-                        $loop->loop_stop if not %{$running_jobs};
-                        return;
+                    }else {
+                        # The collection was success
+                        $lpkg->_mark_coll_finished($coll, $cs->version);
+                        $cmap->satisfy($coll);
+                       # If the entry is marked as failed, don't break the loop
+                       # for it.
+                        return if exists $failed{$procid};
+                        $active{$procid} = 1 if $cmap->selectable;
                     }
-
-                    # The collection was success
-                    $lpkg->_mark_coll_finished($coll, $cs->version);
-                    $cmap->satisfy($coll);
-                    # If the entry is marked as failed, don't break the loop
-                    # for it.
-                    return if exists $failed{$procid};
-                    $active{$procid} = 1 if $cmap->selectable;
 
                     my @task = $find_next_task->();
                     $sch_task_inner->(@task)
