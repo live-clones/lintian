@@ -34,10 +34,10 @@ use List::Util qw(all uniq);
 use Path::Tiny;
 use Test::More;
 
+use lib "$ENV{'LINTIAN_TEST_ROOT'}/lib";
+
 use Lintian::Profile;
 use Test::Lintian::ConfigFile qw(read_config);
-
-use lib "$ENV{'LINTIAN_TEST_ROOT'}/lib";
 
 use constant SPACE => q{ };
 use constant EMPTY => q{};
@@ -94,7 +94,10 @@ foreach my $descpath (@descpaths) {
     );
 
     # listed checks exist
-    ok(all { $profile->get_script($_) } @checks);
+    ok(
+        (all { $profile->get_script($_) } @checks),
+        "All checks mentioned in $testpath exist"
+    );
 
     # no duplicates in tags against
     my @against = split(SPACE, $testcase->{test_against}//EMPTY);
@@ -104,7 +107,8 @@ foreach my $descpath (@descpaths) {
         "No duplicates in Test-Against in $name"
     );
 
-    # listed tags-against belong to listed checks
+    # listed test-against belong to listed checks
     my %tags = map { $_ => 1 } map { $profile->get_script($_)->tags } @checks;
-    ok(all { exists $tags{$_} } @against);
+    ok((all { exists $tags{$_} } @against),
+        "All tags in Test-Against belong to checks listed in $testpath");
 }
