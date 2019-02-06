@@ -3,5 +3,4 @@ Testname: binaries-unsafe-open
 Package-Architecture: any
 Version: 1.0
 Description: Test for possible command execution when processing filenames
-Test-Against:
-Check: manpages
+Check: binaries
