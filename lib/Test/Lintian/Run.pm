@@ -488,7 +488,7 @@ sub check_result {
 
     push(@errors,
 'Test-Against is empty (requiring tags in Test-For) but no tags are expected'
-    )unless scalar @test_against || scalar @expected;
+    )unless scalar @test_against || scalar @test_for;
 
     return @errors;
 }
