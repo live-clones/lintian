@@ -4,5 +4,3 @@ Sequence: 2500
 Version: 1.0
 Profile: debian/ftp-master-auto-reject
 Description: Test Lintian --ftp-master-rejects handling
-Test-Against:
-Check: files
