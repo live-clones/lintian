@@ -1,0 +1,8 @@
+Skeleton: upload-native
+Testname: legacy-binary
+Source: binary
+Sequence: 9999
+Version: 4-1.1
+Description: Legacy test "binary"
+Test-Against: arch-dep-package-has-big-usr-share
+Check: huge-usr-share
