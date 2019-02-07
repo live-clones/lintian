@@ -1,0 +1,7 @@
+#! /bin/sh /usr/share/dpatch/dpatch-run
+## 04_i_dont_have_a_description_either.patch by Adam D. Barratt <adam@adam-barratt.org.uk>
+##
+## All lines beginning with `## DP:' are a description of the patch.
+## DP:     
+
+@DPATCH@
