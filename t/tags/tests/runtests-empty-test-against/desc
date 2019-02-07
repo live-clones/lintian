@@ -1,8 +1,0 @@
-Skeleton: upload-native
-Testname: runtests-empty-test-against
-Sequence: 0700
-Version: 1.0
-Todo: yes
-Description: Test-Against and tags cannot both be empty; implies Test-For
-Test-Against:
-Check: manpages
