@@ -10,6 +10,7 @@ Test-Against:
 Check:
  standards-version
  control-file
+ control-files
  binaries
  manpages
  description
