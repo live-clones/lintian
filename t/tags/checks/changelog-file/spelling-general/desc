@@ -1,0 +1,7 @@
+Testname: spelling-general
+Version: 1.0-1
+Skeleton: upload-non-native
+Source-Format: 3.0 (quilt)
+Description: General checks for spelling errors
+Test-Against:
+Check: changelog-file

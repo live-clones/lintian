@@ -6,8 +6,4 @@ Dh-Compat-Level: 8
 Options: --include-dir ./lintian-include-dir --pedantic --display-level +classification
 Profile: lintian-test
 Test-Against:
-Check:
- deb-format
- rules
- debhelper
- control-file
+Check: control-file
