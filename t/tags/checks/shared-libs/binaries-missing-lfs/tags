@@ -1,0 +1,2 @@
+I: libbasic2: symbols-file-missing-build-depends-package-field
+X: libbasic2: binary-file-built-without-LFS-support usr/lib/libbasic.so.2
