@@ -1,0 +1,7 @@
+Skeleton: upload-native
+Testname: binaries-general
+Version: 1.0
+Description: Misc errors related to binaries
+Package-Architecture: any
+Test-Against:
+Check: binaries

@@ -1,0 +1,11 @@
+#!/bin/sh
+
+set -e
+
+cd "$1"
+
+
+gcc -o foo main.c
+gcc -o bar main.c
+mkdir -p baz/
+gcc -o baz/quux main.c

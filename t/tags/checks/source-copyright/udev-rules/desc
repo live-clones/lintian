@@ -1,0 +1,6 @@
+Skeleton: upload-native
+Testname: udev-rules
+Version: 1.0
+Description: Check udev rules for mistakes
+Test-Against:
+Check: source-copyright

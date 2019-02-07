@@ -1,0 +1,6 @@
+Skeleton: upload-native
+Testname: appstream-metadata
+Version: 1.0
+Description: Test AppStream and udev metadata in binary package
+Test-Against:
+Check: source-copyright

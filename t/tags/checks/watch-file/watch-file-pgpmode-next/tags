@@ -1,0 +1,2 @@
+I: watch-file-pgpmode-next source: public-upstream-key-unusable upstream/signing-key.asc cannot be processed
+W: watch-file-pgpmode-next changes: orig-tarball-missing-upstream-signature watch-file-pgpmode-next_2.0.orig.tar.gz

@@ -1,0 +1,6 @@
+Skeleton: upload-native
+Testname: fields-depends-general
+Version: 1.0
+Description: General tests for binary package dependencies
+Test-Against:
+Check: fields

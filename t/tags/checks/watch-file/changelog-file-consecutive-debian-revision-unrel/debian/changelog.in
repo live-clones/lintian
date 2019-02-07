@@ -1,0 +1,12 @@
+{$source} ({$version}) unstable; urgency=low
+
+  * Version reused, new source package name.
+
+ -- {$author}  {$date}
+
+{$source}-oldname (1.0-3) unstable; urgency=low
+
+  * Lintian Test Suite.
+  * Test: {$testname}
+
+ -- {$author}  Fri, 06 Feb 2009 22:22:37 -0800
