@@ -51,7 +51,7 @@ my @mandatory = qw(version);
 my @disallowed = qw(test_for checks);
 
 # tests per desc
-my $perfile = 6 + scalar @mandatory + scalar @disallowed;
+my $perfile = 7 + scalar @mandatory + scalar @disallowed;
 
 # set the testing plan
 plan tests => $perfile * scalar @descpaths;
@@ -59,6 +59,19 @@ plan tests => $perfile * scalar @descpaths;
 my $profile = Lintian::Profile->new(undef, [$ENV{LINTIAN_ROOT}]);
 
 foreach my $descpath (@descpaths) {
+
+    # test for duplicate fields
+    my %count;
+    my @lines = path($descpath)->lines_utf8;
+    foreach my $line (@lines) {
+        my ($field) = $line =~ qr/^(\S+):/;
+        $count{$field} += 1
+          if defined $field;
+    }
+    ok(
+        (all { $count{$_} == 1 } keys %count),
+        "No duplicate fields in $descpath"
+    );
 
     my $testcase = read_config($descpath);
 
