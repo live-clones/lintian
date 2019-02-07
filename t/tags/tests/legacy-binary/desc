@@ -6,7 +6,6 @@ Version: 4-1.1
 Description: Legacy test "binary"
 Test-Against:
  control-file-is-empty
-Test-Against:
  arch-dep-package-has-big-usr-share
 Check:
  standards-version
