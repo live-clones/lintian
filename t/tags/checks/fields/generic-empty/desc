@@ -5,12 +5,4 @@ Version: 1.0
 Package-Architecture: all
 Description: Pathological empty package
 Test-Against:
-Check:
- changes-file
- nmu
- rules
- fields
- copyright-file
- control-file
- standards-version
- description
+Check: fields
