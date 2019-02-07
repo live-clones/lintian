@@ -454,20 +454,6 @@ sub check_result {
     #diag "+Test-For: $_" for @test_for;
     #diag "-Test-Against (calculated): $_" for @test_against;
 
-    # get Test-Against if present, and override
-    if (exists $testcase->{test_against}) {
-        my @override = sort +split(SPACE, $testcase->{test_against});
-
-        #diag "&Test-Against (override): $_" for @override;
-
-        diag
-"$testcase->{testname}: Explicit Test-Against matches computed value."
-          if List::Compare->new(\@test_against, \@override)->is_LequivalentR();
-
-        # override
-        @test_against = @override;
-    }
-
     # get actual tags from output
     my @actual = sort +get_tagnames($actualpath);
 
@@ -485,10 +471,6 @@ sub check_result {
 
     # warn about missing tags
     push(@errors, "Tag $_ listed in Test-For but not seen")for @missing;
-
-    push(@errors,
-'Test-Against is empty (requiring tags in Test-For) but no tags are expected'
-    )unless scalar @test_against || scalar @test_for;
 
     return @errors;
 }
