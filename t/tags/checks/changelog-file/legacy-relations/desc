@@ -1,0 +1,8 @@
+Skeleton: upload-native
+Testname: legacy-relations
+Source: relations
+Sequence: 9999
+Version: 5
+Description: Legacy test "relations"
+Test-Against:
+Check: changelog-file
