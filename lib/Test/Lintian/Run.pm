@@ -370,7 +370,7 @@ sub runner {
 
     my @errors = check_result($testcase, $extracted, $expected);
 
-    my $okay = !scalar @errors;
+    my $okay = !(scalar @errors);
 
     if($testcase->{todo} eq 'yes') {
       TODO: {
