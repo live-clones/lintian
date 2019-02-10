@@ -6,13 +6,11 @@ Type: native
 Source-Format: 1.0
 Package-Architecture: all
 Prev-Date: Mon, 01 Jan 1990 00:00:00 +0100
-Skeleton: default
 Runner: generic.t
-Builder: builder
 Sequence: 6000
 Profile: debian
-Options: -I -E
 Output-Format: EWI
-Sort: yes
+Default-Lintian-Options: --display-info --display-experimental
+Sort: no
 Todo: no
 Test-Architectures: any

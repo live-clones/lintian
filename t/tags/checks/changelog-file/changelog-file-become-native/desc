@@ -1,0 +1,7 @@
+Skeleton: upload-native
+Testname: changelog-file-become-native
+Version: 1.0
+Description: Test for packages where the version suddenly becomes native
+References: Debian Bug #504070
+Test-Against:
+Check: changelog-file

@@ -1,4 +1,0 @@
-Testname: rules-ignores-error-clean-fp
-Version: 1.0
-Description: Check against Lintian false-positive error
-Test-Against: debian-rules-ignores-make-clean-error

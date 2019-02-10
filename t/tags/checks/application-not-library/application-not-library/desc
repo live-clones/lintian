@@ -1,0 +1,5 @@
+Skeleton: upload-native
+Testname: application-not-library
+Version: 1.0
+Description: Test cases where packages look like libraries but are applications
+Check: application-not-library

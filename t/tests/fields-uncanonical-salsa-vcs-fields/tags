@@ -1,2 +1,0 @@
-I: fields-uncanonical-salsa-vcs-fields source: vcs-field-not-canonical https://salsa.debian.org/foo/bar https://salsa.debian.org/foo/bar.git
-I: fields-uncanonical-salsa-vcs-fields source: vcs-field-not-canonical https://salsa.debian.org/foo/bar.git https://salsa.debian.org/foo/bar

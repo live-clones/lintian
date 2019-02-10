@@ -1,0 +1,6 @@
+Skeleton: upload-native
+Testname: binaries-misplaced
+Version: 1.0
+Description: Test binaries in /etc
+Test-Against:
+Check: binaries

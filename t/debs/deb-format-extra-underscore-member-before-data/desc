@@ -1,4 +1,0 @@
-Testname: deb-format-extra-underscore-member-before-data
-Version: 1.0
-Description: Test package for a deb archive with an extra member with _ before data.tar
-Test-For: misplaced-extra-member-in-deb

@@ -1,0 +1,7 @@
+Skeleton: upload-native
+Testname: lintian-overrides
+Sequence: 2500
+Version: 1.0
+Description: Test the couple of overrides-related tags
+Test-Against:
+Check: lintian

@@ -27,14 +27,14 @@ To run the full suite in all its glory, simply invoke:
  OR
 
  $ mkdir -p debian/test-out
- $ t/runtests -k --dump-logs t debian/test-out
+ $ t/bin/runtests -k --dump-logs t debian/test-out
 
 While writing a new tag (or check) you probably only want to run a
 particular (subset of the) test(s).  See L</Running a subset of the
 tests> for the available options.
 
 When run via I<debian/rules>, the test suite respects
-"DEB_BUILD_OPTIONS=parallel=N". When using I<t/runtests> directly, use
+"DEB_BUILD_OPTIONS=parallel=N". When using I<t/bin/runtests> directly, use
 I<-jN> to choose the number of threads.  Note that "N" denotes the
 amount of "worker" threads.  The test runner will generally have 2
 threads more than that.  Also each "worker" will run lintian, which
@@ -59,7 +59,7 @@ To run a single test by its name, use:
 
  OR
 
- $ t/runtests --dump-logs t debian/test-out $name
+ $ t/bin/runtests --dump-logs t debian/test-out $name
 
 =item Running all tests for a check
 
@@ -69,7 +69,7 @@ To run all tests for a given check, use:
 
  OR
 
- $ t/runtests --dump-logs -k t debian/test-out $check
+ $ t/bin/runtests --dump-logs -k t debian/test-out $check
 
 $check must be the name of a check (it will test for
 checks/$check.desc) or "legacy".  This will run all tests that start
@@ -86,7 +86,7 @@ To run all tests in a given sub-suite, use:
 
  OR
 
- $ t/runtests --dump-logs -k t debian/test-out suite:$suites
+ $ t/bin/runtests --dump-logs -k t debian/test-out suite:$suites
 
 $suites is a comma-separated list of names of sub-suites to run.
 
@@ -102,16 +102,16 @@ tag, use:
 
  OR
 
- $ t/runtests --dump-logs -k t debian/test-out tag:$tag
+ $ t/bin/runtests --dump-logs -k t debian/test-out tag:$tag
 
 =back
 
 =head2 Running tests under coverage
 
 It is possible to run most of the tests under L<Devel::Cover>.  This is
-done by passing I<--coverage> to I<t/runtests>.  Example:
+done by passing I<--coverage> to I<t/bin/runtests>.  Example:
 
-  $ t/runtests --coverage --dump-logs -j1 -k t debian/test-out
+  $ t/bin/runtests --coverage --dump-logs -j1 -k t debian/test-out
 
 Please note that L<Devel::Cover> does not seem to handle multiple
 threads too well.  You may see spurious warnings/errors if you run the
@@ -135,15 +135,15 @@ Fortunately, L<Devel::Cover> "appends" to its cover database.  This
 allows you to "slowly" build up the coverage database over multiple
 runs. Example:
 
-  $ t/runtests --coverage --dump-logs -j1 -k t debian/test-out suite:scripts
-  $ t/runtests --coverage --dump-logs -j1 -k t debian/test-out suite:debs
-  $ t/runtests --coverage --dump-logs -j1 -k t debian/test-out suite:source
+  $ t/bin/runtests --coverage --dump-logs -j1 -k t debian/test-out suite:scripts
+  $ t/bin/runtests --coverage --dump-logs -j1 -k t debian/test-out suite:debs
+  $ t/bin/runtests --coverage --dump-logs -j1 -k t debian/test-out suite:source
   ...
 
 Or:
 
-  $ t/runtests --coverage --dump-logs -j1 -k t debian/test-out $check
-  $ t/runtests --coverage --dump-logs -j1 -k t debian/test-out legacy
+  $ t/bin/runtests --coverage --dump-logs -j1 -k t debian/test-out $check
+  $ t/bin/runtests --coverage --dump-logs -j1 -k t debian/test-out legacy
 
 
 =head1 SEE ALSO

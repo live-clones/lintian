@@ -1,6 +1,0 @@
-Testname: emacsen-common
-Skeleton: non-native
-Version: 1.0-1
-Description: Tests for emacsen-common packages not using dh-elpa
-Test-For:
- emacsen-common-without-dh-elpa

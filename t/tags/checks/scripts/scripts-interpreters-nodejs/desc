@@ -1,0 +1,6 @@
+Skeleton: upload-native
+Testname: scripts-interpreters-nodejs
+Version: 1.0
+Description: Check various NodeJS issues
+Test-Against:
+Check: scripts

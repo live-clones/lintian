@@ -1,0 +1,6 @@
+Skeleton: upload-native
+Testname: group-checks-multi-arch
+Version: 1.0
+Description: Test for multi-arch issues
+Test-Against:
+Check: group-checks

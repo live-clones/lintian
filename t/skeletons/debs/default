@@ -1,6 +1,0 @@
-Template-Sets:
- . (DEBIAN),
- . (debs-make-builder)
-Fill-Targets:
- . (debian-packaging),
- . (make-builder)

@@ -1,6 +1,0 @@
-Testname: source-copyright-unversioned-uri
-Version: 1.0
-Description: Test for unversioned DEP 5-like URI
-Options: -I -E --pedantic
-Test-For:
- unversioned-copyright-format-uri

@@ -1,0 +1,7 @@
+Skeleton: upload-native
+Testname: scripts-calls-init-script
+Version: 1.0
+Description: Test proper use of invoke-rc.d
+References: Debian Bug#381485
+Test-Against:
+Check: scripts

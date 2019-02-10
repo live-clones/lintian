@@ -1,0 +1,7 @@
+Skeleton: upload-native
+Testname: menu-format-desktop-general
+Version: 1.0
+Description: Test desktop file tags
+References: Debian Bug#537737
+Test-Against:
+Check: menu-format

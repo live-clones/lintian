@@ -1,0 +1,6 @@
+Skeleton: upload-native
+Testname: cruft-general-native
+Version: 1.0
+Description: Check for cruft in a native package
+Test-Against:
+Check: cruft

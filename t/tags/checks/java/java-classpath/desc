@@ -1,0 +1,9 @@
+Testname: java-classpath
+Skeleton: upload-non-native
+Version: 1.0-1
+Description: Various checks about JAR files
+Author: Vincent Fourmond <fourmond@debian.org>
+Section: java
+Extra-Build-Depends: javahelper, default-jdk
+Test-Against:
+Check: java

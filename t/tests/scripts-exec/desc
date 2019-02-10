@@ -1,6 +1,0 @@
-Testname: scripts-exec
-Version: 1.0
-Description: Check for exec bit related issues for scripts
-Test-For:
- executable-not-elf-or-script
- script-not-executable

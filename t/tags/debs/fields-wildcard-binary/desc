@@ -1,0 +1,6 @@
+Skeleton: deb
+Testname: fields-wildcard-binary
+Version: 1.0
+Description: Test for architecture wildcard in binary package
+Test-Against:
+Check: fields

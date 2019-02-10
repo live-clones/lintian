@@ -1,0 +1,7 @@
+Testname: cruft-non-native-version
+Skeleton: upload-non-native
+Version: 1.0
+Description: Test non-native package with native version
+Test-Against:
+ malformed-debian-changelog-version
+Check: source-changelog

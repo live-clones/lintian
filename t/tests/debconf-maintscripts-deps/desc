@@ -1,9 +1,0 @@
-Testname: debconf-maintscripts-deps
-Version: 1.0
-Description: Test for various debconf maintscripts and dep issues
-Test-For:
- loads-obsolete-confmodule
- missing-debconf-dependency-for-preinst
- postinst-does-not-load-confmodule
- postinst-uses-db-input
- postrm-does-not-purge-debconf

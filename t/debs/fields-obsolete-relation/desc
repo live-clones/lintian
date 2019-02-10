@@ -1,4 +1,0 @@
-Testname: fields-obsolete-relation
-Version: 1.0
-Description: Test for obsolete relation syntax in a binary package
-Test-For: obsolete-relation-form

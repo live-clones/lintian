@@ -1,0 +1,7 @@
+Skeleton: upload-native
+Testname: debhelper-compat-multiple-unrel
+Version: 1.0
+Description: Test debian/compat file with multiple entries (false-positives)
+Test-Against:
+ debhelper-compat-file-contains-multiple-levels
+Check: debhelper

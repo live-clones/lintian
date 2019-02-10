@@ -1,5 +1,0 @@
-Testname: unpack-srcpkg-xz
-Version: 1.0-1
-Type: non-native
-Source-Format: 3.0 (quilt)
-Description: Test package for xz-compressed source packages

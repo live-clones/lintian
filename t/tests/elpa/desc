@@ -1,7 +1,0 @@
-Testname: elpa
-Skeleton: non-native
-Version: 1.0-1
-Description: Tests for emacsen-common packages using dh-elpa
-Extra-Build-Depends: dh-elpa
-Test-Against:
- emacsen-common-without-dh-elpa

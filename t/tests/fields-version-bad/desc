@@ -1,9 +1,0 @@
-Testname: fields-version-bad
-Version: 0-.3
-Description: Test for weird versions
-Skeleton: non-native
-Test-Against:
- malformed-debian-changelog-version
-Test-For:
- debian-revision-not-well-formed
- debian-revision-should-not-be-zero

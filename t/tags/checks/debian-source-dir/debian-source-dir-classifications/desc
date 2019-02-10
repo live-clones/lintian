@@ -1,0 +1,7 @@
+Skeleton: upload-native
+Testname: debian-source-dir-classifications
+Version: 1.0
+Options: -L +classification -C debian-source-dir
+Description: Test for d-s-d classifications tags
+Test-Against:
+Check: debian-source-dir

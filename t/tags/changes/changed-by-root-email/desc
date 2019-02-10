@@ -1,0 +1,6 @@
+Skeleton: changes
+Testname: changed-by-root-email
+Version: 1.0
+Description: Test Changed-By field with root user
+Test-Against:
+Check: changes-file

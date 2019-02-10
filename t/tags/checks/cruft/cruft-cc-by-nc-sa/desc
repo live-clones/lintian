@@ -1,0 +1,6 @@
+Skeleton: upload-native
+Testname: cruft-cc-by-nc-sa
+Version: 1.0
+Description: Check for the creative common cc by sa
+Test-Against:
+Check: cruft

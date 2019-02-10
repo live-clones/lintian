@@ -69,6 +69,8 @@ our $EXCLUDE =join(
       ^invalid-short-name-in-dep5-copyright$
       ^trailing-slash-for-dpkg-maintscript-helper-symlink_to_dir$
       ^file-name-contains-wildcard-character$
+      ^obsolete-crypt-alias$
+      ^obsolete-des-encryption$
       ^package-contains-.*$
       ^override_dh_.+-does-not-call-dh_.+$
       ^xz-compression-level-too-high$

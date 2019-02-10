@@ -1,5 +1,0 @@
-Testname: files-tar-traps
-Version: 1.0
-Description: Test tags for tar common bugs
-Test-For:
- non-standard-toplevel-dir

@@ -1,5 +1,0 @@
-Testname: fields-binary-nmu-version
-Skeleton: non-native
-Version: 1.0-1.0.1
-Description: Check binary NMU version handling
-Test-For: binary-nmu-debian-revision-in-source

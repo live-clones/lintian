@@ -1,7 +1,0 @@
-Type: non-native
-Template-Sets:
- . (tests-make-builder)
-Fill-Targets:
- pre_build,
- debian (debian-packaging),
- . (make-builder)

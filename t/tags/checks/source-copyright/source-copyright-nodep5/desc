@@ -1,0 +1,7 @@
+Skeleton: upload-native
+Testname: source-copyright-nodep5
+Version: 1.0
+Description: Test for no dep5 source copyright
+Options: --pedantic
+Test-Against:
+Check: source-copyright

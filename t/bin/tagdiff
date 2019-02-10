@@ -1,0 +1,146 @@
+#!/usr/bin/perl
+
+# Copyright © 2019 Felix Lechner
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, you can find it on the World Wide
+# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
+# MA 02110-1301, USA.
+
+# The harness for Lintian's test suite.  For detailed information on
+# the test suite layout and naming conventions, see t/tests/README.
+# For more information about running tests, see
+# doc/tutorial/Lintian/Tutorial/TestSuite.pod
+#
+
+use strict;
+use warnings;
+use autodie;
+use v5.10;
+
+use Getopt::Long;
+use List::Util qw(all);
+use Path::Tiny;
+use Term::ANSIColor;
+use Text::CSV;
+use Text::Diff;
+
+use constant EMPTY => q{};
+use constant SPACE => q{ };
+use constant NEWLINE => qq{\n};
+
+no warnings 'redefine';
+
+sub Text::Diff::Unified::file_header { return EMPTY; }
+sub Text::Diff::Unified::hunk_header { return EMPTY; }
+
+# options
+Getopt::Long::Configure;
+unless (
+    Getopt::Long::GetOptions(
+        'help|h'          => sub {usage(); exit;},
+    )
+) {
+    usage();
+    die;
+}
+
+# check arguments and options
+die "Please use -h for usage information.\n"
+  if scalar @ARGV != 2;
+
+# get arguments
+my ($expectedpath, $actualpath) = @ARGV;
+
+my @expected = reverse sort (path($expectedpath)->lines_utf8);
+my @actual = reverse sort (path($actualpath)->lines_utf8);
+
+my $diff = diff(\@expected, \@actual, { CONTEXT => 0 });
+
+my $pretty = pretty_diff($diff);
+
+print $pretty;
+exit;
+
+sub pretty_diff {
+    my ($diff) = @_;
+
+    my @pretty;
+
+    my $csv = Text::CSV->new({ sep_char => '|' });
+
+    my @lines = split(NEWLINE, $diff);
+    chomp @lines;
+
+    foreach my $line (@lines) {
+        my ($sign, $remainder) = ($line =~ qr/^(.)(.*)$/);
+
+        die "Cannot parse line $line"
+          unless length $sign && length $remainder;
+
+        my $status = $csv->parse($remainder);
+        die "Cannot parse line $remainder: " . $csv->error_diag
+          unless $status;
+
+        my ($type, $package, $name, $details) = $csv->fields;
+
+        die "Cannot parse line $remainder"
+          unless all { length } ($type, $package, $name);
+
+        my $nice = "$sign$package ($type): $name $details";
+        push(@pretty, $nice . NEWLINE);
+    }
+
+    # sort before applying color
+    @pretty = reverse sort @pretty;
+
+    # apply color when on a terminal
+    @pretty = map { colorize($_) } @pretty
+      if -t STDOUT;
+
+    return join(EMPTY, @pretty);
+}
+
+sub colorize {
+    my ($line) = @_;
+
+    return colored($line, 'green') if $line =~ qr/^\+/;
+    return colored($line, 'red') if $line =~ qr/^-/;
+    return $line;
+}
+
+sub usage {
+    print <<"END";
+Usage: $0 <expected-tag-file> <actual-tag-file>
+
+    Print differences between the tag information in the two files. The files
+    must in a CSV format delimited by '|'. The easiest way to obtain such a
+    file is to use tagextract.
+
+    The output is sorted lexigraphically in reverse order. If the arguments
+    are reversed, the new output can also be generated from the old one by
+    reversing the signs and sorting again in reverse order (under LC_ALL=C).
+    It only works with uncolored output.
+
+    Returns with a zero exit code under normal conditions, even when the tags
+    do not match.
+END
+    return;
+}
+
+# Local Variables:
+# indent-tabs-mode: nil
+# cperl-indent-level: 4
+# End:
+# vim: syntax=perl sw=4 sts=4 sr et

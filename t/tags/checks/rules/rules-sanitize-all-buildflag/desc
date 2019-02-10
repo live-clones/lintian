@@ -1,0 +1,6 @@
+Skeleton: upload-native
+Testname: rules-sanitize-all-buildflag
+Version: 1.0
+Description: Test for sanitize=+all
+Test-Against:
+Check: rules

@@ -1,5 +1,0 @@
-Testname: files-python-coverage
-Version: 1.0
-Description: Check for Python .coverage files
-Test-For:
- package-contains-python-coverage-file

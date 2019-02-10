@@ -1,0 +1,8 @@
+Skeleton: upload-native
+Testname: cruft-package-does-not-install-examples-symlink
+Version: 1.0
+Description: Detect installed examples (symlink)
+Options: --pedantic
+Test-Against:
+ package-does-not-install-examples
+Check: cruft

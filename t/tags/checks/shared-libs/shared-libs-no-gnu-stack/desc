@@ -1,0 +1,9 @@
+Skeleton: upload-native
+Testname: shared-libs-no-gnu-stack
+Version: 1.0
+Package-Architecture: any
+Default-Build-Depends: debhelper (>= 9.20151004~)
+Dh-Compat-Level: 9
+Description: Test for shared libs without PT_GNU_STACK
+Test-Against:
+Check: shared-libs

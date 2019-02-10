@@ -1,0 +1,6 @@
+Skeleton: upload-native
+Testname: menus-doc-base-registration
+Version: 1.0
+Description: Test some doc-base registration related tags
+Test-Against:
+Check: menus

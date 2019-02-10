@@ -1,0 +1,10 @@
+Skeleton: upload-native
+Testname: overrides-shown
+Sequence: 1500
+Version: 1.0
+Package-Architecture: any
+Options: --pedantic --show-overrides
+Sort: no
+Description: Test override handling
+Test-Against:
+Check: lintian

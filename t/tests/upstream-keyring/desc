@@ -1,9 +1,0 @@
-Testname: upstream-keyring
-Skeleton: non-native
-Version: 1.0-1
-Description: Test with a keyring (false positive, from inkscape)
-Test-Against:
- unusable-public-upstream-key
- non-minimal-public-upstream-key
- public-upstream-key-in-native-package
- public-upstream-keys-in-multiple-locations

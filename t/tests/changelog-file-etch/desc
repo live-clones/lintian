@@ -1,8 +1,0 @@
-Testname: changelog-file-etch
-Skeleton: non-native
-Version: 1.0-1etch1
-Description: Test for a code name in an unstable upload
-Test-Against:
- malformed-debian-changelog-version
-Test-For:
- version-refers-to-distribution

@@ -1,0 +1,7 @@
+Skeleton: upload-native
+Testname: source-copyright-dep5-general
+Version: 1.0
+Description: Test for various errors in DEP 5 copyright files
+Test-Against:
+ incomplete-creative-commons-license
+Check: source-copyright

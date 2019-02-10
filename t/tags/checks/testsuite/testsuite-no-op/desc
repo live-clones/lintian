@@ -1,0 +1,6 @@
+Skeleton: upload-native
+Testname: testsuite-no-op
+Version: 1.0
+Description: Test for no-op autopkgtests
+Test-Against:
+Check: testsuite

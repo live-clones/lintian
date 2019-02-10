@@ -1,6 +1,0 @@
-Testname: fields-vcs-obsolete-in-debian-infrastructure
-Version: 1.0
-Description: Check for packages with deprecated Vcs-* fields in the Debian infrastructure
-Options: -I -E --pedantic
-Test-For:
- vcs-obsolete-in-debian-infrastructure

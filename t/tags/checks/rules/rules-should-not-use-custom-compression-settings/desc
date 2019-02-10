@@ -1,0 +1,6 @@
+Skeleton: upload-native
+Testname: rules-should-not-use-custom-compression-settings
+Version: 1.0
+Description: Test for over-eager tarball compression etc.
+Test-Against:
+Check: rules

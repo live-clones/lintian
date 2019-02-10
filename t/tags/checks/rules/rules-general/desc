@@ -1,0 +1,7 @@
+Skeleton: upload-native
+Testname: rules-general
+Version: 1.0
+Package-Architecture: all
+Description: Test various debian/rules checks
+Test-Against:
+Check: rules

@@ -1,0 +1,8 @@
+Testname: watch-file-general
+Skeleton: upload-non-native
+Version: 2.0.ds1-1
+Description: General watch file checks
+Options: --pedantic
+References: Debian Bug#510398
+Test-Against:
+Check: watch-file

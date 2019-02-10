@@ -1,0 +1,6 @@
+Skeleton: upload-native
+Testname: menu-format-general
+Version: 1.0
+Description: Test menu file tags
+Test-Against:
+Check: menu-format

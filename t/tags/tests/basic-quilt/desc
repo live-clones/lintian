@@ -1,0 +1,6 @@
+Testname: basic-quilt
+Sequence: 0001
+Skeleton: upload-non-native
+Version: 1.0-1
+Source-Format: 3.0 (quilt)
+Description: Basic test of a 3.0 (quilt) non-native package

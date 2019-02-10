@@ -1022,9 +1022,13 @@ Tag: vcs-field-has-unexpected-spaces
 Severity: normal
 Certainty: possible
 Info: The VCS-* field contains more spaces than expected or spaces at
- places where they were not expected. Where possible escape valid spaces
- in URIs to avoid any ambiguity with respect to possible future additional
- optional fields.
+ places where they were not expected. Where possible, escape valid
+ spaces in URIs to avoid any ambiguity with respect to possible future
+ additional optional fields.
+ .
+ This may be caused by incorrect use of the <tt>-b</tt> branch
+ separator.
+Ref: policy 5.6.26
 
 Tag: vcs-field-not-canonical
 Severity: minor

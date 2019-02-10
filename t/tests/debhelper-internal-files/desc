@@ -1,5 +1,0 @@
-Testname: debhelper-internal-files
-Version: 1.0
-Description: Test for spotting unremoved debhelper temp files
-Test-For: temporary-debhelper-file
-

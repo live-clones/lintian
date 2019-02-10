@@ -1,0 +1,7 @@
+Skeleton: changes
+Testname: changes-bad-ubuntu-distribution
+Version: 1.0+ubuntu2
+Description: Test for invalid Ubuntu distribution
+Profile: ubuntu/main
+Test-Against:
+Check: changes-file

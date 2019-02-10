@@ -1,0 +1,7 @@
+Skeleton: upload-native
+Testname: control-files-classifications-ctrl-script
+Version: 1.0
+Description: Test for control-files classifications
+Options: -L +=classification -C control-files
+Test-Against:
+Check: control-files

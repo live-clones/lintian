@@ -1,6 +1,0 @@
-Testname: changes-missing-fields
-Version: 1.0
-Description: Test for changes missing fields
-Test-For:
- no-description-in-changes-file
- no-urgency-in-changes-file

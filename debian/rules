@@ -48,12 +48,12 @@ api-doc:
 runtests: $(neededfiles) $(allchecks) $(allcollect) $(tagfiles) $(testfiles)
 	@echo .... running tests ....
 	mkdir -p "$(TEST_WORK_DIR)"
-	t/runtests -k $(PAR_ARGS) t "$(TEST_WORK_DIR)" $(onlyrun)
+	t/bin/runtests -k $(PAR_ARGS) t "$(TEST_WORK_DIR)" $(onlyrun)
 
 runtests-translation: $(neededfiles) $(allchecks)
 	@echo .... running translation tests ....
 	mkdir -p "$(TEST_WORK_DIR)"
-	t/runtests -k $(PAR_ARGS) t "$(TEST_WORK_DIR)" \
+	t/bin/runtests -k $(PAR_ARGS) t "$(TEST_WORK_DIR)" \
 	  translation-check-descs
 
 # this target is only run manually
@@ -91,7 +91,6 @@ override_dh_auto_build: $(neededfiles) generate-docs-stamp
 
 
 override_dh_clean: $(neededfiles)
-	rm -f runtests
 	rm -rf  doc/api.html doc/lintian.html/ doc/lintian.txt
 ifneq ($(CLEAN_TEST_WORK_DIR),0)
 	rm -rf "$(TEST_WORK_DIR)"
@@ -117,4 +116,3 @@ override_dh_auto_test: $(testtarget)
 override_dh_update_autotools_config override_dh_autoreconf override_dh_autoreconf_clean:
 
 .PHONY: refresh-perl-provides update-lintian.debian.org generate-docs
-.DELETE_ON_ERROR: runtests

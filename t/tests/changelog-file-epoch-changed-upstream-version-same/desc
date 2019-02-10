@@ -1,9 +1,0 @@
-Testname: changelog-file-epoch-changed-upstream-version-same
-Version: 1.0
-Description: Check changelog for accidental epoch changes (same)
-Test-For:
- epoch-changed-but-upstream-version-did-not-go-backwards
- latest-debian-changelog-entry-reuses-existing-version
-Test-Against:
- epoch-change-without-comment
- latest-debian-changelog-entry-without-new-version

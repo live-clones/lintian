@@ -1,0 +1,6 @@
+Skeleton: upload-native
+Testname: cruft-evil-json
+Version: 1.0
+Description: Check for the "Evil JSON" license
+Test-Against:
+Check: cruft

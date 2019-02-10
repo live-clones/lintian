@@ -1,0 +1,7 @@
+Skeleton: upload-native
+Testname: python-package-missing-depends-on-python
+Sequence: 6000
+Version: 1.0
+Description: Check for packages missing depends on Python
+Test-Against:
+Check: python

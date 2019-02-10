@@ -1,0 +1,6 @@
+Skeleton: upload-native
+Testname: fields-virtual-packages
+Version: 1.0
+Description: Tests related to virtual packages
+Test-Against:
+Check: fields

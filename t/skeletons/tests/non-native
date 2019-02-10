@@ -1,9 +1,0 @@
-Type: non-native
-Template-Sets:
- debian (debian-native),
- debian (debian-extra-non-native),
- . (tests-make-builder)
-Fill-Targets:
- debian (debian-packaging),
- orig/debian (debian-packaging),
- . (make-builder)

@@ -277,6 +277,8 @@ sub exists {
     # Check if the relevant symlink exists.
     if ($pkg_type eq 'changes'){
         return 1 if -l "$base_dir/changes";
+    } elsif ($pkg_type eq 'buildinfo') {
+        return 1 if -l "$base_dir/buildinfo";
     } elsif ($pkg_type eq 'binary' or $pkg_type eq 'udeb') {
         return 1 if -l "$base_dir/deb";
     } elsif ($pkg_type eq 'source'){
@@ -319,6 +321,8 @@ sub create {
     }
     if ($pkg_type eq 'changes'){
         $link = "$base_dir/changes";
+    } elsif ($pkg_type eq 'buildinfo'){
+        $link = "$base_dir/buildinfo";
     } elsif ($pkg_type eq 'binary' or $pkg_type eq 'udeb') {
         $link = "$base_dir/deb";
     } elsif ($pkg_type eq 'source'){
@@ -490,6 +494,7 @@ sub _init {
         $link = 'deb' if $pkg_type eq 'binary' or $pkg_type eq 'udeb';
         $link = 'dsc' if $pkg_type eq 'source';
         $link = 'changes' if $pkg_type eq 'changes';
+        $link = 'buildinfo' if $pkg_type eq 'buildinfo';
 
         croak "Unknown package type $pkg_type" unless $link;
         if (not $self->pkg_path) {

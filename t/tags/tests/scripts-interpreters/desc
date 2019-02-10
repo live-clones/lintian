@@ -1,0 +1,10 @@
+Skeleton: upload-native
+Testname: scripts-interpreters
+Version: 1.0
+Description: Check various script interpreter issues
+Options: --pedantic
+References: Debian Bug#543873
+Test-Against:
+Check:
+ scripts
+ python

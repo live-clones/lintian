@@ -1,7 +1,0 @@
-Testname: copyright-file-license-symlink
-Version: 1.0
-Description: Test the versionless license files checks
-Options: -I -E --pedantic
-Test-For:
- copyright-refers-to-symlink-license
- copyright-refers-to-versionless-license-file

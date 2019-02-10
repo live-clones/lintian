@@ -1,0 +1,6 @@
+Skeleton: upload-native
+Testname: fields-root-maint-address
+Version: 1.0
+Description: Test for root in Maintainer field
+Test-Against:
+Check: fields

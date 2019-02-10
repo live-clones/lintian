@@ -58,22 +58,27 @@ use File::Spec::Functions qw(abs2rel rel2abs splitpath catpath);
 use File::Compare;
 use File::Copy;
 use File::stat;
-use List::Util qw(max min any);
+use List::Compare;
+use List::Util qw(max min any all);
 use Path::Tiny;
 use Test::More;
+use Text::CSV;
 use Try::Tiny;
 
 use Lintian::Command qw(safe_qx);
+use Lintian::Profile;
 
 use Test::Lintian::ConfigFile qw(read_config);
 use Test::Lintian::Helper qw(rfc822date);
 use Test::Lintian::Hooks
   qw(find_missing_prerequisites run_lintian sed_hook sort_lines calibrate);
 use Test::Lintian::Prepare qw(early_logpath);
+use Test::Lintian::UniversalTags qw(get_tagnames);
 use Test::StagedFileProducer;
 
 use constant SPACE => q{ };
 use constant EMPTY => q{};
+use constant NEWLINE => qq{\n};
 use constant YES => q{yes};
 use constant NO => q{no};
 
@@ -91,11 +96,16 @@ and logs the output.
 sub logged_runner {
     my ($runpath) = @_;
 
-    my $betterlogpath = "$runpath/log";
-    my $log;
     my $error;
 
-    $log = capture_merged {
+    # read dynamic file names
+    my $runfiles = "$runpath/files";
+    my $files = read_config($runfiles);
+
+    # set path to logfile
+    my $betterlogpath = "$runpath/$files->{log}";
+
+    my $log = capture_merged {
         try {
             # call runner
             runner($runpath, $betterlogpath)
@@ -132,9 +142,7 @@ sub logged_runner {
 =item runner(RUN_PATH)
 
 This routine provides the basic structure for all runners and runs the
-test located in RUN_PATH. Different objects are than instantiated
-depending on the suite the test case belongs to. Those classes contain
-the code that varies from suite to suite.
+test located in RUN_PATH.
 
 =cut
 
@@ -260,13 +268,35 @@ sub runner {
         products => [$actual],
         minimum_epoch => $lintian_epoch,
         build =>sub {
-            my $includepath = "$runpath/lintian-include-dir";
-            $ENV{'LINTIAN_COVERAGE'}
-              .= ",-db,./cover_db-$testcase->{suite}-$testcase->{testname}"
+            $ENV{'LINTIAN_COVERAGE'}.= ",-db,./cover_db-$testcase->{testname}"
               if exists $ENV{'LINTIAN_COVERAGE'};
-            run_lintian($runpath, $subject, $testcase->{profile}, $includepath,
-                $testcase->{options}, $actual);
 
+            my $lintian = read_config("$runpath/lintian-command");
+            my $command
+              = "cd $runpath; $ENV{'LINTIAN_FRONTEND'} $lintian->{options} $lintian->{subject}";
+            my ($output, $status) = capture_merged { system($command); };
+            $status = ($status >> 8) & 255;
+
+            my @lines = split(NEWLINE, $output);
+
+            if (exists $ENV{LINTIAN_COVERAGE}) {
+                # Devel::Cover causes deep recursion warnings.
+                @lines = grep {
+                    !m{^Deep [ ] recursion [ ] on [ ] subroutine [ ]
+                   "[^"]+" [ ] at [ ] .*B/Deparse.pm [ ] line [ ]
+                   \d+}xsm
+                } @lines;
+            }
+
+            unless ($status == 0 || $status == 1) {
+                unshift(@lines, "$command exited with status $status");
+                die join(NEWLINE, @lines);
+            }
+
+            # do not forget the final newline, or sorting will fail
+            my $contents
+              = scalar @lines ? join(NEWLINE, @lines) . NEWLINE : EMPTY;
+            path($actual)->spew($contents);
         });
 
     # run a sed-script if it exists
@@ -312,10 +342,34 @@ sub runner {
             }
         });
 
+    # extract expected tags
+    my $expected = "$runpath/tags.specified.calibrated.extracted";
+    $producer->add_stage(
+        products => [$expected],
+        build =>sub {
+            my @command = ('tagextract', '-f', 'EWI', $calibrated, $expected);
+            die 'Error executing: ' . join(SPACE, @command) . ": $!"
+              if system(@command);
+        });
+
+    # extract actual tags
+    my $extracted = "$runpath/tags.actual.parsed.sorted.extracted";
+    $producer->add_stage(
+        products => [$extracted],
+        build =>sub {
+            my @command = (
+                'tagextract', '-f', $testcase->{output_format},
+                $sorted, $extracted
+            );
+            die 'Error executing: ' . join(SPACE, @command) . ": $!"
+              if system(@command);
+        });
+
     say EMPTY;
     $producer->run(verbose => 1);
 
-    my @errors = check_result($testcase, $sorted, $calibrated, $specified);
+    my @errors = check_result($testcase, $extracted, $expected);
+
     my $okay = !scalar @errors;
 
     if($testcase->{todo} eq 'yes') {
@@ -326,15 +380,27 @@ sub runner {
         return;
     }
 
-    diag @errors;
-
-    # for uncalibrated tests, use tags in spec path for cut & paste
-    $calibrated = "$testcase->{spec_path}/tags"
-      unless -e "$runpath/test_calibration";
-
-    diag safe_qx('diff', '-u', $calibrated, $sorted)
-      unless $okay;
     ok($okay, "Lintian tags match for $testcase->{testname}");
+
+    diag $_ . NEWLINE for @errors;
+
+    #    for uncalibrated tests, use tags in spec path, for cut & paste
+    #      $expected = rel2abs("$testcase->{spec_path}/tags")
+    #      unless -e "$runpath/test_calibration";
+
+    unless($okay) {
+        my @command = ('tagdiff', $expected, $extracted);
+        my ($diff, $status) = capture_merged { system(@command); };
+        $status = ($status >> 8) & 255;
+        die 'Error executing: ' . join(SPACE, @command) . ": $!"
+          if $status;
+
+        if (length $diff) {
+            diag '--- ' . abs2rel($expected);
+            diag '+++ ' . abs2rel($extracted);
+            diag $diff;
+        }
+    }
 
     return;
 }
@@ -348,89 +414,81 @@ tags before calibration. Returns a list of errors, if there are any.
 =cut
 
 sub check_result {
-    my ($testcase, $actual, $expected, $originaltags) = @_;
+    my ($testcase, $actualpath, $expectedpath) = @_;
 
     # fail if tags do not match
-    return 'Tags do not match' if (compare($actual, $expected) != 0);
+    return 'Tags do not match' if (compare($actualpath, $expectedpath) != 0);
 
-    # no further investigation on unusual output formats
-    return unless $testcase->{output_format} eq 'EWI';
-
-    # check all Test-For tags were seen and all Test-Against tags were not
-    my %test_for = map { $_ => 1 } split SPACE, $testcase->{test_for}//EMPTY;
-    my %test_against =map { $_ => 1 } split SPACE,
-      $testcase->{test_against}//EMPTY;
-
-    return unless (%test_for || %test_against);
+    # no furter checks if the test is not about tags
+    return unless length $testcase->{check};
 
     my @errors;
 
-    # look through actual tags
-    my @lines = path($actual)->lines_utf8;
-    chomp @lines;
-    foreach my $line (@lines) {
+    my $profile = Lintian::Profile->new(undef, [$ENV{LINTIAN_ROOT}]);
 
-        # no tag available
-        next if $line =~ /^N: /;
+    # get tags for checks
+    my @related;
+    my @checks = split(SPACE, $testcase->{check});
+    foreach my $check (@checks) {
+        my $checkscript = $profile->get_script($check);
+        die "Unknown Lintian check $check"
+          unless defined $checkscript;
 
-        # some traversal tests create packages that are skipped
-        next if $line =~ /tainted/ && $line =~ /skipping/;
-
-        # look for "EWI: package[ type]: tag"
-        my ($tag) = $line =~ qr/^.: \S+(?: (?:changes|source|udeb))?: (\S+)/o;
-        unless (length $tag) {
-            push(@errors, "Invalid line: $line");
-            next;
-        }
-
-        # check if tag was blacklisted
-        if ($test_against{$tag}) {
-
-            # warn just once about a tag
-            delete $test_against{$tag};
-            push(@errors, "Tag $tag seen but listed in Test-Against");
-        }
-
-        # mark as seen
-        delete $test_for{$tag};
+        push(@related, $checkscript->tags);
     }
 
-    # check if test was calibrated
-    if (defined $originaltags && compare($originaltags, $expected) != 0) {
+    @related = sort @related;
 
-        # tags lost in calibration; like binaries-hardening on some arches
-        my %lost = %test_for;
+    #diag "#Related tag: $_" for @related;
 
-        # parse original output
-        my @origlines = path($originaltags)->lines_utf8;
-        chomp @origlines;
-        foreach my $line (@origlines) {
+    # get expected tags
+    my @expected = sort +get_tagnames($expectedpath);
 
-            # not tag in this line
-            next if $line =~ /^N: /;
+    #diag "=Expected tag: $_" for @expected;
 
-            # some traversal tests create packages that are skipped
-            next if $line =~ /tainted/ && $line =~ /skipping/;
+    # calculate Test-For and Test-Against; results are sorted
+    my $material = List::Compare->new(\@expected, \@related);
+    my @test_for = $material->get_intersection;
+    my @test_against = $material->get_Ronly;
 
-            # look for "EWI: package[ type]: tag"
-            my ($tag)= $line =~ /^.: \S+(?: (?:changes|source|udeb))?: (\S+)/o;
-            unless (length $tag) {
-                push(@errors, "Invalid line: $line");
-                next;
-            }
-            delete $lost{$tag};
-        }
+    #diag "+Test-For: $_" for @test_for;
+    #diag "-Test-Against (calculated): $_" for @test_against;
 
-        # remove tags that were calibrated out
-        foreach my $tag (keys %lost) {
-            delete $test_for{$tag};
-        }
+    # get Test-Against if present, and override
+    if (exists $testcase->{test_against}) {
+        my @override = sort +split(SPACE, $testcase->{test_against});
+
+        #diag "&Test-Against (override): $_" for @override;
+
+        diag
+"$testcase->{testname}: Explicit Test-Against matches computed value."
+          if List::Compare->new(\@test_against, \@override)->is_LequivalentR();
+
+        # override
+        @test_against = @override;
     }
 
-    # check if the test missed any tags
-    for my $tag (sort keys %test_for) {
-        push(@errors, "Tag $tag listed in Test-For but not found");
-    }
+    # get actual tags from output
+    my @actual = sort +get_tagnames($actualpath);
+
+    #diag "*Actual tag found: $_" for @actual;
+
+    # find tags not seen; result is sorted
+    my @missing = List::Compare->new(\@test_for, \@actual)->get_Lonly;
+
+    # check for blacklisted tags; result is sorted
+    my @unexpected
+      = List::Compare->new(\@test_against, \@actual)->get_intersection;
+
+    # warn about unexpected tags
+    push(@errors, "Tag $_ seen but listed in Test-Against")for @unexpected;
+
+    # warn about missing tags
+    push(@errors, "Tag $_ listed in Test-For but not seen")for @missing;
+
+    push(@errors,
+'Test-Against is empty (requiring tags in Test-For) but no tags are expected'
+    )unless scalar @test_against || scalar @test_for;
 
     return @errors;
 }

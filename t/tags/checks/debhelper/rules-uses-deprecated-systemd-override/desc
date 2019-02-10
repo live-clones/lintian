@@ -1,0 +1,6 @@
+Skeleton: upload-native
+Testname: rules-uses-deprecated-systemd-override
+Version: 1.0
+Description: Test for override_dh_systemd_enable with compat levels 11
+Test-Against:
+Check: debhelper

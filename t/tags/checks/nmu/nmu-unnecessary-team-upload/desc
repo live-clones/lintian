@@ -1,0 +1,6 @@
+Skeleton: upload-native
+Testname: nmu-unnecessary-team-upload
+Version: 1.0
+Description: Test for unnecessary team uploads
+Test-Against:
+Check: nmu

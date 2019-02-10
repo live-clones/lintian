@@ -66,8 +66,11 @@ sub run {
     $bdepends = $info->relation('build-depends-all');
     my $seen_dh = 0;
     my $seen_dh_parallel = 0;
-    my $seen_python_helper = 0;
-    my $seen_python3_helper = 0;
+    my %seen = (
+        'python2' => 0,
+        'python3' => 0,
+        'runit'   => 0,
+    );
     my %overrides;
 
     $drules = $droot->child('rules') if $droot;
@@ -101,11 +104,12 @@ sub run {
                   "$dhcommand (line $.)";
                 $uses_autotools_dev_dh = 1;
             }
-            if ($dhcommand eq 'dh_python3') {
-                $seen_python3_helper = 1;
-            }
-            if ($dhcommand =~ m,^dh_python(?:2$|\$.*),) {
-                $seen_python_helper = 1;
+
+            # Record if we've seen specific helpers, special-casing
+            # "dh_python" as Python 2.x.
+            $seen{'python2'} = 1 if $dhcommand eq 'dh_python2';
+            foreach my $k (keys %seen) {
+                $seen{$k} = 1 if $dhcommand eq "dh_$k";
             }
 
             if ($dhcommand eq 'dh_clean' and m/\s+\-k(?:\s+.*)?$/s) {
@@ -159,20 +163,18 @@ sub run {
                     if (defined $depends) {
                         $missingbdeps_addons{$depends} = $addon;
                     }
-                    if ($addon eq 'python2') {
-                        $seen_python_helper = 1;
-                    } elsif ($addon eq 'python3') {
-                        $seen_python3_helper = 1;
+                    foreach my $k (keys %seen) {
+                        $seen{$k} = 1 if $addon eq $k;
                     }
                 }
             }
             if (m/--(after|before|until|remaining)/) {
                 tag 'dh-manual-sequence-control-obsolete', 'dh', $1;
             }
-            if (m,\$[({]\w,) {
-                # the variable could contain any add-ons
-                $seen_python_helper = 1;
-                $seen_python3_helper = 1;
+            # Variables could contain any add-ons so assume we have seen
+            # them all.
+            foreach my $addon (keys %seen) {
+                $seen{$addon} = 1 if m,\$[({]\w,;
             }
         } elsif (m,^include\s+/usr/share/cdbs/1/rules/debhelper.mk,
             or m,^include\s+/usr/share/R/debian/r-cran.mk,o) {
@@ -268,6 +270,7 @@ sub run {
 
     for my $binpkg (@pkgs) {
         next if $info->binary_package_type($binpkg) ne 'deb';
+        my $breaks = $info->binary_relation($binpkg, 'breaks');
         my $strong = $info->binary_relation($binpkg, 'strong');
         my $all = $info->binary_relation($binpkg, 'all');
 
@@ -278,6 +281,10 @@ sub run {
               unless $strong->implies($MISC_DEPENDS);
         }
 
+        tag 'package-uses-dh-runit-but-lacks-breaks-substvar',$binpkg
+          if $seen{'runit'}
+          and $strong->implies('runit')
+          and not $breaks->implies('${runit:Breaks}');
     }
 
     my $compatnan = 0;
@@ -523,7 +530,7 @@ sub run {
         }
     }
 
-    if ($seen_dh and not $seen_python_helper) {
+    if ($seen_dh and not $seen{'python2'}) {
         my %python_depends;
         for my $binpkg (@pkgs) {
             if ($info->binary_relation($binpkg, 'all')
@@ -536,7 +543,7 @@ sub run {
               sort(keys %python_depends);
         }
     }
-    if ($seen_dh and not $seen_python3_helper) {
+    if ($seen_dh and not $seen{'python3'}) {
         my %python3_depends;
         for my $binpkg (@pkgs) {
             if ($info->binary_relation($binpkg, 'all')

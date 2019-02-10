@@ -1,0 +1,10 @@
+Skeleton: upload-native
+Testname: standards-version-old
+Version: 1.0
+# Overrides the "data/standards-version/ancient-date"
+# data file to avoid turning "old" into "ancient".
+Profile: lintian-test
+Options: --include-dir ./lintian-include-dir
+Description: Test old standards version on recent package
+Test-Against:
+Check: standards-version

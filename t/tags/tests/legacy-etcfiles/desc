@@ -1,0 +1,18 @@
+Skeleton: upload-native
+Testname: legacy-etcfiles
+Source: etcfiles
+Sequence: 9999
+Version: 1
+Description: Legacy test "etcfiles"
+Test-Against:
+Check:
+ standards-version
+ changelog-file
+ rules
+ description
+ conffiles
+ md5sums
+ copyright-file
+ version-substvars
+ files
+ debian-readme

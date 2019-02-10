@@ -1,0 +1,5 @@
+Skeleton: upload-native
+Testname: basic-with-epoch
+Sequence: 0001
+Version: 1:1.0
+Description: Basic test of a native package with an epoch

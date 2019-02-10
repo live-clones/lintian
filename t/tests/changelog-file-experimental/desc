@@ -1,6 +1,0 @@
-Testname: changelog-file-experimental
-Version: 1.0-3
-Description: Check experimental to unstable changes
-Options: --pedantic -I -E
-Test-For: experimental-to-unstable-without-comment
- non-consecutive-debian-revision

@@ -1,0 +1,6 @@
+Skeleton: dsc
+Testname: fields-src-bad-version
+Version: 1
+Description: Test for d/control with syntax errors
+Test-Against:
+Check: fields

@@ -1,6 +1,0 @@
-Testname: python-new-python2-package
-Sequence: 6000
-Version: 1.0
-Description: Check various Python 2 issues
-Test-For:
- new-package-should-not-package-python2-module

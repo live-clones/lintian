@@ -1,0 +1,7 @@
+Testname: phppear-composer
+Version: 1.0-1
+Description: Composer phppear tests
+Test-Against:
+ missing-pkg-php-tools-addon
+Skeleton: upload-non-native
+Check: phppear

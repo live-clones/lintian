@@ -1,5 +1,0 @@
-Testname: rules-dh-auto-test-does-not-check-deb-build-options-unrel-b
-Version: 1.0
-Description: Test for missing checks for DEB_BUILD_PROFILES (false-positive)
-Test-Against:
- override_dh_auto_test-does-not-check-DEB_BUILD_OPTIONS

@@ -1,0 +1,9 @@
+Skeleton: upload-native
+Testname: fields-version-dfsg-native
+Version: 1.0.dfsg1
+Description: Use of dfsg in a native package
+Test-Against:
+ malformed-debian-changelog-version
+Check:
+ fields
+ source-changelog

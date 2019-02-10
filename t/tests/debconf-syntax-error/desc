@@ -1,4 +1,0 @@
-Testname: debconf-syntax-error
-Version: 1.0
-Description: Test for syntax error in debconf files
-Test-For: syntax-error-in-debconf-template

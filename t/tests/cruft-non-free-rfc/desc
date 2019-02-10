@@ -1,6 +1,0 @@
-Testname: cruft-non-free-rfc
-Version: 1.0
-Description: Check for the rfc
-Test-For:
- license-problem-non-free-RFC
- license-problem-non-free-RFC-BCP78

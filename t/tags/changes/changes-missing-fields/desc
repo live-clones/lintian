@@ -1,0 +1,6 @@
+Skeleton: changes
+Testname: changes-missing-fields
+Version: 1.0
+Description: Test for changes missing fields
+Test-Against:
+Check: changes-file

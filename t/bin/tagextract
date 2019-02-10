@@ -1,0 +1,269 @@
+#!/usr/bin/perl
+
+# Copyright © 2019 Felix Lechner
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, you can find it on the World Wide
+# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
+# MA 02110-1301, USA.
+
+# The harness for Lintian's test suite.  For detailed information on
+# the test suite layout and naming conventions, see t/tests/README.
+# For more information about running tests, see
+# doc/tutorial/Lintian/Tutorial/TestSuite.pod
+#
+
+use strict;
+use warnings;
+use autodie;
+use v5.10;
+
+use Getopt::Long;
+use List::Util qw(all);
+use Path::Tiny;
+use Text::CSV;
+use XML::LibXML;
+
+use constant EMPTY => q{};
+use constant SPACE => q{ };
+use constant NEWLINE => qq{\n};
+
+# options
+my $format;
+
+Getopt::Long::Configure;
+unless (
+    Getopt::Long::GetOptions(
+        'f|format=s'  => \$format,
+        'help|h'      => sub {usage(); exit;},
+    )
+) {
+    usage();
+    die;
+}
+
+# check arguments and options
+die "Please use -h for usage information.\n"
+  if scalar @ARGV < 1 || scalar @ARGV > 2;
+
+# get arguments
+my ($input, $output) = @ARGV;
+
+my @extracted = parse($format, $input);
+
+my $joined = EMPTY;
+
+$joined = join(NEWLINE, reverse sort @extracted) . NEWLINE
+  if scalar @extracted;
+
+if (defined $output) {
+    path($output)->spew_utf8($joined);
+}else {
+    print $joined;
+}
+
+exit;
+
+sub parse {
+    my ($format, $path) = @_;
+
+    die "File $path does not exist.\n"
+      unless -f $path;
+
+    my @lines = path($path)->lines_utf8({ chomp => 1 });
+
+    if ($format eq 'EWI') {
+        return parse_ewi(@lines);
+    }elsif ($format eq 'letterqualifier') {
+        return parse_letterqualifier(@lines);
+    }elsif ($format eq 'fullewi') {
+        return parse_fullewi(@lines);
+    }elsif ($format eq 'colons') {
+        return parse_colons(@lines);
+    }elsif ($format eq 'xml') {
+        return parse_xml(@lines);
+    }
+
+    die "Unknown format: $format\n";
+}
+
+sub parse_ewi {
+    my (@lines) = @_;
+
+    my @tags;
+
+    foreach my $line (@lines) {
+
+        # no tag in this line
+        next if $line =~ /^N: /;
+
+        # look for "EWI: package[ type]: name details"
+        my ($code, $package, $type, $name, $details)
+          = $line=~ /^(.): (\S+)(?: (changes|source|udeb))?: (\S+)(?: (.*))?$/;
+
+        # for binary packages, the type field is empty
+        $type //= 'binary';
+
+        die "Cannot parse line $line"
+          unless all { length } ($code, $package, $type, $name);
+
+        my $tag = universal_string($type, $package, $name, $details);
+        push(@tags, $tag);
+    }
+
+    return @tags;
+}
+
+sub parse_letterqualifier {
+    my (@lines) = @_;
+
+    s/^(.)\[..\](.*)$/$1$2/ for @lines;
+
+    return parse_ewi(@lines);
+}
+
+sub parse_fullewi {
+    my (@lines) = @_;
+
+    my @tags;
+
+    foreach my $line (@lines) {
+
+        # no tag in this line
+        next if $line =~ /^N: /;
+
+        # look for fullewi line
+        my ($code, $package, $type, $version, $architecture, $name, $details)
+          = $line
+          =~ /^(.): (\S+) (\S+) \(([^)]+)\) \[([^]]+)\]: (\S+)(?: (.*))?$/;
+
+        die "Cannot parse line $line"
+          unless all { length }
+        ($code, $package, $type, $version, $architecture, $name);
+
+        my $tag = universal_string($type, $package, $name, $details);
+        push(@tags, $tag);
+    }
+
+    return @tags;
+}
+
+sub parse_colons {
+    my (@lines) = @_;
+
+    my @tags;
+
+    my $csv = Text::CSV->new(
+        { sep_char => ':', escape_char => '\\', quote_char => undef });
+
+    foreach my $line (@lines) {
+
+        my $status = $csv->parse($line);
+        die "Cannot parse line $line: " . $csv->error_diag
+          unless $status;
+
+        my @fields = $csv->fields;
+
+        shift @fields;
+
+        my (
+            $code, $severity, $certainty, $override,
+            $package, $version, $architecture, $type,
+            $name, $details
+        ) = @fields;
+
+        die "Cannot parse line $line"
+          unless all { length } (
+            $code, $severity, $certainty, $package, $version,
+            $architecture, $type, $name
+          );
+
+        my $tag = universal_string($type, $package, $name, $details);
+        push(@tags, $tag);
+    }
+
+    return @tags;
+}
+
+sub parse_xml {
+    my (@lines) = @_;
+
+    my @tags;
+
+    my $string = '<lintian>' . join(EMPTY, @lines) . '</lintian>';
+    my $dom = XML::LibXML->load_xml(string => $string);
+
+    my @packagenodes = $dom->findnodes('/lintian/package');
+    die 'No packages in XML'
+      unless scalar @packagenodes;
+
+    foreach my $packagenode (@packagenodes) {
+
+        my $package = $packagenode->getAttribute('name');
+        my $type = $packagenode->getAttribute('type');
+
+        die 'Cannot parse XML'
+          unless all { length } ($package, $type);
+
+        my @tagsnodes = $packagenode->findnodes('./tag');
+        foreach my $tagnode (@tagsnodes) {
+
+            my $severity = $tagnode->getAttribute('severity');
+            my $certainty = $tagnode->getAttribute('certainty');
+            my $name = $tagnode->getAttribute('name');
+            my $details = $tagnode->to_literal;
+
+            die 'Cannot parse XML'
+              unless all { length } ($severity, $certainty, $name);
+
+            my $tag = universal_string($type, $package, $name, $details);
+            push(@tags, $tag);
+        }
+    }
+
+    return @tags;
+}
+
+sub universal_string {
+    my @fields = @_;
+
+    my $csv = Text::CSV->new({ sep_char => '|' });
+    my $status = $csv->combine(@fields);
+    die 'Cannot combine to CSV: ' . $csv->error_diag
+      unless $status;
+
+    my $string = $csv->string;
+    return $string;
+}
+
+sub usage {
+    print <<"END";
+Usage: $0 -f <format> <in-file> <out-file>
+
+    --format, -f <format>  Format of Lintian output file <in-file>
+
+    Extracts tag information from a variety of Lintian output formats. The
+    output format is CSV with a reduced number of fields delimited by '|'.
+    The tags are sorted in reverse order.
+
+    Prints to stdout when no <out-file> is given.
+END
+    return;
+}
+
+# Local Variables:
+# indent-tabs-mode: nil
+# cperl-indent-level: 4
+# End:
+# vim: syntax=perl sw=4 sts=4 sr et

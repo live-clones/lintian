@@ -1,0 +1,7 @@
+Skeleton: upload-native
+Testname: files-games-section
+Section: games
+Version: 1.0
+Description: Correct section for games packages
+Test-Against:
+Check: files

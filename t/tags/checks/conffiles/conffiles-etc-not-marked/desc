@@ -1,0 +1,6 @@
+Skeleton: upload-native
+Testname: conffiles-etc-not-marked
+Version: 1.0
+Description: Test checking etc files not being marked as conffiles
+Test-Against:
+Check: conffiles

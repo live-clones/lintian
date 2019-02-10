@@ -1,7 +1,0 @@
-Testname: overrides
-Sequence: 1500
-Version: 1.0
-Package-Architecture: any
-Options: --pedantic -I -E
-Description: Test override handling
-Test-For: renamed-tag

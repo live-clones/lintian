@@ -58,7 +58,7 @@ libimager-perl
 libva-dev
 libxine2-dev
 mozilla-devscripts
-nodejs-dev
+pkg-js-tools
 pdl
 perl-openssl-defaults
 pidgin-dev

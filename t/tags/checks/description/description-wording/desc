@@ -1,0 +1,6 @@
+Skeleton: upload-native
+Testname: description-wording
+Version: 1.0
+Description: Tests for description wording
+Test-Against:
+Check: description

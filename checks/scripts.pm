@@ -27,6 +27,7 @@ use strict;
 use warnings;
 use autodie;
 
+use POSIX qw(strftime);
 use List::MoreUtils qw(any);
 
 use Lintian::Check qw($known_shells_regex);
@@ -258,9 +259,12 @@ sub run {
       = grep {m,^usr/share/fonts/X11/.*\.(?:afm|pcf|pfa|pfb)(?:\.gz)?$,}
       $info->sorted_index;
 
-    my %old_versions
-      = map { $_->Version => 1 } grep {$_->Timestamp < $OLDSTABLE_RELEASE }
-      ($info->changelog ? $info->changelog->data : ());
+    my %old_versions;
+    for my $entry ($info->changelog ? $info->changelog->data : ()) {
+        my $timestamp = $entry->Timestamp // $OLDSTABLE_RELEASE;
+        $old_versions{$entry->Version} = $timestamp
+          if $timestamp < $OLDSTABLE_RELEASE;
+    }
 
     for my $filename (sort keys %{$info->scripts}) {
         my $interpreter = $info->scripts->{$filename}{interpreter};
@@ -950,7 +954,8 @@ sub run {
                                       (?:\s|;|\Z)}xsm
                         ) {
                             tag 'command-with-path-in-maintainer-script',
-                              "$file:$. $1";
+                              "$file:$. $1"
+                              unless $in_automatic_section;
                         }
                     }
                     my $cmd = $_;
@@ -962,14 +967,16 @@ sub run {
                           \s+ \]}xsm
                     ){
                         tag 'command-with-path-in-maintainer-script',
-                          "$file:$. $1";
+                          "$file:$. $1"
+                          unless $in_automatic_section;
                     }
 
                     $cmd =~ s/\`[^\`]+\`//g;
                     if ($cmd =~ m,$LEADIN(/(?:usr/)?s?bin/[\w.+-]+)(?:\s|;|$),)
                     {
                         tag 'command-with-path-in-maintainer-script',
-                          "$file:$. $1";
+                          "$file:$. $1"
+                          unless $in_automatic_section;
                     }
                 }
             }
@@ -1006,8 +1013,10 @@ sub run {
                 next if $ver =~ /^\d+$/;
                 #<<< no perltidy
                 if (m,$LEADIN(?:/usr/bin/)?dpkg\s+--compare-versions\s+.*\b\Q$ver\E\b,) {
+                    my $date = strftime('%Y-%m-%d', gmtime $old_versions{$ver});
+                    my $epoch = strftime('%Y-%m-%d', gmtime $OLDSTABLE_RELEASE);
                     tag 'maintainer-script-supports-ancient-package-version',
-                      "$file:$.", $ver;
+                      "$file:$.", $ver, "($date < $epoch)";
                     last;
                 }
                 #>>>

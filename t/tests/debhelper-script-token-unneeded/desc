@@ -1,4 +1,0 @@
-Testname: debhelper-script-token-unneeded
-Version: 1.0
-Description: Check unnecessary debhelper script token
-Test-Against: maintainer-script-lacks-debhelper-token

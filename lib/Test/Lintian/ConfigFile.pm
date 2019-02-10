@@ -25,7 +25,7 @@ Test::Lintian::ConfigFile -- generic helper routines for colon-delimited configu
 =head1 SYNOPSIS
 
 use Test::Lintian::ConfigFile qw(read_config);
-my $desc = read_config('t/suite/test/desc');
+my $desc = read_config('t/tags/testname/desc');
 
 =head1 DESCRIPTION
 

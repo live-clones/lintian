@@ -1,8 +1,0 @@
-Testname: files-pkgconfig
-Version: 1.0
-Description: Check for detection of pkgconfig problem
-Test-For:
- pkg-config-bad-directive
- pkg-config-multi-arch-wrong-dir
- multiarch-foreign-pkgconfig
- pkg-config-unavailable-for-cross-compilation

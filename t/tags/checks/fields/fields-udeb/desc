@@ -1,0 +1,6 @@
+Skeleton: upload-native
+Testname: fields-udeb
+Version: 1.0
+Description: Test for various udeb field issues
+Test-Against:
+Check: fields

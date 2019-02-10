@@ -1,6 +1,0 @@
-Testname: files-mtime
-Version: 1.0
-Description: Test for mod time in the deb tarballs
-# Jessie indicator dependency
-Extra-Build-Depends: dpkg (>= 1.17.25)
-Test-For: package-contains-timestamped-gzip

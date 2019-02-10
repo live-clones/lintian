@@ -48,7 +48,7 @@ my $MA_DIRS = Lintian::Data->new('common/multiarch-dirs', qr/\s++/);
 sub run {
     my ($pkg, $type, $info, $proc, $group) = @_;
 
-    my ($must_call_ldconfig, %SONAME, %sharedobject);
+    my ($must_call_ldconfig, %SONAME, %SONAMES, %sharedobject);
     my @shlibs;
     my @words;
     my @devpkgs;
@@ -61,6 +61,7 @@ sub run {
     }
 
     foreach my $file ($info->sorted_index) {
+        $SONAMES{$1} = 1 if $file =~ m,.*\/lib([^/]+)\.so$,;
         next if not $file->is_file;
         my $fileinfo = $file->file_info;
         if (   $fileinfo =~ m/^[^,]*\bELF\b/
@@ -715,6 +716,21 @@ sub run {
                   if $proc->pkg_src ne 'glibc';
             }
         }
+    }
+
+    foreach my $file ($info->sorted_index) {
+        next unless $file =~ m,^usr/(lib(/[^/]+)?|share)/pkgconfig/[^/]+\.pc$,;
+        next unless $file->is_open_ok;
+        my $fd = $file->open;
+        while (<$fd>) {
+            next unless m,^Libs:,;
+            while (/[:\s]-l(\S+)/g) {
+                tag 'pkg-config-references-unknown-shared-library',
+                  $file, "-l$1", "(line $.)"
+                  unless exists($SONAMES{$1});
+            }
+        }
+        close($fd);
     }
 
     return;

@@ -1,0 +1,8 @@
+Skeleton: upload-native
+Testname: files-zero-byte-doc
+Version: 1.0
+Section: doc
+Description: Check detection of zero-byte files in doc directories
+References: Debian Bug#507273
+Test-Against:
+Check: files

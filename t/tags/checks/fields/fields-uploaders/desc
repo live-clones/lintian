@@ -1,0 +1,6 @@
+Skeleton: upload-native
+Testname: fields-uploaders
+Version: 1.0
+Description: General tests of the uploaders field
+Test-Against:
+Check: fields

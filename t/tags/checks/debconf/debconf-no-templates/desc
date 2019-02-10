@@ -1,0 +1,6 @@
+Skeleton: upload-native
+Testname: debconf-no-templates
+Version: 1.0
+Description: Test for missing debconf templates
+Test-Against:
+Check: debconf

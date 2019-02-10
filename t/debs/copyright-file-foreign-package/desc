@@ -1,5 +1,0 @@
-Testname: copyright-file-foreign-package
-Version: 1.0
-Description: Test for foreign symlink in package
-Test-For:
- cannot-check-whether-usr-share-doc-symlink-points-to-foreign-package

@@ -1,0 +1,382 @@
+WRITING A TEST
+==============
+
+A test in this framework is a directory containing a desc file, providing
+metadata about the test, and other files used to build the test package.
+
+Naming conventions
+------------------
+
+Each test name should begin with the name of the part tested, e.g.
+
+<checkname>-...
+<unpackname>-...
+lintian-...
+lintian-info-...
+
+Use generic- as a prefix for test cases that don't cover a specific
+portion of Lintian but instead test Lintian's behavior on a useful special
+case of package (such as a generic dh-make template).
+
+Sequence numbers
+----------------
+
+Each test should have a sequence number to get a more deterministic order.
+You do not need to use unique numbers, only enough to make the order
+deterministic and to your liking!  You should use the middle of the
+assigned range as default number and only divert from it if you have a
+reason to.
+
+Number ranges:
+
+0000 - 0999	Basic test, that generally just assure that the test
+		suite and lintian are not completely broken
+1000 - 1999	Tests for lib/       [1500]
+2000 - 2999	Tests for frontend/  [2500]
+3000 - 3999	Tests for unpack/    [3500]
+4000 - 4999	Tests for collection/[4500]
+5000 - 6999	Tests for checks/    [6000]
+7000 - 8999	<unused>
+9000 - 9998	Tests for reporting/ [9500]
+9999            Tests from the old legacy test suite
+
+The desc file
+-------------
+
+The desc file is formatted like a Debian control file.  The required
+fields are:
+
+    Testname: <should match the directory name>
+    Version: <version number of package>
+    Description: <description of the purpose of the test>
+
+In addition, the tags (if any) that the test case is testing for should be
+listed in a Test-For key.  The tags that the test case is testing are not
+issued (checking against false positives) should be listed in a
+Test-Against key.  In both cases, the tags should be separated by
+whitespace.  The following format is suggested for multiple tags:
+
+    Test-For:
+     lintian-tag-1
+     lintian-tag-2
+
+with the tags listed in alphabetical order.
+
+The default lintian command-line options are -I -E.  You can change these
+options with an Options field specifying the lintian options to use.  This
+overrides the default, so add -I -E if you want to include those options.
+For example, to test --show-overrides with the -T option, use:
+
+    Options: --show-overrides -T no-copyright-file
+
+The string TESTSET is no longer replaced in the Options field. Instead,
+Lintian is run in the test's directory. Please use a local, relative
+reference to the file or list the tags explicitly with '--suppress-tags'.
+
+By default, the Lintian output is sorted before comparing it to the tags
+file.  To suppress the sort (when, for instance, checking non-standard
+output formats), use:
+
+    Sort: no
+
+By default, all tests are built as native Debian packages.  To build
+the test case as a non-native package, add:
+
+    Type: non-native
+
+to the .desc file.  You will also want to change the version number to
+be non-native unless you're testing a mismatch.
+
+By default all tests are run with the default Lintian profile.  If a
+different profile is needed it can be specified via:
+
+    Profile: test/profile
+
+The value will be passed to Lintian via the --profile parameter.
+
+There are times when one wants to add a test for something that needs
+to be done.  To mark it as such, preventing the test suite from
+failing, use:
+
+    Todo: yes
+
+Test cases marked as Todo will succeed if they fail _the testing step_
+and fail if they succeed.  Although this option can be very useful to
+document what needs to be done, the ideal situation is to have none of
+them :)
+
+Unless you're writing a test case just to improve Lintian's test coverage,
+you will normally want to add a References field giving the source of the
+test or the bug that you're testing for.  This should be one of "Debian
+Bug#nnnn" for a bug report, a URL into the debian-lint-maint mailing list
+archives, or a message ID for the message to the list.
+
+The meaning of skeleton has changed in newer versions of the test runner.
+Previously a skeleton indicated a template set, but now it refers to a
+complete layout of the test working directory. It also defines the
+builder. Please look in t/skeletons for examples.
+
+There are currently two fields available when defining skeletons:
+
+    Template-Sets: DEST_DIR (TEMPLATE_SET)
+
+populates DEST_DIR with the files from TEMPLATE_SET. Please use only
+relative paths. To install into the root of the test working directory
+(which you can find somewhere in ./debian/test-out/) please use a dot.
+multiple declarations must be separated by commas. Continuation lines
+are okay.
+
+    Fill-Targets: DEST_FILE
+    Fill-Targets: DEST_DIR (WHITE_LIST)
+
+In the file form, the declaration allows the filling of the file
+DEST_FILE through the use of DEST_FILE.in. This does not mean that the
+template is always filled. The algorithm considers other factors. No
+filling takes place, for example, when the fill data and the file
+modification time of the template are older than the generated file.
+
+In the directory form, the declaration requires a named template
+whitelist in parentheses. In that case, the template whitelist will
+give the filenames to fill. Please separate multiple declaration with
+a comma. It it okay to use indented continuation lines.
+
+The general order is:
+
+1. Copy template sets to the destinations in the working directory.
+2. Copy the original test details into the working directory.
+3. Delete templates for which originals are present.
+4. Fill whitelisted templates if the generated files are dated.
+
+To use a skeleton, please use:
+
+    Skeleton: <skeleton to start from>
+
+Whitelists only have one field, 'May-Generate:'. It permits the
+generation of the listed file through template completion. Please list
+the generated file and not the template. Multiple files must be
+separated by spaces.
+
+Sometimes tests require the presence of certain packages. Please use
+Extra-Build-Depends in most cases. The specified packages will be
+added to Build-Depends when building the package.
+
+Please use Test-Depends only in cases when packages must not (or do
+not need to) be added to Build-Depends. That can be helpful when
+testing for missing build dependencies, or when the standard builder
+is overridden and requires other software. The field Test-Depends
+should probably be renamed.
+
+Sometimes tests fail if certain non-required packages are installed.
+If you notice such a case, you can use:
+
+    Test-Conflicts: <dpkg conflicts field>
+
+If any of the dependencies are unavailable or conflicts are present,
+the test will be skipped.
+
+All other fields in the .desc file are optional and control the values
+filled into the template control and changelog files by the test suite
+harness.  The following additional fields are currently supported:
+
+    Date: <date for changelog entry>
+    Author: <maintainer for control and changelog>
+    Section: <section for package>
+    Standards-Version: <standard version for control>
+
+The Architecture: field cannot be overridden. It is automatically set
+to equal the host architecture. If you require packages built with
+Architecture: all, please make a copy of the particular template and
+set Architecture: all manually.
+
+See t/runtests and t/templates/default/{control,changelog}.in for how
+they're used.
+
+The test directory
+------------------
+
+The test directory should contain the following files and directories:
+
+debian
+    The Debian packaging files.  This directory will form the ./debian
+    subdirectory in the completed package. During the build process, it
+    will be filled with heavily parameterized templates that are best
+    controlled via settings in 'desc'. You can override both the
+    templates (*.in) and the plain files (but using templates is
+    probably better) by placing files directly into this directory.
+
+diff
+    Files that override those in 'orig' if necessary.  This directory
+    should normally not have a debian subdirectory.  It is mostly
+    useful when testing patch systems.  Very few tests need to use
+    this directory.
+
+orig
+    For a non-native package, this is the file tree that goes into the
+    upstream tarball.  The files here should also be present with the
+    same contents in the debian directory unless you're intentionally
+    creating a diff.  However, as normal with a Debian package, you
+    can omit files entirely from the debian directory and the
+    deletions will be ignored by dpkg-buildpackage.
+
+tags
+    The expected output of Lintian when run on the package, including
+    info and experimental tags.  The Lintian output will be
+    lexicographically sorted before comparing it with tags.  This file
+    may be empty if the test case should produce no Lintian output.
+
+pre_upstream
+    If present and executable, this script is run for a non-native test
+    type after preparing the upstream directory but before creating the
+    tarball.  It receives the path to the package directory as its first
+    argument and can make any modifications that can't easily be
+    represented in the template system (such as creating files that
+    shouldn't be stored in a revision control system).
+
+pre_build
+    If present and executable, this script is run after preparing the
+    upstream tarball (if any) and the package directory, but before
+    running dpkg-buildpackage or lintian.  It receives the path to the
+    package directory as its first argument and can make any
+    modifications that can't otherwise be represented in the template
+    system (such as deleting files from the template that aren't
+    desired).
+
+post_test
+    If present, assumed to be a sed script that is run on the output
+    of Lintian before comparing it to the tags file.  The most common
+    use for this script is to remove the architecture from tags
+    produced on the .changes file with a line like:
+
+        s/_[^ _]* changes/_arch changes/
+
+    but it may be useful for other cases where the output of Lintian
+    may change on different systems.
+
+test_calibration
+    If present and executable, this script is run after the Lintian
+    output has been generated and after post_test (if present).  The
+    script can be used to calibrate the expected output or actual
+    output.
+
+    It is useful for cases the expected output is architecture
+    dependent beyond what the post_test script can handle.
+
+    The script will be passed 3 arguments, the "expected output" file,
+    the "actual output" file and file name to write the "calibrated
+    expected output".  The script may modify the "actual output" file
+    and create the calibration file, which (if it is created) will
+    be used instead of the original "expected output" file.
+
+
+Be aware that Git doesn't track directories, only files, so any
+directory must contain at least one file to exist in a fresh Git
+checkout.
+
+
+RUNNING THE TEST SUITE
+======================
+
+The complete test suite will be run with debian/rules runtests, but
+this can take quite a lot of time.  Normally this is only necessary
+after significant structural changes or before a release as a final
+check.
+
+To run a specific test case, run:
+
+    debian/rules runtests onlyrun=test:<path>
+
+You can also run groups of tests defined by selectors such as:
+
+    suite: runs all tests in the named suite
+    tag: runs all tests that relate to the named tag
+    check: runs all tests that relate to the named Lintian check
+    script: runs the named code quality script
+    minimal: runs only required internal tests
+
+The internal tests cannot be disabled. They make sure that essential
+components behave as expected.
+
+The runner provides a detailed log for each test. For details
+please look at ./debian/test-out/${testpath}/log.
+
+
+TEST WRITING TIPS
+=================
+
+Please keep each test case focused.  One of the problems that
+developed with the old test suite is that each test was serving many
+separate purposes and testing large swaths of Lintian, which made it
+difficult to know what could be changed and what would destroy some
+other useful test.  Test cases should only test a set of closely
+related tags and new tests should be added for new issues that aren't
+part of that closely-related set.
+
+Test cases should be as Lintian-clean as possible except for the tags
+that they're testing for.  The template is intended to help with this.
+It generates a Lintian-clean basic package for you to start with.  You
+should override only the minimal required to trigger your test, and
+try to fix any unrelated problems.  Sometimes this won't be possible
+and the only way to trigger a tag is to also trigger another tag, and
+that's fine, but it shouldn't be the normal case.
+
+Test cases should only be listed in Test-For or Test-Against if
+they're a target of that test case.  Tags that are triggered as a side
+effect of setting up the desired test case should not be listed, since
+later changes or reworkings may cause those tags to no longer be
+issued.
+
+Be sure to use Test-For and Test-Against for tags that are targets of
+a particular test case.  The test harness will ensure that the test
+case behaves correctly, and that metadata is used for the runtests
+target (when called with the onlyrun=tag:<tag> filter) and when checking test
+coverage.
+
+The test template uses debhelper 7.  Use debhelper 7 features whenever
+possible rather than replacing the rules file with a more verbose one.
+In other words, if you want to skip a particular debhelper program, do
+something like:
+
+    %:
+            dh $@
+
+    override_dh_install:
+            # Skip dh_install
+
+rather than adding in all of the traditional targets.  All you have to
+do is make dpkg-buildpackage happy (which means that in practice you
+could just override binary, not binary-arch and binary-indep, but
+doing it this way may provide some future-proofing).
+
+Tests will generally fall into one of four basic types:
+
+1. Tests for a specific tag.  To keep the overall size (and therefore
+   run time) of the test suite down, consider combining a test for a
+   new tag into a general test (see below) if it's just another simple
+   addition that's very similar to what's being checked by another
+   test.  However, be sure to keep all test cases tightly focused and
+   err on the side of creating new tests.
+
+2. Tests against a specific tag, generally as regression tests for
+   false positives.
+
+3. General tests of a set of closely-related tags.  For example,
+   there's no need to create a test case for every weird file in a
+   Debian package that files checks for; one test case that installs a
+   lot of weird files can easily test multiple tags at once without
+   any confusion.  Similarly, there's no need to create a separate
+   test case for every type of cruft that could exist in a source
+   package; one test case could contain, for instance, metadata files
+   for every major VCS.  Conventionally, these test case names often
+   end in -general.
+
+4. Generic test cases that provide an interesting representative of a
+   type of package and thereby test a lot of tags (possibly from
+   multiple checks scripts) that trigger on that type of package.  For
+   example, see generic-dh-make-2008 (the results of running dh_make
+   on an empty source package) or generic-empty (a package missing
+   everything that dpkg-buildpackage will let one get away with
+   missing).
+
+If you by any reason need to write an architecture-specific test case,
+make sure the target architectures are properly listed _in the desc
+file_.  runtests will in then handle this special test correctly.

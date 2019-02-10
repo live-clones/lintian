@@ -1,6 +1,0 @@
-Testname: fields-section-general
-Version: 1.0
-Description: Test for general section/area issues
-Test-For:
- section-area-mismatch
- unknown-section

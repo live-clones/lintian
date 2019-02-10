@@ -1,5 +1,0 @@
-Testname: basic-non-native-with-epoch
-Sequence: 0001
-Version: 1:1.0-1
-Skeleton: non-native
-Description: Basic test of a non-native package with epoch

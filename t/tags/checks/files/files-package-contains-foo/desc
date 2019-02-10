@@ -1,0 +1,6 @@
+Skeleton: upload-native
+Testname: files-package-contains-foo
+Version: 1.0
+Description: Test tags about cruft in binary packages
+Test-Against:
+Check: files

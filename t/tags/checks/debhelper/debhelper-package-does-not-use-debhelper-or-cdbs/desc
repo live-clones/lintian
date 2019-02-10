@@ -1,0 +1,7 @@
+Skeleton: upload-native
+Testname: debhelper-package-does-not-use-debhelper-or-cdbs
+Version: 1.0
+Description: Test for packages not using debhelper or CDBS
+Options: --pedantic
+Test-Against:
+Check: debhelper

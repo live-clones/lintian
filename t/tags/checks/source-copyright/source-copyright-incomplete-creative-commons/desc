@@ -1,0 +1,6 @@
+Skeleton: upload-native
+Testname: source-copyright-incomplete-creative-commons
+Version: 1.0
+Description: Test for incomplete Creative Commons licenses
+Test-Against:
+Check: source-copyright

@@ -1,0 +1,6 @@
+Skeleton: upload-native
+Testname: files-hardlinks
+Version: 1.0
+Description: Test for (stable) handling of hardlinks
+Test-Against:
+Check: files

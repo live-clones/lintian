@@ -1,5 +1,0 @@
-Testname: control-file-pedantic-space
-Version: 1.0
-Options: --pedantic -I -E
-Description: Pedantic tests for control file spacing
-Test-For: debian-control-has-unusual-field-spacing

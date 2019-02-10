@@ -1,0 +1,7 @@
+Skeleton: upload-native
+Testname: fields-font-not-multiarch-foreign
+Version: 1.0
+Package-Architecture: all
+Description: Font package Multi-Arch checks
+Test-Against:
+Check: fields

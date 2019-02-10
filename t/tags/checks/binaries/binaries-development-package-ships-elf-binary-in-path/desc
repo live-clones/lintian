@@ -1,0 +1,8 @@
+Skeleton: upload-native
+Testname: binaries-development-package-ships-elf-binary-in-path
+Version: 1.0
+Description: Test for development packages shipping ELF binaries in $PATH
+Default-Build-Depends: debhelper (>= 9.20160114~)
+Dh-Compat-Level: 9
+Test-Against:
+Check: binaries

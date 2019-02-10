@@ -1,0 +1,7 @@
+Skeleton: upload-native
+Testname: cruft-crlf-eols
+Version: 1.0
+Package-Architecture: all
+Description: Check that control files with CRLF EOLs are reported
+Test-Against:
+Check: cruft

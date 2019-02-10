@@ -1,0 +1,6 @@
+Skeleton: deb
+Testname: fields-malformed-source
+Version: 1.0
+Description: Test for bad source package name
+Test-Against:
+Check: fields

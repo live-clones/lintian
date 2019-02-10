@@ -1,8 +1,0 @@
-Testname: fields-version-dot-dfsg
-Skeleton: non-native
-Version: 1.0.dfsg1-1
-Description: Use of ".dfsg"
-Test-Against:
- malformed-debian-changelog-version
-Test-For:
- dfsg-version-with-period

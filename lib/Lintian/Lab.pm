@@ -983,7 +983,7 @@ sub _new_entry {
         $data{'area'}       = ''; # Only for compat
         $data{'maintainer'} = ''; # Only for compat
         $data{'uploaders'}  = ''; # Only for compat
-    } elsif ($pkg_type eq 'changes') {
+    } elsif ($pkg_type eq 'changes' or $pkg_type eq 'buildinfo') {
         $data{'architecture'} = $entry->pkg_arch;
         $data{'source'}       = $pkg_name;
     } elsif ($pkg_type eq 'binary' or $pkg_type eq 'udeb') {

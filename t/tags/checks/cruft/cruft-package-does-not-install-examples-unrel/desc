@@ -1,0 +1,8 @@
+Skeleton: upload-native
+Testname: cruft-package-does-not-install-examples-unrel
+Version: 1.0
+Description: Detect uninstalled examples (false positive)
+Options: --pedantic
+Test-Against:
+ package-does-not-install-examples
+Check: cruft

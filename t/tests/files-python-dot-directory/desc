@@ -1,5 +1,0 @@
-Testname: files-python-dot-directory
-Version: 1.0
-Description: Check for Python .foo dirs
-Test-For:
- package-contains-python-dot-directory

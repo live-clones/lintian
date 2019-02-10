@@ -1,0 +1,23 @@
+Skeleton: upload-native
+Testname: legacy-filenames
+Source: filenames
+Sequence: 9999
+Version: 1:12-0.1
+Description: Legacy test "filenames"
+Test-Against:
+ epoch-change-without-comment
+Check:
+ standards-version
+ menus
+ files
+ manpages
+ changelog-file
+ fields
+ cruft
+ scripts
+ conffiles
+ copyright-file
+ md5sums
+ control-file
+ symlinks
+ description

@@ -1,0 +1,6 @@
+Testname: files-gzip
+Version: 1.0-1
+Skeleton: upload-non-native
+Description: Test for issues handling gz but not gzip files
+Test-Against:
+Check: files

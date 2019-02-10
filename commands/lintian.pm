@@ -30,6 +30,7 @@ use autodie;
 use utf8;
 
 use Cwd qw(abs_path);
+use Carp qw(verbose);
 use Getopt::Long();
 use List::MoreUtils qw(any none);
 use POSIX qw(:sys_wait_h);
@@ -1469,6 +1470,7 @@ sub configure_output {
     if ($opt{'debug'}) {
         $opt{'verbose'} = 1;
         $ENV{'LINTIAN_DEBUG'} = $opt{'debug'};
+        $SIG{__DIE__} = sub { Carp::confess(@_) };
         if ($opt{'debug'} > 2) {
             eval {
                 require Devel::Size;

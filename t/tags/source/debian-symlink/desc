@@ -1,0 +1,4 @@
+Skeleton: dsc
+Testname: debian-symlink
+Version: 1
+Description: Test for debian-dir being a symlink

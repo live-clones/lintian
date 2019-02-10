@@ -1,0 +1,8 @@
+Skeleton: upload-native
+Testname: cruft-python
+Version: 1.0
+Description: Misc errors related to Python
+Options: --pedantic
+Extra-Build-Depends: python
+Test-Against:
+Check: cruft

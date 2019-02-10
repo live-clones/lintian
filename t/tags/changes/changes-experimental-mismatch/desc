@@ -1,0 +1,7 @@
+Skeleton: changes
+Testname: changes-experimental-mismatch
+Sequence: 6000
+Version: 1.0
+Description: Test for experimental package to be installed in unstable
+Test-Against:
+Check: changes-file

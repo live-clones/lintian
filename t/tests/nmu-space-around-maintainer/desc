@@ -1,4 +1,0 @@
-Testname: nmu-space-around-maintainer
-Version: 1.0
-Description: Test for space around maintainer
-Test-For: extra-whitespace-around-name-in-changelog-trailer

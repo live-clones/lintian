@@ -1,7 +1,0 @@
-X: scripts-supports-ancient-package-version source: debian-watch-does-not-check-gpg-signature
-X: scripts-supports-ancient-package-version: maintainer-script-supports-ancient-package-version postinst:10 0.5
-X: scripts-supports-ancient-package-version: maintainer-script-supports-ancient-package-version postinst:11 0.5
-X: scripts-supports-ancient-package-version: maintainer-script-supports-ancient-package-version postinst:6 0.5
-X: scripts-supports-ancient-package-version: maintainer-script-supports-ancient-package-version postinst:7 0.5
-X: scripts-supports-ancient-package-version: maintainer-script-supports-ancient-package-version postinst:8 0.5
-X: scripts-supports-ancient-package-version: maintainer-script-supports-ancient-package-version postinst:9 0.5

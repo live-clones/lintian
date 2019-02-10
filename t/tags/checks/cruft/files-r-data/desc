@@ -1,0 +1,7 @@
+Skeleton: upload-native
+Testname: files-r-data
+Sequence: 6000
+Version: 1.0
+Description: Checks for R statistical data files
+Test-Against:
+Check: cruft

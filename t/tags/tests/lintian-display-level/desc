@@ -1,0 +1,18 @@
+Testname: lintian-display-level
+Sequence: 2500
+Skeleton: upload-non-native
+Version: 1.0+dsfg-1.1
+Description: Test Lintian --display-level handling
+Test-Against:
+ binary-control-field-duplicates-source
+ description-possibly-contains-homepage
+Check:
+ manpages
+ control-file
+ description
+ menu-format
+ fields
+ files
+ scripts
+ nmu
+ copyright-file

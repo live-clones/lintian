@@ -1,6 +1,0 @@
-Testname: changelog-file-missing
-Skeleton: non-native
-Version: 1.0-1
-Description: Test if Debian changelog is missing
-Test-For:
- debian-changelog-file-missing

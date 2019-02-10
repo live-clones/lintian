@@ -1,6 +1,0 @@
-Testname: debhelper-package-uses-debhelper-with-prefix-minus
-Version: 1.0
-Description: Test for packages using debhelper with a - prefix
-Options: --pedantic -I
-Test-Against:
- package-does-not-use-debhelper-or-cdbs

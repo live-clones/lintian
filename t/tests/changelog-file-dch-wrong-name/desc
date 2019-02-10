@@ -1,5 +1,0 @@
-Testname: changelog-file-dch-wrong-name
-Skeleton: non-native
-Version: 1.0-1
-Description: Test if Debian changelog has the wrong name
-Test-For: wrong-name-for-debian-changelog-file

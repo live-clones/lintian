@@ -1,3 +1,107 @@
+lintian (2.6.0) unstable; urgency=medium
+
+  * Summary of tag changes:
+    + Added:
+      - package-contains-sass-cache-directory
+      - package-uses-dh-runit-but-lacks-breaks-substvar
+      - pkg-config-references-unknown-shared-library
+
+  [ Chris Lamb ]
+
+  * Enhancements:
+    - Check for pkg-config(1) files that reference unknown shared objects
+      via (for example) "Libs: -lfoo". (Closes: #920699)
+    - Check for packages that use dh_runit without specifying a Breaks on
+      the "${runit:Breaks}" substvar. (Closes: #920299)
+    - Require that build paths aren't "/" when checking for
+      file-references-package-build-path.
+    - Check for packages that ship with .sass-cache directories.
+      (Closes: #920593)
+    - Detect accidental ".git.git" (etc.) in Vcs-Git headers.
+      (Closes: #921084)
+
+  * Bug fixes:
+    - Fix FTBFS by avoiding "self" false-positives when checking for
+      file-references-package-build-path in the Lintian test suite.
+      (Closes: #920536)
+    - Ignore duplicate .buildinfo files which can be supplied by using
+      mergechanges(1) from devscripts. (Closes: #920469)
+    - Rewrite "old" version calculation to prevent false-positives in the
+      maintainer-script-supports-ancient-package-version tag.
+      (Closes: #920638)
+    - Prevent false-positives in the command-with-path-in-maintainer-script
+      checks for sections automatically added by debhelper.
+      (Closes: #920568)
+    - Ignore quilt .pc directories when checking for
+      inconsistent-appstream-metadata-license. (Closes: #920647)
+
+  * Reporting improvements:
+    - Include the upload and release dates in the output of the
+      maintainer-script-supports-ancient-package-version tag.
+    - Add a reference to the official specification in the long description
+      of the unnecessary-source-date-epoch-assignment tag.
+
+  * Misc:
+    - Move to "Semantic Versioning" (https://semver.org/) scheme.
+    - Print Carp tracebacks in --debug mode.
+
+  [ Felix Lechner ]
+  * Fix a race condition by stopping loop for collections after a task
+    fails. (Closes: #920691)
+  * Remove Test-For from all test specifications. (MR: !138)
+  * Consolidate scripts in t/scripts; move internal harness tests there.
+  * Clean up ./t; move helper binaries, including t/runtests, to t/bin.
+  * Add an empty Test-Against to all tests that do not have one.
+  * Calculate Test-For and Test-Against from new "Check" parameter in
+    runner.
+  * Add an internal self-test for all the fields in "desc" files.
+  * Move all t/tags/tests addressing a single check into t/tags/checks/.
+    (MR: !141)
+
+  [ Jeremy Bicha ]
+  * Drop "GTK" -> "GTK+" correction. (Closes: #911449)
+  * Set "multimaint-merge" in debian/gbp.conf. (MR: !125)
+
+  [ Xavier Guimard ]
+  * Update debhelper addon specification now that nodejs-dev has been
+    replaced by pkg-js-tools. (MR: !135)
+
+  [ Paul Wise ]
+  * Add several spelling corrections.
+
+ -- Chris Lamb <lamby@debian.org>  Wed, 06 Feb 2019 22:51:14 +0100
+
+lintian (2.5.124) unstable; urgency=medium
+
+  * Summary of tag changes:
+    + Added:
+      - obsolete-crypt-alias
+      - obsolete-des-encryption
+
+  [ Chris Lamb ]
+  * Locate and process .buildinfo files if mentioned in a .changes file;
+    previously it was only examined if explicitly referenced. Thanks to
+    James Clarke. (Closes: #920228)
+  * If the changelog entry is missing a maintainer (eg. " -- <missing>"),
+    don't assume that it's an NMU. (Closes: #920184)
+  * Permit "-b" branch specifications in Mercurial Vcs-Hg control fields.
+    (Closes: #920314)
+  * Really fix summary generation code to match the "WIP" entry in the
+    changelog after moving to gbp-dch(1).
+  * Add "could break" as a spelling correction.
+
+  [ Felix Lechner ]
+  * Allow tests to be freely organised such as by check. (MR: !132, !134)
+
+  [ Zack Weinberg ]
+  * Add a check for binaries using obsolete DES encryption.
+    (Closes: #920376)
+
+  [ Paul Wise ]
+  * Add several spelling corrections.
+
+ -- Chris Lamb <lamby@debian.org>  Thu, 24 Jan 2019 23:47:53 +0100
+
 lintian (2.5.123~bpo9+1) stretch-backports; urgency=medium
 
   * Rebuild for stretch-backports.
@@ -1396,6 +1500,9 @@ lintian (2.5.93) unstable; urgency=medium
     + [CL] Apply patch from Simon McVittie to don't warn about wrong
       section for "oldlibs".
 
+  * data/python/versions:
+    + [CL] Don't emit old-python-version-field for X-Python3-Version 3.5
+      just yet. (Closes: #903399)
   * data/spelling/corrections:
     + [PW] Add a number of corrections.
 

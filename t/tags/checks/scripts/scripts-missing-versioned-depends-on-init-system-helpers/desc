@@ -1,0 +1,6 @@
+Skeleton: upload-native
+Testname: scripts-missing-versioned-depends-on-init-system-helpers
+Version: 1.0
+Description: Test for packages that are missing init-system-helpers depends
+Test-Against:
+Check: scripts

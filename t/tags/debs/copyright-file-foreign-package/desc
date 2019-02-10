@@ -1,0 +1,6 @@
+Skeleton: deb
+Testname: copyright-file-foreign-package
+Version: 1.0
+Description: Test for foreign symlink in package
+Test-Against:
+Check: copyright-file

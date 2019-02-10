@@ -1,0 +1,6 @@
+Skeleton: upload-native
+Testname: debhelper-excessive-overrides
+Version: 1.0
+Description: Test for excessive number of overrides
+Test-Against:
+Check: debhelper

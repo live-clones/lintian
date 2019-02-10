@@ -1,9 +1,0 @@
-Testname: changelog-file-consecutive-debian-revision-unrel
-Skeleton: non-native
-Version: 1.0-1
-Description: Check for false positive in non-consecutive-debian-revision
-Options: --pedantic -I -E
-Test-For:
- debian-watch-does-not-check-gpg-signature
-Test-Against:
- non-consecutive-debian-revision

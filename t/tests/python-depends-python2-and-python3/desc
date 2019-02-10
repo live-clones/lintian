@@ -1,6 +1,0 @@
-Testname: python-depends-python2-and-python3
-Sequence: 6000
-Version: 1.0
-Description: Check for packages that depend on Python 2.x and Python 3.x
-Test-For:
- depends-on-python2-and-python3

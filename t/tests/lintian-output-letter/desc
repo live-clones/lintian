@@ -1,7 +1,0 @@
-Testname: lintian-output-letter
-Sequence: 2500
-Skeleton: non-native
-Version: 1.0+dsfg-1.1
-Options: --pedantic -I -E --exp-output format=letterqualifier --show-overrides
-Output-Format: letter
-Description: Test Lintian letter qualifier output format

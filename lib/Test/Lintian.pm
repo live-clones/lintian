@@ -784,7 +784,7 @@ files/symlinks beneath it.
 
     my %SPECIAL_PATHS = (
         'docs-examples' => ['doc/examples/checks'],
-        'test-scripts' => [qw(t/scripts t/helpers t/runtests)],
+        'test-scripts' => [qw(t/scripts t/bin t/templates)],
     );
 
     sub program_name_to_perl_paths {

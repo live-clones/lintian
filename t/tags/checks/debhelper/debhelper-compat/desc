@@ -1,0 +1,8 @@
+Skeleton: upload-native
+Testname: debhelper-compat
+Version: 1.0
+Description: Test the content of debian/compat
+Default-Build-Depends: debhelper (<< 9.20151101~)
+Dh-Compat-Level: [9-
+Test-Against:
+Check: debhelper

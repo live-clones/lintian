@@ -1,0 +1,6 @@
+Skeleton: upload-native
+Testname: fields-essential
+Version: 1.0
+Description: Test for Essential field-related errors
+Test-Against:
+Check: fields

@@ -1,6 +1,0 @@
-Testname: files-gzip
-Version: 1.0-1
-Skeleton: non-native
-Description: Test for issues handling gz but not gzip files
-Test-for:
- gz-file-not-gzip

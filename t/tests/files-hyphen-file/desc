@@ -1,5 +1,0 @@
-Testname: files-hyphen-file
-Version: 1.0
-Description: Test for files called "-"
-Test-For:
- hyphen-file

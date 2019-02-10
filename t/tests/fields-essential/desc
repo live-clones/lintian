@@ -1,8 +1,0 @@
-Testname: fields-essential
-Version: 1.0
-Description: Test for Essential field-related errors
-Test-For:
- essential-in-source-package
- essential-no-not-needed
- new-essential-package
- unknown-essential-value

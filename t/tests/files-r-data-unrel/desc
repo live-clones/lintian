@@ -1,6 +1,0 @@
-Testname: files-r-data-unrel
-Sequence: 6000
-Version: 1.0
-Description: Checks for R statistical data files (false positives)
-Test-Against:
- r-data-without-readme-source

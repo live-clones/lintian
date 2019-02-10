@@ -1,7 +1,0 @@
-Template-Sets:
- debian (debian-native),
- . (source-make-builder)
-Fill-Targets:
- dsc.in,
- debian (debian-packaging),
- . (make-builder)

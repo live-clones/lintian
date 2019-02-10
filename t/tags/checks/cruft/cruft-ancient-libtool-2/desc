@@ -1,0 +1,7 @@
+Skeleton: upload-native
+Testname: cruft-ancient-libtool-2
+Version: 1.0
+Description: Test that an old (1.5.2) ltmain.sh is detected correctly
+References: Debian Bug#293296
+Test-Against:
+Check: cruft

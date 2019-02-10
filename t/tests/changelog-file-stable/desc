@@ -1,8 +1,0 @@
-Testname: changelog-file-stable
-Skeleton: non-native
-Version: 1.0-1etch1
-Description: Test a stable-proposed-updates package
-Test-Against:
- bad-distribution-in-changes-file
- version-refers-to-distribution
- malformed-debian-changelog-version

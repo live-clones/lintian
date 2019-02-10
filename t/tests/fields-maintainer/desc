@@ -1,7 +1,0 @@
-Testname: fields-maintainer
-Version: 1.0
-Description: General tests of the maintainer field
-Test-For:
- maintainer-address-is-on-localhost
- maintainer-address-looks-weird
- maintainer-address-malformed

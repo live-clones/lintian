@@ -1,0 +1,7 @@
+Skeleton: upload-native
+Testname: scripts-bashisms
+Version: 1.0
+Description: Check bashism detection
+Extra-Build-Depends: dash (>= 0.5.10.2)
+Test-Against:
+Check: scripts

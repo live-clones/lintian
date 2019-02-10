@@ -1,0 +1,7 @@
+Skeleton: upload-native
+Testname: scripts-maintainer-script-classification
+Version: 1.0
+Description: Test for classification tags in maintscripts
+Options: -L +classification -C scripts
+Test-Against:
+Check: scripts

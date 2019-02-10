@@ -1,9 +1,0 @@
-Testname: fields-multiple-x-deps
-Version: 1.0
-Description: Tests for multiple depends on X
-Test-For:
-  package-depends-on-multiple-libpng-versions
-  package-depends-on-multiple-libstdc-versions
-  package-depends-on-multiple-tcl-versions
-  package-depends-on-multiple-tclx-versions
-  package-depends-on-multiple-tk-versions

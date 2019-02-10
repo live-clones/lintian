@@ -1,0 +1,6 @@
+Skeleton: upload-native
+Testname: files-tar-traps
+Version: 1.0
+Description: Test tags for tar common bugs
+Test-Against:
+Check: files

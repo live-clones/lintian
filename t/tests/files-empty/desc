@@ -1,6 +1,0 @@
-Testname: files-empty
-Version: 1.0
-Description: Test of empty binary package detection
-Test-For:
- empty-binary-package
- empty-udeb-package

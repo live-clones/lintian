@@ -1,0 +1,6 @@
+Skeleton: changes
+Testname: changes-file-bad-section
+Version: 1.0
+Description: Test for bad section in changes file
+Test-Against:
+Check: changes-file

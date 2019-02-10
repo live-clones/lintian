@@ -1,0 +1,10 @@
+Template-Sets:
+ debian (debian-native),
+ . (tests-make-builder),
+ . (test-runner-tags),
+ . (lintian-invocation)
+Fill-Targets:
+ debian (debian-packaging),
+ orig/debian (debian-packaging),
+ . (make-builder),
+ . (lintian-invocation)

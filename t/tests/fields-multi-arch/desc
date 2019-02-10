@@ -1,7 +1,0 @@
-Testname: fields-multi-arch
-Version: 1.0
-Package-Architecture: any
-Description: Tests for the Multi-Arch field
-Test-Against:
- illegal-multi-arch-value
- unknown-multi-arch-value

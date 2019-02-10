@@ -1,9 +1,0 @@
-Testname: source-copyright-source-files-excluded
-Version: 1.0-1
-Skeleton: non-native
-Source-Format: 3.0 (quilt)
-Description: Test for files listed in Files-Excluded
-Test-Against:
- files-excluded-without-copyright-format-1.0
-Test-For:
- source-includes-file-in-files-excluded

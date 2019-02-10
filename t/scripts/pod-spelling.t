@@ -41,9 +41,9 @@ chdir($ENV{'LINTIAN_TEST_ROOT'}//'.')
 
 my @CHECKS = glob('checks/*[!.]*[!c]');
 my @DIRS
-  = qw(collection doc/tutorial frontend lib private reporting t/scripts t/helpers);
+  = qw(collection doc/tutorial frontend lib private reporting t/scripts t/bin t/templates);
 
-all_pod_files_spelling_ok(@CHECKS, @DIRS, 't/runtests');
+all_pod_files_spelling_ok(@CHECKS, @DIRS);
 
 sub check_aspell {
     # Ubuntu Precise has an old aspell-en, which does not recognise

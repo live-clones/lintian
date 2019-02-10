@@ -1,6 +1,0 @@
-Testname: fields-dep-without-arch-dep-binary
-Version: 1.0
-Package-Architecture: all
-Description: Test for B-D-A and no architecture-dependent pkgs
-Test-For:
- build-depends-arch-without-arch-dependent-binary

@@ -1,8 +1,0 @@
-Testname: debconf-config-general
-Version: 1.0
-Description: Test for various debconf config issues
-Test-For:
- config-does-not-load-confmodule
- isdefault-flag-is-deprecated
- possible-debconf-note-abuse
- unknown-debconf-priority

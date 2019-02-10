@@ -1,5 +1,0 @@
-Testname: testsuite-no-op
-Version: 1.0
-Description: Test for no-op autopkgtests
-Test-For:
- no-op-testsuite
