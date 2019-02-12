@@ -396,6 +396,7 @@ sub runner {
           if $status;
 
         if (length $diff) {
+            path("$runpath/tagdiff")->spew_utf8($diff);
             diag '--- ' . abs2rel($expected);
             diag '+++ ' . abs2rel($extracted);
             diag $diff;
