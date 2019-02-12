@@ -48,7 +48,7 @@ my $MA_DIRS = Lintian::Data->new('common/multiarch-dirs', qr/\s++/);
 sub run {
     my ($pkg, $type, $info, $proc, $group) = @_;
 
-    my ($must_call_ldconfig, %SONAME, %SONAMES, %sharedobject);
+    my ($must_call_ldconfig, %SONAME, %SONAMES, %STATIC_LIBS, %sharedobject);
     my @shlibs;
     my @words;
     my @devpkgs;
@@ -62,6 +62,7 @@ sub run {
 
     foreach my $file ($info->sorted_index) {
         $SONAMES{$1} = 1 if $file =~ m,.*\/lib([^/]+)\.so$,;
+        $STATIC_LIBS{$1} = 1 if $file =~ m,.*\/lib([^/]+)\.a$,;
         next if not $file->is_file;
         my $fileinfo = $file->file_info;
         if (   $fileinfo =~ m/^[^,]*\bELF\b/
@@ -727,7 +728,8 @@ sub run {
             while (/[:\s]-l(\S+)/g) {
                 tag 'pkg-config-references-unknown-shared-library',
                   $file, "-l$1", "(line $.)"
-                  unless exists($SONAMES{$1});
+                  unless exists($SONAMES{$1})
+                  or exists($STATIC_LIBS{$1});
             }
         }
         close($fd);
