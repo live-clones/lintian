@@ -41,7 +41,9 @@ use List::Util qw(max uniq);
 use IO::Async::Channel;
 use IO::Async::Loop;
 use IO::Async::Routine;
+use TAP::Formatter::Console;
 use TAP::Harness;
+use TAP::Parser::Aggregator;
 use Try::Tiny;
 
 BEGIN {
@@ -252,11 +254,18 @@ my %skipped;
 # tests that failed
 my @failed;
 
-my $harness = TAP::Harness->new({
+my $formatter = TAP::Formatter::Console->new({
     jobs => $numjobs,
-    lib => ["$ENV{'LINTIAN_TEST_ROOT'}/lib"],
     color => 1,
 });
+my $harness = TAP::Harness->new({
+    formatter => $formatter,
+    jobs => $numjobs,
+    lib => ["$ENV{'LINTIAN_TEST_ROOT'}/lib"],
+});
+
+my $aggregator = TAP::Parser::Aggregator->new;
+$aggregator->start;
 
 my @runscripts;
 my $scriptpath = "$testset/scripts";
@@ -272,11 +281,30 @@ push(@runscripts, @requiredscripts);
 # remove any duplicates
 @runscripts = uniq @runscripts;
 
+# make all paths relative
+@runscripts = map { abs2rel($_) } @runscripts;
+
+say 'Running selected and required Perl test scripts.';
+say EMPTY;
+
+# run scripts through harness
+$harness->aggregate_tests($aggregator, @runscripts);
+
+unless ($aggregator->all_passed || $keep_going) {
+    $aggregator->stop;
+    $formatter->summary($aggregator);
+    exit 1;
+}
+
+say EMPTY;
+
 # find test paths
 my @testpaths = find_selected_lintian_testpaths($testset, $onlyrun);
 
 # prepare output directories
-say 'Preparing ' . scalar @testpaths . ' work directories.'
+say 'Running selected tag tests; preparing '
+  . scalar @testpaths
+  . ' work directories.'
   if @testpaths;
 
 my @prepqueue = map { abs2rel($_) } @testpaths;
@@ -295,19 +323,21 @@ if (@prepqueue) {
 say "Preparation failed: $_" for @failed;
 exit 1 if scalar @failed;
 
-# these are the generated tests
+# remap paths from testset to outpath to get work directories
 my @workpaths = map { rel2abs(abs2rel($_, $testset), $outpath) } @testpaths;
+
+# make all paths relative to current directory
+@workpaths = map { abs2rel($_) } @workpaths;
 
 # add the scripts in generated tests to be run
 my @workscripts
   = map { File::Find::Rule->file->name('*.t')->in($_) } @workpaths;
-push(@runscripts, @workscripts);
-
-# make all paths relative
-@runscripts = map { abs2rel($_) } @runscripts;
 
 # run scripts through harness
-my $aggregator= $harness->runtests(@runscripts);
+$harness->aggregate_tests($aggregator, @workscripts);
+
+$aggregator->stop;
+$formatter->summary($aggregator);
 
 unless ($aggregator->all_passed) {
     exit 1 unless $keep_going;
@@ -315,7 +345,7 @@ unless ($aggregator->all_passed) {
 }
 
 # give a hint if not enough tests were run
-unless (scalar @runscripts + scalar @testpaths - scalar @requiredscripts
+unless (scalar @runscripts - scalar @requiredscripts + scalar @workscripts
     || $onlyrun eq 'minimal:') {
     quick_hint($onlyrun);
     exit 1;
