@@ -52,7 +52,7 @@ my @folders = map { $_ if -d $_ } path($checkpath)->children;
 my @descpaths = File::Find::Rule->file()->name('desc')->in($checkpath);
 
 # set the testing plan
-plan tests => scalar @folders + 2 * scalar @descpaths;
+plan tests => scalar @folders + 3 * scalar @descpaths;
 
 # needed for folder name calculation
 my (undef, $directories, undef) = splitpath(rel2abs($checkpath));
@@ -61,26 +61,34 @@ my $depth = scalar splitdir($directories);
 my $profile = Lintian::Profile->new(undef, [$ENV{LINTIAN_ROOT}]);
 
 # make sure the folders correspond to valid Lintian checks
-ok(
-    $profile->get_script(basename($_)),
-    "$_ corresponds to a valid Lintian check "
-)for @folders;
+ok($profile->get_script(basename($_)),
+    "Folder $_ corresponds to a valid Lintian check")
+  for @folders;
 
 foreach my $descpath (@descpaths) {
 
     my $testcase = read_config($descpath);
+    my $name = $testcase->{testname};
 
     # get test path
     my $testpath = path($descpath)->parent->stringify;
 
+    ok(defined $testcase->{check},
+        "Test specification for $name defines a field Check");
+
+    next unless defined $testcase->{check};
     my @checks = split(SPACE, $testcase->{check});
 
     # test is only about one check
-    is(scalar @checks, 1, "Test in $testpath addresses only one check");
+    is(scalar @checks, 1,"Test in $testpath is associate only with one check");
 
+    next unless scalar @checks == 1;
+    my $check = $checks[0];
+
+    # get the name of the folder under checks
     my (undef, $directories, undef) = splitpath(rel2abs($descpath));
     my $folder = (splitdir($directories))[$depth];
 
-    # make sure check matches first-leve child directory
-    is($checks[0], $folder, "Test in $testpath is located in correct check");
+    # make first-level child directory matches name of the check
+    is($folder, $check, "Test in $testpath is located in correct folder");
 }
