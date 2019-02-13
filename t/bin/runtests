@@ -152,6 +152,27 @@ my $output_is_tty = -t STDOUT;
 
 our $IO_LOOP = IO::Async::Loop->new;
 
+# get lintian modification date
+my @lintianparts = (
+    'checks', 'collection', 'commands', 'data',
+    'frontend', 'profiles', 'vendors', 'lib/Lintian'
+);
+my @lintianfiles
+  = map { File::Find::Rule->file->in("$ENV{'LINTIAN_ROOT'}/$_") }@lintianparts;
+push(@lintianfiles, $ENV{'LINTIAN_FRONTEND'});
+push(@lintianfiles, $ENV{'LINTIAN_DPLINT_FRONTEND'});
+$ENV{'LINTIAN_EPOCH'}
+  = max(map { -e $_ ? stat($_)->mtime : time } @lintianfiles);
+say 'Lintian modified on '. rfc822date($ENV{'LINTIAN_EPOCH'});
+
+my $string = safe_qx($ENV{'LINTIAN_FRONTEND'}, '--version');
+chomp $string;
+my ($version) = $string =~ qr/^\S+\s+v(.+)$/;
+die 'Cannot get Lintian version' unless length $version;
+say "Version under test is $version.";
+
+say EMPTY;
+
 # set environment for coverage
 if (defined $coverage) {
     # Only collect coverage for stuff that D::NYTProf and
@@ -214,19 +235,6 @@ my $harness_files_epoch
 $ENV{'HARNESS_EPOCH'}
   = max(our_modification_epoch, perl_modification_epoch, $harness_files_epoch);
 say 'Harness modified on '. rfc822date($ENV{'HARNESS_EPOCH'});
-
-# get lintian date
-my @lintianparts = (
-    'checks', 'collection', 'commands', 'data',
-    'frontend', 'profiles', 'vendors', 'lib/Lintian'
-);
-my @lintianfiles
-  = map { File::Find::Rule->file->in("$ENV{'LINTIAN_ROOT'}/$_") }@lintianparts;
-push(@lintianfiles, $ENV{'LINTIAN_FRONTEND'});
-push(@lintianfiles, $ENV{'LINTIAN_DPLINT_FRONTEND'});
-$ENV{'LINTIAN_EPOCH'}
-  = max(map { -e $_ ? stat($_)->mtime : time } @lintianfiles);
-say 'Lintian modified on '. rfc822date($ENV{'LINTIAN_EPOCH'});
 
 say EMPTY;
 
