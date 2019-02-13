@@ -253,7 +253,7 @@ sub _run_binary {
         my $fd = $file->open();
         my $line = <$fd>;
         tag 'script-uses-unversioned-python-in-shebang', $file
-          if $line =~ m,^#!\s*(/usr/bin/env\s*)?(/usr/bin/)?python$,;
+          if $line && $line =~ m,^#!\s*(/usr/bin/env\s*)?(/usr/bin/)?python$,;
         close($fd);
     }
 
