@@ -498,6 +498,9 @@ sub _parse_dep5 {
         foreach my $srcfile (sort keys %file_coverage) {
             my $i = $file_coverage{$srcfile};
             next if $srcfile =~ '^\.pc/';
+            # Assume that license files themselves do not require
+            # copyright.
+            next if $srcfile =~ m,(^|/)(COPYING[^/]*|LICENSE)$,;
             tag 'file-without-copyright-information', $srcfile unless $i;
             delete $file_para_coverage{$i};
         }
