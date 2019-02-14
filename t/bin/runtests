@@ -34,6 +34,8 @@ use autodie;
 use v5.10;
 
 use Cwd;
+use File::Basename;
+use File::Path qw(make_path);
 use File::Spec::Functions qw(abs2rel rel2abs splitpath splitdir);
 use File::stat;
 use Getopt::Long;
@@ -114,19 +116,25 @@ my $dump_logs = 1;
 my $force_rebuild;
 my $numjobs = -1;
 my $keep_going;
+my $onlyrun;
+my $outpath;
+my $unattended;
 my $verbose = 0;
 
 Getopt::Long::Configure('bundling');
 unless (
     Getopt::Long::GetOptions(
-        'B'            => \$force_rebuild,
-        'd|debug+'     => \$debug,
-        'j|jobs:i'     => \$numjobs,
-        'k|keep-going' => \$keep_going,
-        'dump-logs!'   => \$dump_logs,
-        'v|verbose'    => \$verbose,
-        'coverage:s'   => \$coverage,
-        'help|h'       => sub {usage(); exit;},
+        'B|force-rebuild'  => \$force_rebuild,
+        'c|coverage:s'     => \$coverage,
+        'd|debug+'         => \$debug,
+        'j|jobs:i'         => \$numjobs,
+        'k|keep-going'     => \$keep_going,
+        'L|dump-logs!'     => \$dump_logs,
+        'o|onlyrun:s'      => \$onlyrun,
+        'u|unattended'     => \$unattended,
+        'v|verbose'        => \$verbose,
+        'w|work-dir:s'     => \$outpath,
+        'h|help'           => sub {usage(); exit;},
     )
 ) {
     usage();
@@ -135,18 +143,34 @@ unless (
 
 # check number of arguments
 die('Please use -h for usage information.')
-  if @ARGV < 2 || @ARGV > 3;
+  if @ARGV > 1;
 
 # get arguments
-my ($testset, $outpath, $onlyrun) = @ARGV;
+my ($testset) = @ARGV;
+
+# default test set
+$testset ||= 't';
 
 # check test set directory
-die("Test set directory $testset not set") unless -d $testset;
-$testset = rel2abs($testset) // die("Cannot find $testset: $!");
+die "Cannot find testset directory $testset"
+  unless -d $testset;
 
-# check output directory
-die("Test output directory $outpath not set") unless -d $outpath;
-$outpath = rel2abs($outpath) // die("Cannot find $outpath: $!");
+# make sure testset is an absolute path
+$testset = rel2abs($testset);
+
+# calculate a default test work directory if none given
+$outpath ||= dirname($testset) . '/debian/test-out';
+
+# create test work directory unless it exists
+make_path($outpath)
+  unless -e $outpath;
+
+# make sure test work path is a directory
+die "Test work directory $outpath is not a directory"
+  unless -d $outpath;
+
+# make sure outpath is absolute
+$outpath = rel2abs($outpath);
 
 my $ACTIVE_JOBS = 0;
 
