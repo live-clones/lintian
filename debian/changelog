@@ -1,8 +1,28 @@
-lintian (2.6.0) UNRELEASED; urgency=medium
+lintian (2.7.0) unstable; urgency=medium
 
-  * WIP
+  * Summary of tag changes:
+    + Added:
+      - script-uses-unversioned-python-in-shebang
 
- -- Chris Lamb <lamby@debian.org>  Wed, 06 Feb 2019 23:38:48 +0100
+  [ Chris Lamb ]
+  * Track static libraries to avoid false-positives in
+    pkg-config-references-unknown-shared-library. (Closes: #921872)
+  * Assume that license files themselves do not require coverage in DEP-5
+    copyright files. (Closes: #921752)
+  * Ignore spelling errors in patch author names. (Closes: #922233)
+
+  [ Dmitry Bogatov ]
+  * Add a classification tag to identify the number of scripts using
+    unversioned Python shebangs. (Closes: #909510)
+
+  [ Felix Lechner ]
+  * Demote the Test-Against test metadata field to be a selector for
+    false-positives only. (MR: !142)
+
+  [ Paul Wise ]
+  * Add several spelling corrections.
+
+ -- Chris Lamb <lamby@debian.org>  Thu, 14 Feb 2019 08:37:22 +0000
 
 lintian (2.6.0) unstable; urgency=medium
 
