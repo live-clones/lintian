@@ -32,9 +32,25 @@ use v5.10;
 use Getopt::Long;
 use List::Util qw(all);
 use Path::Tiny;
-use Term::ANSIColor;
-use Text::CSV;
+use Term::ANSIColor qw(:constants);
 use Text::Diff;
+
+BEGIN {
+    $ENV{'LINTIAN_TEST_INSTALLED'} = 'no'
+      unless exists $ENV{'LINTIAN_TEST_INSTALLED'};
+
+    my $cwd = Cwd::getcwd();
+
+    if ($ENV{'LINTIAN_TEST_INSTALLED'} eq 'yes') {
+        $ENV{'LINTIAN_ROOT'} = '/usr/share/lintian';
+    } else {
+        $ENV{'LINTIAN_ROOT'} = $cwd;
+    }
+}
+
+use lib "$ENV{'LINTIAN_ROOT'}/lib";
+
+use Test::Lintian::Output::Universal qw(order);
 
 use constant EMPTY => q{};
 use constant SPACE => q{ };
@@ -63,62 +79,33 @@ die "Please use -h for usage information.\n"
 # get arguments
 my ($expectedpath, $actualpath) = @ARGV;
 
-my @expected = reverse sort (path($expectedpath)->lines_utf8);
-my @actual = reverse sort (path($actualpath)->lines_utf8);
+my @expected
+  = reverse sort { order($a) cmp order($b) } (path($expectedpath)->lines_utf8);
+my @actual
+  = reverse sort { order($a) cmp order($b) }(path($actualpath)->lines_utf8);
 
 my $diff = diff(\@expected, \@actual, { CONTEXT => 0 });
 
-my $pretty = pretty_diff($diff);
+my @lines = split(NEWLINE, $diff);
+chomp @lines;
 
-print $pretty;
+# sort before applying color
+@lines = reverse sort @lines;
+
+# apply color when on a terminal
+if (-t STDOUT) {
+
+    my $green = GREEN;
+    my $red = RED;
+    my $reset = RESET;
+
+    s/^(\+.*)$/$green$1$reset/ for @lines;
+    s/^(\-.*)$/$red$1$reset/ for @lines;
+}
+
+print $_ . NEWLINE for @lines;
+
 exit;
-
-sub pretty_diff {
-    my ($diff) = @_;
-
-    my @pretty;
-
-    my $csv = Text::CSV->new({ sep_char => '|' });
-
-    my @lines = split(NEWLINE, $diff);
-    chomp @lines;
-
-    foreach my $line (@lines) {
-        my ($sign, $remainder) = ($line =~ qr/^(.)(.*)$/);
-
-        die "Cannot parse line $line"
-          unless length $sign && length $remainder;
-
-        my $status = $csv->parse($remainder);
-        die "Cannot parse line $remainder: " . $csv->error_diag
-          unless $status;
-
-        my ($type, $package, $name, $details) = $csv->fields;
-
-        die "Cannot parse line $remainder"
-          unless all { length } ($type, $package, $name);
-
-        my $nice = "$sign$package ($type): $name $details";
-        push(@pretty, $nice . NEWLINE);
-    }
-
-    # sort before applying color
-    @pretty = reverse sort @pretty;
-
-    # apply color when on a terminal
-    @pretty = map { colorize($_) } @pretty
-      if -t STDOUT;
-
-    return join(EMPTY, @pretty);
-}
-
-sub colorize {
-    my ($line) = @_;
-
-    return colored($line, 'green') if $line =~ qr/^\+/;
-    return colored($line, 'red') if $line =~ qr/^-/;
-    return $line;
-}
 
 sub usage {
     print <<"END";
