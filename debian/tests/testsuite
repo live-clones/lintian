@@ -5,6 +5,6 @@ WORKDIR="$ADTTMP/$(basename $0)"
 
 export LINTIAN_TEST_INSTALLED=yes
 
-debian/rules TEST_WORK_DIR="$WORKDIR" runtests onlyrun="suite:tags"
+t/bin/runtests --jobs=1 --unattended --keep-going --work-dir="$WORKDIR" --onlyrun="suite:tags" t
 
 rm -fr "${WORKDIR}"
