@@ -21,6 +21,7 @@ Build-Depends:
  diffstat <!nocheck>,
  docbook-utils,
  docbook-xml,
+ dpatch <!nocheck>,
  dpkg (>= 1.17.14),
  fakeroot <!nocheck>,
  file <!nocheck>,
