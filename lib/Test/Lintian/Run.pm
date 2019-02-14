@@ -73,7 +73,7 @@ use Test::Lintian::Helper qw(rfc822date);
 use Test::Lintian::Hooks
   qw(find_missing_prerequisites run_lintian sed_hook sort_lines calibrate);
 use Test::Lintian::Prepare qw(early_logpath);
-use Test::Lintian::UniversalTags qw(get_tagnames);
+use Test::Lintian::Output::Universal qw(get_tagnames);
 use Test::StagedFileProducer;
 
 use constant SPACE => q{ };
@@ -263,9 +263,9 @@ sub runner {
         });
 
     # run lintian
-    my $actual = "$runpath/tags.actual";
+    my $raw = "$runpath/tags.actual";
     $producer->add_stage(
-        products => [$actual],
+        products => [$raw],
         minimum_epoch => $lintian_epoch,
         build =>sub {
             $ENV{'LINTIAN_COVERAGE'}.= ",-db,./cover_db-$testcase->{testname}"
@@ -296,7 +296,7 @@ sub runner {
             # do not forget the final newline, or sorting will fail
             my $contents
               = scalar @lines ? join(NEWLINE, @lines) . NEWLINE : EMPTY;
-            path($actual)->spew($contents);
+            path($raw)->spew($contents);
         });
 
     # run a sed-script if it exists
@@ -306,10 +306,10 @@ sub runner {
         build =>sub {
             my $script = "$runpath/post_test";
             if(-f $script) {
-                sed_hook($script, $actual, $parsed);
+                sed_hook($script, $raw, $parsed);
             } else {
-                die"Could not copy actual tags $actual to $parsed: $!"
-                  if(system('cp', '-p', $actual, $parsed));
+                die"Could not copy actual tags $raw to $parsed: $!"
+                  if(system('cp', '-p', $raw, $parsed));
             }
         });
 
@@ -343,7 +343,7 @@ sub runner {
         });
 
     # extract expected tags
-    my $expected = "$runpath/tags.specified.calibrated.extracted";
+    my $expected = "$runpath/tags.specified.calibrated.universal";
     $producer->add_stage(
         products => [$expected],
         build =>sub {
@@ -353,14 +353,12 @@ sub runner {
         });
 
     # extract actual tags
-    my $extracted = "$runpath/tags.actual.parsed.sorted.extracted";
+    my $actual = "$runpath/tags.actual.parsed.sorted.universal";
     $producer->add_stage(
-        products => [$extracted],
+        products => [$actual],
         build =>sub {
-            my @command = (
-                'tagextract', '-f', $testcase->{output_format},
-                $sorted, $extracted
-            );
+            my @command = ('tagextract', '-f', $testcase->{output_format},
+                $sorted, $actual);
             die 'Error executing: ' . join(SPACE, @command) . ": $!"
               if system(@command);
         });
@@ -368,7 +366,7 @@ sub runner {
     say EMPTY;
     $producer->run(verbose => 1);
 
-    my @errors = check_result($testcase, $extracted, $expected);
+    my @errors = check_result($testcase, $expected, $actual);
 
     my $okay = !(scalar @errors);
 
@@ -389,7 +387,7 @@ sub runner {
     #      unless -e "$runpath/test_calibration";
 
     unless($okay) {
-        my @command = ('tagdiff', $expected, $extracted);
+        my @command = ('tagdiff', $expected, $actual);
         my ($diff, $status) = capture_merged { system(@command); };
         $status = ($status >> 8) & 255;
         die 'Error executing: ' . join(SPACE, @command) . ": $!"
@@ -398,7 +396,7 @@ sub runner {
         if (length $diff) {
             path("$runpath/tagdiff")->spew_utf8($diff);
             diag '--- ' . abs2rel($expected);
-            diag '+++ ' . abs2rel($extracted);
+            diag '+++ ' . abs2rel($actual);
             diag $diff;
         }
     }
@@ -406,7 +404,7 @@ sub runner {
     return;
 }
 
-=item check_result(DESC, ACTUAL, EXPECTED, ORIGINAL)
+=item check_result(DESC, EXPECTED, ACTUAL)
 
 This routine checks if the EXPECTED tags match the calibrated ACTUAL for the
 test described by DESC. For some additional checks, also need the ORIGINAL
@@ -415,10 +413,10 @@ tags before calibration. Returns a list of errors, if there are any.
 =cut
 
 sub check_result {
-    my ($testcase, $actualpath, $expectedpath) = @_;
+    my ($testcase, $expectedpath, $actualpath) = @_;
 
     # fail if tags do not match
-    return 'Tags do not match' if (compare($actualpath, $expectedpath) != 0);
+    return 'Tags do not match' if (compare($expectedpath, $actualpath) != 0);
 
     # no furter checks if the test is not about tags
     return unless length $testcase->{check};
