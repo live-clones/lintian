@@ -95,9 +95,8 @@ my $testcase = read_config($defaultspath);
 plan tests => 2;
 
 # check when tags match
-ok(!scalar check_result($testcase, $match, $expected, $expected),
-    'Same tags match');
+ok(!scalar check_result($testcase, $expected, $match),'Same tags match');
 
 # check tags do not match
-ok(scalar check_result($testcase, $nomatch, $expected, $expected),
+ok(scalar check_result($testcase, $expected, $nomatch),
     'Different tags do not match');
