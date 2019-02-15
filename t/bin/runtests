@@ -44,6 +44,7 @@ use IO::Async::Channel;
 use IO::Async::Loop;
 use IO::Async::Routine;
 use TAP::Formatter::Console;
+use TAP::Formatter::File;
 use TAP::Harness;
 use TAP::Parser::Aggregator;
 use Try::Tiny;
@@ -278,10 +279,14 @@ my %skipped;
 # tests that failed
 my @failed;
 
-my $formatter = TAP::Formatter::Console->new({
+my $formatter = TAP::Formatter::File->new({
     jobs => $numjobs,
-    color => 1,
 });
+$formatter = TAP::Formatter::Console->new({
+        jobs => $numjobs,
+        color => 1,
+    }) if -t STDOUT;
+
 my $harness = TAP::Harness->new({
     formatter => $formatter,
     jobs => $numjobs,
