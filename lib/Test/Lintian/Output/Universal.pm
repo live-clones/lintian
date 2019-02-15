@@ -82,7 +82,7 @@ sub get_tagnames {
     my ($path) = @_;
 
     my @lines = path($path)->lines_utf8({ chomp => 1 });
-    my @names = map { package_name($_) } @lines;
+    my @names = map { tag_name($_) } @lines;
 
     return @names;
 }
