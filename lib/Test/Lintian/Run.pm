@@ -328,6 +328,10 @@ sub runner {
 
     my $specified = "$runpath/tags";
 
+    # create tags if there are none; helps when calibrating new tests
+    path($specified)->touch
+      unless -e $specified;
+
     # calibrate tags; may write to $sorted
     my $calibrated = "$runpath/tags.specified.calibrated";
     $producer->add_stage(
