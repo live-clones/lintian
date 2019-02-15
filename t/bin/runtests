@@ -363,9 +363,38 @@ $harness->aggregate_tests($aggregator, @workscripts);
 $aggregator->stop;
 $formatter->summary($aggregator);
 
-unless ($aggregator->all_passed) {
-    exit 1 unless $keep_going;
-    $status = 1;
+say EMPTY;
+
+$status = 1
+  unless $aggregator->all_passed;
+
+if (-t STDOUT && !$unattended) {
+
+    say 'Offering to re-calibrate the tags expected in tests with errors.';
+
+    my @failed = $aggregator->failed;
+    for my $scriptpath (@failed) {
+
+        my $workpath = dirname($scriptpath);
+        my $diffpath = "$workpath/tagdiff";
+
+        my $relative = abs2rel($workpath, $outpath);
+        my $testpath = abs2rel(rel2abs($relative, $testset));
+        my $tagspath = "$testpath/tags";
+
+        if (-r $diffpath && -w $tagspath) {
+
+            print ">>> Fix $testpath (y/n/q)? ";
+
+            my $decision = <STDIN>;
+            chomp $decision;
+            last if $decision eq 'q';
+            next unless $decision eq 'y';
+
+            die "Cannot run tagadjust for $testpath"
+              if system('tagadjust', '-i', $diffpath, $tagspath);
+        }
+    }
 }
 
 # give a hint if not enough tests were run
