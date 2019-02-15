@@ -1,0 +1,6 @@
+C: rules-requires-root-implicitly source: source-format 1.0 [non-native]
+C: rules-requires-root-implicitly source: rules-requires-root-implicitly
+C: rules-requires-root-implicitly source: debian-build-system dh
+C: rules-requires-root-implicitly: no-ctrl-scripts
+C: rules-requires-root-implicitly: data-tarball-compression-format xz
+C: rules-requires-root-implicitly: control-tarball-compression-format xz
