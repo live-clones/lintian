@@ -36,6 +36,9 @@ use Lintian::Util qw(internal_error strip);
 # one of the following names.
 my $HWCAP_DIRS = Lintian::Data->new('shared-libs/hwcap-dirs');
 
+my $UNKNOWN_SHARED_LIBRARY_EXCEPTIONS
+  = Lintian::Data->new('shared-libs/unknown-shared-library-exceptions');
+
 # List of symbols file meta-fields.
 my %symbols_meta_fields = map { $_ => 1 }qw(
   Build-Depends-Package
@@ -729,7 +732,8 @@ sub run {
                 tag 'pkg-config-references-unknown-shared-library',
                   $file, "-l$1", "(line $.)"
                   unless exists($SONAMES{$1})
-                  or exists($STATIC_LIBS{$1});
+                  or exists($STATIC_LIBS{$1})
+                  or $UNKNOWN_SHARED_LIBRARY_EXCEPTIONS->known($1);
             }
         }
         close($fd);
