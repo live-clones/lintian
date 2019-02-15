@@ -374,12 +374,11 @@ $status = 1
   unless $aggregator->all_passed;
 
 if (-t STDOUT && !$unattended) {
-
-    say 'Offering to re-calibrate the tags expected in tests with errors.';
-
     my @failed = $aggregator->failed;
-    for my $scriptpath (@failed) {
+    say 'Offering to re-calibrate the tags expected in tests with errors.'
+      if @failed;
 
+    for my $scriptpath (@failed) {
         my $workpath = dirname($scriptpath);
         my $diffpath = "$workpath/tagdiff";
 
