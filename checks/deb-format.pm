@@ -116,7 +116,7 @@ sub run {
         if (not defined($ctrl_member)) {
             # Somehow I doubt we will ever get this far without a control
             # file... :)
-            tag 'malformed-deb-archive', 'Missing control.tar.gz member';
+            tag 'malformed-deb-archive', 'Missing control.tar member';
             $failed = 1;
         } else {
             if (
@@ -150,7 +150,7 @@ sub run {
                 tag 'malformed-deb-archive',
                   join(' ',
                     "third (official) member $data_member",
-                    'not data.tar.(gz|bz2|xz)');
+                    'not data.tar.(gz|xz|bz2|lzma)');
                 $failed = 1;
             } elsif ($type eq 'udeb'
                 && $data_member !~ m/^data\.tar\.[gx]z$/) {
