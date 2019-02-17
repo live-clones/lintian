@@ -731,7 +731,8 @@ sub run {
             while (/[:\s]-l(\S+)/g) {
                 tag 'pkg-config-references-unknown-shared-library',
                   $file, "-l$1", "(line $.)"
-                  unless exists($SONAMES{$1})
+                  unless $1 =~ m/\$\{.+\}/
+                  or exists($SONAMES{$1})
                   or exists($STATIC_LIBS{$1})
                   or $UNKNOWN_SHARED_LIBRARY_EXCEPTIONS->known($1);
             }
