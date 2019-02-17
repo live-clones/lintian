@@ -2050,7 +2050,7 @@ sub run {
         next if not $file or not $file->is_open_ok;
 
         my %checks
-          = get_checks_for_file($info, $file, $pkg_section, $build_path);
+          = get_checks_for_file($info, $file, $source_pkg, $build_path);
         my $fd2 = $file->open;
         while (<$fd2>) {
             foreach my $tag (sort keys %checks) {
