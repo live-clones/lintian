@@ -40,7 +40,7 @@ mips          ~~ELF 32-bit MSB .* MIPS
 mipsel        ~~ELF 32-bit LSB .* MIPS
 #mipsn32       ~~ELF 32-bit LSB .* MIPS.* N32
 mips64        ~~ELF 64-bit MSB .* MIPS
-mipsel64      ~~ELF 64-bit LSB .* MIPS
+mips64el      ~~ELF 64-bit LSB .* MIPS
 powerpc       ~~ELF 32-bit MSB .* PowerPC
 powerpcspe    ~~ELF 32-bit MSB .* PowerPC .* cisco 4500
 ppc64         ~~ELF 64-bit MSB .* PowerPC
