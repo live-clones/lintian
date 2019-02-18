@@ -1,0 +1,2 @@
+W: executable-in-docbase: executable-not-elf-or-script usr/share/doc-base/doc1.txt
+E: executable-in-docbase: executable-in-usr-share-docbase usr/share/doc-base/doc1.txt 0755
