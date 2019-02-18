@@ -1,0 +1,6 @@
+Testname: whitespace-after-continuation-character
+Skeleton: upload-native
+Version: 1.0
+Description: Test with a menu file that contains whitespace after a continuation character
+Test-Against:
+Check: menu-format
