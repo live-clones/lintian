@@ -23,7 +23,7 @@ use strict;
 use warnings;
 use autodie;
 
-use List::MoreUtils qw(none any);
+use List::MoreUtils qw(any);
 
 use Lintian::Tags qw(tag);
 use Lintian::Check qw(check_maintainer);
@@ -31,7 +31,6 @@ use Lintian::Data;
 use Lintian::Util qw(get_file_checksum);
 
 my $KNOWN_DISTS = Lintian::Data->new('changes-file/known-dists');
-my $SIGNING_KEY_FILENAMES = Lintian::Data->new('common/signing-key-filenames');
 
 sub run {
     my (undef, undef, $info, undef, $group) = @_;
@@ -184,34 +183,12 @@ sub run {
         check_maintainer($info->field('changed-by'), 'changed-by');
     }
 
-    my $has_signing_key = 0;
-    my $src = $group->get_source_processable;
-    if ($src) {
-        for my $key_name ($SIGNING_KEY_FILENAMES->all) {
-            my $path = $src->info->index_resolved_path("debian/$key_name");
-            if ($path and $path->is_file) {
-                $has_signing_key = 1;
-                last;
-            }
-        }
-    }
-
     my $files = $info->files;
     my $path = readlink($info->lab_data_path('changes'));
     my %num_checksums;
     $path =~ s#/[^/]+$##;
     foreach my $file (keys %$files) {
         my $file_info = $files->{$file};
-
-        # Ensure all orig tarballs have a signature if we have an upstream
-        # signature.
-        if (   $has_signing_key
-            && $file =~ m/(^.*\.orig(?:-[A-Za-z\d-]+)?\.tar)\./
-            && $file !~ m/\.asc$/
-            && !$info->repacked) {
-            tag 'orig-tarball-missing-upstream-signature', $file
-              if none { exists $files->{"$_.asc"} } ($file, $1);
-        }
 
         # check section
         if (   ($file_info->{section} eq 'non-free')

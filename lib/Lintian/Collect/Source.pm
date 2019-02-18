@@ -30,7 +30,7 @@ use Lintian::Relation;
 use Parse::DebianChangelog;
 
 use Lintian::Util
-  qw(get_file_checksum read_dpkg_control open_gz $PKGNAME_REGEX $PKGREPACK_REGEX);
+  qw(get_file_checksum read_dpkg_control open_gz $PKGNAME_REGEX $PKGREPACK_REGEX strip);
 
 =head1 NAME
 
@@ -185,6 +185,89 @@ sub native {
         }
     }
     return $self->{native};
+}
+
+=item files
+
+Returns a reference to a hash containing information about files listed
+in the .changes file.  Each hash may have the following keys:
+
+=over 4
+
+=item name
+
+Name of the file.
+
+=item size
+
+The size of the file in bytes.
+
+=item checksums
+
+A hash with the keys being checksum algorithms and the values themselves being
+hashes containing
+
+=over 4
+
+=item sum
+
+The result of applying the given algorithm to the file.
+
+=item filesize
+
+The size of the file as given in the .changes section relating to the given
+checksum.
+
+=back
+
+=back
+
+Needs-Info requirements for using I<files>: L<Lintian::Collect/field ([FIELD[, DEFAULT]])>
+
+=cut
+
+sub files {
+    my ($self) = @_;
+
+    return $self->{files} if exists $self->{files};
+
+    my %files;
+
+    my $file_list = $self->field('files') || '';
+    local $_;
+    for (split /\n/, $file_list) {
+        strip;
+        next if $_ eq '';
+
+        my ($md5sum,$size,$file) = split(/\s+/o, $_);
+        next if $file =~ m,/,;
+
+        $files{$file}{checksums}{md5} = {
+            'sum' => $md5sum,
+            'filesize' => $size,
+        };
+        $files{$file}{name} = $file;
+        $files{$file}{size} = $size;
+    }
+
+    foreach my $alg (qw(sha1 sha256)) {
+        my $list = $self->field("checksums-$alg") || '';
+        for (split /\n/, $list) {
+            strip;
+            next if $_ eq '';
+
+            my ($checksum, $size, $file) = split(/\s+/o, $_);
+            next if $file =~ m,/,;
+
+            $files{$file}{checksums}{$alg} = {
+                'sum' => $checksum,
+                'filesize' => $size
+            };
+        }
+    }
+
+    $self->{files} = \%files;
+    return $self->{files};
 }
 
 =item repacked
