@@ -1,0 +1,9 @@
+# taken from preseed 1.90; see #883653; FL
+
+Template: test/checksum_error
+Type: error
+# :sl2:
+_Description: Checksum error
+ The ${ALGORITHM} checksum of the file retrieved from <${LOCATION}> fails
+ to match the expected value of "${CHECKSUM}". The file may be corrupt,
+ or the provided checksums may be out of date.
