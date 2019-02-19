@@ -32,6 +32,7 @@ product: $(origtargz)
 	cp -rp $(debiandata)/. $(packagedir)/debian
 	if [ -x ./pre_build ] ; then ./pre_build $(shell realpath $(packagedir)) ; fi
 	cd $(packagedir) && dpkg-buildpackage -rfakeroot -us -uc -d -iNEVER_MATCH_ANYTHING -INEVER_MATCH_ANYTHING --source-option=--auto-commit
+	if [ -x ./post_build ] ; then ./post_build $(shell realpath $(packagedir)) ; fi
 
 ifeq ($(type),native)
 $(origtargz): clean
