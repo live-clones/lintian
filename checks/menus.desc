@@ -14,7 +14,7 @@ Info: The maintainer script calls the <tt>update-menus</tt> command without
  command is not marked as "essential" package.)
  .
  For example, use the following code in your maintainer script:
-  if [ -x /usr/bin/update-menus ] ; then update-menus ; fi
+  if which update-menus > /dev/null; then update-menus ; fi
 
 Tag: maintainer-script-does-not-check-for-existence-of-installdocs
 Severity: important
