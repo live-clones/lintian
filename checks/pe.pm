@@ -25,6 +25,8 @@ use autodie;
 
 use List::MoreUtils qw(any);
 
+use constant SPACE  =>  q{ };
+
 use Lintian::Tags qw(tag);
 use Lintian::Util qw(internal_error);
 
@@ -44,8 +46,11 @@ sub run {
             seek($fd, 0x3c, 0) or internal_error("seek: $!");
             read($fd, $buf, 4) or internal_error("read: $!");
             my $pe_offset = unpack('V', $buf);
-            # Read magic to determine whether we are are PE32 or PE32+
-            seek($fd, $pe_offset + 26 + 64, 0) or internal_error("seek: $!");
+
+            # 0x18 is index to "Optional Header"; 0x46 to DLL Characteristics
+            seek($fd, $pe_offset + 0x18 + 0x46, 0)
+              or internal_error("seek: $!");
+
             # Read and parse DLLCharacteristics value
             read($fd, $buf, 2) or internal_error("read: $!");
         };
@@ -54,11 +59,13 @@ sub run {
         my %features = (
             'ASLR' => $characteristics & 0x40,
             'DEP/NX' => $characteristics & 0x100,
-            'SEH' => ~$characteristics & 0x400,
+            'SafeSEH' => ~$characteristics & 0x400,  # note negation
         );
 
-        tag 'portable-executable-missing-security-features', $file
-          unless any { $_ == 0 } values %features;
+        my @missing = grep { !$features{$_} } sort keys %features;
+        tag 'portable-executable-missing-security-features', $file,
+          join(SPACE, @missing)
+          if scalar @missing;
 
         close($fd);
     }
