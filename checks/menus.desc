@@ -14,7 +14,8 @@ Info: The maintainer script calls the <tt>update-menus</tt> command without
  command is not marked as "essential" package.)
  .
  For example, use the following code in your maintainer script:
-  if which update-menus > /dev/null; then update-menus ; fi
+ .
+  if which update-menus &gt; /dev/null; then update-menus ; fi
 
 Tag: maintainer-script-does-not-check-for-existence-of-installdocs
 Severity: important
@@ -24,8 +25,8 @@ Info: The maintainer script calls the <tt>install-docs</tt> command without
  the command is not marked as "essential" package.)
  .
  For example, use the following code in your maintainer script:
-  if [ -x /usr/sbin/install-docs ]; then
-    /usr/sbin/install-docs -i /usr/share/doc-base/&lt;your-package&gt;
+  if which install-docs &gt; /dev/null; then
+    install-docs -i /usr/share/doc-base/&lt;your-package&gt;
   fi
 
 Tag: preinst-calls-updatemenus
@@ -81,7 +82,8 @@ Info: Since the package installs a file in <tt>/etc/menu-methods</tt>,
  script.
  .
  For example, use the following code in your maintainer script:
-  if [ -x /usr/bin/update-menus ] ; then update-menus ; fi
+ .
+  if which update-menus &gt; /dev/null; then update-menus ; fi
 Ref: menu 4.2
 
 Tag: postrm-does-not-call-updatemenus
@@ -93,7 +95,8 @@ Info: Since the package installs a file in <tt>/etc/menu-methods</tt>,
  script.
  .
  For example, use the following code in your maintainer script:
-  if [ -x /usr/bin/update-menus ] ; then update-menus ; fi
+ .
+  if which update-menus &gt; /dev/null; then update-menus ; fi
 Ref: menu 4.2
 
 Tag: postinst-has-useless-call-to-update-menus
