@@ -1,5 +1,1 @@
-I: invalid-potfiles-in source: no-complete-debconf-translation
-W: invalid-potfiles-in source: newer-debconf-templates
-W: invalid-potfiles-in source: invalid-po-file debian/po/zh_CN.po
-I: invalid-potfiles-in: unused-debconf-template test/checksum_error
-E: invalid-potfiles-in: no-debconf-config
+W: invalid-potfiles-in source: invalid-potfiles-in
