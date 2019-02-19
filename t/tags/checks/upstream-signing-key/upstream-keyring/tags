@@ -1,2 +1,2 @@
-W: upstream-keyring changes: orig-tarball-missing-upstream-signature upstream-keyring_1.0.orig.tar.gz
+W: upstream-keyring source: orig-tarball-missing-upstream-signature upstream-keyring_1.0.orig.tar.gz
 W: upstream-keyring source: debian-watch-could-verify-download debian/upstream/signing-key.asc
