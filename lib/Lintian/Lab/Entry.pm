@@ -63,9 +63,11 @@ use parent qw(Lintian::Processable Class::Accessor::Fast);
 use Carp qw(croak);
 use Cwd();
 use File::Spec;
+use IO::Async::Loop;
 use Path::Tiny;
 use POSIX qw();
 use Scalar::Util qw(refaddr);
+use POSIX qw();
 
 use Lintian::Lab;
 use Lintian::Util qw(parse_dpkg_control get_dsc_info strip);
@@ -227,7 +229,7 @@ sub remove {
     return 1;
 }
 
-=item remove_async(ASYNC_LOOP)
+=item remove_async()
 
 Starts an asynchronous removal of the unpacked parts of the package in the lab.
 
@@ -236,8 +238,9 @@ The method will return a L<Future>, which will be "done" once the entry has been
 =cut
 
 sub remove_async {
-    my ($self, $async_loop) = @_;
+    my ($self) = @_;
     my $basedir = $self->{base_dir};
+    my $async_loop = IO::Async::Loop->new;
     my $future = $async_loop->new_future;
     return $future->done(0) if not -e $basedir;
     $self->clear_cache;

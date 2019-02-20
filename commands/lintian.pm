@@ -32,6 +32,7 @@ use utf8;
 use Cwd qw(abs_path);
 use Carp qw(verbose);
 use Getopt::Long();
+use IO::Async::Loop;
 use List::MoreUtils qw(any none);
 use POSIX qw(:sys_wait_h);
 use Time::HiRes qw(gettimeofday tv_interval);
@@ -590,7 +591,7 @@ sub _main {
 }
 
 sub main {
-    my ($pool, $async_loop);
+    my ($pool);
 
     #turn off file buffering
     STDOUT->autoflush;
@@ -727,8 +728,8 @@ sub main {
     # Now action is always either "check" or "unpack"
     # these two variables are used by process_package
     #  and need to persist between invocations.
-    $async_loop = IO::Async::Loop->new;
-    $unpacker= Lintian::Unpacker->new($async_loop, $collmap, \%unpack_options);
+    my $async_loop = IO::Async::Loop->new;
+    $unpacker= Lintian::Unpacker->new($collmap, \%unpack_options);
 
     if ($action eq 'check') {
         # Ensure all checks can actually be loaded...
@@ -762,7 +763,7 @@ sub main {
             debug_msg(1, "Unpack of $gname done$tres");
             perf_log("$gname,total-group-unpack,${raw_res}");
             if ($action eq 'check') {
-                if (!process_group($async_loop, $gname, $group)) {
+                if (!process_group($gname, $group)) {
                     $success = 0;
                 }
                 $group->clear_cache;
@@ -786,7 +787,7 @@ sub main {
             } else {
                 my @futures;
                 for my $lpkg ($group->get_processables) {
-                    my @pkg_futures = auto_clean_package($async_loop, $lpkg);
+                    my @pkg_futures = auto_clean_package($lpkg);
                     if (not $LAB->is_temp) {
                         my $f= $async_loop->new_future->wait_all(@pkg_futures);
                         $f = $f->then(
@@ -898,15 +899,17 @@ sub main {
 #  - depends on global variables %collection_info
 #
 sub auto_clean_package {
-    my ($async_loop, $lpkg) = @_;
+    my ($lpkg) = @_;
     my $proc_id = $lpkg->identifier;
     my $pkg_name = $lpkg->pkg_name;
     my $pkg_type = $lpkg->pkg_type;
     my $base = $lpkg->base_dir;
+    my $async_loop = IO::Async::Loop->new;
+
     if ($lpkg->lab->is_temp) {
         debug_msg(1, "Auto removing: ${proc_id} ...");
         my $time = $start_timer->();
-        my $f = $lpkg->remove_async($async_loop);
+        my $f = $lpkg->remove_async;
         return $f->on_ready(
             sub {
                 my $raw_res = $finish_timer->($time);
@@ -1039,9 +1042,10 @@ sub coll_hook {
 }
 
 sub process_group {
-    my ($async_loop, $gname, $group) = @_;
+    my ($gname, $group) = @_;
     my ($timer, $raw_res, $tres);
     my $all_ok = 1;
+    my $async_loop = IO::Async::Loop->new;
     $timer = $start_timer->();
   PROC:
     foreach my $lpkg ($group->get_processables){
@@ -1125,7 +1129,7 @@ sub process_group {
         $timer = $start_timer->();
         my @futures;
         foreach my $lpkg ($group->get_processables) {
-            my @pkg_futures = auto_clean_package($async_loop, $lpkg);
+            my @pkg_futures = auto_clean_package($lpkg);
             if (not $lpkg->lab->is_temp) {
                 # Update the status file as auto_clean_package may
                 # have removed some collections
