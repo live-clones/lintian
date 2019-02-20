@@ -48,6 +48,7 @@ use TAP::Formatter::Console;
 use TAP::Formatter::File;
 use TAP::Harness;
 use TAP::Parser::Aggregator;
+use Term::ANSIColor;
 use Try::Tiny;
 
 BEGIN {
@@ -389,7 +390,9 @@ if (-t STDOUT && !$unattended) {
 
         if (-r $diffpath) {
 
-            print ">>> Fix $testpath (y/n/q)? ";
+            say EMPTY;
+
+            print colored($testpath, 'bold white on_blue') . '  >>>  Fix (y/n/q)? ';
 
             my $decision = <STDIN>;
             chomp $decision;
