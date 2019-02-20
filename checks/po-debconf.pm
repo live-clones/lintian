@@ -23,12 +23,17 @@ use strict;
 use warnings;
 use autodie;
 
+use Capture::Tiny qw(capture_merged);
 use Cwd qw(realpath);
 use File::Temp();
+use Try::Tiny;
 
 use Lintian::Command qw(spawn);
+use Lintian::Output qw(msg);
 use Lintian::Tags qw(tag);
 use Lintian::Util qw(clean_env copy_dir run_cmd);
+
+use constant NEWLINE  =>  qq{\n};
 
 sub run {
     my (undef, undef, $info) = @_;
@@ -187,8 +192,10 @@ sub run {
           if $d_templates;
 
         # Generate a "test.pot" (in a tempdir)
-        if (
-            !eval {
+
+        my $error;
+        my ($output) = capture_merged {
+            try {
                 run_cmd(
                     \%intltool_opts,
 
@@ -196,7 +203,17 @@ sub run {
                     '--gettext-package=test','--pot'
                 );
             }
-        ) {
+            catch {
+                # catch any error
+                $error = $_;
+            };
+        };
+
+        my @messages = split(NEWLINE, $output);
+        chomp @messages;
+        msg $_ for @messages;
+
+        if ($error) {
             tag 'invalid-potfiles-in';
             return;
         }
