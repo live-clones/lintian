@@ -34,6 +34,7 @@ use Capture::Tiny qw(capture_merged);
 use Getopt::Long;
 use List::Util qw(all);
 use Path::Tiny;
+use Term::ANSIColor;
 
 BEGIN {
     $ENV{'LINTIAN_TEST_INSTALLED'} = 'no'
@@ -102,11 +103,21 @@ foreach my $line (@difflines) {
 
     if ($interactive) {
 
+        my $command;
+        my $color;
+
         if ($sign eq '+') {
-            print "Add '$stripped' (y/n/q)? ";
+            $command = 'Add';
+            $color = 'bold bright_white on_green';
         } else {
-            print "Remove '$stripped' (y/n/q)? ";
+            $command = 'Remove';
+            $color = 'bold bright_white on_red';
         }
+
+        my $colored = $stripped;
+        $colored = colored($stripped, $color)
+          if -t STDOUT;
+        print "$colored - $command (y/n/q)? ";
 
         my $decision = <STDIN>;
         chomp $decision;
