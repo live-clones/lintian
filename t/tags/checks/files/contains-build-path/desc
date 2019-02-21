@@ -1,0 +1,6 @@
+Testname: contains-build-path
+Version: 1.0
+Skeleton: upload-native
+Description: Test for upload containing build path
+Test-Against:
+Check: files
