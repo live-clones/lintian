@@ -79,7 +79,6 @@ BEGIN {
           copy_dir
           gunzip_file
           open_gz
-          touch_file
           perm2oct
           check_path
           clean_env
@@ -1182,29 +1181,6 @@ sub __open_gz_ext {
     my ($file) = @_;
     open(my $fd, '-|', 'gzip', '-dc', $file);
     return $fd;
-}
-
-=item touch_file(FILE)
-
-Updates the "mtime" of FILE.  If FILE does not exist, it will be
-created.
-
-On failure, this sub will emit a trappable error.
-
-=cut
-
-sub touch_file {
-    my ($file) = @_;
-
-    # We use '>>' because '>' truncates the file if it has contents
-    # (which `touch file` doesn't).
-    open(my $fd, '>>', $file);
-    # open with '>>' does not update the mtime if the file already
-    # exists, so use utime to solve that.
-    utime(undef, undef, $fd);
-    close($fd);
-
-    return 1;
 }
 
 =item internal_error (MSG[, ...])
