@@ -63,11 +63,12 @@ use parent qw(Lintian::Processable Class::Accessor::Fast);
 use Carp qw(croak);
 use Cwd();
 use File::Spec;
-use Scalar::Util qw(refaddr);
+use Path::Tiny;
 use POSIX qw();
+use Scalar::Util qw(refaddr);
 
 use Lintian::Lab;
-use Lintian::Util qw(delete_dir parse_dpkg_control get_dsc_info strip);
+use Lintian::Util qw(parse_dpkg_control get_dsc_info strip);
 
 # This is the entry format version - this changes whenever the layout of
 # entries changes.  This differs from LAB_FORMAT in that LAB_FORMAT
@@ -220,9 +221,8 @@ sub remove {
     my $basedir = $self->{base_dir};
     return 1 if(!-e $basedir);
     $self->clear_cache;
-    unless(delete_dir($basedir)) {
-        return 0;
-    }
+    path($basedir)->remove_tree
+      if -d $basedir;
     $self->{lab}->_entry_removed($self);
     return 1;
 }

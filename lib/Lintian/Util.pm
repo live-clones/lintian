@@ -75,7 +75,6 @@ BEGIN {
           lstrip
           rstrip
           system_env
-          delete_dir
           copy_dir
           gunzip_file
           open_gz
@@ -1119,16 +1118,6 @@ sub run_cmd {
           or die("Failed to exec '$_[0]': $!\n");
     }
     return 1;
-}
-
-=item delete_dir (ARGS)
-
-Convenient way of calling I<rm -fr ARGS>.
-
-=cut
-
-sub delete_dir {
-    return run_cmd('rm', '-rf', '--', @_);
 }
 
 =item copy_dir (ARGS)
