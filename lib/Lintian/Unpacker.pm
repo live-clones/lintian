@@ -445,8 +445,8 @@ sub process_tasks {
                         $cmap->satisfy($coll);
                        # If the entry is marked as failed, don't break the loop
                        # for it.
-                        return if exists $failed{$procid};
-                        $active{$procid} = 1 if $cmap->selectable;
+                        $active{$procid} = 1
+                          unless $failed{$procid} || !$cmap->selectable;
                     }
 
                     my @task = $find_next_task->();
