@@ -392,7 +392,8 @@ if (-t STDOUT && !$unattended) {
 
             say EMPTY;
 
-            print colored($testpath, 'bold white on_blue') . '  >>>  Fix (y/n/q)? ';
+            print colored($testpath, 'bold white on_blue')
+              . '  >>>  Fix (y/n/q)? ';
 
             my $decision = <STDIN>;
             chomp $decision;
