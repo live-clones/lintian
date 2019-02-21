@@ -28,6 +28,7 @@ use Carp qw(croak);
 use Cwd qw(abs_path);
 use Errno qw(ENOENT);
 use Exporter qw(import);
+use Path::Tiny;
 use POSIX qw(sigprocmask SIG_BLOCK SIG_UNBLOCK SIG_SETMASK);
 use YAML::XS ();
 
@@ -64,7 +65,6 @@ BEGIN {
           get_dsc_info
           get_file_checksum
           get_file_digest
-          slurp_entire_file
           file_is_encoded_in_non_utf8
           is_string_utf8_encoded
           fail
@@ -117,12 +117,7 @@ Lintian::Util - Lintian utility functions
 
 =head1 SYNOPSIS
 
- use Lintian::Util qw(slurp_entire_file normalize_pkg_path);
- 
- my $text = slurp_entire_file('some-file');
- if ($text =~ m/regex/) {
-    # ...
- }
+ use Lintian::Util qw(normalize_pkg_path);
 
  my $path = normalize_pkg_path('usr/bin/', '../lib/git-core/git-pull');
  if (defined $path) {
@@ -741,31 +736,6 @@ sub get_dsc_info {
     my ($file) = @_;
     my @data = read_dpkg_control($file);
     return (defined($data[0])? $data[0] : undef);
-}
-
-=item slurp_entire_file (FOH[, NOCLOSE])
-
-Reads the contents of FOH into memory and return it as a scalar.  FOH
-can be either the path to a file or an open file handle.
-
-If it is a handle, the optional NOCLOSE parameter can be used to
-prevent the sub from closing the handle.  The NOCLOSE parameter has no
-effect if FOH is not a handle.
-
-=cut
-
-sub slurp_entire_file {
-    my ($file, $noclose) = @_;
-    my $fd;
-    if (openhandle($file)) {
-        $fd = $file;
-    } else {
-        open($fd, '<', $file);
-    }
-    local $/;
-    local $_ = <$fd>;
-    close($fd) unless $noclose && openhandle($file);
-    return $_;
 }
 
 =item drain_pipe(FD)
@@ -1626,17 +1596,13 @@ sub load_state_cache {
     my ($state_dir) = @_;
     my $state_file = "$state_dir/state-cache";
     my $state = {};
-    my $fd;
-    eval {open($fd, '<:raw', $state_file);};
-    if (my $err = $@) {
-        if ($err->errno != ENOENT) {
-            # Present, but unreadable for some reason
-            die($err);
-        }
-        # Not present; presume empty
-        return $state;
-    }
-    eval {$state = YAML::XS::Load(slurp_entire_file($fd, 1));};
+
+    return $state
+      unless -f $state_file;
+
+    my $yaml = path($state_file)->slurp;
+
+    eval {$state = YAML::XS::Load($yaml);};
     # Not sure what Load does in case of issues; perldoc YAML says
     # very little about it.  Based on YAML::Error, I guess it will
     # write stuff to STDERR and use die/croak, but it remains a
@@ -1649,7 +1615,6 @@ sub load_state_cache {
     if (ref($state) ne 'HASH') {
         die("$state_file was invalid; please fix or remove it.");
     }
-    close($fd);
     return $state;
 }
 

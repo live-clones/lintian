@@ -57,8 +57,9 @@ use overload (
 use Date::Parse qw(str2time);
 use Carp qw(croak confess);
 use Scalar::Util qw(weaken);
+use Path::Tiny;
 
-use Lintian::Util qw(normalize_pkg_path slurp_entire_file);
+use Lintian::Util qw(normalize_pkg_path);
 
 =head1 NAME
 
@@ -672,8 +673,7 @@ This method may fail for the same reasons as L</open([LAYER])>.
 
 sub file_contents {
     my ($self) = @_;
-    my $fd = $self->open;
-    return slurp_entire_file($fd);
+    return path($self->fs_path)->slurp;
 }
 
 =item root_dir

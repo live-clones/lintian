@@ -21,8 +21,9 @@ use warnings;
 use autodie;
 
 use Test::More;
+use Path::Tiny;
 
-use Lintian::Util qw(read_dpkg_control slurp_entire_file);
+use Lintian::Util qw(read_dpkg_control);
 
 $ENV{'LINTIAN_TEST_ROOT'} //= '.';
 
@@ -148,7 +149,7 @@ for my $desc (@DESCS) {
         $codefile .= '.pm';
     }
 
-    my $code = slurp_entire_file($codefile);
+    my $code = path($codefile)->slurp;
     my %subs;
     while ($code =~ s/\$info\s*->\s*(\w+)//) {
         $subs{$1} = 1;

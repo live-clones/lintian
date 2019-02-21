@@ -36,12 +36,12 @@ use constant {
 
 use Encode qw(decode);
 use List::MoreUtils qw(any);
+use Path::Tiny;
 
 use Lintian::Check qw(check_spelling spelling_tag_emitter);
 use Lintian::Data ();
 use Lintian::Tags qw(tag);
-use Lintian::Util
-  qw(slurp_entire_file file_is_encoded_in_non_utf8 read_dpkg_control);
+use Lintian::Util qw(file_is_encoded_in_non_utf8 read_dpkg_control);
 
 our $KNOWN_ESSENTIAL = Lintian::Data->new('fields/essential');
 our $KNOWN_COMMON_LICENSES
@@ -125,7 +125,7 @@ sub run {
     }
 
     # check contents of copyright file
-    $_ = slurp_entire_file($dcopy);
+    $_ = path($dcopy)->slurp;
 
     if (m,\r,) {
         tag 'copyright-has-crs';

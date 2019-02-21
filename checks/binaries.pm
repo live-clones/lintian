@@ -46,7 +46,7 @@ use Lintian::Check qw(check_spelling spelling_tag_emitter);
 use Lintian::Data;
 use Lintian::Relation qw(:constants);
 use Lintian::Tags qw(tag);
-use Lintian::Util qw(internal_error slurp_entire_file strip);
+use Lintian::Util qw(internal_error strip);
 
 my $ARCH_REGEX = Lintian::Data->new('binaries/arch-regex', qr/\s*\~\~/o,
     sub { return qr/$_[1]/ });
@@ -403,7 +403,10 @@ sub run {
             tag 'binary-from-other-architecture', $file if $bad;
         }
 
-        my $strings = slurp_entire_file($info->strings($file));
+        my $stringsfd = $info->strings($file);
+        my $strings = do { local $/; <$stringsfd> };
+        close($stringsfd)
+          or warn "Error closing strings fd: $!";
         my $exceptions = {
             %{ $group->info->spelling_exceptions },
             map { $_ => 1} $BINARY_SPELLING_EXCEPTIONS->all

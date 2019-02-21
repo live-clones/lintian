@@ -70,14 +70,14 @@ use parent 'Test::Builder::Module';
 use Cwd qw(realpath);
 use File::Basename qw(basename);
 use File::Find ();
+use Path::Tiny;
 
 use Lintian::Check qw(check_spelling);
 use Lintian::Data;
 use Lintian::Profile;
 use Lintian::Tag::Info;
 use Lintian::Tags;
-use Lintian::Util
-  qw(read_dpkg_control slurp_entire_file is_string_utf8_encoded);
+use Lintian::Util qw(read_dpkg_control is_string_utf8_encoded);
 
 # We want data files loaded early to avoid problems with missing data
 # files ending up in releases (like in 2.5.17 and 2.5.18).
@@ -600,7 +600,7 @@ sub test_tags_implemented {
             next;
         }
 
-        $codestr = slurp_entire_file($check);
+        $codestr = path($check)->slurp;
 
         for my $tag (@tags) {
             push @missing, $tag unless $codestr =~ /\Q$tag/;
