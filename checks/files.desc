@@ -2103,7 +2103,14 @@ Info: The listed file or maintainer script appears to reference
  This is likely to cause the package to be unreproducible, but it may
  also indicate that the package will not work correctly outside of the
  maintainer's own system.
-Ref: https://reproducible-builds.org/, dpkg-genbuildinfo(1)
+ .
+ Please note that this tag will not appear unless the
+ <tt>.buildinfo</tt> file contains a <tt>Build-Path</tt> field. That
+ field is optional. You may have to set
+ <tt>DEB_BUILD_OPTIONS=buildinfo=+path</tt> or use
+ <tt>--buildinfo-option=--always-include-path</tt> with
+ <tt>dpkg-buildpackage</tt> when building.
+Ref: https://reproducible-builds.org/, https://wiki.debian.org/ReproducibleBuilds/BuildinfoFiles, dpkg-genbuildinfo(1)
 
 Tag: package-contains-usr-unmerged-pathnames
 Severity: classification
