@@ -45,7 +45,8 @@ sub run {
         for my $jar_file (sort keys %{$java_info}) {
             my $files = $java_info->{$jar_file}{files};
             tag 'source-contains-prebuilt-java-object', $jar_file
-              if any { m/$CLASS_REGEX$/i } keys %{$files};
+              if any { m/$CLASS_REGEX$/i } keys %{$files}
+              and $info->name ne 'lintian';
         }
         return;
     }
