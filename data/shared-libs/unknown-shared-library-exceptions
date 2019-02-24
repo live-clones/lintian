@@ -25,3 +25,6 @@ resolv
 rt
 thread_db
 util
+
+# Manually-added exceptions
+gcc
