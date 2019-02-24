@@ -34,7 +34,7 @@ Build-Depends:
  javahelper <!nocheck>,
  libapt-pkg-perl <!nocheck>,
  libarchive-zip-perl <!nocheck>,
- libcapture-tiny-perl <!nocheck>,
+ libcapture-tiny-perl,
  libcgi-pm-perl <!nocheck>,
  libclass-accessor-perl <!nocheck>,
  libclone-perl <!nocheck>,
