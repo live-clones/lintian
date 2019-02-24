@@ -49,7 +49,7 @@ Build-Depends:
  liblist-compare-perl <!nocheck>,
  liblist-moreutils-perl <!nocheck>,
  libparse-debianchangelog-perl <!nocheck>,
- libpath-tiny-perl <!nocheck>,
+ libpath-tiny-perl,
  libtest-minimumversion-perl <!nocheck>,
  libtest-perl-critic-perl <!nocheck>,
  libtest-pod-coverage-perl <!nocheck>,
