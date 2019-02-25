@@ -20,7 +20,8 @@ use warnings;
 
 use parent 'Clone';
 use Carp qw(croak);
-use List::MoreUtils qw(any);
+use List::MoreUtils qw(uniq);
+use List::Util qw(any);
 
 use Lintian::Util qw(internal_error);
 
@@ -456,6 +457,53 @@ sub parents {
     }
 
     return keys %{$self->{'nodes'}{$node}{'parents'}};
+}
+
+=item ancestors(node)
+
+Return an array with unique names of all ancestral nodes for the given C<node>.
+
+E.g.
+
+    $map->add('A');
+    $map->add('B', 'A');
+    # Prints 'A'
+    print $map->ancestors('B');
+
+B<Note>: shall the requested node not exist this method die()s.
+
+=cut
+
+sub ancestors {
+    my $self = shift;
+    my $node = shift;
+
+    return uniq +$self->non_unique_ancestors($node);
+}
+
+=item non_unique_ancestors(node)
+
+Return an array with non-unique names of all ancestral nodes for the given C<node>.
+
+E.g.
+
+    $map->add('A');
+    $map->add('B', 'A');
+    # Prints 'A'
+    print $map->ancestors('B');
+
+B<Note>: shall the requested node not exist this method die()s.
+
+=cut
+
+sub non_unique_ancestors {
+    my $self = shift;
+    my $node = shift;
+
+    my @ancestors;
+    push(@ancestors, $self->non_unique_ancestors($_))for $self->parents($node);
+
+    return @ancestors;
 }
 
 =item pending()
