@@ -116,6 +116,7 @@ Depends:
  libfile-basedir-perl,
  libio-async-perl,
  libipc-run-perl,
+ liblist-compare-perl,
  liblist-moreutils-perl,
  libparse-debianchangelog-perl,
  libpath-tiny-perl,
