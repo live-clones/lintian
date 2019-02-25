@@ -116,6 +116,7 @@ Depends:
  libipc-run-perl,
  liblist-moreutils-perl,
  libparse-debianchangelog-perl,
+ libpath-tiny-perl,
  libtext-levenshtein-perl,
  libtimedate-perl,
  liburi-perl,
