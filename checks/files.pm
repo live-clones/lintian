@@ -28,7 +28,7 @@ use List::MoreUtils qw(none);
 use Lintian::Data;
 use Lintian::Tags qw(tag);
 use Lintian::Util qw(drain_pipe internal_error is_string_utf8_encoded open_gz
-  signal_number2name strip normalize_pkg_path slurp_entire_file);
+  signal_number2name strip normalize_pkg_path);
 use Lintian::SlidingWindow;
 
 use constant BLOCKSIZE => 16_384;
@@ -1523,7 +1523,10 @@ sub run {
               = get_checks_for_file($info, $file, $source_pkg, $build_path);
 
             if (%checks) {
-                my $strings = slurp_entire_file($info->strings($file));
+                my $stringsfd = $info->strings($file);
+                my $strings = do { local $/; <$stringsfd> };
+                close($stringsfd)
+                  or warn "Error closing strings fd: $!";
 
                 foreach my $tag (sort keys %checks) {
                     my $regex = $checks{$tag};
@@ -2050,7 +2053,7 @@ sub run {
         next if not $file or not $file->is_open_ok;
 
         my %checks
-          = get_checks_for_file($info, $file, $pkg_section, $build_path);
+          = get_checks_for_file($info, $file, $source_pkg, $build_path);
         my $fd2 = $file->open;
         while (<$fd2>) {
             foreach my $tag (sort keys %checks) {

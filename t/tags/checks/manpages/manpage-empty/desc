@@ -1,0 +1,5 @@
+Testname: manpage-empty
+Skeleton: upload-native
+Version: 1.0
+Description: Detect empty man page
+Check: manpages

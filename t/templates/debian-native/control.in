@@ -1,11 +1,11 @@
 Source: {$source}
-Priority: optional
+Priority: {$priority}
 Section: {$section}
 Maintainer: {$author}
 Standards-Version: {$standards_version}
 Build-Depends: {$build_depends}
-Rules-Requires-Root: no
-Homepage: https://lintian.debian.org/
+Rules-Requires-Root: {$rules_requires_root}
+Homepage: {$homepage}
 
 Package: {$source}
 Architecture: {$package_architecture}

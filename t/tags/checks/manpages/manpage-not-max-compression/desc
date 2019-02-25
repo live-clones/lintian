@@ -1,0 +1,6 @@
+Testname: manpage-not-max-compression
+Skeleton: upload-native
+Version: 1.0
+Description: Manpage not compressed with maximum gzip level
+Test-Depends: groff-base (>= 1.22.4)
+Check: manpages

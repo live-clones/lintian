@@ -3,9 +3,4 @@ Testname: runtests-options
 Sequence: 0700
 Version: 1.0
 Description: Test a bad package but use -C to only catch some tags
-Test-Against:
- new-essential-package
 Options: -C standards-version
-Check:
- standards-version
- fields

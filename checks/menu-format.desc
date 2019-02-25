@@ -5,13 +5,6 @@ Needs-Info: unpacked
 Type: binary
 Info: This script validates the format of <b>menu</b> files.
 
-Tag: old-format-menu-file
-Severity: important
-Certainty: certain
-Info: The package contains a menu file that is in the old menu file format.
- This format is deprecated. Convert the menu file to the new menu format.
- Note that Lintian will not test this file for any other problems.
-
 Tag: whitespace-after-continuation-character
 Severity: important
 Certainty: certain

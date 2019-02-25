@@ -1,0 +1,3 @@
+usr/X11R6/bin/rstartd /usr/bin/rstartd
+usr/share/man/man7/undocumented.7.gz /usr/share/man/man1/bin-binary.1.gz
+usr/share/man/man3/undocumented.3.gz /usr/share/man/man3/function.3.gz

@@ -1,0 +1,9 @@
+Skeleton: upload-native
+Testname: debhelper-compat-old
+Version: 1.0
+Description: Test for old debian/compat file
+Dh-Compat-Level: 8
+Options: --include-dir ./lintian-include-dir --pedantic --display-level +classification
+Profile: lintian-test
+Test-Against:
+Check: debhelper

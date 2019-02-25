@@ -1,0 +1,6 @@
+Skeleton: upload-native
+Testname: source-copyright-missing
+Version: 1.0
+Description: Test for missing copyright
+Test-Against:
+Check: copyright-file

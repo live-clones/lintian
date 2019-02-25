@@ -142,8 +142,10 @@ sub spelling_exceptions {
       if exists $self->{'spelling_exceptions'};
     my %except;
     my $group = $self->{'group'};
-    foreach my $proc ($group->get_processables('binary')) {
-        foreach my $name ($proc->pkg_name, $proc->pkg_src) {
+    foreach my $proc ($group->get_processables()) {
+        my @names = ($proc->pkg_name, $proc->pkg_src);
+        push(@names, $proc->info->binaries) if $proc->pkg_type eq 'source';
+        foreach my $name (@names) {
             $except{$name} = 1;
             $except{$_} = 1 for split m/-/, $name;
         }

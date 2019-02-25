@@ -1,0 +1,25 @@
+#!/usr/bin/make -f
+%:
+	dh $@
+
+binary: binary-arch binary-indep
+binary-arch:
+binary-indep:
+	dh binary-indep --until dh_prep
+	-dh_clideps
+	-dh_gtkmodules
+	dh_lisp || true
+	# Should trigger a versioned dependency requirement for dpatch
+	-dh_dpatch_patch
+# We don't warn about commands inside make conditionals, so none of these
+# get any warnings.
+ifeq "$(USE_DH_PYTHON2)" "y"
+	dh_python2
+else
+  ifeq "$(USE_PYSUPPORT)" "y"
+	dh_pysupport
+  endif
+endif
+	dh binary-indep --remaining
+	-dh_strip_nondeterminism
+	-dh_scour

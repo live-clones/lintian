@@ -89,6 +89,7 @@ rexx           => /usr/bin, regina-rexx
 rrdcgi         => /usr/bin, rrdtool
 Rscript        => /usr/bin, r-base-core
 ruby           => /usr/bin, ruby:any | ruby-interpreter
+run            => /lib/runit/invoke, runit (>= 2.1.2-23)
 runhaskell     => /usr/bin, ghc | ghc6
 runhugs        => /usr/bin, hugs | hugs98
 sed            => /bin, @NODEPS@

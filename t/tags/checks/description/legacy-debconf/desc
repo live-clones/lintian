@@ -1,0 +1,9 @@
+Skeleton: upload-native
+Testname: legacy-debconf
+Source: debconf
+Sequence: 9999
+Version: 1~rc1
+Dh-Compat-Level: 5
+Description: Legacy test "debconf"
+Test-Against:
+Check: description

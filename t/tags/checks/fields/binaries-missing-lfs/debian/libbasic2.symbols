@@ -1,0 +1,4 @@
+libbasic.so.2 libbasic2 #MINVER#
+ do_open@Base 1.0
+ lib_interface@Base 1.0
+ zz_open@Base 1.0

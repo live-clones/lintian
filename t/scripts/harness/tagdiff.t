@@ -36,20 +36,20 @@ use constant NEWLINE => qq{\n};
 
 # original file
 my $original =<<'EOSTR';
-source|changelog-file-general|latest-debian-changelog-entry-without-new-date|
-binary|changelog-file-general|possible-missing-colon-in-closes|"Closes #555555"
-binary|changelog-file-general|misspelled-closes-bug|#666666
-binary|changelog-file-general|latest-debian-changelog-entry-reuses-existing-version|"1:1.0-1 == 1.0-1 (last used: Fri, 01 Feb 2019 12:27:45 -0800)"
-binary|changelog-file-general|latest-changelog-entry-without-new-date|
-binary|changelog-file-general|improbable-bug-number-in-closes|1234
-binary|changelog-file-general|epoch-changed-but-upstream-version-did-not-go-backwards|"1.0 >= 1.0"
-binary|changelog-file-general|debian-changelog-line-too-long|"line 8"
-binary|changelog-file-general|debian-changelog-line-too-long|"line 15"
-binary|changelog-file-general|debian-changelog-file-contains-obsolete-user-emacs-settings|
-binary|changelog-file-general|debian-changelog-file-contains-invalid-email-address|unknown@unknown
-binary|changelog-file-general|changelog-references-temp-security-identifier|TEMP-1234567-abcdef
-binary|changelog-file-general|changelog-not-compressed-with-max-compression|changelog.Debian.gz
-binary|changelog-file-general|bad-intended-distribution|"intended to experimental but uploaded to unstable"
+changelog-file-general (source): latest-debian-changelog-entry-without-new-date 
+changelog-file-general (binary): possible-missing-colon-in-closes Closes #555555
+changelog-file-general (binary): misspelled-closes-bug #666666
+changelog-file-general (binary): latest-debian-changelog-entry-reuses-existing-version 1:1.0-1 == 1.0-1 (last used: Fri, 01 Feb 2019 12:27:45 -0800)
+changelog-file-general (binary): latest-changelog-entry-without-new-date 
+changelog-file-general (binary): improbable-bug-number-in-closes 1234
+changelog-file-general (binary): epoch-changed-but-upstream-version-did-not-go-backwards 1.0 >= 1.0
+changelog-file-general (binary): debian-changelog-line-too-long line 8
+changelog-file-general (binary): debian-changelog-line-too-long line 15
+changelog-file-general (binary): debian-changelog-file-contains-obsolete-user-emacs-settings 
+changelog-file-general (binary): debian-changelog-file-contains-invalid-email-address unknown@unknown
+changelog-file-general (binary): changelog-references-temp-security-identifier TEMP-1234567-abcdef
+changelog-file-general (binary): changelog-not-compressed-with-max-compression changelog.Debian.gz
+changelog-file-general (binary): bad-intended-distribution intended to experimental but uploaded to unstable
 EOSTR
 
 # test plan
@@ -57,20 +57,20 @@ plan tests => 8;
 
 # different order
 my $reordered =<<'EOSTR';
-binary|changelog-file-general|changelog-references-temp-security-identifier|TEMP-1234567-abcdef
-binary|changelog-file-general|changelog-not-compressed-with-max-compression|changelog.Debian.gz
-binary|changelog-file-general|debian-changelog-line-too-long|"line 15"
-binary|changelog-file-general|debian-changelog-file-contains-obsolete-user-emacs-settings|
-binary|changelog-file-general|debian-changelog-file-contains-invalid-email-address|unknown@unknown
-binary|changelog-file-general|bad-intended-distribution|"intended to experimental but uploaded to unstable"
-binary|changelog-file-general|possible-missing-colon-in-closes|"Closes #555555"
-binary|changelog-file-general|misspelled-closes-bug|#666666
-binary|changelog-file-general|improbable-bug-number-in-closes|1234
-binary|changelog-file-general|epoch-changed-but-upstream-version-did-not-go-backwards|"1.0 >= 1.0"
-binary|changelog-file-general|debian-changelog-line-too-long|"line 8"
-binary|changelog-file-general|latest-debian-changelog-entry-reuses-existing-version|"1:1.0-1 == 1.0-1 (last used: Fri, 01 Feb 2019 12:27:45 -0800)"
-binary|changelog-file-general|latest-changelog-entry-without-new-date|
-source|changelog-file-general|latest-debian-changelog-entry-without-new-date|
+changelog-file-general (binary): changelog-references-temp-security-identifier TEMP-1234567-abcdef
+changelog-file-general (binary): changelog-not-compressed-with-max-compression changelog.Debian.gz
+changelog-file-general (binary): debian-changelog-line-too-long line 15
+changelog-file-general (binary): debian-changelog-file-contains-obsolete-user-emacs-settings 
+changelog-file-general (binary): debian-changelog-file-contains-invalid-email-address unknown@unknown
+changelog-file-general (binary): bad-intended-distribution intended to experimental but uploaded to unstable
+changelog-file-general (binary): possible-missing-colon-in-closes Closes #555555
+changelog-file-general (binary): misspelled-closes-bug #666666
+changelog-file-general (binary): improbable-bug-number-in-closes 1234
+changelog-file-general (binary): epoch-changed-but-upstream-version-did-not-go-backwards 1.0 >= 1.0
+changelog-file-general (binary): debian-changelog-line-too-long line 8
+changelog-file-general (binary): latest-debian-changelog-entry-reuses-existing-version 1:1.0-1 == 1.0-1 (last used: Fri, 01 Feb 2019 12:27:45 -0800)
+changelog-file-general (binary): latest-changelog-entry-without-new-date 
+changelog-file-general (source): latest-debian-changelog-entry-without-new-date 
 EOSTR
 
 ok(tagdiff($original, $reordered) eq EMPTY, 'Reordered tags on the right');
@@ -78,16 +78,16 @@ ok(tagdiff($reordered, $original) eq EMPTY, 'Reordered tags on the left');
 
 # lines missing
 my $missing =<<'EOSTR';
-source|changelog-file-general|latest-debian-changelog-entry-without-new-date|
-binary|changelog-file-general|possible-missing-colon-in-closes|"Closes #555555"
-binary|changelog-file-general|latest-changelog-entry-without-new-date|
-binary|changelog-file-general|improbable-bug-number-in-closes|1234
-binary|changelog-file-general|epoch-changed-but-upstream-version-did-not-go-backwards|"1.0 >= 1.0"
-binary|changelog-file-general|debian-changelog-line-too-long|"line 15"
-binary|changelog-file-general|debian-changelog-file-contains-obsolete-user-emacs-settings|
-binary|changelog-file-general|debian-changelog-file-contains-invalid-email-address|unknown@unknown
-binary|changelog-file-general|changelog-references-temp-security-identifier|TEMP-1234567-abcdef
-binary|changelog-file-general|bad-intended-distribution|"intended to experimental but uploaded to unstable"
+changelog-file-general (source): latest-debian-changelog-entry-without-new-date 
+changelog-file-general (binary): possible-missing-colon-in-closes Closes #555555
+changelog-file-general (binary): latest-changelog-entry-without-new-date 
+changelog-file-general (binary): improbable-bug-number-in-closes 1234
+changelog-file-general (binary): epoch-changed-but-upstream-version-did-not-go-backwards 1.0 >= 1.0
+changelog-file-general (binary): debian-changelog-line-too-long line 15
+changelog-file-general (binary): debian-changelog-file-contains-obsolete-user-emacs-settings 
+changelog-file-general (binary): debian-changelog-file-contains-invalid-email-address unknown@unknown
+changelog-file-general (binary): changelog-references-temp-security-identifier TEMP-1234567-abcdef
+changelog-file-general (binary): bad-intended-distribution intended to experimental but uploaded to unstable
 EOSTR
 
 my $missingright =<<'EOSTR';
@@ -103,23 +103,23 @@ ok(tagdiff($missing, $original) eq complement($missingright),
 
 # lines extra
 my $extra =<<'EOSTR';
-source|changelog-file-general|latest-debian-changelog-entry-without-new-date|
-binary|changelog-file-general|possible-missing-colon-in-closes|"Closes #555555"
-binary|changelog-file-general|misspelled-closes-bug|#666666
-binary|changelog-file-general|latest-debian-changelog-entry-reuses-existing-version|"1:1.0-1 == 1.0-1 (last used: Fri, 01 Feb 2019 12:27:45 -0800)"
-binary|changelog-file-general|latest-debian-changelog-entry-reuses-existing-version|"1:1.0-1 == 1.0-1 (last used: Fri, 01 Feb 2019 12:27:45 -0800)"
-binary|changelog-file-general|latest-changelog-entry-without-new-date|
-binary|changelog-file-general|improbable-bug-number-in-closes|1234
-binary|changelog-file-general|epoch-changed-but-upstream-version-did-not-go-backwards|"1.0 >= 1.0"
-binary|changelog-file-general|debian-changelog-line-too-long|"line 8"
-binary|changelog-file-general|debian-changelog-line-too-long|"line 15"
-binary|changelog-file-general|misspelled-closes-bug|#666666
-binary|changelog-file-general|debian-changelog-file-contains-obsolete-user-emacs-settings|
-source|changelog-file-general|completely-new|"never seen before"
-binary|changelog-file-general|debian-changelog-file-contains-invalid-email-address|unknown@unknown
-binary|changelog-file-general|changelog-references-temp-security-identifier|TEMP-1234567-abcdef
-binary|changelog-file-general|changelog-not-compressed-with-max-compression|changelog.Debian.gz
-binary|changelog-file-general|bad-intended-distribution|"intended to experimental but uploaded to unstable"
+changelog-file-general (source): latest-debian-changelog-entry-without-new-date 
+changelog-file-general (binary): possible-missing-colon-in-closes Closes #555555
+changelog-file-general (binary): misspelled-closes-bug #666666
+changelog-file-general (binary): latest-debian-changelog-entry-reuses-existing-version 1:1.0-1 == 1.0-1 (last used: Fri, 01 Feb 2019 12:27:45 -0800)
+changelog-file-general (binary): latest-debian-changelog-entry-reuses-existing-version 1:1.0-1 == 1.0-1 (last used: Fri, 01 Feb 2019 12:27:45 -0800)
+changelog-file-general (binary): latest-changelog-entry-without-new-date 
+changelog-file-general (binary): improbable-bug-number-in-closes 1234
+changelog-file-general (binary): epoch-changed-but-upstream-version-did-not-go-backwards 1.0 >= 1.0
+changelog-file-general (binary): debian-changelog-line-too-long line 8
+changelog-file-general (binary): debian-changelog-line-too-long line 15
+changelog-file-general (binary): misspelled-closes-bug #666666
+changelog-file-general (binary): debian-changelog-file-contains-obsolete-user-emacs-settings 
+changelog-file-general (source): completely-new never seen before
+changelog-file-general (binary): debian-changelog-file-contains-invalid-email-address unknown@unknown
+changelog-file-general (binary): changelog-references-temp-security-identifier TEMP-1234567-abcdef
+changelog-file-general (binary): changelog-not-compressed-with-max-compression changelog.Debian.gz
+changelog-file-general (binary): bad-intended-distribution intended to experimental but uploaded to unstable
 EOSTR
 
 my $extraright =<<'EOSTR';
@@ -134,20 +134,20 @@ ok(tagdiff($extra, $original) eq complement($extraright),
 
 # lines different
 my $different =<<'EOSTR';
-source|changelog-file-general|latest-debian-changelog-entry-without-new-date|
-binary|changelog-file-general|possible-missing-semicolon-in-closes|"Closes #555555"
-binary|changelog-file-general|misspelled-closes-bug|#666666
-binary|changelog-file-general|latest-debian-changelog-entry-reuses-existing-version|"1:1.0-1 == 1.0-1 (last used: Fri, 01 Feb 2019 12:27:45 -0800)"
-binary|changelog-file-general|latest-changelog-entry-without-new-date|
-binary|changelog-file-general|improbable-bug-number-in-closes|1234
-binary|changelog-file-general|epoch-changed-but-upstream-version-did-not-go-backwards|"1.0 >= 1.0"
-binary|changelog-file-general|debian-changelog-line-too-long|"line 9"
-binary|changelog-file-general|debian-changelog-line-too-long|"line 15"
-source|changelog-file-general|debian-changelog-file-contains-obsolete-user-emacs-settings|
-binary|changelog-file-general|debian-changelog-file-contains-invalid-irc-address|unknown@unknown
-binary|changelog-file-general|changelog-references-temp-security-identifier|TEMP-1234567-abcdef
-binary|changelog-file-general|changelog-not-compressed-with-max-compression|changelog.Debian.gz
-binary|changelog-file-general|bad-intended-distribution|"intended to experimental but uploaded to unstable"
+changelog-file-general (source): latest-debian-changelog-entry-without-new-date 
+changelog-file-general (binary): possible-missing-semicolon-in-closes Closes #555555
+changelog-file-general (binary): misspelled-closes-bug #666666
+changelog-file-general (binary): latest-debian-changelog-entry-reuses-existing-version 1:1.0-1 == 1.0-1 (last used: Fri, 01 Feb 2019 12:27:45 -0800)
+changelog-file-general (binary): latest-changelog-entry-without-new-date 
+changelog-file-general (binary): improbable-bug-number-in-closes 1234
+changelog-file-general (binary): epoch-changed-but-upstream-version-did-not-go-backwards 1.0 >= 1.0
+changelog-file-general (binary): debian-changelog-line-too-long line 9
+changelog-file-general (binary): debian-changelog-line-too-long line 15
+changelog-file-general (source): debian-changelog-file-contains-obsolete-user-emacs-settings 
+changelog-file-general (binary): debian-changelog-file-contains-invalid-irc-address unknown@unknown
+changelog-file-general (binary): changelog-references-temp-security-identifier TEMP-1234567-abcdef
+changelog-file-general (binary): changelog-not-compressed-with-max-compression changelog.Debian.gz
+changelog-file-general (binary): bad-intended-distribution intended to experimental but uploaded to unstable
 EOSTR
 
 my $differentright =<<'EOSTR';

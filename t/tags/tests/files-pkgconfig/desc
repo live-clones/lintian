@@ -1,8 +1,0 @@
-Skeleton: upload-native
-Testname: files-pkgconfig
-Version: 1.0
-Description: Check for detection of pkgconfig problem
-Test-Against:
-Check:
- files
- shared-libs

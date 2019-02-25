@@ -1,0 +1,1 @@
+W: manpage-errors-from-man: manpage-has-errors-from-man usr/share/man/man1/errors-from-man.1P.gz 14: warning: macro 'dep' not defined (possibly missing space after 'de')

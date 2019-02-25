@@ -63,16 +63,22 @@ use parent qw(Lintian::Processable Class::Accessor::Fast);
 use Carp qw(croak);
 use Cwd();
 use File::Spec;
+use IO::Async::Loop;
+use Path::Tiny;
+use POSIX qw();
 use Scalar::Util qw(refaddr);
 use POSIX qw();
 
 use Lintian::Lab;
-use Lintian::Util qw(delete_dir parse_dpkg_control get_dsc_info strip);
+use Lintian::Util qw(parse_dpkg_control get_dsc_info strip);
 
 # This is the entry format version - this changes whenever the layout of
 # entries changes.  This differs from LAB_FORMAT in that LAB_FORMAT
 # presents the things "outside" the entry.
 use constant LAB_ENTRY_FORMAT => 1;
+
+use constant EMPTY => q{};
+use constant COLON => q{:};
 
 =item new_from_metadata (PKG_TYPE, METADATA, LAB, BASEDIR)
 
@@ -220,14 +226,13 @@ sub remove {
     my $basedir = $self->{base_dir};
     return 1 if(!-e $basedir);
     $self->clear_cache;
-    unless(delete_dir($basedir)) {
-        return 0;
-    }
+    path($basedir)->remove_tree
+      if -d $basedir;
     $self->{lab}->_entry_removed($self);
     return 1;
 }
 
-=item remove_async(ASYNC_LOOP)
+=item remove_async()
 
 Starts an asynchronous removal of the unpacked parts of the package in the lab.
 
@@ -236,28 +241,33 @@ The method will return a L<Future>, which will be "done" once the entry has been
 =cut
 
 sub remove_async {
-    my ($self, $async_loop) = @_;
+    my ($self) = @_;
     my $basedir = $self->{base_dir};
+    my $name = $self->identifier;
+    my $async_loop = IO::Async::Loop->new;
     my $future = $async_loop->new_future;
     return $future->done(0) if not -e $basedir;
     $self->clear_cache;
     $async_loop->spawn_child(
-        command => ['rm', '-fr', '--', $basedir],
+        code => sub {
+            $0 = "Lab entry $name: removing $basedir";
+            path($basedir)->remove_tree
+              if -d $basedir;
+            return 0;
+        },
         on_exit => sub {
             my (undef, $exitcode, $dollarbang) = @_;
-            if (not $exitcode and not $dollarbang) {
+            my $status = $exitcode >> 8;
+            unless ($status) {
                 $self->{lab}->_entry_removed($self);
                 $future->done();
-            } else {
-                my $msg
-                  = 'Error: Removing lab entry '. $self->identifier. ' failed';
-                if ($dollarbang) {
-                    $msg = "$msg: $dollarbang";
-                } else {
-                    $msg = "$msg with exitcode $exitcode";
-                }
-                $future->fail($msg);
+                return;
             }
+            my $msg
+              = "Error: Removing lab entry $name failed with status $status";
+            $msg .= COLON . EMPTY . $dollarbang
+              if length $dollarbang;
+            $future->fail($msg);
         });
 
     return $future;

@@ -1,9 +1,0 @@
-Testname: upstream-metadata-is-missing
-Skeleton: upload-non-native
-Version: 1.0-1
-Description: Tests for missing upstream metadata file
-Options: --pedantic
-Test-Against:
-Check:
- watch-file
- upstream-metadata

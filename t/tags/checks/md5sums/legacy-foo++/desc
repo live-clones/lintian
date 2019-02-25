@@ -1,0 +1,8 @@
+Skeleton: upload-native
+Testname: legacy-foo++
+Source: foo++
+Sequence: 9999
+Version: 5
+Description: Legacy test "foo++"
+Test-Against:
+Check: md5sums

@@ -1,0 +1,7 @@
+Testname: priority-extra
+Skeleton: upload-native
+Description: Test check for old priority extra
+Version: 1.0
+Priority: extra
+Test-Against:
+Check: fields

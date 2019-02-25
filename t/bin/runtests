@@ -34,6 +34,8 @@ use autodie;
 use v5.10;
 
 use Cwd;
+use File::Basename;
+use File::Path qw(make_path);
 use File::Spec::Functions qw(abs2rel rel2abs splitpath splitdir);
 use File::stat;
 use Getopt::Long;
@@ -41,7 +43,12 @@ use List::Util qw(max uniq);
 use IO::Async::Channel;
 use IO::Async::Loop;
 use IO::Async::Routine;
+use Path::Tiny;
+use TAP::Formatter::Console;
+use TAP::Formatter::File;
 use TAP::Harness;
+use TAP::Parser::Aggregator;
+use Term::ANSIColor;
 use Try::Tiny;
 
 BEGIN {
@@ -112,19 +119,25 @@ my $dump_logs = 1;
 my $force_rebuild;
 my $numjobs = -1;
 my $keep_going;
+my $onlyrun;
+my $outpath;
+my $unattended;
 my $verbose = 0;
 
 Getopt::Long::Configure('bundling');
 unless (
     Getopt::Long::GetOptions(
-        'B'            => \$force_rebuild,
-        'd|debug+'     => \$debug,
-        'j|jobs:i'     => \$numjobs,
-        'k|keep-going' => \$keep_going,
-        'dump-logs!'   => \$dump_logs,
-        'v|verbose'    => \$verbose,
-        'coverage:s'   => \$coverage,
-        'help|h'       => sub {usage(); exit;},
+        'B|force-rebuild'  => \$force_rebuild,
+        'c|coverage:s'     => \$coverage,
+        'd|debug+'         => \$debug,
+        'j|jobs:i'         => \$numjobs,
+        'k|keep-going'     => \$keep_going,
+        'L|dump-logs!'     => \$dump_logs,
+        'o|onlyrun:s'      => \$onlyrun,
+        'u|unattended'     => \$unattended,
+        'v|verbose'        => \$verbose,
+        'w|work-dir:s'     => \$outpath,
+        'h|help'           => sub {usage(); exit;},
     )
 ) {
     usage();
@@ -133,24 +146,61 @@ unless (
 
 # check number of arguments
 die('Please use -h for usage information.')
-  if @ARGV < 2 || @ARGV > 3;
+  if @ARGV > 1;
 
 # get arguments
-my ($testset, $outpath, $onlyrun) = @ARGV;
+my ($testset) = @ARGV;
+
+# default test set
+$testset ||= 't';
 
 # check test set directory
-die("Test set directory $testset not set") unless -d $testset;
-$testset = rel2abs($testset) // die("Cannot find $testset: $!");
+die "Cannot find testset directory $testset"
+  unless -d $testset;
 
-# check output directory
-die("Test output directory $outpath not set") unless -d $outpath;
-$outpath = rel2abs($outpath) // die("Cannot find $outpath: $!");
+# make sure testset is an absolute path
+$testset = rel2abs($testset);
+
+# calculate a default test work directory if none given
+$outpath ||= dirname($testset) . '/debian/test-out';
+
+# create test work directory unless it exists
+make_path($outpath)
+  unless -e $outpath;
+
+# make sure test work path is a directory
+die "Test work directory $outpath is not a directory"
+  unless -d $outpath;
+
+# make sure outpath is absolute
+$outpath = rel2abs($outpath);
 
 my $ACTIVE_JOBS = 0;
 
 my $output_is_tty = -t STDOUT;
 
 our $IO_LOOP = IO::Async::Loop->new;
+
+# get lintian modification date
+my @lintianparts = (
+    'checks', 'collection', 'commands', 'data',
+    'frontend', 'profiles', 'vendors', 'lib/Lintian'
+);
+my @lintianfiles
+  = map { File::Find::Rule->file->in("$ENV{'LINTIAN_ROOT'}/$_") }@lintianparts;
+push(@lintianfiles, $ENV{'LINTIAN_FRONTEND'});
+push(@lintianfiles, $ENV{'LINTIAN_DPLINT_FRONTEND'});
+$ENV{'LINTIAN_EPOCH'}
+  = max(map { -e $_ ? stat($_)->mtime : time } @lintianfiles);
+say 'Lintian modified on '. rfc822date($ENV{'LINTIAN_EPOCH'});
+
+my $string = safe_qx($ENV{'LINTIAN_FRONTEND'}, '--version');
+chomp $string;
+my ($version) = $string =~ qr/^\S+\s+v(.+)$/;
+die 'Cannot get Lintian version' unless length $version;
+say "Version under test is $version.";
+
+say EMPTY;
 
 # set environment for coverage
 if (defined $coverage) {
@@ -215,19 +265,6 @@ $ENV{'HARNESS_EPOCH'}
   = max(our_modification_epoch, perl_modification_epoch, $harness_files_epoch);
 say 'Harness modified on '. rfc822date($ENV{'HARNESS_EPOCH'});
 
-# get lintian date
-my @lintianparts = (
-    'checks', 'collection', 'commands', 'data',
-    'frontend', 'profiles', 'vendors', 'lib/Lintian'
-);
-my @lintianfiles
-  = map { File::Find::Rule->file->in("$ENV{'LINTIAN_ROOT'}/$_") }@lintianparts;
-push(@lintianfiles, $ENV{'LINTIAN_FRONTEND'});
-push(@lintianfiles, $ENV{'LINTIAN_DPLINT_FRONTEND'});
-$ENV{'LINTIAN_EPOCH'}
-  = max(map { -e $_ ? stat($_)->mtime : time } @lintianfiles);
-say 'Lintian modified on '. rfc822date($ENV{'LINTIAN_EPOCH'});
-
 say EMPTY;
 
 # print environment
@@ -244,11 +281,22 @@ my %skipped;
 # tests that failed
 my @failed;
 
+my $formatter = TAP::Formatter::File->new({
+    jobs => $numjobs,
+});
+$formatter = TAP::Formatter::Console->new({
+        jobs => $numjobs,
+        color => 1,
+    }) if -t STDOUT;
+
 my $harness = TAP::Harness->new({
+    formatter => $formatter,
     jobs => $numjobs,
     lib => ["$ENV{'LINTIAN_TEST_ROOT'}/lib"],
-    color => 1,
 });
+
+my $aggregator = TAP::Parser::Aggregator->new;
+$aggregator->start;
 
 my @runscripts;
 my $scriptpath = "$testset/scripts";
@@ -264,11 +312,30 @@ push(@runscripts, @requiredscripts);
 # remove any duplicates
 @runscripts = uniq @runscripts;
 
+# make all paths relative
+@runscripts = map { abs2rel($_) } @runscripts;
+
+say 'Running selected and required Perl test scripts.';
+say EMPTY;
+
+# run scripts through harness
+$harness->aggregate_tests($aggregator, @runscripts);
+
+unless ($aggregator->all_passed || $keep_going) {
+    $aggregator->stop;
+    $formatter->summary($aggregator);
+    exit 1;
+}
+
+say EMPTY;
+
 # find test paths
 my @testpaths = find_selected_lintian_testpaths($testset, $onlyrun);
 
 # prepare output directories
-say 'Preparing ' . scalar @testpaths . ' work directories.'
+say 'Running selected tag tests; preparing '
+  . scalar @testpaths
+  . ' work directories.'
   if @testpaths;
 
 my @prepqueue = map { abs2rel($_) } @testpaths;
@@ -287,27 +354,64 @@ if (@prepqueue) {
 say "Preparation failed: $_" for @failed;
 exit 1 if scalar @failed;
 
-# these are the generated tests
+# remap paths from testset to outpath to get work directories
 my @workpaths = map { rel2abs(abs2rel($_, $testset), $outpath) } @testpaths;
+
+# make all paths relative to current directory
+@workpaths = map { abs2rel($_) } @workpaths;
 
 # add the scripts in generated tests to be run
 my @workscripts
   = map { File::Find::Rule->file->name('*.t')->in($_) } @workpaths;
-push(@runscripts, @workscripts);
-
-# make all paths relative
-@runscripts = map { abs2rel($_) } @runscripts;
 
 # run scripts through harness
-my $aggregator= $harness->runtests(@runscripts);
+$harness->aggregate_tests($aggregator, @workscripts);
 
-unless ($aggregator->all_passed) {
-    exit 1 unless $keep_going;
-    $status = 1;
+$aggregator->stop;
+$formatter->summary($aggregator);
+
+say EMPTY;
+
+$status = 1
+  unless $aggregator->all_passed;
+
+if (-t STDOUT && !$unattended) {
+    my @failed = $aggregator->failed;
+    say 'Offering to re-calibrate the tags expected in tests with errors.'
+      if @failed;
+
+    for my $scriptpath (@failed) {
+        my $workpath = dirname($scriptpath);
+        my $diffpath = "$workpath/tagdiff";
+
+        my $relative = abs2rel($workpath, $outpath);
+        my $testpath = abs2rel(rel2abs($relative, $testset));
+        my $tagspath = "$testpath/tags";
+
+        if (-r $diffpath) {
+
+            say EMPTY;
+
+            print colored($testpath, 'bold white on_blue')
+              . '  >>>  Fix (y/n/q)? ';
+
+            my $decision = <STDIN>;
+            chomp $decision;
+            last if $decision eq 'q';
+            next unless $decision eq 'y';
+
+            # create tags if needed; helps when writing new tests
+            path($tagspath)->touch
+              unless -e $tagspath;
+
+            die "Cannot run tagadjust for $testpath"
+              if system('tagadjust', '-i', $diffpath, $tagspath);
+        }
+    }
 }
 
 # give a hint if not enough tests were run
-unless (scalar @runscripts + scalar @testpaths - scalar @requiredscripts
+unless (scalar @runscripts - scalar @requiredscripts + scalar @workscripts
     || $onlyrun eq 'minimal:') {
     quick_hint($onlyrun);
     exit 1;

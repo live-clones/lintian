@@ -34,7 +34,7 @@ Changes:
  .
    * checks/*:
      + [NT] Remove assumption that lintian will chdir into the
-       the lab before calling the check.
+       lab before calling the check.
      + [NT] Be better at avoiding false-positive spelling errors
        for references to packages that also happen to be common
        spelling mistake.  Thanks to Paul Tagliamonte for the

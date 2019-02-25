@@ -1,3 +1,100 @@
+lintian (2.9.0) unstable; urgency=medium
+
+  [ Felix Lechner ]
+  * Add missing runtime dependency on libpath-tiny-perl. (Closes: #923229)
+
+  [ Chris Lamb ]
+  * Add /lib/runit/invoke/run as a known interpreter. (Closes: #923232)
+
+ -- Chris Lamb <lamby@debian.org>  Mon, 25 Feb 2019 12:36:32 +0000
+
+lintian (2.8.0) unstable; urgency=medium
+
+  [ Chris Lamb ]
+  * Emit an experimental warning for packages that ship a cron script
+    without an equivalent systemd .timer file. (Closes: #922862)
+  * Make orig-tarball-missing-upstream-signature a "dsc" check so it
+    also appears when running against non-.changes files. (Closes: #922557)
+  * Check all combinations of processables and binary package names in
+    order to avoid false-positives or unused override warnings in spelling
+    checks depending on whether a .deb or .dsc (etc.) is passed to Lintian.
+    (Closes: #921814)
+  * Prevent pkg-config-references-unknown-shared-library false positives:
+    - Ignoring entries such as -lfoo{install_suffix} as they are
+      interpolated at runtime by Autoconf. (Closes: #922511)
+    - Create an exception list and populating with shared
+      objects shipped by libc6-dev and libgcc1. (Closes: #922402)
+    - Manually add "gcc" as an exception.
+  * Use the source package name (not the package section) when checking for
+    uses-dpkg-database-directly exceptions. (Closes: #922530)
+  * Correct reference to mips64el architecture to ensure we emit
+    binary-from-other-architecture on this arch. Thanks to Helmut Grohne.
+    (Closes: #921573)
+  * Don't emit source-nmu-has-incorrect-version-number for uploads to
+    backports. (Closes: #923060)
+  * Ensure libpath-tiny-perl is installed regardless of nocheck build
+    profile as it is needed to generate the Pod documentation.
+  * Add dpatch to "nocheck" Build-Depends to avoid skipping tests
+    and then don't emit build-depends-on-obsolete-package for Lintian
+    itself as a result.
+  * Remove "nocheck" Build-Depends restriction for libcapture-tiny-perl and
+    specify it as a runtime dependency too.
+  * Don't emit source-contains-prebuilt-java-object against Lintian itself
+    as we ship a trivial HelloWorld.jar as a test fixture.
+  * Don't print "Offering to re-calibrate..." message if we aren't actually
+    about to offer.
+
+  [ Felix Lechner ]
+  * Ensure unpack loop stops when process succeeds after processable failed
+    to try and prevent Lintian from occasionally hanging. (Closes: #922737)
+  * Fix detection of security features in Portable Executable (PE)
+    binaries.
+  * Update recommendation in an update-menus long description that will not
+    trigger a check for full path names in maintainer scripts. (MR: !149)
+  * Interactively calibrate the expected tags in failing tests (MR: !145)
+    and use green and red terminal colors when adding or removing tags
+    during said calibration. (MR: !153)
+  * t/runtests:
+    * Split processing between scripts and tag tests.
+    * Split out test routines to process universal tags.
+    * Change options and arguments for stand-alone operation.
+  * Drop obsolete old-format-menu-file tag.
+
+  [ Guillem Jover ]
+  * Don't hardcode ".gz" in the output of the malformed-deb-archive tag's
+    extra information. (Closes: #922534)
+
+  [ Paul Wise ]
+  * Add several spelling corrections.
+
+ -- Chris Lamb <lamby@debian.org>  Sun, 24 Feb 2019 22:13:53 +0000
+
+lintian (2.7.0) unstable; urgency=medium
+
+  * Summary of tag changes:
+    + Added:
+      - script-uses-unversioned-python-in-shebang
+
+  [ Chris Lamb ]
+  * Track static libraries to avoid false-positives in
+    pkg-config-references-unknown-shared-library. (Closes: #921872)
+  * Assume that license files themselves do not require coverage in DEP-5
+    copyright files. (Closes: #921752)
+  * Ignore spelling errors in patch author names. (Closes: #922233)
+
+  [ Dmitry Bogatov ]
+  * Add a classification tag to identify the number of scripts using
+    unversioned Python shebangs. (Closes: #909510)
+
+  [ Felix Lechner ]
+  * Demote the Test-Against test metadata field to be a selector for
+    false-positives only. (MR: !142)
+
+  [ Paul Wise ]
+  * Add several spelling corrections.
+
+ -- Chris Lamb <lamby@debian.org>  Thu, 14 Feb 2019 08:37:22 +0000
+
 lintian (2.6.0~bpo9+1) stretch-backports; urgency=medium
 
   * Rebuild for stretch-backports.

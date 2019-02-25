@@ -31,8 +31,9 @@ use File::Copy qw(copy);
 use Fcntl qw(SEEK_SET);
 use List::Util qw(first);
 use List::MoreUtils qw(uniq);
-use URI::Escape;
+use Path::Tiny;
 use Text::Template ();
+use URI::Escape;
 use YAML::XS ();
 
 use Lintian::Command qw(safe_qx);
@@ -41,8 +42,8 @@ use Lintian::Internal::FrontendUtil qw(split_tag);
 use Lintian::Profile;
 use Lintian::Relation::Version qw(versions_comparator);
 use Lintian::Reporting::ResourceManager;
-use Lintian::Util qw(read_dpkg_control slurp_entire_file load_state_cache
-  find_backlog copy_dir delete_dir run_cmd check_path);
+use Lintian::Util qw(read_dpkg_control load_state_cache
+  find_backlog copy_dir run_cmd check_path);
 
 my $CONFIG;
 my %OPT;
@@ -500,7 +501,7 @@ sub process_data {
 
         # The path to the mirror timestamp.
         my $trace_file= "${path}/project/trace/${trace_basename}";
-        my $mirror_timestamp = slurp_entire_file($trace_file);
+        my $mirror_timestamp = path($trace_file)->slurp;
         $mirror_timestamp =~ s/\n.*//s;
         $mirror_timestamp
           = safe_qx('date', '-u', '--rfc-822', '-d', $mirror_timestamp);
@@ -814,7 +815,8 @@ sub update_history_and_make_graphs {
             my $graph_file = "${svg_dir}/${tag}.svg";
             $RESOURCE_MANAGER->install_resource($graph_file);
         }
-        delete_dir($graph_dir);
+        path($graph_dir)->remove_tree
+          if -d $graph_dir;
     }
     return;
 }

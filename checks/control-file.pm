@@ -24,7 +24,7 @@ use warnings;
 use autodie;
 
 use List::MoreUtils qw(any);
-use List::Util qw(first);
+use List::Util qw(first none);
 
 use Lintian::Data ();
 use Lintian::Relation ();
@@ -45,6 +45,8 @@ my $KNOWN_DBG_PACKAGE = Lintian::Data->new(
     sub {
         return qr/$_[0]/xms;
     });
+
+my $SIGNING_KEY_FILENAMES = Lintian::Data->new('common/signing-key-filenames');
 
 sub run {
     my ($pkg, undef, $info, undef, $group) = @_;
@@ -458,6 +460,27 @@ sub run {
       and $changes->info->field('architecture', '') eq 'source'
       and $info->is_non_free
       and $info->source_field('xs-autobuild', 'no') eq 'no';
+
+    # Ensure all orig tarballs have a signature if we have an upstream
+    # signature.
+    my $files = $info->files;
+    my $has_signing_key = 0;
+    for my $key_name ($SIGNING_KEY_FILENAMES->all) {
+        my $path = $info->index_resolved_path("debian/$key_name");
+        if ($path and $path->is_file) {
+            $has_signing_key = 1;
+            last;
+        }
+    }
+    foreach my $file (keys %$files) {
+        if (   $has_signing_key
+            && $file =~ m/(^.*\.orig(?:-[A-Za-z\d-]+)?\.tar)\./
+            && $file !~ m/\.asc$/
+            && !$info->repacked) {
+            tag 'orig-tarball-missing-upstream-signature', $file
+              if none { exists $files->{"$_.asc"} } ($file, $1);
+        }
+    }
 
     return;
 }

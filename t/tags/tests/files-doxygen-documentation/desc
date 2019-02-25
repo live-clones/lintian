@@ -1,9 +1,0 @@
-Skeleton: upload-native
-Testname: files-doxygen-documentation
-Version: 1.0
-Description: Detect doxygen documentation problem
-Options: --pedantic
-Test-Against:
-Check:
- files
- cruft

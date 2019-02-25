@@ -1,0 +1,6 @@
+Skeleton: upload-native
+Testname: fields-depends-wildcard
+Version: 1.0
+Package-Architecture: any
+Description: Check package dependencies with arch wildcards
+Check: fields

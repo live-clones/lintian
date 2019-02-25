@@ -79,6 +79,7 @@ sub run {
 
     my $version_nmuness = 0;
     my $version_local = 0;
+    my $upload_is_backport = $version =~ m/~bpo(\d+)\+(\d+)$/;
 
     if ($uploader =~ m/^\s|\s$/) {
         tag 'extra-whitespace-around-name-in-changelog-trailer';
@@ -125,7 +126,9 @@ sub run {
             tag 'changelog-should-mention-nmu'
               if !$changelog_mentions_nmu && $upload_is_nmu;
             tag 'source-nmu-has-incorrect-version-number', $version
-              if $upload_is_nmu && $version_nmuness != 1;
+              if $upload_is_nmu
+              && $version_nmuness != 1
+              && !$upload_is_backport;
         }
         tag 'changelog-should-not-mention-nmu'
           if $changelog_mentions_nmu && !$upload_is_nmu;

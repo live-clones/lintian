@@ -1,0 +1,2 @@
+I: control-file-upstream-signature-missing-dfsg source: public-upstream-key-unusable upstream/signing-key.asc cannot be processed
+W: control-file-upstream-signature-missing-dfsg source: debian-watch-could-verify-download debian/upstream/signing-key.asc

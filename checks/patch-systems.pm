@@ -188,7 +188,7 @@ sub run {
                     next if /^\s*$/;
                     # Skip common "lead-in" lines
                     $description .= $_
-                      unless m{^(?:Index: |=+$|diff .+|index )};
+                      unless m{^(?:Index: |=+$|diff .+|index |From: )};
                     $has_template_description = 1
                       if index($_, PATCH_DESC_TEMPLATE) != -1;
                 }

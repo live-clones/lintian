@@ -1,0 +1,8 @@
+Skeleton: upload-native
+Testname: files-python-general
+Version: 1.0
+Dh-Compat-Level: 7
+Description: Test general Python related tags
+References: Debian Bug#608810, Debian Bug#756005
+Test-Against:
+Check: files

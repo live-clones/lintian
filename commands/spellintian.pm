@@ -23,11 +23,11 @@ use warnings;
 use autodie;
 
 use Getopt::Long();
+use Path::Tiny;
 
 use Lintian::Check qw(check_spelling check_spelling_picky);
 use Lintian::Data;
 use Lintian::Profile;
-use Lintian::Util qw(slurp_entire_file);
 
 sub show_version {
     my $version = dplint::lintian_version();
@@ -78,7 +78,7 @@ sub main {
     }
 
     if (not @ARGV) {
-        my $text = slurp_entire_file(*STDIN);
+        my $text = do { local $/; <STDIN> };
         spellcheck(undef, $picky, $text);
     } else {
         my $ok = 0;
@@ -89,7 +89,7 @@ sub main {
                 next;
             }
             $ok = 1;
-            $text = slurp_entire_file($path);
+            $text = path($path)->slurp;
             spellcheck($path, $picky, $text);
         }
         $exit_code = 1 if not $ok;

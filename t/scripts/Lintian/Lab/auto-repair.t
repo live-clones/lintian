@@ -4,11 +4,11 @@ use strict;
 use warnings;
 use autodie qw(opendir closedir);
 
+use Path::Tiny;
 use Test::More;
 use Lintian::Lab;
 use Lintian::Lab::Manifest;
 use Lintian::Processable::Package;
-use Lintian::Util qw(delete_dir);
 
 my $DATADIR = $0;
 $DATADIR =~ s,[^/]+$,,o;
@@ -77,9 +77,9 @@ sub do_tests {
     $diff = undef;
 
     # Time for some destruction
-
-    delete_dir($LAB->dir . '/pool/l')
-      or die "rename LAB pool: $!";
+    my $pooldir = $LAB->dir . '/pool/l';
+    path($pooldir)->remove_tree
+      if -d $pooldir;
 
     # Test that auto repair discards missing entries as they are
     # discovered.

@@ -73,7 +73,7 @@ available via L<Lintian::Collect>.
 
 =over 4
 
-=item new (ASYNC_LOOP, COLLMAP, PROFILE[, OPTIONS])
+=item new (COLLMAP, PROFILE[, OPTIONS])
 
 Creates a new unpacker.
 
@@ -117,7 +117,7 @@ changed with the L</jobs> method later.  If omitted, it defaults to
 =cut
 
 sub new {
-    my ($class, $async_loop, $collmap, $options) = @_;
+    my ($class, $collmap, $options) = @_;
     my $ccmap = $collmap->clone;
     my ($req_table, $profile, $extra);
     my $jobs = 0;
@@ -135,7 +135,6 @@ sub new {
         'profile' => $profile,
         'running-jobs' => {},
         'worktable' => {},
-        'async-loop' => $async_loop,
     };
     if (defined $profile) {
         $req_table = {};
@@ -366,7 +365,8 @@ sub process_tasks {
     my $running_jobs = $self->{'running-jobs'};
     my $colls = $self->{'collmap'};
     my $jobs = $self->jobs;
-    my $loop = $self->{'async-loop'};
+
+    my $loop = IO::Async::Loop->new;
 
     $hooks //= {};
     my $coll_hook = $hooks->{'coll-hook'};
@@ -445,8 +445,8 @@ sub process_tasks {
                         $cmap->satisfy($coll);
                        # If the entry is marked as failed, don't break the loop
                        # for it.
-                        return if exists $failed{$procid};
-                        $active{$procid} = 1 if $cmap->selectable;
+                        $active{$procid} = 1
+                          unless $failed{$procid} || !$cmap->selectable;
                     }
 
                     my @task = $find_next_task->();

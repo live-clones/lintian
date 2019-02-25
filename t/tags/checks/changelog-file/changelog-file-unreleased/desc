@@ -1,0 +1,7 @@
+Skeleton: upload-native
+Testname: changelog-file-unreleased
+Version: 2.0
+Description: Suppress new date warnings for UNRELEASED
+Test-Against: latest-changelog-entry-without-new-date
+References: Debian Bug#560149
+Check: changelog-file

@@ -35,6 +35,23 @@ use Path::Tiny;
 use Text::CSV;
 use XML::LibXML;
 
+BEGIN {
+    $ENV{'LINTIAN_TEST_INSTALLED'} = 'no'
+      unless exists $ENV{'LINTIAN_TEST_INSTALLED'};
+
+    my $cwd = Cwd::getcwd();
+
+    if ($ENV{'LINTIAN_TEST_INSTALLED'} eq 'yes') {
+        $ENV{'LINTIAN_ROOT'} = '/usr/share/lintian';
+    } else {
+        $ENV{'LINTIAN_ROOT'} = $cwd;
+    }
+}
+
+use lib "$ENV{'LINTIAN_ROOT'}/lib";
+
+use Test::Lintian::Output::Universal qw(universal_string order);
+
 use constant EMPTY => q{};
 use constant SPACE => q{ };
 use constant NEWLINE => qq{\n};
@@ -61,11 +78,10 @@ die "Please use -h for usage information.\n"
 my ($input, $output) = @ARGV;
 
 my @extracted = parse($format, $input);
+my @sorted = reverse sort { order($a) cmp order($b) } @extracted;
 
 my $joined = EMPTY;
-
-$joined = join(NEWLINE, reverse sort @extracted) . NEWLINE
-  if scalar @extracted;
+$joined .= $_ . NEWLINE for @sorted;
 
 if (defined $output) {
     path($output)->spew_utf8($joined);
@@ -118,7 +134,7 @@ sub parse_ewi {
         die "Cannot parse line $line"
           unless all { length } ($code, $package, $type, $name);
 
-        my $tag = universal_string($type, $package, $name, $details);
+        my $tag = universal_string($package, $type, $name, $details);
         push(@tags, $tag);
     }
 
@@ -152,7 +168,7 @@ sub parse_fullewi {
           unless all { length }
         ($code, $package, $type, $version, $architecture, $name);
 
-        my $tag = universal_string($type, $package, $name, $details);
+        my $tag = universal_string($package, $type, $name, $details);
         push(@tags, $tag);
     }
 
@@ -189,7 +205,7 @@ sub parse_colons {
             $architecture, $type, $name
           );
 
-        my $tag = universal_string($type, $package, $name, $details);
+        my $tag = universal_string($package, $type, $name, $details);
         push(@tags, $tag);
     }
 
@@ -227,24 +243,12 @@ sub parse_xml {
             die 'Cannot parse XML'
               unless all { length } ($severity, $certainty, $name);
 
-            my $tag = universal_string($type, $package, $name, $details);
+            my $tag = universal_string($package, $type, $name, $details);
             push(@tags, $tag);
         }
     }
 
     return @tags;
-}
-
-sub universal_string {
-    my @fields = @_;
-
-    my $csv = Text::CSV->new({ sep_char => '|' });
-    my $status = $csv->combine(@fields);
-    die 'Cannot combine to CSV: ' . $csv->error_diag
-      unless $status;
-
-    my $string = $csv->string;
-    return $string;
 }
 
 sub usage {
@@ -254,8 +258,12 @@ Usage: $0 -f <format> <in-file> <out-file>
     --format, -f <format>  Format of Lintian output file <in-file>
 
     Extracts tag information from a variety of Lintian output formats. The
-    output format is CSV with a reduced number of fields delimited by '|'.
-    The tags are sorted in reverse order.
+    output format is a simplified EWI format without letter code. Other
+    notable differences are that the binary package type is always displayed.
+
+    The tags are sorted in a reverse order, but with the package type pulled
+    to the front. That way package types are grouped. Source packages are at
+    the top.
 
     Prints to stdout when no <out-file> is given.
 END

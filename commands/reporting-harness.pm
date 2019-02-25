@@ -36,7 +36,7 @@ use Lintian::Lab;
 use Lintian::Lab::Manifest;
 use Lintian::Processable;
 use Lintian::Relation::Version qw(versions_comparator);
-use Lintian::Util qw(open_gz slurp_entire_file strip visit_dpkg_paragraph
+use Lintian::Util qw(open_gz strip visit_dpkg_paragraph
   load_state_cache run_cmd save_state_cache);
 
 sub usage {

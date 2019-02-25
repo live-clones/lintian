@@ -1,0 +1,2 @@
+E: manpage-generic-name: manpage-has-overly-generic-name usr/share/man/man1/README.1.gz
+I: manpage-generic-name: package-contains-documentation-outside-usr-share-doc usr/share/man/man1/README.1.gz

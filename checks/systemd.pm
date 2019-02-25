@@ -70,7 +70,9 @@ sub run {
         check_init_script($info, $script, $services);
     }
 
+    check_timers($info);
     check_maintainer_scripts($info);
+
     return;
 }
 
@@ -352,6 +354,19 @@ sub extract_service_file_values {
     }
 
     return @values;
+}
+
+sub check_timers {
+    my ($info) = @_;
+
+    return if any { m,^/lib/systemd/system/\.timer$, } $info->sorted_index;
+
+    for my $file ($info->sorted_index) {
+        tag 'missing-systemd-timer-for-cron-script', $file
+          if $file->dirname =~ m,^etc/cron\.[^\/]+/$,;
+    }
+
+    return;
 }
 
 sub check_maintainer_scripts {

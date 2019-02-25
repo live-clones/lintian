@@ -206,13 +206,9 @@ sub run {
             }
         }
 
-        # Check first line of file to see if it matches the old menu
+        # Check first line of file to see if it matches the new menu
         # file format.
-        if ($menufile_line =~ m/^(?!\?package\(.*\)).* .* .* .* "?.*"? .*$/o) {
-            tag 'old-format-menu-file', $fullname;
-            close($fd);
-            next;
-        } elsif ($menufile_line =~ m/^!C\s*menu-2/o) {
+        if ($menufile_line =~ m/^!C\s*menu-2/o) {
             # we can't parse that yet
             close($fd);
             next;

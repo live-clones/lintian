@@ -20,9 +20,10 @@ use strict;
 use warnings;
 
 use Test::More;
+use Path::Tiny;
 
 use Lintian::CollScript;
-use Lintian::Util qw(read_dpkg_control slurp_entire_file);
+use Lintian::Util qw(read_dpkg_control);
 
 $ENV{'LINTIAN_TEST_ROOT'} //= '.';
 
@@ -59,7 +60,7 @@ for my $desc (@DESCS) {
     }
 
     my %ninfo = map {$_ => 1} @needs;
-    my $code = slurp_entire_file($codefile);
+    my $code = path($codefile)->slurp;
     my $requires_unpacked = 0;
 
     for my $l2ref (@l2refs) {

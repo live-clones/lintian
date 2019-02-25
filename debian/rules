@@ -18,8 +18,6 @@ tagfiles := $(wildcard t/changes/*.changes t/*/*/tags)
 testfiles := $(wildcard t/tests/*/desc)
 perlprovides := data/fields/perl-provides
 autoreject_data := $(wildcard private/build-time-data/*)
-onlyrun =
-tag =
 
 # Work/output dir for tests
 # private/runtests gets TEST_WORK_DIR from environment
@@ -47,14 +45,22 @@ api-doc:
 .PHONY: runtests
 runtests: $(neededfiles) $(allchecks) $(allcollect) $(tagfiles) $(testfiles)
 	@echo .... running tests ....
-	mkdir -p "$(TEST_WORK_DIR)"
-	t/bin/runtests -k $(PAR_ARGS) t "$(TEST_WORK_DIR)" $(onlyrun)
+	t/bin/runtests \
+		$(PAR_ARGS) \
+		--unattended \
+		--keep-going \
+		--work-dir="$(TEST_WORK_DIR)" \
+		t
 
 runtests-translation: $(neededfiles) $(allchecks)
 	@echo .... running translation tests ....
-	mkdir -p "$(TEST_WORK_DIR)"
-	t/bin/runtests -k $(PAR_ARGS) t "$(TEST_WORK_DIR)" \
-	  translation-check-descs
+	t/bin/runtests \
+		$(PAR_ARGS) \
+		--unattended \
+		--keep-going \
+		--work-dir="$(TEST_WORK_DIR)" \
+		t \
+		translation-check-descs
 
 # this target is only run manually
 refresh-perl-provides:

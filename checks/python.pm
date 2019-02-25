@@ -246,6 +246,17 @@ sub _run_binary {
         }
     }
 
+    for my $file ($info->sorted_index) {
+        next unless $file->is_file;
+        next unless $file->is_open_ok;
+        next unless $file =~ m,(usr/)?bin/[^/]+,;
+        my $fd = $file->open();
+        my $line = <$fd>;
+        tag 'script-uses-unversioned-python-in-shebang', $file
+          if $line && $line =~ m,^#!\s*(/usr/bin/env\s*)?(/usr/bin/)?python$,;
+        close($fd);
+    }
+
     return;
 }
 

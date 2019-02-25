@@ -1,0 +1,2 @@
+E: changelog-distribution-does-not-match-changes-file changes: distribution-and-experimental-mismatch unstable
+W: changelog-distribution-does-not-match-changes-file: changelog-distribution-does-not-match-changes-file (experimental != unstable)

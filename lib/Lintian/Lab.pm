@@ -29,6 +29,7 @@ use parent qw(Class::Accessor::Fast);
 use Carp qw(croak);
 use Cwd();
 use File::Temp qw(tempdir); # For temporary labs
+use Path::Tiny;
 use Scalar::Util qw(blessed);
 
 use constant {
@@ -55,7 +56,7 @@ my %SUPPORTED_VIEWS = ('GROUP' => 1,);
 use Lintian::Collect;
 use Lintian::Lab::Entry;
 use Lintian::Lab::Manifest;
-use Lintian::Util qw(delete_dir get_dsc_info);
+use Lintian::Util qw(get_dsc_info);
 
 =encoding utf8
 
@@ -606,7 +607,8 @@ sub repair {
                 } else {
                     # The entry is not here to clean up, lets purge it
                     # the good old fashioned way.
-                    delete_dir($dir);
+                    path($dir)->remove_tree
+                      if -d $dir;
                 }
                 $index->delete(@keys);
                 $updates++;
@@ -902,8 +904,9 @@ sub remove {
             @subdirs = qw/binary source udeb info/;
             push @subdirs, 'changes' if -d "$dir/changes";
         }
-        unless (delete_dir(map { "$dir/$_" } @subdirs)) {
-            croak "delete_dir (\$contents): $!";
+        for my $subdir (map { "$dir/$_" } @subdirs) {
+            path($subdir)->remove_tree
+              if -d $subdir;
         }
     }
 

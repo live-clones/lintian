@@ -1,0 +1,10 @@
+#!/usr/bin/make -f
+
+tmp := $(CURDIR)/debian/$(shell dh_listpackages)
+
+%:
+	dh $@
+
+override_dh_fixperms:
+	dh_fixperms
+	chown 1:1 $(tmp)/usr/share/separate/controlled-by-owner

@@ -1,0 +1,6 @@
+Testname: files-zero-byte-executable-in-path
+Skeleton: upload-native
+Version: 1.0
+Description: Check detection of zero-byte executables in PATH
+Test-Against:
+Check: files

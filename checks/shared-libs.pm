@@ -36,6 +36,9 @@ use Lintian::Util qw(internal_error strip);
 # one of the following names.
 my $HWCAP_DIRS = Lintian::Data->new('shared-libs/hwcap-dirs');
 
+my $UNKNOWN_SHARED_LIBRARY_EXCEPTIONS
+  = Lintian::Data->new('shared-libs/unknown-shared-library-exceptions');
+
 # List of symbols file meta-fields.
 my %symbols_meta_fields = map { $_ => 1 }qw(
   Build-Depends-Package
@@ -48,7 +51,7 @@ my $MA_DIRS = Lintian::Data->new('common/multiarch-dirs', qr/\s++/);
 sub run {
     my ($pkg, $type, $info, $proc, $group) = @_;
 
-    my ($must_call_ldconfig, %SONAME, %SONAMES, %sharedobject);
+    my ($must_call_ldconfig, %SONAME, %SONAMES, %STATIC_LIBS, %sharedobject);
     my @shlibs;
     my @words;
     my @devpkgs;
@@ -62,6 +65,7 @@ sub run {
 
     foreach my $file ($info->sorted_index) {
         $SONAMES{$1} = 1 if $file =~ m,.*\/lib([^/]+)\.so$,;
+        $STATIC_LIBS{$1} = 1 if $file =~ m,.*\/lib([^/]+)\.a$,;
         next if not $file->is_file;
         my $fileinfo = $file->file_info;
         if (   $fileinfo =~ m/^[^,]*\bELF\b/
@@ -727,7 +731,10 @@ sub run {
             while (/[:\s]-l(\S+)/g) {
                 tag 'pkg-config-references-unknown-shared-library',
                   $file, "-l$1", "(line $.)"
-                  unless exists($SONAMES{$1});
+                  unless $1 =~ m/\$\{.+\}/
+                  or exists($SONAMES{$1})
+                  or exists($STATIC_LIBS{$1})
+                  or $UNKNOWN_SHARED_LIBRARY_EXCEPTIONS->known($1);
             }
         }
         close($fd);
