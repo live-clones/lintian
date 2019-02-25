@@ -1,0 +1,24 @@
+before_script:
+  - apt-get -q update
+  - env DEBIAN_FRONTEND=noninteractive apt-get -q -y install --no-install-recommends aspcud apt-cudf
+  - env DEBIAN_FRONTEND=noninteractive apt-get -q -y --solver aspcud -o APT::Solver::Strict-Pinning=0 -o Debug::pkgProblemResolver=yes build-dep .
+
+.test_template: &test
+  script:
+    - t/bin/runtests
+
+unstable:
+  <<: *test
+  image: debian:unstable
+
+testing:
+  <<: *test
+  image: debian:testing
+
+stable-bpo:
+  <<: *test
+  image: debian:stable-backports
+
+ubuntu-devel:
+  <<: *test
+  image: ubuntu:devel

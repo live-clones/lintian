@@ -119,6 +119,7 @@ Depends:
  libpath-tiny-perl,
  libtext-levenshtein-perl,
  libtimedate-perl,
+ libtry-tiny-perl,
  liburi-perl,
  libxml-simple-perl,
  libyaml-libyaml-perl,

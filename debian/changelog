@@ -1,3 +1,13 @@
+lintian (2.9.1) unstable; urgency=medium
+
+  [ Felix Lechner ]
+  * Add missing runtime dependency on libtry-tiny-perl. (Closes: #923262)
+
+  [ Chris Lamb ]
+  * Add an initial .gitab-ci.yml.
+
+ -- Chris Lamb <lamby@debian.org>  Mon, 25 Feb 2019 16:38:19 +0000
+
 lintian (2.9.0~bpo9+1) stretch-backports; urgency=medium
 
   * Rebuild for stretch-backports.
