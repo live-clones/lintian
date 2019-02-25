@@ -1,3 +1,13 @@
+lintian (2.9.0) unstable; urgency=medium
+
+  [ Felix Lechner ]
+  * Add missing runtime dependency on libpath-tiny-perl. (Closes: #923229)
+
+  [ Chris Lamb ]
+  * Add /lib/runit/invoke/run as a known interpreter. (Closes: #923232)
+
+ -- Chris Lamb <lamby@debian.org>  Mon, 25 Feb 2019 12:36:32 +0000
+
 lintian (2.8.0) unstable; urgency=medium
 
   [ Chris Lamb ]
