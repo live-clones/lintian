@@ -51,7 +51,8 @@ BEGIN {
 use Carp;
 use File::Spec::Functions qw(rel2abs splitpath catpath);
 use File::Find::Rule;
-use List::Util qw(uniq any all);
+use List::MoreUtils qw(uniq);
+use List::Util qw(any all);
 use Text::CSV;
 
 use Lintian::Profile;
