@@ -79,6 +79,7 @@ Geissert
 Lichtenheld
 Niels Thykier
 Bastien ROUCARIES
+Felix Lechner
 
 lintian Lintian Lintian's # ' # hi emacs
 dpkg
