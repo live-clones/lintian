@@ -40,10 +40,9 @@ use File::Spec::Functions qw(abs2rel rel2abs splitpath splitdir);
 use File::stat;
 use Getopt::Long;
 use List::MoreUtils qw(uniq);
-use List::Util qw(max);
-use IO::Async::Channel;
+use List::Util qw(max any);
+use IO::Async::Function;
 use IO::Async::Loop;
-use IO::Async::Routine;
 use Path::Tiny;
 use TAP::Formatter::Console;
 use TAP::Formatter::File;
@@ -99,9 +98,7 @@ use Test::Lintian::Filter
 use Test::Lintian::Helper
   qw(rfc822date get_host_architecture get_latest_policy get_recommended_debhelper_version);
 use Test::Lintian::Prepare qw(logged_prepare);
-use Test::Lintian::Run qw(logged_runner);
 use Test::ScriptAge qw(perl_modification_epoch our_modification_epoch);
-use Test::State;
 
 use constant SPACE => q{ };
 use constant INDENT => q{    };
@@ -179,8 +176,6 @@ $outpath = rel2abs($outpath);
 my $ACTIVE_JOBS = 0;
 
 my $output_is_tty = -t STDOUT;
-
-our $IO_LOOP = IO::Async::Loop->new;
 
 # get lintian modification date
 my @lintianparts = (
@@ -337,23 +332,50 @@ my @testpaths = find_selected_lintian_testpaths($testset, $onlyrun);
 say 'Running selected tag tests; preparing '
   . scalar @testpaths
   . ' work directories.'
+  . NEWLINE
   if @testpaths;
 
 my @prepqueue = map { abs2rel($_) } @testpaths;
 
-if (@prepqueue) {
-    for (0..$numjobs-1) {
-        create_preparation_child($IO_LOOP, \@prepqueue)
-          or last;
-    }
+my $function = IO::Async::Function->new(
+    code => sub {
+        my ($specpath) = @_;
 
-    $IO_LOOP->run;
+        # get runpath
+        my $relative = abs2rel($specpath, $testset);
+        my $runpath = rel2abs($relative, $outpath);
 
-    say EMPTY;
-}
+        # label process
+        $0 = "Processing $specpath";
 
-say "Preparation failed: $_" for @failed;
-exit 1 if scalar @failed;
+        try {
+            # prepare
+            logged_prepare($specpath, $runpath, $testset,$force_rebuild);
+        }
+        catch {
+            # catch any error
+            my $error = $_;
+
+            my $message = "Preparation failed for $specpath";
+            $message .= ": $error" if length $error;
+            die $message;
+        };
+
+        return $specpath;
+    },
+    max_workers => $numjobs,
+    max_worker_calls => 1,
+);
+
+my $loop = IO::Async::Loop->new;
+$loop->add($function);
+
+my @futures = map {$function->call(args => [$_])} @prepqueue;
+
+my $composite = Future->needs_all(@futures);
+
+# awaits, and dies on failure with message from failed constituent
+$composite->get;
 
 # remap paths from testset to outpath to get work directories
 my @workpaths = map { rel2abs(abs2rel($_, $testset), $outpath) } @testpaths;
@@ -439,267 +461,6 @@ sub print_test_summary {
     }
 
     return;
-}
-
-sub create_preparation_child {
-    my ($loop, $tests) = @_;
-    my ($child_in_ch, $child_out_ch, $routine);
-    my $start_test = shift(@{$tests});
-
-    # If there are no more tests, don't spawn a routine for it
-    # Usually happens when only running a single thread.
-    return if not defined($start_test);
-
-    # files don't close properly when numjobs > 1, this is a kludge
-    $ENV{PERL_PATH_TINY_NO_FLOCK} = 1;
-
-    $child_in_ch = IO::Async::Channel->new;
-    $child_out_ch  = IO::Async::Channel->new;
-
-    $routine = IO::Async::Routine->new(
-        channels_in  => [$child_in_ch],
-        channels_out => [$child_out_ch],
-
-        code => sub {
-            $0 = 'Test worker - idle';
-            while (my $metadata = $child_in_ch->recv) {
-                my $state = Test::State->new($metadata, $child_out_ch);
-
-                my $specpath = ${$metadata};
-
-                # get runpath
-                my $relative = abs2rel($specpath, $testset);
-                my $runpath = rel2abs($relative, $outpath);
-
-                # get process label
-                my $label = $specpath;
-
-                $0 = "Test worker - processing $label";
-
-                try {
-                    logged_prepare($specpath, $runpath, $testset,
-                        $force_rebuild);
-                    $state->done;
-                }
-                catch {
-                    if (my $err = $_) {
-                        $state->test_error($err);
-                    }
-                };
-
-                $0 = 'Test worker - idle';
-            }
-            return;
-        },
-
-        on_finish => sub {
-            $ACTIVE_JOBS--;
-            if ($ACTIVE_JOBS < 1) {
-                print "Stopping loop, no more active workers\n"
-                  if $verbose >= 2;
-                $loop->stop;
-            }
-            return;
-        },
-    );
-
-    $loop->add($routine);
-    $ACTIVE_JOBS++;
-    $child_in_ch->send(\$start_test);
-
-    $child_out_ch->configure(
-        'on_recv' => sub {
-            my (undef, $from_child) = @_;
-            handle_msg_from_child($child_in_ch, $tests, @{$from_child});
-            return;
-        },
-    );
-    return 1;
-}
-
-sub create_runner_child {
-    my ($loop, $tests) = @_;
-    my ($child_in_ch, $child_out_ch, $routine);
-    my $start_test = shift(@{$tests});
-
-    # If there are no more tests, don't spawn a routine for it
-    # Usually happens when only running a single thread.
-    return if not defined($start_test);
-
-    # files don't close properly when numjobs > 1, this is a kludge
-    $ENV{PERL_PATH_TINY_NO_FLOCK} = 1;
-
-    $child_in_ch = IO::Async::Channel->new;
-    $child_out_ch  = IO::Async::Channel->new;
-
-    $routine = IO::Async::Routine->new(
-        channels_in  => [$child_in_ch],
-        channels_out => [$child_out_ch],
-
-        code => sub {
-            $0 = 'Test worker - idle';
-            while (my $metadata = $child_in_ch->recv) {
-                my $state = Test::State->new($metadata, $child_out_ch);
-
-                my $runpath = ${$metadata};
-
-                # get process label
-                my $label = $runpath;
-
-                $0 = "Test worker - processing $label";
-
-                try {
-                    logged_runner($state, rel2abs($runpath));
-                }
-                catch {
-                    if (my $err = $_) {
-                        $state->test_error($err);
-                    }
-                };
-
-                $0 = 'Test worker - idle';
-            }
-            return;
-        },
-
-        on_finish => sub {
-            $ACTIVE_JOBS--;
-            if ($ACTIVE_JOBS < 1) {
-                print "Stopping loop, no more active workers\n"
-                  if $verbose >= 2;
-                $loop->stop;
-            }
-            return;
-        },
-    );
-
-    $loop->add($routine);
-    $ACTIVE_JOBS++;
-    $child_in_ch->send(\$start_test);
-
-    $child_out_ch->configure(
-        'on_recv' => sub {
-            my (undef, $from_child) = @_;
-            handle_msg_from_child($child_in_ch, $tests, @{$from_child});
-            return;
-        },
-    );
-    return 1;
-}
-
-my $partial_line = 0;  ## no critic (it is reachable)
-
-sub handle_msg_from_child {
-    my ($child_in_ch, $queue, $msg_type, $metadata, @payload) = @_;
-
-    my $path = ${$metadata};
-
-    # get process label
-    my $label = $path;
-
-    # debug mode, show everything
-    if ($verbose >= 3) {
-        my @dmsg = map { $_ // '<undef>' } @payload;
-        say "PROTO-MSG [DEBUG] $msg_type -- $label [@dmsg]";
-    }
-
-    if ($msg_type eq 'announce') {
-        my ($result, $info_msg) = @payload;
-
-        my $short;
-
-        if ($result eq 'pass') {
-            $short = '.';
-        } elsif ($result eq 'skip') {
-            $short = 'S';
-        } elsif ($result eq 'pass-todo') {
-            $short = 'T';
-        }
-
-        unless ($verbose || $output_is_tty || !defined $short) {
-            $partial_line++;
-            if ($partial_line > 79) {
-                $short .= NEWLINE;
-                $partial_line = 0;
-            }
-            print $short;
-            return;
-        }
-
-        print NEWLINE if $partial_line;
-        $partial_line = 0;
-
-        my $long = "$result $label";
-        $long .= ": $info_msg" if defined $info_msg;
-        say $long;
-        return;
-
-    } elsif ($msg_type eq 'mark-skipped') {
-        my ($reason) = @payload;
-        $skipped{$label} = $reason;
-        return;
-
-    } elsif ($msg_type eq 'mark-failed') {
-        push(@failed, $label);
-        return;
-
-    } elsif ($msg_type eq 'diff-files') {
-        my ($expected, $actual) = @payload;
-        print "\n" if $partial_line;
-        $partial_line = 0;
-        say "$label: diff -u $expected $actual";
-        print safe_qx('diff', '-u', $expected, $actual);
-        return;
-
-    } elsif ($msg_type eq 'dump-file') {
-        my ($path) = @payload;
-        my $prefix = "$label: ";
-        print "\n" if $partial_line;
-        $partial_line = 0;
-        no autodie qw(open);
-        if (open(my $log, '<', $path)){
-            say "$label: ---- START BUILD LOG";
-            print "$label: $_" while (<$log>);
-            say "$label: ---- END BUILD LOG";
-            close($log);
-            return;
-        }
-        say "!!! Could not dump $path: $!";
-        return;
-
-    } elsif ($msg_type eq 'progress') {
-        my ($phase) = @payload;
-        say "$label is now in phase: $phase"
-          if $verbose;
-        return;
-
-    } elsif ($msg_type eq 'log-msg') {
-        my ($level, $msg) = @payload;
-        my $indicator = $level > 1 ? 'DEBUG' : 'INFO';
-        say "INFO-MSG [$indicator] $label: $msg"
-          if $level <= $verbose;
-        return;
-
-    } elsif ($msg_type eq 'stop-others') {
-        # empty queue; start no other jobs
-        $#{$queue} = -1
-          unless $keep_going;
-        $status = 1 unless $status;
-        return;
-
-    } elsif ($msg_type eq 'done') {
-        while (scalar @{$queue}) {
-            my $job = shift @{$queue};
-            next unless defined $job;
-
-            $child_in_ch->send(\$job);
-            return;
-        }
-        $child_in_ch->close;
-        return;
-    }
-
-    die "ERROR: Unknown message type '$msg_type' from $label";
 }
 
 sub usage {
