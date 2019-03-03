@@ -29,6 +29,7 @@ abigious||ambiguous
 abilties||abilities
 abilty||ability
 abitrate||arbitrate
+abnormaly||abnormally
 aboce||above
 abolute||absolute
 abov||above
@@ -514,6 +515,9 @@ automaitcally||automatically
 automaitc||automatic
 automaticall||automatically
 automaticaly||automatically
+automaticalyl||automatically
+automaticalyy||automatically
+automaticlly||automatically
 automaticly||automatically
 automatize||automate
 automatized||automated
@@ -1220,6 +1224,9 @@ decription||description
 decriptions||descriptions
 decriptor||descriptor
 decriptors||descriptors
+decrpt||decrypt
+decrpted||decrypted
+decrption||decryption
 decsriptor||descriptor
 decsriptors||descriptors
 decstiption||description
@@ -1676,6 +1683,9 @@ encoses||encloses
 encosing||enclosing
 encoutner||encounter
 encoutners||encounters
+encrpted||encrypted
+encrpt||encrypt
+encrption||encryption
 encrytion||encryption
 encyption||encryption
 endianes||endianness
@@ -2205,6 +2215,7 @@ imediate||immediate
 imediately||immediately
 imediatly||immediately
 imilar||similar
+immeadiate||immediate
 immeadiately||immediately
 immedate||immediate
 immedately||immediately
@@ -2695,6 +2706,7 @@ lincesed||licensed
 lincese||license
 linceses||licenses
 lintain||lintian
+lising||listing
 litle||little
 litterally||literally
 localation||location
@@ -2744,6 +2756,9 @@ mantainer||maintainer
 mantaining||maintaining
 mantain||maintain
 mantains||maintains
+manualyl||manually
+manualy||manually
+manualyy||manually
 manully||manually
 manupulation||manipulation
 manupulations||manipulations
@@ -2934,7 +2949,13 @@ nonexistant||nonexistent
 non-inreractive||non-interactive
 nontheless||nonetheless
 noone||no one
+normalyl||normally
+normalyly||normally
 normaly||normally
+normalysed||normalised
+normalyy||normally
+normalyzed||normalized
+normlly||normally
 notfication||notification
 notfications||notifications
 nothern||northern
@@ -3075,6 +3096,7 @@ oscilated||oscillated
 oscilate||oscillate
 oscilating||oscillating
 otehr||other
+oter||other
 otherise||otherwise
 otherwhise||otherwise
 othwerwise||otherwise
@@ -3167,6 +3189,7 @@ paremeters||parameters
 paremter||parameter
 paremters||parameters
 parenthesed||parenthesized
+parenthsis||parenthesis
 paritial||partial
 parititioning||partitioning
 paritition||partition
@@ -3991,6 +4014,7 @@ smaple||sample
 smaples||samples
 snapsnot||snapshot
 snapsnots||snapshots
+softend||softened
 softwares||software
 sofware||software
 sofwtare||software
@@ -4498,6 +4522,8 @@ undestand||understand
 undestood||understood
 unecessary||unnecessary
 uneeded||unneeded
+unencrpted||unencrypted
+unencrpt||unencrypt
 uner||under
 unexcpected||unexpected
 unexecpted||unexpected
@@ -4614,6 +4640,7 @@ uptream||upstream
 usally||usually
 usal||usual
 usefule||useful
+usefullness||usefulness
 usefull||useful
 usege||usage
 usera||users
