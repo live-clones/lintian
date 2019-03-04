@@ -8,5 +8,6 @@ writeN	# The Go stdlib text/tabwriter pkg contains "writeN"
 ot	# The Go stdlib runtime/ package contains "ot"
 cymK	# The Go runtime contains "cymK" (#888074)
 selectOn	# "void ToolBoxWidget::selectOn()" in pencil2d (#895818)
+itialize	# From #923725 (carla)
 wIH	# From #895841 (osmo-trx)
 wiH
