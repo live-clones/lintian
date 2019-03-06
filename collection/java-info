@@ -1,7 +1,8 @@
 #!/usr/bin/perl -w
 # java-info -- lintian collection script
 
-# Copyright (C) 2011 Vincent Fourmond
+# Copyright © 2011 Vincent Fourmond
+# Copyright © 2019 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -29,54 +30,34 @@ use autodie;
 
 use Archive::Zip qw( :ERROR_CODES :CONSTANTS );
 use FileHandle;
+use Path::Tiny;
 
 use lib "$ENV{'LINTIAN_ROOT'}/lib/";
+
 use Lintian::Collect;
-use Lintian::Command qw(spawn reap);
-use Lintian::Util qw(internal_error rstrip);
+use Lintian::Util qw(internal_error rstrip gzip);
+
+use constant EMPTY => q{};
+use constant NEWLINE => qq{\n};
+use constant SPACE => q{ };
+use constant DASH => q{-};
 
 sub collect {
     my ($pkg, $type, $dir) = @_;
+
     my $info = Lintian::Collect->new($pkg, $type, $dir);
 
-    unless (-d "$dir/unpacked/") {
-        internal_error('java-info called with the wrong dir argument');
-    }
+    my $unpackedpath = "$dir/unpacked/";
+    die "Directory with unpacked data not found in java-info: $unpackedpath"
+      unless -d $unpackedpath;
+    chdir($unpackedpath);
 
-    if (-f "$dir/java-info.gz") {
-        unlink("$dir/java-info.gz");
-    }
-
-    # We lazily start the gzip process to avoid creating the java-info.gz
-    # file when there are no jar files in the package.
-    my %opts;
-    my $open_java_info = sub {
-        %opts = (
-            pipe_in => FileHandle->new,
-            out => "$dir/java-info.gz",
-            fail => 'error'
-        );
-        spawn(\%opts, ['gzip', '-9c']);
-        $opts{pipe_in}->blocking(1);
-    };
-    my $errorhandler = sub {
-        my ($err) = @_;
-        $err =~ s/\r?\n/ /g;
-        rstrip($err);
-        print {$opts{pipe_in}} "-- ERROR: $err\n";
-    };
-
-    chdir("$dir/unpacked");
-
-    # Without this Archive::Zip will emit errors to standard error for
-    # faulty zip files - but that is not what we want.  AFAICT, it is
-    # the only way to get a textual error as well, so (ab)use it for
-    # this purpose while we are at it.
-    my $oldhandler = Archive::Zip::setErrorHandler($errorhandler);
-
-  FILE:
+    my @lines;
     foreach my $file ($info->sorted_index) {
-        next unless $file->is_file;
+
+        next
+          unless $file->is_file;
+
         my $filename = $file->name;
 
         # Wheezy's version of file calls "jar files" for "Zip archive".
@@ -87,70 +68,109 @@ sub collect {
                    | Zip [ ] archive
                    | JAR /xo;
 
-        if ($filename =~ m#\S+\.jar$#i) {
-            my $manifest;
-            my $azip = Archive::Zip->new;
+        push(@lines, parse_jar($filename))
+          if $filename =~ m#\S+\.jar$#i;
+    }
 
-            $open_java_info->() unless %opts;
-            # This script needs unzip, there's no way around.
-            print {$opts{pipe_in}} "-- $filename\n";
+    my $uncompressed = EMPTY;
+    $uncompressed .= $_ . NEWLINE for @lines;
 
-            $azip->read($filename) == AZ_OK or next FILE;
+    return
+      unless length $uncompressed;
 
-            # First, the file list:
-            foreach my $member ($azip->members) {
-                my $name = $member->fileName;
-                my $jversion;
-                next if $member->isDirectory;
-                $manifest = $member if $name =~ m@^META-INF/MANIFEST.MF$@oi;
-                if ($name =~ m/\.class$/o) {
-                    # Collect the Major version of the class file.
-                    my ($contents, $zerr) = $member->contents;
-                    next FILE unless $zerr == AZ_OK;
+    gzip($uncompressed, "$dir/java-info.gz");
 
-                    # Ensure we can read at least 8 bytes for the unpack.
-                    next if length($contents) < 8;
+    return;
+}
 
-                    # translation of the unpack
-                    #  NN NN NN NN, nn nn, nn nn   - bytes read
-                    #     $magic  , __ __, $major  - variables
-                    my ($magic, undef, $major) = unpack('Nnn', $contents);
-                    $jversion = $major if $magic == 0xCAFEBABE;
-                }
-                $jversion //= '-';
-                print {$opts{pipe_in}} $name, ": $jversion\n";
+sub parse_jar {
+    my ($path) = @_;
+
+    my @lines;
+
+    # This script needs unzip, there's no way around.
+    push(@lines, "-- $path");
+
+    # Without this Archive::Zip will emit errors to standard error for
+    # faulty zip files - but that is not what we want.  AFAICT, it is
+    # the only way to get a textual error as well, so (ab)use it for
+    # this purpose while we are at it.
+    my $errorhandler = sub {
+        my ($err) = @_;
+        $err =~ s/\r?\n/ /g;
+        rstrip($err);
+        push(@lines, "-- ERROR: $err");
+    };
+    my $oldhandler = Archive::Zip::setErrorHandler($errorhandler);
+
+    my $azip = Archive::Zip->new;
+    if($azip->read($path) == AZ_OK) {
+
+        # save manifest for the end
+        my $manifest;
+
+        # file list comes first
+        foreach my $member ($azip->members) {
+            my $name = $member->fileName;
+
+            next
+              if $member->isDirectory;
+
+            # store for later processing
+            $manifest = $member
+              if $name =~ m@^META-INF/MANIFEST.MF$@oi;
+
+            # add version if we can find it
+            my $jversion;
+            if ($name =~ m/\.class$/o) {
+                # Collect the Major version of the class file.
+                my ($contents, $zerr) = $member->contents;
+
+                last
+                  unless $zerr == AZ_OK;
+
+                # Ensure we can read at least 8 bytes for the unpack.
+                next
+                  unless length $contents >= 8;
+
+                # translation of the unpack
+                #  NN NN NN NN, nn nn, nn nn   - bytes read
+                #     $magic  , __ __, $major  - variables
+                my ($magic, undef, $major) = unpack('Nnn', $contents);
+                $jversion = $major
+                  if $magic == 0xCAFEBABE;
             }
+            push(@lines, "$name: " . ($jversion // DASH));
+        }
 
-            if ($manifest) {
-                print {$opts{pipe_in}} "-- MANIFEST: $filename\n";
+        if ($manifest) {
+            push(@lines, "-- MANIFEST: $path");
 
-                my ($contents, $zerr) = $manifest->contents;
-                next FILE unless $zerr == AZ_OK;
+            my ($contents, $zerr) = $manifest->contents;
+
+            if ($zerr == AZ_OK) {
+                my $partial = EMPTY;
                 my $first = 1;
-                foreach my $line (split m/\n/, $contents) {
+                my @list = split(NEWLINE, $contents);
+                foreach my $line (@list) {
+
+                    # remove DOS type line feeds
                     $line =~ s/\r//go;
+
                     if ($line =~ m/^(\S+:)\s*(.*)/o) {
-                        print {$opts{pipe_in}} "\n" unless $first;
-                        $first = 0;
-                        print {$opts{pipe_in}} "  $1 $2";
+                        push(@lines, SPACE . SPACE . "$1 $2");
                     }
-                    if ($line =~ m/^ /o) {
-                        print {$opts{pipe_in}} substr $line, 1;
+                    if ($line =~ m/^ (.*)/o) {
+                        push(@lines, $1);
                     }
                 }
-                print {$opts{pipe_in}} "\n" unless $first;
             }
         }
     }
 
     Archive::Zip::setErrorHandler($oldhandler);
 
-    if (%opts) {
-        close($opts{pipe_in});
-        reap(\%opts);
-    }
-
-    return;
+    return @lines;
 }
 
 collect(@ARGV) unless caller;
