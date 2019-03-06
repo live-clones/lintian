@@ -23,15 +23,14 @@ use strict;
 use warnings;
 use autodie;
 
-use Capture::Tiny qw(capture_merged);
+use Capture::Tiny qw(capture_merged capture_stderr);
 use Cwd qw(realpath);
 use File::Temp();
 use Try::Tiny;
 
-use Lintian::Command qw(spawn);
 use Lintian::Output qw(msg);
 use Lintian::Tags qw(tag);
-use Lintian::Util qw(clean_env copy_dir run_cmd);
+use Lintian::Util qw(copy_dir clean_env);
 
 use constant NEWLINE  =>  qq{\n};
 
@@ -167,22 +166,6 @@ sub run {
         my $test_pot = "$tempdir/test.pot";
         my $tempdir_templates = "${abs_tempdir}/templates";
         my $d_templates = $debian_dir->resolve_path('templates');
-        my %msgcmp_opts = (
-            'out' => '/dev/null',
-            'err' => '/dev/null',
-            'fail' => 'never',
-        );
-        my @msgcmp = ('msgcmp', '--use-untranslated');
-        my %intltool_opts = (
-            'update-env-vars' => {
-                'INTLTOOL_EXTRACT' =>
-                  '/usr/share/intltool-debian/intltool-extract',
-                # safety of $debian_po is implied by us having
-                # accessed two of its children by now.
-                'srcdir' => $debian_po_dir->fs_path,
-            },
-            'chdir' => $tempdir,
-        );
 
         # Create our extra level
         mkdir($tempdir);
@@ -191,20 +174,34 @@ sub run {
         copy_dir($d_templates->fs_path, $tempdir_templates)
           if $d_templates;
 
-        # Generate a "test.pot" (in a tempdir)
-
         my $error;
-        my ($output) = capture_merged {
+        my %save = %ENV;
+        my $cwd = Cwd::getcwd;
+        my $output = capture_merged {
             try {
-                run_cmd(
-                    \%intltool_opts,
+                $ENV{INTLTOOL_EXTRACT}
+                  = '/usr/share/intltool-debian/intltool-extract';
+                # use of $debian_po is safe; we accessed two children by now.
+                $ENV{srcdir} = $debian_po_dir->fs_path;
 
+                chdir($tempdir);
+
+                # generate a "test.pot" in a tempdir
+                my @intltool = (
                     '/usr/share/intltool-debian/intltool-update',
                     '--gettext-package=test','--pot'
                 );
+                system(@intltool) == 0
+                  or die "system @intltool failed: $?";
             }catch {
                 # catch any error
                 $error = $_;
+            }finally {
+                # restore environment
+                %ENV = %save;
+
+                # restore working directory
+                chdir($cwd);
             };
         };
 
@@ -217,13 +214,33 @@ sub run {
             return;
         }
 
-        # Compare our "test.pot" with the existing "templates.pot"
-        (
-            spawn(
-                \%msgcmp_opts,[@msgcmp, $test_pot, $templ_pot_path->fs_path])
-              and spawn(
-                \%msgcmp_opts,[@msgcmp, $templ_pot_path->fs_path, $test_pot])
-        ) or tag 'newer-debconf-templates';
+        # throw away output on the following commands
+        $error = undef;
+        $output = capture_merged {
+            try {
+                # compare our "test.pot" with the existing "templates.pot"
+                my @testleft = (
+                    'msgcmp', '--use-untranslated',
+                    $test_pot, $templ_pot_path->fs_path
+                );
+                system(@testleft) == 0
+                  or die "system @testleft failed: $?";
+
+                # is this not equivalent to the previous command? - FL
+                my @testright = (
+                    'msgcmp', '--use-untranslated',
+                    $templ_pot_path->fs_path, $test_pot
+                );
+                system(@testright) == 0
+                  or die "system @testright failed: $?";
+            }catch {
+                # catch any error
+                $error = $_;
+            };
+        };
+
+        tag 'newer-debconf-templates'
+          if length $error;
     }
 
     return unless $debian_po_dir;
@@ -256,16 +273,30 @@ sub run {
         }
         tag 'unknown-encoding-in-po-file', $po_path
           unless length($charset);
-        my $stats;
-        my %opts = (
-            'child_before_exec' => sub {
+
+        my $error;
+        my %save = %ENV;
+        my $stats = capture_stderr {
+            try {
                 clean_env(1);
-            },
-            'err' => \$stats,
-        );
-        spawn(\%opts,
-            ['msgfmt', '-o', '/dev/null', '--statistics', $po_path->fs_path])
-          or tag 'invalid-po-file', $po_path;
+                my @msgfmt = (
+                    'msgfmt', '-o', '/dev/null', '--statistics',
+                    $po_path->fs_path
+                );
+                system(@msgfmt) == 0
+                  or die "system @msgfmt failed: $?";
+            }catch {
+                # catch any error
+                $error = $_;
+            }finally {
+                # restore environment
+                %ENV = %save;
+            };
+        };
+
+        tag 'invalid-po-file', $po_path
+          if length $error;
+
         if (!$full_translation && $stats =~ m/^\w+ \w+ \w+\.$/) {
             $full_translation = 1;
         }
