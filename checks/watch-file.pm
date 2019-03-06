@@ -62,7 +62,9 @@ sub run {
     my $fd = $wfile->open;
     local $_;
     while (<$fd>) {
-        $template = 1 if m/^\s*\#\s*Example watch control file for uscan/io;
+        $template = $.
+          if m/^\s*\#\s*Example watch control file for uscan/io
+          or m{<project>};
         next if /^\s*\#/;
         next if /^\s*$/;
         s/^\s*//;
@@ -188,7 +190,8 @@ sub run {
     }
     close($fd);
 
-    tag 'debian-watch-contains-dh_make-template' if ($template);
+    tag 'debian-watch-contains-dh_make-template', "(line $template)"
+      if $template;
     tag 'debian-watch-does-not-check-gpg-signature'
       unless ($withgpgverification);
 
