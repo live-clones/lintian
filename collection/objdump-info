@@ -2,10 +2,11 @@
 # objdump-info -- lintian collection script
 
 # The original shell script version of this script is
-# Copyright (C) 1998 Christian Schwarz
+# Copyright © 1998 Christian Schwarz
 #
 # This version, including support for etch's binutils, is
-# Copyright (C) 2008 Adam D. Barratt
+# Copyright © 2008 Adam D. Barratt
+# Copyright © 2019 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -32,11 +33,15 @@ use warnings;
 use autodie;
 
 use FileHandle;
+use IO::Async::Loop;
+use Path::Tiny;
 
 use lib "$ENV{'LINTIAN_ROOT'}/lib/";
+
 use Lintian::Collect;
-use Lintian::Command qw(spawn reap);
-use Lintian::Util qw(locate_helper_tool);
+use Lintian::Util qw(locate_helper_tool gzip safe_qx);
+
+use constant EMPTY => q{};
 
 my $helper = locate_helper_tool('coll/objdump-info-helper');
 
@@ -44,41 +49,26 @@ sub collect {
     my ($pkg, $type, $dir) = @_;
     my $info = Lintian::Collect->new($pkg, $type, $dir);
 
-    if (-e "$dir/objdump-info") {
-        unlink("$dir/objdump-info");
-    }
-
-    if (-e "$dir/objdump-info.gz") {
-        unlink("$dir/objdump-info.gz");
-    }
-
     chdir("$dir/unpacked");
 
-    my %opts = (
-        pipe_in => FileHandle->new,
-        out => "$dir/objdump-info.gz",
-        fail => 'error'
-    );
-    spawn(\%opts, ['xargs', '-0r', $helper], '|', ['gzip', '-9nc']);
-    $opts{pipe_in}->blocking(1);
+    my $uncompressed;
+    foreach my $path ($info->sorted_index) {
+        next if not $path->is_file;
 
-    foreach my $bin ($info->sorted_index) {
-        next if not $bin->is_file;
-        my $fname = $bin->name;
-        my $finfo = $info->file_info($fname);
-        my $check = 0;
+        my $name = $path->name;
+        my $info = $info->file_info($name);
 
-        if ($finfo =~ m/\bELF\b/ or $finfo =~ m/\bcurrent ar archive\b/) {
-            $check = 1;
-        } elsif ($finfo =~ m/\bcurrent ar archive\b/) {
-            # Probably a static library
-            $check = 1 if $fname =~ m/\.a$/;
-        }
-        printf {$opts{pipe_in}} "%s\0", $fname if $check;
+        # must be elf or static library
+        next
+          unless $info =~ m/\bELF\b/
+          || ($info =~ m/\bcurrent ar archive\b/ && $name =~ m/\.a$/);
+
+        my $output = safe_qx($helper, $name);
+        $uncompressed .= $output;
     }
 
-    close($opts{pipe_in});
-    reap(\%opts);
+    # write even if empty; binaries check depends on it
+    gzip($uncompressed // EMPTY, "$dir/objdump-info.gz");
 
     return;
 }
