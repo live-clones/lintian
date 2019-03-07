@@ -1,7 +1,8 @@
 #!/usr/bin/perl -w
 # file-info -- lintian collection script
 
-# Copyright (C) 1998 Richard Braakman
+# Copyright © 1998 Richard Braakman
+# Copyright © 2019 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -27,47 +28,161 @@ use strict;
 use warnings;
 use autodie;
 
-use FileHandle;
+use IO::Async::Loop;
+use IO::Async::Process;
+use Path::Tiny;
+use Try::Tiny;
+
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
+
 use Lintian::Collect;
-use Lintian::Command qw(spawn reap);
 use Lintian::Util qw(locate_helper_tool);
 
-my $helper = locate_helper_tool('coll/file-info-helper');
+use constant EMPTY => q{};
+use constant COLON => q{:};
+use constant NEWLINE => qq{\n};
 
 sub collect {
     my ($pkg, $type, $dir) = @_;
     my $info = Lintian::Collect->new($pkg, $type, $dir);
 
-    my $outfile = "$dir/file-info.gz";
-
-    if (-e $outfile) {
-        unlink($outfile);
-    }
-
     chdir("$dir/unpacked");
 
-    # We ignore failures from file because sometimes file returns a
-    # non-zero exit status when it can't parse a file.  So far, the
-    # resulting output still appears to be usable (although will
-    # contain "ERROR" strings, which Lintian doesn't care about), and
-    # the only problem was the exit status.
-    my %opts = (
-        pipe_in => FileHandle->new,
-        out => $outfile,
-        fail => 'never'
-    );
-    spawn(\%opts,['xargs', '-0r', 'file', '-NF', '', '--print0', '--'],
-        '|', [$helper], '|', ['gzip', '-9nc']);
-    $opts{pipe_in}->blocking(1);
+    my $loop = IO::Async::Loop->new;
 
-    foreach my $file ($info->sorted_index) {
-        next unless $file->is_file;
-        printf {$opts{pipe_in}} "%s\0", $file;
+    my @generatecommand = (
+        'xargs', '--null','--no-run-if-empty', 'file',
+        '--no-pad', '--separator',EMPTY, '--print0','--'
+    );
+    my $generatedone = $loop->new_future;
+
+    my $generate = IO::Async::Process->new(
+        command => [@generatecommand],
+        stdin => { via => 'pipe_write' },
+        stdout => { via => 'pipe_read' },
+        on_finish => sub {
+            # ignore failures; file returns non-zero on parse errors
+            # output then contains "ERROR" messages but is still usable
+
+            $generatedone->done('Done with @generatecommand');
+            return;
+        });
+
+    my $helperpath = locate_helper_tool('coll/file-info-helper');
+    my $helperdone = $loop->new_future;
+    my $helpererrors;
+
+    my $helper = IO::Async::Process->new(
+        command => $helperpath,
+        stdin => { via => 'pipe_write' },
+        stdout => { via => 'pipe_read' },
+        stderr => { into => \$helpererrors },
+        on_finish => sub {
+            my ($self, $exitcode) = @_;
+            my $status = ($exitcode >> 8);
+
+            if ($status) {
+                my $message = "Command $helperpath exited with status $status";
+                $message .= COLON . NEWLINE . $helpererrors
+                  if length $helpererrors;
+                $helperdone->fail($message);
+                return;
+            }
+
+            $helperdone->done('Done with $helperpath');
+            return;
+        });
+
+    my @compresscommand = ('gzip', '--best', '--no-name', '--stdout');
+    my $compressdone = $loop->new_future;
+    my $compresserrors;
+
+    my $compress = IO::Async::Process->new(
+        command => [@compresscommand],
+        stdin => { via => 'pipe_write' },
+        stdout => { via => 'pipe_read' },
+        stderr => { into => \$compresserrors },
+        on_finish => sub {
+            my ($self, $exitcode) = @_;
+            my $status = ($exitcode >> 8);
+
+            if ($status) {
+                my $message
+                  = "Command @compresscommand exited with status $status";
+                $message .= COLON . NEWLINE . $compresserrors
+                  if length $compresserrors;
+                $compressdone->fail($message);
+                return;
+            }
+
+            $compressdone->done('Done with @compresscommand');
+            return;
+        });
+
+    $generate->stdout->configure(
+        on_read => sub {
+            my ($stream, $buffref, $eof) = @_;
+
+            if (length $$buffref) {
+                $helper->stdin->write($$buffref);
+                $$buffref = EMPTY;
+            }
+
+            $helper->stdin->close_when_empty
+              if $eof;
+
+            return 0;
+        },
+    );
+
+    $helper->stdout->configure(
+        on_read => sub {
+            my ($stream, $buffref, $eof) = @_;
+
+            if (length $$buffref) {
+                $compress->stdin->write($$buffref);
+                $$buffref = EMPTY;
+            }
+
+            $compress->stdin->close_when_empty
+              if $eof;
+
+            return 0;
+        },
+    );
+
+    my $resultspath = "$dir/file-info.gz";
+    open(my $fh, '>', $resultspath)
+      or die "Could not open file '$resultspath': $!";
+
+    $compress->stdout->configure(
+        on_read => sub {
+            my ($stream, $buffref, $eof) = @_;
+
+            if (length $$buffref) {
+                print {$fh} $$buffref;
+                $$buffref = EMPTY;
+            }
+
+            close($fh)
+              if $eof;
+
+            return 0;
+        },
+    );
+
+    $loop->add($generate);
+    $loop->add($helper);
+    $loop->add($compress);
+
+    foreach my $path ($info->sorted_index) {
+        next unless $path->is_file;
+
+        $generate->stdin->write("$path\0");
     }
 
-    close($opts{pipe_in});
-    reap(\%opts);
+    $generate->stdin->close_when_empty;
+    Future->needs_all($generatedone, $helperdone, $compressdone)->get;
 
     return;
 }
