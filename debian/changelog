@@ -1,8 +1,18 @@
-lintian (2.9.1+git) UNRELEASED; urgency=medium
+lintian (2.10.0) unstable; urgency=medium
 
-  * WIP
+  [ Chris Lamb ]
+  * Check for placeholder "<project>" strings in debian/watch files as it
+    can resut in uscan(1) generating a file with shell metacharacters.
+    (Closes: #923589)
+  * Add "itialize" to the list of "spelling-error-in-binary" exceptions.
+    (Closes: #923725)
+  * Use less-clunky "for entries that are too short" in the long
+    description of debian-changelog-line-too-short.
 
- -- Chris Lamb <lamby@debian.org>  Wed, 27 Feb 2019 08:39:58 +0100
+  [ Paul Wise ]
+  * Add several spelling corrections.
+
+ -- Chris Lamb <lamby@debian.org>  Fri, 08 Mar 2019 17:26:37 +0000
 
 lintian (2.9.1) unstable; urgency=medium
 
