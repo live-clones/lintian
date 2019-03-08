@@ -378,8 +378,8 @@ Info: The given line of the latest changelog entry appears to contain a
     <tt>apt-listchanges(1)</tt>
   * The information in <tt>debian/changelog</tt> is permanent.
  .
- Examples for too short entries include "dh 11" or simply "R³" - these
- could be expanded to, for example:
+ Examples for entries that are too short include "dh 11" or simply
+ "R³" - these could be expanded to, for example:
  .
   * Switch to debhelper compat 11.
   * Set Rules-Requires-Root: no.
