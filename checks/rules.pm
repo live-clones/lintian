@@ -70,7 +70,10 @@ our @GLOBAL_CLEAN_DEPENDS = (
           qr'^include\s+/usr/share/R/debian/r-cran\.mk'
     ],
     [dpatch => qr'^include\s+/usr/share/cdbs/1/rules/dpatch\.mk'],
-    ['gnome-pkg-tools' => qr'^include\s+/usr/share/gnome-pkg-tools/'],
+    [
+        'gnome-pkg-tools | dh-sequence-gnome' =>
+          qr'^include\s+/usr/share/gnome-pkg-tools/'
+    ],
     [quilt => qr'^include\s+/usr/share/cdbs/1/rules/patchsys-quilt\.mk'],
     [dpatch => qr'^include\s+/usr/share/dpatch/'],
     ['mozilla-devscripts' => qr'^include\s+/usr/share/mozilla-devscripts/'],
