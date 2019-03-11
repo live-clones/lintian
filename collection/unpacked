@@ -2,7 +2,8 @@
 # unpacked -- lintian collector/unpack script
 #
 
-# Copyright (C) 1998 Christian Schwarz and Richard Braakman
+# Copyright © 1998 Christian Schwarz and Richard Braakman
+# Copyright © 2019 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -24,11 +25,17 @@ package Lintian::coll::unpacked;
 
 no lib '.';
 
-use Path::Tiny;
-
 use strict;
 use warnings;
 use autodie;
+
+use IO::Async::Loop;
+use IO::Async::Process;
+use Path::Tiny;
+
+use lib "$ENV{'LINTIAN_ROOT'}/lib";
+
+use Lintian::Util qw(sort_file_index gzip safe_qx);
 
 # Read up to 40kB at the time.  This happens to be 4096 "tar records"
 # (with a block-size of 512 and a block factor of 20, which appears to
@@ -37,196 +44,265 @@ use autodie;
 # record.
 use constant READ_SIZE => 4096 * 1024 * 10;
 
-use lib "$ENV{'LINTIAN_ROOT'}/lib";
-use Lintian::Command qw(spawn reap);
-use Lintian::Util qw(check_path internal_error run_cmd pipe_tee);
+use constant SPACE => q{ };
+use constant EMPTY => q{};
+use constant COLON => q{:};
+use constant NEWLINE => qq{\n};
 
 sub collect {
     my ($pkg, $type, $dir) = @_;
 
-    my $unpackeddir = "$dir/unpacked/";
-    path($unpackeddir)->remove_tree
-      if -d $unpackeddir;
+    my $unpackedpath = "$dir/unpacked/";
+    path($unpackedpath)->remove_tree
+      if -d $unpackedpath;
 
     for my $file (qw(index index.gz index-errors unpacked-errors)) {
         unlink("$dir/$file") if -e "$dir/$file";
     }
-    # If we are asked to only remove the files stop right here
-    if ($type =~ m/^remove-/) {
-        return;
-    }
+
+    # stop here if we are only asked to remove the files
+    return
+      if $type =~ m/^remove-/;
 
     if ($type eq 'source') {
-        if (can_use_dpkg_source()) {
-            # Ignore STDOUT of the child process because older versions of
-            # dpkg-source print things out even with -q.
-            my $opts = { out => '/dev/null', err => "$dir/unpacked-errors" };
-            my @args = ('-q', '--no-check');
-            print "N: Using dpkg-source to unpack $pkg\n"
-              if $ENV{'LINTIAN_DEBUG'};
-            unless (
-                spawn(
-                    $opts,
-                    ['dpkg-source', @args, '-x', "$dir/dsc", "$dir/unpacked"])
-            ) {
-                dump_errors("$dir/unpacked-errors");
-                internal_error('dpkg-source -x failed with status ',
-                    $opts->{harness}->result);
-            }
-        } else {
-            print "N: Using libdpkg-perl to unpack $pkg\n"
-              if $ENV{'LINTIAN_DEBUG'};
-            libdpkg_unpack_dsc("$dir/dsc", "$dir/unpacked");
-        }
+
+        print "N: Using dpkg-source to unpack $pkg\n"
+          if $ENV{'LINTIAN_DEBUG'};
+
+        # Ignore STDOUT of the child process because older versions of
+        # dpkg-source print things out even with -q.
+        my $loop = IO::Async::Loop->new;
+        my $future = $loop->new_future;
+        my $dpkgerror;
+
+        $loop->open_process(
+            command => [
+                'dpkg-source', '-q',
+                '--no-check', '-x',
+                "$dir/dsc", "$dir/unpacked"
+            ],
+            stderr => { into => \$dpkgerror },
+            on_finish => sub {
+                my ($self, $exitcode) = @_;
+                my $status = ($exitcode >> 8);
+
+                if ($status) {
+                    my $message = "Non-zero status $status from dpkg-source";
+                    $message .= COLON . NEWLINE . $dpkgerror
+                      if length $dpkgerror;
+                    $future->fail($message);
+                    return;
+                }
+
+                $future->done('Done with dpkg-deb');
+                return;
+            });
+
+        # awaits, and dies with message on failure
+        $future->get;
+
+        path("$dir/unpacked-errors")->append($dpkgerror // EMPTY);
 
         # chdir for index_src
         chdir("$dir/unpacked");
-        spawn(
-            { fail => 'error', out => "$dir/index.gz" },
-            [
-                'find', '(',  '-type', 'l',
-                # If symlink
-                '-printf', '%M 0/0 %s %AY-%Am-%Ad %AH:%AM %p -> %l\0',
-                '-true',             # elif dir [needs trailing slash]
-                ')', '-o', '(',  '-type', 'd',
-                '-printf', '%M 0/0 %s %AY-%Am-%Ad %AH:%AM %p/\0', '-true',
-                # else (not dir and not symlink)
-                ')', '-o', '-printf', '%M 0/0 %s %AY-%Am-%Ad %AH:%AM %p\0'
-            ],
-            # Link targets can have newlines in them.  A lesson learned by
-            # clasp (#765311) - We must also escape backslashes.  That would
-            # be the \x59 values (used to avoid a mass of backslashes).
-            '|',
-            ['perl', '-l', '-0', '-pe', 's/\x5c/\x5c\x5c/g; s/\n/\\\n/g;'],
-            # Sort and compress
-            '|',
-            ['sort', '-k', '6'],
-            '|',
-            ['gzip', '-9nc']);
+        my $output = safe_qx(
+            'find', '(',  '-type', 'l',
+            # If symlink
+            '-printf', '%M 0/0 %s %AY-%Am-%Ad %AH:%AM %p -> %l\0',
+            '-true',             # elif dir [needs trailing slash]
+            ')', '-o', '(',  '-type', 'd',
+            '-printf', '%M 0/0 %s %AY-%Am-%Ad %AH:%AM %p/\0', '-true',
+            # else (not dir and not symlink)
+            ')', '-o', '-printf', '%M 0/0 %s %AY-%Am-%Ad %AH:%AM %p\0'
+        );
+
+        # Link targets can have newlines in them.  A lesson learned by
+        # clasp (#765311) - We must also escape backslashes.  That would
+        # be the \x5c values (used to avoid a mass of backslashes).
+        $output =~ s/\x5c/\x5c\x5c/g;
+        $output =~ s/\n/\\\n/g;
+
+        my @unsorted = split(/\0/, $output);
+
+        # sorts according to LC_ALL=C
+        my @sorted
+          = sort { (split(SPACE, $a))[5] cmp(split(SPACE, $b))[5] } @unsorted;
+
+        my $uncompressed;
+        $uncompressed .= $_ . NEWLINE for @sorted;
+        gzip($uncompressed, "$dir/index.gz");
 
         # fix permissions
-        run_cmd('chmod', '-R', 'u+rwX,o+rX,o-w', "$dir/unpacked");
+        safe_qx('chmod', '-R', 'u+rwX,o+rX,o-w', "$dir/unpacked");
+
+        # remove error file if empty
+        unlink("$dir/unpacked-errors") if -z "$dir/unpacked-errors";
 
     } else {
+
+        # binary package
         mkdir("$dir/unpacked", 0777);
 
-        extract_and_index_deb($dir);
+        my $loop = IO::Async::Loop->new;
+
+        # get system tarball from deb
+        my $deberror;
+        my $dpkgdeb = $loop->new_future;
+        my $debprocess = IO::Async::Process->new(
+            command => ['dpkg-deb', '--fsys-tarfile', "$dir/deb"],
+            stdout => { via => 'pipe_read' },
+            stderr => { into => \$deberror },
+            on_finish => sub {
+                my ($self, $exitcode) = @_;
+                my $status = ($exitcode >> 8);
+
+                if ($status) {
+                    my $message
+                      = "Non-zero status $status from dpkg-deb for control";
+                    $message .= COLON . NEWLINE . $deberror
+                      if length $deberror;
+                    $dpkgdeb->fail($message);
+                    return;
+                }
+
+                $dpkgdeb->done('Done with dpkg-deb');
+                return;
+            });
+
+        # extract the tarball's contents
+        my $extracterror;
+        my $extractor = $loop->new_future;
+        my $extractprocess = IO::Async::Process->new(
+            command => [
+                'tar', '--no-same-owner', '--no-same-permissions',
+                '-mxf','-', '-C', "$dir/unpacked"
+            ],
+            stdin => { via => 'pipe_write' },
+            stderr => { into => \$extracterror },
+            on_finish => sub {
+                my ($self, $exitcode) = @_;
+                my $status = ($exitcode >> 8);
+
+                if ($status) {
+                    my $message = "Non-zero status $status from extract tar";
+                    $message .= COLON . NEWLINE . $extracterror
+                      if length $extracterror;
+                    $extractor->fail($message);
+                    return;
+                }
+
+                $extractor->done('Done with extract tar');
+                return;
+            });
+
+        # create index (named-owner)
+        my $named;
+        my $namederror;
+        my $namedindexer = $loop->new_future;
+        my $namedindexprocess = IO::Async::Process->new(
+            command => ['tar', '--utc', '--full-time', '-stvf', '-'],
+            stdin => { via => 'pipe_write' },
+            stdout => { into => \$named },
+            stderr => { into => \$namederror },
+            on_finish => sub {
+                my ($self, $exitcode) = @_;
+                my $status = ($exitcode >> 8);
+
+                if ($status) {
+                    my $message = "Non-zero status $status from index tar";
+                    $message .= COLON . NEWLINE . $namederror
+                      if length $namederror;
+                    $namedindexer->fail($message);
+                    return;
+                }
+
+                $namedindexer->done('Done with named index tar');
+                return;
+            });
+
+        # create index (numeric-owner)
+        my $numeric;
+        my $numericerror;
+        my $numericindexer = $loop->new_future;
+        my $numericindexprocess = IO::Async::Process->new(
+            command =>
+              ['tar', '--utc','--full-time', '--numeric-owner','-stvf','-'],
+            stdin => { via => 'pipe_write' },
+            stdout => { into => \$numeric },
+            stderr => { into => \$numericerror },
+            on_finish => sub {
+                my ($self, $exitcode) = @_;
+                my $status = ($exitcode >> 8);
+
+                if ($status) {
+                    my $message = "Non-zero status $status from index tar";
+                    $message .= COLON . NEWLINE . $numericerror
+                      if length $numericerror;
+                    $numericindexer->fail($message);
+                    return;
+                }
+
+                $numericindexer->done('Done with tar');
+                return;
+            });
+
+        $extractprocess->stdin->configure(write_len => READ_SIZE,);
+        $namedindexprocess->stdin->configure(write_len => READ_SIZE,);
+        $numericindexprocess->stdin->configure(write_len => READ_SIZE,);
+
+        $debprocess->stdout->configure(
+            read_len => READ_SIZE,
+            on_read => sub {
+                my ($stream, $buffref, $eof) = @_;
+
+                if (length $$buffref) {
+                    $extractprocess->stdin->write($$buffref);
+                    $namedindexprocess->stdin->write($$buffref);
+                    $numericindexprocess->stdin->write($$buffref);
+
+                    $$buffref = EMPTY;
+                }
+
+                if ($eof) {
+                    $extractprocess->stdin->close_when_empty;
+                    $namedindexprocess->stdin->close_when_empty;
+                    $numericindexprocess->stdin->close_when_empty;
+                }
+
+                return 0;
+            },
+        );
+
+        $loop->add($debprocess);
+        $loop->add($extractprocess);
+        $loop->add($namedindexprocess);
+        $loop->add($numericindexprocess);
+
+        my $composite = Future->needs_all($dpkgdeb, $extractor, $namedindexer,
+            $numericindexer);
+
+        # awaits, and dies on failure with message from failed constituent
+        $composite->get;
+
+        path("$dir/unpacked-errors")->append($deberror // EMPTY);
+        path("$dir/unpacked-errors")->append($extracterror // EMPTY);
+        path("$dir/index-errors")->append($namederror // EMPTY);
+
+        # sorts according to LC_ALL=C
+        $named = sort_file_index($named // EMPTY);
+        gzip($named, "$dir/index.gz");
+
+        # sorts according to LC_ALL=C
+        $numeric = sort_file_index($numeric // EMPTY);
+        gzip($numeric, "$dir/index-owner-id.gz");
+
+        # remove error files if empty
+        unlink("$dir/index-errors") if -z "$dir/index-errors";
+        unlink("$dir/unpacked-errors") if -z "$dir/unpacked-errors";
 
         # fix permissions
-        run_cmd('chmod', '-R', 'u+rwX,go-w', "$dir/unpacked");
+        safe_qx('chmod', '-R', 'u+rwX,go-w', "$dir/unpacked");
     }
-
-    # Remove the error file if it is empty
-    unlink("$dir/unpacked-errors") if -z "$dir/unpacked-errors";
-
-    return;
-}
-
-sub dump_errors {
-    my ($file) = @_;
-    open(my $fd, '<', $file);
-    while (my $line = <$fd>) {
-        print STDERR $line;
-    }
-    close($fd);
-    return;
-}
-
-sub libdpkg_unpack_dsc {
-    my ($dsc, $target) = @_;
-    my $opt = {'quiet' => 1};
-    require Dpkg::Source::Package;
-    open(STDOUT, '>', '/dev/null');
-    # Create the object that does everything
-    my $srcpkg = Dpkg::Source::Package->new(filename => $dsc, options => $opt);
-
-    $srcpkg->check_checksums;
-
-    # Unpack the source package (delegated to Dpkg::Source::Package::*)
-    $srcpkg->extract($target);
-    return 1;
-}
-
-sub can_use_dpkg_source{
-    my $test = $ENV{LINTIAN_TEST_FEATURE};
-    return 0 if defined $test && $test =~ m/unpack-libdpkg-perl/;
-    return check_path('dpkg-source');
-}
-
-sub extract_and_index_deb {
-    my ($dir) = @_;
-    my @sort_gzip = (['sort', '-k', '6'], '|', ['gzip', '-9nc']);
-    my (@jobs, @out_fds, $err);
-    open(my $tar_in, '-|', 'dpkg-deb', '--fsys-tarfile', "$dir/deb");
-
-    # Extraction
-    push(
-        @jobs,
-        {
-            'fail' => 'error',
-            '_pipeline' => [[
-                    'tar', '--no-same-owner', '--no-same-permissions', '-mxf',
-                    '-', '-C', "$dir/unpacked"
-                ]
-            ],
-            'pipe_in' => FileHandle->new,
-            'err' => "$dir/unpacked-errors",
-        });
-    # Index (named-owner)
-    push(
-        @jobs,
-        {
-            '_pipeline' => [
-                ['tar', '--utc', '--full-time', '-stvf', '-'], '|',
-                @sort_gzip, '&'
-            ],
-            'fail' => 'error',
-            'pipe_in' => FileHandle->new,
-            'out' => "$dir/index.gz",
-            'err' => "$dir/index-errors",
-        });
-    # Index (numeric-owner)
-    push(
-        @jobs,
-        {
-            '_pipeline' =>[[
-                    'tar', '--utc', '--full-time', '--numeric-owner', '-stvf',
-                    '-'
-                ],
-                '|',
-                @sort_gzip,
-                '&'
-            ],
-            'fail' => 'error',
-            'pipe_in' => FileHandle->new,
-            'out' => "$dir/index-owner-id.gz",
-            'err' => '/dev/null'
-        });
-    for my $job (@jobs) {
-        spawn($job, @{$job->{'_pipeline'}});
-        my $out_fd = $job->{'pipe_in'};
-        $out_fd->blocking(1);
-        push(@out_fds, $out_fd);
-    }
-
-    eval {pipe_tee($tar_in, \@out_fds, { 'chunk_size' => READ_SIZE});};
-    $err = $@;
-    eval {
-        close($tar_in);
-        for my $fd (@out_fds) {
-            close($fd);
-        }
-        reap(@jobs);
-    };
-    $err ||= $@;
-    if ($err) {
-        eval {dump_errors("$dir/unpack-errors");};
-        die $err;
-    }
-
-    # Remove error files, if they are empty
-    unlink("$dir/index-errors") if -z "$dir/index-errors";
-    unlink("$dir/unpack-errors") if -z "$dir/unpack-errors";
 
     return;
 }
