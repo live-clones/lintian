@@ -5,10 +5,16 @@
 # Please keep this sorted.
 apache2||dh-apache2 | apache2-dev
 autoreconf||dh-autoreconf | debhelper (>= 9.20160403~) | debhelper-compat
+cli=cli-common-dev | dh-sequence-cli
+dwz=debhelper | debhelper-compat | dh-sequence-dwz
+installinitramfs=debhelper | debhelper-compat | dh-sequence-installinitramfs
 gnome||gnome-pkg-tools | dh-sequence-gnome
 lv2config||lv2core
-python2||python:any | python-all:any | python-dev:any | python-all-dev:any | python2:any | python2-dev:any
+perl_dbi=libdbi-perl | dh-sequence-perl-dbi
+perl_imager=libimager-perl | dh-sequence-perl-imager
+pypy=dh-python | dh-sequence-pypy
+python2||python:any | python-all:any | python-dev:any | python-all-dev:any | python2:any | python2-dev:any | dh-sequence-python2
 python3||python3:any | python3-all:any | python3-dev:any | python3-all-dev:any | dh-sequence-python3
-scour||scour | python-scour
+scour||scour | python-scour | dh-sequence-scour
 sphinxdoc||python-sphinx | python3-sphinx
-systemd||debhelper (>= 9.20160709~) | debhelper-compat || dh-systemd
+systemd||debhelper (>= 9.20160709~) | debhelper-compat | dh-sequence-systemd || dh-systemd
