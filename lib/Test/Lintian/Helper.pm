@@ -54,13 +54,13 @@ BEGIN {
     );
 }
 
+use Capture::Tiny qw(capture);
 use Carp;
 use File::Spec::Functions qw(abs2rel rel2abs);
 use File::Path qw(remove_tree);
 use Path::Tiny;
 use POSIX qw(locale_h strftime);
 
-use Lintian::Command qw(safe_qx);
 use Lintian::Data;
 use Lintian::Deb822Parser qw(read_dpkg_control);
 
@@ -212,3 +212,8 @@ sub rfc822date {
 
 1;
 
+# Local Variables:
+# indent-tabs-mode: nil
+# cperl-indent-level: 4
+# End:
+# vim: syntax=perl sw=4 sts=4 sr et

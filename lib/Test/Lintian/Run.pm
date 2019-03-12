@@ -65,7 +65,6 @@ use Test::More;
 use Text::CSV;
 use Try::Tiny;
 
-use Lintian::Command qw(safe_qx);
 use Lintian::Profile;
 
 use Test::Lintian::ConfigFile qw(read_config);

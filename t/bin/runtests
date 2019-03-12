@@ -33,14 +33,15 @@ use warnings;
 use autodie;
 use v5.10;
 
+use Capture::Tiny qw(capture);
 use Cwd;
 use File::Basename;
 use File::Path qw(make_path);
 use File::Spec::Functions qw(abs2rel rel2abs splitpath splitdir);
 use File::stat;
 use Getopt::Long;
-use List::MoreUtils qw(uniq);
-use List::Util qw(max any);
+use List::MoreUtils qw(any uniq);
+use List::Util qw(max);
 use IO::Async::Function;
 use IO::Async::Loop;
 use Path::Tiny;
@@ -90,7 +91,6 @@ BEGIN {
 
 use lib "$ENV{'LINTIAN_TEST_ROOT'}/lib";
 
-use Lintian::Command qw(safe_qx);
 use Lintian::Internal::FrontendUtil qw(default_parallel);
 
 use Test::Lintian::Filter
@@ -98,6 +98,7 @@ use Test::Lintian::Filter
 use Test::Lintian::Helper
   qw(rfc822date cache_dpkg_architecture_values get_latest_policy get_recommended_debhelper_version);
 use Test::Lintian::Prepare qw(logged_prepare);
+use Test::Lintian::Run qw(logged_runner);
 use Test::ScriptAge qw(perl_modification_epoch our_modification_epoch);
 
 use constant SPACE => q{ };
@@ -190,7 +191,11 @@ $ENV{'LINTIAN_EPOCH'}
   = max(map { -e $_ ? stat($_)->mtime : time } @lintianfiles);
 say 'Lintian modified on '. rfc822date($ENV{'LINTIAN_EPOCH'});
 
-my $string = safe_qx($ENV{'LINTIAN_FRONTEND'}, '--version');
+my $string = capture {
+    my @command = ($ENV{'LINTIAN_FRONTEND'}, '--version');
+    system(@command) == 0
+      or die "system @command failed: $?";
+};
 chomp $string;
 my ($version) = $string =~ qr/^\S+\s+v(.+)$/;
 die 'Cannot get Lintian version' unless length $version;
