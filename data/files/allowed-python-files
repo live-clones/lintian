@@ -3,4 +3,5 @@
 
 \.egg-info$
 \.so$
+\.pth$
 \.py[ic]?$
