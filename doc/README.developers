@@ -108,14 +108,8 @@ Tag that was not suppressed and was triggered.
 
 The Laboratory is Lintian's private little play-ground.  When Lintian
 is asked to process a package, it will generally unpack (parts of) the
-package in the laboratory.  It comes in two variants, static or
-temporary.
-
-Temporary laboratories (as the name suggests) expire as soon as
-Lintian is done with its tasks.
-
-Static laboratories are generally used on lintian.d.o(-like) setups,
-where packages remain in a (semi-)unpacked state after processing.
+package in the laboratory. The laboratories  expire as soon as Lintian
+is done with them, unless the option '--keep-lab' was specified.
 
 Note that the laboratory is usually abbreviated to "Lab".
 

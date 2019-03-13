@@ -47,19 +47,14 @@ my @REQUIRED_PARAMETERS = qw(
   schedule-limit-groups
   state-dir
 );
-my %OPT = (
-    'use-permanent-lab' => 'guess',
-    'lintian-frontend'  => 'lintian',
-);
+my %OPT = ('lintian-frontend'  => 'lintian',);
 my %OPT_HASH = (
     'schedule-chunk-size=i'   => \$OPT{'schedule-chunk-size'},
     'schedule-limit-groups=i' => \$OPT{'schedule-limit-groups'},
     'state-dir=s'             => \$OPT{'state-dir'},
     'lintian-frontend=s'      => \$OPT{'lintian-frontend'},
     'lintian-log-dir=s'       => \$OPT{'lintian-log-dir'},
-    'lintian-lab=s'           => \$OPT{'lintian-lab'},
     'lintian-scratch-space=s' => \$OPT{'lintian-scratch-space'},
-    'use-permanent-lab!'      => \$OPT{'use-permanent-lab'},
     'help|h'                  => \&usage,
 );
 
@@ -90,18 +85,7 @@ sub check_parameters {
     }
     die("The argument for --schedule-limit-groups must be an > 0\n")
       if $OPT{'schedule-limit-groups'} < 1;
-    if ($OPT{'use-permanent-lab'} eq 'guess') {
-        $OPT{'use-permanent-lab'} = 0;
-        $OPT{'use-permanent-lab'} = 1 if $OPT{'lintian-lab'};
-    } elsif ($OPT{'use-permanent-lab'} and not $OPT{'lintian-lab'}) {
-        die(    'If --use-permanent-lab is given, then'
-              . " --lintian-lab must be given too\n");
-    } elsif (not $OPT{'use-permanent-lab'} and $OPT{'lintian-lab'}) {
-        warn(   'Ignoring --lintian-lab when explicit'
-              . " --no-use-permanent-lab is given\n");
-        warn("Perhaps you wanted --lintian-scratch-space <PATH> instead?\n");
-        delete($OPT{'lintian-lab'});
-    }
+
     return;
 }
 
@@ -117,9 +101,7 @@ sub prepare_lintian_environment_and_cmdline {
         "+${logs_dir}/lintian-perf.log",
     );
     $frontend = $OPT{'lintian-frontend'} if ($OPT{'lintian-frontend'});
-    if ($OPT{'use-permanent-lab'}) {
-        push(@args, '--lab', $OPT{'lintian-lab'});
-    }
+
     if ($eoa_marker_index > -1) {
         # Move known "non-parameters" and the "--" behind our arguments.
         # It is a misfeature, but at least it does not break
@@ -530,15 +512,11 @@ Usage: $me <args> -- <extra lintian args>
 
   --lintian-frontend PROG     Use PROG as frontend for lintian (defaults to "lintian")
   --lintian-log-dir DIR       Path to the harness log dir. [!]
-  --lintian-lab DIR           Use DIR as permanent lab (implies --use-permanent-lab).
-                              Ignored with --no-use-permanent-lab.
   --lintian-scratch-space DIR Use DIR for temporary files (notably temp labs)
   --schedule-chunk-size N     Run at most N groups in a given lintian run.
   --schedule-limit-groups N   Schedule at most N groups in total. [!]
   --state-dir DIR             Directory containing the state cache (must be
                               writable). [!]
-  --[no-]use-permanent-lab    Whether to use a permanent lab for lintian instead of
-                              throw away labs.
 
 Arguments marked with [!] are required for a successful run.
 EOF

@@ -36,10 +36,6 @@ use constant {
     # Lab format Version Number increased whenever incompatible changes
     # are done to the lab so that all packages are re-unpacked
     LAB_FORMAT      => 11,
-    # Constants to avoid semantic errors due to typos in the $lab->{'mode'}
-    # field values.
-    LAB_MODE_STATIC => 'static',
-    LAB_MODE_TEMP   => 'temporary',
 };
 
 # A private table of supported types.
@@ -58,6 +54,8 @@ use Lintian::Lab::Entry;
 use Lintian::Lab::Manifest;
 use Lintian::Util qw(get_dsc_info);
 
+use constant EMPTY => q{};
+
 =encoding utf8
 
 =head1 NAME
@@ -69,7 +67,7 @@ Lintian::Lab -- Interface to the Lintian Lab
  use Lintian::Lab;
  
  # Static lab
- my $lab = Lintian::Lab->new ('/var/lib/lintian/static-lab');
+ my $lab = Lintian::Lab->new;
 
  if (!$lab->exists) {
      $lab->create;
@@ -97,41 +95,24 @@ well as providing access to the entries.
 
 =over 4
 
-=item new ([DIR])
+=item new
 
-Creates a new Lab instance.  If DIR is defined it will be used as
-the path to the lab and the lab will be in static mode.  Otherwise the
-lab will be in temporary mode and will point to a temporary directory.
+Creates a new Lab instance.  The lab will be temporary and will point
+to a temporary directory.
 
 =cut
 
 sub new {
-    my ($class, $dir) = @_;
-    my $absdir;
-    my $mode = LAB_MODE_TEMP;
+    my ($class) = @_;
     my $dok = 1;
-    if (defined $dir) {
-        $mode = LAB_MODE_STATIC;
-        $absdir = Cwd::abs_path($dir);
-        if (!$absdir) {
-            if ($dir =~ m,^/,o) {
-                $absdir = $dir;
-            } else {
-                $absdir = Cwd::cwd . '/' . $dir;
-            }
-            $dok = 0;
-        }
-    } else {
-        $absdir = ''; #Ensure it is defined.
-    }
+
     my $state = {'GROUP' => Lintian::Lab::Manifest->new('GROUP'),};
     my $self = {
         # Must be absolute (frontend/lintian depends on it)
         #  - also $self->dir promises this
         #  - it may be the empty string (see $self->dir)
-        'dir'         => $absdir,
+        'dir'         => EMPTY,
         'state'       => $state,
-        'mode'        => $mode,
         'is_open'     => 0,
         'keep-lab'    => 0,
         'lab-info'    => {},
@@ -146,15 +127,6 @@ sub new {
 =head1 INSTANCE METHODS
 
 =over 4
-
-=item dir
-
-Returns the absolute path to the base of the lab.
-
-Note: This may return the empty string if either the lab has been
-deleted or this is a temporary lab that has not been created yet.  In
-the latter case, L</create> or L</open> should be run to get a
-non-empty value from this method.
 
 =item is_open
 
@@ -542,7 +514,7 @@ sub generate_diffs {
     my ($self, @lists) = @_;
     my $labdir = $self->dir;
     my @diffs;
-    croak "$labdir is not a valid lab (run lintian --setup-lab first?).\n"
+    croak "$labdir is not a valid lab.\n"
       unless $self->is_open;
     foreach my $list (@lists) {
         my $type = $list->type;
@@ -634,9 +606,8 @@ sub repair {
 
 =item create ([OPTS])
 
-Creates a new lab.  It will create L</dir> if it does not exist.
-It will also create a basic empty lab.  If this is a temporary
-lab, this method will also setup the temporary dir for the lab.
+Creates a basic empty lab. Will also set up the temporary dir for
+the lab.
 
 The lab will I<not> be opened by this method.  This should be done
 afterwards by invoking the L</open> method.
@@ -660,19 +631,12 @@ subject to umask settings.
 
 =back
 
-Note: This will not create parent directories of L</dir> and will
-croak if these does not exist.
-
-Note: This may update the value of L</dir> as resolving the path
-requires it to exist.
-
 Note: This does nothing if the lab appears to already exists.
 
 =cut
 
 sub create {
     my ($self, $opts) = @_;
-    my $dir = $self->dir;
     my $mid = 0;
     my $mode = 0777;
 
@@ -680,38 +644,19 @@ sub create {
 
     $opts = {} unless $opts;
     $mode = $opts->{'mode'} if exists $opts->{'mode'};
-    if (not $dir or $self->is_temp) {
-        if ($self->is_temp) {
-            my $keep = $opts->{'keep-lab'}//0;
-            my %topts = ('CLEANUP' => !$keep, 'TMPDIR' => 1);
-            my $t = tempdir('temp-lintian-lab-XXXXXXXXXX', %topts);
-            $dir = Cwd::abs_path($t);
-            croak "Could not resolve $t: $!" unless $dir;
-            $self->{'dir'} = $dir;
-            $self->{'keep-lab'} = $keep;
-        } else {
-            # This should not be possible - but then again,
-            # code should not have any bugs either...
-            croak 'Lab path may not be empty for a static lab';
-        }
-    }
-    # Create the top dir if needed - note due to Lintian::Lab->new
-    # and the above tempdir creation code, we know that $dir is
-    # absolute.
-    croak "Cannot create $dir: $!" unless -d $dir or mkdir $dir, $mode;
 
-    if ($self->{'_correct_dir'}) {
-        # This happens if $dir has been created in this call.
-        # Until now we have been unable to fully resolve the path,
-        # so we try now.
-        my $absdir = Cwd::abs_path($dir);
-        croak "Cannot resolve $dir: $!" unless $absdir;
-        delete $self->{'_correct_dir'};
-        $dir = $absdir;
-        $self->{'dir'} = $absdir;
-    }
+    my $keep = $opts->{'keep-lab'}//0;
+    my %topts = ('CLEANUP' => !$keep, 'TMPDIR' => 1);
+    my $t = tempdir('temp-lintian-lab-XXXXXXXXXX', %topts);
+    my $dir = Cwd::abs_path($t);
+    croak "Could not resolve $t: $!" unless $dir;
+    $self->{'dir'} = $dir;
+    $self->{'keep-lab'} = $keep;
 
-    # Top dir exists, time to create the minimal directories.
+    croak "Cannot create $dir: $!"
+      unless -d $dir;
+
+    # create minimal sub-directories.
     unless (-d "$dir/info") {
         mkdir "$dir/info", $mode or croak "mkdir $dir/info: $!";
         $mid = 1; # remember we created the info dir
@@ -756,18 +701,14 @@ sub create {
 
 =item open
 
-Opens the lab and reads the contents into caches.  If the lab is
-temporary and does not exists, this method will call create to
-initialize the temporary lab.
+Opens the lab and reads the contents into caches.  If the lab does
+not exist, this method will call create to initialize it.
 
 This will croak if the lab is already open.  It may also croak for
-the same reasons as L</create> if the lab is temporary.
-
-Note: for static labs, L</dir> must point to an existing consistent
-lab or this will croak.  To open a new lab, please use L</create>.
+the same reasons as L</create>.
 
 Note: It is not possible to pass options to the creation of the
-temporary lab.  If special options are required, please use
+lab.  If special options are required, please use
 L</create> directly.
 
 =cut
@@ -777,16 +718,9 @@ sub open {
     my $dir;
     my $msg = 'Open Lab failed';
     croak('Lab is already open') if $self->is_open;
-    if ($self->is_temp) {
-        $self->create unless $self->exists;
-        $dir = $self->dir;
-    } else {
-        $dir = $self->dir;
-        unless ($self->exists) {
-            croak "$msg: $dir does not exists" unless -e $dir;
-            croak "$msg: $dir is not a lab or the lab is corrupt";
-        }
-    }
+
+    $self->create unless $self->exists;
+    $dir = $self->dir;
 
     unless (-e "$dir/info/lab-info") {
         if ($self->exists) {
@@ -795,8 +729,7 @@ sub open {
         croak "$msg: Lab is corrupt - $dir/info/lab-info does not exist";
     }
 
-    # Check the lab-format - this ought to be redundant for temp labs, but
-    # it's simpler to do it for them anyway.
+    # Check the lab-format - this ought to be redundant, but it's simple to do
     my $header = get_dsc_info("$dir/info/lab-info");
     my $format = $header->{'lab-format'}//'';
     my $layout = $header->{'layout'}//'pool';
@@ -822,16 +755,15 @@ Close the lab - all state caches will be flushed to the disk and the
 lab can no longer be used.  All references to entries in the lab
 should be considered invalid.
 
-Note: if the lab is a temporary one, this will be deleted unless it
-was created with "keep-lab" (see L</create>).
+Note: The lab will be deleted unless it was created with "keep-lab"
+(see L</create>).
 
 =cut
 
 sub close {
     my ($self) = @_;
     return unless $self->exists;
-    if ($self->is_temp && !$self->{'keep-lab'}) {
-        # Temporary lab (without "keep-lab" property)
+    if (!$self->{'keep-lab'}) {
         $self->remove;
     } else {
         $self->_write_manifests;
@@ -858,13 +790,10 @@ sub _write_manifests {
 Removes the lab and everything in it.  Any reference to an entry
 returned from this lab will immediately become invalid.
 
-If this is a temporary lab, the lab root dir (as returned L</dir>)
-will be removed as well on success.  Otherwise the lab root dir will
-not be removed by this call.
+The lab root dir will be removed as well on success.
 
-On success, this will return a truth value.  If the lab is a temporary
-lab, the directory path will be set to the empty string (that is,
-L</dir> will return '').
+On success, this will return a truth value. The directory path will
+be set to the empty string.
 
 On error, this method will croak.
 
@@ -911,27 +840,11 @@ sub remove {
     }
 
     # dynamic lab?
-    if ($self->is_temp) {
-        rmdir $dir or croak "rmdir $dir: $!";
-        $self->{'dir'} = '';
-    }
+    rmdir $dir or croak "rmdir $dir: $!";
+    $self->{'dir'} = '';
 
     $self->{'is_open'} = 0;
     return 1;
-}
-
-=item is_temp
-
-Returns a truth value if lab is a temporary lab.
-
-Note: This returns a truth value, even if the lab was created with the
-"keep-lab" property.
-
-=cut
-
-sub is_temp {
-    my ($self) = @_;
-    return $self->{'mode'} eq LAB_MODE_TEMP ? 1 : 0;
 }
 
 sub _entry_from_metadata {

@@ -32,11 +32,6 @@ Lintian dissects Debian packages and reports bugs and policy
 violations.  It contains automated checks for many aspects of Debian
 policy as well as some checks for common errors.
 
-It uses an archive directory, called I<laboratory>, in which it stores
-information about the packages it examines.  It can keep this
-information between multiple invocations in order to avoid repeating
-expensive data-collection operations.
-
 There are three ways to specify binary, udeb or source packages for
 Lintian to process: by file name (the .deb file for a binary package
 or the .dsc file for a source package), by naming a I<.changes> file,
@@ -513,16 +508,6 @@ Specifying this options will leave the lab behind, which might be
 useful for debugging purposes.  You can find out where the temporary
 lab is located by running lintian with the B<--verbose> option.
 
-For static (non-temporary) labs this option causes Lintian to skip
-the automatic clean up of some collections.
-
-=item B<--lab> labdir
-
-Use labdir as the permanent laboratory.  This is where Lintian keeps
-information about the packages it checks.  This option overrides the
-B<LINTIAN_LAB> environment variable and the configuration file entry
-of the same name.
-
 =item B<--packages-from-file> X
 
 Process the packages listed in X.  If the line starts with "!query:",
@@ -626,11 +611,9 @@ Lintian uses the following directories:
 
 =item I</tmp>
 
-If no lab location is specified via the LINTIAN_LAB environment
-variable, configuration, or the B<--lab> command-line option, lintian
-defaults to creating a temporary lab directory in I</tmp>.  To change
-the directory used, set the TMPDIR environment variable to a suitable
-directory.  TMPDIR can be set in the configuration file.
+Lintian defaults to creating a temporary lab directory in I</tmp>.  To
+change the directory used, set the TMPDIR environment variable to a
+suitable directory.  TMPDIR can be set in the configuration file.
 
 =item I</usr/share/lintian/checks>
 
@@ -913,8 +896,7 @@ If you discover any other bugs in lintian, please contact the authors.
 =head1 SEE ALSO
 
 L<lintian-info(1)>, Lintian User Manual
-(/usr/share/doc/lintian/lintian.html/index.html),
-L<lintian-lab-tool(1)>
+(/usr/share/doc/lintian/lintian.html/index.html)
 
 Packaging tools: L<debhelper(7)>, L<dh_make(8)>,
 L<dpkg-buildpackage(1)>.
