@@ -64,6 +64,7 @@ use Carp qw(croak);
 use Cwd();
 use File::Spec;
 use IO::Async::Loop;
+use IO::Async::Routine;
 use Path::Tiny;
 use POSIX qw();
 use Scalar::Util qw(refaddr);
@@ -242,34 +243,40 @@ The method will return a L<Future>, which will be "done" once the entry has been
 
 sub remove_async {
     my ($self) = @_;
+
+    my $loop = IO::Async::Loop->new;
+    my $future = $loop->new_future;
+
     my $basedir = $self->{base_dir};
-    my $name = $self->identifier;
-    my $async_loop = IO::Async::Loop->new;
-    my $future = $async_loop->new_future;
-    return $future->done(0) if not -e $basedir;
+    unless (-e $basedir) {
+        $future->done(0);
+        return $future;
+    }
+
     $self->clear_cache;
-    $async_loop->spawn_child(
+
+    my $name = $self->identifier;
+    my $lab = $self->{lab};
+    my $routine = IO::Async::Routine->new(
         code => sub {
             $0 = "Lab entry $name: removing $basedir";
             path($basedir)->remove_tree
               if -d $basedir;
-            return 0;
         },
-        on_exit => sub {
-            my (undef, $exitcode, $dollarbang) = @_;
-            my $status = $exitcode >> 8;
-            unless ($status) {
-                $self->{lab}->_entry_removed($self);
-                $future->done();
-                return;
-            }
-            my $msg
-              = "Error: Removing lab entry $name failed with status $status";
-            $msg .= COLON . EMPTY . $dollarbang
-              if length $dollarbang;
+        on_return => sub {
+            my (undef, $result) = @_;
+
+            $lab->_entry_removed($self);
+            $future->done();
+        },
+        on_die => sub {
+            my (undef, $exception) = @_;
+
+            my $msg= "Error: Removing lab entry $name failed: $exception";
             $future->fail($msg);
         });
 
+    $loop->add($routine);
     return $future;
 }
 
