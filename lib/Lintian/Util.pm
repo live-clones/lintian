@@ -20,6 +20,7 @@
 # MA 02110-1301, USA.
 
 package Lintian::Util;
+
 use strict;
 use warnings;
 use autodie;
@@ -28,6 +29,8 @@ use Carp qw(croak);
 use Cwd qw(abs_path);
 use Errno qw(ENOENT);
 use Exporter qw(import);
+use IO::Async::Loop;
+use Path::Tiny;
 use POSIX qw(sigprocmask SIG_BLOCK SIG_UNBLOCK SIG_SETMASK);
 
 use Lintian::Deb822Parser qw(read_dpkg_control parse_dpkg_control);
@@ -56,12 +59,15 @@ BEGIN {
           internal_error
           do_fork
           run_cmd
+          safe_qx
           strip
           lstrip
           rstrip
           copy_dir
+          sort_file_index
           gunzip_file
           open_gz
+          gzip
           perm2oct
           check_path
           clean_env
@@ -85,6 +91,13 @@ use Digest::SHA;
 use Encode ();
 use FileHandle;
 use Scalar::Util qw(openhandle);
+
+use Lintian::Command qw(spawn);
+use Lintian::Relation::Version qw(versions_equal versions_comparator);
+
+use constant EMPTY => q{};
+use constant SPACE => q{ };
+use constant NEWLINE => qq{\n};
 
 =head1 NAME
 
@@ -557,6 +570,44 @@ sub run_cmd {
     return 1;
 }
 
+=item C<safe_qx(@cmd)>
+
+Emulates the C<qx()> operator by returning the captured output
+just like Capture::Tiny;
+
+Examples:
+
+  # Capture the output of a simple command
+  my $output = safe_qx('grep', 'some-pattern', 'path/to/file');
+
+=cut
+
+sub safe_qx {
+    my @command = @_;
+
+    my $loop = IO::Async::Loop->new;
+    my $future = $loop->new_future;
+
+    $loop->run_child(
+        command => [@command],
+        on_finish => sub {
+            my ($pid, $exitcode, $stdout, $stderr) = @_;
+            my $status = ($exitcode >> 8);
+
+            if ($status) {
+                my $message = "Command @command exited with status $status";
+                $message .= ": $stderr" if length $stderr;
+                $future->fail($message);
+                return;
+            }
+
+            $future->done($stdout);
+        });
+
+    # will raise an exception in case of failure
+    return $future->get;
+}
+
 =item copy_dir (ARGS)
 
 Convenient way of calling I<cp -a ARGS>.
@@ -570,6 +621,28 @@ sub copy_dir {
     return run_cmd('cp', '-a', '--reflink=auto', '--', @_);
 }
 
+=item sort_file_index (STRING)
+
+Sorts the file index data given in STRING and returns the sorted
+result, also in a string.
+
+=cut
+
+sub sort_file_index {
+    my ($input) = @_;
+
+    my @unsorted = split(NEWLINE, $input);
+
+    # sorts according to LC_ALL=C
+    my @sorted
+      = sort { (split(SPACE, $a))[5] cmp(split(SPACE, $b))[5] } @unsorted;
+
+    my $output = EMPTY;
+    $output .= $_ . NEWLINE for @sorted;
+
+    return $output;
+}
+
 =item gunzip_file (IN, OUT)
 
 Decompresses contents of the file IN and stores the contents in the
@@ -579,8 +652,32 @@ will cause a trappable error.
 =cut
 
 sub gunzip_file {
-    my ($in, $out) = @_;
-    run_cmd({out => $out}, 'gzip', '-dc', $in);
+    my ($inpath, $outpath) = @_;
+
+    my $loop = IO::Async::Loop->new;
+    my $future = $loop->new_future;
+
+    my @command = ('gzip', '--decompress', '--stdout', $inpath);
+    $loop->run_child(
+        command => [@command],
+        on_finish => sub {
+            my ($pid, $exitcode, $stdout, $stderr) = @_;
+            my $status = ($exitcode >> 8);
+
+            if ($status) {
+                my $message = "Command @command exited with status $status";
+                $message .= ": $stderr" if length $stderr;
+                $future->fail($message);
+                return;
+            }
+
+            path($outpath)->spew($stdout);
+            $future->done;
+        });
+
+    # will raise an exception in case of failure
+    $future->get;
+
     return;
 }
 
@@ -607,6 +704,53 @@ sub __open_gz_ext {
     my ($file) = @_;
     open(my $fd, '-|', 'gzip', '-dc', $file);
     return $fd;
+}
+
+=item gzip (DATA, PATH)
+
+Compresses DATA using gzip and stores result in file located at PATH.
+
+=cut
+
+sub gzip {
+    my ($data, $path) = @_;
+
+    unlink($path)
+      if -e $path;
+
+    $data //= EMPTY;
+
+    my $loop = IO::Async::Loop->new;
+    my $future = $loop->new_future;
+    my $compressed;
+    my $stderr;
+
+    my @command = ('gzip', '--best', '--no-name', '--stdout');
+    $loop->open_process(
+        command => [@command],
+        stdin => { from => $data },
+        stdout => { into => \$compressed },
+        stderr => { into => \$stderr },
+        on_finish => sub {
+            my ($self, $exitcode) = @_;
+            my $status = ($exitcode >> 8);
+
+            if ($status) {
+                my $message = "Command @command exited with status $status";
+                $message .= ": $stderr" if length $stderr;
+                $future->fail($message);
+                return;
+            }
+
+            $future->done('Done with command @command');
+            return;
+        });
+
+    $future->get;
+
+    path($path)->spew($compressed // EMPTY);
+
+    return;
 }
 
 =item internal_error (MSG[, ...])
