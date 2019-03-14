@@ -1073,65 +1073,6 @@ sub process_group {
     return $all_ok;
 }
 
-sub handle_lab_query {
-    my ($pool, $query) = @_;
-    my ($type, $pkg, $version, $arch, @res);
-    my $orig = $query; # Save for the error message later
-
-    # "britney"-like format - note this catches the old style, where
-    # only the package name was specified.
-    # Check if it starts with a type specifier
-    # (e.g. "binary:" in "binary:eclipse/3.5.2-1/amd64")
-    if ($query =~ m,^([a-z]+):(.*),i) {
-        ($type, $query) = ($1, $2);
-    }
-    # Split on /
-    ($pkg, $version, $arch) = split m,/,o, $query, 3;
-    if (   $pkg =~ m|^\.{0,2}$|
-        or $pkg =~ m,[_:],
-        or (defined $arch and $arch =~ m,/,)) {
-        # Technically, a string like "../somewhere/else",
-        # "somepkg_version_arch.deb", "/somewhere/somepkg.deb" or even
-        # "http://ftp.debian.org/pool/l/lintian/lintian_2.5.5_all.deb"
-        # could match the above.  Obviously, that is not a lab query.
-        # But the frontend sends it here, because the file denoted by
-        # that string does not exist.
-        warning("\"$orig\" cannot be processed.");
-        warning('It is not a valid lab query and it is not an existing file.');
-        exit 2;
-    }
-
-    # Pass the original query ($query has been mangled for error
-    # checking and debugging purposes)
-    eval {@res = $LAB->lab_query($orig);};
-    if (my $err = $@) {
-        $err =~ s/ at .*? line \d+\s*$//;
-        warning("Bad lab-query: $orig");
-        warning("Error: $err");
-        $exit_code = 2;
-        return ();
-    }
-
-    if (@res) {
-        foreach my $p (@res) {
-            $pool->add_proc($p);
-        }
-    } else {
-        my $tuple = join(', ', map { $_//'*'} ($type, $pkg, $version, $arch));
-        debug_msg(
-            1,
-            "Did not find a match for $orig",
-            " - Search tuple: ($tuple)"
-        );
-        warning(
-            join(q{ },
-                'cannot find binary, udeb or source package',
-                "$orig in lab (skipping)"));
-        $exit_code = 2;
-    }
-    return;
-}
-
 sub _find_cfg_file {
     return $ENV{'LINTIAN_CFG'}
       if exists $ENV{'LINTIAN_CFG'} and -f $ENV{'LINTIAN_CFG'};
@@ -1453,20 +1394,15 @@ sub setup_work_pool {
 
     for my $arg (@ARGV) {
         # file?
-        if (-f $arg) {
-            if ($arg =~ m/\.(?:u?deb|dsc|changes|buildinfo)$/o){
-                eval {$pool->add_file($arg);};
-                if ($@) {
-                    print STDERR "Skipping $arg: $@";
-                    $exit_code = 2;
-                }
-            } else {
-                fatal_error("bad package file name $arg (neither .deb, "
-                      . '.udeb, .changes .dsc or .buildinfo file)');
+        if (-f $arg && $arg =~ m/\.(?:u?deb|dsc|changes|buildinfo)$/o){
+            eval {$pool->add_file($arg);};
+            if ($@) {
+                print STDERR "Skipping $arg: $@";
+                $exit_code = 2;
             }
         } else {
-            # parameter is a package name--so look it up
-            handle_lab_query($pool, $arg);
+            fatal_error("bad package file name $arg (neither .deb, "
+                  . '.udeb, .changes .dsc or .buildinfo file)');
         }
     }
 
@@ -1474,12 +1410,7 @@ sub setup_work_pool {
         my $fd = open_file_or_fd($opt{'packages-from-file'}, '<');
         while (my $file = <$fd>) {
             chomp $file;
-            if ($file =~ m/^!query:\s*(\S(?:.*\S)?)/o) {
-                my $query = $1;
-                handle_lab_query($query);
-            } else {
-                $pool->add_file($file);
-            }
+            $pool->add_file($file);
         }
         # close unless it is STDIN (else we will see a lot of warnings
         # about STDIN being reopened as "output only")
