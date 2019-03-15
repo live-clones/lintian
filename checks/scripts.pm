@@ -1012,7 +1012,7 @@ sub run {
             for my $ver (sort keys %old_versions) {
                 next if $ver =~ /^\d+$/;
                 #<<< no perltidy
-                if (m,$LEADIN(?:/usr/bin/)?dpkg\s+--compare-versions\s+.*\b\Q$ver\E\b,) {
+                if (m,$LEADIN(?:/usr/bin/)?dpkg\s+--compare-versions\s+.*\b\Q$ver\E(?!\.)\b,) {
                     my $date = strftime('%Y-%m-%d', gmtime $old_versions{$ver});
                     my $epoch = strftime('%Y-%m-%d', gmtime $OLDSTABLE_RELEASE);
                     tag 'maintainer-script-supports-ancient-package-version',
