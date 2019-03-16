@@ -570,6 +570,7 @@ baloon||balloon
 baloons||balloons
 bandwidht||bandwidth
 bandwith||bandwidth
+barycentic||barycentric
 basicly||basically
 batery||battery
 beacause||because
@@ -606,6 +607,7 @@ bizzare||bizarre
 blanace||balance
 blindy||blindly
 bofore||before
+boggus||bogus
 bood||boot
 boomark||bookmark
 boomarks||bookmarks
@@ -842,6 +844,8 @@ colums||columns
 comamnd||command
 comamnds||commands
 comand||command
+comapnies||companies
+comapny||company
 comaptible||compatible
 combatibility||compatibility
 coment||comment
@@ -952,6 +956,7 @@ concatonated||concatenated
 concatonates||concatenates
 concatonating||concatenating
 concensus||consensus
+concentic||concentric
 concidered||considered
 conciousness||consciousness
 concurent||concurrent
@@ -1188,6 +1193,9 @@ deatches||detaches
 deatching||detaching
 debain||Debian
 debehlper||debhelper
+debgu||debug
+debgug||debug
+debguging||debugging
 debiab||Debian
 Debiab||Debian
 debia||Debian
@@ -1358,6 +1366,8 @@ desision||decision
 desisions||decisions
 deskop||desktop
 deskops||desktops
+desparate||desperate
+desparately||desperately
 desribed||described
 desribe||describe
 desribes||describes
@@ -1824,6 +1834,7 @@ execeptions||exceptions
 exection||execution
 exections||executions
 exectuable||executable
+exectuableness||executableness
 exectuables||executables
 exectution||execution
 exectutions||executions
@@ -1957,6 +1968,7 @@ folloing||following
 follwing||following
 follwoing||following
 folowing||following
+folx||folks
 foppy||floppy
 foppys||floppies
 forbiden||forbidden
@@ -2062,6 +2074,7 @@ genreates||generates
 genreating||generating
 genric||generic
 gental||gentle
+geocentic||geocentric
 geometrie||geometry
 geomtry||geometry
 geting||getting
@@ -2781,6 +2794,8 @@ mappping||mapping
 mapppings||mappings
 mashine||machine
 mashines||machines
+mata-data||meta-data
+matadata||metadata
 matainer||maintainer
 matainers||maintainers
 matchin||matching
@@ -2837,6 +2852,9 @@ miniscule||minuscule
 minium||minimum
 miniums||minimums
 minumum||minimum
+mirgated||migrated
+mirgate||migrate
+mirgates||migrates
 mirro||mirror
 miscelaneous||miscellaneous
 miscellanous||miscellaneous
@@ -3119,6 +3137,7 @@ ouputs||outputs
 ouputted||outputted
 ouputting||outputting
 outputing||outputting
+outter||outer
 outut||output
 outweight||outweigh
 outweights||outweighs
@@ -3161,6 +3180,10 @@ pacakges||packages
 pachage||package
 pach||patch
 packacge||package
+packaege||package
+packaeges||packages
+packaeg||package
+packaegs||packages
 packege||package
 packe||packed
 packge||package
@@ -3259,6 +3282,7 @@ permuation||permutation
 permuations||permutations
 peroid||period
 peroids||periods
+persepctive||perspective
 persistance||persistence
 persistant||persistent
 personnal||personal
@@ -3681,6 +3705,10 @@ remebers||remembers
 remoote||remote
 removeable||removable
 renderering||rendering
+re-negociated||re-negotiated
+renegociated||renegotiated
+re-negociation||re-negotiation
+renegociation||renegotiation
 renegotation||renegotiation
 reoport||report
 reorginised||reorganised
@@ -3928,7 +3956,12 @@ separte||separate
 separtes||separates
 separting||separating
 sepatae||separate
+sepcifically||specifically
+sepcification||specification
+sepcifications||specifications
+sepcific||specific
 sepcified||specified
+sepcifier||specifier
 sepcifies||specifies
 sepcifying||specifying
 sepcify||specify
@@ -4046,6 +4079,8 @@ souces||sources
 soundard||soundcard
 soure||source
 soures||sources
+sparately||separately
+sparate||separate
 spawed||spawned
 spawing||spawning
 spaw||spawn
@@ -4083,6 +4118,8 @@ speep-up||speed-up
 speficied||specified
 spefic||specific
 speling||spelling
+sperately||separately
+sperate||separate
 spliting||splitting
 splitted||split
 sponser||sponsor
@@ -4616,6 +4653,7 @@ unrecogized||unrecognized
 unreconized||unrecognized
 unregisterd||unregistered
 unresonable||unreasonable
+unsepcified||unspecified
 unsinged||unsigned
 unspported||unsupported
 unsual||unusual
