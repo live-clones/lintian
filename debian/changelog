@@ -1,8 +1,35 @@
-lintian (2.10.0+git) UNRELEASED; urgency=medium
+lintian (2.11.0) unstable; urgency=medium
 
-  * WIP
+  [ Chris Lamb ]
+  * Support dh-sequence-{gir,gnome,python3} etc. virtual packages as
+    satisfying various build-dependencies. (Closes: #924082)
+  * Don't detect non-maintainer upload (NMU) versions when checking for
+    maintainer scripts that support "ancient" package versions.
+    (Closes: #924501)
+  * Correct false-positives in when checking for dh-runit packages that
+    lack a "Breaks" substvar by ensuring that the binary package actually
+    uses runit. (Closes: #924116)
+  * Update the long description of the
+    new-package-should-not-package-python2-module tag to justify further
+    why a changelog entry is more appropriate than an override.
+  * Remove errant "#" from the long description of
+    inconsistent-appstream-metadata-license.
 
- -- Chris Lamb <lamby@debian.org>  Fri, 08 Mar 2019 17:56:59 +0000
+  [ Felix Lechner ]
+  * Deprecate static labs; all labs are temporary from now on.
+  * In autopkgtests, allow output to stderr to shorten waiting period.
+  * Fix the rules-requires-root-implicitly test on stretch.
+  * For stretch-backports, also Build-Depend on the "XS" version of the
+    Text::CSV Perl module in addition to the pure Perl version.
+
+  [ Stewart Ferguson ]
+  * Allow *.pth files in Python directories to avoid false-positives for
+    unknown-file-in-python-module-directory. (Closes: #924417)
+
+  [ Paul Wise ]
+  * Add/fix several spelling corrections.
+
+ -- Chris Lamb <lamby@debian.org>  Mon, 18 Mar 2019 22:20:48 +0000
 
 lintian (2.10.0) unstable; urgency=medium
 
