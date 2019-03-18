@@ -32,15 +32,10 @@ Lintian dissects Debian packages and reports bugs and policy
 violations.  It contains automated checks for many aspects of Debian
 policy as well as some checks for common errors.
 
-It uses an archive directory, called I<laboratory>, in which it stores
-information about the packages it examines.  It can keep this
-information between multiple invocations in order to avoid repeating
-expensive data-collection operations.
-
-There are three ways to specify binary, udeb or source packages for
+There are two ways to specify binary, udeb or source packages for
 Lintian to process: by file name (the .deb file for a binary package
-or the .dsc file for a source package), by naming a I<.changes> file,
-or by using a lab query (see L</LAB QUERY> below).
+or the .dsc file for a source package), or by naming a I<.changes>
+file.
 
 If you specify a I<.changes> file, Lintian will process all packages
 listed in that file.  This is convenient when checking a new package
@@ -513,23 +508,10 @@ Specifying this options will leave the lab behind, which might be
 useful for debugging purposes.  You can find out where the temporary
 lab is located by running lintian with the B<--verbose> option.
 
-For static (non-temporary) labs this option causes Lintian to skip
-the automatic clean up of some collections.
-
-=item B<--lab> labdir
-
-Use labdir as the permanent laboratory.  This is where Lintian keeps
-information about the packages it checks.  This option overrides the
-B<LINTIAN_LAB> environment variable and the configuration file entry
-of the same name.
-
 =item B<--packages-from-file> X
 
-Process the packages listed in X.  If the line starts with "!query:",
-then the rest of that line is processed as a lab query (see L</LAB QUERY>).
-
-Otherwise the line is read as the path to a file to process (all
-whitespace is included!).
+The line is read as the path to a file to process (all whitespace is
+included!).
 
 If X is "-", Lintian will read the packages from STDIN.
 
@@ -626,11 +608,9 @@ Lintian uses the following directories:
 
 =item I</tmp>
 
-If no lab location is specified via the LINTIAN_LAB environment
-variable, configuration, or the B<--lab> command-line option, lintian
-defaults to creating a temporary lab directory in I</tmp>.  To change
-the directory used, set the TMPDIR environment variable to a suitable
-directory.  TMPDIR can be set in the configuration file.
+Lintian defaults to creating a temporary lab directory in I</tmp>.  To
+change the directory used, set the TMPDIR environment variable to a
+suitable directory.  TMPDIR can be set in the configuration file.
 
 =item I</usr/share/lintian/checks>
 
@@ -745,62 +725,6 @@ Lintian run-time error. An error message is sent to stderr.
 
 =back
 
-=head1 LAB QUERY
-
-A lab query can be used to refer to a (set of) package(s) in the
-Lintian Laboratory.  The general format of a query is:
-
- [type:]package[/version[/arch]]
-
-Where:
-
-=over 4
-
-=item type
-
-This is the type of the package and (if present) must be one of "ALL",
-"GROUP", "binary", "udeb", "source" or "changes".  This is case
-sensitive.
-
-If omitted this defaults to "ALL".  The pseudo type "ALL" acts as a
-wildcard for any real package type.
-
-The special type "GROUP" can be used to match all packages related to
-a given source package.  For more info, please see L<Group query>
-below.
-
-=item package
-
-This is the name of the package.  This is mandatory and must match
-exactly.
-
-=item version
-
-This is the version of the package, if left out (or if it is "_") then
-any version will do.  Otherwise the version must match exactly.
-
-=item arch
-
-This is the architecture of the package, if left out (or it is "_")
-then any architecture will do.  Otherwise the architecture must match
-exactly.
-
-Note: This is I<completely> ignored when matching against source
-packages or when type is "GROUP".
-
-Note: For changes packages, this must match the contents of the
-architecture field in the changes.  This field may contain a space
-(e.g. "source all") and therefore may also need proper shell escape.
-
-=back
-
-=head2 Group query
-
-A group query can be used to (re-)process all packages in a given
-group.  The I<package> and I<version> part will be used to look up one
-or more source packages.  The binaries, udebs and changes files for
-each matching source package will also be activated.
-
 =head1 CHECKING LAST BUILD
 
 When run in an unpacked package dir (with no package selection
@@ -913,8 +837,7 @@ If you discover any other bugs in lintian, please contact the authors.
 =head1 SEE ALSO
 
 L<lintian-info(1)>, Lintian User Manual
-(/usr/share/doc/lintian/lintian.html/index.html),
-L<lintian-lab-tool(1)>
+(/usr/share/doc/lintian/lintian.html/index.html)
 
 Packaging tools: L<debhelper(7)>, L<dh_make(8)>,
 L<dpkg-buildpackage(1)>.

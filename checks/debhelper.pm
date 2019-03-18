@@ -49,7 +49,7 @@ my $compat_level = Lintian::Data->new('debhelper/compat-level',qr/=/);
 my $MISC_DEPENDS = Lintian::Relation->new('${misc:Depends}');
 
 sub run {
-    my (undef, undef, $info) = @_;
+    my (undef, undef, $info, undef, $group) = @_;
     my $droot = $info->index_resolved_path('debian/');
     my ($drules, $dh_bd_version, $level);
 
@@ -270,7 +270,6 @@ sub run {
 
     for my $binpkg (@pkgs) {
         next if $info->binary_package_type($binpkg) ne 'deb';
-        my $breaks = $info->binary_relation($binpkg, 'breaks');
         my $strong = $info->binary_relation($binpkg, 'strong');
         my $all = $info->binary_relation($binpkg, 'all');
 
@@ -280,10 +279,16 @@ sub run {
             tag 'weak-dependency-on-misc-depends', $binpkg
               unless $strong->implies($MISC_DEPENDS);
         }
+    }
 
-        tag 'package-uses-dh-runit-but-lacks-breaks-substvar',$binpkg
+    for my $proc ($group->get_processables('binary')) {
+        my $binpkg = $proc->pkg_name;
+        my $breaks = $info->binary_relation($binpkg, 'breaks');
+        my $strong = $info->binary_relation($binpkg, 'strong');
+        tag 'package-uses-dh-runit-but-lacks-breaks-substvar', $binpkg
           if $seen{'runit'}
           and $strong->implies('runit')
+          and any { m,^etc/sv/, } $proc->info->sorted_index
           and not $breaks->implies('${runit:Breaks}');
     }
 

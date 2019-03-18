@@ -77,7 +77,6 @@ my @ENV_VARS = (
     # LINTIAN_CFG  - handled manually
     qw(
       LINTIAN_PROFILE
-      LINTIAN_LAB
       TMPDIR
       ));
 
@@ -215,8 +214,7 @@ EOT-EOT-EOT
 Developer/Special usage options:
     --allow-root              suppress lintian\'s warning when run as root
     -d, --debug               turn Lintian\'s debug messages on (repeatable)
-    --keep-lab                keep lab after run, even if temporary
-    --lab LABDIR              use LABDIR as permanent laboratory
+    --keep-lab                keep lab after run
     --packages-from-file  X   process the packages in a file (if "-" use stdin)
     --perf-debug              turn on performance debugging
     --perf-output X           send performance logging to file (or fd w. \&X)
@@ -503,15 +501,9 @@ sub cfg_override {
     return;
 }
 
-sub use_lab_tool_instead {
-    fatal_error('Please use lintian-lab-tool instead');
-}
-
 # Hash used to process commandline options
 my %opthash = (
     # ------------------ actions
-    'setup-lab|S' => \&use_lab_tool_instead,
-    'remove-lab|R' => \&use_lab_tool_instead,
     'check|c' => \&record_action,
     'check-part|C=s' => \&record_check_part,
     'tags|T=s' => \&record_check_tags,
@@ -519,7 +511,6 @@ my %opthash = (
     'ftp-master-rejects|F' => \$opt{'ftp-master-rejects'},
     'dont-check-part|X=s' => \&record_dont_check_part,
     'unpack|u' => \&record_action,
-    'remove|r' => \&use_lab_tool_instead,
 
     # ------------------ general options
     'help|h:s' => \&syntax,
@@ -557,7 +548,6 @@ my %opthash = (
     # ------------------ configuration options
     'cfg=s' => \$opt{'LINTIAN_CFG'},
     'no-cfg' => \$opt{'no-cfg'},
-    'lab=s' => \$opt{'LINTIAN_LAB'},
     'profile=s' => \$opt{'LINTIAN_PROFILE'},
 
     'jobs|j:i' => \$opt{'jobs'},
@@ -653,11 +643,9 @@ sub main {
         # Print Debug banner, now that we're finished determining
         # the values and have Lintian::Output available
         debug_msg(
-            1,
-            $banner,
+            1,$banner,
             "Lintian root directory: $INIT_ROOT",
             "Configuration file: $opt{'LINTIAN_CFG'}",
-            'Laboratory: '.($opt{'LINTIAN_LAB'} // '<N/A>'),
             'UTF-8: ✓ (☃)',
             delimiter(),
         );
@@ -669,7 +657,7 @@ sub main {
     $SIG{'INT'} = \&interrupted;
     $SIG{'QUIT'} = \&interrupted;
 
-    $LAB = Lintian::Lab->new($opt{'LINTIAN_LAB'});
+    $LAB = Lintian::Lab->new;
 
     #######################################
     #  Check for non deb specific actions
@@ -680,24 +668,7 @@ sub main {
         fatal_error("invalid action $action specified");
     }
 
-    if (!$LAB->is_temp) {
-        # sanity check:
-        fatal_error(
-            join(q{ },
-                'lintian lab has not been set up correctly',
-                '(perhaps you forgot to run lintian-lab-tool create-lab?)')
-        ) unless $LAB->exists;
-    } else {
-        $LAB->create({'keep-lab' => $opt{'keep-lab'}});
-    }
-
-    #  Update the ENV var as well - unlike the original values,
-    #  $LAB->dir is always absolute
-    $ENV{'LINTIAN_LAB'} = $opt{'LINTIAN_LAB'} = $LAB->dir;
-
-    v_msg("Setting up lab in $opt{'LINTIAN_LAB'} ...")
-      if $LAB->is_temp;
-
+    $LAB->create({'keep-lab' => $opt{'keep-lab'}});
     $LAB->open;
 
     $pool = setup_work_pool($LAB);
@@ -788,28 +759,9 @@ sub main {
                 my @futures;
                 for my $lpkg ($group->get_processables) {
                     my @pkg_futures = auto_clean_package($lpkg);
-                    if (not $LAB->is_temp) {
-                        my $f= $async_loop->new_future->wait_all(@pkg_futures);
-                        $f = $f->then(
-                            sub {
-                                push(@group_lpkg, $lpkg);
-                            });
-                        push(@futures, $f);
-                    } else {
-                        push(@futures, @pkg_futures);
-                    }
+                    push(@futures, @pkg_futures);
                 }
                 $async_loop->await_all(@futures);
-            }
-            if (not $LAB->is_temp) {
-                for my $lpkg (@group_lpkg) {
-                    $lpkg->update_status_file
-                      or
-                      warning('could not create status file for package '
-                          .$lpkg->pkg_name
-                          . ": $!");
-
-                }
             }
         };
         my $total_tres = $format_timer_result->($total_raw_res);
@@ -901,45 +853,20 @@ sub main {
 sub auto_clean_package {
     my ($lpkg) = @_;
     my $proc_id = $lpkg->identifier;
-    my $pkg_name = $lpkg->pkg_name;
-    my $pkg_type = $lpkg->pkg_type;
-    my $base = $lpkg->base_dir;
-    my $async_loop = IO::Async::Loop->new;
 
-    if ($lpkg->lab->is_temp) {
-        debug_msg(1, "Auto removing: ${proc_id} ...");
-        my $time = $start_timer->();
-        my $f = $lpkg->remove_async;
-        return $f->on_ready(
-            sub {
-                my $raw_res = $finish_timer->($time);
-                debug_msg(1, "Auto removing: ${proc_id} done (${raw_res}s)");
-                perf_log("$proc_id,auto-remove entry,${raw_res}");
-                return;
-            });
-    }
-    # TODO: Convert this to proper async
-    for my $coll (@auto_remove) {
-        my $ci = $collmap->getp($coll);
-        next unless $lpkg->is_coll_finished($coll, $ci->version);
-        debug_msg(1, "Auto removing: $proc_id ($coll) ...");
-        eval {
-            my $raw_res = timed_task {
-                $ci->collect($pkg_name, "remove-${pkg_type}", $base);
-            };
-            perf_log("$proc_id,auto-remove coll/$coll,${raw_res}");
-        };
-        if ($@) {
-            warning(
-                $@,
-                "removing collect info $coll about package $pkg_name failed",
-                "skipping cleanup of $pkg_type package $pkg_name"
-            );
-            return $async_loop->new_future->fail("$@");
-        }
-        $lpkg->_clear_coll_status($coll);
-    }
-    return $async_loop->new_future->done();
+    debug_msg(1, "Auto removing: ${proc_id} ...");
+    my $time = $start_timer->();
+
+    my $future = $lpkg->remove_async;
+    $future->on_ready(
+        sub {
+            my $raw_res = $finish_timer->($time);
+            debug_msg(1, "Auto removing: ${proc_id} done (${raw_res}s)");
+            perf_log("$proc_id,auto-remove entry,${raw_res}");
+            return;
+        });
+
+    return $future;
 }
 
 sub post_pkg_process_overrides{
@@ -1130,24 +1057,7 @@ sub process_group {
         my @futures;
         foreach my $lpkg ($group->get_processables) {
             my @pkg_futures = auto_clean_package($lpkg);
-            if (not $lpkg->lab->is_temp) {
-                # Update the status file as auto_clean_package may
-                # have removed some collections
-                my $f = $async_loop->new_future->wait_all(@pkg_futures)->then(
-                    sub {
-                        if (not $lpkg->update_status_file) {
-                            my $pkg_name = $lpkg->pkg_name;
-                            warning(
-                                join(q{ },
-                                    'could not create status',
-                                    "file for package $pkg_name: $!"));
-                        }
-                    });
-                push(@futures, $f);
-            } else {
-                push(@futures, @pkg_futures);
-            }
-
+            push(@futures, @pkg_futures);
         }
         $async_loop->await_all(@futures);
         if (any { $_->is_failed } @futures) {
@@ -1161,65 +1071,6 @@ sub process_group {
     }
 
     return $all_ok;
-}
-
-sub handle_lab_query {
-    my ($pool, $query) = @_;
-    my ($type, $pkg, $version, $arch, @res);
-    my $orig = $query; # Save for the error message later
-
-    # "britney"-like format - note this catches the old style, where
-    # only the package name was specified.
-    # Check if it starts with a type specifier
-    # (e.g. "binary:" in "binary:eclipse/3.5.2-1/amd64")
-    if ($query =~ m,^([a-z]+):(.*),i) {
-        ($type, $query) = ($1, $2);
-    }
-    # Split on /
-    ($pkg, $version, $arch) = split m,/,o, $query, 3;
-    if (   $pkg =~ m|^\.{0,2}$|
-        or $pkg =~ m,[_:],
-        or (defined $arch and $arch =~ m,/,)) {
-        # Technically, a string like "../somewhere/else",
-        # "somepkg_version_arch.deb", "/somewhere/somepkg.deb" or even
-        # "http://ftp.debian.org/pool/l/lintian/lintian_2.5.5_all.deb"
-        # could match the above.  Obviously, that is not a lab query.
-        # But the frontend sends it here, because the file denoted by
-        # that string does not exist.
-        warning("\"$orig\" cannot be processed.");
-        warning('It is not a valid lab query and it is not an existing file.');
-        exit 2;
-    }
-
-    # Pass the original query ($query has been mangled for error
-    # checking and debugging purposes)
-    eval {@res = $LAB->lab_query($orig);};
-    if (my $err = $@) {
-        $err =~ s/ at .*? line \d+\s*$//;
-        warning("Bad lab-query: $orig");
-        warning("Error: $err");
-        $exit_code = 2;
-        return ();
-    }
-
-    if (@res) {
-        foreach my $p (@res) {
-            $pool->add_proc($p);
-        }
-    } else {
-        my $tuple = join(', ', map { $_//'*'} ($type, $pkg, $version, $arch));
-        debug_msg(
-            1,
-            "Did not find a match for $orig",
-            " - Search tuple: ($tuple)"
-        );
-        warning(
-            join(q{ },
-                'cannot find binary, udeb or source package',
-                "$orig in lab (skipping)"));
-        $exit_code = 2;
-    }
-    return;
 }
 
 sub _find_cfg_file {
@@ -1543,20 +1394,15 @@ sub setup_work_pool {
 
     for my $arg (@ARGV) {
         # file?
-        if (-f $arg) {
-            if ($arg =~ m/\.(?:u?deb|dsc|changes|buildinfo)$/o){
-                eval {$pool->add_file($arg);};
-                if ($@) {
-                    print STDERR "Skipping $arg: $@";
-                    $exit_code = 2;
-                }
-            } else {
-                fatal_error("bad package file name $arg (neither .deb, "
-                      . '.udeb, .changes .dsc or .buildinfo file)');
+        if (-f $arg && $arg =~ m/\.(?:u?deb|dsc|changes|buildinfo)$/o){
+            eval {$pool->add_file($arg);};
+            if ($@) {
+                print STDERR "Skipping $arg: $@";
+                $exit_code = 2;
             }
         } else {
-            # parameter is a package name--so look it up
-            handle_lab_query($pool, $arg);
+            fatal_error("bad package file name $arg (neither .deb, "
+                  . '.udeb, .changes .dsc or .buildinfo file)');
         }
     }
 
@@ -1564,12 +1410,7 @@ sub setup_work_pool {
         my $fd = open_file_or_fd($opt{'packages-from-file'}, '<');
         while (my $file = <$fd>) {
             chomp $file;
-            if ($file =~ m/^!query:\s*(\S(?:.*\S)?)/o) {
-                my $query = $1;
-                handle_lab_query($query);
-            } else {
-                $pool->add_file($file);
-            }
+            $pool->add_file($file);
         }
         # close unless it is STDIN (else we will see a lot of warnings
         # about STDIN being reopened as "output only")

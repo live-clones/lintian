@@ -32,8 +32,6 @@ use v5.10;
 use Getopt::Long;
 use List::Util qw(all);
 use Path::Tiny;
-use Text::CSV;
-use XML::LibXML;
 
 BEGIN {
     $ENV{'LINTIAN_TEST_INSTALLED'} = 'no'
@@ -50,11 +48,11 @@ BEGIN {
 
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
 
-use Test::Lintian::Output::Universal qw(universal_string order);
-
-use constant EMPTY => q{};
-use constant SPACE => q{ };
-use constant NEWLINE => qq{\n};
+use Test::Lintian::Output::EWI;
+use Test::Lintian::Output::FullEWI;
+use Test::Lintian::Output::LetterQualifier;
+use Test::Lintian::Output::ColonSeparated;
+use Test::Lintian::Output::XML;
 
 # options
 my $format;
@@ -75,180 +73,38 @@ die "Please use -h for usage information.\n"
   if scalar @ARGV < 1 || scalar @ARGV > 2;
 
 # get arguments
-my ($input, $output) = @ARGV;
+my ($inpath, $outpath) = @ARGV;
 
-my @extracted = parse($format, $input);
-my @sorted = reverse sort { order($a) cmp order($b) } @extracted;
+die "File $inpath does not exist.\n"
+  unless -f $inpath;
 
-my $joined = EMPTY;
-$joined .= $_ . NEWLINE for @sorted;
+my $text = path($inpath)->slurp_utf8;
+my $converted = to_universal($format, $text);
 
-if (defined $output) {
-    path($output)->spew_utf8($joined);
+if (defined $outpath) {
+    path($outpath)->spew_utf8($converted);
 }else {
-    print $joined;
+    print $converted;
 }
 
 exit;
 
-sub parse {
-    my ($format, $path) = @_;
-
-    die "File $path does not exist.\n"
-      unless -f $path;
-
-    my @lines = path($path)->lines_utf8({ chomp => 1 });
+sub to_universal {
+    my ($format, $text) = @_;
 
     if ($format eq 'EWI') {
-        return parse_ewi(@lines);
+        return Test::Lintian::Output::EWI::to_universal($text);
     }elsif ($format eq 'letterqualifier') {
-        return parse_letterqualifier(@lines);
+        return Test::Lintian::Output::LetterQualifier::to_universal($text);
     }elsif ($format eq 'fullewi') {
-        return parse_fullewi(@lines);
+        return Test::Lintian::Output::FullEWI::to_universal($text);
     }elsif ($format eq 'colons') {
-        return parse_colons(@lines);
+        return Test::Lintian::Output::ColonSeparated::to_universal($text);
     }elsif ($format eq 'xml') {
-        return parse_xml(@lines);
+        return Test::Lintian::Output::XML::to_universal($text);
     }
 
     die "Unknown format: $format\n";
-}
-
-sub parse_ewi {
-    my (@lines) = @_;
-
-    my @tags;
-
-    foreach my $line (@lines) {
-
-        # no tag in this line
-        next if $line =~ /^N: /;
-
-        # look for "EWI: package[ type]: name details"
-        my ($code, $package, $type, $name, $details)
-          = $line=~ /^(.): (\S+)(?: (changes|source|udeb))?: (\S+)(?: (.*))?$/;
-
-        # for binary packages, the type field is empty
-        $type //= 'binary';
-
-        die "Cannot parse line $line"
-          unless all { length } ($code, $package, $type, $name);
-
-        my $tag = universal_string($package, $type, $name, $details);
-        push(@tags, $tag);
-    }
-
-    return @tags;
-}
-
-sub parse_letterqualifier {
-    my (@lines) = @_;
-
-    s/^(.)\[..\](.*)$/$1$2/ for @lines;
-
-    return parse_ewi(@lines);
-}
-
-sub parse_fullewi {
-    my (@lines) = @_;
-
-    my @tags;
-
-    foreach my $line (@lines) {
-
-        # no tag in this line
-        next if $line =~ /^N: /;
-
-        # look for fullewi line
-        my ($code, $package, $type, $version, $architecture, $name, $details)
-          = $line
-          =~ /^(.): (\S+) (\S+) \(([^)]+)\) \[([^]]+)\]: (\S+)(?: (.*))?$/;
-
-        die "Cannot parse line $line"
-          unless all { length }
-        ($code, $package, $type, $version, $architecture, $name);
-
-        my $tag = universal_string($package, $type, $name, $details);
-        push(@tags, $tag);
-    }
-
-    return @tags;
-}
-
-sub parse_colons {
-    my (@lines) = @_;
-
-    my @tags;
-
-    my $csv = Text::CSV->new(
-        { sep_char => ':', escape_char => '\\', quote_char => undef });
-
-    foreach my $line (@lines) {
-
-        my $status = $csv->parse($line);
-        die "Cannot parse line $line: " . $csv->error_diag
-          unless $status;
-
-        my @fields = $csv->fields;
-
-        shift @fields;
-
-        my (
-            $code, $severity, $certainty, $override,
-            $package, $version, $architecture, $type,
-            $name, $details
-        ) = @fields;
-
-        die "Cannot parse line $line"
-          unless all { length } (
-            $code, $severity, $certainty, $package, $version,
-            $architecture, $type, $name
-          );
-
-        my $tag = universal_string($package, $type, $name, $details);
-        push(@tags, $tag);
-    }
-
-    return @tags;
-}
-
-sub parse_xml {
-    my (@lines) = @_;
-
-    my @tags;
-
-    my $string = '<lintian>' . join(EMPTY, @lines) . '</lintian>';
-    my $dom = XML::LibXML->load_xml(string => $string);
-
-    my @packagenodes = $dom->findnodes('/lintian/package');
-    die 'No packages in XML'
-      unless scalar @packagenodes;
-
-    foreach my $packagenode (@packagenodes) {
-
-        my $package = $packagenode->getAttribute('name');
-        my $type = $packagenode->getAttribute('type');
-
-        die 'Cannot parse XML'
-          unless all { length } ($package, $type);
-
-        my @tagsnodes = $packagenode->findnodes('./tag');
-        foreach my $tagnode (@tagsnodes) {
-
-            my $severity = $tagnode->getAttribute('severity');
-            my $certainty = $tagnode->getAttribute('certainty');
-            my $name = $tagnode->getAttribute('name');
-            my $details = $tagnode->to_literal;
-
-            die 'Cannot parse XML'
-              unless all { length } ($severity, $certainty, $name);
-
-            my $tag = universal_string($package, $type, $name, $details);
-            push(@tags, $tag);
-        }
-    }
-
-    return @tags;
 }
 
 sub usage {

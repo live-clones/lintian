@@ -1214,20 +1214,10 @@ Overridable: no
     <sect1 label="3.2" id="section-3.2">
       <title>The laboratory</title>
       <para>
-        Lintian's laboratory directory can be defined via
-        the <constant>LINTIAN_LAB</constant> variable (either in the
-        configuration file or as environment variable). If this
-        variable is not defined, Lintian creates a temporary lab
-        in <filename class="directory">/tmp</filename> which is
-        removed again after Lintian has completed its checks. This
-        mode is called <emphasis>temporary lab mode</emphasis>.
-      </para>
-      <para>
-        In the <emphasis>static lab mode</emphasis> (if the laboratory
-        directory is defined by the user), the laboratory has to be
-        set up first before it can be used by Lintian. This can be
-        done with the <option>-S</option>
-        (or <option>--setup-lab</option>) command line option.
+        Lintian creates a temporary lab in
+        <filename class="directory">/tmp</filename> which is removed
+        again after Lintian has completed its checks, unless the
+        <option>--keep-lab</option> is used.
       </para>
     </sect1>
 

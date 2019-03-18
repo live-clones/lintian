@@ -281,8 +281,6 @@ sub run_lintian {
             '--lintian-scratch-space', $LINTIAN_SCRATCH_SPACE);
     }
 
-    unshift(@lintian_harness_args, '--no-use-permanent-lab');
-
     Log('Updating harness state cache (reading mirror index files)');
     my %sync_state_opts = (
         'out' => $sync_state_log,

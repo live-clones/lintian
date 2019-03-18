@@ -29,6 +29,7 @@ abigious||ambiguous
 abilties||abilities
 abilty||ability
 abitrate||arbitrate
+abnormaly||abnormally
 aboce||above
 abolute||absolute
 abov||above
@@ -54,6 +55,8 @@ acccess||access
 acccessible||accessible
 acceleratoin||acceleration
 accelleration||acceleration
+accepect||accept
+accepected||accepted
 acceptible||acceptable
 acces||access
 accesing||accessing
@@ -192,10 +195,13 @@ adminstrative||administrative
 adminstrator||administrator
 adminstrators||administrators
 admissable||admissible
+adressable||addressable
 adress||address
 adressed||addressed
 adresses||addresses
 adressing||addressing
+adresss||address
+adressses||addresses
 advane||advance
 advaned||advanced
 advertisment||advertisement
@@ -303,6 +309,7 @@ analysator||analyzer
 anarquism||anarchism
 anarquist||anarchist
 ang||and
+anhoter||another
 anlysis||analysis
 anniversery||anniversary
 annoncement||announcement
@@ -511,6 +518,9 @@ automaitcally||automatically
 automaitc||automatic
 automaticall||automatically
 automaticaly||automatically
+automaticalyl||automatically
+automaticalyy||automatically
+automaticlly||automatically
 automaticly||automatically
 automatize||automate
 automatized||automated
@@ -562,6 +572,7 @@ baloon||balloon
 baloons||balloons
 bandwidht||bandwidth
 bandwith||bandwidth
+barycentic||barycentric
 basicly||basically
 batery||battery
 beacause||because
@@ -598,6 +609,7 @@ bizzare||bizarre
 blanace||balance
 blindy||blindly
 bofore||before
+boggus||bogus
 bood||boot
 boomark||bookmark
 boomarks||bookmarks
@@ -834,6 +846,8 @@ colums||columns
 comamnd||command
 comamnds||commands
 comand||command
+comapnies||companies
+comapny||company
 comaptible||compatible
 combatibility||compatibility
 coment||comment
@@ -886,6 +900,7 @@ compatiblity||compatibility
 competion||completion
 competions||completions
 compilant||compliant
+complaing||complaining
 compleate||complete
 compleated||completed
 compleates||completes
@@ -943,6 +958,7 @@ concatonated||concatenated
 concatonates||concatenates
 concatonating||concatenating
 concensus||consensus
+concentic||concentric
 concidered||considered
 conciousness||consciousness
 concurent||concurrent
@@ -1048,6 +1064,7 @@ contraints||constraints
 contributer||contributor
 contributers||contributors
 contries||countries
+controlable||controllable
 controled||controlled
 controler||controller
 controlers||controllers
@@ -1179,6 +1196,9 @@ deatches||detaches
 deatching||detaching
 debain||Debian
 debehlper||debhelper
+debgu||debug
+debgug||debug
+debguging||debugging
 debiab||Debian
 Debiab||Debian
 debia||Debian
@@ -1190,7 +1210,10 @@ decalare||declare
 decalares||declares
 decalaring||declaring
 decendant||descendant
+decendentant||descendant
+decendentants||descendants
 decendent||descendent
+decendents||descendents
 decidated||dedicated
 decidate||dedicate
 decidates||dedicates
@@ -1214,6 +1237,9 @@ decription||description
 decriptions||descriptions
 decriptor||descriptor
 decriptors||descriptors
+decrpt||decrypt
+decrpted||decrypted
+decrption||decryption
 decsriptor||descriptor
 decsriptors||descriptors
 decstiption||description
@@ -1339,8 +1365,12 @@ desgined||designed
 desination||destination
 desinations||destinations
 desireable||desirable
+desision||decision
+desisions||decisions
 deskop||desktop
 deskops||desktops
+desparate||desperate
+desparately||desperately
 desribed||described
 desribe||describe
 desribes||describes
@@ -1391,15 +1421,20 @@ developper||developer
 developpment||development
 develpment||development
 deveolpment||development
+deverloper||developer
+deverlopers||developers
 devided||divided
 devide||divide
 devides||divides
 deviding||dividing
 diabled||disabled
 diable||disable
+diabler||disabler
+diablers||disablers
 diables||disables
 diabling||disabling
 diagnotic||diagnostic
+diagnotics||diagnostics
 dianostic||diagnostic
 dictioanries||dictionaries
 dictioanry||dictionary
@@ -1576,6 +1611,7 @@ drasticaly||drastically
 droped||dropped
 droppend||dropped
 droppped||dropped
+dropse||drops
 dsfg||dfsg
 dulicate||duplicate
 dumplicated||duplicated
@@ -1598,6 +1634,7 @@ ebaled||enabled
 ebale||enable
 ecspecially||especially
 edditable||editable
+ediable||editable
 editting||editing
 efective||effective
 efectively||effectively
@@ -1612,6 +1649,7 @@ effiently||efficiently
 efford||effort
 egde||edge
 egdes||edges
+eighter||either
 eletronic||electronic
 eligable||eligible
 elliminated||eliminated
@@ -1661,6 +1699,9 @@ encoses||encloses
 encosing||enclosing
 encoutner||encounter
 encoutners||encounters
+encrpted||encrypted
+encrpt||encrypt
+encrption||encryption
 encrytion||encryption
 encyption||encryption
 endianes||endianness
@@ -1709,6 +1750,11 @@ environemntal||environmental
 environemnt||environment
 environemnts||environments
 environent||environment
+epected||expected
+epectedly||expectedly
+epect||expect
+epecting||expecting
+epects||expects
 eqivalent||equivalent
 equiped||equipped
 equitorial||equatorial
@@ -1796,6 +1842,7 @@ execeptions||exceptions
 exection||execution
 exections||executions
 exectuable||executable
+exectuableness||executableness
 exectuables||executables
 exectution||execution
 exectutions||executions
@@ -1808,6 +1855,13 @@ executeables||executables
 exemple||example
 exension||extension
 exensions||extensions
+exepectation||expectation
+exepectations||expectations
+exepected||expected
+exepectedly||expectedly
+exepect||expect
+exepecting||expecting
+exepects||expects
 exept||except
 exeption||exception
 exeptions||exceptions
@@ -1830,6 +1884,8 @@ expectes||expects
 expection||exception
 expections||exceptions
 expendeble||expendable
+expepected||expected
+expepectedly||expectedly
 expermiental||experimental
 expeted||expected
 expierience||experience
@@ -1864,6 +1920,9 @@ extenstions||extensions
 extented||extended
 extention||extension
 extentions||extensions
+extepect||expect
+extepecting||expecting
+extepects||expects
 extesion||extension
 extesions||extensions
 extrac||extract
@@ -1929,6 +1988,7 @@ folloing||following
 follwing||following
 follwoing||following
 folowing||following
+folx||folks
 foppy||floppy
 foppys||floppies
 forbiden||forbidden
@@ -1967,6 +2027,8 @@ frequncies||frequencies
 frequncy||frequency
 frontent||frontend
 frontents||frontends
+frop||drop
+frops||drops
 FTBS||FTBFS
 fucntion||function
 fucntions||functions
@@ -2032,6 +2094,7 @@ genreates||generates
 genreating||generating
 genric||generic
 gental||gentle
+geocentic||geocentric
 geometrie||geometry
 geomtry||geometry
 geting||getting
@@ -2156,6 +2219,9 @@ hovewer||however
 howerver||however
 howver||however
 hsell||shell
+hsould'nt||shouldn't
+hsouldn't||shouldn't
+hsould||should
 hundrets||hundreds
 hvae||have
 hypenated||hyphenated
@@ -2188,10 +2254,12 @@ imediate||immediate
 imediately||immediately
 imediatly||immediately
 imilar||similar
+immeadiate||immediate
 immeadiately||immediately
 immedate||immediate
 immedately||immediately
 immediatelly||immediately
+immediatlye||immediately
 immediatly||immediately
 immidiate||immediate
 immmediate||immediate
@@ -2244,6 +2312,7 @@ impliment||implement
 implimenting||implementing
 impliments||implements
 implmentation||implementation
+implmentations||implementations
 implmented||implemented
 implment||implement
 implmenting||implementing
@@ -2333,6 +2402,14 @@ independant||independent
 independantly||independently
 independed||independent
 independend||independent
+independ||independent
+independly||independently
+independnent||independent
+independnet||independent
+independnt||independent
+independntly||independently
+independt||independent
+independtly||independently
 indepenent||independent
 indepenently||independently
 indiated||indicated
@@ -2433,6 +2510,7 @@ inlcuded||included
 inlcude||include
 inlcudes||includes
 inlcuding||including
+innactive||inactive
 innacurate||inaccurate
 innacurately||inaccurately
 inofficial||unofficial
@@ -2445,6 +2523,7 @@ insde||inside
 insensistive||insensitive
 insensistively||insensitively
 insensitve||insensitive
+insepection||inspection
 instad||instead
 instalation||installation
 instalations||installations
@@ -2494,6 +2573,9 @@ interesect||intersect
 interesection||intersection
 interesections||intersections
 interesects||intersects
+interessted||interested
+interessting||interesting
+interesst||interest
 interferance||interference
 interferred||interfered
 interferring||interfering
@@ -2543,11 +2625,13 @@ intial||initial
 intialisation||initialisation
 intialised||initialised
 intialise||initialise
+intialiser||initialiser
 intialises||initialises
 intialising||initialising
 intialization||initialization
 intialized||initialized
 intialize||initialize
+intializer||initializer
 intializes||initializes
 intializing||initializing
 intially||initially
@@ -2580,6 +2664,7 @@ invokves||invokes
 invokving||invoking
 irrelavent||irrelevant
 irrelevent||irrelevant
+irresepective||irrespective
 isntallation||installation
 isntallations||installations
 isntance||instance
@@ -2674,6 +2759,7 @@ lincesed||licensed
 lincese||license
 linceses||licenses
 lintain||lintian
+lising||listing
 litle||little
 litterally||literally
 localation||location
@@ -2723,6 +2809,9 @@ mantainer||maintainer
 mantaining||maintaining
 mantain||maintain
 mantains||maintains
+manualyl||manually
+manualy||manually
+manualyy||manually
 manully||manually
 manupulation||manipulation
 manupulations||manipulations
@@ -2733,6 +2822,8 @@ mappping||mapping
 mapppings||mappings
 mashine||machine
 mashines||machines
+mata-data||meta-data
+matadata||metadata
 matainer||maintainer
 matainers||maintainers
 matchin||matching
@@ -2789,6 +2880,9 @@ miniscule||minuscule
 minium||minimum
 miniums||minimums
 minumum||minimum
+mirgated||migrated
+mirgate||migrate
+mirgates||migrates
 mirro||mirror
 miscelaneous||miscellaneous
 miscellanous||miscellaneous
@@ -2913,7 +3007,13 @@ nonexistant||nonexistent
 non-inreractive||non-interactive
 nontheless||nonetheless
 noone||no one
+normalyl||normally
+normalyly||normally
 normaly||normally
+normalysed||normalised
+normalyy||normally
+normalyzed||normalized
+normlly||normally
 notfication||notification
 notfications||notifications
 nothern||northern
@@ -3054,6 +3154,7 @@ oscilated||oscillated
 oscilate||oscillate
 oscilating||oscillating
 otehr||other
+oter||other
 otherise||otherwise
 otherwhise||otherwise
 othwerwise||otherwise
@@ -3064,6 +3165,7 @@ ouputs||outputs
 ouputted||outputted
 ouputting||outputting
 outputing||outputting
+outter||outer
 outut||output
 outweight||outweigh
 outweights||outweighs
@@ -3106,6 +3208,10 @@ pacakges||packages
 pachage||package
 pach||patch
 packacge||package
+packaege||package
+packaeges||packages
+packaeg||package
+packaegs||packages
 packege||package
 packe||packed
 packge||package
@@ -3146,6 +3252,7 @@ paremeters||parameters
 paremter||parameter
 paremters||parameters
 parenthesed||parenthesized
+parenthsis||parenthesis
 paritial||partial
 parititioning||partitioning
 paritition||partition
@@ -3203,6 +3310,9 @@ permuation||permutation
 permuations||permutations
 peroid||period
 peroids||periods
+persepctive||perspective
+persepective||perspective
+persepectives||perspectives
 persistance||persistence
 persistant||persistent
 personnal||personal
@@ -3379,7 +3489,12 @@ proctects||protects
 procude||produce
 progam||program
 progams||programs
+progessbar||progressbar
+progesses||progresses
+progessive||progressive
+progessor||progressor
 progess||progress
+progesss||progress
 programatically||programmatically
 programatic||programmatic
 programers||programmers
@@ -3405,6 +3520,7 @@ pronouce||pronounce
 pronounciation||pronunciation
 pronunce||pronounce
 properies||properties
+properteis||properties
 propery||property
 propigate||propagate
 propigation||propagation
@@ -3442,6 +3558,7 @@ raspoberry||raspberry
 reachs||reaches
 readabilty||readability
 readapted||re-adapted
+readiable||readable
 realtion||relation
 realtions||relations
 reamde||README
@@ -3618,6 +3735,10 @@ remebers||remembers
 remoote||remote
 removeable||removable
 renderering||rendering
+re-negociated||re-negotiated
+renegociated||renegotiated
+re-negociation||re-negotiation
+renegociation||renegotiation
 renegotation||renegotiation
 reoport||report
 reorginised||reorganised
@@ -3627,8 +3748,13 @@ repace||replace
 repaces||replaces
 repacing||replacing
 repeatly||repeatedly
+repectable||respectable
+repected||respected
+repecting||respecting
 repectively||respectively
 repective||respective
+repect||respect
+repects||respects
 repesented||represented
 repesenting||representing
 repesent||represent
@@ -3685,6 +3811,12 @@ resarts||restarts
 rescource||resource
 rescources||resources
 resemblence||resemblance
+resepected||respected
+resepecting||respecting
+resepectively||respectively
+resepective||respective
+resepect||respect
+resepects||respects
 reserverd||reserved
 resetable||resettable
 reseted||reset
@@ -3758,7 +3890,10 @@ reuqested||requested
 reuqesting||requesting
 reuqest||request
 reuqests||requests
+reverced||reversed
+reverce||reverse
 revrese||reverse
+rewitable||rewritable
 rewrited||rewrote
 rewriten||rewritten
 rigth||right
@@ -3863,10 +3998,16 @@ separte||separate
 separtes||separates
 separting||separating
 sepatae||separate
+sepcifically||specifically
+sepcification||specification
+sepcifications||specifications
+sepcific||specific
 sepcified||specified
+sepcifier||specifier
 sepcifies||specifies
 sepcifying||specifying
 sepcify||specify
+sepectral||spectral
 seperated||separated
 seperately||separately
 seperate||separate
@@ -3962,6 +4103,7 @@ smaple||sample
 smaples||samples
 snapsnot||snapshot
 snapsnots||snapshots
+softend||softened
 softwares||software
 sofware||software
 sofwtare||software
@@ -3977,9 +4119,14 @@ somtimes||sometimes
 sorrounding||surrounding
 souce||source
 souces||sources
+sould'nt||shouldn't
+souldn't||shouldn't
+sould||should
 soundard||soundcard
 soure||source
 soures||sources
+sparately||separately
+sparate||separate
 spawed||spawned
 spawing||spawning
 spaw||spawn
@@ -4017,6 +4164,8 @@ speep-up||speed-up
 speficied||specified
 spefic||specific
 speling||spelling
+sperately||separately
+sperate||separate
 spliting||splitting
 splitted||split
 sponser||sponsor
@@ -4033,6 +4182,14 @@ sructure||structure
 staically||statically
 standardss||standards
 standar||standard
+standartds||standards
+standartd||standard
+standartisation||standardisation
+standartisator||standardiser
+standartised||standardised
+standartization||standardization
+standartizator||standardizer
+standartized||standardized
 standarts||standards
 standart||standard
 staticly||statically
@@ -4187,6 +4344,8 @@ suroundings||surroundings
 surounding||surrounding
 surounds||surrounds
 suround||surround
+surported||supported
+surport||support
 surpressed||suppressed
 surpresses||suppresses
 surpressing||suppressing
@@ -4382,6 +4541,8 @@ transitionned||transitioned
 transitons||transitions
 transiton||transition
 translatied||translated
+translatoins||translations
+translatoin||translation
 transmiters||transmitters
 transmiter||transmitter
 transmiting||transmitting
@@ -4456,6 +4617,7 @@ unconditionnal||unconditional
 unconditionnaly||unconditionally
 uncondtionally||unconditionally
 unconfiged||unconfigured
+uncontrolable||uncontrollable
 uncorelated||uncorrelated
 uncorrect||incorrect
 uncorrectly||incorrectly
@@ -4469,11 +4631,17 @@ undestand||understand
 undestood||understood
 unecessary||unnecessary
 uneeded||unneeded
+unencrpted||unencrypted
+unencrpt||unencrypt
+unepectedly||unexpectedly
+unepected||unexpected
 uner||under
 unexcpected||unexpected
 unexecpted||unexpected
 unexected||unexpected
 unexepcted||unexpected
+unexepectedly||unexpectedly
+unexepected||unexpected
 unexpcted||unexpected
 unexpetedly||unexpectedly
 unexpeted||unexpected
@@ -4485,6 +4653,7 @@ unforunately||unfortunately
 unforunate||unfortunate
 uninitalized||uninitialized
 unintentially||unintentionally
+uninteressting||uninteresting
 unintialised||uninitialised
 unintialized||uninitialized
 uniqe||unique
@@ -4536,6 +4705,7 @@ unrecogized||unrecognized
 unreconized||unrecognized
 unregisterd||unregistered
 unresonable||unreasonable
+unsepcified||unspecified
 unsinged||unsigned
 unspported||unsupported
 unsual||unusual
@@ -4556,6 +4726,8 @@ unusuable||unusable
 unvailable||unavailable
 unversionned||unversioned
 unversoned||unversioned
+unxepectedly||unexpectedly
+unxepected||unexpected
 unziped||unzipped
 upated||updated
 upater||updater
@@ -4585,6 +4757,7 @@ uptream||upstream
 usally||usually
 usal||usual
 usefule||useful
+usefullness||usefulness
 usefull||useful
 usege||usage
 usera||users
@@ -4598,6 +4771,7 @@ utillities||utilities
 utilties||utilities
 utiltity||utility
 utitlty||utility
+utlities||utilities
 utlity||utility
 vaiables||variables
 vaiable||variable
@@ -4705,6 +4879,7 @@ willl||will
 wipoing||wiping
 wirtes||writes
 wirte||write
+witable||writeable
 withe||with
 withing||within
 withouth||without
@@ -4733,6 +4908,11 @@ writting||writing
 wroked||worked
 wroks||works
 wrok||work
+xepected||expected
+xepectedly||expectedly
+xepect||expect
+xepecting||expecting
+xepects||expects
 xour||your
 xwindows||X
 yau||you

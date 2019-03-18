@@ -472,6 +472,14 @@ sub run {
             last;
         }
     }
+
+    # If we are using uscan in git tag mode, the signature will never
+    # match the tarball so pretend we don't have/need a signing key.
+    my $watch = $info->index_resolved_path('debian/watch');
+    if ($watch && $watch->file_contents =~ m/pgpmode=gittag/) {
+        $has_signing_key = 0;
+    }
+
     foreach my $file (keys %$files) {
         if (   $has_signing_key
             && $file =~ m/(^.*\.orig(?:-[A-Za-z\d-]+)?\.tar)\./

@@ -58,6 +58,7 @@ Build-Depends:
  libtest-strict-perl <!nocheck>,
  libtest-synopsis-perl <!nocheck>,
  libtext-csv-perl <!nocheck>,
+ libtext-csv-xs-perl <!nocheck>,
  libtext-diff-perl <!nocheck>,
  libtext-levenshtein-perl <!nocheck>,
  libtext-template-perl <!nocheck>,

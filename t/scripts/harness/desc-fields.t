@@ -30,7 +30,8 @@ use autodie;
 use v5.10;
 
 use File::Find::Rule;
-use List::Util qw(all uniq);
+use List::MoreUtils qw(uniq);
+use List::Util qw(all);
 use Path::Tiny;
 use Test::More;
 

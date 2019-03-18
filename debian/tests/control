@@ -1,4 +1,5 @@
 Tests: testsuite
+Restrictions: allow-stderr
 Depends: @builddeps@,
          build-essential,
          lintian

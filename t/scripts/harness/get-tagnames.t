@@ -27,7 +27,7 @@ BEGIN {
       unless length $ENV{'LINTIAN_TEST_ROOT'};
 }
 
-use List::Util qw(uniq);
+use List::MoreUtils qw(uniq);
 use Path::Tiny;
 use Test::More;
 
