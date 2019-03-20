@@ -1,11 +1,11 @@
-{$source} (1.0) unstable; urgency=low
+{$source} ({$version}) {$distribution}; urgency=low
 
   * Lintian Test Suite.
   * Test: {$testname}
 
  -- {$author}  {$date}
 
-{$source} (0.1) unstable; urgency=low
+{$source} ({$prev-version}) unstable; urgency=low
 
   * Lintian Test Suite.
   * Test: {$testname}
