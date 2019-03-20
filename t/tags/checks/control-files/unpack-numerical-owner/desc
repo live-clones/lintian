@@ -2,9 +2,5 @@ Skeleton: deb
 Testname: unpack-numerical-owner
 Version: 1.0
 Description: Test for tarballs with numerical owner only
-Test-Against:
- bad-owner-for-doc-file
- control-file-has-bad-owner
-Check:
- files
- control-files
+Test-Against: control-file-has-bad-owner
+Check: control-files

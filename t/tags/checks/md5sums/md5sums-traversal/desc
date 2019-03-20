@@ -6,6 +6,4 @@ Options: -C copyright-file,md5sums,control-files
 Test-Against:
  file-missing-in-md5sums
  malformed-md5sums-control-file
-Check:
- control-files
- md5sums
+Check: md5sums
