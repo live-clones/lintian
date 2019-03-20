@@ -1,8 +1,8 @@
-Package: description-synopsis-spaces
-Version: 1.0
-Architecture: all
-Maintainer: Debian Lintian Maintainers <lintian-maint@debian.org>
-Section: devel
+Package: {$source}
+Version: {$version}
+Architecture: {$package_architecture}
+Maintainer: {$author}
+Section: {$section}
 Priority: optional
 Description:     synopsis starts with spaces
  This is a test package designed to exercise some feature or tag of
