@@ -1,9 +1,14 @@
 Template-Sets:
- . (DEBIAN),
- . (debs-make-builder),
+ DEBIAN (binary-control),
+ doc (mandatory-docs),
+ . (deb-make-builder),
  . (test-runner-tags),
  . (lintian-invocation)
 Fill-Targets:
- . (debian-packaging),
+ DEBIAN (binary-control),
+ doc (mandatory-docs),
  . (make-builder),
- . (lintian-invocation)
+ . (lintian-invocation),
+ pre-build,
+ pre-control,
+ pre-data
