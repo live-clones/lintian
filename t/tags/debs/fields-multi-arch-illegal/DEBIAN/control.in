@@ -1,11 +1,11 @@
-Package: fields-multi-arch-illegal
-Version: 1.0
+Package: {$source}
+Version: {$version}
 Architecture: all
 Multi-arch: same
-Maintainer: Debian Lintian Maintainers <lintian-maint@debian.org>
-Section: devel
+Maintainer: {$author}
+Section: {$section}
 Priority: optional
-Description: Test package with illegal Multi-arch value
+Description: {$description}
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
  things.  It should not be installed like a regular package.  It may
