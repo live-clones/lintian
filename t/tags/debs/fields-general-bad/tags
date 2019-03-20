@@ -1,16 +1,17 @@
-E: fields-general-BAD?: alternates-not-allowed conflicts
-E: fields-general-BAD?: bad-package-name
-E: fields-general-BAD?: bad-relation depends: another-package (>< 1.0)
-E: fields-general-BAD?: bad-version-in-relation depends: other-package (>= 1.0?)
-E: fields-general-BAD?: bad-version-in-relation recommends: g++ (>= s4.1)
-E: fields-general-BAD?: bad-version-number 1.0?
-E: fields-general-BAD?: multiline-field priority
-E: fields-general-BAD?: package-not-lowercase
-E: fields-general-BAD?: too-many-architectures
 E: fields-general-BAD?: unknown-priority is weird
 I: fields-general-BAD?: unknown-field-in-control unknown-field
-W: fields-general-BAD?: empty-section-field
-W: fields-general-BAD?: file-name-contains-wildcard-character usr/share/doc/fields-general-BAD?/
-W: fields-general-BAD?: file-name-contains-wildcard-character usr/share/doc/fields-general-BAD?/changelog.gz
-W: fields-general-BAD?: file-name-contains-wildcard-character usr/share/doc/fields-general-BAD?/copyright
 W: fields-general-BAD?: unknown-architecture weird
+E: fields-general-BAD?: too-many-architectures
+E: fields-general-BAD?: package-not-lowercase
+E: fields-general-BAD?: multiline-field priority
+W: fields-general-BAD?: file-name-contains-wildcard-character usr/share/doc/fields-general-BAD?/copyright
+W: fields-general-BAD?: file-name-contains-wildcard-character usr/share/doc/fields-general-BAD?/changelog.gz
+W: fields-general-BAD?: file-name-contains-wildcard-character usr/share/doc/fields-general-BAD?/
+W: fields-general-BAD?: empty-section-field
+E: fields-general-BAD?: bad-version-number 1.0?
+E: fields-general-BAD?: bad-version-in-relation recommends: g++ (>= s4.1)
+E: fields-general-BAD?: bad-version-in-relation depends: other-package (>= 1.0?)
+E: fields-general-BAD?: bad-relation depends: another-package (>< 1.0)
+E: fields-general-BAD?: bad-package-name
+E: fields-general-BAD?: alternates-not-allowed conflicts
+E: fields-general-BAD?: source-field-malformed fields-general-BAD?

@@ -1,8 +1,8 @@
 Package: fields-general-BAD?
-Source: fields-general-bad
+Source: {$source}
 Version: 1.0?
 Architecture: weird i386 amd64
-Maintainer: Debian Lintian Maintainers <lintian-maint@debian.org>
+Maintainer: {$author}
 Section:
 Priority: is
  weird
@@ -10,7 +10,7 @@ Unknown-Field: Hallo World
 Depends: other-package (>= 1.0?), another-package (>< 1.0)
 Conflicts: somepkg | anotherpkg
 Recommends: g++ (>= s4.1)
-Description: test for bad source package name
+Description: {$description}
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
  things.  It should not be installed like a regular package.  It may
