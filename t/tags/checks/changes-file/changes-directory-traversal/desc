@@ -2,3 +2,4 @@ Skeleton: changes
 Testname: changes-directory-traversal
 Version: 1.0
 Description: Test directory traversal when processing Files
+Check: changes-file
