@@ -1,4 +1,4 @@
-Skeleton: dsc
+Skeleton: source
 Testname: unpack-srcpkg-dot-dir
 Version: 1.0-1
 Type: non-native
