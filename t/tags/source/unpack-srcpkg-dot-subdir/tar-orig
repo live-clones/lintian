@@ -1,0 +1,8 @@
+#!/bin/sh
+
+set -e
+
+tarstem="$1"
+directory="$2"
+
+tar --create --file "$tarstem.tar.gz" --gzip "./$directory"
