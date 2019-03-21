@@ -1,4 +1,4 @@
-Skeleton: dsc
+Skeleton: source
 Testname: debian-source-dir-traversal-2
 Version: 1
 Description: Test for information disclosure via d/source
