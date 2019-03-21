@@ -1,3 +1,1 @@
-debian-symlink (source): testsuite-autopkgtest-missing
 debian-symlink (source): older-source-format 1.0
-debian-symlink (source): inconsistent-testsuite-field
