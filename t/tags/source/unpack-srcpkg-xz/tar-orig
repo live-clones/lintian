@@ -1,0 +1,8 @@
+#!/bin/sh
+
+set -e
+
+tarstem="$1"
+packagedir="$2"
+
+tar --create --file "$tarstem.tar.xz" --xz "$packagedir"
