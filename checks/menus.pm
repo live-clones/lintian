@@ -351,6 +351,11 @@ sub check_doc_base_field {
             tag 'doc-base-index-references-multiple-files', "$dbfile:$line";
         }
         for my $file (@files) {
+            next if $file =~ m %^/usr/share/doc/%;
+            next if $file =~ m %^/usr/share/info/%;
+            tag 'doc-base-file-references-wrong-path', "$dbfile:$line", $file;
+        }
+        for my $file (@files) {
             next if $file eq '';
             my $realfile = delink($file, $all_links);
             # openoffice.org-dev-doc has thousands of files listed so try to
