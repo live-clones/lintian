@@ -1,4 +1,4 @@
-Skeleton: dsc
+Skeleton: source
 Testname: no-sha256-checksum
 Version: 1
 Source-Format: 3.0 (native)
