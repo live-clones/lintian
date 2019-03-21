@@ -1,1 +1,2 @@
 I: debian-symlink source: testsuite-autopkgtest-missing
+I: debian-symlink source: inconsistent-testsuite-field
