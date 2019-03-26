@@ -67,6 +67,7 @@ accepect||accept
 accepected||accepted
 acceptible||acceptable
 acces||access
+accesible||accessible
 accesing||accessing
 accesnt||accent
 accessable||accessible
@@ -381,6 +382,7 @@ aproximate||approximate
 aproximately||approximately
 aproximation||approximation
 aproximations||approximations
+aqain||again
 aqcuire||acquire
 aqcuired||acquired
 aqcuires||acquires
@@ -728,6 +730,7 @@ cehck||check
 cehcked||checked
 cehcking||checking
 cehcks||checks
+cenario||scenario
 certainity||certainty
 certficate||certificate
 certficates||certificates
@@ -805,6 +808,11 @@ choosen||chosen
 chosing||choosing
 chracter||character
 chracters||characters
+chunck||chunk
+chuncked||chunked
+chuncking||chunking
+chuncks||chunks
+chuncksize||chunksize
 cicruit||circuit
 cicruits||circuits
 cilyndre||cylinder
@@ -1147,6 +1155,8 @@ correclty||correctly
 correctnes||correctness
 correect||correct
 correectly||correctly
+correllation||correlation
+correllations||correlations
 correnspond||correspond
 corrensponded||corresponded
 corrensponding||corresponding
@@ -1182,6 +1192,8 @@ coypright||copyright
 creationg||creating
 creatre||create
 creatred||created
+credintial||credential
+credintials||credentials
 cretae||create
 cretaed||created
 cretaes||creates
@@ -1253,6 +1265,7 @@ decompres||decompress
 decompresed||decompressed
 decompreses||decompresses
 decompresing||decompressing
+decorrellation||decorrelation
 decribed||described
 decribe||describe
 decribes||describes
@@ -1598,6 +1611,7 @@ distingush||distinguish
 distingushed||distinguished
 distingushes||distinguishes
 distingushing||distinguishing
+distrebuted||distributed
 distribtion||distribution
 distribtions||distributions
 distribtuion||distribution
@@ -1846,6 +1860,7 @@ espacially||especially
 especailly||especially
 especialy||especially
 especialyl||especially
+esseintially||essentially
 estbalishment||establishment
 etherenet||ethernet
 etsablishment||establishment
@@ -1947,6 +1962,9 @@ exlicit||explicit
 exlicitly||explicitly
 exlusive||exclusive
 exlusively||exclusively
+exmained||examined
+exmaine||examine
+exmaines||examines
 exmaple||example
 exmaples||examples
 expecially||especially
@@ -1977,6 +1995,8 @@ explit||explicit
 explitly||explicitly
 explot||exploit
 exploting||exploiting
+expoential||exponential
+expoentially||exponentially
 expresion||expression
 expresions||expressions
 expresssion||expression
@@ -2069,6 +2089,7 @@ forground||foreground
 formaly||formally
 formated||formatted
 formating||formatting
+formely||formerly
 formend||formed
 forseeable||foreseeable
 forse||force
@@ -2366,6 +2387,8 @@ implememted||implemented
 implememt||implement
 implememting||implementing
 implememts||implements
+implemenationa||implementation
+implemenationd||implementation
 implemenation||implementation
 implemenations||implementations
 implemend||implement
@@ -2412,6 +2435,7 @@ impresive||impressive
 improvment||improvement
 improvments||improvements
 inacccessible||inaccessible
+inaccesible||inaccessible
 inadvertant||inadvertent
 inadvertantly||inadvertently
 inappropiate||inappropriate
@@ -2716,21 +2740,42 @@ intiailize||initialize
 intiailizes||initializes
 intiailizing||initialising
 intiailizing||initializing
+intiale||initial
 intial||initial
 intialisation||initialisation
 intialised||initialised
 intialise||initialise
 intialiser||initialiser
+intialisers||initialisers
 intialises||initialises
 intialising||initialising
+intialistion||initialisation
 intialization||initialization
+intializaze||initialize
 intialized||initialized
 intialize||initialize
 intializer||initializer
+intializers||initializers
 intializes||initializes
 intializing||initializing
+intializtion||initialization
+intiallisation||initialisation
+intiallisations||initialisations
+intiallised||initialised
+intiallization||initialization
+intiallizations||initializations
+intiallized||initialized
+intiallly||initially
 intially||initially
+intialsed||initialised
+intialse||initialise
+intialsing||initialising
 intials||initials
+intialte||initialise
+intialy||initially
+intialzed||initialized
+intialze||initialize
+intialzing||initializing
 intregral||integral
 introsepection||introspection
 intrrupted||interrupted
@@ -2761,6 +2806,7 @@ invokved||invoked
 invokve||invoke
 invokves||invokes
 invokving||invoking
+involvment||involvement
 irrelavent||irrelevant
 irrelevent||irrelevant
 irresepective||irrespective
@@ -2880,6 +2926,7 @@ machanisms||mechanisms
 machinary||machinery
 maching||matching
 macpakge||package
+mahcine||machine
 maillinglist||mailing list
 maillinglists||mailing lists
 mailling||mailing
@@ -3062,6 +3109,7 @@ mumbers||numbers
 musn't||mustn't
 mutiple||multiple
 mutliple||multiple
+myabe||maybe
 myslef||myself
 nam||name
 nams||names
@@ -3228,6 +3276,9 @@ opitons||options
 optet||opted
 optinally||optionally
 optinal||optional
+optioinal||optional
+optioin||option
+optioins||options
 optionaly||optionally
 optionnal||optional
 optionnaly||optionally
@@ -3325,6 +3376,8 @@ pacakge||package
 pacakges||packages
 pachage||package
 pach||patch
+pacjage||package
+pacjages||packages
 packacge||package
 packaege||package
 packaeges||packages
@@ -3458,6 +3511,9 @@ pleaes||please
 ploting||plotting
 pluign||plugin
 pluigns||plugins
+poentially||potentially
+poential||potential
+poentials||potentials
 poinnter||pointer
 poiter||pointer
 poiters||pointers
@@ -3466,6 +3522,11 @@ polute||pollute
 polutes||pollutes
 poluting||polluting
 polution||pollution
+poointed||pointed
+poointer||pointer
+pooint||point
+pooints||points
+popoen||popen
 popullated||populated
 popullate||populate
 porgrammeer||programmer
@@ -3671,6 +3732,8 @@ protocoll||protocol
 protoype||prototype
 protoypes||prototypes
 psaswd||passwd
+pseudopoential||pseudopotential
+pseudopoentials||pseudopotentials
 psuedo||pseudo
 psychadelic||psychedelic
 publicaly||publicly
@@ -3921,6 +3984,10 @@ repsonse||response
 repsonses||responses
 reqeust||request
 reqeusts||requests
+requestesd||requested
+requestes||requests
+requestested||requested
+requestests||requests
 requiered||required
 requiere||require
 requieres||requires
@@ -4060,6 +4127,10 @@ runnig||running
 runnning||running
 sacrifying||sacrificing
 safeing||saving
+safe-pooint||safe-point
+safepooint||safepoint
+safe-pooints||safe-points
+safepooints||safepoints
 safly||safely
 saftey||safety
 safty||safety
@@ -4084,6 +4155,7 @@ scaleable||scalable
 scalled||scaled
 scaned||scanned
 scaning||scanning
+scintiallation||scintillation
 scolling||scrolling
 scritpt||script
 scritpts||scripts
@@ -4295,6 +4367,8 @@ specifiy||specify
 specifyied||specified
 spectularly||spectacularly
 spectular||spectacular
+speeaking||speaking
+speeak||speak
 speeped||sped
 speeping||sleeping
 speep||sleep
@@ -4386,6 +4460,7 @@ subporgram||subprogram
 subsecrion||subsection
 subseqent||subsequent
 subsequest||subsequent
+substaintially||substantially
 substituations||substitutions
 substituation||substitution
 substituded||substituted
@@ -4479,7 +4554,13 @@ suppying||supplying
 suppy||supply
 supressed||suppressed
 supresses||suppresses
+supressible||suppressible
 supressing||suppressing
+supressions||suppressions
+supression||suppression
+supressors||suppressors
+supressor||suppressor
+supresssion||suppression
 supress||suppress
 suprised||surprised
 suprises||surprises
@@ -4737,6 +4818,7 @@ umbrealla||umbrella
 umoutn||umount
 unabailable||unavailable
 unacceptible||unacceptable
+unaccesible||unaccessible
 unamed||unnamed
 unavaible||unavailable
 unavailabel||unavailable
@@ -4799,11 +4881,16 @@ unfortunatelly||unfortunately
 unfortunatly||unfortunately
 unforunately||unfortunately
 unforunate||unfortunate
+uniformely||uniformly
 uninitalized||uninitialized
 unintentially||unintentionally
 uninteressting||uninteresting
 unintialised||uninitialised
 unintialized||uninitialized
+unintiallised||uninitialised
+unintiallized||uninitialized
+unintialsied||uninitialised
+unintialzied||uninitialized
 uniqe||unique
 unitialized||uninitialized
 unitialize||uninitialize
@@ -4867,6 +4954,9 @@ unsuccesful||unsuccessful
 unsuccessfull||unsuccessful
 unsued||unused
 unsuported||unsupported
+unsupressed||unsuppressed
+unsupresses||unsuppresses
+unsupress||unsuppress
 untill||until
 untranslateable||untranslatable
 unued||unused
@@ -4918,6 +5008,7 @@ usetnet||Usenet
 usibility||usability
 usuable||usable
 usualy||usually
+utilies||utilities
 utilites||utilities
 utillities||utilities
 utilties||utilities
