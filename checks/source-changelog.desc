@@ -30,7 +30,7 @@ Certainty: certain
 Info: This package is not native and requires a Debian revision as part of the
  version recorded in debian/changelog.
  .
- This error is sometimes also triggered  in packages with a 1.0 source format
+ This error is sometimes also triggered in packages with a 1.0 source format
  and a stray <tt>*.orig.tar.gz</tt> file in the parent directory, which causes
  <tt>dpkg-source</tt> to believe that the package is non-native. If that is
  incorrect, please convert the package to the 3.0 (native) format.
