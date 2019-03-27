@@ -11,7 +11,9 @@ Architecture: any
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\},
          program-data (= $\{binary:Version\}),
          program-data-extra (= $\{source:Version\})
-Provides: provided-package (= $\{binary:Version\})
+Provides:
+ provided-package (= $\{binary:Version\}),
+ provided-package-2 (= $\{binary:Version\})
 Description: {$description}
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd

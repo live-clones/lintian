@@ -51,8 +51,13 @@ sub run {
 
     my @dep_fields
       = qw(depends pre-depends recommends suggests conflicts replaces);
-    my @provided
-      = map { $info->binary_field($_, 'provides', '') } $info->binaries;
+
+    my @provided;
+    foreach my $pkg ($info->binaries) {
+        my $val = $info->binary_field($pkg, 'provides', '');
+        $val =~ s/^\s+|\s+$//g;
+        push(@provided, split(/\s*,\s*/, $val));
+    }
 
     foreach my $pkg1 ($info->binaries) {
         my ($pkg1_is_any, $pkg2, $pkg2_is_any, $substvar_strips_binNMU);
