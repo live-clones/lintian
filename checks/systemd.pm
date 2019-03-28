@@ -261,6 +261,31 @@ sub check_systemd_service_file {
           unless $seen_hardening
           or $is_oneshot
           or any { 'sleep.target' eq $_ } @wanted_by;
+
+        #<<< no perltidy
+        if (extract_service_file_values($file, 'Unit', 'DefaultDependencies', 1)) {
+        #>>>
+            my $seen_conflicts_shutdown = 0;
+            my @conflicts
+              = extract_service_file_values($file, 'Unit','Conflicts', 1);
+            foreach my $x (@conflicts) {
+                next unless $x eq 'shutdown.target';
+                $seen_conflicts_shutdown = 1;
+                last;
+            }
+            if ($seen_conflicts_shutdown) {
+                my $seen_before_shutdown = 0;
+                my @before
+                  = extract_service_file_values($file, 'Unit','Before', 1);
+                foreach my $x (@before) {
+                    next unless $x eq 'shutdown.target';
+                    $seen_before_shutdown = 1;
+                    last;
+                }
+                tag 'systemd-service-file-shutdown-problems', $file,
+                  unless $seen_before_shutdown;
+            }
+        }
     }
 
     return 1;

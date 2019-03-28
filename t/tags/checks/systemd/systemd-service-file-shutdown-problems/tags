@@ -1,0 +1,3 @@
+W: systemd-service-file-shutdown-problems-good: systemd-service-file-shutdown-problems lib/systemd/system/systemd-service-file-shutdown-problems-good.service
+W: systemd-service-file-shutdown-problems-good: description-too-long
+W: systemd-service-file-shutdown-problems-bad: description-too-long
