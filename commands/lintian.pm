@@ -550,7 +550,7 @@ my %opthash = (
     'no-cfg' => \$opt{'no-cfg'},
     'profile=s' => \$opt{'LINTIAN_PROFILE'},
 
-    'jobs|j:i' => \$opt{'jobs'},
+    'jobs|j=i' => \$opt{'jobs'},
     'ignore-lintian-env' => \$opt{'ignore-lintian-env'},
     'include-dir=s' => \&record_option_too_late,
     'user-dirs!' => \&record_option_too_late,

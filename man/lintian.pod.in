@@ -452,13 +452,11 @@ LINTIAN_ROOT.
 
 B<Note>: This option should be the very first if given.
 
-=item B<-j> [X], B<--jobs>[=X]
+=item B<-j> X, B<--jobs>=X
 
 Set the limit for how many unpacking jobs Lintian will run in
-parallel.  If X is not given, Lintian will not limit the number of
-unpacking jobs run that can run in parallel.
-
-This option overrides the B<jobs> variable in the configuration file.
+parallel.  This option overrides the B<jobs> variable in the
+configuration file.
 
 By default Lintian will use I<nproc> to determine a reasonable default
 (or 2, if the nproc fails).
