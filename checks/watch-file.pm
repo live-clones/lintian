@@ -112,7 +112,7 @@ sub run {
                       and /^[ud]?versionmangle\s*=.*$repack/;
                     $repack_dmangle = 1
                       if defined $repack
-                      and /^dversionmangle\s*=.*$repack/;
+                      and /^dversionmangle\s*=\s*(?:auto|.*$repack.*)$/;
                     $prerelease_mangle = 1
                       if defined $prerelease
                       and /^[ud]?versionmangle\s*=.*$prerelease/;
