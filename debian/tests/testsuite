@@ -5,6 +5,6 @@ WORKDIR="$ADTTMP/$(basename $0)"
 
 export LINTIAN_TEST_INSTALLED=yes
 
-t/bin/runtests --jobs=1 --unattended --keep-going --work-dir="$WORKDIR" --onlyrun="suite:tags" t
+t/bin/runtests -j --unattended --keep-going --work-dir="$WORKDIR" --onlyrun="suite:tags" t
 
 rm -fr "${WORKDIR}"
