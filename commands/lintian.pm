@@ -28,6 +28,7 @@ use strict;
 use warnings;
 use autodie;
 use utf8;
+use v5.16;
 
 use Cwd qw(abs_path);
 use Carp qw(verbose);
@@ -756,12 +757,7 @@ sub main {
                 }
                 @group_lpkg = $group->get_processables;
             } else {
-                my @futures;
-                for my $lpkg ($group->get_processables) {
-                    my @pkg_futures = auto_clean_package($lpkg);
-                    push(@futures, @pkg_futures);
-                }
-                $async_loop->await_all(@futures);
+                auto_clean_package($group);
             }
         };
         my $total_tres = $format_timer_result->($total_raw_res);
@@ -867,6 +863,44 @@ sub auto_clean_package {
         });
 
     return $future;
+}
+
+sub auto_clean_packages {
+    my ($group) = @_;
+    my @worklist = $group->get_processables;
+    my $job_limit = $opt{'jobs'} || scalar(@worklist);
+    my $loop = IO::Async::Loop->new;
+    my $active_jobs = 0;
+    my @futures;
+    my $schedule_task = sub {
+        my $lpkg = pop(@worklist);
+        my $future;
+        if (not defined($lpkg)) {
+            $active_jobs--;
+            debug_msg(2,
+                    'Clean up job finished and queue is empty. '
+                  . " Remaiing jobs: $active_jobs");
+            $loop->stop if not $active_jobs;
+            return;
+        }
+        my $proc_id = $lpkg->identifier;
+        $future = auto_clean_package($lpkg);
+        debug_msg(2,
+                "Scheduled clean up of $proc_id; "
+              . 'Items enqueued: '
+              . scalar(@worklist)
+              . ", active jobs: $active_jobs");
+        $future->on_ready(__SUB__);
+        push(@futures, $future);
+        return;
+    };
+    $job_limit = scalar(@worklist) if $job_limit > scalar(@worklist);
+    for (0..$job_limit-1) {
+        $active_jobs++;
+        $schedule_task->();
+    }
+    $loop->run;
+    return @futures;
 }
 
 sub post_pkg_process_overrides{
@@ -1054,12 +1088,7 @@ sub process_group {
     if (@auto_remove) {
         # Invoke auto-clean now that the group has been checked
         $timer = $start_timer->();
-        my @futures;
-        foreach my $lpkg ($group->get_processables) {
-            my @pkg_futures = auto_clean_package($lpkg);
-            push(@futures, @pkg_futures);
-        }
-        $async_loop->await_all(@futures);
+        my @futures = auto_clean_packages($group);
         if (any { $_->is_failed } @futures) {
             $exit_code = 2;
             $all_ok = 0;
