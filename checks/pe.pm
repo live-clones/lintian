@@ -62,6 +62,11 @@ sub run {
             'SafeSEH' => ~$characteristics & 0x400,  # note negation
         );
 
+        # Don't check for the x86-specific "SafeSEH" feature for code
+        # that is JIT-compiled by the Mono runtime. (#926334)
+        delete $features{'SafeSEH'}
+          if $file->file_info =~ / Mono\/.Net assembly, /;
+
         my @missing = grep { !$features{$_} } sort keys %features;
         tag 'portable-executable-missing-security-features', $file,
           join(SPACE, @missing)
