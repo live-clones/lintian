@@ -1,0 +1,6 @@
+Skeleton: upload-native
+Testname: systemd-service-file-shutdown-problems
+Version: 1.0
+Description: Check for DefaultDependencies=no and Conflicts=shutdown.target but not Before=shutdown.target
+Test-Against:
+Check: systemd

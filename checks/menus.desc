@@ -144,6 +144,14 @@ Info: The Index field in a doc-base file should reference the single index
  should be listed in the Files field.
 Ref: doc-base 2.3.2.2
 
+Tag: doc-base-file-references-wrong-path
+Severity: important
+Certainty: certain
+Info: The specified doc-base control file references a file in an
+ <tt>Index</tt> or <tt>Files</tt> field that does not start with
+ <tt>/usr/share/doc</tt> or <tt>/usr/share/info</tt>.
+Ref: doc-base 2.3.2.2
+
 Tag: doc-base-file-references-missing-file
 Severity: important
 Certainty: certain

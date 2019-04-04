@@ -345,13 +345,17 @@ sub check_doc_base_field {
     # classes since otherwise we'd need to deal with wildcards inside
     # character classes and aren't there yet.
     if ($field eq 'index' or $field eq 'files') {
-        my @files = map { split('\s+', $_) } @$vals;
+        my @files = map { split(' ', $_) } @$vals;
 
         if ($field eq 'index' && @files > 1) {
             tag 'doc-base-index-references-multiple-files', "$dbfile:$line";
         }
         for my $file (@files) {
-            next if $file eq '';
+            next if $file =~ m %^/usr/share/doc/%;
+            next if $file =~ m %^/usr/share/info/%;
+            tag 'doc-base-file-references-wrong-path', "$dbfile:$line", $file;
+        }
+        for my $file (@files) {
             my $realfile = delink($file, $all_links);
             # openoffice.org-dev-doc has thousands of files listed so try to
             # use the hash if possible.

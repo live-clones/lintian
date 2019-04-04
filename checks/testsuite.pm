@@ -51,8 +51,9 @@ my %KNOWN_SPECIAL_DEPENDS = map { $_ => 1 } qw(
 sub run {
     my ($pkg, $type, $info) = @_;
     my $testsuites = $info->field('testsuite', '');
-    my $control = $info->index('debian/tests/control');
-    my $control_autodep8 = $info->index('debian/tests/control.autodep8');
+    my $control = $info->index_resolved_path('debian/tests/control');
+    my $control_autodep8
+      = $info->index_resolved_path('debian/tests/control.autodep8');
     my $needs_control = 0;
 
     tag 'testsuite-autopkgtest-missing' if ($testsuites !~ /autopkgtest/);
@@ -199,7 +200,7 @@ sub check_test_file {
     my ($info, $directory, $name, $line) = @_;
     # Special case with "Tests-Directory: ." (see #849880)
     my $path = $directory eq '.' ? $name : "$directory/$name";
-    my $index = $info->index($path);
+    my $index = $info->index_resolved_path($path);
 
     if ($name !~ m{^ [ [:alnum:] \+ \- \. / ]++ $}xsm) {
         tag 'illegal-runtime-test-name', $name,

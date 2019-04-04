@@ -1,0 +1,85 @@
+name = {$source}
+
+package = $(name).deb
+
+datadir = root
+controldir = DEBIAN
+
+builddir = build
+debiandir = $(builddir)/DEBIAN
+rootdir = $(builddir)/root
+docdir = $(rootdir)/usr/share/doc/$(name)
+
+mandatorydir = doc
+changelogfile = $(mandatorydir)/changelog
+copyrightfile = $(mandatorydir)/copyright
+
+version = {$version}
+
+ifeq "$(findstring -, $(version))" ""
+changelogtarget = $(docdir)/changelog
+else
+changelogtarget = $(docdir)/changelog.Debian
+endif
+
+datapack = data.tar.gz
+controlpack = control.tar.gz
+
+debmembers = $(shell tr '\n' ' ' < deb-members)
+controlmembers = $(shell tr '\n' ' ' < control-members)
+
+$(package): fix-perm
+	-mkdir -p $(datadir) $(rootdir)
+	cp -rp $(datadir)/. $(rootdir)
+
+	if [ -x ./pre-build ] ; then ./pre-build "$(rootdir)" "$(name)" ; fi
+
+	-mkdir -p $(docdir)
+	if [ -f $(changelogfile) ] ; then \
+		install --mode 0644 $(changelogfile) $(changelogtarget) ; \
+		gzip -9nf $(changelogtarget) ; \
+	fi
+	if [ -f $(copyrightfile) ] ; then \
+		install --mode 0644 $(copyrightfile) $(docdir) ; \
+	fi
+
+	# pass package name to pre-data script
+	if [ -x ./pre-data ] ; then ./pre-data "$(rootdir)" "$(name)" ; fi
+	if [ -x ./tar-data ] ; then ./tar-data "$(rootdir)"; fi
+
+	-mkdir $(controldir) $(debiandir)
+	cp -rp $(controldir)/. $(debiandir)
+
+	# prevents 'control-file-has-bad-permissions' on CI runners with strange umasks
+	find $(debiandir) -type d -exec chmod 0755 \{\} \;
+	find $(debiandir) -type f -exec chmod 0644 \{\} \;
+
+	(cd $(rootdir); find . -type f -a -! -ipath etc -exec md5sum -- \{\} \;) > $(debiandir)/md5sums
+
+	# pass package name to pre-control script
+	if [ -x ./pre-control ] ; then ./pre-control "$(debiandir)" "$(name)" ; fi
+	if [ -x ./tar-control ] ; then ./tar-control "$(debiandir)" "$(controlmembers)" ; fi
+
+	ar rc $(package) $(debmembers)
+
+	# pass package name to post-build script
+	if [ -x ./post-build ] ; then ./post-build "$(name)" ; fi
+
+
+clean:
+	rm -f $(package)
+	rm -rf $(builddir)
+
+# If root/ exists, it is because the test ships with it.  Since the
+# test may have been checked out (or unpacked) with a "whack umask"
+# (anything but 0022), we reset the permissions to a reasonable
+# default.
+#
+# The contents of the deb usually is not what is tested by this suite
+# (t/tests is preferred for this), so the below merely handles the
+# AVERAGE CASE.  Tests that need special permissions (anything but
+# 0644 for files and 0755 for dirs) require manually setting the
+# permissions.
+fix-perm:
+	[ ! -d root/ ] || (find root/ -type d | xargs -r chmod 0755 && \
+			   find root/ -type f | xargs -r chmod 0644)

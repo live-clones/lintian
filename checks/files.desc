@@ -1158,7 +1158,7 @@ Info: This package creates a potential privacy breach by fetching a
 Tag: privacy-breach-facebook
 Severity: serious
 Certainty: possible
-Info:  This package creates a privacy breach by exchanging data with
+Info: This package creates a privacy breach by exchanging data with
  Facebook at runtime via plugins such as "Share" or "Like" buttons.
  .
  Please replace any scripts, images, or other remote resources with
@@ -1323,7 +1323,7 @@ Info: This package contains a *.ttf, *.otf, or *.pfb file, file
  extensions used by TrueType, OpenType, or Type 1 fonts, but the package
  does not appear to be a dedicated font package. Dedicated font package
  names should begin with <tt>fonts-</tt>. (Type 1 fonts are also allowed
- in packages starting with <tt>xfonts-</tt>.)  If the font is already
+ in packages starting with <tt>xfonts-</tt>.) If the font is already
  packaged, you should depend on that package instead. Otherwise, normally
  the font should be packaged separately, since fonts are usually useful
  outside of the package that embeds them.
@@ -1483,7 +1483,7 @@ Info: This package contains a file named <tt>mimeinfo.cache</tt>,
 Tag: package-contains-mime-file-outside-package-dir
 Severity: important
 Certainty: certain
-Ref: #761649,  /usr/share/doc/shared-mime-info/
+Ref: #761649, /usr/share/doc/shared-mime-info/
 Info: This package contains a file in a path reserved solely for
  mime cache file.
  .

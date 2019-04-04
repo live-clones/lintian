@@ -1,0 +1,5 @@
+Skeleton: deb
+Testname: deb-format-record-size
+Version: 1.0
+Description: Test package with a non-standard tar record size
+Check: deb-format

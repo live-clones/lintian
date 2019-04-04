@@ -1,16 +1,32 @@
 # Known hardening flags in [Service] section
 
 CapabilityBoundingSet
+DeviceAllow
+DynamicUser
+IPAddressDeny
+InaccessiblePaths
+KeyringMode
 LimitNOFILE
+LockPersonality
 MemoryDenyWriteExecute
+MountFlags
 NoNewPrivileges
 PrivateDevices
+PrivateMounts
 PrivateTmp
+PrivateUsers
 ProtectControlGroups
 ProtectHome
+ProtectHostname
 ProtectKernelModules
 ProtectKernelTunables
-ReadOnlyDirectories
+ProtectSystem
+ReadOnlyPaths
+RemoveIPC
 RestrictAddressFamilies
 RestrictNamespaces
 RestrictRealtime
+RestrictSUIDSGID
+SystemCallArchitectures
+SystemCallFilter
+UMask

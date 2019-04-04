@@ -145,6 +145,7 @@ sub find_selected_lintian_testpaths {
         'suite' => [],
         'test' => [],
         'check' => [],
+        'skeleton' => [],
     };
     my @filter_no_prefix;
 
@@ -210,6 +211,22 @@ sub find_selected_lintian_testpaths {
                     push(@insuite, $testpath)
                       if exists $wanted{$check};
                 }
+            }
+        }
+
+        # find tests for selected skeleton
+        if (scalar @{$filter->{skeleton}}) {
+
+            my %wanted = map { $_ => 1 } @{$filter->{skeleton}};
+
+            for my $testpath (find_all_testpaths($suitepath)) {
+                my $desc = read_config("$testpath/" . DESC);
+
+                next unless exists $desc->{skeleton};
+
+                my $skeleton = $desc->{skeleton};
+                push(@insuite, $testpath)
+                  if exists $wanted{$skeleton};
             }
         }
 

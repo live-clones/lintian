@@ -450,7 +450,7 @@ Info: The listed ELF binary appears to be (partially) built without
  <tt>lfs</tt> feature from the <tt>future</tt> dpkg-buildflags feature
  area which sets the <tt>CPPFLAGS</tt> variable (since dpkg-dev 1.19.0).
  Note though, that <tt>getconf LFS_CFLAGS</tt> must not be used,
- as it does  not support cross-building. Using
+ as it does not support cross-building. Using
  <tt>_FILE_OFFSET_BITS</tt> should require no system function renames (eg.
  from open(2) to open64(2)), and if this tag is still emitted, the most
  probable cause is because the macro is not seen by the system code being
@@ -497,12 +497,12 @@ Info: The listed ELF binary appears to use a C library function that
   performs DES encryption and/or decryption (<tt>encrypt</tt>,
   <tt>encrypt_r</tt>, <tt>setkey</tt>, and/or <tt>setkey_r</tt>).
   The DES block cipher can be broken by brute force on modern hardware,
-  which makes any use of these functions insecure.  Also, programs that
+  which makes any use of these functions insecure. Also, programs that
   use these functions cannot be linked against the <tt>libcrypt.so</tt>
   provided by glibc 2.28 and higher.
   .
   The program will need to be revised to use modern cryptographic
-  primitives and protocols.  Depending on how the program uses these
+  primitives and protocols. Depending on how the program uses these
   functions, it may be necessary to continue using DES under some
   circumstances (e.g. for protocol compatibility, or to retain the
   ability to decrypt old data on disk) but this should be done using
@@ -516,7 +516,7 @@ Info: The listed ELF binary appears to use a C library function that
   definition of <tt>encrypt</tt>, <tt>encrypt_r</tt>, <tt>setkey</tt>,
   and/or <tt>setkey_r</tt> to come from some shared library other than
   <tt>libcrypt.so</tt>, <em>and</em> that shared library defines these
-  functions to do something other than perform DES encryption.  If this
+  functions to do something other than perform DES encryption. If this
   is the case it is appropriate to override this tag.
 
 Tag: obsolete-crypt-alias

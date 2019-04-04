@@ -154,7 +154,7 @@ Info: The Python-Version or Python3-Version control field is not in one
      &gt;= A.B, &lt;&lt; X.Y
      A.B, X.Y
  .
- (One or more specific versions may be listed with the last form.)  A.B
+ (One or more specific versions may be listed with the last form.) A.B
  and X.Y should be Python versions.
 
 Tag: python-version-current-is-deprecated

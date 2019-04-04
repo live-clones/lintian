@@ -1,3 +1,52 @@
+lintian (2.12.0) unstable; urgency=medium
+
+  * Summary of tag changes:
+    + Added:
+      - doc-base-file-references-wrong-path
+      - systemd-service-file-shutdown-problems
+
+  [ Chris Lamb ]
+  * Make the argument to --jobs non-optional to prevent a "0" job count
+    being parsed if the argument is omitted. This resulted in Lintian
+    getting stuck as it did not have any runners to perform work with.
+    (Closes: #925970)
+  * Fix false-positives in the version-substvar-for-external-package tag
+    when a Provides field contains multiple items and/or with leading
+    whitespace. (Closes: #833608)
+  * Don't check for the x86-specific "SafeSEH" hardening feature for code
+    that is JIT-compiled by the Mono runtime. (Closes: #926334)
+  * Collapse the rather long-winded explanation regarding typos in the long
+    description of the version-substvar-for-external-package tag.
+  * Drop double-spaces in .desc files.
+
+  [ Felix Lechner ]
+  * Allow symlinks in autopkgtest paths.
+
+  [ Niels Thykier ]
+  * Restrict the number of parallel clean up jobs to match --jobs
+    parameter. (Closes: #924714)
+
+  [ Osamu Aoki ]
+  * Check for files in doc-base control files that list paths pointing
+    outside of /usr/share/{doc,info}. (Closes: #925200)
+
+  [ Xavier Guimard ]
+  * Don't emit the debian-watch-file-should-mangle-version tag if
+    dversionmangle is set to "auto". (Closes: #926166)
+
+  [ Topi Miettinen ]
+  * Check for systemd service files that use DefaultDependencies=no and
+    Conflicts=shutdown.target without Before=shutdown.target. (MR: !177)
+  * Update the systemd hardening flags. (MR: !178)
+
+  [ Balint Reczey ]
+  * Run autopkgtest tests in parallel, autodetecting CPU count. (MR: !75)
+
+  [ Paul Wise ]
+  * Add/fix several spelling corrections.
+
+ -- Chris Lamb <lamby@debian.org>  Thu, 04 Apr 2019 08:20:06 +0000
+
 lintian (2.11.0~bpo9+1) stretch-backports; urgency=medium
 
   * Rebuild for stretch-backports.
