@@ -438,3 +438,23 @@ Info: The packaging includes an upstream signing key but the corresponding
  .
  Support for signatures was added to <tt>pristine-tar</tt> in version 1.41
  and support in <tt>git-buildpackage</tt> is being tracked in #872864.
+
+Tag: pkg-js-autopkgtest-test-is-missing
+Severity: normal
+Certainty: certain
+Info: The <tt>Testsuite:</tt> field for this package points to
+ <tt>autopkgtest-pkg-nodejs</tt> which attempts to execute
+ <tt>debian/tests/pkg-js/test</tt> during autopkgtests.
+ .
+ When this file is missing, only a simple <tt>node require("<module
+ name")</tt> is launched. This may be insufficient to really test this
+ nodejs module.
+
+Tag: pkg-js-autopkgtest-file-does-not-exist
+Severity: serious
+Certainty: certain
+Info: One of the files referenced in <tt>debian/tests/pkg-js/files</tt>
+ does not exist in sources and thus <tt>pkg-js-autopkgtest</tt> will
+ likely fail.
+ .
+ Please update the <tt>debian/tests/pkg-fs/files</tt> file.
