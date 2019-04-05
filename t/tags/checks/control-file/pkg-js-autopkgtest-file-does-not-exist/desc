@@ -1,0 +1,5 @@
+Testname: pkg-js-autopkgtest-file-does-not-exist
+Skeleton: upload-native
+Version: 1.0
+Description: Test if files in debian/tests/pkg-js/files exists
+Check: control-file

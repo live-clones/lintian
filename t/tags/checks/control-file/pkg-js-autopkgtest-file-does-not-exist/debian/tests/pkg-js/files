@@ -1,0 +1,4 @@
+test*
+lib/*/*.js
+lib/*/*.json
+la/test
