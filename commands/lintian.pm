@@ -758,7 +758,7 @@ sub main {
                 }
                 @group_lpkg = $group->get_processables;
             } else {
-                auto_clean_package($group);
+                auto_clean_packages($group);
             }
         };
         my $total_tres = $format_timer_result->($total_raw_res);
