@@ -613,6 +613,7 @@ sub main {
         if ($opt{'LINTIAN_CFG'}) {
             parse_config_file($opt{'LINTIAN_CFG'});
         }
+        $opt{'LINTIAN_CFG'} //= '';
     }
 
     $ENV{'TMPDIR'} = $opt{'TMPDIR'} if defined($opt{'TMPDIR'});
