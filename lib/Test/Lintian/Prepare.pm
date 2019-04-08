@@ -67,6 +67,7 @@ use Test::Lintian::Templates
 use constant EMPTY => q{};
 use constant SPACE => q{ };
 use constant COMMA => q{,};
+use constant NEWLINE => qq{\n};
 
 my $EARLY_LOG_SUFFIX = 'log';
 
@@ -124,8 +125,10 @@ sub logged_prepare {
 
     # print something if there was an error
     if ($error) {
-        print $log if $log;
-        die $error;
+        my $message;
+        $message = NEWLINE . $log if length $log;
+        $message .= $error;
+        die $message;
     }
 
     return;
