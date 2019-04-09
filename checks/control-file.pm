@@ -490,7 +490,9 @@ sub run {
         }
     }
 
-    if ($info->source_field('testsuite', '')) {
+    my @testsuites = split(m/\s*,\s*/, $info->source_field('testsuite', ''));
+
+    if (any { $_ eq 'autopkgtest-pkg-nodejs' } @testsuites) {
         # Check control file exists in sources
         my $path = $info->index_resolved_path('debian/tests/pkg-js/test');
         tag 'pkg-js-autopkgtest-test-is-missing'
