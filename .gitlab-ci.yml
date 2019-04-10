@@ -18,7 +18,3 @@ testing:
 stable-bpo:
   <<: *test
   image: debian:stable-backports
-
-ubuntu-devel:
-  <<: *test
-  image: ubuntu:devel
