@@ -231,7 +231,7 @@ sub extract_and_index_deb {
     return;
 }
 
-collect(@ARGV) if $0 =~ m,(?:^|/)unpacked$,;
+collect(@ARGV) unless caller;
 
 1;
 

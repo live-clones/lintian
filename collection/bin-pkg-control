@@ -120,7 +120,7 @@ sub collect {
     return;
 }
 
-collect(@ARGV) if $0 =~ m,(?:^|/)bin-pkg-control$,;
+collect(@ARGV) unless caller;
 
 1;
 

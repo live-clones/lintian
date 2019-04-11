@@ -83,7 +83,8 @@ sub collect {
     return;
 }
 
-collect(@ARGV) if $0 =~ m,(?:^|/)objdump-info$,;
+collect(@ARGV) unless caller;
+
 1;
 
 # Local Variables:

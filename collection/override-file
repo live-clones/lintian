@@ -78,7 +78,7 @@ sub collect {
     return;
 }
 
-collect(@ARGV) if $0 =~ m,(?:^|/)override-file$,;
+collect(@ARGV) unless caller;
 
 1;
 

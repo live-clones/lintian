@@ -71,7 +71,8 @@ sub collect {
     return;
 }
 
-collect(@ARGV) if $0 =~ m,(?:^|/)ar-info$,;
+collect(@ARGV) unless caller;
+
 1;
 
 # Local Variables:

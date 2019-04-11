@@ -75,7 +75,7 @@ sub collect {
     return;
 }
 
-collect(@ARGV) if $0 =~ m,(?:^|/)diffstat$,;
+collect(@ARGV) unless caller;
 
 1;
 

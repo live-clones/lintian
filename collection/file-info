@@ -72,7 +72,7 @@ sub collect {
     return;
 }
 
-collect(@ARGV) if $0 =~ m,(?:^|/)file-info$,;
+collect(@ARGV) unless caller;
 
 1;
 

@@ -223,7 +223,7 @@ sub index_orig {
     return;
 }
 
-collect(@ARGV) if $0 =~ m,(?:^|/)src-orig-index$,;
+collect(@ARGV) unless caller;
 
 1;
 

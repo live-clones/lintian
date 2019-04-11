@@ -108,7 +108,7 @@ sub collect {
     return;
 }
 
-collect(@ARGV) if $0 =~ m,(?:^|/)strings$,;
+collect(@ARGV) unless caller;
 
 1;
 

@@ -103,7 +103,7 @@ sub shebang_line {
     return $scriptpath;
 }
 
-collect(@ARGV) if $0 =~ m,(?:^|/)scripts$,;
+collect(@ARGV) unless caller;
 
 1;
 
