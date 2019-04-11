@@ -1,0 +1,405 @@
+#!/usr/bin/perl
+
+# Copyright © 1998 Richard Braakman
+# Copyright © 2008 Frank Lichtenheld
+# Copyright © 2008, 2009 Russ Allbery
+# Copyright © 2014 Niels Thykier
+# Copyright © 2018 Felix Lechner
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, you can find it on the World Wide
+# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
+# MA 02110-1301, USA.
+
+# The harness for Lintian's test suite.  For detailed information on
+# the test suite layout and naming conventions, see t/tests/README.
+# For more information about running tests, see
+# doc/tutorial/Lintian/Tutorial/TestSuite.pod
+#
+
+use strict;
+use warnings;
+use autodie;
+use v5.10;
+
+use Capture::Tiny qw(capture_merged);
+use Cwd;
+use File::Basename;
+use File::Copy;
+use File::Find::Rule;
+use File::Path qw(make_path);
+use File::Spec::Functions qw(abs2rel catpath rel2abs splitpath splitdir);
+use File::stat;
+use Getopt::Long;
+use List::MoreUtils qw(any uniq);
+use List::Util qw(max);
+use IO::Async::Function;
+use IO::Async::Loop;
+use Path::Tiny;
+use Try::Tiny;
+
+BEGIN {
+    # whitelist the environment we permit to avoid things that mess up
+    # tests, like CFLAGS, DH_OPTIONS, DH_COMPAT, DEB_HOST_ARCH
+    my %WHITELIST = map { $_ => 1 } qw(
+      NO_PKG_MANGLE
+      PATH
+      TMPDIR
+    );
+
+    # TODO: MAKEFLAGS - some of the tests don't cope too well with it
+    for my $var (keys %ENV) {
+        delete $ENV{$var} unless exists $WHITELIST{$var};
+    }
+
+    # Ubuntu auto-builders run pkg-mangle which messes up test packages
+    $ENV{'NO_PKG_MANGLE'} = 'true'
+      unless exists($ENV{'NO_PKG_MANGLE'});
+
+    my $cwd = Cwd::getcwd();
+    $ENV{'LINTIAN_ROOT'} = $cwd;
+    $ENV{'LINTIAN_TEST_ROOT'} = $cwd;
+}
+
+use lib "$ENV{'LINTIAN_TEST_ROOT'}/lib";
+
+use Lintian::Internal::FrontendUtil qw(default_parallel);
+
+use Test::Lintian::ConfigFile qw(read_config);
+use Test::Lintian::Helper
+  qw(rfc822date cache_dpkg_architecture_values get_latest_policy get_recommended_debhelper_version);
+use Test::Lintian::Hooks
+  qw(find_missing_prerequisites run_lintian sed_hook sort_lines calibrate);
+use Test::Lintian::Prepare qw(logged_prepare early_logpath);
+
+use constant SPACE => q{ };
+use constant INDENT => q{    };
+use constant NEWLINE => qq{\n};
+use constant EMPTY => q{};
+use constant YES => q{yes};
+use constant NO => q{no};
+
+# options
+my $debug;
+my $dump_logs = 1;
+my $force_rebuild;
+my $numjobs = -1;
+my $outpath;
+my $verbose = 0;
+
+Getopt::Long::Configure('bundling');
+unless (
+    Getopt::Long::GetOptions(
+        'B|force-rebuild'  => \$force_rebuild,
+        'd|debug+'         => \$debug,
+        'j|jobs:i'         => \$numjobs,
+        'L|dump-logs!'     => \$dump_logs,
+        'v|verbose'        => \$verbose,
+        'w|work-dir:s'     => \$outpath,
+        'h|help'           => sub {usage(); exit;},
+    )
+) {
+    usage();
+    die;
+}
+
+# check number of arguments
+die('Please use -h for usage information.')
+  if @ARGV > 1;
+
+# get arguments
+my ($testset) = @ARGV;
+
+# default test set
+$testset ||= 't';
+
+# check test set directory
+die "Cannot find testset directory $testset"
+  unless -d $testset;
+
+# make sure testset is an absolute path
+$testset = rel2abs($testset);
+
+# calculate a default test work directory if none given
+$outpath ||= dirname($testset) . '/debian/test-out';
+
+# create test work directory unless it exists
+make_path($outpath)
+  unless -e $outpath;
+
+# make sure test work path is a directory
+die "Test work directory $outpath is not a directory"
+  unless -d $outpath;
+
+# make sure outpath is absolute
+$outpath = rel2abs($outpath);
+
+say EMPTY;
+
+# tie verbosity to debug
+$verbose = 1 + $debug if $debug;
+
+# can be 0 without value ("-j"), and -1 if option was not specified at all
+$numjobs = default_parallel() if $numjobs <= 0;
+say "Running up to $numjobs tests concurrently"
+  if $numjobs > 1 && $verbose >= 2;
+
+$ENV{'DUMP_LOGS'} = $dump_logs//NO ? YES : NO;
+
+my $helperpath = "$testset/bin";
+if (-d $helperpath) {
+    my $helpers = rel2abs($helperpath)// die("Cannot resolve $helperpath: $!");
+    $ENV{'PATH'} = "$helpers:$ENV{'PATH'}";
+}
+
+# get architecture
+cache_dpkg_architecture_values();
+say "Host architecture is $ENV{'DEB_HOST_ARCH'}.";
+
+# get latest policy version and date
+($ENV{'POLICY_VERSION'}, $ENV{'POLICY_EPOCH'}) = get_latest_policy();
+say "Latest policy version is $ENV{'POLICY_VERSION'} from "
+  . rfc822date($ENV{'POLICY_EPOCH'});
+
+# get current debhelper compat level; do not name DH_COMPAT; causes conflict
+$ENV{'DEFAULT_DEBHELPER_COMPAT'} = get_recommended_debhelper_version();
+say
+"Using compat level $ENV{'DEFAULT_DEBHELPER_COMPAT'} as a default for packages built with debhelper.";
+
+say EMPTY;
+
+# print environment
+my @vars = sort keys %ENV;
+say 'Environment:' if @vars;
+for my $var (@vars) { say INDENT . "$var=$ENV{$var}" }
+
+say EMPTY;
+
+my $status = 0;
+
+# find spec paths
+my @descfiles = File::Find::Rule->file()->name('desc')->in("$testset/tags");
+
+my @testpaths;
+foreach my $descfile (@descfiles) {
+    my ($volume, $directories, $file) = splitpath($descfile);
+    push(@testpaths, catpath($volume, $directories, EMPTY));
+}
+
+# prepare output directories
+say 'Preparing '. scalar @testpaths. ' work directories.'. NEWLINE
+  if @testpaths;
+
+my @prepqueue = map { abs2rel($_) } @testpaths;
+
+my $prepare = IO::Async::Function->new(
+    code => sub {
+        my ($specpath) = @_;
+
+        # get runpath
+        my $relative = abs2rel($specpath, $testset);
+        my $runpath = rel2abs($relative, $outpath);
+
+        # label process
+        $0 = "Processing $specpath";
+
+        try {
+            # prepare
+            logged_prepare($specpath, $runpath, $testset,$force_rebuild);
+        }
+        catch {
+            # catch any error
+            my $error = $_;
+
+            my $message = "Preparation failed for $specpath";
+            $message .= ": $error" if length $error;
+            die $message;
+        };
+
+        return $specpath;
+    },
+    max_workers => $numjobs,
+    max_worker_calls => 1,
+);
+
+my $loop = IO::Async::Loop->new;
+$loop->add($prepare);
+
+my @preptasks = map {$prepare->call(args => [$_])} @prepqueue;
+
+my $allprepared = Future->needs_all(@preptasks);
+
+# awaits, and dies on failure with message from failed constituent
+$allprepared->get;
+
+# remap paths from testset to outpath to get work directories
+my @workpaths = map { rel2abs(abs2rel($_, $testset), $outpath) } @testpaths;
+
+# make all paths relative to current directory
+@workpaths = map { abs2rel($_) } @workpaths;
+
+my $build = IO::Async::Function->new(
+    code => sub {
+        my ($path) = @_;
+
+        my $label = "Building in $path";
+        say $label;
+
+        $0 = $label;
+
+        # set a predictable locale
+        $ENV{'LC_ALL'} = 'C';
+
+        # many tests create files via debian/rules
+        umask(022);
+
+        # read dynamic file names
+        my $runfiles = "$path/files";
+        my $files = read_config($runfiles);
+
+        # set path to logfile
+        my $betterlogpath = "$path/$files->{log}";
+
+        my $error;
+        my $log = capture_merged {
+            try {
+                # call runner
+                build($path);
+            }
+            catch {
+                # catch any error
+                $error = $_;
+            };
+        };
+
+        # delete old runner log
+        unlink $betterlogpath if -f $betterlogpath;
+
+       # move the early log for directory preparation to position of runner log
+        my $earlylogpath = early_logpath($path);
+        move($earlylogpath, $betterlogpath) if -f $earlylogpath;
+
+        # append runner log to population log
+        path($betterlogpath)->append_utf8($log) if length $log;
+
+        # add error if there was one
+        path($betterlogpath)->append_utf8($error) if length $error;
+
+        # print log and die on error
+        if ($error) {
+            print $log if length $log && $ENV{'DUMP_LOGS'}//NO eq YES;
+            die "Runner died for $path: $error";
+        }
+
+        return $path;
+    },
+    max_workers => $numjobs,
+    max_worker_calls => 1,
+);
+
+$loop->add($build);
+
+my @buildtasks = map {$build->call(args => [$_])} @workpaths;
+
+my $allbuilt = Future->needs_all(@buildtasks);
+$allbuilt->get;
+
+say EMPTY;
+
+exit 0;
+
+# program is done
+
+sub build {
+    my ($path) = @_;
+
+    # check test architectures
+    die 'DEB_HOST_ARCH is not set.'
+      unless (length $ENV{'DEB_HOST_ARCH'});
+
+    # read dynamic file names
+    my $runfiles = "$path/files";
+    my $files = read_config($runfiles);
+
+    # read dynamic case data
+    my $rundescpath = "$path/$files->{test_specification}";
+    my $testcase = read_config($rundescpath);
+
+    # skip test if marked
+    my $skipfile = "$path/skip";
+    if (-f $skipfile) {
+        my $reason = path($skipfile)->slurp_utf8 || 'No reason given';
+        say "Skipping test: $reason";
+        return;
+    }
+
+    # skip if missing prerequisites
+    my $missing = find_missing_prerequisites($testcase);
+    if (length $missing) {
+        say "Missing prerequisites: $missing";
+        return;
+    }
+
+    my $platforms = $testcase->{test_architectures};
+    if ($platforms ne 'any') {
+        my @wildcards = split(SPACE, $platforms);
+        my @matches= map {
+            qx{dpkg-architecture -a $ENV{'DEB_HOST_ARCH'} -i $_; echo -n \$?}
+        } @wildcards;
+        unless (any { $_ == 0 } @matches) {
+            say 'Architecture mismatch';
+            return;
+        }
+    }
+
+    # get lintian subject
+    die 'Could not get subject of Lintian examination.'
+      unless exists $testcase->{build_product};
+    my $subject = "$path/$testcase->{build_product}";
+
+    if(exists $testcase->{build_command}) {
+        my $command= "cd $path; $testcase->{build_command}";
+        die "$command failed" if system($command);
+    }
+
+    die 'Build was unsuccessful.'
+      unless -f $subject;
+
+    return;
+}
+
+sub usage {
+    print <<"END";
+Usage: $0 [options] [-j [<jobs>]] [<testset-directory>]
+
+    -d          Display additional debugging information
+    --dump-logs Print build log to STDOUT, if a build fails.
+    -j [<jobs>] Run up to <jobs> jobs in parallel.
+                If -j is passed without specifying <jobs>, the number
+                of jobs started is <nproc>+1.
+    -v          Be more verbose
+    --help, -h  Print this help and exit
+
+    The optional 3rd parameter causes runtests to only run tests that match
+    the particular selection.  This parameter can be a list of selectors:
+    what:<which>[,<what:...>]
+END
+    return;
+}
+
+# Local Variables:
+# indent-tabs-mode: nil
+# cperl-indent-level: 4
+# End:
+# vim: syntax=perl sw=4 sts=4 sr et
