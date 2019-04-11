@@ -37,6 +37,10 @@ sub run {
                 push @files, $dir->children;
             }
         }
+        if (my $dir
+            = $info->index_resolved_path("usr/share/dbus-1/${dirname}.d")) {
+            push @files, $dir->children;
+        }
     }
 
     foreach my $file (@files) {
