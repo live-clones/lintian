@@ -31,9 +31,11 @@ sub run {
     my ($pkg, $type, $info) = @_;
 
     my @files;
-    foreach my $dirname (qw(session system)) {
-        if (my $dir = $info->index_resolved_path("etc/dbus-1/${dirname}.d")) {
-            push @files, $dir->children;
+    foreach my $prefix (qw(etc/dbus-1 usr/share/dbus-1)) {
+        foreach my $suffix (qw(session system)) {
+            if (my $dir = $info->index_resolved_path("${prefix}/${suffix}.d")){
+                push @files, $dir->children;
+            }
         }
     }
 
