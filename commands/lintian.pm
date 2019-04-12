@@ -33,6 +33,7 @@ use v5.16;
 use Cwd qw(abs_path);
 use Carp qw(verbose);
 use Getopt::Long();
+use IO::Async::Function;
 use IO::Async::Loop;
 use List::MoreUtils qw(any none);
 use POSIX qw(:sys_wait_h);
@@ -700,7 +701,7 @@ sub main {
     # Now action is always either "check" or "unpack"
     # these two variables are used by process_package
     #  and need to persist between invocations.
-    my $async_loop = IO::Async::Loop->new;
+
     $unpacker= Lintian::Unpacker->new($collmap, \%unpack_options);
 
     if ($action eq 'check') {
@@ -849,61 +850,45 @@ sub main {
 # Removes all collections with "Auto-Remove: yes"; takes a Lab::Package
 #  - depends on global variables %collection_info
 #
-sub auto_clean_package {
-    my ($lpkg) = @_;
-    my $proc_id = $lpkg->identifier;
+sub auto_clean_packages {
+    my ($group) = @_;
 
-    debug_msg(1, "Auto removing: ${proc_id} ...");
-    my $time = $start_timer->();
+    my $maxjobs = $opt{'jobs'};
 
-    my $future = $lpkg->remove_async;
-    $future->on_ready(
-        sub {
+    my $removelpkg = IO::Async::Function->new(
+        code => sub {
+            my ($lpkg) = @_;
+
+            my $proc_id = $lpkg->identifier;
+            debug_msg(1, "Auto removing: ${proc_id} ...");
+            my $time = $start_timer->();
+
+            $0 = "Auto removing: ${proc_id}";
+            $lpkg->remove;
+
             my $raw_res = $finish_timer->($time);
             debug_msg(1, "Auto removing: ${proc_id} done (${raw_res}s)");
             perf_log("$proc_id,auto-remove entry,${raw_res}");
+
             return;
-        });
+        },
+        max_workers => $maxjobs,
+        max_worker_calls => 1,
+    );
 
-    return $future;
-}
-
-sub auto_clean_packages {
-    my ($group) = @_;
-    my @worklist = $group->get_processables;
-    my $job_limit = $opt{'jobs'} || scalar(@worklist);
     my $loop = IO::Async::Loop->new;
-    my $active_jobs = 0;
-    my @futures;
-    my $schedule_task = sub {
-        my $lpkg = pop(@worklist);
-        my $future;
-        if (not defined($lpkg)) {
-            $active_jobs--;
-            debug_msg(2,
-                    'Clean up job finished and queue is empty. '
-                  . " Remaiing jobs: $active_jobs");
-            $loop->stop if not $active_jobs;
-            return;
-        }
-        my $proc_id = $lpkg->identifier;
-        $future = auto_clean_package($lpkg);
-        debug_msg(2,
-                "Scheduled clean up of $proc_id; "
-              . 'Items enqueued: '
-              . scalar(@worklist)
-              . ", active jobs: $active_jobs");
-        $future->on_ready(__SUB__);
-        push(@futures, $future);
-        return;
-    };
-    $job_limit = scalar(@worklist) if $job_limit > scalar(@worklist);
-    for (0..$job_limit-1) {
-        $active_jobs++;
-        $schedule_task->();
-    }
-    $loop->run;
-    return @futures;
+    $loop->add($removelpkg);
+
+    my @serializable = map { $_->clear_cache } $group->get_processables;
+    my @futures = map { $removelpkg->call(args => [$_]) } @serializable;
+
+    my $done = Future->needs_all(@futures);
+    $done->get;
+
+    $removelpkg->stop;
+    $loop->remove($removelpkg);
+
+    return;
 }
 
 sub post_pkg_process_overrides{
@@ -1009,7 +994,6 @@ sub process_group {
     my ($gname, $group) = @_;
     my ($timer, $raw_res, $tres);
     my $all_ok = 1;
-    my $async_loop = IO::Async::Loop->new;
     $timer = $start_timer->();
   PROC:
     foreach my $lpkg ($group->get_processables){
@@ -1091,11 +1075,9 @@ sub process_group {
     if (not $opt{'keep-lab'}) {
         # Invoke auto-clean now that the group has been checked
         $timer = $start_timer->();
-        my @futures = auto_clean_packages($group);
-        if (any { $_->is_failed } @futures) {
-            $exit_code = 2;
-            $all_ok = 0;
-        }
+
+        auto_clean_packages($group);
+
         $raw_res = $finish_timer->($timer);
         $tres = $format_timer_result->($raw_res);
         debug_msg(1, "Auto-removal all for group $gname done$tres");
