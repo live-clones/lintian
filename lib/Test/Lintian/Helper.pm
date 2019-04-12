@@ -49,7 +49,6 @@ BEGIN {
       get_latest_policy
       get_recommended_debhelper_version
       get_required_debhelper_version
-      get_installed_debhelper_version
       copy_dir_contents
       rfc822date
     );
@@ -152,22 +151,6 @@ sub get_required_debhelper_version {
     }
     die 'Lintian does not depend on debhelper.' unless $version;
 
-    return $version;
-}
-
-=item get_installed_debhelper_version()
-
-Returns the version of debhelper installed on the running system.
-
-=cut
-
-sub get_installed_debhelper_version {
-    die 'Debhelper is not installed.'
-      unless safe_qx('dpkg-query', '--showformat=\${Status}',
-        '--show debhelper') eq 'install ok installed';
-
-    my $version
-      = safe_qx('dpkg-query', '--showformat=\${Version}', '--show debhelper');
     return $version;
 }
 
