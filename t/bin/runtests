@@ -96,7 +96,7 @@ use Lintian::Internal::FrontendUtil qw(default_parallel);
 use Test::Lintian::Filter
   qw(find_selected_scripts find_selected_lintian_testpaths);
 use Test::Lintian::Helper
-  qw(rfc822date get_host_architecture get_latest_policy get_recommended_debhelper_version);
+  qw(rfc822date cache_dpkg_architecture_values get_latest_policy get_recommended_debhelper_version);
 use Test::Lintian::Prepare qw(logged_prepare);
 use Test::ScriptAge qw(perl_modification_epoch our_modification_epoch);
 
@@ -236,7 +236,7 @@ if (-d $helperpath) {
 }
 
 # get architecture
-$ENV{'DEB_HOST_ARCH'} = get_host_architecture();
+cache_dpkg_architecture_values();
 say "Host architecture is $ENV{'DEB_HOST_ARCH'}.";
 
 # get latest policy version and date

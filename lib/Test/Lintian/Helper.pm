@@ -27,8 +27,8 @@ Test::Lintian::Helper -- Helper functions for various testing parts
 
 =head1 SYNOPSIS
 
-  use Test::Lintian::Helper qw(get_host_architecture);
-  my $arch = get_host_architecture();
+  use Test::Lintian::Helper qw(get_latest_policy);
+  my $policy_version = get_latest_policy();
 
 =head1 DESCRIPTION
 
@@ -45,7 +45,7 @@ use Exporter qw(import);
 
 BEGIN {
     our @EXPORT_OK = qw(
-      get_host_architecture
+      cache_dpkg_architecture_values
       get_latest_policy
       get_recommended_debhelper_version
       get_required_debhelper_version
@@ -69,16 +69,22 @@ use Lintian::Data;
 
 =over 4
 
-=item get_host_architecture()
+=item cache_dpkg_architecture_values()
 
-Returns a string containing the value of $DEB_HOST_ARCH.
+Ensures that the output from dpkg-architecture has been cached.
 
 =cut
 
-sub get_host_architecture {
-    my $architecture = safe_qx('dpkg-architecture', '-qDEB_HOST_ARCH');
-    chomp $architecture;
-    return $architecture;
+sub cache_dpkg_architecture_values {
+    open(my $fd, '-|', 'dpkg-architecture')
+      or die('dpkg-architecture failed');
+    while (my $line = <$fd>) {
+        chomp($line);
+        my ($k, $v) = split(/=/, $line, 2);
+        $ENV{$k} = $v;
+    }
+    close($fd);
+    return;
 }
 
 =item get_latest_policy()
