@@ -86,8 +86,6 @@ use Encode ();
 use FileHandle;
 use Scalar::Util qw(openhandle);
 
-use Lintian::Command qw(spawn);
-
 =head1 NAME
 
 Lintian::Util - Lintian utility functions
@@ -174,6 +172,8 @@ L</parse_dpkg_control> do.  It can also emit:
 
 {
 
+    my $loaded = 0;
+
     sub get_deb_info {
         my ($file) = @_;
 
@@ -183,7 +183,12 @@ L</parse_dpkg_control> do.  It can also emit:
             pipe_out => FileHandle->new
         };
 
-        spawn(
+        if (not $loaded) {
+            $loaded++;
+            require Lintian::Command;
+        }
+
+        Lintian::Command::spawn(
             $opts, ['dpkg-deb', '--ctrl-tarfile', $file],
             '|', ['tar', '--wildcards', '-xO', '-f', '-', '*control']);
         my @data = parse_dpkg_control($opts->{pipe_out});
