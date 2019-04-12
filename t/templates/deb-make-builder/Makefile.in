@@ -35,7 +35,7 @@ $(package): fix-perm
 	if [ -x ./pre-build ] ; then ./pre-build "$(rootdir)" "$(name)" ; fi
 
 	-mkdir -p $(docdir)
-	if [ -f $(changelogfile) ] ; then \
+	-if [ -f $(changelogfile) ] ; then \
 		install --mode 0644 $(changelogfile) $(changelogtarget) ; \
 		gzip -9nf $(changelogtarget) ; \
 	fi
