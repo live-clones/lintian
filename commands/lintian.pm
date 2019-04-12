@@ -94,7 +94,7 @@ my ($STATUS_FD, @CLOSE_AT_END, $PROFILE, $TAGS);
 my @certainties = qw(wild-guess possible certain);
 my (@display_level, %display_source, %suppress_tags);
 my ($action, $checks, $check_tags, $dont_check, $received_signal);
-my (@unpack_info, $LAB, %unpack_options, @auto_remove);
+my (@unpack_info, $LAB, %unpack_options);
 my $user_dirs = $ENV{'LINTIAN_ENABLE_USER_DIRS'} // 1;
 my $exit_code = 0;
 
@@ -681,8 +681,7 @@ sub main {
     }
 
     @scripts = sort $PROFILE->scripts;
-    $collmap
-      = load_and_select_collections(\@scripts, \@auto_remove,\%unpack_options);
+    $collmap= load_and_select_collections(\@scripts, \%unpack_options);
 
     $opt{'jobs'} = default_parallel() unless defined $opt{'jobs'};
     $unpack_options{'jobs'} = $opt{'jobs'};
@@ -1086,7 +1085,7 @@ sub process_group {
         }
     }
 
-    if (@auto_remove) {
+    if (not $opt{'keep-lab'}) {
         # Invoke auto-clean now that the group has been checked
         $timer = $start_timer->();
         my @futures = auto_clean_packages($group);
@@ -1480,7 +1479,7 @@ sub load_profile_and_configure_tags {
 }
 
 sub load_and_select_collections {
-    my ($all_checks, $auto_remove_list, $unpack_options_ref) = @_;
+    my ($all_checks, $unpack_options_ref) = @_;
     # $map is just here to check that all the needed collections are present.
     my $map = Lintian::DepMap->new;
     my $collmap = Lintian::DepMap::Properties->new;
@@ -1491,7 +1490,6 @@ sub load_and_select_collections {
         debug_msg(2, "Read collector description for $coll ...");
         $collmap->add($coll, $cs->needs_info, $cs);
         $map->addp('coll-' . $coll, 'coll-', $cs->needs_info);
-        push(@{$auto_remove_list}, $coll) if $cs->auto_remove;
     };
 
     load_collections($load_coll, "$INIT_ROOT/collection");
@@ -1550,13 +1548,7 @@ sub load_and_select_collections {
             }
             $extra_unpack{$i} = 1;
         }
-        # Never auto-remove anything explicitly requested by the user
-        @{$auto_remove_list}
-          = grep { !exists($extra_unpack{$_}) } @{$auto_remove_list}
-          if not $opt{'keep-lab'};
     }
-    # Never auto-remove anything if keep-lab is given...
-    @{$auto_remove_list} = () if $opt{'keep-lab'};
     return $collmap;
 }
 

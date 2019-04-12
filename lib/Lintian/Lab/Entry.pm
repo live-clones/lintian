@@ -104,7 +104,6 @@ sub new_from_metadata {
     }
     $self->{lab}      = $lab;
     $self->{info}     = undef; # load on demand.
-    $self->{coll}     = {};
     $self->{base_dir} = $base_dir;
     $self->{pkg_path} = $pkg_path; # Could be undef, _init will fix that
     $self->_init;
@@ -125,7 +124,6 @@ sub _new_from_proc {
     $self->{pkg_path}        = $proc->pkg_path;
     $self->{lab}             = $lab;
     $self->{info}            = undef; # load on demand.
-    $self->{coll}            = {};
 
     if ($self->pkg_type ne 'source') {
         $self->{pkg_arch} = $proc->pkg_arch;
@@ -373,58 +371,6 @@ sub create {
     return 1;
 }
 
-=item coll_version (COLL)
-
-Returns the version of the collection named COLL, if that
-COLL has been marked as finished.
-
-Returns the empty string if COLL has not been marked as finished.
-
-Note: The version can be 0.
-
-=cut
-
-sub coll_version {
-    my ($self, $coll) = @_;
-    return $self->{coll}{$coll}//'';
-}
-
-=item is_coll_finished (COLL, VERSION)
-
-Returns a truth value if the collection COLL has been completed and
-its version is at least VERSION.  The versions are assumed to be
-integers (the comparison is performed with ">=").
-
-This returns 0 if the collection COLL has not been marked as
-finished.
-
-=cut
-
-sub is_coll_finished {
-    my ($self, $coll, $version) = @_;
-    my $c = $self->coll_version($coll);
-    return 0 if $c eq '';
-    return $c >= $version;
-}
-
-# $lpkg->_mark_coll_finished ($coll, $version)
-#
-# non-public method to mark a collection as complete
-sub _mark_coll_finished {
-    my ($self, $coll, $version) = @_;
-    $self->{coll}{$coll} = $version;
-    return 1;
-}
-
-# $lpkg->_clear_coll_status ($coll)
-#
-# Removes the notion that $coll has been finished.
-sub _clear_coll_status {
-    my ($self, $coll) = @_;
-    delete $self->{coll}{$coll};
-    return 1;
-}
-
 =item update_status_file
 
 Flushes the cached changes of which collections have been completed.
@@ -470,7 +416,7 @@ sub update_status_file {
 sub _init {
     my ($self, $newentry) = @_;
     my $base_dir = $self->base_dir;
-    my (@data, $head, $coll, $fd, $exists);
+    my (@data, $head, $fd, $exists);
 
     eval {
         use autodie qw(open);
@@ -533,12 +479,6 @@ sub _init {
     # Check that we know the format.
     return unless (LAB_ENTRY_FORMAT eq ($head->{'lab-entry-format'}//''));
 
-    $coll = $head->{'collections'}//'';
-    $coll =~ s/\n/ /go;
-    foreach my $c (split m/\s*,\s*+/o, strip($coll)) {
-        my ($cname, $cver) = split m/\s*=\s*/, $c;
-        $self->_mark_coll_finished($cname, $cver);
-    }
     return;
 }
 

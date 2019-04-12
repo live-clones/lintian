@@ -318,7 +318,6 @@ sub _requested_colls {
         # be finished and we do not want to use their
         # dependencies if they are the only ones using them)
         next unless $coll->is_type($pkg_type);
-        next if $lpkg->is_coll_finished($cname, $coll->version);
         $needed{$cname} = 1;
         push @check, $coll->needs_info;
     }
@@ -441,7 +440,6 @@ sub process_tasks {
                         delete $active{$procid};
                     }else {
                         # The collection was success
-                        $lpkg->_mark_coll_finished($coll, $cs->version);
                         $cmap->satisfy($coll);
                        # If the entry is marked as failed, don't break the loop
                        # for it.
@@ -522,20 +520,11 @@ sub _generate_find_next_tasks_sub {
                     next;
                 }
 
-                # check if it has been run previously
-                if ($lpkg->is_coll_finished($coll, $cs->version)) {
-                    $cmap->satisfy($coll);
-                    next;
-                }
-
                 # Check if its actually on our TODO list.
                 if (defined $needed and not exists $needed->{$coll}) {
                     $cmap->satisfy($coll);
                     next;
                 }
-                # Not run before (or out of date)
-                $lpkg->_clear_coll_status($coll);
-
                 # collect info
                 $cmap->select($coll);
                 $wlist->{'changed'} = 1;
