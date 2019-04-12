@@ -72,7 +72,6 @@ BEGIN {
           strip
           lstrip
           rstrip
-          system_env
           copy_dir
           gunzip_file
           open_gz
@@ -883,26 +882,6 @@ sub do_fork() {
         $! = $fork_error;
     }
     return $pid;
-}
-
-=item system_env (CMD)
-
-Behaves like system (CMD) except that the environment of CMD is
-cleaned (as defined by L</clean_env>(1)).
-
-=cut
-
-sub system_env {
-    my $pid = do_fork;
-    if (not defined $pid) {
-        return -1;
-    } elsif ($pid == 0) {
-        clean_env(1);
-        exec @_ or die("exec of $_[0] failed: $!\n");
-    } else {
-        waitpid $pid, 0;
-        return $?;
-    }
 }
 
 =item clean_env ([CLOC])

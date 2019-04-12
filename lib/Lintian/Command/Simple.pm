@@ -151,12 +151,6 @@ __END__
 
 =back
 
-=head1 TODO
-
-Provide the necessary methods to modify the environment variables of
-the to-be-executed commands.  This would let us drop C<system_env> (from
-Lintian::Util) and make C<run> more useful.
-
 =head1 NOTES
 
 Unless specified by prefixing the package name, every reference to a
