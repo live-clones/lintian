@@ -43,8 +43,7 @@ $(origtargz): clean
 else
 $(origtargz): clean
 	-mkdir $(origdata)
-	-mkdir $(packagedir)
-	cp -rp $(origdata)/. $(packagedir)
+	if [ -d $(origdata)/. ] ; then cp -rp $(origdata)/. $(packagedir) ; fi
 	if [ -x ./pre_upstream ] ; then ./pre_upstream $(shell realpath $(packagedir)) ; fi
 	tar czf $(origtargz) $(packagedir)
 	if [ -f $(formatfile) ] && grep --quiet "^3\.. (quilt)$$" $(formatfile) ; then rm -rf $(packagedir)/debian ; fi
