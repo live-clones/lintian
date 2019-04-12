@@ -44,13 +44,16 @@ api-doc:
 
 .PHONY: runtests
 runtests: $(neededfiles) $(allchecks) $(allcollect) $(tagfiles) $(testfiles)
+	@echo .... building test packages ....
+	t/bin/build-test-packages \
+		$(PAR_ARGS) \
+		--work-dir="$(TEST_WORK_DIR)"
 	@echo .... running tests ....
 	t/bin/runtests \
 		$(PAR_ARGS) \
 		--unattended \
 		--keep-going \
-		--work-dir="$(TEST_WORK_DIR)" \
-		t
+		--work-dir="$(TEST_WORK_DIR)"
 
 runtests-translation: $(neededfiles) $(allchecks)
 	@echo .... running translation tests ....
