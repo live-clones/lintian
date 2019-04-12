@@ -5,6 +5,7 @@ before_script:
 
 .test_template: &test
   script:
+    - t/bin/build-test-packages
     - t/bin/runtests
 
 unstable:
