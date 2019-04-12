@@ -246,25 +246,11 @@ sub runner {
       unless exists $testcase->{build_product};
     my $subject = "$runpath/$testcase->{build_product}";
 
-    # build subject for lintian examination
-    $producer->add_stage(
-        products => [$subject],
-        minimum_epoch => $threshold,
-        build =>sub {
-            if(exists $testcase->{build_command}) {
-                my $command= "cd $runpath; $testcase->{build_command}";
-                die "$command failed" if system($command);
-            }
-
-            die 'Build was unsuccessful.'
-              unless -f $subject;
-        });
-
     # run lintian
     my $raw = "$runpath/tags.actual";
     $producer->add_stage(
         products => [$raw],
-        minimum_epoch => $lintian_epoch,
+        minimum_epoch => time,
         build =>sub {
             $ENV{'LINTIAN_COVERAGE'}.= ",-db,./cover_db-$testcase->{testname}"
               if exists $ENV{'LINTIAN_COVERAGE'};

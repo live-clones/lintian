@@ -115,7 +115,6 @@ STDOUT->autoflush;
 my $coverage;
 my $debug;
 my $dump_logs = 1;
-my $force_rebuild;
 my $numjobs = -1;
 my $keep_going;
 my $onlyrun;
@@ -126,7 +125,6 @@ my $verbose = 0;
 Getopt::Long::Configure('bundling');
 unless (
     Getopt::Long::GetOptions(
-        'B|force-rebuild'  => \$force_rebuild,
         'c|coverage:s'     => \$coverage,
         'd|debug+'         => \$debug,
         'j|jobs:i'         => \$numjobs,
@@ -333,55 +331,6 @@ say EMPTY;
 # find test paths
 my @testpaths = find_selected_lintian_testpaths($testset, $onlyrun);
 
-# prepare output directories
-say 'Running selected tag tests; preparing '
-  . scalar @testpaths
-  . ' work directories.'
-  . NEWLINE
-  if @testpaths;
-
-my @prepqueue = map { abs2rel($_) } @testpaths;
-
-my $function = IO::Async::Function->new(
-    code => sub {
-        my ($specpath) = @_;
-
-        # get runpath
-        my $relative = abs2rel($specpath, $testset);
-        my $runpath = rel2abs($relative, $outpath);
-
-        # label process
-        $0 = "Processing $specpath";
-
-        try {
-            # prepare
-            logged_prepare($specpath, $runpath, $testset,$force_rebuild);
-        }
-        catch {
-            # catch any error
-            my $error = $_;
-
-            my $message = "Preparation failed for $specpath";
-            $message .= ": $error" if length $error;
-            die $message;
-        };
-
-        return $specpath;
-    },
-    max_workers => $numjobs,
-    max_worker_calls => 1,
-);
-
-my $loop = IO::Async::Loop->new;
-$loop->add($function);
-
-my @futures = map {$function->call(args => [$_])} @prepqueue;
-
-my $composite = Future->needs_all(@futures);
-
-# awaits, and dies on failure with message from failed constituent
-$composite->get;
-
 # remap paths from testset to outpath to get work directories
 my @workpaths = map { rel2abs(abs2rel($_, $testset), $outpath) } @testpaths;
 
@@ -470,8 +419,9 @@ sub print_test_summary {
 
 sub usage {
     print <<"END";
-Usage: $0 [options] [-j [<jobs>]] <testset-directory> <testing-directory> [<test-selection>]
+Usage: $0 [options] [-j [<jobs>]] <testset-directory>
 
+    --onlyrun   Select only some tests for a quick check
     --coverage  Run Lintian under Devel::Cover (Warning: painfully slow)
     -d          Display additional debugging information
     --dump-logs Print build log to STDOUT, if a build fails.
@@ -482,10 +432,9 @@ Usage: $0 [options] [-j [<jobs>]] <testset-directory> <testing-directory> [<test
     -v          Be more verbose
     --help, -h  Print this help and exit
 
-    The optional 3rd parameter causes runtests to only run tests that match
+    The option --onlyrun  causes runtests to only run tests that match
     the particular selection.  This parameter can be a list of selectors:
     what:<which>[,<what:...>]
-
 
       * test:<testname>
         - Run the named test. Please note that testnames may not be
@@ -501,10 +450,9 @@ Usage: $0 [options] [-j [<jobs>]] <testset-directory> <testing-directory> [<test
         - Run any test that lists <tag-name> in "Test-For" or
           "Test-Against".
 
-
-Test artifacts are cached in <testing-directory> and will be reused if
-deemed "up-to-date".  This cache can greatly reduce the run time of the
-test suite.
+Test artifacts are cached in --work-dir [default: debian/test-out] and
+will generally be reused to save time. To recreate the test packages,
+run 't/bin/build-test-packages'.
 END
     return;
 }
