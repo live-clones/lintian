@@ -62,7 +62,6 @@ use List::Compare;
 use List::Util qw(max min any all);
 use Path::Tiny;
 use Test::More;
-use Text::CSV;
 use Try::Tiny;
 
 use Lintian::Profile;
