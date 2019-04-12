@@ -70,8 +70,9 @@ use POSIX qw();
 use Scalar::Util qw(refaddr);
 use POSIX qw();
 
+use Lintian::Deb822Parser qw(parse_dpkg_control);
 use Lintian::Lab;
-use Lintian::Util qw(parse_dpkg_control get_dsc_info strip);
+use Lintian::Util qw(strip);
 
 # This is the entry format version - this changes whenever the layout of
 # entries changes.  This differs from LAB_FORMAT in that LAB_FORMAT

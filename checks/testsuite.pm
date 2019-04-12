@@ -24,12 +24,14 @@ use warnings;
 use autodie;
 
 use Lintian::Data;
+use Lintian::Deb822Parser qw(
+  DCTRL_COMMENTS_AT_EOL
+  read_dpkg_control
+);
 use Lintian::Relation;
 use Lintian::Tags qw(tag);
 use Lintian::Util qw(
   file_is_encoded_in_non_utf8
-  DCTRL_COMMENTS_AT_EOL
-  read_dpkg_control
   strip
 );
 

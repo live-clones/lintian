@@ -22,7 +22,7 @@ use warnings;
 use Test::More;
 
 use Lintian::CollScript;
-use Lintian::Util qw(read_dpkg_control);
+use Lintian::Deb822Parser qw(read_dpkg_control);
 
 $ENV{'LINTIAN_TEST_ROOT'} //= '.';
 # collections rely on LINTIAN_ROOT being set...

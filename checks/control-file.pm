@@ -27,10 +27,10 @@ use List::MoreUtils qw(any);
 use List::Util qw(first none);
 
 use Lintian::Data ();
+use Lintian::Deb822Parser qw(read_dpkg_control);
 use Lintian::Relation ();
 use Lintian::Tags qw(tag);
-use Lintian::Util qw(file_is_encoded_in_non_utf8 read_dpkg_control
-  rstrip strip);
+use Lintian::Util qw(file_is_encoded_in_non_utf8 rstrip strip);
 
 # The list of libc packages, used for checking for a hard-coded dependency
 # rather than using ${shlibs:Depends}.

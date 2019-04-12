@@ -26,7 +26,8 @@ use parent 'Class::Accessor::Fast';
 use Carp qw(croak);
 use File::Basename qw(dirname);
 
-use Lintian::Util qw(internal_error read_dpkg_control_utf8);
+use Lintian::Deb822Parser qw(read_dpkg_control_utf8);
+use Lintian::Util qw(internal_error);
 
 =head1 NAME
 

@@ -51,7 +51,7 @@ use Carp;
 use List::MoreUtils qw(any);
 use Path::Tiny;
 
-use Lintian::Util qw(read_dpkg_control);
+use Lintian::Deb822Parser qw(read_dpkg_control);
 
 use constant NEWLINE => qq{\n};
 use constant SPACE => q{ };

@@ -27,6 +27,7 @@ use File::Basename qw(basename);
 use YAML::XS ();
 use MIME::Base64 qw(encode_base64);
 
+use Lintian::Deb822Parser qw(visit_dpkg_paragraph);
 use Lintian::Lab;
 use Lintian::Relation::Version qw(versions_comparator);
 use Lintian::Reporting::Util qw(
@@ -37,7 +38,6 @@ use Lintian::Reporting::Util qw(
 use Lintian::Util qw(
   open_gz
   strip
-  visit_dpkg_paragraph
 );
 
 my $DEFAULT_CHECKSUM = 'sha256';

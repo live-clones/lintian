@@ -61,8 +61,8 @@ use Path::Tiny;
 use POSIX qw(locale_h strftime);
 
 use Lintian::Command qw(safe_qx);
-use Lintian::Util qw(read_dpkg_control);
 use Lintian::Data;
+use Lintian::Deb822Parser qw(read_dpkg_control);
 
 =head1 FUNCTIONS
 

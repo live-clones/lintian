@@ -74,10 +74,11 @@ use Path::Tiny;
 
 use Lintian::Check qw(check_spelling);
 use Lintian::Data;
+use Lintian::Deb822Parser qw(read_dpkg_control);
 use Lintian::Profile;
 use Lintian::Tag::Info;
 use Lintian::Tags;
-use Lintian::Util qw(read_dpkg_control is_string_utf8_encoded);
+use Lintian::Util qw(is_string_utf8_encoded);
 
 # We want data files loaded early to avoid problems with missing data
 # files ending up in releases (like in 2.5.17 and 2.5.18).

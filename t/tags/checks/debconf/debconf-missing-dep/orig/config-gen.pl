@@ -7,7 +7,7 @@ use strict;
 use warnings;
 
 use lib "$ENV{'LINTIAN_TEST_ROOT'}/lib";
-use Lintian::Util qw(visit_dpkg_paragraph :constants);
+use Lintian::Deb822Parser qw(visit_dpkg_paragraph :constants);
 
 print <<EOF ;
 #!/bin/sh

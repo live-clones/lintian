@@ -6,7 +6,7 @@ use autodie;
 
 use Test::More;
 
-use Lintian::Util qw(visit_dpkg_paragraph);
+use Lintian::Deb822Parser qw(visit_dpkg_paragraph);
 
 my $syntax_error = qr/syntax error at line \d+/;
 my %TESTS_BAD = (
