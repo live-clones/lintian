@@ -28,9 +28,7 @@ use Carp qw(croak);
 use Cwd qw(abs_path);
 use Errno qw(ENOENT);
 use Exporter qw(import);
-use Path::Tiny;
 use POSIX qw(sigprocmask SIG_BLOCK SIG_UNBLOCK SIG_SETMASK);
-use YAML::XS ();
 
 use constant {
     DCTRL_DEBCONF_TEMPLATE => 1,
@@ -88,9 +86,6 @@ BEGIN {
           drain_pipe
           signal_number2name
           dequote_name
-          load_state_cache
-          save_state_cache
-          find_backlog
           pipe_tee
           untaint
           $PKGNAME_REGEX
@@ -103,13 +98,10 @@ BEGIN {
 use Digest::MD5;
 use Digest::SHA;
 use Encode ();
-use File::Temp qw(tempfile);
 use FileHandle;
-use List::Util qw(shuffle);
 use Scalar::Util qw(openhandle);
 
 use Lintian::Command qw(spawn);
-use Lintian::Relation::Version qw(versions_equal versions_comparator);
 
 =head1 NAME
 
@@ -1584,127 +1576,6 @@ sub pipe_tee {
         }
     }
     return 1;
-}
-
-=item load_state_cache(STATE_DIR)
-
-[Reporting tools only] Load the state cache from STATE_DIR.
-
-=cut
-
-sub load_state_cache {
-    my ($state_dir) = @_;
-    my $state_file = "$state_dir/state-cache";
-    my $state = {};
-
-    return $state
-      unless -f $state_file;
-
-    my $yaml = path($state_file)->slurp;
-
-    eval {$state = YAML::XS::Load($yaml);};
-    # Not sure what Load does in case of issues; perldoc YAML says
-    # very little about it.  Based on YAML::Error, I guess it will
-    # write stuff to STDERR and use die/croak, but it remains a
-    # guess.
-    if (my $err = $@) {
-        die("$state_file was invalid; please fix or remove it.\n$err");
-    }
-    $state //= {};
-
-    if (ref($state) ne 'HASH') {
-        die("$state_file was invalid; please fix or remove it.");
-    }
-    return $state;
-}
-
-=item save_state_cache(STATE_DIR, STATE)
-
-[Reporting tools only] Save the STATE cache to STATE_DIR.
-
-=cut
-
-sub save_state_cache {
-    my ($state_dir, $state) = @_;
-    my $state_file = "$state_dir/state-cache";
-    my ($tmp_fd, $tmp_path);
-
-    ($tmp_fd, $tmp_path) = tempfile('state-cache-XXXXXX', DIR => $state_dir);
-    ## TODO: Should tmp_fd be binmode'd as we use YAML::XS?
-
-    # atomic replacement of the state file; not a substitute for
-    # proper locking, but it will at least ensure that the file
-    # is in a consistent state.
-    eval {
-        print {$tmp_fd} YAML::XS::Dump($state);
-
-        close($tmp_fd) or die("close $tmp_path: $!");
-
-        # There is no secret in this.  Set it to 0644, so it does not
-        # require sudo access on lintian.d.o to read the file.
-        chmod(0644, $tmp_path);
-
-        rename($tmp_path, $state_file)
-          or die("rename $tmp_path -> $state_file: $!");
-    };
-    if (my $err = $@) {
-        if (-e $tmp_path) {
-            # Ignore error as we have a more important one
-            no autodie qw(unlink);
-            unlink($tmp_path);
-        }
-        die($err);
-    }
-    return 1;
-}
-
-=item find_backlog(LINTIAN_VERSION, STATE)
-
-[Reporting tools only] Given the current lintian version and the
-harness state, return a list of group ids that are part of the
-backlog.  The list is sorted based on what version of Lintian
-processed the package.
-
-Note the result is by design not deterministic to reduce the
-risk of all large packages being in the same run (e.g. like
-gcc-5 + gcc-5-cross + gcc-6 + gcc-6-cross).
-
-=cut
-
-sub find_backlog {
-    my ($lintian_version, $state) = @_;
-    my (@backlog, %by_version, @low_priority);
-    for my $group_id (keys(%{$state->{'groups'}})) {
-        my $last_version = '0';
-        my $group_data = $state->{'groups'}{$group_id};
-        my $is_out_of_date;
-        # Does this group repeatedly fail with the current version
-        # of lintian?
-        if (    exists($group_data->{'processing-errors'})
-            and $group_data->{'processing-errors'} > 2
-            and exists($group_data->{'last-error-by'})
-            and $group_data->{'last-error-by'} ne $lintian_version) {
-            # To avoid possible "starvation", we will give lower priority
-            # to packages that repeatedly fail.  They will be retried as
-            # the backlog is cleared.
-            push(@low_priority, $group_id);
-            next;
-        }
-        if (exists($group_data->{'out-of-date'})) {
-            $is_out_of_date = $group_data->{'out-of-date'};
-        }
-        if (exists($group_data->{'last-processed-by'})) {
-            $last_version = $group_data->{'last-processed-by'};
-        }
-        $is_out_of_date = 1
-          if not versions_equal($last_version, $lintian_version);
-        push(@{$by_version{$last_version}}, $group_id) if $is_out_of_date;
-    }
-    for my $v (sort(versions_comparator keys(%by_version))) {
-        push(@backlog, shuffle(@{$by_version{$v}}));
-    }
-    push(@backlog, shuffle(@low_priority)) if @low_priority;
-    return @backlog;
 }
 
 =item untaint(VALUE)

@@ -37,7 +37,9 @@ use List::MoreUtils qw(first_index);
 use POSIX qw(strftime);
 
 use Lintian::Command qw(safe_qx);
-use Lintian::Util qw(find_backlog load_state_cache save_state_cache untaint);
+use Lintian::Reporting::Util
+  qw(find_backlog load_state_cache save_state_cache);
+use Lintian::Util qw(untaint);
 
 my (@LINTIAN_CMD, $LINTIAN_VERSION);
 
