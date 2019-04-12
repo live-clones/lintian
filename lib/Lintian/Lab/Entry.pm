@@ -66,21 +66,10 @@ use File::Spec;
 use IO::Async::Loop;
 use IO::Async::Routine;
 use Path::Tiny;
-use POSIX qw();
 use Scalar::Util qw(refaddr);
-use POSIX qw();
 
-use Lintian::Deb822Parser qw(parse_dpkg_control);
 use Lintian::Lab;
 use Lintian::Util qw(strip);
-
-# This is the entry format version - this changes whenever the layout of
-# entries changes.  This differs from LAB_FORMAT in that LAB_FORMAT
-# presents the things "outside" the entry.
-use constant LAB_ENTRY_FORMAT => 1;
-
-use constant EMPTY => q{};
-use constant COLON => q{:};
 
 =item new_from_metadata (PKG_TYPE, METADATA, LAB, BASEDIR)
 
@@ -106,7 +95,6 @@ sub new_from_metadata {
     $self->{info}     = undef; # load on demand.
     $self->{base_dir} = $base_dir;
     $self->{pkg_path} = $pkg_path; # Could be undef, _init will fix that
-    $self->_init;
 
     return $self;
 }
@@ -132,8 +120,6 @@ sub _new_from_proc {
     }
 
     $self->{base_dir} = $base_dir;
-
-    $self->_init(1);
     $self->_make_identifier;
 
     if ($proc->isa('Lintian::Processable::Package')) {
@@ -228,7 +214,6 @@ sub remove {
     $self->clear_cache;
     path($basedir)->remove_tree
       if -d $basedir;
-    $self->{lab}->_entry_removed($self);
     return 1;
 }
 
@@ -264,8 +249,6 @@ sub remove_async {
         },
         on_return => sub {
             my (undef, $result) = @_;
-
-            $lab->_entry_removed($self);
             $future->done();
         },
         on_die => sub {
@@ -367,119 +350,7 @@ sub create {
               or croak("cannot symlink file $t[2]: $!");
         }
     }
-    $lab->_entry_created($self);
     return 1;
-}
-
-=item update_status_file
-
-Flushes the cached changes of which collections have been completed.
-
-This should also be called for new entries to create the status file.
-
-=cut
-
-sub update_status_file {
-    my ($self) = @_;
-    my $file;
-    my @sc;
-
-    unless ($self->exists) {
-        $! = POSIX::ENOENT;
-        return 0;
-    }
-
-    $file = $self->base_dir . '/.lintian-status';
-    open my $sfd, '>', $file or return 0;
-    print $sfd 'Lab-Entry-Format: ' . LAB_ENTRY_FORMAT . "\n";
-    # Basic package meta-data - this is redundant, but having it may
-    # greatly simplify a migration or detecting a broken lab later.
-    print $sfd 'Package: ' . $self->pkg_name, "\n";
-    print $sfd 'Version: ' . $self->pkg_version, "\n";
-    # Add Source{,-Version} if it is different from Package/Version
-    print $sfd 'Source: ' . $self->pkg_src, "\n"
-      unless $self->pkg_src eq $self->pkg_name;
-    print $sfd 'Source-Version: ' . $self->pkg_src_version, "\n"
-      unless $self->pkg_src_version eq $self->pkg_version;
-    print $sfd 'Architecture: ' . $self->pkg_arch, "\n"
-      if $self->pkg_type ne 'source';
-    print $sfd 'Package-Type: ' . $self->pkg_type, "\n";
-
-    @sc = sort keys %{ $self->{coll} };
-    print $sfd "Collections: \n";
-    print $sfd ' ' . join(",\n ", map { "$_=$self->{coll}{$_}" } @sc);
-    print $sfd "\n\n";
-    close $sfd or return 0;
-    return 1;
-}
-
-sub _init {
-    my ($self, $newentry) = @_;
-    my $base_dir = $self->base_dir;
-    my (@data, $head, $fd, $exists);
-
-    eval {
-        use autodie qw(open);
-        open($fd, '<', "$base_dir/.lintian-status");
-        # If the status file exists, then so does the
-        # entry.
-        $exists = 1;
-    };
-    if (my $err = $@) {
-        die($err) if $err->errno != POSIX::ENOENT;
-        # If it is a new entry, we assume it does not exist if
-        # .lintian-status absent.  In practise, it does not
-        # change the outcome for new entries and it saves
-        # a stat from calling exists().
-        $exists = $self->exists if not $newentry;
-    } else {
-        @data = parse_dpkg_control($fd);
-        close($fd);
-    }
-
-    if ($newentry) {
-        my $pkg_path = $self->pkg_path;
-        croak "$pkg_path does not exist." unless -e $pkg_path;
-    } else {
-        # This error should not happen unless someone (read: me) breaks
-        # Lintian::Lab::get_package
-        my $pkg_type = $self->pkg_type;
-        my $link;
-        if (not $exists) {
-            # This happens with the metadata gets out of sync with reality.
-            # (e.g. unclean close).  Solve it by purging the entry.
-            $self->remove;
-            # Ensure the lab knows the entry us gone.  Depending on how
-            # "missing" the entry is, remove might fail to do it for us.
-            $self->{'lab'}->_entry_removed($self);
-            # Use die as croak insists on adding " at <...>"
-            die("entry-disappeared\n");
-        }
-        $link = 'deb' if $pkg_type eq 'binary' or $pkg_type eq 'udeb';
-        $link = 'dsc' if $pkg_type eq 'source';
-        $link = 'changes' if $pkg_type eq 'changes';
-        $link = 'buildinfo' if $pkg_type eq 'buildinfo';
-
-        croak "Unknown package type $pkg_type" unless $link;
-        if (not $self->pkg_path) {
-            # This case shouldn't happen unless the entry is missing
-            # from the metadata.
-            my $linkp = "$base_dir/$link";
-            # Resolve the link if possible, but else just fall back to the link
-            # - this is not safe in case of a "delete and create", but if
-            #   abs_path fails odds are the package cannot be read anyway.
-            $self->{pkg_path} = Cwd::abs_path("$base_dir/$link")
-              // "$base_dir/$link";
-        }
-    }
-
-    return unless $exists;
-    $head = $data[0];
-
-    # Check that we know the format.
-    return unless (LAB_ENTRY_FORMAT eq ($head->{'lab-entry-format'}//''));
-
-    return;
 }
 
 =back

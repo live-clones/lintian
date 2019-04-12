@@ -30,13 +30,6 @@ use Carp qw(croak);
 use Cwd();
 use File::Temp qw(tempdir); # For temporary labs
 use Path::Tiny;
-use Scalar::Util qw(blessed);
-
-use constant {
-    # Lab format Version Number increased whenever incompatible changes
-    # are done to the lab so that all packages are re-unpacked
-    LAB_FORMAT      => 11,
-};
 
 # A private table of supported types.
 my %SUPPORTED_TYPES = (
@@ -47,11 +40,8 @@ my %SUPPORTED_TYPES = (
     'udeb'    => 1,
 );
 
-my %SUPPORTED_VIEWS = ('GROUP' => 1,);
-
 use Lintian::Collect;
 use Lintian::Lab::Entry;
-use Lintian::Lab::Manifest;
 use Lintian::Util qw(get_dsc_info);
 
 use constant EMPTY => q{};
@@ -66,23 +56,12 @@ Lintian::Lab -- Interface to the Lintian Lab
 
  use Lintian::Lab;
  
- # Static lab
  my $lab = Lintian::Lab->new;
 
  if (!$lab->exists) {
      $lab->create;
  }
  $lab->open;
- 
- # Fetch a package from the lab
- my $lpkg = $lab->get_package ('lintian', 'binary', '2.5.4', 'all');
- 
- my $visitor = sub {
-     my ($lpkg, $pkg_name, $pkg_ver, $pkg_arch) = @_;
-     # do stuff with that entry
- };
- $lab->visit_packages ($visitor, 'source');
- 
  $lab->close;
 
 =head1 DESCRIPTION
@@ -106,16 +85,13 @@ sub new {
     my ($class) = @_;
     my $dok = 1;
 
-    my $state = {'GROUP' => Lintian::Lab::Manifest->new('GROUP'),};
     my $self = {
         # Must be absolute (frontend/lintian depends on it)
         #  - also $self->dir promises this
         #  - it may be the empty string (see $self->dir)
         'dir'         => EMPTY,
-        'state'       => $state,
         'is_open'     => 0,
         'keep-lab'    => 0,
-        'lab-info'    => {},
     };
     $self->{'_correct_dir'} = 1 unless $dok;
     bless $self, $class;
@@ -151,226 +127,38 @@ the lab is closed (see L</is_open>).
 sub exists {
     my ($self) = @_;
     my $dir = $self->dir;
-    return unless $dir;
-    # New style lab?
-    return 1 if -d "$dir/info" && -d "$dir/pool";
-    # 10-style lab?
-    return
-         -d "$dir/binary"
-      && -d "$dir/udeb"
-      && -d "$dir/source"
-      && -d "$dir/info";
+    return 1 if $dir and -d "$dir/pool";
+    return;
 }
 
-=item get_package (NAME, TYPE[, EXTRA]), get_package (PROC)
+=item get_package (PROC)
 
 Fetches an existing package from the lab.
 
-The first argument can be a L<processable|Lintian::Processable>.  In that
-case all other arguments are ignored.
-
-If the first calling convention is used then this method will search
-for an existing package.  The EXTRA argument can be used to narrow
-the search or even to add a new entry.
-
-EXTRA consists of (in order):
-
-=over 4
-
-=item * version
-
-=item * arch (ignored if TYPE is "source")
-
-=back
-
-If version or arch is omitted (or if it is undef) then that search
-parameter is consider a wildcard for "any".  Example:
-
- # Returns all eclipse-platform packages with architecture i386 regardless
- # of their version (if any)
- @ps  = $lab->get_package ('eclipse-platform', 'binary', undef, 'i386');
- # Returns all eclipse-platform packages with version 3.5.2-11 regardless
- # of their architecture (if any)
- @ps  = $lab->get_package ('eclipse-platform', 'binary', '3.5.2-11');
- # Return the eclipse-platform package with version 3.5.2-11 and architecture
- # i386 (or undef)
- $pkg = $lab->get_package ('eclipse-platform', 'binary', '3.5.2-11', 'i386');
-
-
-In list context, this returns a list of matches.  In scalar context
-this returns the first match (if any).  Note there is no guaranteed
-order (e.g. the returned list is not ordered).
-
-If the second calling convention is used, then this method will search
-for an entry matching the processable passed.  If such an entry
-does not exists, a new "non-existing" L<entry|Lintian::Lab::Entry>
-will be returned.  This entry can be created by using the
-L<create|Lintian::Lab::Entry/create> method on the entry.
+The first argument must be a L<processable|Lintian::Processable>.
 
 =cut
 
 sub get_package {
-    my ($self, $pkg, $pkg_type, $pkg_version, $pkg_arch) = @_;
-    my $pkg_name;
-    my @entries;
-    my $index;
-    my $proc;
+    my ($self, $proc) = @_;
+    my ($entry, $dir, $pkg_type);
 
     croak 'Lab is not open' unless $self->is_open;
 
-    # TODO: Cache and check for existing entries to avoid passing out
-    # the same entry twice with different instances.  Problem being
-    # circular references (and weaken may be un-available)
-
-    if (blessed $pkg && $pkg->isa('Lintian::Processable')) {
-        if ($pkg->isa('Lintian::Lab::Entry') and $pkg->from_lab($self)) {
-            # Shouldn't happen too often, but ...
-            return $pkg;
-        }
-        $pkg_name = $pkg->pkg_name;
-        $pkg_type = $pkg->pkg_type;
-        $pkg_version = $pkg->pkg_version;
-        $pkg_arch = $pkg->pkg_arch;
-        $proc = $pkg;
-    } else {
-        $pkg_name = $pkg;
-        croak 'Package name and type must be defined'
-          unless $pkg_name && $pkg_type;
+    if ($proc->isa('Lintian::Lab::Entry') and $proc->from_lab($self)) {
+        # Shouldn't happen too often, but ...
+        return $proc;
     }
+    $pkg_type = $proc->pkg_type;
 
     # get_package only works with "real" types (and not views).
     croak "Not a supported type ($pkg_type)"
       unless exists $SUPPORTED_TYPES{$pkg_type};
 
-    $index = $self->_get_lab_index($pkg_type);
-
-    if ($proc) {
-        my $pkg_src = $proc->pkg_src;
-        my $dir
-          = $self->_pool_path($pkg_src, $pkg_type, $pkg_name, $pkg_version,
-            $pkg_arch);
-        my $entry = Lintian::Lab::Entry->_new_from_proc($proc, $self, $dir);
-        push @entries, $entry;
-        if (not $index->get($proc)) {
-            # Add the entry to the index
-            # Ignore errors - happens if $proc does not have the extra fields
-            # we need.
-            eval {$self->_new_entry($entry);};
-        }
-    } elsif (defined $pkg_version
-        && (defined $pkg_arch || $pkg_type eq 'source')) {
-        # We know everything - just do a regular look up
-        my $dir;
-        my @keys = ($pkg_name, $pkg_version);
-        my $entry;
-        my $pkg_src;
-        push @keys, $pkg_arch if $pkg_type ne 'source';
-        $entry = $index->get(@keys);
-        return unless $entry;
-        $pkg_src = $entry->{'source'};
-        $dir = $self->_pool_path($pkg_src, $pkg_type, $pkg_name, $pkg_version,
-            $pkg_arch);
-        push(@entries, _entry_from_metadata($pkg_type, $entry, $self,$dir));
-    } else {
-        # clear $pkg_arch if it is a source package - it simplifies
-        # the search code below
-        undef $pkg_arch if $pkg_type eq 'source';
-        my $searcher = sub {
-            my ($entry, @keys) = @_;
-            my (undef, $v, $a) = @keys;
-            my $dir;
-            # We do not have to check version - if we have a specific
-            # version, only entries with that version will be visited.
-            return if defined $pkg_arch && $a ne $pkg_arch;
-            $dir
-              = $self->_pool_path($entry->{'source'}, $pkg_type, $pkg_name,$v,
-                $a);
-            push(@entries,_entry_from_metadata($pkg_type, $entry, $self,$dir));
-        };
-        my @sk = ($pkg_name);
-        push @sk, $pkg_version if defined $pkg_version;
-        $index->visit_all($searcher, @sk);
-    }
-
-    return wantarray ? @entries : $entries[0];
-}
-
-=item visit_packages (VISITOR[, TYPE])
-
-Passes each lab entry to VISITOR.  If TYPE is passed, then only
-entries of that type are passed.
-
-VISITOR is given a reference to the L<entry|Lintian::Lab::Entry>,
-the package name, the package version and the package architecture
-(may be undef for source packages).
-
-=cut
-
-sub visit_packages {
-    my ($self, $visitor, $type) = @_;
-    my @types;
-    push @types, $type if $type;
-    @types = keys %SUPPORTED_TYPES unless $type;
-    foreach my $pkg_type (@types) {
-        my $index = $self->_get_lab_index($pkg_type);
-        my $intv = sub {
-            my ($me, $pkg_name, $pkg_version, $pkg_arch) = @_;
-            my $pkg_src = $me->{'source'}//$pkg_name;
-            my $dir
-              = $self->_pool_path($pkg_src, $pkg_type, $pkg_name, $pkg_version,
-                $pkg_arch);
-            my $lentry= _entry_from_metadata($pkg_type, $me, $self,$dir);
-            if ($lentry) {
-                $visitor->($lentry, $pkg_name, $pkg_version, $pkg_arch);
-            }
-        };
-        $index->visit_all($intv);
-    }
-    return;
-}
-
-# Non-API method used by reporting to look up the manifest data via the Lab
-# rather than bypassing it.
-sub _get_lab_manifest_data {
-    my ($self, $pkg_name, $pkg_type, @keys) = @_;
-    my $index = $self->_get_lab_index($pkg_type);
-    if (scalar @keys >= 2 || (scalar @keys >= 1 && $pkg_type eq 'source')) {
-        # All we need to know
-        return $index->get($pkg_name, @keys);
-    } else {
-        # Time to guess (or hope)
-        my @result;
-        my $searcher = sub {
-            my ($v) = @_;
-            push @result, $v;
-        }; # end searcher
-        $index->visit_all($searcher, $pkg_name, @keys);
-        return $result[0] if @result;
-    }
-    # Nothing so far, then it does not exist
-    return;
-}
-
-# Returns the index of packages in the lab of a given type (of packages).
-#
-# Note this is also used by reporting/html_reports
-sub _get_lab_index {
-    my ($self, $pkg_type) = @_;
-    croak 'Undefined (or empty) package type' unless $pkg_type;
-    croak "Unknown package type $pkg_type"
-      unless $SUPPORTED_TYPES{$pkg_type}
-      or $SUPPORTED_VIEWS{$pkg_type};
-
-    my $state = $self->{'state'};
-    # Fetch (or load) the index of that type
-    return $state->{$pkg_type} if exists $state->{$pkg_type};
-
-    my $dir = $self->dir;
-    my $manifest= Lintian::Lab::Manifest->new($pkg_type, $state->{'GROUP'});
-    my $lif = "$dir/info/${pkg_type}-packages";
-    $manifest->read_list($lif);
-    $state->{$pkg_type} = $manifest;
-    return $manifest;
+    $dir = $self->_pool_path($proc->pkg_src,$pkg_type,$proc->pkg_name,
+        $proc->pkg_version,$proc->pkg_arch);
+    $entry = Lintian::Lab::Entry->_new_from_proc($proc, $self, $dir);
+    return $entry;
 }
 
 # Given the package meta data (src_name, type, name, version, arch) return the
@@ -395,112 +183,6 @@ sub _pool_path {
     # Also replace ":" with "_" as : is usually used for path separator
     $p =~ s/:/_/go;
     return "$dir/pool/$p";
-}
-
-=item generate_diffs (LIST)
-
-Each member of LIST must be a L<Lintian::Lab::Manifest>.
-
-The lab will generate a diff between the given member and its state
-for the given package type.
-
-The diffs are accurate until the original manifest is modified or a
-package is added or removed to the lab.
-
-=cut
-
-sub generate_diffs {
-    my ($self, @lists) = @_;
-    my $labdir = $self->dir;
-    my @diffs;
-    croak "$labdir is not a valid lab.\n"
-      unless $self->is_open;
-    foreach my $list (@lists) {
-        my $type = $list->type;
-        my $lab_list;
-        $lab_list = $self->_get_lab_index($type);
-        push @diffs, $lab_list->diff($list);
-    }
-    return @diffs;
-}
-
-=item repair
-
-Checks the lab contents against the current meta-data and syncs them.
-The lab must be open and should not be access while this method is
-running.
-
-This returns the number of corrections done by this process.  If there
-were any corrections, the state files are written before returning.
-
-The method may croak if it is unable to do a full check of the lab or
-if it is unable to write the corrected metadata.
-
-Note: This may (and generally will) correct "broken" entries by
-removing them.
-
-=cut
-
-sub repair {
-    my ($self) = @_;
-    my $updates = 0;
-    croak 'Lab is not open' unless $self->is_open;
-    foreach my $pkg_type (keys %SUPPORTED_TYPES) {
-        my $index = $self->_get_lab_index($pkg_type);
-        my $visitor = sub {
-            my ($metadata, @keys) = @_;
-            my ($pkg_name, $pkg_version, $pkg_arch) = @keys;
-            my $pkg_src = $metadata->{'source'}//$pkg_name;
-            my $dir
-              = $self->_pool_path($pkg_src, $pkg_type, $pkg_name, $pkg_version,
-                $pkg_arch);
-            my $entry;
-            unless (-d $dir) {
-                # The entry is clearly not here, remove it from the metadata
-                $index->delete(@keys);
-                $updates++;
-                return;
-            }
-            eval {
-                $entry
-                  = Lintian::Lab::Entry->new_from_metadata($pkg_type,
-                    $metadata, $self, $dir);
-            };
-            unless ($entry && $entry->exists) {
-                # We either cannot load the entry or it does not
-                # believe it exists - either way, the metadata is out
-                # of date.
-                if ($entry) {
-                    $entry->remove;
-                    # Strictly speaking $entry->remove ought to clean
-                    # up the index for us, but fall through and do it
-                    # anyway.
-                } else {
-                    # The entry is not here to clean up, lets purge it
-                    # the good old fashioned way.
-                    path($dir)->remove_tree
-                      if -d $dir;
-                }
-                $index->delete(@keys);
-                $updates++;
-            } else {
-                unless (-f "$dir/.lintian-status"
-                    or $entry->update_status_file) {
-                    # if we cannot write the status file, scrap the entry.
-                    $entry->remove;
-                    $updates++;
-                }
-            }
-        };
-
-        $index->visit_all($visitor);
-    }
-
-    # FIXME: scan the pool for entries not in the metadata.
-
-    $self->_write_manifests;
-
-    return $updates;
 }
 
 =item create ([OPTS])
@@ -555,46 +237,11 @@ sub create {
     croak "Cannot create $dir: $!"
       unless -d $dir;
 
-    # create minimal sub-directories.
-    unless (-d "$dir/info") {
-        mkdir "$dir/info", $mode or croak "mkdir $dir/info: $!";
-        $mid = 1; # remember we created the info dir
+    if (not -d "$dir/pool" and not mkdir "$dir/pool", $mode) {
+        croak "mkdir $dir/pool: $!";
     }
-
-    unless (-d "$dir/pool") {
-        unless (mkdir "$dir/pool", $mode) {
-            my $err = $!; # store the error
-             # Remove the info dir if we made it.  This attempts to
-             # prevent a semi-created lab that the API cannot remove
-             # again.
-             #
-             # ignore the error (if any) - we can only do so much
-            rmdir "$dir/info" if $mid;
-            $! = $err;
-            croak "mkdir $dir/pool: $!";
-        }
-    }
-    # Okay - $dir/info and $dir/pool exists... The subdirs in
-    # $dir/pool will be created as needed.
-
-    # Create the meta-data file - note at this point we can use
-    # $lab->remove
-    my $ok = 0;
-    eval {
-        open my $lfd, '>', "$dir/info/lab-info"
-          or croak "opening $dir/info/lab-info: $!";
-
-        print $lfd 'Lab-Format: ' . LAB_FORMAT . "\n";
-        print $lfd "Layout: pool\n";
-
-        close $lfd or croak "closing $dir/info/lab-info: $!";
-        $ok = 1;
-    };
-    unless ($ok) {
-        my $err = $@;
-        eval { $self->remove; };
-        croak $err;
-    }
+    # Okay - $dir/pool exists... The subdirs in $dir/pool will be
+    # created as needed.
     return 1;
 }
 
@@ -620,39 +267,14 @@ sub open {
 
     $self->create unless $self->exists;
     $dir = $self->dir;
-
-    unless (-e "$dir/info/lab-info") {
-        if ($self->exists) {
-            croak "$msg: The Lab format is not supported";
-        }
-        croak "$msg: Lab is corrupt - $dir/info/lab-info does not exist";
-    }
-
-    # Check the lab-format - this ought to be redundant, but it's simple to do
-    my $header = get_dsc_info("$dir/info/lab-info");
-    my $format = $header->{'lab-format'}//'';
-    my $layout = $header->{'layout'}//'pool';
-    unless ($format && $format eq LAB_FORMAT) {
-        croak "$msg: Lab format $format is not supported ($dir)" if $format;
-        croak "$msg: No lab format specification in $dir/info/lab-info";
-    }
-    unless ($layout && lc($layout) eq 'pool') {
-        # Unknown layout style?
-        croak "$msg: Layout field present but with no value" unless $layout;
-        croak "$msg: Implementation does not support the layout \"$layout\"";
-    }
-
-    # Looks decent so far
-    $self->{'lab-info'} = $header;
     $self->{'is_open'} = 1;
     return 1;
 }
 
 =item close
 
-Close the lab - all state caches will be flushed to the disk and the
-lab can no longer be used.  All references to entries in the lab
-should be considered invalid.
+Close the lab - the lab can no longer be used.  All references to
+entries in the lab should be considered invalid.
 
 Note: The lab will be deleted unless it was created with "keep-lab"
 (see L</create>).
@@ -664,24 +286,9 @@ sub close {
     return unless $self->exists;
     if (!$self->{'keep-lab'}) {
         $self->remove;
-    } else {
-        $self->_write_manifests;
     }
-    $self->{'state'} = {};
     $self->{'is_open'} = 0;
-    $self->{'lab-info'} = {};
     return 1;
-}
-
-sub _write_manifests {
-    my ($self) = @_;
-    my $dir = $self->dir;
-    while (my ($pkg_type, $plist) = (each %{ $self->{'state'} })) {
-        # write_list croaks on error, so no need for "or croak/die"
-        $plist->write_list("$dir/info/${pkg_type}-packages")
-          if $plist->dirty and exists $SUPPORTED_TYPES{$plist->type};
-    }
-    return;
 }
 
 =item remove
@@ -704,170 +311,19 @@ return a truth value.
 sub remove {
     my ($self) = @_;
     my $dir = $self->dir;
-    my @subdirs;
     my $empty = 0;
 
-    return 1 unless $dir && -d $dir;
+    return 1 if not $dir;
 
-    # sanity check if $self->{dir} really points to a lab :)
-    unless (-d "$dir/info") {
-        # info/ subdirectory does not exist--empty directory?
-        my @t = glob("$dir/*");
-        if ($#t+1 <= 2) {
-            # yes, empty directory--skip it
-            $empty = 1;
-        } else {
-            # non-empty directory that does not look like a lintian lab!
-            croak "$dir: Does not look like a lab";
-        }
+    if (-d $dir) {
+        path($dir)->remove_tree;
     }
-
-    unless ($empty) {
-        # looks ok.
-        if (-d "$dir/pool") {
-            # New lab style
-            @subdirs = qw/pool info/;
-        } else {
-            # 10-style Lab
-            @subdirs = qw/binary source udeb info/;
-            push @subdirs, 'changes' if -d "$dir/changes";
-        }
-        for my $subdir (map { "$dir/$_" } @subdirs) {
-            path($subdir)->remove_tree
-              if -d $subdir;
-        }
-    }
-
-    # dynamic lab?
-    rmdir $dir or croak "rmdir $dir: $!";
     $self->{'dir'} = '';
-
     $self->{'is_open'} = 0;
     return 1;
 }
 
-sub _entry_from_metadata {
-    my (@args) = @_;
-    my $entry;
-    eval {$entry = Lintian::Lab::Entry->new_from_metadata(@args);};
-    if (my $err = $@) {
-        die($err) if $err ne "entry-disappeared\n";
-        return;
-    }
-    return $entry;
-}
-
-# event - triggered by Lintian::Lab::Entry
-sub _entry_removed {
-    my ($self, $entry) = @_;
-    my $pkg_type = $entry->pkg_type;
-    my $pf = $self->_get_lab_index($pkg_type);
-    $pf->delete($entry);
-    return;
-}
-
-# event - triggered by Lintian::Lab::Entry
-sub _entry_created {
-    my ($self, $entry) = @_;
-    my $pkg_type = $entry->pkg_type;
-    my $pf = $self->_get_lab_index($pkg_type);
-    $self->_new_entry($entry) unless $pf->get($entry);
-    $pf->set_transient_marker(0, $entry);
-    return;
-}
-
-sub _new_entry {
-    my ($self, $entry) = @_;
-    my $pkg_name    = $entry->pkg_name;
-    my $pkg_type    = $entry->pkg_type;
-    my $pkg_version = $entry->pkg_version;
-    my $pkg_path    = $entry->pkg_path;
-    my $ts = 0;
-    my $pf = $self->_get_lab_index($pkg_type);
-    my %data = (
-        'file'    => $pkg_path,
-        'version' => $pkg_version,
-    );
-
-    if ($pkg_type eq 'source') {
-
-        $data{'source'}     = $pkg_name;
-        # We *used* to rely on these for the reporting
-        # framework.
-        $data{'binary'}     = ''; # Only for compat
-        $data{'area'}       = ''; # Only for compat
-        $data{'maintainer'} = ''; # Only for compat
-        $data{'uploaders'}  = ''; # Only for compat
-    } elsif ($pkg_type eq 'changes' or $pkg_type eq 'buildinfo') {
-        $data{'architecture'} = $entry->pkg_arch;
-        $data{'source'}       = $pkg_name;
-    } elsif ($pkg_type eq 'binary' or $pkg_type eq 'udeb') {
-        $data{'architecture'}   = $entry->pkg_arch;
-        $data{'package'}        = $pkg_name;
-        $data{'source'}         = $entry->pkg_src;
-        $data{'source-version'} = $entry->pkg_src_version;
-        # Previously used by the reporting framework
-        $data{'area'}           = ''; # Only for compat
-    } else {
-        croak "Unknown package type: $pkg_type";
-    }
-
-    if (my @stat = stat $pkg_path) {
-        $ts = $stat[9];
-    }
-    $data{'timestamp'} = $ts;
-
-    $pf->set(\%data);
-    $pf->set_transient_marker(1, $entry);
-    return;
-}
-
 =back
-
-=head1 Changes to the lab format.
-
-Lab formats up to (and including) "10" used to store the lab format
-with each entry.  The files in $LAB/info/ were used to list packages
-from a mirror (dist).
-
-In lab format 11 the lab format is stored in $LAB/info/lab-info.  The
-rest of the files in $LAB/info/* have been re-purposed to be a list of
-packages in the lab.
-
-The $LAB/info/lab-info is parsed as a debian control file (See Debian
-Policy Manual §5.1 for syntax).  The consists of a single paragraph
-and only the following fields are allowed:
-
-=over 4
-
-=item Lab-Format (simple, mandatory)
-
-This field contains the lab format of this lab.  Generally this is
-simply an integer (though during development non-integers have been
-used).
-
-=item Layout (simple, optional)
-
-The layout parameter describes how packages are stored in the lab.
-Currently the only accepted value is "pool" and the value is not
-case-sensitive.
-
-The pool format dictates that packages are stored in:
-
- pool/$l/${name}/${name}_${version}[_${arch}]_${type}/
-
-Note that $arch is left out for source packages, $l is the first
-letter of the package name (except if the name starts with "lib", then
-it is the first 4 letters of the package name).  Whitespace (e.g. "
-") are replaced with dashes ("-") and colons (":") with underscores
-("_").
-
-If the field is missing, it defaults to "pool".
-
-=back
-
-It is allowed to use comments in $LAB/info/lab-info as described
-in the Debian Policy Manual §5.1.
 
 =head1 AUTHOR
 

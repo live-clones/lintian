@@ -217,36 +217,21 @@ sub prepare_tasks {
     my ($self, $errorhandler, @lpkgs) = @_;
     my %worklists;
     foreach my $lpkg (@lpkgs) {
-        my ($changed, $cmap, $needed);
+        my ($cmap, $needed);
 
-        eval {$changed = $lpkg->create;};
+        eval {$lpkg->create;};
         if (my $e = $@) {
-            eval {$errorhandler->($lpkg, $e);};
-            if ($@) {
-                # The error handler croaked; attempt to write status
-                # files for entries we created.
-                my $err = $@;
-                foreach my $wlist (values %worklists) {
-                    next unless $wlist->{'changed'};
-                    my $lpkg = $wlist->{'lab-entry'};
-                    # ignore errors; there is not much we can do about
-                    # it here.
-                    $lpkg->update_status_file;
-                }
-                # ... and pass back the error.
-                die $err;
-            }
+            $errorhandler->($lpkg, $e);
             next;
         }
 
-        ($cmap, $needed) = $self->_requested_colls($lpkg, $changed);
+        ($cmap, $needed) = $self->_requested_colls($lpkg);
 
         next unless $cmap; # nothing to do
 
         $worklists{$lpkg->identifier} = {
             'collmap' => $cmap,
             'lab-entry' => $lpkg,
-            'changed' => $changed,
             'needed' => $needed,
         };
     }
@@ -296,9 +281,9 @@ sub _requested_colls {
         $cmap = $self->{'cache'}{$pkg_type}->clone;
     }
 
-    # if its new and $profile is undef, we have to run all
-    # of collections.  So lets exit early.
-    return ($cmap, undef) if $new and not $profile;
+    # if $profile is undef, we have to run all of collections.  So
+    # lets exit early.
+    return ($cmap, undef) if not $profile;
     if ($profile) {
         my %tmp;
         foreach my $cname ($profile->scripts) {
@@ -527,7 +512,6 @@ sub _generate_find_next_tasks_sub {
                 }
                 # collect info
                 $cmap->select($coll);
-                $wlist->{'changed'} = 1;
                 debug_msg(3, "READY ${coll}-${procid}") if $debug_enabled;
                 push(@queue, ["${coll}-${procid}", $cs, $lpkg, $cmap]);
                # If we are dealing with the highest priority type of task, then
