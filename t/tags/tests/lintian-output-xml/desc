@@ -5,5 +5,5 @@ Version: 1.0+dsfg-1.1
 Package-Architecture: all
 Options: --pedantic --show-overrides
 Output-Format: xml
-Sort: no
 Description: Test Lintian XML output format
+Match-Strategy: literal

@@ -4,3 +4,5 @@ Sequence: 2500
 Version: 1.0
 Description: Test checking a specific list of tags from a file
 Options: --tags-from-file ./tag-list
+Match-Strategy: literal
+Output-Format: EWI

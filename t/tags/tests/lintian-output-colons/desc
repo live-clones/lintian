@@ -6,3 +6,4 @@ Package-Architecture: all
 Options: --pedantic --show-overrides
 Output-Format: colons
 Description: Test Lintian colon-separated output format
+Match-Strategy: literal

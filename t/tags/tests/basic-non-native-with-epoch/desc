@@ -3,3 +3,5 @@ Sequence: 0001
 Version: 1:1.0-1
 Skeleton: upload-non-native
 Description: Basic test of a non-native package with epoch
+Match-Strategy: literal
+Output-Format: EWI
