@@ -93,6 +93,7 @@ use lib "$ENV{'LINTIAN_TEST_ROOT'}/lib";
 
 use Lintian::Internal::FrontendUtil qw(default_parallel);
 
+use Test::Lintian::Config qw(read_config);
 use Test::Lintian::Filter
   qw(find_selected_scripts find_selected_lintian_testpaths);
 use Test::Lintian::Helper
@@ -359,6 +360,14 @@ if (-t STDOUT && !$unattended) {
 
     for my $scriptpath (@failed) {
         my $workpath = dirname($scriptpath);
+
+        my $descpath = "$workpath/desc";
+        my $testcase = read_config($descpath);
+
+        # only offer when matching tags
+        next
+          unless $testcase->{match_strategy} = "tags";
+
         my $diffpath = "$workpath/tagdiff";
 
         my $relative = abs2rel($workpath, $outpath);
