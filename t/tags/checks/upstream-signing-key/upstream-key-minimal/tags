@@ -1,2 +1,2 @@
-W: upstream-key-minimal source: orig-tarball-missing-upstream-signature upstream-key-minimal_1.0.orig.tar.gz
-W: upstream-key-minimal source: debian-watch-could-verify-download debian/upstream/signing-key.asc
+upstream-key-minimal (source): orig-tarball-missing-upstream-signature upstream-key-minimal_1.0.orig.tar.gz
+upstream-key-minimal (source): debian-watch-could-verify-download debian/upstream/signing-key.asc

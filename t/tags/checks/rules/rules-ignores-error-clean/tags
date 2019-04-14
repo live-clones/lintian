@@ -1,1 +1,1 @@
-W: rules-ignores-error-clean source: debian-rules-ignores-make-clean-error line 6
+rules-ignores-error-clean (source): debian-rules-ignores-make-clean-error line 6

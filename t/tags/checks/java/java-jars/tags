@@ -1,11 +1,11 @@
-E: libtesta-java: executable-jar-without-main-class usr/bin/testc.jar
-E: libtesta-java: missing-dep-on-jarwrapper
-I: libmanifestless-java: missing-manifest usr/share/java/manifestless-1.0.jar
-I: libtestc-java: javalib-but-no-public-jars
-W: libcodeless-java: codeless-jar usr/share/java/codeless-1.0.jar
-W: libcontains-source-java: jar-contains-source usr/share/java/contains-source-1.0.jar org/debian/lintian/TestA.java
-W: libtest-maven-plugin-java: maven-plugin-in-usr-share-java usr/share/java/testb.jar
-W: libtesta-java: bad-jar-name usr/share/java/0.jar
-W: libtesta-java: binary-without-manpage usr/bin/testc.jar
-W: libtesta-java: jar-not-in-usr-share usr/lib/testb.jar
-W: unparsable: zip-parse-error usr/share/unparsable/unparsable.jar: format error: can't find EOCD signature
+unparsable (binary): zip-parse-error usr/share/unparsable/unparsable.jar: format error: can't find EOCD signature
+libtestc-java (binary): javalib-but-no-public-jars
+libtesta-java (binary): missing-dep-on-jarwrapper
+libtesta-java (binary): jar-not-in-usr-share usr/lib/testb.jar
+libtesta-java (binary): executable-jar-without-main-class usr/bin/testc.jar
+libtesta-java (binary): binary-without-manpage usr/bin/testc.jar
+libtesta-java (binary): bad-jar-name usr/share/java/0.jar
+libtest-maven-plugin-java (binary): maven-plugin-in-usr-share-java usr/share/java/testb.jar
+libmanifestless-java (binary): missing-manifest usr/share/java/manifestless-1.0.jar
+libcontains-source-java (binary): jar-contains-source usr/share/java/contains-source-1.0.jar org/debian/lintian/TestA.java
+libcodeless-java (binary): codeless-jar usr/share/java/codeless-1.0.jar

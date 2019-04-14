@@ -1,2 +1,2 @@
-E: deb-format-no-compress: uses-no-compression-for-control-tarball
-E: deb-format-no-compress: uses-no-compression-for-data-tarball
+deb-format-no-compress (binary): uses-no-compression-for-data-tarball
+deb-format-no-compress (binary): uses-no-compression-for-control-tarball

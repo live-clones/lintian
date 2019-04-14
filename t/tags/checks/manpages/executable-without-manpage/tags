@@ -1,1 +1,1 @@
-W: executable-without-manpage: binary-without-manpage usr/bin/telepathic
+executable-without-manpage (binary): binary-without-manpage usr/bin/telepathic

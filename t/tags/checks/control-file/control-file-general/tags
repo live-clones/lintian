@@ -1,23 +1,23 @@
-E: control-file-general source: build-info-in-binary-control-file-section Package control-file-general
-E: control-file-general source: debian-control-has-dbgsym-package control-file-general-dbgsym
-E: control-file-general source: missing-separator-between-items in control-file-general depends field between '${shlibs:Depends}' and '${some:Depends}'
-E: control-file-general source: obsolete-relation-form-in-source in control-file-general-1 breaks: libsqlite3-0 (< 3.6.12)
-E: control-file-general source: obsolete-relation-form-in-source in source build-depends-indep: perl (> 5.8)
-E: control-file-general source: pre-depends-directly-on-multiarch-support control-file-general
-I: control-file-general source: binary-control-field-duplicates-source field "maintainer" in package control-file-general
-I: control-file-general source: debian-control-has-obsolete-dbg-package control-file-general-dbg
-I: control-file-general source: duplicate-long-description control-file-general control-file-general-1 control-file-general-2 control-file-general-3 control-file-general-4 control-file-general-5 control-file-general-dbgsym control-file-general-dbg
-I: control-file-general source: duplicate-short-description control-file-general control-file-general-1
-I: control-file-general source: xs-vcs-field-in-debian-control xs-vcs-svn
-W: control-file-general changes: package-builds-dbg-and-dbgsym-variants control-file-general-{dbg,dbgsym}
-W: control-file-general source: control-file-contains-dh_make-vcs-comment
-W: control-file-general source: dbg-package-missing-depends control-file-general-dbg
-W: control-file-general source: debian-control-repeats-field-name-in-value line 101
-W: control-file-general source: debian-control-repeats-field-name-in-value line 81
-W: control-file-general source: debian-control-repeats-field-name-in-value line 91
-W: control-file-general source: no-section-field-for-source
-W: control-file-general source: package-depends-on-itself control-file-general depends
-W: control-file-general source: stronger-dependency-implies-weaker control-file-general depends -> recommends foo
-W: control-file-general source: stronger-dependency-implies-weaker control-file-general depends -> suggests bar | baz
-W: control-file-general source: stronger-dependency-implies-weaker control-file-general recommends -> suggests bar | baz
-W: control-file-general source: stronger-dependency-implies-weaker control-file-general recommends -> suggests match${lintian:Match}
+control-file-general (source): xs-vcs-field-in-debian-control xs-vcs-svn
+control-file-general (source): stronger-dependency-implies-weaker control-file-general recommends -> suggests match${lintian:Match}
+control-file-general (source): stronger-dependency-implies-weaker control-file-general recommends -> suggests bar | baz
+control-file-general (source): stronger-dependency-implies-weaker control-file-general depends -> suggests bar | baz
+control-file-general (source): stronger-dependency-implies-weaker control-file-general depends -> recommends foo
+control-file-general (source): pre-depends-directly-on-multiarch-support control-file-general
+control-file-general (source): package-depends-on-itself control-file-general depends
+control-file-general (source): obsolete-relation-form-in-source in source build-depends-indep: perl (> 5.8)
+control-file-general (source): obsolete-relation-form-in-source in control-file-general-1 breaks: libsqlite3-0 (< 3.6.12)
+control-file-general (source): no-section-field-for-source
+control-file-general (source): missing-separator-between-items in control-file-general depends field between '${shlibs:Depends}' and '${some:Depends}'
+control-file-general (source): duplicate-short-description control-file-general control-file-general-1
+control-file-general (source): duplicate-long-description control-file-general control-file-general-1 control-file-general-2 control-file-general-3 control-file-general-4 control-file-general-5 control-file-general-dbgsym control-file-general-dbg
+control-file-general (source): debian-control-repeats-field-name-in-value line 91
+control-file-general (source): debian-control-repeats-field-name-in-value line 81
+control-file-general (source): debian-control-repeats-field-name-in-value line 101
+control-file-general (source): debian-control-has-obsolete-dbg-package control-file-general-dbg
+control-file-general (source): debian-control-has-dbgsym-package control-file-general-dbgsym
+control-file-general (source): dbg-package-missing-depends control-file-general-dbg
+control-file-general (source): control-file-contains-dh_make-vcs-comment
+control-file-general (source): build-info-in-binary-control-file-section Package control-file-general
+control-file-general (source): binary-control-field-duplicates-source field "maintainer" in package control-file-general
+control-file-general (changes): package-builds-dbg-and-dbgsym-variants control-file-general-{dbg,dbgsym}

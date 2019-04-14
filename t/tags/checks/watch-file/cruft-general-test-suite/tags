@@ -1,1 +1,1 @@
-X: cruft-general-test-suite source: debian-watch-does-not-check-gpg-signature
+cruft-general-test-suite (source): debian-watch-does-not-check-gpg-signature

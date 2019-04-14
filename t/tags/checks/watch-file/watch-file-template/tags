@@ -1,2 +1,2 @@
-I: watch-file-template source: debian-watch-uses-insecure-uri http://www.example.com/software/foo/
-I: watch-file-template source: debian-watch-contains-dh_make-template (line 3)
+watch-file-template (source): debian-watch-uses-insecure-uri http://www.example.com/software/foo/
+watch-file-template (source): debian-watch-contains-dh_make-template (line 3)

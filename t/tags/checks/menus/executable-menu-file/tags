@@ -1,4 +1,4 @@
-W: executable-menu-file: possible-bashism-in-maintainer-script postrm:3 'if type '
-W: executable-menu-file: executable-not-elf-or-script usr/share/menu/test-menu
-W: executable-menu-file: executable-menu-file usr/share/menu/test-menu 0755
-W: executable-menu-file: command-with-path-in-maintainer-script postinst:9 /usr/bin/update-menus
+executable-menu-file (binary): possible-bashism-in-maintainer-script postrm:3 'if type '
+executable-menu-file (binary): executable-not-elf-or-script usr/share/menu/test-menu
+executable-menu-file (binary): executable-menu-file usr/share/menu/test-menu 0755
+executable-menu-file (binary): command-with-path-in-maintainer-script postinst:9 /usr/bin/update-menus

@@ -1,1 +1,1 @@
-X: files-arch-indep-not-marked-all: package-contains-no-arch-dependent-files
+files-arch-indep-not-marked-all (binary): package-contains-no-arch-dependent-files

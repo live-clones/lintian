@@ -1,1 +1,1 @@
-W: libcp-relative-java: classpath-contains-relative-path usr/share/java/cp-relative-1.0.jar: obviously-relative/stuff.jar
+libcp-relative-java (binary): classpath-contains-relative-path usr/share/java/cp-relative-1.0.jar: obviously-relative/stuff.jar

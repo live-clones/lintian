@@ -1,1 +1,1 @@
-I: files-extra-license: extra-license-file usr/share/doc/files-extra-license/license.txt
+files-extra-license (binary): extra-license-file usr/share/doc/files-extra-license/license.txt

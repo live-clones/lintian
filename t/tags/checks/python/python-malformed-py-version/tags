@@ -1,4 +1,4 @@
-E: python-malformed-py-version source: malformed-python-version x-python3-version invalid
-E: python-malformed-py-version source: malformed-python-version xs-python-version current 2.7
-W: python-malformed-py-version source: ancient-python-version-field xs-python-version 2.7
-W: python-malformed-py-version source: python-version-current-is-deprecated xs-python-version
+python-malformed-py-version (source): python-version-current-is-deprecated xs-python-version
+python-malformed-py-version (source): malformed-python-version xs-python-version current 2.7
+python-malformed-py-version (source): malformed-python-version x-python3-version invalid
+python-malformed-py-version (source): ancient-python-version-field xs-python-version 2.7

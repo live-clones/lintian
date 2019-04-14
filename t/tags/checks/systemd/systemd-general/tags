@@ -1,26 +1,26 @@
-E: systemd-general: init-script-is-not-a-file etc/init.d/fifo-pipe-as-init
-E: systemd-general: missing-systemd-service-for-init.d-rcS-script systemd-general
-E: systemd-general: service-file-is-not-a-file etc/systemd/system/fifo-pipe-as-init.service
-E: systemd-general: service-key-has-whitespace etc/systemd/system/test.service at line 4
-E: systemd-general: service-key-has-whitespace usr/lib/systemd/system/test.service at line 4
-E: systemd-general: special-file etc/init.d/fifo-pipe-as-init 0644
-E: systemd-general: special-file etc/systemd/system/fifo-pipe-as-init.service 0644
-E: systemd-general: systemd-service-file-outside-lib etc/systemd/system/fifo-pipe-as-init.service
-E: systemd-general: systemd-service-file-outside-lib etc/systemd/system/test.service
-E: systemd-general: systemd-service-file-outside-lib usr/lib/systemd/system/test.service
-E: systemd-general: systemd-tmpfiles.d-outside-usr-lib etc/tmpfiles.d/test.conf
-I: systemd-general: systemd-service-file-missing-documentation-key etc/systemd/system/test.service
-I: systemd-general: systemd-service-file-missing-documentation-key usr/lib/systemd/system/test.service
-W: systemd-general: init.d-script-does-not-source-init-functions etc/init.d/systemd-general
-W: systemd-general: maintainer-script-calls-systemctl postrm:6
-W: systemd-general: script-in-etc-init.d-not-registered-via-update-rc.d etc/init.d/bootmisc.sh
-W: systemd-general: script-in-etc-init.d-not-registered-via-update-rc.d etc/init.d/fifo-pipe-as-init
-W: systemd-general: script-in-etc-init.d-not-registered-via-update-rc.d etc/init.d/masked
-W: systemd-general: systemd-service-alias-without-extension etc/systemd/system/test.service
-W: systemd-general: systemd-service-alias-without-extension usr/lib/systemd/system/test.service
-W: systemd-general: systemd-service-file-refers-to-obsolete-bindto etc/systemd/system/test.service
-W: systemd-general: systemd-service-file-refers-to-obsolete-bindto usr/lib/systemd/system/test.service
-W: systemd-general: systemd-service-file-refers-to-obsolete-target etc/systemd/system/test.service syslog.target
-W: systemd-general: systemd-service-file-refers-to-obsolete-target usr/lib/systemd/system/test.service syslog.target
-W: systemd-general: systemd-service-file-refers-to-unusual-wantedby-target etc/systemd/system/test.service unusual.target
-W: systemd-general: systemd-service-file-refers-to-unusual-wantedby-target usr/lib/systemd/system/test.service unusual.target
+systemd-general (binary): systemd-tmpfiles.d-outside-usr-lib etc/tmpfiles.d/test.conf
+systemd-general (binary): systemd-service-file-refers-to-unusual-wantedby-target usr/lib/systemd/system/test.service unusual.target
+systemd-general (binary): systemd-service-file-refers-to-unusual-wantedby-target etc/systemd/system/test.service unusual.target
+systemd-general (binary): systemd-service-file-refers-to-obsolete-target usr/lib/systemd/system/test.service syslog.target
+systemd-general (binary): systemd-service-file-refers-to-obsolete-target etc/systemd/system/test.service syslog.target
+systemd-general (binary): systemd-service-file-refers-to-obsolete-bindto usr/lib/systemd/system/test.service
+systemd-general (binary): systemd-service-file-refers-to-obsolete-bindto etc/systemd/system/test.service
+systemd-general (binary): systemd-service-file-outside-lib usr/lib/systemd/system/test.service
+systemd-general (binary): systemd-service-file-outside-lib etc/systemd/system/test.service
+systemd-general (binary): systemd-service-file-outside-lib etc/systemd/system/fifo-pipe-as-init.service
+systemd-general (binary): systemd-service-file-missing-documentation-key usr/lib/systemd/system/test.service
+systemd-general (binary): systemd-service-file-missing-documentation-key etc/systemd/system/test.service
+systemd-general (binary): systemd-service-alias-without-extension usr/lib/systemd/system/test.service
+systemd-general (binary): systemd-service-alias-without-extension etc/systemd/system/test.service
+systemd-general (binary): special-file etc/systemd/system/fifo-pipe-as-init.service 0644
+systemd-general (binary): special-file etc/init.d/fifo-pipe-as-init 0644
+systemd-general (binary): service-key-has-whitespace usr/lib/systemd/system/test.service at line 4
+systemd-general (binary): service-key-has-whitespace etc/systemd/system/test.service at line 4
+systemd-general (binary): service-file-is-not-a-file etc/systemd/system/fifo-pipe-as-init.service
+systemd-general (binary): script-in-etc-init.d-not-registered-via-update-rc.d etc/init.d/masked
+systemd-general (binary): script-in-etc-init.d-not-registered-via-update-rc.d etc/init.d/fifo-pipe-as-init
+systemd-general (binary): script-in-etc-init.d-not-registered-via-update-rc.d etc/init.d/bootmisc.sh
+systemd-general (binary): missing-systemd-service-for-init.d-rcS-script systemd-general
+systemd-general (binary): maintainer-script-calls-systemctl postrm:6
+systemd-general (binary): init.d-script-does-not-source-init-functions etc/init.d/systemd-general
+systemd-general (binary): init-script-is-not-a-file etc/init.d/fifo-pipe-as-init

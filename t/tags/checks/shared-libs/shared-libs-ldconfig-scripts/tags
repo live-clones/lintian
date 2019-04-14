@@ -1,10 +1,10 @@
-E: libfoo1: package-must-activate-ldconfig-trigger usr/lib/libfoo.so.1.0.1
-I: libfish1: symbols-file-missing-build-depends-package-field
-I: libfoo1: symbols-file-missing-build-depends-package-field
-I: libuns1: symbols-file-missing-build-depends-package-field
-W: app: maintscript-calls-ldconfig postinst
-W: app: maintscript-calls-ldconfig postrm
-W: app: package-has-unnecessary-activation-of-ldconfig-trigger
-W: libfish1: maintscript-calls-ldconfig preinst
-W: libfish1: maintscript-calls-ldconfig prerm
-W: libuns1: maintscript-calls-ldconfig postrm
+libuns1 (binary): symbols-file-missing-build-depends-package-field
+libuns1 (binary): maintscript-calls-ldconfig postrm
+libfoo1 (binary): symbols-file-missing-build-depends-package-field
+libfoo1 (binary): package-must-activate-ldconfig-trigger usr/lib/libfoo.so.1.0.1
+libfish1 (binary): symbols-file-missing-build-depends-package-field
+libfish1 (binary): maintscript-calls-ldconfig prerm
+libfish1 (binary): maintscript-calls-ldconfig preinst
+app (binary): package-has-unnecessary-activation-of-ldconfig-trigger
+app (binary): maintscript-calls-ldconfig postrm
+app (binary): maintscript-calls-ldconfig postinst

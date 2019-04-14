@@ -1,45 +1,45 @@
-E: files-general: FSSTND-dir-in-usr usr/doc/
-E: files-general: FSSTND-dir-in-var var/catman/
-E: files-general: bad-perm-for-file-in-etc-sudoers.d etc/sudoers.d/sudotest 0644 != 0440
-E: files-general: config-file-reserved etc/pam.conf by libpam-runtime
-E: files-general: dir-or-file-in-var-lock var/lock/lintian/
-E: files-general: dir-or-file-in-var-run var/run/lintian/
-E: files-general: executable-manpage usr/share/man/man5/foo.5.gz
-E: files-general: file-name-in-PATH-is-not-ASCII usr/bin/?????????
-E: files-general: file-name-is-not-valid-UTF-8 usr/share/foo/bokm?l
-E: files-general: global-data-in-games-directory usr/share/games/icons/hicolor/22x22/lintian-22x22.png
-E: files-general: lengthy-symlink usr/share/doc/bar/star ../bar/foo
-E: files-general: non-conf-file-in-modprobe.d etc/modprobe.d/--lzma
-E: files-general: non-standard-toplevel-dir new-top-level-dir/
-E: files-general: package-contains-compiled-font-file usr/share/fonts/X11/misc/encodings.dir
-E: files-general: package-contains-compiled-font-file usr/share/fonts/X11/misc/fonts.alias
-E: files-general: package-contains-compiled-font-file usr/share/fonts/X11/misc/fonts.dir
-E: files-general: package-contains-compiled-font-file usr/share/fonts/X11/misc/fonts.scale
-E: files-general: package-contains-compiled-glib-schema usr/share/glib-2.0/schemas/gschemas.compiled
-E: files-general: package-contains-file-in-etc-skel etc/skel/.lintianrc
-E: files-general: package-contains-info-dir-file usr/share/info/dir.gz
-E: files-general: package-contains-mime-cache-file usr/share/mime/types
-E: files-general: package-contains-mimeinfo.cache-file usr/share/applications/mimeinfo.cache
-E: files-general: package-modifies-ld.so-search-path etc/ld.so.conf.d/lintian-lib.conf
-E: files-general: python-package-missing-depends-on-python
-E: files-general: star-file usr/share/foo/*
-E: files-general: stray-directory-in-manpage-directory usr/share/man/man1/random/
-I: files-general: duplicated-compressed-file usr/share/doc/lintian/lintian-16x16.png.gz
-I: files-general: package-contains-empty-directory usr/share/man/man1/random/
-W: files-general: backup-file-in-package usr/share/foo/file~
-W: files-general: executable-not-elf-or-script usr/share/man/man5/foo.5.gz
-W: files-general: file-in-unusual-dir new-top-level-dir/file-in-new-top-level-dir
-W: files-general: file-in-unusual-dir var/catman/do
-W: files-general: file-name-contains-wildcard-character usr/share/foo/*
-W: files-general: file-name-ends-in-whitespace usr/share/foo/ws 
-W: files-general: icon-size-and-directory-name-mismatch usr/share/apps/lintian/icons/hicolor/22x22/lintian-16x16.png 16x16
-W: files-general: icon-size-and-directory-name-mismatch usr/share/apps/lintian/icons/hicolor/64x64/lintian-64x64.png 22x22
-W: files-general: icon-size-and-directory-name-mismatch usr/share/icons/hicolor/22x22/apps/lintian-16x16.png 16x16
-W: files-general: nfs-temporary-file-in-package usr/share/foo/.nfs-fake-tmpfile
-W: files-general: obsolete-comments-style-in-php-ini etc/php/7.0/mods-available/php-foo.ini
-W: files-general: package-contains-file-in-usr-share-hal usr/share/hal/foo.fdi
-W: files-general: package-contains-python-doctree-file usr/share/foo/bar.doctree.gz
-W: files-general: package-contains-python-doctree-file usr/share/foo/foo.doctree
-W: files-general: package-contains-python-tests-in-global-namespace usr/lib/python3/dist-packages/test_foo.py
-W: files-general: raster-image-in-scalable-directory usr/share/icons/hicolor/scalable/apps/lintian-16x16.png
-W: files-general: windows-devel-file-in-package usr/lib/foo/foo.vcproj
+files-general (binary): windows-devel-file-in-package usr/lib/foo/foo.vcproj
+files-general (binary): stray-directory-in-manpage-directory usr/share/man/man1/random/
+files-general (binary): star-file usr/share/foo/*
+files-general (binary): raster-image-in-scalable-directory usr/share/icons/hicolor/scalable/apps/lintian-16x16.png
+files-general (binary): python-package-missing-depends-on-python
+files-general (binary): package-modifies-ld.so-search-path etc/ld.so.conf.d/lintian-lib.conf
+files-general (binary): package-contains-python-tests-in-global-namespace usr/lib/python3/dist-packages/test_foo.py
+files-general (binary): package-contains-python-doctree-file usr/share/foo/foo.doctree
+files-general (binary): package-contains-python-doctree-file usr/share/foo/bar.doctree.gz
+files-general (binary): package-contains-mimeinfo.cache-file usr/share/applications/mimeinfo.cache
+files-general (binary): package-contains-mime-cache-file usr/share/mime/types
+files-general (binary): package-contains-info-dir-file usr/share/info/dir.gz
+files-general (binary): package-contains-file-in-usr-share-hal usr/share/hal/foo.fdi
+files-general (binary): package-contains-file-in-etc-skel etc/skel/.lintianrc
+files-general (binary): package-contains-empty-directory usr/share/man/man1/random/
+files-general (binary): package-contains-compiled-glib-schema usr/share/glib-2.0/schemas/gschemas.compiled
+files-general (binary): package-contains-compiled-font-file usr/share/fonts/X11/misc/fonts.scale
+files-general (binary): package-contains-compiled-font-file usr/share/fonts/X11/misc/fonts.dir
+files-general (binary): package-contains-compiled-font-file usr/share/fonts/X11/misc/fonts.alias
+files-general (binary): package-contains-compiled-font-file usr/share/fonts/X11/misc/encodings.dir
+files-general (binary): obsolete-comments-style-in-php-ini etc/php/7.0/mods-available/php-foo.ini
+files-general (binary): non-standard-toplevel-dir new-top-level-dir/
+files-general (binary): non-conf-file-in-modprobe.d etc/modprobe.d/--lzma
+files-general (binary): nfs-temporary-file-in-package usr/share/foo/.nfs-fake-tmpfile
+files-general (binary): lengthy-symlink usr/share/doc/bar/star ../bar/foo
+files-general (binary): icon-size-and-directory-name-mismatch usr/share/icons/hicolor/22x22/apps/lintian-16x16.png 16x16
+files-general (binary): icon-size-and-directory-name-mismatch usr/share/apps/lintian/icons/hicolor/64x64/lintian-64x64.png 22x22
+files-general (binary): icon-size-and-directory-name-mismatch usr/share/apps/lintian/icons/hicolor/22x22/lintian-16x16.png 16x16
+files-general (binary): global-data-in-games-directory usr/share/games/icons/hicolor/22x22/lintian-22x22.png
+files-general (binary): file-name-is-not-valid-UTF-8 usr/share/foo/bokmål
+files-general (binary): file-name-in-PATH-is-not-ASCII usr/bin/é³¥ã®è©©
+files-general (binary): file-name-ends-in-whitespace usr/share/foo/ws 
+files-general (binary): file-name-contains-wildcard-character usr/share/foo/*
+files-general (binary): file-in-unusual-dir var/catman/do
+files-general (binary): file-in-unusual-dir new-top-level-dir/file-in-new-top-level-dir
+files-general (binary): executable-not-elf-or-script usr/share/man/man5/foo.5.gz
+files-general (binary): executable-manpage usr/share/man/man5/foo.5.gz
+files-general (binary): duplicated-compressed-file usr/share/doc/lintian/lintian-16x16.png.gz
+files-general (binary): dir-or-file-in-var-run var/run/lintian/
+files-general (binary): dir-or-file-in-var-lock var/lock/lintian/
+files-general (binary): config-file-reserved etc/pam.conf by libpam-runtime
+files-general (binary): bad-perm-for-file-in-etc-sudoers.d etc/sudoers.d/sudotest 0644 != 0440
+files-general (binary): backup-file-in-package usr/share/foo/file~
+files-general (binary): FSSTND-dir-in-var var/catman/
+files-general (binary): FSSTND-dir-in-usr usr/doc/

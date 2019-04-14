@@ -1,2 +1,2 @@
-E: fields-section-general source: section-area-mismatch Package fields-section-general-main
-W: fields-section-general: unknown-section contrib/dveel
+fields-section-general (source): section-area-mismatch Package fields-section-general-main
+fields-section-general (binary): unknown-section contrib/dveel

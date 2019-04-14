@@ -1,2 +1,2 @@
-E: fields-dmua source: malformed-dm-upload-allowed no
-W: fields-dmua source: dm-upload-allowed-is-obsolete
+fields-dmua (source): malformed-dm-upload-allowed no
+fields-dmua (source): dm-upload-allowed-is-obsolete

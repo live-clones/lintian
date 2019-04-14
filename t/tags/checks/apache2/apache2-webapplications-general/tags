@@ -1,22 +1,22 @@
-E: phpmyfoo2: apache2-configuration-files-need-conf-suffix etc/apache2/conf-available/phpmyfoo2
-W: phpmyfoo2: non-standard-apache2-configuration-name false-positives.conf != phpmyfoo2.conf
-W: phpmyfoo2: non-standard-apache2-configuration-name local-phpmyfoo2.conf != phpmyfoo2.conf
-W: phpmyfoo2: non-standard-apache2-configuration-name phpmyfoo2 != phpmyfoo2.conf
-W: phpmyfoo3: apache2-deprecated-auth-config etc/apache2/conf.d/phpmyfoo.conf (line 11) </Limit>
-W: phpmyfoo3: apache2-deprecated-auth-config etc/apache2/conf.d/phpmyfoo.conf (line 8) <Limit POST PUT DELETE>
-W: phpmyfoo3: apache2-deprecated-auth-config etc/apache2/conf.d/phpmyfoo.conf (line 9) Order
-W: phpmyfoo3: apache2-reverse-dependency-uses-obsolete-directory etc/apache2/conf.d/phpmyfoo.conf
-W: phpmyfoo3: apache2-unparsable-dependency etc/apache2/conf.d/phpmyfoo.conf (line 1) bar2.conf
-W: phpmyfoo3: apache2-unsupported-dependency etc/apache2/conf.d/phpmyfoo.conf Conflicts
-W: phpmyfoo3: non-standard-apache2-configuration-name phpmyfoo.conf != phpmyfoo3.conf
-W: phpmyfoo: apache2-deprecated-auth-config etc/apache2/conf-available/phpmyfoo.conf (line 11) </Limit>
-W: phpmyfoo: apache2-deprecated-auth-config etc/apache2/conf-available/phpmyfoo.conf (line 8) <Limit POST PUT DELETE>
-W: phpmyfoo: apache2-deprecated-auth-config etc/apache2/conf-available/phpmyfoo.conf (line 9) Order
-W: phpmyfoo: apache2-reverse-dependency-calls-invoke-rc.d postinst
-W: phpmyfoo: apache2-reverse-dependency-calls-invoke-rc.d postrm
-W: phpmyfoo: apache2-reverse-dependency-calls-wrapper-script postinst a2enconf
-W: phpmyfoo: apache2-reverse-dependency-calls-wrapper-script postrm a2disconf
-W: phpmyfoo: apache2-unparsable-dependency etc/apache2/conf-available/phpmyfoo.conf (line 1) bar2.conf
-W: phpmyfoo: apache2-unsupported-dependency etc/apache2/conf-available/phpmyfoo.conf Conflicts
-W: phpmyfoo: web-application-depends-on-apache2-data-package apache2-bin
-W: phpmyfoo: web-application-should-not-depend-unconditionally-on-apache2
+phpmyfoo3 (binary): non-standard-apache2-configuration-name phpmyfoo.conf != phpmyfoo3.conf
+phpmyfoo3 (binary): apache2-unsupported-dependency etc/apache2/conf.d/phpmyfoo.conf Conflicts
+phpmyfoo3 (binary): apache2-unparsable-dependency etc/apache2/conf.d/phpmyfoo.conf (line 1) bar2.conf
+phpmyfoo3 (binary): apache2-reverse-dependency-uses-obsolete-directory etc/apache2/conf.d/phpmyfoo.conf
+phpmyfoo3 (binary): apache2-deprecated-auth-config etc/apache2/conf.d/phpmyfoo.conf (line 9) Order
+phpmyfoo3 (binary): apache2-deprecated-auth-config etc/apache2/conf.d/phpmyfoo.conf (line 8) <Limit POST PUT DELETE>
+phpmyfoo3 (binary): apache2-deprecated-auth-config etc/apache2/conf.d/phpmyfoo.conf (line 11) </Limit>
+phpmyfoo2 (binary): non-standard-apache2-configuration-name phpmyfoo2 != phpmyfoo2.conf
+phpmyfoo2 (binary): non-standard-apache2-configuration-name local-phpmyfoo2.conf != phpmyfoo2.conf
+phpmyfoo2 (binary): non-standard-apache2-configuration-name false-positives.conf != phpmyfoo2.conf
+phpmyfoo2 (binary): apache2-configuration-files-need-conf-suffix etc/apache2/conf-available/phpmyfoo2
+phpmyfoo (binary): web-application-should-not-depend-unconditionally-on-apache2
+phpmyfoo (binary): web-application-depends-on-apache2-data-package apache2-bin
+phpmyfoo (binary): apache2-unsupported-dependency etc/apache2/conf-available/phpmyfoo.conf Conflicts
+phpmyfoo (binary): apache2-unparsable-dependency etc/apache2/conf-available/phpmyfoo.conf (line 1) bar2.conf
+phpmyfoo (binary): apache2-reverse-dependency-calls-wrapper-script postrm a2disconf
+phpmyfoo (binary): apache2-reverse-dependency-calls-wrapper-script postinst a2enconf
+phpmyfoo (binary): apache2-reverse-dependency-calls-invoke-rc.d postrm
+phpmyfoo (binary): apache2-reverse-dependency-calls-invoke-rc.d postinst
+phpmyfoo (binary): apache2-deprecated-auth-config etc/apache2/conf-available/phpmyfoo.conf (line 9) Order
+phpmyfoo (binary): apache2-deprecated-auth-config etc/apache2/conf-available/phpmyfoo.conf (line 8) <Limit POST PUT DELETE>
+phpmyfoo (binary): apache2-deprecated-auth-config etc/apache2/conf-available/phpmyfoo.conf (line 11) </Limit>

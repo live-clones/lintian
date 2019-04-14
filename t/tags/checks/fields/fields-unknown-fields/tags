@@ -1,2 +1,2 @@
-W: fields-unknown-fields source: spelling-error-in-rules-requires-root rules-require-root (line 7)
-W: fields-unknown-fields source: unknown-field-in-dsc comment
+fields-unknown-fields (source): unknown-field-in-dsc comment
+fields-unknown-fields (source): spelling-error-in-rules-requires-root rules-require-root (line 7)

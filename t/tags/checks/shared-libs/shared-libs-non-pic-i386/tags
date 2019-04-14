@@ -1,2 +1,2 @@
-E: libbaz3-1: shlib-with-non-pic-code usr/lib/libbaz3.so.1.0.3b
-I: libbaz3-1: symbols-file-missing-build-depends-package-field
+libbaz3-1 (binary): symbols-file-missing-build-depends-package-field
+libbaz3-1 (binary): shlib-with-non-pic-code usr/lib/libbaz3.so.1.0.3b

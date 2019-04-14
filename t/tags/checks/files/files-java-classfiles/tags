@@ -1,2 +1,2 @@
-I: libfoo-java: javalib-but-no-public-jars
-W: libfoo-java: package-installs-java-bytecode usr/share/java/foo/mini.class
+libfoo-java (binary): package-installs-java-bytecode usr/share/java/foo/mini.class
+libfoo-java (binary): javalib-but-no-public-jars

@@ -1,3 +1,3 @@
-W: python-django-positive: django-package-does-not-depend-on-django python-django
-W: python2-django-positive: django-package-does-not-depend-on-django python-django
-W: python3-django-positive: django-package-does-not-depend-on-django python3-django
+python3-django-positive (binary): django-package-does-not-depend-on-django python3-django
+python2-django-positive (binary): django-package-does-not-depend-on-django python-django
+python-django-positive (binary): django-package-does-not-depend-on-django python-django

@@ -1,8 +1,8 @@
-E: cruft-python source: source-is-missing fake2.pyc
-E: cruft-python source: source-is-missing fake2.pyo
-I: cruft-python source: debian-pycompat-is-obsolete
-I: cruft-python source: debian-pyversions-is-obsolete
-P: cruft-python source: source-contains-prebuilt-python-object fake.pyc
-P: cruft-python source: source-contains-prebuilt-python-object fake.pyo
-P: cruft-python source: source-contains-prebuilt-python-object fake2.pyc
-P: cruft-python source: source-contains-prebuilt-python-object fake2.pyo
+cruft-python (source): source-is-missing fake2.pyo
+cruft-python (source): source-is-missing fake2.pyc
+cruft-python (source): source-contains-prebuilt-python-object fake2.pyo
+cruft-python (source): source-contains-prebuilt-python-object fake2.pyc
+cruft-python (source): source-contains-prebuilt-python-object fake.pyo
+cruft-python (source): source-contains-prebuilt-python-object fake.pyc
+cruft-python (source): debian-pyversions-is-obsolete
+cruft-python (source): debian-pycompat-is-obsolete

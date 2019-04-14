@@ -1,1 +1,1 @@
-E: files-hyphen-file: hyphen-file usr/share/foo/-
+files-hyphen-file (binary): hyphen-file usr/share/foo/-

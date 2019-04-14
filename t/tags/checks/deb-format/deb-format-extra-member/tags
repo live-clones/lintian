@@ -1,1 +1,1 @@
-E: deb-format-extra-member: misplaced-extra-member-in-deb extra-stuff (unexpected member at position 3)
+deb-format-extra-member (binary): misplaced-extra-member-in-deb extra-stuff (unexpected member at position 3)

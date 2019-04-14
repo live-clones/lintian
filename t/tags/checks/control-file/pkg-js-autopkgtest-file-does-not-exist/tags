@@ -1,2 +1,2 @@
-E: pkg-js-autopkgtest-file-does-not-exist source: pkg-js-autopkgtest-file-does-not-exist la/test
-E: pkg-js-autopkgtest-file-does-not-exist source: pkg-js-autopkgtest-file-does-not-exist lib/*/*.json
+pkg-js-autopkgtest-file-does-not-exist (source): pkg-js-autopkgtest-file-does-not-exist lib/*/*.json
+pkg-js-autopkgtest-file-does-not-exist (source): pkg-js-autopkgtest-file-does-not-exist la/test

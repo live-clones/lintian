@@ -1,8 +1,8 @@
-E: dbus-policy: dbus-policy-excessively-broad etc/dbus-1/system.d/send-destination.conf <policy context="default"><allow send_member="AreYouReallySureThisMethodIsAlwaysOK"/>
-E: dbus-policy: dbus-policy-excessively-broad etc/dbus-1/system.d/send-destination.conf <policy context="default"><allow send_path="/com/example/Here"/>
-W: dbus-policy: dbus-policy-at-console etc/dbus-1/system.d/at-console.conf <policy at_console="true"><allow send_destination="com.example.Other"/>
-W: dbus-policy: dbus-policy-at-console etc/dbus-1/system.d/at-console.conf <policy at_console="true"><allow send_destination="com.example.Service"/>
-W: dbus-policy: dbus-policy-without-send-destination etc/dbus-1/system.d/send-destination.conf <policy context="default"><allow send_interface="org.freedesktop.DBus.ObjectManager"/>
-W: dbus-policy: dbus-policy-without-send-destination etc/dbus-1/system.d/send-destination.conf <policy context="default"><allow send_member="AreYouReallySureThisMethodIsAlwaysOK"/>
-W: dbus-policy: dbus-policy-without-send-destination etc/dbus-1/system.d/send-destination.conf <policy context="default"><allow send_path="/com/example/Here"/>
-W: dbus-policy: dbus-policy-without-send-destination etc/dbus-1/system.d/send-destination.conf <policy user="nobody"><allow send_interface="org.freedesktop.DBus.ObjectManager"/>
+dbus-policy (binary): dbus-policy-without-send-destination etc/dbus-1/system.d/send-destination.conf <policy user="nobody"><allow send_interface="org.freedesktop.DBus.ObjectManager"/>
+dbus-policy (binary): dbus-policy-without-send-destination etc/dbus-1/system.d/send-destination.conf <policy context="default"><allow send_path="/com/example/Here"/>
+dbus-policy (binary): dbus-policy-without-send-destination etc/dbus-1/system.d/send-destination.conf <policy context="default"><allow send_member="AreYouReallySureThisMethodIsAlwaysOK"/>
+dbus-policy (binary): dbus-policy-without-send-destination etc/dbus-1/system.d/send-destination.conf <policy context="default"><allow send_interface="org.freedesktop.DBus.ObjectManager"/>
+dbus-policy (binary): dbus-policy-excessively-broad etc/dbus-1/system.d/send-destination.conf <policy context="default"><allow send_path="/com/example/Here"/>
+dbus-policy (binary): dbus-policy-excessively-broad etc/dbus-1/system.d/send-destination.conf <policy context="default"><allow send_member="AreYouReallySureThisMethodIsAlwaysOK"/>
+dbus-policy (binary): dbus-policy-at-console etc/dbus-1/system.d/at-console.conf <policy at_console="true"><allow send_destination="com.example.Service"/>
+dbus-policy (binary): dbus-policy-at-console etc/dbus-1/system.d/at-console.conf <policy at_console="true"><allow send_destination="com.example.Other"/>

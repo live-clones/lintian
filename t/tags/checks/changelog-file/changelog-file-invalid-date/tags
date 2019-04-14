@@ -1,2 +1,2 @@
-E: changelog-file-invalid-date: invalid-date-in-debian-changelog (Sept -> Sep)
-E: changelog-file-invalid-date: invalid-date-in-debian-changelog (Thurs -> Thu)
+changelog-file-invalid-date (binary): invalid-date-in-debian-changelog (Thurs -> Thu)
+changelog-file-invalid-date (binary): invalid-date-in-debian-changelog (Sept -> Sep)

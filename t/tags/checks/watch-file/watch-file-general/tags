@@ -1,21 +1,21 @@
-E: watch-file-general source: debian-watch-file-uses-deprecated-githubredir line 24
-I: watch-file-general source: debian-watch-file-should-dversionmangle-not-uversionmangle line 5
-I: watch-file-general source: debian-watch-uses-insecure-uri http://insecure.com
-W: watch-file-general source: debian-watch-could-verify-download debian/upstream/signing-key.asc
-W: watch-file-general source: debian-watch-file-declares-multiple-versions line 18
-W: watch-file-general source: debian-watch-file-declares-multiple-versions line 7
-W: watch-file-general source: debian-watch-file-should-mangle-version line 12
-W: watch-file-general source: debian-watch-file-should-mangle-version line 14
-W: watch-file-general source: debian-watch-file-should-mangle-version line 15
-W: watch-file-general source: debian-watch-file-should-mangle-version line 24
-W: watch-file-general source: debian-watch-file-should-mangle-version line 28
-W: watch-file-general source: debian-watch-file-should-mangle-version line 29
-W: watch-file-general source: debian-watch-file-should-mangle-version line 32
-W: watch-file-general source: debian-watch-file-should-use-sf-redirector line 12
-W: watch-file-general source: debian-watch-file-should-use-sf-redirector line 14
-W: watch-file-general source: debian-watch-file-should-use-sf-redirector line 15
-W: watch-file-general source: debian-watch-file-should-use-sf-redirector line 8
-W: watch-file-general source: debian-watch-file-specifies-wrong-upstream-version 2.0.ds1-1 line 21
-W: watch-file-general source: debian-watch-file-unknown-version 42
-W: watch-file-general source: debian-watch-file-uses-deprecated-sf-redirector-method line 5
-X: watch-file-general source: debian-watch-does-not-check-gpg-signature
+watch-file-general (source): debian-watch-uses-insecure-uri http://insecure.com
+watch-file-general (source): debian-watch-file-uses-deprecated-sf-redirector-method line 5
+watch-file-general (source): debian-watch-file-uses-deprecated-githubredir line 24
+watch-file-general (source): debian-watch-file-unknown-version 42
+watch-file-general (source): debian-watch-file-specifies-wrong-upstream-version 2.0.ds1-1 line 21
+watch-file-general (source): debian-watch-file-should-use-sf-redirector line 8
+watch-file-general (source): debian-watch-file-should-use-sf-redirector line 15
+watch-file-general (source): debian-watch-file-should-use-sf-redirector line 14
+watch-file-general (source): debian-watch-file-should-use-sf-redirector line 12
+watch-file-general (source): debian-watch-file-should-mangle-version line 32
+watch-file-general (source): debian-watch-file-should-mangle-version line 29
+watch-file-general (source): debian-watch-file-should-mangle-version line 28
+watch-file-general (source): debian-watch-file-should-mangle-version line 24
+watch-file-general (source): debian-watch-file-should-mangle-version line 15
+watch-file-general (source): debian-watch-file-should-mangle-version line 14
+watch-file-general (source): debian-watch-file-should-mangle-version line 12
+watch-file-general (source): debian-watch-file-should-dversionmangle-not-uversionmangle line 5
+watch-file-general (source): debian-watch-file-declares-multiple-versions line 7
+watch-file-general (source): debian-watch-file-declares-multiple-versions line 18
+watch-file-general (source): debian-watch-does-not-check-gpg-signature
+watch-file-general (source): debian-watch-could-verify-download debian/upstream/signing-key.asc

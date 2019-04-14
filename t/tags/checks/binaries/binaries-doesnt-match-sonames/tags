@@ -1,5 +1,5 @@
-I: libany5gcc1v5: symbols-file-missing-build-depends-package-field
-I: libany6gcc1v6: symbols-file-missing-build-depends-package-field
-I: libanyq16-6: symbols-file-missing-build-depends-package-field
-I: mylibany: symbols-file-missing-build-depends-package-field
-W: mylibany: package-name-doesnt-match-sonames libany1
+mylibany (binary): symbols-file-missing-build-depends-package-field
+mylibany (binary): package-name-doesnt-match-sonames libany1
+libanyq16-6 (binary): symbols-file-missing-build-depends-package-field
+libany6gcc1v6 (binary): symbols-file-missing-build-depends-package-field
+libany5gcc1v5 (binary): symbols-file-missing-build-depends-package-field

@@ -1,2 +1,2 @@
-I: libfoo-1: symbols-file-missing-build-depends-package-field
-X: libfoo-dev: package-contains-no-arch-dependent-files
+libfoo-dev (binary): package-contains-no-arch-dependent-files
+libfoo-1 (binary): symbols-file-missing-build-depends-package-field

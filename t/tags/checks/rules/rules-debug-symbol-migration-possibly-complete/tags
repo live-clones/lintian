@@ -1,4 +1,4 @@
-P: rules-debug-symbol-migration-possibly-complete source: debug-symbol-migration-possibly-complete --dbgsym-migration='apostrophe << 1' (line 10)
-P: rules-debug-symbol-migration-possibly-complete source: debug-symbol-migration-possibly-complete --dbgsym-migration='apostrophe' (line 9)
-P: rules-debug-symbol-migration-possibly-complete source: debug-symbol-migration-possibly-complete --dbgsym-migration=foo (line 8)
-P: rules-debug-symbol-migration-possibly-complete source: debug-symbol-migration-possibly-complete --ddeb-migration=foo (line 7)
+rules-debug-symbol-migration-possibly-complete (source): debug-symbol-migration-possibly-complete --ddeb-migration=foo (line 7)
+rules-debug-symbol-migration-possibly-complete (source): debug-symbol-migration-possibly-complete --dbgsym-migration=foo (line 8)
+rules-debug-symbol-migration-possibly-complete (source): debug-symbol-migration-possibly-complete --dbgsym-migration='apostrophe' (line 9)
+rules-debug-symbol-migration-possibly-complete (source): debug-symbol-migration-possibly-complete --dbgsym-migration='apostrophe << 1' (line 10)

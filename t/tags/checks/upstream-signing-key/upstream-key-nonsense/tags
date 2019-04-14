@@ -1,3 +1,3 @@
-I: upstream-key-nonsense source: public-upstream-key-unusable upstream/signing-key.asc cannot be processed
-W: upstream-key-nonsense source: orig-tarball-missing-upstream-signature upstream-key-nonsense_1.0.orig.tar.gz
-W: upstream-key-nonsense source: debian-watch-could-verify-download debian/upstream/signing-key.asc
+upstream-key-nonsense (source): public-upstream-key-unusable upstream/signing-key.asc cannot be processed
+upstream-key-nonsense (source): orig-tarball-missing-upstream-signature upstream-key-nonsense_1.0.orig.tar.gz
+upstream-key-nonsense (source): debian-watch-could-verify-download debian/upstream/signing-key.asc

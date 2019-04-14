@@ -1,2 +1,2 @@
-E: binaries-missing-depends-on-numpy-abi: missing-dependency-on-numpy-abi
-E: binaries-missing-depends-on-numpy-abi: python-package-missing-depends-on-python
+binaries-missing-depends-on-numpy-abi (binary): python-package-missing-depends-on-python
+binaries-missing-depends-on-numpy-abi (binary): missing-dependency-on-numpy-abi

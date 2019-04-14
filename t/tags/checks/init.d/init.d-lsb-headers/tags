@@ -1,29 +1,29 @@
-E: init.d-lsb-headers-all: init.d-script-depends-on-all-virtual-facility etc/init.d/init.d-lsb-headers-all required-start
-E: init.d-lsb-headers-all: init.d-script-depends-on-all-virtual-facility etc/init.d/init.d-lsb-headers-all required-stop
-E: init.d-lsb-headers-all: init.d-script-depends-on-all-virtual-facility etc/init.d/init.d-lsb-headers-all should-start
-E: init.d-lsb-headers-early-boot: missing-systemd-service-for-init.d-rcS-script init.d-lsb-headers-early-boot
-E: init.d-lsb-headers-local: init.d-script-missing-dependency-on-local_fs etc/init.d/init.d-lsb-headers-local: required-start
-E: init.d-lsb-headers-parsing: init.d-script-starts-in-stop-runlevel etc/init.d/init.d-lsb-headers-parsing 0
-E: init.d-lsb-headers-virtual: init.d-script-depends-on-all-virtual-facility etc/init.d/init.d-lsb-headers-virtual required-stop
-E: init.d-lsb-headers-virtual: init.d-script-depends-on-unknown-virtual-facility etc/init.d/init.d-lsb-headers-virtual $something_that_doesnt_exist
-E: init.d-lsb-headers: init.d-script-should-depend-on-virtual-facility etc/init.d/init.d-lsb-headers mountall -> $local_fs
-E: init.d-lsb-headers: init.d-script-should-depend-on-virtual-facility etc/init.d/init.d-lsb-headers mountnfs -> $remote_fs
-E: init.d-lsb-headers: init.d-script-should-depend-on-virtual-facility etc/init.d/init.d-lsb-headers networking -> $network
-E: init.d-lsb-headers: init.d-script-should-depend-on-virtual-facility etc/init.d/init.d-lsb-headers portmap -> $portmap
-E: init.d-lsb-headers: init.d-script-should-depend-on-virtual-facility etc/init.d/init.d-lsb-headers sysklogd -> $syslog
-E: init.d-lsb-headers: init.d-script-starts-in-stop-runlevel etc/init.d/init.d-lsb-headers 0
-E: init.d-lsb-headers: init.d-script-starts-in-stop-runlevel etc/init.d/init.d-lsb-headers 6
-I: init.d-lsb-headers-missing: init.d-script-missing-lsb-short-description etc/init.d/init.d-lsb-headers-missing
-I: init.d-lsb-headers: init.d-script-does-not-provide-itself etc/init.d/init.d-lsb-headers
-W: init.d-lsb-headers-missing: init.d-script-missing-start etc/init.d/init.d-lsb-headers-missing 4
-W: init.d-lsb-headers-missing: init.d-script-possible-missing-stop etc/init.d/init.d-lsb-headers-missing 1
-W: init.d-lsb-headers-parsing: init.d-script-has-conflicting-start-stop etc/init.d/init.d-lsb-headers-parsing 0
-W: init.d-lsb-headers-parsing: init.d-script-possible-missing-stop etc/init.d/init.d-lsb-headers-parsing 1 6
-W: init.d-lsb-headers: init-d-script-stops-in-s-runlevel etc/init.d/init.d-lsb-headers
-W: init.d-lsb-headers: init.d-script-has-bad-start-runlevel etc/init.d/init.d-lsb-headers X
-W: init.d-lsb-headers: init.d-script-has-bad-stop-runlevel etc/init.d/init.d-lsb-headers Y
-W: init.d-lsb-headers: init.d-script-has-conflicting-start-stop etc/init.d/init.d-lsb-headers 0
-W: init.d-lsb-headers: init.d-script-has-conflicting-start-stop etc/init.d/init.d-lsb-headers 6
-W: init.d-lsb-headers: init.d-script-has-duplicate-lsb-keyword etc/init.d/init.d-lsb-headers:13 short-description
-W: init.d-lsb-headers: init.d-script-possible-missing-stop etc/init.d/init.d-lsb-headers 1
-W: init.d-lsb-headers: init.d-script-provides-virtual-facility etc/init.d/init.d-lsb-headers $bad_facility
+init.d-lsb-headers-virtual (binary): init.d-script-depends-on-unknown-virtual-facility etc/init.d/init.d-lsb-headers-virtual $something_that_doesnt_exist
+init.d-lsb-headers-virtual (binary): init.d-script-depends-on-all-virtual-facility etc/init.d/init.d-lsb-headers-virtual required-stop
+init.d-lsb-headers-parsing (binary): init.d-script-starts-in-stop-runlevel etc/init.d/init.d-lsb-headers-parsing 0
+init.d-lsb-headers-parsing (binary): init.d-script-possible-missing-stop etc/init.d/init.d-lsb-headers-parsing 1 6
+init.d-lsb-headers-parsing (binary): init.d-script-has-conflicting-start-stop etc/init.d/init.d-lsb-headers-parsing 0
+init.d-lsb-headers-missing (binary): init.d-script-possible-missing-stop etc/init.d/init.d-lsb-headers-missing 1
+init.d-lsb-headers-missing (binary): init.d-script-missing-start etc/init.d/init.d-lsb-headers-missing 4
+init.d-lsb-headers-missing (binary): init.d-script-missing-lsb-short-description etc/init.d/init.d-lsb-headers-missing
+init.d-lsb-headers-local (binary): init.d-script-missing-dependency-on-local_fs etc/init.d/init.d-lsb-headers-local: required-start
+init.d-lsb-headers-early-boot (binary): missing-systemd-service-for-init.d-rcS-script init.d-lsb-headers-early-boot
+init.d-lsb-headers-all (binary): init.d-script-depends-on-all-virtual-facility etc/init.d/init.d-lsb-headers-all should-start
+init.d-lsb-headers-all (binary): init.d-script-depends-on-all-virtual-facility etc/init.d/init.d-lsb-headers-all required-stop
+init.d-lsb-headers-all (binary): init.d-script-depends-on-all-virtual-facility etc/init.d/init.d-lsb-headers-all required-start
+init.d-lsb-headers (binary): init.d-script-starts-in-stop-runlevel etc/init.d/init.d-lsb-headers 6
+init.d-lsb-headers (binary): init.d-script-starts-in-stop-runlevel etc/init.d/init.d-lsb-headers 0
+init.d-lsb-headers (binary): init.d-script-should-depend-on-virtual-facility etc/init.d/init.d-lsb-headers sysklogd -> $syslog
+init.d-lsb-headers (binary): init.d-script-should-depend-on-virtual-facility etc/init.d/init.d-lsb-headers portmap -> $portmap
+init.d-lsb-headers (binary): init.d-script-should-depend-on-virtual-facility etc/init.d/init.d-lsb-headers networking -> $network
+init.d-lsb-headers (binary): init.d-script-should-depend-on-virtual-facility etc/init.d/init.d-lsb-headers mountnfs -> $remote_fs
+init.d-lsb-headers (binary): init.d-script-should-depend-on-virtual-facility etc/init.d/init.d-lsb-headers mountall -> $local_fs
+init.d-lsb-headers (binary): init.d-script-provides-virtual-facility etc/init.d/init.d-lsb-headers $bad_facility
+init.d-lsb-headers (binary): init.d-script-possible-missing-stop etc/init.d/init.d-lsb-headers 1
+init.d-lsb-headers (binary): init.d-script-has-duplicate-lsb-keyword etc/init.d/init.d-lsb-headers:13 short-description
+init.d-lsb-headers (binary): init.d-script-has-conflicting-start-stop etc/init.d/init.d-lsb-headers 6
+init.d-lsb-headers (binary): init.d-script-has-conflicting-start-stop etc/init.d/init.d-lsb-headers 0
+init.d-lsb-headers (binary): init.d-script-has-bad-stop-runlevel etc/init.d/init.d-lsb-headers Y
+init.d-lsb-headers (binary): init.d-script-has-bad-start-runlevel etc/init.d/init.d-lsb-headers X
+init.d-lsb-headers (binary): init.d-script-does-not-provide-itself etc/init.d/init.d-lsb-headers
+init.d-lsb-headers (binary): init-d-script-stops-in-s-runlevel etc/init.d/init.d-lsb-headers

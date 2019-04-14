@@ -1,1 +1,1 @@
-W: broken-links: package-contains-broken-symlink-wildcard usr/lib/broken-links/some-other.conf etc/some-*.conf
+broken-links (binary): package-contains-broken-symlink-wildcard usr/lib/broken-links/some-other.conf etc/some-*.conf

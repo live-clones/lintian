@@ -1,2 +1,2 @@
-P: patch-systems-no-patch-system source: direct-changes-in-diff-but-no-patch-system README
-X: patch-systems-no-patch-system source: debian-watch-does-not-check-gpg-signature
+patch-systems-no-patch-system (source): direct-changes-in-diff-but-no-patch-system README
+patch-systems-no-patch-system (source): debian-watch-does-not-check-gpg-signature

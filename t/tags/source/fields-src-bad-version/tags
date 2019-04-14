@@ -1,2 +1,2 @@
-E: fields-src-bad-version source: bad-relation build-depends: gcc ((>= 4)
-E: fields-src-bad-version source: bad-version-in-relation build-depends: g++ (>= s4.0)
+fields-src-bad-version (source): bad-version-in-relation build-depends: g++ (>= s4.0)
+fields-src-bad-version (source): bad-relation build-depends: gcc ((>= 4)

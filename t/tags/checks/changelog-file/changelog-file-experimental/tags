@@ -1,3 +1,3 @@
-P: changelog-file-experimental: experimental-to-unstable-without-comment
-W: changelog-file-experimental source: hyphen-in-native-debian-changelog-version 1.0-3
-X: changelog-file-experimental: non-consecutive-debian-revision 1.0-3 -> 1.0-1
+changelog-file-experimental (source): hyphen-in-native-debian-changelog-version 1.0-3
+changelog-file-experimental (binary): non-consecutive-debian-revision 1.0-3 -> 1.0-1
+changelog-file-experimental (binary): experimental-to-unstable-without-comment

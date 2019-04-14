@@ -1,10 +1,10 @@
-E: files-symlinks: compressed-symlink-with-wrong-ext usr/lib/lintian/data/comp-data ../../../share/lintian/data/comp-data.gz
-E: files-symlinks: dir-or-file-in-build-tree symlink usr/lib/lintian/data/1024 point to /var/lib/sbuild/1024
-E: files-symlinks: package-contains-unsafe-symlink usr/share/lintian/data/pkg.conf
-E: files-symlinks: symlink-contains-spurious-segments usr/share/lintian/data/spurious ../../lintian-old/../lintian/data/data-file
-E: files-symlinks: symlink-has-too-many-up-segments usr/share/lintian/data/pkg.conf ../..//..//..//../etc/lintian/pkg.conf
-E: files-symlinks: symlink-should-be-absolute usr/share/lintian/data/pkg-old.conf ../../../../etc/lintian/pkg.conf
-W: files-symlinks: symlink-ends-with-slash usr/share/etc-lintian /etc/lintian/
-W: files-symlinks: symlink-has-double-slash usr/share/lintian/data/pkg.conf ../..//..//..//../etc/lintian/pkg.conf
-W: files-symlinks: symlink-is-self-recursive usr/share/lintian/data/self-recursive /
-W: files-symlinks: symlink-should-be-relative usr/share/lintian/data/data-file.old /usr/share/lintian/data/data-file
+files-symlinks (binary): symlink-should-be-relative usr/share/lintian/data/data-file.old /usr/share/lintian/data/data-file
+files-symlinks (binary): symlink-should-be-absolute usr/share/lintian/data/pkg-old.conf ../../../../etc/lintian/pkg.conf
+files-symlinks (binary): symlink-is-self-recursive usr/share/lintian/data/self-recursive /
+files-symlinks (binary): symlink-has-too-many-up-segments usr/share/lintian/data/pkg.conf ../..//..//..//../etc/lintian/pkg.conf
+files-symlinks (binary): symlink-has-double-slash usr/share/lintian/data/pkg.conf ../..//..//..//../etc/lintian/pkg.conf
+files-symlinks (binary): symlink-ends-with-slash usr/share/etc-lintian /etc/lintian/
+files-symlinks (binary): symlink-contains-spurious-segments usr/share/lintian/data/spurious ../../lintian-old/../lintian/data/data-file
+files-symlinks (binary): package-contains-unsafe-symlink usr/share/lintian/data/pkg.conf
+files-symlinks (binary): dir-or-file-in-build-tree symlink usr/lib/lintian/data/1024 point to /var/lib/sbuild/1024
+files-symlinks (binary): compressed-symlink-with-wrong-ext usr/lib/lintian/data/comp-data ../../../share/lintian/data/comp-data.gz

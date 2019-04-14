@@ -1,2 +1,2 @@
-W: sass-cache-directory: package-contains-sass-cache-directory usr/share/doc/sass-cache-directory/.sass-cache/nothing
-W: sass-cache-directory: package-contains-sass-cache-directory usr/share/doc/sass-cache-directory/.sass-cache/
+sass-cache-directory (binary): package-contains-sass-cache-directory usr/share/doc/sass-cache-directory/.sass-cache/nothing
+sass-cache-directory (binary): package-contains-sass-cache-directory usr/share/doc/sass-cache-directory/.sass-cache/

@@ -1,3 +1,3 @@
-I: rules-unnecessary-source-date-epoch source: debian-rules-parses-dpkg-parsechangelog (line 3)
-I: rules-unnecessary-source-date-epoch source: unnecessary-source-date-epoch-assignment (line 3)
-I: rules-unnecessary-source-date-epoch source: unnecessary-source-date-epoch-assignment (line 5)
+rules-unnecessary-source-date-epoch (source): unnecessary-source-date-epoch-assignment (line 5)
+rules-unnecessary-source-date-epoch (source): unnecessary-source-date-epoch-assignment (line 3)
+rules-unnecessary-source-date-epoch (source): debian-rules-parses-dpkg-parsechangelog (line 3)

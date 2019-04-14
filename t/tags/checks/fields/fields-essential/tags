@@ -1,5 +1,5 @@
-E: fields-essential source: essential-in-source-package
-E: fields-essential2: unknown-essential-value
-E: fields-essential: new-essential-package
-W: fields-essential source: essential-no-not-needed
-W: fields-essential source: unknown-field-in-dsc essential
+fields-essential (source): unknown-field-in-dsc essential
+fields-essential (source): essential-no-not-needed
+fields-essential (source): essential-in-source-package
+fields-essential2 (binary): unknown-essential-value
+fields-essential (binary): new-essential-package

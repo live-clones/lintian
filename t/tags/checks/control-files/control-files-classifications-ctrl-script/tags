@@ -1,2 +1,2 @@
-C: control-files-classifications-ctrl-script: ctrl-script postinst
-C: control-files-classifications-ctrl-script: ctrl-script prerm
+control-files-classifications-ctrl-script (binary): ctrl-script prerm
+control-files-classifications-ctrl-script (binary): ctrl-script postinst
