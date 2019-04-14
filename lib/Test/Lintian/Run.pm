@@ -62,6 +62,7 @@ use List::Compare;
 use List::Util qw(max min any all);
 use Path::Tiny;
 use Test::More;
+use Text::Diff;
 use Try::Tiny;
 
 use Lintian::Profile;
@@ -71,8 +72,7 @@ use Test::Lintian::Helper qw(rfc822date);
 use Test::Lintian::Hooks
   qw(find_missing_prerequisites run_lintian sed_hook sort_lines calibrate);
 use Test::Lintian::Prepare qw(early_logpath);
-use Test::Lintian::Output::Universal qw(get_tagnames);
-use Test::StagedFileProducer;
+use Test::Lintian::Output::Universal qw(get_tagnames order);
 
 use constant SPACE => q{ };
 use constant EMPTY => q{};
@@ -238,158 +238,130 @@ sub runner {
     # set the testing plan
     plan tests => 1;
 
-    my $producer = Test::StagedFileProducer->new(path => $runpath);
-    $producer->exclude(@exclude);
-
     # get lintian subject
     die 'Could not get subject of Lintian examination.'
       unless exists $testcase->{build_product};
     my $subject = "$runpath/$testcase->{build_product}";
 
     # run lintian
-    my $raw = "$runpath/tags.actual";
-    $producer->add_stage(
-        products => [$raw],
-        minimum_epoch => time,
-        build =>sub {
-            $ENV{'LINTIAN_COVERAGE'}.= ",-db,./cover_db-$testcase->{testname}"
-              if exists $ENV{'LINTIAN_COVERAGE'};
+    $ENV{'LINTIAN_COVERAGE'}.= ",-db,./cover_db-$testcase->{testname}"
+      if exists $ENV{'LINTIAN_COVERAGE'};
 
-            my $lintian = read_config("$runpath/lintian-command");
-            my $command
-              = "cd $runpath; $ENV{'LINTIAN_FRONTEND'} $lintian->{options} $lintian->{subject}";
-            my ($output, $status) = capture_merged { system($command); };
-            $status = ($status >> 8) & 255;
+    my $lintian = read_config("$runpath/lintian-command");
+    my $command
+      = "cd $runpath; $ENV{'LINTIAN_FRONTEND'} $lintian->{options} $lintian->{subject}";
+    my ($output, $status) = capture_merged { system($command); };
+    $status = ($status >> 8) & 255;
 
-            my @lines = split(NEWLINE, $output);
+    die "$command exited with status $status" . NEWLINE . $output
+      unless $status == 0 || $status == 1;
 
-            if (exists $ENV{LINTIAN_COVERAGE}) {
-                # Devel::Cover causes deep recursion warnings.
-                @lines = grep {
-                    !m{^Deep [ ] recursion [ ] on [ ] subroutine [ ]
-                   "[^"]+" [ ] at [ ] .*B/Deparse.pm [ ] line [ ]
-                   \d+}xsm
-                } @lines;
-            }
+    # filter out some warnings if running under coverage
+    my @lines = split(/\n/, $output);
+    if (exists $ENV{LINTIAN_COVERAGE}) {
+        # Devel::Cover causes deep recursion warnings.
+        @lines = grep {
+            !m{^Deep [ ] recursion [ ] on [ ] subroutine [ ]
+           "[^"]+" [ ] at [ ] .*B/Deparse.pm [ ] line [ ]
+           \d+}xsm
+        } @lines;
+    }
 
-            unless ($status == 0 || $status == 1) {
-                unshift(@lines, "$command exited with status $status");
-                die join(NEWLINE, @lines);
-            }
+    # put output back together
+    $output = EMPTY;
+    $output .= $_ . NEWLINE for @lines;
 
-            # do not forget the final newline, or sorting will fail
-            my $contents
-              = scalar @lines ? join(NEWLINE, @lines) . NEWLINE : EMPTY;
-            path($raw)->spew($contents);
-        });
+    die 'No match strategy defined'
+      unless length $testcase->{match_strategy};
 
-    # run a sed-script if it exists
-    my $parsed = "$runpath/tags.actual.parsed";
-    $producer->add_stage(
-        products => [$parsed],
-        build =>sub {
-            my $script = "$runpath/post_test";
-            if(-f $script) {
-                sed_hook($script, $raw, $parsed);
-            } else {
-                die"Could not copy actual tags $raw to $parsed: $!"
-                  if(system('cp', '-p', $raw, $parsed));
-            }
-        });
-
-    # sort tags
-    my $sorted = "$runpath/tags.actual.parsed.sorted";
-    $producer->add_stage(
-        products => [$sorted],
-        build =>sub {
-            if($testcase->{sort} eq 'yes') {
-                sort_lines($parsed, $sorted);
-            } else {
-                die"Could not copy parsed tags $parsed to $sorted: $!"
-                  if(system('cp', '-p', $parsed, $sorted));
-            }
-        });
-
-    my $specified = "$runpath/tags";
-
-    # create tags if there are none; helps when calibrating new tests
-    path($specified)->touch
-      unless -e $specified;
-
-    # calibrate tags; may write to $sorted
-    my $calibrated = "$runpath/tags.specified.calibrated";
-    $producer->add_stage(
-        products => [$calibrated],
-        build =>sub {
-            my $script = "$runpath/test_calibration";
-            if(-x $script) {
-                calibrate($script, $sorted, $specified, $calibrated);
-            } else {
-                die"Could not copy expected tags $specified to $calibrated: $!"
-                  if(system('cp', '-p', $specified, $calibrated));
-            }
-        });
-
-    # extract expected tags
-    my $expected = "$runpath/tags.specified.calibrated.universal";
-    $producer->add_stage(
-        products => [$expected],
-        build =>sub {
-            my @command = ('tagextract', '-f', 'EWI', $calibrated, $expected);
-            die 'Error executing: ' . join(SPACE, @command) . ": $!"
-              if system(@command);
-        });
-
-    # extract actual tags
-    my $actual = "$runpath/tags.actual.parsed.sorted.universal";
-    $producer->add_stage(
-        products => [$actual],
-        build =>sub {
-            my @command = ('tagextract', '-f', $testcase->{output_format},
-                $sorted, $actual);
-            die 'Error executing: ' . join(SPACE, @command) . ": $!"
-              if system(@command);
-        });
-
-    say EMPTY;
-    $producer->run(verbose => 1);
-
-    my @errors = check_result($testcase, $expected, $actual);
+    my @errors;
+    if ($testcase->{match_strategy} eq 'literal') {
+        @errors = check_literal($testcase, $runpath, $output);
+    } elsif ($testcase->{match_strategy} eq 'tags') {
+        @errors = check_tags($testcase, $runpath, $output);
+    } else {
+        die "Unknown match strategy $testcase->{match_strategy}.";
+    }
 
     my $okay = !(scalar @errors);
 
     if($testcase->{todo} eq 'yes') {
       TODO: {
             local $TODO = 'Test marked as TODO.';
-            ok($okay, 'Lintian tags match for test marked TODO.');
+            ok($okay, 'Lintian passes for test marked TODO.');
         }
         return;
     }
 
-    ok($okay, "Lintian tags match for $testcase->{testname}");
+    ok($okay, "Lintian passes for $testcase->{testname}");
 
     diag $_ . NEWLINE for @errors;
 
-    #    for uncalibrated tests, use tags in spec path, for cut & paste
-    #      $expected = rel2abs("$testcase->{spec_path}/tags")
-    #      unless -e "$runpath/test_calibration";
+    return;
+}
 
-    unless($okay) {
-        my @command = ('tagdiff', $expected, $actual);
-        my ($diff, $status) = capture_merged { system(@command); };
-        $status = ($status >> 8) & 255;
-        die 'Error executing: ' . join(SPACE, @command) . ": $!"
-          if $status;
+sub check_literal {
+    my ($testcase, $runpath, $output) = @_;
 
-        if (length $diff) {
-            path("$runpath/tagdiff")->spew_utf8($diff);
-            diag '--- ' . abs2rel($expected);
-            diag '+++ ' . abs2rel($actual);
-            diag $diff;
-        }
+    # create expected output if it does not exist
+    my $expected = "$runpath/output";
+    path($expected)->touch
+      unless -e $expected;
+
+    my $raw = "$runpath/output.actual";
+    path($raw)->spew($output);
+
+    # run a sed-script if it exists
+    my $actual = "$runpath/output.actual.parsed";
+    my $script = "$runpath/post_test";
+    if(-f $script) {
+        sed_hook($script, $raw, $actual);
+    } else {
+        die"Could not copy actual tags $raw to $actual: $!"
+          if(system('cp', '-p', $raw, $actual));
     }
 
+    # fail if output does not match
+    return 'Output does not match'
+      if (compare($expected, $actual) != 0);
+
     return;
+}
+
+sub check_tags {
+    my ($testcase, $runpath, $output) = @_;
+
+    # create expected tags if there are none; helps when calibrating new tests
+    my $expected = "$runpath/tags";
+    path($expected)->touch
+      unless -e $expected;
+
+    my $raw = "$runpath/tags.actual";
+    path($raw)->spew($output);
+
+    # run a sed-script if it exists
+    my $actual = "$runpath/tags.actual.parsed";
+    my $sedscript = "$runpath/post_test";
+    if(-f $sedscript) {
+        sed_hook($sedscript, $raw, $actual);
+    } else {
+        die"Could not copy actual tags $raw to $actual: $!"
+          if(system('cp', '-p', $raw, $actual));
+    }
+
+    # calibrate tags; may write to $actual
+    my $calibrated = "$runpath/tags.specified.calibrated";
+    my $calscript = "$runpath/test_calibration";
+    if(-x $calscript) {
+        calibrate($calscript, $actual, $expected, $calibrated);
+    } else {
+        die"Could not copy expected tags $expected to $calibrated: $!"
+          if(system('cp', '-p', $expected, $calibrated));
+    }
+
+    say EMPTY;
+
+    return check_result($testcase, $runpath, $calibrated, $actual);
 }
 
 =item check_result(DESC, EXPECTED, ACTUAL)
@@ -401,15 +373,37 @@ tags before calibration. Returns a list of errors, if there are any.
 =cut
 
 sub check_result {
-    my ($testcase, $expectedpath, $actualpath) = @_;
+    my ($testcase, $runpath, $expectedpath, $actualpath) = @_;
 
-    # fail if tags do not match
-    return 'Tags do not match' if (compare($expectedpath, $actualpath) != 0);
+    my @errors;
+
+    my @expectedlines
+      = reverse sort { order($a) cmp order($b) }(path($expectedpath)->lines);
+    my @actuallines
+      = reverse sort { order($a) cmp order($b) }(path($actualpath)->lines);
+
+    my $unsorted = diff(\@expectedlines, \@actuallines, { CONTEXT => 0 });
+    chomp $unsorted;
+
+    if(length $unsorted) {
+        my @lines = split(/\n/, $unsorted);
+        @lines = reverse sort @lines;
+
+        my $diff = EMPTY;
+        $diff .= $_ . NEWLINE for @lines;
+
+        path("$runpath/tagdiff")->spew($diff);
+
+        push(@errors, 'Tags do not match');
+        push(@errors, '--- ' . abs2rel($expectedpath));
+        push(@errors, diag '+++ ' . abs2rel($actualpath));
+        push(@errors, $diff);
+
+        return @errors;
+    }
 
     # no furter checks if the test is not about tags
     return unless length $testcase->{check};
-
-    my @errors;
 
     my $profile = Lintian::Profile->new(undef, [$ENV{LINTIAN_ROOT}]);
 
@@ -467,3 +461,9 @@ sub check_result {
 =cut
 
 1;
+
+# Local Variables:
+# indent-tabs-mode: nil
+# cperl-indent-level: 4
+# End:
+# vim: syntax=perl sw=4 sts=4 sr et
