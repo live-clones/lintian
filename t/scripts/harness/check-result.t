@@ -62,23 +62,23 @@ $descpath->spew($desctext);
 
 # expected tags
 my $expectedtext =<<EOSTR;
-E: distribution-multiple-bad changes: backports-upload-has-incorrect-version-number 1.0
-E: distribution-multiple-bad changes: bad-distribution-in-changes-file bar
-E: distribution-multiple-bad changes: bad-distribution-in-changes-file foo
-E: distribution-multiple-bad changes: bad-distribution-in-changes-file foo-backportss
-E: distribution-multiple-bad changes: multiple-distributions-in-changes-file stable foo-backportss bar foo
-I: distribution-multiple-bad changes: backports-changes-missing
+distribution-multiple-bad (changes): multiple-distributions-in-changes-file stable foo-backportss bar foo
+distribution-multiple-bad (changes): bad-distribution-in-changes-file foo-backportss
+distribution-multiple-bad (changes): bad-distribution-in-changes-file foo
+distribution-multiple-bad (changes): bad-distribution-in-changes-file bar
+distribution-multiple-bad (changes): backports-upload-has-incorrect-version-number 1.0
+distribution-multiple-bad (changes): backports-changes-missing
 EOSTR
 my $expected = $testpath->child('tags');
 $expected->spew($expectedtext);
 
 # actual tags with one line missing
 my $nomatchtext =<<EOSTR;
-E: distribution-multiple-bad changes: backports-upload-has-incorrect-version-number 1.0
-E: distribution-multiple-bad changes: bad-distribution-in-changes-file bar
-E: distribution-multiple-bad changes: bad-distribution-in-changes-file foo-backportss
-E: distribution-multiple-bad changes: multiple-distributions-in-changes-file stable foo-backportss bar foo
-I: distribution-multiple-bad changes: backports-changes-missing
+distribution-multiple-bad (changes): multiple-distributions-in-changes-file stable foo-backportss bar foo
+distribution-multiple-bad (changes): bad-distribution-in-changes-file foo-backportss
+distribution-multiple-bad (changes): bad-distribution-in-changes-file bar
+distribution-multiple-bad (changes): backports-upload-has-incorrect-version-number 1.0
+distribution-multiple-bad (changes): backports-changes-missing
 EOSTR
 my $nomatch = $testpath->child('tags.nomatch');
 $nomatch->spew($nomatchtext);
@@ -95,8 +95,9 @@ my $testcase = read_config($defaultspath);
 plan tests => 2;
 
 # check when tags match
-ok(!scalar check_result($testcase, $expected, $match),'Same tags match');
+ok(!scalar check_result($testcase, $testpath, $expected, $match),
+    'Same tags match');
 
 # check tags do not match
-ok(scalar check_result($testcase, $expected, $nomatch),
+ok(scalar check_result($testcase, $testpath, $expected, $nomatch),
     'Different tags do not match');

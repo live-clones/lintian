@@ -73,7 +73,7 @@ my $testcase = read_config($runpath->child('desc')->stringify);
 my @testarches = split(/\s+/, $testcase->{'test_architectures'});
 
 # test plan
-plan tests => 26 + scalar @testarches;
+plan tests => 25 + scalar @testarches;
 
 is($testcase->{testname}, $TESTNAME, 'Correct name');
 
@@ -123,14 +123,12 @@ is(
     'Correct policy date'
 );
 
-is($testcase->{sort}, 'no', 'Sort boolean was not converted from string');
-
 is($testcase->{todo}, 'no', 'Todo disabled');
 
 is($testcase->{type}, 'native', 'Test is native');
 isnt($testcase->{type}, 'yes', 'Native type not yes.');
 
-is($testcase->{'output_format'}, 'EWI', 'Output format is EWI');
+is($testcase->{'output_format'}, 'universal', 'Output format is universal');
 
 is($testcase->{options}, undef, 'No extra Lintian options');
 is(
