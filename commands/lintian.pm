@@ -830,6 +830,9 @@ sub main {
         }
     }
 
+    # universal format sorts output from all packages before printing here
+    $Lintian::Output::GLOBAL->print_last();
+
     # }}}
 
     # Wait for any remaining jobs - There will usually not be any
@@ -1327,6 +1330,9 @@ sub configure_output {
                 } elsif ($opts{$_} eq 'fullewi') {
                     require Lintian::Output::FullEWI;
                     $Lintian::Output::GLOBAL = Lintian::Output::FullEWI->new;
+                } elsif ($opts{$_} eq 'universal') {
+                    require Lintian::Output::Universal;
+                    $Lintian::Output::GLOBAL = Lintian::Output::Universal->new;
                 }
             }
         }
@@ -1414,6 +1420,8 @@ sub configure_output {
     } else {
         open($STATUS_FD, '>', '/dev/null');
     }
+
+    $Lintian::Output::GLOBAL->print_first();
     return;
 }
 
