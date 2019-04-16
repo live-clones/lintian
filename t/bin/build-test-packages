@@ -157,6 +157,10 @@ say "Running up to $numjobs tests concurrently"
 
 $ENV{'DUMP_LOGS'} = $dump_logs//NO ? YES : NO;
 
+# Disable translation support in dpkg as it is a considerable
+# unnecessary overhead.
+$ENV{'DPKG_NLS'} = 0;
+
 my $helperpath = "$testset/bin";
 if (-d $helperpath) {
     my $helpers = rel2abs($helperpath)// die("Cannot resolve $helperpath: $!");
