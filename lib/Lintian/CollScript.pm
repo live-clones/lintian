@@ -25,9 +25,13 @@ use parent 'Class::Accessor::Fast';
 
 use Carp qw(croak);
 use File::Basename qw(dirname);
+use IO::Async::Loop;
 
 use Lintian::Deb822Parser qw(read_dpkg_control_utf8);
 use Lintian::Util qw(internal_error);
+
+use constant EMPTY => q{};
+use constant SPACE => q{ };
 
 =head1 NAME
 
@@ -222,14 +226,44 @@ sub is_type {
 sub collect {
     my ($self, $pkg_name, $task, $dir) = @_;
     my $iface = $self->interface;
-    if ($iface eq 'perl-coll') {
+
+    # always use 'exec' under Devel::Cover, which relies on the END handler
+    # otherwise coverage would always be zero (or close to it)
+
+    if ($iface eq 'exec' || exists $ENV{'LINTIAN_COVERAGE'}) {
+        if (exists $ENV{'LINTIAN_COVERAGE'}) {
+            $ENV{'PERL5OPT'} //= EMPTY;
+            $ENV{'PERL5OPT'} .= SPACE . $ENV{'LINTIAN_COVERAGE'};
+        }
+        my $loop = IO::Async::Loop->new;
+        my $future = $loop->new_future;
+
+        my @command = ($self->script_path, $pkg_name, $task, $dir);
+        $loop->run_child(
+            command => [@command],
+            on_finish => sub {
+                my ($pid, $exitcode, $stdout, $stderr) = @_;
+                my $status = ($exitcode >> 8);
+
+                if ($status) {
+                    my $message= "Command @command exited with status $status";
+                    $message .= ": $stderr" if length $stderr;
+                    $future->fail($message);
+                    return;
+                }
+
+                $future->done($stdout);
+            });
+
+        # will raise an exception in case of failure
+        $future->get;
+
+    } elsif ($iface eq 'perl-coll') {
         my $cs_path = $self->script_path;
         require $cs_path;
         my $collector = $self->{'collector_class'};
         $collector->can('collect')->($pkg_name, $task, $dir);
-    } elsif ($iface eq 'exec') {
-        system($self->script_path, $pkg_name, $task, $dir) == 0
-          or die 'Collection ' . $self->name . " for $pkg_name failed\n";
+
     } else {
         internal_error("Unknown interface: $iface");
     }

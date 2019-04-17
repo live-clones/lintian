@@ -376,37 +376,15 @@ sub process_tasks {
                     my $pkg_name = $lpkg->pkg_name;
                     my $pkg_type = $lpkg->pkg_type;
                     my $base = $lpkg->base_dir;
-                    if ($cs->interface ne 'exec'
-                        and not $ENV{'LINTIAN_COVERAGE'}) {
-                        # With a non-exec interface, let L::CollScript
-                        # handle it.  Note that when run under
-                        # Devel::Cover, we never take this route.
-                        # This is because Devel::Cover relies on the
-                        # END handler so all collections would get
-                        # (more or less) 0 coverage in this case.
 
-                        # For platforms that support it, try to change
-                        # our name to the collection being run (like
-                        # how it would be with the exec case below).
-                        # For platforms that do not support, the child
-                        # process will just keep its name as
-                        # "lintian".
-                        $0 = "${coll} (processing ${procid})";
+                    # exec changes the process name; otherwise do it manually
+                    $0 = "$coll (processing $procid)"
+                      unless $cs->interface eq 'exec';
 
-                        eval {$cs->collect($pkg_name, $pkg_type, $base);};
-                        if ($@) {
-                            print STDERR $@;
-                            $ret = 2;
-                        }
-                    } else {
-                        if (my $coverage_arg = $ENV{'LINTIAN_COVERAGE'}) {
-                            my $p5opt = $ENV{'PERL5OPT'} // q{};
-                            $p5opt .= ' ' if $p5opt ne q{};
-                            $ENV{'PERL5OPT'} = "${p5opt} ${coverage_arg}";
-                        }
-                        # Its fork + exec - invoke that directly (saves a fork)
-                        exec $cs->script_path, $pkg_name, $pkg_type, $base
-                          or die "exec $cs->script_path: $!";
+                    eval {$cs->collect($pkg_name, $pkg_type, $base);};
+                    if ($@) {
+                        print STDERR $@;
+                        $ret = 2;
                     }
                     POSIX::_exit($ret);
                 },
