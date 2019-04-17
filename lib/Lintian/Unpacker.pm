@@ -497,6 +497,9 @@ sub start_task {
         $pid = $loop->fork(
             code  => sub {
 
+                # fixed upstream in 0.73
+                undef($IO::Async::Loop::ONE_TRUE_LOOP);
+
                 my $name = $script->name;
                 my $package = $labentry->pkg_name;
                 my $type = $labentry->pkg_type;
