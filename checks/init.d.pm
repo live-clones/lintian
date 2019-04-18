@@ -86,6 +86,8 @@ sub run {
 
     my (%initd_postinst, %initd_postrm);
 
+    check_missing_script($info);
+
     # read postinst control file
     if ($postinst and $postinst->is_file and $postinst->is_open_ok) {
         my $fd = $postinst->open;
@@ -498,6 +500,22 @@ sub check_defaults {
               if m/^\s*#*\s*(?:ENABLED|DISABLED|[A-Z]*RUN)=/;
         }
         close($fd);
+    }
+    return;
+}
+
+# Check for missing init.d script, when equivalent for alternative init
+# system is present.
+sub check_missing_script {
+    my ($info) = @_;
+    for my $file ($info->sorted_index) {
+        if (   $file =~ m,etc/sv/([^/]+)/run$,
+            or $file =~ m,lib/systemd/system/(.*)\.service,) {
+
+            my $service = $1;
+            tag 'package-supports-alternative-init-but-no-init.d-script',$file
+              unless $info->index_resolved_path("etc/init.d/${service}");
+        }
     }
     return;
 }
