@@ -2,6 +2,7 @@
 # refresh-locale-codes -- Refresh the locale (aka ISO 639-1/639-2 codes)
 
 # Copyright (C) 2013 Niels Thykier <niels@thykier.net>
+# Copyright (C) 2019 Adam D. Barratt <adam@adam-barratt.org.uk>
 # Based on a shell script, which was:
 #   Copyright (C) 2010 Raphael Geissert <atomo64@gmail.com>
 #
@@ -56,8 +57,8 @@ open(my $out, '>', $outfile);
 print {$out} <<EOF ;
 # List of locale codes.  This is derived from the ISO 639-1, ISO
 # 639-2, and ISO 639-3 standards.
-# If a language has 639-1 and 639-2 codes, the -2 code is also included
-# as a key to be mapped to the -1 code.
+# If a language has 639-1 and 639-2 codes, the -1 code is also included
+# as a key to be mapped to the -2 code.
 #
 # Last updated: $date
 
@@ -106,20 +107,18 @@ sub parse_iso_xml {
 }
 
 sub parse_iso_query {
-    open(my $fd, '-|', 'isoquery', '-i', '639');
+    open(my $fd, '-|', 'isoquery', '-i', '639-2');
     local $_;
     while (<$fd>) {
-        next unless m/^\w{3}\s+(\w{3})\s+(?:(\w{2})\s+)?/;
+        next unless m/^(\S{3})\s+(?:\S{3}\s+)?(?:(\S{2})\s+)?/;
         my ($iso1, $iso2) = ($2, $1);
         next if $iso2 eq 'zxx';
-        if (!defined $iso1) {
-            $iso1 = $iso2;
-            $iso2 = undef;
-        }
-        $iso1 = lc $iso1;
-        $CODES{$iso1} = undef unless exists $CODES{$iso1};
-        if (defined $iso2) {
+        $iso2 = lc $iso2;
+        $CODES{$iso2} = undef unless exists $CODES{$iso2};
+        if (defined $iso1) {
+            $iso1 = lc $iso1;
             $CODES{lc $iso2} = $iso1;
+            $CODES{$iso1} = undef unless exists $CODES{$iso1};
         }
     }
     close($fd);
