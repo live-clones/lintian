@@ -1,6 +1,10 @@
 lintian (2.12.0+git) UNRELEASED; urgency=medium
 
-  * WIP
+  [ Adam D. Barratt ]
+  * private/refresh-locale-codes: update to work with current
+    isoquery.
+  * data/fields/virtual-packages: update.
+  * data/files/locale-codes: update (after fixing the refresh script).
 
  -- Chris Lamb <lamby@debian.org>  Thu, 04 Apr 2019 12:20:51 +0200
 
