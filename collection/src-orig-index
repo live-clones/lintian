@@ -39,14 +39,13 @@ sub collect {
     my ($pkg, $type, $dir) = @_;
     my $info = Lintian::Collect->new($pkg, $type, $dir);
 
-    if (-f "$dir/src-orig-index.gz") {
-        unlink("$dir/src-orig-index.gz");
-    }
+    my $origpath = "$dir/src-orig-index.gz";
+    unlink($origpath)
+      if -f $origpath;
 
-    # Nothing to do for native packages where the two indices are
-    # identical.
+    # for native packages, just link to regular index
     if ($info->native) {
-        link("$dir/index.gz", "$dir/src-orig-index.gz");
+        link("$dir/index.gz", $origpath);
         return;
     }
 
