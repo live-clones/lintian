@@ -63,6 +63,7 @@ sub run {
     #----- dpatch
     if ($build_deps->implies('dpatch')) {
         my $list_file;
+        tag 'patch-system', 'dpatch';
         tag 'package-uses-deprecated-dpatch-patch-system';
         $uses_patch_system++;
         $list_file = $dpdir->resolve_path('00list') if $dpdir;
@@ -147,6 +148,7 @@ sub run {
         if (not $patch_series or not $patch_series->is_open_ok) {
             tag 'quilt-build-dep-but-no-series-file' unless $quilt_format;
         } else {
+            tag 'patch-system', 'quilt';
             my (@patches, @badopts);
             my $series_fd = $patch_series->open;
             while (my $patch = <$series_fd>) {
