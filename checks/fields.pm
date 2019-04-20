@@ -1346,6 +1346,8 @@ sub run {
                 tag 'vcs-browser-links-to-empty-view', $uri
                   if $uri =~ m%rev=0&sc=0%;
             } else {
+                tag 'vcs', $vcs;
+                tag 'vcs-uri', $uri;
                 $seen_vcs{$vcs}++;
                 foreach my $regex ($KNOWN_VCS_HOSTERS->all) {
                     foreach my $re_vcs (@{$KNOWN_VCS_HOSTERS->value($regex)}) {

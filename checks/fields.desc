@@ -1493,3 +1493,15 @@ Info: The version number for this package does not comply with the
  Derivative distributions of Debian may enforce additional restrictions
  on the version in order to ensure that forked (or packages that are
  otherwise modified) are marked as such.
+
+Tag: vcs
+Severity: classification
+Certainty: certain
+Info: The package uses the specified VCS (eg. "git") according to the
+ <tt>debian/control</tt> file.
+
+Tag: vcs-uri
+Severity: classification
+Certainty: certain
+Info: The package uses the specified VCS URI according to the
+ <tt>debian/control</tt> file.
