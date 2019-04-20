@@ -349,6 +349,7 @@ sub run {
         $compatnan = 1;
     }
 
+    tag 'debhelper-compat-level', $level if defined($level);
     $level ||= 1;
     if ($level < $compat_level->value('deprecated')) {
         tag 'package-uses-deprecated-debhelper-compat-version', $level;

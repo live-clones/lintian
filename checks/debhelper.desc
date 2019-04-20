@@ -388,6 +388,11 @@ Certainty: certain
 Info: This package is using the <tt>debhelper-compat</tt> virtual
  package as a build-dependency.
 
+Tag: debhelper-compat-level
+Severity: classification
+Certainty: certain
+Info: This is the debhelper compat level used specified by this package.
+
 Tag: typo-in-debhelper-override-target
 Severity: normal
 Certainty: possible
