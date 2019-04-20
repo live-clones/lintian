@@ -474,7 +474,7 @@ sub quick_hint {
     my ($selection) = @_;
     print <<"END";
 
-Could not determine what you meant by:
+No tests were selected by your filter:
 
     $selection
 
