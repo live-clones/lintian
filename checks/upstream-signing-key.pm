@@ -25,9 +25,9 @@ use autodie;
 
 use File::Temp;
 
-use Lintian::Tags qw(tag);
 use Lintian::Data;
-use Lintian::Command qw(safe_qx);
+use Lintian::Tags qw(tag);
+use Lintian::Util qw(safe_qx);
 
 my $SIGNING_KEY_FILENAMES = Lintian::Data->new('common/signing-key-filenames');
 
@@ -59,16 +59,16 @@ sub run {
         my $tempdir = File::Temp->newdir();
 
         # get keys packets from gpg
-        my $opts = {'in' => '/dev/null', 'err' => '/dev/null'};
-        my $output = safe_qx(
-            $opts,
-            [
-                'gpg', '--homedir',
-                $tempdir, '--list-packets',
-                $key_locations{$key_name}]);
+        my @command = (
+            'gpg', '--homedir',
+            $tempdir, '--batch',
+            '--attribute-fd', '1',
+            '--status-fd', '2',
+            '--with-colons', '--list-packets',
+            $key_locations{$key_name});
+        my $output = safe_qx(@command);
 
-        # error if key cannot be processed
-        unless ($opts->{success}) {
+        if ($?) {
             tag 'public-upstream-key-unusable', $key_name,
               'cannot be processed';
             next;
