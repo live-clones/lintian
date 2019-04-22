@@ -1,8 +1,64 @@
-lintian (2.12.0+git) UNRELEASED; urgency=medium
+lintian (2.13.0) unstable; urgency=medium
 
-  * WIP
+  * Summary of tag changes:
+    + Added:
+      - debhelper-compat-level
+      - patch-system
+      - pkg-js-autopkgtest-file-does-not-exist
+      - pkg-js-autopkgtest-test-is-missing
+      - pkg-js-tools-test-is-missing
+      - vcs
+      - vcs-uri
 
- -- Chris Lamb <lamby@debian.org>  Thu, 04 Apr 2019 12:20:51 +0200
+  [ Niels Thykier ]
+  * gitlab-ci: Run commands with the time command to get an estimate
+    for each part.
+  * Ensure that LINTIAN_CFG is always defined as it is used in debug
+    output.
+  * Fix a typo that called the wrong clean-up function with --unpack.
+  * Extract reporting related utilities into a separate module.
+  * Remove unused system_env function from Lintian::Util
+  * Move Deb822 parsing into its own module called Lintian::Deb822Parser.
+
+  [ Felix Lechner ]
+  * Implement universal output format in Lintian.
+  * Only run tests in t/bin/runtests but do not build any packages.
+
+  [ Xavier ]
+  * Test for Node.js packages that don't ship a debian/tests/pkg-js/test
+    file or ship a debian/tests/pkg-js/files that contains invalid/missing
+    references. (Closes: #923339)
+  * Test for Node.js packages that use "--with nodejs" in debian/rules but
+    do not specify a debian/tests/pkg-js/test file. (Closes: #923331)
+
+  [ Adam D. Barratt ]
+  * Update private/refresh-locale-codes to work with newer isoquery(1) and
+    refresh data/files/locale-codes and data/fields/virtual-packages to
+    match.
+
+  [ Lucas Nussbaum ]
+  * Emit a classification tag about the current debhelper compat level
+    in use. (Closes: #926766)
+  * Emit a classification tag that records the patch system in use.
+    (Closes: #926767)
+  * Emit a classification tags about the revision control system used by
+    the package. (Closes: #926768)
+
+  [ Michael Biebl ]
+  * Also look in /usr/share/dbus-1/{system,session}.d for dbus
+    configuration files. (MR: !187)
+
+  [ Simon Quigley ]
+  * Add "eoan" as a known Ubuntu distribution. (MR: !198)
+
+  [ Chris Lamb ]
+  * Clarify "Could not determine what you meant by" test harness error
+    message; it is not always a parse error.
+
+  [ Paul Wise ]
+  * Add/fix several spelling corrections.
+
+ -- Chris Lamb <lamby@debian.org>  Mon, 22 Apr 2019 09:01:36 +0000
 
 lintian (2.12.0) unstable; urgency=medium
 
