@@ -27,16 +27,19 @@ use utf8;
 use constant BACKLOG_PROCESSING_GROUP_LIMIT => 1024;
 
 use Date::Format qw(time2str);
+use File::Copy;
 use FileHandle;
 use Getopt::Long;
+use Path::Tiny;
 use POSIX qw(strftime);
 use YAML::XS ();
 
-use Lintian::Command qw(reap spawn safe_qx);
 use Lintian::Processable;
 use Lintian::Relation::Version qw(versions_comparator);
 use Lintian::Reporting::Util qw(load_state_cache save_state_cache);
-use Lintian::Util qw(open_gz run_cmd);
+use Lintian::Util qw(open_gz safe_qx);
+
+use constant EMPTY => q{};
 
 sub usage {
     print <<END;
@@ -143,7 +146,7 @@ sub main {
         # rotate log files
         my @rotate_logs
           = ($log_file, $html_reports_log, $lintian_perf_log, $sync_state_log);
-        run_cmd('savelog', @rotate_logs);
+        safe_qx('savelog', @rotate_logs);
 
         # create new log file
         open($LOG_FD, '>', $log_file)
@@ -158,13 +161,11 @@ sub main {
     # From here on we can use Log() and Die().
     if (not $opt{'dry-run'} and $opt{'clean-mode'}) {
         Log('Purging old state-cache/dir');
-        system('rm', '-rf', $STATE_DIR) == 0
-          or Die("error removing $STATE_DIR");
+        path($STATE_DIR)->remove_tree;
     }
 
     if (not -d $STATE_DIR) {
-        system('mkdir', '-p', $STATE_DIR) == 0
-          or Die("mkdir -p $STATE_DIR failed");
+        path($STATE_DIR)->mkpath;
         Log("Created cache dir: $STATE_DIR");
     }
 
@@ -281,17 +282,72 @@ sub run_lintian {
     }
 
     Log('Updating harness state cache (reading mirror index files)');
-    my %sync_state_opts = (
-        'out' => $sync_state_log,
-        'err' => '&1',
+
+    my $loop = IO::Async::Loop->new;
+    my $syncdone = $loop->new_future;
+
+    my @synccommand = ($dplint_cmd, 'reporting-sync-state', @sync_state_args);
+    Log('Command: ' . join(' ', @synccommand));
+
+    my $syncprocess = IO::Async::Process->new(
+        command => [@synccommand],
+        stdout => { via => 'pipe_read' },
+        stderr => { via => 'pipe_read' },
+        on_finish => sub {
+            my ($self, $exitcode) = @_;
+            my $status = ($exitcode >> 8);
+
+            if ($status) {
+                Log("warning: executing reporting-sync-state returned $status"
+                );
+                my $message= "Non-zero status $status from @synccommand";
+                $syncdone->fail($message);
+                return;
+            }
+
+            $syncdone->done("Done with @synccommand");
+            return;
+        });
+
+    my $syncfh = *STDOUT;
+    unless($opt{'dry-run'}) {
+        open($syncfh, '>', $sync_state_log)
+          or die "Could not open file '$sync_state_log': $!";
+    }
+
+    $syncprocess->stdout->configure(
+        on_read => sub {
+            my ($stream, $buffref, $eof) = @_;
+
+            if (length $$buffref) {
+                print {$syncfh} $$buffref;
+                $$buffref = EMPTY;
+            }
+
+            if ($eof) {
+                close($syncfh)
+                  unless $opt{'dry-run'};
+            }
+
+            return 0;
+        },
     );
-    delete($sync_state_opts{'out'}) if $opt{'dry-run'};
-    Log('Command: '
-          . join(' ',$dplint_cmd, 'reporting-sync-state',@sync_state_args));
-    spawn(\%sync_state_opts,
-        [$dplint_cmd, 'reporting-sync-state', @sync_state_args])
-      or Log('warning: executing reporting-sync-state returned '
-          . (($? >> 8) & 0xff));
+
+    $syncprocess->stderr->configure(
+        on_read => sub {
+            my ($stream, $buffref, $eof) = @_;
+
+            if (length $$buffref) {
+                print STDERR $$buffref;
+                $$buffref = EMPTY;
+            }
+
+            return 0;
+        },
+    );
+
+    $loop->add($syncprocess);
+    $syncdone->await;
 
     Log('Running lintian (via reporting-lintian-harness)');
     Log(
@@ -346,29 +402,82 @@ sub generate_reports {
     # create html reports
     Log('Creating HTML reports...');
     Log("Executing $dplint_cmd reporting-html-reports @html_reports_args");
-    my %html_reports_opts = (
-        'out' => $html_reports_log,
-        'err' => '&1',
+
+    my $loop = IO::Async::Loop->new;
+    my $htmldone = $loop->new_future;
+
+    my @htmlcommand
+      = ($dplint_cmd, 'reporting-html-reports', @html_reports_args);
+    my $htmlprocess = IO::Async::Process->new(
+        command => [@htmlcommand],
+        stdout => { via => 'pipe_read' },
+        stderr => { via => 'pipe_read' },
+        on_finish => sub {
+            my ($self, $exitcode) = @_;
+            my $status = ($exitcode >> 8);
+
+            if ($status) {
+                Log(
+"warning: executing reporting-html-reports returned $status"
+                );
+                my $message= "Non-zero status $status from @htmlcommand";
+                $htmldone->fail($message);
+                return;
+            }
+
+            $htmldone->done("Done with @htmlcommand");
+            return;
+        });
+
+    open(my $htmlfh, '>', $html_reports_log)
+      or die "Could not open file '$html_reports_log': $!";
+
+    $htmlprocess->stdout->configure(
+        on_read => sub {
+            my ($stream, $buffref, $eof) = @_;
+
+            if (length $$buffref) {
+                print {$htmlfh} $$buffref;
+                $$buffref = EMPTY;
+            }
+
+            close($htmlfh)
+              if $eof;
+
+            return 0;
+        },
     );
-    spawn(\%html_reports_opts,
-        [$dplint_cmd, 'reporting-html-reports', @html_reports_args])
-      or Log('warning: executing reporting-html-reports returned '
-          . (($? >> 8) & 0xff));
+
+    $htmlprocess->stderr->configure(
+        on_read => sub {
+            my ($stream, $buffref, $eof) = @_;
+
+            if (length $$buffref) {
+                print STDERR $$buffref;
+                $$buffref = EMPTY;
+            }
+
+            return 0;
+        },
+    );
+
+    $loop->add($htmlprocess);
+    $htmldone->await;
+
     Log('');
 
     # rotate the statistics file updated by reporting-html-reports
     if (!$opt{'dry-run'} && -f "$STATE_DIR/statistics") {
         my $date = time2str('%Y%m%d', time());
         my $dest = "$LOG_DIR/stats/statistics-${date}";
-        system('cp', "$STATE_DIR/statistics", $dest) == 0
+        copy("$STATE_DIR/statistics", $dest)
           or Log('warning: could not rotate the statistics file');
     }
 
     # install new html directory
     Log('Installing HTML reports...');
     unless ($opt{'dry-run'}) {
-        system('rm', '-rf', $HTML_DIR) == 0
-          or Die("error removing $HTML_DIR");
+        path($HTML_DIR)->remove_tree;
         # a tiny bit of race right here
         rename($HTML_TMP_DIR,$HTML_DIR)
           or Die("error renaming $HTML_TMP_DIR into $HTML_DIR");
