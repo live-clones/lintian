@@ -278,6 +278,7 @@ sub run {
         tag 'no-section-field-for-source';
     }
     my @descriptions;
+    my $seen_main, $seen_contrib;
     foreach my $bin (@package_names) {
 
         # Accumulate the description.
@@ -295,6 +296,7 @@ sub run {
 
         # Check mismatches in archive area.
         $bin_area = $info->binary_field($bin, 'section');
+        $seen_main = 1 if not $bin_area and $area eq 'main';
         next unless $area && $bin_area;
 
         if ($bin_area =~ m%^([^/]+)/%) {
@@ -302,12 +304,19 @@ sub run {
         } else {
             $bin_area = 'main';
         }
+        $seen_main = 1 if $bin_area eq 'main';
+        $seen_contrib = 1 if $bin_area eq 'contrib';
         next
           if $area eq $bin_area
           or ($area eq 'main' and $bin_area eq 'contrib');
 
         tag 'section-area-mismatch', 'Package', $bin;
     }
+
+    tag 'section-area-mismatch'
+      if $seen_contrib
+      and not $seen_main
+      and $area eq 'main';
 
     # Check for duplicate descriptions.
     my (%seen_short, %seen_long);
