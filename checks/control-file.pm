@@ -278,7 +278,7 @@ sub run {
         tag 'no-section-field-for-source';
     }
     my @descriptions;
-    my $seen_main, $seen_contrib;
+    my ($seen_main, $seen_contrib);
     foreach my $bin (@package_names) {
 
         # Accumulate the description.
