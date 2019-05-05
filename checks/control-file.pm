@@ -636,19 +636,23 @@ sub _path_exists {
     my ($expr, $info) = @_;
 
     # Split each line in path elements
-    my @elem= map { s/\*/.*/g; s/^\.\*$/.*\\w.*/; $_ ? qr{^$_$} : () }
+    my @elem= map { s/\*/.*/g; s/^\.\*$/.*\\w.*/; $_ ? qr{^$_/?$} : () }
       split m#/#,
       $expr;
     my @dir = ('.');
 
     # Follow directories
-    while (my $re = shift @elem) {
+  LOOP: while (my $re = shift @elem) {
         foreach my $i (0 .. $#dir) {
             my ($dir, @tmp);
 
             next unless defined($dir = $info->index_resolved_path($dir[$i]));
             next unless $dir->is_dir;
-            next unless (@tmp = grep { $_ =~ $re } $dir->children);
+            last LOOP
+              unless (
+                @tmp= map { $_->basename }
+                grep { $_->basename =~ $re } $dir->children
+              );
 
             # Stop searching: at least one element found
             return unless @elem;
