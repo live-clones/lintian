@@ -296,7 +296,7 @@ sub run {
 
         # Check mismatches in archive area.
         $bin_area = $info->binary_field($bin, 'section');
-        $seen_main = 1 if not $bin_area and $area eq 'main';
+        $seen_main = 1 if not $bin_area and ($area // '') eq 'main';
         next unless $area && $bin_area;
 
         if ($bin_area =~ m%^([^/]+)/%) {
