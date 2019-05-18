@@ -31,15 +31,15 @@ sub run {
     my ($pkg, $type, $info) = @_;
 
     my @files;
-    foreach my $prefix (qw(etc/dbus-1 usr/share/dbus-1)) {
-        foreach my $suffix (qw(session system)) {
+    foreach my $suffix (qw(session system)) {
+        if (my $dir
+            = $info->index_resolved_path("usr/share/dbus-1/${suffix}.d")) {
+            push @files, $dir->children;
+        }
+        foreach my $prefix (qw(etc/dbus-1 usr/share/dbus-1)) {
             if (my $dir = $info->index_resolved_path("${prefix}/${suffix}.d")){
                 push @files, $dir->children;
             }
-        }
-        if (my $dir
-            = $info->index_resolved_path("usr/share/dbus-1/${dirname}.d")) {
-            push @files, $dir->children;
         }
     }
 
