@@ -6,6 +6,7 @@ relations (source): stronger-dependency-implies-weaker relations pre-depends -> 
 relations (source): stronger-dependency-implies-weaker relations depends -> recommends null
 relations (source): stronger-dependency-implies-weaker relations depends -> recommends dpkg
 relations (source): section-area-mismatch Package relations-multiple-libs
+relations (source): section-area-mismatch
 relations (source): redundant-origin-field
 relations (source): quilt-build-dep-but-no-series-file
 relations (source): patch-system-but-no-source-readme
