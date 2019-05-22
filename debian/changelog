@@ -1,8 +1,32 @@
-lintian (2.13.0+git) UNRELEASED; urgency=medium
+lintian (2.14.0) unstable; urgency=medium
 
-  * WIP
+  [ Chris Lamb ]
+  * Correct false-positives in missing-systemd-timer-for-cron-script due to
+    an incorrect regular expression. Thanks to Francesco Poli (wintermute)
+    for the patch. (Closes: #927970)
+  * Adjust package-contains-python-header-in-incorrect-directory as Python
+    3.8 dropped the "m" modifier that was used in Python 3.7 and below (eg.
+    /usr/include/python3.7m). (Closes: #928617)
 
- -- Chris Lamb <lamby@debian.org>  Mon, 22 Apr 2019 10:25:13 +0100
+  [ Ivo De Decker ]
+  * Check for sources in the "main" section with only binaries in the
+    "contrib" section. (Closes: #928126)
+
+  [ Michael Biebl ]
+  * Consider the now-preferred /usr/share/dbus-1/{system,session}.d
+    directories (supported since dbus 1.9.18) when checking D-Bus services.
+    (MR: !187)
+
+  [ Xavier ]
+  * Fix an error where debian/tests/pkg-js/files contained deep (but valid)
+    directory. (MR: !199)
+
+  [ Paul Wise ]
+  * Add/fix several spelling corrections.
+  * Sort the dictionary
+  * Prefer American spelling for American typos
+
+ -- Chris Lamb <lamby@debian.org>  Wed, 22 May 2019 07:47:56 +0000
 
 lintian (2.13.0) unstable; urgency=medium
 
