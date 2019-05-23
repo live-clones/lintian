@@ -370,7 +370,7 @@ if (-t STDOUT && !$unattended) {
 
         # only offer when matching tags
         next
-          unless $testcase->{match_strategy} = 'tags';
+          unless $testcase->{match_strategy} eq 'tags';
 
         my $diffpath = "$workpath/tagdiff";
 
