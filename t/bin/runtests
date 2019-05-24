@@ -396,6 +396,10 @@ if (-t STDOUT && !$unattended) {
 
             die "Cannot run tagadjust for $testpath"
               if system('tagadjust', '-i', $diffpath, $tagspath);
+
+            # also copy the new tags to workpath; no need to rebuild
+            die "Cannot copy updated tags to $workpath"
+              if system('cp', $tagspath, "$workpath/tags");
         }
     }
 }
