@@ -80,6 +80,11 @@ use constant NEWLINE => qq{\n};
 use constant YES => q{yes};
 use constant NO => q{no};
 
+# turn off the @@-style headers in Text::Diff
+no warnings 'redefine';
+sub Text::Diff::Unified::file_header { return EMPTY; }
+sub Text::Diff::Unified::hunk_header { return EMPTY; }
+
 =head1 FUNCTIONS
 
 =over 4
