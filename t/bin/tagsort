@@ -1,0 +1,105 @@
+#!/usr/bin/perl
+
+# Copyright © 2019 Felix Lechner
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, you can find it on the World Wide
+# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
+# MA 02110-1301, USA.
+
+# The harness for Lintian's test suite.  For detailed information on
+# the test suite layout and naming conventions, see t/tests/README.
+# For more information about running tests, see
+# doc/tutorial/Lintian/Tutorial/TestSuite.pod
+#
+
+use strict;
+use warnings;
+use autodie;
+use v5.10;
+
+use Cwd;
+use Getopt::Long;
+use List::Util qw(all);
+use Path::Tiny;
+use Term::ANSIColor;
+
+BEGIN {
+    $ENV{'LINTIAN_TEST_INSTALLED'} = 'no'
+      unless exists $ENV{'LINTIAN_TEST_INSTALLED'};
+
+    my $cwd = Cwd::getcwd();
+
+    if ($ENV{'LINTIAN_TEST_INSTALLED'} eq 'yes') {
+        $ENV{'LINTIAN_ROOT'} = '/usr/share/lintian';
+    } else {
+        $ENV{'LINTIAN_ROOT'} = $cwd;
+    }
+}
+
+use lib "$ENV{'LINTIAN_ROOT'}/lib";
+
+use Test::Lintian::Output::Universal qw(parse_line order);
+
+use constant EMPTY => q{};
+use constant SPACE => q{ };
+use constant COLON => q{:};
+use constant LPARENS => q{(};
+use constant RPARENS => q{)};
+use constant NEWLINE => qq{\n};
+
+# options
+my $interactive;
+
+Getopt::Long::Configure;
+unless (
+    Getopt::Long::GetOptions(
+        'help|h'         => sub {usage(); exit;},
+    )
+) {
+    usage();
+    die;
+}
+
+# check arguments and options
+die "Please use -h for usage information.\n"
+  if scalar @ARGV != 1;
+
+# get arguments
+my ($tagspath) = @ARGV;
+
+my @tagslines = path($tagspath)->lines_utf8;
+chomp @tagslines;
+
+my $joined = EMPTY;
+$joined .= $_ . NEWLINE for reverse sort { order($a) cmp order($b) } @tagslines;
+
+path($tagspath)->spew_utf8($joined);
+
+exit;
+
+sub usage {
+    print <<"END";
+Usage: $0 <tagfile>
+
+    Sorts tagfile in the order preferred for universal tags.
+END
+    return;
+}
+
+# Local Variables:
+# indent-tabs-mode: nil
+# cperl-indent-level: 4
+# End:
+# vim: syntax=perl sw=4 sts=4 sr et
