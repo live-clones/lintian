@@ -3,7 +3,7 @@ Author: Christian Schwarz <schwarz@debian.org>
 Abbrev: md5
 Type: binary
 Needs-Info: md5sums, bin-pkg-control, unpacked
-Info: This script checks if md5sum control files are valid, if they are
+Info: This script checks if md5sum control files are valid if they are
  provided by a binary package.
 
 Tag: no-md5sums-control-file
@@ -33,7 +33,7 @@ Certainty: certain
 Info: The md5sum listed for the file does not match the actual file
  contents.
  .
- Usually, this error occurs during the package build process, if the
+ Usually, this error occurs during the package build process if the
  <tt>debian/tmp/</tt> directory is touched after <tt>dh_md5sums</tt>
  is run.
  .
@@ -46,7 +46,7 @@ Certainty: certain
 Info: The md5sums control file lists a file which is not included in the
  package.
  .
- Usually, this error occurs during the package build process, if the
+ Usually, this error occurs during the package build process if the
  <tt>debian/tmp/</tt> directory is touched after <tt>dh_md5sums</tt>
  is run.
 
@@ -56,6 +56,6 @@ Certainty: certain
 Info: The package contains a file which isn't listed in the md5sums control
  file.
  .
- Usually, this error occurs during the package build process, if the
+ Usually, this error occurs during the package build process if the
  <tt>debian/tmp/</tt> directory is touched after <tt>dh_md5sums</tt>
  is run.

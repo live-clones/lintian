@@ -402,8 +402,8 @@ Info: The listed target in debian/rules command is a likely misspelling.
  silently not being executed by <tt>make</tt>.
  .
  Implementation detail: The typo is detected by using "Levenshtein
- edit distance". Therefore, if the typo involve several characters,
- Lintian may not detect it.
+ edit distance" so if the typo involve several characters Lintian may
+ not detect it.
 
 Tag: maintscript-includes-maint-script-parameters
 Severity: normal

@@ -402,7 +402,7 @@ Info: The "Homepage:" field in this package's control file does not
  .
  This tag is also triggered if the scheme is not known by Lintian.
  .
- Please file a bug against Lintian, if this tag is triggered for a
+ Please file a bug against Lintian if this tag is triggered for a
  valid homepage URL.
 
 Tag: no-homepage-field
@@ -506,7 +506,7 @@ Tag: package-relation-with-self
 Severity: normal
 Certainty: possible
 Info: The package declares a relationship with itself. This is not very
- useful, except in the case of a package Conflicting with itself, if its
+ useful except in the case of a package Conflicting with itself if its
  package name doubles as a virtual package.
 
 Tag: bad-relation
@@ -849,7 +849,7 @@ Info: This package declares a Breaks relationship with another package
  all versions predating a fix. If the two packages can never be installed
  at the same time, Conflicts should normally be used instead.
  .
- Note this tag can also be issued, if a package has been split into two
+ Note this tag can also be issued if a package has been split into two
  completely new ones. In this case, this package is missing a Replaces
  on the old package.
 

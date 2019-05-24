@@ -29,7 +29,7 @@ Certainty: certain
 Ref: autodep8(1)
 Info: The specified autopkgtest control file is considered obsolete.
  .
- Before autodep8 version 0.17 and autopkgtest version 5.7, if a
+ Before autodep8 version 0.17 and autopkgtest version 5.7 if a
  maintainer wished to add tests to the set of tests generated
  by autodep8 they provided those tests in a file named
  <tt>debian/tests/control.autodep8</tt>.
