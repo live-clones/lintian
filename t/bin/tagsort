@@ -59,9 +59,6 @@ use constant LPARENS => q{(};
 use constant RPARENS => q{)};
 use constant NEWLINE => qq{\n};
 
-# options
-my $interactive;
-
 Getopt::Long::Configure;
 unless (
     Getopt::Long::GetOptions(
@@ -83,7 +80,8 @@ my @tagslines = path($tagspath)->lines_utf8;
 chomp @tagslines;
 
 my $joined = EMPTY;
-$joined .= $_ . NEWLINE for reverse sort { order($a) cmp order($b) } @tagslines;
+$joined .= $_ . NEWLINE
+  for reverse sort { order($a) cmp order($b) } @tagslines;
 
 path($tagspath)->spew_utf8($joined);
 

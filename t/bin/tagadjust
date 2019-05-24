@@ -134,7 +134,8 @@ exit unless $changed;
 
 # also sort output into preferred order
 my $joined = EMPTY;
-$joined .= $_ . NEWLINE for reverse sort { order($a) cmp order($b) } @tagslines;
+$joined .= $_ . NEWLINE
+  for reverse sort { order($a) cmp order($b) } @tagslines;
 path($tagspath)->spew_utf8($joined);
 
 exit;
