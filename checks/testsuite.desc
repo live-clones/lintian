@@ -174,7 +174,7 @@ Info: This package does not declare a test suite.
  package's dependencies have a new version and check whether that update
  causes problems for your package.
  .
- In addition, since May 2018 such tests now influence migration from
+ In addition, since May 2018 these tests now influence migration from
  unstable to testing:
  .
   https://lists.debian.org/debian-devel-announce/2018/05/msg00001.html
