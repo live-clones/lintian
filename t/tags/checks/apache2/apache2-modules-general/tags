@@ -1,9 +1,9 @@
-E: libapache2-mod-foo2: apache2-module-does-not-ship-load-file etc/apache2/mods-available/foo2.load
-E: libapache2-mod-foo2: apache2-reverse-dependency-ships-file-in-not-allowed-directory etc/apache2/mods-enabled/foo.conf
-E: libapache2-mod-foo: apache2-configuration-files-need-conf-suffix etc/apache2/mods-available/foo
-E: libapache2-modbaz: apache2-module-does-not-depend-on-apache2-api
-W: libapache2-mod-foo2: apache2-reverse-dependency-calls-wrapper-script postinst a2enmod
-W: libapache2-mod-foo2: apache2-reverse-dependency-calls-wrapper-script postrm a2dismod
-W: libapache2-mod-foo: apache2-unparsable-dependency etc/apache2/mods-available/foo.load (line 2) baz4.load
-W: libapache2-mod-foo: apache2-unparsable-dependency etc/apache2/mods-available/foo.load (line 2) mod_baz3
-W: libapache2-modbaz: non-standard-apache2-module-package-name libapache2-modbaz != libapache2-mod-baz
+libapache2-modbaz (binary): non-standard-apache2-module-package-name libapache2-modbaz != libapache2-mod-baz
+libapache2-modbaz (binary): apache2-module-does-not-depend-on-apache2-api
+libapache2-mod-foo2 (binary): apache2-reverse-dependency-ships-file-in-not-allowed-directory etc/apache2/mods-enabled/foo.conf
+libapache2-mod-foo2 (binary): apache2-reverse-dependency-calls-wrapper-script postrm a2dismod
+libapache2-mod-foo2 (binary): apache2-reverse-dependency-calls-wrapper-script postinst a2enmod
+libapache2-mod-foo2 (binary): apache2-module-does-not-ship-load-file etc/apache2/mods-available/foo2.load
+libapache2-mod-foo (binary): apache2-unparsable-dependency etc/apache2/mods-available/foo.load (line 2) mod_baz3
+libapache2-mod-foo (binary): apache2-unparsable-dependency etc/apache2/mods-available/foo.load (line 2) baz4.load
+libapache2-mod-foo (binary): apache2-configuration-files-need-conf-suffix etc/apache2/mods-available/foo

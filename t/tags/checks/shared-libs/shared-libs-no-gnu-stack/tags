@@ -1,2 +1,2 @@
-E: libhallo1: shlib-without-PT_GNU_STACK-section usr/lib/libhallo.so.1.0.1
-I: libhallo1: symbols-file-missing-build-depends-package-field
+libhallo1 (binary): symbols-file-missing-build-depends-package-field
+libhallo1 (binary): shlib-without-PT_GNU_STACK-section usr/lib/libhallo.so.1.0.1

@@ -1,7 +1,7 @@
-E: binaries-from-other-arch: binary-from-other-architecture usr/bin/elfobject
-E: binaries-from-other-arch: statically-linked-binary usr/bin/elfobject
-E: binaries-from-other-arch: statically-linked-binary usr/lib/foo/binaries-from-other-arch/guile/2.2/fake-guile-object.go
-W: binaries-from-other-arch source: debian-rules-sets-DEB_BUILD_OPTIONS line 3
-W: binaries-from-other-arch: apparently-corrupted-elf-binary usr/bin/elfobject
-W: binaries-from-other-arch: apparently-corrupted-elf-binary usr/lib/foo/binaries-from-other-arch/guile/2.2/fake-guile-object.go
-W: binaries-from-other-arch: binary-without-manpage usr/bin/elfobject
+binaries-from-other-arch (source): debian-rules-sets-DEB_BUILD_OPTIONS line 3
+binaries-from-other-arch (binary): statically-linked-binary usr/lib/foo/binaries-from-other-arch/guile/2.2/fake-guile-object.go
+binaries-from-other-arch (binary): statically-linked-binary usr/bin/elfobject
+binaries-from-other-arch (binary): binary-without-manpage usr/bin/elfobject
+binaries-from-other-arch (binary): binary-from-other-architecture usr/bin/elfobject
+binaries-from-other-arch (binary): apparently-corrupted-elf-binary usr/lib/foo/binaries-from-other-arch/guile/2.2/fake-guile-object.go
+binaries-from-other-arch (binary): apparently-corrupted-elf-binary usr/bin/elfobject

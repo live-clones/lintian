@@ -1,3 +1,2 @@
-E: lintian-overrides: malformed-override Possibly wrong package in override at line 1 (got lintian-override, expected lintian-overrides)
-I: lintian-overrides: unused-override copyright-contains-dh_make-todo-boilerplate foo-bar-extra
-N: 0 tags overridden; 1 unused override
+lintian-overrides (binary): unused-override copyright-contains-dh_make-todo-boilerplate foo-bar-extra
+lintian-overrides (binary): malformed-override Possibly wrong package in override at line 1 (got lintian-override, expected lintian-overrides)

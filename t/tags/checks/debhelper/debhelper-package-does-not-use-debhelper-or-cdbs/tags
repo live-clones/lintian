@@ -1,2 +1,2 @@
-P: debhelper-package-does-not-use-debhelper-or-cdbs source: package-does-not-use-debhelper-or-cdbs
-W: debhelper-package-does-not-use-debhelper-or-cdbs: empty-binary-package
+debhelper-package-does-not-use-debhelper-or-cdbs (source): package-does-not-use-debhelper-or-cdbs
+debhelper-package-does-not-use-debhelper-or-cdbs (binary): empty-binary-package

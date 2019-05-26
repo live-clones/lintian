@@ -6,3 +6,4 @@ Package-Architecture: all
 Options: --pedantic --show-overrides
 Output-Format: fullewi
 Description: Test Lintian's 'fullewi' output format
+Match-Strategy: literal

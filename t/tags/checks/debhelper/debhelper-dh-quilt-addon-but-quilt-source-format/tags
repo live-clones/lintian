@@ -1,1 +1,1 @@
-W: debhelper-dh-quilt-addon-but-quilt-source-format source: dh-quilt-addon-but-quilt-source-format dh ... --with quilt (line 4)
+debhelper-dh-quilt-addon-but-quilt-source-format (source): dh-quilt-addon-but-quilt-source-format dh ... --with quilt (line 4)

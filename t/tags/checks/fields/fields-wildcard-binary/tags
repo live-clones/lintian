@@ -1,1 +1,1 @@
-E: fields-wildcard-binary: arch-wildcard-in-binary-package any-i386
+fields-wildcard-binary (binary): arch-wildcard-in-binary-package any-i386

@@ -1,10 +1,10 @@
-I: libfields-java-java: javalib-but-no-public-jars
-I: libfields-java-java: ored-depends-on-obsolete-package depends: openjdk-6-jre
-W: fields-java source: build-depends-on-an-obsolete-java-package java-compiler
-W: fields-java source: build-depends-on-obsolete-package build-depends: openjdk-6-jdk
-W: fields-java source: build-depends-on-specific-java-doc-package openjdk-6-doc
-W: fields-java source: virtual-package-depends-without-real-package-depends build-depends: java-compiler
-W: libfields-java-java-doc: depends-on-specific-java-doc-package recommends
-W: libfields-java-java: needless-dependency-on-jre
-W: libfields-java-java: needless-suggest-recommend-libservlet-java libservlet2.5-java
-W: libfields-java-java: needless-suggest-recommend-libservlet-java libservlet3.0-java
+fields-java (source): virtual-package-depends-without-real-package-depends build-depends: java-compiler
+fields-java (source): build-depends-on-specific-java-doc-package openjdk-6-doc
+fields-java (source): build-depends-on-obsolete-package build-depends: openjdk-6-jdk
+fields-java (source): build-depends-on-an-obsolete-java-package java-compiler
+libfields-java-java-doc (binary): depends-on-specific-java-doc-package recommends
+libfields-java-java (binary): ored-depends-on-obsolete-package depends: openjdk-6-jre
+libfields-java-java (binary): needless-suggest-recommend-libservlet-java libservlet3.0-java
+libfields-java-java (binary): needless-suggest-recommend-libservlet-java libservlet2.5-java
+libfields-java-java (binary): needless-dependency-on-jre
+libfields-java-java (binary): javalib-but-no-public-jars

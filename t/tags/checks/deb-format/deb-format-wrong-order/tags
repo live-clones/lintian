@@ -1,2 +1,2 @@
-E: deb-format-wrong-order: malformed-deb-archive second (official) member data.tar.gz not control.tar.(gz|xz)
-E: deb-format-wrong-order: malformed-deb-archive third (official) member control.tar.gz not data.tar.((gz|xz|bz2|lzma)
+deb-format-wrong-order (binary): malformed-deb-archive third (official) member control.tar.gz not data.tar.((gz|xz|bz2|lzma)
+deb-format-wrong-order (binary): malformed-deb-archive second (official) member data.tar.gz not control.tar.(gz|xz)

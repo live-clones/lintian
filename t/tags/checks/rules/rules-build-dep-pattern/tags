@@ -1,1 +1,1 @@
-E: rules-build-dep-pattern source: missing-python-build-dependency
+rules-build-dep-pattern (source): missing-python-build-dependency

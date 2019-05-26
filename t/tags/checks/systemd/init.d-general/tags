@@ -1,25 +1,25 @@
-E: init.d-general-bugs: duplicate-updaterc.d-calls-in-postinst init.d-general-bugs
-E: init.d-general-bugs: init.d-script-does-not-implement-required-option etc/init.d/init.d-general-bugs force-reload
-E: init.d-general-bugs: init.d-script-does-not-implement-required-option etc/init.d/init.d-general-bugs restart
-E: init.d-general-bugs: init.d-script-does-not-implement-required-option etc/init.d/init.d-general-bugs start
-E: init.d-general-bugs: init.d-script-does-not-implement-required-option etc/init.d/init.d-general-bugs stop
-E: init.d-general-sourcing-without-test: init.d-script-sourcing-without-test etc/init.d/init.d-general-sourcing-without-test:17 /etc/default/rcS
-E: init.d-general: init.d-script-should-always-start-service etc/default/init.d-general (line 1)
-E: init.d-general: init.d-script-should-always-start-service etc/default/init.d-general (line 10)
-E: init.d-general: init.d-script-should-always-start-service etc/default/init.d-general (line 11)
-E: init.d-general: init.d-script-should-always-start-service etc/default/init.d-general (line 12)
-E: init.d-general: init.d-script-should-always-start-service etc/default/init.d-general (line 13)
-E: init.d-general: init.d-script-should-always-start-service etc/default/init.d-general (line 14)
-E: init.d-general: init.d-script-should-always-start-service etc/default/init.d-general (line 15)
-E: init.d-general: init.d-script-should-always-start-service etc/default/init.d-general (line 16)
-E: init.d-general: init.d-script-should-always-start-service etc/default/init.d-general (line 17)
-E: init.d-general: init.d-script-should-always-start-service etc/default/init.d-general (line 2)
-E: init.d-general: init.d-script-should-always-start-service etc/default/init.d-general (line 3)
-E: init.d-general: init.d-script-should-always-start-service etc/default/init.d-general (line 4)
-E: init.d-general: init.d-script-should-always-start-service etc/default/init.d-general (line 5)
-E: init.d-general: init.d-script-should-always-start-service etc/default/init.d-general (line 6)
-E: init.d-general: init.d-script-should-always-start-service etc/default/init.d-general (line 7)
-E: init.d-general: init.d-script-should-always-start-service etc/default/init.d-general (line 8)
-I: init.d-general-bugs: init.d-script-does-not-implement-status-option etc/init.d/init.d-general-bugs
-W: init.d-general-interpreter-in-usr-dir: init.d-script-does-not-source-init-functions etc/init.d/init.d-general-interpreter-in-usr-dir
-W: init.d-general-interpreter-in-usr-dir: init.d-script-uses-usr-interpreter etc/init.d/init.d-general-interpreter-in-usr-dir /usr/bin/perl
+init.d-general-sourcing-without-test (binary): init.d-script-sourcing-without-test etc/init.d/init.d-general-sourcing-without-test:17 /etc/default/rcS
+init.d-general-interpreter-in-usr-dir (binary): init.d-script-uses-usr-interpreter etc/init.d/init.d-general-interpreter-in-usr-dir /usr/bin/perl
+init.d-general-interpreter-in-usr-dir (binary): init.d-script-does-not-source-init-functions etc/init.d/init.d-general-interpreter-in-usr-dir
+init.d-general-bugs (binary): init.d-script-does-not-implement-status-option etc/init.d/init.d-general-bugs
+init.d-general-bugs (binary): init.d-script-does-not-implement-required-option etc/init.d/init.d-general-bugs stop
+init.d-general-bugs (binary): init.d-script-does-not-implement-required-option etc/init.d/init.d-general-bugs start
+init.d-general-bugs (binary): init.d-script-does-not-implement-required-option etc/init.d/init.d-general-bugs restart
+init.d-general-bugs (binary): init.d-script-does-not-implement-required-option etc/init.d/init.d-general-bugs force-reload
+init.d-general-bugs (binary): duplicate-updaterc.d-calls-in-postinst init.d-general-bugs
+init.d-general (binary): init.d-script-should-always-start-service etc/default/init.d-general (line 8)
+init.d-general (binary): init.d-script-should-always-start-service etc/default/init.d-general (line 7)
+init.d-general (binary): init.d-script-should-always-start-service etc/default/init.d-general (line 6)
+init.d-general (binary): init.d-script-should-always-start-service etc/default/init.d-general (line 5)
+init.d-general (binary): init.d-script-should-always-start-service etc/default/init.d-general (line 4)
+init.d-general (binary): init.d-script-should-always-start-service etc/default/init.d-general (line 3)
+init.d-general (binary): init.d-script-should-always-start-service etc/default/init.d-general (line 2)
+init.d-general (binary): init.d-script-should-always-start-service etc/default/init.d-general (line 17)
+init.d-general (binary): init.d-script-should-always-start-service etc/default/init.d-general (line 16)
+init.d-general (binary): init.d-script-should-always-start-service etc/default/init.d-general (line 15)
+init.d-general (binary): init.d-script-should-always-start-service etc/default/init.d-general (line 14)
+init.d-general (binary): init.d-script-should-always-start-service etc/default/init.d-general (line 13)
+init.d-general (binary): init.d-script-should-always-start-service etc/default/init.d-general (line 12)
+init.d-general (binary): init.d-script-should-always-start-service etc/default/init.d-general (line 11)
+init.d-general (binary): init.d-script-should-always-start-service etc/default/init.d-general (line 10)
+init.d-general (binary): init.d-script-should-always-start-service etc/default/init.d-general (line 1)

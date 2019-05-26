@@ -1,5 +1,5 @@
-W: debhelper-executable-files source: package-file-is-executable debian/changelog
-W: debhelper-executable-files source: package-file-is-executable debian/control
-W: debhelper-executable-files source: package-file-is-executable debian/copyright
-W: debhelper-executable-files source: package-file-is-executable debian/manpages
-W: debhelper-executable-files source: package-uses-deprecated-debhelper-compat-version 8
+debhelper-executable-files (source): package-uses-deprecated-debhelper-compat-version 8
+debhelper-executable-files (source): package-file-is-executable debian/manpages
+debhelper-executable-files (source): package-file-is-executable debian/copyright
+debhelper-executable-files (source): package-file-is-executable debian/control
+debhelper-executable-files (source): package-file-is-executable debian/changelog

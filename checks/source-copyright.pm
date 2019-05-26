@@ -36,8 +36,8 @@ use XML::Simple qw(:strict);
 
 use Lintian::Relation::Version qw(versions_compare);
 use Lintian::Tags qw(tag);
-use Lintian::Util qw(parse_dpkg_control);
 use Lintian::Data;
+use Lintian::Deb822Parser qw(parse_dpkg_control);
 
 my $BAD_SHORT_LICENSES = Lintian::Data->new(
     'source-copyright/bad-short-licenses',

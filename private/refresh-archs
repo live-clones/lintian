@@ -31,7 +31,7 @@ BEGIN {
 
 use lib "$ENV{'LINTIAN_ROOT'}/lib/";
 use Lintian::Command qw(safe_qx);
-use Lintian::Util qw(parse_dpkg_control);
+use Lintian::Deb822Parser qw(parse_dpkg_control);
 
 my $datapath = shift;
 my %hardening = (

@@ -5,7 +5,9 @@ before_script:
 
 .test_template: &test
   script:
-    - t/bin/runtests
+    - frontend/lintian --version
+    - time t/bin/build-test-packages
+    - time t/bin/runtests
 
 unstable:
   <<: *test
@@ -18,7 +20,3 @@ testing:
 stable-bpo:
   <<: *test
   image: debian:stable-backports
-
-ubuntu-devel:
-  <<: *test
-  image: ubuntu:devel

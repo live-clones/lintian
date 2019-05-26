@@ -1,2 +1,2 @@
-E: libpublic-dev: multiarch-foreign-shared-library
-I: libpublic1: symbols-file-missing-build-depends-package-field
+libpublic1 (binary): symbols-file-missing-build-depends-package-field
+libpublic-dev (binary): multiarch-foreign-shared-library

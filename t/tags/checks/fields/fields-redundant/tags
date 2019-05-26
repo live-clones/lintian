@@ -1,3 +1,3 @@
-W: fields-redundant source: redundant-origin-field
-W: fields-redundant: redundant-bugs-field
-W: fields-redundant: redundant-origin-field
+fields-redundant (source): redundant-origin-field
+fields-redundant (binary): redundant-origin-field
+fields-redundant (binary): redundant-bugs-field

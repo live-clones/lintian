@@ -1,2 +1,2 @@
-W: cruft-source-is-missing-unrel: empty-binary-package
-X: cruft-source-is-missing-unrel: package-contains-no-arch-dependent-files
+cruft-source-is-missing-unrel (binary): package-contains-no-arch-dependent-files
+cruft-source-is-missing-unrel (binary): empty-binary-package

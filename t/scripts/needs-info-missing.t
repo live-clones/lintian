@@ -23,7 +23,7 @@ use autodie;
 use Test::More;
 use Path::Tiny;
 
-use Lintian::Util qw(read_dpkg_control);
+use Lintian::Deb822Parser qw(read_dpkg_control);
 
 $ENV{'LINTIAN_TEST_ROOT'} //= '.';
 

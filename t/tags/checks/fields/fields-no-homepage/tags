@@ -1,2 +1,2 @@
-P: fields-no-homepage source: no-homepage-field
-X: fields-no-homepage source: debian-watch-does-not-check-gpg-signature
+fields-no-homepage (source): no-homepage-field
+fields-no-homepage (source): debian-watch-does-not-check-gpg-signature

@@ -1,2 +1,2 @@
-I: libexecbit1: symbols-file-missing-build-depends-package-field
-X: libexecbit1: shlib-calls-exit usr/lib/libexecbit.so.1.0.1
+libexecbit1 (binary): symbols-file-missing-build-depends-package-field
+libexecbit1 (binary): shlib-calls-exit usr/lib/libexecbit.so.1.0.1

@@ -1,44 +1,44 @@
-E: pkgconfig-all: pkg-config-bad-directive usr/lib/pkgconfig/indep-really-bad.pc --param=ssp-buffer-size=2
-E: pkgconfig-all: pkg-config-bad-directive usr/lib/pkgconfig/indep-really-bad.pc -DNDEBUG
-E: pkgconfig-all: pkg-config-bad-directive usr/lib/pkgconfig/indep-really-bad.pc -DNEW_STDCPP
-E: pkgconfig-all: pkg-config-bad-directive usr/lib/pkgconfig/indep-really-bad.pc -D_FORTIFY_SOURCE=2
-E: pkgconfig-all: pkg-config-bad-directive usr/lib/pkgconfig/indep-really-bad.pc -D__OSVERSION__=2
-E: pkgconfig-all: pkg-config-bad-directive usr/lib/pkgconfig/indep-really-bad.pc -D__linux__
-E: pkgconfig-all: pkg-config-bad-directive usr/lib/pkgconfig/indep-really-bad.pc -D__x86_64__
-E: pkgconfig-all: pkg-config-bad-directive usr/lib/pkgconfig/indep-really-bad.pc -I/usr/local/somewhere
-E: pkgconfig-all: pkg-config-bad-directive usr/lib/pkgconfig/indep-really-bad.pc -I/var/cache/pbuilder/build/
-E: pkgconfig-all: pkg-config-bad-directive usr/lib/pkgconfig/indep-really-bad.pc -O2
-E: pkgconfig-all: pkg-config-bad-directive usr/lib/pkgconfig/indep-really-bad.pc -Wl,z,relro
-E: pkgconfig-all: pkg-config-bad-directive usr/lib/pkgconfig/indep-really-bad.pc -fPIE
-E: pkgconfig-all: pkg-config-bad-directive usr/lib/pkgconfig/indep-really-bad.pc -fassociative-math
-E: pkgconfig-all: pkg-config-bad-directive usr/lib/pkgconfig/indep-really-bad.pc -fexcess-precision=standard
-E: pkgconfig-all: pkg-config-bad-directive usr/lib/pkgconfig/indep-really-bad.pc -ffinite-math-only
-E: pkgconfig-all: pkg-config-bad-directive usr/lib/pkgconfig/indep-really-bad.pc -ffp-contract
-E: pkgconfig-all: pkg-config-bad-directive usr/lib/pkgconfig/indep-really-bad.pc -fno-check-new
-E: pkgconfig-all: pkg-config-bad-directive usr/lib/pkgconfig/indep-really-bad.pc -fno-inline
-E: pkgconfig-all: pkg-config-bad-directive usr/lib/pkgconfig/indep-really-bad.pc -fno-strict-aliasing
-E: pkgconfig-all: pkg-config-bad-directive usr/lib/pkgconfig/indep-really-bad.pc -fsigned-zeros
-E: pkgconfig-all: pkg-config-bad-directive usr/lib/pkgconfig/indep-really-bad.pc -fstack-protector
-E: pkgconfig-all: pkg-config-bad-directive usr/lib/pkgconfig/indep-really-bad.pc -funsafe-math-optimizations
-E: pkgconfig-all: pkg-config-bad-directive usr/lib/pkgconfig/indep-really-bad.pc -fvisibility=hidden
-E: pkgconfig-all: pkg-config-bad-directive usr/lib/pkgconfig/indep-really-bad.pc -fwrapv
-E: pkgconfig-all: pkg-config-bad-directive usr/lib/pkgconfig/indep-really-bad.pc -g
-E: pkgconfig-all: pkg-config-bad-directive usr/lib/pkgconfig/indep-really-bad.pc -march=core2
-E: pkgconfig-all: pkg-config-bad-directive usr/lib/pkgconfig/indep-really-bad.pc -pedantic
-E: pkgconfig-all: pkg-config-bad-directive usr/lib/pkgconfig/indep-really-bad.pc -pie
-E: pkgconfig-all: pkg-config-bad-directive usr/lib/pkgconfig/indep-really-bad.pc @SOME_FLAGS@
-E: pkgconfig-all: pkg-config-bad-directive usr/lib/pkgconfig/indep-really-bad.pc Cflags: -I/usr/local/somewhere -D__linux__ -D__x86_64__ -D__OSVERSION__=2 -g -D_FORTIFY_SOURCE=2 -O2 -Wall -fvisibility=hidden -fPIE -fstack-protector --param=ssp-buffer-size=2 -frounding-math -lmath
-E: pkgconfig-all: pkg-config-multi-arch-wrong-dir usr/lib/pkgconfig/indep-include-arch-1.pc full text contains architecture specific dir ARCH
-E: pkgconfig-all: pkg-config-multi-arch-wrong-dir usr/lib/pkgconfig/indep-include-arch-2.pc full text contains architecture specific dir ARCH
-E: pkgconfig-all: pkg-config-multi-arch-wrong-dir usr/lib/pkgconfig/indep-include-arch-3.pc full text contains architecture specific dir ARCH
-E: pkgconfig-any: multiarch-foreign-pkgconfig usr/lib/ARCH/pkgconfig/arch-cross.pc
-E: pkgconfig-any: multiarch-foreign-pkgconfig usr/lib/ARCH/pkgconfig/arch-good.pc
-E: pkgconfig-any: multiarch-foreign-pkgconfig usr/lib/ARCH/pkgconfig/arch-include-arch.pc
-E: pkgconfig-any: pkg-config-multi-arch-wrong-dir usr/lib/ARCH/pkgconfig/arch-cross.pc full text contains architecture specific dir ARCH
-W: pkgconfig-all: pkg-config-unavailable-for-cross-compilation usr/lib/pkgconfig/indep-good.pc
-W: pkgconfig-all: pkg-config-unavailable-for-cross-compilation usr/lib/pkgconfig/indep-include-arch-1.pc
-W: pkgconfig-all: pkg-config-unavailable-for-cross-compilation usr/lib/pkgconfig/indep-include-arch-2.pc
-W: pkgconfig-all: pkg-config-unavailable-for-cross-compilation usr/lib/pkgconfig/indep-include-arch-3.pc
-W: pkgconfig-all: pkg-config-unavailable-for-cross-compilation usr/lib/pkgconfig/indep-really-bad.pc
-W: pkgconfig-any: pkg-config-references-unknown-shared-library usr/lib/ARCH/pkgconfig/arch-include-arch.pc -ldoesnotexist (line 5)
-W: pkgconfig-any: pkg-config-references-unknown-shared-library usr/lib/ARCH/pkgconfig/arch-include-arch.pc -lotherdoesnotexist (line 5)
+pkgconfig-any (binary): pkg-config-references-unknown-shared-library usr/lib/ARCH/pkgconfig/arch-include-arch.pc -lotherdoesnotexist (line 5)
+pkgconfig-any (binary): pkg-config-references-unknown-shared-library usr/lib/ARCH/pkgconfig/arch-include-arch.pc -ldoesnotexist (line 5)
+pkgconfig-any (binary): pkg-config-multi-arch-wrong-dir usr/lib/ARCH/pkgconfig/arch-cross.pc full text contains architecture specific dir ARCH
+pkgconfig-any (binary): multiarch-foreign-pkgconfig usr/lib/ARCH/pkgconfig/arch-include-arch.pc
+pkgconfig-any (binary): multiarch-foreign-pkgconfig usr/lib/ARCH/pkgconfig/arch-good.pc
+pkgconfig-any (binary): multiarch-foreign-pkgconfig usr/lib/ARCH/pkgconfig/arch-cross.pc
+pkgconfig-all (binary): pkg-config-unavailable-for-cross-compilation usr/lib/pkgconfig/indep-really-bad.pc
+pkgconfig-all (binary): pkg-config-unavailable-for-cross-compilation usr/lib/pkgconfig/indep-include-arch-3.pc
+pkgconfig-all (binary): pkg-config-unavailable-for-cross-compilation usr/lib/pkgconfig/indep-include-arch-2.pc
+pkgconfig-all (binary): pkg-config-unavailable-for-cross-compilation usr/lib/pkgconfig/indep-include-arch-1.pc
+pkgconfig-all (binary): pkg-config-unavailable-for-cross-compilation usr/lib/pkgconfig/indep-good.pc
+pkgconfig-all (binary): pkg-config-multi-arch-wrong-dir usr/lib/pkgconfig/indep-include-arch-3.pc full text contains architecture specific dir ARCH
+pkgconfig-all (binary): pkg-config-multi-arch-wrong-dir usr/lib/pkgconfig/indep-include-arch-2.pc full text contains architecture specific dir ARCH
+pkgconfig-all (binary): pkg-config-multi-arch-wrong-dir usr/lib/pkgconfig/indep-include-arch-1.pc full text contains architecture specific dir ARCH
+pkgconfig-all (binary): pkg-config-bad-directive usr/lib/pkgconfig/indep-really-bad.pc Cflags: -I/usr/local/somewhere -D__linux__ -D__x86_64__ -D__OSVERSION__=2 -g -D_FORTIFY_SOURCE=2 -O2 -Wall -fvisibility=hidden -fPIE -fstack-protector --param=ssp-buffer-size=2 -frounding-math -lmath
+pkgconfig-all (binary): pkg-config-bad-directive usr/lib/pkgconfig/indep-really-bad.pc @SOME_FLAGS@
+pkgconfig-all (binary): pkg-config-bad-directive usr/lib/pkgconfig/indep-really-bad.pc -pie
+pkgconfig-all (binary): pkg-config-bad-directive usr/lib/pkgconfig/indep-really-bad.pc -pedantic
+pkgconfig-all (binary): pkg-config-bad-directive usr/lib/pkgconfig/indep-really-bad.pc -march=core2
+pkgconfig-all (binary): pkg-config-bad-directive usr/lib/pkgconfig/indep-really-bad.pc -g
+pkgconfig-all (binary): pkg-config-bad-directive usr/lib/pkgconfig/indep-really-bad.pc -fwrapv
+pkgconfig-all (binary): pkg-config-bad-directive usr/lib/pkgconfig/indep-really-bad.pc -fvisibility=hidden
+pkgconfig-all (binary): pkg-config-bad-directive usr/lib/pkgconfig/indep-really-bad.pc -funsafe-math-optimizations
+pkgconfig-all (binary): pkg-config-bad-directive usr/lib/pkgconfig/indep-really-bad.pc -fstack-protector
+pkgconfig-all (binary): pkg-config-bad-directive usr/lib/pkgconfig/indep-really-bad.pc -fsigned-zeros
+pkgconfig-all (binary): pkg-config-bad-directive usr/lib/pkgconfig/indep-really-bad.pc -fno-strict-aliasing
+pkgconfig-all (binary): pkg-config-bad-directive usr/lib/pkgconfig/indep-really-bad.pc -fno-inline
+pkgconfig-all (binary): pkg-config-bad-directive usr/lib/pkgconfig/indep-really-bad.pc -fno-check-new
+pkgconfig-all (binary): pkg-config-bad-directive usr/lib/pkgconfig/indep-really-bad.pc -ffp-contract
+pkgconfig-all (binary): pkg-config-bad-directive usr/lib/pkgconfig/indep-really-bad.pc -ffinite-math-only
+pkgconfig-all (binary): pkg-config-bad-directive usr/lib/pkgconfig/indep-really-bad.pc -fexcess-precision=standard
+pkgconfig-all (binary): pkg-config-bad-directive usr/lib/pkgconfig/indep-really-bad.pc -fassociative-math
+pkgconfig-all (binary): pkg-config-bad-directive usr/lib/pkgconfig/indep-really-bad.pc -fPIE
+pkgconfig-all (binary): pkg-config-bad-directive usr/lib/pkgconfig/indep-really-bad.pc -Wl,z,relro
+pkgconfig-all (binary): pkg-config-bad-directive usr/lib/pkgconfig/indep-really-bad.pc -O2
+pkgconfig-all (binary): pkg-config-bad-directive usr/lib/pkgconfig/indep-really-bad.pc -I/var/cache/pbuilder/build/
+pkgconfig-all (binary): pkg-config-bad-directive usr/lib/pkgconfig/indep-really-bad.pc -I/usr/local/somewhere
+pkgconfig-all (binary): pkg-config-bad-directive usr/lib/pkgconfig/indep-really-bad.pc -D__x86_64__
+pkgconfig-all (binary): pkg-config-bad-directive usr/lib/pkgconfig/indep-really-bad.pc -D__linux__
+pkgconfig-all (binary): pkg-config-bad-directive usr/lib/pkgconfig/indep-really-bad.pc -D__OSVERSION__=2
+pkgconfig-all (binary): pkg-config-bad-directive usr/lib/pkgconfig/indep-really-bad.pc -D_FORTIFY_SOURCE=2
+pkgconfig-all (binary): pkg-config-bad-directive usr/lib/pkgconfig/indep-really-bad.pc -DNEW_STDCPP
+pkgconfig-all (binary): pkg-config-bad-directive usr/lib/pkgconfig/indep-really-bad.pc -DNDEBUG
+pkgconfig-all (binary): pkg-config-bad-directive usr/lib/pkgconfig/indep-really-bad.pc --param=ssp-buffer-size=2

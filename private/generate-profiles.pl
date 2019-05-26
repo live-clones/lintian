@@ -21,7 +21,8 @@ BEGIN {
 }
 
 use lib "$ENV{LINTIAN_ROOT}/lib";
-use Lintian::Util qw(internal_error read_dpkg_control strip);
+use Lintian::Deb822Parser qw(read_dpkg_control);
+use Lintian::Util qw(internal_error strip);
 
 my $root = $ENV{LINTIAN_ROOT};
 my @dirs = ('profiles/debian');

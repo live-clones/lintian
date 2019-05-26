@@ -1,2 +1,3 @@
-C: debhelper-compat-virtual-relation source: debhelper-compat-virtual-relation 11
-C: debhelper-compat-virtual-relation source: debian-build-system dh
+debhelper-compat-virtual-relation (source): debian-build-system dh
+debhelper-compat-virtual-relation (source): debhelper-compat-virtual-relation 11
+debhelper-compat-virtual-relation (source): debhelper-compat-level 11

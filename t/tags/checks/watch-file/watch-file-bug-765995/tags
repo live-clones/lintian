@@ -1,2 +1,2 @@
-I: watch-file-bug-765995 source: public-upstream-key-unusable upstream/signing-key.asc cannot be processed
-W: watch-file-bug-765995 source: orig-tarball-missing-upstream-signature watch-file-bug-765995_2.0.orig.tar.gz
+watch-file-bug-765995 (source): public-upstream-key-unusable upstream/signing-key.asc cannot be processed
+watch-file-bug-765995 (source): orig-tarball-missing-upstream-signature watch-file-bug-765995_2.0.orig.tar.gz

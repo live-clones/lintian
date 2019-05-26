@@ -1,15 +1,15 @@
-E: scripts-control-interpreters-forbidden: control-interpreter-without-depends control/postinst #!/usr/bin/python
-E: scripts-control-interpreters-forbidden: forbidden-config-interpreter #!/usr/bin/python
-E: scripts-control-interpreters-forbidden: forbidden-postrm-interpreter #!/usr/bin/python
-E: scripts-control-interpreters-paths: control-interpreter-in-usr-local control/preinst #!/usr/local/bin/bash
-E: scripts-control-interpreters-paths: control-interpreter-without-depends control/prerm #!/bin/python
-E: scripts-control-interpreters-paths: wrong-path-for-interpreter #!/bin/python != /usr/bin/python (control/prerm)
-E: scripts-control-interpreters-paths: wrong-path-for-interpreter #!/usr/bin/bash != /bin/bash (control/postinst)
-E: scripts-control-interpreters-python: preinst-interpreter-without-predepends #!/usr/bin/python
-E: scripts-control-interpreters-unknown: unknown-control-interpreter control/postinst #!/usr/bin/unknown
-W: scripts-control-interpreters-forbidden: unusual-control-interpreter control/postinst #!/usr/bin/python
-W: scripts-control-interpreters-paths: unusual-control-interpreter control/prerm #!/bin/python
-W: scripts-control-interpreters-prepython: unusual-control-interpreter control/postinst #!/usr/bin/python
-W: scripts-control-interpreters-prepython: unusual-control-interpreter control/preinst #!/usr/bin/python
-W: scripts-control-interpreters-python: unusual-control-interpreter control/postinst #!/usr/bin/python
-W: scripts-control-interpreters-python: unusual-control-interpreter control/preinst #!/usr/bin/python
+scripts-control-interpreters-unknown (binary): unknown-control-interpreter control/postinst #!/usr/bin/unknown
+scripts-control-interpreters-python (binary): unusual-control-interpreter control/preinst #!/usr/bin/python
+scripts-control-interpreters-python (binary): unusual-control-interpreter control/postinst #!/usr/bin/python
+scripts-control-interpreters-python (binary): preinst-interpreter-without-predepends #!/usr/bin/python
+scripts-control-interpreters-prepython (binary): unusual-control-interpreter control/preinst #!/usr/bin/python
+scripts-control-interpreters-prepython (binary): unusual-control-interpreter control/postinst #!/usr/bin/python
+scripts-control-interpreters-paths (binary): wrong-path-for-interpreter #!/usr/bin/bash != /bin/bash (control/postinst)
+scripts-control-interpreters-paths (binary): wrong-path-for-interpreter #!/bin/python != /usr/bin/python (control/prerm)
+scripts-control-interpreters-paths (binary): unusual-control-interpreter control/prerm #!/bin/python
+scripts-control-interpreters-paths (binary): control-interpreter-without-depends control/prerm #!/bin/python
+scripts-control-interpreters-paths (binary): control-interpreter-in-usr-local control/preinst #!/usr/local/bin/bash
+scripts-control-interpreters-forbidden (binary): unusual-control-interpreter control/postinst #!/usr/bin/python
+scripts-control-interpreters-forbidden (binary): forbidden-postrm-interpreter #!/usr/bin/python
+scripts-control-interpreters-forbidden (binary): forbidden-config-interpreter #!/usr/bin/python
+scripts-control-interpreters-forbidden (binary): control-interpreter-without-depends control/postinst #!/usr/bin/python

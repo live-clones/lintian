@@ -388,6 +388,11 @@ Certainty: certain
 Info: This package is using the <tt>debhelper-compat</tt> virtual
  package as a build-dependency.
 
+Tag: debhelper-compat-level
+Severity: classification
+Certainty: certain
+Info: This is the debhelper compat level used specified by this package.
+
 Tag: typo-in-debhelper-override-target
 Severity: normal
 Certainty: possible
@@ -397,8 +402,8 @@ Info: The listed target in debian/rules command is a likely misspelling.
  silently not being executed by <tt>make</tt>.
  .
  Implementation detail: The typo is detected by using "Levenshtein
- edit distance". Therefore, if the typo involve several characters,
- Lintian may not detect it.
+ edit distance" so if the typo involve several characters Lintian may
+ not detect it.
 
 Tag: maintscript-includes-maint-script-parameters
 Severity: normal
@@ -518,3 +523,16 @@ Info: This source package appears to use <tt>dh_runit(1)</tt> but the
  .
  Please add the corresponding <tt>Breaks</tt> relation.
 Refs: dh_runit(1)
+
+Tag: pkg-js-tools-test-is-missing
+Severity: normal
+Certainty: certain
+Info: The <tt>debian/rules</tt> file for this package uses <tt>--with
+ nodejs</tt> which attempts to execute <tt>debian/tests/pkg-js/test</tt>
+ when running autopkgtests.
+ .
+ When this file is missing, only a simple <tt>node require(".")</tt> is
+ launched which may be insufficient to really test this nodejs module.
+ .
+ Please specify the upstream testsuite (or a custom one) in
+ <tt>debian/tests/pkg-js/test</tt>.

@@ -4,3 +4,5 @@ Sequence: 1500
 Version: 1.0
 Description: Test no-override option
 Options: --no-override
+Match-Strategy: literal
+Output-Format: EWI

@@ -51,7 +51,7 @@ use Carp;
 use List::MoreUtils qw(any);
 use Path::Tiny;
 
-use Lintian::Util qw(read_dpkg_control);
+use Lintian::Deb822Parser qw(read_dpkg_control);
 
 use constant NEWLINE => qq{\n};
 use constant SPACE => q{ };
@@ -113,6 +113,7 @@ sub write_config {
     my $desc = path($path);
     $desc->remove;
 
+    my @lines;
     foreach my $key (sort keys %{$testcase}) {
 
         next unless defined $testcase->{$key};
@@ -126,15 +127,15 @@ sub write_config {
             scalar @elements > 1 && any { $_ eq $label }
             ('Test-For', 'Test-Against')
         ) {
-            $desc->append_utf8("$label: $testcase->{$key}" . NEWLINE);
+            push(@lines, "$label: $testcase->{$key}" . NEWLINE);
             next;
         }
 
-        $desc->append_utf8("$label:" . NEWLINE);
-        foreach my $element (@elements) {
-            $desc->append_utf8(SPACE . $element . NEWLINE);
-        }
+        push(@lines, "$label:" . NEWLINE);
+        push(@lines, SPACE . $_ . NEWLINE)for @elements;
     }
+
+    $desc->append_utf8(@lines);
 
     return;
 }

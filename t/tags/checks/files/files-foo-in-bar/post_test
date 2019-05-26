@@ -1,2 +1,2 @@
 # Ignore all duplicate-files tags
-/.: .*: duplicate-files .*/ d
+/[^ ]* \([^)]*\): duplicate-files .*/ d

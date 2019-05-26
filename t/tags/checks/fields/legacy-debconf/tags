@@ -1,78 +1,78 @@
-E: debconf source: declares-possibly-conflicting-debhelper-compat-versions rules=5 compat=5
-E: debconf source: untranslatable-debconf-templates debconf-test.templates: 47
-E: debconf source: untranslatable-debconf-templates debconf-test.templates: 58
-E: debconf-test-noscripts: copyright-contains-dh_make-todo-boilerplate
-E: debconf-test-noscripts: no-debconf-config
-E: debconf-test-postinst: copyright-contains-dh_make-todo-boilerplate
-E: debconf-test-postinst: no-debconf-config
-E: debconf-test-preinst: copyright-contains-dh_make-todo-boilerplate
-E: debconf-test: copyright-contains-dh_make-todo-boilerplate
-E: debconf-test: extended-description-is-empty
-E: debconf-test: mismatch-translated-choices debconf/testmulti-escape choices-de.utf-8
-E: debconf-test: no-template-description debconf/no-description
-E: debconf-test: no-template-type debconf/language
-E: debconf-test: unknown-debconf-priority config:10 LOW
-E: debconf-test: unknown-debconf-priority config:11 normal
-E: debconf-udeb udeb: udeb-postinst-must-not-call-ldconfig
-I: debconf source: debian-pycompat-is-obsolete
-I: debconf source: debian-pyversions-is-obsolete
-I: debconf source: no-complete-debconf-translation
-I: debconf-test-noscripts: unused-debconf-template debconf/test
-I: debconf-test: unused-debconf-template debconf/1st-person
-I: debconf-test: unused-debconf-template debconf/error
-I: debconf-test: unused-debconf-template debconf/internal
-I: debconf-test: unused-debconf-template debconf/language
-I: debconf-test: unused-debconf-template debconf/no-description
-I: debconf-test: unused-debconf-template debconf/should-be-boolean
-I: debconf-test: unused-debconf-template debconf/should-be-no-longer-a-problem
-I: debconf-test: unused-debconf-template debconf/testboolean
-I: debconf-test: unused-debconf-template debconf/testmulti
-I: debconf-test: unused-debconf-template debconf/testmulti-escape
-I: debconf-test: unused-debconf-template debconf/testnote
-I: debconf-test: unused-debconf-template debconf/teststring
-I: debconf-test: unused-debconf-template debconf/translate
-W: debconf source: ancient-standards-version 3.7.2 (released 2006-05-03) (current is CURRENT)
-W: debconf source: build-depends-on-obsolete-package build-depends: dpatch
-W: debconf source: debian-rules-calls-debhelper-in-odd-order dh_makeshlibs (line 56)
-W: debconf source: debian-rules-calls-debhelper-in-odd-order dh_makeshlibs (line 60)
-W: debconf source: debian-rules-sets-DH_COMPAT line 3
-W: debconf source: dh-clean-k-is-deprecated
-W: debconf source: dpatch-build-dep-but-no-patch-list
-W: debconf source: invalid-po-file debian/po/fr.po
-W: debconf source: invalid-po-file debian/po/sample-file.po
-W: debconf source: maintainer-script-lacks-debhelper-token debian/debconf-test.postinst
-W: debconf source: misnamed-po-file debian/po/lang.po
-W: debconf source: misnamed-po-file debian/po/sample-file.po
-W: debconf source: newer-debconf-templates
-W: debconf source: package-uses-deprecated-debhelper-compat-version 5
-W: debconf source: patch-system-but-no-source-readme
-W: debconf source: stray-translated-debconf-templates debconf-test.templates.de
-W: debconf source: template-uses-unsplit-choices debconf-test - debconf/testmulti-escape
-W: debconf source: translated-default-field debconf-test.templates: 67
-W: debconf source: translated-default-field debconf-test.templates: 72
-W: debconf source: unknown-encoding-in-po-file debian/po/fr.po
-W: debconf-test-noscripts: old-fsf-address-in-copyright-file
-W: debconf-test-noscripts: postrm-does-not-purge-debconf
-W: debconf-test-postinst: old-fsf-address-in-copyright-file
-W: debconf-test-postinst: possible-debconf-note-abuse postinst:6 debconf/test
-W: debconf-test-postinst: postinst-uses-db-input
-W: debconf-test-preinst: loads-obsolete-confmodule preinst:5 /usr/share/debconf/confmodule.sh
-W: debconf-test-preinst: missing-debconf-dependency-for-preinst
-W: debconf-test-preinst: old-fsf-address-in-copyright-file
-W: debconf-test-preinst: possible-debconf-note-abuse preinst:9 debconf/test
-W: debconf-test: making-assumptions-about-interfaces-in-templates debconf/testboolean
-W: debconf-test: malformed-prompt-in-templates debconf/teststring
-W: debconf-test: malformed-question-in-templates debconf/should-be-no-longer-a-problem
-W: debconf-test: malformed-question-in-templates debconf/testboolean
-W: debconf-test: malformed-title-in-templates debconf/testnote
-W: debconf-test: old-fsf-address-in-copyright-file
-W: debconf-test: possible-debconf-note-abuse config:19 debconf/test
-W: debconf-test: possible-debconf-note-abuse postinst:8 debconf/test
-W: debconf-test: select-with-boolean-choices debconf/should-be-boolean
-W: debconf-test: too-long-extended-description-in-templates debconf/teststring
-W: debconf-test: too-long-short-description-in-templates debconf/testnote
-W: debconf-test: using-first-person-in-templates debconf/1st-person
-W: debconf-test: using-imperative-form-in-templates debconf/1st-person
-W: debconf-test: using-imperative-form-in-templates debconf/should-be-boolean
-W: debconf-test: using-question-in-extended-description-in-templates debconf/testboolean
-W: debconf-udeb udeb: missing-debconf-dependency
+debconf-udeb (udeb): udeb-postinst-must-not-call-ldconfig
+debconf-udeb (udeb): missing-debconf-dependency
+debconf (source): untranslatable-debconf-templates debconf-test.templates: 58
+debconf (source): untranslatable-debconf-templates debconf-test.templates: 47
+debconf (source): unknown-encoding-in-po-file debian/po/fr.po
+debconf (source): translated-default-field debconf-test.templates: 72
+debconf (source): translated-default-field debconf-test.templates: 67
+debconf (source): template-uses-unsplit-choices debconf-test - debconf/testmulti-escape
+debconf (source): stray-translated-debconf-templates debconf-test.templates.de
+debconf (source): patch-system-but-no-source-readme
+debconf (source): package-uses-deprecated-debhelper-compat-version 5
+debconf (source): no-complete-debconf-translation
+debconf (source): newer-debconf-templates
+debconf (source): misnamed-po-file debian/po/sample-file.po
+debconf (source): misnamed-po-file debian/po/lang.po
+debconf (source): maintainer-script-lacks-debhelper-token debian/debconf-test.postinst
+debconf (source): invalid-po-file debian/po/sample-file.po
+debconf (source): invalid-po-file debian/po/fr.po
+debconf (source): dpatch-build-dep-but-no-patch-list
+debconf (source): dh-clean-k-is-deprecated
+debconf (source): declares-possibly-conflicting-debhelper-compat-versions rules=5 compat=5
+debconf (source): debian-rules-sets-DH_COMPAT line 3
+debconf (source): debian-rules-calls-debhelper-in-odd-order dh_makeshlibs (line 60)
+debconf (source): debian-rules-calls-debhelper-in-odd-order dh_makeshlibs (line 56)
+debconf (source): debian-pyversions-is-obsolete
+debconf (source): debian-pycompat-is-obsolete
+debconf (source): build-depends-on-obsolete-package build-depends: dpatch
+debconf (source): ancient-standards-version 3.7.2 (released 2006-05-03) (current is CURRENT)
+debconf-test-preinst (binary): possible-debconf-note-abuse preinst:9 debconf/test
+debconf-test-preinst (binary): old-fsf-address-in-copyright-file
+debconf-test-preinst (binary): missing-debconf-dependency-for-preinst
+debconf-test-preinst (binary): loads-obsolete-confmodule preinst:5 /usr/share/debconf/confmodule.sh
+debconf-test-preinst (binary): copyright-contains-dh_make-todo-boilerplate
+debconf-test-postinst (binary): postinst-uses-db-input
+debconf-test-postinst (binary): possible-debconf-note-abuse postinst:6 debconf/test
+debconf-test-postinst (binary): old-fsf-address-in-copyright-file
+debconf-test-postinst (binary): no-debconf-config
+debconf-test-postinst (binary): copyright-contains-dh_make-todo-boilerplate
+debconf-test-noscripts (binary): unused-debconf-template debconf/test
+debconf-test-noscripts (binary): postrm-does-not-purge-debconf
+debconf-test-noscripts (binary): old-fsf-address-in-copyright-file
+debconf-test-noscripts (binary): no-debconf-config
+debconf-test-noscripts (binary): copyright-contains-dh_make-todo-boilerplate
+debconf-test (binary): using-question-in-extended-description-in-templates debconf/testboolean
+debconf-test (binary): using-imperative-form-in-templates debconf/should-be-boolean
+debconf-test (binary): using-imperative-form-in-templates debconf/1st-person
+debconf-test (binary): using-first-person-in-templates debconf/1st-person
+debconf-test (binary): unused-debconf-template debconf/translate
+debconf-test (binary): unused-debconf-template debconf/teststring
+debconf-test (binary): unused-debconf-template debconf/testnote
+debconf-test (binary): unused-debconf-template debconf/testmulti-escape
+debconf-test (binary): unused-debconf-template debconf/testmulti
+debconf-test (binary): unused-debconf-template debconf/testboolean
+debconf-test (binary): unused-debconf-template debconf/should-be-no-longer-a-problem
+debconf-test (binary): unused-debconf-template debconf/should-be-boolean
+debconf-test (binary): unused-debconf-template debconf/no-description
+debconf-test (binary): unused-debconf-template debconf/language
+debconf-test (binary): unused-debconf-template debconf/internal
+debconf-test (binary): unused-debconf-template debconf/error
+debconf-test (binary): unused-debconf-template debconf/1st-person
+debconf-test (binary): unknown-debconf-priority config:11 normal
+debconf-test (binary): unknown-debconf-priority config:10 LOW
+debconf-test (binary): too-long-short-description-in-templates debconf/testnote
+debconf-test (binary): too-long-extended-description-in-templates debconf/teststring
+debconf-test (binary): select-with-boolean-choices debconf/should-be-boolean
+debconf-test (binary): possible-debconf-note-abuse postinst:8 debconf/test
+debconf-test (binary): possible-debconf-note-abuse config:19 debconf/test
+debconf-test (binary): old-fsf-address-in-copyright-file
+debconf-test (binary): no-template-type debconf/language
+debconf-test (binary): no-template-description debconf/no-description
+debconf-test (binary): mismatch-translated-choices debconf/testmulti-escape choices-de.utf-8
+debconf-test (binary): malformed-title-in-templates debconf/testnote
+debconf-test (binary): malformed-question-in-templates debconf/testboolean
+debconf-test (binary): malformed-question-in-templates debconf/should-be-no-longer-a-problem
+debconf-test (binary): malformed-prompt-in-templates debconf/teststring
+debconf-test (binary): making-assumptions-about-interfaces-in-templates debconf/testboolean
+debconf-test (binary): extended-description-is-empty
+debconf-test (binary): copyright-contains-dh_make-todo-boilerplate

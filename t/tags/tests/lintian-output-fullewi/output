@@ -1,0 +1,19 @@
+P: lintian-output-fullewi source (1.0+dsfg-1.1) [source]: debian-control-has-unusual-field-spacing line 12
+I: lintian-output-fullewi source (1.0+dsfg-1.1) [source]: binary-control-field-duplicates-source field "section" in package lintian-output-fullewi
+P: lintian-output-fullewi source (1.0+dsfg-1.1) [source]: package-uses-deprecated-source-override-location
+W: lintian-output-fullewi source (1.0+dsfg-1.1) [source]: dfsg-version-misspelled 1.0+dsfg-1.1
+P: lintian-output-fullewi source (1.0+dsfg-1.1) [source]: no-homepage-field
+W: lintian-output-fullewi source (1.0+dsfg-1.1) [source]: maintainer-upload-has-incorrect-version-number 1.0+dsfg-1.1
+P: lintian-output-fullewi source (1.0+dsfg-1.1) [source]: direct-changes-in-diff-but-no-patch-system Changes
+X: lintian-output-fullewi source (1.0+dsfg-1.1) [source]: debian-watch-does-not-check-gpg-signature
+E: lintian-output-fullewi binary (1.0+dsfg-1.1) [all]: possible-gpl-code-linked-with-openssl
+I: lintian-output-fullewi binary (1.0+dsfg-1.1) [all]: description-synopsis-might-not-be-phrased-properly "Test Lintian's 'fullewi' output format."
+I: lintian-output-fullewi binary (1.0+dsfg-1.1) [all]: description-possibly-contains-homepage http://www.example.com/.
+E: lintian-output-fullewi binary (1.0+dsfg-1.1) [all]: new-essential-package
+E: lintian-output-fullewi binary (1.0+dsfg-1.1) [all]: dir-in-usr-local usr/local/share/
+E: lintian-output-fullewi binary (1.0+dsfg-1.1) [all]: dir-in-usr-local usr/local/share/lintian/
+E: lintian-output-fullewi binary (1.0+dsfg-1.1) [all]: dir-or-file-in-var-lock var/lock/lintian/
+I: lintian-output-fullewi binary (1.0+dsfg-1.1) [all]: package-contains-empty-directory usr/local/share/lintian/
+W: lintian-output-fullewi binary (1.0+dsfg-1.1) [all]: binary-without-manpage usr/bin/script
+I: lintian-output-fullewi binary (1.0+dsfg-1.1) [all]: desktop-entry-limited-to-environments usr/share/applications/script.desktop
+P: lintian-output-fullewi binary (1.0+dsfg-1.1) [all]: example-unusual-interpreter usr/share/doc/lintian-output-fullewi/examples/example #!/usr/bin/foo

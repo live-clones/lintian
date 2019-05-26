@@ -40,8 +40,9 @@ use Path::Tiny;
 
 use Lintian::Check qw(check_spelling spelling_tag_emitter);
 use Lintian::Data ();
+use Lintian::Deb822Parser qw(read_dpkg_control);
 use Lintian::Tags qw(tag);
-use Lintian::Util qw(file_is_encoded_in_non_utf8 read_dpkg_control);
+use Lintian::Util qw(file_is_encoded_in_non_utf8);
 
 our $KNOWN_ESSENTIAL = Lintian::Data->new('fields/essential');
 our $KNOWN_COMMON_LICENSES

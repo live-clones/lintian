@@ -1,29 +1,29 @@
-E: description-general-2: description-contains-tabs
-E: description-general-3: description-synopsis-is-empty
-E: description-general-4: description-synopsis-is-duplicated
-E: description-general-control-statements: description-contains-invalid-control-statement
-E: description-general-empty: extended-description-is-empty
-E: description-general-short: description-too-short Short
-E: description-general: description-contains-invalid-control-statement
-E: description-general: description-contains-tabs
-E: description-general: description-is-debmake-template
-E: description-general: description-starts-with-package-name
-E: foo-bar-duplicate: description-is-pkg-name foo bar duplicate
-E: foo-duplicate: description-is-pkg-name foo duplicate
-I: description-general source: duplicate-long-description foo-duplicate foo-bar-duplicate
-I: description-general-3: using-first-person-in-description line 5: I
-I: description-general-4: capitalization-error-in-description debian Debian
-I: description-general-syn-spelling: capitalization-error-in-description-synopsis debian Debian
-W: description-general-2: description-starts-with-leading-spaces
-W: description-general-2: description-too-long
-W: description-general-2: possible-unindented-list-in-extended-description
-W: description-general-3: extended-description-line-too-long
-W: description-general-4: description-contains-homepage
-W: description-general-4: spelling-error-in-description mroe more
-W: description-general-syn-article: description-synopsis-starts-with-article
-W: description-general-syn-spelling: spelling-error-in-description-synopsis developement development
-W: description-general: description-contains-dh-make-perl-template
-W: description-general: spelling-error-in-description all all (duplicate word) all
-W: description-general: spelling-error-in-description matched matched (duplicate word) matched
-W: description-general: spelling-error-in-description of of (duplicate word) of
-W: description-general: spelling-error-in-description these these (duplicate word) these
+description-general (source): duplicate-long-description foo-duplicate foo-bar-duplicate
+foo-duplicate (binary): description-is-pkg-name foo duplicate
+foo-bar-duplicate (binary): description-is-pkg-name foo bar duplicate
+description-general-syn-spelling (binary): spelling-error-in-description-synopsis developement development
+description-general-syn-spelling (binary): capitalization-error-in-description-synopsis debian Debian
+description-general-syn-article (binary): description-synopsis-starts-with-article
+description-general-short (binary): description-too-short Short
+description-general-empty (binary): extended-description-is-empty
+description-general-control-statements (binary): description-contains-invalid-control-statement
+description-general-4 (binary): spelling-error-in-description mroe more
+description-general-4 (binary): description-synopsis-is-duplicated
+description-general-4 (binary): description-contains-homepage
+description-general-4 (binary): capitalization-error-in-description debian Debian
+description-general-3 (binary): using-first-person-in-description line 5: I
+description-general-3 (binary): extended-description-line-too-long
+description-general-3 (binary): description-synopsis-is-empty
+description-general-2 (binary): possible-unindented-list-in-extended-description
+description-general-2 (binary): description-too-long
+description-general-2 (binary): description-starts-with-leading-spaces
+description-general-2 (binary): description-contains-tabs
+description-general (binary): spelling-error-in-description these these (duplicate word) these
+description-general (binary): spelling-error-in-description of of (duplicate word) of
+description-general (binary): spelling-error-in-description matched matched (duplicate word) matched
+description-general (binary): spelling-error-in-description all all (duplicate word) all
+description-general (binary): description-starts-with-package-name
+description-general (binary): description-is-debmake-template
+description-general (binary): description-contains-tabs
+description-general (binary): description-contains-invalid-control-statement
+description-general (binary): description-contains-dh-make-perl-template

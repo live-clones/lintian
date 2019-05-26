@@ -35,7 +35,7 @@ $(package): fix-perm
 	if [ -x ./pre-build ] ; then ./pre-build "$(rootdir)" "$(name)" ; fi
 
 	-mkdir -p $(docdir)
-	if [ -f $(changelogfile) ] ; then \
+	-if [ -f $(changelogfile) ] ; then \
 		install --mode 0644 $(changelogfile) $(changelogtarget) ; \
 		gzip -9nf $(changelogtarget) ; \
 	fi
@@ -51,10 +51,10 @@ $(package): fix-perm
 	cp -rp $(controldir)/. $(debiandir)
 
 	# prevents 'control-file-has-bad-permissions' on CI runners with strange umasks
-	find $(debiandir) -type d -exec chmod 0755 \{\} \;
-	find $(debiandir) -type f -exec chmod 0644 \{\} \;
+	find $(debiandir) -type d -exec chmod 0755 \{\} +
+	find $(debiandir) -type f -exec chmod 0644 \{\} +
 
-	(cd $(rootdir); find . -type f -a -! -ipath etc -exec md5sum -- \{\} \;) > $(debiandir)/md5sums
+	(cd $(rootdir); find . -type f -a -! -ipath etc -exec md5sum -- \{\} +) > $(debiandir)/md5sums
 
 	# pass package name to pre-control script
 	if [ -x ./pre-control ] ; then ./pre-control "$(debiandir)" "$(name)" ; fi

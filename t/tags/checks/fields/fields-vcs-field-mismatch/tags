@@ -1,3 +1,3 @@
-I: fields-vcs-field-mismatch source: vcs-fields-use-more-than-one-vcs bzr git svn
-W: fields-vcs-field-mismatch source: vcs-field-mismatch vcs-bzr != vcs-git https://gitlab.org/lintian/lintian.git
-W: fields-vcs-field-mismatch source: vcs-field-mismatch vcs-svn != vcs-git https://salsa.debian.org/lintian/lintian.git
+fields-vcs-field-mismatch (source): vcs-fields-use-more-than-one-vcs bzr git svn
+fields-vcs-field-mismatch (source): vcs-field-mismatch vcs-svn != vcs-git https://salsa.debian.org/lintian/lintian.git
+fields-vcs-field-mismatch (source): vcs-field-mismatch vcs-bzr != vcs-git https://gitlab.org/lintian/lintian.git

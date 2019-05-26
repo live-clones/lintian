@@ -1,32 +1,32 @@
-E: copyright-compressed: copyright-file-compressed
-E: copyright-file-general source: license-problem-bad-php-license debian/copyright-php.copyright
-E: copyright-file-general source: license-problem-php-license debian/copyright-php.copyright
-E: copyright-full-apache-2: copyright-file-contains-full-apache-2-license
-E: copyright-full-apache-2: copyright-should-refer-to-common-license-file-for-apache-2
-E: copyright-full-gfdl: copyright-file-contains-full-gfdl-license
-E: copyright-full-gfdl: copyright-should-refer-to-common-license-file-for-gfdl
-E: copyright-full-gpl-1: copyright-should-refer-to-common-license-file-for-gpl
-E: copyright-full-gpl-2: copyright-file-contains-full-gpl-license
-E: copyright-full-gpl-2: copyright-should-refer-to-common-license-file-for-lgpl
-E: copyright-full-gpl: copyright-file-contains-full-gpl-license
-E: copyright-full-gpl: copyright-should-refer-to-common-license-file-for-gpl
-E: copyright-full-lgpl: copyright-should-refer-to-common-license-file-for-lgpl
-E: copyright-iso-8859-1: debian-copyright-file-uses-obsolete-national-encoding at line 3
-E: copyright-misc-errors: copyright-refers-to-compressed-license usr/share/common-licenses/BSD.gz
-E: copyright-misc-errors: copyright-refers-to-incorrect-directory usr/share/common-licences
-E: copyright-misc-errors: copyright-refers-to-old-directory
-E: copyright-misc-errors: helper-templates-in-copyright
-E: copyright-missing-apache2-license-pointer: copyright-should-refer-to-common-license-file-for-apache-2
-E: copyright-missing-perl-license-pointer: copyright-file-lacks-pointer-to-perl-license
-E: copyright-old-style: FSSTND-dir-in-usr usr/doc/
-E: copyright-old-style: no-copyright-file
-E: copyright-poor-common-licenses: copyright-should-refer-to-common-license-file-for-gpl
-E: copyright-symlink: copyright-file-is-symlink
-P: copyright-crln: copyright-has-crs
-W: copyright-full-apache-2: copyright-without-copyright-notice
-W: copyright-misc-errors: copyright-contains-automatically-extracted-boilerplate
-W: copyright-misc-errors: copyright-has-url-from-dh_make-boilerplate
-W: copyright-misc-errors: copyright-refers-to-deprecated-bsd-license-file
-W: copyright-misc-errors: copyright-refers-to-nonexistent-license-file usr/share/common-licenses/GPL2
-W: copyright-old-fsf: old-fsf-address-in-copyright-file
-W: copyright-poor-common-licenses: copyright-does-not-refer-to-common-license-file /GPL-3
+copyright-file-general (source): license-problem-php-license debian/copyright-php.copyright
+copyright-file-general (source): license-problem-bad-php-license debian/copyright-php.copyright
+copyright-symlink (binary): copyright-file-is-symlink
+copyright-poor-common-licenses (binary): copyright-should-refer-to-common-license-file-for-gpl
+copyright-poor-common-licenses (binary): copyright-does-not-refer-to-common-license-file /GPL-3
+copyright-old-style (binary): no-copyright-file
+copyright-old-style (binary): FSSTND-dir-in-usr usr/doc/
+copyright-old-fsf (binary): old-fsf-address-in-copyright-file
+copyright-missing-perl-license-pointer (binary): copyright-file-lacks-pointer-to-perl-license
+copyright-missing-apache2-license-pointer (binary): copyright-should-refer-to-common-license-file-for-apache-2
+copyright-misc-errors (binary): helper-templates-in-copyright
+copyright-misc-errors (binary): copyright-refers-to-old-directory
+copyright-misc-errors (binary): copyright-refers-to-nonexistent-license-file usr/share/common-licenses/GPL2
+copyright-misc-errors (binary): copyright-refers-to-incorrect-directory usr/share/common-licences
+copyright-misc-errors (binary): copyright-refers-to-deprecated-bsd-license-file
+copyright-misc-errors (binary): copyright-refers-to-compressed-license usr/share/common-licenses/BSD.gz
+copyright-misc-errors (binary): copyright-has-url-from-dh_make-boilerplate
+copyright-misc-errors (binary): copyright-contains-automatically-extracted-boilerplate
+copyright-iso-8859-1 (binary): debian-copyright-file-uses-obsolete-national-encoding at line 3
+copyright-full-lgpl (binary): copyright-should-refer-to-common-license-file-for-lgpl
+copyright-full-gpl-2 (binary): copyright-should-refer-to-common-license-file-for-lgpl
+copyright-full-gpl-2 (binary): copyright-file-contains-full-gpl-license
+copyright-full-gpl-1 (binary): copyright-should-refer-to-common-license-file-for-gpl
+copyright-full-gpl (binary): copyright-should-refer-to-common-license-file-for-gpl
+copyright-full-gpl (binary): copyright-file-contains-full-gpl-license
+copyright-full-gfdl (binary): copyright-should-refer-to-common-license-file-for-gfdl
+copyright-full-gfdl (binary): copyright-file-contains-full-gfdl-license
+copyright-full-apache-2 (binary): copyright-without-copyright-notice
+copyright-full-apache-2 (binary): copyright-should-refer-to-common-license-file-for-apache-2
+copyright-full-apache-2 (binary): copyright-file-contains-full-apache-2-license
+copyright-crln (binary): copyright-has-crs
+copyright-compressed (binary): copyright-file-compressed

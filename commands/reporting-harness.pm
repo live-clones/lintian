@@ -33,11 +33,10 @@ use YAML::XS ();
 
 use Lintian::Command qw(reap spawn safe_qx);
 use Lintian::Lab;
-use Lintian::Lab::Manifest;
 use Lintian::Processable;
 use Lintian::Relation::Version qw(versions_comparator);
-use Lintian::Util qw(open_gz strip visit_dpkg_paragraph
-  load_state_cache run_cmd save_state_cache);
+use Lintian::Reporting::Util qw(load_state_cache save_state_cache);
+use Lintian::Util qw(open_gz strip run_cmd);
 
 sub usage {
     print <<END;

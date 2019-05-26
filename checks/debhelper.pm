@@ -70,6 +70,7 @@ sub run {
         'python2' => 0,
         'python3' => 0,
         'runit'   => 0,
+        'nodejs'  => 0,
     );
     my %overrides;
 
@@ -348,6 +349,7 @@ sub run {
         $compatnan = 1;
     }
 
+    tag 'debhelper-compat-level', $level if defined($level);
     $level ||= 1;
     if ($level < $compat_level->value('deprecated')) {
         tag 'package-uses-deprecated-debhelper-compat-version', $level;
@@ -561,7 +563,10 @@ sub run {
               sort(keys %python3_depends);
         }
     }
-
+    if ($seen{'nodejs'} and not $overrides{'dh_auto_test'}) {
+        my $path = $info->index_resolved_path('debian/tests/pkg-js/test');
+        tag 'pkg-js-tools-test-is-missing' unless $path;
+    }
     return;
 }
 

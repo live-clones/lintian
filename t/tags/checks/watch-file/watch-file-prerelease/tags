@@ -1,1 +1,1 @@
-I: watch-file-prerelease source: debian-watch-file-should-uversionmangle-not-dversionmangle line 3
+watch-file-prerelease (source): debian-watch-file-should-uversionmangle-not-dversionmangle line 3

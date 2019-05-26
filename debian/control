@@ -74,6 +74,7 @@ Build-Depends:
  node-uglify <!nocheck>,
  patchutils <!nocheck>,
  perl <!nocheck>,
+ pkg-js-tools <!nocheck>,
  pkg-php-tools <!nocheck>,
  python <!nocheck>,
  python-all-dev <!nocheck>,

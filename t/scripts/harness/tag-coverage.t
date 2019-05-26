@@ -72,8 +72,7 @@ for my $descpath (@descpaths) {
 
     next unless -r $tagspath;
 
-    my $ewi = path($tagspath)->slurp_utf8;
-    my $universal = to_universal($ewi);
+    my $universal = path($tagspath)->slurp_utf8;
 
     print "testcase->{testname}\n";
     my @lines = split(NEWLINE, $universal);

@@ -27,10 +27,10 @@ use List::MoreUtils qw(any);
 use List::Util qw(first none);
 
 use Lintian::Data ();
+use Lintian::Deb822Parser qw(read_dpkg_control);
 use Lintian::Relation ();
 use Lintian::Tags qw(tag);
-use Lintian::Util qw(file_is_encoded_in_non_utf8 read_dpkg_control
-  rstrip strip);
+use Lintian::Util qw(file_is_encoded_in_non_utf8 rstrip strip);
 
 # The list of libc packages, used for checking for a hard-coded dependency
 # rather than using ${shlibs:Depends}.
@@ -278,6 +278,7 @@ sub run {
         tag 'no-section-field-for-source';
     }
     my @descriptions;
+    my ($seen_main, $seen_contrib);
     foreach my $bin (@package_names) {
 
         # Accumulate the description.
@@ -295,6 +296,7 @@ sub run {
 
         # Check mismatches in archive area.
         $bin_area = $info->binary_field($bin, 'section');
+        $seen_main = 1 if not $bin_area and ($area // '') eq 'main';
         next unless $area && $bin_area;
 
         if ($bin_area =~ m%^([^/]+)/%) {
@@ -302,12 +304,19 @@ sub run {
         } else {
             $bin_area = 'main';
         }
+        $seen_main = 1 if $bin_area eq 'main';
+        $seen_contrib = 1 if $bin_area eq 'contrib';
         next
           if $area eq $bin_area
           or ($area eq 'main' and $bin_area eq 'contrib');
 
         tag 'section-area-mismatch', 'Package', $bin;
     }
+
+    tag 'section-area-mismatch'
+      if $seen_contrib
+      and not $seen_main
+      and $area eq 'main';
 
     # Check for duplicate descriptions.
     my (%seen_short, %seen_long);
@@ -490,6 +499,23 @@ sub run {
         }
     }
 
+    my @testsuites = split(m/\s*,\s*/, $info->source_field('testsuite', ''));
+
+    if (any { $_ eq 'autopkgtest-pkg-nodejs' } @testsuites) {
+        # Check control file exists in sources
+        my $path = $info->index_resolved_path('debian/tests/pkg-js/test');
+        tag 'pkg-js-autopkgtest-test-is-missing'
+          unless $path and $path->is_open_ok;
+
+        # Ensure all files referenced in debian/tests/pkg-js/files exist
+        $path = $info->index_resolved_path('debian/tests/pkg-js/files');
+        if ($path) {
+            my @list = map { chomp; s/^\s+(.*?)\s+$/$1/; $_ }
+              grep { /\w/ } split /\n/, $path->file_contents;
+            _path_exists($_, $info) foreach (@list);
+        }
+    }
+
     return;
 }
 
@@ -603,6 +629,44 @@ sub check_relation {
     while ($rawvalue =~ /([^\s\(]+\s*\([<>]\s*[^<>=]+\))/g) {
         tag 'obsolete-relation-form-in-source', 'in', $pkg,"$field: $1";
     }
+    return;
+}
+
+sub _path_exists {
+    my ($expr, $info) = @_;
+
+    # Split each line in path elements
+    my @elem= map { s/\*/.*/g; s/^\.\*$/.*\\w.*/; $_ ? qr{^$_/?$} : () }
+      split m#/#,
+      $expr;
+    my @dir = ('.');
+
+    # Follow directories
+  LOOP: while (my $re = shift @elem) {
+        foreach my $i (0 .. $#dir) {
+            my ($dir, @tmp);
+
+            next unless defined($dir = $info->index_resolved_path($dir[$i]));
+            next unless $dir->is_dir;
+            last LOOP
+              unless (
+                @tmp= map { $_->basename }
+                grep { $_->basename =~ $re } $dir->children
+              );
+
+            # Stop searching: at least one element found
+            return unless @elem;
+
+            # If this is the last element of path, store current elements
+            my $pwd = $dir[$i];
+            $dir[$i] .= '/' . shift(@tmp);
+
+            push @dir, map { "$pwd/$_" } @tmp if @tmp;
+        }
+    }
+
+    # No element found
+    tag 'pkg-js-autopkgtest-file-does-not-exist', $expr;
     return;
 }
 

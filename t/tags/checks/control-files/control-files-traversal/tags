@@ -1,1 +1,1 @@
-E: control-files-traversal: control-file-is-not-a-file conffiles
+control-files-traversal (binary): control-file-is-not-a-file conffiles

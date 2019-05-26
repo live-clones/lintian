@@ -1,2 +1,2 @@
-E: deb-format-errors-tar: tar-errors-from-data Removing leading `/' from member names
-E: deb-format-errors-tar: tar-errors-from-data Removing leading `/' from member names
+deb-format-errors-tar (binary): tar-errors-from-data Removing leading `/' from member names
+deb-format-errors-tar (binary): tar-errors-from-data Removing leading `/' from member names

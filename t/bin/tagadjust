@@ -51,7 +51,6 @@ BEGIN {
 
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
 
-use Lintian::Profile;
 use Test::Lintian::Output::Universal qw(parse_line order);
 
 use constant EMPTY => q{};
@@ -85,12 +84,7 @@ my ($diffpath, $tagspath) = @ARGV;
 my @difflines = path($diffpath)->lines_utf8;
 chomp @difflines;
 
-my $extractpath = Path::Tiny->tempfile;
-die "Cannot execute tagextract on $tagspath: $!"
-  if
-  system('t/bin/tagextract', '-f', 'EWI', $tagspath, $extractpath->stringify);
-
-my @tagslines = $extractpath->lines_utf8;
+my @tagslines = path($tagspath)->lines_utf8;
 chomp @tagslines;
 
 my $changed;
@@ -138,41 +132,13 @@ foreach my $line (@difflines) {
 
 exit unless $changed;
 
-my $profile = Lintian::Profile->new(undef, [$ENV{LINTIAN_ROOT}]);
+# also sort output into preferred order
 my $joined = EMPTY;
-
-# do not sort until all tag specifications are kept in sorted order
-#$joined .= $_ . NEWLINE for reverse sort { order($a) cmp order($b) } @tagslines;
-$joined .= pretty2ewi($profile, $_) . NEWLINE for @tagslines;
-
+$joined .= $_ . NEWLINE
+  for reverse sort { order($a) cmp order($b) } @tagslines;
 path($tagspath)->spew_utf8($joined);
 
 exit;
-
-sub pretty2ewi {
-    my ($profile, $line) = @_;
-
-    return EMPTY unless defined $line;
-
-    my ($package, $type, $name, $details)= parse_line($line);
-
-    my $taginfo = $profile->get_tag($name);
-
-    die "Cannot find tag $name"
-      unless $taginfo;
-
-    my $letter = $taginfo->code;
-    $letter = 'X' if $taginfo->experimental;
-
-    my $string = $letter . COLON . SPACE . $package;
-    $string .= SPACE . $type
-      unless $type eq 'binary';
-    $string .= COLON . SPACE . $name;
-    $string .= SPACE . $details
-      if length $details;
-
-    return $string;
-}
 
 sub usage {
     print <<"END";

@@ -26,7 +26,8 @@ use parent 'Class::Accessor::Fast';
 use Carp qw(croak);
 use File::Basename qw(dirname);
 
-use Lintian::Util qw(internal_error read_dpkg_control_utf8);
+use Lintian::Deb822Parser qw(read_dpkg_control_utf8);
+use Lintian::Util qw(internal_error);
 
 =head1 NAME
 
@@ -62,7 +63,7 @@ sub new {
     my ($class, $file) = @_;
     my ($header, undef) = read_dpkg_control_utf8($file);
     my $self;
-    foreach my $field (qw(collector-script type version)) {
+    foreach my $field (qw(collector-script type)) {
         if (($header->{$field}//'') eq '') {
             croak "Required field \"$field\" is missing (or empty) in $file";
         }
@@ -71,16 +72,12 @@ sub new {
     $self = {
         'name' => $header->{'collector-script'},
         'type' => $header->{'type'},
-        'version' => $header->{'version'},
         'type-table' => {},
-        'auto_remove' => 0,
         'priority' => $header->{'priority'} // 8192,
         'interface' => $header->{'interface'}//'exec',
         '_collect_sub' => undef,
     };
     $self->{'script_path'} = dirname($file) . '/' . $self->{'name'};
-    $self->{'auto_remove'} = 1
-      if lc($header->{'auto-remove'}//'') eq 'yes';
     for my $t (split /\s*,\s*/o, $self->{'type'}) {
         $self->{'type-table'}{$t} = 1;
     }
@@ -140,16 +137,6 @@ Returns the value stored in the "Type" field of the file.  For the
 purpose of testing if the collection applies to a given package type,
 the L</is_type> method can be used instead.
 
-
-=item version
-
-Returns the value of the "Version" field of the file.  This should be
-an integer describing the version of the collector script.
-
-=item auto_remove
-
-Returns a truth value if the collection has the "auto-remove" flag.
-
 =item script_path
 
 Returns the absolute path to the collection script.
@@ -180,9 +167,7 @@ the "exec" interface (see above).
 =cut
 
 Lintian::CollScript->mk_ro_accessors(
-    qw(name type version auto_remove
-      script_path interface priority
-      ));
+    qw(name type script_path interface priority));
 
 =item needs_info ([COND])
 

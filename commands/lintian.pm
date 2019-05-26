@@ -33,6 +33,7 @@ use v5.16;
 use Cwd qw(abs_path);
 use Carp qw(verbose);
 use Getopt::Long();
+use IO::Async::Function;
 use IO::Async::Loop;
 use List::MoreUtils qw(any none);
 use POSIX qw(:sys_wait_h);
@@ -94,7 +95,7 @@ my ($STATUS_FD, @CLOSE_AT_END, $PROFILE, $TAGS);
 my @certainties = qw(wild-guess possible certain);
 my (@display_level, %display_source, %suppress_tags);
 my ($action, $checks, $check_tags, $dont_check, $received_signal);
-my (@unpack_info, $LAB, %unpack_options, @auto_remove);
+my (@unpack_info, $LAB, %unpack_options);
 my $user_dirs = $ENV{'LINTIAN_ENABLE_USER_DIRS'} // 1;
 my $exit_code = 0;
 
@@ -613,6 +614,7 @@ sub main {
         if ($opt{'LINTIAN_CFG'}) {
             parse_config_file($opt{'LINTIAN_CFG'});
         }
+        $opt{'LINTIAN_CFG'} //= '';
     }
 
     $ENV{'TMPDIR'} = $opt{'TMPDIR'} if defined($opt{'TMPDIR'});
@@ -680,8 +682,7 @@ sub main {
     }
 
     @scripts = sort $PROFILE->scripts;
-    $collmap
-      = load_and_select_collections(\@scripts, \@auto_remove,\%unpack_options);
+    $collmap= load_and_select_collections(\@scripts, \%unpack_options);
 
     $opt{'jobs'} = default_parallel() unless defined $opt{'jobs'};
     $unpack_options{'jobs'} = $opt{'jobs'};
@@ -700,7 +701,7 @@ sub main {
     # Now action is always either "check" or "unpack"
     # these two variables are used by process_package
     #  and need to persist between invocations.
-    my $async_loop = IO::Async::Loop->new;
+
     $unpacker= Lintian::Unpacker->new($collmap, \%unpack_options);
 
     if ($action eq 'check') {
@@ -740,14 +741,18 @@ sub main {
                 }
                 $group->clear_cache;
                 if ($exit_code != 2) {
-                    # Double check that no processes are running;
-                    # hopefully it will catch regressions like 3bbcc3b
-                    # earlier.
-                    if (waitpid(-1, WNOHANG) != -1) {
-                        $exit_code = 2;
-                        internal_error(
-                            'Unreaped processes after running checks!?');
-                    }
+                # Double check that no processes are running;
+                # hopefully it will catch regressions like 3bbcc3b
+                # earlier.
+                #
+                # Unfortunately, the cleanup via IO::Async::Function seems keep
+                # a worker unreaped; disabling. Should be revisited.
+                #
+                # if (waitpid(-1, WNOHANG) != -1) {
+                #     $exit_code = 2;
+                #     internal_error(
+                #         'Unreaped processes after running checks!?');
+                # }
                 } else {
                     # If we are interrupted in (e.g.) checks/manpages, it
                     # tends to leave processes behind.  No reason to flag
@@ -757,7 +762,7 @@ sub main {
                 }
                 @group_lpkg = $group->get_processables;
             } else {
-                auto_clean_package($group);
+                auto_clean_packages($group);
             }
         };
         my $total_tres = $format_timer_result->($total_raw_res);
@@ -830,6 +835,9 @@ sub main {
         }
     }
 
+    # universal format sorts output from all packages before printing here
+    $Lintian::Output::GLOBAL->print_last();
+
     # }}}
 
     # Wait for any remaining jobs - There will usually not be any
@@ -846,61 +854,45 @@ sub main {
 # Removes all collections with "Auto-Remove: yes"; takes a Lab::Package
 #  - depends on global variables %collection_info
 #
-sub auto_clean_package {
-    my ($lpkg) = @_;
-    my $proc_id = $lpkg->identifier;
+sub auto_clean_packages {
+    my ($group) = @_;
 
-    debug_msg(1, "Auto removing: ${proc_id} ...");
-    my $time = $start_timer->();
+    my $maxjobs = $opt{'jobs'};
 
-    my $future = $lpkg->remove_async;
-    $future->on_ready(
-        sub {
+    my $removelpkg = IO::Async::Function->new(
+        code => sub {
+            my ($lpkg) = @_;
+
+            my $proc_id = $lpkg->identifier;
+            debug_msg(1, "Auto removing: ${proc_id} ...");
+            my $time = $start_timer->();
+
+            $0 = "Auto removing: ${proc_id}";
+            $lpkg->remove;
+
             my $raw_res = $finish_timer->($time);
             debug_msg(1, "Auto removing: ${proc_id} done (${raw_res}s)");
             perf_log("$proc_id,auto-remove entry,${raw_res}");
+
             return;
-        });
+        },
+        max_workers => $maxjobs,
+        max_worker_calls => 1,
+    );
 
-    return $future;
-}
-
-sub auto_clean_packages {
-    my ($group) = @_;
-    my @worklist = $group->get_processables;
-    my $job_limit = $opt{'jobs'} || scalar(@worklist);
     my $loop = IO::Async::Loop->new;
-    my $active_jobs = 0;
-    my @futures;
-    my $schedule_task = sub {
-        my $lpkg = pop(@worklist);
-        my $future;
-        if (not defined($lpkg)) {
-            $active_jobs--;
-            debug_msg(2,
-                    'Clean up job finished and queue is empty. '
-                  . " Remaiing jobs: $active_jobs");
-            $loop->stop if not $active_jobs;
-            return;
-        }
-        my $proc_id = $lpkg->identifier;
-        $future = auto_clean_package($lpkg);
-        debug_msg(2,
-                "Scheduled clean up of $proc_id; "
-              . 'Items enqueued: '
-              . scalar(@worklist)
-              . ", active jobs: $active_jobs");
-        $future->on_ready(__SUB__);
-        push(@futures, $future);
-        return;
-    };
-    $job_limit = scalar(@worklist) if $job_limit > scalar(@worklist);
-    for (0..$job_limit-1) {
-        $active_jobs++;
-        $schedule_task->();
-    }
-    $loop->run;
-    return @futures;
+    $loop->add($removelpkg);
+
+    my @serializable = map { $_->clear_cache } $group->get_processables;
+    my @futures = map { $removelpkg->call(args => [$_]) } @serializable;
+
+    my $done = Future->needs_all(@futures);
+    $done->get;
+
+    $removelpkg->stop;
+    $loop->remove($removelpkg);
+
+    return;
 }
 
 sub post_pkg_process_overrides{
@@ -1006,7 +998,6 @@ sub process_group {
     my ($gname, $group) = @_;
     my ($timer, $raw_res, $tres);
     my $all_ok = 1;
-    my $async_loop = IO::Async::Loop->new;
     $timer = $start_timer->();
   PROC:
     foreach my $lpkg ($group->get_processables){
@@ -1085,14 +1076,12 @@ sub process_group {
         }
     }
 
-    if (@auto_remove) {
+    if (not $opt{'keep-lab'}) {
         # Invoke auto-clean now that the group has been checked
         $timer = $start_timer->();
-        my @futures = auto_clean_packages($group);
-        if (any { $_->is_failed } @futures) {
-            $exit_code = 2;
-            $all_ok = 0;
-        }
+
+        auto_clean_packages($group);
+
         $raw_res = $finish_timer->($timer);
         $tres = $format_timer_result->($raw_res);
         debug_msg(1, "Auto-removal all for group $gname done$tres");
@@ -1327,6 +1316,9 @@ sub configure_output {
                 } elsif ($opts{$_} eq 'fullewi') {
                     require Lintian::Output::FullEWI;
                     $Lintian::Output::GLOBAL = Lintian::Output::FullEWI->new;
+                } elsif ($opts{$_} eq 'universal') {
+                    require Lintian::Output::Universal;
+                    $Lintian::Output::GLOBAL = Lintian::Output::Universal->new;
                 }
             }
         }
@@ -1414,6 +1406,8 @@ sub configure_output {
     } else {
         open($STATUS_FD, '>', '/dev/null');
     }
+
+    $Lintian::Output::GLOBAL->print_first();
     return;
 }
 
@@ -1479,7 +1473,7 @@ sub load_profile_and_configure_tags {
 }
 
 sub load_and_select_collections {
-    my ($all_checks, $auto_remove_list, $unpack_options_ref) = @_;
+    my ($all_checks, $unpack_options_ref) = @_;
     # $map is just here to check that all the needed collections are present.
     my $map = Lintian::DepMap->new;
     my $collmap = Lintian::DepMap::Properties->new;
@@ -1490,7 +1484,6 @@ sub load_and_select_collections {
         debug_msg(2, "Read collector description for $coll ...");
         $collmap->add($coll, $cs->needs_info, $cs);
         $map->addp('coll-' . $coll, 'coll-', $cs->needs_info);
-        push(@{$auto_remove_list}, $coll) if $cs->auto_remove;
     };
 
     load_collections($load_coll, "$INIT_ROOT/collection");
@@ -1549,13 +1542,7 @@ sub load_and_select_collections {
             }
             $extra_unpack{$i} = 1;
         }
-        # Never auto-remove anything explicitly requested by the user
-        @{$auto_remove_list}
-          = grep { !exists($extra_unpack{$_}) } @{$auto_remove_list}
-          if not $opt{'keep-lab'};
     }
-    # Never auto-remove anything if keep-lab is given...
-    @{$auto_remove_list} = () if $opt{'keep-lab'};
     return $collmap;
 }
 

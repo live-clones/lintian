@@ -1,11 +1,11 @@
-E: systemd-complex-service-file: service-key-has-whitespace lib/systemd/system/test3.service at line 3
-I: systemd-complex-service-file: systemd-service-file-missing-documentation-key lib/systemd/system/test3.service
-I: systemd-complex-service-file: systemd-service-file-missing-install-key lib/systemd/system/test2.service
-W: systemd-complex-service-file: systemd-service-file-refers-to-obsolete-target lib/systemd/system/test.service dbus.target
-W: systemd-complex-service-file: systemd-service-file-refers-to-obsolete-target lib/systemd/system/test2.service syslog.target
-W: systemd-complex-service-file: systemd-service-file-wraps-init-script lib/systemd/system/test5.service ExecReload
-W: systemd-complex-service-file: systemd-service-file-wraps-init-script lib/systemd/system/test5.service ExecStart
-W: systemd-complex-service-file: systemd-service-file-wraps-init-script lib/systemd/system/test5.service ExecStartPost
-W: systemd-complex-service-file: systemd-service-file-wraps-init-script lib/systemd/system/test5.service ExecStartPre
-W: systemd-complex-service-file: systemd-service-file-wraps-init-script lib/systemd/system/test5.service ExecStop
-W: systemd-complex-service-file: systemd-service-file-wraps-init-script lib/systemd/system/test5.service ExecStopPost
+systemd-complex-service-file (binary): systemd-service-file-wraps-init-script lib/systemd/system/test5.service ExecStopPost
+systemd-complex-service-file (binary): systemd-service-file-wraps-init-script lib/systemd/system/test5.service ExecStop
+systemd-complex-service-file (binary): systemd-service-file-wraps-init-script lib/systemd/system/test5.service ExecStartPre
+systemd-complex-service-file (binary): systemd-service-file-wraps-init-script lib/systemd/system/test5.service ExecStartPost
+systemd-complex-service-file (binary): systemd-service-file-wraps-init-script lib/systemd/system/test5.service ExecStart
+systemd-complex-service-file (binary): systemd-service-file-wraps-init-script lib/systemd/system/test5.service ExecReload
+systemd-complex-service-file (binary): systemd-service-file-refers-to-obsolete-target lib/systemd/system/test2.service syslog.target
+systemd-complex-service-file (binary): systemd-service-file-refers-to-obsolete-target lib/systemd/system/test.service dbus.target
+systemd-complex-service-file (binary): systemd-service-file-missing-install-key lib/systemd/system/test2.service
+systemd-complex-service-file (binary): systemd-service-file-missing-documentation-key lib/systemd/system/test3.service
+systemd-complex-service-file (binary): service-key-has-whitespace lib/systemd/system/test3.service at line 3

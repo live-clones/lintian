@@ -1,21 +1,21 @@
-E: another-version: debian-changelog-file-missing
-E: another-version: debian-revision-should-not-be-zero 123.4-0
-E: another-version: new-essential-package
-E: another-version: no-copyright-file
-E: fields source: missing-build-dependency debhelper | debhelper-compat
-E: fields source: missing-build-dependency-for-dh_-command dh_md5sums => debhelper | debhelper-compat
-E: fields source: package-uses-debhelper-but-lacks-build-depends
-E: fields: debian-changelog-file-missing-or-wrong-name
-E: fields: depends-on-python-minimal depends
-E: fields: no-copyright-file
-W: fields source: ancient-standards-version 3.9.2 (released 2011-04-07) (current is CURRENT)
-W: fields source: changelog-should-mention-nmu
-W: fields source: debhelper-but-no-misc-depends another-version
-W: fields source: debhelper-but-no-misc-depends fields
-W: fields source: debian-revision-not-well-formed 1.5-.3
-W: fields source: hyphen-in-native-debian-changelog-version 1.5-.3
-W: fields source: package-needs-versioned-debhelper-build-depends 11
-W: fields source: source-nmu-has-incorrect-version-number 1.5-.3
-W: fields: debian-revision-not-well-formed 1.5-.3
-W: fields: essential-no-not-needed
-W: fields: unknown-section does-not-exist
+fields (source): source-nmu-has-incorrect-version-number 1.5-.3
+fields (source): package-uses-debhelper-but-lacks-build-depends
+fields (source): package-needs-versioned-debhelper-build-depends 11
+fields (source): missing-build-dependency-for-dh_-command dh_md5sums => debhelper | debhelper-compat
+fields (source): missing-build-dependency debhelper | debhelper-compat
+fields (source): hyphen-in-native-debian-changelog-version 1.5-.3
+fields (source): debian-revision-not-well-formed 1.5-.3
+fields (source): debhelper-but-no-misc-depends fields
+fields (source): debhelper-but-no-misc-depends another-version
+fields (source): changelog-should-mention-nmu
+fields (source): ancient-standards-version 3.9.2 (released 2011-04-07) (current is CURRENT)
+fields (binary): unknown-section does-not-exist
+fields (binary): no-copyright-file
+fields (binary): essential-no-not-needed
+fields (binary): depends-on-python-minimal depends
+fields (binary): debian-revision-not-well-formed 1.5-.3
+fields (binary): debian-changelog-file-missing-or-wrong-name
+another-version (binary): no-copyright-file
+another-version (binary): new-essential-package
+another-version (binary): debian-revision-should-not-be-zero 123.4-0
+another-version (binary): debian-changelog-file-missing

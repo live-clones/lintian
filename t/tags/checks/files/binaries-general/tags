@@ -1,15 +1,15 @@
-E: binaries-general: arch-dependent-file-in-usr-share usr/share/foo/basic
-E: binaries-general: arch-dependent-file-in-usr-share usr/share/foo/basicdebug
-E: binaries-general: binary-or-shlib-defines-rpath usr/lib/foo/basiclibrpath /usr/lib
-E: binaries-general: binary-or-shlib-defines-rpath usr/share/foo/basic /usr/local/lib
-E: binaries-general: debug-symbols-directly-in-usr-lib-debug usr/lib/debug/basic
-E: binaries-general: library-in-debug-or-profile-should-not-be-stripped usr/lib/debug/usr/share/foo/basic
-E: binaries-general: statically-linked-binary usr/bin/static
-E: binaries-general: unstripped-binary-or-object usr/bin/unstripped
-W: binaries-general: binary-compiled-with-profiling-enabled usr/share/foo/basic
-W: binaries-general: binary-without-manpage usr/bin/static
-W: binaries-general: binary-without-manpage usr/bin/unstripped
-W: binaries-general: debug-file-should-use-detached-symbols usr/lib/debug/.build-id/de/deadbeefdeadbeef.debug
-W: binaries-general: debug-file-with-no-debug-symbols usr/lib/debug/usr/share/foo/basic
-W: binaries-general: debug-package-should-be-named-dbg usr/lib/debug/.build-id/
-W: binaries-general: ocaml-custom-executable usr/lib/foo/ocaml-exec
+binaries-general (binary): unstripped-binary-or-object usr/bin/unstripped
+binaries-general (binary): statically-linked-binary usr/bin/static
+binaries-general (binary): ocaml-custom-executable usr/lib/foo/ocaml-exec
+binaries-general (binary): library-in-debug-or-profile-should-not-be-stripped usr/lib/debug/usr/share/foo/basic
+binaries-general (binary): debug-symbols-directly-in-usr-lib-debug usr/lib/debug/basic
+binaries-general (binary): debug-package-should-be-named-dbg usr/lib/debug/.build-id/
+binaries-general (binary): debug-file-with-no-debug-symbols usr/lib/debug/usr/share/foo/basic
+binaries-general (binary): debug-file-should-use-detached-symbols usr/lib/debug/.build-id/de/deadbeefdeadbeef.debug
+binaries-general (binary): binary-without-manpage usr/bin/unstripped
+binaries-general (binary): binary-without-manpage usr/bin/static
+binaries-general (binary): binary-or-shlib-defines-rpath usr/share/foo/basic /usr/local/lib
+binaries-general (binary): binary-or-shlib-defines-rpath usr/lib/foo/basiclibrpath /usr/lib
+binaries-general (binary): binary-compiled-with-profiling-enabled usr/share/foo/basic
+binaries-general (binary): arch-dependent-file-in-usr-share usr/share/foo/basicdebug
+binaries-general (binary): arch-dependent-file-in-usr-share usr/share/foo/basic

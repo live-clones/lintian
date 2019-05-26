@@ -1,2 +1,2 @@
-E: libfoo1: pkg-has-shlibs-control-file-but-no-actual-shared-libs
-X: libfoo1: package-contains-no-arch-dependent-files
+libfoo1 (binary): pkg-has-shlibs-control-file-but-no-actual-shared-libs
+libfoo1 (binary): package-contains-no-arch-dependent-files

@@ -1,1 +1,1 @@
-W: init.d-symlink: upstart-job-in-etc-init.d-not-registered-via-update-rc.d etc/init.d/lintian-unreg
+init.d-symlink (binary): upstart-job-in-etc-init.d-not-registered-via-update-rc.d etc/init.d/lintian-unreg

@@ -1,22 +1,22 @@
-I: fields-wrong-section source: debian-control-has-obsolete-dbg-package fields-wrong-section-dbg
-I: fields-wrong-section-contrib-doc: wrong-section-according-to-package-name fields-wrong-section-contrib-doc => contrib/doc
-I: fields-wrong-section-dbg: wrong-section-according-to-package-name fields-wrong-section-dbg => debug
-I: fields-wrong-section-doc: wrong-section-according-to-package-name fields-wrong-section-doc => doc
-I: fonts-fields-wrong-section1: wrong-section-according-to-package-name fonts-fields-wrong-section1 => fonts
-I: gir1.2-fields-wrong-section-0.1: wrong-section-according-to-package-name gir1.2-fields-wrong-section-0.1 => introspection
-I: libfields-wrong-section-cil: wrong-section-according-to-package-name libfields-wrong-section-cil => cli-mono
-I: libfields-wrong-section-dev: wrong-section-according-to-package-name libfields-wrong-section-dev => libdevel
-I: libfields-wrong-section-java: javalib-but-no-public-jars
-I: libfields-wrong-section-java: wrong-section-according-to-package-name libfields-wrong-section-java => java
-I: libfields-wrong-section-ocaml-dev: wrong-section-according-to-package-name libfields-wrong-section-ocaml-dev => ocaml
-I: libfields-wrong-section-perl: wrong-section-according-to-package-name libfields-wrong-section-perl => perl
-I: libfields-wrong-section-ruby1.8: wrong-section-according-to-package-name libfields-wrong-section-ruby1.8 => ruby
-I: libghc-fields-wrong-section: wrong-section-according-to-package-name libghc-fields-wrong-section => haskell
-I: libjs-fields-wrong-section: wrong-section-according-to-package-name libjs-fields-wrong-section => javascript
-I: libnss-fields-wrong-section: wrong-section-according-to-package-name libnss-fields-wrong-section => admin
-I: libpam-fields-wrong-section1: wrong-section-according-to-package-name libpam-fields-wrong-section1 => admin
-I: libphp-fields-wrong-section: wrong-section-according-to-package-name libphp-fields-wrong-section => php
-I: python-fields-wrong-section: wrong-section-according-to-package-name python-fields-wrong-section => python
-I: python3-fields-wrong-section: wrong-section-according-to-package-name python3-fields-wrong-section => python
-I: r-cran-fields-wrong-section: wrong-section-according-to-package-name r-cran-fields-wrong-section => gnu-r
-I: xfonts-fields-wrong-section1: wrong-section-according-to-package-name xfonts-fields-wrong-section1 => fonts
+fields-wrong-section (source): debian-control-has-obsolete-dbg-package fields-wrong-section-dbg
+xfonts-fields-wrong-section1 (binary): wrong-section-according-to-package-name xfonts-fields-wrong-section1 => fonts
+r-cran-fields-wrong-section (binary): wrong-section-according-to-package-name r-cran-fields-wrong-section => gnu-r
+python3-fields-wrong-section (binary): wrong-section-according-to-package-name python3-fields-wrong-section => python
+python-fields-wrong-section (binary): wrong-section-according-to-package-name python-fields-wrong-section => python
+libphp-fields-wrong-section (binary): wrong-section-according-to-package-name libphp-fields-wrong-section => php
+libpam-fields-wrong-section1 (binary): wrong-section-according-to-package-name libpam-fields-wrong-section1 => admin
+libnss-fields-wrong-section (binary): wrong-section-according-to-package-name libnss-fields-wrong-section => admin
+libjs-fields-wrong-section (binary): wrong-section-according-to-package-name libjs-fields-wrong-section => javascript
+libghc-fields-wrong-section (binary): wrong-section-according-to-package-name libghc-fields-wrong-section => haskell
+libfields-wrong-section-ruby1.8 (binary): wrong-section-according-to-package-name libfields-wrong-section-ruby1.8 => ruby
+libfields-wrong-section-perl (binary): wrong-section-according-to-package-name libfields-wrong-section-perl => perl
+libfields-wrong-section-ocaml-dev (binary): wrong-section-according-to-package-name libfields-wrong-section-ocaml-dev => ocaml
+libfields-wrong-section-java (binary): wrong-section-according-to-package-name libfields-wrong-section-java => java
+libfields-wrong-section-java (binary): javalib-but-no-public-jars
+libfields-wrong-section-dev (binary): wrong-section-according-to-package-name libfields-wrong-section-dev => libdevel
+libfields-wrong-section-cil (binary): wrong-section-according-to-package-name libfields-wrong-section-cil => cli-mono
+gir1.2-fields-wrong-section-0.1 (binary): wrong-section-according-to-package-name gir1.2-fields-wrong-section-0.1 => introspection
+fonts-fields-wrong-section1 (binary): wrong-section-according-to-package-name fonts-fields-wrong-section1 => fonts
+fields-wrong-section-doc (binary): wrong-section-according-to-package-name fields-wrong-section-doc => doc
+fields-wrong-section-dbg (binary): wrong-section-according-to-package-name fields-wrong-section-dbg => debug
+fields-wrong-section-contrib-doc (binary): wrong-section-according-to-package-name fields-wrong-section-contrib-doc => contrib/doc

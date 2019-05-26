@@ -4,3 +4,5 @@ Sequence: 0700
 Version: 1.0
 Description: Test a bad package but use -C to only catch some tags
 Options: -C standards-version
+Match-Strategy: literal
+Output-Format: EWI

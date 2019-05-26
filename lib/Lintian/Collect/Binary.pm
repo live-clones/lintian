@@ -29,8 +29,8 @@ use Lintian::Relation;
 use Carp qw(croak);
 use Parse::DebianChangelog;
 
-use Lintian::Util
-  qw(internal_error open_gz parse_dpkg_control get_file_checksum strip);
+use Lintian::Deb822Parser qw(parse_dpkg_control);
+use Lintian::Util qw(internal_error open_gz get_file_checksum strip);
 
 =head1 NAME
 

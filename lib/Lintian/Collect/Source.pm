@@ -29,8 +29,9 @@ use Scalar::Util qw(blessed);
 use Lintian::Relation;
 use Parse::DebianChangelog;
 
+use Lintian::Deb822Parser qw(read_dpkg_control);
 use Lintian::Util
-  qw(get_file_checksum read_dpkg_control open_gz $PKGNAME_REGEX $PKGREPACK_REGEX strip);
+  qw(get_file_checksum open_gz $PKGNAME_REGEX $PKGREPACK_REGEX strip);
 
 =head1 NAME
 

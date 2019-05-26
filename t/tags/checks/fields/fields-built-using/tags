@@ -1,1 +1,1 @@
-E: fields-built-using: invalid-value-in-built-using-field foo (>= 1.0)
+fields-built-using (binary): invalid-value-in-built-using-field foo (>= 1.0)

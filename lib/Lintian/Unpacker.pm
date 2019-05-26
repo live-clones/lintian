@@ -217,36 +217,21 @@ sub prepare_tasks {
     my ($self, $errorhandler, @lpkgs) = @_;
     my %worklists;
     foreach my $lpkg (@lpkgs) {
-        my ($changed, $cmap, $needed);
+        my ($cmap, $needed);
 
-        eval {$changed = $lpkg->create;};
+        eval {$lpkg->create;};
         if (my $e = $@) {
-            eval {$errorhandler->($lpkg, $e);};
-            if ($@) {
-                # The error handler croaked; attempt to write status
-                # files for entries we created.
-                my $err = $@;
-                foreach my $wlist (values %worklists) {
-                    next unless $wlist->{'changed'};
-                    my $lpkg = $wlist->{'lab-entry'};
-                    # ignore errors; there is not much we can do about
-                    # it here.
-                    $lpkg->update_status_file;
-                }
-                # ... and pass back the error.
-                die $err;
-            }
+            $errorhandler->($lpkg, $e);
             next;
         }
 
-        ($cmap, $needed) = $self->_requested_colls($lpkg, $changed);
+        ($cmap, $needed) = $self->_requested_colls($lpkg);
 
         next unless $cmap; # nothing to do
 
         $worklists{$lpkg->identifier} = {
             'collmap' => $cmap,
             'lab-entry' => $lpkg,
-            'changed' => $changed,
             'needed' => $needed,
         };
     }
@@ -296,9 +281,9 @@ sub _requested_colls {
         $cmap = $self->{'cache'}{$pkg_type}->clone;
     }
 
-    # if its new and $profile is undef, we have to run all
-    # of collections.  So lets exit early.
-    return ($cmap, undef) if $new and not $profile;
+    # if $profile is undef, we have to run all of collections.  So
+    # lets exit early.
+    return ($cmap, undef) if not $profile;
     if ($profile) {
         my %tmp;
         foreach my $cname ($profile->scripts) {
@@ -318,7 +303,6 @@ sub _requested_colls {
         # be finished and we do not want to use their
         # dependencies if they are the only ones using them)
         next unless $coll->is_type($pkg_type);
-        next if $lpkg->is_coll_finished($cname, $coll->version);
         $needed{$cname} = 1;
         push @check, $coll->needs_info;
     }
@@ -441,7 +425,6 @@ sub process_tasks {
                         delete $active{$procid};
                     }else {
                         # The collection was success
-                        $lpkg->_mark_coll_finished($coll, $cs->version);
                         $cmap->satisfy($coll);
                        # If the entry is marked as failed, don't break the loop
                        # for it.
@@ -522,23 +505,13 @@ sub _generate_find_next_tasks_sub {
                     next;
                 }
 
-                # check if it has been run previously
-                if ($lpkg->is_coll_finished($coll, $cs->version)) {
-                    $cmap->satisfy($coll);
-                    next;
-                }
-
                 # Check if its actually on our TODO list.
                 if (defined $needed and not exists $needed->{$coll}) {
                     $cmap->satisfy($coll);
                     next;
                 }
-                # Not run before (or out of date)
-                $lpkg->_clear_coll_status($coll);
-
                 # collect info
                 $cmap->select($coll);
-                $wlist->{'changed'} = 1;
                 debug_msg(3, "READY ${coll}-${procid}") if $debug_enabled;
                 push(@queue, ["${coll}-${procid}", $cs, $lpkg, $cmap]);
                # If we are dealing with the highest priority type of task, then

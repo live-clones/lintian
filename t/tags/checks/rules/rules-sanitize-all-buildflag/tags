@@ -1,1 +1,1 @@
-E: rules-sanitize-all-buildflag source: debian-rules-should-not-use-sanitize-all-buildflag line 3
+rules-sanitize-all-buildflag (source): debian-rules-should-not-use-sanitize-all-buildflag line 3

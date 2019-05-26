@@ -171,7 +171,7 @@ Info: The package installs a directory in <tt>/usr/local/...</tt> which is
  If you want to provide an empty directory in <tt>/usr/local</tt> for
  convenience of the local system administrator, please follow the rules
  in the policy manual (section 9.1.2), i.e., create the directories in
- the postinst script but don't fail if this isn't possible (e.g., if
+ the postinst script but don't fail if this isn't possible (e.g. if
  <tt>/usr/local</tt> is mounted read-only).
 Ref: policy 9.1.2
 
@@ -1095,7 +1095,7 @@ Info: This package creates a potential privacy breach by fetching data
  from an external website at runtime. Please remove these scripts or
  external HTML resources.
  .
- Instead you can use the Debian package indicated in the hint, if it is
+ Instead you can use the Debian package indicated in the hint if it is
  compatible.
 
 Tag: privacy-breach-google-adsense

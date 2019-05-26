@@ -1,2 +1,2 @@
-W: watch-file-should-mangle source: debian-watch-file-should-mangle-version line 11
-W: watch-file-should-mangle source: debian-watch-file-should-mangle-version line 5
+watch-file-should-mangle (source): debian-watch-file-should-mangle-version line 5
+watch-file-should-mangle (source): debian-watch-file-should-mangle-version line 11

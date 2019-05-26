@@ -4,3 +4,5 @@ Skeleton: upload-non-native
 Version: 1.0-1
 Options: --color=html --show-overrides
 Description: Test Lintian --color=html output escaping
+Match-Strategy: literal
+Output-Format: EWI

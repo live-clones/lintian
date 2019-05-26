@@ -10,7 +10,7 @@ use warnings;
 use File::Find;
 use Test::More;
 
-use Lintian::Util qw(read_dpkg_control); # Test::More (also) exports fail
+use Lintian::Deb822Parser qw(read_dpkg_control);
 
 my $root = $ENV{'LINTIAN_TEST_ROOT'} // '.';
 my %CHECKS;

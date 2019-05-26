@@ -1,3 +1,119 @@
+lintian (2.15.0) unstable; urgency=medium
+
+  [ Chris Lamb ]
+  * t/bin/runtests: Correct equality operator preventing the correct
+    parsing of --onlyrun="" used when (eg.) executing autopkgtests and
+    apply a patch from Felix Lechner to specify a missing --work-dir
+    argument when building test packages. (Closes: #929430)
+  * Add references to Debian Policy §4.9.2 and §5.6.31 for checks
+    regarding Rules-Requires-Root. (Closes: #929428)
+  * Correct more false-positives for missing-systemd-timer-for-cron-script
+    due to an incorrect regular expression. Thanks again to Francesco Poli
+    (wintermute) for the patch. (Closes: #927970)
+  * Remove unnecessary commas from tag long descriptions and
+    improve grammar in the description of testsuite-autopkgtest-missing.
+
+  [ Vagrant Cascadian ]
+  * Add Guile 2.0 & 2.2 to and remove "ancient" versions 1.6 & 1.8 from the
+    list of versioned interpreters. (Closes: #929501)
+
+  [ Paul Wise ]
+  * spelling: Add several corrections
+
+ -- Chris Lamb <lamby@debian.org>  Sun, 26 May 2019 14:12:53 +0000
+
+lintian (2.14.0) unstable; urgency=medium
+
+  [ Chris Lamb ]
+  * Correct false-positives in missing-systemd-timer-for-cron-script due to
+    an incorrect regular expression. Thanks to Francesco Poli (wintermute)
+    for the patch. (Closes: #927970)
+  * Adjust package-contains-python-header-in-incorrect-directory as Python
+    3.8 dropped the "m" modifier that was used in Python 3.7 and below (eg.
+    /usr/include/python3.7m). (Closes: #928617)
+
+  [ Ivo De Decker ]
+  * Check for sources in the "main" section with only binaries in the
+    "contrib" section. (Closes: #928126)
+
+  [ Michael Biebl ]
+  * Consider the now-preferred /usr/share/dbus-1/{system,session}.d
+    directories (supported since dbus 1.9.18) when checking D-Bus services.
+    (MR: !187)
+
+  [ Xavier ]
+  * Fix an error where debian/tests/pkg-js/files contained deep (but valid)
+    directory. (MR: !199)
+
+  [ Paul Wise ]
+  * Add/fix several spelling corrections.
+  * Sort the dictionary
+  * Prefer American spelling for American typos
+
+ -- Chris Lamb <lamby@debian.org>  Wed, 22 May 2019 07:47:56 +0000
+
+lintian (2.13.0) unstable; urgency=medium
+
+  * Summary of tag changes:
+    + Added:
+      - debhelper-compat-level
+      - patch-system
+      - pkg-js-autopkgtest-file-does-not-exist
+      - pkg-js-autopkgtest-test-is-missing
+      - pkg-js-tools-test-is-missing
+      - vcs
+      - vcs-uri
+
+  [ Niels Thykier ]
+  * gitlab-ci: Run commands with the time command to get an estimate
+    for each part.
+  * Ensure that LINTIAN_CFG is always defined as it is used in debug
+    output.
+  * Fix a typo that called the wrong clean-up function with --unpack.
+  * Extract reporting related utilities into a separate module.
+  * Remove unused system_env function from Lintian::Util
+  * Move Deb822 parsing into its own module called Lintian::Deb822Parser.
+
+  [ Felix Lechner ]
+  * Implement universal output format in Lintian.
+  * Only run tests in t/bin/runtests but do not build any packages.
+
+  [ Xavier ]
+  * Test for Node.js packages that don't ship a debian/tests/pkg-js/test
+    file or ship a debian/tests/pkg-js/files that contains invalid/missing
+    references. (Closes: #923339)
+  * Test for Node.js packages that use "--with nodejs" in debian/rules but
+    do not specify a debian/tests/pkg-js/test file. (Closes: #923331)
+
+  [ Adam D. Barratt ]
+  * Update private/refresh-locale-codes to work with newer isoquery(1) and
+    refresh data/files/locale-codes and data/fields/virtual-packages to
+    match.
+
+  [ Lucas Nussbaum ]
+  * Emit a classification tag about the current debhelper compat level
+    in use. (Closes: #926766)
+  * Emit a classification tag that records the patch system in use.
+    (Closes: #926767)
+  * Emit a classification tags about the revision control system used by
+    the package. (Closes: #926768)
+
+  [ Michael Biebl ]
+  * Also look in /usr/share/dbus-1/{system,session}.d for dbus
+    configuration files. (MR: !187)
+
+  [ Simon Quigley ]
+  * Add "eoan" as a known Ubuntu distribution. (MR: !198)
+
+  [ Chris Lamb ]
+  * Clarify "Could not determine what you meant by" test harness error
+    message; it is not always a parse error.
+
+  [ Paul Wise ]
+  * Add/fix several spelling corrections.
+
+ -- Chris Lamb <lamby@debian.org>  Mon, 22 Apr 2019 09:01:36 +0000
+
 lintian (2.12.0~bpo9+1) stretch-backports; urgency=medium
 
   * Rebuild for stretch-backports.

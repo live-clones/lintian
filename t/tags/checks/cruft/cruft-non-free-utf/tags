@@ -1,1 +1,1 @@
-E: cruft-non-free-utf source: license-problem-convert-utf-code src/bad.c
+cruft-non-free-utf (source): license-problem-convert-utf-code src/bad.c

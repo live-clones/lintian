@@ -1,8 +1,8 @@
-E: rules-general source: clean-should-be-satisfied-by-build-depends debhelper | debhelper-compat
-E: rules-general source: debian-rules-is-dh_make-template
-E: rules-general source: debian-rules-should-not-automatically-update-control line 6
-W: rules-general source: debian-rules-passes-version-info-to-dh_shlibdeps line 23
-W: rules-general source: debian-rules-should-not-use-DEB_BUILD_OPTS line 14
-W: rules-general source: debian-rules-should-not-use-DH_EXTRA_ADDONS systemd (line 7)
-W: rules-general source: debian-rules-should-not-use-pwd line 14
-W: rules-general source: debian-rules-should-not-use-underscore-variable line 15
+rules-general (source): debian-rules-should-not-use-underscore-variable line 15
+rules-general (source): debian-rules-should-not-use-pwd line 14
+rules-general (source): debian-rules-should-not-use-DH_EXTRA_ADDONS systemd (line 7)
+rules-general (source): debian-rules-should-not-use-DEB_BUILD_OPTS line 14
+rules-general (source): debian-rules-should-not-automatically-update-control line 6
+rules-general (source): debian-rules-passes-version-info-to-dh_shlibdeps line 23
+rules-general (source): debian-rules-is-dh_make-template
+rules-general (source): clean-should-be-satisfied-by-build-depends debhelper | debhelper-compat

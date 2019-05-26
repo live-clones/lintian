@@ -435,6 +435,27 @@ sub print_end_pkg {
     return;
 }
 
+=item C<print_first()>
+
+Called before lintian starts to handle any package.
+
+=cut
+
+sub print_first {
+    my ($self) = @_;
+    return;
+}
+
+=item C<print_last()>
+
+Called after lintian is finished with a package.
+
+=cut
+
+sub print_last {
+    return;
+}
+
 =back
 
 =head1 INSTANCE METHODS FOR SUBCLASSING

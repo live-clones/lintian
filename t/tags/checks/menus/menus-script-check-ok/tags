@@ -1,5 +1,5 @@
-W: menus-script-check-ok: command-with-path-in-maintainer-script postinst:8 /usr/bin/update-menus
-W: menus-script-check-ok: possible-bashism-in-maintainer-script postinst:11 'if type '
-W: menus-script-check-ok: possible-bashism-in-maintainer-script postrm:3 'if type '
-W: menus-script-check-ok: postinst-has-useless-call-to-install-docs
-W: menus-script-check-ok: prerm-has-useless-call-to-install-docs
+menus-script-check-ok (binary): prerm-has-useless-call-to-install-docs
+menus-script-check-ok (binary): postinst-has-useless-call-to-install-docs
+menus-script-check-ok (binary): possible-bashism-in-maintainer-script postrm:3 'if type '
+menus-script-check-ok (binary): possible-bashism-in-maintainer-script postinst:11 'if type '
+menus-script-check-ok (binary): command-with-path-in-maintainer-script postinst:8 /usr/bin/update-menus

@@ -1,30 +1,30 @@
-E: fields-depends-general source: package-relation-with-perl-modules build-depends: perl-modules
-E: fields-depends-general: conflicts-with-dependency depends conflict-dep
-E: fields-depends-general: depends-on-essential-package-without-using-version depends: bash
-E: fields-depends-general: depends-on-metapackage depends: xorg
-E: fields-depends-general: depends-on-obsolete-package depends: gaim (>= 0.1)
-E: fields-depends-general: needlessly-depends-on-awk depends
-E: fields-depends-general: package-depends-on-an-x-font-package depends: xfont-a
-E: fields-depends-general: package-relation-with-perl-modules depends: perl-modules
-E: libfields-depends-general: depends-on-libdb1-compat depends
-E: libfields-depends-general: package-relation-with-perl-modules depends: perl-modules-5.22
-E: py-fields-depends-general: depends-on-python-minimal depends
-I: fields-depends-general: conflicts-with-version package-with-version (<< 3.0)
-I: fields-depends-general: ored-depends-on-obsolete-package depends: xbase-clients (>= 0.1)
-W: fields-depends-general source: package-depends-on-itself fields-depends-general depends
-W: fields-depends-general-doc: doc-package-depends-on-main-package depends
-W: fields-depends-general: binary-package-depends-on-toolchain-package depends: debhelper
-W: fields-depends-general: breaks-without-version package-without-version
-W: fields-depends-general: depends-exclusively-on-makedev depends
-W: fields-depends-general: depends-on-old-emacs depends: emacs21
-W: fields-depends-general: depends-on-old-emacs depends: emacs22
-W: fields-depends-general: depends-on-old-emacs depends: emacs22-gtk
-W: fields-depends-general: depends-on-old-emacs depends: emacs23
-W: fields-depends-general: depends-on-old-emacs depends: emacs23-el
-W: fields-depends-general: depends-on-old-emacs depends: emacs23-lucid
-W: fields-depends-general: depends-on-old-emacs depends: emacs23-nox
-W: fields-depends-general: depends-on-packaging-dev depends
-W: fields-depends-general: package-relation-with-self breaks: fields-depends-general (<< 0.1)
-W: libfields-depends-general: binary-package-depends-on-toolchain-package recommends: cdbs
-W: libfields-depends-general: empty-binary-package
-W: libfields-depends-general: lib-recommends-documentation recommends: debconf-doc
+fields-depends-general (source): package-relation-with-perl-modules build-depends: perl-modules
+fields-depends-general (source): package-depends-on-itself fields-depends-general depends
+py-fields-depends-general (binary): depends-on-python-minimal depends
+libfields-depends-general (binary): package-relation-with-perl-modules depends: perl-modules-5.22
+libfields-depends-general (binary): lib-recommends-documentation recommends: debconf-doc
+libfields-depends-general (binary): empty-binary-package
+libfields-depends-general (binary): depends-on-libdb1-compat depends
+libfields-depends-general (binary): binary-package-depends-on-toolchain-package recommends: cdbs
+fields-depends-general-doc (binary): doc-package-depends-on-main-package depends
+fields-depends-general (binary): package-relation-with-self breaks: fields-depends-general (<< 0.1)
+fields-depends-general (binary): package-relation-with-perl-modules depends: perl-modules
+fields-depends-general (binary): package-depends-on-an-x-font-package depends: xfont-a
+fields-depends-general (binary): ored-depends-on-obsolete-package depends: xbase-clients (>= 0.1)
+fields-depends-general (binary): needlessly-depends-on-awk depends
+fields-depends-general (binary): depends-on-packaging-dev depends
+fields-depends-general (binary): depends-on-old-emacs depends: emacs23-nox
+fields-depends-general (binary): depends-on-old-emacs depends: emacs23-lucid
+fields-depends-general (binary): depends-on-old-emacs depends: emacs23-el
+fields-depends-general (binary): depends-on-old-emacs depends: emacs23
+fields-depends-general (binary): depends-on-old-emacs depends: emacs22-gtk
+fields-depends-general (binary): depends-on-old-emacs depends: emacs22
+fields-depends-general (binary): depends-on-old-emacs depends: emacs21
+fields-depends-general (binary): depends-on-obsolete-package depends: gaim (>= 0.1)
+fields-depends-general (binary): depends-on-metapackage depends: xorg
+fields-depends-general (binary): depends-on-essential-package-without-using-version depends: bash
+fields-depends-general (binary): depends-exclusively-on-makedev depends
+fields-depends-general (binary): conflicts-with-version package-with-version (<< 3.0)
+fields-depends-general (binary): conflicts-with-dependency depends conflict-dep
+fields-depends-general (binary): breaks-without-version package-without-version
+fields-depends-general (binary): binary-package-depends-on-toolchain-package depends: debhelper

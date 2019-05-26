@@ -30,8 +30,9 @@ use Carp qw(croak);
 use Dpkg::Vendor qw(get_current_vendor get_vendor_info);
 
 use Lintian::CheckScript;
+use Lintian::Deb822Parser qw(read_dpkg_control_utf8);
 use Lintian::Tags;
-use Lintian::Util qw(parse_boolean read_dpkg_control_utf8 strip);
+use Lintian::Util qw(parse_boolean strip);
 
 =head1 NAME
 
