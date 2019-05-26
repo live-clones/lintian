@@ -1,8 +1,26 @@
-lintian (2.14.0+git) UNRELEASED; urgency=medium
+lintian (2.15.0) unstable; urgency=medium
 
-  * WIP
+  [ Chris Lamb ]
+  * t/bin/runtests: Correct equality operator preventing the correct
+    parsing of --onlyrun="" used when (eg.) executing autopkgtests and
+    apply a patch from Felix Lechner to specify a missing --work-dir
+    argument when building test packages. (Closes: #929430)
+  * Add references to Debian Policy §4.9.2 and §5.6.31 for checks
+    regarding Rules-Requires-Root. (Closes: #929428)
+  * Correct more false-positives for missing-systemd-timer-for-cron-script
+    due to an incorrect regular expression. Thanks again to Francesco Poli
+    (wintermute) for the patch. (Closes: #927970)
+  * Remove unnecessary commas from tag long descriptions and
+    improve grammar in the description of testsuite-autopkgtest-missing.
 
- -- Chris Lamb <lamby@debian.org>  Wed, 22 May 2019 09:58:49 +0100
+  [ Vagrant Cascadian ]
+  * Add Guile 2.0 & 2.2 to and remove "ancient" versions 1.6 & 1.8 from the
+    list of versioned interpreters. (Closes: #929501)
+
+  [ Paul Wise ]
+  * spelling: Add several corrections
+
+ -- Chris Lamb <lamby@debian.org>  Sun, 26 May 2019 14:12:53 +0000
 
 lintian (2.14.0) unstable; urgency=medium
 
