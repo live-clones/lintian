@@ -385,7 +385,7 @@ sub check_timers {
     my ($info) = @_;
 
     return
-      if any { m,^/lib/systemd/system/[^\/]+\.timer$, } $info->sorted_index;
+      if any { m,^lib/systemd/system/[^\/]+\.timer$, } $info->sorted_index;
 
     for my $file ($info->sorted_index) {
         tag 'missing-systemd-timer-for-cron-script', $file
