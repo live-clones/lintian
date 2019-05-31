@@ -2,6 +2,10 @@ lintian (2.15.0+git) UNRELEASED; urgency=medium
 
   * WIP
 
+  [ Axel Beckert ]
+  * checks/systemd.pm: Fix comment which referred to "systemctl
+    --daemon-reload" instead of just "systemctl daemon-reload".
+
  -- Chris Lamb <lamby@debian.org>  Sun, 26 May 2019 15:32:47 +0100
 
 lintian (2.15.0) unstable; urgency=medium
