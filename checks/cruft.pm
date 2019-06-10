@@ -1032,7 +1032,7 @@ sub _check_html_cruft {
                 # for the use of various interpolated variables.
                 # <http://www.doxygen.nl/manual/config.html#cfg_html_header>
                 && $block
-                !~ m,\$(doxygenversion|projectname|projectnumber|projectlogo)\b,
+                !~ m,\$(?:doxygenversion|projectname|projectnumber|projectlogo)\b,
             ){
                 tag 'source-contains-prebuilt-doxygen-documentation', $entry;
                 return -1;
