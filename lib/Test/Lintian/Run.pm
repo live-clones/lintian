@@ -113,8 +113,7 @@ sub logged_runner {
             # call runner
             runner($runpath, $betterlogpath)
 
-        }
-        catch {
+        }catch {
             # catch any error
             $error = $_;
         };

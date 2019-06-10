@@ -202,8 +202,7 @@ sub run {
                     '/usr/share/intltool-debian/intltool-update',
                     '--gettext-package=test','--pot'
                 );
-            }
-            catch {
+            }catch {
                 # catch any error
                 $error = $_;
             };
