@@ -1556,7 +1556,7 @@ sub run {
                         # No need for dh-r packages to automatically
                         # create overrides if we just allow them all to
                         # begin with.
-                        next if $file->dirname eq 'usr/lib/R/site-library/';
+                        next if $file->dirname =~ m{^usr/lib/R/site-library/};
                         # see #904852
                         next if $file->dirname =~ m{templates?(?:\.d)?/};
                         next
