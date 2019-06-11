@@ -1553,6 +1553,10 @@ sub run {
                 foreach my $taboo ($DOCUMENTATION_FILE_REGEX->all) {
                     my $regex = $DOCUMENTATION_FILE_REGEX->value($taboo);
                     if($file->basename =~ m{$regex}xi) {
+                        # No need for dh-r packages to automatically
+                        # create overrides if we just allow them all to
+                        # begin with.
+                        next if $file->dirname eq 'usr/lib/R/site-library/';
                         # see #904852
                         next if $file->dirname =~ m{templates?(?:\.d)?/};
                         next
