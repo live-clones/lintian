@@ -1649,10 +1649,12 @@ sub run {
                     tag 'duplicate-font-file', "$fname also in", $font_owner
                       if ($pkg ne $font_owner and $type ne 'udeb');
                 } elsif ($pkg !~ m/^(?:[ot]tf|t1|x?fonts)-/) {
-                    tag 'font-in-non-font-package', $file;
+                    tag 'font-in-non-font-package', $file
+                      unless $fname =~ m,^usr/lib/R/site-library/,;
                 }
                 tag 'font-outside-font-dir', $file
-                  unless $fname =~ m,^usr/share/fonts/,;
+                  unless $fname =~ m,^usr/share/fonts/,
+                  or $fname =~ m,^usr/lib/R/site-library/,;
 
                 my $finfo = $file->file_info;
                 if ($finfo =~ m/PostScript Type 1 font program data/) {
