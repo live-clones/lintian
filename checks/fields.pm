@@ -33,11 +33,10 @@ use List::MoreUtils qw(any true uniq);
 use Lintian::Architecture qw(:all);
 use Lintian::Data ();
 use Lintian::Check qw(check_maintainer);
-use Lintian::Command qw(safe_qx);
 use Lintian::Relation qw(:constants);
 use Lintian::Relation::Version qw(versions_compare);
 use Lintian::Tags qw(tag);
-use Lintian::Util qw($PKGNAME_REGEX $PKGVERSION_REGEX);
+use Lintian::Util qw($PKGNAME_REGEX $PKGVERSION_REGEX safe_qx);
 
 use constant {
     BUILT_USING_REGEX => qr/^$PKGNAME_REGEX \(= $PKGVERSION_REGEX\)$/o,
