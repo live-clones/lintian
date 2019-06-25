@@ -93,12 +93,19 @@ use Encode ();
 use FileHandle;
 use Scalar::Util qw(openhandle);
 
-use Lintian::Command qw(spawn);
 use Lintian::Relation::Version qw(versions_equal versions_comparator);
 
 use constant EMPTY => q{};
 use constant SPACE => q{ };
+use constant COLON => q{:};
 use constant NEWLINE => qq{\n};
+
+# read up to 40kB at a time.  this happens to be 4096 "tar records"
+# (with a block-size of 512 and a block factor of 20, which appear to
+# be the defaults).  when we do full reads and writes of READ_SIZE (the
+# OS willing), the receiving end will never be with an incomplete
+# record.
+use constant READ_SIZE => 4096 * 20 * 512;
 
 =head1 NAME
 
@@ -184,40 +191,99 @@ L</parse_dpkg_control> do.  It can also emit:
 
 =cut
 
-{
+sub get_deb_info {
+    my ($path) = @_;
 
-    my $loaded = 0;
+    # dpkg-deb -f $file is very slow. Instead, we use ar and tar.
 
-    sub get_deb_info {
-        my ($file) = @_;
+    my $loop = IO::Async::Loop->new;
 
-        # dpkg-deb -f $file is very slow. Instead, we use ar and tar.
-        my $opts = {
-            fail => 'exception',
-            pipe_out => FileHandle->new
-        };
+    # get control tarball from deb
+    my $dpkgerror;
+    my $dpkgfuture = $loop->new_future;
+    my @dpkgcommand = ('dpkg-deb', '--ctrl-tarfile', $path);
+    my $dpkgprocess = IO::Async::Process->new(
+        command => [@dpkgcommand],
+        stdout => { via => 'pipe_read' },
+        stderr => { into => \$dpkgerror },
+        on_finish => sub {
+            my ($self, $exitcode) = @_;
+            my $status = ($exitcode >> 8);
 
-        if (not $loaded) {
-            $loaded++;
-            require Lintian::Command;
-        }
+            if ($status) {
+                my $message= "Non-zero status $status from @dpkgcommand";
+                $message .= COLON . NEWLINE . $dpkgerror
+                  if length $dpkgerror;
+                $dpkgfuture->fail($message);
+                return;
+            }
 
-        Lintian::Command::spawn(
-            $opts, ['dpkg-deb', '--ctrl-tarfile', $file],
-            '|', ['tar', '--wildcards', '-xO', '-f', '-', '*control']);
-        my @data = parse_dpkg_control($opts->{pipe_out});
+            $dpkgfuture->done("Done with @dpkgcommand");
+            return;
+        });
 
-        # Consume all data before exiting so that we don't kill child processes
-        # with SIGPIPE.  This will normally only be an issue with malformed
-        # control files.
-        drain_pipe($opts->{pipe_out});
-        close($opts->{pipe_out});
-        $opts->{harness}->finish;
-        return $data[0];
-    }
+    my $control;
+
+    # get the control file
+    my $tarerror;
+    my $tarfuture = $loop->new_future;
+    my @tarcommand = ('tar', '--wildcards', '-xO', '-f', '-', '*control');
+    my $tarprocess = IO::Async::Process->new(
+        command => [@tarcommand],
+        stdin => { via => 'pipe_write' },
+        stdout => { into => \$control },
+        stderr => { into => \$tarerror },
+        on_finish => sub {
+            my ($self, $exitcode) = @_;
+            my $status = ($exitcode >> 8);
+
+            if ($status) {
+                my $message = "Non-zero status $status from @tarcommand";
+                $message .= COLON . NEWLINE . $tarerror
+                  if length $tarerror;
+                $tarfuture->fail($message);
+                return;
+            }
+
+            $tarfuture->done("Done with @tarcommand");
+            return;
+        });
+
+    $tarprocess->stdin->configure(write_len => READ_SIZE);
+
+    $dpkgprocess->stdout->configure(
+        read_len => READ_SIZE,
+        on_read => sub {
+            my ($stream, $buffref, $eof) = @_;
+
+            if (length $$buffref) {
+                $tarprocess->stdin->write($$buffref);
+                $$buffref = EMPTY;
+            }
+
+            if ($eof) {
+                $tarprocess->stdin->close_when_empty;
+            }
+
+            return 0;
+        },
+    );
+
+    $loop->add($dpkgprocess);
+    $loop->add($tarprocess);
+
+    # awaits, and dies on failure with message from failed constituent
+    my $composite = Future->needs_all($dpkgfuture, $tarfuture);
+    $composite->get;
+
+    open(my $fh, '<', \$control);
+    my @data = parse_dpkg_control($fh);
+    close $fh;
+
+    return $data[0];
 }
 
-=item get_dsc_control (DSCFILE)
+=item get_dsc_info (DSCFILE)
 
 Convenience function for reading dsc files.  It will read the DSCFILE
 using L</read_dpkg_control(FILE[, FLAGS[, LINES]])> and then return the
