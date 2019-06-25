@@ -10,7 +10,7 @@ BEGIN {
     $ENV{'LINTIAN_ROOT'} //= '.';
 }
 use lib "$ENV{'LINTIAN_ROOT'}/lib/";
-use Lintian::Command qw(safe_qx);
+use Lintian::Util qw(safe_qx);
 
 my $WIP = '  * WIP';
 my (%added, %removed, %opt);
