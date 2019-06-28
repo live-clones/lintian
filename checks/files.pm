@@ -304,6 +304,7 @@ sub run {
     my %linked_against_libvga;
     my @devhelp;
     my @devhelp_links;
+    my @bin_binaries;
 
     # X11 bitmapped font directories under /usr/share/fonts/X11 in which we've
     # seen files.
@@ -422,6 +423,11 @@ sub run {
         my $operm = $file->operm;
         my $link = $file->link;
         my $finfo = $file->file_info;
+
+        # If we have a /usr/sbin/foo, check for references to
+        # /usr/bin/foo
+        push(@bin_binaries, "/$1bin/$2")
+          if $file->is_file and $fname =~ m,^(usr/)?sbin/(.+),;
 
         $arch_dep_files = 1
           if not $file->is_dir
@@ -1520,7 +1526,8 @@ sub run {
 
             # ---------------- contents checks
             my %checks
-              = get_checks_for_file($info, $file, $source_pkg, $build_path);
+              = get_checks_for_file($info, $file, $source_pkg,
+                $build_path, @bin_binaries);
 
             if (%checks) {
                 my $stringsfd = $info->strings($file);
@@ -2059,7 +2066,8 @@ sub run {
         next if not $file or not $file->is_open_ok;
 
         my %checks
-          = get_checks_for_file($info, $file, $source_pkg, $build_path);
+          = get_checks_for_file($info, $file, $source_pkg, $build_path,
+            @bin_binaries);
         my $fd2 = $file->open;
         while (<$fd2>) {
             foreach my $tag (sort keys %checks) {
@@ -2370,7 +2378,7 @@ sub detect_privacy_breach {
 }
 
 sub get_checks_for_file {
-    my ($info, $file, $source_pkg, $build_path) = @_;
+    my ($info, $file, $source_pkg, $build_path, @bin_binaries) = @_;
     my %checks;
 
     return %checks if $source_pkg eq 'lintian';
@@ -2390,6 +2398,10 @@ sub get_checks_for_file {
 
     $checks{'file-references-package-build-path'} = $build_path
       if defined $build_path && $build_path =~ m,^/.+,g;
+
+    # If we have a /usr/sbin/foo, check for references to /usr/bin/foo
+    $checks{'bin-sbin-mismatch'} = "(" . join('|', @bin_binaries) . ")"
+      if @bin_binaries;
 
     return %checks;
 }
