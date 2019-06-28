@@ -1147,6 +1147,7 @@ sub parse_config_file {
         'override'             => \&cfg_override,
         'show-overrides'       => \$opt{'show-overrides'},
         'suppress-tags'        => \&record_suppress_tags,
+        'suppress-tags-from-file' => \&record_suppress_tags_from_file,
         'tag-display-limit'    => \$opt{'tag-display-limit'},
         'verbose'              => \&cfg_verbosity,
     );
