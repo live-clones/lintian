@@ -2400,7 +2400,7 @@ sub get_checks_for_file {
       if defined $build_path && $build_path =~ m,^/.+,g;
 
     # If we have a /usr/sbin/foo, check for references to /usr/bin/foo
-    $checks{'bin-sbin-mismatch'} = "(" . join('|', @bin_binaries) . ")"
+    $checks{'bin-sbin-mismatch'} = '(' . join('|', @bin_binaries) . ')'
       if @bin_binaries;
 
     return %checks;
