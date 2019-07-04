@@ -89,9 +89,9 @@ my $LEADINSTR
   = '(?:(?:^|[`&;(|{])\s*|(?:if|then|do|while|!)\s+|env(?:\s+[[:alnum:]_]+=(?:\S+|\"[^"]*\"|\'[^\']*\'))*\s+)';
 my $LEADIN = qr/$LEADINSTR/;
 
-# date --date="Sun, 26 Apr 2015 10:28:05 +0800" +%s"
-# <https://lists.debian.org/debian-announce/2015/msg00001.html>
-my $OLDSTABLE_RELEASE = 1_430_015_285;
+# date --date="Sat, 17 Jun 2017 20:22:36 -1000" +%s
+# <https://lists.debian.org/debian-announce/2017/msg00003.html>
+my $OLDSTABLE_RELEASE = 1_497_766_956
 
 #forbidden command in maintainer scripts
 my $BAD_MAINT_CMD = Lintian::Data->new(
