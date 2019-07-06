@@ -516,6 +516,14 @@ sub check_missing_script {
             tag 'package-supports-alternative-init-but-no-init.d-script',$file
               unless $info->index_resolved_path("etc/init.d/${service}");
         }
+
+        if ($file =~ m,etc/sv/([^/]+)/$,) {
+            my $service = $1;
+            my $file = $info->index_resolved_path("etc/sv/${service}/run");
+            tag 'directory-in-etc-sv-directory-without-executable-run-script',
+              $file
+              if not $file or not $file->is_executable;
+        }
     }
     return;
 }

@@ -406,3 +406,14 @@ Info: The specified file under <tt>/etc/default/</tt> includes a line
  via <tt>dh_installinit --no-enable</tt> or move to automatically
  starting it.
 Ref: policy 9.3.3.1, update-rc.d(8), dh_installinit(1)
+
+Tag: directory-in-etc-sv-directory-without-executable-run-script
+Severity: important
+Certainty: possible
+Info: This package provides the specified directory under
+ <tt>/etc/sv</tt> but it does not ship a <tt>run</tt> script under this
+ directory.
+ .
+ Please check that you are installing your <tt>run</tt> script to the
+ right location and that has the correct executable permissions.
+Refs: dh_runit(1)
