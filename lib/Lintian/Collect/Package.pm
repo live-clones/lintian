@@ -250,17 +250,20 @@ sub md5sums {
     my $md5f = $self->lab_data_path('md5sums');
     my $result = {};
 
+    local $/ = "\0";
+
     # read in md5sums info file
     open(my $fd, '<', $md5f);
     while (my $line = <$fd>) {
         chop($line);
+
+        # skip blank lines
         next if $line =~ m/^\s*$/o;
-        $line =~ m/^(\\)?(\S+)\s*(\S.*)$/o
+        $line =~ m/^(\S+)\s+(\S.*)$/o
           or internal_error("syntax error in $md5f info file: $line");
-        my ($zzescaped, $zzsum, $zzfile) = ($1, $2, $3);
-        if($zzescaped) {
-            $zzfile = dequote_name($zzfile);
-        }
+        my ($zzsum, $zzfile) = ($1, $2);
+
+        # remove leading "./" from relative paths
         $zzfile =~ s,^(?:\./)?,,o;
         $result->{$zzfile} = $zzsum;
     }
