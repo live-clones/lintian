@@ -1,3 +1,9 @@
+lintian (2.16.0+git) UNRELEASED; urgency=medium
+
+  * WIP
+
+ -- Chris Lamb <lamby@debian.org>  Wed, 10 Jul 2019 10:20:48 -0300
+
 lintian (2.16.0) unstable; urgency=medium
 
   The "post-buster" release.
