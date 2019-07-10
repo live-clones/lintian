@@ -1025,8 +1025,15 @@ sub _check_html_cruft {
 
     if($blocknumber == 0) {
         if(index($block,'<meta name="generator"') > -1) {
-            if($block =~ m,<meta \s+ name="generator" \s+ content="doxygen,smx)
-            {
+            if(
+                $block =~ m,<meta \s+ name="generator" \s+
+                content="doxygen,smx
+                # Identify and ignore documentation templates by looking
+                # for the use of various interpolated variables.
+                # <http://www.doxygen.nl/manual/config.html#cfg_html_header>
+                && $block
+                !~ m,\$(?:doxygenversion|projectname|projectnumber|projectlogo)\b,
+            ){
                 tag 'source-contains-prebuilt-doxygen-documentation', $entry;
                 return -1;
             }

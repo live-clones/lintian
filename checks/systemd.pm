@@ -419,7 +419,7 @@ sub check_maintainer_scripts {
             next if substr($_, 0, $-[0]) =~ /#/;
 
             # systemctl should not be called in maintainer scripts at all,
-            # except for systemctl --daemon-reload calls.
+            # except for systemctl daemon-reload calls.
             if (m/^(?:.+;)?\s*systemctl\b/ && !/daemon-reload/) {
                 tag 'maintainer-script-calls-systemctl', "$file:$.";
             }

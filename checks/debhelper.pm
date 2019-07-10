@@ -65,6 +65,7 @@ sub run {
     my ($bdepends_noarch, $bdepends, %build_systems, $uses_autotools_dev_dh);
     $bdepends = $info->relation('build-depends-all');
     my $seen_dh = 0;
+    my $seen_dh_dynamic = 0;
     my $seen_dh_parallel = 0;
     my %seen = (
         'python2' => 0,
@@ -141,9 +142,11 @@ sub run {
             delete($build_systems{'debhelper'});
             $seen_dh = 1;
             $seencommand = 1;
+            $seen_dh_dynamic = 1 if m/\$[({]\w/;
             $seen_dh_parallel = $. if m/--parallel/;
             $needbuilddepends = 1;
             $needtomodifyscripts = 1;
+
             while (m/\s--with(?:=|\s+)(['"]?)(\S+)\1/go) {
                 my $addon_list = $2;
                 for my $addon (split(m/,/o, $addon_list)) {
@@ -171,11 +174,6 @@ sub run {
             }
             if (m/--(after|before|until|remaining)/) {
                 tag 'dh-manual-sequence-control-obsolete', 'dh', $1;
-            }
-            # Variables could contain any add-ons so assume we have seen
-            # them all.
-            foreach my $addon (keys %seen) {
-                $seen{$addon} = 1 if m,\$[({]\w,;
             }
         } elsif (m,^include\s+/usr/share/cdbs/1/rules/debhelper.mk,
             or m,^include\s+/usr/share/R/debian/r-cran.mk,o) {
@@ -246,6 +244,11 @@ sub run {
         }
     }
     close($rules_fd);
+
+    # Variables could contain any add-ons; assume we have seen them all
+    if ($seen_dh_dynamic) {
+        %seen = map { $_ => 1 } keys %seen;
+    }
 
     unless ($inclcdbs){
         # Okay - d/rules does not include any file in /usr/share/cdbs/
@@ -563,7 +566,9 @@ sub run {
               sort(keys %python3_depends);
         }
     }
-    if ($seen{'nodejs'} and not $overrides{'dh_auto_test'}) {
+    if (    $seen{'nodejs'}
+        and not $overrides{'dh_auto_test'}
+        and not $seen_dh_dynamic) {
         my $path = $info->index_resolved_path('debian/tests/pkg-js/test');
         tag 'pkg-js-tools-test-is-missing' unless $path;
     }

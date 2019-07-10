@@ -110,8 +110,7 @@ sub logged_prepare {
         try {
             # prepare
             prepare($specpath, $runpath, $testset, $force_rebuild);
-        }
-        catch {
+        }catch {
             # catch any error
             $error = $_;
         };

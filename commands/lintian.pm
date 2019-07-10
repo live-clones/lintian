@@ -178,8 +178,6 @@ Behavior options:
     --display-source X        restrict displayed tags by source
     -E, --display-experimental display "X:" tags (normally suppressed)
     --no-display-experimental suppress "X:" tags
-    --fail-on-warnings        return a non-zero exit status if warnings found
-                              (Deprecated)
     -i, --info                give detailed info about tags
     -I, --display-info        display "I:" tags (normally suppressed)
     -L, --display-level       display tags with the specified level
@@ -542,7 +540,6 @@ my %opthash = (
     'color=s' => \$opt{'color'},
     'unpack-info|U=s' => \@unpack_info,
     'allow-root' => \$opt{'allow-root'},
-    'fail-on-warnings' => \$opt{'fail-on-warnings'},
     'keep-lab' => \$opt{'keep-lab'},
     'no-tag-display-limit' => sub { $opt{'tag-display-limit'} = 0; },
     'tag-display-limit=i' => \$opt{'tag-display-limit'},
@@ -620,10 +617,6 @@ sub main {
     $ENV{'TMPDIR'} = $opt{'TMPDIR'} if defined($opt{'TMPDIR'});
 
     configure_output();
-
-    if ($opt{'fail-on-warnings'}) {
-        warning('--fail-on-warnings is deprecated');
-    }
 
     # check for arguments
     if (    $action =~ /^(?:check|unpack)$/
@@ -1045,8 +1038,6 @@ sub process_group {
             my $stats = $TAGS->statistics($lpkg);
             if ($stats->{types}{E}) {
                 $exit_code = 1;
-            } elsif ($opt{'fail-on-warnings'} && $stats->{types}{W}) {
-                $exit_code = 1;
             }
         }
         post_pkg_process_overrides($lpkg);
@@ -1139,7 +1130,6 @@ sub parse_config_file {
         'display-experimental' => \$opt{'display-experimental'},
         'display-info'         => \&cfg_display_level,
         'display-level'        => \&cfg_display_level,
-        'fail-on-warnings'     => \$opt{'fail-on-warnings'},
         'info'                 => \$opt{'info'},
         'jobs'                 => \$opt{'jobs'},
         'pedantic'             => \&cfg_display_level,
@@ -1147,6 +1137,7 @@ sub parse_config_file {
         'override'             => \&cfg_override,
         'show-overrides'       => \$opt{'show-overrides'},
         'suppress-tags'        => \&record_suppress_tags,
+        'suppress-tags-from-file' => \&record_suppress_tags_from_file,
         'tag-display-limit'    => \$opt{'tag-display-limit'},
         'verbose'              => \&cfg_verbosity,
     );
@@ -1192,11 +1183,6 @@ sub parse_config_file {
                     print STDERR " in $opt{'LINTIAN_CFG'} (line: $.)",
                       " - Using the first value!\n";
                     next;
-                }
-                if ($var eq 'fail-on-warnings') {
-                    print STDERR "The config option ${var} is deprecated\n";
-                    print STDERR
-                      " - Found in $opt{'LINTIAN_CFG'} (line: $.)\n";
                 }
                 $conf_opt{$var} = 1;
                 $found = 1;

@@ -50,6 +50,7 @@ use strict;
 use warnings;
 use autodie;
 
+use Exporter qw(import);
 use File::Temp qw(tempfile);
 use List::Util qw(shuffle);
 use Path::Tiny;

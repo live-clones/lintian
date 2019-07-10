@@ -23,4 +23,6 @@ systemd-general (binary): script-in-etc-init.d-not-registered-via-update-rc.d et
 systemd-general (binary): missing-systemd-service-for-init.d-rcS-script systemd-general
 systemd-general (binary): maintainer-script-calls-systemctl postrm:6
 systemd-general (binary): init.d-script-does-not-source-init-functions etc/init.d/systemd-general
+systemd-general (binary): package-supports-alternative-init-but-no-init.d-script usr/lib/systemd/system/test.service
+systemd-general (binary): package-supports-alternative-init-but-no-init.d-script lib/systemd/system/sourced.service
 systemd-general (binary): init-script-is-not-a-file etc/init.d/fifo-pipe-as-init
