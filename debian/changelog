@@ -57,6 +57,8 @@ lintian (2.16.0) unstable; urgency=medium
   * Lintian::Reporting::Util: Add missing import of Exporter::import.
 
   [ Axel Beckert ]
+  * checks/systemd.pm: Fix "systemctl --daemon-reload" vs "systemctl
+    daemon-reload".
   * Fix typo in description of debian-watch-does-not-check-gpg-signature.
 
  -- Chris Lamb <lamby@debian.org>  Mon, 08 Jul 2019 01:24:09 +0000
