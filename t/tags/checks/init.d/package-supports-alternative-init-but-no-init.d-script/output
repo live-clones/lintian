@@ -1,3 +1,4 @@
+E: package-supports-alternative-init-but-no-init.d-script: directory-in-etc-sv-directory-without-executable-run-script etc/sv/foo/run
 E: package-supports-alternative-init-but-no-init.d-script: package-supports-alternative-init-but-no-init.d-script etc/sv/foo/run
 E: package-supports-alternative-init-but-no-init.d-script: package-supports-alternative-init-but-no-init.d-script lib/systemd/system/bar.service
 I: package-supports-alternative-init-but-no-init.d-script: systemd-service-file-missing-documentation-key lib/systemd/system/bar.service
