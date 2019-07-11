@@ -26,12 +26,17 @@ use parent 'Lintian::Collect::Package';
 use Carp qw(croak);
 use Scalar::Util qw(blessed);
 use Path::Tiny;
+use Try::Tiny;
 
 use Lintian::Deb822Parser qw(read_dpkg_control);
 use Lintian::Info::Changelog;
+use Lintian::Info::Changelog::Version;
 use Lintian::Relation;
+use Lintian::Tags qw(tag);
 use Lintian::Util
   qw(get_file_checksum open_gz $PKGNAME_REGEX $PKGREPACK_REGEX strip);
+
+use constant EMPTY => q{};
 
 =head1 NAME
 
@@ -189,6 +194,41 @@ sub native {
     return $self->{native};
 }
 
+=item version
+
+Returns a fully parsed Lintian::Info::Changelog::Version for the
+source package's version string.
+
+Needs-Info requirements for using I<version>: L<Same as field|Lintian::Collect/field ([FIELD[, DEFAULT]])>
+
+=cut
+
+sub version {
+    my ($self) = @_;
+
+    return $self->{version}
+      if exists $self->{version};
+
+    my $versionstring = $self->field('version', EMPTY);
+
+    my $version = Lintian::Info::Changelog::Version->new;
+    try {
+        $version->set($versionstring, $self->native);
+    } catch {
+        my $indicator= ($self->native ? EMPTY : 'non-') . 'native';
+        tag 'malformed-debian-changelog-version',
+          $versionstring . " (for $indicator)";
+        undef $version;
+    };
+
+    return
+      unless defined $version;
+
+    $self->{version} = $version;
+
+    return $self->{version};
+}
+
 =item files
 
 Returns a reference to a hash containing information about files listed
@@ -284,7 +324,15 @@ Needs-Info requirements for using I<repacked>: L<Same as field|Lintian::Collect/
 sub repacked {
     my ($self) = @_;
     return $self->{repacked} if exists $self->{repacked};
-    $self->{repacked} = $self->field('version', '') =~ $PKGREPACK_REGEX;
+
+    # native packages cannot be repacked
+    if ($self->native) {
+        $self->{repacked} = 0;
+    } else {
+        my $upstream = $self->version->upstream;
+        $self->{repacked} = $upstream =~ $PKGREPACK_REGEX;
+    }
+
     return $self->{repacked};
 }
 
