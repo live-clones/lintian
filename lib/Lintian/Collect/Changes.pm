@@ -24,6 +24,8 @@ use parent 'Lintian::Collect';
 
 use Lintian::Util qw(strip $PKGREPACK_REGEX);
 
+use constant EMPTY => q{};
+
 =head1 NAME
 
 Lintian::Collect::Changes - Lintian interface to .changes file data collection
@@ -180,8 +182,15 @@ Needs-Info requirements for using I<repacked>: L<Same as field|Lintian::Collect/
 
 sub repacked {
     my ($self) = @_;
-    return $self->{repacked} if exists $self->{repacked};
-    $self->{repacked} = $self->field('version', '') =~ $PKGREPACK_REGEX;
+
+    return $self->{repacked}
+      if exists $self->{repacked};
+
+  # original fix for #931846
+  # cannot use centralized version parser; native info only available in source
+    $self->{repacked}
+      = $self->field('version', EMPTY) =~ $PKGREPACK_REGEX . qr/[^-]*\-[^-]+$/;
+
     return $self->{repacked};
 }
 
