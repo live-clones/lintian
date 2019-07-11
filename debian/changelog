@@ -1,3 +1,60 @@
+lintian (2.16.0) unstable; urgency=medium
+
+  The "post-buster" release.
+
+  * Summary of tag changes:
+    + Added:
+      - bin-sbin-mismatch
+      - command-in-sbin-has-manpage-in-incorrect-section
+      - directory-in-etc-sv-directory-without-executable-run-script
+      - package-supports-alternative-init-but-no-init.d-script
+
+  [ Chris Lamb ]
+  * Add 4.4.0 as a known Standards-Version.
+  * Post-buster changes:
+    - Reflect the release, updating dates (etc.) of "oldstable" and so on.
+    - Bump the recommended debhelper level to 12 (see #918809).
+    - Bump the old and ancient version numbers for Python 3 checks (see
+      #903399).
+    - Drop the deprecated --fail-on-warnings option to help towards fixing
+      Debian bug #709932.
+    - Upgrade package-uses-vendor-specific-patch-series to "E:" level
+      severity (see #904302).
+  * Warn about files referencing /usr/bin/foo if the binary is actually
+    installed under /usr/sbin/foo. (Closes: #930702)
+  * Check that a package that ships a /etc/sv/foo directory then
+    /etc/sv/foo/run exists and is executable. (Closes: #931426)
+  * Support suppress-tags-from-file in Lintian configuration file.
+    (Closes: #930700)
+  * Don't emit pkg-js-tools-test-is-missing if the "dh" invocation uses
+    variables in its arguments. (Closes: #928283)
+  * Fix "mistake||correction" delimiter for a number of entries in
+    data/spelling/corrections-case. (Closes: #931446)
+  * Disable the duplicate word checker when analysing patch files.
+    (Closes: #931183)
+  * Override dh_dwz in a binaries-general test to avoid testsuite hanging.
+    (Closes: #931632)
+  * Don't emit latest-debian-changelog-entry-without-new-version for
+    uploads to (eg.) buster-security to avoid false-positives when
+    performing "no-change" uploads with a ~debXuY suffix.
+
+  [ Felix Lechner ]
+  * Bump the minimum perltidy version required to avoid test failures.
+  * Add runtime dependency on liblist-compare-perl.
+  * Reduce the complexity of code in Lintian::Unpacker.
+
+  [ Dmitry Bogatov ]
+  * Check for commands in /sbin or /usr/sbin with manpages in the
+    incorrect section. (Closes: #570998)
+
+  [ Adam D. Barratt ]
+  * Lintian::Reporting::Util: Add missing import of Exporter::import.
+
+  [ Axel Beckert ]
+  * Fix typo in description of debian-watch-does-not-check-gpg-signature.
+
+ -- Chris Lamb <lamby@debian.org>  Mon, 08 Jul 2019 01:24:09 +0000
+
 lintian (2.15.0) unstable; urgency=medium
 
   [ Chris Lamb ]

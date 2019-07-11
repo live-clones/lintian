@@ -304,6 +304,7 @@ sub run {
     my %linked_against_libvga;
     my @devhelp;
     my @devhelp_links;
+    my @bin_binaries;
 
     # X11 bitmapped font directories under /usr/share/fonts/X11 in which we've
     # seen files.
@@ -422,6 +423,11 @@ sub run {
         my $operm = $file->operm;
         my $link = $file->link;
         my $finfo = $file->file_info;
+
+        # If we have a /usr/sbin/foo, check for references to
+        # /usr/bin/foo
+        push(@bin_binaries, "/$1bin/$2")
+          if $file->is_file and $fname =~ m,^(usr/)?sbin/(.+),;
 
         $arch_dep_files = 1
           if not $file->is_dir
@@ -1346,7 +1352,7 @@ sub run {
             and not $fname =~ m{ \. (?:
                   # Common "non-license" file extensions...
                    el|[ch]|cc|p[ylmc]|[hu]i|p_hi|html|php|rb|xpm
-                     |png|jpe?g|gif|svg|dtd|mk|lisp|yml|rs|ogg
+                     |png|jpe?g|gif|svg|dtd|mk|lisp|yml|rs|ogg|xbm
                ) \Z}xsm
             and not $fname=~ m,^usr/share/zope/Products/.*\.(?:dtml|pt|cpt)$,
             and not $fname =~ m,/under\S+License\.docbook$,
@@ -1520,7 +1526,8 @@ sub run {
 
             # ---------------- contents checks
             my %checks
-              = get_checks_for_file($info, $file, $source_pkg, $build_path);
+              = get_checks_for_file($info, $file, $source_pkg,
+                $build_path, @bin_binaries);
 
             if (%checks) {
                 my $stringsfd = $info->strings($file);
@@ -1553,6 +1560,10 @@ sub run {
                 foreach my $taboo ($DOCUMENTATION_FILE_REGEX->all) {
                     my $regex = $DOCUMENTATION_FILE_REGEX->value($taboo);
                     if($file->basename =~ m{$regex}xi) {
+                        # No need for dh-r packages to automatically
+                        # create overrides if we just allow them all to
+                        # begin with.
+                        next if $file->dirname =~ m{^usr/lib/R/site-library/};
                         # see #904852
                         next if $file->dirname =~ m{templates?(?:\.d)?/};
                         next
@@ -1645,10 +1656,12 @@ sub run {
                     tag 'duplicate-font-file', "$fname also in", $font_owner
                       if ($pkg ne $font_owner and $type ne 'udeb');
                 } elsif ($pkg !~ m/^(?:[ot]tf|t1|x?fonts)-/) {
-                    tag 'font-in-non-font-package', $file;
+                    tag 'font-in-non-font-package', $file
+                      unless $fname =~ m,^usr/lib/R/site-library/,;
                 }
                 tag 'font-outside-font-dir', $file
-                  unless $fname =~ m,^usr/share/fonts/,;
+                  unless $fname =~ m,^usr/share/fonts/,
+                  or $fname =~ m,^usr/lib/R/site-library/,;
 
                 my $finfo = $file->file_info;
                 if ($finfo =~ m/PostScript Type 1 font program data/) {
@@ -2053,7 +2066,8 @@ sub run {
         next if not $file or not $file->is_open_ok;
 
         my %checks
-          = get_checks_for_file($info, $file, $source_pkg, $build_path);
+          = get_checks_for_file($info, $file, $source_pkg, $build_path,
+            @bin_binaries);
         my $fd2 = $file->open;
         while (<$fd2>) {
             foreach my $tag (sort keys %checks) {
@@ -2364,7 +2378,7 @@ sub detect_privacy_breach {
 }
 
 sub get_checks_for_file {
-    my ($info, $file, $source_pkg, $build_path) = @_;
+    my ($info, $file, $source_pkg, $build_path, @bin_binaries) = @_;
     my %checks;
 
     return %checks if $source_pkg eq 'lintian';
@@ -2384,6 +2398,10 @@ sub get_checks_for_file {
 
     $checks{'file-references-package-build-path'} = $build_path
       if defined $build_path && $build_path =~ m,^/.+,g;
+
+    # If we have a /usr/sbin/foo, check for references to /usr/bin/foo
+    $checks{'bin-sbin-mismatch'} = '(' . join('|', @bin_binaries) . ')'
+      if @bin_binaries;
 
     return %checks;
 }

@@ -1,3 +1,5 @@
 systemd-service-file-shutdown-problems-good (binary): systemd-service-file-shutdown-problems lib/systemd/system/systemd-service-file-shutdown-problems-good.service
+systemd-service-file-shutdown-problems-good (binary): package-supports-alternative-init-but-no-init.d-script lib/systemd/system/systemd-service-file-shutdown-problems-good.service
 systemd-service-file-shutdown-problems-good (binary): description-too-long
+systemd-service-file-shutdown-problems-bad (binary): package-supports-alternative-init-but-no-init.d-script lib/systemd/system/systemd-service-file-shutdown-problems-bad.service
 systemd-service-file-shutdown-problems-bad (binary): description-too-long

@@ -209,17 +209,6 @@ bug reports are always welcome (particularly if they include fixes).
 These options overrides the B<display-experimental> variable in the
 configuration file.
 
-=item B<--fail-on-warnings>
-
-By default, B<lintian> exits with 0 status if only warnings were
-found.  If this flag is given, exit with a status of 1 if either
-warnings or errors are found.
-
-This option overrides the B<fail-on-warnings> variable in the
-configuration file.
-
-This option is deprecated and will be removed in the near future.
-
 =item B<-i>, B<--info>
 
 Print explanatory information about each problem discovered in

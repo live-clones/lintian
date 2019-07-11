@@ -264,8 +264,7 @@ sub create {
     if (not -d $base_dir) {
         # In the pool we may have to create multiple directories. On
         # error we only remove the "top dir" and that is enough.
-        system('mkdir', '-p', $base_dir) == 0
-          or croak "mkdir -p $base_dir failed";
+        path($base_dir)->mkpath;
         $madedir = 1;
     } else {
         # If $base_dir exists, then check if the entry exists

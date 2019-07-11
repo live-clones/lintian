@@ -221,8 +221,7 @@ my $prepare = IO::Async::Function->new(
         try {
             # prepare
             logged_prepare($specpath, $runpath, $testset,$force_rebuild);
-        }
-        catch {
+        }catch {
             # catch any error
             my $error = $_;
 
@@ -280,8 +279,7 @@ my $build = IO::Async::Function->new(
             try {
                 # call runner
                 build($path);
-            }
-            catch {
+            }catch {
                 # catch any error
                 $error = $_;
             };
