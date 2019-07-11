@@ -52,10 +52,10 @@ my @mandatory = qw(version);
 my @disallowed = qw(test_for checks);
 
 # tests per desc
-my $perfile = 7 + scalar @mandatory + scalar @disallowed;
+my $perfile = 6 + scalar @mandatory + scalar @disallowed;
 
 # set the testing plan
-plan tests => $perfile * scalar @descpaths;
+my $known_tests = $perfile * scalar @descpaths;
 
 my $profile = Lintian::Profile->new(undef, [$ENV{LINTIAN_ROOT}]);
 
@@ -122,7 +122,15 @@ foreach my $descpath (@descpaths) {
     );
 
     # listed test-against belong to listed checks
-    my %tags = map { $_ => 1 } map { $profile->get_script($_)->tags } @checks;
-    ok((all { exists $tags{$_} } @against),
-        "All tags in Test-Against belong to checks listed in $testpath");
+    $known_tests += scalar @against;
+    my %relatedtags
+      = map { $_ => 1 } map { $profile->get_script($_)->tags } @checks;
+    for my $tag (@against) {
+        ok(
+            exists $relatedtags{$tag},
+            "Tags $tag in Test-Against belongs to checks listed in $testpath"
+        );
+    }
 }
+
+done_testing($known_tests);
