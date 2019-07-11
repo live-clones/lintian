@@ -126,7 +126,7 @@ not anchored and does not enforce any "boundary" characters.
 
 =cut
 
-our $PKGREPACK_REGEX = qr/(dfsg|debian|ds|repack)/o;
+our $PKGREPACK_REGEX = qr/(dfsg|debian|ds|repack)[^-]*\-[^-]+$/o;
 
 =item $PKGVERSION_REGEX
 
