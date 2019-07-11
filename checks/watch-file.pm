@@ -21,12 +21,16 @@
 # MA 02110-1301, USA.
 
 package Lintian::watch_file;
+
 use strict;
 use warnings;
 use autodie;
 
+use Lintian::Info::Changelog::Version;
 use Lintian::Tags qw(tag);
 use Lintian::Util qw($PKGREPACK_REGEX);
+
+use constant EMPTY => q{};
 
 our $WATCH_VERSION = Lintian::Data->new('watch-file/version', qr/\s*=\s*/o);
 our $SIGNING_KEY_FILENAMES= Lintian::Data->new('common/signing-key-filenames');
@@ -36,7 +40,7 @@ sub source {
     my $template = 0;
     my $withgpgverification = 0;
     my $wfile = $info->index_resolved_path('debian/watch');
-    my ($repack, $prerelease, $watchver, %dversions);
+    my ($watchver, %dversions);
 
     if (not $wfile or not $wfile->is_open_ok) {
         tag 'debian-watch-file-is-missing' unless ($info->native);
@@ -49,13 +53,13 @@ sub source {
     # Check if the Debian version contains anything that resembles a repackaged
     # source package sign, for fine grained version mangling check
     # If the version field is missing, we assume a neutral non-native one.
-    my $version = $info->field('version', '0-1');
-    if ($version =~ $PKGREPACK_REGEX) {
-        $repack = $1;
-    }
-    if ($version =~ /(alpha|beta|rc)/i) {
-        $prerelease = $1;
-    }
+
+    # upstream method returns empty for native packages
+    my $upstream = $info->version->upstream;
+    my ($prerelease) = ($upstream =~ qr/(alpha|beta|rc)/i);
+
+    # there is a good repack indicator in $info->repacked but we need the text
+    my ($repack) = ($upstream =~ $PKGREPACK_REGEX);
 
     # Gather information from the watch file and look for problems we can
     # diagnose on the first time through.
