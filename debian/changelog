@@ -40,6 +40,20 @@ lintian (2.16.0) unstable; urgency=medium
     (Closes: #931183)
   * Override dh_dwz in a binaries-general test to avoid testsuite hanging.
     (Closes: #931632)
+  * Avoid false-positives in source-contains-prebuilt-doxygen-documentation
+    against Doxygen templates. (Closes: #930109)
+  * Exclude "X Bitmap Graphic" (.xbm) files from being flagged as extra
+    license files. (Closes: #930211)
+  * Add an exception for documentation outside of /usr/share/doc for "R"
+    statistical computing modules; users expect them under
+    /usr/lib/R/site-library. (Closes: #930311)
+  * Interpolate $DPKG_MAINTSCRIPT_PACKAGE in debconf(7) template names in
+    maintainer scripts. (Closes: #930677)
+  * Check that packages that provide support for alternative init systems
+    also provide an init.d script. (Closes: #926471)
+  * Add /lib/runit/invoke-run as a known interpreter to avoid false
+    positives in checking runit scripts under /etc/sv/*/run.
+    (Closes: #930701)
   * Don't emit latest-debian-changelog-entry-without-new-version for
     uploads to (eg.) buster-security to avoid false-positives when
     performing "no-change" uploads with a ~debXuY suffix.
@@ -269,6 +283,8 @@ lintian (2.10.0) unstable; urgency=medium
     (Closes: #923589)
   * Add "itialize" to the list of "spelling-error-in-binary" exceptions.
     (Closes: #923725)
+  * Don't emit orig-tarball-missing-upstream-signature if the package uses
+    the "opts=mode=git,pgpmode=gittag" in debian/watch. (Closes: #920763)
   * Use less-clunky "for entries that are too short" in the long
     description of debian-changelog-line-too-short.
 
