@@ -280,15 +280,12 @@ say EMPTY;
 
 my $status = 0;
 
-# tests that were skipped and why
-my %skipped;
-# tests that failed
-my @failed;
-
 my $formatter = TAP::Formatter::File->new({
+    errors => 1,
     jobs => $numjobs,
 });
 $formatter = TAP::Formatter::Console->new({
+        errors => 1,
         jobs => $numjobs,
         color => 1,
     }) if -t STDOUT;
@@ -359,7 +356,7 @@ $status = 1
 
 if (-t STDOUT && !$unattended) {
     my @failed = $aggregator->failed;
-    say 'Offering to re-calibrate the tags expected in tests with errors.'
+    say 'Offering to re-calibrate the tags expected in tests that failed.'
       if @failed;
 
     for my $scriptpath (@failed) {
@@ -372,12 +369,10 @@ if (-t STDOUT && !$unattended) {
         next
           unless $testcase->{match_strategy} eq 'tags';
 
-        my $diffpath = "$workpath/tagdiff";
-
         my $relative = abs2rel($workpath, $outpath);
         my $testpath = abs2rel(rel2abs($relative, $testset));
-        my $tagspath = "$testpath/tags";
 
+        my $diffpath = "$workpath/tagdiff";
         if (-r $diffpath) {
 
             say EMPTY;
@@ -391,6 +386,7 @@ if (-t STDOUT && !$unattended) {
             next unless $decision eq 'y';
 
             # create tags if needed; helps when writing new tests
+            my $tagspath = "$testpath/tags";
             path($tagspath)->touch
               unless -e $tagspath;
 
@@ -401,6 +397,24 @@ if (-t STDOUT && !$unattended) {
             die "Cannot copy updated tags to $workpath"
               if system('cp', $tagspath, "$workpath/tags");
         }
+    }
+
+} else {
+    my @crashed = $aggregator->parse_errors;
+
+    say 'Showing full logs for tests with parse errors.'
+      if @crashed;
+
+    for my $absolutepath (@crashed) {
+        my $scriptpath = abs2rel($absolutepath);
+        my $workpath = dirname($scriptpath);
+
+        say EMPTY;
+        say "Log for test $scriptpath:";
+
+        my $logpath = "$workpath/log";
+        my $log = path($logpath)->slurp;
+        print $log;
     }
 }
 
@@ -414,25 +428,6 @@ unless (scalar @runscripts - scalar @requiredscripts + scalar @workscripts
 exit $status;
 
 # program is done
-
-sub print_test_summary {
-
-    if (%skipped) {
-        print "\nSkipped/disabled tests:\n";
-        for my $label (sort keys %skipped) {
-            my $reason = $skipped{$label};
-            print "    $label: $reason\n";
-        }
-    }
-    if (my $number = @failed) {
-        print "\nFailed tests ($number)\n";
-        for my $test (@failed) {
-            print "    $test\n";
-        }
-    }
-
-    return;
-}
 
 sub usage {
     print <<"END";
