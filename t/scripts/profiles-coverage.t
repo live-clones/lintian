@@ -34,18 +34,19 @@ exit 0;
 
 sub parse_check {
     my ($desc) = @_;
-    my ($header, @tags) = read_dpkg_control($desc);
+    my @sections = read_dpkg_control($desc);
+    die "$desc does not have exactly one paragraph"
+      if (scalar(@sections) != 1);
+    my $header = $sections[0];
+
     my $list = [];
     unless ($header->{'check-script'}) {
         fail("missing Check-Script field in $desc");
     }
     $CHECKS{$header->{'check-script'}} = $list;
-    for my $tag (@tags) {
-        unless ($tag->{tag}) {
-            fail("missing Tag field in $desc");
-        }
-        push @$list, $tag->{tag};
-        $TAGS{$tag->{tag}} = 0;
+    for my $tagname (split(q{ }, $header->{'tags'})) {
+        push @$list, $tagname;
+        $TAGS{$tagname} = 0;
     }
     return;
 }
