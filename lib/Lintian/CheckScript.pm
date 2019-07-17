@@ -26,6 +26,7 @@ use File::Basename qw(dirname);
 use parent 'Class::Accessor::Fast';
 
 use Carp qw(croak);
+use Path::Tiny;
 
 use Lintian::Deb822Parser qw(read_dpkg_control_utf8);
 use Lintian::Tag::Info ();
@@ -72,7 +73,12 @@ Parses the $file as a check desc file.
 
 sub new {
     my ($class, $basedir, $checkname) = @_;
-    my ($header, @tags) = read_dpkg_control_utf8("$basedir/${checkname}.desc");
+    my $checkpath = "$basedir/${checkname}.desc";
+    my @sections = read_dpkg_control_utf8($checkpath);
+    croak "$checkpath does not have exactly one paragraph"
+      if (scalar(@sections) != 1);
+    my $header = $sections[0];
+
     my ($self, $name);
     unless ($name = $header->{'check-script'}) {
         croak "Missing Check-Script field in $basedir/${checkname}.desc";
@@ -83,6 +89,7 @@ sub new {
         'type' => $header->{'type'}, # lintian.desc has no type
         'abbrev' => $header->{'abbrev'},
         'needs_info' => [split /\s*,\s*/, $header->{'needs-info'}//''],
+        'tags' => [split q{ }, $header->{'tags'}//''],
     };
 
     $self->{'script_pkg'} = $self->{'name'};
@@ -100,11 +107,19 @@ sub new {
         }
     }
 
-    for my $pg (@tags) {
+    for my $tagname (@{$self->{'tags'}}) {
         my $ti;
-        croak "Missing Tag field for tag in $basedir/${checkname}.desc"
-          unless $pg->{'tag'};
-        $ti = Lintian::Tag::Info->new($pg, $self->{'name'}, $self->{'type'});
+        my $initial = substr($tagname, 0, 1);
+        my $tagpath = "$basedir/../tags/$initial/$tagname.desc";
+        croak "Cannot read tag file in $tagpath"
+          unless -r $tagpath;
+
+        my @paragraphs = read_dpkg_control_utf8($tagpath);
+        croak "$tagpath does not have exactly one paragraph"
+          if (scalar(@paragraphs) != 1);
+
+        $ti = Lintian::Tag::Info->new($paragraphs[0], $self->{'name'},
+            $self->{'type'});
         $self->{'tag-table'}{$ti->tag} = $ti;
     }
 
