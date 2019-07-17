@@ -6,60 +6,9 @@ Info: This script checks if a source package conforms to policy
  with regard to changelog files.
  .
  Each source package should have a debian/changelog file.
-
-Tag: latest-debian-changelog-entry-without-new-date
-Severity: important
-Certainty: certain
-Info: The latest Debian changelog entry has either the same or even an
- older date as the entry before.
- .
- This can result in subtle bugs due to the <tt>SOURCE_DATE_EPOCH</tt>
- environment variable being the same between the older and newer
- versions.
-
-Tag: malformed-debian-changelog-version
-Severity: serious
-Certainty: certain
-Info: The version string in the latest changelog entry was not parsed
- correctly. Usually, that means it does not conform to policy.
-Ref: policy 5.6.12
-
-Tag: debian-changelog-version-requires-debian-revision
-Severity: serious
-Certainty: certain
-Info: This package is not native and requires a Debian revision as part of the
- version recorded in debian/changelog.
- .
- This error is sometimes also triggered in packages with a 1.0 source format
- and a stray <tt>*.orig.tar.gz</tt> file in the parent directory, which causes
- <tt>dpkg-source</tt> to believe that the package is non-native. If that is
- incorrect, please convert the package to the 3.0 (native) format.
- Alternatively, you can rename or remove the <tt>*.orig.tar.gz</tt> file.
- .
- If you do not know what a native package is, you are probably working on a
- non-native one.
-Ref: policy 5.6.12
-
-Tag: hyphen-in-native-debian-changelog-version
-Severity: normal
-Certainty: certain
-Info: Native packaging should only be used if a piece of software was
- written specifically to be turned into a Debian package. In this case,
- the version number should not contain a Debian revision part.
- .
- Native source packages are sometimes created by accident. In most cases
- the reason is the location of the original source tarball. For version
- 1.0 source packages, dpkg-source determines whether they're non-native by
- looking for a file named <tt>&lt;package&gt;_&lt;upversion&gt;.orig.tar.gz</tt>
- in the parent directory, where &lt;upversion&gt; is the upstream version
- from the most recent <tt>debian/changelog</tt> entry. For version 3.0
- packages, check <tt>debian/source/format</tt> for an erroneous
- "(native)" package format.
-
-Tag: hyphen-in-upstream-part-of-debian-changelog-version
-Severity: pedantic
-Certainty: certain
-Info: The upstream version in the debian changelog contains one or more
- hyphens. While that is okay according to Debian Policy, some tools may
- croak.
-Ref: policy 5.6.12
+Tags:
+ debian-changelog-version-requires-debian-revision
+ hyphen-in-native-debian-changelog-version
+ hyphen-in-upstream-part-of-debian-changelog-version
+ latest-debian-changelog-entry-without-new-date
+ malformed-debian-changelog-version
