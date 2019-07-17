@@ -1,0 +1,5 @@
+Tag: missing-some-important-file
+Severity: serious
+Certainty: certain
+Info: The package is missing a very important file, which
+ is required for all packages of my-vendor.
