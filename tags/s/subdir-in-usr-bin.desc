@@ -1,0 +1,6 @@
+Tag: subdir-in-usr-bin
+Severity: serious
+Certainty: certain
+Info: The Filesystem Hierarchy Standard forbids the installation of new
+ directories in <tt>/usr/bin</tt> other than <tt>/usr/bin/mh</tt>.
+Ref: fhs usrbinmostusercommands

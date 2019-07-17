@@ -1,0 +1,5 @@
+Tag: vcs-uri
+Severity: classification
+Certainty: certain
+Info: The package uses the specified VCS URI according to the
+ <tt>debian/control</tt> file.

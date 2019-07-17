@@ -1,0 +1,8 @@
+Tag: conffile-has-bad-file-type
+Severity: important
+Certainty: certain
+Ref: #690051, #690910
+Info: The conffiles lists this path, which is not a file. This will
+ almost certainly not work.
+ .
+ Note that dpkg does not support symlinks being conffiles.

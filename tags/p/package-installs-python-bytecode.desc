@@ -1,0 +1,7 @@
+Tag: package-installs-python-bytecode
+Severity: serious
+Certainty: certain
+Ref: python-policy 3.7
+Info: Compiled Python source files must not be included in the package.
+ These files should be removed from the package and created at package
+ installation time in the postinst.

@@ -1,0 +1,10 @@
+Tag: debian-watch-file-specifies-wrong-upstream-version
+Severity: normal
+Certainty: certain
+Ref: uscan(1)
+Info: The watch file specifies an upstream version which exactly matches
+ the version of a <tt>debian/changelog</tt> entry, this is not a
+ native package, and no version mangling is being done. The version
+ field in a watch file should specify the expected upstream version, not
+ the version of the Debian package. Any epochs and Debian revisions
+ should be removed first or mangled away.

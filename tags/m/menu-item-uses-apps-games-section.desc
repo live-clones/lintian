@@ -1,0 +1,6 @@
+Tag: menu-item-uses-apps-games-section
+Severity: normal
+Certainty: certain
+Info: The menu item has a line that specifies a section under "Apps/Games".
+ This section has been moved to just "Games".
+Ref: menu-policy 2.1

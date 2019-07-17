@@ -1,0 +1,7 @@
+Tag: maintainer-address-missing
+Severity: serious
+Certainty: certain
+Info: The maintainer field must contain the package maintainer's name and
+ email address, with the name followed by the address inside angle
+ brackets (&lt; and &gt;). The address seems to be missing.
+Ref: policy 5.6.2

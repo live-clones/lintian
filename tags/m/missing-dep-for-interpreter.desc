@@ -1,0 +1,11 @@
+Tag: missing-dep-for-interpreter
+Severity: important
+Certainty: possible
+Info: You used an interpreter for a script that is not in an essential
+ package. In most cases, you will need to add a Dependency on the
+ package that contains the interpreter. If the dependency is already
+ present, please file a bug against Lintian with the details of your
+ package so that its database can be updated.
+ .
+ In some cases a weaker relationship, such as Suggests or Recommends, will
+ be more appropriate.

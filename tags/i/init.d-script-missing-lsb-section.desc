@@ -1,0 +1,9 @@
+Tag: init.d-script-missing-lsb-section
+Severity: normal
+Certainty: certain
+Ref: https://wiki.debian.org/LSBInitScripts
+Info: This <tt>/etc/init.d</tt> script does not have an LSB keyword
+ section (or the <tt>### BEGIN INIT INFO</tt> tag is incorrect). This
+ section provides description and runlevel information in a standard
+ format and provides dependency information that can be used to
+ parallelize the boot process. Please consider adding it.

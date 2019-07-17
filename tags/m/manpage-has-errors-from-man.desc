@@ -1,0 +1,37 @@
+Tag: manpage-has-errors-from-man
+Severity: normal
+Certainty: certain
+Info: This man page provokes warnings or errors from man.
+ .
+ "cannot adjust" or "can't break" are trouble with paragraph filling,
+ usually related to long lines. Adjustment can be helped by left
+ justifying, breaks can be helped with hyphenation, see "Manipulating
+ Filling and Adjusting" and "Manipulating Hyphenation" in the groff
+ manual (see info groff).
+ .
+ "can't find numbered character" usually means latin1 etc in the input, and
+ this warning indicates characters will be missing from the output. You can
+ change to escapes like \[:a] described on the groff_char man page.
+ .
+ Other warnings are often formatting typos, like missing quotes around a
+ string argument to .IP. These are likely to result in lost or malformed
+ output. See the groff_man (or groff_mdoc if using mdoc) man page for
+ information on macros.
+ .
+ This test uses <tt>man</tt>'s <tt>--warnings</tt> option to enable groff
+ warnings that catch common mistakes, such as putting <tt>.</tt> or
+ <tt>'</tt> characters at the start of a line when they are intended as
+ literal text rather than groff commands. This can be fixed either by
+ reformatting the paragraph so that these characters are not at the start of
+ a line, or by adding a zero-width space (<tt>\&</tt>) immediately before
+ them.
+ .
+ At worst, warning messages can be disabled with the .warn directive, see
+ "Debugging" in the groff manual.
+ .
+ Lintian also stricter in regards to declaring manpage preprocessors.
+ .
+ To test this for yourself you can use the following command:
+  LC_ALL=en_US.UTF-8 MANROFFSEQ='' MANWIDTH=80 \
+         man --warnings -E UTF-8 -l -Tutf8 -Z &lt;file&gt; &gt;/dev/null
+Ref: groff_man(7), groff_mdoc(7)

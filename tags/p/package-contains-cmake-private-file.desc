@@ -1,0 +1,14 @@
+Tag: package-contains-cmake-private-file
+Severity: important
+Certainty: certain
+Ref: https://wiki.debian.org/CMake, https://cmake.org/cmake/help/v3.10/manual/cmake-packages.7.html#config-file-packages
+Info: This package contains a file in a path reserved solely for
+ <tt>CMake</tt>. This normally means you are shipping a <tt>Find</tt>
+ module. Libraries should not ship Find modules at all but Config files
+ instead.
+ .
+ The Config files should be installed in the unversioned path
+ usr/(lib/&lt;arch&gt;|lib|share)/cmake/&lt;name&gt;*/
+ .
+ By using CMake Config files in the unversioned path, the package will
+ continue to work as expected when a new version of CMake is uploaded.

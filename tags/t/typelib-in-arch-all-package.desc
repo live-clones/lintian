@@ -1,0 +1,7 @@
+Tag: typelib-in-arch-all-package
+Severity: serious
+Certainty: certain
+Info: GObject-Introspection binary typelibs
+ (<tt>Foo-23.typelib</tt>) are architecture-dependent, therefore
+ they must appear in architecture-dependent packages.
+Ref: /usr/share/doc/gobject-introspection/policy.txt

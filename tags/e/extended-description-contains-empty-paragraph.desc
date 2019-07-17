@@ -1,0 +1,5 @@
+Tag: extended-description-contains-empty-paragraph
+Severity: normal
+Certainty: certain
+Info: The extended description (the lines after the first line of the
+ "Description:" field) contains an empty paragraph.

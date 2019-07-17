@@ -1,0 +1,11 @@
+Tag: desktop-entry-contains-unknown-key
+Severity: minor
+Certainty: certain
+Info: The key on this line of the desktop entry is not one of the standard
+ keys defined in the FreeDesktop specification, not one of the legacy KDE
+ keywords, and one that does not begin with <tt>X-</tt>. It's most likely
+ that the key was misspelled.
+ .
+ The desktop-file-validate tool in the desktop-file-utils package is
+ useful for checking the syntax of desktop entries.
+Ref: https://specifications.freedesktop.org/desktop-entry-spec/latest/ar01s06.html

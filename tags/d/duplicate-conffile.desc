@@ -1,0 +1,7 @@
+Tag: duplicate-conffile
+Severity: important
+Certainty: certain
+Info: The file is listed more than once in your <tt>debian/conffiles</tt> file.
+ Usually, this is because debhelper (dh_installdeb, compat level 3 or higher)
+ will add any files in your package located in /etc automatically to the list
+ of conffiles, so if you do that manually too, you'll get duplicates.

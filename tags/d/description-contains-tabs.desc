@@ -1,0 +1,5 @@
+Tag: description-contains-tabs
+Severity: important
+Certainty: certain
+Info: The package "Description:" must not contain tab characters.
+Ref: policy 5.6.13

@@ -1,0 +1,8 @@
+Tag: non-standard-executable-perm
+Severity: normal
+Certainty: certain
+Info: Executables that are not setuid or setgid should always have a mode
+ of 0755. Since anyone can obtain the executable by downloading the
+ Debian package and extracting it, restricting access serves little
+ purpose.
+Ref: policy 10.9

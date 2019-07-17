@@ -1,0 +1,6 @@
+Tag: malformed-debian-changelog-version
+Severity: serious
+Certainty: certain
+Info: The version string in the latest changelog entry was not parsed
+ correctly. Usually, that means it does not conform to policy.
+Ref: policy 5.6.12

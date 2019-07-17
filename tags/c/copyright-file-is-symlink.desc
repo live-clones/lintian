@@ -1,0 +1,6 @@
+Tag: copyright-file-is-symlink
+Severity: serious
+Certainty: certain
+Info: The copyright file /usr/share/doc/<i>pkg</i>/copyright must not be a
+ symbolic link.
+Ref: policy 12.5

@@ -1,0 +1,4 @@
+Tag: no-template-name
+Severity: important
+Certainty: certain
+Info: The templates file contains a template without a "Template:" field.

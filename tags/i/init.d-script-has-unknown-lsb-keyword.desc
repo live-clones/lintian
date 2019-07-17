@@ -1,0 +1,8 @@
+Tag: init.d-script-has-unknown-lsb-keyword
+Severity: minor
+Certainty: certain
+Ref: https://wiki.debian.org/LSBInitScripts
+Info: The given keyword was set in the LSB keyword section in this
+ <tt>/etc/init.d</tt> script but isn't one of the known LSB keywords and
+ doesn't begin with <tt>X-</tt>. One of the standard keywords may have
+ been misspelled.

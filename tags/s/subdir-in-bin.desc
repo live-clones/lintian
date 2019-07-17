@@ -1,0 +1,6 @@
+Tag: subdir-in-bin
+Severity: serious
+Certainty: certain
+Info: The Filesystem Hierarchy Standard forbids the installation of new
+ directories in <tt>/bin</tt>.
+Ref: fhs binessentialusercommandbinaries

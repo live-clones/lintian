@@ -1,0 +1,5 @@
+Tag: debconf-config-not-executable
+Severity: important
+Certainty: certain
+Info: The debconf "config" script in the package control area must be
+ executable.

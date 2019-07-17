@@ -1,0 +1,7 @@
+Tag: new-essential-package
+Severity: important
+Certainty: possible
+Info: This package has the Essential flag set. New Essential packages
+ are sufficiently rare that it seems worth warning about. They should
+ be discussed on debian-devel first.
+Ref: policy 3.8

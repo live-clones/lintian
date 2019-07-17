@@ -1,0 +1,5 @@
+Tag: file-in-unusual-dir
+Severity: normal
+Certainty: certain
+Info: This file or symbolic link is in a directory where files are not
+ normally installed by Debian packages.

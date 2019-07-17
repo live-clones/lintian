@@ -1,0 +1,6 @@
+Tag: debhelper-compat-not-a-number
+Severity: important
+Certainty: certain
+Ref: debhelper(7)
+Info: The debhelper compatibility level specified in
+ <tt>debian/compat</tt> is not a number.

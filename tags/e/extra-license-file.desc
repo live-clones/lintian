@@ -1,0 +1,7 @@
+Tag: extra-license-file
+Severity: wishlist
+Certainty: possible
+Ref: policy 12.5
+Info: All license information should be collected in the
+ <tt>debian/copyright</tt> file. This usually makes it unnecessary
+ for the package to install this information in other places as well.

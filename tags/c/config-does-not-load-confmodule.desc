@@ -1,0 +1,4 @@
+Tag: config-does-not-load-confmodule
+Severity: normal
+Certainty: certain
+Info: The config script must load one of the debconf libraries.

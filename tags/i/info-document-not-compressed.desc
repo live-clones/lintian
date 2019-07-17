@@ -1,0 +1,5 @@
+Tag: info-document-not-compressed
+Severity: important
+Certainty: certain
+Info: Info documents should be compressed with <tt>gzip -9n</tt>.
+Ref: policy 12.2

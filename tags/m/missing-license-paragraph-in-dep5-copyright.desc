@@ -1,0 +1,6 @@
+Tag: missing-license-paragraph-in-dep5-copyright
+Severity: normal
+Certainty: possible
+Ref: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Info: The files paragraph in the machine readable copyright file references a
+ license, for which no standalone license paragraph exists.

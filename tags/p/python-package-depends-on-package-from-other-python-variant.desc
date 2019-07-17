@@ -1,0 +1,10 @@
+Tag: python-package-depends-on-package-from-other-python-variant
+Severity: normal
+Certainty: certain
+Info: Either the specified Python 3.x package declares a dependency on a
+ Python 2.x package, or the specified Python 2.x package depends on a Python
+ 3.x package.
+ .
+ This is likely a typo in <tt>debian/control</tt> or due to misconfigured
+ calls to, for example, <tt>dh_installdocs --link-doc=PKG</tt>.
+Ref: #884692

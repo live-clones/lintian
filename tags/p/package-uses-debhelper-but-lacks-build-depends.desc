@@ -1,0 +1,9 @@
+Tag: package-uses-debhelper-but-lacks-build-depends
+Severity: important
+Certainty: possible
+Info: If a package uses debhelper, it must declare a Build-Depends
+ on debhelper or on the debhelper-compat virtual package. For example:
+ .
+  Build-Depends: debhelper (&gt;= 12~)
+ .
+  Build-Depends: debhelper-compat (= 12)

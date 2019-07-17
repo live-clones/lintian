@@ -1,0 +1,7 @@
+Tag: description-contains-dh-make-perl-template
+Severity: normal
+Certainty: certain
+Info: The extended description contains the statement that it was
+ automagically extracted by dh-make-perl. Please check the description
+ for correctness and usefulness and remove the dh-make-perl statement
+ to signal that you have done so.

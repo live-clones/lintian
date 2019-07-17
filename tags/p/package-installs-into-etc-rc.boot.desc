@@ -1,0 +1,6 @@
+Tag: package-installs-into-etc-rc.boot
+Severity: serious
+Certainty: certain
+Info: The package installs files in the <tt>/etc/rc.boot</tt> directory,
+ which is obsolete.
+Ref: policy 9.3.4

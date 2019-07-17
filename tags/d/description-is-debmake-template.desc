@@ -1,0 +1,5 @@
+Tag: description-is-debmake-template
+Severity: important
+Certainty: certain
+Info: The synopsis or the extended description just says "Missing",
+ which is a template provided by debmake.

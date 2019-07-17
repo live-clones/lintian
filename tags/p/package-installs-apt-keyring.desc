@@ -1,0 +1,13 @@
+Tag: package-installs-apt-keyring
+Severity: serious
+Certainty: possible
+Ref: apt-key(8)
+Info: Debian packages should not install files under
+ <tt>/etc/apt/trusted.gpg.d/</tt> or install an
+ <tt>/etc/apt/trusted.gpg</tt> file.
+ .
+ Trusted keyrings are under the control of the local administrator and
+ packages should not override local administrator choices.
+ .
+ Packages whose names end in <tt>-apt-source</tt> or
+ <tt>-archive-keyring</tt> are permitted to install such files.

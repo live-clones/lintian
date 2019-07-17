@@ -1,0 +1,12 @@
+Tag: patch-modifying-debian-files
+Severity: important
+Certainty: certain
+Info: A patch stored in <tt>debian/patches/</tt> should never modify files
+ in the <tt>debian</tt> directory (even when it's only creating new files)
+ because the <tt>debian</tt> directory is always directly provided by the
+ Debian packaging.
+ And you shouldn't have to modify what you choose to provide in the first
+ place.
+ .
+ If the patch provides a new file (say a manual page), place that file
+ in the upstream directory hierarchy as if it was ready to be submitted.

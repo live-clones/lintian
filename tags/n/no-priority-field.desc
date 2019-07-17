@@ -1,0 +1,9 @@
+Tag: no-priority-field
+Severity: normal
+Certainty: certain
+Info: The package does not have a "Priority:" field in its control file.
+ .
+ The Priority field can be included in a binary package by passing
+ the -ip or -isp flags to dpkg-gencontrol when building the package.
+ The field is optional in binary packages.
+Ref: policy 5.3

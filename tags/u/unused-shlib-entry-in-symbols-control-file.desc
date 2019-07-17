@@ -1,0 +1,5 @@
+Tag: unused-shlib-entry-in-symbols-control-file
+Severity: normal
+Certainty: certain
+Info: The symbols control file contains an entry for a shared library that
+ is not installed by this package.

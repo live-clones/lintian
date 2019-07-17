@@ -1,0 +1,5 @@
+Tag: patch-system
+Severity: classification
+Certainty: certain
+Info: This package uses the specified patch system (eg. "quilt" or
+ "dpatch").

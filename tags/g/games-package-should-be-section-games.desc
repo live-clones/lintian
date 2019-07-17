@@ -1,0 +1,6 @@
+Tag: games-package-should-be-section-games
+Severity: normal
+Certainty: possible
+Info: All the executables in this package are in <tt>/usr/games</tt>, but
+ the package is not in section games. This can be intentional but is
+ usually a mistake.

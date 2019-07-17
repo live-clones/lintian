@@ -1,0 +1,4 @@
+Tag: duplicate-entry-in-symbols-control-file
+Severity: important
+Certainty: certain
+Info: The symbols control file contains a duplicate entry.

@@ -1,0 +1,7 @@
+Tag: apache2-module-does-not-depend-on-apache2-api
+Severity: serious
+Certainty: certain
+Info: The package is an Apache2 HTTPD server module but does not declare a
+ strong binary relation against the Apache2 server binary it links against. Modules
+ must depend on the <tt>apache2-api-YYYYMMNN</tt> package provided as a virtual
+ package by <tt>apache2-bin</tt>.

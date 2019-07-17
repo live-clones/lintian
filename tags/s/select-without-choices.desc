@@ -1,0 +1,6 @@
+Tag: select-without-choices
+Severity: important
+Certainty: certain
+Info: Templates using the "select" or "multiselect" data types must provide
+ a "Choices:" field listing the possible values of the template.
+Ref: debconf-spec 3.1, debconf-devel(7)

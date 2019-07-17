@@ -1,0 +1,5 @@
+Tag: unnecessary-team-upload
+Severity: normal
+Certainty: certain
+Info: The <tt>debian/changelog</tt> file refers to a "Team upload" but the
+ uploader is listed amongst the Maintainer/Uploaders.

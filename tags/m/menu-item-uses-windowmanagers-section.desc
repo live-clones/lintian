@@ -1,0 +1,6 @@
+Tag: menu-item-uses-windowmanagers-section
+Severity: normal
+Certainty: certain
+Info: The menu item has a line that specifies a section under
+ "WindowManagers". This section has been moved to "Window Managers".
+Ref: menu-policy 2.1

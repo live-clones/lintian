@@ -1,0 +1,6 @@
+Tag: maintainer-name-missing
+Severity: serious
+Certainty: certain
+Info: The maintainer field seems to contain just an email address. It must
+ contain the package maintainer's name and email address.
+Ref: policy 5.6.2

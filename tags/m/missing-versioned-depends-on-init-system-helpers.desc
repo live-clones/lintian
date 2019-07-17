@@ -1,0 +1,15 @@
+Tag: missing-versioned-depends-on-init-system-helpers
+Severity: normal
+Certainty: possible
+Ref: update.d(8), #910593
+Info: This package uses a command in the specified maintainer script
+ but does not specify an appropriate minimum dependency on the
+ <tt>init-system-helpers</tt> package. It may have been added to the
+ package's <tt>Build-Depends</tt> instead of the corresponding binary
+ package.
+ .
+ For example, the <tt>defaults-disabled</tt> option was added to
+ <tt>update-rc.d</tt> in <tt>init-system-helpers</tt> version 1.50.
+ .
+ Please add a suitable <tt>Depends:</tt> to your <tt>debian/control</tt>
+ file.

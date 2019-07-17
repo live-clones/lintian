@@ -1,0 +1,6 @@
+Tag: file-in-usr-local
+Severity: serious
+Certainty: certain
+Info: The package installs a file in <tt>/usr/local/...</tt> which is
+ not allowed.
+Ref: policy 9.1.2

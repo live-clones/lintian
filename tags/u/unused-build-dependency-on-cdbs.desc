@@ -1,0 +1,5 @@
+Tag: unused-build-dependency-on-cdbs
+Severity: normal
+Certainty: possible
+Info: The package build-depends on cdbs, but does not include any cdbs
+ files in <tt>debian/rules</tt>.

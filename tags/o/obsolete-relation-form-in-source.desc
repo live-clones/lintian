@@ -1,0 +1,7 @@
+Tag: obsolete-relation-form-in-source
+Ref: policy 7.1
+Severity: serious
+Certainty: certain
+Info: The forms "&lt;" and "&gt;" mean "&lt;=" and "&gt;=", not "&lt;&lt;"
+ and "&gt;&gt;" as one might expect. These forms were marked obsolete and
+ must no longer be used. Use the longer forms instead.

@@ -1,0 +1,6 @@
+Tag: too-many-architectures
+Severity: serious
+Certainty: certain
+Info: A binary package should list exactly one architecture (the one it is
+ compiled for), or the special value "all" if it is architecture-independent.
+Ref: policy 5.6.8

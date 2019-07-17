@@ -1,0 +1,6 @@
+Tag: ocaml-dangling-cmx
+Severity: serious
+Certainty: certain
+Info: This package provides a <tt>.cmx</tt> module without its
+ implementation (<tt>.o</tt> object file which may be embedded in a
+ <tt>.a</tt> static library installed in the same directory).

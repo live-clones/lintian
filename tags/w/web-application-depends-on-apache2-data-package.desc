@@ -1,0 +1,10 @@
+Tag: web-application-depends-on-apache2-data-package
+Severity: normal
+Certainty: certain
+Info: The package appears to be a web application but declares a package
+ relation with <tt>apache2-bin</tt>, <tt>apache2-data</tt> or any of its
+ transitional packages. However, web applications are rarely bound to a specific
+ web server version. Thus, they should depend on <tt>apache2</tt> only instead.
+ If a web application is actually tied to a particular binary version of the web
+ server a dependency against the virtual <tt>apache2-api-YYYYMMDD</tt> package
+ is more appropriate.

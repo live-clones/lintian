@@ -1,0 +1,8 @@
+Tag: portable-executable-missing-security-features
+Severity: important
+Certainty: certain
+Info: The package ships a Microsoft Windows Portable Executable (PE) file
+ that appears to be lacking security hardening features.
+ .
+ You can see which are missing using the <tt>pesec</tt> tool from the
+ <tt>pev</tt> package.

@@ -1,0 +1,4 @@
+Tag: control-tarball-compression-format
+Severity: classification
+Certainty: certain
+Info: This is the compressor format used for the <tt>control.tar</tt> tarball.

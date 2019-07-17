@@ -1,0 +1,8 @@
+Tag: typelib-missing-gir-depends
+Severity: normal
+Certainty: certain
+Info: GObject-Introspection binary typelibs
+ (<tt>Foo-23.typelib</tt>) can depend on other typelibs. To generate
+ appropriate dependencies in the binary package, they must have
+ <tt>Depends: ${gir:Depends}</tt> in the control file.
+Ref: /usr/share/doc/gobject-introspection/policy.txt

@@ -1,0 +1,9 @@
+Tag: no-section-field
+Severity: normal
+Certainty: certain
+Info: The package does not have a "Section:" field in its control file.
+ .
+ The field is mandatory for source packages and optional for binary
+ packages, which use the source package's value as default is nothing
+ else is specified.
+Ref: policy 5.3

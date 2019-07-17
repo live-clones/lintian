@@ -1,0 +1,10 @@
+Tag: package-contains-npm-ignore-file
+Severity: important
+Certainty: certain
+Info: This package ships an .npmignore file. This file is a
+ configuration file for the npm command, the Node.js package manager.
+ .
+ This file instructs npm command to keep files out of
+ node package and is therefore unnecessary in a Debian package.
+ .
+ Please remove this file from your package.

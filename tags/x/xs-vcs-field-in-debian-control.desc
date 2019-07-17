@@ -1,0 +1,7 @@
+Tag: xs-vcs-field-in-debian-control
+Severity: wishlist
+Certainty: certain
+Info: There is an XS-Vcs-* field in the <tt>debian/control</tt> file. As
+ of dpkg 1.14.6, the XS- prefix is no longer necessary. dpkg now
+ recognizes these fields and handles them correctly. Consider removing
+ the XS- prefix for this field.

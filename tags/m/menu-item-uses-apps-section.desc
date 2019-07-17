@@ -1,0 +1,6 @@
+Tag: menu-item-uses-apps-section
+Severity: normal
+Certainty: certain
+Info: The menu item has a line that specifies a section under "Apps".
+ This section has been moved to "Applications".
+Ref: menu-policy 2.1

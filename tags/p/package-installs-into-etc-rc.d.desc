@@ -1,0 +1,6 @@
+Tag: package-installs-into-etc-rc.d
+Severity: serious
+Certainty: certain
+Info: The package installs files into the <tt>/etc/rc.d</tt> or
+ <tt>/etc/rc?.d</tt> which is not allowed.
+Ref: policy 9.3.3

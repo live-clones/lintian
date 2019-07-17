@@ -1,0 +1,7 @@
+Tag: latest-debian-changelog-entry-changed-to-native
+Severity: normal
+Certainty: possible
+Info: The latest package has a Debian native version number, while the
+ previous version number was not native. This is usually a mistake made by
+ the maintainer by forgetting to append -1 when uploading a new upstream
+ version.

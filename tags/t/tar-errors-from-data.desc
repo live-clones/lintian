@@ -1,0 +1,6 @@
+Tag: tar-errors-from-data
+Severity: important
+Certainty: possible
+Info: tar produced an error while listing the contents of the data
+ member of this package. This probably means there's something broken or
+ at least strange about the way the package was constructed.

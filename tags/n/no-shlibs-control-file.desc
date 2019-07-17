@@ -1,0 +1,7 @@
+Tag: no-shlibs-control-file
+Severity: serious
+Certainty: possible
+Info: Although the package includes a shared library, the package does not
+ have a shlibs control file. If this is intentional, please override this
+ error.
+Ref: policy 8.6

@@ -1,0 +1,6 @@
+Tag: appstream-metadata-invalid
+Severity: serious
+Certainty: certain
+Ref: https://wiki.debian.org/AppStream/Guidelines
+Info: The specified AppStream metadata file does not consist of
+ valid XML.

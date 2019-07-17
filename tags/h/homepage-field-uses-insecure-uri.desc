@@ -1,0 +1,5 @@
+Tag: homepage-field-uses-insecure-uri
+Severity: pedantic
+Certainty: certain
+Info: The Homepage field uses an unencrypted transport protocol for the
+ URI.

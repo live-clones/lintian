@@ -1,0 +1,5 @@
+Tag: no-version-field
+Severity: serious
+Certainty: certain
+Info: The package does not have a "Version:" field in its control file.
+Ref: policy 5.3

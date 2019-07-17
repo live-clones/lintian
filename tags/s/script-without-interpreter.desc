@@ -1,0 +1,5 @@
+Tag: script-without-interpreter
+Severity: important
+Certainty: certain
+Info: This file starts with the #! sequence that identifies scripts, but
+ it does not name an interpreter.

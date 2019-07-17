@@ -1,0 +1,6 @@
+Tag: csh-considered-harmful
+Severity: normal
+Certainty: certain
+Info: The Debian policy for scripts explicitly warns against using csh
+ and tcsh as scripting languages.
+Ref: policy 10.4

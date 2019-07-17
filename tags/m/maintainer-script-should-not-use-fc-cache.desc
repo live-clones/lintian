@@ -1,0 +1,6 @@
+Tag: maintainer-script-should-not-use-fc-cache
+Severity: normal
+Certainty: possible
+Info: This script apparently runs fc-cache. Updating of the fontconfig
+ cache files is now handled automatically by triggers, so running fc-cache
+ from maintainer scripts is no longer necessary.

@@ -1,0 +1,6 @@
+Tag: missing-templates-pot
+Severity: normal
+Certainty: certain
+Info: The required file <tt>templates.pot</tt> is missing from
+ <tt>debian/po</tt>.
+Ref: po-debconf(7)

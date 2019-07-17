@@ -1,0 +1,8 @@
+Tag: init.d-script-does-not-implement-status-option
+Severity: wishlist
+Certainty: certain
+Ref: https://wiki.debian.org/LSBInitScripts
+Info: The specified <tt>/etc/init.d</tt> script does not implement the
+ <tt>status</tt> option. This is actually required by LSB, often
+ requested by users and will be required by the Debian Policy in
+ the future.

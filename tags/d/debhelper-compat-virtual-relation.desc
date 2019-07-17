@@ -1,0 +1,5 @@
+Tag: debhelper-compat-virtual-relation
+Severity: classification
+Certainty: certain
+Info: This package is using the <tt>debhelper-compat</tt> virtual
+ package as a build-dependency.

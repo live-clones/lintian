@@ -1,0 +1,10 @@
+Tag: debian-watch-file-specifies-old-upstream-version
+Severity: normal
+Certainty: certain
+Info: The watch file specifies an upstream version number which matches
+ the upstream portion of an old <tt>debian/changelog</tt> entry, and the
+ current <tt>debian/changelog</tt> entry specifies a newer upstream
+ version. The version number in the watch file is very likely to be
+ incorrect and probably should be replaced with the current expected
+ upstream version. Otherwise, DEHS and similar projects will think the
+ package is out of date even when it may not be.

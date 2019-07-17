@@ -1,0 +1,6 @@
+Tag: duplicated-tag-in-menu-item
+Severity: normal
+Certainty: certain
+Info: The menu item contains two instances of the same tag. This is just a
+ waste of space, as menu will only use one of them.
+Ref: menu 3.2

@@ -1,0 +1,7 @@
+Tag: license-problem-json-evil
+Severity: serious
+Certainty: possible
+Info: The given source file is copyrighted under the non-free
+ license of json and the infamous clause:
+ The Software shall be used for Good, not Evil.
+Ref: https://wiki.debian.org/qa.debian.org/jsonevil

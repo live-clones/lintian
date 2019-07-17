@@ -1,0 +1,13 @@
+Tag: copyright-should-refer-to-common-license-file-for-gfdl
+Severity: important
+Certainty: possible
+Ref: policy 12.5
+Info: The strings "GNU Free Documentation License" or "GFDL" appear in the
+ copyright file for this package, but the copyright file does not
+ reference <tt>/usr/share/common-licenses</tt> as the location of the GFDL
+ on Debian systems.
+ .
+ If the package uses some other license that just mentions the GFDL and
+ that Lintian should detect as an exception, please file a Lintian bug.
+ If the copyright file must mention the GFDL for reasons other than stating
+ the license of the package, please add a Lintian override.

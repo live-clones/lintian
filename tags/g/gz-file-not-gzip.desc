@@ -1,0 +1,8 @@
+Tag: gz-file-not-gzip
+Severity: normal
+Certainty: possible
+Info: The given file ends with <tt>.gz</tt>, which normally indicates it
+ is compressed with gzip. However, it doesn't seem to be a
+ gzip-compressed file. gzip will fail with an error on such files.
+ Normally this indicates a mistake in the installation process of the
+ package.

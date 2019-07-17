@@ -1,0 +1,12 @@
+Tag: bin-sbin-mismatch
+Severity: wishlist
+Certainty: possible
+Experimental: yes
+Info: The package installs a binary under <tt>/usr/sbin</tt> or
+ <tt>/sbin</tt> but the specified file or maintainer script appears to
+ incorrectly reference it under <tt>/usr/bin</tt> or <tt>/bin</tt>.
+ .
+ This is likely due to the maintainer identifying that the package
+ requires root privileges or similar and thus installing the files to
+ the <tt>sbin</tt> variant, but the package has not been comprehensively
+ or completely updated to match.

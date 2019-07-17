@@ -1,0 +1,9 @@
+Tag: symlink-ends-with-slash
+Severity: minor
+Certainty: certain
+Info: This symlink ends with a slash (/). This is in violation
+ of policy, where it is stated that symlinks should be as short as possible
+ .
+ If you use debhelper, running dh_link after creating the package structure
+ will fix this problem for you.
+Ref: policy 10.5

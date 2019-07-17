@@ -1,0 +1,8 @@
+Tag: unknown-source-format
+Severity: serious
+Certainty: certain
+Info: <tt>debian/source/format</tt> contains an unknown source format. The
+ formats officially supported by Debian are "3.0 (quilt)", "3.0 (native)"
+ and "1.0". dpkg-source additionally supports "2.0", "3.0 (git)" and
+ "3.0 (bzr)".
+Ref: dpkg-source(1)

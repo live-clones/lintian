@@ -1,0 +1,14 @@
+Tag: license-problem-md5sum-non-distributable-file
+Severity: serious
+Certainty: certain
+Info: The following file is not distributable even in the non-free
+ archive.
+ .
+ Please re-package the package without the file (if possible)
+ or ask the FTP-masters to remove the package.
+ .
+ If the package has been uploaded to Debian before, please
+ remember to also notify snapshot.debian.org about this
+ package containing a non-distributable file.
+ .
+ If this is a false-positive, please report a bug against Lintian.

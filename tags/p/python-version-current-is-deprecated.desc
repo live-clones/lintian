@@ -1,0 +1,6 @@
+Tag: python-version-current-is-deprecated
+Severity: normal
+Certainty: certain
+Info: The use of "current" in the Python-Version or Python3-Version
+ field is deprecated.
+Ref: python-policy 3.4

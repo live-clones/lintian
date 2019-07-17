@@ -1,0 +1,5 @@
+Tag: duplicate-updaterc.d-calls-in-postinst
+Severity: important
+Certainty: certain
+Info: The <tt>postinst</tt> script calls <tt>update-rc.d</tt> several
+ times for the same <tt>/etc/init.d</tt> script.

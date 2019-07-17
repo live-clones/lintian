@@ -1,0 +1,13 @@
+Tag: copyright-refers-to-deprecated-bsd-license-file
+Severity: minor
+Certainty: certain
+Ref: policy 12.5
+Info: The copyright file refers to
+ <tt>/usr/share/common-licenses/BSD</tt>. Due to the brevity of this
+ license, the specificity of this copy to code whose copyright is held by
+ the Regents of the University of California, and the frequency of minor
+ wording changes in the license, its text should be included in the
+ copyright file directly rather than referencing this file.
+ .
+ This file may be removed from a future version of base-files if
+ references to it drop sufficiently.

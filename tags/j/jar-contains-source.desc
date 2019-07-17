@@ -1,0 +1,12 @@
+Tag: jar-contains-source
+Severity: normal
+Certainty: certain
+Info: The package ships the specified Jar file containing a
+ <tt>.java</tt> file alongside a corresponding <tt>.class</tt> file.
+ .
+ This wastes disk space as the source is always available via <tt>apt
+ source</tt>.
+ .
+ Please ensure that the specified <tt>.java</tt> files are not shipped in
+ the Jar file.
+Ref: java-policy 2.4
