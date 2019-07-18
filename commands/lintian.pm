@@ -126,6 +126,7 @@ sub lintian_banner {
 
 sub fatal_error {
     my ($msg) = @_;
+    $msg =~ s/ at .*//;
     print STDERR  "$msg\n";
     exit(2);
 }
@@ -1449,11 +1450,7 @@ sub load_profile_and_configure_tags {
     # Initialize display level settings.
     for my $level (@display_level) {
         eval { $TAGS->display(@{$level}) };
-        if ($@) {
-            my $error = $@;
-            $error =~ s/ at .*//;
-            fatal_error($error);
-        }
+        fatal_error($@) if $@;
     }
     return $profile;
 }
