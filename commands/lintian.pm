@@ -1430,7 +1430,8 @@ sub setup_work_pool {
 }
 
 sub load_profile_and_configure_tags {
-    my $profile = dplint::load_profile($opt{'LINTIAN_PROFILE'});
+    my $profile = eval { dplint::load_profile($opt{'LINTIAN_PROFILE'}); };
+    fatal_error($@) if $@;
     # Ensure $opt{'LINTIAN_PROFILE'} is defined
     $opt{'LINTIAN_PROFILE'} = $profile->name
       unless defined($opt{'LINTIAN_PROFILE'});
