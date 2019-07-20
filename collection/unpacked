@@ -75,7 +75,7 @@ sub collect {
         my $future = $loop->new_future;
         my $dpkgerror;
 
-        $loop->open_process(
+        my $process = IO::Async::Process->new(
             command => [
                 'dpkg-source', '-q',
                 '--no-check', '-x',
@@ -97,6 +97,8 @@ sub collect {
                 $future->done('Done with dpkg-deb');
                 return;
             });
+
+        $loop->add($process);
 
         # awaits, and dies with message on failure
         $future->get;

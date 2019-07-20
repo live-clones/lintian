@@ -31,6 +31,7 @@ use autodie;
 
 use Cwd();
 use IO::Async::Loop;
+use IO::Async::Process;
 use Path::Tiny;
 
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
@@ -135,7 +136,7 @@ sub index_orig {
         my $stdout;
         my $stderr;
 
-        $loop->open_process(
+        my $process = IO::Async::Process->new(
             command => [@tar],
             stdout => { into => \$stdout },
             stderr => { into => \$stderr },
@@ -157,6 +158,8 @@ sub index_orig {
                 $future->done('Done with dpkg-deb');
                 return;
             });
+
+        $loop->add($process);
 
         $future->get;
 

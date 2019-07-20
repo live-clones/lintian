@@ -30,6 +30,7 @@ use autodie;
 
 use File::Basename;
 use IO::Async::Loop;
+use IO::Async::Process;
 use Path::Tiny;
 
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
@@ -87,7 +88,7 @@ sub collect {
         my $future = $loop->new_future;
         my $stderr;
 
-        $loop->open_process(
+        my $process = IO::Async::Process->new(
             command => [$helper, $stringdir],
             stdin => { from => $prehelper },
             stderr => { into => \$stderr },
@@ -107,6 +108,8 @@ sub collect {
                 $future->done("Done with $helper $stringdir");
                 return;
             });
+
+        $loop->add($process);
 
         # will raise an exception in case of failure
         $future->get;
