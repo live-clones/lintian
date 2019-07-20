@@ -30,6 +30,7 @@ use Cwd qw(abs_path);
 use Errno qw(ENOENT);
 use Exporter qw(import);
 use IO::Async::Loop;
+use IO::Async::Process;
 use Path::Tiny;
 use POSIX qw(sigprocmask SIG_BLOCK SIG_UNBLOCK SIG_SETMASK);
 
@@ -726,7 +727,7 @@ sub gzip {
     my $stderr;
 
     my @command = ('gzip', '--best', '--no-name', '--stdout');
-    $loop->open_process(
+    my $process = IO::Async::Process->new(
         command => [@command],
         stdin => { from => $data },
         stdout => { into => \$compressed },
@@ -745,6 +746,8 @@ sub gzip {
             $future->done('Done with command @command');
             return;
         });
+
+    $loop->add($process);
 
     $future->get;
 
