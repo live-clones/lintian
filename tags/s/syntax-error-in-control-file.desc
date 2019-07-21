@@ -1,7 +1,0 @@
-Tag: syntax-error-in-control-file
-Severity: important
-Certainty: possible
-Info: The control file contains a syntax error.
- .
- This issue may hide other issues as Lintian skips some checks on the
- file in this case.

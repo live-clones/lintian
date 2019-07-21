@@ -1,5 +1,0 @@
-Tag: debian-tests-control-is-not-a-regular-file
-Severity: wishlist
-Certainty: certain
-Info: In case the dsc file contains a Testsuite field, "debian/tests"
- must be a directory and contain a "control" regular file.
