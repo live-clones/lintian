@@ -42,7 +42,6 @@ Tags:
  source-only-upload-to-non-free-without-autobuild
  spelling-error-in-rules-requires-root
  stronger-dependency-implies-weaker
- syntax-error-in-control-file
  weak-library-dev-dependency
  xc-package-type-in-debian-control
  xs-testsuite-field-in-debian-control

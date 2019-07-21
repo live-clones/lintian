@@ -128,8 +128,7 @@ sub run {
         chomp $@;
         $@ =~ s/^internal error: //;
         $@ =~ s/^syntax error in //;
-        tag 'syntax-error-in-control-file', "debian/control: $@";
-        return;
+        die "syntax error in debian/control: $@";
     }
 
     foreach my $field (keys %{$info->source_field()}) {
