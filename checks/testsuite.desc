@@ -7,17 +7,14 @@ Info: This script checks the Testsuite field in package dsc files,
 Tags:
  debian-tests-control-and-control-autodep8
  debian-tests-control-autodep8-is-obsolete
- debian-tests-control-is-not-a-regular-file
  debian-tests-control-uses-national-encoding
  exclusive-runtime-tests-field
  illegal-runtime-test-name
  inconsistent-testsuite-field
  missing-runtime-test-file
- missing-runtime-tests-field
  no-op-testsuite
  obsolete-runtime-tests-restriction
  runtime-test-file-is-not-a-regular-file
- syntax-error-in-debian-tests-control
  testsuite-autopkgtest-missing
  testsuite-dependency-has-unparsable-elements
  unknown-runtime-tests-feature
