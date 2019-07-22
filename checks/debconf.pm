@@ -430,7 +430,7 @@ sub run {
                      [\"\']? (\S+?) [\"\']? \s+ (\S+)\s/xsm
                 ) {
                     my ($priority, $template) = ($1, $2);
-                    $templates_used{$template} = 1;
+                    $templates_used{get_template_name($info, $template)} = 1;
                     if ($priority !~ /^\$\S+$/) {
                         tag 'unknown-debconf-priority', "$file:$. $1"
                           unless ($valid_priorities{$priority});
@@ -448,7 +448,7 @@ sub run {
                     m/ \A \s* (?:db_get|db_set(?:title)?) \s+ 
                        [\"\']? (\S+?) [\"\']? (?:\s|\Z)/xsm
                 ) {
-                    $templates_used{$1} = 1;
+                    $templates_used{get_template_name($info, $1)} = 1;
                 }
                 # Try to handle Perl somewhat.
                 if (   m/^\s*(?:.*=\s*get|set)\s*\(\s*[\"\'](\S+?)[\"\']/
@@ -583,6 +583,13 @@ sub count_choices {
     }
     push(@items, $item) if $item ne '';
     return scalar(@items);
+}
+
+# Manually interpolate shell variables, eg. $DPKG_MAINTSCRIPT_PACKAGE
+sub get_template_name {
+    my ($info, $name) = @_;
+
+    return $name =~ s/^\$DPKG_MAINTSCRIPT_PACKAGE/$info->{name}/r;
 }
 
 1;

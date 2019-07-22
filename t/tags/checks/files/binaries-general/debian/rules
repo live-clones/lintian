@@ -7,3 +7,6 @@ export DEB_BUILD_MAINT_OPTIONS=hardening=+all
 
 override_dh_strip:
 	dh_strip -X usr/lib/debug -X unstripped -X ocaml
+
+override_dh_dwz:
+	# Can error with "deadbeefdeadbeef.debug: Found compressed .debug_info section, not attempting dwz compression"

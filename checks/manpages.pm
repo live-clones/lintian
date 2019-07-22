@@ -60,8 +60,9 @@ sub run {
                 or ($path eq 'usr/games/'))
         ) {
 
-            my $bin = $fname;
-            $binary{$bin} = $file;
+            my $bin  = $fname;
+            my $sbin = ($path eq 'sbin/') || ($path eq 'usr/sbin/');
+            $binary{$bin} = { file => $file, sbin => $sbin };
             $link{$bin} = $link if $link;
 
             next;
@@ -118,7 +119,8 @@ sub run {
         if (scalar @pieces && $section_num =~ s/^(\d).*$/$1/) {
             my $bin = join('.', @pieces);
             $manpage{$bin} = [] unless $manpage{$bin};
-            push @{$manpage{$bin}}, { file => $file, lang => $lang };
+            push @{$manpage{$bin}},
+              { file => $file, lang => $lang, section => $section };
 
             # number of directory and manpage extension equal?
             if ($section_num != $section) {
@@ -317,12 +319,19 @@ sub run {
     }
 
     for my $f (sort keys %binary) {
-        if (exists $manpage{$f}) {
-            if (none { $_->{lang} eq '' } @{$manpage{$f}}) {
-                tag 'binary-without-english-manpage', "$binary{$f}";
+        my $binfo = $binary{$f};
+        my $minfo = $manpage{$f};
+
+        if ($minfo) {
+            if ($binfo->{sbin} && $minfo->[0]{section} == 1) {
+                tag 'command-in-sbin-has-manpage-in-incorrect-section',
+                  $binfo->{file};
+            }
+            if (none { $_->{lang} eq '' } @{$minfo}) {
+                tag 'binary-without-english-manpage', $binfo->{file};
             }
         } else {
-            tag 'binary-without-manpage', "$binary{$f}";
+            tag 'binary-without-manpage', $binfo->{file};
         }
     }
 

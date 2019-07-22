@@ -1,6 +1,5 @@
 old-python2 = 2.7
-# Don't emit "old-python-version-field" for Python 3.5 yet (#903399)
-old-python3 = 3.4
+old-python3 = 3.5
 
 ancient-python2 = 2.7
-ancient-python3 = 3.4
+ancient-python3 = 3.5

@@ -48,6 +48,9 @@
 
 # Suppress the listed tags (--suppress-tags)
 #suppress-tags = debian-watch-does-not-check-gpg-signature
+
+# Suppress the tags listed in the specified file (--suppress-tags-from-file)
+#suppress-tags-from-file = /path/to/file.txt
  
 # Specify "tag per package" display limit (--tag-display-limit)
 #tag-display-limit = 42

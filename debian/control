@@ -48,6 +48,7 @@ Build-Depends:
  libipc-run-perl <!nocheck>,
  liblist-compare-perl <!nocheck>,
  liblist-moreutils-perl <!nocheck>,
+ libmoo-perl <!nocheck>,
  libparse-debianchangelog-perl <!nocheck>,
  libpath-tiny-perl,
  libtest-minimumversion-perl <!nocheck>,
@@ -64,6 +65,7 @@ Build-Depends:
  libtext-template-perl <!nocheck>,
  libtimedate-perl <!nocheck>,
  libtry-tiny-perl <!nocheck>,
+ libtype-tiny-perl <!nocheck>,
  libunicode-utf8-perl <!nocheck>,
  liburi-perl <!nocheck>,
  libxml-libxml-perl <!nocheck>,
@@ -86,7 +88,7 @@ Build-Depends:
  zip <!nocheck>,
 Build-Conflicts:
  libperl-critic-pulp-perl <!nocheck>,
-Standards-Version: 4.3.0
+Standards-Version: 4.4.0
 Rules-Requires-Root: no
 Vcs-Git: https://salsa.debian.org/lintian/lintian.git
 Vcs-Browser: https://salsa.debian.org/lintian/lintian
@@ -116,12 +118,15 @@ Depends:
  libfile-basedir-perl,
  libio-async-perl,
  libipc-run-perl,
+ liblist-compare-perl,
  liblist-moreutils-perl,
+ libmoo-perl,
  libparse-debianchangelog-perl,
  libpath-tiny-perl,
  libtext-levenshtein-perl,
  libtimedate-perl,
  libtry-tiny-perl,
+ libtype-tiny-perl,
  liburi-perl,
  libxml-simple-perl,
  libyaml-libyaml-perl,
@@ -145,19 +150,12 @@ Replaces:
  funny-manpages (<< 1.3-5.1),
 Multi-Arch: foreign
 Description: Debian package checker
- Lintian dissects Debian packages and reports bugs and policy
- violations. It contains automated checks for many aspects of Debian
- policy as well as some checks for common errors.
+ Lintian dissects Debian packages and reports bugs and policy violations. It
+ contains automated checks for many aspects of Debian policy as well as some
+ checks for common errors.
  .
- It uses an archive directory, called a "laboratory", in which it stores
- information about the packages it examines.  It can keep this
- information between multiple invocations in order to avoid repeating
- expensive data-collection operations. This makes it possible to check the
- complete Debian archive for bugs, in a reasonable time.
+ This package is useful for all people who want to check Debian packages for
+ compliance with Debian policy. Every Debian maintainer should check packages
+ with this tool before uploading them to the archive.
  .
- This package is useful for all people who want to check Debian
- packages for compliance with Debian policy. Every Debian maintainer
- should check packages with this tool before uploading them to the
- archive.
- .
- This version of Lintian is calibrated for policy version 4.3.0.
+ This version of Lintian is calibrated for policy version 4.4.0.

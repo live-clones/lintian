@@ -156,7 +156,7 @@ Severity: pedantic
 Certainty: certain
 Experimental: yes
 Ref: uscan(1)
-Info: This watch file does not specific a means to verify the upstream
+Info: This watch file does not specify a means to verify the upstream
  tarball using a cryptographic signature.
  .
  If upstream distributions provides such signatures, please use the
