@@ -1,3 +1,9 @@
+lintian (2.16.0~bpo10+1) buster-backports; urgency=medium
+
+  * Rebuild for buster-backports. (Closes: #932729)
+
+ -- Chris Lamb <lamby@debian.org>  Mon, 22 Jul 2019 09:24:11 -0300
+
 lintian (2.16.0) unstable; urgency=medium
 
   The "post-buster" release.
