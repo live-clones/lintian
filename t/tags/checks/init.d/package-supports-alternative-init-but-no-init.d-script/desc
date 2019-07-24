@@ -3,5 +3,6 @@ Testname: package-supports-alternative-init-but-no-init.d-script
 Version: 1.0
 Description: Check for daemon with missing init.d script
 Match-Strategy: literal
+Options: -I --pedantic
 Output-Format: EWI
 Check: init.d
