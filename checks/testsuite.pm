@@ -110,7 +110,9 @@ sub check_control_contents {
     ) {
         chomp $@;
         $@ =~ s/^syntax error at //;
-        die "syntax error in debian tests control $@";
+        die "syntax error in debian tests control $@"
+          if length $@;
+        tag 'empty-debian-tests-control';
     } else {
         while (my ($index, $paragraph) = each(@paragraphs)) {
             check_control_paragraph($info, $paragraph,
