@@ -1,6 +1,6 @@
 Tag: command-in-sbin-has-manpage-in-incorrect-section
 Certainty: possible
-Severity: normal
+Severity: pedantic
 Ref: hier(7)
 Info: The command in <tt>/sbin</tt> or <tt>/usr/sbin</tt> are system
  administration commands; their manpages thus belong in section 8, not
