@@ -1556,7 +1556,9 @@ sub run {
             }
 
             # ---------------- documentation files
-            unless($fname =~ m,^etc/, or $fname =~m,^usr/share/(?:doc|help)/,){
+            unless($fname =~ m,^etc/,
+                or $fname =~m,^usr/share/(?:doc|help)/,
+                or $source_pkg eq 'lintian') {
                 foreach my $taboo ($DOCUMENTATION_FILE_REGEX->all) {
                     my $regex = $DOCUMENTATION_FILE_REGEX->value($taboo);
                     if($file->basename =~ m{$regex}xi) {
