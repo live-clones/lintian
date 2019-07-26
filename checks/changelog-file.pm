@@ -27,9 +27,10 @@ use Date::Format qw(time2str);
 use Encode qw(decode);
 use List::Util qw(first);
 use List::MoreUtils qw(any);
-use Parse::DebianChangelog;
+use Path::Tiny;
 
 use Lintian::Check qw(check_spelling spelling_tag_emitter);
+use Lintian::Info::Changelog;
 use Lintian::Relation::Version qw(versions_gt);
 use Lintian::Tags qw(tag);
 use Lintian::Util qw(file_is_encoded_in_non_utf8 strip);
@@ -125,20 +126,20 @@ sub run {
             tag 'debian-news-file-uses-obsolete-national-encoding',
               "at line $line";
         }
-        my $changes = Parse::DebianChangelog->init({
-            infile => $dnews,
-            quiet => 1,
-        });
-        if (my @errors = $changes->get_parse_errors) {
+        my $changelog = Lintian::Info::Changelog->new;
+        my $contents = path($dnews)->slurp;
+        $changelog->parse($contents);
+
+        if (my @errors = @{$changelog->errors}) {
             for (@errors) {
-                tag 'syntax-error-in-debian-news-file', "line $_->[1]",
-                  "\"$_->[2]\"";
+                tag 'syntax-error-in-debian-news-file', "line $_->[0]",
+                  "\"$_->[1]\"";
             }
         }
 
         # Some checks on the most recent entry.
-        if ($changes->data and defined(($changes->data)[0])) {
-            ($news) = $changes->data;
+        if ($changelog->entries && defined @{$changelog->entries}[0]) {
+            ($news) = @{$changelog->entries};
             if ($news->Distribution && $news->Distribution =~ /unreleased/i) {
                 tag 'debian-news-entry-has-strange-distribution',
                   $news->Distribution;
@@ -247,10 +248,10 @@ sub run {
     }
 
     my $changelog = $info->changelog;
-    if (my @errors = $changelog->get_parse_errors) {
+    if (my @errors = @{$changelog->errors}) {
         foreach (@errors) {
-            tag 'syntax-error-in-debian-changelog', "line $_->[1]",
-              "\"$_->[2]\"";
+            tag 'syntax-error-in-debian-changelog', "line $_->[0]",
+              "\"$_->[1]\"";
         }
     }
 
@@ -259,7 +260,7 @@ sub run {
     # report the line number of "too-long" lines.  (#657402)
     my $chloff = check_dch($dchpath);
 
-    my @entries = $changelog->data;
+    my @entries = @{$changelog->entries};
     if (@entries) {
         my %versions;
         my $first_timestamp = $entries[0]->Timestamp;
