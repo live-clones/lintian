@@ -308,15 +308,15 @@ sub check_literal {
     my ($testcase, $runpath, $output) = @_;
 
     # create expected output if it does not exist
-    my $expected = "$runpath/output";
+    my $expected = "$runpath/literal";
     path($expected)->touch
       unless -e $expected;
 
-    my $raw = "$runpath/output.actual";
+    my $raw = "$runpath/literal.actual";
     path($raw)->spew($output);
 
     # run a sed-script if it exists
-    my $actual = "$runpath/output.actual.parsed";
+    my $actual = "$runpath/literal.actual.parsed";
     my $script = "$runpath/post_test";
     if(-f $script) {
         sed_hook($script, $raw, $actual);
@@ -326,7 +326,7 @@ sub check_literal {
     }
 
     # fail if output does not match
-    return 'Output does not match'
+    return 'Output does not match in literal comparison'
       if (compare($expected, $actual) != 0);
 
     return;
