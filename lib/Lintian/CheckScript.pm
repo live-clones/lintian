@@ -107,22 +107,6 @@ sub new {
         }
     }
 
-    for my $tagname (@{$self->{'tags'}}) {
-        my $ti;
-        my $initial = substr($tagname, 0, 1);
-        my $tagpath = "$basedir/../tags/$initial/$tagname.desc";
-        croak "Cannot read tag file in $tagpath"
-          unless -r $tagpath;
-
-        my @paragraphs = read_dpkg_control_utf8($tagpath);
-        croak "$tagpath does not have exactly one paragraph"
-          if (scalar(@paragraphs) != 1);
-
-        $ti = Lintian::Tag::Info->new($paragraphs[0], $self->{'name'},
-            $self->{'type'});
-        $self->{'tag-table'}{$ti->tag} = $ti;
-    }
-
     bless $self, $class;
 
     return $self;
@@ -179,6 +163,18 @@ sub is_check_type {
     my ($self, $type) = @_;
     return 1 if ($self->{'type'}//'ALL') eq 'ALL';
     return $self->{'type-table'}{$type};
+}
+
+=item $cs->add_taginfo ($taginfo)
+
+Associates a L<tag|Lintian::Tag::Info> as issued by this check.
+
+=cut
+
+sub add_taginfo {
+    my ($self, $taginfo) = @_;
+    $self->{'tag-table'}{$taginfo->tag} = $taginfo;
+    return;
 }
 
 =item $cs->get_tag ($tagname)
