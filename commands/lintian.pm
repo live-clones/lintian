@@ -1475,6 +1475,7 @@ sub load_and_select_collections {
     for my $c (@{$all_checks}) {
         # Add the checks with their dependency information
         my $cs = $PROFILE->get_script($c);
+        die "Cannot find check $c" unless defined $cs;
         my @deps = $cs->needs_info;
         $map->add('check-' . $c);
         if (@deps) {
