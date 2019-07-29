@@ -4,5 +4,3 @@ Abbrev: autom
 Type: source
 Needs-Info: unpacked
 Info: Checks for erroneous, missing or deprecated automake files
-Tags:
- deprecated-configure-filename

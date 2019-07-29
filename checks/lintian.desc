@@ -4,7 +4,3 @@ Info: This description file is a special case. It contains the tag info
  .
  The tags in this check are enabled in all profiles by default, but can
  be disabled.
-Tags:
- malformed-override
- renamed-tag
- unused-override

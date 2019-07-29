@@ -4,6 +4,3 @@ Abbrev: dupf
 Type: binary
 Needs-Info: md5sums, unpacked
 Info: This script checks for duplicate files using checksums
-Tags:
- duplicate-changelog-files
- duplicate-files

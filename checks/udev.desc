@@ -3,7 +3,3 @@ Author: Petter Reinholdtsen <pere@hungry.com>
 Type: binary
 Needs-Info: unpacked
 Info: This script checks the udev rules for problems.
-Tags:
- udev-rule-missing-subsystem
- udev-rule-missing-uaccess
- udev-rule-unreadable

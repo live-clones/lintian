@@ -4,18 +4,3 @@ Abbrev: pd
 Type: source
 Info: This looks for common mistakes in packages using po-debconf(7).
 Needs-Info: unpacked
-Tags:
- debconf-translation-using-general-list
- invalid-po-file
- invalid-potfiles-in
- misnamed-po-file
- missing-file-from-potfiles-in
- missing-potfiles-in
- missing-templates-pot
- newer-debconf-templates
- no-complete-debconf-translation
- not-using-po-debconf
- stray-translated-debconf-templates
- translated-default-field
- unknown-encoding-in-po-file
- untranslatable-debconf-templates

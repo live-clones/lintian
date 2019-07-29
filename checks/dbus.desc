@@ -3,9 +3,3 @@ Author: Simon McVittie <simon.mcvittie@collabora.co.uk>
 Type: binary
 Info: Checks for deprecated or harmful D-Bus configuration
 Needs-Info: unpacked
-Tags:
- dbus-policy-at-console
- dbus-policy-excessively-broad
- dbus-policy-without-send-destination
- dbus-session-service-wrong-name
- dbus-system-service-wrong-name

@@ -4,6 +4,3 @@ Abbrev: sym
 Type: binary, udeb
 Needs-Info: unpacked
 Info: This script checks for broken symlinks.
-Tags:
- package-contains-broken-symlink-wildcard
- package-contains-unsafe-symlink

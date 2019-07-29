@@ -3,6 +3,3 @@ Author: Niels Thykier <niels@thykier.net>
 Abbrev: flen
 Type: source, binary, udeb
 Info: This script checks for long package file names
-Tags:
- package-has-long-file-name
- source-package-component-has-long-file-name

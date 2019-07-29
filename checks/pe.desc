@@ -3,5 +3,3 @@ Author: Chris Lamb <lamby@debian.org>
 Type: binary
 Needs-Info: unpacked, file-info
 Info: This script checks Microsoft Windows Portable Executable (PE) files
-Tags:
- portable-executable-missing-security-features

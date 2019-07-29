@@ -4,6 +4,3 @@ Abbrev: usr
 Type: binary
 Needs-Info: unpacked
 Info: This script checks for files with the same name installed in / and /usr.
-Tags:
- file-in-root-and-usr
- library-in-root-and-usr

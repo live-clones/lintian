@@ -5,33 +5,3 @@ Type: binary, udeb
 Needs-Info: unpacked
 Info: Check if the Description control field of a binary package conforms
  to the rules in the Policy Manual (section 3.4).
-Tags:
- capitalization-error-in-description
- capitalization-error-in-description-synopsis
- description-contains-dh-make-perl-template
- description-contains-homepage
- description-contains-invalid-control-statement
- description-contains-tabs
- description-is-debmake-template
- description-is-dh_make-template
- description-is-pkg-name
- description-mentions-planned-features
- description-possibly-contains-homepage
- description-starts-with-leading-spaces
- description-starts-with-package-name
- description-synopsis-is-duplicated
- description-synopsis-is-empty
- description-synopsis-might-not-be-phrased-properly
- description-synopsis-starts-with-article
- description-too-long
- description-too-short
- extended-description-contains-empty-paragraph
- extended-description-is-empty
- extended-description-is-probably-too-short
- extended-description-line-too-long
- package-has-no-description
- perl-module-name-not-mentioned-in-description
- possible-unindented-list-in-extended-description
- spelling-error-in-description
- spelling-error-in-description-synopsis
- using-first-person-in-description

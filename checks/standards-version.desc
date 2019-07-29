@@ -5,10 +5,3 @@ Type: source
 Info: This script checks if a source package contains a valid
  Standards-Version field.
 Needs-Info: unpacked
-Tags:
- ancient-standards-version
- invalid-standards-version
- newer-standards-version
- no-standards-version-field
- out-of-date-standards-version
- timewarp-standards-version

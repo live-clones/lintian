@@ -5,5 +5,3 @@ Type: source
 Needs-Info: unpacked
 Experimental: yes
 Info: This script checks for obsolete (but still valid) URLs
-Tags:
- obsolete-url-in-packaging

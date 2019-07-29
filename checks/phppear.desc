@@ -5,13 +5,3 @@ Type: source
 Needs-Info: unpacked
 Info: This script checks if the packages comply with various aspects of the
  Debian PHP policy.
-Tags:
- composer-package-without-pkg-php-tools-builddep
- missing-pkg-php-tools-addon
- missing-pkg-php-tools-buildsystem
- pear-channel-without-pkg-php-tools-builddep
- pear-package-but-missing-dependency
- pear-package-feature-requires-newer-pkg-php-tools
- pear-package-not-using-substvar
- pear-package-without-pkg-php-tools-builddep
- pecl-package-requires-build-dependency

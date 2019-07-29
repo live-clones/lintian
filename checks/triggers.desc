@@ -3,7 +3,3 @@ Author: Niels Thykier <niels@thykier.net>
 Type: binary, udeb
 Info: Check of trigger files in the binary package.
 Needs-Info: bin-pkg-control
-Tags:
- repeated-trigger-name
- unknown-trigger
- uses-implicit-await-trigger

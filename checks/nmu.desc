@@ -4,15 +4,3 @@ Abbrev: nmu
 Type: source
 Needs-Info: unpacked
 Info: This script checks if a source package is consistent about its NMU-ness.
-Tags:
- changelog-is-symlink
- changelog-should-mention-nmu
- changelog-should-mention-qa
- changelog-should-not-mention-nmu
- extra-whitespace-around-name-in-changelog-trailer
- maintainer-upload-has-incorrect-version-number
- orphaned-package-should-not-have-uploaders
- qa-upload-has-incorrect-version-number
- source-nmu-has-incorrect-version-number
- team-upload-has-incorrect-version-number
- unnecessary-team-upload

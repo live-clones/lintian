@@ -4,11 +4,3 @@ Abbrev: info
 Type: binary
 Needs-Info: unpacked, file-info
 Info: This script checks if a binary package conforms to info document policy.
-Tags:
- info-document-has-wrong-extension
- info-document-missing-dir-entry
- info-document-missing-dir-section
- info-document-missing-image-file
- info-document-not-compressed
- info-document-not-compressed-with-gzip
- info-document-not-compressed-with-max-compression

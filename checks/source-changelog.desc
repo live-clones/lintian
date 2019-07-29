@@ -6,9 +6,3 @@ Info: This script checks if a source package conforms to policy
  with regard to changelog files.
  .
  Each source package should have a debian/changelog file.
-Tags:
- debian-changelog-version-requires-debian-revision
- hyphen-in-native-debian-changelog-version
- hyphen-in-upstream-part-of-debian-changelog-version
- latest-debian-changelog-entry-without-new-date
- malformed-debian-changelog-version

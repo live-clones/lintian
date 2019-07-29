@@ -3,7 +3,3 @@ Author: Petter Reinholdtsen <pere@hungry.com>
 Type: source
 Needs-Info: unpacked
 Info: This script checks the upstream/metadata file for problems.
-Tags:
- upstream-metadata-file-is-missing
- upstream-metadata-is-not-a-file
- upstream-metadata-yaml-invalid

@@ -8,8 +8,3 @@ Info: This script looks for public upstream signing keys in source packages
  Each source package for which upstream developers sign releases should
  have a watch file and a public key to verify the sources retrieved from
  downloads.
-Tags:
- public-upstream-key-in-native-package
- public-upstream-key-not-minimal
- public-upstream-key-unusable
- public-upstream-keys-in-multiple-locations

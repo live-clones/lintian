@@ -4,12 +4,3 @@ Abbrev: ctl
 Type: binary, udeb
 Info: Checks files in the binary package's control.tar.gz, etc.
 Needs-Info: bin-pkg-control
-Tags:
- control-file-has-bad-owner
- control-file-has-bad-permissions
- control-file-is-empty
- control-file-is-not-a-file
- ctrl-script
- no-ctrl-scripts
- not-allowed-control-file
- unknown-control-file

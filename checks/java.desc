@@ -5,18 +5,3 @@ Type: binary, source
 Needs-Info: java-info, unpacked
 Info: This script checks if the packages comply with various aspects of the
  Debian Java policy.
-Tags:
- bad-jar-name
- classpath-contains-relative-path
- codeless-jar
- executable-jar-without-main-class
- incompatible-java-bytecode-format
- jar-contains-source
- jar-not-in-usr-share
- javalib-but-no-public-jars
- maven-plugin-in-usr-share-java
- missing-dep-on-jarwrapper
- missing-manifest
- source-contains-prebuilt-java-object
- unknown-java-class-version
- zip-parse-error

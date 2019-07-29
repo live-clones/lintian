@@ -3,25 +3,3 @@ Author: Michael Stapelberg <stapelberg@debian.org>
 Type: binary
 Info: Checks various systemd policy things
 Needs-Info: scripts, unpacked, file-info, bin-pkg-control
-Tags:
- init-script-is-not-a-file
- init.d-script-does-not-source-init-functions
- maintainer-script-calls-systemctl
- missing-systemd-service-for-init.d-rcS-script
- missing-systemd-service-for-init.d-script
- missing-systemd-timer-for-cron-script
- omitted-systemd-service-for-init.d-script
- service-file-is-not-a-file
- service-key-has-whitespace
- systemd-service-alias-without-extension
- systemd-service-file-missing-documentation-key
- systemd-service-file-missing-hardening-features
- systemd-service-file-missing-install-key
- systemd-service-file-outside-lib
- systemd-service-file-pidfile-refers-to-var-run
- systemd-service-file-refers-to-obsolete-bindto
- systemd-service-file-refers-to-obsolete-target
- systemd-service-file-refers-to-unusual-wantedby-target
- systemd-service-file-shutdown-problems
- systemd-service-file-wraps-init-script
- systemd-tmpfiles.d-outside-usr-lib

@@ -6,10 +6,3 @@ Needs-Info: unpacked
 Info: This script checks for correct use of the various
  <tt>*Version</tt> substvars, e.g. deprecated substvars,
  or usage that can cause un-binNMUability
-Tags:
- maybe-not-arch-all-binnmuable
- not-binnmuable-all-depends-any
- not-binnmuable-any-depends-all
- not-binnmuable-any-depends-any
- substvar-source-version-is-deprecated
- version-substvar-for-external-package

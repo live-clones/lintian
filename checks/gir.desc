@@ -3,12 +3,3 @@ Author: Simon McVittie <smcv@debian.org>
 Type: binary, source
 Info: Checks for GObject-Introspection mini-policy compliance
 Needs-Info: unpacked, bin-pkg-control
-Tags:
- gir-in-arch-all-package
- gir-missing-typelib-dependency
- gir-section-not-libdevel
- typelib-in-arch-all-package
- typelib-missing-gir-depends
- typelib-not-in-multiarch-directory
- typelib-package-name-does-not-match
- typelib-section-not-introspection

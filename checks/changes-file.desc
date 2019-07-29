@@ -2,28 +2,3 @@ Check-Script: changes-file
 Abbrev: chng
 Type: changes
 Info: This script checks for various problems with .changes files
-Tags:
- backports-changes-missing
- backports-upload-has-incorrect-version-number
- bad-distribution-in-changes-file
- bad-section-in-changes-file
- bad-urgency-in-changes-file
- changed-by-address-is-on-localhost
- changed-by-address-is-root-user
- changed-by-address-looks-weird
- changed-by-address-malformed
- changed-by-address-missing
- changed-by-invalid-for-derivative
- changed-by-name-missing
- checksum-count-mismatch-in-changes-file
- checksum-mismatch-in-changes-file
- distribution-and-changes-mismatch
- distribution-and-experimental-mismatch
- file-size-mismatch-in-changes-file
- malformed-changes-file
- multiple-distributions-in-changes-file
- no-description-in-changes-file
- no-urgency-in-changes-file
- package-builds-dbg-and-dbgsym-variants
- unreleased-changes
- upload-has-backports-version-number

@@ -5,5 +5,3 @@ Type: binary
 Needs-Info: unpacked
 Info: This script checks whether an architecture-dependent package has
  large amounts of data in /usr/share.
-Tags:
- arch-dep-package-has-big-usr-share

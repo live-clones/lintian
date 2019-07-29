@@ -4,15 +4,3 @@ Abbrev: dfmt
 Type: binary, udeb
 Needs-Info: unpacked, bin-pkg-control
 Info: This script checks the format of the deb ar archive itself.
-Tags:
- control-tarball-compression-format
- data-tarball-compression-format
- lzma-deb-archive
- malformed-deb-archive
- misplaced-extra-member-in-deb
- tar-errors-from-control
- tar-errors-from-data
- udeb-uses-unsupported-compression-for-data-tarball
- uses-deprecated-compression-for-data-tarball
- uses-no-compression-for-control-tarball
- uses-no-compression-for-data-tarball

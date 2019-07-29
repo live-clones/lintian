@@ -5,12 +5,3 @@ Type: binary
 Needs-Info: bin-pkg-control, unpacked
 Info: This script checks if the conffiles control file of a binary
  package is correct.
-Tags:
- conffile-has-bad-file-type
- conffile-is-not-in-package
- duplicate-conffile
- file-in-etc-not-marked-as-conffile
- file-in-etc-rc.d-marked-as-conffile
- file-in-usr-marked-as-conffile
- non-etc-file-marked-as-conffile
- relative-conffile

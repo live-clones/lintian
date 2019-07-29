@@ -4,36 +4,3 @@ Type: source
 Needs-Info: unpacked
 Info: Check targets and actions in debian/rules.
 Abbrev: rul
-Tags:
- binary-arch-rules-but-pkg-is-arch-indep
- clean-should-be-satisfied-by-build-depends
- debian-rules-calls-debhelper-in-odd-order
- debian-rules-contains-unnecessary-get-orig-source-target
- debian-rules-ignores-make-clean-error
- debian-rules-is-dh_make-template
- debian-rules-is-symlink
- debian-rules-missing-recommended-target
- debian-rules-missing-required-target
- debian-rules-not-a-makefile
- debian-rules-parses-dpkg-parsechangelog
- debian-rules-passes-version-info-to-dh_shlibdeps
- debian-rules-sets-DEB_BUILD_OPTIONS
- debian-rules-sets-DH_COMPAT
- debian-rules-sets-dpkg-architecture-variable
- debian-rules-should-not-automatically-update-control
- debian-rules-should-not-set-CFLAGS-from-noopt
- debian-rules-should-not-use-DEB_BUILD_OPTS
- debian-rules-should-not-use-DH_EXTRA_ADDONS
- debian-rules-should-not-use-custom-compression-settings
- debian-rules-should-not-use-or-modify-user-only-variable
- debian-rules-should-not-use-pwd
- debian-rules-should-not-use-sanitize-all-buildflag
- debian-rules-should-not-use-underscore-variable
- debian-rules-uses-deprecated-makefile
- debug-symbol-migration-possibly-complete
- missing-build-dependency
- missing-python-build-dependency
- override_dh_auto_test-does-not-check-DEB_BUILD_OPTIONS
- override_dh_clean-does-not-call-dh_clean
- override_dh_fixperms-does-not-call-dh_fixperms
- unnecessary-source-date-epoch-assignment

@@ -5,5 +5,3 @@ Type: binary
 Needs-Info: unpacked
 Info: This script checks if the packages comply with various aspects of the
  emacsen team's policy.
-Tags:
- emacsen-common-without-dh-elpa

@@ -4,12 +4,3 @@ Abbrev: ocaml
 Type: binary
 Info: This looks for common mistakes in OCaml binary packages.
 Needs-Info: ar-info, unpacked
-Tags:
- ocaml-dangling-cmi
- ocaml-dangling-cmx
- ocaml-dangling-cmxa
- ocaml-dangling-cmxs
- ocaml-dev-file-in-nondev-package
- ocaml-dev-file-not-in-usr-lib-ocaml
- ocaml-meta-without-suggesting-findlib
- ocaml-stray-cmo

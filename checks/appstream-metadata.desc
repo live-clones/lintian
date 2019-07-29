@@ -3,9 +3,3 @@ Author: Petter Reinholdtsen <pere@hungry.com>
 Type: binary
 Needs-Info: unpacked
 Info: This script checks the AppStream metadata files for problems.
-Tags:
- appstream-metadata-in-legacy-location
- appstream-metadata-invalid
- appstream-metadata-legacy-format
- appstream-metadata-malformed-modalias-provide
- appstream-metadata-missing-modalias-provide

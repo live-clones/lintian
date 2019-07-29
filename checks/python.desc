@@ -3,20 +3,3 @@ Author: Chris Lamb <lamby@debian.org>
 Type: source, binary
 Info: This script checks Python-related issues
 Needs-Info: unpacked, changelog-file
-Tags:
- alternatively-build-depends-on-python-sphinx-and-python3-sphinx
- ancient-python-version-field
- build-depends-on-python-sphinx-only
- dependency-on-python-version-marked-for-end-of-life
- depends-on-python2-and-python3
- django-package-does-not-depend-on-django
- malformed-python-version
- mismatched-python-substvar
- new-package-should-not-package-python2-module
- old-python-version-field
- python-foo-but-no-python3-foo
- python-package-depends-on-package-from-other-python-variant
- python-package-missing-depends-on-python
- python-version-current-is-deprecated
- script-uses-unversioned-python-in-shebang
- source-package-encodes-python-version

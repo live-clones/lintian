@@ -5,9 +5,3 @@ Type: binary
 Needs-Info: md5sums, bin-pkg-control, unpacked
 Info: This script checks if md5sum control files are valid if they are
  provided by a binary package.
-Tags:
- file-missing-in-md5sums
- malformed-md5sums-control-file
- md5sum-mismatch
- md5sums-lists-nonexistent-file
- no-md5sums-control-file

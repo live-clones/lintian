@@ -3,7 +3,3 @@ Author: Axel Beckert <abe@debian.org>
 Type: binary
 Needs-Info: unpacked
 Info: application packaged like a library (imported from pkg-perl-tools)
-Tags:
- application-in-library-section
- libapp-perl-package-name
- library-package-name-for-application

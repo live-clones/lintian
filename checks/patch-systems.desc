@@ -4,25 +4,3 @@ Abbrev: pat
 Type: source
 Info: This script checks for various possible problems when using patch systems
 Needs-Info: unpacked, diffstat
-Tags:
- direct-changes-in-diff-but-no-patch-system
- dpatch-build-dep-but-no-patch-list
- dpatch-index-references-non-existent-patch
- dpatch-missing-description
- format-3.0-but-debian-changes-patch
- more-than-one-patch-system
- package-uses-deprecated-dpatch-patch-system
- package-uses-vendor-specific-patch-series
- patch-file-present-but-not-mentioned-in-series
- patch-modifying-debian-files
- patch-system
- patch-system-but-direct-changes-in-diff
- patch-system-but-no-source-readme
- quilt-build-dep-but-no-series-file
- quilt-patch-missing-description
- quilt-patch-using-template-description
- quilt-patch-with-non-standard-options
- quilt-series-but-no-build-dep
- quilt-series-references-non-existent-patch
- quilt-series-without-trailing-newline
- spelling-error-in-patch-description
