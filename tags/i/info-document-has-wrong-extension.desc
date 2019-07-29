@@ -1,4 +1,5 @@
 Tag: info-document-has-wrong-extension
 Severity: normal
 Certainty: certain
+Check: infofiles
 Info: The info document has an extension other than info*.gz.

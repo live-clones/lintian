@@ -2,6 +2,7 @@
 Tag: mentions-deprecated-usr-lib-perl5-directory
 Severity: important
 Certainty: possible
+Check: cruft
 Experimental: yes
 Info: As of Perl 5.20, the vendorarch directory is /usr/lib/&lt;triplet&gt;/perl5,
  but this package still uses usr/lib/perl5 in some of the files under debian/.

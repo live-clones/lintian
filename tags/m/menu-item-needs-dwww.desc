@@ -1,6 +1,7 @@
 Tag: menu-item-needs-dwww
 Severity: normal
 Certainty: certain
+Check: menu-format
 Info: The menu item has needs=dwww. This is deprecated. Instead, you should
  register your documentation with doc-base, and dwww entries will be 
  automatically generated.

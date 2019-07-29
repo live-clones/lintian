@@ -1,5 +1,6 @@
 Tag: executable-desktop-file
 Severity: important
 Certainty: certain
+Check: menu-format
 Info: The desktop entry file is marked executable. Desktop entries are
  regular files and should be installed mode 0644.

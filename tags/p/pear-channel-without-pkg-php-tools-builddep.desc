@@ -1,6 +1,7 @@
 Tag: pear-channel-without-pkg-php-tools-builddep
 Severity: normal
 Certainty: possible
+Check: phppear
 Info: The package contains a channel.xml file but doesn't build-depend on
  pkg-php-tools.
  .

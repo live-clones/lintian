@@ -1,6 +1,7 @@
 Tag: build-info-in-binary-control-file-section
 Severity: serious
 Certainty: certain
+Check: control-file
 Ref: policy 5.2
 Info: The control file has a Build-Depends, Build-Depends-Indep,
  Build-Conflicts, or Build-Conflicts-Indep field in a binary

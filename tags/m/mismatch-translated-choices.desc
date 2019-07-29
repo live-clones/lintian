@@ -1,6 +1,7 @@
 Tag: mismatch-translated-choices
 Severity: important
 Certainty: certain
+Check: debconf
 Info: A "Choices:" field is a comma separated list, and translated
  "Choices:" fields must have the exact same number of elements. One
  of the translations does not follow this rule, you should contact the

@@ -1,6 +1,7 @@
 Tag: bin-sbin-mismatch
 Severity: wishlist
 Certainty: possible
+Check: files
 Experimental: yes
 Info: The package installs a binary under <tt>/usr/sbin</tt> or
  <tt>/sbin</tt> but the specified file or maintainer script appears to

@@ -1,6 +1,7 @@
 Tag: build-depends-on-metapackage
 Severity: important
 Certainty: certain
+Check: fields
 Info: Packages must not build-depend on metapackages.
  .
  Metapackages such as xorg, xorg-dev, x-window-system,

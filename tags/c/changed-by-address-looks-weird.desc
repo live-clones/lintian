@@ -1,5 +1,6 @@
 Tag: changed-by-address-looks-weird
 Severity: normal
 Certainty: possible
+Check: changes-file
 Info: The Changed-By field does not have whitespace between the name
  and the email address.

@@ -1,6 +1,7 @@
 Tag: apache2-deprecated-auth-config
 Severity: normal
 Certainty: certain
+Check: apache2
 Info: The package is using some of the deprecated authentication configuration
  directives Order, Satisfy, Allow, Deny, &lt;Limit&gt; or &lt;LimitExcept&gt;
  .

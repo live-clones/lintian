@@ -1,6 +1,7 @@
 Tag: debian-changelog-version-requires-debian-revision
 Severity: serious
 Certainty: certain
+Check: source-changelog
 Info: This package is not native and requires a Debian revision as part of the
  version recorded in debian/changelog.
  .

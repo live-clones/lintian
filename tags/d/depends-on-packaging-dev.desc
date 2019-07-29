@@ -3,3 +3,4 @@ Info: You depend/recommend/build-depend on packaging-dev, which is
  only a metapackage to install common packages needed for packaging.
 Severity: normal
 Certainty: certain
+Check: fields

@@ -1,6 +1,7 @@
 Tag: file-should-not-be-compressed
 Severity: normal
 Certainty: possible
+Check: files
 Info: The following file should not be compressed.
  .
  This file should be excluded from compression during build time.

@@ -1,6 +1,7 @@
 Tag: package-installs-deprecated-upstart-configuration
 Severity: normal
 Certainty: certain
+Check: files
 Info: The package installs files into the <tt>/etc/init</tt>
  directory which is used by Upstart, a replacement for the <tt>/sbin/init</tt>
  daemon which handles starting of tasks and services during boot, etc.

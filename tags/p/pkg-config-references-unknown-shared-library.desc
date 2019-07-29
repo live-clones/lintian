@@ -1,6 +1,7 @@
 Tag: pkg-config-references-unknown-shared-library
 Severity: normal
 Certainty: possible
+Check: shared-libs
 Info: The specified <tt>pkg-config(1)</tt> file references a shared
  object via, for example, <tt>Libs: -lfoo</tt> but this package
  appears to not ship the associated "libfoo.so" shared library.

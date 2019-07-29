@@ -1,6 +1,7 @@
 Tag: multiarch-foreign-static-library
 Severity: important
 Certainty: possible
+Check: files
 Info: The package is architecture-dependent, ships a static library in a
  public, architecture-dependent library search path and is marked
  <tt>Multi-Arch: foreign</tt>. A compiler will be unable to find this file,

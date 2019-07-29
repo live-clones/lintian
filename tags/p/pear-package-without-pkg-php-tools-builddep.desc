@@ -1,6 +1,7 @@
 Tag: pear-package-without-pkg-php-tools-builddep
 Severity: normal
 Certainty: possible
+Check: phppear
 Info: The package contains a package.xml or package2.xml file but doesn't
  build-depend on pkg-php-tools.
  .

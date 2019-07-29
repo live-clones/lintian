@@ -1,6 +1,7 @@
 Tag: program-not-linked-against-libc
 Severity: important
 Certainty: possible
+Check: binaries
 Ref: #698720
 Info: The package installs a binary which is not dynamically linked
  against libc.

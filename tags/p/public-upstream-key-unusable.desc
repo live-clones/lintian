@@ -1,6 +1,7 @@
 Tag: public-upstream-key-unusable
 Severity: wishlist
 Certainty: certain
+Check: upstream-signing-key
 Ref: uscan(1)
 Info: The source package contains a public upstream signing key that
  contains bogus, unexpected or unsuitable data.

@@ -1,6 +1,7 @@
 Tag: debian-rules-should-not-use-pwd
 Severity: normal
 Certainty: certain
+Check: rules
 Info: The <tt>debian/rules</tt> file for this package appears to use the
  variable $(PWD) to refer to the current directory. This variable is not
  set by GNU make and therefore will have whatever value it has in the

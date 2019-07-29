@@ -1,6 +1,7 @@
 Tag: perl-module-in-core-directory
 Severity: important
 Certainty: certain
+Check: files
 Info: Packaged modules must not be installed into the core perl
  directories as those directories change with each upstream perl
  revision. The vendor directories are provided for this purpose.

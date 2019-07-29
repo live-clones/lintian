@@ -1,6 +1,7 @@
 Tag: init.d-script-should-always-start-service
 Severity: important
 Certainty: possible
+Check: init.d
 Info: The specified file under <tt>/etc/default/</tt> includes a line
  such as <tt>ENABLED=</tt>, <tt>DISABLED=</tt>, <tt>RUN=</tt>, etc.
  .

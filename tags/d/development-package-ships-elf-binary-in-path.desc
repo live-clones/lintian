@@ -1,6 +1,7 @@
 Tag: development-package-ships-elf-binary-in-path
 Severity: minor
 Certainty: possible
+Check: binaries
 Experimental: yes
 Info: This development package (ie. from the <tt>libdevel</tt> section of
  the archive) installs an ELF binary within <tt>$PATH</tt>.

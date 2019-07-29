@@ -1,6 +1,7 @@
 Tag: ldconfig-symlink-referencing-wrong-file
 Severity: important
 Certainty: certain
+Check: shared-libs
 Info: The symbolic link references the wrong file. (It should reference
  the shared library.)
 Ref: policy 8.1

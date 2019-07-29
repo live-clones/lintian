@@ -1,6 +1,7 @@
 Tag: prerm-has-useless-call-to-install-docs
 Severity: minor
 Certainty: certain
+Check: menus
 Info: Explicitly calling <tt>install-docs</tt> in <tt>prerm</tt> is no
  longer required since doc-base file processing is handled by triggers.
  If the <tt>install-docs</tt> call was added by debhelper, rebuilding the

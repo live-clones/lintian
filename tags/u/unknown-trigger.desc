@@ -1,6 +1,7 @@
 Tag: unknown-trigger
 Severity: important
 Certainty: possible
+Check: triggers
 Info: The package has a trigger that Lintian does not recognise in its
  control file.
  .

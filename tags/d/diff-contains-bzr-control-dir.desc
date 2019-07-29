@@ -1,6 +1,7 @@
 Tag: diff-contains-bzr-control-dir
 Severity: normal
 Certainty: certain
+Check: cruft
 Info: The Debian diff or native package contains files in a .bzr
  directory. These are usually artifacts of the revision control system
  used by the Debian maintainer and not useful in a diff or native package.

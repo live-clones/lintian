@@ -1,6 +1,7 @@
 Tag: license-problem-undefined-license
 Severity: serious
 Certainty: possible
+Check: source-copyright
 Ref: https://ftp-master.debian.org/REJECT-FAQ.html
 Info: Your copyright file references a license that is not defined.
  Due to copyright law or treaties, files that are not available under

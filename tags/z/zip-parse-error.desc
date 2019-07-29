@@ -1,5 +1,6 @@
 Tag: zip-parse-error
 Severity: normal
 Certainty: certain
+Check: java
 Info: The package contains a Jar file, but Lintian is unable to parse it.
  It is possible that the Jar file is corrupt.

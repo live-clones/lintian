@@ -1,6 +1,7 @@
 Tag: debian-control-repeats-field-name-in-value
 Severity: normal
 Certainty: possible
+Check: control-file
 Ref: policy 5.1
 Info: The field on this line of <tt>debian/control</tt> repeats
  the field name in the value of the field. As an example:

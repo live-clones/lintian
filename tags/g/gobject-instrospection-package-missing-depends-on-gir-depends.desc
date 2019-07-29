@@ -1,6 +1,7 @@
 Tag: gobject-instrospection-package-missing-depends-on-gir-depends
 Severity: serious
 Certainty: certain
+Check: control-file
 Info: The package is a GObject Instrospection package but it does not specify a
  dependency on the ${gir:Depends} substvar. Missing these dependenceis usually
  results in the program aborting.

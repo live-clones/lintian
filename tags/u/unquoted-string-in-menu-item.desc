@@ -1,6 +1,7 @@
 Tag: unquoted-string-in-menu-item
 Severity: normal
 Certainty: certain
+Check: menu-format
 Info: The menu item includes a tag with an unquoted string like section=Games
  instead of section="Games". This is deprecated. Use a quoted string instead.
 Ref: menu 3.2

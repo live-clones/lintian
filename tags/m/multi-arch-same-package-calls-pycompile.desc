@@ -1,6 +1,7 @@
 Tag: multi-arch-same-package-calls-pycompile
 Severity: normal
 Certainty: possible
+Check: scripts
 Info: This <tt>Multi-Arch: same</tt> package uses <tt>pycompile</tt> or
  <tt>py3compile</tt> in the specified maintainer script.
  .

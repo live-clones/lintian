@@ -1,6 +1,7 @@
 Tag: missing-dependency-on-perlapi
 Severity: serious
 Certainty: certain
+Check: binaries
 Ref: perl-policy 4.4.2
 Info: This package includes a *.so file in <tt>/usr/lib/.../perl5</tt>,
  normally indicating that it includes a binary Perl module. Binary Perl

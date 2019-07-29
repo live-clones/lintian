@@ -1,6 +1,7 @@
 Tag: maintainer-script-should-not-use-update-alternatives-set
 Severity: normal
 Certainty: certain
+Check: scripts
 Info: The maintainer script calls <tt>update-alternatives --set
  &lt;alternative&gt; foo</tt> or <tt>update-alternatives --config
  &lt;alternative&gt;</tt> or <tt>update-alternatives --set-selections</tt>.

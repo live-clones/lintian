@@ -1,6 +1,7 @@
 Tag: package-installs-apt-preferences
 Severity: serious
 Certainty: possible
+Check: files
 Ref: apt_preferences(5)
 Info: Debian packages should not install files under <tt>/etc/apt/preferences.d/</tt> or install an /etc/apt/preferences file.
  This directory is under the control of the local administrator.

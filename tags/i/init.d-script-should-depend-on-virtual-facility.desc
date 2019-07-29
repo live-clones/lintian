@@ -1,6 +1,7 @@
 Tag: init.d-script-should-depend-on-virtual-facility
 Severity: important
 Certainty: possible
+Check: init.d
 Info: The given <tt>/etc/init.d</tt> script depends on a non-virtual
  facility that should probably be replaced by a virtual facility. For
  example, init scripts should depend on the virtual facility

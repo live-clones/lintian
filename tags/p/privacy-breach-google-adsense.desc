@@ -1,6 +1,7 @@
 Tag: privacy-breach-google-adsense
 Severity: serious
 Certainty: possible
+Check: files
 Info: This package creates a privacy breach by using Google AdSense.
  Google AdSense is a service run by Google that allows publishers
  of websites to automatically serve advertisements. Unfortunately, it

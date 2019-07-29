@@ -1,6 +1,7 @@
 Tag: virtual-package-depends-without-real-package-depends
 Severity: normal
 Certainty: possible
+Check: fields
 Info: The package declares a depends on a virtual package without listing a
  real package as an alternative first.
  .

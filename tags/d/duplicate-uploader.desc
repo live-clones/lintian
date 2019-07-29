@@ -1,5 +1,6 @@
 Tag: duplicate-uploader
 Severity: minor
 Certainty: certain
+Check: fields
 Info: The uploader appears more than once in the <tt>Uploaders</tt>
  field. The duplicate information should be removed.

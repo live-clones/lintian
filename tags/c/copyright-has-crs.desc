@@ -1,6 +1,7 @@
 Tag: copyright-has-crs
 Severity: pedantic
 Certainty: certain
+Check: copyright-file
 Info: The copyright file has lines ending in CRLF instead of just LF.
  .
  Running the following command against the given file removes any

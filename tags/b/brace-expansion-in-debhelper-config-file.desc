@@ -1,6 +1,7 @@
 Tag: brace-expansion-in-debhelper-config-file
 Severity: normal
 Certainty: possible
+Check: debhelper
 Info: This debhelper config file appears to use shell brace expansion
  (such as <tt>{foo,bar}</tt>) to specify files. This happens to work due
  to an accident of implementation but is not a supported feature. Only

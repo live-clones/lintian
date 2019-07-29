@@ -1,5 +1,6 @@
 Tag: no-ctrl-scripts
 Severity: classification
 Certainty: certain
+Check: control-files
 Info: The package does not rely on any maintainer scripts (or other
  executable control files).

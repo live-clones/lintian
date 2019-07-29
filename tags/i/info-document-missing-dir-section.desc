@@ -1,6 +1,7 @@
 Tag: info-document-missing-dir-section
 Severity: important
 Certainty: certain
+Check: infofiles
 Info: This info document has no INFO-DIR-SECTION line.
  <tt>install-info</tt> will be unable to determine the section into which
  this info page should be put. The best solution is to add a line like:

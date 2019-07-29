@@ -1,6 +1,7 @@
 Tag: privacy-breach-logo
 Severity: serious
 Certainty: possible
+Check: files
 Info: This package creates a potential privacy breach by fetching a
  logo at runtime.
  .

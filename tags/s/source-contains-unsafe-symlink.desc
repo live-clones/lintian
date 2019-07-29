@@ -1,6 +1,7 @@
 Tag: source-contains-unsafe-symlink
 Severity: serious
 Certainty: possible
+Check: cruft
 Info: The source contains an unsafe symlink. If followed, the link
  will escape the source root. Note that all absolute symlinks are
  unconditionally considered "unsafe" in this case (unlike in binary

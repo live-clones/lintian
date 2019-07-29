@@ -1,6 +1,7 @@
 Tag: static-library-has-unneeded-section
 Severity: wishlist
 Certainty: certain
+Check: binaries
 Info: The static library is stripped, but still contains a section
  that is not useful. You should call strip with
  <tt>--remove-section=.comment --remove-section=.note</tt> to remove the

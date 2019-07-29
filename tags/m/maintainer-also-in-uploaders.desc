@@ -1,6 +1,7 @@
 Tag: maintainer-also-in-uploaders
 Severity: minor
 Certainty: certain
+Check: fields
 Info: The maintainer value also appears on the <tt>Uploaders</tt> field.
  There were some reasons why this was useful when Uploaders support was
  first introduced, but those have long-since been fixed and there is no

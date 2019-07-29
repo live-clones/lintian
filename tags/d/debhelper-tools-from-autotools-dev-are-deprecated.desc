@@ -1,6 +1,7 @@
 Tag: debhelper-tools-from-autotools-dev-are-deprecated
 Severity: minor
 Certainty: certain
+Check: debhelper
 Info: The debhelper tools from autotools-dev has been replaced by the tool
  <tt>dh_update_autotools_config</tt>, which was available in
  debhelper (&gt;= 9.20160114)

@@ -1,5 +1,6 @@
 Tag: postrm-contains-additional-updaterc.d-calls
 Severity: important
 Certainty: certain
+Check: init.d
 Info: The <tt>postrm</tt> de-registers an <tt>/etc/init.d</tt> script which
  has not been registered in the <tt>postinst</tt> script before.

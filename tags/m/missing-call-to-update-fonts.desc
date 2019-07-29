@@ -1,6 +1,7 @@
 Tag: missing-call-to-update-fonts
 Severity: normal
 Certainty: possible
+Check: scripts
 Info: The maintainer script ships the specified X11 font but does not
  appear to call update-fonts-scale or update-fonts-dir in its postinst
  script.

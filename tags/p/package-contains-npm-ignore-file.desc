@@ -1,6 +1,7 @@
 Tag: package-contains-npm-ignore-file
 Severity: important
 Certainty: certain
+Check: files
 Info: This package ships an .npmignore file. This file is a
  configuration file for the npm command, the Node.js package manager.
  .

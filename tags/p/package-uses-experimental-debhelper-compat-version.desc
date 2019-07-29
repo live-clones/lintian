@@ -1,6 +1,7 @@
 Tag: package-uses-experimental-debhelper-compat-version
 Severity: pedantic
 Certainty: certain
+Check: debhelper
 Ref: debhelper(7)
 Info: The debhelper compatibility version used by this package is marked
  as experimental by the debhelper developer. You should consider using a

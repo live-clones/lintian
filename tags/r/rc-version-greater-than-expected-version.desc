@@ -1,6 +1,7 @@
 Tag: rc-version-greater-than-expected-version
 Severity: normal
 Certainty: possible
+Check: fields
 Ref: policy 5.6.12
 Info: The package appears to be a release candidate or preview release, but
  the version sorts higher than the expected final release.

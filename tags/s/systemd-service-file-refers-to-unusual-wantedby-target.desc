@@ -1,6 +1,7 @@
 Tag: systemd-service-file-refers-to-unusual-wantedby-target
 Severity: normal
 Certainty: certain
+Check: systemd
 Info: The specified systemd service file declares an unusual
  <tt>WantedBy=</tt> relationship.
  .

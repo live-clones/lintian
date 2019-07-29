@@ -1,4 +1,5 @@
 Tag: control-file-is-not-a-file
 Severity: serious
 Certainty: certain
+Check: control-files
 Info: The package contains a control file that is not a regular file.

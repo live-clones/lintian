@@ -1,6 +1,7 @@
 Tag: license-problem-gfdl-invariants-empty
 Severity: minor
 Certainty: possible
+Check: cruft
 Info: The given source file is licensed under GFDL, but without any
  precision about the presence of invariant sections, front-cover or
  back-cover text.

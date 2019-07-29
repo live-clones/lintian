@@ -1,6 +1,7 @@
 Tag: shlib-with-non-pic-code
 Severity: serious
 Certainty: possible
+Check: shared-libs
 Ref: policy 10.2
 Info: The listed shared libraries contain object code that was compiled 
  without -fPIC. All object code in shared libraries should be recompiled

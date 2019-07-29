@@ -1,6 +1,7 @@
 Tag: malformed-deb-archive
 Severity: serious
 Certainty: certain
+Check: deb-format
 Info: The binary package is not a correctly constructed archive. A binary
  Debian package must be an ar archive with exactly three members:
  <tt>debian-binary</tt>, <tt>control.tar.gz</tt>, and one of

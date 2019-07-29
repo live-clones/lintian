@@ -1,6 +1,7 @@
 Tag: missing-dependency-on-phpapi
 Severity: serious
 Certainty: certain
+Check: binaries
 Info: This package includes a *.so file in <tt>/usr/lib/phpN</tt>
  (where N is a number representing the major PHP version), normally
  indicating that it includes a PHP extension. PHP extensions must

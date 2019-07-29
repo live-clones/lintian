@@ -1,5 +1,6 @@
 Tag: package-depends-on-hardcoded-libc
 Severity: normal
 Certainty: certain
+Check: control-file
 Info: The given package declares a dependency on libc directly instead
  of using ${shlibs:Depends} in its <tt>debian/control</tt> stanza.

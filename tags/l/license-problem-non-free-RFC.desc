@@ -1,6 +1,7 @@
 Tag: license-problem-non-free-RFC
 Severity: serious
 Certainty: possible
+Check: cruft
 Info: The given source file is licensed under the newer RFC
  license.
  .

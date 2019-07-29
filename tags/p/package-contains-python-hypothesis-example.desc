@@ -1,6 +1,7 @@
 Tag: package-contains-python-hypothesis-example
 Severity: normal
 Certainty: certain
+Check: files
 Info: This package appears to contain the output of running a Python
  "Hypothesis" testsuite.
  .

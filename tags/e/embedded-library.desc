@@ -1,6 +1,7 @@
 Tag: embedded-library
 Severity: serious
 Certainty: possible
+Check: binaries
 Ref: policy 4.13
 Info: The given ELF object appears to have been statically linked to
  a library. Doing this is strongly discouraged due to the extra work

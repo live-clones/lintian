@@ -1,6 +1,7 @@
 Tag: shlib-missing-in-control-file
 Severity: important
 Certainty: possible
+Check: shared-libs
 Info: The package contains a shared library that is not listed in the
  shlibs control file. If this is intentional, please override this error.
 Ref: policy 8.6

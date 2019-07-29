@@ -1,6 +1,7 @@
 Tag: old-fsf-address-in-copyright-file
 Severity: normal
 Certainty: certain
+Check: copyright-file
 Info: The /usr/share/doc/<i>pkg</i>/copyright file refers to the old postal
  address of the Free Software Foundation (FSF). The new address is:
  .

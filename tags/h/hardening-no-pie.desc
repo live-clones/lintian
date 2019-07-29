@@ -1,6 +1,7 @@
 Tag: hardening-no-pie
 Severity: normal
 Certainty: certain
+Check: binaries
 Info: This package provides an ELF executable that was not compiled
  as a position independent executable (PIE).
  .

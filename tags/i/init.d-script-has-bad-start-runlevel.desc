@@ -1,6 +1,7 @@
 Tag: init.d-script-has-bad-start-runlevel
 Severity: normal
 Certainty: certain
+Check: init.d
 Ref: https://wiki.debian.org/LSBInitScripts
 Info: The given runlevel specified in the Default-Start keyword of the LSB
  keyword section of this <tt>/etc/init.d</tt> script isn't one of the

@@ -1,6 +1,7 @@
 Tag: debhelper-compat-file-is-missing
 Severity: normal
 Certainty: certain
+Check: debhelper
 Info: The package build-depends on debhelper but does not ship a compat
  file. Packages not using an experimental or beta compatibility level
  may alternatively Build-Depend on the debhelper-compat virtual package,

@@ -1,6 +1,7 @@
 Tag: incomplete-creative-commons-license
 Severity: normal
 Certainty: possible
+Check: source-copyright
 Info: The package appears to be licensed under a Creative Commons
  license but only includes the human-readable summary in the
  debian/copyright file which is not the actual licence. The Creative

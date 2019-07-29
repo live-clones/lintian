@@ -1,6 +1,7 @@
 Tag: maintainer-script-should-not-use-dpkg-maintscript-helper
 Severity: minor
 Certainty: certain
+Check: scripts
 Info: The maintainer script seems to make manual calls to the
  <tt>dpkg-maintscript-helper(1)</tt> utility.
  .

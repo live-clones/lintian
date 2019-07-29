@@ -1,6 +1,7 @@
 Tag: spelling-error-in-binary
 Severity: minor
 Certainty: wild-guess
+Check: binaries
 Info: Lintian found a spelling error in the given binary. Lintian has a
  list of common misspellings that it looks for. It does not have a
  dictionary like a spelling checker does.

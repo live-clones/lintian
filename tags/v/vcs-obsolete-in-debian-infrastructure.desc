@@ -1,6 +1,7 @@
 Tag: vcs-obsolete-in-debian-infrastructure
 Severity: normal
 Certainty: certain
+Check: fields
 Info: The specified Vcs-* field points to an area within the *.debian.org
  infrastructure but refers to a version control system that has been
  deprecated.

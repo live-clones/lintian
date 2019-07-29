@@ -1,4 +1,5 @@
 Tag: doc-base-file-duplicated-field
 Severity: important
 Certainty: certain
+Check: menus
 Info: The doc-base control file contains a duplicated field.

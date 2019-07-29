@@ -1,5 +1,6 @@
 Tag: vcs-field-uses-unknown-uri-format
 Severity: normal
 Certainty: possible
+Check: fields
 Info: The VCS-* field uses an URI which doesn't match any known format.
  You might have forgotten the protocol before the hostname.

@@ -1,6 +1,7 @@
 Tag: untranslatable-debconf-templates
 Severity: serious
 Certainty: possible
+Check: po-debconf
 Info: This package seems to be using debconf templates, but some
  descriptions are not translatable. You should prepend an underscore
  before every translatable field, as described in po-debconf(7). This

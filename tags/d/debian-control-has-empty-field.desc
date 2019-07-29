@@ -1,6 +1,7 @@
 Tag: debian-control-has-empty-field
 Severity: wishlist
 Certainty: certain
+Check: control-file
 Info: The field on this line of <tt>debian/control</tt> is empty. Whilst
  this is permitted in the syntax of Debian control files it is
  unnecessary.

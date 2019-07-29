@@ -1,6 +1,7 @@
 Tag: maintscript-calls-ldconfig
 Severity: normal
 Certainty: certain
+Check: shared-libs
 Info: The given maintainer script calls ldconfig. However, explicit
  calls in maintainer scripts should be replaced by a dpkg trigger.
  .

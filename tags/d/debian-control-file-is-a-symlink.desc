@@ -1,6 +1,7 @@
 Tag: debian-control-file-is-a-symlink
 Severity: normal
 Certainty: certain
+Check: control-file
 Info: The <tt>debian/control</tt> file is a symlink rather than a regular
  file. Using symlinks for required source package files is unnecessary and
  makes package checking and manipulation more difficult. If the control

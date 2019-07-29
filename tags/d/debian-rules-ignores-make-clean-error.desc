@@ -1,6 +1,7 @@
 Tag: debian-rules-ignores-make-clean-error
 Severity: normal
 Certainty: certain
+Check: rules
 Info: A rule in the <tt>debian/rules</tt> file for this package calls the
  package's clean or distclean target with a line like:
  .

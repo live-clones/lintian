@@ -1,5 +1,6 @@
 Tag: codeless-jar
 Severity: normal
 Certainty: certain
+Check: java
 Info: The jar file contains a manifest but no code. This probably indicates
  that something went wrong at build-time.

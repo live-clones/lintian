@@ -1,6 +1,7 @@
 Tag: maintainer-script-should-not-modify-ld-so-conf
 Severity: important
 Certainty: possible
+Check: scripts
 Info: This package appears to modify <tt>/etc/ld.so.conf</tt> and does not
  appear to be part of libc. Packages installing shared libraries in
  non-standard locations were previously permitted to modify

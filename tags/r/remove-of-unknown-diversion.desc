@@ -1,6 +1,7 @@
 Tag: remove-of-unknown-diversion
 Severity: important
 Certainty: certain
+Check: scripts
 Info: The maintainer script removes a diversion that it didn't add. If
  you're cleaning up unnecessary diversions from older versions of the
  package, remove them in <tt>preinst</tt> or <tt>postinst</tt> instead of

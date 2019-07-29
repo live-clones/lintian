@@ -1,6 +1,7 @@
 Tag: systemd-service-file-outside-lib
 Severity: serious
 Certainty: certain
+Check: systemd
 Info: The package ships a systemd service file outside
  <tt>/lib/systemd/system/</tt>
  .

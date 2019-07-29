@@ -1,6 +1,7 @@
 Tag: license-problem-php-license
 Severity: serious
 Certainty: possible
+Check: cruft
 Info: This package appears to be covered by version 3.0 (exactly) of the
  PHP license. This license is not applicable to anything that is not PHP
  and has no contributions from the PHP Group.

@@ -1,6 +1,7 @@
 Tag: library-in-root-and-usr
 Severity: important
 Certainty: certain
+Check: usrmerge
 Info: The package ships two files with the same name installed both in
  /lib*/ and /usr/lib*/ (or their subdirectories).
  This is not useful and is incompatible with the merged /usr directories

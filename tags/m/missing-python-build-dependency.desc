@@ -1,6 +1,7 @@
 Tag: missing-python-build-dependency
 Severity: important
 Certainty: certain
+Check: rules
 Ref: policy 4.2
 Info: The package appears to use Python as part of its build process in
  <tt>debian/rules</tt> but doesn't depend on Python.

@@ -1,6 +1,7 @@
 Tag: duplicate-in-relation-field
 Severity: pedantic
 Certainty: certain
+Check: control-file
 Info: The given field in the <tt>debian/control</tt> file contains
  relations that are either identical or imply each other. The less
  restrictive one can be removed. This is done automatically by

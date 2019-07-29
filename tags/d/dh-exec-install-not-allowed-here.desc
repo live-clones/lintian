@@ -1,6 +1,7 @@
 Tag: dh-exec-install-not-allowed-here
 Severity: important
 Certainty: possible
+Check: debhelper
 Info: The package uses a dh-exec-install construct in a debhelper
  config file, where it is not permitted.
  .

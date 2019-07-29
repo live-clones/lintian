@@ -1,5 +1,6 @@
 Tag: no-package-name
 Severity: serious
 Certainty: certain
+Check: fields
 Info: The package does not have a "Package:" field in its control file.
 Ref: policy 5.3

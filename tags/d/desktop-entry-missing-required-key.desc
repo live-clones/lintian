@@ -1,6 +1,7 @@
 Tag: desktop-entry-missing-required-key
 Severity: important
 Certainty: certain
+Check: menu-format
 Info: Desktop entries must contain, at a minimum, the keys Type and Name.
  .
  The desktop-file-validate tool in the desktop-file-utils package is

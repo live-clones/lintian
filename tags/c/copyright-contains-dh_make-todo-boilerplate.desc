@@ -1,6 +1,7 @@
 Tag: copyright-contains-dh_make-todo-boilerplate
 Severity: serious
 Certainty: possible
+Check: copyright-file
 Ref: policy 12.5
 Info: The string "Please also look if..." appears in the copyright
  file, which indicates that you either didn't check the whole source

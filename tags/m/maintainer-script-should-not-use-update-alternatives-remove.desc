@@ -1,6 +1,7 @@
 Tag: maintainer-script-should-not-use-update-alternatives-remove
 Severity: normal
 Certainty: certain
+Check: scripts
 Info: <tt>update-alternatives --remove &lt;alternative&gt; foo</tt> is
  called in the postrm. This can be dangerous because at the time the
  postrm is executed foo has already been deleted and update-alternatives

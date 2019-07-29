@@ -1,6 +1,7 @@
 Tag: debian-rules-should-not-use-underscore-variable
 Severity: normal
 Certainty: possible
+Check: rules
 Ref: policy 4.9
 Info: The rules file use the make variable $(_).
  .

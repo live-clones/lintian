@@ -1,6 +1,7 @@
 Tag: changed-by-name-missing
 Severity: serious
 Certainty: certain
+Check: changes-file
 Info: The Changed-By field seems to contain just an email address. It must
  contain the package maintainer's name and email address.
 Ref: policy 5.6.4

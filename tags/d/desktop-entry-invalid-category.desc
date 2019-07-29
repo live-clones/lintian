@@ -1,6 +1,7 @@
 Tag: desktop-entry-invalid-category
 Severity: normal
 Certainty: certain
+Check: menu-format
 Info: This desktop entry lists a category that is not one of the
  registered Main or Additional Categories in the FreeDesktop
  specification. Note that case is significant and whitespace is only

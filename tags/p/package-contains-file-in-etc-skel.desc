@@ -1,6 +1,7 @@
 Tag: package-contains-file-in-etc-skel
 Severity: serious
 Certainty: certain
+Check: files
 Info: This package ships the specified file under <tt>/etc/skel</tt>. Files
  in this directory are copied into new user accounts by <tt>adduser(8)</tt>.
  .

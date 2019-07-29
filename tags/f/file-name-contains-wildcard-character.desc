@@ -1,6 +1,7 @@
 Tag: file-name-contains-wildcard-character
 Severity: normal
 Certainty: possible
+Check: files
 Info: The file name contains shell wildcard characters.
  .
  These are most likely unexpanded wildcard characters from (for example)

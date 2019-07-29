@@ -1,6 +1,7 @@
 Tag: init.d-script-has-conflicting-start-stop
 Severity: normal
 Certainty: certain
+Check: init.d
 Ref: https://wiki.debian.org/LSBInitScripts
 Info: The given runlevel was included in both the Default-Start and
  Default-Stop keywords of the LSB keyword section of this

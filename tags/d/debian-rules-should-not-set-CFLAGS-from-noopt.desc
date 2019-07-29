@@ -1,6 +1,7 @@
 Tag: debian-rules-should-not-set-CFLAGS-from-noopt
 Severity: normal
 Certainty: certain
+Check: rules
 Ref: dpkg-buildflags(1)
 Info: The <tt>debian/rules</tt> file for this package appears to set
  <tt>CFLAGS</tt> if the value of <tt>DEB_BUILD_OPTIONS</tt> contains

@@ -1,6 +1,7 @@
 Tag: classpath-contains-relative-path
 Severity: normal
 Certainty: possible
+Check: java
 Info: The classpath listed in the jar file refers to a potential
  missing jar file. This could be the remnants of a build-time
  classpath that are not relevant for a JAR bundled in a Debian

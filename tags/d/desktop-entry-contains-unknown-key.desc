@@ -1,6 +1,7 @@
 Tag: desktop-entry-contains-unknown-key
 Severity: minor
 Certainty: certain
+Check: menu-format
 Info: The key on this line of the desktop entry is not one of the standard
  keys defined in the FreeDesktop specification, not one of the legacy KDE
  keywords, and one that does not begin with <tt>X-</tt>. It's most likely

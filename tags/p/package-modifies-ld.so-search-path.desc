@@ -1,6 +1,7 @@
 Tag: package-modifies-ld.so-search-path
 Severity: important
 Certainty: possible
+Check: files
 Ref: policy 10.2
 Info: This package installs a file in <tt>/etc/ld.so.conf.d</tt>,
  presumably to modify the search path of the run-time linker, and does not

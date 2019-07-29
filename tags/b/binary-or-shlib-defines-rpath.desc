@@ -1,6 +1,7 @@
 Tag: binary-or-shlib-defines-rpath
 Severity: serious
 Certainty: possible
+Check: binaries
 Ref: https://wiki.debian.org/RpathIssue
 Info: The binary or shared library sets RPATH or RUNPATH. This
  overrides the normal library search path, possibly interfering with

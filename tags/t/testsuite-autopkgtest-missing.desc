@@ -1,6 +1,7 @@
 Tag: testsuite-autopkgtest-missing
 Severity: wishlist
 Certainty: certain
+Check: testsuite
 Info: This package does not declare a test suite.
  .
  Having a test suite aids with automated quality assurance of the

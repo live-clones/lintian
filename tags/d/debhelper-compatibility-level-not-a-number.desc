@@ -1,6 +1,7 @@
 Tag: debhelper-compatibility-level-not-a-number
 Severity: important
 Certainty: possible
+Check: debhelper
 Info: The debhelper compatibility level specified in <tt>debian/rules</tt>
  is not a number. If you're using make functions or other more complex
  methods to generate the compatibility level, write the output into

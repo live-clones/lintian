@@ -1,6 +1,7 @@
 Tag: binary-without-manpage
 Severity: normal
 Certainty: possible
+Check: manpages
 Info: Each binary in <tt>/usr/bin</tt>, <tt>/usr/sbin</tt>, <tt>/bin</tt>,
  <tt>/sbin</tt> or <tt>/usr/games</tt> should have a manual page
  .

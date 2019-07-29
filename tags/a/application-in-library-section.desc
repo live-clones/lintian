@@ -1,6 +1,7 @@
 Tag: application-in-library-section
 Severity: normal
 Certainty: wild-guess
+Check: application-not-library
 Experimental: yes
 Info: This package contains a binary in $PATH but is in a section just
  thought for libraries. It likely should be in another section like

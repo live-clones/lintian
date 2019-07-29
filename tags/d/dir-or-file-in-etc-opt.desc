@@ -1,6 +1,7 @@
 Tag: dir-or-file-in-etc-opt
 Severity: serious
 Certainty: certain
+Check: files
 Info: Debian packages should not install into <tt>/etc/opt</tt>, because it
  is reserved for add-on software.
 Ref: fhs optaddonapplicationsoftwarepackages

@@ -1,6 +1,7 @@
 Tag: unknown-file-in-debian-source
 Severity: important
 Certainty: possible
+Check: debian-source-dir
 Info: The source package contains a file in debian/source/ that Lintian
  doesn't know about. Currently the following files are recognized:
  .

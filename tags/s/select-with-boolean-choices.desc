@@ -1,6 +1,7 @@
 Tag: select-with-boolean-choices
 Severity: normal
 Certainty: possible
+Check: debconf
 Info: Select templates with only yes and no choices should use the boolean
  type instead.
 Ref: debconf-devel(7)

@@ -1,6 +1,7 @@
 Tag: missing-vcs-browser-field
 Severity: wishlist
 Certainty: certain
+Check: fields
 Info: A Vcs-* field in this package is pointing to a repository that
  supports browsing of the repository via a web browser.
  .

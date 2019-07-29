@@ -1,6 +1,7 @@
 Tag: spelling-error-in-rules-requires-root
 Severity: normal
 Certainty: certain
+Check: control-file
 Info: This source package attempts to specify a
  <tt>Rules-Requires-Root</tt> field but appears to mispell the field.
  .

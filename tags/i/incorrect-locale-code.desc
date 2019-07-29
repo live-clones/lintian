@@ -1,6 +1,7 @@
 Tag: incorrect-locale-code
 Severity: normal
 Certainty: possible
+Check: files
 Info: The package appears to ship locales for a language but uses an
  incorrect locale code as a subdirectory of <tt>/usr/share/locale</tt>.
  This usually results in users of the intended target language not

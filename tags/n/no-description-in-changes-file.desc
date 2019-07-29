@@ -1,6 +1,7 @@
 Tag: no-description-in-changes-file
 Severity: serious
 Certainty: certain
+Check: changes-file
 Info: There is no "Description" field in your .changes file. A
  description is mandatory and is usually constructed from the descriptions
  in the control file of the package by the package build tools.

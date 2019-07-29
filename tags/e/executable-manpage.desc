@@ -1,4 +1,5 @@
 Tag: executable-manpage
 Severity: important
 Certainty: certain
+Check: files
 Info: Manual pages are not meant to be executed.

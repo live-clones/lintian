@@ -1,6 +1,7 @@
 Tag: pipe-symbol-used-as-license-disjunction
 Severity: normal
 Certainty: possible
+Check: source-copyright
 Ref: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 Info: In contrast to package dependencies, the pipe symbol or vertical
  bar does not indicate a logical disjunction or OR-relationship

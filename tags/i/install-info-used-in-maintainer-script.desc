@@ -1,6 +1,7 @@
 Tag: install-info-used-in-maintainer-script
 Severity: serious
 Certainty: possible
+Check: scripts
 Info: This script apparently runs <tt>install-info</tt>. Updating the
  <tt>/usr/share/info/dir</tt> file is now handled automatically by
  triggers, so running <tt>install-info</tt> from maintainer scripts is no

@@ -1,6 +1,7 @@
 Tag: unknown-file-in-python-module-directory
 Severity: important
 Certainty: certain
+Check: files
 Info: This package installs the specifiied "non-Python" file in the
  top-level of a Python library directory.
  .

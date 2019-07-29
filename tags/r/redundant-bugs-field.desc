@@ -1,6 +1,7 @@
 Tag: redundant-bugs-field
 Severity: normal
 Certainty: certain
+Check: fields
 Info: You use the Bugs field though the field value is the default 
  (debbugs://bugs.debian.org/). In this case the field is redundant and
  should be removed.

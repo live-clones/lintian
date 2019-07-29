@@ -1,6 +1,7 @@
 Tag: quilt-build-dep-but-no-series-file
 Severity: normal
 Certainty: certain
+Check: patch-systems
 Info: Using quilt requires you to explicitly list all patches you want
  to apply in debian/patches/series. This package build-depends on quilt,
  but does not provide a patch list. You should either remove the quilt

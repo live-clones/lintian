@@ -1,5 +1,6 @@
 Tag: doc-base-file-syntax-error
 Severity: important
 Certainty: certain
+Check: menus
 Info: Lintian found a syntax error in the doc-base control file.
 Ref: doc-base 2.3.2.2

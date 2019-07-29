@@ -1,5 +1,6 @@
 Tag: debian-build-system
 Severity: classification
 Certainty: certain
+Check: debhelper
 Info: This is the build system that Lintian believes the package is
  using.

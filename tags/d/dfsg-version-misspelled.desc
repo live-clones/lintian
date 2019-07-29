@@ -1,6 +1,7 @@
 Tag: dfsg-version-misspelled
 Severity: minor
 Certainty: certain
+Check: fields
 Info: The version number of this package contains "dsfg". You probably
  meant "dfsg", the conventional marker for upstream packages that are
  repackaged for Debian Free Software Guidelines compliance reasons.

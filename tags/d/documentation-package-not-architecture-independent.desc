@@ -1,5 +1,6 @@
 Tag: documentation-package-not-architecture-independent
 Severity: normal
 Certainty: certain
+Check: fields
 Info: Documentation packages usually shouldn't carry anything that requires
  recompiling on various architectures, in order to save space on mirrors.

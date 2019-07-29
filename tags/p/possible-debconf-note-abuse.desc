@@ -1,6 +1,7 @@
 Tag: possible-debconf-note-abuse
 Severity: normal
 Certainty: possible
+Check: debconf
 Info: Debconf notes should be used only for important notes that the
  user really should see, since debconf will go to great pains to make
  sure the user sees it.

@@ -1,6 +1,7 @@
 Tag: diff-contains-svn-commit-file
 Severity: minor
 Certainty: certain
+Check: cruft
 Info: The Debian diff or native package contains an
  <tt>svn-commit(.NNN).tmp</tt>, almost certainly a left-over from a failed
  Subversion commit by the Debian package maintainer.

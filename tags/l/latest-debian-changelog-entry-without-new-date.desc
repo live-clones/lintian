@@ -1,6 +1,7 @@
 Tag: latest-debian-changelog-entry-without-new-date
 Severity: important
 Certainty: certain
+Check: source-changelog
 Info: The latest Debian changelog entry has either the same or even an
  older date as the entry before.
  .

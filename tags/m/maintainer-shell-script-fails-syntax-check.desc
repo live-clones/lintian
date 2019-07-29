@@ -1,6 +1,7 @@
 Tag: maintainer-shell-script-fails-syntax-check
 Severity: serious
 Certainty: certain
+Check: scripts
 Info: Running this shell script with the shell's -n option set fails,
  which means that the script has syntax errors. This will likely make
  the package uninstallable.

@@ -1,6 +1,7 @@
 Tag: wiki-copyright-format-uri
 Severity: pedantic
 Certainty: possible
+Check: source-copyright
 Ref: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 Info: Format URI of the machine-readable copyright file refers to Debian Wiki.
  .

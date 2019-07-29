@@ -1,6 +1,7 @@
 Tag: debian-watch-file-missing-version
 Severity: normal
 Certainty: certain
+Check: watch-file
 Ref: uscan(1)
 Info: The <tt>debian/watch</tt> file in this package doesn't start a
  <tt>version=</tt> line. The first non-comment line of

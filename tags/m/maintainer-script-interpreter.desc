@@ -1,4 +1,5 @@
 Tag: maintainer-script-interpreter
 Severity: classification
 Certainty: certain
+Check: scripts
 Info: Interpreter used in maintainer script or ELF

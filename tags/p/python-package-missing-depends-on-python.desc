@@ -1,6 +1,7 @@
 Tag: python-package-missing-depends-on-python
 Severity: serious
 Certainty: certain
+Check: python
 Info: The specified Python package ships Python modules under
  <tt>/usr/lib</tt> but does not specify any dependency on Python.
  .

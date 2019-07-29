@@ -1,6 +1,7 @@
 Tag: python-module-has-overly-generic-name
 Severity: important
 Certainty: certain
+Check: files
 Info: This package installs a Python module with an overly generic name to
  a global namespace.
  .

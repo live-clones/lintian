@@ -1,6 +1,7 @@
 Tag: backports-changes-missing
 Severity: wishlist
 Certainty: possible
+Check: changes-file
 Info: The changes file only has changelog entries from a single version. It
  is recommended for backports to include all changes since (old)stable or
  the previous backport. This can be done by adding the '-v' option to the

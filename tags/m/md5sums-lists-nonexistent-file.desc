@@ -1,6 +1,7 @@
 Tag: md5sums-lists-nonexistent-file
 Severity: important
 Certainty: certain
+Check: md5sums
 Info: The md5sums control file lists a file which is not included in the
  package.
  .

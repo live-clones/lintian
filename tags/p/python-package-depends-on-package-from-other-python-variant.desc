@@ -1,6 +1,7 @@
 Tag: python-package-depends-on-package-from-other-python-variant
 Severity: normal
 Certainty: certain
+Check: python
 Info: Either the specified Python 3.x package declares a dependency on a
  Python 2.x package, or the specified Python 2.x package depends on a Python
  3.x package.

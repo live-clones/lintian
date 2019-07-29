@@ -1,6 +1,7 @@
 Tag: possible-new-upstream-release-without-new-version
 Severity: normal
 Certainty: possible
+Check: changelog-file
 Info: The most recent changelog entry contains an entry that appears to
  say this is a new upstream release (a comment similar to "new upstream
  release," possibly with a word between "upstream" and "release"), but the

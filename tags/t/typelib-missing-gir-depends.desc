@@ -1,6 +1,7 @@
 Tag: typelib-missing-gir-depends
 Severity: normal
 Certainty: certain
+Check: gir
 Info: GObject-Introspection binary typelibs
  (<tt>Foo-23.typelib</tt>) can depend on other typelibs. To generate
  appropriate dependencies in the binary package, they must have

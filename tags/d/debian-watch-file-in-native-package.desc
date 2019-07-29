@@ -1,6 +1,7 @@
 Tag: debian-watch-file-in-native-package
 Severity: normal
 Certainty: certain
+Check: watch-file
 Ref: https://wiki.debian.org/DEHS
 Info: The package ships a watch file although it is a Debian native
  package. DEHS does not process watch files in native packages based on

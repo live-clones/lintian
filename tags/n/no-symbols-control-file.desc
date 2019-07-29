@@ -1,6 +1,7 @@
 Tag: no-symbols-control-file
 Severity: wishlist
 Certainty: certain
+Check: shared-libs
 Info: Although the package includes a shared library, the package does not
  have a symbols control file.
  .

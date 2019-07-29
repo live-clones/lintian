@@ -1,6 +1,7 @@
 Tag: source-only-upload-to-non-free-without-autobuild
 Severity: serious
 Certainty: certain
+Check: control-file
 Info: For licensing reasons packages from the non-free section are not
  built by the autobuilders by default, so this source-upload to
  "non-free" will result in the package never appearing in the archive.

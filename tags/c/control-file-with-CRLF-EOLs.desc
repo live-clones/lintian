@@ -1,6 +1,7 @@
 Tag: control-file-with-CRLF-EOLs
 Severity: important
 Certainty: possible
+Check: cruft
 Info: The given control file uses <tt>CRLF</tt> as line terminator
  instead of the traditional UNIX <tt>LF</tt> terminator. Since some
  tools were only designed with the UNIX end-of-line terminators in mind,

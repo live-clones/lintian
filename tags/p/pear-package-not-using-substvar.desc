@@ -1,6 +1,7 @@
 Tag: pear-package-not-using-substvar
 Severity: wishlist
 Certainty: possible
+Check: phppear
 Info: The package is a PEAR package but its control file doesn't have
  ${phppear:summary} or ${phppear:description} in its description fields.
  .

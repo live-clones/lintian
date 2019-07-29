@@ -1,6 +1,7 @@
 Tag: maintainer-script-empty
 Severity: minor
 Certainty: certain
+Check: scripts
 Info: The maintainer script doesn't seem to contain any code other than
  comments and boilerplate (set -e, exit statements, and the case statement
  to parse options). While this is harmless in most cases, it is probably

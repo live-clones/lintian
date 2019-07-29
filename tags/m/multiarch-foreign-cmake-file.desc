@@ -1,6 +1,7 @@
 Tag: multiarch-foreign-cmake-file
 Severity: important
 Certainty: certain
+Check: files
 Info: The package is architecture-dependent, ships a cmake file in a public,
  architecture-dependent cmake search path and is marked <tt>Multi-Arch:
  foreign</tt>. CMake will be unable to find this file, unless it is installed

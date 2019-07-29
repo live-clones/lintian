@@ -1,6 +1,7 @@
 Tag: maintainer-script-may-use-dir_to_symlink_helper
 Severity: serious
 Certainty: possible
+Check: scripts
 Experimental: yes
 Info: The maintainer script apparently change a directory to a symlink
  not using dir_to_symlink command of dpkg-maintscript-helper, that take

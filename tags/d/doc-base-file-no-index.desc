@@ -1,6 +1,7 @@
 Tag: doc-base-file-no-index
 Severity: important
 Certainty: certain
+Check: menus
 Info: Format sections in doc-base control files for HTML or Info documents
  must contain an Index field specifying the starting document for the
  documentation. Even if the documentation is a single file, this field

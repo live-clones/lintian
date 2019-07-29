@@ -1,6 +1,7 @@
 Tag: bad-jar-name
 Severity: normal
 Certainty: certain
+Check: java
 Info: The package ships the specified "public" Jar file under
  <tt>/usr/share/java/</tt>, but the name does not correspond to Java policy
  guidelines. This can cause tools in the Debian Java toolchain to fail.

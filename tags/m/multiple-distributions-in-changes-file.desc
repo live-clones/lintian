@@ -1,6 +1,7 @@
 Tag: multiple-distributions-in-changes-file
 Severity: important
 Certainty: possible
+Check: changes-file
 Info: You've specified more than one target distribution for your upload
  in the <tt>*.changes</tt> file, probably via the most recent entry in the
  <tt>debian/changelog</tt> file.

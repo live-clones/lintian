@@ -1,6 +1,7 @@
 Tag: empty-debian-diff
 Severity: normal
 Certainty: possible
+Check: cruft
 Info: The Debian diff of this non-native package appears to be completely
  empty. This usually indicates a mistake when generating the upstream
  tarball, or it may mean that this was intended to be a native package and

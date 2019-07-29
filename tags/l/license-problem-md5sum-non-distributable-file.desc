@@ -1,6 +1,7 @@
 Tag: license-problem-md5sum-non-distributable-file
 Severity: serious
 Certainty: certain
+Check: cruft
 Info: The following file is not distributable even in the non-free
  archive.
  .

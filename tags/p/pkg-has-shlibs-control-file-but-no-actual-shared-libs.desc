@@ -1,6 +1,7 @@
 Tag: pkg-has-shlibs-control-file-but-no-actual-shared-libs
 Severity: important
 Certainty: certain
+Check: shared-libs
 Info: Although the package does not include any shared libraries, it does
  have a shlibs control file. If you did include a shared library, check that
  the SONAME of the library is set and that it matches the contents of the

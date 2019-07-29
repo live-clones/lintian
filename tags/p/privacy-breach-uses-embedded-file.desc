@@ -1,6 +1,7 @@
 Tag: privacy-breach-uses-embedded-file
 Severity: important
 Certainty: possible
+Check: files
 Info: This package creates a potential privacy breach by fetching data
  from an external website at runtime. Please remove these scripts or
  external HTML resources.

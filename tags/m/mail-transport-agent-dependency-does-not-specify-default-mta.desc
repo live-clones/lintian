@@ -1,6 +1,7 @@
 Tag: mail-transport-agent-dependency-does-not-specify-default-mta
 Severity: normal
 Certainty: certain
+Check: fields
 Info: This package has a relationship with the mail-transport-agent
  virtual package but does not specify the default-mta as an
  alternative.

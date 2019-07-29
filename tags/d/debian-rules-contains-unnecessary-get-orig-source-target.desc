@@ -1,6 +1,7 @@
 Tag: debian-rules-contains-unnecessary-get-orig-source-target
 Severity: wishlist
 Certainty: possible
+Check: rules
 Info: This package's <tt>debian/rules</tt> file contains a
  <tt>get-orig-source</tt> target that appears to be unnecessary. For
  example, the package might simply contain a single call to uscan(1).

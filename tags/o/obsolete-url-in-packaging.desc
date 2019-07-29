@@ -1,6 +1,7 @@
 Tag: obsolete-url-in-packaging
 Severity: normal
 Certainty: certain
+Check: obsolete-sites
 Info: One of the package's packaging files points to a website or code
  hoster known to have frozen contents, to be closed soon or to have
  already closed.

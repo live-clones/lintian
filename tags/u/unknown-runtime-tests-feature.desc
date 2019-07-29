@@ -1,6 +1,7 @@
 Tag: unknown-runtime-tests-feature
 Severity: pedantic
 Certainty: wild-guess
+Check: testsuite
 Info: A paragraph in debian/tests/control mentions a non-standard
  value for the Features field. Though allowed, this may indicate an
  error, as the value will be ignored.

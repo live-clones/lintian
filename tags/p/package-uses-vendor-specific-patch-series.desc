@@ -1,6 +1,7 @@
 Tag: package-uses-vendor-specific-patch-series
 Severity: important
 Certainty: certain
+Check: patch-systems
 Info: The specified series file is a vendor-specific patch series file.
  .
  This is feature of dpkg that can be used to apply a different series of

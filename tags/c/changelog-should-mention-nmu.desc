@@ -1,6 +1,7 @@
 Tag: changelog-should-mention-nmu
 Severity: normal
 Certainty: certain
+Check: nmu
 Info: When you NMU a package, that fact should be mentioned on the first line
  in the changelog entry. Use the words "NMU" or "Non-maintainer upload"
  (case insensitive).

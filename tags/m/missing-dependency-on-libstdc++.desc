@@ -1,6 +1,7 @@
 Tag: missing-dependency-on-libstdc++
 Severity: serious
 Certainty: possible
+Check: binaries
 Experimental: yes
 Ref: policy 8.6.1
 Info: The listed file appears to be linked against the C++ library, but the

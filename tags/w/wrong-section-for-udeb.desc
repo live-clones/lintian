@@ -1,4 +1,5 @@
 Tag: wrong-section-for-udeb
 Severity: normal
 Certainty: certain
+Check: fields
 Info: udeb packages should have "Section: debian-installer".

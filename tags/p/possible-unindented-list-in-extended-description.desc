@@ -1,6 +1,7 @@
 Tag: possible-unindented-list-in-extended-description
 Severity: normal
 Certainty: possible
+Check: description
 Info: The package "Description:" contains an unindented line which
  starts with a dash (-) or asterisk (*). If this was meant to be a
  list of items these lines need to be indented (dselect would

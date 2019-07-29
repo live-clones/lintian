@@ -1,6 +1,7 @@
 Tag: typelib-section-not-introspection
 Severity: normal
 Certainty: certain
+Check: gir
 Info: GObject-Introspection binary typelibs (<tt>Foo-23.typelib</tt>)
  should be made available in a GObject-Introspection package
  in the <tt>introspection</tt> section of the archive,

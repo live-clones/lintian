@@ -1,6 +1,7 @@
 Tag: pkg-js-tools-test-is-missing
 Severity: normal
 Certainty: certain
+Check: debhelper
 Info: The <tt>debian/rules</tt> file for this package uses <tt>--with
  nodejs</tt> which attempts to execute <tt>debian/tests/pkg-js/test</tt>
  when running autopkgtests.

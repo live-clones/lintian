@@ -1,6 +1,7 @@
 Tag: debian-watch-file-should-uversionmangle-not-dversionmangle
 Severity: wishlist
 Certainty: certain
+Check: watch-file
 Ref: https://wiki.debian.org/DEHS
 Info: The version of this package contains <tt>alpha</tt>, <tt>beta</tt>,
  or <tt>rc</tt>, but a misleading Debian version mangling occurs in

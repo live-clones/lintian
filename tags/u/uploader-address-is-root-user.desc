@@ -1,6 +1,7 @@
 Tag: uploader-address-is-root-user
 Severity: important
 Certainty: certain
+Check: fields
 Info: The uploader address includes root user, which is
  invalid. This might indicate that the package
  was not built in a sane environment.

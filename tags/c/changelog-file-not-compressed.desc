@@ -1,6 +1,7 @@
 Tag: changelog-file-not-compressed
 Severity: important
 Certainty: certain
+Check: changelog-file
 Info: Changelog files should be compressed using "gzip -9". Even if they
  start out small, they will become large with time.
 Ref: policy 12.7

@@ -1,6 +1,7 @@
 Tag: library-package-name-for-application
 Severity: normal
 Certainty: wild-guess
+Check: application-not-library
 Experimental: yes
 Info: This package contains a program in $PATH but is named like a
  library. E.g. instead of libfoo-bar-perl it should be named just

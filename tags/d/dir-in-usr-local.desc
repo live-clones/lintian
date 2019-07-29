@@ -1,6 +1,7 @@
 Tag: dir-in-usr-local
 Severity: serious
 Certainty: certain
+Check: files
 Info: The package installs a directory in <tt>/usr/local/...</tt> which is
  not allowed.
  .

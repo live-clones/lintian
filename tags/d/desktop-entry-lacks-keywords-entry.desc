@@ -1,6 +1,7 @@
 Tag: desktop-entry-lacks-keywords-entry
 Severity: wishlist
 Certainty: certain
+Check: menu-format
 Info: This .desktop file does either not contain a "Keywords" entry or it does
  not contain any keywords not already present in the "Name" or
  "GenericName" entries.

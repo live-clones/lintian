@@ -1,6 +1,7 @@
 Tag: obsolete-des-encryption
 Severity: important
 Certainty: possible
+Check: binaries
 Info: The listed ELF binary appears to use a C library function that
   performs DES encryption and/or decryption (<tt>encrypt</tt>,
   <tt>encrypt_r</tt>, <tt>setkey</tt>, and/or <tt>setkey_r</tt>).

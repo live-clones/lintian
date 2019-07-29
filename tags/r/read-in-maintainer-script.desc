@@ -1,6 +1,7 @@
 Tag: read-in-maintainer-script
 Severity: serious
 Certainty: possible
+Check: scripts
 Ref: policy 3.9.1 
 Info: This maintainer script appears to use read to get information from
  the user. Prompting in maintainer scripts must be done by communicating

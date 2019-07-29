@@ -1,6 +1,7 @@
 Tag: misplaced-extra-member-in-deb
 Severity: important
 Certainty: certain
+Check: deb-format
 Info: The binary package contains an extra member that Lintian did not
  expect or expected at a different position.
 Ref: deb(5)

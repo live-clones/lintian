@@ -1,6 +1,7 @@
 Tag: copyright-with-old-dh-make-debian-copyright
 Severity: pedantic
 Certainty: certain
+Check: copyright-file
 Info: The copyright file contains the incomplete Debian packaging
  copyright boilerplate from older versions of <tt>dh_make</tt>.
  <tt>(C)</tt> alone is not considered a valid copyright notice in some

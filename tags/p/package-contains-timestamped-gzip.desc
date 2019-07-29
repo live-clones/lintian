@@ -1,6 +1,7 @@
 Tag: package-contains-timestamped-gzip
 Severity: normal
 Certainty: certain
+Check: files
 Info: The package contains a gzip-compressed file that has timestamps.
  Such files make the packages unreproducible, because their
  contents depend on the time when the package was built.

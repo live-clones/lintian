@@ -1,6 +1,7 @@
 Tag: file-references-package-build-path
 Severity: wishlist
 Certainty: possible
+Check: files
 Info: The listed file or maintainer script appears to reference
  the build path used to build the package as specified in the
  <tt>Build-Path</tt> field of the <tt>.buildinfo</tt> file.

@@ -1,6 +1,7 @@
 Tag: excessive-debhelper-overrides
 Severity: normal
 Certainty: possible
+Check: debhelper
 Info: The <tt>debian/rules</tt> file appears to include a suspiciously
  high number of <tt>dh_override_</tt>-style overrides.
  .

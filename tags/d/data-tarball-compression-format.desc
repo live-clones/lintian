@@ -1,4 +1,5 @@
 Tag: data-tarball-compression-format
 Severity: classification
 Certainty: certain
+Check: deb-format
 Info: This is the compressor format used for the <tt>data.tar</tt> tarball.

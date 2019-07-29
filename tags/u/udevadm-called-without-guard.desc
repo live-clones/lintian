@@ -1,6 +1,7 @@
 Tag: udevadm-called-without-guard
 Severity: normal
 Certainty: possible
+Check: scripts
 Info: The specified maintainer script uses <tt>set -e</tt> but seems to
  call <tt>udevadm(8)</tt> without a conditional guard.
  .

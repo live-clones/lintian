@@ -1,6 +1,7 @@
 Tag: debug-file-should-use-detached-symbols
 Severity: normal
 Certainty: certain
+Check: binaries
 Ref: devref 6.7.9
 Info: This file is in a location generally used for detached debugging
  symbols, but it appears to contain a complete copy of the executable or

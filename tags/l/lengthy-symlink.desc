@@ -1,6 +1,7 @@
 Tag: lengthy-symlink
 Severity: important
 Certainty: certain
+Check: files
 Info: This link goes up, and then back down into the same subdirectory.
  Making it shorter will improve its chances of finding the right file
  if the user's system has lots of symlinked directories.

@@ -1,6 +1,7 @@
 Tag: package-contains-devhelp-file-without-symlink
 Severity: normal
 Certainty: certain
+Check: files
 Info: This package contains a *.devhelp or *.devhelp2 file which is not in
  the devhelp search path (<tt>/usr/share/devhelp/books</tt> and
  <tt>/usr/share/gtk-doc/html</tt>) and is apparently not in a directory

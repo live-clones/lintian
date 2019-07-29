@@ -1,6 +1,7 @@
 Tag: distribution-and-changes-mismatch
 Severity: normal
 Certainty: possible
+Check: changes-file
 Info: The <tt>Distribution</tt> in the <tt>.changes</tt> file indicates
  that packages should be installed into one distribution (suite), but the
  distribution in the <tt>Changes</tt> field copied from

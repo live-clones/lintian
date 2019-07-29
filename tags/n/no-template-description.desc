@@ -1,5 +1,6 @@
 Tag: no-template-description
 Severity: important
 Certainty: certain
+Check: debconf
 Info: The templates file contains a template without a "Description:" field.
 Ref: debconf-spec 3, debconf-devel(7)

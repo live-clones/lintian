@@ -1,6 +1,7 @@
 Tag: using-first-person-in-templates
 Severity: normal
 Certainty: possible
+Check: debconf
 Info: You should avoid the use of first person ("I will do this..." or
  "We recommend..."). The computer is not a person and the Debconf
  templates do not speak for the Debian developers. You should use neutral

@@ -1,6 +1,7 @@
 Tag: diff-contains-arch-control-dir
 Severity: normal
 Certainty: certain
+Check: cruft
 Info: The Debian diff or native package contains files in an {arch} or
  .arch-ids directory or a directory starting with <tt>,,</tt> (used by baz
  for debugging traces). These are usually artifacts of the revision

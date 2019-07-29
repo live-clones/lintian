@@ -1,6 +1,7 @@
 Tag: dh-exec-script-without-dh-exec-features
 Severity: normal
 Certainty: possible
+Check: debhelper
 Info: The package uses dh-exec in at least one of its files, but does
  not use any of the features provided by dh-exec.
  .

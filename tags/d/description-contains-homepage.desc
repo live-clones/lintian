@@ -1,6 +1,7 @@
 Tag: description-contains-homepage
 Severity: normal
 Certainty: certain
+Check: description
 Info: The extended description contains a "Homepage" pseudo-field
  following the old Developer's Reference recommendation. As of 1.14.6,
  dpkg now supports Homepage as a regular field in

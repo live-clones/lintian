@@ -1,6 +1,7 @@
 Tag: postrm-does-not-call-updatemenus
 Severity: important
 Certainty: certain
+Check: menus
 Info: Since the package installs a file in <tt>/etc/menu-methods</tt>,
  <tt>/usr/share/menu</tt>, or <tt>/usr/lib/menu</tt>, the package should
  probably call the <tt>update-menus</tt> command in it's <tt>postrm</tt>

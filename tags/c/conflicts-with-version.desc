@@ -1,6 +1,7 @@
 Tag: conflicts-with-version
 Severity: normal
 Certainty: wild-guess
+Check: fields
 Ref: policy 7.4
 Info: An earlier-than version clause is normally an indication that Breaks
  should be used instead of Conflicts. Breaks is a weaker requirement that

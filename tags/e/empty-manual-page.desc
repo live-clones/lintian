@@ -1,4 +1,5 @@
 Tag: empty-manual-page
 Severity: important
 Certainty: certain
+Check: manpages
 Info: The referenced manual page is empty.

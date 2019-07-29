@@ -1,6 +1,7 @@
 Tag: source-contains-empty-directory
 Severity: pedantic
 Certainty: certain
+Check: cruft
 Info: The upstream source tree of this package contains an empty
  directory.
  .

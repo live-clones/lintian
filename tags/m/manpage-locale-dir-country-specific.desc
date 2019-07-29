@@ -1,6 +1,7 @@
 Tag: manpage-locale-dir-country-specific
 Severity: normal
 Certainty: certain
+Check: manpages
 Ref: policy 12.1
 Info: This package installs a manual page in a locale directory that
  includes the country name. A country name should not be included in the

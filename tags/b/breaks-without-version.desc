@@ -1,6 +1,7 @@
 Tag: breaks-without-version
 Severity: normal
 Certainty: possible
+Check: fields
 Ref: policy 7.3, policy 7.4, #605744
 Info: This package declares a Breaks relationship with another package
  that has no version number. Normally, Breaks should be used to indicate

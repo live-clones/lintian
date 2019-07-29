@@ -1,6 +1,7 @@
 Tag: copyright-file-compressed
 Severity: serious
 Certainty: certain
+Check: copyright-file
 Info: The copyright file /usr/share/doc/<i>pkg</i>/copyright must not be
  compressed.
 Ref: policy 12.5

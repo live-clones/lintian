@@ -1,6 +1,7 @@
 Tag: ancient-standards-version
 Severity: normal
 Certainty: certain
+Check: standards-version
 Ref: https://www.debian.org/doc/packaging-manuals/upgrading-checklist.txt
 Info: The source package refers to a Standards-Version that has been
  obsolete for more than two years. Please update your package to latest

@@ -1,6 +1,7 @@
 Tag: menu-item-creates-new-section
 Severity: normal
 Certainty: certain
+Check: menu-format
 Info: The menu item has a line that specifies an unknown section or uses a
  section that is intended only as a menu root, not as a section that
  applications should use directly. Check the spelling of the section and

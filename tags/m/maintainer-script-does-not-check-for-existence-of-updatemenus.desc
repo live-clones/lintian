@@ -1,6 +1,7 @@
 Tag: maintainer-script-does-not-check-for-existence-of-updatemenus
 Severity: important
 Certainty: possible
+Check: menus
 Info: The maintainer script calls the <tt>update-menus</tt> command without
  checking for existence first. (The <tt>menu</tt> package which provides the
  command is not marked as "essential" package.)

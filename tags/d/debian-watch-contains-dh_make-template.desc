@@ -1,5 +1,6 @@
 Tag: debian-watch-contains-dh_make-template
 Severity: wishlist
 Certainty: certain
+Check: watch-file
 Info: The watch file contains a standard template included by dh_make.
  Please remove them once you have implemented the watch file.

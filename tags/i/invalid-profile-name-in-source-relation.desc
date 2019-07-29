@@ -1,6 +1,7 @@
 Tag: invalid-profile-name-in-source-relation
 Severity: important
 Certainty: possible
+Check: fields
 Info: The restriction formula in the source relation includes an unknown build
  profile. The only allowed build profiles are
  "cross",

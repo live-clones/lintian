@@ -1,6 +1,7 @@
 Tag: quilt-patch-with-non-standard-options
 Severity: normal
 Certainty: certain
+Check: patch-systems
 Info: The quilt series file contains non-standard options to apply some of
  the listed patches. Quilt uses '-p1' by default if nothing is specified
  after the name of the patch and the current series file specify something

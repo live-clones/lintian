@@ -1,6 +1,7 @@
 Tag: debug-symbols-directly-in-usr-lib-debug
 Severity: important
 Certainty: certain
+Check: binaries
 Info: The given debugging symbols-only object is installed directly in
  <tt>/usr/lib/debug</tt>, although it should be installed in a
  subdirectory. For example, debug symbols of a binary in

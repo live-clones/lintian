@@ -1,6 +1,7 @@
 Tag: copyright-should-refer-to-common-license-file-for-gpl
 Severity: important
 Certainty: possible
+Check: copyright-file
 Ref: policy 12.5
 Info: The strings "GNU General Public License" or "GPL" appear in the
  copyright file for this package, but the copyright file does not

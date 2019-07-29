@@ -1,6 +1,7 @@
 Tag: xs-testsuite-field-in-debian-control
 Severity: wishlist
 Certainty: certain
+Check: control-file
 Info: There is an XS-Testsuite field in the <tt>debian/control</tt> file. As
  of dpkg 1.17.10, the XS- prefix is no longer necessary. dpkg now
  recognizes this field and handles it correctly. As of dpkg 1.17.11 the

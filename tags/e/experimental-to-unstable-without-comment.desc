@@ -1,6 +1,7 @@
 Tag: experimental-to-unstable-without-comment
 Severity: pedantic
 Certainty: possible
+Check: changelog-file
 Info: The previous version of this package had a distribution of
  "experimental", this version has a distribution of "unstable", and there's
  apparently no comment about the change of distributions.

@@ -1,5 +1,6 @@
 Tag: debhelper-autoscript-in-maintainer-scripts
 Severity: classification
 Certainty: possible
+Check: scripts
 Info: The maintainer scripts of the package contain one or more
  auto-generated shell snippets inserted by the listed debhelper tool.

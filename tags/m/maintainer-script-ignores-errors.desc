@@ -1,6 +1,7 @@
 Tag: maintainer-script-ignores-errors
 Severity: normal
 Certainty: certain
+Check: scripts
 Ref: policy 10.4
 Info: The maintainer script doesn't seem to set the <tt>-e</tt> flag which
  ensures that the script's execution is aborted when any executed command

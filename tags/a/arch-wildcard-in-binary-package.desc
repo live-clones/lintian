@@ -1,6 +1,7 @@
 Tag: arch-wildcard-in-binary-package
 Severity: serious
 Certainty: certain
+Check: fields
 Info: Architecture wildcards, including the special architecture value
  "any", do not make sense in a binary package. A binary package must
  either be architecture-independent or built for a specific architecture.

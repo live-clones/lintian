@@ -1,6 +1,7 @@
 Tag: hyphen-file
 Severity: important
 Certainty: possible
+Check: files
 Info: The given file is literally installed as <tt>-</tt> (hyphen
  symbol). Normally this indicates a mistake in the package when
  attempting to write to standard output.

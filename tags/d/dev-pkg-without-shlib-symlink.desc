@@ -1,6 +1,7 @@
 Tag: dev-pkg-without-shlib-symlink
 Severity: normal
 Certainty: certain
+Check: shared-libs
 Info: A "-dev" package is supposed to install a "libsomething.so" symbolic
  link referencing the corresponding shared library. Notice how the link name
  doesn't include the version number -- this is because such a link is used

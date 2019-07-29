@@ -1,6 +1,7 @@
 Tag: package-contains-broken-symlink-wildcard
 Severity: normal
 Certainty: possible
+Check: symlinks
 Info: The package contains a symlink with a target that
  appears to be a "failed" wildcard expansion. Furthermore
  the target does not exists in the package or any of its

@@ -1,6 +1,7 @@
 Tag: wrong-debian-qa-address-set-as-maintainer
 Severity: important
 Certainty: certain
+Check: fields
 Info: Orphaned packages should no longer have the address
  &lt;debian-qa@lists.debian.org&gt; in the Maintainer field.
  .

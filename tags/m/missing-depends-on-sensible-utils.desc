@@ -1,6 +1,7 @@
 Tag: missing-depends-on-sensible-utils
 Severity: important
 Certainty: possible
+Check: files
 Info: The listed file appears to use one or more of the binaries
  in <tt>sensible-utils</tt> but no binary declares a dependency for
  this package.

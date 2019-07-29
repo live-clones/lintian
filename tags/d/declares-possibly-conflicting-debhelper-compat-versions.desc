@@ -1,6 +1,7 @@
 Tag: declares-possibly-conflicting-debhelper-compat-versions
 Severity: important
 Certainty: certain
+Check: debhelper
 Ref: debhelper(7)
 Info: The source package declares the debhelper compatibility version
  both in the <tt>debian/compat</tt> file and in the <tt>debian/rules</tt>

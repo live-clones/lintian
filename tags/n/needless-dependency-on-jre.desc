@@ -1,6 +1,7 @@
 Tag: needless-dependency-on-jre
 Severity: normal
 Certainty: possible
+Check: fields
 Info: The package appear to be a Java library and depending on one
  or more JRE/JDK packages. As of 05 Apr 2010, the Java Policy no
  longer mandates that Java libraries depend on Java Runtimes.

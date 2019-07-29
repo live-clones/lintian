@@ -1,6 +1,7 @@
 Tag: typo-in-debhelper-override-target
 Severity: normal
 Certainty: possible
+Check: debhelper
 Info: The listed target in debian/rules command is a likely misspelling.
  .
  This can result in (for example) a <tt>dh_override_</tt>-style target

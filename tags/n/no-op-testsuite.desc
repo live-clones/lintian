@@ -1,6 +1,7 @@
 Tag: no-op-testsuite
 Severity: normal
 Certainty: certain
+Check: testsuite
 Info: This package declares a single autopkgtest which will always
  pass as it uses a "no-op" command such as <tt>/bin/true</tt>.
  .

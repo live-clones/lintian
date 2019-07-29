@@ -1,6 +1,7 @@
 Tag: maintainer-script-should-not-hide-init-failure
 Severity: normal
 Certainty: certain
+Check: scripts
 Info: This script calls invoke-rc.d to run an init script but then, if the
  init script fails, exits successfully (using || exit 0). If the init
  script fails, the maintainer script should probably fail.

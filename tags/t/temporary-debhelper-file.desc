@@ -1,6 +1,7 @@
 Tag: temporary-debhelper-file
 Severity: important
 Certainty: certain
+Check: debhelper
 Ref: dh_clean(1)
 Info: The package contains temporary debhelper files, which are normally
  removed by <tt>dh_clean</tt>. The most common cause for this is that a

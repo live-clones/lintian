@@ -1,6 +1,7 @@
 Tag: symbols-file-contains-current-version-with-debian-revision
 Severity: important
 Certainty: certain
+Check: shared-libs
 Info: Debian revisions should be stripped from versions in symbols files.
  Not doing so leads to dependencies unsatisfiable by backports (1.0-1~bpo
  &lt;&lt; 1.0-1 while 1.0-1~bpo &gt;= 1.0). If the Debian revision can't

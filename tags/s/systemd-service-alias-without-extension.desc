@@ -1,6 +1,7 @@
 Tag: systemd-service-alias-without-extension
 Severity: normal
 Certainty: certain
+Check: systemd
 Ref: http://www.freedesktop.org/software/systemd/man/systemd.unit.html#Alias=
 Info: The service file lists an alias without a file extension.
  .

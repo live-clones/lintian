@@ -2,6 +2,7 @@
 Tag: perl-module-name-not-mentioned-in-description
 Severity: minor
 Certainty: certain
+Check: description
 Experimental: yes
 Info: Debian users are likely to look for perl modules by their name, e.g.
  Foo::Bar, not by package name (libfoo-bar-perl). To make this easier, the main

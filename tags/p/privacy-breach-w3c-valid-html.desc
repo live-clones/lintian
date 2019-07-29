@@ -1,6 +1,7 @@
 Tag: privacy-breach-w3c-valid-html
 Severity: serious
 Certainty: possible
+Check: files
 Ref: http://validator.w3.org/docs/help.html#icon,
      http://www.w3.org/Consortium/Legal/logo-usage-20000308
 Info: This package creates a potential privacy breach by fetching W3C

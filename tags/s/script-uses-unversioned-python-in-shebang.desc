@@ -1,6 +1,7 @@
 Tag: script-uses-unversioned-python-in-shebang
 Severity: classification
 Certainty: certain
+Check: python
 Info: This package contains a script with unversioned Python shebang.
  .
  The 2.x series of Python is due for deprecation and will not be

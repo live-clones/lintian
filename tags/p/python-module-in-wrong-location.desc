@@ -1,6 +1,7 @@
 Tag: python-module-in-wrong-location
 Severity: normal
 Certainty: possible
+Check: files
 Ref: python-policy 2.5, #576012
 Info: The package installs a Python module or debug information for a Python
  module in the wrong location for the given version of Python.

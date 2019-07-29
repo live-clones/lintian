@@ -1,6 +1,7 @@
 Tag: template-uses-unsplit-choices
 Severity: normal
 Certainty: possible
+Check: debconf
 Info: The use of _Choices in templates is deprecated.
  A _Choices field must be translated as a single string.
  .

@@ -1,6 +1,7 @@
 Tag: lib-recommends-documentation
 Severity: normal
 Certainty: possible
+Check: fields
 Info: The given package appears to be a library package, but it recommends
  a documentation package. Doing this can pull in unwanted (and often
  large) documentation packages since recommends are installed by default

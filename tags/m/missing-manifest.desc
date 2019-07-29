@@ -1,5 +1,6 @@
 Tag: missing-manifest
 Severity: minor
 Certainty: possible
+Check: java
 Info: The jar file contains .class files but no manifest. This may
  indicate a build misconfiguration.

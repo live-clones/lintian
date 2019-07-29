@@ -1,6 +1,7 @@
 Tag: font-package-not-multi-arch-foreign
 Severity: normal
 Certainty: certain
+Check: fields
 Info: This package is architecture all and hence requires a Multi-Arch
  foreign value.
  .

@@ -1,6 +1,7 @@
 Tag: license-problem-bad-php-license
 Severity: serious
 Certainty: possible
+Check: cruft
 Info: This package appears to be covered by version 2.x of the PHP license,
  which is not appropriate for anything other than the PHP interpreter
  itself.

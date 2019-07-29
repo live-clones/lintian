@@ -1,6 +1,7 @@
 Tag: file-in-discouraged-x11-font-directory
 Severity: minor
 Certainty: certain
+Check: files
 Ref: policy 11.8.5
 Info: For historical reasons, use of <tt>PEX</tt>, <tt>CID</tt>,
  <tt>Speedo</tt>, and <tt>cyrillic</tt> subdirectories of

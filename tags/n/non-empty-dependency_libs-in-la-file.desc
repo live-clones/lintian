@@ -1,6 +1,7 @@
 Tag: non-empty-dependency_libs-in-la-file
 Severity: serious
 Certainty: certain
+Check: shared-libs
 Info: The dependency_libs field in the .la file has not been cleared. It has
  long been a release goal to get rid of unneeded .la files and clearing the
  dependency_libs field from the rest of them.

@@ -1,6 +1,7 @@
 Tag: preinst-interpreter-without-predepends
 Severity: serious
 Certainty: certain
+Check: scripts
 Info: The package contains a <tt>preinst</tt> maintainer script that uses
  an unusual and non-essential interpreter but does not declare a
  pre-dependency on the package that provides this interpreter.

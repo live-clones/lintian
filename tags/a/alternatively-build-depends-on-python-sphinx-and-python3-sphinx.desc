@@ -1,6 +1,7 @@
 Tag: alternatively-build-depends-on-python-sphinx-and-python3-sphinx
 Severity: normal
 Certainty: certain
+Check: python
 Info: This package alternatively Build-Depends on the Python 2 or Python 3
  version of the Sphinx documentation generator.
  .

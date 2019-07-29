@@ -1,6 +1,7 @@
 Tag: init.d-script-not-marked-as-conffile
 Severity: important
 Certainty: wild-guess
+Check: init.d
 Ref: policy 9.3.2
 Info: <tt>/etc/init.d</tt> scripts should be marked as conffiles.
  .

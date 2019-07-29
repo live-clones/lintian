@@ -1,6 +1,7 @@
 Tag: possible-bashism-in-maintainer-script
 Severity: normal
 Certainty: possible
+Check: scripts
 Ref: policy 10.4
 Info: This script is marked as running under <tt>/bin/sh</tt>, but it seems
  to use a feature found in bash but not in the SUSv3 or POSIX shell

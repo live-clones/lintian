@@ -1,6 +1,7 @@
 Tag: file-contains-trailing-whitespace
 Severity: pedantic
 Certainty: certain
+Check: cruft
 Info: This file appears to contain one or more lines with trailing
  whitespace characters.
  .

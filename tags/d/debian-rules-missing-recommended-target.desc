@@ -1,6 +1,7 @@
 Tag: debian-rules-missing-recommended-target
 Severity: normal
 Certainty: certain
+Check: rules
 Ref: policy 4.9
 Info: The <tt>debian/rules</tt> file for this package does not provide
  one of the recommended targets. All of build-arch and build-indep

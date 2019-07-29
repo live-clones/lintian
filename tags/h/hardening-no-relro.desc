@@ -1,6 +1,7 @@
 Tag: hardening-no-relro
 Severity: normal
 Certainty: certain
+Check: binaries
 Info: This package provides an ELF binary that lacks the "read-only
  relocation" link flag. This package was likely not built with the
  default Debian compiler flags defined by <tt>dpkg-buildflags</tt>.

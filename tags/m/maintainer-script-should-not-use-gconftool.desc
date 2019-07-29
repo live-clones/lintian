@@ -1,5 +1,6 @@
 Tag: maintainer-script-should-not-use-gconftool
 Severity: normal
 Certainty: possible
+Check: scripts
 Info: This script apparently runs gconftool or gconftool-2. It should
  probably be calling gconf-schemas or update-gconf-defaults instead.

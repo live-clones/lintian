@@ -1,6 +1,7 @@
 Tag: unknown-meta-field-in-symbols-file
 Severity: important
 Certainty: certain
+Check: shared-libs
 Info: The symbols control file contains an unknown meta-information field.
  .
  A list of currently supported fields may be found in deb-symbols(5).

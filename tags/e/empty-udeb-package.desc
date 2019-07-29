@@ -1,6 +1,7 @@
 Tag: empty-udeb-package
 Severity: minor
 Certainty: wild-guess
+Check: files
 Experimental: yes
 Info: This udeb package appears to be empty, and its description does
  not say that it's a metapackage or a package. This is often due to

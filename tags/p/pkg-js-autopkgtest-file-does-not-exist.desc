@@ -1,6 +1,7 @@
 Tag: pkg-js-autopkgtest-file-does-not-exist
 Severity: serious
 Certainty: certain
+Check: control-file
 Info: One of the files referenced in <tt>debian/tests/pkg-js/files</tt>
  does not exist in sources and thus <tt>pkg-js-autopkgtest</tt> will
  likely fail.

@@ -1,6 +1,7 @@
 Tag: debian-watch-could-verify-download
 Severity: normal
 Certainty: certain
+Check: watch-file
 Ref: uscan(1)
 Info: One or more upstream signing keys are present in the Debian package
  but are not being used.

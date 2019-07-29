@@ -1,6 +1,7 @@
 Tag: r-data-without-readme-source
 Severity: important
 Certainty: certain
+Check: cruft
 Info: Many modules packaged for the R Project for Statistical Computing contain
  data files with names as *.rda, *.Rda, *.rdata, *.Rdata, etc.
  .

@@ -1,6 +1,7 @@
 Tag: command-with-path-in-maintainer-script
 Severity: normal
 Certainty: certain
+Check: scripts
 Info: The indicated program run in a maintainer script has a prepended
  path. Programs called from maintainer scripts normally should not have a
  path prepended. dpkg ensures that the PATH is set to a reasonable value,

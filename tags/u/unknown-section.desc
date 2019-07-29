@@ -1,6 +1,7 @@
 Tag: unknown-section
 Severity: normal
 Certainty: certain
+Check: fields
 Info: The "Section:" field in this package's control file is not one of
  the sections in use on the ftp archive. Valid sections are currently
  admin, comm, cli-mono, database, debug, devel, doc,

@@ -1,6 +1,7 @@
 Tag: dh-manual-sequence-control-obsolete
 Severity: important
 Certainty: certain
+Check: debhelper
 Info: The package uses one (or more) of the obsolete dh parameters
  to control the debhelper command sequence. This method has been
  deprecated and is now replaced by override targets. If you had:

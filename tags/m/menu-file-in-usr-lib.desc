@@ -1,6 +1,7 @@
 Tag: menu-file-in-usr-lib
 Severity: normal
 Certainty: certain
+Check: menus
 Info: As of menu, version 2.1.25, /usr/lib/menu as location for menu
  files is deprecated (but still works perfectly). Menu files should
  now be placed in /usr/share/menu instead. Only menu files that are

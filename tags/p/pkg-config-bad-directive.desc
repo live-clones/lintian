@@ -1,6 +1,7 @@
 Tag: pkg-config-bad-directive
 Severity: serious
 Certainty: possible
+Check: files
 Info: The pkg-config file contains a wrong directive.
  .
  The following file includes a wrong directive. This could lead to

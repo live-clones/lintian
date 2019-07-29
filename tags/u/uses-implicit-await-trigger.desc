@@ -1,6 +1,7 @@
 Tag: uses-implicit-await-trigger
 Severity: normal
 Certainty: possible
+Check: triggers
 Info: The listed trigger is present in the control file of the package.
  The trigger is an await trigger, which may not be obvious from its name.
  .

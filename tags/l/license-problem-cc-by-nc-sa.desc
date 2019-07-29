@@ -1,5 +1,6 @@
 Tag: license-problem-cc-by-nc-sa
 Severity: serious
 Certainty: possible
+Check: cruft
 Info: The given source file is copyrighted under the non-free
  Creative Commons Non-Commercial Share-Alike (CC-NC-SA) license.

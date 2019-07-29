@@ -2,6 +2,7 @@ Tag: systemd-service-file-shutdown-problems
 Severity: normal
 Experimental: no
 Certainty: certain
+Check: systemd
 Ref: https://github.com/systemd/systemd/issues/11821
 Info: The specified systemd <tt>.service</tt> file contains both
  <tt>DefaultDependencies=no</tt> and <tt>Conflicts=shutdown.target</tt>

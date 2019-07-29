@@ -1,6 +1,7 @@
 Tag: init.d-script-provides-virtual-facility
 Severity: normal
 Certainty: certain
+Check: init.d
 Info: This <tt>/etc/init.d</tt> script indicates in its LSB headers that
  it provides a virtual facility, denoted by the dollar sign in front of
  the name.

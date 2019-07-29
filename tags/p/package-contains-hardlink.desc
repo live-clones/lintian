@@ -1,6 +1,7 @@
 Tag: package-contains-hardlink
 Severity: normal
 Certainty: certain
+Check: files
 Info: The package contains a hardlink in <tt>/etc</tt> or across different
  directories. This might not work at all if directories are on different
  filesystems (which can happen anytime as the system administrator sees fit),

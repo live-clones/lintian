@@ -1,5 +1,6 @@
 Tag: non-free-flash
 Severity: serious
 Certainty: possible
+Check: files
 Info: The given Flash file has a filename which suggests that it may be
  one of a number of known Flash files with non-free content.

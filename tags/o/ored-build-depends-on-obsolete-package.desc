@@ -1,5 +1,6 @@
 Tag: ored-build-depends-on-obsolete-package
 Severity: minor
 Certainty: possible
+Check: fields
 Info: The package build-depends on an ORed group of packages which includes
  a package that has been superseded.

@@ -1,6 +1,7 @@
 Tag: debian-tests-control-autodep8-is-obsolete
 Severity: normal
 Certainty: certain
+Check: testsuite
 Ref: autodep8(1)
 Info: The specified autopkgtest control file is considered obsolete.
  .

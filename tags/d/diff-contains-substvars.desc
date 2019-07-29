@@ -1,6 +1,7 @@
 Tag: diff-contains-substvars
 Severity: normal
 Certainty: certain
+Check: cruft
 Info: Lintian found a substvars file in the Debian diff for this source
  package. The debian/substvars (or debian/<tt>package</tt>.substvars) file
  is usually generated and modified dynamically by debian/rules targets, in

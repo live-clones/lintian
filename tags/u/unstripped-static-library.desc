@@ -1,6 +1,7 @@
 Tag: unstripped-static-library
 Severity: wishlist
 Certainty: certain
+Check: binaries
 Info: The package installs an unstripped static library.
  .
  Please note, that static libraries have to be stripped with the

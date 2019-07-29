@@ -1,6 +1,7 @@
 Tag: service-key-has-whitespace
 Severity: important
 Certainty: certain
+Check: systemd
 Info: The systemd service file contains space in the key definitions
  .
  Service files should not have spaces surrounding the <tt>=</tt> key.

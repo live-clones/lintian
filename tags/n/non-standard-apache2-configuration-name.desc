@@ -1,6 +1,7 @@
 Tag: non-standard-apache2-configuration-name
 Severity: normal
 Certainty: certain
+Check: apache2
 Info: The package appears to be a web application which is installing a
  configuration file for the Apache2 HTTPD server. To avoid name clashes, any file
  installed to <tt>/etc/apache2/{sites,conf}-available</tt> should match the binary package

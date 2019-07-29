@@ -1,6 +1,7 @@
 Tag: quilt-series-but-no-build-dep
 Severity: normal
 Certainty: possible
+Check: patch-systems
 Info: The package contains a debian/patches/series file usually used by
  quilt to apply patches at build time, but quilt is not listed in the
  build dependencies.

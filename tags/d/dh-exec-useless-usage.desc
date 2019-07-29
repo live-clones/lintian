@@ -1,6 +1,7 @@
 Tag: dh-exec-useless-usage
 Severity: wishlist
 Certainty: possible
+Check: debhelper
 Info: The package uses dh-exec for things it is not needed for.
  .
  This typically includes using ${DEB_HOST_MULTIARCH} in an install

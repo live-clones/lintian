@@ -1,6 +1,7 @@
 Tag: missing-systemd-service-for-init.d-script
 Severity: pedantic
 Certainty: certain
+Check: systemd
 Info: The specified init.d script has no equivalent systemd service.
  .
  Whilst systemd has a SysV init.d script compatibility mode, providing

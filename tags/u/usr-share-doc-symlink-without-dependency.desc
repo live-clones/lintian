@@ -1,6 +1,7 @@
 Tag: usr-share-doc-symlink-without-dependency
 Severity: serious
 Certainty: possible
+Check: copyright-file
 Info: If the package installs a symbolic link
  <tt>/usr/share/doc/<i>pkg1</i> -&gt; <i>pkg2</i></tt>, then <i>pkg1</i>
  must depend on <i>pkg2</i> directory, with the same version as

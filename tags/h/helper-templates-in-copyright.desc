@@ -1,6 +1,7 @@
 Tag: helper-templates-in-copyright
 Severity: important
 Certainty: certain
+Check: copyright-file
 Info: The /usr/share/doc/<i>pkg</i>/copyright file still contains
  template markers from a packaging helper. Please fill in the actual
  license, upstream copyright holders, and download information about the

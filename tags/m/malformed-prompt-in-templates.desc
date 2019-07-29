@@ -1,6 +1,7 @@
 Tag: malformed-prompt-in-templates
 Severity: normal
 Certainty: certain
+Check: debconf
 Info: The short description of a select, multiselect, string and password
  debconf template is a prompt and not a title. Avoid question style
  prompts ("IP Address?") in favour of "opened" prompts ("IP address:").

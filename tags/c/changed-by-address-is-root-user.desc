@@ -1,6 +1,7 @@
 Tag: changed-by-address-is-root-user
 Severity: important
 Certainty: certain
+Check: changes-file
 Info: The Changed-By address includes root user, which is
  invalid. This might indicate that the package
  was not built in a sane environment.

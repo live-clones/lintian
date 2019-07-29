@@ -1,6 +1,7 @@
 Tag: shell-script-fails-syntax-check
 Severity: important
 Certainty: possible
+Check: scripts
 Info: Running this shell script with the shell's -n option set fails,
  which means that the script has syntax errors. The most common cause of
  this problem is a script expecting <tt>/bin/sh</tt> to be bash checked on

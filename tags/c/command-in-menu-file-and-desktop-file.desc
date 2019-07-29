@@ -1,6 +1,7 @@
 Tag: command-in-menu-file-and-desktop-file
 Severity: normal
 Certainty: possible
+Check: menu-format
 Info: The command is listed both in a menu file and a desktop file
  .
  Per the tech-ctte decision on #741573, this is now prohibited.

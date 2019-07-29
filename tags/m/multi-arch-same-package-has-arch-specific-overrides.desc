@@ -1,6 +1,7 @@
 Tag: multi-arch-same-package-has-arch-specific-overrides
 Severity: normal
 Certainty: certain
+Check: fields
 Info: The specified file contains architecture-specific Lintian overrides
  but this package is declared as <tt>Multi-Arch: same</tt>.
 Ref: lintian 2.4.3, #787406

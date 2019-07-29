@@ -1,6 +1,7 @@
 Tag: build-depends-on-non-build-package
 Severity: important
 Certainty: certain
+Check: fields
 Info: The package declares a build dependency on a package that is not
  appropriate for build dependencies, usually because it's only for
  interactive use or cannot be correctly installed in a build environment.

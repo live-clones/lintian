@@ -1,6 +1,7 @@
 Tag: source-package-component-has-long-file-name
 Severity: normal
 Certainty: certain
+Check: filename-length
 Info: The source package has a component with a very long filename.
  This may complicate shipping the package on some media that put
  restrictions on the length of the filenames (such as CDs).

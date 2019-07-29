@@ -1,6 +1,7 @@
 Tag: debian-tests-control-uses-national-encoding
 Severity: normal
 Certainty: certain
+Check: testsuite
 Info: The debian/tests/control file should be valid UTF-8, an encoding
  of the Unicode character set.
  .

@@ -2,5 +2,6 @@
 Tag: debian-pycompat-is-obsolete
 Severity: wishlist
 Certainty: certain
+Check: cruft
 Info: debian/pycompat is not used by any modern Python helper. It should be
  safe to remove this file.
