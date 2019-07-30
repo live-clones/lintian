@@ -213,12 +213,11 @@ sub run {
         tag 'debian-watch-could-verify-download', $key_found if $key_found;
     }
 
-    my $changes = $info->changelog;
-    if (defined $changes and %dversions) {
-        my $data = $changes->data;
+    if (defined $info->changelog
+        && %dversions) {
         my %changelog_versions;
         my $count = 1;
-        for my $entry (@{$data}) {
+        for my $entry (@{$info->changelog->entries}) {
             my $uversion = $entry->Version;
             $uversion =~ s/-[^-]+$//; # revision
             $uversion =~ s/^\d+://; # epoch
