@@ -1,4 +1,4 @@
-Tag: gobject-instrospection-package-missing-depends-on-gir-depends
+Tag: gobject-introspection-package-missing-depends-on-gir-depends
 Severity: serious
 Certainty: certain
 Check: control-file

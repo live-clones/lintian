@@ -4274,7 +4274,7 @@ lintian (2.5.52) unstable; urgency=medium
       - elf-maintainer-script
       - emacsen-common-without-dh-elpa
       - file-contains-fixme-placeholder
-      - gobject-instrospection-package-missing-depends-on-gir-depends
+      - gobject-introspection-package-missing-depends-on-gir-depends
       - manpage-has-overly-generic-name
       - orig-tarball-missing-upstream-signature
       - package-installs-deprecated-upstart-configuration
