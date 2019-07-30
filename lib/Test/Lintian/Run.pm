@@ -400,7 +400,7 @@ sub check_result {
 
         push(@errors, 'Tags do not match');
         push(@errors, '--- ' . abs2rel($expectedpath));
-        push(@errors, diag '+++ ' . abs2rel($actualpath));
+        push(@errors, '+++ ' . abs2rel($actualpath));
         push(@errors, $diff);
 
         return @errors;
