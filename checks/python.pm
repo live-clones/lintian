@@ -168,7 +168,10 @@ sub _run_binary {
 
     my $deps = Lintian::Relation->and($info->relation('all'),
         $info->relation('provides'), $pkg);
-    my @entries = $info->changelog ? $info->changelog->data : ();
+    my @entries
+      = $info->changelog
+      ? @{$info->changelog->entries}
+      : ();
 
     # Check for missing dependencies
     if ($pkg !~ /-dbg$/) {
