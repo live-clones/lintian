@@ -92,10 +92,9 @@ sub run {
     # the changelog file.  If we can't find the changelog file, assume
     # that the package was released today, since that activates the
     # most tags.
-    my $changes = $info->changelog;
     my ($pkgdate, $dist);
-    if (defined $changes) {
-        my ($entry) = $changes->data;
+    if (defined $info->changelog) {
+        my ($entry) = @{$info->changelog->entries};
         $pkgdate
           = ($entry && $entry->Timestamp) ? $entry->Timestamp : $CURRENT_DATE;
         $dist = ($entry && $entry->Distribution)? $entry->Distribution : '';
@@ -154,11 +153,11 @@ sub run {
         } else {
             # We have to get the package date from the changelog file.  If we
             # can't find the changelog file, always issue the tag.
-            if (not defined $changes) {
+            unless (defined $info->changelog) {
                 tag 'out-of-date-standards-version', $tag;
                 return;
             }
-            my ($entry) = $changes->data;
+            my ($entry) = @{$info->changelog->entries};
             my $timestamp
               = ($entry && $entry->Timestamp) ? $entry->Timestamp : 0;
             for my $standard (@STANDARDS) {
