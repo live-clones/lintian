@@ -333,10 +333,9 @@ sub run {
     # get the last changelog timestamp
     # if for some weird reasons the timestamp does
     # not exist, it will remain 0
-    my $changes = $info->changelog;
     my $changelog_timestamp = 0;
-    if (defined $changes) {
-        my ($entry) = $changes->data;
+    if (defined $info->changelog) {
+        my ($entry) = @{$info->changelog->entries};
         if ($entry && $entry->Timestamp) {
             $changelog_timestamp = $entry->Timestamp;
         }
