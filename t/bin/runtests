@@ -359,6 +359,8 @@ if (-t STDOUT && !$unattended) {
     say 'Offering to re-calibrate the tags expected in tests that failed.'
       if @failed;
 
+    my $accept_all;
+
     for my $scriptpath (@failed) {
         my $workpath = dirname($scriptpath);
 
@@ -375,29 +377,41 @@ if (-t STDOUT && !$unattended) {
         my $diffpath = "$workpath/tagdiff";
         if (-r $diffpath) {
 
-            say EMPTY;
+            unless ($accept_all) {
 
-            print colored($testpath, 'bold white on_blue')
-              . '  >>>  Fix (y/n/q)? ';
+                say EMPTY;
+                print colored($testpath, 'bold white on_blue')
+                  . '  >>>  Fix (y/a/n/q)? ';
 
-            my $decision = <STDIN>;
-            chomp $decision;
-            last if $decision eq 'q';
-            next unless $decision eq 'y';
+                my $decision = <STDIN>;
+                chomp $decision;
+                last if $decision eq 'q';
+                next unless $decision eq 'y' || $decision eq 'a';
+
+                $accept_all = 1
+                  if $decision eq 'a';
+            }
 
             # create tags if needed; helps when writing new tests
             my $tagspath = "$testpath/tags";
             path($tagspath)->touch
               unless -e $tagspath;
 
+            my @adjustargs = ($diffpath, $tagspath);
+            unshift(@adjustargs, '-i')
+              unless $accept_all;
+
             die "Cannot run tagadjust for $testpath"
-              if system('tagadjust', '-i', $diffpath, $tagspath);
+              if system('tagadjust', @adjustargs);
 
             # also copy the new tags to workpath; no need to rebuild
             die "Cannot copy updated tags to $workpath"
               if system('cp', $tagspath, "$workpath/tags");
         }
     }
+
+    say NEWLINE . 'Accepted all remaining tag changes.'
+      if $accept_all;
 
 } else {
     my @crashed = $aggregator->parse_errors;
