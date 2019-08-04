@@ -425,11 +425,8 @@ sub run {
 
         # If we have a /usr/sbin/foo, check for references to
         # /usr/bin/foo
-        if ($file->is_file) {
-            $fname =~ m,^(usr/)?sbin/(.+),;
-            push(@bin_binaries, "/$1bin/$2")
-              if length $1 && length $2;
-        }
+        push(@bin_binaries, "/$1bin/$2")
+          if $file->is_file and $fname =~ m,^(usr/)?sbin/(.+),;
 
         $arch_dep_files = 1
           if not $file->is_dir
