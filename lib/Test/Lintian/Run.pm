@@ -325,11 +325,7 @@ sub check_literal {
           if(system('cp', '-p', $raw, $actual));
     }
 
-    # fail if output does not match
-    return 'Output does not match in literal comparison'
-      if (compare($expected, $actual) != 0);
-
-    return;
+    return check_result($testcase, $runpath, $expected, $actual);
 }
 
 sub check_tags {
@@ -363,8 +359,6 @@ sub check_tags {
           if(system('cp', '-p', $expected, $calibrated));
     }
 
-    say EMPTY;
-
     return check_result($testcase, $runpath, $calibrated, $actual);
 }
 
@@ -381,55 +375,87 @@ sub check_result {
 
     my @errors;
 
-    my @expectedlines
-      = reverse sort { order($a) cmp order($b) }(path($expectedpath)->lines);
-    my @actuallines
-      = reverse sort { order($a) cmp order($b) }(path($actualpath)->lines);
+    my @expectedlines = path($expectedpath)->lines;
+    my @actuallines = path($actualpath)->lines;
 
-    my $unsorted = diff(\@expectedlines, \@actuallines, { CONTEXT => 0 });
-    chomp $unsorted;
+    push(@expectedlines, NEWLINE)
+      unless @expectedlines;
+    push(@actuallines, NEWLINE)
+      unless @actuallines;
 
-    if(length $unsorted) {
-        my @lines = split(/\n/, $unsorted);
-        @lines = reverse sort @lines;
+    if ($testcase->{match_strategy} eq 'tags') {
+        @expectedlines
+          = reverse sort { order($a) cmp order($b) } @expectedlines;
+        @actuallines
+          = reverse sort { order($a) cmp order($b) } @actuallines;
+    }
 
-        my $diff = EMPTY;
-        $diff .= $_ . NEWLINE for @lines;
+    my $diff = diff(\@expectedlines, \@actuallines, { CONTEXT => 0 });
+    my @difflines = split(/\n/, $diff);
+    chomp @difflines;
 
-        path("$runpath/tagdiff")->spew($diff);
+    # diag "Difflines: $_" for @difflines;
 
-        push(@errors, 'Tags do not match');
+    if(@difflines) {
+
+        if ($testcase->{match_strategy} eq 'literal') {
+            push(@errors, 'Literal output does not match');
+
+        } elsif ($testcase->{match_strategy} eq 'tags') {
+
+            push(@errors, 'Tags do not match');
+
+            @difflines = reverse sort @difflines;
+            my $tagdiff = join(NEWLINE, @difflines) . NEWLINE;
+            path("$runpath/tagdiff")->spew($tagdiff);
+
+        } else {
+            die "Unknown match strategy $testcase->{match_strategy}.";
+        }
+
+        push(@errors, EMPTY);
+
         push(@errors, '--- ' . abs2rel($expectedpath));
         push(@errors, '+++ ' . abs2rel($actualpath));
-        push(@errors, $diff);
+        push(@errors, @difflines);
 
-        return @errors;
+        push(@errors, EMPTY);
     }
 
-    # no furter checks if the test is not about tags
-    return unless length $testcase->{check};
-
-    my $profile = Lintian::Profile->new(undef, [$ENV{LINTIAN_ROOT}]);
-
-    # get tags for checks
-    my @related;
-    my @checks = split(SPACE, $testcase->{check});
-    foreach my $check (@checks) {
-        my $checkscript = $profile->get_script($check);
-        die "Unknown Lintian check $check"
-          unless defined $checkscript;
-
-        push(@related, $checkscript->tags);
-    }
-
-    @related = sort @related;
-
-    #diag "#Related tag: $_" for @related;
+    # stop if the test is not about tags
+    return @errors
+      unless $testcase->{match_strategy} eq 'tags';
 
     # get expected tags
     my @expected = sort +get_tagnames($expectedpath);
 
     #diag "=Expected tag: $_" for @expected;
+
+    # look out for tags being tested
+    my @related;
+
+    if (length $testcase->{check}) {
+
+        my $profile = Lintian::Profile->new(undef, [$ENV{LINTIAN_ROOT}]);
+
+        # use tags related to checks declared
+        my @checks = split(SPACE, $testcase->{check});
+        foreach my $check (@checks) {
+            my $checkscript = $profile->get_script($check);
+            die "Unknown Lintian check $check"
+              unless defined $checkscript;
+
+            push(@related, $checkscript->tags);
+        }
+
+        @related = sort @related;
+
+    } else {
+        # otherwise, look for all expected tags
+        @related = @expected;
+    }
+
+    #diag "#Related tag: $_" for @related;
 
     # calculate Test-For and Test-Against; results are sorted
     my $material = List::Compare->new(\@expected, \@related);
@@ -444,18 +470,25 @@ sub check_result {
 
     #diag "*Actual tag found: $_" for @actual;
 
-    # find tags not seen; result is sorted
-    my @missing = List::Compare->new(\@test_for, \@actual)->get_Lonly;
-
     # check for blacklisted tags; result is sorted
     my @unexpected
       = List::Compare->new(\@test_against, \@actual)->get_intersection;
 
     # warn about unexpected tags
-    push(@errors, "Tag $_ seen but listed in Test-Against")for @unexpected;
+    if (@unexpected) {
+        push(@errors, 'Unexpected tags:');
+        push(@errors, SPACE . SPACE . $_) for @unexpected;
+        push(@errors, EMPTY);
+    }
+    # find tags not seen; result is sorted
+    my @missing = List::Compare->new(\@test_for, \@actual)->get_Lonly;
 
     # warn about missing tags
-    push(@errors, "Tag $_ listed in Test-For but not seen")for @missing;
+    if (@missing) {
+        push(@errors, 'Missing tags:');
+        push(@errors, SPACE . SPACE . $_) for @missing;
+        push(@errors, EMPTY);
+    }
 
     return @errors;
 }
