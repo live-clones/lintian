@@ -116,6 +116,7 @@ Depends:
  libdpkg-perl,
  libemail-valid-perl,
  libfile-basedir-perl,
+ libfile-find-rule-perl,
  libio-async-perl,
  libio-async-loop-epoll-perl (>= 0.20),
  libipc-run-perl,
