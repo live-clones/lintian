@@ -822,6 +822,8 @@ sub run {
             }
             # ---------------- /usr/lib/node
             elsif ($fname =~ m,^usr/(?:share|lib(?:/[^/]+)?)/nodejs/,) {
+                tag 'nodejs-module-installed-in-usr-lib', $file
+                  if $fname =~ m#usr/lib/nodejs/.*# and $file->is_file;
                 if ($fname
                     =~ m#usr/(?:share|lib(?:/[^/]+)?)/nodejs/(?:package\.json|[^/]*\.js)$#
                 ) {
