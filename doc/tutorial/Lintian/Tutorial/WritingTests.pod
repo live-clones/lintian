@@ -6,6 +6,8 @@ Lintian::Tutorial::WritingTests -- Short tutorial on writing tests
 
 =head1 SYNOPSIS
 
+Warning: This document may be out of date.
+
 This document attempts to be a short / quick tutorial to the Lintian
 test suite from a test-writer's perspective.  As such, it will only
 cover the standard type of tests (from the "tests" suite).
@@ -32,24 +34,33 @@ They are B<not> used for testing Lintian tags.
 
 =item -
 
-changes / debs / source
+tags
 
-These suites are small test suites that test some particular tags for
+These tests all test for the presence of tags after building test
+packages using skeletons. For most cases, we recommend
+
+ Skeleton: upload-non-native
+
+suites are small test suites that test some particular tags for
 I<.changes>, I<.deb> or I<.dsc> files.  Typically, you will find the
 more exotic tags here, which require some special fiddling and cannot
 be built by a "standard" dh7 + dpkg build.
 
 =item -
 
-tests
+literal
 
-This suite is the standard test suite for testing Lintian tags.
+These tests look to match the literal output of Lintian. These tests
+are useful as general false positives. They also catch Lintian messages
+unrelated to tags.
 
 =back
 
 With this in mind, let us move on to the scope.
 
 =head2 Scope of the tutorial
+
+WARNING: THE REMAINDER OF THIS TUTORIAL IS OUT OF DATE.
 
 The "tests" suite alone is fairly complex on its own.  To keep things
 simple, the tutorial will limit itself to creating a "native"
