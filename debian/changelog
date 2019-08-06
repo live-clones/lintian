@@ -1,8 +1,63 @@
-lintian (2.16.0+git) UNRELEASED; urgency=medium
+lintian (2.17.0) unstable; urgency=medium
 
-  * WIP
+  * Summary of tag changes:
+    + Added:
+      - empty-debian-tests-control
+    + Removed:
+      - control-file-duplicate-field
+      - control-file-syntax-error
+      - debian-source-dir-unknown-source-format
+      - debian-tests-control-is-not-a-regular-file
+      - missing-runtime-tests-field
+      - syntax-error-in-control-file
+      - syntax-error-in-debian-tests-control
+      - testsuite-control-missing-test-field
+      - testsuite-control-not-file
+      - testsuite-control-syntax-error
+      - unknown-source-format
 
- -- Chris Lamb <lamby@debian.org>  Wed, 10 Jul 2019 10:20:48 -0300
+  [ Chris Lamb ]
+  * Don't emit command-in-sbin-has-manpage-in-incorrect-section for
+    symlinks; they are invariably provided for legacy/compatibility
+    reasons. (Closes: #931951)
+  * Update regex matches against lines in debian/rules correctly identify
+    debhelper calls starting with environment modification (eg.
+    "LC_ALL=C.UTF-8"). (Closes: #932128)
+  * Factor out mangling of fatal error messages in the frontend
+    configuration and correct the exit code if the specified profile does
+    not exist. (Closes: #932215)
+  * Expand the long description of the duplicate-files check to suggest how
+    to remove them. Thanks to Rebecca Palmer for the suggested text.
+    (Closes: #932411)
+  * Downgrade command-in-sbin-has-manpage-in-incorrect-section to pedantic
+    severity for the time being. (Closes: #570998)
+  * Downgrade the severity and certainty of the
+    package-supports-alternative-init-but-no-init.d-script tag for the time
+    being. (Closes: #931889)
+  * Correct multiple "gobject-introspection" typos. Thanks to Simon
+    McVittie (smcv) for the pointer. (Closes: #933394)
+  * Ignore all initscripts provided by the initscripts binary package
+    instead of whitelisting issues individually or requiring overrides;
+    these will never be regular-style initscripts. (Closes: #933383)
+
+  [ Felix Lechner ]
+  * Do not trigger repack requirement when the Debian revision includes the
+    "repack" indicator. (Closes: #931846)
+  * Drop Depends and Build-Depends on libparse-debianchangelog-perl.
+    (Closes: #933134)
+  * Quote the spelling corrections that consist of multiple words.
+  * Use the null character as the line delimiter in collection/md5sums.
+  * Show logs for tests with parse errors when unattended and show all
+    parse errors in TAP.
+  * Always show log when failing to build a test package.
+  * Store tags is separate, small files under ./tags.
+  * Remove MatchVars check from PerlCritic configuration.
+  * In the test runner, add an option to accept all tag changes.
+
+  [ Paul Wise ]
+  * Add several spelling corrections.
+
+ -- Chris Lamb <lamby@debian.org>  Tue, 06 Aug 2019 16:45:11 +0100
 
 lintian (2.16.0) unstable; urgency=medium
 
