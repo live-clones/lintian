@@ -146,7 +146,8 @@ Suggests:
  libtext-template-perl,
 Breaks:
  funny-manpages (<< 1.3-5.1),
- pkg-perl-tools (<< 0.23),
+ pkg-perl-tools (<< 0.53),
+ pkg-js-tools (<< 0.9.4),
 Replaces:
  funny-manpages (<< 1.3-5.1),
 Multi-Arch: foreign
