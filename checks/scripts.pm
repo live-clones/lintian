@@ -260,7 +260,11 @@ sub run {
       $info->sorted_index;
 
     my %old_versions;
-    for my $entry ($info->changelog ? $info->changelog->data : ()) {
+    for my $entry (
+        $info->changelog
+        ? @{$info->changelog->entries}
+        : ()
+    ) {
         my $timestamp = $entry->Timestamp // $OLDSTABLE_RELEASE;
         $old_versions{$entry->Version} = $timestamp
           if $timestamp < $OLDSTABLE_RELEASE;

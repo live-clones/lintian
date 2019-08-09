@@ -1,0 +1,10 @@
+Tag: invalid-arch-string-in-source-relation
+Severity: important
+Certainty: possible
+Check: fields
+Ref: policy 5.6.8
+Info: The architecture string in the source relation includes an unknown
+ architecture. This may be a typo, or it may be an architecture that dpkg
+ doesn't know about yet. A common problem is incorrectly separating
+ architectures with a comma, such as <tt>[i386, m68k]</tt>. Architectures
+ are separated by spaces; this should instead be <tt>[i386 m68k]</tt>.

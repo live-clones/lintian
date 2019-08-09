@@ -1,0 +1,7 @@
+Tag: maintainer-script-removes-device-files
+Severity: serious
+Certainty: certain
+Check: scripts
+Ref: policy 10.6
+Info: Maintainer scripts must not remove device files. This is left to
+ the system administrator.

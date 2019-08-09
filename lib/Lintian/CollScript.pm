@@ -23,9 +23,11 @@ use warnings;
 
 use parent 'Class::Accessor::Fast';
 
+use Capture::Tiny qw(capture_merged);
 use Carp qw(croak);
 use File::Basename qw(dirname);
 use IO::Async::Loop;
+use Try::Tiny;
 
 use Lintian::Deb822Parser qw(read_dpkg_control_utf8);
 use Lintian::Util qw(internal_error);
@@ -235,28 +237,22 @@ sub collect {
             $ENV{'PERL5OPT'} //= EMPTY;
             $ENV{'PERL5OPT'} .= SPACE . $ENV{'LINTIAN_COVERAGE'};
         }
-        my $loop = IO::Async::Loop->new;
-        my $future = $loop->new_future;
 
         my @command = ($self->script_path, $pkg_name, $task, $dir);
-        $loop->run_child(
-            command => [@command],
-            on_finish => sub {
-                my ($pid, $exitcode, $stdout, $stderr) = @_;
-                my $status = ($exitcode >> 8);
+        my $error;
+        my $output = capture_merged {
 
-                if ($status) {
-                    my $message= "Command @command exited with status $status";
-                    $message .= ": $stderr" if length $stderr;
-                    $future->fail($message);
-                    return;
-                }
+            try {
+                system(@command);
+            }catch {
+                # catch any error
+                $error = $_;
+            };
+        };
 
-                $future->done($stdout);
-            });
-
-        # will raise an exception in case of failure
-        $future->get;
+        # print something if there was an error
+        print STDERR $output
+          if $error;
 
     } elsif ($iface eq 'perl-coll') {
         my $cs_path = $self->script_path;

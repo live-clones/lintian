@@ -57,6 +57,7 @@ BEGIN {
 }
 
 use Carp;
+use List::MoreUtils qw(uniq);
 use List::Util qw(all);
 use Path::Tiny;
 
@@ -84,7 +85,7 @@ sub get_tagnames {
     my @lines = path($path)->lines_utf8({ chomp => 1 });
     my @names = map { tag_name($_) } @lines;
 
-    return @names;
+    return uniq @names;
 }
 
 sub order {

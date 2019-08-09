@@ -25,6 +25,7 @@ use warnings;
 use Carp qw(croak);
 
 use Lintian::Data;
+use Lintian::Deb822Parser qw(read_dpkg_control_utf8);
 use Lintian::Tag::TextUtil
   qw(dtml_to_html dtml_to_text split_paragraphs wrap_paragraphs);
 use Lintian::Tags qw();
@@ -83,15 +84,37 @@ Creates a new Lintian::Tag:Info.
 =cut
 
 sub new {
-    my ($class, $tag, $sn, $st) = @_;
-    my %copy;
-    my $self;
-    my $tagname;
-    croak 'no tag specified' unless $tag;
-    %copy = %$tag;
-    $self = \%copy;
+    my ($class) = @_;
+
+    return bless {}, $class;
+}
+
+=back
+
+=head1 INSTANCE METHODS
+
+=over 4
+
+=item load(PATH)
+
+Loads a tag description from PATH.
+
+=cut
+
+sub load {
+    my ($self, $tagpath) = @_;
+
+    croak "Cannot read tag file in $tagpath"
+      unless -r $tagpath;
+
+    my @paragraphs = read_dpkg_control_utf8($tagpath);
+    croak "$tagpath does not have exactly one paragraph"
+      if (scalar(@paragraphs) != 1);
+
+    $self->{$_} = $paragraphs[0]->{$_} for keys %{$paragraphs[0]};
+
     croak 'Missing Tag field' unless $self->{'tag'};
-    $tagname = $self->{'tag'};
+    my $tagname = $self->{'tag'};
     croak "Missing Severity field for $tagname" unless $self->{'severity'};
     croak "Missing Certainty field for $tagname" unless $self->{'certainty'};
     croak "Tag $tagname has invalid severity ($self->{'severity'}):"
@@ -103,20 +126,29 @@ sub new {
       . join(', ', @Lintian::Tags::CERTAINTIES)
       unless exists $CODES{$self->{'severity'}}{$self->{'certainty'}};
     $self->{'info'} = '' unless $self->{'info'};
-    $self->{'script'} = $sn;
-    $self->{'script-type'} = $st;
+
+    #    ($self->{'script'}) = ($self->{'check'} =~ qr/^\s*(\S+)\s*$/);
+    $self->{'script'} = $self->{'check'};
+    delete $self->{'check'};
+
     $self->{'effective-severity'} = $self->{severity};
 
-    bless $self, $class;
-
-    return $self;
+    return;
 }
 
-=back
+=item add_script_type(STRING)
 
-=head1 INSTANCE METHODS
+Set script type to STRING. Only used to format output.
 
-=over 4
+=cut
+
+sub add_script_type {
+    my ($self, $type) = @_;
+
+    $self->{'script-type'} = $type;
+
+    return;
+}
 
 =item certainty()
 

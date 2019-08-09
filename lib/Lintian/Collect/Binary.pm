@@ -25,11 +25,12 @@ use warnings;
 use autodie;
 use parent 'Lintian::Collect::Package';
 
-use Lintian::Relation;
 use Carp qw(croak);
-use Parse::DebianChangelog;
+use Path::Tiny;
 
 use Lintian::Deb822Parser qw(parse_dpkg_control);
+use Lintian::Info::Changelog;
+use Lintian::Relation;
 use Lintian::Util qw(internal_error open_gz get_file_checksum strip);
 
 =head1 NAME
@@ -143,8 +144,9 @@ sub changelog {
             $changelog = $shared->{'changelog'}{$checksum};
         }
         if (not $changelog) {
-            my %opts = (infile => $dch, quiet => 1);
-            $changelog = Parse::DebianChangelog->init(\%opts);
+            my $contents = path($dch)->slurp;
+            $changelog = Lintian::Info::Changelog->new;
+            $changelog->parse($contents);
             if (defined($shared)) {
                 $shared->{'changelog'}{$checksum} = $changelog;
             }

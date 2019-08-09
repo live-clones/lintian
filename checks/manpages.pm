@@ -323,10 +323,11 @@ sub run {
         my $minfo = $manpage{$f};
 
         if ($minfo) {
-            if ($binfo->{sbin} && $minfo->[0]{section} == 1) {
-                tag 'command-in-sbin-has-manpage-in-incorrect-section',
-                  $binfo->{file};
-            }
+            tag 'command-in-sbin-has-manpage-in-incorrect-section',
+              $binfo->{file}
+              if $binfo->{sbin}
+              and $binfo->{file}->is_regular_file
+              and $minfo->[0]{section} == 1;
             if (none { $_->{lang} eq '' } @{$minfo}) {
                 tag 'binary-without-english-manpage', $binfo->{file};
             }

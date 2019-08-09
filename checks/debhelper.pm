@@ -81,6 +81,8 @@ sub run {
 
     my $rules_fd = $drules->open;
 
+    my $command_prefix_pattern = qr/\s+[@+-]?(?:\S+=\S+\s+)*/;
+
     while (<$rules_fd>) {
         while (s,\\$,, and defined(my $cont = <$rules_fd>)) {
             $_ .= $cont;
@@ -92,7 +94,7 @@ sub run {
         }
 
         next if /^\s*\#/;
-        if (m/^\s+[@+-]?(dh_\S+)/) {
+        if (m/^$command_prefix_pattern(dh_\S+)/) {
             my $dhcommand = $1;
             $build_systems{'debhelper'} = 1
               if not exists($build_systems{'dh'});
@@ -137,7 +139,7 @@ sub run {
             }
             $seencommand = 1;
             $needbuilddepends = 1;
-        } elsif (m,^\s+[@+-]?dh\s+,) {
+        } elsif (m,^(?:$command_prefix_pattern)dh\s+,) {
             $build_systems{'dh'} = 1;
             delete($build_systems{'debhelper'});
             $seen_dh = 1;

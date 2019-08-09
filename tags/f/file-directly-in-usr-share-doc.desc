@@ -1,0 +1,7 @@
+Tag: file-directly-in-usr-share-doc
+Severity: serious
+Certainty: certain
+Check: files
+Info: Documentation files have to be installed in
+ <tt>/usr/share/doc/<i>pkg</i></tt>.
+Ref: policy 12.3

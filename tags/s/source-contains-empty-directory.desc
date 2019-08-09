@@ -1,0 +1,18 @@
+Tag: source-contains-empty-directory
+Severity: pedantic
+Certainty: certain
+Check: cruft
+Info: The upstream source tree of this package contains an empty
+ directory.
+ .
+ Having an empty directory in itself does not cause problems but empty
+ directories cannot be stored in Git.
+ .
+ Keeping the empty directory in the source package can prevent others
+ from contributing to the package when using tools like
+ <tt>git-buildpackage(1)</tt>. In this workflow the empty directory
+ would be lost potentially causing errors if the installed binary
+ package or its tests subsequently rely upon them.
+ .
+ Please ask upstream to remove these directories prior to release or to
+ include an empty <tt>.gitignore</tt> file where necessary.

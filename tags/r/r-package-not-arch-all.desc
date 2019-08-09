@@ -1,0 +1,12 @@
+Tag: r-package-not-arch-all
+Severity: normal
+Certainty: certain
+Check: fields
+Info: This package appears to be an "R" progamming language package
+ and has a corresponding <tt>DESCRIPTION</tt> file which contains
+ <tt>NeedsCompilation: No</tt> whilst not being an Architecture: all
+ package.
+ .
+ As the package does not require any compilation, the package should
+ be architecture-independent.
+Ref: https://cran.r-project.org/doc/manuals/r-devel/R-exts.html

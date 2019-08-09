@@ -1,0 +1,11 @@
+Tag: missing-explanation-for-contrib-or-non-free-package
+Severity: wishlist
+Certainty: certain
+Check: source-copyright
+Info: The specified package is in the contrib or non-free archive
+ area but does not include a "Comment" (or "Disclaimer") field in
+ its copyright file.
+ .
+ Please add a brief comment why this package cannot be part of the
+ main Debian distribution.
+Ref: policy 12.5

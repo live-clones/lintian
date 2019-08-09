@@ -1,0 +1,6 @@
+Tag: shlib-with-executable-bit
+Severity: important
+Certainty: certain
+Check: shared-libs
+Info: Shared libraries should be mode 0644.
+Ref: policy 8.1

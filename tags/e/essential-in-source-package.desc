@@ -1,0 +1,6 @@
+Tag: essential-in-source-package
+Severity: important
+Certainty: certain
+Check: fields
+Info: This field should only appear in binary packages.
+Ref: policy 5.6.9

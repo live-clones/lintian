@@ -1,0 +1,7 @@
+Tag: su-wrapper-without--c
+Severity: important
+Certainty: certain
+Check: menu-format
+Info: The menu item command or desktop file uses an su wrapper such as
+ su-to-root without the -c flag. This is a syntax error.
+Ref: su-to-root(1)

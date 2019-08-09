@@ -1,0 +1,15 @@
+Tag: debian-source-options-has-custom-compression-settings
+Severity: normal
+Certainty: certain
+Check: debian-source-dir
+Info: The <tt>debian/source/options</tt> file for this package specifies
+ a custom compression level or algorithm.
+ .
+ Whilst higher levels may reduce the size of big files, they have the
+ side effect of consuming a lot of memory during both compression and
+ extraction. This can not only also waste time unnecessarily, it can
+ cause packages to FTBFS or even fail to install in resource-constrained
+ environments or architectures.
+ .
+ Please remove the call and let dpkg-deb(1) select suitable defaults.
+Ref: #829100, dpkg-deb(1)

@@ -1,0 +1,6 @@
+Tag: script-not-executable
+Severity: normal
+Certainty: certain
+Check: scripts
+Info: This file starts with the #! sequence that marks interpreted scripts,
+ but it is not executable.

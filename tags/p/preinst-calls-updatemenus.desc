@@ -1,0 +1,6 @@
+Tag: preinst-calls-updatemenus
+Severity: important
+Certainty: certain
+Check: menus
+Info: The preinst script calls the <tt>update-menus</tt> command. Usually,
+ this command should be called from the <tt>postinst</tt> maintainer script.

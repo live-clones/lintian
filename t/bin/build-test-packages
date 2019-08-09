@@ -300,8 +300,8 @@ my $build = IO::Async::Function->new(
 
         # print log and die on error
         if ($error) {
-            print $log if length $log && $ENV{'DUMP_LOGS'}//NO eq YES;
-            die "Runner died for $path: $error";
+            print $log if length $log;
+            die "Builder died for $path: $error";
         }
 
         return $path;

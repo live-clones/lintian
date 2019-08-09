@@ -1,0 +1,18 @@
+Tag: possible-bashism-in-maintainer-script
+Severity: normal
+Certainty: possible
+Check: scripts
+Ref: policy 10.4
+Info: This script is marked as running under <tt>/bin/sh</tt>, but it seems
+ to use a feature found in bash but not in the SUSv3 or POSIX shell
+ specification.
+ .
+ Examples:
+  '==' in a test, it should use '=' instead
+  'read' without a variable in the argument
+  'function' to define a function
+  'source' instead of '.'
+  '. command args', passing arguments to commands via 'source' is not supported
+  '{foo,bar}' instead of 'foo bar'
+  '[[ test ]]' instead of '[ test ]' (requires a Korn shell)
+  'type' instead of 'which' or 'command -v'

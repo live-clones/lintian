@@ -1,0 +1,7 @@
+Tag: wrong-name-for-upstream-changelog
+Severity: normal
+Certainty: possible
+Check: changelog-file
+Info: If there is an upstream changelog file, it should usually be
+ installed as /usr/share/doc/<i>pkg</i>/changelog.gz
+Ref: policy 12.7

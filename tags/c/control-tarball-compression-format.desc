@@ -1,0 +1,5 @@
+Tag: control-tarball-compression-format
+Severity: classification
+Certainty: certain
+Check: deb-format
+Info: This is the compressor format used for the <tt>control.tar</tt> tarball.

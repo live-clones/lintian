@@ -1,0 +1,7 @@
+Tag: upstream-metadata-yaml-invalid
+Severity: normal
+Certainty: certain
+Check: upstream-metadata
+Ref: https://dep-team.pages.debian.net/deps/dep12/
+Info: The DEP 12 metadata file is not well formed. The formatting
+ need to be adjusted to match the YAML specification.

@@ -1,7 +1,8 @@
 #!/usr/bin/perl -w
 # md5sums -- lintian collection script
 
-# Copyright (C) 1998 Richard Braakman
+# Copyright © 1998 Richard Braakman
+# Copyright © 2019 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -27,42 +28,88 @@ use strict;
 use warnings;
 use autodie;
 
-use FileHandle;
+use IO::Async::Loop;
+use IO::Async::Process;
+use Path::Tiny;
+
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
+
 use Lintian::Collect;
-use Lintian::Command qw(spawn reap);
+
+use constant EMPTY => q{};
+use constant SPACE => q{ };
+use constant COLON => q{:};
+use constant NEWLINE => qq{\n};
 
 sub collect {
     my ($pkg, $type, $dir) = @_;
     my $info = Lintian::Collect->new($pkg, $type, $dir);
 
-    if (-e "$dir/md5sums") {
-        unlink("$dir/md5sums");
-    }
-
     chdir("$dir/unpacked");
 
-    my %opts = (
-        pipe_in => FileHandle->new,
-        out => "$dir/md5sums",
-        fail => 'error'
+    my $loop = IO::Async::Loop->new;
+    my $future = $loop->new_future;
+
+    my @command= ('xargs', '--null', '--no-run-if-empty', 'md5sum', '--');
+    my $errors;
+
+    my $calculate = IO::Async::Process->new(
+        command => [@command],
+        stdin => { via => 'pipe_write' },
+        stdout => { via => 'pipe_read' },
+        stderr => { into => \$errors },
+        on_finish => sub {
+            my ($self, $exitcode) = @_;
+            my $status = ($exitcode >> 8);
+
+            if ($status) {
+                my $message = "Command @command exited with status $status";
+                $message .= COLON . NEWLINE . $errors
+                  if length $errors;
+                $future->fail($message);
+                return;
+            }
+
+            $future->done('Done with @command');
+            return;
+        });
+
+    my $resultspath = "$dir/md5sums";
+    open(my $fh, '>', $resultspath)
+      or die "Could not open file '$resultspath': $!";
+
+    $calculate->stdout->configure(
+        on_read => sub {
+            my ($stream, $buffref, $eof) = @_;
+
+            if (length $$buffref) {
+                print {$fh} $$buffref;
+                $$buffref = EMPTY;
+            }
+
+            close($fh)
+              if $eof;
+
+            return 0;
+        },
     );
 
-    spawn(\%opts, ['xargs', '-0r', 'md5sum','--']);
-    $opts{pipe_in}->blocking(1);
+    $loop->add($calculate);
 
-    foreach my $file ($info->sorted_index) {
-        next unless $file->is_file;
-        printf {$opts{pipe_in}} "%s\0", $file;
+    foreach my $path ($info->sorted_index) {
+        next unless $path->is_file;
+
+        $calculate->stdin->write("$path\0");
     }
 
-    close($opts{pipe_in});
-    reap(\%opts);
+    $calculate->stdin->close_when_empty;
+    $future->get;
 
     return;
 }
 
-collect(@ARGV) if $0 =~ m,(?:^|/)md5sums$,;
+collect(@ARGV) unless caller;
+
 1;
 
 # Local Variables:

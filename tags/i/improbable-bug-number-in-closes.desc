@@ -1,0 +1,7 @@
+Tag: improbable-bug-number-in-closes
+Severity: normal
+Certainty: possible
+Check: changelog-file
+Info: The most recent changelog closes a low-numbered bug number.
+ While this is distantly possible, it's more likely a typo or a
+ placeholder value that mistakenly wasn't filled in.

@@ -22,7 +22,7 @@ package Lintian::source_changelog;
 use strict;
 use warnings;
 use autodie;
-use Parse::DebianChangelog;
+
 use Lintian::Tags qw(tag);
 
 sub parse_version {
@@ -86,7 +86,7 @@ sub parse_version {
 sub run {
     my ($pkg, undef, $info, undef, undef) = @_;
 
-    my @entries = $info->changelog->data;
+    my @entries = @{$info->changelog->entries};
 
     if (@entries > 0) {
         my ($latest_version, $reconstructed)

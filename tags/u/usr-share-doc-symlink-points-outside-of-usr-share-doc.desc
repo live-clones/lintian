@@ -1,0 +1,7 @@
+Tag: usr-share-doc-symlink-points-outside-of-usr-share-doc
+Severity: important
+Certainty: certain
+Check: copyright-file
+Info: The /usr/share/doc/<i>pkg</i> symbolic link is pointing to a directory
+ outside of <tt>/usr/share/doc</tt>.
+Ref: policy 12.5

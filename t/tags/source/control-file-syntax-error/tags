@@ -1,1 +1,0 @@
-control-file-syntax-error (source): syntax-error-in-control-file debian/control: syntax error at line 11: Cannot parse line "Recommends a-colon, after-the-field, name"

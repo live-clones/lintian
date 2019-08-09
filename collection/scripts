@@ -1,7 +1,8 @@
 #!/usr/bin/perl -w
 # scripts -- lintian collection script
 
-# Copyright (C) 1998 Richard Braakman
+# Copyright © 1998 Richard Braakman
+# Copyright © 2019 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -27,83 +28,106 @@ use strict;
 use warnings;
 use autodie;
 
+use Path::Tiny;
+
 use lib "$ENV{'LINTIAN_ROOT'}/lib/";
 use Lintian::Collect;
 use Lintian::Util qw(strip);
 
+use constant EMPTY => q{};
+use constant SPACE => q{ };
+use constant NEWLINE => qq{\n};
+
 sub collect {
     my ($pkg, $type, $dir) = @_;
     my $info = Lintian::Collect->new($pkg, $type, $dir);
-    my $scripts_fd; # We lazily open this FD.
 
-    foreach my $file ($info->sorted_index) {
-        next unless $file->is_regular_file and $file->is_open_ok;
-        my $scriptpath = shebang_line($file);
+    my $scripts;
 
-        next unless defined($scriptpath); # no shebang line => not a script
+    foreach my $path ($info->sorted_index) {
+        next unless $path->is_regular_file and $path->is_open_ok;
 
-        # skip lincity data files
-        # magic: #!#!#!
-        next if ($scriptpath =~ m/^\#!/);
-        my $copy_path = $scriptpath;
-        $scriptpath =~ s/^\#.*//; # remove comments
+        # skip lincity data files; magic: #!#!#!
+        next if $path->size >= 6 && magic($path, 6) eq '#!#!#!';
 
-        if (!defined($scripts_fd)) {
-            open($scripts_fd, '>', "$dir/scripts");
+        my $interpreter = get_interpreter($path);
+
+        # no shebang => no script
+        next unless defined $interpreter;
+
+        # remove comment, if any
+        (my $nocomment = $interpreter) =~ s/^\#.*//;
+
+        unless (length $nocomment) {
+            $scripts .= "$interpreter $path" . NEWLINE;
+            next;
         }
 
-        if ($scriptpath eq '') {
-            print {$scripts_fd} "$copy_path $file\n";
-        } else {
-            my $env = '';
-            if ($scriptpath =~ s,^/usr/bin/env\s+,,) {
-                $env = 'env ';
-            }
-            # Remove everything after the first space (i.e. any options)
-            $scriptpath =~ s/\s++ .++ \Z//xsm;
-            print {$scripts_fd} $env . "$scriptpath $file\n";
-        }
+        $scripts .= 'env' . SPACE
+          if $nocomment =~ s,^/usr/bin/env\s+,,;
+
+        # get base command without options
+        $nocomment =~ s/\s++ .++ \Z//xsm;
+        $scripts .= "$nocomment $path" . NEWLINE;
     }
-    close($scripts_fd) if defined($scripts_fd);
 
-    open(my $ctrl_fd, '>', "$dir/control-scripts");
-    for my $path ($info->control_index('')->children) {
+    my $scriptspath = "$dir/scripts";
+    path($scriptspath)->spew($scripts // EMPTY);
+
+    my $maintainer;
+
+    for my $path ($info->control_index(EMPTY)->children) {
         next unless $path->is_open_ok;
-        # Only collect maintainer scripts
+
+        # skip anything other than maintainer scripts
         next unless $path =~ m/^(?:(?:pre|post)(?:inst|rm)|config)$/;
 
-        # Allow ELF binaries
-        my $fd = $path->open;
-        my ($magic, $scriptpath);
-        if (read($fd, $magic, 4)) {
-            $scriptpath = 'ELF' if $magic eq "\x7FELF";
+        # allow elf binary
+        if ($path->size >= 4 && magic($path, 4) eq "\x7FELF") {
+            $maintainer .= "ELF $path" . NEWLINE;
+            next;
         }
-        close($fd);
-        # If they aren't ELF, look for a shebang
-        $scriptpath = $scriptpath // shebang_line($path) // '';
 
-        # Remove everything after the first space (i.e. any options)
-        $scriptpath =~ s/\s++ .++ \Z//xsm;
-        print {$ctrl_fd} "$scriptpath $path\n";
+        # check for hashbang
+        my $interpreter = get_interpreter($path) // EMPTY;
+
+        # get base command without options
+        $interpreter =~ s/\s++ .++ \Z//xsm;
+
+        $maintainer .= "$interpreter $path" . NEWLINE;
     }
-    close($ctrl_fd);
+
+    my $controlpath = "$dir/control-scripts";
+    path($controlpath)->spew($maintainer // EMPTY);
 
     return;
 }
 
-sub shebang_line {
-    my ($path) = @_;
-    my ($scriptpath, $magic);
+sub magic {
+    my ($path, $count) = @_;
+    my $magic;
+
     my $fd = $path->open;
-    if (read($fd, $magic, 2) and $magic eq '#!' and not eof($fd)) {
-        $scriptpath = <$fd>;
-        strip($scriptpath);
-    }
+    die "Could not read $count bytes from $path"
+      unless read($fd, $magic, $count) == $count;
     close($fd);
-    return $scriptpath;
+
+    return $magic;
 }
 
-collect(@ARGV) if $0 =~ m,(?:^|/)scripts$,;
+sub get_interpreter {
+    my ($path) = @_;
+    my ($interpreter, $magic);
+    my $fd = $path->open;
+    if (read($fd, $magic, 2) and $magic eq '#!' and not eof($fd)) {
+        $interpreter = <$fd>;
+        strip($interpreter);
+    }
+    close($fd);
+    return $interpreter;
+}
+
+collect(@ARGV) unless caller;
 
 1;
 

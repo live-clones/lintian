@@ -1,7 +1,9 @@
 #!/usr/bin/perl
 #
-# Copyright (C) 2012 Niels Thykier
-#   Based on coll/index which is: Copyright (C) 1998 Christian Schwarz
+# Copyright © 2012 Niels Thykier
+# Copyright © 2019 Felix Lechner
+#
+# Based on coll/index which is: Copyright © 1998 Christian Schwarz
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -27,26 +29,33 @@ use strict;
 use warnings;
 use autodie;
 
-# import perl libraries
-use lib "$ENV{'LINTIAN_ROOT'}/lib";
 use Cwd();
+use IO::Async::Loop;
+use IO::Async::Process;
+use Path::Tiny;
+
+use lib "$ENV{'LINTIAN_ROOT'}/lib";
+
 use Lintian::Collect;
-use Lintian::Command qw(spawn reap);
 use Lintian::Processable::Package;
-use Lintian::Util qw(internal_error);
+use Lintian::Util qw(internal_error sort_file_index gzip);
+
+use constant EMPTY => q{};
+use constant SPACE => q{ };
+use constant COLON => q{:};
+use constant NEWLINE => qq{\n};
 
 sub collect {
     my ($pkg, $type, $dir) = @_;
     my $info = Lintian::Collect->new($pkg, $type, $dir);
 
-    if (-f "$dir/src-orig-index.gz") {
-        unlink("$dir/src-orig-index.gz");
-    }
+    my $origpath = "$dir/src-orig-index.gz";
+    unlink($origpath)
+      if -f $origpath;
 
-    # Nothing to do for native packages where the two indices are
-    # identical.
+    # for native packages, just link to regular index
     if ($info->native) {
-        link("$dir/index.gz", "$dir/src-orig-index.gz");
+        link("$dir/index.gz", $origpath);
         return;
     }
 
@@ -108,6 +117,7 @@ sub index_orig {
     foreach my $tardata (@tarballs) {
         my ($tarball, $compname) = @$tardata;
         my @index;
+
         # Collect a list of the files in the source package.  tar
         # currently doesn't automatically recognize LZMA / XZ, so we
         # need to add the option where it's needed.  Change hard link
@@ -116,39 +126,51 @@ sub index_orig {
         # intentionally don't parallelize this job because we need to
         # use the output below.
         my @tar_options = ('--utc', '--full-time', '-tvf');
-        my $last = '';
-        my $collect;
         if ($tarball =~ /\.(lzma|xz)\z/) {
             unshift @tar_options, "--$1";
         }
-        $collect = sub {
-            my @lines = map { split "\n" } @_;
-            if ($last ne '') {
-                $lines[0] = $last . $lines[0];
-            }
-            if ($_[-1] !~ /\n\z/) {
-                $last = pop @lines;
-            } else {
-                $last = '';
-            }
-            for my $line (@lines) {
-                $line =~ s/^h/-/;
-                if ($line and $line !~ m,^(?:\S+\s+){5}\./$,) {
-                    push @index, $line . "\n";
+        my @tar = ('tar', @tar_options, "$dir/$tarball");
+
+        my $loop = IO::Async::Loop->new;
+        my $future = $loop->new_future;
+        my $stdout;
+        my $stderr;
+
+        my $process = IO::Async::Process->new(
+            command => [@tar],
+            stdout => { into => \$stdout },
+            stderr => { into => \$stderr },
+            on_finish => sub {
+                my ($self, $exitcode) = @_;
+                my $status = ($exitcode >> 8);
+
+                path("$dir/orig-index-errors")->append($stderr // EMPTY);
+
+                if ($status) {
+                    my $message
+                      = "Non-zero status $status from dpkg-deb for control";
+                    $message .= COLON . NEWLINE . $stderr
+                      if length $stderr;
+                    $future->fail($message);
+                    return;
                 }
+
+                $future->done('Done with dpkg-deb');
+                return;
+            });
+
+        $loop->add($process);
+
+        $future->get;
+
+        my @lines = split(/\n/, $stdout);
+        for my $line (@lines) {
+            $line =~ s/^h/-/;
+            if ($line and $line !~ m,^(?:\S+\s+){5}\./$,) {
+                push(@index, $line . NEWLINE);
             }
-        }; # End $collect = sub;
-        spawn({
-                fail => 'never',
-                out => $collect,
-                err_append => "$dir/orig-index-errors"
-            },
-            ['tar', @tar_options, "$dir/$tarball"]);
-        if ($last) {
-            internal_error(
-                "tar output (for $tarball from $pkg) does not end in a newline"
-            );
         }
+
         # We now need to see if all files in the tarball have a common
         # prefix.  If so, we're going to strip that prefix off each
         # file name.  We also remove lines that consist solely of the
@@ -207,23 +229,18 @@ sub index_orig {
         }
         push @result, @index;
     }
-    # Now that we have the file names we want, write them out sorted to the
-    # index file.
-    my %opts = (
-        out => "$dir/src-orig-index.gz",
-        fail => 'error',
-        pipe_in => FileHandle->new
-    );
-    spawn(\%opts, ['sort', '-k', '6'], '|', ['gzip', '-9nc']);
-    $opts{pipe_in}->blocking(1);
-    print {$opts{pipe_in}} @result;
-    close($opts{pipe_in});
-    reap(\%opts);
+
+    # we have the file names, write sorted to the index
+    my $unsorted = join(EMPTY, @result);
+
+    # sorts according to LC_ALL=C
+    my $sorted = sort_file_index($unsorted);
+    gzip($sorted, "$dir/src-orig-index.gz");
 
     return;
 }
 
-collect(@ARGV) if $0 =~ m,(?:^|/)src-orig-index$,;
+collect(@ARGV) unless caller;
 
 1;
 

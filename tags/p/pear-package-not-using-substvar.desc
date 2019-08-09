@@ -1,0 +1,11 @@
+Tag: pear-package-not-using-substvar
+Severity: wishlist
+Certainty: possible
+Check: phppear
+Info: The package is a PEAR package but its control file doesn't have
+ ${phppear:summary} or ${phppear:description} in its description fields.
+ .
+ Those substitution variables should only be used if the description
+ included in PEAR package is of sufficient quality and respect Debian
+ packaging best practices.
+Ref: https://www.debian.org/doc/manuals/developers-reference/best-pkging-practices.html#bpp-desc-basics

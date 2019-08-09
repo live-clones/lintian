@@ -1,0 +1,7 @@
+Tag: wrong-debian-qa-group-name
+Severity: important
+Certainty: certain
+Check: fields
+Info: Orphaned packages should have "Debian QA Group
+ &lt;packages@qa.debian.org&gt;" in the maintainer field.
+Ref: devref 5.9.4

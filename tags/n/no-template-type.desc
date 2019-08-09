@@ -1,0 +1,5 @@
+Tag: no-template-type
+Severity: important
+Certainty: certain
+Check: debconf
+Info: The templates file contains a template without a "Type:" field.

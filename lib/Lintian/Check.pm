@@ -30,6 +30,8 @@ use Lintian::Data;
 use Lintian::Tags qw(tag);
 use Lintian::Util qw(strip);
 
+use constant DOUBLE_QUOTE => q{"};
+
 our $KNOWN_BOUNCE_ADDRESSES = Lintian::Data->new('fields/bounce-addresses');
 
 our @EXPORT_OK = qw(check_maintainer check_spelling check_spelling_picky
@@ -360,7 +362,10 @@ sub check_spelling {
             }
             $counter++;
             next if $seen{lc $word}++;
-            $code_ref->($word, $correction);
+            $code_ref->(
+                DOUBLE_QUOTE . $word . DOUBLE_QUOTE,
+                DOUBLE_QUOTE . $correction . DOUBLE_QUOTE
+            );
         }
     }
 

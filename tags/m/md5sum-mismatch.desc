@@ -1,0 +1,13 @@
+Tag: md5sum-mismatch
+Severity: important
+Certainty: certain
+Check: md5sums
+Info: The md5sum listed for the file does not match the actual file
+ contents.
+ .
+ Usually, this error occurs during the package build process if the
+ <tt>debian/tmp/</tt> directory is touched after <tt>dh_md5sums</tt>
+ is run.
+ .
+ Font files regenerated at post-install time by <tt>t1c2pfb</tt>
+ should be overridden.

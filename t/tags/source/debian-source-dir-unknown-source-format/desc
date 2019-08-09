@@ -1,7 +1,0 @@
-Skeleton: dsc
-Testname: debian-source-dir-unknown-source-format
-Version: 1
-Source-Format: 3.0 (unknown-format)
-Description: Test for d/changelog being a symlink
-Test-Against:
-Check: debian-source-dir

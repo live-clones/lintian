@@ -1,0 +1,7 @@
+Tag: postinst-does-not-load-confmodule
+Severity: normal
+Certainty: certain
+Check: debconf
+Info: Even if your postinst does not involve debconf, you currently need to
+ make sure it loads one of the debconf libraries. This will be changed in
+ the future.

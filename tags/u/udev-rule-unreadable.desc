@@ -1,0 +1,8 @@
+Tag: udev-rule-unreadable
+Severity: serious
+Certainty: certain
+Check: udev
+Ref: https://wiki.debian.org/USB/GadgetSetup
+Info: The udev rule entry should be a file
+ The package contain a non-file in /lib/udev/rules.d/. The directory
+ should only contain readable files.

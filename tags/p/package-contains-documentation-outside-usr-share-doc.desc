@@ -1,0 +1,11 @@
+Tag: package-contains-documentation-outside-usr-share-doc
+Severity: minor
+Certainty: wild-guess
+Check: files
+Info: This package ships a documentation file outside /usr/share/doc
+ Documentation files are normally installed inside <tt>/usr/share/doc</tt>.
+ .
+ If this file doesn't describe the contents or purpose of the directory
+ it is in, please consider moving this file to <tt>/usr/share/doc/</tt>
+ or maybe even removing it. If this file does describe the contents
+ or purpose of the directory it is in, please add a lintian override.

@@ -1,0 +1,7 @@
+Tag: package-relation-with-self
+Severity: normal
+Certainty: possible
+Check: fields
+Info: The package declares a relationship with itself. This is not very
+ useful except in the case of a package Conflicting with itself if its
+ package name doubles as a virtual package.

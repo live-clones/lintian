@@ -1,0 +1,6 @@
+Tag: maintainer-script-needs-depends-on-ucf
+Severity: normal
+Certainty: certain
+Check: scripts
+Info: This script calls ucf, but the package does not depend or pre-depend
+ on the ucf package.

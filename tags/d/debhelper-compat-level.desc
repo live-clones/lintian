@@ -1,0 +1,5 @@
+Tag: debhelper-compat-level
+Severity: classification
+Certainty: certain
+Check: debhelper
+Info: This is the debhelper compat level used specified by this package.

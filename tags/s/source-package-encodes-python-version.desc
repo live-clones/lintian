@@ -1,0 +1,13 @@
+Tag: source-package-encodes-python-version
+Severity: normal
+Certainty: certain
+Check: python
+Info: This source package encodes a Python version in its name such
+ as <tt>python2-foo</tt> or <tt>python3-bar</tt>.
+ .
+ This could result in a misleading future situation where this source
+ package supports multiple versions as well unnecessary given that the
+ binary package names will typically encode the supported versions.
+ .
+ Please override this tag with a suitably-commented override if
+ there is no single upstream codebase that supports both versions.

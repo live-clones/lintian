@@ -1,0 +1,9 @@
+Tag: package-installs-java-bytecode
+Severity: normal
+Certainty: certain
+Check: files
+Ref: java-policy 2
+Info: Compiled Java source files must not be included in the package.
+ This is likely due to a packaging mistake. These files should be
+ removed from the installed package or included in <tt>.jar</tt>
+ archives to save space.

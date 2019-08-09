@@ -1,6 +1,0 @@
-Skeleton: dsc
-Testname: control-file-syntax-error
-Version: 1
-Description: Test for d/control with syntax errors
-Test-Against:
-Check: control-file

@@ -1,0 +1,7 @@
+Tag: init.d-script-does-not-implement-required-option
+Severity: important
+Certainty: certain
+Check: init.d
+Ref: policy 9.3.2
+Info: The <tt>/etc/init.d</tt> scripts have to support the following
+ command line arguments: start, stop, restart, force-reload.

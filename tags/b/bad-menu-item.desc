@@ -1,0 +1,6 @@
+Tag: bad-menu-item
+Severity: important
+Certainty: certain
+Check: fields
+Info: The field Installer-Menu-Item should only contain positive integer
+ values.

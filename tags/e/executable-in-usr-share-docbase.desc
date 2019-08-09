@@ -1,0 +1,5 @@
+Tag: executable-in-usr-share-docbase
+Severity: important
+Certainty: certain
+Check: menus
+Info: Files in <tt>/usr/share/doc-base</tt> may not be marked as executables.

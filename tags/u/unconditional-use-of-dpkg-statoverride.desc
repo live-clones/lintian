@@ -1,0 +1,8 @@
+Tag: unconditional-use-of-dpkg-statoverride
+Severity: normal
+Certainty: possible
+Check: scripts
+Info: The maintainer script appears to use <tt>dpkg-statoverride --add</tt>
+ without a prior call to <tt>dpkg-statoverride --list</tt> to check the
+ current status.
+Ref: policy 10.9.1

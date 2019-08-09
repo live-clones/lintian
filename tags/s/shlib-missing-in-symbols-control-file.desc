@@ -1,0 +1,7 @@
+Tag: shlib-missing-in-symbols-control-file
+Severity: normal
+Certainty: possible
+Check: shared-libs
+Info: The package contains a shared library that is not listed in the
+ symbols control file. This may not be a problem if, for example,
+ the library is a C++ library.

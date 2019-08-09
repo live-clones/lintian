@@ -1,6 +1,0 @@
-Skeleton: dsc
-Testname: testsuite-control-not-file
-Version: 1
-Description: Tests for the autopkgtest control being non-file
-Test-Against:
-Check: testsuite

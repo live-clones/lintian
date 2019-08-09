@@ -1,7 +1,8 @@
 #!/usr/bin/perl -w
 # bin-pkg-control -- lintian collector script
 
-# Copyright (C) 1998 Christian Schwarz
+# Copyright © 1998 Christian Schwarz
+# Copyright © 2019 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -27,100 +28,175 @@ use strict;
 use warnings;
 use autodie;
 
+use IO::Async::Loop;
+use IO::Async::Process;
 use Path::Tiny;
 
-use constant ERROR_FILES => qw(control-index-errors control-errors);
-
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
-use Lintian::Command qw(spawn reap);
-use Lintian::Util qw(internal_error pipe_tee run_cmd);
+
+use Lintian::Util qw(sort_file_index gzip safe_qx);
+
+# read up to 40kB at a time.  this happens to be 4096 "tar records"
+# (with a block-size of 512 and a block factor of 20, which appear to
+# be the defaults).  when we do full reads and writes of READ_SIZE (the
+# OS willing), the receiving end will never be with an incomplete
+# record.
+use constant READ_SIZE => 4096 * 20 * 512;
+
+use constant EMPTY => q{};
+use constant COLON => q{:};
+use constant NEWLINE => qq{\n};
 
 sub collect {
     my ($pkg, $type, $dir) = @_;
-    my (@jobs, $job, $in_fd, @out_fds, $err);
 
     my $controldir = "$dir/control";
     path($controldir)->remove_tree
       if -d $controldir;
 
-    for my $file ('control-index.gz', ERROR_FILES) {
-        my $path = "$dir/$file";
+    my $zipindexpath = "$dir/control-index.gz";
+    my $controlerrorspath = "$dir/control-errors";
+    my $indexerrorspath = "$dir/control-index-errors";
+
+    for my $path ($zipindexpath, $controlerrorspath, $indexerrorspath) {
         unlink($path) if -e $path;
     }
 
-    mkdir("$dir/control", 0777);
+    mkdir($controldir, 0777);
 
-    # The following calls use knowledge of the .deb format for speed
+    my $debpath = "$dir/deb";
+    return
+      unless -f $debpath;
 
-    # (replaces dpkg-deb -e)
-    # extract control files' tarball
-    $in_fd = FileHandle->new;
-    spawn(
-        { fail => 'error', pipe_out => $in_fd },
-        ['dpkg-deb', '--ctrl-tarfile', "$dir/deb"]);
+    my $loop = IO::Async::Loop->new;
 
-    $job = {
-        fail => 'error',
-        err => "$dir/control-errors",
-        pipe_in => FileHandle->new,
-    };
-    push(@out_fds, $job->{'pipe_in'});
-    push(@jobs, $job);
+    # get control tarball from deb
+    my $deberror;
+    my $dpkgdeb = $loop->new_future;
+    my @debcommand = ('dpkg-deb', '--ctrl-tarfile', $debpath);
+    my $debprocess = IO::Async::Process->new(
+        command => [@debcommand],
+        stdout => { via => 'pipe_read' },
+        stderr => { into => \$deberror },
+        on_finish => sub {
+            my ($self, $exitcode) = @_;
+            my $status = ($exitcode >> 8);
+
+            if ($status) {
+                my $message= "Non-zero status $status from @debcommand";
+                $message .= COLON . NEWLINE . $deberror
+                  if length $deberror;
+                $dpkgdeb->fail($message);
+                return;
+            }
+
+            $dpkgdeb->done("Done with @debcommand");
+            return;
+        });
+
     # extract the tarball's contents
-    spawn(
-        $job,
-        [
-            'tar', '--no-same-owner','--no-same-permissions', '-mxf',
-            '-', '-C',"$dir/control",
-        ]);
+    my $extracterror;
+    my $extractor = $loop->new_future;
+    my @extractcommand = (
+        'tar', '--no-same-owner','--no-same-permissions', '-mxf',
+        '-', '-C', $controldir
+    );
+    my $extractprocess = IO::Async::Process->new(
+        command => [@extractcommand],
+        stdin => { via => 'pipe_write' },
+        stderr => { into => \$extracterror },
+        on_finish => sub {
+            my ($self, $exitcode) = @_;
+            my $status = ($exitcode >> 8);
 
-    $job = {
-        fail => 'error',
-        out  => "$dir/control-index.gz",
-        err  => "$dir/control-index-errors",
-        pipe_in => FileHandle->new,
-    };
+            if ($status) {
+                my $message = "Non-zero status $status from @extractcommand";
+                $message .= COLON . NEWLINE . $extracterror
+                  if length $extracterror;
+                $extractor->fail($message);
+                return;
+            }
 
-    push(@out_fds, $job->{'pipe_in'});
-    push(@jobs, $job);
+            $extractor->done("Done with @extractcommand");
+            return;
+        });
+
     # create index of control.tar.gz
-    spawn(
-        $job, ['tar', '-stvf', '-'],'|', ['sort', '-k', '6'],
-        '|', ['gzip', '-9nc'],
+    my $index;
+    my $indexerror;
+    my $indexer = $loop->new_future;
+    my @indexcommand = ('tar', '-stvf', '-');
+    my $indexprocess = IO::Async::Process->new(
+        command => [@indexcommand],
+        stdin => { via => 'pipe_write' },
+        stdout => { into => \$index },
+        stderr => { into => \$indexerror },
+        on_finish => sub {
+            my ($self, $exitcode) = @_;
+            my $status = ($exitcode >> 8);
+
+            if ($status) {
+                my $message = "Non-zero status $status from @indexcommand";
+                $message .= COLON . NEWLINE . $indexerror
+                  if length $indexerror;
+                $indexer->fail($message);
+                return;
+            }
+
+            $indexer->done("Done with @indexcommand");
+            return;
+        });
+
+    $extractprocess->stdin->configure(write_len => READ_SIZE);
+    $indexprocess->stdin->configure(write_len => READ_SIZE);
+
+    $debprocess->stdout->configure(
+        read_len => READ_SIZE,
+        on_read => sub {
+            my ($stream, $buffref, $eof) = @_;
+
+            if (length $$buffref) {
+                $extractprocess->stdin->write($$buffref);
+                $indexprocess->stdin->write($$buffref);
+
+                $$buffref = EMPTY;
+            }
+
+            if ($eof) {
+                $extractprocess->stdin->close_when_empty;
+                $indexprocess->stdin->close_when_empty;
+            }
+
+            return 0;
+        },
     );
 
-    $in_fd->blocking(1);
-    for my $out_pipe (@out_fds) {
-        $out_pipe->blocking(1);
-    }
-    eval {pipe_tee($in_fd, \@out_fds);};
-    $err = $@;
-    eval {
-        close($in_fd);
-        for my $fd (@out_fds) {
-            close($fd);
-        }
-        reap(@jobs);
-        undef(@jobs);
-    };
-    $err ||= $@;
-    if ($err) {
-        die $err;
-    }
+    $loop->add($debprocess);
+    $loop->add($indexprocess);
+    $loop->add($extractprocess);
+
+    my $composite = Future->needs_all($dpkgdeb, $extractor, $indexer);
+
+    # awaits, and dies on failure with message from failed constituent
+    $composite->get;
+
+    # not recording dpkg-deb errors anywhere
+    path($controlerrorspath)->append($extracterror)
+      if length $extracterror;
+    path($indexerrorspath)->append($indexerror)
+      if length $indexerror;
+
+    # sorts according to LC_ALL=C
+    $index = sort_file_index($index // EMPTY);
+    gzip($index, $zipindexpath);
 
     # fix permissions
-    run_cmd('chmod', '-R', 'u+rX,o-w', "$dir/control");
-
-    # Remove empty error files...
-    for my $file (ERROR_FILES) {
-        my $path = "$dir/$file";
-        unlink($path) if -z $path;
-    }
+    safe_qx('chmod', '-R', 'u+rX,o-w', $controldir);
 
     return;
 }
 
-collect(@ARGV) if $0 =~ m,(?:^|/)bin-pkg-control$,;
+collect(@ARGV) unless caller;
 
 1;
 

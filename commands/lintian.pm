@@ -36,6 +36,7 @@ use Getopt::Long();
 use IO::Async::Function;
 use IO::Async::Loop;
 use List::MoreUtils qw(any none);
+use Path::Tiny;
 use POSIX qw(:sys_wait_h);
 use Time::HiRes qw(gettimeofday tv_interval);
 
@@ -47,6 +48,7 @@ use Lintian::DepMap::Properties;
 use Lintian::Data;
 use Lintian::Lab;
 use Lintian::Output qw(:messages);
+use Lintian::Info::Changelog;
 use Lintian::Internal::FrontendUtil qw(
   default_parallel load_collections
   sanitize_environment open_file_or_fd);
@@ -126,6 +128,7 @@ sub lintian_banner {
 
 sub fatal_error {
     my ($msg) = @_;
+    $msg =~ s/ at .*//;
     print STDERR  "$msg\n";
     exit(2);
 }
@@ -1211,11 +1214,11 @@ sub parse_config_file {
 }
 
 sub _find_changes {
-    require Parse::DebianChangelog;
-    my $dch = Parse::DebianChangelog->init(
-        { infile => 'debian/changelog', quiet => 1 });
-    my $data = $dch->data;
-    my $last = $data ? $data->[0] : undef;
+    my $contents = path('debian/changelog')->slurp;
+    my $changelog = Lintian::Info::Changelog->new;
+    $changelog->parse($contents);
+    my @entries = @{$changelog->entries};
+    my $last = @entries ? $entries[0] : undef;
     my ($source, $version);
     my $changes;
     my @archs;
@@ -1225,7 +1228,7 @@ sub _find_changes {
       if exists($ENV{'DEBRELEASE_DEBS_DIR'});
 
     if (not $last) {
-        my @errors = $dch->get_parse_errors;
+        my @errors = @{$changelog->errors};
         if (@errors) {
             print STDERR "Cannot parse debian/changelog due to errors:\n";
             for my $error (@errors) {
@@ -1429,7 +1432,8 @@ sub setup_work_pool {
 }
 
 sub load_profile_and_configure_tags {
-    my $profile = dplint::load_profile($opt{'LINTIAN_PROFILE'});
+    my $profile = eval { dplint::load_profile($opt{'LINTIAN_PROFILE'}); };
+    fatal_error($@) if $@;
     # Ensure $opt{'LINTIAN_PROFILE'} is defined
     $opt{'LINTIAN_PROFILE'} = $profile->name
       unless defined($opt{'LINTIAN_PROFILE'});
@@ -1449,11 +1453,7 @@ sub load_profile_and_configure_tags {
     # Initialize display level settings.
     for my $level (@display_level) {
         eval { $TAGS->display(@{$level}) };
-        if ($@) {
-            my $error = $@;
-            $error =~ s/ at .*//;
-            fatal_error($error);
-        }
+        fatal_error($@) if $@;
     }
     return $profile;
 }
@@ -1477,6 +1477,7 @@ sub load_and_select_collections {
     for my $c (@{$all_checks}) {
         # Add the checks with their dependency information
         my $cs = $PROFILE->get_script($c);
+        die "Cannot find check $c" unless defined $cs;
         my @deps = $cs->needs_info;
         $map->add('check-' . $c);
         if (@deps) {

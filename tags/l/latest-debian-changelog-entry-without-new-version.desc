@@ -1,0 +1,6 @@
+Tag: latest-debian-changelog-entry-without-new-version
+Severity: normal
+Certainty: certain
+Check: changelog-file
+Info: The latest Debian changelog entry has a version number that's either
+ the same or smaller than the version number of the entry before.

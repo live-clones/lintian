@@ -1,0 +1,7 @@
+Tag: no-debian-copyright
+Severity: minor
+Certainty: certain
+Check: source-copyright
+Ref: policy 12.5
+Info: Every package must include the file <tt>/usr/share/doc/<i>pkg</i>/copyright</tt>.
+ A copy of this file should be in <tt>debian/copyright</tt> in the source package.

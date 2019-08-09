@@ -1,0 +1,11 @@
+Tag: program-not-linked-against-libc
+Severity: important
+Certainty: possible
+Check: binaries
+Ref: #698720
+Info: The package installs a binary which is not dynamically linked
+ against libc.
+ .
+ It is theoretically possible to have a program which doesn't use any
+ symbols from libc, but it is far more likely that this binary simply
+ isn't linked correctly.

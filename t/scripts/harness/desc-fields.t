@@ -55,7 +55,7 @@ my @disallowed = qw(test_for checks);
 my $perfile = 7 + scalar @mandatory + scalar @disallowed;
 
 # set the testing plan
-plan tests => $perfile * scalar @descpaths;
+my $known_tests = $perfile * scalar @descpaths;
 
 my $profile = Lintian::Profile->new(undef, [$ENV{LINTIAN_ROOT}]);
 
@@ -93,6 +93,13 @@ foreach my $descpath (@descpaths) {
     ok(!exists $testcase->{$_}, "Field $_ does not exist in $name")
       for @disallowed;
 
+# force Match-Strategy: tags or default for tests directly associated with checks
+    ok(
+        ($testcase->{match_strategy} // 'tags') eq 'tags'
+          || $descpath !~ qr/^t\/tags\/check/,
+        "Test in $descpath must use Match-Strategy: tags or default"
+    );
+
     # no test-against without check
     ok(!exists $testcase->{test_against} || exists $testcase->{check},
         "No Test-Against without Check in $name");
@@ -122,7 +129,15 @@ foreach my $descpath (@descpaths) {
     );
 
     # listed test-against belong to listed checks
-    my %tags = map { $_ => 1 } map { $profile->get_script($_)->tags } @checks;
-    ok((all { exists $tags{$_} } @against),
-        "All tags in Test-Against belong to checks listed in $testpath");
+    $known_tests += scalar @against;
+    my %relatedtags
+      = map { $_ => 1 } map { $profile->get_script($_)->tags } @checks;
+    for my $tag (@against) {
+        ok(
+            exists $relatedtags{$tag},
+            "Tags $tag in Test-Against belongs to checks listed in $testpath"
+        );
+    }
 }
+
+done_testing($known_tests);

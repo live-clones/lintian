@@ -1,0 +1,8 @@
+Tag: quilt-series-without-trailing-newline
+Severity: serious
+Certainty: possible
+Check: patch-systems
+Info: The package contains a debian/patches/series file
+ that doesn't end with a newline. dpkg-source may silently
+ corrupt this file.
+Ref: #584233
