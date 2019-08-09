@@ -5,8 +5,8 @@ Abstract: This manual describes Lintian, the Debian package checker.
 Section: Debian
 
 Format: HTML
-Index: /usr/share/doc/lintian/lintian.html/index.html
-Files: /usr/share/doc/lintian/lintian.html/*.html
+Index: /usr/share/doc/lintian/lintian.html
+Files: /usr/share/doc/lintian/*.html
 
 Format: text
-Files: /usr/share/doc/lintian/lintian.txt.gz
+Files: /usr/share/doc/lintian/lintian.rst.gz

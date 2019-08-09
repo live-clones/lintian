@@ -3,5 +3,4 @@ doc/CREDITS
 doc/api.html
 doc/desc-files
 doc/lintian.html
-doc/lintian.txt
-doc/lintian.xml
+doc/lintian.rst
