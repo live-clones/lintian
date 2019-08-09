@@ -128,8 +128,7 @@ sub run {
         chomp $@;
         $@ =~ s/^internal error: //;
         $@ =~ s/^syntax error in //;
-        tag 'syntax-error-in-control-file', "debian/control: $@";
-        return;
+        die "syntax error in debian/control: $@";
     }
 
     foreach my $field (keys %{$info->source_field()}) {
@@ -438,7 +437,7 @@ sub run {
     foreach my $bin (@package_names) {
         next unless $bin =~ m/gir[\d\.]+-.*-[\d\.]+$/;
         my $relation = $info->binary_relation($bin, 'all');
-        tag 'gobject-instrospection-package-missing-depends-on-gir-depends',
+        tag 'gobject-introspection-package-missing-depends-on-gir-depends',
           $bin
           unless $relation->implies('${gir:Depends}');
     }

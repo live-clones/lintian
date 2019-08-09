@@ -1,0 +1,8 @@
+Tag: html-changelog-without-text-version
+Severity: important
+Certainty: certain
+Check: changelog-file
+Info: If the upstream changelog file is HTML formatted, a text version
+ should also be accessible as "changelog.gz". (This can be created by
+ "lynx -dump -nolist")
+Ref: policy 12.7

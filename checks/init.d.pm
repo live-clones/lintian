@@ -77,7 +77,7 @@ my $ACTION_R = qr/\w+/;
 my $EXCLUDE_R = qr/if\s+\[\s+-x\s+\S*update-rc\.d/;
 
 sub run {
-    my (undef, undef, $info) = @_;
+    my ($pkg, undef, $info) = @_;
     my $initd_dir = $info->index_resolved_path('etc/init.d/');
     my $postinst = $info->control_index('postinst');
     my $preinst = $info->control_index('preinst');
@@ -85,6 +85,9 @@ sub run {
     my $prerm = $info->control_index('prerm');
 
     my (%initd_postinst, %initd_postrm);
+
+    # These will never be regular initscripts. (see #918459 & #933383)
+    return if $pkg eq 'initscripts';
 
     check_missing_script($info);
 

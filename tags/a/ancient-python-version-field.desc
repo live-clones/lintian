@@ -1,0 +1,11 @@
+Tag: ancient-python-version-field
+Severity: minor
+Certainty: certain
+Check: python
+Ref: python-policy 3.4
+Info: The specified Python-Version or Python3-Version field is used to
+ specify the version(s) of Python the package supports. However, the
+ associated Python version is satisfied by the current "oldstable"
+ distribution of Debian and is therefore unnecessary.
+ .
+ Please remove or update the reference.

@@ -1,0 +1,8 @@
+Tag: init.d-script-has-duplicate-lsb-keyword
+Severity: normal
+Certainty: certain
+Check: init.d
+Ref: https://wiki.debian.org/LSBInitScripts
+Info: The given keyword was set twice in the LSB keyword section in this
+ <tt>/etc/init.d</tt> script. This is probably a mistake; the behavior of
+ setting the same keyword twice is undefined.

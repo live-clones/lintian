@@ -1,0 +1,8 @@
+Tag: vim-addon-within-vim-runtime-path
+Severity: normal
+Certainty: certain
+Check: files
+Info: Vim addons should not be installed directly under a directory contained
+ in the Vim runtime path. Users shall be given the freedom to choose which
+ addons they want to have enabled and which they don't.
+Ref: vim-policy 3.1

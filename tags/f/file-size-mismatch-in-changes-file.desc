@@ -1,0 +1,7 @@
+Tag: file-size-mismatch-in-changes-file
+Severity: serious
+Certainty: certain
+Check: changes-file
+Info: The actual file size does not match what's listed in the
+ <tt>.changes</tt> file.
+Ref: policy 5.6.21, policy 5.6.24

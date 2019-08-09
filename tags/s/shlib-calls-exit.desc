@@ -1,0 +1,14 @@
+Tag: shlib-calls-exit
+Severity: wishlist
+Certainty: possible
+Check: shared-libs
+Experimental: yes
+Info: The listed shared library calls the C library exit() or _exit()
+ functions.
+ .
+ In the case of an error, the library should instead return an appropriate
+ error code to the calling program which can then determine how to handle
+ the error, including performing any required clean-up.
+ .
+ In most cases, removing the call should be discussed with upstream,
+ particularly as it may produce an ABI change.

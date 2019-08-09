@@ -1,0 +1,6 @@
+Tag: build-depends-arch-without-arch-dependent-binary
+Severity: important
+Certainty: certain
+Check: fields
+Info: The control file specifies source relations for architecture-dependent
+ packages, but no architecture-dependent packages are built.

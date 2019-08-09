@@ -1,0 +1,27 @@
+Tag: override_dh_auto_test-does-not-check-DEB_BUILD_OPTIONS
+Severity: wishlist
+Certainty: wild-guess
+Check: rules
+Info: The <tt>debian/rules</tt> file for this package has an
+ <tt>override_dh_auto_test</tt> target that does not appear to
+ check <tt>DEB_BUILD_OPTIONS</tt> against <tt>nocheck</tt>.
+ .
+ As this check is not automatically performed by debhelper(1), the
+ specified testsuite is run regardless of another maintainer using
+ the <tt>nocheck</tt> build option.
+ .
+ Please add a check such as:
+ .
+  override_dh_auto_test:
+  ifeq (,$(filter nocheck,$(DEB_BUILD_OPTIONS)))
+          ./run-upstream-testsuite
+  endif
+ .
+ Lintian will ignore comments and other lines such as:
+ .
+  # Disabled
+  : Disabled
+  echo "Disabled"
+  mkdir foo/
+  ENV=var dh_auto_test -- ARG=value
+Ref: policy 4.9.1, https://wiki.debian.org/BuildProfileSpec#Registered_profile_names

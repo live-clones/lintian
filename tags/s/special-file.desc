@@ -1,0 +1,9 @@
+Tag: special-file
+Severity: serious
+Certainty: certain
+Check: files
+Info: The package contains a <i>special</i> file (e.g., a device file).
+ This is forbidden by current policy. If your program needs this device,
+ you should create it by calling <tt>makedev</tt> from the postinst
+ script.
+Ref: policy 10.6

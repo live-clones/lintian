@@ -1,0 +1,9 @@
+Tag: non-standard-dir-in-usr
+Severity: normal
+Certainty: certain
+Check: files
+Info: The FHS says "No large software packages should use a direct
+ subdirectory under the <tt>/usr</tt> hierarchy". This package contains
+ a directory in <tt>/usr</tt> that is not mentioned in the Filesystem
+ Hierarchy Standard.
+Ref: fhs theusrhierarchy

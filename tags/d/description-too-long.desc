@@ -1,0 +1,6 @@
+Tag: description-too-long
+Severity: minor
+Certainty: certain
+Check: description
+Info: The first line of the "Description:" must be less than 80 characters.
+Ref: policy 3.4.1

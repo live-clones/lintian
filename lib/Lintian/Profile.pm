@@ -26,6 +26,7 @@ use warnings;
 use autodie qw(opendir closedir);
 
 use Carp qw(croak);
+use File::Find::Rule;
 
 use Dpkg::Vendor qw(get_current_vendor get_vendor_info);
 
@@ -128,6 +129,8 @@ sub new {
         'non-overridable-tags' => {},
         # maps script name to Lintian::CheckScript
         'check-scripts'        => {},
+        # maps script name to an array of tag names;
+        'check-tagnames'       => {},
         # maps tag name to Lintian::Tag::Info
         'known-tags'           => {},
     };
@@ -143,6 +146,29 @@ sub new {
     croak "Cannot find profile $name (in "
       . join(', ', map { "$_/profiles" } @$ipath).')'
       unless $profile;
+
+    # populate known tags and their check associations
+    for my $tagroot ($self->_safe_include_path('tags')) {
+
+        next unless -d $tagroot;
+
+        my @descfiles = File::Find::Rule->file()->name('*.desc')->in($tagroot);
+        for my $tagpath (@descfiles) {
+
+            my $taginfo = Lintian::Tag::Info->new;
+            $taginfo->load($tagpath);
+
+            unless (exists $self->{'known-tags'}{$taginfo->tag}) {
+                $self->{'known-tags'}{$taginfo->tag} = $taginfo;
+                push(
+                    @{$self->{'check-tagnames'}{$taginfo->script}},
+                    $taginfo->tag
+                );
+            }
+        }
+    }
+
+    $self->_load_checks;
 
     # Implementation detail: Ensure that the "lintian" check is always
     # loaded to avoid "attempt to emit unknown tags" caused by
@@ -256,7 +282,7 @@ sub enable_tags {
     my ($self, @tags) = @_;
     for my $tag (@tags) {
         my $ti = $self->{'known-tags'}{$tag};
-        croak "Unknown tag $tag" unless $ti;
+        die "Unknown tag $tag" unless $ti;
         next if exists $self->{'enabled-tags'}{$tag};
         $self->{'enabled-tags'}{$tag} = 1;
         $self->{'enabled-checks'}{$ti->script}++;
@@ -274,7 +300,7 @@ sub disable_tags {
     my ($self, @tags) = @_;
     for my $tag (@tags) {
         my $ti = $self->{'known-tags'}{$tag};
-        croak "Unknown tag $tag" unless $ti;
+        die "Unknown tag $tag" unless $ti;
         next unless exists $self->{'enabled-tags'}{$tag};
         delete $self->{'enabled-tags'}{$tag};
         delete $self->{'enabled-checks'}{$ti->script}
@@ -469,7 +495,6 @@ sub _read_profile_tags{
     my $tag_sub = sub {
         my ($field, $tag) = @_;
         unless (exists $self->{'known-tags'}{$tag}) {
-            $self->_load_checks;
             croak "Unknown tag \"$tag\" in profile \"$pname\""
               unless exists $self->{'known-tags'}{$tag};
         }
@@ -614,13 +639,17 @@ sub _parse_check {
     $self->{'check-scripts'}{$cname} = $c;
     $self->{'check-scripts'}{$gcname} = $c if $gcname ne $cname;
 
-    for my $tn ($c->tags) {
-        if ($self->{'known-tags'}{$tn}) {
-            my $ocn = $self->{'known-tags'}{$tn}->script;
-            croak "$cname redefined tag $tn which was defined by $ocn";
-        }
-        $self->{'known-tags'}{$tn} = $c->get_tag($tn);
+    die "Unknown check $gcname"
+      unless defined $self->{'check-tagnames'}{$gcname};
+
+    my @tagnames = @{$self->{'check-tagnames'}{$gcname}};
+    for my $tagname (@tagnames) {
+        my $taginfo = $self->{'known-tags'}{$tagname};
+        $taginfo->add_script_type($c->type);
+
+        $c->add_taginfo($taginfo);
     }
+
     return $c;
 }
 

@@ -1,0 +1,11 @@
+Tag: cannot-check-whether-usr-share-doc-symlink-points-to-foreign-package
+Severity: minor
+Certainty: possible
+Check: copyright-file
+Info: There is a symlink /usr/share/doc/<i>pkg1</i> -&gt; <i>pkg2</i>
+ in your package. This means that <i>pkg1</i> and <i>pkg2</i> must
+ both come from the same source package. Lintian cannot check this right now
+ however.
+ .
+ Please reprocess this binary together with its source package to avoid
+ this tag.

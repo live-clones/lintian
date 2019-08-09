@@ -1,0 +1,18 @@
+Tag: copyright-refers-to-versionless-license-file
+Severity: normal
+Certainty: possible
+Check: copyright-file
+Info: The copyright file refers to the versionless symlink in
+ <tt>/usr/share/common-licenses</tt> for the full text of the GPL, LGPL,
+ or GFDL license, but the package does not appear to allow distribution
+ under later versions of the license. This symlink will change with each
+ release of a new version of the license and may therefore point to a
+ different version than the package is released under.
+ <tt>debian/copyright</tt> should instead refers to the specific version
+ of the license that the package references.
+ .
+ For example, if the package says something like "you can redistribute it
+ and/or modify it under the terms of the GNU General Public License as
+ published by the Free Software Foundation; version 2 dated June, 1991,"
+ the <tt>debian/copyright</tt> file should refer to
+ <tt>/usr/share/common-licenses/GPL-2</tt>, not <tt>/GPL</tt>.

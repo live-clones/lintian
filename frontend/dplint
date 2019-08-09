@@ -60,6 +60,7 @@ use warnings;
 use Cwd qw(getcwd realpath);
 use File::Basename qw(dirname basename);
 use Getopt::Long();
+use Path::Tiny;
 
 # The $INIT_ROOT line below is (to be) replaced at install time to the
 # actual root (i.e. '/usr/share/lintian').  The find_source_root call
@@ -343,12 +344,14 @@ sub guess_version {
     }
     # git was not possible - maybe the changelog is available
     if (-f "$rootdir/debian/changelog") {
-        require Parse::DebianChangelog;
         eval {
-            my $changelog
-              = Parse::DebianChangelog->init(
-                { infile => "$rootdir/debian/changelog" });
-            $guess = $changelog->dpkg->{'Version'} if $changelog;
+            require Lintian::Info::Changelog;
+            my $contents = path("$rootdir/debian/changelog")->slurp;
+            my $changelog = Lintian::Info::Changelog->new;
+            $changelog->parse($contents);
+            my @entries = @{$changelog->entries};
+            $guess = $entries[0]->{'Version'}
+              if @entries;
         };
         return $guess if $guess;
     }

@@ -46,7 +46,7 @@ sub run {
         chomp $format;
         close($fd);
         $format_extra = '';
-        tag 'unknown-source-format', $format unless $KNOWN_FORMATS{$format};
+        die "unknown source format $format" unless $KNOWN_FORMATS{$format};
     } else {
         tag 'missing-debian-source-format';
         $format = '1.0';

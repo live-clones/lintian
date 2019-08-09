@@ -1,0 +1,8 @@
+Tag: no-section-field-for-source
+Severity: normal
+Certainty: certain
+Check: control-file
+Ref: policy 5.2
+Info: The package does not have a "Section:" field in the source package
+ section of its control file. The Section field is required for source
+ packages at the request of the Debian ftp-masters.

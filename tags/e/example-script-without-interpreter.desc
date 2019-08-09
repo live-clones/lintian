@@ -1,0 +1,6 @@
+Tag: example-script-without-interpreter
+Severity: wishlist
+Certainty: certain
+Check: scripts
+Info: This example file starts with the #! sequence that identifies
+ scripts, but it does not name an interpreter.

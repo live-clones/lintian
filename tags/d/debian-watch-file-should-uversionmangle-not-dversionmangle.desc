@@ -1,0 +1,10 @@
+Tag: debian-watch-file-should-uversionmangle-not-dversionmangle
+Severity: wishlist
+Certainty: certain
+Check: watch-file
+Ref: https://wiki.debian.org/DEHS
+Info: The version of this package contains <tt>alpha</tt>, <tt>beta</tt>,
+ or <tt>rc</tt>, but a misleading Debian version mangling occurs in
+ the <tt>debian/watch</tt> file. You should use the uversionmangle
+ option instead of dversionmangle so that the prerelease is sorted by
+ uscan before a possible future final release.

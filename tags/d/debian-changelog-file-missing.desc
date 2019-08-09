@@ -1,0 +1,8 @@
+Tag: debian-changelog-file-missing
+Severity: serious
+Certainty: certain
+Check: changelog-file
+Info: Each Debian package (which provides a /usr/share/doc/<i>pkg</i>
+ directory) has to install a Debian changelog file
+ /usr/share/doc/<i>pkg</i>/changelog.Debian.gz
+Ref: policy 12.7

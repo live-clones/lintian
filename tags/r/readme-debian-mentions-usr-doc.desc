@@ -1,0 +1,8 @@
+Tag: readme-debian-mentions-usr-doc
+Severity: normal
+Certainty: possible
+Check: debian-readme
+Info: The README.Debian file installed by this package apparently points
+ users at /usr/doc. /usr/doc has been retired and all documentation
+ migrated to /usr/share/doc. This reference should probably also be
+ updated.

@@ -4,9 +4,6 @@ skeleton
 rc
 rcS
 
-# Provided by bin:initscripts 2.93-3. (#918459)
-brightness
-
 # Names provided/masked by systemd
 # Generated from the systemd links
 # sed -n -e 's|^.\+[[:space:]]\+/lib/systemd/system/\([^/]\+\)\.service$|\1|p' debian/systemd.links

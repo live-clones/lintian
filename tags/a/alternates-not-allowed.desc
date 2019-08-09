@@ -1,0 +1,7 @@
+Tag: alternates-not-allowed
+Severity: important
+Certainty: certain
+Check: fields
+Info: Only the "Depends", "Recommends", "Suggests" and "Pre-Depends"
+ fields may specify alternate dependencies using the "|" symbol.
+Ref: policy 7.1

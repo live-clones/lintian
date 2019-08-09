@@ -25,11 +25,11 @@ use parent 'Lintian::Collect::Package';
 
 use Carp qw(croak);
 use Scalar::Util qw(blessed);
-
-use Lintian::Relation;
-use Parse::DebianChangelog;
+use Path::Tiny;
 
 use Lintian::Deb822Parser qw(read_dpkg_control);
+use Lintian::Info::Changelog;
+use Lintian::Relation;
 use Lintian::Util
   qw(get_file_checksum open_gz $PKGNAME_REGEX $PKGREPACK_REGEX strip);
 
@@ -110,8 +110,9 @@ sub changelog {
             $changelog = $shared->{'changelog'}{$checksum};
         }
         if (not $changelog) {
-            my %opts = (infile => $dch->fs_path, quiet => 1);
-            $changelog = Parse::DebianChangelog->init(\%opts);
+            my $contents = path($dch->fs_path)->slurp;
+            $changelog = Lintian::Info::Changelog->new;
+            $changelog->parse($contents);
             if (defined($shared)) {
                 $shared->{'changelog'}{$checksum} = $changelog;
             }

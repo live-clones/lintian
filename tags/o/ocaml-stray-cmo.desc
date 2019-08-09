@@ -1,0 +1,8 @@
+Tag: ocaml-stray-cmo
+Severity: minor
+Certainty: wild-guess
+Check: ocaml
+Info: This package installs a <tt>.cma</tt> file and a <tt>.cmo</tt> file
+ with the same base name. Most of the time, the module provided by the
+ <tt>.cmo</tt> file is also linked in the <tt>.cma</tt> file, so the
+ <tt>.cmo</tt> file is useless.

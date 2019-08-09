@@ -1,0 +1,5 @@
+Tag: pear-package-feature-requires-newer-pkg-php-tools
+Severity: normal
+Certainty: possible
+Check: phppear
+Info: The package requires a newer pkg-php-tools for a specific feature.

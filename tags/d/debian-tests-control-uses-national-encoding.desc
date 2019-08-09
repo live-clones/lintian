@@ -1,0 +1,12 @@
+Tag: debian-tests-control-uses-national-encoding
+Severity: normal
+Certainty: certain
+Check: testsuite
+Info: The debian/tests/control file should be valid UTF-8, an encoding
+ of the Unicode character set.
+ .
+ There are many ways to convert a file from an encoding like
+ ISO-8859-1; you may for example use "iconv" like:
+ .
+  $ iconv -f ISO-8859-1 -t UTF-8 file &gt; file.new
+  $ mv file.new file

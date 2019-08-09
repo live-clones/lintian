@@ -1,0 +1,10 @@
+Tag: gir-section-not-libdevel
+Severity: normal
+Certainty: certain
+Check: gir
+Info: GObject-Introspection XML files
+ (<tt>/usr/share/gir-1.0/Foo-23.gir</tt>) must be made available in
+ a development package in the <tt>libdevel</tt> section of the archive.
+ This is normally the same <tt>libfoo-dev</tt> package that contains
+ other development files.
+Ref: /usr/share/doc/gobject-introspection/policy.txt

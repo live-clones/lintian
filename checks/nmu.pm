@@ -45,10 +45,10 @@ sub run {
     if ($chf and $chf->is_symlink) {
         tag 'changelog-is-symlink';
     }
-    return if not $info->changelog;
+    return unless $info->changelog;
 
     # Get some data from the changelog file.
-    my ($entry) = $info->changelog->data;
+    my ($entry) = @{$info->changelog->entries};
     my $uploader = canonicalize($entry->Maintainer // '');
     my $changes = $entry->Changes;
     $changes =~ s/^(\s*\n)+//;

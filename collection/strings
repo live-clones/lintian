@@ -1,7 +1,8 @@
 #!/usr/bin/perl -w
 # strings -- lintian collection script
 
-# Copyright (C) 2009, 2010 Raphael Geissert <atomo64@gmail.com>
+# Copyright © 2009, 2010 Raphael Geissert <atomo64@gmail.com>
+# Copyright © 2019 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -27,19 +28,25 @@ use strict;
 use warnings;
 use autodie;
 
-use FileHandle;
+use File::Basename;
+use IO::Async::Loop;
+use IO::Async::Process;
 use Path::Tiny;
 
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
+
 use Lintian::Collect;
-use Lintian::Command qw(spawn reap);
-use Lintian::Util qw(internal_error locate_helper_tool run_cmd);
+use Lintian::Util qw(locate_helper_tool gzip safe_qx);
+
+use constant EMPTY => q{};
+use constant COLON => q{:};
+use constant NEWLINE => qq{\n};
 
 my $helper = locate_helper_tool('coll/strings-helper');
 
 sub collect {
     my ($pkg, $type, $dir) = @_;
-    my ($info, @manual, %opts);
+    my ($info, @manual);
 
     my $stringdir = "$dir/strings";
     path($stringdir)->remove_tree
@@ -57,16 +64,7 @@ sub collect {
 
     chdir("$dir/unpacked");
 
-    my $open_strings_pipe = sub {
-        %opts = (
-            pipe_in => FileHandle->new,
-            fail => 'error'
-        );
-        spawn(\%opts, ['xargs', '-0r', 'strings', '-af', '--'],
-            '|', [$helper, "$dir/strings"]);
-        $opts{pipe_in}->blocking(1);
-    };
-
+    my $prehelper;
     foreach my $bin ($info->sorted_index) {
         my $filename = $bin->name;
         my $finfo;
@@ -79,36 +77,63 @@ sub collect {
             push @manual, $filename;
             next;
         }
-        $open_strings_pipe->() unless %opts;
-        printf {$opts{pipe_in}} "%s\0", $filename;
+
+        # append output from strings to prehelper
+        $prehelper
+          .= safe_qx('strings', '--all', '--print-file-name', '--',$filename);
     }
 
-    if (%opts) {
-        close($opts{pipe_in});
-        reap(\%opts);
+    if (length $prehelper) {
+        my $loop = IO::Async::Loop->new;
+        my $future = $loop->new_future;
+        my $stderr;
+
+        my $process = IO::Async::Process->new(
+            command => [$helper, $stringdir],
+            stdin => { from => $prehelper },
+            stderr => { into => \$stderr },
+            on_finish => sub {
+                my ($self, $exitcode) = @_;
+                my $status = ($exitcode >> 8);
+
+                if ($status) {
+                    my $message
+                      = "Non-zero status $status from $helper $stringdir";
+                    $message .= COLON . NEWLINE . $stderr
+                      if length $stderr;
+                    $future->fail($message);
+                    return;
+                }
+
+                $future->done("Done with $helper $stringdir");
+                return;
+            });
+
+        $loop->add($process);
+
+        # will raise an exception in case of failure
+        $future->get;
     }
 
     # Fall back to the safe but slower method for files with "special"
     # names.
-    if (@manual) {
-        require File::Basename;
-        foreach my $file (@manual) {
-            my $strdir = $dir . '/strings/' . File::Basename::dirname($file);
-            # create the dir if needed.
-            unless (-d $strdir) {
-                run_cmd('mkdir', '-p', $strdir);
-            }
-            spawn(
-                {out => "$dir/strings/${file}.gz", fail => 'fail'},
-                ['strings', '-a', "$dir/unpacked/$file"],
-                '|', ['gzip', '-9nc']);
-        }
+    foreach my $file (@manual) {
+        my $strdir = $dir . '/strings/' . File::Basename::dirname($file);
+
+        # create the dir if needed.
+        path($strdir)->mkpath
+          unless -d $strdir;
+
+        my $originpath = "$dir/unpacked/$file";
+        my $uncompressed = safe_qx('strings', '-a', '--', $originpath);
+
+        gzip($uncompressed, "$dir/strings/$file.gz");
     }
 
     return;
 }
 
-collect(@ARGV) if $0 =~ m,(?:^|/)strings$,;
+collect(@ARGV) unless caller;
 
 1;
 

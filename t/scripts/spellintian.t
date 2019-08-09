@@ -26,6 +26,8 @@ use Test::More tests => 8;
 
 use IPC::Run();
 
+use constant NEWLINE => qq{\n};
+
 $ENV{'LINTIAN_TEST_ROOT'} //= '.';
 
 my $cmd_path = "$ENV{LINTIAN_TEST_ROOT}/frontend/spellintian";
@@ -44,9 +46,18 @@ sub t {
 
 my $s = "A familar brown gnu allows\nto jump over the lazy dog.\n";
 
-t($s, "familar -> familiar\nallows to -> allows one to\n");
-t($s, "familar -> familiar\nallows to -> allows one to\ngnu -> GNU\n",
-    '--picky');
+t($s,
+    'familar -> familiar'. NEWLINE. '"allows to" -> "allows one to"'. NEWLINE);
+t(
+    $s,
+    'familar -> familiar'
+      . NEWLINE
+      . '"allows to" -> "allows one to"'
+      . NEWLINE
+      . 'gnu -> GNU'
+      . NEWLINE,
+    '--picky'
+);
 
 my $iff = 0;
 my $publically = 0;

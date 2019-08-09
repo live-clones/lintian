@@ -1,0 +1,6 @@
+Tag: node-package-install-in-nodejs-rootdir
+Severity: important
+Certainty: certain
+Check: files
+Info: This package contains a file under /usr/lib/nodejs
+ instead of /usr/lib/nodejs/${package}.

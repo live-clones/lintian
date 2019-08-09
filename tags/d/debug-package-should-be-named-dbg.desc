@@ -1,0 +1,9 @@
+Tag: debug-package-should-be-named-dbg
+Severity: normal
+Certainty: certain
+Check: files
+Info: This package provides at least one file in <tt>/usr/lib/debug</tt>,
+ which is intended for detached debugging symbols, but the package name
+ does not end in "-dbg". Detached debugging symbols should be put into a
+ separate package, Priority: extra, with a package name ending in "-dbg".
+Ref: devref 6.7.9

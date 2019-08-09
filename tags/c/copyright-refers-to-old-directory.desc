@@ -1,0 +1,8 @@
+Tag: copyright-refers-to-old-directory
+Severity: serious
+Certainty: certain
+Check: copyright-file
+Info: The common licenses (GPL, BSD, Artistic, etc) have been moved from
+ /usr/doc/copyright to /usr/share/common-licenses.
+ Copyright files should be updated.
+Ref: policy 12.5

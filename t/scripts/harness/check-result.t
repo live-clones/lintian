@@ -52,9 +52,8 @@ Testname: $TESTNAME
 Sequence: 2500
 Version: 1.0
 Description: Multiple distributions with at least one bad one
-Test-For:
- bad-distribution-in-changes-file
- multiple-distributions-in-changes-file
+Check:
+ changes-file
 References: Debian Bug #514853
 EOSTR
 my $descpath = $testpath->child('desc');
@@ -87,9 +86,17 @@ $nomatch->spew($nomatchtext);
 my $match = $testpath->child('tags.match');
 $match->spew($expected->slurp);
 
+# read test case
+my $testcase = read_config($descpath);
+
 # read test defaults
 my $defaultspath = 't/defaults/desc';
-my $testcase = read_config($defaultspath);
+my $defaults = read_config($defaultspath);
+
+foreach my $key (keys %{$defaults}) {
+    $testcase->{$key} = $defaults->{$key}
+      unless exists $testcase->{$key};
+}
 
 # test plan
 plan tests => 2;
@@ -101,3 +108,9 @@ ok(!scalar check_result($testcase, $testpath, $expected, $match),
 # check tags do not match
 ok(scalar check_result($testcase, $testpath, $expected, $nomatch),
     'Different tags do not match');
+
+# Local Variables:
+# indent-tabs-mode: nil
+# cperl-indent-level: 4
+# End:
+# vim: syntax=perl sw=4 sts=4 sr et

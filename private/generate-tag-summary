@@ -39,7 +39,7 @@ if (not $commit_range) {
     print "Assuming commit range to be: ${commit_range}\n";
 }
 
-open(my $fd, '-|', 'git', 'diff', $commit_range, '--', 'checks/*.desc');
+open(my $fd, '-|', 'git', 'diff', $commit_range, '--', 'tags/*/*.desc');
 while (my $line = <$fd>) {
     chomp($line);
     next unless $line =~ m{ \A ([\+-]) Tag: \s*+ ([^ ]++) \s*+ \Z}xsm;

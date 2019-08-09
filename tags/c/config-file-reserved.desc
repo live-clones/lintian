@@ -1,0 +1,6 @@
+Tag: config-file-reserved
+Severity: important
+Certainty: certain
+Check: files
+Info: This file is reserved by a specific package. Please email the
+ maintainer of the package in question if you have questions.

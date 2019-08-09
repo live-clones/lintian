@@ -1,0 +1,7 @@
+Tag: binary-in-etc
+Severity: serious
+Certainty: certain
+Check: binaries
+Ref: fhs etchostspecificsystemconfiguration
+Info: This package installs an ELF binary in <tt>/etc</tt>. The
+ Filesystem Hierarchy Standard forbids this.

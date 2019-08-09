@@ -1,0 +1,6 @@
+Tag: control-file-has-bad-owner
+Severity: serious
+Certainty: certain
+Check: control-files
+Ref: policy 10.9
+Info: All control files should be owned by root/root.

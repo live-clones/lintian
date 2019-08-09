@@ -1,4 +1,5 @@
 checks			usr/share/lintian
+tags			usr/share/lintian
 collection		usr/share/lintian
 commands                usr/share/lintian
 data		  	usr/share/lintian

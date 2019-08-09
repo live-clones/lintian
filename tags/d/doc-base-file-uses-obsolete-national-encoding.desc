@@ -1,0 +1,13 @@
+Tag: doc-base-file-uses-obsolete-national-encoding
+Severity: important
+Certainty: certain
+Check: menus
+Info: doc-base files must be valid UTF-8, an encoding of the Unicode
+ character set.
+ .
+ There are many ways to convert a doc-base file from an obsolete encoding
+ like ISO-8859-1. You may, for example, use "iconv" like:
+ .
+  $ iconv -f ISO-8859-1 -t UTF-8 doc-base &gt; doc-base.new
+  $ mv doc-base.new doc-base
+Ref: doc-base 2.3.2

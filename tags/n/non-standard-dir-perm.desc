@@ -1,0 +1,7 @@
+Tag: non-standard-dir-perm
+Severity: normal
+Certainty: possible
+Check: files
+Info: The directory has a mode different from 0755, and it's not one of the
+ known exceptions.
+Ref: policy 10.9

@@ -1,0 +1,11 @@
+Tag: file-in-discouraged-x11-font-directory
+Severity: minor
+Certainty: certain
+Check: files
+Ref: policy 11.8.5
+Info: For historical reasons, use of <tt>PEX</tt>, <tt>CID</tt>,
+ <tt>Speedo</tt>, and <tt>cyrillic</tt> subdirectories of
+ <tt>/usr/share/fonts/X11</tt> are permitted, but installation of files
+ into these directories is discouraged. Support for the first three font
+ types is deprecated or no longer available, and Cyrillic fonts should use
+ the normal font directories where possible.

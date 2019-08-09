@@ -1,0 +1,13 @@
+Tag: field-name-typo-in-dep5-copyright
+Severity: normal
+Certainty: possible
+Check: source-copyright
+Info: The listed field name is a likely misspelling of one of the documented
+ DEP 5 fields.
+ .
+ Lintian will continue by using the "misspelled" variant, but other parsers
+ are unlikely to do so.
+ .
+ Implementation detail: The typo is detected by using "Levenshtein
+ edit distance". Therefore, if the typo involve several characters,
+ Lintian may not detect it.

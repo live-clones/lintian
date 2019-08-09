@@ -1,6 +1,0 @@
-#!/bin/sh
-
-dir="$1"
-
-rm -f "$dir/debian/tests/control"
-mkfifo "$dir/debian/tests/control"

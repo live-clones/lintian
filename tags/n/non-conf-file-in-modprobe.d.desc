@@ -1,0 +1,12 @@
+Tag: non-conf-file-in-modprobe.d
+Severity: important
+Certainty: certain
+Check: files
+Ref: https://lists.debian.org/debian-devel/2009/03/msg00119.html
+Info: Files in <tt>/etc/modprobe.d</tt> should use filenames ending in
+ <tt>.conf</tt>. modprobe silently ignores all files which do not match
+ this convention.
+ .
+ If the file is an example containing only comments, consider installing
+ it in another location as files in <tt>/etc/modprobe.d</tt> are
+ read each time modprobe is run (which is often at boot time).

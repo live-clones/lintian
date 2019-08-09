@@ -1,0 +1,7 @@
+Tag: depends-on-specific-java-doc-package
+Severity: normal
+Certainty: certain
+Check: fields
+Info: The package should use default-jdk-doc instead of classpath-doc
+ or openjdk-X-doc to ease transitions when the providing doc package
+ is replaced (e.g. openjdk-6-doc being replaced by openjdk-7-doc).

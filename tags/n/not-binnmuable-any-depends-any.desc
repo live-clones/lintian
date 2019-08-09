@@ -1,0 +1,7 @@
+Tag: not-binnmuable-any-depends-any
+Severity: important
+Certainty: certain
+Check: version-substvars
+Info: The package is not safely binNMUable because an arch:any package
+ depends on another arch:any package with a (= ${source:Version})
+ relationship. Please use (= ${binary:Version}) instead.

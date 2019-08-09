@@ -1,0 +1,15 @@
+Tag: unused-override
+Severity: wishlist
+Certainty: certain
+Check: lintian
+Ref: lintian 2.4.3
+Info: Lintian discovered an unused override entry in its database.
+ Most likely it was used for a false-positive that has been fixed.
+ However, some tags are only triggered in packages built on certain
+ architectures. In this case, the override may need an architecture
+ qualifier.
+ .
+ Alternatively, the additional information provided by Lintian in the
+ tag's output may changed since the override was last modified.
+ .
+ If the override is unused, please remove it from the overrides file.

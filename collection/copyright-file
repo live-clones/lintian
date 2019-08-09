@@ -1,7 +1,8 @@
 #!/usr/bin/perl -w
 # copyright-file -- lintian collector script
 
-# Copyright (C) 1998 Richard Braakman
+# Copyright © 1998 Richard Braakman
+# Copyright © 2019 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -35,41 +36,39 @@ use File::Copy qw(copy);
 sub collect {
     my ($pkg, $type, $dir) = @_;
 
-    if (-e "$dir/copyright") {
-        unlink("$dir/copyright");
-    }
+    my $unpackedpath = "$dir/unpacked";
+    return unless -d $unpackedpath;
 
-    if (-d "$dir/unpacked/usr/share/doc/$pkg"
-        && !is_ancestor_of("$dir/unpacked", "$dir/unpacked/usr/share/doc/$pkg")
-    ) {
-        # if the parent dir is outside the package, just stop here before we
-        # do something we will regret.
-        return;
-    }
+    my $copyrightpath = "$dir/copyright";
+    unlink($copyrightpath)
+      if -e $copyrightpath;
 
-    my $file = "$dir/unpacked/usr/share/doc/$pkg/copyright";
+    my $packagepath = "$unpackedpath/usr/share/doc/$pkg";
+    return unless -d $packagepath;
 
-    # If copyright was a symlink, we need to make a copy of it.  Just
-    # hardlinking to the symlink may leave a relative symlink into a
-    # directory we can't unpack.  Be careful about what symlinks we
-    # allow, though.
-    if (-l $file) {
-        my $link = readlink($file);
+    # do not proceed if the parent dir is outside the package
+    return unless is_ancestor_of($unpackedpath, $packagepath);
+
+    my $packagecopyrightpath = "$packagepath/copyright";
+
+    # make copy if symlink; hardlink could dangle; also check link path
+    if (-l $packagecopyrightpath) {
+        my $link = readlink($packagecopyrightpath);
         unless ($link =~ /\.\./
             || ($link =~ m%/% && $link !~ m%^[^/]+(?:/+[^/]+)*\z%)) {
-            copy($file, "$dir/copyright")
-              or internal_error("cannot copy $file: $!");
+            copy($packagecopyrightpath, $copyrightpath)
+              or internal_error("cannot copy $packagecopyrightpath: $!");
         }
-    } elsif (-f $file) {
-        link($file, "$dir/copyright");
-    } elsif (-f "$file.gz") {
-        gunzip_file("$file.gz", "$dir/copyright");
+    } elsif (-f $packagecopyrightpath) {
+        link($packagecopyrightpath, $copyrightpath);
+    } elsif (-f "$packagecopyrightpath.gz") {
+        gunzip_file("$packagecopyrightpath.gz", $copyrightpath);
     }
 
     return;
 }
 
-collect(@ARGV) if $0 =~ m,(?:^|/)copyright-file$,;
+collect(@ARGV) unless caller;
 
 1;
 

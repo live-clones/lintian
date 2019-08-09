@@ -1,0 +1,7 @@
+Tag: dependency-is-not-multi-archified
+Severity: normal
+Certainty: possible
+Check: group-checks
+Info: The package is Multi-Arch "same", but it depends on a package that
+ is neither Multi-Arch "same" nor "foreign".
+Ref: https://wiki.ubuntu.com/MultiarchSpec

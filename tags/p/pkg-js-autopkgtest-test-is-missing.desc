@@ -1,0 +1,11 @@
+Tag: pkg-js-autopkgtest-test-is-missing
+Severity: normal
+Certainty: certain
+Check: control-file
+Info: The <tt>Testsuite:</tt> field for this package points to
+ <tt>autopkgtest-pkg-nodejs</tt> which attempts to execute
+ <tt>debian/tests/pkg-js/test</tt> during autopkgtests.
+ .
+ When this file is missing, only a simple <tt>node require("<module
+ name")</tt> is launched. This may be insufficient to really test this
+ nodejs module.

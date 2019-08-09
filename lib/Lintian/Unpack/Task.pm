@@ -26,6 +26,7 @@ use Moo;
 
 use Carp;
 use IO::Async::Loop;
+use IO::Async::Process;
 
 =head1 NAME
 
@@ -163,7 +164,7 @@ sub run {
 
     my $loop = IO::Async::Loop->really_new;
     my $future = $loop->new_future;
-    my $process = $loop->open_process(
+    my $process = IO::Async::Process->new(
 
         command => [$script->script_path, $package, $type, $basedir],
 
@@ -190,6 +191,8 @@ sub run {
             $future->fail("exec $script->script_path: $message");
         },
     );
+
+    $loop->add($process);
 
     $loop->await($future);
 

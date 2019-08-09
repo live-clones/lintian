@@ -333,10 +333,9 @@ sub run {
     # get the last changelog timestamp
     # if for some weird reasons the timestamp does
     # not exist, it will remain 0
-    my $changes = $info->changelog;
     my $changelog_timestamp = 0;
-    if (defined $changes) {
-        my ($entry) = $changes->data;
+    if (defined $info->changelog) {
+        my ($entry) = @{$info->changelog->entries};
         if ($entry && $entry->Timestamp) {
             $changelog_timestamp = $entry->Timestamp;
         }
@@ -426,7 +425,7 @@ sub run {
 
         # If we have a /usr/sbin/foo, check for references to
         # /usr/bin/foo
-        push(@bin_binaries, "/$1bin/$2")
+        push(@bin_binaries, '/'.($1 // '')."bin/$2")
           if $file->is_file and $fname =~ m,^(usr/)?sbin/(.+),;
 
         $arch_dep_files = 1
@@ -1556,7 +1555,9 @@ sub run {
             }
 
             # ---------------- documentation files
-            unless($fname =~ m,^etc/, or $fname =~m,^usr/share/(?:doc|help)/,){
+            unless($fname =~ m,^etc/,
+                or $fname =~m,^usr/share/(?:doc|help)/,
+                or $source_pkg eq 'lintian') {
                 foreach my $taboo ($DOCUMENTATION_FILE_REGEX->all) {
                     my $regex = $DOCUMENTATION_FILE_REGEX->value($taboo);
                     if($file->basename =~ m{$regex}xi) {

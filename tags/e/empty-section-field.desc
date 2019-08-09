@@ -1,0 +1,6 @@
+Tag: empty-section-field
+Severity: normal
+Certainty: certain
+Check: fields
+Info: The "Section:" field in this package's control file is empty.
+Ref: policy 2.4

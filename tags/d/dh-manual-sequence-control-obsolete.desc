@@ -1,0 +1,26 @@
+Tag: dh-manual-sequence-control-obsolete
+Severity: important
+Certainty: certain
+Check: debhelper
+Info: The package uses one (or more) of the obsolete dh parameters
+ to control the debhelper command sequence. This method has been
+ deprecated and is now replaced by override targets. If you had:
+ .
+  [...]
+  install: build
+           dh install --before dh_auto_install
+           dh_auto_install -- PKG_DEST_DIR=`pwd`/debian/tmp/usr
+           dh install --after dh_auto_install
+  [...]
+ .
+ This should now be replaced by:
+ .
+   %:
+        dh $@
+ .
+   override_dh_auto_install:
+        dh_auto_install -- PKG_DEST_DIR=`pwd`/debian/tmp/usr
+ .
+ Please refer to the debhelper documentation for more information.
+Ref: https://lists.debian.org/debian-devel-changes/2011/08/msg00519.html,
+ debhelper(7)

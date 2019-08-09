@@ -72,7 +72,7 @@ sub run {
 
     if (defined($control)) {
         if (not $control->is_regular_file) {
-            tag 'debian-tests-control-is-not-a-regular-file';
+            die 'debian tests control is not a regular file';
         } elsif ($control->is_open_ok) {
             my $path = $control->fs_path;
             my $not_utf8_line = file_is_encoded_in_non_utf8($path);
@@ -110,7 +110,9 @@ sub check_control_contents {
     ) {
         chomp $@;
         $@ =~ s/^syntax error at //;
-        tag 'syntax-error-in-debian-tests-control', $@;
+        die "syntax error in debian tests control $@"
+          if length $@;
+        tag 'empty-debian-tests-control';
     } else {
         while (my ($index, $paragraph) = each(@paragraphs)) {
             check_control_paragraph($info, $paragraph,
@@ -129,15 +131,15 @@ sub check_control_paragraph {
 
     for my $fieldname (@MANDATORY_FIELDS) {
         if (not exists $paragraph->{$fieldname}) {
-            tag 'missing-runtime-tests-field', $fieldname,
-              'paragraph starting at line', $line;
+            die
+"missing runtime tests field $fieldname, paragraph starting at line $line";
         }
     }
 
     unless (exists $paragraph->{'tests'}
         || exists $paragraph->{'test-command'}) {
-        tag 'missing-runtime-tests-field', 'tests || test-command',
-          'paragraph starting at line', $line;
+        die
+"missing runtime tests field tests || test-command, paragraph starting at line $line";
     }
     if (   exists $paragraph->{'tests'}
         && exists $paragraph->{'test-command'}) {

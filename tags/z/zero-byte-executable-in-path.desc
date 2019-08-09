@@ -1,0 +1,10 @@
+Tag: zero-byte-executable-in-path
+Severity: important
+Certainty: certain
+Check: files
+Info: This package installs the specified empty executable file to the
+ system's PATH. These files do not do anything and produce no error
+ message when run.
+ .
+ This was likely caused by an error in the package build process.
+Ref: #919341

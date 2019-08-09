@@ -1,0 +1,27 @@
+Tag: maintainer-script-should-not-use-recursive-chown-or-chmod
+Severity: normal
+Certainty: certain
+Check: scripts
+Info: The maintainer script appears to call <tt>chmod</tt> or
+ <tt>chown</tt> with a <tt>--recursive</tt>/<tt>-R</tt> argument, or
+ uses <tt>find(1)</tt> in a similar manner.
+ .
+ This is vulnerable to hardlink attacks on mainline, non-Debian kernels
+ that do not have <tt>fs.protected_hardlinks=1</tt>,
+ .
+ This arises through altering permissions or ownership within a directory
+ that may be owned by a non-privileged user - such a user can link to
+ files that they do not own such as <tt>/etc/shadow</tt> or files
+ within <tt>/var/lib/dpkg/</tt>. The promiscuous <tt>chown</tt> or
+ <tt>chmod</tt> would convert the ownership or permissions of these
+ files so that they are manipulable by the non-privileged user.
+ .
+ Ways to avoid this problem include:
+ .
+  - If your package uses a static uid, please perform the <tt>chown</tt> at
+    package build time instead of installation time.
+  - Use a non-recursive call instead, ensuring that you do not change
+    ownership of files that are in user-controlled directories.
+  - Use <tt>runuser(1)</tt> to perform any initialization work as the
+    user you were previously <tt>chown</tt>ing to.
+Ref: #889060, #889488, runuser(1)

@@ -1,0 +1,8 @@
+Tag: copyright-refers-to-compressed-license
+Severity: important
+Certainty: certain
+Check: copyright-file
+Info: The /usr/share/doc/<i>pkg</i>/copyright file refers to a standard license
+ /usr/share/common-licenses/{GPL,LGPL,Artistic,BSD}.gz as a compressed
+ file. Please update the reference (the licenses are installed
+ uncompressed).

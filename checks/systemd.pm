@@ -87,7 +87,8 @@ sub get_init_service_name {
 sub get_init_scripts {
     my ($info) = @_;
     my @scripts;
-    if (my $initd_path = $info->index_resolved_path('etc/init.d/')) {
+    if ($info->name ne 'initscripts'
+        and my $initd_path = $info->index_resolved_path('etc/init.d/')) {
         for my $init_script ($initd_path->children) {
             # sysv generator drops the .sh suffix
             my $basename = get_init_service_name($init_script);

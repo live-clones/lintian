@@ -1,0 +1,14 @@
+Tag: package-contains-file-in-etc-skel
+Severity: serious
+Certainty: certain
+Check: files
+Info: This package ships the specified file under <tt>/etc/skel</tt>. Files
+ in this directory are copied into new user accounts by <tt>adduser(8)</tt>.
+ .
+ However, <tt>/etc/skel</tt> should be empty as possible as there is no
+ mechanism for ensuring files are copied into the accounts of existing
+ users when the package is installed.
+ .
+ Please remove the installation of this file, ensuring this package
+ can automatically create them or can otherwise function without them.
+Ref: policy 10.7.5

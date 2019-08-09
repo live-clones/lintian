@@ -1,0 +1,10 @@
+Tag: udeb-postinst-must-not-call-ldconfig
+Severity: important
+Certainty: certain
+Check: shared-libs
+Info: The udeb invokes ldconfig on install, which is an error in udebs.
+ .
+ ldconfig is not available and not needed in debian-installer.
+ .
+ Note that this tag may (despite what the name suggests) be issued if
+ the udeb uses a dpkg trigger to invoke ldconfig.
