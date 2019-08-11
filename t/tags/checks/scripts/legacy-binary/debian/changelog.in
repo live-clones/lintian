@@ -1,4 +1,4 @@
-binary (4-1.1) unstable; urgency=low
+binary ({$version}) {$distribution}; urgency=low
 
   * I'm doing an comaintainer-upload, acknowledging a NMU, but with a version
     number which suggests I'm doing a NMU myself.
