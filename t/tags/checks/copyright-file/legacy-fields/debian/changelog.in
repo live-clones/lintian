@@ -1,4 +1,4 @@
-fields (1.5-.3) unstable; urgency=low
+fields ({$version}) {$distribution}; urgency=low
 
   * This package adds tests for the following tags:
     - debian-revision-not-well-formed
