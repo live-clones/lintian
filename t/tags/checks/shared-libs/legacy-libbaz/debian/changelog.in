@@ -1,4 +1,4 @@
-libbaz (1-1) unstable; urgency=low
+libbaz ({$version}) {$distribution}; urgency=low
 
   * Initial setup
 
