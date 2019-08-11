@@ -3,7 +3,6 @@ Author: Debian Lintian Maintainers <lintian-maint@debian.org>
 Section: devel
 Priority: optional
 Distribution: unstable
-Source-Format: 1.0
 Package-Architecture: all
 Rules-Requires-Root: no
 Homepage: https://lintian.debian.org/
