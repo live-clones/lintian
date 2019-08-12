@@ -2,5 +2,4 @@ Skeleton: upload-native
 Testname: fields-general
 Version: 1.0
 Description: Test for tags related to minor field issues
-Test-Against:
 Check: control-file

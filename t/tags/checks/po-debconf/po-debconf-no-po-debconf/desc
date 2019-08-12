@@ -2,5 +2,4 @@ Skeleton: upload-native
 Testname: po-debconf-no-po-debconf
 Version: 1.0
 Description: Test for not using po-debconf
-Test-Against:
 Check: po-debconf

@@ -3,5 +3,4 @@ Testname: changelog-file-symlink
 Version: 1
 Source-Format: 3.0 (quilt)
 Description: Test for d/changelog being a symlink
-Test-Against:
 Check: nmu

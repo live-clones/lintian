@@ -5,5 +5,4 @@ Description: Test of substvars
 Options: --pedantic
 # dpkg 1.18.11 Will error out for ${source-version}
 Extra-Build-Depends: dpkg (<< 1.17.2)
-Test-Against:
 Check: version-substvars

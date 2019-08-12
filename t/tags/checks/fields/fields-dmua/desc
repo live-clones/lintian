@@ -2,5 +2,4 @@ Skeleton: upload-native
 Testname: fields-dmua
 Version: 1.0
 Description: Test for invalid DMUA field
-Test-Against:
 Check: fields

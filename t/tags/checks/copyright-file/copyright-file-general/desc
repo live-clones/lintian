@@ -3,5 +3,4 @@ Testname: copyright-file-general
 Version: 1.0
 Description: Test checking of copyright files
 Options: --pedantic
-Test-Against:
 Check: copyright-file

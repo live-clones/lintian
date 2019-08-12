@@ -2,5 +2,4 @@ Skeleton: upload-native
 Testname: files-python-coverage
 Version: 1.0
 Description: Check for Python .coverage files
-Test-Against:
 Check: files

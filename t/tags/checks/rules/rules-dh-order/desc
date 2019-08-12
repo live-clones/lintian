@@ -2,5 +2,4 @@ Skeleton: upload-native
 Testname: rules-dh-order
 Version: 1.0
 Description: Test order of dh command invocations
-Test-Against:
 Check: rules

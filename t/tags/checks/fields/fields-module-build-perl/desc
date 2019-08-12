@@ -3,5 +3,4 @@ Testname: fields-module-build-perl
 Version: 1.0
 Package-Architecture: all
 Description: Test some libmodule-build(-tiny)-perl checks
-Test-Against:
 Check: fields

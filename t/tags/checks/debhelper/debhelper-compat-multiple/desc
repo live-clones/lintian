@@ -2,5 +2,4 @@ Skeleton: upload-native
 Testname: debhelper-compat-multiple
 Version: 1.0
 Description: Test debian/compat file with multiple entries
-Test-Against:
 Check: debhelper

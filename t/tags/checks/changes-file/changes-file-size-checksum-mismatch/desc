@@ -2,5 +2,4 @@ Skeleton: changes
 Testname: changes-file-size-checksum-mismatch
 Version: 1.0
 Description: Test for file size and checksums check
-Test-Against:
 Check: changes-file

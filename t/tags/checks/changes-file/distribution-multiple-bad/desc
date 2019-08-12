@@ -4,5 +4,4 @@ Sequence: 2500
 Version: 1.0
 Description: Multiple distributions with at least one bad one
 References: Debian Bug#514853
-Test-Against:
 Check: changes-file

@@ -6,5 +6,4 @@ Version: 1.0
 Default-Build-Depends: debhelper (>= 9.20151004~)
 Dh-Compat-Level: 5
 Description: Legacy test "debug"
-Test-Against:
 Check: nmu

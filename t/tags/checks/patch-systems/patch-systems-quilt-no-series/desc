@@ -3,5 +3,4 @@ Version: 1.0-1
 Skeleton: upload-non-native
 Description: Test for quilt patches with no series
 Extra-Build-Depends: quilt
-Test-Against:
 Check: patch-systems

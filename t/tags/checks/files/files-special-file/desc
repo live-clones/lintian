@@ -2,5 +2,4 @@ Skeleton: upload-native
 Testname: files-special-file
 Version: 1.0
 Description: Test for special files in the deb
-Test-Against:
 Check: files

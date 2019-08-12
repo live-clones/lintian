@@ -4,5 +4,4 @@ Version: 1.0
 Description: Check for missing hardening features
 Test-Architectures: amd64 i386 armhf arm64
 Package-Architecture: any
-Test-Against:
 Check: binaries

@@ -4,5 +4,4 @@ Version: 1.0
 Description: Source package with a prebuilt java object
 Options: --pedantic
 Section: java
-Test-Against:
 Check: java

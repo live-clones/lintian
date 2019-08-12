@@ -2,5 +2,4 @@ Skeleton: upload-native
 Testname: md5sums-general
 Version: 1.0
 Description: Test of md5sums related tags
-Test-Against:
 Check: md5sums

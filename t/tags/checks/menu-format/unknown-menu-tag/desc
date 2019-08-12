@@ -2,5 +2,4 @@ Testname: unknown-menu-tag
 Skeleton: upload-native
 Version: 1.0
 Description: Test with a menu file that contains an unknown tag
-Test-Against:
 Check: menu-format

@@ -3,5 +3,4 @@ Testname: changes-files-package-builds-dbg-and-dbgsym-variants
 Version: 1.0
 Package-Architecture: any
 Description: Package builds -dbg and -dbgsym
-Test-Against:
 Check: control-file

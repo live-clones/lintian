@@ -3,5 +3,4 @@ Version: 1.0-1
 Package-Architecture: any
 Skeleton: upload-non-native
 Description: Test checks related to static libs
-Test-Against:
 Check: binaries

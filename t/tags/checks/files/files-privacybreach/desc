@@ -2,5 +2,4 @@ Skeleton: upload-native
 Testname: files-privacybreach
 Version: 1.0
 Description: Check for different html privacy breach
-Test-Against:
 Check: files

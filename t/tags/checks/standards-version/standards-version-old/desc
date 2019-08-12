@@ -6,5 +6,4 @@ Version: 1.0
 Profile: lintian-test
 Options: --include-dir ./lintian-include-dir
 Description: Test old standards version on recent package
-Test-Against:
 Check: standards-version

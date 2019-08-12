@@ -3,5 +3,4 @@ Testname: source-copyright-insecure-uri
 Version: 1.0
 Description: Test for insecure Format: URIs
 Options: --pedantic
-Test-Against:
 Check: source-copyright

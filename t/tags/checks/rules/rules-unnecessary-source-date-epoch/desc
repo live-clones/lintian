@@ -3,5 +3,4 @@ Testname: rules-unnecessary-source-date-epoch
 Version: 1.0
 Dh-Compat-Level: 10
 Description: Test for unnecessary SOURCE_DATE_EPOCH assignments
-Test-Against:
 Check: rules

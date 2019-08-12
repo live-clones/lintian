@@ -2,5 +2,4 @@ Skeleton: upload-native
 Testname: source-copyright-boilerplate-uri
 Version: 1.0
 Description: Test for boilerplate DEP 5-like URI
-Test-Against:
 Check: source-copyright

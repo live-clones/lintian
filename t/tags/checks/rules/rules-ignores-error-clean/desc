@@ -2,5 +2,4 @@ Skeleton: upload-native
 Testname: rules-ignores-error-clean
 Version: 1.0
 Description: Check for rules ignoring clean error
-Test-Against:
 Check: rules

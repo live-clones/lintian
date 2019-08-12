@@ -3,5 +3,4 @@ Skeleton: upload-native
 Version: 1.0
 Distribution: experimental
 Description: Test upload with unstable in changes but experimental in changelog
-Test-Against:
 Check: changelog-file

@@ -3,5 +3,4 @@ Skeleton: upload-non-native
 Version: 1.0-1
 Description: Diagnose lack of a patch system
 Options: --pedantic
-Test-Against:
 Check: patch-systems

@@ -3,5 +3,4 @@ Testname: control-has-empty-field
 Version: 1.0
 Options: --pedantic
 Description: Check for empty fields
-Test-Against:
 Check: control-file

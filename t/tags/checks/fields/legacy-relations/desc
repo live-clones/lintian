@@ -4,5 +4,4 @@ Source: relations
 Sequence: 9999
 Version: 5
 Description: Legacy test "relations"
-Test-Against:
 Check: fields

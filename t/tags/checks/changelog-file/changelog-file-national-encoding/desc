@@ -2,5 +2,4 @@ Skeleton: upload-native
 Testname: changelog-file-national-encoding
 Version: 1.0
 Description: Test for changelog with national encoding
-Test-Against:
 Check: changelog-file

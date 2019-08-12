@@ -4,5 +4,4 @@ Version: 1.0
 Package-Architecture: all
 Description: General tests for build dependencies
 References: Debian Bug#540594, Debian Bug#551793
-Test-Against:
 Check: fields

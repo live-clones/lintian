@@ -3,5 +3,4 @@ Testname: source-copyright-unknown-uri
 Version: 1.0
 Description: Test for unknown DEP 5-like URI
 Options: --pedantic
-Test-Against:
 Check: source-copyright

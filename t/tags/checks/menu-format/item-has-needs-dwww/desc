@@ -2,5 +2,4 @@ Testname: item-has-needs-dwww
 Skeleton: upload-native
 Version: 1.0
 Description: Test with a menu file that contains an obsolete entry for needs=dwww
-Test-Against:
 Check: menu-format
