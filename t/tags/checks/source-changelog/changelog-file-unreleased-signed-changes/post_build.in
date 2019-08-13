@@ -1,0 +1,24 @@
+#!/bin/sh
+
+set -e
+
+# create a temporary directory
+TEMPDIR=`mktemp -d`
+
+# import public key
+gpg --homedir "$TEMPDIR" --import public.key
+
+# import private key
+gpg --homedir "$TEMPDIR" --allow-secret-key-import --import private.key
+
+# sign changes file
+gpg --homedir "$TEMPDIR" --clearsign {$build_product}
+
+# save unsigned changes file elsewhere
+mv {$build_product} {$build_product}.unsigned
+
+# move signed changes file to expected location
+mv {$build_product}.asc {$build_product}
+
+# remove the temporary directory
+rm -rf "$TEMPDIR"
