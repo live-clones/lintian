@@ -23,6 +23,8 @@ use strict;
 use warnings;
 use autodie;
 
+use Path::Tiny;
+
 use Lintian::Tags qw(tag);
 
 sub parse_version {
@@ -84,7 +86,7 @@ sub parse_version {
 }
 
 sub run {
-    my ($pkg, undef, $info, undef, undef) = @_;
+    my ($pkg, undef, $info, undef, $group) = @_;
 
     my @entries = @{$info->changelog->entries};
 
@@ -108,6 +110,17 @@ sub run {
         tag 'debian-changelog-version-requires-debian-revision',
           $latest_version->{Literal}
           unless length $latest_version->{Debian} || $info->native;
+
+        my $changes = $group->get_changes_processable;
+        if ($changes) {
+            my $contents = path($changes->pkg_path)->slurp;
+            # make sure dot matches newlines, as well
+            if ($contents =~ qr/BEGIN PGP SIGNATURE.*END PGP SIGNATURE/ms) {
+
+                tag 'unreleased-changelog-distribution'
+                  if lc($entries[0]->Distribution) eq 'unreleased';
+            }
+        }
     }
 
     if (@entries > 1) {
