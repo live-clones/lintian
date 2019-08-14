@@ -588,12 +588,13 @@ sub safe_qx {
 
     my $loop = IO::Async::Loop->new;
     my $future = $loop->new_future;
+    my $status;
 
     $loop->run_child(
         command => [@command],
         on_finish => sub {
             my ($pid, $exitcode, $stdout, $stderr) = @_;
-            my $status = ($exitcode >> 8);
+            $status = ($exitcode >> 8);
 
             if ($status) {
                 my $message = "Command @command exited with status $status";
@@ -604,6 +605,15 @@ sub safe_qx {
 
             $future->done($stdout);
         });
+
+    $loop->await($future);
+
+    if ($future->is_failed) {
+        $? = $status;
+        return $future->failure;
+    }
+
+    $? = 0;
 
     # will raise an exception in case of failure
     return $future->get;
