@@ -1,3 +1,4 @@
+menus-doc-base-general (source): older-source-format 1.0
 menus-doc-base-general (binary): doc-base-uses-applications-section doc2:11 Apps/Programming
 menus-doc-base-general (binary): doc-base-file-syntax-error doc2:18
 menus-doc-base-general (binary): doc-base-file-separator-extra-whitespace doc2:13

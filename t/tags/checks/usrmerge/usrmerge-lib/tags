@@ -1,3 +1,4 @@
+usrmerge-lib (source): older-source-format 1.0
 libbasic2 (binary): no-symbols-control-file usr/lib/libbasic.so.2
 libbasic2 (binary): no-symbols-control-file lib/libbasic.so.2
 libbasic2 (binary): library-in-root-and-usr lib/libbasic.so.2 usr/lib/libbasic.so.2

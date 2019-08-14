@@ -1,3 +1,4 @@
 files-flash-non-free (source): section-area-mismatch Package files-flash-non-free-non-free
+files-flash-non-free (source): older-source-format 1.0
 files-flash-non-free (binary): non-free-flash usr/share/foo/mp3player.swf
 files-flash-non-free (binary): non-free-flash usr/share/foo/flvplayer.swf

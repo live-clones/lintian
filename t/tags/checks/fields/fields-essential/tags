@@ -1,4 +1,5 @@
 fields-essential (source): unknown-field-in-dsc essential
+fields-essential (source): older-source-format 1.0
 fields-essential (source): essential-no-not-needed
 fields-essential (source): essential-in-source-package
 fields-essential2 (binary): unknown-essential-value

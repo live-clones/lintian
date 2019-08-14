@@ -1,2 +1,3 @@
+debhelper-dh-compat (source): older-source-format 1.0
 debhelper-dh-compat (source): declares-possibly-conflicting-debhelper-compat-versions rules=8 compat=12
 debhelper-dh-compat (source): debian-rules-sets-DH_COMPAT line 3

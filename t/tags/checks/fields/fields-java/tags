@@ -1,4 +1,5 @@
 fields-java (source): virtual-package-depends-without-real-package-depends build-depends: java-compiler
+fields-java (source): older-source-format 1.0
 fields-java (source): build-depends-on-specific-java-doc-package openjdk-6-doc
 fields-java (source): build-depends-on-obsolete-package build-depends: openjdk-6-jdk
 fields-java (source): build-depends-on-an-obsolete-java-package java-compiler

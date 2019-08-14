@@ -1,3 +1,4 @@
+scripts-supports-ancient-package-version (source): older-source-format 1.0
 scripts-supports-ancient-package-version (source): debian-watch-does-not-check-gpg-signature
 scripts-supports-ancient-package-version (binary): maintainer-script-supports-ancient-package-version postinst:9 0.5 (2009-02-07 < 2017-06-18)
 scripts-supports-ancient-package-version (binary): maintainer-script-supports-ancient-package-version postinst:8 0.5 (2009-02-07 < 2017-06-18)

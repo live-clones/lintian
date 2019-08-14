@@ -1,2 +1,3 @@
+fields-homepage-field-uses-insecure-uri (source): older-source-format 1.0
 fields-homepage-field-uses-insecure-uri (source): homepage-field-uses-insecure-uri http://github.com/insecure/uri
 fields-homepage-field-uses-insecure-uri (binary): homepage-field-uses-insecure-uri http://github.com/insecure/uri

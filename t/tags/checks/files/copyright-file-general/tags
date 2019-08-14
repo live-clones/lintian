@@ -1,3 +1,4 @@
+copyright-file-general (source): older-source-format 1.0
 copyright-file-general (source): license-problem-php-license debian/copyright-php.copyright
 copyright-file-general (source): license-problem-bad-php-license debian/copyright-php.copyright
 copyright-symlink (binary): copyright-file-is-symlink

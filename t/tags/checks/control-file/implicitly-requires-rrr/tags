@@ -1,1 +1,2 @@
 implicitly-requires-rrr (source): should-specify-rules-requires-root implicitly-requires-rrr usr/share/separate/controlled-by-owner (USER:GROUP)
+implicitly-requires-rrr (source): older-source-format 1.0

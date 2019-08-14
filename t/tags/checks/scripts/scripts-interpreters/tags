@@ -1,3 +1,4 @@
+scripts-interpreters (source): older-source-format 1.0
 scripts-interpreters (binary): wrong-path-for-interpreter usr/bin/wrong-perl-path (#!/bin/perl != /usr/bin/perl)
 scripts-interpreters (binary): wrong-path-for-interpreter usr/bin/usr-local-bin-perl (#!/usr/local/bin/perl != /usr/bin/perl)
 scripts-interpreters (binary): wrong-path-for-interpreter usr/bin/not-absolute (#!perl != /usr/bin/perl)

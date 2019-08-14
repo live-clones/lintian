@@ -1,3 +1,4 @@
+files-privacybreach (source): older-source-format 1.0
 files-privacybreach (binary): privacy-breach-w3c-valid-html usr/share/files-privacy-breach/privacy-breach-w3c-valid-html/htmlvalid.html (http://www.w3.org/icons/valid-xhtml10)
 files-privacybreach (binary): privacy-breach-uses-embedded-file usr/share/files-privacy-breach/privacy-breach-uses-embedded-file/mochachai.html You may use the libjs-mocha package. (//cdnjs.cloudflare.com/ajax/libs/mocha/2.1.0/mocha.min.css)
 files-privacybreach (binary): privacy-breach-uses-embedded-file usr/share/files-privacy-breach/privacy-breach-uses-embedded-file/mochachai.html You may use the libjs-chai package. (//cdnjs.cloudflare.com/ajax/libs/chai/1.10.0/chai.min.js)

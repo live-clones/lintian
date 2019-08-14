@@ -1,3 +1,4 @@
+files-fonts (source): older-source-format 1.0
 ttf-files-fonts (binary): font-outside-font-dir usr/lib/fontpackage/font.ttf
 ttf-files-fonts (binary): duplicate-font-file usr/share/fonts/truetype/4shadow.ttf also in ttf-aenigma
 files-fonts (binary): package-mixes-misc-and-dpi-fonts

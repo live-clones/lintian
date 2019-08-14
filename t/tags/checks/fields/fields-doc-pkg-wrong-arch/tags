@@ -1,1 +1,2 @@
+fields-doc-pkg-wrong-arch (source): older-source-format 1.0
 fields-doc-pkg-wrong-arch-doc (binary): documentation-package-not-architecture-independent

@@ -1,3 +1,4 @@
 po-debconf-no-po-debconf (source): untranslatable-debconf-templates templates: 9
 po-debconf-no-po-debconf (source): untranslatable-debconf-templates templates: 4
+po-debconf-no-po-debconf (source): older-source-format 1.0
 po-debconf-no-po-debconf (source): not-using-po-debconf

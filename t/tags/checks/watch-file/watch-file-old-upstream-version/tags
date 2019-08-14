@@ -1,1 +1,2 @@
+watch-file-old-upstream-version (source): older-source-format 1.0
 watch-file-old-upstream-version (source): debian-watch-file-specifies-old-upstream-version 1.0 line 3

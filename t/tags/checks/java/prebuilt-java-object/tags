@@ -1,1 +1,2 @@
 prebuilt-java-object (source): source-contains-prebuilt-java-object HelloWorld.jar
+prebuilt-java-object (source): older-source-format 1.0

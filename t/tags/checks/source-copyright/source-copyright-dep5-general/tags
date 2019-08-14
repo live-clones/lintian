@@ -1,5 +1,6 @@
 source-copyright-dep5-general (source): unused-license-paragraph-in-dep5-copyright expat (paragraph at line 96)
 source-copyright-dep5-general (source): unknown-paragraph-in-dep5-copyright paragraph at line 6
+source-copyright-dep5-general (source): older-source-format 1.0
 source-copyright-dep5-general (source): obsolete-field-in-dep5-copyright upstream-maintainer upstream-contact (line 3)
 source-copyright-dep5-general (source): missing-license-text-in-dep5-copyright GPL-3 (paragraph at line 94)
 source-copyright-dep5-general (source): missing-license-text-in-dep5-copyright BSD-3 (paragraph at line 22)

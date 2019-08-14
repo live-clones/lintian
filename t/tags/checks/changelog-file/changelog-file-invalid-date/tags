@@ -1,2 +1,3 @@
+changelog-file-invalid-date (source): older-source-format 1.0
 changelog-file-invalid-date (binary): invalid-date-in-debian-changelog (Thurs -> Thu)
 changelog-file-invalid-date (binary): invalid-date-in-debian-changelog (Sept -> Sep)

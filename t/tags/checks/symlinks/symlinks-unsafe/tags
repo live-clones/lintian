@@ -1,3 +1,4 @@
+symlinks-unsafe (source): older-source-format 1.0
 symlinks-unsafe (binary): symlink-has-too-many-up-segments usr/share/lintian/bad-links/relative-escape ../../../../../non-existent/path/lintian-should-not-open
 symlinks-unsafe (binary): package-contains-unsafe-symlink usr/share/lintian/bad-links/relative-escape
 symlinks-unsafe (binary): package-contains-unsafe-symlink usr/share/lintian/bad-links/absolute

@@ -1,3 +1,4 @@
+duplicate-files (source): older-source-format 1.0
 duplicate-files (binary): duplicate-files usr/share/doc/duplicate-files/doccy1 usr/share/doc/duplicate-files/doccy2
 duplicate-files (binary): duplicate-files usr/share/doc/duplicate-files/doc-file1 usr/share/doc/duplicate-files/doc-file2 usr/share/doc/duplicate-files/doc-file3 usr/share/doc/duplicate-files/doc-file4
 duplicate-files (binary): duplicate-changelog-files usr/share/doc/duplicate-files/NEWS.gz usr/share/doc/duplicate-files/changelog.gz

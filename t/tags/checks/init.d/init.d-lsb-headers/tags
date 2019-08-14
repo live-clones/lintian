@@ -1,3 +1,4 @@
+init.d-lsb-headers (source): older-source-format 1.0
 init.d-lsb-headers-virtual (binary): init.d-script-depends-on-unknown-virtual-facility etc/init.d/init.d-lsb-headers-virtual $something_that_doesnt_exist
 init.d-lsb-headers-virtual (binary): init.d-script-depends-on-all-virtual-facility etc/init.d/init.d-lsb-headers-virtual required-stop
 init.d-lsb-headers-parsing (binary): init.d-script-starts-in-stop-runlevel etc/init.d/init.d-lsb-headers-parsing 0

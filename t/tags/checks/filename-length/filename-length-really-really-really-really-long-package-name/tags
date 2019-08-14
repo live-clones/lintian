@@ -1,3 +1,4 @@
 filename-length-really-really-really-really-long-package-name (source): source-package-component-has-long-file-name 107 > 80
 filename-length-really-really-really-really-long-package-name (source): package-has-long-file-name 101 > 80
+filename-length-really-really-really-really-long-package-name (source): older-source-format 1.0
 filename-length-really-really-really-really-long-package-name (binary): package-has-long-file-name 105 > 80

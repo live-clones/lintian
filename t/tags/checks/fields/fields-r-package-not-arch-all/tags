@@ -1,1 +1,2 @@
+fields-r-package-not-arch-all (source): older-source-format 1.0
 r-cran-positive (binary): r-package-not-arch-all

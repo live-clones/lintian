@@ -1,2 +1,3 @@
+executable-in-docbase (source): older-source-format 1.0
 executable-in-docbase (binary): executable-not-elf-or-script usr/share/doc-base/doc1.txt
 executable-in-docbase (binary): executable-in-usr-share-docbase usr/share/doc-base/doc1.txt 0755

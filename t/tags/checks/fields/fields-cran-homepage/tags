@@ -1,2 +1,3 @@
+fields-cran-homepage (source): older-source-format 1.0
 fields-cran-homepage (source): homepage-for-cran-package-not-canonical https://cran.r-project.org/web/packages/foo/index.html
 fields-cran-homepage (binary): homepage-for-cran-package-not-canonical https://cran.r-project.org/web/packages/foo/index.html

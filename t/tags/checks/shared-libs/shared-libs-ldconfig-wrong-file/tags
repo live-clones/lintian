@@ -1,2 +1,3 @@
+shared-libs-ldconfig-wrong-file (source): older-source-format 1.0
 libfoo1 (binary): symbols-file-missing-build-depends-package-field
 libfoo1 (binary): ldconfig-symlink-referencing-wrong-file usr/lib/libfoo.so.1 -> some-other-file instead of libfoo.so.1.0.1

@@ -1,1 +1,2 @@
+fields-aspell (source): older-source-format 1.0
 aspell-en (binary): aspell-package-not-arch-all

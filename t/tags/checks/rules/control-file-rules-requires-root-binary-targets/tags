@@ -1,5 +1,6 @@
 control-file-rules-requires-root-binary-targets (source): source-format 1.0 [non-native]
 control-file-rules-requires-root-binary-targets (source): rules-requires-root-explicitly
+control-file-rules-requires-root-binary-targets (source): older-source-format 1.0
 control-file-rules-requires-root-binary-targets (source): debian-rules-should-not-use-custom-compression-settings dh_builddeb -- -Zgzip (line 7)
 control-file-rules-requires-root-binary-targets (source): debian-build-system dh
 control-file-rules-requires-root-binary-targets (source): debhelper-compat-level 12

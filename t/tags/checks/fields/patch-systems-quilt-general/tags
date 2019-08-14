@@ -6,6 +6,7 @@ patch-systems-quilt-general (source): patch-modifying-debian-files some-file deb
 patch-systems-quilt-general (source): patch-file-present-but-not-mentioned-in-series subdir/file-not-referenced-in-series-2
 patch-systems-quilt-general (source): patch-file-present-but-not-mentioned-in-series file-not-referenced-in-series
 patch-systems-quilt-general (source): package-uses-vendor-specific-patch-series debian/patches/vendorname.series
+patch-systems-quilt-general (source): older-source-format 1.0
 patch-systems-quilt-general (source): more-than-one-patch-system
 patch-systems-quilt-general (source): dpatch-build-dep-but-no-patch-list
 patch-systems-quilt-general (source): build-depends-on-obsolete-package build-depends: dpatch

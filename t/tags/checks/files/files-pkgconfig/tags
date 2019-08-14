@@ -1,3 +1,4 @@
+files-pkgconfig (source): older-source-format 1.0
 pkgconfig-any (binary): pkg-config-references-unknown-shared-library usr/lib/ARCH/pkgconfig/arch-include-arch.pc -lotherdoesnotexist (line 5)
 pkgconfig-any (binary): pkg-config-references-unknown-shared-library usr/lib/ARCH/pkgconfig/arch-include-arch.pc -ldoesnotexist (line 5)
 pkgconfig-any (binary): pkg-config-multi-arch-wrong-dir usr/lib/ARCH/pkgconfig/arch-cross.pc full text contains architecture specific dir ARCH

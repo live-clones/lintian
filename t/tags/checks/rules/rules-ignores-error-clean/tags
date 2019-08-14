@@ -1,1 +1,2 @@
+rules-ignores-error-clean (source): older-source-format 1.0
 rules-ignores-error-clean (source): debian-rules-ignores-make-clean-error line 6

@@ -1,1 +1,2 @@
+symlinks-broken (source): older-source-format 1.0
 broken-links (binary): package-contains-broken-symlink-wildcard usr/lib/broken-links/some-other.conf etc/some-*.conf

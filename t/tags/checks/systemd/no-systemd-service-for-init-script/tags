@@ -1,1 +1,2 @@
+no-systemd-service-for-init-script (source): older-source-format 1.0
 no-systemd-service-for-init-script (binary): omitted-systemd-service-for-init.d-script other

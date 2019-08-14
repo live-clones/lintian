@@ -1,3 +1,4 @@
+systemd-complex-service-file (source): older-source-format 1.0
 systemd-complex-service-file (binary): systemd-service-file-wraps-init-script lib/systemd/system/test5.service ExecStopPost
 systemd-complex-service-file (binary): systemd-service-file-wraps-init-script lib/systemd/system/test5.service ExecStop
 systemd-complex-service-file (binary): systemd-service-file-wraps-init-script lib/systemd/system/test5.service ExecStartPre

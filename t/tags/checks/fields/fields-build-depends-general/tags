@@ -1,4 +1,5 @@
 fields-build-depends-general (source): ored-build-depends-on-obsolete-package build-depends: xlibmesa-gl-dev
+fields-build-depends-general (source): older-source-format 1.0
 fields-build-depends-general (source): invalid-arch-string-in-source-relation source [build-depends: baz [source lintian-fake-arch]]
 fields-build-depends-general (source): invalid-arch-string-in-source-relation lintian-fake-arch [build-depends: baz [source lintian-fake-arch]]
 fields-build-depends-general (source): invalid-arch-string-in-source-relation all [build-depends: foo [all]]

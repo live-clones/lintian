@@ -1,1 +1,2 @@
 patch-systems-quilt-no-depends (source): quilt-series-but-no-build-dep
+patch-systems-quilt-no-depends (source): older-source-format 1.0

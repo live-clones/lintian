@@ -2,3 +2,4 @@ rules-override-dh-foo-does-not-call-dh-foo (source): override_dh_fixperms-does-n
 rules-override-dh-foo-does-not-call-dh-foo (source): override_dh_fixperms-does-not-call-dh_fixperms (line 8)
 rules-override-dh-foo-does-not-call-dh-foo (source): override_dh_fixperms-does-not-call-dh_fixperms (line 10)
 rules-override-dh-foo-does-not-call-dh-foo (source): override_dh_clean-does-not-call-dh_clean (line 7)
+rules-override-dh-foo-does-not-call-dh-foo (source): older-source-format 1.0

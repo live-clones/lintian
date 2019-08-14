@@ -1,1 +1,2 @@
+debhelper-deb-build-options (source): older-source-format 1.0
 debhelper-deb-build-options (source): debian-rules-sets-DEB_BUILD_OPTIONS line 3

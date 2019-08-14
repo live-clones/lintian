@@ -1,3 +1,4 @@
+spelling-multiword (source): older-source-format 1.0
 spelling-multiword (binary): spelling-error-in-description "This packages" "These packages"
 spelling-multiword (binary): spelling-error-in-description "Permits to" "Permits one to"
 spelling-multiword (binary): spelling-error-in-description "Debian/GNU Linux" "Debian GNU/Linux"

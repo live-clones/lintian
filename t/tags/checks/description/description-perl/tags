@@ -1,1 +1,2 @@
+description-perl (source): older-source-format 1.0
 libdeb-long-description-perl (binary): perl-module-name-not-mentioned-in-description Deb::Long::Description

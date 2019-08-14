@@ -1,2 +1,3 @@
+files-nodejs (source): older-source-format 1.0
 files-nodejs (binary): node-package-install-in-nodejs-rootdir usr/share/nodejs/test.js
 files-nodejs (binary): node-package-install-in-nodejs-rootdir usr/share/nodejs/package.json

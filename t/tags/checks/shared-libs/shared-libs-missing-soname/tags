@@ -1,1 +1,2 @@
+shared-libs-missing-soname (source): older-source-format 1.0
 libhallo1 (binary): sharedobject-in-library-directory-missing-soname usr/lib/libhallo.so

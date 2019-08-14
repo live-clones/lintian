@@ -1,3 +1,4 @@
+java-jars (source): older-source-format 1.0
 unparsable (binary): zip-parse-error usr/share/unparsable/unparsable.jar: format error: can't find EOCD signature
 libtestc-java (binary): javalib-but-no-public-jars
 libtesta-java (binary): missing-dep-on-jarwrapper

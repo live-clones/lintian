@@ -1,3 +1,4 @@
+description-synopsis-might-not-be-phrased-properly (source): older-source-format 1.0
 description-synopsis-might-not-be-phrased-properly-two-sentences (binary): description-synopsis-might-not-be-phrased-properly "This synopsis starts a sentence. Then starts another."
 description-synopsis-might-not-be-phrased-properly-misspelt (binary): description-synopsis-might-not-be-phrased-properly "This synopsis ends with mispelling of stretc."
 description-synopsis-might-not-be-phrased-properly-full-stop (binary): description-synopsis-might-not-be-phrased-properly "This synopsis ends with a full-stop."

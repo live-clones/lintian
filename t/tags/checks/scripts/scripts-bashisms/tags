@@ -1,3 +1,4 @@
+scripts-bashisms (source): older-source-format 1.0
 scripts-bashisms (binary): read-in-maintainer-script prerm:51
 scripts-bashisms (binary): read-in-maintainer-script prerm:50
 scripts-bashisms (binary): read-in-maintainer-script prerm:49

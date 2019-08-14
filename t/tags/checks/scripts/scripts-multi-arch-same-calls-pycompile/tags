@@ -1,3 +1,4 @@
+scripts-multi-arch-same-calls-pycompile (source): older-source-format 1.0
 pkg-same (binary): package-contains-no-arch-dependent-files
 pkg-same (binary): multi-arch-same-package-calls-pycompile postinst:8
 pkg-same (binary): multi-arch-same-package-calls-pycompile postinst:7

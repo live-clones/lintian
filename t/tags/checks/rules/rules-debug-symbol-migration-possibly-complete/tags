@@ -1,3 +1,4 @@
+rules-debug-symbol-migration-possibly-complete (source): older-source-format 1.0
 rules-debug-symbol-migration-possibly-complete (source): debug-symbol-migration-possibly-complete --ddeb-migration=foo (line 7)
 rules-debug-symbol-migration-possibly-complete (source): debug-symbol-migration-possibly-complete --dbgsym-migration=foo (line 8)
 rules-debug-symbol-migration-possibly-complete (source): debug-symbol-migration-possibly-complete --dbgsym-migration='apostrophe' (line 9)

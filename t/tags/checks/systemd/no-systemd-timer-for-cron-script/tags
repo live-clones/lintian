@@ -1,3 +1,4 @@
+no-systemd-timer-for-cron-script (source): older-source-format 1.0
 no-systemd-timer-for-cron-script (binary): missing-systemd-timer-for-cron-script etc/cron.weekly/no-systemd-timer-for-cron-script
 no-systemd-timer-for-cron-script (binary): missing-systemd-timer-for-cron-script etc/cron.monthly/no-systemd-timer-for-cron-script
 no-systemd-timer-for-cron-script (binary): missing-systemd-timer-for-cron-script etc/cron.hourly/no-systemd-timer-for-cron-script

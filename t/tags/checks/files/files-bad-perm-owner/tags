@@ -1,3 +1,4 @@
+files-bad-perm-owner (source): older-source-format 1.0
 game (binary): non-standard-game-executable-perm usr/games/script 0755 != 2755
 binary (binary): setuid-gid-binary usr/bin/script-ugid 6755 root/root
 binary (binary): setuid-binary usr/bin/script-wuid 4744 root/root

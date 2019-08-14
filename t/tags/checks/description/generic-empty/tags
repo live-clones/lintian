@@ -1,4 +1,5 @@
 generic-empty (source): source-nmu-has-incorrect-version-number 1.0
+generic-empty (source): older-source-format 1.0
 generic-empty (source): no-standards-version-field
 generic-empty (source): no-section-field-for-source
 generic-empty (source): no-debian-copyright

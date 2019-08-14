@@ -1,3 +1,4 @@
+shared-libs-symbols-file (source): older-source-format 1.0
 nolibrary (binary): pkg-has-symbols-control-file-but-no-shared-libs
 libsym1 (binary): no-symbols-control-file usr/lib/libsym.so.1.0.1
 libfoo1 (binary): syntax-error-in-symbols-file 10

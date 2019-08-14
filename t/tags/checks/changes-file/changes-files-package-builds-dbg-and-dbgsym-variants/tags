@@ -1,3 +1,4 @@
+changes-files-package-builds-dbg-and-dbgsym-variants (source): older-source-format 1.0
 changes-files-package-builds-dbg-and-dbgsym-variants (source): debian-control-has-obsolete-dbg-package changes-files-package-builds-dbg-and-dbgsym-variants-dbg
 changes-files-package-builds-dbg-and-dbgsym-variants (source): debian-control-has-dbgsym-package changes-files-package-builds-dbg-and-dbgsym-variants-dbgsym
 changes-files-package-builds-dbg-and-dbgsym-variants (changes): package-builds-dbg-and-dbgsym-variants changes-files-package-builds-dbg-and-dbgsym-variants-{dbg,dbgsym}

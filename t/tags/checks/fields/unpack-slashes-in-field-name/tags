@@ -1,2 +1,3 @@
 unpack-slashes-in-field-name (source): unknown-field-in-dsc ../foo
+unpack-slashes-in-field-name (source): older-source-format 1.0
 unpack-slashes-in-field-name (binary): unknown-field-in-control ../bar

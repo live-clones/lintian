@@ -1,3 +1,4 @@
+cruft-bad-php (source): older-source-format 1.0
 cruft-bad-php (source): license-problem-php-license src/3_01.txt
 cruft-bad-php (source): license-problem-bad-php-license src/2_02.txt
 cruft-bad-php (source): license-problem-bad-php-license src/2_01.txt

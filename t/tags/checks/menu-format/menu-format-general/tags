@@ -1,3 +1,4 @@
+menu-format-general (source): older-source-format 1.0
 menu-section (binary): non-wm-in-windowmanager-menu-section x11 usr/share/menu/menu-section:15
 menu-section (binary): menu-item-uses-windowmanagers-section usr/share/menu/menu-section:15
 menu-section (binary): menu-item-uses-apps-section usr/share/menu/menu-section:12

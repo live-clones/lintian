@@ -1,1 +1,2 @@
+scripts-skip-systemd-native (source): older-source-format 1.0
 scripts-skip-systemd-native-without (binary): skip-systemd-native-flag-missing-pre-depends postinst:8

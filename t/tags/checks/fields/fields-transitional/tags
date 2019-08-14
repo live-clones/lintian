@@ -1,1 +1,2 @@
+fields-transitional (source): older-source-format 1.0
 fields-transitional (binary): transitional-package-should-be-oldlibs-optional devel/standard

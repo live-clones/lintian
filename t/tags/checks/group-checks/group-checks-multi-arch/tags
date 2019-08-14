@@ -1,3 +1,4 @@
+group-checks-multi-arch (source): older-source-format 1.0
 group-checks-multi-arch (source): dependency-is-not-multi-archified pkg-same depends on pkg-foreign (multi-arch: no)
 group-checks-multi-arch (source): debug-package-for-multi-arch-same-pkg-not-coinstallable pkg-dbg => pkg-same
 group-checks-multi-arch (source): debian-control-has-obsolete-dbg-package pkg-dbg

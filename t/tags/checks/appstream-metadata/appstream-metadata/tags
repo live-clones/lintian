@@ -1,3 +1,4 @@
+appstream-metadata (source): older-source-format 1.0
 appstream-metadata (source): inconsistent-appstream-metadata-license debian/appstream-metadata.metadata.xml (mit != gpl-2+)
 appstream-metadata (binary): udev-rule-missing-uaccess lib/udev/rules.d/60-appstream-metadata.rules:5 user accessible device missing TAG+="uaccess"
 appstream-metadata (binary): udev-rule-missing-uaccess lib/udev/rules.d/60-appstream-metadata.rules:2 user accessible device missing TAG+="uaccess"

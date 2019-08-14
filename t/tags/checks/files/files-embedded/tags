@@ -1,3 +1,4 @@
+files-embedded (source): older-source-format 1.0
 files-embedded (binary): embedded-php-library usr/share/php/streams.php please use php-php-gettext
 files-embedded (binary): embedded-php-library usr/share/php/rss_parse.php please use libphp-magpierss
 files-embedded (binary): embedded-pear-module usr/share/php/IPv4.php please use php-net-ipv4

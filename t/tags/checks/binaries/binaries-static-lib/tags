@@ -1,3 +1,4 @@
+binaries-static-lib (source): older-source-format 1.0
 libfoo-dev (binary): unstripped-static-library usr/lib/libfoo.a(other.o)
 libfoo-dev (binary): unstripped-static-library usr/lib/libfoo.a(code.o)
 libfoo-dev (binary): static-library-has-unneeded-section usr/lib/libbar.a(pstripped.o) .comment

@@ -1,3 +1,4 @@
+cruft-autotools-pkg-config-macro-not-cross-compilation-safe (source): older-source-format 1.0
 cruft-autotools-pkg-config-macro-not-cross-compilation-safe (source): autotools-pkg-config-macro-not-cross-compilation-safe src/configure.in (line 1)
 cruft-autotools-pkg-config-macro-not-cross-compilation-safe (source): autotools-pkg-config-macro-not-cross-compilation-safe src/configure.ac (line 1)
 cruft-autotools-pkg-config-macro-not-cross-compilation-safe (source): autotools-pkg-config-macro-not-cross-compilation-safe configure.in (line 1)

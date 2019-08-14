@@ -1,1 +1,2 @@
+changelog-file-dch-wrong-name (source): older-source-format 1.0
 changelog-file-dch-wrong-name (binary): wrong-name-for-debian-changelog-file usr/share/doc/changelog-file-dch-wrong-name/changelog.debian.gz

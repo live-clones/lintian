@@ -1,3 +1,4 @@
+shared-libs-ldconfig-scripts (source): older-source-format 1.0
 libuns1 (binary): symbols-file-missing-build-depends-package-field
 libuns1 (binary): maintscript-calls-ldconfig postrm
 libfoo1 (binary): symbols-file-missing-build-depends-package-field

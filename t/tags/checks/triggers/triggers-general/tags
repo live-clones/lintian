@@ -1,3 +1,4 @@
+triggers-general (source): older-source-format 1.0
 triggers-general (binary): uses-implicit-await-trigger interest /usr/share/lintian/baz (line 8)
 triggers-general (binary): unknown-trigger random-trigger /bar (line 11)
 triggers-general (binary): repeated-trigger-name interest-noawait /usr/share/lintian/foo2 (line 15) vs interest-await /usr/share/lintian/foo2 (line 14)

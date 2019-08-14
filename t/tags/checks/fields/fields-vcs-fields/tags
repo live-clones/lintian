@@ -9,3 +9,4 @@ fields-vcs-fields (source): vcs-field-uses-insecure-uri vcs-svn svn://anonscm.de
 fields-vcs-fields (source): vcs-field-uses-insecure-uri vcs-cvs :pserver:anonymous@anonscm.debian.org:/cvs/foobar module
 fields-vcs-fields (source): vcs-field-uses-insecure-uri vcs-bzr nosmart+http://anonscm.debian.org/bzr/collab-maint/foobar
 fields-vcs-fields (source): vcs-browser-links-to-empty-view https://anonscm.debian.org/viewvc/foobar/trunk?rev=0&sc=0
+fields-vcs-fields (source): older-source-format 1.0

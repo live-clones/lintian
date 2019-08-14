@@ -1,3 +1,4 @@
+rules-dh-order (source): older-source-format 1.0
 rules-dh-order (source): debian-rules-calls-debhelper-in-odd-order dh_shlibdeps (line 13)
 rules-dh-order (source): debian-rules-calls-debhelper-in-odd-order dh_makeshlibs (line 18)
 rules-dh-order (source): debian-rules-calls-debhelper-in-odd-order dh_makeshlibs (line 14)

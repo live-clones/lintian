@@ -1,1 +1,2 @@
+debconf-no-templates (source): older-source-format 1.0
 debconf-no-templates (binary): no-debconf-templates

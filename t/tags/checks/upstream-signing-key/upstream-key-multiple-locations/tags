@@ -1,2 +1,3 @@
 upstream-key-multiple-locations (source): public-upstream-keys-in-multiple-locations upstream-signing-key.pgp upstream/signing-key.asc
 upstream-key-multiple-locations (source): orig-tarball-missing-upstream-signature upstream-key-multiple-locations_1.0.orig.tar.gz
+upstream-key-multiple-locations (source): older-source-format 1.0

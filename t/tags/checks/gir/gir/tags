@@ -1,4 +1,5 @@
 gir (source): typelib-missing-gir-depends gir1.2-bad
+gir (source): older-source-format 1.0
 gir1.2-perfect-42 (binary): package-contains-no-arch-dependent-files
 gir1.2-good-42 (binary): typelib-not-in-multiarch-directory usr/lib/girepository-1.0/GoodExtras-42.typelib usr/lib/MULTIARCH/girepository-1.0
 gir1.2-good-42 (binary): typelib-not-in-multiarch-directory usr/lib/girepository-1.0/Good-42.typelib usr/lib/MULTIARCH/girepository-1.0

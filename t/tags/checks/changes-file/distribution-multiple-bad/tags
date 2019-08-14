@@ -1,3 +1,4 @@
+distribution-multiple-bad (source): older-source-format 1.0
 distribution-multiple-bad (changes): multiple-distributions-in-changes-file stable foo-backportss bar foo
 distribution-multiple-bad (changes): bad-distribution-in-changes-file foo-backportss
 distribution-multiple-bad (changes): bad-distribution-in-changes-file foo

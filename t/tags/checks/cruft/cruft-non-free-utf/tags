@@ -1,1 +1,2 @@
+cruft-non-free-utf (source): older-source-format 1.0
 cruft-non-free-utf (source): license-problem-convert-utf-code src/bad.c

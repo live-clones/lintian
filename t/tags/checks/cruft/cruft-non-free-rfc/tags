@@ -1,2 +1,3 @@
+cruft-non-free-rfc (source): older-source-format 1.0
 cruft-non-free-rfc (source): license-problem-non-free-RFC-BCP78 src/bcp78.txt
 cruft-non-free-rfc (source): license-problem-non-free-RFC src/rfc.txt

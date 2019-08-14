@@ -15,3 +15,4 @@ fields-uncanonical-vcs-fields (source): vcs-field-not-canonical nosmart+http://b
 fields-uncanonical-vcs-fields (source): vcs-field-not-canonical http://hg.debian.org/hg/foobar/pkg/foobar https://anonscm.debian.org/hg/foobar/pkg/foobar
 fields-uncanonical-vcs-fields (source): vcs-field-bitrotted https://svn.debian.org/wsvn/foobar/trunk?foo=bar;op=log;something=else https://anonscm.debian.org/viewvc/foobar/trunk?foo=bar;something=else
 fields-uncanonical-vcs-fields (source): vcs-field-bitrotted :pserver:anonymous@cvs.alioth.debian.org:/cvsroot/foobar :pserver:anonymous@anonscm.debian.org:/cvs/foobar
+fields-uncanonical-vcs-fields (source): older-source-format 1.0

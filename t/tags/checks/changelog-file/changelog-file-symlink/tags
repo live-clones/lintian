@@ -1,1 +1,2 @@
+changelog-file-symlink (source): older-source-format 1.0
 changelog-file-symlink (binary): debian-changelog-file-is-a-symlink

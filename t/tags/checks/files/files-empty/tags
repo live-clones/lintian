@@ -1,2 +1,3 @@
 files-empty-udeb (udeb): empty-udeb-package
+files-empty (source): older-source-format 1.0
 files-empty (binary): empty-binary-package

@@ -1,3 +1,4 @@
+files-games-section (source): older-source-format 1.0
 files-games-section-wrong (binary): games-package-should-be-section-games
 files-games-section-no-games (binary): package-section-games-but-contains-no-game
 files-games-section-both (binary): package-section-games-but-has-usr-bin

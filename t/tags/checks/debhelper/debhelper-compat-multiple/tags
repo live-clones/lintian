@@ -1,1 +1,2 @@
+debhelper-compat-multiple (source): older-source-format 1.0
 debhelper-compat-multiple (source): debhelper-compat-file-contains-multiple-levels (line 3)

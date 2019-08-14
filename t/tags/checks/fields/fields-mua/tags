@@ -5,6 +5,7 @@ fields-mua (source): stronger-dependency-implies-weaker fields-mua-bad-1 pre-dep
 fields-mua (source): stronger-dependency-implies-weaker fields-mua-bad-1 pre-depends -> recommends mail-transport-agent
 fields-mua (source): stronger-dependency-implies-weaker fields-mua-bad-1 depends -> suggests exim4 | mail-transport-agent
 fields-mua (source): stronger-dependency-implies-weaker fields-mua-bad-1 depends -> recommends default-mta
+fields-mua (source): older-source-format 1.0
 fields-mua (source): default-mta-dependency-does-not-specify-mail-transport-agent build-depends: debhelper (>= 12~), default-mta
 fields-mua-bad-2 (binary): mail-transport-agent-dependency-does-not-specify-default-mta depends: exim4 | postfix | mail-transport-agent
 fields-mua-bad-2 (binary): default-mta-dependency-not-listed-first pre-depends: exim4 | default-mta | mail-transport-agent

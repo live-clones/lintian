@@ -1,2 +1,3 @@
+fields-module-build-perl (source): older-source-format 1.0
 fields-module-build-perl (source): libmodule-build-tiny-perl-needs-to-be-in-build-depends
 fields-module-build-perl (source): libmodule-build-perl-needs-to-be-in-build-depends

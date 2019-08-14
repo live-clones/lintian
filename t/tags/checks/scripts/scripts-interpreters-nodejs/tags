@@ -1,3 +1,4 @@
+scripts-interpreters-nodejs (source): older-source-format 1.0
 scripts-interpreters-nodejs (binary): script-uses-deprecated-nodejs-location usr/bin/usr-bin-env-nodejs
 scripts-interpreters-nodejs (binary): missing-dep-for-interpreter nodejs => nodejs (usr/bin/usr-bin-env-nodejs) #!nodejs
 scripts-interpreters-nodejs (binary): missing-dep-for-interpreter node => nodejs (usr/bin/usr-bin-env-node) #!node

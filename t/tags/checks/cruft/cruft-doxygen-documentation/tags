@@ -2,3 +2,4 @@ cruft-doxygen-documentation (source): source-contains-prebuilt-doxygen-documenta
 cruft-doxygen-documentation (source): source-contains-prebuilt-doxygen-documentation src/doc/html/index.html
 cruft-doxygen-documentation (source): source-contains-prebuilt-doxygen-documentation src/doc/html/files.html
 cruft-doxygen-documentation (source): source-contains-prebuilt-doxygen-documentation src/doc/html/
+cruft-doxygen-documentation (source): older-source-format 1.0

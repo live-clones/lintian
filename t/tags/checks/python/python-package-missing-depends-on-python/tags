@@ -1,1 +1,2 @@
+python-package-missing-depends-on-python (source): older-source-format 1.0
 python3-python-package-missing-depends-on-python (binary): python-package-missing-depends-on-python

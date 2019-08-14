@@ -1,2 +1,3 @@
+fields-bioconductor-homepage (source): older-source-format 1.0
 fields-bioconductor-homepage (source): homepage-for-bioconductor-package-not-canonical https://www.bioconductor.org/packages/release/bioc/html/foo.html
 fields-bioconductor-homepage (binary): homepage-for-bioconductor-package-not-canonical https://www.bioconductor.org/packages/release/bioc/html/foo.html

@@ -1,1 +1,2 @@
+shared-libs-exit-fork (source): older-source-format 1.0
 libexecbit1 (binary): symbols-file-missing-build-depends-package-field

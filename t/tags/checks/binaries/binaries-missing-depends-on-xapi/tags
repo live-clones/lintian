@@ -1,2 +1,3 @@
+binaries-missing-depends-on-xapi (source): older-source-format 1.0
 binaries-missing-depends-on-xapi (binary): missing-dependency-on-phpapi
 binaries-missing-depends-on-xapi (binary): missing-dependency-on-perlapi

@@ -1,2 +1,3 @@
+lintian-overrides (source): older-source-format 1.0
 lintian-overrides (binary): unused-override copyright-contains-dh_make-todo-boilerplate foo-bar-extra
 lintian-overrides (binary): malformed-override Possibly wrong package in override at line 1 (got lintian-override, expected lintian-overrides)

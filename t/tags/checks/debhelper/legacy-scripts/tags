@@ -3,6 +3,7 @@ scripts (source): patch-system-but-no-source-readme
 scripts (source): patch-file-present-but-not-mentioned-in-series 03_specified_without_dpatch.dpatch
 scripts (source): package-uses-deprecated-debhelper-compat-version 1
 scripts (source): package-uses-debhelper-but-lacks-build-depends
+scripts (source): older-source-format 1.0
 scripts (source): missing-build-dependency-for-dh_-command dh_testroot => debhelper | debhelper-compat
 scripts (source): missing-build-dependency debhelper | debhelper-compat
 scripts (source): dpatch-missing-description 04_i_dont_have_a_description_either.patch

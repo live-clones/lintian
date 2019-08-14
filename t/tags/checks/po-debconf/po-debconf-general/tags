@@ -1,6 +1,7 @@
 po-debconf-general (source): untranslatable-debconf-templates templates: 4
 po-debconf-general (source): translated-default-field templates: 3
 po-debconf-general (source): stray-translated-debconf-templates templates.en_US
+po-debconf-general (source): older-source-format 1.0
 po-debconf-general (source): no-complete-debconf-translation
 po-debconf-general (source): missing-file-from-potfiles-in some-other-file
 po-debconf-general (source): misnamed-po-file debian/po/English.po

@@ -1,2 +1,3 @@
+files-foo-violates-expected-naming (source): older-source-format 1.0
 files-foo-violates-expected-naming (binary): run-parts-cron-filename-contains-illegal-chars etc/cron.hourly/cron-script.hourly
 files-foo-violates-expected-naming (binary): incorrect-naming-of-pkcs11-module usr/share/p11-kit/modules/_bad-pkcs11.module

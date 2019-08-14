@@ -1,2 +1,3 @@
 upstream-keyring (source): orig-tarball-missing-upstream-signature upstream-keyring_1.0.orig.tar.gz
+upstream-keyring (source): older-source-format 1.0
 upstream-keyring (source): debian-watch-could-verify-download debian/upstream/signing-key.asc

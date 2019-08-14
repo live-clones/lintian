@@ -1,3 +1,4 @@
+fields-virtual-packages (source): older-source-format 1.0
 fields-virtual-packages2 (binary): invalid-versioned-provides versioned (>> 0.1)
 fields-virtual-packages2 (binary): bad-provided-package-name iNvAlId-NaMe
 fields-virtual-packages2 (binary): bad-provided-package-name a

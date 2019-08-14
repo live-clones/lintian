@@ -1,3 +1,4 @@
+files-multiarch-foreign-files (source): older-source-format 1.0
 libfoo-dev (binary): multiarch-foreign-static-library usr/lib/TRIPLET/libfoo.a
 libfoo-dev (binary): multiarch-foreign-pkgconfig usr/lib/TRIPLET/pkgconfig/libfoo.pc
 libfoo-dev (binary): multiarch-foreign-cmake-file usr/lib/TRIPLET/cmake/foo.cmake

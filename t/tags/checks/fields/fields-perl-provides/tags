@@ -1,1 +1,2 @@
+fields-perl-provides (source): older-source-format 1.0
 libtest-simple-perl (binary): package-superseded-by-perl with 1.302133

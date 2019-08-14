@@ -1,1 +1,2 @@
+debhelper-dh-clean-k-deprecated (source): older-source-format 1.0
 debhelper-dh-clean-k-deprecated (source): dh-clean-k-is-deprecated

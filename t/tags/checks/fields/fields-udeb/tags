@@ -1,2 +1,3 @@
 fields-udeb (udeb): wrong-section-for-udeb devel
 fields-udeb (udeb): bad-menu-item network
+fields-udeb (source): older-source-format 1.0

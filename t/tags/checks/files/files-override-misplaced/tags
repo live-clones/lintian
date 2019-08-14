@@ -1,3 +1,4 @@
+files-override-misplaced (source): older-source-format 1.0
 files-override-misplaced (binary): override-file-in-wrong-package usr/share/lintian/overrides/wrong-package/some-override
 files-override-misplaced (binary): override-file-in-wrong-location usr/share/lintian/overrides/files-override-misplaced/some-override
 files-override-misplaced (binary): override-file-in-wrong-location usr/share/doc/files-override-misplaced/override.lintian

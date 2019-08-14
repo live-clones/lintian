@@ -1,1 +1,2 @@
+eslint-config-file (source): older-source-format 1.0
 eslint-config-file (binary): package-contains-eslint-config-file usr/share/doc/eslint-config-file/.eslintrc

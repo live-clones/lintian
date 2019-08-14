@@ -1,3 +1,4 @@
+scripts-maintainer-script-empty (source): older-source-format 1.0
 scripts-maintainer-script-empty (binary): maintainer-script-empty prerm
 scripts-maintainer-script-empty (binary): maintainer-script-empty preinst
 scripts-maintainer-script-empty (binary): maintainer-script-empty postrm

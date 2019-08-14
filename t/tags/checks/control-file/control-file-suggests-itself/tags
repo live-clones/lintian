@@ -1,1 +1,2 @@
 control-file-suggests-itself (source): package-depends-on-itself control-file-suggests-itself suggests
+control-file-suggests-itself (source): older-source-format 1.0

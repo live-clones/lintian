@@ -1,2 +1,3 @@
 cruft-source-contains-empty-directory (source): source-contains-empty-directory empty/
+cruft-source-contains-empty-directory (source): older-source-format 1.0
 cruft-source-contains-empty-directory (source): debian-watch-does-not-check-gpg-signature

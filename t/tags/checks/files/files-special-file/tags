@@ -1,1 +1,2 @@
+files-special-file (source): older-source-format 1.0
 files-special-file (binary): special-file usr/share/files-special-file/fifo-pipe 0644

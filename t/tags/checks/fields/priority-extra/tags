@@ -1,1 +1,2 @@
+priority-extra (source): older-source-format 1.0
 priority-extra (binary): priority-extra-is-replaced-by-priority-optional

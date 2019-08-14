@@ -1,3 +1,4 @@
+menus-doc-base-file-references-missing-file (source): older-source-format 1.0
 menus-doc-base-file-references-missing-file (binary): doc-base-file-references-wrong-path example:13 /missing
 menus-doc-base-file-references-missing-file (binary): doc-base-file-references-missing-file example:13 /usr/share/doc/menus-doc-base-file-references-missing-file-not-a-dependency/documentation.txt
 menus-doc-base-file-references-missing-file (binary): doc-base-file-references-missing-file example:13 /missing

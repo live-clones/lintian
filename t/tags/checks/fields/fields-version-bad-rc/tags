@@ -1,2 +1,3 @@
 fields-version-bad-rc (source): rc-version-greater-than-expected-version 1.0+rc3 > 1.0 (consider using 1.0~rc3)
+fields-version-bad-rc (source): older-source-format 1.0
 fields-version-bad-rc (binary): rc-version-greater-than-expected-version 1.0+rc3 > 1.0 (consider using 1.0~rc3)

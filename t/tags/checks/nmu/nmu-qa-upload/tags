@@ -1,3 +1,4 @@
 nmu-qa-upload (source): qa-upload-has-incorrect-version-number 1.0+nmu1
 nmu-qa-upload (source): orphaned-package-should-not-have-uploaders
+nmu-qa-upload (source): older-source-format 1.0
 nmu-qa-upload (source): changelog-should-mention-qa

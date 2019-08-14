@@ -1,2 +1,3 @@
+fields-no-homepage (source): older-source-format 1.0
 fields-no-homepage (source): no-homepage-field
 fields-no-homepage (source): debian-watch-does-not-check-gpg-signature

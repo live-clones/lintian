@@ -9,6 +9,7 @@ debconf (source): template-uses-unsplit-choices debconf-test - debconf/testmulti
 debconf (source): stray-translated-debconf-templates debconf-test.templates.de
 debconf (source): patch-system-but-no-source-readme
 debconf (source): package-uses-deprecated-debhelper-compat-version 5
+debconf (source): older-source-format 1.0
 debconf (source): no-complete-debconf-translation
 debconf (source): newer-debconf-templates
 debconf (source): misnamed-po-file debian/po/sample-file.po

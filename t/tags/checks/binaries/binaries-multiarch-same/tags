@@ -1,3 +1,4 @@
 binaries-multiarch-same (source): pre-depends-directly-on-multiarch-support libbasic2
+binaries-multiarch-same (source): older-source-format 1.0
 libbasic2 (binary): symbols-file-missing-build-depends-package-field
 libbasic2 (binary): arch-dependent-file-not-in-arch-specific-directory usr/lib/libbasic.so.2

@@ -1,1 +1,2 @@
+debconf-missing-dep (source): older-source-format 1.0
 debconf-missing-dep (binary): missing-debconf-dependency

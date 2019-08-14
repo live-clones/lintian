@@ -1,2 +1,3 @@
+scripts-calls-init-script (source): older-source-format 1.0
 scripts-calls-init-script (binary): maintainer-script-calls-init-script-directly postinst:5
 scripts-calls-init-script (binary): init.d-script-needs-depends-on-lsb-base etc/init.d/self-invoke (line 12)

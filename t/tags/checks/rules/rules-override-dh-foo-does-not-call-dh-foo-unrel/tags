@@ -1,0 +1,1 @@
+rules-override-dh-foo-does-not-call-dh-foo-unrel (source): older-source-format 1.0

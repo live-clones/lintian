@@ -15,6 +15,7 @@ relations (source): package-has-a-duplicate-build-relation foo (= 3) [!amd64 !i3
 relations (source): package-depends-on-itself relations-multiple-libs recommends
 relations (source): package-depends-on-itself relations depends
 relations (source): ored-build-depends-on-obsolete-package build-depends-indep: gs
+relations (source): older-source-format 1.0
 relations (source): mail-transport-agent-dependency-does-not-specify-default-mta build-depends: mail-transport-agent, libc6-dev, findutils, foo (= 3) [!amd64 !i386], bar, arch-test1 [i386], arch-test2 [!i386], quilt (>= 0.40), perl, python-all-dev
 relations (source): invalid-arch-string-in-source-relation test [build-conflicts: bar [alpha test]]
 relations (source): build-depends-on-python-dev-with-no-arch-any

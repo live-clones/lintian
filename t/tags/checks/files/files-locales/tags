@@ -1,3 +1,4 @@
+files-locales (source): older-source-format 1.0
 files-locales (binary): unknown-locale-code zz
 files-locales (binary): incorrect-locale-code ind -> id
 files-locales (binary): incorrect-locale-code en_UK -> en_GB

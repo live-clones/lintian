@@ -1,1 +1,2 @@
+fields-depends-metapackage (source): older-source-format 1.0
 fields-depends-metapackage (source): build-depends-on-metapackage build-depends: xorg-dev

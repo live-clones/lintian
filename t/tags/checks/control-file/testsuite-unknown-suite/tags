@@ -1,2 +1,3 @@
 testsuite-unknown-suite (source): xs-testsuite-field-in-debian-control xs-testsuite
 testsuite-unknown-suite (source): unknown-testsuite golf
+testsuite-unknown-suite (source): older-source-format 1.0

@@ -1,2 +1,3 @@
+changelog-file-become-native (source): older-source-format 1.0
 changelog-file-become-native (source): debian-changelog-version-requires-debian-revision 1.0
 changelog-file-become-native (binary): latest-debian-changelog-entry-changed-to-native

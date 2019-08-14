@@ -1,2 +1,3 @@
+binaries-multiarch-wrong-dir (source): older-source-format 1.0
 binaries-multiarch-wrong-dir (binary): triplet-dir-and-architecture-mismatch usr/lib/x86_64-linux-gnu/ is for amd64
 binaries-multiarch-wrong-dir (binary): no-symbols-control-file usr/lib/x86_64-linux-gnu/libbasic.so.2

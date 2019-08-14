@@ -1,3 +1,4 @@
+conffiles-general (source): older-source-format 1.0
 conffiles-general (binary): relative-conffile etc/foo
 conffiles-general (binary): non-etc-file-marked-as-conffile var/cache/foo
 conffiles-general (binary): file-in-usr-marked-as-conffile usr/share/foo

@@ -1,2 +1,3 @@
+binaries-misplaced (source): older-source-format 1.0
 binaries-misplaced (binary): binary-in-etc etc/foo
 binaries-misplaced (binary): arch-independent-package-contains-binary-or-object etc/foo

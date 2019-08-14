@@ -1,6 +1,7 @@
 maintainer-scripts (source): wrong-debian-qa-group-name QA group <packages@qa.debian.org>
 maintainer-scripts (source): qa-upload-has-incorrect-version-number 7+dfsg-0.1
 maintainer-scripts (source): orphaned-package-should-not-have-uploaders
+maintainer-scripts (source): older-source-format 1.0
 maintainer-scripts (source): malformed-dm-upload-allowed Yes
 maintainer-scripts (source): hyphen-in-native-debian-changelog-version 7+dfsg-0.1
 maintainer-scripts (source): dm-upload-allowed-is-obsolete

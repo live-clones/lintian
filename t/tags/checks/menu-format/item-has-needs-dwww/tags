@@ -1,3 +1,4 @@
+item-has-needs-dwww (source): older-source-format 1.0
 item-has-needs-dwww (binary): possible-bashism-in-maintainer-script postrm:3 'if type '
 item-has-needs-dwww (binary): menu-item-needs-dwww usr/share/menu/test-menu:5
 item-has-needs-dwww (binary): menu-command-not-in-package usr/share/menu/test-menu:5 usr/bin/test-script

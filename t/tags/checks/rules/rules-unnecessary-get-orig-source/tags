@@ -1,1 +1,2 @@
+rules-unnecessary-get-orig-source (source): older-source-format 1.0
 rules-unnecessary-get-orig-source (source): debian-rules-contains-unnecessary-get-orig-source-target

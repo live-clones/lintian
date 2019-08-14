@@ -1,3 +1,4 @@
+files-symlinks (source): older-source-format 1.0
 files-symlinks (binary): symlink-should-be-relative usr/share/lintian/data/data-file.old /usr/share/lintian/data/data-file
 files-symlinks (binary): symlink-should-be-absolute usr/share/lintian/data/pkg-old.conf ../../../../etc/lintian/pkg.conf
 files-symlinks (binary): symlink-is-self-recursive usr/share/lintian/data/self-recursive /

@@ -1,2 +1,3 @@
+manpage-not-compressed-with-gzip (source): older-source-format 1.0
 manpage-not-compressed-with-gzip (binary): manpage-not-compressed-with-gzip usr/share/man/man1/pretend-compress.1.gz
 manpage-not-compressed-with-gzip (binary): gz-file-not-gzip usr/share/man/man1/pretend-compress.1.gz

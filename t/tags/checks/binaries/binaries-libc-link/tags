@@ -1,3 +1,4 @@
+binaries-libc-link (source): older-source-format 1.0
 binaries-libc-link (binary): shared-lib-without-dependency-information usr/lib/basic/libbasic-nodeps
 binaries-libc-link (binary): program-not-linked-against-libc usr/bin/basic
 binaries-libc-link (binary): library-not-linked-against-libc usr/lib/basic/libbasic-nolibc

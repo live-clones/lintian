@@ -1,2 +1,3 @@
+cruft-non-free-md5sums (source): older-source-format 1.0
 cruft-non-free-md5sums (source): license-problem-md5sum-non-free-file data-non-free-lintian-files usual name is data-non-free-lintian-files. This is part of lintian test suite, used for testing this tag See also http://lintian.debian.org.
 cruft-non-free-md5sums (source): license-problem-md5sum-non-distributable-file data-forbidden-lintian-files usual name is data-forbidden-lintian-files. This is part of lintian test suite, used for testing this tag See also http://lintian.debian.org.

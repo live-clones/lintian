@@ -1,3 +1,4 @@
+ocaml-general (source): older-source-format 1.0
 libocaml-general-ocaml-dev (binary): ocaml-stray-cmo usr/lib/ocaml/bleh.cma
 libocaml-general-ocaml-dev (binary): ocaml-meta-without-suggesting-findlib
 libocaml-general-ocaml-dev (binary): ocaml-dev-file-not-in-usr-lib-ocaml 1 file in usr/lib

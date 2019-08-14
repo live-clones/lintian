@@ -1,3 +1,4 @@
+whitespace-after-continuation-character (source): older-source-format 1.0
 whitespace-after-continuation-character (binary): whitespace-after-continuation-character usr/share/menu/test-menu:5
 whitespace-after-continuation-character (binary): possible-bashism-in-maintainer-script postrm:3 'if type '
 whitespace-after-continuation-character (binary): pkg-not-in-package-test unknown-menu-tag usr/share/menu/test-menu

@@ -2,3 +2,4 @@ control-file-hardcoded-libc (source): package-depends-on-hardcoded-libc control-
 control-file-hardcoded-libc (source): package-depends-on-hardcoded-libc control-file-hardcoded-libc recommends
 control-file-hardcoded-libc (source): package-depends-on-hardcoded-libc control-file-hardcoded-libc pre-depends
 control-file-hardcoded-libc (source): package-depends-on-hardcoded-libc control-file-hardcoded-libc depends
+control-file-hardcoded-libc (source): older-source-format 1.0

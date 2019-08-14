@@ -1,3 +1,4 @@
+executable-menu-file (source): older-source-format 1.0
 executable-menu-file (binary): possible-bashism-in-maintainer-script postrm:3 'if type '
 executable-menu-file (binary): executable-not-elf-or-script usr/share/menu/test-menu
 executable-menu-file (binary): executable-menu-file usr/share/menu/test-menu 0755

@@ -1,2 +1,3 @@
 debhelper-internal-files (source): temporary-debhelper-file package.postinst.debhelper
 debhelper-internal-files (source): temporary-debhelper-file package.debhelper.log
+debhelper-internal-files (source): older-source-format 1.0

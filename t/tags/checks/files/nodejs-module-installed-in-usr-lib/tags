@@ -1,2 +1,3 @@
+nodejs-module-installed-in-usr-lib (source): older-source-format 1.0
 nodejs-module-installed-in-usr-lib (binary): nodejs-module-installed-in-usr-lib usr/lib/nodejs/module-installed-in-usr-lib/test.js
 nodejs-module-installed-in-usr-lib (binary): nodejs-module-installed-in-usr-lib usr/lib/nodejs/module-installed-in-usr-lib/package.json

@@ -1,3 +1,4 @@
+rules-missing-targets-with-known-includes (source): older-source-format 1.0
 rules-missing-targets-with-known-includes (source): debian-rules-missing-required-target binary-indep
 rules-missing-targets-with-known-includes (source): debian-rules-missing-required-target binary-arch
 rules-missing-targets-with-known-includes (source): debian-rules-missing-recommended-target build-indep

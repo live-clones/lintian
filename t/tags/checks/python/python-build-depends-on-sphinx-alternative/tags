@@ -1,1 +1,2 @@
+python-build-depends-on-sphinx-alternative (source): older-source-format 1.0
 python-build-depends-on-sphinx-alternative (source): alternatively-build-depends-on-python-sphinx-and-python3-sphinx

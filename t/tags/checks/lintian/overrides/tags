@@ -1,3 +1,4 @@
+overrides (source): older-source-format 1.0
 overrides (binary): renamed-tag package-install-apt-sources => package-installs-apt-sources at line 18
 overrides (binary): FSSTND-dir-in-manual-page usr/share/man/man1/foo.1.gz:14 /usr/adm/
 overrides (binary): FSSTND-dir-in-manual-page usr/share/man/man1/foo.1.gz:13 /usr/man/
