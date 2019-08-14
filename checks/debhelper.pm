@@ -174,9 +174,6 @@ sub run {
                     }
                 }
             }
-            if (m/--(after|before|until|remaining)/) {
-                tag 'dh-manual-sequence-control-obsolete', 'dh', $1;
-            }
         } elsif (m,^include\s+/usr/share/cdbs/1/rules/debhelper.mk,
             or m,^include\s+/usr/share/R/debian/r-cran.mk,o) {
             $build_systems{'cdbs-with-debhelper.mk'} = 1;
