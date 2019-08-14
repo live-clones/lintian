@@ -2,6 +2,7 @@ Skeleton: upload-native
 Testname: lintian-no-override
 Sequence: 1500
 Version: 1.0
+Source-Format: 3.0 (native)
 Description: Test no-override option
 Options: --no-override
 Match-Strategy: literal
