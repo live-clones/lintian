@@ -97,7 +97,7 @@ sub run {
     #     $ENV{'PERL5OPT'} = "${p5opt} ${coverage_arg}";
     # }
 
-    my $loop = IO::Async::Loop->really_new;
+    my $loop = IO::Async::Loop->new;
     my $future = $loop->new_future;
     my $process = IO::Async::Process->new(
 
