@@ -1,5 +1,4 @@
 Testname: lintian-output-xml
-Sequence: 2500
 Skeleton: upload-non-native
 Version: 1.0+dsfg-1.1
 Source-Format: 3.0 (quilt)

@@ -1,5 +1,4 @@
 Testname: basic-non-native-with-epoch
-Sequence: 0001
 Version: 1:1.0-1
 Source-Format: 3.0 (quilt)
 Skeleton: upload-non-native

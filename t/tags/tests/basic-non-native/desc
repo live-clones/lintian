@@ -1,5 +1,4 @@
 Testname: basic-non-native
-Sequence: 0001
 Skeleton: upload-non-native
 Version: 1.0-1
 Source-Format: 3.0 (quilt)

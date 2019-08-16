@@ -1,6 +1,5 @@
 Skeleton: upload-native
 Testname: strings-elf-detection
-Sequence: 4500
 Version: 1.0
 Source-Format: 3.0 (native)
 Package-Architecture: any

@@ -1,6 +1,5 @@
 Skeleton: upload-native
 Testname: runtests-arch-amd64
-Sequence: 0700
 Version: 1.0
 Source-Format: 3.0 (native)
 Test-Architectures: amd64

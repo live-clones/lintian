@@ -1,6 +1,5 @@
 Skeleton: upload-native
 Testname: basic-3.0-native
-Sequence: 0001
 Version: 1.0
 Source-Format: 3.0 (native)
 Description: Basic test of a native 3.0 package

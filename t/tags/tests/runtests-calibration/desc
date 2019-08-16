@@ -1,5 +1,4 @@
 Skeleton: upload-native
 Testname: runtests-calibration
-Sequence: 0700
 Version: 1.0
 Description: Test calibration support

@@ -1,7 +1,6 @@
 Skeleton: upload-native
 Testname: legacy-fields
 Source: fields
-Sequence: 9999
 Version: 1.5-.3
 Description: Legacy test "fields"
 Check: standards-version

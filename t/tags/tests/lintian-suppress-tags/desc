@@ -1,6 +1,5 @@
 Skeleton: upload-native
 Testname: lintian-suppress-tags
-Sequence: 2500
 Version: 1.0
 Source-Format: 3.0 (native)
 Description: Test tag suppression
