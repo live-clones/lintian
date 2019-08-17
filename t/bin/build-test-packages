@@ -239,7 +239,7 @@ my $prepare = IO::Async::Function->new(
 my $loop = IO::Async::Loop->new;
 $loop->add($prepare);
 
-my @preptasks = map {$prepare->call(args => [$_])} @prepqueue;
+my @preptasks = map {$prepare->call(args => [$_])} sort @prepqueue;
 
 my $allprepared = Future->needs_all(@preptasks);
 
@@ -312,7 +312,7 @@ my $build = IO::Async::Function->new(
 
 $loop->add($build);
 
-my @buildtasks = map {$build->call(args => [$_])} @workpaths;
+my @buildtasks = map {$build->call(args => [$_])} sort @workpaths;
 
 my $allbuilt = Future->needs_all(@buildtasks);
 $allbuilt->get;
