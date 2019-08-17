@@ -1,5 +1,5 @@
 Template-Sets:
- . (changes-builder),
+ . (changes-simple-filler),
  . (test-runner-tags),
  . (lintian-invocation)
 Fill-Targets:
