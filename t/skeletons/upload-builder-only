@@ -1,6 +1,6 @@
 Type: non-native
 Template-Sets:
- . (tests-make-builder),
+ . (upload-make-builder),
  . (test-runner-tags),
  . (lintian-invocation)
 Fill-Targets:

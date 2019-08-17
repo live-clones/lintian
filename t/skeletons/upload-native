@@ -1,7 +1,7 @@
 Type: native
 Template-Sets:
  debian (debian-native),
- . (tests-make-builder),
+ . (upload-make-builder),
  . (test-runner-tags),
  . (lintian-invocation)
 Fill-Targets:
