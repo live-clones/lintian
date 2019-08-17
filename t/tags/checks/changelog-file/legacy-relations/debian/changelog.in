@@ -1,4 +1,4 @@
-relations (5) unstable; urgency=low
+relations ({$version}) {$distribution}; urgency=low
 
   * I'm orphaning this package -- I'm sick of it: it's completely broken,
     lintian complains all over the place.
