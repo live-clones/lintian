@@ -227,7 +227,9 @@ my $prepare = IO::Async::Function->new(
 
             my $message = "Preparation failed for $specpath";
             $message .= ": $error" if length $error;
-            die $message;
+
+          # print log and warn on error (do not die; will mess up Ia::Function)
+            warn $message;
         };
 
         return $specpath;
@@ -239,6 +241,7 @@ my $prepare = IO::Async::Function->new(
 my $loop = IO::Async::Loop->new;
 $loop->add($prepare);
 
+$SIG{INT} = sub { $prepare->stop; die "Caught a sigint $!" };
 my @preptasks = map {$prepare->call(args => [$_])} sort @prepqueue;
 
 my $allprepared = Future->needs_all(@preptasks);
@@ -298,10 +301,10 @@ my $build = IO::Async::Function->new(
         # add error if there was one
         path($betterlogpath)->append_utf8($error) if length $error;
 
-        # print log and die on error
+        # print log and warn on error (do not die; will mess up Ia::Function)
         if ($error) {
             print $log if length $log;
-            die "Builder died for $path: $error";
+            warn "Builder died for $path: $error";
         }
 
         return $path;
@@ -312,6 +315,7 @@ my $build = IO::Async::Function->new(
 
 $loop->add($build);
 
+$SIG{INT} = sub { $build->stop; die "Caught a sigint $!" };
 my @buildtasks = map {$build->call(args => [$_])} sort @workpaths;
 
 my $allbuilt = Future->needs_all(@buildtasks);
