@@ -1,4 +1,4 @@
-debconf (1~rc1) unstable; urgency=low
+debconf ({$version}) {$distribution}; urgency=low
 
   * Initial Release
   * Changelog line with exactly 80 characters which tests the line-too-long tag.
