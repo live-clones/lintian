@@ -1,4 +1,4 @@
-etcfiles (1) unstable; urgency=low
+etcfiles ({$version}) {$distribution}; urgency=low
 
   * Acknowledge NMU (Closes: #123456).
   * initial setup
