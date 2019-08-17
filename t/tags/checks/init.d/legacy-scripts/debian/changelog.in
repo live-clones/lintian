@@ -1,4 +1,4 @@
-scripts (6ds-1ubuntu0.5.10.1) unstable; urgency=low
+scripts ({$version}) {$distribution}; urgency=low
 
   * I'm also not able to write my name.
   * Added a script in /etc/Xsession.d
