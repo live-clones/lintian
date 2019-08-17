@@ -41,6 +41,7 @@ gbx            => /usr/bin, gambas-runtime
 gbx2           => /usr/bin, gambas2-runtime
 gforth         => /usr/bin
 gjs            => /usr/bin
+gjs-console    => /usr/bin, gjs
 gnuplot        => /usr/bin
 gosh           => /usr/bin, gauche
 hhvm           => /usr/bin
