@@ -1,4 +1,4 @@
-generic-dh-make-2005 (1-1) unstable; urgency=low
+generic-dh-make-2005 ({$version}) {$distribution}; urgency=low
 
   * Initial release Closes: #nnnn  (nnnn is the bug number of your ITP)
 
