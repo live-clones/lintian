@@ -1,6 +1,5 @@
-Skeleton: source
+Skeleton: source-non-native
 Testname: magic-architecture-srcpkg-wrong
 Version: 1.0-1
-Type: non-native
 Description: Test package for "any" plus specific arch in .dscs
 Check: fields
