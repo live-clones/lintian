@@ -1,6 +1,10 @@
 lintian (2.18.0+git) UNRELEASED; urgency=medium
 
+  [ Chris Lamb ]
   * WIP
+
+  [ Paul Wise ]
+  * Refer to the HTML version of the Debian Policy Upgrading checklist
 
  -- Chris Lamb <lamby@debian.org>  Wed, 14 Aug 2019 09:19:42 -0700
 
