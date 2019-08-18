@@ -1,7 +1,0 @@
-Tag: source-field-does-not-match-pkg-name
-Severity: serious
-Certainty: certain
-Check: fields
-Info: The source package's filename is not the same as the name given
- in its Source field. The Source field should name the package.
-Ref: policy 5.6.1

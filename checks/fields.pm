@@ -555,7 +555,7 @@ sub run {
             my ($n) = ($base =~ m/^([^_]+)_/o);
 
             if ($source ne $n) {
-                tag 'source-field-does-not-match-pkg-name', "$source != $n";
+                die "Source field does not match package name $source != $n";
             }
             if ($source !~ /^[a-z0-9][-+\.a-z0-9]+\z/) {
                 tag 'source-field-malformed', $source;
