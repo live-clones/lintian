@@ -6,6 +6,5 @@ Template-Sets:
  . (lintian-invocation)
 Fill-Targets:
  debian (debian-packaging),
- orig/debian (debian-packaging),
  . (make-builder),
  . (lintian-invocation)
