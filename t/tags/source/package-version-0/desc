@@ -1,4 +1,4 @@
-Skeleton: source
+Skeleton: source-native
 Testname: package-version-0
 Version: 0
 Description: Test a package with version 0

@@ -1,4 +1,4 @@
-Skeleton: source
+Skeleton: source-native
 Testname: testsuite-inconsistent-field
 Version: 1
 Description: Test a source with inconsistent Testsuite field
