@@ -2,7 +2,7 @@
 # be overridden.  It is based on the data file retrieved from
 # https://ftp-master.debian.org/static/lintian.tags
 #
-# Last updated: 2018-09-17
+# Last updated: 2019-08-17
 
 FSSTND-dir-in-usr
 FSSTND-dir-in-var
@@ -65,7 +65,6 @@ package-installs-python-bytecode
 package-not-lowercase
 package-uses-local-diversion
 section-is-dh_make-template
-source-field-does-not-match-pkg-name
 symlink-has-too-many-up-segments
 too-many-architectures
 uploader-address-is-on-localhost
