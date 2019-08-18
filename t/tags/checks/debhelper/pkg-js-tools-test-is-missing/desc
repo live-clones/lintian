@@ -2,5 +2,5 @@ Testname: pkg-js-tools-test-is-missing
 Skeleton: upload-native
 Version: 1.0
 Description: Test if debian/tests/pkg-js/test exists
-Extra-Build-Depends: pkg-js-tools, nodejs (>= 8.11.1)
+Extra-Build-Depends: pkg-js-tools (>= 0.9.6~), nodejs (>= 8.11.1)
 Check: debhelper
