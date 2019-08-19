@@ -1,5 +1,6 @@
 Testname: patch-systems-no-patch-system
 Skeleton: upload-non-native
+Source-Format: 1.0
 Version: 1.0-1
 Description: Diagnose lack of a patch system
 Options: --pedantic
