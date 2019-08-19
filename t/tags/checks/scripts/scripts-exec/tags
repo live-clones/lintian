@@ -1,3 +1,2 @@
-scripts-exec (source): older-source-format 1.0
 scripts-exec (binary): script-not-executable usr/bin/02-no-exec-script
 scripts-exec (binary): executable-not-elf-or-script usr/bin/04-not-a-script

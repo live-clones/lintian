@@ -1,2 +1,1 @@
-watch-file-no-version (source): older-source-format 1.0
 watch-file-no-version (source): debian-watch-file-missing-version

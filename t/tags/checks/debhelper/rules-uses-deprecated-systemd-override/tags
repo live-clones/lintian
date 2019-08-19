@@ -1,3 +1,2 @@
-rules-uses-deprecated-systemd-override (source): older-source-format 1.0
 rules-uses-deprecated-systemd-override (source): debian-rules-uses-deprecated-systemd-override override_dh_systemd_start-arch (line 12)
 rules-uses-deprecated-systemd-override (source): debian-rules-uses-deprecated-systemd-override override_dh_systemd_enable (line 6)

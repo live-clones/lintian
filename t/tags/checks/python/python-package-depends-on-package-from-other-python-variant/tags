@@ -1,4 +1,3 @@
-python-package-depends-on-package-from-other-python-variant (source): older-source-format 1.0
 python-package-depends-on-package-from-other-python-variant (source): intra-source-package-circular-dependency python-foo python2-foo python3-foo
 python3-foo (binary): python-package-depends-on-package-from-other-python-variant Depends: python2-foo
 python3-foo (binary): python-package-depends-on-package-from-other-python-variant Depends: python2-bar

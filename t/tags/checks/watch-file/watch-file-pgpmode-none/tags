@@ -1,2 +1,1 @@
-watch-file-pgpmode-none (source): older-source-format 1.0
 watch-file-pgpmode-none (source): debian-watch-does-not-check-gpg-signature

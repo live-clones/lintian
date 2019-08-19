@@ -1,4 +1,3 @@
-scripts-control-interpreters (source): older-source-format 1.0
 scripts-control-interpreters-unknown (binary): unknown-control-interpreter control/postinst #!/usr/bin/unknown
 scripts-control-interpreters-python (binary): unusual-control-interpreter control/preinst #!/usr/bin/python
 scripts-control-interpreters-python (binary): unusual-control-interpreter control/postinst #!/usr/bin/python

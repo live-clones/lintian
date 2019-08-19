@@ -1,2 +1,1 @@
-watch-file-native (source): older-source-format 1.0
 watch-file-native (source): debian-watch-file-in-native-package

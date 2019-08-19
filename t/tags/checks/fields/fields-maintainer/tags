@@ -1,4 +1,3 @@
-fields-maintainer (source): older-source-format 1.0
 fields-maintainer (source): maintainer-address-malformed Mrs. Localhost<user@localhost>
 fields-maintainer (source): maintainer-address-looks-weird Mrs. Localhost<user@localhost>
 fields-maintainer (source): maintainer-address-is-on-localhost Mrs. Localhost<user@localhost>

@@ -1,4 +1,3 @@
-fields-general (source): older-source-format 1.0
 fields-general (source): debian-control-has-obsolete-dbg-package fields-general-dbg
 fields-general (source): dbg-package-missing-depends fields-general-dbg
 fields-general-debug (binary): wrong-section-according-to-package-name fields-general-debug

@@ -1,2 +1,1 @@
-debhelper-dh-with-python3 (source): older-source-format 1.0
 debhelper-dh-with-python3 (source): missing-build-dependency-for-dh-addon python3 => dh-python

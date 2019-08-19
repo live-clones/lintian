@@ -1,3 +1,2 @@
 debhelper-compat-experimental (source): package-uses-experimental-debhelper-compat-version 13
 debhelper-compat-experimental (source): package-needs-versioned-debhelper-build-depends 13
-debhelper-compat-experimental (source): older-source-format 1.0

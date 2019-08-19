@@ -1,2 +1,1 @@
-scripts-maintainer-script-set-e (source): older-source-format 1.0
 scripts-maintainer-script-set-e (binary): maintainer-script-without-set-e postinst

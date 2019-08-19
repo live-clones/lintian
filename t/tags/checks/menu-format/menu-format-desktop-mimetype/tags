@@ -1,2 +1,1 @@
-menu-format-desktop-mimetype (source): older-source-format 1.0
 menu-mime (binary): desktop-mime-but-no-exec-code usr/share/applications/foo.desktop

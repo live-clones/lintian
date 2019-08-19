@@ -1,3 +1,2 @@
 fields-qa-maint-name (source): wrong-debian-qa-group-name Debian QA <packages@qa.debian.org>
-fields-qa-maint-name (source): older-source-format 1.0
 fields-qa-maint-name (binary): wrong-debian-qa-group-name Debian QA <packages@qa.debian.org>

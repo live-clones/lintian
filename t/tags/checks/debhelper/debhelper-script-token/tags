@@ -1,2 +1,1 @@
-debhelper-script-token (source): older-source-format 1.0
 debhelper-script-token (source): maintainer-script-lacks-debhelper-token debian/postinst

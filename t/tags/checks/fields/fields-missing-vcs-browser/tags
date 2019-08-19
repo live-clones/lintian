@@ -1,2 +1,1 @@
-fields-missing-vcs-browser (source): older-source-format 1.0
 fields-missing-vcs-browser (source): missing-vcs-browser-field vcs-git https://salsa.debian.org/project/repo.git

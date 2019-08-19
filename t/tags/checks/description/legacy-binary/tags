@@ -1,7 +1,6 @@
 binary (source): xs-vcs-field-in-debian-control xs-vcs-browser
 binary (source): vcs-field-uses-insecure-uri vcs-svn http://svn.wolffelaar.nl/lintian/trunk
 binary (source): vcs-field-uses-insecure-uri vcs-browser http://svn.wolffelaar.nl/lintian/trunk
-binary (source): older-source-format 1.0
 binary (source): not-binnmuable-all-depends-any binary-data -> binary
 binary (source): maintainer-upload-has-incorrect-version-number 4-1.1
 binary (source): intra-source-package-circular-dependency binary binary-data

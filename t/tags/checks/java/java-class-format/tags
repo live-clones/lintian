@@ -1,3 +1,2 @@
-java-class-format (source): older-source-format 1.0
 libtest-java (binary): unknown-java-class-version usr/share/java/testa-1.0.jar (org/debian/lintian/TestA.class -> 42)
 libtest-java (binary): incompatible-java-bytecode-format Java12 version (Class format: 56)

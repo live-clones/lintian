@@ -1,2 +1,1 @@
-manpage-wrong-extension (source): older-source-format 1.0
 manpage-wrong-extension (binary): manpage-has-wrong-extension usr/share/man/man1/example.man.gz

@@ -1,2 +1,1 @@
-fields-font-not-multiarch-foreign (source): older-source-format 1.0
 fonts-fields-font-not-multiarch-foreign (binary): font-package-not-multi-arch-foreign

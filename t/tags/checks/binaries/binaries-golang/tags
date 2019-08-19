@@ -1,3 +1,2 @@
-binaries-golang (source): older-source-format 1.0
 binaries-golang (source): missing-xs-go-import-path-for-golang-package
 binaries-golang (source): missing-built-using-field-for-golang-package binaries-golang

@@ -1,2 +1,1 @@
-init.d-symlink (source): older-source-format 1.0
 init.d-symlink (binary): upstart-job-in-etc-init.d-not-registered-via-update-rc.d etc/init.d/lintian-unreg

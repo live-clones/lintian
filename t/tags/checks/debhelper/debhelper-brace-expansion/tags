@@ -1,4 +1,3 @@
-debhelper-brace-expansion (source): older-source-format 1.0
 debhelper-brace-expansion (source): brace-expansion-in-debhelper-config-file debian/debhelper-brace-problem-5.install {,foo,} (line 1)
 debhelper-brace-expansion (source): brace-expansion-in-debhelper-config-file debian/debhelper-brace-problem-4.install {,,foo} (line 1)
 debhelper-brace-expansion (source): brace-expansion-in-debhelper-config-file debian/debhelper-brace-problem-3.install {foo,} (line 1)

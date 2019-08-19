@@ -1,4 +1,3 @@
-filenames (source): older-source-format 1.0
 filenames (source): no-section-field-for-source
 filenames (source): hyphen-in-native-debian-changelog-version 12-0.1
 filenames (source): diff-contains-svn-control-dir .svn

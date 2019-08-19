@@ -2,7 +2,6 @@ generic-dh-make-2008 (source): upstream-metadata-file-is-missing
 generic-dh-make-2008 (source): testsuite-autopkgtest-missing
 generic-dh-make-2008 (source): superfluous-clutter-in-homepage <insert the upstream URL, if relevant>
 generic-dh-make-2008 (source): package-uses-deprecated-debhelper-compat-version 7
-generic-dh-make-2008 (source): older-source-format 1.0
 generic-dh-make-2008 (source): no-dep5-copyright
 generic-dh-make-2008 (source): missing-debian-source-format
 generic-dh-make-2008 (source): file-contains-trailing-whitespace debian/rules (line 63)

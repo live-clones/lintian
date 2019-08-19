@@ -3,4 +3,3 @@ fields-uploaders (source): uploader-address-malformed Malformed Email <@ddress@m
 fields-uploaders (source): uploader-address-malformed Doris Double-Email <Doris Double-Email <doris@demail.com>>
 fields-uploaders (source): uploader-address-looks-weird Mr. Weird<no-space@somewhere.com>
 fields-uploaders (source): uploader-address-is-on-localhost Mrs. Localhost <user@localhost>
-fields-uploaders (source): older-source-format 1.0

@@ -1,4 +1,3 @@
-files-general (source): older-source-format 1.0
 files-general (binary): windows-devel-file-in-package usr/lib/foo/foo.vcproj
 files-general (binary): stray-directory-in-manpage-directory usr/share/man/man1/random/
 files-general (binary): star-file usr/share/foo/*

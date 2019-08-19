@@ -1,4 +1,3 @@
-apache2-webapplications-general (source): older-source-format 1.0
 phpmyfoo3 (binary): non-standard-apache2-configuration-name phpmyfoo.conf != phpmyfoo3.conf
 phpmyfoo3 (binary): apache2-unsupported-dependency etc/apache2/conf.d/phpmyfoo.conf Conflicts
 phpmyfoo3 (binary): apache2-unparsable-dependency etc/apache2/conf.d/phpmyfoo.conf (line 1) bar2.conf

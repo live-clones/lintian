@@ -1,4 +1,3 @@
-systemd-service-file-pidfile-refers-to-var-run (source): older-source-format 1.0
 systemd-service-file-pidfile-refers-to-var-run-good (binary): systemd-service-file-pidfile-refers-to-var-run lib/systemd/system/systemd-service-file-pidfile-refers-to-var-run-good.service /var/run/$NAME.pid
 systemd-service-file-pidfile-refers-to-var-run-good (binary): package-supports-alternative-init-but-no-init.d-script lib/systemd/system/systemd-service-file-pidfile-refers-to-var-run-good.service
 systemd-service-file-pidfile-refers-to-var-run-bad (binary): package-supports-alternative-init-but-no-init.d-script lib/systemd/system/systemd-service-file-pidfile-refers-to-var-run-bad.service

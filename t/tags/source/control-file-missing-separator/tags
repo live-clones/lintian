@@ -1,3 +1,2 @@
-control-file-missing-separator (source): older-source-format 1.0
 control-file-missing-separator (source): missing-separator-between-items in control-file-missing-separator suggests field between 'p1' and 'p2'
 control-file-missing-separator (source): missing-separator-between-items in control-file-missing-separator depends field between 'foo (>= 1)' and 'baz (<< 2)'

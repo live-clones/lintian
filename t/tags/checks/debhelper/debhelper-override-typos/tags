@@ -11,6 +11,5 @@ debhelper-override-typos (source): typo-in-debhelper-override-target override_dh
 debhelper-override-typos (source): typo-in-debhelper-override-target override_dh_instakk -> override_dh_install (line 8)
 debhelper-override-typos (source): typo-in-debhelper-override-target override_dh_instakk -> override_dh_install (line 14)
 debhelper-override-typos (source): typo-in-debhelper-override-target override_dh_build -> override_dh_auto_build (line 22)
-debhelper-override-typos (source): older-source-format 1.0
 debhelper-override-typos (source): excessive-debhelper-overrides 20
 debhelper-override-typos (source): debian-rules-uses-deprecated-systemd-override override_dh_systemd_enable (line 32)

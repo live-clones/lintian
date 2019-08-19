@@ -1,6 +1,5 @@
 generic-dh-make-2005 (source): testsuite-autopkgtest-missing
 generic-dh-make-2005 (source): package-uses-deprecated-debhelper-compat-version 5
-generic-dh-make-2005 (source): older-source-format 1.0
 generic-dh-make-2005 (source): missing-debian-source-format
 generic-dh-make-2005 (source): dh-clean-k-is-deprecated
 generic-dh-make-2005 (source): debian-watch-file-is-missing

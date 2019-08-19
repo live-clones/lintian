@@ -1,4 +1,3 @@
-scripts-udevadm-called-without-guard (source): older-source-format 1.0
 scripts-udevadm-called-without-guard (binary): udevadm-called-without-guard prerm:7
 scripts-udevadm-called-without-guard (binary): udevadm-called-without-guard postrm:7
 scripts-udevadm-called-without-guard (binary): udevadm-called-without-guard postinst:7

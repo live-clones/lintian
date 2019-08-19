@@ -1,4 +1,3 @@
-control-file-duplicate (source): older-source-format 1.0
 control-file-duplicate (source): duplicate-in-relation-field in source build-depends: debhelper (>= 12~), debhelper
 control-file-duplicate (source): duplicate-in-relation-field in source build-depends-indep: foobar, foobar
 control-file-duplicate (source): duplicate-in-relation-field in source build-conflicts: bar, bar [i386]

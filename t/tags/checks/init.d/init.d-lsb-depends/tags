@@ -1,2 +1,1 @@
-init.d-lsb-depends (source): older-source-format 1.0
 init.d-lsb-depends (binary): init.d-script-needs-depends-on-lsb-base etc/init.d/init.d-lsb-depends (line 30)

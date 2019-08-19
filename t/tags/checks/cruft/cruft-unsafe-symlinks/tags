@@ -1,3 +1,2 @@
 cruft-unsafe-symlinks (source): source-contains-unsafe-symlink bad-symlinks/relative-escape
 cruft-unsafe-symlinks (source): source-contains-unsafe-symlink bad-symlinks/absolute-escape
-cruft-unsafe-symlinks (source): older-source-format 1.0

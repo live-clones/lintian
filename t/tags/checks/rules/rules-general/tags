@@ -1,4 +1,3 @@
-rules-general (source): older-source-format 1.0
 rules-general (source): debian-rules-should-not-use-underscore-variable line 15
 rules-general (source): debian-rules-should-not-use-pwd line 14
 rules-general (source): debian-rules-should-not-use-DH_EXTRA_ADDONS systemd (line 7)

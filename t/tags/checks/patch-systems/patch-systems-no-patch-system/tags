@@ -1,3 +1,2 @@
-patch-systems-no-patch-system (source): older-source-format 1.0
 patch-systems-no-patch-system (source): direct-changes-in-diff-but-no-patch-system README
 patch-systems-no-patch-system (source): debian-watch-does-not-check-gpg-signature

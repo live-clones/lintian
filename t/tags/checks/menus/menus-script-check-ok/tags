@@ -1,4 +1,3 @@
-menus-script-check-ok (source): older-source-format 1.0
 menus-script-check-ok (binary): prerm-has-useless-call-to-install-docs
 menus-script-check-ok (binary): postinst-has-useless-call-to-install-docs
 menus-script-check-ok (binary): possible-bashism-in-maintainer-script postrm:3 'if type '

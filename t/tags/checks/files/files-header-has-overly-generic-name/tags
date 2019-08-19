@@ -1,3 +1,2 @@
-files-header-has-overly-generic-name (source): older-source-format 1.0
 files-header-has-overly-generic-name (binary): header-has-overly-generic-name usr/include/x86_64-linux-gnu/util.h
 files-header-has-overly-generic-name (binary): header-has-overly-generic-name usr/include/util.h

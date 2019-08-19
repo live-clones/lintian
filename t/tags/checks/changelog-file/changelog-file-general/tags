@@ -1,4 +1,3 @@
-changelog-file-general (source): older-source-format 1.0
 changelog-file-general (source): latest-debian-changelog-entry-without-new-date
 changelog-file-general (binary): possible-missing-colon-in-closes Closes #555555
 changelog-file-general (binary): misspelled-closes-bug #666666

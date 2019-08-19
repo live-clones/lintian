@@ -1,3 +1,2 @@
 debconf-syntax-error (source): syntax-error-in-debconf-template templates: syntax error at line 3: Cannot parse line "Description whoops, I forgot a colon"
-debconf-syntax-error (source): older-source-format 1.0
 debconf-syntax-error (binary): syntax-error-in-debconf-template templates: syntax error at line 3: Cannot parse line "Description whoops, I forgot a colon"

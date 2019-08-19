@@ -1,2 +1,1 @@
-debhelper-excessive-overrides (source): older-source-format 1.0
 debhelper-excessive-overrides (source): excessive-debhelper-overrides 21

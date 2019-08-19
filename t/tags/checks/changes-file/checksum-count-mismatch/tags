@@ -1,2 +1,1 @@
-checksum-count-mismatch (source): older-source-format 1.0
 checksum-count-mismatch (changes): checksum-count-mismatch-in-changes-file 3 sha256 checksums != 4 files

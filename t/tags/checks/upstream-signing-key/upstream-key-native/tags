@@ -1,2 +1,1 @@
 upstream-key-native (source): public-upstream-key-in-native-package upstream/signing-key.asc
-upstream-key-native (source): older-source-format 1.0

@@ -1,3 +1,2 @@
 debhelper-autoreconf-build-depends (source): useless-autoreconf-build-depends dh-autoreconf
 debhelper-autoreconf-build-depends (source): useless-autoreconf-build-depends autotools-dev
-debhelper-autoreconf-build-depends (source): older-source-format 1.0

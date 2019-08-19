@@ -1,7 +1,6 @@
 debug (source): version-substvar-for-external-package libhello0-dbg -> libhello
 debug (source): timewarp-standards-version (2006-04-04 < 2006-04-26)
 debug (source): package-uses-deprecated-debhelper-compat-version 5
-debug (source): older-source-format 1.0
 debug (source): dh-clean-k-is-deprecated
 debug (source): debian-control-has-obsolete-dbg-package libhello0-dbg
 debug (source): debian-control-has-obsolete-dbg-package hi-dbg

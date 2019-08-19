@@ -1,3 +1,2 @@
-changelog-distribution-does-not-match-changes-file (source): older-source-format 1.0
 changelog-distribution-does-not-match-changes-file (changes): distribution-and-experimental-mismatch unstable
 changelog-distribution-does-not-match-changes-file (binary): changelog-distribution-does-not-match-changes-file (experimental != unstable)

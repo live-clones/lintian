@@ -1,4 +1,3 @@
-scripts-missing-dep (source): older-source-format 1.0
 scripts-missing-dep (binary): wish-script-but-no-wish-dep usr/bin/wish-script #!/usr/bin/wish
 scripts-missing-dep (binary): tclsh-script-but-no-tclsh-dep usr/bin/tclsh-script #!/usr/bin/tclsh
 scripts-missing-dep (binary): ruby-script-but-no-ruby-dep usr/bin/ruby-script #!/usr/bin/ruby

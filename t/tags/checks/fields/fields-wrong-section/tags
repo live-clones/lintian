@@ -1,4 +1,3 @@
-fields-wrong-section (source): older-source-format 1.0
 fields-wrong-section (source): debian-control-has-obsolete-dbg-package fields-wrong-section-dbg
 xfonts-fields-wrong-section1 (binary): wrong-section-according-to-package-name xfonts-fields-wrong-section1 => fonts
 r-cran-fields-wrong-section (binary): wrong-section-according-to-package-name r-cran-fields-wrong-section => gnu-r

@@ -1,2 +1,1 @@
-debhelper-executable-files-compat-9 (source): older-source-format 1.0
 debhelper-executable-files-compat-9 (source): executable-debhelper-file-without-being-executable debian/manpages

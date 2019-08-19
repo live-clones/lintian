@@ -1,3 +1,2 @@
-files-wrong-ma-foreign (source): older-source-format 1.0
 libpublic1 (binary): symbols-file-missing-build-depends-package-field
 libpublic-dev (binary): multiarch-foreign-shared-library

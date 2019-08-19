@@ -1,4 +1,3 @@
-files-tar-traps (source): older-source-format 1.0
 files-tar-traps (binary): non-standard-toplevel-dir strangename/
 files-tar-traps (binary): file-name-ends-in-whitespace strangename/strangename/'\ 
 files-tar-traps (binary): file-in-unusual-dir strangename/strangename/some-file

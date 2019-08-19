@@ -1,4 +1,3 @@
-python-python2-apps (source): older-source-format 1.0
 pkg-suggests (binary): dependency-on-python-version-marked-for-end-of-life (Suggests: python2.7)
 pkg-suggests (binary): dependency-on-python-version-marked-for-end-of-life (Suggests: python)
 pkg-recommends (binary): dependency-on-python-version-marked-for-end-of-life (Recommends: python-dev)

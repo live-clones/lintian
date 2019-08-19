@@ -1,2 +1,1 @@
-scripts-missing-versioned-depends-on-init-system-helpers (source): older-source-format 1.0
 scripts-missing-versioned-depends-on-init-system-helpers-without (binary): missing-versioned-depends-on-init-system-helpers postinst:8 "update-rc.d defaults-disabled" needs init-system-helpers >= 1.50

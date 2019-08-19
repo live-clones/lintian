@@ -1,3 +1,2 @@
 debhelper-package-does-not-use-debhelper-or-cdbs (source): package-does-not-use-debhelper-or-cdbs
-debhelper-package-does-not-use-debhelper-or-cdbs (source): older-source-format 1.0
 debhelper-package-does-not-use-debhelper-or-cdbs (binary): empty-binary-package

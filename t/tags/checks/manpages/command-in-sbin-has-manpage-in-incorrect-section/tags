@@ -1,2 +1,1 @@
-command-in-sbin-has-manpage-in-incorrect-section (source): older-source-format 1.0
 command-in-sbin-has-manpage-in-incorrect-section (binary): command-in-sbin-has-manpage-in-incorrect-section usr/sbin/sbin-binary

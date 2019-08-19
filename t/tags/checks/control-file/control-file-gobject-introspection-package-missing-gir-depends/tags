@@ -1,2 +1,1 @@
-control-file-gobject-introspection-package-missing-gir-depends (source): older-source-format 1.0
 control-file-gobject-introspection-package-missing-gir-depends (source): gobject-introspection-package-missing-depends-on-gir-depends gir1.1-missing-gir-depends-2.2

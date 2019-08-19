@@ -1,4 +1,3 @@
-binaries-development-package-ships-elf-binary-in-path (source): older-source-format 1.0
 libmultiarch-same-dev (binary): development-package-ships-elf-binary-in-path usr/bin/same
 libmultiarch-same-dev (binary): binary-without-manpage usr/bin/same-script
 libmultiarch-same-dev (binary): binary-without-manpage usr/bin/same

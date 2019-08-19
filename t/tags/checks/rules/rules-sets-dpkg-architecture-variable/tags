@@ -1,3 +1,2 @@
-rules-sets-dpkg-architecture-variable (source): older-source-format 1.0
 rules-sets-dpkg-architecture-variable (source): debian-rules-sets-dpkg-architecture-variable DEB_HOST_ARCH (line 3)
 rules-sets-dpkg-architecture-variable (source): debian-rules-sets-dpkg-architecture-variable DEB_BUILD_ARCH (line 4)

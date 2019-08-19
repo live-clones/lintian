@@ -1,5 +1,4 @@
 fields-root-maint-address (source): uploader-address-is-root-user John Doe <root@debian.org>
-fields-root-maint-address (source): older-source-format 1.0
 fields-root-maint-address (source): maintainer-address-is-root-user root <someone@debian.org>
 fields-root-maint-address (changes): changed-by-address-is-root-user root <someone@debian.org>
 fields-root-maint-address (binary): maintainer-address-is-root-user root <someone@debian.org>

@@ -1,2 +1,1 @@
-scripts-killall (source): older-source-format 1.0
 scripts-killall (binary): killall-is-dangerous postinst:5

@@ -1,4 +1,3 @@
-infofiles-general (source): older-source-format 1.0
 infofiles-general (binary): info-document-not-compressed-with-max-compression usr/share/info/foo-nomax.gz
 infofiles-general (binary): info-document-not-compressed-with-gzip usr/share/info/foo-nogz.gz
 infofiles-general (binary): info-document-not-compressed usr/share/info/foo

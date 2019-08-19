@@ -1,3 +1,2 @@
-fields-version-bad (source): older-source-format 1.0
 fields-version-bad (source): debian-revision-not-well-formed 0-.3
 fields-version-bad (binary): debian-revision-should-not-be-zero 1.0-0

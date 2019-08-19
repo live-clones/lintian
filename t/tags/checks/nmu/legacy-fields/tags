@@ -1,7 +1,6 @@
 fields (source): source-nmu-has-incorrect-version-number 1.5-.3
 fields (source): package-uses-debhelper-but-lacks-build-depends
 fields (source): package-needs-versioned-debhelper-build-depends 12
-fields (source): older-source-format 1.0
 fields (source): missing-build-dependency-for-dh_-command dh_md5sums => debhelper | debhelper-compat
 fields (source): missing-build-dependency debhelper | debhelper-compat
 fields (source): hyphen-in-native-debian-changelog-version 1.5-.3

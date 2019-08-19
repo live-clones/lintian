@@ -1,4 +1,3 @@
-systemd-general (source): older-source-format 1.0
 systemd-general (binary): systemd-tmpfiles.d-outside-usr-lib etc/tmpfiles.d/test.conf
 systemd-general (binary): systemd-service-file-refers-to-unusual-wantedby-target usr/lib/systemd/system/systemd-general.test.service unusual.target
 systemd-general (binary): systemd-service-file-refers-to-unusual-wantedby-target etc/systemd/system/systemd-general.test.service unusual.target

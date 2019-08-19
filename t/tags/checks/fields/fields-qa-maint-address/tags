@@ -1,4 +1,3 @@
 fields-qa-maint-address (source): wrong-debian-qa-address-set-as-maintainer Debian QA Group <debian-qa@lists.debian.org>
-fields-qa-maint-address (source): older-source-format 1.0
 fields-qa-maint-address (source): no-human-maintainers
 fields-qa-maint-address (binary): wrong-debian-qa-address-set-as-maintainer Debian QA Group <debian-qa@lists.debian.org>

@@ -1,2 +1,1 @@
-control-file-symlink (source): older-source-format 1.0
 control-file-symlink (source): debian-control-file-is-a-symlink

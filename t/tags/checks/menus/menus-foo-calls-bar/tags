@@ -1,4 +1,3 @@
-menus-foo-calls-bar (source): older-source-format 1.0
 menus-foo-calls-bar (binary): prerm-has-useless-call-to-install-docs
 menus-foo-calls-bar (binary): prerm-calls-updatemenus
 menus-foo-calls-bar (binary): preinst-calls-updatemenus

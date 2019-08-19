@@ -1,3 +1,2 @@
-files-gzip (source): older-source-format 1.0
 files-gzip (binary): gz-file-not-gzip usr/share/doc/files-gzip/changelog.gz
 files-gzip (binary): gz-file-not-gzip etc/bad.gz

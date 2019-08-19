@@ -23,6 +23,5 @@ cruft-general-upstream (source): source-contains-bzr-control-dir .bzr
 cruft-general-upstream (source): source-contains-bts-control-dir .be
 cruft-general-upstream (source): source-contains-arch-inventory-file .arch-inventory
 cruft-general-upstream (source): source-contains-arch-control-dir {arch}
-cruft-general-upstream (source): older-source-format 1.0
 cruft-general-upstream (source): debian-watch-does-not-check-gpg-signature
 cruft-general-upstream (source): configure-generated-file-in-source config.cache

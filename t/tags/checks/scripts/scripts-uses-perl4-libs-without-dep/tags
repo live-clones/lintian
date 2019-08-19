@@ -1,2 +1,1 @@
-scripts-uses-perl4-libs-without-dep (source): older-source-format 1.0
 scripts-uses-perl4-libs-without-dep (binary): script-uses-perl4-libs-without-dep usr/bin/naughty-script:20 newgetopt.pl

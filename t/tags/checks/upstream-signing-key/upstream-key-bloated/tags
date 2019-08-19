@@ -1,4 +1,3 @@
 upstream-key-bloated (source): public-upstream-key-not-minimal upstream/signing-key.asc has 5 extra signature(s) for keyid E0B11894F66AEC98
 upstream-key-bloated (source): orig-tarball-missing-upstream-signature upstream-key-bloated_1.0.orig.tar.gz
-upstream-key-bloated (source): older-source-format 1.0
 upstream-key-bloated (source): debian-watch-could-verify-download debian/upstream/signing-key.asc

@@ -1,4 +1,3 @@
-files-old-config-script (source): older-source-format 1.0
 config-ma-no (binary): old-style-config-script usr/bin/arch-no-config
 config-ma-no (binary): old-style-config-script usr/bin/arch-cross-no-config
 config-ma-no (binary): binary-without-manpage usr/bin/arch-no-config

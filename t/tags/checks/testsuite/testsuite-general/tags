@@ -4,7 +4,6 @@ testsuite-general (source): unknown-runtime-tests-feature unknownfeature paragra
 testsuite-general (source): testsuite-dependency-has-unparsable-elements "missing a comma" (in paragraph starting at line 20)
 testsuite-general (source): runtime-test-file-is-not-a-regular-file debian/tests/lfifo
 testsuite-general (source): runtime-test-file-is-not-a-regular-file debian/tests/fifo
-testsuite-general (source): older-source-format 1.0
 testsuite-general (source): obsolete-runtime-tests-restriction needs-recommends paragraph starting at line 28
 testsuite-general (source): missing-runtime-test-file debian/tests/self1 paragraph starting at line 35
 testsuite-general (source): missing-runtime-test-file debian/tests/self paragraph starting at line 35

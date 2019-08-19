@@ -1,4 +1,3 @@
-scripts-maintainer-general (source): older-source-format 1.0
 scripts-maintainer-general (binary): uses-dpkg-database-directly postinst (line 56)
 scripts-maintainer-general (binary): uses-dpkg-database-directly postinst (line 53)
 scripts-maintainer-general (binary): uses-dpkg-database-directly postinst (line 228)

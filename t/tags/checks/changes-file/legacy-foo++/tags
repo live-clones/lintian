@@ -5,7 +5,6 @@ foo++ (source): uploader-address-malformed Marc 'HE' Brockschmidt <he@unknown>
 foo++ (source): uploader-address-malformed Josip, I am afraid of spam and think this helps <no_spam_please AT debian.org>
 foo++ (source): uploader-address-looks-weird Jeroen van Wolffelaar<jeroen@localhost.localdomain>
 foo++ (source): uploader-address-is-on-localhost Jeroen van Wolffelaar<jeroen@localhost.localdomain>
-foo++ (source): older-source-format 1.0
 foo++ (source): malformed-dm-upload-allowed no
 foo++ (source): latest-debian-changelog-entry-without-new-date
 foo++ (source): duplicate-short-description foo++ foo++-helper

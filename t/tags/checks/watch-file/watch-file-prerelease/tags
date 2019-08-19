@@ -1,2 +1,1 @@
-watch-file-prerelease (source): older-source-format 1.0
 watch-file-prerelease (source): debian-watch-file-should-uversionmangle-not-dversionmangle line 3

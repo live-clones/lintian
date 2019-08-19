@@ -1,2 +1,1 @@
-files-arch-indep-not-marked-all (source): older-source-format 1.0
 files-arch-indep-not-marked-all (binary): package-contains-no-arch-dependent-files

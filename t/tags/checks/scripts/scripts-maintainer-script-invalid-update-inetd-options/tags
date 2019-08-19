@@ -1,4 +1,3 @@
-scripts-maintainer-script-invalid-update-inetd-options (source): older-source-format 1.0
 scripts-maintainer-script-invalid-update-inetd-options (binary): maintainer-script-needs-depends-on-update-inetd postinst
 scripts-maintainer-script-invalid-update-inetd-options (binary): maintainer-script-has-invalid-update-inetd-options postinst:9 (--pattern with --add)
 scripts-maintainer-script-invalid-update-inetd-options (binary): maintainer-script-has-invalid-update-inetd-options postinst:8 (--group without --add)

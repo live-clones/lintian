@@ -1,4 +1,3 @@
-description-general (source): older-source-format 1.0
 description-general (source): duplicate-long-description foo-duplicate foo-bar-duplicate
 foo-duplicate (binary): description-is-pkg-name foo duplicate
 foo-bar-duplicate (binary): description-is-pkg-name foo bar duplicate

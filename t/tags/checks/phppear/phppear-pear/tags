@@ -8,7 +8,6 @@ phppear-pear (source): pear-package-feature-requires-newer-pkg-php-tools (>= 1.4
 phppear-pear (source): pear-package-but-missing-dependency Recommends
 phppear-pear (source): pear-package-but-missing-dependency Depends
 phppear-pear (source): pear-package-but-missing-dependency Breaks
-phppear-pear (source): older-source-format 1.0
 phppear-pear (source): missing-pkg-php-tools-buildsystem phppear
 phppear-pear (source): missing-pkg-php-tools-addon phppear
 phppear-pear (source): missing-pkg-php-tools-addon php

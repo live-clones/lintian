@@ -1,2 +1,1 @@
 rules-dh-auto-test-does-not-check-deb-build-options (source): override_dh_auto_test-does-not-check-DEB_BUILD_OPTIONS (line 6)
-rules-dh-auto-test-does-not-check-deb-build-options (source): older-source-format 1.0

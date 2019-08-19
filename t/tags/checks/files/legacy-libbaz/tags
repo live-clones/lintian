@@ -2,7 +2,6 @@ libbaz (source): weak-library-dev-dependency libbaz2-dev on libbaz2 (= ${source:
 libbaz (source): weak-library-dev-dependency libbaz1-dev on libbaz1 (= ${source:Version})
 libbaz (source): source-nmu-has-incorrect-version-number 1-1
 libbaz (source): package-uses-deprecated-debhelper-compat-version 6
-libbaz (source): older-source-format 1.0
 libbaz (source): not-binnmuable-any-depends-any libbaz2-dev -> libbaz2
 libbaz (source): not-binnmuable-any-depends-any libbaz1-dev -> libbaz1
 libbaz (source): hyphen-in-native-debian-changelog-version 1-1

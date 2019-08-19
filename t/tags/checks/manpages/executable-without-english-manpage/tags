@@ -1,2 +1,1 @@
-executable-without-english-manpage (source): older-source-format 1.0
 executable-without-english-manpage (binary): binary-without-english-manpage usr/bin/from-abroad

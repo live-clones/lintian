@@ -1,4 +1,3 @@
-changelog-file-empty-entry (source): older-source-format 1.0
 changelog-file-empty-entry (binary): syntax-error-in-debian-changelog line 8 "found start of entry where expected more change data or trailer"
 changelog-file-empty-entry (binary): syntax-error-in-debian-changelog line 6 "badly formatted trailer line"
 changelog-file-empty-entry (binary): changelog-empty-entry

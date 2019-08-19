@@ -1,2 +1,1 @@
-debconf-is-not-registry (source): older-source-format 1.0
 debconf-is-not-registry (binary): debconf-is-not-a-registry usr/share/lintian/script

@@ -1,2 +1,1 @@
-executable-without-manpage (source): older-source-format 1.0
 executable-without-manpage (binary): binary-without-manpage usr/bin/telepathic

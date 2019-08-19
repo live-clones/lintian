@@ -1,3 +1,2 @@
 upstream-metadata-is-missing (source): upstream-metadata-file-is-missing
-upstream-metadata-is-missing (source): older-source-format 1.0
 upstream-metadata-is-missing (source): debian-watch-does-not-check-gpg-signature

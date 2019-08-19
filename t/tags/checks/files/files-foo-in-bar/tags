@@ -1,4 +1,3 @@
-files-foo-in-bar (source): older-source-format 1.0
 files-foo-in-bar (binary): vim-addon-within-vim-runtime-path usr/share/vim/vimcurrent/bar
 files-foo-in-bar (binary): vim-addon-within-vim-runtime-path usr/share/vim/vim73/bar
 files-foo-in-bar (binary): udev-rule-in-etc etc/udev/rules.d/bar

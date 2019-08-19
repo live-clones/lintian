@@ -1,4 +1,3 @@
-obsolete-sites (source): older-source-format 1.0
 obsolete-sites (source): obsolete-url-in-packaging debian/watch http://gitorious.org/foo/foo/file-(.*)\.tar\.gz
 obsolete-sites (source): obsolete-url-in-packaging debian/upstream/metadata http://freecode.com/p/foo
 obsolete-sites (source): obsolete-url-in-packaging debian/upstream/metadata git://gitorious.org/foo/foo.git

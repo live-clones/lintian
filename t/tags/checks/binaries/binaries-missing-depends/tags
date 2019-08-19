@@ -1,3 +1,2 @@
-binaries-missing-depends (source): older-source-format 1.0
 libbasic2 (binary): symbols-file-missing-build-depends-package-field
 libbasic2 (binary): missing-depends-line

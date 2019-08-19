@@ -1,4 +1,3 @@
-package-supports-alternative-init-but-no-init.d-script (source): older-source-format 1.0
 package-supports-alternative-init-but-no-init.d-script (binary): systemd-service-file-missing-install-key lib/systemd/system/bar.service
 package-supports-alternative-init-but-no-init.d-script (binary): systemd-service-file-missing-hardening-features lib/systemd/system/bar.service
 package-supports-alternative-init-but-no-init.d-script (binary): systemd-service-file-missing-documentation-key lib/systemd/system/bar.service

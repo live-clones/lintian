@@ -1,4 +1,3 @@
-files-zero-byte-executable-in-path (source): older-source-format 1.0
 files-zero-byte-executable-in-path (binary): zero-byte-executable-in-path usr/bin/empty-executable
 files-zero-byte-executable-in-path (binary): executable-not-elf-or-script usr/bin/empty-executable
 files-zero-byte-executable-in-path (binary): binary-without-manpage usr/bin/empty-executable

@@ -1,4 +1,3 @@
-watch-file-general (source): older-source-format 1.0
 watch-file-general (source): debian-watch-uses-insecure-uri http://insecure.com
 watch-file-general (source): debian-watch-file-uses-deprecated-sf-redirector-method line 5
 watch-file-general (source): debian-watch-file-uses-deprecated-githubredir line 24

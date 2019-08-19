@@ -1,3 +1,2 @@
-shared-libs-unversioned (source): older-source-format 1.0
 libfoo (binary): symbols-file-missing-build-depends-package-field
 libfoo (binary): shlib-without-versioned-soname usr/lib/libfoo.so libfoo.so

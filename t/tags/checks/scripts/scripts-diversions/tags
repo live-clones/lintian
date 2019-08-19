@@ -1,4 +1,3 @@
-scripts-diversions (source): older-source-format 1.0
 scripts-diversions (binary): remove-of-unknown-diversion usr/share/scripts/old-file postrm:12
 scripts-diversions (binary): package-uses-local-diversion preinst:12
 scripts-diversions (binary): package-uses-local-diversion postrm:31

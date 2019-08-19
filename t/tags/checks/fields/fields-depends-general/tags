@@ -1,6 +1,5 @@
 fields-depends-general (source): package-relation-with-perl-modules build-depends: perl-modules
 fields-depends-general (source): package-depends-on-itself fields-depends-general depends
-fields-depends-general (source): older-source-format 1.0
 py-fields-depends-general (binary): depends-on-python-minimal depends
 libfields-depends-general (binary): package-relation-with-perl-modules depends: perl-modules-5.22
 libfields-depends-general (binary): lib-recommends-documentation recommends: debconf-doc

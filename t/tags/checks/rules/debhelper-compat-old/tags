@@ -1,7 +1,6 @@
 debhelper-compat-old (source): source-format 1.0 [non-native]
 debhelper-compat-old (source): rules-does-not-require-root
 debhelper-compat-old (source): package-uses-old-debhelper-compat-version 8
-debhelper-compat-old (source): older-source-format 1.0
 debhelper-compat-old (source): debian-rules-should-not-use-custom-compression-settings dh_builddeb -- -Zgzip (line 7)
 debhelper-compat-old (source): debian-build-system dh
 debhelper-compat-old (source): debhelper-compat-level 8

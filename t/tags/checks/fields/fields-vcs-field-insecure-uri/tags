@@ -1,3 +1,2 @@
 fields-vcs-field-insecure-uri (source): vcs-field-uses-insecure-uri vcs-git git://salsa.debian.org/users/toddy/foobar.git
 fields-vcs-field-insecure-uri (source): vcs-field-uses-insecure-uri vcs-browser http://salsa.debian.org/toddy/foobar
-fields-vcs-field-insecure-uri (source): older-source-format 1.0

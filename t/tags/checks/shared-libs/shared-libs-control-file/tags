@@ -1,4 +1,3 @@
-shared-libs-control-file (source): older-source-format 1.0
 libunshf1 (binary): unused-shlib-entry-in-control-file libfoo 1
 libunshf1 (binary): symbols-file-missing-build-depends-package-field
 libunshf1 (binary): shlibs-uses-obsolete-relation libunshf1 (> 0.1)
