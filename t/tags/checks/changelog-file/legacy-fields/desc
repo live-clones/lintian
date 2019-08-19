@@ -1,4 +1,4 @@
-Skeleton: upload-native
+Skeleton: upload-non-native
 Testname: legacy-fields
 Source: fields
 Version: 1.5-.3
