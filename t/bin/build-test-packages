@@ -229,7 +229,7 @@ my $prepare = IO::Async::Function->new(
             $message .= ": $error" if length $error;
 
           # print log and warn on error (do not die; will mess up Ia::Function)
-            warn $message;
+            die $message;
         };
 
         return $specpath;
@@ -244,10 +244,20 @@ $loop->add($prepare);
 $SIG{INT} = sub { $prepare->stop; die "Caught a sigint $!" };
 my @preptasks = map {$prepare->call(args => [$_])} sort @prepqueue;
 
-my $allprepared = Future->needs_all(@preptasks);
+my $allprepared = Future->wait_all(@preptasks);
 
-# awaits, and dies on failure with message from failed constituent
-$allprepared->get;
+$loop->await($allprepared);
+
+my @failedprep = $allprepared->failed_futures;
+if (@failedprep) {
+    say 'Failed preparation tasks:';
+    say NEWLINE . $_->failure for @failedprep;
+    exit 1;
+} else {
+    say 'All preparation tasks completed with success.';
+}
+
+say EMPTY;
 
 # remap paths from testset to outpath to get work directories
 my @workpaths = map { rel2abs(abs2rel($_, $testset), $outpath) } @testpaths;
