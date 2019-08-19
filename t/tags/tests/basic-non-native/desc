@@ -1,7 +1,6 @@
 Testname: basic-non-native
 Skeleton: upload-non-native
 Version: 1.0-1
-Source-Format: 3.0 (quilt)
 Description: Basic test of a non-native package
 Match-Strategy: literal
 Output-Format: EWI

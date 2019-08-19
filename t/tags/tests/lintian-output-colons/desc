@@ -1,7 +1,6 @@
 Testname: lintian-output-colons
 Skeleton: upload-non-native
 Version: 1.0+dsfg-1.1
-Source-Format: 3.0 (quilt)
 Package-Architecture: all
 Options: --pedantic --show-overrides
 Output-Format: colons

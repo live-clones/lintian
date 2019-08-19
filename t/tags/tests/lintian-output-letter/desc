@@ -1,7 +1,6 @@
 Testname: lintian-output-letter
 Skeleton: upload-non-native
 Version: 1.0+dsfg-1.1
-Source-Format: 3.0 (quilt)
 Options: --pedantic --show-overrides
 Output-Format: letterqualifier
 Description: Test Lintian letter qualifier output format

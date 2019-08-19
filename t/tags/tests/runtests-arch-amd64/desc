@@ -1,7 +1,6 @@
 Skeleton: upload-native
 Testname: runtests-arch-amd64
 Version: 1.0
-Source-Format: 3.0 (native)
 Test-Architectures: amd64
 Description: Test a package that is supposedly amd64-specific
 Match-Strategy: literal

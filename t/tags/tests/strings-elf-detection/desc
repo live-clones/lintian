@@ -1,7 +1,6 @@
 Skeleton: upload-native
 Testname: strings-elf-detection
 Version: 1.0
-Source-Format: 3.0 (native)
 Package-Architecture: any
 Description: Test the ability to detect ELF objects
 Match-Strategy: literal

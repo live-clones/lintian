@@ -1,7 +1,6 @@
 Testname: lintian-color-html
 Skeleton: upload-non-native
 Version: 1.0-1
-Source-Format: 3.0 (quilt)
 Options: --color=html --show-overrides
 Description: Test Lintian --color=html output escaping
 Match-Strategy: literal
