@@ -1,3 +1,4 @@
+Version: 1.0
 Template-Sets:
  DEBIAN (binary-control),
  doc (mandatory-docs),

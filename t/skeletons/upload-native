@@ -1,4 +1,6 @@
 Type: native
+Source-Format: 3.0 (native)
+Version: 1.0
 Template-Sets:
  debian (debian-native),
  . (upload-make-builder),

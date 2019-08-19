@@ -1,4 +1,6 @@
 Type: non-native
+Source-Format: 3.0 (quilt)
+Version: 1.0-1
 Template-Sets:
  debian (debian-native),
  debian (debian-extra-non-native),
