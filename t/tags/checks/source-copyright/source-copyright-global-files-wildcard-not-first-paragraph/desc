@@ -2,5 +2,4 @@ Skeleton: upload-native
 Testname: source-copyright-global-files-wildcard-not-first-paragraph
 Version: 1.0
 Description: Test for Files: * not being the first paragraph
-Test-Against:
 Check: source-copyright

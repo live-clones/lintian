@@ -2,5 +2,4 @@ Skeleton: upload-native
 Testname: nmu-space-around-maintainer
 Version: 1.0
 Description: Test for space around maintainer
-Test-Against:
 Check: nmu

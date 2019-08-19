@@ -3,5 +3,4 @@ Testname: cruft-doxygen-documentation
 Version: 1.0
 Description: Detect doxygen documentation
 Options: --pedantic
-Test-Against:
 Check: cruft

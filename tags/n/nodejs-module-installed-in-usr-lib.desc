@@ -1,0 +1,11 @@
+Tag: nodejs-module-installed-in-usr-lib
+Severity: normal
+Certainty: certain
+Check: files
+Info: This package installs the specified file under <tt>/usr/lib/nodejs</tt>.
+ Since the release of Buster, these files should be installed under
+ <tt>/usr/share/nodejs</tt> <i>(arch independent)</i> or
+ <tt>/usr/lib/<gnu-arch>/nodejs</tt> <i>(arch dependent)</i> instead.
+ .
+ You can use pkg-js-tools auto installer to avoid this, see
+ <tt>/usr/share/doc/pkg-js-tools/README.md.gz</tt>

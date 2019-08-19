@@ -2,5 +2,4 @@ Skeleton: upload-native
 Testname: cruft-obsolete-upstream-metadata
 Version: 1.0
 Description: Check for obsolete path for debian/upstream/metadata
-Test-Against:
 Check: cruft

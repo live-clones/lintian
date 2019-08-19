@@ -2,5 +2,4 @@ Skeleton: upload-native
 Testname: rules-special-variables
 Version: 1.0
 Description: Test for debian/rules using special variables
-Test-Against:
 Check: rules

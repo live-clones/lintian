@@ -158,6 +158,9 @@ sub new {
             my $taginfo = Lintian::Tag::Info->new;
             $taginfo->load($tagpath);
 
+            die "Tag in $tagpath is not associated with a check"
+              unless length $taginfo->script;
+
             unless (exists $self->{'known-tags'}{$taginfo->tag}) {
                 $self->{'known-tags'}{$taginfo->tag} = $taginfo;
                 push(

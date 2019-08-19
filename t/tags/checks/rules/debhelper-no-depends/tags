@@ -8,6 +8,4 @@ debhelper-no-depends (source): missing-build-dependency-for-dh_-command dh_gtkmo
 debhelper-no-depends (source): missing-build-dependency-for-dh_-command dh_dpatch_patch => dpatch
 debhelper-no-depends (source): missing-build-dependency-for-dh_-command dh_clideps => cli-common-dev
 debhelper-no-depends (source): missing-build-dependency debhelper | debhelper-compat
-debhelper-no-depends (source): dh-manual-sequence-control-obsolete dh until
-debhelper-no-depends (source): dh-manual-sequence-control-obsolete dh remaining
 debhelper-no-depends (source): debhelper-but-no-misc-depends debhelper-no-depends

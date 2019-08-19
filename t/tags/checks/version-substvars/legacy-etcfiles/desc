@@ -4,5 +4,4 @@ Source: etcfiles
 Sequence: 9999
 Version: 1
 Description: Legacy test "etcfiles"
-Test-Against:
 Check: version-substvars

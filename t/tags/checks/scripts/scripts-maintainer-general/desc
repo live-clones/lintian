@@ -5,5 +5,4 @@ Profile: ubuntu/main
 Distribution: precise
 Description: Check general problems in maintainer scripts
 References: Debian Bug#532984
-Test-Against:
 Check: scripts

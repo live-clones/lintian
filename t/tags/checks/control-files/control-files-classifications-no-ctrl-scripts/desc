@@ -3,5 +3,4 @@ Testname: control-files-classifications-no-ctrl-scripts
 Version: 1.0
 Description: Test for control-files classifications
 Options: -L +=classification -C control-files
-Test-Against:
 Check: control-files

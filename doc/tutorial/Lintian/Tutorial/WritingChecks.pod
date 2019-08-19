@@ -6,6 +6,8 @@ Lintian::Tutorial::WritingChecks -- Writing checks for Lintian
 
 =head1 SYNOPSIS
 
+Warning: This tutorial may be outdated.
+
 This guide will quickly guide you through the basics of writing a
 Lintian check.  Most of the work is in writing the two files:
 

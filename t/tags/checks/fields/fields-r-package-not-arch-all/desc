@@ -2,5 +2,4 @@ Testname: fields-r-package-not-arch-all
 Version: 1.0-1
 Skeleton: upload-non-native
 Description: Tests for Architecture of an R package
-Test-Against:
 Check: fields

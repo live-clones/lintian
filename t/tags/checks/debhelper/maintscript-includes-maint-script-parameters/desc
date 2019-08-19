@@ -4,5 +4,4 @@ Sequence: 6000
 Version: 1.0
 Dh-Compat-Level: 11
 Description: Check dh_installdeb .maintscript files
-Test-Against:
 Check: debhelper

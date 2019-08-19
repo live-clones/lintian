@@ -4,5 +4,4 @@ Skeleton: upload-non-native
 Options: --pedantic
 Extra-Build-Depends: zip
 Description: Check for cruft in the upstream source
-Test-Against:
 Check: cruft

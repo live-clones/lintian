@@ -5,7 +5,6 @@
 binary: binary-arch binary-indep
 binary-arch:
 binary-indep:
-	dh binary-indep --until dh_prep
 	-dh_clideps
 	-dh_gtkmodules
 	dh_lisp || true
@@ -20,6 +19,6 @@ else
 	dh_pysupport
   endif
 endif
-	dh binary-indep --remaining
+	dh binary-indep
 	-dh_strip_nondeterminism
 	-dh_scour

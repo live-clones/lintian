@@ -2,5 +2,4 @@ Testname: implicitly-requires-rrr
 Skeleton: upload-native
 Version: 1.0
 Description: Test with package that requires Rules-Requires-Root but does not mention it
-Test-Against:
 Check: control-file

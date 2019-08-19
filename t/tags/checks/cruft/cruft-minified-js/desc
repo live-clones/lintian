@@ -4,5 +4,4 @@ Version: 1.0
 Description: Misc errors related to minified javascript
 Options: --pedantic
 Extra-Build-Depends: uglifyjs
-Test-Against:
 Check: cruft

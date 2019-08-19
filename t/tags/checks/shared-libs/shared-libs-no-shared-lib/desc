@@ -3,5 +3,4 @@ Testname: shared-libs-no-shared-lib
 Version: 1.0
 Package-Architecture: any
 Description: Test checks shlib without SO
-Test-Against:
 Check: shared-libs

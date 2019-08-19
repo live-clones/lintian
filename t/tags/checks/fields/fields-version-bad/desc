@@ -2,5 +2,4 @@ Testname: fields-version-bad
 Version: 0-.3
 Description: Test for weird versions
 Skeleton: upload-non-native
-Test-Against:
 Check: fields

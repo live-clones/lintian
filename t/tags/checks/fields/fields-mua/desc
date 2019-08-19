@@ -2,5 +2,4 @@ Skeleton: upload-native
 Testname: fields-mua
 Version: 1.0
 Description: Test for tags related to MUA etc.
-Test-Against:
 Check: fields

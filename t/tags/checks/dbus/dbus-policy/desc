@@ -2,5 +2,4 @@ Skeleton: upload-native
 Testname: dbus-policy
 Version: 1.0
 Description: test deprecated D-Bus policies
-Test-Against:
 Check: dbus

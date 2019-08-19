@@ -2,5 +2,4 @@ Skeleton: upload-native
 Testname: scripts-diversions
 Version: 1.0
 Description: Tests of dpkg-divert checks
-Test-Against:
 Check: scripts

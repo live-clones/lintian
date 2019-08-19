@@ -2,5 +2,4 @@ Skeleton: upload-native
 Testname: debconf-templates-general
 Version: 1.0
 Description: Test for various debconf template issues
-Test-Against:
 Check: debconf

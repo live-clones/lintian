@@ -4,5 +4,4 @@ Description: Misc errors related to wasm
 Options: --pedantic
 Skeleton: upload-non-native
 Extra-Build-Depends: file (>= 1:5.32)
-Test-Against:
 Check: cruft

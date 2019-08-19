@@ -3,5 +3,4 @@ Testname: cruft-sphinx-documentation
 Version: 1.0
 Description: Detect sphinx documentation
 Options: --pedantic
-Test-Against:
 Check: cruft

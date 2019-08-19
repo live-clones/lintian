@@ -3,5 +3,4 @@ Version: 1.0-1
 Skeleton: upload-non-native
 Source-Format: 3.0 (quilt)
 Description: Test for trivial series file in git-patches-not-exported
-Test-Against:
 Check: debian-source-dir

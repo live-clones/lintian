@@ -2,5 +2,4 @@ Skeleton: upload-native
 Testname: scripts-maintainer-script-invalid-update-inetd-options
 Version: 1.0
 Description: Check for incorrect calls to update-inetd
-Test-Against:
 Check: scripts

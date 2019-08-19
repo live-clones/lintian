@@ -2,5 +2,4 @@ Skeleton: upload-native
 Testname: control-file-symlink
 Version: 1.0
 Description: Test if debian/control is a symlink
-Test-Against:
 Check: control-file

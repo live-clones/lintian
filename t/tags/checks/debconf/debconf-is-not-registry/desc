@@ -2,5 +2,4 @@ Skeleton: upload-native
 Testname: debconf-is-not-registry
 Version: 1.0
 Description: Test for using debconf as a registry
-Test-Against:
 Check: debconf

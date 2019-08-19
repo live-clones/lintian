@@ -5,5 +5,4 @@ Package-Architecture: all
 Description: Various checks for Java Class format
 Section: java
 Extra-Build-Depends: javahelper, default-jdk
-Test-Against:
 Check: java

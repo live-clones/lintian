@@ -1,6 +1,6 @@
 #!/usr/bin/make -f
 PKG:=files-nodejs
-INSTPATH:=$(CURDIR)/debian/tmp/usr/lib/nodejs
+INSTPATH:=$(CURDIR)/debian/tmp/usr/share/nodejs
 
 
 %:

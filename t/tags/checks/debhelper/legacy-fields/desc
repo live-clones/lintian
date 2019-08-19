@@ -4,5 +4,4 @@ Source: fields
 Sequence: 9999
 Version: 1.5-.3
 Description: Legacy test "fields"
-Test-Against:
 Check: debhelper

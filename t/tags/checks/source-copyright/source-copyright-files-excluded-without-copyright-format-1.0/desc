@@ -2,5 +2,4 @@ Testname: source-copyright-files-excluded-without-copyright-format-1.0
 Version: 1.0-1
 Skeleton: upload-non-native
 Description: Test for files listed in Files-Excluded
-Test-Against:
 Check: source-copyright

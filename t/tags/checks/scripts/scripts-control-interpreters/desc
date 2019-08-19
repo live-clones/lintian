@@ -3,5 +3,4 @@ Testname: scripts-control-interpreters
 Version: 1.0
 Description: Check maintainer and config script interpreters
 References: Debian Bug#508307
-Test-Against:
 Check: scripts
