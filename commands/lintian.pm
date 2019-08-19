@@ -878,7 +878,7 @@ sub auto_clean_packages {
     my $loop = IO::Async::Loop->new;
     $loop->add($removelpkg);
 
-    my @serializable = map { $_->clear_cache } $group->get_processables;
+    my @serializable = map { $_->clear_cache; $_ } $group->get_processables;
     my @futures = map { $removelpkg->call(args => [$_]) } @serializable;
 
     my $done = Future->needs_all(@futures);
