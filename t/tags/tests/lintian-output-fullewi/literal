@@ -4,8 +4,7 @@ P: lintian-output-fullewi source (1.0+dsfg-1.1) [source]: package-uses-deprecate
 W: lintian-output-fullewi source (1.0+dsfg-1.1) [source]: dfsg-version-misspelled 1.0+dsfg-1.1
 P: lintian-output-fullewi source (1.0+dsfg-1.1) [source]: no-homepage-field
 W: lintian-output-fullewi source (1.0+dsfg-1.1) [source]: maintainer-upload-has-incorrect-version-number 1.0+dsfg-1.1
-I: lintian-output-fullewi source (1.0+dsfg-1.1) [source]: quilt-patch-using-template-description debian-changes-1.0+dsfg-1.1
-W: lintian-output-fullewi source (1.0+dsfg-1.1) [source]: format-3.0-but-debian-changes-patch
+P: lintian-output-fullewi source (1.0+dsfg-1.1) [source]: direct-changes-in-diff-but-no-patch-system Changes
 X: lintian-output-fullewi source (1.0+dsfg-1.1) [source]: debian-watch-does-not-check-gpg-signature
 E: lintian-output-fullewi binary (1.0+dsfg-1.1) [all]: possible-gpl-code-linked-with-openssl
 I: lintian-output-fullewi binary (1.0+dsfg-1.1) [all]: description-synopsis-might-not-be-phrased-properly "Test Lintian's 'fullewi' output format."
