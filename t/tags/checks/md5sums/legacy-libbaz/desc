@@ -1,4 +1,4 @@
-Skeleton: upload-native
+Skeleton: upload-non-native
 Testname: legacy-libbaz
 Source: libbaz
 Version: 1-1
