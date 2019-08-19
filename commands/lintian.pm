@@ -881,7 +881,7 @@ sub auto_clean_packages {
     my @serializable = map { $_->clear_cache; $_ } $group->get_processables;
     my @futures = map { $removelpkg->call(args => [$_]) } @serializable;
 
-    my $done = Future->needs_all(@futures);
+    my $done = Future->wait_all(@futures);
     $done->get;
 
     $removelpkg->stop;
