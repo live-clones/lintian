@@ -2,5 +2,4 @@ Skeleton: upload-native
 Testname: changelog-file-news-and-changelog-not-compressed
 Version: 1.0
 Description: General tests for changelog-file tags
-Test-Against:
 Check: changelog-file

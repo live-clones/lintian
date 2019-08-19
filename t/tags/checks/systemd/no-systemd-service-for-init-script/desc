@@ -2,5 +2,4 @@ Testname: no-systemd-service-for-init-script
 Skeleton: upload-native
 Version: 1.0
 Description: Test package with init.d script but no systemd service file
-Test-Against:
 Check: systemd

@@ -346,7 +346,8 @@ sub run {
                 my $expected = substr($first_version, 0, -length($1));
                 tag 'changelog-file-missing-explicit-entry',
                   "$second_version -> $expected (missing) -> $first_version"
-                  unless $second_version eq $expected;
+                  unless $second_version eq $expected
+                  or $entries[0]->Distribution =~ /-security$/i;
             }
 
             if (    $first_upstream eq $second_upstream

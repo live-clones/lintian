@@ -2,5 +2,4 @@ Skeleton: dsc
 Testname: fields-src-fields-filename
 Version: 1
 Description: Test package for src field filename mismatch
-Test-Against:
 Check: fields

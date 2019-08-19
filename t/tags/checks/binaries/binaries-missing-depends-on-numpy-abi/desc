@@ -4,5 +4,4 @@ Version: 1.0
 Description: Test for missing dependency on python-numpy-abiN
 Package-Architecture: any
 Extra-Build-Depends: python-all-dev, python-numpy, dh-python
-Test-Against:
 Check: binaries

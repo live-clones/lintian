@@ -1128,6 +1128,9 @@ sub html_quote {
     if (index($text, '>') > -1) {
         $text =~ s/>/\&gt;/g;
     }
+    if (index($text, '/') > -1) {
+        $text =~ s/\//\&#x2f;/g;
+    }
     return $text;
 }
 

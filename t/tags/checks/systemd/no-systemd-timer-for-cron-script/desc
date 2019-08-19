@@ -3,5 +3,4 @@ Skeleton: upload-native
 Version: 1.0
 Description: Test package with cron scripts but no systemd timer file
 Options: --pedantic -E
-Test-Against:
 Check: systemd

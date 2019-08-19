@@ -2,5 +2,4 @@ Skeleton: upload-native
 Testname: testsuite-unknown-suite
 Version: 1.0
 Description: Tests for unknown suite in the control being non-file
-Test-Against:
 Check: testsuite

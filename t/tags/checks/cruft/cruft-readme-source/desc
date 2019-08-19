@@ -3,5 +3,4 @@ Testname: cruft-readme-source
 Sequence: 6000
 Version: 1.0
 Description: Check for cruft in README.source
-Test-Against:
 Check: cruft

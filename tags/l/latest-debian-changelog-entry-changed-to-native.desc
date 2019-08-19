@@ -6,3 +6,7 @@ Info: The latest package has a Debian native version number, while the
  previous version number was not native. This is usually a mistake made by
  the maintainer by forgetting to append -1 when uploading a new upstream
  version.
+ .
+ If you are deliberately moving to a native package, please document the
+ rationale why in your changelog entry; an override will need to removed
+ on subsequent uploads.

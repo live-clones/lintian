@@ -2,5 +2,4 @@ Skeleton: upload-native
 Testname: fields-section-general
 Version: 1.0
 Description: Test for general section/area issues
-Test-Against:
 Check: control-file

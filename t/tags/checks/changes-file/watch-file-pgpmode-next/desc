@@ -3,6 +3,5 @@ Skeleton: upload-non-native
 Version: 2.0-1
 Options: --pedantic
 Description: Watch file with pgpmode=next
-Test-Against:
 References: #841000
 Check: changes-file

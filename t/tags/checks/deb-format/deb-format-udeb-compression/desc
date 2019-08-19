@@ -5,5 +5,4 @@ Package-Architecture: all
 Description: Test of compression of udeb data member
 # dpkg 1.18.1 Will warn for us
 Extra-Build-Depends: dpkg (<< 1.18.11)
-Test-Against:
 Check: deb-format

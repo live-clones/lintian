@@ -3,5 +3,4 @@ Testname: control-file-pedantic
 Version: 1.0
 Options: --pedantic
 Description: Pedantic tests for control file issues
-Test-Against:
 Check: control-file

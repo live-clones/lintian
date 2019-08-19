@@ -298,7 +298,7 @@ sub run {
     }
 
     tag 'package-name-doesnt-match-sonames', "@sonames"
-      if @sonames && !$match_found;
+      if @sonames && !$match_found && $type ne 'udeb';
 
     # process all files in package
     foreach my $file ($info->sorted_index) {

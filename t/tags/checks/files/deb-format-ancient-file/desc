@@ -2,5 +2,4 @@ Skeleton: deb
 Testname: deb-format-ancient-file
 Version: 1.0
 Description: Test package containing an ancient file
-Test-Against:
 Check: files

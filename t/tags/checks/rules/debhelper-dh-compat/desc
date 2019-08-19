@@ -4,5 +4,4 @@ Version: 1.0
 Description: Test the value of DH_COMPAT
 Profile: lintian-test
 Options: --include-dir ./lintian-include-dir
-Test-Against:
 Check: rules

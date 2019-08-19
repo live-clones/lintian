@@ -1,3 +1,33 @@
+lintian (2.18.0) unstable; urgency=medium
+
+  * Summary of tag changes:
+    + Added:
+      - nodejs-module-installed-in-usr-lib
+    + Removed:
+      - dh-manual-sequence-control-obsolete
+
+  [ Chris Lamb ]
+  * Don't emit package-name-doesnt-match-sonames for udebs.
+    (Closes: #934748)
+  * Remove "busses" as a false-positive plural for "bus". Thanks to Jörg
+    Frings-Fürst for the report. (Closes: #934452)
+  * Recommend that maintainers do not override the
+    "latest-debian-changelog-entry-changed-to-native" tag.
+  * Don't emit changelog-file-missing-explicit-entry for uploads to the
+    security archive (Re: #934026).
+
+  [ Felix Lechner ]
+  * Remove the "dh-manual-sequence-control-obsolete" tag as it cannot
+    be tested due to debhelper changes.
+
+  [ Xavier ]
+  * Add a "nodejs-module-installed-in-usr-lib" tag to check if Node.js
+    modules are installed in the (correct) new location.
+  * Update the node-package-install-in-nodejs-rootdir test to search in all
+    Node.js module directories.
+
+ -- Chris Lamb <lamby@debian.org>  Wed, 14 Aug 2019 15:56:02 +0000
+
 lintian (2.17.0~bpo9+1) stretch-backports; urgency=medium
 
   * Rebuild for stretch-backports.

@@ -3,5 +3,4 @@ Skeleton: upload-native
 Version: 1.0
 Section: non-free/devel
 Description: This source-upload to non-free will never appear in the archive
-Test-Against:
 Check: control-file

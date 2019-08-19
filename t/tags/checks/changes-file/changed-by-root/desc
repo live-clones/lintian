@@ -2,5 +2,4 @@ Skeleton: changes
 Testname: changed-by-root
 Version: 1.0
 Description: Test Changed-By field with root user
-Test-Against:
 Check: changes-file

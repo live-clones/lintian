@@ -3,5 +3,4 @@ Testname: fields-doc-pkg-wrong-arch
 Version: 1.0
 Package-Architecture: any
 Description: Check for doc pkg not being arch all
-Test-Against:
 Check: fields

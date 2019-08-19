@@ -3,5 +3,4 @@ Testname: fields-aspell
 Version: 1.0
 Description: Tests for Architecture of an aspell package
 Package-Architecture: any
-Test-Against:
 Check: fields

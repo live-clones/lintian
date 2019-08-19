@@ -4,5 +4,4 @@ Version: 1.0
 Profile: lintian-test
 Options: --include-dir ./lintian-include-dir
 Description: Test for wrong weekday in changelog date
-Test-Against:
 Check: changelog-file

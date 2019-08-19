@@ -3,5 +3,4 @@ Testname: rules-missing-targets-with-known-includes
 Version: 1.0
 Description: Test for debian/rules with known included file
 Extra-Build-Depends: javahelper
-Test-Against:
 Check: rules

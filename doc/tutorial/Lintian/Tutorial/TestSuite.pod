@@ -6,6 +6,8 @@ Lintian::Tutorial::TestSuite -- Quick intro to running the Lintian testsuite
 
 =head1 SYNOPSIS
 
+Warning: This document may be out of date.
+
 This guide will quickly introduce you to running the Lintian test
 suite and some tricks.  The Lintian test suite is fairly large and
 accordingly it can take a substantial amount of time to run.  To speed
@@ -20,34 +22,21 @@ The Lintian test suite is an extensive collection of various test
 cases.  The test suite is divided into 4 "sub-suites".  The majority
 of tests are currently located in the "tests" sub-suite.
 
-To run the full suite in all its glory, simply invoke:
+To run the full suite:
 
- $ debian/rules runtests
-
- OR
-
- $ mkdir -p debian/test-out
- $ t/bin/runtests -k --dump-logs t debian/test-out
+ $ rm -rf debian/test-out; t/bin/build-test-packages; t/bin/runtests
 
 While writing a new tag (or check) you probably only want to run a
 particular (subset of the) test(s).  See L</Running a subset of the
 tests> for the available options.
 
-When run via I<debian/rules>, the test suite respects
-"DEB_BUILD_OPTIONS=parallel=N". When using I<t/bin/runtests> directly, use
-I<-jN> to choose the number of threads.  Note that "N" denotes the
-amount of "worker" threads.  The test runner will generally have 2
-threads more than that.  Also each "worker" will run lintian, which
-runs multiple unpacking jobs in parallel as well.
-
-In case you are wondering about the 2 extra threads in the test
-runner, the first of them is the "coordinator" thread (which will
-generally be waiting when the workers are active) and the second one
-is the "output" thread (which handles the fancy output).
-
 =head2 Running a subset of the tests
 
-The following options are available:
+First, you have to build the test packages with:
+
+ $ rm -rf debian/test-out; t/bin/build-test-packages;
+
+Then, the following options are available:
 
 =over 4
 
@@ -55,58 +44,30 @@ The following options are available:
 
 To run a single test by its name, use:
 
- $ debian/rules runtests onlyrun=$name
-
- OR
-
- $ t/bin/runtests --dump-logs t debian/test-out $name
+ $ t/bin/runtests --onlyrun=test:$name
 
 =item Running all tests for a check
 
 To run all tests for a given check, use:
 
- $ debian/rules runtests onlyrun=$check
-
- OR
-
- $ t/bin/runtests --dump-logs -k t debian/test-out $check
+ $ t/bin/runtests --onlyrun=check:$name
 
 $check must be the name of a check (it will test for
 checks/$check.desc) or "legacy".  This will run all tests that start
 with "$check-".
-
-Note: The "changes" sub-suite in the new test suite does not support
-this.
-
-=item Running all tests in a sub-suite
-
-To run all tests in a given sub-suite, use:
-
- $ debian/rules runtests onlyrun=suite:$suites
-
- OR
-
- $ t/bin/runtests --dump-logs -k t debian/test-out suite:$suites
-
-$suites is a comma-separated list of names of sub-suites to run.
-
-Note: this cannot be used to influence the order in which the sub-suites
-are run.
 
 =item Running all tests designed for a specific tag
 
 To run all tests that have a "Test-For" or a "Test-Against" for a given
 tag, use:
 
- $ debian/rules runtests onlyrun=tag:$tag
-
- OR
-
- $ t/bin/runtests --dump-logs -k t debian/test-out tag:$tag
+ $ t/bin/runtests --onlyrun=tag:$name
 
 =back
 
 =head2 Running tests under coverage
+
+This feature is currently untested.
 
 It is possible to run most of the tests under L<Devel::Cover>.  This is
 done by passing I<--coverage> to I<t/bin/runtests>.  Example:

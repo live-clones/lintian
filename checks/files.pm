@@ -821,10 +821,12 @@ sub run {
                 tag 'file-in-usr-lib-sgml', $file;
             }
             # ---------------- /usr/lib/node
-            elsif ($fname =~ m,^usr/lib/nodejs/,) {
-                if ($fname eq 'usr/lib/nodejs/package.json') {
-                    tag 'node-package-install-in-nodejs-rootdir', $fname;
-                }elsif ($fname =~m,usr/lib/nodejs/[^/]*\.js$,) {
+            elsif ($fname =~ m,^usr/(?:share|lib(?:/[^/]+)?)/nodejs/,) {
+                tag 'nodejs-module-installed-in-usr-lib', $file
+                  if $fname =~ m#usr/lib/nodejs/.*# and $file->is_file;
+                if ($fname
+                    =~ m#usr/(?:share|lib(?:/[^/]+)?)/nodejs/(?:package\.json|[^/]*\.js)$#
+                ) {
                     tag 'node-package-install-in-nodejs-rootdir', $fname;
                 }
             }

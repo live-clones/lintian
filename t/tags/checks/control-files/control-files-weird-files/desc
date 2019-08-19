@@ -2,5 +2,4 @@ Skeleton: deb
 Testname: control-files-weird-files
 Version: 1.0
 Description: Test for bad owner of control files
-Test-Against:
 Check: control-files

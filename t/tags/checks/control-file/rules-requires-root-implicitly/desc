@@ -3,5 +3,4 @@ Skeleton: upload-native
 Version: 1.0
 Description: d/control without explicit rules-requires-root
 Options: -L +classification -C control-file
-Test-Against:
 Check: control-file

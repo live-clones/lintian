@@ -5,5 +5,4 @@ Description: Various checks about JAR files
 Author: Vincent Fourmond <fourmond@debian.org>
 Section: java
 Extra-Build-Depends: javahelper, default-jdk
-Test-Against:
 Check: java
