@@ -315,6 +315,7 @@ sub run {
                 tag 'latest-debian-changelog-entry-without-new-version'
                   unless versions_gt($first_version, $second_version)
                   or $entries[0]->Changes =~ /backport/i
+                  or $entries[0]->Distribution eq 'buster'
                   or $entries[0]->Distribution =~ /-security$/i
                   or $entries[0]->Source ne $entries[1]->Source;
                 tag 'latest-debian-changelog-entry-changed-to-native'
