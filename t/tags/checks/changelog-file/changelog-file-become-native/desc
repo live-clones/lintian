@@ -1,4 +1,4 @@
-Skeleton: upload-non-native
+Skeleton: upload-native
 Testname: changelog-file-become-native
 Version: 1.0
 Description: Test for packages where the version suddenly becomes native
