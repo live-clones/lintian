@@ -1,2 +1,3 @@
 debian-source-dir-general (source): unknown-file-in-debian-source formt
+debian-source-dir-general (source): older-source-format 1.0
 debian-source-dir-general (source): missing-debian-source-format
