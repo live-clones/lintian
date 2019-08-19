@@ -48,6 +48,8 @@ BEGIN {
     );
 }
 
+use Data::Dumper;
+
 use Capture::Tiny qw(capture_merged);
 use Cwd qw(getcwd);
 use File::Copy;
@@ -170,17 +172,11 @@ sub prepare {
     my $defaults = read_config($descdefaultspath);
     $data_epoch= max($data_epoch, stat($descdefaultspath)->mtime);
 
-    foreach my $key (keys %{$defaults}) {
-        $testcase->{$key} = $defaults->{$key}
-          unless exists $testcase->{$key};
-    }
-
     # record path to specification
     $testcase->{spec_path} = $specpath;
 
-    unless ($testcase->{testname} && exists $testcase->{version}) {
-        die 'Name or Version missing';
-    }
+    die "Name missing for $specpath"
+      unless length $testcase->{testname};
 
     die 'Outdated test specification (./debian/debian exists).'
       if -e "$specpath/debian/debian";
@@ -230,6 +226,12 @@ sub prepare {
         }
     }
 
+    # add defaults after skeleton
+    foreach my $key (keys %{$defaults}) {
+        $testcase->{$key} = $defaults->{$key}
+          unless exists $testcase->{$key};
+    }
+
     # add some helpful info to testcase
     $testcase->{source} ||= $testcase->{testname};
 
@@ -245,19 +247,23 @@ sub prepare {
     $testcase->{dh_compat_level} //= $ENV{'DEFAULT_DEBHELPER_COMPAT'}
       //die 'Could not get DEFAULT_DEBHELPER_COMPAT.';
 
-    # add upstream version
-    $testcase->{upstream_version} = $testcase->{version};
-    $testcase->{upstream_version} =~ s/-[^-]+$//;
-    $testcase->{upstream_version} =~ s/(-|^)(\d+):/$1/;
+    # add additional version components
+    if (length $testcase->{version}) {
 
-    # version without epoch
-    $testcase->{no_epoch} = $testcase->{version};
-    $testcase->{no_epoch} =~ s/^\d+://;
+        # add upstream version
+        $testcase->{upstream_version} = $testcase->{version};
+        $testcase->{upstream_version} =~ s/-[^-]+$//;
+        $testcase->{upstream_version} =~ s/(-|^)(\d+):/$1/;
 
-    unless ($testcase->{prev_version}) {
-        $testcase->{prev_version} = '0.0.1';
-        $testcase->{prev_version} .= '-1'
-          if index($testcase->{version}, '-') > -1;
+        # version without epoch
+        $testcase->{no_epoch} = $testcase->{version};
+        $testcase->{no_epoch} =~ s/^\d+://;
+
+        unless ($testcase->{prev_version}) {
+            $testcase->{prev_version} = '0.0.1';
+            $testcase->{prev_version} .= '-1'
+              if index($testcase->{version}, '-') > -1;
+        }
     }
 
     say EMPTY;
