@@ -1,4 +1,3 @@
-debconf-config-not-executable (source): older-source-format 1.0
 debconf-config-not-executable (binary): postinst-does-not-load-confmodule
 debconf-config-not-executable (binary): no-debconf-templates
 debconf-config-not-executable (binary): debconf-config-not-executable
