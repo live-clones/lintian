@@ -1,4 +1,4 @@
-Skeleton: upload-native
+Skeleton: upload-non-native
 Testname: legacy-binary
 Source: binary
 Version: 4-1.1
