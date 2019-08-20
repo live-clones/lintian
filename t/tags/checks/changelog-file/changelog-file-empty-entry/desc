@@ -1,5 +1,4 @@
 Skeleton: upload-native
 Testname: changelog-file-empty-entry
-Version: 1.0
 Description: Check changelog empty entry
 Check: changelog-file

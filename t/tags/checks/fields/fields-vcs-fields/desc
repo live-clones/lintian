@@ -1,7 +1,6 @@
 Skeleton: upload-native
 Testname: fields-vcs-fields
 Description: Test well formed VCS-* fields
-Version: 1.0
 Test-Against:
  vcs-field-bitrotted
  vcs-field-has-unexpected-spaces

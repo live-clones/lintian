@@ -1,7 +1,6 @@
 Skeleton: upload-native
 Testname: fields-not-malformed-vcs-fields
 Description: Test not malformed VCS-* fields (especially #778323)
-Version: 1.0
 Test-Against:
  vcs-field-uses-unknown-uri-format
 Check: fields

@@ -1,5 +1,4 @@
 Skeleton: upload-native
 Testname: python-django-package-does-not-depend-on-django
-Version: 1.0
 Description: Check for Django packages that do not specify a Django Depends
 Check: python

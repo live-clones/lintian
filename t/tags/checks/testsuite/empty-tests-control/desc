@@ -1,5 +1,4 @@
 Testname: empty-tests-control
 Skeleton: upload-native
-Version: 1.0
 Description: Test for empty d/tests/control after comments were removed
 Check: testsuite

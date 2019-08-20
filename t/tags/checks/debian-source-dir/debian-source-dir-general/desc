@@ -1,5 +1,4 @@
 Skeleton: upload-native
 Testname: debian-source-dir-general
-Version: 1.0
 Description: General tests for debian/source/* checks
 Check: debian-source-dir

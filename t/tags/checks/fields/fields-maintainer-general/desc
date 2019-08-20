@@ -1,5 +1,4 @@
 Skeleton: upload-native
 Testname: fields-maintainer-general
-Version: 1.0
 Description: Tests of various maintainer and uploader tags
 Check: fields

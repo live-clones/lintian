@@ -1,5 +1,4 @@
 Skeleton: upload-native
 Testname: files-r-data
-Version: 1.0
 Description: Checks for R statistical data files
 Check: cruft

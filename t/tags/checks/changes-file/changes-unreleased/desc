@@ -1,5 +1,4 @@
 Skeleton: changes
 Testname: changes-unreleased
-Version: 1.0
 Description: Test for UNRELEASED package uploaded to unstable
 Check: changes-file

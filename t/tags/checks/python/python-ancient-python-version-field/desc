@@ -1,6 +1,5 @@
 Skeleton: upload-native
 Testname: python-ancient-python-version-field
-Version: 1.0
 Description: Test for ancient python-version fields
 Test-Against:
  old-python-version-field

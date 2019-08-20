@@ -1,6 +1,5 @@
 Skeleton: upload-native
 Testname: runtests-arch-i386
-Version: 1.0
 Test-Architectures: i386
 Description: Test a package that is supposedly i386-specific
 Match-Strategy: literal

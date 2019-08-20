@@ -1,6 +1,5 @@
 Skeleton: deb
 Testname: deb-format-no-compress
-Version: 1.0
 Description: Test package with no compression
 Extra-Build-Depends: dpkg (>= 1.17.6)
 Check: deb-format

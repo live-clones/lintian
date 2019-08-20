@@ -1,6 +1,5 @@
 Skeleton: upload-native
 Testname: generic-empty
-Version: 1.0
 Package-Architecture: all
 Description: Pathological empty package
 Check: fields

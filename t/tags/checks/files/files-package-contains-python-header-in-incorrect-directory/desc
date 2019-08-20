@@ -1,6 +1,5 @@
 Testname: files-package-contains-python-header-in-incorrect-directory
 Skeleton: upload-native
 Section: python
-Version: 1.0
 Description: Check for packages installing headers incorrectly
 Check: files

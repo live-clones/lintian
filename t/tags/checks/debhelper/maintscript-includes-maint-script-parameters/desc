@@ -1,6 +1,5 @@
 Skeleton: upload-native
 Testname: maintscript-includes-maint-script-parameters
-Version: 1.0
 Dh-Compat-Level: 11
 Description: Check dh_installdeb .maintscript files
 Check: debhelper

@@ -1,6 +1,5 @@
 Skeleton: upload-native
 Testname: control-file-golang-built-using
-Version: 1.0
 Description: False-positive test for Built-Using field
 Package-Architecture: any
 Test-Against:

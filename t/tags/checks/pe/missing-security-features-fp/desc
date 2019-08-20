@@ -1,5 +1,4 @@
 Skeleton: upload-native
 Testname: missing-security-features-fp
-Version: 1.0
 Description: Test with hardened PE binaries not missing any security features
 Check: pe

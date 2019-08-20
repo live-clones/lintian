@@ -1,6 +1,5 @@
 Skeleton: upload-native
 Testname: basic
-Version: 1.0
 Description: Simple/basic test of a native package
 Match-Strategy: literal
 Output-Format: EWI

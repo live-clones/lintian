@@ -1,5 +1,4 @@
 Skeleton: upload-native
 Testname: files-empty
-Version: 1.0
 Description: Test of empty binary package detection
 Check: files

@@ -1,5 +1,4 @@
 Skeleton: upload-native
 Testname: scripts-missing-call-to-update-fonts
-Version: 1.0
 Description: Check missing calls to update-fonts
 Check: scripts

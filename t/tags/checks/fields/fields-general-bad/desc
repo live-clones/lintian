@@ -1,6 +1,5 @@
 Skeleton: deb
 Testname: fields-general-bad
 Source: fields-general-BAD?
-Version: 1.0
 Description: Test for package with control bad values
 Check: fields

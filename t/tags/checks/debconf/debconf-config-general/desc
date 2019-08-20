@@ -1,5 +1,4 @@
 Skeleton: upload-native
 Testname: debconf-config-general
-Version: 1.0
 Description: Test for various debconf config issues
 Check: debconf

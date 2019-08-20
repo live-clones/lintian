@@ -1,5 +1,4 @@
 Skeleton: upload-native
 Testname: lintian-overrides
-Version: 1.0
 Description: Test the couple of overrides-related tags
 Check: lintian

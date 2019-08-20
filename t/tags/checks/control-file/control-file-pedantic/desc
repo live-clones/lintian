@@ -1,6 +1,5 @@
 Skeleton: upload-native
 Testname: control-file-pedantic
-Version: 1.0
 Options: --pedantic
 Description: Pedantic tests for control file issues
 Check: control-file

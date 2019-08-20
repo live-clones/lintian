@@ -1,5 +1,4 @@
 Skeleton: changes
 Testname: changed-by-localhost
-Version: 1.0
 Description: Test Changed-By field with localhost address
 Check: changes-file

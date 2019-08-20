@@ -1,5 +1,4 @@
 Skeleton: upload-native
 Testname: scripts-missing-dep
-Version: 1.0
 Description: Check missing dep on various script interpreters
 Check: scripts

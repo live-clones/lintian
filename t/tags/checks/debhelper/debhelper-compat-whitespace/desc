@@ -1,6 +1,5 @@
 Skeleton: upload-native
 Testname: debhelper-compat-whitespace
-Version: 1.0
 Description: Allow whitespace in debian/compat
 Test-Against: debhelper-compat-not-a-number
 Check: debhelper

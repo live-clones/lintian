@@ -1,6 +1,5 @@
 Skeleton: upload-native
 Testname: scripts-multi-arch-same-calls-pycompile
-Version: 1.0
 Package-Architecture: any
 Description: Check for calls to pycompile in MA: same packages
 Check: scripts

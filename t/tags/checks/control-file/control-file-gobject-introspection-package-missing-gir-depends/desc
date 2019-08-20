@@ -1,5 +1,4 @@
 Skeleton: upload-native
 Testname: control-file-gobject-introspection-package-missing-gir-depends
-Version: 1.0
 Description: Check for missing binary dependencies on ${gir:Depends}
 Check: control-file

@@ -1,6 +1,5 @@
 Skeleton: upload-native
 Testname: manpage-named-after-build-path
-Version: 1.0
 Description: Manual page that is named after a build path
 Test-Depends: groff-base (>= 1.22.4)
 Check: manpages

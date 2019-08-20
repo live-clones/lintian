@@ -1,6 +1,5 @@
 Skeleton: upload-native
 Testname: runtests-todo
-Version: 1.0
 Todo: yes
 Description: Test todo tests support
 Match-Strategy: literal

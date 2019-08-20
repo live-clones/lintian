@@ -1,6 +1,5 @@
 Skeleton: upload-native
 Testname: runtests-options
-Version: 1.0
 Description: Test a bad package but use -C to only catch some tags
 Options: -C standards-version
 Match-Strategy: literal

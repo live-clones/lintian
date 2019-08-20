@@ -1,5 +1,4 @@
 Skeleton: upload-native
 Testname: control-file-national-encoding
-Version: 1.0
 Description: Test for control with national encoding
 Check: control-file

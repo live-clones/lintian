@@ -1,5 +1,4 @@
 Skeleton: upload-native
 Testname: files-wildcard-characters
-Version: 1.0
 Description: Check for wildcard characters in filenames
 Check: files

@@ -1,6 +1,5 @@
 Skeleton: upload-native
 Testname: fields-indep-without-arch-indep
-Version: 1.0
 Package-Architecture: any
 Description: Test for B-D-I and no indep pkgs
 Check: fields

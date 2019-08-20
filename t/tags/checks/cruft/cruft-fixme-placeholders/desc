@@ -1,5 +1,4 @@
 Skeleton: upload-native
 Testname: cruft-fixme-placeholders
-Version: 1.0
 Description: Check for placeholders in various maintainer scripts
 Check: cruft

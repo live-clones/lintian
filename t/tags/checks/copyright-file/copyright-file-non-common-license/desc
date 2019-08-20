@@ -1,6 +1,5 @@
 Skeleton: upload-native
 Testname: copyright-file-non-common-license
-Version: 1.0
 Description: Test for false positive for a common license
 Options: --pedantic
 Test-Against:

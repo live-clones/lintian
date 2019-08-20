@@ -1,5 +1,4 @@
 Skeleton: upload-native
 Testname: source-copyright-undefined
-Version: 1.0
 Description: Test for fixme/todo/unknown
 Check: source-copyright

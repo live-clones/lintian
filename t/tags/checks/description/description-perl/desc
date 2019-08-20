@@ -1,5 +1,4 @@
 Skeleton: upload-native
 Testname: description-perl
-Version: 1.0
 Description: Tests of perl-related description tags
 Check: description

@@ -1,5 +1,4 @@
 Skeleton: upload-native
 Testname: python-python2-no-python3-unrel
-Version: 1.0
 Description: Check for Python packages that only ship a Python 2.x module
 Check: debhelper

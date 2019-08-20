@@ -1,6 +1,5 @@
 Skeleton: upload-native
 Testname: file-info-errors
-Version: 1.0
 Description: Test handling of errors from file
 Match-Strategy: literal
 Output-Format: EWI

@@ -1,6 +1,5 @@
 Skeleton: upload-native
 Testname: patch-systems-quilt-description
-Version: 1.0
 Description: Test for quilt patches which do not have accompanying descriptions
 Extra-Build-Depends: quilt
 References: Debian Bug #498892

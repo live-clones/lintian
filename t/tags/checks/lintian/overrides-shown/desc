@@ -1,6 +1,5 @@
 Skeleton: upload-native
 Testname: overrides-shown
-Version: 1.0
 Package-Architecture: any
 Options: --pedantic --show-overrides
 Description: Test override handling

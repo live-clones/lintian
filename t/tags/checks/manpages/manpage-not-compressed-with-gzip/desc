@@ -1,5 +1,4 @@
 Testname: manpage-not-compressed-with-gzip
 Skeleton: upload-native
-Version: 1.0
 Description: Man page compressed with algorithm other than gzip
 Check: manpages
