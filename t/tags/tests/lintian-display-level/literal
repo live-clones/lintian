@@ -2,7 +2,7 @@ P: lintian-display-level source: debian-control-has-unusual-field-spacing line 1
 W: lintian-display-level source: dfsg-version-misspelled 1.0+dsfg-1.1
 P: lintian-display-level source: no-homepage-field
 W: lintian-display-level source: maintainer-upload-has-incorrect-version-number 1.0+dsfg-1.1
-P: lintian-display-level source: direct-changes-in-diff-but-no-patch-system Changes
+W: lintian-display-level source: format-3.0-but-debian-changes-patch
 X: lintian-display-level source: debian-watch-does-not-check-gpg-signature
 E: lintian-display-level: possible-gpl-code-linked-with-openssl
 I: lintian-display-level: description-synopsis-might-not-be-phrased-properly "Test Lintian --display-level handling."
