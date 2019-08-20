@@ -1,6 +1,5 @@
 Testname: cruft-empty-diff
 Source-Format: 1.0
-Version: 1.0-1
 Skeleton: upload-non-native
 Description: Test an empty Debian diff
 References: Debian Bug#498668

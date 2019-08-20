@@ -1,5 +1,4 @@
 Testname: cruft-general-diff
-Version: 1.0-1
 Skeleton: upload-non-native
 Source-Format: 1.0
 Description: Check for cruft added in the diff
