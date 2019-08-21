@@ -1444,6 +1444,9 @@ sub load_profile_and_configure_tags {
     $TAGS->sources(keys(%display_source)) if %display_source;
     $TAGS->profile($profile);
 
+    undef $checks
+      if ($checks // q{})  eq 'all';
+
     if ($dont_check || %suppress_tags || $checks || $check_tags) {
         _update_profile($profile, $TAGS, $dont_check, \%suppress_tags,$checks);
     }
