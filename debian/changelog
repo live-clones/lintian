@@ -16,7 +16,7 @@ lintian (2.19.0) unstable; urgency=medium
   [ Chris Lamb ]
   * Don't emit the latest-debian-changelog-entry-without-new-version
     warning for uploads to the "buster" distribution. (Closes: #934982)
-  * Also check for "${source:Upstream:Version}" etc. in the
+  * Also check for "${source:Upstream-Version}" etc. in the
     version-substvar-for-external-package tag, not just
     "${source:Version}". (Closes: #935138)
   * Update the name of the node-html5shiv library for the
