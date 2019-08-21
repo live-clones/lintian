@@ -22,6 +22,7 @@ use Carp qw(croak);
 use List::MoreUtils qw(any none);
 
 use Lintian::Data;
+use Lintian::SlidingWindow;
 use Lintian::Tags qw(tag);
 use Lintian::Util qw(rstrip);
 
