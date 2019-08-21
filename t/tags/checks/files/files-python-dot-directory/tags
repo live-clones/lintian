@@ -1,2 +1,1 @@
-files-python-dot-directory (binary): python-package-missing-depends-on-python
 files-python-dot-directory (binary): package-contains-python-dot-directory usr/lib/python3/dist-packages/foo/.directory/

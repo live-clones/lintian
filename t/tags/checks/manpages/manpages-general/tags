@@ -1,11 +1,4 @@
 manpages-general (binary): spelling-error-in-manpage usr/share/man/man1/program.1.gz speling spelling
-manpages-general (binary): package-installs-file-to-usr-x11r6 usr/X11R6/man/man1/rstartd.1x
-manpages-general (binary): package-installs-file-to-usr-x11r6 usr/X11R6/man/man1/
-manpages-general (binary): package-installs-file-to-usr-x11r6 usr/X11R6/man/
-manpages-general (binary): package-installs-file-to-usr-x11r6 usr/X11R6/bin/rstartd
-manpages-general (binary): package-installs-file-to-usr-x11r6 usr/X11R6/bin/
-manpages-general (binary): package-installs-file-to-usr-x11r6 usr/X11R6/
-manpages-general (binary): package-contains-documentation-outside-usr-share-doc usr/share/man/man1/README.1.gz
 manpages-general (binary): manpage-section-mismatch usr/share/man/man6/simple.pod.gz:LINE pod != 6
 manpages-general (binary): manpage-not-compressed-with-max-compression usr/share/man/man6/usr-games-binary.6.gz
 manpages-general (binary): manpage-not-compressed-with-gzip usr/share/man/man1/usr-sbin-binary.1.gz
@@ -25,8 +18,6 @@ manpages-general (binary): manpage-has-errors-from-man usr/share/man/man1/test.1
 manpages-general (binary): manpage-has-bad-whatis-entry usr/share/man/man1/usr-bin-binary.1
 manpages-general (binary): link-to-undocumented-manpage usr/share/man/man3/function.3.gz
 manpages-general (binary): link-to-undocumented-manpage usr/share/man/man1/bin-binary.1.gz
-manpages-general (binary): gz-file-not-gzip usr/share/man/man1/usr-sbin-binary.1.gz
-manpages-general (binary): gz-file-not-gzip usr/share/man/man1/usr-bin-binary-alt.1.gz
 manpages-general (binary): empty-manual-page usr/share/man/man6/usr-games-binary.6.gz
 manpages-general (binary): empty-manual-page usr/share/man/man1/usr-sbin-binary.1.gz
 manpages-general (binary): empty-manual-page usr/share/man/man1/usr-bin-binary-alt.1.gz

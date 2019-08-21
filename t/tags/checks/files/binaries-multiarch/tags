@@ -1,2 +1,1 @@
-binaries-multiarch (source): pre-depends-directly-on-multiarch-support libbasic2
-libbasic2 (binary): symbols-file-missing-build-depends-package-field
+

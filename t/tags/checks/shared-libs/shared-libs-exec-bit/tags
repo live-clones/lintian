@@ -1,5 +1,3 @@
-shared-libs-exec-bit (source): override_dh_fixperms-does-not-call-dh_fixperms (line 8)
 libexecbit1 (binary): symbols-file-missing-build-depends-package-field
 libexecbit1 (binary): shlib-with-executable-bit usr/lib/libexecbit.so.1.0.1 0755
 libexecbit1 (binary): shlib-with-bad-permissions usr/lib/libbadperm.so.1.0.1 0600
-libexecbit1 (binary): non-standard-file-perm usr/lib/libbadperm.so.1.0.1 0600 != 0644

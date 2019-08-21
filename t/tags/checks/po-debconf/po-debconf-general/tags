@@ -6,6 +6,3 @@ po-debconf-general (source): missing-file-from-potfiles-in some-other-file
 po-debconf-general (source): misnamed-po-file debian/po/English.po
 po-debconf-general (source): invalid-po-file debian/po/de.po
 po-debconf-general (source): invalid-po-file debian/po/English.po
-po-debconf-general (binary): unused-debconf-template po-debconf-general/test-2
-po-debconf-general (binary): unused-debconf-template po-debconf-general/test
-po-debconf-general (binary): no-debconf-config

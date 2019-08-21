@@ -1,4 +1,3 @@
-cruft-general-wig-pen (source): unsupported-source-format 2.0
 cruft-general-wig-pen (source): diff-contains-svn-control-dir debian/.svn
 cruft-general-wig-pen (source): diff-contains-svn-conflict-file debian/foo.r1352
 cruft-general-wig-pen (source): diff-contains-svn-commit-file debian/svn-commit.tmp

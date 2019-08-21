@@ -7,5 +7,4 @@ debhelper-no-depends (source): missing-build-dependency-for-dh_-command dh_lisp 
 debhelper-no-depends (source): missing-build-dependency-for-dh_-command dh_gtkmodules => libgtk2.0-dev
 debhelper-no-depends (source): missing-build-dependency-for-dh_-command dh_dpatch_patch => dpatch
 debhelper-no-depends (source): missing-build-dependency-for-dh_-command dh_clideps => cli-common-dev
-debhelper-no-depends (source): missing-build-dependency debhelper | debhelper-compat
 debhelper-no-depends (source): debhelper-but-no-misc-depends debhelper-no-depends

@@ -1,4 +1,2 @@
-unknown-menu-tag (binary): possible-bashism-in-maintainer-script postrm:3 'if type '
 unknown-menu-tag (binary): menu-item-contains-unknown-tag custom usr/share/menu/test-menu:6
 unknown-menu-tag (binary): menu-command-not-in-package usr/share/menu/test-menu:6 usr/bin/test-script
-unknown-menu-tag (binary): command-with-path-in-maintainer-script postinst:9 /usr/bin/update-menus

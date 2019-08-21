@@ -2,8 +2,8 @@ files-general (binary): windows-devel-file-in-package usr/lib/foo/foo.vcproj
 files-general (binary): stray-directory-in-manpage-directory usr/share/man/man1/random/
 files-general (binary): star-file usr/share/foo/*
 files-general (binary): raster-image-in-scalable-directory usr/share/icons/hicolor/scalable/apps/lintian-16x16.png
-files-general (binary): python-package-missing-depends-on-python
 files-general (binary): package-modifies-ld.so-search-path etc/ld.so.conf.d/lintian-lib.conf
+files-general (binary): package-contains-timestamped-gzip usr/share/foo/bar.doctree.gz
 files-general (binary): package-contains-python-tests-in-global-namespace usr/lib/python3/dist-packages/test_foo.py
 files-general (binary): package-contains-python-doctree-file usr/share/foo/foo.doctree
 files-general (binary): package-contains-python-doctree-file usr/share/foo/bar.doctree.gz
@@ -33,7 +33,6 @@ files-general (binary): file-name-ends-in-whitespace usr/share/foo/ws
 files-general (binary): file-name-contains-wildcard-character usr/share/foo/*
 files-general (binary): file-in-unusual-dir var/catman/do
 files-general (binary): file-in-unusual-dir new-top-level-dir/file-in-new-top-level-dir
-files-general (binary): executable-not-elf-or-script usr/share/man/man5/foo.5.gz
 files-general (binary): executable-manpage usr/share/man/man5/foo.5.gz
 files-general (binary): duplicated-compressed-file usr/share/doc/lintian/lintian-16x16.png.gz
 files-general (binary): dir-or-file-in-var-run var/run/lintian/

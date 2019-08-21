@@ -1,17 +1,1 @@
-etcfiles (source): not-binnmuable-all-depends-any only-etcfiles -> etcfiles
-etcfiles (source): debian-rules-missing-required-target binary-arch
-etcfiles (source): ancient-standards-version 3.5.0 (released 2001-01-29) (current is CURRENT)
-only-etcfiles (binary): extended-description-is-empty
-etcfiles (binary): run-parts-cron-filename-contains-illegal-chars etc/cron.daily/cronfile-contains.fullstop
-etcfiles (binary): readme-debian-mentions-usr-doc line 2
-etcfiles (binary): package-contains-hardlink etc/improper -> etc/improper-link
-etcfiles (binary): non-etc-file-marked-as-conffile var/lib/foo
-etcfiles (binary): no-copyright-file
-etcfiles (binary): md5sums-lists-nonexistent-file usr/bin/foo
-etcfiles (binary): md5sum-mismatch etc/improper
-etcfiles (binary): malformed-md5sums-control-file line 7
-etcfiles (binary): file-missing-in-md5sums usr/share/doc/etcfiles/changelog
-etcfiles (binary): file-missing-in-md5sums etc/improper-link
-etcfiles (binary): file-in-etc-not-marked-as-conffile etc/improper-link
-etcfiles (binary): file-in-etc-not-marked-as-conffile etc/improper
 etcfiles (binary): changelog-file-not-compressed changelog

@@ -1,1 +1,1 @@
-control-file-upstream-signature-not-missing (source): debian-watch-could-verify-download debian/upstream/signing-key.asc
+

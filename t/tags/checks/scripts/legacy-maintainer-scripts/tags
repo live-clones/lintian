@@ -1,21 +1,3 @@
-maintainer-scripts (source): wrong-debian-qa-group-name QA group <packages@qa.debian.org>
-maintainer-scripts (source): qa-upload-has-incorrect-version-number 7+dfsg-0.1
-maintainer-scripts (source): orphaned-package-should-not-have-uploaders
-maintainer-scripts (source): malformed-dm-upload-allowed Yes
-maintainer-scripts (source): dm-upload-allowed-is-obsolete
-maintainer-scripts (source): debian-watch-uses-insecure-uri http://domain.tld/foo-(.+)\.tar\.gz
-maintainer-scripts (source): debian-watch-file-unknown-version 5
-maintainer-scripts (source): debian-watch-file-should-mangle-version line 7
-maintainer-scripts (source): debian-watch-file-should-mangle-version line 11
-maintainer-scripts (source): debhelper-but-no-misc-depends maintainer-scripts
-maintainer-scripts (source): changelog-should-mention-qa
-maintainer-scripts (source): ancient-standards-version 3.1.1 (released 1999-11-16) (current is CURRENT)
-maintainer-scripts (binary): wrong-debian-qa-group-name QA group <packages@qa.debian.org>
-maintainer-scripts (binary): uses-implicit-await-trigger interest bar (line 4)
-maintainer-scripts (binary): uses-implicit-await-trigger activate foo (line 2)
-maintainer-scripts (binary): uses-dpkg-database-directly preinst (line 12)
-maintainer-scripts (binary): uses-dpkg-database-directly postinst (line 81)
-maintainer-scripts (binary): uses-dpkg-database-directly postinst (line 78)
 maintainer-scripts (binary): read-in-maintainer-script prerm:66
 maintainer-scripts (binary): read-in-maintainer-script prerm:65
 maintainer-scripts (binary): read-in-maintainer-script prerm:64
@@ -26,12 +8,6 @@ maintainer-scripts (binary): read-in-maintainer-script prerm:180
 maintainer-scripts (binary): read-in-maintainer-script prerm:179
 maintainer-scripts (binary): read-in-maintainer-script prerm:177
 maintainer-scripts (binary): read-in-maintainer-script postinst:20
-maintainer-scripts (binary): prerm-calls-updaterc.d foo
-maintainer-scripts (binary): preinst-calls-updaterc.d bar
-maintainer-scripts (binary): postrm-does-not-purge-debconf
-maintainer-scripts (binary): postrm-does-not-call-updaterc.d-for-init.d-script etc/init.d/foo
-maintainer-scripts (binary): postrm-contains-additional-updaterc.d-calls etc/init.d/bar
-maintainer-scripts (binary): postinst-does-not-load-confmodule
 maintainer-scripts (binary): possibly-insecure-handling-of-tmp-files-in-maintainer-script postrm:40
 maintainer-scripts (binary): possibly-insecure-handling-of-tmp-files-in-maintainer-script postinst:51
 maintainer-scripts (binary): possible-bashism-in-maintainer-script prerm:98 '>& bar'
@@ -123,12 +99,6 @@ maintainer-scripts (binary): possible-bashism-in-maintainer-script postinst:147 
 maintainer-scripts (binary): possible-bashism-in-maintainer-script postinst:145 '${!foo}'
 maintainer-scripts (binary): possible-bashism-in-maintainer-script postinst:144 'echo -e'
 maintainer-scripts (binary): possible-bashism-in-maintainer-script postinst:109 '${H[@]}'
-maintainer-scripts (binary): output-of-updaterc.d-not-redirected-to-dev-null bar postrm
-maintainer-scripts (binary): no-md5sums-control-file
-maintainer-scripts (binary): no-debconf-templates
-maintainer-scripts (binary): no-copyright-file
-maintainer-scripts (binary): missing-debconf-dependency
-maintainer-scripts (binary): maintscript-calls-ldconfig postrm
 maintainer-scripts (binary): maintainer-shell-script-fails-syntax-check prerm
 maintainer-scripts (binary): maintainer-shell-script-fails-syntax-check postinst
 maintainer-scripts (binary): maintainer-script-should-not-use-update-alternatives-remove postrm:4
@@ -158,9 +128,6 @@ maintainer-scripts (binary): maintainer-script-ignores-errors postrm
 maintainer-scripts (binary): maintainer-script-empty config
 maintainer-scripts (binary): maintainer-script-calls-init-script-directly prerm:55
 maintainer-scripts (binary): install-info-used-in-maintainer-script postinst:28
-maintainer-scripts (binary): init.d-script-not-included-in-package etc/init.d/foo
 maintainer-scripts (binary): forbidden-config-interpreter #!/usr/bin/python
-maintainer-scripts (binary): debian-changelog-file-contains-invalid-email-address jeroen@mordor
-maintainer-scripts (binary): config-does-not-load-confmodule
 maintainer-scripts (binary): command-with-path-in-maintainer-script preinst:12 /bin/egrep
 maintainer-scripts (binary): command-with-path-in-maintainer-script postinst:172 /usr/bin/baz

@@ -1,10 +1,7 @@
-copyright-file-general (source): license-problem-php-license debian/copyright-php.copyright
-copyright-file-general (source): license-problem-bad-php-license debian/copyright-php.copyright
 copyright-symlink (binary): copyright-file-is-symlink
 copyright-poor-common-licenses (binary): copyright-should-refer-to-common-license-file-for-gpl
 copyright-poor-common-licenses (binary): copyright-does-not-refer-to-common-license-file /GPL-3
 copyright-old-style (binary): no-copyright-file
-copyright-old-style (binary): FSSTND-dir-in-usr usr/doc/
 copyright-old-fsf (binary): old-fsf-address-in-copyright-file
 copyright-missing-perl-license-pointer (binary): copyright-file-lacks-pointer-to-perl-license
 copyright-missing-apache2-license-pointer (binary): copyright-should-refer-to-common-license-file-for-apache-2

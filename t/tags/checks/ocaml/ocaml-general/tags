@@ -6,7 +6,6 @@ libocaml-general-ocaml-dev (binary): ocaml-dangling-cmi usr/lib/ocaml/baz.cmi
 libocaml-general-ocaml-dev (binary): ocaml-dangling-cmi usr/lib/ocaml/bar.cmi
 libocaml-general-ocaml-dev (binary): ocaml-dangling-cmi usr/lib/foo.cmi
 libocaml-general-ocaml-dev (binary): ocaml-dangling-cmi 2 more files not shown
-libocaml-general-ocaml (binary): package-contains-no-arch-dependent-files
 libocaml-general-ocaml (binary): ocaml-dev-file-in-nondev-package 2 files in usr/lib
 libocaml-general-ocaml (binary): ocaml-dangling-cmxs usr/lib/ocaml/bar.cmxs
 libocaml-general-ocaml (binary): ocaml-dangling-cmxa usr/lib/ocaml/foo.cmxa

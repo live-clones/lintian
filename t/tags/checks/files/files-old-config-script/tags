@@ -1,7 +1,5 @@
 config-ma-no (binary): old-style-config-script usr/bin/arch-no-config
 config-ma-no (binary): old-style-config-script usr/bin/arch-cross-no-config
-config-ma-no (binary): binary-without-manpage usr/bin/arch-no-config
-config-ma-no (binary): binary-without-manpage usr/bin/arch-cross-no-config
 config-ma-foreign (binary): old-style-config-script-multiarch-path usr/bin/arch-foreign-config full text contains architecture specific dir ARCH
 config-ma-foreign (binary): old-style-config-script-multiarch-path usr/bin/arch-cross-foreign-config full text contains architecture specific dir ARCH
 config-ma-foreign (binary): old-style-config-script-multiarch-path usr/bin/TRIPLET_-arch-cross-foreign-config full text contains architecture specific dir ARCH
@@ -9,10 +7,6 @@ config-ma-foreign (binary): old-style-config-script usr/bin/arch-foreign-config
 config-ma-foreign (binary): old-style-config-script usr/bin/arch-cross-foreign-config
 config-ma-foreign (binary): old-style-config-script usr/bin/TRIPLET_-arch-foreign-config
 config-ma-foreign (binary): old-style-config-script usr/bin/TRIPLET_-arch-cross-foreign-config
-config-ma-foreign (binary): binary-without-manpage usr/bin/arch-foreign-config
-config-ma-foreign (binary): binary-without-manpage usr/bin/arch-cross-foreign-config
-config-ma-foreign (binary): binary-without-manpage usr/bin/TRIPLET_-arch-foreign-config
-config-ma-foreign (binary): binary-without-manpage usr/bin/TRIPLET_-arch-cross-foreign-config
 config-all (binary): old-style-config-script-multiarch-path-arch-all usr/bin/arch-cross-all-config full text contains architecture specific dir ARCH
 config-all (binary): old-style-config-script-multiarch-path-arch-all usr/bin/arch-all-config full text contains architecture specific dir ARCH
 config-all (binary): old-style-config-script-multiarch-path-arch-all usr/bin/TRIPLET_-arch-cross-all-config full text contains architecture specific dir ARCH
@@ -20,7 +14,3 @@ config-all (binary): old-style-config-script usr/bin/arch-cross-all-config
 config-all (binary): old-style-config-script usr/bin/arch-all-config
 config-all (binary): old-style-config-script usr/bin/TRIPLET_-arch-cross-all-config
 config-all (binary): old-style-config-script usr/bin/TRIPLET_-arch-all-config
-config-all (binary): binary-without-manpage usr/bin/arch-cross-all-config
-config-all (binary): binary-without-manpage usr/bin/arch-all-config
-config-all (binary): binary-without-manpage usr/bin/TRIPLET_-arch-cross-all-config
-config-all (binary): binary-without-manpage usr/bin/TRIPLET_-arch-all-config

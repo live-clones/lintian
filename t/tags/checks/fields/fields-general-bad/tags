@@ -5,9 +5,6 @@ fields-general-BAD? (binary): too-many-architectures
 fields-general-BAD? (binary): source-field-malformed fields-general-BAD?
 fields-general-BAD? (binary): package-not-lowercase
 fields-general-BAD? (binary): multiline-field priority
-fields-general-BAD? (binary): file-name-contains-wildcard-character usr/share/doc/fields-general-BAD?/copyright
-fields-general-BAD? (binary): file-name-contains-wildcard-character usr/share/doc/fields-general-BAD?/changelog.gz
-fields-general-BAD? (binary): file-name-contains-wildcard-character usr/share/doc/fields-general-BAD?/
 fields-general-BAD? (binary): empty-section-field
 fields-general-BAD? (binary): bad-version-number 1.0?
 fields-general-BAD? (binary): bad-version-in-relation recommends: g++ (>= s4.1)
