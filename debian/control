@@ -79,7 +79,7 @@ Build-Depends:
  python <!nocheck>,
  python-all-dev <!nocheck>,
  python-numpy <!nocheck>,
- python3-docutils <!nocheck>,
+ python3-docutils,
  quilt <!nocheck>,
  t1utils <!nocheck>,
  unzip <!nocheck>,
