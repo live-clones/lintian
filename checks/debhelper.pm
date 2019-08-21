@@ -261,7 +261,7 @@ sub run {
         tag 'debian-build-system', 'other';
     }
 
-    unless ($seencommand) {
+    unless ($seencommand or $inclcdbs) {
         tag 'package-does-not-use-debhelper-or-cdbs';
         return;
     }
