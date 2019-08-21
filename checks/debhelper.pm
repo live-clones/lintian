@@ -238,6 +238,7 @@ sub run {
                  /usr/share/pkg-kde-tools/qt-kde-team/\d+/debian-qt-kde\.mk
               }xsm
         ) {
+            $inclcdbs = 1;
             $build_systems{'dhmk'} = 1;
             delete($build_systems{'debhelper'});
         }
