@@ -294,6 +294,12 @@ sub run {
 
         my ($base) = $interpreter =~ m,([^/]*)$,;
 
+        # Ignore Python scripts that are shipped under dist-packages; these
+        # files aren't supposed to be called as scripts.
+        next
+          if $base eq 'python'
+          and $filename =~ m,^usr/lib/python3/dist-packages/,;
+
         # allow exception for .in files that have stuff like #!@PERL@
         next
           if (  $filename =~ m,\.in$,
