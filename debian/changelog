@@ -1,3 +1,9 @@
+lintian (2.19.0+git) UNRELEASED; urgency=medium
+
+  * WIP
+
+ -- Chris Lamb <lamby@debian.org>  Wed, 21 Aug 2019 09:59:19 -0700
+
 lintian (2.19.0) unstable; urgency=medium
 
   * Summary of tag changes:
