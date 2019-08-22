@@ -1,2 +1,0 @@
-Subject: {$build_product}
-Options: --no-user-dirs {$options} --profile {$profile} --allow-root --no-cfg --exp-output format={$output_format} --pedantic -I -E --display-level '-wishlist/certain' --display-level '-<=wild-guess' --display-level '+>important' --display-level '+normal/wild-guess'
