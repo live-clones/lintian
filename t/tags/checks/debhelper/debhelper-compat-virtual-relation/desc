@@ -1,7 +1,7 @@
 Skeleton: upload-native
 Testname: debhelper-compat-virtual-relation
 Description: Test debhelper-compat as a build-dependency
-Options: -L +classification -C debhelper
+Options: -L +classification
 Default-Build-Depends:
  debhelper (>= 11.3~)
 Test-Against:
