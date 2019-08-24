@@ -1,6 +1,5 @@
 Skeleton: upload-native
 Testname: scripts-missing-call-to-update-fonts-unrel
-Version: 1.0
 Description: Check missing calls to update-fonts (false-positives)
 Test-Against:
  missing-call-to-update-fonts

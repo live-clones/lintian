@@ -1,7 +1,6 @@
 Skeleton: upload-native
 Testname: fields-multi-arch-same-package-has-arch-specific-overrides
 Description: Test for Multi-Arch: same package with arch-specific overrides
-Version: 1.0
 Test-Architectures: amd64
 Package-Architecture: any
 Check: fields

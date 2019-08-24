@@ -1,5 +1,4 @@
 Skeleton: upload-native
 Testname: source-copyright-typo-field
-Version: 1.0
 Description: Test for typo in DEP 5 field name
 Check: source-copyright

@@ -42,7 +42,6 @@ use Time::HiRes qw(gettimeofday tv_interval);
 
 my $INIT_ROOT = $ENV{'LINTIAN_ROOT'};
 
-use Lintian::Command qw(safe_qx);
 use Lintian::DepMap;
 use Lintian::DepMap::Properties;
 use Lintian::Data;
@@ -56,7 +55,7 @@ use Lintian::ProcessablePool;
 use Lintian::Profile;
 use Lintian::Tags qw(tag);
 use Lintian::Unpacker;
-use Lintian::Util qw(internal_error parse_boolean strip);
+use Lintian::Util qw(internal_error parse_boolean strip safe_qx);
 
 sanitize_environment();
 
@@ -879,10 +878,10 @@ sub auto_clean_packages {
     my $loop = IO::Async::Loop->new;
     $loop->add($removelpkg);
 
-    my @serializable = map { $_->clear_cache } $group->get_processables;
+    my @serializable = map { $_->clear_cache; $_ } $group->get_processables;
     my @futures = map { $removelpkg->call(args => [$_]) } @serializable;
 
-    my $done = Future->needs_all(@futures);
+    my $done = Future->wait_all(@futures);
     $done->get;
 
     $removelpkg->stop;
@@ -1255,8 +1254,7 @@ sub _find_changes {
     if (exists $ENV{'DEB_BUILD_ARCH'}) {
         push @archs, $ENV{'DEB_BUILD_ARCH'};
     } else {
-        my %opts = ('err' => '&1',);
-        my $arch = safe_qx(\%opts, 'dpkg', '--print-architecture');
+        my $arch = safe_qx('dpkg', '--print-architecture');
         chomp($arch);
         push @archs, $arch if $arch ne '';
     }

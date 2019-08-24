@@ -1,5 +1,4 @@
 Testname: phppear-pear
-Version: 1.0-1
 Description: phppear tests for PEAR packages
 Extra-Build-Depends: pkg-php-tools
 Skeleton: upload-non-native

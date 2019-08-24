@@ -1,7 +1,6 @@
-Skeleton: upload-native
+Skeleton: upload-non-native
 Testname: legacy-binary
 Source: binary
-Sequence: 9999
 Version: 4-1.1
 Description: Legacy test "binary"
 Check: copyright-file

@@ -1,5 +1,0 @@
-Skeleton: dsc
-Testname: control-field-traversal-3
-Version: 1
-Description: Test for directory traversal issues via field names or values
-Todo: yes

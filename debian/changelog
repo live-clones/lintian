@@ -1,3 +1,52 @@
+lintian (2.19.0) unstable; urgency=medium
+
+  * Summary of tag changes:
+    + Added:
+      - older-source-format
+      - unreleased-changelog-distribution
+    + Removed:
+      - source-field-does-not-match-pkg-name
+
+  [ Chris Lamb ]
+  * Don't emit the latest-debian-changelog-entry-without-new-version
+    warning for uploads to the "buster" distribution. (Closes: #934982)
+  * Also check for "${source:Upstream:Version}" etc. in the
+    version-substvar-for-external-package tag, not just
+    "${source:Version}". (Closes: #935138)
+  * Update the name of the node-html5shiv library for the
+    privacy-breach-uses-embedded-file-html5shiv and
+    embedded-javascript-library tags. (Closes: #935083)
+
+  [ Felix Lechner ]
+  * Emit a wishlist tag for source format 1.0 packages. (Closes: #884498)
+  * Complain about UNRELEASED distribution in changelogs if the .changes
+    file is signed. (Closes: #873520)
+  * Generate the HTML manual from reStructuredText; use latter as plain
+    text. (Closes: #865847)
+  * Convert the untestable source-field-does-not-match-pkg-name tag to a
+    fatal program error.
+  * In the test suite, use a default 3.0 source format and add default
+    version numbers.
+
+  [ Niels Thykier ]
+  * commands/lintian:
+    - Ensure @serializable is properly created.
+    - Use wait_all during clean up; we are more interested in getting as
+      much cleaned up over failing fast.
+
+  [ Simon McVittie ]
+  * Add /usr/bin/gjs-console as a recognised interpreter/shebang.
+    (Closes: #934981)
+
+  [ Raphaël Hertzog ]
+  * Update the Kali Linux profile to make the dir-or-file-in-opt tag
+    overridable.
+
+  [ Paul Wise ]
+  * Refer to the HTML version of the Debian Policy Upgrading checklist.
+
+ -- Chris Lamb <lamby@debian.org>  Wed, 21 Aug 2019 16:34:36 +0000
+
 lintian (2.18.0~bpo9+1) stretch-backports; urgency=medium
 
   * Rebuild for stretch-backports.

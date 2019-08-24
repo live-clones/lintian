@@ -1,0 +1,4 @@
+Skeleton: source-non-native
+Testname: cruft-ancient-file
+Description: Test package for ancient files producing tar errors
+Check: cruft

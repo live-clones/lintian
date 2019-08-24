@@ -1,0 +1,4 @@
+Skeleton: source-non-native
+Testname: unpack-srcpkg-xz
+Source-Format: 3.0 (quilt)
+Description: Test package for xz-compressed source packages

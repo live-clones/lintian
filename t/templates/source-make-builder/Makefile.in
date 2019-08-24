@@ -6,7 +6,7 @@ packagedir = $(name)-$(version)
 underscored = $(name)_$(version)
 
 origdata = orig
-origtargz = $(underscored).orig.tar.gz
+origstem = $(underscored).orig
 
 formatfile = debian/source/format
 
@@ -14,40 +14,58 @@ watchfile = $(packagedir)/debian/watch
 
 product = $(underscored).dsc
 
+ifneq (,$(wildcard dpkg-overrides))
+dpkgoverrides = $(shell cat dpkg-overrides)
+endif
+
+ifeq ($(type),native)
+dpkgoptions = -sn
+else
+dpkgoptions = -sp
+endif
+
 .DEFAULT_GOAL := product
 
-ifeq ($(type),native)
-product: $(watchfile) $(origtargz)
-	cp -rp debian/ $(packagedir)/
-	if [ -x ./pre_build ] ; then ./pre_build $(shell realpath $(packagedir)) ; fi
-	tar cfz $(underscored).tar.gz $(packagedir)
-	subst-dsc $(underscored).tar.gz < dsc.in > $(underscored).dsc
-else
-product: $(watchfile) $(origtargz)
-	cp -rp debian $(packagedir)
-	if [ -x ./pre_build ] ; then ./pre_build $(shell realpath $(packagedir)) ; fi
-	dpkg-source -sp -b $(packagedir)
-endif
+product: clean
+	-mkdir -p $(packagedir)
+	if [ -x ./post-clean ] ; then \
+		./post-clean $(packagedir) ; \
+	fi
 
-ifeq ($(type),native)
-$(watchfile): $(origtargz)
-else
-$(watchfile): $(origtargz)
+	if [ "{$type}" != "native" ] ; then \
+		mkdir $(origdata) || true ; \
+		cp -rp $(origdata)/. $(packagedir) ; \
+		if [ -x ./pre-orig ] ; then \
+			./pre-orig $(shell realpath $(packagedir)) ; \
+		fi ; \
+		if [ -x ./tar-orig ] ; then \
+			./tar-orig $(origstem) $(packagedir) ; \
+		fi ; \
+		if [ -f $(formatfile) ] && grep --quiet "^3\.. (quilt)$$" $(formatfile) ; then \
+			rm -rf $(packagedir)/debian ; \
+		fi ; \
+	fi
+
 	-mkdir -p $(packagedir)/debian
-	if [ ! -f $(watchfile) ] ; then echo '# Empty watch file' > $(watchfile) ; fi
-endif
+	if [ "{$type}" != "native" ] ; then \
+		if [ ! -f $(watchfile) ] ; then \
+			echo '# Empty watch file' > $(watchfile) ; \
+		fi ; \
+	fi
 
-ifeq ($(type),native)
-$(origtargz): clean
-	-mkdir $(packagedir)
-else
-$(origtargz): clean
-	-mkdir $(origdata)
-	if [ -d $(origdata)/. ] ; then cp -rp $(origdata)/. $(packagedir) ; fi
-	if [ -x ./pre_upstream ] ; then ./pre_upstream $(shell realpath $(packagedir)) ; fi
-	tar czf $(origtargz) $(packagedir)
-	if [ -f $(formatfile) ] && grep --quiet "^3\.. (quilt)$$" $(formatfile) ; then rm -rf $(packagedir)/debian ; fi
-endif
+	cp -rp debian/. $(packagedir)/debian
+	if [ -x ./pre-build ] ; then \
+		./pre-build $(shell realpath $(packagedir)) ; \
+	fi
+	if [ -f $(formatfile) ] && grep --quiet "^3\.. (quilt)$$" $(formatfile) ; then \
+		dpkg-source $(dpkgoverrides) -b $(packagedir) ; \
+	else \
+		dpkg-source $(dpkgoverrides) $(dpkgoptions) -b $(packagedir) ; \
+	fi
+	if [ -x ./post-build ] ; then \
+		./post-build $(product) ; \
+	fi
+
 
 .PHONY: clean
 clean:

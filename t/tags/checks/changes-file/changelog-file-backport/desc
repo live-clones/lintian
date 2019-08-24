@@ -1,6 +1,5 @@
 Skeleton: upload-native
 Testname: changelog-file-backport
-Version: 1.0
 Description: Check backport
 Options: --include-dir ./lintian-include-dir --pedantic
 # Overrides the "data/changes-file/known-dists"

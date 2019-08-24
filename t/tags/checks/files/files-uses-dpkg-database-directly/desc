@@ -1,6 +1,5 @@
 Skeleton: upload-native
 Testname: files-uses-dpkg-database-directly
-Version: 1.0
 Description: Check for code using dpkg internals
 Package-Architecture: any
 Check: files

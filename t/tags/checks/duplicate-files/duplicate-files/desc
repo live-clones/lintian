@@ -1,6 +1,5 @@
 Skeleton: upload-native
 Testname: duplicate-files
-Version: 1.0
 Description: Test for duplicate files
 Options: -L +pedantic
 Check: duplicate-files

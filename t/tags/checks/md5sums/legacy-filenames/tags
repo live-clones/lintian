@@ -1,16 +1,4 @@
 filenames (source): no-section-field-for-source
-filenames (source): hyphen-in-native-debian-changelog-version 12-0.1
-filenames (source): diff-contains-svn-control-dir .svn
-filenames (source): diff-contains-svn-conflict-file data/Maelstrom Sounce.r121
-filenames (source): diff-contains-svn-commit-file data/svn-commit.tmp
-filenames (source): diff-contains-svk-commit-file data/svk-commitsEr9P.tmp
-filenames (source): diff-contains-editor-backup-file filenames.c~
-filenames (source): diff-contains-cvs-control-dir CVS
-filenames (source): diff-contains-cvs-conflict-copy data/.#Maelstrom Sound.1.1.1
-filenames (source): diff-contains-bzr-control-dir .bzr
-filenames (source): diff-contains-arch-inventory-file data/.arch-inventory
-filenames (source): diff-contains-arch-control-dir {arch}
-filenames (source): diff-contains-arch-control-dir .arch-ids
 filenames (source): ancient-standards-version 3.1.1 (released 1999-11-16) (current is CURRENT)
 more-filename-games (binary): package-section-games-but-has-usr-bin
 more-filename-games (binary): no-md5sums-control-file

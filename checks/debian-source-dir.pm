@@ -31,6 +31,8 @@ use Lintian::Tags qw(tag);
 our %KNOWN_FORMATS = map { $_ => 1 }
   ('1.0', '2.0', '3.0 (quilt)', '3.0 (native)', '3.0 (git)', '3.0 (bzr)');
 
+my %OLDER_FORMATS = map { $_ => 1 }('1.0');
+
 our $KNOWN_FILES = Lintian::Data->new('debian-source-dir/known-files');
 
 sub run {
@@ -60,8 +62,13 @@ sub run {
             $format_extra .= 'native';
         }
     }
-    $format .= " [$format_extra]" if $format_extra;
-    tag 'source-format', $format;
+    my $format_info = $format;
+    $format_info .= " [$format_extra]"
+      if $format_extra;
+    tag 'source-format', $format_info;
+
+    tag 'older-source-format', $format
+      if $OLDER_FORMATS{$format};
 
     return if not $dsrc;
 

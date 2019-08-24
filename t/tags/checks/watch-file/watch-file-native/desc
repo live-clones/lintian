@@ -1,5 +1,4 @@
 Skeleton: upload-native
 Testname: watch-file-native
-Version: 1.0
 Description: Native package with a watch file
 Check: watch-file

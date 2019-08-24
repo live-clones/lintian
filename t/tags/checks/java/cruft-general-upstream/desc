@@ -1,5 +1,4 @@
 Testname: cruft-general-upstream
-Version: 1.0-1
 Skeleton: upload-non-native
 Options: --pedantic
 Extra-Build-Depends: zip

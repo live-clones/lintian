@@ -1,5 +1,4 @@
 Testname: obsolete-sites
-Version: 1.0-1
 Skeleton: upload-non-native
 Description: Test cases where packages contain links to frozen, closing or closed hosters
 Check: obsolete-sites

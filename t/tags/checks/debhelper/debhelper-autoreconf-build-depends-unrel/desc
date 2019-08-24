@@ -1,6 +1,5 @@
 Skeleton: upload-native
 Testname: debhelper-autoreconf-build-depends-unrel
-Version: 1.0
 Description: Test for useless autoreconf-related build dependencies false positives
 Default-Build-Depends: debhelper (>= 10)
 Dh-Compat-Level: 10

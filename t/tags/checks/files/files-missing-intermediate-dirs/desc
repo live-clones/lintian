@@ -1,5 +1,4 @@
 Skeleton: deb
 Testname: files-missing-intermediate-dirs
-Version: 1.0
 Description: Test for tarballs without intermediate dirs
 Check: files

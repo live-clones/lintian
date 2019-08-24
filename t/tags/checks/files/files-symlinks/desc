@@ -1,5 +1,4 @@
 Skeleton: upload-native
 Testname: files-symlinks
-Version: 1.0
 Description: Test tags about symlinks
 Check: files

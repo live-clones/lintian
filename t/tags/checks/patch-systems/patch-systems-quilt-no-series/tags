@@ -1,1 +1,2 @@
 patch-systems-quilt-no-series (source): quilt-build-dep-but-no-series-file
+patch-systems-quilt-no-series (source): older-source-format 1.0

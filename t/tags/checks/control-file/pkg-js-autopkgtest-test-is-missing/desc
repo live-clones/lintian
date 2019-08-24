@@ -1,5 +1,4 @@
 Testname: pkg-js-autopkgtest-test-is-missing
 Skeleton: upload-native
-Version: 1.0
 Description: Test if debian/tests/pkg-js/test exists
 Check: control-file

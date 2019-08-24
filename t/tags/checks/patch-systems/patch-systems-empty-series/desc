@@ -1,6 +1,5 @@
 Skeleton: upload-native
 Testname: patch-systems-empty-series
-Version: 1.0
 Description: Test for quilt patches with empty series
 Extra-Build-Depends: quilt
 Test-Against: quilt-build-dep-but-no-series-file

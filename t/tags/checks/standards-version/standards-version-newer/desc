@@ -1,5 +1,4 @@
 Skeleton: upload-native
 Testname: standards-version-newer
-Version: 1.0
 Description: Test too-new standards version
 Check: standards-version

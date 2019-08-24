@@ -1,0 +1,6 @@
+Skeleton: upload-native
+Testname: runtests-arch-i386
+Test-Architectures: i386
+Description: Test a package that is supposedly i386-specific
+Match-Strategy: literal
+Output-Format: EWI

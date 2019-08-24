@@ -1,5 +1,4 @@
 Skeleton: deb
 Testname: deb-format-errors-tar
-Version: 1.0
 Description: Test package emitting errors from tar
 Check: deb-format

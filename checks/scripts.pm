@@ -27,14 +27,16 @@ use strict;
 use warnings;
 use autodie;
 
-use POSIX qw(strftime);
+use Capture::Tiny qw(capture);
 use List::MoreUtils qw(any);
+use POSIX qw(strftime);
+use Try::Tiny;
 
 use Lintian::Check qw($known_shells_regex);
 use Lintian::Data;
 use Lintian::Relation;
 use Lintian::Tags qw(tag);
-use Lintian::Util qw(do_fork internal_error strip);
+use Lintian::Util qw(internal_error safe_qx strip);
 
 # This is a map of all known interpreters.  The key is the interpreter
 # name (the binary invoked on the #! line).  The value is an anonymous
@@ -1368,16 +1370,8 @@ sub script_is_evil_and_wrong {
 # -n option to check syntax, discarding output and returning the exit status.
 sub check_script_syntax {
     my ($interpreter, $path) = @_;
-    my $fs_path = $path->fs_path;
-    my $pid = do_fork();
-    if ($pid == 0) {
-        open(STDOUT, '>', '/dev/null');
-        open(STDERR, '>&', \*STDOUT);
-        exec $interpreter, '-n', $fs_path
-          or internal_error("cannot exec $interpreter: $!");
-    } else {
-        waitpid $pid, 0;
-    }
+
+    safe_qx($interpreter, '-n', $path->fs_path);
     return $?;
 }
 

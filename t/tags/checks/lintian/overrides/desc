@@ -1,7 +1,5 @@
 Skeleton: upload-native
 Testname: overrides
-Sequence: 1500
-Version: 1.0
 Package-Architecture: any
 Options: --pedantic
 Description: Test override handling

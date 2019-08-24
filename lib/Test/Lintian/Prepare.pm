@@ -48,6 +48,8 @@ BEGIN {
     );
 }
 
+use Data::Dumper;
+
 use Capture::Tiny qw(capture_merged);
 use Cwd qw(getcwd);
 use File::Copy;
@@ -170,46 +172,11 @@ sub prepare {
     my $defaults = read_config($descdefaultspath);
     $data_epoch= max($data_epoch, stat($descdefaultspath)->mtime);
 
-    foreach my $key (keys %{$defaults}) {
-        $testcase->{$key} = $defaults->{$key}
-          unless exists $testcase->{$key};
-    }
-
     # record path to specification
     $testcase->{spec_path} = $specpath;
 
-    unless ($testcase->{testname} && exists $testcase->{version}) {
-        die 'Name or Version missing';
-    }
-
-    $testcase->{source} ||= $testcase->{testname};
-
-    warn "Cannot override Architecture: in test $testcase->{testname}."
-      if length $testcase->{architecture};
-
-    $testcase->{host_architecture} = $ENV{'DEB_HOST_ARCH'}
-      //die 'DEB_HOST_ARCH is not set.';
-
-    $testcase->{standards_version} ||= $ENV{'POLICY_VERSION'}
-      //die 'Could not get POLICY_VERSION.';
-
-    $testcase->{dh_compat_level} //= $ENV{'DEFAULT_DEBHELPER_COMPAT'}
-      //die 'Could not get DEFAULT_DEBHELPER_COMPAT.';
-
-    # add upstream version
-    $testcase->{upstream_version} = $testcase->{version};
-    $testcase->{upstream_version} =~ s/-[^-]+$//;
-    $testcase->{upstream_version} =~ s/(-|^)(\d+):/$1/;
-
-    # version without epoch
-    $testcase->{no_epoch} = $testcase->{version};
-    $testcase->{no_epoch} =~ s/^\d+://;
-
-    unless ($testcase->{prev_version}) {
-        $testcase->{prev_version} = '0.0.1';
-        $testcase->{prev_version} .= '-1'
-          if index($testcase->{version}, '-') > -1;
-    }
+    die "Name missing for $specpath"
+      unless length $testcase->{testname};
 
     die 'Outdated test specification (./debian/debian exists).'
       if -e "$specpath/debian/debian";
@@ -254,7 +221,48 @@ sub prepare {
         my $skeleton = read_config($skeletonpath);
 
         foreach my $key (keys %{$skeleton}) {
-            $testcase->{$key} = $skeleton->{$key};
+            $testcase->{$key} = $skeleton->{$key}
+              unless exists $testcase->{$key};
+        }
+    }
+
+    # add defaults after skeleton
+    foreach my $key (keys %{$defaults}) {
+        $testcase->{$key} = $defaults->{$key}
+          unless exists $testcase->{$key};
+    }
+
+    # add some helpful info to testcase
+    $testcase->{source} ||= $testcase->{testname};
+
+    warn "Cannot override Architecture: in test $testcase->{testname}."
+      if length $testcase->{architecture};
+
+    $testcase->{host_architecture} = $ENV{'DEB_HOST_ARCH'}
+      //die 'DEB_HOST_ARCH is not set.';
+
+    $testcase->{standards_version} ||= $ENV{'POLICY_VERSION'}
+      //die 'Could not get POLICY_VERSION.';
+
+    $testcase->{dh_compat_level} //= $ENV{'DEFAULT_DEBHELPER_COMPAT'}
+      //die 'Could not get DEFAULT_DEBHELPER_COMPAT.';
+
+    # add additional version components
+    if (length $testcase->{version}) {
+
+        # add upstream version
+        $testcase->{upstream_version} = $testcase->{version};
+        $testcase->{upstream_version} =~ s/-[^-]+$//;
+        $testcase->{upstream_version} =~ s/(-|^)(\d+):/$1/;
+
+        # version without epoch
+        $testcase->{no_epoch} = $testcase->{version};
+        $testcase->{no_epoch} =~ s/^\d+://;
+
+        unless ($testcase->{prev_version}) {
+            $testcase->{prev_version} = '0.0.1';
+            $testcase->{prev_version} .= '-1'
+              if index($testcase->{version}, '-') > -1;
         }
     }
 
@@ -382,3 +390,9 @@ sub combine_fields {
 =cut
 
 1;
+
+# Local Variables:
+# indent-tabs-mode: nil
+# cperl-indent-level: 4
+# End:
+# vim: syntax=perl sw=4 sts=4 sr et

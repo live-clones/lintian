@@ -1,5 +1,0 @@
-Skeleton: dsc
-Testname: unpack-srcpkg-no-subdir
-Version: 1.0-1
-Type: non-native
-Description: Test package for upstream tar files with no subdirectories

@@ -1,8 +1,0 @@
-Skeleton: upload-native
-Testname: runtests-todo
-Sequence: 0700
-Version: 1.0
-Todo: yes
-Description: Test todo tests support
-Match-Strategy: literal
-Output-Format: EWI

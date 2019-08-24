@@ -320,7 +320,7 @@ say 'Running selected and required Perl test scripts.';
 say EMPTY;
 
 # run scripts through harness
-$harness->aggregate_tests($aggregator, @runscripts);
+$harness->aggregate_tests($aggregator, sort @runscripts);
 
 unless ($aggregator->all_passed || $keep_going) {
     $aggregator->stop;
@@ -344,7 +344,7 @@ my @workscripts
   = map { File::Find::Rule->file->name('*.t')->in($_) } @workpaths;
 
 # run scripts through harness
-$harness->aggregate_tests($aggregator, @workscripts);
+$harness->aggregate_tests($aggregator, sort @workscripts);
 
 $aggregator->stop;
 $formatter->summary($aggregator);
@@ -380,8 +380,12 @@ if (-t STDOUT && !$unattended) {
             unless ($accept_all) {
 
                 say EMPTY;
-                print colored($testpath, 'bold white on_blue')
-                  . '  >>>  Fix (y/a/n/q)? ';
+                say 'Failed test: ' . colored($testpath, 'bold white on_blue');
+
+                my $diff = path($diffpath)->slurp_utf8;
+                print $diff;
+
+                print '>>>  Fix and step through tags (y/a/n/q)? ';
 
                 my $decision = <STDIN>;
                 chomp $decision;

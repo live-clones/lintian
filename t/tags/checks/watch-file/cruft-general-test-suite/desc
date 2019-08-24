@@ -1,5 +1,4 @@
 Testname: cruft-general-test-suite
-Version: 1.0-1
 Skeleton: upload-non-native
 Options: --pedantic
 Description: Check that cruft in test suites is okay

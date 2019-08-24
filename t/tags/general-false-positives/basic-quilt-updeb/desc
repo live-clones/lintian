@@ -1,0 +1,6 @@
+Testname: basic-quilt-updeb
+Skeleton: upload-non-native
+Source-Format: 3.0 (quilt)
+Description: Test the purging of ./debian in orig for a 3.0 (quilt) package
+Match-Strategy: literal
+Output-Format: EWI

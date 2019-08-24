@@ -10,7 +10,7 @@ neededfiles := debian/rules frontend/lintian $(profiles) \
 	     $(wildcard commands/*)
 pod2man := pod2man --center "Debian Package Checker" --release "Lintian v$(VER)"
 pod2mansources := $(wildcard man/*.pod)
-docsource := doc/lintian.xml README.md man/lintian.pod.in \
+docsource := doc/lintian.rst README.md man/lintian.pod.in \
 	     $(pod2mansources)
 allchecks := $(wildcard checks/*)
 allcollect := $(wildcard collection/*)
@@ -72,10 +72,8 @@ refresh-perl-provides:
 generate-docs: generate-docs-stamp
 generate-docs-stamp: $(docsource)
 	dh_testdir
-	cd doc && LC_ALL=C docbook2html  -V "%use-id-as-filename%" -o lintian.html lintian.xml
-	cd doc && LC_ALL=C jw -b txt lintian.xml
-	# docbook does not set a charset and we rely on UTF-8.  Make this explicit to avoid #802721
-	find doc/lintian.html/ -type f -name '*.html' -exec perl -pe 's/(<TITLE[\s\r\n])/<meta charset="UTF-8">$$1/' -i {} +
+	# A UTF-8 locale seemed appropriate; manual uses &sect; character
+	cd doc && LC_ALL=en_US.UTF-8 rst2html lintian.rst > lintian.html
 	mkdir -p man/man1/ man/man3/
 	private/generate-lintian-pod | \
 		$(pod2man) --name lintian --section=1 > man/man1/lintian.1
@@ -100,7 +98,7 @@ override_dh_auto_build: $(neededfiles) generate-docs-stamp
 
 
 override_dh_clean: $(neededfiles)
-	rm -rf  doc/api.html doc/lintian.html/ doc/lintian.txt
+	rm -rf doc/api.html doc/lintian.html
 ifneq ($(CLEAN_TEST_WORK_DIR),0)
 	rm -rf "$(TEST_WORK_DIR)"
 endif

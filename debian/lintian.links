@@ -1,3 +1,4 @@
 usr/share/lintian/frontend/dplint usr/bin/lintian
 usr/share/lintian/frontend/dplint usr/bin/lintian-info
 usr/share/lintian/frontend/dplint usr/bin/spellintian
+usr/share/doc/lintian/lintian.rst usr/share/doc/lintian/lintian.txt

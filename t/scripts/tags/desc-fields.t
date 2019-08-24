@@ -88,7 +88,7 @@ foreach my $descpath (@descpaths) {
 
     # encapsulating directory is first letter of tag's name
     my $parentdir = path($descpath)->parent->basename;
-    my $firstletter = substr($tagname, 0, 1);
+    my $firstletter = lc(substr($tagname, 0, 1));
     is($parentdir, $firstletter,
         "Tag $tagname is in directory named '$firstletter'");
 

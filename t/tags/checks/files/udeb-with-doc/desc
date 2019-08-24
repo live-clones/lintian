@@ -1,6 +1,5 @@
 Testname: udeb-with-doc
 Skeleton: upload-native
 Section: debian-installer
-Version: 1.0
 Description: Test for files called "-"
 Check: files

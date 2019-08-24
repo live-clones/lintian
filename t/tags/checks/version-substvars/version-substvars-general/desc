@@ -1,6 +1,5 @@
 Skeleton: upload-native
 Testname: version-substvars-general
-Version: 1.0
 Description: Test of substvars
 Options: --pedantic
 Check: version-substvars

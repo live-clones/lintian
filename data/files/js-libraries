@@ -16,7 +16,6 @@ libjs-chai                   ~~ (?i)/chai$EXT
 libjs-cropper                ~~ (?i)/cropper(?:\.uncompressed)?$EXT
 libjs-dojo-\w+               ~~ (?i)/(?:dojo|dijit)$EXT
 libjs-excanvas               ~~ (?i)/excanvas(?:-r[0-9]+)?$EXT
-libjs-html5shiv              ~~ (?i)html5shiv(?:-printshiv)?$EXT
 libjs-jac                    ~~ (?i)/jsjac$EXT
 libjs-jquery                 ~~ (?i)/jquery(?:-[\d\.]+)?$EXT
 libjs-jquery-cookie          ~~ (?i)/jquery\.cookie$EXT
@@ -56,6 +55,7 @@ libjs-yui                    ~~ (?i)/(?:yahoo|yui)-(?:dom-event)?$EXT
 # that the file being checked is /the/ yahoo.js
 # libjs-yui                  ~~ (?i)/yahoo\.js(\.gz)?$EXT
 jsmath                       ~~ (?i)/jsMath(?:-fallback-\w+)?$EXT
+node-html5shiv              ~~ (?i)html5shiv(?:-printshiv)?$EXT
 tinymce                      ~~ (?i)/tiny_mce(?:_(?:popup|src))?$EXT
 # not yet available in unstable
 # xinha                      ~~ (?i)/(htmlarea|Xinha(Loader|Core))$EXT

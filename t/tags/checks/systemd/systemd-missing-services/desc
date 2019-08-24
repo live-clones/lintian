@@ -1,6 +1,5 @@
 Skeleton: upload-native
 Testname: systemd-missing-services
-Version: 1.0
 Description: Check for missing service files
 Options: --pedantic
 Test-Against:

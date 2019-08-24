@@ -1,5 +1,4 @@
 Skeleton: deb
 Testname: changelog-file-syntax
-Version: 1.0
 Description: Test for syntax errors in changelogs
 Check: changelog-file

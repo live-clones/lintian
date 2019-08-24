@@ -1,6 +1,5 @@
 Skeleton: upload-native
 Testname: infofiles-general
-Version: 1.0
 Description: Checks of info files
 References: Bug#534640
 Check: infofiles

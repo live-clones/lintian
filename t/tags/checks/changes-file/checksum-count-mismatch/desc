@@ -1,5 +1,4 @@
 Testname: checksum-count-mismatch
 Skeleton: upload-native
-Version: 1.0
 Description: Check for changes file with missing checksum entry
 Check: changes-file
