@@ -1,6 +1,5 @@
 Skeleton: upload-native
 Testname: command-in-sbin-has-manpage-in-incorrect-section
-Version: 1.0
 Options: --pedantic -E
 Description: Binary in /sbin with manpage in section 1
 Check: manpages

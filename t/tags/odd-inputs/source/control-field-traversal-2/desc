@@ -1,0 +1,4 @@
+Skeleton: source-native
+Testname: control-field-traversal-2
+Version: 1
+Description: Test for directory traversal issues via field names or values

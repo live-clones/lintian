@@ -1,6 +1,5 @@
 Skeleton: upload-native
 Testname: manpage-wrong-extension
-Version: 1.0
 Description: Manual page that has an incorrect extension
 Test-Depends: groff-base (>= 1.22.4)
 Check: manpages

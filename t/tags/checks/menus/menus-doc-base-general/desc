@@ -1,6 +1,5 @@
 Skeleton: upload-native
 Testname: menus-doc-base-general
-Version: 1.0
 Description: Test some doc-base related tags
 Test-Against: doc-base-unknown-section
 References: Debian Bug#495836

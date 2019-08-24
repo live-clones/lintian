@@ -1,5 +1,4 @@
 Testname: npm-ignore-file
-Version: 1.0
 Skeleton: upload-native
 Description: Test for presence of .npmignore file
 Check: files

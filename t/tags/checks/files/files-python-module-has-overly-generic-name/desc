@@ -1,6 +1,5 @@
 Skeleton: upload-native
 Testname: files-python-module-has-overly-generic-name
-Version: 1.0
 Description: Test tags for Python modules with overly generic names
 Test-Against:
  unknown-file-in-python-module-directory

@@ -46,7 +46,7 @@ use constant EMPTY => q{};
 my @descpaths = File::Find::Rule->file()->name('desc')->in('t/tags');
 
 # mandatory fields
-my @mandatory = qw(version);
+my @mandatory = qw();
 
 # disallowed fields
 my @disallowed = qw(test_for checks);

@@ -4,7 +4,6 @@ binary (source): vcs-field-uses-insecure-uri vcs-browser http://svn.wolffelaar.n
 binary (source): not-binnmuable-all-depends-any binary-data -> binary
 binary (source): maintainer-upload-has-incorrect-version-number 4-1.1
 binary (source): intra-source-package-circular-dependency binary binary-data
-binary (source): hyphen-in-native-debian-changelog-version 4-1.1
 binary (source): dm-upload-allowed-is-obsolete
 binary (source): debian-rules-should-not-use-pwd line 9
 binary (source): debian-rules-missing-required-target binary-indep

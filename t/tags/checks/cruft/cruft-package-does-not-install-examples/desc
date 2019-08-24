@@ -1,7 +1,6 @@
 Skeleton: upload-native
 Testname: cruft-package-does-not-install-examples
 Source: foo
-Version: 1.0
 Description: Detect uninstalled examples
 Options: --pedantic
 Check: cruft

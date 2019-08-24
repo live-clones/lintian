@@ -1,6 +1,0 @@
-Skeleton: dsc
-Testname: cruft-ancient-file
-Version: 1.0-1
-Type: non-native
-Description: Test package for ancient files producing tar errors
-Check: cruft

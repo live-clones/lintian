@@ -1,5 +1,4 @@
 Testname: fields-no-source-homepage
 Skeleton: upload-non-native
 Description: Test check for no Homepage field in source
-Version: 1.0-1
 Check: fields

@@ -49,10 +49,10 @@ Enable-Tags: FSSTND-dir-in-usr, FSSTND-dir-in-var, arch-dependent-file-in-usr-sh
  quilt-series-without-trailing-newline, section-is-dh_make-template,
  source-contains-prebuilt-ms-help-file,
  source-contains-prebuilt-silverlight-object, source-contains-waf-binary,
- source-field-does-not-match-pkg-name, statically-linked-binary,
- symlink-has-too-many-up-segments, too-many-architectures,
- uploader-address-is-on-localhost, uploader-address-malformed,
- uploader-name-missing, usr-share-doc-symlink-to-foreign-package,
+ statically-linked-binary, symlink-has-too-many-up-segments,
+ too-many-architectures, uploader-address-is-on-localhost,
+ uploader-address-malformed, uploader-name-missing,
+ usr-share-doc-symlink-to-foreign-package,
  usr-share-doc-symlink-without-dependency, wrong-file-owner-uid-or-gid
 
 Tags: FSSTND-dir-in-usr, FSSTND-dir-in-var, bad-package-name, bad-relation, bad-version-number,
@@ -84,9 +84,9 @@ Tags: FSSTND-dir-in-usr, FSSTND-dir-in-var, bad-package-name, bad-relation, bad-
  not-allowed-control-file, package-contains-ancient-file,
  package-has-no-description, package-installs-python-bytecode,
  package-not-lowercase, package-uses-local-diversion,
- section-is-dh_make-template, source-field-does-not-match-pkg-name,
- symlink-has-too-many-up-segments, too-many-architectures,
- uploader-address-is-on-localhost, uploader-address-malformed,
- uploader-name-missing, usr-share-doc-symlink-to-foreign-package
+ section-is-dh_make-template, symlink-has-too-many-up-segments,
+ too-many-architectures, uploader-address-is-on-localhost,
+ uploader-address-malformed, uploader-name-missing,
+ usr-share-doc-symlink-to-foreign-package
 Overridable: no
 

@@ -1,6 +1,5 @@
 Skeleton: upload-native
 Testname: binaries-obsolete-des
-Version: 1.0
 Description: Check detection of obsolete DES functions
 Package-Architecture: any
 Check: binaries

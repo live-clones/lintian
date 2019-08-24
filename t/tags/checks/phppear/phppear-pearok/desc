@@ -1,5 +1,4 @@
 Testname: phppear-pearok
-Version: 1.0-1
 Description: phppear tests for PEAR packages
 Extra-Build-Depends: uglifyjs
 Test-Against:

@@ -1,4 +1,4 @@
-control-file-rules-requires-root-no (source): source-format 1.0 [non-native]
+control-file-rules-requires-root-no (source): source-format 3.0 (native)
 control-file-rules-requires-root-no (source): rules-does-not-require-root
 control-file-rules-requires-root-no (source): debian-rules-should-not-use-custom-compression-settings dh_builddeb -- -Zgzip (line 7)
 control-file-rules-requires-root-no (source): debian-build-system dh

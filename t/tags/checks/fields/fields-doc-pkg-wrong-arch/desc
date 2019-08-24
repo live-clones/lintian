@@ -1,6 +1,5 @@
 Skeleton: upload-native
 Testname: fields-doc-pkg-wrong-arch
-Version: 1.0
 Package-Architecture: any
 Description: Check for doc pkg not being arch all
 Check: fields

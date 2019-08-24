@@ -1,6 +1,5 @@
 Skeleton: upload-native
 Testname: systemd-general
-Version: 1.0
 Description: General systemd tests
 Test-Against:
  omitted-systemd-service-for-init.d-script

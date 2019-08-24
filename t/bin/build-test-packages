@@ -227,6 +227,8 @@ my $prepare = IO::Async::Function->new(
 
             my $message = "Preparation failed for $specpath";
             $message .= ": $error" if length $error;
+
+          # print log and warn on error (do not die; will mess up Ia::Function)
             die $message;
         };
 
@@ -239,12 +241,23 @@ my $prepare = IO::Async::Function->new(
 my $loop = IO::Async::Loop->new;
 $loop->add($prepare);
 
-my @preptasks = map {$prepare->call(args => [$_])} @prepqueue;
+$SIG{INT} = sub { $prepare->stop; die "Caught a sigint $!" };
+my @preptasks = map {$prepare->call(args => [$_])} sort @prepqueue;
 
-my $allprepared = Future->needs_all(@preptasks);
+my $allprepared = Future->wait_all(@preptasks);
 
-# awaits, and dies on failure with message from failed constituent
-$allprepared->get;
+$loop->await($allprepared);
+
+my @failedprep = $allprepared->failed_futures;
+if (@failedprep) {
+    say 'Failed preparation tasks:';
+    say NEWLINE . $_->failure for @failedprep;
+    exit 1;
+} else {
+    say 'All preparation tasks completed with success.';
+}
+
+say EMPTY;
 
 # remap paths from testset to outpath to get work directories
 my @workpaths = map { rel2abs(abs2rel($_, $testset), $outpath) } @testpaths;
@@ -298,11 +311,9 @@ my $build = IO::Async::Function->new(
         # add error if there was one
         path($betterlogpath)->append_utf8($error) if length $error;
 
-        # print log and die on error
-        if ($error) {
-            print $log if length $log;
-            die "Builder died for $path: $error";
-        }
+        # print log and warn on error (do not die; will mess up Ia::Function)
+        warn($log // EMPTY) . "Builder died for $path: $error"
+          if length $error;
 
         return $path;
     },
@@ -312,7 +323,8 @@ my $build = IO::Async::Function->new(
 
 $loop->add($build);
 
-my @buildtasks = map {$build->call(args => [$_])} @workpaths;
+$SIG{INT} = sub { $build->stop; die "Caught a sigint $!" };
+my @buildtasks = map {$build->call(args => [$_])} sort @workpaths;
 
 my $allbuilt = Future->needs_all(@buildtasks);
 $allbuilt->get;

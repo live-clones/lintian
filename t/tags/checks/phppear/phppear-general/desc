@@ -1,5 +1,4 @@
 Testname: phppear-general
-Version: 1.0-1
 Description: General phppear tests
 Test-Against:
  missing-pkg-php-tools-buildsystem

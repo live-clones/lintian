@@ -1,6 +1,5 @@
 Skeleton: upload-native
 Testname: debhelper-compat-experimental
-Version: 1.0
 Dh-Compat-Level: 13
 Default-Build-Depends: debhelper (>= 12~)
 Description: Test for old debian/compat file

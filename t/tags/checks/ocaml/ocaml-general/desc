@@ -1,6 +1,5 @@
 Skeleton: upload-native
 Testname: ocaml-general
-Version: 1.0
 Package-Architecture: any
 Options: --pedantic
 Section: ocaml

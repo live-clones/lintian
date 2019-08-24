@@ -1,5 +1,4 @@
 Testname: watch-file-no-version
 Skeleton: upload-non-native
-Version: 1.0-1
 Description: Watch file with no version
 Check: watch-file

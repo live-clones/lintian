@@ -1,6 +1,5 @@
 Testname: manpage-bad-whatis
 Skeleton: upload-native
-Version: 1.0
 Description: Man page with bad whatis entry
 Test-Depends: groff-base (>= 1.22.4)
 Check: manpages

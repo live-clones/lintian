@@ -1,6 +1,5 @@
 Skeleton: upload-native
 Testname: source-copyright-incomplete-creative-commons-unrel
-Version: 1.0
 Description: Test for incomplete Creative Commons licenses (good)
 Test-Against:
  incomplete-creative-commons-license

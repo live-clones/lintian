@@ -1,5 +1,4 @@
 Testname: sass-cache-directory
-Version: 1.0
 Skeleton: upload-native
 Description: Test for presence of sass cache directory
 Check: files

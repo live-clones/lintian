@@ -1,7 +1,6 @@
 Skeleton: upload-native
 Testname: legacy-etcfiles
 Source: etcfiles
-Sequence: 9999
 Version: 1
 Description: Legacy test "etcfiles"
 Check: debian-readme

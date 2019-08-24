@@ -1,5 +1,4 @@
 Skeleton: changes
 Testname: changed-by-malformed
-Version: 1.0
 Description: Test malformed Changed-By field
 Check: changes-file

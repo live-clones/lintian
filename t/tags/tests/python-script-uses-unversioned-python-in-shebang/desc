@@ -1,7 +1,0 @@
-Skeleton: upload-native
-Testname: python-script-uses-unversioned-python-in-shebang
-Version: 1.0
-Description: Check for unversioned python in shebang
-Options: -L +classification -C python
-Match-Strategy: literal
-Output-Format: EWI

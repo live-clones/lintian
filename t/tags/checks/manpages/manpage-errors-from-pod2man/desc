@@ -1,6 +1,5 @@
 Skeleton: upload-native
 Testname: manpage-errors-from-pod2man
-Version: 1.0
 Description: Manual page that has errors from pod2man
 Test-Depends: groff-base (>= 1.22.4)
 Check: manpages

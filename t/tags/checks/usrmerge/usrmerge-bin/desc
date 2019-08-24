@@ -1,5 +1,4 @@
 Skeleton: upload-native
 Testname: usrmerge-bin
-Version: 1.0
 Description: Check for file installed in /usr/bin /bin
 Check: usrmerge

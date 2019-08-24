@@ -2,6 +2,7 @@ Skeleton: upload-native
 Testname: binaries-from-other-arch
 Test-Architectures: amd64 i386
 Package-Architecture: any
-Version: 1.0
+# since debhelper 12.5.2, objdump no longer fails silently for compat > 10, need better binary
+Dh-Compat-Level: 10
 Description: Test package with a pseudo binary from a different architecture
 Check: binaries

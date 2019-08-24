@@ -1,6 +1,5 @@
 Skeleton: upload-native
 Testname: link-to-undocumented-manpage
-Version: 1.0
 Description: Manual page is a link to the undocumented man page
 Test-Depends: groff-base (>= 1.22.4)
 Check: manpages

@@ -1,5 +1,4 @@
 Skeleton: upload-native
 Testname: cruft-non-free-utf
-Version: 1.0
 Description: Check for non free utf
 Check: cruft

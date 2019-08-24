@@ -1,0 +1,7 @@
+Skeleton: upload-native
+Testname: basic-with-epoch
+Version: 1:1.0
+Prev-Version: 8.5
+Description: Basic test of a native package with an epoch
+Match-Strategy: literal
+Output-Format: EWI

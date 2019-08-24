@@ -4,7 +4,6 @@ libbaz (source): source-nmu-has-incorrect-version-number 1-1
 libbaz (source): package-uses-deprecated-debhelper-compat-version 6
 libbaz (source): not-binnmuable-any-depends-any libbaz2-dev -> libbaz2
 libbaz (source): not-binnmuable-any-depends-any libbaz1-dev -> libbaz1
-libbaz (source): hyphen-in-native-debian-changelog-version 1-1
 libbaz (source): debian-control-has-obsolete-dbg-package libbaz2-dbg
 libbaz (source): debhelper-but-no-misc-depends libbaz2-dev
 libbaz (source): debhelper-but-no-misc-depends libbaz2-dbg

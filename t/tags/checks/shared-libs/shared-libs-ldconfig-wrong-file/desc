@@ -1,5 +1,4 @@
 Testname: shared-libs-ldconfig-wrong-file
-Version: 1.0-1
 Package-Architecture: any
 Skeleton: upload-non-native
 Default-Build-Depends: debhelper (>= 9.20151004~)

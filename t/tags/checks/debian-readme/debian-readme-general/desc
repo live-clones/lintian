@@ -1,6 +1,5 @@
 Skeleton: upload-native
 Testname: debian-readme-general
-Version: 1.0
 Description: General tests for README.Debian
 References: Debian Bug#556456
 Check: debian-readme

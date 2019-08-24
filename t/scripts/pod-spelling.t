@@ -11,16 +11,9 @@ plan skip_all => 'Not needed for coverage of Lintian'
 plan skip_all => 'Need newer version of aspell-en (>= 7.1)'
   if not check_aspell();
 
-use Test::Lintian;
+use lib "$ENV{'LINTIAN_TEST_ROOT'}/lib";
 
-BEGIN {
-    # If IPCRUNDEBUG is set to 'none', reset to 0.  Unfortunately,
-    # IPC::Run and IPC::Run3 reads the variables different and we end
-    # up loading IPC::Run via Test::Lintian.
-    $ENV{'IPCRUNDEBUG'} = 0
-      if exists($ENV{'IPCRUNDEBUG'})
-      && $ENV{'IPCRUNDEBUG'} eq 'none';
-}
+use Test::Lintian;
 
 eval 'use Test::Spelling';
 plan skip_all => 'Pod spell checking requires Test::Spelling' if $@;

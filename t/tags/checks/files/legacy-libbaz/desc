@@ -1,7 +1,6 @@
-Skeleton: upload-native
+Skeleton: upload-non-native
 Testname: legacy-libbaz
 Source: libbaz
-Sequence: 9999
 Version: 1-1
 Default-Build-Depends: debhelper (>= 9.20151004~)
 Dh-Compat-Level: 6
