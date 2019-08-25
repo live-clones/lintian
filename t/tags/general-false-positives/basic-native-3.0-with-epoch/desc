@@ -1,0 +1,7 @@
+Skeleton: upload-native
+Testname: basic-native-3.0-with-epoch
+Source-Format: 3.0 (native)
+Type: native
+Version: 1:1.0
+Prev-Version: 8.5
+Description: Basic test of a native 3.0 package with an epoch
