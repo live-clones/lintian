@@ -64,8 +64,8 @@ sub collect {
         # skip empty archives to avoid ar error message; happens in tests
         next unless $file->size;
 
-	# fails silently for non-ar files (#934899); probably creates empty entries
-	# in case of trouble, please try: "next if $?;" underneath it
+    # fails silently for non-ar files (#934899); probably creates empty entries
+    # in case of trouble, please try: "next if $?;" underneath it
         my $output = safe_qx('ar', 't', $file);
         my @contents = split(/\n/, $output);
 
