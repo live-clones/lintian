@@ -1,6 +1,5 @@
 Skeleton: upload-native
-Testname: basic-3.0-native
+Testname: basic-native-3.0
 Source-Format: 3.0 (native)
+Type: native
 Description: Basic test of a native 3.0 package
-Match-Strategy: literal
-Output-Format: EWI
