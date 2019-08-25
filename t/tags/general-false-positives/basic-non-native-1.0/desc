@@ -1,0 +1,5 @@
+Testname: basic-non-native-1.0
+Skeleton: upload-non-native
+Description: Basic test of a non-native 1.0 package
+Source-Format: 1.0
+Type: non-native
