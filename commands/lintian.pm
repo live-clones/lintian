@@ -699,19 +699,6 @@ sub main {
 
     $unpacker= Lintian::Unpacker->new($collmap, \%unpack_options);
 
-    if ($action eq 'check') {
-        # Ensure all checks can actually be loaded...
-        foreach my $script (@scripts) {
-            my $cs = $PROFILE->get_script($script);
-            eval {$cs->load_check;};
-            if ($@) {
-                warning("Cannot load check \"$script\"");
-                print STDERR $@;
-                exit 2;
-            }
-        }
-    }
-
     foreach my $gname (sort $pool->get_group_names) {
         my $success = 1;
         my $group = $pool->get_group($gname);

@@ -98,8 +98,6 @@ sub new {
 
     $self->{'script_path'} = $basedir . '/' . $self->{'name'} . '.pm';
 
-    $self->{'script_run'} = undef; # init'ed with $self->load_check later
-
     if ($self->{'type'}//'ALL' ne 'ALL') {
         $self->{'type-table'} = {};
         for my $t (split /\s*,\s*/o, $self->{'type'}) {
@@ -201,36 +199,6 @@ sub tags {
     return keys %{ $self->{'tag-table'}};
 }
 
-=item $cs->load_check
-
-Attempts to load the check.  On failure, the load error will be
-propagated to the caller.  On success it returns normally.
-
-=cut
-
-sub load_check {
-    my ($self) = @_;
-    return if defined $self->{'script_run'};
-    # Special-case: has no perl module
-    return if $self->name eq 'lintian';
-    my $cs_path = $self->{'script_path'};
-    my $cs_pkg = $self->{'script_pkg'};
-    my $run;
-
-    require $cs_path;
-
-    {
-        # minimal "no strict refs" scope.
-        no strict 'refs';
-        $run = \&{'Lintian::' . $cs_pkg . '::run'}
-          if defined &{'Lintian::' . $cs_pkg . '::run'};
-    }
-    die "$cs_path does not have a run-sub.\n"
-      unless defined $run;
-    $self->{'script_run'} = $run;
-    return;
-}
-
 =item $cs->run_check ($proc, $group)
 
 Run the check on C<$proc>, which is in the
@@ -254,14 +222,19 @@ sub run_check {
     my ($self, $proc, $group) = @_;
     # Special-case: has no perl module
     return if $self->name eq 'lintian';
-    my @args = ($proc->pkg_name,$proc->pkg_type,$proc->info,$proc,$group);
-    my $cs_run = $self->{'script_run'};
-    unless (defined $cs_run) {
-        $self->load_check;
-        $cs_run = $self->{'script_run'};
-    }
 
-    $cs_run->(@args);
+    require $self->{'script_path'};
+
+    my $check = "Lintian::$self->{script_pkg}";
+
+    my @args = ($proc->pkg_name,$proc->pkg_type,$proc->info,$proc,$group);
+
+    $check->can($proc->pkg_type)->(@args)
+      if $check->can($proc->pkg_type);
+
+    $check->can('run')->(@args)
+      if $check->can('run');
+
     return;
 }
 
