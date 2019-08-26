@@ -509,7 +509,7 @@ sub run {
             tag 'pkg-js-autopkgtest-test-is-empty', $path
               unless any { s/^\s*//; /^\w/ } $path->file_contents;
         } else {
-            tag 'pkg-js-autopkgtest-test-is-missing', $path;
+            tag 'pkg-js-autopkgtest-test-is-missing';
         }
 
         # Ensure all files referenced in debian/tests/pkg-js/files exist
