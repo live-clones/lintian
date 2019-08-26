@@ -1,7 +1,7 @@
 Tag: pkg-js-autopkgtest-test-is-empty
 Severity: serious
 Certainty: certain
-Check: control-file
+Check: nodejs
 Info: The specified file is empty. This will produce erroneous autopkgtest
  success reports.
  .

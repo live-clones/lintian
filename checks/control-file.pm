@@ -498,30 +498,6 @@ sub run {
         }
     }
 
-    my @testsuites = split(m/\s*,\s*/, $info->source_field('testsuite', ''));
-
-    if (any { $_ eq 'autopkgtest-pkg-nodejs' } @testsuites) {
-        # Check control file exists in sources
-        my $filename = 'debian/tests/pkg-js/test';
-        my $path = $info->index_resolved_path($filename);
-
-        # Ensure test file contains something
-        if ($path and $path->is_open_ok) {
-            tag 'pkg-js-autopkgtest-test-is-empty', $filename
-              unless any { s/^\s*//; /^\w/ } $path->file_contents;
-        } else {
-            tag 'pkg-js-autopkgtest-test-is-missing', $filename;
-        }
-
-        # Ensure all files referenced in debian/tests/pkg-js/files exist
-        $path = $info->index_resolved_path('debian/tests/pkg-js/files');
-        if ($path) {
-            my @list = map { chomp; s/^\s+(.*?)\s+$/$1/; $_ }
-              grep { /\w/ } split /\n/, $path->file_contents;
-            _path_exists($_, $info) foreach (@list);
-        }
-    }
-
     return;
 }
 
@@ -635,44 +611,6 @@ sub check_relation {
     while ($rawvalue =~ /([^\s\(]+\s*\([<>]\s*[^<>=]+\))/g) {
         tag 'obsolete-relation-form-in-source', 'in', $pkg,"$field: $1";
     }
-    return;
-}
-
-sub _path_exists {
-    my ($expr, $info) = @_;
-
-    # Split each line in path elements
-    my @elem= map { s/\*/.*/g; s/^\.\*$/.*\\w.*/; $_ ? qr{^$_/?$} : () }
-      split m#/#,
-      $expr;
-    my @dir = ('.');
-
-    # Follow directories
-  LOOP: while (my $re = shift @elem) {
-        foreach my $i (0 .. $#dir) {
-            my ($dir, @tmp);
-
-            next unless defined($dir = $info->index_resolved_path($dir[$i]));
-            next unless $dir->is_dir;
-            last LOOP
-              unless (
-                @tmp= map { $_->basename }
-                grep { $_->basename =~ $re } $dir->children
-              );
-
-            # Stop searching: at least one element found
-            return unless @elem;
-
-            # If this is the last element of path, store current elements
-            my $pwd = $dir[$i];
-            $dir[$i] .= '/' . shift(@tmp);
-
-            push @dir, map { "$pwd/$_" } @tmp if @tmp;
-        }
-    }
-
-    # No element found
-    tag 'pkg-js-autopkgtest-file-does-not-exist', $expr;
     return;
 }
 

@@ -1,4 +1,4 @@
 Skeleton: upload-native
 Testname: files-nodejs
 Description: Check for nodejs problems
-Check: files
+Check: nodejs

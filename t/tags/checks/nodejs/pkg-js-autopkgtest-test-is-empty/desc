@@ -1,4 +1,4 @@
 Testname: pkg-js-autopkgtest-test-is-empty
 Skeleton: upload-native
 Description: Test if debian/tests/pkg-js/test contains a command
-Check: control-file
+Check: nodejs

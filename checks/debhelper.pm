@@ -71,7 +71,6 @@ sub run {
         'python2' => 0,
         'python3' => 0,
         'runit'   => 0,
-        'nodejs'  => 0,
     );
     my %overrides;
 
@@ -564,19 +563,6 @@ sub run {
         if (%python3_depends) {
             tag 'python3-depends-but-no-python3-helper',
               sort(keys %python3_depends);
-        }
-    }
-    if (    $seen{'nodejs'}
-        and not $overrides{'dh_auto_test'}
-        and not $seen_dh_dynamic) {
-        my $path = $info->index_resolved_path('debian/tests/pkg-js/test');
-
-        # Ensure test file contains something
-        if ($path) {
-            tag 'pkg-js-tools-test-is-empty', $path
-              unless any { s/^\s*//; /^\w/ } $path->file_contents;
-        } else {
-            tag 'pkg-js-tools-test-is-missing';
         }
     }
     return;
