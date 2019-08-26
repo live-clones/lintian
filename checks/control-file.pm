@@ -503,8 +503,14 @@ sub run {
     if (any { $_ eq 'autopkgtest-pkg-nodejs' } @testsuites) {
         # Check control file exists in sources
         my $path = $info->index_resolved_path('debian/tests/pkg-js/test');
-        tag 'pkg-js-autopkgtest-test-is-missing'
-          unless $path and $path->is_open_ok;
+
+        # Ensure test file contains something
+        if ($path and $path->is_open_ok) {
+            tag 'pkg-js-autopkgtest-test-is-empty', $path
+              unless any { s/^\s*//; /^\w/ } $path->file_contents;
+        } else {
+            tag 'pkg-js-autopkgtest-test-is-missing', $path;
+        }
 
         # Ensure all files referenced in debian/tests/pkg-js/files exist
         $path = $info->index_resolved_path('debian/tests/pkg-js/files');

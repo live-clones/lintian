@@ -570,7 +570,14 @@ sub run {
         and not $overrides{'dh_auto_test'}
         and not $seen_dh_dynamic) {
         my $path = $info->index_resolved_path('debian/tests/pkg-js/test');
-        tag 'pkg-js-tools-test-is-missing' unless $path;
+
+        # Ensure test file contains something
+        if ($path) {
+            tag 'pkg-js-tools-test-is-empty', $path
+              unless any { s/^\s*//; /^\w/ } $path->file_contents;
+        } else {
+            tag 'pkg-js-tools-test-is-missing', $path;
+        }
     }
     return;
 }
