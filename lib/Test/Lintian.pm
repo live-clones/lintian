@@ -469,8 +469,15 @@ sub test_load_checks {
         $ppkg =~ s,/,::,go;
         $ppkg = "Lintian::$ppkg";
 
+        if ($ppkg->can('run')) {
+            $builder->diag(
+                "Warning: check $ppkg uses old entry point ::run\n");
+            return;
+        }
+
         my $has_entrypoint = any { $ppkg->can($_) }
-        ('run', 'source', 'binary', 'udeb', 'changes');
+        ('source', 'binary', 'udeb', 'changes', 'always');
+
         if (!$builder->ok($has_entrypoint, "Check $cname has entry point")) {
             $builder->diag("Expected package name is $ppkg\n");
         }
@@ -804,3 +811,9 @@ files/symlinks beneath it.
 =cut
 
 1;
+
+# Local Variables:
+# indent-tabs-mode: nil
+# cperl-indent-level: 4
+# End:
+# vim: syntax=perl sw=4 sts=4 sr et
