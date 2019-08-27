@@ -62,7 +62,7 @@ my $CURRENT_DATE = $STANDARDS[0][1];
 my $CURRENT      = $STANDARDS[0][0];
 my @CURRENT      = split(m/\./, $CURRENT);
 
-sub run {
+sub source {
     my (undef, undef, $info) = @_;
 
     # udebs aren't required to conform to policy, so they don't need

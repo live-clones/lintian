@@ -33,7 +33,7 @@ use Lintian::Check qw(check_spelling spelling_tag_emitter);
 use Lintian::Tags qw(tag);
 use Lintian::Util qw(internal_error strip);
 
-sub run {
+sub source {
     my (undef, undef, $info, undef, $group) = @_;
 
     # Some (cruft) checks are valid for every patch system, so we need

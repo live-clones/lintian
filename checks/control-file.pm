@@ -48,7 +48,7 @@ my $KNOWN_DBG_PACKAGE = Lintian::Data->new(
 
 my $SIGNING_KEY_FILENAMES = Lintian::Data->new('common/signing-key-filenames');
 
-sub run {
+sub source {
     my ($pkg, undef, $info, undef, $group) = @_;
     my $debian_dir = $info->index_resolved_path('debian/');
     my $dcontrol;

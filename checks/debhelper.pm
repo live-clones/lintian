@@ -48,7 +48,7 @@ my $compat_level = Lintian::Data->new('debhelper/compat-level',qr/=/);
 
 my $MISC_DEPENDS = Lintian::Relation->new('${misc:Depends}');
 
-sub run {
+sub source {
     my (undef, undef, $info, undef, $group) = @_;
     my $droot = $info->index_resolved_path('debian/');
     my ($drules, $dh_bd_version, $level);

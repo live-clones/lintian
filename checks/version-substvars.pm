@@ -45,7 +45,7 @@ use Lintian::Relation qw(:constants);
 use Lintian::Tags qw(tag);
 use Lintian::Util qw($PKGNAME_REGEX);
 
-sub run {
+sub source {
 
     my (undef, undef, $info) = @_;
 

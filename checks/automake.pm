@@ -25,7 +25,7 @@ use autodie;
 
 use Lintian::Tags qw(tag);
 
-sub run {
+sub source {
     my (undef, undef, $info) = @_;
 
     my $makefile = $info->index('Makefile.am');

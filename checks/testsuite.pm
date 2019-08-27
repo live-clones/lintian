@@ -50,7 +50,7 @@ my %KNOWN_SPECIAL_DEPENDS = map { $_ => 1 } qw(
   @builddeps@
 );
 
-sub run {
+sub source {
     my ($pkg, $type, $info) = @_;
     my $testsuites = $info->field('testsuite', '');
     my $control = $info->index_resolved_path('debian/tests/control');
