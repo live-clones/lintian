@@ -406,8 +406,9 @@ sub check_result {
             push(@errors, 'Tags do not match');
 
             @difflines = reverse sort @difflines;
-            my $tagdiff = join(NEWLINE, @difflines) . NEWLINE;
-            path("$runpath/tagdiff")->spew($tagdiff);
+            my $tagdiff;
+            $tagdiff .= $_ . NEWLINE for @difflines;
+            path("$runpath/tagdiff")->spew($tagdiff // EMPTY);
 
         } else {
             die "Unknown match strategy $testcase->{match_strategy}.";
