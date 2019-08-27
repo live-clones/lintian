@@ -33,7 +33,7 @@ use constant FILENAME_LENGTH_LIMIT => 80;
 # neither of which Debian officially supports.
 use constant LONGEST_ARCHITECTURE => length 'kfreebsd-amd64';
 
-sub run {
+sub always {
     my ($pkg, $type, $info, $proc) = @_;
 
     # pkg_version(_arch)?.type

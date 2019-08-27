@@ -48,7 +48,7 @@ my %symbols_meta_fields = map { $_ => 1 }qw(
 my $ldconfig_dirs = Lintian::Data->new('shared-libs/ldconfig-dirs');
 my $MA_DIRS = Lintian::Data->new('common/multiarch-dirs', qr/\s++/);
 
-sub run {
+sub always {
     my ($pkg, $type, $info, $proc, $group) = @_;
 
     my ($must_call_ldconfig, %SONAME, %SONAMES, %STATIC_LIBS, %sharedobject);

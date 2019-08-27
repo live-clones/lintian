@@ -26,7 +26,7 @@ use autodie;
 use File::Basename qw(dirname);
 use Lintian::Tags qw(tag);
 
-sub run {
+sub always {
     my (undef, undef, $info, $proc, $group) = @_;
     my $ginfo = $group->info;
     my (@brokenlinks, @dindexes);

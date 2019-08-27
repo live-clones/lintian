@@ -253,7 +253,7 @@ our $OBSOLETE_PACKAGES
 our $VIRTUAL_PACKAGES   = Lintian::Data->new('fields/virtual-packages');
 our $SOURCE_FIELDS      = Lintian::Data->new('common/source-fields');
 
-sub run {
+sub always {
     my ($pkg, $type, $info, $proc, $group) = @_;
     my ($version, $arch_indep);
 

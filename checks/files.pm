@@ -296,7 +296,7 @@ my $OBSOLETE_PATHS = Lintian::Data->new(
         };
     });
 
-sub run {
+sub always {
     my ($pkg, $type, $info, $proc, $group) = @_;
     my ($is_python, $is_perl, $has_binary_perl_file, $has_public_executable,
         $has_public_shared_library, $build_path);

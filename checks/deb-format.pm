@@ -43,7 +43,7 @@ our %ERRORS = (
 
 my $EXTRA_MEMBERS = Lintian::Data->new('deb-format/extra-members');
 
-sub run {
+sub always {
     my (undef, $type, $info) = @_;
     my $deb = $info->lab_data_path('deb');
 

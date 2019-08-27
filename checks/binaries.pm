@@ -114,7 +114,7 @@ our $OBSOLETE_CRYPT_FUNCTIONS
 
 our $ARCH_32_REGEX;
 
-sub run {
+sub always {
     my ($pkg, $type, $info, $proc, $group) = @_;
 
     my ($madir, %directories, $built_with_golang, %SONAME);
