@@ -1,10 +1,11 @@
+changelog-file-general (source): odd-historical-debian-changelog-version 0.1 (for non-native)
 changelog-file-general (source): latest-debian-changelog-entry-without-new-date
+changelog-file-general (source): latest-debian-changelog-entry-reuses-existing-version 1:1.0-1 ~= 1.0-1 (last used: CURRENT)
+changelog-file-general (source): epoch-changed-but-upstream-version-did-not-go-backwards 1.0-1 -> 1:1.0-1
 changelog-file-general (binary): possible-missing-colon-in-closes Closes #555555
 changelog-file-general (binary): misspelled-closes-bug #666666
-changelog-file-general (binary): latest-debian-changelog-entry-reuses-existing-version 1:1.0-1 == 1.0-1 (last used: CURRENT)
 changelog-file-general (binary): latest-changelog-entry-without-new-date
 changelog-file-general (binary): improbable-bug-number-in-closes 1234
-changelog-file-general (binary): epoch-changed-but-upstream-version-did-not-go-backwards 1.0 >= 1.0
 changelog-file-general (binary): debian-changelog-line-too-long line 8
 changelog-file-general (binary): debian-changelog-line-too-long line 15
 changelog-file-general (binary): debian-changelog-file-contains-obsolete-user-emacs-settings
