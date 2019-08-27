@@ -1,7 +1,7 @@
 Tag: debian-changelog-file-missing-or-wrong-name
 Severity: serious
 Certainty: certain
-Check: changelog-file
+Check: changelog
 Info: Each Debian package (which provides a /usr/share/doc/<i>pkg</i>
  directory) must install a Debian changelog file in
  /usr/share/doc/<i>pkg</i>/changelog.Debian.gz

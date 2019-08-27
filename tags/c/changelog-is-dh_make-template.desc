@@ -1,7 +1,7 @@
 Tag: changelog-is-dh_make-template
 Severity: important
 Certainty: certain
-Check: changelog-file
+Check: changelog
 Info: The changelog file has an instruction left by dh_make, which has
  not been removed. Example:
  .
