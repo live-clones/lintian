@@ -229,11 +229,16 @@ sub run_check {
 
     my @args = ($proc->pkg_name,$proc->pkg_type,$proc->info,$proc,$group);
 
+    if ($check->can('run')) {
+        $check->can('run')->(@args);
+        return;
+    }
+
     $check->can($proc->pkg_type)->(@args)
       if $check->can($proc->pkg_type);
 
-    $check->can('run')->(@args)
-      if $check->can('run');
+    $check->can('always')->(@args)
+      if $check->can('always');
 
     return;
 }
