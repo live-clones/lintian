@@ -152,7 +152,7 @@ my %needs_tag_vals_hash = map { $_ => 1 } @needs_tag_vals;
 
 # -----------------------------------
 
-sub run {
+sub binary {
     my ($pkg, $type, $info, $proc, $group) = @_;
     my (@menufiles, %desktop_cmds);
     for my $dirname (qw(usr/share/menu/ usr/lib/menu/)) {

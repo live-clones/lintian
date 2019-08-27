@@ -30,7 +30,7 @@ use constant SPACE  =>  q{ };
 use Lintian::Tags qw(tag);
 use Lintian::Util qw(internal_error);
 
-sub run {
+sub binary {
     my (undef, undef, $info) = @_;
 
     foreach my $file ($info->sorted_index) {

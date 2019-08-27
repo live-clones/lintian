@@ -27,7 +27,7 @@ use autodie;
 
 use Lintian::Tags qw(tag);
 
-sub run {
+sub binary {
     my ($pkg, $type, $info) = @_;
 
     my @files;

@@ -238,7 +238,7 @@ sub script_tag {
     return;
 }
 
-sub run {
+sub binary {
     my ($pkg, undef, $info) = @_;
 
     my (%executable, %ELF, %scripts, %seen_helper_cmds);

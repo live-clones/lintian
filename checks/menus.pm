@@ -52,7 +52,7 @@ our %KNOWN_DOCBASE_FORMAT_FIELDS = (
 
 our $SECTIONS = Lintian::Data->new('doc-base/sections');
 
-sub run {
+sub binary {
     my ($pkg, undef, $info, undef, $group) = @_;
     my (%all_files, %all_links);
 

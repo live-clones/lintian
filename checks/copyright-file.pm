@@ -51,7 +51,7 @@ our $KNOWN_COMMON_LICENSES
 my $SPELLING_ERROR_IN_COPYRIGHT
   = spelling_tag_emitter('spelling-error-in-copyright');
 
-sub run {
+sub binary {
     my ($pkg, undef, $info, $proc, $group) = @_;
     my $found = 0;
     my $linked = 0;

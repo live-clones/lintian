@@ -28,7 +28,7 @@ use Lintian::Tags qw(tag);
 # Check /lib/udev/rules.d/, detect use of MODE="0666" and use of
 # GROUP="plugdev" without TAG+="uaccess".
 
-sub run {
+sub binary {
     my ($pkg, $type, $info, $proc, $group) = @_;
     my $rules_dir = $info->index_resolved_path('lib/udev/rules.d/');
     return unless $rules_dir;

@@ -29,7 +29,7 @@ use Lintian::Tags qw(tag);
 use Lintian::Relation qw(:constants);
 use Lintian::Util qw(internal_error);
 
-sub run {
+sub binary {
     my ($pkg, $type, $info) = @_;
 
     # Do nothing if the package in question appears to be related to

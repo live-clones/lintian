@@ -45,7 +45,7 @@ my $HARDENING_FLAGS = Lintian::Data->new('systemd/hardening-flags');
 # Usual WantedBy= targets
 my $WANTEDBY_WHITELIST = Lintian::Data->new('systemd/wantedby-whitelist');
 
-sub run {
+sub binary {
     my ($pkg, undef, $info) = @_;
 
     # non-service checks

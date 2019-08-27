@@ -37,7 +37,7 @@ use File::Basename qw(basename);
 
 use Lintian::Tags qw(tag);
 
-sub run {
+sub binary {
     my ($pkg, $type, $info, $proc, $group) = @_;
 
     my (%desktopfiles, %metainfo, @udevrules);

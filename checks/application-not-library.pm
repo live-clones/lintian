@@ -26,7 +26,7 @@ use warnings;
 use Lintian::Tags qw(tag);
 use List::MoreUtils qw(any);
 
-sub run {
+sub binary {
     my ($pkg, $type, $info, $proc, $group) = @_;
 
     return if # Big exception list for all tags
