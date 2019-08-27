@@ -1,4 +1,0 @@
-Testname: changelog-file-missing
-Skeleton: upload-non-native
-Description: Test if Debian changelog is missing
-Check: changelog-file

@@ -1,0 +1,5 @@
+Testname: changelog-file-no-dch
+Skeleton: upload-non-native
+Description: Test if Debian changelog is missing
+Test-Against: syntax-error-in-debian-changelog
+Check: changelog
