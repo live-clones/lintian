@@ -1,9 +1,11 @@
-Check-Script: changelog-file
-Author: Christian Schwarz <schwarz@debian.org>
+Check-Script: changelog
+Author:
+ Christian Schwarz <schwarz@debian.org>
+ Chris Lamb <lamby@debian.org>
 Abbrev: chg
-Type: binary
+Type: source, binary
 Needs-Info: file-info, changelog-file, unpacked
-Info: This script checks if a binary package conforms to policy
+Info: This script checks if packages conform to policy
  with regards to changelog files.
  .
  Each binary package with a /usr/share/doc/&lt;foo&gt; directory must have
@@ -16,3 +18,5 @@ Info: This script checks if a binary package conforms to policy
  .
  Both changelog files should be compressed using "gzip -9".
  Even if they start out small, they will become large with time.
+ .
+ Each source package should have a debian/changelog file.
