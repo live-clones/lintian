@@ -30,20 +30,8 @@ use List::MoreUtils qw(any);
 use Lintian::Tags qw(tag);
 use Lintian::Relation;
 
-sub run {
-    my ($pkg, $type, @args) = @_;
-
-    if ($type eq 'source') {
-        _run_source($pkg, @args);
-    } else {
-        _run_binary($pkg, @args);
-    }
-
-    return;
-}
-
-sub _run_source {
-    my ($pkg, $info) = @_;
+sub source {
+    my ($pkg, undef, $info) = @_;
     # debian/control check
     my @testsuites = split(m/\s*,\s*/, $info->source_field('testsuite', ''));
     if (any { /^autopkgtest-pkg-nodejs$/ } @testsuites) {
@@ -109,8 +97,8 @@ sub _run_source {
     return;
 }
 
-sub _run_binary {
-    my ($pkg, $info) = @_;
+sub binary {
+    my ($pkg, undef, $info) = @_;
     if ($pkg !~ /-dbg$/) {
         foreach my $file ($info->sorted_index) {
             my $fname = $file->name;
