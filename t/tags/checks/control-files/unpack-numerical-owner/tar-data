@@ -4,4 +4,4 @@ set -e
 
 rootdir="$1"
 
-tar --create --file data.tar.gz --gzip --numeric-owner --directory "$rootdir" .
+tar --create --file members/data.tar.gz --gzip --numeric-owner --directory "$rootdir" .
