@@ -4,4 +4,4 @@ set -e
 
 rootdir="$1"
 
-tar --create --file data.tar.gz --gzip --directory "$rootdir" "usr/share/doc/files-missing-intermediate-dirs"
+tar --create --file members/data.tar.gz --gzip --directory "$rootdir" "usr/share/doc/files-missing-intermediate-dirs"
