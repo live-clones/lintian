@@ -98,7 +98,7 @@ use Test::Lintian::Filter
   qw(find_selected_scripts find_selected_lintian_testpaths);
 use Test::Lintian::Helper
   qw(rfc822date cache_dpkg_architecture_values get_latest_policy get_recommended_debhelper_version);
-use Test::Lintian::Prepare qw(logged_prepare);
+use Test::Lintian::Prepare qw(filleval);
 use Test::Lintian::Run qw(logged_runner);
 use Test::ScriptAge qw(perl_modification_epoch our_modification_epoch);
 
@@ -337,15 +337,109 @@ say EMPTY;
 # find test paths
 my @testpaths = find_selected_lintian_testpaths($testset, $onlyrun);
 
+# for built test packages
+my $buildroot = "$outpath/packages";
+
+# for built test packages
+my $evalroot = "$outpath/eval";
+
+# prepare test
+my $filleval = IO::Async::Function->new(
+    code => sub {
+        my ($specpath) = @_;
+
+        # label process
+        $0 = "Lintian prepare test: $specpath";
+
+        # calculate destination
+        my $relative = path($specpath)->parent->relative($testset);
+        my $buildpath = $relative->absolute($buildroot)->stringify;
+        my $evalpath = $relative->absolute($evalroot)->relative->stringify;
+
+        my $error;
+
+        # capture output
+        my $log = capture_merged {
+
+            try {
+
+                # remove destination
+                path($evalpath)->remove_tree
+                  if -e $evalpath;
+
+                path($evalpath)->mkpath;
+
+                # prepare
+                filleval($specpath, $evalpath, $testset);
+
+                my $traversal = Cwd::realpath("$buildpath/subject");
+
+                if (length $traversal) {
+                    die "Cannot link to subject in $buildpath"
+                      if system("cd $evalpath; ln -s $traversal subject");
+                }
+
+            }catch {
+                # catch any error
+                $error = $_;
+            };
+        };
+
+        # save log;
+        my $logfile = "$evalpath/log";
+        path($logfile)->spew_utf8($log) if $log;
+
+        # print something if there was an error
+        die(($log // EMPTY) . "Preparation failed for $specpath: $error")
+          if $error;
+
+        return $specpath;
+    },
+    max_workers => $numjobs,
+    max_worker_calls => 1,
+);
+
+my $loop = IO::Async::Loop->new;
+$loop->add($filleval);
+
+$SIG{INT} = sub { $filleval->stop; die "Caught a sigint $!" };
+my @filltasks = map {$filleval->call(args => [$_])} sort @testpaths;
+
+my $allfilled = Future->wait_all(@filltasks);
+
+$loop->await($allfilled);
+
 # remap paths from testset to outpath to get work directories
-my @workpaths = map { rel2abs(abs2rel($_, $testset), $outpath) } @testpaths;
+my @workpaths
+  = map { rel2abs(abs2rel($_, $testset), "$outpath/eval") } @testpaths;
+
+# if ($platforms ne 'any') {
+#     my @wildcards = split(SPACE, $platforms);
+#     my @matches= map {
+#         qx{dpkg-architecture -a $ENV{'DEB_HOST_ARCH'} -i $_; echo -n \$?}
+#     } @wildcards;
+#     unless (any { $_ == 0 } @matches) {
+#         say 'Architecture mismatch';
+#         return;
+#     }
+# }
 
 # make all paths relative to current directory
-@workpaths = map { abs2rel($_) } @workpaths;
+@workpaths = map { path($_)->parent->relative } @workpaths;
 
 # add the scripts in generated tests to be run
-my @workscripts
-  = map { File::Find::Rule->file->name('*.t')->in($_) } @workpaths;
+my @workscripts;
+for my $path (@workpaths) {
+
+    my @runners = File::Find::Rule->file->name('*.t')->in($path);
+
+    die "No runner in $path"
+      unless scalar @runners;
+    die "More than one runner in $path"
+      if scalar @runners > 1;
+
+    push(@workscripts, @runners);
+}
 
 # run scripts through harness
 $harness->aggregate_tests($aggregator, sort @workscripts);
