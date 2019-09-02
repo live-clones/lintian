@@ -82,6 +82,10 @@ sub source {
 
     my $command_prefix_pattern = qr/\s+[@+-]?(?:\S+=\S+\s+)*/;
 
+    foreach (qw(python2 python3)) {
+        $seen{$_} = 1 if $bdepends->implies("dh-sequence-$_");
+    }
+
     while (<$rules_fd>) {
         while (s,\\$,, and defined(my $cont = <$rules_fd>)) {
             $_ .= $cont;
