@@ -30,12 +30,9 @@ Checksum_input () {
 		debian/ \
 		-type f -print0 | sort -z | xargs -0 sha1sum
 
-	# Rebuild if any build-dependency or installed package changes
-	(
-		apt -q -y --print-uris build-dep . 2>/dev/null | \
-			grep MD5Sum: | cut -d' ' -f2 | cut -d_ -f1-2;
-			dpkg -l | awk '{ print $2 "_" $3 }'
-	) | sort
+	# Rebuild if any installed package changes; assumes we have already
+	# installed all build-dependencies.
+	dpkg -l | grep '^ii' | sort
 }
 
 CHECKSUM="$(Checksum_input | sha1sum | cut -d ' ' -f1)"
@@ -45,12 +42,11 @@ rm -rf debian/test-out
 
 echo "I: Looking for ${CACHE_FILENAME}" >&2
  
-if [ ! -f "${CACHE_FILENAME}" ]
+if [ -f "${CACHE_FILENAME}" ]
 then
-	env DEBIAN_FRONTEND=noninteractive apt-get -q -y -o dir::cache::archives="${CACHE_DIR}" build-dep .
+	tar xfJ ${CACHE_FILENAME}
+else
 	t/bin/build-test-packages
-	mkdir -p "$(dirname "${CACHE_FILENAME}")"
+	mkdir -p ${CACHE_DIR}
 	tar cfJ "${CACHE_FILENAME}" debian/test-out
 fi
-
-cp -v "${CACHE_FILENAME}" test-packages.tar.xz
