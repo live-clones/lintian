@@ -45,8 +45,9 @@ use constant EMPTY => q{};
 
 my $checkpath = 't/tags/checks';
 
-# find all immediate directories under t/tags/checks
-my @folders = map { $_ if -d $_ } path($checkpath)->children;
+# find all immediate directories under t/tags/checks with contents
+my @folders
+  = grep { -d $_ && path($_)->children }path($checkpath)->children;
 
 # find all test specifications related to only one check
 my @descpaths = File::Find::Rule->file()->name('desc')->in($checkpath);

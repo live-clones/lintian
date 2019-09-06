@@ -1,6 +1,0 @@
-Skeleton: upload-native
-Testname: changelog-file-wrong-weekday
-Profile: lintian-test
-Options: --include-dir ./lintian-include-dir
-Description: Test for wrong weekday in changelog date
-Check: changelog-file

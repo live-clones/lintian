@@ -1,2 +1,1 @@
-libpublic1 (binary): symbols-file-missing-build-depends-package-field
 libpublic-dev (binary): multiarch-foreign-shared-library

@@ -1,12 +1,3 @@
-scripts-maintainer-general (binary): uses-dpkg-database-directly postinst (line 56)
-scripts-maintainer-general (binary): uses-dpkg-database-directly postinst (line 53)
-scripts-maintainer-general (binary): uses-dpkg-database-directly postinst (line 228)
-scripts-maintainer-general (binary): uses-dpkg-database-directly postinst (line 227)
-scripts-maintainer-general (binary): uses-dpkg-database-directly postinst (line 226)
-scripts-maintainer-general (binary): uses-dpkg-database-directly postinst (line 225)
-scripts-maintainer-general (binary): uses-dpkg-database-directly postinst (line 224)
-scripts-maintainer-general (binary): uses-dpkg-database-directly postinst (line 223)
-scripts-maintainer-general (binary): uses-dpkg-database-directly postinst (line 222)
 scripts-maintainer-general (binary): trailing-slash-for-dpkg-maintscript-helper-symlink_to_dir postinst:190
 scripts-maintainer-general (binary): read-in-maintainer-script postinst:10
 scripts-maintainer-general (binary): possibly-insecure-handling-of-tmp-files-in-maintainer-script postinst:26

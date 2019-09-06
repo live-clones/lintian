@@ -9,7 +9,6 @@ Fill-Targets:
  DEBIAN (binary-control),
  doc (mandatory-docs),
  . (make-builder),
- . (lintian-invocation),
  pre-build,
  pre-control,
  pre-data

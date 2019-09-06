@@ -31,7 +31,7 @@ use Lintian::Util qw(safe_qx);
 
 my $SIGNING_KEY_FILENAMES = Lintian::Data->new('common/signing-key-filenames');
 
-sub run {
+sub source {
     my (undef, undef, $info, undef, undef) = @_;
 
     # Check all possible locations for signing keys

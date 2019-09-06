@@ -7,4 +7,3 @@ infofiles-general (binary): info-document-missing-dir-section usr/share/info/bar
 infofiles-general (binary): info-document-missing-dir-entry usr/share/info/bar.newinfo.gz
 infofiles-general (binary): info-document-missing-dir-entry usr/share/info/bar.info.gz
 infofiles-general (binary): info-document-has-wrong-extension usr/share/info/bar.newinfo.gz
-infofiles-general (binary): gz-file-not-gzip usr/share/info/foo-nogz.gz

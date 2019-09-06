@@ -1,5 +1,0 @@
-Testname: basic-non-native
-Skeleton: upload-non-native
-Description: Basic test of a non-native package
-Match-Strategy: literal
-Output-Format: EWI

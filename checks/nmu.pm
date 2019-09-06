@@ -29,7 +29,7 @@ use List::Util qw(first);
 use Lintian::Tags qw(tag);
 use Lintian::Util qw(strip);
 
-sub run {
+sub source {
     my (undef, undef, $info) = @_;
     my $changelog_mentions_nmu = 0;
     my $changelog_mentions_local = 0;

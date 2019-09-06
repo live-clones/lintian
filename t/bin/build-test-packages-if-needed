@@ -1,0 +1,56 @@
+#!/bin/sh
+#
+# Copyright © 2019 Chris Lamb <lamby@debian.org
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, you can find it on the World Wide
+# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
+# MA 02110-1301, USA.
+
+set -eu
+
+CACHE_DIR="${1}"
+
+Checksum_input () {
+	# Local files that, if changed, should result in a rebuild of the test
+	# packages.
+	find \
+		t/ \
+		debian/ \
+		-type f -print0 | sort -z | xargs -0 sha1sum
+
+	# Rebuild if any build-dependency or installed package changes
+	(
+		apt -q -y --print-uris build-dep . 2>/dev/null | \
+			grep MD5Sum: | cut -d' ' -f2 | cut -d_ -f1-2;
+			dpkg -l | awk '{ print $2 "_" $3 }'
+	) | sort
+}
+
+CHECKSUM="$(Checksum_input | sha1sum | cut -d ' ' -f1)"
+CACHE_FILENAME="${CACHE_DIR}/${CHECKSUM}.tar.xz"
+
+rm -rf debian/test-out
+
+echo "I: Looking for ${CACHE_FILENAME}" >&2
+ 
+if [ ! -f "${CACHE_FILENAME}" ]
+then
+	env DEBIAN_FRONTEND=noninteractive apt-get -q -y -o dir::cache::archives="${CACHE_DIR}" build-dep .
+	t/bin/build-test-packages
+	mkdir -p "$(dirname "${CACHE_FILENAME}")"
+	tar cfJ "${CACHE_FILENAME}" debian/test-out
+fi
+
+cp -v "${CACHE_FILENAME}" test-packages.tar.xz

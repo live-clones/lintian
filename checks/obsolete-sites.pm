@@ -35,7 +35,7 @@ my @interesting_files = qw(
   upstream-metadata.yaml
 );
 
-sub run {
+sub source {
     my ($pkg, $type, $info, $proc) = @_;
 
     my $debian_dir = $info->index_resolved_path('debian/');

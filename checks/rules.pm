@@ -22,6 +22,7 @@ use Carp qw(croak);
 use List::MoreUtils qw(any none);
 
 use Lintian::Data;
+use Lintian::SlidingWindow;
 use Lintian::Tags qw(tag);
 use Lintian::Util qw(rstrip);
 
@@ -125,7 +126,7 @@ my %debhelper_order = (
     dh_builddeb   => 3
 );
 
-sub run {
+sub source {
     my (undef, undef, $info, undef, $group) = @_;
     my $debian_dir = $info->index_resolved_path('debian');
     my $rules;

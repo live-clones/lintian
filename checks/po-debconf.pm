@@ -34,7 +34,7 @@ use Lintian::Util qw(copy_dir clean_env);
 
 use constant NEWLINE  =>  qq{\n};
 
-sub run {
+sub source {
     my (undef, undef, $info) = @_;
     my $has_template = 0;
     my @lang_templates;

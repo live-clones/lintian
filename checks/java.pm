@@ -33,7 +33,7 @@ use Lintian::Util qw(normalize_pkg_path $PKGNAME_REGEX);
 our $CLASS_REGEX = qr/\.(?:class|cljc?)/o;
 our $MAX_BYTECODE = Lintian::Data->new('java/constants', qr/\s*=\s*/o);
 
-sub run {
+sub always {
     my ($pkg, $type, $info) = @_;
     my $java_info = $info->java_info;
     my $missing_jarwrapper = 0;

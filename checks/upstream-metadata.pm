@@ -29,7 +29,7 @@ use YAML::XS;
 
 $YAML::XS::LoadBlessed = 0;
 
-sub run {
+sub source {
     my (undef, undef, $info) = @_;
     my $yamlfile = $info->index_resolved_path('debian/upstream/metadata');
 

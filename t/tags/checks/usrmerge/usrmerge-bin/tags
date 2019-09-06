@@ -1,2 +1,1 @@
 usrmerge-bin (binary): file-in-root-and-usr bin/script usr/bin/script
-usrmerge-bin (binary): binary-without-manpage usr/bin/script

@@ -12,16 +12,9 @@ systemd-general (binary): systemd-service-file-missing-documentation-key usr/lib
 systemd-general (binary): systemd-service-file-missing-documentation-key etc/systemd/system/systemd-general.test.service
 systemd-general (binary): systemd-service-alias-without-extension usr/lib/systemd/system/systemd-general.test.service
 systemd-general (binary): systemd-service-alias-without-extension etc/systemd/system/systemd-general.test.service
-systemd-general (binary): special-file etc/systemd/system/fifo-pipe-as-init.service 0644
-systemd-general (binary): special-file etc/init.d/fifo-pipe-as-init 0644
 systemd-general (binary): service-key-has-whitespace usr/lib/systemd/system/systemd-general.test.service at line 4
 systemd-general (binary): service-key-has-whitespace etc/systemd/system/systemd-general.test.service at line 4
 systemd-general (binary): service-file-is-not-a-file etc/systemd/system/fifo-pipe-as-init.service
-systemd-general (binary): script-in-etc-init.d-not-registered-via-update-rc.d etc/init.d/masked
-systemd-general (binary): script-in-etc-init.d-not-registered-via-update-rc.d etc/init.d/fifo-pipe-as-init
-systemd-general (binary): script-in-etc-init.d-not-registered-via-update-rc.d etc/init.d/bootmisc.sh
-systemd-general (binary): package-supports-alternative-init-but-no-init.d-script usr/lib/systemd/system/systemd-general.test.service
-systemd-general (binary): package-supports-alternative-init-but-no-init.d-script lib/systemd/system/sourced.service
 systemd-general (binary): missing-systemd-service-for-init.d-rcS-script systemd-general
 systemd-general (binary): maintainer-script-calls-systemctl postrm:6
 systemd-general (binary): init.d-script-does-not-source-init-functions etc/init.d/systemd-general

@@ -30,7 +30,7 @@ use List::MoreUtils qw(none);
 use Lintian::Tags qw(tag);
 use Lintian::Relation;
 
-sub run {
+sub source {
     my ($pkg, $type, $info) = @_;
 
     # Don't check package if it doesn't contain a .php file

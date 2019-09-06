@@ -6,4 +6,3 @@ patch-systems-quilt-general (source): package-uses-vendor-specific-patch-series 
 patch-systems-quilt-general (source): more-than-one-patch-system
 patch-systems-quilt-general (source): format-3.0-but-debian-changes-patch
 patch-systems-quilt-general (source): dpatch-build-dep-but-no-patch-list
-patch-systems-quilt-general (source): build-depends-on-obsolete-package build-depends: dpatch

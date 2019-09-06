@@ -32,7 +32,7 @@ use Lintian::Tags qw(tag);
 my $KNOWN_DBG_PACKAGE = Lintian::Data->new('common/dbg-pkg',qr/\s*\~\~\s*/,
     sub { return qr/$_[0]/xms; });
 
-sub run {
+sub source {
 
     my (undef, undef, undef, undef, $group) = @_;
 

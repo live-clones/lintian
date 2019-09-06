@@ -1,3 +1,1 @@
 upstream-key-empty (source): public-upstream-key-unusable upstream/signing-key.asc cannot be processed
-upstream-key-empty (source): orig-tarball-missing-upstream-signature upstream-key-empty_1.0.orig.tar.gz
-upstream-key-empty (source): debian-watch-could-verify-download debian/upstream/signing-key.asc

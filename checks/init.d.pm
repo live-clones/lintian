@@ -76,7 +76,7 @@ my $OPTS_R = qr/-\S+\s*/;
 my $ACTION_R = qr/\w+/;
 my $EXCLUDE_R = qr/if\s+\[\s+-x\s+\S*update-rc\.d/;
 
-sub run {
+sub binary {
     my ($pkg, undef, $info) = @_;
     my $initd_dir = $info->index_resolved_path('etc/init.d/');
     my $postinst = $info->control_index('postinst');

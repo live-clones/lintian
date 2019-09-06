@@ -25,7 +25,7 @@ use warnings;
 
 use Lintian::Tags qw(tag);
 
-sub run {
+sub binary {
     my ($pkg, $type, $info, $proc, $group) = @_;
 
     tag 'emacsen-common-without-dh-elpa'

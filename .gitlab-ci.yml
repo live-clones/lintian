@@ -1,22 +1,65 @@
-before_script:
-  - apt-get -q update
-  - env DEBIAN_FRONTEND=noninteractive apt-get -q -y install --no-install-recommends aspcud apt-cudf
-  - env DEBIAN_FRONTEND=noninteractive apt-get -q -y --solver aspcud -o APT::Solver::Strict-Pinning=0 -o Debug::pkgProblemResolver=yes build-dep .
+stages:
+ - test-packages
+ - test
 
-.test_template: &test
+cache:
+  paths:
+  - .cache/
+
+variables:
+  GIT_DEPTH: "3"
+
+##
+
+.test-packages-template: &test-packages
+  stage: test-packages
+  before_script:
+    - apt-get -q update
   script:
-    - frontend/lintian --version
-    - time t/bin/build-test-packages
+    - time t/bin/build-test-packages-if-needed .cache
+  artifacts:
+    paths:
+      - test-packages.tar.xz
+
+.test-template: &test
+  stage: test
+  before_script:
+    - apt-get -q update
+    - env DEBIAN_FRONTEND=noninteractive apt-get -q -y -o dir::cache::archives=".cache" build-dep .
+  script:
+    - tar xfJ test-packages.tar.xz
     - time t/bin/runtests
+
+##
+
+unstable-test-packages:
+  <<: *test-packages
+  image: debian:unstable
+
+testing-test-packages:
+  <<: *test-packages
+  image: debian:testing
+
+stable-bpo-test-packages:
+  <<: *test-packages
+  image: debian:stable-backports
+
+##
 
 unstable:
   <<: *test
   image: debian:unstable
+  dependencies:
+    - unstable-test-packages
 
 testing:
   <<: *test
   image: debian:testing
+  dependencies:
+    - testing-test-packages
 
 stable-bpo:
   <<: *test
   image: debian:stable-backports
+  dependencies:
+    - stable-bpo-test-packages

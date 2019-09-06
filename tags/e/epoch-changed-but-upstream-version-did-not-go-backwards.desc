@@ -1,7 +1,7 @@
 Tag: epoch-changed-but-upstream-version-did-not-go-backwards
 Severity: serious
 Certainty: possible
-Check: changelog-file
+Check: changelog
 Info: The previous version of this package had a different version epoch
  to the current version but the upstream version did not go "backwards".
  For example, the previous package version was "1:1.0-1" and the current

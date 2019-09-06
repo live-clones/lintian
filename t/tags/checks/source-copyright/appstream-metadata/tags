@@ -1,8 +1,1 @@
 appstream-metadata (source): inconsistent-appstream-metadata-license debian/appstream-metadata.metadata.xml (mit != gpl-2+)
-appstream-metadata (binary): udev-rule-missing-uaccess lib/udev/rules.d/60-appstream-metadata.rules:5 user accessible device missing TAG+="uaccess"
-appstream-metadata (binary): udev-rule-missing-uaccess lib/udev/rules.d/60-appstream-metadata.rules:2 user accessible device missing TAG+="uaccess"
-appstream-metadata (binary): appstream-metadata-missing-modalias-provide lib/udev/rules.d/60-appstream-metadata.rules match rule usb:v0000p000Ad*
-appstream-metadata (binary): appstream-metadata-malformed-modalias-provide usr/share/metainfo/appstream-metadata.metadata.xml include non-valid hex digit in USB matching rule 'usb:v0000p000ad*'
-appstream-metadata (binary): appstream-metadata-legacy-format usr/share/appdata/appstream-metadata-obsolete.metadata.xml
-appstream-metadata (binary): appstream-metadata-invalid appstream-metadata-invalid.metadata.xml
-appstream-metadata (binary): appstream-metadata-in-legacy-location usr/share/appdata/appstream-metadata-obsolete.metadata.xml

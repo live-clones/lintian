@@ -3,4 +3,3 @@ cruft-upstream-binaries (source): source-contains-prebuilt-binary symlink-to-sou
 cruft-upstream-binaries (source): source-contains-prebuilt-binary sourced
 cruft-upstream-binaries (source): source-contains-prebuilt-binary notsourced
 cruft-upstream-binaries (source): source-contains-prebuilt-binary hello
-cruft-upstream-binaries (source): debian-watch-does-not-check-gpg-signature

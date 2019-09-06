@@ -1,7 +1,7 @@
 Tag: debian-changelog-file-uses-obsolete-national-encoding
 Severity: serious
 Certainty: certain
-Check: changelog-file
+Check: changelog
 Ref: policy 4.4
 Info: The Debian changelog file must be valid UTF-8, an encoding of
  the Unicode character set.

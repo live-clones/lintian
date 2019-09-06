@@ -56,14 +56,8 @@ files-foo-in-bar (binary): file-in-unusual-dir var/cache/pbuilder/build/bar
 files-foo-in-bar (binary): file-in-unusual-dir usr/local/foo/bar
 files-foo-in-bar (binary): file-in-unusual-dir usr/foo/bar
 files-foo-in-bar (binary): file-in-unusual-dir emul/bar
-files-foo-in-bar (binary): file-in-root-and-usr libx32/bar usr/libx32/bar
-files-foo-in-bar (binary): file-in-root-and-usr lib64/bar usr/lib64/bar
-files-foo-in-bar (binary): file-in-root-and-usr lib32/bar usr/lib32/bar
-files-foo-in-bar (binary): file-in-root-and-usr bin/foo/bar usr/bin/foo/bar
 files-foo-in-bar (binary): file-directly-in-usr-share-doc usr/share/doc/bar
 files-foo-in-bar (binary): file-directly-in-usr-share usr/share/bar
-files-foo-in-bar (binary): executable-not-elf-or-script usr/bin/foo/bar
-files-foo-in-bar (binary): executable-not-elf-or-script bin/foo/bar
 files-foo-in-bar (binary): dir-or-file-in-var-www var/www/foo/bar
 files-foo-in-bar (binary): dir-or-file-in-var-www var/www/foo/
 files-foo-in-bar (binary): dir-or-file-in-var-run var/run/foo/bar

@@ -1,4 +1,3 @@
-cruft-general-diff (source): older-source-format 1.0
 cruft-general-diff (source): diff-contains-svn-control-dir .svn
 cruft-general-diff (source): diff-contains-svn-conflict-file foo.r1352
 cruft-general-diff (source): diff-contains-svn-commit-file svn-commit.tmp

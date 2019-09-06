@@ -7,7 +7,6 @@ init.d-lsb-headers-missing (binary): init.d-script-possible-missing-stop etc/ini
 init.d-lsb-headers-missing (binary): init.d-script-missing-start etc/init.d/init.d-lsb-headers-missing 4
 init.d-lsb-headers-missing (binary): init.d-script-missing-lsb-short-description etc/init.d/init.d-lsb-headers-missing
 init.d-lsb-headers-local (binary): init.d-script-missing-dependency-on-local_fs etc/init.d/init.d-lsb-headers-local: required-start
-init.d-lsb-headers-early-boot (binary): missing-systemd-service-for-init.d-rcS-script init.d-lsb-headers-early-boot
 init.d-lsb-headers-all (binary): init.d-script-depends-on-all-virtual-facility etc/init.d/init.d-lsb-headers-all should-start
 init.d-lsb-headers-all (binary): init.d-script-depends-on-all-virtual-facility etc/init.d/init.d-lsb-headers-all required-stop
 init.d-lsb-headers-all (binary): init.d-script-depends-on-all-virtual-facility etc/init.d/init.d-lsb-headers-all required-start

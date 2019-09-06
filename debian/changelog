@@ -1,3 +1,38 @@
+lintian (2.20.0) unstable; urgency=medium
+
+  * Summary of tag changes:
+    + Added:
+      - pkg-js-autopkgtest-test-is-empty
+      - pkg-js-tools-test-is-empty
+
+  [ Chris Lamb ]
+  * Ignore Python scripts that are shipped under
+    /usr/lib/python3/dist-packages as these files aren't supposed to be
+    called as scripts. (Closes: #933167)
+  * Avoid a large number of false-positives for
+    package-does-not-use-debhelper-or-cdbs by actually taking into account
+    whether the package uses CDBS or not. (Closes: #933902, #933903)
+  * Avoid package-does-not-use-debhelper-or-cdbs false-positives for
+    packages using the pkg-kde-tools CDBS routines. (Closes: #933901)
+  * Don't emit python3-depends-but-no-python3-helper when we build-depend
+    on dh-sequence-python3, etc. (Closes: #939050)
+  * Split out building the test packages into a new CI stage, reducing the
+    test iteration time by approximately 30 minutes in many cases.
+    (Closes: #930487)
+
+  [ Felix Lechner ]
+  * Adjust the testing default to run only the declared check to speed up
+    testing and make said tests more specific.
+  * Combine the checks changelog-file and source-changelog into a new
+    "changelog"-type check.
+
+  [ Xavier ]
+  * Group all Node.js-related tests into a new checks/nodejs.pm package.
+  * Warn if the debian/tests/pkg-js/test file is empty or otherwise devoid
+    of meaningful test content.
+
+ -- Chris Lamb <lamby@debian.org>  Tue, 03 Sep 2019 07:57:19 +0000
+
 lintian (2.19.0~bpo10+1) buster-backports; urgency=medium
 
   * Rebuild for buster-backports.
@@ -16,7 +51,7 @@ lintian (2.19.0) unstable; urgency=medium
   [ Chris Lamb ]
   * Don't emit the latest-debian-changelog-entry-without-new-version
     warning for uploads to the "buster" distribution. (Closes: #934982)
-  * Also check for "${source:Upstream:Version}" etc. in the
+  * Also check for "${source:Upstream-Version}" etc. in the
     version-substvar-for-external-package tag, not just
     "${source:Version}". (Closes: #935138)
   * Update the name of the node-html5shiv library for the

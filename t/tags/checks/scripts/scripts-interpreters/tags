@@ -19,5 +19,4 @@ scripts-interpreters (binary): example-script-uses-bin-env usr/share/doc/scripts
 scripts-interpreters (binary): example-interpreter-not-absolute usr/share/doc/scripts-interpreters/examples/not-absolute #!perl
 scripts-interpreters (binary): example-interpreter-in-usr-local usr/share/doc/scripts-interpreters/examples/usr-local #!/usr/local/bin/special-perl
 scripts-interpreters (binary): example-incorrect-path-for-interpreter usr/share/doc/scripts-interpreters/examples/usr-bin-env-perl (#!/usr/bin/env perl != /usr/bin/perl)
-scripts-interpreters (binary): dependency-on-python-version-marked-for-end-of-life (Depends: python2.7)
 scripts-interpreters (binary): csh-considered-harmful usr/bin/csh-shell

@@ -27,7 +27,7 @@ use autodie;
 use Lintian::Tags qw(tag);
 use Lintian::Util qw(open_gz normalize_pkg_path);
 
-sub run {
+sub binary {
     my (undef, undef, $info) = @_;
     my $info_dir = $info->index_resolved_path('usr/share/info/');
 

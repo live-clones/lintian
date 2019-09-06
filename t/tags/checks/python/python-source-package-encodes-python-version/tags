@@ -1,2 +1,1 @@
 python3-foo (source): source-package-encodes-python-version
-python3-foo (binary): wrong-section-according-to-package-name python3-foo => python

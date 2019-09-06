@@ -52,20 +52,8 @@ my %MISMATCHED_SUBSTVARS = (
 my $VERSIONS = Lintian::Data->new('python/versions', qr/\s*=\s*/o);
 my @VERSION_FIELDS = qw(x-python-version xs-python-version x-python3-version);
 
-sub run {
-    my ($pkg, $type, $info) = @_;
-
-    if ($type eq 'source') {
-        _run_source($pkg, $info);
-    } else {
-        _run_binary($pkg, $info);
-    }
-
-    return;
-}
-
-sub _run_source {
-    my ($pkg, $info) = @_;
+sub source {
+    my ($pkg, undef, $info) = @_;
 
     my @package_names = $info->binaries;
     foreach my $bin (@package_names) {
@@ -163,8 +151,8 @@ sub _run_source {
     return;
 }
 
-sub _run_binary {
-    my ($pkg, $info) = @_;
+sub binary {
+    my ($pkg, undef, $info) = @_;
 
     my $deps = Lintian::Relation->and($info->relation('all'),
         $info->relation('provides'), $pkg);

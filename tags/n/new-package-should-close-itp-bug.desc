@@ -1,7 +1,7 @@
 Tag: new-package-should-close-itp-bug
 Severity: normal
 Certainty: certain
-Check: changelog-file
+Check: changelog
 Info: This package appears to be the first packaging of a new upstream
  software package (there is only one changelog entry and the Debian
  revision is 1), but it does not close any bugs. The initial upload of a

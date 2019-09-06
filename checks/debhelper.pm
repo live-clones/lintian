@@ -48,7 +48,7 @@ my $compat_level = Lintian::Data->new('debhelper/compat-level',qr/=/);
 
 my $MISC_DEPENDS = Lintian::Relation->new('${misc:Depends}');
 
-sub run {
+sub source {
     my (undef, undef, $info, undef, $group) = @_;
     my $droot = $info->index_resolved_path('debian/');
     my ($drules, $dh_bd_version, $level);
@@ -71,7 +71,6 @@ sub run {
         'python2' => 0,
         'python3' => 0,
         'runit'   => 0,
-        'nodejs'  => 0,
     );
     my %overrides;
 
@@ -82,6 +81,10 @@ sub run {
     my $rules_fd = $drules->open;
 
     my $command_prefix_pattern = qr/\s+[@+-]?(?:\S+=\S+\s+)*/;
+
+    foreach (qw(python2 python3)) {
+        $seen{$_} = 1 if $bdepends->implies("dh-sequence-$_");
+    }
 
     while (<$rules_fd>) {
         while (s,\\$,, and defined(my $cont = <$rules_fd>)) {
@@ -238,6 +241,7 @@ sub run {
                  /usr/share/pkg-kde-tools/qt-kde-team/\d+/debian-qt-kde\.mk
               }xsm
         ) {
+            $inclcdbs = 1;
             $build_systems{'dhmk'} = 1;
             delete($build_systems{'debhelper'});
         }
@@ -261,7 +265,7 @@ sub run {
         tag 'debian-build-system', 'other';
     }
 
-    unless ($seencommand) {
+    unless ($seencommand or $inclcdbs) {
         tag 'package-does-not-use-debhelper-or-cdbs';
         return;
     }
@@ -564,12 +568,6 @@ sub run {
             tag 'python3-depends-but-no-python3-helper',
               sort(keys %python3_depends);
         }
-    }
-    if (    $seen{'nodejs'}
-        and not $overrides{'dh_auto_test'}
-        and not $seen_dh_dynamic) {
-        my $path = $info->index_resolved_path('debian/tests/pkg-js/test');
-        tag 'pkg-js-tools-test-is-missing' unless $path;
     }
     return;
 }

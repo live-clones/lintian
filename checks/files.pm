@@ -296,7 +296,7 @@ my $OBSOLETE_PATHS = Lintian::Data->new(
         };
     });
 
-sub run {
+sub always {
     my ($pkg, $type, $info, $proc, $group) = @_;
     my ($is_python, $is_perl, $has_binary_perl_file, $has_public_executable,
         $has_public_shared_library, $build_path);
@@ -819,16 +819,6 @@ sub run {
             # ---------------- /usr/lib/sgml
             elsif ($fname =~ m,^usr/lib/sgml/\S,) {
                 tag 'file-in-usr-lib-sgml', $file;
-            }
-            # ---------------- /usr/lib/node
-            elsif ($fname =~ m,^usr/(?:share|lib(?:/[^/]+)?)/nodejs/,) {
-                tag 'nodejs-module-installed-in-usr-lib', $file
-                  if $fname =~ m#usr/lib/nodejs/.*# and $file->is_file;
-                if ($fname
-                    =~ m#usr/(?:share|lib(?:/[^/]+)?)/nodejs/(?:package\.json|[^/]*\.js)$#
-                ) {
-                    tag 'node-package-install-in-nodejs-rootdir', $fname;
-                }
             }
             # ---------------- perllocal.pod
             elsif ($fname =~ m,^usr/lib/perl.*/perllocal.pod$,) {

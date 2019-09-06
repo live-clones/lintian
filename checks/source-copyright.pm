@@ -59,7 +59,7 @@ my %dep5_renamed_fields        = (
     'name'                 => 'upstream-name',
 );
 
-sub run {
+sub source {
     my (undef, undef, $info, undef, $group) = @_;
     my $debian_dir = $info->index_resolved_path('debian/');
     return if not $debian_dir;

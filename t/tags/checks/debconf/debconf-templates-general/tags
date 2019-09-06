@@ -1,5 +1,4 @@
 debconf-templates-general (source): template-uses-unsplit-choices debconf-templates-general - debconf/unsplit-choices
-debconf-templates-general (source): debconf-translation-using-general-list en_US.po
 debconf-templates-general (binary): using-question-in-extended-description-in-templates debconf/question-in-extended
 debconf-templates-general (binary): using-imperative-form-in-templates debconf/imperative-select
 debconf-templates-general (binary): using-first-person-in-templates debconf/first-person

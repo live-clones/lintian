@@ -1,7 +1,7 @@
 Tag: debian-news-file-uses-obsolete-national-encoding
 Severity: important
 Certainty: certain
-Check: changelog-file
+Check: changelog
 Info: The NEWS.Debian file must be valid UTF-8, an encoding of the Unicode
  character set.
  .

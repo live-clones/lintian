@@ -1,0 +1,5 @@
+Skeleton: upload-native
+Testname: basic-native-1.0
+Description: Simple/basic test of a native 1.0 package
+Source-Format: 1.0
+Type: native

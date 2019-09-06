@@ -35,7 +35,7 @@ my $DEB_PERMISSIONS
 my $UDEB_PERMISSIONS
   = Lintian::Data->new('control-files/udeb-permissions', qr/\s++/o, \&octify);
 
-sub run {
+sub always {
     my (undef, $type, $info) = @_;
     my $ctrl = $type eq 'udeb' ? $UDEB_PERMISSIONS : $DEB_PERMISSIONS;
     my $ctrl_alt = $type eq 'udeb' ? $DEB_PERMISSIONS : $UDEB_PERMISSIONS;

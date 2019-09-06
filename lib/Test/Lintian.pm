@@ -29,9 +29,9 @@ Test::Lintian -- Check Lintian files for issues
  use Test::Lintian;
  use Test::More import => ['done_testing'];
  test_load_profiles('some/path');
- 
+
  done_testing;
- 
+
  # file 2
  use Test::Lintian;
  use Test::More import => ['done_testing'];
@@ -39,7 +39,7 @@ Test::Lintian -- Check Lintian files for issues
  test_check_desc('some/path/checks');
  test_load_checks('some/path/checks');
  test_tags_implemented('some/path/checks');
- 
+
  done_testing;
 
 =head1 DESCRIPTION
@@ -70,6 +70,7 @@ use parent 'Test::Builder::Module';
 use Cwd qw(realpath);
 use File::Basename qw(basename);
 use File::Find ();
+use List::MoreUtils qw{any};
 use Path::Tiny;
 
 use Lintian::Check qw(check_spelling);
@@ -467,16 +468,18 @@ sub test_load_checks {
         $ppkg =~ s,[-.],_,go;
         $ppkg =~ s,/,::,go;
         $ppkg = "Lintian::$ppkg";
-        eval {
-            # minimal "no strict refs" scope.
-            no strict 'refs';
-            $rs_ref = 'PRESENT'
-              if defined &{$ppkg . '::run'};
-        };
-        $err = $@//'';
-        if (!$builder->is_eq($rs_ref, 'PRESENT', "Check $cname has runsub")) {
+
+        if ($ppkg->can('run')) {
+            $builder->diag(
+                "Warning: check $ppkg uses old entry point ::run\n");
+            return;
+        }
+
+        my $has_entrypoint = any { $ppkg->can($_) }
+        ('source', 'binary', 'udeb', 'changes', 'always');
+
+        if (!$builder->ok($has_entrypoint, "Check $cname has entry point")) {
             $builder->diag("Expected package name is $ppkg\n");
-            $builder->diag("Error: $err\n") if $err;
         }
     }
     return;
@@ -808,3 +811,9 @@ files/symlinks beneath it.
 =cut
 
 1;
+
+# Local Variables:
+# indent-tabs-mode: nil
+# cperl-indent-level: 4
+# End:
+# vim: syntax=perl sw=4 sts=4 sr et

@@ -1,0 +1,4 @@
+Testname: pkg-js-autopkgtest-test-is-missing
+Skeleton: upload-native
+Description: Test if debian/tests/pkg-js/test exists
+Check: nodejs

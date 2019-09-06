@@ -48,7 +48,7 @@ sub _parse_trigger_types {
 my $TRIGGER_TYPES = Lintian::Data->new('triggers/trigger-types',
     qr/\s*\Q=>\E\s*/, \&_parse_trigger_types);
 
-sub run {
+sub always {
     my (undef, undef, $info) = @_;
     my $triggers_file = $info->control_index('triggers');
     return if not $triggers_file or not $triggers_file->is_open_ok;

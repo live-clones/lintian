@@ -7,3 +7,18 @@ Info: The package ships a Microsoft Windows Portable Executable (PE) file
  .
  You can see which are missing using the <tt>pesec</tt> tool from the
  <tt>pev</tt> package.
+ .
+ EFI binaries often trigger this tag. The security flags are probably
+ meaningless for them, but the flags are easily changed using the
+ <tt>genpeimg</tt> tool from the <tt>mingw-w64-tools</tt> package.
+ .
+     $ genpeimg -d +d -d +n -d +s $file
+ .
+ Then, to verify that it worked:
+ .
+     $ genpeimg -x $file
+     ...
+     Optional Characteristics:
+       dynamic-base nx-compatible no-SEH
+ .
+ Please change the flags, if possible, instead of overriding the tag.

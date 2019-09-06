@@ -1,2 +1,1 @@
-fields-binary-nmu-version (source): source-nmu-has-incorrect-version-number 1.0-1.0.1
 fields-binary-nmu-version (source): binary-nmu-debian-revision-in-source 1.0-1.0.1

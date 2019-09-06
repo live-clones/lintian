@@ -1,0 +1,7 @@
+Testname: basic-non-native-3.0-with-epoch
+Version: 1:1.0-1
+Prev-Version: 16.29-6
+Skeleton: upload-non-native
+Source-Format: 3.0 (quilt)
+Type: non-native
+Description: Basic test of a non-native 3.0 package with epoch
