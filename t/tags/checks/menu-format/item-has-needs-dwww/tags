@@ -1,4 +1,2 @@
-item-has-needs-dwww (binary): possible-bashism-in-maintainer-script postrm:3 'if type '
 item-has-needs-dwww (binary): menu-item-needs-dwww usr/share/menu/test-menu:5
 item-has-needs-dwww (binary): menu-command-not-in-package usr/share/menu/test-menu:5 usr/bin/test-script
-item-has-needs-dwww (binary): command-with-path-in-maintainer-script postinst:9 /usr/bin/update-menus

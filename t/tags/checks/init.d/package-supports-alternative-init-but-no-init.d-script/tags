@@ -1,6 +1,3 @@
-package-supports-alternative-init-but-no-init.d-script (binary): systemd-service-file-missing-install-key lib/systemd/system/bar.service
-package-supports-alternative-init-but-no-init.d-script (binary): systemd-service-file-missing-hardening-features lib/systemd/system/bar.service
-package-supports-alternative-init-but-no-init.d-script (binary): systemd-service-file-missing-documentation-key lib/systemd/system/bar.service
 package-supports-alternative-init-but-no-init.d-script (binary): package-supports-alternative-init-but-no-init.d-script lib/systemd/system/bar.service
 package-supports-alternative-init-but-no-init.d-script (binary): package-supports-alternative-init-but-no-init.d-script etc/sv/foo/run
 package-supports-alternative-init-but-no-init.d-script (binary): directory-in-etc-sv-directory-without-executable-run-script etc/sv/foo/run

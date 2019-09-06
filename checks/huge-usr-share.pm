@@ -31,7 +31,7 @@ my $THRESHOLD_SIZE_SOFT = 4096;
 my $THRESHOLD_SIZE_HARD = 8192;
 my $THRESHOLD_PERC = 50;
 
-sub run {
+sub binary {
     my (undef, undef, $info) = @_;
     # Skip architecture-dependent packages.
     my $arch = $info->field('architecture', '');

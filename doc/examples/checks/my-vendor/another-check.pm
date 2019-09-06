@@ -25,7 +25,7 @@ use warnings;
 
 use Lintian::Tags qw(tag);
 
-sub run {
+sub always {
     my ($pkg, undef, $info) = @_;
     if (not $info->index("usr/share/doc/$pkg/important-file")) {
         tag 'missing-some-important-file', "usr/share/doc/$pkg/important-file";

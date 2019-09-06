@@ -1,3 +1,2 @@
 libfoo1 (binary): symbols-file-missing-build-depends-package-field
 libfoo1 (binary): dev-pkg-without-shlib-symlink usr/lib/libfoo.so.1.0.1 usr/lib/libfoo.so
-libfoo-dev (binary): package-contains-no-arch-dependent-files

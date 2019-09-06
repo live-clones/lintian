@@ -2,4 +2,3 @@ files-uses-dpkg-database-directly (binary): uses-dpkg-database-directly var/lib/
 files-uses-dpkg-database-directly (binary): uses-dpkg-database-directly var/lib/test/test-1
 files-uses-dpkg-database-directly (binary): uses-dpkg-database-directly usr/bin/test
 files-uses-dpkg-database-directly (binary): package-contains-documentation-outside-usr-share-doc var/lib/test/README
-files-uses-dpkg-database-directly (binary): binary-without-manpage usr/bin/test

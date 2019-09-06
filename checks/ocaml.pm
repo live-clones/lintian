@@ -31,7 +31,7 @@ use Lintian::Tags qw(tag);
 # The maximum number of *.cmi files to show individually.
 our $MAX_CMI = 3;
 
-sub run {
+sub binary {
     my ($pkg, undef, $info) = @_;
 
     # Collect information about .a files from ar-info dump

@@ -5,4 +5,3 @@ obsolete-sites (source): obsolete-url-in-packaging debian/copyright https://foo.
 obsolete-sites (source): obsolete-url-in-packaging debian/copyright http://freshmeat.net/p/foo
 obsolete-sites (source): obsolete-url-in-packaging debian/copyright ftp://ftp.debian.org
 obsolete-sites (source): obsolete-url-in-packaging debian/control http://code.google.com/p/foo
-obsolete-sites (source): debian-watch-uses-insecure-uri http://gitorious.org/foo/foo/file-(.*)\.tar\.gz

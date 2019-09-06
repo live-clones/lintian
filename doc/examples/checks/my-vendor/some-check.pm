@@ -25,7 +25,7 @@ use warnings;
 
 use Lintian::Tags qw(tag);
 
-sub run {
+sub always {
     my ($pkg, undef, $info) = @_;
 
     # This check only applies to source packages that are named

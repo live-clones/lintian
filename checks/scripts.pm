@@ -238,7 +238,7 @@ sub script_tag {
     return;
 }
 
-sub run {
+sub binary {
     my ($pkg, undef, $info) = @_;
 
     my (%executable, %ELF, %scripts, %seen_helper_cmds);
@@ -293,6 +293,12 @@ sub run {
         next if $in_docs and not $in_examples;
 
         my ($base) = $interpreter =~ m,([^/]*)$,;
+
+        # Ignore Python scripts that are shipped under dist-packages; these
+        # files aren't supposed to be called as scripts.
+        next
+          if $base eq 'python'
+          and $filename =~ m,^usr/lib/python3/dist-packages/,;
 
         # allow exception for .in files that have stuff like #!@PERL@
         next

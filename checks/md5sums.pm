@@ -26,7 +26,7 @@ use autodie;
 use Lintian::Tags qw(tag);
 use Lintian::Util qw(dequote_name);
 
-sub run {
+sub binary {
     my (undef, undef, $info) = @_;
     my $control = $info->control_index('md5sums');
     my (%control_entry, %info_entry);

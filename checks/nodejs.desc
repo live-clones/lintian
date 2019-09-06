@@ -1,0 +1,5 @@
+Check-Script: nodejs
+Author: Xavier Guimard <yadd@debian.org>
+Type: source, binary
+Info: This script checks nodejs-related issues
+Needs-Info: unpacked

@@ -31,7 +31,7 @@ use Lintian::Util qw($PKGREPACK_REGEX);
 our $WATCH_VERSION = Lintian::Data->new('watch-file/version', qr/\s*=\s*/o);
 our $SIGNING_KEY_FILENAMES= Lintian::Data->new('common/signing-key-filenames');
 
-sub run {
+sub source {
     my (undef, undef, $info) = @_;
     my $template = 0;
     my $withgpgverification = 0;

@@ -46,7 +46,7 @@ sub open_readme {
     return;
 }
 
-sub run {
+sub binary {
     my ($pkg_name, undef, $info, undef, $group) = @_;
     my $readme = '';
 

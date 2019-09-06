@@ -61,7 +61,7 @@ my $ANY_DEBCONF = Lintian::Relation->new(
           cdebconf-udeb libdebconfclient0 libdebconfclient0-udeb)
     ));
 
-sub run {
+sub always {
     my ($pkg, $type, $info) = @_;
     my ($seenconfig, $seentemplates, $usespreinst);
 

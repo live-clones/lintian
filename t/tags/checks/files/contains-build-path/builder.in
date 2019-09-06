@@ -1,3 +1,0 @@
-Build-Product: {$source}_{$no_epoch}_{$host_architecture}.changes
-Build-Command: make --trace DEFAULT_DH_COMPAT={$dh_compat_level} DEB_BUILD_OPTIONS='buildinfo=+path'
-Default-Build-Depends: debhelper (>= {$dh_compat_level}~)

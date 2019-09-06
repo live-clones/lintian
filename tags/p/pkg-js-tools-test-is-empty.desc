@@ -1,0 +1,9 @@
+Tag: pkg-js-tools-test-is-empty
+Severity: normal
+Certainty: certain
+Check: nodejs
+Info: The specified file is empty. This means that no test is played during
+ build.
+ .
+ Please set a significant test in this file
+ (see <tt>/usr/share/doc/pkg-js-tools/README.md.gz</tt>).

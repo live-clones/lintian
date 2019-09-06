@@ -47,7 +47,7 @@ my $PICKY_SPELLING_ERROR_IN_SYNOPSIS
 my $PICKY_SPELLING_ERROR_IN_DESCRIPTION
   = spelling_tag_emitter('capitalization-error-in-description');
 
-sub run {
+sub always {
     my ($pkg, $type, $info, undef, $group) = @_;
     my $tabs = 0;
     my $lines = 0;

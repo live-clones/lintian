@@ -59,6 +59,7 @@ use File::Spec::Functions qw(abs2rel rel2abs splitpath splitdir catpath);
 use File::stat;
 use List::Util qw(max);
 use Path::Tiny;
+use Text::Template;
 use Try::Tiny;
 
 use Test::Lintian::ConfigFile qw(read_config write_config);
@@ -164,7 +165,7 @@ sub prepare {
 
     # read test data
     my $descpath = "$specpath/$files->{test_specification}";
-    my $testcase = read_config($descpath);
+    my $desc = read_config($descpath);
     $data_epoch= max($data_epoch, stat($descpath)->mtime);
 
     # read test defaults
@@ -172,11 +173,11 @@ sub prepare {
     my $defaults = read_config($descdefaultspath);
     $data_epoch= max($data_epoch, stat($descdefaultspath)->mtime);
 
-    # record path to specification
-    $testcase->{spec_path} = $specpath;
+    # start with a shallow copy of defaults
+    my $testcase = {%$defaults};
 
     die "Name missing for $specpath"
-      unless length $testcase->{testname};
+      unless length $desc->{testname};
 
     die 'Outdated test specification (./debian/debian exists).'
       if -e "$specpath/debian/debian";
@@ -211,29 +212,54 @@ sub prepare {
     my @oldrunners = File::Find::Rule->file->name('*.t')->in($runpath);
     unlink(@oldrunners);
 
-    # load skeleton
-    if (exists $testcase->{skeleton}) {
+    my $skeletonname = ($desc->{skeleton} // EMPTY);
+    if (length $skeletonname) {
 
-        # the skeleton we are working with
-        my $skeletonname = $testcase->{skeleton};
+        # load skeleton
         my $skeletonpath = "$testset/skeletons/$skeletonname";
-
         my $skeleton = read_config($skeletonpath);
 
-        foreach my $key (keys %{$skeleton}) {
-            $testcase->{$key} = $skeleton->{$key}
-              unless exists $testcase->{$key};
+        $testcase->{$_} = $skeleton->{$_}for keys %{$skeleton};
+    }
+
+    # populate working directory with specified template sets
+    copy_skeleton_template_sets($testcase->{template_sets},$runpath, $testset)
+      if exists $testcase->{template_sets};
+
+    # delete templates for which we have originals
+    remove_surplus_templates($specpath, $runpath);
+
+    # copy test specification to working directory
+    my $offset = abs2rel($specpath, $testset);
+    say "Copy test specification $offset from $testset to $runpath.";
+    copy_dir_contents($specpath, $runpath);
+
+    my $valuefolder = ($testcase->{fill_values_folder} // EMPTY);
+    if (length $valuefolder) {
+
+        # load all the values in the fill values folder
+        my $valuepath = "$runpath/$valuefolder";
+        my @filepaths
+          = File::Find::Rule->file->name('*.values')->in($valuepath);
+
+        for my $filepath (sort @filepaths) {
+            my $values = read_config($filepath);
+
+            $testcase->{$_} = $values->{$_}for keys %{$values};
         }
     }
 
-    # add defaults after skeleton
-    foreach my $key (keys %{$defaults}) {
-        $testcase->{$key} = $defaults->{$key}
-          unless exists $testcase->{$key};
-    }
+    # add individual settings after skeleton
+    $testcase->{$_} = $desc->{$_}for keys %{$desc};
 
-    # add some helpful info to testcase
+    # record path to specification
+    $testcase->{spec_path} = $specpath;
+
+    # add other helpful info to testcase
     $testcase->{source} ||= $testcase->{testname};
+
+    # record our effective data age as date, unless given
+    $testcase->{date} ||= rfc822date($data_epoch);
 
     warn "Cannot override Architecture: in test $testcase->{testname}."
       if length $testcase->{architecture};
@@ -266,52 +292,6 @@ sub prepare {
         }
     }
 
-    say EMPTY;
-
-    # populate working directory with specified template sets
-    copy_skeleton_template_sets($testcase->{template_sets},$runpath, $testset)
-      if exists $testcase->{template_sets};
-
-    # delete templates for which we have originals
-    remove_surplus_templates($specpath, $runpath);
-
-    say EMPTY;
-
-    # copy test specification to working directory
-    my $offset = abs2rel($specpath, $testset);
-    say "Copy test specification $offset from $testset to $runpath.";
-    copy_dir_contents($specpath, $runpath);
-
-    # get builder name
-    my $buildername = $files->{builder};
-    if (length $buildername) {
-        my $builderpath = "$runpath/$buildername";
-
-        # fill builder if needed
-        my $buildertemplate = "$builderpath.in";
-        fill_template($buildertemplate, $builderpath, $testcase, $data_epoch)
-          if -f $buildertemplate;
-
-        if (-f $builderpath) {
-
-            # read builder
-            my $builder = read_config($builderpath);
-            die 'Could not read builder data.' unless $builder;
-
-            # adjust age threshold
-            $data_epoch= max($data_epoch, stat($builderpath)->mtime);
-
-            # transfer builder data to test case, but do not override
-            foreach my $key (keys %{$builder}) {
-                $testcase->{$key} = $builder->{$key}
-                  unless exists $testcase->{$key};
-            }
-
-            # delete builder
-            unlink($builderpath);
-        }
-    }
-
     # calculate build dependencies
     warn 'Cannot override Build-Depends:'
       if length $testcase->{build_depends};
@@ -324,8 +304,11 @@ sub prepare {
     combine_fields($testcase, 'build_conflicts', COMMA . SPACE,
         'default_build_conflicts', 'extra_build_conflicts');
 
-    # record our effective data age as date, unless given
-    $testcase->{date} ||= rfc822date($data_epoch);
+    # fill testcase with itself; do it twice to make sure all is done
+    $testcase = fill_hash_from_hash($testcase);
+    $testcase = fill_hash_from_hash($testcase);
+
+    say EMPTY;
 
     # fill remaining templates
     fill_skeleton_templates($testcase->{fill_targets},
@@ -383,6 +366,30 @@ sub combine_fields {
       unless length $testcase->{$destination};
 
     return;
+}
+
+sub fill_hash_from_hash {
+    my ($hashref, $delimiters) = @_;
+
+    my %origin = %{$hashref};
+    my %destination;
+
+    # fill hash with itself
+    for my $key (keys %origin) {
+
+        my $template = $origin{$key} // EMPTY;
+        my $filler= Text::Template->new(TYPE => 'STRING', SOURCE => $template);
+        croak("Cannot read template $template: $Text::Template::ERROR")
+          unless $filler;
+
+        my $generated
+          = $filler->fill_in(HASH => \%origin, DELIMITERS => $delimiters);
+        croak("Could not create string from template $template")
+          unless defined $generated;
+        $destination{$key} = $generated;
+    }
+
+    return \%destination;
 }
 
 =back

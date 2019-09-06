@@ -58,6 +58,7 @@ Package-Architecture: any
 Test-Depends: debhelper (>= 9.20151004~)
 Description: Test checks related to non-pic code
 Test-For: shlib-with-non-pic-code
+Check: shared-libs
 EOSTR
 my $descpath = $specpath->child('desc');
 $descpath->spew($desctext);
@@ -133,7 +134,7 @@ is($testcase->{'output_format'}, 'universal', 'Output format is universal');
 is($testcase->{options}, undef, 'No extra Lintian options');
 is(
     $testcase->{default_lintian_options},
-    '--display-info --display-experimental',
+    '--display-info --display-experimental --check-part shared-libs',
     'Default Lintian options'
 );
 

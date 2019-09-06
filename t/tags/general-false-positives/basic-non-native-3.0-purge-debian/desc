@@ -1,0 +1,5 @@
+Testname: basic-non-native-3.0-purge-debian
+Skeleton: upload-non-native
+Source-Format: 3.0 (quilt)
+Type: non-native
+Description: Test the purging of ./debian in orig for a 3.0 (quilt) package

@@ -27,7 +27,7 @@ use autodie;
 use Lintian::Tags qw(tag);
 use Lintian::Util qw(rstrip);
 
-sub run {
+sub binary {
     my (undef, undef, $info) = @_;
 
     my $cf = $info->control_index('conffiles');

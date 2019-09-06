@@ -33,7 +33,7 @@ use Lintian::Check qw(check_spelling spelling_tag_emitter);
 use Lintian::Tags qw(tag);
 use Lintian::Util qw(clean_env do_fork drain_pipe internal_error open_gz);
 
-sub run {
+sub binary {
     my (undef, undef, $info, $proc, $group) = @_;
     my $ginfo = $group->info;
     my (%binary, %link, %manpage, @running_man, @running_lexgrog);

@@ -25,7 +25,7 @@ use autodie;
 
 use Lintian::Tags qw(tag);
 
-sub run {
+sub binary {
     my (undef, undef, $info) = @_;
 
     foreach my $file1 ($info->sorted_index) {

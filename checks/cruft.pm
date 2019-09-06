@@ -345,7 +345,7 @@ our @TRAILING_WHITESPACE_FILES = (
     ['debian/rules'            => qr,[ ]+\n$,], # Allow trailing tabs in Make
 );
 
-sub run {
+sub source {
     my (undef, undef, $info, $proc, $group) = @_;
     my $source_pkg = $proc->pkg_src;
     my $d_files = $info->index_resolved_path('debian/files');

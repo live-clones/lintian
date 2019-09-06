@@ -1,7 +1,7 @@
 Tag: changelog-file-missing-in-native-package
 Severity: important
 Certainty: certain
-Check: changelog-file
+Check: changelog
 Info: Each Debian package (which provides a /usr/share/doc/<i>pkg</i>
  directory) has to install a changelog file. Since this package seems
  to be a native Debian package (i.e., there is no upstream source),

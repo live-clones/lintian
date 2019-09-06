@@ -8,4 +8,3 @@ Template-Sets:
 Fill-Targets:
  debian (debian-packaging),
  . (make-builder),
- . (lintian-invocation)

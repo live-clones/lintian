@@ -32,7 +32,7 @@ use Lintian::Util qw(get_file_checksum);
 
 my $KNOWN_DISTS = Lintian::Data->new('changes-file/known-dists');
 
-sub run {
+sub changes {
     my (undef, undef, $info, undef, $group) = @_;
 
     # If we don't have a Format key, something went seriously wrong.

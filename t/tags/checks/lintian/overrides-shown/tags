@@ -1,15 +1,1 @@
 overrides-shown (binary): renamed-tag package-install-apt-sources => package-installs-apt-sources at line 19
-overrides-shown (binary): package-installs-apt-sources etc/apt/sources.list.d/foo.1
-overrides-shown (binary): manpage-has-bad-whatis-entry usr/share/man/man1/foo.1.gz
-overrides-shown (binary): FSSTND-dir-in-manual-page usr/share/man/man1/foo.1.gz:6 /usr/etc/
-overrides-shown (binary): FSSTND-dir-in-manual-page usr/share/man/man1/foo.1.gz:5 /usr/doc/
-overrides-shown (binary): FSSTND-dir-in-manual-page usr/share/man/man1/foo.1.gz:4 /usr/dict/
-overrides-shown (binary): FSSTND-dir-in-manual-page usr/share/man/man1/foo.1.gz:32 /usr/preserve/
-overrides-shown (binary): FSSTND-dir-in-manual-page usr/share/man/man1/foo.1.gz:31 /var/preserve/
-overrides-shown (binary): FSSTND-dir-in-manual-page usr/share/man/man1/foo.1.gz:30 /var/nis/
-overrides-shown (binary): FSSTND-dir-in-manual-page usr/share/man/man1/foo.1.gz:23 /var/named/
-overrides-shown (binary): FSSTND-dir-in-manual-page usr/share/man/man1/foo.1.gz:22 /var/catman/
-overrides-shown (binary): FSSTND-dir-in-manual-page usr/share/man/man1/foo.1.gz:21 /var/adm/
-overrides-shown (binary): FSSTND-dir-in-manual-page usr/share/man/man1/foo.1.gz:14 /usr/adm/
-overrides-shown (binary): FSSTND-dir-in-manual-page usr/share/man/man1/foo.1.gz:13 /usr/man/
-overrides-shown (binary): FSSTND-dir-in-manual-page usr/share/man/man1/foo.1.gz:12 /usr/info/

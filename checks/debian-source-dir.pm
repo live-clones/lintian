@@ -35,7 +35,7 @@ my %OLDER_FORMATS = map { $_ => 1 }('1.0');
 
 our $KNOWN_FILES = Lintian::Data->new('debian-source-dir/known-files');
 
-sub run {
+sub source {
     my (undef, undef, $info) = @_;
     my $dsrc = $info->index_resolved_path('debian/source/');
     my ($format_file, $git_pfile, $format, $format_extra);

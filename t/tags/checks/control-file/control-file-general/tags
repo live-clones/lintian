@@ -16,8 +16,6 @@ control-file-general (source): debian-control-repeats-field-name-in-value line 8
 control-file-general (source): debian-control-repeats-field-name-in-value line 101
 control-file-general (source): debian-control-has-obsolete-dbg-package control-file-general-dbg
 control-file-general (source): debian-control-has-dbgsym-package control-file-general-dbgsym
-control-file-general (source): dbg-package-missing-depends control-file-general-dbg
 control-file-general (source): control-file-contains-dh_make-vcs-comment
 control-file-general (source): build-info-in-binary-control-file-section Package control-file-general
 control-file-general (source): binary-control-field-duplicates-source field "maintainer" in package control-file-general
-control-file-general (changes): package-builds-dbg-and-dbgsym-variants control-file-general-{dbg,dbgsym}

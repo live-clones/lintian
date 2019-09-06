@@ -1,3 +1,0 @@
-Build-Product: {$source}_{$no_epoch}_source.changes
-Build-Command: make --trace DEFAULT_DH_COMPAT={$dh_compat_level}
-Default-Build-Depends: debhelper (>= {$dh_compat_level}~)

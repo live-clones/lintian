@@ -27,7 +27,7 @@ use List::MoreUtils qw(any);
 
 use Lintian::Tags qw(tag);
 
-sub run {
+sub binary {
     my (undef, undef, $info) = @_;
     my %hashmap;
 

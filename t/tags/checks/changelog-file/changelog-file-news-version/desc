@@ -1,4 +1,0 @@
-Skeleton: upload-native
-Testname: changelog-file-news-version
-Description: Check mismatches of the NEWS.Debian version
-Check: changelog-file

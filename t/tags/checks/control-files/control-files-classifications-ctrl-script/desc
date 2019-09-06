@@ -1,5 +1,5 @@
 Skeleton: upload-native
 Testname: control-files-classifications-ctrl-script
 Description: Test for control-files classifications
-Options: -L +=classification -C control-files
+Options: -L +=classification
 Check: control-files

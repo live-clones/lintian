@@ -30,19 +30,7 @@ use Lintian::Tags qw(tag);
 
 my $MA_DIRS = Lintian::Data->new('common/multiarch-dirs', qr/\s++/);
 
-sub run {
-    my ($pkg, $type, $info, $proc, $group) = @_;
-
-    if ($type eq 'source') {
-        _run_source($pkg, $type, $info, $proc, $group);
-    } else {
-        _run_binary($pkg, $type, $info, $proc, $group);
-    }
-
-    return;
-}
-
-sub _run_source {
+sub source {
     my (undef, undef, $info) = @_;
 
     foreach my $bin ($info->binaries) {
@@ -58,7 +46,7 @@ sub _run_source {
     return;
 }
 
-sub _run_binary {
+sub binary {
     my ($pkg, undef, $info, $proc, $group) = @_;
     my @girs;
     my @typelibs;

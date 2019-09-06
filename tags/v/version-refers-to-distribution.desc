@@ -1,7 +1,7 @@
 Tag: version-refers-to-distribution
 Severity: minor
 Certainty: certain
-Check: changelog-file
+Check: changelog
 Info: The Debian portion of the package version contains a reference to a
  particular Debian release or distribution. This should only be done for
  uploads targeted at a particular release, not at unstable or

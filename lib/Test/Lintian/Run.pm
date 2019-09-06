@@ -251,9 +251,8 @@ sub runner {
     $ENV{'LINTIAN_COVERAGE'}.= ",-db,./cover_db-$testcase->{testname}"
       if exists $ENV{'LINTIAN_COVERAGE'};
 
-    my $lintian = read_config("$runpath/lintian-command");
     my $command
-      = "cd $runpath; $ENV{'LINTIAN_FRONTEND'} $lintian->{options} $lintian->{subject}";
+      = "cd $runpath; $ENV{'LINTIAN_FRONTEND'} $testcase->{lintian_command_line} $testcase->{subject}";
     my ($output, $status) = capture_merged { system($command); };
     $status = ($status >> 8) & 255;
 
@@ -434,7 +433,7 @@ sub check_result {
     # look out for tags being tested
     my @related;
 
-    if (length $testcase->{check}) {
+    if (length $testcase->{check} && $testcase->{check} ne 'all') {
 
         my $profile = Lintian::Profile->new(undef, [$ENV{LINTIAN_ROOT}]);
 

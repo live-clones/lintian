@@ -1,8 +1,1 @@
-control-file-rules-requires-root-no (source): source-format 3.0 (native)
-control-file-rules-requires-root-no (source): rules-does-not-require-root
 control-file-rules-requires-root-no (source): debian-rules-should-not-use-custom-compression-settings dh_builddeb -- -Zgzip (line 7)
-control-file-rules-requires-root-no (source): debian-build-system dh
-control-file-rules-requires-root-no (source): debhelper-compat-level 12
-control-file-rules-requires-root-no (binary): no-ctrl-scripts
-control-file-rules-requires-root-no (binary): data-tarball-compression-format gz
-control-file-rules-requires-root-no (binary): control-tarball-compression-format gz

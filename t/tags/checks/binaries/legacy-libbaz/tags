@@ -1,79 +1,10 @@
-libbaz (source): weak-library-dev-dependency libbaz2-dev on libbaz2 (= ${source:Version})
-libbaz (source): weak-library-dev-dependency libbaz1-dev on libbaz1 (= ${source:Version})
-libbaz (source): source-nmu-has-incorrect-version-number 1-1
-libbaz (source): package-uses-deprecated-debhelper-compat-version 6
-libbaz (source): not-binnmuable-any-depends-any libbaz2-dev -> libbaz2
-libbaz (source): not-binnmuable-any-depends-any libbaz1-dev -> libbaz1
-libbaz (source): debian-control-has-obsolete-dbg-package libbaz2-dbg
-libbaz (source): debhelper-but-no-misc-depends libbaz2-dev
-libbaz (source): debhelper-but-no-misc-depends libbaz2-dbg
-libbaz (source): debhelper-but-no-misc-depends libbaz2
-libbaz (source): debhelper-but-no-misc-depends libbaz1-dev
-libbaz (source): debhelper-but-no-misc-depends libbaz1
-libbaz (source): changelog-should-mention-nmu
-libbaz (source): binary-control-field-duplicates-source field "priority" in package libbaz2-dbg
-libbaz (source): binaries-have-file-conflict libbaz1 libbaz2-dev usr/lib/libbaz2.a
-libbaz (source): binaries-have-file-conflict libbaz1 libbaz1-dev usr/lib/ma-dir/perl/version/auto/Foo/Foo.so
-libbaz (source): ancient-standards-version 3.2.1 (released 2000-08-24) (current is CURRENT)
-libbaz2-dev (binary): wrong-section-according-to-package-name libbaz2-dev => libdevel
-libbaz2-dev (binary): no-md5sums-control-file
-libbaz2-dev (binary): new-package-should-close-itp-bug
-libbaz2-dev (binary): debian-changelog-file-missing-or-wrong-name
-libbaz2-dev (binary): changelog-file-not-compressed changelog
-libbaz2-dbg (binary): wrong-section-according-to-package-name libbaz2-dbg => debug
-libbaz2-dbg (binary): no-md5sums-control-file
-libbaz2-dbg (binary): debian-changelog-file-missing
-libbaz2 (binary): symlink-should-be-relative usr/share/doc/libbaz2/changelog.gz /usr/share/doc/lintian/changelog.gz
 libbaz2 (binary): package-name-doesnt-match-sonames libbaz2-1.0
-libbaz2 (binary): no-symbols-control-file usr/lib/libbaz2.so.1.0.3b
-libbaz2 (binary): no-md5sums-control-file
-libbaz2 (binary): debian-changelog-file-missing-or-wrong-name
-libbaz2 (binary): debian-changelog-file-is-a-symlink
-libbaz1-dev (binary): wrong-section-according-to-package-name libbaz1-dev => libdevel
-libbaz1-dev (binary): package-contains-empty-directory usr/include/
-libbaz1-dev (binary): no-md5sums-control-file
 libbaz1-dev (binary): missing-dependency-on-libc needed by usr/lib/ma-dir/perl/version/auto/Foo/Foo.so
 libbaz1-dev (binary): binary-has-unneeded-section usr/lib/ma-dir/perl/version/auto/Foo/Foo.so .comment
-libbaz1 (binary): zero-byte-file-in-doc-directory usr/share/doc/README.Debian
-libbaz1 (binary): unused-shlib-entry-in-symbols-control-file libbaz 2
-libbaz1 (binary): unused-shlib-entry-in-control-file udeb: libdoesntexist2 1.0
-libbaz1 (binary): unused-shlib-entry-in-control-file libdoesntexist2 1.0
-libbaz1 (binary): unused-shlib-entry-in-control-file libbaz5 1
-libbaz1 (binary): unused-shlib-entry-in-control-file libbaz4 1
-libbaz1 (binary): unused-shlib-entry-in-control-file libbaz2 1.1
 libbaz1 (binary): unstripped-binary-or-object usr/lib/libfoo2.so.1.0.3b
 libbaz1 (binary): unstripped-binary-or-object usr/lib/libbaz3.so.1.0.3b
 libbaz1 (binary): unstripped-binary-or-object usr/lib/libbaz1.so.1.0.3b
-libbaz1 (binary): symbols-file-missing-build-depends-package-field
-libbaz1 (binary): symbols-file-contains-debian-revision on symbol foo
-libbaz1 (binary): symbols-file-contains-current-version-with-debian-revision on symbol pw
-libbaz1 (binary): symbols-declared-but-not-shlib libbaz 2
-libbaz1 (binary): shlibs-declares-dependency-on-other-package libbaz2
-libbaz1 (binary): shlibs-declares-dependency-on-other-package libbaz1 (>> 1-1)
-libbaz1 (binary): shlib-without-versioned-soname usr/lib/libbaz.so libbaz.so
-libbaz1 (binary): shlib-with-executable-bit usr/lib/libfoo2.so.1.0.3b 0755
-libbaz1 (binary): shlib-missing-in-symbols-control-file libbaz3 1 for usr/lib/libbaz3.so.1.0.3b
-libbaz1 (binary): shlib-missing-in-symbols-control-file libbaz2 1.0 for usr/lib/libfoo2.so.1.0.3b
-libbaz1 (binary): shlib-missing-in-symbols-control-file libbaz.so for usr/lib/libbaz.so
-libbaz1 (binary): shlib-missing-in-control-file libbaz2 1.0 for usr/lib/libfoo2.so.1.0.3b
-libbaz1 (binary): sharedobject-in-library-directory-missing-soname usr/lib/libbaz1.so.1.0.3b
 libbaz1 (binary): package-name-doesnt-match-sonames libbaz libbaz2-1.0 libbaz3-1
-libbaz1 (binary): package-must-activate-ldconfig-trigger usr/lib/libfoo2.so.1.0.3b
-libbaz1 (binary): no-md5sums-control-file
-libbaz1 (binary): new-package-should-close-itp-bug
 libbaz1 (binary): missing-depends-line
 libbaz1 (binary): missing-dependency-on-perlapi
-libbaz1 (binary): maintainer-shell-script-fails-syntax-check postinst
-libbaz1 (binary): maintainer-script-may-use-dir_to_symlink_helper postinst:8
-libbaz1 (binary): ldconfig-symlink-missing-for-shlib usr/lib/libbaz3.so.1 usr/lib/libbaz3.so.1.0.3b libbaz3.so.1
-libbaz1 (binary): ldconfig-symlink-missing-for-shlib usr/lib/libbaz2.so.1.0 usr/lib/libfoo2.so.1.0.3b libbaz2.so.1.0
-libbaz1 (binary): file-directly-in-usr-share-doc usr/share/doc/README.Debian
-libbaz1 (binary): duplicate-entry-in-shlibs-control-file udeb: libdoesntexist2 1.0
-libbaz1 (binary): duplicate-entry-in-shlibs-control-file libdoesntexist2 1.0
-libbaz1 (binary): dev-pkg-without-shlib-symlink usr/lib/libfoo2.so.1.0.3b usr/lib/libbaz2.so
-libbaz1 (binary): dev-pkg-without-shlib-symlink usr/lib/libbaz3.so.1.0.3b usr/lib/libbaz3.so
-libbaz1 (binary): dev-pkg-without-shlib-symlink usr/lib/libbaz.so usr/lib/libbaz.so
-libbaz1 (binary): debian-changelog-file-missing-or-wrong-name
-libbaz1 (binary): control-file-has-bad-permissions symbols 0755 != 0644
-libbaz1 (binary): control-file-has-bad-permissions shlibs 0755 != 0644
 libbaz1 (binary): binary-has-unneeded-section usr/lib/ma-dir/perl/version/auto/Foo/Foo.so .comment
