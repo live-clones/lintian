@@ -11,3 +11,4 @@ selectOn	# "void ToolBoxWidget::selectOn()" in pencil2d (#895818)
 itialize	# From #923725 (carla)
 wIH	# From #895841 (osmo-trx)
 wiH
+iIF	# binutils/armhf (#939637)
