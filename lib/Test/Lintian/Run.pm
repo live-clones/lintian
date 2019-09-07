@@ -253,6 +253,7 @@ sub runner {
 
     my $command
       = "cd $runpath; $ENV{'LINTIAN_FRONTEND'} $testcase->{lintian_command_line} $testcase->{subject}";
+    say $command;
     my ($output, $status) = capture_merged { system($command); };
     $status = ($status >> 8) & 255;
 
