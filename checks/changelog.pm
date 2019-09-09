@@ -430,7 +430,9 @@ sub binary {
                   or $entries[0]->Distribution =~ /-security$/i
                   or $entries[0]->Source ne $entries[1]->Source;
                 tag 'latest-debian-changelog-entry-changed-to-native'
-                  if $native_pkg and $second_version =~ m/-/;
+                  if $native_pkg
+                  and $second_version =~ m/-/
+                  and $entries[0]->Changes !~ /\bnative package\b/im;
             }
             my $first_version_without_epoch = $first_version =~ s/^([^:]+)://r;
             foreach my $entry (@entries[1..$#entries]) {
