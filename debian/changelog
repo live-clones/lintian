@@ -1,3 +1,9 @@
+lintian (2.21.0~bpo9+1) stretch-backports; urgency=medium
+
+  * Rebuild for stretch-backports.
+
+ -- Chris Lamb <lamby@debian.org>  Mon, 09 Sep 2019 08:57:33 +0100
+
 lintian (2.21.0) unstable; urgency=medium
 
   * Add 'iIF' to the list of spelling exceptions ignored in binaries.

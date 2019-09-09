@@ -717,6 +717,10 @@ sub always {
         if ($KNOWN_INSECURE_HOMEPAGE_URIS->matches_any($homepage)) {
             tag 'homepage-field-uses-insecure-uri', $orig;
         }
+
+        tag 'homepage-references-obsolete-debian-infrastructure', $orig
+          if $homepage =~ m/\.alioth\.debian\.org/;
+
     } elsif (not $info->native) {
         if ($type eq 'source') {
             my $binary_has_homepage_field = 0;
@@ -1026,6 +1030,12 @@ sub always {
         );
 
     }
+
+    #---- Rules-Requires-Root
+
+    tag 'no-rules-requires-root-field'
+      if defined($info->field('rules-requires-root'))
+      and $type eq 'source';
 
     #---- Package relations (source package)
 
