@@ -12,6 +12,7 @@
 ckeditor                     ~~ (?i)/ckeditor$EXT
 fckeditor                    ~~ (?i)/fckeditor$EXT
 libjs-async                  ~~ (?i)/async$EXT
+libjs-bootstrap              ~~ (?i)/bootstrap(?:-[\d\.]+)?$EXT$ ~~ var (Carousel|Typeahead)
 libjs-chai                   ~~ (?i)/chai$EXT
 libjs-cropper                ~~ (?i)/cropper(?:\.uncompressed)?$EXT
 libjs-dojo-\w+               ~~ (?i)/(?:dojo|dijit)$EXT
@@ -48,7 +49,6 @@ libjs-prototype              ~~ (?i)/prototype(?:-[\d\.]+)?$EXT
 libjs-raphael                ~~ (?i)/raphael(?:[\.-]min)?$EXT
 libjs-scriptaculous          ~~ (?i)/scriptaculous$EXT
 libjs-strophe                ~~ (?i)/strophe$EXT
-libjs-twitter-bootstrap      ~~ (?i)/bootstrap(?:-[\d\.]+)?$EXT$ ~~ var (Carousel|Typeahead)
 libjs-underscore             ~~ (?i)/underscore$EXT
 libjs-yui                    ~~ (?i)/(?:yahoo|yui)-(?:dom-event)?$EXT
 # Disabled due to false positives.  Needs a content check adding to verify
