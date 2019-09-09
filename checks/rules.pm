@@ -92,6 +92,10 @@ our @GLOBAL_CLEAN_DEPENDS = (
 # Build-Depends-Indep as appropriate; and optional tags as above.
 my @GLOBAL_DEPENDS=(
     ['dh-ocaml, ocaml-nox | ocaml' => qr'^\t\s*dh_ocaml(?:init|doc)\s'],
+    [
+        'debhelper | debhelper-compat | dh-autoreconf' =>
+          qr'^\t\s*dh_autoreconf(?:_clean)?\s'
+    ],
 );
 
 # Similarly, this list of packages, regexes, and optional tags say that if the
