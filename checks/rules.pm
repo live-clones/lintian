@@ -99,7 +99,7 @@ my @GLOBAL_DEPENDS=(
 # depend on, this package is allowed (and required) in Build-Depends.
 my @RULE_CLEAN_DEPENDS =(
     [ant => qr'^\t\s*(\S+=\S+\s+)*ant\s'],
-    ['debhelper | debhelper-compat' => qr'^\t\s*dh_.+'],
+    ['debhelper | debhelper-compat' => qr'^\t\s*dh_(?!autoreconf).+'],
     ['dh-ocaml, ocaml-nox | ocaml' => qr'^\t\s*dh_ocamlinit\s'],
     [dpatch => qr'^\t\s*(\S+=\S+\s+)*dpatch\s'],
     ['po-debconf' => qr'^\t\s*debconf-updatepo\s'],
