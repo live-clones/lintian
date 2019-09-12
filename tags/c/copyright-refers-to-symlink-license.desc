@@ -1,7 +1,7 @@
 Tag: copyright-refers-to-symlink-license
 Severity: pedantic
 Certainty: possible
-Check: copyright-file
+Check: copyright
 Info: The copyright file refers to the versionless symlink in
  <tt>/usr/share/common-licenses</tt> for the full text of the GPL, LGPL,
  or GFDL license. This symlink is updated to point to the latest version

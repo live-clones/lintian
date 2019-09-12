@@ -1,7 +1,7 @@
 Tag: possible-gpl-code-linked-with-openssl
 Severity: serious
 Certainty: wild-guess
-Check: copyright-file
+Check: copyright
 Info: This package appears to be covered by the GNU GPL but depends on
  the OpenSSL libssl package and does not mention a license exemption or
  exception for OpenSSL in its copyright file. The GPL (including version
