@@ -1,0 +1,4 @@
+Skeleton: upload-native
+Testname: source-copyright-unique
+Description: Test if standalone paragraph name are unique
+Check: copyright

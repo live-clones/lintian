@@ -1,0 +1,8 @@
+Testname: source-copyright-missing-repack-explanation-unrel
+Skeleton: upload-non-native
+Version: 1+dfsg-1
+Description: Test for missing repack explanations (false-positive)
+Options: --pedantic
+Test-Against:
+ missing-explanation-for-repacked-upstream-tarball
+Check: copyright

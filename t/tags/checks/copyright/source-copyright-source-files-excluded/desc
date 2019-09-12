@@ -1,0 +1,7 @@
+Testname: source-copyright-source-files-excluded
+Skeleton: upload-non-native
+Source-Format: 3.0 (quilt)
+Description: Test for files listed in Files-Excluded
+Test-Against:
+ files-excluded-without-copyright-format-1.0
+Check: copyright
