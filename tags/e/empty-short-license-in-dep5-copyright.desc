@@ -1,7 +1,7 @@
 Tag: empty-short-license-in-dep5-copyright
 Severity: normal
 Certainty: possible
-Check: source-copyright
+Check: copyright
 Ref: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 Info: The short license field in the machine readable copyright file
  is empty.

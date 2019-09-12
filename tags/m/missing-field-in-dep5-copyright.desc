@@ -1,7 +1,7 @@
 Tag: missing-field-in-dep5-copyright
 Severity: normal
 Certainty: possible
-Check: source-copyright
+Check: copyright
 Ref: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 Info: The paragraph in the machine readable copyright file is missing a field
  that is required by the specification.

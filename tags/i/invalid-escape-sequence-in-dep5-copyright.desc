@@ -1,7 +1,7 @@
 Tag: invalid-escape-sequence-in-dep5-copyright
 Severity: normal
 Certainty: possible
-Check: source-copyright
+Check: copyright
 Ref: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 Info: The only allowed escape sequences are "\*", "\?" and "\\" (without
  quotes) to produce a literal star, question mark and backslash, respectively.
