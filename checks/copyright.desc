@@ -1,0 +1,15 @@
+Check-Script: copyright
+Author: Jakub Wilk <jwilk@debian.org>
+Abbrev: cpy
+Type: source, binary
+Needs-Info: copyright-file, unpacked, src-orig-index, java-info
+Info: This script checks if the copyright information shipped with
+ a source or an installation package conforms to policy.
+ .
+ Each source package should have a debian/copyright file.
+ .
+ Each binary package must either have a
+ /usr/share/doc/&lt;foo&gt;/copyright file or must have a symlink
+ /usr/share/doc/&lt;foo&gt; -&gt; &lt;bar&gt;, where &lt;bar&gt; comes
+ from the same source package and pkg foo declares a "Depends" relation on
+ bar.
