@@ -393,7 +393,7 @@ sub source {
             tag 'rules-requires-root-explicitly';
         }
     } else {
-        tag 'rules-requires-root-implicitly';
+        tag 'rules-requires-root-missing';
     }
 
     if ($info->source_field('rules-requires-root', 'no') eq 'no') {
