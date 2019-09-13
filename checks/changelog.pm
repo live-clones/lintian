@@ -28,7 +28,7 @@ use Date::Format qw(time2str);
 use Email::Valid;
 use Encode qw(decode);
 use List::Util qw(first);
-use List::MoreUtils qw(any);
+use List::MoreUtils qw(any uniq);
 use Path::Tiny;
 use Try::Tiny;
 
@@ -481,11 +481,17 @@ sub binary {
 
             my $changes = $group->get_changes_processable;
             if ($changes) {
-                my $chgs_dist
+                my $changes_dist
                   = lc($changes->info->field('distribution', EMPTY));
+
+                my %codename;
+                $codename{'unstable'} = 'sid';
+                my @normalized
+                  = map { $codename{$_} // $_ }($latest_dist, $changes_dist);
+
                 tag 'changelog-distribution-does-not-match-changes-file',
-                  "($latest_dist != $chgs_dist)"
-                  if $latest_dist ne $chgs_dist;
+                  "($latest_dist != $changes_dist)"
+                  unless scalar(uniq @normalized) == 1;
             }
 
         }
