@@ -81,6 +81,26 @@ sub source {
         tag 'hyphen-in-upstream-part-of-debian-changelog-version',
           $latest_version->upstream
           if !$info->native && $latest_version->upstream =~ qr/-/;
+
+        # unstable, testing, and stable shouldn't be used in Debian
+        # version numbers.  unstable should get a normal version
+        # increment and testing and stable should get suite-specific
+        # versions.
+        #
+        # NMUs get a free pass because they need to work with the
+        # version number that was already there.
+        unless (length $latest_version->source_nmu) {
+            my $revision = $latest_version->maintainer_revision;
+            my $distribution = $latest_entry->Distribution;
+
+            tag 'version-refers-to-distribution',$latest_version->literal
+              if ($revision =~ /testing|(?:un)?stable/i)
+              || (
+                ($distribution eq 'unstable'|| $distribution eq 'experimental')
+                && $revision
+                =~ /woody|sarge|etch|lenny|squeeze|stretch|buster/);
+        }
+
     }
 
     if (@entries > 1) {
@@ -550,38 +570,6 @@ sub binary {
             tag 'improbable-bug-number-in-closes', $bug
               if $bug < $BUGS_NUMBER->value('min-bug')
               || $bug > $BUGS_NUMBER->value('max-bug');
-        }
-
-        # unstable, testing, and stable shouldn't be used in Debian
-        # version numbers.  unstable should get a normal version
-        # increment and testing and stable should get suite-specific
-        # versions.
-        #
-        # NMUs get a free pass because they need to work with the
-        # version number that was already there.
-        my $changelog_version;
-        if ($info->native) {
-            $changelog_version = $latest_entry->Version || EMPTY;
-        } else {
-            if ($latest_entry->Version) {
-                ($changelog_version)
-                  = (split('-', $latest_entry->Version))[-1];
-            } else {
-                $changelog_version = EMPTY;
-            }
-        }
-        unless (not $info->native and $changelog_version =~ /\./) {
-            if (    $info->native
-                and $changelog_version =~ /testing|(?:un)?stable/i) {
-                tag 'version-refers-to-distribution', $latest_entry->Version;
-            } elsif ($changelog_version =~ /woody|sarge|etch|lenny|squeeze/) {
-                my %unreleased_dists
-                  = map { $_ => 1 } qw(unstable experimental);
-                if (exists($unreleased_dists{$latest_entry->Distribution})) {
-                    tag 'version-refers-to-distribution',
-                      $latest_entry->Version;
-                }
-            }
         }
 
         # Compare against NEWS.Debian if available.
