@@ -717,6 +717,8 @@ sub always {
         if ($KNOWN_INSECURE_HOMEPAGE_URIS->matches_any($homepage)) {
             tag 'homepage-field-uses-insecure-uri', $orig;
         }
+        tag 'homepage-refers-to-obsolete-debian-infrastructure', $orig
+          if $homepage =~ m,alioth\.debian\.org,;
     } elsif (not $info->native) {
         if ($type eq 'source') {
             my $binary_has_homepage_field = 0;
