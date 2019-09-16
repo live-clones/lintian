@@ -1,0 +1,5 @@
+Testname: watch-file-should-mangle
+Skeleton: upload-non-native
+Version: 1+dfsg-1
+Description: Watch file should mangle version
+Check: debian/watch

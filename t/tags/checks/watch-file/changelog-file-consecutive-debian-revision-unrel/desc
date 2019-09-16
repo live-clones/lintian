@@ -1,5 +1,0 @@
-Testname: changelog-file-consecutive-debian-revision-unrel
-Skeleton: upload-non-native
-Description: Check for false positive in non-consecutive-debian-revision
-Options: --pedantic
-Check: watch-file

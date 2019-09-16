@@ -1,4 +1,0 @@
-Skeleton: upload-native
-Testname: watch-file-native
-Description: Native package with a watch file
-Check: watch-file

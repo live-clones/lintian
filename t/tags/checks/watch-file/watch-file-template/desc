@@ -1,4 +1,0 @@
-Testname: watch-file-template
-Skeleton: upload-non-native
-Description: Test for dh_make(1) templates
-Check: watch-file

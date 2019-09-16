@@ -1,5 +1,0 @@
-Testname: watch-file-prerelease
-Skeleton: upload-non-native
-Version: 1~rc1-1
-Description: Check mangling tags for upstream prereleases
-Check: watch-file
