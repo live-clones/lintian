@@ -373,12 +373,12 @@ sub _find_profile {
 # normally, the profile will have been parsed successfully.
 sub _read_profile {
     my ($self, $pfile) = @_;
-    my @pdata;
     my $pheader;
     my $pmap = $self->{'parent-map'};
     my $pname;
     my $plist = $self->{'profile_list'};
-    @pdata = read_dpkg_control_utf8($pfile, 0);
+    my @dirty = read_dpkg_control_utf8($pfile, 0);
+    my @pdata = _clean_fields(@dirty);
     $pheader = shift @pdata;
     croak "Profile field is missing from $pfile"
       unless defined $pheader && $pheader->{'profile'};
@@ -417,6 +417,35 @@ sub _read_profile {
         }
     }
     return;
+}
+
+# $self->_clean_fields(@dirty)
+#
+# Cleans the paragraphs from read_dpkg_control
+sub _clean_fields {
+    my @dirty = @_;
+
+    my @clean;
+
+    foreach my $paragraphref (@dirty) {
+        my %paragraph = %{$paragraphref};
+
+        foreach my $field (keys %paragraph) {
+
+            # unwrap continuation lines
+            $paragraph{$field} =~ s/\n/ /g;
+
+            # trim both ends
+            $paragraph{$field} =~ s/^\s+|\s+$//g;
+
+            # reduce multiple spaces to one
+            $paragraph{$field} =~ s/\s+/ /g;
+        }
+
+        push(@clean, \%paragraph);
+    }
+
+    return @clean;
 }
 
 # $self->_read_profile_section($pname, $section, $sno)
