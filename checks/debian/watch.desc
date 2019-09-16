@@ -1,4 +1,4 @@
-Check-Script: watch-file
+Check-Script: debian/watch
 Author: Patrick Schoenfeld <schoenfeld@in-medisa-res.com>
 Abbrev: watch
 Type: source

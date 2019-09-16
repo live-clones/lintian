@@ -1,4 +1,4 @@
-# watch-file -- lintian check script -*- perl -*-
+# debian/watch -- lintian check script -*- perl -*-
 #
 # Copyright (C) 2008 Patrick Schoenfeld
 # Copyright (C) 2008 Russ Allbery
@@ -20,7 +20,7 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-package Lintian::watch_file;
+package Lintian::debian::watch;
 
 use strict;
 use warnings;
