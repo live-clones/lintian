@@ -1,7 +1,7 @@
 Tag: debian-changelog-file-is-a-symlink
 Severity: normal
 Certainty: certain
-Check: changelog
+Check: debian/changelog
 Info: The Debian changelog file is a symlink to a file in a different
  directory or not found in this package. Please don't do this. It makes
  package checking and manipulation unnecessarily difficult. Because it was

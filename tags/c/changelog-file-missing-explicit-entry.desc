@@ -1,7 +1,7 @@
 Tag: changelog-file-missing-explicit-entry
 Severity: normal
 Certainty: certain
-Check: changelog
+Check: debian/changelog
 Info: The latest changelog file for this package specifies a version in
  the form of 1.2-3+deb8u1, 1.2-3+nmu4 (or similar) but this does not
  follow from a corresponding 1.2-3 changelog stanza.

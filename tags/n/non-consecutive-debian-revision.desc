@@ -1,7 +1,7 @@
 Tag: non-consecutive-debian-revision
 Severity: pedantic
 Certainty: possible
-Check: changelog
+Check: debian/changelog
 Experimental: yes
 Info: The last changelog entry refer to a Debian revision that is not
  consecutive to previous changelog entry. Please use consecutive Debian

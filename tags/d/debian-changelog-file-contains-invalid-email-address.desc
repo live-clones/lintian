@@ -1,6 +1,6 @@
 Tag: debian-changelog-file-contains-invalid-email-address
 Severity: important
 Certainty: certain
-Check: changelog
+Check: debian/changelog
 Info: The changelog file contains an invalid email address: the domain
  needs at least one dot. This looks like a mistake.
