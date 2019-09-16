@@ -1,0 +1,5 @@
+Skeleton: upload-native
+Testname: source-copyright-insecure-uri
+Description: Test for insecure Format: URIs
+Options: --pedantic
+Check: debian/copyright

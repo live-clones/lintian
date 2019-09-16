@@ -1,0 +1,6 @@
+Testname: source-copyright-missing-repack-explanation
+Skeleton: upload-non-native
+Version: 1+dfsg-1
+Description: Test for missing repack explanations
+Options: --pedantic
+Check: debian/copyright
