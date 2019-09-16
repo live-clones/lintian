@@ -1,4 +1,4 @@
-Check-Script: rules
+Check-Script: debian/rules
 Author: Russ Allbery <rra@debian.org>
 Type: source
 Needs-Info: unpacked

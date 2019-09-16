@@ -1,4 +1,4 @@
-# rules -- lintian check script -*- perl -*-
+# debian/rules -- lintian check script -*- perl -*-
 
 # Copyright (C) 2006 Russ Allbery <rra@debian.org>
 # Copyright (C) 2005 René van Bevern <rvb@pro-linux.de>
@@ -13,7 +13,8 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 
-package Lintian::rules;
+package Lintian::debian::rules;
+
 use strict;
 use warnings;
 use autodie;
