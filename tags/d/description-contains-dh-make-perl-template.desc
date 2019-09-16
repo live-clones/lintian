@@ -1,7 +1,7 @@
 Tag: description-contains-dh-make-perl-template
 Severity: normal
 Certainty: certain
-Check: description
+Check: debian/description
 Info: The extended description contains the statement that it was
  automagically extracted by dh-make-perl. Please check the description
  for correctness and usefulness and remove the dh-make-perl statement

@@ -1,7 +1,7 @@
 Tag: description-too-short
 Severity: serious
 Certainty: certain
-Check: description
+Check: debian/description
 Ref: devref 6.2.2
 Info: The description contains only a single word. It is likely that the
  description won't be very clear for the user.

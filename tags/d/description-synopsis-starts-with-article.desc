@@ -1,7 +1,7 @@
 Tag: description-synopsis-starts-with-article
 Severity: minor
 Certainty: certain
-Check: description
+Check: debian/description
 Info: The first line of the "Description:" should omit any initial indefinite
  or definite article: "a", "an", or "the". A good heuristic is that it should
  be possible to substitute the package <tt>name</tt> and <tt>synopsis</tt>

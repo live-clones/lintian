@@ -1,7 +1,7 @@
 Tag: extended-description-is-probably-too-short
 Severity: minor
 Certainty: possible
-Check: description
+Check: debian/description
 Ref: devref 6.2.1, devref 6.2.3
 Info: The extended description (the lines after the first line of the
  "Description:" field) is only one or two lines long. The extended

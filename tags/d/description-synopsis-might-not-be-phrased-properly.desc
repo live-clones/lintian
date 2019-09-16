@@ -1,7 +1,7 @@
 Tag: description-synopsis-might-not-be-phrased-properly
 Severity: minor
 Certainty: possible
-Check: description
+Check: debian/description
 Info: The package synopsis (also known as the "short" description, ie. the
  first line in the package's "Description:" field) either ends with a full
  stop "." character or starts another sentence.

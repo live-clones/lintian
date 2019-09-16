@@ -1,6 +1,6 @@
 Tag: description-synopsis-is-empty
 Severity: serious
 Certainty: certain
-Check: description
+Check: debian/description
 Info: The first line in the "Description:" is empty.
 Ref: policy 3.4
