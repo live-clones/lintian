@@ -8,7 +8,7 @@ Enable-Tags-From-Check: apache2, application-not-library, appstream-metadata, au
  files, gir, group-checks, huge-usr-share, infofiles, init.d, java, lintian,
  manpages, md5sums, menu-format, menus, nmu, nodejs, obsolete-sites, ocaml,
  patch-systems, pe, phppear, po-debconf, python, rules, scripts, shared-libs,
- standards-version, symlinks, systemd,
- testsuite, triggers, udev, upstream-metadata, upstream-signing-key, usrmerge,
- version-substvars, watch-file
+ standards-version, symlinks, systemd, testsuite, triggers, udev,
+ upstream-metadata, upstream-signing-key, usrmerge, version-substvars,
+ watch-file
 

@@ -6,6 +6,7 @@ Enable-Tags: FSSTND-dir-in-usr, FSSTND-dir-in-var, arch-dependent-file-in-usr-sh
  bad-perm-for-file-in-etc-sudoers.d, bad-relation, bad-version-number,
  binary-in-etc, binary-or-shlib-defines-rpath, binary-with-bad-dynamic-table,
  build-info-in-binary-control-file-section,
+ changelog-distribution-does-not-match-changes-file,
  conflicting-negation-in-source-relation, control-file-has-bad-owner,
  control-file-has-bad-permissions, control-file-is-not-a-file,
  control-interpreter-in-usr-local, control-interpreter-without-depends,
@@ -57,6 +58,7 @@ Enable-Tags: FSSTND-dir-in-usr, FSSTND-dir-in-var, arch-dependent-file-in-usr-sh
 
 Tags: FSSTND-dir-in-usr, FSSTND-dir-in-var, bad-package-name, bad-relation, bad-version-number,
  binary-in-etc, build-info-in-binary-control-file-section,
+ changelog-distribution-does-not-match-changes-file,
  conflicting-negation-in-source-relation, control-file-has-bad-owner,
  control-file-has-bad-permissions, control-file-is-not-a-file,
  control-interpreter-in-usr-local, copyright-file-compressed,
