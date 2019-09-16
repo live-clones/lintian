@@ -1,5 +1,0 @@
-Skeleton: upload-native
-Testname: changes-files-package-builds-dbg-and-dbgsym-variants
-Package-Architecture: any
-Description: Package builds -dbg and -dbgsym
-Check: control-file

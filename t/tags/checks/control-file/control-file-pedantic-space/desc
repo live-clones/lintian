@@ -1,5 +1,0 @@
-Skeleton: upload-native
-Testname: control-file-pedantic-space
-Options: --pedantic
-Description: Pedantic tests for control file spacing
-Check: control-file
