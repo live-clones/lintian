@@ -27,6 +27,7 @@ use autodie qw(opendir closedir);
 
 use Carp qw(croak);
 use File::Find::Rule;
+use Path::Tiny;
 
 use Dpkg::Vendor qw(get_current_vendor get_vendor_info);
 
@@ -689,15 +690,15 @@ sub _load_checks {
     my ($self) = @_;
     foreach my $checkdir ($self->_safe_include_path('checks')) {
         next unless -d $checkdir;
-        opendir(my $dirfd, $checkdir);
-        for my $desc (sort readdir $dirfd) {
-            my $cname = $desc;
-            next unless $cname =~ s/\.desc$//o;
-            # _parse_check ignores duplicates, so we don't have to
-            # check for it.
-            $self->_parse_check($cname, $checkdir);
+
+        my @descpaths
+          = sort File::Find::Rule->file->name('*.desc')->in($checkdir);
+        for my $desc (@descpaths) {
+            my $relative = path($desc)->relative($checkdir)->stringify;
+            my ($name) = ($relative =~ qr/^(.*)\.desc$/);
+            # _parse_check ignores duplicates on its own
+            $self->_parse_check($name, $checkdir);
         }
-        closedir($dirfd);
     }
     return;
 }
