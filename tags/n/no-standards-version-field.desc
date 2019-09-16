@@ -1,7 +1,7 @@
 Tag: no-standards-version-field
 Severity: important
 Certainty: certain
-Check: standards-version
+Check: debian/standards-version
 Ref: policy 5.6.11
 Info: The source package does not have a Standards-Version control field.
  Please update your package to latest Policy and set this control field
