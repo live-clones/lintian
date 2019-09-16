@@ -1,5 +1,0 @@
-Skeleton: upload-native
-Testname: rules-variable-targets
-Description: Test against missing targets in debian/rules
-Test-Against: debian-rules-missing-recommended-target
-Check: rules

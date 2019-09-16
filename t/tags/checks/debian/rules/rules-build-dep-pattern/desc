@@ -1,0 +1,5 @@
+Skeleton: upload-native
+Testname: rules-build-dep-pattern
+Description: Check recognition of pattern dependencies
+References: Bug#536405
+Check: debian/rules

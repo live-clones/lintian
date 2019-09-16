@@ -1,4 +1,0 @@
-Skeleton: upload-native
-Testname: rules-unnecessary-get-orig-source
-Description: Test for unnecessary get-orig-source targets
-Check: rules

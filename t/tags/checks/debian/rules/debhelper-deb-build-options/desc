@@ -1,0 +1,4 @@
+Skeleton: upload-native
+Testname: debhelper-deb-build-options
+Description: Test the value of DEB_BUILD_OPTIONS
+Check: debian/rules

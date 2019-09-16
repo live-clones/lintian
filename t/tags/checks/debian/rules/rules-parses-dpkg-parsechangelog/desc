@@ -1,0 +1,4 @@
+Skeleton: upload-native
+Testname: rules-parses-dpkg-parsechangelog
+Description: Test for debian/rules manually parsing dpkg-parsechangelog
+Check: debian/rules

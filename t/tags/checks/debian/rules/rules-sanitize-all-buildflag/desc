@@ -1,0 +1,4 @@
+Skeleton: upload-native
+Testname: rules-sanitize-all-buildflag
+Description: Test for sanitize=+all
+Check: debian/rules
