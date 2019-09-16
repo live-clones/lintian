@@ -1,7 +1,7 @@
 Tag: missing-file-from-potfiles-in
 Severity: normal
 Certainty: certain
-Check: po-debconf
+Check: debian/po-debconf
 Info: A file listed in <tt>debian/po/POTFILES.in</tt> could not be found
  in the source package.
 Ref: po-debconf(7)
