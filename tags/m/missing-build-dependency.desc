@@ -1,7 +1,7 @@
 Tag: missing-build-dependency
 Severity: serious
 Certainty: possible
-Check: rules
+Check: debian/rules
 Ref: policy 4.2
 Info: The package doesn't specify a build dependency on a package that is
  used in <tt>debian/rules</tt>.

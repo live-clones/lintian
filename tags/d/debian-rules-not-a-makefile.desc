@@ -1,7 +1,7 @@
 Tag: debian-rules-not-a-makefile
 Severity: serious
 Certainty: certain
-Check: rules
+Check: debian/rules
 Ref: policy 4.9
 Info: The <tt>debian/rules</tt> file for this package does not appear to
  be a makefile or does not start with the required line.
