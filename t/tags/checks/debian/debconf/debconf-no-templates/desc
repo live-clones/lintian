@@ -1,4 +1,4 @@
 Skeleton: upload-native
 Testname: debconf-no-templates
 Description: Test for missing debconf templates
-Check: debconf
+Check: debian/debconf

@@ -1,4 +1,4 @@
 Skeleton: upload-native
 Testname: debconf-maintscripts-deps
 Description: Test for various debconf maintscripts and dep issues
-Check: debconf
+Check: debian/debconf
