@@ -1,4 +1,0 @@
-Skeleton: upload-native
-Testname: changelog-file-news-wrong-name
-Description: Check for NEWS.Debian installed with wrong name
-Check: changelog

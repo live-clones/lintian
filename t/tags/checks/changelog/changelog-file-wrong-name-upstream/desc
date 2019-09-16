@@ -1,4 +1,0 @@
-Testname: changelog-file-wrong-name-upstream
-Skeleton: upload-non-native
-Description: Check a wrong name for an upstream changelog
-Check: changelog

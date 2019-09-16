@@ -1,0 +1,5 @@
+Testname: changelog-file-line-too-short
+Skeleton: upload-non-native
+Options: --pedantic
+Description: Test for short changelog entries
+Check: debian/changelog

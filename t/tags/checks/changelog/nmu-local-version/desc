@@ -1,7 +1,0 @@
-Skeleton: upload-native
-Testname: nmu-local-version
-Version: 1.0local1
-Description: Test suppression of NMU tags for local packages
-Test-Against: malformed-debian-changelog-version
-References: Debian Bug#501523
-Check: changelog

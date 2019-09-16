@@ -1,6 +1,0 @@
-Skeleton: upload-native
-Testname: changelog-file-invalid-date
-Description: Test for invalid dates
-Test-Against:
- debian-changelog-has-wrong-day-of-week
-Check: changelog

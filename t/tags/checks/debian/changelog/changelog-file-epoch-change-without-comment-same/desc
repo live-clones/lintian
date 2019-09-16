@@ -1,0 +1,7 @@
+Skeleton: upload-native
+Testname: changelog-file-epoch-change-without-comment-same
+Description: Check changelog for accidental epoch changes (false positive)
+Test-Against:
+ epoch-change-without-comment
+ epoch-changed-but-upstream-version-did-not-go-backwards
+Check: debian/changelog
