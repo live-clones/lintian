@@ -3,4 +3,4 @@ Testname: legacy-foo++
 Source: foo++
 Version: 5
 Description: Legacy test "foo++"
-Check: debian-readme
+Check: debian/readme
