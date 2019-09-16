@@ -2,4 +2,4 @@ Skeleton: upload-native
 Testname: debian-source-dir-classifications
 Options: -L +classification
 Description: Test for d-s-d classifications tags
-Check: debian-source-dir
+Check: debian/source-dir
