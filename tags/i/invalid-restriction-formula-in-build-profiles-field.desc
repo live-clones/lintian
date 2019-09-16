@@ -1,7 +1,7 @@
 Tag: invalid-restriction-formula-in-build-profiles-field
 Severity: important
 Certainty: certain
-Check: control-file
+Check: debian/control
 Info: The restriction formula in the Build-Profiles field must have the same
  format as the restriction formula in the Build-Depends field with angle
  brackets.

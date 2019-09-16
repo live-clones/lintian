@@ -1,7 +1,7 @@
 Tag: weak-library-dev-dependency
 Severity: important
 Certainty: possible
-Check: control-file
+Check: debian/control
 Ref: policy 8.5
 Info: The given package appears to be a shared library -dev package, but
  the dependency on what seems to be a corresponding shared library package
