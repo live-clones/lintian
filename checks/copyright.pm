@@ -439,7 +439,7 @@ sub _parse_dep5 {
                             $file_licenses{$entry->name} = $short_license;
                         }
                     } else {
-                        for my $srcfile (%file_coverage) {
+                        for my $srcfile (keys %file_coverage) {
                             if ($srcfile =~ $wc_value) {
                                 $used = 1;
                                 $file_coverage{$srcfile} = $current_line;
@@ -521,11 +521,15 @@ sub _parse_dep5 {
         foreach my $srcfile (sort keys %file_coverage) {
             my $i = $file_coverage{$srcfile};
             next if $srcfile =~ '^\.pc/';
-            # Assume that license files themselves do not require
-            # copyright.
-            next if $srcfile =~ m,(^|/)(COPYING[^/]*|LICENSE)$,;
-            tag 'file-without-copyright-information', $srcfile unless $i;
             delete $file_para_coverage{$i};
+            if ($srcfile =~ m,(^|/)(COPYING[^/]*|LICENSE)$,) {
+                # license files do not require their own entry in d/copyright.
+                tag 'license-file-listed-in-debian-copyright', $srcfile
+                  if $i;
+            } else {
+                tag 'file-without-copyright-information', $srcfile
+                  unless $i;
+            }
         }
         foreach my $i (sort keys %file_para_coverage) {
             tag 'unused-file-paragraph-in-dep5-copyright',
