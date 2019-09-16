@@ -1,5 +1,5 @@
 Tag: config-does-not-load-confmodule
 Severity: normal
 Certainty: certain
-Check: debconf
+Check: debian/debconf
 Info: The config script must load one of the debconf libraries.

@@ -1,7 +1,7 @@
 Tag: too-long-short-description-in-templates
 Severity: normal
 Certainty: certain
-Check: debconf
+Check: debian/debconf
 Info: The short description should be kept short (50 characters or so) so
  that it may be accommodated by most debconf interfaces. Keeping it short
  also helps translators, as usually translations tend to end up being

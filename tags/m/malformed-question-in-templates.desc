@@ -1,7 +1,7 @@
 Tag: malformed-question-in-templates
 Severity: normal
 Certainty: certain
-Check: debconf
+Check: debian/debconf
 Info: The short description of a boolean debconf template should be
  phrased in the form of a question which should be kept short and should
  generally end with a question mark. Terse writing style is permitted and

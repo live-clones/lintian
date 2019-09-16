@@ -1,6 +1,6 @@
 Tag: missing-debconf-dependency
 Severity: normal
 Certainty: possible
-Check: debconf
+Check: debian/debconf
 Info: Packages using debconf should depend on it, since debconf is not an
  essential package.

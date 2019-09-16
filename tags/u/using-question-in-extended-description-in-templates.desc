@@ -1,7 +1,7 @@
 Tag: using-question-in-extended-description-in-templates
 Severity: normal
 Certainty: certain
-Check: debconf
+Check: debian/debconf
 Info: The extended description of a debconf template should never include
  a question.
  .
