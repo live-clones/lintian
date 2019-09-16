@@ -2,4 +2,4 @@ Skeleton: upload-native
 Testname: version-substvars-general
 Description: Test of substvars
 Options: --pedantic
-Check: version-substvars
+Check: debian/version-substvars

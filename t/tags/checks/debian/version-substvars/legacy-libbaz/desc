@@ -5,4 +5,4 @@ Version: 1-1
 Default-Build-Depends: debhelper (>= 9.20151004~)
 Dh-Compat-Level: 6
 Description: Legacy test "libbaz"
-Check: version-substvars
+Check: debian/version-substvars
