@@ -1,0 +1,6 @@
+Skeleton: upload-native
+Testname: spelling-package-name
+Description: Spell check test for excluding package name
+Test-Against:
+ spelling-error-in-description
+Check: debian/description

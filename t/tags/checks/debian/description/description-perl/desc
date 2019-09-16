@@ -1,0 +1,4 @@
+Skeleton: upload-native
+Testname: description-perl
+Description: Tests of perl-related description tags
+Check: debian/description
