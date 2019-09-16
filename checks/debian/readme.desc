@@ -1,4 +1,4 @@
-Check-Script: debian-readme
+Check-Script: debian/readme
 Author: Richard Braakman <dark@xs4all.nl>
 Abbrev: drm
 Type: binary

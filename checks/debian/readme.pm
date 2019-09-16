@@ -1,4 +1,4 @@
-# debian-readme -- lintian check script -*- perl -*-
+# debian/readme -- lintian check script -*- perl -*-
 
 # Copyright (C) 1998 Richard Braakman
 #
@@ -18,7 +18,8 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-package Lintian::debian_readme;
+package Lintian::debian::readme;
+
 use strict;
 use warnings;
 use autodie;
