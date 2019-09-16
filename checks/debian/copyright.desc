@@ -1,4 +1,4 @@
-Check-Script: copyright
+Check-Script: debian/copyright
 Author: Jakub Wilk <jwilk@debian.org>
 Abbrev: cpy
 Type: source, binary
