@@ -1,4 +1,4 @@
-Check-Script: changelog
+Check-Script: debian/changelog
 Author:
  Christian Schwarz <schwarz@debian.org>
  Chris Lamb <lamby@debian.org>
