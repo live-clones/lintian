@@ -1,4 +1,4 @@
-# version-substvars -- lintian check script -*- perl -*-
+# debian/version-substvars -- lintian check script -*- perl -*-
 #
 # Copyright (C) 2006 Adeodato Simó
 #
@@ -34,7 +34,8 @@
 # Always warn on ${Source-Version} even if it doesn't break since the substvar
 # is now considered deprecated.
 
-package Lintian::version_substvars;
+package Lintian::debian::version_substvars;
+
 use strict;
 use warnings;
 use autodie;
