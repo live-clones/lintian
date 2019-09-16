@@ -1,4 +1,4 @@
-Check-Script: control-file
+Check-Script: debian/control
 Author: Marc 'HE' Brockschmidt <marc@marcbrockschmidt.de>
 Abbrev: dctl
 Type: source

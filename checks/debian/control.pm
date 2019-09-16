@@ -1,4 +1,4 @@
-# control-file -- lintian check script -*- perl -*-
+# debian/control -- lintian check script -*- perl -*-
 #
 # Copyright (C) 2004 Marc Brockschmidt
 #
@@ -18,7 +18,8 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-package Lintian::control_file;
+package Lintian::debian::control;
+
 use strict;
 use warnings;
 use autodie;
