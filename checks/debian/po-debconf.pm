@@ -1,4 +1,4 @@
-# po-debconf -- lintian check script -*- perl -*-
+# debian/po-debconf -- lintian check script -*- perl -*-
 
 # Copyright (C) 2002-2004 by Denis Barbier <barbier@linuxfr.org>
 #
@@ -18,7 +18,8 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-package Lintian::po_debconf;
+package Lintian::debian::po_debconf;
+
 use strict;
 use warnings;
 use autodie;

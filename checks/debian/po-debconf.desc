@@ -1,4 +1,4 @@
-Check-Script: po-debconf
+Check-Script: debian/po-debconf
 Author: Denis Barbier <barbier@linuxfr.org>
 Abbrev: pd
 Type: source
