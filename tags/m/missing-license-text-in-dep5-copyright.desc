@@ -1,7 +1,7 @@
 Tag: missing-license-text-in-dep5-copyright
 Severity: normal
 Certainty: possible
-Check: copyright
+Check: debian/copyright
 Ref: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 Info: The standalone “License” paragraph contains only short license
  name, but not the license text.

@@ -1,7 +1,7 @@
 Tag: no-copyright-file
 Severity: serious
 Certainty: certain
-Check: copyright
+Check: debian/copyright
 Info: Each binary package has to include a plain file
  /usr/share/doc/<i>pkg</i>/copyright
 Ref: policy 12.5

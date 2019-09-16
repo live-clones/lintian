@@ -1,7 +1,7 @@
 Tag: field-name-typo-in-dep5-copyright
 Severity: normal
 Certainty: possible
-Check: copyright
+Check: debian/copyright
 Info: The listed field name is a likely misspelling of one of the documented
  DEP 5 fields.
  .

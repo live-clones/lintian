@@ -1,7 +1,7 @@
 Tag: copyright-contains-automatically-extracted-boilerplate
 Severity: normal
 Certainty: certain
-Check: copyright
+Check: debian/copyright
 Ref: policy 12.5
 Info: The string "This copyright info was automatically extracted"
  appears in the copyright file, which indicates that you either didn't

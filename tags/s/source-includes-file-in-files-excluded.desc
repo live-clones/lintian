@@ -1,7 +1,7 @@
 Tag: source-includes-file-in-files-excluded
 Severity: serious
 Certainty: possible
-Check: copyright
+Check: debian/copyright
 Info: A file specified in the <tt>Files-Excluded</tt> field in
  debian/copyright exists in the source tree.
  .
