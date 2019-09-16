@@ -18,7 +18,8 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-package Lintian::debian_source_dir;
+package Lintian::debian::source_dir;
+
 use strict;
 use warnings;
 use autodie;

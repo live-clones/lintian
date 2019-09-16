@@ -1,4 +1,4 @@
-Check-Script: debian-source-dir
+Check-Script: debian/source-dir
 Author: Raphaël Hertzog <hertzog@debian.org>
 Abbrev: dsd
 Type: source
