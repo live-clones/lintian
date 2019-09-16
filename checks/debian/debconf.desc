@@ -1,4 +1,4 @@
-Check-Script: debconf
+Check-Script: debian/debconf
 Author: Colin Watson <cjwatson@debian.org>
 Abbrev: dc
 Type: binary, udeb, source

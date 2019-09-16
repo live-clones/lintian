@@ -1,4 +1,4 @@
-# debconf -- lintian check script -*- perl -*-
+# debian/debconf -- lintian check script -*- perl -*-
 
 # Copyright (C) 2001 Colin Watson
 #
@@ -18,7 +18,8 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-package Lintian::debconf;
+package Lintian::debian::debconf;
+
 use strict;
 use warnings;
 use autodie;
