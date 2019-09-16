@@ -7,47 +7,50 @@ use strict;
 use warnings;
 use autodie;
 
-use constant LINE_LENGTH => 80;
-use constant FIELD_ORDER => (
-    'Extends','Enable-Tags-From-Check',
-    'Disable-Tags-From-Check','Enable-Tags',
-    'Disable-Tags',
-);
-use constant PARAGRAPH_ORDER => ('Overridable', 'Severity');
-
 BEGIN {
-    my $root = $ENV{'LINTIAN_ROOT'}//'.';
-    $ENV{'LINTIAN_ROOT'} = $root;
+    $ENV{'LINTIAN_ROOT'} //= q{.};
 }
+
+use File::Find::Rule;
+use Path::Tiny;
 
 use lib "$ENV{LINTIAN_ROOT}/lib";
+
 use Lintian::Deb822Parser qw(read_dpkg_control);
-use Lintian::Util qw(internal_error strip);
+use Lintian::Util qw(strip);
 
-my $root = $ENV{LINTIAN_ROOT};
-my @dirs = ('profiles/debian');
-my (@checks, @fatal, @nonfatal);
+use constant EMPTY => q{};
+use constant SPACE => q{ };
+use constant COMMA => q{,};
+use constant NEWLINE => qq{\n};
 
-foreach my $check (glob("$root/checks/*.desc")){
-    my ($header, undef) = read_dpkg_control($check);
-    my $cname = $header->{'check-script'};
-    internal_error("$check missing check-script\n") unless defined $cname;
-    push @checks, $cname;
+my @checkdescs
+  = File::Find::Rule->file->name('*.desc')->in("$ENV{LINTIAN_ROOT}/checks");
+
+my @checks;
+foreach my $desc (@checkdescs){
+    my ($header, undef) = read_dpkg_control($desc);
+    my $name = $header->{'check-script'};
+    die "$desc missing check-script"
+      unless defined $name;
+    push @checks, $name;
 }
 
-@fatal = read_tags('private/build-time-data/ftp-master-fatal');
-@nonfatal = read_tags('private/build-time-data/ftp-master-nonfatal');
-
+my @dirs = ('profiles/debian');
 foreach my $dir (@dirs) {
-    mkdir($dir) or internal_error("mkdir $dir: $!") unless -d $dir;
+    path($dir)->mkpath
+      unless -d $dir;
 }
 
 generate_profile(
     'debian/main',
     {
-        'Extends' => 'debian/ftp-master-auto-reject',
+        'Extends' => ['debian/ftp-master-auto-reject'],
         'Enable-Tags-From-Check' => \@checks,
     });
+
+my @fatal = read_tags('private/build-time-data/ftp-master-fatal');
+my @nonfatal = read_tags('private/build-time-data/ftp-master-nonfatal');
 
 generate_profile(
     'debian/ftp-master-auto-reject',
@@ -58,57 +61,44 @@ generate_profile(
     },
     {
         'Tags' => \@fatal,
-        'Overridable' => 'no',
+        'Overridable' => ['no'],
     });
 
 exit 0;
 
 sub generate_profile {
-    my ($profile, $main, @other) = @_;
-    my $filename = "profiles/$profile.profile";
-    open(my $fd, '>', $filename);
-    print $fd "# This profile is auto-generated\n";
-    print $fd "Profile: $profile\n";
-    foreach my $f (FIELD_ORDER) {
-        my $val = $main->{$f};
-        next unless defined $val;
-        if ($f eq 'Extends') {
-            format_field($fd, $f, $val);
-        } else {
-            format_field($fd, $f, sort @$val);
-        }
-    }
-    print $fd "\n";
-    foreach my $para (@other) {
-        format_field($fd, 'Tags', sort @{ $para->{'Tags'} });
-        foreach my $f (PARAGRAPH_ORDER) {
-            my $val = $para->{$f};
-            next unless defined $val;
-            print $fd "$f: $val\n";
-        }
-        print $fd "\n";
-    }
-    close($fd);
+    my ($name, @paragraphs) = @_;
+
+    my $text =<<EOSTR;
+# This profile is auto-generated
+Profile: $name
+EOSTR
+
+    $text .= write_paragraph($_)foreach @paragraphs;
+
+    path("profiles/$name.profile")->spew($text);
+
     return;
 }
 
-sub format_field {
-    my ($fd, $field, @elements) = @_;
-    my $llen = length($field)  + 2;
-    my $first = shift @elements;
-    print $fd "$field: $first";
-    foreach my $el (@elements){
-        my $ellen = length $el;
-        if ($llen + $ellen + 2 <= LINE_LENGTH || $llen <= 2){
-            print $fd ", $el";
-            $llen += $ellen + 2;
-        } else {
-            print $fd ",\n $el";
-            $llen = $ellen + 1;
-        }
+sub write_paragraph {
+    my ($paragraph) = @_;
+
+    my $text = EMPTY;
+
+    foreach my $field (sort keys %{$paragraph}) {
+        $text .= "$field:" . NEWLINE;
+
+        my @values = sort @{$paragraph->{$field}};
+        my $separator = (scalar @values > 1 ? COMMA : EMPTY);
+
+        $text .= SPACE . $_ . $separator . NEWLINE for @values;
     }
-    print $fd "\n";
-    return;
+
+    $text .= NEWLINE
+      if length $text;
+
+    return $text;
 }
 
 sub read_tags {
