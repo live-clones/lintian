@@ -1,0 +1,4 @@
+Skeleton: upload-native
+Testname: standards-version-newer
+Description: Test too-new standards version
+Check: debian/standards-version

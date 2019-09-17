@@ -1,0 +1,7 @@
+Skeleton: upload-native
+Testname: legacy-debug
+Source: debug
+Default-Build-Depends: debhelper (>= 9.20151004~)
+Dh-Compat-Level: 5
+Description: Legacy test "debug"
+Check: debian/standards-version
