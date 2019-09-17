@@ -1,4 +1,4 @@
-# changelog-file -- lintian check script -*- perl -*-
+# debian/changelog -- lintian check script -*- perl -*-
 
 # Copyright © 1998 Christian Schwarz
 # Copyright © 2017 Chris Lamb <lamby@debian.org>
@@ -20,6 +20,7 @@
 # MA 02110-1301, USA.
 
 package Lintian::debian::changelog;
+
 use strict;
 use warnings;
 use autodie;
@@ -63,27 +64,6 @@ sub source {
 
     my $latest_entry = $entries[0];
 
-    my %all_versions;
-
-    # fully parsed version object
-    $all_versions{$latest_entry} = $info->version;
-
-    if(@entries > 1) {
-        for my $entry (@entries[1..$#entries]) {
-            my $version = Lintian::Info::Changelog::Version->new;
-            try {
-                $version->set($entry->Version, $info->native);
-            } catch {
-                my $indicator= ($info->native ? EMPTY : 'non-') . 'native';
-                tag 'odd-historical-debian-changelog-version',
-                  $entry->Version . " (for $indicator)";
-                undef $version;
-            };
-
-            $all_versions{$entry} = $version;
-        }
-    }
-
     my $changes = $group->get_changes_processable;
     if ($changes) {
         my $contents = path($changes->pkg_path)->slurp;
@@ -95,7 +75,7 @@ sub source {
         }
     }
 
-    my $latest_version = $all_versions{$latest_entry};
+    my $latest_version = $info->version;
     if (defined $latest_version) {
 
         tag 'hyphen-in-upstream-part-of-debian-changelog-version',
@@ -104,10 +84,20 @@ sub source {
     }
 
     if (@entries > 1) {
-        my $previous_entry = $entries[1];
 
+        my $previous_entry = $entries[1];
         my $latest_timestamp = $latest_entry->Timestamp;
         my $previous_timestamp = $previous_entry->Timestamp;
+
+        my $previous_version = Lintian::Info::Changelog::Version->new;
+        try {
+            $previous_version->set($previous_entry->Version, $info->native);
+        } catch {
+            my $indicator= ($info->native ? EMPTY : 'non-') . 'native';
+            tag 'odd-historical-debian-changelog-version',
+              $previous_entry->Version . " (for $indicator)";
+            undef $previous_version;
+        };
 
         if ($latest_timestamp && $previous_timestamp) {
             tag 'latest-debian-changelog-entry-without-new-date'
@@ -115,24 +105,28 @@ sub source {
               || lc($latest_entry->Distribution) eq 'unreleased';
         }
 
-        foreach my $entry (@entries[1..$#entries]) {
-            my $old_version = $all_versions{$entry};
+        if (defined $latest_version) {
+            foreach my $entry (@entries[1..$#entries]) {
 
-            next
-              unless defined $latest_version && defined $old_version;
+                # cannot use parser; nativeness may differ
+                my ($no_epoch) = ($entry->Version =~ qr/^(?:[^:]+:)?([^:]+)$/);
 
-            # disallowed even if epochs differ; see tag description
-            if (   $latest_version->no_epoch eq$old_version->no_epoch
-                && $latest_entry->Source eq $entry->Source) {
-                tag
-                  'latest-debian-changelog-entry-reuses-existing-version',
-                  $latest_version->literal. " ~= $entry->{Version}",
-                  "(last used: $entry->{Date})";
-                last;
+                next
+                  unless defined $no_epoch;
+
+                # disallowed even if epochs differ; see tag description
+                if (   $latest_version->no_epoch eq $no_epoch
+                    && $latest_entry->Source eq $entry->Source) {
+                    tag
+                      'latest-debian-changelog-entry-reuses-existing-version',
+                      $latest_version->literal. ' ~= '
+                      . $entry->Version
+                      . ' (last used: '
+                      . $entry->Date . ')';
+                    last;
+                }
             }
         }
-
-        my $previous_version = $all_versions{$previous_entry};
 
         if (defined $latest_version && defined $previous_version) {
 
