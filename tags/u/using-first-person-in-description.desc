@@ -1,7 +1,7 @@
 Tag: using-first-person-in-description
 Severity: minor
 Certainty: possible
-Check: debian/description
+Check: fields/description
 Info: You should avoid the use of first person ("I will do this..." or
  "We recommend..."). The computer is not a person and the description
  does not speak for the maintainer or maintainers. Instead, use a more
