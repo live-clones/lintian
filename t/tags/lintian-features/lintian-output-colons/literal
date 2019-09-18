@@ -8,9 +8,9 @@ tag:W:normal:certain::lintian-output-colons:1.0+dsfg-1.1:source:source:maintaine
 tag:I:wishlist:certain::lintian-output-colons:1.0+dsfg-1.1:source:source:quilt-patch-using-template-description:debian-changes-1.0+dsfg-1.1:
 tag:W:minor:certain::lintian-output-colons:1.0+dsfg-1.1:source:source:format-3.0-but-debian-changes-patch::
 tag:E:serious:wild-guess::lintian-output-colons:1.0+dsfg-1.1:all:binary:possible-gpl-code-linked-with-openssl::
+tag:E:important:possible::lintian-output-colons:1.0+dsfg-1.1:all:binary:new-essential-package::
 tag:I:minor:possible::lintian-output-colons:1.0+dsfg-1.1:all:binary:description-synopsis-might-not-be-phrased-properly:"Test Lintian colon-separated output format.":
 tag:I:wishlist:wild-guess::lintian-output-colons:1.0+dsfg-1.1:all:binary:description-possibly-contains-homepage:http\://www.example.com/.:
-tag:E:important:possible::lintian-output-colons:1.0+dsfg-1.1:all:binary:new-essential-package::
 tag:E:serious:certain::lintian-output-colons:1.0+dsfg-1.1:all:binary:dir-in-usr-local:usr/local/share/:
 tag:E:serious:certain::lintian-output-colons:1.0+dsfg-1.1:all:binary:dir-in-usr-local:usr/local/share/lintian/:
 tag:E:serious:possible::lintian-output-colons:1.0+dsfg-1.1:all:binary:dir-or-file-in-var-lock:var/lock/lintian/:

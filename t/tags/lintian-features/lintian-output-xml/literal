@@ -15,9 +15,9 @@
 </package>
 <package type="binary" name="lintian-output-xml" architecture="all" version="1.0+dsfg-1.1">
 <tag severity="serious" certainty="wild-guess" name="possible-gpl-code-linked-with-openssl" />
+<tag severity="important" certainty="possible" name="new-essential-package" />
 <tag severity="minor" certainty="possible" name="description-synopsis-might-not-be-phrased-properly">&quot;Test Lintian XML output format.&quot;</tag>
 <tag severity="wishlist" certainty="wild-guess" name="description-possibly-contains-homepage">http://www.example.com/.</tag>
-<tag severity="important" certainty="possible" name="new-essential-package" />
 <tag severity="serious" certainty="certain" name="dir-in-usr-local">usr/local/share/</tag>
 <tag severity="serious" certainty="certain" name="dir-in-usr-local">usr/local/share/lintian/</tag>
 <tag severity="serious" certainty="possible" name="dir-or-file-in-var-lock">var/lock/lintian/</tag>
