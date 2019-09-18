@@ -1,5 +1,0 @@
-Skeleton: upload-native
-Testname: description-homepage
-Options: --pedantic
-Description: Test for a homepage reference in the description
-Check: debian/description
