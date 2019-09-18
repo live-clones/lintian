@@ -23,6 +23,7 @@ use warnings::register;
 
 use Carp qw(croak);
 
+use Lintian::Tags qw(tag);
 use Lintian::Util qw(get_dsc_info get_deb_info);
 
 =encoding utf-8
@@ -168,6 +169,47 @@ sub lab_data_path {
     my $base = $self->base_dir;
     return "$base/$entry" if $entry;
     return $base;
+}
+
+=item unfolded_field (FIELD)
+
+This method returns the unfolded value of the control field FIELD in
+the control file for the package.  For a source package, this is the
+*.dsc file; for a binary package, this is the control file in the
+control section of the package.
+
+If FIELD is passed but not present, then this method returns undef.
+
+Needs-Info requirements for using I<unfolded_field>: none
+
+=cut
+
+sub unfolded_field {
+    my ($self, $field) = @_;
+
+    return
+      unless defined $field;
+
+    my $value = $self->field($field);
+
+    return
+      unless defined $value;
+
+    $value =~ s/\n$//;
+    if ($value =~ s/\n//g) {
+
+        tag 'multiline-field', $field;
+
+        # Remove leading space as it confuses some of the other checks
+        # that are anchored.  This happens if the field starts with a
+        # space and a newline, i.e ($ marks line end):
+        #
+        # Vcs-Browser: $
+        #  http://somewhere.com/$
+        $value =~ s/^\s*+//;
+    }
+
+    return $value;
 }
 
 =item field ([FIELD[, DEFAULT]])
