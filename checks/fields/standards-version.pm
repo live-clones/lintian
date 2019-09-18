@@ -1,4 +1,4 @@
-# debian/standards-version -- lintian check script -*- perl -*-
+# fields/standards-version -- lintian check script -*- perl -*-
 
 # Copyright (C) 1998 Christian Schwarz and Richard Braakman
 # Copyright (C) 2008-2009 Russ Allbery
@@ -19,7 +19,7 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-package Lintian::debian::standards_version;
+package Lintian::fields::standards_version;
 
 use strict;
 use warnings;

@@ -1,4 +1,4 @@
-Check-Script: debian/standards-version
+Check-Script: fields/standards-version
 Author: Christian Schwarz <schwarz@debian.org>
 Abbrev: std
 Type: source
