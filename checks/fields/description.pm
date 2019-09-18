@@ -1,4 +1,4 @@
-# debian/description -- lintian check script -*- perl -*-
+# fields/description -- lintian check script -*- perl -*-
 
 # Copyright (C) 1998 Christian Schwarz
 #
@@ -18,7 +18,7 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-package Lintian::debian::description;
+package Lintian::fields::description;
 
 use strict;
 use warnings;
