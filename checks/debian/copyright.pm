@@ -37,6 +37,7 @@ use constant {
 };
 
 use Encode qw(decode);
+use List::Compare;
 use List::MoreUtils qw(any none);
 use Path::Tiny;
 use Text::Levenshtein qw(distance);
@@ -48,6 +49,8 @@ use Lintian::Deb822Parser qw(read_dpkg_control parse_dpkg_control);
 use Lintian::Relation::Version qw(versions_compare);
 use Lintian::Tags qw(tag);
 use Lintian::Util qw(file_is_encoded_in_non_utf8);
+
+use constant SPACE => q{ };
 
 use constant {
     WC_TYPE_REGEX => 'REGEX',
@@ -327,11 +330,18 @@ sub _parse_dep5 {
         }
     }
 
+    my @shippedfiles = sort grep { $_->is_file } $info->sorted_index;
+
+    my @licensefiles= grep { m,(^|/)(COPYING[^/]*|LICENSE)$, } @shippedfiles;
+
+    my @quiltfiles = grep { m,^\.pc/, } @shippedfiles;
+
     my (@commas_in_files, %file_para_coverage, %file_licenses);
-    my %file_coverage = map { $_ => 0 } get_all_files($info);
+    my %file_coverage = map { $_ => 0 } @shippedfiles;
     my $i = 0;
     my $current_line = 0;
     my $commas_in_files = any { m/,/xsm } $info->sorted_index;
+
     for my $para (@dep5) {
         $i++;
         $current_line = $lines[$i]{'START-OF-PARAGRAPH'};
@@ -388,6 +398,15 @@ sub _parse_dep5 {
               "(paragraph at line $current_line)"
               if $files eq '*' and $i > 1;
 
+            my @listedfiles = split(SPACE, $files);
+
+            # license files do not require their own entries in d/copyright.
+            my $lc = List::Compare->new(\@licensefiles, \@listedfiles);
+            my @listedlicensefiles = $lc->get_intersection;
+
+            tag 'license-file-listed-in-debian-copyright', $_
+              for @listedlicensefiles;
+
             # Files paragraph
             if (not @commas_in_files and $files =~ /,/) {
                 @commas_in_files = ($i, $files_fname);
@@ -426,7 +445,7 @@ sub _parse_dep5 {
                         if (my $dir = $info->index($wc_value)) {
                             if ($wc_value eq q{}) {
                                 # Special-case => Files: *
-                                push(@wlist, get_all_files($info));
+                                push(@wlist, @shippedfiles);
                             } else {
                                 push(@wlist,
                                     grep { $_->is_file }
@@ -439,7 +458,7 @@ sub _parse_dep5 {
                             $file_licenses{$entry->name} = $short_license;
                         }
                     } else {
-                        for my $srcfile (keys %file_coverage) {
+                        for my $srcfile (@shippedfiles) {
                             if ($srcfile =~ $wc_value) {
                                 $used = 1;
                                 $file_coverage{$srcfile} = $current_line;
@@ -518,23 +537,19 @@ sub _parse_dep5 {
               unless $seen eq $wanted
               or $info->name eq 'lintian';
         }
-        foreach my $srcfile (sort keys %file_coverage) {
-            my $i = $file_coverage{$srcfile};
-            next if $srcfile =~ '^\.pc/';
-            delete $file_para_coverage{$i};
-            if ($srcfile =~ m,(^|/)(COPYING[^/]*|LICENSE)$,) {
-                # license files do not require their own entry in d/copyright.
-                tag 'license-file-listed-in-debian-copyright', $srcfile
-                  if $i;
-            } else {
-                tag 'file-without-copyright-information', $srcfile
-                  unless $i;
-            }
-        }
-        foreach my $i (sort keys %file_para_coverage) {
-            tag 'unused-file-paragraph-in-dep5-copyright',
-              "paragraph at line $i";
-        }
+
+        my @no_license_needed = (@quiltfiles, @licensefiles);
+        my $lc = List::Compare->new(\@shippedfiles, \@no_license_needed);
+        my @license_needed = $lc->get_Lonly;
+
+        my @files_not_covered = grep { !$file_coverage{$_} } @license_needed;
+
+        tag 'file-without-copyright-information', $_ for @files_not_covered;
+
+        delete $file_para_coverage{$file_coverage{$_}}for keys %file_coverage;
+
+        tag 'unused-file-paragraph-in-dep5-copyright',"paragraph at line $_"
+          for sort keys %file_para_coverage;
     }
     while ((my $license, $i) = each %required_standalone_licenses) {
         if (not defined $standalone_licenses{$license}) {
@@ -702,11 +717,6 @@ sub parse_wildcard {
     } else {
         return (qr/^(?:$regex_src)$/, WC_TYPE_REGEX, undef);
     }
-}
-
-sub get_all_files {
-    my ($info) = @_;
-    return grep { $_->is_file } $info->sorted_index;
 }
 
 sub check_files_excluded {
