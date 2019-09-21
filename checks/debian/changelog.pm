@@ -278,7 +278,7 @@ sub binary {
         # Some checks on the most recent entry.
         if ($changelog->entries && defined @{$changelog->entries}[0]) {
             ($news) = @{$changelog->entries};
-            if ($news->Distribution && $news->Distribution ne 'UNRELEASED') {
+            if ($news->Distribution && $news->Distribution eq 'UNRELEASED') {
                 tag 'debian-news-entry-has-strange-distribution',
                   $news->Distribution;
             }
