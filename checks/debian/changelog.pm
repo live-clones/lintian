@@ -71,7 +71,7 @@ sub source {
         if ($contents =~ qr/BEGIN PGP SIGNATURE.*END PGP SIGNATURE/ms) {
 
             tag 'unreleased-changelog-distribution'
-              if lc($latest_entry->Distribution) eq 'unreleased';
+              if $latest_entry->Distribution eq 'UNRELEASED';
         }
     }
 
@@ -278,7 +278,7 @@ sub binary {
         # Some checks on the most recent entry.
         if ($changelog->entries && defined @{$changelog->entries}[0]) {
             ($news) = @{$changelog->entries};
-            if ($news->Distribution && $news->Distribution =~ /unreleased/i) {
+            if ($news->Distribution && $news->Distribution ne 'UNRELEASED') {
                 tag 'debian-news-entry-has-strange-distribution',
                   $news->Distribution;
             }
@@ -460,7 +460,7 @@ sub binary {
             if ($latest_timestamp && $previous_timestamp) {
                 tag 'latest-changelog-entry-without-new-date'
                   unless (($latest_timestamp - $previous_timestamp) > 0
-                    or lc($latest_entry->Distribution) eq 'unreleased');
+                    or $latest_entry->Distribution eq 'UNRELEASED');
             }
 
             my $latest_dist = lc $latest_entry->Distribution;
