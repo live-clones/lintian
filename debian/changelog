@@ -1,8 +1,71 @@
-lintian (2.21.0+git) UNRELEASED; urgency=medium
+lintian (2.22.0) unstable; urgency=medium
 
-  * WIP
+  * Summary of tag changes:
+    + Added:
+      - homepage-refers-to-obsolete-debian-infrastructure
+      - license-file-listed-in-debian-copyright
+      - odd-historical-debian-changelog-version
+    + Removed:
+      - debian-changelog-version-requires-debian-revision
+      - hyphen-in-native-debian-changelog-version
+      - latest-debian-changelog-entry-changed-to-native
+      - pear-package-feature-requires-newer-pkg-php-tools
+    + Renamed:
+      - rules-requires-root-implicitly -> rules-requires-root-missing
 
- -- Chris Lamb <lamby@debian.org>  Sat, 07 Sep 2019 14:45:34 +0100
+  [ Chris Lamb ]
+  * Check for packages still refering to the deprecated Alioth
+    service in their Homepage field. (Closes: #933500)
+  * Quote the package build path to avoid test failures when building in a
+    directory whose name contains a '+' or other regex metacharacters.
+    (Closes: #939674)
+  * Don't emit the missing-build-dependency,
+    package-uses-debhelper-but-lacks-build-depends or
+    debhelper-but-no-misc-depends tags for packages that do not use
+    debhelper but use specific parts of dh-autoreconf. (Closes: #939874)
+  * Emit missing-build-dependency for packages that do not use debhelper
+    but use specific parts of dh-autoreconf without build-depending on it.
+  * Revert merging our two CI pipeline stages. Whilst this avoided an
+    additional ~5 minute initial setup/teardown time, it meant that the
+    cache misses attempted to do both the within the 1h timeout. Whilst we
+    might still timeout overall, at least with a split we are very likely
+    to have cached the build packages.
+  * Upgrade and rename classification-level tag
+    rules-requires-root-implicitly to rules-requires-root-missing. (Closes:
+    #933240)
+  * Drop the unnecessary pear-package-feature-requires-newer-pkg-php-tools
+    tag. Thanks, Antonio Ospite and David Prévot. (Closes: #939698
+  * Don't emit latest-debian-changelog-entry-changed-to-native if the
+    latest changelog entry references "native package".
+
+  [ Felix Lechner ]
+  * Remove parts related to gzip timestamps from the files-general test.
+    (Closes: #939673)
+  * Refocus the 'binaries-missing-lfs' test on the tag
+    'binary-file-built-without-LFS-support'. (Closes: #939639)
+  * Add the changelog-distribution-does-not-match-changes-file tag to the
+    ftp-master-auto-reject profile
+  * In Lintian::Collect::Source, use a centralized version parser.
+  * Add new tag 'license-file-listed-in-debian-copyright' to avoid
+    unnecessary clutter.
+  * Fix command-line processing for --check-part so 'all' can also be part
+    of a list.
+  * Associate the multiline-field tag with the 'lintian' check.
+
+  [ Xavier ]
+  * Fix false-postivies when checking for the
+    pkg-js-autopkgtest-file-does-not-exist tag with regards to comments.
+    (Closes: #940082)
+
+  [ Rafael Laboissiere ]
+  * Avoid false positives for library-not-linked-against-libc with Octave
+    add-ons. (Closes: #940282)
+
+  [ Faidon Liambotis ]
+  * Use the "build-depends-all" relation to correctly detect binaries built
+    with Go.
+
+ -- Chris Lamb <lamby@debian.org>  Sat, 21 Sep 2019 02:49:05 +0000
 
 lintian (2.21.0) unstable; urgency=medium
 
