@@ -1,5 +1,0 @@
-Skeleton: upload-native
-Testname: rules-dh-unused-target-nonempty
-Description: Allow dh in unused targets, but nothing else
-References: <20080806175819.GV11882@mail-vs.djpig.de>
-Check: rules

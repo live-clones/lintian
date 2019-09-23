@@ -1,7 +1,7 @@
 Tag: debconf-translation-using-general-list
 Severity: normal
 Certainty: certain
-Check: po-debconf
+Check: debian/po-debconf
 Info: This debconf translation is using the general debconf-i18n list as
  the address in the Language-Team field.
  .

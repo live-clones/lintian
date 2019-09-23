@@ -1,7 +1,7 @@
 Tag: copyright-does-not-refer-to-common-license-file
 Severity: normal
 Certainty: certain
-Check: copyright-file
+Check: debian/copyright
 Info: If your package uses any one of the licenses in
  <tt>/usr/share/common-licenses</tt>, the copyright file should refer to
  files therein.

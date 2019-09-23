@@ -1,5 +1,5 @@
 Tag: no-template-name
 Severity: important
 Certainty: certain
-Check: debconf
+Check: debian/debconf
 Info: The templates file contains a template without a "Template:" field.

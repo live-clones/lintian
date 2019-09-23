@@ -1,7 +1,7 @@
 Tag: debian-rules-is-dh_make-template
 Severity: important
 Certainty: certain
-Check: rules
+Check: debian/rules
 Info: The debian/rules file appears to be an unmodified or insufficiently
  modified copy of the dh_make template.
  .

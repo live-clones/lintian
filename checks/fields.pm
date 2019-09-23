@@ -278,9 +278,8 @@ sub always {
         if (not defined $info->field('package')) {
             tag 'no-package-name';
         } else {
-            my $name = $info->field('package');
+            my $name = $info->unfolded_field('package');
 
-            unfold('package', \$name);
             tag 'bad-package-name' unless $name =~ /^$PKGNAME_REGEX$/i;
             tag 'package-not-lowercase' if ($name =~ /[A-Z]/);
             tag 'unusual-documentation-package-name' if $name =~ /-docs$/;
@@ -292,9 +291,8 @@ sub always {
     if (not defined $info->field('version')) {
         tag 'no-version-field';
     } else {
-        $version = $info->field('version');
+        $version = $info->unfolded_field('version');
 
-        unfold('version', \$version);
         my $dversion = Dpkg::Version->new($version);
 
         if ($dversion->is_valid) {
@@ -385,8 +383,8 @@ sub always {
 
     #---- Multi-Arch
 
-    if (defined(my $march = $info->field('multi-arch'))){
-        unfold('multi-arch', \$march);
+    if (defined(my $march = $info->unfolded_field('multi-arch'))){
+
         tag 'unknown-multi-arch-value', $pkg, $march
           unless $march =~ m/^(?:no|foreign|allowed|same)$/o;
         if (   $march eq 'same'
@@ -433,8 +431,7 @@ sub always {
     if (not defined $info->field('architecture')) {
         tag 'no-architecture-field';
     } else {
-        my $archs = $info->field('architecture');
-        unfold('architecture', \$archs);
+        my $archs = $info->unfolded_field('architecture');
 
         my @archs = split(m/ /o, $archs);
         if (@archs > 1) { # Check for magic architecture combinations.
@@ -484,9 +481,8 @@ sub always {
 
     #---- Subarchitecture (udeb)
 
-    if (defined(my $subarch = $info->field('subarchitecture'))) {
-        unfold('subarchitecture', \$subarch);
-    }
+    # may trigger unfolding tag
+    my $subarch = $info->unfolded_field('subarchitecture');
 
     #---- Maintainer
     #---- Uploaders
@@ -496,7 +492,7 @@ sub always {
         if (not defined $info->field($f)) {
             tag 'no-maintainer-field' if $f eq 'maintainer';
         } else {
-            my $maintainer = $info->field($f);
+            my $maintainer = $info->unfolded_field($f);
 
             my $is_list = $maintainer =~ /\@lists(?:\.alioth)?\.debian\.org\b/;
             $is_comaintained = 1 if $is_list;
@@ -504,7 +500,6 @@ sub always {
             # Note, not expected to hit on uploaders anymore, as dpkg
             # now strips newlines for the .dsc, and the newlines don't
             # hurt in debian/control
-            unfold($f, \$maintainer);
 
             if ($f eq 'uploaders') {
                 # check for empty field see  #783628
@@ -546,8 +541,7 @@ sub always {
     # Optional in binary packages, required in source packages, but we
     # cannot check it as dpkg-source(1) refuses to unpack source packages
     # without this field (and fields indirectly depends on unpacked)...
-    if (defined(my $source = $info->field('source'))) {
-        unfold('source', \$source);
+    if (defined(my $source = $info->unfolded_field('source'))) {
 
         if ($type eq 'source') {
             my $filename = $proc->pkg_path;
@@ -572,8 +566,7 @@ sub always {
 
     #---- Essential
 
-    if (defined(my $essential = $info->field('essential'))) {
-        unfold('essential', \$essential);
+    if (defined(my $essential = $info->unfolded_field('essential'))) {
 
         tag 'essential-in-source-package' if ($type eq 'source');
         tag 'essential-no-not-needed' if ($essential eq 'no');
@@ -589,9 +582,7 @@ sub always {
     if (not defined $info->field('section')) {
         tag 'no-section-field' if ($type eq 'binary');
     } else {
-        my $section = $info->field('section');
-
-        unfold('section', \$section);
+        my $section = $info->unfolded_field('section');
 
         if ($section eq '') {
             tag 'empty-section-field';
@@ -654,9 +645,7 @@ sub always {
     if (not defined $info->field('priority')) {
         tag 'no-priority-field' if $type eq 'binary';
     } else {
-        my $priority = $info->field('priority');
-
-        unfold('priority', \$priority);
+        my $priority = $info->unfolded_field('priority');
 
         if ($priority eq 'extra') {
             tag 'priority-extra-is-replaced-by-priority-optional'
@@ -686,10 +675,9 @@ sub always {
 
     #--- Homepage
 
-    if (defined(my $homepage = $info->field('homepage'))) {
-        my $orig = $homepage;
+    if (defined(my $orig = $info->field('homepage'))) {
 
-        unfold('homepage', \$homepage);
+        my $homepage = $info->unfolded_field('homepage');
 
         if ($homepage =~ /^<(?:UR[LI]:)?.*>$/i) {
             tag 'superfluous-clutter-in-homepage', $orig;
@@ -717,10 +705,15 @@ sub always {
         if ($KNOWN_INSECURE_HOMEPAGE_URIS->matches_any($homepage)) {
             tag 'homepage-field-uses-insecure-uri', $orig;
         }
+<<<<<<< HEAD
 
         tag 'homepage-references-obsolete-debian-infrastructure', $orig
           if $homepage =~ m/\.alioth\.debian\.org/;
 
+=======
+        tag 'homepage-refers-to-obsolete-debian-infrastructure', $orig
+          if $homepage =~ m,alioth\.debian\.org,;
+>>>>>>> 2.22.0
     } elsif (not $info->native) {
         if ($type eq 'source') {
             my $binary_has_homepage_field = 0;
@@ -740,8 +733,7 @@ sub always {
 
     #---- Installer-Menu-Item (udeb)
 
-    if (defined(my $menu_item = $info->field('installer-menu-item'))) {
-        unfold('installer-menu-item', \$menu_item);
+    if (defined(my $menu_item = $info->unfolded_field('installer-menu-item'))){
 
         $menu_item =~ /^\d+$/ or tag 'bad-menu-item', $menu_item;
     }
@@ -758,9 +750,8 @@ sub always {
         ) {
             next unless defined $info->field($field);
             #Get data and clean it
-            my $data = $info->field($field);
+            my $data = $info->unfolded_field($field);
             my $javadep = 0;
-            unfold($field, \$data);
 
             my (
                 @seen_libstdcs, @seen_tcls, @seen_tclxs,
@@ -1072,8 +1063,8 @@ sub always {
         ) {
             if (defined $info->field($field)) {
                 #Get data and clean it
-                my $data = $info->field($field);
-                unfold($field, \$data);
+                my $data = $info->unfolded_field($field);
+
                 check_field($info, $field, $data);
                 $depend{$field} = $data;
 
@@ -1281,16 +1272,14 @@ sub always {
 
     #----- Origin
 
-    if (defined(my $origin = $info->field('origin'))) {
-        unfold('origin', \$origin);
+    if (defined(my $origin = $info->unfolded_field('origin'))) {
 
         tag 'redundant-origin-field' if lc($origin) eq 'debian';
     }
 
     #----- Bugs
 
-    if (defined(my $bugs = $info->field('bugs'))) {
-        unfold('bugs', \$bugs);
+    if (defined(my $bugs = $info->unfolded_field('bugs'))) {
 
         tag 'redundant-bugs-field'
           if $bugs =~ m,^debbugs://bugs.debian.org/?$,i;
@@ -1301,10 +1290,8 @@ sub always {
 
     #----- Dm-Upload-Allowed
 
-    if (defined(my $dmupload = $info->field('dm-upload-allowed'))) {
+    if (defined(my $dmupload = $info->unfolded_field('dm-upload-allowed'))) {
         tag 'dm-upload-allowed-is-obsolete';
-
-        unfold('dm-upload-allowed', \$dmupload);
 
         unless ($dmupload eq 'yes') {
             tag 'malformed-dm-upload-allowed', $dmupload;
@@ -1316,8 +1303,8 @@ sub always {
     my %seen_vcs;
     while (my ($vcs, $splitter) = each %VCS_EXTRACT) {
         if (defined $info->field("vcs-$vcs")) {
-            my $uri = $info->field("vcs-$vcs");
-            unfold("vcs-$vcs", \$uri);
+            my $uri = $info->unfolded_field("vcs-$vcs");
+
             my @parts = &$splitter($uri);
             if (not @parts or not $parts[0]) {
                 tag 'vcs-field-uses-unknown-uri-format', "vcs-$vcs", $uri;
@@ -1480,24 +1467,6 @@ sub perl_core_has_version {
     return 0 if !defined $core_version;
     return 0 unless version_check($version);
     return versions_compare($core_version, $op, $version);
-}
-
-sub unfold {
-    my ($field, $line) = @_;
-
-    $$line =~ s/\n$//;
-
-    if ($$line =~ s/\n//g) {
-        tag 'multiline-field', $field;
-        # Remove leading space as it confuses some of the other checks
-        # that are anchored.  This happens if the field starts with a
-        # space and a newline, i.e ($ marks line end):
-        #
-        # Vcs-Browser: $
-        #  http://somewhere.com/$
-        $$line=~s/^\s*+//;
-    }
-    return;
 }
 
 sub check_field {

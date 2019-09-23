@@ -1,0 +1,5 @@
+Skeleton: upload-native
+Testname: control-file-rules-requires-root-binary-targets
+Description: Test for "Rules-Requires-Root: binary-targets"
+Options: -L +classification
+Check: debian/rules

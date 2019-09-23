@@ -1,5 +1,0 @@
-Skeleton: upload-native
-Testname: rules-missing-targets-with-known-includes
-Description: Test for debian/rules with known included file
-Extra-Build-Depends: javahelper
-Check: rules

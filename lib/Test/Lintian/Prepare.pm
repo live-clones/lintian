@@ -288,7 +288,7 @@ sub prepare {
         unless ($testcase->{prev_version}) {
             $testcase->{prev_version} = '0.0.1';
             $testcase->{prev_version} .= '-1'
-              if index($testcase->{version}, '-') > -1;
+              unless $testcase->{type} eq 'native';
         }
     }
 

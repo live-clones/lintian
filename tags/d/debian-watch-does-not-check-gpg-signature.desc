@@ -1,7 +1,7 @@
 Tag: debian-watch-does-not-check-gpg-signature
 Severity: pedantic
 Certainty: certain
-Check: watch-file
+Check: debian/watch
 Experimental: yes
 Ref: uscan(1)
 Info: This watch file does not specify a means to verify the upstream

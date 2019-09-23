@@ -1,0 +1,4 @@
+Skeleton: upload-native
+Testname: changelog-file-empty-entry
+Description: Check changelog empty entry
+Check: debian/changelog

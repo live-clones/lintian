@@ -1,7 +1,7 @@
 Tag: duplicate-short-description
 Severity: wishlist
 Certainty: possible
-Check: control-file
+Check: debian/control
 Info: The listed binary packages all share the same short description (the
  first line of the Description control field). The package names may
  provide enough additional information to distinguish between the

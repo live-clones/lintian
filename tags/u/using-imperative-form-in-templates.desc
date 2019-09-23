@@ -1,7 +1,7 @@
 Tag: using-imperative-form-in-templates
 Severity: normal
 Certainty: certain
-Check: debconf
+Check: debian/debconf
 Info: Do not use useless imperative constructions such as "Please choose...",
  "Enter...". The interface will make it obvious that the user needs to
  choose or enter something.

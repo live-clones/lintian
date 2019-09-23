@@ -1,0 +1,5 @@
+Skeleton: upload-native
+Testname: changelog-file-empty-entry-unrel
+Description: Check changelog empty entry (UNRELEASED)
+Test-Against: changelog-empty-entry
+Check: debian/changelog

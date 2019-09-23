@@ -13,6 +13,6 @@ Runner: generic.t
 Profile: debian
 Output-Format: universal
 Match-Strategy: tags
-Default-Lintian-Options: --display-info --display-experimental --check-part {$check}
+Default-Lintian-Options: --display-info --display-experimental --check-part {$check},lintian
 Todo: no
 Test-Architectures: any

@@ -1,1 +1,3 @@
-ls
+#!/bin/sh
+
+/usr/bin/ls

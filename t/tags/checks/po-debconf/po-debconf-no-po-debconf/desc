@@ -1,4 +1,0 @@
-Skeleton: upload-native
-Testname: po-debconf-no-po-debconf
-Description: Test for not using po-debconf
-Check: po-debconf

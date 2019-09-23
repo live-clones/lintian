@@ -1,7 +1,7 @@
 Tag: gobject-introspection-package-missing-depends-on-gir-depends
 Severity: serious
 Certainty: certain
-Check: control-file
+Check: debian/control
 Info: The package is a GObject Introspection package but does not specify a
  dependency on the ${gir:Depends} substvar. Without the dependencies, a
  program usually aborts.

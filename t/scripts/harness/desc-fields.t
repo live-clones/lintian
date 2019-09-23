@@ -130,8 +130,8 @@ foreach my $descpath (@descpaths) {
 
     # listed test-against belong to listed checks
     $known_tests += scalar @against;
-    my %relatedtags
-      = map { $_ => 1 } map { $profile->get_script($_)->tags } @checks;
+    my %relatedtags= map { $_ => 1 }
+      map { $profile->get_script($_)->tags } (@checks, 'lintian');
     for my $tag (@against) {
         ok(
             exists $relatedtags{$tag},

@@ -27,6 +27,7 @@ use autodie qw(opendir closedir);
 
 use Carp qw(croak);
 use File::Find::Rule;
+use Path::Tiny;
 
 use Dpkg::Vendor qw(get_current_vendor get_vendor_info);
 
@@ -373,12 +374,12 @@ sub _find_profile {
 # normally, the profile will have been parsed successfully.
 sub _read_profile {
     my ($self, $pfile) = @_;
-    my @pdata;
     my $pheader;
     my $pmap = $self->{'parent-map'};
     my $pname;
     my $plist = $self->{'profile_list'};
-    @pdata = read_dpkg_control_utf8($pfile, 0);
+    my @dirty = read_dpkg_control_utf8($pfile, 0);
+    my @pdata = _clean_fields(@dirty);
     $pheader = shift @pdata;
     croak "Profile field is missing from $pfile"
       unless defined $pheader && $pheader->{'profile'};
@@ -417,6 +418,35 @@ sub _read_profile {
         }
     }
     return;
+}
+
+# $self->_clean_fields(@dirty)
+#
+# Cleans the paragraphs from read_dpkg_control
+sub _clean_fields {
+    my @dirty = @_;
+
+    my @clean;
+
+    foreach my $paragraphref (@dirty) {
+        my %paragraph = %{$paragraphref};
+
+        foreach my $field (keys %paragraph) {
+
+            # unwrap continuation lines
+            $paragraph{$field} =~ s/\n/ /g;
+
+            # trim both ends
+            $paragraph{$field} =~ s/^\s+|\s+$//g;
+
+            # reduce multiple spaces to one
+            $paragraph{$field} =~ s/\s+/ /g;
+        }
+
+        push(@clean, \%paragraph);
+    }
+
+    return @clean;
 }
 
 # $self->_read_profile_section($pname, $section, $sno)
@@ -660,15 +690,15 @@ sub _load_checks {
     my ($self) = @_;
     foreach my $checkdir ($self->_safe_include_path('checks')) {
         next unless -d $checkdir;
-        opendir(my $dirfd, $checkdir);
-        for my $desc (sort readdir $dirfd) {
-            my $cname = $desc;
-            next unless $cname =~ s/\.desc$//o;
-            # _parse_check ignores duplicates, so we don't have to
-            # check for it.
-            $self->_parse_check($cname, $checkdir);
+
+        my @descpaths
+          = sort File::Find::Rule->file->name('*.desc')->in($checkdir);
+        for my $desc (@descpaths) {
+            my $relative = path($desc)->relative($checkdir)->stringify;
+            my ($name) = ($relative =~ qr/^(.*)\.desc$/);
+            # _parse_check ignores duplicates on its own
+            $self->_parse_check($name, $checkdir);
         }
-        closedir($dirfd);
     }
     return;
 }

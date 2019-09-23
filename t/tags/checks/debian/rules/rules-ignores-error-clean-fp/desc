@@ -1,0 +1,5 @@
+Skeleton: upload-native
+Testname: rules-ignores-error-clean-fp
+Description: Check against Lintian false-positive error
+Test-Against: debian-rules-ignores-make-clean-error
+Check: debian/rules

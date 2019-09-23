@@ -1,7 +1,7 @@
 Tag: changelog-references-temp-security-identifier
 Severity: normal
 Certainty: certain
-Check: changelog
+Check: debian/changelog
 Info: The changelog entry references a temporary security identifier,
  like "TEMP-0000000-2FC21E".
  .

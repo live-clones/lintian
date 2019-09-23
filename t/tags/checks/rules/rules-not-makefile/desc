@@ -1,4 +1,0 @@
-Skeleton: upload-native
-Testname: rules-not-makefile
-Description: Check if the rules file is a makefile
-Check: rules

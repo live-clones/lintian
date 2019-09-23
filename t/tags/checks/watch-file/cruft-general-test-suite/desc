@@ -1,5 +1,0 @@
-Testname: cruft-general-test-suite
-Skeleton: upload-non-native
-Options: --pedantic
-Description: Check that cruft in test suites is okay
-Check: watch-file

@@ -1,4 +1,0 @@
-Skeleton: upload-native
-Testname: rules-ignores-error-clean
-Description: Check for rules ignoring clean error
-Check: rules

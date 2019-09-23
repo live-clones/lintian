@@ -1,0 +1,4 @@
+Skeleton: deb
+Testname: description-synopsis-spaces
+Description: Test for the synopsis starting with spaces
+Check: fields/description

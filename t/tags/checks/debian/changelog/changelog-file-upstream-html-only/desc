@@ -1,0 +1,4 @@
+Testname: changelog-file-upstream-html-only
+Skeleton: upload-non-native
+Description: Check HTML-only upstream changelog
+Check: debian/changelog

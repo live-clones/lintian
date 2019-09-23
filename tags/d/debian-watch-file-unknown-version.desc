@@ -1,7 +1,7 @@
 Tag: debian-watch-file-unknown-version
 Severity: normal
 Certainty: certain
-Check: watch-file
+Check: debian/watch
 Ref: uscan(1)
 Info: The <tt>version=</tt> line in the <tt>debian/watch</tt> file in this
  package declares an unknown version. The currently known watch file

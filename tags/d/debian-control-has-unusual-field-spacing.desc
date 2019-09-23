@@ -1,7 +1,7 @@
 Tag: debian-control-has-unusual-field-spacing
 Severity: pedantic
 Certainty: certain
-Check: control-file
+Check: debian/control
 Ref: policy 5.1
 Info: The field on this line of <tt>debian/control</tt> has whitespace
  other than a single space after the colon. This is explicitly permitted

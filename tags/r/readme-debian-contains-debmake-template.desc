@@ -1,7 +1,7 @@
 Tag: readme-debian-contains-debmake-template
 Severity: normal
 Certainty: certain
-Check: debian-readme
+Check: debian/readme
 Info: The README.Debian file installed by this package contains one of the
  template phrases from the README.Debian provided by deb-make or dh_make:
  .

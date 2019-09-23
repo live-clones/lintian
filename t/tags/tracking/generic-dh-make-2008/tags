@@ -33,6 +33,7 @@ generic-dh-make-2008 (source): debian-rules-missing-recommended-target build-ind
 generic-dh-make-2008 (source): debian-rules-missing-recommended-target build-arch
 generic-dh-make-2008 (source): bad-homepage <insert the upstream URL, if relevant>
 generic-dh-make-2008 (source): ancient-standards-version 3.7.3 (released 2007-12-03) (current is CURRENT)
+generic-dh-make-2008 (source): rules-requires-root-missing
 generic-dh-make-2008 (binary): wrong-bug-number-in-closes l3:#nnnn
 generic-dh-make-2008 (binary): superfluous-clutter-in-homepage <insert the upstream URL, if relevant>
 generic-dh-make-2008 (binary): section-is-dh_make-template

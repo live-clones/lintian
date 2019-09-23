@@ -72,22 +72,6 @@ sub source {
             if ($description !~ /\$\{phppear:description\}/) {
                 tag 'pear-package-not-using-substvar','${phppear:description}';
             }
-            # Checking overrides
-            my $overrides
-              = $info->index_resolved_path('debian/pkg-php-tools-overrides');
-            if ($overrides and $overrides->is_file) {
-                if (!$bdepends->implies('pkg-php-tools (>= 1~)')) {
-                    tag 'pear-package-feature-requires-newer-pkg-php-tools',
-                      '(>= 1~)', 'for package name overrides';
-                }
-            }
-            # Checking package2.xml
-            if (defined($package2_xml)) {
-                if (!$bdepends->implies('pkg-php-tools (>= 1.4~)')) {
-                    tag 'pear-package-feature-requires-newer-pkg-php-tools',
-                      '(>= 1.4~)', 'for package2.xml';
-                }
-            }
             if (defined($package_xml) && $package_xml->is_regular_file) {
                 # Wild guess package type as in
                 # PEAR_PackageFile_v2::getPackageType()
@@ -114,11 +98,6 @@ sub source {
                     if (!$bdepends->implies('dh-php')) {
                         tag 'pecl-package-requires-build-dependency','dh-php';
                     }
-                    if (!$bdepends->implies('pkg-php-tools (>= 1.5~)')) {
-                        tag
-                          'pear-package-feature-requires-newer-pkg-php-tools',
-                          '(>= 1.5~)', 'for PECL support';
-                    }
                 }
             }
         }
@@ -128,9 +107,6 @@ sub source {
     if (defined($channel_xml)) {
         if (!$bdepends->implies('pkg-php-tools')) {
             tag 'pear-channel-without-pkg-php-tools-builddep';
-        } elsif (!$bdepends->implies('pkg-php-tools (>= 1.3~)')) {
-            tag 'pear-package-feature-requires-newer-pkg-php-tools',
-              '(>= 1.3~)', 'for PEAR channels support';
         }
     }
     # Composer package
@@ -140,9 +116,6 @@ sub source {
         && defined($composer_json)) {
         if (!$bdepends->implies('pkg-php-tools')) {
             tag 'composer-package-without-pkg-php-tools-builddep';
-        } elsif (!$bdepends->implies('pkg-php-tools (>= 1.7~)')) {
-            tag 'pear-package-feature-requires-newer-pkg-php-tools',
-              '(>= 1.7~)', 'for Composer package support';
         }
     }
     # Check rules

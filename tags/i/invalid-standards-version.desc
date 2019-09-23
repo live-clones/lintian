@@ -1,7 +1,7 @@
 Tag: invalid-standards-version
 Severity: important
 Certainty: certain
-Check: standards-version
+Check: fields/standards-version
 Info: The source package refers to a Standards-Version which never
  existed. Please update your package to latest Policy and set this
  control field appropriately.

@@ -1,23 +1,23 @@
 <package type="changes" name="lintian-output-xml" architecture="source all" version="1.0+dsfg-1.1">
 </package>
 <package type="source" name="lintian-output-xml" architecture="source" version="1.0+dsfg-1.1">
+<tag severity="pedantic" certainty="certain" name="package-uses-deprecated-source-override-location" />
 <tag severity="pedantic" certainty="certain" name="debian-control-has-unusual-field-spacing">line 12</tag>
 <tag severity="wishlist" certainty="certain" name="binary-control-field-duplicates-source">field &quot;section&quot; in package lintian-output-xml</tag>
-<tag severity="pedantic" certainty="certain" name="package-uses-deprecated-source-override-location" />
+<tag severity="pedantic" certainty="certain" flags="experimental" name="debian-watch-does-not-check-gpg-signature" />
 <tag severity="minor" certainty="certain" flags="overridden" name="dfsg-version-misspelled">1.0+dsfg-1.1</tag>
 <tag severity="pedantic" certainty="possible" name="no-homepage-field" />
 <tag severity="normal" certainty="certain" name="maintainer-upload-has-incorrect-version-number">1.0+dsfg-1.1</tag>
 <tag severity="wishlist" certainty="certain" name="quilt-patch-using-template-description">debian-changes-1.0+dsfg-1.1</tag>
 <tag severity="minor" certainty="certain" name="format-3.0-but-debian-changes-patch" />
-<tag severity="pedantic" certainty="certain" flags="experimental" name="debian-watch-does-not-check-gpg-signature" />
 </package>
 <package type="buildinfo" name="lintian-output-xml" architecture="all source" version="1.0+dsfg-1.1">
 </package>
 <package type="binary" name="lintian-output-xml" architecture="all" version="1.0+dsfg-1.1">
 <tag severity="serious" certainty="wild-guess" name="possible-gpl-code-linked-with-openssl" />
+<tag severity="important" certainty="possible" name="new-essential-package" />
 <tag severity="minor" certainty="possible" name="description-synopsis-might-not-be-phrased-properly">&quot;Test Lintian XML output format.&quot;</tag>
 <tag severity="wishlist" certainty="wild-guess" name="description-possibly-contains-homepage">http://www.example.com/.</tag>
-<tag severity="important" certainty="possible" name="new-essential-package" />
 <tag severity="serious" certainty="certain" name="dir-in-usr-local">usr/local/share/</tag>
 <tag severity="serious" certainty="certain" name="dir-in-usr-local">usr/local/share/lintian/</tag>
 <tag severity="serious" certainty="possible" name="dir-or-file-in-var-lock">var/lock/lintian/</tag>

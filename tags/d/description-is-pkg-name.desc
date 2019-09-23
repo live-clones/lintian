@@ -1,7 +1,7 @@
 Tag: description-is-pkg-name
 Severity: serious
 Certainty: certain
-Check: description
+Check: fields/description
 Ref: devref 6.2.2
 Info: The description is the same as the package name.
  A better description should be provided for the user.

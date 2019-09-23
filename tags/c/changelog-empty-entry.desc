@@ -1,7 +1,7 @@
 Tag: changelog-empty-entry
 Severity: serious
 Certainty: certain
-Check: changelog
+Check: debian/changelog
 Info: The last changelog entry is empty. Please add a description or use
  an UNRELEASED version.
 Ref: policy 4.4
