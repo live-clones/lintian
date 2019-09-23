@@ -1,7 +1,7 @@
 Tag: debian-news-entry-uses-asterisk
 Severity: wishlist
 Certainty: possible
-Check: changelog
+Check: debian/changelog
 Info: The latest entry in NEWS.Debian appears to use asterisks to present
  changes in a bulleted list, similar to the normal changelog syntax. The
  Debian Developer's Reference recommends using regular paragraphs in

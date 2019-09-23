@@ -1,7 +1,7 @@
 Tag: invalid-date-in-debian-changelog
 Severity: important
 Certainty: certain
-Check: changelog
+Check: debian/changelog
 Info: The date format in the latest changelog entry file appears to be invalid.
  .
  Dates should use the following format (compatible and with the same semantics

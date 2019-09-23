@@ -1,7 +1,7 @@
 Tag: inconsistent-appstream-metadata-license
 Severity: normal
 Certainty: possible
-Check: source-copyright
+Check: debian/copyright
 Info: The specified AppStream metadata file specifies a
  <tt>metadata_license</tt> field but this does not match the files in
  <tt>debian/copyright</tt>.

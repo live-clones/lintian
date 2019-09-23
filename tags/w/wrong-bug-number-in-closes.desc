@@ -1,6 +1,6 @@
 Tag: wrong-bug-number-in-closes
 Severity: normal
 Certainty: certain
-Check: changelog
+Check: debian/changelog
 Info: Bug numbers can only contain digits.
 Ref: policy 4.4

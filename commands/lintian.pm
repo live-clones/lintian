@@ -1431,9 +1431,6 @@ sub load_profile_and_configure_tags {
     $TAGS->sources(keys(%display_source)) if %display_source;
     $TAGS->profile($profile);
 
-    undef $checks
-      if ($checks // q{})  eq 'all';
-
     if ($dont_check || %suppress_tags || $checks || $check_tags) {
         _update_profile($profile, $TAGS, $dont_check, \%suppress_tags,$checks);
     }
@@ -1591,6 +1588,12 @@ sub _update_profile {
             $profile->enable_tags(split /,/, $check_tags);
         } else {
             for my $c (split /,/, $checks) {
+                if ($c eq 'all') {
+                    my @all
+                      = map {$profile->get_script($_, 1) }$profile->scripts(1);
+                    $profile->enable_tags($_->tags)for @all;
+                    next;
+                }
                 my $cs = $profile->get_script($c, 1) || $abbrev{$c};
                 fatal_error("Unrecognized check script (via -C): $c")
                   unless $cs;

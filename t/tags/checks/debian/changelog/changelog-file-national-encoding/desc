@@ -1,0 +1,4 @@
+Skeleton: upload-native
+Testname: changelog-file-national-encoding
+Description: Test for changelog with national encoding
+Check: debian/changelog

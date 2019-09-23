@@ -1,0 +1,7 @@
+Tag: license-file-listed-in-debian-copyright
+Severity: wishlist
+Certainty: certain
+Check: debian/copyright
+Info: A file containing a software license is listed in
+ <tt>debian/copyright</tt>.  That is not necessary. Please remove
+ the entry referring to the license file.

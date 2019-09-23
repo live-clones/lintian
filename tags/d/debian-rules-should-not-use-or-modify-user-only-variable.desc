@@ -1,7 +1,7 @@
 Tag: debian-rules-should-not-use-or-modify-user-only-variable
 Severity: normal
 Certainty: possible
-Check: rules
+Check: debian/rules
 Ref: #631786
 Info: The rules file appears to be reading or modifying a variable not
  intended for use by package maintainers.

@@ -1,4 +1,0 @@
-Skeleton: upload-native
-Testname: standards-version-timewarp
-Description: Test newer standards version with old changelog date
-Check: standards-version

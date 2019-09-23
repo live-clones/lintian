@@ -3,10 +3,8 @@ files-general (binary): stray-directory-in-manpage-directory usr/share/man/man1/
 files-general (binary): star-file usr/share/foo/*
 files-general (binary): raster-image-in-scalable-directory usr/share/icons/hicolor/scalable/apps/lintian-16x16.png
 files-general (binary): package-modifies-ld.so-search-path etc/ld.so.conf.d/lintian-lib.conf
-files-general (binary): package-contains-timestamped-gzip usr/share/foo/bar.doctree.gz
 files-general (binary): package-contains-python-tests-in-global-namespace usr/lib/python3/dist-packages/test_foo.py
 files-general (binary): package-contains-python-doctree-file usr/share/foo/foo.doctree
-files-general (binary): package-contains-python-doctree-file usr/share/foo/bar.doctree.gz
 files-general (binary): package-contains-mimeinfo.cache-file usr/share/applications/mimeinfo.cache
 files-general (binary): package-contains-mime-cache-file usr/share/mime/types
 files-general (binary): package-contains-info-dir-file usr/share/info/dir.gz

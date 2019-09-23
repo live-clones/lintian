@@ -1,0 +1,4 @@
+Skeleton: deb
+Testname: changelog-file-syntax
+Description: Test for syntax errors in changelogs
+Check: debian/changelog

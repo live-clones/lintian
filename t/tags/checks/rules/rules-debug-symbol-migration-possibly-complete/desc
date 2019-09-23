@@ -1,5 +1,0 @@
-Skeleton: upload-native
-Testname: rules-debug-symbol-migration-possibly-complete
-Description: Test for --dbgsym-migration etc.
-Options: --pedantic
-Check: rules

@@ -1,6 +1,0 @@
-Skeleton: upload-native
-Testname: cruft-gfdl-invariants
-Description: Check for GFDL invariants sections
-Options: --pedantic
-Test-Against: inconsistent-appstream-metadata-license
-Check: source-copyright

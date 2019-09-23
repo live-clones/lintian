@@ -1,0 +1,4 @@
+Skeleton: upload-native
+Testname: po-debconf-missing
+Description: Test for missing po-debconf files
+Check: debian/po-debconf

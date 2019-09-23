@@ -1,0 +1,7 @@
+Testname: sid-and-unstable-match-in-changes
+Skeleton: upload-native
+Distribution: sid
+Description: Test if Debian changelog is missing
+Test-Against:
+ changelog-distribution-does-not-match-changes-file
+Check: debian/changelog

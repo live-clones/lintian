@@ -1,4 +1,0 @@
-Skeleton: upload-native
-Testname: source-copyright-dep5-syntax-error
-Description: Test for DEP 5 syntax error
-Check: source-copyright

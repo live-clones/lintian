@@ -1,0 +1,5 @@
+Skeleton: upload-native
+Testname: control-has-empty-field
+Options: --pedantic
+Description: Check for empty fields
+Check: debian/control

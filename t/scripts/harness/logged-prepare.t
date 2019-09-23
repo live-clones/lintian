@@ -134,7 +134,7 @@ is($testcase->{'output_format'}, 'universal', 'Output format is universal');
 is($testcase->{options}, undef, 'No extra Lintian options');
 is(
     $testcase->{default_lintian_options},
-    '--display-info --display-experimental --check-part shared-libs',
+    '--display-info --display-experimental --check-part shared-libs,lintian',
     'Default Lintian options'
 );
 

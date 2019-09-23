@@ -1,0 +1,6 @@
+Check-Script: debian/watch
+Author: Patrick Schoenfeld <schoenfeld@in-medisa-res.com>
+Abbrev: watch
+Type: source
+Needs-Info: unpacked
+Info: Check debian/watch files in source packages.

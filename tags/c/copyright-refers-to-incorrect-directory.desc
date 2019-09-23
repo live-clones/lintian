@@ -1,7 +1,7 @@
 Tag: copyright-refers-to-incorrect-directory
 Severity: serious
 Certainty: certain
-Check: copyright-file
+Check: debian/copyright
 Ref: policy 12.5
 Info: In the directory name /usr/share/common-licenses, licenses is spelled
  with an "s", not as licences with a "c".

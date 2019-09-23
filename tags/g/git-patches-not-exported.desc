@@ -1,7 +1,7 @@
 Tag: git-patches-not-exported
 Severity: important
 Certainty: possible
-Check: debian-source-dir
+Check: debian/source-dir
 Info: The source package contains non-empty debian/source/git-patches,
  which indicates it was intended to have patches exported via the
  quilt-patches-deb-export-hook of gitpkg. It seems the patches

@@ -1,0 +1,4 @@
+Skeleton: upload-native
+Testname: source-copyright-wildcard-matching
+Description: Test whether the Files wildcards match all files in the source
+Check: debian/copyright

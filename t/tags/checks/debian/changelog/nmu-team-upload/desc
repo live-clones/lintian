@@ -1,0 +1,6 @@
+Skeleton: upload-native
+Testname: nmu-team-upload
+Version: 1.0+nmu1
+Description: Test for versioning of a team upload
+Test-Against: malformed-debian-changelog-version
+Check: debian/changelog

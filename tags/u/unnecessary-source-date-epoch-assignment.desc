@@ -1,7 +1,7 @@
 Tag: unnecessary-source-date-epoch-assignment
 Severity: wishlist
 Certainty: certain
-Check: rules
+Check: debian/rules
 Info: There is an assignment to a <tt>SOURCE_DATE_EPOCH</tt> variable in the
  <tt>debian/rules</tt> file.
  .

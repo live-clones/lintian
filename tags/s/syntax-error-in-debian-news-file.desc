@@ -1,6 +1,6 @@
 Tag: syntax-error-in-debian-news-file
 Severity: normal
 Certainty: possible
-Check: changelog
+Check: debian/changelog
 Info: While parsing the NEWS.Debian file, a syntax error was found.
 Ref: devref 6.3.4

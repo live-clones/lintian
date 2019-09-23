@@ -1,0 +1,5 @@
+Skeleton: upload-native
+Testname: description-mentions-planned-features
+Options: --pedantic
+Description: Test for a packages mentioning upcoming features
+Check: fields/description

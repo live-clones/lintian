@@ -97,7 +97,7 @@ sub source {
         }
 
         next if /^\s*\#/;
-        if (m/^$command_prefix_pattern(dh_\S+)/) {
+        if (m/^$command_prefix_pattern(dh_(?!autoreconf)\S+)/) {
             my $dhcommand = $1;
             $build_systems{'debhelper'} = 1
               if not exists($build_systems{'dh'});

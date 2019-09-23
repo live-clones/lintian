@@ -1,5 +1,0 @@
-Testname: changelog-file-extra-upstream
-Skeleton: upload-non-native
-Description: Check a package with ChangeLog and changelog.gz
-Test-Against: changelog-file-not-compressed
-Check: changelog

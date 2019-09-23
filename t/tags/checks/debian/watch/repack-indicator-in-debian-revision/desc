@@ -1,0 +1,5 @@
+Testname: repack-indicator-in-debian-revision
+Skeleton: upload-non-native
+Version: 1-debian1
+Description: Avoid false positives in Devuan (#931846)
+Check: debian/watch

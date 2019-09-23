@@ -312,7 +312,7 @@ my $build = IO::Async::Function->new(
         path($betterlogpath)->append_utf8($error) if length $error;
 
         # print log and warn on error (do not die; will mess up Ia::Function)
-        warn($log // EMPTY) . "Builder died for $path: $error"
+        warn(($log // EMPTY) . "Builder died for $path: $error")
           if length $error;
 
         return $path;

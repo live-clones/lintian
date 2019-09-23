@@ -1,0 +1,4 @@
+Skeleton: upload-native
+Testname: changelog-file-reuses-existing-version
+Description: Check changelog for re-used version numbers
+Check: debian/changelog

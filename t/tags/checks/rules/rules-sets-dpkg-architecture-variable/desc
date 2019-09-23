@@ -1,4 +1,0 @@
-Skeleton: upload-native
-Testname: rules-sets-dpkg-architecture-variable
-Description: Test for unnecessary dpkg-architecture assignments
-Check: rules

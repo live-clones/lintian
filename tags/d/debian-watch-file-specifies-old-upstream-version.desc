@@ -1,7 +1,7 @@
 Tag: debian-watch-file-specifies-old-upstream-version
 Severity: normal
 Certainty: certain
-Check: watch-file
+Check: debian/watch
 Info: The watch file specifies an upstream version number which matches
  the upstream portion of an old <tt>debian/changelog</tt> entry, and the
  current <tt>debian/changelog</tt> entry specifies a newer upstream

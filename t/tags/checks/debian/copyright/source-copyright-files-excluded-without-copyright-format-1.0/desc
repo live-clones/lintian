@@ -1,0 +1,4 @@
+Testname: source-copyright-files-excluded-without-copyright-format-1.0
+Skeleton: upload-non-native
+Description: Test for files listed in Files-Excluded
+Check: debian/copyright

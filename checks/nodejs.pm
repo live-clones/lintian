@@ -42,7 +42,7 @@ sub source {
         # Ensure test file contains something
         if ($path and $path->is_open_ok) {
             tag 'pkg-js-autopkgtest-test-is-empty', $filename
-              unless any { s/^\s*//; /^\w/ } $path->file_contents;
+              unless any { /^[^#]*\w/m } $path->file_contents;
         } else {
             tag 'pkg-js-autopkgtest-test-is-missing', $filename;
         }
@@ -89,7 +89,7 @@ sub source {
         # Ensure test file contains something
         if ($path) {
             tag 'pkg-js-tools-test-is-empty', $filename
-              unless any { s/^\s*//; /^\w/ } $path->file_contents;
+              unless any { /^[^#]*\w/m } $path->file_contents;
         } else {
             tag 'pkg-js-tools-test-is-missing', $filename;
         }

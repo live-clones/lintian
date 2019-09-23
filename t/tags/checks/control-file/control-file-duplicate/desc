@@ -1,6 +1,0 @@
-Skeleton: upload-native
-Testname: control-file-duplicate
-Package-Architecture: all
-Options: --pedantic
-Description: Pedantic test for duplicate relations
-Check: control-file

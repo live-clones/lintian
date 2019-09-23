@@ -1,7 +1,7 @@
 Tag: ambiguous-paragraph-in-dep5-copyright
 Severity: normal
 Certainty: possible
-Check: source-copyright
+Check: debian/copyright
 Ref: #652380, https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 Info: The paragraph has a "License" and a "Copyright" field, but no
  "Files" field. Technically, this is a valid paragraph per the DEP 5

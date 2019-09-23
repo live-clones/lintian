@@ -117,7 +117,7 @@ our $ARCH_32_REGEX;
 sub always {
     my ($pkg, $type, $info, $proc, $group) = @_;
 
-    my ($madir, %directories, $built_with_golang, %SONAME);
+    my ($madir, %directories, $built_with_golang, $built_with_octave, %SONAME);
     my ($arch_hardening, $gnu_triplet_re, $ruby_triplet_re);
     my $needs_libc = '';
     my $needs_libcxx = '';
@@ -139,10 +139,13 @@ sub always {
 
     my $src = $group->get_source_processable;
     if (defined($src)) {
-        $built_with_golang = $src->info->relation('build-depends')
+        $built_with_golang = $src->info->relation('build-depends-all')
           ->implies('golang-go | golang-any');
+        $built_with_octave
+          = $src->info->relation('build-depends')->implies('dh-octave');
     } else {
         $built_with_golang = $pkg =~ m/^golang-/;
+        $built_with_octave = $pkg =~ m/^octave-/;
     }
 
     foreach my $file (sort keys %{$info->objdump_info}) {
@@ -597,7 +600,9 @@ sub always {
                     $needs_libcxx_count++;
                 }
             }
-            if ($no_libc and not $fname =~ m,/libc\b,) {
+            if (    $no_libc
+                and not $fname =~ m,/libc\b,
+                and not($built_with_octave and $fname =~ m/\.(oct|mex)$/)) {
                 # If there is no libc dependency, then it is most likely a
                 # bug.  The major exception is that some C++ libraries,
                 # but these tend to link against libstdc++ instead.  (see

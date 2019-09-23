@@ -1,7 +1,7 @@
 Tag: files-excluded-without-copyright-format-1.0
 Severity: serious
 Certainty: certain
-Check: source-copyright
+Check: debian/copyright
 Info: The <tt>Files-Excluded</tt> field in <tt>debian/copyright</tt> is
  used to exclude files from upstream source packages such as when they
  violate the Debian Free Software Guidelines

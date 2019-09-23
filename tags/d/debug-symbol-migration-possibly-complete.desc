@@ -1,7 +1,7 @@
 Tag: debug-symbol-migration-possibly-complete
 Severity: pedantic
 Certainty: possible
-Check: rules
+Check: debian/rules
 Info: The <tt>debian/rules</tt> file for this package has a call to
  <tt>dh_strip(1)</tt> with the specified <tt>--dbgsym-migration</tt> or
  <tt>--ddeb-migration</tt> argument.
