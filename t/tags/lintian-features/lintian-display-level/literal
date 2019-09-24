@@ -1,3 +1,4 @@
+W: lintian-display-level source: changelog-file-missing-explicit-entry 0.0.1-1 -> 1.0+dsfg-1 (missing) -> 1.0+dsfg-1.1
 P: lintian-display-level source: debian-control-has-unusual-field-spacing line 12
 X: lintian-display-level source: debian-watch-does-not-check-gpg-signature
 W: lintian-display-level source: dfsg-version-misspelled 1.0+dsfg-1.1

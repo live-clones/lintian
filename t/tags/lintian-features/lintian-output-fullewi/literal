@@ -1,4 +1,5 @@
 P: lintian-output-fullewi source (1.0+dsfg-1.1) [source]: package-uses-deprecated-source-override-location
+W: lintian-output-fullewi source (1.0+dsfg-1.1) [source]: changelog-file-missing-explicit-entry 0.0.1-1 -> 1.0+dsfg-1 (missing) -> 1.0+dsfg-1.1
 P: lintian-output-fullewi source (1.0+dsfg-1.1) [source]: debian-control-has-unusual-field-spacing line 12
 I: lintian-output-fullewi source (1.0+dsfg-1.1) [source]: binary-control-field-duplicates-source field "section" in package lintian-output-fullewi
 X: lintian-output-fullewi source (1.0+dsfg-1.1) [source]: debian-watch-does-not-check-gpg-signature
