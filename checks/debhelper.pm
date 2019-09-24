@@ -77,6 +77,7 @@ sub source {
         'python2' => 0,
         'python3' => 0,
         'runit'   => 0,
+        'sphinxdoc' => 0,
     );
     my %overrides;
 
@@ -589,6 +590,18 @@ sub source {
                 sort(keys %python3_depends));
         }
     }
+
+    if ($seen{'sphinxdoc'}) {
+        my $seen_sphinxdoc = 0;
+        for my $binpkg (@pkgs) {
+            $seen_sphinxdoc = 1
+              if $info->binary_relation($binpkg, 'all')
+              ->implies('${sphinxdoc:Depends}');
+        }
+        $self->tag('sphinxdoc-but-no-sphinxdoc-depends')
+          unless $seen_sphinxdoc;
+    }
+
     return;
 }
 
