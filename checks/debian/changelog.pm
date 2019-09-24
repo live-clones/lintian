@@ -138,15 +138,21 @@ sub source {
               or $latest_entry->Distribution =~ /-security$/i
               or $latest_entry->Source ne $previous_entry->Source;
 
-            if ($latest_version->literal=~ /([+~]deb\d+u1|\+nmu1)$/) {
-                my $expected= substr($latest_version->literal, 0, -length($1));
-                tag 'changelog-file-missing-explicit-entry',
-                    $previous_version->literal
-                  . " -> $expected (missing) -> "
-                  . $latest_version->literal
-                  unless $previous_version->literal eq $expected
-                  || $latest_entry->Distribution =~ /-security$/i;
-            }
+            my $expected_previous = $previous_version->literal;
+            $expected_previous = $latest_version->without_backport
+              if $latest_version->backport_release
+              && $latest_version->backport_revision
+              && $latest_version->debian_without_backport ne '0';
+
+            $expected_previous = $latest_version->without_source_nmu
+              if $latest_version->source_nmu;
+
+            tag 'changelog-file-missing-explicit-entry',
+                $previous_version->literal
+              . " -> $expected_previous (missing) -> "
+              . $latest_version->literal
+              unless $previous_version->literal eq $expected_previous
+              || $latest_entry->Distribution =~ /-security$/i;
 
             if (   $latest_version->epoch eq $previous_version->epoch
                 && $latest_version->upstream eq$previous_version->upstream
