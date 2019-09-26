@@ -1,4 +1,4 @@
-# fields -- lintian check script (rewrite) -*- perl -*-
+# fields/built-using -- lintian check script (rewrite) -*- perl -*-
 #
 # Copyright (C) 2004 Marc Brockschmidt
 #
@@ -22,48 +22,39 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-package Lintian::fields;
+package Lintian::fields::built_using;
 
 use strict;
 use warnings;
 use autodie;
 
-use File::Find::Rule;
-use Path::Tiny;
+use Lintian::Relation qw(:constants);
+use Lintian::Tags qw(tag);
+use Lintian::Util qw($PKGNAME_REGEX $PKGVERSION_REGEX);
+
+use constant {
+    BUILT_USING_REGEX => qr/^$PKGNAME_REGEX \(= $PKGVERSION_REGEX\)$/o,
+};
 
 sub always {
-    my ($pkg, $type, $info, $proc, $group) = @_;
+    my (undef, undef, $info, undef, undef) = @_;
 
-    # temporary setup until split is finalized
-    # tags and tests will be divided and reassigned later
+    my $built_using = $info->field('built-using');
 
-    # call submodules for now
-    my @submodules = File::Find::Rule->file->name('*.pm')
-      ->in("$ENV{LINTIAN_ROOT}/checks/fields");
+    return
+      unless defined $built_using;
 
-    for my $submodule (@submodules) {
-
-        my $name = path($submodule)->basename('.pm');
-        my $dir = path($submodule)->parent->stringify;
-
-        # skip checks that already stand on their own
-        next
-          if -e "$dir/$name.desc";
-
-        require $submodule;
-
-        # replace hyphens with underscores
-        $name =~ s/-/_/g;
-
-        my $check = "Lintian::fields::$name";
-        my @args = ($pkg, $type, $info, $proc, $group);
-
-        $check->can($type)->(@args)
-          if $check->can($type);
-
-        $check->can('always')->(@args)
-          if $check->can('always');
-    }
+    my $built_using_rel = Lintian::Relation->new($built_using);
+    $built_using_rel->visit(
+        sub {
+            if ($_ !~ BUILT_USING_REGEX) {
+                tag 'invalid-value-in-built-using-field', $_;
+                return 1;
+            }
+            return 0;
+        },
+        VISIT_OR_CLAUSE_FULL | VISIT_STOP_FIRST_MATCH
+    );
 
     return;
 }

@@ -1,4 +1,4 @@
-# fields -- lintian check script (rewrite) -*- perl -*-
+# fields/dm-upload-allowed -- lintian check script (rewrite) -*- perl -*-
 #
 # Copyright (C) 2004 Marc Brockschmidt
 #
@@ -22,48 +22,26 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-package Lintian::fields;
+package Lintian::fields::dm_upload_allowed;
 
 use strict;
 use warnings;
 use autodie;
 
-use File::Find::Rule;
-use Path::Tiny;
+use Lintian::Tags qw(tag);
 
 sub always {
-    my ($pkg, $type, $info, $proc, $group) = @_;
+    my (undef, undef, $info, undef, undef) = @_;
 
-    # temporary setup until split is finalized
-    # tags and tests will be divided and reassigned later
+    my $dmupload = $info->unfolded_field('dm-upload-allowed');
 
-    # call submodules for now
-    my @submodules = File::Find::Rule->file->name('*.pm')
-      ->in("$ENV{LINTIAN_ROOT}/checks/fields");
+    return
+      unless defined $dmupload;
 
-    for my $submodule (@submodules) {
+    tag 'dm-upload-allowed-is-obsolete';
 
-        my $name = path($submodule)->basename('.pm');
-        my $dir = path($submodule)->parent->stringify;
-
-        # skip checks that already stand on their own
-        next
-          if -e "$dir/$name.desc";
-
-        require $submodule;
-
-        # replace hyphens with underscores
-        $name =~ s/-/_/g;
-
-        my $check = "Lintian::fields::$name";
-        my @args = ($pkg, $type, $info, $proc, $group);
-
-        $check->can($type)->(@args)
-          if $check->can($type);
-
-        $check->can('always')->(@args)
-          if $check->can('always');
-    }
+    tag 'malformed-dm-upload-allowed', $dmupload
+      unless $dmupload eq 'yes';
 
     return;
 }

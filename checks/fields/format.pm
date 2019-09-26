@@ -1,4 +1,4 @@
-# fields -- lintian check script (rewrite) -*- perl -*-
+# fields/format -- lintian check script (rewrite) -*- perl -*-
 #
 # Copyright (C) 2004 Marc Brockschmidt
 #
@@ -22,48 +22,33 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-package Lintian::fields;
+package Lintian::fields::format;
 
 use strict;
 use warnings;
 use autodie;
 
-use File::Find::Rule;
-use Path::Tiny;
+use Lintian::Tags qw(tag);
 
-sub always {
-    my ($pkg, $type, $info, $proc, $group) = @_;
+our @supported_source_formats = (qr/1\.0/, qr/3\.0\s*\((quilt|native)\)/);
 
-    # temporary setup until split is finalized
-    # tags and tests will be divided and reassigned later
+sub source {
+    my (undef, undef, $info, undef, undef) = @_;
 
-    # call submodules for now
-    my @submodules = File::Find::Rule->file->name('*.pm')
-      ->in("$ENV{LINTIAN_ROOT}/checks/fields");
+    my $format = $info->unfolded_field('format');
 
-    for my $submodule (@submodules) {
+    return
+      unless defined $format;
 
-        my $name = path($submodule)->basename('.pm');
-        my $dir = path($submodule)->parent->stringify;
+    my $supported = 0;
+    foreach my $f (@supported_source_formats){
 
-        # skip checks that already stand on their own
-        next
-          if -e "$dir/$name.desc";
-
-        require $submodule;
-
-        # replace hyphens with underscores
-        $name =~ s/-/_/g;
-
-        my $check = "Lintian::fields::$name";
-        my @args = ($pkg, $type, $info, $proc, $group);
-
-        $check->can($type)->(@args)
-          if $check->can($type);
-
-        $check->can('always')->(@args)
-          if $check->can('always');
+        $supported = 1
+          if $format =~ /^\s*$f\s*\z/;
     }
+
+    tag 'unsupported-source-format', $format
+      unless $supported;
 
     return;
 }
