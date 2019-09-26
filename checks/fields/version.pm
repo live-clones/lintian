@@ -60,6 +60,48 @@ sub source {
     tag 'binary-nmu-debian-revision-in-source', $version
       if $version =~ /\+b\d+$/;
 
+    my $dversion = Dpkg::Version->new($version);
+
+    return
+      unless $dversion->is_valid;
+
+    my ($epoch, $upstream, $debian)
+      = ($dversion->epoch, $dversion->version, $dversion->revision);
+
+    if (
+        $upstream =~ m/[^~a-z]
+                       (rc|alpha|beta|pre(?:view|release)?)
+                       ([^a-z].*|\Z)
+                      /xsm
+    ) {
+        my $expected = $upstream;
+        my $rc = $1;
+        my $rest = $2//'';
+        my $suggestion;
+
+        # Remove the rc-part and the preceding symbol (if any).
+        $expected =~ s/[\.\+\-\:]?\Q$rc\E.*//;
+        $suggestion = "$expected~$rc$rest";
+
+        tag 'rc-version-greater-than-expected-version', $upstream, '>',
+          $expected, "(consider using $suggestion)",
+          if $info->native
+          or ($debian eq q{1} or $debian =~ m,^0(?:\.1|ubuntu1)?$,);
+    }
+
+    unless ($info->native) {
+        foreach my $re ($DERIVATIVE_VERSIONS->all) {
+
+            next
+              if $version =~ m/$re/;
+
+            my $explanation = $DERIVATIVE_VERSIONS->value($re);
+
+            tag 'invalid-version-number-for-derivative', $version,
+              "($explanation)";
+        }
+    }
+
     return;
 }
 
@@ -112,40 +154,6 @@ sub always {
 
         tag 'binary-nmu-debian-revision-in-source', $version
           if $debian =~ /^[^.-]+\.[^.-]+\./o and not $ubuntu;
-    }
-
-    if (
-        $upstream =~ m/[^~a-z]
-                       (rc|alpha|beta|pre(?:view|release)?)
-                       ([^a-z].*|\Z)
-                      /xsm
-    ) {
-        my $expected = $upstream;
-        my $rc = $1;
-        my $rest = $2//'';
-        my $suggestion;
-
-        # Remove the rc-part and the preceding symbol (if any).
-        $expected =~ s/[\.\+\-\:]?\Q$rc\E.*//;
-        $suggestion = "$expected~$rc$rest";
-
-        tag 'rc-version-greater-than-expected-version', $upstream, '>',
-          $expected, "(consider using $suggestion)",
-          if $info->native
-          or ($debian eq q{1} or $debian =~ m,^0(?:\.1|ubuntu1)?$,);
-    }
-
-    unless ($info->native) {
-        foreach my $re ($DERIVATIVE_VERSIONS->all) {
-
-            next
-              if $version =~ m/$re/;
-
-            my $explanation = $DERIVATIVE_VERSIONS->value($re);
-
-            tag 'invalid-version-number-for-derivative', $version,
-              "($explanation)";
-        }
     }
 
     my $name = $info->field('package');
