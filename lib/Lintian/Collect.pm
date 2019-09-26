@@ -101,6 +101,10 @@ sub new {
     $object->{type} = $type;
     $object->{base_dir} = $base_dir;
     $object->{field} = $fields if defined $fields;
+
+# raw fields are already at the root; field names probably do not contain quotes
+    $object->{'"unfolded"'} = {};
+
     return $object;
 }
 
@@ -190,6 +194,9 @@ sub unfolded_field {
     return
       unless defined $field;
 
+    return $self->{'"unfolded"'}{$field}
+      if exists $self->{'"unfolded"'}{$field};
+
     my $value = $self->field($field);
 
     return
@@ -208,6 +215,8 @@ sub unfolded_field {
         #  http://somewhere.com/$
         $value =~ s/^\s*+//;
     }
+
+    $self->{'"unfolded"'}{$field} = $value;
 
     return $value;
 }
