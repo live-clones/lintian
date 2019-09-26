@@ -41,9 +41,6 @@ Lintian::Collect::Binary - Lintian interface to binary package data collection
 
     my ($name, $type, $dir) = ('foobar', 'binary', '/path/to/lab-entry');
     my $collect = Lintian::Collect->new ($name, $type, $dir);
-    if ($collect->native) {
-        print "Package is native\n";
-    }
 
 =head1 DESCRIPTION
 
@@ -57,6 +54,8 @@ data via collect scripts.  The goal is to eventually access all data about
 binary packages via this module so that the module can cache data where
 appropriate and possibly retire collect scripts in favor of caching that
 data in memory.
+
+Native heuristics are only available in source packages.
 
 =head1 CLASS METHODS
 
@@ -86,38 +85,6 @@ documented in the L<Lintian::Collect> and the
 L<Lintian::Collect::Package> modules are also available.
 
 =over 4
-
-=item native
-
-Returns true if the binary package is native and false otherwise.
-Nativeness will be judged by the source version number.
-
-If the version number is absent, this will return false (as
-native packages are a lot rarer than non-native ones).
-
-Needs-Info requirements for using I<native>: L<Same as field|Lintian::Collect/field ([FIELD[, DEFAULT]])>
-
-=cut
-
-sub native {
-    my ($self) = @_;
-    return $self->{native} if exists $self->{native};
-    my $version;
-    my $source = $self->field('source');
-    if (defined $source && $source =~ m/\((.*)\)/) {
-        $version = $1;
-    } else {
-        $version = $self->field('version');
-    }
-    if (defined $version) {
-        $self->{native} = ($version !~ m/-/);
-    } else {
-        # We do not know, but assume it to non-native as it is
-        # the most likely case.
-        $self->{native} = 0;
-    }
-    return $self->{native};
-}
 
 =item changelog
 
