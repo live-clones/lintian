@@ -1,4 +1,4 @@
-# fields -- lintian check script (rewrite) -*- perl -*-
+# fields/derivatives -- lintian check script (rewrite) -*- perl -*-
 #
 # Copyright (C) 2004 Marc Brockschmidt
 #
@@ -22,47 +22,37 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-package Lintian::fields;
+package Lintian::fields::derivatives;
 
 use strict;
 use warnings;
 use autodie;
 
-use File::Find::Rule;
-use Path::Tiny;
+use Lintian::Data ();
+use Lintian::Tags qw(tag);
 
-sub always {
-    my ($pkg, $type, $info, $proc, $group) = @_;
+my $DERIVATIVE_FIELDS = Lintian::Data->new(
+    'fields/derivative-fields',
+    qr/\s*\~\~\s*/,
+    sub {
+        my ($regexp, $explanation) = split(/\s*\~\~\s*/, $_[1], 2);
+        return {
+            'regexp' => qr/$regexp/,
+            'explanation' => $explanation,
+        };
+    });
 
-    # temporary setup until split is finalized
-    # tags and tests will be divided and reassigned later
+sub source {
+    my (undef, undef, $info, undef, undef) = @_;
 
-    # call submodules for now
-    my @submodules = sort File::Find::Rule->file->name('*.pm')
-      ->in("$ENV{LINTIAN_ROOT}/checks/fields");
+    foreach my $field ($DERIVATIVE_FIELDS->all) {
 
-    for my $submodule (@submodules) {
+        my $val = $info->field($field, '-');
+        my $data = $DERIVATIVE_FIELDS->value($field);
 
-        my $name = path($submodule)->basename('.pm');
-        my $dir = path($submodule)->parent->stringify;
-
-        # skip checks that already stand on their own
-        next
-          if -e "$dir/$name.desc";
-
-        require $submodule;
-
-        # replace hyphens with underscores
-        $name =~ s/-/_/g;
-
-        my $check = "Lintian::fields::$name";
-        my @args = ($pkg, $type, $info, $proc, $group);
-
-        $check->can($type)->(@args)
-          if $check->can($type);
-
-        $check->can('always')->(@args)
-          if $check->can('always');
+        tag 'invalid-field-for-derivative',
+          "$field: $val ($data->{'explanation'})"
+          if $val !~ m/$data->{'regexp'}/;
     }
 
     return;

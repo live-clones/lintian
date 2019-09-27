@@ -1,3 +1,29 @@
+lintian (2.24.0) unstable; urgency=medium
+
+  [ Felix Lechner ]
+  * Do not emit changelog-file-missing-explicit-entry when maintainer
+    revision is 0 (eg. 1.2.5-0+deb10u1). (Closes: #940994)
+  * Remove internal support for checking whether binary packages are
+    "native".
+  * Various code cleanups, splitting checks/fields.pm into smaller
+    components, moving numerous tags, etc.
+
+ -- Chris Lamb <lamby@debian.org>  Fri, 27 Sep 2019 08:15:59 +0000
+
+lintian (2.23.0) unstable; urgency=medium
+
+  * Allow the lowercase version of "UNRELEASED" changelog entries in
+    various tags. This is a convention used in the Debian ports archive.
+    (Closes: #940877)
+  * Drop matching for Source-Version substvars; they are not supported by
+    dpkg-dev anymore and results in us accidentally matching an incorrect
+    "Source-:Upstream-Version" variable. (Closes: #940878)
+  * Bump severity of script-uses-unversioned-python-in-shebang (ie.
+    "#!/usr/bin/env python") from classification to "pedantic" severity for
+    now. (Closes: #934853)
+
+ -- Chris Lamb <lamby@debian.org>  Tue, 24 Sep 2019 10:31:54 +0000
+
 lintian (2.22.0~bpo10+1) buster-backports; urgency=medium
 
   * Rebuild for buster-backports.

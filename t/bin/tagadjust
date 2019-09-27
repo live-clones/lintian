@@ -124,7 +124,9 @@ foreach my $line (@difflines) {
         push(@tagslines, $stripped);
     } else {
         # say "Removing: $stripped";
-        @tagslines = grep { $_ ne $stripped } @tagslines;
+        # remove the first match only
+        my $found = 0;
+        @tagslines = grep {$_ ne $stripped || $found++} @tagslines;
     }
 
     $changed = 1;

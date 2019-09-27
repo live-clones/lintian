@@ -1,4 +1,4 @@
-# fields -- lintian check script (rewrite) -*- perl -*-
+# fields/essential -- lintian check script (rewrite) -*- perl -*-
 #
 # Copyright (C) 2004 Marc Brockschmidt
 #
@@ -22,48 +22,48 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-package Lintian::fields;
+package Lintian::fields::essential;
 
 use strict;
 use warnings;
 use autodie;
 
-use File::Find::Rule;
-use Path::Tiny;
+use Lintian::Data ();
+use Lintian::Tags qw(tag);
+
+our $KNOWN_ESSENTIAL = Lintian::Data->new('fields/essential');
+
+sub source {
+    my (undef, undef, $info, undef, undef) = @_;
+
+    my $essential = $info->unfolded_field('essential');
+
+    return
+      unless defined $essential;
+
+    tag 'essential-in-source-package';
+
+    return;
+}
 
 sub always {
-    my ($pkg, $type, $info, $proc, $group) = @_;
+    my ($pkg, undef, $info, undef, undef) = @_;
 
-    # temporary setup until split is finalized
-    # tags and tests will be divided and reassigned later
+    my $essential = $info->unfolded_field('essential');
 
-    # call submodules for now
-    my @submodules = sort File::Find::Rule->file->name('*.pm')
-      ->in("$ENV{LINTIAN_ROOT}/checks/fields");
+    return
+      unless defined $essential;
 
-    for my $submodule (@submodules) {
-
-        my $name = path($submodule)->basename('.pm');
-        my $dir = path($submodule)->parent->stringify;
-
-        # skip checks that already stand on their own
-        next
-          if -e "$dir/$name.desc";
-
-        require $submodule;
-
-        # replace hyphens with underscores
-        $name =~ s/-/_/g;
-
-        my $check = "Lintian::fields::$name";
-        my @args = ($pkg, $type, $info, $proc, $group);
-
-        $check->can($type)->(@args)
-          if $check->can($type);
-
-        $check->can('always')->(@args)
-          if $check->can('always');
+    unless ($essential eq 'yes' || $essential eq 'no') {
+        tag 'unknown-essential-value';
+        return;
     }
+
+    tag 'essential-no-not-needed'
+      if $essential eq 'no';
+
+    tag 'new-essential-package'
+      if $essential eq 'yes' && !$KNOWN_ESSENTIAL->known($pkg);
 
     return;
 }

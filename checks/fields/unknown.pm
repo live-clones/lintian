@@ -1,4 +1,4 @@
-# fields -- lintian check script (rewrite) -*- perl -*-
+# fields/unknown -- lintian check script (rewrite) -*- perl -*-
 #
 # Copyright (C) 2004 Marc Brockschmidt
 #
@@ -22,47 +22,50 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-package Lintian::fields;
+package Lintian::fields::unknown;
 
 use strict;
 use warnings;
 use autodie;
 
-use File::Find::Rule;
-use Path::Tiny;
+use Lintian::Data ();
+use Lintian::Tags qw(tag);
 
-sub always {
-    my ($pkg, $type, $info, $proc, $group) = @_;
+our $KNOWN_BINARY_FIELDS = Lintian::Data->new('fields/binary-fields');
+our $KNOWN_UDEB_FIELDS = Lintian::Data->new('fields/udeb-fields');
+our $SOURCE_FIELDS      = Lintian::Data->new('common/source-fields');
 
-    # temporary setup until split is finalized
-    # tags and tests will be divided and reassigned later
+sub source {
+    my (undef, undef, $info, undef, undef) = @_;
 
-    # call submodules for now
-    my @submodules = sort File::Find::Rule->file->name('*.pm')
-      ->in("$ENV{LINTIAN_ROOT}/checks/fields");
+    for my $field (keys %{$info->field}) {
 
-    for my $submodule (@submodules) {
+        tag 'unknown-field-in-dsc', $field
+          unless $SOURCE_FIELDS->known($field);
+    }
 
-        my $name = path($submodule)->basename('.pm');
-        my $dir = path($submodule)->parent->stringify;
+    return;
+}
 
-        # skip checks that already stand on their own
-        next
-          if -e "$dir/$name.desc";
+sub binary {
+    my (undef, undef, $info, undef, undef) = @_;
 
-        require $submodule;
+    for my $field (keys %{$info->field}) {
 
-        # replace hyphens with underscores
-        $name =~ s/-/_/g;
+        tag 'unknown-field-in-control', $field
+          unless $KNOWN_BINARY_FIELDS->known($field);
+    }
 
-        my $check = "Lintian::fields::$name";
-        my @args = ($pkg, $type, $info, $proc, $group);
+    return;
+}
 
-        $check->can($type)->(@args)
-          if $check->can($type);
+sub udeb {
+    my (undef, undef, $info, undef, undef) = @_;
 
-        $check->can('always')->(@args)
-          if $check->can('always');
+    for my $field (keys %{$info->field}) {
+
+        tag 'unknown-field-in-control', $field
+          unless $KNOWN_UDEB_FIELDS->known($field);
     }
 
     return;

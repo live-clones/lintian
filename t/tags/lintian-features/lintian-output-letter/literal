@@ -1,9 +1,10 @@
 P[P!]: lintian-output-letter source: package-uses-deprecated-source-override-location
+W[N!]: lintian-output-letter source: changelog-file-missing-explicit-entry 0.0.1-1 -> 1.0+dsfg-1 (missing) -> 1.0+dsfg-1.1
 P[P!]: lintian-output-letter source: debian-control-has-unusual-field-spacing line 12
 I[W!]: lintian-output-letter source: binary-control-field-duplicates-source field "section" in package lintian-output-letter
 X[P!]: lintian-output-letter source: debian-watch-does-not-check-gpg-signature
-O[M!]: lintian-output-letter source: dfsg-version-misspelled 1.0+dsfg-1.1
 P[P ]: lintian-output-letter source: no-homepage-field
+O[M!]: lintian-output-letter source: dfsg-version-misspelled 1.0+dsfg-1.1
 W[N!]: lintian-output-letter source: maintainer-upload-has-incorrect-version-number 1.0+dsfg-1.1
 I[W!]: lintian-output-letter source: quilt-patch-using-template-description debian-changes-1.0+dsfg-1.1
 W[M!]: lintian-output-letter source: format-3.0-but-debian-changes-patch
