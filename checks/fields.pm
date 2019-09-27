@@ -38,7 +38,7 @@ sub always {
     # tags and tests will be divided and reassigned later
 
     # call submodules for now
-    my @submodules = File::Find::Rule->file->name('*.pm')
+    my @submodules = sort File::Find::Rule->file->name('*.pm')
       ->in("$ENV{LINTIAN_ROOT}/checks/fields");
 
     for my $submodule (@submodules) {
