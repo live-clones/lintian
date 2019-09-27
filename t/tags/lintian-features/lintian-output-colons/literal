@@ -1,9 +1,10 @@
 tag:P:pedantic:certain::lintian-output-colons:1.0+dsfg-1.1:source:source:package-uses-deprecated-source-override-location::
+tag:W:normal:certain::lintian-output-colons:1.0+dsfg-1.1:source:source:changelog-file-missing-explicit-entry:0.0.1-1 -> 1.0+dsfg-1 (missing) -> 1.0+dsfg-1.1:
 tag:P:pedantic:certain::lintian-output-colons:1.0+dsfg-1.1:source:source:debian-control-has-unusual-field-spacing:line 12:
 tag:I:wishlist:certain::lintian-output-colons:1.0+dsfg-1.1:source:source:binary-control-field-duplicates-source:field "section" in package lintian-output-colons:
 tag:P:pedantic:certain:X:lintian-output-colons:1.0+dsfg-1.1:source:source:debian-watch-does-not-check-gpg-signature::
-tag:W:minor:certain:O:lintian-output-colons:1.0+dsfg-1.1:source:source:dfsg-version-misspelled:1.0+dsfg-1.1:dfsg-version-misspelled 1.0*
 tag:P:pedantic:possible::lintian-output-colons:1.0+dsfg-1.1:source:source:no-homepage-field::
+tag:W:minor:certain:O:lintian-output-colons:1.0+dsfg-1.1:source:source:dfsg-version-misspelled:1.0+dsfg-1.1:dfsg-version-misspelled 1.0*
 tag:W:normal:certain::lintian-output-colons:1.0+dsfg-1.1:source:source:maintainer-upload-has-incorrect-version-number:1.0+dsfg-1.1:
 tag:I:wishlist:certain::lintian-output-colons:1.0+dsfg-1.1:source:source:quilt-patch-using-template-description:debian-changes-1.0+dsfg-1.1:
 tag:W:minor:certain::lintian-output-colons:1.0+dsfg-1.1:source:source:format-3.0-but-debian-changes-patch::

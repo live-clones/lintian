@@ -23,238 +23,17 @@
 # MA 02110-1301, USA.
 
 package Lintian::fields;
+
 use strict;
 use warnings;
 use autodie;
 
-use Dpkg::Version qw(version_check);
-use List::MoreUtils qw(any true uniq);
-
-use Lintian::Architecture qw(:all);
-use Lintian::Data ();
-use Lintian::Check qw(check_maintainer);
-use Lintian::Relation qw(:constants);
-use Lintian::Relation::Version qw(versions_compare);
-use Lintian::Tags qw(tag);
-use Lintian::Util qw($PKGNAME_REGEX $PKGVERSION_REGEX safe_qx);
-
-use constant {
-    BUILT_USING_REGEX => qr/^$PKGNAME_REGEX \(= $PKGVERSION_REGEX\)$/o,
-};
-
-our $KNOWN_ESSENTIAL = Lintian::Data->new('fields/essential');
-our $KNOWN_TOOLCHAIN = Lintian::Data->new('fields/toolchain');
-our $KNOWN_METAPACKAGES = Lintian::Data->new('fields/metapackages');
-our $NO_BUILD_DEPENDS = Lintian::Data->new('fields/no-build-depends');
-our $KNOWN_SECTIONS = Lintian::Data->new('fields/archive-sections');
-our $known_build_essential
-  = Lintian::Data->new('fields/build-essential-packages');
-our $KNOWN_BINARY_FIELDS = Lintian::Data->new('fields/binary-fields');
-our $KNOWN_UDEB_FIELDS = Lintian::Data->new('fields/udeb-fields');
-our $KNOWN_BUILD_PROFILES = Lintian::Data->new('fields/build-profiles');
-our $KNOWN_VCS_HOSTERS= Lintian::Data->new(
-    'fields/vcs-hosters',
-    qr/\s*~~\s*/,
-    sub {
-        my @ret = split(',', $_[1]);
-        return \@ret;
-    });
-my $KNOWN_INSECURE_HOMEPAGE_URIS
-  = Lintian::Data->new('fields/insecure-homepage-uris');
-my $DERIVATIVE_VERSIONS= Lintian::Data->new('fields/derivative-versions',
-    qr/\s*~~\s*/, sub { $_[1]; });
-
-our %KNOWN_ARCHIVE_PARTS = map { $_ => 1 } ('non-free', 'contrib');
-
-my $DERIVATIVE_FIELDS = Lintian::Data->new(
-    'fields/derivative-fields',
-    qr/\s*\~\~\s*/,
-    sub {
-        my ($regexp, $explanation) = split(/\s*\~\~\s*/, $_[1], 2);
-        return {
-            'regexp' => qr/$regexp/,
-            'explanation' => $explanation,
-        };
-    });
-my $KNOWN_PRIOS = Lintian::Data->new('fields/priorities');
-
-our @supported_source_formats = (qr/1\.0/, qr/3\.0\s*\((quilt|native)\)/);
-
-# Still in the archive but shouldn't be the primary Emacs dependency.
-our %known_obsolete_emacs = map { $_ => 1 }
-  map { $_, $_.'-el', $_.'-gtk', $_.'-nox', $_.'-lucid' }
-  qw(emacs21 emacs22 emacs23);
-
-our %known_libstdcs = map { $_ => 1 } (
-    'libstdc++2.9-glibc2.1', 'libstdc++2.10',
-    'libstdc++2.10-glibc2.2','libstdc++3',
-    'libstdc++3.0', 'libstdc++4',
-    'libstdc++5','libstdc++6',
-    'lib64stdc++6',
-);
-
-our %known_tcls = map { $_ => 1 }
-  ('tcl74', 'tcl8.0', 'tcl8.2', 'tcl8.3', 'tcl8.4', 'tcl8.5',);
-
-our %known_tclxs
-  = map { $_ => 1 } ('tclx76', 'tclx8.0.4', 'tclx8.2', 'tclx8.3', 'tclx8.4',);
-
-our %known_tks
-  = map { $_ => 1 } ('tk40', 'tk8.0', 'tk8.2', 'tk8.3', 'tk8.4', 'tk8.5',);
-
-our %known_libpngs = map { $_ => 1 } ('libpng12-0', 'libpng2', 'libpng3',);
-
-our @known_java_pkg = map { qr/$_/ } (
-    'default-j(?:re|dk)(?:-headless)?',
-    # java-runtime and javaX-runtime alternatives (virtual)
-    'java\d*-runtime(?:-headless)?',
-    # openjdk-X and sun-javaX
-    '(openjdk-|sun-java)\d+-j(?:re|dk)(?:-headless)?',
-    'gcj-(?:\d+\.\d+-)?jre(?:-headless)?', 'gcj-(?:\d+\.\d+-)?jdk', # gcj
-    'gij',
-    'java-gcj-compat(?:-dev|-headless)?', # deprecated/transitional packages
-    'kaffe', 'cacao', 'jamvm',
-    'classpath', # deprecated packages (removed in Squeeze)
-);
-
-# Mapping of package names to section names
-my $NAME_SECTION_MAPPINGS = Lintian::Data->new(
-    'fields/name_section_mappings',
-    qr/\s*=>\s*/,
-    sub {
-        return {'regex' =>  qr/$_[0]/x, 'section' => $_[1]};
-    });
-
-our $DH_ADDONS = Lintian::Data->new('common/dh_addons', '=');
-our %DH_ADDONS_VALUES = map { $DH_ADDONS->value($_) => 1 } $DH_ADDONS->all;
-
-my %VCS_EXTRACT = (
-    browser => sub { return @_;},
-    arch    => sub { return @_;},
-    bzr     => sub { return @_;},
-    # cvs rootdir followed by optional module name:
-    cvs     => sub { return shift =~ /^(.+?)(?:\s+(\S*))?$/;},
-    darcs   => sub { return @_;},
-    # hg uri followed by optional -b branchname
-    hg      => sub { return shift =~ /^(.+?)(?:\s+-b\s+(\S*))?$/;},
-    # git uri followed by optional "[subdir]", "-b branchname" etc.
-    git     =>
-      sub { return shift =~ /^(.+?)(?:\s+\[(\S*)\])?(?:\s+-b\s+(\S*))?$/;},
-    svn     => sub { return @_;},
-    # New "mtn://host?branch" uri or deprecated "host branch".
-    mtn     => sub { return shift =~ /^(.+?)(?:\s+\S+)?$/;},
-);
-my %VCS_CANONIFY = (
-    browser => sub {
-        $_[0] =~ s{https?://svn\.debian\.org/wsvn/}
-                  {https://anonscm.debian.org/viewvc/};
-        $_[0] =~ s{https?\Q://git.debian.org/?p=\E}
-                  {https://anonscm.debian.org/git/};
-        $_[0] =~ s{https?\Q://bzr.debian.org/loggerhead/\E}
-                  {https://anonscm.debian.org/loggerhead/};
-        $_[0] =~ s{https?\Q://salsa.debian.org/\E([^/]+/[^/]+)\.git/?$}
-                  {https://salsa.debian.org/$1};
-
-        if ($_[0] =~ m{https?\Q://anonscm.debian.org/viewvc/\E}xsm) {
-            if ($_[0] =~ s{\?(.*[;\&])?op=log(?:[;\&](.*))?\Z}{}xsm) {
-                my (@keep) = ($1, $2, $3);
-                my $final = join('', grep {defined} @keep);
-                $_[0] .= '?' . $final if ($final ne '');
-                $_[1] = 'vcs-field-bitrotted';
-            }
-        }
-    },
-    cvs      => sub {
-        if (
-            $_[0] =~ s{\@(?:cvs\.alioth|anonscm)\.debian\.org:/cvsroot/}
-                      {\@anonscm.debian.org:/cvs/}
-        ) {
-            $_[1] = 'vcs-field-bitrotted';
-        }
-        $_[0]=~ s{\@\Qcvs.alioth.debian.org:/cvs/}{\@anonscm.debian.org:/cvs/};
-    },
-    arch     => sub {
-        $_[0] =~ s{https?\Q://arch.debian.org/arch/\E}
-                  {https://anonscm.debian.org/arch/};
-    },
-    bzr     => sub {
-        $_[0] =~ s{https?\Q://bzr.debian.org/\E}
-                  {https://anonscm.debian.org/bzr/};
-        $_[0] =~ s{https?\Q://anonscm.debian.org/bzr/bzr/\E}
-                  {https://anonscm.debian.org/bzr/};
-    },
-    git     => sub {
-        if (
-            $_[0] =~ s{git://(?:git|anonscm)\.debian\.org/~}
-                      {https://anonscm.debian.org/git/users/}
-        ) {
-            $_[1] = 'vcs-git-uses-invalid-user-uri';
-        }
-        $_[0] =~ s{(https?://.*?\.git)(?:\.git)+$}{$1};
-        $_[0] =~ s{https?\Q://git.debian.org/\E(?:git/?)?}
-                  {https://anonscm.debian.org/git/};
-        $_[0] =~ s{https?\Q://anonscm.debian.org/git/git/\E}
-                  {https://anonscm.debian.org/git/};
-        $_[0] =~ s{\Qgit://git.debian.org/\E(?:git/?)?}
-                  {https://anonscm.debian.org/git/};
-        $_[0] =~ s{\Qgit://anonscm.debian.org/git/\E}
-                  {https://anonscm.debian.org/git/};
-        $_[0] =~ s{https?\Q://salsa.debian.org/\E([^/]+/[^/\.]+)(?!\.git)$}
-                  {https://salsa.debian.org/$1.git};
-    },
-    hg      => sub {
-        $_[0] =~ s{https?\Q://hg.debian.org/\E}
-                  {https://anonscm.debian.org/hg/};
-        $_[0] =~ s{https?\Q://anonscm.debian.org/hg/hg/\E}
-                  {https://anonscm.debian.org/hg/};
-    },
-    svn     => sub {
-        $_[0] =~ s{\Qsvn://cvs.alioth.debian.org/\E}
-                  {svn://anonscm.debian.org/};
-        $_[0] =~ s{\Qsvn://svn.debian.org/\E}
-                  {svn://anonscm.debian.org/};
-        $_[0] =~ s{\Qsvn://anonscm.debian.org/svn/\E}
-                  {svn://anonscm.debian.org/};
-    },
-);
-# Valid URI formats for the Vcs-* fields
-# currently only checks the protocol, not the actual format of the URI
-my %VCS_RECOMMENDED_URIS = (
-    browser => qr;^https?://;,
-    arch    => qr;^https?://;,
-    bzr     => qr;^(?:lp:|(?:nosmart\+)?https?://);,
-    cvs     => qr;^:(?:pserver:|ext:_?anoncvs);,
-    darcs   => qr;^https?://;,
-    hg      => qr;^https?://;,
-    git     => qr;^(?:git|https?|rsync)://;,
-    svn     => qr;^(?:svn|(?:svn\+)?https?)://;,
-    mtn     => qr;^mtn://;,
-);
-my %VCS_VALID_URIS = (
-    arch    => qr;^https?://;,
-    bzr     => qr;^(?:sftp|(?:bzr\+)?ssh)://;,
-    cvs     => qr;^(?:-d\s*)?:(?:ext|pserver):;,
-    hg      => qr;^ssh://;,
-    git     => qr;^(?:git\+)?ssh://|^[\w.]+@[a-zA-Z0-9.]+:[/a-zA-Z0-9.];,
-    svn     => qr;^(?:svn\+)?ssh://;,
-    mtn     => qr;^[\w.-]+$;,
-);
-
-# Python development packages that are used almost always just for building
-# architecture-dependent modules.  Used to check for unnecessary build
-# dependencies for architecture-independent source packages.
-our $PYTHON_DEV = join(' | ',
-    qw(python-dev python-all-dev python3-dev python3-all-dev),
-    map { "python$_-dev" } qw(2.7 3 3.4 3.5));
-
-our $PERL_CORE_PROVIDES = Lintian::Data->new('fields/perl-provides', '\s+');
-our $OBSOLETE_PACKAGES
-  = Lintian::Data->new('fields/obsolete-packages',qr/\s*=>\s*/);
-our $VIRTUAL_PACKAGES   = Lintian::Data->new('fields/virtual-packages');
-our $SOURCE_FIELDS      = Lintian::Data->new('common/source-fields');
+use File::Find::Rule;
+use Path::Tiny;
 
 sub always {
     my ($pkg, $type, $info, $proc, $group) = @_;
+<<<<<<< HEAD
     my ($version, $arch_indep);
 
     #---- Format
@@ -801,46 +580,37 @@ sub always {
                 tag 'depends-on-old-emacs', "$field: $alternatives[0][0]"
                   if ( &$is_dep_field($field)
                     && $known_obsolete_emacs{$alternatives[0][0]});
+=======
+>>>>>>> 2.24.0
 
-                for my $part_d (@alternatives) {
-                    my ($d_pkg, undef, $d_version, undef, undef, $rest,
-                        $part_d_orig)
-                      = @$part_d;
+    # temporary setup until split is finalized
+    # tags and tests will be divided and reassigned later
 
-                    tag 'invalid-versioned-provides', $part_d_orig
-                      if ( $field eq 'provides'
-                        && $d_version->[0]
-                        && $d_version->[0] ne '=');
+    # call submodules for now
+    my @submodules = sort File::Find::Rule->file->name('*.pm')
+      ->in("$ENV{LINTIAN_ROOT}/checks/fields");
 
-                    tag 'bad-provided-package-name', $d_pkg
-                      if $d_pkg !~ /^[a-z0-9][-+\.a-z0-9]+$/;
+    for my $submodule (@submodules) {
 
-                    tag 'breaks-without-version', $part_d_orig
-                      if ( $field eq 'breaks'
-                        && !$d_version->[0]
-                        && !$VIRTUAL_PACKAGES->known($d_pkg)
-                        && !$replaces->implies($part_d_orig));
+        my $name = path($submodule)->basename('.pm');
+        my $dir = path($submodule)->parent->stringify;
 
-                    tag 'conflicts-with-version', $part_d_orig
-                      if ($field eq 'conflicts' && $d_version->[0]);
+        # skip checks that already stand on their own
+        next
+          if -e "$dir/$name.desc";
 
-                    tag 'obsolete-relation-form', "$field: $part_d_orig"
-                      if (
-                        $d_version && any { $d_version->[0] eq $_ }
-                        ('<', '>'));
+        require $submodule;
 
-                    tag 'bad-version-in-relation', "$field: $part_d_orig"
-                      if ($d_version->[0] && !version_check($d_version->[1]));
+        # replace hyphens with underscores
+        $name =~ s/-/_/g;
 
-                    tag 'package-relation-with-self', "$field: $part_d_orig"
-                      if ($pkg eq $d_pkg)
-                      && ( $field ne 'conflicts'
-                        && $field ne 'replaces'
-                        && $field ne 'provides');
+        my $check = "Lintian::fields::$name";
+        my @args = ($pkg, $type, $info, $proc, $group);
 
-                    tag 'bad-relation', "$field: $part_d_orig"
-                      if $rest;
+        $check->can($type)->(@args)
+          if $check->can($type);
 
+<<<<<<< HEAD
                     push @seen_obsolete_packages, [$part_d_orig, $d_pkg]
                       if ( $OBSOLETE_PACKAGES->known($d_pkg)
                         && &$is_dep_field($field));
@@ -1436,60 +1206,12 @@ sub _split_dep {
     if ($dep =~ s/^\s*([^<\s\[\(]+)\s*//) {
         ($pkg, $dmarch) = split(/:/, $1, 2);
         $dmarch //= '';  # Ensure it is defined (in case there is no ":")
+=======
+        $check->can('always')->(@args)
+          if $check->can('always');
+>>>>>>> 2.24.0
     }
 
-    if (length $dep) {
-        if ($dep
-            =~ s/\s* \( \s* (<<|<=|<|=|>=|>>|>) \s* ([^\s(]+) \s* \) \s*//x) {
-            @$version = ($1, $2);
-        }
-        if ($dep && $dep =~ s/\s*\[([^\]]+)\]\s*//) {
-            my $t = $1;
-            $darch->[0] = [split /\s+/, $t];
-            my $negated = 0;
-            for my $arch (@{ $darch->[0] }) {
-                $negated++ if $arch =~ s/^!//;
-            }
-            $darch->[1] = $negated;
-        }
-        while ($dep && $dep =~ s/\s*<([^>]+)>\s*//) {
-            my $t = $1;
-            push @$restr, [split /\s+/, $t];
-        }
-    }
-
-    return ($pkg, $dmarch, $version, $darch, $restr, $dep);
-}
-
-sub perl_core_has_version {
-    my ($package, $op, $version) = @_;
-    my $core_version = $PERL_CORE_PROVIDES->value($package);
-    return 0 if !defined $core_version;
-    return 0 unless version_check($version);
-    return versions_compare($core_version, $op, $version);
-}
-
-sub check_field {
-    my ($info, $field, $data) = @_;
-
-    my $has_default_mta
-      = $info->relation($field)->matches(qr/^default-mta$/, VISIT_PRED_NAME);
-    my $has_mail_transport_agent = $info->relation($field)
-      ->matches(qr/^mail-transport-agent$/, VISIT_PRED_NAME);
-
-    tag 'default-mta-dependency-not-listed-first',"$field: $data"
-      if $info->relation($field)
-      ->matches(qr/\|\s+default-mta/, VISIT_OR_CLAUSE_FULL);
-
-    if ($has_default_mta) {
-        tag 'default-mta-dependency-does-not-specify-mail-transport-agent',
-          "$field: $data"
-          unless $has_mail_transport_agent;
-    } elsif ($has_mail_transport_agent) {
-        tag 'mail-transport-agent-dependency-does-not-specify-default-mta',
-          "$field: $data"
-          unless $has_default_mta;
-    }
     return;
 }
 

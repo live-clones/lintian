@@ -71,7 +71,7 @@ sub source {
         if ($contents =~ qr/BEGIN PGP SIGNATURE.*END PGP SIGNATURE/ms) {
 
             tag 'unreleased-changelog-distribution'
-              if lc($latest_entry->Distribution) eq 'unreleased';
+              if $latest_entry->Distribution eq 'UNRELEASED';
         }
     }
 
@@ -81,6 +81,51 @@ sub source {
         tag 'hyphen-in-upstream-part-of-debian-changelog-version',
           $latest_version->upstream
           if !$info->native && $latest_version->upstream =~ qr/-/;
+
+        # unstable, testing, and stable shouldn't be used in Debian
+        # version numbers.  unstable should get a normal version
+        # increment and testing and stable should get suite-specific
+        # versions.
+        #
+        # NMUs get a free pass because they need to work with the
+        # version number that was already there.
+        unless (length $latest_version->source_nmu) {
+            my $revision = $latest_version->maintainer_revision;
+            my $distribution = $latest_entry->Distribution;
+
+            tag 'version-refers-to-distribution',$latest_version->literal
+              if ($revision =~ /testing|(?:un)?stable/i)
+              || (
+                ($distribution eq 'unstable'|| $distribution eq 'experimental')
+                && $revision
+                =~ /woody|sarge|etch|lenny|squeeze|stretch|buster/);
+        }
+
+        my $examine = $latest_version->maintainer_revision;
+        $examine = $latest_version->upstream
+          unless $info->native;
+
+        my $candidate_pattern = qr/rc|alpha|beta|pre(?:view|release)?/;
+        my $increment_pattern = qr/[^a-z].*|\Z/;
+
+        my ($candidate_string, $increment_string)
+          = ($examine =~ m/[^~a-z]($candidate_pattern)($increment_pattern)/sm);
+        if (length $candidate_string && !length $latest_version->source_nmu) {
+
+            my $increment_string //= EMPTY;
+
+            # remove rc-part and any preceding symbol
+            my $expected = $examine;
+            $expected =~ s/[\.\+\-\:]?\Q$candidate_string\E.*//;
+
+            my $suggestion = "$expected~$candidate_string$increment_string";
+
+            tag 'rc-version-greater-than-expected-version',
+              $examine, '>',$expected, "(consider using $suggestion)",
+              if $latest_version->maintainer_revision eq '1'
+              || $latest_version->maintainer_revision=~ m,^0(?:\.1|ubuntu1)?$,
+              || $info->native;
+        }
     }
 
     if (@entries > 1) {
@@ -138,15 +183,21 @@ sub source {
               or $latest_entry->Distribution =~ /-security$/i
               or $latest_entry->Source ne $previous_entry->Source;
 
-            if ($latest_version->literal=~ /([+~]deb\d+u1|\+nmu1)$/) {
-                my $expected= substr($latest_version->literal, 0, -length($1));
-                tag 'changelog-file-missing-explicit-entry',
-                    $previous_version->literal
-                  . " -> $expected (missing) -> "
-                  . $latest_version->literal
-                  unless $previous_version->literal eq $expected
-                  || $latest_entry->Distribution =~ /-security$/i;
-            }
+            my $expected_previous = $previous_version->literal;
+            $expected_previous = $latest_version->without_backport
+              if $latest_version->backport_release
+              && $latest_version->backport_revision
+              && $latest_version->debian_without_backport ne '0';
+
+            $expected_previous = $latest_version->without_source_nmu
+              if $latest_version->source_nmu;
+
+            tag 'changelog-file-missing-explicit-entry',
+                $previous_version->literal
+              . " -> $expected_previous (missing) -> "
+              . $latest_version->literal
+              unless $previous_version->literal eq $expected_previous
+              || $latest_entry->Distribution =~ /-security$/i;
 
             if (   $latest_version->epoch eq $previous_version->epoch
                 && $latest_version->upstream eq$previous_version->upstream
@@ -278,7 +329,7 @@ sub binary {
         # Some checks on the most recent entry.
         if ($changelog->entries && defined @{$changelog->entries}[0]) {
             ($news) = @{$changelog->entries};
-            if ($news->Distribution && $news->Distribution =~ /unreleased/i) {
+            if ($news->Distribution && $news->Distribution eq 'UNRELEASED') {
                 tag 'debian-news-entry-has-strange-distribution',
                   $news->Distribution;
             }
@@ -297,8 +348,21 @@ sub binary {
     # is this a native Debian package?
     # If the version is missing, we assume it to be non-native
     # as it is the most likely case.
-    my $version = $info->field('version', '0-1');
-    $native_pkg  = $info->native;
+    my $source = $info->field('source');
+    my $version;
+    if (defined $source && $source =~ m/\((.*)\)/) {
+        $version = $1;
+    } else {
+        $version = $info->field('version');
+    }
+    if (defined $version) {
+        $native_pkg = ($version !~ m/-/);
+    } else {
+        # We do not know, but assume it to non-native as it is
+        # the most likely case.
+        $native_pkg = 0;
+    }
+    $version = $info->field('version', '0-1');
     $foreign_pkg = (!$native_pkg && $version !~ m/-0\./);
     # A version of 1.2.3-0.1 could be either, so in that
     # case, both vars are false
@@ -460,7 +524,7 @@ sub binary {
             if ($latest_timestamp && $previous_timestamp) {
                 tag 'latest-changelog-entry-without-new-date'
                   unless (($latest_timestamp - $previous_timestamp) > 0
-                    or lc($latest_entry->Distribution) eq 'unreleased');
+                    or $latest_entry->Distribution eq 'UNRELEASED');
             }
 
             my $latest_dist = lc $latest_entry->Distribution;
@@ -544,38 +608,6 @@ sub binary {
             tag 'improbable-bug-number-in-closes', $bug
               if $bug < $BUGS_NUMBER->value('min-bug')
               || $bug > $BUGS_NUMBER->value('max-bug');
-        }
-
-        # unstable, testing, and stable shouldn't be used in Debian
-        # version numbers.  unstable should get a normal version
-        # increment and testing and stable should get suite-specific
-        # versions.
-        #
-        # NMUs get a free pass because they need to work with the
-        # version number that was already there.
-        my $changelog_version;
-        if ($info->native) {
-            $changelog_version = $latest_entry->Version || EMPTY;
-        } else {
-            if ($latest_entry->Version) {
-                ($changelog_version)
-                  = (split('-', $latest_entry->Version))[-1];
-            } else {
-                $changelog_version = EMPTY;
-            }
-        }
-        unless (not $info->native and $changelog_version =~ /\./) {
-            if (    $info->native
-                and $changelog_version =~ /testing|(?:un)?stable/i) {
-                tag 'version-refers-to-distribution', $latest_entry->Version;
-            } elsif ($changelog_version =~ /woody|sarge|etch|lenny|squeeze/) {
-                my %unreleased_dists
-                  = map { $_ => 1 } qw(unstable experimental);
-                if (exists($unreleased_dists{$latest_entry->Distribution})) {
-                    tag 'version-refers-to-distribution',
-                      $latest_entry->Version;
-                }
-            }
         }
 
         # Compare against NEWS.Debian if available.

@@ -69,6 +69,9 @@ sub set {
 
     my ($self, $literal, $native) = @_;
 
+    croak 'Literal version string required for version parsing'
+      unless defined $literal;
+
     croak 'Native flag required for version parsing'
       unless defined $native;
 
@@ -100,33 +103,65 @@ sub set {
     my ($epoch, $upstream, $maintainer_revision, $source_nmu, $binary_nmu)
       = ($literal =~ $pattern);
 
-    my $debian_source = $maintainer_revision // EMPTY;
+    $epoch //= EMPTY;
+    $upstream //= EMPTY;
+    $maintainer_revision //= EMPTY;
+    $source_nmu //= EMPTY;
+    $binary_nmu //= EMPTY;
 
-    $debian_source .= "+nmu$source_nmu"
-      if $native && length $source_nmu;
-    $debian_source
-      = $maintainer_revision . (length $source_nmu ? ".$source_nmu" : EMPTY)
-      if !$native && length $maintainer_revision;
+    my $source_nmu_string = EMPTY;
+
+    $source_nmu_string = ($native ? "+nmu$source_nmu" : ".$source_nmu")
+      if length $source_nmu;
+
+    my $debian_source = $maintainer_revision . $source_nmu_string;
 
     my $debian_no_epoch
       = $debian_source . (length $binary_nmu ? "+b$binary_nmu" : EMPTY);
 
-    my $no_epoch= (length $upstream ? "$upstream-" : EMPTY). $debian_no_epoch;
+    my $upstream_string = (length $upstream ? "$upstream-" : EMPTY);
 
-    my $reconstructed= (length $epoch ? "$epoch:" : EMPTY). $no_epoch;
+    my $no_epoch= $upstream_string . $debian_no_epoch;
+
+    my $epoch_string = (length $epoch ? "$epoch:" : EMPTY);
+
+    my $reconstructed= $epoch_string . $no_epoch;
 
     croak "Failed to parse package version: $reconstructed ne $literal"
       unless $reconstructed eq $literal;
 
-    $self->_set_literal($literal // EMPTY);
-    $self->_set_epoch($epoch // EMPTY);
-    $self->_set_no_epoch($no_epoch // EMPTY);
-    $self->_set_upstream($upstream // EMPTY);
-    $self->_set_maintainer_revision($maintainer_revision // EMPTY);
-    $self->_set_debian_source($debian_source // EMPTY);
-    $self->_set_debian_no_epoch($debian_no_epoch // EMPTY);
-    $self->_set_source_nmu($source_nmu // EMPTY);
-    $self->_set_binary_nmu($binary_nmu // EMPTY);
+    $self->_set_literal($literal);
+    $self->_set_epoch($epoch);
+    $self->_set_no_epoch($no_epoch);
+    $self->_set_upstream($upstream);
+    $self->_set_maintainer_revision($maintainer_revision);
+    $self->_set_debian_source($debian_source);
+    $self->_set_debian_no_epoch($debian_no_epoch);
+    $self->_set_source_nmu($source_nmu);
+    $self->_set_binary_nmu($binary_nmu);
+
+    my $without_source_nmu
+      = $epoch_string . $upstream_string . $maintainer_revision;
+
+    $self->_set_without_source_nmu($without_source_nmu);
+
+    my $backport_pattern = qr/^(.*)[+~]deb(\d+)u(\d+)$/;
+
+    my ($debian_without_backport, $backport_release, $backport_revision)
+      = ($self->maintainer_revision =~ $backport_pattern);
+
+    $debian_without_backport //= $maintainer_revision . $source_nmu_string;
+    $backport_release //= EMPTY;
+    $backport_revision //= EMPTY;
+
+    $self->_set_debian_without_backport($debian_without_backport);
+    $self->_set_backport_release($backport_release);
+    $self->_set_backport_revision($backport_revision);
+
+    my $without_backport
+      = $epoch_string . $upstream_string . $debian_without_backport;
+
+    $self->_set_without_backport($without_backport);
 
     return;
 }
@@ -148,6 +183,16 @@ has debian_no_epoch => (is => 'rwp',);
 has source_nmu => (is => 'rwp',);
 
 has binary_nmu => (is => 'rwp',);
+
+has without_source_nmu => (is => 'rwp',);
+
+has debian_without_backport => (is => 'rwp',);
+
+has backport_release => (is => 'rwp',);
+
+has backport_revision => (is => 'rwp',);
+
+has without_backport => (is => 'rwp',);
 
 =back
 
