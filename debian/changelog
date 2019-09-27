@@ -1,3 +1,9 @@
+lintian (2.24.0~bpo10+1) buster-backports; urgency=medium
+
+  * Rebuild for buster-backports.
+
+ -- Chris Lamb <lamby@debian.org>  Fri, 27 Sep 2019 16:31:35 +0100
+
 lintian (2.24.0) unstable; urgency=medium
 
   [ Felix Lechner ]
