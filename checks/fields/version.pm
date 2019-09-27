@@ -68,27 +68,6 @@ sub source {
     my ($epoch, $upstream, $debian)
       = ($dversion->epoch, $dversion->version, $dversion->revision);
 
-    if (
-        $upstream =~ m/[^~a-z]
-                       (rc|alpha|beta|pre(?:view|release)?)
-                       ([^a-z].*|\Z)
-                      /xsm
-    ) {
-        my $expected = $upstream;
-        my $rc = $1;
-        my $rest = $2//'';
-        my $suggestion;
-
-        # Remove the rc-part and the preceding symbol (if any).
-        $expected =~ s/[\.\+\-\:]?\Q$rc\E.*//;
-        $suggestion = "$expected~$rc$rest";
-
-        tag 'rc-version-greater-than-expected-version', $upstream, '>',
-          $expected, "(consider using $suggestion)",
-          if $info->native
-          or ($debian eq q{1} or $debian =~ m,^0(?:\.1|ubuntu1)?$,);
-    }
-
     unless ($info->native) {
         foreach my $re ($DERIVATIVE_VERSIONS->all) {
 

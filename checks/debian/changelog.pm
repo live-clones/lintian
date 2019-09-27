@@ -101,6 +101,31 @@ sub source {
                 =~ /woody|sarge|etch|lenny|squeeze|stretch|buster/);
         }
 
+        my $examine = $latest_version->maintainer_revision;
+        $examine = $latest_version->upstream
+          unless $info->native;
+
+        my $candidate_pattern = qr/rc|alpha|beta|pre(?:view|release)?/;
+        my $increment_pattern = qr/[^a-z].*|\Z/;
+
+        my ($candidate_string, $increment_string)
+          = ($examine =~ m/[^~a-z]($candidate_pattern)($increment_pattern)/sm);
+        if (length $candidate_string && !length $latest_version->source_nmu) {
+
+            my $increment_string //= EMPTY;
+
+            # remove rc-part and any preceding symbol
+            my $expected = $examine;
+            $expected =~ s/[\.\+\-\:]?\Q$candidate_string\E.*//;
+
+            my $suggestion = "$expected~$candidate_string$increment_string";
+
+            tag 'rc-version-greater-than-expected-version',
+              $examine, '>',$expected, "(consider using $suggestion)",
+              if $latest_version->maintainer_revision eq '1'
+              || $latest_version->maintainer_revision=~ m,^0(?:\.1|ubuntu1)?$,
+              || $info->native;
+        }
     }
 
     if (@entries > 1) {
