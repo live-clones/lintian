@@ -513,7 +513,7 @@ sub check_missing_script {
     my ($info) = @_;
     for my $file ($info->sorted_index) {
         if (   $file =~ m,etc/sv/([^/]+)/run$,
-            or $file =~ m,lib/systemd/system/(.*)\.service,) {
+            or $file =~ m,lib/systemd/system/(.*?)@?\.service,) {
 
             my $service = $1;
             tag 'package-supports-alternative-init-but-no-init.d-script',$file
