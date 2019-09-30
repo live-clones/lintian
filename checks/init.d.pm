@@ -86,8 +86,9 @@ sub binary {
 
     my (%initd_postinst, %initd_postrm);
 
-    # These will never be regular initscripts. (see #918459 & #933383)
-    return if $pkg eq 'initscripts';
+    # These will never be regular initscripts. (see #918459, #933383
+    # and #941140 etc.)
+    return if $pkg eq 'initscripts' or $pkg eq 'sysvinit';
 
     check_missing_script($info);
 
