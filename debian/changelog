@@ -1,3 +1,9 @@
+lintian (2.25.0+git) UNRELEASED; urgency=medium
+
+  * WIP
+
+ -- Chris Lamb <lamby@debian.org>  Wed, 02 Oct 2019 10:16:27 +0100
+
 lintian (2.25.0) unstable; urgency=medium
 
   * Fix false positives for templated (eg. "foo@.service") service files
