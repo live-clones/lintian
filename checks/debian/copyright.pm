@@ -43,10 +43,10 @@ use Path::Tiny;
 use Text::Levenshtein qw(distance);
 use XML::Simple qw(:strict);
 
-use Lintian::Check qw(check_spelling spelling_tag_emitter);
 use Lintian::Data;
 use Lintian::Deb822Parser qw(read_dpkg_control parse_dpkg_control);
 use Lintian::Relation::Version qw(versions_compare);
+use Lintian::Spelling qw(check_spelling spelling_tag_emitter);
 use Lintian::Tags qw(tag);
 use Lintian::Util qw(file_is_encoded_in_non_utf8);
 
