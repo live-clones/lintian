@@ -23,6 +23,7 @@
 # MA 02110-1301, USA.
 
 package Lintian::scripts;
+
 use strict;
 use warnings;
 use autodie;
@@ -32,7 +33,7 @@ use List::MoreUtils qw(any);
 use POSIX qw(strftime);
 use Try::Tiny;
 
-use Lintian::Check qw($known_shells_regex);
+use Lintian::Spelling qw($known_shells_regex);
 use Lintian::Data;
 use Lintian::Relation;
 use Lintian::Tags qw(tag);

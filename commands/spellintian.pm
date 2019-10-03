@@ -25,8 +25,8 @@ use autodie;
 use Getopt::Long();
 use Path::Tiny;
 
-use Lintian::Check qw(check_spelling check_spelling_picky);
 use Lintian::Data;
+use Lintian::Spelling qw(check_spelling check_spelling_picky);
 use Lintian::Profile;
 
 sub show_version {
