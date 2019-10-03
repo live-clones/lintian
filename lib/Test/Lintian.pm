@@ -73,7 +73,7 @@ use File::Find ();
 use List::MoreUtils qw{any};
 use Path::Tiny;
 
-use Lintian::Check qw(check_spelling);
+use Lintian::Spelling qw(check_spelling);
 use Lintian::Data;
 use Lintian::Deb822Parser qw(read_dpkg_control);
 use Lintian::Profile;
