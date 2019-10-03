@@ -25,9 +25,9 @@ use strict;
 use warnings;
 use autodie;
 
-use Lintian::Check
-  qw(check_spelling check_spelling_picky $known_shells_regex spelling_tag_emitter);
 use Lintian::Data;
+use Lintian::Spelling
+  qw(check_spelling check_spelling_picky $known_shells_regex spelling_tag_emitter);
 use Lintian::Tags qw(tag);
 use Lintian::Util qw(file_is_encoded_in_non_utf8 strip);
 

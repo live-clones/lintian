@@ -25,9 +25,9 @@ use autodie;
 
 use List::MoreUtils qw(any);
 
-use Lintian::Tags qw(tag);
-use Lintian::Check qw(check_maintainer);
 use Lintian::Data;
+use Lintian::Maintainer qw(check_maintainer);
+use Lintian::Tags qw(tag);
 use Lintian::Util qw(get_file_checksum);
 
 my $KNOWN_DISTS = Lintian::Data->new('changes-file/known-dists');

@@ -24,7 +24,7 @@ use strict;
 use warnings;
 use autodie;
 
-use Lintian::Check qw(check_spelling spelling_tag_emitter);
+use Lintian::Spelling qw(check_spelling spelling_tag_emitter);
 use Lintian::Tags qw(tag);
 
 my $SPELLING_ERROR_IN_README

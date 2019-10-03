@@ -29,7 +29,7 @@ use constant PATCH_DESC_TEMPLATE => 'TODO: Put a short summary on'
 
 use List::MoreUtils qw(none);
 
-use Lintian::Check qw(check_spelling spelling_tag_emitter);
+use Lintian::Spelling qw(check_spelling spelling_tag_emitter);
 use Lintian::Tags qw(tag);
 use Lintian::Util qw(internal_error strip);
 

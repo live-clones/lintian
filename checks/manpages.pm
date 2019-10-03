@@ -29,7 +29,7 @@ use File::Basename;
 use List::MoreUtils qw(any none);
 use Text::ParseWords ();
 
-use Lintian::Check qw(check_spelling spelling_tag_emitter);
+use Lintian::Spelling qw(check_spelling spelling_tag_emitter);
 use Lintian::Tags qw(tag);
 use Lintian::Util qw(clean_env do_fork drain_pipe internal_error open_gz);
 

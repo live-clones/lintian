@@ -28,7 +28,7 @@ use strict;
 use warnings;
 use autodie;
 
-use Lintian::Check qw(check_maintainer);
+use Lintian::Maintainer qw(check_maintainer);
 use Lintian::Tags qw(tag);
 
 sub source {

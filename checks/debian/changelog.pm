@@ -33,10 +33,10 @@ use List::MoreUtils qw(any uniq);
 use Path::Tiny;
 use Try::Tiny;
 
-use Lintian::Check qw(check_spelling spelling_tag_emitter);
 use Lintian::Info::Changelog;
 use Lintian::Info::Changelog::Version;
 use Lintian::Relation::Version qw(versions_gt);
+use Lintian::Spelling qw(check_spelling spelling_tag_emitter);
 use Lintian::Tags qw(tag);
 use Lintian::Util qw(file_is_encoded_in_non_utf8 strip);
 

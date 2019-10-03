@@ -42,9 +42,9 @@ use constant DEBUG_SECTIONS => qw(.debug_info .zdebug_info);
 use File::Spec;
 use List::MoreUtils qw(any);
 
-use Lintian::Check qw(check_spelling spelling_tag_emitter);
 use Lintian::Data;
 use Lintian::Relation qw(:constants);
+use Lintian::Spelling qw(check_spelling spelling_tag_emitter);
 use Lintian::Tags qw(tag);
 use Lintian::Util qw(internal_error strip);
 

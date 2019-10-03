@@ -30,7 +30,7 @@ use autodie;
 
 use List::MoreUtils qw(true);
 
-use Lintian::Check qw(check_maintainer);
+use Lintian::Maintainer qw(check_maintainer);
 use Lintian::Tags qw(tag);
 
 sub always {

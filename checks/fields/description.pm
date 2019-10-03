@@ -31,7 +31,7 @@ use constant DH_MAKE_PERL_TEMPLATE => 'this description was'
 use Encode qw(decode);
 
 use Lintian::Data;
-use Lintian::Check
+use Lintian::Spelling
   qw(check_spelling check_spelling_picky spelling_tag_emitter);
 use Lintian::Tags qw(tag);
 use Lintian::Util qw(strip);
