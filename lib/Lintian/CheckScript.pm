@@ -220,25 +220,38 @@ loadable.
 
 sub run_check {
     my ($self, $proc, $group) = @_;
+
     # Special-case: has no perl module
-    return if $self->name eq 'lintian';
+    return
+      if $self->name eq 'lintian';
 
     require $self->{'script_path'};
 
-    my $check = "Lintian::$self->{script_pkg}";
+    my $module = "Lintian::$self->{script_pkg}";
 
-    my @args = ($proc->pkg_name,$proc->pkg_type,$proc->info,$proc,$group);
+    if ($module->DOES('Lintian::Check')) {
 
-    if ($check->can('run')) {
-        $check->can('run')->(@args);
+        my $check = $module->new;
+        $check->processable($proc);
+        $check->group($group);
+
+        $check->run;
+
         return;
     }
 
-    $check->can($proc->pkg_type)->(@args)
-      if $check->can($proc->pkg_type);
+    my @args = ($proc->pkg_name,$proc->pkg_type,$proc->info,$proc,$group);
 
-    $check->can('always')->(@args)
-      if $check->can('always');
+    if ($module->can('run')) {
+        $module->can('run')->(@args);
+        return;
+    }
+
+    $module->can($proc->pkg_type)->(@args)
+      if $module->can($proc->pkg_type);
+
+    $module->can('always')->(@args)
+      if $module->can('always');
 
     return;
 }
