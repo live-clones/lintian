@@ -469,10 +469,9 @@ sub test_load_checks {
         $ppkg =~ s,/,::,go;
         $ppkg = "Lintian::$ppkg";
 
-        if ($ppkg->can('run')) {
+        if ($ppkg->can('run') && !$ppkg->DOES('Lintian::Check')) {
             $builder->diag(
                 "Warning: check $ppkg uses old entry point ::run\n");
-            return;
         }
 
         my $has_entrypoint = any { $ppkg->can($_) }
