@@ -1,3 +1,15 @@
+lintian (2.25.0~bpo9+2) stretch-backports; urgency=medium
+
+  * Rebuild for stretch-backports, fixing broken merge. (Closes: #941762)
+
+ -- Chris Lamb <lamby@debian.org>  Sat, 05 Oct 2019 10:26:03 -0700
+
+lintian (2.25.0~bpo9+1) stretch-backports; urgency=medium
+
+  * Rebuild for stretch-backports.
+
+ -- Chris Lamb <lamby@debian.org>  Fri, 04 Oct 2019 07:54:10 +0100
+
 lintian (2.25.0) unstable; urgency=medium
 
   * Fix false positives for templated (eg. "foo@.service") service files
