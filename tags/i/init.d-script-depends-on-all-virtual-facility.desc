@@ -2,11 +2,9 @@ Tag: init.d-script-depends-on-all-virtual-facility
 Severity: serious
 Certainty: possible
 Check: init.d
-Info: The given init script declares a dependency on the
- virtual facility "$all".
+Info: The given init script declares a dependency on the virtual
+ facility "$all". This virtual facility is reserved for very special
+ cases, that work specifically with init system.
  .
- This virtual facility is reserved for local scripts.
- .
- Moreover, using $all in more than one init.d script is
- totally broken.
+ Regular services should not use this facility.
 Ref: https://wiki.debian.org/LSBInitScripts
