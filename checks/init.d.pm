@@ -86,8 +86,9 @@ sub binary {
 
     my (%initd_postinst, %initd_postrm);
 
-    # These will never be regular initscripts. (see #918459 & #933383)
-    return if $pkg eq 'initscripts';
+    # These will never be regular initscripts. (see #918459, #933383
+    # and #941140 etc.)
+    return if $pkg eq 'initscripts' or $pkg eq 'sysvinit';
 
     check_missing_script($info);
 
@@ -513,7 +514,7 @@ sub check_missing_script {
     my ($info) = @_;
     for my $file ($info->sorted_index) {
         if (   $file =~ m,etc/sv/([^/]+)/run$,
-            or $file =~ m,lib/systemd/system/(.*)\.service,) {
+            or $file =~ m,lib/systemd/system/(.*?)@?\.service,) {
 
             my $service = $1;
             tag 'package-supports-alternative-init-but-no-init.d-script',$file

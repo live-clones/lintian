@@ -1,3 +1,15 @@
+lintian (2.25.0) unstable; urgency=medium
+
+  * Fix false positives for templated (eg. "foo@.service") service files
+    when checking for packages that appear to lack corresponding init
+    scripts.
+  * Update the long description of the
+    init.d-script-depends-on-all-virtual-facility tag and whitelist the
+    sysvinit package from all such init.d checks. (Closes: #941140)
+  * Add 4.4.1 as a known Standards-Version.
+
+ -- Chris Lamb <lamby@debian.org>  Wed, 02 Oct 2019 08:52:55 +0000
+
 lintian (2.24.0~bpo9+2) stretch-backports; urgency=medium
 
   * Rebuild for stretch-backports.
