@@ -19,15 +19,24 @@
 # MA 02110-1301, USA.
 
 package Lintian::symlinks;
+
 use strict;
 use warnings;
 use autodie;
 
 use File::Basename qw(dirname);
 use Lintian::Tags qw(tag);
+use Moo;
+
+with('Lintian::Check');
 
 sub always {
-    my (undef, undef, $info, $proc, $group) = @_;
+    my ($self) = @_;
+
+    my $info = $self->info;
+    my $proc = $self->processable;
+    my $group = $self->group;
+
     my $ginfo = $group->info;
     my (@brokenlinks, @dindexes);
 

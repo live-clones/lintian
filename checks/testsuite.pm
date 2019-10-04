@@ -23,6 +23,8 @@ use strict;
 use warnings;
 use autodie;
 
+use Moo;
+
 use Lintian::Data;
 use Lintian::Deb822Parser qw(
   DCTRL_COMMENTS_AT_EOL
@@ -34,6 +36,8 @@ use Lintian::Util qw(
   file_is_encoded_in_non_utf8
   strip
 );
+
+with('Lintian::Check');
 
 # empty because it is test xor test-command
 my @MANDATORY_FIELDS = qw();
@@ -51,7 +55,12 @@ my %KNOWN_SPECIAL_DEPENDS = map { $_ => 1 } qw(
 );
 
 sub source {
-    my ($pkg, $type, $info) = @_;
+    my ($self) = @_;
+
+    my $pkg = $self->package;
+    my $type = $self->type;
+    my $info = $self->info;
+
     my $testsuites = $info->field('testsuite', '');
     my $control = $info->index_resolved_path('debian/tests/control');
     my $control_autodep8

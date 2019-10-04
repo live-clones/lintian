@@ -19,12 +19,17 @@
 # MA 02110-1301, USA.
 
 package Lintian::obsolete_sites;
+
 use strict;
 use warnings;
 use autodie;
 
+use Moo;
+
 use Lintian::Tags qw(tag);
 use Lintian::Data ();
+
+with('Lintian::Check');
 
 our $OBSOLETE_SITES = Lintian::Data->new('obsolete-sites/obsolete-sites');
 my @interesting_files = qw(
@@ -36,7 +41,12 @@ my @interesting_files = qw(
 );
 
 sub source {
-    my ($pkg, $type, $info, $proc) = @_;
+    my ($self) = @_;
+
+    my $pkg = $self->package;
+    my $type = $self->type;
+    my $info = $self->info;
+    my $proc = $self->processable;
 
     my $debian_dir = $info->index_resolved_path('debian/');
     return unless $debian_dir;

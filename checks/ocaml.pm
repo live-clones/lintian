@@ -25,14 +25,21 @@ use warnings;
 use autodie;
 
 use File::Basename;
+use Moo;
+
 use Lintian::Relation ();
 use Lintian::Tags qw(tag);
+
+with('Lintian::Check');
 
 # The maximum number of *.cmi files to show individually.
 our $MAX_CMI = 3;
 
 sub binary {
-    my ($pkg, undef, $info) = @_;
+    my ($self) = @_;
+
+    my $pkg = $self->package;
+    my $info = $self->info;
 
     # Collect information about .a files from ar-info dump
     my %provided_o;

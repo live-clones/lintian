@@ -29,14 +29,19 @@ use warnings;
 use autodie;
 
 use List::MoreUtils qw(any);
+use Moo;
 
 use Lintian::Data ();
 use Lintian::Tags qw(tag);
 
+with('Lintian::Check');
+
 my $KNOWN_PRIOS = Lintian::Data->new('fields/priorities');
 
 sub binary {
-    my (undef, undef, $info, undef, undef) = @_;
+    my ($self) = @_;
+
+    my $info = $self->info;
 
     my $priority = $info->unfolded_field('priority');
 
@@ -47,7 +52,11 @@ sub binary {
 }
 
 sub always {
-    my ($pkg, $type, $info, undef, undef) = @_;
+    my ($self) = @_;
+
+    my $pkg = $self->package;
+    my $type = $self->type;
+    my $info = $self->info;
 
     my $priority = $info->unfolded_field('priority');
 

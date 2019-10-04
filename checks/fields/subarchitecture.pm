@@ -28,8 +28,14 @@ use strict;
 use warnings;
 use autodie;
 
+use Moo;
+
+with('Lintian::Check');
+
 sub always {
-    my (undef, undef, $info, undef, undef) = @_;
+    my ($self) = @_;
+
+    my $info = $self->info;
 
     #---- Subarchitecture (udeb)
 

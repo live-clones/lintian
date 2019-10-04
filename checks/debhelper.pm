@@ -24,12 +24,15 @@ use warnings;
 use autodie;
 
 use List::MoreUtils qw(any);
+use Moo;
 use Text::Levenshtein qw(distance);
 
 use Lintian::Data;
 use Lintian::Relation qw(:constants);
 use Lintian::Tags qw(tag);
 use Lintian::Util qw(strip);
+
+with('Lintian::Check');
 
 # If there is no debian/compat file present but cdbs is being used, cdbs will
 # create one automatically.  Currently it always uses compatibility level 5.
@@ -49,7 +52,11 @@ my $compat_level = Lintian::Data->new('debhelper/compat-level',qr/=/);
 my $MISC_DEPENDS = Lintian::Relation->new('${misc:Depends}');
 
 sub source {
-    my (undef, undef, $info, undef, $group) = @_;
+    my ($self) = @_;
+
+    my $info = $self->info;
+    my $group = $self->group;
+
     my $droot = $info->index_resolved_path('debian/');
     my ($drules, $dh_bd_version, $level);
 

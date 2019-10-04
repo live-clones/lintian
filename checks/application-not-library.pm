@@ -23,11 +23,21 @@ package Lintian::application_not_library;
 use strict;
 use warnings;
 
-use Lintian::Tags qw(tag);
 use List::MoreUtils qw(any);
+use Moo;
+
+use Lintian::Tags qw(tag);
+
+with('Lintian::Check');
 
 sub binary {
-    my ($pkg, $type, $info, $proc, $group) = @_;
+    my ($self) = @_;
+
+    my $pkg = $self->package;
+    my $type = $self->type;
+    my $info = $self->info;
+    my $proc = $self->processable;
+    my $group = $self->group;
 
     return if # Big exception list for all tags
       $pkg =~ /^perl(?:-base)?$/                    or # perl itself

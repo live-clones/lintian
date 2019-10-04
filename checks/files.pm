@@ -24,12 +24,15 @@ use warnings;
 use autodie;
 
 use List::MoreUtils qw(none);
+use Moo;
 
 use Lintian::Data;
 use Lintian::Tags qw(tag);
 use Lintian::Util qw(drain_pipe internal_error is_string_utf8_encoded open_gz
   signal_number2name strip normalize_pkg_path);
 use Lintian::SlidingWindow;
+
+with('Lintian::Check');
 
 use constant BLOCKSIZE => 16_384;
 
@@ -297,7 +300,14 @@ my $OBSOLETE_PATHS = Lintian::Data->new(
     });
 
 sub always {
-    my ($pkg, $type, $info, $proc, $group) = @_;
+    my ($self) = @_;
+
+    my $pkg = $self->package;
+    my $type = $self->type;
+    my $info = $self->info;
+    my $proc = $self->processable;
+    my $group = $self->group;
+
     my ($is_python, $is_perl, $has_binary_perl_file, $has_public_executable,
         $has_public_shared_library, $build_path);
     my @nonbinary_perl_files_in_lib;

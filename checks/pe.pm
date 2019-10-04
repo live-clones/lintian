@@ -19,19 +19,25 @@
 # MA 02110-1301, USA.
 
 package Lintian::pe;
+
 use strict;
 use warnings;
 use autodie;
 
 use List::MoreUtils qw(any);
-
-use constant SPACE  =>  q{ };
+use Moo;
 
 use Lintian::Tags qw(tag);
 use Lintian::Util qw(internal_error);
 
+with('Lintian::Check');
+
+use constant SPACE  =>  q{ };
+
 sub binary {
-    my (undef, undef, $info) = @_;
+    my ($self) = @_;
+
+    my $info = $self->info;
 
     foreach my $file ($info->sorted_index) {
         next unless $file->is_file;

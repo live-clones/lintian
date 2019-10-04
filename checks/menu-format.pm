@@ -33,15 +33,19 @@
 #  - Review desktop-file-validate to see what else we're missing.
 
 package Lintian::menu_format;
+
 use strict;
 use warnings;
 use autodie;
 
 use File::Basename;
 use List::MoreUtils qw(any);
+use Moo;
 
 use Lintian::Data;
 use Lintian::Tags qw(tag);
+
+with('Lintian::Check');
 
 # This is a list of all tags that should be in every menu item.
 my @req_tags = qw(needs section title command);
@@ -153,7 +157,14 @@ my %needs_tag_vals_hash = map { $_ => 1 } @needs_tag_vals;
 # -----------------------------------
 
 sub binary {
-    my ($pkg, $type, $info, $proc, $group) = @_;
+    my ($self) = @_;
+
+    my $pkg = $self->package;
+    my $type = $self->type;
+    my $info = $self->info;
+    my $proc = $self->processable;
+    my $group = $self->group;
+
     my (@menufiles, %desktop_cmds);
     for my $dirname (qw(usr/share/menu/ usr/lib/menu/)) {
         if (my $dir = $info->index_resolved_path($dirname)) {

@@ -28,12 +28,18 @@ use strict;
 use warnings;
 use autodie;
 
+use Moo;
+
 use Lintian::Tags qw(tag);
+
+with('Lintian::Check');
 
 our @supported_source_formats = (qr/1\.0/, qr/3\.0\s*\((quilt|native)\)/);
 
 sub source {
-    my (undef, undef, $info, undef, undef) = @_;
+    my ($self) = @_;
+
+    my $info = $self->info;
 
     my $format = $info->unfolded_field('format');
 

@@ -39,6 +39,7 @@ use constant {
 use Encode qw(decode);
 use List::Compare;
 use List::MoreUtils qw(any none);
+use Moo;
 use Path::Tiny;
 use Text::Levenshtein qw(distance);
 use XML::Simple qw(:strict);
@@ -49,6 +50,8 @@ use Lintian::Relation::Version qw(versions_compare);
 use Lintian::Spelling qw(check_spelling spelling_tag_emitter);
 use Lintian::Tags qw(tag);
 use Lintian::Util qw(file_is_encoded_in_non_utf8);
+
+with('Lintian::Check');
 
 use constant SPACE => q{ };
 
@@ -86,7 +89,11 @@ my %dep5_renamed_fields        = (
 );
 
 sub source {
-    my (undef, undef, $info, undef, $group) = @_;
+    my ($self) = @_;
+
+    my $info = $self->info;
+    my $group = $self->group;
+
     my $debian_dir = $info->index_resolved_path('debian/');
     return if not $debian_dir;
     my $copyright_path = $debian_dir->child('copyright');
@@ -762,7 +769,13 @@ sub check_incomplete_creative_commons_license {
 }
 
 sub binary {
-    my ($pkg, undef, $info, $proc, $group) = @_;
+    my ($self) = @_;
+
+    my $pkg = $self->package;
+    my $info = $self->info;
+    my $proc = $self->processable;
+    my $group = $self->group;
+
     my $found = 0;
     my $linked = 0;
     my $path = "usr/share/doc/$pkg";

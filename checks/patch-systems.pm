@@ -20,21 +20,28 @@
 # MA 02110-1301, USA.
 
 package Lintian::patch_systems;
+
 use strict;
 use warnings;
 use autodie;
 
-use constant PATCH_DESC_TEMPLATE => 'TODO: Put a short summary on'
-  . ' the line above and replace this paragraph';
-
 use List::MoreUtils qw(none);
+use Moo;
 
 use Lintian::Spelling qw(check_spelling spelling_tag_emitter);
 use Lintian::Tags qw(tag);
 use Lintian::Util qw(internal_error strip);
 
+with('Lintian::Check');
+
+use constant PATCH_DESC_TEMPLATE => 'TODO: Put a short summary on'
+  . ' the line above and replace this paragraph';
+
 sub source {
-    my (undef, undef, $info, undef, $group) = @_;
+    my ($self) = @_;
+
+    my $info = $self->info;
+    my $group = $self->group;
 
     # Some (cruft) checks are valid for every patch system, so we need
     # to record that:

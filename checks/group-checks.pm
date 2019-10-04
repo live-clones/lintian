@@ -24,17 +24,21 @@ use warnings;
 use autodie;
 
 use List::MoreUtils qw(any);
+use Moo;
 
 use Lintian::Data;
 use Lintian::Relation;
 use Lintian::Tags qw(tag);
 
+with('Lintian::Check');
+
 my $KNOWN_DBG_PACKAGE = Lintian::Data->new('common/dbg-pkg',qr/\s*\~\~\s*/,
     sub { return qr/$_[0]/xms; });
 
 sub source {
+    my ($self) = @_;
 
-    my (undef, undef, undef, undef, $group) = @_;
+    my $group = $self->group;
 
     ## To find circular dependencies, we will first generate Strongly
     ## Connected Components using Tarjan's algorithm

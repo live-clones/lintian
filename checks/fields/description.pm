@@ -29,12 +29,15 @@ use constant DH_MAKE_PERL_TEMPLATE => 'this description was'
   . ' automagically extracted from the module by dh-make-perl';
 
 use Encode qw(decode);
+use Moo;
 
 use Lintian::Data;
 use Lintian::Spelling
   qw(check_spelling check_spelling_picky spelling_tag_emitter);
 use Lintian::Tags qw(tag);
 use Lintian::Util qw(strip);
+
+with('Lintian::Check');
 
 my $PLANNED_FEATURES = Lintian::Data->new('description/planned-features');
 
@@ -49,7 +52,13 @@ my $PICKY_SPELLING_ERROR_IN_DESCRIPTION
   = spelling_tag_emitter('capitalization-error-in-description');
 
 sub always {
-    my ($pkg, $type, $info, undef, $group) = @_;
+    my ($self) = @_;
+
+    my $pkg = $self->package;
+    my $type = $self->type;
+    my $info = $self->info;
+    my $group = $self->group;
+
     my $tabs = 0;
     my $lines = 0;
     my $template = 0;

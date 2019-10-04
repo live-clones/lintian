@@ -20,15 +20,22 @@
 # MA 02110-1301, USA.
 
 package Lintian::conffiles;
+
 use strict;
 use warnings;
 use autodie;
 
+use Moo;
+
 use Lintian::Tags qw(tag);
 use Lintian::Util qw(rstrip);
 
+with('Lintian::Check');
+
 sub binary {
-    my (undef, undef, $info) = @_;
+    my ($self) = @_;
+
+    my $info = $self->info;
 
     my $cf = $info->control_index('conffiles');
     my %conffiles;

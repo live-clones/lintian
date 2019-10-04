@@ -29,9 +29,12 @@ use warnings;
 use autodie;
 
 use List::MoreUtils qw(any);
+use Moo;
 
 use Lintian::Data ();
 use Lintian::Tags qw(tag);
+
+with('Lintian::Check');
 
 use constant EMPTY => q{};
 
@@ -159,7 +162,10 @@ my %VCS_VALID_URIS = (
 );
 
 sub always {
-    my (undef, $type, $info, undef, undef) = @_;
+    my ($self) = @_;
+
+    my $type = $self->type;
+    my $info = $self->info;
 
     my $is_comaintained = 0;
     for my $field (qw(maintainer uploaders)) {

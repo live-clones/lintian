@@ -29,12 +29,14 @@ use autodie;
 
 use File::Basename;
 use List::MoreUtils qw(any first_index);
+use Moo;
 use Text::ParseWords qw(shellwords);
 
+use Lintian::Data;
 use Lintian::Tags qw(tag);
 use Lintian::Util qw(internal_error lstrip rstrip);
 
-use Lintian::Data;
+with('Lintian::Check');
 
 # Init scripts that do not need a service file
 my $INIT_WHITELIST = Lintian::Data->new('systemd/init-whitelist');
@@ -46,7 +48,10 @@ my $HARDENING_FLAGS = Lintian::Data->new('systemd/hardening-flags');
 my $WANTEDBY_WHITELIST = Lintian::Data->new('systemd/wantedby-whitelist');
 
 sub binary {
-    my ($pkg, undef, $info) = @_;
+    my ($self) = @_;
+
+    my $pkg = $self->package;
+    my $info = $self->info;
 
     # non-service checks
     if (my $tmpfiles = $info->index_resolved_path('etc/tmpfiles.d/')) {

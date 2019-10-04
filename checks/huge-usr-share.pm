@@ -23,7 +23,11 @@ use strict;
 use warnings;
 use autodie;
 
+use Moo;
+
 use Lintian::Tags qw(tag);
+
+with('Lintian::Check');
 
 # Threshold in kB of /usr/share to trigger this warning.  Consider that the
 # changelog alone can be quite big, and cannot be moved away.
@@ -32,7 +36,10 @@ my $THRESHOLD_SIZE_HARD = 8192;
 my $THRESHOLD_PERC = 50;
 
 sub binary {
-    my (undef, undef, $info) = @_;
+    my ($self) = @_;
+
+    my $info = $self->info;
+
     # Skip architecture-dependent packages.
     my $arch = $info->field('architecture', '');
     return if $arch eq 'all';

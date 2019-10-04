@@ -28,11 +28,18 @@ use strict;
 use warnings;
 use autodie;
 
+use Moo;
+
 use Lintian::Util qw($PKGNAME_REGEX);
 use Lintian::Tags qw(tag);
 
+with('Lintian::Check');
+
 sub source {
-    my (undef, undef, $info, $proc, undef) = @_;
+    my ($self) = @_;
+
+    my $info = $self->info;
+    my $proc = $self->processable;
 
     my $source = $info->unfolded_field('source');
 
@@ -55,7 +62,10 @@ sub source {
 }
 
 sub always {
-    my (undef, $type, $info, undef, undef) = @_;
+    my ($self) = @_;
+
+    my $type = $self->type;
+    my $info = $self->info;
 
     my $source = $info->unfolded_field('source');
 

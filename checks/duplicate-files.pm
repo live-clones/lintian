@@ -19,16 +19,23 @@
 # MA 02110-1301, USA.
 
 package Lintian::duplicate_files;
+
 use strict;
 use warnings;
 use autodie;
 
 use List::MoreUtils qw(any);
+use Moo;
 
 use Lintian::Tags qw(tag);
 
+with('Lintian::Check');
+
 sub binary {
-    my (undef, undef, $info) = @_;
+    my ($self) = @_;
+
+    my $info = $self->info;
+
     my %hashmap;
 
     foreach my $file ($info->sorted_index){

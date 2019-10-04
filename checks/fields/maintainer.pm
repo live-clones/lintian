@@ -28,11 +28,17 @@ use strict;
 use warnings;
 use autodie;
 
+use Moo;
+
 use Lintian::Maintainer qw(check_maintainer);
 use Lintian::Tags qw(tag);
 
+with('Lintian::Check');
+
 sub source {
-    my (undef, undef, $info, undef, undef) = @_;
+    my ($self) = @_;
+
+    my $info = $self->info;
 
     my $maintainer = $info->unfolded_field('maintainer');
 
@@ -48,7 +54,9 @@ sub source {
 }
 
 sub always {
-    my (undef, undef, $info, undef, undef) = @_;
+    my ($self) = @_;
+
+    my $info = $self->info;
 
     my $maintainer = $info->unfolded_field('maintainer');
 

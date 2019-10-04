@@ -29,10 +29,13 @@ use warnings;
 use autodie;
 
 use File::Find::Rule;
+use Moo;
 use Path::Tiny;
 
+with('Lintian::Check');
+
 sub always {
-    my ($pkg, $type, $info, $proc, $group) = @_;
+    my ($self) = @_;
 
     # temporary setup until split is finalized
     # tags and tests will be divided and reassigned later
@@ -55,14 +58,13 @@ sub always {
         # replace hyphens with underscores
         $name =~ s/-/_/g;
 
-        my $check = "Lintian::fields::$name";
-        my @args = ($pkg, $type, $info, $proc, $group);
+        my $subpackage = "Lintian::fields::$name";
 
-        $check->can($type)->(@args)
-          if $check->can($type);
+        my $subcheck = $subpackage->new;
+        $subcheck->processable($self->processable);
+        $subcheck->group($self->group);
 
-        $check->can('always')->(@args)
-          if $check->can('always');
+        $subcheck->run;
     }
 
     return;
