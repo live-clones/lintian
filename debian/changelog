@@ -1,8 +1,16 @@
-lintian (2.25.0+git) UNRELEASED; urgency=medium
+lintian (2.26.0) unstable; urgency=medium
 
-  * WIP
+  [ Chris Lamb ]
+  * Avoid false-positives in non-consecutive-debian-revision by only
+    performing the test when Debian revisions (eg. -2, -3, etc.) are whole
+    integers. (Closes: #941395, #942013)
+  * Correct/improve the grammar of the non-consecutive-debian-revision
+    tags long description.
 
- -- Chris Lamb <lamby@debian.org>  Wed, 02 Oct 2019 10:16:27 +0100
+  [ Felix Lechner ]
+  * Convert all test checks to use instantiated objects.
+
+ -- Chris Lamb <lamby@debian.org>  Wed, 09 Oct 2019 23:51:26 +0000
 
 lintian (2.25.0) unstable; urgency=medium
 
