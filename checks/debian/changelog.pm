@@ -219,7 +219,7 @@ sub source {
                 tag 'non-consecutive-debian-revision',
                   $previous . ' -> ' . $latest
                   if $previous =~ /^\d+$/
-                  and $latext =~ /^\d+$/
+                  and $latest =~ /^\d+$/
                   and $latest != $previous + 1;
             }
 
