@@ -214,12 +214,13 @@ sub source {
                   if $latest_entry->Changes
                   =~ /^\s*\*\s+new\s+upstream\s+(?:\S+\s+)?release\b/im;
 
-                unless ($latest_version->maintainer_revision
-                    == $previous_version->maintainer_revision + 1) {
-                    tag 'non-consecutive-debian-revision',
-                      $previous_version->literal . ' -> '
-                      . $latest_version->literal;
-                }
+                my $latest = $latest_version->maintainer_revision;
+                my $previous = $previous_version->maintainer_revision;
+                tag 'non-consecutive-debian-revision',
+                  $previous . ' -> ' . $latest
+                  if $previous =~ /^\d+$/
+                  and $latext =~ /^\d+$/
+                  and $latest != $previous + 1;
             }
 
             if ($latest_version->epoch ne $previous_version->epoch) {
