@@ -217,7 +217,8 @@ sub source {
                 my $latest = $latest_version->maintainer_revision;
                 my $previous = $previous_version->maintainer_revision;
                 tag 'non-consecutive-debian-revision',
-                  $previous . ' -> ' . $latest
+                  $previous_version->literal . ' -> '
+                  . $latest_version->literal
                   if $previous =~ /^\d+$/
                   and $latest =~ /^\d+$/
                   and $latest != $previous + 1;
