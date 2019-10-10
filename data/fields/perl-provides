@@ -29,7 +29,5 @@ libencode-perl 2.97
 libdigest-sha-perl 6.01
 libcpan-meta-yaml-perl 0.018
 libcpan-meta-requirements-perl 2.140
-libcpan-meta-perl 2.150010
 libcompress-raw-zlib-perl 2.076
 libcompress-raw-bzip2-perl 2.074
-libautodie-perl 2.29
