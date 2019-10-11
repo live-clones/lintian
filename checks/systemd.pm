@@ -251,6 +251,7 @@ sub check_systemd_service_file {
           or extract_service_file_values($file, 'Install', 'RequiredBy',1)
           or extract_service_file_values($file, 'Install', 'Also',1)
           or $is_oneshot
+          or $file !~ m,^lib/systemd/[^\/]+/[^\/]+\.service$,
           or $file =~ m,@\.service$,;
         my @pidfile = extract_service_file_values($file,'Service','PIDFile',1);
         foreach my $x (@pidfile) {
