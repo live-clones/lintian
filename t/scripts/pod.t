@@ -18,3 +18,8 @@ push(@POD_FILES, map { "$dir/man/$_" } 'lintian-info.pod', 'lintian.pod.in');
 
 all_pod_files_ok(@POD_FILES);
 
+# Local Variables:
+# indent-tabs-mode: nil
+# cperl-indent-level: 4
+# End:
+# vim: syntax=perl sw=4 sts=4 sr et

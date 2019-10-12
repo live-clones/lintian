@@ -20,3 +20,9 @@ is(join(', ', $obj->selectable),
 $obj->satisfy('A');
 is(join(', ', $obj->selectable),
     'B','B is selectable after A has been satisfied');
+
+# Local Variables:
+# indent-tabs-mode: nil
+# cperl-indent-level: 4
+# End:
+# vim: syntax=perl sw=4 sts=4 sr et

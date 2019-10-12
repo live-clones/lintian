@@ -51,3 +51,9 @@ TODO: {
     $map->satisfy('B');
     ok(eval {$map->satisfy('A')}, 'B re-added, A can be satisfied');
 }
+
+# Local Variables:
+# indent-tabs-mode: nil
+# cperl-indent-level: 4
+# End:
+# vim: syntax=perl sw=4 sts=4 sr et

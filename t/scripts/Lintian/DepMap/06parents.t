@@ -14,3 +14,9 @@ $map->add('B', 'A');
 my @parents;
 ok(eval {@parents = $map->parents('B'); }, q{Get B's parents});
 is_deeply(\@parents, ['A'], q{B's parent is A});
+
+# Local Variables:
+# indent-tabs-mode: nil
+# cperl-indent-level: 4
+# End:
+# vim: syntax=perl sw=4 sts=4 sr et

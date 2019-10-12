@@ -80,3 +80,9 @@ for my $desc (@DESCS) {
         "$short has valid needs-info for unpack level"
     );
 }
+
+# Local Variables:
+# indent-tabs-mode: nil
+# cperl-indent-level: 4
+# End:
+# vim: syntax=perl sw=4 sts=4 sr et

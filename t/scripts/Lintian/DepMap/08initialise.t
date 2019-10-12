@@ -36,3 +36,9 @@ $obj->add('Z', 'X');
 $obj->initialise;
 is(join(', ', $obj->missing), 'X', 'X is unknown');
 is(join(', ', sort($obj->known)), 'A, B, Z', 'X is not known');
+
+# Local Variables:
+# indent-tabs-mode: nil
+# cperl-indent-level: 4
+# End:
+# vim: syntax=perl sw=4 sts=4 sr et
