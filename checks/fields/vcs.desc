@@ -1,0 +1,6 @@
+Check-Script: fields/vcs
+Author: Marc 'HE' Brockschmidt <marc@marcbrockschmidt.de>
+Type: binary, udeb, source
+Needs-Info: unpacked
+Info: This script checks the syntax of the 'Vcs-*' fields
+ in package control files, as described in the Policy Manual.

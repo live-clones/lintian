@@ -1,7 +1,6 @@
-Check-Script: fields
+Check-Script: fields/unknown
 Author: Marc 'HE' Brockschmidt <marc@marcbrockschmidt.de>
-Abbrev: fld
 Type: binary, udeb, source
 Needs-Info: unpacked
-Info: This script checks the syntax of the fields in package control files,
+Info: This script checks for unknown fields in package control files,
  as described in the Policy Manual.
