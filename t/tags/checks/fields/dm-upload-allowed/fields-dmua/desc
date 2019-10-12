@@ -1,0 +1,4 @@
+Skeleton: upload-native
+Testname: fields-dmua
+Description: Test for invalid DMUA field
+Check: fields/dm-upload-allowed

@@ -1,0 +1,8 @@
+Skeleton: upload-native
+Testname: fields-vcs-obsolete-in-debian-infrastructure-unrel
+Description: Check for false positives with deprecated Vcs-* fields
+Options: --pedantic
+Test-Against:
+ vcs-obsolete-in-debian-infrastructure
+ vcs-field-not-canonical
+Check: fields/vcs

@@ -1,4 +1,0 @@
-filenames (binary): no-section-field
-filenames (binary): no-priority-field
-filenames (binary): depends-on-obsolete-package depends: python-support => use dh_python2 instead
-filename-games (binary): no-priority-field

@@ -1,6 +1,0 @@
-Skeleton: upload-native
-Testname: fields-build-depends-general
-Package-Architecture: all
-Description: General tests for build dependencies
-References: Debian Bug#540594, Debian Bug#551793
-Check: fields

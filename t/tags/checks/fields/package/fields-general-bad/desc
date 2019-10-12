@@ -1,0 +1,5 @@
+Skeleton: deb
+Testname: fields-general-bad
+Source: fields-general-BAD?
+Description: Test for package with control bad values
+Check: fields/package

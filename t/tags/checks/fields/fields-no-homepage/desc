@@ -1,6 +1,0 @@
-Testname: fields-no-homepage
-Skeleton: upload-non-native
-Description: Test pedantic check for no Homepage field
-Options: --pedantic
-Test-Against: homepage-field-uses-insecure-uri
-Check: fields

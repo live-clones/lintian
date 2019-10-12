@@ -1,0 +1,5 @@
+Testname: fields-version-dot-dfsg
+Skeleton: upload-non-native
+Version: 1.0.dfsg1-1
+Description: Use of ".dfsg"
+Check: fields/version

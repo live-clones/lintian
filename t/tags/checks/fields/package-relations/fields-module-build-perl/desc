@@ -1,0 +1,5 @@
+Skeleton: upload-native
+Testname: fields-module-build-perl
+Package-Architecture: all
+Description: Test some libmodule-build(-tiny)-perl checks
+Check: fields/package-relations

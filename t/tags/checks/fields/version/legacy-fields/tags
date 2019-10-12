@@ -1,0 +1,3 @@
+fields (source): debian-revision-not-well-formed 1.5-.3
+fields (binary): debian-revision-not-well-formed 1.5-.3
+another-version (binary): debian-revision-should-not-be-zero 123.4-0

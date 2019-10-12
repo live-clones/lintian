@@ -1,4 +1,0 @@
-fields-general (source): dbg-package-missing-depends fields-general-dbg
-fields-general-debug (binary): wrong-section-according-to-package-name fields-general-debug
-fields-general-dbg (binary): superfluous-clutter-in-homepage <http://lintian.debian.org/>
-fields-general (binary): bad-homepage ttp://lintian.debian.org/
