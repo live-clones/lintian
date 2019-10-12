@@ -1,7 +1,7 @@
 Tag: build-depends-on-an-obsolete-java-package
 Severity: normal
 Certainty: certain
-Check: fields
+Check: fields/package-relations
 Ref: java-policy 2.2
 Info: The package build-depends on an obsolete Java dependency.
  It should build-depend on default-jdk instead.

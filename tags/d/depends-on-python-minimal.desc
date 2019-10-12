@@ -1,7 +1,7 @@
 Tag: depends-on-python-minimal
 Severity: important
 Certainty: certain
-Check: fields
+Check: fields/package-relations
 Info: The python-minimal package (and versioned variants thereof) exists
  only to possibly become an Essential package. Depending on it is always
  an error since it should never be installed without python. If it

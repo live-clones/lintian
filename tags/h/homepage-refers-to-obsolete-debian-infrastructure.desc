@@ -1,7 +1,7 @@
 Tag: homepage-refers-to-obsolete-debian-infrastructure
 Severity: normal
 Certainty: certain
-Check: fields
+Check: fields/homepage
 Info: The <tt>Homepage</tt> field for this package points to an area
  within the *.debian.org infrastructure that has been deprecated.
  .

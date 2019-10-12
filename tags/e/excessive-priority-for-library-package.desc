@@ -1,7 +1,7 @@
 Tag: excessive-priority-for-library-package
 Severity: normal
 Certainty: possible
-Check: fields
+Check: fields/priority
 Info: The given package appears to be a library package, but it has "Priority"
  of "required", "important", or "standard".
  .

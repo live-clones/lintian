@@ -4,5 +4,5 @@ Info: You depend on the build-essential package, which is only a
  build environments.
 Severity: important
 Certainty: certain
-Check: fields
+Check: fields/package-relations
 Ref: policy 7.7

@@ -1,7 +1,7 @@
 Tag: depends-on-libdb1-compat
 Severity: important
 Certainty: certain
-Check: fields
+Check: fields/package-relations
 Info: The package seems to declare a relation on libdb1-compat.
  This library exists for compatibility with applications built against
  glibc 2.0 or 2.1. There is intentionally no corresponding development

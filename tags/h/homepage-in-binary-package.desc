@@ -1,7 +1,7 @@
 Tag: homepage-in-binary-package
 Severity: wishlist
 Certainty: possible
-Check: fields
+Check: fields/homepage
 Info: This non-native source package produces at least one binary package
  with a <tt>Homepage</tt> field. However, the source package itself has
  no <tt>Homepage</tt> field. Unfortunately, this results in some

@@ -1,7 +1,7 @@
 Tag: dbg-package-missing-depends
 Severity: normal
 Certainty: certain
-Check: fields
+Check: fields/package-relations
 Info: The given binary package has a name of the form of "X-dbg", indicating it
  contains detached debugging symbols for the package X. If so, it should
  depend on the corresponding package, generally with (= ${binary:Version})

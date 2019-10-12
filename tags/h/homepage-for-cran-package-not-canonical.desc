@@ -1,7 +1,7 @@
 Tag: homepage-for-cran-package-not-canonical
 Severity: wishlist
 Certainty: certain
-Check: fields
+Check: fields/homepage
 Info: The Homepage field for this package points to an uncanonical CRAN URL.
  Please update to use the current canonical URL instead. The canonical URL is
  recommended for use in publications, etc., will always redirect to current

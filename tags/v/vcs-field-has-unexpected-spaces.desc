@@ -1,7 +1,7 @@
 Tag: vcs-field-has-unexpected-spaces
 Severity: normal
 Certainty: possible
-Check: fields
+Check: fields/vcs
 Info: The VCS-* field contains more spaces than expected or spaces at
  places where they were not expected. Where possible, escape valid
  spaces in URIs to avoid any ambiguity with respect to possible future

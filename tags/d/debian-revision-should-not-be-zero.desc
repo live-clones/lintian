@@ -1,7 +1,7 @@
 Tag: debian-revision-should-not-be-zero
 Severity: important
 Certainty: certain
-Check: fields
+Check: fields/version
 Info: The Debian version part (the part after the -) should start with one,
  not with zero. This is to ensure that a correctly-done Maintainer Upload will
  always have a higher version number than a Non-Maintainer upload: a NMU could
