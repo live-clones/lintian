@@ -4,6 +4,11 @@ use strict;
 use warnings;
 
 use Test::More;
+
+use Test::Lintian;
+
+load_profile_for_test;
+
 plan skip_all => 'Not needed for coverage of Lintian'
   if $ENV{'LINTIAN_COVERAGE'};
 eval 'use Test::Pod';

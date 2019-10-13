@@ -652,10 +652,10 @@ sub load_profile_for_test {
      # do just fine...
     $profname ||= 'debian/main';
 
-    unless (@inc) {
-        push @inc, $ENV{'LINTIAN_TEST_ROOT'} if $ENV{'LINTIAN_TEST_ROOT'};
-        push @inc, '/usr/share/lintian' if -d '/usr/share/lintian';
-    }
+    my $location
+      = $ENV{'LINTIAN_ROOT'} ? $ENV{'LINTIAN_ROOT'} : '/usr/share/lintian';
+    push(@inc, $location)
+      unless @inc;
 
     $PROFILE = Lintian::Profile->new($profname, \@inc);
     Lintian::Data->set_vendor($PROFILE);
