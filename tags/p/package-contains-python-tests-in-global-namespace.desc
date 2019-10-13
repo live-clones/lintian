@@ -3,9 +3,11 @@ Severity: normal
 Certainty: certain
 Check: files
 Info: This package appears to contain Python test files such as
- <tt>test_foo.py</tt> in the global module namespace.
+ <tt>test_foo.py</tt> or <tt>test_foo/</tt> in the global module
+ namespace.
  .
  Whilst the tests may be useful in the binary package, it is probably a
  mistake to pollute the "top-level" namespace in this way.
  .
- Please install them to a subdirectory instead.
+ Please install them to a subdirectory of the module being tested
+ instead or simply omit from the binary package entirely.
