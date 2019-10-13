@@ -1,8 +1,21 @@
-lintian (2.26.0+git) UNRELEASED; urgency=medium
+lintian (2.27.0) unstable; urgency=medium
 
-  * WIP
+  [ Chris Lamb]
+  * Don't warn about package-supports-alternative-init-but-no-init.d-script
+    and systemd-service-file-missing-install-key and for units installed in
+    a subdirectory of (for example) /lib/systemd/system. (Closes: #941419)
+  * Update data/fields/perl-provides.
 
- -- Chris Lamb <lamby@debian.org>  Wed, 09 Oct 2019 17:19:32 -0700
+  [ Felix Lechner ]
+  * In the tests, load profiles only from one location, ensuring one is
+    loaded in pod-syposis.t. (Closes: #942252)
+  * Make subchecks of 'fields' stand on their own:
+    - Associate tags with new subchecks for original check 'fields'.
+    - Add to the debian/main profile the new checks split from 'fields'.
+  * Add editing aid section to all Perl files that do not have it, except
+    in tests.
+
+ -- Chris Lamb <lamby@debian.org>  Sun, 13 Oct 2019 22:27:26 +0000
 
 lintian (2.26.0) unstable; urgency=medium
 
