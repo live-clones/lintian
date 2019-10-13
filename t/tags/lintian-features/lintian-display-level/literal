@@ -6,8 +6,8 @@ W: lintian-display-level source: dfsg-version-misspelled 1.0+dsfg-1.1
 W: lintian-display-level source: maintainer-upload-has-incorrect-version-number 1.0+dsfg-1.1
 W: lintian-display-level source: format-3.0-but-debian-changes-patch
 E: lintian-display-level: possible-gpl-code-linked-with-openssl
-E: lintian-display-level: new-essential-package
 I: lintian-display-level: description-synopsis-might-not-be-phrased-properly "Test Lintian --display-level handling."
+E: lintian-display-level: new-essential-package
 E: lintian-display-level: dir-in-usr-local usr/local/share/
 E: lintian-display-level: dir-in-usr-local usr/local/share/lintian/
 E: lintian-display-level: dir-or-file-in-var-lock var/lock/lintian/
