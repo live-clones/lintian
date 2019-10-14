@@ -58,7 +58,6 @@ use File::Path;
 use File::stat;
 use Path::Tiny;
 use File::Temp qw(tempfile);
-use Text::Template;
 
 use constant NEWLINE => qq{\n};
 use constant SPACE => q{ };
