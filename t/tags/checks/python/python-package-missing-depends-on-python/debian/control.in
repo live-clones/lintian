@@ -1,13 +1,13 @@
-Source: {$source}
+Source: [% $source %]
 Priority: optional
 Section: python
-Maintainer: {$author}
-Standards-Version: {$standards_version}
-Build-Depends: {$build_depends}
+Maintainer: [% $author %]
+Standards-Version: [% $standards_version %]
+Build-Depends: [% $build_depends %]
 Rules-Requires-Root: no
 
-Package: python3-{$source}
-Architecture: {$package_architecture}
+Package: python3-[% $source %]
+Architecture: [% $package_architecture %]
 Depends: $\{misc:Depends\}
 Description: Python package with no Python dependencies
  This is a test package designed to exercise some feature or tag of

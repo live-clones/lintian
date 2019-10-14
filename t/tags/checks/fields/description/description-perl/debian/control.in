@@ -1,13 +1,13 @@
-Source: {$source}
+Source: [% $source %]
 Priority: optional
 Section: perl
-Maintainer: {$author}
-Standards-Version: {$standards_version}
-Build-Depends: {$build_depends}
+Maintainer: [% $author %]
+Standards-Version: [% $standards_version %]
+Build-Depends: [% $build_depends %]
 Rules-Requires-Root: no
 
 Package: libdeb-long-description-perl
-Architecture: {$package_architecture}
+Architecture: [% $package_architecture %]
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
 Description: lintian dummy package to test a module name related check
  This package is solely meant for testing a lintian check to argue
@@ -17,7 +17,7 @@ Description: lintian dummy package to test a module name related check
  name is mentioned though.
 
 Package: libdeb-long-description-proper-perl
-Architecture: {$package_architecture}
+Architecture: [% $package_architecture %]
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
 Description: lintian dummy package to test a module name related false positive
  This package is solely meant for testing a lintian check to argue

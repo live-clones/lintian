@@ -1,4 +1,4 @@
-fields ({$version}) {$distribution}; urgency=low
+fields ([% $version %]) [% $distribution %]; urgency=low
 
   * This package adds tests for the following tags:
     - debian-revision-not-well-formed

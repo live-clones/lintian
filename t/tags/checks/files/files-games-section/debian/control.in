@@ -1,48 +1,48 @@
-Source: {$source}
+Source: [% $source %]
 Priority: optional
-Section: {$section}
-Maintainer: {$author}
-Standards-Version: {$standards_version}
-Build-Depends: {$build_depends}
+Section: [% $section %]
+Maintainer: [% $author %]
+Standards-Version: [% $standards_version %]
+Build-Depends: [% $build_depends %]
 Rules-Requires-Root: no
 
-Package: {$source}-both
-Architecture: {$package_architecture}
+Package: [% $source %]-both
+Architecture: [% $package_architecture %]
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
-Conflicts: {$source}-good, {$source}-wrong, {$source}-no-games
-Description: {$description} (both)
+Conflicts: [% $source %]-good, [% $source %]-wrong, [% $source %]-no-games
+Description: [% $description %] (both)
  Package has both regular binaries and games.
  .
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
  things.  It should not be installed like a regular package.
 
-Package: {$source}-good
-Architecture: {$package_architecture}
+Package: [% $source %]-good
+Architecture: [% $package_architecture %]
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
-Description: {$description} (good)
+Description: [% $description %] (good)
  Games package in games section.
  .
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
  things.  It should not be installed like a regular package.
 
-Package: {$source}-no-games
-Architecture: {$package_architecture}
+Package: [% $source %]-no-games
+Architecture: [% $package_architecture %]
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
-Description: {$description} (no games)
+Description: [% $description %] (no games)
  Games package without any games.
  .
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
  things.  It should not be installed like a regular package.
 
-Package: {$source}-wrong
+Package: [% $source %]-wrong
 Section: devel
-Architecture: {$package_architecture}
+Architecture: [% $package_architecture %]
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
-Conflicts: {$source}-good
-Description: {$description} (wrong)
+Conflicts: [% $source %]-good
+Description: [% $description %] (wrong)
  Games package in wrong section.
  .
  This is a test package designed to exercise some feature or tag of

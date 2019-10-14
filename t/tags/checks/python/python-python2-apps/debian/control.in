@@ -1,9 +1,9 @@
-Source: {$source}
+Source: [% $source %]
 Priority: optional
 Section: python
-Maintainer: {$author}
-Build-Depends: {$build_depends}
-Standards-Version: {$standards_version}
+Maintainer: [% $author %]
+Build-Depends: [% $build_depends %]
+Standards-Version: [% $standards_version %]
 Rules-Requires-Root: no
 
 Package: pkg-depends
@@ -53,7 +53,7 @@ Description: Test package with Python 2.x in Suggests
  .
  Description: Test package with Python 2.x in Suggests.
 
-Package: python-{$source}
+Package: python-[% $source %]
 Architecture: all
 Depends: $\{misc:Depends\}, python
 Description: Python 3 module with Python 3.x in Depends
@@ -64,7 +64,7 @@ Description: Python 3 module with Python 3.x in Depends
  .
  Python module with Python 2.x in Depends.
 
-Package: python3-{$source}
+Package: python3-[% $source %]
 Architecture: all
 Depends: $\{misc:Depends\}, python3
 Description: Test package (Python 3)

@@ -1,13 +1,13 @@
-Source: {$source}
+Source: [% $source %]
 Priority: optional
 Section: mail
-Maintainer: {$author}
-Standards-Version: {$standards_version}
-Build-Depends: {$build_depends}
+Maintainer: [% $author %]
+Standards-Version: [% $standards_version %]
+Build-Depends: [% $build_depends %]
 Rules-Requires-Root: no
 
-Package: {$source}
-Architecture: {$package_architecture}
+Package: [% $source %]
+Architecture: [% $package_architecture %]
 Depends: $\{misc:Depends\}
 Description: Package with daemon, but no init.d script
  This is a test package designed to exercise some feature or tag of

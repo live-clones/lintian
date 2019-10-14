@@ -1,15 +1,15 @@
-Source: {$source}
+Source: [% $source %]
 Priority: optional
-Section: {$section}
-Maintainer: {$author}
-Standards-Version: {$standards_version}
-Build-Depends: {$build_depends}
+Section: [% $section %]
+Maintainer: [% $author %]
+Standards-Version: [% $standards_version %]
+Build-Depends: [% $build_depends %]
 Rules-Requires-Root: no
 
-Package: {$source}-with
+Package: [% $source %]-with
 Architecture: all
 Depends: $\{misc:Depends\}, init-system-helpers (>= 1.50)
-Description: {$description} (with)
+Description: [% $description %] (with)
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
  things.  It should not be installed like a regular package.  It may
@@ -17,10 +17,10 @@ Description: {$description} (with)
  .
  This package has the dependency.
 
-Package: {$source}-without
+Package: [% $source %]-without
 Architecture: all
 Depends: $\{misc:Depends\}
-Description: {$description} (without)
+Description: [% $description %] (without)
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
  things.  It should not be installed like a regular package.  It may

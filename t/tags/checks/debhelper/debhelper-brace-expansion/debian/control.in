@@ -1,78 +1,78 @@
-Source: {$source}
+Source: [% $source %]
 Priority: optional
-Section: {$section}
-Maintainer: {$author}
-Standards-Version: {$standards_version}
-Build-Depends: {$build_depends}
+Section: [% $section %]
+Maintainer: [% $author %]
+Standards-Version: [% $standards_version %]
+Build-Depends: [% $build_depends %]
 Rules-Requires-Root: no
 
-Package: {$source}
-Architecture: {$package_architecture}
+Package: [% $source %]
+Architecture: [% $package_architecture %]
 Depends: $\{misc:Depends\}
-Description: {$description}
+Description: [% $description %]
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
  things.  It should not be installed like a regular package.  It may
  be an empty package.
 
 Package: debhelper-brace-problem-1
-Architecture: {$package_architecture}
+Architecture: [% $package_architecture %]
 Depends: $\{misc:Depends\}
-Description: {$description} another extra string
+Description: [% $description %] another extra string
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
  things.  It should not be installed like a regular package. Extra
  string.  It may be an empty package.
 
 Package: debhelper-brace-problem-2
-Architecture: {$package_architecture}
+Architecture: [% $package_architecture %]
 Depends: $\{misc:Depends\}
-Description: {$description} another extra string three
+Description: [% $description %] another extra string three
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
  things.  It should not be installed like a regular package. Extra
  string three.  It may be an empty package.
 
 Package: debhelper-brace-problem-3
-Architecture: {$package_architecture}
+Architecture: [% $package_architecture %]
 Depends: $\{misc:Depends\}
-Description: {$description} three test case
+Description: [% $description %] three test case
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
  things.  It should not be installed like a regular package. Extra
  string three test case. It may be an empty package.
 
 Package: debhelper-brace-problem-4
-Architecture: {$package_architecture}
+Architecture: [% $package_architecture %]
 Depends: $\{misc:Depends\}
-Description: {$description} fourth test case
+Description: [% $description %] fourth test case
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
  things.  It should not be installed like a regular package. Extra
  string fourth test case. It may be an empty package.
 
 Package: debhelper-brace-problem-5
-Architecture: {$package_architecture}
+Architecture: [% $package_architecture %]
 Depends: $\{misc:Depends\}
-Description: {$description} fifth test case
+Description: [% $description %] fifth test case
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
  things.  It should not be installed like a regular package. Extra
  string fifth test case. It may be an empty package.
 
 Package: debhelper-brace-problem-6
-Architecture: {$package_architecture}
+Architecture: [% $package_architecture %]
 Depends: $\{misc:Depends\}
-Description: {$description} sixth test case
+Description: [% $description %] sixth test case
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
  things.  It should not be installed like a regular package. Extra
  string sixth test case. It may be an empty package.
 
 Package: debhelper-brace-problem-good
-Architecture: {$package_architecture}
+Architecture: [% $package_architecture %]
 Depends: $\{misc:Depends\}
-Description: {$description} good test case
+Description: [% $description %] good test case
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
  things.  It should not be installed like a regular package. Should

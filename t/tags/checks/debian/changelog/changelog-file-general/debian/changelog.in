@@ -1,7 +1,7 @@
-{$source} (1:{$version}) unstable; urgency=low
+[% $source %] (1:[% $version %]) unstable; urgency=low
 
 
-  * Test: {$testname}
+  * Test: [% $testname %]
   * Upload to experimental.
   * improbable-bug-number-in-closes (Closes: #1234)
   * Another bug closer without a colon (Closes #555555)
@@ -23,19 +23,19 @@
   * It might even fix TEMP-1234567-abcdef, though probably not.
   * We refer to the epoch bump here.
 
- -- {$author}  {$date}
+ -- [% $author %]  [% $date %]
 
-{$source} ({$version}) unstable; urgency=low
+[% $source %] ([% $version %]) unstable; urgency=low
 
   * Duplicate changelog entry to trigger tags.
 
- -- Unknown <unknown@unknown>  {$date}
+ -- Unknown <unknown@unknown>  [% $date %]
 
-{$source} (0.1) unstable; urgency=low
+[% $source %] (0.1) unstable; urgency=low
 
   * Used to be a syntax error here.
 
- -- {$author}  {$date}
+ -- [% $author %]  [% $date %]
 
 Local variables:
 add-log-mailing-address: "rra@debian.org"

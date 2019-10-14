@@ -1,29 +1,29 @@
-Source: {$source}
+Source: [% $source %]
 Section: httpd
 Priority: optional
 Maintainer:  Big Kahuna <kahuna@example.com>
-Uploaders: {$author}
-Standards-Version: {$standards_version}
-Build-Depends: {$build_depends}
+Uploaders: [% $author %]
+Standards-Version: [% $standards_version %]
+Build-Depends: [% $build_depends %]
 Rules-Requires-Root: no
 
 Package: libapache2-mod-foo
-Architecture: {$package_architecture}
+Architecture: [% $package_architecture %]
 Depends: $\{shlibs:Depends\},
  $\{misc:Depends\},
  apache2-api-19700101
-Description: {$description}
+Description: [% $description %]
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
  things.  It should not be installed like a regular package.  It may
  be an empty package.
 
 Package: libapache2-modbaz
-Architecture: {$package_architecture}
+Architecture: [% $package_architecture %]
 Depends: $\{shlibs:Depends\},
  $\{misc:Depends\},
  apache2.2-common,
-Description: {$description} don't care
+Description: [% $description %] don't care
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
  things.  It should not be installed like a regular package.  It may
@@ -32,11 +32,11 @@ Description: {$description} don't care
  To avoid duplicate description warnings this line differs. Ignore me.
 
 Package: libapache2-mod-foo2
-Architecture: {$package_architecture}
+Architecture: [% $package_architecture %]
 Depends: $\{shlibs:Depends\},
  $\{misc:Depends\},
  apache2-api-19700101,
-Description: {$description} still don't care
+Description: [% $description %] still don't care
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
  things.  It should not be installed like a regular package.  It may

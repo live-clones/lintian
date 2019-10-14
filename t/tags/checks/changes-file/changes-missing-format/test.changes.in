@@ -1,11 +1,11 @@
-Date: {$date}
-Source: {$source}
-Binary: {$source}
+Date: [% $date %]
+Source: [% $source %]
+Binary: [% $source %]
 Architecture: source all
-Version: {$version}
+Version: [% $version %]
 Distribution: unstable
 Urgency: low
-Maintainer: {$author}
-Changed-By: {$author}
+Maintainer: [% $author %]
+Changed-By: [% $author %]
 Description:
- {$source} - {$description}
+ [% $source %] - [% $description %]

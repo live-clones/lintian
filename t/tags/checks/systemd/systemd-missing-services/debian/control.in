@@ -1,16 +1,16 @@
-Source: {$source}
+Source: [% $source %]
 Priority: optional
-Section: {$section}
-Maintainer: {$author}
-Standards-Version: {$standards_version}
-Build-Depends: {$build_depends}
+Section: [% $section %]
+Maintainer: [% $author %]
+Standards-Version: [% $standards_version %]
+Build-Depends: [% $build_depends %]
 Rules-Requires-Root: no
 
-Package: {$source}-with
-Architecture: {$package_architecture}
+Package: [% $source %]-with
+Architecture: [% $package_architecture %]
 Pre-Depends: $\{misc:Pre-Depends\}
 Depends: $\{misc:Depends\}, lsb-base (>= 3.0-6)
-Description: {$description} - with .service file
+Description: [% $description %] - with .service file
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
  things.  It should not be installed like a regular package.  It may
@@ -18,11 +18,11 @@ Description: {$description} - with .service file
  .
  This package has a .service file for its initscript.
 
-Package: {$source}-template
-Architecture: {$package_architecture}
+Package: [% $source %]-template
+Architecture: [% $package_architecture %]
 Pre-Depends: $\{misc:Pre-Depends\}
 Depends: $\{misc:Depends\}, lsb-base (>= 3.0-6)
-Description: {$description} - with @.service template file
+Description: [% $description %] - with @.service template file
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
  things.  It should not be installed like a regular package.  It may
@@ -30,11 +30,11 @@ Description: {$description} - with @.service template file
  .
  This package has a @.service template file for its initscript.
 
-Package: {$source}-without
-Architecture: {$package_architecture}
+Package: [% $source %]-without
+Architecture: [% $package_architecture %]
 Pre-Depends: $\{misc:Pre-Depends\}
 Depends: $\{misc:Depends\}, lsb-base (>= 3.0-6)
-Description: {$description} - without .service file
+Description: [% $description %] - without .service file
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
  things.  It should not be installed like a regular package.  It may
@@ -42,11 +42,11 @@ Description: {$description} - without .service file
  .
  This package does not have a .service file for its initscript.
 
-Package: {$source}-without-rcs
-Architecture: {$package_architecture}
+Package: [% $source %]-without-rcs
+Architecture: [% $package_architecture %]
 Pre-Depends: $\{misc:Pre-Depends\}
 Depends: $\{misc:Depends\}, lsb-base (>= 3.0-6)
-Description: {$description} - rcS script without .service file
+Description: [% $description %] - rcS script without .service file
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
  things.  It should not be installed like a regular package.  It may

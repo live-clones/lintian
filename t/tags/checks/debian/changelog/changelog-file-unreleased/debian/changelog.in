@@ -1,13 +1,13 @@
-{$source} ({$version}) {$distribution}; urgency=low
+[% $source %] ([% $version %]) [% $distribution %]; urgency=low
 
   * Lintian Test Suite.
-  * Test: {$testname}
+  * Test: [% $testname %]
 
- -- {$author}  {$date}
+ -- [% $author %]  [% $date %]
 
-{$source} (1.0) unstable; urgency=low
+[% $source %] (1.0) unstable; urgency=low
 
   * An older changelog entry to test suppression of errors about the
     changelog entry having the same date as the previous one.
 
- -- {$author}  {$date}
+ -- [% $author %]  [% $date %]

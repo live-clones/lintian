@@ -1,22 +1,22 @@
-Source: {$source}
+Source: [% $source %]
 Priority: optional
-Section: {$section}
-Maintainer: {$author}
-Standards-Version: {$standards_version}
+Section: [% $section %]
+Maintainer: [% $author %]
+Standards-Version: [% $standards_version %]
 Rules-Requires-Root: no
 
-Package: {$source}
-Architecture: {$package_architecture}
-Description: {$description}
+Package: [% $source %]
+Architecture: [% $package_architecture %]
+Description: [% $description %]
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
  things.  It should not be installed like a regular package.  It may
  be an empty package.
 
 Package: debhelper-pre-depends
-Architecture: {$package_architecture}
+Architecture: [% $package_architecture %]
 Pre-Depends: $\{misc:Depends\}
-Description: {$description} extra string
+Description: [% $description %] extra string
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
  things.  It should not be installed like a regular package. Extra
@@ -24,9 +24,9 @@ Description: {$description} extra string
  be an empty package.
 
 Package: debhelper-suggests
-Architecture: {$package_architecture}
+Architecture: [% $package_architecture %]
 Suggests: $\{misc:Depends\}
-Description: {$description} another extra string
+Description: [% $description %] another extra string
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
  things.  It should not be installed like a regular package. Extra

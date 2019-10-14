@@ -1,16 +1,16 @@
-Source: {$source}
+Source: [% $source %]
 Priority: optional
-Section: {$section}
-Maintainer: {$author}
-Standards-Version: {$standards_version}
-Build-Depends: {$build_depends}
+Section: [% $section %]
+Maintainer: [% $author %]
+Standards-Version: [% $standards_version %]
+Build-Depends: [% $build_depends %]
 Rules-Requires-Root: no
 
 Package: libtest-simple-perl
 Section: perl
 Architecture: all
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
-Description: {$description}
+Description: [% $description %]
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
  things.  It should not be installed like a regular package.  It may
@@ -20,7 +20,7 @@ Package: libversion-perl
 Section: perl
 Architecture: all
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
-Description: another {$description}
+Description: another [% $description %]
  This is another test package, designed to exercise epoch handling
  in the 'package-superseded-by-perl' check. It is part of the Lintian
  test suite and may do very odd things.  It should not be installed like

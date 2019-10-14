@@ -1,24 +1,24 @@
-Source: {$source}
+Source: [% $source %]
 Priority: optional
-Section: {$section}
-Maintainer: {$author}
-Standards-Version: {$standards_version}
-Build-Depends: {$build_depends}
+Section: [% $section %]
+Maintainer: [% $author %]
+Standards-Version: [% $standards_version %]
+Build-Depends: [% $build_depends %]
 Rules-Requires-Root: no
 
-Package: {$source}
+Package: [% $source %]
 Architecture: all
 Depends: $\{misc:Depends\}
-Description: {$description}
+Description: [% $description %]
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
  things.  It should not be installed like a regular package.  It may
  be an empty package.
 
-Package: {$source}-has-depends
+Package: [% $source %]-has-depends
 Architecture: all
 Depends: $\{misc:Depends\}, sensible-utils
-Description: {$description} (with dependency)
+Description: [% $description %] (with dependency)
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
  things.  It should not be installed like a regular package.  It may
@@ -26,11 +26,11 @@ Description: {$description} (with dependency)
  .
  This package has a dependency on sensible-utils.
 
-Package: {$source}-has-recommends
+Package: [% $source %]-has-recommends
 Architecture: all
 Depends: $\{misc:Depends\}
 Recommends: sensible-utils
-Description: {$description} (with Recommends dependency)
+Description: [% $description %] (with Recommends dependency)
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
  things.  It should not be installed like a regular package.  It may
@@ -38,11 +38,11 @@ Description: {$description} (with Recommends dependency)
  .
  This package has a Recommends dependency on sensible-utils.
 
-Package: {$source}-has-suggests
+Package: [% $source %]-has-suggests
 Architecture: all
 Depends: $\{misc:Depends\}
 Suggests: sensible-utils
-Description: {$description} (with Suggests dependency)
+Description: [% $description %] (with Suggests dependency)
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
  things.  It should not be installed like a regular package.  It may

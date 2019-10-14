@@ -1,4 +1,4 @@
-foo++ ({$version}) {$distribution}; urgency=low
+foo++ ([% $version %]) [% $distribution %]; urgency=low
 
   * Add a fake README.Debian to trigger a warning.
   * This should trigger

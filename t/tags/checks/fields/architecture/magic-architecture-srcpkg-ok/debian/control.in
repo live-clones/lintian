@@ -1,9 +1,9 @@
-Source: {$source}
-Section: {$section}
+Source: [% $source %]
+Section: [% $section %]
 Priority: optional
-Maintainer: {$author}
-Build-Depends: {$build_depends}
-Standards-Version: {$standards_version}
+Maintainer: [% $author %]
+Build-Depends: [% $build_depends %]
+Standards-Version: [% $standards_version %]
 
 Package: magic-architecture-srcpkg-ok-data
 Architecture: all

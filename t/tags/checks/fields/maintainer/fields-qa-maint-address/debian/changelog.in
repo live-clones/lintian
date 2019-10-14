@@ -1,7 +1,7 @@
-{$source} ({$version}) unstable; urgency=low
+[% $source %] ([% $version %]) unstable; urgency=low
 
   * Orphaned.
   * Lintian Test Suite.
-  * Test: {$testname}
+  * Test: [% $testname %]
 
- -- Debian QA Group <debian-qa@lists.debian.org>  {$date}
+ -- Debian QA Group <debian-qa@lists.debian.org>  [% $date %]

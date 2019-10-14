@@ -1,17 +1,17 @@
-Source: {$source}
+Source: [% $source %]
 Priority: optional
 Section: python
-Maintainer: {$author}
-Standards-Version: {$standards_version}
+Maintainer: [% $author %]
+Standards-Version: [% $standards_version %]
 X-Python3-Version: >= 3.5
 XS-Python-Version: >= 2.7
-Build-Depends: {$build_depends}
+Build-Depends: [% $build_depends %]
 Rules-Requires-Root: no
 
-Package: not-{$source}
-Architecture: {$package_architecture}
+Package: not-[% $source %]
+Architecture: [% $package_architecture %]
 Depends: $\{misc:Depends\}
-Description: {$description}
+Description: [% $description %]
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
  things.  It should not be installed like a regular package.  It may

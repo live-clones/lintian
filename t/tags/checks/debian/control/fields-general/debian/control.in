@@ -1,16 +1,16 @@
-Source: {$source}
+Source: [% $source %]
 Priority: optional
-Section: {$section}
-Maintainer: {$author}
-Standards-Version: {$standards_version}
-Build-Depends: {$build_depends}
+Section: [% $section %]
+Maintainer: [% $author %]
+Standards-Version: [% $standards_version %]
+Build-Depends: [% $build_depends %]
 Rules-Requires-Root: no
 Homepage: http://lintian.debian.org/
 
-Package: {$source}
-Architecture: {$package_architecture}
+Package: [% $source %]
+Architecture: [% $package_architecture %]
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
-Description: {$description}
+Description: [% $description %]
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
  things.  It should not be installed like a regular package.  It may
@@ -18,11 +18,11 @@ Description: {$description}
 # Whoops, typo
 Homepage: ttp://lintian.debian.org/
 
-Package: {$source}-dbg
+Package: [% $source %]-dbg
 Section: debug
-Architecture: {$package_architecture}
+Architecture: [% $package_architecture %]
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
-Description: {$description} (dbg)
+Description: [% $description %] (dbg)
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
  things.  It should not be installed like a regular package.  It may
@@ -32,11 +32,11 @@ Description: {$description} (dbg)
 # ... and some unneeded <>
 Homepage: <http://lintian.debian.org/>
 
-Package: {$source}-debug
+Package: [% $source %]-debug
 Section: debug
-Architecture: {$package_architecture}
+Architecture: [% $package_architecture %]
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
-Description: {$description} (debug)
+Description: [% $description %] (debug)
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
  things.  It should not be installed like a regular package.  It may

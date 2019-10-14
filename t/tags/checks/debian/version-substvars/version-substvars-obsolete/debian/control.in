@@ -1,9 +1,9 @@
-Source: {$source}
+Source: [% $source %]
 Priority: optional
-Section: {$section}
-Maintainer: {$author}
-Standards-Version: {$standards_version}
-Build-Depends: {$build_depends}
+Section: [% $section %]
+Maintainer: [% $author %]
+Standards-Version: [% $standards_version %]
+Build-Depends: [% $build_depends %]
 Rules-Requires-Root: no
 
 Package: program-bin
@@ -11,7 +11,7 @@ Architecture: any
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\},
          program-data (= $\{binary:Version\}),
          program-data-extra (= $\{source:Version\})
-Description: {$description}
+Description: [% $description %]
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
  things.  It should not be installed like a regular package.  It may
@@ -23,7 +23,7 @@ Architecture: all
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\},
          foreign-pkg:any (= $\{Source-Version\})
 Replaces: other-foreign-pkg:any (<< $\{binary:Version\})
-Description: {$description} - data
+Description: [% $description %] - data
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
  things.  It should not be installed like a regular package.  It may
@@ -36,7 +36,7 @@ Architecture: any
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\},
          program-bin:any (= $\{source:Version\}),
          program-data (>= $\{binary:Version\})
-Description: {$description} - extra utils
+Description: [% $description %] - extra utils
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
  things.  It should not be installed like a regular package.  It may
@@ -48,7 +48,7 @@ Package: program-data-extra
 Architecture: all
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\},
          program-bin:any (= $\{binary:Version\}),
-Description: {$description} - extra data
+Description: [% $description %] - extra data
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
  things.  It should not be installed like a regular package.  It may

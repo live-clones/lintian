@@ -1,15 +1,15 @@
-Source: {$source}
+Source: [% $source %]
 Priority: optional
 Section: libs
-Maintainer: {$author}
-Standards-Version: {$standards_version}
-Build-Depends: {$build_depends}
+Maintainer: [% $author %]
+Standards-Version: [% $standards_version %]
+Build-Depends: [% $build_depends %]
 Rules-Requires-Root: no
 
 Package: libnoshf1
 Architecture: any
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
-Description: {$description} (no shlibs file)
+Description: [% $description %] (no shlibs file)
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
  things.  It should not be installed like a regular package.
@@ -19,7 +19,7 @@ Description: {$description} (no shlibs file)
 Package: libeshf1
 Architecture: any
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
-Description: {$description} (empty shlibs file)
+Description: [% $description %] (empty shlibs file)
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
  things.  It should not be installed like a regular package.
@@ -29,7 +29,7 @@ Description: {$description} (empty shlibs file)
 Package: libunshf1
 Architecture: any
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
-Description: {$description} (unused entry)
+Description: [% $description %] (unused entry)
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
  things.  It should not be installed like a regular package.
@@ -39,7 +39,7 @@ Description: {$description} (unused entry)
 Package: libfdshf1
 Architecture: any
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
-Description: {$description} (foreign dep)
+Description: [% $description %] (foreign dep)
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
  things.  It should not be installed like a regular package.
@@ -49,7 +49,7 @@ Description: {$description} (foreign dep)
 Package: libdupshf1
 Architecture: any
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
-Description: {$description} (dup entry)
+Description: [% $description %] (dup entry)
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
  things.  It should not be installed like a regular package.

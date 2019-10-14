@@ -1,24 +1,24 @@
-Source: {$source}
+Source: [% $source %]
 Priority: optional
-Section: {$section}
-Maintainer: {$author}
-Standards-Version: {$standards_version}
-Build-Depends: {$build_depends}
+Section: [% $section %]
+Maintainer: [% $author %]
+Standards-Version: [% $standards_version %]
+Build-Depends: [% $build_depends %]
 Rules-Requires-Root: no
 
-Package: {$source}
+Package: [% $source %]
 Architecture: any
-Depends: $\{misc:Depends\}, {$source}-data
-Description: {$description}
+Depends: $\{misc:Depends\}, [% $source %]-data
+Description: [% $description %]
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
  things.  It should not be installed like a regular package.  It may
  be an empty package.
 
-Package: {$source}-data
+Package: [% $source %]-data
 Architecture: all
 Depends: $\{misc:Depends\},
-Description: {$description} - data
+Description: [% $description %] - data
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
  things.  It should not be installed like a regular package.  It may

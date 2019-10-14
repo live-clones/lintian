@@ -1,6 +1,6 @@
-{$source} ({$version}) unstable; urgency=low
+[% $source %] ([% $version %]) unstable; urgency=low
 
   * Lintian Test Suite.
-  * Test: {$testname}
+  * Test: [% $testname %]
 
- -- Russ Allbery <rra@DebIAN.org>  {$date}
+ -- Russ Allbery <rra@DebIAN.org>  [% $date %]

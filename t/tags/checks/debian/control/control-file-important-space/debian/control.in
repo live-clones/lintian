@@ -1,17 +1,17 @@
-Source: {$source}
+Source: [% $source %]
 Priority: optional
-Section: {$section}
-Maintainer: {$author}
-Standards-Version: {$standards_version}
-Build-Depends: {$build_depends}
+Section: [% $section %]
+Maintainer: [% $author %]
+Standards-Version: [% $standards_version %]
+Build-Depends: [% $build_depends %]
 Rules-Requires-Root: no
 Homepage: http://lintian.debian.org/
 
-Package: {$source}-broken
+Package: [% $source %]-broken
 Architecture: any-amd64 any-arm64 any-mips64 any-mips64el any-ia64
               any-ppc64 any-ppc64el any-sparc64
 Depends: $\{misc:Depends\}
-Description: {$description} (multiline architecture, broken)
+Description: [% $description %] (multiline architecture, broken)
  This is a (broken) test package designed to exercise some feature or
  tag of Lintian.  It is part of the Lintian test suite and may do very
  odd things.  It should not be installed like a regular package.  It
@@ -20,10 +20,10 @@ Description: {$description} (multiline architecture, broken)
  The Architecture (multi-)line example above is taken from
  https://bugs.debian.org/780473
 
-Package: {$source}-fine-any-something
+Package: [% $source %]-fine-any-something
 Architecture: any-amd64 any-arm64 any-mips64 any-mips64el any-ia64 any-ppc64 any-ppc64el any-sparc64
 Depends: $\{misc:Depends\}
-Description: {$description} (any-something, fine)
+Description: [% $description %] (any-something, fine)
  This is a (non-broken) test package designed to exercise some feature
  or tag of Lintian.  It is part of the Lintian test suite and may do
  very odd things.  It should not be installed like a regular package.
@@ -31,10 +31,10 @@ Description: {$description} (any-something, fine)
  .
  This "any-something" package should not show up.
 
-Package: {$source}-fine-all
+Package: [% $source %]-fine-all
 Architecture: all
 Depends: $\{misc:Depends\}
-Description: {$description} (all, fine)
+Description: [% $description %] (all, fine)
  This is a (non-broken) test package designed to exercise some feature
  or tag of Lintian.  It is part of the Lintian test suite and may do
  very odd things.  It should not be installed like a regular package.

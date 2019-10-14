@@ -1,15 +1,15 @@
-Source: {$source}
+Source: [% $source %]
 Priority: optional
-Section: {$section}
-Maintainer: {$author}
-Standards-Version: {$standards_version}
-Build-Depends: {$build_depends}, javahelper, default-jdk-headless | default-jdk
+Section: [% $section %]
+Maintainer: [% $author %]
+Standards-Version: [% $standards_version %]
+Build-Depends: [% $build_depends %], javahelper, default-jdk-headless | default-jdk
 Rules-Requires-Root: no
 
 Package: libtesta-java
 Architecture: all
 Depends: $\{misc:Depends\}
-Description: {$description} - part A
+Description: [% $description %] - part A
  This is a test package designed to test various aspects of the
  java-related QA code in lintian. First part.
  .
@@ -18,7 +18,7 @@ Description: {$description} - part A
 Package: libcodeless-java
 Architecture: all
 Depends: $\{misc:Depends\}
-Description: {$description} - codeless
+Description: [% $description %] - codeless
  This is a test package designed to test various aspects of the
  java-related QA code in lintian. This package should not be
  installed.
@@ -28,7 +28,7 @@ Description: {$description} - codeless
 Package: libmanifestless-java
 Architecture: all
 Depends: $\{misc:Depends\}
-Description: {$description} - manifestless
+Description: [% $description %] - manifestless
  This is a test package designed to test various aspects of the
  java-related QA code in lintian. This package should not be
  installed.
@@ -38,7 +38,7 @@ Description: {$description} - manifestless
 Package: libtestc-java
 Architecture: all
 Depends: $\{misc:Depends\}
-Description: {$description} - part C
+Description: [% $description %] - part C
  This is a test package designed to test various aspects of the
  java-related QA code in lintian. Third part.
  .
@@ -47,7 +47,7 @@ Description: {$description} - part C
 Package: libtest-maven-plugin-java
 Architecture: all
 Depends: $\{misc:Depends\}
-Description: {$description} - part D
+Description: [% $description %] - part D
  This is a test package designed to test various aspects of the
  java-related QA code in lintian. Fourth part.
  .
@@ -56,7 +56,7 @@ Description: {$description} - part D
 Package: unparsable
 Architecture: all
 Depends: $\{misc:Depends\}
-Description: {$description} - unparsable
+Description: [% $description %] - unparsable
  This is a test package designed to test various aspects of the
  java-related QA code in lintian. The unparsable part.
  .
@@ -65,7 +65,7 @@ Description: {$description} - unparsable
 Package: libcontains-source-java
 Architecture: all
 Depends: $\{misc:Depends\}
-Description: {$description} - contains .java source
+Description: [% $description %] - contains .java source
  This is a test package designed to test various aspects of the
  java-related QA code in lintian. This package should not be
  installed.

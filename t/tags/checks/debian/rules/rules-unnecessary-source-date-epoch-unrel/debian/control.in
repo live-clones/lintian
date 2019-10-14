@@ -1,12 +1,12 @@
-Source: {$source}
+Source: [% $source %]
 Priority: optional
 Section: python
-Maintainer: {$author}
-Standards-Version: {$standards_version}
-Build-Depends: {$build_depends}, dpkg-dev (>= 1.18.8), debhelper (>= 10.10)
+Maintainer: [% $author %]
+Standards-Version: [% $standards_version %]
+Build-Depends: [% $build_depends %], dpkg-dev (>= 1.18.8), debhelper (>= 10.10)
 Rules-Requires-Root: no
 
-Package: {$source}
+Package: [% $source %]
 Architecture: all
 Depends: $\{misc:Depends\}
 Description: Test package

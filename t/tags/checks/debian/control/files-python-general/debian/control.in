@@ -1,15 +1,15 @@
-Source: {$source}
+Source: [% $source %]
 Priority: optional
 Section: python
-Maintainer: {$author}
-Standards-Version: {$standards_version}
-Build-Depends: {$build_depends}, dpkg-dev (>= 1.16.1~)
+Maintainer: [% $author %]
+Standards-Version: [% $standards_version %]
+Build-Depends: [% $build_depends %], dpkg-dev (>= 1.16.1~)
 Rules-Requires-Root: no
 
 Package: python-kinterbasdb
 Architecture: any
 Depends: $\{misc:Depends\}, $\{shlibs:Depends\}
-Description: {$description}
+Description: [% $description %]
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
  things.  It should not be installed like a regular package.  It may
@@ -20,7 +20,7 @@ Architecture: any
 Section: debug
 Depends: $\{misc:Depends\}, python-kinterbasdb (= $\{binary:Version\}),
  $\{shlibs:Depends\}
-Description: {$description} - debug
+Description: [% $description %] - debug
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
  things.  It should not be installed like a regular package.  It may
@@ -31,7 +31,7 @@ Description: {$description} - debug
 Package: python3-modulename
 Architecture: any
 Depends: $\{misc:Depends\}, $\{shlibs:Depends\}
-Description: {$description} (Python 3.x)
+Description: [% $description %] (Python 3.x)
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
  things.  It should not be installed like a regular package.  It may
@@ -44,7 +44,7 @@ Architecture: any
 Section: debug
 Depends: $\{misc:Depends\}, python3-modulename (= $\{binary:Version\}),
  $\{shlibs:Depends\}
-Description: {$description} - debug (Python 3.x) version
+Description: [% $description %] - debug (Python 3.x) version
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
  things.  It should not be installed like a regular package.  It may

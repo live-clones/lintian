@@ -3,13 +3,13 @@ Section: misc
 Priority: optional
 Maintainer: QA group <packages@qa.debian.org>
 Uploaders: Anyone but Jeroen <jeroen@wolffelaar.nl>
-Build-Depends: {$build_depends}
+Build-Depends: [% $build_depends %]
 Standards-Version: 3.1.1
 Rules-Requires-Root: binary-targets
 XS-Dm-Upload-Allowed: Yes
 
 Package: maintainer-scripts
-Architecture: {$package_architecture}
+Architecture: [% $package_architecture %]
 Depends: test
 Description: test lintian's maintainer script checks
  This is a test package designed to exercise some feature or tag of

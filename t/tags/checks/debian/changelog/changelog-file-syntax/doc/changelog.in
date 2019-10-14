@@ -1,22 +1,22 @@
-{$source} ({$version}) {$distribution}; urgency=low
+[% $source %] ([% $version %]) [% $distribution %]; urgency=low
 
   * Lintian Test Suite.
-  * Test: {$testname}
+  * Test: [% $testname %]
 
- -- {$author}  {$date}
+ -- [% $author %]  [% $date %]
 
-{$source} ({$prev-version}) unstable; urgency=low
-
-  * Lintian Test Suite.
-  * Test: {$testname}
-
- -- {$author}  Sat, 09 Apr 2016 10:56:49 +0000
-
-{$source} () unstable; urgency=low
+[% $source %] ([% $prev-version %]) unstable; urgency=low
 
   * Lintian Test Suite.
-  * Test: {$testname}
+  * Test: [% $testname %]
+
+ -- [% $author %]  Sat, 09 Apr 2016 10:56:49 +0000
+
+[% $source %] () unstable; urgency=low
+
+  * Lintian Test Suite.
+  * Test: [% $testname %]
 
   * Suppress "should close ITP bug" messages.  (Closes: #123456)
 
- -- {$author}  Sat, 02 Apr 2016 10:56:49 +0000
+ -- [% $author %]  Sat, 02 Apr 2016 10:56:49 +0000

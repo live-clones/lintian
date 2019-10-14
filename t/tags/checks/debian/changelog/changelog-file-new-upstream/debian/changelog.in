@@ -1,14 +1,14 @@
-{$source} ({$version}) unstable; urgency=low
+[% $source %] ([% $version %]) unstable; urgency=low
 
   * New upstream bugfix release.
   * Lintian Test Suite.
-  * Test: {$testname}
+  * Test: [% $testname %]
 
- -- {$author}  {$date}
+ -- [% $author %]  [% $date %]
 
-{$source} (1.0-1) unstable; urgency=low
+[% $source %] (1.0-1) unstable; urgency=low
 
   * Old changelog entry to trigger the tag.
 
- -- {$author}  Sat, 20 Mar 2010 16:09:18 -0700
+ -- [% $author %]  Sat, 20 Mar 2010 16:09:18 -0700
 

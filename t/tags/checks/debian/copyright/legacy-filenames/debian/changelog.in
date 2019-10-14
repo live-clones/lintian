@@ -1,4 +1,4 @@
-filenames ({$version}) {$distribution}; urgency=low
+filenames ([% $version %]) [% $distribution %]; urgency=low
 
   * /me is doing a correct NMU of this package, bumping the epoch too.
 

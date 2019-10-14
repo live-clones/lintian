@@ -1,38 +1,38 @@
-Source: {$source}
+Source: [% $source %]
 Priority: optional
-Section: {$section}
-Maintainer: {$author}
-Standards-Version: {$standards_version}
-Build-Depends: {$build_depends}
+Section: [% $section %]
+Maintainer: [% $author %]
+Standards-Version: [% $standards_version %]
+Build-Depends: [% $build_depends %]
 Rules-Requires-Root: no
 
-Package: {$source}
+Package: [% $source %]
 Architecture: all
-Depends: $\{shlibs:Depends\}, $\{misc:Depends\}, {$source}-dependency
-Description: {$description}
+Depends: $\{shlibs:Depends\}, $\{misc:Depends\}, [% $source %]-dependency
+Description: [% $description %]
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
  things.  It should not be installed like a regular package.  It may
  be an empty package.
 
-Package: {$source}-dependency
+Package: [% $source %]-dependency
 Architecture: all
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
-Description: {$description} (dependency)
+Description: [% $description %] (dependency)
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
  things.  It should not be installed like a regular package.  It may
  be an empty package.
  .
- This is a dependency for {$source}
+ This is a dependency for [% $source %]
 
-Package: {$source}-not-a-dependency
+Package: [% $source %]-not-a-dependency
 Architecture: all
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
-Description: {$description} (not a dependency)
+Description: [% $description %] (not a dependency)
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
  things.  It should not be installed like a regular package.  It may
  be an empty package.
  .
- This is not a dependency for {$source}
+ This is not a dependency for [% $source %]

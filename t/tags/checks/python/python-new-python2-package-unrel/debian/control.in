@@ -1,12 +1,12 @@
-Source: {$source}
+Source: [% $source %]
 Priority: optional
 Section: python
-Maintainer: {$author}
-Standards-Version: {$standards_version}
-Build-Depends: {$build_depends}
+Maintainer: [% $author %]
+Standards-Version: [% $standards_version %]
+Build-Depends: [% $build_depends %]
 Rules-Requires-Root: no
 
-Package: python-{$source}
+Package: python-[% $source %]
 Architecture: all
 Depends: $\{misc:Depends\}, python2.7
 Description: Python 2 package with no corresponding Python 3 package
@@ -15,7 +15,7 @@ Description: Python 2 package with no corresponding Python 3 package
  things.  It should not be installed like a regular package.  It may
  be an empty package.
 
-Package: python3-{$source}
+Package: python3-[% $source %]
 Architecture: all
 Depends: $\{misc:Depends\}, python3
 Description: Python 2 package with corresponding Python 3 package

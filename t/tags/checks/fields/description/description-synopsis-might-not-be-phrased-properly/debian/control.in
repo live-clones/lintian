@@ -1,12 +1,12 @@
-Source: {$source}
+Source: [% $source %]
 Priority: optional
-Section: {$section}
-Maintainer: {$author}
-Standards-Version: {$standards_version}
-Build-Depends: {$build_depends}
+Section: [% $section %]
+Maintainer: [% $author %]
+Standards-Version: [% $standards_version %]
+Build-Depends: [% $build_depends %]
 Rules-Requires-Root: no
 
-Package: {$source}-full-stop
+Package: [% $source %]-full-stop
 Architecture: all
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
 Description: This synopsis ends with a full-stop.
@@ -17,7 +17,7 @@ Description: This synopsis ends with a full-stop.
  things.  It should not be installed like a regular package.  It may
  be an empty package.
 
-Package: {$source}-no-full-stop
+Package: [% $source %]-no-full-stop
 Architecture: all
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
 Description: This synopsis does not end with a full stop
@@ -28,7 +28,7 @@ Description: This synopsis does not end with a full stop
  things.  It should not be installed like a regular package.  It may
  be an empty package.
 
-Package: {$source}-two-sentences
+Package: [% $source %]-two-sentences
 Architecture: all
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
 Description: This synopsis starts a sentence. Then starts another.
@@ -39,7 +39,7 @@ Description: This synopsis starts a sentence. Then starts another.
  things.  It should not be installed like a regular package.  It may
  be an empty package.
 
-Package: {$source}-etc
+Package: [% $source %]-etc
 Architecture: all
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
 Description: This synopsis ends with, etc.
@@ -50,7 +50,7 @@ Description: This synopsis ends with, etc.
  things.  It should not be installed like a regular package.  It may
  be an empty package.
 
-Package: {$source}-eg
+Package: [% $source %]-eg
 Architecture: all
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
 Description: This synopsis contains, e.g. /foo/bar/baz.conf
@@ -61,7 +61,7 @@ Description: This synopsis contains, e.g. /foo/bar/baz.conf
  things.  It should not be installed like a regular package.  It may
  be an empty package.
 
-Package: {$source}-eg-variant
+Package: [% $source %]-eg-variant
 Architecture: all
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
 Description: This synopsis contains, eg. /foo/bar/baz.conf
@@ -72,7 +72,7 @@ Description: This synopsis contains, eg. /foo/bar/baz.conf
  things.  It should not be installed like a regular package.  It may
  be an empty package.
 
-Package: {$source}-2-ellipsis
+Package: [% $source %]-2-ellipsis
 Architecture: all
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
 Description: This synopsis contains a 2-ellipsis .. and other words
@@ -83,7 +83,7 @@ Description: This synopsis contains a 2-ellipsis .. and other words
  things.  It should not be installed like a regular package.  It may
  be an empty package.
 
-Package: {$source}-3-ellipsis
+Package: [% $source %]-3-ellipsis
 Architecture: all
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
 Description: This synopsis contains a 3-ellipsis ... and other words
@@ -94,7 +94,7 @@ Description: This synopsis contains a 3-ellipsis ... and other words
  things.  It should not be installed like a regular package.  It may
  be an empty package.
 
-Package: {$source}-4-ellipsis
+Package: [% $source %]-4-ellipsis
 Architecture: all
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
 Description: This synopsis contains a 4-ellipsis .... and other words
@@ -105,7 +105,7 @@ Description: This synopsis contains a 4-ellipsis .... and other words
  things.  It should not be installed like a regular package.  It may
  be an empty package.
 
-Package: {$source}-misspelt
+Package: [% $source %]-misspelt
 Architecture: all
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
 Description: This synopsis ends with mispelling of stretc.

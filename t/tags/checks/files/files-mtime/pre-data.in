@@ -13,6 +13,6 @@ gzip --best "$rootdir/usr/share/$name/foo"
 # in weird time-zones
 # NB: foo.gz is bad, but changelog.gz is "ok" (ignoring the
 # gzip header has a date).
-NOW="$(date -d "{$date}" +%s)"
+NOW="$(date -d "[% $date %]" +%s)"
 touch -m -d @"$(($NOW+1))" "$rootdir/usr/share/$name/foo.gz"
 touch -m -d @"$NOW" "$rootdir/usr/share/doc/$name/changelog.gz"
