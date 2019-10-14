@@ -374,6 +374,8 @@ sub fill_hash_from_hash {
     my %origin = %{$hashref};
     my %destination;
 
+    $delimiters //= ['[%', '%]'];
+
     # fill hash with itself
     for my $key (keys %origin) {
 
