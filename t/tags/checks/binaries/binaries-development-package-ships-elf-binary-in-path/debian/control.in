@@ -9,7 +9,7 @@ Rules-Requires-Root: no
 Package: libmultiarch-none-dev
 Architecture: any
 Section: libdevel
-Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
+Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: [% $description %] (M-A: none)
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
@@ -20,7 +20,7 @@ Description: [% $description %] (M-A: none)
 Package: libmultiarch-foreign-dev
 Architecture: any
 Section: libdevel
-Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
+Depends: ${shlibs:Depends}, ${misc:Depends}
 Multi-Arch: foreign
 Description: [% $description %] (M-A: foreign)
  This is a test package designed to exercise some feature or tag of
@@ -32,7 +32,7 @@ Description: [% $description %] (M-A: foreign)
 Package: libmultiarch-same-dev
 Architecture: any
 Section: libdevel
-Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
+Depends: ${shlibs:Depends}, ${misc:Depends}
 Multi-Arch: same
 Description: [% $description %] (M-A: same)
  This is a test package designed to exercise some feature or tag of
@@ -44,7 +44,7 @@ Description: [% $description %] (M-A: same)
 Package: libmultiarch-contrib-dev
 Architecture: any
 Section: contrib/libdevel
-Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
+Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: [% $description %] (contrib)
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd

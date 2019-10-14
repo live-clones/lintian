@@ -8,8 +8,8 @@ Rules-Requires-Root: no
 
 Package: [% $source %]-with
 Architecture: [% $package_architecture %]
-Pre-Depends: $\{misc:Pre-Depends\}
-Depends: $\{misc:Depends\}, lsb-base (>= 3.0-6)
+Pre-Depends: ${misc:Pre-Depends}
+Depends: ${misc:Depends}, lsb-base (>= 3.0-6)
 Description: [% $description %] - with .service file
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
@@ -20,8 +20,8 @@ Description: [% $description %] - with .service file
 
 Package: [% $source %]-template
 Architecture: [% $package_architecture %]
-Pre-Depends: $\{misc:Pre-Depends\}
-Depends: $\{misc:Depends\}, lsb-base (>= 3.0-6)
+Pre-Depends: ${misc:Pre-Depends}
+Depends: ${misc:Depends}, lsb-base (>= 3.0-6)
 Description: [% $description %] - with @.service template file
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
@@ -32,8 +32,8 @@ Description: [% $description %] - with @.service template file
 
 Package: [% $source %]-without
 Architecture: [% $package_architecture %]
-Pre-Depends: $\{misc:Pre-Depends\}
-Depends: $\{misc:Depends\}, lsb-base (>= 3.0-6)
+Pre-Depends: ${misc:Pre-Depends}
+Depends: ${misc:Depends}, lsb-base (>= 3.0-6)
 Description: [% $description %] - without .service file
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
@@ -44,8 +44,8 @@ Description: [% $description %] - without .service file
 
 Package: [% $source %]-without-rcs
 Architecture: [% $package_architecture %]
-Pre-Depends: $\{misc:Pre-Depends\}
-Depends: $\{misc:Depends\}, lsb-base (>= 3.0-6)
+Pre-Depends: ${misc:Pre-Depends}
+Depends: ${misc:Depends}, lsb-base (>= 3.0-6)
 Description: [% $description %] - rcS script without .service file
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd

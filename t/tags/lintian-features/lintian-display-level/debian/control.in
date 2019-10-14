@@ -8,7 +8,7 @@ Rules-Requires-Root: no
 
 Package: [% $source %]
 Architecture: [% $package_architecture %]
-Depends: $\{misc:Depends\}, libssl0.9.8 (>= 0abcd)
+Depends: ${misc:Depends}, libssl0.9.8 (>= 0abcd)
 Essential:yes
 Section: [% $section %]
 Description: [% $description %].

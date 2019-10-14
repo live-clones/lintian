@@ -8,7 +8,7 @@ Rules-Requires-Root: no
 
 Package: [% $source %]
 Architecture: any
-Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
+Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: [% $description %]
  Only here as valid dependency for [% $source %]-dbg.
  .
@@ -19,7 +19,7 @@ Description: [% $description %]
 
 Package: [% $source %]-doc
 Architecture: all
-Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
+Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: [% $description %] (doc)
  Test for doc section.
  .
@@ -30,7 +30,7 @@ Description: [% $description %] (doc)
 
 Package: [% $source %]-dbg
 Architecture: any
-Depends: $\{shlibs:Depends\}, $\{misc:Depends\}, [% $source %] (= $\{binary:Version\})
+Depends: ${shlibs:Depends}, ${misc:Depends}, [% $source %] (= ${binary:Version})
 Description: [% $description %] (debug)
  Test for debug section.
  .
@@ -41,7 +41,7 @@ Description: [% $description %] (debug)
 
 Package: lib[% $source %]-dev
 Architecture: [% $package_architecture %]
-Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
+Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: [% $description %] (dev)
  Test for libdevel section.
  .
@@ -52,7 +52,7 @@ Description: [% $description %] (dev)
 
 Package: lib[% $source %]-perl
 Architecture: [% $package_architecture %]
-Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
+Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: [% $description %] (perl)
  Test for perl section.
  .
@@ -63,7 +63,7 @@ Description: [% $description %] (perl)
 
 Package: python-[% $source %]
 Architecture: [% $package_architecture %]
-Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
+Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: [% $description %] (Python)
  Test for Python section.
  .
@@ -74,7 +74,7 @@ Description: [% $description %] (Python)
 
 Package: python3-[% $source %]
 Architecture: [% $package_architecture %]
-Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
+Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: [% $description %] (Python 3)
  Test for Python section for Python 3.
  .
@@ -85,7 +85,7 @@ Description: [% $description %] (Python 3)
 
 Package: lib[% $source %]-ocaml-dev
 Architecture: [% $package_architecture %]
-Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
+Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: [% $description %] (OCaml)
  Test for OCaml section.
  .
@@ -96,7 +96,7 @@ Description: [% $description %] (OCaml)
 
 Package: libjs-[% $source %]
 Architecture: any
-Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
+Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: [% $description %] (Javascript)
  Test for web section.
  .
@@ -107,7 +107,7 @@ Description: [% $description %] (Javascript)
 
 Package: libghc-[% $source %]
 Architecture: [% $package_architecture %]
-Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
+Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: [% $description %] (Haskell)
  Test for Haskell section.
  .
@@ -118,7 +118,7 @@ Description: [% $description %] (Haskell)
 
 Package: lib[% $source %]-cil
 Architecture: [% $package_architecture %]
-Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
+Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: [% $description %] (CLI/Mono)
  Test for CLI/Mono section.
  .
@@ -129,7 +129,7 @@ Description: [% $description %] (CLI/Mono)
 
 Package: libphp-[% $source %]
 Architecture: [% $package_architecture %]
-Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
+Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: [% $description %] (PHP)
  Test for PHP section.
  .
@@ -140,7 +140,7 @@ Description: [% $description %] (PHP)
 
 Package: lib[% $source %]-ruby1.8
 Architecture: [% $package_architecture %]
-Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
+Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: [% $description %] (Ruby)
  Test for Ruby section.
  .
@@ -151,7 +151,7 @@ Description: [% $description %] (Ruby)
 
 Package: lib[% $source %]-java
 Architecture: [% $package_architecture %]
-Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
+Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: [% $description %] (Java)
  Test for Java section.
  .
@@ -162,7 +162,7 @@ Description: [% $description %] (Java)
 
 Package: r-cran-[% $source %]
 Architecture: [% $package_architecture %]
-Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
+Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: [% $description %] (GNU R)
  Test for GNU R section.
  .
@@ -173,7 +173,7 @@ Description: [% $description %] (GNU R)
 
 Package: lib[% $source %]-oldlibs-dev
 Architecture: [% $package_architecture %]
-Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
+Depends: ${shlibs:Depends}, ${misc:Depends}
 Section: oldlibs
 Description: [% $description %] (oldlibs)
  Test for oldlibs section.
@@ -185,7 +185,7 @@ Description: [% $description %] (oldlibs)
 
 Package: [% $source %]-contrib-doc
 Architecture: all
-Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
+Depends: ${shlibs:Depends}, ${misc:Depends}
 Section: contrib/[% $section %]
 Description: [% $description %] (contrib docs)
  Test for suggestion for packages not in main.
@@ -197,7 +197,7 @@ Description: [% $description %] (contrib docs)
 
 Package: gir1.2-[% $source %]-0.1
 Architecture: all
-Depends: $\{shlibs:Depends\}, $\{misc:Depends\}, $\{gir:Depends\}
+Depends: ${shlibs:Depends}, ${misc:Depends}, ${gir:Depends}
 Description: [% $description %] (gir1.2-pkg)
  Test for gir1.2 packages.
  .
@@ -209,7 +209,7 @@ Description: [% $description %] (gir1.2-pkg)
 Package: libnss-[% $source %]
 Architecture: all
 Section: web
-Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
+Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: [% $description %] (NSS module)
  Test for NSS modules.
  .
@@ -220,7 +220,7 @@ Description: [% $description %] (NSS module)
 
 Package: libpam-[% $source %]1
 Architecture: all
-Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
+Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: [% $description %] (PAM module with number suffix)
  Test for PAM modules.
  .
@@ -231,7 +231,7 @@ Description: [% $description %] (PAM module with number suffix)
 
 Package: fonts-[% $source %]1
 Architecture: all
-Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
+Depends: ${shlibs:Depends}, ${misc:Depends}
 Multi-Arch: foreign
 Description: [% $description %] (fonts)
  Test for font modules.
@@ -243,7 +243,7 @@ Description: [% $description %] (fonts)
 
 Package: xfonts-[% $source %]1
 Architecture: all
-Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
+Depends: ${shlibs:Depends}, ${misc:Depends}
 Multi-Arch: foreign
 Description: [% $description %] (xfonts)
  Test for xfonts modules.

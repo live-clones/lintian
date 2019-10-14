@@ -9,7 +9,7 @@ Homepage: http://lintian.debian.org/
 
 Package: fonts-[% $source %]
 Architecture: [% $package_architecture %]
-Depends: $\{misc:Depends\}
+Depends: ${misc:Depends}
 Description: [% $description %] (okay)
  Font package containing fonts.
  .

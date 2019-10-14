@@ -8,7 +8,7 @@ Rules-Requires-Root: no
 
 Package: [% $source %]
 Architecture: all
-Depends: $\{shlibs:Depends\}, $\{misc:Depends\}, [% $source %]-dependency
+Depends: ${shlibs:Depends}, ${misc:Depends}, [% $source %]-dependency
 Description: [% $description %]
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
@@ -17,7 +17,7 @@ Description: [% $description %]
 
 Package: [% $source %]-dependency
 Architecture: all
-Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
+Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: [% $description %] (dependency)
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
@@ -28,7 +28,7 @@ Description: [% $description %] (dependency)
 
 Package: [% $source %]-not-a-dependency
 Architecture: all
-Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
+Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: [% $description %] (not a dependency)
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd

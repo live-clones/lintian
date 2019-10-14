@@ -8,8 +8,8 @@ Rules-Requires-Root: binary-targets
 
 Package: binary
 Architecture: all
-Pre-Depends: $\{misc:Pre-Depends\}
-Depends: $\{misc:Depends\}, lsb-base (>= 3.0-6)
+Pre-Depends: ${misc:Pre-Depends}
+Depends: ${misc:Depends}, lsb-base (>= 3.0-6)
 Description: [% $description %]
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
@@ -19,7 +19,7 @@ Description: [% $description %]
 Package: game
 Architecture: all
 Section: games
-Depends: $\{misc:Depends\}
+Depends: ${misc:Depends}
 Description: [% $description %] - game
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd

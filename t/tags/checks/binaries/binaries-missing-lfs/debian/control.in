@@ -9,7 +9,7 @@ Rules-Requires-Root: no
 Package: libbasic2
 Architecture: [% $package_architecture %]
 Section: libs
-Depends: $\{misc:Depends\}, $\{shlibs:Depends\}
+Depends: ${misc:Depends}, ${shlibs:Depends}
 Description: [% $description %]
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd

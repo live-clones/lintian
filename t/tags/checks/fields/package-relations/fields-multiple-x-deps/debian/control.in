@@ -8,7 +8,7 @@ Rules-Requires-Root: no
 
 Package: [% $source %]
 Architecture: [% $package_architecture %]
-Depends: $\{shlibs:Depends\}, $\{misc:Depends\},
+Depends: ${shlibs:Depends}, ${misc:Depends},
          libstdc++2.10, libstdc++2.10-glibc2.2, libstdc++3.0,
          tk8.2, tk8.3,
          tcl8.0, tcl8.2,

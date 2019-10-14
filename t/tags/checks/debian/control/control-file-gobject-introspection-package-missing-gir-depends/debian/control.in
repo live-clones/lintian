@@ -8,7 +8,7 @@ Rules-Requires-Root: no
 
 Package: gir1.1-missing-gir-depends-2.2
 Architecture: [% $package_architecture %]
-Depends: $\{misc:Depends\}
+Depends: ${misc:Depends}
 Description: [% $description %]
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
@@ -19,7 +19,7 @@ Description: [% $description %]
 
 Package: gir1.1-gir-depends-present-2.2
 Architecture: [% $package_architecture %]
-Depends: $\{misc:Depends\}, $\{gir:Depends\}
+Depends: ${misc:Depends}, ${gir:Depends}
 Description: [% $description %]: False
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd

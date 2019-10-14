@@ -10,7 +10,7 @@ Homepage: https://lintian.debian.org/
 Package: [% $source %]-udeb
 Section: debian-installer
 Architecture: [% $package_architecture %]
-Depends: $\{misc:Depends\}
+Depends: ${misc:Depends}
 XC-Package-Type: udeb
 Description: [% $description %]
  This is a test package designed to exercise some feature or tag of

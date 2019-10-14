@@ -8,7 +8,7 @@ Rules-Requires-Root: no
 
 Package: libfoo1
 Architecture: any
-Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
+Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: [% $description %]
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
@@ -17,8 +17,8 @@ Description: [% $description %]
 Package: libfoo-dev
 Architecture: any
 Section: libdevel
-Depends: $\{shlibs:Depends\}, $\{misc:Depends\},
-          libfoo1 (= $\{binary:Version\})
+Depends: ${shlibs:Depends}, ${misc:Depends},
+          libfoo1 (= ${binary:Version})
 Description: [% $description %] - dev
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd

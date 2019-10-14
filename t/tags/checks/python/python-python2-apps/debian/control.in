@@ -8,7 +8,7 @@ Rules-Requires-Root: no
 
 Package: pkg-depends
 Architecture: all
-Depends: $\{misc:Depends\}, python
+Depends: ${misc:Depends}, python
 Description: Test package with Python 2.x in Depends
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
@@ -19,7 +19,7 @@ Description: Test package with Python 2.x in Depends
 
 Package: pkg-pre-depends
 Architecture: all
-Depends: $\{misc:Depends\}
+Depends: ${misc:Depends}
 Pre-Depends: python2.7
 Description: Test package with Python 2.x in Pre-Suggests
  This is a test package designed to exercise some feature or tag of
@@ -31,7 +31,7 @@ Description: Test package with Python 2.x in Pre-Suggests
 
 Package: pkg-recommends
 Architecture: all
-Depends: $\{misc:Depends\}
+Depends: ${misc:Depends}
 Recommends: python-dev
 Description: Test package with Python 2.x in Recommends
  This is a test package designed to exercise some feature or tag of
@@ -43,7 +43,7 @@ Description: Test package with Python 2.x in Recommends
 
 Package: pkg-suggests
 Architecture: all
-Depends: $\{misc:Depends\}
+Depends: ${misc:Depends}
 Suggests: python, python2.7
 Description: Test package with Python 2.x in Suggests
  This is a test package designed to exercise some feature or tag of
@@ -55,7 +55,7 @@ Description: Test package with Python 2.x in Suggests
 
 Package: python-[% $source %]
 Architecture: all
-Depends: $\{misc:Depends\}, python
+Depends: ${misc:Depends}, python
 Description: Python 3 module with Python 3.x in Depends
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
@@ -66,7 +66,7 @@ Description: Python 3 module with Python 3.x in Depends
 
 Package: python3-[% $source %]
 Architecture: all
-Depends: $\{misc:Depends\}, python3
+Depends: ${misc:Depends}, python3
 Description: Test package (Python 3)
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
@@ -77,7 +77,7 @@ Description: Test package (Python 3)
 
 Package: pkg-depends-any
 Architecture: all
-Depends: $\{misc:Depends\}, python:any
+Depends: ${misc:Depends}, python:any
 Description: Test package with Python 2.x with :any suffix in Depends
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd

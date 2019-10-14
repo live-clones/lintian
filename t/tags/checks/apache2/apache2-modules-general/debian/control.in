@@ -9,8 +9,8 @@ Rules-Requires-Root: no
 
 Package: libapache2-mod-foo
 Architecture: [% $package_architecture %]
-Depends: $\{shlibs:Depends\},
- $\{misc:Depends\},
+Depends: ${shlibs:Depends},
+ ${misc:Depends},
  apache2-api-19700101
 Description: [% $description %]
  This is a test package designed to exercise some feature or tag of
@@ -20,8 +20,8 @@ Description: [% $description %]
 
 Package: libapache2-modbaz
 Architecture: [% $package_architecture %]
-Depends: $\{shlibs:Depends\},
- $\{misc:Depends\},
+Depends: ${shlibs:Depends},
+ ${misc:Depends},
  apache2.2-common,
 Description: [% $description %] don't care
  This is a test package designed to exercise some feature or tag of
@@ -33,8 +33,8 @@ Description: [% $description %] don't care
 
 Package: libapache2-mod-foo2
 Architecture: [% $package_architecture %]
-Depends: $\{shlibs:Depends\},
- $\{misc:Depends\},
+Depends: ${shlibs:Depends},
+ ${misc:Depends},
  apache2-api-19700101,
 Description: [% $description %] still don't care
  This is a test package designed to exercise some feature or tag of

@@ -8,13 +8,13 @@ Rules-Requires-Root: no
 
 Package: [% $source %]
 Architecture: [% $package_architecture %]
-Depends: $\{misc:Depends\}, $\{phppear:Debian-Depends\}
-Recommends: $\{phppear:Debian-Recommends\}
-Breaks: $\{phppear:Debian-Breaks\}
-Description: $\{phppear:summary\}
+Depends: ${misc:Depends}, ${phppear:Debian-Depends}
+Recommends: ${phppear:Debian-Recommends}
+Breaks: ${phppear:Debian-Breaks}
+Description: ${phppear:summary}
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
  things.  It should not be installed like a regular package.  It may
  be an empty package.
  .
- $\{phppear:description\}
+ ${phppear:description}

@@ -8,7 +8,7 @@ Rules-Requires-Root: no
 
 Package: [% $source %]-missing
 Architecture: [% $package_architecture %]
-Depends: $\{misc:Depends\}, runit
+Depends: ${misc:Depends}, runit
 Description: [% $description %] (true positive)
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
@@ -19,8 +19,8 @@ Description: [% $description %] (true positive)
 
 Package: [% $source %]-present
 Architecture: [% $package_architecture %]
-Depends: $\{misc:Depends\}, runit
-Breaks: $\{runit:Breaks\}
+Depends: ${misc:Depends}, runit
+Breaks: ${runit:Breaks}
 Description: [% $description %] (false positive)
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
@@ -31,8 +31,8 @@ Description: [% $description %] (false positive)
 
 Package: [% $source %]-unrelated
 Architecture: all
-Depends: $\{misc:Depends\}
-Breaks: $\{runit:Breaks\}
+Depends: ${misc:Depends}
+Breaks: ${runit:Breaks}
 Description: [% $description %] (unrelated)
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd

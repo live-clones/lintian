@@ -8,8 +8,8 @@ Build-Depends: [% $build_depends %],
 
 Package: [% $source %]
 Architecture: [% $package_architecture %]
-Depends: $\{misc:Depends\}
-Built-Using: $\{misc:Built-Using\}
+Depends: ${misc:Depends}
+Built-Using: ${misc:Built-Using}
 Description: [% $description %]
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
@@ -18,8 +18,8 @@ Description: [% $description %]
 
 Package: [% $source %]-dev
 Architecture: all
-Depends: $\{misc:Depends\}
-Built-Using: $\{misc:Built-Using\}
+Depends: ${misc:Depends}
+Built-Using: ${misc:Built-Using}
 Description: [% $description %] (dev)
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
@@ -30,7 +30,7 @@ Description: [% $description %] (dev)
 
 Package: [% $source %]-clean-dev
 Architecture: all
-Depends: $\{misc:Depends\}
+Depends: ${misc:Depends}
 Description: [% $description %] (clean dev)
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd

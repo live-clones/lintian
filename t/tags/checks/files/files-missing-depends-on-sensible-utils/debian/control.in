@@ -8,7 +8,7 @@ Rules-Requires-Root: no
 
 Package: [% $source %]
 Architecture: all
-Depends: $\{misc:Depends\}
+Depends: ${misc:Depends}
 Description: [% $description %]
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
@@ -17,7 +17,7 @@ Description: [% $description %]
 
 Package: [% $source %]-has-depends
 Architecture: all
-Depends: $\{misc:Depends\}, sensible-utils
+Depends: ${misc:Depends}, sensible-utils
 Description: [% $description %] (with dependency)
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
@@ -28,7 +28,7 @@ Description: [% $description %] (with dependency)
 
 Package: [% $source %]-has-recommends
 Architecture: all
-Depends: $\{misc:Depends\}
+Depends: ${misc:Depends}
 Recommends: sensible-utils
 Description: [% $description %] (with Recommends dependency)
  This is a test package designed to exercise some feature or tag of
@@ -40,7 +40,7 @@ Description: [% $description %] (with Recommends dependency)
 
 Package: [% $source %]-has-suggests
 Architecture: all
-Depends: $\{misc:Depends\}
+Depends: ${misc:Depends}
 Suggests: sensible-utils
 Description: [% $description %] (with Suggests dependency)
  This is a test package designed to exercise some feature or tag of

@@ -15,7 +15,7 @@ Description: [% $description %]
 
 Package: debhelper-pre-depends
 Architecture: [% $package_architecture %]
-Pre-Depends: $\{misc:Depends\}
+Pre-Depends: ${misc:Depends}
 Description: [% $description %] extra string
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
@@ -25,7 +25,7 @@ Description: [% $description %] extra string
 
 Package: debhelper-suggests
 Architecture: [% $package_architecture %]
-Suggests: $\{misc:Depends\}
+Suggests: ${misc:Depends}
 Description: [% $description %] another extra string
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd

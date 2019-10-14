@@ -7,7 +7,7 @@ Rules-Requires-Root: no
 
 Package: lib[% $source %]42
 Architecture: all
-Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
+Depends: ${shlibs:Depends}, ${misc:Depends}
 Priority: important
 Description: [% $description %] (lib)
  This is a test package designed to exercise some feature or tag of
@@ -17,7 +17,7 @@ Description: [% $description %] (lib)
 
 Package: lib[% $source %]-dev
 Architecture: all
-Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
+Depends: ${shlibs:Depends}, ${misc:Depends}
 Section: libdevel
 Priority: standard
 Description: [% $description %] (dev)
@@ -30,7 +30,7 @@ Description: [% $description %] (dev)
 
 Package: lib[% $source %]-false-positive-bin
 Architecture: all
-Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
+Depends: ${shlibs:Depends}, ${misc:Depends}
 Section: libdevel
 Priority: required
 Description: [% $description %] (false positive bin)
@@ -43,7 +43,7 @@ Description: [% $description %] (false positive bin)
 
 Package: lib[% $source %]-false-positive-dev
 Architecture: all
-Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
+Depends: ${shlibs:Depends}, ${misc:Depends}
 Section: libdevel
 Priority: optional
 Description: [% $description %] (false positive)

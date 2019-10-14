@@ -10,7 +10,7 @@ Homepage: http://lintian.debian.org/
 Package: [% $source %]-broken
 Architecture: any-amd64 any-arm64 any-mips64 any-mips64el any-ia64
               any-ppc64 any-ppc64el any-sparc64
-Depends: $\{misc:Depends\}
+Depends: ${misc:Depends}
 Description: [% $description %] (multiline architecture, broken)
  This is a (broken) test package designed to exercise some feature or
  tag of Lintian.  It is part of the Lintian test suite and may do very
@@ -22,7 +22,7 @@ Description: [% $description %] (multiline architecture, broken)
 
 Package: [% $source %]-fine-any-something
 Architecture: any-amd64 any-arm64 any-mips64 any-mips64el any-ia64 any-ppc64 any-ppc64el any-sparc64
-Depends: $\{misc:Depends\}
+Depends: ${misc:Depends}
 Description: [% $description %] (any-something, fine)
  This is a (non-broken) test package designed to exercise some feature
  or tag of Lintian.  It is part of the Lintian test suite and may do
@@ -33,7 +33,7 @@ Description: [% $description %] (any-something, fine)
 
 Package: [% $source %]-fine-all
 Architecture: all
-Depends: $\{misc:Depends\}
+Depends: ${misc:Depends}
 Description: [% $description %] (all, fine)
  This is a (non-broken) test package designed to exercise some feature
  or tag of Lintian.  It is part of the Lintian test suite and may do

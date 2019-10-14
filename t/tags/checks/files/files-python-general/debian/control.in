@@ -8,7 +8,7 @@ Rules-Requires-Root: no
 
 Package: python-kinterbasdb
 Architecture: any
-Depends: $\{misc:Depends\}, $\{shlibs:Depends\}
+Depends: ${misc:Depends}, ${shlibs:Depends}
 Description: [% $description %]
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
@@ -18,8 +18,8 @@ Description: [% $description %]
 Package: python-kinterbasdb-dbg
 Architecture: any
 Section: debug
-Depends: $\{misc:Depends\}, python-kinterbasdb (= $\{binary:Version\}),
- $\{shlibs:Depends\}
+Depends: ${misc:Depends}, python-kinterbasdb (= ${binary:Version}),
+ ${shlibs:Depends}
 Description: [% $description %] - debug
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
@@ -30,7 +30,7 @@ Description: [% $description %] - debug
 
 Package: python3-modulename
 Architecture: any
-Depends: $\{misc:Depends\}, $\{shlibs:Depends\}
+Depends: ${misc:Depends}, ${shlibs:Depends}
 Description: [% $description %] (Python 3.x)
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
@@ -42,8 +42,8 @@ Description: [% $description %] (Python 3.x)
 Package: python3-modulename-dbg
 Architecture: any
 Section: debug
-Depends: $\{misc:Depends\}, python3-modulename (= $\{binary:Version\}),
- $\{shlibs:Depends\}
+Depends: ${misc:Depends}, python3-modulename (= ${binary:Version}),
+ ${shlibs:Depends}
 Description: [% $description %] - debug (Python 3.x) version
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd

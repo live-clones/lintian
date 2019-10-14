@@ -9,8 +9,8 @@ Rules-Requires-Root: no
 
 Package: phpmyfoo
 Architecture: [% $package_architecture %]
-Depends: $\{shlibs:Depends\},
- $\{misc:Depends\},
+Depends: ${shlibs:Depends},
+ ${misc:Depends},
  apache2,
  apache2-bin
 Description: [% $description %]
@@ -21,8 +21,8 @@ Description: [% $description %]
 
 Package: phpmyfoo2
 Architecture: [% $package_architecture %]
-Depends: $\{shlibs:Depends\},
- $\{misc:Depends\},
+Depends: ${shlibs:Depends},
+ ${misc:Depends},
  apache2 | httpd
 Description: [% $description %] - ignore me
  This is a test package designed to exercise some feature or tag of
@@ -34,8 +34,8 @@ Description: [% $description %] - ignore me
 
 Package: phpmyfoo3
 Architecture: [% $package_architecture %]
-Depends: $\{shlibs:Depends\},
- $\{misc:Depends\},
+Depends: ${shlibs:Depends},
+ ${misc:Depends},
  apache2 | lighttpd | httpd
 Description: [% $description %] - another ignore me
  This is a test package designed to exercise some feature or tag of

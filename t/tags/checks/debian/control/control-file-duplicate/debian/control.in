@@ -12,7 +12,7 @@ Rules-Requires-Root: no
 
 Package: [% $source %]
 Architecture: [% $package_architecture %]
-Depends: $\{shlibs:Depends\}, $\{misc:Depends\}, $\{misc:Depends\}
+Depends: ${shlibs:Depends}, ${misc:Depends}, ${misc:Depends}
 Recommends: foo (>> 1.0) | bar, foo
 Suggests: baz (= 1.0), baz, baz (>= 2.0)
 Description: [% $description %]

@@ -9,7 +9,7 @@ Homepage: http://lintian.debian.org/
 
 Package: [% $source %]
 Architecture: all
-Depends: $\{misc:Depends\}
+Depends: ${misc:Depends}
 Description: [% $description %]
  Non-font package containing fonts.
  .
@@ -22,7 +22,7 @@ Section: fonts
 Architecture: all
 # Due to file-conflict
 Conflicts: [% $source %]
-Depends: $\{misc:Depends\}
+Depends: ${misc:Depends}
 Description: [% $description %] (okay)
  Font package containing fonts.
  .

@@ -10,7 +10,7 @@ Vcs-Git: git://salsa.debian.org/users/toddy/foobar.git
 
 Package: [% $source %]
 Architecture: [% $package_architecture %]
-Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
+Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: [% $description %]
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd

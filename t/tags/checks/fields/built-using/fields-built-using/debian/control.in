@@ -9,7 +9,7 @@ Homepage: https://lintian.debian.org/
 
 Package: [% $source %]
 Architecture: [% $package_architecture %]
-Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
+Depends: ${shlibs:Depends}, ${misc:Depends}
 Built-Using: foo (>= 1.0)
 Description: [% $description %]
  This is a test package designed to exercise some feature or tag of

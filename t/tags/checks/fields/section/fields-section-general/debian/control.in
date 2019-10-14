@@ -9,7 +9,7 @@ Rules-Requires-Root: no
 Package: [% $source %]
 Architecture: all
 Section: contrib/dveel
-Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
+Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: [% $description %] (typo)
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
@@ -21,7 +21,7 @@ Description: [% $description %] (typo)
 Package: [% $source %]-main
 Architecture: all
 Section: [% $section %]
-Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
+Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: [% $description %] (main)
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd

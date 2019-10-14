@@ -14,11 +14,11 @@ Vcs-Git:
 
 Package: [% $source %]
 Architecture: [% $package_architecture %]
-Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
+Depends: ${shlibs:Depends}, ${misc:Depends}
 Suggests:
 # The following line contains "Provides: \n"
 Provides: 
-Recommends: $\{false:Positive\}
+Recommends: ${false:Positive}
 Description: [% $description %]
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd

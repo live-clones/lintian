@@ -8,7 +8,7 @@ Rules-Requires-Root: no
 
 Package: broken-links
 Architecture: all
-Depends: $\{misc:Depends\}, data-pkg
+Depends: ${misc:Depends}, data-pkg
 Description: [% $description %] - symlinks
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
@@ -19,7 +19,7 @@ Description: [% $description %] - symlinks
 
 Package: data-pkg
 Architecture: all
-Depends: $\{misc:Depends\}
+Depends: ${misc:Depends}
 Description: [% $description %] - data
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd

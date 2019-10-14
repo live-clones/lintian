@@ -9,7 +9,7 @@ Rules-Requires-Root: no
 
 Package: [% $source %]
 Architecture: [% $package_architecture %]
-Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
+Depends: ${shlibs:Depends}, ${misc:Depends}
 XB-../bar: moo
 Description: [% $description %]
  This is a test package designed to exercise some feature or tag of

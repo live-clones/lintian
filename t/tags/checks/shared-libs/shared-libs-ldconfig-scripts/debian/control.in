@@ -8,7 +8,7 @@ Rules-Requires-Root: no
 
 Package: libfoo1
 Architecture: any
-Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
+Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: [% $description %] (missing ldc)
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
@@ -18,7 +18,7 @@ Description: [% $description %] (missing ldc)
 
 Package: libfish1
 Architecture: any
-Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
+Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: [% $description %] (preinst/rm ldc)
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
@@ -28,7 +28,7 @@ Description: [% $description %] (preinst/rm ldc)
 
 Package: libuns1
 Architecture: any
-Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
+Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: [% $description %] (unsafe ldc)
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
@@ -38,7 +38,7 @@ Description: [% $description %] (unsafe ldc)
 
 Package: app
 Architecture: all
-Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
+Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: [% $description %] (useless ldc)
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd

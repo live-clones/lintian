@@ -13,7 +13,7 @@ Homepage: http://lintian.debian.org/
 Package: [% $source %]-bad-1
 Architecture: all
 # default-mta missing mail-transport-agent
-Depends: $\{misc:Depends\}, default-mta, exim4, nullmailer
+Depends: ${misc:Depends}, default-mta, exim4, nullmailer
 Pre-Depends: mail-transport-agent
 Recommends: default-mta, mail-transport-agent
 Suggests: exim4 | mail-transport-agent
@@ -27,7 +27,7 @@ Description: [% $description %] (bad set 1)
 Package: [% $source %]-bad-2
 Architecture: all
 # default-mta missing
-Depends: $\{misc:Depends\}, exim4 | postfix | mail-transport-agent
+Depends: ${misc:Depends}, exim4 | postfix | mail-transport-agent
 # default-mta not listed first
 Pre-Depends: exim4 | default-mta | mail-transport-agent
 Description: [% $description %] (bad set 2)
@@ -39,7 +39,7 @@ Description: [% $description %] (bad set 2)
 
 Package: [% $source %]-good-1
 Architecture: all
-Depends: $\{misc:Depends\}, default-mta | mail-transport-agent
+Depends: ${misc:Depends}, default-mta | mail-transport-agent
 Pre-Depends: default-mta | exim4 | mail-transport-agent
 Recommends: default-mta | mail-transport-agent | exim4
 Suggests: lintian

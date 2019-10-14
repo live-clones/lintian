@@ -8,7 +8,7 @@ Rules-Requires-Root: no
 
 Package: [% $source %]-both
 Architecture: [% $package_architecture %]
-Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
+Depends: ${shlibs:Depends}, ${misc:Depends}
 Conflicts: [% $source %]-good, [% $source %]-wrong, [% $source %]-no-games
 Description: [% $description %] (both)
  Package has both regular binaries and games.
@@ -19,7 +19,7 @@ Description: [% $description %] (both)
 
 Package: [% $source %]-good
 Architecture: [% $package_architecture %]
-Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
+Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: [% $description %] (good)
  Games package in games section.
  .
@@ -29,7 +29,7 @@ Description: [% $description %] (good)
 
 Package: [% $source %]-no-games
 Architecture: [% $package_architecture %]
-Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
+Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: [% $description %] (no games)
  Games package without any games.
  .
@@ -40,7 +40,7 @@ Description: [% $description %] (no games)
 Package: [% $source %]-wrong
 Section: devel
 Architecture: [% $package_architecture %]
-Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
+Depends: ${shlibs:Depends}, ${misc:Depends}
 Conflicts: [% $source %]-good
 Description: [% $description %] (wrong)
  Games package in wrong section.

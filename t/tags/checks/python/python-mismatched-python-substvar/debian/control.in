@@ -9,7 +9,7 @@ Rules-Requires-Root: no
 Package: python-[% $source %]
 Section: python
 Architecture: all
-Depends: $\{misc:Depends\}, $\{python3:Depends\}
+Depends: ${misc:Depends}, ${python3:Depends}
 Description: Mismatched substvar for Python 2.X
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
@@ -21,7 +21,7 @@ Description: Mismatched substvar for Python 2.X
 Package: python3-[% $source %]
 Section: python
 Architecture: all
-Depends: $\{misc:Depends\}, $\{python:Depends\}
+Depends: ${misc:Depends}, ${python:Depends}
 Description: Mismatched substvar for Python 3.X
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
@@ -33,7 +33,7 @@ Description: Mismatched substvar for Python 3.X
 Package: python-[% $source %]-nonrel
 Section: python
 Architecture: all
-Depends: $\{misc:Depends\}, $\{python:Depends\}
+Depends: ${misc:Depends}, ${python:Depends}
 Description: False positive for Python 2.X
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
@@ -45,7 +45,7 @@ Description: False positive for Python 2.X
 Package: python3-[% $source %]-nonrel
 Section: python
 Architecture: all
-Depends: $\{misc:Depends\}, $\{python3:Depends\}
+Depends: ${misc:Depends}, ${python3:Depends}
 Description: False positive Python 3.X
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
@@ -57,7 +57,7 @@ Description: False positive Python 3.X
 Package: python-[% $source %]-tools
 Section: python
 Architecture: all
-Depends: $\{misc:Depends\}, $\{python3:Depends\}
+Depends: ${misc:Depends}, ${python3:Depends}
 Description: Generic tools package
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd

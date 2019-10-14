@@ -8,10 +8,10 @@ Rules-Requires-Root: no
 
 Package: [% $source %]
 Architecture: any
-Depends: $\{shlibs:Depends\}, $\{misc:Depends\}, httpd
+Depends: ${shlibs:Depends}, ${misc:Depends}, httpd
 Provides:
     123456789,
-    [% $source %]-$\{source:Version\},
+    [% $source %]-${source:Version},
     arch-specific [i386],
     provides-are-allowed [!i386],
     valid-versioned-provides (= 1.0)
@@ -23,7 +23,7 @@ Description: [% $description %]
 
 Package: [% $source %]2
 Architecture: [% $package_architecture %]
-Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
+Depends: ${shlibs:Depends}, ${misc:Depends}
 Provides: a, iNvAlId-NaMe, versioned (>> 0.1)
 Description: [% $description %] - bogus
  This is a bogus test package designed to exercise some feature or tag

@@ -8,7 +8,7 @@ Rules-Requires-Root: no
 
 Package: [% $source %]
 Architecture: [% $package_architecture %]
-Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
+Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: [% $description %]
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
@@ -17,7 +17,7 @@ Description: [% $description %]
 
 Package: [% $source %]-helper
 Architecture: [% $package_architecture %]
-Depends: [% $source %] (= [% $version %]), $\{shlibs:Depends\}, $\{misc:Depends\}
+Depends: [% $source %] (= [% $version %]), ${shlibs:Depends}, ${misc:Depends}
 Description: [% $description %] (symlink)
  Helper package with a legitimate /usr/share/doc symlink.
  .
@@ -28,7 +28,7 @@ Description: [% $description %] (symlink)
 
 Package: [% $source %]-weak
 Architecture: [% $package_architecture %]
-Depends: [% $source %], $\{shlibs:Depends\}, $\{misc:Depends\}
+Depends: [% $source %], ${shlibs:Depends}, ${misc:Depends}
 Description: [% $description %] (weak)
  Helper package with a /usr/share/doc symlink but an insufficiently
  strong dependency.  Lintian intentionally doesn't diagnose this.

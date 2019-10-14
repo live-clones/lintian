@@ -8,7 +8,7 @@ Rules-Requires-Root: no
 
 Package: r-cran-positive
 Architecture: any
-Depends: $\{misc:Depends\}, $\{shlibs:Depends\}
+Depends: ${misc:Depends}, ${shlibs:Depends}
 Description: [% $description %] (wrong)
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
@@ -19,7 +19,7 @@ Description: [% $description %] (wrong)
 
 Package: r-cran-false-positive
 Architecture: all
-Depends: $\{misc:Depends\}, $\{shlibs:Depends\}
+Depends: ${misc:Depends}, ${shlibs:Depends}
 Description: [% $description %] (right)
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd

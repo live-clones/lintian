@@ -20,10 +20,10 @@ Section: [% $section %]
 Maintainer: [% $author %]
 Build-Conflicts: foo
 Architecture: all
-Pre-depends: $\{misc:Pre-depends\}, multiarch-support
-Depends: [% $source %], foo, baz, $\{shlibs:Depends\} $\{some:Depends\}, $\{misc:Depends\}
-Recommends: foo, bar, no-match$\{lintian:Foo\}, match$\{lintian:Match\}, no-match$\{lintian:Bar\}-foo
-Suggests: bar | baz, no-match$\{lintian:Bar\}, match$\{lintian:Match\}
+Pre-depends: ${misc:Pre-depends}, multiarch-support
+Depends: [% $source %], foo, baz, ${shlibs:Depends} ${some:Depends}, ${misc:Depends}
+Recommends: foo, bar, no-match${lintian:Foo}, match${lintian:Match}, no-match${lintian:Bar}-foo
+Suggests: bar | baz, no-match${lintian:Bar}, match${lintian:Match}
 Description: [% $description %]
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
@@ -33,7 +33,7 @@ Description: [% $description %]
 Package: [% $source %]-1
 Section: [% $section %]
 Architecture: all
-Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
+Depends: ${shlibs:Depends}, ${misc:Depends}
 Breaks: libsqlite3-0 (< 3.6.12)
 Description: [% $description %]
  This is a test package designed to exercise some feature or tag of
@@ -44,7 +44,7 @@ Description: [% $description %]
 Package: [% $source %]-2
 Section: [% $section %]
 Architecture: all
-Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
+Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: [% $description %] (two)
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
@@ -54,9 +54,9 @@ Description: [% $description %] (two)
 Package: [% $source %]-3
 Section: [% $section %]
 Architecture: all
-Depends: $\{shlibs:Depends\}, $\{misc:Depends\}, foo (>= 1),
+Depends: ${shlibs:Depends}, ${misc:Depends}, foo (>= 1),
   baz (<< 2),
-  fizz (= 2.0), gcc-$\{pv:gcc\} $\{reqv:gcc\}
+  fizz (= 2.0), gcc-${pv:gcc} ${reqv:gcc}
 Description: [% $description %] (three)
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
@@ -66,7 +66,7 @@ Description: [% $description %] (three)
 Package: [% $source %]-4
 Section: [% $section %]
 Architecture: all
-Depends: $\{shlibs:Depends\}, $\{misc:Depends\}, foo |
+Depends: ${shlibs:Depends}, ${misc:Depends}, foo |
   bar (>= 1), baz
 Description: [% $description %] (four)
  This is a test package designed to exercise some feature or tag of
@@ -77,7 +77,7 @@ Description: [% $description %] (four)
 Package: [% $source %]-5
 Section: [% $section %]
 Architecture: all
-Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
+Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: Description: [% $description %]
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
@@ -87,7 +87,7 @@ Description: Description: [% $description %]
 Package: [% $source %]-dbgsym
 Section: debug
 Architecture: all
-Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
+Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: Description: dbg-sym
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
@@ -97,7 +97,7 @@ Description: Description: dbg-sym
 Package: [% $source %]-dbg
 Section: debug
 Architecture: all
-Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
+Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: Description: debug
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
@@ -108,7 +108,7 @@ Package: [% $source %]-udeb
 Section: debian-installer
 Package-Type: udeb
 Architecture: all
-Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
+Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: [% $description %] (udeb)
  udeb tests.
  .

@@ -8,7 +8,7 @@ Rules-Requires-Root: no
 
 Package: libdeb-long-description-perl
 Architecture: [% $package_architecture %]
-Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
+Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: lintian dummy package to test a module name related check
  This package is solely meant for testing a lintian check to argue
  about not mentioning the contained perl module.
@@ -18,7 +18,7 @@ Description: lintian dummy package to test a module name related check
 
 Package: libdeb-long-description-proper-perl
 Architecture: [% $package_architecture %]
-Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
+Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: lintian dummy package to test a module name related false positive
  This package is solely meant for testing a lintian check to argue
  about not mentioning the contained perl module.

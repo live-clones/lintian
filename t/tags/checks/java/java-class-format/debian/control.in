@@ -8,7 +8,7 @@ Rules-Requires-Root: no
 
 Package: libtest-java
 Architecture: [% $package_architecture %]
-Depends: $\{misc:Depends\}
+Depends: ${misc:Depends}
 Description: [% $description %]
  This is a test package designed to test various aspects of the
  java-related QA code in lintian. First part.

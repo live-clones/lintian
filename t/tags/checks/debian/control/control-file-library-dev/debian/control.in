@@ -9,7 +9,7 @@ Rules-Requires-Root: no
 Package: libcontrol-file-foo1
 Section: libs
 Architecture: [% $package_architecture %]
-Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
+Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: [% $description %] (shared lib 1)
  First shared library.
  .
@@ -20,7 +20,7 @@ Description: [% $description %] (shared lib 1)
 
 Package: libcontrol-file-bar7ldbl
 Architecture: [% $package_architecture %]
-Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
+Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: [% $description %] (shared lib 2)
  Second shared library.
  .
@@ -32,9 +32,9 @@ Description: [% $description %] (shared lib 2)
 Package: libcontrol-file-dev
 Section: libdevel
 Architecture: [% $package_architecture %]
-Depends: $\{shlibs:Depends\}, $\{misc:Depends\},
- libcontrol-file-foo1 (= $\{binary:Version\}),
- libcontrol-file-bar7ldbl, libcontrol-file-baz9-4 (>= $\{binary:Version\}),
+Depends: ${shlibs:Depends}, ${misc:Depends},
+ libcontrol-file-foo1 (= ${binary:Version}),
+ libcontrol-file-bar7ldbl, libcontrol-file-baz9-4 (>= ${binary:Version}),
  libfoo4, libcontrol-file-doc, libcontrol-file4-dev
 Description: [% $description %] (dev package)
  Dev package.
@@ -47,7 +47,7 @@ Description: [% $description %] (dev package)
 Package: libcontrol-file-baz9-4
 Section: libs
 Architecture: [% $package_architecture %]
-Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
+Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: [% $description %] (shared lib 3)
  Third shared library.
  .
@@ -59,7 +59,7 @@ Description: [% $description %] (shared lib 3)
 Package: libcontrol-file-doc
 Section: doc
 Architecture: all
-Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
+Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: [% $description %] (doc package)
  Doc package.
  .
@@ -71,11 +71,11 @@ Description: [% $description %] (doc package)
 Package: libcontrol-file4-dev
 Section: libdevel
 Architecture: [% $package_architecture %]
-Depends: $\{shlibs:Depends\}, $\{misc:Depends\},
- libcontrol-file-foo1 (<= $\{source:Upstream-Version\}-99)
- | libcontrol-file-baz9-4 (<= $\{source:Upstream-Version\}-99),
- libcontrol-file-foo1 (>= $\{binary:Version\})
- | libcontrol-file-baz9-4 (>= $\{binary:Version\})
+Depends: ${shlibs:Depends}, ${misc:Depends},
+ libcontrol-file-foo1 (<= ${source:Upstream-Version}-99)
+ | libcontrol-file-baz9-4 (<= ${source:Upstream-Version}-99),
+ libcontrol-file-foo1 (>= ${binary:Version})
+ | libcontrol-file-baz9-4 (>= ${binary:Version})
 Description: [% $description %] (dev package with version)
  Dev package containing a number.
  .
@@ -87,10 +87,10 @@ Description: [% $description %] (dev package with version)
 Package: libcontrol-file-all-dev
 Section: libdevel
 Architecture: all
-Depends: $\{shlibs:Depends\}, $\{misc:Depends\}, libcontrol-file-doc,
- libcontrol-file-foo1 (>= $\{source:Upstream-Version\}),
- libcontrol-file-foo1 (<= $\{source:Version\}.1~),
- libcontrol-file-baz9-4 (>= $\{source:Version\})
+Depends: ${shlibs:Depends}, ${misc:Depends}, libcontrol-file-doc,
+ libcontrol-file-foo1 (>= ${source:Upstream-Version}),
+ libcontrol-file-foo1 (<= ${source:Version}.1~),
+ libcontrol-file-baz9-4 (>= ${source:Version})
 Description: [% $description %] (arch: all dev package)
  Architecture-independent development package.
  .
@@ -103,9 +103,9 @@ Package: libcontrol-baz-dev
 Section: libdevel
 Architecture: [% $package_architecture %]
 Depends:
- libcontrol-file-baz9-4 (= $\{binary:Version\}),
- $\{misc:Depends\},
- $\{shlibs:Depends\}
+ libcontrol-file-baz9-4 (= ${binary:Version}),
+ ${misc:Depends},
+ ${shlibs:Depends}
 Description: [% $description %] (dev whitespace)
  Test proper parsing of leading whitespace in Depends
  .

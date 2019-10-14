@@ -11,7 +11,7 @@ Vcs-Git: https://anonscm.debian.org/test/test.git --branch wrong
 
 Package: [% $source %]
 Architecture: [% $package_architecture %]
-Depends: $\{misc:Depends\}
+Depends: ${misc:Depends}
 Description: [% $description %]
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd

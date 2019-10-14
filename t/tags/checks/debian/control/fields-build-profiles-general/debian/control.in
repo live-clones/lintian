@@ -10,7 +10,7 @@ Rules-Requires-Root: no
 
 Package: [% $source %]-wrong-syntax
 Architecture: [% $package_architecture %]
-Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
+Depends: ${shlibs:Depends}, ${misc:Depends}
 Build-Profiles: <in<valid>
 Description: [% $description %] (wrong syntax)
  Check the syntax of the Build-Profiles field
@@ -22,7 +22,7 @@ Description: [% $description %] (wrong syntax)
 
 Package: [% $source %]-unknown-profile
 Architecture: [% $package_architecture %]
-Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
+Depends: ${shlibs:Depends}, ${misc:Depends}
 Build-Profiles: <!stage1 !nocheck> <!unknown> <pkg.[% $source %].foo>
 Description: [% $description %] (unknown profile)
  Check for unknown profile names

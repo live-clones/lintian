@@ -8,7 +8,7 @@ Rules-Requires-Root: no
 
 Package: [% $source %]
 Architecture: [% $package_architecture %]
-Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
+Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: [% $description %]
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
@@ -18,7 +18,7 @@ Description: [% $description %]
 Package: [% $source %]-dbg
 Section: debug
 Architecture: all
-Depends: [% $source %], $\{shlibs:Depends\}, $\{misc:Depends\}
+Depends: [% $source %], ${shlibs:Depends}, ${misc:Depends}
 Description: Manual dbg package
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
@@ -28,7 +28,7 @@ Description: Manual dbg package
 Package: [% $source %]-dbgsym
 Section: debug
 Architecture: all
-Depends: [% $source %], $\{shlibs:Depends\}, $\{misc:Depends\}
+Depends: [% $source %], ${shlibs:Depends}, ${misc:Depends}
 Description: Manual dbgsym package
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd

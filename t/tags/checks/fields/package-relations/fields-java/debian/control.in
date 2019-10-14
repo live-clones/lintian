@@ -8,7 +8,7 @@ Rules-Requires-Root: no
 
 Package: lib[% $source %]-java
 Architecture: all
-Depends: $\{misc:Depends\},
+Depends: ${misc:Depends},
          default-jre-headless | java-runtime-headless |
          java2-runtime-headless | kaffe | gcj-jdk |
          openjdk-6-jre | gcj-4.5-jre
@@ -23,7 +23,7 @@ Description: [% $description %]
 Package: lib[% $source %]-java-doc
 Architecture: all
 Section: doc
-Depends: $\{misc:Depends\}
+Depends: ${misc:Depends}
 Recommends: openjdk-6-doc
 # Negative testing as well, this should not be triggered.
 Replaces: openjdk-6-doc

@@ -8,7 +8,7 @@ Rules-Requires-Root: no
 
 Package: python-[% $source %]
 Architecture: all
-Depends: $\{misc:Depends\}, python2.7
+Depends: ${misc:Depends}, python2.7
 Description: Python 2 package with corresponding Python 3 package
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
@@ -17,7 +17,7 @@ Description: Python 2 package with corresponding Python 3 package
 
 Package: python3-[% $source %]
 Architecture: all
-Depends: $\{misc:Depends\}, python3
+Depends: ${misc:Depends}, python3
 Description: Python 2 package with corresponding Python 3 package (Python 3)
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
@@ -29,7 +29,7 @@ Description: Python 2 package with corresponding Python 3 package (Python 3)
 Package: python-[% $source %]-doc
 Section: doc
 Architecture: all
-Depends: $\{misc:Depends\}
+Depends: ${misc:Depends}
 Description: Python 2 package with corresponding Python 3 package (documentation)
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
@@ -40,7 +40,7 @@ Description: Python 2 package with corresponding Python 3 package (documentation
 
 Package: python-[% $source %]-common
 Architecture: all
-Depends: $\{misc:Depends\}
+Depends: ${misc:Depends}
 Description: Python 2 package with corresponding Python 3 package (common files)
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
@@ -51,7 +51,7 @@ Description: Python 2 package with corresponding Python 3 package (common files)
 
 Package: python-[% $source %]-tools
 Architecture: all
-Depends: $\{misc:Depends\}
+Depends: ${misc:Depends}
 Description: Python 2 package with corresponding Python 3 package (tools)
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
@@ -62,7 +62,7 @@ Description: Python 2 package with corresponding Python 3 package (tools)
 
 Package: python-[% $source %]-2
 Architecture: all
-Depends: $\{misc:Depends\}
+Depends: ${misc:Depends}
 Description: Python 2 package with corresponding Python 3 package (2)
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
@@ -73,7 +73,7 @@ Description: Python 2 package with corresponding Python 3 package (2)
 
 Package: entirely-unrelated-name
 Architecture: all
-Depends: $\{misc:Depends\}, $\{python3:Depends\}
+Depends: ${misc:Depends}, ${python3:Depends}
 Description: Python 3 version of python-[% $source %]-2
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd

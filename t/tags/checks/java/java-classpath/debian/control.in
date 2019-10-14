@@ -8,7 +8,7 @@ Rules-Requires-Root: no
 
 Package: libcp-missing-java
 Architecture: all
-Depends: $\{misc:Depends\}, libdepends-java
+Depends: ${misc:Depends}, libdepends-java
 Description: [% $description %] - missing
  This is a test package designed to test various aspects of the
  java-related QA code in lintian. This package should not be
@@ -18,7 +18,7 @@ Description: [% $description %] - missing
 
 Package: libcp-relative-java
 Architecture: all
-Depends: $\{misc:Depends\}, libdepends-java
+Depends: ${misc:Depends}, libdepends-java
 Description: [% $description %] - relative
  This is a test package designed to test various aspects of the
  java-related QA code in lintian. This package should not be
@@ -29,7 +29,7 @@ Description: [% $description %] - relative
 
 Package: binary-using-java
 Architecture: all
-Depends: $\{misc:Depends\}, libdepends-java
+Depends: ${misc:Depends}, libdepends-java
 Description: [% $description %] - binary
  This is a test package designed to test various aspects of the
  java-related QA code in lintian. This package should not be

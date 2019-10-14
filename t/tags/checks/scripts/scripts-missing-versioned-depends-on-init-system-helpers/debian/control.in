@@ -8,7 +8,7 @@ Rules-Requires-Root: no
 
 Package: [% $source %]-with
 Architecture: all
-Depends: $\{misc:Depends\}, init-system-helpers (>= 1.50)
+Depends: ${misc:Depends}, init-system-helpers (>= 1.50)
 Description: [% $description %] (with)
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
@@ -19,7 +19,7 @@ Description: [% $description %] (with)
 
 Package: [% $source %]-without
 Architecture: all
-Depends: $\{misc:Depends\}
+Depends: ${misc:Depends}
 Description: [% $description %] (without)
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd

@@ -8,6 +8,6 @@ Homepage: <insert the upstream URL, if relevant>
 
 Package: generic-dh-make-2008
 Architecture: [% $package_architecture %]
-Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
+Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: <insert up to 60 chars description>
  <insert long description, indented with spaces>

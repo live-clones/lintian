@@ -8,7 +8,7 @@ Rules-Requires-Root: no
 
 Package: nam
 Architecture: [% $package_architecture %]
-Depends: $\{misc:Depends\},
+Depends: ${misc:Depends},
 Description: [% $description %]
  This is a test to see if the spell checker realizes that nam is
  not a spelling mistake, but the name of the package.
