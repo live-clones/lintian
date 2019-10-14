@@ -1,6 +1,6 @@
-name = {$source}
-version = {$upstream_version}
-type = {$type}
+name = [% $source %]
+version = [% $upstream_version %]
+type = [% $type %]
 
 packagedir = $(name)-$(version)
 underscored = $(name)_$(version)
@@ -32,7 +32,7 @@ product: clean
 		./post-clean $(packagedir) ; \
 	fi
 
-	if [ "{$type}" != "native" ] ; then \
+	if [ "[% $type %]" != "native" ] ; then \
 		mkdir $(origdata) || true ; \
 		cp -rp $(origdata)/. $(packagedir) ; \
 		if [ -x ./pre-orig ] ; then \
@@ -47,7 +47,7 @@ product: clean
 	fi
 
 	-mkdir -p $(packagedir)/debian
-	if [ "{$type}" != "native" ] ; then \
+	if [ "[% $type %]" != "native" ] ; then \
 		if [ ! -f $(watchfile) ] ; then \
 			echo '# Empty watch file' > $(watchfile) ; \
 		fi ; \
