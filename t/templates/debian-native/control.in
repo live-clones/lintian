@@ -9,8 +9,8 @@ Homepage: [% $homepage %]
 
 Package: [% $source %]
 Architecture: [% $package_architecture %]
-Pre-Depends: $\{misc:Pre-Depends\}
-Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
+Pre-Depends: ${misc:Pre-Depends}
+Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: [% $description %]
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
