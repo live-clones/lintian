@@ -1,4 +1,4 @@
-# files -- lintian check script -*- perl -*-
+# files/date -- lintian check script -*- perl -*-
 
 # Copyright (C) 1998 Christian Schwarz and Richard Braakman
 #
@@ -18,7 +18,7 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-package Lintian::files;
+package Lintian::files::date;
 
 use strict;
 use warnings;
@@ -26,42 +26,18 @@ use autodie;
 
 use Moo;
 
-use File::Find::Rule;
-use Path::Tiny;
-
 with('Lintian::Check');
 
-sub always {
-    my ($self) = @_;
+my $ALLOWED_ANCIENT_FILES = Lintian::Data->new('files/allowed-ancient-files');
 
-    # temporary setup until split is finalized
-    # tags and tests will be divided and reassigned later
+sub files {
+    my ($self, $file) = @_;
 
-    # call submodules for now
-    my @submodules = sort File::Find::Rule->file->name('*.pm')
-      ->in("$ENV{LINTIAN_ROOT}/checks/files");
+    my ($year) = ($file->date =~ /^(\d{4})/);
 
-    for my $submodule (@submodules) {
-
-        my $name = path($submodule)->basename('.pm');
-        my $dir = path($submodule)->parent->stringify;
-
-        # skip checks that already stand on their own
-        next
-          if -e "$dir/$name.desc";
-
-        require $submodule;
-
-        # replace hyphens with underscores
-        $name =~ s/-/_/g;
-
-        my $subpackage = "Lintian::files::$name";
-        my $check = $subpackage->new;
-        $check->processable($self->processable);
-        $check->group($self->group);
-
-        $check->run;
-    }
+    $self->tag('package-contains-ancient-file', $file->name, $file->date)
+      if $year <= 1975 # value from dak CVS: Dinstall::PastCutOffYear
+      and not $ALLOWED_ANCIENT_FILES->matches_any($file->name);
 
     return;
 }

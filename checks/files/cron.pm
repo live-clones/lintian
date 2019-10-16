@@ -1,4 +1,4 @@
-# files -- lintian check script -*- perl -*-
+# files/cron -- lintian check script -*- perl -*-
 
 # Copyright (C) 1998 Christian Schwarz and Richard Braakman
 #
@@ -18,7 +18,7 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-package Lintian::files;
+package Lintian::files::cron;
 
 use strict;
 use warnings;
@@ -26,42 +26,26 @@ use autodie;
 
 use Moo;
 
-use File::Find::Rule;
-use Path::Tiny;
-
 with('Lintian::Check');
 
-sub always {
-    my ($self) = @_;
+sub files {
+    my ($self, $file) = @_;
 
-    # temporary setup until split is finalized
-    # tags and tests will be divided and reassigned later
+    return
+      unless $file->name =~ m,^etc/cron,;
 
-    # call submodules for now
-    my @submodules = sort File::Find::Rule->file->name('*.pm')
-      ->in("$ENV{LINTIAN_ROOT}/checks/files");
+    # /etc/cron.daily, etc.
+    # NB: cron ships ".placeholder" files, which shouldn't be run.
+    $self->tag('run-parts-cron-filename-contains-illegal-chars', $file->name)
+      if $file->name
+      =~ m,^etc/cron\.(?:daily|hourly|monthly|weekly|d)/[^\.].*[\+\.],;
 
-    for my $submodule (@submodules) {
-
-        my $name = path($submodule)->basename('.pm');
-        my $dir = path($submodule)->parent->stringify;
-
-        # skip checks that already stand on their own
-        next
-          if -e "$dir/$name.desc";
-
-        require $submodule;
-
-        # replace hyphens with underscores
-        $name =~ s/-/_/g;
-
-        my $subpackage = "Lintian::files::$name";
-        my $check = $subpackage->new;
-        $check->processable($self->processable);
-        $check->group($self->group);
-
-        $check->run;
-    }
+    # /etc/cron.d
+    # NB: cron ships ".placeholder" files in etc/cron.d,
+    # which we shouldn't tag.
+    $self->tag('bad-permissions-for-etc-cron.d-script',
+        sprintf('%s %04o != 0644', $file->name, $file->operm))
+      if $file->name =~ m,^etc/cron\.d/[^\.], && $file->operm != 0644;
 
     return;
 }

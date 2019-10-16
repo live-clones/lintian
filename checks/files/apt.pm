@@ -1,4 +1,4 @@
-# files -- lintian check script -*- perl -*-
+# files/apt -- lintian check script -*- perl -*-
 
 # Copyright (C) 1998 Christian Schwarz and Richard Braakman
 #
@@ -18,7 +18,7 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-package Lintian::files;
+package Lintian::files::apt;
 
 use strict;
 use warnings;
@@ -26,41 +26,34 @@ use autodie;
 
 use Moo;
 
-use File::Find::Rule;
-use Path::Tiny;
-
 with('Lintian::Check');
 
-sub always {
-    my ($self) = @_;
+sub files {
+    my ($self, $file) = @_;
 
-    # temporary setup until split is finalized
-    # tags and tests will be divided and reassigned later
+    return
+      unless $file->name =~ m,^etc/apt/,;
 
-    # call submodules for now
-    my @submodules = sort File::Find::Rule->file->name('*.pm')
-      ->in("$ENV{LINTIAN_ROOT}/checks/files");
+    # /etc/apt/preferences
+    unless ($self->source eq 'apt') {
 
-    for my $submodule (@submodules) {
+        $self->tag('package-installs-apt-preferences', $file->name)
+          if $file->name =~ m,^etc/apt/preferences(?:$|\.d/[^/]+),;
+    }
 
-        my $name = path($submodule)->basename('.pm');
-        my $dir = path($submodule)->parent->stringify;
+    # /etc/apt/sources
+    unless ($self->source eq 'apt' || $self->package =~ /-apt-source$/) {
 
-        # skip checks that already stand on their own
-        next
-          if -e "$dir/$name.desc";
+        $self->tag('package-installs-apt-sources', $file->name)
+          if $file->name =~ m,^etc/apt/sources\.list(?:$|\.d/[^/]+),;
+    }
 
-        require $submodule;
+    # /etc/apt/trusted.gpg
+    unless ($self->source eq 'apt'
+        || $self->package =~ /(?:-apt-source|-archive-keyring)$/) {
 
-        # replace hyphens with underscores
-        $name =~ s/-/_/g;
-
-        my $subpackage = "Lintian::files::$name";
-        my $check = $subpackage->new;
-        $check->processable($self->processable);
-        $check->group($self->group);
-
-        $check->run;
+        $self->tag('package-installs-apt-keyring', $file->name)
+          if $file->name =~ m,^etc/apt/trusted\.gpg(?:$|\.d/[^/]+),;
     }
 
     return;

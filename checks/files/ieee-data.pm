@@ -1,4 +1,4 @@
-# files -- lintian check script -*- perl -*-
+# files/ieee-data -- lintian check script -*- perl -*-
 
 # Copyright (C) 1998 Christian Schwarz and Richard Braakman
 #
@@ -18,7 +18,7 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-package Lintian::files;
+package Lintian::files::ieee_data;
 
 use strict;
 use warnings;
@@ -26,41 +26,33 @@ use autodie;
 
 use Moo;
 
-use File::Find::Rule;
-use Path::Tiny;
-
 with('Lintian::Check');
 
-sub always {
-    my ($self) = @_;
+my $COMPRESS_FILE_EXTENSIONS
+  = Lintian::Data->new('files/compressed-file-extensions',
+    qr/\s++/,sub { return qr/\Q$_[0]\E/ });
 
-    # temporary setup until split is finalized
-    # tags and tests will be divided and reassigned later
+# an OR (|) regex of all compressed extension
+my $COMPRESS_FILE_EXTENSIONS_OR_ALL = sub { qr/(:?$_[0])/ }
+  ->(
+    join('|',
+        map {$COMPRESS_FILE_EXTENSIONS->value($_) }
+          $COMPRESS_FILE_EXTENSIONS->all));
 
-    # call submodules for now
-    my @submodules = sort File::Find::Rule->file->name('*.pm')
-      ->in("$ENV{LINTIAN_ROOT}/checks/files");
+sub files {
+    my ($self, $file) = @_;
 
-    for my $submodule (@submodules) {
+    if (   $file->is_regular_file
+        && $file->name
+        =~ m,/(?:[^/]-)?(?:oui|iab)(?:\.(txt|idx|db))?(?:\.$COMPRESS_FILE_EXTENSIONS_OR_ALL)?\Z,x
+    ) {
 
-        my $name = path($submodule)->basename('.pm');
-        my $dir = path($submodule)->parent->stringify;
+        # see #785662
+        if (index($file->name,'oui') > -1 || index($file->name,'iab') > -1) {
 
-        # skip checks that already stand on their own
-        next
-          if -e "$dir/$name.desc";
-
-        require $submodule;
-
-        # replace hyphens with underscores
-        $name =~ s/-/_/g;
-
-        my $subpackage = "Lintian::files::$name";
-        my $check = $subpackage->new;
-        $check->processable($self->processable);
-        $check->group($self->group);
-
-        $check->run;
+            $self->tag('package-installs-ieee-data', $file->name)
+              unless $self->source eq 'ieee-data';
+        }
     }
 
     return;

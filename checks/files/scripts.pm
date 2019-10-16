@@ -1,4 +1,4 @@
-# files -- lintian check script -*- perl -*-
+# files/scripts -- lintian check script -*- perl -*-
 
 # Copyright (C) 1998 Christian Schwarz and Richard Braakman
 #
@@ -18,7 +18,7 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-package Lintian::files;
+package Lintian::files::scripts;
 
 use strict;
 use warnings;
@@ -26,41 +26,22 @@ use autodie;
 
 use Moo;
 
-use File::Find::Rule;
-use Path::Tiny;
-
 with('Lintian::Check');
 
-sub always {
-    my ($self) = @_;
+sub files {
+    my ($self, $file) = @_;
 
-    # temporary setup until split is finalized
-    # tags and tests will be divided and reassigned later
+    return
+      unless $file->is_file;
 
-    # call submodules for now
-    my @submodules = sort File::Find::Rule->file->name('*.pm')
-      ->in("$ENV{LINTIAN_ROOT}/checks/files");
-
-    for my $submodule (@submodules) {
-
-        my $name = path($submodule)->basename('.pm');
-        my $dir = path($submodule)->parent->stringify;
-
-        # skip checks that already stand on their own
-        next
-          if -e "$dir/$name.desc";
-
-        require $submodule;
-
-        # replace hyphens with underscores
-        $name =~ s/-/_/g;
-
-        my $subpackage = "Lintian::files::$name";
-        my $check = $subpackage->new;
-        $check->processable($self->processable);
-        $check->group($self->group);
-
-        $check->run;
+    # language extensions
+    if (
+        $file->name =~ m{\A
+                    (?:usr/)?(?:s?bin|games)/[^/]+\.
+                    (?:p[ly]|php|rb|[bc]?sh|tcl)
+                    \Z}xsm
+    ) {
+        $self->tag('script-with-language-extension', $file->name);
     }
 
     return;

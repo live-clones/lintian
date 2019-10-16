@@ -1,4 +1,4 @@
-# files -- lintian check script -*- perl -*-
+# files/build-path -- lintian check script -*- perl -*-
 
 # Copyright (C) 1998 Christian Schwarz and Richard Braakman
 #
@@ -18,7 +18,7 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-package Lintian::files;
+package Lintian::files::build_path;
 
 use strict;
 use warnings;
@@ -26,41 +26,25 @@ use autodie;
 
 use Moo;
 
-use File::Find::Rule;
-use Path::Tiny;
-
 with('Lintian::Check');
 
-sub always {
-    my ($self) = @_;
+my $BUILD_PATH_REGEX
+  = Lintian::Data->new('files/build-path-regex',qr/~~~~~/,
+    sub { return  qr/$_[0]/xsm;});
 
-    # temporary setup until split is finalized
-    # tags and tests will be divided and reassigned later
+sub files {
+    my ($self, $file) = @_;
 
-    # call submodules for now
-    my @submodules = sort File::Find::Rule->file->name('*.pm')
-      ->in("$ENV{LINTIAN_ROOT}/checks/files");
+    # build directory
+    unless ($self->source eq 'sbuild' || $self->source eq 'pbuilder') {
 
-    for my $submodule (@submodules) {
+        foreach my $buildpath ($BUILD_PATH_REGEX->all) {
+            my $regex = $BUILD_PATH_REGEX->value($buildpath);
+            if ($file->name =~ m{$regex}xms) {
 
-        my $name = path($submodule)->basename('.pm');
-        my $dir = path($submodule)->parent->stringify;
-
-        # skip checks that already stand on their own
-        next
-          if -e "$dir/$name.desc";
-
-        require $submodule;
-
-        # replace hyphens with underscores
-        $name =~ s/-/_/g;
-
-        my $subpackage = "Lintian::files::$name";
-        my $check = $subpackage->new;
-        $check->processable($self->processable);
-        $check->group($self->group);
-
-        $check->run;
+                $self->tag('dir-or-file-in-build-tree', $file->name);
+            }
+        }
     }
 
     return;

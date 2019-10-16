@@ -1,4 +1,4 @@
-# files -- lintian check script -*- perl -*-
+# files/includes -- lintian check script -*- perl -*-
 
 # Copyright (C) 1998 Christian Schwarz and Richard Braakman
 #
@@ -18,7 +18,7 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-package Lintian::files;
+package Lintian::files::includes;
 
 use strict;
 use warnings;
@@ -26,41 +26,39 @@ use autodie;
 
 use Moo;
 
-use File::Find::Rule;
-use Path::Tiny;
-
 with('Lintian::Check');
 
-sub always {
+my $MULTIARCH_DIRS = Lintian::Data->new('common/multiarch-dirs', qr/\s++/);
+my $GENERIC_HEADER_FILES = Lintian::Data->new('files/generic-header-files');
+
+has header_dirs => (is => 'rwp');
+
+sub setup {
     my ($self) = @_;
 
-    # temporary setup until split is finalized
-    # tags and tests will be divided and reassigned later
+    my %header_dirs = ('usr/include/' => 1);
 
-    # call submodules for now
-    my @submodules = sort File::Find::Rule->file->name('*.pm')
-      ->in("$ENV{LINTIAN_ROOT}/checks/files");
+    foreach my $arch ($MULTIARCH_DIRS->all) {
+        my $dir = $MULTIARCH_DIRS->value($arch);
+        $header_dirs{"usr/include/$dir/"} = 1;
+    }
 
-    for my $submodule (@submodules) {
+    $self->_set_header_dirs(\%header_dirs);
 
-        my $name = path($submodule)->basename('.pm');
-        my $dir = path($submodule)->parent->stringify;
+    return;
+}
 
-        # skip checks that already stand on their own
-        next
-          if -e "$dir/$name.desc";
+sub files {
+    my ($self, $file) = @_;
 
-        require $submodule;
+    # only look at files in header locations
+    return
+      unless exists $self->header_dirs->{$file->dirname};
 
-        # replace hyphens with underscores
-        $name =~ s/-/_/g;
+    if (   $file->is_file
+        && $GENERIC_HEADER_FILES->matches_any($file->basename, 'i')) {
 
-        my $subpackage = "Lintian::files::$name";
-        my $check = $subpackage->new;
-        $check->processable($self->processable);
-        $check->group($self->group);
-
-        $check->run;
+        $self->tag('header-has-overly-generic-name', $file->name);
     }
 
     return;

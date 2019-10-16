@@ -1,4 +1,4 @@
-# files -- lintian check script -*- perl -*-
+# files/lintian -- lintian check script -*- perl -*-
 
 # Copyright (C) 1998 Christian Schwarz and Richard Braakman
 #
@@ -18,7 +18,7 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-package Lintian::files;
+package Lintian::files::lintian;
 
 use strict;
 use warnings;
@@ -26,41 +26,32 @@ use autodie;
 
 use Moo;
 
-use File::Find::Rule;
-use Path::Tiny;
-
 with('Lintian::Check');
 
-sub always {
+has ppkg => (is => 'rwp');
+
+sub setup {
     my ($self) = @_;
 
-    # temporary setup until split is finalized
-    # tags and tests will be divided and reassigned later
+    $self->_set_ppkg(quotemeta($self->package));
+    return;
+}
 
-    # call submodules for now
-    my @submodules = sort File::Find::Rule->file->name('*.pm')
-      ->in("$ENV{LINTIAN_ROOT}/checks/files");
+sub files {
+    my ($self, $file) = @_;
 
-    for my $submodule (@submodules) {
+    my $ppkg = $self->ppkg;
 
-        my $name = path($submodule)->basename('.pm');
-        my $dir = path($submodule)->parent->stringify;
+    # misplaced overrides
+    if ($file->name =~ m,^usr/share/doc/$ppkg/override\.[lL]intian(?:\.gz)?$,
+        or $file->name =~ m,^usr/share/lintian/overrides/$ppkg/.+,) {
 
-        # skip checks that already stand on their own
-        next
-          if -e "$dir/$name.desc";
+        $self->tag('override-file-in-wrong-location', $file->name);
 
-        require $submodule;
+    } elsif ($file->name =~ m,^usr/share/lintian/overrides/(.+)/.+$,) {
 
-        # replace hyphens with underscores
-        $name =~ s/-/_/g;
-
-        my $subpackage = "Lintian::files::$name";
-        my $check = $subpackage->new;
-        $check->processable($self->processable);
-        $check->group($self->group);
-
-        $check->run;
+        $self->tag('override-file-in-wrong-package', $file->name)
+          unless $1 eq $self->package;
     }
 
     return;

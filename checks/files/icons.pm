@@ -1,4 +1,4 @@
-# files -- lintian check script -*- perl -*-
+# files/icons -- lintian check script -*- perl -*-
 
 # Copyright (C) 1998 Christian Schwarz and Richard Braakman
 #
@@ -18,7 +18,7 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-package Lintian::files;
+package Lintian::files::icons;
 
 use strict;
 use warnings;
@@ -26,41 +26,31 @@ use autodie;
 
 use Moo;
 
-use File::Find::Rule;
-use Path::Tiny;
-
 with('Lintian::Check');
 
-sub always {
-    my ($self) = @_;
+sub files {
+    my ($self, $file) = @_;
 
-    # temporary setup until split is finalized
-    # tags and tests will be divided and reassigned later
+    if ($file->name =~ m,/icons/[^/]+/(\d+)x(\d+)/(?!animations/).*\.png$,){
 
-    # call submodules for now
-    my @submodules = sort File::Find::Rule->file->name('*.pm')
-      ->in("$ENV{LINTIAN_ROOT}/checks/files");
+        my ($directory_width, $directory_height) = ($1, $2);
+        my $resolved = $file->resolve_path;
 
-    for my $submodule (@submodules) {
+        if ($resolved && $resolved->file_info =~ m/,\s*(\d+)\s*x\s*(\d+)\s*,/){
 
-        my $name = path($submodule)->basename('.pm');
-        my $dir = path($submodule)->parent->stringify;
+            my ($file_width, $file_height) = ($1, $2);
+            my $width_delta = abs($directory_width - $file_width);
+            my $height_delta = abs($directory_height - $file_height);
 
-        # skip checks that already stand on their own
-        next
-          if -e "$dir/$name.desc";
+            $self->tag('icon-size-and-directory-name-mismatch',
+                $file->name,$file_width.'x'.$file_height)
+              unless $width_delta <= 2 && $height_delta <= 2;
+        }
+    }
 
-        require $submodule;
-
-        # replace hyphens with underscores
-        $name =~ s/-/_/g;
-
-        my $subpackage = "Lintian::files::$name";
-        my $check = $subpackage->new;
-        $check->processable($self->processable);
-        $check->group($self->group);
-
-        $check->run;
+    if (   $file->is_file
+        && $file->name =~ m,/icons/[^/]+/scalable/.*\.(?:png|xpm)$,) {
+        $self->tag('raster-image-in-scalable-directory', $file->name);
     }
 
     return;

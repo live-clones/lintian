@@ -1,4 +1,4 @@
-# files -- lintian check script -*- perl -*-
+# files/debug -- lintian check script -*- perl -*-
 
 # Copyright (C) 1998 Christian Schwarz and Richard Braakman
 #
@@ -18,7 +18,7 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-package Lintian::files;
+package Lintian::files::debug;
 
 use strict;
 use warnings;
@@ -26,41 +26,22 @@ use autodie;
 
 use Moo;
 
-use File::Find::Rule;
-use Path::Tiny;
-
 with('Lintian::Check');
 
-sub always {
-    my ($self) = @_;
+has warned_debug_name => (is => 'rwp', default => 0);
 
-    # temporary setup until split is finalized
-    # tags and tests will be divided and reassigned later
+sub files {
+    my ($self, $file) = @_;
 
-    # call submodules for now
-    my @submodules = sort File::Find::Rule->file->name('*.pm')
-      ->in("$ENV{LINTIAN_ROOT}/checks/files");
+    if ($file->name =~ m,^usr/lib/debug/\S,) {
 
-    for my $submodule (@submodules) {
+        unless ($self->info->is_pkg_class('debug')) {
 
-        my $name = path($submodule)->basename('.pm');
-        my $dir = path($submodule)->parent->stringify;
-
-        # skip checks that already stand on their own
-        next
-          if -e "$dir/$name.desc";
-
-        require $submodule;
-
-        # replace hyphens with underscores
-        $name =~ s/-/_/g;
-
-        my $subpackage = "Lintian::files::$name";
-        my $check = $subpackage->new;
-        $check->processable($self->processable);
-        $check->group($self->group);
-
-        $check->run;
+            unless ($self->warned_debug_name) {
+                $self->tag('debug-package-should-be-named-dbg', $file->name);
+                $self->_set_warned_debug_name(1);
+            }
+        }
     }
 
     return;

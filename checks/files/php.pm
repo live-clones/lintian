@@ -1,4 +1,4 @@
-# files -- lintian check script -*- perl -*-
+# files/php -- lintian check script -*- perl -*-
 
 # Copyright (C) 1998 Christian Schwarz and Richard Braakman
 #
@@ -18,7 +18,7 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-package Lintian::files;
+package Lintian::files::php;
 
 use strict;
 use warnings;
@@ -26,41 +26,27 @@ use autodie;
 
 use Moo;
 
-use File::Find::Rule;
-use Path::Tiny;
-
 with('Lintian::Check');
 
-sub always {
-    my ($self) = @_;
+sub files {
+    my ($self, $file) = @_;
 
-    # temporary setup until split is finalized
-    # tags and tests will be divided and reassigned later
+    # /etc/php/*/mods-available/*.ini
+    if (   $file->is_file
+        && $file->name =~ m,^etc/php/.*/mods-available/.+\.ini$,) {
 
-    # call submodules for now
-    my @submodules = sort File::Find::Rule->file->name('*.pm')
-      ->in("$ENV{LINTIAN_ROOT}/checks/files");
+        my $fd = $file->open;
+        while (<$fd>) {
+            next
+              unless (m/^\s*#/);
 
-    for my $submodule (@submodules) {
+            $self->tag('obsolete-comments-style-in-php-ini', $file->name);
 
-        my $name = path($submodule)->basename('.pm');
-        my $dir = path($submodule)->parent->stringify;
+            # only warn once per file:
+            last;
+        }
 
-        # skip checks that already stand on their own
-        next
-          if -e "$dir/$name.desc";
-
-        require $submodule;
-
-        # replace hyphens with underscores
-        $name =~ s/-/_/g;
-
-        my $subpackage = "Lintian::files::$name";
-        my $check = $subpackage->new;
-        $check->processable($self->processable);
-        $check->group($self->group);
-
-        $check->run;
+        close($fd);
     }
 
     return;

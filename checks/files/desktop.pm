@@ -1,4 +1,4 @@
-# files -- lintian check script -*- perl -*-
+# files/desktop -- lintian check script -*- perl -*-
 
 # Copyright (C) 1998 Christian Schwarz and Richard Braakman
 #
@@ -18,7 +18,7 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-package Lintian::files;
+package Lintian::files::desktop;
 
 use strict;
 use warnings;
@@ -26,41 +26,27 @@ use autodie;
 
 use Moo;
 
-use File::Find::Rule;
-use Path::Tiny;
-
 with('Lintian::Check');
 
-sub always {
-    my ($self) = @_;
+sub files {
+    my ($self, $file) = @_;
 
-    # temporary setup until split is finalized
-    # tags and tests will be divided and reassigned later
+    # .desktop files
+    # People have placed them everywhere, but nowadays the
+    # consensus seems to be to stick to the fd.org standard
+    # drafts, which says that .desktop files intended for
+    # menus should be placed in $XDG_DATA_DIRS/applications.
+    # The default for $XDG_DATA_DIRS is
+    # /usr/local/share/:/usr/share/, according to the
+    # basedir-spec on fd.org. As distributor, we should only
+    # allow /usr/share.
+    #
+    # KDE hasn't moved its files from /usr/share/applnk, so
+    # don't warn about this yet until KDE adopts the new
+    # location.
 
-    # call submodules for now
-    my @submodules = sort File::Find::Rule->file->name('*.pm')
-      ->in("$ENV{LINTIAN_ROOT}/checks/files");
-
-    for my $submodule (@submodules) {
-
-        my $name = path($submodule)->basename('.pm');
-        my $dir = path($submodule)->parent->stringify;
-
-        # skip checks that already stand on their own
-        next
-          if -e "$dir/$name.desc";
-
-        require $submodule;
-
-        # replace hyphens with underscores
-        $name =~ s/-/_/g;
-
-        my $subpackage = "Lintian::files::$name";
-        my $check = $subpackage->new;
-        $check->processable($self->processable);
-        $check->group($self->group);
-
-        $check->run;
+    if ($file->name =~ m,^usr/share/gnome/apps/.*\.desktop$,) {
+        $self->tag('desktop-file-in-wrong-dir', $file->name);
     }
 
     return;
