@@ -327,6 +327,26 @@ sub scripts {
     return $self->{scripts};
 }
 
+=item is_script (PATH)
+
+True if PATH is a script.
+
+Needs-Info requirements for using I<is_script>: scripts
+
+=cut
+
+sub is_script {
+    my ($self, $path) = @_;
+
+    return 0
+      unless defined $path;
+
+    return 1
+      if exists $self->scripts->{$path};
+
+    return 0;
+}
+
 =item objdump_info
 
 Returns a hashref mapping a FILE to the data collected by objdump-info
