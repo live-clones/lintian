@@ -29,12 +29,17 @@ use warnings;
 use autodie;
 
 use List::MoreUtils qw(true);
+use Moo;
 
-use Lintian::Check qw(check_maintainer);
+use Lintian::Maintainer qw(check_maintainer);
 use Lintian::Tags qw(tag);
 
+with('Lintian::Check');
+
 sub always {
-    my (undef, undef, $info, undef, undef) = @_;
+    my ($self) = @_;
+
+    my $info = $self->info;
 
     my $uploaders = $info->unfolded_field('uploaders');
 

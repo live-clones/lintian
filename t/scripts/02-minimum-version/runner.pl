@@ -19,3 +19,9 @@ $ENV{'LINTIAN_TEST_ROOT'} //= '.';
 all_minimum_version_ok($REQUIRED, { paths => \@test_paths, no_plan => 1});
 
 done_testing();
+
+# Local Variables:
+# indent-tabs-mode: nil
+# cperl-indent-level: 4
+# End:
+# vim: syntax=perl sw=4 sts=4 sr et

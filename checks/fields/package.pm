@@ -28,11 +28,17 @@ use strict;
 use warnings;
 use autodie;
 
+use Moo;
+
 use Lintian::Tags qw(tag);
 use Lintian::Util qw($PKGNAME_REGEX);
 
+with('Lintian::Check');
+
 sub binary {
-    my (undef, undef, $info, undef, undef) = @_;
+    my ($self) = @_;
+
+    my $info = $self->info;
 
     my $name = $info->unfolded_field('package');
 

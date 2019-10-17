@@ -1,0 +1,4 @@
+Skeleton: upload-native
+Testname: fields-excessive-priority-for-library-package
+Description: Library packages with excessive Priority field
+Check: fields/priority

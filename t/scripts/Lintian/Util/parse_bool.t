@@ -42,3 +42,9 @@ foreach my $not_bool (@not_bools) {
 }
 
 plan tests =>(1 + scalar @truth_vals + scalar @false_vals + scalar @not_bools);
+
+# Local Variables:
+# indent-tabs-mode: nil
+# cperl-indent-level: 4
+# End:
+# vim: syntax=perl sw=4 sts=4 sr et

@@ -16,6 +16,7 @@
 # this program.  If not, see <http://www.gnu.org/licenses/>.
 
 package Lintian::deb_format;
+
 use strict;
 use warnings;
 use autodie;
@@ -23,10 +24,13 @@ use autodie;
 use IO::Async::Loop;
 use IO::Async::Process;
 use List::MoreUtils qw(first_index none);
+use Moo;
 
 use Lintian::Data;
 use Lintian::Tags qw(tag);
 use Lintian::Util qw(safe_qx);
+
+with('Lintian::Check');
 
 use constant EMPTY => q{};
 use constant NEWLINE => qq{\n};
@@ -44,7 +48,11 @@ our %ERRORS = (
 my $EXTRA_MEMBERS = Lintian::Data->new('deb-format/extra-members');
 
 sub always {
-    my (undef, $type, $info) = @_;
+    my ($self) = @_;
+
+    my $type = $self->type;
+    my $info = $self->info;
+
     my $deb = $info->lab_data_path('deb');
 
     # Run ar t on the *.deb file.  deb will be a symlink to it.

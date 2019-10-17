@@ -1,0 +1,52 @@
+Source: [% $source %]
+Priority: optional
+Section: [% $section %]
+Maintainer: [% $author %]
+Standards-Version: [% $standards_version %]
+Build-Depends:
+ debhelper (>= [% $dh_compat_level %]~),
+ default-mta | mail-transport-agent,
+ default-mta
+Rules-Requires-Root: no
+Homepage: http://lintian.debian.org/
+
+Package: [% $source %]-bad-1
+Architecture: all
+# default-mta missing mail-transport-agent
+Depends: ${misc:Depends}, default-mta, exim4, nullmailer
+Pre-Depends: mail-transport-agent
+Recommends: default-mta, mail-transport-agent
+Suggests: exim4 | mail-transport-agent
+Description: [% $description %] (bad set 1)
+ This is a test package designed to exercise some feature or tag of
+ Lintian.  It is part of the Lintian test suite and may do very odd
+ things.  It should not be installed like a regular package.
+ .
+ This package has incorrect dependencies (1).
+
+Package: [% $source %]-bad-2
+Architecture: all
+# default-mta missing
+Depends: ${misc:Depends}, exim4 | postfix | mail-transport-agent
+# default-mta not listed first
+Pre-Depends: exim4 | default-mta | mail-transport-agent
+Description: [% $description %] (bad set 2)
+ This is a test package designed to exercise some feature or tag of
+ Lintian.  It is part of the Lintian test suite and may do very odd
+ things.  It should not be installed like a regular package.
+ .
+ This package has incorrect dependencies (2).
+
+Package: [% $source %]-good-1
+Architecture: all
+Depends: ${misc:Depends}, default-mta | mail-transport-agent
+Pre-Depends: default-mta | exim4 | mail-transport-agent
+Recommends: default-mta | mail-transport-agent | exim4
+Suggests: lintian
+Provides: mail-transport-agent
+Description: [% $description %] (good 1)
+ This is a test package designed to exercise some feature or tag of
+ Lintian.  It is part of the Lintian test suite and may do very odd
+ things.  It should not be installed like a regular package
+ .
+ This package has correct dependencies.

@@ -3,4 +3,4 @@ Skeleton: upload-native
 Section: non-free/devel
 Description: This source-upload to non-free will never appear in the archive
 Check: debian/control
-Build-Product: {$source}_{$no_epoch}_source.changes
+Build-Product: [% $source %]_[% $no_epoch %]_source.changes

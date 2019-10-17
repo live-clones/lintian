@@ -1,16 +1,16 @@
-Source: {$source}
+Source: [% $source %]
 Priority: optional
 Section: libs
-Maintainer: {$author}
-Standards-Version: {$standards_version}
-Build-Depends: {$build_depends}
+Maintainer: [% $author %]
+Standards-Version: [% $standards_version %]
+Build-Depends: [% $build_depends %]
 Rules-Requires-Root: no
 
 Package: gir1.2-bad
 Section: misc
 Architecture: all
-Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
-Description: {$description}
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: [% $description %]
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
  things.  It should not be installed like a regular package.
@@ -20,9 +20,9 @@ Description: {$description}
 Package: gir1.2-good-42
 Section: oldlibs
 Architecture: any
-Provides: gir1.2-goodextras-42 (= $\{binary:Version\})
-Depends: $\{gir:Depends\}, $\{shlibs:Depends\}, $\{misc:Depends\}, libgood-42-0
-Description: {$description} - GIR
+Provides: gir1.2-goodextras-42 (= ${binary:Version})
+Depends: ${gir:Depends}, ${shlibs:Depends}, ${misc:Depends}, libgood-42-0
+Description: [% $description %] - GIR
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
  things.  It should not be installed like a regular package.
@@ -35,8 +35,8 @@ Description: {$description} - GIR
 Package: libgood-42-dev
 Section: oldlibs
 Architecture: any
-Depends: $\{shlibs:Depends\}, $\{misc:Depends\}, gir1.2-good-42 (= $\{binary:Version\}), libgood-42-0 (= $\{binary:Version\})
-Description: {$description} - development
+Depends: ${shlibs:Depends}, ${misc:Depends}, gir1.2-good-42 (= ${binary:Version}), libgood-42-0 (= ${binary:Version})
+Description: [% $description %] - development
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
  things.  It should not be installed like a regular package.
@@ -46,8 +46,8 @@ Description: {$description} - development
 
 Package: libgood-42-0
 Architecture: any
-Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
-Description: {$description} - shared library
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: [% $description %] - shared library
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
  things.  It should not be installed like a regular package.
@@ -57,8 +57,8 @@ Description: {$description} - shared library
 Package: gir1.2-perfect-42
 Section: introspection
 Architecture: any
-Depends: $\{gir:Depends\}, $\{shlibs:Depends\}, $\{misc:Depends\}, libperfect-42-0
-Description: {$description} - GIR with multiarch
+Depends: ${gir:Depends}, ${shlibs:Depends}, ${misc:Depends}, libperfect-42-0
+Description: [% $description %] - GIR with multiarch
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
  things.  It should not be installed like a regular package.
@@ -68,8 +68,8 @@ Description: {$description} - GIR with multiarch
 Package: libperfect-42-dev
 Section: libdevel
 Architecture: any
-Depends: $\{shlibs:Depends\}, $\{misc:Depends\}, gir1.2-perfect-42 (= $\{binary:Version\}), libperfect-42-0 (= $\{binary:Version\})
-Description: {$description} - development with multiarch
+Depends: ${shlibs:Depends}, ${misc:Depends}, gir1.2-perfect-42 (= ${binary:Version}), libperfect-42-0 (= ${binary:Version})
+Description: [% $description %] - development with multiarch
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
  things.  It should not be installed like a regular package.
@@ -78,8 +78,8 @@ Description: {$description} - development with multiarch
 
 Package: libperfect-42-0
 Architecture: any
-Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
-Description: {$description} - shared library with multiarch
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: [% $description %] - shared library with multiarch
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
  things.  It should not be installed like a regular package.

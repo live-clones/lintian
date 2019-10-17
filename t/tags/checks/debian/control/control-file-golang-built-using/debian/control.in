@@ -1,26 +1,26 @@
-Source: {$source}
+Source: [% $source %]
 Section: net
 Priority: optional
-Maintainer: {$author}
-Standards-Version: {$standards_version}
-Build-Depends: {$build_depends},
+Maintainer: [% $author %]
+Standards-Version: [% $standards_version %]
+Build-Depends: [% $build_depends %],
  golang-go (>= 2:1.1.1-4)
 
-Package: {$source}
-Architecture: {$package_architecture}
-Depends: $\{misc:Depends\}
-Built-Using: $\{misc:Built-Using\}
-Description: {$description}
+Package: [% $source %]
+Architecture: [% $package_architecture %]
+Depends: ${misc:Depends}
+Built-Using: ${misc:Built-Using}
+Description: [% $description %]
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
  things.  It should not be installed like a regular package.  It may
  be an empty package.
 
-Package: {$source}-dev
+Package: [% $source %]-dev
 Architecture: all
-Depends: $\{misc:Depends\}
-Built-Using: $\{misc:Built-Using\}
-Description: {$description} (dev)
+Depends: ${misc:Depends}
+Built-Using: ${misc:Built-Using}
+Description: [% $description %] (dev)
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
  things.  It should not be installed like a regular package.  It may
@@ -28,10 +28,10 @@ Description: {$description} (dev)
  .
  This package contains the source.
 
-Package: {$source}-clean-dev
+Package: [% $source %]-clean-dev
 Architecture: all
-Depends: $\{misc:Depends\}
-Description: {$description} (clean dev)
+Depends: ${misc:Depends}
+Description: [% $description %] (clean dev)
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
  things.  It should not be installed like a regular package.  It may

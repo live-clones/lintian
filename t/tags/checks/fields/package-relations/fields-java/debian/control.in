@@ -1,0 +1,37 @@
+Source: [% $source %]
+Priority: optional
+Section: java
+Maintainer: [% $author %]
+Standards-Version: [% $standards_version %]
+Build-Depends: [% $build_depends %], openjdk-6-doc, openjdk-6-jdk, java-compiler
+Rules-Requires-Root: no
+
+Package: lib[% $source %]-java
+Architecture: all
+Depends: ${misc:Depends},
+         default-jre-headless | java-runtime-headless |
+         java2-runtime-headless | kaffe | gcj-jdk |
+         openjdk-6-jre | gcj-4.5-jre
+Suggests: libservlet2.5-java
+Recommends: libservlet3.0-java
+Description: [% $description %]
+ This is a test package designed to exercise some feature or tag of
+ Lintian.  It is part of the Lintian test suite and may do very odd
+ things.  It should not be installed like a regular package.  It may
+ be an empty package.
+
+Package: lib[% $source %]-java-doc
+Architecture: all
+Section: doc
+Depends: ${misc:Depends}
+Recommends: openjdk-6-doc
+# Negative testing as well, this should not be triggered.
+Replaces: openjdk-6-doc
+Description: [% $description %] - API
+ This is a test package designed to exercise some feature or tag of
+ Lintian.  It is part of the Lintian test suite and may do very odd
+ things.  It should not be installed like a regular package.  It may
+ be an empty package.
+ .
+ Doc package.
+

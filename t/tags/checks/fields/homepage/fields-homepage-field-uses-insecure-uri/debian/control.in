@@ -1,0 +1,17 @@
+Source: [% $source %]
+Priority: optional
+Section: [% $section %]
+Maintainer: [% $author %]
+Standards-Version: [% $standards_version %]
+Build-Depends: [% $build_depends %]
+Rules-Requires-Root: no
+Homepage: http://github.com/insecure/uri
+
+Package: [% $source %]
+Architecture: [% $package_architecture %]
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: [% $description %]
+ This is a test package designed to exercise some feature or tag of
+ Lintian.  It is part of the Lintian test suite and may do very odd
+ things.  It should not be installed like a regular package.  It may
+ be an empty package.

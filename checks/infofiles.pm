@@ -20,18 +20,26 @@
 # MA 02110-1301, USA.
 
 package Lintian::infofiles;
+
 use strict;
 use warnings;
 use autodie;
 
+use Moo;
+
 use Lintian::Tags qw(tag);
 use Lintian::Util qw(open_gz normalize_pkg_path);
 
-sub binary {
-    my (undef, undef, $info) = @_;
-    my $info_dir = $info->index_resolved_path('usr/share/info/');
+with('Lintian::Check');
 
-    return if not $info_dir;
+sub binary {
+    my ($self) = @_;
+
+    my $info = $self->info;
+
+    my $info_dir = $info->index_resolved_path('usr/share/info/');
+    return
+      unless $info_dir;
 
     # Read package contents...
     foreach my $file ($info_dir->children('breadth-first')) {

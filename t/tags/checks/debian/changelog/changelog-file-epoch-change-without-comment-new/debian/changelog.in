@@ -1,11 +1,11 @@
-{$source} (1:{$version}) unstable; urgency=low
+[% $source %] (1:[% $version %]) unstable; urgency=low
 
   * This changelog entry introduces a version prefix.
 
- -- {$author}  {$date}
+ -- [% $author %]  [% $date %]
 
-{$source} (999999) unstable; urgency=low
+[% $source %] (999999) unstable; urgency=low
 
   * Initial upload.
 
- -- {$author}  Fri, 06 Feb 2009 22:22:37 -0800
+ -- [% $author %]  Fri, 06 Feb 2009 22:22:37 -0800

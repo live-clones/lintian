@@ -1,12 +1,12 @@
-{$source} ({$version}) unstable; urgency=low
+[% $source %] ([% $version %]) unstable; urgency=low
 
   * Lintian Test Suite.
-  * Test: {$testname}
+  * Test: [% $testname %]
 
- -- {$author}  {$date}
+ -- [% $author %]  [% $date %]
 
-{$source} (0.1-2) unstable; urgency=low
+[% $source %] (0.1-2) unstable; urgency=low
 
   * An earlier non-native version.
 
- -- {$author}  Tue,  1 Jan 2008 22:45:57 +0000
+ -- [% $author %]  Tue,  1 Jan 2008 22:45:57 +0000

@@ -1,0 +1,6 @@
+Skeleton: upload-native
+Testname: fields-malformed-vcs-fields-unrel
+Description: Test malformed VCS-* fields
+Test-Against:
+ vcs-field-has-unexpected-spaces
+Check: fields/vcs

@@ -24,15 +24,20 @@ use warnings;
 use autodie;
 
 use File::Temp;
+use Moo;
 
 use Lintian::Data;
 use Lintian::Tags qw(tag);
 use Lintian::Util qw(safe_qx);
 
+with('Lintian::Check');
+
 my $SIGNING_KEY_FILENAMES = Lintian::Data->new('common/signing-key-filenames');
 
 sub source {
-    my (undef, undef, $info, undef, undef) = @_;
+    my ($self) = @_;
+
+    my $info = $self->info;
 
     # Check all possible locations for signing keys
     my %key_locations;

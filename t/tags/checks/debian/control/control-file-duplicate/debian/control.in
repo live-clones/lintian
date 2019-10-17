@@ -1,21 +1,21 @@
-Source: {$source}
+Source: [% $source %]
 Priority: optional
-Section: {$section}
-Maintainer: {$author}
-Standards-Version: {$standards_version}
-Build-Depends: {$build_depends}, debhelper
+Section: [% $section %]
+Maintainer: [% $author %]
+Standards-Version: [% $standards_version %]
+Build-Depends: [% $build_depends %], debhelper
 Build-Depends-Indep: foobar, foo, foobar
 Build-Conflicts: bar,
  baz,
  bar [i386]
 Rules-Requires-Root: no
 
-Package: {$source}
-Architecture: {$package_architecture}
-Depends: $\{shlibs:Depends\}, $\{misc:Depends\}, $\{misc:Depends\}
+Package: [% $source %]
+Architecture: [% $package_architecture %]
+Depends: ${shlibs:Depends}, ${misc:Depends}, ${misc:Depends}
 Recommends: foo (>> 1.0) | bar, foo
 Suggests: baz (= 1.0), baz, baz (>= 2.0)
-Description: {$description}
+Description: [% $description %]
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
  things.  It should not be installed like a regular package.  It may

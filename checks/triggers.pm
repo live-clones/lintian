@@ -23,9 +23,13 @@ package Lintian::triggers;
 use strict;
 use warnings;
 
+use Moo;
+
 use Lintian::Data;
 use Lintian::Tags qw(tag);
 use Lintian::Util qw(internal_error strip);
+
+with('Lintian::Check');
 
 sub _parse_trigger_types {
     my ($key, $val) = @_;
@@ -49,7 +53,10 @@ my $TRIGGER_TYPES = Lintian::Data->new('triggers/trigger-types',
     qr/\s*\Q=>\E\s*/, \&_parse_trigger_types);
 
 sub always {
-    my (undef, undef, $info) = @_;
+    my ($self) = @_;
+
+    my $info = $self->info;
+
     my $triggers_file = $info->control_index('triggers');
     return if not $triggers_file or not $triggers_file->is_open_ok;
     my $fd = $triggers_file->open;

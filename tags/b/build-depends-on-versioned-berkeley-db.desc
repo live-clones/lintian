@@ -1,7 +1,7 @@
 Tag: build-depends-on-versioned-berkeley-db
 Severity: normal
 Certainty: possible
-Check: fields
+Check: fields/package-relations
 Info: The package build-depends on a versioned development package of
  Berkeley DB (libdbX.Y-dev) instead of versionless package
  (libdb-dev). Unfortunately this prevents binNMUs when default

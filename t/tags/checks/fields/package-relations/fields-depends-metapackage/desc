@@ -1,0 +1,5 @@
+Skeleton: upload-native
+Testname: fields-depends-metapackage
+Description: Tests for package dependencies in a metapackage
+Test-Against: depends-on-metapackage
+Check: fields/package-relations

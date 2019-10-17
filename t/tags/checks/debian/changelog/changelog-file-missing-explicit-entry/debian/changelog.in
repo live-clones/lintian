@@ -1,12 +1,12 @@
-{$source} ({$version}) stable-proposed-updates; urgency=low
+[% $source %] ([% $version %]) stable-proposed-updates; urgency=low
 
   * New version.
 
- -- {$author}  {$date}
+ -- [% $author %]  [% $date %]
 
-{$source} (0.9-1) unstable; urgency=low
+[% $source %] (0.9-1) unstable; urgency=low
 
   * Lintian Test Suite.
-  * Test: {$testname}
+  * Test: [% $testname %]
 
- -- {$author}  Tue,  1 Jan 2008 22:45:57 +0000
+ -- [% $author %]  Tue,  1 Jan 2008 22:45:57 +0000

@@ -19,14 +19,21 @@
 # MA 02110-1301, USA.
 
 package Lintian::usrmerge;
+
 use strict;
 use warnings;
 use autodie;
 
+use Moo;
+
 use Lintian::Tags qw(tag);
 
+with('Lintian::Check');
+
 sub binary {
-    my (undef, undef, $info) = @_;
+    my ($self) = @_;
+
+    my $info = $self->info;
 
     foreach my $file1 ($info->sorted_index) {
         next unless $file1 =~ m,^(?:s?bin|lib(?:|[ox]?32|64))/,;

@@ -21,11 +21,14 @@ use autodie;
 use Carp qw(croak);
 
 use List::MoreUtils qw(any none);
+use Moo;
 
 use Lintian::Data;
 use Lintian::SlidingWindow;
 use Lintian::Tags qw(tag);
 use Lintian::Util qw(rstrip);
+
+with('Lintian::Check');
 
 our $PYTHON_DEPEND
   = 'python:any | python-dev:any | python-all:any | python-all-dev:any | python2:any | python2-dev:any';
@@ -132,7 +135,11 @@ my %debhelper_order = (
 );
 
 sub source {
-    my (undef, undef, $info, undef, $group) = @_;
+    my ($self) = @_;
+
+    my $info = $self->info;
+    my $group = $self->group;
+
     my $debian_dir = $info->index_resolved_path('debian');
     my $rules;
     $rules = $debian_dir->child('rules') if $debian_dir;

@@ -1,0 +1,17 @@
+Package: fields-general-BAD?
+Source: [% $source %]
+Version: 1.0?
+Architecture: weird i386 amd64
+Maintainer: [% $author %]
+Section:
+Priority: is
+ weird
+Unknown-Field: Hallo World
+Depends: other-package (>= 1.0?), another-package (>< 1.0)
+Conflicts: somepkg | anotherpkg
+Recommends: g++ (>= s4.1)
+Description: [% $description %]
+ This is a test package designed to exercise some feature or tag of
+ Lintian.  It is part of the Lintian test suite and may do very odd
+ things.  It should not be installed like a regular package.  It may
+ be an empty package.

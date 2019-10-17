@@ -1,7 +1,7 @@
 Tag: no-strong-digests-in-dsc
 Severity: serious
 Certainty: certain
-Check: fields
+Check: fields/checksums
 Info: This .dsc file contains no Checksum-Sha256 field and hence only
  weak digests.
  .

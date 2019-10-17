@@ -1,4 +1,4 @@
-maintainer-scripts ({$version}) {$distribution}; urgency=low
+maintainer-scripts ([% $version %]) [% $distribution %]; urgency=low
 
   * Doing an upload for QA  but I fail to give it a correct version number,
     have some uploaders, and also fail to mention it... Bad me ;)

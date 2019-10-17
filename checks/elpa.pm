@@ -23,10 +23,16 @@ package Lintian::elpa;
 use strict;
 use warnings;
 
+use Moo;
+
 use Lintian::Tags qw(tag);
 
+with('Lintian::Check');
+
 sub binary {
-    my ($pkg, $type, $info, $proc, $group) = @_;
+    my ($self) = @_;
+
+    my $info = $self->info;
 
     tag 'emacsen-common-without-dh-elpa'
       if ($info->index('usr/lib/emacsen-common/packages/install/')
@@ -36,3 +42,9 @@ sub binary {
 }
 
 1;
+
+# Local Variables:
+# indent-tabs-mode: nil
+# cperl-indent-level: 4
+# End:
+# vim: syntax=perl sw=4 sts=4 sr et

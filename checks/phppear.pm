@@ -22,16 +22,22 @@ package Lintian::phppear;
 
 use strict;
 use warnings;
-
 use autodie;
 
 use List::MoreUtils qw(none);
+use Moo;
 
 use Lintian::Tags qw(tag);
 use Lintian::Relation;
 
+with('Lintian::Check');
+
 sub source {
-    my ($pkg, $type, $info) = @_;
+    my ($self) = @_;
+
+    my $pkg = $self->package;
+    my $type = $self->type;
+    my $info = $self->info;
 
     # Don't check package if it doesn't contain a .php file
     if (none { $_->basename =~ m/\.php$/i } $info->sorted_index) {

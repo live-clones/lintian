@@ -19,18 +19,25 @@
 # MA 02110-1301, USA.
 
 package Lintian::nmu;
+
 use strict;
 use warnings;
 use autodie;
 
 use List::MoreUtils qw(any);
 use List::Util qw(first);
+use Moo;
 
 use Lintian::Tags qw(tag);
 use Lintian::Util qw(strip);
 
+with('Lintian::Check');
+
 sub source {
-    my (undef, undef, $info) = @_;
+    my ($self) = @_;
+
+    my $info = $self->info;
+
     my $changelog_mentions_nmu = 0;
     my $changelog_mentions_local = 0;
     my $changelog_mentions_qa = 0;

@@ -1,4 +1,4 @@
-scripts ({$version}) {$distribution}; urgency=low
+scripts ([% $version %]) [% $distribution %]; urgency=low
 
   * I'm also not able to write my name.
   * Added a script in /etc/Xsession.d

@@ -41,14 +41,18 @@ use warnings;
 use autodie;
 
 use List::MoreUtils qw(any);
+use Moo;
 
 use Lintian::Relation qw(:constants);
 use Lintian::Tags qw(tag);
 use Lintian::Util qw($PKGNAME_REGEX);
 
-sub source {
+with('Lintian::Check');
 
-    my (undef, undef, $info) = @_;
+sub source {
+    my ($self) = @_;
+
+    my $info = $self->info;
 
     my @dep_fields
       = qw(depends pre-depends recommends suggests conflicts replaces);

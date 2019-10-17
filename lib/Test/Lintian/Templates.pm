@@ -277,7 +277,11 @@ sub fill_template {
 
     if ($generated_epoch <= $threshold) {
 
-        my $filler= Text::Template->new(TYPE => 'FILE', SOURCE => $template);
+        my $filler= Text::Template->new(
+            TYPE => 'FILE',
+            DELIMITERS => ['[%', '%]'],
+            SOURCE => $template
+        );
         croak("Cannot read template $template: $Text::Template::ERROR")
           unless $filler;
 
@@ -312,3 +316,8 @@ sub fill_template {
 
 1;
 
+# Local Variables:
+# indent-tabs-mode: nil
+# cperl-indent-level: 4
+# End:
+# vim: syntax=perl sw=4 sts=4 sr et

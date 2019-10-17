@@ -160,3 +160,9 @@ is(
     'Debian Lintian Maintainers <lintian-maint@debian.org>',
     'Default author'
 );
+
+# Local Variables:
+# indent-tabs-mode: nil
+# cperl-indent-level: 4
+# End:
+# vim: syntax=perl sw=4 sts=4 sr et

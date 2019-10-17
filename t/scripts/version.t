@@ -27,3 +27,9 @@ ok(
     versions_compare('1:1.1', '<<', '2:1.1'),
     'compare() << with different epochs'
 );
+
+# Local Variables:
+# indent-tabs-mode: nil
+# cperl-indent-level: 4
+# End:
+# vim: syntax=perl sw=4 sts=4 sr et

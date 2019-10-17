@@ -23,3 +23,9 @@ ok(eval {$map->satisfy('P1');}, 'Nodes can be satisfied');
 
 ok($map->addp('foo', 'P', '1', '2', {name => 'test'}),
     'Nodes can be added with prefix');
+
+# Local Variables:
+# indent-tabs-mode: nil
+# cperl-indent-level: 4
+# End:
+# vim: syntax=perl sw=4 sts=4 sr et

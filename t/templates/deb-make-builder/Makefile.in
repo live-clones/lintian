@@ -1,4 +1,4 @@
-name = {$source}
+name = [% $source %]
 
 package = $(name).deb
 
@@ -14,7 +14,7 @@ mandatorydir = doc
 changelogfile = $(mandatorydir)/changelog
 copyrightfile = $(mandatorydir)/copyright
 
-version = {$version}
+version = [% $version %]
 
 ifeq "$(findstring -, $(version))" ""
 changelogtarget = $(docdir)/changelog

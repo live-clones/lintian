@@ -28,10 +28,17 @@ use strict;
 use warnings;
 use autodie;
 
+use Moo;
+
 use Lintian::Tags qw(tag);
 
+with('Lintian::Check');
+
 sub always {
-    my (undef, undef, $info, $proc, undef) = @_;
+    my ($self) = @_;
+
+    my $info = $self->info;
+    my $proc = $self->processable;
 
     my $origin = $info->unfolded_field('origin');
 

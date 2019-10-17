@@ -15,3 +15,9 @@ ok(eval {$map->addp('foo', 'p', 'A')}, 'Add foo depending on "p"+"A"');
 $map->satisfy('pA');
 
 ok($map->selectable('foo'), 'foo is selectable');
+
+# Local Variables:
+# indent-tabs-mode: nil
+# cperl-indent-level: 4
+# End:
+# vim: syntax=perl sw=4 sts=4 sr et

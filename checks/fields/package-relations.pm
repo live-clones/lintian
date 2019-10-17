@@ -30,11 +30,14 @@ use autodie;
 
 use Dpkg::Version qw(version_check);
 use List::MoreUtils qw(any);
+use Moo;
 
 use Lintian::Architecture qw(:all);
 use Lintian::Data ();
 use Lintian::Relation qw(:constants);
 use Lintian::Tags qw(tag);
+
+with('Lintian::Check');
 
 our $KNOWN_ESSENTIAL = Lintian::Data->new('fields/essential');
 our $KNOWN_TOOLCHAIN = Lintian::Data->new('fields/toolchain');
@@ -96,15 +99,21 @@ our $OBSOLETE_PACKAGES
 our $VIRTUAL_PACKAGES   = Lintian::Data->new('fields/virtual-packages');
 
 sub udeb {
-    my @args = @_;
+    my ($self) = @_;
 
-    binary(@args);
+    $self->binary;
 
     return;
 }
 
 sub binary {
-    my ($pkg, $type, $info, $proc, $group) = @_;
+    my ($self) = @_;
+
+    my $pkg = $self->package;
+    my $type = $self->type;
+    my $info = $self->info;
+    my $proc = $self->processable;
+    my $group = $self->group;
 
     my $javalib = 0;
     my $replaces = $info->relation('replaces');
@@ -364,7 +373,13 @@ sub binary {
 }
 
 sub source {
-    my ($pkg, $type, $info, $proc, $group) = @_;
+    my ($self) = @_;
+
+    my $pkg = $self->package;
+    my $type = $self->type;
+    my $info = $self->info;
+    my $proc = $self->processable;
+    my $group = $self->group;
 
     my @binpkgs = $info->binaries;
 

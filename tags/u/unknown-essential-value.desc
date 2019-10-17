@@ -1,6 +1,6 @@
 Tag: unknown-essential-value
 Severity: important
 Certainty: certain
-Check: fields
+Check: fields/essential
 Info: The only valid values for the Essential field are yes and no.
 Ref: policy 5.6.9

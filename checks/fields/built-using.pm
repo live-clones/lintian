@@ -28,16 +28,22 @@ use strict;
 use warnings;
 use autodie;
 
+use Moo;
+
 use Lintian::Relation qw(:constants);
 use Lintian::Tags qw(tag);
 use Lintian::Util qw($PKGNAME_REGEX $PKGVERSION_REGEX);
+
+with('Lintian::Check');
 
 use constant {
     BUILT_USING_REGEX => qr/^$PKGNAME_REGEX \(= $PKGVERSION_REGEX\)$/o,
 };
 
 sub always {
-    my (undef, undef, $info, undef, undef) = @_;
+    my ($self) = @_;
+
+    my $info = $self->info;
 
     my $built_using = $info->field('built-using');
 

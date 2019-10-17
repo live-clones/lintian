@@ -19,17 +19,21 @@
 # MA 02110-1301, USA.
 
 package Lintian::shared_libs;
+
 use strict;
 use warnings;
 use autodie;
 
 use File::Basename;
 use List::MoreUtils qw(any none uniq);
+use Moo;
 
 use Lintian::Data;
 use Lintian::Relation;
 use Lintian::Tags qw(tag);
 use Lintian::Util qw(internal_error strip);
+
+with('Lintian::Check');
 
 # Libraries that should only be used in the presence of certain capabilities
 # may be located in subdirectories of the standard ldconfig search path with
@@ -49,7 +53,13 @@ my $ldconfig_dirs = Lintian::Data->new('shared-libs/ldconfig-dirs');
 my $MA_DIRS = Lintian::Data->new('common/multiarch-dirs', qr/\s++/);
 
 sub always {
-    my ($pkg, $type, $info, $proc, $group) = @_;
+    my ($self) = @_;
+
+    my $pkg = $self->package;
+    my $type = $self->type;
+    my $info = $self->info;
+    my $proc = $self->processable;
+    my $group = $self->group;
 
     my ($must_call_ldconfig, %SONAME, %SONAMES, %STATIC_LIBS, %sharedobject);
     my @shlibs;

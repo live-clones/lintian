@@ -1,7 +1,7 @@
-{$source} ({$version}) unstable; urgency=low
+[% $source %] ([% $version %]) unstable; urgency=low
 
   * Lintian Test Suite.
-  * Test: {$testname}
+  * Test: [% $testname %]
 
   * Suppress "should close ITP bug" messages.  (Closes: #123456)
   * This line has a speling error.
@@ -10,4 +10,4 @@
   * Corrected spelling: abov -> above.
   * Corrected typo: abov -> above.
 
- -- {$author}  {$date}
+ -- [% $author %]  [% $date %]

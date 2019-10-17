@@ -1,4 +1,4 @@
-debug ({$version}) {$distribution}; urgency=low
+debug ([% $version %]) [% $distribution %]; urgency=low
 
   * NMU.
     (uploaded by the maintainer and with repeated version number)

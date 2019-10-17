@@ -23,20 +23,24 @@
 # MA 02110-1301, USA.
 
 package Lintian::scripts;
+
 use strict;
 use warnings;
 use autodie;
 
 use Capture::Tiny qw(capture);
 use List::MoreUtils qw(any);
+use Moo;
 use POSIX qw(strftime);
 use Try::Tiny;
 
-use Lintian::Check qw($known_shells_regex);
+use Lintian::Spelling qw($known_shells_regex);
 use Lintian::Data;
 use Lintian::Relation;
 use Lintian::Tags qw(tag);
 use Lintian::Util qw(internal_error safe_qx strip);
+
+with('Lintian::Check');
 
 # This is a map of all known interpreters.  The key is the interpreter
 # name (the binary invoked on the #! line).  The value is an anonymous
@@ -239,7 +243,10 @@ sub script_tag {
 }
 
 sub binary {
-    my ($pkg, undef, $info) = @_;
+    my ($self) = @_;
+
+    my $pkg = $self->package;
+    my $info = $self->info;
 
     my (%executable, %ELF, %scripts, %seen_helper_cmds);
 

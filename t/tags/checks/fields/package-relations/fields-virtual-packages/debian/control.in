@@ -1,0 +1,32 @@
+Source: [% $source %]
+Priority: optional
+Section: [% $section %]
+Maintainer: [% $author %]
+Standards-Version: [% $standards_version %]
+Build-Depends: [% $build_depends %]
+Rules-Requires-Root: no
+
+Package: [% $source %]
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, httpd
+Provides:
+    123456789,
+    [% $source %]-${source:Version},
+    arch-specific [i386],
+    provides-are-allowed [!i386],
+    valid-versioned-provides (= 1.0)
+Description: [% $description %]
+ This is a test package designed to exercise some feature or tag of
+ Lintian.  It is part of the Lintian test suite and may do very odd
+ things.  It should not be installed like a regular package.  It may
+ be an empty package.
+
+Package: [% $source %]2
+Architecture: [% $package_architecture %]
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Provides: a, iNvAlId-NaMe, versioned (>> 0.1)
+Description: [% $description %] - bogus
+ This is a bogus test package designed to exercise some feature or tag
+ of Lintian.  It is part of the Lintian test suite and may do very odd
+ things.  It should not be installed like a regular package.  It may
+ be an empty package.

@@ -24,10 +24,23 @@
 # MA 02110-1301, USA.
 
 package Lintian::cruft;
+
 use strict;
 use warnings;
 use autodie;
 use v5.10;
+
+use File::Basename qw(basename);
+use List::MoreUtils qw(any);
+use Moo;
+
+use Lintian::Data;
+use Lintian::Relation ();
+use Lintian::Tags qw(tag);
+use Lintian::Util qw(internal_error normalize_pkg_path strip open_gz);
+use Lintian::SlidingWindow;
+
+with('Lintian::Check');
 
 # Half of the size used in the "sliding window" for detecting bad
 # licenses like GFDL with invariant sections.
@@ -38,15 +51,6 @@ use constant BLOCKSIZE => 16_384;
 # constant for insane line length
 use constant INSANE_LINE_LENGTH => 512;
 use constant SAFE_LINE_LENGTH => 256;
-
-use File::Basename qw(basename);
-use List::MoreUtils qw(any);
-
-use Lintian::Data;
-use Lintian::Relation ();
-use Lintian::Tags qw(tag);
-use Lintian::Util qw(internal_error normalize_pkg_path strip open_gz);
-use Lintian::SlidingWindow;
 
 our $LIBTOOL = Lintian::Relation->new('libtool | dh-autoreconf');
 
@@ -346,7 +350,12 @@ our @TRAILING_WHITESPACE_FILES = (
 );
 
 sub source {
-    my (undef, undef, $info, $proc, $group) = @_;
+    my ($self) = @_;
+
+    my $info = $self->info;
+    my $proc = $self->processable;
+    my $group = $self->group;
+
     my $source_pkg = $proc->pkg_src;
     my $d_files = $info->index_resolved_path('debian/files');
 

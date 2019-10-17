@@ -1,0 +1,5 @@
+Skeleton: upload-native
+Testname: fields-duplicate-build
+Package-Architecture: all
+Description: Check for duplicate build relations
+Check: fields/package-relations

@@ -2,7 +2,7 @@
 Tag: libmodule-build-tiny-perl-needs-to-be-in-build-depends
 Severity: serious
 Certainty: certain
-Check: fields
+Check: fields/package-relations
 Experimental: yes
 Info: libmodule-build-tiny-perl needs to be in <tt>Build-Depends</tt>, not
  in Build-Depends-Indep, since it's used in the clean target.

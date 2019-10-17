@@ -1,6 +1,6 @@
 Tag: uploader-address-looks-weird
 Severity: normal
 Certainty: possible
-Check: fields
+Check: fields/uploaders
 Info: The uploader address does not have whitespace between the name
  and the email address.

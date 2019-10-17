@@ -1,15 +1,15 @@
-Source: {$source}
+Source: [% $source %]
 Priority: optional
-Section: {$section}
-Maintainer: {$author}
-Standards-Version: {$standards_version}
-Build-Depends: {$build_depends}
+Section: [% $section %]
+Maintainer: [% $author %]
+Standards-Version: [% $standards_version %]
+Build-Depends: [% $build_depends %]
 Rules-Requires-Root: no
 
 Package: python-cheshire
 Section: python
 Architecture: all
-Depends: $\{misc:Depends\}, $\{python:Depends\}
+Depends: ${misc:Depends}, ${python:Depends}
 Description: Cheshire cheese for Python 2.X
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
@@ -21,7 +21,7 @@ Description: Cheshire cheese for Python 2.X
 Package: python3-cheshire
 Section: python
 Architecture: all
-Depends: $\{misc:Depends\}, $\{python3:Depends\}
+Depends: ${misc:Depends}, ${python3:Depends}
 Description: Cheshire cheese for Python 3.X
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd

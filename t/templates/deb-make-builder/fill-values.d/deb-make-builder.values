@@ -1,2 +1,2 @@
-Build-Product: {$source}.deb
-Build-Command: fakeroot make --trace DEFAULT_DH_COMPAT={$dh_compat_level}
+Build-Product: [% $source %].deb
+Build-Command: fakeroot make --trace DEFAULT_DH_COMPAT=[% $dh_compat_level %]

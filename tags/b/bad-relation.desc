@@ -1,7 +1,7 @@
 Tag: bad-relation
 Severity: serious
 Certainty: certain
-Check: fields
+Check: fields/package-relations
 Info: The package declares a relationship that could not be parsed according
  to the rules given in the Policy Manual.
 Ref: policy 7.1

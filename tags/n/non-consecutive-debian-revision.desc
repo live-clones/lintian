@@ -3,6 +3,7 @@ Severity: pedantic
 Certainty: possible
 Check: debian/changelog
 Experimental: yes
-Info: The last changelog entry refer to a Debian revision that is not
- consecutive to previous changelog entry. Please use consecutive Debian
- revision or use UNRELEASED version.
+Info: The latest changelog entry refers to a Debian revision (eg.
+ <tt>1.2-3</tt>) that is not consecutive to the previous changelog entry
+ (eg. <tt>1.2-2</tt>). Please use a consecutive Debian revision or use a
+ UNRELEASED version instead.

@@ -59,3 +59,9 @@ plan tests => 1;
 
 # check when tags match
 is_deeply(\@actual, \@expected, 'Tags read via get_tagnames match');
+
+# Local Variables:
+# indent-tabs-mode: nil
+# cperl-indent-level: 4
+# End:
+# vim: syntax=perl sw=4 sts=4 sr et

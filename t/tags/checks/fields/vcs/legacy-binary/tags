@@ -1,0 +1,2 @@
+binary (source): vcs-field-uses-insecure-uri vcs-svn http://svn.wolffelaar.nl/lintian/trunk
+binary (source): vcs-field-uses-insecure-uri vcs-browser http://svn.wolffelaar.nl/lintian/trunk

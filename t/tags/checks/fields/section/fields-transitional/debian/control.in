@@ -1,0 +1,15 @@
+Source: [% $source %]
+Priority: standard
+Section: devel
+Maintainer: [% $author %]
+Standards-Version: [% $standards_version %]
+Build-Depends: [% $build_depends %]
+Rules-Requires-Root: no
+
+Package: [% $source %]
+Architecture: [% $package_architecture %]
+Depends: ${misc:Depends},
+         some-replacement
+Description: [% $description %]
+ This is a transitional package that should have been in section
+ oldlibs and priority extra.

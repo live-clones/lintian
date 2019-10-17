@@ -12,3 +12,8 @@ my $relationB = Lintian::Relation->new_noarch('pkgA, pkgB, pkgC, pkgD | pkgE');
 is_deeply($relationA->duplicates, (['pkgA', 'pkgA | pkgD']), 'Duplicates');
 is($relationB->duplicates, 0, 'No duplicates');
 
+# Local Variables:
+# indent-tabs-mode: nil
+# cperl-indent-level: 4
+# End:
+# vim: syntax=perl sw=4 sts=4 sr et

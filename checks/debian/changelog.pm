@@ -30,17 +30,19 @@ use Email::Valid;
 use Encode qw(decode);
 use List::Util qw(first);
 use List::MoreUtils qw(any uniq);
+use Moo;
 use Path::Tiny;
 use Try::Tiny;
 
-use Lintian::Check qw(check_spelling spelling_tag_emitter);
+use Lintian::Data ();
 use Lintian::Info::Changelog;
 use Lintian::Info::Changelog::Version;
 use Lintian::Relation::Version qw(versions_gt);
+use Lintian::Spelling qw(check_spelling spelling_tag_emitter);
 use Lintian::Tags qw(tag);
 use Lintian::Util qw(file_is_encoded_in_non_utf8 strip);
 
-use Lintian::Data ();
+with('Lintian::Check');
 
 use constant EMPTY => q{};
 
@@ -55,7 +57,11 @@ my $SPELLING_ERROR_CHANGELOG
   = spelling_tag_emitter('spelling-error-in-changelog');
 
 sub source {
-    my ($pkg, undef, $info, undef, $group) = @_;
+    my ($self) = @_;
+
+    my $pkg = $self->package;
+    my $info = $self->info;
+    my $group = $self->group;
 
     my @entries = @{$info->changelog->entries};
 
@@ -208,12 +214,14 @@ sub source {
                   if $latest_entry->Changes
                   =~ /^\s*\*\s+new\s+upstream\s+(?:\S+\s+)?release\b/im;
 
-                unless ($latest_version->maintainer_revision
-                    == $previous_version->maintainer_revision + 1) {
-                    tag 'non-consecutive-debian-revision',
-                      $previous_version->literal . ' -> '
-                      . $latest_version->literal;
-                }
+                my $latest = $latest_version->maintainer_revision;
+                my $previous = $previous_version->maintainer_revision;
+                tag 'non-consecutive-debian-revision',
+                  $previous_version->literal . ' -> '
+                  . $latest_version->literal
+                  if $previous =~ /^\d+$/
+                  and $latest =~ /^\d+$/
+                  and $latest != $previous + 1;
             }
 
             if ($latest_version->epoch ne $previous_version->epoch) {
@@ -237,7 +245,12 @@ sub source {
 }
 
 sub binary {
-    my ($pkg, undef, $info, undef, $group) = @_;
+    my ($self) = @_;
+
+    my $pkg = $self->package;
+    my $info = $self->info;
+    my $group = $self->group;
+
     my $found_html = 0;
     my $found_text = 0;
     my ($native_pkg, $foreign_pkg, @doc_files);

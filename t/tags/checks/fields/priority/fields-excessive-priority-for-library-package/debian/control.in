@@ -1,0 +1,55 @@
+Source: [% $source %]
+Section: libs
+Maintainer: [% $author %]
+Standards-Version: [% $standards_version %]
+Build-Depends: [% $build_depends %]
+Rules-Requires-Root: no
+
+Package: lib[% $source %]42
+Architecture: all
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Priority: important
+Description: [% $description %] (lib)
+ This is a test package designed to exercise some feature or tag of
+ Lintian.  It is part of the Lintian test suite and may do very odd
+ things.  It should not be installed like a regular package.  It may
+ be an empty package.
+
+Package: lib[% $source %]-dev
+Architecture: all
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Section: libdevel
+Priority: standard
+Description: [% $description %] (dev)
+ This is a test package designed to exercise some feature or tag of
+ Lintian.  It is part of the Lintian test suite and may do very odd
+ things.  It should not be installed like a regular package.  It may
+ be an empty package.
+ .
+ (This is a dev package.)
+
+Package: lib[% $source %]-false-positive-bin
+Architecture: all
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Section: libdevel
+Priority: required
+Description: [% $description %] (false positive bin)
+ This is a test package designed to exercise some feature or tag of
+ Lintian.  It is part of the Lintian test suite and may do very odd
+ things.  It should not be installed like a regular package.  It may
+ be an empty package.
+ .
+ (This is a -bin false positive)
+
+Package: lib[% $source %]-false-positive-dev
+Architecture: all
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Section: libdevel
+Priority: optional
+Description: [% $description %] (false positive)
+ This is a test package designed to exercise some feature or tag of
+ Lintian.  It is part of the Lintian test suite and may do very odd
+ things.  It should not be installed like a regular package.  It may
+ be an empty package.
+ .
+ (This is a -dev false positive)

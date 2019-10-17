@@ -35,3 +35,9 @@ is_deeply([$map->selected], [], 'A satisfied, nothing is selected');
 ok($map->pending == 0, 'A satisfied, nothing is pending');
 is_deeply([$map->known], ['A'], 'A satisfied, it is known');
 is_deeply([$map->missing], [], 'A satisfied, nothing is missing');
+
+# Local Variables:
+# indent-tabs-mode: nil
+# cperl-indent-level: 4
+# End:
+# vim: syntax=perl sw=4 sts=4 sr et

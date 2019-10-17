@@ -198,3 +198,9 @@ sub tagdiff {
 
     return $diff;
 }
+
+# Local Variables:
+# indent-tabs-mode: nil
+# cperl-indent-level: 4
+# End:
+# vim: syntax=perl sw=4 sts=4 sr et

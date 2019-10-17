@@ -141,3 +141,9 @@ foreach my $descpath (@descpaths) {
 }
 
 done_testing($known_tests);
+
+# Local Variables:
+# indent-tabs-mode: nil
+# cperl-indent-level: 4
+# End:
+# vim: syntax=perl sw=4 sts=4 sr et

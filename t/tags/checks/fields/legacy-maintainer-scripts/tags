@@ -1,4 +1,0 @@
-maintainer-scripts (source): wrong-debian-qa-group-name QA group <packages@qa.debian.org>
-maintainer-scripts (source): malformed-dm-upload-allowed Yes
-maintainer-scripts (source): dm-upload-allowed-is-obsolete
-maintainer-scripts (binary): wrong-debian-qa-group-name QA group <packages@qa.debian.org>

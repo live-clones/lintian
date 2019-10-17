@@ -28,10 +28,17 @@ use strict;
 use warnings;
 use autodie;
 
+use Moo;
+
 use Lintian::Tags qw(tag);
 
+with('Lintian::Check');
+
 sub always {
-    my ($pkg, undef, $info, undef, undef) = @_;
+    my ($self) = @_;
+
+    my $pkg = $self->package;
+    my $info = $self->info;
 
     my $bugs = $info->unfolded_field('bugs');
 

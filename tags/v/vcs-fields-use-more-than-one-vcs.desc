@@ -1,5 +1,5 @@
 Tag: vcs-fields-use-more-than-one-vcs
 Severity: wishlist
 Certainty: possible
-Check: fields
+Check: fields/vcs
 Info: The Vcs-* fields mix more than one version control system.

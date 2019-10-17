@@ -28,8 +28,12 @@ use strict;
 use warnings;
 use autodie;
 
+use Moo;
+
 use Lintian::Data ();
 use Lintian::Tags qw(tag);
+
+with('Lintian::Check');
 
 my $DERIVATIVE_FIELDS = Lintian::Data->new(
     'fields/derivative-fields',
@@ -43,7 +47,9 @@ my $DERIVATIVE_FIELDS = Lintian::Data->new(
     });
 
 sub source {
-    my (undef, undef, $info, undef, undef) = @_;
+    my ($self) = @_;
+
+    my $info = $self->info;
 
     foreach my $field ($DERIVATIVE_FIELDS->all) {
 

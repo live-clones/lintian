@@ -7,7 +7,7 @@ Build-Depends-Indep: python (>= 2.3), python (<< 2.4), dpatch
 Standards-Version: 3.2.1
 
 Package: scripts
-Architecture: {$package_architecture}
+Architecture: [% $package_architecture %]
 Depends: test, ruby1.8, build-essential, libssl0.9.7, php7.0-cli
 Recommends: tk8.4 | wish
 Description: test lintian's script file checks

@@ -1,7 +1,7 @@
 Tag: conflicting-negation-in-source-relation
 Severity: serious
 Certainty: certain
-Check: fields
+Check: fields/package-relations
 Ref: policy 7.1
 Info: The architecture string in this source relation has some
  negated architectures (prepended by <tt>!</tt>) and others that are not

@@ -25,9 +25,12 @@ use autodie;
 
 use File::Basename qw(dirname);
 use List::MoreUtils qw(any none);
+use Moo;
 
 use Lintian::Data;
 use Lintian::Tags qw(tag);
+
+with('Lintian::Check');
 
 # A list of valid LSB keywords.  The value is 0 if optional and 1 if required.
 my %lsb_keywords = (
@@ -77,7 +80,11 @@ my $ACTION_R = qr/\w+/;
 my $EXCLUDE_R = qr/if\s+\[\s+-x\s+\S*update-rc\.d/;
 
 sub binary {
-    my ($pkg, undef, $info) = @_;
+    my ($self) = @_;
+
+    my $pkg = $self->package;
+    my $info = $self->info;
+
     my $initd_dir = $info->index_resolved_path('etc/init.d/');
     my $postinst = $info->control_index('postinst');
     my $preinst = $info->control_index('preinst');
@@ -514,7 +521,7 @@ sub check_missing_script {
     my ($info) = @_;
     for my $file ($info->sorted_index) {
         if (   $file =~ m,etc/sv/([^/]+)/run$,
-            or $file =~ m,lib/systemd/system/(.*?)@?\.service,) {
+            or $file =~ m,lib/systemd/system/([^/]*?)@?\.service,) {
 
             my $service = $1;
             tag 'package-supports-alternative-init-but-no-init.d-script',$file

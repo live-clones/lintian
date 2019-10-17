@@ -19,15 +19,19 @@
 # MA 02110-1301, USA.
 
 package Lintian::python;
+
 use strict;
 use warnings;
 use autodie;
 
 use List::MoreUtils qw(any none);
+use Moo;
 
 use Lintian::Tags qw(tag);
 use Lintian::Relation qw(:constants);
 use Lintian::Relation::Version qw(versions_lte);
+
+with('Lintian::Check');
 
 my @FIELDS = qw(Depends Pre-Depends Recommends Suggests);
 my @IGNORE = qw(-dev$ -docs?$ -common$ -tools$);
@@ -53,7 +57,10 @@ my $VERSIONS = Lintian::Data->new('python/versions', qr/\s*=\s*/o);
 my @VERSION_FIELDS = qw(x-python-version xs-python-version x-python3-version);
 
 sub source {
-    my ($pkg, undef, $info) = @_;
+    my ($self) = @_;
+
+    my $pkg = $self->package;
+    my $info = $self->info;
 
     my @package_names = $info->binaries;
     foreach my $bin (@package_names) {
@@ -152,7 +159,10 @@ sub source {
 }
 
 sub binary {
-    my ($pkg, undef, $info) = @_;
+    my ($self) = @_;
+
+    my $pkg = $self->package;
+    my $info = $self->info;
 
     my $deps = Lintian::Relation->and($info->relation('all'),
         $info->relation('provides'), $pkg);

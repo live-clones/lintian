@@ -19,22 +19,31 @@
 # MA 02110-1301, USA.
 
 package Lintian::manpages;
+
 use strict;
 use warnings;
 use autodie;
 
-use constant LINTIAN_COVERAGE => ($ENV{'LINTIAN_COVERAGE'}?1:0);
-
 use File::Basename;
 use List::MoreUtils qw(any none);
+use Moo;
 use Text::ParseWords ();
 
-use Lintian::Check qw(check_spelling spelling_tag_emitter);
+use Lintian::Spelling qw(check_spelling spelling_tag_emitter);
 use Lintian::Tags qw(tag);
 use Lintian::Util qw(clean_env do_fork drain_pipe internal_error open_gz);
 
+with('Lintian::Check');
+
+use constant LINTIAN_COVERAGE => ($ENV{'LINTIAN_COVERAGE'}?1:0);
+
 sub binary {
-    my (undef, undef, $info, $proc, $group) = @_;
+    my ($self) = @_;
+
+    my $info = $self->info;
+    my $proc = $self->processable;
+    my $group = $self->group;
+
     my $ginfo = $group->info;
     my (%binary, %link, %manpage, @running_man, @running_lexgrog);
 

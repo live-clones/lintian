@@ -25,10 +25,18 @@ use strict;
 use warnings;
 use autodie;
 
+use Moo;
+
 use Lintian::Tags qw(tag);
 
+with('Lintian::Check');
+
 sub binary {
-    my ($pkg, $type, $info) = @_;
+    my ($self) = @_;
+
+    my $pkg = $self->package;
+    my $type = $self->type;
+    my $info = $self->info;
 
     my @files;
     foreach my $suffix (qw(session system)) {

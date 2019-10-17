@@ -29,9 +29,12 @@ use warnings;
 use autodie;
 
 use Dpkg::Version qw(version_check);
+use Moo;
 
 use Lintian::Relation::Version qw(versions_compare);
 use Lintian::Tags qw(tag);
+
+with('Lintian::Check');
 
 our $DERIVATIVE_VERSIONS= Lintian::Data->new('fields/derivative-versions',
     qr/\s*~~\s*/, sub { $_[1]; });
@@ -39,7 +42,9 @@ our $DERIVATIVE_VERSIONS= Lintian::Data->new('fields/derivative-versions',
 our $PERL_CORE_PROVIDES = Lintian::Data->new('fields/perl-provides', '\s+');
 
 sub source {
-    my (undef, undef, $info, undef, undef) = @_;
+    my ($self) = @_;
+
+    my $info = $self->info;
 
     my $version = $info->unfolded_field('version');
 
@@ -85,7 +90,10 @@ sub source {
 }
 
 sub always {
-    my (undef, $type, $info, undef, undef) = @_;
+    my ($self) = @_;
+
+    my $type = $self->type;
+    my $info = $self->info;
 
     my $version = $info->unfolded_field('version');
 

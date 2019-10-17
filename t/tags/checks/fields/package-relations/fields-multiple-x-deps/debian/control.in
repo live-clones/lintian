@@ -1,0 +1,22 @@
+Source: [% $source %]
+Priority: optional
+Section: [% $section %]
+Maintainer: [% $author %]
+Standards-Version: [% $standards_version %]
+Build-Depends: [% $build_depends %]
+Rules-Requires-Root: no
+
+Package: [% $source %]
+Architecture: [% $package_architecture %]
+Depends: ${shlibs:Depends}, ${misc:Depends},
+         libstdc++2.10, libstdc++2.10-glibc2.2, libstdc++3.0,
+         tk8.2, tk8.3,
+         tcl8.0, tcl8.2,
+         tclx76, tclx8.0.4, tclx8.2,
+         libpng2, libpng3
+Description: [% $description %]
+ This is a test package designed to exercise some feature or tag of
+ Lintian.  It is part of the Lintian test suite and may do very odd
+ things.  It should not be installed like a regular package.  It may
+ be an empty package.
+

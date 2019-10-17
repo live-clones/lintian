@@ -1,6 +1,6 @@
-package = {$source}
-upstream_version = {$upstream_version}
-type = {$type}
+package = [% $source %]
+upstream_version = [% $upstream_version %]
+type = [% $type %]
 
 packagedir = $(package)-$(upstream_version)
 
@@ -14,7 +14,7 @@ diffdata = diff
 
 private_key = upstream/private-key.asc
 
-product = $(package)_{$no_epoch}_{$host_architecture}.changes
+product = $(package)_[% $no_epoch %]_[% $host_architecture %].changes
 
 .DEFAULT_GOAL := product
 

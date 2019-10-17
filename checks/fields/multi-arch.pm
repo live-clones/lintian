@@ -29,15 +29,21 @@ use warnings;
 use autodie;
 
 use List::MoreUtils qw(uniq);
+use Moo;
 
 use Lintian::Tags qw(tag);
 use Lintian::Util qw(safe_qx);
+
+with('Lintian::Check');
 
 use constant EMPTY => q{};
 use constant SPACE => q{ };
 
 sub source {
-    my ($pkg, undef, $info, undef, undef) = @_;
+    my ($self) = @_;
+
+    my $pkg = $self->package;
+    my $info = $self->info;
 
     for my $bin ($info->binaries) {
 
@@ -69,7 +75,10 @@ sub source {
 }
 
 sub binary {
-    my ($pkg, undef, $info, undef, undef) = @_;
+    my ($self) = @_;
+
+    my $pkg = $self->package;
+    my $info = $self->info;
 
     if ($pkg =~ /^x?fonts-/) {
         tag 'font-package-not-multi-arch-foreign'
@@ -92,7 +101,10 @@ sub binary {
 }
 
 sub always {
-    my ($pkg, undef, $info, undef, undef) = @_;
+    my ($self) = @_;
+
+    my $pkg = $self->package;
+    my $info = $self->info;
 
     my $multi = $info->unfolded_field('multi-arch');
 
