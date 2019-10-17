@@ -1,0 +1,6 @@
+foo++ (source): uploader-name-missing Yama@gotchi
+foo++ (source): uploader-address-malformed Yama@gotchi
+foo++ (source): uploader-address-malformed Marc 'HE' Brockschmidt <he@unknown>
+foo++ (source): uploader-address-malformed Josip, I am afraid of spam and think this helps <no_spam_please AT debian.org>
+foo++ (source): uploader-address-looks-weird Jeroen van Wolffelaar<jeroen@localhost.localdomain>
+foo++ (source): uploader-address-is-on-localhost Jeroen van Wolffelaar<jeroen@localhost.localdomain>

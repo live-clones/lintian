@@ -1,15 +1,15 @@
-Source: {$source}
+Source: [% $source %]
 Priority: optional
-Section: {$section}
-Maintainer: {$author}
-Standards-Version: {$standards_version}
-Build-Depends: {$build_depends}, javahelper (>= 0.32~), default-jdk-headlesss | default-jdk
+Section: [% $section %]
+Maintainer: [% $author %]
+Standards-Version: [% $standards_version %]
+Build-Depends: [% $build_depends %], javahelper (>= 0.32~), default-jdk-headlesss | default-jdk
 Rules-Requires-Root: no
 
 Package: libcp-missing-java
 Architecture: all
-Depends: $\{misc:Depends\}, libdepends-java
-Description: {$description} - missing
+Depends: ${misc:Depends}, libdepends-java
+Description: [% $description %] - missing
  This is a test package designed to test various aspects of the
  java-related QA code in lintian. This package should not be
  installed.
@@ -18,8 +18,8 @@ Description: {$description} - missing
 
 Package: libcp-relative-java
 Architecture: all
-Depends: $\{misc:Depends\}, libdepends-java
-Description: {$description} - relative
+Depends: ${misc:Depends}, libdepends-java
+Description: [% $description %] - relative
  This is a test package designed to test various aspects of the
  java-related QA code in lintian. This package should not be
  installed.
@@ -29,8 +29,8 @@ Description: {$description} - relative
 
 Package: binary-using-java
 Architecture: all
-Depends: $\{misc:Depends\}, libdepends-java
-Description: {$description} - binary
+Depends: ${misc:Depends}, libdepends-java
+Description: [% $description %] - binary
  This is a test package designed to test various aspects of the
  java-related QA code in lintian. This package should not be
  installed.

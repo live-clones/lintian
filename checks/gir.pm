@@ -26,12 +26,18 @@ use strict;
 use warnings;
 use autodie;
 
+use Moo;
+
 use Lintian::Tags qw(tag);
+
+with('Lintian::Check');
 
 my $MA_DIRS = Lintian::Data->new('common/multiarch-dirs', qr/\s++/);
 
 sub source {
-    my (undef, undef, $info) = @_;
+    my ($self) = @_;
+
+    my $info = $self->info;
 
     foreach my $bin ($info->binaries) {
         if ($bin =~ m/^gir1\.2-/) {
@@ -47,7 +53,13 @@ sub source {
 }
 
 sub binary {
-    my ($pkg, undef, $info, $proc, $group) = @_;
+    my ($self) = @_;
+
+    my $pkg = $self->package;
+    my $info = $self->info;
+    my $proc = $self->processable;
+    my $group = $self->group;
+
     my @girs;
     my @typelibs;
     my $section = $info->field('section', 'NONE');

@@ -1,15 +1,15 @@
-Source: {$source}
+Source: [% $source %]
 Priority: optional
-Section: {$section}
-Maintainer: {$author}
-Standards-Version: {$standards_version}
-Build-Depends: {$build_depends}
+Section: [% $section %]
+Maintainer: [% $author %]
+Standards-Version: [% $standards_version %]
+Build-Depends: [% $build_depends %]
 Rules-Requires-Root: no
 
 Package: pkg-foreign
 Architecture: all
-Depends: $\{misc:Depends\}
-Description: {$description} - pkg-foreign
+Depends: ${misc:Depends}
+Description: [% $description %] - pkg-foreign
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
  things.  It should not be installed like a regular package.
@@ -18,9 +18,9 @@ Description: {$description} - pkg-foreign
 
 Package: pkg-same
 Architecture: any
-Depends: $\{misc:Depends\}, pkg-foreign
+Depends: ${misc:Depends}, pkg-foreign
 Multi-Arch: same
-Description: {$description} - pkg-same
+Description: [% $description %] - pkg-same
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
  things.  It should not be installed like a regular package.
@@ -30,9 +30,9 @@ Description: {$description} - pkg-same
 Package: pkg-dbg
 Section: debug
 Architecture: any
-Depends: $\{misc:Depends\}, pkg-same (= $\{binary:Version\}),
- pkg-foreign (>= $\{source:Version\})
-Description: {$description} - pkg-dbg
+Depends: ${misc:Depends}, pkg-same (= ${binary:Version}),
+ pkg-foreign (>= ${source:Version})
+Description: [% $description %] - pkg-dbg
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
  things.  It should not be installed like a regular package.
@@ -42,9 +42,9 @@ Description: {$description} - pkg-dbg
 Package: python3-pkg-dbg
 Section: debug
 Architecture: any
-Depends: $\{misc:Depends\}, pkg-same (= $\{binary:Version\}),
- pkg-foreign (>= $\{source:Version\})
-Description: {$description} - python-pkg-dbg
+Depends: ${misc:Depends}, pkg-same (= ${binary:Version}),
+ pkg-foreign (>= ${source:Version})
+Description: [% $description %] - python-pkg-dbg
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
  things.  It should not be installed like a regular package.

@@ -28,11 +28,18 @@ use strict;
 use warnings;
 use autodie;
 
+use Moo;
+
 use Lintian::Architecture qw(:all);
 use Lintian::Tags qw(tag);
 
+with('Lintian::Check');
+
 sub binary {
-    my ($pkg, undef, $info, undef, undef) = @_;
+    my ($self) = @_;
+
+    my $pkg = $self->package;
+    my $info = $self->info;
 
     my $unsplit = $info->unfolded_field('architecture');
 
@@ -84,7 +91,10 @@ sub binary {
 }
 
 sub always {
-    my (undef, $type, $info, undef, undef) = @_;
+    my ($self) = @_;
+
+    my $type = $self->type;
+    my $info = $self->info;
 
     my $architecture = $info->unfolded_field('architecture');
 

@@ -1,0 +1,6 @@
+Check-Script: fields/unknown
+Author: Marc 'HE' Brockschmidt <marc@marcbrockschmidt.de>
+Type: binary, udeb, source
+Needs-Info: unpacked
+Info: This script checks for unknown fields in package control files,
+ as described in the Policy Manual.

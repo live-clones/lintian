@@ -58,7 +58,6 @@ use File::Path;
 use File::stat;
 use Path::Tiny;
 use File::Temp qw(tempfile);
-use Text::Template;
 
 use constant NEWLINE => qq{\n};
 use constant SPACE => q{ };
@@ -275,3 +274,8 @@ sub run_lintian {
 
 1;
 
+# Local Variables:
+# indent-tabs-mode: nil
+# cperl-indent-level: 4
+# End:
+# vim: syntax=perl sw=4 sts=4 sr et

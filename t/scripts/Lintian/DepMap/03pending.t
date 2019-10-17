@@ -22,3 +22,9 @@ is($map->pending, 1, 'B satisfied, one pending');
 
 $map->satisfy('A');
 is($map->pending, 0, 'A satisfied, zero pending');
+
+# Local Variables:
+# indent-tabs-mode: nil
+# cperl-indent-level: 4
+# End:
+# vim: syntax=perl sw=4 sts=4 sr et

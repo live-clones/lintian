@@ -28,8 +28,12 @@ use strict;
 use warnings;
 use autodie;
 
+use Moo;
+
 use Lintian::Data ();
 use Lintian::Tags qw(tag);
+
+with('Lintian::Check');
 
 use constant EMPTY => q{};
 
@@ -46,7 +50,9 @@ my $NAME_SECTION_MAPPINGS = Lintian::Data->new(
 our %KNOWN_ARCHIVE_PARTS = map { $_ => 1 } ('non-free', 'contrib');
 
 sub binary {
-    my ($pkg, $type, $info, undef, undef) = @_;
+    my ($self) = @_;
+
+    my $info = $self->info;
 
     my $section = $info->unfolded_field('section');
 
@@ -59,7 +65,9 @@ sub binary {
 }
 
 sub udeb {
-    my (undef, undef, $info, undef, undef) = @_;
+    my ($self) = @_;
+
+    my $info = $self->info;
 
     my $section = $info->unfolded_field('section');
 
@@ -73,7 +81,11 @@ sub udeb {
 }
 
 sub always {
-    my ($pkg, $type, $info, undef, undef) = @_;
+    my ($self) = @_;
+
+    my $pkg = $self->package;
+    my $type = $self->type;
+    my $info = $self->info;
 
     my $section = $info->unfolded_field('section');
 
@@ -94,23 +106,23 @@ sub always {
     $division = $parts[0]
       if @parts > 1;
 
-    my $group = $parts[-1];
+    my $fraction = $parts[-1];
 
     if (defined $division) {
         tag 'unknown-section', $section
           unless $KNOWN_ARCHIVE_PARTS{$division};
     }
 
-    if ($group eq 'unknown' && !length $division) {
+    if ($fraction eq 'unknown' && !length $division) {
         tag 'section-is-dh_make-template';
     } else {
         tag 'unknown-section', $section
-          unless $KNOWN_SECTIONS->known($group);
+          unless $KNOWN_SECTIONS->known($fraction);
     }
 
     # Check package name <-> section.  oldlibs is a special case; let
     # anything go there.
-    if ($group ne 'oldlibs') {
+    if ($fraction ne 'oldlibs') {
 
         foreach my $name_section ($NAME_SECTION_MAPPINGS->all()) {
             my $regex= $NAME_SECTION_MAPPINGS->value($name_section)->{'regex'};
@@ -120,7 +132,7 @@ sub always {
             next
               unless ($pkg =~ m{$regex});
 
-            unless ($group eq $section) {
+            unless ($fraction eq $section) {
 
                 my $better
                   = (defined $division ? "$division/" : EMPTY) . $section;
@@ -132,7 +144,7 @@ sub always {
         }
     }
 
-    if ($group eq 'debug') {
+    if ($fraction eq 'debug') {
 
         tag 'wrong-section-according-to-package-name',"$pkg"
           if $pkg !~ /-dbg(?:sym)?$/;
@@ -143,8 +155,8 @@ sub always {
         my $priority = $info->unfolded_field('priority') // EMPTY;
 
         tag 'transitional-package-should-be-oldlibs-optional',
-          "$group/$priority"
-          unless $priority eq 'optional' && $group eq 'oldlibs';
+          "$fraction/$priority"
+          unless $priority eq 'optional' && $fraction eq 'oldlibs';
     }
 
     return;

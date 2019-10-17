@@ -1,5 +1,0 @@
-Source: {$source}
-Maintainer: a
-
-Package: {$source}
-Architecture: {$package_architecture}

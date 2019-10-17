@@ -1,14 +1,14 @@
-Source: {$source}
+Source: [% $source %]
 Priority: optional
 Section: python
-Maintainer: {$author}
-Standards-Version: {$standards_version}
-Build-Depends: {$build_depends}, python-sphinx | python3-sphinx
+Maintainer: [% $author %]
+Standards-Version: [% $standards_version %]
+Build-Depends: [% $build_depends %], python-sphinx | python3-sphinx
 Rules-Requires-Root: no
 
-Package: python3-{$source}
-Architecture: {$package_architecture}
-Depends: $\{misc:Depends\}, python3
+Package: python3-[% $source %]
+Architecture: [% $package_architecture %]
+Depends: ${misc:Depends}, python3
 Description: Test package
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd

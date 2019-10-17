@@ -1,6 +1,6 @@
-{$source} ({$version}) stable-proposed-updates; urgency=low
+[% $source %] ([% $version %]) stable-proposed-updates; urgency=low
 
   * Lintian Test Suite.
-  * Test: {$testname}
+  * Test: [% $testname %]
 
- -- {$author}  {$date}
+ -- [% $author %]  [% $date %]

@@ -1663,7 +1663,7 @@ jQuery.support = (function() {
 
 
 
-var rbrace = /^(?:\{.*\}|\[.*\])$/,
+var rbrace = /^(?:{.*}|\[.*\])$/,
 	rmultiDash = /([A-Z])/g;
 
 jQuery.extend({

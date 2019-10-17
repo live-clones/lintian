@@ -1,7 +1,7 @@
 Tag: maintainer-address-causes-mail-loops-or-bounces
 Severity: serious
 Certainty: certain
-Check: fields
+Check: fields/maintainer
 Info: The maintainer e-mail address either loops back to itself because
  it is set to an address which is known to bounce mails. Policy
  states: The email address given in the Maintainer control field must

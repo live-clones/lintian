@@ -1,4 +1,4 @@
-libbaz ({$version}) {$distribution}; urgency=low
+libbaz ([% $version %]) [% $distribution %]; urgency=low
 
   * Initial setup
 

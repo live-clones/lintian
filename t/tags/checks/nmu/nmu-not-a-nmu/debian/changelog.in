@@ -1,9 +1,9 @@
-{$source} ({$version}) unstable; urgency=low
+[% $source %] ([% $version %]) unstable; urgency=low
 
   * Non-maintainer upload.
   * Lintian Test Suite.
-  * Test: {$testname}
+  * Test: [% $testname %]
 
   * Suppress "should close ITP bug" messages.  (Closes: #123456)
 
- -- {$author}  {$date}
+ -- [% $author %]  [% $date %]

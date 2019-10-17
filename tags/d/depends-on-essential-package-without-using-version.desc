@@ -1,7 +1,7 @@
 Tag: depends-on-essential-package-without-using-version
 Severity: important
 Certainty: certain
-Check: fields
+Check: fields/package-relations
 Ref: policy 3.5
 Info: The package declares a depends on an essential package, e.g. dpkg,
  without using a versioned depends. Packages do not need to depend on

@@ -19,14 +19,21 @@
 # MA 02110-1301, USA.
 
 package Lintian::automake;
+
 use strict;
 use warnings;
 use autodie;
 
+use Moo;
+
 use Lintian::Tags qw(tag);
 
+with('Lintian::Check');
+
 sub source {
-    my (undef, undef, $info) = @_;
+    my ($self) = @_;
+
+    my $info = $self->info;
 
     my $makefile = $info->index('Makefile.am');
 
@@ -44,3 +51,8 @@ sub source {
 
 1;
 
+# Local Variables:
+# indent-tabs-mode: nil
+# cperl-indent-level: 4
+# End:
+# vim: syntax=perl sw=4 sts=4 sr et

@@ -1,15 +1,15 @@
-Source: {$source}
+Source: [% $source %]
 Priority: optional
-Section: {$section}
-Maintainer: {$author}
-Standards-Version: {$standards_version}
-Build-Depends: {$build_depends}, javahelper, default-jdk-headless | default-jdk
+Section: [% $section %]
+Maintainer: [% $author %]
+Standards-Version: [% $standards_version %]
+Build-Depends: [% $build_depends %], javahelper, default-jdk-headless | default-jdk
 Rules-Requires-Root: no
 
 Package: libtest-java
-Architecture: {$package_architecture}
-Depends: $\{misc:Depends\}
-Description: {$description}
+Architecture: [% $package_architecture %]
+Depends: ${misc:Depends}
+Description: [% $description %]
  This is a test package designed to test various aspects of the
  java-related QA code in lintian. First part.
  .

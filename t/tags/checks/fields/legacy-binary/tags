@@ -1,5 +1,0 @@
-binary (source): vcs-field-uses-insecure-uri vcs-svn http://svn.wolffelaar.nl/lintian/trunk
-binary (source): vcs-field-uses-insecure-uri vcs-browser http://svn.wolffelaar.nl/lintian/trunk
-binary (source): dm-upload-allowed-is-obsolete
-binary (binary): superfluous-clutter-in-homepage <http://lintian.debian.org/>
-binary (binary): depends-on-metapackage pre-depends: xorg

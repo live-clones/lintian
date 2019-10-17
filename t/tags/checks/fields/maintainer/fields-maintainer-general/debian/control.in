@@ -1,0 +1,22 @@
+Source: [% $source %]
+Priority: optional
+Section: [% $section %]
+Maintainer: lintian-maint@debian.org
+Uploaders: <lintian-maint@debian.org>, Russ Allbery <rra@debian.org>,
+ Russ Allbery <rra@debian.org>,
+ Ubuntu Developers <ubuntu-devel-discuss@lists.ubuntu.com>,
+ Double comma <double@comma.com>, ,
+ Mr. Missing Comma <mrmc@comma.com>
+ Mrs. Missing Comma <mrsmc@comma.com>
+Standards-Version: [% $standards_version %]
+Build-Depends: [% $build_depends %]
+Rules-Requires-Root: no
+
+Package: [% $source %]
+Architecture: [% $package_architecture %]
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: [% $description %]
+ This is a test package designed to exercise some feature or tag of
+ Lintian.  It is part of the Lintian test suite and may do very odd
+ things.  It should not be installed like a regular package.  It may
+ be an empty package.

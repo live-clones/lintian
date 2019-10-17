@@ -1,0 +1,2 @@
+fields-maintainer-general (source): maintainer-name-missing lintian-maint@debian.org
+fields-maintainer-general (binary): maintainer-name-missing lintian-maint@debian.org

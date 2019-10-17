@@ -73,7 +73,7 @@ use File::Find ();
 use List::MoreUtils qw{any};
 use Path::Tiny;
 
-use Lintian::Check qw(check_spelling);
+use Lintian::Spelling qw(check_spelling);
 use Lintian::Data;
 use Lintian::Deb822Parser qw(read_dpkg_control);
 use Lintian::Profile;
@@ -469,10 +469,9 @@ sub test_load_checks {
         $ppkg =~ s,/,::,go;
         $ppkg = "Lintian::$ppkg";
 
-        if ($ppkg->can('run')) {
+        if ($ppkg->can('run') && !$ppkg->DOES('Lintian::Check')) {
             $builder->diag(
                 "Warning: check $ppkg uses old entry point ::run\n");
-            return;
         }
 
         my $has_entrypoint = any { $ppkg->can($_) }
@@ -653,10 +652,10 @@ sub load_profile_for_test {
      # do just fine...
     $profname ||= 'debian/main';
 
-    unless (@inc) {
-        push @inc, $ENV{'LINTIAN_TEST_ROOT'} if $ENV{'LINTIAN_TEST_ROOT'};
-        push @inc, '/usr/share/lintian' if -d '/usr/share/lintian';
-    }
+    my $location
+      = $ENV{'LINTIAN_ROOT'} ? $ENV{'LINTIAN_ROOT'} : '/usr/share/lintian';
+    push(@inc, $location)
+      unless @inc;
 
     $PROFILE = Lintian::Profile->new($profname, \@inc);
     Lintian::Data->set_vendor($PROFILE);

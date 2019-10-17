@@ -19,11 +19,16 @@
 # MA 02110-1301, USA.
 
 package Lintian::control_files;
+
 use strict;
 use warnings;
 use autodie;
 
+use Moo;
+
 use Lintian::Tags qw(tag);
+
+with('Lintian::Check');
 
 sub octify {
     my (undef, $val) = @_;
@@ -36,7 +41,11 @@ my $UDEB_PERMISSIONS
   = Lintian::Data->new('control-files/udeb-permissions', qr/\s++/o, \&octify);
 
 sub always {
-    my (undef, $type, $info) = @_;
+    my ($self) = @_;
+
+    my $type = $self->type;
+    my $info = $self->info;
+
     my $ctrl = $type eq 'udeb' ? $UDEB_PERMISSIONS : $DEB_PERMISSIONS;
     my $ctrl_alt = $type eq 'udeb' ? $DEB_PERMISSIONS : $UDEB_PERMISSIONS;
     my $has_ctrl_script = 0;

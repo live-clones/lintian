@@ -1,0 +1,25 @@
+Source: [% $source %]
+Priority: optional
+Section: devel
+Maintainer: [% $author %]
+Standards-Version: [% $standards_version %]
+Build-Depends: [% $build_depends %], bd-conflict, revision-1 (>= 1.0-1),
+ bash, make, x-dev (>= 1.0) | ok, build-essential, new-package | xlibmesa-gl-dev,
+ xorg-dev, java-propose-classpath, python3-dev, foo [all],
+ bar [i386 any], baz [source lintian-fake-arch], baz [i386 !amd64],
+ other-pkg [kfreebsd-any], yet-another [any-powerpc],
+ packaging-dev, libdb5.1++-dev, libdb5.1-java-dev, hardening-wrapper (>= 2.2),
+ mount
+Build-Conflicts:
+ bd-conflict,
+Rules-Requires-Root: no
+
+Package: [% $source %]
+Architecture: [% $package_architecture %]
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: [% $description %]
+ This is a test package designed to exercise some feature or tag of
+ Lintian.  It is part of the Lintian test suite and may do very odd
+ things.  It should not be installed like a regular package.  It may
+ be an empty package.
+

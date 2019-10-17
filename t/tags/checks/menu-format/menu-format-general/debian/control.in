@@ -1,15 +1,15 @@
-Source: {$source}
+Source: [% $source %]
 Priority: optional
 Section: devel
-Maintainer: {$author}
-Standards-Version: {$standards_version}
-Build-Depends: {$build_depends}
+Maintainer: [% $author %]
+Standards-Version: [% $standards_version %]
+Build-Depends: [% $build_depends %]
 Rules-Requires-Root: no
 
 Package: menu-none
 Architecture: all
-Depends: $\{misc:Depends\}
-Description: {$description} (no icon)
+Depends: ${misc:Depends}
+Description: [% $description %] (no icon)
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
  things.  It should not be installed like a regular package.  It may
@@ -19,8 +19,8 @@ Description: {$description} (no icon)
 
 Package: menu-cmd
 Architecture: all
-Depends: $\{misc:Depends\}
-Description: {$description} (cmd)
+Depends: ${misc:Depends}
+Description: [% $description %] (cmd)
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
  things.  It should not be installed like a regular package.  It may
@@ -30,8 +30,8 @@ Description: {$description} (cmd)
 
 Package: menu-broken
 Architecture: all
-Depends: $\{misc:Depends\}
-Description: {$description} (broken)
+Depends: ${misc:Depends}
+Description: [% $description %] (broken)
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
  things.  It should not be installed like a regular package.  It may
@@ -41,8 +41,8 @@ Description: {$description} (broken)
 
 Package: menu-section
 Architecture: all
-Depends: $\{misc:Depends\}
-Description: {$description} (section)
+Depends: ${misc:Depends}
+Description: [% $description %] (section)
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
  things.  It should not be installed like a regular package.  It may

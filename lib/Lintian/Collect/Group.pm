@@ -170,3 +170,8 @@ Lintian::Collect::Source(3)
 1;
 __END__;
 
+# Local Variables:
+# indent-tabs-mode: nil
+# cperl-indent-level: 4
+# End:
+# vim: syntax=perl sw=4 sts=4 sr et

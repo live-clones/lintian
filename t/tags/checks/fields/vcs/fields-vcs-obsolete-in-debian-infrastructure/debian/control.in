@@ -1,0 +1,19 @@
+Source: [% $source %]
+Priority: optional
+Section: [% $section %]
+Maintainer: [% $author %]
+Standards-Version: [% $standards_version %]
+Build-Depends: [% $build_depends %]
+Rules-Requires-Root: no
+Homepage: https://lintian.debian.org/
+Vcs-Svn: svn://anonscm.debian.org/foobar/trunk
+Vcs-Browser: https://anonscm.debian.org/git/lintian/lintian.git
+
+Package: [% $source %]
+Architecture: [% $package_architecture %]
+Depends: ${misc:Depends}
+Description: [% $description %]
+ This is a test package designed to exercise some feature or tag of
+ Lintian.  It is part of the Lintian test suite and may do very odd
+ things.  It should not be installed like a regular package.  It may
+ be an empty package.

@@ -34,3 +34,8 @@ for my $test (@TESTS) {
         $b_ii_a, "$b_raw implies inverse $a_raw (case 4, line $lno)");
 }
 
+# Local Variables:
+# indent-tabs-mode: nil
+# cperl-indent-level: 4
+# End:
+# vim: syntax=perl sw=4 sts=4 sr et

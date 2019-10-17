@@ -1,0 +1,12 @@
+Package: [% $source %]
+Version: [% $version %]
+Architecture: [% $package_architecture %]
+Maintainer: [% $author %]
+Section: [% $section %]
+Priority: optional
+Conflicts: libsqlite3-0 (< 3.6.12)
+Description: [% $description %]
+ This is a test package designed to exercise some feature or tag of
+ Lintian.  It is part of the Lintian test suite and may do very odd
+ things.  It should not be installed like a regular package.  It may
+ be an empty package.

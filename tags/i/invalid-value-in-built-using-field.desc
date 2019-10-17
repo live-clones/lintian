@@ -1,7 +1,7 @@
 Tag: invalid-value-in-built-using-field
 Severity: serious
 Certainty: certain
-Check: fields
+Check: fields/built-using
 Info: The Built-Using field contains invalid fields.
  .
  The Built-Using field must consist of simple <tt>source (=

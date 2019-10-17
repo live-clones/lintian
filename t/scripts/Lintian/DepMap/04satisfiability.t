@@ -18,3 +18,9 @@ isnt($@, '','Nodes that were not added and are missing() cannot be satisfied');
 
 ok(!$obj->satisfy('A'),
     'Nodes cannot be satisfied if they still have dependencies');
+
+# Local Variables:
+# indent-tabs-mode: nil
+# cperl-indent-level: 4
+# End:
+# vim: syntax=perl sw=4 sts=4 sr et

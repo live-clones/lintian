@@ -23,8 +23,12 @@ use strict;
 use warnings;
 use autodie;
 
+use Moo;
+
 use Lintian::Tags qw(tag);
 use Lintian::Util qw(strip);
+
+with('Lintian::Check');
 
 use constant FILENAME_LENGTH_LIMIT => 80;
 
@@ -34,7 +38,12 @@ use constant FILENAME_LENGTH_LIMIT => 80;
 use constant LONGEST_ARCHITECTURE => length 'kfreebsd-amd64';
 
 sub always {
-    my ($pkg, $type, $info, $proc) = @_;
+    my ($self) = @_;
+
+    my $pkg = $self->package;
+    my $type = $self->type;
+    my $info = $self->info;
+    my $proc = $self->processable;
 
     # pkg_version(_arch)?.type
     # - here we pay for length of "name_version"

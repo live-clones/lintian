@@ -19,15 +19,23 @@
 # MA 02110-1301, USA.
 
 package Lintian::md5sums;
+
 use strict;
 use warnings;
 use autodie;
 
+use Moo;
+
 use Lintian::Tags qw(tag);
 use Lintian::Util qw(dequote_name);
 
+with('Lintian::Check');
+
 sub binary {
-    my (undef, undef, $info) = @_;
+    my ($self) = @_;
+
+    my $info = $self->info;
+
     my $control = $info->control_index('md5sums');
     my (%control_entry, %info_entry);
 

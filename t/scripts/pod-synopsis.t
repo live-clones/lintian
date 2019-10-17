@@ -4,6 +4,11 @@ use strict;
 use warnings;
 
 use Test::More;
+
+use Test::Lintian;
+
+load_profile_for_test;
+
 plan skip_all => 'Not needed for coverage of Lintian'
   if $ENV{'LINTIAN_COVERAGE'};
 eval 'use Test::Pod';
@@ -16,3 +21,9 @@ $ENV{'LINTIAN_TEST_ROOT'} //= '.';
 my @pod_files = all_pod_files("$ENV{'LINTIAN_TEST_ROOT'}/lib");
 plan tests => scalar(@pod_files);
 synopsis_ok(@pod_files);
+
+# Local Variables:
+# indent-tabs-mode: nil
+# cperl-indent-level: 4
+# End:
+# vim: syntax=perl sw=4 sts=4 sr et

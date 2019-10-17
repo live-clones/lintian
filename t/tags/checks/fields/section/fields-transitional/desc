@@ -1,0 +1,4 @@
+Skeleton: upload-native
+Testname: fields-transitional
+Description: Test for transitional package in wrong section
+Check: fields/section

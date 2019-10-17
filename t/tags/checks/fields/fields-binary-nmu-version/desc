@@ -1,5 +1,0 @@
-Testname: fields-binary-nmu-version
-Skeleton: upload-non-native
-Version: 1.0-1.0.1
-Description: Check binary NMU version handling
-Check: fields

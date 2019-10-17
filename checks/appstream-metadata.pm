@@ -32,13 +32,22 @@ package Lintian::appstream_metadata;
 use strict;
 use warnings;
 
-use XML::Simple qw(:strict);
 use File::Basename qw(basename);
+use Moo;
+use XML::Simple qw(:strict);
 
 use Lintian::Tags qw(tag);
 
+with('Lintian::Check');
+
 sub binary {
-    my ($pkg, $type, $info, $proc, $group) = @_;
+    my ($self) = @_;
+
+    my $pkg = $self->package;
+    my $type = $self->type;
+    my $info = $self->info;
+    my $proc = $self->processable;
+    my $group = $self->group;
 
     my (%desktopfiles, %metainfo, @udevrules);
     my $found_modalias = 0;

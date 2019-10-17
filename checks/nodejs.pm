@@ -22,16 +22,22 @@ package Lintian::nodejs;
 
 use strict;
 use warnings;
-
 use autodie;
 
 use List::MoreUtils qw(any);
+use Moo;
 
 use Lintian::Tags qw(tag);
 use Lintian::Relation;
 
+with('Lintian::Check');
+
 sub source {
-    my ($pkg, undef, $info) = @_;
+    my ($self) = @_;
+
+    my $pkg = $self->package;
+    my $info = $self->info;
+
     # debian/control check
     my @testsuites = split(m/\s*,\s*/, $info->source_field('testsuite', ''));
     if (any { /^autopkgtest-pkg-nodejs$/ } @testsuites) {
@@ -98,7 +104,11 @@ sub source {
 }
 
 sub binary {
-    my ($pkg, undef, $info) = @_;
+    my ($self) = @_;
+
+    my $pkg = $self->package;
+    my $info = $self->info;
+
     if ($pkg !~ /-dbg$/) {
         foreach my $file ($info->sorted_index) {
             my $fname = $file->name;

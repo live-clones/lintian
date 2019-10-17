@@ -93,3 +93,9 @@ test_tags_implemented($opts, "$ENV{LINTIAN_TEST_ROOT}/checks");
 test_tags_implemented("$ENV{LINTIAN_TEST_ROOT}/doc/examples/checks");
 
 done_testing;
+
+# Local Variables:
+# indent-tabs-mode: nil
+# cperl-indent-level: 4
+# End:
+# vim: syntax=perl sw=4 sts=4 sr et

@@ -1,0 +1,4 @@
+Skeleton: upload-native
+Testname: fields-malformed-vcs-fields
+Description: Test malformed VCS-* fields
+Check: fields/vcs

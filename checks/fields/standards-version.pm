@@ -25,13 +25,16 @@ use strict;
 use warnings;
 use autodie;
 
-use POSIX qw(strftime);
-use List::Util qw(first);
 use Date::Parse qw(str2time);
+use List::Util qw(first);
+use Moo;
+use POSIX qw(strftime);
 
 use Lintian::Data;
 use Lintian::Tags qw(tag);
 use Lintian::Util qw(internal_error);
+
+with('Lintian::Check');
 
 # Any Standards Version released before this day is "ancient"
 my $ANCIENT_DATE_DATA = Lintian::Data->new(
@@ -63,7 +66,9 @@ my $CURRENT      = $STANDARDS[0][0];
 my @CURRENT      = split(m/\./, $CURRENT);
 
 sub source {
-    my (undef, undef, $info) = @_;
+    my ($self) = @_;
+
+    my $info = $self->info;
 
     # udebs aren't required to conform to policy, so they don't need
     # Standards-Version. (If they have it, though, it should be valid.)

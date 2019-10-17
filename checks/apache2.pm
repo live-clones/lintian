@@ -25,16 +25,25 @@ use warnings;
 use autodie;
 
 use File::Basename;
+use Moo;
+
 use Lintian::Tags qw(tag);
 use Lintian::Relation qw(:constants);
 use Lintian::Util qw(internal_error);
 
+with('Lintian::Check');
+
 sub binary {
-    my ($pkg, $type, $info) = @_;
+    my ($self) = @_;
+
+    my $pkg = $self->package;
+    my $type = $self->type;
+    my $info = $self->info;
 
     # Do nothing if the package in question appears to be related to
     # the web server itself
-    return if $pkg =~ m/^apache2(:?\.2)?(?:-\w+)?$/;
+    return
+      if $pkg =~ m/^apache2(:?\.2)?(?:-\w+)?$/;
 
     # whether the package appears to be an Apache2 module/web application
     my $seen_apache2_special_file = 0;

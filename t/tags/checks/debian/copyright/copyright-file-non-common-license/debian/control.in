@@ -1,14 +1,14 @@
-Source: {$source}
+Source: [% $source %]
 Priority: optional
-Section: {$section}
-Maintainer: {$author}
-Standards-Version: {$standards_version}
-Build-Depends: {$build_depends}
+Section: [% $section %]
+Maintainer: [% $author %]
+Standards-Version: [% $standards_version %]
+Build-Depends: [% $build_depends %]
 Rules-Requires-Root: no
 
 Package: copyright-mentions-apache
 Architecture: all
-Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
+Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: checks against common license false positive for Apache
  Tests against common license false positive for Apache.
  .
@@ -19,7 +19,7 @@ Description: checks against common license false positive for Apache
 
 Package: copyright-mentions-apache2
 Architecture: all
-Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
+Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: checks against common license false positive for Apache (2)
  Tests against common license false positive for Apache (2).
  .
@@ -30,7 +30,7 @@ Description: checks against common license false positive for Apache (2)
 
 Package: copyright-mentions-apache3
 Architecture: all
-Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
+Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: checks against common license false positive for Apache (3)
  Tests against common license false positive for Apache (3).
  .
@@ -41,7 +41,7 @@ Description: checks against common license false positive for Apache (3)
 
 Package: copyright-mentions-gfdl
 Architecture: all
-Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
+Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: checks against common license false positive for gfdl
  Tests against common license false positive for gfdl.
  .
@@ -52,7 +52,7 @@ Description: checks against common license false positive for gfdl
 
 Package: copyright-mentions-gpl
 Architecture: all
-Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
+Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: checks against common license false positive for gpl
  Tests against common license false positive for gpl.
  .
@@ -63,7 +63,7 @@ Description: checks against common license false positive for gpl
 
 Package: copyright-mentions-lgpl
 Architecture: all
-Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
+Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: checks against common license false positive for lgpl
  Tests against common license false positive for lgpl.
  .
@@ -74,7 +74,7 @@ Description: checks against common license false positive for lgpl
 
 Package: copyright-mentions-lgpl2
 Architecture: all
-Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
+Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: checks against common license false positive for lgpl (2)
  Tests against common license false positive for lgpl (2).
  .
@@ -85,7 +85,7 @@ Description: checks against common license false positive for lgpl (2)
 
 Package: copyright-mentions-perl
 Architecture: all
-Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
+Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: checks against common license false positive for perl
  Tests against common license false positive for perl.
  .

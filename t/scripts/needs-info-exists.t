@@ -50,3 +50,9 @@ for my $desc (@DESCS) {
     }
     is(join(', ', @missing), '', "$name has valid needs-info");
 }
+
+# Local Variables:
+# indent-tabs-mode: nil
+# cperl-indent-level: 4
+# End:
+# vim: syntax=perl sw=4 sts=4 sr et

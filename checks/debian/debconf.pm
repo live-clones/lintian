@@ -24,10 +24,14 @@ use strict;
 use warnings;
 use autodie;
 
+use Moo;
+
 use Lintian::Deb822Parser qw(read_dpkg_control :constants);
 use Lintian::Relation;
 use Lintian::Tags qw(tag);
 use Lintian::Util qw($PKGNAME_REGEX);
+
+with('Lintian::Check');
 
 # From debconf-devel(7), section 'THE TEMPLATES FILE', up to date with debconf
 # version 1.5.24.  Added indices for cdebconf (indicates sort order for
@@ -63,7 +67,12 @@ my $ANY_DEBCONF = Lintian::Relation->new(
     ));
 
 sub always {
-    my ($pkg, $type, $info) = @_;
+    my ($self) = @_;
+
+    my $pkg = $self->package;
+    my $type = $self->type;
+    my $info = $self->info;
+
     my ($seenconfig, $seentemplates, $usespreinst);
 
     if ($type eq 'source') {

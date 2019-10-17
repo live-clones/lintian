@@ -1,0 +1,23 @@
+Source: [% $source %]
+Priority: optional
+Section: [% $section %]
+Maintainer: [% $author %]
+Standards-Version: [% $standards_version %]
+Build-Depends: [% $build_depends %]
+Rules-Requires-Root: no
+Vcs-Browser: https://anonscm.debian.org/viewvc/foobar/trunk?rev=0&sc=0
+Vcs-Svn: svn://anonscm.debian.org/foobar/trunk
+Vcs-Mtn: www.example.org org.debian.foobar
+Vcs-Hg: https://anonscm.debian.org/hg/foobar/pkg/foobar -b master
+Vcs-Git: https://anonscm.debian.org/users/djpig/foobar.git -b master
+Vcs-Cvs: :pserver:anonymous@anonscm.debian.org:/cvs/foobar module
+Vcs-Bzr: nosmart+http://anonscm.debian.org/bzr/collab-maint/foobar
+
+Package: [% $source %]
+Architecture: [% $package_architecture %]
+Depends: ${misc:Depends}
+Description: [% $description %]
+ This is a test package designed to exercise some feature or tag of
+ Lintian.  It is part of the Lintian test suite and may do very odd
+ things.  It should not be installed like a regular package.  It may
+ be an empty package.

@@ -24,8 +24,12 @@ use strict;
 use warnings;
 use autodie;
 
-use Lintian::Check qw(check_spelling spelling_tag_emitter);
+use Moo;
+
+use Lintian::Spelling qw(check_spelling spelling_tag_emitter);
 use Lintian::Tags qw(tag);
+
+with('Lintian::Check');
 
 my $SPELLING_ERROR_IN_README
   = spelling_tag_emitter('spelling-error-in-readme-debian');
@@ -48,7 +52,12 @@ sub open_readme {
 }
 
 sub binary {
-    my ($pkg_name, undef, $info, undef, $group) = @_;
+    my ($self) = @_;
+
+    my $pkg_name = $self->package;
+    my $info = $self->info;
+    my $group = $self->group;
+
     my $readme = '';
 
     my $fd = open_readme($pkg_name, $info);

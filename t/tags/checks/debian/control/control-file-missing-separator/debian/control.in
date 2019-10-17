@@ -1,8 +1,8 @@
 Source: control-file-missing-separator
 Section: devel
 Priority: optional
-Maintainer: {$author}
-Build-Depends: {$build_depends},
+Maintainer: [% $author %]
+Build-Depends: [% $build_depends %],
  fiddle [amd64 powerpc
  mips mipsel
  hppa
@@ -12,11 +12,11 @@ Build-Depends: {$build_depends},
  2) [
  sparc i386 amd64
  ]
-Standards-Version: {$standards_version}
+Standards-Version: [% $standards_version %]
 
 Package: control-file-missing-separator
 Architecture: all
-Depends: $\{shlibs:Depends\}, $\{misc:Depends\}, foo (>= 1)
+Depends: ${shlibs:Depends}, ${misc:Depends}, foo (>= 1)
   baz (<< 2),
   fizz (= 2.0)
 Suggests: p1

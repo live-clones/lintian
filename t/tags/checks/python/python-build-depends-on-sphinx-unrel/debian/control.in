@@ -1,23 +1,23 @@
-Source: {$source}
+Source: [% $source %]
 Priority: optional
 Section: python
-Maintainer: {$author}
-Standards-Version: {$standards_version}
-Build-Depends: {$build_depends}, python-sphinx, python3-sphinx
+Maintainer: [% $author %]
+Standards-Version: [% $standards_version %]
+Build-Depends: [% $build_depends %], python-sphinx, python3-sphinx
 Rules-Requires-Root: no
 
-Package: python-{$source}
+Package: python-[% $source %]
 Architecture: all
-Depends: $\{misc:Depends\}, python2.7
+Depends: ${misc:Depends}, python2.7
 Description: Test package
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
  things.  It should not be installed like a regular package.  It may
  be an empty package.
 
-Package: python3-{$source}
+Package: python3-[% $source %]
 Architecture: all
-Depends: $\{misc:Depends\}, python3
+Depends: ${misc:Depends}, python3
 Description: Test package (Python 3)
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd

@@ -1,7 +1,7 @@
 Tag: no-section-field
 Severity: normal
 Certainty: certain
-Check: fields
+Check: fields/section
 Info: The package does not have a "Section:" field in its control file.
  .
  The field is mandatory for source packages and optional for binary

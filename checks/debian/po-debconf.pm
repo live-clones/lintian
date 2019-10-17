@@ -27,16 +27,22 @@ use autodie;
 use Capture::Tiny qw(capture_merged capture_stderr);
 use Cwd qw(realpath);
 use File::Temp();
+use Moo;
 use Try::Tiny;
 
 use Lintian::Output qw(msg);
 use Lintian::Tags qw(tag);
 use Lintian::Util qw(copy_dir clean_env);
 
+with('Lintian::Check');
+
 use constant NEWLINE  =>  qq{\n};
 
 sub source {
-    my (undef, undef, $info) = @_;
+    my ($self) = @_;
+
+    my $info = $self->info;
+
     my $has_template = 0;
     my @lang_templates;
     my $full_translation = 0;

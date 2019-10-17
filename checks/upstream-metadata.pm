@@ -23,14 +23,19 @@ package Lintian::upstream_metadata;
 use strict;
 use warnings;
 
-use Lintian::Tags qw(tag);
-
+use Moo;
 use YAML::XS;
-
 $YAML::XS::LoadBlessed = 0;
 
+use Lintian::Tags qw(tag);
+
+with('Lintian::Check');
+
 sub source {
-    my (undef, undef, $info) = @_;
+    my ($self) = @_;
+
+    my $info = $self->info;
+
     my $yamlfile = $info->index_resolved_path('debian/upstream/metadata');
 
     if (not $yamlfile) {

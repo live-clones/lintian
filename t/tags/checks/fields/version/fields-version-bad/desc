@@ -1,0 +1,5 @@
+Testname: fields-version-bad
+Version: 0-.3
+Description: Test for weird versions
+Skeleton: upload-non-native
+Check: fields/version

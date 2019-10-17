@@ -19,21 +19,28 @@
 # MA 02110-1301, USA.
 
 package Lintian::changes_file;
+
 use strict;
 use warnings;
 use autodie;
 
 use List::MoreUtils qw(any);
+use Moo;
 
-use Lintian::Tags qw(tag);
-use Lintian::Check qw(check_maintainer);
 use Lintian::Data;
+use Lintian::Maintainer qw(check_maintainer);
+use Lintian::Tags qw(tag);
 use Lintian::Util qw(get_file_checksum);
+
+with('Lintian::Check');
 
 my $KNOWN_DISTS = Lintian::Data->new('changes-file/known-dists');
 
 sub changes {
-    my (undef, undef, $info, undef, $group) = @_;
+    my ($self) = @_;
+
+    my $info = $self->info;
+    my $group = $self->group;
 
     # If we don't have a Format key, something went seriously wrong.
     # Tag the file and skip remaining processing.

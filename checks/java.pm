@@ -25,16 +25,24 @@ use autodie;
 
 use File::Basename;
 use List::MoreUtils qw(any none);
-use Lintian::Data ();
+use Moo;
 
+use Lintian::Data ();
 use Lintian::Tags qw(tag);
 use Lintian::Util qw(normalize_pkg_path $PKGNAME_REGEX);
+
+with('Lintian::Check');
 
 our $CLASS_REGEX = qr/\.(?:class|cljc?)/o;
 our $MAX_BYTECODE = Lintian::Data->new('java/constants', qr/\s*=\s*/o);
 
 sub always {
-    my ($pkg, $type, $info) = @_;
+    my ($self) = @_;
+
+    my $pkg = $self->package;
+    my $type = $self->type;
+    my $info = $self->info;
+
     my $java_info = $info->java_info;
     my $missing_jarwrapper = 0;
     my $has_public_jars = 0;

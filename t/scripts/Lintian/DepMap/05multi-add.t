@@ -33,3 +33,9 @@ is_deeply([$map->selectable], ['C'], 'B satisfied, C selectable');
 
 $map->satisfy('C');
 is_deeply([$map->selectable], ['D'], 'C satisfied, D now selectable');
+
+# Local Variables:
+# indent-tabs-mode: nil
+# cperl-indent-level: 4
+# End:
+# vim: syntax=perl sw=4 sts=4 sr et

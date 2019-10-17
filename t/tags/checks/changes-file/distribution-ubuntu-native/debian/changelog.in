@@ -1,6 +1,6 @@
-{$source} ({$version}) lucid; urgency=low
+[% $source %] ([% $version %]) lucid; urgency=low
 
   * Lintian Test Suite.
-  * Test: {$testname}
+  * Test: [% $testname %]
 
- -- {$author}  {$date}
+ -- [% $author %]  [% $date %]

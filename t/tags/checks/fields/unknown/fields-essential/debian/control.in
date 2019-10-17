@@ -1,0 +1,28 @@
+Source: [% $source %]
+Priority: optional
+Section: [% $section %]
+Maintainer: [% $author %]
+Standards-Version: [% $standards_version %]
+XS-Essential: no
+Build-Depends: [% $build_depends %]
+Rules-Requires-Root: binary-targets
+
+Package: [% $source %]
+Essential: yes
+Architecture: all
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: [% $description %]
+ This is a test package designed to exercise some feature or tag of
+ Lintian.  It is part of the Lintian test suite and may do very odd
+ things.  It should not be installed like a regular package.  It may
+ be an empty package.
+
+Package: [% $source %]2
+Essential: maybe
+Architecture: all
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: [% $description %] -- maybe
+ This is another test package designed to exercise some feature or tag of
+ Lintian.  It is part of the Lintian test suite and may do very odd
+ things.  It should not be installed like a regular package.  It may
+ be an empty package.

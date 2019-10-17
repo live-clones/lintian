@@ -1,7 +1,7 @@
 Tag: vcs-field-uses-not-recommended-uri-format
 Severity: normal
 Certainty: possible
-Check: fields
+Check: fields/vcs
 Info: The VCS-* field uses a URI which doesn't match the recommended
  format, but still looks valid. Examples for not recommended URI formats
  are protocols that require authentication (like SSH). Instead where

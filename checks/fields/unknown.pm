@@ -28,15 +28,21 @@ use strict;
 use warnings;
 use autodie;
 
+use Moo;
+
 use Lintian::Data ();
 use Lintian::Tags qw(tag);
+
+with('Lintian::Check');
 
 our $KNOWN_BINARY_FIELDS = Lintian::Data->new('fields/binary-fields');
 our $KNOWN_UDEB_FIELDS = Lintian::Data->new('fields/udeb-fields');
 our $SOURCE_FIELDS      = Lintian::Data->new('common/source-fields');
 
 sub source {
-    my (undef, undef, $info, undef, undef) = @_;
+    my ($self) = @_;
+
+    my $info = $self->info;
 
     for my $field (keys %{$info->field}) {
 
@@ -48,7 +54,9 @@ sub source {
 }
 
 sub binary {
-    my (undef, undef, $info, undef, undef) = @_;
+    my ($self) = @_;
+
+    my $info = $self->info;
 
     for my $field (keys %{$info->field}) {
 
@@ -60,7 +68,9 @@ sub binary {
 }
 
 sub udeb {
-    my (undef, undef, $info, undef, undef) = @_;
+    my ($self) = @_;
+
+    my $info = $self->info;
 
     for my $field (keys %{$info->field}) {
 

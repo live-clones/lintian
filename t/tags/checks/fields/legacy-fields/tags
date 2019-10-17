@@ -1,7 +1,0 @@
-fields (source): debian-revision-not-well-formed 1.5-.3
-fields (binary): unknown-section does-not-exist
-fields (binary): essential-no-not-needed
-fields (binary): depends-on-python-minimal depends
-fields (binary): debian-revision-not-well-formed 1.5-.3
-another-version (binary): new-essential-package
-another-version (binary): debian-revision-should-not-be-zero 123.4-0

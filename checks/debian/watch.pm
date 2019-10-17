@@ -26,9 +26,13 @@ use strict;
 use warnings;
 use autodie;
 
+use Moo;
+
 use Lintian::Info::Changelog::Version;
 use Lintian::Tags qw(tag);
 use Lintian::Util qw($PKGREPACK_REGEX);
+
+with('Lintian::Check');
 
 use constant EMPTY => q{};
 
@@ -36,7 +40,10 @@ our $WATCH_VERSION = Lintian::Data->new('watch-file/version', qr/\s*=\s*/o);
 our $SIGNING_KEY_FILENAMES= Lintian::Data->new('common/signing-key-filenames');
 
 sub source {
-    my (undef, undef, $info) = @_;
+    my ($self) = @_;
+
+    my $info = $self->info;
+
     my $template = 0;
     my $withgpgverification = 0;
     my $wfile = $info->index_resolved_path('debian/watch');

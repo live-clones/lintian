@@ -28,14 +28,20 @@ use strict;
 use warnings;
 use autodie;
 
+use Moo;
+
 use Lintian::Data ();
 use Lintian::Tags qw(tag);
+
+with('Lintian::Check');
 
 my $KNOWN_INSECURE_HOMEPAGE_URIS
   = Lintian::Data->new('fields/insecure-homepage-uris');
 
 sub source {
-    my (undef, undef, $info, undef, undef) = @_;
+    my ($self) = @_;
+
+    my $info = $self->info;
 
     my $homepage = $info->unfolded_field('homepage');
 
@@ -66,7 +72,9 @@ sub source {
 }
 
 sub always {
-    my (undef, undef, $info, undef, undef) = @_;
+    my ($self) = @_;
+
+    my $info = $self->info;
 
     my $homepage = $info->unfolded_field('homepage');
 

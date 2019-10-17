@@ -28,13 +28,19 @@ use strict;
 use warnings;
 use autodie;
 
+use Moo;
+
 use Lintian::Data ();
 use Lintian::Tags qw(tag);
+
+with('Lintian::Check');
 
 our $KNOWN_ESSENTIAL = Lintian::Data->new('fields/essential');
 
 sub source {
-    my (undef, undef, $info, undef, undef) = @_;
+    my ($self) = @_;
+
+    my $info = $self->info;
 
     my $essential = $info->unfolded_field('essential');
 
@@ -47,7 +53,10 @@ sub source {
 }
 
 sub always {
-    my ($pkg, undef, $info, undef, undef) = @_;
+    my ($self) = @_;
+
+    my $pkg = $self->package;
+    my $info = $self->info;
 
     my $essential = $info->unfolded_field('essential');
 

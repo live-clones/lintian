@@ -23,13 +23,24 @@ package Lintian::udev;
 use strict;
 use warnings;
 
+use Moo;
+
 use Lintian::Tags qw(tag);
+
+with('Lintian::Check');
 
 # Check /lib/udev/rules.d/, detect use of MODE="0666" and use of
 # GROUP="plugdev" without TAG+="uaccess".
 
 sub binary {
-    my ($pkg, $type, $info, $proc, $group) = @_;
+    my ($self) = @_;
+
+    my $pkg = $self->package;
+    my $type = $self->type;
+    my $info = $self->info;
+    my $proc = $self->processable;
+    my $group = $self->group;
+
     my $rules_dir = $info->index_resolved_path('lib/udev/rules.d/');
     return unless $rules_dir;
     foreach my $file ($rules_dir->children) {

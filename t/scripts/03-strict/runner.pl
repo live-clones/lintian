@@ -31,3 +31,9 @@ if ($0 =~ m{^(?:.*/)?reporting\.t$}) {
     my @test_paths = program_name_to_perl_paths($0);
     all_perl_files_ok(@test_paths);
 }
+
+# Local Variables:
+# indent-tabs-mode: nil
+# cperl-indent-level: 4
+# End:
+# vim: syntax=perl sw=4 sts=4 sr et

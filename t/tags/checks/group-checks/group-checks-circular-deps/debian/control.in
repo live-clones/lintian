@@ -1,15 +1,15 @@
-Source: {$source}
+Source: [% $source %]
 Priority: optional
-Section: {$section}
-Maintainer: {$author}
-Standards-Version: {$standards_version}
-Build-Depends: {$build_depends}
+Section: [% $section %]
+Maintainer: [% $author %]
+Standards-Version: [% $standards_version %]
+Build-Depends: [% $build_depends %]
 Rules-Requires-Root: no
 
 Package: root
 Architecture: all
-Depends: $\{misc:Depends\}, c1-a, c1-c, c2-b
-Description: {$description} - root
+Depends: ${misc:Depends}, c1-a, c1-c, c2-b
+Description: [% $description %] - root
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
  things.  It should not be installed like a regular package.
@@ -18,8 +18,8 @@ Description: {$description} - root
 
 Package: leaf
 Architecture: all
-Depends: $\{misc:Depends\}
-Description: {$description} - leaf
+Depends: ${misc:Depends}
+Description: [% $description %] - leaf
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
  things.  It should not be installed like a regular package.
@@ -28,8 +28,8 @@ Description: {$description} - leaf
 
 Package: disconnected
 Architecture: all
-Depends: $\{misc:Depends\}
-Description: {$description} - dis
+Depends: ${misc:Depends}
+Description: [% $description %] - dis
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
  things.  It should not be installed like a regular package.
@@ -39,8 +39,8 @@ Description: {$description} - dis
 
 Package: c1-a
 Architecture: all
-Depends: $\{misc:Depends\}, c1-b, leaf
-Description: {$description} - c1-a
+Depends: ${misc:Depends}, c1-b, leaf
+Description: [% $description %] - c1-a
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
  things.  It should not be installed like a regular package.
@@ -49,8 +49,8 @@ Description: {$description} - c1-a
 
 Package: c1-b
 Architecture: all
-Depends: $\{misc:Depends\}, c1-c
-Description: {$description} - c1-b
+Depends: ${misc:Depends}, c1-c
+Description: [% $description %] - c1-b
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
  things.  It should not be installed like a regular package.
@@ -59,8 +59,8 @@ Description: {$description} - c1-b
 
 Package: c1-c
 Architecture: all
-Depends: $\{misc:Depends\}, c1-a, leaf
-Description: {$description} - c1-c
+Depends: ${misc:Depends}, c1-a, leaf
+Description: [% $description %] - c1-c
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
  things.  It should not be installed like a regular package.
@@ -69,8 +69,8 @@ Description: {$description} - c1-c
 
 Package: c2-a
 Architecture: all
-Depends: $\{misc:Depends\}, c2-b, c2-c, leaf
-Description: {$description} - c2-a
+Depends: ${misc:Depends}, c2-b, c2-c, leaf
+Description: [% $description %] - c2-a
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
  things.  It should not be installed like a regular package.
@@ -79,8 +79,8 @@ Description: {$description} - c2-a
 
 Package: c2-b
 Architecture: all
-Depends: $\{misc:Depends\}, c2-a, c2-c
-Description: {$description} - c2-b
+Depends: ${misc:Depends}, c2-a, c2-c
+Description: [% $description %] - c2-b
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
  things.  It should not be installed like a regular package.
@@ -89,8 +89,8 @@ Description: {$description} - c2-b
 
 Package: c2-c
 Architecture: all
-Depends: $\{misc:Depends\}, c2-a, c2-b, leaf
-Description: {$description} - c2-c
+Depends: ${misc:Depends}, c2-a, c2-b, leaf
+Description: [% $description %] - c2-c
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
  things.  It should not be installed like a regular package.

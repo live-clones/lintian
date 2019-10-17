@@ -1,14 +1,14 @@
-Source: {$source}
+Source: [% $source %]
 Priority: optional
 Section: devel
-Maintainer: {$author}
-Standards-Version: {$standards_version}
-Build-Depends: {$build_depends}
+Maintainer: [% $author %]
+Standards-Version: [% $standards_version %]
+Build-Depends: [% $build_depends %]
 Rules-Requires-Root: no
 
 Package: config-ma-no
 Architecture: any
-Depends: $\{misc:Depends\}, $\{shlib:Depends\}
+Depends: ${misc:Depends}, ${shlib:Depends}
 Multi-arch: no
 Description: Contains config test file no
  This is a test package designed to exercise some feature or tag of
@@ -20,7 +20,7 @@ Description: Contains config test file no
 Package: config-ma-foreign
 Architecture: any
 Multi-arch: foreign
-Depends: $\{misc:Depends\}, $\{shlib:Depends\}
+Depends: ${misc:Depends}, ${shlib:Depends}
 Description: Contains config test file foreign
  This is a test package designed to exercise some feature or tag of
  Lintian for arch any config script ma foreign.
@@ -30,7 +30,7 @@ Description: Contains config test file foreign
 
 Package: config-all
 Architecture: all
-Depends: $\{misc:Depends\}, $\{shlib:Depends\}
+Depends: ${misc:Depends}, ${shlib:Depends}
 Multi-arch: no
 Description: Contains config test file all arch
  This is a test package designed to exercise some feature or tag of
