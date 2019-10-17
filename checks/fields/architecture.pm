@@ -31,7 +31,6 @@ use autodie;
 use Moo;
 
 use Lintian::Architecture qw(:all);
-use Lintian::Tags qw(tag);
 
 with('Lintian::Check');
 
@@ -52,22 +51,21 @@ sub binary {
       unless @list;
 
     for my $architecture (@list) {
-        tag 'arch-wildcard-in-binary-package', $architecture
+        $self->tag('arch-wildcard-in-binary-package', $architecture)
           if is_arch_wildcard($architecture);
     }
 
-    tag 'too-many-architectures'
-      if @list > 1;
+    $self->tag('too-many-architectures') if @list > 1;
 
     my $architecture = $list[0];
 
     return
       if $architecture eq 'all';
 
-    tag 'aspell-package-not-arch-all'
+    $self->tag('aspell-package-not-arch-all')
       if $pkg =~ /^aspell-[a-z]{2}(?:-.*)?$/;
 
-    tag 'documentation-package-not-architecture-independent'
+    $self->tag('documentation-package-not-architecture-independent')
       if $pkg =~ /-docs?$/;
 
     if ($pkg =~ /^r-(?:cran|bioc|other)-/) {
@@ -80,7 +78,7 @@ sub binary {
             next
               unless $file =~ m,^usr/lib/R/.*/DESCRIPTION,;
 
-            tag 'r-package-not-arch-all'
+            $self->tag('r-package-not-arch-all')
               if $file->file_contents =~ m/NeedsCompilation: no/m;
 
             last;
@@ -99,7 +97,7 @@ sub always {
     my $architecture = $info->unfolded_field('architecture');
 
     unless (defined $architecture) {
-        tag 'no-architecture-field';
+        $self->tag('no-architecture-field');
         return;
     }
 
@@ -107,7 +105,7 @@ sub always {
 
     for my $arch (@list) {
 
-        tag 'unknown-architecture', $arch
+        $self->tag('unknown-architecture', $arch)
           unless is_arch_or_wildcard($arch);
     }
 
@@ -134,8 +132,7 @@ sub always {
               if %archmap;
         }
 
-        tag 'magic-arch-in-arch-list'
-          if $magic;
+        $self->tag('magic-arch-in-arch-list') if $magic;
     }
 
     # Used for later tests.
