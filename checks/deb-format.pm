@@ -27,7 +27,6 @@ use List::MoreUtils qw(first_index none);
 use Moo;
 
 use Lintian::Data;
-use Lintian::Tags qw(tag);
 use Lintian::Util qw(safe_qx);
 
 with('Lintian::Check');
@@ -89,11 +88,11 @@ sub always {
         my $count = scalar(@members);
         my ($ctrl_member, $data_member);
         if ($count < 3) {
-            tag 'malformed-deb-archive',
-              "found only $count members instead of 3";
+            $self->tag('malformed-deb-archive',
+                "found only $count members instead of 3");
         } elsif ($members[0] ne 'debian-binary') {
-            tag 'malformed-deb-archive',
-              "first member $members[0] not debian-binary";
+            $self->tag('malformed-deb-archive',
+                "first member $members[0] not debian-binary");
         } elsif (
             $count == 3 and none {
                 substr($_, 0, 1) eq '_';
@@ -146,38 +145,39 @@ sub always {
                 } else {
                     $text = 'unexpected member';
                 }
-                tag 'misplaced-extra-member-in-deb',
-                  "$member ($text at position $actual_index)";
+                $self->tag('misplaced-extra-member-in-deb',
+                    "$member ($text at position $actual_index)");
             }
         }
 
         if (not defined($ctrl_member)) {
             # Somehow I doubt we will ever get this far without a control
             # file... :)
-            tag 'malformed-deb-archive', 'Missing control.tar member';
+            $self->tag('malformed-deb-archive', 'Missing control.tar member');
             $failed = 1;
         } else {
             if (
                 $ctrl_member !~ m/\A
                      control\.tar(?:\.(?:gz|xz))?  \Z/xsm
             ) {
-                tag 'malformed-deb-archive',
-                  join(' ',
-                    "second (official) member $ctrl_member",
-                    'not control.tar.(gz|xz)');
+                $self->tag(
+                    'malformed-deb-archive',
+                    join(' ',
+                        "second (official) member $ctrl_member",
+                        'not control.tar.(gz|xz)'));
                 $failed = 1;
             } elsif ($ctrl_member eq 'control.tar') {
-                tag 'uses-no-compression-for-control-tarball';
+                $self->tag('uses-no-compression-for-control-tarball');
             }
-            tag 'control-tarball-compression-format',
-              $ctrl_member =~ s/^control\.tar\.?//r || '(none)';
+            $self->tag('control-tarball-compression-format',
+                $ctrl_member =~ s/^control\.tar\.?//r || '(none)');
         }
 
         if (not defined($data_member)) {
             # Somehow I doubt we will ever get this far without a data
             # member (i.e. I suspect unpacked and index will fail), but
             # mah
-            tag 'malformed-deb-archive', 'Missing data.tar member';
+            $self->tag('malformed-deb-archive', 'Missing data.tar member');
             $failed = 1;
         } else {
             if (
@@ -185,25 +185,29 @@ sub always {
                      data\.tar(?:\.(?:gz|bz2|xz|lzma))?  \Z/xsm
             ) {
                 # wasn't okay after all
-                tag 'malformed-deb-archive',
-                  join(' ',
-                    "third (official) member $data_member",
-                    'not data.tar.(gz|xz|bz2|lzma)');
+                $self->tag(
+                    'malformed-deb-archive',
+                    join(' ',
+                        "third (official) member $data_member",
+                        'not data.tar.(gz|xz|bz2|lzma)'));
                 $failed = 1;
             } elsif ($type eq 'udeb'
                 && $data_member !~ m/^data\.tar\.[gx]z$/) {
-                tag 'udeb-uses-unsupported-compression-for-data-tarball';
+                $self->tag(
+                    'udeb-uses-unsupported-compression-for-data-tarball');
             } elsif ($data_member eq 'data.tar.lzma') {
-                tag 'uses-deprecated-compression-for-data-tarball', 'lzma';
+                $self->tag('uses-deprecated-compression-for-data-tarball',
+                    'lzma');
                 # Ubuntu's archive allows lzma packages.
-                tag 'lzma-deb-archive';
+                $self->tag('lzma-deb-archive');
             } elsif ($data_member eq 'data.tar.bz2') {
-                tag 'uses-deprecated-compression-for-data-tarball', 'bzip2';
+                $self->tag('uses-deprecated-compression-for-data-tarball',
+                    'bzip2');
             } elsif ($data_member eq 'data.tar') {
-                tag 'uses-no-compression-for-data-tarball';
+                $self->tag('uses-no-compression-for-data-tarball');
             }
-            tag 'data-tarball-compression-format',
-              $data_member =~ s/^data\.tar\.?//r || '(none)';
+            $self->tag('data-tarball-compression-format',
+                $data_member =~ s/^data\.tar\.?//r || '(none)');
         }
     } else {
         # unpack will probably fail so we'll never get here, but may as well be
@@ -211,7 +215,7 @@ sub always {
         $stderr =~ s/\n.*//s;
         $stderr =~ s/^ar:\s*//;
         $stderr =~ s/^deb:\s*//;
-        tag 'malformed-deb-archive', "ar error: $stderr";
+        $self->tag('malformed-deb-archive', "ar error: $stderr");
     }
 
     # Check the debian-binary version number.  We probably won't get
@@ -222,10 +226,11 @@ sub always {
     if (not defined($failed)) {
         my $output = safe_qx('ar', 'p', $deb, 'debian-binary');
         if ($? != 0) {
-            tag 'malformed-deb-archive', 'cannot read debian-binary member';
+            $self->tag('malformed-deb-archive',
+                'cannot read debian-binary member');
         } elsif ($output !~ /^2\.\d+\n/) {
             my ($version) = split(m/\n/, $output);
-            tag 'malformed-deb-archive', "version $version not 2.0";
+            $self->tag('malformed-deb-archive', "version $version not 2.0");
         }
     }
 
@@ -250,7 +255,7 @@ sub always {
                 if ($tag eq 'tar-errors-from-data') {
                     next if $line =~ /implausibly old time stamp/;
                 }
-                tag $tag, $line;
+                $self->tag($tag, $line);
             }
             close($fd);
         }
