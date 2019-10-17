@@ -27,8 +27,6 @@ use autodie;
 use List::MoreUtils qw(any);
 use Moo;
 
-use Lintian::Tags qw(tag);
-
 with('Lintian::Check');
 
 sub binary {
@@ -61,9 +59,9 @@ sub binary {
         my @files = @{ $hashmap{$hash} };
         next if scalar(@files) < 2;
         if (any { m,changelog,io} @files) {
-            tag 'duplicate-changelog-files', sort @files;
+            $self->tag('duplicate-changelog-files', sort @files);
         } else {
-            tag 'duplicate-files', sort @files;
+            $self->tag('duplicate-files', sort @files);
         }
     }
 
