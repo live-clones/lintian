@@ -25,7 +25,6 @@ use warnings;
 use autodie;
 
 use File::Basename qw(dirname);
-use Lintian::Tags qw(tag);
 use Moo;
 
 with('Lintian::Check');
@@ -50,7 +49,7 @@ sub always {
             $path = $file->link_normalized;
             if (not defined $path) {
                 # Unresolvable link
-                tag 'package-contains-unsafe-symlink', $file;
+                $self->tag('package-contains-unsafe-symlink', $file);
                 next;
             }
             # Links to the package root is always going to exist (although
@@ -91,7 +90,7 @@ sub always {
         }
         # nope - not found in any of our direct dependencies.  Ergo it is
         # a broken "ln -s target/*.so link" expansion.
-        tag 'package-contains-broken-symlink-wildcard', $file, $target;
+        $self->tag('package-contains-broken-symlink-wildcard', $file, $target);
     }
 
     return;
