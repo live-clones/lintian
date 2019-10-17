@@ -30,8 +30,6 @@ use autodie;
 
 use Moo;
 
-use Lintian::Tags qw(tag);
-
 with('Lintian::Check');
 
 sub source {
@@ -39,7 +37,7 @@ sub source {
 
     my $info = $self->info;
 
-    tag 'no-strong-digests-in-dsc'
+    $self->tag('no-strong-digests-in-dsc')
       unless $info->field('checksums-sha256');
 
     return;
