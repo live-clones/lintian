@@ -29,7 +29,6 @@ use autodie;
 use Moo;
 
 use Lintian::Info::Changelog::Version;
-use Lintian::Tags qw(tag);
 use Lintian::Util qw($PKGREPACK_REGEX);
 
 with('Lintian::Check');
@@ -50,12 +49,12 @@ sub source {
     my ($watchver, %dversions);
 
     if (not $wfile or not $wfile->is_open_ok) {
-        tag 'debian-watch-file-is-missing' unless ($info->native);
+        $self->tag('debian-watch-file-is-missing') unless ($info->native);
         return;
     }
 
     # Perform the other checks even if it is a native package
-    tag 'debian-watch-file-in-native-package' if ($info->native);
+    $self->tag('debian-watch-file-in-native-package') if ($info->native);
 
     # Check if the Debian version contains anything that resembles a repackaged
     # source package sign, for fine grained version mangling check
@@ -91,17 +90,18 @@ sub source {
 
         if (/^version\s*=\s*(\d+)(?:\s|\Z)/) {
             if (defined $watchver) {
-                tag 'debian-watch-file-declares-multiple-versions', "line $.";
+                $self->tag('debian-watch-file-declares-multiple-versions',
+                    "line $.");
             }
             $watchver = $1;
             my $minver = $WATCH_VERSION->value('min-version');
             my $maxver = $WATCH_VERSION->value('max-version');
             if ($watchver < $minver or $watchver > $maxver) {
-                tag 'debian-watch-file-unknown-version', $watchver;
+                $self->tag('debian-watch-file-unknown-version', $watchver);
             }
         } else {
             unless (defined($watchver)) {
-                tag 'debian-watch-file-missing-version';
+                $self->tag('debian-watch-file-missing-version');
                 $watchver = 1;
             }
             # Version 1 watch files are too broken to try checking them.
@@ -141,10 +141,12 @@ sub source {
             }
 
             if (m%qa\.debian\.org/watch/sf\.php\?%) {
-                tag 'debian-watch-file-uses-deprecated-sf-redirector-method',
-                  "line $.";
+                $self->tag(
+                    'debian-watch-file-uses-deprecated-sf-redirector-method',
+                    "line $.");
             } elsif (m%githubredir\.debian\.net%) {
-                tag 'debian-watch-file-uses-deprecated-githubredir',"line $.";
+                $self->tag('debian-watch-file-uses-deprecated-githubredir',
+                    "line $.");
             } elsif (
                 m{ (?:https?|ftp)://
                    (?:(?:.+\.)?dl|(?:pr)?downloads?|ftp\d?|upload) \.
@@ -154,9 +156,10 @@ sub source {
                 or m{https?://(?:www\.)?(?:sourceforge|sf)\.net
                               /projects/.+/files}xsm
             ) {
-                tag 'debian-watch-file-should-use-sf-redirector', "line $.";
+                $self->tag('debian-watch-file-should-use-sf-redirector',
+                    "line $.");
             } elsif (m%((?:http|ftp):(?!//sf.net/)\S+)%) {
-                tag 'debian-watch-uses-insecure-uri',$1;
+                $self->tag('debian-watch-uses-insecure-uri',$1);
             }
 
             # This bit is as-is from uscan.pl:
@@ -177,15 +180,16 @@ sub source {
             # If the version of the package contains dfsg, assume that it needs
             # to be mangled to get reasonable matches with upstream.
             if ($needs_repack_mangling and not $repack_mangle) {
-                tag 'debian-watch-file-should-mangle-version', "line $."
+                $self->tag('debian-watch-file-should-mangle-version',"line $.")
                   unless $repack_dmangle_auto;
             }
             if (    $needs_repack_mangling
                 and $repack_mangle
                 and not $repack_dmangle) {
-                tag
-                  'debian-watch-file-should-dversionmangle-not-uversionmangle',
-                  "line $.";
+                $self->tag(
+'debian-watch-file-should-dversionmangle-not-uversionmangle',
+                    "line $."
+                );
             }
 
             my $needs_prerelease_mangling
@@ -193,17 +197,18 @@ sub source {
             if (    $needs_prerelease_mangling
                 and $prerelease_mangle
                 and not $prerelease_umangle) {
-                tag
-                  'debian-watch-file-should-uversionmangle-not-dversionmangle',
-                  "line $.";
+                $self->tag(
+'debian-watch-file-should-uversionmangle-not-dversionmangle',
+                    "line $."
+                );
             }
         }
     }
     close($fd);
 
-    tag 'debian-watch-contains-dh_make-template', "(line $template)"
+    $self->tag('debian-watch-contains-dh_make-template', "(line $template)")
       if $template;
-    tag 'debian-watch-does-not-check-gpg-signature'
+    $self->tag('debian-watch-does-not-check-gpg-signature')
       unless ($withgpgverification);
 
     # Look for upstream signing key
@@ -218,10 +223,12 @@ sub source {
 
     if ($withgpgverification) {
         # Check upstream key is present if needed
-        tag 'debian-watch-file-pubkey-file-is-missing' unless $key_found;
+        $self->tag('debian-watch-file-pubkey-file-is-missing')
+          unless $key_found;
     } else {
         # Check upstream key is used if present
-        tag 'debian-watch-could-verify-download', $key_found if $key_found;
+        $self->tag('debian-watch-could-verify-download', $key_found)
+          if $key_found;
     }
 
     if (defined $info->changelog
@@ -245,14 +252,15 @@ sub source {
             local $" = ', ';
             if (!$info->native
                 && exists($changelog_versions{'orig'}{$dversion})) {
-                tag 'debian-watch-file-specifies-wrong-upstream-version',
-                  $dversion, "line @{$lines}";
+                $self->tag(
+                    'debian-watch-file-specifies-wrong-upstream-version',
+                    $dversion, "line @{$lines}");
                 next;
             }
             if (exists($changelog_versions{'mangled'}{$dversion})
                 && $changelog_versions{'mangled'}{$dversion} != 1) {
-                tag 'debian-watch-file-specifies-old-upstream-version',
-                  $dversion, "line @{$lines}";
+                $self->tag('debian-watch-file-specifies-old-upstream-version',
+                    $dversion, "line @{$lines}");
                 next;
             }
         }
