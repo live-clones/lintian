@@ -26,7 +26,6 @@ use autodie;
 
 use Moo;
 
-use Lintian::Tags qw(tag);
 use Lintian::Util qw(dequote_name);
 
 with('Lintian::Check');
@@ -58,7 +57,7 @@ sub binary {
             }
         }
 
-        tag 'no-md5sums-control-file' unless $only_conffiles;
+        $self->tag('no-md5sums-control-file') unless $only_conffiles;
         return;
     }
 
@@ -80,7 +79,7 @@ sub binary {
         ) {
             my $md5sum = $+{'md5sum'};
             if(length($md5sum) != 32) {
-                tag 'malformed-md5sums-control-file', "line $.";
+                $self->tag('malformed-md5sums-control-file', "line $.");
                 next LINE;
             }
             my $name = $+{'name'};
@@ -90,7 +89,7 @@ sub binary {
             }
             $control_entry{$name} = $md5sum;
         } else {
-            tag 'malformed-md5sums-control-file', "line $.";
+            $self->tag('malformed-md5sums-control-file', "line $.");
             next LINE;
         }
     }
@@ -100,16 +99,16 @@ sub binary {
 
         my $md5sum = $info->md5sums->{$file};
         if (not defined $md5sum) {
-            tag 'md5sums-lists-nonexistent-file', $file;
+            $self->tag('md5sums-lists-nonexistent-file', $file);
         } elsif ($md5sum ne $control_entry{$file}) {
-            tag 'md5sum-mismatch', $file;
+            $self->tag('md5sum-mismatch', $file);
         }
 
         delete $info_entry{$file};
     }
     for my $file (keys %{ $info->md5sums }) {
         next if $control_entry{$file};
-        tag 'file-missing-in-md5sums', $file
+        $self->tag('file-missing-in-md5sums', $file)
           unless ($info->is_conffile($file)
             || $file =~ m%^var/lib/[ai]spell/.%o);
     }
