@@ -76,7 +76,9 @@ foreach my $descpath (@descpaths) {
     my $relative = path($testpath)->parent->relative($checkpath)->stringify;
 
     # relative location should match check
-    is($relative, $check, "Test in $testpath is located in correct folder ($relative != $check)");
+    is($relative, $check,
+        "Test in $testpath is located in correct folder ($relative != $check)"
+    );
 }
 
 # Local Variables:
