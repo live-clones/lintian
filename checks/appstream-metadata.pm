@@ -32,11 +32,10 @@ package Lintian::appstream_metadata;
 use strict;
 use warnings;
 
-use File::Basename qw(basename);
 use Moo;
-use XML::Simple qw(:strict);
 
-use Lintian::Tags qw(tag);
+use File::Basename qw(basename);
+use XML::Simple qw(:strict);
 
 with('Lintian::Check');
 
@@ -64,15 +63,15 @@ sub binary {
         for my $file ($dir->children) {
             if ($file->is_file) {
                 $metainfo{$file} = 1;
-                $found_modalias |= check_modalias($info, $file, $modaliases);
+                $found_modalias|= $self->check_modalias($file, $modaliases);
             }
         }
     }
     if (defined(my $dir = $info->index_resolved_path('usr/share/appdata/'))) {
         for my $file ($dir->children('breadth-first')) {
             if ($file->is_file) {
-                tag('appstream-metadata-in-legacy-location', $file);
-                $found_modalias |= check_modalias($info, $file, $modaliases);
+                $self->tag(('appstream-metadata-in-legacy-location', $file));
+                $found_modalias|= $self->check_modalias($file, $modaliases);
             }
         }
     }
@@ -83,16 +82,20 @@ sub binary {
     }
 
     for my $udevrule (@udevrules) {
-        if (check_udev_rules($udevrule, \&provides_user_device, $modaliases)
+        if ($self->check_udev_rules($udevrule, $modaliases)
             && !$found_modalias) {
-            tag('appstream-metadata-missing-modalias-provide', $udevrule);
+            $self->tag(
+                ('appstream-metadata-missing-modalias-provide', $udevrule));
         }
     }
     return;
 }
 
 sub check_modalias {
-    my ($info, $metadatafile, $modaliases) = @_;
+    my ($self, $metadatafile, $modaliases) = @_;
+
+    my $info = $self->info;
+
     if (!$metadatafile->is_open_ok) {
         # FIXME report this as an error
         return;
@@ -106,12 +109,13 @@ sub check_modalias {
         );
     };
     if ($@) {
-        tag 'appstream-metadata-invalid', basename($metadatafile->fs_path);
+        $self->tag('appstream-metadata-invalid',
+            basename($metadatafile->fs_path));
         return 0;
     }
 
     if (exists $xml->{'application'}) {
-        tag('appstream-metadata-legacy-format', $metadatafile);
+        $self->tag(('appstream-metadata-legacy-format', $metadatafile));
         return 0;
     }
     if (   exists $xml->{'component'}
@@ -121,11 +125,11 @@ sub check_modalias {
             push(@{$modaliases}, $_);
             if (m/^usb:v[0-9a-f]{4}p[0-9a-f]{4}d/i
                 && !m/^usb:v[0-9A-F]{4}p[0-9A-F]{4}d/) {
-                tag(
+                $self->tag((
                     'appstream-metadata-malformed-modalias-provide',
                     $metadatafile,
                     "include non-valid hex digit in USB matching rule '$_'"
-                );
+                ));
             }
         }
         return 1;
@@ -134,8 +138,10 @@ sub check_modalias {
 }
 
 sub provides_user_device {
-    my ($udevrulefile, $linenum, $rule, $data) = @_;
+    my ($self, $udevrulefile, $linenum, $rule, $data) = @_;
+
     my $retval = 0;
+
     if (   m/plugdev/
         || m/uaccess/
         || m/MODE=\"0666\"/) {
@@ -158,8 +164,10 @@ sub provides_user_device {
                 }
             }
             if (!$foundmatch) {
-                tag('appstream-metadata-missing-modalias-provide',
-                    $udevrulefile, "match rule $match*");
+                $self->tag((
+                    'appstream-metadata-missing-modalias-provide',
+                    $udevrulefile, "match rule $match*"
+                ));
             }
         }
     }
@@ -167,7 +175,7 @@ sub provides_user_device {
 }
 
 sub check_udev_rules {
-    my ($file, $check, $data) = @_;
+    my ($self, $file, $data) = @_;
 
     my $fd = $file->open;
     my $linenum = 0;
@@ -185,7 +193,7 @@ sub check_udev_rules {
             next;
         }
         next if /^#.*/; # Skip comments
-        $retval |= $check->($file, $linenum, $_, $data);
+        $retval |= $self->provides_user_device($file, $linenum, $_, $data);
     }
     close($fd);
     return $retval;
