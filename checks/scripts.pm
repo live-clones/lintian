@@ -37,7 +37,6 @@ use Try::Tiny;
 use Lintian::Spelling qw($known_shells_regex);
 use Lintian::Data;
 use Lintian::Relation;
-use Lintian::Tags qw(tag);
 use Lintian::Util qw(internal_error safe_qx strip);
 
 with('Lintian::Check');
@@ -233,12 +232,12 @@ my @bashism_regexs = (
 
 # a local function to help use separate tags for example scripts
 sub script_tag {
-    my($tag, $filename, @rest) = @_;
+    my($self, $tag, $filename, @rest) = @_;
 
     $tag = "example-$tag"
       if $filename and $filename =~ m,usr/share/doc/[^/]+/examples/,;
 
-    tag($tag, $filename, @rest);
+    $self->tag(($tag, $filename, @rest));
     return;
 }
 
@@ -316,7 +315,7 @@ sub binary {
 
         # As a special-exception, Policy 10.4 states that Perl scripts must use
         # /usr/bin/perl directly and not via /usr/bin/env, etc.
-        script_tag(bad_interpreter_tag_name('/usr/bin/env perl'),
+        $self->script_tag(bad_interpreter_tag_name('/usr/bin/env perl'),
             $filename, '(#!/usr/bin/env perl != /usr/bin/perl)')
           if defined $calls_env and $interpreter eq 'perl';
 
@@ -347,14 +346,15 @@ sub binary {
           if $filename =~ m,^usr/share/cargo/registry/,;
 
         if ($interpreter eq '') {
-            script_tag('script-without-interpreter', $filename);
+            $self->script_tag('script-without-interpreter', $filename);
             next;
         }
 
         # Either they use an absolute path or they use '/usr/bin/env interp'.
-        script_tag('interpreter-not-absolute', $filename, "#!$interpreter")
+        $self->script_tag('interpreter-not-absolute', $filename,
+            "#!$interpreter")
           unless $is_absolute;
-        tag 'script-not-executable', $filename
+        $self->tag('script-not-executable', $filename)
           unless ($executable{$filename}
             or $filename =~ m,^usr/(?:lib|share)/.*\.pm,
             or $filename =~ m,^usr/(?:lib|share)/.*\.py,
@@ -369,7 +369,7 @@ sub binary {
           or $in_docs;
 
         # Warn about csh scripts.
-        tag 'csh-considered-harmful', $filename
+        $self->tag('csh-considered-harmful', $filename)
           if (  ($base eq 'csh' or $base eq 'tcsh')
             and $executable{$filename}
             and $filename !~ m,^etc/csh/login\.d/,)
@@ -391,7 +391,8 @@ sub binary {
             ) {
 
                 if (check_script_syntax($interpreter, $path)) {
-                    script_tag('shell-script-fails-syntax-check', $filename);
+                    $self->script_tag('shell-script-fails-syntax-check',
+                        $filename);
                 }
             }
         }
@@ -414,19 +415,21 @@ sub binary {
         if ($data) {
             my $expected = $data->[0] . '/' . $base;
             unless ($interpreter eq $expected or defined $calls_env) {
-                script_tag(bad_interpreter_tag_name($expected),
+                $self->script_tag(bad_interpreter_tag_name($expected),
                     $filename, "(#!$interpreter != $expected)");
             }
         } elsif ($interpreter =~ m,/usr/local/,) {
-            script_tag('interpreter-in-usr-local', $filename,"#!$interpreter");
+            $self->script_tag('interpreter-in-usr-local', $filename,
+                "#!$interpreter");
         } elsif ($interpreter eq '/bin/env') {
-            script_tag('script-uses-bin-env', $filename);
+            $self->script_tag('script-uses-bin-env', $filename);
         } elsif ($interpreter eq 'nodejs') {
-            script_tag('script-uses-deprecated-nodejs-location',$filename);
+            $self->script_tag('script-uses-deprecated-nodejs-location',
+                $filename);
             # Check whether we have correct dependendies on nodejs regardless.
             $data = $INTERPRETERS->value('node');
         } elsif ($base =~ /^php/) {
-            script_tag('php-script-with-unusual-interpreter',
+            $self->script_tag('php-script-with-unusual-interpreter',
                 $filename, "$interpreter");
 
             # This allows us to still perform the dependencies checks
@@ -447,7 +450,8 @@ sub binary {
                     }
                 }
             }
-            script_tag('unusual-interpreter', $filename, "#!$interpreter")
+            $self->script_tag('unusual-interpreter', $filename,
+                "#!$interpreter")
               unless $pinter;
 
         }
@@ -474,8 +478,8 @@ sub binary {
                           \.pl['"]
                }xsm
                 ) {
-                    tag 'script-uses-perl4-libs-without-dep',
-                      "$filename:$. ${1}.pl";
+                    $self->tag('script-uses-perl4-libs-without-dep',
+                        "$filename:$. ${1}.pl");
                 }
             }
             close($fd);
@@ -493,11 +497,13 @@ sub binary {
             }
             if ($depends && !$all_parsed->implies($depends)) {
                 if ($base =~ /^php/) {
-                    tag 'php-script-but-no-php-cli-dep', $filename,
-                      "#!$interpreter";
+                    $self->tag('php-script-but-no-php-cli-dep',
+                        $filename,"#!$interpreter");
                 } elsif ($base =~ /^(python|ruby|[mg]awk)$/) {
-                    tag("$base-script-but-no-$base-dep",
-                        $filename, "#!$interpreter");
+                    $self->tag((
+                        "$base-script-but-no-$base-dep",$filename,
+                        "#!$interpreter"
+                    ));
                 } elsif ($base eq 'csh' && $filename =~ m,^etc/csh/login\.d/,){
                     # Initialization files for csh.
                 } elsif ($base eq 'fish' && $filename =~ m,^etc/fish\.d/,) {
@@ -512,8 +518,10 @@ sub binary {
                     && $all_parsed->matches(qr/^erlang-abi-[\d+\.]+$/)) {
                     # ABI-versioned virtual packages for erlang
                 } else {
-                    tag 'missing-dep-for-interpreter', "$base => $depends",
-                      "($filename)", "#!$interpreter";
+                    $self->tag(
+                        'missing-dep-for-interpreter', "$base => $depends",
+                        "($filename)", "#!$interpreter"
+                    );
                 }
             }
         } elsif ($VERSIONED_INTERPRETERS->known($base)) {
@@ -527,10 +535,13 @@ sub binary {
             my $depends = join(' | ',  @depends);
             unless ($all_parsed->implies($depends)) {
                 if ($base =~ /^(wish|tclsh)/) {
-                    tag "$1-script-but-no-$1-dep", $filename, "#!$interpreter";
+                    $self->tag("$1-script-but-no-$1-dep", $filename,
+                        "#!$interpreter");
                 } else {
-                    tag 'missing-dep-for-interpreter', "$base => $depends",
-                      "($filename)", "#!$interpreter";
+                    $self->tag(
+                        'missing-dep-for-interpreter', "$base => $depends",
+                        "($filename)", "#!$interpreter"
+                    );
                 }
             }
         } else {
@@ -539,10 +550,13 @@ sub binary {
             $depends =~ s/\$1/$version/g;
             unless ($all_parsed->implies($depends)) {
                 if ($base =~ /^(python|ruby)/) {
-                    tag "$1-script-but-no-$1-dep", $filename,"#!$interpreter";
+                    $self->tag("$1-script-but-no-$1-dep", $filename,
+                        "#!$interpreter");
                 } else {
-                    tag 'missing-dep-for-interpreter', "$base => $depends",
-                      "($filename)", "#!$interpreter";
+                    $self->tag(
+                        'missing-dep-for-interpreter', "$base => $depends",
+                        "($filename)", "#!$interpreter"
+                    );
                 }
             }
         }
@@ -560,7 +574,7 @@ sub binary {
             }
         }
 
-        tag 'executable-not-elf-or-script', $_
+        $self->tag('executable-not-elf-or-script', $_)
           unless (
                $ok
             or $ELF{$_}
@@ -592,43 +606,49 @@ sub binary {
         my $base = $1;
 
         # tag for statistics
-        tag 'maintainer-script-interpreter', "control/$file", $interpreter;
+        $self->tag('maintainer-script-interpreter',
+            "control/$file", $interpreter);
 
         if ($interpreter eq '') {
-            tag 'script-without-interpreter', "control/$file";
+            $self->tag('script-without-interpreter', "control/$file");
             next;
         }
 
         if ($interpreter eq 'ELF') {
-            tag 'elf-maintainer-script', "control/$file";
+            $self->tag('elf-maintainer-script', "control/$file");
             next;
         }
 
-        tag 'interpreter-not-absolute', "control/$file", "#!$interpreter"
+        $self->tag('interpreter-not-absolute', "control/$file",
+            "#!$interpreter")
           unless ($interpreter =~ m|^/|);
 
         if ($interpreter =~ m|/usr/local/|) {
-            tag 'control-interpreter-in-usr-local', "control/$file",
-              "#!$interpreter";
+            $self->tag('control-interpreter-in-usr-local',
+                "control/$file","#!$interpreter");
         } elsif ($base eq 'sh' or $base eq 'bash' or $base eq 'perl') {
             my $expected = ($INTERPRETERS->value($base))->[0] . '/' . $base;
-            tag bad_interpreter_tag_name($expected),
-              "#!$interpreter != $expected","(control/$file)"
-              unless $interpreter eq $expected;
+            $self->tag(
+                bad_interpreter_tag_name($expected),
+                "#!$interpreter != $expected",
+                "(control/$file)"
+            ) unless $interpreter eq $expected;
         } elsif ($file eq 'config') {
-            tag 'forbidden-config-interpreter', "#!$interpreter";
+            $self->tag('forbidden-config-interpreter', "#!$interpreter");
         } elsif ($file eq 'postrm') {
-            tag 'forbidden-postrm-interpreter', "#!$interpreter";
+            $self->tag('forbidden-postrm-interpreter', "#!$interpreter");
         } elsif ($INTERPRETERS->known($base)) {
             my $data = $INTERPRETERS->value($base);
             my $expected = $data->[0] . '/' . $base;
             unless ($interpreter eq $expected) {
-                tag bad_interpreter_tag_name($expected),
-                  "#!$interpreter != $expected",
-                  "(control/$file)";
+                $self->tag(
+                    bad_interpreter_tag_name($expected),
+                    "#!$interpreter != $expected",
+                    "(control/$file)"
+                );
             }
-            tag 'unusual-control-interpreter', "control/$file",
-              "#!$interpreter";
+            $self->tag('unusual-control-interpreter', "control/$file",
+                "#!$interpreter");
 
             # Interpreters used by preinst scripts must be in
             # Pre-Depends.  Interpreters used by postinst or prerm
@@ -637,26 +657,28 @@ sub binary {
                 my $depends = Lintian::Relation->new($data->[1]);
                 if ($file eq 'preinst') {
                     unless ($info->relation('pre-depends')->implies($depends)){
-                        tag 'preinst-interpreter-without-predepends',
-                          "#!$interpreter";
+                        $self->tag('preinst-interpreter-without-predepends',
+                            "#!$interpreter");
                     }
                 } else {
                     unless ($info->relation('strong')->implies($depends)) {
-                        tag 'control-interpreter-without-depends',
-                          "control/$file",
-                          "#!$interpreter";
+                        $self->tag(
+                            'control-interpreter-without-depends',
+                            "control/$file",
+                            "#!$interpreter"
+                        );
                     }
                 }
             }
         } else {
-            tag 'unknown-control-interpreter', "control/$file",
-              "#!$interpreter";
+            $self->tag('unknown-control-interpreter', "control/$file",
+                "#!$interpreter");
             next; # no use doing further checks if it's not a known interpreter
         }
 
         # perhaps we should warn about *csh even if they're somehow screwed,
         # but that's not really important...
-        tag 'csh-considered-harmful', "control/$file"
+        $self->tag('csh-considered-harmful', "control/$file")
           if ($base eq 'csh' or $base eq 'tcsh');
 
         next if not $path or not $path->is_open_ok;
@@ -669,7 +691,8 @@ sub binary {
             $checkbashisms = $base eq 'sh' ? 1 : 0;
             if ($base eq 'sh' or $base eq 'bash') {
                 if (check_script_syntax("/bin/${base}", $path)) {
-                    tag 'maintainer-shell-script-fails-syntax-check', $file;
+                    $self->tag('maintainer-shell-script-fails-syntax-check',
+                        $file);
                 }
             }
         }
@@ -695,13 +718,15 @@ sub binary {
             }
 
             if (/\#DEBHELPER\#/) {
-                tag 'maintainer-script-has-unexpanded-debhelper-token', $file;
+                $self->tag('maintainer-script-has-unexpanded-debhelper-token',
+                    $file);
             }
             if (/^# Automatically added by (\S+)\s*$/) {
                 my $dh_cmd = $1;
                 # dh_python puts a trailing ":", remove that.
                 $dh_cmd =~ s/:++$//g;
-                tag 'debhelper-autoscript-in-maintainer-scripts', $dh_cmd
+                $self->tag('debhelper-autoscript-in-maintainer-scripts',
+                    $dh_cmd)
                   if not $dh_cmd_substs{$dh_cmd}++;
                 $in_automatic_section = 1;
             }
@@ -761,7 +786,7 @@ sub binary {
 
             $saw_udevadm_guard = 1 if m/\b(if|which|command)\s+.*udevadm/g;
             if (m,$LEADIN(?:/bin/)?udevadm\s, and $saw_sete) {
-                tag 'udevadm-called-without-guard', "$file:$."
+                $self->tag('udevadm-called-without-guard', "$file:$.")
                   unless $saw_udevadm_guard
                   or m/\|\|/
                   or $str_deps->implies('udev');
@@ -773,19 +798,19 @@ sub binary {
                 and not m/\bmkdir\b/
                 and not m/\bXXXXXX\b/
                 and not m/\$RANDOM/) {
-                #<<< no perltidy - tag name too long
-                tag 'possibly-insecure-handling-of-tmp-files-in-maintainer-script',
-                #>>>
-                  "$file:$."
-                  unless $warned{tmp};
+                $self->tag(
+'possibly-insecure-handling-of-tmp-files-in-maintainer-script',
+                    "$file:$."
+                ) unless $warned{tmp};
                 $warned{tmp} = 1;
             }
             if (m/^\s*killall(?:\s|\z)/) {
-                tag 'killall-is-dangerous', "$file:$." unless $warned{killall};
+                $self->tag('killall-is-dangerous', "$file:$.")
+                  unless $warned{killall};
                 $warned{killall} = 1;
             }
             if (m/^\s*mknod(?:\s|\z)/ and not m/\sp\s/) {
-                tag 'mknod-in-maintainer-script', "$file:$.";
+                $self->tag('mknod-in-maintainer-script', "$file:$.");
             }
 
             # Collect information about init script invocations to
@@ -915,8 +940,8 @@ sub binary {
                     }
 
                     if ($found) {
-                        tag 'possible-bashism-in-maintainer-script',
-                          "$file:$. \'$match\'";
+                        $self->tag('possible-bashism-in-maintainer-script',
+                            "$file:$. \'$match\'");
                     }
 
                     # Only look for the beginning of a heredoc here,
@@ -930,27 +955,30 @@ sub binary {
                     }
                 }
                 if (!$cat_string) {
-                    generic_check_bad_command($_, $file, $., $pkg, 0,
+                    $self->generic_check_bad_command($_, $file, $., 0,
                         $in_automatic_section);
 
                     if (m,/usr/share/debconf/confmodule,) {
                         $saw_debconf = 1;
                     }
                     if (m/^\s*read(?:\s|\z)/ && !$saw_debconf) {
-                        tag 'read-in-maintainer-script', "$file:$.";
+                        $self->tag('read-in-maintainer-script', "$file:$.");
                     }
 
-                    tag 'multi-arch-same-package-calls-pycompile', "$file:$."
+                    $self->tag('multi-arch-same-package-calls-pycompile',
+                        "$file:$.")
                       if m/^\s*py3?compile(?:\s|\z)/
                       and $info->field('multi-arch', 'no') eq 'same';
 
                     if (m,>\s*/etc/inetd\.conf(?:\s|\Z),) {
-                        tag 'maintainer-script-modifies-inetd-conf',"$file:$."
+                        $self->tag('maintainer-script-modifies-inetd-conf',
+                            "$file:$.")
                           unless $info->relation('provides')
                           ->implies('inet-superserver');
                     }
                     if (m,^\s*(?:cp|mv)\s+(?:.*\s)?/etc/inetd\.conf\s*$,) {
-                        tag 'maintainer-script-modifies-inetd-conf',"$file:$."
+                        $self->tag('maintainer-script-modifies-inetd-conf',
+                            "$file:$.")
                           unless $info->relation('provides')
                           ->implies('inet-superserver');
                     }
@@ -972,8 +1000,9 @@ sub binary {
                                       (/(?:usr/)?s?bin/[\w.+-]+)
                                       (?:\s|;|\Z)}xsm
                         ) {
-                            tag 'command-with-path-in-maintainer-script',
-                              "$file:$. $1"
+                            $self->tag(
+                                'command-with-path-in-maintainer-script',
+                                "$file:$. $1")
                               unless $in_automatic_section;
                         }
                     }
@@ -985,16 +1014,16 @@ sub binary {
                           (/(?:usr/)?s?bin/[\w.+-]+)
                           \s+ \]}xsm
                     ){
-                        tag 'command-with-path-in-maintainer-script',
-                          "$file:$. $1"
+                        $self->tag('command-with-path-in-maintainer-script',
+                            "$file:$. $1")
                           unless $in_automatic_section;
                     }
 
                     $cmd =~ s/\`[^\`]+\`//g;
                     if ($cmd =~ m,$LEADIN(/(?:usr/)?s?bin/[\w.+-]+)(?:\s|;|$),)
                     {
-                        tag 'command-with-path-in-maintainer-script',
-                          "$file:$. $1"
+                        $self->tag('command-with-path-in-maintainer-script',
+                            "$file:$. $1")
                           unless $in_automatic_section;
                     }
                 }
@@ -1014,10 +1043,10 @@ sub binary {
                                 $info->relation('strong')->implies($package)) {
                                 my $shortpackage = $package;
                                 $shortpackage =~ s/[ \(].*//;
-                                #<<< no perltidy - tag name too long
-                                tag "maintainer-script-needs-depends-on-$shortpackage",
-                                #>>>
-                                  $file;
+                                $self->tag(
+"maintainer-script-needs-depends-on-$shortpackage",
+                                    $file
+                                );
                                 $warned{$package} = 1;
                             }
                         }
@@ -1025,46 +1054,53 @@ sub binary {
                 }
             }
 
-            generic_check_bad_command($_, $file, $., $pkg, 1,
+            $self->generic_check_bad_command($_, $file, $., 1,
                 $in_automatic_section);
 
             for my $ver (sort keys %old_versions) {
                 next if $ver =~ /^\d+$/;
-                #<<< no perltidy
-                if (m,$LEADIN(?:/usr/bin/)?dpkg\s+--compare-versions\s+.*\b\Q$ver\E(?!\.)\b,) {
-                    my $date = strftime('%Y-%m-%d', gmtime $old_versions{$ver});
-                    my $epoch = strftime('%Y-%m-%d', gmtime $OLDSTABLE_RELEASE);
-                    tag 'maintainer-script-supports-ancient-package-version',
-                      "$file:$.", $ver, "($date < $epoch)";
+                if (
+m,$LEADIN(?:/usr/bin/)?dpkg\s+--compare-versions\s+.*\b\Q$ver\E(?!\.)\b,
+                ) {
+                    my $date= strftime('%Y-%m-%d', gmtime $old_versions{$ver});
+                    my $epoch= strftime('%Y-%m-%d', gmtime $OLDSTABLE_RELEASE);
+                    $self->tag(
+                        'maintainer-script-supports-ancient-package-version',
+                        "$file:$.", $ver, "($date < $epoch)");
                     last;
                 }
-                #>>>
             }
 
             if (m,$LEADIN(?:/usr/sbin/)?update-inetd\s,) {
-                tag 'maintainer-script-has-invalid-update-inetd-options',
-                  "$file:$.", '(--pattern with --add)'
+                $self->tag(
+                    'maintainer-script-has-invalid-update-inetd-options',
+                    "$file:$.", '(--pattern with --add)')
                   if /--pattern/ && /--add/;
-                tag 'maintainer-script-has-invalid-update-inetd-options',
-                  "$file:$.", '(--group without --add)'
+                $self->tag(
+                    'maintainer-script-has-invalid-update-inetd-options',
+                    "$file:$.", '(--group without --add)')
                   if /--group/ && !/--add/;
             }
 
             my $pdepends = $info->relation('pre-depends');
-            tag 'skip-systemd-native-flag-missing-pre-depends', "$file:$."
+            $self->tag('skip-systemd-native-flag-missing-pre-depends',
+                "$file:$.")
               if m/invoke-rc.d\b.*--skip-systemd-native\b/
               && !$pdepends->implies('init-system-helpers (>= 1.54~)');
 
             my $depends = $info->relation('depends');
-            tag 'missing-versioned-depends-on-init-system-helpers',
-              "$file:$.", "\"$1 $2\" needs init-system-helpers >= 1.50"
+            $self->tag(
+                'missing-versioned-depends-on-init-system-helpers',
+                "$file:$.",
+                "\"$1 $2\" needs init-system-helpers >= 1.50"
+              )
               if m/(update-rc\.d)\b.*(defaults-disabled)\b/
               && !$depends->implies('init-system-helpers (>= 1.50)');
 
             if (m,$LEADIN(?:/usr/sbin/)?dpkg-divert\s,
                 && !/--(?:help|list|truename|version)/) {
                 if (/--local/) {
-                    tag 'package-uses-local-diversion', "$file:$.";
+                    $self->tag('package-uses-local-diversion', "$file:$.");
                 }
                 my $mode = /--remove/ ? 'remove' : 'add';
                 my ($divert) = /dpkg-divert\s*(.*)$/;
@@ -1122,28 +1158,28 @@ sub binary {
         }
 
         foreach my $font (@x11_fonts) {
-            tag 'missing-call-to-update-fonts', $font
+            $self->tag('missing-call-to-update-fonts', $font)
               if $file eq 'postinst' and not $saw_update_fonts;
         }
 
         if ($saw_init && !$saw_invoke) {
-            tag 'maintainer-script-calls-init-script-directly',
-              "$file:$saw_init";
+            $self->tag('maintainer-script-calls-init-script-directly',
+                "$file:$saw_init");
         }
         unless ($has_code) {
-            tag 'maintainer-script-empty', $file;
+            $self->tag('maintainer-script-empty', $file);
         }
         if ($shellscript && !$saw_sete) {
             if ($saw_bange) {
-                tag 'maintainer-script-without-set-e', $file;
+                $self->tag('maintainer-script-without-set-e', $file);
             } else {
-                tag 'maintainer-script-ignores-errors', $file;
+                $self->tag('maintainer-script-ignores-errors', $file);
             }
         }
 
         if ($saw_statoverride_add && !$saw_statoverride_list) {
-            tag 'unconditional-use-of-dpkg-statoverride',
-              "$file:$saw_statoverride_add";
+            $self->tag('unconditional-use-of-dpkg-statoverride',
+                "$file:$saw_statoverride_add");
         }
 
         close($fd);
@@ -1157,7 +1193,8 @@ sub binary {
         # dpkg-maintscript-helper(1) recommends the snippets are in all
         # maintainer scripts but they are not strictly required in prerm.
         for my $file (qw(preinst postinst postrm)) {
-            tag 'missing-call-to-dpkg-maintscript-helper', "$file ($cmd)"
+            $self->tag('missing-call-to-dpkg-maintscript-helper',
+                "$file ($cmd)")
               unless $seen_helper_cmds{$cmd}{$file};
         }
     }
@@ -1229,7 +1266,8 @@ sub binary {
 
                 $divert = unquote($divert, $expand_diversions);
 
-                tag 'remove-of-unknown-diversion', $divert, "$script:$line";
+                $self->tag('remove-of-unknown-diversion', $divert,
+                    "$script:$line");
             }
         }
     }
@@ -1242,7 +1280,7 @@ sub binary {
         $divert = unquote($divert, $expand_diversions);
 
         if (not exists $added_diversions{$divertrx}{'removed'}) {
-            tag 'orphaned-diversion', $divert, $script;
+            $self->tag('orphaned-diversion', $divert, $script);
         }
 
         # Handle man page diversions somewhat specially.  We may
@@ -1263,10 +1301,10 @@ sub binary {
         }
 
         if ($expand_diversions) {
-            tag 'diversion-for-unknown-file', $divert, "$script:$line"
+            $self->tag('diversion-for-unknown-file', $divert, "$script:$line")
               unless (any { $_ =~ m/$divertrx/ } $info->sorted_index);
         } else {
-            tag 'diversion-for-unknown-file', $divert, "$script:$line"
+            $self->tag('diversion-for-unknown-file', $divert, "$script:$line")
               unless $info->index($divert);
         }
     }
@@ -1278,8 +1316,11 @@ sub binary {
 
 # try generic bad maintainer script command tagging
 sub generic_check_bad_command {
-    my ($line, $file, $lineno, $pkg, $findincatstring, $in_automatic_section)
+    my ($self, $line, $file, $lineno, $findincatstring, $in_automatic_section)
       = @_;
+
+    my $pkg = $self->package;
+
     # try generic bad maintainer script command tagging
   BAD_CMD:
     foreach my $bad_cmd_tag ($BAD_MAINT_CMD->all) {
@@ -1299,7 +1340,7 @@ sub generic_check_bad_command {
                 my $extrainfo = defined($1) ? "\'$1\'" : '';
                 my $inpackage = $bad_cmd_data->{'in_package'};
                 unless($pkg =~ m{$inpackage}) {
-                    tag $bad_cmd_tag, "$file:$lineno", $extrainfo;
+                    $self->tag($bad_cmd_tag, "$file:$lineno", $extrainfo);
                 }
             }
         }
