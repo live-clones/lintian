@@ -32,7 +32,6 @@ use List::MoreUtils qw(any);
 use Moo;
 
 use Lintian::Data ();
-use Lintian::Tags qw(tag);
 
 with('Lintian::Check');
 
@@ -205,23 +204,24 @@ sub always {
 
         my @parts = &$splitter($uri);
         if (not @parts or not $parts[0]) {
-            tag 'vcs-field-uses-unknown-uri-format', $fieldname, $uri;
+            $self->tag('vcs-field-uses-unknown-uri-format', $fieldname, $uri);
         } else {
             if (    $VCS_RECOMMENDED_URIS{$platform}
                 and $parts[0] !~ $VCS_RECOMMENDED_URIS{$platform}) {
                 if (    $VCS_VALID_URIS{$platform}
                     and $parts[0] =~ $VCS_VALID_URIS{$platform}) {
-                    tag 'vcs-field-uses-not-recommended-uri-format',
-                      $fieldname, $uri;
+                    $self->tag('vcs-field-uses-not-recommended-uri-format',
+                        $fieldname, $uri);
                 } else {
-                    tag 'vcs-field-uses-unknown-uri-format', $fieldname,$uri;
+                    $self->tag('vcs-field-uses-unknown-uri-format',
+                        $fieldname,$uri);
                 }
             }
 
-            tag 'vcs-field-has-unexpected-spaces', $fieldname, $uri
+            $self->tag('vcs-field-has-unexpected-spaces', $fieldname, $uri)
               if (any { $_ and /\s/} @parts);
 
-            tag 'vcs-field-uses-insecure-uri', $fieldname, $uri
+            $self->tag('vcs-field-uses-insecure-uri', $fieldname, $uri)
               if $parts[0] =~ m%^(?:git|(?:nosmart\+)?http|svn)://%
               || $parts[0] =~ m%^(?:lp|:pserver):%;
         }
@@ -235,18 +235,18 @@ sub always {
                 &$canonify($canonicalized, $tag);
             }
 
-            tag $tag, $parts[0], $canonicalized
+            $self->tag($tag, $parts[0], $canonicalized)
               unless $canonicalized eq $parts[0];
         }
 
         if ($platform eq 'browser') {
 
-            tag 'vcs-browser-links-to-empty-view', $uri
+            $self->tag('vcs-browser-links-to-empty-view', $uri)
               if $uri =~ m%rev=0&sc=0%;
 
         } else {
-            tag 'vcs', $platform;
-            tag 'vcs-uri', $uri;
+            $self->tag('vcs', $platform);
+            $self->tag('vcs-uri', $uri);
             $seen_vcs{$platform}++;
 
             foreach my $regex ($KNOWN_VCS_HOSTERS->all) {
@@ -256,9 +256,8 @@ sub always {
                         && $platform ne $re_vcs
                         && $platform ne 'browser') {
 
-                        tag 'vcs-field-mismatch',
-                          "vcs-$platform != vcs-$re_vcs",
-                          $uri;
+                        $self->tag('vcs-field-mismatch',
+                            "vcs-$platform != vcs-$re_vcs",$uri);
 
                         # warn once
                         last;
@@ -268,21 +267,23 @@ sub always {
         }
 
         if ($uri =~ m{//(.+)\.debian\.org/}) {
-            tag 'vcs-obsolete-in-debian-infrastructure', $fieldname, $uri
+            $self->tag('vcs-obsolete-in-debian-infrastructure',
+                $fieldname, $uri)
               unless $1 =~ m{^(?:salsa|.*\.dgit)$};
 
         } else {
-            tag 'orphaned-package-not-maintained-in-debian-infrastructure',
-              $fieldname, $uri
+            $self->tag(
+                'orphaned-package-not-maintained-in-debian-infrastructure',
+                $fieldname, $uri)
               if $info->field('maintainer', EMPTY)=~ /packages\@qa.debian.org/
               && $platform ne 'browser';
         }
     }
 
-    tag 'vcs-fields-use-more-than-one-vcs', sort keys %seen_vcs
+    $self->tag('vcs-fields-use-more-than-one-vcs', sort keys %seen_vcs)
       if keys %seen_vcs > 1;
 
-    tag 'co-maintained-package-with-no-vcs-fields'
+    $self->tag('co-maintained-package-with-no-vcs-fields')
       if $type eq 'source'
       and $is_comaintained
       and not %seen_vcs;
@@ -296,7 +297,7 @@ sub always {
             my $fieldname = "vcs-$platform";
 
             if ($info->field($fieldname, EMPTY) =~ m/^($regex.*)/xi) {
-                tag 'missing-vcs-browser-field', $fieldname, $1;
+                $self->tag('missing-vcs-browser-field', $fieldname, $1);
 
                 # warn once
                 last;
