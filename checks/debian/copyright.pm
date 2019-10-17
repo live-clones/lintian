@@ -48,7 +48,6 @@ use Lintian::Data;
 use Lintian::Deb822Parser qw(read_dpkg_control parse_dpkg_control);
 use Lintian::Relation::Version qw(versions_compare);
 use Lintian::Spelling qw(check_spelling spelling_tag_emitter);
-use Lintian::Tags qw(tag);
 use Lintian::Util qw(file_is_encoded_in_non_utf8);
 
 with('Lintian::Check');
@@ -100,7 +99,7 @@ sub source {
 
     if (not $copyright_path) {
         my @pkgs = $info->binaries;
-        tag 'no-debian-copyright';
+        $self->tag('no-debian-copyright');
         if (scalar @pkgs == 1) {
             # If debian/copyright doesn't exist, and the only a single
             # binary package is built, there's a good chance that the
@@ -110,14 +109,14 @@ sub source {
         }
         return if not $copyright_path;
     } elsif ($copyright_path->is_symlink) {
-        tag 'debian-copyright-is-symlink';
+        $self->tag('debian-copyright-is-symlink');
     }
 
     if ($copyright_path->is_open_ok) {
         my $contents = $copyright_path->file_contents;
 
-        _check_dep5_copyright($info, $contents);
-        _check_apache_notice_files($info, $group, $contents);
+        $self->check_dep5_copyright($contents);
+        $self->check_apache_notice_files($contents);
     }
     return;
 }
@@ -125,13 +124,14 @@ sub source {
 # The policy states, since 4.0.0, that people should use "https://" for the
 # format URI. This is checked later in check_dep5_copyright.
 # return undef is not dep5 and '' if unknown version
-sub _find_dep5_version {
-    my ($original_uri) = @_;
+sub find_dep5_version {
+    my ($self, $original_uri) = @_;
+
     my $uri = $original_uri;
     my $version;
 
     if ($uri =~ m,\b(?:rev=REVISION|VERSIONED_FORMAT_URL)\b,) {
-        tag 'boilerplate-copyright-format-uri', $uri;
+        $self->tag('boilerplate-copyright-format-uri', $uri);
         return;
     }
 
@@ -178,12 +178,15 @@ sub _find_dep5_version {
         return $version;
     }
 
-    tag 'unknown-copyright-format-uri', $original_uri;
+    $self->tag('unknown-copyright-format-uri', $original_uri);
     return;
 }
 
-sub _check_apache_notice_files {
-    my ($info, $group, $contents) = @_;
+sub check_apache_notice_files {
+    my ($self, $contents) = @_;
+
+    my $info = $self->info;
+    my $group = $self->group;
 
     my @procs = $group->get_processables('binary');
     return if not @procs;
@@ -205,19 +208,23 @@ sub _check_apache_notice_files {
         return if any { m{/NOTICE(\.txt)?(\.gz)?$} } @files;
     }
 
-    tag 'missing-notice-file-for-apache-license', join(' ', @notice_files);
+    $self->tag('missing-notice-file-for-apache-license',
+        join(' ', @notice_files));
 
     return;
 }
 
-sub _check_dep5_copyright {
-    my ($info, $contents) = @_;
+sub check_dep5_copyright {
+    my ($self, $contents) = @_;
+
+    my $info = $self->info;
+
     my (@dep5, @lines);
 
     if (    $contents =~ m/^Files-Excluded:/
         and $contents
         !~ m{^Format:.*/doc/packaging-manuals/copyright-format/1.0$}) {
-        tag 'files-excluded-without-copyright-format-1.0';
+        $self->tag('files-excluded-without-copyright-format-1.0');
     }
 
     if (
@@ -232,7 +239,7 @@ sub _check_dep5_copyright {
                ) }x
     ){
 
-        tag 'no-dep5-copyright';
+        $self->tag('no-dep5-copyright');
         return;
     }
 
@@ -250,21 +257,21 @@ sub _check_dep5_copyright {
       if defined $uri;               # strip fragment identifier
 
     if (!defined $uri) {
-        tag 'unknown-copyright-format-uri';
+        $self->tag('unknown-copyright-format-uri');
         return;
     }
 
-    my $version = _find_dep5_version($uri);
+    my $version = $self->find_dep5_version($uri);
 
     return if !defined($version);
     if ($version =~ m,wiki,) {
-        tag 'wiki-copyright-format-uri', $uri;
+        $self->tag('wiki-copyright-format-uri', $uri);
     }elsif ($version =~ m,svn$,) {
-        tag 'unversioned-copyright-format-uri', $uri;
+        $self->tag('unversioned-copyright-format-uri', $uri);
     }elsif (versions_compare $version, '<<', $dep5_last_normative_change) {
-        tag 'out-of-date-copyright-format-uri', $uri;
+        $self->tag('out-of-date-copyright-format-uri', $uri);
     }elsif ($uri =~ m,^http://www\.debian\.org/,) {
-        tag 'insecure-copyright-format-uri', $uri;
+        $self->tag('insecure-copyright-format-uri', $uri);
     }
 
     if (versions_compare $version, '<<', $dep5_last_overhaul) {
@@ -282,19 +289,21 @@ sub _check_dep5_copyright {
     if ($@) {
         chomp $@;
         $@ =~ s/^syntax error at //;
-        tag 'syntax-error-in-dep5-copyright', $@;
+        $self->tag('syntax-error-in-dep5-copyright', $@);
         return;
     }
 
     return if (!@dep5);
 
-    _parse_dep5($info, \@dep5, \@lines);
+    $self->parse_dep5(\@dep5, \@lines);
 
     return;
 }
 
-sub _parse_dep5 {
-    my ($info, $dep5ref, $linesref) = @_;
+sub parse_dep5 {
+    my ($self, $dep5ref, $linesref) = @_;
+
+    my $info = $self->info;
     my @dep5       = @$dep5ref;
     my @lines      = @$linesref;
     my $first_para = shift @dep5;
@@ -306,25 +315,25 @@ sub _parse_dep5 {
     for my $field (keys %{$first_para}) {
         my $renamed_to = $dep5_renamed_fields{$field};
         if (defined $renamed_to) {
-            tag 'obsolete-field-in-dep5-copyright', $field,
-              $renamed_to, "(line $lines[0]{$field})";
+            $self->tag('obsolete-field-in-dep5-copyright',
+                $field,$renamed_to, "(line $lines[0]{$field})");
         }
     }
-    check_files_excluded($info, $first_para->{'files-excluded'} // '');
+    $self->check_files_excluded($first_para->{'files-excluded'} // '');
 
-    tag 'missing-field-in-dep5-copyright', 'format',
-      "(line $lines[0]{'format'})"
+    $self->tag('missing-field-in-dep5-copyright',
+        'format',"(line $lines[0]{'format'})")
       if none { defined $first_para->{$_} } qw(format format-specification);
-    tag 'missing-explanation-for-contrib-or-non-free-package'
+    $self->tag('missing-explanation-for-contrib-or-non-free-package')
       if $info->source_field('section', '') =~ m{^(contrib|non-free)(/.+)?$}
       and none { defined $first_para->{$_} } qw(comment disclaimer);
-    tag 'missing-explanation-for-repacked-upstream-tarball'
+    $self->tag('missing-explanation-for-repacked-upstream-tarball')
       if $info->repacked
       and none { defined $first_para->{$_} } qw(comment files-excluded)
       and ($first_para->{'source'} // '') =~ m{^https?://};
 
     my (undef, $full_license_field, undef,@short_licenses_field)
-      =parse_license($first_para->{'license'}, 1);
+      = $self->parse_license($first_para->{'license'}, 1);
     for my $short_license (@short_licenses_field) {
         $required_standalone_licenses{$short_license} = 0
           if not defined($full_license_field);
@@ -353,15 +362,17 @@ sub _parse_dep5 {
         $i++;
         $current_line = $lines[$i]{'START-OF-PARAGRAPH'};
         my ($files_fname, $files)
-          =get_field($para, 'files', $lines[$i]);
-        my $license   = get_field($para, 'license',   $lines[$i]);
-        my $copyright = get_field($para, 'copyright', $lines[$i]);
+          = $self->get_field($para, 'files', $lines[$i]);
+        my $license   = $self->get_field($para, 'license',   $lines[$i]);
+        my $copyright = $self->get_field($para, 'copyright', $lines[$i]);
 
         if (    not defined $files
             and defined $license
             and defined $copyright){
-            tag 'ambiguous-paragraph-in-dep5-copyright',
-              "paragraph at line $current_line";
+            $self->tag(
+                'ambiguous-paragraph-in-dep5-copyright',
+                "paragraph at line $current_line"
+            );
 
             # If it is the first paragraph, it might be an instance of
             # the (no-longer) optional "first Files-field".
@@ -370,23 +381,25 @@ sub _parse_dep5 {
 
         if (defined $license and not defined $files) {
             my (undef, $full_license, $short_license,@short_licenses)
-              = parse_license($license, $current_line);
-            check_incomplete_creative_commons_license($short_license,
+              = $self->parse_license($license, $current_line);
+            $self->check_incomplete_creative_commons_license($short_license,
                 $license, $current_line);
             # Standalone license paragraph
             if (defined($short_license) and $short_license =~ /\s++\|\s++/) {
-                tag 'pipe-symbol-used-as-license-disjunction', $short_license,
-                  "(paragraph at line $current_line)";
+                $self->tag('pipe-symbol-used-as-license-disjunction',
+                    $short_license,"(paragraph at line $current_line)");
             }
             if (not defined($full_license)) {
-                tag 'missing-license-text-in-dep5-copyright', $license,
-                  "(paragraph at line $current_line)";
+                $self->tag('missing-license-text-in-dep5-copyright',
+                    $license,"(paragraph at line $current_line)");
             }else {
                 for (@short_licenses) {
                     if(defined($full_licenses_seen{$_})
                         and $_ ne 'public-domain') {
-                        tag 'dep5-copyright-license-name-not-unique',
-                          "(paragraph at line $current_line)";
+                        $self->tag(
+                            'dep5-copyright-license-name-not-unique',
+                            "(paragraph at line $current_line)"
+                        );
                     } else {
                         $standalone_licenses{$_} = $i;
                         $full_licenses_seen{$_} = $current_line;
@@ -396,14 +409,18 @@ sub _parse_dep5 {
             }
         }elsif (defined $files) {
             if ($files =~ m/\A\s*\Z/mxs) {
-                tag 'missing-field-in-dep5-copyright', 'files',
-                  '(empty field,',
-                  "paragraph at line $current_line)";
+                $self->tag(
+                    'missing-field-in-dep5-copyright',
+                    'files',
+                    '(empty field,',
+                    "paragraph at line $current_line)"
+                );
             }
 
-            tag 'global-files-wildcard-not-first-paragraph-in-dep5-copyright',
-              "(paragraph at line $current_line)"
-              if $files eq '*' and $i > 1;
+            $self->tag(
+                'global-files-wildcard-not-first-paragraph-in-dep5-copyright',
+                "(paragraph at line $current_line)"
+            ) if $files eq '*' and $i > 1;
 
             my @listedfiles = split(SPACE, $files);
 
@@ -411,7 +428,7 @@ sub _parse_dep5 {
             my $lc = List::Compare->new(\@licensefiles, \@listedfiles);
             my @listedlicensefiles = $lc->get_intersection;
 
-            tag 'license-file-listed-in-debian-copyright', $_
+            $self->tag('license-file-listed-in-debian-copyright',$_)
               for @listedlicensefiles;
 
             # Files paragraph
@@ -420,7 +437,7 @@ sub _parse_dep5 {
             }
 
             my ($found_license, $full_license, $short_license, @short_licenses)
-              = parse_license($license, $current_line);
+              = $self->parse_license($license, $current_line);
 
             # only attempt to evaluate globbing if commas could be legal
             if (not @commas_in_files or $commas_in_files) {
@@ -433,9 +450,9 @@ sub _parse_dep5 {
                     my ($wc_value, $wc_type, $wildcard_error)
                       = parse_wildcard($wildcard);
                     if (defined $wildcard_error) {
-                        tag 'invalid-escape-sequence-in-dep5-copyright',
-                          substr($wildcard_error, 0, 2)
-                          . " (paragraph at line $current_line)";
+                        $self->tag('invalid-escape-sequence-in-dep5-copyright',
+                            substr($wildcard_error, 0, 2)
+                              . " (paragraph at line $current_line)");
                         next;
                     }
 
@@ -476,17 +493,19 @@ sub _parse_dep5 {
                     if ($used) {
                         $file_para_coverage{$current_line} = 1;
                     } elsif (not $used) {
-                        tag 'wildcard-matches-nothing-in-dep5-copyright',
-                          "$wildcard (paragraph at line $current_line)";
+                        $self->tag(
+                            'wildcard-matches-nothing-in-dep5-copyright',
+                            "$wildcard (paragraph at line $current_line)"
+                        );
                     }
                 }
             }
 
-            check_incomplete_creative_commons_license($short_license,
+            $self->check_incomplete_creative_commons_license($short_license,
                 $license, $current_line);
             if (defined($short_license) and $short_license =~ /\s++\|\s++/) {
-                tag 'pipe-symbol-used-as-license-disjunction', $short_license,
-                  "(paragraph at line $current_line)";
+                $self->tag('pipe-symbol-used-as-license-disjunction',
+                    $short_license,"(paragraph at line $current_line)");
             }
             if ($found_license) {
                 for (@short_licenses) {
@@ -496,37 +515,45 @@ sub _parse_dep5 {
                     } else {
                         if(defined($full_licenses_seen{$_})
                             and $_ ne 'public-domain') {
-                            tag 'dep5-copyright-license-name-not-unique',
-                              $_, "(paragraph at line $current_line)";
+                            $self->tag(
+                                'dep5-copyright-license-name-not-unique',
+                                $_, "(paragraph at line $current_line)");
                         } else {
                             $full_licenses_seen{$_} = $current_line;
                         }
                     }
                 }
             }else {
-                tag 'missing-field-in-dep5-copyright', 'license',
-                  "(paragraph at line $current_line)";
+                $self->tag('missing-field-in-dep5-copyright',
+                    'license',"(paragraph at line $current_line)");
             }
 
             if (not defined $copyright) {
-                tag 'missing-field-in-dep5-copyright', 'copyright',
-                  "(paragraph at line $current_line)";
+                $self->tag('missing-field-in-dep5-copyright',
+                    'copyright',"(paragraph at line $current_line)");
             }elsif ($copyright =~ m/\A\s*\Z/mxs) {
-                tag 'missing-field-in-dep5-copyright', 'copyright',
-                  '(empty field,',
-                  "paragraph at line $current_line)";
+                $self->tag(
+                    'missing-field-in-dep5-copyright',
+                    'copyright',
+                    '(empty field,',
+                    "paragraph at line $current_line)"
+                );
             }
 
         }else {
-            tag 'unknown-paragraph-in-dep5-copyright', 'paragraph at line',
-              $current_line;
+            $self->tag(
+                'unknown-paragraph-in-dep5-copyright',
+                'paragraph at line',
+                $current_line
+            );
         }
     }
     if (@commas_in_files and not $commas_in_files) {
         my ($paragraph_no, $field_name) = @commas_in_files;
-        tag 'comma-separated-files-in-dep5-copyright',
-          'paragraph at line',
-          $lines[$paragraph_no]{$field_name};
+        $self->tag(
+            'comma-separated-files-in-dep5-copyright',
+            'paragraph at line',
+            $lines[$paragraph_no]{$field_name});
     } else {
         foreach my $srcfile (sort keys %file_licenses) {
             next if $srcfile =~ '^\.pc/';
@@ -539,8 +566,8 @@ sub _parse_dep5 {
             };
             next unless $seen;
             my $wanted = $file_licenses{$srcfile};
-            tag 'inconsistent-appstream-metadata-license', $srcfile,
-              "($seen != $wanted)"
+            $self->tag('inconsistent-appstream-metadata-license',
+                $srcfile,"($seen != $wanted)")
               unless $seen eq $wanted
               or $info->name eq 'lintian';
         }
@@ -551,27 +578,32 @@ sub _parse_dep5 {
 
         my @files_not_covered = grep { !$file_coverage{$_} } @license_needed;
 
-        tag 'file-without-copyright-information', $_ for @files_not_covered;
+        $self->tag('file-without-copyright-information',$_)
+          for @files_not_covered;
 
         delete $file_para_coverage{$file_coverage{$_}}for keys %file_coverage;
 
-        tag 'unused-file-paragraph-in-dep5-copyright',"paragraph at line $_"
+        $self->tag('unused-file-paragraph-in-dep5-copyright',
+            "paragraph at line $_")
           for sort keys %file_para_coverage;
     }
     while ((my $license, $i) = each %required_standalone_licenses) {
         if (not defined $standalone_licenses{$license}) {
-            tag 'missing-license-paragraph-in-dep5-copyright', $license,
-              "(paragraph at line $lines[$i]{'START-OF-PARAGRAPH'})";
+            $self->tag('missing-license-paragraph-in-dep5-copyright',
+                $license,
+                "(paragraph at line $lines[$i]{'START-OF-PARAGRAPH'})");
         } elsif ($standalone_licenses{$license} == -1) {
-            tag 'dep5-file-paragraph-references-header-paragraph', $license,
-              "(paragraph at line $lines[$i]{'START-OF-PARAGRAPH'})";
+            $self->tag('dep5-file-paragraph-references-header-paragraph',
+                $license,
+                "(paragraph at line $lines[$i]{'START-OF-PARAGRAPH'})");
         }
 
     }
     while ((my $license, $i) = each %standalone_licenses) {
         if (not defined $required_standalone_licenses{$license}) {
-            tag 'unused-license-paragraph-in-dep5-copyright', $license,
-              "(paragraph at line $lines[$i]{'START-OF-PARAGRAPH'})";
+            $self->tag('unused-license-paragraph-in-dep5-copyright',
+                $license,
+                "(paragraph at line $lines[$i]{'START-OF-PARAGRAPH'})");
         }
     }
   LICENSE:
@@ -580,20 +612,24 @@ sub _parse_dep5 {
             if($license =~ m,[^ ]+ \s+ with \s+ (.*),x) {
                 my $exceptiontext = $1;
                 unless ($exceptiontext =~ m,[^ ]+ \s+ exception,x) {
-                    tag 'bad-exception-format-in-dep5-copyright', $license,
-                      "(paragraph at line $lines[$i]{'START-OF-PARAGRAPH'})";
+                    $self->tag(
+                        'bad-exception-format-in-dep5-copyright',
+                        $license,
+                        "(paragraph at line $lines[$i]{'START-OF-PARAGRAPH'})"
+                    );
                 }
             }else {
-                tag 'space-in-std-shortname-in-dep5-copyright', $license,
-                  "(paragraph at line $lines[$i]{'START-OF-PARAGRAPH'})";
+                $self->tag('space-in-std-shortname-in-dep5-copyright',
+                    $license,
+                    "(paragraph at line $lines[$i]{'START-OF-PARAGRAPH'})");
             }
         }
         foreach my $bad_short_license ($BAD_SHORT_LICENSES->all) {
             my $value = $BAD_SHORT_LICENSES->value($bad_short_license);
             my $regex = $value->{'regex'};
             if ($license =~ m/$regex/x) {
-                tag $value->{'tag'}, $license,
-                  "(paragraph at line $lines[$i]{'START-OF-PARAGRAPH'})";
+                $self->tag($value->{'tag'}, $license,
+                    "(paragraph at line $lines[$i]{'START-OF-PARAGRAPH'})");
                 next LICENSE;
             }
         }
@@ -603,7 +639,8 @@ sub _parse_dep5 {
 
 # parse a license block
 sub parse_license {
-    my ($license_block, $line) = @_;
+    my ($self, $license_block, $line) = @_;
+
     my ($full_license, $short_license);
     return 0 unless defined($license_block);
     if ($license_block =~ m/\n/) {
@@ -613,8 +650,8 @@ sub parse_license {
     }
     $short_license =~ s/[(),]/ /g;
     if ($short_license =~ m/\A\s*\Z/) {
-        tag 'empty-short-license-in-dep5-copyright',
-          "(paragraph at line $line)";
+        $self->tag('empty-short-license-in-dep5-copyright',
+            "(paragraph at line $line)");
         return 1, $full_license, '';
     }
     $short_license = lc($short_license);
@@ -624,7 +661,7 @@ sub parse_license {
 }
 
 sub get_field {
-    my ($para, $field, $line) = @_;
+    my ($self, $para, $field, $line) = @_;
     if (exists $para->{$field}) {
         return $para->{$field} unless wantarray;
         return ($field, $para->{$field});
@@ -633,8 +670,8 @@ sub get_field {
     # Fall back to a "likely misspelling" of the field.
     foreach my $f (sort keys %$para) {
         if (distance($field, $f) < 3) {
-            tag 'field-name-typo-in-dep5-copyright', $f, '->', $field,
-              "(line $line->{$f})";
+            $self->tag('field-name-typo-in-dep5-copyright',
+                $f, '->', $field,"(line $line->{$f})");
             return $para->{$f} unless wantarray;
             return ($f, $para->{$f});
         }
@@ -727,7 +764,10 @@ sub parse_wildcard {
 }
 
 sub check_files_excluded {
-    my ($info, $excluded) = @_;
+    my ($self, $excluded) = @_;
+
+    my $info = $self->info;
+
     my @files = grep { $_->is_file } $info->sorted_orig_index;
     my @wildcards = split /[\n\t ]+/, $excluded;
     for my $wildcard (@wildcards) {
@@ -737,7 +777,8 @@ sub check_files_excluded {
         }
         my ($wc_value, $wc_type, $wildcard_error)= parse_wildcard($wildcard);
         if (defined $wildcard_error) {
-            tag 'invalid-escape-sequence-in-dep5-copyright', $wildcard_error;
+            $self->tag('invalid-escape-sequence-in-dep5-copyright',
+                $wildcard_error);
             next;
         }
         if ($wc_type eq WC_TYPE_FILE) {
@@ -746,7 +787,7 @@ sub check_files_excluded {
         }
         for my $srcfile (@files) {
             next if $srcfile =~ m/^(?:debian|\.pc)\//;
-            tag 'source-includes-file-in-files-excluded', $srcfile
+            $self->tag('source-includes-file-in-files-excluded', $srcfile)
               if $srcfile =~ qr/^$wc_value/;
         }
     }
@@ -755,12 +796,12 @@ sub check_files_excluded {
 }
 
 sub check_incomplete_creative_commons_license {
-    my ($short_license, $license, $current_line) = @_;
+    my ($self, $short_license, $license, $current_line) = @_;
     return unless $short_license and $license;
 
     my $num_lines = $license =~ tr/\n//;
-    tag 'incomplete-creative-commons-license', $short_license,
-      "(paragraph at line $current_line)"
+    $self->tag('incomplete-creative-commons-license',
+        $short_license,"(paragraph at line $current_line)")
       if $short_license =~ m,^cc-,
       and $num_lines > 0
       and $num_lines < 20;
@@ -781,14 +822,14 @@ sub binary {
     my $path = "usr/share/doc/$pkg";
 
     if ($info->index("$path/copyright.gz")) {
-        tag 'copyright-file-compressed';
+        $self->tag('copyright-file-compressed');
         $found = 1;
     }
 
     if (my $index_info = $info->index("$path/copyright")) {
         $found = 1;
         if ($index_info->is_symlink) {
-            tag 'copyright-file-is-symlink';
+            $self->tag('copyright-file-is-symlink');
             $linked = 1;
             # Fall through here - coll/copyright-file protects us
             # from reading through an "evil" link.
@@ -802,8 +843,9 @@ sub binary {
 
             # check if this symlink references a directory elsewhere
             if ($link =~ m,^(?:\.\.)?/,) {
-                tag 'usr-share-doc-symlink-points-outside-of-usr-share-doc',
-                  $link;
+                $self->tag(
+                    'usr-share-doc-symlink-points-outside-of-usr-share-doc',
+                    $link);
                 return;
             }
 
@@ -824,19 +866,18 @@ sub binary {
             # don't worry about the version number.
             $link =~ s,/.*,,;
             if (not depends_on($info, $proc, $link)) {
-                tag 'usr-share-doc-symlink-without-dependency', $link;
+                $self->tag('usr-share-doc-symlink-without-dependency', $link);
                 return;
             }
             # Check if the link points to a package from the same source.
-            check_cross_link($group, $link);
+            $self->check_cross_link($link);
             return;
         }
     }
 
     if (not $found) {
         # #522827: special exception for perl for now
-        tag 'no-copyright-file'
-          unless $pkg eq 'perl';
+        $self->tag('no-copyright-file') unless $pkg eq 'perl';
         return;
     }
 
@@ -844,15 +885,15 @@ sub binary {
     # check that copyright is UTF-8 encoded
     my $line = file_is_encoded_in_non_utf8($dcopy);
     if ($line) {
-        tag 'debian-copyright-file-uses-obsolete-national-encoding',
-          "at line $line";
+        $self->tag('debian-copyright-file-uses-obsolete-national-encoding',
+            "at line $line");
     }
 
     # check contents of copyright file
     $_ = path($dcopy)->slurp;
 
     if (m,\r,) {
-        tag 'copyright-has-crs';
+        $self->tag('copyright-has-crs');
     }
 
     my $wrong_directory_detected = 0;
@@ -860,7 +901,7 @@ sub binary {
     if (m{ (usr/share/common-licenses/ ( [^ \t]*? ) \.gz) }xsm) {
         my ($path, $license) = ($1, $2);
         if ($KNOWN_COMMON_LICENSES->known($license)) {
-            tag 'copyright-refers-to-compressed-license', $path;
+            $self->tag('copyright-refers-to-compressed-license', $path);
         }
     }
 
@@ -872,16 +913,16 @@ sub binary {
     if (m,(usr/share/common-licenses/(L?GPL|GFDL))([^-]),i) {
         my ($ref, $license, $separator) = ($1, $2, $3);
         if ($separator =~ /[\d\w]/) {
-            tag 'copyright-refers-to-nonexistent-license-file',
-              "$ref$separator";
+            $self->tag('copyright-refers-to-nonexistent-license-file',
+                "$ref$separator");
         } elsif (m,\b(?:any|or)\s+later(?:\s+version)?\b,i
             || m,License: $license-[\d\.]+\+,i
             || m,as Perl itself,i
             || m,License-Alias:\s+Perl,
             || m,License:\s+Perl,) {
-            tag 'copyright-refers-to-symlink-license', $ref;
+            $self->tag('copyright-refers-to-symlink-license', $ref);
         } else {
-            tag 'copyright-refers-to-versionless-license-file', $ref
+            $self->tag('copyright-refers-to-versionless-license-file', $ref)
               if /\bversion\b/;
         }
     }
@@ -889,28 +930,28 @@ sub binary {
     # References to /usr/share/common-licenses/BSD are deprecated as of Policy
     # 3.8.5.
     if (m,/usr/share/common-licenses/BSD,) {
-        tag 'copyright-refers-to-deprecated-bsd-license-file';
+        $self->tag('copyright-refers-to-deprecated-bsd-license-file');
     }
 
     if (m,(usr/share/common-licences),) {
-        tag 'copyright-refers-to-incorrect-directory', $1;
+        $self->tag('copyright-refers-to-incorrect-directory', $1);
         $wrong_directory_detected = 1;
     }
 
     if (m,usr/share/doc/copyright,) {
-        tag 'copyright-refers-to-old-directory';
+        $self->tag('copyright-refers-to-old-directory');
         $wrong_directory_detected = 1;
     }
 
     if (m,usr/doc/copyright,) {
-        tag 'copyright-refers-to-old-directory';
+        $self->tag('copyright-refers-to-old-directory');
         $wrong_directory_detected = 1;
     }
 
     # Lame check for old FSF zip code.  Try to avoid false positives from other
     # Cambridge, MA addresses.
     if (m/(?:Free\s*Software\s*Foundation.*02139|02111-1307)/s) {
-        tag 'old-fsf-address-in-copyright-file';
+        $self->tag('old-fsf-address-in-copyright-file');
     }
 
     # Whether the package is covered by the GPL, used later for the
@@ -926,25 +967,25 @@ sub binary {
             or (    m/\bGNU GENERAL PUBLIC LICENSE\s*Version 3/
                 and m/\bTERMS AND CONDITIONS\s/))
     ) {
-        tag 'copyright-file-contains-full-gpl-license';
+        $self->tag('copyright-file-contains-full-gpl-license');
         $gpl = 1;
     }
 
     if (    length($_) > 12_000
         and m/\bGNU Free Documentation License\s*Version 1\.2/
         and m/\b1\. APPLICABILITY AND DEFINITIONS/) {
-        tag 'copyright-file-contains-full-gfdl-license';
+        $self->tag('copyright-file-contains-full-gfdl-license');
     }
 
     if (    length($_) > 10_000
         and m/\bApache License\s+Version 2\.0,/
         and m/TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION/) {
-        tag 'copyright-file-contains-full-apache-2-license';
+        $self->tag('copyright-file-contains-full-apache-2-license');
     }
 
     # wtf?
     if ((m,common-licenses(/\S+),) && (!m,/usr/share/common-licenses/,)) {
-        tag 'copyright-does-not-refer-to-common-license-file', $1;
+        $self->tag('copyright-does-not-refer-to-common-license-file', $1);
     }
 
     # This check is a bit prone to false positives, since some other
@@ -977,21 +1018,24 @@ sub binary {
                 qr/GNU Free Documentation License|(?-i:\bGFDL\b)/i
             )
         ) {
-            tag 'copyright-should-refer-to-common-license-file-for-gfdl';
+            $self->tag(
+                'copyright-should-refer-to-common-license-file-for-gfdl');
         }elsif (
             check_names_texts(
 qr/\b(?:LGPL|gnu[-_](?:lesser|library)[-_]general[-_]public[-_]license)\b/i,
 qr/GNU (?:Lesser|Library) General Public License|(?-i:\bLGPL\b)/i
             )
         ) {
-            tag 'copyright-should-refer-to-common-license-file-for-lgpl';
+            $self->tag(
+                'copyright-should-refer-to-common-license-file-for-lgpl');
         }elsif (
             check_names_texts(
                 qr/\b(?:GPL|gnu[-_]general[-_]public[-_]license)\b/i,
                 qr/GNU General Public License|(?-i:\bGPL\b)/i
             )
         ) {
-            tag 'copyright-should-refer-to-common-license-file-for-gpl';
+            $self->tag(
+                'copyright-should-refer-to-common-license-file-for-gpl');
             $gpl = 1;
         }elsif (
             check_names_texts(
@@ -999,7 +1043,8 @@ qr/GNU (?:Lesser|Library) General Public License|(?-i:\bLGPL\b)/i
                 qr/\bApache License\s*,?\s*Version 2|\b(?-i:Apache)-2/i
             )
         ) {
-            tag 'copyright-should-refer-to-common-license-file-for-apache-2';
+            $self->tag(
+                'copyright-should-refer-to-common-license-file-for-apache-2');
         }
     }
 
@@ -1011,7 +1056,7 @@ qr/GNU (?:Lesser|Library) General Public License|(?-i:\bLGPL\b)/i
                   &&!m,usr/share/common-licenses/,;
             })
     ) {
-        tag 'copyright-file-lacks-pointer-to-perl-license';
+        $self->tag('copyright-file-lacks-pointer-to-perl-license');
     }
 
     # Checks for various packaging helper boilerplate.
@@ -1031,29 +1076,29 @@ qr/GNU (?:Lesser|Library) General Public License|(?-i:\bLGPL\b)/i
         or m,\<Including paragraphs\>,o
         or m,\<likewise for another author\>,o
     ) {
-        tag 'helper-templates-in-copyright';
+        $self->tag('helper-templates-in-copyright');
     }
 
     if (m/This copyright info was automatically extracted/o) {
-        tag 'copyright-contains-automatically-extracted-boilerplate';
+        $self->tag('copyright-contains-automatically-extracted-boilerplate');
     }
 
     if (m,url://,o) {
-        tag 'copyright-has-url-from-dh_make-boilerplate';
+        $self->tag('copyright-has-url-from-dh_make-boilerplate');
     }
 
     if (   index($_, DH_MAKE_TODO_BOILERPLATE_1) != -1
         or index($_, DH_MAKE_TODO_BOILERPLATE_2) != -1) {
-        tag 'copyright-contains-dh_make-todo-boilerplate';
+        $self->tag('copyright-contains-dh_make-todo-boilerplate');
     }
 
     if (m,The\s+Debian\s+packaging\s+is\s+\(C\)\s+\d+,io) {
-        tag 'copyright-with-old-dh-make-debian-copyright';
+        $self->tag('copyright-with-old-dh-make-debian-copyright');
     }
 
     # Other flaws in the copyright phrasing or contents.
     if ($found && !$linked) {
-        tag 'copyright-without-copyright-notice'
+        $self->tag('copyright-without-copyright-notice')
           unless /(?:Copyright|Copr\.|\302\251)(?:.*|[\(C\):\s]+)\b\d{4}\b
                |\bpublic(?:\s+|-)domain\b/xi;
     }
@@ -1076,7 +1121,7 @@ qr/GNU (?:Lesser|Library) General Public License|(?-i:\bLGPL\b)/i
                 push(@depends, split(/\s*,\s*/, $field));
             }
             if (any { /^libssl[0-9.]+(?:\s|\z)/ && !/\|/ } @depends) {
-                tag 'possible-gpl-code-linked-with-openssl';
+                $self->tag('possible-gpl-code-linked-with-openssl');
             }
         }
     }
@@ -1101,12 +1146,14 @@ sub depends_on {
 
 # Checks cross pkg links for /usr/share/doc/$pkg links
 sub check_cross_link {
-    my ($group, $fpkg) = @_;
+    my ($self, $fpkg) = @_;
+
+    my $group = $self->group;
     my $src = $group->get_source_processable;
     if ($src) {
         # source package is available; check it's list of binary
         return if defined $src->info->binary_package_type($fpkg);
-        tag 'usr-share-doc-symlink-to-foreign-package', $fpkg;
+        $self->tag('usr-share-doc-symlink-to-foreign-package', $fpkg);
     } else {
         # The source package is not available, but the binary could
         # be present anyway;  If they are in the same group, they claim
@@ -1116,9 +1163,10 @@ sub check_cross_link {
         }
         # It was not, but since the source package was not present, we cannot
         # tell if it is foreign or not at this point.
-        #<<< No perltidy - tag name too long
-        tag 'cannot-check-whether-usr-share-doc-symlink-points-to-foreign-package';
-        #>>>
+
+        $self->tag(
+'cannot-check-whether-usr-share-doc-symlink-points-to-foreign-package'
+        );
     }
     return;
 }
