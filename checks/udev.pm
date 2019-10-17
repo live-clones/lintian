@@ -25,8 +25,6 @@ use warnings;
 
 use Moo;
 
-use Lintian::Tags qw(tag);
-
 with('Lintian::Check');
 
 # Check /lib/udev/rules.d/, detect use of MODE="0666" and use of
@@ -45,16 +43,16 @@ sub binary {
     return unless $rules_dir;
     foreach my $file ($rules_dir->children) {
         if (!$file->is_open_ok) {
-            tag('udev-rule-unreadable', $file);
+            $self->tag('udev-rule-unreadable', $file);
             next;
         }
-        check_udev_rules($file, \&check_rule);
+        $self->check_udev_rules($file);
     }
     return;
 }
 
 sub check_rule {
-    my ($file, $linenum, $in_goto, $rule) = @_;
+    my ($self, $file, $linenum, $in_goto, $rule) = @_;
 
     # for USB, if everyone or the plugdev group members are
     # allowed access, the uaccess tag should be used too.
@@ -78,11 +76,11 @@ sub check_rule {
         && $rule !~ m/ENV\{ID_SOFTWARE_RADIO\}/
         && $rule !~ m/TAG\+="uaccess"/
     ) {
-        tag(
+        $self->tag((
             'udev-rule-missing-uaccess',
             "$file:$linenum",
             'user accessible device missing TAG+="uaccess"'
-        );
+        ));
     }
 
     # Matching rules mentioning vendor/product should also specify
@@ -91,17 +89,17 @@ sub check_rule {
         && $rule =~ m/ATTR\{idProduct\}=="[0-9a-fA-F]*"/
         && !$in_goto
         && $rule !~ m/SUBSYSTEM=="[^"]+"/) {
-        tag(
+        $self->tag((
             'udev-rule-missing-subsystem',
             "$file:$linenum",
             'vendor/product matching missing SUBSYSTEM specifier'
-        );
+        ));
     }
     return 0;
 }
 
 sub check_udev_rules {
-    my ($file, $check) = @_;
+    my ($self, $file) = @_;
 
     my $fd = $file->open;
     my $linenum = 0;
@@ -122,7 +120,7 @@ sub check_udev_rules {
         next if /^#.*/; # Skip comments
         $in_goto = '' if m/LABEL="[^"]+"/;
         $in_goto = $_ if m/SUBSYSTEM!="[^"]+"/ && m/GOTO="[^"]+"/;
-        $retval |= $check->($file, $linenum, $in_goto, $_);
+        $retval |= $self->check_rule($file, $linenum, $in_goto, $_);
     }
     close($fd);
     return $retval;
