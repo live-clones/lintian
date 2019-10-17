@@ -31,7 +31,6 @@ use autodie;
 use Moo;
 
 use Lintian::Data ();
-use Lintian::Tags qw(tag);
 
 with('Lintian::Check');
 
@@ -46,7 +45,7 @@ sub source {
 
     for my $field (keys %{$info->field}) {
 
-        tag 'unknown-field-in-dsc', $field
+        $self->tag('unknown-field-in-dsc', $field)
           unless $SOURCE_FIELDS->known($field);
     }
 
@@ -60,7 +59,7 @@ sub binary {
 
     for my $field (keys %{$info->field}) {
 
-        tag 'unknown-field-in-control', $field
+        $self->tag('unknown-field-in-control', $field)
           unless $KNOWN_BINARY_FIELDS->known($field);
     }
 
@@ -74,7 +73,7 @@ sub udeb {
 
     for my $field (keys %{$info->field}) {
 
-        tag 'unknown-field-in-control', $field
+        $self->tag('unknown-field-in-control', $field)
           unless $KNOWN_UDEB_FIELDS->known($field);
     }
 
