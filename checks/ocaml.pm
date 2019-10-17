@@ -28,7 +28,6 @@ use File::Basename;
 use Moo;
 
 use Lintian::Relation ();
-use Lintian::Tags qw(tag);
 
 with('Lintian::Check');
 
@@ -98,7 +97,7 @@ sub binary {
         # For each .cmxa file, there must be a matching .a file (#528367)
         $_ = $file;
         if (s/\.cmxa$/.a/ && !$info->index($_)) {
-            tag 'ocaml-dangling-cmxa', $file;
+            $self->tag('ocaml-dangling-cmxa', $file);
         }
 
         # For each .cmxs file, there must be a matching .cma or .cmo file
@@ -108,7 +107,7 @@ sub binary {
             if (   s/\.cmxs$/.cm/
                 && !$info->index("${_}a")
                 && !$info->index("${_}o")) {
-                tag 'ocaml-dangling-cmxs', $file;
+                $self->tag('ocaml-dangling-cmxs', $file);
             }
         }
 
@@ -119,7 +118,7 @@ sub binary {
         if (   s/\.cmx$/.o/
             && !$info->index($_)
             && !(exists $provided_o{$_})) {
-            tag 'ocaml-dangling-cmx', $file;
+            $self->tag('ocaml-dangling-cmx', $file);
         }
 
         # $somename.cmi should be shipped with $somename.mli or $somename.ml
@@ -130,7 +129,7 @@ sub binary {
             && !$info->index($_)) {
             $cmi_number++;
             if ($cmi_number <= $MAX_CMI) {
-                tag 'ocaml-dangling-cmi', $file;
+                $self->tag('ocaml-dangling-cmi', $file);
             }
         }
 
@@ -147,7 +146,7 @@ sub binary {
         # $somename.cmo should usually not be shipped with $somename.cma
         $_ = $file;
         if (s/\.cma$/.cmo/ && $info->index($_)) {
-            tag 'ocaml-stray-cmo', $file;
+            $self->tag('ocaml-stray-cmo', $file);
         }
 
         # development files outside /usr/lib/ocaml (.cmi, .cmx, .cmxa)
@@ -169,19 +168,22 @@ sub binary {
         # summary about .cmi files
         if ($cmi_number > $MAX_CMI) {
             my $plural = ($cmi_number - $MAX_CMI == 1) ? '' : 's';
-            tag 'ocaml-dangling-cmi', ($cmi_number - $MAX_CMI),
-              "more file$plural not shown";
+            $self->tag(
+                'ocaml-dangling-cmi',
+                ($cmi_number - $MAX_CMI),
+                "more file$plural not shown"
+            );
         }
         # summary about /usr/lib/ocaml
         if ($outside_number) {
             $outside_prefix = dirname($outside_prefix);
             my $plural = ($outside_number == 1) ? '' : 's';
-            tag 'ocaml-dev-file-not-in-usr-lib-ocaml',
-              "$outside_number file$plural in $outside_prefix";
+            $self->tag('ocaml-dev-file-not-in-usr-lib-ocaml',
+                "$outside_number file$plural in $outside_prefix");
         }
         if ($has_meta) {
             my $depends = $info->relation('all');
-            tag 'ocaml-meta-without-suggesting-findlib'
+            $self->tag('ocaml-meta-without-suggesting-findlib')
               unless $depends->implies('ocaml-findlib');
         }
     } else {
@@ -189,8 +191,10 @@ sub binary {
         if ($dev_number > 0) {
             $dev_prefix = dirname($dev_prefix);
             my $plural = ($dev_number == 1) ? '' : 's';
-            tag 'ocaml-dev-file-in-nondev-package',
-              "$dev_number file$plural in $dev_prefix";
+            $self->tag(
+                'ocaml-dev-file-in-nondev-package',
+                "$dev_number file$plural in $dev_prefix"
+            );
         }
     }
 
