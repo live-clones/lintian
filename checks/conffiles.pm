@@ -27,7 +27,6 @@ use autodie;
 
 use Moo;
 
-use Lintian::Tags qw(tag);
 use Lintian::Util qw(rstrip);
 
 with('Lintian::Check');
@@ -52,7 +51,7 @@ sub binary {
             next if $filename eq q{};
 
             if ($filename !~ m{^ / }xsm) {
-                tag 'relative-conffile', $filename;
+                $self->tag('relative-conffile', $filename);
             } else {
                 # strip the leading slash from here.
                 $filename =~ s{^ /++ }{}xsm;
@@ -60,21 +59,22 @@ sub binary {
             $conffiles{$filename}++;
 
             if ($conffiles{$filename} > 1) {
-                tag 'duplicate-conffile', $filename;
+                $self->tag('duplicate-conffile', $filename);
                 next;
             }
 
             if (not defined($info->index($filename))) {
-                tag 'conffile-is-not-in-package', $filename;
+                $self->tag('conffile-is-not-in-package', $filename);
             }
 
             if ($filename =~ m{^ usr/ }xsm) {
-                tag 'file-in-usr-marked-as-conffile', $filename;
+                $self->tag('file-in-usr-marked-as-conffile', $filename);
             } else {
                 if ($filename !~ m{^ etc/ }xsm) {
-                    tag 'non-etc-file-marked-as-conffile', $filename;
+                    $self->tag('non-etc-file-marked-as-conffile', $filename);
                 } elsif ($filename =~ m{^ etc/rc.\.d/ }xsm) {
-                    tag 'file-in-etc-rc.d-marked-as-conffile', $filename;
+                    $self->tag('file-in-etc-rc.d-marked-as-conffile',
+                        $filename);
                 }
             }
 
@@ -86,7 +86,7 @@ sub binary {
     # Read package contents...
     foreach my $file ($info->sorted_index) {
         if (not $file->is_file and exists $conffiles{$file}) {
-            tag 'conffile-has-bad-file-type', $file;
+            $self->tag('conffile-has-bad-file-type', $file);
         }
         next unless $file =~ m{\A etc/ }xsm and $file->is_file;
 
@@ -97,7 +97,7 @@ sub binary {
             and $file ne 'etc/init.d/skeleton'
             and $file ne 'etc/init.d/rc'
             and $file ne 'etc/init.d/rcS') {
-            tag 'file-in-etc-not-marked-as-conffile', $file;
+            $self->tag('file-in-etc-not-marked-as-conffile', $file);
         }
     }
 
