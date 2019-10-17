@@ -27,7 +27,6 @@ use autodie;
 use File::Basename;
 use Moo;
 
-use Lintian::Tags qw(tag);
 use Lintian::Relation qw(:constants);
 use Lintian::Util qw(internal_error);
 
@@ -60,50 +59,57 @@ sub binary {
             my $temp_type = $1;
             my $temp_file = $2;
             # ... except modules which are allowed to ship .load files
-            tag 'apache2-configuration-files-need-conf-suffix', $file
+            $self->tag('apache2-configuration-files-need-conf-suffix', $file)
               unless $temp_type eq 'mods' and $temp_file =~ m#\.load#;
         }
 
         # Package appears to be a binary module
         if ($file =~ m#^usr/lib/apache2/modules/(.*)\.so#) {
-            check_module_package($pkg, $info, $1);
+            $self->check_module_package($1);
             $seen_apache2_special_file++;
         }
 
         # Package appears to be a web application
         elsif ($file =~ m#^etc/apache2/(conf|site)-available/(.*)$#) {
-            check_web_application_package($pkg, $info, $file, $1, $2);
+            $self->check_web_application_package($file, $1, $2);
             $seen_apache2_special_file++;
         }
 
         # Package appears to be a legacy web application
         elsif ($file =~ m#^etc/apache2/conf\.d/(.*)$#) {
-            tag 'apache2-reverse-dependency-uses-obsolete-directory',$file;
-            check_web_application_package($pkg, $info, $file,'conf', $1);
+            $self->tag('apache2-reverse-dependency-uses-obsolete-directory',
+                $file);
+            $self->check_web_application_package($file,'conf', $1);
             $seen_apache2_special_file++;
         }
 
         # Package does scary things
         elsif ($file =~ m#^etc/apache2/(?:conf|sites|mods)-enabled/.*$#) {
-#<<< no perltidy (tag name is too long to fit)
-            tag 'apache2-reverse-dependency-ships-file-in-not-allowed-directory',
-              $file;
-#>>>
+
+            $self->tag(
+'apache2-reverse-dependency-ships-file-in-not-allowed-directory',
+                $file
+            );
+
             $seen_apache2_special_file++;
         }
 
     }
 
     if ($seen_apache2_special_file) {
-        check_maintainer_scripts($info);
+        $self->check_maintainer_scripts;
     }
     return;
 }
 
 sub check_web_application_package {
-    my ($pkg, $info, $file, $pkgtype, $webapp) = @_;
+    my ($self, $file, $pkgtype, $webapp) = @_;
 
-    tag 'non-standard-apache2-configuration-name', $webapp, '!=', "$pkg.conf"
+    my $pkg = $self->package;
+    my $info = $self->info;
+
+    $self->tag('non-standard-apache2-configuration-name',
+        $webapp, '!=', "$pkg.conf")
       if $webapp ne "$pkg.conf"
       or $webapp =~ m/^local-./;
 
@@ -113,7 +119,7 @@ sub check_web_application_package {
     # A web application must not depend on apache2-whatever
     my $visit = sub {
         if (m/^apache2(?:\.2)?-(?:common|data|bin)$/) {
-            tag 'web-application-depends-on-apache2-data-package', $_;
+            $self->tag('web-application-depends-on-apache2-data-package', $_);
             return 1;
         }
         return 0;
@@ -124,15 +130,19 @@ sub check_web_application_package {
     # apache2 | httpd but don't worry about versions, virtual package
     # don't support that
     if ($rel->implies('apache2')) {
-        tag 'web-application-should-not-depend-unconditionally-on-apache2';
+        $self->tag(
+            'web-application-should-not-depend-unconditionally-on-apache2');
     }
 
-    inspect_conf_file($pkgtype, $file);
+    $self->inspect_conf_file($pkgtype, $file);
     return;
 }
 
 sub check_module_package {
-    my ($pkg, $info, $module) = @_;
+    my ($self, $module) = @_;
+
+    my $pkg = $self->package;
+    my $info = $self->info;
 
     # We want packages to be follow our naming scheme. Modules should be named
     # libapache2-mod-<foo> if it ships a mod_foo.so
@@ -144,14 +154,14 @@ sub check_module_package {
 
     $expected_name =~ tr/_/-/;
     if ($expected_name ne $pkg) {
-        tag 'non-standard-apache2-module-package-name', $pkg, '!=',
-          $expected_name;
+        $self->tag('non-standard-apache2-module-package-name',
+            $pkg, '!=',$expected_name);
     }
 
     $rel = Lintian::Relation->and($info->relation('strong'),
         $info->relation('recommends'));
     if (!$rel->matches(qr/^apache2-api-\d+$/o)) {
-        tag 'apache2-module-does-not-depend-on-apache2-api';
+        $self->tag('apache2-module-does-not-depend-on-apache2-api');
     }
 
     # The module is called mod_foo.so, thus the load file is expected to be
@@ -162,19 +172,21 @@ sub check_module_package {
     $conf_file =~ s#^mod.(.*)$#etc/apache2/mods-available/$1.conf#;
 
     if (my $f = $info->index($load_file)) {
-        inspect_conf_file('mods', $f);
+        $self->inspect_conf_file('mods', $f);
     } else {
-        tag 'apache2-module-does-not-ship-load-file', $load_file;
+        $self->tag('apache2-module-does-not-ship-load-file', $load_file);
     }
 
     if (my $f = $info->index($conf_file)) {
-        inspect_conf_file('mods', $f);
+        $self->inspect_conf_file('mods', $f);
     }
     return;
 }
 
 sub check_maintainer_scripts {
-    my ($info) = @_;
+    my ($self) = @_;
+
+    my $info = $self->info;
 
     open(my $fd, '<', $info->lab_data_path('control-scripts'));
 
@@ -198,13 +210,14 @@ sub check_maintainer_scripts {
             # Do not allow reverse dependencies to call "a2enmod" and friends
             # directly
             if (m/\b(a2(?:en|dis)(?:conf|site|mod))\b/) {
-                tag 'apache2-reverse-dependency-calls-wrapper-script', $path,
-                  $1;
+                $self->tag('apache2-reverse-dependency-calls-wrapper-script',
+                    $path,$1);
             }
 
             # Do not allow reverse dependencies to call "invoke-rc.d apache2
             if (m/invoke-rc\.d\s+apache2/) {
-                tag 'apache2-reverse-dependency-calls-invoke-rc.d', $path;
+                $self->tag('apache2-reverse-dependency-calls-invoke-rc.d',
+                    $path);
             }
 
             # XXX: Check whether apache2-maintscript-helper is used
@@ -220,7 +233,7 @@ sub check_maintainer_scripts {
 }
 
 sub inspect_conf_file {
-    my ($conftype, $file) = @_;
+    my ($self, $conftype, $file) = @_;
 
     # Don't follow unsafe links
     return if not $file->is_open_ok;
@@ -234,17 +247,19 @@ sub inspect_conf_file {
         for my $directive ('Order', 'Satisfy', 'Allow', 'Deny',
             qr{</?Limit.*?>}xsm, qr{</?LimitExcept.*?>}xsm) {
             if (m{\A \s* ($directive) (?:\s+|\Z)}xsm and not $skip) {
-                tag 'apache2-deprecated-auth-config', $file, "(line $.)", $1;
+                $self->tag('apache2-deprecated-auth-config',
+                    $file, "(line $.)", $1);
             }
         }
 
         if (m/^#\s*(Depends|Conflicts):\s+(.*?)\s*$/) {
             my ($field, $value) = ($1, $2);
-            tag 'apache2-unsupported-dependency', $file, $field
+            $self->tag('apache2-unsupported-dependency', $file, $field)
               if $field eq 'Conflicts' and $conftype ne 'mods';
             my @dependencies = split(/[\n\s]+/, $value);
             foreach my $dep (@dependencies) {
-                tag 'apache2-unparsable-dependency', $file, "(line $.)", $dep
+                $self->tag('apache2-unparsable-dependency',
+                    $file, "(line $.)", $dep)
                   if $dep =~ m/[^\w\.]/
                   or $dep =~ /^mod\_/
                   or $dep =~ m/\.(?:conf|load)/;
