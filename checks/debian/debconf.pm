@@ -28,7 +28,6 @@ use Moo;
 
 use Lintian::Deb822Parser qw(read_dpkg_control :constants);
 use Lintian::Relation;
-use Lintian::Tags qw(tag);
 use Lintian::Util qw($PKGNAME_REGEX);
 
 with('Lintian::Check');
@@ -102,15 +101,17 @@ sub always {
                     chomp $@;
                     $@ =~ s/^internal error: //;
                     $@ =~ s/^syntax error in //;
-                    tag 'syntax-error-in-debconf-template', "$file: $@";
+                    $self->tag('syntax-error-in-debconf-template',"$file: $@");
                     next;
                 }
 
                 foreach my $template (@templates) {
                     if (    exists $template->{template}
                         and exists $template->{_choices}) {
-                        tag 'template-uses-unsplit-choices',
-                          "$binary - $template->{template}";
+                        $self->tag(
+                            'template-uses-unsplit-choices',
+                            "$binary - $template->{template}"
+                        );
                     }
                 }
             }
@@ -171,16 +172,16 @@ sub always {
 
     # Check that both debconf control area files are present.
     if ($seenconfig and not $seentemplates and not $usesdbconfig) {
-        tag 'no-debconf-templates';
+        $self->tag('no-debconf-templates');
     } elsif ($seentemplates
         and not $seenconfig
         and not $usespreinst
         and $type ne 'udeb') {
-        tag 'no-debconf-config';
+        $self->tag('no-debconf-config');
     }
 
     if ($seenconfig and not $ctrl_config->is_executable) {
-        tag 'debconf-config-not-executable';
+        $self->tag('debconf-config-not-executable');
     }
 
     # Lots of template checks.
@@ -200,7 +201,7 @@ sub always {
             chomp $@;
             $@ =~ s/^internal error: //;
             $@ =~ s/^syntax error in //;
-            tag 'syntax-error-in-debconf-template', "templates: $@";
+            $self->tag('syntax-error-in-debconf-template', "templates: $@");
             @templates = ();
         }
     }
@@ -209,20 +210,20 @@ sub always {
         my $isselect = '';
 
         if (not exists $template->{template}) {
-            tag 'no-template-name';
+            $self->tag('no-template-name');
             $template->{template} = 'no-template-name';
         } else {
             push @templates_seen, $template->{template};
             if ($template->{template}!~m|[A-Za-z0-9.+-](?:/[A-Za-z0-9.+-])|) {
-                tag 'malformed-template-name', "$template->{template}";
+                $self->tag('malformed-template-name', "$template->{template}");
             }
         }
 
         if (not exists $template->{type}) {
-            tag 'no-template-type', "$template->{template}";
+            $self->tag('no-template-type', "$template->{template}");
         } elsif (not $valid_types{$template->{type}}) {
             # cdebconf has a special "entropy" type
-            tag 'unknown-template-type', "$template->{type}"
+            $self->tag('unknown-template-type', "$template->{type}")
               unless ($template->{type} eq 'entropy'
                 and $alldependencies->implies('cdebconf'));
         } elsif ($template->{type} eq 'select') {
@@ -230,8 +231,10 @@ sub always {
         } elsif ($template->{type} eq 'multiselect') {
             $isselect = 1;
         } elsif ($template->{type} eq 'boolean') {
-            tag 'boolean-template-has-bogus-default',
-              "$template->{template} $template->{default}"
+            $self->tag(
+                'boolean-template-has-bogus-default',
+                "$template->{template} $template->{default}"
+              )
               if defined $template->{default}
               and $template->{default} ne 'true'
               and $template->{default} ne 'false';
@@ -242,32 +245,37 @@ sub always {
             for my $key (keys %$template) {
                 if ($key =~ /^choices-/) {
                     if (!$template->{$key} || ($template->{$key} =~ /^\s*$/o)){
-                        tag 'empty-translated-choices',
-                          "$template->{template} $key";
+                        $self->tag(
+                            'empty-translated-choices',
+                            "$template->{template} $key"
+                        );
                     }
                     if (count_choices($template->{$key}) != $nrchoices) {
-                        tag 'mismatch-translated-choices',
-                          "$template->{template} $key";
+                        $self->tag(
+                            'mismatch-translated-choices',
+                            "$template->{template} $key"
+                        );
                     }
                 }
             }
             if ($template->{choices} =~ /^\s*(yes\s*,\s*no|no\s*,\s*yes)\s*$/i)
             {
-                tag 'select-with-boolean-choices', "$template->{template}";
+                $self->tag('select-with-boolean-choices',
+                    "$template->{template}");
             }
         }
 
         if ($isselect and not exists $template->{choices}) {
-            tag 'select-without-choices', "$template->{template}";
+            $self->tag('select-without-choices', "$template->{template}");
         }
 
         if (not exists $template->{description}) {
-            tag 'no-template-description', "$template->{template}";
+            $self->tag('no-template-description', "$template->{template}");
         } elsif ($template->{description}=~m/^\s*(.*?)\s*?\n\s*\1\s*$/) {
             # Check for duplication. Should all this be folded into the
             # description checks?
-            tag 'duplicate-long-description-in-template',
-              "$template->{template}";
+            $self->tag('duplicate-long-description-in-template',
+                "$template->{template}");
         }
 
         my %languages;
@@ -278,8 +286,10 @@ sub always {
                 $languages{$lang}{$mainfield}=1;
             }
             unless ($template_fields{$mainfield}){ # Ignore language codes here
-                tag 'unknown-field-in-templates',
-                  "$template->{template} $field";
+                $self->tag(
+                    'unknown-field-in-templates',
+                    "$template->{template} $field"
+                );
             }
         }
 
@@ -311,46 +321,50 @@ sub always {
                     && (   $short !~ m/:$/
                         || $short =~ m/^(what|who|when|where|which|how)/i)
                 ) {
-                    tag 'malformed-prompt-in-templates', $template->{template};
+                    $self->tag('malformed-prompt-in-templates',
+                        $template->{template});
                 }
             }
             if ($isselect) {
                 if ($short =~ /^(Please|Cho+se|Enter|Select|Specify|Give)/) {
-                    tag 'using-imperative-form-in-templates',
-                      $template->{template};
+                    $self->tag('using-imperative-form-in-templates',
+                        $template->{template});
                 }
             }
             if ($ttype eq 'boolean') {
                 if ($short !~ /\?/) {
-                    tag 'malformed-question-in-templates',
-                      $template->{template};
+                    $self->tag('malformed-question-in-templates',
+                        $template->{template});
                 }
             }
             if (defined($extended) && $extended =~ /[^\?]\?(\s+|$)/) {
-                tag 'using-question-in-extended-description-in-templates',
-                  $template->{template};
+                $self->tag(
+                    'using-question-in-extended-description-in-templates',
+                    $template->{template});
             }
             if ($ttype eq 'note') {
                 if ($short =~ /[.?;:]$/) {
-                    tag 'malformed-title-in-templates', $template->{template};
+                    $self->tag('malformed-title-in-templates',
+                        $template->{template});
                 }
             }
             if (length($short) > 75) {
-                tag 'too-long-short-description-in-templates',
-                  $template->{template}
+                $self->tag('too-long-short-description-in-templates',
+                    $template->{template})
                   unless $type eq 'udeb' && $ttype eq 'text';
             }
             if (defined $template->{description}) {
                 if ($template->{description}
                     =~ /(\A|\s)(I|[Mm]y|[Ww]e|[Oo]ur|[Oo]urs|mine|myself|ourself|me|us)(\Z|\s)/
                 ) {
-                    tag 'using-first-person-in-templates',
-                      $template->{template};
+                    $self->tag('using-first-person-in-templates',
+                        $template->{template});
                 }
                 if (    $template->{description} =~ /[ \'\"]yes[ \'\",;.]/i
                     and $ttype eq 'boolean') {
-                    tag 'making-assumptions-about-interfaces-in-templates',
-                      $template->{template};
+                    $self->tag(
+                        'making-assumptions-about-interfaces-in-templates',
+                        $template->{template});
                 }
             }
 
@@ -373,8 +387,8 @@ sub always {
                     $lines++;
                 }
                 if ($lines > 20) {
-                    tag 'too-long-extended-description-in-templates',
-                      $template->{template};
+                    $self->tag('too-long-extended-description-in-templates',
+                        $template->{template});
                 }
             }
         }
@@ -416,7 +430,7 @@ sub always {
                    Debian::DebConf::Client::ConfModule),x
                 ) {
                     my $cmod = $1;
-                    tag 'loads-obsolete-confmodule', "$file:$. $cmod";
+                    $self->tag('loads-obsolete-confmodule', "$file:$. $cmod");
                     $usesconfmodule = 1;
                     $obsoleteconfmodule = 1;
                 }
@@ -428,7 +442,7 @@ sub always {
                     and m/db_input/
                     and not $config_calls_db_input) {
                     # TODO: Perl?
-                    tag 'postinst-uses-db-input'
+                    $self->tag('postinst-uses-db-input')
                       unless $type eq 'udeb';
                     $db_input=1;
                 }
@@ -442,10 +456,10 @@ sub always {
                     my ($priority, $template) = ($1, $2);
                     $templates_used{get_template_name($info, $template)} = 1;
                     if ($priority !~ /^\$\S+$/) {
-                        tag 'unknown-debconf-priority', "$file:$. $1"
+                        $self->tag('unknown-debconf-priority', "$file:$. $1")
                           unless ($valid_priorities{$priority});
-                        tag 'possible-debconf-note-abuse',
-                          "$file:$. $template"
+                        $self->tag('possible-debconf-note-abuse',
+                            "$file:$. $template")
                           if (
                             $potential_db_abuse{$template}
                             and (
@@ -471,7 +485,7 @@ sub always {
                 }
                 if (not $isdefault and m/db_fset.*isdefault/) {
                     # TODO: Perl?
-                    tag 'isdefault-flag-is-deprecated', $file;
+                    $self->tag('isdefault-flag-is-deprecated', $file);
                     $isdefault = 1;
                 }
                 if (not $db_purge and m/db_purge/) {    # TODO: Perl?
@@ -481,7 +495,7 @@ sub always {
 
             if ($file eq 'postinst' or $file eq 'config') {
                 unless ($usesconfmodule) {
-                    tag "$file-does-not-load-confmodule"
+                    $self->tag("$file-does-not-load-confmodule")
                       unless ($type eq 'udeb'
                         || ($file eq 'postinst' && !$seenconfig));
                 }
@@ -492,19 +506,19 @@ sub always {
                 # package is a debconf provider (in which case db_purge
                 # won't be available)
                 unless ($db_purge or $selfrelation->implies($ANY_DEBCONF)) {
-                    tag 'postrm-does-not-purge-debconf';
+                    $self->tag('postrm-does-not-purge-debconf');
                 }
             }
 
             close($fd);
         } elsif ($file eq 'postinst') {
-            tag 'postinst-does-not-load-confmodule'
+            $self->tag('postinst-does-not-load-confmodule')
               unless ($type eq 'udeb' || !$seenconfig);
         } elsif ($file eq 'postrm') {
             # Make an exception for debconf providing packages as some of
             # them (incl. "debconf" itself) cleans up in prerm and have no
             # postrm script at all.
-            tag 'postrm-does-not-purge-debconf'
+            $self->tag('postrm-does-not-purge-debconf')
               unless $type eq 'udeb'
               or $selfrelation->implies($ANY_DEBCONF);
         }
@@ -527,7 +541,7 @@ sub always {
         }
 
         unless ($used or $pkg eq 'debconf' or $type eq 'udeb') {
-            tag 'unused-debconf-template', $template
+            $self->tag('unused-debconf-template', $template)
               unless $template =~ m,^shared/packages-(wordlist|ispell)$,
               or $template =~ m,/languages$,;
         }
@@ -538,12 +552,12 @@ sub always {
 
     if ($usespreinst) {
         unless ($info->relation('pre-depends')->implies($ANY_DEBCONF)) {
-            tag 'missing-debconf-dependency-for-preinst'
+            $self->tag('missing-debconf-dependency-for-preinst')
               unless $type eq 'udeb';
         }
     } else {
         unless ($alldependencies->implies($ANY_DEBCONF) or $usesdbconfig) {
-            tag 'missing-debconf-dependency';
+            $self->tag('missing-debconf-dependency');
         }
     }
 
@@ -563,7 +577,7 @@ sub always {
             s/#.*//;    # Not perfect for Perl, but should be OK
             if (   m,/usr/share/debconf/confmodule,
                 or m/(?:Debconf|Debian::DebConf)::Client::ConfModule/) {
-                tag 'debconf-is-not-a-registry', $filename;
+                $self->tag('debconf-is-not-a-registry', $filename);
                 last;
             }
         }
