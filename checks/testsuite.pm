@@ -31,7 +31,6 @@ use Lintian::Deb822Parser qw(
   read_dpkg_control
 );
 use Lintian::Relation;
-use Lintian::Tags qw(tag);
 use Lintian::Util qw(
   file_is_encoded_in_non_utf8
   strip
@@ -67,16 +66,17 @@ sub source {
       = $info->index_resolved_path('debian/tests/control.autodep8');
     my $needs_control = 0;
 
-    tag 'testsuite-autopkgtest-missing' if ($testsuites !~ /autopkgtest/);
+    $self->tag('testsuite-autopkgtest-missing')
+      if ($testsuites !~ /autopkgtest/);
 
     for my $testsuite (split(m/\s*,\s*/o, $testsuites)) {
-        tag 'unknown-testsuite', $testsuite
+        $self->tag('unknown-testsuite', $testsuite)
           unless $KNOWN_TESTSUITES->known($testsuite);
 
         $needs_control = 1 if $testsuite eq 'autopkgtest';
     }
     if ($needs_control xor defined($control)) {
-        tag 'inconsistent-testsuite-field';
+        $self->tag('inconsistent-testsuite-field');
     }
 
     if (defined($control)) {
@@ -87,28 +87,30 @@ sub source {
             my $not_utf8_line = file_is_encoded_in_non_utf8($path);
 
             if ($not_utf8_line) {
-                tag 'debian-tests-control-uses-national-encoding',
-                  "at line $not_utf8_line";
+                $self->tag('debian-tests-control-uses-national-encoding',
+                    "at line $not_utf8_line");
             }
-            check_control_contents($info, $path);
+            $self->check_control_contents($path);
         }
 
-        tag 'unnecessary-testsuite-autopkgtest-field'
+        $self->tag('unnecessary-testsuite-autopkgtest-field')
           if ($info->source_field('testsuite') // '') eq 'autopkgtest';
 
-        tag 'debian-tests-control-and-control-autodep8', $control,
-          $control_autodep8
+        $self->tag('debian-tests-control-and-control-autodep8',
+            $control,$control_autodep8)
           if defined($control_autodep8);
     }
 
-    tag 'debian-tests-control-autodep8-is-obsolete', $control_autodep8
+    $self->tag('debian-tests-control-autodep8-is-obsolete', $control_autodep8)
       if defined($control_autodep8);
 
     return;
 }
 
 sub check_control_contents {
-    my ($info, $path) = @_;
+    my ($self, $path) = @_;
+
+    my $info = $self->info;
 
     my (@paragraphs, @lines);
     if (
@@ -121,22 +123,24 @@ sub check_control_contents {
         $@ =~ s/^syntax error at //;
         die "syntax error in debian tests control $@"
           if length $@;
-        tag 'empty-debian-tests-control';
+        $self->tag('empty-debian-tests-control');
     } else {
         while (my ($index, $paragraph) = each(@paragraphs)) {
-            check_control_paragraph($info, $paragraph,
+            $self->check_control_paragraph($paragraph,
                 $lines[$index]{'START-OF-PARAGRAPH'});
         }
         if (scalar(@paragraphs) == 1) {
             my $cmd = $paragraphs[0]->{'test-command'} // '';
-            tag 'no-op-testsuite' if $cmd =~ m,^\s*(/bin/)?true,;
+            $self->tag('no-op-testsuite') if $cmd =~ m,^\s*(/bin/)?true,;
         }
     }
     return;
 }
 
 sub check_control_paragraph {
-    my ($info, $paragraph, $line) = @_;
+    my ($self, $paragraph, $line) = @_;
+
+    my $info = $self->info;
 
     for my $fieldname (@MANDATORY_FIELDS) {
         if (not exists $paragraph->{$fieldname}) {
@@ -152,14 +156,18 @@ sub check_control_paragraph {
     }
     if (   exists $paragraph->{'tests'}
         && exists $paragraph->{'test-command'}) {
-        tag 'exclusive-runtime-tests-field', 'tests, test-command',
-          'paragraph starting at line', $line;
+        $self->tag(
+            'exclusive-runtime-tests-field',
+            'tests, test-command',
+            'paragraph starting at line', $line
+        );
     }
 
     for my $fieldname (sort(keys(%{$paragraph}))) {
-        tag 'unknown-runtime-tests-field', $fieldname,
-          'paragraph starting at line', $line
-          unless $KNOWN_FIELDS->known($fieldname);
+        $self->tag(
+            'unknown-runtime-tests-field', $fieldname,
+            'paragraph starting at line', $line
+        ) unless $KNOWN_FIELDS->known($fieldname);
     }
 
     if (exists $paragraph->{'features'}) {
@@ -167,8 +175,10 @@ sub check_control_paragraph {
         for my $feature (split(/\s*,\s*|\s+/ms, $features)) {
             if (not exists $KNOWN_FEATURES{$feature}
                 and $feature !~ m/^test-name=\S+/) {
-                tag 'unknown-runtime-tests-feature', $feature,
-                  'paragraph starting at line', $line;
+                $self->tag(
+                    'unknown-runtime-tests-feature', $feature,
+                    'paragraph starting at line', $line
+                );
             }
         }
     }
@@ -176,11 +186,12 @@ sub check_control_paragraph {
     if (exists $paragraph->{'restrictions'}) {
         my $restrictions = strip($paragraph->{'restrictions'});
         for my $restriction (split(/\s*,\s*|\s+/ms, $restrictions)) {
-            tag 'unknown-runtime-tests-restriction', $restriction,
-              'paragraph starting at line', $line
-              unless $KNOWN_RESTRICTIONS->known($restriction);
-            tag 'obsolete-runtime-tests-restriction', $restriction,
-              'paragraph starting at line', $line
+            $self->tag(
+                'unknown-runtime-tests-restriction', $restriction,
+                'paragraph starting at line', $line
+            ) unless $KNOWN_RESTRICTIONS->known($restriction);
+            $self->tag('obsolete-runtime-tests-restriction',
+                $restriction,'paragraph starting at line', $line)
               if $KNOWN_OBSOLETE_RESTRICTIONS->known($restriction);
         }
     }
@@ -192,7 +203,7 @@ sub check_control_paragraph {
             $directory = $paragraph->{'tests-directory'};
         }
         for my $testname (split(/\s*,\s*|\s+/ms, $tests)) {
-            check_test_file($info, $directory, $testname, $line);
+            $self->check_test_file($directory, $testname, $line);
         }
     }
     if (exists($paragraph->{'depends'})) {
@@ -201,29 +212,38 @@ sub check_control_paragraph {
             # @ is not a valid predicate in general, but autopkgtests
             # allows it.
             next if exists($KNOWN_SPECIAL_DEPENDS{$unparsable});
-            tag 'testsuite-dependency-has-unparsable-elements',
-              "\"$unparsable\"",
-              "(in paragraph starting at line $line)";
+            $self->tag(
+                'testsuite-dependency-has-unparsable-elements',
+                "\"$unparsable\"",
+                "(in paragraph starting at line $line)"
+            );
         }
     }
     return;
 }
 
 sub check_test_file {
-    my ($info, $directory, $name, $line) = @_;
+    my ($self, $directory, $name, $line) = @_;
+
+    my $info = $self->info;
+
     # Special case with "Tests-Directory: ." (see #849880)
     my $path = $directory eq '.' ? $name : "$directory/$name";
     my $index = $info->index_resolved_path($path);
 
     if ($name !~ m{^ [ [:alnum:] \+ \- \. / ]++ $}xsm) {
-        tag 'illegal-runtime-test-name', $name,
-          'paragraph starting at line', $line;
+        $self->tag(
+            'illegal-runtime-test-name', $name,
+            'paragraph starting at line', $line
+        );
     }
     if (not defined($index)) {
-        tag 'missing-runtime-test-file', $path,
-          'paragraph starting at line', $line;
+        $self->tag(
+            'missing-runtime-test-file', $path,
+            'paragraph starting at line', $line
+        );
     } elsif (not $index->is_open_ok) {
-        tag 'runtime-test-file-is-not-a-regular-file', $path;
+        $self->tag('runtime-test-file-is-not-a-regular-file', $path);
     }
     # Test files are allowed not to be executable.
     return;
