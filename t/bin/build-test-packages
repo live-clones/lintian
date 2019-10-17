@@ -202,7 +202,7 @@ foreach my $descfile (@descfiles) {
 }
 
 # prepare output directories
-say 'Preparing '. scalar @testpaths. ' work directories.'. NEWLINE
+say 'Preparing '. scalar @testpaths. ' work directories...'. NEWLINE
   if @testpaths;
 
 my @prepqueue = map { abs2rel($_) } @testpaths;
