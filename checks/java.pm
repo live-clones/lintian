@@ -28,7 +28,6 @@ use List::MoreUtils qw(any none);
 use Moo;
 
 use Lintian::Data ();
-use Lintian::Tags qw(tag);
 use Lintian::Util qw(normalize_pkg_path $PKGNAME_REGEX);
 
 with('Lintian::Check');
@@ -52,7 +51,7 @@ sub always {
     if ($type eq 'source') {
         for my $jar_file (sort keys %{$java_info}) {
             my $files = $java_info->{$jar_file}{files};
-            tag 'source-contains-prebuilt-java-object', $jar_file
+            $self->tag('source-contains-prebuilt-java-object', $jar_file)
               if any { m/$CLASS_REGEX$/i } keys %{$files}
               and $info->name ne 'lintian';
         }
@@ -79,7 +78,8 @@ sub always {
         my $bsname = '';
 
         if (exists $java_info->{$jar_file}{error}) {
-            tag 'zip-parse-error', "$jar_file:",$java_info->{$jar_file}{error};
+            $self->tag('zip-parse-error', "$jar_file:",
+                $java_info->{$jar_file}{error});
             next;
         }
 
@@ -91,14 +91,15 @@ sub always {
         $has_jars = 1;
         if($jar_file =~ m#^usr/share/java/[^/]+\.jar$#o) {
             $has_public_jars = 1;
-            tag 'bad-jar-name', $jar_file
+            $self->tag('bad-jar-name', $jar_file)
               unless basename($jar_file) =~ /^$PKGNAME_REGEX\.jar$/;
         }
         # check for common code files like .class or .clj (Clojure files)
         foreach my $class (grep { m/$CLASS_REGEX$/i } sort keys %{$files}){
             my $mver = $files->{$class};
             (my $src = $class) =~ s/\.[^.]+$/\.java/;
-            tag 'jar-contains-source', $jar_file, $src if %{$files}{$src};
+            $self->tag('jar-contains-source', $jar_file, $src)
+              if %{$files}{$src};
             $classes = 1;
             next if $class =~ m/\.cljc?$/;
             # .class but no major version?
@@ -108,8 +109,8 @@ sub always {
                 > $MAX_BYTECODE->value('max-bytecode-existing-version')) {
                 # First public major version was 45 (Java1), latest
                 # version is 55 (Java11).
-                tag 'unknown-java-class-version', $jar_file,
-                  "($class -> $mver)";
+                $self->tag('unknown-java-class-version', $jar_file,
+                    "($class -> $mver)");
                 # Skip the rest of this Jar.
                 last;
             }
@@ -130,7 +131,7 @@ sub always {
 
         if($operm & 0111) {
             # Executable ?
-            tag 'executable-jar-without-main-class', $jar_file
+            $self->tag('executable-jar-without-main-class', $jar_file)
               unless $manifest && $manifest->{'Main-Class'};
 
             # Here, we need to check that the package depends on
@@ -138,7 +139,7 @@ sub always {
             $missing_jarwrapper = 1
               unless $info->relation('strong')->implies('jarwrapper');
         } elsif ($jar_file !~ m#^usr/share/#) {
-            tag 'jar-not-in-usr-share', $jar_file;
+            $self->tag('jar-not-in-usr-share', $jar_file);
         }
 
         $cp = $manifest->{'Class-Path'}//'' if $manifest;
@@ -159,11 +160,11 @@ sub always {
                     )
                     || $cp
                 ) {
-                    tag 'codeless-jar', $jar_file;
+                    $self->tag('codeless-jar', $jar_file);
                 }
             }
         } elsif ($classes) {
-            tag 'missing-manifest', $jar_file;
+            $self->tag('missing-manifest', $jar_file);
         }
 
         if ($cp) {
@@ -199,9 +200,9 @@ sub always {
                 }
             }
 
-            tag 'classpath-contains-relative-path',
-              "$jar_file: " . join(', ', @relative)
-              if @relative;
+            $self->tag(
+                'classpath-contains-relative-path',
+                "$jar_file: " . join(', ', @relative)) if @relative;
         }
 
         if (   $has_public_jars
@@ -209,12 +210,12 @@ sub always {
             && $jar_file !~ m#^usr/share/maven-repo/.*\.jar#) {
             # Trigger a warning when a maven plugin lib is installed in
             # /usr/share/java/
-            tag 'maven-plugin-in-usr-share-java', $jar_file;
+            $self->tag('maven-plugin-in-usr-share-java', $jar_file);
         }
 
     }
 
-    tag 'missing-dep-on-jarwrapper' if $missing_jarwrapper;
+    $self->tag('missing-dep-on-jarwrapper') if $missing_jarwrapper;
 
     if ($jmajlow ne '-') {
         # Byte code numbers:
@@ -239,8 +240,10 @@ sub always {
         if ($bad) {
             # Map the Class version to a Java version.
             my $v = $jmajlow - 44;
-            tag 'incompatible-java-bytecode-format',
-              "Java${v} version (Class format: $jmajlow)";
+            $self->tag(
+                'incompatible-java-bytecode-format',
+                "Java${v} version (Class format: $jmajlow)"
+            );
         }
     }
 
@@ -252,7 +255,7 @@ sub always {
         $has_jars = 1
           if $java_dir
           and any { $_->name =~ m@^[^/]+\.jar$@o } $java_dir->children;
-        tag 'javalib-but-no-public-jars' if not $has_jars;
+        $self->tag('javalib-but-no-public-jars') if not $has_jars;
     }
 
     return;
