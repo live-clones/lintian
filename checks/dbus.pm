@@ -27,8 +27,6 @@ use autodie;
 
 use Moo;
 
-use Lintian::Tags qw(tag);
-
 with('Lintian::Check');
 
 sub binary {
@@ -53,13 +51,13 @@ sub binary {
 
     foreach my $file (@files) {
         next unless $file->is_open_ok;
-        _check_policy($file);
+        $self->check_policy($file);
     }
 
     if (my $dir = $info->index_resolved_path('usr/share/dbus-1/services')) {
         foreach my $file ($dir->children) {
             next unless $file->is_open_ok;
-            _check_service($file, session => 1);
+            $self->check_service($file, session => 1);
         }
     }
 
@@ -67,7 +65,7 @@ sub binary {
         = $info->index_resolved_path('usr/share/dbus-1/system-services')) {
         foreach my $file ($dir->children) {
             next unless $file->is_open_ok;
-            _check_service($file);
+            $self->check_service($file);
         }
     }
 
@@ -76,8 +74,8 @@ sub binary {
 
 my $PROPERTIES = 'org.freedesktop.DBus.Properties';
 
-sub _check_policy {
-    my ($file) = @_;
+sub check_policy {
+    my ($self, $file) = @_;
 
     my $xml = $file->file_contents;
 
@@ -114,7 +112,8 @@ sub _check_policy {
                 # e.g. BlueZ), and cannot normally be a security flaw
                 # because root can do anything anyway
             } else {
-                tag('dbus-policy-without-send-destination', $file, $rule);
+                $self->tag(
+                    ('dbus-policy-without-send-destination', $file, $rule));
 
                 if (   $rule =~ m{send_interface=}
                     && $rule !~ m{send_interface=['"]\Q${PROPERTIES}\E['"]}) {
@@ -129,21 +128,22 @@ sub _check_policy {
                 } elsif ($rule =~ m{<allow}) {
                     # Looks like CVE-2014-8148 or similar. This is really bad;
                     # emit an additional tag.
-                    tag('dbus-policy-excessively-broad', $file, $rule);
+                    $self->tag(
+                        ('dbus-policy-excessively-broad', $file, $rule));
                 }
             }
         }
 
         if ($rule =~ m{at_console=['"]true}) {
-            tag('dbus-policy-at-console', $file, $rule);
+            $self->tag(('dbus-policy-at-console', $file, $rule));
         }
     }
 
     return;
 }
 
-sub _check_service {
-    my ($file, %kwargs) = @_;
+sub check_service {
+    my ($self, $file, %kwargs) = @_;
 
     my $basename = $file->basename;
     my $text = $file->file_contents;
@@ -152,10 +152,14 @@ sub _check_service {
         my $name = $1;
         if ($basename ne "${name}.service") {
             if ($kwargs{session}) {
-                tag('dbus-session-service-wrong-name',
-                    "${name}.service", $file);
+                $self->tag((
+                    'dbus-session-service-wrong-name',
+                    "${name}.service", $file
+                ));
             } else {
-                tag('dbus-system-service-wrong-name',"${name}.service", $file);
+                $self->tag(
+                    ('dbus-system-service-wrong-name',"${name}.service", $file)
+                );
             }
         }
     }
