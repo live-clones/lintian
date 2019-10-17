@@ -26,7 +26,6 @@ use autodie;
 
 use Moo;
 
-use Lintian::Tags qw(tag);
 use Lintian::Data ();
 
 with('Lintian::Check');
@@ -52,20 +51,20 @@ sub source {
     return unless $debian_dir;
     foreach my $file (@interesting_files) {
         my $dfile = $debian_dir->child($file);
-        search_for_obsolete_sites($dfile, "debian/$file");
+        $self->search_for_obsolete_sites($dfile, "debian/$file");
     }
 
     my $upstream_dir = $info->index_resolved_path('debian/upstream');
     return unless $upstream_dir;
 
     my $dfile = $upstream_dir->child('metadata');
-    search_for_obsolete_sites($dfile, 'debian/upstream/metadata');
+    $self->search_for_obsolete_sites($dfile, 'debian/upstream/metadata');
 
     return;
 }
 
 sub search_for_obsolete_sites {
-    my ($dfile, $file) = @_;
+    my ($self, $dfile, $file) = @_;
 
     if (defined($dfile) and $dfile->is_regular_file and $dfile->is_open_ok) {
 
@@ -77,11 +76,11 @@ sub search_for_obsolete_sites {
         foreach my $site ($OBSOLETE_SITES->all) {
             if ($dcontents
                 =~ m((\w+://(?:[\w.]*\.)?\Q$site\E[/:][^\s\"<>\$]*))i) {
-                tag 'obsolete-url-in-packaging', $file, $1;
+                $self->tag('obsolete-url-in-packaging', $file, $1);
             }
         }
 
-        tag 'obsolete-url-in-packaging', $file, $1
+        $self->tag('obsolete-url-in-packaging', $file, $1)
           if $dcontents =~m{(ftp://(?:ftp|security)\.debian\.org)}i;
     }
 
