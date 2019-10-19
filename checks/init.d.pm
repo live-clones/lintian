@@ -543,7 +543,9 @@ sub check_missing_script {
             my $service = $1;
             $self->tag(
                 'package-supports-alternative-init-but-no-init.d-script',$file)
-              unless $info->index_resolved_path("etc/init.d/${service}");
+              unless $info->index_resolved_path("etc/init.d/${service}")
+              or $info->index_resolved_path(
+                "lib/systemd/system/${service}.timer");
         }
 
         if ($file =~ m,etc/sv/([^/]+)/$,) {
