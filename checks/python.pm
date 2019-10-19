@@ -44,7 +44,7 @@ my %DJANGO_PACKAGES = (
 
 my %REQUIRED_DEPENDS = (
     'python2' =>
-      'python-minimal:any | python:any | python2-minimal:any | python2:all',
+      'python-minimal:any | python:any | python2-minimal:any | python2:any',
     'python3' => 'python3-minimal:any | python3:any',
 );
 
