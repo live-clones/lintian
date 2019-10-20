@@ -24,6 +24,13 @@ use v5.16;
 
 use Moo::Role;
 
+use constant EMPTY => q{};
+
+with('Lintian::Tag::Issuer');
+
+has processable => (is => 'rw', default => sub { {} });
+has group => (is => 'rw', default => sub { {} });
+
 =head1 NAME
 
 Lintian::Check -- Common facilities for Lintian checks
@@ -49,8 +56,10 @@ Run the check.
 =cut
 
 sub run {
-
     my ($self) = @_;
+
+    $self->setup
+      if $self->can('setup');
 
     my $type = $self->type;
 
@@ -59,6 +68,18 @@ sub run {
 
     $self->always
       if $self->can('always');
+
+    if ($self->can('files')) {
+
+        my $info = $self->info;
+
+        $self->files($_)for $info->sorted_index;
+    }
+
+    $self->breakdown
+      if $self->can('breakdown');
+
+    $self->issue_tags;
 
     return;
 }
@@ -70,7 +91,6 @@ Get package name from processable.
 =cut
 
 sub package {
-
     my ($self) = @_;
 
     return $self->processable->pkg_name;
@@ -83,7 +103,6 @@ Get type of processable.
 =cut
 
 sub type {
-
     my ($self) = @_;
 
     return $self->processable->pkg_type;
@@ -96,14 +115,40 @@ Get the info data structure from processable.
 =cut
 
 sub info {
-
     my ($self) = @_;
 
     return $self->processable->info;
 }
 
-has processable => (is => 'rw', default => sub { {} });
-has group => (is => 'rw', default => sub { {} });
+=item source
+
+Get the source package from processable.
+
+=cut
+
+sub source {
+    my ($self) = @_;
+
+    # note: $proc->pkg_src never includes the source version
+    return $self->processable->pkg_src;
+}
+
+=item build_path
+
+Get the source package from processable.
+
+=cut
+
+sub build_path {
+    my ($self) = @_;
+
+    my $buildinfo = $self->group->get_buildinfo_processable;
+
+    return EMPTY
+      unless $buildinfo;
+
+    return $buildinfo->info->field('build-path', EMPTY);
+}
 
 =back
 
