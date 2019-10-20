@@ -1,3 +1,25 @@
+lintian (2.28.0) unstable; urgency=medium
+
+  [ Felix Lechner ]
+  * Correctly calculate an appropriate prior changelog version for source
+    NMUs. (Closes: #942411)
+  * Split check/files.pm into smaller components; invoke parts through the
+    old scripts.
+
+  [ Simon Quigley ]
+  * Add "focal" as a known Ubuntu distribution.
+
+  [ Adam Schmalhofer ]
+  * Clarify the long description for the
+    package-contains-python-tests-in-global-namespace tag to specifically
+    mention "test_foo" directory-based moduiles and not "test_foo.py"
+    files.
+
+  [ Paul Wise ]
+  * Add several spelling corrections.
+
+ -- Chris Lamb <lamby@debian.org>  Thu, 17 Oct 2019 18:00:48 +0000
+
 lintian (2.27.0~bpo9+1) stretch-backports; urgency=medium
 
   * Rebuild for stretch-backports.

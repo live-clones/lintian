@@ -12,10 +12,10 @@ E: lintian-output-fullewi binary (1.0+dsfg-1.1) [all]: possible-gpl-code-linked-
 I: lintian-output-fullewi binary (1.0+dsfg-1.1) [all]: description-synopsis-might-not-be-phrased-properly "Test Lintian's 'fullewi' output format."
 I: lintian-output-fullewi binary (1.0+dsfg-1.1) [all]: description-possibly-contains-homepage http://www.example.com/.
 E: lintian-output-fullewi binary (1.0+dsfg-1.1) [all]: new-essential-package
+I: lintian-output-fullewi binary (1.0+dsfg-1.1) [all]: package-contains-empty-directory usr/local/share/lintian/
 E: lintian-output-fullewi binary (1.0+dsfg-1.1) [all]: dir-in-usr-local usr/local/share/
 E: lintian-output-fullewi binary (1.0+dsfg-1.1) [all]: dir-in-usr-local usr/local/share/lintian/
 E: lintian-output-fullewi binary (1.0+dsfg-1.1) [all]: dir-or-file-in-var-lock var/lock/lintian/
-I: lintian-output-fullewi binary (1.0+dsfg-1.1) [all]: package-contains-empty-directory usr/local/share/lintian/
 W: lintian-output-fullewi binary (1.0+dsfg-1.1) [all]: binary-without-manpage usr/bin/script
 I: lintian-output-fullewi binary (1.0+dsfg-1.1) [all]: desktop-entry-limited-to-environments usr/share/applications/script.desktop
 P: lintian-output-fullewi binary (1.0+dsfg-1.1) [all]: example-unusual-interpreter usr/share/doc/lintian-output-fullewi/examples/example #!/usr/bin/foo

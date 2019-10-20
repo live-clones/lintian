@@ -42,6 +42,8 @@ use constant {
     OPERM_MASK     => 0x00_00_ff_ff,
 };
 
+use constant SLASH => q{/};
+
 use overload (
     '""' => \&_as_string,
     'qr' => \&_as_regex_ref,
@@ -118,6 +120,22 @@ sub new {
 Returns the name of the file (relative to the package root).
 
 NB: It will never have any leading "./" (or "/") in it.
+
+=item identity
+
+Returns the owner and group of the path, separated by a slash.
+
+NB: If only numerical owner information is available in the package,
+this may return a numerical owner (except uid 0 is always mapped to
+"root")
+
+=cut
+
+sub identity {
+    my ($self) = @_;
+
+    return $self->owner . SLASH . $self->group;
+}
 
 =item owner
 

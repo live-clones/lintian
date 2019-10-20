@@ -1,5 +1,8 @@
 Testname: missing-explicit-entry-fp
 Skeleton: upload-non-native
 Version: 1.2-0+deb9u1
+Prev-Version: 0.9-1
 Description: Test for missing (stable update, etc.) entries, false positive, exception on 0.
+Test-Against:
+ changelog-file-missing-explicit-entry
 Check: debian/changelog

@@ -19,10 +19,10 @@
 <tag severity="minor" certainty="possible" name="description-synopsis-might-not-be-phrased-properly">&quot;Test Lintian XML output format.&quot;</tag>
 <tag severity="wishlist" certainty="wild-guess" name="description-possibly-contains-homepage">http://www.example.com/.</tag>
 <tag severity="important" certainty="possible" name="new-essential-package" />
+<tag severity="wishlist" certainty="possible" name="package-contains-empty-directory">usr/local/share/lintian/</tag>
 <tag severity="serious" certainty="certain" name="dir-in-usr-local">usr/local/share/</tag>
 <tag severity="serious" certainty="certain" name="dir-in-usr-local">usr/local/share/lintian/</tag>
 <tag severity="serious" certainty="possible" name="dir-or-file-in-var-lock">var/lock/lintian/</tag>
-<tag severity="wishlist" certainty="possible" name="package-contains-empty-directory">usr/local/share/lintian/</tag>
 <tag severity="normal" certainty="possible" name="binary-without-manpage">usr/bin/script</tag>
 <tag severity="normal" certainty="wild-guess" name="desktop-entry-limited-to-environments">usr/share/applications/script.desktop</tag>
 <tag severity="pedantic" certainty="possible" name="example-unusual-interpreter">usr/share/doc/lintian-output-xml/examples/example #!/usr/bin/foo</tag>

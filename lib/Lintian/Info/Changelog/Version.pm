@@ -150,7 +150,7 @@ sub set {
     my ($debian_without_backport, $backport_release, $backport_revision)
       = ($self->maintainer_revision =~ $backport_pattern);
 
-    $debian_without_backport //= $maintainer_revision . $source_nmu_string;
+    $debian_without_backport //= $maintainer_revision;
     $backport_release //= EMPTY;
     $backport_revision //= EMPTY;
 

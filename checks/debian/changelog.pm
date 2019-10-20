@@ -189,14 +189,23 @@ sub source {
               or $latest_entry->Distribution =~ /-security$/i
               or $latest_entry->Source ne $previous_entry->Source;
 
+            # start with a reasonable default
             my $expected_previous = $previous_version->literal;
+
             $expected_previous = $latest_version->without_backport
               if $latest_version->backport_release
               && $latest_version->backport_revision
               && $latest_version->debian_without_backport ne '0';
 
-            $expected_previous = $latest_version->without_source_nmu
-              if $latest_version->source_nmu;
+            # find an appropriate prior version for a source NMU
+            if (length $latest_version->source_nmu) {
+
+                # can only do first nmu for now
+                $expected_previous = $latest_version->without_source_nmu
+                  if $latest_version->source_nmu eq '1'
+                  &&$latest_version->maintainer_revision =~ qr/\d+/
+                  && $latest_version->maintainer_revision ne '0';
+            }
 
             tag 'changelog-file-missing-explicit-entry',
                 $previous_version->literal
