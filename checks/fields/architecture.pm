@@ -32,7 +32,52 @@ use Moo;
 
 use Lintian::Architecture qw(:all);
 
+use constant EMPTY => q{};
+
 with('Lintian::Check');
+
+has architecture => (is => 'rwp', default => EMPTY);
+has have_r_package_not_arch_all => (is => 'rwp', default => 0);
+
+sub setup {
+    my ($self) = @_;
+
+    my $unsplit = $self->info->unfolded_field('architecture');
+
+    return
+      unless defined $unsplit;
+
+    my @list = split(m/ /o, $unsplit);
+
+    return
+      unless @list;
+
+    $self->_set_architecture($list[0]);
+
+    return;
+}
+
+sub files {
+    my ($self, $file) = @_;
+
+    $self->_set_have_r_package_not_arch_all(1)
+      if $file->name =~ m,^usr/lib/R/.*/DESCRIPTION,
+      && !$file->is_dir
+      && $self->package =~ /^r-(?:cran|bioc|other)-/
+      && $file->file_contents =~ m/NeedsCompilation: no/m
+      && $self->architecture ne 'all';
+
+    return;
+}
+
+sub breakdown {
+    my ($self) = @_;
+
+    $self->tag('r-package-not-arch-all')
+      if $self->have_r_package_not_arch_all;
+
+    return;
+}
 
 sub binary {
     my ($self) = @_;
@@ -67,23 +112,6 @@ sub binary {
 
     $self->tag('documentation-package-not-architecture-independent')
       if $pkg =~ /-docs?$/;
-
-    if ($pkg =~ /^r-(?:cran|bioc|other)-/) {
-
-        for my $file ($info->sorted_index) {
-
-            next
-              if $file->is_dir;
-
-            next
-              unless $file =~ m,^usr/lib/R/.*/DESCRIPTION,;
-
-            $self->tag('r-package-not-arch-all')
-              if $file->file_contents =~ m/NeedsCompilation: no/m;
-
-            last;
-        }
-    }
 
     return;
 }
