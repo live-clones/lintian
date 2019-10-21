@@ -120,25 +120,6 @@ sub info {
     return $self->processable->info;
 }
 
-=item source
-
-Get the source package from processable.
-
-=cut
-
-sub source {
-    my ($self) = @_;
-
-    # note: $proc->pkg_src never includes the source version
-    return $self->processable->pkg_src;
-}
-
-=item build_path
-
-Get the source package from processable.
-
-=cut
-
 sub build_path {
     my ($self) = @_;
 
