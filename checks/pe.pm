@@ -24,61 +24,67 @@ use strict;
 use warnings;
 use autodie;
 
-use List::MoreUtils qw(any);
 use Moo;
 
-use Lintian::Util qw(internal_error);
+use List::MoreUtils qw(any);
 
 with('Lintian::Check');
 
 use constant SPACE  =>  q{ };
 
-sub binary {
-    my ($self) = @_;
+sub files {
+    my ($self, $file) = @_;
 
-    my $info = $self->info;
+    return
+      unless $file->is_file;
 
-    foreach my $file ($info->sorted_index) {
-        next unless $file->is_file;
-        next unless $file->file_info =~ /^PE32\+? executable/;
-        next unless $file->is_open_ok;
+    return
+      unless $file->file_info =~ /^PE32\+? executable/;
 
-        my $buf;
-        my $fd = $file->open;
+    return
+      unless $file->is_open_ok;
 
-        eval {
-            # Offset to main header
-            seek($fd, 0x3c, 0) or internal_error("seek: $!");
-            read($fd, $buf, 4) or internal_error("read: $!");
-            my $pe_offset = unpack('V', $buf);
+    my $buf;
+    my $fd = $file->open;
 
-            # 0x18 is index to "Optional Header"; 0x46 to DLL Characteristics
-            seek($fd, $pe_offset + 0x18 + 0x46, 0)
-              or internal_error("seek: $!");
+    eval {
+        # offset to main header
+        seek($fd, 0x3c, 0)
+          or die "seek: $!";
 
-            # Read and parse DLLCharacteristics value
-            read($fd, $buf, 2) or internal_error("read: $!");
-        };
+        read($fd, $buf, 4)
+          or die "read: $!";
 
-        my $characteristics = unpack('v', $buf);
-        my %features = (
-            'ASLR' => $characteristics & 0x40,
-            'DEP/NX' => $characteristics & 0x100,
-            'SafeSEH' => ~$characteristics & 0x400,  # note negation
-        );
+        my $pe_offset = unpack('V', $buf);
 
-        # Don't check for the x86-specific "SafeSEH" feature for code
-        # that is JIT-compiled by the Mono runtime. (#926334)
-        delete $features{'SafeSEH'}
-          if $file->file_info =~ / Mono\/.Net assembly, /;
+        # 0x18 is index to "Optional Header"; 0x46 to DLL Characteristics
+        seek($fd, $pe_offset + 0x18 + 0x46, 0)
+          or die "seek: $!";
 
-        my @missing = grep { !$features{$_} } sort keys %features;
-        $self->tag('portable-executable-missing-security-features',
-            $file,join(SPACE, @missing))
-          if scalar @missing;
+        # get DLLCharacteristics value
+        read($fd, $buf, 2)
+          or die "read: $!";
+    };
 
-        close($fd);
-    }
+    my $characteristics = unpack('v', $buf);
+    my %features = (
+        'ASLR' => $characteristics & 0x40,
+        'DEP/NX' => $characteristics & 0x100,
+        'SafeSEH' => ~$characteristics & 0x400,  # note negation
+    );
+
+    # Don't check for the x86-specific "SafeSEH" feature for code
+    # that is JIT-compiled by the Mono runtime. (#926334)
+    delete $features{'SafeSEH'}
+      if $file->file_info =~ / Mono\/.Net assembly, /;
+
+    my @missing = grep { !$features{$_} } sort keys %features;
+
+    $self->tag('portable-executable-missing-security-features',
+        $file,join(SPACE, @missing))
+      if scalar @missing;
+
+    close($fd);
 
     return;
 }
