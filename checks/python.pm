@@ -160,6 +160,22 @@ sub source {
     return;
 }
 
+sub files {
+    my ($self, $file) = @_;
+
+    return
+      unless $file->name =~ m,(usr/)?bin/[^/]+,;
+
+    if ($self->info->is_script($file->name)) {
+        my $interpreter = $self->info->scripts->{$file->name}->{interpreter};
+
+        $self->tag('script-uses-unversioned-python-in-shebang', $file)
+          if $interpreter =~ m,^(/usr/bin/)?python$,;
+    }
+
+    return;
+}
+
 sub binary {
     my ($self) = @_;
 
@@ -248,17 +264,6 @@ sub binary {
                 $info->relation($field)->visit($visit, VISIT_PRED_NAME);
             }
         }
-    }
-
-    for my $file ($info->sorted_index) {
-        next unless $file->is_file;
-        next unless $file->is_open_ok;
-        next unless $file =~ m,(usr/)?bin/[^/]+,;
-        my $fd = $file->open();
-        my $line = <$fd>;
-        $self->tag('script-uses-unversioned-python-in-shebang', $file)
-          if $line && $line =~ m,^#!\s*(/usr/bin/env\s*)?(/usr/bin/)?python$,;
-        close($fd);
     }
 
     return;
