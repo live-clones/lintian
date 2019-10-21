@@ -28,26 +28,24 @@ use Moo;
 
 with('Lintian::Check');
 
-sub binary {
-    my ($self) = @_;
+sub files {
+    my ($self, $file) = @_;
 
-    my $info = $self->info;
+    return
+      unless $file->name =~ m,^(?:s?bin|lib(?:|[ox]?32|64))/,;
 
-    foreach my $file1 ($info->sorted_index) {
+    my $usrfile = $self->info->index("usr/$file");
 
-        next
-          unless $file1 =~ m,^(?:s?bin|lib(?:|[ox]?32|64))/,;
+    return
+      unless $usrfile;
 
-        my $file2 = $info->index("usr/$file1") or next;
+    return
+      if $file->is_dir and $usrfile->is_dir;
 
-        next
-          if $file1->is_dir and $file2->is_dir;
-
-        if ($file1 =~ m,^lib.+\.(?:so[\.0-9]*|a)$,) {
-            $self->tag('library-in-root-and-usr', $file1, $file2);
-        } else {
-            $self->tag('file-in-root-and-usr', $file1, $file2);
-        }
+    if ($file =~ m,^lib.+\.(?:so[\.0-9]*|a)$,) {
+        $self->tag('library-in-root-and-usr', $file, $usrfile);
+    } else {
+        $self->tag('file-in-root-and-usr', $file, $usrfile);
     }
 
     return;
