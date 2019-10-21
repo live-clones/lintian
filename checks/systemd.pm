@@ -37,6 +37,8 @@ use Lintian::Util qw(internal_error lstrip rstrip);
 
 with('Lintian::Check');
 
+has timers => (is => 'rwp', default => sub{ [] });
+
 # Init scripts that do not need a service file
 my $INIT_WHITELIST = Lintian::Data->new('systemd/init-whitelist');
 
@@ -45,6 +47,25 @@ my $HARDENING_FLAGS = Lintian::Data->new('systemd/hardening-flags');
 
 # Usual WantedBy= targets
 my $WANTEDBY_WHITELIST = Lintian::Data->new('systemd/wantedby-whitelist');
+
+sub setup {
+    my ($self) = @_;
+
+    my @timers = grep { m,^lib/systemd/system/[^\/]+\.timer$, }
+      $self->info->sorted_index;
+    $self->_set_timers(\@timers);
+
+    return;
+}
+
+sub files {
+    my ($self, $file) = @_;
+
+    $self->tag('missing-systemd-timer-for-cron-script', $file)
+      if $file->dirname =~ m,^etc/cron\.[^\/]+/$, && !scalar @{$self->timers};
+
+    return;
+}
 
 sub binary {
     my ($self) = @_;
@@ -74,7 +95,6 @@ sub binary {
         $self->check_init_script($script, $services);
     }
 
-    $self->check_timers();
     $self->check_maintainer_scripts();
 
     return;
@@ -413,22 +433,6 @@ sub extract_service_file_values {
     }
 
     return @values;
-}
-
-sub check_timers {
-    my ($self) = @_;
-
-    my $info = $self->info;
-
-    return
-      if any { m,^lib/systemd/system/[^\/]+\.timer$, } $info->sorted_index;
-
-    for my $file ($info->sorted_index) {
-        $self->tag('missing-systemd-timer-for-cron-script', $file)
-          if $file->dirname =~ m,^etc/cron\.[^\/]+/$,;
-    }
-
-    return;
 }
 
 sub check_maintainer_scripts {
