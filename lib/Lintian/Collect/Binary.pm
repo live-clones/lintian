@@ -31,7 +31,9 @@ use Path::Tiny;
 use Lintian::Deb822Parser qw(parse_dpkg_control);
 use Lintian::Info::Changelog;
 use Lintian::Relation;
-use Lintian::Util qw(internal_error open_gz get_file_checksum strip);
+use Lintian::Util qw(internal_error open_gz get_file_checksum strip rstrip);
+
+use constant EMPTY => q{};
 
 =head1 NAME
 
@@ -694,6 +696,48 @@ Needs-Info requirements for using I<is_pkg_class>: L<Same as field|Lintian::Coll
     }
 }
 
+=item conffiles
+
+Returns a list of absolute filenames found for conffiles.
+
+Needs-Info requirements for using I<conffiles>: L<Same as control_index_resolved_path|/control_index_resolved_path(PATH)>
+
+=cut
+
+sub conffiles {
+    my ($self) = @_;
+
+    return @{$self->{'conffiles'}}
+      if exists $self->{'conffiles'};
+
+    $self->{'conffiles'} = [];
+
+    # read conffiles if it exists and is a file
+    my $cf = $self->control_index_resolved_path('conffiles');
+    return
+      unless $cf && $cf->is_file && $cf->is_open_ok;
+
+    my $fd = $cf->open;
+    while (my $absolute = <$fd>) {
+
+        chomp $absolute;
+
+        # dpkg strips whitespace (using isspace) from the right hand
+        # side of the file name.
+        rstrip($absolute);
+
+        next
+          if $absolute eq EMPTY;
+
+        # list contains absolute paths, unlike lookup
+        push(@{$self->{conffiles}}, $absolute);
+    }
+
+    close($fd);
+
+    return @{$self->{conffiles}};
+}
+
 =item is_conffile (FILE)
 
 Returns a truth value if FILE is listed in the conffiles control file.
@@ -711,26 +755,25 @@ Needs-Info requirements for using I<is_conffile>: L<Same as control_index_resolv
 
 sub is_conffile {
     my ($self, $file) = @_;
-    if (exists $self->{'conffiles'}) {
-        return 1 if exists $self->{'conffiles'}{$file};
-        return;
+
+    unless (exists $self->{'conffiles_lookup'}) {
+
+        $self->{'conffiles_lookup'} = {};
+
+        for my $absolute ($self->conffiles) {
+
+            # strip the leading slash
+            my $relative = $absolute;
+            $relative =~ s,^/++,,;
+
+            # look up happens with a relative path
+            $self->{conffiles_lookup}{$relative} = 1;
+        }
     }
-    my $cf = $self->control_index_resolved_path('conffiles');
-    my %conffiles;
-    $self->{'conffiles'} = \%conffiles;
-    return if not $cf or not $cf->is_open_ok;
-    my $fd = $cf->open;
-    while (my $line = <$fd>) {
-        chomp $line;
-        next if $line =~ m/^\s*$/;
-        # Look up happens with a relative path (e.g. etc/file.conf).
-        # Side-effect is that we silently "fix" relative conffiles,
-        # but checks/conffiles catches those for us.
-        $line =~ s,^/++,,o;
-        $conffiles{$line} = 1;
-    }
-    close($fd);
-    return 1 if exists $conffiles{$file};
+
+    return 1
+      if exists $self->{conffiles_lookup}{$file};
+
     return;
 }
 
