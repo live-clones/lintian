@@ -474,8 +474,9 @@ sub test_load_checks {
                 "Warning: check $ppkg uses old entry point ::run\n");
         }
 
+        # setup and breakdown should only be used together with files
         my $has_entrypoint = any { $ppkg->can($_) }
-        ('source', 'binary', 'udeb', 'changes', 'always');
+        ('source', 'binary', 'udeb', 'changes', 'always', 'files');
 
         if (!$builder->ok($has_entrypoint, "Check $cname has entry point")) {
             $builder->diag("Expected package name is $ppkg\n");
