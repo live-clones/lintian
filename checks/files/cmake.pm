@@ -33,7 +33,7 @@ sub files {
 
     # /usr/share/cmake-*
     if ($file->name =~ m,^usr/share/cmake-\d+\.\d+/.+,){
-        unless ($self->source eq 'cmake') {
+        unless ($self->processable->pkg_src eq 'cmake') {
             $self->tag('package-contains-cmake-private-file', $file->name);
         }
     }

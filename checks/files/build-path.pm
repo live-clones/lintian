@@ -36,7 +36,8 @@ sub files {
     my ($self, $file) = @_;
 
     # build directory
-    unless ($self->source eq 'sbuild' || $self->source eq 'pbuilder') {
+    unless ($self->processable->pkg_src eq 'sbuild'
+        || $self->processable->pkg_src eq 'pbuilder') {
 
         foreach my $buildpath ($BUILD_PATH_REGEX->all) {
             my $regex = $BUILD_PATH_REGEX->value($buildpath);

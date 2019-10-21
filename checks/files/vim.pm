@@ -33,7 +33,7 @@ sub files {
 
     if ($file->name =~ m,^usr/share/vim/vim(?:current|\d{2})/([^/]++),){
         my $is_vimhelp = $1 eq 'doc' && $self->package =~ m,^vimhelp-\w++$,;
-        my $is_vim = $self->source =~ m,vim,;
+        my $is_vim = $self->processable->pkg_src =~ m,vim,;
 
         $self->tag('vim-addon-within-vim-runtime-path', $file->name)
           unless $is_vim or $is_vimhelp;

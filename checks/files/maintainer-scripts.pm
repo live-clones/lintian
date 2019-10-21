@@ -36,7 +36,7 @@ sub get_checks_for_file {
     my %checks;
 
     return %checks
-      if $self->source eq 'lintian';
+      if $self->processable->pkg_src eq 'lintian';
 
     $checks{'missing-depends-on-sensible-utils'}
       = '(?:select-editor|sensible-(?:browser|editor|pager))\b'
@@ -49,7 +49,8 @@ sub get_checks_for_file {
       and $file->basename !~ m/^changelog(?:\..*)?$/i
       and $file->basename !~ m/\.(?:html|txt)$/i
       and $self->info->field('section', '') ne 'debian-installer'
-      and none { $_ eq $self->source } qw(base-files dpkg lintian);
+      and none { $_ eq $self->processable->pkg_src }
+    qw(base-files dpkg lintian);
 
     $checks{'file-references-package-build-path'}= quotemeta($self->build_path)
       if $self->build_path =~ m,^/.+,g;
