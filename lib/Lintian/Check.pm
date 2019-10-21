@@ -58,23 +58,23 @@ Run the check.
 sub run {
     my ($self) = @_;
 
+    my $type = $self->type;
+
     $self->setup
       if $self->can('setup');
 
-    my $type = $self->type;
+    if ($type eq 'binary' || $type eq 'udeb') {
+
+        if ($self->can('files')) {
+            $self->files($_)for $self->info->sorted_index;
+        }
+    }
 
     $self->$type
       if $self->can($type);
 
     $self->always
       if $self->can('always');
-
-    if ($self->can('files')) {
-
-        my $info = $self->info;
-
-        $self->files($_)for $info->sorted_index;
-    }
 
     $self->breakdown
       if $self->can('breakdown');
