@@ -31,7 +31,6 @@ use autodie;
 use Moo;
 
 use Lintian::Util qw($PKGNAME_REGEX);
-use Lintian::Tags qw(tag);
 
 with('Lintian::Check');
 
@@ -55,7 +54,7 @@ sub source {
     die "Source field does not match package name $source != $stem"
       if $source ne $stem;
 
-    tag 'source-field-malformed', $source
+    $self->tag('source-field-malformed', $source)
       if $source !~ /^[a-z0-9][-+\.a-z0-9]+\z/;
 
     return;
@@ -76,7 +75,7 @@ sub always {
     return
       if $type eq 'source';
 
-    tag 'source-field-malformed', $source
+    $self->tag('source-field-malformed', $source)
       if $source !~ /^ $PKGNAME_REGEX
                          \s*
                          # Optional Version e.g. (1.0)

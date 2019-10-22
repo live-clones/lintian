@@ -32,7 +32,6 @@ use List::MoreUtils qw(true);
 use Moo;
 
 use Lintian::Maintainer qw(check_maintainer);
-use Lintian::Tags qw(tag);
 
 with('Lintian::Check');
 
@@ -52,7 +51,7 @@ sub always {
 
     # check for empty field see  #783628
     if($uploaders =~ m/,\s*,/) {
-        tag 'uploader-name-missing','you have used a double comma';
+        $self->tag('uploader-name-missing','you have used a double comma');
         $uploaders =~ s/,\s*,/,/g;
     }
 
@@ -64,14 +63,14 @@ sub always {
         check_maintainer($member, 'uploader');
         if (   ((true { $_ eq $member } @list) > 1)
             and($duplicate_uploaders{$member}++ == 0)) {
-            tag 'duplicate-uploader', $member;
+            $self->tag('duplicate-uploader', $member);
         }
     }
 
     my $maintainer = $info->field('maintainer');
     if (defined $maintainer) {
 
-        tag 'maintainer-also-in-uploaders'
+        $self->tag('maintainer-also-in-uploaders')
           if $info->field('uploaders') =~ m/\Q$maintainer/;
     }
 

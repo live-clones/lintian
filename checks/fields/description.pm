@@ -34,7 +34,6 @@ use Moo;
 use Lintian::Data;
 use Lintian::Spelling
   qw(check_spelling check_spelling_picky spelling_tag_emitter);
-use Lintian::Tags qw(tag);
 use Lintian::Util qw(strip);
 
 with('Lintian::Check');
@@ -69,7 +68,7 @@ sub always {
     # description?
     my $full_description = $info->field('description');
     unless (defined $full_description) {
-        tag 'package-has-no-description';
+        $self->tag('package-has-no-description');
         return;
     }
 
@@ -87,31 +86,31 @@ sub always {
     $description = '' unless defined($description);
 
     if ($synopsis =~ m/^\s*$/) {
-        tag 'description-synopsis-is-empty';
+        $self->tag('description-synopsis-is-empty');
     } else {
         if ($synopsis =~ m/^\Q$pkg\E\b/i) {
-            tag 'description-starts-with-package-name';
+            $self->tag('description-starts-with-package-name');
         }
         if ($synopsis =~ m/^(an?|the)\s/i) {
-            tag 'description-synopsis-starts-with-article';
+            $self->tag('description-synopsis-starts-with-article');
         }
         if ($synopsis =~ m/(.*\.)(?:\s*$|\s+\S+)/i) {
-            tag 'description-synopsis-might-not-be-phrased-properly',
-              "\"$synopsis\""
+            $self->tag('description-synopsis-might-not-be-phrased-properly',
+                "\"$synopsis\"")
               unless $1 =~ m/\s+etc\.$/
               or $1 =~ m/\s+e\.?g\.$/
               or $1 =~ m/(?<!\.)\.\.\.$/;
         }
         if ($synopsis =~ m/\t/) {
-            tag 'description-contains-tabs' unless $tabs++;
+            $self->tag('description-contains-tabs') unless $tabs++;
         }
         if ($synopsis =~ m/^missing\s*$/i) {
-            tag 'description-is-debmake-template' unless $template++;
+            $self->tag('description-is-debmake-template') unless $template++;
         } elsif ($synopsis =~ m/<insert up to 60 chars description>/) {
-            tag 'description-is-dh_make-template' unless $template++;
+            $self->tag('description-is-dh_make-template') unless $template++;
         }
         if ($synopsis !~ m/\s/) {
-            tag 'description-too-short', $synopsis;
+            $self->tag('description-too-short', $synopsis);
         }
         my $pkg_fmt = lc $pkg;
         my $synopsis_fmt = lc $synopsis;
@@ -120,7 +119,7 @@ sub always {
         $synopsis_fmt =~ s,[-_/\\], ,g;
         $synopsis_fmt =~ s,\s+, ,g;
         if ($pkg_fmt eq $synopsis_fmt) {
-            tag 'description-is-pkg-name', $synopsis;
+            $self->tag('description-is-pkg-name', $synopsis);
         }
 
         # We have to decode into UTF-8 to get the right length for the
@@ -128,7 +127,7 @@ sub always {
         # this will mangle it, but it doesn't matter for the length
         # check.
         if (length(decode('utf-8', $synopsis)) >= 80) {
-            tag 'description-too-long';
+            $self->tag('description-too-long');
         }
     }
 
@@ -140,12 +139,12 @@ sub always {
             my $firstline = lc $_;
             my $lsyn = lc $synopsis;
             if ($firstline =~ /^\Q$lsyn\E$/) {
-                tag 'description-synopsis-is-duplicated';
+                $self->tag('description-synopsis-is-duplicated');
             } else {
                 $firstline =~ s/[^a-zA-Z0-9]+//g;
                 $lsyn =~ s/[^a-zA-Z0-9]+//g;
                 if ($firstline eq $lsyn) {
-                    tag 'description-synopsis-is-duplicated';
+                    $self->tag('description-synopsis-is-duplicated');
                 }
             }
         }
@@ -153,29 +152,30 @@ sub always {
         $lines++;
 
         if (m/^ \.\s*\S/o or m/^ \s+\.\s*$/o) {
-            tag 'description-contains-invalid-control-statement';
+            $self->tag('description-contains-invalid-control-statement');
         } elsif (m/^ [\-\*]/o) {
        # Print it only the second time.  Just one is not enough to be sure that
        # it's a list, and after the second there's no need to repeat it.
-            tag 'possible-unindented-list-in-extended-description'
+            $self->tag('possible-unindented-list-in-extended-description')
               if $unindented_list++ == 2;
         }
 
         if (m/\t/o) {
-            tag 'description-contains-tabs' unless $tabs++;
+            $self->tag('description-contains-tabs') unless $tabs++;
         }
 
         if (m,^\s*Homepage: <?https?://,i) {
-            tag 'description-contains-homepage';
+            $self->tag('description-contains-homepage');
             $flagged_homepage = 1;
         }
 
         if ($PLANNED_FEATURES->matches_any($_, 'i')) {
-            tag 'description-mentions-planned-features', "(line $lines)";
+            $self->tag('description-mentions-planned-features',
+                "(line $lines)");
         }
 
         if (index(lc($_), DH_MAKE_PERL_TEMPLATE) != -1) {
-            tag 'description-contains-dh-make-perl-template';
+            $self->tag('description-contains-dh-make-perl-template');
         }
 
         my $first_person = $_;
@@ -183,23 +183,26 @@ sub always {
             =~ m/(?:^|\s)(I|[Mm]y|[Oo]urs?|mine|myself|me|us|[Ww]e)(?:$|\s)/) {
             my $word = $1;
             $first_person =~ s/\Q$word//;
-            tag 'using-first-person-in-description', "line $lines: $word";
+            $self->tag('using-first-person-in-description',
+                "line $lines: $word");
         }
 
         if ($lines == 1) {
             # checks for the first line of the extended description:
             if (m/^ \s/o) {
-                tag 'description-starts-with-leading-spaces';
+                $self->tag('description-starts-with-leading-spaces');
             }
             if (m/^\s*missing\s*$/oi) {
-                tag 'description-is-debmake-template' unless $template++;
+                $self->tag('description-is-debmake-template')
+                  unless $template++;
             } elsif (m/<insert long description, indented with spaces>/) {
-                tag 'description-is-dh_make-template' unless $template++;
+                $self->tag('description-is-dh_make-template')
+                  unless $template++;
             }
         }
 
         if (length(decode('utf-8', $_)) > 80) {
-            tag 'extended-description-line-too-long';
+            $self->tag('extended-description-line-too-long');
         }
     }
 
@@ -208,14 +211,14 @@ sub always {
             # Ignore debug packages with empty "extended" description
             # "debug symbols for pkg foo" is generally descriptive
             # enough.
-            tag 'extended-description-is-empty'
+            $self->tag('extended-description-is-empty')
               if not $info->is_pkg_class('debug');
         } elsif ($lines <= 2 and not $synopsis =~ /(?:dummy|transition)/i) {
-            tag 'extended-description-is-probably-too-short'
+            $self->tag('extended-description-is-probably-too-short')
               unless $info->is_pkg_class('any-meta')
               or $pkg =~ m{-dbg\Z}xsm;
         } elsif ($description =~ /^ \.\s*\n|\n \.\s*\n \.\s*\n|\n \.\s*\n?$/) {
-            tag 'extended-description-contains-empty-paragraph';
+            $self->tag('extended-description-contains-empty-paragraph');
         }
     }
 
@@ -229,9 +232,9 @@ sub always {
                          |official\s+site|project\s+home/xi
             and $description =~ m,\b(https?://[a-z0-9][^>\s]+),i
         ) {
-            tag 'description-possibly-contains-homepage', $1;
+            $self->tag('description-possibly-contains-homepage', $1);
         } elsif ($description =~ m,\b(https?://[a-z0-9][^>\s]+)>?\.?\s*\z,i) {
-            tag 'description-possibly-contains-homepage', $1;
+            $self->tag('description-possibly-contains-homepage', $1);
         }
     }
 
@@ -273,7 +276,7 @@ sub always {
             }
         }
 
-        tag 'perl-module-name-not-mentioned-in-description', $mod
+        $self->tag('perl-module-name-not-mentioned-in-description', $mod)
           if (index(lc($description), $mod_lc) < 0 and $pm_found);
     }
 

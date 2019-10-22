@@ -30,8 +30,6 @@ use autodie;
 
 use Moo;
 
-use Lintian::Tags qw(tag);
-
 with('Lintian::Check');
 
 our @supported_source_formats = (qr/1\.0/, qr/3\.0\s*\((quilt|native)\)/);
@@ -53,8 +51,7 @@ sub source {
           if $format =~ /^\s*$f\s*\z/;
     }
 
-    tag 'unsupported-source-format', $format
-      unless $supported;
+    $self->tag('unsupported-source-format', $format) unless $supported;
 
     return;
 }

@@ -30,8 +30,6 @@ use autodie;
 
 use Moo;
 
-use Lintian::Tags qw(tag);
-
 with('Lintian::Check');
 
 sub always {
@@ -44,9 +42,9 @@ sub always {
     return
       unless defined $dmupload;
 
-    tag 'dm-upload-allowed-is-obsolete';
+    $self->tag('dm-upload-allowed-is-obsolete');
 
-    tag 'malformed-dm-upload-allowed', $dmupload
+    $self->tag('malformed-dm-upload-allowed', $dmupload)
       unless $dmupload eq 'yes';
 
     return;

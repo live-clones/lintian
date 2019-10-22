@@ -30,8 +30,6 @@ use autodie;
 
 use Moo;
 
-use Lintian::Tags qw(tag);
-
 with('Lintian::Check');
 
 sub always {
@@ -46,8 +44,7 @@ sub always {
     return
       unless defined $menu_item;
 
-    tag 'bad-menu-item', $menu_item
-      unless $menu_item =~ /^\d+$/;
+    $self->tag('bad-menu-item', $menu_item) unless $menu_item =~ /^\d+$/;
 
     return;
 }

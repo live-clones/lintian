@@ -26,8 +26,6 @@ use autodie;
 
 use Moo;
 
-use Lintian::Tags qw(tag);
-
 with('Lintian::Check');
 
 sub source {
@@ -43,7 +41,7 @@ sub source {
     my $deprecated_configure = $info->index('configure.in');
 
     if (defined $deprecated_configure) {
-        tag 'deprecated-configure-filename';
+        $self->tag('deprecated-configure-filename');
     }
 
     return;

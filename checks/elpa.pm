@@ -25,8 +25,6 @@ use warnings;
 
 use Moo;
 
-use Lintian::Tags qw(tag);
-
 with('Lintian::Check');
 
 sub binary {
@@ -34,7 +32,7 @@ sub binary {
 
     my $info = $self->info;
 
-    tag 'emacsen-common-without-dh-elpa'
+    $self->tag('emacsen-common-without-dh-elpa')
       if ($info->index('usr/lib/emacsen-common/packages/install/')
         && (not $info->index('usr/share/emacs/site-lisp/elpa-src/')));
 

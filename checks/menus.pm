@@ -31,7 +31,6 @@ use Moo;
 use Lintian::Data;
 use Lintian::Spelling
   qw(check_spelling check_spelling_picky $known_shells_regex spelling_tag_emitter);
-use Lintian::Tags qw(tag);
 use Lintian::Util qw(file_is_encoded_in_non_utf8 strip);
 
 with('Lintian::Check');
@@ -76,10 +75,10 @@ sub binary {
     my $anymenu_file;
     my $documentation;
 
-    check_script($pkg, scalar $info->control_index('preinst'), \%preinst);
-    check_script($pkg, scalar $info->control_index('postinst'), \%postinst);
-    check_script($pkg, scalar $info->control_index('prerm'), \%prerm);
-    check_script($pkg, scalar $info->control_index('postrm'), \%postrm);
+    $self->check_script(scalar $info->control_index('preinst'), \%preinst);
+    $self->check_script(scalar $info->control_index('postinst'), \%postinst);
+    $self->check_script(scalar $info->control_index('prerm'), \%prerm);
+    $self->check_script(scalar $info->control_index('postrm'), \%postrm);
 
     # Populate all_{files,links} from current package and its dependencies
     foreach my $bin ($group->get_binary_processables) {
@@ -100,21 +99,21 @@ sub binary {
              # menu file?
             if ($file =~ m,^usr/(lib|share)/menu/\S,o) { # correct permissions?
                 if ($operm & 0111) {
-                    tag 'executable-menu-file',
-                      sprintf('%s %04o', $file, $operm);
+                    $self->tag('executable-menu-file',
+                        sprintf('%s %04o', $file, $operm));
                 }
 
                 next if $file =~ m,^usr/(?:lib|share)/menu/README$,;
 
                 if ($file =~ m,^usr/lib/,o) {
-                    tag 'menu-file-in-usr-lib', $file;
+                    $self->tag('menu-file-in-usr-lib', $file);
                 }
 
                 $menu_file = $file;
 
                 if (    $file =~ m,usr/(?:lib|share)/menu/menu$,o
                     and $pkg ne 'menu') {
-                    tag 'bad-menu-file-name', $file;
+                    $self->tag('bad-menu-file-name', $file);
                 }
             }
             #menu-methods file?
@@ -137,7 +136,7 @@ sub binary {
                     }
                     close($fd);
                 }
-                tag 'menu-method-should-include-menu-h', $file
+                $self->tag('menu-method-should-include-menu-h', $file)
                   unless $menumethod_includes_menu_h
                   or $pkg eq 'menu';
             }
@@ -159,31 +158,31 @@ sub binary {
 
     # prerm scripts should not call update-menus
     if ($prerm{'calls-updatemenus'}) {
-        tag 'prerm-calls-updatemenus';
+        $self->tag('prerm-calls-updatemenus');
     }
 
     # postrm scripts should not call install-docs
     if ($postrm{'calls-installdocs'} or $postrm{'calls-installdocs-r'}) {
-        tag 'postrm-calls-installdocs';
+        $self->tag('postrm-calls-installdocs');
     }
 
     # preinst scripts should not call either update-menus nor installdocs
     if ($preinst{'calls-updatemenus'}) {
-        tag 'preinst-calls-updatemenus';
+        $self->tag('preinst-calls-updatemenus');
     }
 
     if ($preinst{'calls-installdocs'}) {
-        tag 'preinst-calls-installdocs';
+        $self->tag('preinst-calls-installdocs');
     }
 
     $anymenu_file = $menu_file || $menumethod_file;
 
     # No one needs to call install-docs any more; triggers now handles that.
     if ($postinst{'calls-installdocs'} or $postinst{'calls-installdocs-r'}) {
-        tag 'postinst-has-useless-call-to-install-docs';
+        $self->tag('postinst-has-useless-call-to-install-docs');
     }
     if ($prerm{'calls-installdocs'} or $prerm{'calls-installdocs-r'}) {
-        tag 'prerm-has-useless-call-to-install-docs';
+        $self->tag('prerm-has-useless-call-to-install-docs');
     }
 
     # check consistency
@@ -192,11 +191,11 @@ sub binary {
         for my $dbpath ($db_dir->children) {
             next if not $dbpath->is_open_ok;
             if ($dbpath->resolve_path->is_executable) {
-                tag 'executable-in-usr-share-docbase', $dbpath,
-                  sprintf('%04o', $dbpath->operm);
+                $self->tag('executable-in-usr-share-docbase',
+                    $dbpath,sprintf('%04o', $dbpath->operm));
                 next;
             }
-            check_doc_base_file($dbpath, $pkg, \%all_files,\%all_links,$group);
+            $self->check_doc_base_file($dbpath, \%all_files,\%all_links);
         }
     } elsif ($documentation) {
         if ($pkg =~ /^libghc6?-.*-doc$/) {
@@ -204,7 +203,7 @@ sub binary {
             # libraries register their documentation via the ghc compiler's
             # documentation registration mechanism.  See bug #586877.
         } else {
-            tag 'possible-documentation-but-no-doc-base-registration';
+            $self->tag('possible-documentation-but-no-doc-base-registration');
         }
     }
 
@@ -220,18 +219,18 @@ sub binary {
         # but debhelper apparently currently still adds that to the
         # maintainer script, so don't warn if it's done.
         if (not $postinst{'calls-updatemenus'}) {
-            tag 'postinst-does-not-call-updatemenus', $anymenu_file;
+            $self->tag('postinst-does-not-call-updatemenus', $anymenu_file);
         }
         if ($menumethod_file and not $postrm{'calls-updatemenus'}) {
-            tag 'postrm-does-not-call-updatemenus', $menumethod_file
+            $self->tag('postrm-does-not-call-updatemenus', $menumethod_file)
               unless $pkg eq 'menu';
         }
     } else {
         if ($postinst{'calls-updatemenus'}) {
-            tag 'postinst-has-useless-call-to-update-menus';
+            $self->tag('postinst-has-useless-call-to-update-menus');
         }
         if ($postrm{'calls-updatemenus'}) {
-            tag 'postrm-has-useless-call-to-update-menus';
+            $self->tag('postrm-has-useless-call-to-update-menus');
         }
     }
 
@@ -241,12 +240,16 @@ sub binary {
 # -----------------------------------
 
 sub check_doc_base_file {
-    my ($dbpath, $pkg, $all_files, $all_links, $group) = @_;
+    my ($self, $dbpath, $all_files, $all_links) = @_;
+
+    my $pkg = $self->package;
+    my $group = $self->group;
 
     my $dbfile = $dbpath->basename;
     my $line = file_is_encoded_in_non_utf8($dbpath->fs_path);
     if ($line) {
-        tag 'doc-base-file-uses-obsolete-national-encoding', "$dbfile:$line";
+        $self->tag('doc-base-file-uses-obsolete-national-encoding',
+            "$dbfile:$line");
     }
 
     my $knownfields = \%KNOWN_DOCBASE_MAIN_FIELDS;
@@ -264,10 +267,10 @@ sub check_doc_base_file {
         if (/^(\S+)\s*:\s*(.*)$/) {
             my (@new) = ($1, $2);
             if ($field) {
-                check_doc_base_field(
-                    $pkg, $dbfile, $line, $field,
-                    \@vals,\%sawfields, \%sawformats, $knownfields,
-                    $all_files, $all_links, $group
+                $self->check_doc_base_field(
+                    $dbfile, $line, $field,
+                    \@vals,\%sawfields, \%sawformats,
+                    $knownfields,$all_files, $all_links
                 );
             }
             $field = lc $new[0];
@@ -284,17 +287,17 @@ sub check_doc_base_file {
 
             # Sections' separator.
         } elsif (/^(\s*)$/) {
-            tag 'doc-base-file-separator-extra-whitespace', "$dbfile:$."
+            $self->tag('doc-base-file-separator-extra-whitespace',"$dbfile:$.")
               if $1;
             next unless $field; # skip successive empty lines
 
             # Check previously defined field and section.
-            check_doc_base_field(
-                $pkg, $dbfile, $line, $field,
-                \@vals,\%sawfields, \%sawformats, $knownfields,
-                $all_files, $all_links, $group
+            $self->check_doc_base_field(
+                $dbfile, $line, $field,
+                \@vals,\%sawfields, \%sawformats,
+                $knownfields,$all_files, $all_links
             );
-            check_doc_base_file_section($dbfile, $line + 1, \%sawfields,
+            $self->check_doc_base_file_section($dbfile, $line + 1,\%sawfields,
                 \%sawformats, $knownfields);
 
             # Initialize variables for new section.
@@ -308,23 +311,24 @@ sub check_doc_base_file {
 
             # Everything else is a syntax error.
         } else {
-            tag 'doc-base-file-syntax-error', "$dbfile:$.";
+            $self->tag('doc-base-file-syntax-error', "$dbfile:$.");
         }
     }
 
     # Check the last field/section of the control file.
     if ($field) {
-        check_doc_base_field(
-            $pkg, $dbfile, $line, $field,
-            \@vals, \%sawfields,\%sawformats, $knownfields,
-            $all_files,$all_links, $group
+        $self->check_doc_base_field(
+            $dbfile, $line, $field,
+            \@vals, \%sawfields,\%sawformats,
+            $knownfields,$all_files,$all_links
         );
-        check_doc_base_file_section($dbfile, $line, \%sawfields, \%sawformats,
-            $knownfields);
+        $self->check_doc_base_file_section($dbfile, $line, \%sawfields,
+            \%sawformats,$knownfields);
     }
 
     # Make sure we saw at least one format.
-    tag 'doc-base-file-no-format-section', "$dbfile:$." unless %sawformats;
+    $self->tag('doc-base-file-no-format-section', "$dbfile:$.")
+      unless %sawformats;
 
     close($fd);
 
@@ -335,14 +339,16 @@ sub check_doc_base_file {
 # all lines of the field.  Modifies $sawfields and $sawformats.
 sub check_doc_base_field {
     my (
-        $pkg, $dbfile, $line, $field,
-        $vals, $sawfields, $sawformats,$knownfields,
-        $all_files, $all_links, $group
+        $self, $dbfile, $line, $field,$vals,
+        $sawfields, $sawformats,$knownfields,$all_files, $all_links
     ) = @_;
 
-    tag 'doc-base-file-unknown-field', "$dbfile:$line", $field
+    my $pkg = $self->package;
+    my $group = $self->group;
+
+    $self->tag('doc-base-file-unknown-field', "$dbfile:$line", $field)
       unless defined $knownfields->{$field};
-    tag 'doc-base-file-duplicated-field', "$dbfile:$line", $field
+    $self->tag('doc-base-file-duplicated-field', "$dbfile:$line", $field)
       if $sawfields->{$field};
     $sawfields->{$field} = 1;
 
@@ -358,12 +364,14 @@ sub check_doc_base_field {
         my @files = map { split(' ', $_) } @$vals;
 
         if ($field eq 'index' && @files > 1) {
-            tag 'doc-base-index-references-multiple-files', "$dbfile:$line";
+            $self->tag('doc-base-index-references-multiple-files',
+                "$dbfile:$line");
         }
         for my $file (@files) {
             next if $file =~ m %^/usr/share/doc/%;
             next if $file =~ m %^/usr/share/info/%;
-            tag 'doc-base-file-references-wrong-path', "$dbfile:$line", $file;
+            $self->tag('doc-base-file-references-wrong-path',
+                "$dbfile:$line", $file);
         }
         for my $file (@files) {
             my $realfile = delink($file, $all_links);
@@ -383,8 +391,8 @@ sub check_doc_base_field {
                 $found = $all_files->{$realfile} || $all_files->{"$realfile/"};
             }
             unless ($found) {
-                tag 'doc-base-file-references-missing-file', "$dbfile:$line",
-                  $file;
+                $self->tag('doc-base-file-references-missing-file',
+                    "$dbfile:$line",$file);
             }
         }
         undef @files;
@@ -394,9 +402,9 @@ sub check_doc_base_field {
         my $format = join(' ', @$vals);
         strip($format);
         $format = lc $format;
-        tag 'doc-base-file-unknown-format', "$dbfile:$line", $format
+        $self->tag('doc-base-file-unknown-format', "$dbfile:$line", $format)
           unless $known_doc_base_formats{$format};
-        tag 'doc-base-file-duplicated-format', "$dbfile:$line", $format
+        $self->tag('doc-base-file-duplicated-format', "$dbfile:$line", $format)
           if $sawformats->{$format};
         $sawformats->{$format} = 1;
 
@@ -407,11 +415,12 @@ sub check_doc_base_field {
     } elsif ($field eq 'document') {
         $_ = join(' ', @$vals);
 
-        tag 'doc-base-invalid-document-field', "$dbfile:$line", $_
+        $self->tag('doc-base-invalid-document-field', "$dbfile:$line", $_)
           unless /^[a-z0-9+.-]+$/;
-        tag 'doc-base-document-field-ends-in-whitespace', "$dbfile:$line"
+        $self->tag('doc-base-document-field-ends-in-whitespace',
+            "$dbfile:$line")
           if /[ \t]$/;
-        tag 'doc-base-document-field-not-in-first-line', "$dbfile:$line"
+        $self->tag('doc-base-document-field-not-in-first-line',"$dbfile:$line")
           unless $line == 1;
 
         # Title field.
@@ -433,11 +442,12 @@ sub check_doc_base_field {
         $_ = join(' ', @$vals);
         unless ($SECTIONS->known($_)) {
             if (m,^App(?:lication)?s/(.+)$, and $SECTIONS->known($1)) {
-                tag 'doc-base-uses-applications-section', "$dbfile:$line", $_;
+                $self->tag('doc-base-uses-applications-section',
+                    "$dbfile:$line", $_);
             } elsif (m,^(.+)/(?:[^/]+)$, and $SECTIONS->known($1)) {
                 # allows creating a new subsection to a known section
             } else {
-                tag 'doc-base-unknown-section', "$dbfile:$line", $_;
+                $self->tag('doc-base-unknown-section', "$dbfile:$line", $_);
             }
         }
 
@@ -466,11 +476,13 @@ sub check_doc_base_field {
         for my $idx (1 .. $#{$vals}) {
             $_ = $vals->[$idx];
             if (/manage\s+online\s+manuals\s.*Debian/o) {
-                tag 'doc-base-abstract-field-is-template', "$dbfile:$line"
+                $self->tag('doc-base-abstract-field-is-template',
+                    "$dbfile:$line")
                   unless $pkg eq 'doc-base';
             } elsif (/^(\s+)\.(\s*)$/o and ($1 ne ' ' or $2)) {
-                tag 'doc-base-abstract-field-separator-extra-whitespace',
-                  "$dbfile:" . ($line - $#{$vals} + $idx);
+                $self->tag(
+                    'doc-base-abstract-field-separator-extra-whitespace',
+                    "$dbfile:" . ($line - $#{$vals} + $idx));
             } elsif (!$leadsp && /^(\s+)(\S)/o) {
                 # The regexp should always match.
                 ($leadsp, $charafter) = ($1, $2);
@@ -483,8 +495,9 @@ sub check_doc_base_field {
             }
         }
         unless ($leadsp_ok) {
-            tag 'doc-base-abstract-might-contain-extra-leading-whitespace',
-              "$dbfile:$line";
+            $self->tag(
+                'doc-base-abstract-might-contain-extra-leading-whitespace',
+                "$dbfile:$line");
         }
 
         # Check spelling.
@@ -508,22 +521,23 @@ sub check_doc_base_field {
 # Checks the section of the doc-base control file.  Tries to find required
 # fields missing in the section.
 sub check_doc_base_file_section {
-    my ($dbfile, $line, $sawfields, $sawformats, $knownfields) = @_;
+    my ($self, $dbfile, $line, $sawfields, $sawformats, $knownfields) = @_;
 
-    tag 'doc-base-file-no-format', "$dbfile:$line"
+    $self->tag('doc-base-file-no-format', "$dbfile:$line")
       if ((defined $sawfields->{'files'} || defined $sawfields->{'index'})
         && !(defined $sawfields->{'format'}));
 
     # The current format is set by check_doc_base_field.
     if ($sawfields->{'format'}) {
         my $format =  $sawformats->{' *current* '};
-        tag 'doc-base-file-no-index', "$dbfile:$line"
+        $self->tag('doc-base-file-no-index', "$dbfile:$line")
           if ( $format
             && ($format eq 'html' || $format eq 'info')
             && !$sawfields->{'index'});
     }
     for my $field (sort keys %$knownfields) {
-        tag 'doc-base-file-lacks-required-field', "$dbfile:$line", $field
+        $self->tag('doc-base-file-lacks-required-field',
+            "$dbfile:$line", $field)
           if ($knownfields->{$field} == 1 && !$sawfields->{$field});
     }
 
@@ -612,7 +626,10 @@ sub delink {
 }
 
 sub check_script {
-    my ($pkg, $spath, $pres) = @_;
+    my ($self, $spath, $pres) = @_;
+
+    my $pkg = $self->package;
+
     my ($no_check_menu, $no_check_installdocs, $interp);
 
     # control files are regular files and not symlinks, pipes etc.
@@ -667,11 +684,10 @@ sub check_script {
 
             # checked first?
             if (not $pres->{'checks-for-updatemenus'} and $pkg ne 'menu') {
-                #<<< no perltidy - tag name too long
-                tag 'maintainer-script-does-not-check-for-existence-of-updatemenus',
-                #>>>
-                  "$spath:$."
-                  unless $no_check_menu++;
+                $self->tag(
+'maintainer-script-does-not-check-for-existence-of-updatemenus',
+                    "$spath:$."
+                ) unless $no_check_menu++;
             }
         }
 
@@ -697,11 +713,10 @@ sub check_script {
             }
             # checked first?
             if (not $pres->{'checks-for-installdocs'}) {
-                #<<< no perltidy - tag name too long
-                tag 'maintainer-script-does-not-check-for-existence-of-installdocs',
-                #>>>
-                  $spath
-                  unless $no_check_installdocs++;
+                $self->tag(
+'maintainer-script-does-not-check-for-existence-of-installdocs',
+                    $spath
+                ) unless $no_check_installdocs++;
             }
         }
     }

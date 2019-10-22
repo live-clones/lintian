@@ -27,7 +27,6 @@ use autodie;
 use List::MoreUtils qw(any none);
 use Moo;
 
-use Lintian::Tags qw(tag);
 use Lintian::Relation qw(:constants);
 use Lintian::Relation::Version qw(versions_lte);
 
@@ -44,7 +43,8 @@ my %DJANGO_PACKAGES = (
 );
 
 my %REQUIRED_DEPENDS = (
-    'python2' => 'python-minimal:any | python:any',
+    'python2' =>
+      'python-minimal:any | python:any | python2-minimal:any | python2:any',
     'python3' => 'python3-minimal:any | python3:any',
 );
 
@@ -75,16 +75,17 @@ sub source {
                   ->implies('${python3:Depends}')
             }
             @package_names;
-            tag 'python-foo-but-no-python3-foo', $bin;
+            $self->tag('python-foo-but-no-python3-foo', $bin);
         }
     }
 
     my $build_all = $info->relation('build-depends-all');
-    tag 'build-depends-on-python-sphinx-only'
+    $self->tag('build-depends-on-python-sphinx-only')
       if $build_all->implies('python-sphinx')
       and not $build_all->implies('python3-sphinx');
 
-    tag 'alternatively-build-depends-on-python-sphinx-and-python3-sphinx'
+    $self->tag(
+        'alternatively-build-depends-on-python-sphinx-and-python3-sphinx')
       if $info->field('build-depends', '')
       =~ m,\bpython-sphinx\s+\|\s+python3-sphinx\b,g;
 
@@ -94,7 +95,7 @@ sub source {
         for my $binpkg ($info->binaries) {
             next if any { $binpkg =~ /$_/ } @IGNORE;
             next if $binpkg !~ qr/$regex/;
-            tag 'mismatched-python-substvar', $binpkg, $substvar
+            $self->tag('mismatched-python-substvar', $binpkg, $substvar)
               if $info->binary_relation($binpkg, 'all')->implies($substvar);
         }
     }
@@ -112,12 +113,12 @@ sub source {
         my @pyversion = split(/\s*,\s*/, $pyversion);
 
         if ($pyversion =~ m/^current/) {
-            tag 'python-version-current-is-deprecated', $field;
+            $self->tag('python-version-current-is-deprecated', $field);
         }
 
         if (@pyversion > 2) {
             if (any { !/^\d+\.\d+$/ } @pyversion) {
-                tag 'malformed-python-version', $field, $pyversion;
+                $self->tag('malformed-python-version', $field, $pyversion);
             }
         } else {
             my $okay = 0;
@@ -135,7 +136,8 @@ sub source {
                     last;
                 }
             }
-            tag 'malformed-python-version', $field, $pyversion unless $okay;
+            $self->tag('malformed-python-version', $field, $pyversion)
+              unless $okay;
         }
 
         if ($pyversion =~ /\b(([23])\.\d+)$/) {
@@ -144,14 +146,14 @@ sub source {
             my $ancient = $VERSIONS->value("ancient-python$major");
 
             if (versions_lte($v, $ancient)) {
-                tag 'ancient-python-version-field', $field, $v;
+                $self->tag('ancient-python-version-field', $field, $v);
             } elsif (versions_lte($v, $old)) {
-                tag 'old-python-version-field', $field, $v;
+                $self->tag('old-python-version-field', $field, $v);
             }
         }
     }
 
-    tag 'source-package-encodes-python-version'
+    $self->tag('source-package-encodes-python-version')
       if $info->name =~ m/^python\d-/
       and $info->name ne 'python3-defaults';
 
@@ -178,7 +180,7 @@ sub binary {
                 and $file
                 =~ m,usr/lib/(?<version>python[23])[\d.]*/(?:site|dist)-packages,
                 and not $deps->implies($REQUIRED_DEPENDS{$+{version}})) {
-                tag 'python-package-missing-depends-on-python';
+                $self->tag('python-package-missing-depends-on-python');
                 last;
             }
         }
@@ -190,8 +192,8 @@ sub binary {
       FIELD: for my $py2 (@PYTHON2) {
             for my $py3 (@PYTHON3) {
                 if ($dep->implies("$py2:any") and $dep->implies("$py3:any")) {
-                    tag 'depends-on-python2-and-python3',
-                      "$field: $py2, [..], $py3";
+                    $self->tag('depends-on-python2-and-python3',
+                        "$field: $py2, [..], $py3");
                     last FIELD;
                 }
             }
@@ -205,15 +207,16 @@ sub binary {
         and $entries[0]->Changes
         !~ /\bpython ?2(?:\.x)? (?:variant|version)\b/im
         and index($entries[0]->Changes, $pkg) == -1) {
-        tag 'new-package-should-not-package-python2-module', $pkg;
+        $self->tag('new-package-should-not-package-python2-module', $pkg);
     }
 
     # Python applications
     if ($pkg !~ /^python[23]?-/ and none { $_ eq $pkg } @PYTHON2) {
         for my $field (@FIELDS) {
             for my $dep (@PYTHON2) {
-                tag 'dependency-on-python-version-marked-for-end-of-life',
-                  "($field: $dep)"
+                $self->tag(
+                    'dependency-on-python-version-marked-for-end-of-life',
+                    "($field: $dep)")
                   if $info->relation($field)->implies("$dep:any");
             }
         }
@@ -224,7 +227,7 @@ sub binary {
         my $basepkg = $DJANGO_PACKAGES{$regex};
         next if $pkg !~ /$regex/;
         next if any { $pkg =~ /$_/ } @IGNORE;
-        tag 'django-package-does-not-depend-on-django', $basepkg
+        $self->tag('django-package-does-not-depend-on-django', $basepkg)
           if not $info->relation('strong')->implies($basepkg);
     }
 
@@ -237,10 +240,10 @@ sub binary {
                 my $visit = sub {
                     my $rel = $_;
                     return if any { $rel =~ /$_/ } @IGNORE;
-                    #<<< No tidy (tag name too long)
-                    tag 'python-package-depends-on-package-from-other-python-variant',
-                        "$field: $rel" if /^$prefix-/;
-                    #>>>
+                    $self->tag(
+'python-package-depends-on-package-from-other-python-variant',
+                        "$field: $rel"
+                    ) if /^$prefix-/;
                 };
                 $info->relation($field)->visit($visit, VISIT_PRED_NAME);
             }
@@ -253,7 +256,7 @@ sub binary {
         next unless $file =~ m,(usr/)?bin/[^/]+,;
         my $fd = $file->open();
         my $line = <$fd>;
-        tag 'script-uses-unversioned-python-in-shebang', $file
+        $self->tag('script-uses-unversioned-python-in-shebang', $file)
           if $line && $line =~ m,^#!\s*(/usr/bin/env\s*)?(/usr/bin/)?python$,;
         close($fd);
     }

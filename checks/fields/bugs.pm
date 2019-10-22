@@ -30,8 +30,6 @@ use autodie;
 
 use Moo;
 
-use Lintian::Tags qw(tag);
-
 with('Lintian::Check');
 
 sub always {
@@ -45,10 +43,10 @@ sub always {
     return
       unless defined $bugs;
 
-    tag 'redundant-bugs-field'
+    $self->tag('redundant-bugs-field')
       if $bugs =~ m,^debbugs://bugs.debian.org/?$,i;
 
-    tag 'bugs-field-does-not-refer-to-debian-infrastructure', $bugs
+    $self->tag('bugs-field-does-not-refer-to-debian-infrastructure', $bugs)
       unless $bugs =~ m,\.debian\.org, or $pkg =~ /[-]dbgsym$/;
 
     return;

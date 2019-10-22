@@ -31,7 +31,6 @@ use autodie;
 use Moo;
 
 use Lintian::Relation qw(:constants);
-use Lintian::Tags qw(tag);
 use Lintian::Util qw($PKGNAME_REGEX $PKGVERSION_REGEX);
 
 with('Lintian::Check');
@@ -54,7 +53,7 @@ sub always {
     $built_using_rel->visit(
         sub {
             if ($_ !~ BUILT_USING_REGEX) {
-                tag 'invalid-value-in-built-using-field', $_;
+                $self->tag('invalid-value-in-built-using-field', $_);
                 return 1;
             }
             return 0;

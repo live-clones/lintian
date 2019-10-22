@@ -44,7 +44,6 @@ use List::MoreUtils qw(any);
 use Moo;
 
 use Lintian::Relation qw(:constants);
-use Lintian::Tags qw(tag);
 use Lintian::Util qw($PKGNAME_REGEX);
 
 with('Lintian::Check');
@@ -77,7 +76,7 @@ sub source {
             my $visitor = sub {
                 if (m/\$[{]Source-Version[}]/o and not $svid) {
                     $svid++;
-                    tag 'substvar-source-version-is-deprecated', $pkg1;
+                    $self->tag('substvar-source-version-is-deprecated', $pkg1);
                 }
                 if (
                     m/^($PKGNAME_REGEX)(?: :[-a-z0-9]+)? \s*   # pkg-name $1
@@ -90,8 +89,8 @@ sub source {
                     # We can't test dependencies on packages whose names are
                     # formed via substvars expanded during the build.  Assume
                     # those maintainers know what they're doing.
-                    tag 'version-substvar-for-external-package',
-                      "$pkg1 -> $other"
+                    $self->tag('version-substvar-for-external-package',
+                        "$pkg1 -> $other")
                       unless $info->binary_field($other, 'architecture')
                       or any { "$other (= $substvar)" eq $_ } @provided
                       or $other =~ /\$\{\S+\}/;
@@ -129,7 +128,8 @@ sub source {
                 if ($pkg2_is_any and $substvar_strips_binNMU) {
                     unless ($gt) {
                         # (b1) any -> any (= ${source:Version})
-                        tag 'not-binnmuable-any-depends-any', "$pkg1 -> $pkg2";
+                        $self->tag('not-binnmuable-any-depends-any',
+                            "$pkg1 -> $pkg2");
                     } else {
                         # any -> any (>= ${source:Version})
                         # technically this can be "binNMU'ed", though it is
@@ -139,15 +139,17 @@ sub source {
                 } elsif (not $pkg2_is_any) {
                     # (b2) any -> all ( = ${binary:Version}) [or S-V]
                     # or  -- same --  (>= ${binary:Version}) [or S-V]
-                    tag 'not-binnmuable-any-depends-all', "$pkg1 -> $pkg2"
+                    $self->tag('not-binnmuable-any-depends-all',
+                        "$pkg1 -> $pkg2")
                       if not $substvar_strips_binNMU;
                     if ($substvar_strips_binNMU and not $gt) {
-                        tag 'maybe-not-arch-all-binnmuable', "$pkg1 -> $pkg2";
+                        $self->tag('maybe-not-arch-all-binnmuable',
+                            "$pkg1 -> $pkg2");
                     }
                 }
             } elsif ($pkg2_is_any && !$gt) {
                 # (b3) all -> any (= ${either-of-them})
-                tag 'not-binnmuable-all-depends-any', "$pkg1 -> $pkg2";
+                $self->tag('not-binnmuable-all-depends-any', "$pkg1 -> $pkg2");
             }
         }
     }

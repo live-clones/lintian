@@ -28,7 +28,6 @@ use Moo;
 
 use Lintian::Data;
 use Lintian::Relation;
-use Lintian::Tags qw(tag);
 
 with('Lintian::Check');
 
@@ -51,7 +50,7 @@ sub source {
     my $ginfo = $group->info;
     my @procs = $group->get_processables('binary');
 
-    _check_file_overlap(@procs);
+    $self->check_file_overlap(@procs);
 
     foreach my $proc (@procs) {
         my $deps = $ginfo->direct_dependencies($proc);
@@ -61,7 +60,7 @@ sub source {
             my $pname = $proc->pkg_name;
             push @nodes, $pname;
             $edges{$pname} = [map { $_->pkg_name } @$deps];
-            _check_multiarch($proc, $deps);
+            $self->check_multiarch($proc, $deps);
         }
     }
 
@@ -74,14 +73,14 @@ sub source {
     foreach my $comp (@$sccs) {
         # It takes two to tango... erh. make a circular dependency.
         next if scalar @$comp < 2;
-        tag 'intra-source-package-circular-dependency', sort @$comp;
+        $self->tag('intra-source-package-circular-dependency', sort @$comp);
     }
 
     return;
 }
 
-sub _check_file_overlap {
-    my (@procs) = @_;
+sub check_file_overlap {
+    my ($self, @procs) = @_;
     # Sort them for stable output
     my @sorted = sort { $a->pkg_name cmp $b->pkg_name } @procs;
     for (my $i = 0 ; $i < scalar @sorted ; $i++) {
@@ -106,14 +105,14 @@ sub _check_file_overlap {
             next if $pinfo->relation('conflicts')->implies($oprov);
             next if $pinfo->relation('replaces')->implies($other->pkg_name);
 
-            _overlap_check($proc, $pinfo, $other, $oinfo);
+            $self->overlap_check($proc, $pinfo, $other, $oinfo);
         }
     }
     return;
 }
 
-sub _overlap_check {
-    my ($a_proc, $a_info, $b_proc, $b_info) = @_;
+sub overlap_check {
+    my ($self, $a_proc, $a_info, $b_proc, $b_info) = @_;
     foreach my $a_file ($a_info->sorted_index) {
         my $name = $a_file->name;
         my $b_file;
@@ -121,15 +120,16 @@ sub _overlap_check {
         $b_file = $b_info->index($name) // $b_info->index("$name/");
         if ($b_file) {
             next if $a_file->is_dir and $b_file->is_dir;
-            tag 'binaries-have-file-conflict', $a_proc->pkg_name,
-              $b_proc->pkg_name, $name;
+            $self->tag('binaries-have-file-conflict', $a_proc->pkg_name,
+                $b_proc->pkg_name, $name);
         }
     }
     return;
 }
 
-sub _check_multiarch {
-    my ($proc, $deps) = @_;
+sub check_multiarch {
+    my ($self, $proc, $deps) = @_;
+
     my $ma = $proc->info->field('multi-arch', 'no');
     if ($ma eq 'same') {
         foreach my $dep (@$deps) {
@@ -137,10 +137,11 @@ sub _check_multiarch {
             if ($dma eq 'same' or $dma eq 'foreign') {
                 1; # OK
             } else {
-                tag 'dependency-is-not-multi-archified',
-                  join(q{ },
-                    $proc->pkg_name, 'depends on',
-                    $dep->pkg_name, "(multi-arch: $dma)");
+                $self->tag(
+                    'dependency-is-not-multi-archified',
+                    join(q{ },
+                        $proc->pkg_name, 'depends on',
+                        $dep->pkg_name, "(multi-arch: $dma)"));
             }
         }
     } elsif ($ma ne 'same'
@@ -158,8 +159,10 @@ sub _check_multiarch {
                 # package and that is M-A same.  Thus it is not
                 # possible to install debug symbols for all
                 # (architecture) variants of the binaries.
-                tag 'debug-package-for-multi-arch-same-pkg-not-coinstallable',
-                  $proc->pkg_name . ' => ' . $dep->pkg_name
+                $self->tag(
+                    'debug-package-for-multi-arch-same-pkg-not-coinstallable',
+                    $proc->pkg_name . ' => ' . $dep->pkg_name
+                  )
                   unless any { $proc->pkg_name =~ m/$_/xms }
                 $KNOWN_DBG_PACKAGE->all;
             }
