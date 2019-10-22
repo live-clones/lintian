@@ -96,8 +96,6 @@ sub binary {
     # and #941140 etc.)
     return if $pkg eq 'initscripts' or $pkg eq 'sysvinit';
 
-    $self->check_missing_script;
-
     # read postinst control file
     if ($postinst and $postinst->is_file and $postinst->is_open_ok) {
         my $fd = $postinst->open;
@@ -529,34 +527,32 @@ sub check_defaults {
     return;
 }
 
-# Check for missing init.d script, when equivalent for alternative init
-# system is present.
-sub check_missing_script {
-    my ($self) = @_;
+sub files {
+    my ($self, $file) = @_;
 
-    my $info = $self->info;
+    # check for missing init.d script when alternative init system is present
 
-    for my $file ($info->sorted_index) {
-        if (   $file =~ m,etc/sv/([^/]+)/run$,
-            or $file =~ m,lib/systemd/system/([^/]*?)@?\.service,) {
+    if (   $file =~ m,etc/sv/([^/]+)/run$,
+        or $file =~ m,lib/systemd/system/([^/]*?)@?\.service,) {
 
-            my $service = $1;
-            $self->tag(
-                'package-supports-alternative-init-but-no-init.d-script',$file)
-              unless $info->index_resolved_path("etc/init.d/${service}")
-              or $info->index_resolved_path(
-                "lib/systemd/system/${service}.timer");
-        }
+        my $service = $1;
 
-        if ($file =~ m,etc/sv/([^/]+)/$,) {
-            my $service = $1;
-            my $file = $info->index_resolved_path("etc/sv/${service}/run");
-            $self->tag(
-                'directory-in-etc-sv-directory-without-executable-run-script',
-                $file
-            ) if not $file or not $file->is_executable;
-        }
+        $self->tag('package-supports-alternative-init-but-no-init.d-script',
+            $file)
+          unless $self->info->index_resolved_path("etc/init.d/${service}")
+          or $self->info->index_resolved_path(
+            "lib/systemd/system/${service}.timer");
     }
+
+    if ($file =~ m,etc/sv/([^/]+)/$,) {
+        my $service = $1;
+        my $file = $self->info->index_resolved_path("etc/sv/${service}/run");
+        $self->tag(
+            'directory-in-etc-sv-directory-without-executable-run-script',
+            $file)
+          if not $file or not $file->is_executable;
+    }
+
     return;
 }
 
