@@ -9,7 +9,10 @@ control-file-general (source): obsolete-relation-form-in-source in source build-
 control-file-general (source): obsolete-relation-form-in-source in control-file-general-1 breaks: libsqlite3-0 (< 3.6.12)
 control-file-general (source): no-section-field-for-source
 control-file-general (source): missing-separator-between-items in control-file-general depends field between '${shlibs:Depends}' and '${some:Depends}'
+control-file-general (source): field-too-long provides control-file-general-rust-libbaz1 (277987 > 5000)
+control-file-general (source): field-too-long depends control-file-general-long-depends (6846 > 5000)
 control-file-general (source): duplicate-short-description control-file-general control-file-general-1
+control-file-general (source): duplicate-long-description control-file-general-rust-libbaz1 control-file-general-long-depends
 control-file-general (source): duplicate-long-description control-file-general control-file-general-1 control-file-general-2 control-file-general-3 control-file-general-4 control-file-general-5 control-file-general-dbgsym control-file-general-dbg
 control-file-general (source): debian-control-repeats-field-name-in-value line 91
 control-file-general (source): debian-control-repeats-field-name-in-value line 81
