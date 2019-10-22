@@ -26,7 +26,6 @@ use warnings;
 use Moo;
 
 use Lintian::Data;
-use Lintian::Tags qw(tag);
 use Lintian::Util qw(internal_error strip);
 
 with('Lintian::Check');
@@ -67,16 +66,16 @@ sub always {
         my ($trigger_type, $arg) = split(m/\s++/, $line, 2);
         my $trigger_info = $TRIGGER_TYPES->value($trigger_type);
         if (not $trigger_info) {
-            tag 'unknown-trigger', $line, "(line $.)";
+            $self->tag('unknown-trigger', $line, "(line $.)");
             next;
         }
         if ($trigger_info->{'implicit-await'}) {
-            tag 'uses-implicit-await-trigger', $line, "(line $.)";
+            $self->tag('uses-implicit-await-trigger', $line, "(line $.)");
         }
         if (defined(my $prev_info = $seen_triggers{$arg})) {
             my ($prev_line, $prev_line_no) = @{$prev_info};
-            tag 'repeated-trigger-name', $line, "(line $.)", 'vs', $prev_line,
-              "(line $prev_line_no)";
+            $self->tag('repeated-trigger-name', $line, "(line $.)", 'vs',
+                $prev_line,"(line $prev_line_no)");
             next;
         }
         $seen_triggers{$arg} = [$line, $.];

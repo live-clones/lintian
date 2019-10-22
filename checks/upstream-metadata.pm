@@ -27,8 +27,6 @@ use Moo;
 use YAML::XS;
 $YAML::XS::LoadBlessed = 0;
 
-use Lintian::Tags qw(tag);
-
 with('Lintian::Check');
 
 sub source {
@@ -39,7 +37,7 @@ sub source {
     my $yamlfile = $info->index_resolved_path('debian/upstream/metadata');
 
     if (not $yamlfile) {
-        tag 'upstream-metadata-file-is-missing' unless $info->native;
+        $self->tag('upstream-metadata-file-is-missing') unless $info->native;
         return;
     }
 
@@ -56,10 +54,10 @@ sub source {
             ) {
                 $msg = "$reason (at document $doc, line $line, column $col)";
             }
-            tag('upstream-metadata-yaml-invalid', $msg);
+            $self->tag(('upstream-metadata-yaml-invalid', $msg));
         }
     } else {
-        tag('upstream-metadata-is-not-a-file');
+        $self->tag(('upstream-metadata-is-not-a-file'));
     }
     return;
 }

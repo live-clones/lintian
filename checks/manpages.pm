@@ -30,7 +30,6 @@ use Moo;
 use Text::ParseWords ();
 
 use Lintian::Spelling qw(check_spelling spelling_tag_emitter);
-use Lintian::Tags qw(tag);
 use Lintian::Util qw(clean_env do_fork drain_pipe internal_error open_gz);
 
 with('Lintian::Check');
@@ -78,7 +77,7 @@ sub binary {
         }
 
         if (($path =~ m,usr/share/man/$,) and ($fname ne '')) {
-            tag 'manpage-in-wrong-directory', $file;
+            $self->tag('manpage-in-wrong-directory', $file);
             next;
         }
 
@@ -89,15 +88,15 @@ sub binary {
         my $t = $1;
 
         if ($file =~ m{/_build_} or $file =~ m{_tmp_buildd}) {
-            tag 'manpage-named-after-build-path', $file;
+            $self->tag('manpage-named-after-build-path', $file);
         }
 
         if ($file =~ m,/README\.,) {
-            tag 'manpage-has-overly-generic-name', $file;
+            $self->tag('manpage-has-overly-generic-name', $file);
         }
 
         if (not $t =~ m,^.*man(\d)/$,o) {
-            tag 'manpage-in-wrong-directory', $file;
+            $self->tag('manpage-in-wrong-directory', $file);
             next;
         }
         my $section = $1;
@@ -108,19 +107,20 @@ sub binary {
         # directory unless it's one of the known cases where the
         # language is significantly different between countries.
         if ($lang =~ /_/ && $lang !~ /^(?:pt_BR|zh_[A-Z][A-Z])$/) {
-            tag 'manpage-locale-dir-country-specific', $file;
+            $self->tag('manpage-locale-dir-country-specific', $file);
         }
 
         my @pieces = split(/\./, $fname);
         my $ext = pop @pieces;
         if ($ext ne 'gz') {
             push @pieces, $ext;
-            tag 'manpage-not-compressed', $file;
+            $self->tag('manpage-not-compressed', $file);
         } elsif ($file->is_file) { # so it's .gz... files first; links later
             if ($file_info !~ m/gzip compressed data/o) {
-                tag 'manpage-not-compressed-with-gzip', $file;
+                $self->tag('manpage-not-compressed-with-gzip', $file);
             } elsif ($file_info !~ m/max compression/o) {
-                tag 'manpage-not-compressed-with-max-compression', $file;
+                $self->tag('manpage-not-compressed-with-max-compression',
+                    $file);
             }
         }
         my $fn_section = pop @pieces;
@@ -133,10 +133,10 @@ sub binary {
 
             # number of directory and manpage extension equal?
             if ($section_num != $section) {
-                tag 'manpage-in-wrong-directory', $file;
+                $self->tag('manpage-in-wrong-directory', $file);
             }
         } else {
-            tag 'manpage-has-wrong-extension', $file;
+            $self->tag('manpage-has-wrong-extension', $file);
         }
 
         # check symbolic links to other manual pages
@@ -149,18 +149,20 @@ sub binary {
                 #    ../../../share/man/man?/undocumented...
                 #    ../../../../usr/share/man/man?/undocumented...
                 if ((
-                    #<<< no perl tidy for now
                             $link =~ m,^undocumented\.([237])\.gz,o
-                        and $path =~ m,^usr/share/man/man$1,)
+                        and $path =~ m,^usr/share/man/man$1,
+                    )
                     or $link =~ m,^\.\./man[237]/undocumented\.[237]\.gz$,o
-                    or $link =~ m,^\.\./\.\./man/man[237]/undocumented\.[237]\.gz$,o
-                    or $link =~ m,^\.\./\.\./\.\./share/man/man[237]/undocumented\.[237]\.gz$,o
-                    or $link =~ m,^\.\./\.\./\.\./\.\./usr/share/man/man[237]/undocumented\.[237]\.gz$,o
-                    #>>>
+                    or $link
+                    =~ m,^\.\./\.\./man/man[237]/undocumented\.[237]\.gz$,o
+                    or $link
+                    =~ m,^\.\./\.\./\.\./share/man/man[237]/undocumented\.[237]\.gz$,o
+                    or $link
+                    =~ m,^\.\./\.\./\.\./\.\./usr/share/man/man[237]/undocumented\.[237]\.gz$,o
                 ) {
-                    tag 'link-to-undocumented-manpage', $file;
+                    $self->tag('link-to-undocumented-manpage', $file);
                 } else {
-                    tag 'bad-link-to-undocumented-manpage', $file;
+                    $self->tag('bad-link-to-undocumented-manpage', $file);
                 }
             }
         } else { # not a symlink
@@ -181,7 +183,7 @@ sub binary {
                 } while ($first =~ /^\.\\"/ && $manfile[$i]); #");
 
                 unless ($first) {
-                    tag 'empty-manual-page', $file;
+                    $self->tag('empty-manual-page', $file);
                     next;
                 } elsif ($first =~ /^\.so\s+(.+)?$/) {
                     my $dest = $1;
@@ -193,14 +195,17 @@ sub binary {
                             if ($rest =~ m,^([^/]+)/(.+)$,) {
                                 my (undef, $rest) = ($1, $2);
                                 if ($rest !~ m,^[^/]+\.\d(?:\S+)?(?:\.gz)?$,) {
-                                    tag 'bad-so-link-within-manual-page',$file;
+                                    $self->tag(
+                                        'bad-so-link-within-manual-page',
+                                        $file);
                                 }
                             } else {
-                                tag 'bad-so-link-within-manual-page', $file;
+                                $self->tag('bad-so-link-within-manual-page',
+                                    $file);
                             }
                         }
                     } else {
-                        tag 'bad-so-link-within-manual-page', $file;
+                        $self->tag('bad-so-link-within-manual-page', $file);
                     }
                     next;
                 }
@@ -225,7 +230,7 @@ sub binary {
                       or internal_error("exec lexgrog failed: $!");
                 }
                 if (@running_lexgrog > 2) {
-                    process_lexgrog_output(\@running_lexgrog);
+                    $self->process_lexgrog_output(\@running_lexgrog);
                 }
                 # lexgrog can have a high start up time, so revisit
                 # this later.
@@ -267,7 +272,7 @@ sub binary {
             }
 
             if (@running_man > 3) {
-                process_man_output(\@running_man);
+                $self->process_man_output(\@running_man);
             }
             # man can have a high start up time, so revisit this
             # later.
@@ -285,18 +290,18 @@ sub binary {
                     my (undef, undef, $th_section, undef)
                       = Text::ParseWords::parse_line('\s+', 0, $line);
                     if ($th_section && (lc($fn_section) ne lc($th_section))) {
-                        tag 'manpage-section-mismatch',
-                          "$file:$lc $fn_section != $th_section";
+                        $self->tag('manpage-section-mismatch',
+                            "$file:$lc $fn_section != $th_section");
                     }
                 }
                 if (($line =~ m,(/usr/(dict|doc|etc|info|man|adm|preserve)/),o)
                     || ($line =~ m,(/var/(adm|catman|named|nis|preserve)/),o)){
                     # FSSTND dirs in man pages
                     # regexes taken from checks/files
-                    tag 'FSSTND-dir-in-manual-page', "$file:$lc $1";
+                    $self->tag('FSSTND-dir-in-manual-page', "$file:$lc $1");
                 }
                 if ($line eq '.SH "POD ERRORS"') {
-                    tag 'manpage-has-errors-from-pod2man', "$file:$lc";
+                    $self->tag('manpage-has-errors-from-pod2man', "$file:$lc");
                 }
                 # Check for spelling errors if the manpage is English
                 check_spelling($line, $ginfo->spelling_exceptions,
@@ -306,8 +311,8 @@ sub binary {
         }
     }
     # If we have any running sub processes, wait for them here.
-    process_lexgrog_output(\@running_lexgrog) if @running_lexgrog;
-    process_man_output(\@running_man) if @running_man;
+    $self->process_lexgrog_output(\@running_lexgrog) if @running_lexgrog;
+    $self->process_man_output(\@running_man) if @running_man;
 
     # Check our dependencies:
     foreach my $depproc (@{ $ginfo->direct_dependencies($proc) }) {
@@ -332,16 +337,16 @@ sub binary {
         my $minfo = $manpage{$f};
 
         if ($minfo) {
-            tag 'command-in-sbin-has-manpage-in-incorrect-section',
-              $binfo->{file}
+            $self->tag('command-in-sbin-has-manpage-in-incorrect-section',
+                $binfo->{file})
               if $binfo->{sbin}
               and $binfo->{file}->is_regular_file
               and $minfo->[0]{section} == 1;
             if (none { $_->{lang} eq '' } @{$minfo}) {
-                tag 'binary-without-english-manpage', $binfo->{file};
+                $self->tag('binary-without-english-manpage', $binfo->{file});
             }
         } else {
-            tag 'binary-without-manpage', $binfo->{file};
+            $self->tag('binary-without-manpage', $binfo->{file});
         }
     }
 
@@ -349,15 +354,15 @@ sub binary {
 }
 
 sub process_lexgrog_output {
-    my ($running) = @_;
+    my ($self, $running) = @_;
     for my $lex_proc (@{$running}) {
         my ($file, $lexgrog_fd, undef) = @{$lex_proc};
         my $desc = <$lexgrog_fd>;
         $desc =~ s/^[^:]+: \"(.*)\"$/$1/;
         if ($desc =~ /(\S+)\s+-\s+manual page for \1/i) {
-            tag 'manpage-has-useless-whatis-entry', $file;
+            $self->tag('manpage-has-useless-whatis-entry', $file);
         } elsif ($desc =~ /\S+\s+-\s+programs? to do something/i) {
-            tag 'manpage-is-dh_make-template', $file;
+            $self->tag('manpage-is-dh_make-template', $file);
         }
         drain_pipe($lexgrog_fd);
         eval {close($lexgrog_fd);};
@@ -365,7 +370,7 @@ sub process_lexgrog_output {
             # Problem closing the pipe?
             internal_error("close pipe: $err") if $err->errno;
             # No, then lexgrog returned with a non-zero exit code.
-            tag 'manpage-has-bad-whatis-entry', $file;
+            $self->tag('manpage-has-bad-whatis-entry', $file);
         }
     }
     @{$running} = ();
@@ -373,7 +378,7 @@ sub process_lexgrog_output {
 }
 
 sub process_man_output {
-    my ($running) = @_;
+    my ($self, $running) = @_;
     for my $man_proc (@{$running}) {
         my ($file, $read, $pid, $lang, $contents) = @{$man_proc};
         while (<$read>) {
@@ -405,7 +410,7 @@ sub process_man_output {
             chomp;
             s/^[^:]+: //o;
             s/^<standard input>://o;
-            tag 'manpage-has-errors-from-man', $file, $_;
+            $self->tag('manpage-has-errors-from-man', $file, $_);
             last;
         }
         close($read);

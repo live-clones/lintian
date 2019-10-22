@@ -31,7 +31,6 @@ use autodie;
 use Moo;
 
 use Lintian::Data ();
-use Lintian::Tags qw(tag);
 
 with('Lintian::Check');
 
@@ -56,8 +55,8 @@ sub source {
         my $val = $info->field($field, '-');
         my $data = $DERIVATIVE_FIELDS->value($field);
 
-        tag 'invalid-field-for-derivative',
-          "$field: $val ($data->{'explanation'})"
+        $self->tag('invalid-field-for-derivative',
+            "$field: $val ($data->{'explanation'})")
           if $val !~ m/$data->{'regexp'}/;
     }
 

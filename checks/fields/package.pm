@@ -30,7 +30,6 @@ use autodie;
 
 use Moo;
 
-use Lintian::Tags qw(tag);
 use Lintian::Util qw($PKGNAME_REGEX);
 
 with('Lintian::Check');
@@ -43,18 +42,15 @@ sub binary {
     my $name = $info->unfolded_field('package');
 
     unless (defined $name) {
-        tag 'no-package-name';
+        $self->tag('no-package-name');
         return;
     }
 
-    tag 'bad-package-name'
-      unless $name =~ /^$PKGNAME_REGEX$/i;
+    $self->tag('bad-package-name') unless $name =~ /^$PKGNAME_REGEX$/i;
 
-    tag 'package-not-lowercase'
-      if $name =~ /[A-Z]/;
+    $self->tag('package-not-lowercase') if $name =~ /[A-Z]/;
 
-    tag 'unusual-documentation-package-name'
-      if $name =~ /-docs$/;
+    $self->tag('unusual-documentation-package-name') if $name =~ /-docs$/;
 
     return;
 }

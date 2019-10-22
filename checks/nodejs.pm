@@ -27,7 +27,6 @@ use autodie;
 use List::MoreUtils qw(any);
 use Moo;
 
-use Lintian::Tags qw(tag);
 use Lintian::Relation;
 
 with('Lintian::Check');
@@ -47,10 +46,10 @@ sub source {
 
         # Ensure test file contains something
         if ($path and $path->is_open_ok) {
-            tag 'pkg-js-autopkgtest-test-is-empty', $filename
+            $self->tag('pkg-js-autopkgtest-test-is-empty', $filename)
               unless any { /^[^#]*\w/m } $path->file_contents;
         } else {
-            tag 'pkg-js-autopkgtest-test-is-missing', $filename;
+            $self->tag('pkg-js-autopkgtest-test-is-missing', $filename);
         }
 
         # Ensure all files referenced in debian/tests/pkg-js/files exist
@@ -58,7 +57,7 @@ sub source {
         if ($path) {
             my @list = map { chomp; s/^\s+(.*?)\s+$/$1/; $_ }
               grep { /\w/ } split /\n/, $path->file_contents;
-            _path_exists($_, $info) foreach (@list);
+            $self->path_exists($_) foreach (@list);
         }
     }
     # debian/rules check
@@ -94,10 +93,10 @@ sub source {
         my $path = $info->index_resolved_path($filename);
         # Ensure test file contains something
         if ($path) {
-            tag 'pkg-js-tools-test-is-empty', $filename
+            $self->tag('pkg-js-tools-test-is-empty', $filename)
               unless any { /^[^#]*\w/m } $path->file_contents;
         } else {
-            tag 'pkg-js-tools-test-is-missing', $filename;
+            $self->tag('pkg-js-tools-test-is-missing', $filename);
         }
     }
     return;
@@ -114,9 +113,9 @@ sub binary {
             my $fname = $file->name;
             if (    $file->is_file
                 and $fname =~ m,^usr/(?:share|lib(?:/[^/]+)?)/nodejs/,) {
-                tag 'nodejs-module-installed-in-usr-lib', $fname
+                $self->tag('nodejs-module-installed-in-usr-lib', $fname)
                   if $fname =~ m#usr/lib/nodejs/.*#;
-                tag 'node-package-install-in-nodejs-rootdir', $fname
+                $self->tag('node-package-install-in-nodejs-rootdir', $fname)
                   if $fname
                   =~ m#usr/(?:share|lib(?:/[^/]+)?)/nodejs/(?:package\.json|[^/]*\.js)$#;
             }
@@ -125,8 +124,10 @@ sub binary {
     return;
 }
 
-sub _path_exists {
-    my ($expr, $info) = @_;
+sub path_exists {
+    my ($self, $expr) = @_;
+
+    my $info = $self->info;
 
     # Split each line in path elements
     my @elem= map { s/\*/.*/g; s/^\.\*$/.*\\w.*/; $_ ? qr{^$_/?$} : () }
@@ -159,7 +160,7 @@ sub _path_exists {
     }
 
     # No element found
-    tag 'pkg-js-autopkgtest-file-does-not-exist', $expr;
+    $self->tag('pkg-js-autopkgtest-file-does-not-exist', $expr);
     return;
 }
 

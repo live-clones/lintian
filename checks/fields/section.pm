@@ -31,7 +31,6 @@ use autodie;
 use Moo;
 
 use Lintian::Data ();
-use Lintian::Tags qw(tag);
 
 with('Lintian::Check');
 
@@ -57,7 +56,7 @@ sub binary {
     my $section = $info->unfolded_field('section');
 
     unless (defined $section) {
-        tag 'no-section-field';
+        $self->tag('no-section-field');
         return;
     }
 
@@ -74,7 +73,7 @@ sub udeb {
     return
       unless defined $section;
 
-    tag 'wrong-section-for-udeb', $section
+    $self->tag('wrong-section-for-udeb', $section)
       unless $section eq 'debian-installer';
 
     return;
@@ -93,7 +92,7 @@ sub always {
       unless defined $section;
 
     if ($section eq EMPTY) {
-        tag 'empty-section-field';
+        $self->tag('empty-section-field');
         return;
     }
 
@@ -109,14 +108,14 @@ sub always {
     my $fraction = $parts[-1];
 
     if (defined $division) {
-        tag 'unknown-section', $section
+        $self->tag('unknown-section', $section)
           unless $KNOWN_ARCHIVE_PARTS{$division};
     }
 
     if ($fraction eq 'unknown' && !length $division) {
-        tag 'section-is-dh_make-template';
+        $self->tag('section-is-dh_make-template');
     } else {
-        tag 'unknown-section', $section
+        $self->tag('unknown-section', $section)
           unless $KNOWN_SECTIONS->known($fraction);
     }
 
@@ -136,8 +135,8 @@ sub always {
 
                 my $better
                   = (defined $division ? "$division/" : EMPTY) . $section;
-                tag 'wrong-section-according-to-package-name',
-                  "$pkg => $better";
+                $self->tag('wrong-section-according-to-package-name',
+                    "$pkg => $better");
             }
 
             last;
@@ -146,7 +145,7 @@ sub always {
 
     if ($fraction eq 'debug') {
 
-        tag 'wrong-section-according-to-package-name',"$pkg"
+        $self->tag('wrong-section-according-to-package-name',"$pkg")
           if $pkg !~ /-dbg(?:sym)?$/;
     }
 
@@ -154,8 +153,8 @@ sub always {
 
         my $priority = $info->unfolded_field('priority') // EMPTY;
 
-        tag 'transitional-package-should-be-oldlibs-optional',
-          "$fraction/$priority"
+        $self->tag('transitional-package-should-be-oldlibs-optional',
+            "$fraction/$priority")
           unless $priority eq 'optional' && $fraction eq 'oldlibs';
     }
 

@@ -26,8 +26,6 @@ use autodie;
 
 use Moo;
 
-use Lintian::Tags qw(tag);
-
 with('Lintian::Check');
 
 sub octify {
@@ -57,7 +55,7 @@ sub always {
         # the control.tar.gz should only contain files (and the "root"
         # dir, but that is excluded from the index)
         if (not $file->is_regular_file) {
-            tag 'control-file-is-not-a-file', $file;
+            $self->tag('control-file-is-not-a-file', $file);
             # Doing further checks is probably not going to yield anything
             # remotely useful.
             next;
@@ -66,10 +64,10 @@ sub always {
         # valid control file?
         unless ($ctrl->known($file)) {
             if ($ctrl_alt->known($file)) {
-                tag 'not-allowed-control-file', $file;
+                $self->tag('not-allowed-control-file', $file);
                 next;
             } else {
-                tag 'unknown-control-file', $file;
+                $self->tag('unknown-control-file', $file);
                 next;
             }
         }
@@ -77,7 +75,7 @@ sub always {
         $experm = $ctrl->value($file);
 
         if ($file->size == 0 and $file->basename ne 'md5sums') {
-            tag 'control-file-is-empty', $file;
+            $self->tag('control-file-is-empty', $file);
         }
 
         # skip `control' control file (that's an exception: dpkg
@@ -88,26 +86,27 @@ sub always {
         $operm = $file->operm;
         if ($operm & 0111 or $experm & 0111) {
             $has_ctrl_script = 1;
-            tag 'ctrl-script', $file;
+            $self->tag('ctrl-script', $file);
         }
 
         # correct permissions?
         unless ($operm == $experm) {
-            tag 'control-file-has-bad-permissions',
-              sprintf('%s %04o != %04o', $file, $operm, $experm);
+            $self->tag('control-file-has-bad-permissions',
+                sprintf('%s %04o != %04o', $file, $operm, $experm));
         }
 
         $owner = $file->owner . '/' . $file->group;
 
         # correct owner?
         unless ($owner eq 'root/root') {
-            tag 'control-file-has-bad-owner', "$file $owner != root/root";
+            $self->tag('control-file-has-bad-owner',
+                "$file $owner != root/root");
         }
 
         # for other maintainer scripts checks, see the scripts check
     }
     if (not $has_ctrl_script) {
-        tag 'no-ctrl-scripts';
+        $self->tag('no-ctrl-scripts');
     }
     return;
 } # </run>

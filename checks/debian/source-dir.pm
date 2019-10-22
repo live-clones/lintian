@@ -28,7 +28,6 @@ use List::MoreUtils qw(any);
 use Moo;
 
 use Lintian::Data;
-use Lintian::Tags qw(tag);
 
 with('Lintian::Check');
 
@@ -57,7 +56,7 @@ sub source {
         $format_extra = '';
         die "unknown source format $format" unless $KNOWN_FORMATS{$format};
     } else {
-        tag 'missing-debian-source-format';
+        $self->tag('missing-debian-source-format');
         $format = '1.0';
         $format_extra = 'implicit';
     }
@@ -72,10 +71,9 @@ sub source {
     my $format_info = $format;
     $format_info .= " [$format_extra]"
       if $format_extra;
-    tag 'source-format', $format_info;
+    $self->tag('source-format', $format_info);
 
-    tag 'older-source-format', $format
-      if $OLDER_FORMATS{$format};
+    $self->tag('older-source-format', $format) if $OLDER_FORMATS{$format};
 
     return if not $dsrc;
 
@@ -88,12 +86,12 @@ sub source {
             # gitpkg does not create series as a link, so this is most likely
             # a traversal attempt.
             if (not $dpseries or not $dpseries->is_open_ok) {
-                tag 'git-patches-not-exported';
+                $self->tag('git-patches-not-exported');
             } else {
                 my $series_fd = $dpseries->open;
                 my $comment_line = <$series_fd>;
                 my $count = grep { !/^\s*+\#|^\s*+$/o } <$series_fd>;
-                tag 'git-patches-not-exported'
+                $self->tag('git-patches-not-exported')
                   unless (
                     $count
                     && ($comment_line
@@ -106,7 +104,7 @@ sub source {
 
     for my $path ($dsrc->children) {
         my $file = $path->basename;
-        tag 'unknown-file-in-debian-source', $file
+        $self->tag('unknown-file-in-debian-source', $file)
           unless $KNOWN_FILES->known($file);
     }
 
@@ -114,8 +112,8 @@ sub source {
     if ($options and $options->is_open_ok) {
         my $fd = $options->open;
         while (<$fd>) {
-            tag 'debian-source-options-has-custom-compression-settings',
-              $1, "(line $.)"
+            $self->tag('debian-source-options-has-custom-compression-settings',
+                $1, "(line $.)")
               if m/^\s*(compression(?:-level)?\s*=\s+\S+)\n/;
         }
         close($fd);

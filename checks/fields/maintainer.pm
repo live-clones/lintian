@@ -31,7 +31,6 @@ use autodie;
 use Moo;
 
 use Lintian::Maintainer qw(check_maintainer);
-use Lintian::Tags qw(tag);
 
 with('Lintian::Check');
 
@@ -47,7 +46,7 @@ sub source {
 
     my $is_list = $maintainer =~ /\@lists(?:\.alioth)?\.debian\.org\b/;
 
-    tag 'no-human-maintainers'
+    $self->tag('no-human-maintainers')
       if $is_list && !defined $info->field('uploaders');
 
     return;
@@ -61,7 +60,7 @@ sub always {
     my $maintainer = $info->unfolded_field('maintainer');
 
     unless (defined $maintainer) {
-        tag 'no-maintainer-field';
+        $self->tag('no-maintainer-field');
         return;
     }
 

@@ -27,7 +27,6 @@ use File::Temp;
 use Moo;
 
 use Lintian::Data;
-use Lintian::Tags qw(tag);
 use Lintian::Util qw(safe_qx);
 
 with('Lintian::Check');
@@ -48,7 +47,8 @@ sub source {
     }
 
     # Check if more than one signing key is present
-    tag 'public-upstream-keys-in-multiple-locations', sort keys %key_locations
+    $self->tag('public-upstream-keys-in-multiple-locations',
+        sort keys %key_locations)
       if scalar keys %key_locations > 1;
 
     # Go through signing keys and run checks for each
@@ -56,7 +56,7 @@ sub source {
 
         # native packages should not have such keys
         if ($info->native) {
-            tag 'public-upstream-key-in-native-package', $key_name;
+            $self->tag('public-upstream-key-in-native-package', $key_name);
             next;
         }
 
@@ -74,8 +74,8 @@ sub source {
         my $output = safe_qx(@command);
 
         if ($?) {
-            tag 'public-upstream-key-unusable', $key_name,
-              'cannot be processed';
+            $self->tag('public-upstream-key-unusable',
+                $key_name,'cannot be processed');
             next;
         }
 
@@ -86,7 +86,8 @@ sub source {
           );
 
         unless (scalar @keys) {
-            tag 'public-upstream-key-unusable', $key_name,'contains no keys';
+            $self->tag('public-upstream-key-unusable',
+                $key_name,'contains no keys');
             next;
         }
 
@@ -97,13 +98,15 @@ sub source {
 
             # require at least one packet
             unless (scalar @packets) {
-                tag 'public-upstream-key-unusable', $key_name,'has no packets';
+                $self->tag('public-upstream-key-unusable',
+                    $key_name,'has no packets');
                 next;
             }
 
             # look for key identifier
             unless ($packets[0] =~ (qr/\skeyid:\s+(\S+)\s/)) {
-                tag 'public-upstream-key-unusable', $key_name, 'has no keyid';
+                $self->tag('public-upstream-key-unusable',
+                    $key_name, 'has no keyid');
                 next;
             }
             my $keyid = $1;
@@ -121,8 +124,9 @@ sub source {
             my $extrasignatures = scalar @thirdparty;
 
             # export-minimal strips such signatures
-            tag 'public-upstream-key-not-minimal', $key_name,
-              "has $extrasignatures extra signature(s) for keyid $keyid"
+            $self->tag('public-upstream-key-not-minimal',
+                $key_name,
+                "has $extrasignatures extra signature(s) for keyid $keyid")
               if $extrasignatures;
         }
     }

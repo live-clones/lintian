@@ -27,7 +27,6 @@ use autodie;
 use List::MoreUtils qw(none);
 use Moo;
 
-use Lintian::Tags qw(tag);
 use Lintian::Relation;
 
 with('Lintian::Check');
@@ -53,7 +52,7 @@ sub source {
     if (defined($package_xml) || defined($package2_xml)) {
         # Checking source builddep
         if (!$bdepends->implies('pkg-php-tools')) {
-            tag 'pear-package-without-pkg-php-tools-builddep';
+            $self->tag('pear-package-without-pkg-php-tools-builddep');
         } else {
             # Checking first binary relations
             my @binaries = $info->binaries;
@@ -62,21 +61,23 @@ sub source {
             my $recommends = $info->binary_relation($binary, 'recommends');
             my $breaks = $info->binary_relation($binary, 'breaks');
             if (!$depends->implies('${phppear:Debian-Depends}')) {
-                tag 'pear-package-but-missing-dependency', 'Depends';
+                $self->tag('pear-package-but-missing-dependency', 'Depends');
             }
             if (!$recommends->implies('${phppear:Debian-Recommends}')) {
-                tag 'pear-package-but-missing-dependency', 'Recommends';
+                $self->tag('pear-package-but-missing-dependency','Recommends');
             }
             if (!$breaks->implies('${phppear:Debian-Breaks}')) {
-                tag 'pear-package-but-missing-dependency', 'Breaks';
+                $self->tag('pear-package-but-missing-dependency', 'Breaks');
             }
             # Checking description
             my $description = $info->binary_field($binary, 'description');
             if ($description !~ /\$\{phppear:summary\}/) {
-                tag 'pear-package-not-using-substvar', '${phppear:summary}';
+                $self->tag('pear-package-not-using-substvar',
+                    '${phppear:summary}');
             }
             if ($description !~ /\$\{phppear:description\}/) {
-                tag 'pear-package-not-using-substvar','${phppear:description}';
+                $self->tag('pear-package-not-using-substvar',
+                    '${phppear:description}');
             }
             if (defined($package_xml) && $package_xml->is_regular_file) {
                 # Wild guess package type as in
@@ -99,10 +100,12 @@ sub source {
                 close($package_xml_fd);
                 if ($package_type eq 'extsrc') { # PECL package
                     if (!$bdepends->implies('php-dev')) {
-                        tag 'pecl-package-requires-build-dependency','php-dev';
+                        $self->tag('pecl-package-requires-build-dependency',
+                            'php-dev');
                     }
                     if (!$bdepends->implies('dh-php')) {
-                        tag 'pecl-package-requires-build-dependency','dh-php';
+                        $self->tag('pecl-package-requires-build-dependency',
+                            'dh-php');
                     }
                 }
             }
@@ -112,7 +115,7 @@ sub source {
     my $channel_xml = $info->index('channel.xml');
     if (defined($channel_xml)) {
         if (!$bdepends->implies('pkg-php-tools')) {
-            tag 'pear-channel-without-pkg-php-tools-builddep';
+            $self->tag('pear-channel-without-pkg-php-tools-builddep');
         }
     }
     # Composer package
@@ -121,7 +124,7 @@ sub source {
         && !defined($package2_xml)
         && defined($composer_json)) {
         if (!$bdepends->implies('pkg-php-tools')) {
-            tag 'composer-package-without-pkg-php-tools-builddep';
+            $self->tag('composer-package-without-pkg-php-tools-builddep');
         }
     }
     # Check rules
@@ -166,20 +169,20 @@ m/^\t\s*dh\s.*--with(?:=|\s+)(?:\S+,)*phpcomposer(?:,\S+)*\s/
                 || defined($package2_xml)
                 || defined($channel_xml)) {
                 if (!$has_buildsystem_phppear) {
-                    tag 'missing-pkg-php-tools-buildsystem', 'phppear';
+                    $self->tag('missing-pkg-php-tools-buildsystem', 'phppear');
                 }
                 if (!$has_addon_phppear) {
-                    tag 'missing-pkg-php-tools-addon', 'phppear';
+                    $self->tag('missing-pkg-php-tools-addon', 'phppear');
                 }
                 if (($package_type eq 'extsrc') and not $has_addon_php) {
-                    tag 'missing-pkg-php-tools-addon', 'php';
+                    $self->tag('missing-pkg-php-tools-addon', 'php');
                 }
             }
             if (   !defined($package_xml)
                 && !defined($package2_xml)
                 && defined($composer_json)) {
                 if (!$has_addon_phpcomposer) {
-                    tag 'missing-pkg-php-tools-addon', 'phpcomposer';
+                    $self->tag('missing-pkg-php-tools-addon', 'phpcomposer');
                 }
             }
         }

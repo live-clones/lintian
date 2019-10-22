@@ -25,8 +25,6 @@ use autodie;
 
 use Moo;
 
-use Lintian::Tags qw(tag);
-
 with('Lintian::Check');
 
 # Threshold in kB of /usr/share to trigger this warning.  Consider that the
@@ -59,8 +57,8 @@ sub binary {
     if ($size_usrshare > $THRESHOLD_SIZE_SOFT) {
         my $perc = int(100 * $size_usrshare / $size);
         if ($size_usrshare > $THRESHOLD_SIZE_HARD || $perc > $THRESHOLD_PERC) {
-            tag 'arch-dep-package-has-big-usr-share',
-              "${size_usrshare}kB $perc%";
+            $self->tag('arch-dep-package-has-big-usr-share',
+                "${size_usrshare}kB $perc%");
         }
     }
 

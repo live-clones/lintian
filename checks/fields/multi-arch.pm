@@ -31,7 +31,6 @@ use autodie;
 use List::MoreUtils qw(uniq);
 use Moo;
 
-use Lintian::Tags qw(tag);
 use Lintian::Util qw(safe_qx);
 
 with('Lintian::Check');
@@ -65,8 +64,8 @@ sub source {
 
             my $specific = "debian/$bin.lintian-overrides.$arch";
 
-            tag 'multi-arch-same-package-has-arch-specific-overrides',
-              $specific
+            $self->tag('multi-arch-same-package-has-arch-specific-overrides',
+                $specific)
               if $info->index_resolved_path($specific);
         }
     }
@@ -81,7 +80,7 @@ sub binary {
     my $info = $self->info;
 
     if ($pkg =~ /^x?fonts-/) {
-        tag 'font-package-not-multi-arch-foreign'
+        $self->tag('font-package-not-multi-arch-foreign')
           unless $info->field('multi-arch', 'no') =~m/^(?:foreign|allowed)$/o;
     }
 
@@ -93,7 +92,7 @@ sub binary {
     my $architecture = $info->unfolded_field('architecture');
     if (defined $architecture) {
 
-        tag 'illegal-multi-arch-value', $architecture, $multi
+        $self->tag('illegal-multi-arch-value', $architecture, $multi)
           if $architecture eq 'all' && $multi eq 'same';
     }
 
@@ -111,7 +110,7 @@ sub always {
     return
       unless defined $multi;
 
-    tag 'unknown-multi-arch-value', $pkg, $multi
+    $self->tag('unknown-multi-arch-value', $pkg, $multi)
       unless $multi =~ m/^(?:no|foreign|allowed|same)$/o;
 
     return;

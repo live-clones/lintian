@@ -29,7 +29,6 @@ use List::MoreUtils qw(none);
 use Moo;
 
 use Lintian::Spelling qw(check_spelling spelling_tag_emitter);
-use Lintian::Tags qw(tag);
 use Lintian::Util qw(internal_error strip);
 
 with('Lintian::Check');
@@ -70,13 +69,13 @@ sub source {
     #----- dpatch
     if ($build_deps->implies('dpatch')) {
         my $list_file;
-        tag 'patch-system', 'dpatch';
-        tag 'package-uses-deprecated-dpatch-patch-system';
+        $self->tag('patch-system', 'dpatch');
+        $self->tag('package-uses-deprecated-dpatch-patch-system');
         $uses_patch_system++;
         $list_file = $dpdir->resolve_path('00list') if $dpdir;
         #check for a debian/patches file:
         if (not $list_file or not $list_file->is_file) {
-            tag 'dpatch-build-dep-but-no-patch-list';
+            $self->tag('dpatch-build-dep-but-no-patch-list');
         } else {
             my $list_uses_cpp = 0;
             my $opt_file = $dpdir->resolve_path('00options');
@@ -119,8 +118,9 @@ sub source {
                     $patch_file = $dpdir->child("${patch_name}.dpatch")
                       if not $patch_file;
                     if (not $patch_file) {
-                        tag 'dpatch-index-references-non-existent-patch',
-                          $patch_name;
+                        $self->tag(
+                            'dpatch-index-references-non-existent-patch',
+                            $patch_name);
                         next;
                     }
                     next unless $patch_file->is_open_ok;
@@ -140,9 +140,9 @@ sub source {
                     }
                     close($fd);
                     unless ($description) {
-                        tag 'dpatch-missing-description', $patch_name;
+                        $self->tag('dpatch-missing-description', $patch_name);
                     }
-                    check_patch($group, $patch_file, $description);
+                    $self->check_patch($patch_file, $description);
                 }
             }
         }
@@ -153,15 +153,16 @@ sub source {
         $uses_patch_system++;
         # check for a debian/patches file:
         if (not $patch_series or not $patch_series->is_open_ok) {
-            tag 'quilt-build-dep-but-no-series-file' unless $quilt_format;
+            $self->tag('quilt-build-dep-but-no-series-file')
+              unless $quilt_format;
         } else {
-            tag 'patch-system', 'quilt';
+            $self->tag('patch-system', 'quilt');
             my (@patches, @badopts);
             my $series_fd = $patch_series->open;
             while (my $patch = <$series_fd>) {
                 $patch =~ s/(?:^|\s+)#.*$//; # Strip comment
                 if (rindex($patch,"\n") < 0) {
-                    tag 'quilt-series-without-trailing-newline';
+                    $self->tag('quilt-series-without-trailing-newline');
                 }
                 strip($patch); # Strip leading/trailing spaces
                 next if $patch eq '';
@@ -176,15 +177,15 @@ sub source {
             }
             close($series_fd);
             if (scalar(@badopts)) {
-                tag 'quilt-patch-with-non-standard-options', @badopts;
+                $self->tag('quilt-patch-with-non-standard-options', @badopts);
             }
 
             # Check each patch.
             foreach my $patch_filename (@patches) {
                 my $patch = $dpdir->resolve_path($patch_filename);
                 if (not $patch or not $patch->is_file) {
-                    tag 'quilt-series-references-non-existent-patch',
-                      $patch_filename;
+                    $self->tag('quilt-series-references-non-existent-patch',
+                        $patch_filename);
                     next;
                 }
                 next if not $patch->is_open_ok;
@@ -203,13 +204,14 @@ sub source {
                 }
                 close($patch_fd);
                 unless ($description) {
-                    tag 'quilt-patch-missing-description', $patch_filename;
+                    $self->tag('quilt-patch-missing-description',
+                        $patch_filename);
                 }
                 if ($has_template_description) {
-                    tag 'quilt-patch-using-template-description',
-                      $patch_filename;
+                    $self->tag('quilt-patch-using-template-description',
+                        $patch_filename);
                 }
-                check_patch($group, $patch, $description);
+                $self->check_patch($patch, $description);
             }
         }
         if ($quilt_format) { # 3.0 (quilt) specific checks
@@ -221,21 +223,20 @@ sub source {
               if $dpdir;
             if ($versioned_patch and $versioned_patch->is_file) {
                 if (not $patch_header or not $patch_header->is_file) {
-                    tag 'format-3.0-but-debian-changes-patch';
+                    $self->tag('format-3.0-but-debian-changes-patch');
                 }
             }
         }
     } elsif ($patch_series and $patch_series->is_file) {
         # 3.0 (quilt) sources don't need quilt as dpkg-source will
         # do the work
-        tag 'quilt-series-but-no-build-dep' unless $quilt_format;
+        $self->tag('quilt-series-but-no-build-dep') unless $quilt_format;
     }
 
     #----- look for README.source
     if ($uses_patch_system && !$quilt_format) {
         my $readme = $droot->resolve_path('README.source');
-        tag 'patch-system-but-no-source-readme'
-          if not $readme;
+        $self->tag('patch-system-but-no-source-readme') if not $readme;
     }
 
     #----- look for unreferenced files in debian/patches
@@ -251,7 +252,7 @@ sub source {
             }
             close($fd);
 
-            tag 'package-uses-vendor-specific-patch-series', $file
+            $self->tag('package-uses-vendor-specific-patch-series', $file)
               if $file =~ /\.series$/;
         }
 
@@ -261,14 +262,14 @@ sub source {
               or $file->basename =~ /\.in/g;
             # Use path relative to debian/patches for "subdir/foo"
             my $name = substr($file, length $dpdir);
-            tag 'patch-file-present-but-not-mentioned-in-series', $name
+            $self->tag('patch-file-present-but-not-mentioned-in-series', $name)
               unless $known_files{$name} or $file->is_dir;
         }
     }
 
     #----- general cruft checking:
     if ($uses_patch_system > 1) {
-        tag 'more-than-one-patch-system';
+        $self->tag('more-than-one-patch-system');
     }
     my @direct;
     open(my $fd, '<', $info->diffstat);
@@ -283,10 +284,11 @@ sub source {
 
         if ($uses_patch_system) {
             for my $patched_file (@direct) {
-                tag 'patch-system-but-direct-changes-in-diff', $patched_file;
+                $self->tag('patch-system-but-direct-changes-in-diff',
+                    $patched_file);
             }
         }
-        tag 'direct-changes-in-diff-but-no-patch-system', $files
+        $self->tag('direct-changes-in-diff-but-no-patch-system', $files)
           if (not $uses_patch_system);
     }
     return;
@@ -294,7 +296,10 @@ sub source {
 
 # Checks on patches common to all build systems.
 sub check_patch {
-    my ($group, $patch_file, $description) = @_;
+    my ($self, $patch_file, $description) = @_;
+
+    my $group = $self->group;
+
     if (none { /(spelling|typo)/i } ($patch_file, $description)) {
         my $tag_emitter
           = spelling_tag_emitter('spelling-error-in-patch-description',
@@ -312,7 +317,8 @@ sub check_patch {
     while (<$fd>) {
         chomp;
         if (m|^(?:\./)?debian/|o) {
-            tag 'patch-modifying-debian-files', $patch_file->basename, $_;
+            $self->tag('patch-modifying-debian-files',
+                $patch_file->basename, $_);
         }
     }
     close($fd);

@@ -30,7 +30,6 @@ use Moo;
 
 use Lintian::Data;
 use Lintian::Relation;
-use Lintian::Tags qw(tag);
 use Lintian::Util qw(internal_error strip);
 
 with('Lintian::Check');
@@ -137,7 +136,7 @@ sub always {
             # Now that we're sure this is really a shared library, report on
             # non-PIC problems.
             if ($objdump->{$cur_file}{TEXTREL}) {
-                tag 'shlib-with-non-pic-code', $cur_file;
+                $self->tag('shlib-with-non-pic-code', $cur_file);
             }
 
             my @symbol_names
@@ -147,7 +146,7 @@ sub always {
                 # If it has an INTERP section it might be an application with
                 # a SONAME (hi openjdk-6, see #614305).  Also see the comment
                 # for "shlib-with-executable-bit" below.
-                tag 'shlib-calls-exit', $cur_file
+                $self->tag('shlib-calls-exit', $cur_file)
                   unless $objdump->{$cur_file}{INTERP};
             }
 
@@ -158,25 +157,26 @@ sub always {
                 # designed to do something useful when executed, so don't
                 # report an error.  Also give ld.so a pass, since it's
                 # special.
-                tag 'shlib-with-executable-bit', $cur_file, $perms
+                $self->tag('shlib-with-executable-bit', $cur_file, $perms)
                   unless ($objdump->{$cur_file}{INTERP}
                     or $cur_file =~ m,^lib.*/ld-[\d.]+\.so$,);
             } elsif ($perm != 0644) {
-                tag 'shlib-with-bad-permissions', $cur_file, $perms;
+                $self->tag('shlib-with-bad-permissions', $cur_file, $perms);
             }
 
             # executable stack.
             if (not defined $objdump->{$cur_file}{'PH'}{STACK}) {
                 if (defined $info->field('architecture')) {
                     my $arch = $info->field('architecture');
-                    tag 'shlib-without-PT_GNU_STACK-section', $cur_file;
+                    $self->tag('shlib-without-PT_GNU_STACK-section',$cur_file);
                 }
             } elsif ($objdump->{$cur_file}{'PH'}{STACK}{flags} ne 'rw-'){
-                tag 'shlib-with-executable-stack', $cur_file;
+                $self->tag('shlib-with-executable-stack', $cur_file);
             }
         } elsif ($ldconfig_dirs->known(dirname($cur_file))
             && exists $sharedobject{$cur_file}) {
-            tag 'sharedobject-in-library-directory-missing-soname', $cur_file;
+            $self->tag('sharedobject-in-library-directory-missing-soname',
+                $cur_file);
         } elsif ($cur_file =~ m/\.la$/ and not defined $cur_file->link) {
             local $_;
             my $fd = $cur_file->open;
@@ -196,11 +196,12 @@ sub always {
                       if ($value
                         =~ m,^/usr/lib/python[\d.]+/(?:site|dist)-packages,
                         and $expected =~ m,^/usr/share/pyshared,);
-                    tag 'incorrect-libdir-in-la-file', $cur_file,
-                      "$value != $expected"
+                    $self->tag('incorrect-libdir-in-la-file', $cur_file,
+                        "$value != $expected")
                       unless($expected eq $value);
                 } elsif ($field eq 'dependency_libs'){
-                    tag 'non-empty-dependency_libs-in-la-file', $cur_file;
+                    $self->tag('non-empty-dependency_libs-in-la-file',
+                        $cur_file);
                 }
             }
             close($fd);
@@ -223,8 +224,8 @@ sub always {
         # symlink found?
         my $link_file = "$dir/$SONAME{$shlib_file}";
         if (not $info->index($link_file)) {
-            tag 'ldconfig-symlink-missing-for-shlib',
-              "$link_file $shlib_file $SONAME{$shlib_file}";
+            $self->tag('ldconfig-symlink-missing-for-shlib',
+                "$link_file $shlib_file $SONAME{$shlib_file}");
         } else {
             # $link_file really another file?
             if ($link_file eq $shlib_file) {
@@ -238,15 +239,16 @@ sub always {
                     if ($info->index($link_file)->link eq $shlib_name) {
                         # ok.
                     } else {
-                        tag 'ldconfig-symlink-referencing-wrong-file',
-                          join(q{ },
-                            "$link_file ->",
-                            $info->index($link_file)->link,
-                            "instead of $shlib_name");
+                        $self->tag(
+                            'ldconfig-symlink-referencing-wrong-file',
+                            join(q{ },
+                                "$link_file ->",
+                                $info->index($link_file)->link,
+                                "instead of $shlib_name"));
                     }
                 } else {
-                    tag 'ldconfig-symlink-is-not-a-symlink',
-                      "$shlib_file $link_file";
+                    $self->tag('ldconfig-symlink-is-not-a-symlink',
+                        "$shlib_file $link_file");
                 }
             }
         }
@@ -261,7 +263,8 @@ sub always {
         # $shlib_file will be equal, and it's not a development link,
         # so don't complain.
         if ($info->index($link_file) and $link_file ne $shlib_file) {
-            tag 'non-dev-pkg-with-shlib-symlink', "$shlib_file $link_file";
+            $self->tag('non-dev-pkg-with-shlib-symlink',
+                "$shlib_file $link_file");
         } elsif (@devpkgs) {
             # -dev package - it needs a shlib symlink
             my $ok = 0;
@@ -325,7 +328,8 @@ sub always {
                     }
                 }
             }
-            tag 'dev-pkg-without-shlib-symlink', "$shlib_file $link_file"
+            $self->tag('dev-pkg-without-shlib-symlink',
+                "$shlib_file $link_file")
               unless $ok;
         }
     }
@@ -358,7 +362,7 @@ sub always {
         my $soname = format_soname($SONAME{$_});
         if ($soname !~ / /) {
             $unversioned_shlibs{$_} = 1;
-            tag 'shlib-without-versioned-soname', $_, $soname
+            $self->tag('shlib-without-versioned-soname', $_, $soname)
               if $ldconfig_dirs->known(dirname($_));
         }
     }
@@ -368,7 +372,8 @@ sub always {
         # no shared libraries included in package, thus shlibs control
         # file should not be present
         if ($shlibsf) {
-            tag 'pkg-has-shlibs-control-file-but-no-actual-shared-libs';
+            $self->tag(
+                'pkg-has-shlibs-control-file-but-no-actual-shared-libs');
         }
     } else {
         # shared libraries included, thus shlibs control file has to exist
@@ -377,7 +382,7 @@ sub always {
                 for my $shlib (@shlibs) {
                     # skip it if it's not a public shared library
                     next unless $ldconfig_dirs->known(dirname($shlib));
-                    tag 'no-shlibs-control-file', $shlib
+                    $self->tag('no-shlibs-control-file', $shlib)
                       unless is_nss_plugin($shlib);
                 }
             }
@@ -396,8 +401,8 @@ sub always {
                 @words = split(/\s+/o,$_);
                 my $shlibs_string = $udeb.$words[0].' '.$words[1];
                 if ($shlibs_control{$shlibs_string}) {
-                    tag 'duplicate-entry-in-shlibs-control-file',
-                      $shlibs_string;
+                    $self->tag('duplicate-entry-in-shlibs-control-file',
+                        $shlibs_string);
                 } else {
                     $shlibs_control{$shlibs_string} = 1;
                     push(@shlibs_depends, join(' ', @words[2 .. $#words]))
@@ -414,13 +419,13 @@ sub always {
                     # skip it if it's not a public shared library
                     next unless $ldconfig_dirs->known(dirname($shlib));
                     # no!!
-                    tag 'shlib-missing-in-control-file', $shlib_name, 'for',
-                      $shlib
+                    $self->tag('shlib-missing-in-control-file',
+                        $shlib_name, 'for',$shlib)
                       unless is_nss_plugin($shlib);
                 }
             }
             for my $shlib_name (keys %shlibs_control) {
-                tag 'unused-shlib-entry-in-control-file', $shlib_name
+                $self->tag('unused-shlib-entry-in-control-file', $shlib_name)
                   unless $shlibs_control_used{$shlib_name};
             }
 
@@ -435,9 +440,10 @@ sub always {
             @shlibs_depends = uniq(@shlibs_depends);
             for my $depend (@shlibs_depends) {
                 unless ($provides->implies($depend)) {
-                    tag 'shlibs-declares-dependency-on-other-package', $depend;
+                    $self->tag('shlibs-declares-dependency-on-other-package',
+                        $depend);
                 }
-                tag 'shlibs-uses-obsolete-relation', $depend
+                $self->tag('shlibs-uses-obsolete-relation', $depend)
                   if $depend =~ m/\(\s*[><](?![<>=])\s*/;
             }
         }
@@ -449,7 +455,7 @@ sub always {
         # no shared libraries included in package, thus symbols
         # control file should not be present
         if ($symbolsf) {
-            tag 'pkg-has-symbols-control-file-but-no-shared-libs';
+            $self->tag('pkg-has-symbols-control-file-but-no-shared-libs');
         }
     } elsif (not $symbolsf) {
         if ($type ne 'udeb') {
@@ -460,7 +466,7 @@ sub always {
                 # appear in the symbol table
                 next if any { @{$_}[2] =~ m/^__objc_/ }
                 @{$objdump->{$shlib}{SYMBOLS}};
-                tag 'no-symbols-control-file', $shlib
+                $self->tag('no-symbols-control-file', $shlib)
                   unless is_nss_plugin($shlib);
             }
         }
@@ -491,7 +497,8 @@ sub always {
                 $soname = format_soname($soname);
 
                 if ($symbols_control{$soname}) {
-                    tag 'duplicate-entry-in-symbols-control-file', $soname;
+                    $self->tag('duplicate-entry-in-symbols-control-file',
+                        $soname);
                 } else {
                     $symbols_control{$soname} = 1;
                     $warned = 0;
@@ -504,7 +511,7 @@ sub always {
                             if (defined $dep_package) {
                                 push @symbols_depends, $dep_package . $dep;
                             } else {
-                                tag 'syntax-error-in-symbols-file', $.
+                                $self->tag('syntax-error-in-symbols-file', $.)
                                   unless $warned;
                                 $warned = 1;
                             }
@@ -521,7 +528,7 @@ sub always {
                 $warned = 0;
 
                 if (%meta_info_seen or not defined $soname) {
-                    tag 'syntax-error-in-symbols-file', $.;
+                    $self->tag('syntax-error-in-symbols-file', $.);
                     $warned = 1;
                 }
 
@@ -534,7 +541,7 @@ sub always {
                         if (defined $dep_package) {
                             push @symbols_depends, $dep_package . $dep;
                         } else {
-                            tag 'syntax-error-in-symbols-file', $.
+                            $self->tag('syntax-error-in-symbols-file', $.)
                               unless $warned;
                             $warned = 1;
                         }
@@ -545,9 +552,9 @@ sub always {
             } elsif (m/^\*\s(\S+):\s\S+/) {
                 # meta-information
 
-                tag 'unknown-meta-field-in-symbols-file', "$1, line $."
+                $self->tag('unknown-meta-field-in-symbols-file', "$1, line $.")
                   unless exists $symbols_meta_fields{$1};
-                tag 'syntax-error-in-symbols-file', $.
+                $self->tag('syntax-error-in-symbols-file', $.)
                   unless defined $soname and $symbol_count == 0;
 
                 $meta_info_seen{$1} = 1;
@@ -555,7 +562,7 @@ sub always {
             } elsif (m/^\s+(\S+)\s(\S+)(?:\s(\S+(?:\s\S+)?))?$/) {
                 # Symbol definition
 
-                tag 'syntax-error-in-symbols-file', $.
+                $self->tag('syntax-error-in-symbols-file', $.)
                   unless defined $soname;
 
                 $symbol_count++;
@@ -574,13 +581,13 @@ sub always {
 
                 if (length $dep_order) {
                     if ($dep_order !~ /^\d+$/ or $dep_order > $dep_templates) {
-                        tag 'invalid-template-id-in-symbols-file', $.;
+                        $self->tag('invalid-template-id-in-symbols-file', $.);
                     }
                 }
             } else {
                 # Unparseable line
 
-                tag 'syntax-error-in-symbols-file', $.;
+                $self->tag('syntax-error-in-symbols-file', $.);
             }
         }
         close($fd);
@@ -590,8 +597,9 @@ sub always {
             if ($full_version_count > 0) {
                 $others = " and $full_version_count others";
             }
-            tag 'symbols-file-contains-current-version-with-debian-revision',
-              "on symbol $full_version_sym$others";
+            $self->tag(
+                'symbols-file-contains-current-version-with-debian-revision',
+                "on symbol $full_version_sym$others");
         }
         if ($debian_revision_count) {
             $debian_revision_count--;
@@ -599,8 +607,10 @@ sub always {
             if ($debian_revision_count > 0) {
                 $others = " and $debian_revision_count others";
             }
-            tag 'symbols-file-contains-debian-revision',
-              "on symbol $debian_revision_sym$others";
+            $self->tag(
+                'symbols-file-contains-debian-revision',
+                "on symbol $debian_revision_sym$others"
+            );
         }
         for my $shlib (@shlibs, keys %unversioned_shlibs) {
             my $shlib_name = $SONAME{$shlib};
@@ -610,16 +620,17 @@ sub always {
             unless (exists $symbols_control{$shlib_name}) {
                 # skip it if it's not a public shared library
                 next unless $ldconfig_dirs->known(dirname($shlib));
-                tag 'shlib-missing-in-symbols-control-file', $shlib_name,
-                  'for', $shlib
+                $self->tag('shlib-missing-in-symbols-control-file',
+                    $shlib_name,'for', $shlib)
                   unless is_nss_plugin($shlib);
             }
         }
         for my $shlib_name (keys %symbols_control) {
-            tag 'unused-shlib-entry-in-symbols-control-file', $shlib_name
+            $self->tag('unused-shlib-entry-in-symbols-control-file',
+                $shlib_name)
               unless $symbols_control_used{$shlib_name};
         }
-        tag 'symbols-file-missing-build-depends-package-field'
+        $self->tag('symbols-file-missing-build-depends-package-field')
           unless $build_depends_seen;
 
         # Check that all of the packages listed as dependencies in the symbols
@@ -634,7 +645,8 @@ sub always {
             my $d = $depend;
             $d =~ s/ \#MINVER\#$//;
             unless ($provides->implies($d)) {
-                tag 'symbols-declares-dependency-on-other-package', $depend;
+                $self->tag('symbols-declares-dependency-on-other-package',
+                    $depend);
             }
         }
     }
@@ -645,7 +657,7 @@ sub always {
     if (keys %shlibs_control and keys %symbols_control) {
         for my $key (keys %symbols_control) {
             unless (exists $shlibs_control{$key} or $key !~ / /) {
-                tag 'symbols-declared-but-not-shlib', $key;
+                $self->tag('symbols-declared-but-not-shlib', $key);
             }
         }
     }
@@ -654,9 +666,10 @@ sub always {
     if (my $preinst = $info->control_index_resolved_path('preinst')) {
         if ($preinst->is_open_ok) {
             if ($preinst->file_contents =~ m/^[^\#]*\bldconfig\b/m) {
-                tag 'maintscript-calls-ldconfig', 'preinst'
-                  # Assume it is needed if glibc does it
-                  if $proc->pkg_src ne 'glibc';
+                $self->tag(
+                    'maintscript-calls-ldconfig', 'preinst'
+                      # Assume it is needed if glibc does it
+                ) if $proc->pkg_src ne 'glibc';
             }
         }
     }
@@ -667,11 +680,11 @@ sub always {
             # Decide if we call ldconfig
             if ($postinst->file_contents =~ m/^[^\#]*\bldconfig\b/m) {
                 if ($type eq 'udeb') {
-                    tag 'udeb-postinst-must-not-call-ldconfig';
+                    $self->tag('udeb-postinst-must-not-call-ldconfig');
                 } else {
                     # glibc (notably libc-bin) needs to call ldconfig in
                     # order to implement the "ldconfig" trigger.
-                    tag 'maintscript-calls-ldconfig', 'postinst'
+                    $self->tag('maintscript-calls-ldconfig', 'postinst')
                       if $proc->pkg_src ne 'glibc';
                 }
             }
@@ -695,26 +708,28 @@ sub always {
     }
 
     if ($type eq 'udeb') {
-        tag 'udeb-postinst-must-not-call-ldconfig'
+        $self->tag('udeb-postinst-must-not-call-ldconfig')
           if $we_trigger_ldconfig;
     } else {
-        tag 'package-has-unnecessary-activation-of-ldconfig-trigger'
+        $self->tag('package-has-unnecessary-activation-of-ldconfig-trigger')
           if $we_trigger_ldconfig and not $must_call_ldconfig;
-        tag 'package-must-activate-ldconfig-trigger', $must_call_ldconfig
+        $self->tag('package-must-activate-ldconfig-trigger',
+            $must_call_ldconfig)
           if not $we_trigger_ldconfig and $must_call_ldconfig;
     }
 
     my $multiarch = $info->field('multi-arch', 'no');
     if ($multiarch eq 'foreign' and $must_call_ldconfig) {
-        tag 'shlib-in-multi-arch-foreign-package', $must_call_ldconfig;
+        $self->tag('shlib-in-multi-arch-foreign-package', $must_call_ldconfig);
     }
 
     if (my $prerm = $info->control_index_resolved_path('prerm')) {
         if ($prerm->is_open_ok) {
             if ($prerm->file_contents =~ m/^[^\#]*\bldconfig\b/m) {
-                tag 'maintscript-calls-ldconfig', 'prerm'
-                  # Assume it is needed if glibc does it
-                  if $proc->pkg_src ne 'glibc';
+                $self->tag(
+                    'maintscript-calls-ldconfig', 'prerm'
+                      # Assume it is needed if glibc does it
+                ) if $proc->pkg_src ne 'glibc';
             }
         }
     }
@@ -725,9 +740,10 @@ sub always {
 
             # Decide if we call ldconfig
             if ($contents =~ m/^[^\#]*\bldconfig\b/m) {
-                tag 'maintscript-calls-ldconfig', 'postrm'
-                  # Assume it is needed if glibc does it
-                  if $proc->pkg_src ne 'glibc';
+                $self->tag(
+                    'maintscript-calls-ldconfig', 'postrm'
+                      # Assume it is needed if glibc does it
+                ) if $proc->pkg_src ne 'glibc';
             }
         }
     }
@@ -739,8 +755,8 @@ sub always {
         while (<$fd>) {
             next unless m,^Libs:,;
             while (/[:\s]-l(\S+)/g) {
-                tag 'pkg-config-references-unknown-shared-library',
-                  $file, "-l$1", "(line $.)"
+                $self->tag('pkg-config-references-unknown-shared-library',
+                    $file, "-l$1", "(line $.)")
                   unless $1 =~ m/\$\{.+\}/
                   or exists($SONAMES{$1})
                   or exists($STATIC_LIBS{$1})

@@ -29,7 +29,6 @@ use Text::Levenshtein qw(distance);
 
 use Lintian::Data;
 use Lintian::Relation qw(:constants);
-use Lintian::Tags qw(tag);
 use Lintian::Util qw(strip);
 
 with('Lintian::Check');
@@ -78,6 +77,7 @@ sub source {
         'python2' => 0,
         'python3' => 0,
         'runit'   => 0,
+        'sphinxdoc' => 0,
     );
     my %overrides;
 
@@ -110,12 +110,12 @@ sub source {
               if not exists($build_systems{'dh'});
 
             if ($dhcommand eq 'dh_installmanpages') {
-                tag 'dh_installmanpages-is-obsolete', "line $.";
+                $self->tag('dh_installmanpages-is-obsolete', "line $.");
             }
             if (   $dhcommand eq 'dh_autotools-dev_restoreconfig'
                 or $dhcommand eq 'dh_autotools-dev_updateconfig') {
-                tag 'debhelper-tools-from-autotools-dev-are-deprecated',
-                  "$dhcommand (line $.)";
+                $self->tag('debhelper-tools-from-autotools-dev-are-deprecated',
+                    "$dhcommand (line $.)");
                 $uses_autotools_dev_dh = 1;
             }
 
@@ -167,13 +167,17 @@ sub source {
                     my $depends = $dh_addons_manual->value($addon)
                       || $dh_addons->value($addon);
                     if ($addon eq 'autotools_dev') {
-                        tag
-                          'debhelper-tools-from-autotools-dev-are-deprecated',
-                          "dh ... --with ${orig_addon} (line $.)";
+                        $self->tag(
+'debhelper-tools-from-autotools-dev-are-deprecated',
+                            "dh ... --with ${orig_addon} (line $.)"
+                        );
                         $uses_autotools_dev_dh = 1;
                     }
-                    tag 'dh-quilt-addon-but-quilt-source-format',
-                      "dh ... --with ${orig_addon}", "(line $.)"
+                    $self->tag(
+                        'dh-quilt-addon-but-quilt-source-format',
+                        "dh ... --with ${orig_addon}",
+                        "(line $.)"
+                      )
                       if $addon eq 'quilt'
                       and $info->field('format', '') eq '3.0 (quilt)';
                     if (defined $depends) {
@@ -218,9 +222,9 @@ sub source {
                 # Unknown command, so check for likely misspellings
                 foreach my $x (sort $dh_commands_depends->all) {
                     if ("dh_auto_$cmd" eq $x or distance($dhcommand, $x) < 3) {
-                        tag 'typo-in-debhelper-override-target',
-                          "override_$dhcommand", '->', "override_$x",
-                          "(line $.)";
+                        $self->tag('typo-in-debhelper-override-target',
+                            "override_$dhcommand", '->', "override_$x",
+                            "(line $.)");
                         last; # Only emit a single match
                     }
                 }
@@ -262,18 +266,19 @@ sub source {
 
     unless ($inclcdbs){
         # Okay - d/rules does not include any file in /usr/share/cdbs/
-        tag 'unused-build-dependency-on-cdbs' if ($bdepends->implies('cdbs'));
+        $self->tag('unused-build-dependency-on-cdbs')
+          if ($bdepends->implies('cdbs'));
     }
 
     if (%build_systems) {
         my @systems = sort(keys(%build_systems));
-        tag 'debian-build-system', join(', ', @systems);
+        $self->tag('debian-build-system', join(', ', @systems));
     } else {
-        tag 'debian-build-system', 'other';
+        $self->tag('debian-build-system', 'other');
     }
 
     unless ($seencommand or $inclcdbs) {
-        tag 'package-does-not-use-debhelper-or-cdbs';
+        $self->tag('package-does-not-use-debhelper-or-cdbs');
         return;
     }
 
@@ -288,9 +293,9 @@ sub source {
         my $all = $info->binary_relation($binpkg, 'all');
 
         if (!$all->implies($MISC_DEPENDS)) {
-            tag 'debhelper-but-no-misc-depends', $binpkg;
+            $self->tag('debhelper-but-no-misc-depends', $binpkg);
         } else {
-            tag 'weak-dependency-on-misc-depends', $binpkg
+            $self->tag('weak-dependency-on-misc-depends', $binpkg)
               unless $strong->implies($MISC_DEPENDS);
         }
     }
@@ -299,7 +304,7 @@ sub source {
         my $binpkg = $proc->pkg_name;
         my $breaks = $info->binary_relation($binpkg, 'breaks');
         my $strong = $info->binary_relation($binpkg, 'strong');
-        tag 'package-uses-dh-runit-but-lacks-breaks-substvar', $binpkg
+        $self->tag('package-uses-dh-runit-but-lacks-breaks-substvar', $binpkg)
           if $seen{'runit'}
           and $strong->implies('runit')
           and any { m,^etc/sv/, } $proc->info->sorted_index
@@ -313,7 +318,7 @@ sub source {
         return 0 unless m,^debhelper-compat \(= (\d+)\)$,;
         $level = $1;
         $compatvirtual = $level;
-        tag 'debhelper-compat-virtual-relation', $compatvirtual;
+        $self->tag('debhelper-compat-virtual-relation', $compatvirtual);
         return 1;
     };
     $bdepends->visit($visit, VISIT_PRED_FULL | VISIT_STOP_FIRST_MATCH);
@@ -327,69 +332,76 @@ sub source {
             if ($. == 1) {
                 $compat = strip($_);
             } elsif (m/^\d/) {
-                tag 'debhelper-compat-file-contains-multiple-levels',
-                  "(line $.)";
+                $self->tag('debhelper-compat-file-contains-multiple-levels',
+                    "(line $.)");
             }
         }
         close($fd);
         if ($compat ne '') {
             my $compat_value = $compat;
             if ($compat !~ m/^\d+$/) {
-                tag 'debhelper-compat-not-a-number', $compat;
+                $self->tag('debhelper-compat-not-a-number', $compat);
                 $compat =~ s/[^\d]//g;
                 $compat_value = $compat;
                 $compatnan = 1;
             }
             if ($level) {
                 my $c = $compat;
-                tag 'declares-possibly-conflicting-debhelper-compat-versions',
-                  "rules=$level compat=${c}";
+                $self->tag(
+                    'declares-possibly-conflicting-debhelper-compat-versions',
+                    "rules=$level compat=${c}"
+                );
             } else {
                 # this is not just to fill in the gap, but because debhelper
                 # prefers DH_COMPAT over debian/compat
                 $level = $compat_value;
             }
         } else {
-            tag 'debhelper-compat-file-is-empty';
+            $self->tag('debhelper-compat-file-is-empty');
         }
     } else {
-        tag 'debhelper-compat-file-is-missing' unless $compatvirtual;
+        $self->tag('debhelper-compat-file-is-missing') unless $compatvirtual;
     }
 
     if (defined($level) and $level !~ m/^\d+$/ and not $compatnan) {
-        tag 'debhelper-compatibility-level-not-a-number', $level;
+        $self->tag('debhelper-compatibility-level-not-a-number', $level);
         $level =~ s/[^\d]//g;
         $compatnan = 1;
     }
 
-    tag 'debhelper-compat-level', $level if defined($level);
+    $self->tag('debhelper-compat-level', $level) if defined($level);
     $level ||= 1;
     if ($level < $compat_level->value('deprecated')) {
-        tag 'package-uses-deprecated-debhelper-compat-version', $level;
+        $self->tag('package-uses-deprecated-debhelper-compat-version', $level);
     } elsif ($level < $compat_level->value('recommended')) {
-        tag 'package-uses-old-debhelper-compat-version', $level;
+        $self->tag('package-uses-old-debhelper-compat-version', $level);
     } elsif ($level >= $compat_level->value('experimental')) {
-        tag 'package-uses-experimental-debhelper-compat-version', $level;
+        $self->tag('package-uses-experimental-debhelper-compat-version',
+            $level);
     }
 
     if ($seendhcleank) {
-        tag 'dh-clean-k-is-deprecated';
+        $self->tag('dh-clean-k-is-deprecated');
     }
 
     for my $suffix (qw(enable start)) {
         my ($line, $arch) = @{$overrides{"dh_systemd_$suffix"} // []};
-        tag 'debian-rules-uses-deprecated-systemd-override',
-          "override_dh_systemd_$suffix$arch", "(line $line)"
-          if $line and $level >= 11;
+        $self->tag(
+            'debian-rules-uses-deprecated-systemd-override',
+            "override_dh_systemd_$suffix$arch",
+            "(line $line)"
+        ) if $line and $level >= 11;
     }
 
     my $num_overrides = scalar(keys %overrides);
-    tag 'excessive-debhelper-overrides', $num_overrides
+    $self->tag('excessive-debhelper-overrides', $num_overrides)
       if $num_overrides >= 20;
 
-    tag 'debian-rules-uses-unnecessary-dh-argument', 'dh ... --parallel',
-      "(line $seen_dh_parallel)"
-      if $seen_dh_parallel and $level >= 10;
+    $self->tag(
+        'debian-rules-uses-unnecessary-dh-argument',
+        'dh ... --parallel',
+        "(line $seen_dh_parallel)"
+    ) if $seen_dh_parallel and $level >= 10;
 
     # Check the files in the debian directory for various debhelper-related
     # things.
@@ -420,23 +432,24 @@ sub source {
                 $is_udeb = 1 if $binpkg and $binpkg_type eq 'udeb';
                 $is_udeb = 1 if not $binpkg and $single_pkg eq 'udeb';
                 if (not $is_udeb) {
-                    tag 'maintainer-script-lacks-debhelper-token',$file;
+                    $self->tag('maintainer-script-lacks-debhelper-token',
+                        $file);
                 }
             }
         } elsif ($basename eq 'control'
             or $basename =~ m/^(?:.*\.)?(?:copyright|changelog|NEWS)$/o) {
             # Handle "control", [<pkg>.]copyright, [<pkg>.]changelog
             # and [<pkg>.]NEWS
-            _tag_if_executable($file);
+            $self->tag_if_executable($file);
         } elsif ($basename =~ m/^ex\.|\.ex$/i) {
-            tag 'dh-make-template-in-source', $file;
+            $self->tag('dh-make-template-in-source', $file);
         } elsif ($basename =~ m/^(?:(.*)\.)?maintscript$/) {
             next unless $file->is_open_ok;
             my $fd = $file->open;
             while (<$fd>) {
                 if (m/--\s+"\$(?:@|{@})"\s*$/) {
-                    tag 'maintscript-includes-maint-script-parameters',
-                      $basename, "(line $.)";
+                    $self->tag('maintscript-includes-maint-script-parameters',
+                        $basename, "(line $.)");
                 }
             }
             close($fd);
@@ -444,7 +457,7 @@ sub source {
             # The regex matches "debhelper", but debhelper/Dh_Lib does not
             # make those, so skip it.
             if ($basename ne 'debhelper') {
-                tag 'temporary-debhelper-file', $basename;
+                $self->tag('temporary-debhelper-file', $basename);
             }
         } else {
             my $base = $basename;
@@ -456,7 +469,7 @@ sub source {
                 next unless $file->is_open_ok;
                 if ($level < 9) {
                     # debhelper only use executable files in compat 9
-                    _tag_if_executable($file);
+                    $self->tag_if_executable($file);
                 } else {
                     # Permissions are not really well defined for
                     # symlinks.  Resolve unconditionally, so we are
@@ -465,10 +478,10 @@ sub source {
                     if ($actual and $actual->is_executable) {
                         my $cmd = _shebang_cmd($file);
                         unless ($cmd) {
-                            #<<< perltidy doesn't handle this too well
-                            tag 'executable-debhelper-file-without-being-executable',
-                              $file;
-                            #>>>
+                            $self->tag(
+'executable-debhelper-file-without-being-executable',
+                                $file
+                            );
                         }
 
                         # Do not make assumptions about the contents of an
@@ -476,7 +489,7 @@ sub source {
                         # script.
                         if ($cmd =~ /dh-exec/) {
                             $needdhexecbuilddepends = 1;
-                            _check_dh_exec($cmd, $base, $file);
+                            $self->check_dh_exec($cmd, $base, $file);
                         }
                         next;
                     }
@@ -488,8 +501,8 @@ sub source {
                     next if /^\s*$/;
                     next if (/^\#/ and $level >= 5);
                     if (m/((?<!\\)\{(?:[^\s\\\}]*?,)+[^\\\}\s,]*,*\})/) {
-                        tag 'brace-expansion-in-debhelper-config-file',$file,
-                          $1,"(line $.)";
+                        $self->tag('brace-expansion-in-debhelper-config-file',
+                            $file,$1,"(line $.)");
                         last;
                     }
                 }
@@ -501,12 +514,12 @@ sub source {
     $bdepends_noarch = $info->relation_noarch('build-depends-all');
     $bdepends = $info->relation('build-depends-all');
     if ($needbuilddepends) {
-        tag 'package-uses-debhelper-but-lacks-build-depends'
+        $self->tag('package-uses-debhelper-but-lacks-build-depends')
           unless $bdepends->implies('debhelper')
           or $bdepends->implies('debhelper-compat');
     }
     if ($needdhexecbuilddepends && !$bdepends->implies('dh-exec')) {
-        tag 'package-uses-dh-exec-but-lacks-build-depends';
+        $self->tag('package-uses-dh-exec-but-lacks-build-depends');
     }
 
     while (my ($dep, $command) = each %missingbdeps) {
@@ -514,17 +527,18 @@ sub source {
         next
           if $level >= 10
           and any { $_ eq $dep } qw(autotools-dev dh-strip-nondeterminism);
-        tag 'missing-build-dependency-for-dh_-command', "$command => $dep"
+        $self->tag('missing-build-dependency-for-dh_-command',
+            "$command => $dep")
           unless ($bdepends_noarch->implies($dep));
     }
     while (my ($dep, $addon) = each %missingbdeps_addons) {
-        tag 'missing-build-dependency-for-dh-addon', "$addon => $dep"
+        $self->tag('missing-build-dependency-for-dh-addon', "$addon => $dep")
           unless ($bdepends_noarch->implies($dep));
 
         # As a special case, the python3 addon needs a dependency on
         # dh-python unless the -dev packages are used.
         my $pkg = 'dh-python';
-        tag 'missing-build-dependency-for-dh-addon',"$addon => $pkg"
+        $self->tag('missing-build-dependency-for-dh-addon',"$addon => $pkg")
           if $addon eq 'python3'
           && $bdepends_noarch->implies($dep)
           && !$bdepends_noarch->implies(
@@ -539,13 +553,13 @@ sub source {
         my @extra = ($level);
         $tagname = 'package-lacks-versioned-build-depends-on-debhelper'
           if ($dh_bd_version <= $compat_level->value('pedantic'));
-        tag $tagname, @extra;
+        $self->tag($tagname, @extra);
     }
 
     if ($level >= 10) {
         for my $pkg (qw(dh-autoreconf autotools-dev)) {
             next if $pkg eq 'autotools-dev' and $uses_autotools_dev_dh;
-            tag 'useless-autoreconf-build-depends', $pkg
+            $self->tag('useless-autoreconf-build-depends', $pkg)
               if $bdepends->implies($pkg);
         }
     }
@@ -559,8 +573,8 @@ sub source {
             }
         }
         if (%python_depends) {
-            tag 'python-depends-but-no-python-helper',
-              sort(keys %python_depends);
+            $self->tag('python-depends-but-no-python-helper',
+                sort(keys %python_depends));
         }
     }
     if ($seen_dh and not $seen{'python3'}) {
@@ -572,31 +586,43 @@ sub source {
             }
         }
         if (%python3_depends) {
-            tag 'python3-depends-but-no-python3-helper',
-              sort(keys %python3_depends);
+            $self->tag('python3-depends-but-no-python3-helper',
+                sort(keys %python3_depends));
         }
     }
+
+    if ($seen{'sphinxdoc'}) {
+        my $seen_sphinxdoc = 0;
+        for my $binpkg (@pkgs) {
+            $seen_sphinxdoc = 1
+              if $info->binary_relation($binpkg, 'all')
+              ->implies('${sphinxdoc:Depends}');
+        }
+        $self->tag('sphinxdoc-but-no-sphinxdoc-depends')
+          unless $seen_sphinxdoc;
+    }
+
     return;
 }
 
-sub _tag_if_executable {
-    my ($path) = @_;
+sub tag_if_executable {
+    my ($self, $path) = @_;
     # The permissions of symlinks are not really defined, so resolve
     # $path to ensure we are not dealing with a symlink.
     my $actual = $path->resolve_path;
-    tag 'package-file-is-executable', $path
+    $self->tag('package-file-is-executable', $path)
       if $actual and $actual->is_executable;
     return;
 }
 
 # Perform various checks on a dh-exec file.
-sub _check_dh_exec {
-    my ($cmd, $base, $path) = @_;
+sub check_dh_exec {
+    my ($self, $cmd, $base, $path) = @_;
 
     # Only /usr/bin/dh-exec is allowed, even if
     # /usr/lib/dh-exec/dh-exec-subst works too.
     if ($cmd =~ m,/usr/lib/dh-exec/,) {
-        tag 'dh-exec-private-helper', $path;
+        $self->tag('dh-exec-private-helper', $path);
     }
 
     my ($dhe_subst, $dhe_install, $dhe_filter) = (0, 0, 0);
@@ -613,7 +639,7 @@ sub _check_dh_exec {
                       |GNU_ (?:CPU|SYSTEM|TYPE)|MULTIARCH
              ) \Z}xsm
             ) {
-                tag 'dh-exec-subst-unknown-variable', $path, $sv;
+                $self->tag('dh-exec-subst-unknown-variable', $path, $sv);
             }
         }
         $dhe_install = 1 if /[ \t]=>[ \t]/;
@@ -644,18 +670,18 @@ sub _check_dh_exec {
                 my $form = $_;
                 chomp($form);
                 $form = "\"$form\"";
-                tag 'dh-exec-useless-usage', $path, $form;
+                $self->tag('dh-exec-useless-usage', $path, $form);
             }
         }
     }
     close($fd);
 
     if (!($dhe_subst || $dhe_install || $dhe_filter)) {
-        tag 'dh-exec-script-without-dh-exec-features', $path;
+        $self->tag('dh-exec-script-without-dh-exec-features', $path);
     }
 
     if ($dhe_install && ($base ne 'install' && $base ne 'manpages')) {
-        tag 'dh-exec-install-not-allowed-here', $path;
+        $self->tag('dh-exec-install-not-allowed-here', $path);
     }
 
     return;

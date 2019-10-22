@@ -32,7 +32,6 @@ use List::MoreUtils qw(any);
 use Moo;
 
 use Lintian::Data ();
-use Lintian::Tags qw(tag);
 
 with('Lintian::Check');
 
@@ -46,7 +45,7 @@ sub binary {
     my $priority = $info->unfolded_field('priority');
 
     unless (defined $priority) {
-        tag 'no-priority-field';
+        $self->tag('no-priority-field');
         return;
     }
 }
@@ -65,7 +64,7 @@ sub always {
 
     if ($type eq 'source' || !$info->is_pkg_class('auto-generated')) {
 
-        tag 'priority-extra-is-replaced-by-priority-optional'
+        $self->tag('priority-extra-is-replaced-by-priority-optional')
           if $priority eq 'extra';
 
         # Re-map to optional to avoid an additional warning from
@@ -74,10 +73,10 @@ sub always {
           if $priority eq 'extra';
     }
 
-    tag 'unknown-priority', $priority
+    $self->tag('unknown-priority', $priority)
       unless $KNOWN_PRIOS->known($priority);
 
-    tag 'excessive-priority-for-library-package', $priority
+    $self->tag('excessive-priority-for-library-package', $priority)
       if $pkg =~ m/^lib/o
       && $pkg !~ m/-bin$/o
       && $pkg !~ m/^libc[0-9.]+$/o

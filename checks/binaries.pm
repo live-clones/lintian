@@ -32,7 +32,6 @@ use Moo;
 use Lintian::Data;
 use Lintian::Relation qw(:constants);
 use Lintian::Spelling qw(check_spelling spelling_tag_emitter);
-use Lintian::Tags qw(tag);
 use Lintian::Util qw(internal_error strip);
 
 with('Lintian::Check');
@@ -212,7 +211,7 @@ sub always {
             if ($foo eq 'UND' and $OBSOLETE_CRYPT_FUNCTIONS->known($sym)) {
                 # Using an obsolete DES encryption function.
                 my $tag = $OBSOLETE_CRYPT_FUNCTIONS->value($sym);
-                tag $tag, $file;
+                $self->tag($tag, $file);
             }
 
             next if $is_profiled;
@@ -231,22 +230,22 @@ sub always {
                     $is_profiled = 1;
                 }
             }
-            tag 'binary-compiled-with-profiling-enabled', $file
+            $self->tag('binary-compiled-with-profiling-enabled', $file)
               if $is_profiled;
         }
         if (    %unharded_functions
             and not @hardened_functions
             and not $built_with_golang
             and $arch_hardening->{'hardening-no-fortify-functions'}) {
-            tag 'hardening-no-fortify-functions', $file;
+            $self->tag('hardening-no-fortify-functions', $file);
         }
 
-        tag 'apparently-corrupted-elf-binary', $file
+        $self->tag('apparently-corrupted-elf-binary', $file)
           if $objdump->{'ERRORS'};
-        tag 'binary-file-built-without-LFS-support', $file
+        $self->tag('binary-file-built-without-LFS-support', $file)
           if defined $has_lfs and not $has_lfs;
         if ($objdump->{'BAD-DYNAMIC-TABLE'}) {
-            tag 'binary-with-bad-dynamic-table', $file
+            $self->tag('binary-with-bad-dynamic-table', $file)
               unless $file =~ m%^usr/lib/debug/%;
         }
     }
@@ -310,7 +309,7 @@ sub always {
         }
     }
 
-    tag 'package-name-doesnt-match-sonames', "@sonames"
+    $self->tag('package-name-doesnt-match-sonames', "@sonames")
       if @sonames && !$match_found && $type ne 'udeb';
 
     # process all files in package
@@ -328,23 +327,26 @@ sub always {
 
         # Warn about Architecture: all packages that contain shared libraries.
         if ($arch eq 'all') {
-            tag 'arch-independent-package-contains-binary-or-object',$file;
+            $self->tag('arch-independent-package-contains-binary-or-object',
+                $file);
         }
 
         $fname = $file->name;
         if ($fname =~ m,^etc/,) {
-            tag 'binary-in-etc', $file;
+            $self->tag('binary-in-etc', $file);
         }
 
         if ($fname =~ m,^usr/share/,) {
-            tag 'arch-dependent-file-in-usr-share', $file;
+            $self->tag('arch-dependent-file-in-usr-share', $file);
         }
 
         if ($multiarch eq 'same') {
             unless ($fname
                 =~ m,\b$gnu_triplet_re(?:\b|_)|/(?:$ruby_triplet_re|java-\d+-openjdk-\Q$arch\E|\.build-id)/,
             ) {
-                tag 'arch-dependent-file-not-in-arch-specific-directory',$file;
+                $self->tag(
+                    'arch-dependent-file-not-in-arch-specific-directory',
+                    $file);
             }
         }
         if ($fileinfo =~ m/\bcurrent ar archive\b/) {
@@ -363,9 +365,9 @@ sub always {
                   unless defined $libobj;
 
                 if (any { exists($libobj->{'SH'}{$_}) } DEBUG_SECTIONS) {
-                    tag 'unstripped-static-library', "${file}(${obj})";
+                    $self->tag('unstripped-static-library', "${file}(${obj})");
                 } else {
-                    tag_unneeded_sections(
+                    $self->tag_unneeded_sections(
                         'static-library-has-unneeded-section',
                         "${file}(${obj})", $libobj);
                 }
@@ -375,7 +377,7 @@ sub always {
         # ELF?
         next unless $fileinfo =~ m/^[^,]*\bELF\b/o;
 
-        tag 'development-package-ships-elf-binary-in-path', $file
+        $self->tag('development-package-ships-elf-binary-in-path', $file)
           if exists($PATH_DIRECTORIES{$file->dirname})
           and $info->field('section', 'NONE') =~ m/(?:^|\/)libdevel$/
           and $info->field('multi-arch', 'NONE') ne 'foreign';
@@ -413,7 +415,7 @@ sub always {
                 # Ignore i386 binaries in amd64 packages for right now.
                 $bad = 0 if $fileinfo =~ m/$arch32re/;
             }
-            tag 'binary-from-other-architecture', $file if $bad;
+            $self->tag('binary-from-other-architecture', $file) if $bad;
         }
 
         my $stringsfd = $info->strings($file);
@@ -442,19 +444,21 @@ sub always {
                 if (    $fileinfo =~ m/executable/
                     and $strings =~ m/^Caml1999X0[0-9][0-9]$/m) {
                     # Check for OCaml custom executables (#498138)
-                    tag 'ocaml-custom-executable', $file;
+                    $self->tag('ocaml-custom-executable', $file);
                 } else {
-                    tag 'unstripped-binary-or-object', $file;
+                    $self->tag('unstripped-binary-or-object', $file);
                 }
             }
         } else {
             # stripped but a debug or profiling library?
             if (($fname =~ m,/lib/debug/,o) or ($fname =~ m,/lib/profile/,o)){
-                tag 'library-in-debug-or-profile-should-not-be-stripped',$file;
+                $self->tag(
+                    'library-in-debug-or-profile-should-not-be-stripped',
+                    $file);
             } else {
                 # appropriately stripped, but is it stripped enough?
-                tag_unneeded_sections('binary-has-unneeded-section', $file,
-                    $objdump);
+                $self->tag_unneeded_sections('binary-has-unneeded-section',
+                    $file,$objdump);
             }
         }
 
@@ -482,7 +486,7 @@ sub always {
                 next
                   if $directories{$rpath}
                   and $rpath !~ m,^(?:/usr)?/lib(?:/$madir)?/?\z,;
-                tag 'binary-or-shlib-defines-rpath', $file, $rpath;
+                $self->tag('binary-or-shlib-defines-rpath', $file, $rpath);
             }
         }
 
@@ -494,7 +498,7 @@ sub always {
                 next if $proc->pkg_src eq $ldata->{'source'};
             }
             if ($strings =~ $ldata->{'match'}) {
-                tag 'embedded-library', "$fname: $ldata->{'libname'}";
+                $self->tag('embedded-library', "$fname: $ldata->{'libname'}");
             }
         }
 
@@ -531,9 +535,9 @@ sub always {
             =~ m,^usr/lib/debug/(?:lib\d*|s?bin|usr|opt|dev|emul|\.build-id)/,)
         {
             if (exists($objdump->{NEEDED})) {
-                tag 'debug-file-should-use-detached-symbols', $file;
+                $self->tag('debug-file-should-use-detached-symbols', $file);
             }
-            tag 'debug-file-with-no-debug-symbols', $file
+            $self->tag('debug-file-with-no-debug-symbols', $file)
               unless (exists $objdump->{'SH'}{'.debug_line'}
                 or exists $objdump->{'SH'}{'.zdebug_line'}
                 or exists $objdump->{'SH'}{'.debug_str'}
@@ -544,7 +548,7 @@ sub always {
         if ($fname =~ m,^usr/lib/debug/[^/]+$,) {
             unless (exists($objdump->{NEEDED})
                 || $fileinfo =~ m/statically linked/) {
-                tag 'debug-symbols-directly-in-usr-lib-debug', $file;
+                $self->tag('debug-symbols-directly-in-usr-lib-debug', $file);
             }
         }
 
@@ -568,7 +572,7 @@ sub always {
                                    ld-[\d.]+\.so$
                                 }xsm
                   );
-                tag 'shared-lib-without-dependency-information', $file;
+                $self->tag('shared-lib-without-dependency-information', $file);
             } else {
                 # Some exceptions: files in /boot, /usr/lib/debug/*,
                 # named *-static or *.static, or *-static as
@@ -587,7 +591,7 @@ sub always {
                 next if ($fname =~ m%^usr/lib/debug/%);
                 # ldconfig must be static.
                 next if ($fname eq 'sbin/ldconfig');
-                tag 'statically-linked-binary', $file;
+                $self->tag('statically-linked-binary', $file);
             }
         } else {
             my $no_libc = 1;
@@ -618,29 +622,29 @@ sub always {
                 # but these tend to link against libstdc++ instead.  (see
                 # #719806)
                 if ($is_shared) {
-                    tag 'library-not-linked-against-libc', $file
+                    $self->tag('library-not-linked-against-libc', $file)
                       unless $needs_libcxx ne '';
                 } else {
-                    tag 'program-not-linked-against-libc', $file;
+                    $self->tag('program-not-linked-against-libc', $file);
                 }
             }
 
             if (    $arch_hardening->{'hardening-no-relro'}
                 and not $built_with_golang
                 and not $objdump->{'PH'}{'RELRO'}) {
-                tag 'hardening-no-relro', $file;
+                $self->tag('hardening-no-relro', $file);
             }
 
             if (    $arch_hardening->{'hardening-no-bindnow'}
                 and not $built_with_golang
                 and not exists($objdump->{'FLAGS_1'}{'NOW'})) {
-                tag 'hardening-no-bindnow', $file;
+                $self->tag('hardening-no-bindnow', $file);
             }
 
             if (    $arch_hardening->{'hardening-no-pie'}
                 and not $built_with_golang
                 and $objdump->{'ELF-TYPE'} eq 'EXEC') {
-                tag 'hardening-no-pie', $file;
+                $self->tag('hardening-no-pie', $file);
             }
         }
     }
@@ -651,7 +655,7 @@ sub always {
     # Check for a libc dependency.
     if ($needs_depends_line) {
         if ($depends->empty) {
-            tag 'missing-depends-line';
+            $self->tag('missing-depends-line');
         } else {
             if ($needs_libc && $pkg !~ /^libc[\d.]+(?:-|\z)/) {
                 # Match libcXX or libcXX-*, but not libc3p0.
@@ -662,8 +666,8 @@ sub always {
                     if ($needs_libc_count > 0) {
                         $others = " and $needs_libc_count others";
                     }
-                    tag 'missing-dependency-on-libc',
-                      "needed by $needs_libc_file$others";
+                    $self->tag('missing-dependency-on-libc',
+                        "needed by $needs_libc_file$others");
                 }
             }
             if ($needs_libcxx ne '') {
@@ -675,8 +679,10 @@ sub always {
                     if ($needs_libcxx_count > 0) {
                         $others = " and $needs_libcxx_count others";
                     }
-                    tag 'missing-dependency-on-libstdc++',
-                      "needed by $needs_libcxx_file$others";
+                    $self->tag(
+                        'missing-dependency-on-libstdc++',
+                        "needed by $needs_libcxx_file$others"
+                    );
                 }
             }
         }
@@ -688,7 +694,7 @@ sub always {
         # alternatives probably does not make sense here either.
         my $re = qr/^perlapi-[-\w.]+(?:\s*\[[^\]]+\])?$/;
         unless ($depends->matches($re, VISIT_OR_CLAUSE_FULL)) {
-            tag 'missing-dependency-on-perlapi';
+            $self->tag('missing-dependency-on-perlapi');
         }
     }
 
@@ -698,7 +704,7 @@ sub always {
         # alternatives probably does not make sense here either.
         unless ($depends->matches(qr/^phpapi-[\d\w+]+$/, VISIT_OR_CLAUSE_FULL))
         {
-            tag 'missing-dependency-on-phpapi';
+            $self->tag('missing-dependency-on-phpapi');
         }
     }
 
@@ -709,7 +715,7 @@ sub always {
         # defeat the purpose of this relation.  Also, we do not allow
         # versions for -abi as it is a virtual package.
         my $vflags = VISIT_OR_CLAUSE_FULL;
-        tag 'missing-dependency-on-numpy-abi'
+        $self->tag('missing-dependency-on-numpy-abi')
           unless $depends->matches(qr/^python3?-numpy-abi\d+$/, $vflags)
           or (  $depends->matches(qr/^python-numpy \(>[>=][^\|]+$/, $vflags)
             and $depends->matches(qr/^python-numpy \(<[<=][^\|]+$/, $vflags));
@@ -719,10 +725,10 @@ sub always {
 }
 
 sub tag_unneeded_sections {
-    my ($tag, $file, $objdump) = @_;
+    my ($self, $tag, $file, $objdump) = @_;
     foreach my $sect ('.note', '.comment') {
         if (exists $objdump->{'SH'}{$sect}) {
-            tag $tag, "$file $sect";
+            $self->tag($tag, "$file $sect");
         }
     }
     return;

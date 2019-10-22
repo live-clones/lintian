@@ -25,7 +25,6 @@ use autodie;
 
 use Moo;
 
-use Lintian::Tags qw(tag);
 use Lintian::Util qw(strip);
 
 with('Lintian::Check');
@@ -76,7 +75,7 @@ sub always {
     }
     $extra = $len unless defined $extra;
 
-    tag 'package-has-long-file-name', "$extra > ". FILENAME_LENGTH_LIMIT
+    $self->tag('package-has-long-file-name',"$extra > ". FILENAME_LENGTH_LIMIT)
       if $len > FILENAME_LENGTH_LIMIT;
 
     return if $type ne 'source';
@@ -96,8 +95,8 @@ sub always {
     }
 
     if ($len > FILENAME_LENGTH_LIMIT){
-        tag 'source-package-component-has-long-file-name',
-          "$len > " . FILENAME_LENGTH_LIMIT;
+        $self->tag('source-package-component-has-long-file-name',
+            "$len > " . FILENAME_LENGTH_LIMIT);
     }
 
     return;

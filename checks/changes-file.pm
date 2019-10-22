@@ -29,7 +29,6 @@ use Moo;
 
 use Lintian::Data;
 use Lintian::Maintainer qw(check_maintainer);
-use Lintian::Tags qw(tag);
 use Lintian::Util qw(get_file_checksum);
 
 with('Lintian::Check');
@@ -45,7 +44,7 @@ sub changes {
     # If we don't have a Format key, something went seriously wrong.
     # Tag the file and skip remaining processing.
     if (!$info->field('format')) {
-        tag 'malformed-changes-file';
+        $self->tag('malformed-changes-file');
         return;
     }
 
@@ -53,7 +52,7 @@ sub changes {
     # packages are included.  Don't tag pure source uploads.
     if (  !$info->field('description')
         && $info->field('architecture', '') ne 'source') {
-        tag 'no-description-in-changes-file';
+        $self->tag('no-description-in-changes-file');
     }
 
     # check distribution field
@@ -88,17 +87,16 @@ sub changes {
                                     && $distnumber ne '7')
                                 ||($dist eq 'jessie' && $distnumber ne '8')
                             ) {
-                                #<<< perltidy doesn't handle this too well
-                                tag 'backports-upload-has-incorrect-version-number',
-                                  $info->field('version'),
-                                  $distribution;
-                                #>>>
+                                $self->tag(
+'backports-upload-has-incorrect-version-number',
+                                    $info->field('version'),$distribution
+                                );
                             }
                             $bpo1 = 0 if ($bpoversion > 1);
                         } else {
-                            tag
-                              'backports-upload-has-incorrect-version-number',
-                              $info->field('version');
+                            $self->tag(
+'backports-upload-has-incorrect-version-number',
+                                $info->field('version'));
                         }
                         # for a ~bpoXX+2 or greater version, there
                         # probably will be only a single changelog entry
@@ -123,19 +121,21 @@ sub changes {
                             # probably something wrong with the parsing, so we
                             # don't emit a tag
                             if ($changes_versions == 1) {
-                                tag 'backports-changes-missing';
+                                $self->tag('backports-changes-missing');
                             }
                         }
                     }
                 } else {
-                    tag
-                      'upload-has-backports-version-number',
-                      $info->field('version'), $distribution
-                      if $info->field('version') =~ m/~bpo(\d+)\+(\d+)$/;
+                    $self->tag(
+                        'upload-has-backports-version-number',
+                        $info->field('version'),
+                        $distribution
+                    ) if $info->field('version') =~ m/~bpo(\d+)\+(\d+)$/;
                 }
                 if (!$KNOWN_DISTS->known($dist)) {
                     # bad distribution entry
-                    tag 'bad-distribution-in-changes-file', $distribution;
+                    $self->tag('bad-distribution-in-changes-file',
+                        $distribution);
                 }
 
                 my $changes = $info->field('changes');
@@ -149,16 +149,17 @@ sub changes {
                     ) {
                         my $changesdist = $1;
                         if ($changesdist eq 'UNRELEASED') {
-                            tag 'unreleased-changes';
+                            $self->tag('unreleased-changes');
                         } elsif ($changesdist ne $distribution
                             && $changesdist ne $dist) {
                             if (   $changesdist eq 'experimental'
                                 && $dist ne 'experimental') {
-                                tag 'distribution-and-experimental-mismatch',
-                                  $distribution;
+                                $self->tag(
+                                    'distribution-and-experimental-mismatch',
+                                    $distribution);
                             } elsif ($KNOWN_DISTS->known($dist)) {
-                                tag 'distribution-and-changes-mismatch',
-                                  $distribution, $changesdist;
+                                $self->tag('distribution-and-changes-mismatch',
+                                    $distribution, $changesdist);
                             }
                         }
                     }
@@ -167,20 +168,20 @@ sub changes {
         }
 
         if ($#distributions > 0) {
-            tag 'multiple-distributions-in-changes-file',
-              $info->field('distribution');
+            $self->tag('multiple-distributions-in-changes-file',
+                $info->field('distribution'));
         }
 
     }
 
     # Urgency is only recommended by Policy.
     if (!$info->field('urgency')) {
-        tag 'no-urgency-in-changes-file';
+        $self->tag('no-urgency-in-changes-file');
     } else {
         my $urgency = lc $info->field('urgency');
         $urgency =~ s/ .*//o;
         unless ($urgency =~ /^(?:low|medium|high|critical|emergency)$/o) {
-            tag 'bad-urgency-in-changes-file', $info->field('urgency');
+            $self->tag('bad-urgency-in-changes-file', $info->field('urgency'));
         }
     }
 
@@ -200,15 +201,17 @@ sub changes {
         # check section
         if (   ($file_info->{section} eq 'non-free')
             or ($file_info->{section} eq 'contrib')) {
-            tag 'bad-section-in-changes-file', $file, $file_info->{section};
+            $self->tag('bad-section-in-changes-file', $file,
+                $file_info->{section});
         }
 
         foreach my $alg (qw(sha1 sha256)) {
             my $checksum_info = $file_info->{checksums}{$alg};
             if (defined $checksum_info) {
                 if ($file_info->{size} != $checksum_info->{filesize}) {
-                    tag 'file-size-mismatch-in-changes-file', $file,
-                      $file_info->{size} . ' != ' .$checksum_info->{filesize};
+                    $self->tag('file-size-mismatch-in-changes-file', $file,
+                           $file_info->{size} . ' != '
+                          .$checksum_info->{filesize});
                 }
             }
         }
@@ -218,8 +221,8 @@ sub changes {
         my $size = -s $filename;
 
         if ($size ne $file_info->{size}) {
-            tag 'file-size-mismatch-in-changes-file', $file,
-              $file_info->{size} . " != $size";
+            $self->tag('file-size-mismatch-in-changes-file',
+                $file,$file_info->{size} . " != $size");
         }
 
         # check checksums
@@ -230,7 +233,7 @@ sub changes {
             $num_checksums{$alg}++;
 
             if ($real_checksum ne $file_info->{checksums}{$alg}{sum}) {
-                tag 'checksum-mismatch-in-changes-file', $alg, $file;
+                $self->tag('checksum-mismatch-in-changes-file', $alg, $file);
             }
         }
     }
@@ -238,7 +241,8 @@ sub changes {
     my %debs = map { m/^([^_]+)_/ => 1 } grep { m/\.deb$/ } keys %$files;
     foreach my $pkg_name (keys %debs) {
         if ($pkg_name =~ m/^(.+)-dbgsym$/) {
-            tag 'package-builds-dbg-and-dbgsym-variants', "$1-{dbg,dbgsym}"
+            $self->tag('package-builds-dbg-and-dbgsym-variants',
+                "$1-{dbg,dbgsym}")
               if exists $debs{"$1-dbg"};
         }
     }
@@ -247,9 +251,10 @@ sub changes {
     foreach my $alg (keys %num_checksums) {
         my $seen = $num_checksums{$alg};
         my $expected = keys %{$files};
-        tag 'checksum-count-mismatch-in-changes-file',
-          "$seen $alg checksums != $expected files"
-          if $seen != $expected;
+        $self->tag(
+            'checksum-count-mismatch-in-changes-file',
+            "$seen $alg checksums != $expected files"
+        ) if $seen != $expected;
     }
 
     return;

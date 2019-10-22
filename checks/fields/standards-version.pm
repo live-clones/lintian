@@ -31,7 +31,6 @@ use Moo;
 use POSIX qw(strftime);
 
 use Lintian::Data;
-use Lintian::Tags qw(tag);
 use Lintian::Util qw(internal_error);
 
 with('Lintian::Check');
@@ -78,7 +77,7 @@ sub source {
       if first { $info->binary_package_type($_) ne 'udeb' } $info->binaries;
 
     if (not defined $version) {
-        tag 'no-standards-version-field' unless $all_udeb;
+        $self->tag('no-standards-version-field') unless $all_udeb;
         return;
     }
 
@@ -87,7 +86,7 @@ sub source {
     # change in Policy and is therefore meaningless in the Standards-Version
     # field.
     unless ($version =~ m/^\s*(\d+\.\d+\.\d+)(?:\.\d+)?\s*$/) {
-        tag 'invalid-standards-version', $version;
+        $self->tag('invalid-standards-version', $version);
         return;
     }
     my $stdver = $1;
@@ -122,7 +121,7 @@ sub source {
             $package = strftime($fmt, gmtime $pkgdate);
             $release = strftime($fmt, gmtime $STANDARDS->value($stdver));
         }
-        tag 'timewarp-standards-version', "($package < $release)";
+        $self->tag('timewarp-standards-version', "($package < $release)");
     }
 
     my $tag = "$version (current is $CURRENT)";
@@ -135,9 +134,9 @@ sub source {
                 and $minor == $CURRENT[1]
                 and $patch > $CURRENT[2])
         ) {
-            tag 'newer-standards-version', $tag;
+            $self->tag('newer-standards-version', $tag);
         } else {
-            tag 'invalid-standards-version', $version;
+            $self->tag('invalid-standards-version', $version);
         }
     } elsif ($stdver eq $CURRENT) {
         # Current standard.  Nothing more to check.
@@ -154,12 +153,12 @@ sub source {
         my $released = strftime('%Y-%m-%d', gmtime $rdate);
         $tag = "$version (released $released) (current is $CURRENT)";
         if ($rdate < $ANCIENT_DATE) {
-            tag 'ancient-standards-version', $tag;
+            $self->tag('ancient-standards-version', $tag);
         } else {
             # We have to get the package date from the changelog file.  If we
             # can't find the changelog file, always issue the tag.
             unless (defined $info->changelog) {
-                tag 'out-of-date-standards-version', $tag;
+                $self->tag('out-of-date-standards-version', $tag);
                 return;
             }
             my ($entry) = @{$info->changelog->entries};
@@ -168,7 +167,7 @@ sub source {
             for my $standard (@STANDARDS) {
                 last if $standard->[0] eq $stdver;
                 if ($standard->[1] < $timestamp) {
-                    tag 'out-of-date-standards-version', $tag;
+                    $self->tag('out-of-date-standards-version', $tag);
                     last;
                 }
             }

@@ -31,7 +31,6 @@ use autodie;
 use Moo;
 
 use Lintian::Data ();
-use Lintian::Tags qw(tag);
 
 with('Lintian::Check');
 
@@ -47,7 +46,7 @@ sub source {
     return
       unless defined $essential;
 
-    tag 'essential-in-source-package';
+    $self->tag('essential-in-source-package');
 
     return;
 }
@@ -64,14 +63,13 @@ sub always {
       unless defined $essential;
 
     unless ($essential eq 'yes' || $essential eq 'no') {
-        tag 'unknown-essential-value';
+        $self->tag('unknown-essential-value');
         return;
     }
 
-    tag 'essential-no-not-needed'
-      if $essential eq 'no';
+    $self->tag('essential-no-not-needed') if $essential eq 'no';
 
-    tag 'new-essential-package'
+    $self->tag('new-essential-package')
       if $essential eq 'yes' && !$KNOWN_ESSENTIAL->known($pkg);
 
     return;

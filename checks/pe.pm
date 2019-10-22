@@ -27,7 +27,6 @@ use autodie;
 use List::MoreUtils qw(any);
 use Moo;
 
-use Lintian::Tags qw(tag);
 use Lintian::Util qw(internal_error);
 
 with('Lintian::Check');
@@ -74,8 +73,8 @@ sub binary {
           if $file->file_info =~ / Mono\/.Net assembly, /;
 
         my @missing = grep { !$features{$_} } sort keys %features;
-        tag 'portable-executable-missing-security-features', $file,
-          join(SPACE, @missing)
+        $self->tag('portable-executable-missing-security-features',
+            $file,join(SPACE, @missing))
           if scalar @missing;
 
         close($fd);

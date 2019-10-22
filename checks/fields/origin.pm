@@ -30,8 +30,6 @@ use autodie;
 
 use Moo;
 
-use Lintian::Tags qw(tag);
-
 with('Lintian::Check');
 
 sub always {
@@ -45,8 +43,7 @@ sub always {
     return
       unless defined $origin;
 
-    tag 'redundant-origin-field'
-      if lc($origin) eq 'debian';
+    $self->tag('redundant-origin-field') if lc($origin) eq 'debian';
 
     return;
 }

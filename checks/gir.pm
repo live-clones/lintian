@@ -28,8 +28,6 @@ use autodie;
 
 use Moo;
 
-use Lintian::Tags qw(tag);
-
 with('Lintian::Check');
 
 my $MA_DIRS = Lintian::Data->new('common/multiarch-dirs', qr/\s++/);
@@ -44,7 +42,7 @@ sub source {
             if (
                 not $info->binary_relation($bin, 'strong')
                 ->implies('${gir:Depends}')) {
-                tag('typelib-missing-gir-depends', $bin);
+                $self->tag(('typelib-missing-gir-depends', $bin));
             }
         }
     }
@@ -78,8 +76,10 @@ sub binary {
     if (my $dir = $info->index_resolved_path('usr/lib/girepository-1.0/')) {
         push @typelibs, $dir->children;
         foreach my $typelib ($dir->children) {
-            tag('typelib-not-in-multiarch-directory',
-                $typelib,"usr/lib/$madir/girepository-1.0");
+            $self->tag((
+                'typelib-not-in-multiarch-directory',$typelib,
+                "usr/lib/$madir/girepository-1.0"
+            ));
         }
     }
 
@@ -90,22 +90,23 @@ sub binary {
 
     if ($section ne 'libdevel' && $section ne 'oldlibs') {
         foreach my $gir (@girs) {
-            tag('gir-section-not-libdevel', $gir, $section);
+            $self->tag(('gir-section-not-libdevel', $gir, $section));
         }
     }
 
     if ($section ne 'introspection' && $section ne 'oldlibs') {
         foreach my $typelib (@typelibs) {
-            tag('typelib-section-not-introspection', $typelib, $section);
+            $self->tag(
+                ('typelib-section-not-introspection', $typelib, $section));
         }
     }
 
     if ($proc->pkg_arch eq 'all') {
         foreach my $gir (@girs) {
-            tag('gir-in-arch-all-package', $gir);
+            $self->tag(('gir-in-arch-all-package', $gir));
         }
         foreach my $typelib (@typelibs) {
-            tag('typelib-in-arch-all-package', $typelib);
+            $self->tag(('typelib-in-arch-all-package', $typelib));
         }
     }
 
@@ -125,7 +126,7 @@ sub binary {
         }
 
         if (not $info->relation('strong')->implies("$expected (= $version)")) {
-            tag('gir-missing-typelib-dependency', $gir, $expected);
+            $self->tag(('gir-missing-typelib-dependency', $gir, $expected));
         }
     }
 
@@ -135,7 +136,8 @@ sub binary {
         $expected =~ tr/_/-/;
         if ($pkg ne $expected
             and not $info->relation('provides')->implies($expected)) {
-            tag('typelib-package-name-does-not-match', $typelib, $expected);
+            $self->tag(
+                ('typelib-package-name-does-not-match', $typelib, $expected));
         }
     }
 

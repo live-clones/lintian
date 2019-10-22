@@ -33,7 +33,6 @@ use Moo;
 use Text::ParseWords qw(shellwords);
 
 use Lintian::Data;
-use Lintian::Tags qw(tag);
 use Lintian::Util qw(internal_error lstrip rstrip);
 
 with('Lintian::Check');
@@ -57,26 +56,26 @@ sub binary {
     if (my $tmpfiles = $info->index_resolved_path('etc/tmpfiles.d/')) {
         for my $file ($tmpfiles->children('breadth-first')) {
             if ($file->basename =~ m,\.conf$,) {
-                tag 'systemd-tmpfiles.d-outside-usr-lib', $file;
+                $self->tag('systemd-tmpfiles.d-outside-usr-lib', $file);
             }
         }
     }
 
-    my @init_scripts = get_init_scripts($info);
-    my @service_files = get_systemd_service_files($pkg, $info);
+    my @init_scripts = $self->get_init_scripts;
+    my @service_files = $self->get_systemd_service_files;
 
     # A hash of names reference which are provided by the service files.
     # This includes Alias= directives, so after parsing
     # NetworkManager.service, it will contain NetworkManager and
     # network-manager.
-    my $services = get_systemd_service_names($info, \@service_files);
+    my $services = $self->get_systemd_service_names(\@service_files);
 
     for my $script (@init_scripts) {
-        check_init_script($info, $script, $services);
+        $self->check_init_script($script, $services);
     }
 
-    check_timers($info);
-    check_maintainer_scripts($info);
+    $self->check_timers();
+    $self->check_maintainer_scripts();
 
     return;
 }
@@ -90,7 +89,10 @@ sub get_init_service_name {
 }
 
 sub get_init_scripts {
-    my ($info) = @_;
+    my ($self) = @_;
+
+    my $info = $self->info;
+
     my @scripts;
     if ($info->name ne 'initscripts'
         and my $initd_path = $info->index_resolved_path('etc/init.d/')) {
@@ -111,7 +113,9 @@ sub get_init_scripts {
 # Verify that each init script includes /lib/lsb/init-functions,
 # because that is where the systemd diversion happens.
 sub check_init_script {
-    my ($info, $file, $services) = @_;
+    my ($self, $file, $services) = @_;
+
+    my $info = $self->info;
     my $basename = $file->basename;
     my $servicename = get_init_service_name($file);
     my $lsb_source_seen;
@@ -119,7 +123,7 @@ sub check_init_script {
 
     if (!$file->is_regular_file) {
         unless ($file->is_open_ok) {
-            tag 'init-script-is-not-a-file', $file;
+            $self->tag('init-script-is-not-a-file', $file);
             return;
         }
     }
@@ -140,18 +144,21 @@ sub check_init_script {
     }
     close($fh);
 
-    tag 'init.d-script-does-not-source-init-functions', $file
+    $self->tag('init.d-script-does-not-source-init-functions', $file)
       unless $lsb_source_seen;
 
     if (!$services->{$servicename}) {
         # rcS scripts are particularly bad; always tag
         if ($is_rcs_script) {
-            tag 'missing-systemd-service-for-init.d-rcS-script', $basename;
+            $self->tag('missing-systemd-service-for-init.d-rcS-script',
+                $basename);
         } else {
             if (%{$services}) {
-                tag 'omitted-systemd-service-for-init.d-script', $basename;
+                $self->tag('omitted-systemd-service-for-init.d-script',
+                    $basename);
             } else {
-                tag 'missing-systemd-service-for-init.d-script', $basename;
+                $self->tag('missing-systemd-service-for-init.d-script',
+                    $basename);
             }
         }
     }
@@ -160,19 +167,24 @@ sub check_init_script {
 }
 
 sub get_systemd_service_files {
-    my ($pkg, $info) = @_;
+    my ($self) = @_;
+
+    my $pkg = $self->package;
+    my $info = $self->info;
     my @res;
     my @potential
       = grep { m,/systemd/system/.*\.service$, } $info->sorted_index;
 
     for my $file (@potential) {
-        push(@res, $file) if check_systemd_service_file($pkg, $info, $file);
+        push(@res, $file) if $self->check_systemd_service_file($file);
     }
     return @res;
 }
 
 sub get_systemd_service_names {
-    my ($info,$files_ref) = @_;
+    my ($self,$files_ref) = @_;
+
+    my $info = $self->info;
     my %services;
 
     my $safe_add_service = sub {
@@ -189,10 +201,11 @@ sub get_systemd_service_names {
         $name =~ s/@?\.service$//;
         $safe_add_service->($name);
 
-        my @aliases= extract_service_file_values($file, 'Install', 'Alias', 1);
+        my @aliases
+          = $self->extract_service_file_values($file, 'Install', 'Alias', 1);
 
         for my $alias (@aliases) {
-            tag 'systemd-service-alias-without-extension', $file
+            $self->tag('systemd-service-alias-without-extension', $file)
               if $alias !~ m/\.service$/;
             $alias =~ s/\.service$//;
             $safe_add_service->($alias);
@@ -202,79 +215,92 @@ sub get_systemd_service_names {
 }
 
 sub check_systemd_service_file {
-    my ($pkg, $info, $file) = @_;
+    my ($self, $file) = @_;
 
-    tag 'systemd-service-file-outside-lib', $file
+    my $pkg = $self->package;
+    my $info = $self->info;
+
+    $self->tag('systemd-service-file-outside-lib', $file)
       if ($file =~ m,^etc/systemd/system/,);
-    tag 'systemd-service-file-outside-lib', $file
+    $self->tag('systemd-service-file-outside-lib', $file)
       if ($file =~ m,^usr/lib/systemd/system/,);
 
     unless ($file->is_open_ok
         || ($file->is_symlink && $file->link eq '/dev/null')) {
-        tag 'service-file-is-not-a-file', $file;
+        $self->tag('service-file-is-not-a-file', $file);
         return 0;
     }
-    my @values = extract_service_file_values($file, 'Unit', 'After');
+    my @values = $self->extract_service_file_values($file, 'Unit', 'After');
     my @obsolete = grep { /^(?:syslog|dbus)\.target$/ } @values;
-    tag 'systemd-service-file-refers-to-obsolete-target', $file, $_
+    $self->tag('systemd-service-file-refers-to-obsolete-target',$file, $_)
       for @obsolete;
 
-    tag 'systemd-service-file-refers-to-obsolete-bindto', $file,
-      if extract_service_file_values($file, 'Unit', 'BindTo', 1);
+    $self->tag('systemd-service-file-refers-to-obsolete-bindto', $file,)
+      if $self->extract_service_file_values($file, 'Unit', 'BindTo', 1);
 
     for my $key (
         qw(ExecStart ExecStartPre ExecStartPost ExecReload ExecStop ExecStopPost)
     ) {
-        tag 'systemd-service-file-wraps-init-script', $file, $key
+        $self->tag('systemd-service-file-wraps-init-script', $file, $key)
           if any { m,^/etc/init\.d/, }
-        extract_service_file_values($file, 'Service', $key, 1);
+        $self->extract_service_file_values($file, 'Service', $key, 1);
     }
 
     if (not $file->is_symlink or $file->link ne '/dev/null') {
-        #<<< no perltidy
+
         my @wanted_by
-          = extract_service_file_values($file, 'Install', 'WantedBy', 1);
-        my $is_oneshot =
-           any { /^oneshot$/ }
-           extract_service_file_values($file, 'Service', 'Type', 1);
-        #>>>
+          = $self->extract_service_file_values($file, 'Install', 'WantedBy',1);
+        my $is_oneshot =any { /^oneshot$/ }
+        $self->extract_service_file_values($file, 'Service', 'Type', 1);
+
         foreach my $target (@wanted_by) {
-            tag 'systemd-service-file-refers-to-unusual-wantedby-target',
-              $file, $target
+            $self->tag(
+                'systemd-service-file-refers-to-unusual-wantedby-target',
+                $file, $target)
               unless any { $target eq $_ } $WANTEDBY_WHITELIST->all
               or $pkg eq 'systemd';
         }
-        tag 'systemd-service-file-missing-documentation-key', $file,
-          unless extract_service_file_values($file, 'Unit', 'Documentation',1);
-        tag 'systemd-service-file-missing-install-key', $file,
-             unless @wanted_by
-          or extract_service_file_values($file, 'Install', 'RequiredBy',1)
-          or extract_service_file_values($file, 'Install', 'Also',1)
+        $self->tag('systemd-service-file-missing-documentation-key', $file,)
+          unless $self->extract_service_file_values($file, 'Unit',
+            'Documentation',1);
+        $self->tag('systemd-service-file-missing-install-key', $file,)
+          unless @wanted_by
+          or
+          $self->extract_service_file_values($file, 'Install', 'RequiredBy',1)
+          or $self->extract_service_file_values($file, 'Install', 'Also',1)
           or $is_oneshot
           or $file !~ m,^lib/systemd/[^\/]+/[^\/]+\.service$,
           or $file =~ m,@\.service$,;
-        my @pidfile = extract_service_file_values($file,'Service','PIDFile',1);
+        my @pidfile
+          = $self->extract_service_file_values($file,'Service','PIDFile',1);
         foreach my $x (@pidfile) {
-            tag 'systemd-service-file-pidfile-refers-to-var-run', $file, $x
+            $self->tag('systemd-service-file-pidfile-refers-to-var-run',
+                $file, $x)
               if $x =~ m,^/var/run/,;
         }
         my $seen_hardening;
         foreach my $x ($HARDENING_FLAGS->all) {
-            next unless extract_service_file_values($file, 'Service', $x, 1);
+            next
+              unless $self->extract_service_file_values($file, 'Service', $x,
+                1);
             $seen_hardening = 1;
             last;
         }
-        tag 'systemd-service-file-missing-hardening-features', $file
+        $self->tag('systemd-service-file-missing-hardening-features', $file)
           unless $seen_hardening
           or $is_oneshot
           or any { 'sleep.target' eq $_ } @wanted_by;
 
-        #<<< no perltidy
-        if (extract_service_file_values($file, 'Unit', 'DefaultDependencies', 1)) {
-        #>>>
+        if (
+            $self->extract_service_file_values(
+                $file, 'Unit', 'DefaultDependencies', 1
+            )
+        ) {
+
             my $seen_conflicts_shutdown = 0;
             my @conflicts
-              = extract_service_file_values($file, 'Unit','Conflicts', 1);
+              = $self->extract_service_file_values($file, 'Unit','Conflicts',
+                1);
             foreach my $x (@conflicts) {
                 next unless $x eq 'shutdown.target';
                 $seen_conflicts_shutdown = 1;
@@ -283,13 +309,14 @@ sub check_systemd_service_file {
             if ($seen_conflicts_shutdown) {
                 my $seen_before_shutdown = 0;
                 my @before
-                  = extract_service_file_values($file, 'Unit','Before', 1);
+                  = $self->extract_service_file_values($file, 'Unit','Before',
+                    1);
                 foreach my $x (@before) {
                     next unless $x eq 'shutdown.target';
                     $seen_before_shutdown = 1;
                     last;
                 }
-                tag 'systemd-service-file-shutdown-problems', $file,
+                $self->tag('systemd-service-file-shutdown-problems', $file,)
                   unless $seen_before_shutdown;
             }
         }
@@ -333,14 +360,14 @@ sub service_file_lines {
 
 # Extracts the values of a specific Key from a .service file
 sub extract_service_file_values {
-    my ($file, $extract_section, $extract_key, $skip_tag) = @_;
+    my ($self, $file, $extract_section, $extract_key, $skip_tag) = @_;
 
     my (@values, $section);
 
     my @lines = service_file_lines($file);
     my $key_ws = first_index { /^[[:alnum:]]+(\s*=\s|\s+=)/ } @lines;
     if ($key_ws > -1) {
-        tag 'service-key-has-whitespace', $file, 'at line', $key_ws
+        $self->tag('service-key-has-whitespace', $file, 'at line', $key_ws)
           unless $skip_tag;
     }
     if (any { /^\.include / } @lines) {
@@ -389,13 +416,15 @@ sub extract_service_file_values {
 }
 
 sub check_timers {
-    my ($info) = @_;
+    my ($self) = @_;
+
+    my $info = $self->info;
 
     return
       if any { m,^lib/systemd/system/[^\/]+\.timer$, } $info->sorted_index;
 
     for my $file ($info->sorted_index) {
-        tag 'missing-systemd-timer-for-cron-script', $file
+        $self->tag('missing-systemd-timer-for-cron-script', $file)
           if $file->dirname =~ m,^etc/cron\.[^\/]+/$,;
     }
 
@@ -403,7 +432,9 @@ sub check_timers {
 }
 
 sub check_maintainer_scripts {
-    my ($info) = @_;
+    my ($self) = @_;
+
+    my $info = $self->info;
 
     open(my $fd, '<', $info->lab_data_path('control-scripts'));
 
@@ -428,7 +459,7 @@ sub check_maintainer_scripts {
             # systemctl should not be called in maintainer scripts at all,
             # except for systemctl daemon-reload calls.
             if (m/^(?:.+;)?\s*systemctl\b/ && !/daemon-reload/) {
-                tag 'maintainer-script-calls-systemctl', "$file:$.";
+                $self->tag('maintainer-script-calls-systemctl', "$file:$.");
             }
         }
         close($sfd);

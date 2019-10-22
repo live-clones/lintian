@@ -202,7 +202,7 @@ foreach my $descfile (@descfiles) {
 }
 
 # prepare output directories
-say 'Preparing '. scalar @testpaths. ' work directories.'. NEWLINE
+say 'Preparing '. scalar @testpaths. ' work directories...'. NEWLINE
   if @testpaths;
 
 my @prepqueue = map { abs2rel($_) } @testpaths;
@@ -267,9 +267,9 @@ my @workpaths = map { rel2abs(abs2rel($_, $testset), $outpath) } @testpaths;
 
 my $build = IO::Async::Function->new(
     code => sub {
-        my ($path) = @_;
+        my ($path, $num, $total) = @_;
 
-        my $label = "Building in $path";
+        my $label = "Building in $path [$num/$total]";
         say $label;
 
         $0 = $label;
@@ -324,7 +324,9 @@ my $build = IO::Async::Function->new(
 $loop->add($build);
 
 $SIG{INT} = sub { $build->stop; die "Caught a sigint $!" };
-my @buildtasks = map {$build->call(args => [$_])} sort @workpaths;
+my $counter;
+my @buildtasks= map {$build->call(args => [$_, ++$counter, scalar @workpaths])}
+  sort @workpaths;
 
 my $allbuilt = Future->needs_all(@buildtasks);
 $allbuilt->get;

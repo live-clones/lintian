@@ -27,7 +27,6 @@ use autodie;
 use Moo;
 
 use Lintian::Spelling qw(check_spelling spelling_tag_emitter);
-use Lintian::Tags qw(tag);
 
 with('Lintian::Check');
 
@@ -64,7 +63,7 @@ sub binary {
     return if not defined($fd);
     while (my $line = <$fd>) {
         if ($line =~ m,/usr/doc\b,) {
-            tag 'readme-debian-mentions-usr-doc', "line $.";
+            $self->tag('readme-debian-mentions-usr-doc', "line $.");
         }
         $readme .= $line;
     }
@@ -78,9 +77,9 @@ sub binary {
     );
     my $regex = join('|', @template);
     if ($readme =~ m/$regex/io) {
-        tag 'readme-debian-contains-debmake-template';
+        $self->tag('readme-debian-contains-debmake-template');
     } elsif ($readme =~ m/^\s*-- [^<]*<([^> ]+.\@[^>.]*)>/m) {
-        tag 'readme-debian-contains-invalid-email-address', $1;
+        $self->tag('readme-debian-contains-invalid-email-address', $1);
     }
 
     check_spelling($readme,$group->info->spelling_exceptions,

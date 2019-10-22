@@ -43,7 +43,6 @@ use List::MoreUtils qw(any);
 use Moo;
 
 use Lintian::Data;
-use Lintian::Tags qw(tag);
 
 with('Lintian::Check');
 
@@ -180,8 +179,8 @@ sub binary {
                 next unless $file->is_file;
                 next unless $file->basename =~ m/\.desktop$/;
                 if ($file->is_executable) {
-                    tag 'executable-desktop-file',
-                      sprintf('%s %04o',$file, $file->operm);
+                    $self->tag('executable-desktop-file',
+                        sprintf('%s %04o',$file, $file->operm));
                 }
                 if (index($file, 'template') == -1) {
                     push(@desktop_files, $file);
@@ -192,7 +191,7 @@ sub binary {
 
     # Verify all the desktop files.
     for my $desktop_file (@desktop_files) {
-        verify_desktop_file($desktop_file, $pkg, $info, \%desktop_cmds);
+        $self->verify_desktop_file($desktop_file, \%desktop_cmds);
     }
 
     # Now all the menu files.
@@ -239,19 +238,12 @@ sub binary {
             # Note that I allow whitespace after the continuation character.
             # This is caught by verify_line().
             if (!($menufile_line =~ m/\\\s*?$/)) {
-                verify_line(
-                    $pkg, $info, $proc, $group,
-                    $type,$menufile, $fullname, $line,
-                    $lc,\%desktop_cmds
-                );
+                $self->verify_line($menufile, $fullname, $line,
+                    $lc,\%desktop_cmds);
                 $line='';
             }
         } while ($menufile_line = <$fd>);
-        verify_line(
-            $pkg, $info, $proc, $group,
-            $type,$menufile, $fullname, $line,
-            $lc,\%desktop_cmds
-        );
+        $self->verify_line($menufile, $fullname, $line,$lc,\%desktop_cmds);
 
         close($fd);
     }
@@ -264,10 +256,13 @@ sub binary {
 # Pass this a line of a menu file, it sanitizes it and
 # verifies that it is correct.
 sub verify_line {
-    my (
-        $pkg, $info, $proc, $group, $type,
-        $menufile, $fullname, $line, $linecount,$desktop_cmds
-    ) = @_;
+    my ($self, $menufile, $fullname, $line, $linecount,$desktop_cmds) = @_;
+
+    my $pkg = $self->package;
+    my $type = $self->type;
+    my $info = $self->info;
+    my $proc = $self->processable;
+    my $group = $self->group;
 
     my %vals;
 
@@ -280,7 +275,8 @@ sub verify_line {
     # This is in here to fix a common mistake: whitespace after a '\'
     # character.
     if ($line =~ s/\\\s+\n/ /mgo) {
-        tag 'whitespace-after-continuation-character', "$fullname:$linecount";
+        $self->tag('whitespace-after-continuation-character',
+            "$fullname:$linecount");
     }
 
     # Ignore lines that are all whitespace or empty.
@@ -291,14 +287,14 @@ sub verify_line {
 
     # Start by testing the package check.
     if (not $line =~ m/^\?package\((.*?)\):/o) {
-        tag 'bad-test-in-menu-item', "$fullname:$linecount";
+        $self->tag('bad-test-in-menu-item', "$fullname:$linecount");
         return;
     }
     my $pkg_test = $1;
     my %tested_packages = map { $_ => 1 } split(/\s*,\s*/, $pkg_test);
     my $tested_packages = scalar keys %tested_packages;
     unless (exists $tested_packages{$pkg}) {
-        tag 'pkg-not-in-package-test', "$pkg_test $fullname";
+        $self->tag('pkg-not-in-package-test', "$pkg_test $fullname");
     }
     $line =~ s/^\?package\(.*?\)://;
 
@@ -340,14 +336,16 @@ sub verify_line {
         my $value = $2;
 
         if (exists $vals{$tag}) {
-            tag 'duplicated-tag-in-menu-item', "$fullname $1:$linecount";
+            $self->tag('duplicated-tag-in-menu-item',
+                "$fullname $1:$linecount");
         }
 
         # If the value was quoted, remove those quotes.
         if ($value =~ m/^\"(.*)\"$/) {
             $value = $1;
         } else {
-            tag 'unquoted-string-in-menu-item', "$fullname $1:$linecount";
+            $self->tag('unquoted-string-in-menu-item',
+                "$fullname $1:$linecount");
         }
 
         # If the value has escaped characters, remove the
@@ -369,7 +367,7 @@ sub verify_line {
     # If that loop didn't match up to end of line, we have a
     # problem..
     if (pos($line) < length($line)) {
-        tag 'unparsable-menu-item', "$fullname:$linecount";
+        $self->tag('unparsable-menu-item', "$fullname:$linecount");
         # Give up now, before things just blow up in our face.
         return;
     }
@@ -379,7 +377,10 @@ sub verify_line {
     # Test for important tags.
     foreach my $tag (@req_tags) {
         unless (exists($vals{$tag}) && defined($vals{$tag})) {
-            tag 'menu-item-missing-required-tag', "$tag $fullname:$linecount";
+            $self->tag(
+                'menu-item-missing-required-tag',
+                "$tag $fullname:$linecount"
+            );
             # Just give up right away, if such an essential tag is missing,
             # chance is high the rest doesn't make sense either. And now all
             # following checks can assume those tags to be there
@@ -390,7 +391,10 @@ sub verify_line {
     # Make sure all tags are known.
     foreach my $tag (keys %vals) {
         if (!$known_tags_hash{$tag}) {
-            tag 'menu-item-contains-unknown-tag', "$tag $fullname:$linecount";
+            $self->tag(
+                'menu-item-contains-unknown-tag',
+                "$tag $fullname:$linecount"
+            );
         }
     }
 
@@ -402,8 +406,8 @@ sub verify_line {
 
     # Be sure the command is provided by the package.
     my ($okay, $command)
-      = verify_cmd($fullname, $linecount, $vals{'command'},$pkg, $info);
-    tag 'menu-command-not-in-package', "$fullname:$linecount $command"
+      = $self->verify_cmd($fullname, $linecount, $vals{'command'});
+    $self->tag('menu-command-not-in-package', "$fullname:$linecount $command")
       unless ($okay
         or not $command
         or ($tested_packages >= 2)
@@ -413,21 +417,20 @@ sub verify_line {
     if (defined($command)) {
         $command =~ s@^(?:usr/)?s?bin/@@;
         if ($desktop_cmds->{$command}) {
-            tag 'command-in-menu-file-and-desktop-file', $command,
-              "${fullname}:${linecount}";
+            $self->tag('command-in-menu-file-and-desktop-file',
+                $command,"${fullname}:${linecount}");
         }
     }
 
     if (exists($vals{'icon'})) {
-        verify_icon($info, $proc, $group, $menufile, $fullname, $linecount,
-            $vals{'icon'}, 32);
+        $self->verify_icon($menufile, $fullname, $linecount,$vals{'icon'}, 32);
     }
     if (exists($vals{'icon32x32'})) {
-        verify_icon($info, $proc, $group, $menufile, $fullname, $linecount,
+        $self->verify_icon($menufile, $fullname, $linecount,
             $vals{'icon32x32'}, 32);
     }
     if (exists($vals{'icon16x16'})) {
-        verify_icon($info, $proc, $group, $menufile, $fullname, $linecount,
+        $self->verify_icon($menufile, $fullname, $linecount,
             $vals{'icon16x16'}, 16);
     }
 
@@ -437,37 +440,38 @@ sub verify_line {
     if ($section =~ m:^(WindowManagers/Modules|FVWM Modules|Window Maker):) {
         # WM/Modules: needs must not be the regular ones nor wm
         if ($needs_tag_vals_hash{$needs} or $needs eq 'wm') {
-            tag 'non-wm-module-in-wm-modules-menu-section',
-              "$needs $fullname:$linecount";
+            $self->tag('non-wm-module-in-wm-modules-menu-section',
+                "$needs $fullname:$linecount");
         }
     } elsif ($section =~ m:^Window ?Managers:) {
         # Other WM sections: needs must be wm
         if ($needs ne 'wm') {
-            tag 'non-wm-in-windowmanager-menu-section',
-              "$needs $fullname:$linecount";
+            $self->tag('non-wm-in-windowmanager-menu-section',
+                "$needs $fullname:$linecount");
         }
     } else {
         # Any other section: just only the general ones
         if ($needs eq 'dwww') {
-            tag 'menu-item-needs-dwww', "$fullname:$linecount";
+            $self->tag('menu-item-needs-dwww', "$fullname:$linecount");
         } elsif (not $needs_tag_vals_hash{$needs}) {
-            tag 'menu-item-needs-tag-has-unknown-value',
-              "$needs $fullname:$linecount";
+            $self->tag('menu-item-needs-tag-has-unknown-value',
+                "$needs $fullname:$linecount");
         }
     }
 
     # Check the section tag
     # Check for historical changes in the section tree.
     if ($section =~ m:^Apps/Games:) {
-        tag 'menu-item-uses-apps-games-section', "$fullname:$linecount";
+        $self->tag('menu-item-uses-apps-games-section',"$fullname:$linecount");
         $section =~ s:^Apps/::;
     }
     if ($section =~ m:^Apps/:) {
-        tag 'menu-item-uses-apps-section', "$fullname:$linecount";
+        $self->tag('menu-item-uses-apps-section', "$fullname:$linecount");
         $section =~ s:^Apps/:Applications/:;
     }
     if ($section =~ m:^WindowManagers:) {
-        tag 'menu-item-uses-windowmanagers-section', "$fullname:$linecount";
+        $self->tag('menu-item-uses-windowmanagers-section',
+            "$fullname:$linecount");
         $section =~ s:^WindowManagers:Window Managers:;
     }
 
@@ -476,8 +480,10 @@ sub verify_line {
     my $root_data = $MENU_SECTIONS->value($rootsec);
     if (not defined $root_data) {
         if (not $rootsec =~ m/$pkg/i) {
-            tag 'menu-item-creates-new-root-section',
-              "$rootsec $fullname:$linecount";
+            $self->tag(
+                'menu-item-creates-new-root-section',
+                "$rootsec $fullname:$linecount"
+            );
         }
     } else {
         my $ok = 1;
@@ -489,29 +495,33 @@ sub verify_line {
             $ok = 0 if %$root_data;
         }
         unless ($ok) {
-            tag 'menu-item-creates-new-section',
-              "$vals{section} $fullname:$linecount";
+            $self->tag(
+                'menu-item-creates-new-section',
+                "$vals{section} $fullname:$linecount"
+            );
         }
     }
     return;
 }
 
 sub verify_icon {
-    my ($info, $proc, $group, $menufile, $fullname, $linecount, $icon, $size)
-      = @_;
+    my ($self, $menufile, $fullname, $linecount, $icon, $size)= @_;
+
+    my $info = $self->info;
+    my $proc = $self->processable;
+    my $group = $self->group;
 
     if ($icon eq 'none') {
-        tag 'menu-item-uses-icon-none', "$fullname:$linecount";
+        $self->tag('menu-item-uses-icon-none', "$fullname:$linecount");
         return;
     }
 
-    tag 'menu-icon-uses-relative-path', $icon
-      unless $icon =~ m,^/,;
+    $self->tag('menu-icon-uses-relative-path', $icon) unless $icon =~ m,^/,;
 
     $icon =~ s|^/*||og;
 
     if (not($icon =~ m/\.xpm$/i)) {
-        tag 'menu-icon-not-in-xpm-format', $icon;
+        $self->tag('menu-icon-not-in-xpm-format', $icon);
         return;
     }
 
@@ -533,7 +543,7 @@ sub verify_icon {
     }
 
     if (not $iconfile or not $iconfile->is_open_ok) {
-        tag 'menu-icon-missing', $icon;
+        $self->tag('menu-icon-missing', $icon);
         return;
     }
 
@@ -552,7 +562,8 @@ sub verify_icon {
     my $height = $2 + 0;
 
     if ($width > $size || $height > $size) {
-        tag 'menu-icon-too-big', "$icon: ${width}x${height} > ${size}x${size}";
+        $self->tag('menu-icon-too-big',
+            "$icon: ${width}x${height} > ${size}x${size}");
     }
 
     close($fd);
@@ -560,20 +571,25 @@ sub verify_icon {
 
   parse_error:
     close($fd);
-    tag 'menu-icon-cannot-be-parsed', "$icon: looking for $parse";
+    $self->tag('menu-icon-cannot-be-parsed', "$icon: looking for $parse");
     return;
 }
 
 # Syntax-checks a .desktop file.
 sub verify_desktop_file {
-    my ($file, $pkg, $info, $desktop_cmds) = @_;
+    my ($self, $file, $desktop_cmds) = @_;
+
+    my $pkg = $self->package;
+    my $info = $self->info;
+
     my ($saw_first, $warned_cr, %vals, @pending);
     my $fd = $file->open;
     while (my $line = <$fd>) {
         chomp $line;
         next if ($line =~ m/^\s*\#/ or $line =~ m/^\s*$/);
         if ($line =~ s/\r//) {
-            tag 'desktop-entry-file-has-crs', "$file:$." unless $warned_cr;
+            $self->tag('desktop-entry-file-has-crs', "$file:$.")
+              unless $warned_cr;
             $warned_cr = 1;
         }
 
@@ -584,7 +600,7 @@ sub verify_desktop_file {
         unless ($saw_first) {
             return unless $line =~ /^\[(KDE )?Desktop Entry\]\s*$/;
             $saw_first = 1;
-            tag 'desktop-contains-deprecated-key', "$file:$."
+            $self->tag('desktop-contains-deprecated-key', "$file:$.")
               if ($line =~ /^\[KDE Desktop Entry\]\s*$/);
         }
 
@@ -600,7 +616,7 @@ sub verify_desktop_file {
             my $basetag = $tag;
             $basetag =~ s/\[([^\]]+)\]$//;
             if (exists $vals{$tag}) {
-                tag 'duplicated-key-in-desktop-entry', "$file:$. $tag";
+                $self->tag('duplicated-key-in-desktop-entry', "$file:$. $tag");
             } elsif ($DEPRECATED_DESKTOP_KEYS->known($basetag)) {
                 if ($basetag eq 'Encoding') {
                     push(
@@ -633,23 +649,23 @@ sub verify_desktop_file {
 
     # Now we can issue any pending tags.
     for my $pending (@pending) {
-        tag @$pending;
+        $self->tag(@$pending);
     }
 
     # Test for important keys.
     for my $tag (@req_desktop_keys) {
         unless (defined $vals{$tag}) {
-            tag 'desktop-entry-missing-required-key', "$file $tag";
+            $self->tag('desktop-entry-missing-required-key', "$file $tag");
         }
     }
 
     # test if missing Keywords (only if NoDisplay is not set)
     if (!defined $vals{NoDisplay}) {
         if (!defined $vals{Icon}) {
-            tag 'desktop-entry-lacks-icon-entry', $file;
+            $self->tag('desktop-entry-lacks-icon-entry', $file);
         }
         if (!defined $vals{Keywords} && $vals{'Type'} eq 'Application') {
-            tag 'desktop-entry-lacks-keywords-entry', $file;
+            $self->tag('desktop-entry-lacks-keywords-entry', $file);
         }
     }
 
@@ -663,8 +679,8 @@ sub verify_desktop_file {
         and $vals{'Exec'}
         and $vals{'Exec'} =~ /\S/) {
         my ($okay, $command)
-          = verify_cmd($file->name, undef, $vals{'Exec'}, $pkg,$info);
-        tag 'desktop-command-not-in-package', $file, $command
+          = $self->verify_cmd($file->name, undef, $vals{'Exec'});
+        $self->tag('desktop-command-not-in-package', $file, $command)
           unless $okay
           or $command eq 'kcmshell';
         $command =~ s@^(?:usr/)?s?bin/@@;
@@ -680,19 +696,19 @@ sub verify_desktop_file {
         for my $cat (@cats) {
             next if $cat =~ /^X-/;
             if ($reserved_categories{$cat}) {
-                tag 'desktop-entry-uses-reserved-category', "$cat $file"
+                $self->tag('desktop-entry-uses-reserved-category',"$cat $file")
                   unless $vals{'OnlyShowIn'};
                 $saw_main = 1;
                 $in_reserved = 1;
             } elsif (not $ADD_CATEGORIES->known($cat)
                 and not $main_categories{$cat}) {
-                tag 'desktop-entry-invalid-category', "$cat $file";
+                $self->tag('desktop-entry-invalid-category', "$cat $file");
             } elsif ($main_categories{$cat}) {
                 $saw_main = 1;
             }
         }
         unless ($saw_main) {
-            tag 'desktop-entry-lacks-main-category', $file;
+            $self->tag('desktop-entry-lacks-main-category', $file);
         }
     }
 
@@ -703,7 +719,7 @@ sub verify_desktop_file {
     if (defined $vals{OnlyShowIn} and not $in_reserved) {
         my @envs = split(';', $vals{OnlyShowIn});
         if (@envs > 1) {
-            tag 'desktop-entry-limited-to-environments', $file;
+            $self->tag('desktop-entry-limited-to-environments', $file);
         }
     }
 
@@ -712,7 +728,7 @@ sub verify_desktop_file {
     if ($file =~ m,^usr/share/applications/, and defined $vals{'MimeType'}) {
         unless(defined $vals{'Exec'}
             and $vals{'Exec'} =~ m,(?:^|[^%])%[fFuU],){
-            tag 'desktop-mime-but-no-exec-code', $file;
+            $self->tag('desktop-mime-but-no-exec-code', $file);
         }
     }
 
@@ -725,7 +741,11 @@ sub verify_desktop_file {
 # false otherwise, and whose second member is the command (minus any leading
 # su-to-root wrapper).  Shared between the desktop and menu code.
 sub verify_cmd {
-    my ($file, $line, $exec, $pkg, $info) = @_;
+    my ($self, $file, $line, $exec) = @_;
+
+    my $pkg = $self->package;
+    my $info = $self->info;
+
     my $location = ($line ? "$file:$line" : $file);
 
     # This routine handles su wrappers.  The option parsing here is ugly and
@@ -735,7 +755,7 @@ sub verify_cmd {
     my @com = split(' ', $exec);
     my $cmd;
     if ($com[0] and $com[0] eq '/usr/sbin/su-to-root') {
-        tag 'su-to-root-with-usr-sbin', $location;
+        $self->tag('su-to-root-with-usr-sbin', $location);
     }
     if (    $com[0]
         and $com[0] =~ m,^(?:/usr/s?bin/)?(su-to-root|gksu|kdesu|sux)$,) {
@@ -766,9 +786,9 @@ sub verify_cmd {
                 undef $wrapper;
             }
         }
-        tag 'su-wrapper-without--c', "$location $wrapper" unless $cmd;
+        $self->tag('su-wrapper-without--c', "$location $wrapper") unless $cmd;
         if ($wrapper && $wrapper !~ /su-to-root/ && $wrapper ne $pkg) {
-            tag 'su-wrapper-not-su-to-root', "$location $wrapper";
+            $self->tag('su-wrapper-not-su-to-root', "$location $wrapper");
         }
     } else {
         $cmd = $com[0];

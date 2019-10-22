@@ -31,7 +31,6 @@ use autodie;
 use Moo;
 
 use Lintian::Data ();
-use Lintian::Tags qw(tag);
 
 with('Lintian::Check');
 
@@ -60,9 +59,9 @@ sub source {
         }
 
         if ($binary_has_homepage_field) {
-            tag 'homepage-in-binary-package';
+            $self->tag('homepage-in-binary-package');
         } else {
-            tag 'no-homepage-field';
+            $self->tag('no-homepage-field');
         }
 
         return;
@@ -84,7 +83,7 @@ sub always {
     my $orig = $info->field('homepage');
 
     if ($homepage =~ /^<(?:UR[LI]:)?.*>$/i) {
-        tag 'superfluous-clutter-in-homepage', $orig;
+        $self->tag('superfluous-clutter-in-homepage', $orig);
         $homepage = substr($homepage, 1, length($homepage) - 2);
     }
 
@@ -92,22 +91,22 @@ sub always {
     my $uri = URI->new($homepage);
 
     # not an absolute URI or (most likely) an invalid protocol
-    tag 'bad-homepage', $orig
+    $self->tag('bad-homepage', $orig)
       unless $uri->scheme && $uri->scheme =~ m/^(?:ftp|https?|gopher)$/o;
 
-    tag 'homepage-for-cpan-package-contains-version', $orig
+    $self->tag('homepage-for-cpan-package-contains-version', $orig)
       if $homepage=~ m,/(?:search\.cpan\.org|metacpan\.org)/.*-[0-9._]+/*$,;
 
-    tag 'homepage-for-cran-package-not-canonical', $orig
+    $self->tag('homepage-for-cran-package-not-canonical', $orig)
       if $homepage=~ m,/cran\.r-project\.org/web/packages/.+,;
 
-    tag 'homepage-for-bioconductor-package-not-canonical', $orig
+    $self->tag('homepage-for-bioconductor-package-not-canonical', $orig)
       if $homepage=~ m,bioconductor\.org/packages/.*/bioc/html/.*\.html*$,;
 
-    tag 'homepage-field-uses-insecure-uri', $orig
+    $self->tag('homepage-field-uses-insecure-uri', $orig)
       if $KNOWN_INSECURE_HOMEPAGE_URIS->matches_any($homepage);
 
-    tag 'homepage-refers-to-obsolete-debian-infrastructure', $orig
+    $self->tag('homepage-refers-to-obsolete-debian-infrastructure', $orig)
       if $homepage =~ m,alioth\.debian\.org,;
 
     return;

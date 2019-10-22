@@ -27,7 +27,6 @@ use autodie;
 
 use Moo;
 
-use Lintian::Tags qw(tag);
 use Lintian::Util qw(open_gz normalize_pkg_path);
 
 with('Lintian::Check');
@@ -63,12 +62,13 @@ sub binary {
             if ($file->is_file) {
                 # compressed with maximum compression rate?
                 if ($file_info !~ m/gzip compressed data/o) {
-                    tag 'info-document-not-compressed-with-gzip', $file;
+                    $self->tag('info-document-not-compressed-with-gzip',$file);
                 } else {
                     if ($file_info !~ m/max compression/o) {
-                        tag
-                          'info-document-not-compressed-with-max-compression',
-                          $file;
+                        $self->tag(
+'info-document-not-compressed-with-max-compression',
+                            $file
+                        );
                     }
                 }
             }
@@ -76,13 +76,13 @@ sub binary {
             next;
         } else {
             push(@fname_pieces, $ext);
-            tag 'info-document-not-compressed', $file;
+            $self->tag('info-document-not-compressed', $file);
         }
         my $infoext = pop @fname_pieces;
         unless ($infoext && $infoext =~ /^info(-\d+)?$/) { # it's not foo.info
             unless (!@fname_pieces) {
                 # it's not foo{,-{1,2,3,...}}
-                tag 'info-document-has-wrong-extension', $file;
+                $self->tag('info-document-has-wrong-extension', $file);
             }
         }
 
@@ -104,8 +104,10 @@ sub binary {
                 $end     = 1 if /^END-INFO-DIR-ENTRY\b/;
             }
             close($fd);
-            tag 'info-document-missing-dir-section', $file unless $section;
-            tag 'info-document-missing-dir-entry', $file unless $start && $end;
+            $self->tag('info-document-missing-dir-section', $file)
+              unless $section;
+            $self->tag('info-document-missing-dir-entry', $file)
+              unless $start && $end;
         }
 
         # Check each [image src=""] form in the info files.  The src
@@ -128,7 +130,8 @@ sub binary {
                     my $src = $1;
                     $src =~ s/\\(.)/$1/g;   # unbackslash
                     $info->index(normalize_pkg_path('usr/share/info', $src))
-                      or tag 'info-document-missing-image-file', $file, $src;
+                      or $self->tag('info-document-missing-image-file',
+                        $file, $src);
                 }
             }
             close($fd);
