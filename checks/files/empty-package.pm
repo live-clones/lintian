@@ -32,30 +32,40 @@ with('Lintian::Check');
 # consider the package non-empty.
 my $STANDARD_FILES = Lintian::Data->new('files/standard-files');
 
-sub always {
+has is_dummy => (is => 'rwp');
+has is_empty => (is => 'rwp', default => 1);
+
+sub setup {
     my ($self) = @_;
 
     # check if package is empty
-    my $is_dummy = $self->info->is_pkg_class('any-meta');
+    $self->_set_is_dummy($self->info->is_pkg_class('any-meta'));
+
+    return;
+}
+
+sub files {
+    my ($self, $file) = @_;
 
     return
-      if $is_dummy;
+      unless $self->is_empty;
+
+    return
+      if $self->is_dummy;
+
+    # ignore directories
+    return
+      if $file->name =~ m,/$,;
 
     my $pkg = $self->package;
     my $ppkg = quotemeta($self->package);
 
-    my $is_empty = 1;
-    for my $file ($self->info->sorted_index) {
+    # skip if file is outside /usr/share/doc/$pkg directory
+    if ($file->name !~ m,^usr/share/doc/\Q$pkg\E,) {
 
-        # ignore directories
-        next
-          if $file->name =~ m,/$,;
-
-        # skip if file is outside /usr/share/doc/$pkg directory
-        if ($file->name !~ m,^usr/share/doc/\Q$pkg\E,) {
-            # - except if it is a lintian override.
-            next
-              if $file->name =~ m{\A
+        # - except if it is a lintian override.
+        return
+          if $file->name =~ m{\A
                              # Except for:
                              usr/share/ (?:
                                  # lintian overrides
@@ -64,46 +74,54 @@ sub always {
                              | bug/$ppkg(?:/(?:control|presubj|script))?
                              )\Z}xsm;
 
-            $is_empty = 0;
-            last;
-        }
-
-        # skip if /usr/share/doc/$pkg has files in a subdirectory
-        if ($file->name =~ m,^usr/share/doc/\Q$pkg\E/[^/]++/,) {
-            $is_empty = 0;
-            last;
-        }
-
-        # skip /usr/share/doc/$pkg symlinks.
-        next
-          if $file->name eq "usr/share/doc/$pkg";
-
-        # For files directly in /usr/share/doc/$pkg, if the
-        # file isn't one of the uninteresting ones, the
-        # package isn't empty.
-        next
-          if $STANDARD_FILES->known($file->basename);
-
-        # ignore all READMEs
-        next
-          if $file->basename =~ m/^README(?:\..*)?$/i;
-
-        my $pkg_arch = $self->processable->pkg_arch;
-        unless ($pkg_arch eq 'all') {
-            # binNMU changelog (debhelper)
-            next
-              if $file->basename eq "changelog.Debian.${pkg_arch}.gz";
-        }
-
-        # buildinfo file (dh-buildinfo)
-        next
-          if $file->basename eq "buildinfo_${pkg_arch}.gz";
-
-        $is_empty = 0;
-        last;
+        $self->_set_is_empty(0);
+        return;
     }
 
-    if ($is_empty) {
+    # skip if /usr/share/doc/$pkg has files in a subdirectory
+    if ($file->name =~ m,^usr/share/doc/\Q$pkg\E/[^/]++/,) {
+        $self->_set_is_empty(0);
+        return;
+    }
+
+    # skip /usr/share/doc/$pkg symlinks.
+    return
+      if $file->name eq "usr/share/doc/$pkg";
+
+    # For files directly in /usr/share/doc/$pkg, if the
+    # file isn't one of the uninteresting ones, the
+    # package isn't empty.
+    return
+      if $STANDARD_FILES->known($file->basename);
+
+    # ignore all READMEs
+    return
+      if $file->basename =~ m/^README(?:\..*)?$/i;
+
+    my $pkg_arch = $self->processable->pkg_arch;
+    unless ($pkg_arch eq 'all') {
+
+        # binNMU changelog (debhelper)
+        return
+          if $file->basename eq "changelog.Debian.${pkg_arch}.gz";
+    }
+
+    # buildinfo file (dh-buildinfo)
+    return
+      if $file->basename eq "buildinfo_${pkg_arch}.gz";
+
+    $self->_set_is_empty(0);
+
+    return;
+}
+
+sub breakdown {
+    my ($self) = @_;
+
+    return
+      if $self->is_dummy;
+
+    if ($self->is_empty) {
 
         $self->tag('empty-binary-package')
           if $self->type eq 'binary';
