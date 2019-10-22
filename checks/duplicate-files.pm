@@ -29,37 +29,47 @@ use Moo;
 
 with('Lintian::Check');
 
-sub binary {
+has md5map => (is => 'rwp', default => sub{ {} });
+
+sub files {
+    my ($self, $file) = @_;
+
+    return
+      unless $file->is_regular_file;
+
+    # Ignore empty files; in some cases (e.g. python) a file is
+    # required even if it is empty and we are never looking at a
+    # substantial gain in such a case.  Also see #632789
+    return
+      unless $file->size;
+
+    my $md5 = $self->info->md5sums->{$file};
+    return
+      unless defined $md5;
+
+    return
+      unless $file =~ m{\A usr/share/doc/}xsmo;
+
+    $self->md5map->{$md5} = []
+      unless defined $self->md5map->{$md5};
+
+    push(@{$self->md5map->{$md5}}, $file);
+
+    return;
+}
+
+sub breakdown {
     my ($self) = @_;
 
-    my $info = $self->info;
+    foreach my $md5 (keys %{$self->md5map}){
+        my @files = @{ $self->md5map->{$md5} };
 
-    my %hashmap;
+        next
+          if scalar @files < 2;
 
-    foreach my $file ($info->sorted_index){
-        my $md5 = $info->md5sums->{$file};
-        my $fs;
-        next unless defined $md5;
-        next unless $file->is_regular_file;
-        # Ignore empty files; in some cases (e.g. python) a file is
-        # required even if it is empty and we are never looking at a
-        # substantial gain in such a case.  Also see #632789
-        next unless $file->size;
-        next unless $file =~ m{\A usr/share/doc/}xsmo;
-        $fs = $hashmap{$md5};
-        unless (defined $fs){
-            $fs = [$file];
-            $hashmap{$md5} = $fs;
-        } else {
-            push @$fs, $file;
-        }
-    }
-
-    foreach my $hash (keys %hashmap){
-        my @files = @{ $hashmap{$hash} };
-        next if scalar(@files) < 2;
         if (any { m,changelog,io} @files) {
             $self->tag('duplicate-changelog-files', sort @files);
+
         } else {
             $self->tag('duplicate-files', sort @files);
         }
