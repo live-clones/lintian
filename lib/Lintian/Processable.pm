@@ -301,6 +301,21 @@ sub get_field {
     return $self->{'extra-fields'}{$field}//$def;
 }
 
+=item get_group_id
+
+Calculates an appropriate group id for the package. It is based
+on the name and the version of the src-pkg.
+
+=cut
+
+sub get_group_id{
+    my ($self) = @_;
+
+    my $id = $self->pkg_src . '/' . $self->pkg_src_version;
+
+    return $id;
+}
+
 =back
 
 =head1 AUTHOR
