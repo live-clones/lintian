@@ -124,6 +124,8 @@ sub source {
         $self->tag('timewarp-standards-version', "($package < $release)");
     }
 
+    $self->tag('standards-version', $version);
+
     my $tag = "$version (current is $CURRENT)";
     if (not $STANDARDS->known($stdver)) {
         # Unknown standards version.  Perhaps newer?
