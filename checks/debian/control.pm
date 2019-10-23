@@ -494,7 +494,7 @@ sub source {
           unless $info->source_field('xs-go-import-path', '');
     }
 
-    my $changes = $group->get_changes_processable;
+    my $changes = $group->changes;
     $self->tag('source-only-upload-to-non-free-without-autobuild')
       if defined($changes)
       and $changes->info->field('architecture', '') eq 'source'

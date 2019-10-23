@@ -123,7 +123,7 @@ sub info {
 sub build_path {
     my ($self) = @_;
 
-    my $buildinfo = $self->group->get_buildinfo_processable;
+    my $buildinfo = $self->group->buildinfo;
 
     return EMPTY
       unless $buildinfo;

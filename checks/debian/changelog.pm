@@ -69,7 +69,7 @@ sub source {
 
     my $latest_entry = $entries[0];
 
-    my $changes = $group->get_changes_processable;
+    my $changes = $group->changes;
     if ($changes) {
         my $contents = path($changes->pkg_path)->slurp;
         # make sure dot matches newlines, as well
@@ -568,7 +568,7 @@ sub binary {
                 }
             }
 
-            my $changes = $group->get_changes_processable;
+            my $changes = $group->changes;
             if ($changes) {
                 my $changes_dist
                   = lc($changes->info->field('distribution', EMPTY));
