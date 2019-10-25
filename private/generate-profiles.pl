@@ -12,6 +12,7 @@ BEGIN {
 }
 
 use File::Find::Rule;
+use LWP::Simple;
 use Path::Tiny;
 
 use lib "$ENV{LINTIAN_ROOT}/lib";
@@ -23,6 +24,34 @@ use constant EMPTY => q{};
 use constant SPACE => q{ };
 use constant COMMA => q{,};
 use constant NEWLINE => qq{\n};
+
+my $masterurl = 'https://ftp-master.debian.org/static/lintian.tags';
+my $contents = get($masterurl);
+
+die "Couldn't get $masterurl"
+  unless defined $contents;
+
+my ($nonfatal_string, $fatal_string)
+  = ($contents =~ qr/^lintian:[^:]*nonfatal:([^:]*)fatal:([^:]*)$/);
+die "Could not parse document downloaded from $masterurl"
+  unless defined $nonfatal_string && defined $fatal_string;
+
+# remove comments
+$nonfatal_string =~ s/#[^\n]*\n/\n/g;
+$fatal_string =~ s/#[^\n]*\n/\n/g;
+
+# remove hyphens
+$nonfatal_string =~ s/\s-\s/ /g;
+$fatal_string =~ s/\s-\s/ /g;
+
+my @nonfatal = split(' ', $nonfatal_string);
+my @fatal = split(' ', $fatal_string);
+
+print 'Found '
+  . scalar @fatal
+  . ' fatal and '
+  . scalar @nonfatal
+  . " non-fatal tags for profile ftp-master-auto-reject.\n";
 
 my @checkdescs
   = File::Find::Rule->file->name('*.desc')->in("$ENV{LINTIAN_ROOT}/checks");
@@ -48,9 +77,6 @@ generate_profile(
         'Extends' => ['debian/ftp-master-auto-reject'],
         'Enable-Tags-From-Check' => \@checks,
     });
-
-my @fatal = read_tags('private/build-time-data/ftp-master-fatal');
-my @nonfatal = read_tags('private/build-time-data/ftp-master-nonfatal');
 
 generate_profile(
     'debian/ftp-master-auto-reject',
