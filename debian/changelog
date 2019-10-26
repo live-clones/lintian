@@ -1,8 +1,20 @@
-lintian (2.29.0+git) UNRELEASED; urgency=medium
+lintian (2.30.0) unstable; urgency=medium
 
-  * WIP (generated upon release).
+  [ Chris Lamb ]
+  * Warn about packages that use the deprecated $ADTTMP autopkgtest variable.
 
- -- Chris Lamb <lamby@debian.org>  Sun, 20 Oct 2019 11:29:40 +0100
+  [ Sylvestre Ledru ]
+  * Emit a warning for overly-long binary package fields. (Closes: #942493)
+
+  [ Felix Lechner ]
+  * Generate the qa-list.txt data file from the Ultimate Debian Database
+    and update this file in the package.
+  * Extract the auto-reject tags from the data published by the FTP Master
+    team and update locally.
+  * In the cruft check, use the new ->tag subroutine instead of the
+    Lintian::Tag::tag global.
+
+ -- Chris Lamb <lamby@debian.org>  Sat, 26 Oct 2019 18:03:17 +0000
 
 lintian (2.29.0) unstable; urgency=medium
 
