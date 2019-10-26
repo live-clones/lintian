@@ -1,6 +1,6 @@
 Testname: source-only-upload-to-non-free-without-autobuild
 Skeleton: upload-native
 Section: non-free/devel
-Description: This source-upload to non-free will never appear in the archive
+Upload-Type: source
+Description: This source-only upload to non-free will never appear in the archive
 Check: debian/control
-Build-Product: [% $source %]_[% $no_epoch %]_source.changes
