@@ -28,9 +28,9 @@ product: $(origtargz)
 	fi ;
 	if [ -d $(diffdata)/. ] ; then cp -rp $(diffdata)/. $(packagedir) ; fi
 	if [ -d $(debiandata)/. ] ; then cp -rp $(debiandata)/. $(packagedir)/debian ; fi
-	if [ -x ./pre_build ] ; then ./pre_build $(shell realpath $(packagedir)) ; fi
+	if [ -x ./pre-build ] ; then ./pre-build $(shell realpath $(packagedir)) ; fi
 	cd $(packagedir) && dpkg-buildpackage -rfakeroot -us -uc -d -iNEVER_MATCH_ANYTHING -INEVER_MATCH_ANYTHING --source-option=--auto-commit
-	if [ -x ./post_build ] ; then ./post_build $(shell realpath $(packagedir)) ; fi
+	if [ -x ./post-build ] ; then ./post-build $(shell realpath $(packagedir)) ; fi
 
 ifeq ($(type),native)
 $(origtargz): clean
@@ -40,7 +40,7 @@ else
 $(origtargz): clean
 	-mkdir $(packagedir)
 	if [ -d $(origdata)/. ] ; then cp -rp $(origdata)/. $(packagedir) ; fi
-	if [ -x ./pre_upstream ] ; then ./pre_upstream $(shell realpath $(packagedir)) ; fi
+	if [ -x ./pre-upstream ] ; then ./pre-upstream $(shell realpath $(packagedir)) ; fi
 	tar czf $(origtargz) $(packagedir)
 	if [ -f $(formatfile) ] && grep --quiet "^3\.. (quilt)$$" $(formatfile) ; then rm -rf $(packagedir)/debian ; fi
 endif
