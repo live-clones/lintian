@@ -1,0 +1,12 @@
+ROOT_DIR:=$(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
+
+product = [% $build_product %]
+
+.DEFAULT_GOAL := $(product)
+
+$(product): $(ROOT_DIR)/$(product)
+	cp $(ROOT_DIR)/$(product) $(product)
+
+.PHONY: clean
+clean:
+	rm -f $(product)

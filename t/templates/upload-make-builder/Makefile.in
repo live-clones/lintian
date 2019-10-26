@@ -1,51 +1,90 @@
+ROOT_DIR:=$(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
+
 package = [% $source %]
 upstream_version = [% $upstream_version %]
 type = [% $type %]
 
 packagedir = $(package)-$(upstream_version)
 
-origdata = orig
+origdata = $(ROOT_DIR)/orig
 origtargz = $(package)_$(upstream_version).orig.tar.gz
 
-debiandata = debian
+debiandata = $(ROOT_DIR)/debian
 formatfile = $(debiandata)/source/format
 
-diffdata = diff
+diffdata = $(ROOT_DIR)/diff
 
-private_key = upstream/private-key.asc
+private_key = $(ROOT_DIR)/upstream/private-key.asc
 
-product = $(package)_[% $no_epoch %]_[% $host_architecture %].changes
+pre_build = $(ROOT_DIR)/pre-build
+post_build = $(ROOT_DIR)/post-build
+pre_upstream = $(ROOT_DIR)/pre-upstream
 
-.DEFAULT_GOAL := product
+product = [% $build_product %]
+upload_type = [% $upload_type %]
 
-product: $(origtargz)
+ifeq ($(upload_type),source)
+extraflags = -S
+else
+extraflags =
+endif
+
+.DEFAULT_GOAL := $(product)
+
+$(product): $(origtargz)
 	if [ -r $(origtargz) -a -r $(private_key) ] ; then \
-	tmpdir=$(shell mktemp -d) ; \
-	gpg --homedir "$$tmpdir" --import $(private_key) ; \
-	gpg --homedir "$$tmpdir" --batch --yes --output $(origtargz).asc --detach-sign $(origtargz) ; \
-	gpg-connect-agent --homedir "$$tmpdir" KILLAGENT /bye ; \
-	rm -rf "$$tmpdir" ; \
-	fi ;
-	if [ -d $(diffdata)/. ] ; then cp -rp $(diffdata)/. $(packagedir) ; fi
-	if [ -d $(debiandata)/. ] ; then cp -rp $(debiandata)/. $(packagedir)/debian ; fi
-	if [ -x ./pre-build ] ; then ./pre-build $(shell realpath $(packagedir)) ; fi
-	cd $(packagedir) && dpkg-buildpackage -rfakeroot -us -uc -d -iNEVER_MATCH_ANYTHING -INEVER_MATCH_ANYTHING --source-option=--auto-commit
-	if [ -x ./post-build ] ; then ./post-build $(shell realpath $(packagedir)) ; fi
+		tmpdir=$(shell mktemp -d) ; \
+		gpg --homedir "$$tmpdir" --import $(private_key) ; \
+		gpg --homedir "$$tmpdir" --batch --yes --output $(origtargz).asc \
+			--detach-sign $(origtargz) ; \
+		gpg-connect-agent --homedir "$$tmpdir" KILLAGENT /bye ; \
+		rm -rf "$$tmpdir" ; \
+	fi
+	if [ -d $(diffdata)/. ] ; then \
+		cp -rp $(diffdata)/. $(packagedir) ; \
+	fi
+	if [ -d $(debiandata)/. ] ; then \
+		cp -rp $(debiandata)/. $(packagedir)/debian ; \
+	fi
+
+	if [ -x $(pre_build) ] ; then \
+		$(pre_build) $(shell realpath $(packagedir)) ; \
+	fi
+
+	cd $(packagedir) && dpkg-buildpackage -rfakeroot $(extraflags) -us -uc -d \
+		-iNEVER_MATCH_ANYTHING -INEVER_MATCH_ANYTHING --source-option=--auto-commit
+
+	if [ -x $(post_build) ] ; then \
+		$(post_build) $(shell realpath $(packagedir)) ; \
+	fi
 
 ifeq ($(type),native)
-$(origtargz): clean
+$(origtargz):
 	-mkdir $(packagedir)
-	if [ -d $(origdata)/. ] ; then cp -rp $(origdata)/. $(packagedir) ; fi
+	if [ -d $(origdata)/. ] ; then \
+		cp -rp $(origdata)/. $(packagedir) ; \
+	fi
 else
-$(origtargz): clean
+$(origtargz):
 	-mkdir $(packagedir)
-	if [ -d $(origdata)/. ] ; then cp -rp $(origdata)/. $(packagedir) ; fi
-	if [ -x ./pre-upstream ] ; then ./pre-upstream $(shell realpath $(packagedir)) ; fi
+	if [ -d $(origdata)/. ] ; then \
+		cp -rp $(origdata)/. $(packagedir) ; \
+	fi
+
+	if [ -x $(pre_upstream) ] ; then \
+		$(pre_upstream) $(shell realpath $(packagedir)) ; \
+	fi
+
 	tar czf $(origtargz) $(packagedir)
-	if [ -f $(formatfile) ] && grep --quiet "^3\.. (quilt)$$" $(formatfile) ; then rm -rf $(packagedir)/debian ; fi
+
+	if [ -f $(formatfile) ] && grep --quiet "^3\.. (quilt)$$" $(formatfile) ; then \
+		rm -rf $(packagedir)/debian ; \
+	fi
 endif
 
 .PHONY: clean
 clean:
 	rm -rf $(packagedir)
-	if [ "$(type)" = "native" ] ; then rm -f $(origtargz) ; fi
+	if [ "$(type)" = "native" ] ; then \
+		rm -f $(origtargz) ; \
+	fi
