@@ -30,17 +30,66 @@ use autodie;
 
 use IO::Async::Loop;
 use IO::Async::Process;
+use IO::Async::Routine;
 use Path::Tiny;
 use Try::Tiny;
 
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
 
 use Lintian::Collect;
-use Lintian::Util qw(locate_helper_tool);
 
 use constant EMPTY => q{};
+use constant SPACE => q{ };
+use constant COMMA => q{,};
 use constant COLON => q{:};
 use constant NEWLINE => qq{\n};
+use constant NULL => qq{\0};
+
+sub check_magic {
+    my ($path, $type) = @_;
+
+    # the file program is regularly wrong here; determine type properly
+    return ($path, $type)
+      unless $path =~ m/\.gz$/
+      && -f $path
+      && !-l $path
+      && $type !~ m/compressed/;
+
+    open(my $fd, '<', $path)
+      or die "Cannot open $path";
+
+    my $size = sysread($fd, my $buffer, 1024);
+
+    close($fd)
+      or warn "Cannot close $path";
+
+    # need to read at least 9 bytes
+    return ($path, $type)
+      unless $size >= 9;
+
+    # translation of the unpack
+    #  nn nn ,  NN NN NN NN, nn nn, cc     - bytes read
+    #  $magic,  __ __ __ __, __ __, $comp  - variables
+    my ($magic, undef, undef, $compression) = unpack('nNnc', $buffer);
+
+    my $text = EMPTY;
+
+    # gzip file magic
+    if ($magic == 0x1f8b){
+
+        $text = 'gzip compressed data';
+
+        # 2 for max compression; RFC1952 suggests this is a
+        # flag and not a value, hence bit operation
+        $text .= COMMA . SPACE . 'max compression'
+          if $compression & 2;
+    }
+
+    $type .= COMMA . SPACE . $text
+      if $text;
+
+    return ($path, $type);
+}
 
 sub collect {
     my ($pkg, $type, $dir) = @_;
@@ -65,31 +114,6 @@ sub collect {
             # output then contains "ERROR" messages but is still usable
 
             $generatedone->done('Done with @generatecommand');
-            return;
-        });
-
-    my $helperpath = locate_helper_tool('coll/file-info-helper');
-    my $helperdone = $loop->new_future;
-    my $helpererrors;
-
-    my $helper = IO::Async::Process->new(
-        command => $helperpath,
-        stdin => { via => 'pipe_write' },
-        stdout => { via => 'pipe_read' },
-        stderr => { into => \$helpererrors },
-        on_finish => sub {
-            my ($self, $exitcode) = @_;
-            my $status = ($exitcode >> 8);
-
-            if ($status) {
-                my $message = "Command $helperpath exited with status $status";
-                $message .= COLON . NEWLINE . $helpererrors
-                  if length $helpererrors;
-                $helperdone->fail($message);
-                return;
-            }
-
-            $helperdone->done('Done with $helperpath');
             return;
         });
 
@@ -123,25 +147,14 @@ sub collect {
         on_read => sub {
             my ($stream, $buffref, $eof) = @_;
 
-            if (length $$buffref) {
-                $helper->stdin->write($$buffref);
-                $$buffref = EMPTY;
-            }
+            while($$buffref =~ s/^(.*\n)//) {
 
-            $helper->stdin->close_when_empty
-              if $eof;
+                my $line = $1;
+                my ($path, $type) = ($line =~ m/^(.*?)\x00(.*)$/);
 
-            return 0;
-        },
-    );
+                ($path, $type) = check_magic($path, $type);
 
-    $helper->stdout->configure(
-        on_read => sub {
-            my ($stream, $buffref, $eof) = @_;
-
-            if (length $$buffref) {
-                $compress->stdin->write($$buffref);
-                $$buffref = EMPTY;
+                $compress->stdin->write($path . NULL . $type . NEWLINE);
             }
 
             $compress->stdin->close_when_empty
@@ -172,17 +185,16 @@ sub collect {
     );
 
     $loop->add($generate);
-    $loop->add($helper);
     $loop->add($compress);
 
     foreach my $path ($info->sorted_index) {
         next unless $path->is_file;
 
-        $generate->stdin->write("$path\0");
+        $generate->stdin->write($path . NULL);
     }
 
     $generate->stdin->close_when_empty;
-    Future->needs_all($generatedone, $helperdone, $compressdone)->get;
+    Future->needs_all($generatedone, $compressdone)->get;
 
     return;
 }
