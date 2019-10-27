@@ -253,11 +253,11 @@ sub process{
                 # Unfortunately, the cleanup via IO::Async::Function seems keep
                 # a worker unreaped; disabling. Should be revisited.
                 #
-                # if (waitpid(-1, WNOHANG) != -1) {
-                #     $exit_code = 2;
-                #     internal_error(
-                #         'Unreaped processes after running checks!?');
-                # }
+                if (waitpid(-1, WNOHANG) != -1) {
+                    $$exit_code_ref = 2;
+                    internal_error(
+                        'Unreaped processes after running checks!?');
+                }
             } else {
                 # If we are interrupted in (e.g.) checks/manpages, it
                 # tends to leave processes behind.  No reason to flag
