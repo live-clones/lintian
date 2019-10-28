@@ -339,6 +339,9 @@ sub source {
         close($fd);
         if ($compat ne '') {
             my $compat_value = $compat;
+            # Recommend people use debhelper-compat (introduced in debhelper
+            # 11.1.5~alpha1) over debian/compat, except for experimental/beta
+            # versions.
             if ($compat !~ m/^\d+$/) {
                 $self->tag('debhelper-compat-not-a-number', $compat);
                 $compat =~ s/[^\d]//g;
@@ -356,6 +359,9 @@ sub source {
                 # prefers DH_COMPAT over debian/compat
                 $level = $compat_value;
             }
+            $self->tag('uses-debhelper-compat-file')
+              if $compat_value >= 11
+              and $compat_value < $compat_level->value('experimental');
         } else {
             $self->tag('debhelper-compat-file-is-empty');
         }
