@@ -591,7 +591,7 @@ sub source {
         }
     }
 
-    if ($seen{'sphinxdoc'}) {
+    if ($seen{'sphinxdoc'} and not $seen_dh_dynamic) {
         my $seen_sphinxdoc = 0;
         for my $binpkg (@pkgs) {
             $seen_sphinxdoc = 1
