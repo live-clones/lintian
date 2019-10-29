@@ -203,7 +203,7 @@ sub file_info {
         my %file_info;
 
         my %h;
-        tie %h, 'BerkeleyDB::Hash',-Filename => $dbpath
+        tie %h, 'BerkeleyDB::Btree',-Filename => $dbpath
           or die "Cannot open file $dbpath: $! $BerkeleyDB::Error\n";
 
         $file_info{$_} = $h{$_} for keys %h;
@@ -239,7 +239,7 @@ sub md5sums {
         my %md5sums;
 
         my %h;
-        tie %h, 'BerkeleyDB::Hash',-Filename => $dbpath
+        tie %h, 'BerkeleyDB::Btree',-Filename => $dbpath
           or die "Cannot open file $dbpath: $! $BerkeleyDB::Error\n";
 
         $md5sums{$_} = $h{$_} for keys %h;

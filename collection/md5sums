@@ -82,7 +82,7 @@ sub collect {
       if -e $dbpath;
 
     my %h;
-    tie %h, 'BerkeleyDB::Hash',
+    tie %h, 'BerkeleyDB::Btree',
       -Filename => $dbpath,
       -Flags    => DB_CREATE
       or die "Cannot open file $dbpath: $! $BerkeleyDB::Error\n";
