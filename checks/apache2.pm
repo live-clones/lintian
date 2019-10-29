@@ -191,36 +191,37 @@ sub check_module_package {
 sub check_maintainer_scripts {
     my ($self) = @_;
 
-    my $info = $self->info;
+    my %control = %{$self->info->control_scripts};
 
-    open(my $fd, '<', $info->lab_data_path('control-scripts'));
+    for my $key (keys %control) {
 
-    while (<$fd>){
-        m/^(\S*) (.*)$/
-          or internal_error("bad line in control-scripts file: $_");
-        my $interpreter = $1;
-        my $file = $2;
-        my $path = $info->control_index_resolved_path($file);
+        my $path = $self->info->control_index_resolved_path($key);
+        my $interpreter = $control{$key};
 
-        next if not $path or not $path->is_open_ok;
-        # Don't try to parse the file if it does not appear to be a
-        # shell script
-        next if $interpreter !~ m/sh\b/;
+        next
+          unless $path && $path->is_open_ok;
+
+        # skip anything but shell scripts
+        next
+          unless $interpreter =~ m/sh\b/;
 
         my $sfd = $path->open;
         while (<$sfd>) {
+
             # skip comments
             next if substr($_, 0, $-[0]) =~ /#/;
 
             # Do not allow reverse dependencies to call "a2enmod" and friends
             # directly
             if (m/\b(a2(?:en|dis)(?:conf|site|mod))\b/) {
+
                 $self->tag('apache2-reverse-dependency-calls-wrapper-script',
                     $path,$1);
             }
 
             # Do not allow reverse dependencies to call "invoke-rc.d apache2
             if (m/invoke-rc\.d\s+apache2/) {
+
                 $self->tag('apache2-reverse-dependency-calls-invoke-rc.d',
                     $path);
             }
@@ -230,10 +231,10 @@ sub check_maintainer_scripts {
             # That's going to be complicated. Or not possible without grammar
             # parser.
         }
+
         close($sfd);
     }
 
-    close($fd);
     return;
 }
 
