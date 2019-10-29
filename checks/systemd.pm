@@ -440,20 +440,21 @@ sub check_maintainer_scripts {
 
     my $info = $self->info;
 
-    open(my $fd, '<', $info->lab_data_path('control-scripts'));
+    # get maintainer scripts
+    my %control = %{$self->info->control_scripts};
 
-    while (<$fd>) {
-        m/^(\S*) (.*)$/
-          or internal_error("bad line in control-scripts file: $_");
-        my $interpreter = $1;
-        my $file = $2;
+    for my $file (keys %control) {
+
         my $path = $info->control_index_resolved_path($file);
+        my $interpreter = $control{$file};
 
         # Don't follow unsafe links
-        next if not $path or not $path->is_open_ok;
-        # Don't try to parse the file if it does not appear to be a
-        # shell script
-        next if $interpreter !~ m/sh\b/;
+        next
+          unless $path && $path->is_open_ok;
+
+        # skip anything but shell scripts
+        next
+          unless $interpreter =~ m/sh\b/;
 
         my $sfd = $path->open;
         while (<$sfd>) {
@@ -469,7 +470,6 @@ sub check_maintainer_scripts {
         close($sfd);
     }
 
-    close($fd);
     return;
 }
 
