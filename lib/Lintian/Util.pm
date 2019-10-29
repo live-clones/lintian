@@ -78,6 +78,7 @@ BEGIN {
           locate_helper_tool
           drain_pipe
           signal_number2name
+          drop_relative_prefix
           dequote_name
           pipe_tee
           untaint
@@ -994,6 +995,20 @@ sub check_path {
         return 1 if -f "$element/$command" and -x _;
     }
     return 0;
+}
+
+=item drop_relative_prefix(STRING)
+
+Remove an initial ./ from STRING, if present
+
+=cut
+
+sub drop_relative_prefix {
+    my ($name) = @_;
+
+    $name =~ s,^\.?/,,;
+
+    return $name;
 }
 
 =item dequote_name(STR, REMOVESLASH)
