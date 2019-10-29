@@ -585,7 +585,8 @@ sub binary {
           );
     }
 
-    open(my $ctrl_fd, '<', $info->lab_data_path('control-scripts'));
+    # get maintainer scripts
+    my %control = %{$self->info->control_scripts};
 
     # Handle control scripts.  This is an edited version of the code for
     # normal scripts above, because there were just enough differences to
@@ -593,14 +594,10 @@ sub binary {
 
     my (%added_diversions, %removed_diversions, %dh_cmd_substs);
     my $expand_diversions = 0;
-    while (<$ctrl_fd>) {
-        chop;
+    for my $file (keys %control) {
 
-        m/^(\S*) (.*)$/
-          or internal_error("bad line in control-scripts file: $_");
-        my $interpreter = $1;
-        my $file = $2;
         my $path = $info->control_index_resolved_path($file);
+        my $interpreter = $control{$file};
 
         $interpreter =~ m|([^/]*)$|;
         my $base = $1;
@@ -1185,7 +1182,6 @@ m,$LEADIN(?:/usr/bin/)?dpkg\s+--compare-versions\s+.*\b\Q$ver\E(?!\.)\b,
         close($fd);
 
     }
-    close($ctrl_fd);
 
     for my $cmd (qw(rm_conffile mv_conffile symlink_to_dir)) {
         next unless $seen_helper_cmds{$cmd};
