@@ -82,27 +82,25 @@ sub breakdown {
     my ($self) = @_;
 
     # get maintainer scripts
-    open(my $fd, '<', $self->info->lab_data_path('control-scripts'));
-    while (<$fd>) {
-        m/^\S* (.*)$/
-          or die "bad line in control-scripts file: $_";
+    my %control = %{$self->info->control_scripts};
 
-        my $file = $self->info->control_index_resolved_path($1);
+    for my $key (keys %control) {
+
+        my $file = $self->info->control_index_resolved_path($key);
         next
           unless $file && $file->is_open_ok;
 
         my %checks= $self->get_checks_for_file($file);
 
-        my $fd2 = $file->open;
-        while (<$fd2>) {
+        my $fd = $file->open;
+        while (<$fd>) {
             foreach my $tag (sort keys %checks) {
                 $self->tag($tag, $file->name, "(line $.)")
                   if $_ =~ $checks{$tag};
             }
         }
-        close($fd2);
+        close $fd;
     }
-    close($fd);
 
     return;
 }
