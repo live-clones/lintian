@@ -25,6 +25,7 @@ use autodie;
 
 use parent 'Lintian::Collect';
 
+use BerkeleyDB;
 use Carp qw(croak);
 use Scalar::Util qw(blessed);
 
@@ -193,44 +194,28 @@ Needs-Info requirements for using I<file_info>: file-info
 =cut
 
 sub file_info {
-    my ($self, $file) = @_;
-    if (my $cache = $self->{file_info}) {
-        return ${$cache->{$file}}
-          if exists $cache->{$file};
-        return;
+    my ($self, $path) = @_;
+
+    unless ($self->{file_info}) {
+
+        my $dbpath = $self->lab_data_path('file-info.db');
+
+        my %file_info;
+
+        my %h;
+        tie %h, 'BerkeleyDB::Hash',-Filename => $dbpath
+          or die "Cannot open file $dbpath: $! $BerkeleyDB::Error\n";
+
+        $file_info{$_} = $h{$_} for keys %h;
+
+        untie %h;
+
+        $self->{file_info} = \%file_info;
     }
-    my %interned;
-    my %file_info;
-    my $path = $self->lab_data_path('file-info.gz');
-    my $idx = open_gz($path);
-    while (my $line = <$idx>) {
-        chomp($line);
 
-        $line =~ m/^(.+?)\x00\s+(.*)$/o
-          or croak(
-            join(q{ },
-                'an error in the file pkg is preventing',
-                "lintian from checking this package: $_"));
-        my ($file, $info) = ($1,$2);
-        my $ref = $interned{$info};
+    return $self->{file_info}{$path}
+      if exists $self->{file_info}{$path};
 
-        $file =~ s,^\./,,o;
-
-        if (!defined($ref)) {
-            # Store a ref to the info to avoid creating a new copy
-            # each time.  We just have to deref the reference on
-            # return.  TODO: Test if this will be obsolete by
-            # COW variables in Perl 5.20.
-            $interned{$info} = $ref = \$info;
-        }
-
-        $file_info{$file} = $ref;
-    }
-    close($idx);
-    $self->{file_info} = \%file_info;
-
-    return ${$self->{file_info}{$file}}
-      if exists $self->{file_info}{$file};
     return;
 }
 
