@@ -464,6 +464,7 @@ sub source {
     if (my $line = $overridden{'dh_auto_test'}) {
         my @lines = grep {
                   $_ !~ m{^\t\s*[\:\[]}
+              and $_ !~ m{^\s*$}
               and $_ !~ m{\bdh_auto_test\b}
               and $_
               !~ m{^\t\s*[-@]?(?:(?:/usr)?/bin/)?(?:cp|chmod|echo|ln|mv|mkdir|rm|test|true)}
