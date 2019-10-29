@@ -32,11 +32,286 @@ use Text::ParseWords ();
 use Lintian::Spelling qw(check_spelling spelling_tag_emitter);
 use Lintian::Util qw(clean_env do_fork drain_pipe internal_error open_gz);
 
-with('Lintian::Check');
-
 use constant LINTIAN_COVERAGE => ($ENV{'LINTIAN_COVERAGE'}?1:0);
 
-sub binary {
+with('Lintian::Check');
+
+has binary => (is => 'rwp', default => sub { {} });
+has link => (is => 'rwp', default => sub { {} });
+has manpage => (is => 'rwp', default => sub { {} });
+
+has running_man => (is => 'rwp', default => sub { [] });
+has running_lexgrog => (is => 'rwp', default => sub { [] });
+
+sub files {
+    my ($self, $file) = @_;
+
+    my $file_info = $file->file_info;
+    my $link = $file->link || '';
+    my ($fname, $path, undef) = fileparse($file);
+
+    # Binary that wants a manual page?
+    #
+    # It's tempting to check the section of the man page depending on the
+    # location of the binary, but there are too many mismatches between
+    # bin/sbin and 1/8 that it's not clear it's the right thing to do.
+    if (
+        ($file->is_symlink or $file->is_file)
+        and (  ($path eq 'bin/')
+            or ($path eq 'sbin/')
+            or ($path eq 'usr/bin/')
+            or ($path eq 'usr/bin/X11/')
+            or ($path eq 'usr/bin/mh/')
+            or ($path eq 'usr/sbin/')
+            or ($path eq 'usr/games/'))
+    ) {
+
+        my $bin  = $fname;
+        my $sbin = ($path eq 'sbin/') || ($path eq 'usr/sbin/');
+        $self->binary->{$bin} = { file => $file, sbin => $sbin };
+        $self->link->{$bin} = $link
+          if $link;
+
+        return;
+    }
+
+    if (($path =~ m,usr/share/man/$,) and ($fname ne '')) {
+        $self->tag('manpage-in-wrong-directory', $file);
+        return;
+    }
+
+    # manual page?
+    return
+      unless ($file->is_symlink or $file->is_file)
+      and $path =~ m,^usr/share/man(/\S+),o;
+
+    my $t = $1;
+
+    if ($file =~ m{/_build_} or $file =~ m{_tmp_buildd}) {
+        $self->tag('manpage-named-after-build-path', $file);
+    }
+
+    if ($file =~ m,/README\.,) {
+        $self->tag('manpage-has-overly-generic-name', $file);
+    }
+
+    if (not $t =~ m,^.*man(\d)/$,o) {
+        $self->tag('manpage-in-wrong-directory', $file);
+        return;
+    }
+    my $section = $1;
+    my $lang = '';
+    $lang = $1 if $t =~ m,^/([^/]+)/man\d/$,o;
+
+    # The country should not be part of the man page locale
+    # directory unless it's one of the known cases where the
+    # language is significantly different between countries.
+    if ($lang =~ /_/ && $lang !~ /^(?:pt_BR|zh_[A-Z][A-Z])$/) {
+        $self->tag('manpage-locale-dir-country-specific', $file);
+    }
+
+    my @pieces = split(/\./, $fname);
+    my $ext = pop @pieces;
+    if ($ext ne 'gz') {
+        push @pieces, $ext;
+        $self->tag('manpage-not-compressed', $file);
+    } elsif ($file->is_file) { # so it's .gz... files first; links later
+        if ($file_info !~ m/gzip compressed data/o) {
+            $self->tag('manpage-not-compressed-with-gzip', $file);
+        } elsif ($file_info !~ m/max compression/o) {
+            $self->tag('manpage-not-compressed-with-max-compression',$file);
+        }
+    }
+    my $fn_section = pop @pieces;
+    my $section_num = $fn_section;
+    if (scalar @pieces && $section_num =~ s/^(\d).*$/$1/) {
+        my $bin = join('.', @pieces);
+        $self->manpage->{$bin} = []
+          unless $self->manpage->{$bin};
+        push @{$self->manpage->{$bin}},
+          { file => $file, lang => $lang, section => $section };
+
+        # number of directory and manpage extension equal?
+        if ($section_num != $section) {
+            $self->tag('manpage-in-wrong-directory', $file);
+        }
+    } else {
+        $self->tag('manpage-has-wrong-extension', $file);
+    }
+
+    # check symbolic links to other manual pages
+    if ($file->is_symlink) {
+        if ($link =~ m,(^|/)undocumented,o) {
+            # undocumented link in /usr/share/man -- possibilities
+            #    undocumented... (if in the appropriate section)
+            #    ../man?/undocumented...
+            #    ../../man/man?/undocumented...
+            #    ../../../share/man/man?/undocumented...
+            #    ../../../../usr/share/man/man?/undocumented...
+            if ((
+                        $link =~ m,^undocumented\.([237])\.gz,o
+                    and $path =~ m,^usr/share/man/man$1,
+                )
+                or $link =~ m,^\.\./man[237]/undocumented\.[237]\.gz$,o
+                or $link
+                =~ m,^\.\./\.\./man/man[237]/undocumented\.[237]\.gz$,o
+                or $link
+                =~ m,^\.\./\.\./\.\./share/man/man[237]/undocumented\.[237]\.gz$,o
+                or $link
+                =~ m,^\.\./\.\./\.\./\.\./usr/share/man/man[237]/undocumented\.[237]\.gz$,o
+            ) {
+                $self->tag('link-to-undocumented-manpage', $file);
+            } else {
+                $self->tag('bad-link-to-undocumented-manpage', $file);
+            }
+        }
+    } else { # not a symlink
+        my $fs_path = $file->fs_path;
+        my $fd;
+        if ($file_info =~ m/gzip compressed/) {
+            $fd = $file->open_gz;
+        } else {
+            $fd = $file->open;
+        }
+        my @manfile = <$fd>;
+        close $fd;
+        # Is it a .so link?
+        if ($file->size < 256) {
+            my ($i, $first) = (0, '');
+            do {
+                $first = $manfile[$i++] || '';
+            } while ($first =~ /^\.\\"/ && $manfile[$i]); #");
+
+            unless ($first) {
+                $self->tag('empty-manual-page', $file);
+                return;
+            } elsif ($first =~ /^\.so\s+(.+)?$/) {
+                my $dest = $1;
+                if ($dest =~ m,^([^/]+)/(.+)$,) {
+                    my ($manxorlang, $rest) = ($1, $2);
+                    if ($manxorlang !~ /^man\d+$/) {
+                        # then it's likely a language subdir, so let's run
+                        # the other component through the same check
+                        if ($rest =~ m,^([^/]+)/(.+)$,) {
+                            my (undef, $rest) = ($1, $2);
+                            if ($rest !~ m,^[^/]+\.\d(?:\S+)?(?:\.gz)?$,) {
+                                $self->tag('bad-so-link-within-manual-page',
+                                    $file);
+                            }
+                        } else {
+                            $self->tag('bad-so-link-within-manual-page',$file);
+                        }
+                    }
+                } else {
+                    $self->tag('bad-so-link-within-manual-page', $file);
+                }
+                return;
+            }
+        }
+
+        # If it's not a .so link, use lexgrog to find out if the
+        # man page parses correctly and make sure the short
+        # description is reasonable.
+        #
+        # This check is currently not applied to pages in
+        # language-specific hierarchies, because those pages are
+        # not currently scanned by mandb (bug #29448), and because
+        # lexgrog can't handle pages in all languages at the
+        # moment, leading to huge numbers of false negatives. When
+        # man-db is fixed, this limitation should be removed.
+        if ($path =~ m,/man/man\d/,) {
+            my $pid = open(my $lexgrog_fd, '-|');
+            if ($pid == 0) {
+                clean_env;
+                open(STDERR, '>&', \*STDOUT);
+                exec('lexgrog', $fs_path)
+                  or internal_error("exec lexgrog failed: $!");
+            }
+            if (@{$self->running_lexgrog} > 2) {
+                $self->process_lexgrog_output($self->running_lexgrog);
+            }
+            # lexgrog can have a high start up time, so revisit
+            # this later.
+            push(@{$self->running_lexgrog}, [$file, $lexgrog_fd, $pid]);
+        }
+
+        # If it's not a .so link, run it through 'man' to check for errors.
+        # If it is in a directory with the standard man layout, cd to the
+        # parent directory before running man so that .so directives are
+        # processed properly.  (Yes, there are man pages that include other
+        # pages with .so but aren't simple links; rbash, for instance.)
+        my @cmd = qw(man --warnings -E UTF-8 -l -Tutf8 -Z);
+        my $dir;
+        if ($fs_path =~ m,^(.*)/(man\d/.*)$,) {
+            $dir = $1;
+            push @cmd, $2;
+        } else {
+            push(@cmd, $fs_path);
+        }
+        my ($read, $write);
+        pipe($read, $write);
+        my $pid = do_fork();
+        if ($pid == 0) {
+            clean_env;
+            close STDOUT;
+            close $read;
+            open(STDOUT, '>', '/dev/null');
+            open(STDERR, '>&', $write);
+            if ($dir) {
+                chdir($dir);
+            }
+            $ENV{MANROFFSEQ} = '';
+            $ENV{MANWIDTH} = 80;
+            exec { $cmd[0] } @cmd
+              or internal_error("cannot run man -E UTF-8 -l: $!");
+        } else {
+            # parent - close write end
+            close $write;
+        }
+
+        if (@{$self->running_man} > 3) {
+            $self->process_man_output($self->running_man);
+        }
+        # man can have a high start up time, so revisit this
+        # later.
+        push(@{$self->running_man}, [$file, $read, $pid, $lang, \@manfile]);
+
+        # Now we search through the whole man page for some common errors
+        my $lc = 0;
+        my $stag_emitter
+          = spelling_tag_emitter('spelling-error-in-manpage', $file);
+        foreach my $line (@manfile) {
+            $lc++;
+            chomp $line;
+            next if $line =~ /^\.\\\"/o; # comments .\"
+            if ($line =~ /^\.TH\s/) { # header
+                my (undef, undef, $th_section, undef)
+                  = Text::ParseWords::parse_line('\s+', 0, $line);
+                if ($th_section && (lc($fn_section) ne lc($th_section))) {
+                    $self->tag('manpage-section-mismatch',
+                        "$file:$lc $fn_section != $th_section");
+                }
+            }
+            if (   ($line =~ m,(/usr/(dict|doc|etc|info|man|adm|preserve)/),o)
+                || ($line =~ m,(/var/(adm|catman|named|nis|preserve)/),o)){
+                # FSSTND dirs in man pages
+                # regexes taken from checks/files
+                $self->tag('FSSTND-dir-in-manual-page', "$file:$lc $1");
+            }
+            if ($line eq '.SH "POD ERRORS"') {
+                $self->tag('manpage-has-errors-from-pod2man', "$file:$lc");
+            }
+            # Check for spelling errors if the manpage is English
+            check_spelling($line, $self->group->info->spelling_exceptions,
+                $stag_emitter, 0)
+              if ($path =~ m,/man/man\d/,);
+        }
+    }
+
+    return;
+}
+
+sub breakdown {
     my ($self) = @_;
 
     my $info = $self->info;
@@ -44,297 +319,40 @@ sub binary {
     my $group = $self->group;
 
     my $ginfo = $group->info;
-    my (%binary, %link, %manpage, @running_man, @running_lexgrog);
 
-    # Read package contents...
-    foreach my $file ($info->sorted_index) {
-        my $file_info = $file->file_info;
-        my $link = $file->link || '';
-        my ($fname, $path, undef) = fileparse($file);
-
-        # Binary that wants a manual page?
-        #
-        # It's tempting to check the section of the man page depending on the
-        # location of the binary, but there are too many mismatches between
-        # bin/sbin and 1/8 that it's not clear it's the right thing to do.
-        if (
-            ($file->is_symlink or $file->is_file)
-            and (  ($path eq 'bin/')
-                or ($path eq 'sbin/')
-                or ($path eq 'usr/bin/')
-                or ($path eq 'usr/bin/X11/')
-                or ($path eq 'usr/bin/mh/')
-                or ($path eq 'usr/sbin/')
-                or ($path eq 'usr/games/'))
-        ) {
-
-            my $bin  = $fname;
-            my $sbin = ($path eq 'sbin/') || ($path eq 'usr/sbin/');
-            $binary{$bin} = { file => $file, sbin => $sbin };
-            $link{$bin} = $link if $link;
-
-            next;
-        }
-
-        if (($path =~ m,usr/share/man/$,) and ($fname ne '')) {
-            $self->tag('manpage-in-wrong-directory', $file);
-            next;
-        }
-
-        # manual page?
-        next
-          unless ($file->is_symlink or $file->is_file)
-          and $path =~ m,^usr/share/man(/\S+),o;
-        my $t = $1;
-
-        if ($file =~ m{/_build_} or $file =~ m{_tmp_buildd}) {
-            $self->tag('manpage-named-after-build-path', $file);
-        }
-
-        if ($file =~ m,/README\.,) {
-            $self->tag('manpage-has-overly-generic-name', $file);
-        }
-
-        if (not $t =~ m,^.*man(\d)/$,o) {
-            $self->tag('manpage-in-wrong-directory', $file);
-            next;
-        }
-        my $section = $1;
-        my $lang = '';
-        $lang = $1 if $t =~ m,^/([^/]+)/man\d/$,o;
-
-        # The country should not be part of the man page locale
-        # directory unless it's one of the known cases where the
-        # language is significantly different between countries.
-        if ($lang =~ /_/ && $lang !~ /^(?:pt_BR|zh_[A-Z][A-Z])$/) {
-            $self->tag('manpage-locale-dir-country-specific', $file);
-        }
-
-        my @pieces = split(/\./, $fname);
-        my $ext = pop @pieces;
-        if ($ext ne 'gz') {
-            push @pieces, $ext;
-            $self->tag('manpage-not-compressed', $file);
-        } elsif ($file->is_file) { # so it's .gz... files first; links later
-            if ($file_info !~ m/gzip compressed data/o) {
-                $self->tag('manpage-not-compressed-with-gzip', $file);
-            } elsif ($file_info !~ m/max compression/o) {
-                $self->tag('manpage-not-compressed-with-max-compression',
-                    $file);
-            }
-        }
-        my $fn_section = pop @pieces;
-        my $section_num = $fn_section;
-        if (scalar @pieces && $section_num =~ s/^(\d).*$/$1/) {
-            my $bin = join('.', @pieces);
-            $manpage{$bin} = [] unless $manpage{$bin};
-            push @{$manpage{$bin}},
-              { file => $file, lang => $lang, section => $section };
-
-            # number of directory and manpage extension equal?
-            if ($section_num != $section) {
-                $self->tag('manpage-in-wrong-directory', $file);
-            }
-        } else {
-            $self->tag('manpage-has-wrong-extension', $file);
-        }
-
-        # check symbolic links to other manual pages
-        if ($file->is_symlink) {
-            if ($link =~ m,(^|/)undocumented,o) {
-                # undocumented link in /usr/share/man -- possibilities
-                #    undocumented... (if in the appropriate section)
-                #    ../man?/undocumented...
-                #    ../../man/man?/undocumented...
-                #    ../../../share/man/man?/undocumented...
-                #    ../../../../usr/share/man/man?/undocumented...
-                if ((
-                            $link =~ m,^undocumented\.([237])\.gz,o
-                        and $path =~ m,^usr/share/man/man$1,
-                    )
-                    or $link =~ m,^\.\./man[237]/undocumented\.[237]\.gz$,o
-                    or $link
-                    =~ m,^\.\./\.\./man/man[237]/undocumented\.[237]\.gz$,o
-                    or $link
-                    =~ m,^\.\./\.\./\.\./share/man/man[237]/undocumented\.[237]\.gz$,o
-                    or $link
-                    =~ m,^\.\./\.\./\.\./\.\./usr/share/man/man[237]/undocumented\.[237]\.gz$,o
-                ) {
-                    $self->tag('link-to-undocumented-manpage', $file);
-                } else {
-                    $self->tag('bad-link-to-undocumented-manpage', $file);
-                }
-            }
-        } else { # not a symlink
-            my $fs_path = $file->fs_path;
-            my $fd;
-            if ($file_info =~ m/gzip compressed/) {
-                $fd = $file->open_gz;
-            } else {
-                $fd = $file->open;
-            }
-            my @manfile = <$fd>;
-            close $fd;
-            # Is it a .so link?
-            if ($file->size < 256) {
-                my ($i, $first) = (0, '');
-                do {
-                    $first = $manfile[$i++] || '';
-                } while ($first =~ /^\.\\"/ && $manfile[$i]); #");
-
-                unless ($first) {
-                    $self->tag('empty-manual-page', $file);
-                    next;
-                } elsif ($first =~ /^\.so\s+(.+)?$/) {
-                    my $dest = $1;
-                    if ($dest =~ m,^([^/]+)/(.+)$,) {
-                        my ($manxorlang, $rest) = ($1, $2);
-                        if ($manxorlang !~ /^man\d+$/) {
-                            # then it's likely a language subdir, so let's run
-                            # the other component through the same check
-                            if ($rest =~ m,^([^/]+)/(.+)$,) {
-                                my (undef, $rest) = ($1, $2);
-                                if ($rest !~ m,^[^/]+\.\d(?:\S+)?(?:\.gz)?$,) {
-                                    $self->tag(
-                                        'bad-so-link-within-manual-page',
-                                        $file);
-                                }
-                            } else {
-                                $self->tag('bad-so-link-within-manual-page',
-                                    $file);
-                            }
-                        }
-                    } else {
-                        $self->tag('bad-so-link-within-manual-page', $file);
-                    }
-                    next;
-                }
-            }
-
-            # If it's not a .so link, use lexgrog to find out if the
-            # man page parses correctly and make sure the short
-            # description is reasonable.
-            #
-            # This check is currently not applied to pages in
-            # language-specific hierarchies, because those pages are
-            # not currently scanned by mandb (bug #29448), and because
-            # lexgrog can't handle pages in all languages at the
-            # moment, leading to huge numbers of false negatives. When
-            # man-db is fixed, this limitation should be removed.
-            if ($path =~ m,/man/man\d/,) {
-                my $pid = open(my $lexgrog_fd, '-|');
-                if ($pid == 0) {
-                    clean_env;
-                    open(STDERR, '>&', \*STDOUT);
-                    exec('lexgrog', $fs_path)
-                      or internal_error("exec lexgrog failed: $!");
-                }
-                if (@running_lexgrog > 2) {
-                    $self->process_lexgrog_output(\@running_lexgrog);
-                }
-                # lexgrog can have a high start up time, so revisit
-                # this later.
-                push(@running_lexgrog, [$file, $lexgrog_fd, $pid]);
-            }
-
-            # If it's not a .so link, run it through 'man' to check for errors.
-            # If it is in a directory with the standard man layout, cd to the
-            # parent directory before running man so that .so directives are
-            # processed properly.  (Yes, there are man pages that include other
-            # pages with .so but aren't simple links; rbash, for instance.)
-            my @cmd = qw(man --warnings -E UTF-8 -l -Tutf8 -Z);
-            my $dir;
-            if ($fs_path =~ m,^(.*)/(man\d/.*)$,) {
-                $dir = $1;
-                push @cmd, $2;
-            } else {
-                push(@cmd, $fs_path);
-            }
-            my ($read, $write);
-            pipe($read, $write);
-            my $pid = do_fork();
-            if ($pid == 0) {
-                clean_env;
-                close STDOUT;
-                close $read;
-                open(STDOUT, '>', '/dev/null');
-                open(STDERR, '>&', $write);
-                if ($dir) {
-                    chdir($dir);
-                }
-                $ENV{MANROFFSEQ} = '';
-                $ENV{MANWIDTH} = 80;
-                exec { $cmd[0] } @cmd
-                  or internal_error("cannot run man -E UTF-8 -l: $!");
-            } else {
-                # parent - close write end
-                close $write;
-            }
-
-            if (@running_man > 3) {
-                $self->process_man_output(\@running_man);
-            }
-            # man can have a high start up time, so revisit this
-            # later.
-            push(@running_man, [$file, $read, $pid, $lang, \@manfile]);
-
-            # Now we search through the whole man page for some common errors
-            my $lc = 0;
-            my $stag_emitter
-              = spelling_tag_emitter('spelling-error-in-manpage', $file);
-            foreach my $line (@manfile) {
-                $lc++;
-                chomp $line;
-                next if $line =~ /^\.\\\"/o; # comments .\"
-                if ($line =~ /^\.TH\s/) { # header
-                    my (undef, undef, $th_section, undef)
-                      = Text::ParseWords::parse_line('\s+', 0, $line);
-                    if ($th_section && (lc($fn_section) ne lc($th_section))) {
-                        $self->tag('manpage-section-mismatch',
-                            "$file:$lc $fn_section != $th_section");
-                    }
-                }
-                if (($line =~ m,(/usr/(dict|doc|etc|info|man|adm|preserve)/),o)
-                    || ($line =~ m,(/var/(adm|catman|named|nis|preserve)/),o)){
-                    # FSSTND dirs in man pages
-                    # regexes taken from checks/files
-                    $self->tag('FSSTND-dir-in-manual-page', "$file:$lc $1");
-                }
-                if ($line eq '.SH "POD ERRORS"') {
-                    $self->tag('manpage-has-errors-from-pod2man', "$file:$lc");
-                }
-                # Check for spelling errors if the manpage is English
-                check_spelling($line, $ginfo->spelling_exceptions,
-                    $stag_emitter, 0)
-                  if ($path =~ m,/man/man\d/,);
-            }
-        }
-    }
     # If we have any running sub processes, wait for them here.
-    $self->process_lexgrog_output(\@running_lexgrog) if @running_lexgrog;
-    $self->process_man_output(\@running_man) if @running_man;
+    $self->process_lexgrog_output($self->running_lexgrog)
+      if @{$self->running_lexgrog};
+    $self->process_man_output($self->running_man) if @{$self->running_man};
 
     # Check our dependencies:
     foreach my $depproc (@{ $ginfo->direct_dependencies($proc) }) {
         # Find the manpages in our related dependencies
         my $depinfo = $depproc->info;
+
         foreach my $file ($depinfo->sorted_index){
             my ($fname, $path, undef) = fileparse($file, qr,\..+$,o);
             my $lang = '';
+
             next
               unless ($file->is_file or $file->is_symlink)
               and $path =~ m,^usr/share/man/\S+,o;
-            next unless ($path =~ m,man\d/$,o);
-            $manpage{$fname} = [] unless exists $manpage{$fname};
+
+            next
+              unless ($path =~ m,man\d/$,o);
+
+            $self->manpage->{$fname} = []
+              unless exists $self->manpage->{$fname};
+
             $lang = $1 if $path =~ m,/([^/]+)/man\d/$,o;
             $lang = '' if $lang eq 'man';
-            push @{$manpage{$fname}}, {file => $file, lang => $lang};
+            push @{$self->manpage->{$fname}}, {file => $file, lang => $lang};
         }
     }
 
-    for my $f (sort keys %binary) {
-        my $binfo = $binary{$f};
-        my $minfo = $manpage{$f};
+    for my $f (sort keys %{$self->binary}) {
+        my $binfo = $self->binary->{$f};
+        my $minfo = $self->manpage->{$f};
 
         if ($minfo) {
             $self->tag('command-in-sbin-has-manpage-in-incorrect-section',

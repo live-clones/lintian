@@ -35,21 +35,22 @@ sub files {
       unless $file->name =~ m,^etc/apt/,;
 
     # /etc/apt/preferences
-    unless ($self->source eq 'apt') {
+    unless ($self->processable->pkg_src eq 'apt') {
 
         $self->tag('package-installs-apt-preferences', $file->name)
           if $file->name =~ m,^etc/apt/preferences(?:$|\.d/[^/]+),;
     }
 
     # /etc/apt/sources
-    unless ($self->source eq 'apt' || $self->package =~ /-apt-source$/) {
+    unless ($self->processable->pkg_src eq 'apt'
+        || $self->package =~ /-apt-source$/) {
 
         $self->tag('package-installs-apt-sources', $file->name)
           if $file->name =~ m,^etc/apt/sources\.list(?:$|\.d/[^/]+),;
     }
 
     # /etc/apt/trusted.gpg
-    unless ($self->source eq 'apt'
+    unless ($self->processable->pkg_src eq 'apt'
         || $self->package =~ /(?:-apt-source|-archive-keyring)$/) {
 
         $self->tag('package-installs-apt-keyring', $file->name)

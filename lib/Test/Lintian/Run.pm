@@ -317,7 +317,7 @@ sub check_literal {
 
     # run a sed-script if it exists
     my $actual = "$runpath/literal.actual.parsed";
-    my $script = "$runpath/post_test";
+    my $script = "$runpath/post-test";
     if(-f $script) {
         sed_hook($script, $raw, $actual);
     } else {
@@ -341,7 +341,7 @@ sub check_tags {
 
     # run a sed-script if it exists
     my $actual = "$runpath/tags.actual.parsed";
-    my $sedscript = "$runpath/post_test";
+    my $sedscript = "$runpath/post-test";
     if(-f $sedscript) {
         sed_hook($sedscript, $raw, $actual);
     } else {
@@ -351,7 +351,7 @@ sub check_tags {
 
     # calibrate tags; may write to $actual
     my $calibrated = "$runpath/tags.specified.calibrated";
-    my $calscript = "$runpath/test_calibration";
+    my $calscript = "$runpath/test-calibration";
     if(-x $calscript) {
         calibrate($calscript, $actual, $expected, $calibrated);
     } else {

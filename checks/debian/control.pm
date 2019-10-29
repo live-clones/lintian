@@ -451,6 +451,18 @@ sub source {
         }
     }
 
+    # Ensure fields are't too long
+    my $max_length = 5_000;
+    for my $bin (@package_names) {
+        for my $field (
+            qw(depends pre-depends recommends suggests conflicts provides enhances replaces breaks)
+        ) {
+            my $len = length($info->binary_field($bin, $field, ''));
+            $self->tag('field-too-long', $field, $bin, "($len > $max_length)")
+              if $len > $max_length;
+        }
+    }
+
     # Check for GObject Introspection packages that are missing ${gir:Depends}
     foreach my $bin (@package_names) {
         next unless $bin =~ m/gir[\d\.]+-.*-[\d\.]+$/;
@@ -482,7 +494,7 @@ sub source {
           unless $info->source_field('xs-go-import-path', '');
     }
 
-    my $changes = $group->get_changes_processable;
+    my $changes = $group->changes;
     $self->tag('source-only-upload-to-non-free-without-autobuild')
       if defined($changes)
       and $changes->info->field('architecture', '') eq 'source'

@@ -31,36 +31,52 @@ with('Lintian::Check');
 # changelog alone can be quite big, and cannot be moved away.
 my $THRESHOLD_SIZE_SOFT = 4096;
 my $THRESHOLD_SIZE_HARD = 8192;
-my $THRESHOLD_PERC = 50;
+my $THRESHOLD_PERCENTAGE = 50;
 
-sub binary {
+has total_size => (is => 'rwp', default => 0);
+has usrshare_size => (is => 'rwp', default => 0);
+
+sub files {
+    my ($self, $file) = @_;
+
+    return
+      unless $file->is_regular_file;
+
+    # space taken up by package
+    $self->_set_total_size($self->total_size + $file->size);
+
+    # space taken up in /usr/share.
+    $self->_set_usrshare_size($self->usrshare_size + $file->size)
+      if $file =~ m,usr/share/,;
+
+    return;
+}
+
+sub breakdown {
     my ($self) = @_;
 
-    my $info = $self->info;
+    # skip architecture-dependent packages.
+    my $arch = $self->info->field('architecture', '');
+    return
+      if $arch eq 'all';
 
-    # Skip architecture-dependent packages.
-    my $arch = $info->field('architecture', '');
-    return if $arch eq 'all';
+    # meaningless; prevents division by zero
+    return
+      unless $self->total_size > 0;
 
-    # Add up the space taken by the package and the space taken by
-    # just the files in /usr/share.  Convert the totals to kilobytes.
-    my ($size, $size_usrshare) = (0, 0);
-    for my $file (grep { $_->is_regular_file } $info->sorted_index) {
-        $size += $file->size;
-        if ($file =~ m,usr/share/,) {
-            $size_usrshare += $file->size;
-        }
-    }
-    $size = int($size / 1024);
-    $size_usrshare = int($size_usrshare / 1024);
+    # convert the totals to kilobytes.
+    my $size = sprintf('%.0f', $self->total_size / 1024);
+    my $size_usrshare = sprintf('%.0f', $self->usrshare_size / 1024);
+    my $percentage
+      = sprintf('%.0f', 100 * $self->usrshare_size / $self->total_size);
 
-    if ($size_usrshare > $THRESHOLD_SIZE_SOFT) {
-        my $perc = int(100 * $size_usrshare / $size);
-        if ($size_usrshare > $THRESHOLD_SIZE_HARD || $perc > $THRESHOLD_PERC) {
-            $self->tag('arch-dep-package-has-big-usr-share',
-                "${size_usrshare}kB $perc%");
-        }
-    }
+    $self->tag(
+        'arch-dep-package-has-big-usr-share',
+        "${size_usrshare}kB $percentage%"
+      )
+      if ( $percentage > $THRESHOLD_PERCENTAGE
+        && $size_usrshare > $THRESHOLD_SIZE_SOFT)
+      || $size_usrshare > $THRESHOLD_SIZE_HARD;
 
     return;
 }

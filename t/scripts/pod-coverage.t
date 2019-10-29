@@ -26,8 +26,8 @@ our %MODULES =(
     'Lintian::Lab::Entry'         => [],
     'Lintian::Profile'            => [],
     'Lintian::Processable'        => [qr/^new$/],
-    'Lintian::ProcessableGroup'   => [],
-    'Lintian::ProcessablePool'    => [],
+    'Lintian::Processable::Group' => [],
+    'Lintian::Processable::Pool'  => [],
     'Lintian::Relation'           =>
       [qr/^parse_element$/,qr/^implies_(element|array)/],
     'Lintian::Relation::Version'  => [qr/^compare$/],

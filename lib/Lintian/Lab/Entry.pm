@@ -68,6 +68,7 @@ use IO::Async::Routine;
 use Path::Tiny;
 use Scalar::Util qw(refaddr);
 
+use Lintian::Collect;
 use Lintian::Lab;
 use Lintian::Util qw(strip);
 

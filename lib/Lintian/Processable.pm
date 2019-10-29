@@ -46,7 +46,7 @@ Lintian::Processable -- An (abstract) object that Lintian can process
 
 Instances of this perl class are objects that Lintian can process (e.g.
 deb files).  Multiple objects can then be combined into
-L<groups|Lintian::ProcessableGroup>, which Lintian will process
+L<groups|Lintian::Processable::Group>, which Lintian will process
 together.
 
 =head1 CLASS METHODS
@@ -236,7 +236,7 @@ Lintian::Processable->mk_ro_accessors(
 
 =item $proc->group([$group])
 
-Returns the L<group|Lintian::ProcessableGroup> $proc is in,
+Returns the L<group|Lintian::Processable::Group> $proc is in,
 if any.  If the processable is not in a group, this returns C<undef>.
 
 Can also be used to set the group of this processable.
@@ -301,6 +301,21 @@ sub get_field {
     return $self->{'extra-fields'}{$field}//$def;
 }
 
+=item get_group_id
+
+Calculates an appropriate group id for the package. It is based
+on the name and the version of the src-pkg.
+
+=cut
+
+sub get_group_id{
+    my ($self) = @_;
+
+    my $id = $self->pkg_src . '/' . $self->pkg_src_version;
+
+    return $id;
+}
+
 =back
 
 =head1 AUTHOR
@@ -311,7 +326,7 @@ Originally written by Niels Thykier <niels@thykier.net> for Lintian.
 
 lintian(1)
 
-L<Lintian::ProcessableGroup>
+L<Lintian::Processable::Group>
 
 =cut
 

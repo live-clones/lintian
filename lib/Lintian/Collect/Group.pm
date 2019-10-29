@@ -29,7 +29,7 @@ Lintian::Collect::Group - Lintian interface to group data collection
 
 =head1 SYNOPSIS
 
- my $group = Lintian::ProcessableGroup->new ('lintian_2.5.0_i386.changes');
+ my $group = Lintian::Processable::Group->new ('lintian_2.5.0_i386.changes');
  my $ginfo = Lintian::Collect::Group->new ($group);
  
  foreach my $bin ($group->get_binary_processables) {
@@ -53,7 +53,7 @@ it).
 =item Lintian::Collect::Group->new ($group)
 
 Creates a new object to provide information about
-L<$group|Lintian::ProcessableGroup>.
+L<$group|Lintian::Processable::Group>.
 
 =cut
 

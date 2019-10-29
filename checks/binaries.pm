@@ -146,7 +146,7 @@ sub always {
     $arch_hardening = $HARDENING->value($arch)
       if $arch ne 'all';
 
-    my $src = $group->get_source_processable;
+    my $src = $group->source;
     if (defined($src)) {
         $built_with_golang = $src->info->relation('build-depends-all')
           ->implies('golang-go | golang-any');

@@ -58,23 +58,23 @@ Run the check.
 sub run {
     my ($self) = @_;
 
+    my $type = $self->type;
+
     $self->setup
       if $self->can('setup');
 
-    my $type = $self->type;
+    if ($type eq 'binary' || $type eq 'udeb') {
+
+        if ($self->can('files')) {
+            $self->files($_)for $self->info->sorted_index;
+        }
+    }
 
     $self->$type
       if $self->can($type);
 
     $self->always
       if $self->can('always');
-
-    if ($self->can('files')) {
-
-        my $info = $self->info;
-
-        $self->files($_)for $info->sorted_index;
-    }
 
     $self->breakdown
       if $self->can('breakdown');
@@ -120,29 +120,10 @@ sub info {
     return $self->processable->info;
 }
 
-=item source
-
-Get the source package from processable.
-
-=cut
-
-sub source {
-    my ($self) = @_;
-
-    # note: $proc->pkg_src never includes the source version
-    return $self->processable->pkg_src;
-}
-
-=item build_path
-
-Get the source package from processable.
-
-=cut
-
 sub build_path {
     my ($self) = @_;
 
-    my $buildinfo = $self->group->get_buildinfo_processable;
+    my $buildinfo = $self->group->buildinfo;
 
     return EMPTY
       unless $buildinfo;

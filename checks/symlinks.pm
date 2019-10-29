@@ -24,70 +24,81 @@ use strict;
 use warnings;
 use autodie;
 
-use File::Basename qw(dirname);
 use Moo;
+
+use File::Basename qw(dirname);
+use List::MoreUtils qw(any);
+
+use constant EMPTY => q{};
 
 with('Lintian::Check');
 
-sub always {
+has wildcard_links => (is => 'rwp', default => sub{ [] });
+
+sub files {
+    my ($self, $file) = @_;
+
+    return
+      unless $file->is_symlink;
+
+    # target relative to the package root
+    my $path = $file->link_normalized;
+
+    # unresolvable link
+    unless (defined $path) {
+
+        $self->tag('package-contains-unsafe-symlink', $file->name);
+        return;
+    }
+
+    # will always have links to the package root (although
+    # self-recursive and possibly not very useful)
+    return
+      if $path eq EMPTY;
+
+    # If it contains a "*" it probably a bad
+    # ln -s target/*.so link expansion.  We do not bother looking
+    # for other broken symlinks as people keep adding new special
+    # cases and it is not worth it.
+    push(@{$self->wildcard_links}, $file)
+      if $file->link && index($file->link, '*') >= 0;
+
+    return;
+}
+
+sub breakdown {
     my ($self) = @_;
 
-    my $info = $self->info;
-    my $proc = $self->processable;
-    my $group = $self->group;
+    return
+      unless @{$self->wildcard_links};
 
-    my $ginfo = $group->info;
-    my (@brokenlinks, @dindexes);
+    # get prerequisites from same source package
+    my @prerequisites
+      = @{$self->group->info->direct_dependencies($self->processable)};
 
-  FILE:
-    foreach my $file ($info->sorted_index) {
-        if ($file->is_symlink){
-            my $target = $file->link//''; # the link target
-            my $path; # the target (from the pkg root)
-             # Should not happen (too often) - but just in case
-            next unless $target;
-            $path = $file->link_normalized;
-            if (not defined $path) {
-                # Unresolvable link
-                $self->tag('package-contains-unsafe-symlink', $file);
-                next;
-            }
-            # Links to the package root is always going to exist (although
-            # self-recursive and possibly not very useful)
-            next if $path eq '';
+    foreach my $file (@{$self->wildcard_links}){
 
-            # Check if the destination is in the package itself
-            next if $info->index($path) || $info->index("$path/");
+        # target relative to the package root
+        my $path = $file->link_normalized;
 
-            # If it contains a "*" it probably a bad
-            # ln -s target/*.so link expansion.  We do not bother looking
-            # for other broken symlinks as people keep adding new special
-            # cases and it is not worth it.
-            next if index($target, '*') < 0;
+        # destination is in the package
+        next
+          if $self->info->index($path) || $self->info->index("$path/");
 
-            $target =~ s,^/++,,o; # strip leading slashes (for reporting)
-
-            # Possibly broken symlink
-            push @brokenlinks, [$file, $path, $target]
-              unless $info->index($path);
+        # does the link point to any prerequisites in same source package
+        next
+          if any {
+            $_->info->index($path)
+              || $_->info->index("$path/")
         }
+        @prerequisites;
 
-    }
+        # link target
+        my $target = $file->link // EMPTY;
 
-    return unless @brokenlinks;
+        # strip leading slashes for reporting
+        $target =~ s,^/++,,o;
 
-    # Check our dependencies:
-    foreach my $depproc (@{ $ginfo->direct_dependencies($proc)}) {
-        push @dindexes, $depproc->info;
-    }
-
-  BLINK:
-    foreach my $blink (@brokenlinks){
-        my ($file, $path, $target) = @$blink;
-        foreach my $dinfo (@dindexes){
-            # Is it in our dependency?
-            next BLINK if $dinfo->index($path) || $dinfo->index("$path/");
-        }
         # nope - not found in any of our direct dependencies.  Ergo it is
         # a broken "ln -s target/*.so link" expansion.
         $self->tag('package-contains-broken-symlink-wildcard', $file, $target);

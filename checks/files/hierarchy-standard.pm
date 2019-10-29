@@ -91,7 +91,7 @@ sub files {
                 # allow (e.g.) "lib64" packages to still use
                 # these dirs, since their use appears to be by
                 # intention.
-                unless ($self->source =~ m/^e?glibc$/
+                unless ($self->processable->pkg_src =~ m/^e?glibc$/
                     or $self->package =~ m/^lib$libsuffix/) {
 
                     $self->tag('non-multi-arch-lib-dir', $file->name);
@@ -201,7 +201,7 @@ sub files {
         if ($file->name =~ m,^lib(?'libsuffix'64|x?32)/,) {
             my $libsuffix = $+{libsuffix};
             # see comments for ^usr/lib(?'libsuffix'64|x?32)
-            unless ($self->source =~ m/^e?glibc$/
+            unless ($self->processable->pkg_src =~ m/^e?glibc$/
                 or $self->package =~ m/^lib$libsuffix/) {
 
                 $self->tag('non-multi-arch-lib-dir', $file->name);

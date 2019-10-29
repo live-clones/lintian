@@ -27,78 +27,67 @@ use autodie;
 
 use Moo;
 
-use Lintian::Util qw(rstrip);
-
 with('Lintian::Check');
+
+sub files {
+    my ($self, $file) = @_;
+
+    # files /etc must be conffiles, with some exceptions).
+    $self->tag('file-in-etc-not-marked-as-conffile', $file)
+      if $file->is_file
+      && $file->name =~ m,^etc/,
+      && !($self->info->is_conffile($file->name)
+        || $file =~ m,/README$,
+        || $file eq 'etc/init.d/skeleton'
+        || $file eq 'etc/init.d/rc'
+        || $file eq 'etc/init.d/rcS');
+
+    return
+      unless $self->info->is_conffile($file->name);
+
+    $self->tag('conffile-has-bad-file-type', $file)
+      unless $file->is_file;
+
+    return;
+}
 
 sub binary {
     my ($self) = @_;
 
-    my $info = $self->info;
+    my %count;
 
-    my $cf = $info->control_index('conffiles');
-    my %conffiles;
+    for my $absolute ($self->info->conffiles) {
 
-    # Read conffiles if it exists and is a file; no real package uses
-    # e.g. links in control.tar.gz.
-    if ($cf and $cf->is_file and $cf->is_open_ok) {
-        my $fd = $cf->open;
-        while (my $filename = <$fd>) {
-            # dpkg strips whitespace (using isspace) from the right hand
-            # side of the file name.
-            rstrip($filename);
+        # all paths should be absolute
+        $self->tag('relative-conffile', $absolute)
+          unless $absolute =~ m,^/,;
 
-            next if $filename eq q{};
+        # strip the leading slash
+        my $relative = $absolute;
+        $relative =~ s,^/++,,;
 
-            if ($filename !~ m{^ / }xsm) {
-                $self->tag('relative-conffile', $filename);
+        $count{$relative} //= 0;
+        $count{$relative}++;
+
+        $self->tag('conffile-is-not-in-package', $relative)
+          unless defined $self->info->index($relative);
+
+        $self->tag('file-in-etc-rc.d-marked-as-conffile', $relative)
+          if $relative =~ m,^etc/rc.\.d/,;
+
+        if ($relative !~ m,^etc/,) {
+            if ($relative =~ m,^usr/,) {
+                $self->tag('file-in-usr-marked-as-conffile', $relative);
+
             } else {
-                # strip the leading slash from here.
-                $filename =~ s{^ /++ }{}xsm;
+                $self->tag('non-etc-file-marked-as-conffile', $relative);
             }
-            $conffiles{$filename}++;
-
-            if ($conffiles{$filename} > 1) {
-                $self->tag('duplicate-conffile', $filename);
-                next;
-            }
-
-            if (not defined($info->index($filename))) {
-                $self->tag('conffile-is-not-in-package', $filename);
-            }
-
-            if ($filename =~ m{^ usr/ }xsm) {
-                $self->tag('file-in-usr-marked-as-conffile', $filename);
-            } else {
-                if ($filename !~ m{^ etc/ }xsm) {
-                    $self->tag('non-etc-file-marked-as-conffile', $filename);
-                } elsif ($filename =~ m{^ etc/rc.\.d/ }xsm) {
-                    $self->tag('file-in-etc-rc.d-marked-as-conffile',
-                        $filename);
-                }
-            }
-
         }
-        close($fd);
-
     }
 
-    # Read package contents...
-    foreach my $file ($info->sorted_index) {
-        if (not $file->is_file and exists $conffiles{$file}) {
-            $self->tag('conffile-has-bad-file-type', $file);
-        }
-        next unless $file =~ m{\A etc/ }xsm and $file->is_file;
-
-        # If there is an /etc/foo, it must be a conffile (with a few
-        # exceptions).
-        if (    not exists($conffiles{$file})
-            and $file !~ m{ /README $}xsm
-            and $file ne 'etc/init.d/skeleton'
-            and $file ne 'etc/init.d/rc'
-            and $file ne 'etc/init.d/rcS') {
-            $self->tag('file-in-etc-not-marked-as-conffile', $file);
-        }
+    for my $path (keys %count) {
+        $self->tag('duplicate-conffile', $path)
+          if $count{$path} > 1;
     }
 
     return;
