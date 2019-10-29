@@ -32,71 +32,76 @@ use Lintian::Util qw(internal_error);
 
 with('Lintian::Check');
 
-sub binary {
-    my ($self) = @_;
+# whether the package appears to be an Apache2 module/web application
+has seen_apache2_special_file => (is => 'rwp', default => 0);
 
-    my $pkg = $self->package;
-    my $type = $self->type;
-    my $info = $self->info;
+sub files {
+    my ($self, $file) = @_;
 
     # Do nothing if the package in question appears to be related to
     # the web server itself
     return
-      if $pkg =~ m/^apache2(:?\.2)?(?:-\w+)?$/;
+      if $self->package =~ m/^apache2(:?\.2)?(?:-\w+)?$/;
 
-    # whether the package appears to be an Apache2 module/web application
-    my $seen_apache2_special_file = 0;
+    # File is probably not relevant to us, ignore it
+    return
+      if $file->is_dir;
 
-    foreach my $file ($info->sorted_index) {
+    return
+      if $file !~ m#^(?:usr/lib/apache2/modules/|etc/apache2/)#;
 
-        # File is probably not relevant to us, ignore it
-        next if $file->is_dir;
-        next if $file !~ m#^(?:usr/lib/apache2/modules/|etc/apache2/)#;
+    # Package installs an unrecognized file - check this for all files
+    if (    $file !~ m#\.conf$#
+        and $file =~ m#^etc/apache2/(conf|site|mods)-available/(.*)$#){
+        my $temp_type = $1;
+        my $temp_file = $2;
 
-        # Package installs an unrecognized file - check this for all files
-        if (    $file !~ m#\.conf$#
-            and $file =~ m#^etc/apache2/(conf|site|mods)-available/(.*)$#){
-            my $temp_type = $1;
-            my $temp_file = $2;
-            # ... except modules which are allowed to ship .load files
-            $self->tag('apache2-configuration-files-need-conf-suffix', $file)
-              unless $temp_type eq 'mods' and $temp_file =~ m#\.load#;
-        }
-
-        # Package appears to be a binary module
-        if ($file =~ m#^usr/lib/apache2/modules/(.*)\.so#) {
-            $self->check_module_package($1);
-            $seen_apache2_special_file++;
-        }
-
-        # Package appears to be a web application
-        elsif ($file =~ m#^etc/apache2/(conf|site)-available/(.*)$#) {
-            $self->check_web_application_package($file, $1, $2);
-            $seen_apache2_special_file++;
-        }
-
-        # Package appears to be a legacy web application
-        elsif ($file =~ m#^etc/apache2/conf\.d/(.*)$#) {
-            $self->tag('apache2-reverse-dependency-uses-obsolete-directory',
-                $file);
-            $self->check_web_application_package($file,'conf', $1);
-            $seen_apache2_special_file++;
-        }
-
-        # Package does scary things
-        elsif ($file =~ m#^etc/apache2/(?:conf|sites|mods)-enabled/.*$#) {
-
-            $self->tag(
-'apache2-reverse-dependency-ships-file-in-not-allowed-directory',
-                $file
-            );
-
-            $seen_apache2_special_file++;
-        }
-
+        # ... except modules which are allowed to ship .load files
+        $self->tag('apache2-configuration-files-need-conf-suffix', $file)
+          unless $temp_type eq 'mods' and $temp_file =~ m#\.load#;
     }
 
-    if ($seen_apache2_special_file) {
+    # Package appears to be a binary module
+    if ($file =~ m#^usr/lib/apache2/modules/(.*)\.so#) {
+        $self->check_module_package($1);
+        $self->_set_seen_apache2_special_file(1);
+    }
+
+    # Package appears to be a web application
+    elsif ($file =~ m#^etc/apache2/(conf|site)-available/(.*)$#) {
+        $self->check_web_application_package($file, $1, $2);
+        $self->_set_seen_apache2_special_file(1);
+    }
+
+    # Package appears to be a legacy web application
+    elsif ($file =~ m#^etc/apache2/conf\.d/(.*)$#) {
+        $self->tag('apache2-reverse-dependency-uses-obsolete-directory',$file);
+        $self->check_web_application_package($file,'conf', $1);
+        $self->_set_seen_apache2_special_file(1);
+    }
+
+    # Package does scary things
+    elsif ($file =~ m#^etc/apache2/(?:conf|sites|mods)-enabled/.*$#) {
+
+        $self->tag(
+            'apache2-reverse-dependency-ships-file-in-not-allowed-directory',
+            $file);
+
+        $self->_set_seen_apache2_special_file(1);
+    }
+
+    return;
+}
+
+sub binary {
+    my ($self) = @_;
+
+    # Do nothing if the package in question appears to be related to
+    # the web server itself
+    return
+      if $self->package =~ m/^apache2(:?\.2)?(?:-\w+)?$/;
+
+    if ($self->seen_apache2_special_file) {
         $self->check_maintainer_scripts;
     }
     return;

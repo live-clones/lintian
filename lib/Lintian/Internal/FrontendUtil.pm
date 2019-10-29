@@ -29,8 +29,7 @@ use Dpkg::Vendor;
 use Lintian::CollScript;
 use Lintian::Util qw(check_path safe_qx);
 
-our @EXPORT_OK
-  = qw(check_test_feature default_parallel load_collections split_tag
+our @EXPORT_OK= qw(check_test_feature default_parallel split_tag
   sanitize_environment open_file_or_fd);
 
 # Check if we are testing a specific feature
@@ -87,28 +86,6 @@ sub check_test_feature{
         $ENV{'PATH'} = '/bin:/usr/bin' unless exists($ENV{'PATH'});
         return;
     }
-}
-
-# load_collections ($visitor, $dirname)
-#
-# Load collections from $dirname and pass them to $visitor.  $visitor
-# will be called once per collection as it has been loaded.  The first
-# (and only) argument to $visitor is the collection as an instance of
-# Lintian::CollScript instance.
-sub load_collections {
-    my ($visitor, $dirname) = @_;
-
-    opendir(my $dir, $dirname);
-
-    foreach my $file (readdir $dir) {
-        next if $file =~ m/^\./;
-        next unless $file =~ m/\.desc$/;
-        my $cs = Lintian::CollScript->new("$dirname/$file");
-        $visitor->($cs);
-    }
-
-    closedir($dir);
-    return;
 }
 
 # Return the default number of parallelization to be used

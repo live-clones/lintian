@@ -1,4 +1,4 @@
 May-Generate:
  Makefile
- pre_build
- post_build
+ pre-build
+ post-build

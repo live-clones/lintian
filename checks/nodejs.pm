@@ -102,25 +102,21 @@ sub source {
     return;
 }
 
-sub binary {
-    my ($self) = @_;
+sub files {
+    my ($self, $file) = @_;
 
-    my $pkg = $self->package;
-    my $info = $self->info;
+    return
+      if $self->package =~ /-dbg$/;
 
-    if ($pkg !~ /-dbg$/) {
-        foreach my $file ($info->sorted_index) {
-            my $fname = $file->name;
-            if (    $file->is_file
-                and $fname =~ m,^usr/(?:share|lib(?:/[^/]+)?)/nodejs/,) {
-                $self->tag('nodejs-module-installed-in-usr-lib', $fname)
-                  if $fname =~ m#usr/lib/nodejs/.*#;
-                $self->tag('node-package-install-in-nodejs-rootdir', $fname)
-                  if $fname
-                  =~ m#usr/(?:share|lib(?:/[^/]+)?)/nodejs/(?:package\.json|[^/]*\.js)$#;
-            }
-        }
-    }
+    $self->tag('nodejs-module-installed-in-usr-lib', $file->name)
+      if $file->name =~ m#usr/lib/nodejs/.*#
+      && $file->is_file;
+
+    $self->tag('node-package-install-in-nodejs-rootdir', $file->name)
+      if $file->name
+      =~ m#usr/(?:share|lib(?:/[^/]+)?)/nodejs/(?:package\.json|[^/]*\.js)$#
+      && $file->is_file;
+
     return;
 }
 

@@ -149,7 +149,7 @@ sub files {
 
     # embedded Feedparser library
     if (    $file->name =~ m,/feedparser\.py$,
-        and $self->source ne 'feedparser'){
+        and $self->processable->pkg_src ne 'feedparser'){
 
         my $fd = $file->open;
         while (<$fd>) {

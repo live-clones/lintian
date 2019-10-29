@@ -1149,7 +1149,7 @@ sub check_cross_link {
     my ($self, $fpkg) = @_;
 
     my $group = $self->group;
-    my $src = $group->get_source_processable;
+    my $src = $group->source;
     if ($src) {
         # source package is available; check it's list of binary
         return if defined $src->info->binary_package_type($fpkg);

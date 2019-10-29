@@ -69,7 +69,7 @@ sub files {
 
         # check if it's the "perl" package itself
         $self->tag('perl-module-in-core-directory', $file)
-          unless $self->source eq 'perl';
+          unless $self->processable->pkg_src eq 'perl';
     }
 
     # perl modules using old libraries

@@ -56,6 +56,77 @@ our %KNOWN_DOCBASE_FORMAT_FIELDS = (
 
 our $SECTIONS = Lintian::Data->new('doc-base/sections');
 
+has menu_file => (is => 'rwp');
+has menumethod_file => (is => 'rwp');
+has documentation => (is => 'rwp', default => 0);
+
+sub files {
+    my ($self, $file) = @_;
+
+    if ($file->is_file) { # file checks
+         # menu file?
+        if ($file =~ m,^usr/(lib|share)/menu/\S,o) { # correct permissions?
+            if ($file->operm & 0111) {
+                $self->tag('executable-menu-file',
+                    sprintf('%s %04o', $file, $file->operm));
+            }
+
+            return
+              if $file =~ m,^usr/(?:lib|share)/menu/README$,;
+
+            if ($file =~ m,^usr/lib/,o) {
+                $self->tag('menu-file-in-usr-lib', $file);
+            }
+
+            $self->_set_menu_file($file->name);
+
+            if (    $file =~ m,usr/(?:lib|share)/menu/menu$,o
+                and $self->package ne 'menu') {
+                $self->tag('bad-menu-file-name', $file);
+            }
+        }
+        #menu-methods file?
+        elsif ($file =~ m,^etc/menu-methods/\S,o) {
+            #TODO: we should test if the menu-methods file
+            # is made executable in the postinst as recommended by
+            # the menu manual
+
+            my $menumethod_includes_menu_h = 0;
+            $self->_set_menumethod_file($file->name);
+
+            if ($file->is_open_ok) {
+                my $fd = $file->open;
+                while (<$fd>) {
+                    chomp;
+                    if (m,^!include menu.h,o) {
+                        $menumethod_includes_menu_h = 1;
+                        last;
+                    }
+                }
+                close($fd);
+            }
+            $self->tag('menu-method-should-include-menu-h', $file)
+              unless $menumethod_includes_menu_h
+              or $self->package eq 'menu';
+        }
+        # package doc dir?
+        elsif (
+            $file =~ m{ \A usr/share/doc/(?:[^/]+/)?
+                                 (.+\.(?:html|pdf))(?:\.gz)?
+                          \Z}xsmo
+        ) {
+            my $name = $1;
+            unless ($name =~ m/^changelog\.html$/o
+                or $name =~ m/^README[.-]/o
+                or $name =~ m|examples|o) {
+                $self->_set_documentation(1);
+            }
+        }
+    }
+
+    return;
+}
+
 sub binary {
     my ($self) = @_;
 
@@ -70,11 +141,6 @@ sub binary {
     my %prerm;
     my %postrm;
 
-    my $menu_file;
-    my $menumethod_file;
-    my $anymenu_file;
-    my $documentation;
-
     $self->check_script(scalar $info->control_index('preinst'), \%preinst);
     $self->check_script(scalar $info->control_index('postinst'), \%postinst);
     $self->check_script(scalar $info->control_index('prerm'), \%prerm);
@@ -88,71 +154,6 @@ sub binary {
         for my $file ($bin->info->sorted_index) {
             add_file_link_info($bin->info, $file->name, \%all_files,
                 \%all_links);
-        }
-    }
-
-    # read package contents
-    for my $file ($info->sorted_index) {
-        my $operm = $file->operm;
-
-        if ($file->is_file) { # file checks
-             # menu file?
-            if ($file =~ m,^usr/(lib|share)/menu/\S,o) { # correct permissions?
-                if ($operm & 0111) {
-                    $self->tag('executable-menu-file',
-                        sprintf('%s %04o', $file, $operm));
-                }
-
-                next if $file =~ m,^usr/(?:lib|share)/menu/README$,;
-
-                if ($file =~ m,^usr/lib/,o) {
-                    $self->tag('menu-file-in-usr-lib', $file);
-                }
-
-                $menu_file = $file;
-
-                if (    $file =~ m,usr/(?:lib|share)/menu/menu$,o
-                    and $pkg ne 'menu') {
-                    $self->tag('bad-menu-file-name', $file);
-                }
-            }
-            #menu-methods file?
-            elsif ($file =~ m,^etc/menu-methods/\S,o) {
-                #TODO: we should test if the menu-methods file
-                # is made executable in the postinst as recommended by
-                # the menu manual
-
-                my $menumethod_includes_menu_h = 0;
-                $menumethod_file = $file;
-
-                if ($file->is_open_ok) {
-                    my $fd = $file->open;
-                    while (<$fd>) {
-                        chomp;
-                        if (m,^!include menu.h,o) {
-                            $menumethod_includes_menu_h = 1;
-                            last;
-                        }
-                    }
-                    close($fd);
-                }
-                $self->tag('menu-method-should-include-menu-h', $file)
-                  unless $menumethod_includes_menu_h
-                  or $pkg eq 'menu';
-            }
-            # package doc dir?
-            elsif (
-                $file =~ m{ \A usr/share/doc/(?:[^/]+/)?
-                                 (.+\.(?:html|pdf))(?:\.gz)?
-                          \Z}xsmo
-            ) {
-                my $name = $1;
-                unless ($name =~ m/^changelog\.html$/o
-                    or $name =~ m/^README[.-]/o
-                    or $name =~ m|examples|o) {
-                    $documentation = 1;
-                }
-            }
         }
     }
 
@@ -175,7 +176,7 @@ sub binary {
         $self->tag('preinst-calls-installdocs');
     }
 
-    $anymenu_file = $menu_file || $menumethod_file;
+    my $anymenu_file = $self->menu_file || $self->menumethod_file;
 
     # No one needs to call install-docs any more; triggers now handles that.
     if ($postinst{'calls-installdocs'} or $postinst{'calls-installdocs-r'}) {
@@ -197,7 +198,7 @@ sub binary {
             }
             $self->check_doc_base_file($dbpath, \%all_files,\%all_links);
         }
-    } elsif ($documentation) {
+    } elsif ($self->documentation) {
         if ($pkg =~ /^libghc6?-.*-doc$/) {
             # This is the library documentation for a haskell library. Haskell
             # libraries register their documentation via the ghc compiler's
@@ -221,8 +222,9 @@ sub binary {
         if (not $postinst{'calls-updatemenus'}) {
             $self->tag('postinst-does-not-call-updatemenus', $anymenu_file);
         }
-        if ($menumethod_file and not $postrm{'calls-updatemenus'}) {
-            $self->tag('postrm-does-not-call-updatemenus', $menumethod_file)
+        if ($self->menumethod_file and not $postrm{'calls-updatemenus'}) {
+            $self->tag('postrm-does-not-call-updatemenus',
+                $self->menumethod_file)
               unless $pkg eq 'menu';
         }
     } else {

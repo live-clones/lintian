@@ -33,28 +33,21 @@ use v5.16;
 use Cwd qw(abs_path);
 use Carp qw(verbose);
 use Getopt::Long();
-use IO::Async::Function;
-use IO::Async::Loop;
 use List::MoreUtils qw(any none);
 use Path::Tiny;
 use POSIX qw(:sys_wait_h);
-use Time::HiRes qw(gettimeofday tv_interval);
 
 my $INIT_ROOT = $ENV{'LINTIAN_ROOT'};
 
-use Lintian::DepMap;
-use Lintian::DepMap::Properties;
 use Lintian::Data;
 use Lintian::Lab;
 use Lintian::Output qw(:messages);
 use Lintian::Info::Changelog;
-use Lintian::Internal::FrontendUtil qw(
-  default_parallel load_collections
-  sanitize_environment open_file_or_fd);
-use Lintian::ProcessablePool;
+use Lintian::Internal::FrontendUtil
+  qw(default_parallel sanitize_environment open_file_or_fd);
+use Lintian::Processable::Pool;
 use Lintian::Profile;
 use Lintian::Tags qw(tag);
-use Lintian::Unpacker;
 use Lintian::Util qw(internal_error parse_boolean strip safe_qx);
 
 sanitize_environment();
@@ -88,33 +81,21 @@ my %conf_opt;                   #names of options set in the cfg file
 my %opt = (                     #hash of some flags from cmd or cfg
      # Init some cmd-line value defaults
     'debug'             => 0,
+    'jobs'              => default_parallel(),
 );
 
-my ($experimental_output_opts, $collmap, %overrides, $unpacker, @scripts);
+my ($experimental_output_opts, %overrides);
 
-my ($STATUS_FD, @CLOSE_AT_END, $PROFILE, $TAGS);
+my (@CLOSE_AT_END, $TAGS);
 my @certainties = qw(wild-guess possible certain);
 my (@display_level, %display_source, %suppress_tags);
 my ($action, $checks, $check_tags, $dont_check, $received_signal);
-my (@unpack_info, $LAB, %unpack_options);
+my @unpack_info;
 my $user_dirs = $ENV{'LINTIAN_ENABLE_USER_DIRS'} // 1;
 my $exit_code = 0;
+my $STATUS_FD;
 
-# Timer handling (by default to nothing)
-my $start_timer = sub {
-    return [gettimeofday()];
-};
-my $finish_timer =  sub {
-    my ($start) = @_;
-    return tv_interval($start);
-};
-my $format_timer_result = sub {
-    my ($result) = @_;
-    return sprintf(' (%.3fs)', $result);
-};
 my $memory_usage = sub { 'N/A'; };
-
-sub timed_task(&);
 
 # }}}
 
@@ -582,7 +563,6 @@ sub _main {
 }
 
 sub main {
-    my ($pool);
 
     #turn off file buffering
     STDOUT->autoflush;
@@ -618,7 +598,116 @@ sub main {
 
     $ENV{'TMPDIR'} = $opt{'TMPDIR'} if defined($opt{'TMPDIR'});
 
-    configure_output();
+    if (defined $experimental_output_opts) {
+        my %opts = map { split(/=/) } split(/,/, $experimental_output_opts);
+        foreach (keys %opts) {
+            if ($_ eq 'format') {
+                if ($opts{$_} eq 'colons') {
+                    require Lintian::Output::ColonSeparated;
+                    $Lintian::Output::GLOBAL
+                      = Lintian::Output::ColonSeparated->new;
+                } elsif ($opts{$_} eq 'letterqualifier') {
+                    require Lintian::Output::LetterQualifier;
+                    $Lintian::Output::GLOBAL
+                      = Lintian::Output::LetterQualifier->new;
+                } elsif ($opts{$_} eq 'xml') {
+                    require Lintian::Output::XML;
+                    $Lintian::Output::GLOBAL = Lintian::Output::XML->new;
+                } elsif ($opts{$_} eq 'fullewi') {
+                    require Lintian::Output::FullEWI;
+                    $Lintian::Output::GLOBAL = Lintian::Output::FullEWI->new;
+                } elsif ($opts{$_} eq 'universal') {
+                    require Lintian::Output::Universal;
+                    $Lintian::Output::GLOBAL = Lintian::Output::Universal->new;
+                }
+            }
+        }
+    }
+
+    # check permitted values for --color / color
+    #  - We set the default to 'auto' here; because we cannot do
+    #    it before the config check.
+    $opt{'color'} = 'auto' unless defined($opt{'color'});
+    if ($opt{'color'} and $opt{'color'} !~ /^(?:never|always|auto|html)$/) {
+        fatal_error(
+            join(q{ },
+                'The color value must be one of',
+                'never", "always", "auto" or "html"'));
+    }
+    if (not defined $opt{'tag-display-limit'}) {
+        if (-t STDOUT and not $opt{'verbose'}) {
+            $opt{'tag-display-limit'}
+              = Lintian::Output::DEFAULT_INTERACTIVE_TAG_LIMIT();
+        } else {
+            $opt{'tag-display-limit'} = 0;
+        }
+    }
+
+    if ($opt{'debug'}) {
+        $opt{'verbose'} = 1;
+        $ENV{'LINTIAN_DEBUG'} = $opt{'debug'};
+        $SIG{__DIE__} = sub { Carp::confess(@_) };
+        if ($opt{'debug'} > 2) {
+            eval {
+                require Devel::Size;
+                Devel::Size->import(qw(total_size));
+                {
+                    no warnings qw(once);
+                    # Disable warnings about stuff Devel::Size cannot
+                    # give reliable sizes for.
+                    $Devel::Size::warn = 0;
+                }
+
+                $memory_usage = sub {
+                    my ($obj) = @_;
+                    my $size = total_size($obj);
+                    my $unit = 'B';
+                    if ($size > 1536) {
+                        $size /= 1024;
+                        $unit = 'kB';
+                        if ($size > 1536) {
+                            $size /= 1024;
+                            $unit = 'MB';
+                        }
+                    }
+                    return sprintf('%.2f %s', $size, $unit);
+                };
+                print "N: Using Devel::Size to debug memory usage\n";
+            };
+            if ($@) {
+                print "N: Cannot load Devel::Size ($@)\n";
+                print "N: Running memory usage will not be checked.\n";
+            }
+        }
+    } else {
+        # Ensure verbose has a defined value
+        $opt{'verbose'} = 0 unless defined($opt{'verbose'});
+    }
+
+    $Lintian::Output::GLOBAL->verbosity_level($opt{'verbose'});
+    $Lintian::Output::GLOBAL->debug($opt{'debug'});
+    $Lintian::Output::GLOBAL->color($opt{'color'});
+    $Lintian::Output::GLOBAL->tag_display_limit($opt{'tag-display-limit'});
+    $Lintian::Output::GLOBAL->showdescription($opt{'info'});
+
+    $Lintian::Output::GLOBAL->perf_debug($opt{'perf-debug'});
+    if (defined(my $perf_log = $opt{'perf-output'})) {
+        my $fd = open_file_or_fd($perf_log, '>');
+        $Lintian::Output::GLOBAL->perf_log_fd($fd);
+
+        push(@CLOSE_AT_END, [$fd, $perf_log]);
+    }
+
+    if (defined(my $status_log = $opt{'status-log'})) {
+        $STATUS_FD = open_file_or_fd($status_log, '>');
+        $STATUS_FD->autoflush;
+
+        push(@CLOSE_AT_END, [$STATUS_FD, $status_log]);
+    } else {
+        open($STATUS_FD, '>', '/dev/null');
+    }
+
+    $Lintian::Output::GLOBAL->print_first();
 
     # check for arguments
     if (    $action =~ /^(?:check|unpack)$/
@@ -649,13 +738,34 @@ sub main {
         );
     }
 
-    $PROFILE = load_profile_and_configure_tags();
+    my $PROFILE = eval { dplint::load_profile($opt{'LINTIAN_PROFILE'}); };
+    fatal_error($@) if $@;
+
+    # Ensure $opt{'LINTIAN_PROFILE'} is defined
+    $opt{'LINTIAN_PROFILE'} = $PROFILE->name
+      unless defined($opt{'LINTIAN_PROFILE'});
+    v_msg('Using profile ' . $PROFILE->name . '.');
+    Lintian::Data->set_vendor($PROFILE);
+
+    $TAGS = Lintian::Tags->new;
+    $TAGS->show_experimental($opt{'display-experimental'});
+    $TAGS->show_overrides($opt{'show-overrides'});
+    $TAGS->sources(keys(%display_source)) if %display_source;
+    $TAGS->profile($PROFILE);
+
+    if ($dont_check || %suppress_tags || $checks || $check_tags) {
+        _update_profile($PROFILE, $TAGS, $dont_check, \%suppress_tags,$checks);
+    }
+
+    # Initialize display level settings.
+    for my $level (@display_level) {
+        eval { $TAGS->display(@{$level}) };
+        fatal_error($@) if $@;
+    }
 
     $SIG{'TERM'} = \&interrupted;
     $SIG{'INT'} = \&interrupted;
     $SIG{'QUIT'} = \&interrupted;
-
-    $LAB = Lintian::Lab->new;
 
     #######################################
     #  Check for non deb specific actions
@@ -666,98 +776,69 @@ sub main {
         fatal_error("invalid action $action specified");
     }
 
-    $LAB->create({'keep-lab' => $opt{'keep-lab'}});
-    $LAB->open;
+    my @subjects;
+    push(@subjects, @ARGV);
 
-    $pool = setup_work_pool($LAB);
+    if ($opt{'packages-from-file'}){
+        my $fd = open_file_or_fd($opt{'packages-from-file'}, '<');
+
+        while (my $line = <$fd>) {
+            chomp $line;
+
+            next
+              if $line =~ /^\s*/;
+
+            push(@subjects, $line);
+        }
+
+        # close unless it is STDIN (else we will see a lot of warnings
+        # about STDIN being reopened as "output only")
+        close($fd)
+          unless fileno($fd) == fileno(STDIN);
+    }
+
+    my $pool = Lintian::Processable::Pool->new;
+
+    for my $path (@subjects) {
+
+        fatal_error
+"bad package file name $path (neither .deb, .udeb, .changes, .dsc or .buildinfo file)"
+          unless -f $path
+          && $path =~ m/\.(?:u?deb|dsc|changes|buildinfo)$/;
+
+        my $absolute = Cwd::abs_path($path);
+        die "Cannot resolve $path: $!"
+          unless $absolute;
+
+        eval {
+            # create a new group
+            my $group = Lintian::Processable::Group->new;
+            $group->lab($pool->lab);
+            $group->init_from_file($absolute);
+
+            $pool->add_group($group);
+        };
+        if ($@) {
+            print STDERR "Skipping $path: $@";
+            $exit_code = 2;
+        }
+    }
 
     if ($pool->empty) {
         v_msg('No packages selected.');
         exit $exit_code;
     }
 
-    @scripts = sort $PROFILE->scripts;
-    $collmap= load_and_select_collections(\@scripts, \%unpack_options);
+    $ENV{INIT_ROOT} = $INIT_ROOT;
 
-    $opt{'jobs'} = default_parallel() unless defined $opt{'jobs'};
-    $unpack_options{'jobs'} = $opt{'jobs'};
-
-    # Filter out the "lintian" check if present - it does no real harm,
-    # but it adds a bit of noise in the debug output.
-    @scripts = grep { $_ ne 'lintian' } @scripts;
-
-    debug_msg(
-        1,
-        "Selected action: $action",
-        sprintf('Selected checks: %s', join(',', @scripts)),
-        "Parallelization limit: $opt{'jobs'}",
+    $pool->process(
+        $action, $PROFILE,$TAGS,
+        \$exit_code,\%overrides, \%opt,
+        $memory_usage,$STATUS_FD, \@unpack_info
     );
 
-    # Now action is always either "check" or "unpack"
-    # these two variables are used by process_package
-    #  and need to persist between invocations.
-
-    $unpacker= Lintian::Unpacker->new($collmap, \%unpack_options);
-
-    foreach my $gname (sort $pool->get_group_names) {
-        my $success = 1;
-        my $group = $pool->get_group($gname);
-
-        # Do not start a new group if we have a signal pending.
-        retrigger_signal() if $received_signal;
-
-        v_msg("Starting on group $gname");
-        my $total_raw_res = timed_task {
-            my @group_lpkg;
-            my $raw_res = timed_task {
-                if (!unpack_group($gname, $group)) {
-                    $success = 0;
-                }
-            };
-            my $tres = $format_timer_result->($raw_res);
-            debug_msg(1, "Unpack of $gname done$tres");
-            perf_log("$gname,total-group-unpack,${raw_res}");
-            if ($action eq 'check') {
-                if (!process_group($gname, $group)) {
-                    $success = 0;
-                }
-                $group->clear_cache;
-                if ($exit_code != 2) {
-                # Double check that no processes are running;
-                # hopefully it will catch regressions like 3bbcc3b
-                # earlier.
-                #
-                # Unfortunately, the cleanup via IO::Async::Function seems keep
-                # a worker unreaped; disabling. Should be revisited.
-                #
-                # if (waitpid(-1, WNOHANG) != -1) {
-                #     $exit_code = 2;
-                #     internal_error(
-                #         'Unreaped processes after running checks!?');
-                # }
-                } else {
-                    # If we are interrupted in (e.g.) checks/manpages, it
-                    # tends to leave processes behind.  No reason to flag
-                    # an error for that - but we still try to reap the
-                    # children if they are now done.
-                    1 while waitpid(-1, WNOHANG) > 0;
-                }
-                @group_lpkg = $group->get_processables;
-            } else {
-                auto_clean_packages($group);
-            }
-        };
-        my $total_tres = $format_timer_result->($total_raw_res);
-        if ($success) {
-            print {$STATUS_FD} "complete ${gname}${total_tres}\n";
-        } else {
-            print {$STATUS_FD} "error ${gname}${total_tres}\n";
-        }
-        v_msg("Finished processing group $gname");
-    }
-
-    # Write the lab state to the disk, so it remembers the new packages
-    $LAB->close;
+    retrigger_signal()
+      if $received_signal;
 
     if (    $action eq 'check'
         and not $opt{'no-override'}
@@ -822,254 +903,10 @@ sub main {
 
     # }}}
 
-    # Wait for any remaining jobs - There will usually not be any
-    # unless we had an issue examining the last package.  We patiently wait
-    # for them here; if the user cannot be bothered to wait, he/she can send
-    # us a signal and the END handler will kill any remaining jobs.
-    $unpacker->wait_for_jobs;
-
     exit $exit_code;
 }
 
 # {{{ Some subroutines
-
-# Removes all collections with "Auto-Remove: yes"; takes a Lab::Package
-#  - depends on global variables %collection_info
-#
-sub auto_clean_packages {
-    my ($group) = @_;
-
-    my $maxjobs = $opt{'jobs'};
-
-    my $removelpkg = IO::Async::Function->new(
-        code => sub {
-            my ($lpkg) = @_;
-
-            my $proc_id = $lpkg->identifier;
-            debug_msg(1, "Auto removing: ${proc_id} ...");
-            my $time = $start_timer->();
-
-            $0 = "Auto removing: ${proc_id}";
-            $lpkg->remove;
-
-            my $raw_res = $finish_timer->($time);
-            debug_msg(1, "Auto removing: ${proc_id} done (${raw_res}s)");
-            perf_log("$proc_id,auto-remove entry,${raw_res}");
-
-            return;
-        },
-        max_workers => $maxjobs,
-        max_worker_calls => 1,
-    );
-
-    my $loop = IO::Async::Loop->new;
-    $loop->add($removelpkg);
-
-    my @serializable = map { $_->clear_cache; $_ } $group->get_processables;
-    my @futures = map { $removelpkg->call(args => [$_]) } @serializable;
-
-    my $done = Future->wait_all(@futures);
-    $done->get;
-
-    $removelpkg->stop;
-    $loop->remove($removelpkg);
-
-    return;
-}
-
-sub post_pkg_process_overrides{
-    my ($lpkg) = @_;
-
-    # Report override statistics.
-    if (not $opt{'no-override'} and not $opt{'show-overrides'}) {
-        my $stats = $TAGS->statistics($lpkg);
-        my $errors = $stats->{overrides}{types}{E} || 0;
-        my $warnings = $stats->{overrides}{types}{W} || 0;
-        my $info = $stats->{overrides}{types}{I} || 0;
-        $overrides{errors} += $errors;
-        $overrides{warnings} += $warnings;
-        $overrides{info} += $info;
-    }
-    return;
-}
-
-sub prep_unpack_error {
-    my ($group, $lpkg) = @_;
-    my $err = $!;
-    my $pkg_type = $lpkg->pkg_type;
-    my $pkg_name = $lpkg->pkg_name;
-    warning(
-        "could not create the package entry in the lab: $err",
-        "skipping $action of $pkg_type package $pkg_name"
-    );
-    $exit_code = 2;
-    $group->remove_processable($lpkg);
-    return;
-}
-
-sub unpack_group {
-    my ($gname, $group) = @_;
-    my $all_ok = 1;
-    my $errhandler = sub { $all_ok = 0; prep_unpack_error($group, @_) };
-
-    # Kill pending jobs, if any
-    $unpacker->kill_jobs;
-    $unpacker->reset_worklist;
-
-    # Stop here if there is nothing list for us to do
-    return
-      unless $unpacker->prepare_tasks($errhandler, $group->get_processables);
-
-    retrigger_signal() if $received_signal;
-
-    v_msg("Unpacking packages in group $gname");
-
-    my (%timers, %hooks);
-    $hooks{'coll-hook'}
-      = sub { coll_hook($group, \%timers, @_) or $all_ok = 0; };
-
-    $unpacker->process_tasks(\%hooks);
-    return $all_ok;
-}
-
-sub coll_hook {
-    my ($group, $timers, $lpkg, $event, $cs, $task_id, $exitval) = @_;
-    my $coll = $cs->name;
-    my $procid = $lpkg->identifier;
-    my $ok = 1;
-
-    if ($event eq 'start') {
-        $timers->{$task_id} = $start_timer->();
-        debug_msg(1, "Collecting info: $coll for $procid ...");
-    } elsif ($event eq 'start-failed') {
-        # failed
-        my $pkg_name = $lpkg->pkg_name;
-        my $pkg_type = $lpkg->pkg_type;
-        warning(
-            "collect info $coll about package $pkg_name failed",
-            "skipping $action of $pkg_type package $pkg_name",
-            "error: $exitval"
-        );
-        $exit_code = 2;
-        $ok = 0;
-        $group->remove_processable($lpkg);
-    } elsif ($event eq 'finish') {
-        if ($exitval) {
-            # Failed
-            my $pkg_name  = $lpkg->pkg_name;
-            my $pkg_type = $lpkg->pkg_type;
-            warning(
-                "collect info $coll about package $pkg_name failed ($exitval)"
-            );
-            warning("skipping $action of $pkg_type package $pkg_name");
-            $exit_code = 2;
-            $ok = 0;
-            $group->remove_processable($lpkg);
-        } else {
-            # success
-            my $raw_res = $finish_timer->($timers->{$task_id});
-            my $tres = $format_timer_result->($raw_res);
-            debug_msg(1, "Collection script $coll for $procid done$tres");
-            perf_log("$procid,coll/$coll,${raw_res}");
-        }
-    }
-    return $ok;
-}
-
-sub process_group {
-    my ($gname, $group) = @_;
-    my ($timer, $raw_res, $tres);
-    my $all_ok = 1;
-    $timer = $start_timer->();
-  PROC:
-    foreach my $lpkg ($group->get_processables){
-        my $pkg_type = $lpkg->pkg_type;
-        my $procid = $lpkg->identifier;
-
-        $TAGS->file_start($lpkg);
-
-        debug_msg(1, 'Base directory in lab: ' . $lpkg->base_dir);
-
-        if (not $opt{'no-override'} and $collmap->getp('override-file')) {
-            debug_msg(1, 'Loading overrides file (if any) ...');
-            $TAGS->load_overrides;
-        }
-        foreach my $script (@scripts) {
-            my $cs = $PROFILE->get_script($script);
-            my $check = $cs->name;
-            my $timer = $start_timer->();
-
-            # The lintian check is done by this frontend and we
-            # also skip the check if it is not for this type of
-            # package.
-            next if !$cs->is_check_type($pkg_type);
-
-            debug_msg(1, "Running check: $check on $procid  ...");
-            eval {$cs->run_check($lpkg, $group);};
-            my $err = $@;
-            my $raw_res = $finish_timer->($timer);
-            retrigger_signal() if $received_signal;
-            if ($err) {
-                print STDERR $err;
-                print STDERR "internal error: cannot run $check check",
-                  " on package $procid\n";
-                warning("skipping check of $procid");
-                $exit_code = 2;
-                $all_ok = 0;
-                next PROC;
-            }
-            my $tres = $format_timer_result->($raw_res);
-            debug_msg(1, "Check script $check for $procid done$tres");
-            perf_log("$procid,check/$check,${raw_res}");
-        }
-
-        unless ($exit_code) {
-            my $stats = $TAGS->statistics($lpkg);
-            if ($stats->{types}{E}) {
-                $exit_code = 1;
-            }
-        }
-        post_pkg_process_overrides($lpkg);
-    } # end foreach my $lpkg ($group->get_processable)
-
-    $TAGS->file_end;
-
-    $raw_res = $finish_timer->($timer);
-    $tres = $format_timer_result->($raw_res);
-    debug_msg(1, "Checking all of group $gname done$tres");
-    perf_log("$gname,total-group-check,${raw_res}");
-
-    if ($opt{'debug'} > 2) {
-        my $pivot = ($group->get_processables)[0];
-        my $group_id = $pivot->pkg_src . '/' . $pivot->pkg_src_version;
-        my $group_usage
-          = $memory_usage->([map { $_->info } $group->get_processables]);
-        debug_msg(3, "Memory usage [$group_id]: $group_usage");
-        for my $lpkg ($group->get_processables) {
-            my $id = $lpkg->identifier;
-            my $usage = $memory_usage->($lpkg->info);
-            my $breakdown = $lpkg->info->_memory_usage($memory_usage);
-            debug_msg(3, "Memory usage [$id]: $usage");
-            for my $field (sort(keys(%{$breakdown}))) {
-                debug_msg(4, "  -- $field: $breakdown->{$field}");
-            }
-        }
-    }
-
-    if (not $opt{'keep-lab'}) {
-        # Invoke auto-clean now that the group has been checked
-        $timer = $start_timer->();
-
-        auto_clean_packages($group);
-
-        $raw_res = $finish_timer->($timer);
-        $tres = $format_timer_result->($raw_res);
-        debug_msg(1, "Auto-removal all for group $gname done$tres");
-        perf_log("$gname,total-group-auto-remove,${raw_res}");
-    }
-
-    return $all_ok;
-}
 
 sub _find_cfg_file {
     return $ENV{'LINTIAN_CFG'}
@@ -1271,253 +1108,6 @@ sub _find_changes {
     exit 0;
 }
 
-sub configure_output {
-    if (defined $experimental_output_opts) {
-        my %opts = map { split(/=/) } split(/,/, $experimental_output_opts);
-        foreach (keys %opts) {
-            if ($_ eq 'format') {
-                if ($opts{$_} eq 'colons') {
-                    require Lintian::Output::ColonSeparated;
-                    $Lintian::Output::GLOBAL
-                      = Lintian::Output::ColonSeparated->new;
-                } elsif ($opts{$_} eq 'letterqualifier') {
-                    require Lintian::Output::LetterQualifier;
-                    $Lintian::Output::GLOBAL
-                      = Lintian::Output::LetterQualifier->new;
-                } elsif ($opts{$_} eq 'xml') {
-                    require Lintian::Output::XML;
-                    $Lintian::Output::GLOBAL = Lintian::Output::XML->new;
-                } elsif ($opts{$_} eq 'fullewi') {
-                    require Lintian::Output::FullEWI;
-                    $Lintian::Output::GLOBAL = Lintian::Output::FullEWI->new;
-                } elsif ($opts{$_} eq 'universal') {
-                    require Lintian::Output::Universal;
-                    $Lintian::Output::GLOBAL = Lintian::Output::Universal->new;
-                }
-            }
-        }
-    }
-
-    # check permitted values for --color / color
-    #  - We set the default to 'auto' here; because we cannot do
-    #    it before the config check.
-    $opt{'color'} = 'auto' unless defined($opt{'color'});
-    if ($opt{'color'} and $opt{'color'} !~ /^(?:never|always|auto|html)$/) {
-        fatal_error(
-            join(q{ },
-                'The color value must be one of',
-                'never", "always", "auto" or "html"'));
-    }
-    if (not defined $opt{'tag-display-limit'}) {
-        if (-t STDOUT and not $opt{'verbose'}) {
-            $opt{'tag-display-limit'}
-              = Lintian::Output::DEFAULT_INTERACTIVE_TAG_LIMIT();
-        } else {
-            $opt{'tag-display-limit'} = 0;
-        }
-    }
-
-    if ($opt{'debug'}) {
-        $opt{'verbose'} = 1;
-        $ENV{'LINTIAN_DEBUG'} = $opt{'debug'};
-        $SIG{__DIE__} = sub { Carp::confess(@_) };
-        if ($opt{'debug'} > 2) {
-            eval {
-                require Devel::Size;
-                Devel::Size->import(qw(total_size));
-                {
-                    no warnings qw(once);
-                    # Disable warnings about stuff Devel::Size cannot
-                    # give reliable sizes for.
-                    $Devel::Size::warn = 0;
-                }
-
-                $memory_usage = sub {
-                    my ($obj) = @_;
-                    my $size = total_size($obj);
-                    my $unit = 'B';
-                    if ($size > 1536) {
-                        $size /= 1024;
-                        $unit = 'kB';
-                        if ($size > 1536) {
-                            $size /= 1024;
-                            $unit = 'MB';
-                        }
-                    }
-                    return sprintf('%.2f %s', $size, $unit);
-                };
-                print "N: Using Devel::Size to debug memory usage\n";
-            };
-            if ($@) {
-                print "N: Cannot load Devel::Size ($@)\n";
-                print "N: Running memory usage will not be checked.\n";
-            }
-        }
-    } else {
-        # Ensure verbose has a defined value
-        $opt{'verbose'} = 0 unless defined($opt{'verbose'});
-    }
-
-    $Lintian::Output::GLOBAL->verbosity_level($opt{'verbose'});
-    $Lintian::Output::GLOBAL->debug($opt{'debug'});
-    $Lintian::Output::GLOBAL->color($opt{'color'});
-    $Lintian::Output::GLOBAL->tag_display_limit($opt{'tag-display-limit'});
-    $Lintian::Output::GLOBAL->showdescription($opt{'info'});
-
-    $Lintian::Output::GLOBAL->perf_debug($opt{'perf-debug'});
-    if (defined(my $perf_log = $opt{'perf-output'})) {
-        my $fd = open_file_or_fd($perf_log, '>');
-        $Lintian::Output::GLOBAL->perf_log_fd($fd);
-
-        push(@CLOSE_AT_END, [$fd, $perf_log]);
-    }
-
-    if (defined(my $status_log = $opt{'status-log'})) {
-        $STATUS_FD = open_file_or_fd($status_log, '>');
-        $STATUS_FD->autoflush;
-
-        push(@CLOSE_AT_END, [$STATUS_FD, $status_log]);
-    } else {
-        open($STATUS_FD, '>', '/dev/null');
-    }
-
-    $Lintian::Output::GLOBAL->print_first();
-    return;
-}
-
-sub setup_work_pool {
-    my ($lab) = @_;
-    my $pool = Lintian::ProcessablePool->new($lab);
-
-    for my $arg (@ARGV) {
-        # file?
-        if (-f $arg && $arg =~ m/\.(?:u?deb|dsc|changes|buildinfo)$/o){
-            eval {$pool->add_file($arg);};
-            if ($@) {
-                print STDERR "Skipping $arg: $@";
-                $exit_code = 2;
-            }
-        } else {
-            fatal_error("bad package file name $arg (neither .deb, "
-                  . '.udeb, .changes .dsc or .buildinfo file)');
-        }
-    }
-
-    if ($opt{'packages-from-file'}){
-        my $fd = open_file_or_fd($opt{'packages-from-file'}, '<');
-        while (my $file = <$fd>) {
-            chomp $file;
-            $pool->add_file($file);
-        }
-        # close unless it is STDIN (else we will see a lot of warnings
-        # about STDIN being reopened as "output only")
-        close($fd) unless fileno($fd) == fileno(STDIN);
-    }
-    return $pool;
-}
-
-sub load_profile_and_configure_tags {
-    my $profile = eval { dplint::load_profile($opt{'LINTIAN_PROFILE'}); };
-    fatal_error($@) if $@;
-    # Ensure $opt{'LINTIAN_PROFILE'} is defined
-    $opt{'LINTIAN_PROFILE'} = $profile->name
-      unless defined($opt{'LINTIAN_PROFILE'});
-    v_msg('Using profile ' . $profile->name . '.');
-    Lintian::Data->set_vendor($profile);
-
-    $TAGS = Lintian::Tags->new;
-    $TAGS->show_experimental($opt{'display-experimental'});
-    $TAGS->show_overrides($opt{'show-overrides'});
-    $TAGS->sources(keys(%display_source)) if %display_source;
-    $TAGS->profile($profile);
-
-    if ($dont_check || %suppress_tags || $checks || $check_tags) {
-        _update_profile($profile, $TAGS, $dont_check, \%suppress_tags,$checks);
-    }
-
-    # Initialize display level settings.
-    for my $level (@display_level) {
-        eval { $TAGS->display(@{$level}) };
-        fatal_error($@) if $@;
-    }
-    return $profile;
-}
-
-sub load_and_select_collections {
-    my ($all_checks, $unpack_options_ref) = @_;
-    # $map is just here to check that all the needed collections are present.
-    my $map = Lintian::DepMap->new;
-    my $collmap = Lintian::DepMap::Properties->new;
-    my %extra_unpack;
-    my $load_coll = sub {
-        my ($cs) = @_;
-        my $coll = $cs->name;
-        debug_msg(2, "Read collector description for $coll ...");
-        $collmap->add($coll, $cs->needs_info, $cs);
-        $map->addp('coll-' . $coll, 'coll-', $cs->needs_info);
-    };
-
-    load_collections($load_coll, "$INIT_ROOT/collection");
-
-    for my $c (@{$all_checks}) {
-        # Add the checks with their dependency information
-        my $cs = $PROFILE->get_script($c);
-        die "Cannot find check $c" unless defined $cs;
-        my @deps = $cs->needs_info;
-        $map->add('check-' . $c);
-        if (@deps) {
-            # In case a (third-party) check gets their needs-info wrong,
-            # present the user with useful error message.
-            my @missing;
-            for my $dep (@deps) {
-                if (!$map->known('coll-' . $dep)) {
-                    push(@missing, $dep);
-                }
-            }
-            if (@missing) {
-                my $str = join(', ', @missing);
-                internal_error(
-                    "The check \"$c\" depends unknown collection(s): $str");
-            }
-            $map->addp('check-' . $c, 'coll-', @deps);
-        }
-    }
-
-    # Make sure the resolver is in a sane state
-    # - This can happen if we break collections (inter)dependencies.
-    if ($map->missing) {
-        internal_error('There are missing nodes in the resolver: '
-              . join(', ', $map->missing));
-    }
-
-    if ($action eq 'check') {
-        # For overrides we need "override-file" as well
-        unless ($opt{'no-override'}) {
-            $extra_unpack{'override-file'} = 1;
-        }
-        # For checking, pass a profile to the unpacker to limit what it
-        # unpacks.
-        $unpack_options_ref->{'profile'} = $PROFILE;
-        $unpack_options_ref->{'extra-coll'} = \%extra_unpack;
-    } else {
-        # With --unpack we want all of them.  That's the default so,
-        # "done!"
-        1;
-    }
-
-    if (@unpack_info) {
-        # Add collections specifically requested by the user (--unpack-info)
-        for my $i (map { split(m/,/) } @unpack_info) {
-            unless ($collmap->getp($i)) {
-                fatal_error(
-                    "unrecognized info specified via --unpack-info: $i");
-            }
-            $extra_unpack{$i} = 1;
-        }
-    }
-    return $collmap;
-}
-
 sub parse_options {
     # init commandline parser
     Getopt::Long::config('default', 'bundling',
@@ -1617,13 +1207,6 @@ sub _update_profile {
     return;
 }
 
-sub timed_task(&) {
-    my ($task) = @_;
-    my $timer = $start_timer->();
-    $task->();
-    return $finish_timer->($timer);
-}
-
 # }}}
 
 # {{{ Exit handler.
@@ -1639,17 +1222,19 @@ sub END {
         local ($!, $?, $@);
         my %already_closed;
 
-        # Kill any remaining jobs.
-        $unpacker->kill_jobs if $unpacker;
-
-        $LAB->close if $LAB;
         for my $to_close (@CLOSE_AT_END) {
+
             my ($fd, $filename) = @{$to_close};
             my $fno = fileno($fd);
+
             # Already closed?  Can happen with e.g.
             #   --perf-output '&1' --status-log '&1'
-            next if not defined($fno);
-            next if $fno > -1 and $already_closed{$fno}++;
+            next
+              if not defined($fno);
+
+            next
+              if $fno > -1 and $already_closed{$fno}++;
+
             eval {close($fd);};
             if (my $err = $@) {
                 # Don't use L::Output here as it might be (partly) cleaned

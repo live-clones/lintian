@@ -30,6 +30,45 @@ use Lintian::Util qw(dequote_name);
 
 with('Lintian::Check');
 
+has only_conffiles => (is => 'rwp', default => 1);
+
+sub files {
+    my ($self, $file) = @_;
+
+    # check if package contains non-conffiles
+    # debhelper doesn't create entries in md5sums
+    # for conffiles since this information would
+    # be redundant
+
+    # Skip non-files, they will not appear in the md5sums file
+    return
+      unless $file->is_regular_file;
+
+    $self->_set_only_conffiles(0)
+      unless $self->info->is_conffile($file);
+
+    return;
+}
+
+sub breakdown {
+    my ($self) = @_;
+
+    my $control = $self->info->control_index('md5sums');
+
+    # Is there an md5sums control file?
+    unless ($control) {
+
+        # ignore if package contains no files
+        return
+          if -z $self->info->lab_data_path('md5sums');
+
+        $self->tag('no-md5sums-control-file')
+          unless $self->only_conffiles;
+    }
+
+    return;
+}
+
 sub binary {
     my ($self) = @_;
 
@@ -39,27 +78,8 @@ sub binary {
     my (%control_entry, %info_entry);
 
     # Is there an md5sums control file?
-    if (not $control) {
-        # ignore if package contains no files
-        return if -z $info->lab_data_path('md5sums');
-
-        # check if package contains non-conffiles
-        # debhelper doesn't create entries in md5sums
-        # for conffiles since this information would
-        # be redundant
-        my $only_conffiles = 1;
-        foreach my $file ($info->sorted_index) {
-            # Skip non-files, they will not appear in the md5sums file
-            next unless $file->is_regular_file;
-            unless ($info->is_conffile($file)) {
-                $only_conffiles = 0;
-                last;
-            }
-        }
-
-        $self->tag('no-md5sums-control-file') unless $only_conffiles;
-        return;
-    }
+    return
+      unless $control;
 
     # The md5sums file should not be a symlink.  If it is, the best
     # we can do is to leave it alone.

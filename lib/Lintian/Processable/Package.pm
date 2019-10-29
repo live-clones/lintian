@@ -49,7 +49,7 @@ Lintian::Processable::Package -- An object that Lintian can process
 
 Instances of this perl class are objects that Lintian can process (e.g.
 deb files).  Multiple objects can then be combined into
-L<groups|Lintian::ProcessableGroup>, which Lintian will process
+L<groups|Lintian::Processable::Group>, which Lintian will process
 together.
 
 =head1 CLASS METHODS
@@ -218,7 +218,7 @@ lintian(1)
 
 L<Lintian::Processable>
 
-L<Lintian::ProcessableGroup>
+L<Lintian::Processable::Group>
 
 =cut
 
