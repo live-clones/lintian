@@ -1,8 +1,15 @@
-lintian (2.30.0+git) UNRELEASED; urgency=medium
+lintian (2.31.0) unstable; urgency=medium
 
-  * WIP (generated upon release).
+  [ Chris Lamb ]
+  * Avoid false-positives for missing ${sphinxdoc:Depends} when "dh" calls
+    include dynamic variables. (Closes: #943711)
+  * Include more verbose debugging info (eg. concurrency) when running
+    Lintian's autopkgtests.
 
- -- Chris Lamb <lamby@debian.org>  Sat, 26 Oct 2019 19:33:56 +0100
+  [ Felix Lechner ]
+  * Rework the warning for overly-long binary package fields.
+
+ -- Chris Lamb <lamby@debian.org>  Tue, 29 Oct 2019 12:51:32 +0000
 
 lintian (2.30.0) unstable; urgency=medium
 
