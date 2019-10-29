@@ -252,6 +252,36 @@ sub md5sums {
     return $self->{md5sums};
 }
 
+=item control_scripts
+
+Returns a hashref mapping a FILE to data about how it is run.
+
+Needs-Info requirements for using I<control_scripts>: scripts
+
+=cut
+
+sub control_scripts {
+    my ($self) = @_;
+
+    unless (exists $self->{control_scripts}) {
+
+        my $dbpath = $self->lab_data_path('control-scripts.db');
+
+        my %control;
+
+        tie my %h, 'BerkeleyDB::Btree',-Filename => $dbpath
+          or die "Cannot open file $dbpath: $! $BerkeleyDB::Error\n";
+
+        $control{$_} = $h{$_} for keys %h;
+
+        untie %h;
+
+        $self->{control_scripts} = \%control;
+    }
+
+    return $self->{control_scripts};
+}
+
 =item index (FILE)
 
 Returns a L<path object|Lintian::Path> to FILE in the package.  FILE
