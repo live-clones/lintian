@@ -13,6 +13,8 @@ variables:
 
 .test-packages-template: &test-packages
   stage: test-packages
+  except:
+    - tags
   before_script:
     - apt-get -q update
   script:
@@ -23,6 +25,8 @@ variables:
 
 .test-template: &test
   stage: test
+  except:
+    - tags
   before_script:
     - apt-get -q update
     - env DEBIAN_FRONTEND=noninteractive apt-get -q -y -o dir::cache::archives=".cache" build-dep .
