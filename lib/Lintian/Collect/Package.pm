@@ -231,27 +231,25 @@ Needs-Info requirements for using I<md5sums>: md5sums
 
 sub md5sums {
     my ($self) = @_;
-    return $self->{md5sums} if exists $self->{md5sums};
-    my $md5f = $self->lab_data_path('md5sums');
-    my $result = {};
 
-    # read in md5sums info file
-    open(my $fd, '<', $md5f);
-    while (my $line = <$fd>) {
-        chop($line);
-        next if $line =~ m/^\s*$/o;
-        $line =~ m/^(\\)?(\S+)\s*(\S.*)$/o
-          or internal_error("syntax error in $md5f info file: $line");
-        my ($zzescaped, $zzsum, $zzfile) = ($1, $2, $3);
-        if($zzescaped) {
-            $zzfile = dequote_name($zzfile);
-        }
-        $zzfile =~ s,^(?:\./)?,,o;
-        $result->{$zzfile} = $zzsum;
+    unless (exists $self->{md5sums}) {
+
+        my $dbpath = $self->lab_data_path('md5sums.db');
+
+        my %md5sums;
+
+        my %h;
+        tie %h, 'BerkeleyDB::Hash',-Filename => $dbpath
+          or die "Cannot open file $dbpath: $! $BerkeleyDB::Error\n";
+
+        $md5sums{$_} = $h{$_} for keys %h;
+
+        untie %h;
+
+        $self->{md5sums} = \%md5sums;
     }
-    close($fd);
-    $self->{md5sums} = $result;
-    return $result;
+
+    return $self->{md5sums};
 }
 
 =item index (FILE)
