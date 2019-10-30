@@ -39,7 +39,7 @@ sub setup {
     my ($self) = @_;
 
     # check if package is empty
-    $self->_set_is_dummy($self->info->is_pkg_class('any-meta') // 0);
+    $self->_set_is_dummy(scalar($self->info->is_pkg_class('any-meta'));
 
     return;
 }
