@@ -675,11 +675,11 @@ Needs-Info requirements for using I<is_pkg_class>: L<Same as field|Lintian::Coll
         $pkg_class //= 'any-meta';
         if ($pkg_class eq 'debug') {
             return 1 if $self->name =~ m/-dbg(?:sym)?/;
-            return;
+            return 0;
         }
         if ($pkg_class eq 'auto-generated') {
             return 1 if $self->field('auto-built-package');
-            return;
+            return 0;
         }
         return 1 if $desc =~ m/transitional package/;
         $desc = lc($desc);
@@ -690,7 +690,7 @@ Needs-Info requirements for using I<is_pkg_class>: L<Same as field|Lintian::Coll
             return 1 if $section =~ m,(?:^|/)(?:tasks|metapackages)$,;
             return 1 if $self->name =~ m/^task-/;
         }
-        return;
+        return 0;
     }
 }
 
