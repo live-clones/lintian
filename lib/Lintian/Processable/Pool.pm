@@ -27,16 +27,18 @@ use Moo;
 
 use Carp qw(croak);
 use Cwd();
+use Data::Dumper;
 use Time::HiRes qw(gettimeofday tv_interval);
 use POSIX qw(:sys_wait_h);
 
 use Lintian::DepMap;
 use Lintian::DepMap::Properties;
 use Lintian::Output qw(:messages);
-use Lintian::Processable::Package;
 use Lintian::Processable::Group;
 use Lintian::Unpacker;
 use Lintian::Util;
+
+use constant SPACE => q{ };
 
 has groups => (is => 'rwp', default => sub{ {} });
 has unpacker => (is => 'rwp');
@@ -181,37 +183,34 @@ sub process{
               . join(', ', $map->missing));
     }
 
-    my %extra_unpack;
-    my %unpack_options;
-    $unpack_options{'jobs'} = $opt->{'jobs'};
+    my $unpacker = Lintian::Unpacker->new;
 
+    # for checking, pass profile to limit what it unpacks
     if ($action eq 'check') {
-        # For overrides we need "override-file" as well
-        unless ($opt->{'no-override'}) {
-            $extra_unpack{'override-file'} = 1;
-        }
-        # For checking, pass a profile to the unpacker to limit what it
-        # unpacks.
-        $unpack_options{'profile'} = $PROFILE;
-        $unpack_options{'extra-coll'} = \%extra_unpack;
-    } else {
-        # With --unpack we want all of them.  That's the default so,
-        # "done!"
-        1;
+
+        $unpacker->profile($PROFILE);
+
+        # add collections requested by user (--unpack-info)
+        my @requested
+          = map { split(/,/) } (@{$unpack_info_ref // []});
+
+        my @unknown = grep { !collmap->getp($_) } @requested;
+        die 'unrecognized items in --unpack-info:', join(SPACE, @unknown)
+          if @unknown;
+
+        # need 'override-file' for overrides
+        push(@requested, 'override-file')
+          unless $opt->{'no-override'};
+
+        $unpacker->extra_coll(\@requested);
     }
 
-    if (@{$unpack_info_ref}) {
-        # Add collections specifically requested by the user (--unpack-info)
-        for my $i (map { split(m/,/) } @{$unpack_info_ref}) {
-            unless ($collmap->getp($i)) {
-                fatal_error(
-                    "unrecognized info specified via --unpack-info: $i");
-            }
-            $extra_unpack{$i} = 1;
-        }
-    }
+    # With --unpack we want all of them.  That's the default so,
+    # "done!"
 
-    $self->_set_unpacker(Lintian::Unpacker->new($collmap, \%unpack_options));
+    $unpacker->jobs($opt->{'jobs'});
+    $unpacker->init($collmap);
+    $self->_set_unpacker($unpacker);
 
     my @sorted = sort { $a->name cmp $b->name } values %{$self->groups};
     foreach my $group (@sorted) {
