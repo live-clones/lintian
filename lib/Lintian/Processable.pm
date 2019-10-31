@@ -25,8 +25,13 @@ use strict;
 use warnings;
 
 use Carp qw(croak);
+use Cwd qw(realpath);
+use File::Spec;
+use Path::Tiny;
+use Scalar::Util qw(refaddr);
 
-use Lintian::Util qw(strip);
+use Lintian::Collect;
+use Lintian::Util qw(get_deb_info get_dsc_info strip);
 
 =head1 NAME
 
@@ -53,114 +58,182 @@ together.
 
 =over 4
 
-=item new_from_metadata (TYPE, PARAGRAPH[, BASEPATH])
+=item new (FILE[, TYPE])
 
-Returns a Lintian::Processable from a PARAGRAPH in a Sources or a
-Packages file with the following exception.
+Creates a processable from FILE.  If TYPE is given, the FILE is
+assumed to be that TYPE otherwise the type is determined by the file
+extension.
 
-If the PARAGRAPH has a field named "pkg_path", then that is used
-instead of creating the path from BASEPATH path concatenated with the
-TYPE specific field(s).  Hench BASEPATH is optional if and only if,
-the paragraph has a field called "pkg_path".
-
-The TYPE parameter determines the type of the processable and is
-required.
-
-NB: Optional fields (e.g. "Source" for binaries) may be omitted in
-PARAGRAPH as usual.  In this case, the respective values are computed
-from the required fields according to the Policy Manual.
+TYPE is one of "binary" (.deb), "udeb" (.udeb), "source" (.dsc) or
+"changes" (.changes).
 
 =cut
 
-my %KEEP = map { $_ => 1 } qw(
-  pkg_name pkg_version pkg_src pkg_src_version pkg_type pkg_path pkg_arch
-);
-my %KEEP_EXTRA = map { $_ => 1} qw(
-  section binary uploaders maintainer area
-);
+# Black listed characters - any match will be replaced with a _.
+use constant EVIL_CHARACTERS => qr,[/&|;\$"'<>],o;
 
-sub new_from_metadata {
-    my ($clazz, $pkg_type, $paragraph, $basepath) = @_;
-    my $self = {
-        %$paragraph # Copy the input data for starters
-    };
-    my $rename_field = sub {
-        my ($oldn, $newn, $default) = @_;
-        $self->{$newn} = delete $self->{$oldn};
-        if (not defined $self->{$newn} and defined $default) {
-            $self->{$newn} = $default;
-        }
-        croak "Required field $oldn is missing or empty"
-          unless defined $self->{$newn} and $self->{$newn} ne '';
-    };
-    $self->{'pkg_type'} = $pkg_type;
-    $rename_field->('package', 'pkg_name');
-    $rename_field->('version', 'pkg_version');
-    bless $self, $clazz;
-    if ($pkg_type eq 'binary' or $pkg_type eq 'udeb') {
-        $rename_field->('source', 'pkg_src', $self->pkg_name);
-        $rename_field->('architecture', 'pkg_arch');
-        if ($self->{'pkg_src'} =~ /^([-+\.\w]+)\s+\((.+)\)$/) {
-            $self->{'pkg_src'} = $1;
-            $self->{'pkg_src_version'} = $2;
-            croak 'Two source-versions given (source + source-version)'
-              if exists $self->{'source-version'};
+# internal initialization method.
+#  reads values from fields etc.
+sub new {
+    my ($class, $file, $pkg_type) = @_;
+    my $pkg_path;
+    my $self;
+
+    if (not defined $pkg_type) {
+        if ($file =~ m/\.dsc$/o) {
+            $pkg_type = 'source';
+        } elsif ($file =~ m/\.buildinfo$/o) {
+            $pkg_type = 'buildinfo';
+        } elsif ($file =~ m/\.deb$/o) {
+            $pkg_type = 'binary';
+        } elsif ($file =~ m/\.udeb$/o) {
+            $pkg_type = 'udeb';
+        } elsif ($file =~ m/\.changes$/o) {
+            $pkg_type = 'changes';
         } else {
-            $rename_field->(
-                'source-version', 'pkg_src_version', $self->pkg_version
-            );
+            croak "$file is not a known type of package";
         }
-        if (not exists $self->{'pkg_path'}) {
-            my $fn = delete $self->{'filename'};
-            croak 'Missing required "filename" field'
-              unless defined $fn;
-            $self->{'pkg_path'} = "$basepath/$fn";
+    }
+
+    croak "$file does not exists"
+      unless -f $file;
+
+    $pkg_path = realpath($file);
+    croak "Cannot resolve $file: $!"
+      unless $pkg_path;
+
+    $self = {
+        pkg_type => $pkg_type,
+        pkg_path => $pkg_path,
+        tainted => 0,
+    };
+
+    if ($pkg_type eq 'binary' or $pkg_type eq 'udeb'){
+        my $dinfo = get_deb_info($pkg_path)
+          or croak "could not read control data in $pkg_path: $!";
+        my $pkg_name = $dinfo->{package};
+        my $pkg_src = $dinfo->{source};
+        my $pkg_version = $dinfo->{version};
+        my $pkg_src_version = $pkg_version;
+
+        unless ($pkg_name) {
+            my $type = $pkg_type;
+            $type = 'deb' if $type eq 'binary';
+            $pkg_name = _derive_name($pkg_path, $type)
+              or croak "Cannot determine the name of $pkg_path";
         }
-    } elsif ($pkg_type eq 'source') {
-        $self->{'pkg_src'} = $self->pkg_name;
-        $self->{'pkg_src_version'} = $self->pkg_version;
-        $self->{'pkg_arch'} = 'source';
-        if (not exists $self->{'pkg_path'}) {
-            my $fn = delete $self->{'files'};
-            my $dir = delete $self->{'directory'};
-            $dir .= '/' if defined $dir;
-            $dir //= '';
-            foreach my $f (split m/\n/, $fn) {
-                strip($f);
-                next unless $f && $f =~ m/\.dsc$/;
-                my (undef, undef, $file) = split m/\s++/, $f;
-                # $dir should end with a slash if it is non-empty.
-                $self->{'pkg_path'} = "$basepath/${dir}$file";
-                last;
-            }
-            croak 'dsc file not listed in "Files"'
-              unless defined $self->{'pkg_path'};
+
+        # Source may be left out if it is the same as $pkg_name
+        $pkg_src = $pkg_name unless (defined $pkg_src && length $pkg_src);
+
+        # Source may contain the version (in parentheses)
+        if ($pkg_src =~ m/(\S++)\s*\(([^\)]+)\)/o){
+            $pkg_src = $1;
+            $pkg_src_version = $2;
         }
-    } elsif ($pkg_type eq 'changes') {
-        # This case is basically for L::Lab::Manifest entries...
-        $self->{'pkg_src'} = $self->pkg_name;
-        $self->{'pkg_src_version'} = $self->pkg_version;
-        $rename_field->('architecture', 'pkg_arch');
-        croak '.changes file must have pkg_path set'
-          unless defined $self->{'pkg_path'};
+        $self->{pkg_name} = $pkg_name;
+        $self->{pkg_version} = $pkg_version;
+        $self->{pkg_arch} = $dinfo->{architecture};
+        $self->{pkg_src} = $pkg_src;
+        $self->{pkg_src_version} = $pkg_src_version;
+        $self->{'extra-fields'} = $dinfo;
+    } elsif ($pkg_type eq 'source'){
+        my $dinfo = get_dsc_info($pkg_path)
+          or croak "$pkg_path is not valid dsc file";
+        my $pkg_name = $dinfo->{source} // '';
+        my $pkg_version = $dinfo->{version};
+        if ($pkg_name eq '') {
+            croak "$pkg_path is missing Source field";
+        }
+        $self->{pkg_name} = $pkg_name;
+        $self->{pkg_version} = $pkg_version;
+        $self->{pkg_arch} = 'source';
+        $self->{pkg_src} = $pkg_name; # it is own source pkg
+        $self->{pkg_src_version} = $pkg_version;
+        $self->{'extra-fields'} = $dinfo;
+    } elsif ($pkg_type eq 'buildinfo' or $pkg_type eq 'changes'){
+        my $cinfo = get_dsc_info($pkg_path)
+          or croak "$pkg_path is not a valid $pkg_type file";
+        my $pkg_version = $cinfo->{version};
+        my $pkg_name = $cinfo->{source}//'';
+        unless ($pkg_name) {
+            $pkg_name = _derive_name($pkg_path, $pkg_type)
+              or croak "Cannot determine the name of $pkg_path";
+        }
+        $self->{pkg_name} = $pkg_name;
+        $self->{pkg_version} = $pkg_version;
+        $self->{pkg_src} = $pkg_name;
+        $self->{pkg_src_version} = $pkg_version;
+        $self->{pkg_arch} = $cinfo->{architecture};
+        $self->{'extra-fields'} = $cinfo;
     } else {
-        croak "Unsupported type $pkg_type";
+        croak "Unknown package type $pkg_type";
     }
-    # Prune the field list...
-    foreach my $k (keys %$self) {
-        my $val;
-        $val = delete $self->{$k} unless exists $KEEP{$k};
-        if (defined $val && exists $KEEP_EXTRA{$k}) {
-            $self->{'extra-fields'}{$k} = $val;
+    # make sure these are not undefined
+    $self->{pkg_version}     = '' unless (defined $self->{pkg_version});
+    $self->{pkg_src_version} = '' unless (defined $self->{pkg_src_version});
+    $self->{pkg_arch}        = '' unless (defined $self->{pkg_arch});
+    # make sure none of the fields can cause traversal.
+    for my $field (qw(pkg_name pkg_version pkg_src pkg_src_version pkg_arch)) {
+        if ($self->{$field} =~ m,${\EVIL_CHARACTERS},o){
+            # None of these fields are allowed to contain a these
+            # characters.  This package is most likely crafted to
+            # cause Path traversals or other "fun" things.
+            $self->{tainted} = 1;
+            $self->{$field} =~ s,${\EVIL_CHARACTERS},_,go;
         }
     }
+    bless $self, $class;
     $self->_make_identifier;
     return $self;
 }
 
-# Shadow Class::Accessor::Fast - otherwise you get some very "funny" errors
-# from Class::Accessor::Fast if you get the constructor wrong.
-sub new { croak 'Not implemented'; }
+# _derive_name ($file, $ext)
+#
+# Derive the name from the file name
+#  - the name is the part of the basename up to (and excl.) the first "_".
+#
+# _derive_name ('somewhere/lintian_2.5.2_amd64.changes', 'changes') eq 'lintian'
+sub _derive_name {
+    my ($file, $ext) = @_;
+    my ($name) = ($file =~ m,(?:.*/)?([^_/]+)[^/]*\.$ext$,);
+    return $name;
+}
+
+sub _new_from_proc {
+    my ($type, $proc, $lab, $base_dir) = @_;
+    my $self = {};
+    bless $self, $type;
+    $self->{pkg_name}        = $proc->pkg_name;
+    $self->{pkg_version}     = $proc->pkg_version;
+    $self->{pkg_type}        = $proc->pkg_type;
+    $self->{pkg_src}         = $proc->pkg_src;
+    $self->{pkg_src_version} = $proc->pkg_src_version;
+    $self->{pkg_path}        = $proc->pkg_path;
+    $self->{lab}             = $lab;
+    $self->{info}            = undef; # load on demand.
+
+    if ($self->pkg_type ne 'source') {
+        $self->{pkg_arch} = $proc->pkg_arch;
+    } else {
+        $self->{pkg_arch} = 'source';
+    }
+
+    $self->{base_dir} = $base_dir;
+    $self->_make_identifier;
+
+    if ($proc->isa('Lintian::Processable')) {
+        my $ctrl = $proc->_ctrl_fields;
+        if ($ctrl) {
+            # The processable has already loaded the fields, cache them to save
+            # info from doing it later...
+            $self->{info}
+              = Lintian::Collect->new($self->pkg_name, $self->pkg_type,
+                $self->base_dir, $ctrl);
+        }
+    }
+    return $self;
+}
 
 =back
 
@@ -169,6 +242,17 @@ sub new { croak 'Not implemented'; }
 =over 4
 
 =cut
+
+# $proc->_ctrl_fields
+#
+# Return a hashref of the control fields if available.  Used by
+# L::Lab::Entry to avoid (re-)loading the fields from the control
+# file.
+sub _ctrl_fields {
+    my ($self) = @_;
+    return $self->{'extra-fields'} if exists $self->{'extra-fields'};
+    return;
+}
 
 sub _make_identifier {
     my ($self) = @_;
@@ -228,10 +312,18 @@ to less dangerous (but possibly invalid) values.
 Produces an identifier for this processable.  The identifier is
 based on the type, name, version and architecture of the package.
 
+=item base_dir
+
+Returns the base directory of this package inside the lab.
+
+=item lab
+
+Returns a reference to the laboratory related to this entry.
+
 =cut
 
 Lintian::Processable->mk_ro_accessors(
-    qw(pkg_name pkg_version pkg_src pkg_arch pkg_path pkg_type pkg_src_version tainted identifier)
+    qw(pkg_name pkg_version pkg_src pkg_arch pkg_path pkg_type pkg_src_version tainted identifier lab base_dir)
 );
 
 =item $proc->group([$group])
@@ -245,33 +337,158 @@ Can also be used to set the group of this processable.
 
 Lintian::Processable->mk_accessors(qw(group));
 
-=item $proc->info
+=item from_lab (LAB)
 
-Returns L<$info|Lintian::Collect> element for this processable.
+Returns a truth value if this entry is from LAB.
 
-Note: This method must be implemented by sub-classes unless they
-provide an "info" field.
+=cut
+
+sub from_lab {
+    my ($self, $lab) = @_;
+    return refaddr $lab eq (refaddr $self->{'lab'} // q{}) ? 1 : 0;
+}
+
+=item info
+
+Returns the L<info|Lintian::Collect> object associated with this entry.
+
+Overrides info from L<Lintian::Processable>.
 
 =cut
 
 sub info {
     my ($self) = @_;
-    return $self->{info} if exists $self->{info};
-    croak 'Not implemented.';
+    my $info;
+    $info = $self->{info};
+    if (!defined $info) {
+        croak('Cannot load info, entry does not exist') unless $self->exists;
+
+        $info = Lintian::Collect->new($self->pkg_name, $self->pkg_type,
+            $self->base_dir);
+        $self->{info} = $info;
+    }
+    return $info;
 }
 
-=item $proc->clear_cache
+=item clear_cache
 
-Discard the info element, so the memory used by it can be reclaimed.
-Mostly useful when checking a lot of packages (e.g. on lintian.d.o).
+Clears any caches held; this includes discarding the L<info|Lintian::Collect> object.
 
-Note: By default this does nothing, but it may (and should) be
-overridden by sub-classes.
+Overrides clear_cache from L<Lintian::Processable>.
 
 =cut
 
 sub clear_cache {
+    my ($self) = @_;
+    delete $self->{info};
     return;
+}
+
+=item remove
+
+Removes all unpacked parts of the package in the lab.  Returns a truth
+value if successful.
+
+=cut
+
+sub remove {
+    my ($self) = @_;
+    my $basedir = $self->{base_dir};
+    return 1 if(!-e $basedir);
+    $self->clear_cache;
+    path($basedir)->remove_tree
+      if -d $basedir;
+    return 1;
+}
+
+=item exists
+
+Returns a truth value if the entry exists.
+
+=cut
+
+sub exists {
+    my ($self) = @_;
+    my $pkg_type = $self->{pkg_type};
+    my $base_dir = $self->{base_dir};
+
+    # Check if the relevant symlink exists.
+    if ($pkg_type eq 'changes'){
+        return 1 if -l "$base_dir/changes";
+    } elsif ($pkg_type eq 'buildinfo') {
+        return 1 if -l "$base_dir/buildinfo";
+    } elsif ($pkg_type eq 'binary' or $pkg_type eq 'udeb') {
+        return 1 if -l "$base_dir/deb";
+    } elsif ($pkg_type eq 'source'){
+        return 1 if -l "$base_dir/dsc";
+    }
+
+    # No unpack level and no symlink => the entry does not
+    # exist or it is too broken in its current state.
+    return 0;
+}
+
+=item create
+
+Creates a minimum entry, in which collections and checks
+can be run.  Note if it already exists, then this will do
+nothing.
+
+=cut
+
+sub create {
+    my ($self) = @_;
+    my $pkg_type = $self->{pkg_type};
+    my $base_dir = $self->{base_dir};
+    my $pkg_path = $self->{pkg_path};
+    my $lab      = $self->{lab};
+    my $link;
+    my $madedir = 0;
+
+    if (not -d $base_dir) {
+        # In the pool we may have to create multiple directories. On
+        # error we only remove the "top dir" and that is enough.
+        path($base_dir)->mkpath;
+        $madedir = 1;
+    } else {
+        # If $base_dir exists, then check if the entry exists
+        # - this is optimising for "non-existence" which is
+        #   often the common case.
+        return 0 if $self->exists;
+    }
+    if ($pkg_type eq 'changes'){
+        $link = "$base_dir/changes";
+    } elsif ($pkg_type eq 'buildinfo'){
+        $link = "$base_dir/buildinfo";
+    } elsif ($pkg_type eq 'binary' or $pkg_type eq 'udeb') {
+        $link = "$base_dir/deb";
+    } elsif ($pkg_type eq 'source'){
+        $link = "$base_dir/dsc";
+    } else {
+        croak "create cannot handle $pkg_type";
+    }
+    unless (symlink($pkg_path, $link)){
+        my $err = $!;
+        # "undo" the mkdir if the symlink fails.
+        rmdir $base_dir  if $madedir;
+        $! = $err;
+        croak "symlinking $pkg_path failed: $!";
+    }
+    if ($pkg_type eq 'source'){
+        # If it is a source package, pull in all the related files
+        #  - else unpacked will fail or we would need a separate
+        #    collection for the symlinking.
+        my (undef, $dir, undef) = File::Spec->splitpath($pkg_path);
+        for my $fs (split(m/\n/o, $self->info->field('files'))) {
+            strip($fs);
+            next if $fs eq '';
+            my @t = split(/\s+/o,$fs);
+            next if ($t[2] =~ m,/,o);
+            symlink("$dir/$t[2]", "$base_dir/$t[2]")
+              or croak("cannot symlink file $t[2]: $!");
+        }
+    }
+    return 1;
 }
 
 =item $proc->get_field ($field[, $def])
