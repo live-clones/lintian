@@ -1,8 +1,27 @@
-lintian (2.31.0+git) UNRELEASED; urgency=medium
+lintian (2.32.0) unstable; urgency=medium
 
-  * WIP (generated upon release).
+  [ Chris Lamb ]
+  * Skip entirely whitespace lines when checking the
+    override_dh_auto_test-does-not-check-DEB_BUILD_OPTIONS tag.
+    (Closes: #943684)
+  * Don't build Git tags on salsa.
 
- -- Chris Lamb <lamby@debian.org>  Tue, 29 Oct 2019 13:12:28 +0000
+  [ Felix Lechner ]
+  * Clarify boolean return value in Collect::Binary->is_pkg_class.
+    (Closes: #943724)
+  * In Lintian::Collect::Binary, read from MLDBM in new facilites for
+    details on scripts.
+  * In Lintian::Collect::Package, read from BerkeleyDB in new facilites for
+    details on binary package "control" scripts.
+
+  [ David Prévot ]
+  * Update a file reference in the long description of the
+    unnecessary-source-date-epoch-assignment tag.
+
+  [ Paul Wise ]
+  * Add several spelling corrections.
+
+ -- Chris Lamb <lamby@debian.org>  Thu, 31 Oct 2019 17:09:52 +0000
 
 lintian (2.31.0) unstable; urgency=medium
 
