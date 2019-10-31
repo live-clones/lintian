@@ -34,6 +34,15 @@ use Lintian::Util qw(internal_error get_dsc_info strip);
 
 use constant EMPTY => q{};
 
+# A private table of supported types.
+my %SUPPORTED_TYPES = (
+    'binary'  => 1,
+    'buildinfo' => 1,
+    'changes' => 1,
+    'source'  => 1,
+    'udeb'    => 1,
+);
+
 has lab => (is => 'rw');
 has name => (is => 'rw', default => EMPTY);
 
@@ -82,7 +91,7 @@ sub init_from_file {
     return
       unless defined $path;
 
-    my $processable = Lintian::Processable::Package->new($path);
+    my $processable = Lintian::Processable->new($path);
     $self->add_processable($processable);
 
     my ($type) = $path =~ m/\.(buildinfo|changes)$/;
@@ -138,31 +147,11 @@ sub init_from_file {
             next;
         }
 
-        my $payload = Lintian::Processable::Package->new("$dir/$file");
+        my $payload = Lintian::Processable->new("$dir/$file");
         $self->add_processable($payload);
     }
 
     return 1;
-}
-
-=item prep_unpack_error
-
-Error handler.
-
-=cut
-
-sub prep_unpack_error {
-    my ($self, $action, $exit_code_ref, $lpkg) = @_;
-    my $err = $!;
-    my $pkg_type = $lpkg->pkg_type;
-    my $pkg_name = $lpkg->pkg_name;
-    warning(
-        "could not create the package entry in the lab: $err",
-        "skipping $action of $pkg_type package $pkg_name"
-    );
-    $$exit_code_ref = 2;
-    $self->remove_processable($lpkg);
-    return;
 }
 
 =item unpack
@@ -173,10 +162,24 @@ Unpack this group.
 
 sub unpack {
     my ($self, $unpacker, $action, $exit_code_ref)= @_;
+
     my $all_ok = 1;
+
     my $errhandler = sub {
+        my ($lpkg) = @_;
+
+        my $err = $!;
+        my $pkg_type = $lpkg->pkg_type;
+        my $pkg_name = $lpkg->pkg_name;
+        warning(
+            "could not create the package entry in the lab: $err",
+            "skipping $action of $pkg_type package $pkg_name"
+        );
+
+        $self->remove_processable($lpkg);
+
+        $$exit_code_ref = 2;
         $all_ok = 0;
-        $self->prep_unpack_error($action, $exit_code_ref, @_);
     };
 
     # Kill pending jobs, if any
@@ -189,13 +192,14 @@ sub unpack {
 
     v_msg('Unpacking packages in group ' . $self->name);
 
-    my (%timers, %hooks);
-    $hooks{'coll-hook'}= sub {
+    my %timers;
+    my $hook = sub {
         $self->coll_hook($action, $exit_code_ref, \%timers, @_)
           or $all_ok = 0;
     };
 
-    $unpacker->process_tasks(\%hooks);
+    $unpacker->process_tasks($hook);
+
     return $all_ok;
 }
 
@@ -206,50 +210,46 @@ Collection hook.
 =cut
 
 sub coll_hook {
-    my (
-        $self, $action, $exit_code_ref,$timers, $lpkg,
-        $event, $cs, $task_id, $exitval
-    )= @_;
-    my $coll = $cs->name;
-    my $procid = $lpkg->identifier;
-    my $ok = 1;
+    my ($self, $action, $exit_code_ref,$timers, $task, $event, $exitval)= @_;
+
+    my $coll = $task->script->name;
+    my $procid = $task->labentry->identifier;
+    my $pkg_name = $task->labentry->pkg_name;
+    my $pkg_type = $task->labentry->pkg_type;
 
     if ($event eq 'start') {
-        $timers->{$task_id} = [gettimeofday];
+        $timers->{$task->id} = [gettimeofday];
         debug_msg(1, "Collecting info: $coll for $procid ...");
-    } elsif ($event eq 'start-failed') {
+
+        return 1;
+
+    } elsif ($event eq 'start-failed' || ($event eq 'finish' && $exitval)) {
+
         # failed
-        my $pkg_name = $lpkg->pkg_name;
-        my $pkg_type = $lpkg->pkg_type;
-        warning(
-            "collect info $coll about package $pkg_name failed",
-            "skipping $action of $pkg_type package $pkg_name",
-            "error: $exitval"
-        );
+        my $string
+          = "collection $coll failed for $pkg_type package $pkg_name, skipping $action";
+        $string .= " error: $exitval"
+          if $exitval;
+        warning($string);
+
+        $self->remove_processable($task->labentry);
         $$exit_code_ref = 2;
-        $ok = 0;
-        $self->remove_processable($lpkg);
+
+        return 0;
+
     } elsif ($event eq 'finish') {
-        if ($exitval) {
-            # Failed
-            my $pkg_name  = $lpkg->pkg_name;
-            my $pkg_type = $lpkg->pkg_type;
-            warning(
-                "collect info $coll about package $pkg_name failed ($exitval)"
-            );
-            warning("skipping $action of $pkg_type package $pkg_name");
-            $$exit_code_ref = 2;
-            $ok = 0;
-            $self->remove_processable($lpkg);
-        } else {
-            # success
-            my $raw_res = tv_interval($timers->{$task_id});
-            my $tres = sprintf('%.3fs', $raw_res);
-            debug_msg(1, "Collection script $coll for $procid done ($tres)");
-            perf_log("$procid,coll/$coll,${raw_res}");
-        }
+
+        # success
+        my $raw_res = tv_interval($timers->{$task->id});
+        my $tres = sprintf('%.3fs', $raw_res);
+        debug_msg(1, "Collection script $coll for $procid done ($tres)");
+        perf_log("$procid,coll/$coll,${raw_res}");
+
+        return 0;
     }
-    return $ok;
+
+    # unknown event
+    return 1;
 }
 
 =item post_pkg_process_overrides
@@ -447,7 +447,7 @@ sub add_processable{
     croak 'Please set lab first.'
       unless $self->lab;
 
-    my $mapped = $self->lab->get_package($processable);
+    my $mapped = $self->get_package($processable);
 
     if ($pkg_type eq 'changes') {
         internal_error("Cannot add another $pkg_type file")
@@ -479,6 +479,63 @@ sub add_processable{
     }
     $processable->group($self);
     return 1;
+}
+
+=item get_package (PROC)
+
+Fetches an existing package from the lab.
+
+The first argument must be a L<processable|Lintian::Processable>.
+
+=cut
+
+sub get_package {
+    my ($self, $proc) = @_;
+
+    return $proc
+      if $proc->isa('Lintian::Processable') && $proc->from_lab($self->lab);
+
+    my $pkg_type = $proc->pkg_type;
+
+    # get_package only works with "real" types (and not views).
+    croak "Not a supported type ($pkg_type)"
+      unless exists $SUPPORTED_TYPES{$pkg_type};
+
+    my $dir = $self->_pool_path($proc->pkg_src,$pkg_type,$proc->pkg_name,
+        $proc->pkg_version,$proc->pkg_arch);
+
+    my $entry = Lintian::Processable->_new_from_proc($proc, $self->lab, $dir);
+    return $entry;
+}
+
+# Given the package meta data (src_name, type, name, version, arch) return the
+# path to it in the Lab.  The path returned will be absolute.
+sub _pool_path {
+    my ($self, $pkg_src, $pkg_type, $pkg_name, $pkg_version, $pkg_arch) = @_;
+
+    my $dir = $self->lab->basedir;
+    my $p;
+
+    # If it is at least 4 characters and starts with "lib", use "libX"
+    # as prefix
+    if ($pkg_src =~ m/^lib./o) {
+        $p = substr $pkg_src, 0, 4;
+    } else {
+        $p = substr $pkg_src, 0, 1;
+    }
+
+    $p  = "$p/$pkg_src/${pkg_name}_${pkg_version}";
+    $p .= "_${pkg_arch}" unless $pkg_type eq 'source';
+    $p .= "_${pkg_type}";
+
+    # Turn spaces into dashes - spaces do appear in architectures
+    # (i.e. for changes files).
+    $p =~ s/\s/-/go;
+
+    # Also replace ":" with "_" as : is usually used for path separator
+    $p =~ s/:/_/go;
+
+    return "$dir/pool/$p";
 }
 
 =item $group->get_processables([$type])
