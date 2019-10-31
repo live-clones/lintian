@@ -79,8 +79,12 @@ the Lintian::Collect constructor.
 # which is currently unused.
 sub new {
     my ($class, $pkg) = @_;
+
     my $self = {};
     bless($self, $class);
+
+    $self->{java_info} = {};
+
     return $self;
 }
 
@@ -619,48 +623,28 @@ Needs-Info requirements for using I<java_info>: java-info
 
 sub java_info {
     my ($self) = @_;
-    return $self->{java_info} if exists $self->{java_info};
-    my $javaf = $self->lab_data_path('java-info.gz');
-    my %java_info;
-    if (!-f $javaf) {
-        # no java-info.gz => no jar files to collect data.  Just
-        # return an empty hash ref.
+
+    # do something to prevent second lookup
+    unless (keys %{$self->{java_info}}) {
+
+        my $dbpath = $self->lab_data_path('java-info.db');
+
+        # no jar files
+        return $self->{java_info}
+          unless -f $dbpath;
+
+        my %java_info;
+
+        tie my %h, 'MLDBM',-Filename => $dbpath
+          or die "Cannot open file $dbpath: $! $BerkeleyDB::Error\n";
+
+        $java_info{$_} = $h{$_} for keys %h;
+
+        untie %h;
+
         $self->{java_info} = \%java_info;
-        return $self->{java_info};
     }
-    my $idx = open_gz($javaf);
-    my $file;
-    my $file_list;
-    my $manifest = 0;
-    local $_;
-    while (<$idx>) {
-        chomp;
-        next if m/^\s*$/o;
 
-        if (m#^-- ERROR:\s*(\S.++)$#o) {
-            $java_info{$file}{error} = $1;
-        } elsif (m#^-- MANIFEST: (?:\./)?(?:.+)$#o) {
-            # TODO: check $file == $1 ?
-            $java_info{$file}{manifest} = {};
-            $manifest = $java_info{$file}{manifest};
-            $file_list = 0;
-        } elsif (m#^-- (?:\./)?(.+)$#o) {
-            $file = $1;
-            $java_info{$file}{files} = {};
-            $file_list = $java_info{$file}{files};
-            $manifest = 0;
-        } else {
-            if ($manifest && m#^  (\S+):\s(.*)$#o) {
-                $manifest->{$1} = $2;
-            } elsif ($file_list) {
-                my ($fname, $clmajor) = (m#^([^-].*):\s*([-\d]+)$#);
-                $file_list->{$fname} = $clmajor;
-            }
-
-        }
-    }
-    $self->{java_info} = \%java_info;
-    close($idx);
     return $self->{java_info};
 }
 
