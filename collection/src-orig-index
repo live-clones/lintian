@@ -37,7 +37,7 @@ use Path::Tiny;
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
 
 use Lintian::Collect;
-use Lintian::Processable::Package;
+use Lintian::Processable;
 use Lintian::Util qw(internal_error sort_file_index gzip);
 
 use constant EMPTY => q{};
@@ -80,7 +80,7 @@ sub gather_tarballs {
     # Use Lintian::Processable::Package to determine source and
     # version as it handles missing fields for us to some extent.
 
-    $proc = Lintian::Processable::Package->new($file, 'source');
+    $proc = Lintian::Processable->new($file, 'source');
     #  Version handling is based on Dpkg::Version::parseversion.
     $version = $proc->pkg_src_version;
     if ($version =~ /:/) {
