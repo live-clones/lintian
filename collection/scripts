@@ -70,9 +70,9 @@ sub collect {
 
         my %record;
 
-        # remove /usr/bin/env
-        $record{calls_env} = 1
-          if $stripped =~ s,^/usr/bin/env\s+,,;
+        # remove /usr/bin/env; get a true boolean success value #943724
+        my $calls_env = 0 + ($stripped =~ s{^/usr/bin/env\s+}{},);
+        $record{calls_env} = $calls_env;
 
         # get base command without options
         $stripped =~ s/\s++ .++ \Z//xsm;

@@ -311,13 +311,13 @@ sub binary {
           if (  $filename =~ m,\.in$,
             and $interpreter =~ m,^(\@|<\<)[A-Z_]+(\@|>\>)$,);
 
-        my $is_absolute = ($interpreter =~ m,^/, or defined $calls_env);
+        my $is_absolute = ($interpreter =~ m,^/, or $calls_env);
 
         # As a special-exception, Policy 10.4 states that Perl scripts must use
         # /usr/bin/perl directly and not via /usr/bin/env, etc.
         $self->script_tag(bad_interpreter_tag_name('/usr/bin/env perl'),
             $filename, '(#!/usr/bin/env perl != /usr/bin/perl)')
-          if defined $calls_env and $interpreter eq 'perl';
+          if $calls_env and $interpreter eq 'perl';
 
         # Skip files that have the #! line, but are not executable and
         # do not have an absolute path and are not in a bin/ directory
@@ -414,7 +414,7 @@ sub binary {
         }
         if ($data) {
             my $expected = $data->[0] . '/' . $base;
-            unless ($interpreter eq $expected or defined $calls_env) {
+            unless ($interpreter eq $expected or $calls_env) {
                 $self->script_tag(bad_interpreter_tag_name($expected),
                     $filename, "(#!$interpreter != $expected)");
             }
@@ -442,7 +442,7 @@ sub binary {
                 # executable).
                 my $interfile = substr $interpreter, 1;
                 $pinter = 1 if $executable{$interfile};
-            } elsif (defined $calls_env) {
+            } elsif ($calls_env) {
                 for my $dir (qw(usr/bin bin)) {
                     if ($executable{"$dir/$interpreter"}) {
                         $pinter = 1;
