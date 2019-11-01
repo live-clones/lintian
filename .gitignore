@@ -20,3 +20,4 @@
 *.rej
 cover_db*
 /coverage-report
+/TAGS
