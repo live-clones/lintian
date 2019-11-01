@@ -39,10 +39,11 @@ Lintian::Processable -- An (abstract) object that Lintian can process
 
 =head1 SYNOPSIS
 
- use Lintian::Processable::Package;
+ use Lintian::Processable;
  
- # Instantiate via Lintian::Processable::Package
- my $proc = Lintian::Processable::Package->new ('lintian_2.5.0_all.deb');
+ # Instantiate via Lintian::Processable
+ my $proc = Lintian::Processable->new;
+ $proc->init_from_file('lintian_2.5.0_all.deb');
  my $pkg_name = $proc->pkg_name;
  my $pkg_version = $proc->pkg_version;
  # etc.

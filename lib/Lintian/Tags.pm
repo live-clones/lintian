@@ -54,7 +54,8 @@ Lintian::Tags - Manipulate and output Lintian tags
 =head1 SYNOPSIS
 
     my $tags = Lintian::Tags->new;
-    my $proc = Lintian::Processable::Package->new ('/path/to/file');
+    my $proc = Lintian::Processable->new;
+    $proc->init_from_file('/path/to/file');
     $tags->file_start ($proc);
     $tags->file_overrides ('/path/to/an/overrides-file');
     $tags->tag ('lintian-tag', 'extra tag information');
