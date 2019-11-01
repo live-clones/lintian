@@ -23,7 +23,6 @@ our %MODULES =(
     'Lintian::DepMap'             => [],
     'Lintian::DepMap::Properties' => [],
     'Lintian::Lab'                => [],
-    'Lintian::Lab::Entry'         => [],
     'Lintian::Profile'            => [],
     'Lintian::Processable'        => [qr/^new$/],
     'Lintian::Processable::Group' => [],
