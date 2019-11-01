@@ -1768,7 +1768,7 @@ sub _ships_examples {
         return 1
           if any { m{^usr/share/doc/(.+/)?examples/?$} } @files;
     }
-    return;
+    return 0;
 }
 
 1;

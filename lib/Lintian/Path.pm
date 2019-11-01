@@ -623,7 +623,7 @@ sub is_open_ok {
         my $path = $self->_collect_path;
         $self->_check_open($path);
     };
-    return if $@;
+    return 0 if $@;
     return 1;
 }
 

@@ -756,7 +756,7 @@ sub is_conffile {
     return 1
       if exists $self->{conffiles_lookup}{$file};
 
-    return;
+    return 0;
 }
 
 =back

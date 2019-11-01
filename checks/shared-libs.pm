@@ -805,7 +805,7 @@ sub needs_ldconfig {
     $dirname .= "/$last" if $last;
     # yes! so postinst must call ldconfig
     return 1 if $ldconfig_dirs->known($dirname);
-    return;
+    return 0;
 }
 
 1;

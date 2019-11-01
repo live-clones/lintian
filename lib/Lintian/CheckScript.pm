@@ -160,7 +160,7 @@ inputs.
 sub is_check_type {
     my ($self, $type) = @_;
     return 1 if ($self->{'type'}//'ALL') eq 'ALL';
-    return $self->{'type-table'}{$type};
+    return $self->{'type-table'}{$type} // 0;
 }
 
 =item $cs->add_taginfo ($taginfo)
