@@ -3,6 +3,7 @@ nobiarch
 nocheck
 nodoc
 nogolang
+noguile
 nojava
 nolua
 noperl
