@@ -121,7 +121,9 @@ sub init_from_file {
     return
       unless defined $path;
 
-    my $processable = Lintian::Processable->new($path);
+    my $processable = Lintian::Processable->new;
+    $processable->lab($self->lab);
+    $processable->init($path);
     $self->add_processable($processable);
 
     my ($type) = $path =~ m/\.(buildinfo|changes)$/;
@@ -177,7 +179,9 @@ sub init_from_file {
             next;
         }
 
-        my $payload = Lintian::Processable->new("$dir/$file");
+        my $payload = Lintian::Processable->new;
+        $payload->lab($self->lab);
+        $payload->init("$dir/$file");
         $self->add_processable($payload);
     }
 
@@ -477,22 +481,31 @@ sub add_processable{
     croak 'Please set lab first.'
       unless $self->lab;
 
-    my $mapped = $self->get_package($processable);
+    croak "Not a supported type ($pkg_type)"
+      unless exists $SUPPORTED_TYPES{$pkg_type};
+
+    my $dir = $self->_pool_path(
+        $processable->pkg_src,$processable->pkg_type,
+        $processable->pkg_name,$processable->pkg_version,
+        $processable->pkg_arch
+    );
+
+    $processable->base_dir($dir);
 
     if ($pkg_type eq 'changes') {
         internal_error("Cannot add another $pkg_type file")
           if $self->changes;
-        $self->changes($mapped);
+        $self->changes($processable);
 
     } elsif ($pkg_type eq 'buildinfo') {
         # Ignore multiple .buildinfo files; use the first one
-        $self->buildinfo($mapped)
+        $self->buildinfo($processable)
           unless $self->buildinfo;
 
     } elsif ($pkg_type eq 'source'){
         internal_error('Cannot add another source package')
           if $self->source;
-        $self->source($mapped);
+        $self->source($processable);
 
     } else {
         my $phash;
@@ -505,37 +518,10 @@ sub add_processable{
         return 0
           if exists $phash->{$id};
 
-        $phash->{$id} = $mapped;
+        $phash->{$id} = $processable;
     }
     $processable->group($self);
     return 1;
-}
-
-=item get_package (PROC)
-
-Fetches an existing package from the lab.
-
-The first argument must be a L<processable|Lintian::Processable>.
-
-=cut
-
-sub get_package {
-    my ($self, $proc) = @_;
-
-    return $proc
-      if $proc->isa('Lintian::Processable') && $proc->from_lab($self->lab);
-
-    my $pkg_type = $proc->pkg_type;
-
-    # get_package only works with "real" types (and not views).
-    croak "Not a supported type ($pkg_type)"
-      unless exists $SUPPORTED_TYPES{$pkg_type};
-
-    my $dir = $self->_pool_path($proc->pkg_src,$pkg_type,$proc->pkg_name,
-        $proc->pkg_version,$proc->pkg_arch);
-
-    my $entry = Lintian::Processable->_new_from_proc($proc, $self->lab, $dir);
-    return $entry;
 }
 
 # Given the package meta data (src_name, type, name, version, arch) return the
