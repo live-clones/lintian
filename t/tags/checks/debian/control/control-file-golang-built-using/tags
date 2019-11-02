@@ -1,2 +1,3 @@
+control-file-golang-built-using (source): rules-requires-root-missing
 control-file-golang-built-using (source): missing-xs-go-import-path-for-golang-package
 control-file-golang-built-using (source): built-using-field-on-arch-all-package control-file-golang-built-using-dev

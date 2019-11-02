@@ -1,1 +1,2 @@
+debhelper-script-token (source): uses-debhelper-compat-file
 debhelper-script-token (source): maintainer-script-lacks-debhelper-token debian/postinst

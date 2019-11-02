@@ -8,6 +8,8 @@ systemd-general (binary): systemd-service-file-refers-to-obsolete-bindto etc/sys
 systemd-general (binary): systemd-service-file-outside-lib usr/lib/systemd/system/systemd-general.test.service
 systemd-general (binary): systemd-service-file-outside-lib etc/systemd/system/systemd-general.test.service
 systemd-general (binary): systemd-service-file-outside-lib etc/systemd/system/fifo-pipe-as-init.service
+systemd-general (binary): systemd-service-file-missing-hardening-features usr/lib/systemd/system/systemd-general.test.service
+systemd-general (binary): systemd-service-file-missing-hardening-features etc/systemd/system/systemd-general.test.service
 systemd-general (binary): systemd-service-file-missing-documentation-key usr/lib/systemd/system/systemd-general.test.service
 systemd-general (binary): systemd-service-file-missing-documentation-key etc/systemd/system/systemd-general.test.service
 systemd-general (binary): systemd-service-alias-without-extension usr/lib/systemd/system/systemd-general.test.service

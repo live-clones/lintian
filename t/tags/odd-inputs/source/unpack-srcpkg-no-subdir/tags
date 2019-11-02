@@ -1,0 +1,2 @@
+unpack-srcpkg-no-subdir (source): uses-debhelper-compat-file
+unpack-srcpkg-no-subdir (source): debian-watch-does-not-check-gpg-signature

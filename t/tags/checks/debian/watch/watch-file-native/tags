@@ -1,1 +1,2 @@
 watch-file-native (source): debian-watch-file-in-native-package
+watch-file-native (source): debian-watch-does-not-check-gpg-signature

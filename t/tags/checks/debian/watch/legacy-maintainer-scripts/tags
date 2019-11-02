@@ -2,3 +2,4 @@ maintainer-scripts (source): debian-watch-uses-insecure-uri http://domain.tld/fo
 maintainer-scripts (source): debian-watch-file-unknown-version 5
 maintainer-scripts (source): debian-watch-file-should-mangle-version line 7
 maintainer-scripts (source): debian-watch-file-should-mangle-version line 11
+maintainer-scripts (source): debian-watch-does-not-check-gpg-signature

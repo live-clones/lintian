@@ -1,1 +1,2 @@
+no-systemd-service-for-init-script (binary): systemd-service-file-missing-hardening-features lib/systemd/system/no-systemd-service-for-init-script.service
 no-systemd-service-for-init-script (binary): omitted-systemd-service-for-init.d-script other

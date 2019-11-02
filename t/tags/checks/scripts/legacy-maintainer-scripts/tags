@@ -101,6 +101,7 @@ maintainer-scripts (binary): possible-bashism-in-maintainer-script postinst:144 
 maintainer-scripts (binary): possible-bashism-in-maintainer-script postinst:109 '${H[@]}'
 maintainer-scripts (binary): maintainer-shell-script-fails-syntax-check prerm
 maintainer-scripts (binary): maintainer-shell-script-fails-syntax-check postinst
+maintainer-scripts (binary): maintainer-script-without-set-e postinst
 maintainer-scripts (binary): maintainer-script-should-not-use-update-alternatives-remove postrm:4
 maintainer-scripts (binary): maintainer-script-should-not-use-start-stop-daemon postinst:160
 maintainer-scripts (binary): maintainer-script-should-not-use-recursive-chown-or-chmod postinst:166

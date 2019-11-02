@@ -1,3 +1,4 @@
+binary (source): no-dep5-copyright
 binary (binary): possible-gpl-code-linked-with-openssl
 binary (binary): old-fsf-address-in-copyright-file
 binary (binary): debian-copyright-file-uses-obsolete-national-encoding at line 13

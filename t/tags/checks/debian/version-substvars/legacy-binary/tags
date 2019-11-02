@@ -1,1 +1,2 @@
 binary (source): not-binnmuable-all-depends-any binary-data -> binary
+binary (source): maybe-not-arch-all-binnmuable binary -> binary-data

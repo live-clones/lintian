@@ -1,1 +1,2 @@
+debhelper-dh-with-python3 (source): uses-debhelper-compat-file
 debhelper-dh-with-python3 (source): missing-build-dependency-for-dh-addon python3 => dh-python

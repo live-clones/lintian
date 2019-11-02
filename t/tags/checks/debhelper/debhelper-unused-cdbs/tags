@@ -1,1 +1,2 @@
+debhelper-unused-cdbs (source): uses-debhelper-compat-file
 debhelper-unused-cdbs (source): unused-build-dependency-on-cdbs

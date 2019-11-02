@@ -1,1 +1,2 @@
+debhelper-dh-quilt-addon-but-quilt-source-format (source): uses-debhelper-compat-file
 debhelper-dh-quilt-addon-but-quilt-source-format (source): dh-quilt-addon-but-quilt-source-format dh ... --with quilt (line 4)

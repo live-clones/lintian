@@ -1,0 +1,1 @@
+debhelper-compat-virtual-relation-both (source): package-uses-old-debhelper-compat-version 10

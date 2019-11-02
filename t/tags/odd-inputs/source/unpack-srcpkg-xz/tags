@@ -1,0 +1,2 @@
+unpack-srcpkg-xz (source): uses-debhelper-compat-file
+unpack-srcpkg-xz (source): debian-watch-does-not-check-gpg-signature
