@@ -33,23 +33,6 @@ use Path::Tiny;
 
 use constant EMPTY => q{};
 
-# must be absolute; frontend/lintian depends on it
-has basedir => (
-    is => 'rwp',
-    default => sub {
-
-        my $relative = tempdir('temp-lintian-lab-XXXXXXXXXX', 'TMPDIR' => 1);
-
-        my $absolute = Cwd::abs_path($relative);
-        croak "Could not resolve $relative: $!"
-          unless $absolute;
-
-        path("$absolute/pool")->mkpath({mode => 0777});
-
-        return $absolute;
-    });
-has keep => (is => 'rw', default => 0);
-
 =encoding utf8
 
 =head1 NAME
@@ -67,6 +50,38 @@ Lintian::Lab -- Interface to the Lintian Lab
 This module provides an abstraction from "How and where" packages are
 placed.  It handles creation and deletion of the Lintian Lab itself as
 well as providing access to the entries.
+
+=over 4
+
+=item $lab->basedir
+
+Returns the base directory for the lab. Most likely it's a temporary directory.
+
+=item $lab->keep
+
+Returns or accepts a boolean value that indicates whether the lab should be
+removed when Lintian finishes. Used for debugging.
+
+=back
+
+=cut
+
+# must be absolute; frontend/lintian depends on it
+has basedir => (
+    is => 'rwp',
+    default => sub {
+
+        my $relative = tempdir('temp-lintian-lab-XXXXXXXXXX', 'TMPDIR' => 1);
+
+        my $absolute = Cwd::abs_path($relative);
+        croak "Could not resolve $relative: $!"
+          unless $absolute;
+
+        path("$absolute/pool")->mkpath({mode => 0777});
+
+        return $absolute;
+    });
+has keep => (is => 'rw', default => 0);
 
 =head1 INSTANCE METHODS
 
