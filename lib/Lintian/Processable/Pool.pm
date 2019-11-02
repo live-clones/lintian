@@ -40,10 +40,6 @@ use Lintian::Util;
 
 use constant SPACE => q{ };
 
-has groups => (is => 'rwp', default => sub{ {} });
-has unpacker => (is => 'rwp');
-has lab => (is => 'rw', default => sub { Lintian::Lab->new });
-
 =head1 NAME
 
 Lintian::Processable::Pool -- Pool of processables
@@ -65,6 +61,25 @@ Lintian::Processable::Pool -- Pool of processables
 =head1 METHODS
 
 =over 4
+
+=item $pool->groups
+
+Returns a hash reference to the list of processable groups that are currently
+in the pool. The key is a unique identifier based on name and version.
+
+=item $pool->lab
+
+Returns or sets the lab used by this pool.
+
+=item $pool->unpacker
+
+Returns or sets the Unpacker object used by this pool.
+
+=cut
+
+has groups => (is => 'rwp', default => sub{ {} });
+has lab => (is => 'rw', default => sub { Lintian::Lab->new });
+has unpacker => (is => 'rwp');
 
 =item $pool->add_group($group)
 
