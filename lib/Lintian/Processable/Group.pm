@@ -43,15 +43,6 @@ my %SUPPORTED_TYPES = (
     'udeb'    => 1,
 );
 
-has lab => (is => 'rw');
-has name => (is => 'rw', default => EMPTY);
-
-has source => (is => 'rw');
-has changes => (is => 'rw');
-has buildinfo => (is => 'rw');
-has binary => (is => 'rw', default => sub{ {} });
-has udeb => (is => 'rw', default => sub{ {} });
-
 =head1 NAME
 
 Lintian::Processable::Group -- A group of objects that Lintian can process
@@ -77,6 +68,45 @@ and one changes or buildinfo package per set, but multiple binary packages
 =head1 METHODS
 
 =over 4
+
+=item $group->lab
+
+Returns or sets the lab used by this pool.
+
+=item $group->name
+
+Returns a unique identifier for the group based on source and version.
+
+=item $group->binary
+
+Returns a hash reference to the binary processables in this group.
+
+=item $group->buildinfo
+
+Returns the buildinfo processable in this group.
+
+=item $group->changes
+
+Returns the changes processable in this group.
+
+=item $group->source
+
+Returns the source processable in this group.
+
+=item $group->udeb
+
+Returns a hash reference to the udeb processables in this group.
+
+=cut
+
+has lab => (is => 'rw');
+has name => (is => 'rw', default => EMPTY);
+
+has binary => (is => 'rw', default => sub{ {} });
+has buildinfo => (is => 'rw');
+has changes => (is => 'rw');
+has source => (is => 'rw');
+has udeb => (is => 'rw', default => sub{ {} });
 
 =item Lintian::Processable::Group->init_from_file (FILE)
 
