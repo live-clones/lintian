@@ -5,8 +5,8 @@ WORKDIR="$AUTOPKGTEST_TMP/$(basename $0)"
 
 export LINTIAN_TEST_INSTALLED=yes
 
-t/bin/build-test-packages --work-dir="$WORKDIR"
+t/bin/build-test-packages -d --work-dir="$WORKDIR"
 
-t/bin/runtests --unattended --keep-going --work-dir="$WORKDIR" --onlyrun="suite:tags"
+t/bin/runtests -d --unattended --keep-going --work-dir="$WORKDIR" --onlyrun="suite:tags"
 
 rm -fr "${WORKDIR}"

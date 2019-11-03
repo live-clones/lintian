@@ -25,13 +25,16 @@ use warnings;
 use autodie;
 use parent 'Lintian::Collect::Package';
 
+use BerkeleyDB;
 use Carp qw(croak);
+use List::Util qw(any);
+use MLDBM qw(BerkeleyDB::Btree Storable);
 use Path::Tiny;
 
 use Lintian::Deb822Parser qw(parse_dpkg_control);
 use Lintian::Info::Changelog;
 use Lintian::Relation;
-use Lintian::Util qw(internal_error open_gz get_file_checksum strip rstrip);
+use Lintian::Util qw(open_gz get_file_checksum strip rstrip);
 
 use constant EMPTY => q{};
 
@@ -304,27 +307,22 @@ Needs-Info requirements for using I<scripts>: scripts
 
 sub scripts {
     my ($self) = @_;
-    return $self->{scripts} if exists $self->{scripts};
-    my $scrf = $self->lab_data_path('scripts');
-    my %scripts;
-    if (-f $scrf) {
-        open(my $fd, '<', $scrf);
-        while (my $line = <$fd>) {
-            my (%file, $name);
-            chomp($line);
 
-            $line =~ m/^(env )?(\S*) (.*)$/o
-              or internal_error("bad line in scripts file: $line");
-            ($file{calls_env}, $file{interpreter}, $name) = ($1, $2, $3);
+    unless (exists $self->{scripts}) {
 
-            $name =~ s,^\./,,o;
-            $name =~ s,/+$,,o;
-            $file{name} = $name;
-            $scripts{$name} = \%file;
-        }
-        close($fd);
+        my %scripts;
+
+        my $dbpath = $self->lab_data_path('scripts.db');
+
+        tie my %h, 'MLDBM',-Filename => $dbpath
+          or die "Cannot open file $dbpath: $! $BerkeleyDB::Error\n";
+
+        $scripts{$_} = $h{$_} for keys %h;
+
+        untie %h;
+
+        $self->{scripts} = \%scripts;
     }
-    $self->{scripts} = \%scripts;
 
     return $self->{scripts};
 }
@@ -677,11 +675,11 @@ Needs-Info requirements for using I<is_pkg_class>: L<Same as field|Lintian::Coll
         $pkg_class //= 'any-meta';
         if ($pkg_class eq 'debug') {
             return 1 if $self->name =~ m/-dbg(?:sym)?/;
-            return;
+            return 0;
         }
         if ($pkg_class eq 'auto-generated') {
             return 1 if $self->field('auto-built-package');
-            return;
+            return 0;
         }
         return 1 if $desc =~ m/transitional package/;
         $desc = lc($desc);
@@ -692,7 +690,7 @@ Needs-Info requirements for using I<is_pkg_class>: L<Same as field|Lintian::Coll
             return 1 if $section =~ m,(?:^|/)(?:tasks|metapackages)$,;
             return 1 if $self->name =~ m/^task-/;
         }
-        return;
+        return 0;
     }
 }
 

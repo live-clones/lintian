@@ -28,106 +28,58 @@ use strict;
 use warnings;
 use autodie;
 
-use File::Basename;
-use IO::Async::Loop;
-use IO::Async::Process;
 use Path::Tiny;
 
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
 
 use Lintian::Collect;
-use Lintian::Util qw(locate_helper_tool gzip safe_qx);
+use Lintian::Util qw(gzip safe_qx);
 
-use constant EMPTY => q{};
-use constant COLON => q{:};
-use constant NEWLINE => qq{\n};
-
-my $helper = locate_helper_tool('coll/strings-helper');
+use constant DOT => q{.};
+use constant GZ => q{gz};
 
 sub collect {
     my ($pkg, $type, $dir) = @_;
-    my ($info, @manual);
 
     my $stringdir = "$dir/strings";
     path($stringdir)->remove_tree
       if -d $stringdir;
 
-    # If we are asked to only remove the files stop right here
-    if ($type =~ m/^remove-/) {
-        return;
-    }
+    # stop if we are asked to only remove the files
+    return
+      if $type =~ m/^remove-/;
 
-    $info = Lintian::Collect->new($pkg, $type, $dir);
+    # the directory is required, even if it stays empty.
+    path($stringdir)->mkpath
+      unless -e $stringdir;
 
-    # The directory is required, even if it would be empty.
-    mkdir("$dir/strings");
+    my $info = Lintian::Collect->new($pkg, $type, $dir);
 
-    chdir("$dir/unpacked");
+    foreach my $file ($info->sorted_index) {
 
-    my $prehelper;
-    foreach my $bin ($info->sorted_index) {
-        my $filename = $bin->name;
-        my $finfo;
-        next if not $bin->is_file or $filename =~ m,^usr/lib/debug/,;
-        $finfo = $info->file_info($filename);
-        next unless $finfo =~ m/\bELF\b/o;
+        next
+          unless $file->is_file;
 
-        if ($bin =~ m/[:\n\r]/) {
-            # Do these "interesting cases" manual
-            push @manual, $filename;
-            next;
-        }
+        next
+          if $file->name =~ m,^usr/lib/debug/,;
 
-        # append output from strings to prehelper
-        $prehelper
-          .= safe_qx('strings', '--all', '--print-file-name', '--',$filename);
-    }
+        # skip non-binaries
+        next
+          unless $info->file_info($file->name) =~ m/\bELF\b/o;
 
-    if (length $prehelper) {
-        my $loop = IO::Async::Loop->new;
-        my $future = $loop->new_future;
-        my $stderr;
+        # prior implementations sometimes made the list unique
+        my $allstrings = safe_qx('strings', '--all', '--',$file->fs_path);
 
-        my $process = IO::Async::Process->new(
-            command => [$helper, $stringdir],
-            stdin => { from => $prehelper },
-            stderr => { into => \$stderr },
-            on_finish => sub {
-                my ($self, $exitcode) = @_;
-                my $status = ($exitcode >> 8);
+        # calculate destination path
+        my $relative = $file->name . DOT . GZ;
+        my $zippath = path($relative)->absolute($stringdir)->stringify;
 
-                if ($status) {
-                    my $message
-                      = "Non-zero status $status from $helper $stringdir";
-                    $message .= COLON . NEWLINE . $stderr
-                      if length $stderr;
-                    $future->fail($message);
-                    return;
-                }
+        # make sure destination folder exists
+        path($zippath)->parent->mkpath
+          unless path($zippath)->parent->exists;
 
-                $future->done("Done with $helper $stringdir");
-                return;
-            });
-
-        $loop->add($process);
-
-        # will raise an exception in case of failure
-        $future->get;
-    }
-
-    # Fall back to the safe but slower method for files with "special"
-    # names.
-    foreach my $file (@manual) {
-        my $strdir = $dir . '/strings/' . File::Basename::dirname($file);
-
-        # create the dir if needed.
-        path($strdir)->mkpath
-          unless -d $strdir;
-
-        my $originpath = "$dir/unpacked/$file";
-        my $uncompressed = safe_qx('strings', '-a', '--', $originpath);
-
-        gzip($uncompressed, "$dir/strings/$file.gz");
+        # write file
+        gzip($allstrings, $zippath);
     }
 
     return;

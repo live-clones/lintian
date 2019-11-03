@@ -69,13 +69,53 @@ sub breakdown {
     return;
 }
 
+sub read_md5sums_file {
+    my ($self, $file) = @_;
+
+    my %checksums;
+
+    # read in md5sums control file
+    my $fd = $file->open;
+
+    while (my $line = <$fd>) {
+
+        chop $line;
+
+        next
+          if $line =~ m/^\s*$/;
+
+        if ($line=~ m{^(\\)?([a-f0-9]+)\s*(?:\./)?(\S.*)$}) {
+
+            my $escaped = $1;
+            my $checksum = $2;
+            my $path = $3;
+
+            if (length($checksum) != 32) {
+                $self->tag('malformed-md5sums-control-file', "line $.");
+
+                next;
+            }
+
+            $path = dequote_name($path)
+              if $escaped;
+
+            $checksums{$path} = $checksum;
+
+            next;
+        }
+
+        $self->tag('malformed-md5sums-control-file', "line $.");
+    }
+
+    close($fd);
+
+    return \%checksums;
+}
+
 sub binary {
     my ($self) = @_;
 
-    my $info = $self->info;
-
-    my $control = $info->control_index('md5sums');
-    my (%control_entry, %info_entry);
+    my $control = $self->info->control_index('md5sums');
 
     # Is there an md5sums control file?
     return
@@ -83,54 +123,41 @@ sub binary {
 
     # The md5sums file should not be a symlink.  If it is, the best
     # we can do is to leave it alone.
-    return if $control->is_symlink or not $control->is_open_ok;
+    return
+      if $control->is_symlink;
+
+    return
+      unless $control->is_open_ok;
 
     # Is it empty? Then skip it. Tag will be issued by control-files
-    return if $control->size == 0;
+    return
+      if $control->size == 0;
 
-    # read in md5sums control file
-    my $fd = $control->open;
-  LINE:
-    while (my $line = <$fd>) {
-        chop($line);
-        next LINE if $line =~ m/^\s*$/;
-        if ($line
-            =~ m{^(?'escaped'\\)?(?'md5sum'[a-f0-9]+)\s*(?:\./)?(?'name'\S.*)$}
-        ) {
-            my $md5sum = $+{'md5sum'};
-            if(length($md5sum) != 32) {
-                $self->tag('malformed-md5sums-control-file', "line $.");
-                next LINE;
-            }
-            my $name = $+{'name'};
-            my $escaped = $+{'escaped'};
-            if ($escaped) {
-                $name = dequote_name($name);
-            }
-            $control_entry{$name} = $md5sum;
-        } else {
-            $self->tag('malformed-md5sums-control-file', "line $.");
-            next LINE;
-        }
-    }
-    close($fd);
+    my %md5sums = %{$self->read_md5sums_file($control)};
 
-    for my $file (keys %control_entry) {
+    # iterate over files found in control file
+    for my $file (keys %md5sums) {
 
-        my $md5sum = $info->md5sums->{$file};
-        if (not defined $md5sum) {
+        my $calculated = $self->info->md5sums->{$file};
+        unless (defined $calculated) {
+
             $self->tag('md5sums-lists-nonexistent-file', $file);
-        } elsif ($md5sum ne $control_entry{$file}) {
-            $self->tag('md5sum-mismatch', $file);
+            next;
         }
 
-        delete $info_entry{$file};
+        $self->tag('md5sum-mismatch', $file)
+          unless $calculated eq $md5sums{$file};
     }
-    for my $file (keys %{ $info->md5sums }) {
-        next if $control_entry{$file};
+
+    # iterate over files present in package
+    for my $file (keys %{ $self->info->md5sums }) {
+
+        next
+          if $md5sums{$file};
+
         $self->tag('file-missing-in-md5sums', $file)
-          unless ($info->is_conffile($file)
-            || $file =~ m%^var/lib/[ai]spell/.%o);
+          unless $self->info->is_conffile($file)
+          || $file =~ m%^var/lib/[ai]spell/.%;
     }
 
     return;

@@ -1,3 +1,5 @@
+ROOT_DIR:=$(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
+
 name = [% $source %]
 version = [% $upstream_version %]
 type = [% $type %]
@@ -5,14 +7,22 @@ type = [% $type %]
 packagedir = $(name)-$(version)
 underscored = $(name)_$(version)
 
-origdata = orig
+origdata = $(ROOT_DIR)/orig
 origstem = $(underscored).orig
 
-formatfile = debian/source/format
+debiandata = $(ROOT_DIR)/debian
+
+formatfile = $(debiandata)/source/format
 
 watchfile = $(packagedir)/debian/watch
 
-product = $(underscored).dsc
+post_clean = $(ROOT_DIR)/post-clean
+pre_orig = $(ROOT_DIR)/pre-orig
+tar_orig = $(ROOT_DIR)/tar-orig
+pre_build = $(ROOT_DIR)/pre-build
+post_build = $(ROOT_DIR)/post-build
+
+product = [% $build_product %]
 
 ifneq (,$(wildcard dpkg-overrides))
 dpkgoverrides = $(shell cat dpkg-overrides)
@@ -24,22 +34,22 @@ else
 dpkgoptions = -sp
 endif
 
-.DEFAULT_GOAL := product
+.DEFAULT_GOAL := $(product)
 
-product: clean
+$(product):
 	-mkdir -p $(packagedir)
-	if [ -x ./post-clean ] ; then \
-		./post-clean $(packagedir) ; \
+	if [ -x $(post_clean) ] ; then \
+		$(post_clean) $(packagedir) ; \
 	fi
 
 	if [ "[% $type %]" != "native" ] ; then \
 		mkdir $(origdata) || true ; \
 		cp -rp $(origdata)/. $(packagedir) ; \
-		if [ -x ./pre-orig ] ; then \
-			./pre-orig $(shell realpath $(packagedir)) ; \
+		if [ -x $(pre_orig) ] ; then \
+			$(pre_orig) $(shell realpath $(packagedir)) ; \
 		fi ; \
-		if [ -x ./tar-orig ] ; then \
-			./tar-orig $(origstem) $(packagedir) ; \
+		if [ -x $(tar_orig) ] ; then \
+			$(tar_orig) $(origstem) $(packagedir) ; \
 		fi ; \
 		if [ -f $(formatfile) ] && grep --quiet "^3\.. (quilt)$$" $(formatfile) ; then \
 			rm -rf $(packagedir)/debian ; \
@@ -47,23 +57,25 @@ product: clean
 	fi
 
 	-mkdir -p $(packagedir)/debian
+	if [ -d $(debiandata) ] ; then \
+		cp -rp $(debiandata)/. $(packagedir)/debian ; \
+	fi
 	if [ "[% $type %]" != "native" ] ; then \
 		if [ ! -f $(watchfile) ] ; then \
 			echo '# Empty watch file' > $(watchfile) ; \
 		fi ; \
 	fi
 
-	cp -rp debian/. $(packagedir)/debian
-	if [ -x ./pre-build ] ; then \
-		./pre-build $(shell realpath $(packagedir)) ; \
+	if [ -x $(pre_build) ] ; then \
+		$(pre_build) $(shell realpath $(packagedir)) ; \
 	fi
 	if [ -f $(formatfile) ] && grep --quiet "^3\.. (quilt)$$" $(formatfile) ; then \
 		dpkg-source $(dpkgoverrides) -b $(packagedir) ; \
 	else \
 		dpkg-source $(dpkgoverrides) $(dpkgoptions) -b $(packagedir) ; \
 	fi
-	if [ -x ./post-build ] ; then \
-		./post-build $(product) ; \
+	if [ -x $(post_build) ] ; then \
+		$(post_build) $(product) ; \
 	fi
 
 

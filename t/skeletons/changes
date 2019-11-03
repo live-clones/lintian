@@ -5,3 +5,4 @@ Template-Sets:
  . (lintian-invocation)
 Fill-Targets:
  test.changes,
+ . (make-builder),
