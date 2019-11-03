@@ -216,17 +216,10 @@ or manually.
 =cut
 
 sub prepare_tasks {
-    my ($self, $errorhandler, @labentries) = @_;
+    my ($self, @labentries) = @_;
 
     my %worklists;
     foreach my $labentry (@labentries) {
-        my $new;
-
-        eval {$new = $labentry->create;};
-        if (my $e = $@) {
-            $errorhandler->($labentry, $e);
-            next;
-        }
 
         my $type = $labentry->pkg_type;
         my $cmap;
@@ -258,7 +251,7 @@ sub prepare_tasks {
         my %wanted;
         my @requested;
         my $profile = $self->profile;
-        if (!$new || $profile) {
+        if ($profile) {
             if ($profile) {
 
                 foreach my $name ($profile->scripts) {
