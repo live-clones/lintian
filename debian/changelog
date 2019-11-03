@@ -1,3 +1,41 @@
+lintian (2.32.0) unstable; urgency=medium
+
+  [ Chris Lamb ]
+  * Skip entirely whitespace lines when checking the
+    override_dh_auto_test-does-not-check-DEB_BUILD_OPTIONS tag.
+    (Closes: #943684)
+  * Don't build Git tags on salsa.
+
+  [ Felix Lechner ]
+  * Clarify boolean return value in Collect::Binary->is_pkg_class.
+    (Closes: #943724)
+  * In Lintian::Collect::Binary, read from MLDBM in new facilites for
+    details on scripts.
+  * In Lintian::Collect::Package, read from BerkeleyDB in new facilites for
+    details on binary package "control" scripts.
+
+  [ David Prévot ]
+  * Update a file reference in the long description of the
+    unnecessary-source-date-epoch-assignment tag.
+
+  [ Paul Wise ]
+  * Add several spelling corrections.
+
+ -- Chris Lamb <lamby@debian.org>  Thu, 31 Oct 2019 17:09:52 +0000
+
+lintian (2.31.0) unstable; urgency=medium
+
+  [ Chris Lamb ]
+  * Avoid false-positives for missing ${sphinxdoc:Depends} when "dh" calls
+    include dynamic variables. (Closes: #943711)
+  * Include more verbose debugging info (eg. concurrency) when running
+    Lintian's autopkgtests.
+
+  [ Felix Lechner ]
+  * Rework the warning for overly-long binary package fields.
+
+ -- Chris Lamb <lamby@debian.org>  Tue, 29 Oct 2019 12:51:32 +0000
+
 lintian (2.30.0~bpo9+1) stretch-backports; urgency=medium
 
   * Rebuild for stretch-backports.

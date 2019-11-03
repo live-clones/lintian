@@ -28,6 +28,7 @@ use strict;
 use warnings;
 use autodie;
 
+use BerkeleyDB;
 use IO::Async::Loop;
 use IO::Async::Process;
 use Path::Tiny;
@@ -35,22 +36,24 @@ use Path::Tiny;
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
 
 use Lintian::Collect;
+use Lintian::Util qw(drop_relative_prefix);
 
 use constant EMPTY => q{};
 use constant SPACE => q{ };
 use constant COLON => q{:};
 use constant NEWLINE => qq{\n};
+use constant NULL => qq{\0};
 
 sub collect {
     my ($pkg, $type, $dir) = @_;
-    my $info = Lintian::Collect->new($pkg, $type, $dir);
 
     chdir("$dir/unpacked");
 
     my $loop = IO::Async::Loop->new;
     my $future = $loop->new_future;
 
-    my @command= ('xargs', '--null', '--no-run-if-empty', 'md5sum', '--');
+    my @command
+      = ('xargs', '--null', '--no-run-if-empty', 'md5sum', '--zero', '--');
     my $errors;
 
     my $calculate = IO::Async::Process->new(
@@ -74,20 +77,40 @@ sub collect {
             return;
         });
 
-    my $resultspath = "$dir/md5sums";
-    open(my $fh, '>', $resultspath)
-      or die "Could not open file '$resultspath': $!";
+    my $dbpath = "$dir/md5sums.db";
+    unlink $dbpath
+      if -e $dbpath;
+
+    my %h;
+    tie %h, 'BerkeleyDB::Btree',
+      -Filename => $dbpath,
+      -Flags    => DB_CREATE
+      or die "Cannot open file $dbpath: $! $BerkeleyDB::Error\n";
 
     $calculate->stdout->configure(
         on_read => sub {
             my ($stream, $buffref, $eof) = @_;
 
-            if (length $$buffref) {
-                print {$fh} $$buffref;
-                $$buffref = EMPTY;
+            local $\ = NULL;
+
+            while($$buffref =~ s/^(\S*)\s+([^\0]*)\x00//) {
+
+                my $sum = $1;
+                my $path = $2;
+
+                unless (length $sum && length $path) {
+                    $future->fail(
+                        "syntax error in md5sum output: '$sum' '$path'");
+                    next;
+                }
+
+                # remove relative prefix, if present
+                $path = drop_relative_prefix($path);
+
+                $h{$path} = $sum;
             }
 
-            close($fh)
+            untie %h
               if $eof;
 
             return 0;
@@ -96,10 +119,13 @@ sub collect {
 
     $loop->add($calculate);
 
+    my $info = Lintian::Collect->new($pkg, $type, $dir);
     foreach my $path ($info->sorted_index) {
-        next unless $path->is_file;
 
-        $calculate->stdin->write("$path\0");
+        next
+          unless $path->is_file;
+
+        $calculate->stdin->write($path . NULL);
     }
 
     $calculate->stdin->close_when_empty;

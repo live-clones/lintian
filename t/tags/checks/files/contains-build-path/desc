@@ -2,4 +2,4 @@ Testname: contains-build-path
 Skeleton: upload-native
 Description: Test for upload containing build path
 Check: files
-Build-Command: make --trace DEFAULT_DH_COMPAT=[% $dh_compat_level %] DEB_BUILD_OPTIONS='buildinfo=+path'
+Build-Command: make --trace -f [% $source_path %]/Makefile DEFAULT_DH_COMPAT=[% $dh_compat_level %] DEB_BUILD_OPTIONS='buildinfo=+path'

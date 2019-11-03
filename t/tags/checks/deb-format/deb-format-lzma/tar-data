@@ -4,4 +4,4 @@ set -e
 
 rootdir="$1"
 
-tar --create --file data.tar.lzma --use-compress-program=lzma --directory "$rootdir" .
+tar --create --file members/data.tar.lzma --use-compress-program=lzma --directory "$rootdir" .

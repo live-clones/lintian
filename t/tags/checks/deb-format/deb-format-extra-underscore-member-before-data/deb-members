@@ -1,4 +1,4 @@
-debian-binary
-control.tar.gz
-_extra-stuff
-data.tar.gz
+members/debian-binary
+members/control.tar.gz
+members/_extra-stuff
+members/data.tar.gz

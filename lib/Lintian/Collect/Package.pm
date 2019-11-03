@@ -25,6 +25,7 @@ use autodie;
 
 use parent 'Lintian::Collect';
 
+use BerkeleyDB;
 use Carp qw(croak);
 use Scalar::Util qw(blessed);
 
@@ -193,44 +194,28 @@ Needs-Info requirements for using I<file_info>: file-info
 =cut
 
 sub file_info {
-    my ($self, $file) = @_;
-    if (my $cache = $self->{file_info}) {
-        return ${$cache->{$file}}
-          if exists $cache->{$file};
-        return;
+    my ($self, $path) = @_;
+
+    unless ($self->{file_info}) {
+
+        my $dbpath = $self->lab_data_path('file-info.db');
+
+        my %file_info;
+
+        my %h;
+        tie %h, 'BerkeleyDB::Btree',-Filename => $dbpath
+          or die "Cannot open file $dbpath: $! $BerkeleyDB::Error\n";
+
+        $file_info{$_} = $h{$_} for keys %h;
+
+        untie %h;
+
+        $self->{file_info} = \%file_info;
     }
-    my %interned;
-    my %file_info;
-    my $path = $self->lab_data_path('file-info.gz');
-    my $idx = open_gz($path);
-    while (my $line = <$idx>) {
-        chomp($line);
 
-        $line =~ m/^(.+?)\x00\s+(.*)$/o
-          or croak(
-            join(q{ },
-                'an error in the file pkg is preventing',
-                "lintian from checking this package: $_"));
-        my ($file, $info) = ($1,$2);
-        my $ref = $interned{$info};
+    return $self->{file_info}{$path}
+      if exists $self->{file_info}{$path};
 
-        $file =~ s,^\./,,o;
-
-        if (!defined($ref)) {
-            # Store a ref to the info to avoid creating a new copy
-            # each time.  We just have to deref the reference on
-            # return.  TODO: Test if this will be obsolete by
-            # COW variables in Perl 5.20.
-            $interned{$info} = $ref = \$info;
-        }
-
-        $file_info{$file} = $ref;
-    }
-    close($idx);
-    $self->{file_info} = \%file_info;
-
-    return ${$self->{file_info}{$file}}
-      if exists $self->{file_info}{$file};
     return;
 }
 
@@ -246,27 +231,55 @@ Needs-Info requirements for using I<md5sums>: md5sums
 
 sub md5sums {
     my ($self) = @_;
-    return $self->{md5sums} if exists $self->{md5sums};
-    my $md5f = $self->lab_data_path('md5sums');
-    my $result = {};
 
-    # read in md5sums info file
-    open(my $fd, '<', $md5f);
-    while (my $line = <$fd>) {
-        chop($line);
-        next if $line =~ m/^\s*$/o;
-        $line =~ m/^(\\)?(\S+)\s*(\S.*)$/o
-          or internal_error("syntax error in $md5f info file: $line");
-        my ($zzescaped, $zzsum, $zzfile) = ($1, $2, $3);
-        if($zzescaped) {
-            $zzfile = dequote_name($zzfile);
-        }
-        $zzfile =~ s,^(?:\./)?,,o;
-        $result->{$zzfile} = $zzsum;
+    unless (exists $self->{md5sums}) {
+
+        my $dbpath = $self->lab_data_path('md5sums.db');
+
+        my %md5sums;
+
+        my %h;
+        tie %h, 'BerkeleyDB::Btree',-Filename => $dbpath
+          or die "Cannot open file $dbpath: $! $BerkeleyDB::Error\n";
+
+        $md5sums{$_} = $h{$_} for keys %h;
+
+        untie %h;
+
+        $self->{md5sums} = \%md5sums;
     }
-    close($fd);
-    $self->{md5sums} = $result;
-    return $result;
+
+    return $self->{md5sums};
+}
+
+=item control_scripts
+
+Returns a hashref mapping a FILE to data about how it is run.
+
+Needs-Info requirements for using I<control_scripts>: scripts
+
+=cut
+
+sub control_scripts {
+    my ($self) = @_;
+
+    unless (exists $self->{control_scripts}) {
+
+        my $dbpath = $self->lab_data_path('control-scripts.db');
+
+        my %control;
+
+        tie my %h, 'BerkeleyDB::Btree',-Filename => $dbpath
+          or die "Cannot open file $dbpath: $! $BerkeleyDB::Error\n";
+
+        $control{$_} = $h{$_} for keys %h;
+
+        untie %h;
+
+        $self->{control_scripts} = \%control;
+    }
+
+    return $self->{control_scripts};
 }
 
 =item index (FILE)

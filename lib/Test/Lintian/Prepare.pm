@@ -255,6 +255,9 @@ sub prepare {
     # record path to specification
     $testcase->{spec_path} = $specpath;
 
+    # record path to specification
+    $testcase->{source_path} = $runpath;
+
     # add other helpful info to testcase
     $testcase->{source} ||= $testcase->{testname};
 

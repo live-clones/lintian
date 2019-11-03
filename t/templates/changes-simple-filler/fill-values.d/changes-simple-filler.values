@@ -1,1 +1,2 @@
 Build-Product: test.changes
+Build-Command: make -f [% $source_path %]/Makefile

@@ -42,8 +42,6 @@ use constant {
     OPERM_MASK     => 0x00_00_ff_ff,
 };
 
-use constant SLASH => q{/};
-
 use overload (
     '""' => \&_as_string,
     'qr' => \&_as_regex_ref,
@@ -61,7 +59,10 @@ use Carp qw(croak confess);
 use Scalar::Util qw(weaken);
 use Path::Tiny;
 
-use Lintian::Util qw(normalize_pkg_path);
+use Lintian::Util qw(normalize_pkg_path strip);
+
+use constant EMPTY => q{};
+use constant SLASH => q{/};
 
 =head1 NAME
 
@@ -120,6 +121,52 @@ sub new {
 Returns the name of the file (relative to the package root).
 
 NB: It will never have any leading "./" (or "/") in it.
+
+=cut
+
+=item magic(COUNT)
+
+Returns the specified COUNT of magic bytes for the file.
+
+=cut
+
+sub magic {
+    my ($self, $count) = @_;
+
+    return EMPTY
+      unless $self->size >= $count;
+
+    my $magic;
+
+    my $fd = $self->open;
+    die "Could not read $count bytes from ", $self->name
+      unless read($fd, $magic, $count) == $count;
+    close $fd;
+
+    return $magic;
+}
+
+=item get_interpreter
+
+Returns the interpreter for the file if it is a script.
+
+=cut
+
+sub get_interpreter {
+    my ($self) = @_;
+
+    my $magic;
+    my $interpreter;
+
+    my $fd = $self->open;
+    if (read($fd, $magic, 2) && $magic eq '#!' && !eof($fd)) {
+        $interpreter = <$fd>;
+        strip($interpreter);
+    }
+    close $fd;
+
+    return $interpreter;
+}
 
 =item identity
 
