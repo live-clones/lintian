@@ -32,7 +32,7 @@ use lib "$ENV{LINTIAN_ROOT}/lib";
 
 use Path::Tiny;
 
-use Lintian::Collect;
+use Lintian::Collect::Dispatcher qw(create_info);
 use Lintian::Util qw(safe_qx);
 
 use constant EMPTY => q{};
@@ -53,7 +53,7 @@ sub collect {
     return
       if $type =~ m/^remove-/;
 
-    $info  = Lintian::Collect->new($pkg, $type, $dir);
+    $info = create_info($pkg, $type, $dir);
 
     chdir("$dir/unpacked");
 

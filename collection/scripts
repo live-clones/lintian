@@ -34,7 +34,7 @@ use Path::Tiny;
 
 use lib "$ENV{'LINTIAN_ROOT'}/lib/";
 
-use Lintian::Collect;
+use Lintian::Collect::Dispatcher qw(create_info);
 
 use constant EMPTY => q{};
 use constant SPACE => q{ };
@@ -53,7 +53,7 @@ sub collect {
       -Flags    => DB_CREATE
       or die "Cannot open file $script_dbpath: $! $BerkeleyDB::Error\n";
 
-    my $info = Lintian::Collect->new($pkg, $type, $dir);
+    my $info = create_info($pkg, $type, $dir);
     foreach my $path ($info->sorted_index) {
         next unless $path->is_regular_file and $path->is_open_ok;
 

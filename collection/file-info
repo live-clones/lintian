@@ -37,7 +37,7 @@ use Try::Tiny;
 
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
 
-use Lintian::Collect;
+use Lintian::Collect::Dispatcher qw(create_info);
 use Lintian::Util qw(drop_relative_prefix);
 
 use constant EMPTY => q{};
@@ -161,7 +161,7 @@ sub collect {
 
     $loop->add($generate);
 
-    my $info = Lintian::Collect->new($pkg, $type, $dir);
+    my $info = create_info($pkg, $type, $dir);
     foreach my $path ($info->sorted_index) {
 
         next
