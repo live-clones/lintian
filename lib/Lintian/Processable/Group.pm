@@ -25,11 +25,17 @@ use warnings;
 use Moo;
 
 use Carp;
+use File::Spec;
+use Path::Tiny;
 use Time::HiRes qw(gettimeofday tv_interval);
 
 use Lintian::Collect::Group;
 use Lintian::Output qw(:messages);
-use Lintian::Processable;
+use Lintian::Processable::Binary;
+use Lintian::Processable::Buildinfo;
+use Lintian::Processable::Changes;
+use Lintian::Processable::Source;
+use Lintian::Processable::Udeb;
 use Lintian::Util qw(internal_error get_dsc_info strip);
 
 use constant EMPTY => q{};
@@ -114,6 +120,40 @@ Add all processables from .changes or .buildinfo file FILE.
 
 =cut
 
+sub _get_processable {
+    my ($self, $file) = @_;
+
+    my $absolute = path($file)->realpath->stringify;
+    croak "Cannot resolve $file: $!"
+      unless $absolute;
+
+    my $processable;
+
+    if ($file =~ m/\.dsc$/o) {
+        $processable = Lintian::Processable::Source->new;
+
+    } elsif ($file =~ m/\.buildinfo$/o) {
+        $processable = Lintian::Processable::Buildinfo->new;
+
+    } elsif ($file =~ m/\.deb$/o) {
+        $processable = Lintian::Processable::Binary->new;
+
+    } elsif ($file =~ m/\.udeb$/o) {
+        $processable = Lintian::Processable::Udeb->new;
+
+    } elsif ($file =~ m/\.changes$/o) {
+        $processable = Lintian::Processable::Changes->new;
+
+    } else {
+        croak "$file is not a known type of package";
+    }
+
+    $processable->lab($self->lab);
+    $processable->init($absolute);
+
+    return $processable;
+}
+
 #  populates $self from a buildinfo or changes file.
 sub init_from_file {
     my ($self, $path) = @_;
@@ -121,9 +161,7 @@ sub init_from_file {
     return
       unless defined $path;
 
-    my $processable = Lintian::Processable->new;
-    $processable->lab($self->lab);
-    $processable->init($path);
+    my $processable = $self->_get_processable($path);
     $self->add_processable($processable);
 
     my ($type) = $path =~ m/\.(buildinfo|changes)$/;
@@ -179,9 +217,7 @@ sub init_from_file {
             next;
         }
 
-        my $payload = Lintian::Processable->new;
-        $payload->lab($self->lab);
-        $payload->init("$dir/$file");
+        my $payload = $self->_get_processable("$dir/$file");
         $self->add_processable($payload);
     }
 
@@ -199,30 +235,33 @@ sub unpack {
 
     my $all_ok = 1;
 
-    my $errhandler = sub {
-        my ($lpkg) = @_;
-
-        my $err = $!;
-        my $pkg_type = $lpkg->pkg_type;
-        my $pkg_name = $lpkg->pkg_name;
-        warning(
-            "could not create the package entry in the lab: $err",
-            "skipping $action of $pkg_type package $pkg_name"
-        );
-
-        $self->remove_processable($lpkg);
-
-        $$exit_code_ref = 2;
-        $all_ok = 0;
-    };
-
     # Kill pending jobs, if any
     $unpacker->kill_jobs;
     $unpacker->reset_worklist;
 
     # Stop here if there is nothing list for us to do
-    return
-      unless $unpacker->prepare_tasks($errhandler, $self->get_processables);
+    my @processables = $self->get_processables;
+    for my $processable (@processables) {
+
+        $processable->create;
+
+        # for sources pull in all related files so unpacked does not fail
+        if ($processable->pkg_type eq 'source') {
+            my (undef, $dir, undef)
+              = File::Spec->splitpath($processable->pkg_path);
+            for my $fs (split(m/\n/o, $processable->info->field('files'))) {
+                strip($fs);
+                next if $fs eq '';
+                my @t = split(/\s+/o,$fs);
+                next if ($t[2] =~ m,/,o);
+                symlink("$dir/$t[2]", $processable->base_dir . "/$t[2]")
+                  or croak("cannot symlink file $t[2]: $!");
+            }
+        }
+    }
+
+    return 0
+      unless $unpacker->prepare_tasks(@processables);
 
     v_msg('Unpacking packages in group ' . $self->name);
 
