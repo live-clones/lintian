@@ -22,9 +22,10 @@ use strict;
 use warnings;
 use v5.16;
 
-use Moo::Role;
-
 use constant EMPTY => q{};
+
+use Moo::Role;
+use namespace::clean;
 
 with('Lintian::Tag::Issuer');
 

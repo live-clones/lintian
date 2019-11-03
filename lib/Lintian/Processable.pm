@@ -34,6 +34,7 @@ use constant SLASH => q{/};
 use constant EVIL_CHARACTERS => qr,[/&|;\$"'<>],o;
 
 use Moo::Role;
+use namespace::clean;
 
 =head1 NAME
 

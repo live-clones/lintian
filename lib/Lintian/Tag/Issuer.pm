@@ -25,6 +25,7 @@ use v5.16;
 use Lintian::Tags;
 
 use Moo::Role;
+use namespace::clean;
 
 =head1 NAME
 
