@@ -16,4 +16,11 @@ Info: The symbols file for this package does not contain a
  Note that the format of <tt>deb-symbols(5)</tt> files requires that the
  <tt>* Build-Depends-Package:</tt> line should start in column one of
  the file and not be indented to align with the symbols themselves.
-Ref: deb-symbols(5), dpkg-shlibdeps(1)
+ Please do not use the placeholder <tt>&#35;PACKAGE&#35;</tt>. The
+ development package for your shared library must be stated explicitly.
+Ref:
+ policy 8.6.3.2,
+ deb-symbols(5),
+ dpkg-shlibdeps(1),
+ https://www.debian.org/doc/manuals/maint-guide/advanced.en.html#librarysymbols,
+ #944047
