@@ -1,5 +1,5 @@
 # -*- perl -*-
-# Lintian::Collect::Package -- interface to data collection for packages
+# Lintian::Info::Package -- interface to data collection for packages
 
 # Copyright (C) 2011 Niels Thykier
 #
@@ -16,14 +16,11 @@
 # You should have received a copy of the GNU General Public License along with
 # this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# This handles common things for things available in source and binary packages
-package Lintian::Collect::Package;
+package Lintian::Info::Package;
 
 use strict;
 use warnings;
 use autodie;
-
-use parent 'Lintian::Collect';
 
 use BerkeleyDB;
 use Carp qw(croak);
@@ -33,6 +30,15 @@ use Lintian::Path;
 use Lintian::Path::FSInfo;
 use Lintian::Util
   qw(internal_error open_gz perm2oct normalize_pkg_path dequote_name);
+
+use Moo::Role;
+use namespace::clean;
+
+with 'Lintian::Collect';
+with 'Lintian::Info::Checksums::Md5';
+with 'Lintian::Info::FileInfo';
+with 'Lintian::Info::Java';
+with 'Lintian::Info::Scripts::Control';
 
 # A cache for (probably) the 5 most common permission strings seen in
 # the wild.
@@ -67,7 +73,7 @@ my %INDEX_FAUX_DIR_TEMPLATE = (
 
 =head1 NAME
 
-Lintian::Collect::Package - Lintian base interface to binary and source package data collection
+Lintian::Info::Package - Lintian base interface to binary and source package data collection
 
 =head1 SYNOPSIS
 
@@ -75,7 +81,8 @@ Lintian::Collect::Package - Lintian base interface to binary and source package 
     use Lintian::Collect;
     
     my ($name, $type, $dir) = ('foobar', 'source', '/path/to/lab-entry');
-    my $info = Lintian::Collect->new ($name, $type, $dir);
+    my $info = Lintian::Collect::Binary->new;
+    $info->name($name);
     my $filename = "etc/conf.d/$name.conf";
     my $file = $info->index_resolved_path($filename);
     if ($file and $file->is_open_ok) {
@@ -90,7 +97,7 @@ Lintian::Collect::Package - Lintian base interface to binary and source package 
 
 =head1 DESCRIPTION
 
-Lintian::Collect::Package provides part of an interface to package
+Lintian::Info::Package provides part of an interface to package
 data for source and binary packages.  It implements data collection
 methods specific to all packages that can be unpacked (or can contain
 files)
@@ -180,106 +187,6 @@ sub unpacked {
     );
 
     return $self->_fetch_extracted_dir('unpacked', 'unpacked', @_);
-}
-
-=item file_info (FILE)
-
-Returns the output of file(1) for FILE (if it exists) or C<undef>.
-
-NB: The value may have been calibrated by Lintian.  A notorious example
-is gzip files, where file(1) can be unreliable at times (see #620289)
-
-Needs-Info requirements for using I<file_info>: file-info
-
-=cut
-
-sub file_info {
-    my ($self, $path) = @_;
-
-    unless ($self->{file_info}) {
-
-        my $dbpath = $self->lab_data_path('file-info.db');
-
-        my %file_info;
-
-        my %h;
-        tie %h, 'BerkeleyDB::Btree',-Filename => $dbpath
-          or die "Cannot open file $dbpath: $! $BerkeleyDB::Error\n";
-
-        $file_info{$_} = $h{$_} for keys %h;
-
-        untie %h;
-
-        $self->{file_info} = \%file_info;
-    }
-
-    return $self->{file_info}{$path}
-      if exists $self->{file_info}{$path};
-
-    return;
-}
-
-=item md5sums
-
-Returns a hashref mapping a FILE to its md5sum.  The md5sum is
-computed by Lintian during extraction and is not guaranteed to match
-the md5sum in the "md5sums" control file.
-
-Needs-Info requirements for using I<md5sums>: md5sums
-
-=cut
-
-sub md5sums {
-    my ($self) = @_;
-
-    unless (exists $self->{md5sums}) {
-
-        my $dbpath = $self->lab_data_path('md5sums.db');
-
-        my %md5sums;
-
-        my %h;
-        tie %h, 'BerkeleyDB::Btree',-Filename => $dbpath
-          or die "Cannot open file $dbpath: $! $BerkeleyDB::Error\n";
-
-        $md5sums{$_} = $h{$_} for keys %h;
-
-        untie %h;
-
-        $self->{md5sums} = \%md5sums;
-    }
-
-    return $self->{md5sums};
-}
-
-=item control_scripts
-
-Returns a hashref mapping a FILE to data about how it is run.
-
-Needs-Info requirements for using I<control_scripts>: scripts
-
-=cut
-
-sub control_scripts {
-    my ($self) = @_;
-
-    unless (exists $self->{control_scripts}) {
-
-        my $dbpath = $self->lab_data_path('control-scripts.db');
-
-        my %control;
-
-        tie my %h, 'BerkeleyDB::Btree',-Filename => $dbpath
-          or die "Cannot open file $dbpath: $! $BerkeleyDB::Error\n";
-
-        $control{$_} = $h{$_} for keys %h;
-
-        untie %h;
-
-        $self->{control_scripts} = \%control;
-    }
-
-    return $self->{control_scripts};
 }
 
 =item index (FILE)
@@ -651,6 +558,40 @@ sub _fetch_index_data {
     close($num_idx) if $num_idx;
     return $self->{$field}{$file} if exists $self->{$field}{$file};
     return;
+}
+
+# Internal sub for providing a shared storage between multiple
+# L::Collect objects from same group.
+#
+
+# Internal sub for dumping the memory usage of this instance
+#
+# Used by the frontend (under debug level >= 4)
+#
+# sub _memory_usage Needs-Info none
+sub _memory_usage {
+    my ($self, $calc_usage) = @_;
+
+    my %usage;
+
+    for my $field (keys %{$self}) {
+
+        next
+          if ($field =~ m{ \A sorted_ }xsm);
+
+        if (exists($self->{"sorted_$field"})) {
+            # merge "index" and "sorted_index".  At the price of an extra
+            # list, we avoid overcounting all the L::Path objects so the
+            # produced result is a lot more accurate.
+            $usage{$field}
+              = $calc_usage->([$self->{$field},$self->{"sorted_$field"}]);
+
+        } else {
+            $usage{$field} = $calc_usage->($self->{$field});
+        }
+    }
+
+    return \%usage;
 }
 
 1;
