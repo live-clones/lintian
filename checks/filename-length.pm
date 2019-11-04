@@ -23,11 +23,12 @@ use strict;
 use warnings;
 use autodie;
 
-use Moo;
-
 use Lintian::Util qw(strip);
 
-with('Lintian::Check');
+use Moo;
+use namespace::clean;
+
+with 'Lintian::Check';
 
 use constant FILENAME_LENGTH_LIMIT => 80;
 

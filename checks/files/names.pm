@@ -24,11 +24,12 @@ use strict;
 use warnings;
 use autodie;
 
-use Moo;
-
 use Lintian::Util qw(is_string_utf8_encoded);
 
-with('Lintian::Check');
+use Moo;
+use namespace::clean;
+
+with 'Lintian::Check';
 
 my $FNAMES = Lintian::Data->new('files/fnames', qr/\s*\~\~\s*/);
 

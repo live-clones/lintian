@@ -25,11 +25,13 @@ use autodie;
 
 use File::Basename qw(dirname);
 use List::MoreUtils qw(any none);
-use Moo;
 
 use Lintian::Data;
 
-with('Lintian::Check');
+use Moo;
+use namespace::clean;
+
+with 'Lintian::Check';
 
 # A list of valid LSB keywords.  The value is 0 if optional and 1 if required.
 my %lsb_keywords = (

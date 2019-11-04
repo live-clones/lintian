@@ -28,11 +28,12 @@ use strict;
 use warnings;
 use autodie;
 
-use Moo;
-
 use Lintian::Maintainer qw(check_maintainer);
 
-with('Lintian::Check');
+use Moo;
+use namespace::clean;
+
+with 'Lintian::Check';
 
 sub source {
     my ($self) = @_;

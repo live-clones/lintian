@@ -24,14 +24,15 @@ package Lintian::Lab;
 use strict;
 use warnings;
 
-use Moo;
-
 use Carp qw(croak);
 use Cwd();
 use File::Temp qw(tempdir);
 use Path::Tiny;
 
 use constant EMPTY => q{};
+
+use Moo;
+use namespace::clean;
 
 =encoding utf8
 

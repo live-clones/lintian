@@ -27,14 +27,11 @@ use autodie;
 
 use File::Spec;
 use List::MoreUtils qw(any);
-use Moo;
 
 use Lintian::Data;
 use Lintian::Relation qw(:constants);
 use Lintian::Spelling qw(check_spelling spelling_tag_emitter);
 use Lintian::Util qw(internal_error strip);
-
-with('Lintian::Check');
 
 use constant NUMPY_REGEX => qr/
     \Qmodule compiled against ABI version \E (?:0x)?%x
@@ -50,6 +47,11 @@ use constant GUILE_PATH_REGEX => qr,^usr/lib/[^/]+/[^/]+/guile/[^/]+/.+\.go$,o;
 # - Technically, file(1) also looks for .symtab, but that is apparently
 #   not strippable for static libs.  Accordingly, it is omitted below.
 use constant DEBUG_SECTIONS => qw(.debug_info .zdebug_info);
+
+use Moo;
+use namespace::clean;
+
+with 'Lintian::Check';
 
 my $ARCH_REGEX = Lintian::Data->new('binaries/arch-regex', qr/\s*\~\~/o,
     sub { return qr/$_[1]/ });

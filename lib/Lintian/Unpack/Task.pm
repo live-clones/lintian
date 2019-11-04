@@ -22,11 +22,12 @@ use strict;
 use warnings;
 use v5.16;
 
-use Moo;
-
 use Carp;
 use IO::Async::Loop;
 use IO::Async::Process;
+
+use Moo;
+use namespace::clean;
 
 =head1 NAME
 

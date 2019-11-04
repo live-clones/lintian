@@ -18,16 +18,18 @@ package Lintian::debian::rules;
 use strict;
 use warnings;
 use autodie;
-use Carp qw(croak);
 
+use Carp qw(croak);
 use List::MoreUtils qw(any none);
-use Moo;
 
 use Lintian::Data;
 use Lintian::SlidingWindow;
 use Lintian::Util qw(rstrip);
 
-with('Lintian::Check');
+use Moo;
+use namespace::clean;
+
+with 'Lintian::Check';
 
 our $PYTHON_DEPEND
   = 'python:any | python-dev:any | python-all:any | python-all-dev:any | python2:any | python2-dev:any';

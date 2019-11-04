@@ -36,6 +36,7 @@ use constant EMPTY => q{};
 use constant SPACE => q{ };
 
 use Moo;
+use namespace::clean;
 
 has jobs => (is => 'rw', default => 1);
 

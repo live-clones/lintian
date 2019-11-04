@@ -19,17 +19,20 @@
 # MA 02110-1301, USA.
 
 package Lintian::upstream_signing_key;
+
 use strict;
 use warnings;
 use autodie;
 
 use File::Temp;
-use Moo;
 
 use Lintian::Data;
 use Lintian::Util qw(safe_qx);
 
-with('Lintian::Check');
+use Moo;
+use namespace::clean;
+
+with 'Lintian::Check';
 
 my $SIGNING_KEY_FILENAMES = Lintian::Data->new('common/signing-key-filenames');
 

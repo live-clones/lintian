@@ -23,8 +23,6 @@ package Lintian::Processable::Pool;
 use strict;
 use warnings;
 
-use Moo;
-
 use Carp qw(croak);
 use Cwd();
 use Data::Dumper;
@@ -39,6 +37,9 @@ use Lintian::Unpacker;
 use Lintian::Util;
 
 use constant SPACE => q{ };
+
+use Moo;
+use namespace::clean;
 
 =head1 NAME
 

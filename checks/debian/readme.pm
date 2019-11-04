@@ -24,11 +24,12 @@ use strict;
 use warnings;
 use autodie;
 
-use Moo;
-
 use Lintian::Spelling qw(check_spelling spelling_tag_emitter);
 
-with('Lintian::Check');
+use Moo;
+use namespace::clean;
+
+with 'Lintian::Check';
 
 my $SPELLING_ERROR_IN_README
   = spelling_tag_emitter('spelling-error-in-readme-debian');

@@ -22,8 +22,6 @@ package Lintian::Processable::Group;
 use strict;
 use warnings;
 
-use Moo;
-
 use Carp;
 use File::Spec;
 use Path::Tiny;
@@ -39,6 +37,9 @@ use Lintian::Processable::Udeb;
 use Lintian::Util qw(internal_error get_dsc_info strip);
 
 use constant EMPTY => q{};
+
+use Moo;
+use namespace::clean;
 
 # A private table of supported types.
 my %SUPPORTED_TYPES = (

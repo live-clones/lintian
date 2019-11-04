@@ -24,13 +24,14 @@ use strict;
 use warnings;
 use autodie;
 
-use Moo;
-
 use File::Basename;
 
 use Lintian::Relation ();
 
-with('Lintian::Check');
+use Moo;
+use namespace::clean;
+
+with 'Lintian::Check';
 
 has provided_o => (is => 'rwp', default => sub{ {} });
 has is_lib_package => (is => 'rwp', default => 0);

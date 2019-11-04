@@ -24,14 +24,15 @@ use strict;
 use warnings;
 use autodie;
 
-use Moo;
-
 use File::Basename qw(dirname);
 use List::MoreUtils qw(any);
 
 use constant EMPTY => q{};
 
-with('Lintian::Check');
+use Moo;
+use namespace::clean;
+
+with 'Lintian::Check';
 
 has wildcard_links => (is => 'rwp', default => sub{ [] });
 

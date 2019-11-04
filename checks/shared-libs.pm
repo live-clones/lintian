@@ -26,13 +26,15 @@ use autodie;
 
 use File::Basename;
 use List::MoreUtils qw(any none uniq);
-use Moo;
 
 use Lintian::Data;
 use Lintian::Relation;
 use Lintian::Util qw(internal_error strip);
 
-with('Lintian::Check');
+use Moo;
+use namespace::clean;
+
+with 'Lintian::Check';
 
 # Libraries that should only be used in the presence of certain capabilities
 # may be located in subdirectories of the standard ldconfig search path with

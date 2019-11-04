@@ -26,14 +26,15 @@ use strict;
 use warnings;
 use autodie;
 
-use Moo;
-
 use Lintian::Info::Changelog::Version;
 use Lintian::Util qw($PKGREPACK_REGEX);
 
-with('Lintian::Check');
-
 use constant EMPTY => q{};
+
+use Moo;
+use namespace::clean;
+
+with 'Lintian::Check';
 
 our $WATCH_VERSION = Lintian::Data->new('watch-file/version', qr/\s*=\s*/o);
 our $SIGNING_KEY_FILENAMES= Lintian::Data->new('common/signing-key-filenames');

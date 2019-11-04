@@ -30,8 +30,6 @@ use warnings;
 use autodie;
 use v5.10;
 
-use Moo;
-
 use File::Basename qw(basename);
 use List::MoreUtils qw(any);
 
@@ -39,8 +37,6 @@ use Lintian::Data;
 use Lintian::Relation ();
 use Lintian::Util qw(internal_error normalize_pkg_path strip open_gz);
 use Lintian::SlidingWindow;
-
-with('Lintian::Check');
 
 # Half of the size used in the "sliding window" for detecting bad
 # licenses like GFDL with invariant sections.
@@ -51,6 +47,11 @@ use constant BLOCKSIZE => 16_384;
 # constant for insane line length
 use constant INSANE_LINE_LENGTH => 512;
 use constant SAFE_LINE_LENGTH => 256;
+
+use Moo;
+use namespace::clean;
+
+with 'Lintian::Check';
 
 our $LIBTOOL = Lintian::Relation->new('libtool | dh-autoreconf');
 

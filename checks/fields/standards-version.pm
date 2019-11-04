@@ -27,13 +27,15 @@ use autodie;
 
 use Date::Parse qw(str2time);
 use List::Util qw(first);
-use Moo;
 use POSIX qw(strftime);
 
 use Lintian::Data;
 use Lintian::Util qw(internal_error);
 
-with('Lintian::Check');
+use Moo;
+use namespace::clean;
+
+with 'Lintian::Check';
 
 # Any Standards Version released before this day is "ancient"
 my $ANCIENT_DATE_DATA = Lintian::Data->new(

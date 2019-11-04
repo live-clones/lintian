@@ -26,11 +26,13 @@ use autodie;
 
 use List::MoreUtils qw(any);
 use List::Util qw(first);
-use Moo;
 
 use Lintian::Util qw(strip);
 
-with('Lintian::Check');
+use Moo;
+use namespace::clean;
+
+with 'Lintian::Check';
 
 sub source {
     my ($self) = @_;

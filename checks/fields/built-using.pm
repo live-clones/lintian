@@ -28,16 +28,17 @@ use strict;
 use warnings;
 use autodie;
 
-use Moo;
-
 use Lintian::Relation qw(:constants);
 use Lintian::Util qw($PKGNAME_REGEX $PKGVERSION_REGEX);
-
-with('Lintian::Check');
 
 use constant {
     BUILT_USING_REGEX => qr/^$PKGNAME_REGEX \(= $PKGVERSION_REGEX\)$/o,
 };
+
+use Moo;
+use namespace::clean;
+
+with 'Lintian::Check';
 
 sub always {
     my ($self) = @_;

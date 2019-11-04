@@ -28,13 +28,14 @@ use strict;
 use warnings;
 use autodie;
 
-use Moo;
-
 use Lintian::Data ();
 
-with('Lintian::Check');
-
 use constant EMPTY => q{};
+
+use Moo;
+use namespace::clean;
+
+with 'Lintian::Check';
 
 our $KNOWN_SECTIONS = Lintian::Data->new('fields/archive-sections');
 

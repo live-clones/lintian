@@ -23,11 +23,13 @@ package Lintian::upstream_metadata;
 use strict;
 use warnings;
 
-use Moo;
 use YAML::XS;
 $YAML::XS::LoadBlessed = 0;
 
-with('Lintian::Check');
+use Moo;
+use namespace::clean;
+
+with 'Lintian::Check';
 
 sub source {
     my ($self) = @_;

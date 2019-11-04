@@ -31,6 +31,7 @@ use constant COLON => q{:};
 use constant SLASH => q{/};
 
 use Moo;
+use namespace::clean;
 
 with 'Lintian::Processable';
 

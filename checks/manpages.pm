@@ -26,7 +26,6 @@ use autodie;
 
 use File::Basename;
 use List::MoreUtils qw(any none);
-use Moo;
 use Text::ParseWords ();
 
 use Lintian::Spelling qw(check_spelling spelling_tag_emitter);
@@ -34,7 +33,10 @@ use Lintian::Util qw(clean_env do_fork drain_pipe internal_error open_gz);
 
 use constant LINTIAN_COVERAGE => ($ENV{'LINTIAN_COVERAGE'}?1:0);
 
-with('Lintian::Check');
+use Moo;
+use namespace::clean;
+
+with 'Lintian::Check';
 
 has binary => (is => 'rwp', default => sub { {} });
 has link => (is => 'rwp', default => sub { {} });

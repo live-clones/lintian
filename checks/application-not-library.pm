@@ -24,9 +24,11 @@ use strict;
 use warnings;
 
 use List::MoreUtils qw(any);
-use Moo;
 
-with('Lintian::Check');
+use Moo;
+use namespace::clean;
+
+with 'Lintian::Check';
 
 sub binary {
     my ($self) = @_;

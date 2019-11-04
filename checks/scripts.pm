@@ -30,7 +30,6 @@ use autodie;
 
 use Capture::Tiny qw(capture);
 use List::MoreUtils qw(any);
-use Moo;
 use POSIX qw(strftime);
 use Try::Tiny;
 
@@ -39,7 +38,10 @@ use Lintian::Data;
 use Lintian::Relation;
 use Lintian::Util qw(internal_error safe_qx strip);
 
-with('Lintian::Check');
+use Moo;
+use namespace::clean;
+
+with 'Lintian::Check';
 
 # This is a map of all known interpreters.  The key is the interpreter
 # name (the binary invoked on the #! line).  The value is an anonymous

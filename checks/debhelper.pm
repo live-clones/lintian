@@ -19,19 +19,22 @@
 # MA 02110-1301, USA.
 
 package Lintian::debhelper;
+
 use strict;
 use warnings;
 use autodie;
 
 use List::MoreUtils qw(any);
-use Moo;
 use Text::Levenshtein qw(distance);
 
 use Lintian::Data;
 use Lintian::Relation qw(:constants);
 use Lintian::Util qw(strip);
 
-with('Lintian::Check');
+use Moo;
+use namespace::clean;
+
+with 'Lintian::Check';
 
 # If there is no debian/compat file present but cdbs is being used, cdbs will
 # create one automatically.  Currently it always uses compatibility level 5.
