@@ -21,7 +21,6 @@ package Lintian::Collect::Source;
 
 use strict;
 use warnings;
-use parent 'Lintian::Collect::Package';
 
 use Carp qw(croak);
 use Scalar::Util qw(blessed);
@@ -38,6 +37,11 @@ use Lintian::Util
 
 use constant EMPTY => q{};
 
+use Moo;
+use namespace::clean;
+
+with 'Lintian::Info::Package';
+
 =head1 NAME
 
 Lintian::Collect::Source - Lintian interface to source package data collection
@@ -45,7 +49,7 @@ Lintian::Collect::Source - Lintian interface to source package data collection
 =head1 SYNOPSIS
 
     my ($name, $type, $dir) = ('foobar', 'source', '/path/to/lab-entry');
-    my $collect = Lintian::Collect->new ($name, $type, $dir);
+    my $collect = Lintian::Collect::Source->new($name);
     if ($collect->native) {
         print "Package is native\n";
     }
@@ -63,37 +67,10 @@ source packages via this module so that the module can cache data where
 appropriate and possibly retire collect scripts in favor of caching that
 data in memory.
 
-=head1 CLASS METHODS
-
-=over 4
-
-=item new (PACKAGE)
-
-Creates a new Lintian::Collect::Source object.  Currently, PACKAGE is
-ignored.  Normally, this method should not be called directly, only via
-the Lintian::Collect constructor.
-
-=cut
-
-# Initialize a new source package collect object.  Takes the package name,
-# which is currently unused.
-sub new {
-    my ($class, $pkg) = @_;
-
-    my $self = {};
-    bless($self, $class);
-
-    $self->{java_info} = {};
-
-    return $self;
-}
-
-=back
-
 =head1 INSTANCE METHODS
 
 In addition to the instance methods listed below, all instance methods
-documented in the L<Lintian::Collect> and L<Lintian::Collect::Package>
+documented in the L<Lintian::Collect> and L<Lintian::Info::Package>
 modules are also available.
 
 =over 4
@@ -103,7 +80,7 @@ modules are also available.
 Returns the changelog of the source package as a Parse::DebianChangelog
 object, or C<undef> if the changelog cannot be resolved safely.
 
-Needs-Info requirements for using I<changelog>: L<Same as index_resolved_path|Lintian::Collect::Package/index_resolved_path(PATH)>
+Needs-Info requirements for using I<changelog>: L<Same as index_resolved_path|Lintian::Info::Package/index_resolved_path(PATH)>
 
 =cut
 
@@ -408,7 +385,7 @@ modified.
 NB: If a field from the "dsc" file itself is desired, please use
 L<field|Lintian::Collect/field> instead.
 
-Needs-Info requirements for using I<source_field>: L<Same as index_resolved_path|Lintian::Collect::Package/index_resolved_path(PATH)>
+Needs-Info requirements for using I<source_field>: L<Same as index_resolved_path|Lintian::Info::Package/index_resolved_path(PATH)>
 
 =cut
 
@@ -519,7 +496,7 @@ modified.
 If PACKAGE is not a binary built from this source, this returns
 DEFAULT.
 
-Needs-Info requirements for using I<binary_field>: L<Same as index_resolved_path|Lintian::Collect::Package/index_resolved_path(PATH)>
+Needs-Info requirements for using I<binary_field>: L<Same as index_resolved_path|Lintian::Info::Package/index_resolved_path(PATH)>
 
 =cut
 
@@ -580,72 +557,6 @@ sub _load_dctrl {
     $self->{binary_field} = \%packages;
 
     return 1;
-}
-
-=item java_info
-
-Returns a hashref containing information about JAR files found in
-source packages, in the form I<file name> -> I<info>, where I<info> is
-a hash containing the following keys:
-
-=over 4
-
-=item manifest
-
-A hash containing the contents of the JAR file manifest. For instance,
-to find the classpath of I<$file>, you could use:
-
- if (exists $info->java_info->{$file}{'manifest'}) {
-     my $cp = $info->java_info->{$file}{'manifest'}{'Class-Path'};
-     # ...
- }
-
-NB: Not all jar files have a manifest.  For those without, this will
-value will not be available.  Use exists (rather than defined) to
-check for it.
-
-=item files
-
-A table of the files in the JAR.  Each key is a file name and its value
-is its "Major class version" for Java or "-" if it is not a class file.
-
-=item error
-
-If it exists, this is an error that occurred during reading of the zip
-file.  If it exists, it is unlikely that the other fields will be
-present.
-
-=back
-
-Needs-Info requirements for using I<java_info>: java-info
-
-=cut
-
-sub java_info {
-    my ($self) = @_;
-
-    # do something to prevent second lookup
-    unless (keys %{$self->{java_info}}) {
-
-        my $dbpath = $self->lab_data_path('java-info.db');
-
-        # no jar files
-        return $self->{java_info}
-          unless -f $dbpath;
-
-        my %java_info;
-
-        tie my %h, 'MLDBM',-Filename => $dbpath
-          or die "Cannot open file $dbpath: $! $BerkeleyDB::Error\n";
-
-        $java_info{$_} = $h{$_} for keys %h;
-
-        untie %h;
-
-        $self->{java_info} = \%java_info;
-    }
-
-    return $self->{java_info};
 }
 
 =item binary_relation (PACKAGE, FIELD)
@@ -778,7 +689,7 @@ sub relation_noarch {
 =item debfiles ([FILE])
 
 B<This method is deprecated>.  Consider using
-L<index_resolved_path(PATH)|Lintian::Collect::Package/index_resolved_path(PATH)>
+L<index_resolved_path(PATH)|Lintian::Info::Package/index_resolved_path(PATH)>
 instead, which returns L<Lintian::Path> objects.
 
 Returns the path to FILE in the debian dir of the extracted source
@@ -791,7 +702,7 @@ It is not permitted for FILE to be C<undef>.  If the "root" dir is
 desired either invoke this method without any arguments at all or use
 the empty string.
 
-The caveats of L<unpacked|Lintian::Collect::Package/unpacked ([FILE])>
+The caveats of L<unpacked|Lintian::Info::Package/unpacked ([FILE])>
 also apply to this method.
 
 Needs-Info requirements for using I<debfiles>: debfiles
@@ -820,7 +731,7 @@ sub debfiles {
 
 For the general documentation of this method, please refer to the
 documentation of it in
-L<Lintian::Collect::Package|Lintian::Collect::Package/index (FILE)>.
+L<Lintian::Info::Package|Lintian::Info::Package/index (FILE)>.
 
 The index of a source package is not very well defined for non-native
 source packages.  This method gives the index of the "unpacked"
