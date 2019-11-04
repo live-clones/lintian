@@ -1,7 +1,8 @@
 # -*- perl -*-
 # Lintian::Collect -- interface to package data collection
 
-# Copyright (C) 2008 Russ Allbery
+# Copyright © 2008 Russ Allbery
+# Copyright © 2019 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by the Free
@@ -17,6 +18,7 @@
 # this program.  If not, see <http://www.gnu.org/licenses/>.
 
 package Lintian::Collect;
+
 use strict;
 use warnings;
 use warnings::register;
@@ -25,6 +27,11 @@ use Carp qw(croak);
 
 use Lintian::Tags qw(tag);
 use Lintian::Util qw(get_dsc_info get_deb_info);
+
+use constant SLASH => q{/};
+
+use Moo::Role;
+use namespace::clean;
 
 =encoding utf-8
 
@@ -35,7 +42,7 @@ Lintian::Collect - Lintian interface to package data collection
 =head1 SYNOPSIS
 
     my ($name, $type, $dir) = ('foobar', 'udeb', '/some/abs/path');
-    my $collect = Lintian::Collect->new ($name, $type, $dir);
+    my $collect = Lintian::Collect::Binary->new_object($name);
     $name = $collect->name;
     $type = $collect->type;
 
@@ -61,53 +68,6 @@ data in memory.
 
 =over 4
 
-=item new (PACKAGE, TYPE, BASEDIR[, FIELDS]))
-
-Creates a new object appropriate to the package type.  TYPE can be
-retrieved later with the L</type> method.  Croaks if given an unknown
-TYPE.
-
-PACKAGE is the name of the package and is stored in the collect object.
-It can be retrieved with the L</name> method.
-
-BASEDIR is the base directory for the data and should be absolute.
-
-If FIELDS is given it is assumed to be the fields from the underlying
-control file.  This is only used to avoid an unnecessary read
-operation (possibly incl. an ar | gzip pipeline) when the fields are
-already known.
-
-=cut
-
-sub new {
-    my ($class, $pkg, $type, $base_dir, $fields) = @_;
-    my $object;
-    if ($type eq 'source') {
-        require Lintian::Collect::Source;
-        $object = Lintian::Collect::Source->new($pkg);
-    } elsif ($type eq 'binary' or $type eq 'udeb') {
-        require Lintian::Collect::Binary;
-        $object = Lintian::Collect::Binary->new($pkg);
-    } elsif ($type eq 'buildinfo') {
-        require Lintian::Collect::Buildinfo;
-        $object = Lintian::Collect::Buildinfo->new($pkg);
-    } elsif ($type eq 'changes') {
-        require Lintian::Collect::Changes;
-        $object = Lintian::Collect::Changes->new($pkg);
-    } else {
-        croak("Undefined type: $type");
-    }
-    $object->{name} = $pkg;
-    $object->{type} = $type;
-    $object->{base_dir} = $base_dir;
-    $object->{field} = $fields if defined $fields;
-
-# raw fields are already at the root; field names probably do not contain quotes
-    $object->{'"unfolded"'} = {};
-
-    return $object;
-}
-
 =back
 
 =head1 INSTANCE METHODS
@@ -123,40 +83,36 @@ binary / udeb packages and .changes files.
 
 Returns the name of the package.
 
-Needs-Info requirements for using I<name>: none
-
-=cut
-
-sub name {
-    my ($self) = @_;
-    return $self->{name};
-}
-
 =item type
 
 Returns the type of the package.
-
-Needs-Info requirements for using I<type>: none
-
-=cut
-
-sub type {
-    my ($self) = @_;
-    return $self->{type};
-}
 
 =item base_dir
 
 Returns the base_dir where all the package information is stored.
 
-Needs-Info requirements for using I<base_dir>: none
+=item verbatim
+
+Returns a hash to the raw, unedited and verbatim field values.
+
+=item unfolded
+
+Returns a hash to unfolded field values. Continuations lines
+have been connected.
+
+=item shared_storage
+
+Returns shared_storage.
 
 =cut
 
-sub base_dir {
-    my ($self) = @_;
-    return $self->{base_dir};
-}
+has name => (is => 'rw');
+has type => (is => 'rw');
+has base_dir => (is => 'rw');
+
+has verbatim => (is => 'rw', default => sub { {} });
+has unfolded => (is => 'rwp', default => sub { {} });
+has shared_storage => (is => 'rwp', default => sub { {} });
 
 =item lab_data_path ([ENTRY])
 
@@ -170,9 +126,11 @@ Needs-Info requirements for using I<lab_data_path>: L</base_dir>
 
 sub lab_data_path {
     my ($self, $entry) = @_;
-    my $base = $self->base_dir;
-    return "$base/$entry" if $entry;
-    return $base;
+
+    croak 'Need entry to calculate lab data path.'
+      unless $entry;
+
+    return $self->base_dir . SLASH . $entry;
 }
 
 =item unfolded_field (FIELD)
@@ -194,8 +152,8 @@ sub unfolded_field {
     return
       unless defined $field;
 
-    return $self->{'"unfolded"'}{$field}
-      if exists $self->{'"unfolded"'}{$field};
+    return $self->unfolded->{$field}
+      if exists $self->unfolded->{$field};
 
     my $value = $self->field($field);
 
@@ -216,7 +174,7 @@ sub unfolded_field {
         $value =~ s/^\s*+//;
     }
 
-    $self->{'"unfolded"'}{$field} = $value;
+    $self->unfolded->{$field} = $value;
 
     return $value;
 }
@@ -239,45 +197,39 @@ Needs-Info requirements for using I<field>: none
 =cut
 
 sub field {
-    my ($self, $field, $def) = @_;
-    return $self->_get_field($field, $def);
-}
+    my ($self, $field, $default) = @_;
 
-# $self->_get_field([$name[, $def]])
-#
-# Method getting the fields; this is the backing method of $self->field
-#
-# It must return either a field (if $name is given) or a hash, where the keys are
-# the name of the fields.  If $name is given and it is not present, then it will
-# return $def (or undef if $def was not given).
-#
-# It must cache the result if possible, since field and fields are called often.
-# sub _get_field Needs-Info none
-sub _get_field {
-    my ($self, $field, $def) = @_;
-    my $fields;
-    unless (exists $self->{field}) {
+    unless (keys %{$self->verbatim}) {
+
         my $base_dir = $self->base_dir;
-        my $type = $self->{type};
-        if ($type eq 'changes' or $type eq 'source'){
+        my $verbatim;
+
+        if ($self->type eq 'changes' || $self->type eq 'source'){
             my $file = 'changes';
-            $file = 'dsc' if $type eq 'source';
-            $fields = get_dsc_info("$base_dir/$file");
-        } elsif ($type eq 'binary' or $type eq 'udeb'){
+            $file = 'dsc'
+              if $self->type eq 'source';
+
+            $verbatim = get_dsc_info("$base_dir/$file");
+
+        } elsif ($self->type eq 'binary' || $self->type eq 'udeb'){
             # (ab)use the unpacked control dir if it is present
             if (   -f "$base_dir/control/control"
                 && -s "$base_dir/control/control") {
-                $fields = get_dsc_info("$base_dir/control/control");
+
+                $verbatim = get_dsc_info("$base_dir/control/control");
+
             } else {
-                $fields = (get_deb_info("$base_dir/deb"));
+                $verbatim = (get_deb_info("$base_dir/deb"));
             }
         }
-        $self->{field} = $fields;
-    } else {
-        $fields = $self->{field};
+
+        $self->verbatim($verbatim);
     }
-    return $fields->{$field}//$def if $field;
-    return $fields;
+
+    return $self->verbatim
+      unless defined $field;
+
+    return $self->verbatim->{$field} // $default;
 }
 
 =item is_non_free
@@ -291,45 +243,12 @@ Needs-Info requirements for using I<is_non_free>: L</field ([FIELD[, DEFAULT]])>
 
 sub is_non_free {
     my ($self) = @_;
-    return $self->{is_non_free} if exists $self->{is_non_free};
-    $self->{is_non_free} = 0;
-    $self->{is_non_free} = 1
+
+    return 1
       if $self->field('section', 'main')
       =~ m,^(?:non-free|restricted|multiverse)/,;
-    return $self->{is_non_free};
-}
 
-# Internal sub for providing a shared storage between multiple
-# L::Collect objects from same group.
-#
-# sub _set_shared_storage Needs-Info none
-sub _set_shared_storage {
-    my ($self, $storage) = @_;
-    $self->{'_shared_storage'} = $storage;
-    return;
-}
-
-# Internal sub for dumping the memory usage of this instance
-#
-# Used by the frontend (under debug level >= 4)
-#
-# sub _memory_usage Needs-Info none
-sub _memory_usage {
-    my ($self, $calc_usage) = @_;
-    my %usage;
-    for my $field (keys(%{$self})) {
-        next if ($field =~ m{ \A sorted_ }xsm);
-        if (exists($self->{"sorted_$field"})) {
-            # merge "index" and "sorted_index".  At the price of an extra
-            # list, we avoid overcounting all the L::Path objects so the
-            # produced result is a lot more accurate.
-            $usage{$field}
-              = $calc_usage->([$self->{$field},$self->{"sorted_$field"}]);
-        } else {
-            $usage{$field} = $calc_usage->($self->{$field});
-        }
-    }
-    return \%usage;
+    return 0;
 }
 
 =back
