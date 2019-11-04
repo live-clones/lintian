@@ -36,6 +36,7 @@ Enable-Tags-From-Check:
  fields/format,
  fields/homepage,
  fields/installer-menu-item,
+ fields/length,
  fields/maintainer,
  fields/multi-arch,
  fields/origin,
