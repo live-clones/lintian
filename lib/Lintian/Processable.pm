@@ -25,7 +25,7 @@ use warnings;
 use Carp qw(croak);
 use Path::Tiny;
 
-use Lintian::Collect;
+use Lintian::Collect::Dispatcher qw(create_info);
 
 use constant EMPTY => q{};
 use constant COLON => q{:};
@@ -176,7 +176,7 @@ sub info {
 
     unless (keys %{$self->saved_info}) {
 
-        my $info = Lintian::Collect->new(
+        my $info = create_info(
             $self->pkg_name, $self->pkg_type,
             $self->base_dir, $self->extra_fields
         );
