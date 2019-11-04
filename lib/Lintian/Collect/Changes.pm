@@ -20,11 +20,15 @@ package Lintian::Collect::Changes;
 
 use strict;
 use warnings;
-use parent 'Lintian::Collect';
 
-use Lintian::Util qw(strip $PKGREPACK_REGEX);
+use Lintian::Util qw($PKGREPACK_REGEX strip);
 
 use constant EMPTY => q{};
+
+use Moo;
+use namespace::clean;
+
+with 'Lintian::Collect';
 
 =head1 NAME
 
@@ -33,7 +37,8 @@ Lintian::Collect::Changes - Lintian interface to .changes file data collection
 =head1 SYNOPSIS
 
     my ($name, $type) = ('foobar_1.2_i386.changes', 'changes');
-    my $collect = Lintian::Collect->new($name, $type);
+    my $collect = Lintian::Collect::Changes->new;
+    $collect->name($name);
     my $files = $collect->files;
 
     foreach my $file (keys %{$files}) {
@@ -46,29 +51,6 @@ Lintian::Collect::Changes - Lintian interface to .changes file data collection
 Lintian::Collect::Changes provides an interface to data for .changes
 files.  It implements data collection methods specific to .changes 
 files.
-
-=head1 CLASS METHODS
-
-=over 4
-
-=item new (PACKAGE)
-
-Creates a new Lintian::Collect::Changes object.  Currently, PACKAGE is
-ignored.  Normally, this method should not be called directly, only via
-the L<Lintian::Collect> constructor.
-
-=cut
-
-# Initialize a new .changes file collect object.  Takes the package name,
-# which is currently unused.
-sub new {
-    my ($class, $pkg) = @_;
-    my $self = {};
-    bless($self, $class);
-    return $self;
-}
-
-=back
 
 =head1 INSTANCE METHODS
 
