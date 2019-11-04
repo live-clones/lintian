@@ -21,9 +21,13 @@ package Lintian::Collect::Buildinfo;
 
 use strict;
 use warnings;
-use parent 'Lintian::Collect';
 
 use Lintian::Util qw(strip);
+
+use Moo;
+use namespace::clean;
+
+with 'Lintian::Collect';
 
 =head1 NAME
 
@@ -32,7 +36,8 @@ Lintian::Collect::Buildinfo - Lintian interface to .buildinfo file data collecti
 =head1 SYNOPSIS
 
     my ($name, $type) = ('foobar_1.2_i386.buildinfo', 'changes');
-    my $collect = Lintian::Collect->new($name, $type);
+    my $collect = Lintian::Collect::Buildinfo->new;
+    $collect->name($name);
     my $files = $collect->files;
 
     foreach my $file (keys %{$files}) {
@@ -45,29 +50,6 @@ Lintian::Collect::Buildinfo - Lintian interface to .buildinfo file data collecti
 Lintian::Collect::Buildinfo provides an interface to data for .buildinfo
 files.  It implements data collection methods specific to .buildinfo 
 files.
-
-=head1 CLASS METHODS
-
-=over 4
-
-=item new (PACKAGE)
-
-Creates a new Lintian::Collect::Buildinfo object.  Currently, PACKAGE is
-ignored.  Normally, this method should not be called directly, only via
-the L<Lintian::Collect> constructor.
-
-=cut
-
-# Initialize a new .buildinfo file collect object.  Takes the package name,
-# which is currently unused.
-sub new {
-    my ($class, $pkg) = @_;
-    my $self = {};
-    bless($self, $class);
-    return $self;
-}
-
-=back
 
 =head1 INSTANCE METHODS
 
