@@ -543,6 +543,8 @@ sub files {
             $file)
           unless $self->info->index_resolved_path("etc/init.d/${service}")
           or $self->info->index_resolved_path(
+            "lib/systemd/system/${service}.path")
+          or $self->info->index_resolved_path(
             "lib/systemd/system/${service}.timer");
     }
 
