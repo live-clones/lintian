@@ -23,7 +23,6 @@ package Lintian::Collect::Binary;
 use strict;
 use warnings;
 use autodie;
-use parent 'Lintian::Collect::Package';
 
 use BerkeleyDB;
 use Carp qw(croak);
@@ -38,6 +37,11 @@ use Lintian::Util qw(open_gz get_file_checksum strip rstrip);
 
 use constant EMPTY => q{};
 
+use Moo;
+use namespace::clean;
+
+with 'Lintian::Info::Package';
+
 =head1 NAME
 
 Lintian::Collect::Binary - Lintian interface to binary package data collection
@@ -45,7 +49,7 @@ Lintian::Collect::Binary - Lintian interface to binary package data collection
 =head1 SYNOPSIS
 
     my ($name, $type, $dir) = ('foobar', 'binary', '/path/to/lab-entry');
-    my $collect = Lintian::Collect->new ($name, $type, $dir);
+    my $collect = Lintian::Collect::Binary->new($name);
 
 =head1 DESCRIPTION
 
@@ -62,36 +66,11 @@ data in memory.
 
 Native heuristics are only available in source packages.
 
-=head1 CLASS METHODS
-
-=over 4
-
-=item new (PACKAGE)
-
-Creates a new Lintian::Collect::Binary object.  Currently, PACKAGE is
-ignored.  Normally, this method should not be called directly, only via
-the L<Lintian::Collect> constructor.
-
-=cut
-
-sub new {
-    my ($class, $pkg) = @_;
-
-    my $self = {};
-    bless($self, $class);
-
-    $self->{java_info} = {};
-
-    return $self;
-}
-
-=back
-
 =head1 INSTANCE METHODS
 
 In addition to the instance methods listed below, all instance methods
 documented in the L<Lintian::Collect> and the
-L<Lintian::Collect::Package> modules are also available.
+L<Lintian::Info::Package> modules are also available.
 
 =over 4
 
@@ -151,7 +130,7 @@ To get a list of entries in the control.tar.gz or the file meta data
 of the entries (as L<path objects|Lintian::Path>), see
 L</sorted_control_index> and L</control_index (FILE)>.
 
-The caveats of L<unpacked|Lintian::Collect::Package/unpacked ([FILE])>
+The caveats of L<unpacked|Lintian::Info::Package/unpacked ([FILE])>
 also apply to this method.  However, as the control.tar.gz is not
 known to contain symlinks, a simple file type check is usually enough.
 
@@ -481,72 +460,6 @@ sub hardening_info {
 
     $self->{hardening_info} = \%hardening_info;
     return $self->{hardening_info};
-}
-
-=item java_info
-
-Returns a hashref containing information about JAR files found in
-binary packages, in the form I<file name> -> I<info>, where I<info> is
-a hash containing the following keys:
-
-=over 4
-
-=item manifest
-
-A hash containing the contents of the JAR file manifest. For instance,
-to find the classpath of I<$file>, you could use:
-
- if (exists $info->java_info->{$file}{'manifest'}) {
-     my $cp = $info->java_info->{$file}{'manifest'}{'Class-Path'};
-     # ...
- }
-
-NB: Not all jar files have a manifest.  For those without, this will
-value will not be available.  Use exists (rather than defined) to
-check for it.
-
-=item files
-
-A table of the files in the JAR.  Each key is a file name and its value
-is its "Major class version" for Java or "-" if it is not a class file.
-
-=item error
-
-If it exists, this is an error that occurred during reading of the zip
-file.  If it exists, it is unlikely that the other fields will be
-present.
-
-=back
-
-Needs-Info requirements for using I<java_info>: java-info
-
-=cut
-
-sub java_info {
-    my ($self) = @_;
-
-    # do something to prevent second lookup
-    unless (keys %{$self->{java_info}}) {
-
-        my $dbpath = $self->lab_data_path('java-info.db');
-
-        # no jar files
-        return $self->{java_info}
-          unless -f $dbpath;
-
-        my %java_info;
-
-        tie my %h, 'MLDBM',-Filename => $dbpath
-          or die "Cannot open file $dbpath: $! $BerkeleyDB::Error\n";
-
-        $java_info{$_} = $h{$_} for keys %h;
-
-        untie %h;
-
-        $self->{java_info} = \%java_info;
-    }
-
-    return $self->{java_info};
 }
 
 =item relation (FIELD)
