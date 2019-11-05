@@ -232,25 +232,6 @@ sub field {
     return $self->verbatim->{$field} // $default;
 }
 
-=item is_non_free
-
-Returns a truth value if the package appears to be non-free (based on
-the section field; "non-free/*" and "restricted/*")
-
-Needs-Info requirements for using I<is_non_free>: L</field ([FIELD[, DEFAULT]])>
-
-=cut
-
-sub is_non_free {
-    my ($self) = @_;
-
-    return 1
-      if $self->field('section', 'main')
-      =~ m,^(?:non-free|restricted|multiverse)/,;
-
-    return 0;
-}
-
 =back
 
 =head1 AUTHOR
