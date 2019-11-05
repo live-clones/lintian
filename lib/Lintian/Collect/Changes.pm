@@ -25,10 +25,8 @@ use Lintian::Util qw($PKGREPACK_REGEX strip);
 
 use constant EMPTY => q{};
 
-use Moo;
+use Moo::Role;
 use namespace::clean;
-
-with 'Lintian::Collect';
 
 =head1 NAME
 

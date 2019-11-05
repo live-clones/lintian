@@ -37,10 +37,8 @@ use Lintian::Util
 
 use constant EMPTY => q{};
 
-use Moo;
+use Moo::Role;
 use namespace::clean;
-
-with 'Lintian::Info::Package';
 
 =head1 NAME
 

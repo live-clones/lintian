@@ -37,10 +37,8 @@ use Lintian::Util qw(open_gz get_file_checksum strip rstrip);
 
 use constant EMPTY => q{};
 
-use Moo;
+use Moo::Role;
 use namespace::clean;
-
-with 'Lintian::Info::Package';
 
 =head1 NAME
 

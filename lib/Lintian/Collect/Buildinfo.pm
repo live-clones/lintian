@@ -24,10 +24,8 @@ use warnings;
 
 use Lintian::Util qw(strip);
 
-use Moo;
+use Moo::Role;
 use namespace::clean;
-
-with 'Lintian::Collect';
 
 =head1 NAME
 
