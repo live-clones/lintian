@@ -189,46 +189,6 @@ sub unpacked {
     return $self->_fetch_extracted_dir('unpacked', 'unpacked', @_);
 }
 
-=item index (FILE)
-
-Returns a L<path object|Lintian::Path> to FILE in the package.  FILE
-must be relative to the root of the unpacked package and must be
-without leading slash (or "./").  If FILE is not in the package, it
-returns C<undef>.  If FILE is supposed to be a directory, it must be
-given with a trailing slash.  Example:
-
-  my $file = $info->index ("usr/bin/lintian");
-  my $dir = $info->index ("usr/bin/");
-
-To get a list of entries in the package, see L</sorted_index>.  To
-actually access the underlying file (e.g. the contents), use
-L</unpacked ([FILE])>.
-
-Note that the "root directory" (denoted by the empty string) will
-always be present, even if the underlying tarball omits it.
-
-Needs-Info requirements for using I<index>: unpacked
-
-=cut
-
-sub index {
-    my ($self, $file) = @_;
-    if (my $cache = $self->{'index'}) {
-        return $cache->{$file}
-          if exists($cache->{$file});
-        return;
-    }
-    my $load_info = {
-        'field' => 'index',
-        'index_file' => 'index',
-        'index_owner_file' => 'index-owner-id',
-        'fs_root_sub' => 'unpacked',
-        'has_anchored_root_dir' => 0,
-        'file_info_sub' => 'file_info',
-    };
-    return $self->_fetch_index_data($load_info, $file);
-}
-
 =item sorted_index
 
 Returns a sorted array of file names listed in the package.  The names
