@@ -32,42 +32,15 @@ Lintian::Info::FileInfo - access to collected file-info data
 
 =head1 SYNOPSIS
 
-    use autodie;
-    use Lintian::Collect;
-    
-    my ($name, $type, $dir) = ('foobar', 'source', '/path/to/lab-entry');
-    my $info = Lintian::Collect::Binary->new;
-    $info->name($name);
-    my $filename = "etc/conf.d/$name.conf";
-    my $file = $info->index_resolved_path($filename);
-    if ($file and $file->is_open_ok) {
-        my $fd = $info->open;
-        # Use $fd ...
-        close($fd);
-    } elsif ($file) {
-        print "$file is available, but is not a file or unsafe to open\n";
-    } else {
-        print "$file is missing\n";
-    }
+    use Lintian::Processable;
+    my $processable = Lintian::Processable::Binary->new;
 
 =head1 DESCRIPTION
 
-Lintian::Info::Package provides part of an interface to package
-data for source and binary packages.  It implements data collection
-methods specific to all packages that can be unpacked (or can contain
-files)
-
-This module is in its infancy.  Most of Lintian still reads all data from
-files in the laboratory whenever that data is needed and generates that
-data via collect scripts.  The goal is to eventually access all data about
-source packages via this module so that the module can cache data where
-appropriate and possibly retire collect scripts in favor of caching that
-data in memory.
+Lintian::Info::FileInfo provides an interface to package data for
+file(1) information, aka magic data.
 
 =head1 INSTANCE METHODS
-
-In addition to the instance methods listed below, all instance methods
-documented in the L<Lintian::Collect> module are also available.
 
 =over 4
 
