@@ -119,7 +119,7 @@ Get the info data structure from processable.
 sub info {
     my ($self) = @_;
 
-    return $self->processable->info;
+    return $self->processable;
 }
 
 sub build_path {
