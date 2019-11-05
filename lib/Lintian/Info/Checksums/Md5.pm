@@ -27,8 +27,6 @@ use BerkeleyDB;
 use Moo::Role;
 use namespace::clean;
 
-with 'Lintian::Collect';
-
 =head1 NAME
 
 Lintian::Info::Checksums::Md5 - access to collected md5 data

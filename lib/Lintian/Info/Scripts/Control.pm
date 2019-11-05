@@ -26,8 +26,6 @@ use BerkeleyDB;
 use Moo::Role;
 use namespace::clean;
 
-with 'Lintian::Collect';
-
 =head1 NAME
 
 Lintian::Info::Scripts::Control - access to control script data

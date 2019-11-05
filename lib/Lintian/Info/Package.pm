@@ -34,11 +34,8 @@ use Lintian::Util
 use Moo::Role;
 use namespace::clean;
 
-with 'Lintian::Collect';
-with 'Lintian::Info::Checksums::Md5';
-with 'Lintian::Info::FileInfo';
-with 'Lintian::Info::Java';
-with 'Lintian::Info::Scripts::Control';
+with 'Lintian::Info::Checksums::Md5', 'Lintian::Info::FileInfo',
+  'Lintian::Info::Java', 'Lintian::Info::Scripts::Control';
 
 # A cache for (probably) the 5 most common permission strings seen in
 # the wild.
