@@ -26,11 +26,6 @@ our @EXPORT_OK = qw(create_info);
 
 use Carp qw(croak);
 
-use Lintian::Collect::Source;
-use Lintian::Collect::Binary;
-use Lintian::Collect::Buildinfo;
-use Lintian::Collect::Changes;
-
 =encoding utf-8
 
 =head1 NAME
@@ -46,7 +41,7 @@ Lintian::Collect::Dispatcher - type neutral dispatcher
 
 =head1 DESCRIPTION
 
-Lintian::Collect provides the shared interface to package data used by
+Lintian::Processable provides the shared interface to package data used by
 source, binary and udeb packages and .changes files.  It creates an
 object of the appropriate type and provides common functions used by the
 collection interface to all types of package.
@@ -92,20 +87,20 @@ sub create_info {
     my $object;
 
     if ($type eq 'source') {
-        require Lintian::Collect::Source;
-        $object = Lintian::Collect::Source->new;
+        require Lintian::Processable::Source;
+        $object = Lintian::Processable::Source->new;
 
     } elsif ($type eq 'binary' or $type eq 'udeb') {
-        require Lintian::Collect::Binary;
-        $object = Lintian::Collect::Binary->new;
+        require Lintian::Processable::Binary;
+        $object = Lintian::Processable::Binary->new;
 
     } elsif ($type eq 'buildinfo') {
-        require Lintian::Collect::Buildinfo;
-        $object = Lintian::Collect::Buildinfo->new;
+        require Lintian::Processable::Buildinfo;
+        $object = Lintian::Processable::Buildinfo->new;
 
     } elsif ($type eq 'changes') {
-        require Lintian::Collect::Changes;
-        $object = Lintian::Collect::Changes->new;
+        require Lintian::Processable::Changes;
+        $object = Lintian::Processable::Changes->new;
 
     } else {
         croak("Undefined type: $type");
@@ -129,8 +124,8 @@ Originally written by Russ Allbery <rra@debian.org> for Lintian.
 
 =head1 SEE ALSO
 
-lintian(1), L<Lintian::Collect::Binary>, L<Lintian::Collect::Changes>,
-L<Lintian::Collect::Source>
+lintian(1), L<Lintian::Processable::Binary>, L<Lintian::Processable::Changes>,
+L<Lintian::Processable::Source>
 
 =cut
 
