@@ -22,6 +22,7 @@ use warnings;
 use autodie;
 
 use BerkeleyDB;
+use Path::Tiny;
 
 use Moo::Role;
 use namespace::clean;
@@ -90,7 +91,7 @@ sub java_info {
     # do something to prevent second lookup
     unless (keys %{$self->saved_java_info}) {
 
-        my $dbpath = $self->lab_data_path('java-info.db');
+        my $dbpath = path($self->groupdir)->child('java-info.db')->stringify;
 
         # no jar files
         return $self->saved_java_info

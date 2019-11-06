@@ -22,6 +22,7 @@ use warnings;
 use autodie;
 
 use BerkeleyDB;
+use Path::Tiny;
 
 use Moo::Role;
 use namespace::clean;
@@ -59,7 +60,8 @@ sub control_scripts {
 
     unless (keys %{$self->saved_control_scripts}) {
 
-        my $dbpath = $self->lab_data_path('control-scripts.db');
+        my $dbpath
+          = path($self->groupdir)->child('control-scripts.db')->stringify;
 
         my %control;
 

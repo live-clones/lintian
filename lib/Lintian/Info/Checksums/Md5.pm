@@ -23,6 +23,7 @@ use warnings;
 use autodie;
 
 use BerkeleyDB;
+use Path::Tiny;
 
 use Moo::Role;
 use namespace::clean;
@@ -62,7 +63,7 @@ sub md5sums {
 
     unless (keys %{$self->saved_md5sums}) {
 
-        my $dbpath = $self->lab_data_path('md5sums.db');
+        my $dbpath = path($self->groupdir)->child('md5sums.db')->stringify;
 
         my %md5sums;
 

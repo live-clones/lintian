@@ -24,6 +24,7 @@ use autodie;
 
 use BerkeleyDB;
 use Carp qw(croak);
+use Path::Tiny;
 use Scalar::Util qw(blessed);
 
 use Lintian::Path;
@@ -212,7 +213,7 @@ sub _fetch_extracted_dir {
     my $filename = '';
     my $normalized = 0;
     if (not defined $dir) {
-        $dir = $self->lab_data_path($dirname);
+        $dir = path($self->groupdir)->child($dirname)->stringify;
         croak "$field ($dirname) is not available" unless -d "$dir/";
         $self->{$field} = $dir;
     }
@@ -263,12 +264,12 @@ sub _fetch_index_data {
     my ($self, $load_info, $file) = @_;
 
     my (%idxh, %children, $num_idx, %rhlinks, @sorted, @check_dirs);
-    my $base_dir = $self->base_dir;
+    my $groupdir = $self->groupdir;
     my $field = $load_info->{'field'};
     my $index = $load_info->{'index_file'};
     my $indexown = $load_info->{'index_owner_file'};
     my $allow_empty = $load_info->{'allow_empty'} // 0;
-    my $idx = open_gz("$base_dir/${index}.gz");
+    my $idx = open_gz("$groupdir/${index}.gz");
     my $fs_info = Lintian::Path::FSInfo->new(
         '_collect' => $self,
         '_collect_path_sub' => $load_info->{'fs_root_sub'},
@@ -277,7 +278,7 @@ sub _fetch_index_data {
     );
 
     if ($indexown) {
-        $num_idx = open_gz("$base_dir/${indexown}.gz");
+        $num_idx = open_gz("$groupdir/${indexown}.gz");
     }
     while (my $line = <$idx>) {
         chomp($line);

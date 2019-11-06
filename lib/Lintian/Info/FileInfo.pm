@@ -22,6 +22,7 @@ use warnings;
 use autodie;
 
 use BerkeleyDB;
+use Path::Tiny;
 
 use Moo::Role;
 use namespace::clean;
@@ -62,7 +63,7 @@ sub file_info {
 
     unless ($self->saved_file_info) {
 
-        my $dbpath = $self->lab_data_path('file-info.db');
+        my $dbpath = path($self->groupdir)->child('file-info.db')->stringify;
 
         my %file_info;
 
