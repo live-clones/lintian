@@ -88,11 +88,19 @@ sub get_tagnames {
     return uniq @names;
 }
 
+=item order
+
+=cut
+
 sub order {
     my ($line) = @_;
 
     return package_type($line) . $line;
 }
+
+=item package_name
+
+=cut
 
 sub package_name {
     my ($line) = @_;
@@ -101,6 +109,10 @@ sub package_name {
     return $package;
 }
 
+=item package_type
+
+=cut
+
 sub package_type {
     my ($line) = @_;
 
@@ -108,12 +120,20 @@ sub package_type {
     return $type;
 }
 
+=item tag_name
+
+=cut
+
 sub tag_name {
     my ($line) = @_;
 
     my (undef, undef, $name, undef) = parse_line($line);
     return $name;
 }
+
+=item parse_line
+
+=cut
 
 sub parse_line {
     my ($line) = @_;
@@ -126,6 +146,10 @@ sub parse_line {
 
     return ($package, $type, $name, $details);
 }
+
+=item universal_string
+
+=cut
 
 sub universal_string {
     my ($package, $type, $name, $details) = @_;
@@ -146,6 +170,14 @@ sub universal_string {
 }
 
 =back
+
+=head1 AUTHOR
+
+Originally written by Felix Lechner <felix.lechner@lease-up.com> for Lintian.
+
+=head1 SEE ALSO
+
+lintian(1)
 
 =cut
 

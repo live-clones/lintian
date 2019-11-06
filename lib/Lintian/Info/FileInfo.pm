@@ -54,6 +54,10 @@ is gzip files, where file(1) can be unreliable at times (see #620289)
 
 Needs-Info requirements for using I<file_info>: file-info
 
+=item saved_file_info
+
+Returns the cached file (1) information.
+
 =cut
 
 has saved_file_info => (is => 'rwp');

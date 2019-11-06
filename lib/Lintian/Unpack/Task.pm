@@ -53,6 +53,8 @@ A task class for unpacking lab entries.
 
 =over 4
 
+=item run
+
 =cut
 
 sub run {
@@ -134,6 +136,18 @@ sub run {
 
     return 0;
 }
+
+=item id
+
+=item script
+
+=item processable
+
+=item C<cmap>
+
+=item worklist
+
+=cut
 
 has id => (is => 'rw',);
 

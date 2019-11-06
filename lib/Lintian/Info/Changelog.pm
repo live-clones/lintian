@@ -329,6 +329,12 @@ m/^ \-\- (?<name>.*) <(?<email>.*)>(?<sep>  ?)(?<date>(?:\w+\,\s*)?\d{1,2}\s+\w+
     return;
 }
 
+=item errors
+
+=item entries
+
+=cut
+
 has errors => (is => 'rwp', default => sub { [] });
 has entries => (is => 'rwp', default => sub { [] });
 

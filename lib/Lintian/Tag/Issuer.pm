@@ -77,6 +77,10 @@ sub issue_tags {
     return;
 }
 
+=item found
+
+=cut
+
 has found => (is => 'rwp', default => sub { [] });
 
 =back

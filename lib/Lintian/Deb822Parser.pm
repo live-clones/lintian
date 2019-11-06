@@ -295,10 +295,13 @@ present.
 
 =back
 
+=item rstrip
+
 =cut
 
 # Defined rstrip here to avoid having to depend on L::Util
 # prototype for default to $_
+
 sub rstrip (_) {  ## no critic (Subroutines::RequireFinalReturn)
     if (defined wantarray) {
         # unpack 'A*' is faster than s/\s++$//

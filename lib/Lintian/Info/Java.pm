@@ -81,6 +81,10 @@ present.
 
 Needs-Info requirements for using I<java_info>: java-info
 
+=item saved_java_info
+
+Returns the cached java information.
+
 =cut
 
 has saved_java_info => (is => 'rw', default => sub { {} });

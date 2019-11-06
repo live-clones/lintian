@@ -54,6 +54,10 @@ the md5sum in the "md5sums" control file.
 
 Needs-Info requirements for using I<md5sums>: md5sums
 
+=item saved_md5sums
+
+Returns the cached md5sums.
+
 =cut
 
 has saved_md5sums => (is => 'rwp', default => sub { {} });

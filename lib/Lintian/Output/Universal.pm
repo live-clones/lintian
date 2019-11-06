@@ -36,6 +36,26 @@ use constant LPARENS => q{(};
 use constant RPARENS => q{)};
 use constant NEWLINE => qq{\n};
 
+=head1 NAME
+
+Lintian::Output::Universal -- Facilities for printing universal tags
+
+=head1 SYNOPSIS
+
+ use Lintian::Output::Universal;
+
+=head1 DESCRIPTION
+
+A class for printing tags using the 'universal' format.
+
+=head1 INSTANCE METHODS
+
+=over 4
+
+=item print_tag
+
+=cut
+
 sub print_tag {
     my ($self, $pkg_info, $tag_info, $details, $override) = @_;
     $self->issued_tag($tag_info->tag);
@@ -74,11 +94,19 @@ sub _warning {
     return;
 }
 
+=item print_first
+
+=cut
+
 sub print_first {
     my ($self, $pkg_info) = @_;
     $self->{lines} = [];
     return;
 }
+
+=item order
+
+=cut
 
 sub order {
     my ($line) = @_;
@@ -86,12 +114,20 @@ sub order {
     return package_type($line) . $line;
 }
 
+=item package_type
+
+=cut
+
 sub package_type {
     my ($line) = @_;
 
     my (undef, $type, undef, undef) = parse_line($line);
     return $type;
 }
+
+=item parse_line
+
+=cut
 
 sub parse_line {
     my ($line) = @_;
@@ -105,6 +141,10 @@ sub parse_line {
     return ($package, $type, $name, $details);
 }
 
+=item print_last
+
+=cut
+
 sub print_last {
     my ($self) = @_;
     my @sorted
@@ -116,6 +156,18 @@ sub print_last {
 sub _delimiter {
     return;
 }
+
+=back
+
+=head1 AUTHOR
+
+Originally written by Felix Lechner <felix.lechner@lease-up.com> for Lintian.
+
+=head1 SEE ALSO
+
+lintian(1)
+
+=cut
 
 1;
 

@@ -47,6 +47,24 @@ use warnings;
 
 use parent qw(Lintian::Output);
 
+=head1 NAME
+
+Lintian::Output::FullEWI -- output module
+
+=head1 SYNOPSIS
+
+ use Lintian::Output::FullEWI;
+
+=head1 DESCRIPTION
+
+A parent class specializing in Lintian output.
+
+=head1 INSTANCE METHODS
+
+=over 4
+
+=cut
+
 # Overridden from Lintian::Output
 sub _format_pkg_info {
     my ($self, $pkg_info, $tag_info, $override) = @_;
@@ -60,6 +78,14 @@ sub _format_pkg_info {
     $arch = 'source' unless $arch;
     return "$code: $pkg_info->{package} $type ($version) [$arch]";
 }
+
+=back
+
+=head1 SEE ALSO
+
+lintian(1)
+
+=cut
 
 1;
 

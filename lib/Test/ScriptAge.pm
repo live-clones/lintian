@@ -57,9 +57,9 @@ use List::Util qw(max);
 
 =over 4
 
-=item find_tests_by_name(NAME)
+=item perl_modification_epoch
 
-Find the test case named NAME.
+Calculate the time our Perl was last modified.
 
 =cut
 
@@ -67,6 +67,12 @@ sub perl_modification_epoch {
     my $perlpath = rel2abs($^X);
     return stat($perlpath)->mtime;
 }
+
+=item our_modification_epoch
+
+Calculate the time our scripts, including all libraries, was last modified.
+
+=cut
 
 sub our_modification_epoch {
     my (undef, $callerpath, undef) = caller;
@@ -80,6 +86,14 @@ sub our_modification_epoch {
 }
 
 =back
+
+=head1 AUTHOR
+
+Originally written by Felix Lechner <felix.lechner@lease-up.com> for Lintian.
+
+=head1 SEE ALSO
+
+lintian(1)
 
 =cut
 

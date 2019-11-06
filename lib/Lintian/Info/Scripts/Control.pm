@@ -51,6 +51,10 @@ Returns a hashref mapping a FILE to data about how it is run.
 
 Needs-Info requirements for using I<control_scripts>: scripts
 
+=item saved_control_scripts
+
+Returns the cached control scripts.
+
 =cut
 
 has saved_control_scripts => (is => 'rwp', default => sub { {} });

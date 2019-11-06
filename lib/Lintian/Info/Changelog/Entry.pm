@@ -30,15 +30,28 @@ use constant UNKNOWN => q{unknown};
 use Moo;
 use namespace::clean;
 
+=begin Pod::Coverage
+
+Changes
+Closes
+Date
+Distribution
+Header
+Maintainer
+C<MaintainerEmail>
+Source
+Timestamp
+Trailer
+
+=end Pod::Coverage
+
 has Changes => (is => 'rw', default => EMPTY);
 has Closes => (is => 'rw');
 has Date => (is => 'rw');
 has Distribution => (is => 'rw');
-has ExtraFields => (is => 'rw');
 has Header => (is => 'rw');
 #has Items => (is => 'rw', default => sub { [] });
 has Maintainer => (is => 'rw');
-has MaintainerEmail => (is => 'rw');
 has Source => (is => 'rw');
 has Timestamp => (is => 'rw');
 has Trailer => (is => 'rw');
@@ -79,55 +92,45 @@ fields are string values unless otherwise noted):
 
 =over 4
 
-=item *
+=item Source
 
-Source
+=item Version
 
-=item *
+=item Distribution
 
-Version
+=item Urgency
 
-=item *
-
-Distribution
-
-=item *
-
-Urgency
-
-=item *
+=item C<ExtraFields>
 
 Extra_Fields (all fields except for urgency as hash; POD spelling forces the underscore)
 
-=item *
+=item Header
 
 Header (the whole header in verbatim form)
 
-=item *
+=item Changes
 
 Changes (the actual content of the bug report, in verbatim form)
 
-=item *
+=item Trailer
 
 Trailer (the whole trailer in verbatim form)
 
-=item *
+=item C;pses
 
 Closes (Array of bug numbers)
 
-=item *
+=item Maintainer
 
-Maintainer (name B<and> email address)
+=item C<MaintainerEmail>
 
-=item *
+=item Date
 
-Date
-
-=item *
+=item Timestamp
 
 Timestamp (Date expressed in seconds since the epoch)
 
-=item *
+=item ERROR
 
 ERROR (last parse error related to this entry in the format described
 at Parse::DebianChangelog::get_parse_errors.

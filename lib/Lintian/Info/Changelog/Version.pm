@@ -168,6 +168,36 @@ sub set {
     return;
 }
 
+=item literal
+
+=item epoch
+
+=item no_epoch
+
+=item upstream
+
+=item maintainer_revision
+
+=item debian_source
+
+=item debian_no_epoch
+
+=item source_nmu
+
+=item binary_nmu
+
+=item without_source_nmu
+
+=item debian_without_backport
+
+=item backport_release
+
+=item backport_revision
+
+=item without_backport
+
+=cut
+
 has literal => (is => 'rwp',);
 
 has epoch => (is => 'rwp',);

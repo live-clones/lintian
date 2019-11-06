@@ -423,7 +423,7 @@ sub print_start_pkg {
     return;
 }
 
-=item C<print_start_pkg($pkg_info)>
+=item C<print_end_pkg>
 
 Called after lintian is finished with a package.  The version in
 Lintian::Output does nothing.  Called from Lintian::Tags::file_start() and
@@ -606,10 +606,6 @@ Exports all the methods in L</CLASS/INSTANCE METHODS>
 Exports all the methods in L<CLASS METHODS>
 
 =back
-
-=head1 AUTHOR
-
-Originally written by Frank Lichtenheld <djpig@debian.org> for Lintian.
 
 =head1 SEE ALSO
 
