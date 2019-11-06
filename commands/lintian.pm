@@ -40,7 +40,6 @@ use POSIX qw(:sys_wait_h);
 my $INIT_ROOT = $ENV{'LINTIAN_ROOT'};
 
 use Lintian::Data;
-use Lintian::Lab;
 use Lintian::Output qw(:messages);
 use Lintian::Info::Changelog;
 use Lintian::Internal::FrontendUtil
@@ -813,7 +812,7 @@ sub main {
         eval {
             # create a new group
             my $group = Lintian::Processable::Group->new;
-            $group->lab($pool->lab);
+            $group->pooldir($pool->basedir);
             $group->init_from_file($absolute);
 
             $pool->add_group($group);
