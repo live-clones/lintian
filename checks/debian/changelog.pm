@@ -219,6 +219,8 @@ sub source {
                   . " -> $expected_previous (missing) -> "
                   . $latest_version->literal)
               unless $previous_version->literal eq $expected_previous
+              || $latest_entry->Distribution eq 'buster'
+              || $previous_version->Distribution eq 'buster'
               || $latest_entry->Distribution =~ /-security$/i;
 
             if (   $latest_version->epoch eq $previous_version->epoch
