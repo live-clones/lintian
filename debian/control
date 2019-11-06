@@ -53,6 +53,7 @@ Build-Depends:
  libmoo-perl <!nocheck>,
  libnamespace-clean-perl <!nocheck>,
  libpath-tiny-perl <!nocheck>,
+ libpod-coverage-trustpod-perl <!nocheck>,
  libtest-minimumversion-perl <!nocheck>,
  libtest-perl-critic-perl <!nocheck>,
  libtest-pod-coverage-perl <!nocheck>,
