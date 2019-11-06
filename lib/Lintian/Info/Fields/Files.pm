@@ -1,8 +1,9 @@
 # -*- perl -*-
-# Lintian::Collect::Buildinfo -- interface to .buildinfo file data collection
-
-# Copyright (C) 2010 Adam D. Barratt
-# Copyright (C) 2018 Chris Lamb
+# Lintian::Info::Fields::Files -- interface to .buildinfo file data collection
+#
+# Copyright © 2010 Adam D. Barratt
+# Copyright © 2018 Chris Lamb
+# Copyright © 2019 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by the Free
@@ -17,7 +18,7 @@
 # You should have received a copy of the GNU General Public License along with
 # this program.  If not, see <http://www.gnu.org/licenses/>.
 
-package Lintian::Collect::Buildinfo;
+package Lintian::Info::Fields::Files;
 
 use strict;
 use warnings;
@@ -29,25 +30,19 @@ use namespace::clean;
 
 =head1 NAME
 
-Lintian::Collect::Buildinfo - Lintian interface to .buildinfo file data collection
+Lintian::Info::Fields::Files - Lintian interface to .buildinfo or changes file data collection
 
 =head1 SYNOPSIS
 
-    my ($name, $type) = ('foobar_1.2_i386.buildinfo', 'changes');
-    my $collect = Lintian::Collect::Buildinfo->new;
-    $collect->name($name);
-    my $files = $collect->files;
+   use Moo;
 
-    foreach my $file (keys %{$files}) {
-        my $size = $files->{$file}{size};
-        print "File $file has size $size\n";
-    }
+   with 'Lintian::Info::Fields::Files';
 
 =head1 DESCRIPTION
 
-Lintian::Collect::Buildinfo provides an interface to data for .buildinfo
-files.  It implements data collection methods specific to .buildinfo 
-files.
+Lintian::Info::Fields::Files provides an interface to data for .buildinfo
+and changes files.  It implements data collection methods specific to .buildinfo
+and changes files.
 
 =head1 INSTANCE METHODS
 
@@ -101,23 +96,32 @@ checksum.
 
 Needs-Info requirements for using I<files>: L<Lintian::Collect/field ([FIELD[, DEFAULT]])>
 
+=item saved_files
+
 =cut
+
+has saved_files => (is => 'rwp', default => sub { {} });
 
 sub files {
     my ($self) = @_;
 
-    return $self->{files} if exists $self->{files};
+    return $self->saved_files
+      if scalar keys %{$self->saved_files};
 
     my %files;
 
     my $file_list = $self->field('files') || '';
+
     local $_;
+
     for (split /\n/, $file_list) {
         strip;
         next if $_ eq '';
 
         my ($md5sum,$size,$section,$priority,$file) = split(/\s+/o, $_);
-        next if $file =~ m,/,;
+
+        next
+          if $file =~ m,/,;
 
         $files{$file}{checksums}{md5} = {
             'sum' => $md5sum,
@@ -130,7 +134,9 @@ sub files {
     }
 
     foreach my $alg (qw(sha1 sha256)) {
+
         my $list = $self->field("checksums-$alg") || '';
+
         for (split /\n/, $list) {
             strip;
             next if $_ eq '';
@@ -145,8 +151,9 @@ sub files {
         }
     }
 
-    $self->{files} = \%files;
-    return $self->{files};
+    $self->_set_saved_files(\%files);
+
+    return $self->saved_files;
 }
 
 =back
@@ -157,7 +164,7 @@ Originally written by Adam D. Barratt <adsb@debian.org> for Lintian.
 
 =head1 SEE ALSO
 
-lintian(1), L<Lintian::Collect>
+lintian(1), L<Lintian::Processable>
 
 =cut
 
