@@ -49,6 +49,10 @@ use Lintian::Profile;
 use Lintian::Tags qw(tag);
 use Lintian::Util qw(internal_error parse_boolean strip safe_qx);
 
+# only in GNOME; need original environment
+my $interactive = -t STDIN && (-t STDOUT || !(-f STDOUT || -c STDOUT));
+my $hyperlinks_capable = $interactive && qx{env | fgrep -i gnome};
+
 sanitize_environment();
 
 # }}}
@@ -156,6 +160,7 @@ General options:
     -V, --version             display Lintian version and exit
 Behavior options:
     --color never/always/auto disable, enable, or enable color for TTY
+    --hyperlinks on/off       hyperlinks for TTY (when supported)
     --default-display-level   reset the display level to the default
     --display-source X        restrict displayed tags by source
     -E, --display-experimental display "X:" tags (normally suppressed)
@@ -520,6 +525,7 @@ my %opthash = (
     'show-overrides' => \$opt{'show-overrides'},
     'hide-overrides' => sub { $opt{'show-overrides'} = 0; },
     'color=s' => \$opt{'color'},
+    'hyperlinks=s' => \$opt{'hyperlinks'},
     'unpack-info|U=s' => \@unpack_info,
     'allow-root' => \$opt{'allow-root'},
     'keep-lab' => \$opt{'keep-lab'},
@@ -633,6 +639,15 @@ sub main {
                 'The color value must be one of',
                 'never", "always", "auto" or "html"'));
     }
+
+    if ($opt{'color'} eq 'never') {
+        $opt{'hyperlinks'} //= 'off';
+    } else {
+        $opt{'hyperlinks'} //= 'on';
+    }
+    fatal_error('The hyperlink value must be one of "on" or "off"')
+      unless $opt{'hyperlinks'} =~ /^(?:on|off)$/;
+
     if (not defined $opt{'tag-display-limit'}) {
         if (-t STDOUT and not $opt{'verbose'}) {
             $opt{'tag-display-limit'}
@@ -685,7 +700,10 @@ sub main {
 
     $Lintian::Output::GLOBAL->verbosity_level($opt{'verbose'});
     $Lintian::Output::GLOBAL->debug($opt{'debug'});
+
     $Lintian::Output::GLOBAL->color($opt{'color'});
+    $Lintian::Output::GLOBAL->tty_hyperlinks($hyperlinks_capable
+          && $opt{hyperlinks} eq 'on');
     $Lintian::Output::GLOBAL->tag_display_limit($opt{'tag-display-limit'});
     $Lintian::Output::GLOBAL->showdescription($opt{'info'});
 
@@ -952,6 +970,7 @@ sub parse_config_file {
     # Options that can appear in the config file
     my %cfghash = (
         'color'                => \$opt{'color'},
+        'hyperlinks'           => \$opt{'hyperlinks'},
         'display-experimental' => \$opt{'display-experimental'},
         'display-info'         => \&cfg_display_level,
         'display-level'        => \&cfg_display_level,

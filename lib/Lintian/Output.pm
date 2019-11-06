@@ -82,6 +82,10 @@ use Lintian::Tags ();
 # support for ANSI color output via colored()
 use Term::ANSIColor ();
 
+# for tty hyperlinks
+use constant OSC_HYPERLINK => qq{\033]8;;};
+use constant OSC_DONE => qq{\033\\};
+
 =head1 ACCESSORS
 
 The following fields define the behaviours of Lintian::Output.
@@ -137,7 +141,7 @@ Get/Set the number of times a tag is emitted per processable.
 Lintian::Output->mk_accessors(
     qw(verbosity_level debug color colors stdout
       stderr perf_log_fd perf_debug showdescription
-      issuedtags tag_display_limit)
+      issuedtags tag_display_limit tty_hyperlinks)
 );
 
 # for the non-OO interface
@@ -168,6 +172,8 @@ sub new {
     $self->verbosity_level(0);
     $self->perf_debug(0);
     $self->color('never');
+    $self->tty_hyperlinks(0);
+
     return $self;
 }
 
@@ -354,16 +360,23 @@ sub print_tag {
         $information = $self->_quote_print($msg)
           if $emitted_count >= $limit-1;
     }
-    if ($self->_do_color) {
-        if ($self->color eq 'html') {
-            my $escaped = escapeHTML($tag_name);
-            $information = escapeHTML($information);
-            $tag .= qq(<span style="color: $tag_color">$escaped</span>);
-        } else {
-            $tag .= Term::ANSIColor::colored($tag_name, $tag_color);
-        }
+    if ($self->_do_color && $self->color eq 'html') {
+        my $escaped = escapeHTML($tag_name);
+        $information = escapeHTML($information);
+        $tag .= qq(<span style="color: $tag_color">$escaped</span>);
+
     } else {
-        $tag .= $tag_name;
+        my $text = $tag_name;
+        $text = Term::ANSIColor::colored($tag_name, $tag_color)
+          if $self->_do_color;
+
+        if ($self->tty_hyperlinks) {
+            my $target
+              = 'https://lintian.debian.org/tags/' . $tag_name . '.html';
+            $tag .= $self->osc_hyperlink($text, $target);
+        } else {
+            $tag .= $text;
+        }
     }
 
     if ($override && @{ $override->comments }) {
@@ -385,6 +398,19 @@ sub print_tag {
         $self->_print('', 'N', '');
     }
     return;
+}
+
+=item C<osc_hyperlink>
+
+=cut
+
+sub osc_hyperlink {
+    my ($self, $text, $target) = @_;
+
+    my $start = OSC_HYPERLINK . $target . OSC_DONE;
+    my $end = OSC_HYPERLINK . OSC_DONE;
+
+    return $start . $text . $end;
 }
 
 # Helper function to "print_tag" to decide the output format of the tag line.  Used by
