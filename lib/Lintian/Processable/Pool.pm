@@ -360,7 +360,7 @@ Returns true if the pool is empty.
 
 sub empty{
     my ($self) = @_;
-    return scalar %{$self->groups} == 0;
+    return scalar keys %{$self->groups} == 0;
 }
 
 =back
