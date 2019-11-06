@@ -30,21 +30,6 @@ use constant UNKNOWN => q{unknown};
 use Moo;
 use namespace::clean;
 
-=begin Pod::Coverage
-
-Changes
-Closes
-Date
-Distribution
-Header
-Maintainer
-C<MaintainerEmail>
-Source
-Timestamp
-Trailer
-
-=end Pod::Coverage
-
 has Changes => (is => 'rw', default => EMPTY);
 has Closes => (is => 'rw');
 has Date => (is => 'rw');
@@ -100,6 +85,10 @@ fields are string values unless otherwise noted):
 
 =item Urgency
 
+=item Urgency_Comment
+
+=item C<Urgency_LC>
+
 =item C<ExtraFields>
 
 Extra_Fields (all fields except for urgency as hash; POD spelling forces the underscore)
@@ -116,7 +105,7 @@ Changes (the actual content of the bug report, in verbatim form)
 
 Trailer (the whole trailer in verbatim form)
 
-=item C;pses
+=item Closes
 
 Closes (Array of bug numbers)
 
@@ -136,6 +125,21 @@ ERROR (last parse error related to this entry in the format described
 at Parse::DebianChangelog::get_parse_errors.
 
 =back
+
+=begin Pod::Coverage
+
+Changes
+Closes
+Date
+Distribution
+Header
+Maintainer
+C<MaintainerEmail>
+Source
+Timestamp
+Trailer
+
+=end Pod::Coverage
 
 =cut
 
