@@ -32,7 +32,6 @@ use POSIX qw(strftime);
 use YAML::XS ();
 
 use Lintian::Command qw(reap spawn safe_qx);
-use Lintian::Lab;
 use Lintian::Processable;
 use Lintian::Relation::Version qw(versions_comparator);
 use Lintian::Reporting::Util qw(load_state_cache save_state_cache);

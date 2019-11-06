@@ -26,8 +26,6 @@ package Lintian::Output::FullEWI;
 # When parsing a lintian.log written in format, it is no longer
 # ambiguous which package is referred to (even if --verbose is
 # not used).
-#   This makes machine-parsing of the log easier, especially
-# when using the parsed data with the Lintian::Lab API.
 #
 # The full format of the emitted tag is:
 #
