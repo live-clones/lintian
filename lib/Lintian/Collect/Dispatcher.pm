@@ -46,17 +46,6 @@ source, binary and udeb packages and .changes files.  It creates an
 object of the appropriate type and provides common functions used by the
 collection interface to all types of package.
 
-Usually instances should not be created directly (exceptions include
-collections), but instead be requested via the
-L<info|Lintian::Lab::Entry/info> method in Lintian::Lab::Entry.
-
-This module is in its infancy.  Most of Lintian still reads all data from
-files in the laboratory whenever that data is needed and generates that
-data via collect scripts.  The goal is to eventually access all data via
-this module and its subclasses so that the module can cache data where
-appropriate and possibly retire collect scripts in favor of caching that
-data in memory.
-
 =head1 CLASS METHODS
 
 =over 4
@@ -82,38 +71,38 @@ Needs-Info requirements for using I<create_info>: none
 =cut
 
 sub create_info {
-    my ($pkg, $type, $base_dir, $fields) = @_;
+    my ($pkg, $type, $groupdir, $fields) = @_;
 
-    my $object;
+    my $processable;
 
     if ($type eq 'source') {
         require Lintian::Processable::Source;
-        $object = Lintian::Processable::Source->new;
+        $processable = Lintian::Processable::Source->new;
 
     } elsif ($type eq 'binary' or $type eq 'udeb') {
         require Lintian::Processable::Binary;
-        $object = Lintian::Processable::Binary->new;
+        $processable = Lintian::Processable::Binary->new;
 
     } elsif ($type eq 'buildinfo') {
         require Lintian::Processable::Buildinfo;
-        $object = Lintian::Processable::Buildinfo->new;
+        $processable = Lintian::Processable::Buildinfo->new;
 
     } elsif ($type eq 'changes') {
         require Lintian::Processable::Changes;
-        $object = Lintian::Processable::Changes->new;
+        $processable = Lintian::Processable::Changes->new;
 
     } else {
         croak("Undefined type: $type");
     }
 
-    $object->name($pkg);
-    $object->type($type);
-    $object->base_dir($base_dir);
+    $processable->name($pkg);
+    $processable->type($type);
+    $processable->groupdir($groupdir);
 
-    $object->verbatim($fields)
+    $processable->verbatim($fields)
       if defined $fields;
 
-    return $object;
+    return $processable;
 }
 
 =back

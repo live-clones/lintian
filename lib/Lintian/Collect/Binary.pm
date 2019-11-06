@@ -125,27 +125,37 @@ Needs-Info requirements for using I<changelog>: changelog-file
 
 sub changelog {
     my ($self) = @_;
-    return $self->{changelog} if exists $self->{changelog};
-    my $dch = $self->lab_data_path('changelog');
+
+    return $self->{changelog}
+      if exists $self->{changelog};
+
+    my $dch = path($self->groupdir)->child('changelog')->stringify;
+
     if (-l $dch || !-f $dch) {
         $self->{changelog} = undef;
+
     } else {
         my $shared = $self->{'_shared_storage'};
         my ($checksum, $changelog);
-        if (defined($shared)) {
+
+        if (defined $shared) {
             $checksum = get_file_checksum('sha1', $dch);
             $changelog = $shared->{'changelog'}{$checksum};
         }
-        if (not $changelog) {
+
+        unless ($changelog) {
             my $contents = path($dch)->slurp;
             $changelog = Lintian::Info::Changelog->new;
             $changelog->parse($contents);
-            if (defined($shared)) {
+
+            if (defined $shared) {
                 $shared->{'changelog'}{$checksum} = $changelog;
             }
         }
+
         $self->{changelog} = $changelog;
     }
+
     return $self->{changelog};
 }
 
@@ -333,7 +343,7 @@ sub scripts {
 
         my %scripts;
 
-        my $dbpath = $self->lab_data_path('scripts.db');
+        my $dbpath = path($self->groupdir)->child('scripts.db')->stringify;
 
         tie my %h, 'MLDBM',-Filename => $dbpath
           or die "Cannot open file $dbpath: $! $BerkeleyDB::Error\n";
@@ -380,11 +390,17 @@ Needs-Info requirements for using I<objdump_info>: objdump-info
 
 sub objdump_info {
     my ($self) = @_;
-    return $self->{objdump_info} if exists $self->{objdump_info};
-    my $objf = $self->lab_data_path('objdump-info.gz');
+
+    return $self->{objdump_info}
+      if exists $self->{objdump_info};
+
+    my $objf = path($self->groupdir)->child('objdump-info.gz')->stringify;
+
     my %objdump_info;
     local $_;
+
     my $fd = open_gz($objf);
+
     foreach my $pg (parse_dpkg_control($fd)) {
         my %info;
         if (lc($pg->{'broken'}//'no') eq 'yes') {
@@ -480,9 +496,14 @@ Needs-Info requirements for using I<hardening_info>: hardening-info
 
 sub hardening_info {
     my ($self) = @_;
-    return $self->{hardening_info} if exists $self->{hardening_info};
-    my $hardf = $self->lab_data_path('hardening-info');
+
+    return $self->{hardening_info}
+      if exists $self->{hardening_info};
+
+    my $hardf = path($self->groupdir)->child('hardening-info')->stringify;
+
     my %hardening_info;
+
     if (-e $hardf) {
         open(my $idx, '<', $hardf);
         while (my $line = <$idx>) {
@@ -490,6 +511,7 @@ sub hardening_info {
 
             if ($line =~ m,^([^:]+):(?:\./)?(.*)$,) {
                 my ($tag, $file) = ($1, $2);
+
                 push(@{$hardening_info{$file}}, $tag);
             }
         }
@@ -497,6 +519,7 @@ sub hardening_info {
     }
 
     $self->{hardening_info} = \%hardening_info;
+
     return $self->{hardening_info};
 }
 

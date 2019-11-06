@@ -121,10 +121,17 @@ Needs-Info requirements for using I<diffstat>: diffstat
 
 sub diffstat {
     my ($self) = @_;
-    return $self->{diffstat} if exists $self->{diffstat};
-    my $dstat = $self->lab_data_path('diffstat');
-    $dstat = '/dev/null' unless -e $dstat;
+
+    return $self->{diffstat}
+      if exists $self->{diffstat};
+
+    my $dstat = path($self->groupdir)->child('diffstat')->stringify;
+
+    $dstat = '/dev/null'
+      unless -e $dstat;
+
     $self->{diffstat} = $dstat;
+
     return $dstat;
 }
 
@@ -158,12 +165,12 @@ sub native {
         $self->{native} = 1;
     } else {
         my $version = $self->field('version');
-        my $base_dir = $self->base_dir;
+        my $groupdir = $self->groupdir;
         if (defined $version) {
             $version =~ s/^\d+://;
             my $name = $self->{name};
             $self->{native}
-              = (-f "$base_dir/${name}_${version}.diff.gz" ? 0 : 1);
+              = (-f "$groupdir/${name}_${version}.diff.gz" ? 0 : 1);
         } else {
             # We do not know, but assume it to non-native as it is
             # the most likely case.
