@@ -26,6 +26,7 @@ use autodie;
 use Carp qw(croak);
 use Exporter qw(import);
 use List::MoreUtils qw(any);
+use Path::Tiny;
 use POSIX qw(ENOENT);
 
 use Lintian::Architecture qw(:all);
@@ -699,18 +700,22 @@ present.
 
 sub load_overrides {
     my ($self) = @_;
+
     my $current = $self->{current};
-    my $lpkg;
     my $overrides_file;
-    unless (defined($current)) {
-        die 'no current file when loading overrides';
-    }
-    $lpkg = $self->{'info'}{$current}{'processable'};
-    $overrides_file = $lpkg->info->lab_data_path('override');
+
+    die 'no current file when loading overrides'
+      unless defined $current;
+
+    my $processable = $self->{'info'}{$current}{'processable'};
+    $overrides_file
+      = path($processable->info->groupdir)->child('override')->stringify;
+
     eval {$self->file_overrides($overrides_file);};
     if (my $err = $@) {
         die $err if not ref $err or $err->errno != ENOENT;
     }
+
     return;
 }
 
