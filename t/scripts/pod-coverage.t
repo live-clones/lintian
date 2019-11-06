@@ -5,11 +5,15 @@ use warnings;
 
 use Test::More;
 
+use Test::Lintian;
+
 plan skip_all => 'Not needed for coverage of Lintian'
   if $ENV{'LINTIAN_COVERAGE'};
 
 plan skip_all => 'Test::Pod::Coverage 1.08 required for this test'
   unless eval 'use Test::Pod::Coverage 1.08; 1';
+
+load_profile_for_test;
 
 all_pod_coverage_ok({ coverage_class => 'Pod::Coverage::TrustPod' });
 
