@@ -25,17 +25,18 @@ use warnings;
 
 use Carp qw(croak);
 use Cwd();
-use Data::Dumper;
+use File::Temp qw(tempdir);
 use Time::HiRes qw(gettimeofday tv_interval);
+use Path::Tiny;
 use POSIX qw(:sys_wait_h);
 
 use Lintian::DepMap;
 use Lintian::DepMap::Properties;
 use Lintian::Output qw(:messages);
 use Lintian::Processable::Group;
-use Lintian::Unpacker;
 use Lintian::Util;
 
+use constant EMPTY => q{};
 use constant SPACE => q{ };
 
 use Moo;
@@ -68,19 +69,35 @@ Lintian::Processable::Pool -- Pool of processables
 Returns a hash reference to the list of processable groups that are currently
 in the pool. The key is a unique identifier based on name and version.
 
-=item $pool->lab
-
-Returns or sets the lab used by this pool.
-
-=item $pool->unpacker
-
-Returns or sets the Unpacker object used by this pool.
-
 =cut
 
 has groups => (is => 'rwp', default => sub{ {} });
-has lab => (is => 'rw', default => sub { Lintian::Lab->new });
-has unpacker => (is => 'rwp');
+
+# must be absolute; frontend/lintian depends on it
+has basedir => (
+    is => 'rwp',
+    default => sub {
+
+        my $relative = tempdir('temp-lintian-lab-XXXXXXXXXX', 'TMPDIR' => 1);
+
+        my $absolute = Cwd::abs_path($relative);
+        croak "Could not resolve $relative: $!"
+          unless $absolute;
+
+        path("$absolute/pool")->mkpath({mode => 0777});
+
+        return $absolute;
+    });
+has keep => (is => 'rw', default => 0);
+
+=item $pool->basedir
+
+Returns the base directory for the pool. Most likely it's a temporary directory.
+
+=item $pool->keep
+
+Returns or accepts a boolean value that indicates whether the lab should be
+removed when Lintian finishes. Used for debugging.
 
 =item $pool->add_group($group)
 
@@ -199,15 +216,11 @@ sub process{
               . join(', ', $map->missing));
     }
 
-    my $unpacker = Lintian::Unpacker->new;
-
-    # for checking, pass profile to limit what it unpacks
+    my @requested;
     if ($action eq 'check') {
 
-        $unpacker->profile($PROFILE);
-
         # add collections requested by user (--unpack-info)
-        my @requested
+        @requested
           = map { split(/,/) } (@{$unpack_info_ref // []});
 
         my @unknown = grep { !collmap->getp($_) } @requested;
@@ -217,16 +230,10 @@ sub process{
         # need 'override-file' for overrides
         push(@requested, 'override-file')
           unless $opt->{'no-override'};
-
-        $unpacker->extra_coll(\@requested);
     }
 
     # With --unpack we want all of them.  That's the default so,
     # "done!"
-
-    $unpacker->jobs($opt->{'jobs'});
-    $unpacker->init($collmap);
-    $self->_set_unpacker($unpacker);
 
     my @sorted = sort { $a->name cmp $b->name } values %{$self->groups};
     foreach my $group (@sorted) {
@@ -237,7 +244,13 @@ sub process{
         my $total_start = [gettimeofday];
         my $group_start = [gettimeofday];
 
-        if (!$group->unpack($self->unpacker, $action,$exit_code_ref)) {
+        # for checking, pass profile to limit what it unpacks
+        $group->profile($PROFILE);
+
+        $group->extra_coll(\@requested);
+        $group->jobs($opt->{'jobs'});
+
+        if (!$group->unpack($collmap, $action,$exit_code_ref)) {
             $success = 0;
         }
 
@@ -250,9 +263,7 @@ sub process{
         if ($action eq 'check') {
             if (
                 !$group->process(
-                    $PROFILE,$TAGS, $collmap,
-                    $exit_code_ref, $overrides,$opt,
-                    $memory_usage
+                    $TAGS,$exit_code_ref, $overrides,$opt,$memory_usage
                 )
             ) {
                 $success = 0;
@@ -285,7 +296,14 @@ sub process{
 
         # remove group files unless we are keeping the lab
         $group->clean_lab
-          unless ($self->lab->keep);
+          unless ($self->keep);
+
+       # Wait for any remaining jobs - There will usually not be any
+       # unless we had an issue examining the last package.  We patiently wait
+       # for them here; if the user cannot be bothered to wait, he/she can send
+       # us a signal and the END handler will kill any remaining jobs.
+
+        $group->wait_for_jobs;
 
         my $total_raw_res = tv_interval($total_start);
         my $total_tres = sprintf('%.3fs', $total_raw_res);
@@ -298,31 +316,8 @@ sub process{
         v_msg('Finished processing group ' . $group->name);
     }
 
-    # Wait for any remaining jobs - There will usually not be any
-    # unless we had an issue examining the last package.  We patiently wait
-    # for them here; if the user cannot be bothered to wait, he/she can send
-    # us a signal and the END handler will kill any remaining jobs.
-
-    $self->unpacker->wait_for_jobs;
-
     # do not remove lab if so selected
-    $self->lab->keep($opt->{'keep-lab'});
-
-    return;
-}
-
-=item DEMOLISH
-
-Moo destructor.
-
-=cut
-
-sub DEMOLISH {
-    my ($self, $in_global_destruction) = @_;
-
-    # kill any remaining jobs.
-    $self->unpacker->kill_jobs
-      if $self->unpacker;
+    $self->keep($opt->{'keep-lab'});
 
     return;
 }
@@ -361,6 +356,22 @@ Returns true if the pool is empty.
 sub empty{
     my ($self) = @_;
     return scalar keys %{$self->groups} == 0;
+}
+
+=item DEMOLISH
+
+Removes the lab and everything in it.  Any reference to an entry
+returned from this lab will immediately become invalid.
+
+=cut
+
+sub DEMOLISH {
+    my ($self, $in_global_destruction) = @_;
+
+    path($self->basedir)->remove_tree
+      if length $self->basedir && -d $self->basedir && !$self->keep;
+
+    return;
 }
 
 =back
