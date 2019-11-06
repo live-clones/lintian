@@ -32,6 +32,7 @@ use v5.10;
 
 use File::Basename qw(basename);
 use List::MoreUtils qw(any);
+use Path::Tiny;
 
 use Lintian::Data;
 use Lintian::Relation ();
@@ -427,7 +428,7 @@ sub source {
     # package if it isn't just tar cruft.
     for my $file (keys %ERRORS) {
         my $tag  = $ERRORS{$file};
-        my $path = $info->lab_data_path($file);
+        my $path = path($info->groupdir)->child($file)->stringify;
         if (-s $path) {
             open(my $fd, '<', $path);
             local $_;

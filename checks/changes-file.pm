@@ -25,6 +25,7 @@ use warnings;
 use autodie;
 
 use List::MoreUtils qw(any);
+use Path::Tiny;
 
 use Lintian::Data;
 use Lintian::Maintainer qw(check_maintainer);
@@ -194,7 +195,7 @@ sub changes {
     }
 
     my $files = $info->files;
-    my $path = readlink($info->lab_data_path('changes'));
+    my $path = readlink(path($info->groupdir)->child('changes')->stringify);
     my %num_checksums;
     $path =~ s#/[^/]+$##;
     foreach my $file (keys %$files) {

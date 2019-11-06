@@ -339,7 +339,7 @@ sub binary {
     # Check a NEWS.Debian file if we have one.  Save the parsed version of the
     # file for later checks against the changelog file.
     my $news;
-    my $dnews = $info->lab_data_path('NEWS.Debian');
+    my $dnews = path($info->groupdir)->child('NEWS.Debian')->stringify;
     if (-f $dnews) {
         my $line = file_is_encoded_in_non_utf8($dnews);
         if ($line) {
@@ -458,7 +458,7 @@ sub binary {
         }
     }
 
-    my $dchpath = $info->lab_data_path('changelog');
+    my $dchpath = path($info->groupdir)->child('changelog')->stringify;
     # Everything below involves opening and reading the changelog file, so bail
     # with a warning at this point if all we have is a symlink.  Ubuntu permits
     # such symlinks, so their profile will suppress this tag.

@@ -883,7 +883,7 @@ sub binary {
         return;
     }
 
-    my $dcopy = $info->lab_data_path('copyright');
+    my $dcopy = path($info->groupdir)->child('copyright')->stringify;
     # check that copyright is UTF-8 encoded
     my $line = file_is_encoded_in_non_utf8($dcopy);
     if ($line) {
