@@ -75,10 +75,6 @@ Returns the name of the package.
 
 Returns the type of the package.
 
-=item base_dir
-
-Returns the base_dir where all the package information is stored.
-
 =item verbatim
 
 Returns a hash to the raw, unedited and verbatim field values.
@@ -135,11 +131,11 @@ to less dangerous (but possibly invalid) values.
 Produces an identifier for this processable.  The identifier is
 based on the type, name, version and architecture of the package.
 
-=item lab
+=item $proc->pooldir
 
 Returns a reference to lab this Processable is in.
 
-=item base_dir
+=item $proc->groupdir
 
 Returns the base directory of this package inside the lab.
 
@@ -186,8 +182,8 @@ has tainted => (is => 'rw', default => 0);
 
 has identifier =>
   (is => 'rw', coerce => sub { my $id = shift; $id =~ s/\s+/_/g; $id; });
-has lab => (is => 'rw');
-has base_dir => (is => 'rw');
+has pooldir => (is => 'rw', default => EMPTY);
+has groupdir => (is => 'rw', default => EMPTY);
 has group => (is => 'rw');
 
 has extra_fields => (is => 'rw', default => sub { {} });
@@ -236,8 +232,8 @@ sub remove {
 
     $self->clear_cache;
 
-    path($self->base_dir)->remove_tree
-      if -e $self->base_dir;
+    path($self->groupdir)->remove_tree
+      if -e $self->groupdir;
 
     return;
 }
@@ -289,12 +285,12 @@ sub link {
     unless (length $self->saved_link) {
 
         croak 'Please set base directory for processable first'
-          unless length $self->base_dir;
+          unless length $self->groupdir;
 
         croak 'Please set link label for processable first'
           unless length $self->link_label;
 
-        my $link = path($self->base_dir)->child($self->link_label)->stringify;
+        my $link = path($self->groupdir)->child($self->link_label)->stringify;
         $self->saved_link($link);
     }
 
@@ -315,10 +311,10 @@ sub create {
       if -l $self->link;
 
     croak 'Please set base directory for processable first'
-      unless length $self->base_dir;
+      unless length $self->groupdir;
 
-    path($self->base_dir)->mkpath
-      unless -e $self->base_dir;
+    path($self->groupdir)->mkpath
+      unless -e $self->groupdir;
 
     symlink($self->pkg_path, $self->link)
       or croak 'symlinking ' . $self->pkg_path . "failed: $!";
@@ -346,25 +342,6 @@ sub guess_name {
 
     # 'path/lintian_2.5.2_amd64.changes' became 'lintian'
     return $guess;
-}
-
-=item lab_data_path ([ENTRY])
-
-Return the path to the ENTRY in the lab.  This is a convenience method
-around base_dir.  If ENTRY is not given, this method behaves like
-base_dir.
-
-Needs-Info requirements for using I<lab_data_path>: L</base_dir>
-
-=cut
-
-sub lab_data_path {
-    my ($self, $entry) = @_;
-
-    croak 'Need entry to calculate lab data path.'
-      unless $entry;
-
-    return $self->base_dir . SLASH . $entry;
 }
 
 =item unfolded_field (FIELD)
@@ -435,7 +412,7 @@ sub field {
 
     unless (keys %{$self->verbatim}) {
 
-        my $base_dir = $self->base_dir;
+        my $groupdir = $self->groupdir;
         my $verbatim;
 
         if ($self->type eq 'changes' || $self->type eq 'source'){
@@ -443,17 +420,17 @@ sub field {
             $file = 'dsc'
               if $self->type eq 'source';
 
-            $verbatim = get_dsc_info("$base_dir/$file");
+            $verbatim = get_dsc_info("$groupdir/$file");
 
         } elsif ($self->type eq 'binary' || $self->type eq 'udeb'){
             # (ab)use the unpacked control dir if it is present
-            if (   -f "$base_dir/control/control"
-                && -s "$base_dir/control/control") {
+            if (   -f "$groupdir/control/control"
+                && -s "$groupdir/control/control") {
 
-                $verbatim = get_dsc_info("$base_dir/control/control");
+                $verbatim = get_dsc_info("$groupdir/control/control");
 
             } else {
-                $verbatim = (get_deb_info("$base_dir/deb"));
+                $verbatim = (get_deb_info("$groupdir/deb"));
             }
         }
 
