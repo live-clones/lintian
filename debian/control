@@ -5,7 +5,6 @@ Maintainer: Debian Lintian Maintainers <lintian-maint@debian.org>
 Uploaders:
  Colin Watson <cjwatson@debian.org>,
  Russ Allbery <rra@debian.org>,
- Adam D. Barratt <adam@adam-barratt.org.uk>,
  Chris Lamb <lamby@debian.org>,
 Build-Depends:
  aspell <!nocheck>,
