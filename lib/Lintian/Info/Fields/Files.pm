@@ -118,19 +118,27 @@ sub files {
         strip;
         next if $_ eq '';
 
-        my ($md5sum,$size,$section,$priority,$file) = split(/\s+/o, $_);
+        my @fields = split(/\s+/o, $_);
+        my $file = $fields[-1];
 
         next
           if $file =~ m,/,;
+
+        my ($md5sum, $size, $section, $priority) = @fields;
 
         $files{$file}{checksums}{md5} = {
             'sum' => $md5sum,
             'filesize' => $size,
         };
+
         $files{$file}{name} = $file;
         $files{$file}{size} = $size;
-        $files{$file}{section} = $section;
-        $files{$file}{priority} = $priority;
+
+        unless ($self->type eq 'source') {
+
+            $files{$file}{section} = $section;
+            $files{$file}{priority} = $priority;
+        }
     }
 
     foreach my $alg (qw(sha1 sha256)) {
