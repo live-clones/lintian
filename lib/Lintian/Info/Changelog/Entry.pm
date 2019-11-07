@@ -19,6 +19,35 @@
 #    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
 #
 
+package Lintian::Info::Changelog::Entry;
+
+use strict;
+use warnings;
+
+use constant EMPTY => q{};
+use constant UNKNOWN => q{unknown};
+
+use Moo;
+use namespace::clean;
+
+has Changes => (is => 'rw', default => EMPTY);
+has Closes => (is => 'rw');
+has Date => (is => 'rw');
+has Distribution => (is => 'rw');
+has ExtraFields => (is => 'rw');
+has Header => (is => 'rw');
+#has Items => (is => 'rw', default => sub { [] });
+has Maintainer => (is => 'rw');
+has MaintainerEmail => (is => 'rw');
+has Source => (is => 'rw');
+has Timestamp => (is => 'rw');
+has Trailer => (is => 'rw');
+has Urgency => (is => 'rw', default => UNKNOWN);
+has Urgency_LC => (is => 'rw', default => UNKNOWN);
+has Urgency_Comment => (is => 'rw', default => EMPTY);
+has Version => (is => 'rw');
+has ERROR => (is => 'rw');
+
 =head1 NAME
 
 Lintian::Info::Changelog::Entry - represents one entry in a Debian changelog
@@ -106,34 +135,6 @@ at Parse::DebianChangelog::get_parse_errors.
 =back
 
 =cut
-
-package Lintian::Info::Changelog::Entry;
-
-use strict;
-use warnings;
-
-use Moo;
-
-use constant EMPTY => q{};
-use constant UNKNOWN => q{unknown};
-
-has Changes => (is => 'rw', default => EMPTY);
-has Closes => (is => 'rw');
-has Date => (is => 'rw');
-has Distribution => (is => 'rw');
-has ExtraFields => (is => 'rw');
-has Header => (is => 'rw');
-#has Items => (is => 'rw', default => sub { [] });
-has Maintainer => (is => 'rw');
-has MaintainerEmail => (is => 'rw');
-has Source => (is => 'rw');
-has Timestamp => (is => 'rw');
-has Trailer => (is => 'rw');
-has Urgency => (is => 'rw', default => UNKNOWN);
-has Urgency_LC => (is => 'rw', default => UNKNOWN);
-has Urgency_Comment => (is => 'rw', default => EMPTY);
-has Version => (is => 'rw');
-has ERROR => (is => 'rw');
 
 sub is_empty {
     my ($self) = @_;

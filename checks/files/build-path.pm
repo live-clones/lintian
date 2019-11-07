@@ -25,8 +25,9 @@ use warnings;
 use autodie;
 
 use Moo;
+use namespace::clean;
 
-with('Lintian::Check');
+with 'Lintian::Check';
 
 my $BUILD_PATH_REGEX
   = Lintian::Data->new('files/build-path-regex',qr/~~~~~/,

@@ -19,18 +19,21 @@
 # MA 02110-1301, USA.
 
 package Lintian::java;
+
 use strict;
 use warnings;
 use autodie;
 
 use File::Basename;
 use List::MoreUtils qw(any none);
-use Moo;
 
 use Lintian::Data ();
 use Lintian::Util qw(normalize_pkg_path $PKGNAME_REGEX);
 
-with('Lintian::Check');
+use Moo;
+use namespace::clean;
+
+with 'Lintian::Check';
 
 our $CLASS_REGEX = qr/\.(?:class|cljc?)/o;
 our $MAX_BYTECODE = Lintian::Data->new('java/constants', qr/\s*=\s*/o);

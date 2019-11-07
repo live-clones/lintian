@@ -25,12 +25,14 @@ use warnings;
 use autodie;
 
 use File::Basename;
-use Moo;
 
 use Lintian::Relation qw(:constants);
 use Lintian::Util qw(internal_error);
 
-with('Lintian::Check');
+use Moo;
+use namespace::clean;
+
+with 'Lintian::Check';
 
 # whether the package appears to be an Apache2 module/web application
 has seen_apache2_special_file => (is => 'rwp', default => 0);

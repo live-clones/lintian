@@ -1,3 +1,4 @@
+fields (source): uses-debhelper-compat-file
 fields (source): package-uses-debhelper-but-lacks-build-depends
 fields (source): package-needs-versioned-debhelper-build-depends 12
 fields (source): missing-build-dependency-for-dh_-command dh_md5sums => debhelper | debhelper-compat

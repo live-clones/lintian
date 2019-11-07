@@ -1,1 +1,2 @@
 watch-file-old-upstream-version (source): debian-watch-file-specifies-old-upstream-version 1.0 line 3
+watch-file-old-upstream-version (source): debian-watch-does-not-check-gpg-signature

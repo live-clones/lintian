@@ -27,15 +27,17 @@ use autodie;
 use Capture::Tiny qw(capture_merged capture_stderr);
 use Cwd qw(realpath);
 use File::Temp();
-use Moo;
 use Try::Tiny;
 
 use Lintian::Output qw(msg);
 use Lintian::Util qw(copy_dir clean_env);
 
-with('Lintian::Check');
-
 use constant NEWLINE  =>  qq{\n};
+
+use Moo;
+use namespace::clean;
+
+with 'Lintian::Check';
 
 sub source {
     my ($self) = @_;

@@ -24,11 +24,12 @@ use strict;
 use warnings;
 use autodie;
 
-use Moo;
-
 use Lintian::Util qw(drain_pipe);
 
-with('Lintian::Check');
+use Moo;
+use namespace::clean;
+
+with 'Lintian::Check';
 
 my $FONT_PACKAGES = Lintian::Data->new('files/fonts', qr/\s++/);
 

@@ -24,13 +24,14 @@ use strict;
 use warnings;
 use autodie;
 
-use Moo;
-
 use List::MoreUtils qw(any);
 
-with('Lintian::Check');
-
 use constant SPACE  =>  q{ };
+
+use Moo;
+use namespace::clean;
+
+with 'Lintian::Check';
 
 sub files {
     my ($self, $file) = @_;

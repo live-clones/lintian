@@ -24,11 +24,12 @@ use strict;
 use warnings;
 use autodie;
 
-use Moo;
-
 use constant EMPTY => q{};
 
-with('Lintian::Check');
+use Moo;
+use namespace::clean;
+
+with 'Lintian::Check';
 
 sub files {
     my ($self, $file) = @_;

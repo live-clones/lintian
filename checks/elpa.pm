@@ -24,8 +24,9 @@ use strict;
 use warnings;
 
 use Moo;
+use namespace::clean;
 
-with('Lintian::Check');
+with 'Lintian::Check';
 
 sub binary {
     my ($self) = @_;

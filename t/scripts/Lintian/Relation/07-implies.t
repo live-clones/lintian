@@ -9,13 +9,13 @@ my @TESTS = (
     # A, B, A->I(B), A->I_I(B), B->I(A), B->I_I(A), line
     # - with "I" being "implies" and "I_I" being "implies_inverse".
     ['foo (= 1.0)', 'foo (= 2.0)', 0, 1, 0, 1, __LINE__],
-    ['foo (>= 1.0)', 'foo (= 2.0)', undef, undef, 1, 0, __LINE__],
-    ['foo (>= 2.0)', 'foo (>= 1.0)', 1, 0, undef, undef, __LINE__],
-    ['foo (>> 1.0)', 'foo (>= 1.0)', 1, 0, undef, undef, __LINE__],
-    ['foo (>> 2.0)', 'foo (>> 1.0)', 1, 0, undef, undef, __LINE__],
-    ['foo (<= 1.0)', 'foo (<= 2.0)', 1, 0, undef, undef, __LINE__],
-    ['foo (<< 1.0)', 'foo (<= 1.0)', 1, 0, undef, undef, __LINE__],
-    ['foo (<< 1.0)', 'foo (<< 2.0)', 1, 0, undef, undef, __LINE__],
+    ['foo (>= 1.0)', 'foo (= 2.0)', 0, 0, 1, 0, __LINE__],
+    ['foo (>= 2.0)', 'foo (>= 1.0)', 1, 0, 0, 0, __LINE__],
+    ['foo (>> 1.0)', 'foo (>= 1.0)', 1, 0, 0, 0, __LINE__],
+    ['foo (>> 2.0)', 'foo (>> 1.0)', 1, 0, 0, 0, __LINE__],
+    ['foo (<= 1.0)', 'foo (<= 2.0)', 1, 0, 0, 0, __LINE__],
+    ['foo (<< 1.0)', 'foo (<= 1.0)', 1, 0, 0, 0, __LINE__],
+    ['foo (<< 1.0)', 'foo (<< 2.0)', 1, 0, 0, 0, __LINE__],
 );
 
 plan tests => scalar(@TESTS) * 4;

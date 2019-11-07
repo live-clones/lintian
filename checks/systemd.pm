@@ -29,13 +29,15 @@ use autodie;
 
 use File::Basename;
 use List::MoreUtils qw(any first_index);
-use Moo;
 use Text::ParseWords qw(shellwords);
 
 use Lintian::Data;
 use Lintian::Util qw(internal_error lstrip rstrip);
 
-with('Lintian::Check');
+use Moo;
+use namespace::clean;
+
+with 'Lintian::Check';
 
 has timers => (is => 'rwp', default => sub{ [] });
 

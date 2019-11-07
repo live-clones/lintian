@@ -24,19 +24,21 @@ use strict;
 use warnings;
 use autodie;
 
-# Compared to a lower-case string, so it must be all lower-case
-use constant DH_MAKE_PERL_TEMPLATE => 'this description was'
-  . ' automagically extracted from the module by dh-make-perl';
-
 use Encode qw(decode);
-use Moo;
 
 use Lintian::Data;
 use Lintian::Spelling
   qw(check_spelling check_spelling_picky spelling_tag_emitter);
 use Lintian::Util qw(strip);
 
-with('Lintian::Check');
+# Compared to a lower-case string, so it must be all lower-case
+use constant DH_MAKE_PERL_TEMPLATE => 'this description was'
+  . ' automagically extracted from the module by dh-make-perl';
+
+use Moo;
+use namespace::clean;
+
+with 'Lintian::Check';
 
 my $PLANNED_FEATURES = Lintian::Data->new('description/planned-features');
 

@@ -24,8 +24,9 @@ use strict;
 use warnings;
 
 use Moo;
+use namespace::clean;
 
-with('Lintian::Check');
+with 'Lintian::Check';
 
 # Check /lib/udev/rules.d/, detect use of MODE="0666" and use of
 # GROUP="plugdev" without TAG+="uaccess".

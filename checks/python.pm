@@ -25,12 +25,14 @@ use warnings;
 use autodie;
 
 use List::MoreUtils qw(any none);
-use Moo;
 
 use Lintian::Relation qw(:constants);
 use Lintian::Relation::Version qw(versions_lte);
 
-with('Lintian::Check');
+use Moo;
+use namespace::clean;
+
+with 'Lintian::Check';
 
 my @FIELDS = qw(Depends Pre-Depends Recommends Suggests);
 my @IGNORE = qw(-dev$ -docs?$ -common$ -tools$);

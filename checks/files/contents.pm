@@ -24,13 +24,14 @@ use strict;
 use warnings;
 use autodie;
 
-use Moo;
-
 use List::MoreUtils qw(none);
 
 use Lintian::SlidingWindow;
 
-with('Lintian::Check');
+use Moo;
+use namespace::clean;
+
+with 'Lintian::Check';
 
 has bin_binaries => (is => 'rwp', default => sub { [] });
 

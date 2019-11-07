@@ -25,8 +25,9 @@ use warnings;
 use autodie;
 
 use Moo;
+use namespace::clean;
 
-with('Lintian::Check');
+with 'Lintian::Check';
 
 # Common files stored in /usr/share/doc/$pkg that aren't sufficient to
 # consider the package non-empty.

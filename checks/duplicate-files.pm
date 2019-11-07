@@ -25,9 +25,11 @@ use warnings;
 use autodie;
 
 use List::MoreUtils qw(any);
-use Moo;
 
-with('Lintian::Check');
+use Moo;
+use namespace::clean;
+
+with 'Lintian::Check';
 
 has md5map => (is => 'rwp', default => sub{ {} });
 

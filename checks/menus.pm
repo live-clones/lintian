@@ -26,14 +26,15 @@ use strict;
 use warnings;
 use autodie;
 
-use Moo;
-
 use Lintian::Data;
 use Lintian::Spelling
   qw(check_spelling check_spelling_picky $known_shells_regex spelling_tag_emitter);
 use Lintian::Util qw(file_is_encoded_in_non_utf8 strip);
 
-with('Lintian::Check');
+use Moo;
+use namespace::clean;
+
+with 'Lintian::Check';
 
 # Supported documentation formats for doc-base files.
 our %known_doc_base_formats = map { $_ => 1 }

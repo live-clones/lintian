@@ -1,4 +1,5 @@
 libbaz (source): package-uses-deprecated-debhelper-compat-version 6
+libbaz (source): package-lacks-versioned-build-depends-on-debhelper 6
 libbaz (source): debhelper-but-no-misc-depends libbaz2-dev
 libbaz (source): debhelper-but-no-misc-depends libbaz2-dbg
 libbaz (source): debhelper-but-no-misc-depends libbaz2

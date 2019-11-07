@@ -40,11 +40,13 @@ use autodie;
 
 use File::Basename;
 use List::MoreUtils qw(any);
-use Moo;
 
 use Lintian::Data;
 
-with('Lintian::Check');
+use Moo;
+use namespace::clean;
+
+with 'Lintian::Check';
 
 # This is a list of all tags that should be in every menu item.
 my @req_tags = qw(needs section title command);

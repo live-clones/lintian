@@ -26,15 +26,17 @@ use warnings;
 use autodie;
 
 use List::MoreUtils qw(none);
-use Moo;
 
 use Lintian::Spelling qw(check_spelling spelling_tag_emitter);
 use Lintian::Util qw(internal_error strip);
 
-with('Lintian::Check');
-
 use constant PATCH_DESC_TEMPLATE => 'TODO: Put a short summary on'
   . ' the line above and replace this paragraph';
+
+use Moo;
+use namespace::clean;
+
+with 'Lintian::Check';
 
 sub source {
     my ($self) = @_;

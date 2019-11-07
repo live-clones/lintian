@@ -24,11 +24,12 @@ use strict;
 use warnings;
 use autodie;
 
-use Moo;
-
 use Lintian::Data ();
 
-with('Lintian::Check');
+use Moo;
+use namespace::clean;
+
+with 'Lintian::Check';
 
 our $OBSOLETE_SITES = Lintian::Data->new('obsolete-sites/obsolete-sites');
 my @interesting_files = qw(

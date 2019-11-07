@@ -23,9 +23,11 @@ use warnings;
 use v5.16;
 
 use Carp;
-use Moo;
 
 use constant EMPTY => q{};
+
+use Moo;
+use namespace::clean;
 
 =head1 NAME
 

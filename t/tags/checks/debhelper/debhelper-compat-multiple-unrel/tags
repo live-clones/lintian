@@ -1,0 +1,2 @@
+debhelper-compat-multiple-unrel (source): uses-debhelper-compat-file
+debhelper-compat-multiple-unrel (source): package-uses-old-debhelper-compat-version 11

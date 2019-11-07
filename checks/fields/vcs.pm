@@ -29,13 +29,15 @@ use warnings;
 use autodie;
 
 use List::MoreUtils qw(any);
-use Moo;
 
 use Lintian::Data ();
 
-with('Lintian::Check');
-
 use constant EMPTY => q{};
+
+use Moo;
+use namespace::clean;
+
+with 'Lintian::Check';
 
 our $KNOWN_VCS_HOSTERS= Lintian::Data->new(
     'fields/vcs-hosters',

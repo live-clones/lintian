@@ -24,7 +24,6 @@ use v5.16;
 
 use Carp;
 use Date::Parse;
-use Moo;
 
 use Lintian::Info::Changelog::Entry;
 
@@ -32,6 +31,9 @@ use constant EMPTY => q{};
 use constant SPACE => q{ };
 use constant ASTERISK => q{*};
 use constant UNKNOWN => q{unknown};
+
+use Moo;
+use namespace::clean;
 
 =head1 NAME
 

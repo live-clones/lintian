@@ -28,11 +28,12 @@ use strict;
 use warnings;
 use autodie;
 
-use Moo;
-
 use Lintian::Data ();
 
-with('Lintian::Check');
+use Moo;
+use namespace::clean;
+
+with 'Lintian::Check';
 
 my $KNOWN_INSECURE_HOMEPAGE_URIS
   = Lintian::Data->new('fields/insecure-homepage-uris');

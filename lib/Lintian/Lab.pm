@@ -24,42 +24,15 @@ package Lintian::Lab;
 use strict;
 use warnings;
 
-use Moo;
-
 use Carp qw(croak);
 use Cwd();
 use File::Temp qw(tempdir);
 use Path::Tiny;
 
-# A private table of supported types.
-my %SUPPORTED_TYPES = (
-    'binary'  => 1,
-    'buildinfo' => 1,
-    'changes' => 1,
-    'source'  => 1,
-    'udeb'    => 1,
-);
-
-use Lintian::Lab::Entry;
-
 use constant EMPTY => q{};
 
-# must be absolute; frontend/lintian depends on it
-has basedir => (
-    is => 'rwp',
-    default => sub {
-
-        my $relative = tempdir('temp-lintian-lab-XXXXXXXXXX', 'TMPDIR' => 1);
-
-        my $absolute = Cwd::abs_path($relative);
-        croak "Could not resolve $relative: $!"
-          unless $absolute;
-
-        path("$absolute/pool")->mkpath({mode => 0777});
-
-        return $absolute;
-    });
-has keep => (is => 'rw', default => 0);
+use Moo;
+use namespace::clean;
 
 =encoding utf8
 
@@ -79,66 +52,41 @@ This module provides an abstraction from "How and where" packages are
 placed.  It handles creation and deletion of the Lintian Lab itself as
 well as providing access to the entries.
 
-=head1 INSTANCE METHODS
-
 =over 4
 
-=item get_package (PROC)
+=item $lab->basedir
 
-Fetches an existing package from the lab.
+Returns the base directory for the lab. Most likely it's a temporary directory.
 
-The first argument must be a L<processable|Lintian::Processable>.
+=item $lab->keep
+
+Returns or accepts a boolean value that indicates whether the lab should be
+removed when Lintian finishes. Used for debugging.
+
+=back
 
 =cut
 
-sub get_package {
-    my ($self, $proc) = @_;
+# must be absolute; frontend/lintian depends on it
+has basedir => (
+    is => 'rwp',
+    default => sub {
 
-    return $proc
-      if $proc->isa('Lintian::Lab::Entry') && $proc->from_lab($self);
+        my $relative = tempdir('temp-lintian-lab-XXXXXXXXXX', 'TMPDIR' => 1);
 
-    my $pkg_type = $proc->pkg_type;
+        my $absolute = Cwd::abs_path($relative);
+        croak "Could not resolve $relative: $!"
+          unless $absolute;
 
-    # get_package only works with "real" types (and not views).
-    croak "Not a supported type ($pkg_type)"
-      unless exists $SUPPORTED_TYPES{$pkg_type};
+        path("$absolute/pool")->mkpath({mode => 0777});
 
-    my $dir = $self->_pool_path($proc->pkg_src,$pkg_type,$proc->pkg_name,
-        $proc->pkg_version,$proc->pkg_arch);
+        return $absolute;
+    });
+has keep => (is => 'rw', default => 0);
 
-    my $entry = Lintian::Lab::Entry->_new_from_proc($proc, $self, $dir);
-    return $entry;
-}
+=head1 INSTANCE METHODS
 
-# Given the package meta data (src_name, type, name, version, arch) return the
-# path to it in the Lab.  The path returned will be absolute.
-sub _pool_path {
-    my ($self, $pkg_src, $pkg_type, $pkg_name, $pkg_version, $pkg_arch) = @_;
-
-    my $dir = $self->basedir;
-    my $p;
-
-    # If it is at least 4 characters and starts with "lib", use "libX"
-    # as prefix
-    if ($pkg_src =~ m/^lib./o) {
-        $p = substr $pkg_src, 0, 4;
-    } else {
-        $p = substr $pkg_src, 0, 1;
-    }
-
-    $p  = "$p/$pkg_src/${pkg_name}_${pkg_version}";
-    $p .= "_${pkg_arch}" unless $pkg_type eq 'source';
-    $p .= "_${pkg_type}";
-
-    # Turn spaces into dashes - spaces do appear in architectures
-    # (i.e. for changes files).
-    $p =~ s/\s/-/go;
-
-    # Also replace ":" with "_" as : is usually used for path separator
-    $p =~ s/:/_/go;
-
-    return "$dir/pool/$p";
-}
+=over 4
 
 =item DEMOLISH
 

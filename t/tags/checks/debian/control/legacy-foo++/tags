@@ -1,3 +1,4 @@
+foo++ (source): rules-requires-root-missing
 foo++ (source): duplicate-short-description foo++ foo++-helper
 foo++ (source): debian-control-file-uses-obsolete-national-encoding at line 19
 foo++ (source): build-info-in-binary-control-file-section Package foo++

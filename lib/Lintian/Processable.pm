@@ -1,4 +1,5 @@
-# Copyright (C) 2011 Niels Thykier <niels@thykier.net>
+# Copyright © 2011 Niels Thykier <niels@thykier.net>
+# Copyright © 2019 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -16,17 +17,24 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-## Represents something Lintian can process (e.g. a deb, dsc or a changes)
 package Lintian::Processable;
-
-use parent qw(Class::Accessor::Fast);
 
 use strict;
 use warnings;
 
 use Carp qw(croak);
+use Path::Tiny;
 
-use Lintian::Util qw(strip);
+use Lintian::Collect;
+
+use constant EMPTY => q{};
+use constant COLON => q{:};
+use constant SLASH => q{/};
+
+use constant EVIL_CHARACTERS => qr,[/&|;\$"'<>],o;
+
+use Moo::Role;
+use namespace::clean;
 
 =head1 NAME
 
@@ -34,12 +42,13 @@ Lintian::Processable -- An (abstract) object that Lintian can process
 
 =head1 SYNOPSIS
 
- use Lintian::Processable::Package;
+ use Lintian::Processable;
  
- # Instantiate via Lintian::Processable::Package
- my $proc = Lintian::Processable::Package->new ('lintian_2.5.0_all.deb');
- my $pkg_name = $proc->pkg_name;
- my $pkg_version = $proc->pkg_version;
+ # Instantiate via Lintian::Processable
+ my $proc = Lintian::Processable->new;
+ $proc->init_from_file('lintian_2.5.0_all.deb');
+ my $package = $proc->pkg_name;
+ my $version = $proc->pkg_version;
  # etc.
 
 =head1 DESCRIPTION
@@ -49,141 +58,9 @@ deb files).  Multiple objects can then be combined into
 L<groups|Lintian::Processable::Group>, which Lintian will process
 together.
 
-=head1 CLASS METHODS
-
-=over 4
-
-=item new_from_metadata (TYPE, PARAGRAPH[, BASEPATH])
-
-Returns a Lintian::Processable from a PARAGRAPH in a Sources or a
-Packages file with the following exception.
-
-If the PARAGRAPH has a field named "pkg_path", then that is used
-instead of creating the path from BASEPATH path concatenated with the
-TYPE specific field(s).  Hench BASEPATH is optional if and only if,
-the paragraph has a field called "pkg_path".
-
-The TYPE parameter determines the type of the processable and is
-required.
-
-NB: Optional fields (e.g. "Source" for binaries) may be omitted in
-PARAGRAPH as usual.  In this case, the respective values are computed
-from the required fields according to the Policy Manual.
-
-=cut
-
-my %KEEP = map { $_ => 1 } qw(
-  pkg_name pkg_version pkg_src pkg_src_version pkg_type pkg_path pkg_arch
-);
-my %KEEP_EXTRA = map { $_ => 1} qw(
-  section binary uploaders maintainer area
-);
-
-sub new_from_metadata {
-    my ($clazz, $pkg_type, $paragraph, $basepath) = @_;
-    my $self = {
-        %$paragraph # Copy the input data for starters
-    };
-    my $rename_field = sub {
-        my ($oldn, $newn, $default) = @_;
-        $self->{$newn} = delete $self->{$oldn};
-        if (not defined $self->{$newn} and defined $default) {
-            $self->{$newn} = $default;
-        }
-        croak "Required field $oldn is missing or empty"
-          unless defined $self->{$newn} and $self->{$newn} ne '';
-    };
-    $self->{'pkg_type'} = $pkg_type;
-    $rename_field->('package', 'pkg_name');
-    $rename_field->('version', 'pkg_version');
-    bless $self, $clazz;
-    if ($pkg_type eq 'binary' or $pkg_type eq 'udeb') {
-        $rename_field->('source', 'pkg_src', $self->pkg_name);
-        $rename_field->('architecture', 'pkg_arch');
-        if ($self->{'pkg_src'} =~ /^([-+\.\w]+)\s+\((.+)\)$/) {
-            $self->{'pkg_src'} = $1;
-            $self->{'pkg_src_version'} = $2;
-            croak 'Two source-versions given (source + source-version)'
-              if exists $self->{'source-version'};
-        } else {
-            $rename_field->(
-                'source-version', 'pkg_src_version', $self->pkg_version
-            );
-        }
-        if (not exists $self->{'pkg_path'}) {
-            my $fn = delete $self->{'filename'};
-            croak 'Missing required "filename" field'
-              unless defined $fn;
-            $self->{'pkg_path'} = "$basepath/$fn";
-        }
-    } elsif ($pkg_type eq 'source') {
-        $self->{'pkg_src'} = $self->pkg_name;
-        $self->{'pkg_src_version'} = $self->pkg_version;
-        $self->{'pkg_arch'} = 'source';
-        if (not exists $self->{'pkg_path'}) {
-            my $fn = delete $self->{'files'};
-            my $dir = delete $self->{'directory'};
-            $dir .= '/' if defined $dir;
-            $dir //= '';
-            foreach my $f (split m/\n/, $fn) {
-                strip($f);
-                next unless $f && $f =~ m/\.dsc$/;
-                my (undef, undef, $file) = split m/\s++/, $f;
-                # $dir should end with a slash if it is non-empty.
-                $self->{'pkg_path'} = "$basepath/${dir}$file";
-                last;
-            }
-            croak 'dsc file not listed in "Files"'
-              unless defined $self->{'pkg_path'};
-        }
-    } elsif ($pkg_type eq 'changes') {
-        # This case is basically for L::Lab::Manifest entries...
-        $self->{'pkg_src'} = $self->pkg_name;
-        $self->{'pkg_src_version'} = $self->pkg_version;
-        $rename_field->('architecture', 'pkg_arch');
-        croak '.changes file must have pkg_path set'
-          unless defined $self->{'pkg_path'};
-    } else {
-        croak "Unsupported type $pkg_type";
-    }
-    # Prune the field list...
-    foreach my $k (keys %$self) {
-        my $val;
-        $val = delete $self->{$k} unless exists $KEEP{$k};
-        if (defined $val && exists $KEEP_EXTRA{$k}) {
-            $self->{'extra-fields'}{$k} = $val;
-        }
-    }
-    $self->_make_identifier;
-    return $self;
-}
-
-# Shadow Class::Accessor::Fast - otherwise you get some very "funny" errors
-# from Class::Accessor::Fast if you get the constructor wrong.
-sub new { croak 'Not implemented'; }
-
-=back
-
 =head1 INSTANCE METHODS
 
 =over 4
-
-=cut
-
-sub _make_identifier {
-    my ($self) = @_;
-    my $pkg_type = $self->pkg_type;
-    my $pkg_name = $self->pkg_name;
-    my $pkg_version = $self->pkg_version;
-    my $pkg_arch = $self->pkg_arch;
-    my $id = "$pkg_type:$pkg_name/$pkg_version";
-    if ($pkg_type ne 'source') {
-        $pkg_arch =~ s/\s++/_/g; # avoid spaces in ids
-        $id .= "/$pkg_arch";
-    }
-    $self->{identifier} = $id;
-    return;
-}
 
 =item $proc->pkg_name
 
@@ -228,77 +105,119 @@ to less dangerous (but possibly invalid) values.
 Produces an identifier for this processable.  The identifier is
 based on the type, name, version and architecture of the package.
 
+=item lab
+
+Returns a reference to lab this Processable is in.
+
+=item base_dir
+
+Returns the base directory of this package inside the lab.
+
+=item group
+
+Returns a reference to the Processable::Group related to this entry.
+
+=item saved_info
+
+Returns a reference to the info structure related to this entry.
+
 =cut
 
-Lintian::Processable->mk_ro_accessors(
-    qw(pkg_name pkg_version pkg_src pkg_arch pkg_path pkg_type pkg_src_version tainted identifier)
-);
+=item extra_fields
 
-=item $proc->group([$group])
-
-Returns the L<group|Lintian::Processable::Group> $proc is in,
-if any.  If the processable is not in a group, this returns C<undef>.
-
-Can also be used to set the group of this processable.
+Returns a reference to the extra fields related to this entry.
 
 =cut
 
-Lintian::Processable->mk_accessors(qw(group));
+=item link_label
 
-=item $proc->info
+Returns a reference to the extra fields related to this entry.
 
-Returns L<$info|Lintian::Collect> element for this processable.
+=cut
 
-Note: This method must be implemented by sub-classes unless they
-provide an "info" field.
+=item saved_link
+
+Returns a reference to the extra fields related to this entry.
+
+=cut
+
+has pkg_name => (is => 'rw');
+has pkg_version => (is => 'rw', default => EMPTY);
+has pkg_src => (is => 'rw');
+has pkg_arch => (is => 'rw', default => EMPTY);
+has pkg_path => (is => 'rw');
+has pkg_type => (is => 'rw');
+has pkg_src_version => (is => 'rw', default => EMPTY);
+
+has tainted => (is => 'rw', default => 0);
+
+has identifier =>
+  (is => 'rw', coerce => sub { my $id = shift; $id =~ s/\s+/_/g; $id; });
+has lab => (is => 'rw');
+has base_dir => (is => 'rw');
+has group => (is => 'rw');
+
+has saved_info => (is => 'rw', default => sub { {} });
+has extra_fields => (is => 'rw', default => sub { {} });
+
+has link_label => (is => 'rw', default => EMPTY);
+has saved_link => (is => 'rw', default => EMPTY);
+
+=item info
+
+Returns the L<info|Lintian::Collect> object associated with this entry.
+
+Overrides info from L<Lintian::Processable>.
 
 =cut
 
 sub info {
     my ($self) = @_;
-    return $self->{info} if exists $self->{info};
-    croak 'Not implemented.';
+
+    unless (keys %{$self->saved_info}) {
+
+        my $info = Lintian::Collect->new(
+            $self->pkg_name, $self->pkg_type,
+            $self->base_dir, $self->extra_fields
+        );
+
+        $self->saved_info($info);
+    }
+
+    return $self->saved_info;
 }
 
-=item $proc->clear_cache
+=item clear_cache
 
-Discard the info element, so the memory used by it can be reclaimed.
-Mostly useful when checking a lot of packages (e.g. on lintian.d.o).
+Clears any caches held; this includes discarding the L<info|Lintian::Collect> object.
 
-Note: By default this does nothing, but it may (and should) be
-overridden by sub-classes.
+Overrides clear_cache from L<Lintian::Processable>.
 
 =cut
 
 sub clear_cache {
+    my ($self) = @_;
+
+    $self->info({});
     return;
 }
 
-=item $proc->get_field ($field[, $def])
+=item remove
 
-Optional method to access a field in the underlying data set.
-
-Returns $def if the field is not present or the implementation does
-not have (or want to expose) it.  This method is I<not> guaranteed to
-return the same value as "$proc->info->field ($field, $def)".
-
-If C<$def> is omitted is defaults to C<undef>.
-
-Default implementation accesses them via the hashref stored in
-"extra-fields" if present.  If the field is present, but not defined
-$def is returned instead.
-
-NB: This is mostly an optimization used by L<Lintian::Lab> to avoid
-(re-)reading the underlying package data.
+Removes all unpacked parts of the package in the lab.  Returns a truth
+value if successful.
 
 =cut
 
-sub get_field {
-    my ($self, $field, $def) = @_;
-    return $def
-      unless exists $self->{'extra-fields'}
-      and exists $self->{'extra-fields'}{$field};
-    return $self->{'extra-fields'}{$field}//$def;
+sub remove {
+    my ($self) = @_;
+
+    $self->clear_cache;
+
+    path($self->base_dir)->remove_tree
+      if -e $self->base_dir;
+
+    return;
 }
 
 =item get_group_id
@@ -308,12 +227,103 @@ on the name and the version of the src-pkg.
 
 =cut
 
-sub get_group_id{
+sub get_group_id {
     my ($self) = @_;
 
-    my $id = $self->pkg_src . '/' . $self->pkg_src_version;
+    my $id = $self->pkg_src . SLASH . $self->pkg_src_version;
 
     return $id;
+}
+
+=item clean_field
+
+Cleans a field of evil characters to prevent traversal or worse.
+
+=cut
+
+sub clean_field {
+    my ($self, $field) = @_;
+
+    my $clean = $self->$field;
+    my $evil = 0 + ($clean =~ s,${\EVIL_CHARACTERS},_,g);
+
+    $self->tainted(1)
+      if $evil;
+
+    $self->$field($clean);
+
+    return;
+}
+
+=item link
+
+Returns the link in the work area to the input data.
+
+=cut
+
+sub link {
+    my ($self) = @_;
+
+    unless (length $self->saved_link) {
+
+        croak 'Please set base directory for processable first'
+          unless length $self->base_dir;
+
+        croak 'Please set link label for processable first'
+          unless length $self->link_label;
+
+        my $link = path($self->base_dir)->child($self->link_label)->stringify;
+        $self->saved_link($link);
+    }
+
+    return $self->saved_link;
+}
+
+=item create
+
+Creates a link to the input file near where all files in that
+group will be unpacked and analyzed.
+
+=cut
+
+sub create {
+    my ($self) = @_;
+
+    return
+      if -l $self->link;
+
+    croak 'Please set base directory for processable first'
+      unless length $self->base_dir;
+
+    path($self->base_dir)->mkpath
+      unless -e $self->base_dir;
+
+    symlink($self->pkg_path, $self->link)
+      or croak 'symlinking ' . $self->pkg_path . "failed: $!";
+
+    return;
+}
+
+=item guess_name
+
+Creates a link to the input file near where all files in that
+group will be unpacked and analyzed.
+
+=cut
+
+sub guess_name {
+    my ($self, $path) = @_;
+
+    my $guess = path($path)->basename;
+
+    # drop extension, to catch fields-general-missing.deb
+    $guess =~ s/\.[^.]*$//;
+
+    # drop everything after the first underscore, if any
+    $guess =~ s/_.*$//;
+
+    # 'path/lintian_2.5.2_amd64.changes' became 'lintian'
+    return $guess;
 }
 
 =back

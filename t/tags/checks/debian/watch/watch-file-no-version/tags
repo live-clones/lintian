@@ -1,1 +1,2 @@
 watch-file-no-version (source): debian-watch-file-missing-version
+watch-file-no-version (source): debian-watch-does-not-check-gpg-signature

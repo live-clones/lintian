@@ -693,7 +693,7 @@ sub implies {
     if (ref($relation) ne 'Lintian::Relation') {
         $relation = Lintian::Relation->new($relation);
     }
-    return $self->implies_array($self, $relation);
+    return $self->implies_array($self, $relation) // 0;
 }
 
 =item implies_inverse(RELATION)
@@ -778,7 +778,7 @@ sub implies_inverse {
     if (ref($relation) ne 'Lintian::Relation') {
         $relation = Lintian::Relation->new($relation);
     }
-    return $self->implies_array_inverse($self, $relation);
+    return $self->implies_array_inverse($self, $relation) // 0;
 }
 
 =item unparse()
@@ -960,22 +960,22 @@ sub visit {
         my $against = $relation->[1];
         $against = $self->unparse($relation) if $flags & VISIT_PRED_FULL;
         local $_ = $against;
-        return $code->($against);
+        return scalar $code->($against);
     } elsif (($flags & VISIT_OR_CLAUSE_FULL) == VISIT_OR_CLAUSE_FULL
         and $rel_type eq 'OR') {
         my $against = $self->unparse($relation);
         local $_ = $against;
-        return $code->($against);
+        return scalar $code->($against);
     } elsif ($rel_type eq 'AND'
         or $rel_type eq 'OR'
         or $rel_type eq 'NOT') {
         for my $rel (@$relation[1 .. $#$relation]) {
-            my $ret = $self->visit($code, $flags, $rel);
+            my $ret = scalar $self->visit($code, $flags, $rel);
             if ($ret && ($flags & VISIT_STOP_FIRST_MATCH)) {
                 return $ret;
             }
         }
-        return;
+        return 0;
     }
 }
 

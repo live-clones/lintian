@@ -29,11 +29,13 @@ use warnings;
 use autodie;
 
 use List::MoreUtils qw(true);
-use Moo;
 
 use Lintian::Maintainer qw(check_maintainer);
 
-with('Lintian::Check');
+use Moo;
+use namespace::clean;
+
+with 'Lintian::Check';
 
 sub always {
     my ($self) = @_;

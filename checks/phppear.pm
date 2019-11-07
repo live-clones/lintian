@@ -25,11 +25,13 @@ use warnings;
 use autodie;
 
 use List::MoreUtils qw(none);
-use Moo;
 
 use Lintian::Relation;
 
-with('Lintian::Check');
+use Moo;
+use namespace::clean;
+
+with 'Lintian::Check';
 
 sub source {
     my ($self) = @_;

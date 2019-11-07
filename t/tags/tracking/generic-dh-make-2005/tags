@@ -1,7 +1,17 @@
+generic-dh-make-2005 (source): upstream-metadata-file-is-missing
 generic-dh-make-2005 (source): testsuite-autopkgtest-missing
+generic-dh-make-2005 (source): rules-requires-root-missing
 generic-dh-make-2005 (source): package-uses-deprecated-debhelper-compat-version 5
+generic-dh-make-2005 (source): package-lacks-versioned-build-depends-on-debhelper 5
 generic-dh-make-2005 (source): older-source-format 1.0
+generic-dh-make-2005 (source): no-homepage-field
+generic-dh-make-2005 (source): no-dep5-copyright
 generic-dh-make-2005 (source): missing-debian-source-format
+generic-dh-make-2005 (source): file-contains-trailing-whitespace debian/rules (line 70)
+generic-dh-make-2005 (source): file-contains-trailing-whitespace debian/rules (line 54)
+generic-dh-make-2005 (source): file-contains-trailing-whitespace debian/rules (line 49)
+generic-dh-make-2005 (source): file-contains-trailing-whitespace debian/rules (line 32)
+generic-dh-make-2005 (source): file-contains-trailing-whitespace debian/changelog (line 6)
 generic-dh-make-2005 (source): dh-clean-k-is-deprecated
 generic-dh-make-2005 (source): debian-watch-file-is-missing
 generic-dh-make-2005 (source): debian-rules-should-not-set-CFLAGS-from-noopt

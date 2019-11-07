@@ -37,7 +37,7 @@ use Path::Tiny;
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
 
 use Lintian::Collect;
-use Lintian::Processable::Package;
+use Lintian::Processable::Source;
 use Lintian::Util qw(internal_error sort_file_index gzip);
 
 use constant EMPTY => q{};
@@ -72,7 +72,7 @@ sub gather_tarballs {
     my @tarballs;
     my $base;
     my $baserev;
-    my $proc;
+
     internal_error(
         "Cannot resolve \"dsc\" link for $pkg or it does not point to a file.")
       unless $file and -e $file;
@@ -80,16 +80,20 @@ sub gather_tarballs {
     # Use Lintian::Processable::Package to determine source and
     # version as it handles missing fields for us to some extent.
 
-    $proc = Lintian::Processable::Package->new($file, 'source');
+    my $proc = Lintian::Processable::Source->new;
+    $proc->init($file);
+
     #  Version handling is based on Dpkg::Version::parseversion.
     $version = $proc->pkg_src_version;
     if ($version =~ /:/) {
         $version =~ s/^(?:\d+):(.+)/$1/
           or internal_error("bad version number \"$version\"");
     }
+
     $baserev = $proc->pkg_src . '_' . $version;
     $version =~ s/(.+)-(?:.*)$/$1/;
     $base = $proc->pkg_src . '_' . $version;
+
     for my $fs (split /\n/, $info->field('files', '')) {
         $fs =~ s/^\s*//;
         next if $fs eq '';
@@ -106,6 +110,7 @@ sub gather_tarballs {
         }
     }
     internal_error('could not find the source tarball') unless @tarballs;
+
     return @tarballs;
 }
 

@@ -28,11 +28,12 @@ use strict;
 use warnings;
 use autodie;
 
-use Moo;
-
 use Lintian::Data ();
 
-with('Lintian::Check');
+use Moo;
+use namespace::clean;
+
+with 'Lintian::Check';
 
 our $KNOWN_ESSENTIAL = Lintian::Data->new('fields/essential');
 

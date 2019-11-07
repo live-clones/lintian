@@ -30,7 +30,6 @@ use Email::Valid;
 use Encode qw(decode);
 use List::Util qw(first);
 use List::MoreUtils qw(any uniq);
-use Moo;
 use Path::Tiny;
 use Try::Tiny;
 
@@ -41,9 +40,12 @@ use Lintian::Relation::Version qw(versions_gt);
 use Lintian::Spelling qw(check_spelling spelling_tag_emitter);
 use Lintian::Util qw(file_is_encoded_in_non_utf8 strip);
 
-with('Lintian::Check');
-
 use constant EMPTY => q{};
+
+use Moo;
+use namespace::clean;
+
+with 'Lintian::Check';
 
 my $BUGS_NUMBER
   = Lintian::Data->new('changelog-file/bugs-number', qr/\s*=\s*/o);
