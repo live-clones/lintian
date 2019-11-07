@@ -102,7 +102,6 @@ Architecture: all
 Depends:
  binutils,
  bzip2,
- coreutils (>= 8.30),
  diffstat,
  dpkg (>= 1.17.14),
  dpkg-dev,
