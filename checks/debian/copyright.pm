@@ -25,6 +25,19 @@ use strict;
 use warnings;
 use autodie;
 
+use Encode qw(decode);
+use List::Compare;
+use List::MoreUtils qw(any none);
+use Path::Tiny;
+use Text::Levenshtein qw(distance);
+use XML::Simple qw(:strict);
+
+use Lintian::Data;
+use Lintian::Deb822Parser qw(read_dpkg_control parse_dpkg_control);
+use Lintian::Relation::Version qw(versions_compare);
+use Lintian::Spelling qw(check_spelling spelling_tag_emitter);
+use Lintian::Util qw(file_is_encoded_in_non_utf8);
+
 use constant {
     DH_MAKE_TODO_BOILERPLATE_1 =>join(q{ },
         '# Please also look if there are files or directories',
@@ -36,29 +49,18 @@ use constant {
         'Delete these two lines'),
 };
 
-use Encode qw(decode);
-use List::Compare;
-use List::MoreUtils qw(any none);
-use Moo;
-use Path::Tiny;
-use Text::Levenshtein qw(distance);
-use XML::Simple qw(:strict);
-
-use Lintian::Data;
-use Lintian::Deb822Parser qw(read_dpkg_control parse_dpkg_control);
-use Lintian::Relation::Version qw(versions_compare);
-use Lintian::Spelling qw(check_spelling spelling_tag_emitter);
-use Lintian::Util qw(file_is_encoded_in_non_utf8);
-
-with('Lintian::Check');
-
-use constant SPACE => q{ };
-
 use constant {
     WC_TYPE_REGEX => 'REGEX',
     WC_TYPE_FILE => 'FILE',
     WC_TYPE_DECENDANTS => 'DECENDANTS',
 };
+
+use constant SPACE => q{ };
+
+use Moo;
+use namespace::clean;
+
+with 'Lintian::Check';
 
 our $KNOWN_ESSENTIAL = Lintian::Data->new('fields/essential');
 our $KNOWN_COMMON_LICENSES

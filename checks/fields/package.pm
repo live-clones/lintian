@@ -28,11 +28,12 @@ use strict;
 use warnings;
 use autodie;
 
-use Moo;
-
 use Lintian::Util qw($PKGNAME_REGEX);
 
-with('Lintian::Check');
+use Moo;
+use namespace::clean;
+
+with 'Lintian::Check';
 
 sub binary {
     my ($self) = @_;

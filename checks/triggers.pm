@@ -23,12 +23,13 @@ package Lintian::triggers;
 use strict;
 use warnings;
 
-use Moo;
-
 use Lintian::Data;
 use Lintian::Util qw(internal_error strip);
 
-with('Lintian::Check');
+use Moo;
+use namespace::clean;
+
+with 'Lintian::Check';
 
 sub _parse_trigger_types {
     my ($key, $val) = @_;

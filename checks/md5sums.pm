@@ -24,11 +24,12 @@ use strict;
 use warnings;
 use autodie;
 
-use Moo;
-
 use Lintian::Util qw(dequote_name);
 
-with('Lintian::Check');
+use Moo;
+use namespace::clean;
+
+with 'Lintian::Check';
 
 has only_conffiles => (is => 'rwp', default => 1);
 

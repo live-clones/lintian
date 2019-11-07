@@ -28,13 +28,14 @@ use strict;
 use warnings;
 use autodie;
 
-use Moo;
-
 use Lintian::Architecture qw(:all);
 
 use constant EMPTY => q{};
 
-with('Lintian::Check');
+use Moo;
+use namespace::clean;
+
+with 'Lintian::Check';
 
 has architecture => (is => 'rwp', default => EMPTY);
 has have_r_package_not_arch_all => (is => 'rwp', default => 0);

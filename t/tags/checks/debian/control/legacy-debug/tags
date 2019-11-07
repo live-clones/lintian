@@ -1,3 +1,4 @@
+debug (source): rules-requires-root-missing
 debug (source): debian-control-has-obsolete-dbg-package libhello0-dbg
 debug (source): debian-control-has-obsolete-dbg-package hi-dbg
 debug (source): debian-control-has-obsolete-dbg-package hello-hello-dbg

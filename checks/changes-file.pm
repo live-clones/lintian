@@ -25,13 +25,15 @@ use warnings;
 use autodie;
 
 use List::MoreUtils qw(any);
-use Moo;
 
 use Lintian::Data;
 use Lintian::Maintainer qw(check_maintainer);
 use Lintian::Util qw(get_file_checksum);
 
-with('Lintian::Check');
+use Moo;
+use namespace::clean;
+
+with 'Lintian::Check';
 
 my $KNOWN_DISTS = Lintian::Data->new('changes-file/known-dists');
 

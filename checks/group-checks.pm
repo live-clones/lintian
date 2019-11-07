@@ -19,17 +19,20 @@
 # MA 02110-1301, USA.
 
 package Lintian::group_checks;
+
 use strict;
 use warnings;
 use autodie;
 
 use List::MoreUtils qw(any);
-use Moo;
 
 use Lintian::Data;
 use Lintian::Relation;
 
-with('Lintian::Check');
+use Moo;
+use namespace::clean;
+
+with 'Lintian::Check';
 
 my $KNOWN_DBG_PACKAGE = Lintian::Data->new('common/dbg-pkg',qr/\s*\~\~\s*/,
     sub { return qr/$_[0]/xms; });

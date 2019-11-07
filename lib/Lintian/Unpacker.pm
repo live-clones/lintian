@@ -23,8 +23,6 @@ use strict;
 use warnings;
 use v5.16;
 
-use parent 'Class::Accessor::Fast';
-
 use IO::Async::Loop;
 use IO::Async::Routine;
 use List::Compare;
@@ -36,6 +34,26 @@ use Lintian::Unpack::Task;
 
 use constant EMPTY => q{};
 use constant SPACE => q{ };
+
+use Moo;
+use namespace::clean;
+
+has jobs => (is => 'rw', default => 1);
+
+has coll_priorities => (is => 'rw');
+
+has cache => (is => 'rw', default => sub { {} });
+has coll2priority => (is => 'rw', default => sub { {} });
+has collmap => (is => 'rw', default => sub { {} });
+has profile => (is => 'rw', default => sub { {} });
+has running_jobs => (is => 'rw', default => sub { {} });
+has worktable => (is => 'rw', default => sub { {} });
+has active => (is => 'rw', default => sub { {} });
+has failed => (is => 'rw', default => sub { {} });
+has colls_not_scheduled => (is => 'rw', default => sub { {} });
+
+has extra_coll => (is => 'rw', default => sub { [] });
+has queue => (is => 'rw', default => sub { [] });
 
 =head1 NAME
 
@@ -79,7 +97,7 @@ available via L<Lintian::Collect>.
 
 =over 4
 
-=item new (COLLMAP, PROFILE[, OPTIONS])
+=item init (COLLMAP, PROFILE[, OPTIONS])
 
 Creates a new unpacker.
 
@@ -122,23 +140,18 @@ changed with the L</jobs> method later.  If omitted, it defaults to
 
 =cut
 
-sub new {
-    my ($class, $collmap, $options) = @_;
-
-    $options //= {};
-    my %extra = %{ $options->{'extra-coll'} // {} };
-    my $profile = $options->{'profile'};
-    my $jobs = $options->{'jobs'} // 0;
+sub init {
+    my ($self, $collmap) = @_;
 
     my $clonedmap = $collmap->clone;
 
-    if ($profile) {
+    if ($self->profile) {
         my @requested;
-        foreach my $name ($profile->scripts) {
-            my $check = $profile->get_script($name);
+        foreach my $name ($self->profile->scripts) {
+            my $check = $self->profile->get_script($name);
             push(@requested, $check->needs_info);
         }
-        push(@requested, keys %extra);
+        push(@requested, @{$self->extra_coll});
 
         # For new entries we take everything in the collmap, which is
         # a bit too much in some cases.  Since we have cloned collmap,
@@ -165,20 +178,9 @@ sub new {
     # Initialise our copy
     $clonedmap->initialise;
 
-    my $self = {
-        'cache' => {},
-        'coll-priorities' => undef,
-        'coll2priority' => {},
-        'collmap' => $clonedmap,
-        'extra-coll' => \%extra,
-        'jobs' => $jobs,
-        'profile' => $profile,
-        'running-jobs' => {},
-        'worktable' => {},
-    };
+    $self->collmap($clonedmap);
 
-    bless $self, $class;
-    return $self;
+    return;
 }
 
 =back
@@ -215,59 +217,53 @@ or manually.
 =cut
 
 sub prepare_tasks {
-    my ($self, $errorhandler, @labentries) = @_;
+    my ($self, @labentries) = @_;
 
     my %worklists;
     foreach my $labentry (@labentries) {
-        my $new;
-
-        eval {$new = $labentry->create;};
-        if (my $e = $@) {
-            $errorhandler->($labentry, $e);
-            next;
-        }
 
         my $type = $labentry->pkg_type;
         my $cmap;
 
-        if (exists $self->{'cache'}{$type}) {
-            $cmap = $self->{'cache'}{$type}->clone;
+        if (exists $self->cache->{$type}) {
+            $cmap = $self->cache->{$type}->clone;
         } else {
-            my $collmap = $self->{'collmap'};
+            my $collmap = $self->collmap;
             my $cmap2 = Lintian::DepMap::Properties->new;
             my $cond = { 'type' => $type };
-            my $coll2priority = $self->{'coll2priority'};
+            my $coll2priority = $self->coll2priority;
 
             foreach my $node ($collmap->known) {
                 my $script = $collmap->getp($node);
                 if (not exists($coll2priority->{$node})) {
                     $coll2priority->{$node} = $script->priority;
-                    $self->{'coll-priorities'} = undef;
+                    $self->coll_priorities(undef);
                 }
                 $cmap2->add($node, $script->needs_info($cond), $script);
             }
 
             $cmap2->initialise;
 
-            $self->{'cache'}{$type} = $cmap2;
+            $self->cache->{$type} = $cmap2;
             $cmap = $cmap2->clone;
         }
 
         my $needed;
         my %wanted;
         my @requested;
-        my $profile = $self->{'profile'};
-        if (!$new || $profile) {
+        my $profile = $self->profile;
+        if ($profile) {
             if ($profile) {
+
                 foreach my $name ($profile->scripts) {
                     my $check = $profile->get_script($name);
                     push(@requested, $check->needs_info)
                       if $check->is_check_type($type);
                 }
-                my $extra = $self->{'extra-coll'};
-                push(@requested, keys %$extra)
-                  if defined $extra;
+
+                push(@requested, @{$self->extra_coll});
                 @requested = uniq @requested;
+
             } else {
                 # not new
                 @requested = $cmap->known;
@@ -304,14 +300,20 @@ sub prepare_tasks {
             'needed' => $needed,
         };
     }
-    return unless %worklists;
-    $self->{'worktable'} = \%worklists;
-    if (not $self->{'coll-priorities'}) {
-        my $coll2priority = $self->{'coll2priority'};
-        my @priorities = sort { $coll2priority->{$a} <=> $coll2priority->{$b} }
-          keys(%{$coll2priority});
-        $self->{'coll-priorities'} = \@priorities;
+
+    return
+      unless %worklists;
+
+    $self->worktable(\%worklists);
+
+    unless($self->coll_priorities) {
+        my @priorities
+          = sort { $self->coll2priority->{$a} <=> $self->coll2priority->{$b} }
+          keys %{$self->coll2priority};
+
+        $self->coll_priorities(\@priorities);
     }
+
     return 1;
 }
 
@@ -348,37 +350,28 @@ defined for other events.
 =cut
 
 sub process_tasks {
-    my ($self, $hooks) = @_;
-    my $worklists = $self->{'worktable'};
-    my $jobs = $self->jobs;
+    my ($self, $hook) = @_;
 
-    my $loop = IO::Async::Loop->new;
+    $self->active({ map { $_ => 1 } keys %{$self->worktable} });
 
-    $self->{active} = { map { $_ => 1 } keys %$worklists };
-    $self->{failed} = {};
-
-    my @coll_priorities = @{$self->{'coll-priorities'}};
-    $self->{colls_not_scheduled} = {};
-    $self->{queue} = [];
-
-    for my $name (@coll_priorities) {
+    for my $name (@{$self->coll_priorities}) {
         my %procs;
-        for my $labid (keys(%{$worklists})) {
-            $procs{$labid} = 1;
-        }
-        $self->{colls_not_scheduled}->{$name} = \%procs;
+        $procs{$_} = 1 for keys %{$self->worktable};
+        $self->colls_not_scheduled->{$name} = \%procs;
     }
 
     my @slices;
 
-    for (0..$jobs-1) {
+    my $loop = IO::Async::Loop->new;
+
+    for (0..$self->jobs-1) {
         my $task = $self->find_next_task();
         last if not $task;
 
         my $slice = $loop->new_future;
         push(@slices, $slice);
 
-        $self->start_task($slice, $hooks, $task);
+        $self->start_task($slice, $hook, $task);
     }
 
     Future->wait_all(@slices)->get;
@@ -388,108 +381,100 @@ sub process_tasks {
 sub find_next_task {
     my ($self) = @_;
 
-    my $worklists = $self->{'worktable'};
-    my @coll_priorities = @{$self->{'coll-priorities'}};
-    my $active = $self->{active};
-    my $colls = $self->{'collmap'};
-    my $colls_not_scheduled = $self->{colls_not_scheduled};
+    my @coll_priorities = @{$self->coll_priorities};
+    my $colls = $self->collmap;
     my $debug_enabled = $Lintian::Output::GLOBAL->debug;
 
-    {
-        unless (@{$self->{queue}}) {
-            for (my $i = 0; $i < @coll_priorities ; $i++) {
-                my $name = $coll_priorities[$i];
-                my $script = $colls->getp($name);
-                my $procs = $colls_not_scheduled->{$name};
-                foreach my $labid (grep { $procs->{$_} } keys %{$active}) {
-                    my $wlist = $worklists->{$labid};
-                    my $cmap = $wlist->{'collmap'};
-                    next if not $cmap->selectable($name);
-                    my $labentry = $wlist->{'lab-entry'};
-                    my $needed = $wlist->{'needed'};
-                    my $type = $labentry->pkg_type;
-                    delete($procs->{$labid});
-                    # current type?
-                    if (not $script->is_type($type)) {
-                        $cmap->satisfy($name);
-                        next;
-                    }
+    unless (@{$self->queue}) {
 
-                    # Check if its actually on our TODO list.
-                    if (defined $needed and not exists $needed->{$name}) {
-                        $cmap->satisfy($name);
-                        next;
-                    }
+        for (my $i = 0; $i < @coll_priorities ; $i++) {
 
-                    # collect info
-                    $cmap->select($name);
-                    debug_msg(3, "READY ${name}-${labid}") if $debug_enabled;
+            my $name = $coll_priorities[$i];
+            my $script = $colls->getp($name);
+            my $procs = $self->colls_not_scheduled->{$name};
 
-                    my $task = Lintian::Unpack::Task->new;
-                    $task->id("${name}-${labid}");
-                    $task->script($script);
-                    $task->labentry($labentry);
-                    $task->cmap($cmap);
-                    push(@{$self->{queue}}, $task);
+            foreach my $labid (grep { $procs->{$_} } keys %{$self->active}) {
+                my $wlist = $self->worktable->{$labid};
+                my $cmap = $wlist->{'collmap'};
+
+                next
+                  unless $cmap->selectable($name);
+
+                my $labentry = $wlist->{'lab-entry'};
+                my $needed = $wlist->{'needed'};
+
+                delete $procs->{$labid};
+
+                # current type?
+                unless ($script->is_type($labentry->pkg_type)) {
+                    $cmap->satisfy($name);
+                    next;
+                }
+
+                # Check if its actually on our TODO list.
+                if (defined $needed and not exists $needed->{$name}) {
+                    $cmap->satisfy($name);
+                    next;
+                }
+
+                # collect info
+                $cmap->select($name);
+                debug_msg(3, "READY ${name}-${labid}") if $debug_enabled;
+
+                my $task = Lintian::Unpack::Task->new;
+                $task->id("${name}-${labid}");
+                $task->script($script);
+                $task->labentry($labentry);
+                $task->cmap($cmap);
+                push(@{$self->queue}, $task);
 
                # If we are dealing with the highest priority type of task, then
                # keep filling the cache (i.e. $i == 0).  Otherwise, stop here
                # to avoid priority inversion due to filling the queue with
                # unimportant tasks.
-                    last if $i;
-                }
-                if (not keys(%{$procs})) {
-                    debug_msg(3,
-                        "DISCARD $name (all instances have been scheduled)")
-                      if $debug_enabled;
-                    splice(@coll_priorities, $i, 1);
-                    $i--;
-                }
-                last if @{$self->{queue}};
+                last if $i;
             }
-        }
 
-        if (@{$self->{queue}}) {
-            debug_msg(4,
-                    'QUEUE non-empty with '
-                  . scalar(@{$self->{queue}})
-                  . ' item(s).  Taking one.')
-              if $debug_enabled;
+            unless (keys %{$procs}) {
+                debug_msg(3,
+                    "DISCARD $name (all instances have been scheduled)")
+                  if $debug_enabled;
+                splice(@coll_priorities, $i, 1);
+                $i--;
+            }
+
+            last if @{$self->queue};
         }
     }
 
-    return shift @{$self->{queue}}
-      if @{$self->{queue}};
+    if (@{$self->queue}) {
+        debug_msg(4,
+                'QUEUE non-empty with '
+              . scalar(@{$self->queue})
+              . ' item(s).  Taking one.')
+          if $debug_enabled;
+    }
+
+    return shift @{$self->queue}
+      if @{$self->queue};
 
     return;
 }
 
 sub start_task {
-    my ($self, $slice, $hooks, $task) = @_;
+    my ($self, $slice, $hook, $task) = @_;
 
-    my $id = $task->id;
-    my $script = $task->script;
-    my $labentry = $task->labentry;
     my $cmap = $task->cmap;
-
-    my $labid = $labentry->identifier;
-
-    my $running_jobs = $self->{'running-jobs'};
-    my $active = $self->{active};
-    my $failed = $self->{failed};
 
     my $loop = IO::Async::Loop->new;
     my $debug_enabled = $Lintian::Output::GLOBAL->debug;
 
-    debug_msg(3, "START $id");
+    debug_msg(3, 'START ' . $task->id);
     my $pid = -1;
 
     my $future = $loop->new_future;
 
-    $hooks //= {};
-    my $hook = $hooks->{'coll-hook'};
-
-    $hook->($labentry, 'start', $script, $id)
+    $hook->($task, 'start')
       if $hook;
 
     eval {
@@ -500,16 +485,16 @@ sub start_task {
                 # fixed upstream in 0.73
                 undef($IO::Async::Loop::ONE_TRUE_LOOP);
 
-                my $name = $script->name;
-                my $package = $labentry->pkg_name;
-                my $type = $labentry->pkg_type;
-                my $basedir = $labentry->base_dir;
+                my $name = $task->script->name;
+                my $package = $task->labentry->pkg_name;
+                my $type = $task->labentry->pkg_type;
+                my $basedir = $task->labentry->base_dir;
 
                 # change the process name; possible overwritten by exec
-                $0 = "$name (processing $labid)";
+                $0 = "$name (processing " . $task->labentry->identifier . ')';
 
                 my $ret = 0;
-                eval {$script->collect($package, $type, $basedir);};
+                eval {$task->script->collect($package, $type, $basedir);};
                 if ($@) {
                     print STDERR $@;
                     $ret = 2;
@@ -520,29 +505,32 @@ sub start_task {
             on_exit  => sub {
                 my ($pid, $status) = @_;
 
-                delete $running_jobs->{$future};
+                delete $self->running_jobs->{$future};
 
-                debug_msg(3, "FINISH $id ($status)");
+                debug_msg(3, 'FINISH ' . $task->id . " ($status)");
 
-                $hook->($labentry, 'finish', $script, $id, $status)
+                $hook->($task, 'finish', $status)
                   if $hook;
 
-                my $name = $script->name;
+                my $name = $task->script->name;
 
                 if ($status) {
                     # failed ...
-                    $failed->{$labid} = 1;
-                    delete $active->{$labid};
+                    $self->failed->{$task->labentry->identifier} = 1;
+                    delete $self->active->{$task->labentry->identifier};
                 }else {
                     # The collection was success
                     $cmap->satisfy($name);
                     # If the entry is marked as failed, don't break the loop
                     # for it.
-                    $active->{$labid} = 1
-                      unless $failed->{$labid} || !$cmap->selectable;
+                    $self->active->{$task->labentry->identifier} = 1
+                      unless $self->failed->{$task->labentry->identifier}
+                      || !$cmap->selectable;
                 }
 
-                $future->done("Script $name for $labid finished");
+                $future->done("Script $name for "
+                      . $task->labentry->identifier
+                      . ' finished');
 
             });
     };
@@ -552,12 +540,12 @@ sub start_task {
             my $task = $self->find_next_task();
             $slice->done('No more tasks')
               unless $task;
-            $self->start_task($slice, $hooks, $task)
+            $self->start_task($slice, $hook, $task)
               if $task;
 
             my $debug_enabled = $Lintian::Output::GLOBAL->debug;
             if ($debug_enabled) {
-                my @ids = map { $_->{id} } values %{$self->{'running-jobs'}};
+                my @ids = map { $_->{id} } values %{$self->running_jobs};
                 my $queue = join(', ', sort @ids);
                 debug_msg(3, "RUNNING QUEUE: $queue");
             }
@@ -565,11 +553,11 @@ sub start_task {
 
     if ($hook) {
         my $err = $@;
-        $hook->($labentry, 'failed', $script, $id, $err)
+        $hook->($task, 'failed', $err)
           if $pid == -1;
     }
 
-    $running_jobs->{$future} = { id => $id, pid => $pid };
+    $self->running_jobs->{$future} = { id => $task->id, pid => $pid };
 
     return;
 }
@@ -583,8 +571,10 @@ current worklist.
 
 sub reset_worklist {
     my ($self) = @_;
+
     $self->wait_for_jobs;
-    $self->{'worktable'} = {};
+    $self->worktable({});
+
     return;
 }
 
@@ -598,10 +588,10 @@ needed unless process_tasks was interrupted somehow.
 sub wait_for_jobs {
     my ($self) = @_;
 
-    my @futures = keys %{$self->{'running-jobs'}};
+    my @futures = keys %{$self->running_jobs};
     Future->wait_all(@futures)->get;
 
-    $self->{'running-jobs'} = {};
+    $self->running_jobs({});
     return;
 }
 
@@ -615,13 +605,13 @@ unless process_tasks was interrupted somehow.
 sub kill_jobs {
     my ($self) = @_;
 
-    my @pids = map { $_->{pid} } values %{$self->{'running-jobs'}};
+    my @pids = map { $_->{pid} } values %{$self->running_jobs};
     if (@pids) {
         kill('TERM', @pids);
         kill('KILL', @pids);
     }
 
-    $self->{'running-jobs'} = {};
+    $self->running_jobs({});
     return;
 }
 
@@ -633,8 +623,6 @@ If the limit is 0, then there is no limit for the number of parallel
 jobs.
 
 =cut
-
-Lintian::Unpacker->mk_accessors(qw(jobs));
 
 =back
 

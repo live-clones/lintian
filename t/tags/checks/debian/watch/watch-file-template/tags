@@ -1,2 +1,3 @@
 watch-file-template (source): debian-watch-uses-insecure-uri http://www.example.com/software/foo/
+watch-file-template (source): debian-watch-does-not-check-gpg-signature
 watch-file-template (source): debian-watch-contains-dh_make-template (line 3)

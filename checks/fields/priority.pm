@@ -29,11 +29,13 @@ use warnings;
 use autodie;
 
 use List::MoreUtils qw(any);
-use Moo;
 
 use Lintian::Data ();
 
-with('Lintian::Check');
+use Moo;
+use namespace::clean;
+
+with 'Lintian::Check';
 
 my $KNOWN_PRIOS = Lintian::Data->new('fields/priorities');
 

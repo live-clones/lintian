@@ -25,8 +25,9 @@ use warnings;
 use autodie;
 
 use Moo;
+use namespace::clean;
 
-with('Lintian::Check');
+with 'Lintian::Check';
 
 my $LOCALE_CODES = Lintian::Data->new('files/locale-codes', qr/\s++/);
 my $INCORRECT_LOCALE_CODES

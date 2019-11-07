@@ -23,8 +23,6 @@ use strict;
 use warnings;
 use autodie;
 
-use Moo;
-
 use Lintian::Data;
 use Lintian::Deb822Parser qw(
   DCTRL_COMMENTS_AT_EOL
@@ -36,7 +34,10 @@ use Lintian::Util qw(
   strip
 );
 
-with('Lintian::Check');
+use Moo;
+use namespace::clean;
+
+with 'Lintian::Check';
 
 # empty because it is test xor test-command
 my @MANDATORY_FIELDS = qw();

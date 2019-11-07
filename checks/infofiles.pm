@@ -25,11 +25,12 @@ use strict;
 use warnings;
 use autodie;
 
-use Moo;
-
 use Lintian::Util qw(open_gz normalize_pkg_path);
 
-with('Lintian::Check');
+use Moo;
+use namespace::clean;
+
+with 'Lintian::Check';
 
 sub binary {
     my ($self) = @_;

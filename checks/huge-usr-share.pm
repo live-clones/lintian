@@ -24,8 +24,9 @@ use warnings;
 use autodie;
 
 use Moo;
+use namespace::clean;
 
-with('Lintian::Check');
+with 'Lintian::Check';
 
 # Threshold in kB of /usr/share to trigger this warning.  Consider that the
 # changelog alone can be quite big, and cannot be moved away.

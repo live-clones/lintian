@@ -41,12 +41,14 @@ use warnings;
 use autodie;
 
 use List::MoreUtils qw(any);
-use Moo;
 
 use Lintian::Relation qw(:constants);
 use Lintian::Util qw($PKGNAME_REGEX);
 
-with('Lintian::Check');
+use Moo;
+use namespace::clean;
+
+with 'Lintian::Check';
 
 sub source {
     my ($self) = @_;

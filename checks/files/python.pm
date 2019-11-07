@@ -25,10 +25,11 @@ use warnings;
 use autodie;
 
 use Moo;
+use namespace::clean;
 
 use Lintian::Data;
 
-with('Lintian::Check');
+with 'Lintian::Check';
 
 my $ALLOWED_PYTHON_FILES = Lintian::Data->new('files/allowed-python-files');
 my $GENERIC_PYTHON_MODULES= Lintian::Data->new('files/generic-python-modules');

@@ -1,0 +1,16 @@
+Tag: uses-debhelper-compat-file
+Severity: pedantic
+Certainty: certain
+Check: debhelper
+Info: This package uses a <tt>debian/compat</tt> file to denote the
+ required debhelper compatibility number.
+ .
+ However, debhelper has replaced <tt>debian/compat</tt> with the
+ <tt>debhelper-compat</tt> virtual package for most circumstances.
+ .
+ Packages not using an experimental or beta compatibility level should
+ Build-Depend on the <tt>debhelper-compat</tt> virtual package, for
+ example:
+ .
+  Build-Depends: debhelper-compat (= 12)
+Ref: debhelper(7)

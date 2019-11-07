@@ -29,11 +29,13 @@ use warnings;
 use autodie;
 
 use Dpkg::Version qw(version_check);
-use Moo;
 
 use Lintian::Relation::Version qw(versions_compare);
 
-with('Lintian::Check');
+use Moo;
+use namespace::clean;
+
+with 'Lintian::Check';
 
 our $DERIVATIVE_VERSIONS= Lintian::Data->new('fields/derivative-versions',
     qr/\s*~~\s*/, sub { $_[1]; });

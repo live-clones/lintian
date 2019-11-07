@@ -22,11 +22,12 @@ use strict;
 use warnings;
 use v5.16;
 
-use Moo::Role;
-
 use constant EMPTY => q{};
 
-with('Lintian::Tag::Issuer');
+use Moo::Role;
+use namespace::clean;
+
+with 'Lintian::Tag::Issuer';
 
 has processable => (is => 'rw', default => sub { {} });
 has group => (is => 'rw', default => sub { {} });
@@ -38,6 +39,7 @@ Lintian::Check -- Common facilities for Lintian checks
 =head1 SYNOPSIS
 
  use Moo;
+use namespace::clean;
 
  with('Lintian::Check');
 

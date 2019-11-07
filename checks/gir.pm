@@ -27,8 +27,9 @@ use warnings;
 use autodie;
 
 use Moo;
+use namespace::clean;
 
-with('Lintian::Check');
+with 'Lintian::Check';
 
 my $MA_DIRS = Lintian::Data->new('common/multiarch-dirs', qr/\s++/);
 

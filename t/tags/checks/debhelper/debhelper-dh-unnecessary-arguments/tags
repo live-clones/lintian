@@ -1,1 +1,2 @@
+debhelper-dh-unnecessary-arguments (source): uses-debhelper-compat-file
 debhelper-dh-unnecessary-arguments (source): debian-rules-uses-unnecessary-dh-argument dh ... --parallel (line 4)

@@ -25,8 +25,9 @@ use warnings;
 use autodie;
 
 use Moo;
+use namespace::clean;
 
-with('Lintian::Check');
+with 'Lintian::Check';
 
 has related => (is => 'rwp', default => sub { [] });
 has links => (is => 'rwp', default => sub { [] });

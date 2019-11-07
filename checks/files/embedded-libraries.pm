@@ -24,12 +24,13 @@ use strict;
 use warnings;
 use autodie;
 
-use Moo;
-
 use Lintian::SlidingWindow;
 use Lintian::Util qw(strip);
 
-with('Lintian::Check');
+use Moo;
+use namespace::clean;
+
+with 'Lintian::Check';
 
 # A list of known packaged Javascript libraries
 # and the packages providing them

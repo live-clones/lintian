@@ -1,0 +1,2 @@
+unpack-srcpkg-dot-dir (source): uses-debhelper-compat-file
+unpack-srcpkg-dot-dir (source): debian-watch-does-not-check-gpg-signature

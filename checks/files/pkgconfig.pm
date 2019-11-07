@@ -24,11 +24,12 @@ use strict;
 use warnings;
 use autodie;
 
-use Moo;
-
 use Lintian::SlidingWindow;
 
-with('Lintian::Check');
+use Moo;
+use namespace::clean;
+
+with 'Lintian::Check';
 
 my $MULTIARCH_DIRS = Lintian::Data->new('common/multiarch-dirs', qr/\s++/);
 

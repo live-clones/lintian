@@ -25,8 +25,9 @@ use warnings;
 use autodie;
 
 use Moo;
+use namespace::clean;
 
-with('Lintian::Check');
+with 'Lintian::Check';
 
 my $ALLOWED_ANCIENT_FILES = Lintian::Data->new('files/allowed-ancient-files');
 

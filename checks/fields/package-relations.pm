@@ -30,13 +30,15 @@ use autodie;
 
 use Dpkg::Version qw(version_check);
 use List::MoreUtils qw(any);
-use Moo;
 
 use Lintian::Architecture qw(:all);
 use Lintian::Data ();
 use Lintian::Relation qw(:constants);
 
-with('Lintian::Check');
+use Moo;
+use namespace::clean;
+
+with 'Lintian::Check';
 
 our $KNOWN_ESSENTIAL = Lintian::Data->new('fields/essential');
 our $KNOWN_TOOLCHAIN = Lintian::Data->new('fields/toolchain');

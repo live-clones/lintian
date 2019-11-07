@@ -24,14 +24,15 @@ use strict;
 use warnings;
 use autodie;
 
-use Moo;
-
 use Lintian::SlidingWindow;
 use Lintian::Util qw(strip);
 
 use constant BLOCKSIZE => 16_384;
 
-with('Lintian::Check');
+use Moo;
+use namespace::clean;
+
+with 'Lintian::Check';
 
 my $PRIVACY_BREAKER_WEBSITES= Lintian::Data->new(
     'files/privacy-breaker-websites',

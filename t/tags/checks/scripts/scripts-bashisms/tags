@@ -99,3 +99,4 @@ scripts-bashisms (binary): possible-bashism-in-maintainer-script postinst:11 '. 
 scripts-bashisms (binary): possible-bashism-in-maintainer-script postinst:10 '. /usr/share/lintian/shell foo'
 scripts-bashisms (binary): maintainer-shell-script-fails-syntax-check prerm
 scripts-bashisms (binary): maintainer-shell-script-fails-syntax-check postinst
+scripts-bashisms (binary): maintainer-script-without-set-e postinst

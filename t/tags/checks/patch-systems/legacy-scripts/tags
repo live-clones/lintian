@@ -1,4 +1,5 @@
 scripts (source): patch-file-present-but-not-mentioned-in-series 03_specified_without_dpatch.dpatch
+scripts (source): package-uses-deprecated-dpatch-patch-system
 scripts (source): more-than-one-patch-system
 scripts (source): dpatch-missing-description 04_i_dont_have_a_description_either.patch
 scripts (source): dpatch-missing-description 02_i_dont_have_a_description.patch

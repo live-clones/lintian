@@ -1,0 +1,1 @@
+debhelper-package-uses-debhelper-with-prefix-minus (source): uses-debhelper-compat-file

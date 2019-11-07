@@ -24,15 +24,17 @@ use autodie;
 use IO::Async::Loop;
 use IO::Async::Process;
 use List::MoreUtils qw(first_index none);
-use Moo;
 
 use Lintian::Data;
 use Lintian::Util qw(safe_qx);
 
-with('Lintian::Check');
-
 use constant EMPTY => q{};
 use constant NEWLINE => qq{\n};
+
+use Moo;
+use namespace::clean;
+
+with 'Lintian::Check';
 
 # The files that contain error messages from tar, which we'll check and issue
 # tags for if they contain something unexpected, and their corresponding tags.

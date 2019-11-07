@@ -24,12 +24,13 @@ use strict;
 use warnings;
 use autodie;
 
-use Moo;
-
 use File::Find::Rule;
 use Path::Tiny;
 
-with('Lintian::Check');
+use Moo;
+use namespace::clean;
+
+with 'Lintian::Check';
 
 sub always {
     my ($self) = @_;

@@ -29,14 +29,16 @@ use warnings;
 use autodie;
 
 use List::MoreUtils qw(uniq);
-use Moo;
 
 use Lintian::Util qw(safe_qx);
 
-with('Lintian::Check');
-
 use constant EMPTY => q{};
 use constant SPACE => q{ };
+
+use Moo;
+use namespace::clean;
+
+with 'Lintian::Check';
 
 sub source {
     my ($self) = @_;

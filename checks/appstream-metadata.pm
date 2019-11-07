@@ -32,12 +32,13 @@ package Lintian::appstream_metadata;
 use strict;
 use warnings;
 
-use Moo;
-
 use File::Basename qw(basename);
 use XML::Simple qw(:strict);
 
-with('Lintian::Check');
+use Moo;
+use namespace::clean;
+
+with 'Lintian::Check';
 
 sub binary {
     my ($self) = @_;

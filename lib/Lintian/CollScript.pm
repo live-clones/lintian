@@ -218,7 +218,7 @@ Returns a truth value if this collection can be applied to a TYPE package.
 
 sub is_type {
     my ($self, $type) = @_;
-    return $self->{'type-table'}{$type};
+    return $self->{'type-table'}{$type} // 0;
 }
 
 =item collect (PKG, TASK, DIR)

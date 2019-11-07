@@ -29,13 +29,15 @@ use warnings;
 use autodie;
 
 use Archive::Zip qw( :ERROR_CODES :CONSTANTS );
+use BerkeleyDB;
 use FileHandle;
+use MLDBM qw(BerkeleyDB::Btree Storable);
 use Path::Tiny;
 
 use lib "$ENV{'LINTIAN_ROOT'}/lib/";
 
 use Lintian::Collect;
-use Lintian::Util qw(internal_error rstrip gzip);
+use Lintian::Util qw(rstrip);
 
 use constant EMPTY => q{};
 use constant NEWLINE => qq{\n};
@@ -72,13 +74,57 @@ sub collect {
           if $filename =~ m#\S+\.jar$#i;
     }
 
-    my $uncompressed = EMPTY;
-    $uncompressed .= $_ . NEWLINE for @lines;
-
     return
-      unless length $uncompressed;
+      unless @lines;
 
-    gzip($uncompressed, "$dir/java-info.gz");
+    # any scripts shipped in the package
+    my $dbpath = "$dir/java-info.db";
+    unlink $dbpath
+      if -e $dbpath;
+
+    tie my %h, 'MLDBM',
+      -Filename => $dbpath,
+      -Flags    => DB_CREATE
+      or die "Cannot open file $dbpath: $! $BerkeleyDB::Error\n";
+
+    my $file;
+    my $file_list;
+    my $manifest = 0;
+    local $_;
+
+    my %java_info;
+
+    for my $line (@lines) {
+        chomp $line;
+        next if $line =~ m/^\s*$/o;
+
+        if ($line =~ m#^-- ERROR:\s*(\S.++)$#o) {
+            $java_info{$file}{error} = $1;
+
+        } elsif ($line =~ m#^-- MANIFEST: (?:\./)?(?:.+)$#o) {
+            # TODO: check $file == $1 ?
+            $java_info{$file}{manifest} = {};
+            $manifest = $java_info{$file}{manifest};
+            $file_list = 0;
+
+        } elsif ($line =~ m#^-- (?:\./)?(.+)$#o) {
+            $file = $1;
+            $java_info{$file}{files} = {};
+            $file_list = $java_info{$file}{files};
+            $manifest = 0;
+        } else {
+            if ($manifest && $line =~ m#^  (\S+):\s(.*)$#o) {
+                $manifest->{$1} = $2;
+            } elsif ($file_list) {
+                my ($fname, $clmajor) = ($line =~ m#^([^-].*):\s*([-\d]+)$#);
+                $file_list->{$fname} = $clmajor;
+            }
+        }
+    }
+
+    $h{$_} = $java_info{$_} for keys %java_info;
+
+    untie %h;
 
     return;
 }

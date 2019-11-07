@@ -25,8 +25,9 @@ use warnings;
 use autodie;
 
 use Moo;
+use namespace::clean;
 
-with('Lintian::Check');
+with 'Lintian::Check';
 
 has warned_debug_name => (is => 'rwp', default => 0);
 
