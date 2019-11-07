@@ -220,7 +220,7 @@ sub source {
                   . $latest_version->literal)
               unless $previous_version->literal eq $expected_previous
               || $latest_entry->Distribution eq 'buster'
-              || $previous_version->Distribution eq 'buster'
+              || $previous_entry->Distribution eq 'buster'
               || $latest_entry->Distribution =~ /-security$/i;
 
             if (   $latest_version->epoch eq $previous_version->epoch
