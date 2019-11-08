@@ -31,7 +31,6 @@ use MLDBM qw(BerkeleyDB::Btree Storable);
 use Path::Tiny;
 
 use Lintian::Deb822Parser qw(parse_dpkg_control);
-use Lintian::Inspect::Changelog;
 use Lintian::Relation;
 use Lintian::Util qw(open_gz get_file_checksum strip rstrip);
 
@@ -110,53 +109,6 @@ sub index {
         'file_info_sub' => 'file_info',
     };
     return $self->_fetch_index_data($load_info, $file);
-}
-
-=item changelog
-
-Returns the changelog of the binary package as a Parse::DebianChangelog
-object, or undef if the changelog doesn't exist.  The changelog-file
-collection script must have been run to create the changelog file, which
-this method expects to find in F<changelog>.
-
-Needs-Info requirements for using I<changelog>: changelog-file
-
-=cut
-
-sub changelog {
-    my ($self) = @_;
-
-    return $self->{changelog}
-      if exists $self->{changelog};
-
-    my $dch = path($self->groupdir)->child('changelog')->stringify;
-
-    if (-l $dch || !-f $dch) {
-        $self->{changelog} = undef;
-
-    } else {
-        my $shared = $self->{'_shared_storage'};
-        my ($checksum, $changelog);
-
-        if (defined $shared) {
-            $checksum = get_file_checksum('sha1', $dch);
-            $changelog = $shared->{'changelog'}{$checksum};
-        }
-
-        unless ($changelog) {
-            my $contents = path($dch)->slurp;
-            $changelog = Lintian::Inspect::Changelog->new;
-            $changelog->parse($contents);
-
-            if (defined $shared) {
-                $shared->{'changelog'}{$checksum} = $changelog;
-            }
-        }
-
-        $self->{changelog} = $changelog;
-    }
-
-    return $self->{changelog};
 }
 
 =item control ([FILE])

@@ -28,7 +28,6 @@ use Path::Tiny;
 use Try::Tiny;
 
 use Lintian::Deb822Parser qw(read_dpkg_control);
-use Lintian::Inspect::Changelog;
 use Lintian::Inspect::Changelog::Version;
 use Lintian::Relation;
 use Lintian::Tags qw(tag);
@@ -72,41 +71,6 @@ documented in the L<Lintian::Collect> and L<Lintian::Info::Package>
 modules are also available.
 
 =over 4
-
-=item changelog
-
-Returns the changelog of the source package as a Parse::DebianChangelog
-object, or C<undef> if the changelog cannot be resolved safely.
-
-Needs-Info requirements for using I<changelog>: L<Same as index_resolved_path|Lintian::Info::Package/index_resolved_path(PATH)>
-
-=cut
-
-sub changelog {
-    my ($self) = @_;
-    return $self->{changelog} if exists $self->{changelog};
-    my $dch = $self->index_resolved_path('debian/changelog');
-    if ($dch and $dch->is_open_ok) {
-        my $shared = $self->{'_shared_storage'};
-        my ($checksum, $changelog);
-        if (defined($shared)) {
-            $checksum = get_file_checksum('sha1', $dch->fs_path);
-            $changelog = $shared->{'changelog'}{$checksum};
-        }
-        if (not $changelog) {
-            my $contents = path($dch->fs_path)->slurp;
-            $changelog = Lintian::Inspect::Changelog->new;
-            $changelog->parse($contents);
-            if (defined($shared)) {
-                $shared->{'changelog'}{$checksum} = $changelog;
-            }
-        }
-        $self->{changelog} = $changelog;
-    } else {
-        $self->{changelog} = undef;
-    }
-    return $self->{changelog};
-}
 
 =item native
 
