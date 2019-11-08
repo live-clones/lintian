@@ -108,33 +108,6 @@ sub changelog {
     return $self->{changelog};
 }
 
-=item diffstat
-
-Returns the path to diffstat output run on the Debian packaging diff
-(a.k.a. the "diff.gz") for 1.0 non-native packages.  For source
-packages without a "diff.gz" component, this returns the path to an
-empty file (this may be a device like /dev/null).
-
-Needs-Info requirements for using I<diffstat>: diffstat
-
-=cut
-
-sub diffstat {
-    my ($self) = @_;
-
-    return $self->{diffstat}
-      if exists $self->{diffstat};
-
-    my $dstat = path($self->groupdir)->child('diffstat')->stringify;
-
-    $dstat = '/dev/null'
-      unless -e $dstat;
-
-    $self->{diffstat} = $dstat;
-
-    return $dstat;
-}
-
 =item native
 
 Returns true if the source package is native and false otherwise.
