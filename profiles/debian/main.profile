@@ -21,6 +21,7 @@ Enable-Tags-From-Check:
  debian/readme,
  debian/rules,
  debian/source-dir,
+ debian/symbols,
  debian/version-substvars,
  debian/watch,
  duplicate-files,
