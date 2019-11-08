@@ -31,7 +31,7 @@ use MLDBM qw(BerkeleyDB::Btree Storable);
 use Path::Tiny;
 
 use Lintian::Deb822Parser qw(parse_dpkg_control);
-use Lintian::Info::Changelog;
+use Lintian::Inspect::Changelog;
 use Lintian::Relation;
 use Lintian::Util qw(open_gz get_file_checksum strip rstrip);
 
@@ -145,7 +145,7 @@ sub changelog {
 
         unless ($changelog) {
             my $contents = path($dch)->slurp;
-            $changelog = Lintian::Info::Changelog->new;
+            $changelog = Lintian::Inspect::Changelog->new;
             $changelog->parse($contents);
 
             if (defined $shared) {

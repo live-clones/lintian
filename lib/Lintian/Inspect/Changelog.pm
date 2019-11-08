@@ -16,7 +16,7 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-package Lintian::Info::Changelog;
+package Lintian::Inspect::Changelog;
 
 use strict;
 use warnings;
@@ -25,7 +25,7 @@ use v5.16;
 use Carp;
 use Date::Parse;
 
-use Lintian::Info::Changelog::Entry;
+use Lintian::Inspect::Changelog::Entry;
 
 use constant EMPTY => q{};
 use constant SPACE => q{ };
@@ -37,13 +37,13 @@ use namespace::clean;
 
 =head1 NAME
 
-Lintian::Info::Changelog -- Parse a literal version string into its constituents
+Lintian::Inspect::Changelog -- Parse a literal version string into its constituents
 
 =head1 SYNOPSIS
 
- use Lintian::Info::Changelog;
+ use Lintian::Inspect::Changelog;
 
- my $version = Lintian::Info::Changelog->new;
+ my $version = Lintian::Inspect::Changelog->new;
  $version->set('1.2.3-4', undef);
 
 =head1 DESCRIPTION
@@ -56,7 +56,7 @@ A class for parsing literal version strings
 
 =item new ()
 
-Creates a new Lintian::Info::Changelog object.
+Creates a new Lintian::Inspect::Changelog object.
 
 =cut
 
@@ -104,7 +104,7 @@ sub parse {
 
     # based on /usr/lib/dpkg/parsechangelog/debian
     my $expect='first heading';
-    my $entry = Lintian::Info::Changelog::Entry->new;
+    my $entry = Lintian::Inspect::Changelog::Entry->new;
     my $blanklines = 0;
     my $unknowncounter = 1; # to make version unique, e.g. for using as id
     my $lineno = 0;
@@ -139,7 +139,7 @@ m/^(?<Source>\w[-+0-9a-z.]*) \((?<Version>[^\(\) \t]+)\)(?<Distribution>(?:\s+[-
                 $entry->Closes(find_closes($entry->Changes));
                 #		    print STDERR, Dumper($entry);
                 push @{$self->entries}, $entry;
-                $entry = Lintian::Info::Changelog::Entry->new;
+                $entry = Lintian::Inspect::Changelog::Entry->new;
             }
 
             $entry->Header($literal);
@@ -261,7 +261,7 @@ m/^ \-\- (?<name>.*) <(?<email>.*)>(?<sep>  ?)(?<date>(?:\w+\,\s*)?\d{1,2}\s+\w+
                     $entry->Closes(find_closes($entry->Changes));
                     #		    print STDERR, Dumper($entry);
                     push @{$self->entries}, $entry;
-                    $entry = Lintian::Info::Changelog::Entry->new;
+                    $entry = Lintian::Inspect::Changelog::Entry->new;
                     $entry->Source(UNKNOWN);
                     $entry->Distribution(UNKNOWN);
                     $entry->Urgency(UNKNOWN);

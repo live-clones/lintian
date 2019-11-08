@@ -41,7 +41,7 @@ my $INIT_ROOT = $ENV{'LINTIAN_ROOT'};
 
 use Lintian::Data;
 use Lintian::Output qw(:messages);
-use Lintian::Info::Changelog;
+use Lintian::Inspect::Changelog;
 use Lintian::Internal::FrontendUtil
   qw(default_parallel sanitize_environment open_file_or_fd);
 use Lintian::Processable::Pool;
@@ -1056,7 +1056,7 @@ sub parse_config_file {
 
 sub _find_changes {
     my $contents = path('debian/changelog')->slurp;
-    my $changelog = Lintian::Info::Changelog->new;
+    my $changelog = Lintian::Inspect::Changelog->new;
     $changelog->parse($contents);
     my @entries = @{$changelog->entries};
     my $last = @entries ? $entries[0] : undef;

@@ -34,8 +34,8 @@ use Path::Tiny;
 use Try::Tiny;
 
 use Lintian::Data ();
-use Lintian::Info::Changelog;
-use Lintian::Info::Changelog::Version;
+use Lintian::Inspect::Changelog;
+use Lintian::Inspect::Changelog::Version;
 use Lintian::Relation::Version qw(versions_gt);
 use Lintian::Spelling qw(check_spelling spelling_tag_emitter);
 use Lintian::Util qw(file_is_encoded_in_non_utf8 strip);
@@ -144,7 +144,7 @@ sub source {
         my $latest_timestamp = $latest_entry->Timestamp;
         my $previous_timestamp = $previous_entry->Timestamp;
 
-        my $previous_version = Lintian::Info::Changelog::Version->new;
+        my $previous_version = Lintian::Inspect::Changelog::Version->new;
         try {
             $previous_version->set($previous_entry->Version, $info->native);
         } catch {
@@ -348,7 +348,7 @@ sub binary {
             $self->tag('debian-news-file-uses-obsolete-national-encoding',
                 "at line $line");
         }
-        my $changelog = Lintian::Info::Changelog->new;
+        my $changelog = Lintian::Inspect::Changelog->new;
         my $contents = path($dnews)->slurp;
         $changelog->parse($contents);
 

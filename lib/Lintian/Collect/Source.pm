@@ -28,8 +28,8 @@ use Path::Tiny;
 use Try::Tiny;
 
 use Lintian::Deb822Parser qw(read_dpkg_control);
-use Lintian::Info::Changelog;
-use Lintian::Info::Changelog::Version;
+use Lintian::Inspect::Changelog;
+use Lintian::Inspect::Changelog::Version;
 use Lintian::Relation;
 use Lintian::Tags qw(tag);
 use Lintian::Util
@@ -95,7 +95,7 @@ sub changelog {
         }
         if (not $changelog) {
             my $contents = path($dch->fs_path)->slurp;
-            $changelog = Lintian::Info::Changelog->new;
+            $changelog = Lintian::Inspect::Changelog->new;
             $changelog->parse($contents);
             if (defined($shared)) {
                 $shared->{'changelog'}{$checksum} = $changelog;
@@ -155,7 +155,7 @@ sub native {
 
 =item version
 
-Returns a fully parsed Lintian::Info::Changelog::Version for the
+Returns a fully parsed Lintian::Inspect::Changelog::Version for the
 source package's version string.
 
 Needs-Info requirements for using I<version>: L<Same as field|Lintian::Collect/field ([FIELD[, DEFAULT]])>
@@ -170,7 +170,7 @@ sub version {
 
     my $versionstring = $self->field('version', EMPTY);
 
-    my $version = Lintian::Info::Changelog::Version->new;
+    my $version = Lintian::Inspect::Changelog::Version->new;
     try {
         $version->set($versionstring, $self->native);
     } catch {
