@@ -34,6 +34,7 @@ use Moo;
 use namespace::clean;
 
 with 'Lintian::Collect::Source', 'Lintian::Info::Diffstat',
+  'Lintian::Info::Changelog',
   'Lintian::Info::Fields::Files', 'Lintian::Info::Package',
   'Lintian::Processable';
 
