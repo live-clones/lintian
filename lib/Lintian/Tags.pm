@@ -35,7 +35,7 @@ use Lintian::Tag::Override;
 use Lintian::Util qw($PKGNAME_REGEX strip);
 
 BEGIN {
-    our @EXPORT_OK = qw(tag);
+    our @EXPORT_OK = qw(tag GLOBAL);
 }
 
 # The default Lintian::Tags object, set to the first one constructed and
