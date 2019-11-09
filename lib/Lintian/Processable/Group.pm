@@ -590,13 +590,13 @@ sub process {
         my $pkg_type = $processable->pkg_type;
         my $procid = $processable->identifier;
 
-        my $file = $processable->pkg_path;
+        my $path = $processable->pkg_path;
 
-        die "duplicate of file $file added to Lintian::Tags object"
-          if exists $TAGS->{info}{$file};
+        die "duplicate of file $path added to Lintian::Tags object"
+          if exists $TAGS->{info}{$path};
 
-        $TAGS->{info}{$file} = {
-            file              => $file,
+        $TAGS->{info}{$path} = {
+            file              => $path,
             package           => $processable->pkg_name,
             version           => $processable->pkg_version,
             arch              => $processable->pkg_arch,
@@ -605,7 +605,8 @@ sub process {
             overrides         => {},
             'overrides-data'  => {},
         };
-        $TAGS->{statistics}{$file} = {
+
+        $TAGS->{statistics}{$path} = {
             types     => {},
             severity  => {},
             certainty => {},
@@ -613,9 +614,11 @@ sub process {
             overrides => {},
         };
 
-        $TAGS->{current} = $file;
+        $TAGS->{current} = $path;
 
-        $Lintian::Output::GLOBAL->print_start_pkg($TAGS->{info}{$file});
+        my $procstruct = $TAGS->{info}{$path};
+
+        $Lintian::Output::GLOBAL->print_start_pkg($procstruct);
 
         debug_msg(1, 'Base directory for group: ' . $processable->groupdir);
 
@@ -682,9 +685,9 @@ sub process {
 
             # Note, we get the known as it will be suppressed by
             # $self->suppressed below if the tag is not enabled.
-            my $info = $self->profile->get_tag($tag, 1);
+            my $taginfo = $self->profile->get_tag($tag, 1);
             croak "tried to issue unknown tag $tag"
-              unless $info;
+              unless $taginfo;
 
             next
               if $TAGS->suppressed($tag);
@@ -696,8 +699,31 @@ sub process {
               map { s/\n/\\n/g; $_ } @extra;
             my $extra = join(SPACE, @extra) // EMPTY;
 
-            my $override= $TAGS->_check_overrides($tag, $extra);
-            $TAGS->_record_stats($tag, $info, $override);
+            my $override;
+
+            my $overrides
+              = $TAGS->{info}{$path}{'overrides-data'}{$tag};
+            my $stats = $TAGS->{info}{$path}{overrides}{$tag};
+            if ($overrides) {
+                if (exists $overrides->{''}) {
+                    $stats->{''}++;
+                    $override = $overrides->{''};
+                } elsif ($extra ne '' and exists $overrides->{$extra}) {
+                    $stats->{$extra}++;
+                    $override = $overrides->{$extra};
+                } elsif ($extra ne '') {
+                    for (sort keys %$overrides) {
+                        my $candidate = $overrides->{$_};
+                        if (   $candidate->is_pattern
+                            && $candidate->overrides($extra)){
+                            $stats->{$_}++;
+                            $override = $candidate;
+                        }
+                    }
+                }
+            }
+
+            $TAGS->_record_stats($tag, $taginfo, $override);
 
             next
               if defined $override
@@ -706,8 +732,8 @@ sub process {
             next
               unless $TAGS->displayed($tag);
 
-            my $file = $TAGS->{info}{$TAGS->{current}};
-            $Lintian::Output::GLOBAL->print_tag($file, $info, $extra,
+            my $procstruct = $TAGS->{info}{$path};
+            $Lintian::Output::GLOBAL->print_tag($procstruct, $taginfo, $extra,
                 $override);
         }
 
@@ -732,23 +758,21 @@ sub process {
             $overrides->{info} += $info;
         }
 
-        my $current = $TAGS->{current};
-        my $info = $TAGS->{info}{$current};
-        my $pkg_overrides = $info->{overrides};
+        my $pkg_overrides = $procstruct->{overrides};
 
-        for my $tag (sort(keys %{$pkg_overrides})) {
+        for my $tag (sort keys %{$pkg_overrides}) {
             my $overrides;
             next if $TAGS->suppressed($tag);
 
             $overrides = $pkg_overrides->{$tag};
-            for my $extra (sort(keys %{$overrides})) {
+            for my $extra (sort keys %{$overrides}) {
                 next if $overrides->{$extra};
                 $TAGS->{unused_overrides}++;
                 $TAGS->tag('unused-override', $tag, $extra);
             }
         }
 
-        $Lintian::Output::GLOBAL->print_end_pkg($info);
+        $Lintian::Output::GLOBAL->print_end_pkg($procstruct);
 
         undef $TAGS->{current};
     }

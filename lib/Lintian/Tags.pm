@@ -191,36 +191,6 @@ called first or if an attempt is made to issue an unknown tag.
 
 #'# for cperl-mode
 
-# Check if a given tag with associated extra information is overridden by the
-# overrides for the current file.  This may require checking for matches
-# against override data with wildcards.  Returns undef if the tag is not
-# overridden or the override if the tag is.
-#
-# The override will be returned as a list ref where the first element is the
-# name of the tag and the second is the "extra" for the override (if any).
-sub _check_overrides {
-    my ($self, $tag, $extra) = @_;
-    my $overrides = $self->{info}{$self->{current}}{'overrides-data'}{$tag};
-    my $stats = $self->{info}{$self->{current}}{overrides}{$tag};
-    return unless $overrides;
-    if (exists $overrides->{''}) {
-        $stats->{''}++;
-        return $overrides->{''};
-    } elsif ($extra ne '' and exists $overrides->{$extra}) {
-        $stats->{$extra}++;
-        return $overrides->{$extra};
-    } elsif ($extra ne '') {
-        for (sort keys %$overrides) {
-            my $override = $overrides->{$_};
-            if ($override->is_pattern && $override->overrides($extra)){
-                $stats->{$_}++;
-                return $override;
-            }
-        }
-    }
-    return;
-}
-
 # Record tag statistics.  Takes the tag, the Lintian::Tag::Info object and a
 # flag saying whether the tag was overridden.
 sub _record_stats {
