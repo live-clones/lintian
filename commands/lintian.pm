@@ -46,7 +46,7 @@ use Lintian::Internal::FrontendUtil
   qw(default_parallel sanitize_environment open_file_or_fd);
 use Lintian::Processable::Pool;
 use Lintian::Profile;
-use Lintian::Tags qw(tag);
+use Lintian::Tags;
 use Lintian::Util qw(internal_error parse_boolean strip safe_qx);
 
 # only in GNOME; need original environment
