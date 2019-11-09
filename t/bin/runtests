@@ -33,7 +33,7 @@ use warnings;
 use autodie;
 use v5.10;
 
-use Capture::Tiny qw(capture);
+use Capture::Tiny qw(capture_merged);
 use Cwd;
 use File::Basename;
 use File::Path qw(make_path);
@@ -190,11 +190,15 @@ $ENV{'LINTIAN_EPOCH'}
   = max(map { -e $_ ? stat($_)->mtime : time } @lintianfiles);
 say 'Lintian modified on '. rfc822date($ENV{'LINTIAN_EPOCH'});
 
-my $string = capture {
+my $error;
+my $string = capture_merged {
     my @command = ($ENV{'LINTIAN_FRONTEND'}, '--version');
     system(@command) == 0
-      or die "system @command failed: $?";
+      or $error = "system @command failed: $?";
 };
+die $string . $error
+  if length $error;
+
 chomp $string;
 my ($version) = $string =~ qr/^\S+\s+v(.+)$/;
 die 'Cannot get Lintian version' unless length $version;
