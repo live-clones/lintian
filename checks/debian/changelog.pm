@@ -37,7 +37,7 @@ use Lintian::Data ();
 use Lintian::Inspect::Changelog;
 use Lintian::Inspect::Changelog::Version;
 use Lintian::Relation::Version qw(versions_gt);
-use Lintian::Spelling qw(check_spelling spelling_tag_emitter);
+use Lintian::Spelling qw(check_spelling);
 use Lintian::Util qw(file_is_encoded_in_non_utf8 strip);
 
 use constant EMPTY => q{};
@@ -52,10 +52,12 @@ my $BUGS_NUMBER
 my $INVALID_DATES
   = Lintian::Data->new('changelog-file/invalid-dates', qr/\s*=\>\s*/o);
 
-my $SPELLING_ERROR_IN_NEWS
-  = spelling_tag_emitter('spelling-error-in-news-debian');
-my $SPELLING_ERROR_CHANGELOG
-  = spelling_tag_emitter('spelling-error-in-changelog');
+sub spelling_tag_emitter {
+    my ($self, @orig_args) = @_;
+    return sub {
+        return $self->tag(@orig_args, @_);
+    };
+}
 
 sub source {
     my ($self) = @_;
@@ -366,8 +368,10 @@ sub binary {
                 $self->tag('debian-news-entry-has-strange-distribution',
                     $news->Distribution);
             }
-            check_spelling($news->Changes, $group->info->spelling_exceptions,
-                $SPELLING_ERROR_IN_NEWS);
+            check_spelling(
+                $news->Changes,
+                $group->info->spelling_exceptions,
+                $self->spelling_tag_emitter('spelling-error-in-news-debian'));
             if ($news->Changes =~ /^\s*\*\s/) {
                 $self->tag('debian-news-entry-uses-asterisk');
             }
@@ -686,8 +690,10 @@ sub binary {
         # Strip out all lines that contain the word spelling to avoid false
         # positives on changelog entries for spelling fixes.
         $changes =~ s/^.*(?:spelling|typo).*\n//gm;
-        check_spelling($changes, $group->info->spelling_exceptions,
-            $SPELLING_ERROR_CHANGELOG);
+        check_spelling(
+            $changes,
+            $group->info->spelling_exceptions,
+            $self->spelling_tag_emitter('spelling-error-in-changelog'));
     }
 
     return;

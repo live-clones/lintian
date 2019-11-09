@@ -28,7 +28,7 @@ use File::Basename;
 use List::MoreUtils qw(any none);
 use Text::ParseWords ();
 
-use Lintian::Spelling qw(check_spelling spelling_tag_emitter);
+use Lintian::Spelling qw(check_spelling);
 use Lintian::Util qw(clean_env do_fork drain_pipe internal_error open_gz);
 
 use constant LINTIAN_COVERAGE => ($ENV{'LINTIAN_COVERAGE'}?1:0);
@@ -44,6 +44,13 @@ has manpage => (is => 'rwp', default => sub { {} });
 
 has running_man => (is => 'rwp', default => sub { [] });
 has running_lexgrog => (is => 'rwp', default => sub { [] });
+
+sub spelling_tag_emitter {
+    my ($self, @orig_args) = @_;
+    return sub {
+        return $self->tag(@orig_args, @_);
+    };
+}
 
 sub files {
     my ($self, $file) = @_;
@@ -281,7 +288,7 @@ sub files {
         # Now we search through the whole man page for some common errors
         my $lc = 0;
         my $stag_emitter
-          = spelling_tag_emitter('spelling-error-in-manpage', $file);
+          = $self->spelling_tag_emitter('spelling-error-in-manpage', $file);
         foreach my $line (@manfile) {
             $lc++;
             chomp $line;

@@ -28,7 +28,7 @@ use autodie;
 
 use Lintian::Data;
 use Lintian::Spelling
-  qw(check_spelling check_spelling_picky $known_shells_regex spelling_tag_emitter);
+  qw(check_spelling check_spelling_picky $known_shells_regex);
 use Lintian::Util qw(file_is_encoded_in_non_utf8 strip);
 
 use Moo;
@@ -60,6 +60,13 @@ our $SECTIONS = Lintian::Data->new('doc-base/sections');
 has menu_file => (is => 'rwp');
 has menumethod_file => (is => 'rwp');
 has documentation => (is => 'rwp', default => 0);
+
+sub spelling_tag_emitter {
+    my ($self, @orig_args) = @_;
+    return sub {
+        return $self->tag(@orig_args, @_);
+    };
+}
 
 sub files {
     my ($self, $file) = @_;
@@ -430,7 +437,8 @@ sub check_doc_base_field {
     } elsif ($field eq 'title') {
         if (@$vals) {
             my $stag_emitter
-              = spelling_tag_emitter('spelling-error-in-doc-base-title-field',
+              = $self->spelling_tag_emitter(
+                'spelling-error-in-doc-base-title-field',
                 "${dbfile}:${line}");
             check_spelling(
                 join(' ', @$vals),
@@ -506,7 +514,7 @@ sub check_doc_base_field {
         # Check spelling.
         if (@$vals) {
             my $stag_emitter
-              = spelling_tag_emitter(
+              = $self->spelling_tag_emitter(
                 'spelling-error-in-doc-base-abstract-field',
                 "${dbfile}:${line}");
             check_spelling(
