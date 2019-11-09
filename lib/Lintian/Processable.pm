@@ -27,7 +27,6 @@ use Carp qw(croak);
 use Path::Tiny;
 
 use Lintian::Collect::Dispatcher qw(create_info);
-use Lintian::Tags qw(tag);
 use Lintian::Util qw(get_dsc_info get_deb_info);
 
 use constant EMPTY => q{};
@@ -371,19 +370,16 @@ sub unfolded_field {
     return
       unless defined $value;
 
-    $value =~ s/\n$//;
-    if ($value =~ s/\n//g) {
+    # will also replace a newline at the very end
+    $value =~ s/\n//g;
 
-        tag 'multiline-field', $field;
-
-        # Remove leading space as it confuses some of the other checks
-        # that are anchored.  This happens if the field starts with a
-        # space and a newline, i.e ($ marks line end):
-        #
-        # Vcs-Browser: $
-        #  http://somewhere.com/$
-        $value =~ s/^\s*+//;
-    }
+    # Remove leading space as it confuses some of the other checks
+    # that are anchored.  This happens if the field starts with a
+    # space and a newline, i.e ($ marks line end):
+    #
+    # Vcs-Browser: $
+    #  http://somewhere.com/$
+    $value =~ s/^\s*+//;
 
     $self->unfolded->{$field} = $value;
 
