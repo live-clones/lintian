@@ -84,7 +84,21 @@ sub source {
         }
     }
 
-    my $latest_version = $info->version;
+    my $versionstring = $self->info->field('version', EMPTY);
+    my $latest_version = Lintian::Inspect::Changelog::Version->new;
+
+    try {
+        $latest_version->set($versionstring, $self->info->native);
+
+    } catch {
+        my $indicator= ($self->info->native ? EMPTY : 'non-') . 'native';
+        $self->tag(
+            'malformed-debian-changelog-version',
+            $versionstring . " (for $indicator)"
+        );
+        undef $latest_version;
+    };
+
     if (defined $latest_version) {
 
         $self->tag('hyphen-in-upstream-part-of-debian-changelog-version',

@@ -30,7 +30,6 @@ use Try::Tiny;
 use Lintian::Deb822Parser qw(read_dpkg_control);
 use Lintian::Inspect::Changelog::Version;
 use Lintian::Relation;
-use Lintian::Tags qw(tag);
 use Lintian::Util
   qw(get_file_checksum open_gz $PKGNAME_REGEX $PKGREPACK_REGEX strip);
 
@@ -138,9 +137,6 @@ sub version {
     try {
         $version->set($versionstring, $self->native);
     } catch {
-        my $indicator= ($self->native ? EMPTY : 'non-') . 'native';
-        tag 'malformed-debian-changelog-version',
-          $versionstring . " (for $indicator)";
         undef $version;
     };
 
