@@ -586,7 +586,6 @@ sub process {
 
     my $timer = [gettimeofday];
 
-  PROC:
     foreach my $processable ($self->get_processables){
         my $pkg_type = $processable->pkg_type;
         my $procid = $processable->identifier;
@@ -613,9 +612,6 @@ sub process {
             tags      => {},
             overrides => {},
         };
-
-        $TAGS->file_end
-          if $TAGS->{current};
 
         $TAGS->{current} = $file;
 
@@ -656,12 +652,9 @@ sub process {
 
                 my ($tag, @extra) = @{$tagref};
 
-                die "tried to issue tag $tag without starting a file"
-                  unless $TAGS->{current};
-
                 # Note, we get the known as it will be suppressed by
                 # $self->suppressed below if the tag is not enabled.
-                my $info = $TAGS->{profile}->get_tag($tag, 1);
+                my $info = $self->profile->get_tag($tag, 1);
                 croak "tried to issue unknown tag $tag"
                   unless $info;
 
@@ -697,7 +690,8 @@ sub process {
                 warning("skipping check of $procid");
                 $$exit_code_ref = 2;
                 $all_ok = 0;
-                next PROC;
+
+                next;
             }
             my $tres = sprintf('%.3fs', $raw_res);
             debug_msg(1, "Check script $check for $procid done ($tres)");
@@ -725,9 +719,8 @@ sub process {
             $overrides->{info} += $info;
         }
 
-    } # end foreach my $processable ($self->get_processable)
-
-    $TAGS->file_end;
+        $TAGS->file_end;
+    }
 
     my $raw_res = tv_interval($timer);
     my $tres = sprintf('%.3fs', $raw_res);
