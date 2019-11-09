@@ -40,7 +40,7 @@ use Lintian::Processable::Buildinfo;
 use Lintian::Processable::Changes;
 use Lintian::Processable::Source;
 use Lintian::Processable::Udeb;
-use Lintian::Tags qw(tag GLOBAL);
+use Lintian::Tags qw(tag);
 use Lintian::Unpack::Task;
 use Lintian::Util qw(internal_error get_dsc_info strip);
 
@@ -591,7 +591,35 @@ sub process {
         my $pkg_type = $processable->pkg_type;
         my $procid = $processable->identifier;
 
-        $TAGS->file_start($processable);
+        my $file = $processable->pkg_path;
+
+        die "duplicate of file $file added to Lintian::Tags object"
+          if exists $TAGS->{info}{$file};
+
+        $TAGS->{info}{$file} = {
+            file              => $file,
+            package           => $processable->pkg_name,
+            version           => $processable->pkg_version,
+            arch              => $processable->pkg_arch,
+            type              => $processable->pkg_type,
+            processable       => $processable,
+            overrides         => {},
+            'overrides-data'  => {},
+        };
+        $TAGS->{statistics}{$file} = {
+            types     => {},
+            severity  => {},
+            certainty => {},
+            tags      => {},
+            overrides => {},
+        };
+
+        $TAGS->file_end
+          if $TAGS->{current};
+
+        $TAGS->{current} = $file;
+
+        $Lintian::Output::GLOBAL->print_start_pkg($TAGS->{info}{$file});
 
         debug_msg(1, 'Base directory for group: ' . $processable->groupdir);
 
@@ -629,38 +657,35 @@ sub process {
                 my ($tag, @extra) = @{$tagref};
 
                 die "tried to issue tag $tag without starting a file"
-                  unless $Lintian::Tags::GLOBAL->{current};
+                  unless $TAGS->{current};
 
                 # Note, we get the known as it will be suppressed by
                 # $self->suppressed below if the tag is not enabled.
-                my $info = $Lintian::Tags::GLOBAL->{profile}->get_tag($tag, 1);
+                my $info = $TAGS->{profile}->get_tag($tag, 1);
                 croak "tried to issue unknown tag $tag"
                   unless $info;
 
                 next
-                  if $Lintian::Tags::GLOBAL->suppressed($tag);
+                  if $TAGS->suppressed($tag);
 
             # Clean up @extra and collapse it to a string.  Lintian code
             # doesn't treat the distinction between extra arguments to tag() as
             # significant, so we may as well take care of this up front.
                 @extra = grep { defined($_) and $_ ne '' }
                   map { s/\n/\\n/g; $_ } @extra;
-                my $extra = join(' ', @extra);
-                $extra = '' unless defined $extra;
+                my $extra = join(SPACE, @extra) // EMPTY;
 
-                my $override
-                  = $Lintian::Tags::GLOBAL->_check_overrides($tag, $extra);
-                $Lintian::Tags::GLOBAL->_record_stats($tag, $info, $override);
+                my $override= $TAGS->_check_overrides($tag, $extra);
+                $TAGS->_record_stats($tag, $info, $override);
 
                 next
                   if defined $override
-                  && !$Lintian::Tags::GLOBAL->{show_overrides};
+                  && !$TAGS->{show_overrides};
 
                 next
-                  unless $Lintian::Tags::GLOBAL->displayed($tag);
+                  unless $TAGS->displayed($tag);
 
-                my $file = $Lintian::Tags::GLOBAL->{info}
-                  {$Lintian::Tags::GLOBAL->{current}};
+                my $file = $TAGS->{info}{$TAGS->{current}};
                 $Lintian::Output::GLOBAL->print_tag($file, $info, $extra,
                     $override);
             }

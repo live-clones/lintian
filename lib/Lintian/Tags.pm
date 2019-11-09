@@ -35,7 +35,7 @@ use Lintian::Tag::Override;
 use Lintian::Util qw($PKGNAME_REGEX strip);
 
 BEGIN {
-    our @EXPORT_OK = qw(tag GLOBAL);
+    our @EXPORT_OK = qw(tag);
 }
 
 # The default Lintian::Tags object, set to the first one constructed and
@@ -453,50 +453,6 @@ sub profile {
 =head2 File Metadata
 
 =over 4
-
-=item file_start(PROC)
-
-Adds a new file from a processable, initializes the data structures
-used for statistics and overrides, and makes it the default file for which
-tags will be issued.  Also call Lintian::Output::print_end_pkg() to end
-the previous file, if any, and Lintian::Output::print_start_pkg() to start
-the new file.
-
-This method throws an exception if the file being added was already added
-earlier.
-
-=cut
-
-sub file_start {
-    my ($self, $proc) = @_;
-    my $file = $proc->pkg_path;
-    if (exists $self->{info}{$file}) {
-        die "duplicate of file $file added to Lintian::Tags object";
-    }
-    $self->{info}{$file} = {
-        file              => $file,
-        package           => $proc->pkg_name,
-        version           => $proc->pkg_version,
-        arch              => $proc->pkg_arch,
-        type              => $proc->pkg_type,
-        processable       => $proc,
-        overrides         => {},
-        'overrides-data'  => {},
-    };
-    $self->{statistics}{$file} = {
-        types     => {},
-        severity  => {},
-        certainty => {},
-        tags      => {},
-        overrides => {},
-    };
-    if ($self->{current}) {
-        $self->file_end;
-    }
-    $self->{current} = $file;
-    $Lintian::Output::GLOBAL->print_start_pkg($self->{info}{$file});
-    return;
-}
 
 =item file_overrides(OVERRIDE-FILE)
 
