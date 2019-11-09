@@ -645,36 +645,6 @@ sub file_overrides {
     return;
 }
 
-=item load_overrides
-
-Loads overrides for the current file.  This is basically a short-hand
-for finding the overrides file in the lab and calling
-L<files_overrides|/file_overrides(OVERRIDE-FILE)> on it if it is
-present.
-
-=cut
-
-sub load_overrides {
-    my ($self) = @_;
-
-    my $current = $self->{current};
-    my $overrides_file;
-
-    die 'no current file when loading overrides'
-      unless defined $current;
-
-    my $processable = $self->{'info'}{$current}{'processable'};
-    $overrides_file
-      = path($processable->info->groupdir)->child('override')->stringify;
-
-    eval {$self->file_overrides($overrides_file);};
-    if (my $err = $@) {
-        die $err if not ref $err or $err->errno != ENOENT;
-    }
-
-    return;
-}
-
 =back
 
 =head2 Statistics

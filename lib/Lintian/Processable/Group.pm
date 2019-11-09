@@ -621,8 +621,17 @@ sub process {
 
         if (not $opt->{'no-override'}
             and $self->collmap->getp('override-file')) {
+
             debug_msg(1, 'Loading overrides file (if any) ...');
-            $TAGS->load_overrides;
+
+            my $overrides_file
+              = path($processable->info->groupdir)->child('override')
+              ->stringify;
+
+            eval {$TAGS->file_overrides($overrides_file);};
+            if (my $err = $@) {
+                die $err if not ref $err or $err->errno != ENOENT;
+            }
         }
 
         # Filter out the "lintian" check if present - it does no real harm,
