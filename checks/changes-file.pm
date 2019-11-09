@@ -191,7 +191,8 @@ sub changes {
     # Changed-By is optional in Policy, but if set, must be
     # syntactically correct.  It's also used by dak.
     if ($info->field('changed-by')) {
-        check_maintainer($info->field('changed-by'), 'changed-by');
+        my @tags = check_maintainer($info->field('changed-by'), 'changed-by');
+        $self->tag(@{$_}) for @tags;
     }
 
     my $files = $info->files;
