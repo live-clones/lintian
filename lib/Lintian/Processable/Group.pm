@@ -619,6 +619,8 @@ sub process {
 
         debug_msg(1, 'Base directory for group: ' . $processable->groupdir);
 
+        my @early;
+
         if (not $opt->{'no-override'}
             and $self->collmap->getp('override-file')) {
 
@@ -628,7 +630,7 @@ sub process {
               = path($processable->info->groupdir)->child('override')
               ->stringify;
 
-            eval {$TAGS->file_overrides($overrides_file);};
+            eval {@early = $TAGS->file_overrides($overrides_file);};
             if (my $err = $@) {
                 die $err if not ref $err or $err->errno != ENOENT;
             }
@@ -657,40 +659,7 @@ sub process {
             my $err = $@;
             my $raw_res = tv_interval($timer);
 
-            for my $tagref (@found) {
-
-                my ($tag, @extra) = @{$tagref};
-
-                # Note, we get the known as it will be suppressed by
-                # $self->suppressed below if the tag is not enabled.
-                my $info = $self->profile->get_tag($tag, 1);
-                croak "tried to issue unknown tag $tag"
-                  unless $info;
-
-                next
-                  if $TAGS->suppressed($tag);
-
-            # Clean up @extra and collapse it to a string.  Lintian code
-            # doesn't treat the distinction between extra arguments to tag() as
-            # significant, so we may as well take care of this up front.
-                @extra = grep { defined($_) and $_ ne '' }
-                  map { s/\n/\\n/g; $_ } @extra;
-                my $extra = join(SPACE, @extra) // EMPTY;
-
-                my $override= $TAGS->_check_overrides($tag, $extra);
-                $TAGS->_record_stats($tag, $info, $override);
-
-                next
-                  if defined $override
-                  && !$TAGS->{show_overrides};
-
-                next
-                  unless $TAGS->displayed($tag);
-
-                my $file = $TAGS->{info}{$TAGS->{current}};
-                $Lintian::Output::GLOBAL->print_tag($file, $info, $extra,
-                    $override);
-            }
+            push(@early, @found);
 
             if ($err) {
                 print STDERR $err;
@@ -705,6 +674,41 @@ sub process {
             my $tres = sprintf('%.3fs', $raw_res);
             debug_msg(1, "Check script $check for $procid done ($tres)");
             perf_log("$procid,check/$check,${raw_res}");
+        }
+
+        for my $tagref (@early) {
+
+            my ($tag, @extra) = @{$tagref};
+
+            # Note, we get the known as it will be suppressed by
+            # $self->suppressed below if the tag is not enabled.
+            my $info = $self->profile->get_tag($tag, 1);
+            croak "tried to issue unknown tag $tag"
+              unless $info;
+
+            next
+              if $TAGS->suppressed($tag);
+
+            # Clean up @extra and collapse it to a string.  Lintian code
+            # doesn't treat the distinction between extra arguments to tag() as
+            # significant, so we may as well take care of this up front.
+            @extra = grep { defined($_) and $_ ne '' }
+              map { s/\n/\\n/g; $_ } @extra;
+            my $extra = join(SPACE, @extra) // EMPTY;
+
+            my $override= $TAGS->_check_overrides($tag, $extra);
+            $TAGS->_record_stats($tag, $info, $override);
+
+            next
+              if defined $override
+              && !$TAGS->{show_overrides};
+
+            next
+              unless $TAGS->displayed($tag);
+
+            my $file = $TAGS->{info}{$TAGS->{current}};
+            $Lintian::Output::GLOBAL->print_tag($file, $info, $extra,
+                $override);
         }
 
         unless ($$exit_code_ref) {

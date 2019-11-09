@@ -468,6 +468,9 @@ file cannot be opened.
 
 sub file_overrides {
     my ($self, $overrides) = @_;
+
+    my @tags;
+
     my $profile = $self->{profile};
     unless (defined $self->{current}) {
         die 'no current file when adding overrides';
@@ -475,6 +478,10 @@ sub file_overrides {
     my $info = $self->{info}{$self->{current}};
     my $comments = [];
     my $last_over;
+
+    return
+      unless -f $overrides;
+
     open(my $file, '<:encoding(UTF-8)', $overrides);
     local $_;
   OVERRIDE:
@@ -515,19 +522,23 @@ sub file_overrides {
             my $tagover;
             my $data;
             if ($opkg_type and $opkg_type ne $info->{type}) {
-                tag(
-                    'malformed-override',
-                    join(q{ },
-                        "Override of $rawtag for package type $opkg_type",
-                        "(expecting $info->{type}) at line $."));
+                push(
+                    @tags,
+                    [
+                        'malformed-override',
+                        join(q{ },
+                            "Override of $rawtag for package type $opkg_type",
+                            "(expecting $info->{type}) at line $.")]);
                 next;
             }
             if ($info->{arch} eq 'all' && $archlist) {
-                tag(
-                    'malformed-override',
-                    join(q{ },
-                        'Architecture list for arch:all package',
-                        "at line $. (for tag $rawtag)"));
+                push(
+                    @tags,
+                    [
+                        'malformed-override',
+                        join(q{ },
+                            'Architecture list for arch:all package',
+                            "at line $. (for tag $rawtag)")]);
                 next;
             }
             if ($archlist) {
@@ -543,21 +554,25 @@ sub file_overrides {
                     } elsif (is_arch($a)) {
                         $found = 1 if $a eq $info->{arch};
                     } else {
-                        tag(
-                            'malformed-override',
-                            join(q{ },
-                                "Unknown architecture \"$a\"",
-                                "at line $. (for tag $rawtag)"));
+                        push(
+                            @tags,
+                            [
+                                'malformed-override',
+                                join(q{ },
+                                    "Unknown architecture \"$a\"",
+                                    "at line $. (for tag $rawtag)")]);
                         next OVERRIDE;
                     }
                 }
                 if ($negated > 0 && scalar @archs != $negated){
                     # missing a ! somewhere
-                    tag(
-                        'malformed-override',
-                        join(q{ },
-                            'Inconsistent architecture negation',
-                            "at line $. (for tag $rawtag)"));
+                    push(
+                        @tags,
+                        [
+                            'malformed-override',
+                            join(q{ },
+                                'Inconsistent architecture negation',
+                                "at line $. (for tag $rawtag)")]);
                     next;
                 }
                 # missing wildcard checks and sanity checking archs $arch
@@ -588,7 +603,7 @@ sub file_overrides {
             $tag = $tagover->{'tag'};
 
             unless($tag eq $rawtag) {
-                tag 'renamed-tag',"$rawtag => $tag at line $.";
+                push(@tags, ['renamed-tag',"$rawtag => $tag at line $."]);
             }
 
             # treat here ignored overrides
@@ -625,12 +640,14 @@ sub file_overrides {
                     # Looks like a wrong package name - technically,
                     # $opkg could be a tag if the tag information is
                     # present, but it is very unlikely.
-                    tag(
-                        'malformed-override',
-                        join(q{ },
-                            'Possibly wrong package in override',
-                            "at line $. (got $opkg, expected $info->{package})"
-                        ));
+                    push(
+                        @tags,
+                        [
+                            'malformed-override',
+                            join(q{ },
+                                'Possibly wrong package in override',
+"at line $. (got $opkg, expected $info->{package})"
+                            )]);
                     next;
                 }
             }
@@ -638,11 +655,12 @@ sub file_overrides {
             # at all), not sure what the problem is so we just throw a
             # generic parse error.
 
-            tag 'malformed-override', "Cannot parse line $.: $_";
+            push(@tags, ['malformed-override', "Cannot parse line $.: $_"]);
         }
     }
     close($file);
-    return;
+
+    return @tags;
 }
 
 =back
