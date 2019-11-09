@@ -662,6 +662,12 @@ sub process {
             my $err = $@;
             my $raw_res = tv_interval($timer);
 
+            # add any from the global queue
+            push(@found, @{$TAGS->{queue}});
+
+            # empty the global queue
+            $TAGS->{queue} = [];
+
             push(@early, @found);
 
             if ($err) {

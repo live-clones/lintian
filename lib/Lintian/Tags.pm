@@ -166,6 +166,7 @@ sub new {
         show_experimental    => 0,
         show_overrides       => 0,
         statistics           => {},
+        queue                => [],
     };
     bless($self, $class);
     $GLOBAL = $self unless $GLOBAL;
@@ -216,29 +217,9 @@ sub tag {
     unless ($self->{current}) {
         die "tried to issue tag $tag without starting a file";
     }
-    # Retrieve the tag metadata and display the tag if the configuration
-    # says to display it.
-    # Note, we get the known as it will be suppressed by
-    # $self->suppressed below if the tag is not enabled.
-    my $info = $self->{profile}->get_tag($tag, 1);
-    unless ($info) {
-        croak "tried to issue unknown tag $tag";
-    }
-    return if $self->suppressed($tag);
 
-    # Clean up @extra and collapse it to a string.  Lintian code
-    # doesn't treat the distinction between extra arguments to tag() as
-    # significant, so we may as well take care of this up front.
-    @extra = grep { defined($_) and $_ ne '' } map { s/\n/\\n/g; $_ } @extra;
-    my $extra = join(' ', @extra);
-    $extra = '' unless defined $extra;
+    push(@{$self->{queue}}, [$tag, @extra]);
 
-    my $override = $self->_check_overrides($tag, $extra);
-    $self->_record_stats($tag, $info, $override);
-    return if (defined($override) and not $self->{show_overrides});
-    return unless $self->displayed($tag);
-    my $file = $self->{info}{$self->{current}};
-    $Lintian::Output::GLOBAL->print_tag($file, $info, $extra, $override);
     return;
 }
 
