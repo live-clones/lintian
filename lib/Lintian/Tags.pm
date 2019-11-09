@@ -675,43 +675,6 @@ sub load_overrides {
     return;
 }
 
-=item file_end()
-
-Ends processing of a file.
-
-This does two things.  First it emits "unused-override" tags for all
-unused overrides.  Secondly, it calls Lintian::Output::print_end_pkg
-to mark the end of the package.
-
-Note that this method is called by file_start if it detects another
-entry is already active.
-
-=cut
-
-sub file_end {
-    my ($self) = @_;
-    if (my $current = $self->{current}) {
-        my $info = $self->{info}{$current};
-        my $pkg_overrides = $info->{overrides};
-
-        for my $tag (sort(keys %{$pkg_overrides})) {
-            my $overrides;
-            next if $self->suppressed($tag);
-
-            $overrides = $pkg_overrides->{$tag};
-            for my $extra (sort(keys %{$overrides})) {
-                next if $overrides->{$extra};
-                $self->{unused_overrides}++;
-                $self->tag('unused-override', $tag, $extra);
-            }
-        }
-
-        $Lintian::Output::GLOBAL->print_end_pkg($info);
-    }
-    undef $self->{current};
-    return;
-}
-
 =back
 
 =head2 Statistics

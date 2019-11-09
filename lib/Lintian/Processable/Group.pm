@@ -719,7 +719,25 @@ sub process {
             $overrides->{info} += $info;
         }
 
-        $TAGS->file_end;
+        my $current = $TAGS->{current};
+        my $info = $TAGS->{info}{$current};
+        my $pkg_overrides = $info->{overrides};
+
+        for my $tag (sort(keys %{$pkg_overrides})) {
+            my $overrides;
+            next if $TAGS->suppressed($tag);
+
+            $overrides = $pkg_overrides->{$tag};
+            for my $extra (sort(keys %{$overrides})) {
+                next if $overrides->{$extra};
+                $TAGS->{unused_overrides}++;
+                $TAGS->tag('unused-override', $tag, $extra);
+            }
+        }
+
+        $Lintian::Output::GLOBAL->print_end_pkg($info);
+
+        undef $TAGS->{current};
     }
 
     my $raw_res = tv_interval($timer);
