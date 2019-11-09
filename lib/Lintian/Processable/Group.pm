@@ -40,6 +40,7 @@ use Lintian::Processable::Buildinfo;
 use Lintian::Processable::Changes;
 use Lintian::Processable::Source;
 use Lintian::Processable::Udeb;
+use Lintian::Tags qw(tag);
 use Lintian::Unpack::Task;
 use Lintian::Util qw(internal_error get_dsc_info strip);
 
@@ -616,10 +617,14 @@ sub process {
             next
               if !$cs->is_check_type($pkg_type);
 
+            my @found;
+
             debug_msg(1, "Running check: $check on $procid  ...");
-            eval {$cs->run_check($processable, $self);};
+            eval {@found = $cs->run_check($processable, $self);};
             my $err = $@;
             my $raw_res = tv_interval($timer);
+
+            Lintian::Tags::tag @{$_} for @found;
 
             if ($err) {
                 print STDERR $err;

@@ -234,7 +234,10 @@ sub run_check {
 
         $check->run;
 
-        return;
+        my @found = @{$check->found};
+        $check->found([]);
+
+        return @found;
     }
 
     my @args = ($proc->pkg_name,$proc->pkg_type,$proc->info,$proc,$group);

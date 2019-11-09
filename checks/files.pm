@@ -62,6 +62,9 @@ sub always {
         $check->group($self->group);
 
         $check->run;
+
+        push(@{$self->found}, @{$check->found});
+        $check->found([]);
     }
 
     return;

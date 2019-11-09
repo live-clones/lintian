@@ -27,7 +27,7 @@ use constant EMPTY => q{};
 use Moo::Role;
 use namespace::clean;
 
-with 'Lintian::Tag::Issuer';
+with 'Lintian::Tag::Finder';
 
 =head1 NAME
 
@@ -90,8 +90,6 @@ sub run {
 
     $self->breakdown
       if $self->can('breakdown');
-
-    $self->issue_tags;
 
     return;
 }
