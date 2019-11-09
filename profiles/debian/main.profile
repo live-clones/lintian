@@ -39,6 +39,7 @@ Enable-Tags-From-Check:
  fields/length,
  fields/maintainer,
  fields/multi-arch,
+ fields/multi-line,
  fields/origin,
  fields/package,
  fields/package-relations,
