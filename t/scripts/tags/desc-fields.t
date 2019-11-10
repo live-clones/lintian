@@ -106,7 +106,7 @@ foreach my $descpath (@descpaths) {
 
     $checkfield //= EMPTY;
 
-    my ($checkname) = $checkfield  =~ qr/^(\S+)$/;
+    my ($checkname) = $checkfield =~ qr/^(\S+)$/;
 
     # tag is associated with a single check
     ok(length $checkname, "Tag $tagname is associated with a single check");
