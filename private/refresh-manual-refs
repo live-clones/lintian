@@ -108,7 +108,8 @@ my %manuals = (
     'lintian' => [
         '/usr/share/doc/lintian/lintian.html',
         'https://lintian.debian.org/manual/',
-        $dbk_index_re, $dbk_fields
+        $dbk_index_re,
+        $dbk_fields
     ],
     'devref' => [
         '/usr/share/doc/developers-reference/index.html',
