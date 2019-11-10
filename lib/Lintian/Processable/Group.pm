@@ -30,7 +30,6 @@ use IO::Async::Routine;
 use List::Compare;
 use List::MoreUtils qw(uniq);
 use Path::Tiny;
-#use POSIX;
 use POSIX qw(ENOENT);
 use Time::HiRes qw(gettimeofday tv_interval);
 
@@ -624,14 +623,14 @@ sub process {
 
         debug_msg(1, 'Base directory for group: ' . $processable->groupdir);
 
-        my @early;
+        my @found;
 
         if (not $opt->{'no-override'}
             and $self->collmap->getp('override-file')) {
 
             debug_msg(1, 'Loading overrides file (if any) ...');
 
-            eval {@early = $processable->overrides($TAGS);};
+            eval {@found = $processable->overrides($TAGS);};
             if (my $err = $@) {
                 die $err if not ref $err or $err->errno != ENOENT;
             }
@@ -653,20 +652,20 @@ sub process {
             next
               if !$cs->is_check_type($pkg_type);
 
-            my @found;
+            my @collected;
 
             debug_msg(1, "Running check: $check on $procid  ...");
-            eval {@found = $cs->run_check($processable, $self);};
+            eval {@collected = $cs->run_check($processable, $self);};
             my $err = $@;
             my $raw_res = tv_interval($timer);
+
+            push(@found, @collected);
 
             # add any from the global queue
             push(@found, @{$TAGS->{queue}});
 
             # empty the global queue
             $TAGS->{queue} = [];
-
-            push(@early, @found);
 
             if ($err) {
                 print STDERR $err;
@@ -683,18 +682,20 @@ sub process {
             perf_log("$procid,check/$check,${raw_res}");
         }
 
-        for my $tagref (@early) {
+        my @print;
 
-            my ($tag, @extra) = @{$tagref};
+        for my $tagref (@found) {
+
+            my ($tagname, @extra) = @{$tagref};
 
             # Note, we get the known as it will be suppressed by
             # $self->suppressed below if the tag is not enabled.
-            my $taginfo = $self->profile->get_tag($tag, 1);
-            croak "tried to issue unknown tag $tag"
+            my $taginfo = $self->profile->get_tag($tagname, 1);
+            croak "tried to issue unknown tag $tagname"
               unless $taginfo;
 
             next
-              if $TAGS->suppressed($tag);
+              if $TAGS->suppressed($tagname);
 
             # Clean up @extra and collapse it to a string.  Lintian code
             # doesn't treat the distinction between extra arguments to tag() as
@@ -705,10 +706,10 @@ sub process {
 
             my $override;
 
-            my $overrides= $procstruct->{'overrides-data'}{$tag};
+            my $overrides= $procstruct->{'overrides-data'}{$tagname};
             if ($overrides) {
 
-                my $extrastats = $procstruct->{overrides}{$tag};
+                my $extrastats = $procstruct->{overrides}{$tagname};
 
                 if (exists $overrides->{''}) {
                     $override = $overrides->{''};
@@ -739,7 +740,7 @@ sub process {
             $record = $stats->{overrides}
               if $override;
 
-            $record->{tags}{$tag}++;
+            $record->{tags}{$tagname}++;
             $record->{severity}{$taginfo->severity}++;
             $record->{certainty}{$taginfo->certainty}++;
 
@@ -752,10 +753,9 @@ sub process {
               && !$TAGS->{show_overrides};
 
             next
-              unless $TAGS->displayed($tag);
+              unless $TAGS->displayed($tagname);
 
-            $Lintian::Output::GLOBAL->print_tag($procstruct, $taginfo, $extra,
-                $override);
+            push(@print, [$taginfo, $extra, $override]);
         }
 
         unless ($$exit_code_ref) {
@@ -778,22 +778,27 @@ sub process {
 
         my $pkg_overrides = $procstruct->{overrides};
 
-        for my $tag (sort keys %{$pkg_overrides}) {
+        for my $tagname (sort keys %{$pkg_overrides}) {
 
             next
-              if $TAGS->suppressed($tag);
+              if $TAGS->suppressed($tagname);
 
-            my $overrides = $pkg_overrides->{$tag};
+            my $overrides = $pkg_overrides->{$tagname};
 
             for my $extra (sort keys %{$overrides}) {
 
                 next
                   if $overrides->{$extra};
 
-                $TAGS->tag('unused-override', $tag, $extra);
+                # cannot be overridden or suppressed
+                my $taginfo = $self->profile->get_tag('unused-override', 1);
+                push(@print, [$taginfo, "$tagname $extra"]);
+
                 $TAGS->{unused_overrides}++;
             }
         }
+
+        $Lintian::Output::GLOBAL->print_tag($procstruct, @{$_})for @print;
 
         $Lintian::Output::GLOBAL->print_end_pkg($procstruct);
 
