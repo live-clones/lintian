@@ -28,8 +28,6 @@ use Exporter qw(import);
 use List::MoreUtils qw(any);
 use Path::Tiny;
 
-use Lintian::Output;
-
 BEGIN {
     our @EXPORT_OK = qw(tag);
 }
@@ -380,65 +378,6 @@ sub profile {
 
 =back
 
-=head2 File Metadata
-
-=over 4
-
-=back
-
-=head2 Statistics
-
-=over 4
-
-=item overrides(PROC)
-
-Returns a reference to the overrides hash for the given processable.  The keys of
-this hash are the tags for which are overrides.  The value for each key is
-another hash, whose keys are the extra data matched by that override and
-whose values are the counts of tags that matched that override.  Overrides
-matching any tag by that name are stored with the empty string as
-metadata, so:
-
-    my $overrides = $tags->overrides('/some/file');
-    print "$overrides->{'some-tag'}{''}\n";
-
-will print out the number of tags that matched a general override for the
-tag some-tag, regardless of what extra data was associated with it.
-
-=cut
-
-sub overrides {
-    my ($self, $proc) = @_;
-    if ($proc and $self->{info}{$proc->pkg_path}) {
-        return $self->{info}{$proc->pkg_path}{overrides};
-    }
-    return;
-}
-
-=item statistics([PROC])
-
-Returns a reference to the statistics hash for the given processable or, if PROC
-is omitted, a reference to the full statistics hash for all files.  In the
-latter case, the returned hash reference has as keys the file names and as
-values the per-file statistics.
-
-The per-file statistics has a set of hashes of keys to times seen in tags:
-tag names (the C<tags> key), severities (the C<severity> key), certainties
-(the C<certainty> key), and tag codes (the C<types> key).  It also has an
-C<overrides> key which has as its value another hash with those same four
-keys, which keeps statistics on overridden tags (not included in the
-regular counts).
-
-=cut
-
-sub statistics {
-    my ($self, $proc) = @_;
-    return $self->{statistics}{$proc->pkg_path} if $proc;
-    return $self->{statistics};
-}
-
-=back
-
 =head2 Tag Reporting
 
 =over 4
@@ -514,7 +453,7 @@ Originally written by Russ Allbery <rra@debian.org> for Lintian.
 
 =head1 SEE ALSO
 
-lintian(1), Lintian::Output(3), Lintian::Tag::Info(3)
+lintian(1), Lintian::Tag::Info(3)
 
 =cut
 

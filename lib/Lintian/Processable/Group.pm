@@ -708,20 +708,28 @@ sub process {
             my $overrides= $procstruct->{'overrides-data'}{$tag};
             if ($overrides) {
 
-                my $stats = $procstruct->{overrides}{$tag};
+                my $extrastats = $procstruct->{overrides}{$tag};
+
                 if (exists $overrides->{''}) {
-                    $stats->{''}++;
                     $override = $overrides->{''};
-                } elsif ($extra ne '' and exists $overrides->{$extra}) {
-                    $stats->{$extra}++;
-                    $override = $overrides->{$extra};
-                } elsif ($extra ne '') {
-                    for (sort keys %$overrides) {
-                        my $candidate = $overrides->{$_};
-                        if (   $candidate->is_pattern
-                            && $candidate->overrides($extra)){
-                            $stats->{$_}++;
-                            $override = $candidate;
+                    $extrastats->{''}++;
+
+                } elsif (length $extra) {
+
+                    if (exists $overrides->{$extra}) {
+                        $override = $overrides->{$extra};
+                        $extrastats->{$extra}++;
+
+                    } else {
+                        for my $matchmore (sort keys %$overrides) {
+
+                            my $candidate = $overrides->{$matchmore};
+                            if (   $candidate->is_pattern
+                                && $candidate->overrides($extra)){
+
+                                $override = $candidate;
+                                $extrastats->{$matchmore}++;
+                            }
                         }
                     }
                 }
