@@ -685,20 +685,20 @@ A sample configuration file could look like:
  #
  # Set the default profile (--profile)
  LINTIAN_PROFILE = debian
- 
+
  # Set the default TMPDIR for lintian to /var/tmp/lintian
  # - useful if /tmp is tmpfs with "limited" size.
  TMPDIR = /var/tmp/lintian/
- 
+
  # Show info (I:) tags by default (--display-info)
  #  NB: this cannot be used with display-level
  display-info=yes
- 
+
  # Ignore all overrides (--no-override)
  #  NB: called "override" in the config file
  #      and has inverted value!
  override = no
- 
+
  # Automatically determine if color should be used
  color = auto
 
@@ -833,7 +833,7 @@ If you discover any other bugs in lintian, please contact the authors.
 =head1 SEE ALSO
 
 L<lintian-info(1)>, Lintian User Manual
-(/usr/share/doc/lintian/lintian.html/index.html)
+(/usr/share/doc/lintian/lintian.html)
 
 Packaging tools: L<debhelper(7)>, L<dh_make(8)>,
 L<dpkg-buildpackage(1)>.
@@ -850,5 +850,3 @@ Please use the email address <lintian-maint@debian.org> for
 Lintian related comments.
 
 =cut
-
-
