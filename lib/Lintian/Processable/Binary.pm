@@ -34,7 +34,7 @@ use Moo;
 use namespace::clean;
 
 with 'Lintian::Collect::Binary', 'Lintian::Info::Changelog',
-  'Lintian::Info::Package',
+  'Lintian::Info::Overrides', 'Lintian::Info::Package',
   'Lintian::Info::Scripts', 'Lintian::Processable';
 
 =head1 NAME

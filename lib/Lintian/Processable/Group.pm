@@ -30,7 +30,8 @@ use IO::Async::Routine;
 use List::Compare;
 use List::MoreUtils qw(uniq);
 use Path::Tiny;
-use POSIX;
+#use POSIX;
+use POSIX qw(ENOENT);
 use Time::HiRes qw(gettimeofday tv_interval);
 
 use Lintian::Collect::Group;
@@ -629,11 +630,7 @@ sub process {
 
             debug_msg(1, 'Loading overrides file (if any) ...');
 
-            my $overrides_file
-              = path($processable->info->groupdir)->child('override')
-              ->stringify;
-
-            eval {@early = $TAGS->file_overrides($overrides_file);};
+            eval {@early = $processable->overrides($TAGS);};
             if (my $err = $@) {
                 die $err if not ref $err or $err->errno != ENOENT;
             }

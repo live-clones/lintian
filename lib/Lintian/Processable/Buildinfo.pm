@@ -33,7 +33,8 @@ use constant SLASH => q{/};
 use Moo;
 use namespace::clean;
 
-with 'Lintian::Info::Fields::Files', 'Lintian::Processable';
+with 'Lintian::Info::Fields::Files', 'Lintian::Info::Overrides',
+  'Lintian::Processable';
 
 =head1 NAME
 
