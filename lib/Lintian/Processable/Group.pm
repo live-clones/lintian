@@ -618,6 +618,7 @@ sub process {
         $TAGS->{current} = $path;
 
         my $procstruct = $TAGS->{info}{$path};
+        my $stats = $TAGS->{statistics}{$path};
 
         $Lintian::Output::GLOBAL->print_start_pkg($procstruct);
 
@@ -698,16 +699,16 @@ sub process {
             # Clean up @extra and collapse it to a string.  Lintian code
             # doesn't treat the distinction between extra arguments to tag() as
             # significant, so we may as well take care of this up front.
-            @extra = grep { defined($_) and $_ ne '' }
-              map { s/\n/\\n/g; $_ } @extra;
+            @extra = grep { length } @extra;
             my $extra = join(SPACE, @extra) // EMPTY;
+            $extra =~ s/\n/\\n/g;
 
             my $override;
 
-            my $overrides
-              = $TAGS->{info}{$path}{'overrides-data'}{$tag};
-            my $stats = $TAGS->{info}{$path}{overrides}{$tag};
+            my $overrides= $procstruct->{'overrides-data'}{$tag};
             if ($overrides) {
+
+                my $stats = $procstruct->{overrides}{$tag};
                 if (exists $overrides->{''}) {
                     $stats->{''}++;
                     $override = $overrides->{''};
@@ -726,7 +727,17 @@ sub process {
                 }
             }
 
-            $TAGS->_record_stats($tag, $taginfo, $override);
+            my $record = $stats;
+            $record = $stats->{overrides}
+              if $override;
+
+            $record->{tags}{$tag}++;
+            $record->{severity}{$taginfo->severity}++;
+            $record->{certainty}{$taginfo->certainty}++;
+
+            my $code = $taginfo->code;
+            $code = 'X' if $taginfo->experimental;
+            $record->{types}{$code}++;
 
             next
               if defined $override
@@ -735,13 +746,11 @@ sub process {
             next
               unless $TAGS->displayed($tag);
 
-            my $procstruct = $TAGS->{info}{$path};
             $Lintian::Output::GLOBAL->print_tag($procstruct, $taginfo, $extra,
                 $override);
         }
 
         unless ($$exit_code_ref) {
-            my $stats = $TAGS->statistics($processable);
             if ($stats->{types}{E}) {
                 $$exit_code_ref = 1;
             }
@@ -749,8 +758,6 @@ sub process {
 
         # Report override statistics.
         unless ($opt->{'no-override'} || $opt->{'show-overrides'}) {
-
-            my $stats = $TAGS->statistics($processable);
 
             my $errors = $stats->{overrides}{types}{E} || 0;
             my $warnings = $stats->{overrides}{types}{W} || 0;
@@ -764,14 +771,19 @@ sub process {
         my $pkg_overrides = $procstruct->{overrides};
 
         for my $tag (sort keys %{$pkg_overrides}) {
-            my $overrides;
-            next if $TAGS->suppressed($tag);
 
-            $overrides = $pkg_overrides->{$tag};
+            next
+              if $TAGS->suppressed($tag);
+
+            my $overrides = $pkg_overrides->{$tag};
+
             for my $extra (sort keys %{$overrides}) {
-                next if $overrides->{$extra};
-                $TAGS->{unused_overrides}++;
+
+                next
+                  if $overrides->{$extra};
+
                 $TAGS->tag('unused-override', $tag, $extra);
+                $TAGS->{unused_overrides}++;
             }
         }
 

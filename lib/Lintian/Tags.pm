@@ -188,23 +188,6 @@ called first or if an attempt is made to issue an unknown tag.
 
 #'# for cperl-mode
 
-# Record tag statistics.  Takes the tag, the Lintian::Tag::Info object and a
-# flag saying whether the tag was overridden.
-sub _record_stats {
-    my ($self, $tag, $info, $override) = @_;
-    my $stats = $self->{statistics}{$self->{current}};
-    my $code = $info->code;
-    $code = 'X' if $info->experimental;
-    if ($override) {
-        $stats = $self->{statistics}{$self->{current}}{overrides};
-    }
-    $stats->{tags}{$tag}++;
-    $stats->{severity}{$info->severity}++;
-    $stats->{certainty}{$info->certainty}++;
-    $stats->{types}{$code}++;
-    return;
-}
-
 sub tag {
     unless (ref $_[0] eq 'Lintian::Tags') {
         unshift(@_, $GLOBAL);
