@@ -28,8 +28,6 @@ use strict;
 use warnings;
 use autodie;
 
-use constant QUOTE => q{'};
-
 use Moo;
 use namespace::clean;
 
@@ -50,8 +48,8 @@ sub always {
         next
           unless $length > $maximum;
 
-        my $label = QUOTE . $name . QUOTE;
-        $label =~ s/\b(\w)/\U$1/g;
+        # Title-case the field name
+        my ($label) = $name =~ s/\b(\w)/\U$1/g;
 
         $self->tag('field-too-long', $label, "($length chars > $maximum)");
     }
