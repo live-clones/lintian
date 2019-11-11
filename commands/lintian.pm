@@ -87,7 +87,7 @@ my %opt = (                     #hash of some flags from cmd or cfg
     'jobs'              => default_parallel(),
 );
 
-my ($experimental_output_opts, %overrides);
+my ($experimental_output_opts, %override_count);
 
 my (@CLOSE_AT_END, $TAGS);
 my @certainties = qw(wild-guess possible certain);
@@ -850,7 +850,7 @@ sub main {
 
     $pool->process(
         $action, $PROFILE,$TAGS,
-        \$exit_code,\%overrides, \%opt,
+        \$exit_code,\%override_count, \%opt,
         $memory_usage,$STATUS_FD, \@unpack_info
     );
 
@@ -860,9 +860,9 @@ sub main {
     if (    $action eq 'check'
         and not $opt{'no-override'}
         and not $opt{'show-overrides'}) {
-        my $errors = $overrides{errors} || 0;
-        my $warnings = $overrides{warnings} || 0;
-        my $info = $overrides{info} || 0;
+        my $errors = $override_count{errors} || 0;
+        my $warnings = $override_count{warnings} || 0;
+        my $info = $override_count{info} || 0;
         my $total = $errors + $warnings + $info;
         my $unused = $TAGS->{unused_overrides};
         if ($total > 0 or $unused > 0) {

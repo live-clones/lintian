@@ -149,7 +149,7 @@ Process the pool.
 sub process{
     my (
         $self, $action,$PROFILE,$TAGS,
-        $exit_code_ref, $overrides,$opt,$memory_usage,
+        $exit_code_ref, $override_count,$opt,$memory_usage,
         $STATUS_FD, $unpack_info_ref
     ) = @_;
 
@@ -263,7 +263,8 @@ sub process{
         if ($action eq 'check') {
             if (
                 !$group->process(
-                    $TAGS,$exit_code_ref, $overrides,$opt,$memory_usage
+                    $TAGS,$exit_code_ref, $override_count,
+                    $opt,$memory_usage
                 )
             ) {
                 $success = 0;
