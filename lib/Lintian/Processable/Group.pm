@@ -580,7 +580,7 @@ Process group.
 =cut
 
 sub process {
-    my ($self, $TAGS, $exit_code_ref, $overrides,$opt, $memory_usage)= @_;
+    my ($self, $TAGS, $exit_code_ref, $override_count,$opt, $memory_usage)= @_;
 
     my $all_ok = 1;
 
@@ -617,6 +617,8 @@ sub process {
         $TAGS->{current} = $path;
 
         my $procstruct = $TAGS->{info}{$path};
+        my $overrides_data = $procstruct->{'overrides-data'};
+        my $overrides = $procstruct->{overrides};
         my $stats = $TAGS->{statistics}{$path};
 
         $Lintian::Output::GLOBAL->print_start_pkg($procstruct);
@@ -633,6 +635,25 @@ sub process {
             eval {@found = $processable->overrides($TAGS);};
             if (my $err = $@) {
                 die $err if not ref $err or $err->errno != ENOENT;
+            }
+
+            # treat ignored overrides here
+            for my $tag (keys %{$overrides_data}) {
+
+                if ($TAGS->{profile}
+                    && !$TAGS->{profile}->is_overridable($tag)) {
+
+                    delete $overrides_data->{$tag};
+                    $TAGS->{ignored_overrides}{$tag}++;
+                }
+            }
+
+            for my $tag (keys %{$overrides_data}) {
+
+                my $extras = $overrides_data->{$tag};
+
+                # set the use count to zero for each $extra
+                $overrides->{$tag}{$_} = 0 for keys %{$extras};
             }
         }
 
@@ -706,25 +727,25 @@ sub process {
 
             my $override;
 
-            my $overrides= $procstruct->{'overrides-data'}{$tagname};
-            if ($overrides) {
+            my $tag_overrides= $procstruct->{'overrides-data'}{$tagname};
+            if ($tag_overrides) {
 
                 my $extrastats = $procstruct->{overrides}{$tagname};
 
-                if (exists $overrides->{''}) {
-                    $override = $overrides->{''};
+                if (exists $tag_overrides->{''}) {
+                    $override = $tag_overrides->{''};
                     $extrastats->{''}++;
 
                 } elsif (length $extra) {
 
-                    if (exists $overrides->{$extra}) {
-                        $override = $overrides->{$extra};
+                    if (exists $tag_overrides->{$extra}) {
+                        $override = $tag_overrides->{$extra};
                         $extrastats->{$extra}++;
 
                     } else {
-                        for my $matchmore (sort keys %$overrides) {
+                        for my $matchmore (sort keys %$tag_overrides) {
 
-                            my $candidate = $overrides->{$matchmore};
+                            my $candidate = $tag_overrides->{$matchmore};
                             if (   $candidate->is_pattern
                                 && $candidate->overrides($extra)){
 
@@ -771,24 +792,22 @@ sub process {
             my $warnings = $stats->{overrides}{types}{W} || 0;
             my $info = $stats->{overrides}{types}{I} || 0;
 
-            $overrides->{errors} += $errors;
-            $overrides->{warnings} += $warnings;
-            $overrides->{info} += $info;
+            $override_count->{errors} += $errors;
+            $override_count->{warnings} += $warnings;
+            $override_count->{info} += $info;
         }
 
-        my $pkg_overrides = $procstruct->{overrides};
-
-        for my $tagname (sort keys %{$pkg_overrides}) {
+        for my $tagname (sort keys %{$overrides}) {
 
             next
               if $TAGS->suppressed($tagname);
 
-            my $overrides = $pkg_overrides->{$tagname};
+            my $tag_overrides = $overrides->{$tagname};
 
-            for my $extra (sort keys %{$overrides}) {
+            for my $extra (sort keys %{$tag_overrides}) {
 
                 next
-                  if $overrides->{$extra};
+                  if $tag_overrides->{$extra};
 
                 # cannot be overridden or suppressed
                 my $taginfo = $self->profile->get_tag('unused-override', 1);
