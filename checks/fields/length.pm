@@ -53,7 +53,7 @@ sub always {
         next if $name eq 'build-ids';
 
         # Title-case the field name
-        (my $label) = $name =~ s/\b(\w)/\U$1/g;
+        (my $label = $name) =~ s/\b(\w)/\U$1/g;
 
         $self->tag('field-too-long', $label, "($length chars > $maximum)");
     }
