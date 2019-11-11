@@ -1,8 +1,33 @@
-lintian (2.34.0+git) UNRELEASED; urgency=medium
+lintian (2.35.0) unstable; urgency=medium
 
-  * WIP (generated upon release).
+  * Summary of tag changes:
+    + Added:
+      - package-placeholder-in-symbols-file
 
- -- Chris Lamb <lamby@debian.org>  Thu, 07 Nov 2019 11:06:45 -0800
+  [ Chris Lamb ]
+  * Don't complain about Build-Ids or Description fields that are too long;
+    there is nothing really actionable for Lintian to complain about.
+    (Closes: #942493)
+  * Drop quoting around the field that violates "field-too-long" whilst a
+    convincing case can certainly be made for quoting the offending field
+    (eg "'Depends'") it feels too inconsistent with the rest of Lintian.
+
+  [ Felix Lechner ]
+  * Detect PACKAGE placeholders in debian/symbols files. (Closes: #944047)
+  * Drop minimum version requirement 8.30 for coreutils; process files
+    containing newlines separately. (Closes: #944258)
+  * Associate the multiline-field tag with the fields/multi-line check.
+  * Provide a new check fields/multi-line to do what Lintian::Processable
+    did previously in that regard.
+  * Fix missing module for --version; remove eval shielding error.
+
+  [ Fabrice Bauzac ]
+  * Update the location of the local HTML documentation.
+
+  [ Adam D. Barratt ]
+  * Remove myself from uploaders
+
+ -- Chris Lamb <lamby@debian.org>  Mon, 11 Nov 2019 13:58:05 +0000
 
 lintian (2.34.0) unstable; urgency=medium
 
