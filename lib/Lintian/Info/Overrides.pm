@@ -64,7 +64,7 @@ file cannot be opened.
 =cut
 
 sub overrides {
-    my ($self, $override_data) = @_;
+    my ($self) = @_;
 
     my @tags;
 
@@ -80,6 +80,8 @@ sub overrides {
 
     return
       unless -f $overrides_path;
+
+    my %override_data;
 
     open(my $fh, '<:encoding(UTF-8)', $overrides_path);
 
@@ -250,8 +252,8 @@ sub overrides {
             $tagover->{comments} = $comments;
             $comments = [];
 
-            $override_data->{$tag} = {};
-            $override_data->{$tag}{$extra} = $tagover;
+            $override_data{$tag} = {};
+            $override_data{$tag}{$extra} = $tagover;
 
             $last_over = $tagover;
 
@@ -300,7 +302,7 @@ sub overrides {
 
     close($fh);
 
-    return @tags;
+    return (\%override_data, \@tags);
 }
 
 1;

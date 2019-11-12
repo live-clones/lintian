@@ -606,8 +606,8 @@ sub process {
             processable       => $processable,
         );
 
-        my %override_data;
-        my %overrides;
+        my $declared_overrides;
+        my %used_overrides;
 
         my %statistics = (
             types     => {},
@@ -629,28 +629,32 @@ sub process {
 
             debug_msg(1, 'Loading overrides file (if any) ...');
 
-            eval {@found = $processable->overrides(\%override_data);};
+            my $early;
+            eval {($declared_overrides, $early) = $processable->overrides;};
             if (my $err = $@) {
                 die $err if not ref $err or $err->errno != ENOENT;
             }
 
+            push(@found, @{$early})
+              if $early;
+
             # treat ignored overrides here
-            for my $tagname (keys %override_data) {
+            for my $tagname (keys %{$declared_overrides}) {
 
                 if ($TAGS->{profile}
                     && !$TAGS->{profile}->is_overridable($tagname)) {
 
-                    delete $override_data{$tagname};
+                    delete $declared_overrides->{$tagname};
                     $override_count->{ignored}{$tagname}++;
                 }
             }
 
-            for my $tagname (keys %override_data) {
+            for my $tagname (keys %{$declared_overrides}) {
 
-                my $extras = $override_data{$tagname};
+                my $extras = $declared_overrides->{$tagname};
 
                 # set the use count to zero for each $extra
-                $overrides{$tagname}{$_} = 0 for keys %{$extras};
+                $used_overrides{$tagname}{$_} = 0 for keys %{$extras};
             }
         }
 
@@ -735,10 +739,10 @@ sub process {
 
             my $override;
 
-            my $tag_overrides= $override_data{$tagname};
+            my $tag_overrides= $declared_overrides->{$tagname};
             if ($tag_overrides) {
 
-                my $extrastats = $overrides{$tagname};
+                my $extrastats = $used_overrides{$tagname};
 
                 if (exists $tag_overrides->{''}) {
                     $override = $tag_overrides->{''};
@@ -773,12 +777,12 @@ sub process {
         }
 
         # look for unused overrides
-        for my $tagname (sort keys %overrides) {
+        for my $tagname (sort keys %used_overrides) {
 
             next
               if $TAGS->suppressed($tagname);
 
-            my $tag_overrides = $overrides{$tagname};
+            my $tag_overrides = $used_overrides{$tagname};
 
             for my $extra (sort keys %{$tag_overrides}) {
 
@@ -793,7 +797,7 @@ sub process {
             }
         }
 
-        $procstruct{overrides} = \%overrides;
+        $procstruct{overrides} = \%used_overrides;
 
         for my $tagref (@keep) {
 
