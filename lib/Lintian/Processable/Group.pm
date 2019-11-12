@@ -28,7 +28,7 @@ use File::Spec;
 use IO::Async::Loop;
 use IO::Async::Routine;
 use List::Compare;
-use List::MoreUtils qw(uniq);
+use List::MoreUtils qw(uniq firstval);
 use Path::Tiny;
 use POSIX qw(ENOENT);
 use Time::HiRes qw(gettimeofday tv_interval);
@@ -728,6 +728,8 @@ sub process {
 
             my ($tagname, $extra) = @{$tagref};
 
+            $extra //= EMPTY;
+
             # Note, we get the known as it will be suppressed by
             # $self->suppressed below if the tag is not enabled.
             my $taginfo = $self->profile->get_tag($tagname, 1);
@@ -742,35 +744,31 @@ sub process {
             my $tag_overrides= $declared_overrides->{$tagname};
             if ($tag_overrides) {
 
-                my $extrastats = $used_overrides{$tagname};
+                # do not use EMPTY; hash keys literal
+                # empty extra in specification matches all
+                $override = $tag_overrides->{''};
 
-                if (exists $tag_overrides->{''}) {
-                    $override = $tag_overrides->{''};
-                    $extrastats->{''}++;
+                # matches 'extra' exactly
+                $override = $tag_overrides->{$extra}
+                  unless $override;
 
-                } elsif (length $extra) {
+                # look for patterns
+                unless ($override) {
+                    my @candidates
+                      = sort grep { length $tag_overrides->{$_}{pattern} }
+                      keys %{$tag_overrides};
 
-                    if (exists $tag_overrides->{$extra}) {
-                        $override = $tag_overrides->{$extra};
-                        $extrastats->{$extra}++;
-
-                    } else {
-                        for my $matchmore (sort keys %$tag_overrides) {
-
-                            my $candidate = $tag_overrides->{$matchmore};
-                            if ($candidate->{is_pattern}) {
-
-                                my $pattern = $candidate->{pattern};
-
-                                if ($extra =~ m/^$pattern\z/){
-
-                                    $override = $candidate;
-                                    $extrastats->{$matchmore}++;
-                                }
-                            }
-                        }
+                    my $match= firstval {
+                        $extra =~ m/^$tag_overrides->{$_}{pattern}\z/
                     }
+                    @candidates;
+
+                    $override = $tag_overrides->{$match}
+                      if $match;
                 }
+
+                $used_overrides{$tagname}{$override->{extra}}++
+                  if $override;
             }
 
             push(@keep, [$taginfo, $extra, $override]);

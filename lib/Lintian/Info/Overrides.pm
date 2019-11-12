@@ -243,10 +243,6 @@ sub overrides {
                 }
 
                 $tagover->{pattern} = qr/$pat$end/;
-                $tagover->{is_pattern} = 1;
-
-            } else {
-                $tagover->{is_pattern} = 0;
             }
 
             $tagover->{comments} = $comments;
