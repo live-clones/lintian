@@ -32,6 +32,9 @@ use constant EMPTY => q{};
 use Moo::Role;
 use namespace::clean;
 
+# renamed tag list
+my $RENAMED_TAGS = Lintian::Data->new('override/renamed-tags',qr/\s*=>\s*/);
+
 =head1 NAME
 
 Lintian::Info::Overrides - access to override data
@@ -198,21 +201,51 @@ sub overrides {
                 $comments = $last_over->comments;
             }
 
-            $extra //= EMPTY;
-
             my $tagover = Lintian::Tag::Override->new;
-            $tagover->tag($rawtag);
-            $tagover->extra($extra // EMPTY);
-            $tagover->comments($comments);
-            $tagover->init;
 
-            # tag will be changed here if renamed reread
-            my $tag = $tagover->tag;
+            # use new name if tag was renamed
+            my $tag = $rawtag;
+            $tag = $RENAMED_TAGS->value($rawtag)
+              if $RENAMED_TAGS->known($rawtag);
 
-            $comments = [];
+            $tagover->tag($tag);
 
             push(@tags, ['renamed-tag',"$rawtag => $tag at line $."])
               unless $tag eq $rawtag;
+
+            $extra //= EMPTY;
+            $tagover->extra($extra);
+
+            if ($extra =~ m/\*/o) {
+                # It is a pattern, pre-compute it
+                my $pattern = $extra;
+                my $end = ''; # Trailing "match anything" (if any)
+                my $pat = ''; # The rest of the pattern
+                 # Split does not help us if $pattern ends with *
+                 # so we deal with that now
+                if ($pattern =~ s/\Q*\E+\z//o){
+                    $end = '.*';
+                }
+
+                # Are there any * left (after the above)?
+                if ($pattern =~ m/\Q*\E/o) {
+                    # this works even if $text starts with a *, since
+                    # that is split as '', <text>
+                    my @pargs = split(m/\Q*\E++/o, $pattern);
+                    $pat = join('.*', map { quotemeta($_) } @pargs);
+                } else {
+                    $pat = $pattern;
+                }
+
+                $tagover->pattern(qr/$pat$end/);
+                $tagover->is_pattern(1);
+
+            } else {
+                $tagover->is_pattern(0);
+            }
+
+            $tagover->comments($comments);
+            $comments = [];
 
             $override_data->{$tag} = {};
             $override_data->{$tag}{$extra} = $tagover;

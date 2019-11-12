@@ -28,9 +28,6 @@ use constant EMPTY => q{};
 use Moo;
 use namespace::clean;
 
-# renamed tag list
-my $RENAMED_TAGS = Lintian::Data->new('override/renamed-tags',qr/\s*=>\s*/);
-
 =head1 NAME
 
 Lintian::Tag::Override -- Representation of a Lintian Override
@@ -55,57 +52,6 @@ Represents a Lintian Override.
 =head1 METHODS
 
 =over 4
-
-=item Lintian::Tag::Override->init
-
-Initializes the data structure. Always call before using.
-
-=cut
-
-sub init {
-    my ($self) = @_;
-
-    if ($RENAMED_TAGS->known($self->tag)) {
-        my $newname = $RENAMED_TAGS->value($self->tag);
-        $self->tag($newname);
-    }
-
-    $self->arch('any')
-      unless $self->arch;
-
-    $self->extra(EMPTY)
-      unless $self->extra;
-
-    if ($self->extra =~ m/\*/o) {
-        # It is a pattern, pre-compute it
-        my $pattern = $self->extra;
-        my $end = ''; # Trailing "match anything" (if any)
-        my $pat = ''; # The rest of the pattern
-         # Split does not help us if $pattern ends with *
-         # so we deal with that now
-        if ($pattern =~ s/\Q*\E+\z//o){
-            $end = '.*';
-        }
-
-        # Are there any * left (after the above)?
-        if ($pattern =~ m/\Q*\E/o) {
-            # this works even if $text starts with a *, since
-            # that is split as '', <text>
-            my @pargs = split(m/\Q*\E++/o, $pattern);
-            $pat = join('.*', map { quotemeta($_) } @pargs);
-        } else {
-            $pat = $pattern;
-        }
-
-        $self->pattern(qr/$pat$end/);
-        $self->is_pattern(1);
-
-    } else {
-        $self->is_pattern(0);
-    }
-
-    return $self;
-}
 
 =item $override->tag
 
