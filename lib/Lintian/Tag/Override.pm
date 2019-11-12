@@ -21,8 +21,15 @@ package Lintian::Tag::Override;
 use strict;
 use warnings;
 
-use parent qw(Class::Accessor::Fast);
 use Lintian::Data;
+
+use constant EMPTY => q{};
+
+use Moo;
+use namespace::clean;
+
+# renamed tag list
+my $RENAMED_TAGS = Lintian::Data->new('override/renamed-tags',qr/\s*=>\s*/);
 
 =head1 NAME
 
@@ -49,109 +56,29 @@ Represents a Lintian Override.
 
 =over 4
 
-=item Lintian::Tag::Override->new($tag, $data)
+=item Lintian::Tag::Override->init
 
-Creates a new override for $tag.  $data should be a hashref with the
-following fields.
-
-=over 4
-
-=item arch
-
-Architectures this override applies too (not really used).
-
-=item comments
-
-A list of comments (each item is a separate line)
-
-=item extra
-
-The extra part of the override.  If it contains a "*" is will
-considered a pattern.
-
-=back
+Initializes the data structure. Always call before using.
 
 =cut
 
-# renamed tag list
-my $RENAMED_TAGS = Lintian::Data->new('override/renamed-tags',qr/\s*=>\s*/);
-
-sub new {
-    my ($type, $tag, $data) = @_;
-    $data = {} unless defined $data;
-
-    if($RENAMED_TAGS->known($tag)) {
-        $tag = $RENAMED_TAGS->value($tag);
-    }
-
-    my $self = {
-        'arch'     => $data->{'arch'},
-        'comments' => $data->{'comments'},
-        'extra'    => $data->{'extra'}//'',
-        'tag'      => $tag,
-    };
-    $self->{'arch'} = 'any' unless $self->{'arch'};
-    bless $self, $type;
-    $self->_init;
-    return $self;
-}
-
-=item $override->tag
-
-Returns the name of the tag.
-
-=item $override->arch
-
-Returns the architecture this tag applies to.
-
-=item $override->comments
-
-Returns a list of lines that makes up the comments for this override.
-
-Do not modify the contents of this list.
-
-=item $override->extra
-
-Returns the extra of this tag (or the empty string, if there is no
-extra).
-
-=item $override->is_pattern
-
-Returns a truth value if the extra is a pattern.
-
-=cut
-
-Lintian::Tag::Override->mk_ro_accessors(
-    qw(tag arch comments extra is_pattern));
-
-=item $override->overrides($extra)
-
-Returns a truth value if this override applies to this extra.
-
-=cut
-
-sub overrides {
-    my ($self, $textra) = @_;
-    my $extra = $self->{'extra'}//'';
-    # No extra => applies to all tags
-    return 1 unless $extra;
-    return 1 if $extra eq $textra;
-    if ($self->{'is_pattern'}) {
-        my $pat = $self->{'pattern'};
-        if ($textra =~ m/^$pat\z/){
-            return 1;
-        }
-    }
-    return 0;
-}
-
-# Internal initialization method
-sub _init  {
+sub init {
     my ($self) = @_;
-    my $extra = $self->{'extra'};
-    if ($extra && $extra =~ m/\*/o) {
+
+    if ($RENAMED_TAGS->known($self->tag)) {
+        my $newname = $RENAMED_TAGS->value($self->tag);
+        $self->tag($newname);
+    }
+
+    $self->arch('any')
+      unless $self->arch;
+
+    $self->extra(EMPTY)
+      unless $self->extra;
+
+    if ($self->extra =~ m/\*/o) {
         # It is a pattern, pre-compute it
-        my $pattern = $extra;
+        my $pattern = $self->extra;
         my $end = ''; # Trailing "match anything" (if any)
         my $pat = ''; # The rest of the pattern
          # Split does not help us if $pattern ends with *
@@ -159,6 +86,7 @@ sub _init  {
         if ($pattern =~ s/\Q*\E+\z//o){
             $end = '.*';
         }
+
         # Are there any * left (after the above)?
         if ($pattern =~ m/\Q*\E/o) {
             # this works even if $text starts with a *, since
@@ -168,12 +96,82 @@ sub _init  {
         } else {
             $pat = $pattern;
         }
-        $self->{'is_pattern'} = 1;
-        $self->{'pattern'} = qr/$pat$end/;
+
+        $self->pattern(qr/$pat$end/);
+        $self->is_pattern(1);
+
     } else {
-        $self->{'is_pattern'} = 0;
+        $self->is_pattern(0);
     }
-    return;
+
+    return $self;
+}
+
+=item $override->tag
+
+Returns the name of the tag.
+
+=item $override->arch
+
+Architectures this override applies too (not really used).
+
+=item $override->comments
+
+A list of comments (each item is a separate line).
+Returns a list of lines that makes up the comments for this override.
+
+Do not modify the contents of this list.
+
+=item $override->extra
+
+The extra part of the override.  If it contains a "*" is will
+considered a pattern. Returns the extra of this tag
+(or the empty string, if there is no extra).
+
+=item $override->is_pattern
+
+Returns a truth value if the extra is a pattern.
+
+=item $override->pattern
+
+Hold the pattern if extra is a pattern.
+
+=cut
+
+has tag => (is => 'rw');
+has arch => (is => 'rw', default => 'any');
+has comments => (is => 'rw');
+has extra => (is => 'rw', default => EMPTY);
+has pattern => (is => 'rw', default => EMPTY);
+has is_pattern => (is => 'rw', default => 0);
+
+=item $override->overrides($extra)
+
+Returns a truth value if this override applies to this extra.
+
+=cut
+
+sub overrides {
+    my ($self, $testextra) = @_;
+
+    $testextra //= EMPTY;
+
+    # overrides without extra apply to all tags of its kind
+    return 1
+      unless length $self->extra;
+
+    return 1
+      if $testextra eq $self->extra // EMPTY;
+
+    if ($self->is_pattern) {
+
+        my $pat = $self->pattern;
+
+        return 1
+          if $testextra =~ m/^$pat\z/;
+    }
+
+    return 0;
 }
 
 =back

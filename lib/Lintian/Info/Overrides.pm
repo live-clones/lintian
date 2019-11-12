@@ -200,15 +200,14 @@ sub overrides {
 
             $extra //= EMPTY;
 
-            my $tagover = Lintian::Tag::Override->new(
-                $rawtag,
-                {
-                    'extra' => $extra,
-                    'comments' => $comments,
-                });
+            my $tagover = Lintian::Tag::Override->new;
+            $tagover->tag($rawtag);
+            $tagover->extra($extra // EMPTY);
+            $tagover->comments($comments);
+            $tagover->init;
 
             # tag will be changed here if renamed reread
-            my $tag = $tagover->{'tag'};
+            my $tag = $tagover->tag;
 
             $comments = [];
 
