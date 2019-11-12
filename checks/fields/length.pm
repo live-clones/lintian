@@ -52,6 +52,9 @@ sub always {
         # for Lintian to complain about.
         next if $name eq 'build-ids';
 
+        # Allow long descriptions
+        next if $name eq 'description';
+
         # Title-case the field name
         (my $label = $name) =~ s/\b(\w)/\U$1/g;
 
