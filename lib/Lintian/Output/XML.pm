@@ -34,9 +34,9 @@ sub print_tag {
     if ($override) {
         $flags .= ',' if $flags;
         $flags .= 'overridden';
-        if (@{ $override->comments }) {
+        if (@{ $override->{comments} }) {
             my $c = $self->_make_xml_tag('comment', [],
-                join("\n", @{ $override->comments }));
+                join("\n", @{ $override->{comments} }));
             $comment = [$c];
         }
     }

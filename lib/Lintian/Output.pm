@@ -331,9 +331,8 @@ can only be called as instance methods.
 Print a tag.  The first two arguments are hash reference with the
 information about the package and the tag, $extra is the extra
 information for the tag (if any) as an array reference, and $override
-is either undef if the tag is not overridden or the
-L<override|Lintian::Tag::Override> for this tag.  Called from
-Lintian::Tags::tag().
+is either undef if the tag is not overridden or a hash with
+override info for this tag.  Called from Lintian::Tags::tag().
 
 =cut
 
@@ -379,8 +378,8 @@ sub print_tag {
         }
     }
 
-    if ($override && @{ $override->comments }) {
-        foreach my $c (@{ $override->comments }) {
+    if ($override && @{ $override->{comments} }) {
+        foreach my $c (@{ $override->{comments} }) {
             $self->msg($self->_quote_print($c));
         }
     }

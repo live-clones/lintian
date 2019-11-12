@@ -24,7 +24,6 @@ use autodie;
 use Path::Tiny;
 
 use Lintian::Architecture qw(:all);
-use Lintian::Tag::Override;
 use Lintian::Util qw($PKGNAME_REGEX strip);
 
 use constant EMPTY => q{};
@@ -190,31 +189,35 @@ sub overrides {
                   unless $found;
             }
 
-            if ($last_over && $last_over->tag eq $rawtag && !scalar @$comments)
-            {
+            if (   $last_over
+                && $last_over->{tag} eq $rawtag
+                && !scalar @$comments){
                 # There are no new comments, no "empty line" in between and
                 # this tag is the same as the last, so we "carry over" the
                 # comment from the previous override (if any).
                 #
                 # Since L::T::Override is (supposed to be) immutable, the new
                 # override can share the reference with the previous one.
-                $comments = $last_over->comments;
+                $comments = $last_over->{comments};
             }
 
-            my $tagover = Lintian::Tag::Override->new;
+            my $tagover = {};
 
             # use new name if tag was renamed
             my $tag = $rawtag;
             $tag = $RENAMED_TAGS->value($rawtag)
               if $RENAMED_TAGS->known($rawtag);
 
-            $tagover->tag($tag);
+            $tagover->{tag} = $tag;
 
             push(@tags, ['renamed-tag',"$rawtag => $tag at line $."])
               unless $tag eq $rawtag;
 
+            # does not seem to be used anywhere
+            $tagover->{arch} = 'any';
+
             $extra //= EMPTY;
-            $tagover->extra($extra);
+            $tagover->{extra} = $extra;
 
             if ($extra =~ m/\*/o) {
                 # It is a pattern, pre-compute it
@@ -237,14 +240,14 @@ sub overrides {
                     $pat = $pattern;
                 }
 
-                $tagover->pattern(qr/$pat$end/);
-                $tagover->is_pattern(1);
+                $tagover->{pattern} = qr/$pat$end/;
+                $tagover->{is_pattern} = 1;
 
             } else {
-                $tagover->is_pattern(0);
+                $tagover->{is_pattern} = 0;
             }
 
-            $tagover->comments($comments);
+            $tagover->{comments} = $comments;
             $comments = [];
 
             $override_data->{$tag} = {};

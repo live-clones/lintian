@@ -62,9 +62,9 @@ sub print_tag {
 
     my $odata = '';
     if ($override) {
-        $odata = $override->tag;
-        $odata .= ' ' . $self->_quote_print($override->extra)
-          if $override->extra;
+        $odata = $override->{tag};
+        $odata .= ' ' . $self->_quote_print($override->{extra})
+          if $override->{extra};
     }
 
     my $line

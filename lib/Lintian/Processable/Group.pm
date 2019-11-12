@@ -754,9 +754,9 @@ sub process {
                         for my $matchmore (sort keys %$tag_overrides) {
 
                             my $candidate = $tag_overrides->{$matchmore};
-                            if ($candidate->is_pattern) {
+                            if ($candidate->{is_pattern}) {
 
-                                my $pattern = $candidate->pattern;
+                                my $pattern = $candidate->{pattern};
 
                                 if ($extra =~ m/^$pattern\z/){
 

@@ -30,9 +30,9 @@ sub print_tag {
     my ($self, $pkg_info, $tag_info, $information, $override) = @_;
     my $odata = '';
     if ($override) {
-        $odata = $override->tag;
-        $odata .= ' ' . $self->_quote_print($override->extra)
-          if $override->extra;
+        $odata = $override->{tag};
+        $odata .= ' ' . $self->_quote_print($override->{extra})
+          if $override->{extra};
     }
 
     $self->issued_tag($tag_info->tag);
