@@ -592,34 +592,28 @@ sub process {
 
         my $path = $processable->pkg_path;
 
-        die "duplicate of file $path added to Lintian::Tags object"
-          if exists $TAGS->{info}{$path};
+        # required for global Lintian::Tags::tag usage
+        $TAGS->{current} = $path;
 
-        $TAGS->{info}{$path} = {
+        my %procstruct = (
             file              => $path,
             package           => $processable->pkg_name,
             version           => $processable->pkg_version,
             arch              => $processable->pkg_arch,
             type              => $processable->pkg_type,
             processable       => $processable,
-            overrides         => {},
-            'overrides-data'  => {},
-        };
+        );
 
-        $TAGS->{statistics}{$path} = {
+        my %override_data;
+        my %overrides;
+
+        my %statistics = (
             types     => {},
             severity  => {},
             certainty => {},
             tags      => {},
             overrides => {},
-        };
-
-        $TAGS->{current} = $path;
-
-        my $procstruct = $TAGS->{info}{$path};
-        my $overrides_data = $procstruct->{'overrides-data'};
-        my $overrides = $procstruct->{overrides};
-        my $stats = $TAGS->{statistics}{$path};
+        );
 
         debug_msg(1, 'Base directory for group: ' . $processable->groupdir);
 
@@ -630,28 +624,28 @@ sub process {
 
             debug_msg(1, 'Loading overrides file (if any) ...');
 
-            eval {@found = $processable->overrides($TAGS);};
+            eval {@found = $processable->overrides(\%override_data);};
             if (my $err = $@) {
                 die $err if not ref $err or $err->errno != ENOENT;
             }
 
             # treat ignored overrides here
-            for my $tag (keys %{$overrides_data}) {
+            for my $tagname (keys %override_data) {
 
                 if ($TAGS->{profile}
-                    && !$TAGS->{profile}->is_overridable($tag)) {
+                    && !$TAGS->{profile}->is_overridable($tagname)) {
 
-                    delete $overrides_data->{$tag};
-                    $TAGS->{ignored_overrides}{$tag}++;
+                    delete $override_data{$tagname};
+                    $TAGS->{ignored_overrides}{$tagname}++;
                 }
             }
 
-            for my $tag (keys %{$overrides_data}) {
+            for my $tagname (keys %override_data) {
 
-                my $extras = $overrides_data->{$tag};
+                my $extras = $override_data{$tagname};
 
                 # set the use count to zero for each $extra
-                $overrides->{$tag}{$_} = 0 for keys %{$extras};
+                $overrides{$tagname}{$_} = 0 for keys %{$extras};
             }
         }
 
@@ -701,6 +695,8 @@ sub process {
             perf_log("$procid,check/$check,${raw_res}");
         }
 
+        undef $TAGS->{current};
+
         my @clean;
 
         for my $tagref (@found) {
@@ -734,10 +730,10 @@ sub process {
 
             my $override;
 
-            my $tag_overrides= $procstruct->{'overrides-data'}{$tagname};
+            my $tag_overrides= $override_data{$tagname};
             if ($tag_overrides) {
 
-                my $extrastats = $procstruct->{overrides}{$tagname};
+                my $extrastats = $overrides{$tagname};
 
                 if (exists $tag_overrides->{''}) {
                     $override = $tag_overrides->{''};
@@ -768,12 +764,12 @@ sub process {
         }
 
         # look for unused overrides
-        for my $tagname (sort keys %{$overrides}) {
+        for my $tagname (sort keys %overrides) {
 
             next
               if $TAGS->suppressed($tagname);
 
-            my $tag_overrides = $overrides->{$tagname};
+            my $tag_overrides = $overrides{$tagname};
 
             for my $extra (sort keys %{$tag_overrides}) {
 
@@ -788,13 +784,15 @@ sub process {
             }
         }
 
+        $procstruct{overrides} = \%overrides;
+
         for my $tagref (@keep) {
 
             my ($taginfo, $extra, $override) = @{$tagref};
             my $tagname = $taginfo->tag;
 
-            my $record = $stats;
-            $record = $stats->{overrides}
+            my $record = \%statistics;
+            $record = $statistics{overrides}
               if $override;
 
             $record->{tags}{$tagname}++;
@@ -807,7 +805,7 @@ sub process {
         }
 
         unless ($$exit_code_ref) {
-            if ($stats->{types}{E}) {
+            if ($statistics{types}{E}) {
                 $$exit_code_ref = 1;
             }
         }
@@ -815,14 +813,16 @@ sub process {
         # Report override statistics.
         unless ($opt->{'no-override'} || $opt->{'show-overrides'}) {
 
-            my $errors = $stats->{overrides}{types}{E} || 0;
-            my $warnings = $stats->{overrides}{types}{W} || 0;
-            my $info = $stats->{overrides}{types}{I} || 0;
+            my $errors = $statistics{overrides}{types}{E} || 0;
+            my $warnings = $statistics{overrides}{types}{W} || 0;
+            my $info = $statistics{overrides}{types}{I} || 0;
 
             $override_count->{errors} += $errors;
             $override_count->{warnings} += $warnings;
             $override_count->{info} += $info;
         }
+
+        $TAGS->{statistics}{$path} = \%statistics;
 
         my @print;
 
@@ -841,13 +841,11 @@ sub process {
             push(@print, [$taginfo, $extra, $override]);
         }
 
-        $Lintian::Output::GLOBAL->print_start_pkg($procstruct);
+        $Lintian::Output::GLOBAL->print_start_pkg(\%procstruct);
+        $Lintian::Output::GLOBAL->print_tag(\%procstruct, @{$_})for @print;
+        $Lintian::Output::GLOBAL->print_end_pkg(\%procstruct);
 
-        $Lintian::Output::GLOBAL->print_tag($procstruct, @{$_})for @print;
-
-        $Lintian::Output::GLOBAL->print_end_pkg($procstruct);
-
-        undef $TAGS->{current};
+        $TAGS->{info}{$path} = \%procstruct;
     }
 
     my $raw_res = tv_interval($timer);

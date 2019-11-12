@@ -62,15 +62,13 @@ file cannot be opened.
 =cut
 
 sub overrides {
-    my ($self, $TAGS) = @_;
+    my ($self, $override_data) = @_;
 
     my @tags;
 
     my $package = $self->pkg_name;
     my $architecture = $self->pkg_arch;
     my $type = $self->pkg_type;
-
-    my %overrides_data;
 
     my $comments = [];
     my $last_over;
@@ -217,7 +215,8 @@ sub overrides {
             push(@tags, ['renamed-tag',"$rawtag => $tag at line $."])
               unless $tag eq $rawtag;
 
-            $overrides_data{$tag}{$extra} = $tagover;
+            $override_data->{$tag} = {};
+            $override_data->{$tag}{$extra} = $tagover;
 
             $last_over = $tagover;
 
@@ -265,8 +264,6 @@ sub overrides {
     }
 
     close($fh);
-
-    $TAGS->{info}{$self->pkg_path}{'overrides-data'} = \%overrides_data;
 
     return @tags;
 }
