@@ -827,8 +827,6 @@ sub process {
             $override_count->{info} += $info;
         }
 
-        $TAGS->{statistics}{$path} = \%statistics;
-
         my @print;
 
         for my $tagref (@keep) {

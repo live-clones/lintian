@@ -157,7 +157,6 @@ sub new {
         profile              => undef,
         show_experimental    => 0,
         show_overrides       => 0,
-        statistics           => {},
         queue                => [],
     };
     bless($self, $class);
