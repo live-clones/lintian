@@ -91,35 +91,6 @@ has extra => (is => 'rw', default => EMPTY);
 has pattern => (is => 'rw', default => EMPTY);
 has is_pattern => (is => 'rw', default => 0);
 
-=item $override->overrides($extra)
-
-Returns a truth value if this override applies to this extra.
-
-=cut
-
-sub overrides {
-    my ($self, $testextra) = @_;
-
-    $testextra //= EMPTY;
-
-    # overrides without extra apply to all tags of its kind
-    return 1
-      unless length $self->extra;
-
-    return 1
-      if $testextra eq $self->extra // EMPTY;
-
-    if ($self->is_pattern) {
-
-        my $pat = $self->pattern;
-
-        return 1
-          if $testextra =~ m/^$pat\z/;
-    }
-
-    return 0;
-}
-
 =back
 
 =head1 AUTHOR
