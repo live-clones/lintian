@@ -586,6 +586,8 @@ sub process {
 
     my $timer = [gettimeofday];
 
+    $Lintian::Output::GLOBAL->print_first();
+
     foreach my $processable ($self->get_processables){
         my $pkg_type = $processable->pkg_type;
         my $procid = $processable->identifier;
@@ -615,6 +617,9 @@ sub process {
             overrides => {},
         );
 
+        # to store tag names as well
+        my $override_count->{ignored} = {};
+
         debug_msg(1, 'Base directory for group: ' . $processable->groupdir);
 
         my @found;
@@ -636,7 +641,7 @@ sub process {
                     && !$TAGS->{profile}->is_overridable($tagname)) {
 
                     delete $override_data{$tagname};
-                    $TAGS->{ignored_overrides}{$tagname}++;
+                    $override_count->{ignored}{$tagname}++;
                 }
             }
 
@@ -780,7 +785,7 @@ sub process {
                 my $taginfo = $self->profile->get_tag('unused-override', 1);
                 push(@keep, [$taginfo, "$tagname $extra"]);
 
-                $TAGS->{unused_overrides}++;
+                $override_count->{unused}++;
             }
         }
 
@@ -847,6 +852,9 @@ sub process {
 
         $TAGS->{info}{$path} = \%procstruct;
     }
+
+    # universal format sorts output from all processables and prints here
+    $Lintian::Output::GLOBAL->print_last();
 
     my $raw_res = tv_interval($timer);
     my $tres = sprintf('%.3fs', $raw_res);

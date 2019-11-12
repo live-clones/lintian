@@ -87,7 +87,7 @@ my %opt = (                     #hash of some flags from cmd or cfg
     'jobs'              => default_parallel(),
 );
 
-my ($experimental_output_opts, %override_count);
+my $experimental_output_opts;
 
 my (@CLOSE_AT_END, $TAGS);
 my @certainties = qw(wild-guess possible certain);
@@ -724,8 +724,6 @@ sub main {
         open($STATUS_FD, '>', '/dev/null');
     }
 
-    $Lintian::Output::GLOBAL->print_first();
-
     # check for arguments
     if (    $action =~ /^(?:check|unpack)$/
         and $#ARGV == -1
@@ -848,75 +846,11 @@ sub main {
 
     $ENV{INIT_ROOT} = $INIT_ROOT;
 
-    $pool->process(
-        $action, $PROFILE,$TAGS,
-        \$exit_code,\%override_count, \%opt,
-        $memory_usage,$STATUS_FD, \@unpack_info
-    );
+    $pool->process($action, $PROFILE,$TAGS,\$exit_code, \%opt,
+        $memory_usage,$STATUS_FD, \@unpack_info);
 
     retrigger_signal()
       if $received_signal;
-
-    if (    $action eq 'check'
-        and not $opt{'no-override'}
-        and not $opt{'show-overrides'}) {
-        my $errors = $override_count{errors} || 0;
-        my $warnings = $override_count{warnings} || 0;
-        my $info = $override_count{info} || 0;
-        my $total = $errors + $warnings + $info;
-        my $unused = $TAGS->{unused_overrides};
-        if ($total > 0 or $unused > 0) {
-            my $text
-              = ($total == 1)
-              ? "$total tag overridden"
-              : "$total tags overridden";
-            my @output;
-            if ($errors) {
-                push(@output,
-                    ($errors == 1) ? "$errors error" : "$errors errors");
-            }
-            if ($warnings) {
-                push(@output,
-                    ($warnings == 1)
-                    ? "$warnings warning"
-                    : "$warnings warnings");
-            }
-            if ($info) {
-                push(@output, "$info info");
-            }
-            if (@output) {
-                $text .= ' (' . join(', ', @output). ')';
-            }
-            if ($unused == 1) {
-                $text .= "; $unused unused override";
-            } elsif ($unused > 1) {
-                $text .= "; $unused unused overrides";
-            }
-            msg($text);
-        }
-    }
-
-    my $ign_over = $TAGS->ignored_overrides;
-    if (keys %$ign_over) {
-        msg(
-            join(q{ },
-                'Some overrides were ignored,',
-                'since the tags were marked "non-overridable".'));
-        if ($opt{'verbose'}) {
-            v_msg(
-                join(q{ },
-                    'The following tags were "non-overridable"',
-                    'and had at least one override'));
-            foreach my $tag (sort keys %$ign_over) {
-                v_msg("  - $tag");
-            }
-        } else {
-            msg('Use --verbose for more information.');
-        }
-    }
-
-    # universal format sorts output from all packages before printing here
-    $Lintian::Output::GLOBAL->print_last();
 
     # }}}
 

@@ -154,8 +154,6 @@ sub new {
         },
         display_source       => {},
         files                => {},
-        unused_overrides     => 0,
-        ignored_overrides    => {},
         profile              => undef,
         show_experimental    => 0,
         show_overrides       => 0,
@@ -430,19 +428,6 @@ sub suppressed {
     my ($self, $tag) = @_;
     return 1 if $self->{profile} and not $self->{profile}->get_tag($tag);
     return;
-}
-
-=item ignored_overrides()
-
-Returns a hash of tags, for which overrides have been ignored.  The
-keys are tag names and the value is the number of overrides that has
-been ignored.
-
-=cut
-
-sub ignored_overrides {
-    my ($self) = @_;
-    return $self->{ignored_overrides};
 }
 
 =back

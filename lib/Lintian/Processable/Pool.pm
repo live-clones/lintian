@@ -148,9 +148,9 @@ Process the pool.
 
 sub process{
     my (
-        $self, $action,$PROFILE,$TAGS,
-        $exit_code_ref, $override_count,$opt,$memory_usage,
-        $STATUS_FD, $unpack_info_ref
+        $self, $action,$PROFILE,
+        $TAGS,$exit_code_ref, $opt,
+        $memory_usage,$STATUS_FD, $unpack_info_ref
     ) = @_;
 
     # $map is just here to check that all the needed collections are present.
@@ -235,6 +235,8 @@ sub process{
     # With --unpack we want all of them.  That's the default so,
     # "done!"
 
+    my %override_count;
+
     my @sorted = sort { $a->name cmp $b->name } values %{$self->groups};
     foreach my $group (@sorted) {
         my $success = 1;
@@ -263,7 +265,7 @@ sub process{
         if ($action eq 'check') {
             if (
                 !$group->process(
-                    $TAGS,$exit_code_ref, $override_count,
+                    $TAGS,$exit_code_ref, \%override_count,
                     $opt,$memory_usage
                 )
             ) {
@@ -319,6 +321,67 @@ sub process{
 
     # do not remove lab if so selected
     $self->keep($opt->{'keep-lab'});
+
+    if (    $action eq 'check'
+        and not $opt->{'no-override'}
+        and not $opt->{'show-overrides'}) {
+
+        my $errors = $override_count{errors} || 0;
+        my $warnings = $override_count{warnings} || 0;
+        my $info = $override_count{info} || 0;
+        my $total = $errors + $warnings + $info;
+
+        my $unused = $override_count{unused} || 0;
+
+        if ($total > 0 or $unused > 0) {
+            my $text
+              = ($total == 1)
+              ? "$total tag overridden"
+              : "$total tags overridden";
+            my @output;
+            if ($errors) {
+                push(@output,
+                    ($errors == 1) ? "$errors error" : "$errors errors");
+            }
+            if ($warnings) {
+                push(@output,
+                    ($warnings == 1)
+                    ? "$warnings warning"
+                    : "$warnings warnings");
+            }
+            if ($info) {
+                push(@output, "$info info");
+            }
+            if (@output) {
+                $text .= ' (' . join(', ', @output). ')';
+            }
+            if ($unused == 1) {
+                $text .= "; $unused unused override";
+            } elsif ($unused > 1) {
+                $text .= "; $unused unused overrides";
+            }
+            msg($text);
+        }
+    }
+
+    my $ign_over = $override_count{ignored};
+    if (keys %$ign_over) {
+        msg(
+            join(q{ },
+                'Some overrides were ignored,',
+                'since the tags were marked "non-overridable".'));
+        if ($opt->{'verbose'}) {
+            v_msg(
+                join(q{ },
+                    'The following tags were "non-overridable"',
+                    'and had at least one override'));
+            foreach my $tag (sort keys %$ign_over) {
+                v_msg("  - $tag");
+            }
+        } else {
+            msg('Use --verbose for more information.');
+        }
+    }
 
     return;
 }
