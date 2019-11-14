@@ -29,7 +29,6 @@ use Cwd qw(realpath);
 use File::Temp();
 use Try::Tiny;
 
-use Lintian::Output qw(msg);
 use Lintian::Util qw(copy_dir clean_env);
 
 use constant NEWLINE  =>  qq{\n};
@@ -216,9 +215,7 @@ sub source {
             };
         };
 
-        my @messages = split(NEWLINE, $output);
-        chomp @messages;
-        msg $_ for @messages;
+        # output could be helpful to user but is currently not printed
 
         if ($error) {
             $self->tag('invalid-potfiles-in');
