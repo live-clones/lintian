@@ -43,7 +43,7 @@ use Lintian::Data;
 use Lintian::Inspect::Changelog;
 use Lintian::Internal::FrontendUtil
   qw(default_parallel sanitize_environment open_file_or_fd);
-use Lintian::Output;
+use Lintian::Output::Standard;
 use Lintian::Processable::Pool;
 use Lintian::Profile;
 use Lintian::Tags;
@@ -90,7 +90,7 @@ my %opt = (                     #hash of some flags from cmd or cfg
 my $experimental_output_opts;
 
 my (@CLOSE_AT_END, $TAGS);
-my $OUTPUT = Lintian::Output->new;
+my $OUTPUT = Lintian::Output::Standard->new;
 my @certainties = qw(wild-guess possible certain);
 my (@display_level, %display_source, %suppress_tags);
 my ($action, $checks, $check_tags, $dont_check, $received_signal);
@@ -647,13 +647,10 @@ sub main {
     fatal_error('The hyperlink value must be one of "on" or "off"')
       unless $opt{'hyperlinks'} =~ /^(?:on|off)$/;
 
-    if (not defined $opt{'tag-display-limit'}) {
-        if (-t STDOUT and not $opt{'verbose'}) {
-            $opt{'tag-display-limit'}
-              = Lintian::Output::DEFAULT_INTERACTIVE_TAG_LIMIT();
-        } else {
-            $opt{'tag-display-limit'} = 0;
-        }
+    if ($opt{'verbose'} || !-t STDOUT) {
+        $opt{'tag-display-limit'} //= 0;
+    } else {
+        $opt{'tag-display-limit'} //= 4;
     }
 
     if ($opt{'debug'}) {
