@@ -20,26 +20,14 @@ package Lintian::Output;
 
 use strict;
 use warnings;
+use v5.8.0; # for PerlIO
+
+use parent qw(Class::Accessor::Fast);
+
 use CGI qw(escapeHTML);
 
-use v5.8.0; # for PerlIO
-use parent qw(Class::Accessor::Fast);
 # The limit is including the "use --foo to see all tags".
 use constant DEFAULT_INTERACTIVE_TAG_LIMIT => 4;
-
-use Exporter qw(import);
-
-# Force export as soon as possible, since some of the modules we load also
-# depend on us and the sequencing can cause things not to be exported
-# otherwise.
-our (%EXPORT_TAGS, @EXPORT_OK);
-
-BEGIN {
-    %EXPORT_TAGS = (
-        messages => [qw(msg v_msg warning debug_msg delimiter perf_log)],
-        util => [qw(_global_or_object)]);
-    @EXPORT_OK = (@{$EXPORT_TAGS{messages}},@{$EXPORT_TAGS{util}},'string');
-}
 
 =head1 NAME
 
@@ -153,8 +141,6 @@ my %default_colors = (
     'C' => 'blue',
 );
 
-our $GLOBAL = Lintian::Output->new;
-
 sub new {
     my ($class, %options) = @_;
     my $self = {%options};
@@ -205,7 +191,7 @@ with 'N: '.  Will do nothing unless debug is set to a positive integer
 =cut
 
 sub msg {
-    my ($self, @args) = _global_or_object(@_);
+    my ($self, @args) = @_;
 
     return if $self->verbosity_level < 0;
     $self->_message(@args);
@@ -213,7 +199,7 @@ sub msg {
 }
 
 sub v_msg {
-    my ($self, @args) = _global_or_object(@_);
+    my ($self, @args) = @_;
 
     return unless $self->verbosity_level > 0;
     $self->_message(@args);
@@ -221,7 +207,7 @@ sub v_msg {
 }
 
 sub debug_msg {
-    my ($self, $level, @args) = _global_or_object(@_);
+    my ($self, $level, @args) = @_;
 
     return unless $self->debug && ($self->debug >= $level);
 
@@ -237,7 +223,7 @@ prefixed with 'warning: '.
 =cut
 
 sub warning {
-    my ($self, @args) = _global_or_object(@_);
+    my ($self, @args) = @_;
 
     return if $self->verbosity_level < 0;
     $self->_warning(@args);
@@ -256,7 +242,7 @@ positive integer.
 =cut
 
 sub perf_log {
-    my ($self, @args) = _global_or_object(@_);
+    my ($self, @args) = @_;
 
     return unless $self->perf_debug;
 
@@ -275,7 +261,7 @@ with one of the methods above, e.g.
 =cut
 
 sub delimiter {
-    my ($self) = _global_or_object(@_);
+    my ($self) = @_;
 
     return $self->_delimiter;
 }
@@ -288,7 +274,7 @@ indicating whether the tag had previously been issued by the object.
 =cut
 
 sub issued_tag {
-    my ($self, $tag_name) = _global_or_object(@_);
+    my ($self, $tag_name) = @_;
 
     return $self->issuedtags->{$tag_name}++ ? 1 : 0;
 }
@@ -300,7 +286,7 @@ TODO: Is this part of the public interface?
 =cut
 
 sub string {
-    my ($self, $lead, @args) = _global_or_object(@_);
+    my ($self, $lead, @args) = @_;
 
     my $output = '';
     if (@args) {
@@ -589,31 +575,11 @@ sub _quote_print {
     return $string;
 }
 
-=back
-
-=head1 CLASS METHODS
-
-=over 4
-
-=item C<_global_or_object(@args)>
-
-If $args[0] is an object which satisfies C<isa('Lintian::Output')>
-returns @args, otherwise returns C<($Lintian::Output::GLOBAL, @_)>.
-
-=back
-
-=cut
-
-sub _global_or_object {
-    if (ref($_[0]) and $_[0]->isa('Lintian::Output')) {
-        return @_;
-    } else {
-        return ($Lintian::Output::GLOBAL, @_);
-    }
-}
-
 1;
+
 __END__
+
+=back
 
 =head1 EXPORTS
 

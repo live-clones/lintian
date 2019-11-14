@@ -40,10 +40,10 @@ use POSIX qw(:sys_wait_h);
 my $INIT_ROOT = $ENV{'LINTIAN_ROOT'};
 
 use Lintian::Data;
-use Lintian::Output qw(:messages);
 use Lintian::Inspect::Changelog;
 use Lintian::Internal::FrontendUtil
   qw(default_parallel sanitize_environment open_file_or_fd);
+use Lintian::Output;
 use Lintian::Processable::Pool;
 use Lintian::Profile;
 use Lintian::Tags;
@@ -90,6 +90,7 @@ my %opt = (                     #hash of some flags from cmd or cfg
 my $experimental_output_opts;
 
 my (@CLOSE_AT_END, $TAGS);
+my $OUTPUT = Lintian::Output->new;
 my @certainties = qw(wild-guess possible certain);
 my (@display_level, %display_source, %suppress_tags);
 my ($action, $checks, $check_tags, $dont_check, $received_signal);
@@ -609,21 +610,19 @@ sub main {
             if ($_ eq 'format') {
                 if ($opts{$_} eq 'colons') {
                     require Lintian::Output::ColonSeparated;
-                    $Lintian::Output::GLOBAL
-                      = Lintian::Output::ColonSeparated->new;
+                    $OUTPUT= Lintian::Output::ColonSeparated->new;
                 } elsif ($opts{$_} eq 'letterqualifier') {
                     require Lintian::Output::LetterQualifier;
-                    $Lintian::Output::GLOBAL
-                      = Lintian::Output::LetterQualifier->new;
+                    $OUTPUT= Lintian::Output::LetterQualifier->new;
                 } elsif ($opts{$_} eq 'xml') {
                     require Lintian::Output::XML;
-                    $Lintian::Output::GLOBAL = Lintian::Output::XML->new;
+                    $OUTPUT = Lintian::Output::XML->new;
                 } elsif ($opts{$_} eq 'fullewi') {
                     require Lintian::Output::FullEWI;
-                    $Lintian::Output::GLOBAL = Lintian::Output::FullEWI->new;
+                    $OUTPUT = Lintian::Output::FullEWI->new;
                 } elsif ($opts{$_} eq 'universal') {
                     require Lintian::Output::Universal;
-                    $Lintian::Output::GLOBAL = Lintian::Output::Universal->new;
+                    $OUTPUT = Lintian::Output::Universal->new;
                 }
             }
         }
@@ -698,19 +697,18 @@ sub main {
         $opt{'verbose'} = 0 unless defined($opt{'verbose'});
     }
 
-    $Lintian::Output::GLOBAL->verbosity_level($opt{'verbose'});
-    $Lintian::Output::GLOBAL->debug($opt{'debug'});
+    $OUTPUT->verbosity_level($opt{'verbose'});
+    $OUTPUT->debug($opt{'debug'});
 
-    $Lintian::Output::GLOBAL->color($opt{'color'});
-    $Lintian::Output::GLOBAL->tty_hyperlinks($hyperlinks_capable
-          && $opt{hyperlinks} eq 'on');
-    $Lintian::Output::GLOBAL->tag_display_limit($opt{'tag-display-limit'});
-    $Lintian::Output::GLOBAL->showdescription($opt{'info'});
+    $OUTPUT->color($opt{'color'});
+    $OUTPUT->tty_hyperlinks($hyperlinks_capable&& $opt{hyperlinks} eq 'on');
+    $OUTPUT->tag_display_limit($opt{'tag-display-limit'});
+    $OUTPUT->showdescription($opt{'info'});
 
-    $Lintian::Output::GLOBAL->perf_debug($opt{'perf-debug'});
+    $OUTPUT->perf_debug($opt{'perf-debug'});
     if (defined(my $perf_log = $opt{'perf-output'})) {
         my $fd = open_file_or_fd($perf_log, '>');
-        $Lintian::Output::GLOBAL->perf_log_fd($fd);
+        $OUTPUT->perf_log_fd($fd);
 
         push(@CLOSE_AT_END, [$fd, $perf_log]);
     }
@@ -744,12 +742,12 @@ sub main {
         my $banner = lintian_banner();
         # Print Debug banner, now that we're finished determining
         # the values and have Lintian::Output available
-        debug_msg(
+        $OUTPUT->debug_msg(
             1,$banner,
             "Lintian root directory: $INIT_ROOT",
             "Configuration file: $opt{'LINTIAN_CFG'}",
             'UTF-8: ✓ (☃)',
-            delimiter(),
+            $OUTPUT->delimiter,
         );
     }
 
@@ -759,7 +757,7 @@ sub main {
     # Ensure $opt{'LINTIAN_PROFILE'} is defined
     $opt{'LINTIAN_PROFILE'} = $PROFILE->name
       unless defined($opt{'LINTIAN_PROFILE'});
-    v_msg('Using profile ' . $PROFILE->name . '.');
+    $OUTPUT->v_msg('Using profile ' . $PROFILE->name . '.');
     Lintian::Data->set_vendor($PROFILE);
 
     $TAGS = Lintian::Tags->new;
@@ -840,14 +838,16 @@ sub main {
     }
 
     if ($pool->empty) {
-        v_msg('No packages selected.');
+        $OUTPUT->v_msg('No packages selected.');
         exit $exit_code;
     }
 
     $ENV{INIT_ROOT} = $INIT_ROOT;
 
-    $pool->process($action, $PROFILE,$TAGS,\$exit_code, \%opt,
-        $memory_usage,$STATUS_FD, \@unpack_info);
+    $pool->process(
+        $action, $PROFILE,$TAGS,\$exit_code, \%opt,
+        $memory_usage,$STATUS_FD, \@unpack_info, $OUTPUT
+    );
 
     retrigger_signal()
       if $received_signal;
@@ -1205,7 +1205,7 @@ sub retrigger_signal {
     # Re-kill ourselves with the same signal to ensure that the exit
     # code reflects that we died by a signal.
     local $SIG{$received_signal} = \&_die_in_signal_handler;
-    debug_msg(2, "Retriggering signal SIG${received_signal}");
+    $OUTPUT->debug_msg(2, "Retriggering signal SIG${received_signal}");
     return kill($received_signal, $$);
 }
 

@@ -81,7 +81,7 @@ sub _print {
 }
 
 sub string {
-    my ($self, @args) = _global_or_object(@_);
+    my ($self, @args) = @_;
 
     return join(':', _quote_char(':', @args))."\n";
 }

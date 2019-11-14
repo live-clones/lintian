@@ -34,7 +34,6 @@ use POSIX qw(ENOENT);
 use Time::HiRes qw(gettimeofday tv_interval);
 
 use Lintian::Collect::Group;
-use Lintian::Output qw(:messages);
 use Lintian::Processable::Binary;
 use Lintian::Processable::Buildinfo;
 use Lintian::Processable::Changes;
@@ -314,7 +313,7 @@ Unpack this group.
 =cut
 
 sub unpack {
-    my ($self, $collmap, $action, $exit_code_ref)= @_;
+    my ($self, $collmap, $action, $exit_code_ref, $OUTPUT)= @_;
 
     my $clonedmap = $collmap->clone;
 
@@ -477,11 +476,11 @@ sub unpack {
         $self->coll_priorities(\@priorities);
     }
 
-    v_msg('Unpacking packages in group ' . $self->name);
+    $OUTPUT->v_msg('Unpacking packages in group ' . $self->name);
 
     my %timers;
     my $hook = sub {
-        $self->coll_hook($action, $exit_code_ref, \%timers, @_)
+        $self->coll_hook($OUTPUT, $action, $exit_code_ref, \%timers, @_)
           or $all_ok = 0;
     };
 
@@ -498,13 +497,13 @@ sub unpack {
     my $loop = IO::Async::Loop->new;
 
     for (0..$self->jobs-1) {
-        my $task = $self->find_next_task();
+        my $task = $self->find_next_task($OUTPUT);
         last if not $task;
 
         my $slice = $loop->new_future;
         push(@slices, $slice);
 
-        $self->start_task($slice, $hook, $task);
+        $self->start_task($slice, $hook, $task, $OUTPUT);
     }
 
     Future->wait_all(@slices)->get;
@@ -519,7 +518,8 @@ Collection hook.
 =cut
 
 sub coll_hook {
-    my ($self, $action, $exit_code_ref,$timers, $task, $event, $exitval)= @_;
+    my ($self, $OUTPUT, $action, $exit_code_ref,$timers, $task, $event,
+        $exitval)= @_;
 
     my $coll = $task->script->name;
     my $procid = $task->processable->identifier;
@@ -528,7 +528,7 @@ sub coll_hook {
 
     if ($event eq 'start') {
         $timers->{$task->id} = [gettimeofday];
-        debug_msg(1, "Collecting info: $coll for $procid ...");
+        $OUTPUT->debug_msg(1, "Collecting info: $coll for $procid ...");
 
         return 1;
 
@@ -539,7 +539,7 @@ sub coll_hook {
           = "collection $coll failed for $pkg_type package $pkg_name, skipping $action";
         $string .= " error: $exitval"
           if $exitval;
-        warning($string);
+        $OUTPUT->warning($string);
 
         my $pkg_type = $task->processable->pkg_type;
         if (   $pkg_type eq 'source'
@@ -563,8 +563,9 @@ sub coll_hook {
         # success
         my $raw_res = tv_interval($timers->{$task->id});
         my $tres = sprintf('%.3fs', $raw_res);
-        debug_msg(1, "Collection script $coll for $procid done ($tres)");
-        perf_log("$procid,coll/$coll,${raw_res}");
+        $OUTPUT->debug_msg(1,
+            "Collection script $coll for $procid done ($tres)");
+        $OUTPUT->perf_log("$procid,coll/$coll,${raw_res}");
 
         return 0;
     }
@@ -580,13 +581,15 @@ Process group.
 =cut
 
 sub process {
-    my ($self, $TAGS, $exit_code_ref, $override_count,$opt, $memory_usage)= @_;
+    my ($self, $TAGS, $exit_code_ref, $override_count,$opt, $memory_usage,
+        $OUTPUT)
+      = @_;
 
     my $all_ok = 1;
 
     my $timer = [gettimeofday];
 
-    $Lintian::Output::GLOBAL->print_first();
+    $OUTPUT->print_first();
 
     foreach my $processable ($self->get_processables){
         my $pkg_type = $processable->pkg_type;
@@ -620,14 +623,15 @@ sub process {
         # to store tag names as well
         my $override_count->{ignored} = {};
 
-        debug_msg(1, 'Base directory for group: ' . $processable->groupdir);
+        $OUTPUT->debug_msg(1,
+            'Base directory for group: ' . $processable->groupdir);
 
         my @found;
 
         if (not $opt->{'no-override'}
             and $self->collmap->getp('override-file')) {
 
-            debug_msg(1, 'Loading overrides file (if any) ...');
+            $OUTPUT->debug_msg(1, 'Loading overrides file (if any) ...');
 
             my $early;
             eval {($declared_overrides, $early) = $processable->overrides;};
@@ -676,7 +680,7 @@ sub process {
 
             my @collected;
 
-            debug_msg(1, "Running check: $check on $procid  ...");
+            $OUTPUT->debug_msg(1, "Running check: $check on $procid  ...");
             eval {@collected = $cs->run_check($processable, $self);};
             my $err = $@;
             my $raw_res = tv_interval($timer);
@@ -693,15 +697,16 @@ sub process {
                 print STDERR $err;
                 print STDERR "internal error: cannot run $check check",
                   " on package $procid\n";
-                warning("skipping check of $procid");
+                $OUTPUT->warning("skipping check of $procid");
                 $$exit_code_ref = 2;
                 $all_ok = 0;
 
                 next;
             }
             my $tres = sprintf('%.3fs', $raw_res);
-            debug_msg(1, "Check script $check for $procid done ($tres)");
-            perf_log("$procid,check/$check,${raw_res}");
+            $OUTPUT->debug_msg(1,
+                "Check script $check for $procid done ($tres)");
+            $OUTPUT->perf_log("$procid,check/$check,${raw_res}");
         }
 
         undef $TAGS->{current};
@@ -850,34 +855,35 @@ sub process {
             push(@print, [$taginfo, $extra, $override]);
         }
 
-        $Lintian::Output::GLOBAL->print_start_pkg(\%procstruct);
-        $Lintian::Output::GLOBAL->print_tag(\%procstruct, @{$_})for @print;
-        $Lintian::Output::GLOBAL->print_end_pkg(\%procstruct);
+        $OUTPUT->print_start_pkg(\%procstruct);
+        $OUTPUT->print_tag(\%procstruct, @{$_})for @print;
+        $OUTPUT->print_end_pkg(\%procstruct);
 
         $TAGS->{info}{$path} = \%procstruct;
     }
 
     # universal format sorts output from all processables and prints here
-    $Lintian::Output::GLOBAL->print_last();
+    $OUTPUT->print_last();
 
     my $raw_res = tv_interval($timer);
     my $tres = sprintf('%.3fs', $raw_res);
-    debug_msg(1, 'Checking all of group ' . $self->name . " done ($tres)");
-    perf_log($self->name . ",total-group-check,${raw_res}");
+    $OUTPUT->debug_msg(1,
+        'Checking all of group ' . $self->name . " done ($tres)");
+    $OUTPUT->perf_log($self->name . ",total-group-check,${raw_res}");
 
     if ($opt->{'debug'} > 2) {
         my $pivot = ($self->get_processables)[0];
         my $group_id = $pivot->pkg_src . '/' . $pivot->pkg_src_version;
         my $group_usage
           = $memory_usage->([map { $_->info } $self->get_processables]);
-        debug_msg(3, "Memory usage [$group_id]: $group_usage");
+        $OUTPUT->debug_msg(3, "Memory usage [$group_id]: $group_usage");
         for my $processable ($self->get_processables) {
             my $id = $processable->identifier;
             my $usage = $memory_usage->($processable->info);
             my $breakdown = $processable->info->_memory_usage($memory_usage);
-            debug_msg(3, "Memory usage [$id]: $usage");
+            $OUTPUT->debug_msg(3, "Memory usage [$id]: $usage");
             for my $field (sort(keys(%{$breakdown}))) {
-                debug_msg(4, "  -- $field: $breakdown->{$field}");
+                $OUTPUT->debug_msg(4, "  -- $field: $breakdown->{$field}");
             }
         }
     }
@@ -893,27 +899,28 @@ also get these unless we are keeping the lab.
 =cut
 
 sub clean_lab {
-    my ($self) = @_;
+    my ($self, $OUTPUT) = @_;
 
     my $total = [gettimeofday];
 
     for my $processable ($self->get_processables) {
 
         my $proc_id = $processable->identifier;
-        debug_msg(1, "Auto removing: $proc_id ...");
+        $OUTPUT->debug_msg(1, "Auto removing: $proc_id ...");
         my $each = [gettimeofday];
 
         $processable->remove;
 
         my $raw_res = tv_interval($each);
-        debug_msg(1, "Auto removing: $proc_id done (${raw_res}s)");
-        perf_log("$proc_id,auto-remove entry,$raw_res");
+        $OUTPUT->debug_msg(1, "Auto removing: $proc_id done (${raw_res}s)");
+        $OUTPUT->perf_log("$proc_id,auto-remove entry,$raw_res");
     }
 
     my $raw_res = tv_interval($total);
     my $tres = sprintf('%.3fs', $raw_res);
-    debug_msg(1,'Auto-removal all for group ' . $self->name . " done ($tres)");
-    perf_log($self->name . ",total-group-auto-remove,$raw_res");
+    $OUTPUT->debug_msg(1,
+        'Auto-removal all for group ' . $self->name . " done ($tres)");
+    $OUTPUT->perf_log($self->name . ",total-group-auto-remove,$raw_res");
 
     return;
 }
@@ -1144,7 +1151,7 @@ Find next task.
 =cut
 
 sub find_next_task {
-    my ($self) = @_;
+    my ($self, $OUTPUT) = @_;
 
     my @coll_priorities = @{$self->coll_priorities};
 
@@ -1183,8 +1190,8 @@ sub find_next_task {
 
                 # collect info
                 $cmap->select($check);
-                debug_msg(3, "READY $check-$procid")
-                  if $Lintian::Output::GLOBAL->debug;
+                $OUTPUT->debug_msg(3, "READY $check-$procid")
+                  if $OUTPUT->debug;
 
                 my $task = Lintian::Unpack::Task->new;
                 $task->id($check . HYPHEN . $procid);
@@ -1201,9 +1208,9 @@ sub find_next_task {
             }
 
             unless (keys %{$unscheduled}) {
-                debug_msg(3,
+                $OUTPUT->debug_msg(3,
                     "DISCARD $check (all instances have been scheduled)")
-                  if $Lintian::Output::GLOBAL->debug;
+                  if $OUTPUT->debug;
                 splice(@coll_priorities, $i, 1);
                 $i--;
             }
@@ -1213,11 +1220,11 @@ sub find_next_task {
     }
 
     if (@{$self->queue}) {
-        debug_msg(4,
+        $OUTPUT->debug_msg(4,
                 'QUEUE non-empty with '
               . scalar(@{$self->queue})
               . ' item(s).  Taking one.')
-          if $Lintian::Output::GLOBAL->debug;
+          if $OUTPUT->debug;
     }
 
     return shift @{$self->queue}
@@ -1233,14 +1240,14 @@ Start task.
 =cut
 
 sub start_task {
-    my ($self, $slice, $hook, $task) = @_;
+    my ($self, $slice, $hook, $task, $OUTPUT) = @_;
 
     my $cmap = $task->cmap;
 
     my $loop = IO::Async::Loop->new;
-    my $debug_enabled = $Lintian::Output::GLOBAL->debug;
+    my $debug_enabled = $OUTPUT->debug;
 
-    debug_msg(3, 'START ' . $task->id);
+    $OUTPUT->debug_msg(3, 'START ' . $task->id);
     my $pid = -1;
 
     my $future = $loop->new_future;
@@ -1280,7 +1287,7 @@ sub start_task {
 
                 delete $self->running_jobs->{$future};
 
-                debug_msg(3, 'FINISH ' . $task->id . " ($status)");
+                $OUTPUT->debug_msg(3, 'FINISH ' . $task->id . " ($status)");
 
                 $hook->($task, 'finish', $status)
                   if $hook;
@@ -1309,17 +1316,17 @@ sub start_task {
 
     $future->on_ready(
         sub {
-            my $task = $self->find_next_task();
+            my $task = $self->find_next_task($OUTPUT);
             $slice->done('No more tasks')
               unless $task;
-            $self->start_task($slice, $hook, $task)
+            $self->start_task($slice, $hook, $task, $OUTPUT)
               if $task;
 
-            my $debug_enabled = $Lintian::Output::GLOBAL->debug;
+            my $debug_enabled = $OUTPUT->debug;
             if ($debug_enabled) {
                 my @ids = map { $_->{id} } values %{$self->running_jobs};
                 my $queue = join(', ', sort @ids);
-                debug_msg(3, "RUNNING QUEUE: $queue");
+                $OUTPUT->debug_msg(3, "RUNNING QUEUE: $queue");
             }
         });
 

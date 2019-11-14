@@ -32,7 +32,6 @@ use POSIX qw(:sys_wait_h);
 
 use Lintian::DepMap;
 use Lintian::DepMap::Properties;
-use Lintian::Output qw(:messages);
 use Lintian::Processable::Group;
 use Lintian::Util;
 
@@ -148,9 +147,9 @@ Process the pool.
 
 sub process{
     my (
-        $self, $action,$PROFILE,
-        $TAGS,$exit_code_ref, $opt,
-        $memory_usage,$STATUS_FD, $unpack_info_ref
+        $self, $action,$PROFILE,$TAGS,
+        $exit_code_ref, $opt,$memory_usage,$STATUS_FD,
+        $unpack_info_ref, $OUTPUT
     ) = @_;
 
     # $map is just here to check that all the needed collections are present.
@@ -169,7 +168,8 @@ sub process{
 
         my $cs = Lintian::CollScript->new("$dirname/$file");
 
-        debug_msg(2, 'Read collector description for ' . $cs->name . '...');
+        $OUTPUT->debug_msg(2,
+            'Read collector description for ' . $cs->name . '...');
         $collmap->add($cs->name, $cs->needs_info, $cs);
         $map->addp('coll-' . $cs->name, 'coll-', $cs->needs_info);
     }
@@ -178,7 +178,7 @@ sub process{
       or warn 'Close failed';
 
     my @scripts = sort $PROFILE->scripts;
-    debug_msg(
+    $OUTPUT->debug_msg(
         1,
         "Selected action: $action",
         sprintf('Selected checks: %s', join(',', @scripts)),
@@ -241,7 +241,7 @@ sub process{
     foreach my $group (@sorted) {
         my $success = 1;
 
-        v_msg('Starting on group ' . $group->name);
+        $OUTPUT->v_msg('Starting on group ' . $group->name);
 
         my $total_start = [gettimeofday];
         my $group_start = [gettimeofday];
@@ -252,21 +252,21 @@ sub process{
         $group->extra_coll(\@requested);
         $group->jobs($opt->{'jobs'});
 
-        if (!$group->unpack($collmap, $action,$exit_code_ref)) {
+        if (!$group->unpack($collmap, $action,$exit_code_ref, $OUTPUT)) {
             $success = 0;
         }
 
         my $raw_res = tv_interval($group_start);
         my $tres = sprintf('%.3fs', $raw_res);
 
-        debug_msg(1, 'Unpack of ' . $group->name . " done ($tres)");
-        perf_log($group->name . ",total-group-unpack,${raw_res}");
+        $OUTPUT->debug_msg(1, 'Unpack of ' . $group->name . " done ($tres)");
+        $OUTPUT->perf_log($group->name . ",total-group-unpack,${raw_res}");
 
         if ($action eq 'check') {
             if (
                 !$group->process(
                     $TAGS,$exit_code_ref, \%override_count,
-                    $opt,$memory_usage
+                    $opt,$memory_usage, $OUTPUT
                 )
             ) {
                 $success = 0;
@@ -298,7 +298,7 @@ sub process{
         }
 
         # remove group files unless we are keeping the lab
-        $group->clean_lab
+        $group->clean_lab($OUTPUT)
           unless ($self->keep);
 
        # Wait for any remaining jobs - There will usually not be any
@@ -316,7 +316,7 @@ sub process{
         } else {
             print {$STATUS_FD} 'error ' . $group->name . " ($total_tres)\n";
         }
-        v_msg('Finished processing group ' . $group->name);
+        $OUTPUT->v_msg('Finished processing group ' . $group->name);
     }
 
     # do not remove lab if so selected
@@ -360,26 +360,26 @@ sub process{
             } elsif ($unused > 1) {
                 $text .= "; $unused unused overrides";
             }
-            msg($text);
+            $OUTPUT->msg($text);
         }
     }
 
     my $ign_over = $override_count{ignored};
     if (keys %$ign_over) {
-        msg(
+        $OUTPUT->msg(
             join(q{ },
                 'Some overrides were ignored,',
                 'since the tags were marked "non-overridable".'));
         if ($opt->{'verbose'}) {
-            v_msg(
+            $OUTPUT->v_msg(
                 join(q{ },
                     'The following tags were "non-overridable"',
                     'and had at least one override'));
             foreach my $tag (sort keys %$ign_over) {
-                v_msg("  - $tag");
+                $OUTPUT->v_msg("  - $tag");
             }
         } else {
-            msg('Use --verbose for more information.');
+            $OUTPUT->msg('Use --verbose for more information.');
         }
     }
 
