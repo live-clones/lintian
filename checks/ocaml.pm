@@ -25,6 +25,7 @@ use warnings;
 use autodie;
 
 use File::Basename;
+use Path::Tiny;
 
 use Lintian::Relation ();
 
@@ -57,7 +58,7 @@ our $MAX_CMI = 3;
 sub setup {
     my ($self) = @_;
 
-    open(my $fd, '<', $self->info->lab_data_path('ar-info'));
+    open(my $fd, '<',path($self->info->groupdir)->child('ar-info')->stringify);
     while (my $line = <$fd>) {
         chomp($line);
         if ($line =~ /^(?:\.\/)?([^:]+): (.*)$/) {

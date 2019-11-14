@@ -24,15 +24,19 @@ use strict;
 use warnings;
 use autodie;
 
-use Lintian::Spelling qw(check_spelling spelling_tag_emitter);
+use Lintian::Spelling qw(check_spelling);
 
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
 
-my $SPELLING_ERROR_IN_README
-  = spelling_tag_emitter('spelling-error-in-readme-debian');
+sub spelling_tag_emitter {
+    my ($self, @orig_args) = @_;
+    return sub {
+        return $self->tag(@orig_args, @_);
+    };
+}
 
 sub open_readme {
     my ($pkg_name, $info) = @_;
@@ -83,8 +87,10 @@ sub binary {
         $self->tag('readme-debian-contains-invalid-email-address', $1);
     }
 
-    check_spelling($readme,$group->info->spelling_exceptions,
-        $SPELLING_ERROR_IN_README);
+    check_spelling(
+        $readme,
+        $group->info->spelling_exceptions,
+        $self->spelling_tag_emitter('spelling-error-in-readme-debian'));
 
     return;
 }

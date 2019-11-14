@@ -304,6 +304,10 @@ sub runner {
     return;
 }
 
+=item check_literal
+
+=cut
+
 sub check_literal {
     my ($testcase, $runpath, $output) = @_;
 
@@ -327,6 +331,10 @@ sub check_literal {
 
     return check_result($testcase, $runpath, $expected, $actual);
 }
+
+=item check_tags
+
+=cut
 
 sub check_tags {
     my ($testcase, $runpath, $output) = @_;
@@ -495,6 +503,14 @@ sub check_result {
 }
 
 =back
+
+=head1 AUTHOR
+
+Originally written by Felix Lechner <felix.lechner@lease-up.com> for Lintian.
+
+=head1 SEE ALSO
+
+lintian(1)
 
 =cut
 

@@ -27,7 +27,6 @@ use Exporter qw(import);
 use Email::Valid;
 
 use Lintian::Data;
-use Lintian::Tags qw(tag);
 use Lintian::Util qw(strip);
 
 our $KNOWN_BOUNCE_ADDRESSES = Lintian::Data->new('fields/bounce-addresses');
@@ -136,6 +135,8 @@ the parsing done by the rest of the function.
 sub check_maintainer {
     my ($maintainer, $field) = @_;
 
+    my @tags;
+
     # Do the initial parse.
     $maintainer =~ /^([^<\s]*(?:\s+[^<\s]+)*)?(\s*)(?:<(.+)>)?(.*)$/;
     my ($name, $del, $mail, $extra) = ($1, $2, $3, $4);
@@ -157,17 +158,17 @@ sub check_maintainer {
     # does not etc.).  Thus this check is to ensure we only pass the
     # "email"-part to Email::Valid.
     if ($extra or ($mail && $mail =~ m/\@[^\>\@]+\>[^\>\@]*$/o)) {
-        tag "$field-address-malformed", $maintainer;
+        push(@tags, ["$field-address-malformed", $maintainer]);
         $malformed = 1;
     }
-    tag "$field-address-looks-weird", $maintainer
+    push(@tags, ["$field-address-looks-weird", $maintainer])
       if (not $del and $name and $mail);
 
     if (not $name) {
-        tag "$field-name-missing", $maintainer;
+        push(@tags, ["$field-name-missing", $maintainer]);
     } else {
         if ($name eq 'root') {
-            tag "$field-address-is-root-user", $maintainer;
+            push(@tags, ["$field-address-is-root-user", $maintainer]);
         }
     }
 
@@ -175,23 +176,25 @@ sub check_maintainer {
     if (not $mail) {
         # Cannot be done accurately for uploaders due to changes with commas
         # (see #485705)
-        tag "$field-address-missing", $maintainer unless $field eq 'uploader';
+        push(@tags, ["$field-address-missing", $maintainer])
+          unless $field eq 'uploader';
     } else {
         if (not $malformed and not Email::Valid->address($mail)) {
             # Either not a valid email or possibly missing a comma between
             # two entries.
-            tag "$field-address-malformed", $maintainer;
+            push(@tags, ["$field-address-malformed", $maintainer]);
         }
         if ($mail =~ /(?:localhost|\.localdomain|\.localnet)$/) {
-            tag "$field-address-is-on-localhost", $maintainer;
+            push(@tags, ["$field-address-is-on-localhost", $maintainer]);
         }
         if ($mail =~ /^root@/) {
-            tag "$field-address-is-root-user", $maintainer;
+            push(@tags, ["$field-address-is-root-user", $maintainer]);
         }
 
         if (($field ne 'changed-by') and $KNOWN_BOUNCE_ADDRESSES->known($mail))
         {
-            tag "$field-address-causes-mail-loops-or-bounces", $maintainer;
+            push(@tags,
+                ["$field-address-causes-mail-loops-or-bounces", $maintainer]);
         }
 
         # Some additional checks that we only do for maintainer fields.
@@ -201,9 +204,10 @@ sub check_maintainer {
                 or (    $name =~ /\bdebian\s+qa\b/i
                     and $mail ne 'packages@qa.debian.org')
             ) {
-                tag 'wrong-debian-qa-address-set-as-maintainer',$maintainer;
+                push(@tags,
+                    ['wrong-debian-qa-address-set-as-maintainer',$maintainer]);
             } elsif ($mail eq 'packages@qa.debian.org') {
-                tag 'wrong-debian-qa-group-name', $maintainer
+                push(@tags, ['wrong-debian-qa-group-name', $maintainer])
                   if ($name ne 'Debian QA Group');
             }
         }
@@ -217,12 +221,17 @@ sub check_maintainer {
             foreach my $re ($DERIVATIVE_CHANGED_BY->all) {
                 next if $maintainer =~ m/$re/;
                 my $explanation = $DERIVATIVE_CHANGED_BY->value($re);
-                tag "$field-invalid-for-derivative", $maintainer,
-                  "($explanation)";
+                push(
+                    @tags,
+                    [
+                        "$field-invalid-for-derivative", $maintainer,
+                        "($explanation)"
+                    ]);
             }
         }
     }
-    return;
+
+    return @tags;
 }
 
 =back

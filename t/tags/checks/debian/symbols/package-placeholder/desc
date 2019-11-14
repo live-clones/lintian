@@ -1,0 +1,4 @@
+Skeleton: source-native
+Testname: package-placeholder
+Description: Look for PACKAGE placeholder in d/symbols files
+Check: debian/symbols

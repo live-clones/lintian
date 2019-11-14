@@ -40,15 +40,18 @@ use POSIX qw(:sys_wait_h);
 my $INIT_ROOT = $ENV{'LINTIAN_ROOT'};
 
 use Lintian::Data;
-use Lintian::Lab;
 use Lintian::Output qw(:messages);
-use Lintian::Info::Changelog;
+use Lintian::Inspect::Changelog;
 use Lintian::Internal::FrontendUtil
   qw(default_parallel sanitize_environment open_file_or_fd);
 use Lintian::Processable::Pool;
 use Lintian::Profile;
-use Lintian::Tags qw(tag);
+use Lintian::Tags;
 use Lintian::Util qw(internal_error parse_boolean strip safe_qx);
+
+# only in GNOME; need original environment
+my $interactive = -t STDIN && (-t STDOUT || !(-f STDOUT || -c STDOUT));
+my $hyperlinks_capable = $interactive && qx{env | fgrep -i gnome};
 
 sanitize_environment();
 
@@ -84,7 +87,7 @@ my %opt = (                     #hash of some flags from cmd or cfg
     'jobs'              => default_parallel(),
 );
 
-my ($experimental_output_opts, %overrides);
+my ($experimental_output_opts, %override_count);
 
 my (@CLOSE_AT_END, $TAGS);
 my @certainties = qw(wild-guess possible certain);
@@ -157,6 +160,7 @@ General options:
     -V, --version             display Lintian version and exit
 Behavior options:
     --color never/always/auto disable, enable, or enable color for TTY
+    --hyperlinks on/off       hyperlinks for TTY (when supported)
     --default-display-level   reset the display level to the default
     --display-source X        restrict displayed tags by source
     -E, --display-experimental display "X:" tags (normally suppressed)
@@ -521,6 +525,7 @@ my %opthash = (
     'show-overrides' => \$opt{'show-overrides'},
     'hide-overrides' => sub { $opt{'show-overrides'} = 0; },
     'color=s' => \$opt{'color'},
+    'hyperlinks=s' => \$opt{'hyperlinks'},
     'unpack-info|U=s' => \@unpack_info,
     'allow-root' => \$opt{'allow-root'},
     'keep-lab' => \$opt{'keep-lab'},
@@ -634,6 +639,15 @@ sub main {
                 'The color value must be one of',
                 'never", "always", "auto" or "html"'));
     }
+
+    if ($opt{'color'} eq 'never') {
+        $opt{'hyperlinks'} //= 'off';
+    } else {
+        $opt{'hyperlinks'} //= 'on';
+    }
+    fatal_error('The hyperlink value must be one of "on" or "off"')
+      unless $opt{'hyperlinks'} =~ /^(?:on|off)$/;
+
     if (not defined $opt{'tag-display-limit'}) {
         if (-t STDOUT and not $opt{'verbose'}) {
             $opt{'tag-display-limit'}
@@ -686,7 +700,10 @@ sub main {
 
     $Lintian::Output::GLOBAL->verbosity_level($opt{'verbose'});
     $Lintian::Output::GLOBAL->debug($opt{'debug'});
+
     $Lintian::Output::GLOBAL->color($opt{'color'});
+    $Lintian::Output::GLOBAL->tty_hyperlinks($hyperlinks_capable
+          && $opt{hyperlinks} eq 'on');
     $Lintian::Output::GLOBAL->tag_display_limit($opt{'tag-display-limit'});
     $Lintian::Output::GLOBAL->showdescription($opt{'info'});
 
@@ -813,7 +830,7 @@ sub main {
         eval {
             # create a new group
             my $group = Lintian::Processable::Group->new;
-            $group->lab($pool->lab);
+            $group->pooldir($pool->basedir);
             $group->init_from_file($absolute);
 
             $pool->add_group($group);
@@ -833,7 +850,7 @@ sub main {
 
     $pool->process(
         $action, $PROFILE,$TAGS,
-        \$exit_code,\%overrides, \%opt,
+        \$exit_code,\%override_count, \%opt,
         $memory_usage,$STATUS_FD, \@unpack_info
     );
 
@@ -843,9 +860,9 @@ sub main {
     if (    $action eq 'check'
         and not $opt{'no-override'}
         and not $opt{'show-overrides'}) {
-        my $errors = $overrides{errors} || 0;
-        my $warnings = $overrides{warnings} || 0;
-        my $info = $overrides{info} || 0;
+        my $errors = $override_count{errors} || 0;
+        my $warnings = $override_count{warnings} || 0;
+        my $info = $override_count{info} || 0;
         my $total = $errors + $warnings + $info;
         my $unused = $TAGS->{unused_overrides};
         if ($total > 0 or $unused > 0) {
@@ -953,6 +970,7 @@ sub parse_config_file {
     # Options that can appear in the config file
     my %cfghash = (
         'color'                => \$opt{'color'},
+        'hyperlinks'           => \$opt{'hyperlinks'},
         'display-experimental' => \$opt{'display-experimental'},
         'display-info'         => \&cfg_display_level,
         'display-level'        => \&cfg_display_level,
@@ -1038,7 +1056,7 @@ sub parse_config_file {
 
 sub _find_changes {
     my $contents = path('debian/changelog')->slurp;
-    my $changelog = Lintian::Info::Changelog->new;
+    my $changelog = Lintian::Inspect::Changelog->new;
     $changelog->parse($contents);
     my @entries = @{$changelog->entries};
     my $last = @entries ? $entries[0] : undef;

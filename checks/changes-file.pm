@@ -25,6 +25,7 @@ use warnings;
 use autodie;
 
 use List::MoreUtils qw(any);
+use Path::Tiny;
 
 use Lintian::Data;
 use Lintian::Maintainer qw(check_maintainer);
@@ -190,11 +191,12 @@ sub changes {
     # Changed-By is optional in Policy, but if set, must be
     # syntactically correct.  It's also used by dak.
     if ($info->field('changed-by')) {
-        check_maintainer($info->field('changed-by'), 'changed-by');
+        my @tags = check_maintainer($info->field('changed-by'), 'changed-by');
+        $self->tag(@{$_}) for @tags;
     }
 
     my $files = $info->files;
-    my $path = readlink($info->lab_data_path('changes'));
+    my $path = readlink(path($info->groupdir)->child('changes')->stringify);
     my %num_checksums;
     $path =~ s#/[^/]+$##;
     foreach my $file (keys %$files) {

@@ -27,10 +27,7 @@ use constant EMPTY => q{};
 use Moo::Role;
 use namespace::clean;
 
-with 'Lintian::Tag::Issuer';
-
-has processable => (is => 'rw', default => sub { {} });
-has group => (is => 'rw', default => sub { {} });
+with 'Lintian::Tag::Finder';
 
 =head1 NAME
 
@@ -39,7 +36,7 @@ Lintian::Check -- Common facilities for Lintian checks
 =head1 SYNOPSIS
 
  use Moo;
-use namespace::clean;
+ use namespace::clean;
 
  with('Lintian::Check');
 
@@ -51,11 +48,24 @@ A class for collecting Lintian tags as they are issued
 
 =over 4
 
+=item processable
+
+Get processable underlying this check.
+
+=item group
+
+Get group that the processable is in.
+
+=cut
+
 =item run
 
 Run the check.
 
 =cut
+
+has processable => (is => 'rw', default => sub { {} });
+has group => (is => 'rw', default => sub { {} });
 
 sub run {
     my ($self) = @_;
@@ -80,8 +90,6 @@ sub run {
 
     $self->breakdown
       if $self->can('breakdown');
-
-    $self->issue_tags;
 
     return;
 }
@@ -119,8 +127,14 @@ Get the info data structure from processable.
 sub info {
     my ($self) = @_;
 
-    return $self->processable->info;
+    return $self->processable;
 }
+
+=item build_path
+
+Get the build path.
+
+=cut
 
 sub build_path {
     my ($self) = @_;

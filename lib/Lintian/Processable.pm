@@ -21,11 +21,13 @@ package Lintian::Processable;
 
 use strict;
 use warnings;
+use warnings::register;
 
 use Carp qw(croak);
 use Path::Tiny;
 
-use Lintian::Collect;
+use Lintian::Collect::Dispatcher qw(create_info);
+use Lintian::Util qw(get_dsc_info get_deb_info);
 
 use constant EMPTY => q{};
 use constant COLON => q{:};
@@ -35,6 +37,8 @@ use constant EVIL_CHARACTERS => qr,[/&|;\$"'<>],o;
 
 use Moo::Role;
 use namespace::clean;
+
+=encoding utf-8
 
 =head1 NAME
 
@@ -61,6 +65,27 @@ together.
 =head1 INSTANCE METHODS
 
 =over 4
+
+=item name
+
+Returns the name of the package.
+
+=item type
+
+Returns the type of the package.
+
+=item verbatim
+
+Returns a hash to the raw, unedited and verbatim field values.
+
+=item unfolded
+
+Returns a hash to unfolded field values. Continuations lines
+have been connected.
+
+=item shared_storage
+
+Returns shared_storage.
 
 =item $proc->pkg_name
 
@@ -105,21 +130,17 @@ to less dangerous (but possibly invalid) values.
 Produces an identifier for this processable.  The identifier is
 based on the type, name, version and architecture of the package.
 
-=item lab
+=item $proc->pooldir
 
 Returns a reference to lab this Processable is in.
 
-=item base_dir
+=item $proc->groupdir
 
 Returns the base directory of this package inside the lab.
 
 =item group
 
 Returns a reference to the Processable::Group related to this entry.
-
-=item saved_info
-
-Returns a reference to the info structure related to this entry.
 
 =cut
 
@@ -141,6 +162,13 @@ Returns a reference to the extra fields related to this entry.
 
 =cut
 
+has name => (is => 'rw');
+has type => (is => 'rw');
+
+has verbatim => (is => 'rw', default => sub { {} });
+has unfolded => (is => 'rwp', default => sub { {} });
+has shared_storage => (is => 'rwp', default => sub { {} });
+
 has pkg_name => (is => 'rw');
 has pkg_version => (is => 'rw', default => EMPTY);
 has pkg_src => (is => 'rw');
@@ -153,11 +181,10 @@ has tainted => (is => 'rw', default => 0);
 
 has identifier =>
   (is => 'rw', coerce => sub { my $id = shift; $id =~ s/\s+/_/g; $id; });
-has lab => (is => 'rw');
-has base_dir => (is => 'rw');
+has pooldir => (is => 'rw', default => EMPTY);
+has groupdir => (is => 'rw', default => EMPTY);
 has group => (is => 'rw');
 
-has saved_info => (is => 'rw', default => sub { {} });
 has extra_fields => (is => 'rw', default => sub { {} });
 
 has link_label => (is => 'rw', default => EMPTY);
@@ -174,17 +201,7 @@ Overrides info from L<Lintian::Processable>.
 sub info {
     my ($self) = @_;
 
-    unless (keys %{$self->saved_info}) {
-
-        my $info = Lintian::Collect->new(
-            $self->pkg_name, $self->pkg_type,
-            $self->base_dir, $self->extra_fields
-        );
-
-        $self->saved_info($info);
-    }
-
-    return $self->saved_info;
+    return $self;
 }
 
 =item clear_cache
@@ -214,8 +231,8 @@ sub remove {
 
     $self->clear_cache;
 
-    path($self->base_dir)->remove_tree
-      if -e $self->base_dir;
+    path($self->groupdir)->remove_tree
+      if -e $self->groupdir;
 
     return;
 }
@@ -267,12 +284,12 @@ sub link {
     unless (length $self->saved_link) {
 
         croak 'Please set base directory for processable first'
-          unless length $self->base_dir;
+          unless length $self->groupdir;
 
         croak 'Please set link label for processable first'
           unless length $self->link_label;
 
-        my $link = path($self->base_dir)->child($self->link_label)->stringify;
+        my $link = path($self->groupdir)->child($self->link_label)->stringify;
         $self->saved_link($link);
     }
 
@@ -293,10 +310,10 @@ sub create {
       if -l $self->link;
 
     croak 'Please set base directory for processable first'
-      unless length $self->base_dir;
+      unless length $self->groupdir;
 
-    path($self->base_dir)->mkpath
-      unless -e $self->base_dir;
+    path($self->groupdir)->mkpath
+      unless -e $self->groupdir;
 
     symlink($self->pkg_path, $self->link)
       or croak 'symlinking ' . $self->pkg_path . "failed: $!";
@@ -326,15 +343,122 @@ sub guess_name {
     return $guess;
 }
 
+=item unfolded_field (FIELD)
+
+This method returns the unfolded value of the control field FIELD in
+the control file for the package.  For a source package, this is the
+*.dsc file; for a binary package, this is the control file in the
+control section of the package.
+
+If FIELD is passed but not present, then this method returns undef.
+
+Needs-Info requirements for using I<unfolded_field>: none
+
+=cut
+
+sub unfolded_field {
+    my ($self, $field) = @_;
+
+    return
+      unless defined $field;
+
+    return $self->unfolded->{$field}
+      if exists $self->unfolded->{$field};
+
+    my $value = $self->field($field);
+
+    return
+      unless defined $value;
+
+    # will also replace a newline at the very end
+    $value =~ s/\n//g;
+
+    # Remove leading space as it confuses some of the other checks
+    # that are anchored.  This happens if the field starts with a
+    # space and a newline, i.e ($ marks line end):
+    #
+    # Vcs-Browser: $
+    #  http://somewhere.com/$
+    $value =~ s/^\s*+//;
+
+    $self->unfolded->{$field} = $value;
+
+    return $value;
+}
+
+=item field ([FIELD[, DEFAULT]])
+
+If FIELD is given, this method returns the value of the control field
+FIELD in the control file for the package.  For a source package, this
+is the *.dsc file; for a binary package, this is the control file in
+the control section of the package.
+
+If FIELD is passed but not present, then this method will return
+DEFAULT (if given) or undef.
+
+Otherwise this will return a hash of fields, where the key is the field
+name (in all lowercase).
+
+Needs-Info requirements for using I<field>: none
+
+=cut
+
+sub field {
+    my ($self, $field, $default) = @_;
+
+    unless (keys %{$self->verbatim}) {
+
+        my $groupdir = $self->groupdir;
+        my $verbatim;
+
+        if ($self->type eq 'changes' || $self->type eq 'source'){
+            my $file = 'changes';
+            $file = 'dsc'
+              if $self->type eq 'source';
+
+            $verbatim = get_dsc_info("$groupdir/$file");
+
+        } elsif ($self->type eq 'binary' || $self->type eq 'udeb'){
+            # (ab)use the unpacked control dir if it is present
+            if (   -f "$groupdir/control/control"
+                && -s "$groupdir/control/control") {
+
+                $verbatim = get_dsc_info("$groupdir/control/control");
+
+            } else {
+                $verbatim = (get_deb_info("$groupdir/deb"));
+            }
+        }
+
+        $self->verbatim($verbatim);
+    }
+
+    return $self->verbatim
+      unless defined $field;
+
+    return $self->verbatim->{$field} // $default;
+}
+
 =back
 
 =head1 AUTHOR
 
 Originally written by Niels Thykier <niels@thykier.net> for Lintian.
+Substantial portions written by Russ Allbery <rra@debian.org> for Lintian.
 
 =head1 SEE ALSO
 
 lintian(1)
+
+L<Lintian::Processable::Binary>
+
+L<Lintian::Processable::Buildinfo>
+
+L<Lintian::Processable::Changes>,
+
+L<Lintian::Processable::Source>
+
+L<Lintian::Processable::Udeb>
 
 L<Lintian::Processable::Group>
 

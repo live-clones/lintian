@@ -71,7 +71,7 @@ Lintian::Path - Lintian representation of a path entry in a package
 =head1 SYNOPSIS
 
     my ($name, $type, $dir) = ('lintian', 'source', '/path/to/entry');
-    my $info = Lintian::Collect->new ($name, $type, $dir);
+    my $info = Lintian::Collect::Source->new($name);
     my $path = $info->index('bin/ls');
     if ($path->is_file) {
        # is file (or hardlink)
@@ -97,7 +97,7 @@ Lintian::Path - Lintian representation of a path entry in a package
 
 =item Lintian::Path->new ($data)
 
-Internal constructor (used by Lintian::Collect::Package).
+Internal constructor (used by Lintian::Info::Package).
 
 Argument is a hash containing the data read from the index file.
 

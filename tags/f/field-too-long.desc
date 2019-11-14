@@ -1,7 +1,7 @@
 Tag: field-too-long
 Severity: important
 Certainty: certain
-Check: debian/control
+Check: fields/length
 Info: The length of the specified field is too long.
  .
  Overly-long fields not only can break some tools tools (eg.

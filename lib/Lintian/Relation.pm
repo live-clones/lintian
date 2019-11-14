@@ -81,6 +81,8 @@ about that relationship.  RELATION may be C<undef> or the empty string, in
 which case the returned Lintian::Relation object is empty (always
 satisfied).
 
+=item parse_element
+
 =cut
 
 # The internal parser which converts a single package element of a
@@ -395,6 +397,8 @@ string.  If architecture restrictions should be ignored in RELATION,
 create a Lintian::Relation object with new_noarch() and pass that in as
 RELATION instead of the string.
 
+=item implies_element
+
 =cut
 
 # This internal function does the heavily lifting of comparing two
@@ -601,6 +605,10 @@ sub implies_element {
     return;
 }
 
+=item implies_array
+
+=cut
+
 # This internal function does the heavy of AND, OR, and NOT logic.  It expects
 # two references to arrays instead of an object and a relation.
 sub implies_array {
@@ -708,6 +716,8 @@ RELATION if it is a string.  If architecture restrictions should be
 ignored in RELATION, create a Lintian::Relation object with new_noarch()
 and pass that in as RELATION instead of the string.
 
+=item implies_element_inverse
+
 =cut
 
 # This internal function does the heavy lifting of inverse implication between
@@ -723,6 +733,10 @@ sub implies_element_inverse {
     return if not defined($result);
     return $result ? 0 : 1;
 }
+
+=item implies_array_inverse
+
+=cut
 
 # This internal function does the heavily lifting for AND, OR, and NOT
 # handling for inverse implications.  It takes two references to arrays and

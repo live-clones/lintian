@@ -356,15 +356,16 @@ sub guess_version {
 
     # git was not possible - maybe the changelog is available
     if (-f "$rootdir/debian/changelog") {
-        eval {
-            require Lintian::Info::Changelog;
-            my $contents = path("$rootdir/debian/changelog")->slurp;
-            my $changelog = Lintian::Info::Changelog->new;
-            $changelog->parse($contents);
-            my @entries = @{$changelog->entries};
-            $guess = $entries[0]->{'Version'}
-              if @entries;
-        };
+
+        require Lintian::Inspect::Changelog;
+        my $contents = path("$rootdir/debian/changelog")->slurp;
+        my $changelog = Lintian::Inspect::Changelog->new;
+
+        $changelog->parse($contents);
+        my @entries = @{$changelog->entries};
+        $guess = $entries[0]->{'Version'}
+          if @entries;
+
         return $guess if $guess;
     }
     # Out of guesses ...

@@ -32,6 +32,26 @@ use Text::Wrap;
 
 use Lintian::Util qw(internal_error strip);
 
+=head1 NAME
+
+Lintian::Tag::TextUtil -- text utility functions related to tags
+
+=head1 SYNOPSIS
+
+ use Lintian::Tag::TextUtil;
+
+=head1 DESCRIPTION
+
+A class with text utilities.
+
+=head1 INSTANCE METHODS
+
+=over 4
+
+=item html_wrap
+
+=cut
+
 # html_wrap -- word-wrap a paragraph.  The wrap() function from Text::Wrap
 # is not suitable, because it chops words that are longer than the line
 # length.
@@ -68,6 +88,10 @@ sub html_wrap {
 
     return $r;
 }
+
+=item split_paragraphs
+
+=cut
 
 # split_paragraphs -- splits a bunch of text lines into paragraphs.
 # This function returns a list of paragraphs.
@@ -114,6 +138,10 @@ sub split_paragraphs {
     return @o;
 }
 
+=item dtml_to_html
+
+=cut
+
 sub dtml_to_html {
     my @o;
 
@@ -159,6 +187,10 @@ sub dtml_to_html {
     return @o;
 }
 
+=item dtml_to_text
+
+=cut
+
 sub dtml_to_text {
     for $_ (@_) {
         # substitute Lintian &tags;
@@ -187,6 +219,10 @@ sub dtml_to_text {
 
     return @_;
 }
+
+=item wrap_paragraphs
+
+=cut
 
 # wrap_paragraphs -- wrap paragraphs in dpkg/dselect style.
 # indented lines are not wrapped but displayed "as is"
@@ -218,6 +254,14 @@ sub wrap_paragraphs {
     }
     return $o;
 }
+
+=back
+
+=head1 SEE ALSO
+
+lintian(1)
+
+=cut
 
 1;
 

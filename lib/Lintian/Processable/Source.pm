@@ -33,7 +33,12 @@ use constant SLASH => q{/};
 use Moo;
 use namespace::clean;
 
-with 'Lintian::Processable';
+with 'Lintian::Collect::Source', 'Lintian::Info::Diffstat',
+  'Lintian::Info::Changelog',
+  'Lintian::Info::Fields::Files', 'Lintian::Info::Orig::Index',
+  'Lintian::Info::Overrides',
+  'Lintian::Info::Package',
+  'Lintian::Processable';
 
 =head1 NAME
 
@@ -94,6 +99,10 @@ sub init {
     $self->pkg_src_version($self->pkg_version);
 
     $self->extra_fields($dinfo);
+
+    $self->name($self->pkg_name);
+    $self->type($self->pkg_type);
+    $self->verbatim($dinfo);
 
     # make sure none of the fields can cause traversal
     $self->clean_field($_)

@@ -25,6 +25,7 @@ use warnings;
 use autodie;
 
 use Lintian::Util qw(dequote_name);
+use Path::Tiny;
 
 use Moo;
 use namespace::clean;
@@ -61,7 +62,7 @@ sub breakdown {
 
         # ignore if package contains no files
         return
-          if -z $self->info->lab_data_path('md5sums');
+          if -z path($self->info->groupdir)->child('md5sums')->stringify;
 
         $self->tag('no-md5sums-control-file')
           unless $self->only_conffiles;

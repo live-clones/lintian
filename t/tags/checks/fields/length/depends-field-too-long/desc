@@ -2,4 +2,4 @@ Skeleton: upload-native
 Testname: depends-field-too-long
 Description: The Depends: field d/control is too long.
 References: Debian Bug#942493
-Check: debian/control
+Check: fields/length

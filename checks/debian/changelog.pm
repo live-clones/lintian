@@ -34,10 +34,10 @@ use Path::Tiny;
 use Try::Tiny;
 
 use Lintian::Data ();
-use Lintian::Info::Changelog;
-use Lintian::Info::Changelog::Version;
+use Lintian::Inspect::Changelog;
+use Lintian::Inspect::Changelog::Version;
 use Lintian::Relation::Version qw(versions_gt);
-use Lintian::Spelling qw(check_spelling spelling_tag_emitter);
+use Lintian::Spelling qw(check_spelling);
 use Lintian::Util qw(file_is_encoded_in_non_utf8 strip);
 
 use constant EMPTY => q{};
@@ -52,10 +52,12 @@ my $BUGS_NUMBER
 my $INVALID_DATES
   = Lintian::Data->new('changelog-file/invalid-dates', qr/\s*=\>\s*/o);
 
-my $SPELLING_ERROR_IN_NEWS
-  = spelling_tag_emitter('spelling-error-in-news-debian');
-my $SPELLING_ERROR_CHANGELOG
-  = spelling_tag_emitter('spelling-error-in-changelog');
+sub spelling_tag_emitter {
+    my ($self, @orig_args) = @_;
+    return sub {
+        return $self->tag(@orig_args, @_);
+    };
+}
 
 sub source {
     my ($self) = @_;
@@ -82,7 +84,21 @@ sub source {
         }
     }
 
-    my $latest_version = $info->version;
+    my $versionstring = $self->info->field('version', EMPTY);
+    my $latest_version = Lintian::Inspect::Changelog::Version->new;
+
+    try {
+        $latest_version->set($versionstring, $self->info->native);
+
+    } catch {
+        my $indicator= ($self->info->native ? EMPTY : 'non-') . 'native';
+        $self->tag(
+            'malformed-debian-changelog-version',
+            $versionstring . " (for $indicator)"
+        );
+        undef $latest_version;
+    };
+
     if (defined $latest_version) {
 
         $self->tag('hyphen-in-upstream-part-of-debian-changelog-version',
@@ -144,7 +160,7 @@ sub source {
         my $latest_timestamp = $latest_entry->Timestamp;
         my $previous_timestamp = $previous_entry->Timestamp;
 
-        my $previous_version = Lintian::Info::Changelog::Version->new;
+        my $previous_version = Lintian::Inspect::Changelog::Version->new;
         try {
             $previous_version->set($previous_entry->Version, $info->native);
         } catch {
@@ -219,6 +235,8 @@ sub source {
                   . " -> $expected_previous (missing) -> "
                   . $latest_version->literal)
               unless $previous_version->literal eq $expected_previous
+              || $latest_entry->Distribution eq 'buster'
+              || $previous_entry->Distribution eq 'buster'
               || $latest_entry->Distribution =~ /-security$/i;
 
             if (   $latest_version->epoch eq $previous_version->epoch
@@ -339,14 +357,14 @@ sub binary {
     # Check a NEWS.Debian file if we have one.  Save the parsed version of the
     # file for later checks against the changelog file.
     my $news;
-    my $dnews = $info->lab_data_path('NEWS.Debian');
+    my $dnews = path($info->groupdir)->child('NEWS.Debian')->stringify;
     if (-f $dnews) {
         my $line = file_is_encoded_in_non_utf8($dnews);
         if ($line) {
             $self->tag('debian-news-file-uses-obsolete-national-encoding',
                 "at line $line");
         }
-        my $changelog = Lintian::Info::Changelog->new;
+        my $changelog = Lintian::Inspect::Changelog->new;
         my $contents = path($dnews)->slurp;
         $changelog->parse($contents);
 
@@ -364,8 +382,10 @@ sub binary {
                 $self->tag('debian-news-entry-has-strange-distribution',
                     $news->Distribution);
             }
-            check_spelling($news->Changes, $group->info->spelling_exceptions,
-                $SPELLING_ERROR_IN_NEWS);
+            check_spelling(
+                $news->Changes,
+                $group->info->spelling_exceptions,
+                $self->spelling_tag_emitter('spelling-error-in-news-debian'));
             if ($news->Changes =~ /^\s*\*\s/) {
                 $self->tag('debian-news-entry-uses-asterisk');
             }
@@ -458,7 +478,7 @@ sub binary {
         }
     }
 
-    my $dchpath = $info->lab_data_path('changelog');
+    my $dchpath = path($info->groupdir)->child('changelog')->stringify;
     # Everything below involves opening and reading the changelog file, so bail
     # with a warning at this point if all we have is a symlink.  Ubuntu permits
     # such symlinks, so their profile will suppress this tag.
@@ -684,8 +704,10 @@ sub binary {
         # Strip out all lines that contain the word spelling to avoid false
         # positives on changelog entries for spelling fixes.
         $changes =~ s/^.*(?:spelling|typo).*\n//gm;
-        check_spelling($changes, $group->info->spelling_exceptions,
-            $SPELLING_ERROR_CHANGELOG);
+        check_spelling(
+            $changes,
+            $group->info->spelling_exceptions,
+            $self->spelling_tag_emitter('spelling-error-in-changelog'));
     }
 
     return;

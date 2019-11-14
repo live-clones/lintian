@@ -26,7 +26,7 @@ use strict;
 use warnings;
 use autodie;
 
-use Lintian::Info::Changelog::Version;
+use Lintian::Inspect::Changelog::Version;
 use Lintian::Util qw($PKGREPACK_REGEX);
 
 use constant EMPTY => q{};

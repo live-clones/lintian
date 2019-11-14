@@ -30,7 +30,7 @@ use List::MoreUtils qw(any);
 
 use Lintian::Data;
 use Lintian::Relation qw(:constants);
-use Lintian::Spelling qw(check_spelling spelling_tag_emitter);
+use Lintian::Spelling qw(check_spelling);
 use Lintian::Util qw(internal_error strip);
 
 use constant NUMPY_REGEX => qr/
@@ -62,6 +62,13 @@ my $BINARY_SPELLING_EXCEPTIONS
 
 my %PATH_DIRECTORIES = map { $_ => 1 } qw(
   bin/ sbin/ usr/bin/ usr/sbin/ usr/games/ );
+
+sub spelling_tag_emitter {
+    my ($self, @orig_args) = @_;
+    return sub {
+        return $self->tag(@orig_args, @_);
+    };
+}
 
 sub _embedded_libs {
     my ($key, $val, undef) = @_;
@@ -429,7 +436,7 @@ sub always {
             map { $_ => 1} $BINARY_SPELLING_EXCEPTIONS->all
         };
         my $tag_emitter
-          = spelling_tag_emitter('spelling-error-in-binary', $file);
+          = $self->spelling_tag_emitter('spelling-error-in-binary', $file);
         check_spelling($strings, $exceptions, $tag_emitter, 0);
 
         # stripped?

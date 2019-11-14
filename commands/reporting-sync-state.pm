@@ -28,7 +28,6 @@ use YAML::XS ();
 use MIME::Base64 qw(encode_base64);
 
 use Lintian::Deb822Parser qw(visit_dpkg_paragraph);
-use Lintian::Lab;
 use Lintian::Relation::Version qw(versions_comparator);
 use Lintian::Reporting::Util qw(
   find_backlog

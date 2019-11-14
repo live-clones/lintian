@@ -1,3 +1,59 @@
+lintian (2.35.0) unstable; urgency=medium
+
+  * Summary of tag changes:
+    + Added:
+      - package-placeholder-in-symbols-file
+
+  [ Chris Lamb ]
+  * Don't complain about Build-Ids or Description fields that are too long;
+    there is nothing really actionable for Lintian to complain about.
+    (Closes: #942493)
+  * Drop quoting around the field that violates "field-too-long" whilst a
+    convincing case can certainly be made for quoting the offending field
+    (eg "'Depends'") it feels too inconsistent with the rest of Lintian.
+
+  [ Felix Lechner ]
+  * Detect PACKAGE placeholders in debian/symbols files. (Closes: #944047)
+  * Drop minimum version requirement 8.30 for coreutils; process files
+    containing newlines separately. (Closes: #944258)
+  * Associate the multiline-field tag with the fields/multi-line check.
+  * Provide a new check fields/multi-line to do what Lintian::Processable
+    did previously in that regard.
+  * Fix missing module for --version; remove eval shielding error.
+
+  [ Fabrice Bauzac ]
+  * Update the location of the local HTML documentation.
+
+  [ Adam D. Barratt ]
+  * Remove myself from uploaders
+
+ -- Chris Lamb <lamby@debian.org>  Mon, 11 Nov 2019 13:58:05 +0000
+
+lintian (2.34.0) unstable; urgency=medium
+
+  [ Chris Lamb ]
+  * Don't emit package-supports-alternative-init-but-no-init.d-script when
+    we have a .path and .service pair, in parallel to allowing .service and
+    .timer pairs released in Lintian 2.29.0 via #933109. (Closes: #944094)
+  * Don't emit changelog-file-missing-explicit-entry for stable updates.
+    (Closes: #944098)
+
+  [ Felix Lechner ]
+  * Insert 'keys' before hashes for Perl in stretch. (Closes: #943910)
+  * In text-output, offer hyperlinks to tag descriptions on
+    <https://lintian.debian.org>.
+  * Turn the Lintian::Collect package into a Moo common role for all
+    consumers of collected data.
+  * Test for POD coverage in all files but allow exceptions via
+    Pod::Coverage::TrustPod. Add libpod-coverage-trustpod-perl to
+    Build-Depends.
+  * In Info::Changelog::Entry, adjust POD to avoid runtime errors.
+
+  [ Peter Wienemann ]
+  * Simplify the testing of the 'standards-version-classifications' tag.
+
+ -- Chris Lamb <lamby@debian.org>  Thu, 07 Nov 2019 18:44:29 +0000
+
 lintian (2.33.0~bpo10+1) buster-backports; urgency=medium
 
   * Rebuild for buster-backports.

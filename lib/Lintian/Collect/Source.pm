@@ -21,7 +21,6 @@ package Lintian::Collect::Source;
 
 use strict;
 use warnings;
-use parent 'Lintian::Collect::Package';
 
 use Carp qw(croak);
 use Scalar::Util qw(blessed);
@@ -29,14 +28,15 @@ use Path::Tiny;
 use Try::Tiny;
 
 use Lintian::Deb822Parser qw(read_dpkg_control);
-use Lintian::Info::Changelog;
-use Lintian::Info::Changelog::Version;
+use Lintian::Inspect::Changelog::Version;
 use Lintian::Relation;
-use Lintian::Tags qw(tag);
 use Lintian::Util
   qw(get_file_checksum open_gz $PKGNAME_REGEX $PKGREPACK_REGEX strip);
 
 use constant EMPTY => q{};
+
+use Moo::Role;
+use namespace::clean;
 
 =head1 NAME
 
@@ -45,7 +45,7 @@ Lintian::Collect::Source - Lintian interface to source package data collection
 =head1 SYNOPSIS
 
     my ($name, $type, $dir) = ('foobar', 'source', '/path/to/lab-entry');
-    my $collect = Lintian::Collect->new ($name, $type, $dir);
+    my $collect = Lintian::Collect::Source->new($name);
     if ($collect->native) {
         print "Package is native\n";
     }
@@ -63,95 +63,13 @@ source packages via this module so that the module can cache data where
 appropriate and possibly retire collect scripts in favor of caching that
 data in memory.
 
-=head1 CLASS METHODS
-
-=over 4
-
-=item new (PACKAGE)
-
-Creates a new Lintian::Collect::Source object.  Currently, PACKAGE is
-ignored.  Normally, this method should not be called directly, only via
-the Lintian::Collect constructor.
-
-=cut
-
-# Initialize a new source package collect object.  Takes the package name,
-# which is currently unused.
-sub new {
-    my ($class, $pkg) = @_;
-
-    my $self = {};
-    bless($self, $class);
-
-    $self->{java_info} = {};
-
-    return $self;
-}
-
-=back
-
 =head1 INSTANCE METHODS
 
 In addition to the instance methods listed below, all instance methods
-documented in the L<Lintian::Collect> and L<Lintian::Collect::Package>
+documented in the L<Lintian::Collect> and L<Lintian::Info::Package>
 modules are also available.
 
 =over 4
-
-=item changelog
-
-Returns the changelog of the source package as a Parse::DebianChangelog
-object, or C<undef> if the changelog cannot be resolved safely.
-
-Needs-Info requirements for using I<changelog>: L<Same as index_resolved_path|Lintian::Collect::Package/index_resolved_path(PATH)>
-
-=cut
-
-sub changelog {
-    my ($self) = @_;
-    return $self->{changelog} if exists $self->{changelog};
-    my $dch = $self->index_resolved_path('debian/changelog');
-    if ($dch and $dch->is_open_ok) {
-        my $shared = $self->{'_shared_storage'};
-        my ($checksum, $changelog);
-        if (defined($shared)) {
-            $checksum = get_file_checksum('sha1', $dch->fs_path);
-            $changelog = $shared->{'changelog'}{$checksum};
-        }
-        if (not $changelog) {
-            my $contents = path($dch->fs_path)->slurp;
-            $changelog = Lintian::Info::Changelog->new;
-            $changelog->parse($contents);
-            if (defined($shared)) {
-                $shared->{'changelog'}{$checksum} = $changelog;
-            }
-        }
-        $self->{changelog} = $changelog;
-    } else {
-        $self->{changelog} = undef;
-    }
-    return $self->{changelog};
-}
-
-=item diffstat
-
-Returns the path to diffstat output run on the Debian packaging diff
-(a.k.a. the "diff.gz") for 1.0 non-native packages.  For source
-packages without a "diff.gz" component, this returns the path to an
-empty file (this may be a device like /dev/null).
-
-Needs-Info requirements for using I<diffstat>: diffstat
-
-=cut
-
-sub diffstat {
-    my ($self) = @_;
-    return $self->{diffstat} if exists $self->{diffstat};
-    my $dstat = $self->lab_data_path('diffstat');
-    $dstat = '/dev/null' unless -e $dstat;
-    $self->{diffstat} = $dstat;
-    return $dstat;
-}
 
 =item native
 
@@ -183,12 +101,12 @@ sub native {
         $self->{native} = 1;
     } else {
         my $version = $self->field('version');
-        my $base_dir = $self->base_dir;
+        my $groupdir = $self->groupdir;
         if (defined $version) {
             $version =~ s/^\d+://;
             my $name = $self->{name};
             $self->{native}
-              = (-f "$base_dir/${name}_${version}.diff.gz" ? 0 : 1);
+              = (-f "$groupdir/${name}_${version}.diff.gz" ? 0 : 1);
         } else {
             # We do not know, but assume it to non-native as it is
             # the most likely case.
@@ -200,7 +118,7 @@ sub native {
 
 =item version
 
-Returns a fully parsed Lintian::Info::Changelog::Version for the
+Returns a fully parsed Lintian::Inspect::Changelog::Version for the
 source package's version string.
 
 Needs-Info requirements for using I<version>: L<Same as field|Lintian::Collect/field ([FIELD[, DEFAULT]])>
@@ -215,13 +133,10 @@ sub version {
 
     my $versionstring = $self->field('version', EMPTY);
 
-    my $version = Lintian::Info::Changelog::Version->new;
+    my $version = Lintian::Inspect::Changelog::Version->new;
     try {
         $version->set($versionstring, $self->native);
     } catch {
-        my $indicator= ($self->native ? EMPTY : 'non-') . 'native';
-        tag 'malformed-debian-changelog-version',
-          $versionstring . " (for $indicator)";
         undef $version;
     };
 
@@ -231,89 +146,6 @@ sub version {
     $self->{version} = $version;
 
     return $self->{version};
-}
-
-=item files
-
-Returns a reference to a hash containing information about files listed
-in the .changes file.  Each hash may have the following keys:
-
-=over 4
-
-=item name
-
-Name of the file.
-
-=item size
-
-The size of the file in bytes.
-
-=item checksums
-
-A hash with the keys being checksum algorithms and the values themselves being
-hashes containing
-
-=over 4
-
-=item sum
-
-The result of applying the given algorithm to the file.
-
-=item filesize
-
-The size of the file as given in the .changes section relating to the given
-checksum.
-
-=back
-
-=back
-
-Needs-Info requirements for using I<files>: L<Lintian::Collect/field ([FIELD[, DEFAULT]])>
-
-=cut
-
-sub files {
-    my ($self) = @_;
-
-    return $self->{files} if exists $self->{files};
-
-    my %files;
-
-    my $file_list = $self->field('files') || '';
-    local $_;
-    for (split /\n/, $file_list) {
-        strip;
-        next if $_ eq '';
-
-        my ($md5sum,$size,$file) = split(/\s+/o, $_);
-        next if $file =~ m,/,;
-
-        $files{$file}{checksums}{md5} = {
-            'sum' => $md5sum,
-            'filesize' => $size,
-        };
-        $files{$file}{name} = $file;
-        $files{$file}{size} = $size;
-    }
-
-    foreach my $alg (qw(sha1 sha256)) {
-        my $list = $self->field("checksums-$alg") || '';
-        for (split /\n/, $list) {
-            strip;
-            next if $_ eq '';
-
-            my ($checksum, $size, $file) = split(/\s+/o, $_);
-            next if $file =~ m,/,;
-
-            $files{$file}{checksums}{$alg} = {
-                'sum' => $checksum,
-                'filesize' => $size
-            };
-        }
-    }
-
-    $self->{files} = \%files;
-    return $self->{files};
 }
 
 =item repacked
@@ -408,7 +240,7 @@ modified.
 NB: If a field from the "dsc" file itself is desired, please use
 L<field|Lintian::Collect/field> instead.
 
-Needs-Info requirements for using I<source_field>: L<Same as index_resolved_path|Lintian::Collect::Package/index_resolved_path(PATH)>
+Needs-Info requirements for using I<source_field>: L<Same as index_resolved_path|Lintian::Info::Package/index_resolved_path(PATH)>
 
 =cut
 
@@ -420,88 +252,6 @@ sub source_field {
     $self->_load_dctrl unless exists $self->{source_field};
     return $self->{source_field}{$field}//$def if $field;
     return $self->{source_field};
-}
-
-=item orig_index (FILE)
-
-Like L</index> except orig_index is based on the "orig tarballs" of
-the source packages.
-
-For native packages L</index> and L</orig_index> are generally
-identical.
-
-NB: If sorted_index includes a debian packaging, it is was
-contained in upstream part of the source package (or the package is
-native).
-
-Needs-Info requirements for using I<orig_index>: src-orig-index
-
-=cut
-
-sub orig_index {
-    my ($self, $file) = @_;
-    if (my $cache = $self->{'orig_index'}) {
-        return $cache->{$file}
-          if exists($cache->{$file});
-        return;
-    }
-    my $load_info = {
-        'field' => 'orig_index',
-        'index_file' => 'src-orig-index',
-        'index_owner_file' => undef,
-        'fs_root_sub' => undef,
-        # source packages do not have anchored roots as they can be
-        # unpacked anywhere...
-        'has_anchored_root_dir' => 1,
-        'allow_empty' => 1,
-    };
-    return $self->_fetch_index_data($load_info, $file);
-}
-
-=item sorted_orig_index
-
-Like L<sorted_index|Lintian::Collect/sorted_index> except
-sorted_orig_index is based on the "orig tarballs" of the source
-packages.
-
-For native packages L<sorted_index|Lintian::Collect/sorted_index> and
-L</sorted_orig_index> are generally identical.
-
-NB: If sorted_orig_index includes a debian packaging, it is was
-contained in upstream part of the source package (or the package is
-native).
-
-Needs-Info requirements for using I<sorted_orig_index>: L<Same as orig_index|/orig_index ([FILE])>
-
-=cut
-
-sub sorted_orig_index {
-    my ($self) = @_;
-    # orig_index does all our work for us, so call it if
-    # sorted_orig_index has not been created yet.
-    $self->orig_index('') unless exists($self->{'sorted_orig_index'});
-    return @{ $self->{'sorted_orig_index'} };
-}
-
-=item orig_index_resolved_path(PATH)
-
-Resolve PATH (relative to the root of the package) and return the
-L<entry|Lintian::Path> denoting the resolved path.
-
-The resolution is done using
-L<resolve_path|Lintian::Path/resolve_path([PATH])>.
-
-NB: If orig_index_resolved_path includes a debian packaging, it is was
-contained in upstream part of the source package (or the package is
-native).
-
-Needs-Info requirements for using I<orig_index_resolved_path>: L<Same as orig_index|/orig_index (FILE)>
-
-=cut
-
-sub orig_index_resolved_path {
-    my ($self, $path) = @_;
-    return $self->orig_index('')->resolve_path($path);
 }
 
 =item binary_field (PACKAGE[, FIELD[, DEFAULT]])
@@ -519,7 +269,7 @@ modified.
 If PACKAGE is not a binary built from this source, this returns
 DEFAULT.
 
-Needs-Info requirements for using I<binary_field>: L<Same as index_resolved_path|Lintian::Collect::Package/index_resolved_path(PATH)>
+Needs-Info requirements for using I<binary_field>: L<Same as index_resolved_path|Lintian::Info::Package/index_resolved_path(PATH)>
 
 =cut
 
@@ -580,72 +330,6 @@ sub _load_dctrl {
     $self->{binary_field} = \%packages;
 
     return 1;
-}
-
-=item java_info
-
-Returns a hashref containing information about JAR files found in
-source packages, in the form I<file name> -> I<info>, where I<info> is
-a hash containing the following keys:
-
-=over 4
-
-=item manifest
-
-A hash containing the contents of the JAR file manifest. For instance,
-to find the classpath of I<$file>, you could use:
-
- if (exists $info->java_info->{$file}{'manifest'}) {
-     my $cp = $info->java_info->{$file}{'manifest'}{'Class-Path'};
-     # ...
- }
-
-NB: Not all jar files have a manifest.  For those without, this will
-value will not be available.  Use exists (rather than defined) to
-check for it.
-
-=item files
-
-A table of the files in the JAR.  Each key is a file name and its value
-is its "Major class version" for Java or "-" if it is not a class file.
-
-=item error
-
-If it exists, this is an error that occurred during reading of the zip
-file.  If it exists, it is unlikely that the other fields will be
-present.
-
-=back
-
-Needs-Info requirements for using I<java_info>: java-info
-
-=cut
-
-sub java_info {
-    my ($self) = @_;
-
-    # do something to prevent second lookup
-    unless (keys %{$self->{java_info}}) {
-
-        my $dbpath = $self->lab_data_path('java-info.db');
-
-        # no jar files
-        return $self->{java_info}
-          unless -f $dbpath;
-
-        my %java_info;
-
-        tie my %h, 'MLDBM',-Filename => $dbpath
-          or die "Cannot open file $dbpath: $! $BerkeleyDB::Error\n";
-
-        $java_info{$_} = $h{$_} for keys %h;
-
-        untie %h;
-
-        $self->{java_info} = \%java_info;
-    }
-
-    return $self->{java_info};
 }
 
 =item binary_relation (PACKAGE, FIELD)
@@ -778,7 +462,7 @@ sub relation_noarch {
 =item debfiles ([FILE])
 
 B<This method is deprecated>.  Consider using
-L<index_resolved_path(PATH)|Lintian::Collect::Package/index_resolved_path(PATH)>
+L<index_resolved_path(PATH)|Lintian::Info::Package/index_resolved_path(PATH)>
 instead, which returns L<Lintian::Path> objects.
 
 Returns the path to FILE in the debian dir of the extracted source
@@ -791,7 +475,7 @@ It is not permitted for FILE to be C<undef>.  If the "root" dir is
 desired either invoke this method without any arguments at all or use
 the empty string.
 
-The caveats of L<unpacked|Lintian::Collect::Package/unpacked ([FILE])>
+The caveats of L<unpacked|Lintian::Info::Package/unpacked ([FILE])>
 also apply to this method.
 
 Needs-Info requirements for using I<debfiles>: debfiles
@@ -820,7 +504,7 @@ sub debfiles {
 
 For the general documentation of this method, please refer to the
 documentation of it in
-L<Lintian::Collect::Package|Lintian::Collect::Package/index (FILE)>.
+L<Lintian::Info::Package|Lintian::Info::Package/index (FILE)>.
 
 The index of a source package is not very well defined for non-native
 source packages.  This method gives the index of the "unpacked"

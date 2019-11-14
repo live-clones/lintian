@@ -1,5 +1,5 @@
 # -*- perl -*-
-# Lintian::Collect::Package -- interface to data collection for packages
+# Lintian::Info::Package -- interface to data collection for packages
 
 # Copyright (C) 2011 Niels Thykier
 #
@@ -16,23 +16,27 @@
 # You should have received a copy of the GNU General Public License along with
 # this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# This handles common things for things available in source and binary packages
-package Lintian::Collect::Package;
+package Lintian::Info::Package;
 
 use strict;
 use warnings;
 use autodie;
 
-use parent 'Lintian::Collect';
-
 use BerkeleyDB;
 use Carp qw(croak);
+use Path::Tiny;
 use Scalar::Util qw(blessed);
 
 use Lintian::Path;
 use Lintian::Path::FSInfo;
 use Lintian::Util
   qw(internal_error open_gz perm2oct normalize_pkg_path dequote_name);
+
+use Moo::Role;
+use namespace::clean;
+
+with 'Lintian::Info::Checksums::Md5', 'Lintian::Info::FileInfo',
+  'Lintian::Info::Java', 'Lintian::Info::Scripts::Control';
 
 # A cache for (probably) the 5 most common permission strings seen in
 # the wild.
@@ -67,45 +71,20 @@ my %INDEX_FAUX_DIR_TEMPLATE = (
 
 =head1 NAME
 
-Lintian::Collect::Package - Lintian base interface to binary and source package data collection
+Lintian::Info::Package - Lintian base interface to binary and source package data collection
 
 =head1 SYNOPSIS
 
-    use autodie;
-    use Lintian::Collect;
-    
-    my ($name, $type, $dir) = ('foobar', 'source', '/path/to/lab-entry');
-    my $info = Lintian::Collect->new ($name, $type, $dir);
-    my $filename = "etc/conf.d/$name.conf";
-    my $file = $info->index_resolved_path($filename);
-    if ($file and $file->is_open_ok) {
-        my $fd = $info->open;
-        # Use $fd ...
-        close($fd);
-    } elsif ($file) {
-        print "$file is available, but is not a file or unsafe to open\n";
-    } else {
-        print "$file is missing\n";
-    }
+    use Lintian::Processable;
+    my $processable = Lintian::Processable::Binary->new;
 
 =head1 DESCRIPTION
 
-Lintian::Collect::Package provides part of an interface to package
-data for source and binary packages.  It implements data collection
-methods specific to all packages that can be unpacked (or can contain
-files)
-
-This module is in its infancy.  Most of Lintian still reads all data from
-files in the laboratory whenever that data is needed and generates that
-data via collect scripts.  The goal is to eventually access all data about
-source packages via this module so that the module can cache data where
-appropriate and possibly retire collect scripts in favor of caching that
-data in memory.
+Lintian::Info::Package provides an interface to package data for
+source and binary packages.  It implements data collection methods
+specific to packages that can be unpacked (or can contain files)
 
 =head1 INSTANCE METHODS
-
-In addition to the instance methods listed below, all instance methods
-documented in the L<Lintian::Collect> module are also available.
 
 =over 4
 
@@ -182,146 +161,6 @@ sub unpacked {
     return $self->_fetch_extracted_dir('unpacked', 'unpacked', @_);
 }
 
-=item file_info (FILE)
-
-Returns the output of file(1) for FILE (if it exists) or C<undef>.
-
-NB: The value may have been calibrated by Lintian.  A notorious example
-is gzip files, where file(1) can be unreliable at times (see #620289)
-
-Needs-Info requirements for using I<file_info>: file-info
-
-=cut
-
-sub file_info {
-    my ($self, $path) = @_;
-
-    unless ($self->{file_info}) {
-
-        my $dbpath = $self->lab_data_path('file-info.db');
-
-        my %file_info;
-
-        my %h;
-        tie %h, 'BerkeleyDB::Btree',-Filename => $dbpath
-          or die "Cannot open file $dbpath: $! $BerkeleyDB::Error\n";
-
-        $file_info{$_} = $h{$_} for keys %h;
-
-        untie %h;
-
-        $self->{file_info} = \%file_info;
-    }
-
-    return $self->{file_info}{$path}
-      if exists $self->{file_info}{$path};
-
-    return;
-}
-
-=item md5sums
-
-Returns a hashref mapping a FILE to its md5sum.  The md5sum is
-computed by Lintian during extraction and is not guaranteed to match
-the md5sum in the "md5sums" control file.
-
-Needs-Info requirements for using I<md5sums>: md5sums
-
-=cut
-
-sub md5sums {
-    my ($self) = @_;
-
-    unless (exists $self->{md5sums}) {
-
-        my $dbpath = $self->lab_data_path('md5sums.db');
-
-        my %md5sums;
-
-        my %h;
-        tie %h, 'BerkeleyDB::Btree',-Filename => $dbpath
-          or die "Cannot open file $dbpath: $! $BerkeleyDB::Error\n";
-
-        $md5sums{$_} = $h{$_} for keys %h;
-
-        untie %h;
-
-        $self->{md5sums} = \%md5sums;
-    }
-
-    return $self->{md5sums};
-}
-
-=item control_scripts
-
-Returns a hashref mapping a FILE to data about how it is run.
-
-Needs-Info requirements for using I<control_scripts>: scripts
-
-=cut
-
-sub control_scripts {
-    my ($self) = @_;
-
-    unless (exists $self->{control_scripts}) {
-
-        my $dbpath = $self->lab_data_path('control-scripts.db');
-
-        my %control;
-
-        tie my %h, 'BerkeleyDB::Btree',-Filename => $dbpath
-          or die "Cannot open file $dbpath: $! $BerkeleyDB::Error\n";
-
-        $control{$_} = $h{$_} for keys %h;
-
-        untie %h;
-
-        $self->{control_scripts} = \%control;
-    }
-
-    return $self->{control_scripts};
-}
-
-=item index (FILE)
-
-Returns a L<path object|Lintian::Path> to FILE in the package.  FILE
-must be relative to the root of the unpacked package and must be
-without leading slash (or "./").  If FILE is not in the package, it
-returns C<undef>.  If FILE is supposed to be a directory, it must be
-given with a trailing slash.  Example:
-
-  my $file = $info->index ("usr/bin/lintian");
-  my $dir = $info->index ("usr/bin/");
-
-To get a list of entries in the package, see L</sorted_index>.  To
-actually access the underlying file (e.g. the contents), use
-L</unpacked ([FILE])>.
-
-Note that the "root directory" (denoted by the empty string) will
-always be present, even if the underlying tarball omits it.
-
-Needs-Info requirements for using I<index>: unpacked
-
-=cut
-
-sub index {
-    my ($self, $file) = @_;
-    if (my $cache = $self->{'index'}) {
-        return $cache->{$file}
-          if exists($cache->{$file});
-        return;
-    }
-    my $load_info = {
-        'field' => 'index',
-        'index_file' => 'index',
-        'index_owner_file' => 'index-owner-id',
-        'fs_root_sub' => 'unpacked',
-        'has_anchored_root_dir' => 0,
-        'file_info_sub' => 'file_info',
-    };
-    return $self->_fetch_index_data($load_info, $file);
-}
-
 =item sorted_index
 
 Returns a sorted array of file names listed in the package.  The names
@@ -374,7 +213,7 @@ sub _fetch_extracted_dir {
     my $filename = '';
     my $normalized = 0;
     if (not defined $dir) {
-        $dir = $self->lab_data_path($dirname);
+        $dir = path($self->groupdir)->child($dirname)->stringify;
         croak "$field ($dirname) is not available" unless -d "$dir/";
         $self->{$field} = $dir;
     }
@@ -425,12 +264,12 @@ sub _fetch_index_data {
     my ($self, $load_info, $file) = @_;
 
     my (%idxh, %children, $num_idx, %rhlinks, @sorted, @check_dirs);
-    my $base_dir = $self->base_dir;
+    my $groupdir = $self->groupdir;
     my $field = $load_info->{'field'};
     my $index = $load_info->{'index_file'};
     my $indexown = $load_info->{'index_owner_file'};
     my $allow_empty = $load_info->{'allow_empty'} // 0;
-    my $idx = open_gz("$base_dir/${index}.gz");
+    my $idx = open_gz("$groupdir/${index}.gz");
     my $fs_info = Lintian::Path::FSInfo->new(
         '_collect' => $self,
         '_collect_path_sub' => $load_info->{'fs_root_sub'},
@@ -439,7 +278,7 @@ sub _fetch_index_data {
     );
 
     if ($indexown) {
-        $num_idx = open_gz("$base_dir/${indexown}.gz");
+        $num_idx = open_gz("$groupdir/${indexown}.gz");
     }
     while (my $line = <$idx>) {
         chomp($line);
@@ -651,6 +490,40 @@ sub _fetch_index_data {
     close($num_idx) if $num_idx;
     return $self->{$field}{$file} if exists $self->{$field}{$file};
     return;
+}
+
+# Internal sub for providing a shared storage between multiple
+# L::Collect objects from same group.
+#
+
+# Internal sub for dumping the memory usage of this instance
+#
+# Used by the frontend (under debug level >= 4)
+#
+# sub _memory_usage Needs-Info none
+sub _memory_usage {
+    my ($self, $calc_usage) = @_;
+
+    my %usage;
+
+    for my $field (keys %{$self}) {
+
+        next
+          if ($field =~ m{ \A sorted_ }xsm);
+
+        if (exists($self->{"sorted_$field"})) {
+            # merge "index" and "sorted_index".  At the price of an extra
+            # list, we avoid overcounting all the L::Path objects so the
+            # produced result is a lot more accurate.
+            $usage{$field}
+              = $calc_usage->([$self->{$field},$self->{"sorted_$field"}]);
+
+        } else {
+            $usage{$field} = $calc_usage->($self->{$field});
+        }
+    }
+
+    return \%usage;
 }
 
 1;

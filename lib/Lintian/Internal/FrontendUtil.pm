@@ -17,6 +17,7 @@
 # this program.  If not, see <http://www.gnu.org/licenses/>.
 
 package Lintian::Internal::FrontendUtil;
+
 use strict;
 use warnings;
 use autodie;
@@ -32,6 +33,26 @@ use Lintian::Util qw(check_path safe_qx);
 our @EXPORT_OK= qw(check_test_feature default_parallel split_tag
   sanitize_environment open_file_or_fd);
 
+=head1 NAME
+
+Lintian::Internal::FrontendUtil - routines for the front end
+
+=head1 SYNOPSIS
+
+ use Lintian::Internal::FrontendUtil;
+
+=head1 DESCRIPTION
+
+A module with helper routines.
+
+=head1 INSTANCE METHODS
+
+=over 4
+
+=item check_test_feature
+
+=cut
+
 # Check if we are testing a specific feature
 #  - e.g. vendor-libdpkg-perl
 sub check_test_feature{
@@ -42,6 +63,10 @@ sub check_test_feature{
     }
     return 0;
 }
+
+=item sanitize_environment
+
+=cut
 
 {
     # sanitize_environment
@@ -88,6 +113,10 @@ sub check_test_feature{
     }
 }
 
+=item default_parallel
+
+=cut
+
 # Return the default number of parallelization to be used
 sub default_parallel {
     # check cpuinfo for the number of cores...
@@ -102,6 +131,10 @@ sub default_parallel {
     # No decent number of jobs? Just use 2 as a default
     return 2;
 }
+
+=item split_tag
+
+=cut
 
 {
     # Matches something like:  (1:2.0-3) [arch1 arch2]
@@ -128,6 +161,10 @@ sub default_parallel {
         return ($1, $2, $pkg_type, $4, $5, $6, $7);
     }
 }
+
+=item open_file_or_fd
+
+=cut
 
 # open_file_or_fd(TO_OPEN, MODE)
 #
@@ -176,6 +213,14 @@ sub open_file_or_fd {
     }
     return $fd;
 }
+
+=back
+
+=head1 SEE ALSO
+
+lintian(1)
+
+=cut
 
 1;
 

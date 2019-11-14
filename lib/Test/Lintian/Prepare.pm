@@ -345,6 +345,10 @@ sub prepare {
     return;
 }
 
+=item combine_fields
+
+=cut
+
 sub combine_fields {
     my ($testcase, $destination, $delimiter, @sources) = @_;
 
@@ -370,6 +374,10 @@ sub combine_fields {
 
     return;
 }
+
+=item fill_hash_from_hash
+
+=cut
 
 sub fill_hash_from_hash {
     my ($hashref, $delimiters) = @_;
@@ -398,6 +406,14 @@ sub fill_hash_from_hash {
 }
 
 =back
+
+=head1 AUTHOR
+
+Originally written by Felix Lechner <felix.lechner@lease-up.com> for Lintian.
+
+=head1 SEE ALSO
+
+lintian(1)
 
 =cut
 

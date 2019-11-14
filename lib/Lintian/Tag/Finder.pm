@@ -16,31 +16,29 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-package Lintian::Tag::Issuer;
+package Lintian::Tag::Finder;
 
 use strict;
 use warnings;
 use v5.16;
-
-use Lintian::Tags;
 
 use Moo::Role;
 use namespace::clean;
 
 =head1 NAME
 
-Lintian::Tag::Issuer -- Facilities for objects issuing Lintian tags
+Lintian::Tag::Finder -- Facilities for objects finding Lintian tags
 
 =head1 SYNOPSIS
 
  use Moo;
 use namespace::clean;
 
- with('Lintian::Tag::Issuer');
+ with('Lintian::Tag::Finder');
 
 =head1 DESCRIPTION
 
-A class for collecting Lintian tags as they are issued
+A class for collecting Lintian tags as they are found
 
 =head1 INSTANCE METHODS
 
@@ -48,7 +46,7 @@ A class for collecting Lintian tags as they are issued
 
 =item tag (ARGS)
 
-Store issued tags for later processing.
+Store found tags for later processing.
 
 =cut
 
@@ -61,23 +59,11 @@ sub tag {
     return;
 }
 
-=item issue_tags
-
-Issue tags.
+=item found
 
 =cut
 
-sub issue_tags {
-
-    my ($self, @args) = @_;
-
-    Lintian::Tags::tag @{$_} for @{$self->found};
-    $self->_set_found([]);
-
-    return;
-}
-
-has found => (is => 'rwp', default => sub { [] });
+has found => (is => 'rw', default => sub { [] });
 
 =back
 

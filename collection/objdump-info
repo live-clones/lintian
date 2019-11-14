@@ -38,7 +38,7 @@ use Path::Tiny;
 
 use lib "$ENV{'LINTIAN_ROOT'}/lib/";
 
-use Lintian::Collect;
+use Lintian::Collect::Dispatcher qw(create_info);
 use Lintian::Util qw(locate_helper_tool gzip safe_qx);
 
 use constant EMPTY => q{};
@@ -47,7 +47,8 @@ my $helper = locate_helper_tool('coll/objdump-info-helper');
 
 sub collect {
     my ($pkg, $type, $dir) = @_;
-    my $info = Lintian::Collect->new($pkg, $type, $dir);
+
+    my $info = create_info($pkg, $type, $dir);
 
     chdir("$dir/unpacked");
 
