@@ -35,8 +35,8 @@ use Path::Tiny;
 
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
 
-use Lintian::Collect;
-use Lintian::Util qw(drop_relative_prefix);
+use Lintian::Collect::Dispatcher qw(create_info);
+use Lintian::Util qw(drop_relative_prefix safe_qx);
 
 use constant EMPTY => q{};
 use constant SPACE => q{ };
@@ -52,8 +52,7 @@ sub collect {
     my $loop = IO::Async::Loop->new;
     my $future = $loop->new_future;
 
-    my @command
-      = ('xargs', '--null', '--no-run-if-empty', 'md5sum', '--zero', '--');
+    my @command= ('xargs', '--null', '--no-run-if-empty', 'md5sum', '--');
     my $errors;
 
     my $calculate = IO::Async::Process->new(
@@ -93,7 +92,7 @@ sub collect {
 
             local $\ = NULL;
 
-            while($$buffref =~ s/^(\S*)\s+([^\0]*)\x00//) {
+            while($$buffref =~ s/^(\S*)\s+([^\n]*)\n//) {
 
                 my $sum = $1;
                 my $path = $2;
@@ -110,26 +109,44 @@ sub collect {
                 $h{$path} = $sum;
             }
 
-            untie %h
-              if $eof;
-
             return 0;
         },
     );
 
     $loop->add($calculate);
 
-    my $info = Lintian::Collect->new($pkg, $type, $dir);
+    my @special;
+
+    my $info = create_info($pkg, $type, $dir);
     foreach my $path ($info->sorted_index) {
 
         next
           unless $path->is_file;
+
+        if (index($path->name, NEWLINE) >= 0) {
+            push(@special, $path->name);
+
+            next;
+        }
 
         $calculate->stdin->write($path . NULL);
     }
 
     $calculate->stdin->close_when_empty;
     $future->get;
+
+    for my $path (@special) {
+
+        my $output = safe_qx('md5sum', '--', $path);
+        my ($md5sum) = ($output =~ qr/^(\S+)/);
+
+        next
+          unless length $md5sum;
+
+        $h{path} = $md5sum;
+    }
+
+    untie %h;
 
     return;
 }

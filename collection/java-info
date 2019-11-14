@@ -36,7 +36,7 @@ use Path::Tiny;
 
 use lib "$ENV{'LINTIAN_ROOT'}/lib/";
 
-use Lintian::Collect;
+use Lintian::Collect::Dispatcher qw(create_info);
 use Lintian::Util qw(rstrip);
 
 use constant EMPTY => q{};
@@ -47,7 +47,7 @@ use constant DASH => q{-};
 sub collect {
     my ($pkg, $type, $dir) = @_;
 
-    my $info = Lintian::Collect->new($pkg, $type, $dir);
+    my $info = create_info($pkg, $type, $dir);
 
     my $unpackedpath = "$dir/unpacked/";
     die "Directory with unpacked data not found in java-info: $unpackedpath"

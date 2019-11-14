@@ -35,7 +35,7 @@ use XML::Simple qw(:strict);
 use Lintian::Data;
 use Lintian::Deb822Parser qw(read_dpkg_control parse_dpkg_control);
 use Lintian::Relation::Version qw(versions_compare);
-use Lintian::Spelling qw(check_spelling spelling_tag_emitter);
+use Lintian::Spelling qw(check_spelling);
 use Lintian::Util qw(file_is_encoded_in_non_utf8);
 
 use constant {
@@ -66,9 +66,6 @@ our $KNOWN_ESSENTIAL = Lintian::Data->new('fields/essential');
 our $KNOWN_COMMON_LICENSES
   =  Lintian::Data->new('copyright-file/common-licenses');
 
-my $SPELLING_ERROR_IN_COPYRIGHT
-  = spelling_tag_emitter('spelling-error-in-copyright');
-
 my $BAD_SHORT_LICENSES = Lintian::Data->new(
     'source-copyright/bad-short-licenses',
     qr/\s*\~\~\s*/,
@@ -88,6 +85,13 @@ my %dep5_renamed_fields        = (
     'contact'              => 'upstream-contact',
     'name'                 => 'upstream-name',
 );
+
+sub spelling_tag_emitter {
+    my ($self, @orig_args) = @_;
+    return sub {
+        return $self->tag(@orig_args, @_);
+    };
+}
 
 sub source {
     my ($self) = @_;
@@ -883,7 +887,7 @@ sub binary {
         return;
     }
 
-    my $dcopy = $info->lab_data_path('copyright');
+    my $dcopy = path($info->groupdir)->child('copyright')->stringify;
     # check that copyright is UTF-8 encoded
     my $line = file_is_encoded_in_non_utf8($dcopy);
     if ($line) {
@@ -1105,8 +1109,11 @@ qr/GNU (?:Lesser|Library) General Public License|(?-i:\bLGPL\b)/i
                |\bpublic(?:\s+|-)domain\b/xi;
     }
 
-    check_spelling($_, $group->info->spelling_exceptions,
-        $SPELLING_ERROR_IN_COPYRIGHT, 0);
+    check_spelling(
+        $_,
+        $group->info->spelling_exceptions,
+        $self->spelling_tag_emitter('spelling-error-in-copyright'), 0
+    );
 
     # Now, check for linking against libssl if the package is covered
     # by the GPL.  (This check was requested by ftp-master.)  First,

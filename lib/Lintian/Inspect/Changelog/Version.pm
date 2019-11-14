@@ -16,7 +16,7 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-package Lintian::Info::Changelog::Version;
+package Lintian::Inspect::Changelog::Version;
 
 use strict;
 use warnings;
@@ -31,13 +31,13 @@ use namespace::clean;
 
 =head1 NAME
 
-Lintian::Info::Changelog::Version -- Parse a literal version string into its constituents
+Lintian::Inspect::Changelog::Version -- Parse a literal version string into its constituents
 
 =head1 SYNOPSIS
 
- use Lintian::Info::Changelog::Version;
+ use Lintian::Inspect::Changelog::Version;
 
- my $version = Lintian::Info::Changelog::Version->new;
+ my $version = Lintian::Inspect::Changelog::Version->new;
  $version->set('1.2.3-4', undef);
 
 =head1 DESCRIPTION
@@ -50,7 +50,7 @@ A class for parsing literal version strings
 
 =item new ()
 
-Creates a new Lintian::Info::Changelog::Version object.
+Creates a new Lintian::Inspect::Changelog::Version object.
 
 =cut
 
@@ -62,7 +62,7 @@ Creates a new Lintian::Info::Changelog::Version object.
 
 =item set (LITERAL, NATIVE)
 
-Set the various members in the Lintian::Info::Changelog::Version object
+Set the various members in the Lintian::Inspect::Changelog::Version object
 using the LITERAL version string and the NATIVE boolean selector.
 
 =cut
@@ -167,6 +167,36 @@ sub set {
 
     return;
 }
+
+=item literal
+
+=item epoch
+
+=item no_epoch
+
+=item upstream
+
+=item maintainer_revision
+
+=item debian_source
+
+=item debian_no_epoch
+
+=item source_nmu
+
+=item binary_nmu
+
+=item without_source_nmu
+
+=item debian_without_backport
+
+=item backport_release
+
+=item backport_revision
+
+=item without_backport
+
+=cut
 
 has literal => (is => 'rwp',);
 

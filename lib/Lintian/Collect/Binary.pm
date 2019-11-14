@@ -23,7 +23,6 @@ package Lintian::Collect::Binary;
 use strict;
 use warnings;
 use autodie;
-use parent 'Lintian::Collect::Package';
 
 use BerkeleyDB;
 use Carp qw(croak);
@@ -32,11 +31,13 @@ use MLDBM qw(BerkeleyDB::Btree Storable);
 use Path::Tiny;
 
 use Lintian::Deb822Parser qw(parse_dpkg_control);
-use Lintian::Info::Changelog;
 use Lintian::Relation;
 use Lintian::Util qw(open_gz get_file_checksum strip rstrip);
 
 use constant EMPTY => q{};
+
+use Moo::Role;
+use namespace::clean;
 
 =head1 NAME
 
@@ -45,7 +46,7 @@ Lintian::Collect::Binary - Lintian interface to binary package data collection
 =head1 SYNOPSIS
 
     my ($name, $type, $dir) = ('foobar', 'binary', '/path/to/lab-entry');
-    my $collect = Lintian::Collect->new ($name, $type, $dir);
+    my $collect = Lintian::Collect::Binary->new($name);
 
 =head1 DESCRIPTION
 
@@ -62,191 +63,52 @@ data in memory.
 
 Native heuristics are only available in source packages.
 
-=head1 CLASS METHODS
-
-=over 4
-
-=item new (PACKAGE)
-
-Creates a new Lintian::Collect::Binary object.  Currently, PACKAGE is
-ignored.  Normally, this method should not be called directly, only via
-the L<Lintian::Collect> constructor.
-
-=cut
-
-sub new {
-    my ($class, $pkg) = @_;
-
-    my $self = {};
-    bless($self, $class);
-
-    $self->{java_info} = {};
-
-    return $self;
-}
-
-=back
-
 =head1 INSTANCE METHODS
 
 In addition to the instance methods listed below, all instance methods
 documented in the L<Lintian::Collect> and the
-L<Lintian::Collect::Package> modules are also available.
+L<Lintian::Info::Package> modules are also available.
 
 =over 4
 
-=item changelog
+=item index (FILE)
 
-Returns the changelog of the binary package as a Parse::DebianChangelog
-object, or undef if the changelog doesn't exist.  The changelog-file
-collection script must have been run to create the changelog file, which
-this method expects to find in F<changelog>.
+Returns a L<path object|Lintian::Path> to FILE in the package.  FILE
+must be relative to the root of the unpacked package and must be
+without leading slash (or "./").  If FILE is not in the package, it
+returns C<undef>.  If FILE is supposed to be a directory, it must be
+given with a trailing slash.  Example:
 
-Needs-Info requirements for using I<changelog>: changelog-file
+  my $file = $info->index ("usr/bin/lintian");
+  my $dir = $info->index ("usr/bin/");
 
-=cut
-
-sub changelog {
-    my ($self) = @_;
-    return $self->{changelog} if exists $self->{changelog};
-    my $dch = $self->lab_data_path('changelog');
-    if (-l $dch || !-f $dch) {
-        $self->{changelog} = undef;
-    } else {
-        my $shared = $self->{'_shared_storage'};
-        my ($checksum, $changelog);
-        if (defined($shared)) {
-            $checksum = get_file_checksum('sha1', $dch);
-            $changelog = $shared->{'changelog'}{$checksum};
-        }
-        if (not $changelog) {
-            my $contents = path($dch)->slurp;
-            $changelog = Lintian::Info::Changelog->new;
-            $changelog->parse($contents);
-            if (defined($shared)) {
-                $shared->{'changelog'}{$checksum} = $changelog;
-            }
-        }
-        $self->{changelog} = $changelog;
-    }
-    return $self->{changelog};
-}
-
-=item control ([FILE])
-
-B<This method is deprecated>.  Consider using
-L</control_index_resolved_path(PATH)> instead, which returns
-L<Lintian::Path> objects.
-
-Returns the path to FILE in the control.tar.gz.  FILE must be either a
-L<Lintian::Path> object (>= 2.5.13~) or a string denoting the
-requested path.  In the latter case, the path must be relative to the
-root of the control.tar.gz member and should be normalized.
-
-It is not permitted for FILE to be C<undef>.  If the "root" dir is
-desired either invoke this method without any arguments at all, pass
-it the correct L<Lintian::Path> or the empty string.
-
-To get a list of entries in the control.tar.gz or the file meta data
-of the entries (as L<path objects|Lintian::Path>), see
-L</sorted_control_index> and L</control_index (FILE)>.
-
-The caveats of L<unpacked|Lintian::Collect::Package/unpacked ([FILE])>
-also apply to this method.  However, as the control.tar.gz is not
-known to contain symlinks, a simple file type check is usually enough.
-
-Needs-Info requirements for using I<control>: bin-pkg-control
-
-=cut
-
-sub control {
-    ## no critic (Subroutines::RequireArgUnpacking)
-    # - see L::Collect::unpacked for why
-    my $self = shift(@_);
-    my $f = $_[0] // '';
-
-    warnings::warnif(
-        'deprecated',
-        '[deprecated] The control method is deprecated.  '
-          . "Consider using \$info->control_index_resolved_path('$f') instead."
-          . '  Called' # warnif appends " at <...>"
-    );
-    return $self->_fetch_extracted_dir('control', 'control', @_);
-}
-
-=item control_index (FILE)
-
-Returns a L<path object|Lintian::Path> to FILE in the control.tar.gz.
-FILE must be relative to the root of the control.tar.gz and must be
-without leading slash (or "./").  If FILE is not in the
-control.tar.gz, it returns C<undef>.
-
-To get a list of entries in the control.tar.gz, see
-L</sorted_control_index>.  To actually access the underlying file
-(e.g. the contents), use L</control ([FILE])>.
+To get a list of entries in the package, see L</sorted_index>.  To
+actually access the underlying file (e.g. the contents), use
+L</unpacked ([FILE])>.
 
 Note that the "root directory" (denoted by the empty string) will
 always be present, even if the underlying tarball omits it.
 
-Needs-Info requirements for using I<control_index>: bin-pkg-control
+Needs-Info requirements for using I<index>: unpacked
 
 =cut
 
-sub control_index {
+sub index {
     my ($self, $file) = @_;
-    if (my $cache = $self->{'control_index'}) {
+    if (my $cache = $self->{'index'}) {
         return $cache->{$file}
           if exists($cache->{$file});
         return;
     }
     my $load_info = {
-        'field' => 'control_index',
-        'index_file' => 'control-index',
-        'index_owner_file' => undef,
-        'fs_root_sub' => 'control',
-        # Control files are not installed relative to the system root.
-        # Accordingly, we forbid absolute paths and symlinks..
+        'field' => 'index',
+        'index_file' => 'index',
+        'index_owner_file' => 'index-owner-id',
+        'fs_root_sub' => 'unpacked',
         'has_anchored_root_dir' => 0,
+        'file_info_sub' => 'file_info',
     };
     return $self->_fetch_index_data($load_info, $file);
-}
-
-=item sorted_control_index
-
-Returns a sorted array of file names listed in the control.tar.gz.
-The names will not have a leading slash (or "./") and can be passed
-to L</control ([FILE])> or L</control_index (FILE)> as is.
-
-The array will not contain the entry for the "root" of the
-control.tar.gz.
-
-Needs-Info requirements for using I<sorted_control_index>: L<Same as control_index|/control_index (FILE)>
-
-=cut
-
-sub sorted_control_index {
-    my ($self) = @_;
-    # control_index does all our work for us, so call it if
-    # sorted_control_index has not been created yet.
-    $self->control_index('') unless exists($self->{'sorted_control_index'});
-    return @{ $self->{'sorted_control_index'} };
-}
-
-=item control_index_resolved_path(PATH)
-
-Resolve PATH (relative to the root of the package) and return the
-L<entry|Lintian::Path> denoting the resolved path.
-
-The resolution is done using
-L<resolve_path|Lintian::Path/resolve_path([PATH])>.
-
-Needs-Info requirements for using I<control_index_resolved_path>: L<Same as control_index|/control_index (FILE)>
-
-=cut
-
-sub control_index_resolved_path {
-    my ($self, $path) = @_;
-    return $self->control_index('')->resolve_path($path);
 }
 
 =item strings (FILE)
@@ -270,283 +132,6 @@ sub strings {
     }
     my $fd = open_gz($real);
     return $fd;
-}
-
-=item scripts
-
-Returns a hashref mapping a FILE to its script/interpreter information
-(if FILE is a script).  If FILE is not a script, it is not in the hash
-(and callers should use exists to test membership to ensure this
-invariant holds).
-
-The value for a given FILE consists of a table with the following keys
-(and associated value):
-
-=over 4
-
-=item calls_env
-
-Returns a truth value if the script uses env (/usr/bin/env or
-/bin/env) in the "#!".  Otherwise it is C<undef>.
-
-=item interpreter
-
-This is the interpreter used.  If calls_env is true, this will be the
-first argument to env.  Otherwise it will be the command listed after
-the "#!".
-
-NB: Some template files have "#!" lines like "#!@PERL@" or "#!perl".
-In this case, this value will be @PERL@ or perl (respectively).
-
-=item name
-
-Return the file name of the script.  This will be identical to key to
-look up this table.
-
-=back
-
-Needs-Info requirements for using I<scripts>: scripts
-
-=cut
-
-sub scripts {
-    my ($self) = @_;
-
-    unless (exists $self->{scripts}) {
-
-        my %scripts;
-
-        my $dbpath = $self->lab_data_path('scripts.db');
-
-        tie my %h, 'MLDBM',-Filename => $dbpath
-          or die "Cannot open file $dbpath: $! $BerkeleyDB::Error\n";
-
-        $scripts{$_} = $h{$_} for keys %h;
-
-        untie %h;
-
-        $self->{scripts} = \%scripts;
-    }
-
-    return $self->{scripts};
-}
-
-=item is_script (PATH)
-
-True if PATH is a script.
-
-Needs-Info requirements for using I<is_script>: scripts
-
-=cut
-
-sub is_script {
-    my ($self, $path) = @_;
-
-    return 0
-      unless defined $path;
-
-    return 1
-      if exists $self->scripts->{$path};
-
-    return 0;
-}
-
-=item objdump_info
-
-Returns a hashref mapping a FILE to the data collected by objdump-info
-or C<undef> if no data is available for that FILE.  Data is generally
-only collected for ELF files.
-
-Needs-Info requirements for using I<objdump_info>: objdump-info
-
-=cut
-
-sub objdump_info {
-    my ($self) = @_;
-    return $self->{objdump_info} if exists $self->{objdump_info};
-    my $objf = $self->lab_data_path('objdump-info.gz');
-    my %objdump_info;
-    local $_;
-    my $fd = open_gz($objf);
-    foreach my $pg (parse_dpkg_control($fd)) {
-        my %info;
-        if (lc($pg->{'broken'}//'no') eq 'yes') {
-            $info{'ERRORS'} = 1;
-        }
-        if (lc($pg->{'bad-dynamic-table'}//'no') eq 'yes') {
-            $info{'BAD-DYNAMIC-TABLE'} = 1;
-        }
-        $info{'ELF-TYPE'} = $pg->{'elf-type'} if $pg->{'elf-type'};
-        foreach my $symd (split m/\s*\n\s*/, $pg->{'dynamic-symbols'}//'') {
-            next unless $symd;
-            if ($symd =~ m/^\s*(\S+)\s+(?:(\S+)\s+)?(\S+)$/){
-                # $ver is not always there
-                my ($sec, $ver, $sym) = ($1, $2, $3);
-                $ver //= '';
-                push @{ $info{'SYMBOLS'} }, [$sec, $ver, $sym];
-            }
-        }
-        foreach my $section (split m/\s*\n\s*/, $pg->{'section-headers'}//'') {
-            next unless $section;
-            # NB: helpers/coll/objdump-info-helper discards most
-            # sections.  If you are missing a section name for a
-            # check, please update helpers/coll/objdump-info-helper to
-            # retrain the section name you need.
-            strip($section);
-            $info{'SH'}{$section} = 1;
-        }
-        foreach my $data (split m/\s*\n\s*/, $pg->{'program-headers'}//'') {
-            next unless $data;
-            my ($header, @vals) = split m/\s++/, $data;
-            foreach my $extra (@vals) {
-                my ($opt, $val) = split m/=/, $extra;
-                if ($opt eq 'interp' and $header eq 'INTERP') {
-                    $info{'INTERP'} = $val;
-                } else {
-                    $info{'PH'}{$header}{$opt} = $val;
-                }
-            }
-        }
-        foreach my $data (split m/\s*\n\s*/, $pg->{'dynamic-section'}//'') {
-            next unless $data;
-            # Here we just need RPATH and NEEDS, so ignore the rest for now
-            my ($header, $val) = split(m/\s++/, $data, 2);
-            if ($header eq 'RPATH' or $header eq 'RUNPATH') {
-                # RPATH is like PATH
-                foreach my $rpathcomponent (split(m/:/,$val)) {
-                    $info{$header}{$rpathcomponent} = 1;
-                }
-            } elsif ($header eq 'NEEDED' or $header eq 'SONAME') {
-                push @{ $info{$header} }, $val;
-            } elsif ($header eq 'TEXTREL' or $header eq 'DEBUG') {
-                $info{$header} = 1;
-            } elsif ($header eq 'FLAGS_1') {
-                for my $flag (split(m/\s++/, $val)) {
-                    $info{$header}{$flag} = 1;
-                }
-            }
-        }
-
-        if ($pg->{'filename'} =~ m,^(.+)\(([^/\)]+)\)$,o) {
-            # object file in a static lib.
-            my ($lib, $obj) = ($1, $2);
-            my $libentry = $objdump_info{$lib};
-            if (not defined $libentry) {
-                $libentry = {
-                    'filename' => $lib,
-                    'objects'  => [$obj],
-                };
-                $objdump_info{$lib} = $libentry;
-            } else {
-                push @{ $libentry->{'objects'} }, $obj;
-            }
-        }
-        $objdump_info{$pg->{'filename'}} = \%info;
-    }
-    $self->{objdump_info} = \%objdump_info;
-
-    close($fd);
-
-    return $self->{objdump_info};
-}
-
-=item hardening_info
-
-Returns a hashref mapping a FILE to its hardening issues.
-
-NB: This is generally only useful for checks/binaries to emit the
-hardening-no-* tags.
-
-Needs-Info requirements for using I<hardening_info>: hardening-info
-
-=cut
-
-sub hardening_info {
-    my ($self) = @_;
-    return $self->{hardening_info} if exists $self->{hardening_info};
-    my $hardf = $self->lab_data_path('hardening-info');
-    my %hardening_info;
-    if (-e $hardf) {
-        open(my $idx, '<', $hardf);
-        while (my $line = <$idx>) {
-            chomp($line);
-
-            if ($line =~ m,^([^:]+):(?:\./)?(.*)$,) {
-                my ($tag, $file) = ($1, $2);
-                push(@{$hardening_info{$file}}, $tag);
-            }
-        }
-        close($idx);
-    }
-
-    $self->{hardening_info} = \%hardening_info;
-    return $self->{hardening_info};
-}
-
-=item java_info
-
-Returns a hashref containing information about JAR files found in
-binary packages, in the form I<file name> -> I<info>, where I<info> is
-a hash containing the following keys:
-
-=over 4
-
-=item manifest
-
-A hash containing the contents of the JAR file manifest. For instance,
-to find the classpath of I<$file>, you could use:
-
- if (exists $info->java_info->{$file}{'manifest'}) {
-     my $cp = $info->java_info->{$file}{'manifest'}{'Class-Path'};
-     # ...
- }
-
-NB: Not all jar files have a manifest.  For those without, this will
-value will not be available.  Use exists (rather than defined) to
-check for it.
-
-=item files
-
-A table of the files in the JAR.  Each key is a file name and its value
-is its "Major class version" for Java or "-" if it is not a class file.
-
-=item error
-
-If it exists, this is an error that occurred during reading of the zip
-file.  If it exists, it is unlikely that the other fields will be
-present.
-
-=back
-
-Needs-Info requirements for using I<java_info>: java-info
-
-=cut
-
-sub java_info {
-    my ($self) = @_;
-
-    # do something to prevent second lookup
-    unless (keys %{$self->{java_info}}) {
-
-        my $dbpath = $self->lab_data_path('java-info.db');
-
-        # no jar files
-        return $self->{java_info}
-          unless -f $dbpath;
-
-        my %java_info;
-
-        tie my %h, 'MLDBM',-Filename => $dbpath
-          or die "Cannot open file $dbpath: $! $BerkeleyDB::Error\n";
-
-        $java_info{$_} = $h{$_} for keys %h;
-
-        untie %h;
-
-        $self->{java_info} = \%java_info;
-    }
-
-    return $self->{java_info};
 }
 
 =item relation (FIELD)
@@ -678,83 +263,21 @@ Needs-Info requirements for using I<is_pkg_class>: L<Same as field|Lintian::Coll
     }
 }
 
-=item conffiles
+=item is_non_free
 
-Returns a list of absolute filenames found for conffiles.
+Returns a truth value if the package appears to be non-free (based on
+the section field; "non-free/*" and "restricted/*")
 
-Needs-Info requirements for using I<conffiles>: L<Same as control_index_resolved_path|/control_index_resolved_path(PATH)>
+Needs-Info requirements for using I<is_non_free>: L</field ([FIELD[, DEFAULT]])>
 
 =cut
 
-sub conffiles {
+sub is_non_free {
     my ($self) = @_;
 
-    return @{$self->{'conffiles'}}
-      if exists $self->{'conffiles'};
-
-    $self->{'conffiles'} = [];
-
-    # read conffiles if it exists and is a file
-    my $cf = $self->control_index_resolved_path('conffiles');
-    return
-      unless $cf && $cf->is_file && $cf->is_open_ok;
-
-    my $fd = $cf->open;
-    while (my $absolute = <$fd>) {
-
-        chomp $absolute;
-
-        # dpkg strips whitespace (using isspace) from the right hand
-        # side of the file name.
-        rstrip($absolute);
-
-        next
-          if $absolute eq EMPTY;
-
-        # list contains absolute paths, unlike lookup
-        push(@{$self->{conffiles}}, $absolute);
-    }
-
-    close($fd);
-
-    return @{$self->{conffiles}};
-}
-
-=item is_conffile (FILE)
-
-Returns a truth value if FILE is listed in the conffiles control file.
-If the control file is not present or FILE is not listed in it, it
-returns C<undef>.
-
-Note that FILE should be the filename relative to the package root
-(even though the control file uses absolute paths).  If the control
-file does relative paths, they are assumed to be relative to the
-package root as well (and used without warning).
-
-Needs-Info requirements for using I<is_conffile>: L<Same as control_index_resolved_path|/control_index_resolved_path(PATH)>
-
-=cut
-
-sub is_conffile {
-    my ($self, $file) = @_;
-
-    unless (exists $self->{'conffiles_lookup'}) {
-
-        $self->{'conffiles_lookup'} = {};
-
-        for my $absolute ($self->conffiles) {
-
-            # strip the leading slash
-            my $relative = $absolute;
-            $relative =~ s,^/++,,;
-
-            # look up happens with a relative path
-            $self->{conffiles_lookup}{$relative} = 1;
-        }
-    }
-
     return 1
-      if exists $self->{conffiles_lookup}{$file};
+      if $self->field('section', 'main')
+      =~ m,^(?:non-free|restricted|multiverse)/,;
 
     return 0;
 }

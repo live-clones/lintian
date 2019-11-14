@@ -65,7 +65,8 @@ sub always {
         return;
     }
 
-    check_maintainer($maintainer, 'maintainer');
+    my @tags = check_maintainer($maintainer, 'maintainer');
+    $self->tag(@{$_}) for @tags;
 
     return;
 }

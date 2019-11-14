@@ -27,7 +27,7 @@ use autodie;
 
 use List::MoreUtils qw(none);
 
-use Lintian::Spelling qw(check_spelling spelling_tag_emitter);
+use Lintian::Spelling qw(check_spelling);
 use Lintian::Util qw(internal_error strip);
 
 use constant PATCH_DESC_TEMPLATE => 'TODO: Put a short summary on'
@@ -37,6 +37,13 @@ use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
+
+sub spelling_tag_emitter {
+    my ($self, @orig_args) = @_;
+    return sub {
+        return $self->tag(@orig_args, @_);
+    };
+}
 
 sub source {
     my ($self) = @_;
@@ -304,7 +311,7 @@ sub check_patch {
 
     if (none { /(spelling|typo)/i } ($patch_file, $description)) {
         my $tag_emitter
-          = spelling_tag_emitter('spelling-error-in-patch-description',
+          = $self->spelling_tag_emitter('spelling-error-in-patch-description',
             $patch_file);
         check_spelling($description, $group->info->spelling_exceptions,
             $tag_emitter, 0);

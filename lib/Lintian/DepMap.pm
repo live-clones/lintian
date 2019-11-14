@@ -159,7 +159,7 @@ sub add {
         $self->{'nodes'}{$node}{'parents'}{$parent}
           = $self->{'nodes'}{$parent};
     }
-    unless ($parents || scalar %{$self->{'nodes'}{$node}{'parents'}}) {
+    unless ($parents || scalar keys %{$self->{'nodes'}{$node}{'parents'}}) {
         $self->{'pending'}{$node} = 1;
     } elsif (exists $self->{'pending'}{$node}) {
         delete $self->{'pending'}{$node};

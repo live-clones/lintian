@@ -27,8 +27,7 @@ use autodie;
 use Encode qw(decode);
 
 use Lintian::Data;
-use Lintian::Spelling
-  qw(check_spelling check_spelling_picky spelling_tag_emitter);
+use Lintian::Spelling qw(check_spelling check_spelling_picky);
 use Lintian::Util qw(strip);
 
 # Compared to a lower-case string, so it must be all lower-case
@@ -42,15 +41,12 @@ with 'Lintian::Check';
 
 my $PLANNED_FEATURES = Lintian::Data->new('description/planned-features');
 
-my $SPELLING_ERROR_IN_SYNOPSIS
-  = spelling_tag_emitter('spelling-error-in-description-synopsis');
-my $SPELLING_ERROR_IN_DESCRIPTION
-  = spelling_tag_emitter('spelling-error-in-description');
-
-my $PICKY_SPELLING_ERROR_IN_SYNOPSIS
-  = spelling_tag_emitter('capitalization-error-in-description-synopsis');
-my $PICKY_SPELLING_ERROR_IN_DESCRIPTION
-  = spelling_tag_emitter('capitalization-error-in-description');
+sub spelling_tag_emitter {
+    my ($self, @orig_args) = @_;
+    return sub {
+        return $self->tag(@orig_args, @_);
+    };
+}
 
 sub always {
     my ($self) = @_;
@@ -241,24 +237,30 @@ sub always {
     }
 
     if ($synopsis) {
-        check_spelling($synopsis, $group->info->spelling_exceptions,
-            $SPELLING_ERROR_IN_SYNOPSIS);
+        check_spelling(
+            $synopsis,
+            $group->info->spelling_exceptions,
+            $self->spelling_tag_emitter(
+                'spelling-error-in-description-synopsis'));
         # Auto-generated dbgsym packages will use the package name in
         # their synopsis.  Unfortunately, some package names trigger a
         # capitalization error, such as "dbus" -> "D-Bus".  Therefore,
         # we exempt auto-generated packages from this check.
-        check_spelling_picky($synopsis, $PICKY_SPELLING_ERROR_IN_SYNOPSIS)
-          if not $info->is_pkg_class('auto-generated');
+        check_spelling_picky(
+            $synopsis,
+            $self->spelling_tag_emitter(
+                'capitalization-error-in-description-synopsis')
+        )if not $info->is_pkg_class('auto-generated');
     }
 
     if ($description) {
         check_spelling(
             $description,
             $group->info->spelling_exceptions,
-            $SPELLING_ERROR_IN_DESCRIPTION
-        );
+            $self->spelling_tag_emitter('spelling-error-in-description'));
         check_spelling_picky($description,
-            $PICKY_SPELLING_ERROR_IN_DESCRIPTION);
+            $self->spelling_tag_emitter('capitalization-error-in-description')
+        );
     }
 
     if ($pkg =~ /^lib(.+)-perl$/) {

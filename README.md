@@ -49,7 +49,7 @@ more leeway than Lintian does.
 If you have installed Lintian via the "lintian" Debian package, you
 can find the Lintian User's Manual in:
 
-    $ sensible-browser /usr/share/doc/lintian/lintian.html/index.html
+    $ sensible-browser /usr/share/doc/lintian/lintian.html
     # or in txt format
     $ less /usr/share/doc/lintian/lintian.txt.gz
 

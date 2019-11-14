@@ -62,7 +62,9 @@ sub always {
       split />\K\s*,\s*/, $uploaders;
 
     for my $member (@list) {
-        check_maintainer($member, 'uploader');
+        my @tags = check_maintainer($member, 'uploader');
+        $self->tag(@{$_}) for @tags;
+
         if (   ((true { $_ eq $member } @list) > 1)
             and($duplicate_uploaders{$member}++ == 0)) {
             $self->tag('duplicate-uploader', $member);

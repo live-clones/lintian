@@ -3,3 +3,4 @@ Testname: standards-version-classifications
 Options: -L +classification
 Description: Test standards version
 Check: fields/standards-version
+Standards-Version: 4.4.1

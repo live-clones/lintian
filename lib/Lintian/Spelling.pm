@@ -26,13 +26,12 @@ use warnings;
 use Exporter qw(import);
 
 use Lintian::Data;
-use Lintian::Tags qw(tag);
 use Lintian::Util qw(strip);
 
 use constant DOUBLE_QUOTE => q{"};
 
 our @EXPORT_OK = qw(check_spelling check_spelling_picky
-  $known_shells_regex spelling_tag_emitter
+  $known_shells_regex
 );
 
 =head1 NAME
@@ -61,25 +60,6 @@ function are described in the documentation for that function.
 =head1 FUNCTIONS
 
 =over 4
-
-=item spelling_tag_emitter(TAGNAME[, FILENAME])
-
-Create and return a subroutine that is useful for emitting lintian
-tags for spelling mistakes.  The returned CODE ref can be passed to
-L</check_spelling(TEXT,[ EXCEPTIONS,] CODEREF)> and will faithfully
-emit TAGNAME once for each unique spelling mistake.
-
-The optional extra parameter FILENAME is used to denote the file name,
-when this is not given from the tagname.
-
-=cut
-
-sub spelling_tag_emitter {
-    my (@orig_args) = @_;
-    return sub {
-        return tag(@orig_args, @_);
-    };
-}
 
 =item check_spelling(TEXT,[ EXCEPTIONS,] CODEREF)
 

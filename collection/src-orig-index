@@ -36,7 +36,7 @@ use Path::Tiny;
 
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
 
-use Lintian::Collect;
+use Lintian::Collect::Dispatcher qw(create_info);
 use Lintian::Processable::Source;
 use Lintian::Util qw(internal_error sort_file_index gzip);
 
@@ -47,7 +47,8 @@ use constant NEWLINE => qq{\n};
 
 sub collect {
     my ($pkg, $type, $dir) = @_;
-    my $info = Lintian::Collect->new($pkg, $type, $dir);
+
+    my $info = create_info($pkg, $type, $dir);
 
     my $origpath = "$dir/src-orig-index.gz";
     unlink($origpath)

@@ -24,6 +24,7 @@ use autodie;
 use IO::Async::Loop;
 use IO::Async::Process;
 use List::MoreUtils qw(first_index none);
+use Path::Tiny;
 
 use Lintian::Data;
 use Lintian::Util qw(safe_qx);
@@ -54,7 +55,7 @@ sub always {
     my $type = $self->type;
     my $info = $self->info;
 
-    my $deb = $info->lab_data_path('deb');
+    my $deb = path($info->groupdir)->child('deb')->stringify;
 
     # Run ar t on the *.deb file.  deb will be a symlink to it.
     my $failed; # set to one when something is so bad that we can't continue
@@ -242,7 +243,7 @@ sub always {
     # represent an actual problem.
     for my $file (keys %ERRORS) {
         my $tag = $ERRORS{$file};
-        my $path = $info->lab_data_path($file);
+        my $path = path($info->groupdir)->child($file)->stringify;
         if (-s $path) {
             open(my $fd, '<', $path);
             while (my $line = <$fd>) {
