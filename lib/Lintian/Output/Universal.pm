@@ -22,12 +22,8 @@ use strict;
 use warnings;
 use v5.12;
 
-use List::MoreUtils qw(all);
-
-use Lintian::Output qw(:util);
-use parent qw(Lintian::Output);
-
 use Carp;
+use List::MoreUtils qw(all);
 
 use constant SPACE => q{ };
 use constant EMPTY => q{};
@@ -35,6 +31,11 @@ use constant COLON => q{:};
 use constant LPARENS => q{(};
 use constant RPARENS => q{)};
 use constant NEWLINE => qq{\n};
+
+use Moo;
+use namespace::clean;
+
+with 'Lintian::Output';
 
 =head1 NAME
 

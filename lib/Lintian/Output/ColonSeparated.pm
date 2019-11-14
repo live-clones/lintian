@@ -20,11 +20,34 @@
 # MA 02110-1301, USA.
 
 package Lintian::Output::ColonSeparated;
+
 use strict;
 use warnings;
 
-use Lintian::Output qw(:util);
-use parent qw(Lintian::Output);
+use Moo;
+use namespace::clean;
+
+with 'Lintian::Output';
+
+=head1 NAME
+
+Lintian::Output::ColonSeparated - colon-separated tag output
+
+=head1 SYNOPSIS
+
+    use Lintian::Output::ColonSeparated;
+
+=head1 DESCRIPTION
+
+Provides colon-separated tag output.
+
+=head1 INSTANCE METHODS
+
+=over 4
+
+=item print_tag
+
+=cut
 
 sub print_tag {
     my ($self, $pkg_info, $tag_info, $information, $override) = @_;
@@ -80,6 +103,10 @@ sub _print {
     return;
 }
 
+=item string
+
+=cut
+
 sub string {
     my ($self, @args) = @_;
 
@@ -96,6 +123,10 @@ sub _quote_char {
 
     return @items;
 }
+
+=back
+
+=cut
 
 1;
 

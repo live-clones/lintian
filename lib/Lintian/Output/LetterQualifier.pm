@@ -24,8 +24,10 @@ use warnings;
 use Term::ANSIColor qw(colored);
 use Lintian::Tag::Info ();
 
-use Lintian::Output qw(:util);
-use parent qw(Lintian::Output);
+use Moo;
+use namespace::clean;
+
+with 'Lintian::Output';
 
 my %codes = (
     'classification' => {
@@ -98,13 +100,37 @@ my %lq_default_colors = (
     },
 );
 
-sub new {
-    my $self = Lintian::Output::new('Lintian::Output::LetterQualifier');
+=head1 NAME
+
+Lintian::Output::LetterQualifier - letter qualifier tag output
+
+=head1 SYNOPSIS
+
+    use Lintian::Output::LetterQualifier;
+
+=head1 DESCRIPTION
+
+Provides letter qualifier tag output.
+
+=head1 INSTANCE METHODS
+
+=over 4
+
+=item BUILD
+
+=cut
+
+sub BUILD {
+    my ($self) = @_;
 
     $self->colors({%lq_default_colors});
 
-    return $self;
+    return;
 }
+
+=item print_tag
+
+=cut
 
 sub print_tag {
     my ($self, $pkg_info, $tag_info, $information, $override) = @_;
@@ -140,6 +166,10 @@ sub print_tag {
     }
     return;
 }
+
+=back
+
+=cut
 
 1;
 

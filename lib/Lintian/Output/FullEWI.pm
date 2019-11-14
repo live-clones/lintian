@@ -45,7 +45,10 @@ package Lintian::Output::FullEWI;
 use strict;
 use warnings;
 
-use parent qw(Lintian::Output);
+use Moo;
+use namespace::clean;
+
+with 'Lintian::Output';
 
 =head1 NAME
 
