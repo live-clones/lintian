@@ -22,12 +22,10 @@ use strict;
 use warnings;
 use v5.8.0; # for PerlIO
 
-use parent qw(Class::Accessor::Fast);
-
 use CGI qw(escapeHTML);
 
-# The limit is including the "use --foo to see all tags".
-use constant DEFAULT_INTERACTIVE_TAG_LIMIT => 4;
+use Moo::Role;
+use namespace::clean;
 
 =head1 NAME
 
@@ -74,22 +72,11 @@ use Term::ANSIColor ();
 use constant OSC_HYPERLINK => qq{\033]8;;};
 use constant OSC_DONE => qq{\033\\};
 
-=head1 ACCESSORS
+=head1 ATTRIBUTES
 
-The following fields define the behaviours of Lintian::Output.
+The following fields impact the behavior of Lintian::Output.
 
 =over 4
-
-=item verbosity_level
-
-Determine how verbose the output should be.  "0" is the default value
-(tags and msg only), "-1" is quiet (tags only) and "1" is verbose
-(tags, msg and v_msg).
-
-=item debug
-
-If set to a positive integer, will enable all debug messages issued with
-a level lower or equal to its value.
 
 =item color
 
@@ -101,6 +88,23 @@ color only if the output is going to a terminal.
 
 "html" will output HTML <span> tags with a color style attribute (instead
 of ANSI color escape sequences).
+
+=item colors
+
+=item debug
+
+If set to a positive integer, will enable all debug messages issued with
+a level lower or equal to its value.
+
+=item issuedtags
+
+Hash containing the names of tags which have been issued.
+
+=item perf_debug
+
+=item perf_log_fd
+
+=item proc_id2tag_count
 
 =item stdout
 
@@ -114,54 +118,46 @@ I/O handle to use for warnings.  Defaults to C<\*STDERR>.
 
 Whether to show the description of a tag when printing it.
 
-=item issuedtags
-
-Hash containing the names of tags which have been issued.
+=item tty_hyperlinks
 
 =item tag_display_limit
 
 Get/Set the number of times a tag is emitted per processable.
 
+=item verbosity_level
+
+Determine how verbose the output should be.  "0" is the default value
+(tags and msg only), "-1" is quiet (tags only) and "1" is verbose
+(tags, msg and v_msg).
+
 =back
 
 =cut
 
-Lintian::Output->mk_accessors(
-    qw(verbosity_level debug color colors stdout
-      stderr perf_log_fd perf_debug showdescription
-      issuedtags tag_display_limit tty_hyperlinks)
-);
+has color => (is => 'rw', default => 'never');
+has colors => (
+    is => 'rw',
+    default => sub {
+        {
+            'E' => 'red',
+            'W' => 'yellow',
+            'I' => 'cyan',
+            'P' => 'green',
+            'C' => 'blue',
+        }
+    });
+has issuedtags => (is => 'rw', default => sub { {} });
+has perf_debug => (is => 'rw', default => 0);
+has perf_log_fd => (is => 'rw', default => sub { \*STDOUT });
+has proc_id2tag_count => (is => 'rw', default => sub { {} });
+has stderr => (is => 'rw', default => sub { \*STDERR });
+has stdout => (is => 'rw', default => sub { \*STDOUT });
+has tag_display_limit => (is => 'rw', default => 4);
+has tty_hyperlinks => (is => 'rw', default => 0);
+has verbosity_level => (is => 'rw', default => 0);
 
-# for the non-OO interface
-my %default_colors = (
-    'E' => 'red',
-    'W' => 'yellow',
-    'I' => 'cyan',
-    'P' => 'green',
-    'C' => 'blue',
-);
-
-sub new {
-    my ($class, %options) = @_;
-    my $self = {%options};
-
-    bless($self, $class);
-
-    $self->stdout(\*STDOUT);
-    $self->stderr(\*STDERR);
-    $self->perf_log_fd(\*STDOUT);
-    $self->colors({%default_colors});
-    $self->issuedtags({});
-    $self->{'proc_id2tag_count'} = {};
-
-    # Set defaults to avoid "uninitialized" warnings
-    $self->verbosity_level(0);
-    $self->perf_debug(0);
-    $self->color('never');
-    $self->tty_hyperlinks(0);
-
-    return $self;
-}
+has debug => (is => 'rw', default => sub { {} });
+has showdescription => (is => 'rw', default => sub { {} });
 
 =head1 CLASS/INSTANCE METHODS
 
