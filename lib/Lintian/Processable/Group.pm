@@ -589,7 +589,15 @@ sub process {
 
     my $timer = [gettimeofday];
 
-    $OUTPUT->print_first();
+    my %statistics = (
+        types     => {},
+        severity  => {},
+        certainty => {},
+        tags      => {},
+        overrides => {},
+    );
+
+    my @reported;
 
     foreach my $processable ($self->get_processables){
         my $pkg_type = $processable->pkg_type;
@@ -602,14 +610,6 @@ sub process {
 
         my $declared_overrides;
         my %used_overrides;
-
-        my %statistics = (
-            types     => {},
-            severity  => {},
-            certainty => {},
-            tags      => {},
-            overrides => {},
-        );
 
         # to store tag names as well
         my $override_count->{ignored} = {};
@@ -785,58 +785,79 @@ sub process {
             }
         }
 
-        for my $tag (@keep) {
-
-            my $record = \%statistics;
-            $record = $statistics{overrides}
-              if $tag->override;
-
-            $record->{tags}{$tag->name}++;
-            $record->{severity}{$tag->info->severity}++;
-            $record->{certainty}{$tag->info->certainty}++;
-
-            my $code = $tag->info->code;
-            $code = 'X' if $tag->info->experimental;
-            $record->{types}{$code}++;
-        }
-
-        unless ($$exit_code_ref) {
-            if ($statistics{types}{E}) {
-                $$exit_code_ref = 1;
-            }
-        }
-
-        # Report override statistics.
-        unless ($opt->{'no-override'} || $opt->{'show-overrides'}) {
-
-            my $errors = $statistics{overrides}{types}{E} || 0;
-            my $warnings = $statistics{overrides}{types}{W} || 0;
-            my $info = $statistics{overrides}{types}{I} || 0;
-
-            $override_count->{errors} += $errors;
-            $override_count->{warnings} += $warnings;
-            $override_count->{info} += $info;
-        }
-
-        my @print;
-
-        for my $tag (@keep) {
-
-            next
-              if defined $tag->override
-              && !$TAGS->{show_overrides};
-
-            next
-              unless $TAGS->displayed($tag->name);
-
-            push(@print, $tag);
-        }
-
         # associate all tags with processable
-        $_->processable($processable) for @print;
+        $_->processable($processable) for @keep;
 
+        push(@reported, @keep);
+        @keep = ();
+    }
+
+    for my $tag (@reported) {
+
+        my $record = \%statistics;
+        $record = $statistics{overrides}
+          if $tag->override;
+
+        $record->{tags}{$tag->name}++;
+        $record->{severity}{$tag->info->severity}++;
+        $record->{certainty}{$tag->info->certainty}++;
+
+        my $code = $tag->info->code;
+        $code = 'X' if $tag->info->experimental;
+        $record->{types}{$code}++;
+    }
+
+    unless ($$exit_code_ref) {
+        if ($statistics{types}{E}) {
+            $$exit_code_ref = 1;
+        }
+    }
+
+    # Report override statistics.
+    unless ($opt->{'no-override'} || $opt->{'show-overrides'}) {
+
+        my $errors = $statistics{overrides}{types}{E} || 0;
+        my $warnings = $statistics{overrides}{types}{W} || 0;
+        my $info = $statistics{overrides}{types}{I} || 0;
+
+        $override_count->{errors} += $errors;
+        $override_count->{warnings} += $warnings;
+        $override_count->{info} += $info;
+    }
+
+    my @print;
+
+    for my $tag (@reported) {
+
+        next
+          if defined $tag->override
+          && !$TAGS->{show_overrides};
+
+        next
+          unless $TAGS->displayed($tag->name);
+
+        push(@print, $tag);
+    }
+
+    $OUTPUT->print_first();
+
+    my @processables;
+    my %taglist;
+
+    for my $tag (@print) {
+        push(@processables, $tag->processable);
+
+        $taglist{$tag->processable} //= [];
+        push(@{$taglist{$tag->processable}}, $tag);
+    }
+
+    my @unique = uniq @processables;
+    my @ordered = @unique;
+
+    for my $processable ($self->get_processables) {
         $OUTPUT->print_start_pkg($processable);
-        $OUTPUT->print_tag($_) for @print;
+        my @sorted = @{$taglist{$processable} // []};
+        $OUTPUT->print_tag($_) for @sorted;
         $OUTPUT->print_end_pkg($processable);
     }
 
