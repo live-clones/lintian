@@ -50,7 +50,13 @@ Provides colon-separated tag output.
 =cut
 
 sub print_tag {
-    my ($self, $pkg_info, $tag_info, $information, $override) = @_;
+    my ($self, $tag) = @_;
+
+    my $tag_info = $tag->info;
+    my $information = $tag->extra;
+    my $override = $tag->override;
+    my $processable = $tag->processable;
+
     my $odata = '';
     if ($override) {
         $odata = $override->{tag};
@@ -65,7 +71,10 @@ sub print_tag {
         $tag_info->severity,
         $tag_info->certainty,
         ($tag_info->experimental ? 'X' : '') . (defined($override) ? 'O' : ''),
-        @{$pkg_info}{'package','version','arch','type'},
+        $processable->name,
+        $processable->pkg_version,
+        $processable->pkg_arch,
+        $processable->type,
         $tag_info->tag,
         $self->_quote_print($information),
         $odata,

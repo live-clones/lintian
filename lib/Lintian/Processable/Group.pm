@@ -600,15 +600,6 @@ sub process {
         # required for global Lintian::Tags::tag usage
         $TAGS->{current} = $path;
 
-        my %procstruct = (
-            file              => $path,
-            package           => $processable->pkg_name,
-            version           => $processable->pkg_version,
-            arch              => $processable->pkg_arch,
-            type              => $processable->pkg_type,
-            processable       => $processable,
-        );
-
         my $declared_overrides;
         my %used_overrides;
 
@@ -794,8 +785,6 @@ sub process {
             }
         }
 
-        $procstruct{overrides} = \%used_overrides;
-
         for my $tag (@keep) {
 
             my $record = \%statistics;
@@ -846,12 +835,9 @@ sub process {
         # associate all tags with processable
         $_->processable($processable) for @print;
 
-        $OUTPUT->print_start_pkg(\%procstruct);
-        $OUTPUT->print_tag(\%procstruct, $_->info, $_->extra, $_->override)
-          for @print;
-        $OUTPUT->print_end_pkg(\%procstruct);
-
-        $TAGS->{info}{$path} = \%procstruct;
+        $OUTPUT->print_start_pkg($processable);
+        $OUTPUT->print_tag($_) for @print;
+        $OUTPUT->print_end_pkg($processable);
     }
 
     # universal format sorts output from all processables and prints here

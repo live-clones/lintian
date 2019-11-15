@@ -49,7 +49,12 @@ Provides XML tag output.
 =cut
 
 sub print_tag {
-    my ($self, $pkg_info, $tag_info, $information, $override) = @_;
+    my ($self, $tag) = @_;
+
+    my $tag_info = $tag->info;
+    my $information = $tag->extra;
+    my $override = $tag->override;
+
     $self->issued_tag($tag_info->tag);
     my $flags = ($tag_info->experimental ? 'experimental' : '');
     my $comment;
@@ -79,12 +84,12 @@ sub print_tag {
 =cut
 
 sub print_start_pkg {
-    my ($self, $pkg_info) = @_;
+    my ($self, $processable) = @_;
     my @attrs = (
-        [type         => $pkg_info->{type}],
-        [name         => $pkg_info->{package}],
-        [architecture => $pkg_info->{arch}],
-        [version      => $pkg_info->{version}]);
+        [type         => $processable->type],
+        [name         => $processable->name],
+        [architecture => $processable->pkg_arch],
+        [version      => $processable->pkg_version]);
     print { $self->stdout } $self->_open_xml_tag('package', \@attrs, 0), "\n";
     return;
 }

@@ -68,6 +68,8 @@ use Lintian::Tags ();
 # support for ANSI color output via colored()
 use Term::ANSIColor ();
 
+use constant SPACE => q{ };
+
 # for tty hyperlinks
 use constant OSC_HYPERLINK => qq{\033]8;;};
 use constant OSC_DONE => qq{\033\\};
@@ -319,20 +321,26 @@ override info for this tag.  Called from Lintian::Tags::tag().
 =cut
 
 sub print_tag {
-    my ($self, $pkg_info, $tag_info, $information, $override) = @_;
+    my ($self, $tag) = @_;
+
+    my $tag_info = $tag->info;
+    my $information = $tag->extra;
+    my $override = $tag->override;
+    my $processable = $tag->processable;
+
     $information = ' ' . $self->_quote_print($information)
       if $information ne '';
     my $code = $tag_info->code;
     my $tag_color = $self->{colors}{$code};
-    my $fpkg_info = $self->_format_pkg_info($pkg_info, $tag_info, $override);
+    my $fpkg_info= $self->_format_pkg_info($processable, $tag_info, $override);
     my $tag_name = $tag_info->tag;
     my $limit = $self->tag_display_limit;
-    my $tag;
+    my $output;
 
     # Limit the output so people do not drown in tags.  Some tags are
     # insanely noisy (hi static-library-has-unneeded-section)
     if ($limit) {
-        my $proc_id = $pkg_info->{'processable'}->identifier;
+        my $proc_id = $processable->identifier;
         my $emitted_count
           = $self->{'proc_id2tag_count'}{$proc_id}{$tag_name}++;
         return if $emitted_count >= $limit;
@@ -344,7 +352,7 @@ sub print_tag {
     if ($self->_do_color && $self->color eq 'html') {
         my $escaped = escapeHTML($tag_name);
         $information = escapeHTML($information);
-        $tag .= qq(<span style="color: $tag_color">$escaped</span>);
+        $output .= qq(<span style="color: $tag_color">$escaped</span>);
 
     } else {
         my $text = $tag_name;
@@ -354,9 +362,9 @@ sub print_tag {
         if ($self->tty_hyperlinks) {
             my $target
               = 'https://lintian.debian.org/tags/' . $tag_name . '.html';
-            $tag .= $self->osc_hyperlink($text, $target);
+            $output .= $self->osc_hyperlink($text, $target);
         } else {
-            $tag .= $text;
+            $output .= $text;
         }
     }
 
@@ -366,7 +374,7 @@ sub print_tag {
         }
     }
 
-    $self->_print('', $fpkg_info, "$tag$information");
+    $self->_print('', $fpkg_info, "$output$information");
     if (not $self->issued_tag($tag_info->tag) and $self->showdescription) {
         my $description;
         if ($self->_do_color && $self->color eq 'html') {
@@ -398,13 +406,13 @@ sub osc_hyperlink {
 # the "FullEWI" subclass.
 #
 sub _format_pkg_info {
-    my ($self, $pkg_info, $tag_info, $override) = @_;
+    my ($self, $processable, $tag_info, $override) = @_;
     my $code = $tag_info->code;
     $code = 'X' if $tag_info->experimental;
     $code = 'O' if defined $override;
     my $type = '';
-    $type = " $pkg_info->{type}" if $pkg_info->{type} ne 'binary';
-    return "$code: $pkg_info->{package}$type";
+    $type = SPACE . $processable->type if $processable->type ne 'binary';
+    return "$code: " . $processable->name . $type;
 }
 
 =item C<print_start_pkg($pkg_info)>
@@ -415,18 +423,20 @@ Lintian::Output uses v_msg() for output.  Called from Tags::select_pkg().
 =cut
 
 sub print_start_pkg {
-    my ($self, $pkg_info) = @_;
+    my ($self, $processable) = @_;
 
     my $object = 'package';
-    if ($pkg_info->{type} eq 'changes') {
-        $object = 'file';
-    }
+    $object = 'file'
+      if $processable->type eq 'changes';
 
     $self->v_msg(
         $self->delimiter,
-        join(q{ },
-            "Processing $pkg_info->{type} $object $pkg_info->{package}",
-            "(version $pkg_info->{version}, arch $pkg_info->{arch}) ..."));
+        'Processing '. $processable->type. " $object ". $processable->name,
+        '(version '
+          . $processable->pkg_version
+          . ', arch '
+          . $processable->pkg_arch . ') ...'
+    );
     return;
 }
 

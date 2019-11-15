@@ -24,6 +24,9 @@ use warnings;
 use Term::ANSIColor qw(colored);
 use Lintian::Tag::Info ();
 
+use constant EMPTY => q{};
+use constant SPACE => q{ };
+
 use Moo;
 use namespace::clean;
 
@@ -133,7 +136,12 @@ sub BUILD {
 =cut
 
 sub print_tag {
-    my ($self, $pkg_info, $tag_info, $information, $override) = @_;
+    my ($self, $tag) = @_;
+
+    my $tag_info = $tag->info;
+    my $information = $tag->extra;
+    my $override = $tag->override;
+    my $processable = $tag->processable;
 
     my $code = $tag_info->code;
     $code = 'X' if $tag_info->experimental;
@@ -143,10 +151,11 @@ sub print_tag {
     my $cer = $tag_info->certainty;
     my $lq = $codes{$sev}{$cer};
 
-    my $pkg = $pkg_info->{package};
-    my $type = ($pkg_info->{type} ne 'binary') ? " $pkg_info->{type}" : '';
+    my $pkg = $processable->name;
+    my $type
+      = ($processable->type ne 'binary') ? SPACE . $processable->type : EMPTY;
 
-    my $tag = $tag_info->tag;
+    my $tagname = $tag_info->tag;
 
     $information = ' ' . $self->_quote_print($information)
       if $information ne '';
@@ -154,10 +163,10 @@ sub print_tag {
     if ($self->_do_color) {
         my $color = $self->colors->{$sev}{$cer};
         $lq = colored($lq, $color);
-        $tag = colored($tag, $color);
+        $tagname = colored($tagname, $color);
     }
 
-    $self->_print('', "$code\[$lq\]: $pkg$type", "$tag$information");
+    $self->_print('', "$code\[$lq\]: $pkg$type", "$tagname$information");
     if (not $self->issued_tag($tag_info->tag) and $self->showdescription) {
         my $description = $tag_info->description('text', '   ');
         $self->_print('', 'N', '');

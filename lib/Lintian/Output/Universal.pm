@@ -58,7 +58,13 @@ A class for printing tags using the 'universal' format.
 =cut
 
 sub print_tag {
-    my ($self, $pkg_info, $tag_info, $details, $override) = @_;
+    my ($self, $tag) = @_;
+
+    my $tag_info = $tag->info;
+    my $details = $tag->extra;
+    my $override = $tag->override;
+    my $processable = $tag->processable;
+
     $self->issued_tag($tag_info->tag);
 
     my $odata = '';
@@ -69,10 +75,10 @@ sub print_tag {
     }
 
     my $line
-      = $pkg_info->{package}
+      = $processable->name
       . SPACE
       . LPARENS
-      . $pkg_info->{type}
+      . $processable->type
       . RPARENS
       . COLON
       . SPACE
