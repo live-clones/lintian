@@ -275,6 +275,18 @@ sub check_systemd_service_file {
         my $is_oneshot =any { /^oneshot$/ }
         $self->extract_service_file_values($file, 'Service', 'Type', 1);
 
+        # We are a "standalone" service file if we have no .path or .timer
+        # equivalent.
+        my $is_standalone = 1;
+        if ($file =~ m,lib/systemd/system/([^/]*?)@?\.service,) {
+            my $service = $1;
+            for my $x (qw(path timer)) {
+                $is_standalone = 0
+                  if $info->index_resolved_path(
+                    "lib/systemd/system/${service}.${x}");
+            }
+        }
+
         foreach my $target (@wanted_by) {
             $self->tag(
                 'systemd-service-file-refers-to-unusual-wantedby-target',
@@ -285,14 +297,17 @@ sub check_systemd_service_file {
         $self->tag('systemd-service-file-missing-documentation-key', $file,)
           unless $self->extract_service_file_values($file, 'Unit',
             'Documentation',1);
+
         $self->tag('systemd-service-file-missing-install-key', $file,)
           unless @wanted_by
           or
           $self->extract_service_file_values($file, 'Install', 'RequiredBy',1)
           or $self->extract_service_file_values($file, 'Install', 'Also',1)
           or $is_oneshot
+          or $is_standalone
           or $file !~ m,^lib/systemd/[^\/]+/[^\/]+\.service$,
           or $file =~ m,@\.service$,;
+
         my @pidfile
           = $self->extract_service_file_values($file,'Service','PIDFile',1);
         foreach my $x (@pidfile) {
