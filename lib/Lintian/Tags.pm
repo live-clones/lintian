@@ -28,6 +28,8 @@ use Exporter qw(import);
 use List::MoreUtils qw(any);
 use Path::Tiny;
 
+use Lintian::Tag::Standard;
+
 BEGIN {
     our @EXPORT_OK = qw(tag);
 }
@@ -187,12 +189,16 @@ sub tag {
     unless (ref $_[0] eq 'Lintian::Tags') {
         unshift(@_, $GLOBAL);
     }
-    my ($self, $tag, @extra) = @_;
+    my ($self, $tagname, @extra) = @_;
     unless ($self->{current}) {
-        die "tried to issue tag $tag without starting a file";
+        die "tried to issue tag $tagname without starting a file";
     }
 
-    push(@{$self->{queue}}, [$tag, @extra]);
+    my $tag = Lintian::Tag::Standard->new;
+    $tag->name($tagname);
+    $tag->arguments(\@extra);
+
+    push(@{$self->{queue}}, $tag);
 
     return;
 }
