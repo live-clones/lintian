@@ -66,8 +66,6 @@ file cannot be opened.
 sub overrides {
     my ($self) = @_;
 
-    my @tags;
-
     my $package = $self->pkg_name;
     my $architecture = $self->pkg_arch;
     my $type = $self->pkg_type;
@@ -128,22 +126,16 @@ sub overrides {
             my ($rawtag, $extra) = split(/ /, $tagdata, 2);
 
             if ($opkg_type and $opkg_type ne $type) {
-                push(
-                    @tags,
-                    [
-                        'malformed-override',
+                $self->tag('malformed-override',
 "Override of $rawtag for package type $opkg_type (expecting $type) at line $."
-                    ]);
+                );
                 next;
             }
 
             if ($architecture eq 'all' && $archlist) {
-                push(
-                    @tags,
-                    [
-                        'malformed-override',
+                $self->tag('malformed-override',
 "Architecture list for arch:all package at line $. (for tag $rawtag)"
-                    ]);
+                );
                 next;
             }
 
@@ -161,24 +153,18 @@ sub overrides {
                     } elsif (is_arch($a)) {
                         $found = 1 if $a eq $architecture;
                     } else {
-                        push(
-                            @tags,
-                            [
-                                'malformed-override',
+                        $self->tag('malformed-override',
 "Unknown architecture \"$a\" at line $. (for tag $rawtag)"
-                            ]);
+                        );
                         next OVERRIDE;
                     }
                 }
 
                 if ($negated > 0 && scalar @archs != $negated){
                     # missing a ! somewhere
-                    push(
-                        @tags,
-                        [
-                            'malformed-override',
+                    $self->tag('malformed-override',
 "Inconsistent architecture negation at line $. (for tag $rawtag)"
-                        ]);
+                    );
                     next;
                 }
 
@@ -212,7 +198,7 @@ sub overrides {
 
             $tagover->{tag} = $tag;
 
-            push(@tags, ['renamed-tag',"$rawtag => $tag at line $."])
+            $self->tag('renamed-tag',"$rawtag => $tag at line $.")
               unless $tag eq $rawtag;
 
             # does not seem to be used anywhere
@@ -279,12 +265,9 @@ sub overrides {
                     # Looks like a wrong package name - technically,
                     # $opkg could be a tag if the tag information is
                     # present, but it is very unlikely.
-                    push(
-                        @tags,
-                        [
-                            'malformed-override',
+                    $self->tag('malformed-override',
 "Possibly wrong package in override at line $. (got $opkg, expected $package)"
-                        ]);
+                    );
                     next;
                 }
             }
@@ -292,13 +275,13 @@ sub overrides {
             # at all), not sure what the problem is so we just throw a
             # generic parse error.
 
-            push(@tags, ['malformed-override', "Cannot parse line $.: $line"]);
+            $self->tag('malformed-override', "Cannot parse line $.: $line");
         }
     }
 
     close($fh);
 
-    return (\%override_data, \@tags);
+    return \%override_data;
 }
 
 1;
