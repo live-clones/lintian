@@ -633,14 +633,15 @@ sub process {
 
             $OUTPUT->debug_msg(1, 'Loading overrides file (if any) ...');
 
-            my $early;
-            eval {($declared_overrides, $early) = $processable->overrides;};
+            eval {$declared_overrides = $processable->overrides;};
             if (my $err = $@) {
                 die $err if not ref $err or $err->errno != ENOENT;
             }
 
-            push(@found, @{$early})
-              if $early;
+            push(@found, @{$processable->found});
+
+            # remove found tags from Processable
+            $processable->found([]);
 
             # treat ignored overrides here
             for my $tagname (keys %{$declared_overrides}) {
@@ -678,14 +679,15 @@ sub process {
             next
               if !$cs->is_check_type($pkg_type);
 
-            my @collected;
-
             $OUTPUT->debug_msg(1, "Running check: $check on $procid  ...");
-            eval {@collected = $cs->run_check($processable, $self);};
+            eval {$cs->run_check($processable, $self);};
             my $err = $@;
             my $raw_res = tv_interval($timer);
 
-            push(@found, @collected);
+            push(@found, @{$processable->found});
+
+            # remove found tags from Processable
+            $processable->found([]);
 
             # add any from the global queue
             push(@found, @{$TAGS->{queue}});
@@ -711,42 +713,25 @@ sub process {
 
         undef $TAGS->{current};
 
-        my @clean;
-
-        for my $tagref (@found) {
-
-            my ($tagname, @extra) = @{$tagref};
-
-            # Clean up @extra and collapse it to a string.  Lintian code
-            # doesn't treat the distinction between extra arguments to tag() as
-            # significant, so we may as well take care of this up front.
-            @extra = grep { length } @extra;
-            my $extra = join(SPACE, @extra) // EMPTY;
-            $extra =~ s/\n/\\n/g;
-
-            push(@clean, [$tagname, $extra]);
-        }
-
         my @keep;
 
-        for my $tagref (@clean) {
-
-            my ($tagname, $extra) = @{$tagref};
-
-            $extra //= EMPTY;
+        for my $tag (@found) {
 
             # Note, we get the known as it will be suppressed by
             # $self->suppressed below if the tag is not enabled.
-            my $taginfo = $self->profile->get_tag($tagname, 1);
-            croak "tried to issue unknown tag $tagname"
+            my $taginfo = $self->profile->get_tag($tag->name, 1);
+            croak 'tried to issue unknown tag ' . $tag->name
               unless $taginfo;
 
+            $tag->info($taginfo);
+
             next
-              if $TAGS->suppressed($tagname);
+              if $TAGS->suppressed($tag->name);
 
             my $override;
+            my $extra = $tag->extra;
 
-            my $tag_overrides= $declared_overrides->{$tagname};
+            my $tag_overrides= $declared_overrides->{$tag->name};
             if ($tag_overrides) {
 
                 # do not use EMPTY; hash keys literal
@@ -772,14 +757,17 @@ sub process {
                       if $match;
                 }
 
-                $used_overrides{$tagname}{$override->{extra}}++
+                $used_overrides{$tag->name}{$override->{extra}}++
                   if $override;
             }
 
-            push(@keep, [$taginfo, $extra, $override]);
+            $tag->override($override);
+
+            push(@keep, $tag);
         }
 
         # look for unused overrides
+        # should this not iterate over $tag_overrides instead?
         for my $tagname (sort keys %used_overrides) {
 
             next
@@ -793,8 +781,14 @@ sub process {
                   if $tag_overrides->{$extra};
 
                 # cannot be overridden or suppressed
+                my $tag = Lintian::Tag::Standard->new;
+                $tag->name('unused-override');
+                $tag->arguments([$tagname, $extra]);
+
                 my $taginfo = $self->profile->get_tag('unused-override', 1);
-                push(@keep, [$taginfo, "$tagname $extra"]);
+                $tag->info($taginfo);
+
+                push(@keep, $tag);
 
                 $override_count->{unused}++;
             }
@@ -802,21 +796,18 @@ sub process {
 
         $procstruct{overrides} = \%used_overrides;
 
-        for my $tagref (@keep) {
-
-            my ($taginfo, $extra, $override) = @{$tagref};
-            my $tagname = $taginfo->tag;
+        for my $tag (@keep) {
 
             my $record = \%statistics;
             $record = $statistics{overrides}
-              if $override;
+              if $tag->override;
 
-            $record->{tags}{$tagname}++;
-            $record->{severity}{$taginfo->severity}++;
-            $record->{certainty}{$taginfo->certainty}++;
+            $record->{tags}{$tag->name}++;
+            $record->{severity}{$tag->info->severity}++;
+            $record->{certainty}{$tag->info->certainty}++;
 
-            my $code = $taginfo->code;
-            $code = 'X' if $taginfo->experimental;
+            my $code = $tag->info->code;
+            $code = 'X' if $tag->info->experimental;
             $record->{types}{$code}++;
         }
 
@@ -840,23 +831,24 @@ sub process {
 
         my @print;
 
-        for my $tagref (@keep) {
-
-            my ($taginfo, $extra, $override) = @{$tagref};
-            my $tagname = $taginfo->tag;
+        for my $tag (@keep) {
 
             next
-              if defined $override
+              if defined $tag->override
               && !$TAGS->{show_overrides};
 
             next
-              unless $TAGS->displayed($tagname);
+              unless $TAGS->displayed($tag->name);
 
-            push(@print, [$taginfo, $extra, $override]);
+            push(@print, $tag);
         }
 
+        # associate all tags with processable
+        $_->processable($processable) for @print;
+
         $OUTPUT->print_start_pkg(\%procstruct);
-        $OUTPUT->print_tag(\%procstruct, @{$_})for @print;
+        $OUTPUT->print_tag(\%procstruct, $_->info, $_->extra, $_->override)
+          for @print;
         $OUTPUT->print_end_pkg(\%procstruct);
 
         $TAGS->{info}{$path} = \%procstruct;
