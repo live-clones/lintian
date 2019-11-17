@@ -69,7 +69,8 @@ sub get_checks_for_file {
     $checks{'missing-depends-on-sensible-utils'}
       = '(?:select-editor|sensible-(?:browser|editor|pager))\b'
       if $file->name !~ m,^usr/share/(?:doc|locale)/,
-      and not $self->info->relation('all')->implies('sensible-utils');
+      and not $self->info->relation('all')->implies('sensible-utils')
+      and not $self->processable->pkg_src eq 'sensible-utils';
 
     $checks{'uses-dpkg-database-directly'} = '/var/lib/dpkg'
       if $file->name !~ m,^usr/share/(?:doc|locale)/,
