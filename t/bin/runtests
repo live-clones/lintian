@@ -393,7 +393,7 @@ if (-t STDOUT && !$unattended) {
 
                 my $decision = <STDIN>;
                 chomp $decision;
-                last if $decision eq 'q';
+                last if $decision eq 'q' || $decision eq EMPTY;
                 next unless $decision eq 'y' || $decision eq 'a';
 
                 $accept_all = 1

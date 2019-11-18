@@ -40,10 +40,10 @@ use POSIX qw(:sys_wait_h);
 my $INIT_ROOT = $ENV{'LINTIAN_ROOT'};
 
 use Lintian::Data;
-use Lintian::Output qw(:messages);
 use Lintian::Inspect::Changelog;
 use Lintian::Internal::FrontendUtil
   qw(default_parallel sanitize_environment open_file_or_fd);
+use Lintian::Output::Standard;
 use Lintian::Processable::Pool;
 use Lintian::Profile;
 use Lintian::Tags;
@@ -87,9 +87,10 @@ my %opt = (                     #hash of some flags from cmd or cfg
     'jobs'              => default_parallel(),
 );
 
-my ($experimental_output_opts, %override_count);
+my $experimental_output_opts;
 
 my (@CLOSE_AT_END, $TAGS);
+my $OUTPUT = Lintian::Output::Standard->new;
 my @certainties = qw(wild-guess possible certain);
 my (@display_level, %display_source, %suppress_tags);
 my ($action, $checks, $check_tags, $dont_check, $received_signal);
@@ -609,21 +610,19 @@ sub main {
             if ($_ eq 'format') {
                 if ($opts{$_} eq 'colons') {
                     require Lintian::Output::ColonSeparated;
-                    $Lintian::Output::GLOBAL
-                      = Lintian::Output::ColonSeparated->new;
+                    $OUTPUT= Lintian::Output::ColonSeparated->new;
                 } elsif ($opts{$_} eq 'letterqualifier') {
                     require Lintian::Output::LetterQualifier;
-                    $Lintian::Output::GLOBAL
-                      = Lintian::Output::LetterQualifier->new;
+                    $OUTPUT= Lintian::Output::LetterQualifier->new;
                 } elsif ($opts{$_} eq 'xml') {
                     require Lintian::Output::XML;
-                    $Lintian::Output::GLOBAL = Lintian::Output::XML->new;
+                    $OUTPUT = Lintian::Output::XML->new;
                 } elsif ($opts{$_} eq 'fullewi') {
                     require Lintian::Output::FullEWI;
-                    $Lintian::Output::GLOBAL = Lintian::Output::FullEWI->new;
+                    $OUTPUT = Lintian::Output::FullEWI->new;
                 } elsif ($opts{$_} eq 'universal') {
                     require Lintian::Output::Universal;
-                    $Lintian::Output::GLOBAL = Lintian::Output::Universal->new;
+                    $OUTPUT = Lintian::Output::Universal->new;
                 }
             }
         }
@@ -648,13 +647,10 @@ sub main {
     fatal_error('The hyperlink value must be one of "on" or "off"')
       unless $opt{'hyperlinks'} =~ /^(?:on|off)$/;
 
-    if (not defined $opt{'tag-display-limit'}) {
-        if (-t STDOUT and not $opt{'verbose'}) {
-            $opt{'tag-display-limit'}
-              = Lintian::Output::DEFAULT_INTERACTIVE_TAG_LIMIT();
-        } else {
-            $opt{'tag-display-limit'} = 0;
-        }
+    if ($opt{'verbose'} || !-t STDOUT) {
+        $opt{'tag-display-limit'} //= 0;
+    } else {
+        $opt{'tag-display-limit'} //= 4;
     }
 
     if ($opt{'debug'}) {
@@ -698,19 +694,18 @@ sub main {
         $opt{'verbose'} = 0 unless defined($opt{'verbose'});
     }
 
-    $Lintian::Output::GLOBAL->verbosity_level($opt{'verbose'});
-    $Lintian::Output::GLOBAL->debug($opt{'debug'});
+    $OUTPUT->verbosity_level($opt{'verbose'});
+    $OUTPUT->debug($opt{'debug'});
 
-    $Lintian::Output::GLOBAL->color($opt{'color'});
-    $Lintian::Output::GLOBAL->tty_hyperlinks($hyperlinks_capable
-          && $opt{hyperlinks} eq 'on');
-    $Lintian::Output::GLOBAL->tag_display_limit($opt{'tag-display-limit'});
-    $Lintian::Output::GLOBAL->showdescription($opt{'info'});
+    $OUTPUT->color($opt{'color'});
+    $OUTPUT->tty_hyperlinks($hyperlinks_capable&& $opt{hyperlinks} eq 'on');
+    $OUTPUT->tag_display_limit($opt{'tag-display-limit'});
+    $OUTPUT->showdescription($opt{'info'});
 
-    $Lintian::Output::GLOBAL->perf_debug($opt{'perf-debug'});
+    $OUTPUT->perf_debug($opt{'perf-debug'});
     if (defined(my $perf_log = $opt{'perf-output'})) {
         my $fd = open_file_or_fd($perf_log, '>');
-        $Lintian::Output::GLOBAL->perf_log_fd($fd);
+        $OUTPUT->perf_log_fd($fd);
 
         push(@CLOSE_AT_END, [$fd, $perf_log]);
     }
@@ -723,8 +718,6 @@ sub main {
     } else {
         open($STATUS_FD, '>', '/dev/null');
     }
-
-    $Lintian::Output::GLOBAL->print_first();
 
     # check for arguments
     if (    $action =~ /^(?:check|unpack)$/
@@ -746,12 +739,12 @@ sub main {
         my $banner = lintian_banner();
         # Print Debug banner, now that we're finished determining
         # the values and have Lintian::Output available
-        debug_msg(
+        $OUTPUT->debug_msg(
             1,$banner,
             "Lintian root directory: $INIT_ROOT",
             "Configuration file: $opt{'LINTIAN_CFG'}",
             'UTF-8: ✓ (☃)',
-            delimiter(),
+            $OUTPUT->delimiter,
         );
     }
 
@@ -761,7 +754,7 @@ sub main {
     # Ensure $opt{'LINTIAN_PROFILE'} is defined
     $opt{'LINTIAN_PROFILE'} = $PROFILE->name
       unless defined($opt{'LINTIAN_PROFILE'});
-    v_msg('Using profile ' . $PROFILE->name . '.');
+    $OUTPUT->v_msg('Using profile ' . $PROFILE->name . '.');
     Lintian::Data->set_vendor($PROFILE);
 
     $TAGS = Lintian::Tags->new;
@@ -842,81 +835,19 @@ sub main {
     }
 
     if ($pool->empty) {
-        v_msg('No packages selected.');
+        $OUTPUT->v_msg('No packages selected.');
         exit $exit_code;
     }
 
     $ENV{INIT_ROOT} = $INIT_ROOT;
 
     $pool->process(
-        $action, $PROFILE,$TAGS,
-        \$exit_code,\%override_count, \%opt,
-        $memory_usage,$STATUS_FD, \@unpack_info
+        $action, $PROFILE,$TAGS,\$exit_code, \%opt,
+        $memory_usage,$STATUS_FD, \@unpack_info, $OUTPUT
     );
 
     retrigger_signal()
       if $received_signal;
-
-    if (    $action eq 'check'
-        and not $opt{'no-override'}
-        and not $opt{'show-overrides'}) {
-        my $errors = $override_count{errors} || 0;
-        my $warnings = $override_count{warnings} || 0;
-        my $info = $override_count{info} || 0;
-        my $total = $errors + $warnings + $info;
-        my $unused = $TAGS->{unused_overrides};
-        if ($total > 0 or $unused > 0) {
-            my $text
-              = ($total == 1)
-              ? "$total tag overridden"
-              : "$total tags overridden";
-            my @output;
-            if ($errors) {
-                push(@output,
-                    ($errors == 1) ? "$errors error" : "$errors errors");
-            }
-            if ($warnings) {
-                push(@output,
-                    ($warnings == 1)
-                    ? "$warnings warning"
-                    : "$warnings warnings");
-            }
-            if ($info) {
-                push(@output, "$info info");
-            }
-            if (@output) {
-                $text .= ' (' . join(', ', @output). ')';
-            }
-            if ($unused == 1) {
-                $text .= "; $unused unused override";
-            } elsif ($unused > 1) {
-                $text .= "; $unused unused overrides";
-            }
-            msg($text);
-        }
-    }
-
-    my $ign_over = $TAGS->ignored_overrides;
-    if (keys %$ign_over) {
-        msg(
-            join(q{ },
-                'Some overrides were ignored,',
-                'since the tags were marked "non-overridable".'));
-        if ($opt{'verbose'}) {
-            v_msg(
-                join(q{ },
-                    'The following tags were "non-overridable"',
-                    'and had at least one override'));
-            foreach my $tag (sort keys %$ign_over) {
-                v_msg("  - $tag");
-            }
-        } else {
-            msg('Use --verbose for more information.');
-        }
-    }
-
-    # universal format sorts output from all packages before printing here
-    $Lintian::Output::GLOBAL->print_last();
 
     # }}}
 
@@ -1271,7 +1202,7 @@ sub retrigger_signal {
     # Re-kill ourselves with the same signal to ensure that the exit
     # code reflects that we died by a signal.
     local $SIG{$received_signal} = \&_die_in_signal_handler;
-    debug_msg(2, "Retriggering signal SIG${received_signal}");
+    $OUTPUT->debug_msg(2, "Retriggering signal SIG${received_signal}");
     return kill($received_signal, $$);
 }
 

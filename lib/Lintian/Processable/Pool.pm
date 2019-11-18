@@ -32,7 +32,6 @@ use POSIX qw(:sys_wait_h);
 
 use Lintian::DepMap;
 use Lintian::DepMap::Properties;
-use Lintian::Output qw(:messages);
 use Lintian::Processable::Group;
 use Lintian::Util;
 
@@ -149,8 +148,8 @@ Process the pool.
 sub process{
     my (
         $self, $action,$PROFILE,$TAGS,
-        $exit_code_ref, $override_count,$opt,$memory_usage,
-        $STATUS_FD, $unpack_info_ref
+        $exit_code_ref, $opt,$memory_usage,$STATUS_FD,
+        $unpack_info_ref, $OUTPUT
     ) = @_;
 
     # $map is just here to check that all the needed collections are present.
@@ -169,7 +168,8 @@ sub process{
 
         my $cs = Lintian::CollScript->new("$dirname/$file");
 
-        debug_msg(2, 'Read collector description for ' . $cs->name . '...');
+        $OUTPUT->debug_msg(2,
+            'Read collector description for ' . $cs->name . '...');
         $collmap->add($cs->name, $cs->needs_info, $cs);
         $map->addp('coll-' . $cs->name, 'coll-', $cs->needs_info);
     }
@@ -178,7 +178,7 @@ sub process{
       or warn 'Close failed';
 
     my @scripts = sort $PROFILE->scripts;
-    debug_msg(
+    $OUTPUT->debug_msg(
         1,
         "Selected action: $action",
         sprintf('Selected checks: %s', join(',', @scripts)),
@@ -235,11 +235,13 @@ sub process{
     # With --unpack we want all of them.  That's the default so,
     # "done!"
 
+    my %override_count;
+
     my @sorted = sort { $a->name cmp $b->name } values %{$self->groups};
     foreach my $group (@sorted) {
         my $success = 1;
 
-        v_msg('Starting on group ' . $group->name);
+        $OUTPUT->v_msg('Starting on group ' . $group->name);
 
         my $total_start = [gettimeofday];
         my $group_start = [gettimeofday];
@@ -250,21 +252,21 @@ sub process{
         $group->extra_coll(\@requested);
         $group->jobs($opt->{'jobs'});
 
-        if (!$group->unpack($collmap, $action,$exit_code_ref)) {
+        if (!$group->unpack($collmap, $action,$exit_code_ref, $OUTPUT)) {
             $success = 0;
         }
 
         my $raw_res = tv_interval($group_start);
         my $tres = sprintf('%.3fs', $raw_res);
 
-        debug_msg(1, 'Unpack of ' . $group->name . " done ($tres)");
-        perf_log($group->name . ",total-group-unpack,${raw_res}");
+        $OUTPUT->debug_msg(1, 'Unpack of ' . $group->name . " done ($tres)");
+        $OUTPUT->perf_log($group->name . ",total-group-unpack,${raw_res}");
 
         if ($action eq 'check') {
             if (
                 !$group->process(
-                    $TAGS,$exit_code_ref, $override_count,
-                    $opt,$memory_usage
+                    $TAGS,$exit_code_ref, \%override_count,
+                    $opt,$memory_usage, $OUTPUT
                 )
             ) {
                 $success = 0;
@@ -296,7 +298,7 @@ sub process{
         }
 
         # remove group files unless we are keeping the lab
-        $group->clean_lab
+        $group->clean_lab($OUTPUT)
           unless ($self->keep);
 
        # Wait for any remaining jobs - There will usually not be any
@@ -314,11 +316,72 @@ sub process{
         } else {
             print {$STATUS_FD} 'error ' . $group->name . " ($total_tres)\n";
         }
-        v_msg('Finished processing group ' . $group->name);
+        $OUTPUT->v_msg('Finished processing group ' . $group->name);
     }
 
     # do not remove lab if so selected
     $self->keep($opt->{'keep-lab'});
+
+    if (    $action eq 'check'
+        and not $opt->{'no-override'}
+        and not $opt->{'show-overrides'}) {
+
+        my $errors = $override_count{errors} || 0;
+        my $warnings = $override_count{warnings} || 0;
+        my $info = $override_count{info} || 0;
+        my $total = $errors + $warnings + $info;
+
+        my $unused = $override_count{unused} || 0;
+
+        if ($total > 0 or $unused > 0) {
+            my $text
+              = ($total == 1)
+              ? "$total tag overridden"
+              : "$total tags overridden";
+            my @output;
+            if ($errors) {
+                push(@output,
+                    ($errors == 1) ? "$errors error" : "$errors errors");
+            }
+            if ($warnings) {
+                push(@output,
+                    ($warnings == 1)
+                    ? "$warnings warning"
+                    : "$warnings warnings");
+            }
+            if ($info) {
+                push(@output, "$info info");
+            }
+            if (@output) {
+                $text .= ' (' . join(', ', @output). ')';
+            }
+            if ($unused == 1) {
+                $text .= "; $unused unused override";
+            } elsif ($unused > 1) {
+                $text .= "; $unused unused overrides";
+            }
+            $OUTPUT->msg($text);
+        }
+    }
+
+    my $ign_over = $override_count{ignored};
+    if (keys %$ign_over) {
+        $OUTPUT->msg(
+            join(q{ },
+                'Some overrides were ignored,',
+                'since the tags were marked "non-overridable".'));
+        if ($opt->{'verbose'}) {
+            $OUTPUT->v_msg(
+                join(q{ },
+                    'The following tags were "non-overridable"',
+                    'and had at least one override'));
+            foreach my $tag (sort keys %$ign_over) {
+                $OUTPUT->v_msg("  - $tag");
+            }
+        } else {
+            $OUTPUT->msg('Use --verbose for more information.');
+        }
+    }
 
     return;
 }

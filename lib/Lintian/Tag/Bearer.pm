@@ -16,25 +16,27 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-package Lintian::Tag::Finder;
+package Lintian::Tag::Bearer;
 
 use strict;
 use warnings;
 use v5.16;
+
+use Lintian::Tag::Standard;
 
 use Moo::Role;
 use namespace::clean;
 
 =head1 NAME
 
-Lintian::Tag::Finder -- Facilities for objects finding Lintian tags
+Lintian::Tag::Bearer -- Facilities for objects receiving Lintian tags
 
 =head1 SYNOPSIS
 
  use Moo;
 use namespace::clean;
 
- with('Lintian::Tag::Finder');
+ with('Lintian::Tag::Bearer');
 
 =head1 DESCRIPTION
 
@@ -52,9 +54,13 @@ Store found tags for later processing.
 
 sub tag {
 
-    my ($self, @args) = @_;
+    my ($self, $tagname, @extra) = @_;
 
-    push(@{$self->found}, [@args]);
+    my $tag = Lintian::Tag::Standard->new;
+    $tag->name($tagname);
+    $tag->arguments(\@extra);
+
+    push(@{$self->found}, $tag);
 
     return;
 }

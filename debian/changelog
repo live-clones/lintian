@@ -1,3 +1,10 @@
+lintian (2.36.0) unstable; urgency=medium
+
+  * Don't emit systemd-service-file-missing-install-key for .service files
+    with corresponding .path or .timer pairs. (Closes: #944145)
+
+ -- Chris Lamb <lamby@debian.org>  Fri, 15 Nov 2019 12:18:04 +0000
+
 lintian (2.35.0~bpo9+1) stretch-backports; urgency=medium
 
   * Rebuild for stretch-backports.

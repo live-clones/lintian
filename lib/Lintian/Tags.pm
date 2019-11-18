@@ -28,6 +28,8 @@ use Exporter qw(import);
 use List::MoreUtils qw(any);
 use Path::Tiny;
 
+use Lintian::Tag::Standard;
+
 BEGIN {
     our @EXPORT_OK = qw(tag);
 }
@@ -154,12 +156,9 @@ sub new {
         },
         display_source       => {},
         files                => {},
-        unused_overrides     => 0,
-        ignored_overrides    => {},
         profile              => undef,
         show_experimental    => 0,
         show_overrides       => 0,
-        statistics           => {},
         queue                => [],
     };
     bless($self, $class);
@@ -190,12 +189,16 @@ sub tag {
     unless (ref $_[0] eq 'Lintian::Tags') {
         unshift(@_, $GLOBAL);
     }
-    my ($self, $tag, @extra) = @_;
+    my ($self, $tagname, @extra) = @_;
     unless ($self->{current}) {
-        die "tried to issue tag $tag without starting a file";
+        die "tried to issue tag $tagname without starting a file";
     }
 
-    push(@{$self->{queue}}, [$tag, @extra]);
+    my $tag = Lintian::Tag::Standard->new;
+    $tag->name($tagname);
+    $tag->arguments(\@extra);
+
+    push(@{$self->{queue}}, $tag);
 
     return;
 }
@@ -430,19 +433,6 @@ sub suppressed {
     my ($self, $tag) = @_;
     return 1 if $self->{profile} and not $self->{profile}->get_tag($tag);
     return;
-}
-
-=item ignored_overrides()
-
-Returns a hash of tags, for which overrides have been ignored.  The
-keys are tag names and the value is the number of overrides that has
-been ignored.
-
-=cut
-
-sub ignored_overrides {
-    my ($self) = @_;
-    return $self->{ignored_overrides};
 }
 
 =back
