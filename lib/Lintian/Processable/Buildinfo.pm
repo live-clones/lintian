@@ -36,6 +36,8 @@ use namespace::clean;
 with 'Lintian::Info::Fields::Files', 'Lintian::Info::Overrides',
   'Lintian::Processable';
 
+=for Pod::Coverage BUILDARGS
+
 =head1 NAME
 
 Lintian::Processable::Buildinfo -- A buildinfo file Lintian can process
@@ -72,48 +74,42 @@ sub init {
     croak "File $file does not exist"
       unless -e $file;
 
-    $self->pkg_path($file);
+    $self->path($file);
 
-    $self->pkg_type('buildinfo');
+    $self->type('buildinfo');
     $self->link_label('buildinfo');
 
-    my $cinfo = get_dsc_info($self->pkg_path)
-      or croak $self->pkg_path. ' is not a valid '. $self->pkg_type . ' file';
+    my $cinfo = get_dsc_info($self->path)
+      or croak $self->path. ' is not a valid '. $self->type . ' file';
 
-    my $package = $cinfo->{source};
-    my $version = $cinfo->{version};
-    my $architecture = $cinfo->{architecture};
-
-    unless (length $package) {
-        $package = $self->guess_name($self->pkg_path);
-        croak 'Cannot determine the name from '. $self->pkg_path
-          unless length $package;
-    }
-
-    $self->pkg_name($package // EMPTY);
-    $self->pkg_version($version // EMPTY);
-    $self->pkg_arch($architecture // EMPTY);
-
-    $self->pkg_src($self->pkg_name);
-    $self->pkg_src_version($self->pkg_version);
-
-    $self->extra_fields($cinfo);
-
-    $self->name($self->pkg_name);
-    $self->type($self->pkg_type);
     $self->verbatim($cinfo);
 
-    # make sure none of the fields can cause traversal
-    $self->clean_field($_)
-      for ('pkg_name', 'pkg_version', 'pkg_src', 'pkg_src_version','pkg_arch');
+    my $name = $cinfo->{source} // EMPTY;
+    my $version = $cinfo->{version} // EMPTY;
+    my $architecture = $cinfo->{architecture} // EMPTY;
 
-    my $id
-      = $self->pkg_type . COLON . $self->pkg_name . SLASH . $self->pkg_version;
+    unless (length $name) {
+        $name = $self->guess_name($self->path);
+        croak 'Cannot determine the name from '. $self->path
+          unless length $name;
+    }
 
-    # add architecture unless it is source
-    $id .= SLASH . $self->pkg_arch;
+    my $source = $name;
+    my $source_version = $version;
 
-    $self->identifier($id);
+    $self->name($name);
+    $self->version($version);
+    $self->architecture($architecture);
+    $self->source($source);
+    $self->source_version($source_version);
+
+    # make sure none of these fields can cause traversal
+    $self->tainted(1)
+      if $self->name ne $name
+      || $self->version ne $version
+      || $self->architecture ne $architecture
+      || $self->source ne $source
+      || $self->source_version ne $source_version;
 
     return;
 }
