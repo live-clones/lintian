@@ -38,6 +38,8 @@ use constant EVIL_CHARACTERS => qr,[/&|;\$"'<>],o;
 use Moo::Role;
 use namespace::clean;
 
+with 'Lintian::Tag::Bearer';
+
 =encoding utf-8
 
 =head1 NAME

@@ -24,13 +24,15 @@ use autodie;
 use Path::Tiny;
 
 use Lintian::Architecture qw(:all);
-use Lintian::Tag::Override;
 use Lintian::Util qw($PKGNAME_REGEX strip);
 
 use constant EMPTY => q{};
 
 use Moo::Role;
 use namespace::clean;
+
+# renamed tag list
+my $RENAMED_TAGS = Lintian::Data->new('override/renamed-tags',qr/\s*=>\s*/);
 
 =head1 NAME
 
@@ -62,15 +64,11 @@ file cannot be opened.
 =cut
 
 sub overrides {
-    my ($self, $TAGS) = @_;
-
-    my @tags;
+    my ($self) = @_;
 
     my $package = $self->pkg_name;
     my $architecture = $self->pkg_arch;
     my $type = $self->pkg_type;
-
-    my %overrides_data;
 
     my $comments = [];
     my $last_over;
@@ -80,6 +78,8 @@ sub overrides {
 
     return
       unless -f $overrides_path;
+
+    my %override_data;
 
     open(my $fh, '<:encoding(UTF-8)', $overrides_path);
 
@@ -126,22 +126,16 @@ sub overrides {
             my ($rawtag, $extra) = split(/ /, $tagdata, 2);
 
             if ($opkg_type and $opkg_type ne $type) {
-                push(
-                    @tags,
-                    [
-                        'malformed-override',
+                $self->tag('malformed-override',
 "Override of $rawtag for package type $opkg_type (expecting $type) at line $."
-                    ]);
+                );
                 next;
             }
 
             if ($architecture eq 'all' && $archlist) {
-                push(
-                    @tags,
-                    [
-                        'malformed-override',
+                $self->tag('malformed-override',
 "Architecture list for arch:all package at line $. (for tag $rawtag)"
-                    ]);
+                );
                 next;
             }
 
@@ -159,24 +153,18 @@ sub overrides {
                     } elsif (is_arch($a)) {
                         $found = 1 if $a eq $architecture;
                     } else {
-                        push(
-                            @tags,
-                            [
-                                'malformed-override',
+                        $self->tag('malformed-override',
 "Unknown architecture \"$a\" at line $. (for tag $rawtag)"
-                            ]);
+                        );
                         next OVERRIDE;
                     }
                 }
 
                 if ($negated > 0 && scalar @archs != $negated){
                     # missing a ! somewhere
-                    push(
-                        @tags,
-                        [
-                            'malformed-override',
+                    $self->tag('malformed-override',
 "Inconsistent architecture negation at line $. (for tag $rawtag)"
-                        ]);
+                    );
                     next;
                 }
 
@@ -189,35 +177,65 @@ sub overrides {
                   unless $found;
             }
 
-            if ($last_over && $last_over->tag eq $rawtag && !scalar @$comments)
-            {
+            if (   $last_over
+                && $last_over->{tag} eq $rawtag
+                && !scalar @$comments){
                 # There are no new comments, no "empty line" in between and
                 # this tag is the same as the last, so we "carry over" the
                 # comment from the previous override (if any).
                 #
                 # Since L::T::Override is (supposed to be) immutable, the new
                 # override can share the reference with the previous one.
-                $comments = $last_over->comments;
+                $comments = $last_over->{comments};
             }
 
-            $extra //= EMPTY;
+            my $tagover = {};
 
-            my $tagover = Lintian::Tag::Override->new(
-                $rawtag,
-                {
-                    'extra' => $extra,
-                    'comments' => $comments,
-                });
+            # use new name if tag was renamed
+            my $tag = $rawtag;
+            $tag = $RENAMED_TAGS->value($rawtag)
+              if $RENAMED_TAGS->known($rawtag);
 
-            # tag will be changed here if renamed reread
-            my $tag = $tagover->{'tag'};
+            $tagover->{tag} = $tag;
 
-            $comments = [];
-
-            push(@tags, ['renamed-tag',"$rawtag => $tag at line $."])
+            $self->tag('renamed-tag',"$rawtag => $tag at line $.")
               unless $tag eq $rawtag;
 
-            $overrides_data{$tag}{$extra} = $tagover;
+            # does not seem to be used anywhere
+            $tagover->{arch} = 'any';
+
+            $extra //= EMPTY;
+            $tagover->{extra} = $extra;
+
+            if ($extra =~ m/\*/o) {
+                # It is a pattern, pre-compute it
+                my $pattern = $extra;
+                my $end = ''; # Trailing "match anything" (if any)
+                my $pat = ''; # The rest of the pattern
+                 # Split does not help us if $pattern ends with *
+                 # so we deal with that now
+                if ($pattern =~ s/\Q*\E+\z//o){
+                    $end = '.*';
+                }
+
+                # Are there any * left (after the above)?
+                if ($pattern =~ m/\Q*\E/o) {
+                    # this works even if $text starts with a *, since
+                    # that is split as '', <text>
+                    my @pargs = split(m/\Q*\E++/o, $pattern);
+                    $pat = join('.*', map { quotemeta($_) } @pargs);
+                } else {
+                    $pat = $pattern;
+                }
+
+                $tagover->{pattern} = qr/$pat$end/;
+            }
+
+            $tagover->{comments} = $comments;
+            $comments = [];
+
+            $override_data{$tag} = {};
+            $override_data{$tag}{$extra} = $tagover;
 
             $last_over = $tagover;
 
@@ -247,12 +265,9 @@ sub overrides {
                     # Looks like a wrong package name - technically,
                     # $opkg could be a tag if the tag information is
                     # present, but it is very unlikely.
-                    push(
-                        @tags,
-                        [
-                            'malformed-override',
+                    $self->tag('malformed-override',
 "Possibly wrong package in override at line $. (got $opkg, expected $package)"
-                        ]);
+                    );
                     next;
                 }
             }
@@ -260,15 +275,13 @@ sub overrides {
             # at all), not sure what the problem is so we just throw a
             # generic parse error.
 
-            push(@tags, ['malformed-override', "Cannot parse line $.: $line"]);
+            $self->tag('malformed-override', "Cannot parse line $.: $line");
         }
     }
 
     close($fh);
 
-    $TAGS->{info}{$self->pkg_path}{'overrides-data'} = \%overrides_data;
-
-    return @tags;
+    return \%override_data;
 }
 
 1;

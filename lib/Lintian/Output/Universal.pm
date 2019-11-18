@@ -22,12 +22,8 @@ use strict;
 use warnings;
 use v5.12;
 
-use List::MoreUtils qw(all);
-
-use Lintian::Output qw(:util);
-use parent qw(Lintian::Output);
-
 use Carp;
+use List::MoreUtils qw(all);
 
 use constant SPACE => q{ };
 use constant EMPTY => q{};
@@ -35,6 +31,11 @@ use constant COLON => q{:};
 use constant LPARENS => q{(};
 use constant RPARENS => q{)};
 use constant NEWLINE => qq{\n};
+
+use Moo;
+use namespace::clean;
+
+with 'Lintian::Output';
 
 =head1 NAME
 
@@ -57,21 +58,27 @@ A class for printing tags using the 'universal' format.
 =cut
 
 sub print_tag {
-    my ($self, $pkg_info, $tag_info, $details, $override) = @_;
+    my ($self, $tag) = @_;
+
+    my $tag_info = $tag->info;
+    my $details = $tag->extra;
+    my $override = $tag->override;
+    my $processable = $tag->processable;
+
     $self->issued_tag($tag_info->tag);
 
     my $odata = '';
     if ($override) {
-        $odata = $override->tag;
-        $odata .= ' ' . $self->_quote_print($override->extra)
-          if $override->extra;
+        $odata = $override->{tag};
+        $odata .= ' ' . $self->_quote_print($override->{extra})
+          if $override->{extra};
     }
 
     my $line
-      = $pkg_info->{package}
+      = $processable->name
       . SPACE
       . LPARENS
-      . $pkg_info->{type}
+      . $processable->type
       . RPARENS
       . COLON
       . SPACE

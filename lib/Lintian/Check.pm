@@ -27,8 +27,6 @@ use constant EMPTY => q{};
 use Moo::Role;
 use namespace::clean;
 
-with 'Lintian::Tag::Finder';
-
 =head1 NAME
 
 Lintian::Check -- Common facilities for Lintian checks
@@ -145,6 +143,18 @@ sub build_path {
       unless $buildinfo;
 
     return $buildinfo->info->field('build-path', EMPTY);
+}
+
+=item tag
+
+Tag the processable associated with this check
+
+=cut
+
+sub tag {
+    my ($self, @arguments) = @_;
+
+    return $self->processable->tag(@arguments);
 }
 
 =back

@@ -45,7 +45,10 @@ package Lintian::Output::FullEWI;
 use strict;
 use warnings;
 
-use parent qw(Lintian::Output);
+use Moo;
+use namespace::clean;
+
+with 'Lintian::Output';
 
 =head1 NAME
 
@@ -67,16 +70,16 @@ A parent class specializing in Lintian output.
 
 # Overridden from Lintian::Output
 sub _format_pkg_info {
-    my ($self, $pkg_info, $tag_info, $override) = @_;
+    my ($self, $processable, $tag_info, $override) = @_;
     my $code = $tag_info->code;
     $code = 'X' if $tag_info->experimental;
     $code = 'O' if defined $override;
-    my $version = $pkg_info->{version};
+    my $version = $processable->pkg_version;
     my $arch = '';
-    my $type = $pkg_info->{type};
-    $arch = "$pkg_info->{arch}" if $pkg_info->{type} ne 'source';
+    my $type = $processable->type;
+    $arch = $processable->pkg_arch if $processable->type ne 'source';
     $arch = 'source' unless $arch;
-    return "$code: $pkg_info->{package} $type ($version) [$arch]";
+    return "$code: " . $processable->name . " $type ($version) [$arch]";
 }
 
 =back

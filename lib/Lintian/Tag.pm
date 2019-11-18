@@ -1,0 +1,101 @@
+# Copyright © 2019 Felix Lechner
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, you can find it on the World Wide
+# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
+# MA 02110-1301, USA.
+
+package Lintian::Tag;
+
+use strict;
+use warnings;
+use v5.16;
+
+use constant EMPTY => q{};
+use constant SPACE => q{ };
+
+use Moo::Role;
+use namespace::clean;
+
+=head1 NAME
+
+Lintian::Tag -- Common facilities for Lintian tags found and to be issued
+
+=head1 SYNOPSIS
+
+ use Moo;
+ use namespace::clean;
+
+ with 'Lintian::Tag';
+
+=head1 DESCRIPTION
+
+Common facilities for Lintian tags found and to be issued
+
+=head1 INSTANCE METHODS
+
+=over 4
+
+=item arguments
+=item info
+=item name
+=item override
+=item processable
+
+=item extra
+
+Calculate the string representation commonly referred to as 'extra'.
+
+=cut
+
+has arguments => (is => 'rw', default => sub { [] });
+has info => (is => 'rw');
+has name => (is => 'rw');
+has override => (is => 'rw');
+has processable => (is => 'rw');
+
+sub extra {
+    my ($self) = @_;
+
+    # skip empty arguments
+    my @relevant = grep { length } @{$self->arguments};
+
+    # concatenate with spaces
+    my $extra = join(SPACE, @relevant) // EMPTY;
+
+    # escape newlines; maybe add others
+    $extra =~ s/\n/\\n/g;
+
+    return $extra;
+}
+
+=back
+
+=head1 AUTHOR
+
+Originally written by Felix Lechner <felix.lechner@lease-up.com> for Lintian.
+
+=head1 SEE ALSO
+
+lintian(1)
+
+=cut
+
+1;
+
+# Local Variables:
+# indent-tabs-mode: nil
+# cperl-indent-level: 4
+# End:
+# vim: syntax=perl sw=4 sts=4 sr et

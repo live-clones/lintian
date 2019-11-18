@@ -20,19 +20,48 @@
 # MA 02110-1301, USA.
 
 package Lintian::Output::ColonSeparated;
+
 use strict;
 use warnings;
 
-use Lintian::Output qw(:util);
-use parent qw(Lintian::Output);
+use Moo;
+use namespace::clean;
+
+with 'Lintian::Output';
+
+=head1 NAME
+
+Lintian::Output::ColonSeparated - colon-separated tag output
+
+=head1 SYNOPSIS
+
+    use Lintian::Output::ColonSeparated;
+
+=head1 DESCRIPTION
+
+Provides colon-separated tag output.
+
+=head1 INSTANCE METHODS
+
+=over 4
+
+=item print_tag
+
+=cut
 
 sub print_tag {
-    my ($self, $pkg_info, $tag_info, $information, $override) = @_;
+    my ($self, $tag) = @_;
+
+    my $tag_info = $tag->info;
+    my $information = $tag->extra;
+    my $override = $tag->override;
+    my $processable = $tag->processable;
+
     my $odata = '';
     if ($override) {
-        $odata = $override->tag;
-        $odata .= ' ' . $self->_quote_print($override->extra)
-          if $override->extra;
+        $odata = $override->{tag};
+        $odata .= ' ' . $self->_quote_print($override->{extra})
+          if $override->{extra};
     }
 
     $self->issued_tag($tag_info->tag);
@@ -42,7 +71,10 @@ sub print_tag {
         $tag_info->severity,
         $tag_info->certainty,
         ($tag_info->experimental ? 'X' : '') . (defined($override) ? 'O' : ''),
-        @{$pkg_info}{'package','version','arch','type'},
+        $processable->name,
+        $processable->pkg_version,
+        $processable->pkg_arch,
+        $processable->type,
         $tag_info->tag,
         $self->_quote_print($information),
         $odata,
@@ -80,8 +112,12 @@ sub _print {
     return;
 }
 
+=item string
+
+=cut
+
 sub string {
-    my ($self, @args) = _global_or_object(@_);
+    my ($self, @args) = @_;
 
     return join(':', _quote_char(':', @args))."\n";
 }
@@ -96,6 +132,10 @@ sub _quote_char {
 
     return @items;
 }
+
+=back
+
+=cut
 
 1;
 

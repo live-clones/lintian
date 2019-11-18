@@ -28,13 +28,12 @@ use File::Spec;
 use IO::Async::Loop;
 use IO::Async::Routine;
 use List::Compare;
-use List::MoreUtils qw(uniq);
+use List::MoreUtils qw(uniq firstval);
 use Path::Tiny;
 use POSIX qw(ENOENT);
 use Time::HiRes qw(gettimeofday tv_interval);
 
 use Lintian::Collect::Group;
-use Lintian::Output qw(:messages);
 use Lintian::Processable::Binary;
 use Lintian::Processable::Buildinfo;
 use Lintian::Processable::Changes;
@@ -314,7 +313,7 @@ Unpack this group.
 =cut
 
 sub unpack {
-    my ($self, $collmap, $action, $exit_code_ref)= @_;
+    my ($self, $collmap, $action, $exit_code_ref, $OUTPUT)= @_;
 
     my $clonedmap = $collmap->clone;
 
@@ -477,11 +476,11 @@ sub unpack {
         $self->coll_priorities(\@priorities);
     }
 
-    v_msg('Unpacking packages in group ' . $self->name);
+    $OUTPUT->v_msg('Unpacking packages in group ' . $self->name);
 
     my %timers;
     my $hook = sub {
-        $self->coll_hook($action, $exit_code_ref, \%timers, @_)
+        $self->coll_hook($OUTPUT, $action, $exit_code_ref, \%timers, @_)
           or $all_ok = 0;
     };
 
@@ -498,13 +497,13 @@ sub unpack {
     my $loop = IO::Async::Loop->new;
 
     for (0..$self->jobs-1) {
-        my $task = $self->find_next_task();
+        my $task = $self->find_next_task($OUTPUT);
         last if not $task;
 
         my $slice = $loop->new_future;
         push(@slices, $slice);
 
-        $self->start_task($slice, $hook, $task);
+        $self->start_task($slice, $hook, $task, $OUTPUT);
     }
 
     Future->wait_all(@slices)->get;
@@ -519,7 +518,8 @@ Collection hook.
 =cut
 
 sub coll_hook {
-    my ($self, $action, $exit_code_ref,$timers, $task, $event, $exitval)= @_;
+    my ($self, $OUTPUT, $action, $exit_code_ref,$timers, $task, $event,
+        $exitval)= @_;
 
     my $coll = $task->script->name;
     my $procid = $task->processable->identifier;
@@ -528,7 +528,7 @@ sub coll_hook {
 
     if ($event eq 'start') {
         $timers->{$task->id} = [gettimeofday];
-        debug_msg(1, "Collecting info: $coll for $procid ...");
+        $OUTPUT->debug_msg(1, "Collecting info: $coll for $procid ...");
 
         return 1;
 
@@ -539,7 +539,7 @@ sub coll_hook {
           = "collection $coll failed for $pkg_type package $pkg_name, skipping $action";
         $string .= " error: $exitval"
           if $exitval;
-        warning($string);
+        $OUTPUT->warning($string);
 
         my $pkg_type = $task->processable->pkg_type;
         if (   $pkg_type eq 'source'
@@ -563,8 +563,9 @@ sub coll_hook {
         # success
         my $raw_res = tv_interval($timers->{$task->id});
         my $tres = sprintf('%.3fs', $raw_res);
-        debug_msg(1, "Collection script $coll for $procid done ($tres)");
-        perf_log("$procid,coll/$coll,${raw_res}");
+        $OUTPUT->debug_msg(1,
+            "Collection script $coll for $procid done ($tres)");
+        $OUTPUT->perf_log("$procid,coll/$coll,${raw_res}");
 
         return 0;
     }
@@ -580,11 +581,23 @@ Process group.
 =cut
 
 sub process {
-    my ($self, $TAGS, $exit_code_ref, $override_count,$opt, $memory_usage)= @_;
+    my ($self, $TAGS, $exit_code_ref, $override_count,$opt, $memory_usage,
+        $OUTPUT)
+      = @_;
 
     my $all_ok = 1;
 
     my $timer = [gettimeofday];
+
+    my %statistics = (
+        types     => {},
+        severity  => {},
+        certainty => {},
+        tags      => {},
+        overrides => {},
+    );
+
+    my @reported;
 
     foreach my $processable ($self->get_processables){
         my $pkg_type = $processable->pkg_type;
@@ -592,68 +605,52 @@ sub process {
 
         my $path = $processable->pkg_path;
 
-        die "duplicate of file $path added to Lintian::Tags object"
-          if exists $TAGS->{info}{$path};
-
-        $TAGS->{info}{$path} = {
-            file              => $path,
-            package           => $processable->pkg_name,
-            version           => $processable->pkg_version,
-            arch              => $processable->pkg_arch,
-            type              => $processable->pkg_type,
-            processable       => $processable,
-            overrides         => {},
-            'overrides-data'  => {},
-        };
-
-        $TAGS->{statistics}{$path} = {
-            types     => {},
-            severity  => {},
-            certainty => {},
-            tags      => {},
-            overrides => {},
-        };
-
+        # required for global Lintian::Tags::tag usage
         $TAGS->{current} = $path;
 
-        my $procstruct = $TAGS->{info}{$path};
-        my $overrides_data = $procstruct->{'overrides-data'};
-        my $overrides = $procstruct->{overrides};
-        my $stats = $TAGS->{statistics}{$path};
+        my $declared_overrides;
+        my %used_overrides;
 
-        $Lintian::Output::GLOBAL->print_start_pkg($procstruct);
+        # to store tag names as well
+        my $override_count->{ignored} = {};
 
-        debug_msg(1, 'Base directory for group: ' . $processable->groupdir);
+        $OUTPUT->debug_msg(1,
+            'Base directory for group: ' . $processable->groupdir);
 
         my @found;
 
         if (not $opt->{'no-override'}
             and $self->collmap->getp('override-file')) {
 
-            debug_msg(1, 'Loading overrides file (if any) ...');
+            $OUTPUT->debug_msg(1, 'Loading overrides file (if any) ...');
 
-            eval {@found = $processable->overrides($TAGS);};
+            eval {$declared_overrides = $processable->overrides;};
             if (my $err = $@) {
                 die $err if not ref $err or $err->errno != ENOENT;
             }
 
+            push(@found, @{$processable->found});
+
+            # remove found tags from Processable
+            $processable->found([]);
+
             # treat ignored overrides here
-            for my $tag (keys %{$overrides_data}) {
+            for my $tagname (keys %{$declared_overrides}) {
 
                 if ($TAGS->{profile}
-                    && !$TAGS->{profile}->is_overridable($tag)) {
+                    && !$TAGS->{profile}->is_overridable($tagname)) {
 
-                    delete $overrides_data->{$tag};
-                    $TAGS->{ignored_overrides}{$tag}++;
+                    delete $declared_overrides->{$tagname};
+                    $override_count->{ignored}{$tagname}++;
                 }
             }
 
-            for my $tag (keys %{$overrides_data}) {
+            for my $tagname (keys %{$declared_overrides}) {
 
-                my $extras = $overrides_data->{$tag};
+                my $extras = $declared_overrides->{$tagname};
 
                 # set the use count to zero for each $extra
-                $overrides->{$tag}{$_} = 0 for keys %{$extras};
+                $used_overrides{$tagname}{$_} = 0 for keys %{$extras};
             }
         }
 
@@ -673,14 +670,15 @@ sub process {
             next
               if !$cs->is_check_type($pkg_type);
 
-            my @collected;
-
-            debug_msg(1, "Running check: $check on $procid  ...");
-            eval {@collected = $cs->run_check($processable, $self);};
+            $OUTPUT->debug_msg(1, "Running check: $check on $procid  ...");
+            eval {$cs->run_check($processable, $self);};
             my $err = $@;
             my $raw_res = tv_interval($timer);
 
-            push(@found, @collected);
+            push(@found, @{$processable->found});
+
+            # remove found tags from Processable
+            $processable->found([]);
 
             # add any from the global queue
             push(@found, @{$TAGS->{queue}});
@@ -692,117 +690,81 @@ sub process {
                 print STDERR $err;
                 print STDERR "internal error: cannot run $check check",
                   " on package $procid\n";
-                warning("skipping check of $procid");
+                $OUTPUT->warning("skipping check of $procid");
                 $$exit_code_ref = 2;
                 $all_ok = 0;
 
                 next;
             }
             my $tres = sprintf('%.3fs', $raw_res);
-            debug_msg(1, "Check script $check for $procid done ($tres)");
-            perf_log("$procid,check/$check,${raw_res}");
+            $OUTPUT->debug_msg(1,
+                "Check script $check for $procid done ($tres)");
+            $OUTPUT->perf_log("$procid,check/$check,${raw_res}");
         }
 
-        my @print;
+        undef $TAGS->{current};
 
-        for my $tagref (@found) {
+        my @keep;
 
-            my ($tagname, @extra) = @{$tagref};
+        for my $tag (@found) {
 
             # Note, we get the known as it will be suppressed by
             # $self->suppressed below if the tag is not enabled.
-            my $taginfo = $self->profile->get_tag($tagname, 1);
-            croak "tried to issue unknown tag $tagname"
+            my $taginfo = $self->profile->get_tag($tag->name, 1);
+            croak 'tried to issue unknown tag ' . $tag->name
               unless $taginfo;
 
-            next
-              if $TAGS->suppressed($tagname);
+            $tag->info($taginfo);
 
-            # Clean up @extra and collapse it to a string.  Lintian code
-            # doesn't treat the distinction between extra arguments to tag() as
-            # significant, so we may as well take care of this up front.
-            @extra = grep { length } @extra;
-            my $extra = join(SPACE, @extra) // EMPTY;
-            $extra =~ s/\n/\\n/g;
+            next
+              if $TAGS->suppressed($tag->name);
 
             my $override;
+            my $extra = $tag->extra;
 
-            my $tag_overrides= $procstruct->{'overrides-data'}{$tagname};
+            my $tag_overrides= $declared_overrides->{$tag->name};
             if ($tag_overrides) {
 
-                my $extrastats = $procstruct->{overrides}{$tagname};
+                # do not use EMPTY; hash keys literal
+                # empty extra in specification matches all
+                $override = $tag_overrides->{''};
 
-                if (exists $tag_overrides->{''}) {
-                    $override = $tag_overrides->{''};
-                    $extrastats->{''}++;
+                # matches 'extra' exactly
+                $override = $tag_overrides->{$extra}
+                  unless $override;
 
-                } elsif (length $extra) {
+                # look for patterns
+                unless ($override) {
+                    my @candidates
+                      = sort grep { length $tag_overrides->{$_}{pattern} }
+                      keys %{$tag_overrides};
 
-                    if (exists $tag_overrides->{$extra}) {
-                        $override = $tag_overrides->{$extra};
-                        $extrastats->{$extra}++;
-
-                    } else {
-                        for my $matchmore (sort keys %$tag_overrides) {
-
-                            my $candidate = $tag_overrides->{$matchmore};
-                            if (   $candidate->is_pattern
-                                && $candidate->overrides($extra)){
-
-                                $override = $candidate;
-                                $extrastats->{$matchmore}++;
-                            }
-                        }
+                    my $match= firstval {
+                        $extra =~ m/^$tag_overrides->{$_}{pattern}\z/
                     }
+                    @candidates;
+
+                    $override = $tag_overrides->{$match}
+                      if $match;
                 }
+
+                $used_overrides{$tag->name}{$override->{extra}}++
+                  if $override;
             }
 
-            my $record = $stats;
-            $record = $stats->{overrides}
-              if $override;
+            $tag->override($override);
 
-            $record->{tags}{$tagname}++;
-            $record->{severity}{$taginfo->severity}++;
-            $record->{certainty}{$taginfo->certainty}++;
-
-            my $code = $taginfo->code;
-            $code = 'X' if $taginfo->experimental;
-            $record->{types}{$code}++;
-
-            next
-              if defined $override
-              && !$TAGS->{show_overrides};
-
-            next
-              unless $TAGS->displayed($tagname);
-
-            push(@print, [$taginfo, $extra, $override]);
+            push(@keep, $tag);
         }
 
-        unless ($$exit_code_ref) {
-            if ($stats->{types}{E}) {
-                $$exit_code_ref = 1;
-            }
-        }
-
-        # Report override statistics.
-        unless ($opt->{'no-override'} || $opt->{'show-overrides'}) {
-
-            my $errors = $stats->{overrides}{types}{E} || 0;
-            my $warnings = $stats->{overrides}{types}{W} || 0;
-            my $info = $stats->{overrides}{types}{I} || 0;
-
-            $override_count->{errors} += $errors;
-            $override_count->{warnings} += $warnings;
-            $override_count->{info} += $info;
-        }
-
-        for my $tagname (sort keys %{$overrides}) {
+        # look for unused overrides
+        # should this not iterate over $tag_overrides instead?
+        for my $tagname (sort keys %used_overrides) {
 
             next
               if $TAGS->suppressed($tagname);
 
-            my $tag_overrides = $overrides->{$tagname};
+            my $tag_overrides = $used_overrides{$tagname};
 
             for my $extra (sort keys %{$tag_overrides}) {
 
@@ -810,38 +772,117 @@ sub process {
                   if $tag_overrides->{$extra};
 
                 # cannot be overridden or suppressed
-                my $taginfo = $self->profile->get_tag('unused-override', 1);
-                push(@print, [$taginfo, "$tagname $extra"]);
+                my $tag = Lintian::Tag::Standard->new;
+                $tag->name('unused-override');
+                $tag->arguments([$tagname, $extra]);
 
-                $TAGS->{unused_overrides}++;
+                my $taginfo = $self->profile->get_tag('unused-override', 1);
+                $tag->info($taginfo);
+
+                push(@keep, $tag);
+
+                $override_count->{unused}++;
             }
         }
 
-        $Lintian::Output::GLOBAL->print_tag($procstruct, @{$_})for @print;
+        # associate all tags with processable
+        $_->processable($processable) for @keep;
 
-        $Lintian::Output::GLOBAL->print_end_pkg($procstruct);
-
-        undef $TAGS->{current};
+        push(@reported, @keep);
+        @keep = ();
     }
+
+    for my $tag (@reported) {
+
+        my $record = \%statistics;
+        $record = $statistics{overrides}
+          if $tag->override;
+
+        $record->{tags}{$tag->name}++;
+        $record->{severity}{$tag->info->severity}++;
+        $record->{certainty}{$tag->info->certainty}++;
+
+        my $code = $tag->info->code;
+        $code = 'X' if $tag->info->experimental;
+        $record->{types}{$code}++;
+    }
+
+    unless ($$exit_code_ref) {
+        if ($statistics{types}{E}) {
+            $$exit_code_ref = 1;
+        }
+    }
+
+    # Report override statistics.
+    unless ($opt->{'no-override'} || $opt->{'show-overrides'}) {
+
+        my $errors = $statistics{overrides}{types}{E} || 0;
+        my $warnings = $statistics{overrides}{types}{W} || 0;
+        my $info = $statistics{overrides}{types}{I} || 0;
+
+        $override_count->{errors} += $errors;
+        $override_count->{warnings} += $warnings;
+        $override_count->{info} += $info;
+    }
+
+    my @print;
+
+    for my $tag (@reported) {
+
+        next
+          if defined $tag->override
+          && !$TAGS->{show_overrides};
+
+        next
+          unless $TAGS->displayed($tag->name);
+
+        push(@print, $tag);
+    }
+
+    $OUTPUT->print_first();
+
+    my @processables;
+    my %taglist;
+
+    for my $tag (@print) {
+        push(@processables, $tag->processable);
+
+        $taglist{$tag->processable} //= [];
+        push(@{$taglist{$tag->processable}}, $tag);
+    }
+
+    my @unique = uniq @processables;
+    my @ordered = @unique;
+
+    for my $processable ($self->get_processables) {
+        $OUTPUT->print_start_pkg($processable);
+        my @sorted = @{$taglist{$processable} // []};
+        $OUTPUT->print_tag($_) for @sorted;
+        $OUTPUT->print_end_pkg($processable);
+    }
+
+    # universal format sorts output from all processables and prints here
+    $OUTPUT->print_last();
 
     my $raw_res = tv_interval($timer);
     my $tres = sprintf('%.3fs', $raw_res);
-    debug_msg(1, 'Checking all of group ' . $self->name . " done ($tres)");
-    perf_log($self->name . ",total-group-check,${raw_res}");
+    $OUTPUT->debug_msg(1,
+        'Checking all of group ' . $self->name . " done ($tres)");
+    $OUTPUT->perf_log($self->name . ",total-group-check,${raw_res}");
 
     if ($opt->{'debug'} > 2) {
         my $pivot = ($self->get_processables)[0];
         my $group_id = $pivot->pkg_src . '/' . $pivot->pkg_src_version;
         my $group_usage
           = $memory_usage->([map { $_->info } $self->get_processables]);
-        debug_msg(3, "Memory usage [$group_id]: $group_usage");
+        $OUTPUT->debug_msg(3, "Memory usage [$group_id]: $group_usage");
         for my $processable ($self->get_processables) {
             my $id = $processable->identifier;
             my $usage = $memory_usage->($processable->info);
             my $breakdown = $processable->info->_memory_usage($memory_usage);
-            debug_msg(3, "Memory usage [$id]: $usage");
+            $OUTPUT->debug_msg(3, "Memory usage [$id]: $usage");
             for my $field (sort(keys(%{$breakdown}))) {
-                debug_msg(4, "  -- $field: $breakdown->{$field}");
+                $OUTPUT->debug_msg(4, "  -- $field: $breakdown->{$field}");
             }
         }
     }
@@ -857,27 +898,28 @@ also get these unless we are keeping the lab.
 =cut
 
 sub clean_lab {
-    my ($self) = @_;
+    my ($self, $OUTPUT) = @_;
 
     my $total = [gettimeofday];
 
     for my $processable ($self->get_processables) {
 
         my $proc_id = $processable->identifier;
-        debug_msg(1, "Auto removing: $proc_id ...");
+        $OUTPUT->debug_msg(1, "Auto removing: $proc_id ...");
         my $each = [gettimeofday];
 
         $processable->remove;
 
         my $raw_res = tv_interval($each);
-        debug_msg(1, "Auto removing: $proc_id done (${raw_res}s)");
-        perf_log("$proc_id,auto-remove entry,$raw_res");
+        $OUTPUT->debug_msg(1, "Auto removing: $proc_id done (${raw_res}s)");
+        $OUTPUT->perf_log("$proc_id,auto-remove entry,$raw_res");
     }
 
     my $raw_res = tv_interval($total);
     my $tres = sprintf('%.3fs', $raw_res);
-    debug_msg(1,'Auto-removal all for group ' . $self->name . " done ($tres)");
-    perf_log($self->name . ",total-group-auto-remove,$raw_res");
+    $OUTPUT->debug_msg(1,
+        'Auto-removal all for group ' . $self->name . " done ($tres)");
+    $OUTPUT->perf_log($self->name . ",total-group-auto-remove,$raw_res");
 
     return;
 }
@@ -1108,7 +1150,7 @@ Find next task.
 =cut
 
 sub find_next_task {
-    my ($self) = @_;
+    my ($self, $OUTPUT) = @_;
 
     my @coll_priorities = @{$self->coll_priorities};
 
@@ -1147,8 +1189,8 @@ sub find_next_task {
 
                 # collect info
                 $cmap->select($check);
-                debug_msg(3, "READY $check-$procid")
-                  if $Lintian::Output::GLOBAL->debug;
+                $OUTPUT->debug_msg(3, "READY $check-$procid")
+                  if $OUTPUT->debug;
 
                 my $task = Lintian::Unpack::Task->new;
                 $task->id($check . HYPHEN . $procid);
@@ -1165,9 +1207,9 @@ sub find_next_task {
             }
 
             unless (keys %{$unscheduled}) {
-                debug_msg(3,
+                $OUTPUT->debug_msg(3,
                     "DISCARD $check (all instances have been scheduled)")
-                  if $Lintian::Output::GLOBAL->debug;
+                  if $OUTPUT->debug;
                 splice(@coll_priorities, $i, 1);
                 $i--;
             }
@@ -1177,11 +1219,11 @@ sub find_next_task {
     }
 
     if (@{$self->queue}) {
-        debug_msg(4,
+        $OUTPUT->debug_msg(4,
                 'QUEUE non-empty with '
               . scalar(@{$self->queue})
               . ' item(s).  Taking one.')
-          if $Lintian::Output::GLOBAL->debug;
+          if $OUTPUT->debug;
     }
 
     return shift @{$self->queue}
@@ -1197,14 +1239,14 @@ Start task.
 =cut
 
 sub start_task {
-    my ($self, $slice, $hook, $task) = @_;
+    my ($self, $slice, $hook, $task, $OUTPUT) = @_;
 
     my $cmap = $task->cmap;
 
     my $loop = IO::Async::Loop->new;
-    my $debug_enabled = $Lintian::Output::GLOBAL->debug;
+    my $debug_enabled = $OUTPUT->debug;
 
-    debug_msg(3, 'START ' . $task->id);
+    $OUTPUT->debug_msg(3, 'START ' . $task->id);
     my $pid = -1;
 
     my $future = $loop->new_future;
@@ -1244,7 +1286,7 @@ sub start_task {
 
                 delete $self->running_jobs->{$future};
 
-                debug_msg(3, 'FINISH ' . $task->id . " ($status)");
+                $OUTPUT->debug_msg(3, 'FINISH ' . $task->id . " ($status)");
 
                 $hook->($task, 'finish', $status)
                   if $hook;
@@ -1273,17 +1315,17 @@ sub start_task {
 
     $future->on_ready(
         sub {
-            my $task = $self->find_next_task();
+            my $task = $self->find_next_task($OUTPUT);
             $slice->done('No more tasks')
               unless $task;
-            $self->start_task($slice, $hook, $task)
+            $self->start_task($slice, $hook, $task, $OUTPUT)
               if $task;
 
-            my $debug_enabled = $Lintian::Output::GLOBAL->debug;
+            my $debug_enabled = $OUTPUT->debug;
             if ($debug_enabled) {
                 my @ids = map { $_->{id} } values %{$self->running_jobs};
                 my $queue = join(', ', sort @ids);
-                debug_msg(3, "RUNNING QUEUE: $queue");
+                $OUTPUT->debug_msg(3, "RUNNING QUEUE: $queue");
             }
         });
 

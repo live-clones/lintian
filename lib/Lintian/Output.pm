@@ -20,26 +20,12 @@ package Lintian::Output;
 
 use strict;
 use warnings;
+use v5.8.0; # for PerlIO
+
 use CGI qw(escapeHTML);
 
-use v5.8.0; # for PerlIO
-use parent qw(Class::Accessor::Fast);
-# The limit is including the "use --foo to see all tags".
-use constant DEFAULT_INTERACTIVE_TAG_LIMIT => 4;
-
-use Exporter qw(import);
-
-# Force export as soon as possible, since some of the modules we load also
-# depend on us and the sequencing can cause things not to be exported
-# otherwise.
-our (%EXPORT_TAGS, @EXPORT_OK);
-
-BEGIN {
-    %EXPORT_TAGS = (
-        messages => [qw(msg v_msg warning debug_msg delimiter perf_log)],
-        util => [qw(_global_or_object)]);
-    @EXPORT_OK = (@{$EXPORT_TAGS{messages}},@{$EXPORT_TAGS{util}},'string');
-}
+use Moo::Role;
+use namespace::clean;
 
 =head1 NAME
 
@@ -82,26 +68,17 @@ use Lintian::Tags ();
 # support for ANSI color output via colored()
 use Term::ANSIColor ();
 
+use constant SPACE => q{ };
+
 # for tty hyperlinks
 use constant OSC_HYPERLINK => qq{\033]8;;};
 use constant OSC_DONE => qq{\033\\};
 
-=head1 ACCESSORS
+=head1 ATTRIBUTES
 
-The following fields define the behaviours of Lintian::Output.
+The following fields impact the behavior of Lintian::Output.
 
 =over 4
-
-=item verbosity_level
-
-Determine how verbose the output should be.  "0" is the default value
-(tags and msg only), "-1" is quiet (tags only) and "1" is verbose
-(tags, msg and v_msg).
-
-=item debug
-
-If set to a positive integer, will enable all debug messages issued with
-a level lower or equal to its value.
 
 =item color
 
@@ -113,6 +90,23 @@ color only if the output is going to a terminal.
 
 "html" will output HTML <span> tags with a color style attribute (instead
 of ANSI color escape sequences).
+
+=item colors
+
+=item debug
+
+If set to a positive integer, will enable all debug messages issued with
+a level lower or equal to its value.
+
+=item issuedtags
+
+Hash containing the names of tags which have been issued.
+
+=item perf_debug
+
+=item perf_log_fd
+
+=item proc_id2tag_count
 
 =item stdout
 
@@ -126,56 +120,46 @@ I/O handle to use for warnings.  Defaults to C<\*STDERR>.
 
 Whether to show the description of a tag when printing it.
 
-=item issuedtags
-
-Hash containing the names of tags which have been issued.
+=item tty_hyperlinks
 
 =item tag_display_limit
 
 Get/Set the number of times a tag is emitted per processable.
 
+=item verbosity_level
+
+Determine how verbose the output should be.  "0" is the default value
+(tags and msg only), "-1" is quiet (tags only) and "1" is verbose
+(tags, msg and v_msg).
+
 =back
 
 =cut
 
-Lintian::Output->mk_accessors(
-    qw(verbosity_level debug color colors stdout
-      stderr perf_log_fd perf_debug showdescription
-      issuedtags tag_display_limit tty_hyperlinks)
-);
+has color => (is => 'rw', default => 'never');
+has colors => (
+    is => 'rw',
+    default => sub {
+        {
+            'E' => 'red',
+            'W' => 'yellow',
+            'I' => 'cyan',
+            'P' => 'green',
+            'C' => 'blue',
+        }
+    });
+has issuedtags => (is => 'rw', default => sub { {} });
+has perf_debug => (is => 'rw', default => 0);
+has perf_log_fd => (is => 'rw', default => sub { \*STDOUT });
+has proc_id2tag_count => (is => 'rw', default => sub { {} });
+has stderr => (is => 'rw', default => sub { \*STDERR });
+has stdout => (is => 'rw', default => sub { \*STDOUT });
+has tag_display_limit => (is => 'rw', default => 4);
+has tty_hyperlinks => (is => 'rw', default => 0);
+has verbosity_level => (is => 'rw', default => 0);
 
-# for the non-OO interface
-my %default_colors = (
-    'E' => 'red',
-    'W' => 'yellow',
-    'I' => 'cyan',
-    'P' => 'green',
-    'C' => 'blue',
-);
-
-our $GLOBAL = Lintian::Output->new;
-
-sub new {
-    my ($class, %options) = @_;
-    my $self = {%options};
-
-    bless($self, $class);
-
-    $self->stdout(\*STDOUT);
-    $self->stderr(\*STDERR);
-    $self->perf_log_fd(\*STDOUT);
-    $self->colors({%default_colors});
-    $self->issuedtags({});
-    $self->{'proc_id2tag_count'} = {};
-
-    # Set defaults to avoid "uninitialized" warnings
-    $self->verbosity_level(0);
-    $self->perf_debug(0);
-    $self->color('never');
-    $self->tty_hyperlinks(0);
-
-    return $self;
-}
+has debug => (is => 'rw', default => sub { {} });
+has showdescription => (is => 'rw', default => sub { {} });
 
 =head1 CLASS/INSTANCE METHODS
 
@@ -205,7 +189,7 @@ with 'N: '.  Will do nothing unless debug is set to a positive integer
 =cut
 
 sub msg {
-    my ($self, @args) = _global_or_object(@_);
+    my ($self, @args) = @_;
 
     return if $self->verbosity_level < 0;
     $self->_message(@args);
@@ -213,7 +197,7 @@ sub msg {
 }
 
 sub v_msg {
-    my ($self, @args) = _global_or_object(@_);
+    my ($self, @args) = @_;
 
     return unless $self->verbosity_level > 0;
     $self->_message(@args);
@@ -221,7 +205,7 @@ sub v_msg {
 }
 
 sub debug_msg {
-    my ($self, $level, @args) = _global_or_object(@_);
+    my ($self, $level, @args) = @_;
 
     return unless $self->debug && ($self->debug >= $level);
 
@@ -237,7 +221,7 @@ prefixed with 'warning: '.
 =cut
 
 sub warning {
-    my ($self, @args) = _global_or_object(@_);
+    my ($self, @args) = @_;
 
     return if $self->verbosity_level < 0;
     $self->_warning(@args);
@@ -256,7 +240,7 @@ positive integer.
 =cut
 
 sub perf_log {
-    my ($self, @args) = _global_or_object(@_);
+    my ($self, @args) = @_;
 
     return unless $self->perf_debug;
 
@@ -275,7 +259,7 @@ with one of the methods above, e.g.
 =cut
 
 sub delimiter {
-    my ($self) = _global_or_object(@_);
+    my ($self) = @_;
 
     return $self->_delimiter;
 }
@@ -288,7 +272,7 @@ indicating whether the tag had previously been issued by the object.
 =cut
 
 sub issued_tag {
-    my ($self, $tag_name) = _global_or_object(@_);
+    my ($self, $tag_name) = @_;
 
     return $self->issuedtags->{$tag_name}++ ? 1 : 0;
 }
@@ -300,7 +284,7 @@ TODO: Is this part of the public interface?
 =cut
 
 sub string {
-    my ($self, $lead, @args) = _global_or_object(@_);
+    my ($self, $lead, @args) = @_;
 
     my $output = '';
     if (@args) {
@@ -331,27 +315,32 @@ can only be called as instance methods.
 Print a tag.  The first two arguments are hash reference with the
 information about the package and the tag, $extra is the extra
 information for the tag (if any) as an array reference, and $override
-is either undef if the tag is not overridden or the
-L<override|Lintian::Tag::Override> for this tag.  Called from
-Lintian::Tags::tag().
+is either undef if the tag is not overridden or a hash with
+override info for this tag.  Called from Lintian::Tags::tag().
 
 =cut
 
 sub print_tag {
-    my ($self, $pkg_info, $tag_info, $information, $override) = @_;
+    my ($self, $tag) = @_;
+
+    my $tag_info = $tag->info;
+    my $information = $tag->extra;
+    my $override = $tag->override;
+    my $processable = $tag->processable;
+
     $information = ' ' . $self->_quote_print($information)
       if $information ne '';
     my $code = $tag_info->code;
     my $tag_color = $self->{colors}{$code};
-    my $fpkg_info = $self->_format_pkg_info($pkg_info, $tag_info, $override);
+    my $fpkg_info= $self->_format_pkg_info($processable, $tag_info, $override);
     my $tag_name = $tag_info->tag;
     my $limit = $self->tag_display_limit;
-    my $tag;
+    my $output;
 
     # Limit the output so people do not drown in tags.  Some tags are
     # insanely noisy (hi static-library-has-unneeded-section)
     if ($limit) {
-        my $proc_id = $pkg_info->{'processable'}->identifier;
+        my $proc_id = $processable->identifier;
         my $emitted_count
           = $self->{'proc_id2tag_count'}{$proc_id}{$tag_name}++;
         return if $emitted_count >= $limit;
@@ -363,7 +352,7 @@ sub print_tag {
     if ($self->_do_color && $self->color eq 'html') {
         my $escaped = escapeHTML($tag_name);
         $information = escapeHTML($information);
-        $tag .= qq(<span style="color: $tag_color">$escaped</span>);
+        $output .= qq(<span style="color: $tag_color">$escaped</span>);
 
     } else {
         my $text = $tag_name;
@@ -373,19 +362,19 @@ sub print_tag {
         if ($self->tty_hyperlinks) {
             my $target
               = 'https://lintian.debian.org/tags/' . $tag_name . '.html';
-            $tag .= $self->osc_hyperlink($text, $target);
+            $output .= $self->osc_hyperlink($text, $target);
         } else {
-            $tag .= $text;
+            $output .= $text;
         }
     }
 
-    if ($override && @{ $override->comments }) {
-        foreach my $c (@{ $override->comments }) {
+    if ($override && @{ $override->{comments} }) {
+        foreach my $c (@{ $override->{comments} }) {
             $self->msg($self->_quote_print($c));
         }
     }
 
-    $self->_print('', $fpkg_info, "$tag$information");
+    $self->_print('', $fpkg_info, "$output$information");
     if (not $self->issued_tag($tag_info->tag) and $self->showdescription) {
         my $description;
         if ($self->_do_color && $self->color eq 'html') {
@@ -417,13 +406,13 @@ sub osc_hyperlink {
 # the "FullEWI" subclass.
 #
 sub _format_pkg_info {
-    my ($self, $pkg_info, $tag_info, $override) = @_;
+    my ($self, $processable, $tag_info, $override) = @_;
     my $code = $tag_info->code;
     $code = 'X' if $tag_info->experimental;
     $code = 'O' if defined $override;
     my $type = '';
-    $type = " $pkg_info->{type}" if $pkg_info->{type} ne 'binary';
-    return "$code: $pkg_info->{package}$type";
+    $type = SPACE . $processable->type if $processable->type ne 'binary';
+    return "$code: " . $processable->name . $type;
 }
 
 =item C<print_start_pkg($pkg_info)>
@@ -434,18 +423,20 @@ Lintian::Output uses v_msg() for output.  Called from Tags::select_pkg().
 =cut
 
 sub print_start_pkg {
-    my ($self, $pkg_info) = @_;
+    my ($self, $processable) = @_;
 
     my $object = 'package';
-    if ($pkg_info->{type} eq 'changes') {
-        $object = 'file';
-    }
+    $object = 'file'
+      if $processable->type eq 'changes';
 
     $self->v_msg(
         $self->delimiter,
-        join(q{ },
-            "Processing $pkg_info->{type} $object $pkg_info->{package}",
-            "(version $pkg_info->{version}, arch $pkg_info->{arch}) ..."));
+        'Processing '. $processable->type. " $object ". $processable->name,
+        '(version '
+          . $processable->pkg_version
+          . ', arch '
+          . $processable->pkg_arch . ') ...'
+    );
     return;
 }
 
@@ -590,31 +581,11 @@ sub _quote_print {
     return $string;
 }
 
-=back
-
-=head1 CLASS METHODS
-
-=over 4
-
-=item C<_global_or_object(@args)>
-
-If $args[0] is an object which satisfies C<isa('Lintian::Output')>
-returns @args, otherwise returns C<($Lintian::Output::GLOBAL, @_)>.
-
-=back
-
-=cut
-
-sub _global_or_object {
-    if (ref($_[0]) and $_[0]->isa('Lintian::Output')) {
-        return @_;
-    } else {
-        return ($Lintian::Output::GLOBAL, @_);
-    }
-}
-
 1;
+
 __END__
+
+=back
 
 =head1 EXPORTS
 
