@@ -73,8 +73,7 @@ sub overrides {
     my $comments = [];
     my $last_over;
 
-    my $overrides_path
-      = path($self->info->groupdir)->child('override')->stringify;
+    my $overrides_path= path($self->groupdir)->child('override')->stringify;
 
     return
       unless -f $overrides_path;

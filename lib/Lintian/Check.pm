@@ -76,7 +76,7 @@ sub run {
     if ($type eq 'binary' || $type eq 'udeb') {
 
         if ($self->can('files')) {
-            $self->files($_)for $self->info->sorted_index;
+            $self->files($_)for $self->processable->sorted_index;
         }
     }
 
@@ -142,7 +142,7 @@ sub build_path {
     return EMPTY
       unless $buildinfo;
 
-    return $buildinfo->info->field('build-path', EMPTY);
+    return $buildinfo->field('build-path', EMPTY);
 }
 
 =item tag

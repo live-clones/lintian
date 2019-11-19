@@ -259,7 +259,6 @@ Overrides clear_cache from L<Lintian::Processable>.
 sub clear_cache {
     my ($self) = @_;
 
-    $self->info({});
     return;
 }
 

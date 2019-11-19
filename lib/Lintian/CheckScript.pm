@@ -237,7 +237,7 @@ sub run_check {
         return;
     }
 
-    my @args = ($proc->name,$proc->type,$proc->info,$proc,$group);
+    my @args = ($proc->name,$proc->type,$proc,$proc,$group);
 
     if ($module->can('run')) {
         $module->can('run')->(@args);

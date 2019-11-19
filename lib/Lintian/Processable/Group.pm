@@ -364,7 +364,7 @@ sub unpack {
         # for sources pull in all related files so unpacked does not fail
         if ($processable->type eq 'source') {
             my (undef, $dir, undef)= File::Spec->splitpath($processable->path);
-            for my $fs (split(m/\n/o, $processable->info->field('files'))) {
+            for my $fs (split(m/\n/o, $processable->field('files'))) {
                 strip($fs);
                 next if $fs eq '';
                 my @t = split(/\s+/o,$fs);
@@ -845,12 +845,12 @@ sub process {
         my $pivot = ($self->get_processables)[0];
         my $group_id = $pivot->source . '/' . $pivot->source_version;
         my $group_usage
-          = $memory_usage->([map { $_->info } $self->get_processables]);
+          = $memory_usage->([map { $_ } $self->get_processables]);
         $OUTPUT->debug_msg(3, "Memory usage [$group_id]: $group_usage");
         for my $processable ($self->get_processables) {
             my $id = $processable->identifier;
-            my $usage = $memory_usage->($processable->info);
-            my $breakdown = $processable->info->_memory_usage($memory_usage);
+            my $usage = $memory_usage->($processable);
+            my $breakdown = $processable->_memory_usage($memory_usage);
             $OUTPUT->debug_msg(3, "Memory usage [$id]: $usage");
             for my $field (sort(keys(%{$breakdown}))) {
                 $OUTPUT->debug_msg(4, "  -- $field: $breakdown->{$field}");
