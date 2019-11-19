@@ -66,9 +66,9 @@ file cannot be opened.
 sub overrides {
     my ($self) = @_;
 
-    my $package = $self->pkg_name;
-    my $architecture = $self->pkg_arch;
-    my $type = $self->pkg_type;
+    my $package = $self->name;
+    my $architecture = $self->architecture;
+    my $type = $self->type;
 
     my $comments = [];
     my $last_over;

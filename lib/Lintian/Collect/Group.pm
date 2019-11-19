@@ -31,13 +31,6 @@ Lintian::Collect::Group - Lintian interface to group data collection
 
  my $group = Lintian::Processable::Group->new ('lintian_2.5.0_i386.changes');
  my $ginfo = Lintian::Collect::Group->new ($group);
- 
- foreach my $bin ($group->get_binary_processables) {
-    my $pkg_name = $bin->pkg_name;
-    foreach my $dirdep ($ginfo->direct_dependencies ($bin)) {
-        print "$pkg_name (pre-)depends on $dirdep (which is also in this group)\n";
-    }
- }
 
 =head1 DESCRIPTION
 
@@ -93,11 +86,11 @@ sub direct_dependencies {
         push @procs, $group->get_processables('udeb');
         $deps = {};
         foreach my $proc (@procs) {
-            my $pname = $proc->pkg_name;
+            my $pname = $proc->name;
             my $relation = $proc->info->relation('strong');
             my $d = [];
             foreach my $oproc (@procs) {
-                my $opname = $oproc->pkg_name;
+                my $opname = $oproc->name;
                 # Ignore self deps - we have checks for that and it
                 # will just end up complicating "correctness" of
                 # otherwise simple checks.
@@ -108,7 +101,7 @@ sub direct_dependencies {
         }
         $self->{'direct-dependencies'} = $deps;
     }
-    return $deps->{$p->pkg_name} if $p;
+    return $deps->{$p->name} if $p;
     return $deps;
 }
 
@@ -143,8 +136,8 @@ sub spelling_exceptions {
     my %except;
     my $group = $self->{'group'};
     foreach my $proc ($group->get_processables()) {
-        my @names = ($proc->pkg_name, $proc->pkg_src);
-        push(@names, $proc->info->binaries) if $proc->pkg_type eq 'source';
+        my @names = ($proc->name, $proc->source);
+        push(@names, $proc->info->binaries) if $proc->type eq 'source';
         foreach my $name (@names) {
             $except{$name} = 1;
             $except{$_} = 1 for split m/-/, $name;

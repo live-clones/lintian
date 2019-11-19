@@ -101,7 +101,7 @@ Get package name from processable.
 sub package {
     my ($self) = @_;
 
-    return $self->processable->pkg_name;
+    return $self->processable->name;
 }
 
 =item type
@@ -113,7 +113,7 @@ Get type of processable.
 sub type {
     my ($self) = @_;
 
-    return $self->processable->pkg_type;
+    return $self->processable->type;
 }
 
 =item info

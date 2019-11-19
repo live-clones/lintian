@@ -434,9 +434,9 @@ sub print_start_pkg {
         $self->delimiter,
         'Processing '. $processable->type. " $object ". $processable->name,
         '(version '
-          . $processable->pkg_version
+          . $processable->version
           . ', arch '
-          . $processable->pkg_arch . ') ...'
+          . $processable->architecture . ') ...'
     );
     return;
 }

@@ -70,11 +70,6 @@ Lintian::Processable::Group -- A group of objects that Lintian can process
  use Lintian::Processable::Group;
 
  my $group = Lintian::Processable::Group->new('lintian_2.5.0_i386.changes');
- foreach my $proc ($group->get_processables){
-     printf "%s %s (%s)\n", $proc->pkg_name,
-            $proc->pkg_version, $proc->pkg_type;
- }
- # etc.
 
 =head1 DESCRIPTION
 
@@ -367,9 +362,8 @@ sub unpack {
         $processable->create;
 
         # for sources pull in all related files so unpacked does not fail
-        if ($processable->pkg_type eq 'source') {
-            my (undef, $dir, undef)
-              = File::Spec->splitpath($processable->pkg_path);
+        if ($processable->type eq 'source') {
+            my (undef, $dir, undef)= File::Spec->splitpath($processable->path);
             for my $fs (split(m/\n/o, $processable->info->field('files'))) {
                 strip($fs);
                 next if $fs eq '';
@@ -384,7 +378,7 @@ sub unpack {
     my %worklists;
     foreach my $processable (@processables) {
 
-        my $type = $processable->pkg_type;
+        my $type = $processable->type;
         my $cmap;
 
         if (exists $self->cache->{$type}) {
@@ -523,8 +517,8 @@ sub coll_hook {
 
     my $coll = $task->script->name;
     my $procid = $task->processable->identifier;
-    my $pkg_name = $task->processable->pkg_name;
-    my $pkg_type = $task->processable->pkg_type;
+    my $pkg_name = $task->processable->name;
+    my $pkg_type = $task->processable->type;
 
     if ($event eq 'start') {
         $timers->{$task->id} = [gettimeofday];
@@ -541,7 +535,7 @@ sub coll_hook {
           if $exitval;
         $OUTPUT->warning($string);
 
-        my $pkg_type = $task->processable->pkg_type;
+        my $pkg_type = $task->processable->type;
         if (   $pkg_type eq 'source'
             or $pkg_type eq 'changes'
             or $pkg_type eq 'buildinfo'){
@@ -600,10 +594,10 @@ sub process {
     my @reported;
 
     foreach my $processable ($self->get_processables){
-        my $pkg_type = $processable->pkg_type;
+        my $pkg_type = $processable->type;
         my $procid = $processable->identifier;
 
-        my $path = $processable->pkg_path;
+        my $path = $processable->path;
 
         # required for global Lintian::Tags::tag usage
         $TAGS->{current} = $path;
@@ -849,7 +843,7 @@ sub process {
 
     if ($opt->{'debug'} > 2) {
         my $pivot = ($self->get_processables)[0];
-        my $group_id = $pivot->pkg_src . '/' . $pivot->pkg_src_version;
+        my $group_id = $pivot->source . '/' . $pivot->source_version;
         my $group_usage
           = $memory_usage->([map { $_->info } $self->get_processables]);
         $OUTPUT->debug_msg(3, "Memory usage [$group_id]: $group_usage");
@@ -916,13 +910,13 @@ added.
 sub add_processable{
     my ($self, $processable) = @_;
 
-    my $pkg_type = $processable->pkg_type;
+    my $pkg_type = $processable->type;
 
     if ($processable->tainted) {
         warn(
             sprintf(
                 "warning: tainted %1\$s package '%2\$s', skipping\n",
-                $pkg_type, $processable->pkg_name
+                $pkg_type, $processable->name
             ));
         return 0;
     }
@@ -986,23 +980,23 @@ sub _pool_path {
 
     # If it is at least 4 characters and starts with "lib", use "libX"
     # as prefix
-    if ($processable->pkg_src =~ m/^lib./) {
-        $prefix = substr $processable->pkg_src, 0, 4;
+    if ($processable->source =~ m/^lib./) {
+        $prefix = substr $processable->source, 0, 4;
     } else {
-        $prefix = substr $processable->pkg_src, 0, 1;
+        $prefix = substr $processable->source, 0, 1;
     }
 
     my $path
       = $prefix
       . SLASH
-      . $processable->pkg_src
+      . $processable->source
       . SLASH
-      . $processable->pkg_name
+      . $processable->name
       . UNDERSCORE
-      . $processable->pkg_version;
-    $path .= UNDERSCORE . $processable->pkg_arch
-      unless $processable->pkg_type eq 'source';
-    $path .= UNDERSCORE . $processable->pkg_type;
+      . $processable->version;
+    $path .= UNDERSCORE . $processable->architecture
+      unless $processable->type eq 'source';
+    $path .= UNDERSCORE . $processable->type;
 
     # Turn spaces into dashes - spaces do appear in architectures
     # (i.e. for changes files).
@@ -1153,7 +1147,7 @@ sub find_next_task {
                 delete $unscheduled->{$procid};
 
                 # current type?
-                unless ($script->is_type($processable->pkg_type)) {
+                unless ($script->is_type($processable->type)) {
                     $cmap->satisfy($check);
                     next;
                 }
@@ -1242,8 +1236,8 @@ sub start_task {
                 my $check = $task->script->name;
                 my $procid = $task->processable->identifier;
 
-                my $package = $task->processable->pkg_name;
-                my $type = $task->processable->pkg_type;
+                my $package = $task->processable->name;
+                my $type = $task->processable->type;
                 my $groupdir = $task->processable->groupdir;
 
                 # change the process name; possible overwritten by exec

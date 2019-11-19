@@ -85,15 +85,15 @@ sub gather_tarballs {
     $proc->init($file);
 
     #  Version handling is based on Dpkg::Version::parseversion.
-    $version = $proc->pkg_src_version;
+    $version = $proc->source_version;
     if ($version =~ /:/) {
         $version =~ s/^(?:\d+):(.+)/$1/
           or internal_error("bad version number \"$version\"");
     }
 
-    $baserev = $proc->pkg_src . '_' . $version;
+    $baserev = $proc->source . '_' . $version;
     $version =~ s/(.+)-(?:.*)$/$1/;
-    $base = $proc->pkg_src . '_' . $version;
+    $base = $proc->source . '_' . $version;
 
     for my $fs (split /\n/, $info->field('files', '')) {
         $fs =~ s/^\s*//;

@@ -74,10 +74,10 @@ sub _format_pkg_info {
     my $code = $tag_info->code;
     $code = 'X' if $tag_info->experimental;
     $code = 'O' if defined $override;
-    my $version = $processable->pkg_version;
+    my $version = $processable->version;
     my $arch = '';
     my $type = $processable->type;
-    $arch = $processable->pkg_arch if $processable->type ne 'source';
+    $arch = $processable->architecture if $processable->type ne 'source';
     $arch = 'source' unless $arch;
     return "$code: " . $processable->name . " $type ($version) [$arch]";
 }

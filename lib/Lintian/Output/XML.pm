@@ -88,8 +88,8 @@ sub print_start_pkg {
     my @attrs = (
         [type         => $processable->type],
         [name         => $processable->name],
-        [architecture => $processable->pkg_arch],
-        [version      => $processable->pkg_version]);
+        [architecture => $processable->architecture],
+        [version      => $processable->version]);
     print { $self->stdout } $self->_open_xml_tag('package', \@attrs, 0), "\n";
     return;
 }
