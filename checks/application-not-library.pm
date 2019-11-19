@@ -34,7 +34,7 @@ sub binary {
     my ($self) = @_;
 
     my $pkg = $self->package;
-    my $info = $self->info;
+    my $processable = $self->processable;
 
     return if # Big exception list for all tags
       $pkg =~ /^perl(?:-base)?$/                    or # perl itself
@@ -61,7 +61,7 @@ sub binary {
 
     my @programs = ();
     foreach my $binpath (qw(bin sbin usr/bin usr/sbin usr/games)) {
-        my $bindir = $info->index("$binpath/");
+        my $bindir = $processable->index("$binpath/");
         next unless $bindir;
 
         push(
@@ -86,7 +86,7 @@ sub binary {
     }
 
     # Check for wrong section
-    my $section = $info->field('section', '');
+    my $section = $processable->field('section', '');
     if ($section =~ /perl|python|ruby|(?:^|\/)libs/) { # oldlibs is ok
         $self->tag('application-in-library-section', "$section", @programs);
     }

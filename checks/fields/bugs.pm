@@ -37,9 +37,9 @@ sub always {
     my ($self) = @_;
 
     my $pkg = $self->package;
-    my $info = $self->info;
+    my $processable = $self->processable;
 
-    my $bugs = $info->unfolded_field('bugs');
+    my $bugs = $processable->unfolded_field('bugs');
 
     return
       unless defined $bugs;

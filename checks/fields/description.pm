@@ -53,7 +53,7 @@ sub always {
 
     my $pkg = $self->package;
     my $type = $self->type;
-    my $info = $self->info;
+    my $processable = $self->processable;
     my $group = $self->group;
 
     my $tabs = 0;
@@ -64,7 +64,7 @@ sub always {
     my $description;
 
     # description?
-    my $full_description = $info->field('description');
+    my $full_description = $processable->field('description');
     unless (defined $full_description) {
         $self->tag('package-has-no-description');
         return;
@@ -210,10 +210,10 @@ sub always {
             # "debug symbols for pkg foo" is generally descriptive
             # enough.
             $self->tag('extended-description-is-empty')
-              if not $info->is_pkg_class('debug');
+              if not $processable->is_pkg_class('debug');
         } elsif ($lines <= 2 and not $synopsis =~ /(?:dummy|transition)/i) {
             $self->tag('extended-description-is-probably-too-short')
-              unless $info->is_pkg_class('any-meta')
+              unless $processable->is_pkg_class('any-meta')
               or $pkg =~ m{-dbg\Z}xsm;
         } elsif ($description =~ /^ \.\s*\n|\n \.\s*\n \.\s*\n|\n \.\s*\n?$/) {
             $self->tag('extended-description-contains-empty-paragraph');
@@ -223,7 +223,7 @@ sub always {
     # Check for a package homepage in the description and no Homepage
     # field.  This is less accurate and more of a guess than looking
     # for the old Homepage: convention in the body.
-    unless ($info->field('homepage') or $flagged_homepage) {
+    unless ($processable->field('homepage') or $flagged_homepage) {
         if (
             $description =~ /homepage|webpage|website|url|upstream|web\s+site
                          |home\s+page|further\s+information|more\s+info
@@ -250,7 +250,7 @@ sub always {
             $synopsis,
             $self->spelling_tag_emitter(
                 'capitalization-error-in-description-synopsis')
-        )if not $info->is_pkg_class('auto-generated');
+        )if not $processable->is_pkg_class('auto-generated');
     }
 
     if ($description) {
@@ -273,7 +273,7 @@ sub always {
         my $pmpath = join('/', @mod_path_elements).'.pm';
         my $pm     = $mod_path_elements[-1].'.pm';
 
-        foreach my $filepath ($info->sorted_index) {
+        foreach my $filepath ($processable->sorted_index) {
             if ($filepath =~ m(\Q$pmpath\E\z|/\Q$pm\E\z)i) {
                 $pm_found = 1;
                 last;

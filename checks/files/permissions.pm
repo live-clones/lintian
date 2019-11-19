@@ -37,7 +37,7 @@ sub setup {
     my %linked_against_libvga;
 
     # read data from objdump-info file
-    my $table = $self->info->objdump_info;
+    my $table = $self->processable->objdump_info;
 
     foreach my $file (sort keys %{$table}) {
         my $objdump = $table->{$file};

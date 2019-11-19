@@ -36,7 +36,7 @@ sub files {
 
     if ($file->name =~ m,^usr/lib/debug/\S,) {
 
-        unless ($self->info->is_pkg_class('debug')) {
+        unless ($self->processable->is_pkg_class('debug')) {
 
             unless ($self->warned_debug_name) {
                 $self->tag('debug-package-should-be-named-dbg', $file->name);

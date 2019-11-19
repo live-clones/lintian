@@ -38,17 +38,16 @@ with 'Lintian::Check';
 sub source {
     my ($self) = @_;
 
-    my $info = $self->info;
-    my $proc = $self->processable;
+    my $processable = $self->processable;
 
-    my $source = $info->unfolded_field('source');
+    my $source = $processable->unfolded_field('source');
 
     # required in source packages, but dpkg-source already refuses to unpack
     # without this field (and fields depends on unpacked)
     return
       unless defined $source;
 
-    my $filename = $proc->path;
+    my $filename = $processable->path;
     my ($base) = ($filename =~ m,(?:\a|/)([^/]+)$,o);
     my ($stem) = ($base =~ m/^([^_]+)_/o);
 
@@ -65,9 +64,9 @@ sub always {
     my ($self) = @_;
 
     my $type = $self->type;
-    my $info = $self->info;
+    my $processable = $self->processable;
 
-    my $source = $info->unfolded_field('source');
+    my $source = $processable->unfolded_field('source');
 
     # optional in binary packages
     return

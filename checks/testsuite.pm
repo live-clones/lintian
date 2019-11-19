@@ -59,12 +59,12 @@ sub source {
 
     my $pkg = $self->package;
     my $type = $self->type;
-    my $info = $self->info;
+    my $processable = $self->processable;
 
-    my $testsuites = $info->field('testsuite', '');
-    my $control = $info->index_resolved_path('debian/tests/control');
+    my $testsuites = $processable->field('testsuite', '');
+    my $control = $processable->index_resolved_path('debian/tests/control');
     my $control_autodep8
-      = $info->index_resolved_path('debian/tests/control.autodep8');
+      = $processable->index_resolved_path('debian/tests/control.autodep8');
     my $needs_control = 0;
 
     $self->tag('testsuite-autopkgtest-missing')
@@ -95,7 +95,7 @@ sub source {
         }
 
         $self->tag('unnecessary-testsuite-autopkgtest-field')
-          if ($info->source_field('testsuite') // '') eq 'autopkgtest';
+          if ($processable->source_field('testsuite') // '') eq 'autopkgtest';
 
         $self->tag('debian-tests-control-and-control-autodep8',
             $control,$control_autodep8)
@@ -111,7 +111,7 @@ sub source {
 sub check_control_contents {
     my ($self, $path) = @_;
 
-    my $info = $self->info;
+    my $processable = $self->processable;
 
     my (@paragraphs, @lines);
     if (
@@ -141,7 +141,7 @@ sub check_control_contents {
 sub check_control_paragraph {
     my ($self, $paragraph, $line) = @_;
 
-    my $info = $self->info;
+    my $processable = $self->processable;
 
     for my $fieldname (@MANDATORY_FIELDS) {
         if (not exists $paragraph->{$fieldname}) {
@@ -226,11 +226,11 @@ sub check_control_paragraph {
 sub check_test_file {
     my ($self, $directory, $name, $line) = @_;
 
-    my $info = $self->info;
+    my $processable = $self->processable;
 
     # Special case with "Tests-Directory: ." (see #849880)
     my $path = $directory eq '.' ? $name : "$directory/$name";
-    my $index = $info->index_resolved_path($path);
+    my $index = $processable->index_resolved_path($path);
 
     if ($name !~ m{^ [ [:alnum:] \+ \- \. / ]++ $}xsm) {
         $self->tag(

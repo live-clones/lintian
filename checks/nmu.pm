@@ -37,13 +37,13 @@ with 'Lintian::Check';
 sub source {
     my ($self) = @_;
 
-    my $info = $self->info;
+    my $processable = $self->processable;
 
     my $changelog_mentions_nmu = 0;
     my $changelog_mentions_local = 0;
     my $changelog_mentions_qa = 0;
     my $changelog_mentions_team_upload = 0;
-    my $debian_dir = $info->index_resolved_path('debian/');
+    my $debian_dir = $processable->index_resolved_path('debian/');
     my $chf;
     $chf = $debian_dir->child('changelog') if $debian_dir;
 
@@ -53,10 +53,10 @@ sub source {
     if ($chf and $chf->is_symlink) {
         $self->tag('changelog-is-symlink');
     }
-    return unless $info->changelog;
+    return unless $processable->changelog;
 
     # Get some data from the changelog file.
-    my ($entry) = @{$info->changelog->entries};
+    my ($entry) = @{$processable->changelog->entries};
     my $uploader = canonicalize($entry->Maintainer // '');
     my $changes = $entry->Changes;
     $changes =~ s/^(\s*\n)+//;
@@ -81,9 +81,9 @@ sub source {
 
     # If the version field is missing, assume it to be a native,
     # maintainer upload as it is probably the most likely case.
-    my $version = $info->field('version', '0-1');
-    my $maintainer = canonicalize($info->field('maintainer', ''));
-    my $uploaders = $info->field('uploaders');
+    my $version = $processable->field('version', '0-1');
+    my $maintainer = canonicalize($processable->field('maintainer', ''));
+    my $uploaders = $processable->field('uploaders');
 
     my $version_nmuness = 0;
     my $version_local = 0;

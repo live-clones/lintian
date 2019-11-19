@@ -44,7 +44,7 @@ sub get_checks_for_file {
     $checks{'missing-depends-on-sensible-utils'}
       = '(?:select-editor|sensible-(?:browser|editor|pager))\b'
       if $file->name !~ m,^usr/share/(?:doc|locale)/,
-      and not $self->info->relation('all')->implies('sensible-utils')
+      and not $self->processable->relation('all')->implies('sensible-utils')
       and not $self->processable->source eq 'sensible-utils';
 
     $checks{'uses-dpkg-database-directly'} = '/var/lib/dpkg'
@@ -52,7 +52,7 @@ sub get_checks_for_file {
       and $file->basename !~ m/^README(?:\..*)?$/
       and $file->basename !~ m/^changelog(?:\..*)?$/i
       and $file->basename !~ m/\.(?:html|txt)$/i
-      and $self->info->field('section', '') ne 'debian-installer'
+      and $self->processable->field('section', '') ne 'debian-installer'
       and none { $_ eq $self->processable->source }
     qw(base-files dpkg lintian);
 
@@ -84,11 +84,11 @@ sub breakdown {
     my ($self) = @_;
 
     # get maintainer scripts
-    my %control = %{$self->info->control_scripts};
+    my %control = %{$self->processable->control_scripts};
 
     for my $key (keys %control) {
 
-        my $file = $self->info->control_index_resolved_path($key);
+        my $file = $self->processable->control_index_resolved_path($key);
         next
           unless $file && $file->is_open_ok;
 

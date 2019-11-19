@@ -323,8 +323,7 @@ sub files {
 sub breakdown {
     my ($self) = @_;
 
-    my $info = $self->info;
-    my $proc = $self->processable;
+    my $processable = $self->processable;
     my $group = $self->group;
 
     my $ginfo = $group->info;
@@ -335,11 +334,10 @@ sub breakdown {
     $self->process_man_output($self->running_man) if @{$self->running_man};
 
     # Check our dependencies:
-    foreach my $depproc (@{ $ginfo->direct_dependencies($proc) }) {
+    foreach my $depproc (@{ $ginfo->direct_dependencies($processable) }) {
         # Find the manpages in our related dependencies
-        my $depinfo = $depproc->info;
 
-        foreach my $file ($depinfo->sorted_index){
+        foreach my $file ($depproc->sorted_index){
             my ($fname, $path, undef) = fileparse($file, qr,\..+$,o);
             my $lang = '';
 

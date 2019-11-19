@@ -39,8 +39,9 @@ sub spelling_tag_emitter {
 }
 
 sub open_readme {
-    my ($pkg_name, $info) = @_;
-    my $doc_dir = $info->index_resolved_path("usr/share/doc/${pkg_name}/");
+    my ($pkg_name, $processable) = @_;
+    my $doc_dir
+      = $processable->index_resolved_path("usr/share/doc/${pkg_name}/");
     if ($doc_dir) {
         for my $name (
             qw(README.Debian.gz README.Debian README.debian.gz README.debian)){
@@ -59,12 +60,12 @@ sub binary {
     my ($self) = @_;
 
     my $pkg_name = $self->package;
-    my $info = $self->info;
+    my $processable = $self->processable;
     my $group = $self->group;
 
     my $readme = '';
 
-    my $fd = open_readme($pkg_name, $info);
+    my $fd = open_readme($pkg_name, $processable);
     return if not defined($fd);
     while (my $line = <$fd>) {
         if ($line =~ m,/usr/doc\b,) {

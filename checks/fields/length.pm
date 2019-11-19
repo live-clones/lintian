@@ -36,14 +36,14 @@ with 'Lintian::Check';
 sub always {
     my ($self) = @_;
 
-    my $info = $self->info;
+    my $processable = $self->processable;
 
     my $maximum = 5_000;
 
     # Ensure fields aren't too long
-    for my $name (keys %{$info->field}) {
+    for my $name (keys %{$processable->field}) {
 
-        my $length = length $info->field($name);
+        my $length = length $processable->field($name);
 
         next
           unless $length > $maximum;

@@ -43,9 +43,9 @@ sub always {
 
     my $pkg = $self->package;
     my $type = $self->type;
-    my $info = $self->info;
+    my $processable = $self->processable;
 
-    my $java_info = $info->java_info;
+    my $java_info = $processable->java_info;
     my $missing_jarwrapper = 0;
     my $has_public_jars = 0;
     my $has_jars = 0;
@@ -56,12 +56,12 @@ sub always {
             my $files = $java_info->{$jar_file}{files};
             $self->tag('source-contains-prebuilt-java-object', $jar_file)
               if any { m/$CLASS_REGEX$/i } keys %{$files}
-              and $info->name ne 'lintian';
+              and $processable->name ne 'lintian';
         }
         return;
     }
 
-    my $depends = $info->relation('strong')->unparse;
+    my $depends = $processable->relation('strong')->unparse;
     # Remove all libX-java-doc packages to avoid thinking they are java libs
     #  - note the result may not be a valid dependency listing
     $depends =~ s/lib[^\s,]+-java-doc//go;
@@ -73,7 +73,7 @@ sub always {
     for my $jar_file (sort keys %{$java_info}) {
         my $files = $java_info->{$jar_file}{files};
         my $manifest = $java_info->{$jar_file}{manifest};
-        my $operm = $info->index($jar_file)->operm;
+        my $operm = $processable->index($jar_file)->operm;
         my $jar_dir = dirname($jar_file);
         my $classes = 0;
         my $datafiles = 1;
@@ -140,7 +140,7 @@ sub always {
             # Here, we need to check that the package depends on
             # jarwrapper.
             $missing_jarwrapper = 1
-              unless $info->relation('strong')->implies('jarwrapper');
+              unless $processable->relation('strong')->implies('jarwrapper');
         } elsif ($jar_file !~ m#^usr/share/#) {
             $self->tag('jar-not-in-usr-share', $jar_file);
         }
@@ -188,7 +188,7 @@ sub always {
                         next
                           if $target =~ m,^usr/share/java/[^/]+.jar$,o
                           and @java_lib_depends;
-                        $tinfo = $info->index($target);
+                        $tinfo = $processable->index($target);
                         # Points to file or link in this package,
                         #  which is sometimes easier than
                         #  re-writing the classpath.
@@ -250,10 +250,10 @@ sub always {
         }
     }
 
-    my $is_transitional = $info->is_pkg_class('transitional');
+    my $is_transitional = $processable->is_pkg_class('transitional');
     if (!$has_public_jars && !$is_transitional && $pkg =~ /^lib[^\s,]+-java$/){
         # Skip this if it installs a symlink in usr/share/java
-        my $java_dir = $info->index_resolved_path('usr/share/java/');
+        my $java_dir = $processable->index_resolved_path('usr/share/java/');
         my $has_jars = 0;
         $has_jars = 1
           if $java_dir

@@ -42,18 +42,17 @@ sub always {
 
     my $pkg = $self->package;
     my $type = $self->type;
-    my $info = $self->info;
-    my $proc = $self->processable;
+    my $processable = $self->processable;
 
     # pkg_version(_arch)?.type
     # - here we pay for length of "name_version"
-    my $len = length($pkg) + length($proc->version) + 1;
+    my $len = length($pkg) + length($processable->version) + 1;
     my $extra;
 
     # Skip auto-generated packages (dbgsym)
     return
       if ($type eq 'binary' or $type eq 'udeb')
-      and $info->is_pkg_class('auto-generated');
+      and $processable->is_pkg_class('auto-generated');
 
     if ($type eq 'binary' || $type eq 'source'){
         # Here we add length .deb / .dsc (in both cases +4)
@@ -65,8 +64,8 @@ sub always {
 
     if ($type ne 'source') {
         # non-src pkgs have architecture as well
-        if ($proc->architecture ne 'all'){
-            my $real = $len + 1 + length($proc->architecture);
+        if ($processable->architecture ne 'all'){
+            my $real = $len + 1 + length($processable->architecture);
             $len  += 1 + LONGEST_ARCHITECTURE;
             $extra = "$real ($len)";
         } else {
@@ -84,7 +83,7 @@ sub always {
     # Reset to work with elements of the dsc file.
     $len = 0;
 
-    foreach my $entry (split m/\n/o, $info->field('files', '')){
+    foreach my $entry (split m/\n/o, $processable->field('files', '')){
         my $filename;
         my $flen;
         strip($entry);

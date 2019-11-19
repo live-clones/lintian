@@ -36,12 +36,12 @@ my $MA_DIRS = Lintian::Data->new('common/multiarch-dirs', qr/\s++/);
 sub source {
     my ($self) = @_;
 
-    my $info = $self->info;
+    my $processable = $self->processable;
 
-    foreach my $bin ($info->binaries) {
+    foreach my $bin ($processable->binaries) {
         if ($bin =~ m/^gir1\.2-/) {
             if (
-                not $info->binary_relation($bin, 'strong')
+                not $processable->binary_relation($bin, 'strong')
                 ->implies('${gir:Depends}')) {
                 $self->tag(('typelib-missing-gir-depends', $bin));
             }
@@ -55,26 +55,26 @@ sub binary {
     my ($self) = @_;
 
     my $pkg = $self->package;
-    my $info = $self->info;
-    my $proc = $self->processable;
+    my $processable = $self->processable;
     my $group = $self->group;
 
     my @girs;
     my @typelibs;
-    my $section = $info->field('section', 'NONE');
-    my $madir = $MA_DIRS->value($proc->architecture);
+    my $section = $processable->field('section', 'NONE');
+    my $madir = $MA_DIRS->value($processable->architecture);
     # Slightly contrived, but it might be Architecture: all, in which
     # case this is the best we can do
     $madir = '${DEB_HOST_MULTIARCH}' unless defined $madir;
 
-    if (my $xmldir = $info->index_resolved_path('usr/share/gir-1.0/')) {
+    if (my $xmldir = $processable->index_resolved_path('usr/share/gir-1.0/')) {
         foreach my $child ($xmldir->children) {
             next unless $child =~ m/\.gir$/;
             push @girs, $child;
         }
     }
 
-    if (my $dir = $info->index_resolved_path('usr/lib/girepository-1.0/')) {
+    if (my $dir
+        = $processable->index_resolved_path('usr/lib/girepository-1.0/')) {
         push @typelibs, $dir->children;
         foreach my $typelib ($dir->children) {
             $self->tag((
@@ -84,7 +84,8 @@ sub binary {
         }
     }
 
-    if (my $dir= $info->index_resolved_path("usr/lib/$madir/girepository-1.0"))
+    if (my $dir
+        = $processable->index_resolved_path("usr/lib/$madir/girepository-1.0"))
     {
         push @typelibs, $dir->children;
     }
@@ -102,7 +103,7 @@ sub binary {
         }
     }
 
-    if ($proc->architecture eq 'all') {
+    if ($processable->architecture eq 'all') {
         foreach my $gir (@girs) {
             $self->tag(('gir-in-arch-all-package', $gir));
         }
@@ -115,18 +116,20 @@ sub binary {
         my $expected = 'gir1.2-' . lc($gir->basename);
         $expected =~ s/\.gir$//;
         $expected =~ tr/_/-/;
-        my $version = $info->field('version');
+        my $version = $processable->field('version');
 
         foreach my $bin ($group->get_binary_processables) {
             next unless $bin->name =~ m/^gir1\.2-/;
-            my $other = $bin->name.' (= '.$bin->info->field('version').')';
-            if (    $bin->info->relation('provides')->implies($expected)
-                and $info->relation('strong')->implies($other)) {
+            my $other = $bin->name.' (= '.$bin->field('version').')';
+            if (    $bin->relation('provides')->implies($expected)
+                and $processable->relation('strong')->implies($other)) {
                 next GIR;
             }
         }
 
-        if (not $info->relation('strong')->implies("$expected (= $version)")) {
+        if (
+            not $processable->relation('strong')
+            ->implies("$expected (= $version)")) {
             $self->tag(('gir-missing-typelib-dependency', $gir, $expected));
         }
     }
@@ -136,7 +139,7 @@ sub binary {
         $expected =~ s/\.typelib$//;
         $expected =~ tr/_/-/;
         if ($pkg ne $expected
-            and not $info->relation('provides')->implies($expected)) {
+            and not $processable->relation('provides')->implies($expected)) {
             $self->tag(
                 ('typelib-package-name-does-not-match', $typelib, $expected));
         }

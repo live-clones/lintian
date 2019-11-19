@@ -49,11 +49,11 @@ my $DERIVATIVE_FIELDS = Lintian::Data->new(
 sub source {
     my ($self) = @_;
 
-    my $info = $self->info;
+    my $processable = $self->processable;
 
     foreach my $field ($DERIVATIVE_FIELDS->all) {
 
-        my $val = $info->field($field, '-');
+        my $val = $processable->field($field, '-');
         my $data = $DERIVATIVE_FIELDS->value($field);
 
         $self->tag('invalid-field-for-derivative',

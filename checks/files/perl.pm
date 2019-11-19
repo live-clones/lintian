@@ -75,7 +75,7 @@ sub files {
 
     # perl modules using old libraries
     # we do the same check on perl scripts in checks/scripts
-    my $dep = $self->info->relation('strong');
+    my $dep = $self->processable->relation('strong');
     if (   $file->is_file
         && $file->name =~ m,\.pm$,
         && !$dep->implies('libperl4-corelibs-perl | perl (<< 5.12.3-7)')) {

@@ -47,7 +47,7 @@ sub files {
       unless $file->is_regular_file;
 
     $self->_set_only_conffiles(0)
-      unless $self->info->is_conffile($file);
+      unless $self->processable->is_conffile($file);
 
     return;
 }
@@ -55,14 +55,15 @@ sub files {
 sub breakdown {
     my ($self) = @_;
 
-    my $control = $self->info->control_index('md5sums');
+    my $control = $self->processable->control_index('md5sums');
 
     # Is there an md5sums control file?
     unless ($control) {
 
         # ignore if package contains no files
         return
-          if -z path($self->info->groupdir)->child('md5sums')->stringify;
+          if -z path($self->processable->groupdir)->child('md5sums')
+          ->stringify;
 
         $self->tag('no-md5sums-control-file')
           unless $self->only_conffiles;
@@ -117,7 +118,7 @@ sub read_md5sums_file {
 sub binary {
     my ($self) = @_;
 
-    my $control = $self->info->control_index('md5sums');
+    my $control = $self->processable->control_index('md5sums');
 
     # Is there an md5sums control file?
     return
@@ -140,7 +141,7 @@ sub binary {
     # iterate over files found in control file
     for my $file (keys %md5sums) {
 
-        my $calculated = $self->info->md5sums->{$file};
+        my $calculated = $self->processable->md5sums->{$file};
         unless (defined $calculated) {
 
             $self->tag('md5sums-lists-nonexistent-file', $file);
@@ -152,13 +153,13 @@ sub binary {
     }
 
     # iterate over files present in package
-    for my $file (keys %{ $self->info->md5sums }) {
+    for my $file (keys %{ $self->processable->md5sums }) {
 
         next
           if $md5sums{$file};
 
         $self->tag('file-missing-in-md5sums', $file)
-          unless $self->info->is_conffile($file)
+          unless $self->processable->is_conffile($file)
           || $file =~ m%^var/lib/[ai]spell/.%;
     }
 

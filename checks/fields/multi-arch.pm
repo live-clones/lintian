@@ -44,14 +44,15 @@ sub source {
     my ($self) = @_;
 
     my $pkg = $self->package;
-    my $info = $self->info;
+    my $processable = $self->processable;
 
-    for my $bin ($info->binaries) {
+    for my $bin ($processable->binaries) {
 
         next
-          unless $info->binary_field($bin, 'multi-arch', EMPTY) eq 'same';
+          unless $processable->binary_field($bin, 'multi-arch', EMPTY) eq
+          'same';
 
-        my $wildcard = $info->binary_field($bin, 'architecture');
+        my $wildcard = $processable->binary_field($bin, 'architecture');
         my @arches   = split(
             SPACE,
             safe_qx(
@@ -68,7 +69,7 @@ sub source {
 
             $self->tag('multi-arch-same-package-has-arch-specific-overrides',
                 $specific)
-              if $info->index_resolved_path($specific);
+              if $processable->index_resolved_path($specific);
         }
     }
 
@@ -79,19 +80,20 @@ sub binary {
     my ($self) = @_;
 
     my $pkg = $self->package;
-    my $info = $self->info;
+    my $processable = $self->processable;
 
     if ($pkg =~ /^x?fonts-/) {
         $self->tag('font-package-not-multi-arch-foreign')
-          unless $info->field('multi-arch', 'no') =~m/^(?:foreign|allowed)$/o;
+          unless $processable->field('multi-arch', 'no')
+          =~m/^(?:foreign|allowed)$/o;
     }
 
-    my $multi = $info->unfolded_field('multi-arch');
+    my $multi = $processable->unfolded_field('multi-arch');
 
     return
       unless defined $multi;
 
-    my $architecture = $info->unfolded_field('architecture');
+    my $architecture = $processable->unfolded_field('architecture');
     if (defined $architecture) {
 
         $self->tag('illegal-multi-arch-value', $architecture, $multi)
@@ -105,9 +107,9 @@ sub always {
     my ($self) = @_;
 
     my $pkg = $self->package;
-    my $info = $self->info;
+    my $processable = $self->processable;
 
-    my $multi = $info->unfolded_field('multi-arch');
+    my $multi = $processable->unfolded_field('multi-arch');
 
     return
       unless defined $multi;

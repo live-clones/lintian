@@ -55,9 +55,9 @@ my $TRIGGER_TYPES = Lintian::Data->new('triggers/trigger-types',
 sub always {
     my ($self) = @_;
 
-    my $info = $self->info;
+    my $processable = $self->processable;
 
-    my $triggers_file = $info->control_index('triggers');
+    my $triggers_file = $processable->control_index('triggers');
     return if not $triggers_file or not $triggers_file->is_open_ok;
     my $fd = $triggers_file->open;
     my %seen_triggers;

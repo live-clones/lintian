@@ -45,7 +45,7 @@ sub files {
     return
       unless $file->size;
 
-    my $md5 = $self->info->md5sums->{$file};
+    my $md5 = $self->processable->md5sums->{$file};
     return
       unless defined $md5;
 

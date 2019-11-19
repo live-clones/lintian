@@ -37,14 +37,14 @@ sub files {
     $self->tag('file-in-etc-not-marked-as-conffile', $file)
       if $file->is_file
       && $file->name =~ m,^etc/,
-      && !($self->info->is_conffile($file->name)
+      && !($self->processable->is_conffile($file->name)
         || $file =~ m,/README$,
         || $file eq 'etc/init.d/skeleton'
         || $file eq 'etc/init.d/rc'
         || $file eq 'etc/init.d/rcS');
 
     return
-      unless $self->info->is_conffile($file->name);
+      unless $self->processable->is_conffile($file->name);
 
     $self->tag('conffile-has-bad-file-type', $file)
       unless $file->is_file;
@@ -57,7 +57,7 @@ sub binary {
 
     my %count;
 
-    for my $absolute ($self->info->conffiles) {
+    for my $absolute ($self->processable->conffiles) {
 
         # all paths should be absolute
         $self->tag('relative-conffile', $absolute)
@@ -71,7 +71,7 @@ sub binary {
         $count{$relative}++;
 
         $self->tag('conffile-is-not-in-package', $relative)
-          unless defined $self->info->index($relative);
+          unless defined $self->processable->index($relative);
 
         $self->tag('file-in-etc-rc.d-marked-as-conffile', $relative)
           if $relative =~ m,^etc/rc.\.d/,;

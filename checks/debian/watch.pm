@@ -42,30 +42,32 @@ our $SIGNING_KEY_FILENAMES= Lintian::Data->new('common/signing-key-filenames');
 sub source {
     my ($self) = @_;
 
-    my $info = $self->info;
+    my $processable = $self->processable;
 
     my $template = 0;
     my $withgpgverification = 0;
-    my $wfile = $info->index_resolved_path('debian/watch');
+    my $wfile = $processable->index_resolved_path('debian/watch');
     my ($watchver, %dversions);
 
     if (not $wfile or not $wfile->is_open_ok) {
-        $self->tag('debian-watch-file-is-missing') unless ($info->native);
+        $self->tag('debian-watch-file-is-missing')
+          unless ($processable->native);
         return;
     }
 
     # Perform the other checks even if it is a native package
-    $self->tag('debian-watch-file-in-native-package') if ($info->native);
+    $self->tag('debian-watch-file-in-native-package')
+      if ($processable->native);
 
     # Check if the Debian version contains anything that resembles a repackaged
     # source package sign, for fine grained version mangling check
     # If the version field is missing, we assume a neutral non-native one.
 
     # upstream method returns empty for native packages
-    my $upstream = $info->changelog_version->upstream;
+    my $upstream = $processable->changelog_version->upstream;
     my ($prerelease) = ($upstream =~ qr/(alpha|beta|rc)/i);
 
-    # there is a good repack indicator in $info->repacked but we need the text
+# there is a good repack indicator in $processable->repacked but we need the text
     my ($repack) = ($upstream =~ $PKGREPACK_REGEX);
 
     # Gather information from the watch file and look for problems we can
@@ -215,7 +217,7 @@ sub source {
     # Look for upstream signing key
     my $key_found = 0;
     for my $key_name ($SIGNING_KEY_FILENAMES->all) {
-        my $path = $info->index_resolved_path("debian/$key_name");
+        my $path = $processable->index_resolved_path("debian/$key_name");
         if ($path and $path->is_file) {
             $key_found = $path;
             last;
@@ -232,11 +234,11 @@ sub source {
           if $key_found;
     }
 
-    if (defined $info->changelog
+    if (defined $processable->changelog
         && %dversions) {
         my %changelog_versions;
         my $count = 1;
-        for my $entry (@{$info->changelog->entries}) {
+        for my $entry (@{$processable->changelog->entries}) {
             my $uversion = $entry->Version;
             $uversion =~ s/-[^-]+$//; # revision
             $uversion =~ s/^\d+://; # epoch
@@ -251,7 +253,7 @@ sub source {
         while (my ($dversion, $lines) = each %dversions) {
             next if (!defined($dversion) || $dversion eq 'debian');
             local $" = ', ';
-            if (!$info->native
+            if (!$processable->native
                 && exists($changelog_versions{'orig'}{$dversion})) {
                 $self->tag(
                     'debian-watch-file-specifies-wrong-upstream-version',

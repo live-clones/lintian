@@ -45,17 +45,16 @@ sub source {
 
     my $pkg = $self->package;
     my $type = $self->type;
-    my $info = $self->info;
-    my $proc = $self->processable;
+    my $processable = $self->processable;
 
-    my $debian_dir = $info->index_resolved_path('debian/');
+    my $debian_dir = $processable->index_resolved_path('debian/');
     return unless $debian_dir;
     foreach my $file (@interesting_files) {
         my $dfile = $debian_dir->child($file);
         $self->search_for_obsolete_sites($dfile, "debian/$file");
     }
 
-    my $upstream_dir = $info->index_resolved_path('debian/upstream');
+    my $upstream_dir = $processable->index_resolved_path('debian/upstream');
     return unless $upstream_dir;
 
     my $dfile = $upstream_dir->child('metadata');

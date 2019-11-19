@@ -47,7 +47,7 @@ sub files {
 sub dir_counts {
     my ($self, $filename) = @_;
 
-    my $file = $self->info->index($filename);
+    my $file = $self->processable->index($filename);
 
     return 0
       unless $file;
@@ -58,7 +58,7 @@ sub dir_counts {
 sub always {
     my ($self) = @_;
 
-    my $section = $self->info->field('section', EMPTY);
+    my $section = $self->processable->field('section', EMPTY);
 
     # section games but nothing in /usr/games
     # any binary counts to avoid game-data false positives:

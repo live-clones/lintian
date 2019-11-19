@@ -38,30 +38,31 @@ sub source {
 
     my $pkg = $self->package;
     my $type = $self->type;
-    my $info = $self->info;
+    my $processable = $self->processable;
 
     # Don't check package if it doesn't contain a .php file
-    if (none { $_->basename =~ m/\.php$/i } $info->sorted_index) {
+    if (none { $_->basename =~ m/\.php$/i } $processable->sorted_index) {
         return;
     }
 
-    my $bdepends = $info->relation('build-depends');
+    my $bdepends = $processable->relation('build-depends');
     my $package_type = 'unknown';
 
     # PEAR or PECL package
-    my $package_xml = $info->index('package.xml');
-    my $package2_xml = $info->index('package2.xml');
+    my $package_xml = $processable->index('package.xml');
+    my $package2_xml = $processable->index('package2.xml');
     if (defined($package_xml) || defined($package2_xml)) {
         # Checking source builddep
         if (!$bdepends->implies('pkg-php-tools')) {
             $self->tag('pear-package-without-pkg-php-tools-builddep');
         } else {
             # Checking first binary relations
-            my @binaries = $info->binaries;
+            my @binaries = $processable->binaries;
             my $binary = $binaries[0];
-            my $depends = $info->binary_relation($binary, 'depends');
-            my $recommends = $info->binary_relation($binary, 'recommends');
-            my $breaks = $info->binary_relation($binary, 'breaks');
+            my $depends = $processable->binary_relation($binary, 'depends');
+            my $recommends
+              = $processable->binary_relation($binary, 'recommends');
+            my $breaks = $processable->binary_relation($binary, 'breaks');
             if (!$depends->implies('${phppear:Debian-Depends}')) {
                 $self->tag('pear-package-but-missing-dependency', 'Depends');
             }
@@ -72,7 +73,8 @@ sub source {
                 $self->tag('pear-package-but-missing-dependency', 'Breaks');
             }
             # Checking description
-            my $description = $info->binary_field($binary, 'description');
+            my $description
+              = $processable->binary_field($binary, 'description');
             if ($description !~ /\$\{phppear:summary\}/) {
                 $self->tag('pear-package-not-using-substvar',
                     '${phppear:summary}');
@@ -114,14 +116,14 @@ sub source {
         }
     }
     # PEAR channel
-    my $channel_xml = $info->index('channel.xml');
+    my $channel_xml = $processable->index('channel.xml');
     if (defined($channel_xml)) {
         if (!$bdepends->implies('pkg-php-tools')) {
             $self->tag('pear-channel-without-pkg-php-tools-builddep');
         }
     }
     # Composer package
-    my $composer_json = $info->index('composer.json');
+    my $composer_json = $processable->index('composer.json');
     if (   !defined($package_xml)
         && !defined($package2_xml)
         && defined($composer_json)) {
@@ -137,7 +139,7 @@ sub source {
             || defined($channel_xml)
             || defined($composer_json))
     ) {
-        my $rules = $info->index_resolved_path('debian/rules');
+        my $rules = $processable->index_resolved_path('debian/rules');
         if ($rules and $rules->is_open_ok) {
             my $has_buildsystem_phppear = 0;
             my $has_addon_phppear = 0;
