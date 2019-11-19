@@ -1,8 +1,14 @@
-lintian (2.36.0+git) UNRELEASED; urgency=medium
+lintian (2.37.0) unstable; urgency=medium
 
+  [ Chris Lamb ]
   * WIP (generated upon release).
+  * Don't emit missing-depends-on-sensible-utils for sensible-utils itself. (Closes: #944895)
+  * Correct logic when excluding .path/.timer & .service pairs from systemd-service-file-missing-install-key. Thanks, Richard Laager <rlaager@wiktel.com>. (Closes: #944145)
 
- -- Chris Lamb <lamby@debian.org>  Fri, 15 Nov 2019 18:39:52 +0000
+  [ Paul Wise ]
+  * spelling: Add several corrections
+
+ -- Chris Lamb <lamby@debian.org>  Tue, 19 Nov 2019 16:23:48 +0000
 
 lintian (2.36.0) unstable; urgency=medium
 
