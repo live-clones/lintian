@@ -60,9 +60,9 @@ sub source {
         if (scalar @$deps > 0) {
             # it depends on another package - it can cause
             # a circular dependency
-            my $pname = $proc->pkg_name;
+            my $pname = $proc->name;
             push @nodes, $pname;
-            $edges{$pname} = [map { $_->pkg_name } @$deps];
+            $edges{$pname} = [map { $_->name } @$deps];
             $self->check_multiarch($proc, $deps);
         }
     }
@@ -85,28 +85,27 @@ sub source {
 sub check_file_overlap {
     my ($self, @procs) = @_;
     # Sort them for stable output
-    my @sorted = sort { $a->pkg_name cmp $b->pkg_name } @procs;
+    my @sorted = sort { $a->name cmp $b->name } @procs;
     for (my $i = 0 ; $i < scalar @sorted ; $i++) {
         my $proc = $sorted[$i];
         my $pinfo = $proc->info;
         my @p = grep { $_ } split(m/,/o, $pinfo->field('provides', ''));
-        my $prov = Lintian::Relation->new(join(' |̈́ ', $proc->pkg_name, @p));
+        my $prov = Lintian::Relation->new(join(' |̈́ ', $proc->name, @p));
         for (my $j = $i ; $j < scalar @sorted ; $j++) {
             my $other = $sorted[$j];
             my $oinfo = $other->info;
             my @op = grep { $_ } split(m/,/o, $oinfo->field('provides', ''));
-            my $oprov
-              = Lintian::Relation->new(join(' | ', $other->pkg_name, @op));
+            my $oprov= Lintian::Relation->new(join(' | ', $other->name, @op));
             # poor man's "Multi-arch: same" work-around.
-            next if $proc->pkg_name eq $other->pkg_name;
+            next if $proc->name eq $other->name;
 
             # $other conflicts/replaces with $proc
             next if $oinfo->relation('conflicts')->implies($prov);
-            next if $oinfo->relation('replaces')->implies($proc->pkg_name);
+            next if $oinfo->relation('replaces')->implies($proc->name);
 
             # $proc conflicts/replaces with $other
             next if $pinfo->relation('conflicts')->implies($oprov);
-            next if $pinfo->relation('replaces')->implies($other->pkg_name);
+            next if $pinfo->relation('replaces')->implies($other->name);
 
             $self->overlap_check($proc, $pinfo, $other, $oinfo);
         }
@@ -123,8 +122,8 @@ sub overlap_check {
         $b_file = $b_info->index($name) // $b_info->index("$name/");
         if ($b_file) {
             next if $a_file->is_dir and $b_file->is_dir;
-            $self->tag('binaries-have-file-conflict', $a_proc->pkg_name,
-                $b_proc->pkg_name, $name);
+            $self->tag('binaries-have-file-conflict',
+                $a_proc->name,$b_proc->name, $name);
         }
     }
     return;
@@ -143,8 +142,8 @@ sub check_multiarch {
                 $self->tag(
                     'dependency-is-not-multi-archified',
                     join(q{ },
-                        $proc->pkg_name, 'depends on',
-                        $dep->pkg_name, "(multi-arch: $dma)"));
+                        $proc->name, 'depends on',
+                        $dep->name, "(multi-arch: $dma)"));
             }
         }
     } elsif ($ma ne 'same'
@@ -164,9 +163,9 @@ sub check_multiarch {
                 # (architecture) variants of the binaries.
                 $self->tag(
                     'debug-package-for-multi-arch-same-pkg-not-coinstallable',
-                    $proc->pkg_name . ' => ' . $dep->pkg_name
+                    $proc->name . ' => ' . $dep->name
                   )
-                  unless any { $proc->pkg_name =~ m/$_/xms }
+                  unless any { $proc->name =~ m/$_/xms }
                 $KNOWN_DBG_PACKAGE->all;
             }
         }

@@ -666,7 +666,7 @@ sub find_cruft {
         next ENTRY unless $entry->is_file;
         # avoid lintian testset
         next ENTRY
-          if $self->processable->pkg_src eq 'lintian' && $istestsetdir;
+          if $self->processable->source eq 'lintian' && $istestsetdir;
 
         # check non free file
         my $md5sum = $info->md5sums->{$name};
@@ -825,7 +825,7 @@ sub find_cruft {
 
         $self->tag('source-contains-prebuilt-doxygen-documentation', $dirname)
           if $basename =~ m{^doxygen.(?:png|sty)$}
-          and $self->processable->pkg_src ne 'doxygen';
+          and $self->processable->source ne 'doxygen';
 
         unless ($warned->{$name}) {
             for my $rule (@file_checks) {
@@ -1515,7 +1515,7 @@ sub php_source_whitelist {
         return 0;
     }
 
-    if($self->processable->pkg_src =~ m,^php\d*(?:\.\d+)?$,xms) {
+    if($self->processable->source =~ m,^php\d*(?:\.\d+)?$,xms) {
         return 0;
     }
     $self->tag($licenseproblem, $name);
@@ -1686,7 +1686,7 @@ sub license_check {
     my $ret = 0;
 
     # avoid to check lintian
-    if($self->processable->pkg_src eq 'lintian') {
+    if($self->processable->source eq 'lintian') {
         return $ret;
     }
   LICENSE:
@@ -1762,7 +1762,7 @@ sub _ships_examples {
     my @procs = $group->get_processables('binary');
     return 1 if not @procs;
     foreach my $binpkg (@procs) {
-        my $name = $binpkg->pkg_name;
+        my $name = $binpkg->name;
         # If we have an -examples package, assume we ship examples.
         return 1 if $name =~ m{-examples$};
         my @files = $binpkg->info->sorted_index;

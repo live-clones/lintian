@@ -150,7 +150,7 @@ sub always {
 
     my $arch = $info->field('architecture', '');
     my $multiarch = $info->field('multi-arch', 'no');
-    my $srcpkg = $proc->pkg_src;
+    my $srcpkg = $proc->source;
 
     $arch_hardening = $HARDENING->value($arch)
       if $arch ne 'all';
@@ -502,9 +502,9 @@ sub always {
         foreach my $emlib ($EMBEDDED_LIBRARIES->all) {
             my $ldata = $EMBEDDED_LIBRARIES->value($emlib);
             if ($ldata->{'source-regex'}) {
-                next if $proc->pkg_src =~ m/^$ldata->{'source-regex'}$/;
+                next if $proc->source =~ m/^$ldata->{'source-regex'}$/;
             } else {
-                next if $proc->pkg_src eq $ldata->{'source'};
+                next if $proc->source eq $ldata->{'source'};
             }
             if ($strings =~ $ldata->{'match'}) {
                 $self->tag('embedded-library', "$fname: $ldata->{'libname'}");

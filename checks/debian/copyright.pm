@@ -1148,7 +1148,7 @@ sub depends_on {
     return 1 if $KNOWN_ESSENTIAL->known($package);
     $strong = $info->relation('strong');
     return 1 if $strong->implies($package);
-    $arch = $proc->pkg_arch;
+    $arch = $proc->architecture;
     return 1 if $arch ne 'all' and $strong->implies("${package}:${arch}");
     return 0;
 }
@@ -1168,7 +1168,7 @@ sub check_cross_link {
         # be present anyway;  If they are in the same group, they claim
         # to have the same source (and source version)
         foreach my $proc ($group->get_processables('binary')){
-            return if($proc->pkg_name eq $fpkg);
+            return if($proc->name eq $fpkg);
         }
         # It was not, but since the source package was not present, we cannot
         # tell if it is foreign or not at this point.

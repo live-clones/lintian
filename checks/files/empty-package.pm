@@ -99,7 +99,7 @@ sub files {
     return
       if $file->basename =~ m/^README(?:\..*)?$/i;
 
-    my $pkg_arch = $self->processable->pkg_arch;
+    my $pkg_arch = $self->processable->architecture;
     unless ($pkg_arch eq 'all') {
 
         # binNMU changelog (debhelper)

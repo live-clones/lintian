@@ -304,7 +304,7 @@ sub source {
     }
 
     for my $proc ($group->get_processables('binary')) {
-        my $binpkg = $proc->pkg_name;
+        my $binpkg = $proc->name;
         my $breaks = $info->binary_relation($binpkg, 'breaks');
         my $strong = $info->binary_relation($binpkg, 'strong');
         $self->tag('package-uses-dh-runit-but-lacks-breaks-substvar', $binpkg)

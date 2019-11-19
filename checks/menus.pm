@@ -157,8 +157,8 @@ sub binary {
     # Populate all_{files,links} from current package and its dependencies
     foreach my $bin ($group->get_binary_processables) {
         next
-          unless $info->name eq $bin->pkg_name
-          or $info->relation('strong')->implies($bin->pkg_name);
+          unless $info->name eq $bin->name
+          or $info->relation('strong')->implies($bin->name);
         for my $file ($bin->info->sorted_index) {
             add_file_link_info($bin->info, $file->name, \%all_files,
                 \%all_links);

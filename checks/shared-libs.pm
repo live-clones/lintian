@@ -93,7 +93,7 @@ sub always {
 
     if (%SONAME) {
         foreach my $bin ($group->get_binary_processables) {
-            next unless $bin->pkg_name =~ m/\-dev$/;
+            next unless $bin->name =~ m/\-dev$/;
             if ($bin->info->relation('strong')->implies($pkg)) {
                 push @devpkgs, $bin;
             }
@@ -278,7 +278,7 @@ sub always {
 
             push @alt, $link_file;
 
-            if ($proc->pkg_src =~ m/^gcc-(\d+(?:.\d+)?)$/o) {
+            if ($proc->source =~ m/^gcc-(\d+(?:.\d+)?)$/o) {
                 # gcc has a lot of bi-arch libs and puts the dev symlink
                 # in slightly different directories (to be co-installable
                 # with itself I guess).  Allegedly, clang (etc.) have to
@@ -286,7 +286,7 @@ sub always {
                 # acceptable...
                 my $gcc_ver = $1;
                 my $basename = basename($link_file);
-                my $madir = $MA_DIRS->value($proc->pkg_arch);
+                my $madir = $MA_DIRS->value($proc->architecture);
                 my @madirs;
                 if (defined $madir) {
                     # For i386-*, the triplet GCC uses can be i586-* or i686-*.
@@ -671,7 +671,7 @@ sub always {
                 $self->tag(
                     'maintscript-calls-ldconfig', 'preinst'
                       # Assume it is needed if glibc does it
-                ) if $proc->pkg_src ne 'glibc';
+                ) if $proc->source ne 'glibc';
             }
         }
     }
@@ -687,7 +687,7 @@ sub always {
                     # glibc (notably libc-bin) needs to call ldconfig in
                     # order to implement the "ldconfig" trigger.
                     $self->tag('maintscript-calls-ldconfig', 'postinst')
-                      if $proc->pkg_src ne 'glibc';
+                      if $proc->source ne 'glibc';
                 }
             }
         }
@@ -731,7 +731,7 @@ sub always {
                 $self->tag(
                     'maintscript-calls-ldconfig', 'prerm'
                       # Assume it is needed if glibc does it
-                ) if $proc->pkg_src ne 'glibc';
+                ) if $proc->source ne 'glibc';
             }
         }
     }
@@ -745,7 +745,7 @@ sub always {
                 $self->tag(
                     'maintscript-calls-ldconfig', 'postrm'
                       # Assume it is needed if glibc does it
-                ) if $proc->pkg_src ne 'glibc';
+                ) if $proc->source ne 'glibc';
             }
         }
     }

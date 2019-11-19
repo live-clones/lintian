@@ -277,7 +277,7 @@ sub binary {
                   )
                   if $d_pkg =~ /^perl-modules/
                   && $field ne 'replaces'
-                  && $proc->pkg_src ne 'perl';
+                  && $proc->source ne 'perl';
 
                 $self->tag('depends-exclusively-on-makedev', $field,)
                   if ( $field eq 'depends'
@@ -542,7 +542,7 @@ sub source {
                           # perl-modules-5.xx (>> 5.20)
                       )
                       if $d_pkg =~ /^perl-modules/
-                      && $proc->pkg_src ne 'perl';
+                      && $proc->source ne 'perl';
                 }
 
                 my $all_obsolete = 0;
@@ -552,7 +552,7 @@ sub source {
                     my ($dep, $pkg_name) = @{$d};
                     my $replacement = $OBSOLETE_PACKAGES->value($pkg_name)
                       // '';
-                    next if $proc->pkg_src eq 'lintian';
+                    next if $proc->source eq 'lintian';
                     $replacement = ' => ' . $replacement
                       if $replacement ne '';
                     if (   $pkg_name eq $alternatives[0][0]
@@ -591,7 +591,7 @@ sub source {
 
     my (@arch_dep_pkgs, @dbg_pkgs);
     foreach my $gproc ($group->get_binary_processables) {
-        my $binpkg = $gproc->pkg_name;
+        my $binpkg = $gproc->name;
         if ($binpkg =~ m/-dbg$/) {
             push(@dbg_pkgs, $gproc);
         } elsif ($info->binary_field($binpkg, 'architecture', '') ne 'all'){
@@ -601,7 +601,7 @@ sub source {
     my $dstr = join('|', map { quotemeta($_) } @arch_dep_pkgs);
     my $depregex = qr/^(?:$dstr)$/;
     for my $dbg_proc (@dbg_pkgs) {
-        my $deps = $info->binary_relation($dbg_proc->pkg_name, 'strong');
+        my $deps = $info->binary_relation($dbg_proc->name, 'strong');
         my $missing = 1;
         $missing = 0 if $deps->matches($depregex, VISIT_PRED_NAME);
         if ($missing and $dbg_proc->info->is_pkg_class('transitional')) {
@@ -610,7 +610,7 @@ sub source {
             $missing = 0
               if $deps->matches(qr/-dbg \Z/xsm, VISIT_PRED_NAME);
         }
-        $self->tag('dbg-package-missing-depends', $dbg_proc->pkg_name)
+        $self->tag('dbg-package-missing-depends', $dbg_proc->name)
           if $missing;
     }
 

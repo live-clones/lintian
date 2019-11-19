@@ -47,7 +47,7 @@ sub always {
 
     # pkg_version(_arch)?.type
     # - here we pay for length of "name_version"
-    my $len = length($pkg) + length($proc->pkg_version) + 1;
+    my $len = length($pkg) + length($proc->version) + 1;
     my $extra;
 
     # Skip auto-generated packages (dbgsym)
@@ -65,8 +65,8 @@ sub always {
 
     if ($type ne 'source') {
         # non-src pkgs have architecture as well
-        if ($proc->pkg_arch ne 'all'){
-            my $real = $len + 1 + length($proc->pkg_arch);
+        if ($proc->architecture ne 'all'){
+            my $real = $len + 1 + length($proc->architecture);
             $len  += 1 + LONGEST_ARCHITECTURE;
             $extra = "$real ($len)";
         } else {

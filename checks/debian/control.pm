@@ -419,7 +419,7 @@ sub source {
     if ($info->source_field('rules-requires-root', 'no') eq 'no') {
       BINARY:
         foreach my $proc ($group->get_binary_processables) {
-            my $pkg = $proc->pkg_name;
+            my $pkg = $proc->name;
             foreach my $file ($proc->info->sorted_index) {
                 my $owner = $file->owner . ':' . $file->group;
                 next if $owner eq 'root:root';

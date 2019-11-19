@@ -62,7 +62,7 @@ sub binary {
     my @girs;
     my @typelibs;
     my $section = $info->field('section', 'NONE');
-    my $madir = $MA_DIRS->value($proc->pkg_arch);
+    my $madir = $MA_DIRS->value($proc->architecture);
     # Slightly contrived, but it might be Architecture: all, in which
     # case this is the best we can do
     $madir = '${DEB_HOST_MULTIARCH}' unless defined $madir;
@@ -102,7 +102,7 @@ sub binary {
         }
     }
 
-    if ($proc->pkg_arch eq 'all') {
+    if ($proc->architecture eq 'all') {
         foreach my $gir (@girs) {
             $self->tag(('gir-in-arch-all-package', $gir));
         }
@@ -118,8 +118,8 @@ sub binary {
         my $version = $info->field('version');
 
         foreach my $bin ($group->get_binary_processables) {
-            next unless $bin->pkg_name =~ m/^gir1\.2-/;
-            my $other = $bin->pkg_name.' (= '.$bin->info->field('version').')';
+            next unless $bin->name =~ m/^gir1\.2-/;
+            my $other = $bin->name.' (= '.$bin->info->field('version').')';
             if (    $bin->info->relation('provides')->implies($expected)
                 and $info->relation('strong')->implies($other)) {
                 next GIR;

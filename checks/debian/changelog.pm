@@ -75,7 +75,7 @@ sub source {
 
     my $changes = $group->changes;
     if ($changes) {
-        my $contents = path($changes->pkg_path)->slurp;
+        my $contents = path($changes->path)->slurp;
         # make sure dot matches newlines, as well
         if ($contents =~ qr/BEGIN PGP SIGNATURE.*END PGP SIGNATURE/ms) {
 

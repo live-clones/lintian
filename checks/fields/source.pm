@@ -48,7 +48,7 @@ sub source {
     return
       unless defined $source;
 
-    my $filename = $proc->pkg_path;
+    my $filename = $proc->path;
     my ($base) = ($filename =~ m,(?:\a|/)([^/]+)$,o);
     my ($stem) = ($base =~ m/^([^_]+)_/o);
 
