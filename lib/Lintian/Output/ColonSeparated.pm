@@ -57,26 +57,42 @@ is necessary to report in case no tags were found.
 
 =cut
 
+my %code_priority = (
+    'E' => 30,
+    'W' => 40,
+    'I' => 50,
+    'P' => 60,
+    'X' => 70,
+    'O' => 80,
+);
+
+my %type_priority = (
+    'source' => 30,
+    'binary' => 40,
+    'udeb' => 50,
+    'changes' => 60,
+    'buildinfo' => 70,
+);
+
 sub issue_tags {
     my ($self, $pending, $processables) = @_;
 
     return
       unless $pending && $processables;
 
-    my %taglist;
+    $self->print_start_pkg($_)for @{$processables};
 
-    for my $tag (@{$pending}) {
-        $taglist{$tag->processable} //= [];
-        push(@{$taglist{$tag->processable}}, $tag);
-    }
+    my @sorted = sort {
+             defined $a->override <=> defined $b->override
+          || $code_priority{$a->info->code} <=> $code_priority{$b->info->code}
+          || $a->name cmp $b->name
+          || $type_priority{$a->processable->type}
+          <=> $type_priority{$b->processable->type}
+          || $a->processable->name cmp $b->processable->name
+          || $a->extra cmp $b->extra
+    } @{$pending};
 
-    for my $processable (@{$processables}) {
-
-        $self->print_start_pkg($processable);
-
-        my @sorted = @{$taglist{$processable} // []};
-        $self->print_tag($_) for @sorted;
-    }
+    $self->print_tag($_) for @sorted;
 
     return;
 }
