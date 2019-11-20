@@ -55,6 +55,23 @@ is necessary to report in case no tags were found.
 
 =cut
 
+my %code_priority = (
+    'E' => 30,
+    'W' => 40,
+    'I' => 50,
+    'P' => 60,
+    'X' => 70,
+    'O' => 80,
+);
+
+my %type_priority = (
+    'source' => 30,
+    'binary' => 40,
+    'udeb' => 50,
+    'changes' => 60,
+    'buildinfo' => 70,
+);
+
 sub issue_tags {
     my ($self, $pending, $processables) = @_;
 
@@ -68,7 +85,12 @@ sub issue_tags {
         push(@{$taglist{$tag->processable}}, $tag);
     }
 
-    for my $processable (@{$processables}) {
+    my @ordered = sort {
+             $type_priority{$a->type} <=> $type_priority{$b->type}
+          || $a->name cmp $b->name
+    } @{$processables};
+
+    for my $processable (@ordered) {
 
         my @attrs = (
             [type         => $processable->type],
@@ -79,7 +101,12 @@ sub issue_tags {
         my $preamble = $self->_open_xml_tag('package', \@attrs, 0);
         print { $self->stdout } $preamble, NEWLINE;
 
-        my @sorted = @{$taglist{$processable} // []};
+        my @sorted = sort {
+            $code_priority{$a->info->code} <=> $code_priority{$b->info->code}
+              || $a->name cmp $b->name
+              || $a->extra cmp $b->extra
+        } @{$taglist{$processable} // []};
+
         $self->print_tag($_) for @sorted;
 
         print { $self->stdout } "</package>\n";
