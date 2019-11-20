@@ -26,6 +26,7 @@ use Lintian::Tag::Info ();
 
 use constant EMPTY => q{};
 use constant SPACE => q{ };
+use constant NEWLINE => qq{\n};
 
 use Moo;
 use namespace::clean;
@@ -131,6 +132,37 @@ sub BUILD {
     return;
 }
 
+=item issue_tags
+
+Print all tags passed in array. A separate arguments with processables
+is necessary to report in case no tags were found.
+
+=cut
+
+sub issue_tags {
+    my ($self, $pending, $processables) = @_;
+
+    return
+      unless $pending && $processables;
+
+    my %taglist;
+
+    for my $tag (@{$pending}) {
+        $taglist{$tag->processable} //= [];
+        push(@{$taglist{$tag->processable}}, $tag);
+    }
+
+    for my $processable (@{$processables}) {
+
+        $self->print_start_pkg($processable);
+
+        my @sorted = @{$taglist{$processable} // []};
+        $self->print_tag($_) for @sorted;
+    }
+
+    return;
+}
+
 =item print_tag
 
 =cut
@@ -174,6 +206,45 @@ sub print_tag {
         $self->_print('', 'N', '');
     }
     return;
+}
+
+=item C<print_start_pkg($pkg_info)>
+
+Called before lintian starts to handle each package.  The version in
+Lintian::Output uses v_msg() for output.  Called from Tags::select_pkg().
+
+=cut
+
+sub print_start_pkg {
+    my ($self, $processable) = @_;
+
+    my $object = 'package';
+    $object = 'file'
+      if $processable->type eq 'changes';
+
+    $self->v_msg(
+        $self->delimiter,
+        'Processing '. $processable->type. " $object ". $processable->name,
+        '(version '
+          . $processable->version
+          . ', arch '
+          . $processable->architecture . ') ...'
+    );
+    return;
+}
+
+=item C<_quote_print($string)>
+
+Called to quote a string.  By default it will replace all
+non-printables with "?".  Sub-classes can override it if
+they allow non-ascii printables etc.
+
+=cut
+
+sub _quote_print {
+    my ($self, $string) = @_;
+    $string =~ s/[^[:print:]]/?/go;
+    return $string;
 }
 
 =back
