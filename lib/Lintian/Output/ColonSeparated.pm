@@ -24,6 +24,11 @@ package Lintian::Output::ColonSeparated;
 use strict;
 use warnings;
 
+use constant EMPTY => q{};
+use constant SPACE => q{ };
+use constant COLON => q{:};
+use constant NEWLINE => qq{\n};
+
 use Moo;
 use namespace::clean;
 
@@ -45,6 +50,37 @@ Provides colon-separated tag output.
 
 =over 4
 
+=item issue_tags
+
+Print all tags passed in array. A separate arguments with processables
+is necessary to report in case no tags were found.
+
+=cut
+
+sub issue_tags {
+    my ($self, $pending, $processables) = @_;
+
+    return
+      unless $pending && $processables;
+
+    my %taglist;
+
+    for my $tag (@{$pending}) {
+        $taglist{$tag->processable} //= [];
+        push(@{$taglist{$tag->processable}}, $tag);
+    }
+
+    for my $processable (@{$processables}) {
+
+        $self->print_start_pkg($processable);
+
+        my @sorted = @{$taglist{$processable} // []};
+        $self->print_tag($_) for @sorted;
+    }
+
+    return;
+}
+
 =item print_tag
 
 =cut
@@ -57,27 +93,68 @@ sub print_tag {
     my $override = $tag->override;
     my $processable = $tag->processable;
 
-    my $odata = '';
+    my $odata = EMPTY;
     if ($override) {
         $odata = $override->{tag};
-        $odata .= ' ' . $self->_quote_print($override->{extra})
-          if $override->{extra};
+        my $extra = $override->{extra};
+        $extra =~ s/[^[:print:]]/?/g;
+        $odata .= SPACE . $extra
+          if length $extra;
     }
 
-    $self->issued_tag($tag_info->tag);
-    $self->_print(
+    $self->issuedtags->{$tag_info->tag}++;
+
+    $information =~ s/[^[:print:]]/?/g;
+
+    my @args = (
         'tag',
         $tag_info->code,
         $tag_info->severity,
         $tag_info->certainty,
-        ($tag_info->experimental ? 'X' : '') . (defined($override) ? 'O' : ''),
+        ($tag_info->experimental ? 'X' : EMPTY)
+          . (defined $override ? 'O' : EMPTY),
         $processable->name,
         $processable->version,
         $processable->architecture,
         $processable->type,
         $tag_info->tag,
-        $self->_quote_print($information),
+        $information,
         $odata,
+    );
+
+    my @quoted = map {
+        s/\\/\\\\/g;
+        s/\Q:\E/\\:/g;
+        $_
+    } @args;
+
+    my $output = join(COLON, @quoted) . NEWLINE;
+    print {$self->stdout} $output;
+
+    return;
+}
+
+=item C<print_start_pkg($pkg_info)>
+
+Called before lintian starts to handle each package.  The version in
+Lintian::Output uses v_msg() for output.  Called from Tags::select_pkg().
+
+=cut
+
+sub print_start_pkg {
+    my ($self, $processable) = @_;
+
+    my $object = 'package';
+    $object = 'file'
+      if $processable->type eq 'changes';
+
+    $self->v_msg(
+        $self->delimiter,
+        'Processing '. $processable->type. " $object ". $processable->name,
+        '(version '
+          . $processable->version
+          . ', arch '
+          . $processable->architecture . ') ...'
     );
     return;
 }
