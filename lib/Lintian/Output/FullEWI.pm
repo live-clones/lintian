@@ -45,6 +45,13 @@ package Lintian::Output::FullEWI;
 use strict;
 use warnings;
 
+use CGI qw(escapeHTML);
+use Term::ANSIColor ();
+
+# for tty hyperlinks
+use constant OSC_HYPERLINK => qq{\033]8;;};
+use constant OSC_DONE => qq{\033\\};
+
 use Moo;
 use namespace::clean;
 
@@ -66,7 +73,154 @@ A parent class specializing in Lintian output.
 
 =over 4
 
+=item issue_tags
+
+Print all tags passed in array. A separate arguments with processables
+is necessary to report in case no tags were found.
+
 =cut
+
+sub issue_tags {
+    my ($self, $pending, $processables) = @_;
+
+    return
+      unless $pending && $processables;
+
+    my %taglist;
+
+    for my $tag (@{$pending}) {
+        $taglist{$tag->processable} //= [];
+        push(@{$taglist{$tag->processable}}, $tag);
+    }
+
+    for my $processable (@{$processables}) {
+
+        $self->print_start_pkg($processable);
+
+        my @sorted = @{$taglist{$processable} // []};
+        $self->print_tag($_) for @sorted;
+    }
+
+    return;
+}
+
+=item C<print_tag($pkg_info, $tag_info, $extra, $override)>
+
+Print a tag.  The first two arguments are hash reference with the
+information about the package and the tag, $extra is the extra
+information for the tag (if any) as an array reference, and $override
+is either undef if the tag is not overridden or a hash with
+override info for this tag.  Called from Lintian::Tags::tag().
+
+=cut
+
+sub print_tag {
+    my ($self, $tag) = @_;
+
+    my $tag_info = $tag->info;
+    my $information = $tag->extra;
+    my $override = $tag->override;
+    my $processable = $tag->processable;
+
+    $information = ' ' . $self->_quote_print($information)
+      if $information ne '';
+    my $code = $tag_info->code;
+    my $tag_color = $self->{colors}{$code};
+    my $fpkg_info= $self->_format_pkg_info($processable, $tag_info, $override);
+    my $tag_name = $tag_info->tag;
+    my $limit = $self->tag_display_limit;
+    my $output;
+
+    # Limit the output so people do not drown in tags.  Some tags are
+    # insanely noisy (hi static-library-has-unneeded-section)
+    if ($limit) {
+        my $proc_id = $processable->identifier;
+        my $emitted_count
+          = $self->{'proc_id2tag_count'}{$proc_id}{$tag_name}++;
+        return if $emitted_count >= $limit;
+        my $msg
+          = ' ... use --no-tag-display-limit to see all (or pipe to a file/program)';
+        $information = $self->_quote_print($msg)
+          if $emitted_count >= $limit-1;
+    }
+    if ($self->_do_color && $self->color eq 'html') {
+        my $escaped = escapeHTML($tag_name);
+        $information = escapeHTML($information);
+        $output .= qq(<span style="color: $tag_color">$escaped</span>);
+
+    } else {
+        my $text = $tag_name;
+        $text = Term::ANSIColor::colored($tag_name, $tag_color)
+          if $self->_do_color;
+
+        if ($self->tty_hyperlinks) {
+            my $target
+              = 'https://lintian.debian.org/tags/' . $tag_name . '.html';
+            $output .= $self->osc_hyperlink($text, $target);
+        } else {
+            $output .= $text;
+        }
+    }
+
+    if ($override && @{ $override->{comments} }) {
+        foreach my $c (@{ $override->{comments} }) {
+            $self->msg($self->_quote_print($c));
+        }
+    }
+
+    $self->_print('', $fpkg_info, "$output$information");
+    if (not $self->issued_tag($tag_info->tag) and $self->showdescription) {
+        my $description;
+        if ($self->_do_color && $self->color eq 'html') {
+            $description = $tag_info->description('html', '   ');
+        } else {
+            $description = $tag_info->description('text', '   ');
+        }
+        $self->_print('', 'N', '');
+        $self->_print('', 'N', split("\n", $description));
+        $self->_print('', 'N', '');
+    }
+    return;
+}
+
+=item C<print_start_pkg($pkg_info)>
+
+Called before lintian starts to handle each package.  The version in
+Lintian::Output uses v_msg() for output.  Called from Tags::select_pkg().
+
+=cut
+
+sub print_start_pkg {
+    my ($self, $processable) = @_;
+
+    my $object = 'package';
+    $object = 'file'
+      if $processable->type eq 'changes';
+
+    $self->v_msg(
+        $self->delimiter,
+        'Processing '. $processable->type. " $object ". $processable->name,
+        '(version '
+          . $processable->version
+          . ', arch '
+          . $processable->architecture . ') ...'
+    );
+    return;
+}
+
+=item C<_quote_print($string)>
+
+Called to quote a string.  By default it will replace all
+non-printables with "?".  Sub-classes can override it if
+they allow non-ascii printables etc.
+
+=cut
+
+sub _quote_print {
+    my ($self, $string) = @_;
+    $string =~ s/[^[:print:]]/?/go;
+    return $string;
+}
 
 # Overridden from Lintian::Output
 sub _format_pkg_info {
@@ -80,6 +234,19 @@ sub _format_pkg_info {
     $arch = $processable->architecture if $processable->type ne 'source';
     $arch = 'source' unless $arch;
     return "$code: " . $processable->name . " $type ($version) [$arch]";
+}
+
+=item C<osc_hyperlink>
+
+=cut
+
+sub osc_hyperlink {
+    my ($self, $text, $target) = @_;
+
+    my $start = OSC_HYPERLINK . $target . OSC_DONE;
+    my $end = OSC_HYPERLINK . OSC_DONE;
+
+    return $start . $text . $end;
 }
 
 =back
