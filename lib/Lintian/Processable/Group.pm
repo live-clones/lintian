@@ -137,7 +137,7 @@ Hash linking collection to priority.
 
 Hash with active jobs.
 
-=item group->collmap
+=item C<collmap>
 
 Hash with active jobs.
 
@@ -164,6 +164,12 @@ Hash with active jobs.
 =item worktable
 
 Hash with active jobs.
+
+=item C<saved_direct_dependencies>
+
+=item C<saved_spelling_exceptions>
+
+=item C<shared_storage>
 
 =cut
 
@@ -192,6 +198,11 @@ has colls_not_scheduled => (is => 'rw', default => sub { {} });
 
 has extra_coll => (is => 'rw', default => sub { [] });
 has queue => (is => 'rw', default => sub { [] });
+
+has saved_direct_dependencies => (is => 'rw', default => sub { {} });
+has saved_spelling_exceptions => (is => 'rw', default => sub { {} });
+
+has shared_storage => (is => 'rw', default => sub { {} });
 
 =item Lintian::Processable::Group->init_from_file (FILE)
 
@@ -966,7 +977,10 @@ sub add_processable{
 
         $phash->{$id} = $processable;
     }
+
     $processable->group($self);
+    $processable->shared_storage($self->shared_storage);
+
     return 1;
 }
 
@@ -1075,26 +1089,109 @@ Returns L<$info|Lintian::Collect::Group> element for this group.
 
 sub info {
     my ($self) = @_;
-    my $info = $self->{info};
-    if (!defined $info) {
-        $info = Lintian::Collect::Group->new($self);
-        $self->{info} = $info;
-    }
-    return $info;
+
+    return $self;
 }
 
-=item $group->init_shared_cache
+=item direct_dependencies (PROC)
 
-Prepare a shared memory cache for all current members of the group.
-This is solely a memory saving optimization and is not required for
-correct performance.
+If PROC is a part of the underlying processable group, this method
+returns a listref containing all the direct dependencies of PROC.  If
+PROC is not a part of the group, this returns undef.
+
+Note: Only strong dependencies (Pre-Depends and Depends) are
+considered.
+
+Note: Self-dependencies (if any) are I<not> included in the result.
 
 =cut
 
-sub init_shared_cache {
+# sub direct_dependencies Needs-Info <>
+sub direct_dependencies {
+    my ($self, $processable) = @_;
+
+    unless (keys %{$self->saved_direct_dependencies}) {
+
+        my @processables = $self->get_processables('binary');
+        push @processables, $self->get_processables('udeb');
+
+        my %dependencies;
+        foreach my $that (@processables) {
+
+            my $relation = $that->relation('strong');
+            my @specific;
+
+            foreach my $this (@processables) {
+
+                # Ignore self deps - we have checks for that and it
+                # will just end up complicating "correctness" of
+                # otherwise simple checks.
+                next
+                  if $this->name eq $that->name;
+
+                push @specific, $this
+                  if $relation->implies($this->name);
+            }
+            $dependencies{$that->name} = \@specific;
+        }
+
+        $self->saved_direct_dependencies(\%dependencies);
+    }
+
+    return $self->saved_direct_dependencies->{$processable->name}
+      if $processable;
+
+    return $self->saved_direct_dependencies;
+}
+
+=item $ginfo->type
+
+Return the type of this collect object (which is the string 'group').
+
+=cut
+
+# Return the package type.
+# sub type Needs-Info <>
+sub type {
     my ($self) = @_;
-    $self->info; # Side-effect of creating the info object.
-    return;
+
+    return 'group';
+}
+
+=item spelling_exceptions
+
+Returns a hashref of words, which the spell checker should ignore.
+These words are generally based on the package names in the group to
+avoid false-positive "spelling error" when packages have "fun" names.
+
+Example: Package alot-doc (#687464)
+
+=cut
+
+# sub spelling_exceptions Needs-Info <>
+sub spelling_exceptions {
+    my ($self) = @_;
+
+    return $self->saved_spelling_exceptions
+      if keys %{$self->saved_spelling_exceptions};
+
+    my %exceptions;
+
+    foreach my $processable ($self->get_processables) {
+
+        my @names = ($processable->name, $processable->source);
+        push(@names, $processable->binaries)
+          if $processable->type eq 'source';
+
+        foreach my $name (@names) {
+            $exceptions{$name} = 1;
+            $exceptions{$_} = 1 for split m/-/, $name;
+        }
+    }
+
+    $self->saved_spelling_exceptions(\%exceptions);
+
+    return $self->saved_spelling_exceptions;
 }
 
 =item $group->clear_cache
@@ -1110,7 +1207,7 @@ sub clear_cache {
     for my $proc ($self->get_processables) {
         $proc->clear_cache;
     }
-    delete $self->{info};
+
     return;
 }
 
