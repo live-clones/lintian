@@ -33,7 +33,6 @@ use Path::Tiny;
 use POSIX qw(ENOENT);
 use Time::HiRes qw(gettimeofday tv_interval);
 
-use Lintian::Collect::Group;
 use Lintian::Processable::Binary;
 use Lintian::Processable::Buildinfo;
 use Lintian::Processable::Changes;
@@ -1082,8 +1081,6 @@ sub get_binary_processables {
 }
 
 =item $group->info
-
-Returns L<$info|Lintian::Collect::Group> element for this group.
 
 =cut
 
