@@ -233,7 +233,7 @@ sub overrides {
             $tagover->{comments} = $comments;
             $comments = [];
 
-            $override_data{$tag} = {};
+            $override_data{$tag} //= {};
             $override_data{$tag}{$extra} = $tagover;
 
             $last_over = $tagover;
