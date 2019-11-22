@@ -1,8 +1,18 @@
-lintian (2.37.0+git) UNRELEASED; urgency=medium
+lintian (2.38.0) unstable; urgency=medium
 
-  * WIP (generated upon release).
+  [ Felix Lechner ]
+  * Process all overrides for a particular tag, not just the last one.
+    (Closes: #945276, #945299)
+  * For all output types except XML and "universal" impose a tag order when
+    emitting. (Closes: #944807)
+  * In checks, use the new attribute accessors from Processable and remove
+    references to the outdated 'info' attribute.
 
- -- Chris Lamb <lamby@debian.org>  Tue, 19 Nov 2019 11:41:19 -0500
+  [ Stephen Kitt ]
+  * Drop the package-depends-on-an-x-font-package as packages can now
+    depend on X fonts directly (see #941803).
+
+ -- Chris Lamb <lamby@debian.org>  Fri, 22 Nov 2019 20:09:51 +0000
 
 lintian (2.37.0) unstable; urgency=medium
 
