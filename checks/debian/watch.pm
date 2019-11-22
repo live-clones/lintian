@@ -62,7 +62,7 @@ sub source {
     # If the version field is missing, we assume a neutral non-native one.
 
     # upstream method returns empty for native packages
-    my $upstream = $info->version->upstream;
+    my $upstream = $info->changelog_version->upstream;
     my ($prerelease) = ($upstream =~ qr/(alpha|beta|rc)/i);
 
     # there is a good repack indicator in $info->repacked but we need the text

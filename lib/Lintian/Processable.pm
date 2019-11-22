@@ -33,9 +33,10 @@ use constant EMPTY => q{};
 use constant COLON => q{:};
 use constant SLASH => q{/};
 
-use constant EVIL_CHARACTERS => qr,[/&|;\$"'<>],o;
+use constant EVIL_CHARACTERS => qr,[/&|;\$"'<>],;
 
 use Moo::Role;
+use MooX::Aliases;
 use namespace::clean;
 
 with 'Lintian::Tag::Bearer';
@@ -69,14 +70,17 @@ together.
 =over 4
 
 =item name
+=item $proc->pkg_name
 
 Returns the name of the package.
 
 =item type
+=item $proc->pkg_type
 
-Returns the type of the package.
+Returns the type of package (e.g. binary, source, udeb ...)
 
 =item verbatim
+=item extra_fields
 
 Returns a hash to the raw, unedited and verbatim field values.
 
@@ -89,14 +93,12 @@ have been connected.
 
 Returns shared_storage.
 
-=item $proc->pkg_name
-
-Returns the package name.
-
+=item $proc->version
 =item $proc->pkg_version
 
 Returns the version of the package.
 
+=item $proc->path
 =item $proc->pkg_path
 
 Returns the path to the packaged version of actual package.  This path
@@ -104,19 +106,18 @@ is used in case the data needs to be extracted from the package.
 
 Note: This may return the path to a symlink to the package.
 
-=item $proc->pkg_type
-
-Returns the type of package (e.g. binary, source, udeb ...)
-
+=item $proc->architecture
 =item $proc->pkg_arch
 
 Returns the architecture(s) of the package. May return multiple values
 from changes processables.  For source processables it is "source".
 
+=item $proc->source
 =item $proc->pkg_src
 
 Returns the name of the source package.
 
+=item $proc->source_version
 =item $proc->pkg_src_version
 
 Returns the version of the source package.
@@ -126,11 +127,6 @@ Returns the version of the source package.
 Returns a truth value if one or more fields in this Processable is
 tainted.  On a best effort basis tainted fields will be sanitized
 to less dangerous (but possibly invalid) values.
-
-=item $proc->identifier
-
-Produces an identifier for this processable.  The identifier is
-based on the type, name, version and architecture of the package.
 
 =item $proc->pooldir
 
@@ -144,19 +140,9 @@ Returns the base directory of this package inside the lab.
 
 Returns a reference to the Processable::Group related to this entry.
 
-=cut
-
-=item extra_fields
-
-Returns a reference to the extra fields related to this entry.
-
-=cut
-
 =item link_label
 
 Returns a reference to the extra fields related to this entry.
-
-=cut
 
 =item saved_link
 
@@ -164,33 +150,89 @@ Returns a reference to the extra fields related to this entry.
 
 =cut
 
-has name => (is => 'rw');
-has type => (is => 'rw');
+has path => (alias => 'pkg_path', is => 'rw', default => EMPTY);
+has type => (alias => 'pkg_type', is => 'rw', default => EMPTY);
 
-has verbatim => (is => 'rw', default => sub { {} });
-has unfolded => (is => 'rwp', default => sub { {} });
-has shared_storage => (is => 'rwp', default => sub { {} });
-
-has pkg_name => (is => 'rw');
-has pkg_version => (is => 'rw', default => EMPTY);
-has pkg_src => (is => 'rw');
-has pkg_arch => (is => 'rw', default => EMPTY);
-has pkg_path => (is => 'rw');
-has pkg_type => (is => 'rw');
-has pkg_src_version => (is => 'rw', default => EMPTY);
+has architecture => (
+    alias => 'pkg_arch',
+    is => 'rw',
+    coerce => sub {
+        my ($value) = @_;
+        return clean_field($value);
+    },
+    default => EMPTY
+);
+has name => (
+    alias => 'pkg_name',
+    is => 'rw',
+    coerce => sub {
+        my ($value) = @_;
+        return clean_field($value);
+    },
+    default => EMPTY
+);
+has source => (
+    alias => 'pkg_src',
+    is => 'rw',
+    coerce => sub {
+        my ($value) = @_;
+        return clean_field($value);
+    },
+    default => EMPTY
+);
+has source_version =>(
+    alias => 'pkg_src_version',
+    is => 'rw',
+    coerce => sub {
+        my ($value) = @_;
+        return clean_field($value);
+    },
+    default => EMPTY
+);
+has version => (
+    alias => 'pkg_version',
+    is => 'rw',
+    coerce => sub {
+        my ($value) = @_;
+        return clean_field($value);
+    },
+    default => EMPTY
+);
 
 has tainted => (is => 'rw', default => 0);
 
-has identifier =>
-  (is => 'rw', coerce => sub { my $id = shift; $id =~ s/\s+/_/g; $id; });
+has verbatim => (alias => 'extra_fields', is => 'rw', default => sub { {} });
+has unfolded => (is => 'rwp', default => sub { {} });
+
 has pooldir => (is => 'rw', default => EMPTY);
 has groupdir => (is => 'rw', default => EMPTY);
 has group => (is => 'rw');
 
-has extra_fields => (is => 'rw', default => sub { {} });
-
 has link_label => (is => 'rw', default => EMPTY);
 has saved_link => (is => 'rw', default => EMPTY);
+
+has shared_storage => (is => 'rwp', default => sub { {} });
+
+=item C<identifier>
+
+Produces an identifier for this processable.  The identifier is
+based on the type, name, version and architecture of the package.
+
+=cut
+
+sub identifier {
+    my ($self) = @_;
+
+    my $id = $self->type . COLON . $self->name . SLASH . $self->version;
+
+    # add architecture unless it is source
+    $id .= SLASH . $self->architecture
+      unless $self->type eq 'source';
+
+    $id =~ s/\s+/_/g;
+
+    return $id;
+}
 
 =item info
 
@@ -249,7 +291,7 @@ on the name and the version of the src-pkg.
 sub get_group_id {
     my ($self) = @_;
 
-    my $id = $self->pkg_src . SLASH . $self->pkg_src_version;
+    my $id = $self->source . SLASH . $self->source_version;
 
     return $id;
 }
@@ -261,17 +303,13 @@ Cleans a field of evil characters to prevent traversal or worse.
 =cut
 
 sub clean_field {
-    my ($self, $field) = @_;
+    my ($value) = @_;
 
-    my $clean = $self->$field;
-    my $evil = 0 + ($clean =~ s,${\EVIL_CHARACTERS},_,g);
+    # make sure none of the fields can cause traversal
+    my $clean = $value;
+    $clean =~ s,${\EVIL_CHARACTERS},_,g;
 
-    $self->tainted(1)
-      if $evil;
-
-    $self->$field($clean);
-
-    return;
+    return $clean;
 }
 
 =item link
@@ -317,8 +355,8 @@ sub create {
     path($self->groupdir)->mkpath
       unless -e $self->groupdir;
 
-    symlink($self->pkg_path, $self->link)
-      or croak 'symlinking ' . $self->pkg_path . "failed: $!";
+    symlink($self->path, $self->link)
+      or croak 'symlinking ' . $self->path . "failed: $!";
 
     return;
 }

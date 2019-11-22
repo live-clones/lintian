@@ -839,30 +839,7 @@ sub process {
         push(@print, $tag);
     }
 
-    $OUTPUT->print_first();
-
-    my @processables;
-    my %taglist;
-
-    for my $tag (@print) {
-        push(@processables, $tag->processable);
-
-        $taglist{$tag->processable} //= [];
-        push(@{$taglist{$tag->processable}}, $tag);
-    }
-
-    my @unique = uniq @processables;
-    my @ordered = @unique;
-
-    for my $processable ($self->get_processables) {
-        $OUTPUT->print_start_pkg($processable);
-        my @sorted = @{$taglist{$processable} // []};
-        $OUTPUT->print_tag($_) for @sorted;
-        $OUTPUT->print_end_pkg($processable);
-    }
-
-    # universal format sorts output from all processables and prints here
-    $OUTPUT->print_last();
+    $OUTPUT->issue_tags(\@print, [$self->get_processables]);
 
     my $raw_res = tv_interval($timer);
     my $tres = sprintf('%.3fs', $raw_res);

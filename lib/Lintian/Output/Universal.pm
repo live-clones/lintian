@@ -53,40 +53,69 @@ A class for printing tags using the 'universal' format.
 
 =over 4
 
-=item print_tag
+=item issue_tags
+
+Print all tags passed in array. A separate arguments with processables
+is necessary to report in case no tags were found.
 
 =cut
 
-sub print_tag {
-    my ($self, $tag) = @_;
+sub issue_tags {
+    my ($self, $pending, $processables) = @_;
 
-    my $tag_info = $tag->info;
-    my $details = $tag->extra;
-    my $override = $tag->override;
-    my $processable = $tag->processable;
+    return
+      unless $pending && $processables;
 
-    $self->issued_tag($tag_info->tag);
+    my %taglist;
 
-    my $odata = '';
-    if ($override) {
-        $odata = $override->{tag};
-        $odata .= ' ' . $self->_quote_print($override->{extra})
-          if $override->{extra};
+    for my $tag (@{$pending}) {
+        $taglist{$tag->processable} //= [];
+        push(@{$taglist{$tag->processable}}, $tag);
     }
 
-    my $line
-      = $processable->name
-      . SPACE
-      . LPARENS
-      . $processable->type
-      . RPARENS
-      . COLON
-      . SPACE
-      . $tag_info->tag;
-    $line .= SPACE . $details
-      if length $details;
+    my @lines;
 
-    push(@{$self->{lines}}, $line);
+    for my $processable (@{$processables}) {
+
+        my $object = 'package';
+        $object = 'file'
+          if $processable->type eq 'changes';
+
+        $self->v_msg(
+            $self->delimiter,
+            'Processing '. $processable->type. " $object ". $processable->name,
+            '(version '
+              . $processable->pkg_version
+              . ', arch '
+              . $processable->pkg_arch . ') ...'
+        );
+
+        my @subset = @{$taglist{$processable} // []};
+
+        for my $tag (@subset) {
+
+            my $details = $tag->extra;
+
+            my $line
+              = $processable->name
+              . SPACE
+              . LPARENS
+              . $processable->type
+              . RPARENS
+              . COLON
+              . SPACE
+              . $tag->name;
+            $line .= SPACE . $details
+              if length $details;
+
+            push(@lines, $line);
+        }
+    }
+
+    my @sorted
+      = reverse sort { order($a) cmp order($b) } @lines;
+
+    print { $self->stdout } $_ . NEWLINE for @sorted;
 
     return;
 }
@@ -98,16 +127,6 @@ sub _message {
 
 sub _warning {
     my ($self, @args) = @_;
-    return;
-}
-
-=item print_first
-
-=cut
-
-sub print_first {
-    my ($self, $pkg_info) = @_;
-    $self->{lines} = [];
     return;
 }
 
@@ -146,22 +165,6 @@ sub parse_line {
       unless all { length } ($package, $type, $name);
 
     return ($package, $type, $name, $details);
-}
-
-=item print_last
-
-=cut
-
-sub print_last {
-    my ($self) = @_;
-    my @sorted
-      = reverse sort { order($a) cmp order($b) } @{$self->{lines}};
-    print { $self->stdout } $_ . NEWLINE for @sorted;
-    return;
-}
-
-sub _delimiter {
-    return;
 }
 
 =back

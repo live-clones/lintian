@@ -39,6 +39,8 @@ with 'Lintian::Collect::Binary', 'Lintian::Info::Changelog',
   'Lintian::Info::Overrides', 'Lintian::Info::Package',
   'Lintian::Info::Scripts', 'Lintian::Processable';
 
+=for Pod::Coverage BUILDARGS
+
 =head1 NAME
 
 Lintian::Processable::Binary -- A deb installation package Lintian can process
@@ -75,60 +77,52 @@ sub init {
     croak "File $file does not exist"
       unless -e $file;
 
-    $self->pkg_path($file);
+    $self->path($file);
 
-    $self->pkg_type('binary');
+    $self->type('binary');
     $self->link_label('deb');
 
-    my $dinfo = get_deb_info($self->pkg_path)
-      or croak 'could not read control data in ' . $self->pkg_path . ": $!";
+    my $dinfo = get_deb_info($self->path)
+      or croak 'could not read control data in ' . $self->path . ": $!";
 
-    my $package = $dinfo->{package};
-    my $version = $dinfo->{version};
-    my $architecture = $dinfo->{architecture};
-    my $source = $dinfo->{source};
+    $self->verbatim($dinfo);
+
+    my $name = $dinfo->{package} // EMPTY;
+    my $version = $dinfo->{version} // EMPTY;
+    my $architecture = $dinfo->{architecture} // EMPTY;
+    my $source = $dinfo->{source} // EMPTY;
 
     my $source_version = $version;
 
-    unless (length $package) {
-        $package = $self->guess_name($self->pkg_path);
-        croak 'Cannot determine the name from ' . $self->pkg_path
-          unless length $package;
+    unless (length $name) {
+        $name = $self->guess_name($self->path);
+        croak 'Cannot determine the name from ' . $self->path
+          unless length $name;
     }
 
-    # source may be left out if same as $package
-    $source = $package
+    # source may be left out if same as $name
+    $source = $name
       unless length $source;
 
     # source probably contains the version in parentheses
-    if ($source =~ m/(\S++)\s*\(([^\)]+)\)/o){
+    if ($source =~ m/(\S++)\s*\(([^\)]+)\)/){
         $source = $1;
         $source_version = $2;
     }
 
-    $self->pkg_name($package // EMPTY);
-    $self->pkg_version($version // EMPTY);
-    $self->pkg_arch($architecture // EMPTY);
-    $self->pkg_src($source // EMPTY);
-    $self->pkg_src_version($source_version // EMPTY);
+    $self->name($name);
+    $self->version($version);
+    $self->architecture($architecture);
+    $self->source($source);
+    $self->source_version($source_version);
 
-    $self->extra_fields($dinfo);
-
-    $self->name($self->pkg_name);
-    $self->type($self->pkg_type);
-    $self->verbatim($dinfo);
-
-    # make sure none of the fields can cause traversal
-    $self->clean_field($_)
-      for ('pkg_name', 'pkg_version', 'pkg_src', 'pkg_src_version','pkg_arch');
-
-    my $id
-      = $self->pkg_type . COLON . $self->pkg_name . SLASH . $self->pkg_version;
-
-    # add architecture unless it is source
-    $id .= SLASH . $self->pkg_arch;
-
-    $self->identifier($id);
+    # make sure none of these fields can cause traversal
+    $self->tainted(1)
+      if $self->name ne $name
+      || $self->version ne $version
+      || $self->architecture ne $architecture
+      || $self->source ne $source
+      || $self->source_version ne $source_version;
 
     return;
 }
