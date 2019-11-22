@@ -23,6 +23,7 @@ use warnings;
 use v5.8.0; # for PerlIO
 
 use CGI qw(escapeHTML);
+use List::MoreUtils qw(uniq);
 
 use Moo::Role;
 use namespace::clean;
@@ -470,6 +471,44 @@ Called after lintian is finished with a package.
 =cut
 
 sub print_last {
+    return;
+}
+
+=item issue_tags
+
+Print all tags passed in array. A separate arguments with processables
+is necessary to report in case no tags were found.
+
+=cut
+
+sub issue_tags {
+    my ($self, $pending, $processables) = @_;
+
+    return
+      unless $pending && $processables;
+
+    my %taglist;
+
+    for my $tag (@{$pending}) {
+        $taglist{$tag->processable} //= [];
+        push(@{$taglist{$tag->processable}}, $tag);
+    }
+
+    $self->print_first();
+
+    for my $processable (@{$processables}) {
+
+        $self->print_start_pkg($processable);
+
+        my @sorted = @{$taglist{$processable} // []};
+        $self->print_tag($_) for @sorted;
+
+        $self->print_end_pkg($processable);
+    }
+
+    # universal format sorts output from all processables and prints here
+    $self->print_last();
+
     return;
 }
 

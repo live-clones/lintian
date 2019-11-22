@@ -71,6 +71,12 @@ modules are also available.
 
 =over 4
 
+=item C<saved_changelog_version>
+
+=cut
+
+has saved_changelog_version => (is => 'rw');
+
 =item native
 
 Returns true if the source package is native and false otherwise.
@@ -116,22 +122,22 @@ sub native {
     return $self->{native};
 }
 
-=item version
+=item changelog_version
 
 Returns a fully parsed Lintian::Inspect::Changelog::Version for the
 source package's version string.
 
-Needs-Info requirements for using I<version>: L<Same as field|Lintian::Collect/field ([FIELD[, DEFAULT]])>
+Needs-Info requirements for using I<changelog_version>: L<Same as field|Lintian::Collect/field ([FIELD[, DEFAULT]])>
 
 =cut
 
-sub version {
+sub changelog_version {
     my ($self) = @_;
 
-    return $self->{version}
-      if exists $self->{version};
+    return $self->saved_changelog_version
+      if defined $self->saved_changelog_version;
 
-    my $versionstring = $self->field('version', EMPTY);
+    my $versionstring = $self->field('version') // EMPTY;
 
     my $version = Lintian::Inspect::Changelog::Version->new;
     try {
@@ -143,9 +149,9 @@ sub version {
     return
       unless defined $version;
 
-    $self->{version} = $version;
+    $self->saved_changelog_version($version);
 
-    return $self->{version};
+    return $self->saved_changelog_version;
 }
 
 =item repacked
@@ -165,7 +171,7 @@ sub repacked {
     if ($self->native) {
         $self->{repacked} = 0;
     } else {
-        my $upstream = $self->version->upstream;
+        my $upstream = $self->changelog_version->upstream;
         $self->{repacked} = $upstream =~ $PKGREPACK_REGEX;
     }
 

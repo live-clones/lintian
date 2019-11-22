@@ -304,7 +304,7 @@ sub check_systemd_service_file {
           $self->extract_service_file_values($file, 'Install', 'RequiredBy',1)
           or $self->extract_service_file_values($file, 'Install', 'Also',1)
           or $is_oneshot
-          or $is_standalone
+          or not $is_standalone
           or $file !~ m,^lib/systemd/[^\/]+/[^\/]+\.service$,
           or $file =~ m,@\.service$,;
 

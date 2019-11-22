@@ -40,6 +40,8 @@ with 'Lintian::Collect::Source', 'Lintian::Info::Diffstat',
   'Lintian::Info::Package',
   'Lintian::Processable';
 
+=for Pod::Coverage BUILDARGS
+
 =head1 NAME
 
 Lintian::Processable::Source -- A dsc source package Lintian can process
@@ -76,42 +78,40 @@ sub init {
     croak "File $file does not exist"
       unless -e $file;
 
-    $self->pkg_path($file);
+    $self->path($file);
 
-    $self->pkg_type('source');
+    $self->type('source');
     $self->link_label('dsc');
 
-    my $dinfo = get_dsc_info($self->pkg_path)
-      or croak $self->pkg_path . ' is not valid dsc file';
+    my $dinfo = get_dsc_info($self->path)
+      or croak $self->path . ' is not valid dsc file';
 
-    my $package = $dinfo->{source} // '';
-    my $version = $dinfo->{version};
-
-    croak $self->pkg_path . ' is missing Source field'
-      unless length $package;
-
-    $self->pkg_name($package // EMPTY);
-    $self->pkg_version($version // EMPTY);
-    $self->pkg_arch('source');
-
-    # it is its own source package
-    $self->pkg_src($self->pkg_name);
-    $self->pkg_src_version($self->pkg_version);
-
-    $self->extra_fields($dinfo);
-
-    $self->name($self->pkg_name);
-    $self->type($self->pkg_type);
     $self->verbatim($dinfo);
 
-    # make sure none of the fields can cause traversal
-    $self->clean_field($_)
-      for ('pkg_name', 'pkg_version', 'pkg_src', 'pkg_src_version','pkg_arch');
+    my $name = $dinfo->{source} // EMPTY;
+    my $version = $dinfo->{version} // EMPTY;
+    my $architecture = 'source';
 
-    my $id
-      = $self->pkg_type . COLON . $self->pkg_name . SLASH . $self->pkg_version;
+    # it is its own source package
+    my $source = $name;
+    my $source_version = $version;
 
-    $self->identifier($id);
+    croak $self->path . ' is missing Source field'
+      unless length $name;
+
+    $self->name($name);
+    $self->version($version);
+    $self->architecture($architecture);
+    $self->source($source);
+    $self->source_version($source_version);
+
+    # make sure none of these fields can cause traversal
+    $self->tainted(1)
+      if $self->name ne $name
+      || $self->version ne $version
+      || $self->architecture ne $architecture
+      || $self->source ne $source
+      || $self->source_version ne $source_version;
 
     return;
 }
