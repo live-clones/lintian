@@ -232,13 +232,6 @@ sub binary {
                     && $d_pkg ne 'diffutils'
                     && $d_pkg ne 'dash');
 
-                $self->tag('package-depends-on-an-x-font-package',
-                    "$field: $part_d_orig")
-                  if ( $field =~ /^(?:pre-)?depends$/
-                    && $d_pkg =~ /^xfont.*/
-                    && $d_pkg ne 'xfonts-utils'
-                    && $d_pkg ne 'xfonts-encodings');
-
                 $self->tag('depends-on-packaging-dev',$field)
                   if (($field =~ /^(?:pre-)?depends$/|| $field eq 'recommends')
                     && $d_pkg eq 'packaging-dev'
