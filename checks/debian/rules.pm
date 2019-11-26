@@ -171,6 +171,10 @@ sub source {
     $self->tag('debian-rules-not-a-makefile')
       unless $start =~ m%^\#!\s*/usr/bin/make\s+-[re]?f[re]?\s*$%;
 
+    # Check if debian/rules is marked as executable.
+    $self->tag('debian-rules-not-executable')
+      unless ($rules->$operm == 0755);
+
     # Holds which dependencies are required.  The keys in %needed and
     # %needed_clean are the dependencies; the values are the tags to use or the
     # empty string to use the default tag.
