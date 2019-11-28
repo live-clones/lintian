@@ -1,8 +1,19 @@
-lintian (2.38.0+git) UNRELEASED; urgency=medium
+lintian (2.39.0) unstable; urgency=medium
 
-  * WIP (generated upon release).
+  [ Scott Talbert ]
+  * Add wmem{cpy,move,set} to the list of excluded hardened functions to
+    avoid many false-positives. (Closes: #921136)
 
- -- Chris Lamb <lamby@debian.org>  Fri, 22 Nov 2019 15:30:50 -0500
+  [ Louis-Philippe Véronneau ]
+  * Check to ensure debian/rules files are executable.
+  * Update instructions to download build-dependencies with "apt" instead
+    of "apt-get".
+
+  [ Chris Lamb ]
+  * Don't emit debian-rules-not-executable if debian/rules is a symlink; we
+    warn about this via debian-rules-is-symlink.
+
+ -- Chris Lamb <lamby@debian.org>  Thu, 28 Nov 2019 10:34:27 +0000
 
 lintian (2.38.0) unstable; urgency=medium
 
