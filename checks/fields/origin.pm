@@ -36,10 +36,9 @@ with 'Lintian::Check';
 sub always {
     my ($self) = @_;
 
-    my $info = $self->info;
-    my $proc = $self->processable;
+    my $processable = $self->processable;
 
-    my $origin = $info->unfolded_field('origin');
+    my $origin = $processable->unfolded_field('origin');
 
     return
       unless defined $origin;

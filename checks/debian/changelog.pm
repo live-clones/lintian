@@ -63,10 +63,10 @@ sub source {
     my ($self) = @_;
 
     my $pkg = $self->package;
-    my $info = $self->info;
+    my $processable = $self->processable;
     my $group = $self->group;
 
-    my @entries = @{$info->changelog->entries};
+    my @entries = @{$processable->changelog->entries};
 
     return
       unless @entries;
@@ -75,7 +75,7 @@ sub source {
 
     my $changes = $group->changes;
     if ($changes) {
-        my $contents = path($changes->pkg_path)->slurp;
+        my $contents = path($changes->path)->slurp;
         # make sure dot matches newlines, as well
         if ($contents =~ qr/BEGIN PGP SIGNATURE.*END PGP SIGNATURE/ms) {
 
@@ -84,14 +84,14 @@ sub source {
         }
     }
 
-    my $versionstring = $self->info->field('version', EMPTY);
+    my $versionstring = $processable->field('version', EMPTY);
     my $latest_version = Lintian::Inspect::Changelog::Version->new;
 
     try {
-        $latest_version->set($versionstring, $self->info->native);
+        $latest_version->set($versionstring, $processable->native);
 
     } catch {
-        my $indicator= ($self->info->native ? EMPTY : 'non-') . 'native';
+        my $indicator= ($processable->native ? EMPTY : 'non-') . 'native';
         $self->tag(
             'malformed-debian-changelog-version',
             $versionstring . " (for $indicator)"
@@ -103,7 +103,7 @@ sub source {
 
         $self->tag('hyphen-in-upstream-part-of-debian-changelog-version',
             $latest_version->upstream)
-          if !$info->native && $latest_version->upstream =~ qr/-/;
+          if !$processable->native && $latest_version->upstream =~ qr/-/;
 
         # unstable, testing, and stable shouldn't be used in Debian
         # version numbers.  unstable should get a normal version
@@ -127,7 +127,7 @@ sub source {
 
         my $examine = $latest_version->maintainer_revision;
         $examine = $latest_version->upstream
-          unless $info->native;
+          unless $processable->native;
 
         my $candidate_pattern = qr/rc|alpha|beta|pre(?:view|release)?/;
         my $increment_pattern = qr/[^a-z].*|\Z/;
@@ -150,7 +150,7 @@ sub source {
               )
               if $latest_version->maintainer_revision eq '1'
               || $latest_version->maintainer_revision=~ m,^0(?:\.1|ubuntu1)?$,
-              || $info->native;
+              || $processable->native;
         }
     }
 
@@ -162,9 +162,10 @@ sub source {
 
         my $previous_version = Lintian::Inspect::Changelog::Version->new;
         try {
-            $previous_version->set($previous_entry->Version, $info->native);
+            $previous_version->set($previous_entry->Version,
+                $processable->native);
         } catch {
-            my $indicator= ($info->native ? EMPTY : 'non-') . 'native';
+            my $indicator= ($processable->native ? EMPTY : 'non-') . 'native';
             $self->tag(
                 'odd-historical-debian-changelog-version',
                 $previous_entry->Version . " (for $indicator)"
@@ -242,7 +243,7 @@ sub source {
             if (   $latest_version->epoch eq $previous_version->epoch
                 && $latest_version->upstream eq$previous_version->upstream
                 && $latest_entry->Source eq $previous_entry->Source
-                && !$info->native) {
+                && !$processable->native) {
 
                 $self->tag('possible-new-upstream-release-without-new-version')
                   if $latest_entry->Changes
@@ -269,7 +270,7 @@ sub source {
                     $previous_version->literal . ' -> '
                       . $latest_version->literal
                   )
-                  unless $info->native
+                  unless $processable->native
                   || versions_gt($previous_version->upstream,
                     $latest_version->upstream);
             }
@@ -283,7 +284,7 @@ sub binary {
     my ($self) = @_;
 
     my $pkg = $self->package;
-    my $info = $self->info;
+    my $processable = $self->processable;
     my $group = $self->group;
 
     my $found_html = 0;
@@ -292,10 +293,10 @@ sub binary {
 
     # skip packages which have a /usr/share/doc/$pkg -> foo symlink
     return
-      if  $info->index("usr/share/doc/$pkg")
-      and $info->index("usr/share/doc/$pkg")->is_symlink;
+      if  $processable->index("usr/share/doc/$pkg")
+      and $processable->index("usr/share/doc/$pkg")->is_symlink;
 
-    if (my $docdir = $info->index("usr/share/doc/$pkg/")) {
+    if (my $docdir = $processable->index("usr/share/doc/$pkg/")) {
         for my $path ($docdir->children) {
             my $basename = $path->basename;
 
@@ -357,7 +358,7 @@ sub binary {
     # Check a NEWS.Debian file if we have one.  Save the parsed version of the
     # file for later checks against the changelog file.
     my $news;
-    my $dnews = path($info->groupdir)->child('NEWS.Debian')->stringify;
+    my $dnews = path($processable->groupdir)->child('NEWS.Debian')->stringify;
     if (-f $dnews) {
         my $line = file_is_encoded_in_non_utf8($dnews);
         if ($line) {
@@ -399,12 +400,12 @@ sub binary {
     # is this a native Debian package?
     # If the version is missing, we assume it to be non-native
     # as it is the most likely case.
-    my $source = $info->field('source');
+    my $source = $processable->field('source');
     my $version;
     if (defined $source && $source =~ m/\((.*)\)/) {
         $version = $1;
     } else {
-        $version = $info->field('version');
+        $version = $processable->field('version');
     }
     if (defined $version) {
         $native_pkg = ($version !~ m/-/);
@@ -413,7 +414,7 @@ sub binary {
         # the most likely case.
         $native_pkg = 0;
     }
-    $version = $info->field('version', '0-1');
+    $version = $processable->field('version', '0-1');
     $foreign_pkg = (!$native_pkg && $version !~ m/-0\./);
     # A version of 1.2.3-0.1 could be either, so in that
     # case, both vars are false
@@ -478,7 +479,7 @@ sub binary {
         }
     }
 
-    my $dchpath = path($info->groupdir)->child('changelog')->stringify;
+    my $dchpath = path($processable->groupdir)->child('changelog')->stringify;
     # Everything below involves opening and reading the changelog file, so bail
     # with a warning at this point if all we have is a symlink.  Ubuntu permits
     # such symlinks, so their profile will suppress this tag.
@@ -500,7 +501,7 @@ sub binary {
             "at line $line");
     }
 
-    my $changelog = $info->changelog;
+    my $changelog = $processable->changelog;
     if (my @errors = @{$changelog->errors}) {
         foreach (@errors) {
             $self->tag('syntax-error-in-debian-changelog',
@@ -592,8 +593,7 @@ sub binary {
 
             my $changes = $group->changes;
             if ($changes) {
-                my $changes_dist
-                  = lc($changes->info->field('distribution', EMPTY));
+                my $changes_dist= lc($changes->field('distribution', EMPTY));
 
                 my %codename;
                 $codename{'unstable'} = 'sid';

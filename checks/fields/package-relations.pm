@@ -112,20 +112,19 @@ sub binary {
 
     my $pkg = $self->package;
     my $type = $self->type;
-    my $info = $self->info;
-    my $proc = $self->processable;
+    my $processable = $self->processable;
     my $group = $self->group;
 
     my $javalib = 0;
-    my $replaces = $info->relation('replaces');
+    my $replaces = $processable->relation('replaces');
     my %nag_once;
     $javalib = 1 if($pkg =~ m/^lib.*-java$/o);
     for my $field (
         qw(depends pre-depends recommends suggests conflicts provides enhances replaces breaks)
     ) {
-        next unless defined $info->field($field);
+        next unless defined $processable->field($field);
         #Get data and clean it
-        my $data = $info->unfolded_field($field);
+        my $data = $processable->unfolded_field($field);
         my $javadep = 0;
 
         my (@seen_libstdcs, @seen_tcls, @seen_tclxs,@seen_tks, @seen_libpngs);
@@ -218,7 +217,7 @@ sub binary {
                 $self->tag('depends-on-metapackage', "$field: $part_d_orig")
                   if (  $KNOWN_METAPACKAGES->known($d_pkg)
                     and not $KNOWN_METAPACKAGES->known($pkg)
-                    and not $info->is_pkg_class('any-meta')
+                    and not $processable->is_pkg_class('any-meta')
                     and &$is_dep_field($field));
 
                 # diffutils is a special case since diff was
@@ -233,17 +232,10 @@ sub binary {
                     && $d_pkg ne 'diffutils'
                     && $d_pkg ne 'dash');
 
-                $self->tag('package-depends-on-an-x-font-package',
-                    "$field: $part_d_orig")
-                  if ( $field =~ /^(?:pre-)?depends$/
-                    && $d_pkg =~ /^xfont.*/
-                    && $d_pkg ne 'xfonts-utils'
-                    && $d_pkg ne 'xfonts-encodings');
-
                 $self->tag('depends-on-packaging-dev',$field)
                   if (($field =~ /^(?:pre-)?depends$/|| $field eq 'recommends')
                     && $d_pkg eq 'packaging-dev'
-                    && !$info->is_pkg_class('any-meta'));
+                    && !$processable->is_pkg_class('any-meta'));
 
                 $self->tag('needless-suggest-recommend-libservlet-java',
                     "$d_pkg")
@@ -277,7 +269,7 @@ sub binary {
                   )
                   if $d_pkg =~ /^perl-modules/
                   && $field ne 'replaces'
-                  && $proc->pkg_src ne 'perl';
+                  && $processable->source ne 'perl';
 
                 $self->tag('depends-exclusively-on-makedev', $field,)
                   if ( $field eq 'depends'
@@ -297,7 +289,7 @@ sub binary {
                   and &$is_dep_field($field)
                   and not $pkg =~ m/^dh-/
                   and not $pkg =~ m/-(source|src)$/
-                  and not $info->is_pkg_class('any-meta')
+                  and not $processable->is_pkg_class('any-meta')
                   and not $DH_ADDONS_VALUES{$pkg};
 
                 # default-jdk-doc must depend on openjdk-X-doc (or
@@ -367,11 +359,11 @@ sub binary {
     # If Conflicts or Breaks is set, make sure it's not inconsistent with
     # the other dependency fields.
     for my $conflict (qw/conflicts breaks/) {
-        next unless $info->field($conflict);
+        next unless $processable->field($conflict);
         for my $field (qw(depends pre-depends recommends suggests)) {
-            next unless $info->field($field);
-            my $relation = $info->relation($field);
-            for my $package (split /\s*,\s*/, $info->field($conflict)) {
+            next unless $processable->field($field);
+            my $relation = $processable->relation($field);
+            for my $package (split /\s*,\s*/, $processable->field($conflict)) {
                 $self->tag('conflicts-with-dependency', $field, $package)
                   if $relation->implies($package);
             }
@@ -386,17 +378,16 @@ sub source {
 
     my $pkg = $self->package;
     my $type = $self->type;
-    my $info = $self->info;
-    my $proc = $self->processable;
+    my $processable = $self->processable;
     my $group = $self->group;
 
-    my @binpkgs = $info->binaries;
+    my @binpkgs = $processable->binaries;
 
     #Get number of arch-indep packages:
     my $arch_indep_packages = 0;
     my $arch_dep_packages = 0;
     foreach my $binpkg (@binpkgs) {
-        my $arch = $info->binary_field($binpkg, 'architecture', '');
+        my $arch = $processable->binary_field($binpkg, 'architecture', '');
         if ($arch eq 'all') {
             $arch_indep_packages++;
         } else {
@@ -405,10 +396,10 @@ sub source {
     }
 
     $self->tag('build-depends-indep-without-arch-indep')
-      if (defined $info->field('build-depends-indep')
+      if (defined $processable->field('build-depends-indep')
         && $arch_indep_packages == 0);
     $self->tag('build-depends-arch-without-arch-dependent-binary')
-      if (defined $info->field('build-depends-arch')
+      if (defined $processable->field('build-depends-arch')
         && $arch_dep_packages == 0);
 
     my $is_dep_field = sub {
@@ -420,9 +411,9 @@ sub source {
     for my $field (
         qw(build-depends build-depends-indep build-depends-arch build-conflicts build-conflicts-indep build-conflicts-arch)
     ) {
-        if (defined $info->field($field)) {
+        if (defined $processable->field($field)) {
             #Get data and clean it
-            my $data = $info->unfolded_field($field);
+            my $data = $processable->unfolded_field($field);
 
             $self->check_field($field, $data);
             $depend{$field} = $data;
@@ -542,7 +533,7 @@ sub source {
                           # perl-modules-5.xx (>> 5.20)
                       )
                       if $d_pkg =~ /^perl-modules/
-                      && $proc->pkg_src ne 'perl';
+                      && $processable->source ne 'perl';
                 }
 
                 my $all_obsolete = 0;
@@ -552,7 +543,7 @@ sub source {
                     my ($dep, $pkg_name) = @{$d};
                     my $replacement = $OBSOLETE_PACKAGES->value($pkg_name)
                       // '';
-                    next if $proc->pkg_src eq 'lintian';
+                    next if $processable->source eq 'lintian';
                     $replacement = ' => ' . $replacement
                       if $replacement ne '';
                     if (   $pkg_name eq $alternatives[0][0]
@@ -569,7 +560,7 @@ sub source {
     }
 
     # Check for duplicates.
-    my $build_all = $info->relation('build-depends-all');
+    my $build_all = $processable->relation('build-depends-all');
     my @dups = $build_all->duplicates;
     for my $dup (@dups) {
         $self->tag('package-has-a-duplicate-build-relation',join(', ', @$dup));
@@ -591,26 +582,27 @@ sub source {
 
     my (@arch_dep_pkgs, @dbg_pkgs);
     foreach my $gproc ($group->get_binary_processables) {
-        my $binpkg = $gproc->pkg_name;
+        my $binpkg = $gproc->name;
         if ($binpkg =~ m/-dbg$/) {
             push(@dbg_pkgs, $gproc);
-        } elsif ($info->binary_field($binpkg, 'architecture', '') ne 'all'){
+        } elsif (
+            $processable->binary_field($binpkg, 'architecture', '') ne 'all'){
             push @arch_dep_pkgs, $binpkg;
         }
     }
     my $dstr = join('|', map { quotemeta($_) } @arch_dep_pkgs);
     my $depregex = qr/^(?:$dstr)$/;
     for my $dbg_proc (@dbg_pkgs) {
-        my $deps = $info->binary_relation($dbg_proc->pkg_name, 'strong');
+        my $deps = $processable->binary_relation($dbg_proc->name, 'strong');
         my $missing = 1;
         $missing = 0 if $deps->matches($depregex, VISIT_PRED_NAME);
-        if ($missing and $dbg_proc->info->is_pkg_class('transitional')) {
+        if ($missing and $dbg_proc->is_pkg_class('transitional')) {
             # If it is a transitional package, allow it to depend
             # on another -dbg instead.
             $missing = 0
               if $deps->matches(qr/-dbg \Z/xsm, VISIT_PRED_NAME);
         }
-        $self->tag('dbg-package-missing-depends', $dbg_proc->pkg_name)
+        $self->tag('dbg-package-missing-depends', $dbg_proc->name)
           if $missing;
     }
 
@@ -620,18 +612,18 @@ sub source {
         $self->tag('build-depends-on-python-dev-with-no-arch-any');
     }
 
-    my $bdepends = $info->relation('build-depends');
+    my $bdepends = $processable->relation('build-depends');
 
     # libmodule-build-perl
     # matches() instead of implies() because of possible OR relation
     $self->tag('libmodule-build-perl-needs-to-be-in-build-depends')
-      if $info->relation('build-depends-indep')
+      if $processable->relation('build-depends-indep')
       ->matches(qr/^libmodule-build-perl$/, VISIT_PRED_NAME)
       && !$bdepends->matches(qr/^libmodule-build-perl$/,VISIT_PRED_NAME);
 
     # libmodule-build-tiny-perl
     $self->tag('libmodule-build-tiny-perl-needs-to-be-in-build-depends')
-      if $info->relation('build-depends-indep')
+      if $processable->relation('build-depends-indep')
       ->implies('libmodule-build-tiny-perl')
       && !$bdepends->implies('libmodule-build-tiny-perl');
 
@@ -679,15 +671,16 @@ sub _split_dep {
 sub check_field {
     my ($self, $field, $data) = @_;
 
-    my $info = $self->info;
+    my $processable = $self->processable;
 
     my $has_default_mta
-      = $info->relation($field)->matches(qr/^default-mta$/, VISIT_PRED_NAME);
-    my $has_mail_transport_agent = $info->relation($field)
+      = $processable->relation($field)
+      ->matches(qr/^default-mta$/, VISIT_PRED_NAME);
+    my $has_mail_transport_agent = $processable->relation($field)
       ->matches(qr/^mail-transport-agent$/, VISIT_PRED_NAME);
 
     $self->tag('default-mta-dependency-not-listed-first',"$field: $data")
-      if $info->relation($field)
+      if $processable->relation($field)
       ->matches(qr/\|\s+default-mta/, VISIT_OR_CLAUSE_FULL);
 
     if ($has_default_mta) {

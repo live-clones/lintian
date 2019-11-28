@@ -62,9 +62,9 @@ sub source {
     my ($self) = @_;
 
     my $pkg = $self->package;
-    my $info = $self->info;
+    my $processable = $self->processable;
 
-    my @package_names = $info->binaries;
+    my @package_names = $processable->binaries;
     foreach my $bin (@package_names) {
         # Python 2 modules
         if ($bin =~ /^python2?-(.*)$/) {
@@ -73,7 +73,7 @@ sub source {
             next if any { $_ eq "python3-${suffix}" } @package_names;
             # Don't trigger if we ship any Python 3 module
             next if any {
-                $info->binary_relation($_, 'all')
+                $processable->binary_relation($_, 'all')
                   ->implies('${python3:Depends}')
             }
             @package_names;
@@ -81,29 +81,30 @@ sub source {
         }
     }
 
-    my $build_all = $info->relation('build-depends-all');
+    my $build_all = $processable->relation('build-depends-all');
     $self->tag('build-depends-on-python-sphinx-only')
       if $build_all->implies('python-sphinx')
       and not $build_all->implies('python3-sphinx');
 
     $self->tag(
         'alternatively-build-depends-on-python-sphinx-and-python3-sphinx')
-      if $info->field('build-depends', '')
+      if $processable->field('build-depends', '')
       =~ m,\bpython-sphinx\s+\|\s+python3-sphinx\b,g;
 
     # Mismatched substvars
     foreach my $regex (keys %MISMATCHED_SUBSTVARS) {
         my $substvar = $MISMATCHED_SUBSTVARS{$regex};
-        for my $binpkg ($info->binaries) {
+        for my $binpkg ($processable->binaries) {
             next if any { $binpkg =~ /$_/ } @IGNORE;
             next if $binpkg !~ qr/$regex/;
             $self->tag('mismatched-python-substvar', $binpkg, $substvar)
-              if $info->binary_relation($binpkg, 'all')->implies($substvar);
+              if $processable->binary_relation($binpkg, 'all')
+              ->implies($substvar);
         }
     }
 
     foreach my $field (@VERSION_FIELDS) {
-        my $pyversion = $info->source_field($field);
+        my $pyversion = $processable->source_field($field);
         next unless defined($pyversion);
 
         my @valid = (
@@ -156,8 +157,8 @@ sub source {
     }
 
     $self->tag('source-package-encodes-python-version')
-      if $info->name =~ m/^python\d-/
-      and $info->name ne 'python3-defaults';
+      if $processable->name =~ m/^python\d-/
+      and $processable->name ne 'python3-defaults';
 
     return;
 }
@@ -168,8 +169,9 @@ sub files {
     return
       unless $file->name =~ m,(usr/)?bin/[^/]+,;
 
-    if ($self->info->is_script($file->name)) {
-        my $interpreter = $self->info->scripts->{$file->name}->{interpreter};
+    if ($self->processable->is_script($file->name)) {
+        my $interpreter
+          = $self->processable->scripts->{$file->name}->{interpreter};
 
         $self->tag('script-uses-unversioned-python-in-shebang', $file)
           if $interpreter =~ m,^(/usr/bin/)?python$,;
@@ -182,18 +184,18 @@ sub binary {
     my ($self) = @_;
 
     my $pkg = $self->package;
-    my $info = $self->info;
+    my $processable = $self->processable;
 
-    my $deps = Lintian::Relation->and($info->relation('all'),
-        $info->relation('provides'), $pkg);
+    my $deps = Lintian::Relation->and($processable->relation('all'),
+        $processable->relation('provides'), $pkg);
     my @entries
-      = $info->changelog
-      ? @{$info->changelog->entries}
+      = $processable->changelog
+      ? @{$processable->changelog->entries}
       : ();
 
     # Check for missing dependencies
     if ($pkg !~ /-dbg$/) {
-        foreach my $file ($info->sorted_index) {
+        foreach my $file ($processable->sorted_index) {
             if (    $file->is_file
                 and $file
                 =~ m,usr/lib/(?<version>python[23])[\d.]*/(?:site|dist)-packages,
@@ -206,7 +208,7 @@ sub binary {
 
     # Check for duplicate dependencies
     for my $field (@FIELDS) {
-        my $dep = $info->relation($field);
+        my $dep = $processable->relation($field);
       FIELD: for my $py2 (@PYTHON2) {
             for my $py3 (@PYTHON3) {
                 if ($dep->implies("$py2:any") and $dep->implies("$py3:any")) {
@@ -235,7 +237,7 @@ sub binary {
                 $self->tag(
                     'dependency-on-python-version-marked-for-end-of-life',
                     "($field: $dep)")
-                  if $info->relation($field)->implies("$dep:any");
+                  if $processable->relation($field)->implies("$dep:any");
             }
         }
     }
@@ -246,7 +248,7 @@ sub binary {
         next if $pkg !~ /$regex/;
         next if any { $pkg =~ /$_/ } @IGNORE;
         $self->tag('django-package-does-not-depend-on-django', $basepkg)
-          if not $info->relation('strong')->implies($basepkg);
+          if not $processable->relation('strong')->implies($basepkg);
     }
 
     if ($pkg =~ /^python([23]?)-/ and none { $pkg =~ /$_/ } @IGNORE) {
@@ -263,7 +265,7 @@ sub binary {
                         "$field: $rel"
                     ) if /^$prefix-/;
                 };
-                $info->relation($field)->visit($visit, VISIT_PRED_NAME);
+                $processable->relation($field)->visit($visit, VISIT_PRED_NAME);
             }
         }
     }

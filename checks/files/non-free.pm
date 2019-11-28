@@ -43,7 +43,7 @@ sub files {
 
     # only look at packages with undeclared non-free content
     return
-      if $self->info->is_non_free;
+      if $self->processable->is_non_free;
 
     # non-free .swf files
     foreach my $flash (@flash_nonfree) {

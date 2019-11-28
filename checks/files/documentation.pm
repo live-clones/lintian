@@ -63,7 +63,7 @@ sub files {
     if(    $file->is_file
         && $file->name !~ m,^etc/,
         && $file->name !~ m,^usr/share/(?:doc|help)/,
-        && $self->processable->pkg_src ne 'lintian') {
+        && $self->processable->source ne 'lintian') {
 
         foreach my $taboo ($DOCUMENTATION_FILE_REGEX->all) {
 
@@ -106,7 +106,7 @@ sub files {
         if (    $file->is_file
             and $file->name !~ m,^usr/share/doc/(?:[^/]+/)?examples/,
             and ($file->operm & 0111)) {
-            if ($self->info->is_script($file->name)) {
+            if ($self->processable->is_script($file->name)) {
                 $self->tag('script-in-usr-share-doc', $file->name);
             } else {
                 $self->tag('executable-in-usr-share-doc', $file->name,

@@ -40,7 +40,7 @@ sub setup {
     my ($self) = @_;
 
     # check if package is empty
-    $self->_set_is_dummy($self->info->is_pkg_class('any-meta'));
+    $self->_set_is_dummy($self->processable->is_pkg_class('any-meta'));
 
     return;
 }
@@ -99,7 +99,7 @@ sub files {
     return
       if $file->basename =~ m/^README(?:\..*)?$/i;
 
-    my $pkg_arch = $self->processable->pkg_arch;
+    my $pkg_arch = $self->processable->architecture;
     unless ($pkg_arch eq 'all') {
 
         # binNMU changelog (debhelper)

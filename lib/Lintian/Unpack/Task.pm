@@ -67,8 +67,8 @@ sub run {
 
     my $processable = $self->processable;
 
-    my $package = $processable->pkg_name;
-    my $type = $processable->pkg_type;
+    my $package = $processable->name;
+    my $type = $processable->type;
     my $groupdir = $processable->groupdir;
 
     # With a non-exec interface, let L::CollScript
@@ -97,7 +97,7 @@ sub run {
     #     $ENV{'PERL5OPT'} = "${p5opt} ${coverage_arg}";
     # }
 
-    my $loop = IO::Async::Loop->really_new;
+    my $loop = IO::Async::Loop->new;
     my $future = $loop->new_future;
     my $process = IO::Async::Process->new(
 

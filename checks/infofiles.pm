@@ -35,9 +35,9 @@ with 'Lintian::Check';
 sub binary {
     my ($self) = @_;
 
-    my $info = $self->info;
+    my $processable = $self->processable;
 
-    my $info_dir = $info->index_resolved_path('usr/share/info/');
+    my $info_dir = $processable->index_resolved_path('usr/share/info/');
     return
       unless $info_dir;
 
@@ -130,7 +130,8 @@ sub binary {
                 while ($line =~ /[\0][\b]\[image src="((?:\\.|[^\"])+)"/smg) {
                     my $src = $1;
                     $src =~ s/\\(.)/$1/g;   # unbackslash
-                    $info->index(normalize_pkg_path('usr/share/info', $src))
+                    $processable->index(
+                        normalize_pkg_path('usr/share/info', $src))
                       or $self->tag('info-document-missing-image-file',
                         $file, $src);
                 }

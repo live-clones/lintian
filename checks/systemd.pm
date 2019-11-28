@@ -54,7 +54,7 @@ sub setup {
     my ($self) = @_;
 
     my @timers = grep { m,^lib/systemd/system/[^\/]+\.timer$, }
-      $self->info->sorted_index;
+      $self->processable->sorted_index;
     $self->_set_timers(\@timers);
 
     return;
@@ -73,10 +73,10 @@ sub binary {
     my ($self) = @_;
 
     my $pkg = $self->package;
-    my $info = $self->info;
+    my $processable = $self->processable;
 
     # non-service checks
-    if (my $tmpfiles = $info->index_resolved_path('etc/tmpfiles.d/')) {
+    if (my $tmpfiles = $processable->index_resolved_path('etc/tmpfiles.d/')) {
         for my $file ($tmpfiles->children('breadth-first')) {
             if ($file->basename =~ m,\.conf$,) {
                 $self->tag('systemd-tmpfiles.d-outside-usr-lib', $file);
@@ -113,11 +113,11 @@ sub get_init_service_name {
 sub get_init_scripts {
     my ($self) = @_;
 
-    my $info = $self->info;
+    my $processable = $self->processable;
 
     my @scripts;
-    if ($info->name ne 'initscripts'
-        and my $initd_path = $info->index_resolved_path('etc/init.d/')) {
+    if ($processable->name ne 'initscripts'
+        and my $initd_path = $processable->index_resolved_path('etc/init.d/')){
         for my $init_script ($initd_path->children) {
             # sysv generator drops the .sh suffix
             my $basename = get_init_service_name($init_script);
@@ -137,7 +137,7 @@ sub get_init_scripts {
 sub check_init_script {
     my ($self, $file, $services) = @_;
 
-    my $info = $self->info;
+    my $processable = $self->processable;
     my $basename = $file->basename;
     my $servicename = get_init_service_name($file);
     my $lsb_source_seen;
@@ -192,10 +192,10 @@ sub get_systemd_service_files {
     my ($self) = @_;
 
     my $pkg = $self->package;
-    my $info = $self->info;
+    my $processable = $self->processable;
     my @res;
     my @potential
-      = grep { m,/systemd/system/.*\.service$, } $info->sorted_index;
+      = grep { m,/systemd/system/.*\.service$, } $processable->sorted_index;
 
     for my $file (@potential) {
         push(@res, $file) if $self->check_systemd_service_file($file);
@@ -206,7 +206,7 @@ sub get_systemd_service_files {
 sub get_systemd_service_names {
     my ($self,$files_ref) = @_;
 
-    my $info = $self->info;
+    my $processable = $self->processable;
     my %services;
 
     my $safe_add_service = sub {
@@ -240,7 +240,7 @@ sub check_systemd_service_file {
     my ($self, $file) = @_;
 
     my $pkg = $self->package;
-    my $info = $self->info;
+    my $processable = $self->processable;
 
     $self->tag('systemd-service-file-outside-lib', $file)
       if ($file =~ m,^etc/systemd/system/,);
@@ -282,7 +282,7 @@ sub check_systemd_service_file {
             my $service = $1;
             for my $x (qw(path timer)) {
                 $is_standalone = 0
-                  if $info->index_resolved_path(
+                  if $processable->index_resolved_path(
                     "lib/systemd/system/${service}.${x}");
             }
         }
@@ -455,14 +455,14 @@ sub extract_service_file_values {
 sub check_maintainer_scripts {
     my ($self) = @_;
 
-    my $info = $self->info;
+    my $processable = $self->processable;
 
     # get maintainer scripts
-    my %control = %{$self->info->control_scripts};
+    my %control = %{$self->processable->control_scripts};
 
     for my $file (keys %control) {
 
-        my $path = $info->control_index_resolved_path($file);
+        my $path = $processable->control_index_resolved_path($file);
         my $interpreter = $control{$file};
 
         # Don't follow unsafe links

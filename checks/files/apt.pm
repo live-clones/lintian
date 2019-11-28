@@ -36,14 +36,14 @@ sub files {
       unless $file->name =~ m,^etc/apt/,;
 
     # /etc/apt/preferences
-    unless ($self->processable->pkg_src eq 'apt') {
+    unless ($self->processable->source eq 'apt') {
 
         $self->tag('package-installs-apt-preferences', $file->name)
           if $file->name =~ m,^etc/apt/preferences(?:$|\.d/[^/]+),;
     }
 
     # /etc/apt/sources
-    unless ($self->processable->pkg_src eq 'apt'
+    unless ($self->processable->source eq 'apt'
         || $self->package =~ /-apt-source$/) {
 
         $self->tag('package-installs-apt-sources', $file->name)
@@ -51,7 +51,7 @@ sub files {
     }
 
     # /etc/apt/trusted.gpg
-    unless ($self->processable->pkg_src eq 'apt'
+    unless ($self->processable->source eq 'apt'
         || $self->package =~ /(?:-apt-source|-archive-keyring)$/) {
 
         $self->tag('package-installs-apt-keyring', $file->name)

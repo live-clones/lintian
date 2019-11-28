@@ -52,9 +52,9 @@ our %KNOWN_ARCHIVE_PARTS = map { $_ => 1 } ('non-free', 'contrib');
 sub binary {
     my ($self) = @_;
 
-    my $info = $self->info;
+    my $processable = $self->processable;
 
-    my $section = $info->unfolded_field('section');
+    my $section = $processable->unfolded_field('section');
 
     unless (defined $section) {
         $self->tag('no-section-field');
@@ -67,9 +67,9 @@ sub binary {
 sub udeb {
     my ($self) = @_;
 
-    my $info = $self->info;
+    my $processable = $self->processable;
 
-    my $section = $info->unfolded_field('section');
+    my $section = $processable->unfolded_field('section');
 
     return
       unless defined $section;
@@ -85,9 +85,9 @@ sub always {
 
     my $pkg = $self->package;
     my $type = $self->type;
-    my $info = $self->info;
+    my $processable = $self->processable;
 
-    my $section = $info->unfolded_field('section');
+    my $section = $processable->unfolded_field('section');
 
     return
       unless defined $section;
@@ -150,9 +150,9 @@ sub always {
           if $pkg !~ /-dbg(?:sym)?$/;
     }
 
-    if ($info->is_pkg_class('transitional')) {
+    if ($processable->is_pkg_class('transitional')) {
 
-        my $priority = $info->unfolded_field('priority') // EMPTY;
+        my $priority = $processable->unfolded_field('priority') // EMPTY;
 
         $self->tag('transitional-package-should-be-oldlibs-optional',
             "$fraction/$priority")

@@ -38,9 +38,9 @@ with 'Lintian::Check';
 sub source {
     my ($self) = @_;
 
-    my $info = $self->info;
+    my $processable = $self->processable;
 
-    my $maintainer = $info->unfolded_field('maintainer');
+    my $maintainer = $processable->unfolded_field('maintainer');
 
     return
       unless defined $maintainer;
@@ -48,7 +48,7 @@ sub source {
     my $is_list = $maintainer =~ /\@lists(?:\.alioth)?\.debian\.org\b/;
 
     $self->tag('no-human-maintainers')
-      if $is_list && !defined $info->field('uploaders');
+      if $is_list && !defined $processable->field('uploaders');
 
     return;
 }
@@ -56,9 +56,9 @@ sub source {
 sub always {
     my ($self) = @_;
 
-    my $info = $self->info;
+    my $processable = $self->processable;
 
-    my $maintainer = $info->unfolded_field('maintainer');
+    my $maintainer = $processable->unfolded_field('maintainer');
 
     unless (defined $maintainer) {
         $self->tag('no-maintainer-field');

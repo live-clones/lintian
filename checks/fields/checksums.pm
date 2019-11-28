@@ -36,10 +36,10 @@ with 'Lintian::Check';
 sub source {
     my ($self) = @_;
 
-    my $info = $self->info;
+    my $processable = $self->processable;
 
     $self->tag('no-strong-digests-in-dsc')
-      unless $info->field('checksums-sha256');
+      unless $processable->field('checksums-sha256');
 
     return;
 }

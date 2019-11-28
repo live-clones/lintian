@@ -23,6 +23,8 @@ use autodie;
 
 use Path::Tiny;
 
+use Lintian::Util qw(get_file_checksum);
+
 use Moo::Role;
 use namespace::clean;
 
@@ -94,7 +96,7 @@ sub changelog {
 
     my ($checksum, $changelog);
 
-    my $shared = $self->{'_shared_storage'};
+    my $shared = $self->shared_storage;
     if (defined $shared) {
 
         $checksum = get_file_checksum('sha1', $dch);

@@ -34,12 +34,14 @@ with 'Lintian::Check';
 sub source {
     my ($self) = @_;
 
-    my $info = $self->info;
+    my $processable = $self->processable;
 
-    my $yamlfile = $info->index_resolved_path('debian/upstream/metadata');
+    my $yamlfile
+      = $processable->index_resolved_path('debian/upstream/metadata');
 
     if (not $yamlfile) {
-        $self->tag('upstream-metadata-file-is-missing') unless $info->native;
+        $self->tag('upstream-metadata-file-is-missing')
+          unless $processable->native;
         return;
     }
 

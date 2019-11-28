@@ -19,6 +19,7 @@
 # MA 02110-1301, USA.
 
 package Lintian::init_d;
+
 use strict;
 use warnings;
 use autodie;
@@ -84,13 +85,13 @@ sub binary {
     my ($self) = @_;
 
     my $pkg = $self->package;
-    my $info = $self->info;
+    my $processable = $self->processable;
 
-    my $initd_dir = $info->index_resolved_path('etc/init.d/');
-    my $postinst = $info->control_index('postinst');
-    my $preinst = $info->control_index('preinst');
-    my $postrm = $info->control_index('postrm');
-    my $prerm = $info->control_index('prerm');
+    my $initd_dir = $processable->index_resolved_path('etc/init.d/');
+    my $postinst = $processable->control_index('postinst');
+    my $preinst = $processable->control_index('preinst');
+    my $postrm = $processable->control_index('postrm');
+    my $prerm = $processable->control_index('prerm');
 
     my (%initd_postinst, %initd_postrm);
 
@@ -202,7 +203,7 @@ sub binary {
 
         if (
             not $initd_path
-            or (    not $info->is_conffile($initd_path->name)
+            or (    not $processable->is_conffile($initd_path->name)
                 and not $initd_path->is_symlink)
         ) {
             $self->tag('init.d-script-not-marked-as-conffile',
@@ -246,7 +247,7 @@ sub binary {
 sub check_init {
     my ($self, $initd_path) = @_;
 
-    my $info = $self->info;
+    my $processable = $self->processable;
 
     # In an upstart system, such as Ubuntu, init scripts are symlinks to
     # upstart-job.  It doesn't make sense to check the syntax of upstart-job,
@@ -349,9 +350,12 @@ sub check_init {
             $tag{$1} = 1;
         }
 
-        if (   $l =~ m{^\s*\.\s+/lib/lsb/init-functions}
-            && !$info->relation('strong')->implies('lsb-base')
-            && none { $_->basename =~ m/\.service$/ } $info->sorted_index) {
+        if (
+               $l =~ m{^\s*\.\s+/lib/lsb/init-functions}
+            && !$processable->relation('strong')->implies('lsb-base')
+            && none { $_->basename =~ m/\.service$/ }
+            $processable->sorted_index
+        ) {
             $self->tag('init.d-script-needs-depends-on-lsb-base',
                 $initd_path, "(line $.)");
         }
@@ -512,9 +516,9 @@ sub check_init {
 sub check_defaults {
     my ($self) = @_;
 
-    my $info = $self->info;
+    my $processable = $self->processable;
 
-    my $dir = $info->index_resolved_path('etc/default/');
+    my $dir = $processable->index_resolved_path('etc/default/');
     return unless $dir and $dir->is_dir;
     for my $path ($dir->children) {
         return if not $path->is_open_ok;
@@ -541,16 +545,18 @@ sub files {
 
         $self->tag('package-supports-alternative-init-but-no-init.d-script',
             $file)
-          unless $self->info->index_resolved_path("etc/init.d/${service}")
-          or $self->info->index_resolved_path(
+          unless $self->processable->index_resolved_path(
+            "etc/init.d/${service}")
+          or $self->processable->index_resolved_path(
             "lib/systemd/system/${service}.path")
-          or $self->info->index_resolved_path(
+          or $self->processable->index_resolved_path(
             "lib/systemd/system/${service}.timer");
     }
 
     if ($file =~ m,etc/sv/([^/]+)/$,) {
         my $service = $1;
-        my $file = $self->info->index_resolved_path("etc/sv/${service}/run");
+        my $file
+          = $self->processable->index_resolved_path("etc/sv/${service}/run");
         $self->tag(
             'directory-in-etc-sv-directory-without-executable-run-script',
             $file)

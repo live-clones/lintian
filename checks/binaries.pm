@@ -131,8 +131,7 @@ sub always {
 
     my $pkg = $self->package;
     my $type = $self->type;
-    my $info = $self->info;
-    my $proc = $self->processable;
+    my $processable = $self->processable;
     my $group = $self->group;
 
     my ($madir, %directories, $built_with_golang, $built_with_octave, %SONAME);
@@ -148,31 +147,31 @@ sub always {
     my $has_php_ext = 0;
     my $uses_numpy_c_abi = 0;
 
-    my $arch = $info->field('architecture', '');
-    my $multiarch = $info->field('multi-arch', 'no');
-    my $srcpkg = $proc->pkg_src;
+    my $arch = $processable->field('architecture', '');
+    my $multiarch = $processable->field('multi-arch', 'no');
+    my $srcpkg = $processable->source;
 
     $arch_hardening = $HARDENING->value($arch)
       if $arch ne 'all';
 
     my $src = $group->source;
     if (defined($src)) {
-        $built_with_golang = $src->info->relation('build-depends-all')
+        $built_with_golang = $src->relation('build-depends-all')
           ->implies('golang-go | golang-any');
         $built_with_octave
-          = $src->info->relation('build-depends')->implies('dh-octave');
+          = $src->relation('build-depends')->implies('dh-octave');
     } else {
         $built_with_golang = $pkg =~ m/^golang-/;
         $built_with_octave = $pkg =~ m/^octave-/;
     }
 
-    foreach my $file (sort keys %{$info->objdump_info}) {
-        my $objdump = $info->objdump_info->{$file};
+    foreach my $file (sort keys %{$processable->objdump_info}) {
+        my $objdump = $processable->objdump_info->{$file};
         my ($has_lfs, %unharded_functions, @hardened_functions);
         my $is_profiled = 0;
         # $file can be an object inside a static lib.  These do
         # not appear in the output of our file_info collection.
-        my $file_info = $info->file_info($file) // '';
+        my $file_info = $processable->file_info($file) // '';
 
         # The LFS check only works reliably for ELF files due to the
         # architecture regex.
@@ -322,7 +321,7 @@ sub always {
       if @sonames && !$match_found && $type ne 'udeb';
 
     # process all files in package
-    foreach my $file ($info->sorted_index) {
+    foreach my $file ($processable->sorted_index) {
         my ($fileinfo, $objdump, $fname);
 
         next if not $file->is_file;
@@ -364,10 +363,10 @@ sub always {
             # unneeded sections in those.
             next if $file =~ m/_g\.a$/;
 
-            $objdump = $info->objdump_info->{$file};
+            $objdump = $processable->objdump_info->{$file};
 
             foreach my $obj (@{ $objdump->{'objects'} }) {
-                my $libobj = $info->objdump_info->{"${file}(${obj})"};
+                my $libobj = $processable->objdump_info->{"${file}(${obj})"};
                 # Shouldn't happen, but...
                 internal_error(
                     "object ($file $obj) in static lib is missing!?")
@@ -388,10 +387,10 @@ sub always {
 
         $self->tag('development-package-ships-elf-binary-in-path', $file)
           if exists($PATH_DIRECTORIES{$file->dirname})
-          and $info->field('section', 'NONE') =~ m/(?:^|\/)libdevel$/
-          and $info->field('multi-arch', 'NONE') ne 'foreign';
+          and $processable->field('section', 'NONE') =~ m/(?:^|\/)libdevel$/
+          and $processable->field('multi-arch', 'NONE') ne 'foreign';
 
-        $objdump = $info->objdump_info->{$fname};
+        $objdump = $processable->objdump_info->{$fname};
 
         if ($arch eq 'all' or not $ARCH_REGEX->known($arch)) {
             # arch:all or unknown architecture - not much we can say here
@@ -427,7 +426,7 @@ sub always {
             $self->tag('binary-from-other-architecture', $file) if $bad;
         }
 
-        my $stringsfd = $info->strings($file);
+        my $stringsfd = $processable->strings($file);
         my $strings = do { local $/; <$stringsfd> };
         close($stringsfd)
           or warn "Error closing strings fd: $!";
@@ -474,7 +473,7 @@ sub always {
         # rpath is disallowed, except in private directories
         if (exists($objdump->{RPATH}) or exists($objdump->{RUNPATH})) {
             if (not %directories) {
-                for my $file ($info->sorted_index) {
+                for my $file ($processable->sorted_index) {
                     my $name;
                     next unless $file->is_dir || $file->is_symlink;
                     $name = $file->name;
@@ -502,9 +501,9 @@ sub always {
         foreach my $emlib ($EMBEDDED_LIBRARIES->all) {
             my $ldata = $EMBEDDED_LIBRARIES->value($emlib);
             if ($ldata->{'source-regex'}) {
-                next if $proc->pkg_src =~ m/^$ldata->{'source-regex'}$/;
+                next if $processable->source =~ m/^$ldata->{'source-regex'}$/;
             } else {
-                next if $proc->pkg_src eq $ldata->{'source'};
+                next if $processable->source eq $ldata->{'source'};
             }
             if ($strings =~ $ldata->{'match'}) {
                 $self->tag('embedded-library', "$fname: $ldata->{'libname'}");
@@ -659,7 +658,7 @@ sub always {
     }
 
     # Find the package dependencies, which is used by various checks.
-    my $depends = $info->relation('strong');
+    my $depends = $processable->relation('strong');
 
     # Check for a libc dependency.
     if ($needs_depends_line) {

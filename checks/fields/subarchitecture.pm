@@ -36,12 +36,12 @@ with 'Lintian::Check';
 sub always {
     my ($self) = @_;
 
-    my $info = $self->info;
+    my $processable = $self->processable;
 
     #---- Subarchitecture (udeb)
 
     # may trigger unfolding tag
-    my $subarch = $info->unfolded_field('subarchitecture');
+    my $subarch = $processable->unfolded_field('subarchitecture');
 
     return;
 }

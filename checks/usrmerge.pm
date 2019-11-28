@@ -35,7 +35,7 @@ sub files {
     return
       unless $file->name =~ m,^(?:s?bin|lib(?:|[ox]?32|64))/,;
 
-    my $usrfile = $self->info->index("usr/$file");
+    my $usrfile = $self->processable->index("usr/$file");
 
     return
       unless $usrfile;

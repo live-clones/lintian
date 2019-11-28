@@ -56,10 +56,10 @@ my $MISC_DEPENDS = Lintian::Relation->new('${misc:Depends}');
 sub source {
     my ($self) = @_;
 
-    my $info = $self->info;
+    my $processable = $self->processable;
     my $group = $self->group;
 
-    my $droot = $info->index_resolved_path('debian/');
+    my $droot = $processable->index_resolved_path('debian/');
     my ($drules, $dh_bd_version, $level);
 
     my $seencommand = '';
@@ -72,7 +72,7 @@ sub source {
     my $inclcdbs = 0;
 
     my ($bdepends_noarch, $bdepends, %build_systems, $uses_autotools_dev_dh);
-    $bdepends = $info->relation('build-depends-all');
+    $bdepends = $processable->relation('build-depends-all');
     my $seen_dh = 0;
     my $seen_dh_dynamic = 0;
     my $seen_dh_parallel = 0;
@@ -182,7 +182,7 @@ sub source {
                         "(line $.)"
                       )
                       if $addon eq 'quilt'
-                      and $info->field('format', '') eq '3.0 (quilt)';
+                      and $processable->field('format', '') eq '3.0 (quilt)';
                     if (defined $depends) {
                         $missingbdeps_addons{$depends} = $addon;
                     }
@@ -285,15 +285,15 @@ sub source {
         return;
     }
 
-    my @pkgs = $info->binaries;
+    my @pkgs = $processable->binaries;
     my $single_pkg = '';
-    $single_pkg =  $info->binary_package_type($pkgs[0])
+    $single_pkg =  $processable->binary_package_type($pkgs[0])
       if scalar @pkgs == 1;
 
     for my $binpkg (@pkgs) {
-        next if $info->binary_package_type($binpkg) ne 'deb';
-        my $strong = $info->binary_relation($binpkg, 'strong');
-        my $all = $info->binary_relation($binpkg, 'all');
+        next if $processable->binary_package_type($binpkg) ne 'deb';
+        my $strong = $processable->binary_relation($binpkg, 'strong');
+        my $all = $processable->binary_relation($binpkg, 'all');
 
         if (!$all->implies($MISC_DEPENDS)) {
             $self->tag('debhelper-but-no-misc-depends', $binpkg);
@@ -304,13 +304,13 @@ sub source {
     }
 
     for my $proc ($group->get_processables('binary')) {
-        my $binpkg = $proc->pkg_name;
-        my $breaks = $info->binary_relation($binpkg, 'breaks');
-        my $strong = $info->binary_relation($binpkg, 'strong');
+        my $binpkg = $proc->name;
+        my $breaks = $processable->binary_relation($binpkg, 'breaks');
+        my $strong = $processable->binary_relation($binpkg, 'strong');
         $self->tag('package-uses-dh-runit-but-lacks-breaks-substvar', $binpkg)
           if $seen{'runit'}
           and $strong->implies('runit')
-          and any { m,^etc/sv/, } $proc->info->sorted_index
+          and any { m,^etc/sv/, } $proc->sorted_index
           and not $breaks->implies('${runit:Breaks}');
     }
 
@@ -436,7 +436,8 @@ sub source {
             }
             close($fd);
             if (!$seentag) {
-                my $binpkg_type = $info->binary_package_type($binpkg) // 'deb';
+                my $binpkg_type = $processable->binary_package_type($binpkg)
+                  // 'deb';
                 my $is_udeb = 0;
                 $is_udeb = 1 if $binpkg and $binpkg_type eq 'udeb';
                 $is_udeb = 1 if not $binpkg and $single_pkg eq 'udeb';
@@ -520,8 +521,8 @@ sub source {
         }
     }
 
-    $bdepends_noarch = $info->relation_noarch('build-depends-all');
-    $bdepends = $info->relation('build-depends-all');
+    $bdepends_noarch = $processable->relation_noarch('build-depends-all');
+    $bdepends = $processable->relation('build-depends-all');
     if ($needbuilddepends) {
         $self->tag('package-uses-debhelper-but-lacks-build-depends')
           unless $bdepends->implies('debhelper')
@@ -576,7 +577,7 @@ sub source {
     if ($seen_dh and not $seen{'python2'}) {
         my %python_depends;
         for my $binpkg (@pkgs) {
-            if ($info->binary_relation($binpkg, 'all')
+            if ($processable->binary_relation($binpkg, 'all')
                 ->implies('${python:Depends}')) {
                 $python_depends{$binpkg} = 1;
             }
@@ -589,7 +590,7 @@ sub source {
     if ($seen_dh and not $seen{'python3'}) {
         my %python3_depends;
         for my $binpkg (@pkgs) {
-            if ($info->binary_relation($binpkg, 'all')
+            if ($processable->binary_relation($binpkg, 'all')
                 ->implies('${python3:Depends}')) {
                 $python3_depends{$binpkg} = 1;
             }
@@ -604,7 +605,7 @@ sub source {
         my $seen_sphinxdoc = 0;
         for my $binpkg (@pkgs) {
             $seen_sphinxdoc = 1
-              if $info->binary_relation($binpkg, 'all')
+              if $processable->binary_relation($binpkg, 'all')
               ->implies('${sphinxdoc:Depends}');
         }
         $self->tag('sphinxdoc-but-no-sphinxdoc-depends')

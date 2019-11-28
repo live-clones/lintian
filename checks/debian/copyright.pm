@@ -96,15 +96,15 @@ sub spelling_tag_emitter {
 sub source {
     my ($self) = @_;
 
-    my $info = $self->info;
+    my $processable = $self->processable;
     my $group = $self->group;
 
-    my $debian_dir = $info->index_resolved_path('debian/');
+    my $debian_dir = $processable->index_resolved_path('debian/');
     return if not $debian_dir;
     my $copyright_path = $debian_dir->child('copyright');
 
     if (not $copyright_path) {
-        my @pkgs = $info->binaries;
+        my @pkgs = $processable->binaries;
         $self->tag('no-debian-copyright');
         if (scalar @pkgs == 1) {
             # If debian/copyright doesn't exist, and the only a single
@@ -191,7 +191,7 @@ sub find_dep5_version {
 sub check_apache_notice_files {
     my ($self, $contents) = @_;
 
-    my $info = $self->info;
+    my $processable = $self->processable;
     my $group = $self->group;
 
     my @procs = $group->get_processables('binary');
@@ -202,12 +202,12 @@ sub check_apache_notice_files {
               $_->basename =~ m/^NOTICE(\.txt)?$/
           and $_->is_open_ok
           and $_->file_contents =~ m/apache/i
-    } $info->sorted_index;
+    } $processable->sorted_index;
     return if not @notice_files;
 
     foreach my $binpkg (@procs) {
-        my @files = map { $_->name } $binpkg->info->sorted_index;
-        my $java_info = $binpkg->info->java_info;
+        my @files = map { $_->name } $binpkg->sorted_index;
+        my $java_info = $binpkg->java_info;
         for my $jar_file (sort keys %{$java_info}) {
             push @files, keys %{$java_info->{$jar_file}{files}};
         }
@@ -223,7 +223,7 @@ sub check_apache_notice_files {
 sub check_dep5_copyright {
     my ($self, $contents) = @_;
 
-    my $info = $self->info;
+    my $processable = $self->processable;
 
     my (@dep5, @lines);
 
@@ -309,7 +309,7 @@ sub check_dep5_copyright {
 sub parse_dep5 {
     my ($self, $dep5ref, $linesref) = @_;
 
-    my $info = $self->info;
+    my $processable = $self->processable;
     my @dep5       = @$dep5ref;
     my @lines      = @$linesref;
     my $first_para = shift @dep5;
@@ -331,10 +331,11 @@ sub parse_dep5 {
         'format',"(line $lines[0]{'format'})")
       if none { defined $first_para->{$_} } qw(format format-specification);
     $self->tag('missing-explanation-for-contrib-or-non-free-package')
-      if $info->source_field('section', '') =~ m{^(contrib|non-free)(/.+)?$}
+      if $processable->source_field('section', '')
+      =~ m{^(contrib|non-free)(/.+)?$}
       and none { defined $first_para->{$_} } qw(comment disclaimer);
     $self->tag('missing-explanation-for-repacked-upstream-tarball')
-      if $info->repacked
+      if $processable->repacked
       and none { defined $first_para->{$_} } qw(comment files-excluded)
       and ($first_para->{'source'} // '') =~ m{^https?://};
 
@@ -352,7 +353,7 @@ sub parse_dep5 {
         }
     }
 
-    my @shippedfiles = sort grep { $_->is_file } $info->sorted_index;
+    my @shippedfiles = sort grep { $_->is_file } $processable->sorted_index;
 
     my @licensefiles= grep { m,(^|/)(COPYING[^/]*|LICENSE)$, } @shippedfiles;
 
@@ -362,7 +363,7 @@ sub parse_dep5 {
     my %file_coverage = map { $_ => 0 } @shippedfiles;
     my $i = 0;
     my $current_line = 0;
-    my $commas_in_files = any { m/,/xsm } $info->sorted_index;
+    my $commas_in_files = any { m/,/xsm } $processable->sorted_index;
 
     for my $para (@dep5) {
         $i++;
@@ -472,7 +473,7 @@ sub parse_dep5 {
                         }
                     } elsif ($wc_type eq WC_TYPE_DECENDANTS) {
                         my @wlist;
-                        if (my $dir = $info->index($wc_value)) {
+                        if (my $dir = $processable->index($wc_value)) {
                             if ($wc_value eq q{}) {
                                 # Special-case => Files: *
                                 push(@wlist, @shippedfiles);
@@ -564,7 +565,7 @@ sub parse_dep5 {
         foreach my $srcfile (sort keys %file_licenses) {
             next if $srcfile =~ '^\.pc/';
             next unless $srcfile =~ /\.xml$/;
-            my $file = $info->index_resolved_path($srcfile);
+            my $file = $processable->index_resolved_path($srcfile);
             my $seen = eval {
                 my $xml
                   = XMLin($file->fs_path, ForceArray => [], KeyAttr => []);
@@ -575,7 +576,7 @@ sub parse_dep5 {
             $self->tag('inconsistent-appstream-metadata-license',
                 $srcfile,"($seen != $wanted)")
               unless $seen eq $wanted
-              or $info->name eq 'lintian';
+              or $processable->name eq 'lintian';
         }
 
         my @no_license_needed = (@quiltfiles, @licensefiles);
@@ -772,9 +773,9 @@ sub parse_wildcard {
 sub check_files_excluded {
     my ($self, $excluded) = @_;
 
-    my $info = $self->info;
+    my $processable = $self->processable;
 
-    my @files = grep { $_->is_file } $info->sorted_orig_index;
+    my @files = grep { $_->is_file } $processable->sorted_orig_index;
     my @wildcards = split /[\n\t ]+/, $excluded;
     for my $wildcard (@wildcards) {
         $wildcard =~ s/^\s+|\s+$//g;
@@ -819,20 +820,19 @@ sub binary {
     my ($self) = @_;
 
     my $pkg = $self->package;
-    my $info = $self->info;
-    my $proc = $self->processable;
+    my $processable = $self->processable;
     my $group = $self->group;
 
     my $found = 0;
     my $linked = 0;
     my $path = "usr/share/doc/$pkg";
 
-    if ($info->index("$path/copyright.gz")) {
+    if ($processable->index("$path/copyright.gz")) {
         $self->tag('copyright-file-compressed');
         $found = 1;
     }
 
-    if (my $index_info = $info->index("$path/copyright")) {
+    if (my $index_info = $processable->index("$path/copyright")) {
         $found = 1;
         if ($index_info->is_symlink) {
             $self->tag('copyright-file-is-symlink');
@@ -843,7 +843,7 @@ sub binary {
     }
 
     if (not $found) {
-        my $index_info = $info->index($path);
+        my $index_info = $processable->index($path);
         if (defined $index_info && $index_info->is_symlink) {
             my $link = $index_info->link;
 
@@ -871,7 +871,7 @@ sub binary {
             # We therefore just require the dependency for now and
             # don't worry about the version number.
             $link =~ s,/.*,,;
-            if (not depends_on($info, $proc, $link)) {
+            if (not depends_on($processable, $link)) {
                 $self->tag('usr-share-doc-symlink-without-dependency', $link);
                 return;
             }
@@ -887,7 +887,7 @@ sub binary {
         return;
     }
 
-    my $dcopy = path($info->groupdir)->child('copyright')->stringify;
+    my $dcopy = path($processable->groupdir)->child('copyright')->stringify;
     # check that copyright is UTF-8 encoded
     my $line = file_is_encoded_in_non_utf8($dcopy);
     if ($line) {
@@ -1123,10 +1123,10 @@ qr/GNU (?:Lesser|Library) General Public License|(?-i:\bLGPL\b)/i
     if ($gpl || m,/usr/share/common-licenses/GPL,) {
         unless (m,exception|exemption|/usr/share/common-licenses/(?!GPL)\S,){
             my @depends;
-            if (my $field = $info->field('depends')) {
+            if (my $field = $processable->field('depends')) {
                 @depends = split(/\s*,\s*/, $field);
             }
-            if (my $field = $info->field('pre-depends')) {
+            if (my $field = $processable->field('pre-depends')) {
                 push(@depends, split(/\s*,\s*/, $field));
             }
             if (any { /^libssl[0-9.]+(?:\s|\z)/ && !/\|/ } @depends) {
@@ -1140,15 +1140,15 @@ qr/GNU (?:Lesser|Library) General Public License|(?-i:\bLGPL\b)/i
 
 # -----------------------------------
 
-# Returns true if the package whose information is in $info depends $package
+# Returns true if the package whose information is in $processable depends $package
 # or if $package is essential.
 sub depends_on {
-    my ($info, $proc, $package) = @_;
+    my ($processable, $package) = @_;
     my ($strong, $arch);
     return 1 if $KNOWN_ESSENTIAL->known($package);
-    $strong = $info->relation('strong');
+    $strong = $processable->relation('strong');
     return 1 if $strong->implies($package);
-    $arch = $proc->pkg_arch;
+    $arch = $processable->architecture;
     return 1 if $arch ne 'all' and $strong->implies("${package}:${arch}");
     return 0;
 }
@@ -1161,14 +1161,14 @@ sub check_cross_link {
     my $src = $group->source;
     if ($src) {
         # source package is available; check it's list of binary
-        return if defined $src->info->binary_package_type($fpkg);
+        return if defined $src->binary_package_type($fpkg);
         $self->tag('usr-share-doc-symlink-to-foreign-package', $fpkg);
     } else {
         # The source package is not available, but the binary could
         # be present anyway;  If they are in the same group, they claim
         # to have the same source (and source version)
-        foreach my $proc ($group->get_processables('binary')){
-            return if($proc->pkg_name eq $fpkg);
+        foreach my $processable ($group->get_processables('binary')){
+            return if($processable->name eq $fpkg);
         }
         # It was not, but since the source package was not present, we cannot
         # tell if it is foreign or not at this point.

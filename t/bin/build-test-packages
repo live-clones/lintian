@@ -86,6 +86,7 @@ use Test::Lintian::Prepare qw(logged_prepare early_logpath);
 use constant SPACE => q{ };
 use constant INDENT => q{    };
 use constant NEWLINE => qq{\n};
+use constant TAB => qq{\t};
 use constant EMPTY => q{};
 use constant YES => q{yes};
 use constant NO => q{no};
@@ -328,8 +329,16 @@ my $counter;
 my @buildtasks= map {$build->call(args => [$_, ++$counter, scalar @workpaths])}
   sort @workpaths;
 
-my $allbuilt = Future->needs_all(@buildtasks);
-$allbuilt->get;
+my $allbuilt = Future->wait_all(@buildtasks);
+
+$loop->await($allbuilt);
+
+my @failedbuild = $allbuilt->failed_futures;
+if (@failedbuild) {
+    say EMPTY;
+    say 'Failed build tasks:';
+    say TAB . $_ for @failedbuild;
+}
 
 say EMPTY;
 

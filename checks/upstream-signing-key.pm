@@ -39,12 +39,12 @@ my $SIGNING_KEY_FILENAMES = Lintian::Data->new('common/signing-key-filenames');
 sub source {
     my ($self) = @_;
 
-    my $info = $self->info;
+    my $processable = $self->processable;
 
     # Check all possible locations for signing keys
     my %key_locations;
     for my $key_name ($SIGNING_KEY_FILENAMES->all) {
-        my $path = $info->index_resolved_path("debian/$key_name");
+        my $path = $processable->index_resolved_path("debian/$key_name");
         $key_locations{$key_name} = $path->fs_path
           if $path && $path->is_file;
     }
@@ -58,7 +58,7 @@ sub source {
     for my $key_name (sort keys %key_locations) {
 
         # native packages should not have such keys
-        if ($info->native) {
+        if ($processable->native) {
             $self->tag('public-upstream-key-in-native-package', $key_name);
             next;
         }

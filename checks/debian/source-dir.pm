@@ -43,9 +43,9 @@ our $KNOWN_FILES = Lintian::Data->new('debian-source-dir/known-files');
 sub source {
     my ($self) = @_;
 
-    my $info = $self->info;
+    my $processable = $self->processable;
 
-    my $dsrc = $info->index_resolved_path('debian/source/');
+    my $dsrc = $processable->index_resolved_path('debian/source/');
     my ($format_file, $git_pfile, $format, $format_extra);
 
     $format_file = $dsrc->child('format') if $dsrc;
@@ -64,7 +64,7 @@ sub source {
     }
     if ($format eq '1.0') {
         $format_extra .= ' ' if $format_extra;
-        if ($info->diffstat) {
+        if ($processable->diffstat) {
             $format_extra .= 'non-native';
         } else {
             $format_extra .= 'native';
@@ -84,7 +84,8 @@ sub source {
     if ($git_pfile and $git_pfile->is_open_ok and $git_pfile->size != 0) {
         my $git_patches_fd = $git_pfile->open;
         if (any { !/^\s*+#|^\s*+$/o} <$git_patches_fd>) {
-            my $dpseries = $info->index_resolved_path('debian/patches/series');
+            my $dpseries
+              = $processable->index_resolved_path('debian/patches/series');
             # gitpkg does not create series as a link, so this is most likely
             # a traversal attempt.
             if (not $dpseries or not $dpseries->is_open_ok) {
@@ -110,7 +111,7 @@ sub source {
           unless $KNOWN_FILES->known($file);
     }
 
-    my $options = $info->index_resolved_path('debian/source/options');
+    my $options = $processable->index_resolved_path('debian/source/options');
     if ($options and $options->is_open_ok) {
         my $fd = $options->open;
         while (<$fd>) {

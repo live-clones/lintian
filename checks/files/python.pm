@@ -72,8 +72,8 @@ sub files {
         && $file->name !~ m,^usr/lib/python\d\.\d/(?:site|dist)-packages/,){
 
         $self->tag('third-party-package-in-python-dir', $file->name)
-          unless $self->processable->pkg_src =~ m/^python(?:\d\.\d)?$/
-          || $self->processable->pkg_src =~ m{\A python\d?-
+          unless $self->processable->source =~ m/^python(?:\d\.\d)?$/
+          || $self->processable->source =~ m{\A python\d?-
                                (?:stdlib-extensions|profiler|old-doctools) \Z}xsm;
     }
 

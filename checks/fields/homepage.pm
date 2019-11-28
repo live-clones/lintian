@@ -41,19 +41,19 @@ my $KNOWN_INSECURE_HOMEPAGE_URIS
 sub source {
     my ($self) = @_;
 
-    my $info = $self->info;
+    my $processable = $self->processable;
 
-    my $homepage = $info->unfolded_field('homepage');
+    my $homepage = $processable->unfolded_field('homepage');
 
     unless (defined $homepage) {
 
         return
-          if $info->native;
+          if $processable->native;
 
         my $binary_has_homepage_field = 0;
-        for my $binary ($info->binaries) {
+        for my $binary ($processable->binaries) {
 
-            if (defined $info->binary_field($binary, 'homepage')) {
+            if (defined $processable->binary_field($binary, 'homepage')) {
                 $binary_has_homepage_field = 1;
                 last;
             }
@@ -74,14 +74,14 @@ sub source {
 sub always {
     my ($self) = @_;
 
-    my $info = $self->info;
+    my $processable = $self->processable;
 
-    my $homepage = $info->unfolded_field('homepage');
+    my $homepage = $processable->unfolded_field('homepage');
 
     return
       unless defined $homepage;
 
-    my $orig = $info->field('homepage');
+    my $orig = $processable->field('homepage');
 
     if ($homepage =~ /^<(?:UR[LI]:)?.*>$/i) {
         $self->tag('superfluous-clutter-in-homepage', $orig);

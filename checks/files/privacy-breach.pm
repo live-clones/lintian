@@ -307,7 +307,7 @@ sub files {
     if (   $file->is_file
         && $file->name =~ m,\.(?:x?html?\d?|js|xht|xml|css)$,i) {
 
-        if(     $self->processable->pkg_src eq 'josm'
+        if(     $self->processable->source eq 'josm'
             and $file->basename eq 'defaultpresets.xml') {
             # false positive
 

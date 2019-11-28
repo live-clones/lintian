@@ -42,9 +42,9 @@ my $KNOWN_PRIOS = Lintian::Data->new('fields/priorities');
 sub binary {
     my ($self) = @_;
 
-    my $info = $self->info;
+    my $processable = $self->processable;
 
-    my $priority = $info->unfolded_field('priority');
+    my $priority = $processable->unfolded_field('priority');
 
     unless (defined $priority) {
         $self->tag('no-priority-field');
@@ -57,14 +57,14 @@ sub always {
 
     my $pkg = $self->package;
     my $type = $self->type;
-    my $info = $self->info;
+    my $processable = $self->processable;
 
-    my $priority = $info->unfolded_field('priority');
+    my $priority = $processable->unfolded_field('priority');
 
     return
       unless defined $priority;
 
-    if ($type eq 'source' || !$info->is_pkg_class('auto-generated')) {
+    if ($type eq 'source' || !$processable->is_pkg_class('auto-generated')) {
 
         $self->tag('priority-extra-is-replaced-by-priority-optional')
           if $priority eq 'extra';
@@ -82,7 +82,7 @@ sub always {
       if $pkg =~ m/^lib/o
       && $pkg !~ m/-bin$/o
       && $pkg !~ m/^libc[0-9.]+$/o
-      && (any { $_ eq $info->field('section', '') } qw(libdevel libs))
+      && (any { $_ eq $processable->field('section', '') } qw(libdevel libs))
       && (any { $_ eq $priority } qw(required important standard));
 
     return;

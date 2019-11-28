@@ -43,14 +43,14 @@ sub always {
     my ($self) = @_;
 
     my $type = $self->type;
-    my $info = $self->info;
+    my $processable = $self->processable;
 
     my $ctrl = $type eq 'udeb' ? $UDEB_PERMISSIONS : $DEB_PERMISSIONS;
     my $ctrl_alt = $type eq 'udeb' ? $DEB_PERMISSIONS : $UDEB_PERMISSIONS;
     my $has_ctrl_script = 0;
 
     # process control-index file
-    foreach my $file ($info->sorted_control_index) {
+    foreach my $file ($processable->sorted_control_index) {
         my ($owner, $operm, $experm);
 
         # the control.tar.gz should only contain files (and the "root"

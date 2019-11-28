@@ -57,10 +57,10 @@ sub source {
     my ($self) = @_;
 
     my $pkg = $self->package;
-    my $info = $self->info;
+    my $processable = $self->processable;
     my $group = $self->group;
 
-    my $debian_dir = $info->index_resolved_path('debian/');
+    my $debian_dir = $processable->index_resolved_path('debian/');
     my $dcontrol;
     $dcontrol = $debian_dir->child('control') if $debian_dir;
 
@@ -133,7 +133,7 @@ sub source {
 
     eval {
         # check we can parse it, but ignore the result - we will fetch
-        # the fields we need from $info.
+        # the fields we need from $processable.
         read_dpkg_control($dcontrol->fs_path);
     };
     if ($@) {
@@ -143,17 +143,17 @@ sub source {
         die "syntax error in debian/control: $@";
     }
 
-    foreach my $field (keys %{$info->source_field()}) {
+    foreach my $field (keys %{$processable->source_field()}) {
         $self->tag(
             'debian-control-has-empty-field',
             "field \"$field\" in source paragraph",
-        ) if $info->source_field($field) eq '';
+        ) if $processable->source_field($field) eq '';
     }
 
-    my @package_names = $info->binaries;
+    my @package_names = $processable->binaries;
 
     foreach my $bin (@package_names) {
-        my $bfields = $info->binary_field($bin);
+        my $bfields = $processable->binary_field($bin);
         $self->tag('build-info-in-binary-control-file-section', "Package $bin")
           if (
             first { $bfields->{"build-$_"} }
@@ -164,8 +164,8 @@ sub source {
                 'binary-control-field-duplicates-source',
                 "field \"$field\" in package $bin"
               )
-              if ( $info->source_field($field)
-                && $bfields->{$field} eq $info->source_field($field));
+              if ( $processable->source_field($field)
+                && $bfields->{$field} eq $processable->source_field($field));
             $self->tag(
                 'debian-control-has-empty-field',
                 "field \"$field\" in package $bin",
@@ -207,7 +207,7 @@ sub source {
         qw(build-depends build-depends-indep
         build-conflicts build-conflicts-indep)
     ) {
-        my $raw = $info->source_field($field);
+        my $raw = $processable->source_field($field);
         my $rel;
         next unless $raw;
         $rel = Lintian::Relation->new($raw);
@@ -219,10 +219,10 @@ sub source {
             qw(pre-depends depends recommends suggests breaks
             conflicts provides replaces enhances)
         ) {
-            my $raw = $info->binary_field($bin, $field);
+            my $raw = $processable->binary_field($bin, $field);
             my $rel;
             next unless $raw;
-            $rel = $info->binary_relation($bin, $field);
+            $rel = $processable->binary_relation($bin, $field);
             $self->check_relation($bin, $field, $raw, $rel);
         }
     }
@@ -242,8 +242,9 @@ sub source {
     my @dep_fields = qw(pre-depends depends recommends suggests);
     foreach my $bin (@package_names) {
         for my $strong (0 .. $#dep_fields) {
-            next unless $info->binary_field($bin, $dep_fields[$strong]);
-            my $relation = $info->binary_relation($bin, $dep_fields[$strong]);
+            next unless $processable->binary_field($bin, $dep_fields[$strong]);
+            my $relation
+              = $processable->binary_relation($bin, $dep_fields[$strong]);
             $self->tag('package-depends-on-itself', $bin, $dep_fields[$strong])
               if $relation->implies($bin);
             $self->tag('package-depends-on-hardcoded-libc',
@@ -251,9 +252,10 @@ sub source {
               if $relation->implies($LIBCS)
               and $pkg !~ /^e?glibc$/;
             for my $weak (($strong + 1) .. $#dep_fields) {
-                next unless $info->binary_field($bin, $dep_fields[$weak]);
+                next
+                  unless $processable->binary_field($bin, $dep_fields[$weak]);
                 for my $dependency (split /\s*,\s*/,
-                    $info->binary_field($bin, $dep_fields[$weak])) {
+                    $processable->binary_field($bin, $dep_fields[$weak])) {
                     next unless $dependency;
                     $self->tag('stronger-dependency-implies-weaker',
                         $bin,"$dep_fields[$strong] -> $dep_fields[$weak]",
@@ -284,7 +286,7 @@ sub source {
     # duplicate the descriptions of non-udeb packages and the package
     # description for udebs is much less important or significant to
     # the user.
-    my $area = $info->source_field('section');
+    my $area = $processable->source_field('section');
     if (defined $area) {
         if ($area =~ m%^([^/]+)/%) {
             $area = $1;
@@ -299,20 +301,21 @@ sub source {
     foreach my $bin (@package_names) {
 
         # Accumulate the description.
-        my $desc = $info->binary_field($bin, 'description');
+        my $desc = $processable->binary_field($bin, 'description');
         my $bin_area;
-        if ($desc and $info->binary_package_type($bin) ne 'udeb') {
+        if ($desc and $processable->binary_package_type($bin) ne 'udeb') {
             push @descriptions, [$bin, split("\n", $desc, 2)];
         }
 
         # If this looks like a -dev package, check its dependencies.
-        if ($bin =~ /-dev$/ and $info->binary_field($bin,'depends')) {
-            $self->check_dev_depends($bin,$info->binary_field($bin, 'depends'),
+        if ($bin =~ /-dev$/ and $processable->binary_field($bin,'depends')) {
+            $self->check_dev_depends($bin,
+                $processable->binary_field($bin, 'depends'),
                 @package_names);
         }
 
         # Check mismatches in archive area.
-        $bin_area = $info->binary_field($bin, 'section');
+        $bin_area = $processable->binary_field($bin, 'section');
         $seen_main = 1 if not $bin_area and ($area // '') eq 'main';
         next unless $area && $bin_area;
 
@@ -364,7 +367,7 @@ sub source {
 
     # check the syntax of the Build-Profiles field
     for my $bin (@package_names) {
-        my $raw = $info->binary_field($bin, 'build-profiles');
+        my $raw = $processable->binary_field($bin, 'build-profiles');
         next unless $raw;
         if (
             $raw!~ m{^\s*              # skip leading whitespace
@@ -406,7 +409,7 @@ sub source {
     }
 
     # Check Rules-Requires-Root
-    if (defined(my $r3 = $info->source_field('rules-requires-root'))) {
+    if (defined(my $r3 = $processable->source_field('rules-requires-root'))) {
         if ($r3 eq 'no') {
             $self->tag('rules-does-not-require-root');
         } elsif ($r3 eq 'binary-targets') {
@@ -416,11 +419,11 @@ sub source {
         $self->tag('rules-requires-root-missing');
     }
 
-    if ($info->source_field('rules-requires-root', 'no') eq 'no') {
+    if ($processable->source_field('rules-requires-root', 'no') eq 'no') {
       BINARY:
         foreach my $proc ($group->get_binary_processables) {
-            my $pkg = $proc->pkg_name;
-            foreach my $file ($proc->info->sorted_index) {
+            my $pkg = $proc->name;
+            foreach my $file ($proc->sorted_index) {
                 my $owner = $file->owner . ':' . $file->group;
                 next if $owner eq 'root:root';
                 $self->tag('should-specify-rules-requires-root',
@@ -432,9 +435,9 @@ sub source {
 
     # find binary packages that Pre-Depend on multiarch-support without going
     # via ${misc:Pre-Depends}
-    if ($info->source_field('build-depends')) {
+    if ($processable->source_field('build-depends')) {
         for my $bin (@package_names) {
-            my $raw = $info->binary_field($bin, 'pre-depends');
+            my $raw = $processable->binary_field($bin, 'pre-depends');
             next unless $raw;
             if($raw =~ /multiarch-support/) {
                 $self->tag('pre-depends-directly-on-multiarch-support',$bin);
@@ -447,7 +450,7 @@ sub source {
         # The Architecture field is mandatory and dpkg-buildpackage
         # will already bail out if it's missing, so we don't need to
         # check that.
-        my $raw = $info->binary_field($bin, 'architecture');
+        my $raw = $processable->binary_field($bin, 'architecture');
         if ($raw =~ /\n./) {
             $self->tag('multiline-architecture-field',$bin);
         }
@@ -456,19 +459,20 @@ sub source {
     # Check for GObject Introspection packages that are missing ${gir:Depends}
     foreach my $bin (@package_names) {
         next unless $bin =~ m/gir[\d\.]+-.*-[\d\.]+$/;
-        my $relation = $info->binary_relation($bin, 'all');
+        my $relation = $processable->binary_relation($bin, 'all');
         $self->tag(
             'gobject-introspection-package-missing-depends-on-gir-depends',
             $bin)
           unless $relation->implies('${gir:Depends}');
     }
 
-    if ($info->relation('build-depends')->implies('golang-go | golang-any')) {
+    if ($processable->relation('build-depends')
+        ->implies('golang-go | golang-any')) {
         # Verify that golang binary packages set Built-Using (except for
         # arch:all library packages).
         foreach my $bin (@package_names) {
-            my $bu = $info->binary_field($bin, 'built-using');
-            my $arch = $info->binary_field($bin, 'architecture');
+            my $bu = $processable->binary_field($bin, 'built-using');
+            my $arch = $processable->binary_field($bin, 'architecture');
             if ($arch eq 'all') {
                 $self->tag('built-using-field-on-arch-all-package', $bin)
                   if defined($bu);
@@ -481,22 +485,22 @@ sub source {
         }
 
         $self->tag('missing-xs-go-import-path-for-golang-package')
-          unless $info->source_field('xs-go-import-path', '');
+          unless $processable->source_field('xs-go-import-path', '');
     }
 
     my $changes = $group->changes;
     $self->tag('source-only-upload-to-non-free-without-autobuild')
       if defined($changes)
-      and $changes->info->field('architecture', '') eq 'source'
-      and $info->is_non_free
-      and $info->source_field('xs-autobuild', 'no') eq 'no';
+      and $changes->field('architecture', '') eq 'source'
+      and $processable->is_non_free
+      and $processable->source_field('xs-autobuild', 'no') eq 'no';
 
     # Ensure all orig tarballs have a signature if we have an upstream
     # signature.
-    my $files = $info->files;
+    my $files = $processable->files;
     my $has_signing_key = 0;
     for my $key_name ($SIGNING_KEY_FILENAMES->all) {
-        my $path = $info->index_resolved_path("debian/$key_name");
+        my $path = $processable->index_resolved_path("debian/$key_name");
         if ($path and $path->is_file) {
             $has_signing_key = 1;
             last;
@@ -505,7 +509,7 @@ sub source {
 
     # If we are using uscan in git tag mode, the signature will never
     # match the tarball so pretend we don't have/need a signing key.
-    my $watch = $info->index_resolved_path('debian/watch');
+    my $watch = $processable->index_resolved_path('debian/watch');
     if ($watch && $watch->file_contents =~ m/pgpmode=gittag/) {
         $has_signing_key = 0;
     }
@@ -514,7 +518,7 @@ sub source {
         if (   $has_signing_key
             && $file =~ m/(^.*\.orig(?:-[A-Za-z\d-]+)?\.tar)\./
             && $file !~ m/\.asc$/
-            && !$info->repacked) {
+            && !$processable->repacked) {
             $self->tag('orig-tarball-missing-upstream-signature', $file)
               if none { exists $files->{"$_.asc"} } ($file, $1);
         }
@@ -543,7 +547,7 @@ sub dbg_pkg_is_known {
 sub check_dev_depends {
     my ($self, $package, $depends, @packages) = @_;
 
-    my $info = $self->info;
+    my $processable = $self->processable;
 
     strip($depends);
     for my $target (@packages) {
@@ -582,7 +586,8 @@ sub check_dev_depends {
                 # arch:all as well.  The version-substvars check
                 # handles that for us.
                 next
-                  if $info->binary_field($target, 'architecture', '') eq 'all'
+                  if $processable->binary_field($target, 'architecture', '')eq
+                  'all'
                   && $versions[0] =~ /^\s*=\s*\$\{source:Version\}/;
                 $self->tag('weak-library-dev-dependency',
                     "$package on $depends[0]");

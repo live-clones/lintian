@@ -52,7 +52,7 @@ sub files {
         if (index($file->name,'oui') > -1 || index($file->name,'iab') > -1) {
 
             $self->tag('package-installs-ieee-data', $file->name)
-              unless $self->processable->pkg_src eq 'ieee-data';
+              unless $self->processable->source eq 'ieee-data';
         }
     }
 

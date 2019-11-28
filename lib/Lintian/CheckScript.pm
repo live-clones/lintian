@@ -237,15 +237,15 @@ sub run_check {
         return;
     }
 
-    my @args = ($proc->pkg_name,$proc->pkg_type,$proc->info,$proc,$group);
+    my @args = ($proc->name,$proc->type,$proc,$proc,$group);
 
     if ($module->can('run')) {
         $module->can('run')->(@args);
         return;
     }
 
-    $module->can($proc->pkg_type)->(@args)
-      if $module->can($proc->pkg_type);
+    $module->can($proc->type)->(@args)
+      if $module->can($proc->type);
 
     $module->can('always')->(@args)
       if $module->can('always');
