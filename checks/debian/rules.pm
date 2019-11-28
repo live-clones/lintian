@@ -173,7 +173,7 @@ sub source {
 
     # Check if debian/rules is marked as executable.
     $self->tag('debian-rules-not-executable')
-      unless $rules->operm == 0755;
+      unless $rules->operm == 0755 or $rules->is_symlink;
 
     # Holds which dependencies are required.  The keys in %needed and
     # %needed_clean are the dependencies; the values are the tags to use or the
