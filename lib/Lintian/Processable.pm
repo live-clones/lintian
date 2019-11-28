@@ -211,7 +211,7 @@ has group => (is => 'rw');
 has link_label => (is => 'rw', default => EMPTY);
 has saved_link => (is => 'rw', default => EMPTY);
 
-has shared_storage => (is => 'rwp', default => sub { {} });
+has shared_storage => (is => 'rw', default => sub { {} });
 
 =item C<identifier>
 
@@ -259,7 +259,6 @@ Overrides clear_cache from L<Lintian::Processable>.
 sub clear_cache {
     my ($self) = @_;
 
-    $self->info({});
     return;
 }
 

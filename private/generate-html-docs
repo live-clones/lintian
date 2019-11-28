@@ -68,7 +68,7 @@ sub guess_version {
         require IO::Async::Process;
         delete $ENV{'GITDIR'};
 
-        my $loop = IO::Async::Loop->really_new;
+        my $loop = IO::Async::Loop->new;
         my $future = $loop->new_future;
         my $process = IO::Async::Process->new(
             command => ['git', 'describe'],

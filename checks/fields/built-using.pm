@@ -43,9 +43,9 @@ with 'Lintian::Check';
 sub always {
     my ($self) = @_;
 
-    my $info = $self->info;
+    my $processable = $self->processable;
 
-    my $built_using = $info->field('built-using');
+    my $built_using = $processable->field('built-using');
 
     return
       unless defined $built_using;

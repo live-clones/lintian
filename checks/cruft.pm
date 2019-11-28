@@ -354,36 +354,36 @@ our @TRAILING_WHITESPACE_FILES = (
 sub source {
     my ($self) = @_;
 
-    my $info = $self->info;
+    my $processable = $self->processable;
 
-    my $d_files = $info->index_resolved_path('debian/files');
+    my $d_files = $processable->index_resolved_path('debian/files');
 
     if ($d_files and $d_files->is_file and $d_files->size != 0) {
         $self->tag('debian-files-list-in-source');
     }
 
     $self->tag('package-uses-deprecated-source-override-location')
-      if $info->index_resolved_path('debian/source.lintian-overrides');
+      if $processable->index_resolved_path('debian/source.lintian-overrides');
 
     # Check if the package build-depends on autotools-dev, automake,
     # or libtool.
-    my $ltinbd  = $info->relation('build-depends-all')->implies($LIBTOOL);
+    my $ltinbd= $processable->relation('build-depends-all')->implies($LIBTOOL);
     my %warned;
     # Assume the package to be non-native if the field is not present.
     # - while 1.0 is more likely in this case, Lintian will probably get
     #   better results by checking debfiles/ rather than looking for a diffstat
     #   that may not be present.
-    my $format = $info->field('format', '3.0 (quilt)');
+    my $format = $processable->field('format', '3.0 (quilt)');
 
     if ($format =~ /^\s*2\.0\s*\z/ or $format =~ /^\s*3\.0\s*\(quilt|git\)/) {
         $self->check_debian_dir(\%warned);
-    }elsif (not $info->native) {
+    }elsif (not $processable->native) {
         $self->check_diffstat(\%warned);
     }
     $self->find_cruft(\%warned, $ltinbd);
 
     for my $file (@EOL_TERMINATORS_FILES) {
-        my $path = $info->index_resolved_path("debian/$file");
+        my $path = $processable->index_resolved_path("debian/$file");
         next if not $path or not $path->is_open_ok;
         my $fd = $path->open;
         while (my $line = <$fd>) {
@@ -396,7 +396,7 @@ sub source {
     }
 
     for my $file (@TRAILING_WHITESPACE_FILES) {
-        my $path = $info->index_resolved_path($file->[0]);
+        my $path = $processable->index_resolved_path($file->[0]);
         next if not $path or not $path->is_open_ok;
         my $fd = $path->open;
         my @empty_lines;
@@ -416,11 +416,12 @@ sub source {
         }
     }
 
-    if (my $pycompat = $info->index_resolved_path('debian/pycompat')) {
+    if (my $pycompat = $processable->index_resolved_path('debian/pycompat')) {
         $self->tag('debian-pycompat-is-obsolete') if $pycompat->is_file;
     }
 
-    if (my $pyversions = $info->index_resolved_path('debian/pyversions')) {
+    if (my $pyversions= $processable->index_resolved_path('debian/pyversions'))
+    {
         $self->tag('debian-pyversions-is-obsolete') if $pyversions->is_file;
     }
 
@@ -428,7 +429,7 @@ sub source {
     # package if it isn't just tar cruft.
     for my $file (keys %ERRORS) {
         my $tag  = $ERRORS{$file};
-        my $path = path($info->groupdir)->child($file)->stringify;
+        my $path = path($processable->groupdir)->child($file)->stringify;
         if (-s $path) {
             open(my $fd, '<', $path);
             local $_;
@@ -454,7 +455,7 @@ sub source {
         }
     }
 
-    foreach my $file ($info->sorted_orig_index) {
+    foreach my $file ($processable->sorted_orig_index) {
         $self->tag('source-contains-empty-directory', $file)
           if $file->is_dir
           and scalar($file->children) == 0;
@@ -472,7 +473,7 @@ sub check_diffstat {
     my ($self, $warned) = @_;
 
     my $saw_file;
-    open(my $fd, '<', $self->info->diffstat);
+    open(my $fd, '<', $self->processable->diffstat);
     local $_;
     while (<$fd>) {
         my ($file) = (m,^\s+(.*?)\s+\|,)
@@ -534,9 +535,9 @@ sub check_diffstat {
 sub check_debian_dir {
     my ($self, $warned) = @_;
 
-    my $info = $self->info;
+    my $processable = $self->processable;
 
-    my $droot = $info->index_resolved_path('debian/');
+    my $droot = $processable->index_resolved_path('debian/');
     return if not $droot;
 
     my @worklist = $droot->children;
@@ -598,14 +599,14 @@ sub istestset {
 sub find_cruft {
     my ($self, $warned, $ltinbd) = @_;
 
-    my $info = $self->info;
+    my $processable = $self->processable;
 
-    my $prefix = ($info->native ? 'diff-contains' : 'source-contains');
+    my $prefix = ($processable->native ? 'diff-contains' : 'source-contains');
     my @worklist;
     my $ships_examples = _ships_examples($self->group);
 
     # start with the top-level dirs
-    push(@worklist, $info->index('')->children);
+    push(@worklist, $processable->index('')->children);
 
   ENTRY:
     while (my $entry = shift(@worklist)) {
@@ -666,10 +667,10 @@ sub find_cruft {
         next ENTRY unless $entry->is_file;
         # avoid lintian testset
         next ENTRY
-          if $self->processable->pkg_src eq 'lintian' && $istestsetdir;
+          if $self->processable->source eq 'lintian' && $istestsetdir;
 
         # check non free file
-        my $md5sum = $info->md5sums->{$name};
+        my $md5sum = $processable->md5sums->{$name};
         if(
             $self->md5sum_based_check(
                 $name, $md5sum, $NON_DISTRIBUTABLE_FILES,
@@ -678,7 +679,7 @@ sub find_cruft {
         ) {
             next ENTRY;
         }
-        unless ($info->is_non_free) {
+        unless ($processable->is_non_free) {
             $self->md5sum_based_check($name, $md5sum, $NON_FREE_FILES,
                 'license-problem-md5sum-non-free-file');
         }
@@ -719,7 +720,7 @@ sub find_cruft {
             && $entry->is_file
             && $entry->is_open_ok
             && $file_info =~ /gzip compressed data/
-            && !$info->index_resolved_path('debian/README.source')) {
+            && !$processable->index_resolved_path('debian/README.source')) {
             my $fd = $entry->open_gz;
             read($fd, my $magic, 4);
             close($fd);
@@ -825,11 +826,11 @@ sub find_cruft {
 
         $self->tag('source-contains-prebuilt-doxygen-documentation', $dirname)
           if $basename =~ m{^doxygen.(?:png|sty)$}
-          and $self->processable->pkg_src ne 'doxygen';
+          and $self->processable->source ne 'doxygen';
 
         unless ($warned->{$name}) {
             for my $rule (@file_checks) {
-                next if ($rule->[2] and not $info->native);
+                next if ($rule->[2] and not $processable->native);
                 if ($basename =~ /$rule->[0]/) {
                     $self->tag("${prefix}-$rule->[1]", $name);
                 }
@@ -870,13 +871,13 @@ sub check_missing_source {
         $extratext)
       = @_;
 
-    my $info = $self->info;
+    my $processable = $self->processable;
 
     my $basename_of_dirname = basename($dirname);
     $extratext //= '';
 
     # do not check missing source for non free
-    if($info->is_non_free) {
+    if($processable->is_non_free) {
         return;
     }
 
@@ -892,7 +893,7 @@ sub check_missing_source {
     # As a special-case, check debian/missing-sources including symlinks, etc.
     foreach my $ext (($file, $basename)) {
         my $path = normalize_pkg_path("debian/missing-sources/$ext");
-        return if $path and $info->index_resolved_path($path);
+        return if $path and $processable->index_resolved_path($path);
     }
 
     # try to find for each replacement
@@ -941,7 +942,7 @@ sub check_missing_source {
                 next PATH;
             }
             # found source file or directory
-            if($info->index_resolved_path($newpath)) {
+            if($processable->index_resolved_path($newpath)) {
                 return;
             }
         }
@@ -956,7 +957,7 @@ sub check_missing_source {
 sub full_text_check {
     my ($self, $entry, $name, $basename, $dirname) = @_;
 
-    my $info = $self->info;
+    my $processable = $self->processable;
 
     # license string in debian/changelog are probably just change
     # Ignore these strings in d/README.{Debian,source}.  If they
@@ -1006,7 +1007,7 @@ sub full_text_check {
 
         # Skip the rest of the license checks for non-free
         # sections.
-        if ($info->is_non_free) {
+        if ($processable->is_non_free) {
             next BLOCK;
         }
 
@@ -1090,8 +1091,6 @@ sub check_html_cruft {
 sub check_js_script {
     my ($self, $entry, $name,$basename,$dirname,$lcscript) = @_;
 
-    my $info = $self->info;
-
     my $firstline = '';
     foreach (split /\n/, $lcscript) {
         if ($_ =~ m/^\s*$/) {
@@ -1124,8 +1123,6 @@ sub _is_javascript_but_not_minified {
 # search something in block $0
 sub search_in_block0 {
     my ($self, $entry, $name, $basename, $dirname, $block) = @_;
-
-    my $info = $self->info;
 
     if(_is_javascript_but_not_minified($name)) {
         # exception sphinx documentation
@@ -1195,8 +1192,6 @@ sub search_in_block0 {
 sub warn_prebuilt_javascript{
     my ($self, $entry, $name, $basename, $dirname,$linelength,$cutoff) = @_;
 
-    my $info = $self->info;
-
     my $extratext
       =  'line length is '.int($linelength)." characters (>$cutoff)";
     $self->tag('source-contains-prebuilt-javascript-object',$name,$extratext);
@@ -1254,8 +1249,6 @@ sub _strip_c_comments {
 sub detect_browserify {
     my ($self, $entry, $name, $basename, $dirname, $block) = @_;
 
-    my $info = $self->info;
-
     $block =~ s,\n, ,msg;
     foreach my $browserifyregex ($BROWSERIFY_REGEX->all) {
         my $regex = $BROWSERIFY_REGEX->value($browserifyregex);
@@ -1272,8 +1265,6 @@ sub detect_browserify {
 # try to detect non human source based on line length
 sub linelength_test {
     my ($self, $entry, $name, $basename, $dirname, $block) = @_;
-
-    my $info = $self->info;
 
     my $linelength = 0;
     my $line;
@@ -1365,8 +1356,6 @@ sub check_gfdl_license_problem {
         $matchedkeyword,$licenseproblemhash,$licenseproblem,
         %matchedhash
     )= @_;
-
-    my $info = $self->info;
 
     my $rawgfdlsections  = $matchedhash{rawgfdlsections}  || '';
     my $rawcontextbefore = $matchedhash{rawcontextbefore} || '';
@@ -1482,8 +1471,6 @@ sub rfc_whitelist_filename {
         %matchedhash
     )= @_;
 
-    my $info = $self->info;
-
     return 0 if $name eq 'debian/copyright';
     my $lcname = lc($basename);
 
@@ -1506,16 +1493,16 @@ sub php_source_whitelist {
         %matchedhash
     )= @_;
 
-    my $info = $self->info;
+    my $processable = $self->processable;
 
-    my $copyright_path = $info->index_resolved_path('debian/copyright');
+    my $copyright_path = $processable->index_resolved_path('debian/copyright');
     if (    $copyright_path
         and $copyright_path->file_contents
         =~ m{^Source: https?://pecl.php.net/package/.*$}m) {
         return 0;
     }
 
-    if($self->processable->pkg_src =~ m,^php\d*(?:\.\d+)?$,xms) {
+    if($self->processable->source =~ m,^php\d*(?:\.\d+)?$,xms) {
         return 0;
     }
     $self->tag($licenseproblem, $name);
@@ -1681,12 +1668,10 @@ sub license_check {
         $cleanedblock,$matchedkeyword,$licenseproblemhash
     )= @_;
 
-    my $info = $self->info;
-
     my $ret = 0;
 
     # avoid to check lintian
-    if($self->processable->pkg_src eq 'lintian') {
+    if($self->processable->source eq 'lintian') {
         return $ret;
     }
   LICENSE:
@@ -1762,10 +1747,10 @@ sub _ships_examples {
     my @procs = $group->get_processables('binary');
     return 1 if not @procs;
     foreach my $binpkg (@procs) {
-        my $name = $binpkg->pkg_name;
+        my $name = $binpkg->name;
         # If we have an -examples package, assume we ship examples.
         return 1 if $name =~ m{-examples$};
-        my @files = $binpkg->info->sorted_index;
+        my @files = $binpkg->sorted_index;
         # Check each package for a directory (or symlink) called "examples".
         return 1
           if any { m{^usr/share/doc/(.+/)?examples/?$} } @files;

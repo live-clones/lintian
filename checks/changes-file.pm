@@ -41,26 +41,26 @@ my $KNOWN_DISTS = Lintian::Data->new('changes-file/known-dists');
 sub changes {
     my ($self) = @_;
 
-    my $info = $self->info;
+    my $processable = $self->processable;
     my $group = $self->group;
 
     # If we don't have a Format key, something went seriously wrong.
     # Tag the file and skip remaining processing.
-    if (!$info->field('format')) {
+    if (!$processable->field('format')) {
         $self->tag('malformed-changes-file');
         return;
     }
 
     # Description is mandated by dak, but only makes sense if binary
     # packages are included.  Don't tag pure source uploads.
-    if (  !$info->field('description')
-        && $info->field('architecture', '') ne 'source') {
+    if (  !$processable->field('description')
+        && $processable->field('architecture', '') ne 'source') {
         $self->tag('no-description-in-changes-file');
     }
 
     # check distribution field
-    if (defined $info->field('distribution')) {
-        my @distributions = split /\s+/o, $info->field('distribution');
+    if (defined $processable->field('distribution')) {
+        my @distributions = split /\s+/o, $processable->field('distribution');
         for my $distribution (@distributions) {
             if ($distribution eq 'UNRELEASED') {
                 # ignore
@@ -79,7 +79,8 @@ sub changes {
 
                     if ($distribution =~ /backports/) {
                         my $bpo1 = 1;
-                        if ($info->field('version') =~ m/~bpo(\d+)\+(\d+)$/) {
+                        if ($processable->field('version')
+                            =~ m/~bpo(\d+)\+(\d+)$/) {
                             my $distnumber = $1;
                             my $bpoversion = $2;
                             if (
@@ -92,21 +93,22 @@ sub changes {
                             ) {
                                 $self->tag(
 'backports-upload-has-incorrect-version-number',
-                                    $info->field('version'),$distribution
+                                    $processable->field('version'),
+                                    $distribution
                                 );
                             }
                             $bpo1 = 0 if ($bpoversion > 1);
                         } else {
                             $self->tag(
 'backports-upload-has-incorrect-version-number',
-                                $info->field('version'));
+                                $processable->field('version'));
                         }
                         # for a ~bpoXX+2 or greater version, there
                         # probably will be only a single changelog entry
                         if ($bpo1) {
                             my $changes_versions = 0;
                             foreach my $change_line (
-                                split("\n", $info->field('changes'))) {
+                                split("\n", $processable->field('changes'))) {
                       # from Parse/DebianChangelog.pm
                       # the changelog entries in the changes file are in a
                       # different format than in the changelog, so the standard
@@ -131,9 +133,10 @@ sub changes {
                 } else {
                     $self->tag(
                         'upload-has-backports-version-number',
-                        $info->field('version'),
+                        $processable->field('version'),
                         $distribution
-                    ) if $info->field('version') =~ m/~bpo(\d+)\+(\d+)$/;
+                      )
+                      if $processable->field('version')=~ m/~bpo(\d+)\+(\d+)$/;
                 }
                 if (!$KNOWN_DISTS->known($dist)) {
                     # bad distribution entry
@@ -141,7 +144,7 @@ sub changes {
                         $distribution);
                 }
 
-                my $changes = $info->field('changes');
+                my $changes = $processable->field('changes');
                 if (defined $changes) {
                     # take the first non-empty line
                     $changes =~ s/^\s+//s;
@@ -171,32 +174,37 @@ sub changes {
         }
 
         if ($#distributions > 0) {
-            $self->tag('multiple-distributions-in-changes-file',
-                $info->field('distribution'));
+            $self->tag(
+                'multiple-distributions-in-changes-file',
+                $processable->field('distribution'));
         }
 
     }
 
     # Urgency is only recommended by Policy.
-    if (!$info->field('urgency')) {
+    if (!$processable->field('urgency')) {
         $self->tag('no-urgency-in-changes-file');
     } else {
-        my $urgency = lc $info->field('urgency');
+        my $urgency = lc $processable->field('urgency');
         $urgency =~ s/ .*//o;
         unless ($urgency =~ /^(?:low|medium|high|critical|emergency)$/o) {
-            $self->tag('bad-urgency-in-changes-file', $info->field('urgency'));
+            $self->tag(
+                'bad-urgency-in-changes-file',
+                $processable->field('urgency'));
         }
     }
 
     # Changed-By is optional in Policy, but if set, must be
     # syntactically correct.  It's also used by dak.
-    if ($info->field('changed-by')) {
-        my @tags = check_maintainer($info->field('changed-by'), 'changed-by');
+    if ($processable->field('changed-by')) {
+        my @tags
+          = check_maintainer($processable->field('changed-by'), 'changed-by');
         $self->tag(@{$_}) for @tags;
     }
 
-    my $files = $info->files;
-    my $path = readlink(path($info->groupdir)->child('changes')->stringify);
+    my $files = $processable->files;
+    my $path
+      = readlink(path($processable->groupdir)->child('changes')->stringify);
     my %num_checksums;
     $path =~ s#/[^/]+$##;
     foreach my $file (keys %$files) {

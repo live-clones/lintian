@@ -36,13 +36,13 @@ my $MULTIARCH_DIRS = Lintian::Data->new('common/multiarch-dirs', qr/\s++/);
 sub files {
     my ($self, $file) = @_;
 
-    my $architecture = $self->info->field('architecture', '');
-    my $multiarch = $self->info->field('multi-arch', 'no');
+    my $architecture = $self->processable->field('architecture', '');
+    my $multiarch = $self->processable->field('multi-arch', 'no');
 
     # check old style config scripts
     if (    $file->name =~ m,^usr/bin/,
         and $file->name =~ m,-config$,
-        and $self->info->is_script($file->name)
+        and $self->processable->is_script($file->name)
         and $file->is_regular_file) {
 
         # try to find some indication of

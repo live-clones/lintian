@@ -50,7 +50,7 @@ sub setup {
     my ($self) = @_;
 
     # remains 0 if there is no timestamp
-    my $changelog = $self->info->changelog;
+    my $changelog = $self->processable->changelog;
     if (defined $changelog) {
 
         my ($entry) = @{$changelog->entries};
@@ -67,13 +67,13 @@ sub files {
     return
       unless $file->is_file;
 
-    my $architecture = $self->info->field('architecture', '');
-    my $multiarch = $self->info->field('multi-arch', 'no');
+    my $architecture = $self->processable->field('architecture', '');
+    my $multiarch = $self->processable->field('multi-arch', 'no');
 
     # both compressed and uncompressed present
     if ($file->name =~ $DUPLICATED_COMPRESSED_FILE_REGEX) {
         $self->tag('duplicated-compressed-file', $file->name)
-          if $self->info->index($1);
+          if $self->processable->index($1);
     }
 
     # gzip files

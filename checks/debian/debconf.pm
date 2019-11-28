@@ -71,18 +71,18 @@ sub always {
 
     my $pkg = $self->package;
     my $type = $self->type;
-    my $info = $self->info;
+    my $processable = $self->processable;
 
     my ($seenconfig, $seentemplates, $usespreinst);
 
     if ($type eq 'source') {
-        my @binaries = $info->binaries;
+        my @binaries = $processable->binaries;
         my @files = map { "$_.templates" } @binaries;
         push @files, 'templates';
 
         foreach my $file (@files) {
             my $dfile = "debian/$file";
-            my $templates_file = $info->index_resolved_path($dfile);
+            my $templates_file = $processable->index_resolved_path($dfile);
             my $binary = $file;
             $binary =~ s/\.?templates$//;
             # Single binary package (so @files contains "templates" and
@@ -122,9 +122,9 @@ sub always {
         return;
     }
 
-    my $preinst = $info->control_index('preinst');
-    my $ctrl_config = $info->control_index('config');
-    my $ctrl_templates = $info->control_index('templates');
+    my $preinst = $processable->control_index('preinst');
+    my $ctrl_config = $processable->control_index('config');
+    my $ctrl_templates = $processable->control_index('templates');
 
     if ($preinst and $preinst->is_file and $preinst->is_open_ok) {
         my $fd = $preinst->open;
@@ -152,8 +152,8 @@ sub always {
 
     # Consider every package to depend on itself.
     my $selfrel;
-    if (defined $info->field('version')) {
-        $_ = $info->field('version');
+    if (defined $processable->field('version')) {
+        $_ = $processable->field('version');
         $selfrel = "$pkg (= $_)";
     } else {
         $selfrel = "$pkg";
@@ -162,9 +162,9 @@ sub always {
     # Include self and provides as a package providing debconf presumably
     # satisfies its own use of debconf (if any).
     my $selfrelation
-      = Lintian::Relation->and($info->relation('provides'), $selfrel);
+      = Lintian::Relation->and($processable->relation('provides'), $selfrel);
     my $alldependencies
-      = Lintian::Relation->and($info->relation('strong'), $selfrelation);
+      = Lintian::Relation->and($processable->relation('strong'),$selfrelation);
 
     # See if the package depends on dbconfig-common.  Packages that do
     # are allowed to have a config file with no templates, since they
@@ -401,7 +401,7 @@ sub always {
     my (%templates_used, %template_aliases);
     for my $file (qw(config prerm postrm preinst postinst)) {
         my $potential_makedev = {};
-        my $path = $info->control_index($file);
+        my $path = $processable->control_index($file);
         if ($path and $path->is_file and $path->is_open_ok) {
             my ($usesconfmodule, $obsoleteconfmodule, $db_input, $isdefault);
 
@@ -455,7 +455,8 @@ sub always {
                      [\"\']? (\S+?) [\"\']? \s+ (\S+)\s/xsm
                 ) {
                     my ($priority, $template) = ($1, $2);
-                    $templates_used{get_template_name($info, $template)} = 1;
+                    $templates_used{get_template_name($processable, $template)}
+                      = 1;
                     if ($priority !~ /^\$\S+$/) {
                         $self->tag('unknown-debconf-priority', "$file:$. $1")
                           unless ($valid_priorities{$priority});
@@ -473,7 +474,7 @@ sub always {
                     m/ \A \s* (?:db_get|db_set(?:title)?) \s+ 
                        [\"\']? (\S+?) [\"\']? (?:\s|\Z)/xsm
                 ) {
-                    $templates_used{get_template_name($info, $1)} = 1;
+                    $templates_used{get_template_name($processable, $1)} = 1;
                 }
                 # Try to handle Perl somewhat.
                 if (   m/^\s*(?:.*=\s*get|set)\s*\(\s*[\"\'](\S+?)[\"\']/
@@ -552,7 +553,7 @@ sub always {
     # package that might provide debconf functionality.
 
     if ($usespreinst) {
-        unless ($info->relation('pre-depends')->implies($ANY_DEBCONF)) {
+        unless ($processable->relation('pre-depends')->implies($ANY_DEBCONF)) {
             $self->tag('missing-debconf-dependency-for-preinst')
               unless $type eq 'udeb';
         }
@@ -570,8 +571,8 @@ sub always {
 
     return if ($pkg eq 'debconf') || ($type eq 'udeb');
 
-    foreach my $filename (sort keys %{$info->scripts}) {
-        my $path = $info->index_resolved_path($filename);
+    foreach my $filename (sort keys %{$processable->scripts}) {
+        my $path = $processable->index_resolved_path($filename);
         next if not $path or not $path->is_open_ok;
         my $fd = $path->open;
         while (<$fd>) {
@@ -612,9 +613,10 @@ sub count_choices {
 
 # Manually interpolate shell variables, eg. $DPKG_MAINTSCRIPT_PACKAGE
 sub get_template_name {
-    my ($info, $name) = @_;
+    my ($processable, $name) = @_;
 
-    return $name =~ s/^\$DPKG_MAINTSCRIPT_PACKAGE/$info->{name}/r;
+    my $package = $processable->name;
+    return $name =~ s/^\$DPKG_MAINTSCRIPT_PACKAGE/$package/r;
 }
 
 1;

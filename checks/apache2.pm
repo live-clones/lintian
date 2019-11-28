@@ -113,15 +113,16 @@ sub check_web_application_package {
     my ($self, $file, $pkgtype, $webapp) = @_;
 
     my $pkg = $self->package;
-    my $info = $self->info;
+    my $processable = $self->processable;
 
     $self->tag('non-standard-apache2-configuration-name',
         $webapp, '!=', "$pkg.conf")
       if $webapp ne "$pkg.conf"
       or $webapp =~ m/^local-./;
 
-    my $rel = Lintian::Relation->and($info->relation('strong'),
-        $info->relation('recommends'));
+    my $rel = Lintian::Relation->and(
+        $processable->relation('strong'),
+        $processable->relation('recommends'));
 
     # A web application must not depend on apache2-whatever
     my $visit = sub {
@@ -149,7 +150,7 @@ sub check_module_package {
     my ($self, $module) = @_;
 
     my $pkg = $self->package;
-    my $info = $self->info;
+    my $processable = $self->processable;
 
     # We want packages to be follow our naming scheme. Modules should be named
     # libapache2-mod-<foo> if it ships a mod_foo.so
@@ -165,8 +166,9 @@ sub check_module_package {
             $pkg, '!=',$expected_name);
     }
 
-    $rel = Lintian::Relation->and($info->relation('strong'),
-        $info->relation('recommends'));
+    $rel = Lintian::Relation->and(
+        $processable->relation('strong'),
+        $processable->relation('recommends'));
     if (!$rel->matches(qr/^apache2-api-\d+$/o)) {
         $self->tag('apache2-module-does-not-depend-on-apache2-api');
     }
@@ -178,13 +180,13 @@ sub check_module_package {
     $load_file =~ s#^mod.(.*)$#etc/apache2/mods-available/$1.load#;
     $conf_file =~ s#^mod.(.*)$#etc/apache2/mods-available/$1.conf#;
 
-    if (my $f = $info->index($load_file)) {
+    if (my $f = $processable->index($load_file)) {
         $self->inspect_conf_file('mods', $f);
     } else {
         $self->tag('apache2-module-does-not-ship-load-file', $load_file);
     }
 
-    if (my $f = $info->index($conf_file)) {
+    if (my $f = $processable->index($conf_file)) {
         $self->inspect_conf_file('mods', $f);
     }
     return;
@@ -193,11 +195,11 @@ sub check_module_package {
 sub check_maintainer_scripts {
     my ($self) = @_;
 
-    my %control = %{$self->info->control_scripts};
+    my %control = %{$self->processable->control_scripts};
 
     for my $key (keys %control) {
 
-        my $path = $self->info->control_index_resolved_path($key);
+        my $path = $self->processable->control_index_resolved_path($key);
         my $interpreter = $control{$key};
 
         next

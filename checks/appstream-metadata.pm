@@ -45,8 +45,7 @@ sub binary {
 
     my $pkg = $self->package;
     my $type = $self->type;
-    my $info = $self->info;
-    my $proc = $self->processable;
+    my $processable = $self->processable;
     my $group = $self->group;
 
     my (%desktopfiles, %metainfo, @udevrules);
@@ -54,13 +53,17 @@ sub binary {
     my $modaliases = [];
     if (
         defined(
-            my $dir = $info->index_resolved_path('usr/share/applications/'))
+            my $dir
+              = $processable->index_resolved_path('usr/share/applications/'))
     ) {
         for my $file ($dir->children('breadth-first')) {
             $desktopfiles{$file} = 1 if ($file->is_file);
         }
     }
-    if (defined(my $dir = $info->index_resolved_path('usr/share/metainfo/'))) {
+    if (
+        defined(
+            my $dir = $processable->index_resolved_path('usr/share/metainfo/'))
+    ) {
         for my $file ($dir->children) {
             if ($file->is_file) {
                 $metainfo{$file} = 1;
@@ -68,7 +71,10 @@ sub binary {
             }
         }
     }
-    if (defined(my $dir = $info->index_resolved_path('usr/share/appdata/'))) {
+    if (
+        defined(
+            my $dir = $processable->index_resolved_path('usr/share/appdata/'))
+    ) {
         for my $file ($dir->children('breadth-first')) {
             if ($file->is_file) {
                 $self->tag(('appstream-metadata-in-legacy-location', $file));
@@ -76,7 +82,10 @@ sub binary {
             }
         }
     }
-    if (defined(my $dir = $info->index_resolved_path('lib/udev/rules.d/'))) {
+    if (
+        defined(
+            my $dir = $processable->index_resolved_path('lib/udev/rules.d/'))
+    ) {
         for my $file ($dir->children('breadth-first')) {
             push(@udevrules, $file) if ($file->is_file);
         }
@@ -94,8 +103,6 @@ sub binary {
 
 sub check_modalias {
     my ($self, $metadatafile, $modaliases) = @_;
-
-    my $info = $self->info;
 
     if (!$metadatafile->is_open_ok) {
         # FIXME report this as an error

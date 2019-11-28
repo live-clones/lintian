@@ -40,9 +40,9 @@ with 'Lintian::Check';
 sub always {
     my ($self) = @_;
 
-    my $info = $self->info;
+    my $processable = $self->processable;
 
-    my $uploaders = $info->unfolded_field('uploaders');
+    my $uploaders = $processable->unfolded_field('uploaders');
 
     return
       unless defined $uploaders;
@@ -71,11 +71,11 @@ sub always {
         }
     }
 
-    my $maintainer = $info->field('maintainer');
+    my $maintainer = $processable->field('maintainer');
     if (defined $maintainer) {
 
         $self->tag('maintainer-also-in-uploaders')
-          if $info->field('uploaders') =~ m/\Q$maintainer/;
+          if $processable->field('uploaders') =~ m/\Q$maintainer/;
     }
 
     return;

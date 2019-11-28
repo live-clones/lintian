@@ -138,10 +138,10 @@ my %debhelper_order = (
 sub source {
     my ($self) = @_;
 
-    my $info = $self->info;
+    my $processable = $self->processable;
     my $group = $self->group;
 
-    my $debian_dir = $info->index_resolved_path('debian');
+    my $debian_dir = $processable->index_resolved_path('debian');
     my $rules;
     $rules = $debian_dir->child('rules') if $debian_dir;
 
@@ -157,8 +157,8 @@ sub source {
         return unless $rules->is_open_ok;
     }
 
-    my $architecture = $info->field('architecture', '');
-    my $version = $info->field('version');
+    my $architecture = $processable->field('architecture', '');
+    my $version = $processable->field('version');
     # If the version field is missing, we assume a neutral non-native one.
     $version = '0-1' unless defined $version;
 
@@ -185,7 +185,7 @@ sub source {
     # other files, since to chase all includes we'd have to have all
     # of its build dependencies installed.
     local $_;
-    my $build_all = $info->relation('build-depends-all');
+    my $build_all = $processable->relation('build-depends-all');
     my @arch_rules = (qr/^clean$/, qr/^binary-arch$/, qr/^build-arch$/);
     my @indep_rules = (qr/^build$/, qr/^build-indep$/, qr/^binary-indep$/);
     my (@current_targets, %rules_per_target,  %debhelper_group);
@@ -482,8 +482,8 @@ sub source {
     # Make sure that all the required build dependencies are there.  Don't
     # issue missing-build-dependency errors for debhelper, since there's
     # another test that does that and it would just be a duplicate.
-    my $build_regular = $info->relation('build-depends');
-    my $build_indep   = $info->relation('build-depends-indep');
+    my $build_regular = $processable->relation('build-depends');
+    my $build_indep   = $processable->relation('build-depends-indep');
     for my $package (keys %needed_clean) {
         delete $needed{$package};
         my $tag = $needed_clean{$package} || 'missing-build-dependency';
@@ -500,7 +500,7 @@ sub source {
             }
         }
     }
-    my $noarch = $info->relation_noarch('build-depends-all');
+    my $noarch = $processable->relation_noarch('build-depends-all');
     for my $package (keys %needed) {
         my $tag = $needed{$package} || 'missing-build-dependency';
 

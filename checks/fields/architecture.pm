@@ -43,7 +43,7 @@ has have_r_package_not_arch_all => (is => 'rwp', default => 0);
 sub setup {
     my ($self) = @_;
 
-    my $unsplit = $self->info->unfolded_field('architecture');
+    my $unsplit = $self->processable->unfolded_field('architecture');
 
     return
       unless defined $unsplit;
@@ -84,9 +84,9 @@ sub binary {
     my ($self) = @_;
 
     my $pkg = $self->package;
-    my $info = $self->info;
+    my $processable = $self->processable;
 
-    my $unsplit = $info->unfolded_field('architecture');
+    my $unsplit = $processable->unfolded_field('architecture');
 
     return
       unless defined $unsplit;
@@ -121,9 +121,9 @@ sub always {
     my ($self) = @_;
 
     my $type = $self->type;
-    my $info = $self->info;
+    my $processable = $self->processable;
 
-    my $architecture = $info->unfolded_field('architecture');
+    my $architecture = $processable->unfolded_field('architecture');
 
     unless (defined $architecture) {
         $self->tag('no-architecture-field');

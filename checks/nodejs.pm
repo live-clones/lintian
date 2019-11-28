@@ -37,14 +37,15 @@ sub source {
     my ($self) = @_;
 
     my $pkg = $self->package;
-    my $info = $self->info;
+    my $processable = $self->processable;
 
     # debian/control check
-    my @testsuites = split(m/\s*,\s*/, $info->source_field('testsuite', ''));
+    my @testsuites
+      = split(m/\s*,\s*/, $processable->source_field('testsuite', ''));
     if (any { /^autopkgtest-pkg-nodejs$/ } @testsuites) {
         # Check control file exists in sources
         my $filename = 'debian/tests/pkg-js/test';
-        my $path = $info->index_resolved_path($filename);
+        my $path = $processable->index_resolved_path($filename);
 
         # Ensure test file contains something
         if ($path and $path->is_open_ok) {
@@ -55,7 +56,7 @@ sub source {
         }
 
         # Ensure all files referenced in debian/tests/pkg-js/files exist
-        $path = $info->index_resolved_path('debian/tests/pkg-js/files');
+        $path = $processable->index_resolved_path('debian/tests/pkg-js/files');
         if ($path) {
             my @list = map { chomp; s/^\s+(.*?)\s+$/$1/; $_ }
               grep { /\w/ } split /\n/, $path->file_contents;
@@ -63,7 +64,7 @@ sub source {
         }
     }
     # debian/rules check
-    my $droot = $info->index_resolved_path('debian/') or return;
+    my $droot = $processable->index_resolved_path('debian/') or return;
     my $drules = $droot->child('rules') or return;
     return unless $drules->is_open_ok;
     my $rules_fd = $drules->open;
@@ -92,7 +93,7 @@ sub source {
         and not $override_test
         and not $seen_dh_dynamic) {
         my $filename = 'debian/tests/pkg-js/test';
-        my $path = $info->index_resolved_path($filename);
+        my $path = $processable->index_resolved_path($filename);
         # Ensure test file contains something
         if ($path) {
             $self->tag('pkg-js-tools-test-is-empty', $filename)
@@ -125,7 +126,7 @@ sub files {
 sub path_exists {
     my ($self, $expr) = @_;
 
-    my $info = $self->info;
+    my $processable = $self->processable;
 
     # Split each line in path elements
     my @elem= map { s/\*/.*/g; s/^\.\*$/.*\\w.*/; $_ ? qr{^$_/?$} : () }
@@ -138,7 +139,9 @@ sub path_exists {
         foreach my $i (0 .. $#dir) {
             my ($dir, @tmp);
 
-            next unless defined($dir = $info->index_resolved_path($dir[$i]));
+            next
+              unless
+              defined($dir = $processable->index_resolved_path($dir[$i]));
             next unless $dir->is_dir;
             last LOOP
               unless (

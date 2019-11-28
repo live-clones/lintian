@@ -139,7 +139,7 @@ sub binary {
     my ($self) = @_;
 
     my $pkg = $self->package;
-    my $info = $self->info;
+    my $processable = $self->processable;
     my $group = $self->group;
 
     my (%all_files, %all_links);
@@ -149,19 +149,20 @@ sub binary {
     my %prerm;
     my %postrm;
 
-    $self->check_script(scalar $info->control_index('preinst'), \%preinst);
-    $self->check_script(scalar $info->control_index('postinst'), \%postinst);
-    $self->check_script(scalar $info->control_index('prerm'), \%prerm);
-    $self->check_script(scalar $info->control_index('postrm'), \%postrm);
+    $self->check_script(scalar $processable->control_index('preinst'),
+        \%preinst);
+    $self->check_script(scalar $processable->control_index('postinst'),
+        \%postinst);
+    $self->check_script(scalar $processable->control_index('prerm'), \%prerm);
+    $self->check_script(scalar $processable->control_index('postrm'),\%postrm);
 
     # Populate all_{files,links} from current package and its dependencies
     foreach my $bin ($group->get_binary_processables) {
         next
-          unless $info->name eq $bin->pkg_name
-          or $info->relation('strong')->implies($bin->pkg_name);
-        for my $file ($bin->info->sorted_index) {
-            add_file_link_info($bin->info, $file->name, \%all_files,
-                \%all_links);
+          unless $processable->name eq $bin->name
+          or $processable->relation('strong')->implies($bin->name);
+        for my $file ($bin->sorted_index) {
+            add_file_link_info($bin, $file->name, \%all_files,\%all_links);
         }
     }
 
@@ -196,7 +197,7 @@ sub binary {
 
     # check consistency
     # docbase file?
-    if (my $db_dir = $info->index_resolved_path('usr/share/doc-base/')) {
+    if (my $db_dir = $processable->index_resolved_path('usr/share/doc-base/')){
         for my $dbpath ($db_dir->children) {
             next if not $dbpath->is_open_ok;
             if ($dbpath->resolve_path->is_executable) {
@@ -558,9 +559,9 @@ sub check_doc_base_file_section {
 # Add file and link to $all_files and $all_links.  Note that both files and
 # links have to include a leading /.
 sub add_file_link_info {
-    my ($info, $file, $all_files, $all_links) = @_;
-    my $link = $info->index($file)->link;
-    my $ishard = $info->index($file)->is_hardlink;
+    my ($processable, $file, $all_files, $all_links) = @_;
+    my $link = $processable->index($file)->link;
+    my $ishard = $processable->index($file)->is_hardlink;
 
     $file = '/' . $file if (not $file =~ m%^/%); # make file absolute
     $file =~ s%/+%/%g;                           # remove duplicated `/'

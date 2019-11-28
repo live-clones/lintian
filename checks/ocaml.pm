@@ -58,7 +58,8 @@ our $MAX_CMI = 3;
 sub setup {
     my ($self) = @_;
 
-    open(my $fd, '<',path($self->info->groupdir)->child('ar-info')->stringify);
+    open(my $fd, '<',
+        path($self->processable->groupdir)->child('ar-info')->stringify);
     while (my $line = <$fd>) {
         chomp($line);
         if ($line =~ /^(?:\.\/)?([^:]+): (.*)$/) {
@@ -98,7 +99,7 @@ sub files {
 
     # For each .cmxa file, there must be a matching .a file (#528367)
     $_ = $file;
-    if (s/\.cmxa$/.a/ && !$self->info->index($_)) {
+    if (s/\.cmxa$/.a/ && !$self->processable->index($_)) {
         $self->tag('ocaml-dangling-cmxa', $file);
     }
 
@@ -107,8 +108,8 @@ sub files {
     if ($self->is_lib_package) {
         $_ = $file;
         if (   s/\.cmxs$/.cm/
-            && !$self->info->index("${_}a")
-            && !$self->info->index("${_}o")) {
+            && !$self->processable->index("${_}a")
+            && !$self->processable->index("${_}o")) {
             $self->tag('ocaml-dangling-cmxs', $file);
         }
     }
@@ -118,7 +119,7 @@ sub files {
     # .a file in the same directory
     $_ = $file;
     if (   s/\.cmx$/.o/
-        && !$self->info->index($_)
+        && !$self->processable->index($_)
         && !(exists $self->provided_o->{$_})) {
         $self->tag('ocaml-dangling-cmx', $file);
     }
@@ -127,8 +128,8 @@ sub files {
     $_ = $file;
     if (   $self->is_dev_package
         && s/\.cmi$/.ml/
-        && !$self->info->index("${_}i")
-        && !$self->info->index($_)) {
+        && !$self->processable->index("${_}i")
+        && !$self->processable->index($_)) {
         $self->_set_cmi_number($self->cmi_number + 1);
         if ($self->cmi_number <= $MAX_CMI) {
             $self->tag('ocaml-dangling-cmi', $file);
@@ -149,7 +150,7 @@ sub files {
 
     # $somename.cmo should usually not be shipped with $somename.cma
     $_ = $file;
-    if (s/\.cma$/.cmo/ && $self->info->index($_)) {
+    if (s/\.cma$/.cmo/ && $self->processable->index($_)) {
         $self->tag('ocaml-stray-cmo', $file);
     }
 
@@ -195,7 +196,7 @@ sub breakdown {
                 "$outside_number file$plural in $outside_prefix");
         }
         if ($self->has_meta) {
-            my $depends = $self->info->relation('all');
+            my $depends = $self->processable->relation('all');
             $self->tag('ocaml-meta-without-suggesting-findlib')
               unless $depends->implies('ocaml-findlib');
         }

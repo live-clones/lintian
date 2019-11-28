@@ -36,9 +36,9 @@ with 'Lintian::Check';
 sub always {
     my ($self) = @_;
 
-    my $info = $self->info;
+    my $processable = $self->processable;
 
-    my $dmupload = $info->unfolded_field('dm-upload-allowed');
+    my $dmupload = $processable->unfolded_field('dm-upload-allowed');
 
     return
       unless defined $dmupload;

@@ -58,15 +58,14 @@ sub always {
 
     my $pkg = $self->package;
     my $type = $self->type;
-    my $info = $self->info;
-    my $proc = $self->processable;
+    my $processable = $self->processable;
     my $group = $self->group;
 
     my ($must_call_ldconfig, %SONAME, %SONAMES, %STATIC_LIBS, %sharedobject);
     my @shlibs;
     my @words;
     my @devpkgs;
-    my $objdump = $info->objdump_info;
+    my $objdump = $processable->objdump_info;
 
     # 1st step: get info about shared libraries installed by this package
     foreach my $file (sort keys %{$objdump}) {
@@ -74,7 +73,7 @@ sub always {
           if exists($objdump->{$file}{SONAME});
     }
 
-    foreach my $file ($info->sorted_index) {
+    foreach my $file ($processable->sorted_index) {
         $SONAMES{$1} = 1 if $file =~ m,.*\/lib([^/]+)\.so$,;
         $STATIC_LIBS{$1} = 1 if $file =~ m,.*\/lib([^/]+)\.a$,;
         next if not $file->is_file;
@@ -93,8 +92,8 @@ sub always {
 
     if (%SONAME) {
         foreach my $bin ($group->get_binary_processables) {
-            next unless $bin->pkg_name =~ m/\-dev$/;
-            if ($bin->info->relation('strong')->implies($pkg)) {
+            next unless $bin->name =~ m/\-dev$/;
+            if ($bin->relation('strong')->implies($pkg)) {
                 push @devpkgs, $bin;
             }
         }
@@ -102,7 +101,7 @@ sub always {
 
     # 2nd step: read package contents
 
-    for my $cur_file ($info->sorted_index) {
+    for my $cur_file ($processable->sorted_index) {
         # shared library?
 
         my $normalized_target;
@@ -168,8 +167,8 @@ sub always {
 
             # executable stack.
             if (not defined $objdump->{$cur_file}{'PH'}{STACK}) {
-                if (defined $info->field('architecture')) {
-                    my $arch = $info->field('architecture');
+                if (defined $processable->field('architecture')) {
+                    my $arch = $processable->field('architecture');
                     $self->tag('shlib-without-PT_GNU_STACK-section',$cur_file);
                 }
             } elsif ($objdump->{$cur_file}{'PH'}{STACK}{flags} ne 'rw-'){
@@ -213,7 +212,7 @@ sub always {
     # 3rd step: check if shlib symlinks are present and in correct order
     for my $shlib_file (keys %SONAME) {
         # file found?
-        if (not $info->index($shlib_file)) {
+        if (not $processable->index($shlib_file)) {
             internal_error(
                 "shlib $shlib_file not found in package (should not happen!)");
         }
@@ -225,7 +224,7 @@ sub always {
 
         # symlink found?
         my $link_file = "$dir/$SONAME{$shlib_file}";
-        if (not $info->index($link_file)) {
+        if (not $processable->index($link_file)) {
             $self->tag('ldconfig-symlink-missing-for-shlib',
                 "$link_file $shlib_file $SONAME{$shlib_file}");
         } else {
@@ -234,18 +233,18 @@ sub always {
                 # the library file uses its SONAME, this is ok...
             } else {
                 # $link_file really a symlink?
-                if ($info->index($link_file)->is_symlink) {
+                if ($processable->index($link_file)->is_symlink) {
                     # yes.
 
                     # $link_file pointing to correct file?
-                    if ($info->index($link_file)->link eq $shlib_name) {
+                    if ($processable->index($link_file)->link eq $shlib_name) {
                         # ok.
                     } else {
                         $self->tag(
                             'ldconfig-symlink-referencing-wrong-file',
                             join(q{ },
                                 "$link_file ->",
-                                $info->index($link_file)->link,
+                                $processable->index($link_file)->link,
                                 "instead of $shlib_name"));
                     }
                 } else {
@@ -264,7 +263,7 @@ sub always {
         # if shlib doesn't _have_ a version, then $link_file and
         # $shlib_file will be equal, and it's not a development link,
         # so don't complain.
-        if ($info->index($link_file) and $link_file ne $shlib_file) {
+        if ($processable->index($link_file) and $link_file ne $shlib_file) {
             $self->tag('non-dev-pkg-with-shlib-symlink',
                 "$shlib_file $link_file");
         } elsif (@devpkgs) {
@@ -278,7 +277,7 @@ sub always {
 
             push @alt, $link_file;
 
-            if ($proc->pkg_src =~ m/^gcc-(\d+(?:.\d+)?)$/o) {
+            if ($processable->source =~ m/^gcc-(\d+(?:.\d+)?)$/o) {
                 # gcc has a lot of bi-arch libs and puts the dev symlink
                 # in slightly different directories (to be co-installable
                 # with itself I guess).  Allegedly, clang (etc.) have to
@@ -286,7 +285,7 @@ sub always {
                 # acceptable...
                 my $gcc_ver = $1;
                 my $basename = basename($link_file);
-                my $madir = $MA_DIRS->value($proc->pkg_arch);
+                my $madir = $MA_DIRS->value($processable->architecture);
                 my @madirs;
                 if (defined $madir) {
                     # For i386-*, the triplet GCC uses can be i586-* or i686-*.
@@ -322,9 +321,9 @@ sub always {
 
           PKG:
             foreach my $devpkg (@devpkgs) {
-                my $dinfo = $devpkg->info;
+
                 foreach my $link (@alt) {
-                    if ($dinfo->index($link)) {
+                    if ($devpkg->index($link)) {
                         $ok = 1;
                         last PKG;
                     }
@@ -338,16 +337,17 @@ sub always {
 
     # 4th step: check shlibs control file
     # $version may be undef in very broken packages
-    my $version = $info->field('version');
+    my $version = $processable->field('version');
     my $provides = $pkg;
     $provides .= "( = $version)" if defined $version;
     # Assume the version to be a non-native version to avoid
     # uninitialization warnings later.
     $version = '0-1' unless defined $version;
-    $provides = Lintian::Relation->and($info->relation('provides'), $provides);
+    $provides
+      = Lintian::Relation->and($processable->relation('provides'), $provides);
 
-    my $shlibsf = $info->control_index('shlibs');
-    my $symbolsf = $info->control_index('symbols');
+    my $shlibsf = $processable->control_index('shlibs');
+    my $symbolsf = $processable->control_index('symbols');
     my (%shlibs_control, %symbols_control);
 
     # control files are not symlinks (or other "weird" things).
@@ -665,19 +665,19 @@ sub always {
     }
 
     # 6th step: check pre- and post- control files
-    if (my $preinst = $info->control_index_resolved_path('preinst')) {
+    if (my $preinst = $processable->control_index_resolved_path('preinst')) {
         if ($preinst->is_open_ok) {
             if ($preinst->file_contents =~ m/^[^\#]*\bldconfig\b/m) {
                 $self->tag(
                     'maintscript-calls-ldconfig', 'preinst'
                       # Assume it is needed if glibc does it
-                ) if $proc->pkg_src ne 'glibc';
+                ) if $processable->source ne 'glibc';
             }
         }
     }
 
     my $we_trigger_ldconfig = 0;
-    if (my $postinst = $info->control_index_resolved_path('postinst')) {
+    if (my $postinst = $processable->control_index_resolved_path('postinst')) {
         if ($postinst->is_open_ok) {
             # Decide if we call ldconfig
             if ($postinst->file_contents =~ m/^[^\#]*\bldconfig\b/m) {
@@ -687,13 +687,13 @@ sub always {
                     # glibc (notably libc-bin) needs to call ldconfig in
                     # order to implement the "ldconfig" trigger.
                     $self->tag('maintscript-calls-ldconfig', 'postinst')
-                      if $proc->pkg_src ne 'glibc';
+                      if $processable->source ne 'glibc';
                 }
             }
         }
     }
 
-    if (my $triggers = $info->control_index_resolved_path('triggers')) {
+    if (my $triggers = $processable->control_index_resolved_path('triggers')) {
         if ($triggers->is_open_ok) {
             # Determine if the package had an ldconfig trigger
             my $fd = $triggers->open;
@@ -720,23 +720,23 @@ sub always {
           if not $we_trigger_ldconfig and $must_call_ldconfig;
     }
 
-    my $multiarch = $info->field('multi-arch', 'no');
+    my $multiarch = $processable->field('multi-arch', 'no');
     if ($multiarch eq 'foreign' and $must_call_ldconfig) {
         $self->tag('shlib-in-multi-arch-foreign-package', $must_call_ldconfig);
     }
 
-    if (my $prerm = $info->control_index_resolved_path('prerm')) {
+    if (my $prerm = $processable->control_index_resolved_path('prerm')) {
         if ($prerm->is_open_ok) {
             if ($prerm->file_contents =~ m/^[^\#]*\bldconfig\b/m) {
                 $self->tag(
                     'maintscript-calls-ldconfig', 'prerm'
                       # Assume it is needed if glibc does it
-                ) if $proc->pkg_src ne 'glibc';
+                ) if $processable->source ne 'glibc';
             }
         }
     }
 
-    if (my $postrm = $info->control_index_resolved_path('postrm')) {
+    if (my $postrm = $processable->control_index_resolved_path('postrm')) {
         if ($postrm->is_open_ok) {
             my $contents = $postrm->file_contents;
 
@@ -745,12 +745,12 @@ sub always {
                 $self->tag(
                     'maintscript-calls-ldconfig', 'postrm'
                       # Assume it is needed if glibc does it
-                ) if $proc->pkg_src ne 'glibc';
+                ) if $processable->source ne 'glibc';
             }
         }
     }
 
-    foreach my $file ($info->sorted_index) {
+    foreach my $file ($processable->sorted_index) {
         next unless $file =~ m,^usr/(lib(/[^/]+)?|share)/pkgconfig/[^/]+\.pc$,;
         next unless $file->is_open_ok;
         my $fd = $file->open;

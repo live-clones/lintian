@@ -247,32 +247,32 @@ sub binary {
     my ($self) = @_;
 
     my $pkg = $self->package;
-    my $info = $self->info;
+    my $processable = $self->processable;
 
     my (%executable, %ELF, %scripts, %seen_helper_cmds);
 
     # no dependency for install-menu, because the menu package specifically
     # says not to depend on it.
 
-    foreach my $file ($info->sorted_index) {
+    foreach my $file ($processable->sorted_index) {
         next if not $file->is_file;
         $ELF{$file} = 1 if $file->file_info =~ /^[^,]*\bELF\b/o;
         next unless $file->operm & 0111;
         $executable{$file} = 1;
     }
 
-    my $all_parsed = Lintian::Relation->and($info->relation('all'),
-        $info->relation('provides'),$pkg);
-    my $str_deps = $info->relation('strong');
+    my $all_parsed = Lintian::Relation->and($processable->relation('all'),
+        $processable->relation('provides'),$pkg);
+    my $str_deps = $processable->relation('strong');
 
     my @x11_fonts
       = grep {m,^usr/share/fonts/X11/.*\.(?:afm|pcf|pfa|pfb)(?:\.gz)?$,}
-      $info->sorted_index;
+      $processable->sorted_index;
 
     my %old_versions;
     for my $entry (
-        $info->changelog
-        ? @{$info->changelog->entries}
+        $processable->changelog
+        ? @{$processable->changelog->entries}
         : ()
     ) {
         my $timestamp = $entry->Timestamp // $OLDSTABLE_RELEASE;
@@ -280,9 +280,9 @@ sub binary {
           if $timestamp < $OLDSTABLE_RELEASE;
     }
 
-    for my $filename (sort keys %{$info->scripts}) {
-        my $interpreter = $info->scripts->{$filename}{interpreter};
-        my $calls_env = $info->scripts->{$filename}{calls_env};
+    for my $filename (sort keys %{$processable->scripts}) {
+        my $interpreter = $processable->scripts->{$filename}{interpreter};
+        my $calls_env = $processable->scripts->{$filename}{calls_env};
         my $path;
         $scripts{$filename} = 1;
 
@@ -377,7 +377,7 @@ sub binary {
             and $filename !~ m,^etc/csh/login\.d/,)
           and not $in_docs;
 
-        $path = $info->index_resolved_path($filename);
+        $path = $processable->index_resolved_path($filename);
         next if not $path or not $path->is_open_ok;
         # Syntax-check most shell scripts, but don't syntax-check
         # scripts that end in .dpatch.  bash -n doesn't stop checking
@@ -565,13 +565,13 @@ sub binary {
     }
 
     foreach (keys %executable) {
-        my $index_info = $info->index($_);
+        my $index_info = $processable->index($_);
         my $ok = 0;
         if ($index_info->is_hardlink) {
             # We don't collect script information for hardlinks, so check
             # if the target is a script.
             my $target = $index_info->link_normalized;
-            if (exists $info->scripts->{$target}) {
+            if (exists $processable->scripts->{$target}) {
                 $ok = 1;
             }
         }
@@ -588,7 +588,7 @@ sub binary {
     }
 
     # get maintainer scripts
-    my %control = %{$self->info->control_scripts};
+    my %control = %{$self->processable->control_scripts};
 
     # Handle control scripts.  This is an edited version of the code for
     # normal scripts above, because there were just enough differences to
@@ -598,7 +598,7 @@ sub binary {
     my $expand_diversions = 0;
     for my $file (keys %control) {
 
-        my $path = $info->control_index_resolved_path($file);
+        my $path = $processable->control_index_resolved_path($file);
         my $interpreter = $control{$file};
 
         $interpreter =~ m|([^/]*)$|;
@@ -655,12 +655,14 @@ sub binary {
             unless (not $data->[1]) {
                 my $depends = Lintian::Relation->new($data->[1]);
                 if ($file eq 'preinst') {
-                    unless ($info->relation('pre-depends')->implies($depends)){
+                    unless ($processable->relation('pre-depends')
+                        ->implies($depends)){
                         $self->tag('preinst-interpreter-without-predepends',
                             "#!$interpreter");
                     }
                 } else {
-                    unless ($info->relation('strong')->implies($depends)) {
+                    unless (
+                        $processable->relation('strong')->implies($depends)) {
                         $self->tag(
                             'control-interpreter-without-depends',
                             "control/$file",
@@ -967,18 +969,18 @@ sub binary {
                     $self->tag('multi-arch-same-package-calls-pycompile',
                         "$file:$.")
                       if m/^\s*py3?compile(?:\s|\z)/
-                      and $info->field('multi-arch', 'no') eq 'same';
+                      and $processable->field('multi-arch', 'no') eq 'same';
 
                     if (m,>\s*/etc/inetd\.conf(?:\s|\Z),) {
                         $self->tag('maintainer-script-modifies-inetd-conf',
                             "$file:$.")
-                          unless $info->relation('provides')
+                          unless $processable->relation('provides')
                           ->implies('inet-superserver');
                     }
                     if (m,^\s*(?:cp|mv)\s+(?:.*\s)?/etc/inetd\.conf\s*$,) {
                         $self->tag('maintainer-script-modifies-inetd-conf',
                             "$file:$.")
-                          unless $info->relation('provides')
+                          unless $processable->relation('provides')
                           ->implies('inet-superserver');
                     }
 
@@ -1038,8 +1040,8 @@ sub binary {
                             or m,command\s+.*?$regex,) {
                             $warned{$package} = 1;
                         } elsif (!/\|\|\s*true\b/) {
-                            unless (
-                                $info->relation('strong')->implies($package)) {
+                            unless ($processable->relation('strong')
+                                ->implies($package)) {
                                 my $shortpackage = $package;
                                 $shortpackage =~ s/[ \(].*//;
                                 $self->tag(
@@ -1081,13 +1083,13 @@ m,$LEADIN(?:/usr/bin/)?dpkg\s+--compare-versions\s+.*\b\Q$ver\E(?!\.)\b,
                   if /--group/ && !/--add/;
             }
 
-            my $pdepends = $info->relation('pre-depends');
+            my $pdepends = $processable->relation('pre-depends');
             $self->tag('skip-systemd-native-flag-missing-pre-depends',
                 "$file:$.")
               if m/invoke-rc.d\b.*--skip-systemd-native\b/
               && !$pdepends->implies('init-system-helpers (>= 1.54~)');
 
-            my $depends = $info->relation('depends');
+            my $depends = $processable->relation('depends');
             $self->tag(
                 'missing-versioned-depends-on-init-system-helpers',
                 "$file:$.",
@@ -1300,10 +1302,10 @@ m,$LEADIN(?:/usr/bin/)?dpkg\s+--compare-versions\s+.*\b\Q$ver\E(?!\.)\b,
 
         if ($expand_diversions) {
             $self->tag('diversion-for-unknown-file', $divert, "$script:$line")
-              unless (any { $_ =~ m/$divertrx/ } $info->sorted_index);
+              unless (any { $_ =~ m/$divertrx/ } $processable->sorted_index);
         } else {
             $self->tag('diversion-for-unknown-file', $divert, "$script:$line")
-              unless $info->index($divert);
+              unless $processable->index($divert);
         }
     }
 

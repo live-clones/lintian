@@ -162,13 +162,12 @@ sub binary {
 
     my $pkg = $self->package;
     my $type = $self->type;
-    my $info = $self->info;
-    my $proc = $self->processable;
+    my $processable = $self->processable;
     my $group = $self->group;
 
     my (@menufiles, %desktop_cmds);
     for my $dirname (qw(usr/share/menu/ usr/lib/menu/)) {
-        if (my $dir = $info->index_resolved_path($dirname)) {
+        if (my $dir = $processable->index_resolved_path($dirname)) {
             push(@menufiles, $dir->children);
         }
     }
@@ -176,7 +175,7 @@ sub binary {
     # Find the desktop files in the package for verification.
     my @desktop_files;
     for my $subdir (qw(applications xsessions)) {
-        if (my $dir = $info->index("usr/share/$subdir/")) {
+        if (my $dir = $processable->index("usr/share/$subdir/")) {
             for my $file ($dir->children) {
                 next unless $file->is_file;
                 next unless $file->basename =~ m/\.desktop$/;
@@ -262,8 +261,7 @@ sub verify_line {
 
     my $pkg = $self->package;
     my $type = $self->type;
-    my $info = $self->info;
-    my $proc = $self->processable;
+    my $processable = $self->processable;
     my $group = $self->group;
 
     my %vals;
@@ -509,8 +507,7 @@ sub verify_line {
 sub verify_icon {
     my ($self, $menufile, $fullname, $linecount, $icon, $size)= @_;
 
-    my $info = $self->info;
-    my $proc = $self->processable;
+    my $processable = $self->processable;
     my $group = $self->group;
 
     if ($icon eq 'none') {
@@ -528,17 +525,19 @@ sub verify_icon {
     }
 
     # Try the explicit location, and if that fails, try the standard path.
-    my $iconfile = $info->index_resolved_path($icon);
+    my $iconfile = $processable->index_resolved_path($icon);
     if (not $iconfile) {
-        $iconfile = $info->index_resolved_path("usr/share/pixmaps/$icon");
+        $iconfile
+          = $processable->index_resolved_path("usr/share/pixmaps/$icon");
         if (not $iconfile) {
             my $ginfo = $group->info;
-            foreach my $depproc (@{ $ginfo->direct_dependencies($proc) }) {
-                my $dinfo = $depproc->info;
-                $iconfile = $dinfo->index_resolved_path($icon);
+            foreach
+              my $depproc (@{ $ginfo->direct_dependencies($processable) }) {
+
+                $iconfile = $depproc->index_resolved_path($icon);
                 last if $iconfile;
                 $iconfile
-                  = $dinfo->index_resolved_path("usr/share/pixmaps/$icon");
+                  = $depproc->index_resolved_path("usr/share/pixmaps/$icon");
                 last if $iconfile;
             }
         }
@@ -582,7 +581,6 @@ sub verify_desktop_file {
     my ($self, $file, $desktop_cmds) = @_;
 
     my $pkg = $self->package;
-    my $info = $self->info;
 
     my ($saw_first, $warned_cr, %vals, @pending);
     my $fd = $file->open;
@@ -746,7 +744,7 @@ sub verify_cmd {
     my ($self, $file, $line, $exec) = @_;
 
     my $pkg = $self->package;
-    my $info = $self->info;
+    my $processable = $self->processable;
 
     my $location = ($line ? "$file:$line" : $file);
 
@@ -801,10 +799,10 @@ sub verify_cmd {
     }
     my $okay = $cmd
       && ( $cmd =~ /^[\'\"]/
-        || $info->index($cmd_file)
+        || $processable->index($cmd_file)
         || $cmd =~ m,^(/bin/)?sh,
         || $cmd =~ m,^(/usr/bin/)?sensible-(pager|editor|browser),
-        || any { $info->index($_ . $cmd) } @path);
+        || any { $processable->index($_ . $cmd) } @path);
     return ($okay, $cmd_file);
 }
 

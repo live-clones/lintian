@@ -45,9 +45,9 @@ our $PERL_CORE_PROVIDES = Lintian::Data->new('fields/perl-provides', '\s+');
 sub source {
     my ($self) = @_;
 
-    my $info = $self->info;
+    my $processable = $self->processable;
 
-    my $version = $info->unfolded_field('version');
+    my $version = $processable->unfolded_field('version');
 
     return
       unless defined $version;
@@ -55,7 +55,7 @@ sub source {
     # Checks for the dfsg convention for repackaged upstream
     # source.  Only check these against the source package to not
     # repeat ourselves too much.
-    if ($version =~ /dfsg/ and $info->native) {
+    if ($version =~ /dfsg/ and $processable->native) {
         $self->tag('dfsg-version-in-native-package', $version);
     } elsif ($version =~ /\.dfsg/) {
         $self->tag('dfsg-version-with-period', $version);
@@ -74,7 +74,7 @@ sub source {
     my ($epoch, $upstream, $debian)
       = ($dversion->epoch, $dversion->version, $dversion->revision);
 
-    unless ($info->native) {
+    unless ($processable->native) {
         foreach my $re ($DERIVATIVE_VERSIONS->all) {
 
             next
@@ -94,9 +94,9 @@ sub always {
     my ($self) = @_;
 
     my $type = $self->type;
-    my $info = $self->info;
+    my $processable = $self->processable;
 
-    my $version = $info->unfolded_field('version');
+    my $version = $processable->unfolded_field('version');
 
     unless (defined $version) {
         $self->tag('no-version-field');
@@ -144,7 +144,7 @@ sub always {
           if $debian =~ /^[^.-]+\.[^.-]+\./o and not $ubuntu;
     }
 
-    my $name = $info->field('package');
+    my $name = $processable->field('package');
     if (   $name
         && $PERL_CORE_PROVIDES->known($name)
         && perl_core_has_version($name, '>=', "$epoch:$upstream")) {

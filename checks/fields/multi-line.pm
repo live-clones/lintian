@@ -59,14 +59,14 @@ sub always {
     push(@banned, @package_relations)
       unless $self->type eq 'source';
 
-    my @present = keys %{$self->info->field};
+    my @present = keys %{$self->processable->field};
 
     my $single_lc = List::Compare->new('--unsorted', \@present, \@banned);
     my @enforce = $single_lc->get_intersection;
 
     for my $name (@enforce) {
 
-        my $value = $self->info->field($name);
+        my $value = $self->processable->field($name);
 
         return
           unless length $value;

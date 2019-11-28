@@ -57,7 +57,7 @@ sub breakdown {
     my ($self) = @_;
 
     # skip architecture-dependent packages.
-    my $arch = $self->info->field('architecture', '');
+    my $arch = $self->processable->field('architecture', '');
     return
       if $arch eq 'all';
 

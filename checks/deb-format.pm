@@ -53,9 +53,9 @@ sub always {
     my ($self) = @_;
 
     my $type = $self->type;
-    my $info = $self->info;
+    my $processable = $self->processable;
 
-    my $deb = path($info->groupdir)->child('deb')->stringify;
+    my $deb = path($processable->groupdir)->child('deb')->stringify;
 
     # Run ar t on the *.deb file.  deb will be a symlink to it.
     my $failed; # set to one when something is so bad that we can't continue
@@ -243,7 +243,7 @@ sub always {
     # represent an actual problem.
     for my $file (keys %ERRORS) {
         my $tag = $ERRORS{$file};
-        my $path = path($info->groupdir)->child($file)->stringify;
+        my $path = path($processable->groupdir)->child($file)->stringify;
         if (-s $path) {
             open(my $fd, '<', $path);
             while (my $line = <$fd>) {

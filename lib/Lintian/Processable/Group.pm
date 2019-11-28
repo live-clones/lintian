@@ -33,7 +33,6 @@ use Path::Tiny;
 use POSIX qw(ENOENT);
 use Time::HiRes qw(gettimeofday tv_interval);
 
-use Lintian::Collect::Group;
 use Lintian::Processable::Binary;
 use Lintian::Processable::Buildinfo;
 use Lintian::Processable::Changes;
@@ -70,11 +69,6 @@ Lintian::Processable::Group -- A group of objects that Lintian can process
  use Lintian::Processable::Group;
 
  my $group = Lintian::Processable::Group->new('lintian_2.5.0_i386.changes');
- foreach my $proc ($group->get_processables){
-     printf "%s %s (%s)\n", $proc->pkg_name,
-            $proc->pkg_version, $proc->pkg_type;
- }
- # etc.
 
 =head1 DESCRIPTION
 
@@ -142,7 +136,7 @@ Hash linking collection to priority.
 
 Hash with active jobs.
 
-=item group->collmap
+=item C<collmap>
 
 Hash with active jobs.
 
@@ -169,6 +163,12 @@ Hash with active jobs.
 =item worktable
 
 Hash with active jobs.
+
+=item C<saved_direct_dependencies>
+
+=item C<saved_spelling_exceptions>
+
+=item C<shared_storage>
 
 =cut
 
@@ -197,6 +197,11 @@ has colls_not_scheduled => (is => 'rw', default => sub { {} });
 
 has extra_coll => (is => 'rw', default => sub { [] });
 has queue => (is => 'rw', default => sub { [] });
+
+has saved_direct_dependencies => (is => 'rw', default => sub { {} });
+has saved_spelling_exceptions => (is => 'rw', default => sub { {} });
+
+has shared_storage => (is => 'rw', default => sub { {} });
 
 =item Lintian::Processable::Group->init_from_file (FILE)
 
@@ -367,10 +372,9 @@ sub unpack {
         $processable->create;
 
         # for sources pull in all related files so unpacked does not fail
-        if ($processable->pkg_type eq 'source') {
-            my (undef, $dir, undef)
-              = File::Spec->splitpath($processable->pkg_path);
-            for my $fs (split(m/\n/o, $processable->info->field('files'))) {
+        if ($processable->type eq 'source') {
+            my (undef, $dir, undef)= File::Spec->splitpath($processable->path);
+            for my $fs (split(m/\n/o, $processable->field('files'))) {
                 strip($fs);
                 next if $fs eq '';
                 my @t = split(/\s+/o,$fs);
@@ -384,7 +388,7 @@ sub unpack {
     my %worklists;
     foreach my $processable (@processables) {
 
-        my $type = $processable->pkg_type;
+        my $type = $processable->type;
         my $cmap;
 
         if (exists $self->cache->{$type}) {
@@ -523,8 +527,8 @@ sub coll_hook {
 
     my $coll = $task->script->name;
     my $procid = $task->processable->identifier;
-    my $pkg_name = $task->processable->pkg_name;
-    my $pkg_type = $task->processable->pkg_type;
+    my $pkg_name = $task->processable->name;
+    my $pkg_type = $task->processable->type;
 
     if ($event eq 'start') {
         $timers->{$task->id} = [gettimeofday];
@@ -541,7 +545,7 @@ sub coll_hook {
           if $exitval;
         $OUTPUT->warning($string);
 
-        my $pkg_type = $task->processable->pkg_type;
+        my $pkg_type = $task->processable->type;
         if (   $pkg_type eq 'source'
             or $pkg_type eq 'changes'
             or $pkg_type eq 'buildinfo'){
@@ -600,10 +604,10 @@ sub process {
     my @reported;
 
     foreach my $processable ($self->get_processables){
-        my $pkg_type = $processable->pkg_type;
+        my $pkg_type = $processable->type;
         my $procid = $processable->identifier;
 
-        my $path = $processable->pkg_path;
+        my $path = $processable->path;
 
         # required for global Lintian::Tags::tag usage
         $TAGS->{current} = $path;
@@ -849,14 +853,14 @@ sub process {
 
     if ($opt->{'debug'} > 2) {
         my $pivot = ($self->get_processables)[0];
-        my $group_id = $pivot->pkg_src . '/' . $pivot->pkg_src_version;
+        my $group_id = $pivot->source . '/' . $pivot->source_version;
         my $group_usage
-          = $memory_usage->([map { $_->info } $self->get_processables]);
+          = $memory_usage->([map { $_ } $self->get_processables]);
         $OUTPUT->debug_msg(3, "Memory usage [$group_id]: $group_usage");
         for my $processable ($self->get_processables) {
             my $id = $processable->identifier;
-            my $usage = $memory_usage->($processable->info);
-            my $breakdown = $processable->info->_memory_usage($memory_usage);
+            my $usage = $memory_usage->($processable);
+            my $breakdown = $processable->_memory_usage($memory_usage);
             $OUTPUT->debug_msg(3, "Memory usage [$id]: $usage");
             for my $field (sort(keys(%{$breakdown}))) {
                 $OUTPUT->debug_msg(4, "  -- $field: $breakdown->{$field}");
@@ -916,13 +920,13 @@ added.
 sub add_processable{
     my ($self, $processable) = @_;
 
-    my $pkg_type = $processable->pkg_type;
+    my $pkg_type = $processable->type;
 
     if ($processable->tainted) {
         warn(
             sprintf(
                 "warning: tainted %1\$s package '%2\$s', skipping\n",
-                $pkg_type, $processable->pkg_name
+                $pkg_type, $processable->name
             ));
         return 0;
     }
@@ -972,7 +976,10 @@ sub add_processable{
 
         $phash->{$id} = $processable;
     }
+
     $processable->group($self);
+    $processable->shared_storage($self->shared_storage);
+
     return 1;
 }
 
@@ -986,23 +993,23 @@ sub _pool_path {
 
     # If it is at least 4 characters and starts with "lib", use "libX"
     # as prefix
-    if ($processable->pkg_src =~ m/^lib./) {
-        $prefix = substr $processable->pkg_src, 0, 4;
+    if ($processable->source =~ m/^lib./) {
+        $prefix = substr $processable->source, 0, 4;
     } else {
-        $prefix = substr $processable->pkg_src, 0, 1;
+        $prefix = substr $processable->source, 0, 1;
     }
 
     my $path
       = $prefix
       . SLASH
-      . $processable->pkg_src
+      . $processable->source
       . SLASH
-      . $processable->pkg_name
+      . $processable->name
       . UNDERSCORE
-      . $processable->pkg_version;
-    $path .= UNDERSCORE . $processable->pkg_arch
-      unless $processable->pkg_type eq 'source';
-    $path .= UNDERSCORE . $processable->pkg_type;
+      . $processable->version;
+    $path .= UNDERSCORE . $processable->architecture
+      unless $processable->type eq 'source';
+    $path .= UNDERSCORE . $processable->type;
 
     # Turn spaces into dashes - spaces do appear in architectures
     # (i.e. for changes files).
@@ -1075,32 +1082,113 @@ sub get_binary_processables {
 
 =item $group->info
 
-Returns L<$info|Lintian::Collect::Group> element for this group.
-
 =cut
 
 sub info {
     my ($self) = @_;
-    my $info = $self->{info};
-    if (!defined $info) {
-        $info = Lintian::Collect::Group->new($self);
-        $self->{info} = $info;
-    }
-    return $info;
+
+    return $self;
 }
 
-=item $group->init_shared_cache
+=item direct_dependencies (PROC)
 
-Prepare a shared memory cache for all current members of the group.
-This is solely a memory saving optimization and is not required for
-correct performance.
+If PROC is a part of the underlying processable group, this method
+returns a listref containing all the direct dependencies of PROC.  If
+PROC is not a part of the group, this returns undef.
+
+Note: Only strong dependencies (Pre-Depends and Depends) are
+considered.
+
+Note: Self-dependencies (if any) are I<not> included in the result.
 
 =cut
 
-sub init_shared_cache {
+# sub direct_dependencies Needs-Info <>
+sub direct_dependencies {
+    my ($self, $processable) = @_;
+
+    unless (keys %{$self->saved_direct_dependencies}) {
+
+        my @processables = $self->get_processables('binary');
+        push @processables, $self->get_processables('udeb');
+
+        my %dependencies;
+        foreach my $that (@processables) {
+
+            my $relation = $that->relation('strong');
+            my @specific;
+
+            foreach my $this (@processables) {
+
+                # Ignore self deps - we have checks for that and it
+                # will just end up complicating "correctness" of
+                # otherwise simple checks.
+                next
+                  if $this->name eq $that->name;
+
+                push @specific, $this
+                  if $relation->implies($this->name);
+            }
+            $dependencies{$that->name} = \@specific;
+        }
+
+        $self->saved_direct_dependencies(\%dependencies);
+    }
+
+    return $self->saved_direct_dependencies->{$processable->name}
+      if $processable;
+
+    return $self->saved_direct_dependencies;
+}
+
+=item $ginfo->type
+
+Return the type of this collect object (which is the string 'group').
+
+=cut
+
+# Return the package type.
+# sub type Needs-Info <>
+sub type {
     my ($self) = @_;
-    $self->info; # Side-effect of creating the info object.
-    return;
+
+    return 'group';
+}
+
+=item spelling_exceptions
+
+Returns a hashref of words, which the spell checker should ignore.
+These words are generally based on the package names in the group to
+avoid false-positive "spelling error" when packages have "fun" names.
+
+Example: Package alot-doc (#687464)
+
+=cut
+
+# sub spelling_exceptions Needs-Info <>
+sub spelling_exceptions {
+    my ($self) = @_;
+
+    return $self->saved_spelling_exceptions
+      if keys %{$self->saved_spelling_exceptions};
+
+    my %exceptions;
+
+    foreach my $processable ($self->get_processables) {
+
+        my @names = ($processable->name, $processable->source);
+        push(@names, $processable->binaries)
+          if $processable->type eq 'source';
+
+        foreach my $name (@names) {
+            $exceptions{$name} = 1;
+            $exceptions{$_} = 1 for split m/-/, $name;
+        }
+    }
+
+    $self->saved_spelling_exceptions(\%exceptions);
+
+    return $self->saved_spelling_exceptions;
 }
 
 =item $group->clear_cache
@@ -1116,7 +1204,7 @@ sub clear_cache {
     for my $proc ($self->get_processables) {
         $proc->clear_cache;
     }
-    delete $self->{info};
+
     return;
 }
 
@@ -1153,7 +1241,7 @@ sub find_next_task {
                 delete $unscheduled->{$procid};
 
                 # current type?
-                unless ($script->is_type($processable->pkg_type)) {
+                unless ($script->is_type($processable->type)) {
                     $cmap->satisfy($check);
                     next;
                 }
@@ -1242,8 +1330,8 @@ sub start_task {
                 my $check = $task->script->name;
                 my $procid = $task->processable->identifier;
 
-                my $package = $task->processable->pkg_name;
-                my $type = $task->processable->pkg_type;
+                my $package = $task->processable->name;
+                my $type = $task->processable->type;
                 my $groupdir = $task->processable->groupdir;
 
                 # change the process name; possible overwritten by exec

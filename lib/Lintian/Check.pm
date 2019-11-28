@@ -76,7 +76,7 @@ sub run {
     if ($type eq 'binary' || $type eq 'udeb') {
 
         if ($self->can('files')) {
-            $self->files($_)for $self->info->sorted_index;
+            $self->files($_)for $self->processable->sorted_index;
         }
     }
 
@@ -101,7 +101,7 @@ Get package name from processable.
 sub package {
     my ($self) = @_;
 
-    return $self->processable->pkg_name;
+    return $self->processable->name;
 }
 
 =item type
@@ -113,7 +113,7 @@ Get type of processable.
 sub type {
     my ($self) = @_;
 
-    return $self->processable->pkg_type;
+    return $self->processable->type;
 }
 
 =item info
@@ -142,7 +142,7 @@ sub build_path {
     return EMPTY
       unless $buildinfo;
 
-    return $buildinfo->info->field('build-path', EMPTY);
+    return $buildinfo->field('build-path', EMPTY);
 }
 
 =item tag

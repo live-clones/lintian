@@ -35,16 +35,18 @@ sub binary {
 
     my $pkg = $self->package;
     my $type = $self->type;
-    my $info = $self->info;
+    my $processable = $self->processable;
 
     my @files;
     foreach my $suffix (qw(session system)) {
         if (my $dir
-            = $info->index_resolved_path("usr/share/dbus-1/${suffix}.d")) {
+            = $processable->index_resolved_path("usr/share/dbus-1/${suffix}.d")
+        ) {
             push @files, $dir->children;
         }
         foreach my $prefix (qw(etc/dbus-1 usr/share/dbus-1)) {
-            if (my $dir = $info->index_resolved_path("${prefix}/${suffix}.d")){
+            if (my $dir
+                = $processable->index_resolved_path("${prefix}/${suffix}.d")){
                 push @files, $dir->children;
             }
         }
@@ -55,7 +57,8 @@ sub binary {
         $self->check_policy($file);
     }
 
-    if (my $dir = $info->index_resolved_path('usr/share/dbus-1/services')) {
+    if (my $dir
+        = $processable->index_resolved_path('usr/share/dbus-1/services')) {
         foreach my $file ($dir->children) {
             next unless $file->is_open_ok;
             $self->check_service($file, session => 1);
@@ -63,7 +66,8 @@ sub binary {
     }
 
     if (my $dir
-        = $info->index_resolved_path('usr/share/dbus-1/system-services')) {
+        = $processable->index_resolved_path('usr/share/dbus-1/system-services')
+    ) {
         foreach my $file ($dir->children) {
             next unless $file->is_open_ok;
             $self->check_service($file);

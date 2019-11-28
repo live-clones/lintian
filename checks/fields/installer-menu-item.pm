@@ -36,11 +36,11 @@ with 'Lintian::Check';
 sub always {
     my ($self) = @_;
 
-    my $info = $self->info;
+    my $processable = $self->processable;
 
     #---- Installer-Menu-Item (udeb)
 
-    my $menu_item = $info->unfolded_field('installer-menu-item');
+    my $menu_item = $processable->unfolded_field('installer-menu-item');
 
     return
       unless defined $menu_item;

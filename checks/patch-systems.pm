@@ -48,7 +48,7 @@ sub spelling_tag_emitter {
 sub source {
     my ($self) = @_;
 
-    my $info = $self->info;
+    my $processable = $self->processable;
     my $group = $self->group;
 
     # Some (cruft) checks are valid for every patch system, so we need
@@ -57,12 +57,12 @@ sub source {
 
     # Get build deps so we can decide which build system the
     # maintainer meant to use:
-    my $build_deps = $info->relation('build-depends-all');
+    my $build_deps = $processable->relation('build-depends-all');
     # Get source package format
-    my $format = $info->field('format', '');
+    my $format = $processable->field('format', '');
     my $quilt_format = ($format =~ /3\.\d+ \(quilt\)/) ? 1 : 0;
 
-    my $droot = $info->index_resolved_path('debian/');
+    my $droot = $processable->index_resolved_path('debian/');
     return if not $droot;
     my $dpdir = $droot->resolve_path('patches');
     my $patch_series;
@@ -225,7 +225,7 @@ sub source {
         }
         if ($quilt_format) { # 3.0 (quilt) specific checks
              # Format 3.0 packages may generate a debian-changes-$version patch
-            my $version = $info->field('version');
+            my $version = $processable->field('version');
             my $patch_header = $droot->resolve_path('source/patch-header');
             my $versioned_patch;
             $versioned_patch = $dpdir->resolve_path("debian-changes-$version")
@@ -281,7 +281,7 @@ sub source {
         $self->tag('more-than-one-patch-system');
     }
     my @direct;
-    open(my $fd, '<', $info->diffstat);
+    open(my $fd, '<', $processable->diffstat);
     while (<$fd>) {
         my ($file) = (m,^\s+(.*?)\s+\|,)
           or internal_error("syntax error in diffstat file: $_");

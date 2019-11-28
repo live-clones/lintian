@@ -23,6 +23,10 @@ use warnings;
 
 use HTML::Entities;
 
+use constant EMPTY => q{};
+use constant SPACE => q{ };
+use constant NEWLINE => qq{\n};
+
 use Moo;
 use namespace::clean;
 
@@ -44,6 +48,73 @@ Provides XML tag output.
 
 =over 4
 
+=item issue_tags
+
+Print all tags passed in array. A separate arguments with processables
+is necessary to report in case no tags were found.
+
+=cut
+
+my %code_priority = (
+    'E' => 30,
+    'W' => 40,
+    'I' => 50,
+    'P' => 60,
+    'X' => 70,
+    'O' => 80,
+);
+
+my %type_priority = (
+    'source' => 30,
+    'binary' => 40,
+    'udeb' => 50,
+    'changes' => 60,
+    'buildinfo' => 70,
+);
+
+sub issue_tags {
+    my ($self, $pending, $processables) = @_;
+
+    return
+      unless $pending && $processables;
+
+    my %taglist;
+
+    for my $tag (@{$pending}) {
+        $taglist{$tag->processable} //= [];
+        push(@{$taglist{$tag->processable}}, $tag);
+    }
+
+    my @ordered = sort {
+             $type_priority{$a->type} <=> $type_priority{$b->type}
+          || $a->name cmp $b->name
+    } @{$processables};
+
+    for my $processable (@ordered) {
+
+        my @attrs = (
+            [type         => $processable->type],
+            [name         => $processable->name],
+            [architecture => $processable->architecture],
+            [version      => $processable->version]);
+
+        my $preamble = $self->_open_xml_tag('package', \@attrs, 0);
+        print { $self->stdout } $preamble, NEWLINE;
+
+        my @sorted = sort {
+            $code_priority{$a->info->code} <=> $code_priority{$b->info->code}
+              || $a->name cmp $b->name
+              || $a->extra cmp $b->extra
+        } @{$taglist{$processable} // []};
+
+        $self->print_tag($_) for @sorted;
+
+        print { $self->stdout } "</package>\n";
+    }
+
+    return;
+}
+
 =item print_tag
 
 =cut
@@ -55,7 +126,8 @@ sub print_tag {
     my $information = $tag->extra;
     my $override = $tag->override;
 
-    $self->issued_tag($tag_info->tag);
+    $self->issuedtags->{$tag_info->tag}++;
+
     my $flags = ($tag_info->experimental ? 'experimental' : '');
     my $comment;
     if ($override) {
@@ -79,29 +151,18 @@ sub print_tag {
     return;
 }
 
-=item print_start_pkg
+=item C<_quote_print($string)>
+
+Called to quote a string.  By default it will replace all
+non-printables with "?".  Sub-classes can override it if
+they allow non-ascii printables etc.
 
 =cut
 
-sub print_start_pkg {
-    my ($self, $processable) = @_;
-    my @attrs = (
-        [type         => $processable->type],
-        [name         => $processable->name],
-        [architecture => $processable->pkg_arch],
-        [version      => $processable->pkg_version]);
-    print { $self->stdout } $self->_open_xml_tag('package', \@attrs, 0), "\n";
-    return;
-}
-
-=item print_end_pkg
-
-=cut
-
-sub print_end_pkg {
-    my ($self) = @_;
-    print { $self->stdout } "</package>\n";
-    return;
+sub _quote_print {
+    my ($self, $string) = @_;
+    $string =~ s/[^[:print:]]/?/go;
+    return $string;
 }
 
 sub _delimiter {

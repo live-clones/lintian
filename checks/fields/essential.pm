@@ -40,9 +40,9 @@ our $KNOWN_ESSENTIAL = Lintian::Data->new('fields/essential');
 sub source {
     my ($self) = @_;
 
-    my $info = $self->info;
+    my $processable = $self->processable;
 
-    my $essential = $info->unfolded_field('essential');
+    my $essential = $processable->unfolded_field('essential');
 
     return
       unless defined $essential;
@@ -56,9 +56,9 @@ sub always {
     my ($self) = @_;
 
     my $pkg = $self->package;
-    my $info = $self->info;
+    my $processable = $self->processable;
 
-    my $essential = $info->unfolded_field('essential');
+    my $essential = $processable->unfolded_field('essential');
 
     return
       unless defined $essential;

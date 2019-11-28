@@ -166,12 +166,12 @@ sub always {
     my ($self) = @_;
 
     my $type = $self->type;
-    my $info = $self->info;
+    my $processable = $self->processable;
 
     my $is_comaintained = 0;
     for my $field (qw(maintainer uploaders)) {
 
-        my $maintainer = $info->unfolded_field($field);
+        my $maintainer = $processable->unfolded_field($field);
 
         next
           unless defined $maintainer;
@@ -199,7 +199,7 @@ sub always {
 
         my $fieldname = "vcs-$platform";
 
-        my $uri = $info->unfolded_field($fieldname);
+        my $uri = $processable->unfolded_field($fieldname);
 
         next
           unless defined $uri;
@@ -277,7 +277,8 @@ sub always {
             $self->tag(
                 'orphaned-package-not-maintained-in-debian-infrastructure',
                 $fieldname, $uri)
-              if $info->field('maintainer', EMPTY)=~ /packages\@qa.debian.org/
+              if $processable->field('maintainer', EMPTY)
+              =~ /packages\@qa.debian.org/
               && $platform ne 'browser';
         }
     }
@@ -291,14 +292,14 @@ sub always {
       and not %seen_vcs;
 
     # Check for missing Vcs-Browser headers
-    unless (defined $info->field('vcs-browser')) {
+    unless (defined $processable->field('vcs-browser')) {
 
         foreach my $regex ($KNOWN_VCS_HOSTERS->all) {
 
             my $platform = @{$KNOWN_VCS_HOSTERS->value($regex)}[0];
             my $fieldname = "vcs-$platform";
 
-            if ($info->field($fieldname, EMPTY) =~ m/^($regex.*)/xi) {
+            if ($processable->field($fieldname, EMPTY) =~ m/^($regex.*)/xi) {
                 $self->tag('missing-vcs-browser-field', $fieldname, $1);
 
                 # warn once

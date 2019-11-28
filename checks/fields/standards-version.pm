@@ -69,14 +69,15 @@ my @CURRENT      = split(m/\./, $CURRENT);
 sub source {
     my ($self) = @_;
 
-    my $info = $self->info;
+    my $processable = $self->processable;
 
     # udebs aren't required to conform to policy, so they don't need
     # Standards-Version. (If they have it, though, it should be valid.)
-    my $version = $info->field('standards-version');
+    my $version = $processable->field('standards-version');
     my $all_udeb = 1;
     $all_udeb = 0
-      if first { $info->binary_package_type($_) ne 'udeb' } $info->binaries;
+      if first { $processable->binary_package_type($_) ne 'udeb' }
+    $processable->binaries;
 
     if (not defined $version) {
         $self->tag('no-standards-version-field') unless $all_udeb;
@@ -99,8 +100,8 @@ sub source {
     # that the package was released today, since that activates the
     # most tags.
     my ($pkgdate, $dist);
-    if (defined $info->changelog) {
-        my ($entry) = @{$info->changelog->entries};
+    if (defined $processable->changelog) {
+        my ($entry) = @{$processable->changelog->entries};
         $pkgdate
           = ($entry && $entry->Timestamp) ? $entry->Timestamp : $CURRENT_DATE;
         $dist = ($entry && $entry->Distribution)? $entry->Distribution : '';
@@ -161,11 +162,11 @@ sub source {
         } else {
             # We have to get the package date from the changelog file.  If we
             # can't find the changelog file, always issue the tag.
-            unless (defined $info->changelog) {
+            unless (defined $processable->changelog) {
                 $self->tag('out-of-date-standards-version', $tag);
                 return;
             }
-            my ($entry) = @{$info->changelog->entries};
+            my ($entry) = @{$processable->changelog->entries};
             my $timestamp
               = ($entry && $entry->Timestamp) ? $entry->Timestamp : 0;
             for my $standard (@STANDARDS) {

@@ -53,27 +53,27 @@ with 'Lintian::Check';
 sub source {
     my ($self) = @_;
 
-    my $info = $self->info;
+    my $processable = $self->processable;
 
     my @dep_fields
       = qw(depends pre-depends recommends suggests conflicts replaces);
 
     my @provided;
-    foreach my $pkg ($info->binaries) {
-        my $val = $info->binary_field($pkg, 'provides', '');
+    foreach my $pkg ($processable->binaries) {
+        my $val = $processable->binary_field($pkg, 'provides', '');
         $val =~ s/^\s+|\s+$//g;
         push(@provided, split(/\s*,\s*/, $val));
     }
 
-    foreach my $pkg1 ($info->binaries) {
+    foreach my $pkg1 ($processable->binaries) {
         my ($pkg1_is_any, $pkg2, $pkg2_is_any, $substvar_strips_binNMU);
 
         $pkg1_is_any
-          = ($info->binary_field($pkg1, 'architecture', '') ne 'all');
+          = ($processable->binary_field($pkg1, 'architecture', '') ne 'all');
 
         foreach my $field (@dep_fields) {
-            next unless $info->binary_field($pkg1, $field);
-            my $rel = $info->binary_relation($pkg1, $field);
+            next unless $processable->binary_field($pkg1, $field);
+            my $rel = $processable->binary_relation($pkg1, $field);
             my $svid = 0;
             my $visitor = sub {
                 if (m/\$[{]Source-Version[}]/o and not $svid) {
@@ -93,7 +93,7 @@ sub source {
                     # those maintainers know what they're doing.
                     $self->tag('version-substvar-for-external-package',
                         "$pkg1 -> $other")
-                      unless $info->binary_field($other, 'architecture')
+                      unless $processable->binary_field($other, 'architecture')
                       or any { "$other (= $substvar)" eq $_ } @provided
                       or $other =~ /\$\{\S+\}/;
                 }
@@ -105,8 +105,8 @@ sub source {
             split(
                 m/,/,
                 (
-                        $info->binary_field($pkg1, 'pre-depends', '').', '
-                      . $info->binary_field($pkg1, 'depends', '')))
+                    $processable->binary_field($pkg1, 'pre-depends', '').', '
+                      . $processable->binary_field($pkg1, 'depends', '')))
         ) {
             next
               unless m/($PKGNAME_REGEX)(?: :any)? \s*               # pkg-name
@@ -118,13 +118,14 @@ sub source {
             $pkg2 = $1;
             $substvar_strips_binNMU = ($3 eq 'source:Version');
 
-            if (not $info->binary_field($pkg2, 'architecture')) {
+            if (not $processable->binary_field($pkg2, 'architecture')) {
                 # external relation or subst var package - either way,
                 # handled above.
                 next;
             }
             $pkg2_is_any
-              = ($info->binary_field($pkg2, 'architecture', '') ne 'all');
+              = ($processable->binary_field($pkg2, 'architecture', '') ne
+                  'all');
 
             if ($pkg1_is_any) {
                 if ($pkg2_is_any and $substvar_strips_binNMU) {

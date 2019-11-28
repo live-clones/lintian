@@ -1,3 +1,19 @@
+lintian (2.38.0) unstable; urgency=medium
+
+  [ Felix Lechner ]
+  * Process all overrides for a particular tag, not just the last one.
+    (Closes: #945276, #945299)
+  * For all output types except XML and "universal" impose a tag order when
+    emitting. (Closes: #944807)
+  * In checks, use the new attribute accessors from Processable and remove
+    references to the outdated 'info' attribute.
+
+  [ Stephen Kitt ]
+  * Drop the package-depends-on-an-x-font-package as packages can now
+    depend on X fonts directly (see #941803).
+
+ -- Chris Lamb <lamby@debian.org>  Fri, 22 Nov 2019 20:09:51 +0000
+
 lintian (2.37.0~bpo10+1) buster-backports; urgency=medium
 
   * Rebuild for buster-backports.
@@ -7,12 +23,14 @@ lintian (2.37.0~bpo10+1) buster-backports; urgency=medium
 lintian (2.37.0) unstable; urgency=medium
 
   [ Chris Lamb ]
-  * WIP (generated upon release).
-  * Don't emit missing-depends-on-sensible-utils for sensible-utils itself. (Closes: #944895)
-  * Correct logic when excluding .path/.timer & .service pairs from systemd-service-file-missing-install-key. Thanks, Richard Laager <rlaager@wiktel.com>. (Closes: #944145)
+  * Don't emit missing-depends-on-sensible-utils for sensible-utils itself.
+    (Closes: #944895)
+  * Correct logic when excluding .path/.timer & .service pairs from
+    systemd-service-file-missing-install-key. Thanks, Richard Laager
+    <rlaager@wiktel.com>. (Closes: #944145)
 
   [ Paul Wise ]
-  * spelling: Add several corrections
+  * Add several spelling corrections.
 
  -- Chris Lamb <lamby@debian.org>  Tue, 19 Nov 2019 16:23:48 +0000
 

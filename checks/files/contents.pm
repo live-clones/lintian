@@ -38,7 +38,7 @@ has bin_binaries => (is => 'rwp', default => sub { [] });
 sub setup {
     my ($self) = @_;
 
-    for my $file ($self->info->sorted_index) {
+    for my $file ($self->processable->sorted_index) {
 
         next
           unless $file->is_file;
@@ -64,21 +64,21 @@ sub get_checks_for_file {
     my %checks;
 
     return %checks
-      if $self->processable->pkg_src eq 'lintian';
+      if $self->processable->source eq 'lintian';
 
     $checks{'missing-depends-on-sensible-utils'}
       = '(?:select-editor|sensible-(?:browser|editor|pager))\b'
       if $file->name !~ m,^usr/share/(?:doc|locale)/,
-      and not $self->info->relation('all')->implies('sensible-utils')
-      and not $self->processable->pkg_src eq 'sensible-utils';
+      and not $self->processable->relation('all')->implies('sensible-utils')
+      and not $self->processable->source eq 'sensible-utils';
 
     $checks{'uses-dpkg-database-directly'} = '/var/lib/dpkg'
       if $file->name !~ m,^usr/share/(?:doc|locale)/,
       and $file->basename !~ m/^README(?:\..*)?$/
       and $file->basename !~ m/^changelog(?:\..*)?$/i
       and $file->basename !~ m/\.(?:html|txt)$/i
-      and $self->info->field('section', '') ne 'debian-installer'
-      and none { $_ eq $self->processable->pkg_src }
+      and $self->processable->field('section', '') ne 'debian-installer'
+      and none { $_ eq $self->processable->source }
     qw(base-files dpkg lintian);
 
     $checks{'file-references-package-build-path'}= quotemeta($self->build_path)
@@ -102,7 +102,7 @@ sub files {
 
     if (%checks) {
 
-        my $stringsfd = $self->info->strings($file);
+        my $stringsfd = $self->processable->strings($file);
         my $strings = do { local $/; <$stringsfd> };
         close($stringsfd)
           or warn "Error closing strings fd: $!";

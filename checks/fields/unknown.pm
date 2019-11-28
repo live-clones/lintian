@@ -42,9 +42,9 @@ our $SOURCE_FIELDS      = Lintian::Data->new('common/source-fields');
 sub source {
     my ($self) = @_;
 
-    my $info = $self->info;
+    my $processable = $self->processable;
 
-    for my $field (keys %{$info->field}) {
+    for my $field (keys %{$processable->field}) {
 
         $self->tag('unknown-field-in-dsc', $field)
           unless $SOURCE_FIELDS->known($field);
@@ -56,9 +56,9 @@ sub source {
 sub binary {
     my ($self) = @_;
 
-    my $info = $self->info;
+    my $processable = $self->processable;
 
-    for my $field (keys %{$info->field}) {
+    for my $field (keys %{$processable->field}) {
 
         $self->tag('unknown-field-in-control', $field)
           unless $KNOWN_BINARY_FIELDS->known($field);
@@ -70,9 +70,9 @@ sub binary {
 sub udeb {
     my ($self) = @_;
 
-    my $info = $self->info;
+    my $processable = $self->processable;
 
-    for my $field (keys %{$info->field}) {
+    for my $field (keys %{$processable->field}) {
 
         $self->tag('unknown-field-in-control', $field)
           unless $KNOWN_UDEB_FIELDS->known($field);

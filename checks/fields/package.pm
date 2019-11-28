@@ -38,9 +38,9 @@ with 'Lintian::Check';
 sub binary {
     my ($self) = @_;
 
-    my $info = $self->info;
+    my $processable = $self->processable;
 
-    my $name = $info->unfolded_field('package');
+    my $name = $processable->unfolded_field('package');
 
     unless (defined $name) {
         $self->tag('no-package-name');
