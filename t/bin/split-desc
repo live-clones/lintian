@@ -1,0 +1,107 @@
+#!/usr/bin/perl
+
+use strict;
+use warnings;
+
+use List::MoreUtils qw(any);
+use Path::Tiny;
+
+use constant EMPTY => q{};
+
+die 'Please specify exactly one argument'
+  unless @ARGV == 1;
+
+my $path = $ARGV[0];
+
+#print "Splitting $path\n";
+
+my $contents = path($path)->slurp;
+
+#print $contents;
+
+my @testlabels = qw(
+  Check
+  Default-Lintian-Options
+  Lintian-Command-Line
+  Match-Strategy
+  Options
+  Output-Format
+  Profile
+  References
+  Test-Against
+  Test-Architectures
+  Test-Conflicts
+  Test-Depends
+  Todo
+);
+
+my $build = EMPTY;
+my $eval = EMPTY;
+my $comments = EMPTY;
+
+while ($contents =~ s/\n(\#[^\n]*\n)/\n/) {
+    $comments .= $1;
+}
+
+while ($contents =~ s/^([^:]+\:[^\n]*\n(?: [^\n]+\n)*)//) {
+
+    my $field = $1;
+
+    my ($label) = ($field =~ /^([^:]+)\:/);
+    #  print "Found $label\n";
+
+    if ($label eq 'Testname') {
+        $eval .= $field;
+        $build .= $field;
+        next;
+    }
+
+    if (any {/^$label$/} @testlabels) {
+        $eval .= $field;
+
+    } else {
+        $build .= $field;
+    }
+}
+
+die 'Unknown data at the end'
+  if length $contents;
+
+path($path)->remove;
+
+my $parent = path($path)->parent->stringify;
+
+my $temppath = $parent . ' (new)';
+path($parent)->move($temppath);
+path($parent)->mkpath;
+
+my $buildpath = path($parent)->child('build-spec')->stringify;
+my $evalpath = path($parent)->child('eval')->stringify;
+
+path($parent)->mkpath;
+path($temppath)->move($buildpath);
+path($evalpath)->mkpath;
+
+my $fillvalues = path($buildpath)->child('fill-values')->stringify;
+my $desc = path($evalpath)->child('desc');
+
+path($fillvalues)->spew($build);
+path($desc)->spew($eval);
+
+path($fillvalues)->append($comments);
+path($desc)->append($comments);
+
+my @move
+  = qw(tags literal skip post-test test-calibration tag-list suppress lintian-include-dir);
+
+for my $transfer (@move) {
+
+    my $sourcepath = path($buildpath)->child($transfer)->stringify;
+    my $destpath = path($evalpath)->child($transfer)->stringify;
+
+    path($sourcepath)->move($destpath)
+      if -e $sourcepath;
+}
+
+#print "Build:\n$build\n";
+#print "Eval:\n$eval\n";
