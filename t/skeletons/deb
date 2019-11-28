@@ -2,9 +2,7 @@ Version: 1.0
 Template-Sets:
  DEBIAN (binary-control),
  doc (mandatory-docs),
- . (deb-make-builder),
- . (test-runner-tags),
- . (lintian-invocation)
+ . (deb-make-builder)
 Fill-Targets:
  DEBIAN (binary-control),
  doc (mandatory-docs),
