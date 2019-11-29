@@ -1,0 +1,4 @@
+Testname: binaries-static-lib
+Package-Architecture: any
+Skeleton: upload-non-native
+Description: Test checks related to static libs

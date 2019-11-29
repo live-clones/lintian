@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: cruft-ancient-libtool-2
+Description: Test that an old (1.5.2) ltmain.sh is detected correctly

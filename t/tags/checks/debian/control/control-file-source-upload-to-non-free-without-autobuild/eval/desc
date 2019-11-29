@@ -1,0 +1,4 @@
+Testname: control-file-source-upload-to-non-free-without-autobuild
+Test-Against:
+ source-only-upload-to-non-free-without-autobuild
+Check: debian/control

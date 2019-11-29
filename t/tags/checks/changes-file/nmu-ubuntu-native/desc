@@ -1,7 +1,0 @@
-Skeleton: upload-native
-Testname: nmu-ubuntu-native
-Description: Test NMU tag suppression for Ubuntu native packages
-Profile: ubuntu/main
-Test-Against: bad-distribution-in-changes-file
-References: Debian Bug #507740
-Check: changes-file

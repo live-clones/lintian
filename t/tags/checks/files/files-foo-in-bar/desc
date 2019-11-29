@@ -1,5 +1,0 @@
-Skeleton: upload-native
-Testname: files-foo-in-bar
-Description: Test tags about files or dirs in given paths
-Options: --pedantic
-Check: files

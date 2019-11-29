@@ -1,0 +1,6 @@
+Skeleton: deb
+Testname: deb-format-wrong-order
+Description: Test package for an ar archive in the wrong order
+Extra-Build-Depends: dpkg (<< 1.17.2)
+# dpkg 1.17.2 Do not allow deb packages with control
+# and data members swapped

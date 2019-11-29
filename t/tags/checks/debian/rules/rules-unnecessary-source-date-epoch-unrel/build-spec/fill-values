@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: rules-unnecessary-source-date-epoch-unrel
+Description: Test for unnecessary SOURCE_DATE_EPOCH assignments (false positive)

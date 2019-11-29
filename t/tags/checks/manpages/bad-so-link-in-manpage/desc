@@ -1,5 +1,0 @@
-Skeleton: upload-native
-Testname: bad-so-link-in-manpage
-Description: Manual page with a bad .so link
-Test-Depends: groff-base (>= 1.22.4)
-Check: manpages

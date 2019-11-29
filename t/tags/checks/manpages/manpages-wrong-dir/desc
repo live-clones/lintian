@@ -1,4 +1,0 @@
-Skeleton: upload-native
-Testname: manpages-wrong-dir
-Description: Test for manpages in wrong dirs
-Check: manpages

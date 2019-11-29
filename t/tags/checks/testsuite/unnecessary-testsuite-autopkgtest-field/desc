@@ -1,4 +1,0 @@
-Testname: unnecessary-testsuite-autopkgtest-field
-Skeleton: upload-native
-Description: Test with an unnecessary field Testsuite in control
-Check: testsuite

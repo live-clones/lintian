@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: cruft-file-contains-trailing-whitespace
+Description: Check for files containing trailing whitespace characters

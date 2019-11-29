@@ -1,4 +1,0 @@
-Skeleton: upload-native
-Testname: copyright-file-symlink
-Description: Test for symlinked doc directories
-Check: debian/copyright

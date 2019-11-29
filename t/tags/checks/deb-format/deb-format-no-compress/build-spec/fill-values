@@ -1,0 +1,4 @@
+Skeleton: deb
+Testname: deb-format-no-compress
+Description: Test package with no compression
+Extra-Build-Depends: dpkg (>= 1.17.6)

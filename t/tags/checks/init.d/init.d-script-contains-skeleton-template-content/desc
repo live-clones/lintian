@@ -1,4 +1,0 @@
-Skeleton: upload-native
-Testname: init.d-script-contains-skeleton-template-content
-Description: Test for scripts using the /etc/init.d/skeleton template
-Check: init.d

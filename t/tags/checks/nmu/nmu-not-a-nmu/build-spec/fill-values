@@ -1,0 +1,4 @@
+Skeleton: upload-native
+Testname: nmu-not-a-nmu
+Description: Test for MU declared as NMU
+Author: Niels Thykier <niels@thykier.net>

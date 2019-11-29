@@ -1,0 +1,5 @@
+Skeleton: upload-native
+Testname: debhelper-compat-virtual-relation-both
+Description: Test both debhelper and debhelper-compat as a build-dependency
+Default-Build-Depends:
+ debhelper (>= 11.3~)

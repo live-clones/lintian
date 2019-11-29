@@ -1,0 +1,4 @@
+Testname: changelog-file-consecutive-debian-revision-unrel
+Options: --pedantic
+Test-Against: non-consecutive-debian-revision
+Check: debian/changelog

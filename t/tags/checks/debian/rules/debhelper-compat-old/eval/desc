@@ -1,0 +1,4 @@
+Testname: debhelper-compat-old
+Options: --include-dir ./lintian-include-dir --pedantic --display-level +classification
+Profile: lintian-test
+Check: debian/rules

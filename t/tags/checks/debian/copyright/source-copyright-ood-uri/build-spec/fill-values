@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: source-copyright-ood-uri
+Description: Test for out-of-date DEP 5-like URI

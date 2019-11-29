@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: debian-source-dir-general
+Description: General tests for debian/source/* checks

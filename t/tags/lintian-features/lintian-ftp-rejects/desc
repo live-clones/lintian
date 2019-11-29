@@ -1,7 +1,0 @@
-Skeleton: upload-native
-Testname: lintian-ftp-rejects
-Profile: debian/ftp-master-auto-reject
-Description: Test Lintian --ftp-master-rejects handling
-Match-Strategy: literal
-Output-Format: EWI
-Default-Lintian-Options: --display-info --display-experimental

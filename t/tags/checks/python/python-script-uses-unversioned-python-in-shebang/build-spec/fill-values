@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: python-script-uses-unversioned-python-in-shebang
+Description: Check for unversioned python in shebang

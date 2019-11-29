@@ -1,4 +1,0 @@
-Skeleton: deb
-Testname: fields-wildcard-binary
-Description: Test for architecture wildcard in binary package
-Check: fields/architecture

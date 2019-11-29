@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: debhelper-brace-expansion
+Description: Check for brace expansion in debhelper config files

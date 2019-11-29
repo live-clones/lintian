@@ -1,0 +1,2 @@
+Testname: cruft-autotools-pkg-config-macro-not-cross-compilation-safe
+Check: cruft

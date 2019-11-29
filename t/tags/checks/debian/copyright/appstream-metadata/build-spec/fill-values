@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: appstream-metadata
+Description: Test AppStream and udev metadata in binary package

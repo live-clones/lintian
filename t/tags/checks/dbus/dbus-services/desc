@@ -1,4 +1,0 @@
-Skeleton: upload-native
-Testname: dbus-services
-Description: test D-Bus .service files
-Check: dbus

@@ -1,6 +1,0 @@
-Skeleton: upload-native
-Testname: rules-missing-targets-with-includes
-Description: Test a debian/rules with targets included from another file
-Test-Against: debian-rules-missing-required-target
-References: Debian Bug#607281
-Check: debian/rules

@@ -1,0 +1,4 @@
+Skeleton: upload-native
+Testname: fields-unusual-doc-package-name
+Package-Architecture: all
+Description: Check for -docs packages

@@ -1,6 +1,0 @@
-Skeleton: upload-native
-Testname: fields-architecture
-Description: Tests for the Architecture field
-Test-Architectures: linux-any any-i386 kfreebsd-any hurd-any
-Test-Against: unknown-architecture
-Check: fields/architecture

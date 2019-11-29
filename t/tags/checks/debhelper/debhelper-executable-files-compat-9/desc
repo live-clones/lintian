@@ -1,6 +1,0 @@
-Skeleton: upload-native
-Testname: debhelper-executable-files-compat-9
-Options: --suppress-tags
- package-needs-versioned-debhelper-build-depends
-Description: Tests related to executable packaging files
-Check: debhelper

@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: debhelper-compat-missing
+Description: Test for missing debian/compat

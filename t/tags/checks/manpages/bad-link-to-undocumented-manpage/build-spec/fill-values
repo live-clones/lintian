@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: bad-link-to-undocumented-manpage
+Description: Manual page that is a bad link to an undocumented man page

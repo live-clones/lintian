@@ -1,5 +1,0 @@
-Skeleton: upload-native
-Testname: distribution-multiple-bad
-Description: Multiple distributions with at least one bad one
-References: Debian Bug#514853
-Check: changes-file

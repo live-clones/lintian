@@ -1,4 +1,0 @@
-Skeleton: upload-native
-Testname: symlinks-broken
-Description: General tests broken symlinks
-Check: symlinks

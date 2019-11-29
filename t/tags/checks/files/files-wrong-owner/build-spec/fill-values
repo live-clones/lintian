@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: files-wrong-owner
+Description: Test for wrong owner files in the deb

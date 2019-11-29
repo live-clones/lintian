@@ -1,0 +1,2 @@
+Testname: implicitly-requires-rrr
+Check: debian/control

@@ -1,0 +1,5 @@
+Skeleton: upload-native
+Testname: debhelper-dh-with-python3-unrel2
+Description: Check dependency requirements for dh --with python3 (false positive)
+Package-Architecture: any
+Extra-Build-Depends: dh-python

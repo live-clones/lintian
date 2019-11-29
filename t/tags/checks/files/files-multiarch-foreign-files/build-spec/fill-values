@@ -1,0 +1,4 @@
+Skeleton: upload-native
+Testname: files-multiarch-foreign-files
+Description: Test for files violating Multi-Arch: foreign
+Package-Architecture: any

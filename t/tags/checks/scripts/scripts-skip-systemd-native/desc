@@ -1,4 +1,0 @@
-Skeleton: upload-native
-Testname: scripts-skip-systemd-native
-Description: Test for packages that use --skip-systemd-native
-Check: scripts

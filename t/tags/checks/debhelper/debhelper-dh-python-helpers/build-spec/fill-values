@@ -1,0 +1,4 @@
+Skeleton: upload-native
+Testname: debhelper-dh-python-helpers
+Description: Check if helpers that substitute python:Depends and
+ python3:Depends are called in debian/rules

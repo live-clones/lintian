@@ -1,8 +1,0 @@
-Skeleton: upload-native
-Testname: control-file-general
-Description: Various problems with debian/control
-Options: --pedantic
-References: Debian Bug#30020, Debian Bug#409099, Debian Bug#516706,
- Debian Bug#533202, Debian Bug#557971, Debian Bug#573399, Debian Bug#580494,
- Debian Bug#657110
-Check: debian/control

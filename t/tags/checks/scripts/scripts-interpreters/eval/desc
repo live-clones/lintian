@@ -1,0 +1,4 @@
+Testname: scripts-interpreters
+Options: --pedantic
+References: Debian Bug#543873
+Check: scripts

@@ -1,0 +1,4 @@
+Testname: changelog-version-special-chars
+Version: 2:1.5+important~personal1-stable-7
+Description: Test for weird versions
+Skeleton: upload-non-native

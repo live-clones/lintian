@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: control-file-hardcoded-libc
+Description: Test hard-coded dependencies on libc

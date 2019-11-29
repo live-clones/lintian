@@ -1,0 +1,5 @@
+Skeleton: upload-native
+Testname: ocaml-general
+Package-Architecture: any
+Section: ocaml
+Description: Test the OCaml-related tags

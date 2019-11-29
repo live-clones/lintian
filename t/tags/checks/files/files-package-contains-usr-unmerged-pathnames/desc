@@ -1,5 +1,0 @@
-Testname: files-package-contains-usr-unmerged-pathnames
-Skeleton: upload-native
-Description: Test for "real" files outside of /usr
-Options: -L +classification
-Check: files

@@ -1,0 +1,4 @@
+Testname: pkg-js-tools-test-is-empty
+Skeleton: upload-native
+Description: Test if debian/tests/pkg-js/test contains a command
+Extra-Build-Depends: pkg-js-tools (>= 0.9.6~), nodejs (>= 8.11.1)

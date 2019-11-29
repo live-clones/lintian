@@ -1,0 +1,4 @@
+Skeleton: upload-native
+Testname: shared-libs-no-shared-lib
+Package-Architecture: any
+Description: Test checks shlib without SO

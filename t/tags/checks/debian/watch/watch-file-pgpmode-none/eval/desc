@@ -1,0 +1,5 @@
+Testname: watch-file-pgpmode-none
+Options: --pedantic
+Test-Against: debian-watch-file-pubkey-file-is-missing
+References: #841000
+Check: debian/watch

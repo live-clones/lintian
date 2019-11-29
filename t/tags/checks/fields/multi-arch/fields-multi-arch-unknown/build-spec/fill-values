@@ -1,0 +1,3 @@
+Skeleton: deb
+Testname: fields-multi-arch-unknown
+Description: Test package with an unknown Multi-arch value

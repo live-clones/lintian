@@ -1,4 +1,0 @@
-Skeleton: upload-native
-Testname: init.d-general
-Description: Test tags related to the init.d checks
-Check: init.d

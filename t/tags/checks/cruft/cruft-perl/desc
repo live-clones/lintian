@@ -1,4 +1,0 @@
-Skeleton: upload-native
-Testname: cruft-perl
-Description: Misc errors related to Perl
-Check: cruft

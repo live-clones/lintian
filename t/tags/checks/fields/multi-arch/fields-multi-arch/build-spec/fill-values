@@ -1,0 +1,4 @@
+Skeleton: upload-native
+Testname: fields-multi-arch
+Package-Architecture: any
+Description: Tests for the Multi-Arch field

@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: group-checks-circular-deps
+Description: Test for circular dependencies

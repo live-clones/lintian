@@ -1,0 +1,4 @@
+Skeleton: upload-non-native
+Testname: changelog-file-epoch-changed-upstream-version-same
+Version: 1.0-3
+Description: Check changelog for accidental epoch changes (same)

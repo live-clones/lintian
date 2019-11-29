@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: changelog-file-news-and-changelog-not-compressed
+Description: General tests for changelog-file tags

@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: python-package-depends-on-package-from-other-python-variant
+Description: Check for Python packages that depend on variants of themselves

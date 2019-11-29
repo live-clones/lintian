@@ -1,0 +1,4 @@
+Testname: patch-systems-quilt-general
+Skeleton: upload-non-native
+Extra-Build-Depends: quilt, dpatch
+Description: General tests of a quilt patch system

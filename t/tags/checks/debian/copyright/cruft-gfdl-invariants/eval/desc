@@ -1,0 +1,4 @@
+Testname: cruft-gfdl-invariants
+Options: --pedantic
+Test-Against: inconsistent-appstream-metadata-license
+Check: debian/copyright

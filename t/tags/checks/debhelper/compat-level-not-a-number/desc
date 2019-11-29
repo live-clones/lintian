@@ -1,4 +1,0 @@
-Testname: compat-level-not-a-number
-Skeleton: upload-native
-Description: Test if the value of DH_COMPAT is a number
-Check: debhelper

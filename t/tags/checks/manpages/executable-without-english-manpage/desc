@@ -1,5 +1,0 @@
-Skeleton: upload-native
-Testname: executable-without-english-manpage
-Description: Manpage without an English language manpage
-Test-Depends: groff-base (>= 1.22.4)
-Check: manpages

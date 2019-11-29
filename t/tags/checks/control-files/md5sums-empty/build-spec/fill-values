@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: md5sums-empty
+Description: Test of empty md5sums file

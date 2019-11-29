@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: fields-vcs-field-insecure-uri
+Description: Test for VCS-* fields using insecure URIs

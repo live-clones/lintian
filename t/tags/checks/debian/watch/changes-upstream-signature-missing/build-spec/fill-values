@@ -1,0 +1,6 @@
+Testname: changes-upstream-signature-missing
+Skeleton: upload-non-native
+Source-Format: 3.0 (quilt)
+Description: No upstream signature included but package contains a signing key
+Extra-Build-Depends: dpkg (>= 1.18.5)
+# dpkg 1.18.5 required in order to create multiple tarballs with detached signatures

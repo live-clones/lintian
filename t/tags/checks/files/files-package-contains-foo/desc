@@ -1,4 +1,0 @@
-Skeleton: upload-native
-Testname: files-package-contains-foo
-Description: Test tags about cruft in binary packages
-Check: files

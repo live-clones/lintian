@@ -1,0 +1,4 @@
+Testname: cruft-updated-libtool
+Test-Against: ancient-libtool
+References: Debian Bug#534134
+Check: cruft

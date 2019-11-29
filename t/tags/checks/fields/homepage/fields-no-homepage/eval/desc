@@ -1,0 +1,4 @@
+Testname: fields-no-homepage
+Options: --pedantic
+Test-Against: homepage-field-uses-insecure-uri
+Check: fields/homepage

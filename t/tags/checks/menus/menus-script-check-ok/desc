@@ -1,7 +1,0 @@
-Skeleton: upload-native
-Testname: menus-script-check-ok
-Description: Correct program checks in maintainer scripts
-Test-Against:
- maintainer-script-does-not-check-for-existence-of-installdocs
- maintainer-script-does-not-check-for-existence-of-updatemenus
-Check: menus

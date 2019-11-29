@@ -1,0 +1,4 @@
+Testname: changelog-file-stable
+Skeleton: upload-non-native
+Version: 1.0-1etch1
+Description: Test a stable-proposed-updates package

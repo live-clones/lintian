@@ -1,4 +1,0 @@
-Testname: upstream-key-minimal
-Skeleton: upload-non-native
-Description: Test with a minimal public upstream signing key (false positive)
-Check: upstream-signing-key

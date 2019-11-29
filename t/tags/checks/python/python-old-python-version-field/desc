@@ -1,7 +1,0 @@
-Skeleton: upload-native
-Testname: python-old-python-version-field
-Description: Test for old python-version fields
-Options: --pedantic
-Test-Against:
- old-python-version-field
-Check: python

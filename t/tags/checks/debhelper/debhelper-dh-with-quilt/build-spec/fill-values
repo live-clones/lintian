@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: debhelper-dh-with-quilt
+Description: Check dependency requirements for dh --with quilt

@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: changelog-file-become-native
+Description: Test for packages where the version suddenly becomes native

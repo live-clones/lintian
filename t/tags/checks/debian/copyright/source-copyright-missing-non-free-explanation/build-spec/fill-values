@@ -1,0 +1,4 @@
+Skeleton: upload-native
+Testname: source-copyright-missing-non-free-explanation
+Description: Test for missing contrib/non-free explanations
+Section: contrib/doc

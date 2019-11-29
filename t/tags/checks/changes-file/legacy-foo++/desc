@@ -1,6 +1,0 @@
-Skeleton: upload-native
-Testname: legacy-foo++
-Source: foo++
-Version: 5
-Description: Legacy test "foo++"
-Check: changes-file

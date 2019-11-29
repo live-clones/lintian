@@ -1,7 +1,0 @@
-Skeleton: upload-native
-Testname: lintian-suppress-tags
-Description: Test tag suppression
-Options: --suppress-tags extended-description-is-empty
- --suppress-tags-from-file ./suppress
-Match-Strategy: literal
-Output-Format: EWI

@@ -1,4 +1,0 @@
-Skeleton: upload-native
-Testname: files-hardlinks
-Description: Test for (stable) handling of hardlinks
-Check: files

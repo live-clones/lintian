@@ -1,0 +1,4 @@
+Testname: lintian-display-level
+Skeleton: upload-non-native
+Version: 1.0+dsfg-1.1
+Description: Test Lintian --display-level handling

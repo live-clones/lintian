@@ -1,4 +1,0 @@
-Skeleton: upload-native
-Testname: shared-libs-la-files
-Description: Test checks related to libtool .la files
-Check: shared-libs

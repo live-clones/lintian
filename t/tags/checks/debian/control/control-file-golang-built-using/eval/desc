@@ -1,0 +1,4 @@
+Testname: control-file-golang-built-using
+Test-Against:
+ missing-built-using-field-for-golang-package
+Check: debian/control

@@ -1,0 +1,4 @@
+Skeleton: upload-native
+Testname: cruft-package-does-not-install-examples
+Source: foo
+Description: Detect uninstalled examples

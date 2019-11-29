@@ -1,0 +1,4 @@
+Testname: changelog-distribution-does-not-match-changes-file
+Skeleton: upload-native
+Distribution: experimental
+Description: Test upload with unstable in changes but experimental in changelog

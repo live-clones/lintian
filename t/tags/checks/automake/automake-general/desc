@@ -1,4 +1,0 @@
-Skeleton: upload-native
-Testname: automake-general
-Description: Test if the package uses the deprecated configure.in for automake
-Check: automake

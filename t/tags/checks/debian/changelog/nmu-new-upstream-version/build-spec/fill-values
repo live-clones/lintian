@@ -1,0 +1,4 @@
+Testname: nmu-new-upstream-version
+Version: 3.1-0.1
+Description: Test for new upstream NMU versions
+Skeleton: upload-non-native

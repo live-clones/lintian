@@ -1,5 +1,0 @@
-Testname: rules-requires-root-missing
-Skeleton: upload-native
-Description: d/control without explicit rules-requires-root
-Options: --pedantic
-Check: debian/control

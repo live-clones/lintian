@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: scripts-ocamlrun
+Description: Test correct handling of ocamlrun scripts

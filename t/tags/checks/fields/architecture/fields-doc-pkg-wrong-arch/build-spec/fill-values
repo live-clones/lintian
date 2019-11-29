@@ -1,0 +1,4 @@
+Skeleton: upload-native
+Testname: fields-doc-pkg-wrong-arch
+Package-Architecture: any
+Description: Check for doc pkg not being arch all

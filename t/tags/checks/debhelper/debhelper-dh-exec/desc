@@ -1,7 +1,0 @@
-Skeleton: upload-native
-Testname: debhelper-dh-exec
-Dh-Compat-Level: 9
-Options: --suppress-tags
- package-needs-versioned-debhelper-build-depends
-Description: Tests related to executable, dh-exec using packaging files
-Check: debhelper

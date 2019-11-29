@@ -1,0 +1,2 @@
+Testname: debian-source-dir-traversal-2
+Check: debian/source-dir

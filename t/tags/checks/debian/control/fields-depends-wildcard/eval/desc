@@ -1,0 +1,2 @@
+Testname: fields-depends-wildcard
+Check: debian/control

@@ -1,0 +1,4 @@
+Skeleton: upload-native
+Testname: standards-version-classifications
+Description: Test standards version
+Standards-Version: 4.4.1

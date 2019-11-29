@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: scripts-maintainer-script-set-e
+Description: Test for using set -e in script body

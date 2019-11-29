@@ -1,0 +1,5 @@
+Skeleton: upload-non-native
+Testname: legacy-fields
+Source: fields
+Version: 1.5-.3
+Description: Legacy test "fields"

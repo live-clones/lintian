@@ -1,0 +1,4 @@
+Skeleton: upload-native
+Testname: patch-systems-quilt-no-newline
+Description: Patch system with no debian/series that does not end with newline
+Extra-Build-Depends: quilt

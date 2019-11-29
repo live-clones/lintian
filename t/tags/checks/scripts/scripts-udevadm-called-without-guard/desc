@@ -1,4 +1,0 @@
-Skeleton: upload-native
-Testname: scripts-udevadm-called-without-guard
-Description: Test for packages that call udevadm without a guard
-Check: scripts

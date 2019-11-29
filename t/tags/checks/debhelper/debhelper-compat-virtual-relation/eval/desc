@@ -1,0 +1,6 @@
+Testname: debhelper-compat-virtual-relation
+Options: -L +classification
+Test-Against:
+ package-uses-debhelper-but-lacks-build-depends
+ package-lacks-versioned-build-depends-on-debhelper
+Check: debhelper

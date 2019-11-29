@@ -1,4 +1,0 @@
-Skeleton: upload-native
-Testname: source-copyright-typo-field
-Description: Test for typo in DEP 5 field name
-Check: debian/copyright

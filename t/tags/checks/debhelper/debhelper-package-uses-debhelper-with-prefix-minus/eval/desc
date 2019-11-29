@@ -1,0 +1,5 @@
+Testname: debhelper-package-uses-debhelper-with-prefix-minus
+Options: --pedantic
+Test-Against:
+ package-does-not-use-debhelper-or-cdbs
+Check: debhelper

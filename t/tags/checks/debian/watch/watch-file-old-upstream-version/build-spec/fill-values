@@ -1,0 +1,4 @@
+Testname: watch-file-old-upstream-version
+Skeleton: upload-non-native
+Version: 2.0-1
+Description: Watch file with old upstream version

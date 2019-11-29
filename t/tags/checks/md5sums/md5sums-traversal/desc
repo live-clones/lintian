@@ -1,7 +1,0 @@
-Skeleton: deb
-Testname: md5sums-traversal
-Description: Test for traversals via md5sums symlink
-Test-Against:
- file-missing-in-md5sums
- malformed-md5sums-control-file
-Check: md5sums

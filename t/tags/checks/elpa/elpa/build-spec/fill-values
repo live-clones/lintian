@@ -1,0 +1,4 @@
+Testname: elpa
+Skeleton: upload-non-native
+Description: Tests for emacsen-common packages using dh-elpa
+Extra-Build-Depends: dh-elpa

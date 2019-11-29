@@ -1,0 +1,4 @@
+Testname: control-file-upstream-signature-missing-dfsg
+Skeleton: upload-non-native
+Version: 1.0+dfsg1-1
+Description: No upstream signature included in DFSG package

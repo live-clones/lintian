@@ -1,0 +1,3 @@
+Skeleton: deb
+Testname: deb-format-extra-underscore-member-before-control
+Description: Test package for a deb archive with an extra member with _ before control.tar

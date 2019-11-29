@@ -1,0 +1,4 @@
+Skeleton: upload-native
+Testname: binaries-hardening
+Description: Check for missing hardening features
+Package-Architecture: any

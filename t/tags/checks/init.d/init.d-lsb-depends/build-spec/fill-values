@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: init.d-lsb-depends
+Description: Test for packages missing dependencies on lsb-base

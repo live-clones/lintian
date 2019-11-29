@@ -1,0 +1,4 @@
+Testname: deb-format-wrong-order
+Check: deb-format
+# dpkg 1.17.2 Do not allow deb packages with control
+# and data members swapped

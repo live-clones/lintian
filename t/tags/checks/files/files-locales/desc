@@ -1,4 +1,0 @@
-Skeleton: upload-native
-Testname: files-locales
-Description: Test checks about incorrect locale codes
-Check: files

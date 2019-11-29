@@ -1,0 +1,4 @@
+Skeleton: upload-native
+Testname: binaries-obsolete-des
+Description: Check detection of obsolete DES functions
+Package-Architecture: any

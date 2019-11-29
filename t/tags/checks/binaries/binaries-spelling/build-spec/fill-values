@@ -1,0 +1,4 @@
+Skeleton: upload-native
+Testname: binaries-spelling
+Description: Spelling errors in binaries
+Package-Architecture: any

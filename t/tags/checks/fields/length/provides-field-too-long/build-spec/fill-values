@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: provides-field-too-long
+Description: The Provides: field d/control is too long.

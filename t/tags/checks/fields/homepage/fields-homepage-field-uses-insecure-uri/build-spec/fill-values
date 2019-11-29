@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: fields-homepage-field-uses-insecure-uri
+Description: Test for Homepage fields using insecure URIs

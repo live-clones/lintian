@@ -1,7 +1,0 @@
-Skeleton: upload-native
-Testname: legacy-debconf
-Source: debconf
-Version: 1~rc1
-Dh-Compat-Level: 5
-Description: Legacy test "debconf"
-Check: debian/po-debconf

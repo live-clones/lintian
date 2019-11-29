@@ -1,4 +1,0 @@
-Testname: cruft-contains-waf
-Skeleton: upload-non-native
-Description: Check for sources with waf
-Check: cruft

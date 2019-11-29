@@ -1,5 +1,0 @@
-Skeleton: upload-native
-Testname: debhelper-script-token-unneeded
-Description: Check unnecessary debhelper script token
-Test-Against: maintainer-script-lacks-debhelper-token
-Check: debhelper

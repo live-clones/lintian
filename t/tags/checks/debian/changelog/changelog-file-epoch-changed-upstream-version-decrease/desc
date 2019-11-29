@@ -1,8 +1,0 @@
-Skeleton: upload-native
-Testname: changelog-file-epoch-changed-upstream-version-decrease
-Description: Check changelog for accidental epoch changes (decrease)
-Test-Against:
- epoch-change-without-comment
- epoch-changed-but-upstream-version-did-not-go-backwards
- latest-debian-changelog-entry-without-new-version
-Check: debian/changelog

@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: copyright-file-doc-symlink
+Description: Test a symlinked /usr/share/doc

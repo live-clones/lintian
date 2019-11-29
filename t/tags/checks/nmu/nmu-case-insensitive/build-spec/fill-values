@@ -1,0 +1,4 @@
+Skeleton: upload-native
+Testname: nmu-case-insensitive
+Author: Russ Allbery <rra@debian.ORG>
+Description: Test case-insensitive matching of e-mail addresses

@@ -1,7 +1,0 @@
-Skeleton: upload-native
-Testname: patch-systems-empty-series
-Description: Test for quilt patches with empty series
-Extra-Build-Depends: quilt
-Test-Against: quilt-build-dep-but-no-series-file
-References: Debian Bug #525005
-Check: patch-systems

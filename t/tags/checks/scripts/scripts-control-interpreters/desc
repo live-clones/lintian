@@ -1,5 +1,0 @@
-Skeleton: upload-native
-Testname: scripts-control-interpreters
-Description: Check maintainer and config script interpreters
-References: Debian Bug#508307
-Check: scripts

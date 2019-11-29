@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: scripts-does-not-start-with-shebang
+Description: Check for maintainer scripts that do not start with #!

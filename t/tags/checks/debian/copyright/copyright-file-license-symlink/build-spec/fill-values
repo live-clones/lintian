@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: copyright-file-license-symlink
+Description: Test the versionless license files checks

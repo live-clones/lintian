@@ -1,0 +1,6 @@
+Skeleton: upload-native
+Testname: binaries-missing-depends-on-libc
+Default-Build-Depends: debhelper (>= 9.20151004~)
+Dh-Compat-Level: 9
+Description: Test for missing libc depends
+Package-Architecture: any

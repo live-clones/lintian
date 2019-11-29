@@ -1,0 +1,4 @@
+Testname: cruft-empty-diff
+Source-Format: 1.0
+Skeleton: upload-non-native
+Description: Test an empty Debian diff

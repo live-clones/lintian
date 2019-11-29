@@ -1,0 +1,4 @@
+Testname: shared-libs-exit-fork
+Test-Against:
+ shlib-calls-exit
+Check: shared-libs

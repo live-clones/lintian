@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: package-supports-alternative-init-but-no-init.d-script
+Description: Check for daemon with missing init.d script

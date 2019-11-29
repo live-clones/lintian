@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: fields-vcs-field-mismatch
+Description: Check for packages with mismatched Vcs-* fields

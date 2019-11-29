@@ -1,0 +1,5 @@
+Testname: lintian-ftp-rejects
+Profile: debian/ftp-master-auto-reject
+Match-Strategy: literal
+Output-Format: EWI
+Default-Lintian-Options: --display-info --display-experimental

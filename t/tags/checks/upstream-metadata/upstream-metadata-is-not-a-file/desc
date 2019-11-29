@@ -1,4 +1,0 @@
-Skeleton: upload-native
-Testname: upstream-metadata-is-not-a-file
-Description: Tests for d/upstream/metadata being non-file
-Check: upstream-metadata
