@@ -34,7 +34,7 @@ use List::Util qw(max);
 use Test::More;
 
 use lib "$ENV{'LINTIAN_TEST_ROOT'}/lib";
-use Test::Lintian::Prepare qw(logged_prepare);
+use Test::Lintian::Prepare qw(prepare);
 
 # dummy test name; used in desc and directory name
 my $TESTNAME = 'test-of-templates-for-native-package';
@@ -52,13 +52,13 @@ Testname: $TESTNAME
 Version: 1
 Skeleton: upload-native
 EOSTR
-my $descpath = $specpath->child('desc');
+my $descpath = $specpath->child('fill-values');
 $descpath->spew($desctext);
 
 my $runpath = $tempdir->child('run')->child($TESTNAME);
 $runpath->mkpath;
 
-logged_prepare($specpath->stringify, $runpath->stringify, 't');
+prepare($specpath->stringify, $runpath->stringify, 't');
 
 # test plan
 plan tests => 1;

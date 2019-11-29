@@ -34,7 +34,7 @@ use List::Util qw(max);
 use Test::More;
 
 use lib "$ENV{'LINTIAN_TEST_ROOT'}/lib";
-use Test::Lintian::Prepare qw(logged_prepare);
+use Test::Lintian::Prepare qw(prepare);
 use Test::Lintian::ConfigFile qw(read_config);
 use Test::Lintian::Helper qw(rfc822date);
 
@@ -60,21 +60,21 @@ Description: Test checks related to non-pic code
 Test-For: shlib-with-non-pic-code
 Check: shared-libs
 EOSTR
-my $descpath = $specpath->child('desc');
+my $descpath = $specpath->child('fill-values');
 $descpath->spew($desctext);
 
 my $runpath = $tempdir->child('run')->child($TESTNAME);
 $runpath->mkpath;
 
-logged_prepare($specpath->stringify, $runpath->stringify, 't');
+prepare($specpath->stringify, $runpath->stringify, 't');
 
 # read resulting test description
-my $testcase = read_config($runpath->child('desc')->stringify);
+my $testcase = read_config($runpath->child('fill-values')->stringify);
 
 my @testarches = split(/\s+/, $testcase->{'test_architectures'});
 
 # test plan
-plan tests => 25 + scalar @testarches;
+plan tests => 20 + scalar @testarches;
 
 is($testcase->{testname}, $TESTNAME, 'Correct name');
 
@@ -118,25 +118,8 @@ is($testcase->{'test_against'}, undef, 'Correct Test-Against');
 is($testcase->{'standards_version'},
     $ENV{'POLICY_VERSION'}, 'Correct policy version');
 
-is(
-    $testcase->{date},
-    rfc822date(max(stat($descpath)->mtime, $ENV{'POLICY_EPOCH'})),
-    'Correct policy date'
-);
-
-is($testcase->{todo}, 'no', 'Todo disabled');
-
 is($testcase->{type}, 'native', 'Test is native');
 isnt($testcase->{type}, 'yes', 'Native type not yes.');
-
-is($testcase->{'output_format'}, 'universal', 'Output format is universal');
-
-is($testcase->{options}, undef, 'No extra Lintian options');
-is(
-    $testcase->{default_lintian_options},
-'--pedantic --display-info --display-experimental --check-part shared-libs,lintian',
-    'Default Lintian options'
-);
 
 is(
     $testcase->{'dh_compat_level'},
