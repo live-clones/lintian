@@ -115,5 +115,7 @@ clean:
 # permissions.
 .PHONY: fix-perm
 fix-perm:
-	[ ! -d $(rootdir) ] || (find $(rootdir) -type d | xargs -r chmod 0755 && \
-				find $(rootdir) -type f | xargs -r chmod 0644)
+	if [ -d $(datadir) ] ; then \
+		find $(datadir) -type d | xargs -r chmod 0755 ; \
+		find $(datadir) -type f | xargs -r chmod 0644 ; \
+	fi
