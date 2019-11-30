@@ -1,0 +1,5 @@
+#!/bin/sh
+
+packagedir=$1
+
+chmod 775 "$packagedir/debian/rules"
