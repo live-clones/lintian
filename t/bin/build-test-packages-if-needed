@@ -28,6 +28,7 @@ Checksum_input () {
 	find \
 		t/ \
 		debian/ \
+		-not \( -path 't/tags/*' -or -path 't/scripts/*' \) \
 		-type f -print0 | sort -z | xargs -0 sha1sum
 
 	# Rebuild if any build-dependency or installed package changes
