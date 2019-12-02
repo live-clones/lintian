@@ -183,7 +183,8 @@ sub always {
         next
           unless defined $maintainer;
 
-        my $is_list = $maintainer =~ /\b(\S+\@lists(?:\.alioth)?\.debian\.org)\b/;
+        my $is_list
+          = $maintainer =~ /\b(\S+\@lists(?:\.alioth)?\.debian\.org)\b/;
         if ($is_list) {
             $is_teammaintained = 1;
             $team_email = $1;
