@@ -1,3 +1,20 @@
+lintian (2.39.0) unstable; urgency=medium
+
+  [ Scott Talbert ]
+  * Add wmem{cpy,move,set} to the list of excluded hardened functions to
+    avoid many false-positives. (Closes: #921136)
+
+  [ Louis-Philippe Véronneau ]
+  * Check to ensure debian/rules files are executable.
+  * Update instructions to download build-dependencies with "apt" instead
+    of "apt-get".
+
+  [ Chris Lamb ]
+  * Don't emit debian-rules-not-executable if debian/rules is a symlink; we
+    warn about this via debian-rules-is-symlink.
+
+ -- Chris Lamb <lamby@debian.org>  Thu, 28 Nov 2019 10:34:27 +0000
+
 lintian (2.38.0~bpo10+1) buster-backports; urgency=medium
 
   * Rebuild for buster-backports.

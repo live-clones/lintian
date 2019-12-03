@@ -16,10 +16,11 @@ Please either checkout the repository from [salsa.debian.org][salsa]:
 
 Or create your own "fork" of repository [via the web interface][lintian-fork].
 
-You will also need a number of dependencies.  On a very recent Debian
-(e.g. Stretch), you can have apt install these for you via:
+You will also need a number of dependencies. You can have apt install these for
+you via:
 
-    $ apt-get build-dep debian/control
+    $ cd lintian
+    $ apt build-dep .
 
 Otherwise, the full list of dependencies are listed in the `Build-Depends*`
 fields in the `debian/control` file.

@@ -7,6 +7,7 @@ libfields-depends-general (binary): binary-package-depends-on-toolchain-package 
 fields-depends-general-doc (binary): doc-package-depends-on-main-package depends
 fields-depends-general (binary): package-relation-with-self breaks: fields-depends-general (<< 0.1)
 fields-depends-general (binary): package-relation-with-perl-modules depends: perl-modules
+fields-depends-general (binary): package-depends-on-an-x-font-package depends: xfont-a
 fields-depends-general (binary): ored-depends-on-obsolete-package depends: xbase-clients (>= 0.1)
 fields-depends-general (binary): needlessly-depends-on-awk depends
 fields-depends-general (binary): depends-on-packaging-dev depends
