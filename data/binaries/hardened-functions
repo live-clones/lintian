@@ -6,6 +6,9 @@
 #    memcpy
 #    memset
 #    memmove
+#    wmemcpy
+#    wmemmove
+#    wmemset
 #
 # The list is manually updated, please keep it
 # sorted by name
@@ -81,8 +84,5 @@ wcsnrtombs
 wcsrtombs
 wcstombs
 wctomb
-wmemcpy
-wmemmove
 wmempcpy
-wmemset
 wprintf
