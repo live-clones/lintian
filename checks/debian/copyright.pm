@@ -655,6 +655,11 @@ sub parse_license {
     }else {
         $short_license = $license_block;
     }
+    if(defined $full_license) {
+        $self->tag('tab-in-license-text',
+            "debian/copyright (paragraph at line $line)")
+          if $full_license =~ /\t/;
+    }
     $short_license =~ s/[(),]/ /g;
     if ($short_license =~ m/\A\s*\Z/) {
         $self->tag('empty-short-license-in-dep5-copyright',
