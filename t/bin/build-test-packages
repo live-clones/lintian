@@ -40,6 +40,7 @@ use File::stat;
 use Getopt::Long;
 use IO::Async::Function;
 use IO::Async::Loop;
+use List::Compare;
 use Path::Tiny;
 use Try::Tiny;
 
@@ -205,6 +206,33 @@ my $sourceroot = "$outpath/package-sources";
 
 # for built test packages
 my $buildroot = "$outpath/packages";
+
+my @relative = map { path($_)->parent->relative($testset) } @specpaths;
+my @sourcepaths = map {$_->absolute($sourceroot)->stringify } @relative;
+my @buildpaths = map {$_->absolute($buildroot)->stringify } @relative;
+
+# remove obsolete package sources
+my @foundsources = map { path($_)->parent->absolute->stringify; }
+  File::Find::Rule->file->name('fill-values')->in($sourceroot);
+my $lc = List::Compare->new('--unsorted', \@foundsources, \@sourcepaths);
+my @obsoletesources = $lc->get_Lonly;
+path($_)->remove_tree for @obsoletesources;
+
+# remove obsolete built packages
+my @foundpackages = map { path($_)->parent->absolute->stringify; }
+  File::Find::Rule->file->name('source-files.sha1sums')->in($buildroot);
+my $lc = List::Compare->new('--unsorted', \@foundpackages, \@buildpaths);
+my @obsoletepackages = $lc->get_Lonly;
+path($_)->remove_tree for @obsoletepackages;
+
+# remove empty directories
+for my $folder (@obsoletesources, @obsoletepackages) {
+    my $candidate = path($folder)->parent;
+    while ($candidate->exists && !$candidate->children) {
+        rmdir $candidate->stringify;
+        $candidate = $candidate->parent;
+    }
+}
 
 $ENV{PERL_PATH_TINY_NO_FLOCK} =1;
 
