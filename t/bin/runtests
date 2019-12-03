@@ -469,7 +469,7 @@ if (-t STDOUT && !$unattended) {
         next
           unless $testcase->{match_strategy} eq 'tags';
 
-        my $relative = abs2rel($workpath, $outpath);
+        my $relative = abs2rel($workpath, $evalroot);
         my $testpath = abs2rel(rel2abs($relative, $testset));
 
         my $diffpath = "$workpath/tagdiff";
@@ -495,7 +495,7 @@ if (-t STDOUT && !$unattended) {
             }
 
             # create tags if needed; helps when writing new tests
-            my $tagspath = "$testpath/tags";
+            my $tagspath = "$testpath/eval/tags";
             path($tagspath)->touch
               unless -e $tagspath;
 
