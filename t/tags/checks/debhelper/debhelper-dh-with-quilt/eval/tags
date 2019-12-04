@@ -1,2 +1,1 @@
-debhelper-dh-with-quilt (source): uses-debhelper-compat-file
 debhelper-dh-with-quilt (source): missing-build-dependency-for-dh-addon quilt => quilt

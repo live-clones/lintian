@@ -1,4 +1,3 @@
-debhelper-override-typos (source): uses-debhelper-compat-file
 debhelper-override-typos (source): typo-in-debhelper-override-target override_dh_testdirs -> override_dh_testdir (line 18)
 debhelper-override-typos (source): typo-in-debhelper-override-target override_dh_perls -> override_dh_perl (line 13)
 debhelper-override-typos (source): typo-in-debhelper-override-target override_dh_perls -> override_dh_perl (line 12)

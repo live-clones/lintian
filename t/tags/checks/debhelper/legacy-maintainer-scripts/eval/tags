@@ -1,2 +1,1 @@
-maintainer-scripts (source): uses-debhelper-compat-file
 maintainer-scripts (source): debhelper-but-no-misc-depends maintainer-scripts
