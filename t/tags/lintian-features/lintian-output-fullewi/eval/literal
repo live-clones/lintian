@@ -19,4 +19,3 @@ X: lintian-output-fullewi source (1.0+dsfg-1.1) [source]: debian-watch-does-not-
 P: lintian-output-fullewi binary (1.0+dsfg-1.1) [all]: example-unusual-interpreter usr/share/doc/lintian-output-fullewi/examples/example #!/usr/bin/foo
 P: lintian-output-fullewi source (1.0+dsfg-1.1) [source]: no-homepage-field
 P: lintian-output-fullewi source (1.0+dsfg-1.1) [source]: package-uses-deprecated-source-override-location
-P: lintian-output-fullewi source (1.0+dsfg-1.1) [source]: uses-debhelper-compat-file

@@ -1,2 +1,1 @@
 P: strings-elf-detection source: file-contains-trailing-whitespace debian/rules (line 14)
-P: strings-elf-detection source: uses-debhelper-compat-file
