@@ -1,3 +1,4 @@
 Skeleton: upload-native
 Testname: debhelper-compat-multiple
 Description: Test debian/compat file with multiple entries
+Default-Build-Depends: debhelper (>= [% $dh_compat_level %]~)

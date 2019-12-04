@@ -4,3 +4,4 @@ Source: debconf
 Version: 1~rc1
 Dh-Compat-Level: 5
 Description: Legacy test "debconf"
+Default-Build-Depends: debhelper (>= [% $dh_compat_level %]~)

@@ -2,3 +2,4 @@ Skeleton: upload-native
 Testname: debhelper-compat-old
 Description: Test for old debian/compat file
 Dh-Compat-Level: 8
+Default-Build-Depends: debhelper (>= [% $dh_compat_level %]~)
