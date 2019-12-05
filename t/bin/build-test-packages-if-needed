@@ -21,14 +21,14 @@
 set -eu
 
 CACHE_DIR="${1}"
+PIPELINE="${2}"
 
 Checksum_input () {
 	# Local files that, if changed, should result in a rebuild of the test
 	# packages.
 	find \
-		t/ \
-		debian/ \
-		-not \( -path 't/tags/*' -or -path 't/scripts/*' \) \
+		t/bin/build-test-packages \
+		lib/Test/ \
 		-type f -print0 | sort -z | xargs -0 sha1sum
 
 	# Rebuild if any build-dependency or installed package changes
@@ -40,18 +40,15 @@ Checksum_input () {
 }
 
 CHECKSUM="$(Checksum_input | sha1sum | cut -d ' ' -f1)"
-CACHE_FILENAME="${CACHE_DIR}/${CHECKSUM}.tar.xz"
+CACHE_FILENAME="${CACHE_DIR}/${PIPELINE}-${CHECKSUM}.tar.xz"
 
-rm -rf debian/test-out
+rm -rf debian/test-out/packages
 
-echo "I: Looking for ${CACHE_FILENAME}" >&2
+echo "I: Updating ${CACHE_FILENAME}" >&2
  
-if [ ! -f "${CACHE_FILENAME}" ]
-then
-	env DEBIAN_FRONTEND=noninteractive apt-get -q -y -o dir::cache::archives="${CACHE_DIR}" build-dep .
-	t/bin/build-test-packages
-	mkdir -p "$(dirname "${CACHE_FILENAME}")"
-	tar cfJ "${CACHE_FILENAME}" debian/test-out
-fi
+env DEBIAN_FRONTEND=noninteractive apt-get -q -y -o dir::cache::archives="${CACHE_DIR}" build-dep .
+t/bin/build-test-packages
+mkdir -p "$(dirname "${CACHE_FILENAME}")"
+tar cfJ "${CACHE_FILENAME}" debian/test-out/packages
 
 cp -v "${CACHE_FILENAME}" test-packages.tar.xz
