@@ -34,7 +34,9 @@ sub source {
     # names are different in installation packages (see #429510)
     # README and TODO may be handled differently
 
-    my @often_misnamed = ({ correct => 'NEWS', problematic => 'NEWS.Debian' });
+    my @often_misnamed = (
+        { correct => 'NEWS', problematic => 'NEWS.Debian' },
+        { correct => 'TODO', problematic => 'TODO.Debian' });
 
     for my $relative (@often_misnamed) {
 
