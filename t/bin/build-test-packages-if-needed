@@ -44,8 +44,14 @@ CACHE_FILENAME="${CACHE_DIR}/${PIPELINE}-${CHECKSUM}.tar.xz"
 
 rm -rf debian/test-out/packages
 
-echo "I: Updating ${CACHE_FILENAME}" >&2
- 
+if [ -f "${CACHE_FILENAME}" ]
+then
+    echo "I: Updating ${CACHE_FILENAME}" >&2
+    tar xfJ "${CACHE_FILENAME}"
+else
+    echo "I: Creating ${CACHE_FILENAME}" >&2
+fi
+
 env DEBIAN_FRONTEND=noninteractive apt-get -q -y -o dir::cache::archives="${CACHE_DIR}" build-dep .
 t/bin/build-test-packages
 mkdir -p "$(dirname "${CACHE_FILENAME}")"
