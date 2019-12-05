@@ -1,0 +1,1 @@
+debhelper-arch-depends (source): uses-debhelper-compat-file
