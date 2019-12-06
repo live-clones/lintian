@@ -55,6 +55,9 @@ sub always {
         # Allow long descriptions
         next if $name eq 'description';
 
+        # Allow package list
+        next if $name eq 'package-list';
+
         # Title-case the field name
         (my $label = $name) =~ s/\b(\w)/\U$1/g;
 
