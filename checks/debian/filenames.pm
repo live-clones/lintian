@@ -36,7 +36,9 @@ sub source {
 
     my @often_misnamed = (
         { correct => 'NEWS', problematic => 'NEWS.Debian' },
-        { correct => 'TODO', problematic => 'TODO.Debian' });
+        { correct => 'NEWS', problematic => 'NEWS.debian' },
+        { correct => 'TODO', problematic => 'TODO.Debian' },
+        { correct => 'TODO', problematic => 'TODO.debian' });
 
     for my $relative (@often_misnamed) {
 
