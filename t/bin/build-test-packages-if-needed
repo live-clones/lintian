@@ -49,14 +49,34 @@ rm -rf debian/test-out/packages
 
 if [ -f "${CACHE_FILENAME}" ]
 then
-    echo "I: Updating ${CACHE_FILENAME}" >&2
+    echo "I: Extracting ${CACHE_FILENAME}" >&2
     tar xfJ "${CACHE_FILENAME}"
-else
-    echo "I: Creating ${CACHE_FILENAME}" >&2
 fi
 
 t/bin/build-test-packages
+
+echo "I: Removing obsolete test package artifacts from .cache" >&2
+find .cache \
+     -maxdepth 1 \
+     -type f \
+     -regextype posix-egrep \
+     -regex "^\.cache/${PIPELINE}-[[:xdigit:]]{40}\.tar\.xz\$" \
+     -print \
+     -delete
+
+echo "I: Removing old-style artifacts (no pipeline in name) from .cache" >&2
+find .cache \
+     -maxdepth 1 \
+     -type f \
+     -regextype posix-egrep \
+     -regex '^\.cache/[[:xdigit:]]{40}\.tar\.xz$' \
+     -print
+
+echo "I: Creating ${CACHE_FILENAME}" >&2
 mkdir -p "$(dirname "${CACHE_FILENAME}")"
 tar cfJ "${CACHE_FILENAME}" debian/test-out/packages
 
 cp -v "${CACHE_FILENAME}" test-packages.tar.xz
+
+echo "I: Showing artifacts in .cache" >&2
+ls -al .cache >&2
