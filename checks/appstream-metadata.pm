@@ -33,7 +33,7 @@ use strict;
 use warnings;
 
 use File::Basename qw(basename);
-use XML::Simple qw(:strict);
+use XML::LibXML;
 
 use Moo;
 use namespace::clean;
@@ -108,41 +108,54 @@ sub check_modalias {
         # FIXME report this as an error
         return;
     }
-    my $xml = eval {
-        XMLin(
-            $metadatafile->fs_path,
-            ForceArray => ['provides', 'modalias'],
-            KeepRoot => 1,
-            KeyAttr => [],
-        );
-    };
+
+    my $parser = XML::LibXML->new;
+    $parser->set_option('no_network', 1);
+
+    my $doc = eval {$parser->parse_file($metadatafile->fs_path);};
     if ($@) {
         $self->tag('appstream-metadata-invalid',
             basename($metadatafile->fs_path));
         return 0;
     }
 
-    if (exists $xml->{'application'}) {
-        $self->tag(('appstream-metadata-legacy-format', $metadatafile));
+    return 0
+      unless $doc;
+
+    if ($doc->findnodes('/application')) {
+        $self->tag('appstream-metadata-legacy-format', $metadatafile);
         return 0;
     }
-    if (   exists $xml->{'component'}
-        && exists $xml->{'component'}{'provides'}
-        && exists $xml->{'component'}{'provides'}[0]{'modalias'}) {
-        for (@{$xml->{'component'}{'provides'}[0]{'modalias'}}) {
-            push(@{$modaliases}, $_);
-            if (m/^usb:v[0-9a-f]{4}p[0-9a-f]{4}d/i
-                && !m/^usb:v[0-9A-F]{4}p[0-9A-F]{4}d/) {
-                $self->tag((
-                    'appstream-metadata-malformed-modalias-provide',
-                    $metadatafile,
-                    "include non-valid hex digit in USB matching rule '$_'"
-                ));
-            }
-        }
-        return 1;
+
+    my @provides = $doc->findnodes('/component/provides');
+    return 0
+      unless @provides;
+
+    # take first one
+    my $first = $provides[0];
+    return 0
+      unless $first;
+
+    my @nodes = $first->getChildrenByTagName('modalias');
+    return 0
+      unless @nodes;
+
+    for my $node (@nodes) {
+
+        my $alias = $node->firstChild->data;
+        next
+          unless $alias;
+
+        push(@{$modaliases}, $alias);
+
+        $self->tag('appstream-metadata-malformed-modalias-provide',
+            $metadatafile,
+            "include non-valid hex digit in USB matching rule '$alias'")
+          if $alias =~ /^usb:v[0-9a-f]{4}p[0-9a-f]{4}d/i
+          && $alias !~ /^usb:v[0-9A-F]{4}p[0-9A-F]{4}d/;
     }
-    return 0;
+
+    return 1;
 }
 
 sub provides_user_device {
