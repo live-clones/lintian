@@ -30,7 +30,7 @@ use List::Compare;
 use List::MoreUtils qw(any none);
 use Path::Tiny;
 use Text::Levenshtein qw(distance);
-use XML::Simple qw(:strict);
+use XML::LibXML;
 
 use Lintian::Data;
 use Lintian::Deb822Parser qw(read_dpkg_control parse_dpkg_control);
@@ -55,6 +55,7 @@ use constant {
     WC_TYPE_DECENDANTS => 'DECENDANTS',
 };
 
+use constant EMPTY => q{};
 use constant SPACE => q{ };
 
 use Moo;
@@ -563,15 +564,32 @@ sub parse_dep5 {
             $lines[$paragraph_no]{$field_name});
     } else {
         foreach my $srcfile (sort keys %file_licenses) {
-            next if $srcfile =~ '^\.pc/';
-            next unless $srcfile =~ /\.xml$/;
+            next
+              if $srcfile =~ '^\.pc/';
+            next
+              unless $srcfile =~ /\.xml$/;
+
+            my $parser = XML::LibXML->new;
+            $parser->set_option('no_network', 1);
+
             my $file = $processable->index_resolved_path($srcfile);
-            my $seen = eval {
-                my $xml
-                  = XMLin($file->fs_path, ForceArray => [], KeyAttr => []);
-                lc($xml->{'metadata_license'} // '');
-            };
-            next unless $seen;
+            my $doc = eval {$parser->parse_file($file->fs_path);};
+            next
+              unless $doc;
+
+            my @nodes = $doc->findnodes('/component/metadata_license');
+            next
+              unless @nodes;
+
+            # take first one
+            my $first = $nodes[0];
+            next
+              unless $first;
+
+            my $seen = lc($first->firstChild->data // EMPTY);
+            next
+              unless $seen;
+
             my $wanted = $file_licenses{$srcfile};
             $self->tag('inconsistent-appstream-metadata-license',
                 $srcfile,"($seen != $wanted)")
@@ -594,6 +612,7 @@ sub parse_dep5 {
             "paragraph at line $_")
           for sort keys %file_para_coverage;
     }
+
     while ((my $license, $i) = each %required_standalone_licenses) {
         if (not defined $standalone_licenses{$license}) {
             $self->tag('missing-license-paragraph-in-dep5-copyright',
