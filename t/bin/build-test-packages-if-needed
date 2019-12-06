@@ -70,7 +70,8 @@ find .cache \
      -type f \
      -regextype posix-egrep \
      -regex '^\.cache/[[:xdigit:]]{40}\.tar\.xz$' \
-     -print
+     -print \
+     -delete
 
 echo "I: Creating ${CACHE_FILENAME}" >&2
 mkdir -p "$(dirname "${CACHE_FILENAME}")"
