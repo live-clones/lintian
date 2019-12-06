@@ -23,6 +23,9 @@ set -eu
 CACHE_DIR="${1}"
 PIPELINE="${2}"
 
+# get prequisites early, otherwise tar fails for lack of xz-utils
+env DEBIAN_FRONTEND=noninteractive apt-get -q -y -o dir::cache::archives="${CACHE_DIR}" build-dep .
+
 Checksum_input () {
 	# Local files that, if changed, should result in a rebuild of the test
 	# packages.
@@ -52,7 +55,6 @@ else
     echo "I: Creating ${CACHE_FILENAME}" >&2
 fi
 
-env DEBIAN_FRONTEND=noninteractive apt-get -q -y -o dir::cache::archives="${CACHE_DIR}" build-dep .
 t/bin/build-test-packages
 mkdir -p "$(dirname "${CACHE_FILENAME}")"
 tar cfJ "${CACHE_FILENAME}" debian/test-out/packages
