@@ -45,11 +45,15 @@ Checksum_input () {
 CHECKSUM="$(Checksum_input | sha1sum | cut -d ' ' -f1)"
 CACHE_FILENAME="${CACHE_DIR}/${PIPELINE}-${CHECKSUM}.tar.xz"
 
-rm -rf debian/test-out/packages
+echo "I: Showing artifacts in .cache" >&2
+ls -al .cache >&2
+
+echo "I: Looking for ${CACHE_FILENAME}" >&2
 
 if [ -f "${CACHE_FILENAME}" ]
 then
     echo "I: Extracting ${CACHE_FILENAME}" >&2
+    rm -rf debian/test-out/packages
     tar xfJ "${CACHE_FILENAME}"
 fi
 
