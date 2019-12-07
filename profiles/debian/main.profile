@@ -58,6 +58,7 @@ Enable-Tags-From-Check:
  gir,
  group-checks,
  huge-usr-share,
+ image-names,
  infofiles,
  init.d,
  java,
