@@ -1,0 +1,5 @@
+Check-Script: image-names
+Author: Felix Lechner <felix.lechner@lease-up.com>
+Type: binary
+Needs-Info: unpacked, file-info
+Info: This script checks the names of files with image content
