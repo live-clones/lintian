@@ -47,7 +47,7 @@ sub source {
     my $template = 0;
     my $withgpgverification = 0;
     my $wfile = $processable->index_resolved_path('debian/watch');
-    my ($watchver, %dversions);
+    my ($standard, %dversions);
 
     if (not $wfile or not $wfile->is_open_ok) {
         $self->tag('debian-watch-file-is-missing')
@@ -92,23 +92,25 @@ sub source {
         }
 
         if (/^version\s*=\s*(\d+)(?:\s|\Z)/) {
-            if (defined $watchver) {
-                $self->tag('debian-watch-file-declares-multiple-versions',
-                    "line $.");
-            }
-            $watchver = $1;
+            $self->tag('debian-watch-file-declares-multiple-versions',
+                "line $.")
+              if defined $standard;
+
+            $standard = $1;
+
             my $minver = $WATCH_VERSION->value('min-version');
             my $maxver = $WATCH_VERSION->value('max-version');
-            if ($watchver < $minver or $watchver > $maxver) {
-                $self->tag('debian-watch-file-unknown-version', $watchver);
-            }
+            $self->tag('debian-watch-file-unknown-version', $standard)
+              if $standard < $minver || $standard > $maxver;
+
         } else {
-            unless (defined($watchver)) {
+            unless (defined $standard) {
                 $self->tag('debian-watch-file-missing-version');
-                $watchver = 1;
+                $standard = 1;
             }
+
             # Version 1 watch files are too broken to try checking them.
-            next if ($watchver == 1);
+            next if $standard == 1;
 
             my (
                 $repack_mangle, $repack_dmangle,
@@ -119,7 +121,7 @@ sub source {
             if (   s/^opt(?:ion)?s=\"((?:[^\"]|\\\")+)\"\s+//
                 || s/^opt(?:ion)?s=(\S+)\s+//) {
                 $opts = $1;
-                @opts = split($watchver >= 4 ? '\s*,\s*' : ',', $opts);
+                @opts = split($standard >= 4 ? '\s*,\s*' : ',', $opts);
                 for (@opts) {
                     $repack_mangle = 1
                       if defined $repack
@@ -134,7 +136,7 @@ sub source {
                       if defined $prerelease
                       and /^uversionmangle\s*=.*$prerelease/;
                     $repack_dmangle_auto = 1
-                      if $watchver >= 4
+                      if $standard >= 4
                       and /^dversionmangle\s*=.*(?:s\/\@DEB_EXT\@\/|auto)/;
                     $withgpgverification = 1
                       if /^pgpsigurlmangle\s*=\s*/;
@@ -208,6 +210,8 @@ sub source {
         }
     }
     close($fd);
+
+    $self->tag('debian-watch-file-standard', $standard);
 
     $self->tag('debian-watch-contains-dh_make-template', "(line $template)")
       if $template;
