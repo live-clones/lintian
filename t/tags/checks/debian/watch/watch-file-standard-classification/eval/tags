@@ -1,0 +1,2 @@
+watch-file-standard-classification (source): debian-watch-file-standard 3
+watch-file-standard-classification (source): debian-watch-does-not-check-gpg-signature
