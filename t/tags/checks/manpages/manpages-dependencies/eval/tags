@@ -1,1 +1,1 @@
-pecho-data (binary): gratuitous-manpage usr/share/man/man1/pecho.1.gz
+pecho-data (binary): manpage-without-executable usr/share/man/man1/pecho.1.gz
