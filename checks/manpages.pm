@@ -383,7 +383,7 @@ sub breakdown {
         my $section = $minfo->[0]{section};
 
         unless ($binfo || $link) {
-            $self->tag('gratuitous-manpage', $minfo->[0]{file})
+            $self->tag('manpage-without-executable', $minfo->[0]{file})
               if $section == 1 || $section == 8;
         }
     }
