@@ -32,37 +32,37 @@ with 'Lintian::Check';
 my @image_formats = ({
         name => 'PNG',
         file_info => qr/^PNG image data/,
-        good_name => sub { /\.(?:png|PNG)$/ }
+        good_name => sub { $_[0] =~ /\.(?:png|PNG)$/ }
     },
     {
         name => 'JPEG',
         file_info => qr/^JPEG image data/,
-        good_name => sub { /\.(?:jpg|JPG|jpeg|JPEG)$/ }
+        good_name => sub { $_[0] =~ /\.(?:jpg|JPG|jpeg|JPEG)$/ }
     },
     {
         name => 'GIF',
         file_info => qr/^GIF image data/,
-        good_name => sub { /\.(?:gif|GIF)$/ }
+        good_name => sub { $_[0] =~ /\.(?:gif|GIF)$/ }
     },
     {
         name => 'TIFF',
         file_info => qr/^TIFF image data/,
-        good_name => sub { /\.(?:tiff|TIFF|tif|TIF)$/ }
+        good_name => sub { $_[0] =~ /\.(?:tiff|TIFF|tif|TIF)$/ }
     },
     {
         name => 'XPM',
         file_info => qr/^X pixmap image/,
-        good_name => sub { /\.(?:xpm|XPM)$/ }
+        good_name => sub { $_[0] =~ /\.(?:xpm|XPM)$/ }
     },
     {
         name => 'Netpbm',
         file_info => qr/^Netpbm image data/,
-        good_name => sub { /\.(?:pbm|PBM|pgm|PGM|ppm|PPM|pnm|PNM)$/ }
+        good_name => sub { $_[0] =~ /\.(?:pbm|PBM|pgm|PGM|ppm|PPM|pnm|PNM)$/ }
     },
     {
         name => 'SVG',
         file_info => qr/^SVG Scalable Vector Graphics image/,
-        good_name => sub { /\.(?:svg|SVG)$/ }
+        good_name => sub { $_[0] =~ /\.(?:svg|SVG)$/ }
     },
 );
 
