@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: files-old-config-script
+Description: Check for detection of old style config script

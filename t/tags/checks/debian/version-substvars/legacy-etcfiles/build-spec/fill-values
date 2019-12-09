@@ -1,0 +1,5 @@
+Skeleton: upload-native
+Testname: legacy-etcfiles
+Source: etcfiles
+Version: 1
+Description: Legacy test "etcfiles"

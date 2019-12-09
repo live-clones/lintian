@@ -1,4 +1,0 @@
-Testname: python-hypothesis-example
-Skeleton: upload-native
-Description: Test for presence of Python hypothesis example
-Check: files

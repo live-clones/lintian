@@ -1,0 +1,4 @@
+Skeleton: upload-native
+Testname: fields-orphaned-package-not-maintained-in-debian-infrastructure-fp
+Description: Test for orphaned package not maintained in Debian infrastucture
+Package-Architecture: all

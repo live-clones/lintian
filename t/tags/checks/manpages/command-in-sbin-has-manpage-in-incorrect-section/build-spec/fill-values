@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: command-in-sbin-has-manpage-in-incorrect-section
+Description: Binary in /sbin with manpage in section 1

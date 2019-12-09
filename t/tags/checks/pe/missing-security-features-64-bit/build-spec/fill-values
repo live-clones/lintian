@@ -1,0 +1,4 @@
+Testname: missing-security-features-64-bit
+Skeleton: upload-native
+Extra-Build-Depends: gcc-mingw-w64-x86-64, mingw-w64-tools
+Description: Test with 64-bit PE binaries (PE32+) missing recommended security features

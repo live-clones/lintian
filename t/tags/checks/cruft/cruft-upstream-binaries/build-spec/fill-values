@@ -1,0 +1,4 @@
+Testname: cruft-upstream-binaries
+Skeleton: upload-non-native
+Source-Format: 3.0 (quilt)
+Description: Check for binaries in the upstream tarball

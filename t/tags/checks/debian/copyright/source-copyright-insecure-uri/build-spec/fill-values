@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: source-copyright-insecure-uri
+Description: Test for insecure Format: URIs

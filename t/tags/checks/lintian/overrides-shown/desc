@@ -1,6 +1,0 @@
-Skeleton: upload-native
-Testname: overrides-shown
-Package-Architecture: any
-Options: --pedantic --show-overrides
-Description: Test override handling
-Check: lintian

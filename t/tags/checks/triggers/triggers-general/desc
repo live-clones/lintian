@@ -1,4 +1,0 @@
-Skeleton: upload-native
-Testname: triggers-general
-Description: Test of the triggers check
-Check: triggers

@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: gir
+Description: test GObject-Introspection

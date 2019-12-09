@@ -1,0 +1,4 @@
+Skeleton: upload-native
+Testname: source-format-1.0
+Source-Format: 1.0
+Description: General tests for debian/source/* checks

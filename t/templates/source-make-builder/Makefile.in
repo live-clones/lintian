@@ -24,8 +24,8 @@ post_build = $(ROOT_DIR)/post-build
 
 product = [% $build_product %]
 
-ifneq (,$(wildcard dpkg-overrides))
-dpkgoverrides = $(shell cat dpkg-overrides)
+ifneq (,$(wildcard $(ROOT_DIR)/dpkg-overrides))
+dpkgoverrides = $(shell cat $(ROOT_DIR)/dpkg-overrides)
 endif
 
 ifeq ($(type),native)

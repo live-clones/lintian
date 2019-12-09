@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: source-copyright-symlink
+Description: Test for symlinked debian/copyright

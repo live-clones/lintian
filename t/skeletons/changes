@@ -1,8 +1,6 @@
 Version: 1.0
 Template-Sets:
  . (changes-simple-filler),
- . (test-runner-tags),
- . (lintian-invocation)
 Fill-Targets:
  test.changes,
  . (make-builder),

@@ -1,8 +1,0 @@
-Skeleton: upload-native
-Testname: nmu-local-changelog
-Description: Test suppression of NMU tags for local packages
-Test-Against:
- changelog-should-mention-nmu
- source-nmu-has-incorrect-version-number
-References: Debian Bug#501523
-Check: nmu

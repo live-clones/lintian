@@ -1,0 +1,4 @@
+Testname: debhelper-executable-files-compat-9
+Options: --suppress-tags
+ package-needs-versioned-debhelper-build-depends
+Check: debhelper

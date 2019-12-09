@@ -1,0 +1,4 @@
+Testname: debian-source-dir-gitpkg-series
+Skeleton: upload-non-native
+Source-Format: 3.0 (quilt)
+Description: Test for trivial series file in git-patches-not-exported

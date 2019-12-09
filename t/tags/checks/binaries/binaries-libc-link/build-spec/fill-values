@@ -1,0 +1,4 @@
+Skeleton: upload-native
+Testname: binaries-libc-link
+Description: Binaries not linked against libc
+Package-Architecture: any

@@ -1,4 +1,0 @@
-Testname: eslint-config-file
-Skeleton: upload-native
-Description: Test for presence of .eslintrc config file
-Check: files

@@ -1,0 +1,4 @@
+Testname: lintian-output-colons
+Options: --pedantic --show-overrides
+Output-Format: colons
+Match-Strategy: literal

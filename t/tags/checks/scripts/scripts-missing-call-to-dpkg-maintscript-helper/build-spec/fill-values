@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: scripts-missing-call-to-dpkg-maintscript-helper
+Description: Test for packages that miss calls to dpkg-maintscript-helper(1)

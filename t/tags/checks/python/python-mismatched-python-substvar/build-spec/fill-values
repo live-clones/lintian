@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: python-mismatched-python-substvar
+Description: Check for Python packages with mismatched substvars.

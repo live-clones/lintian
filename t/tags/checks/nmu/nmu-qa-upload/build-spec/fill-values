@@ -1,0 +1,5 @@
+Skeleton: upload-native
+Testname: nmu-qa-upload
+Version: 1.0+nmu1
+Description: Test for QA upload issues
+Author: Debian QA Group <packages@qa.debian.org>

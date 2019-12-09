@@ -1,4 +1,0 @@
-Skeleton: upload-native
-Testname: files-foo-violates-expected-naming
-Description: Test naming conventions not being followed
-Check: files

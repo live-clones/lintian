@@ -1,0 +1,4 @@
+Testname: description-general
+Test-Against:
+ description-synopsis-might-not-be-phrased-properly
+Check: fields/description

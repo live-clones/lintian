@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: source-copyright-pipe-as-or
+Description: Test for the pipe symbol being used as an "or"

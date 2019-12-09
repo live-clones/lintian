@@ -1,0 +1,6 @@
+Skeleton: upload-native
+Testname: deb-format-udeb-compression
+Package-Architecture: all
+Description: Test of compression of udeb data member
+Extra-Build-Depends: dpkg (<< 1.18.11)
+# dpkg 1.18.1 Will warn for us

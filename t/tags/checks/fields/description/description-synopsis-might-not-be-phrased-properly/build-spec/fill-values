@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: description-synopsis-might-not-be-phrased-properly
+Description: Tests for fullstop detection

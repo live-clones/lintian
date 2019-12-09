@@ -1,6 +1,0 @@
-Skeleton: upload-native
-Testname: standards-version-timewarp-unrel
-Description: Test newer standards version with unreleased old changelog date
-Test-Against:
- timewarp-standards-version
-Check: fields/standards-version

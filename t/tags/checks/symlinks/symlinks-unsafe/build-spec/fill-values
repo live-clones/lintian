@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: symlinks-unsafe
+Description: General tests of unsafe symlinks

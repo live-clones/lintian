@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: manpages-dependencies
+Description: Test for manpages in dependencies

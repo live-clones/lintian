@@ -26,7 +26,6 @@
 # the test suite layout and naming conventions, see t/tests/README.
 # For more information about running tests, see
 # doc/tutorial/Lintian/Tutorial/TestSuite.pod
-#
 
 use strict;
 use warnings;
@@ -35,15 +34,10 @@ use v5.10;
 
 use Capture::Tiny qw(capture_merged);
 use Cwd;
-use File::Basename;
 use File::Copy;
 use File::Find::Rule;
-use File::Path qw(make_path);
-use File::Spec::Functions qw(abs2rel catpath rel2abs splitpath splitdir);
 use File::stat;
 use Getopt::Long;
-use List::MoreUtils qw(any uniq);
-use List::Util qw(max);
 use IO::Async::Function;
 use IO::Async::Loop;
 use Path::Tiny;
@@ -76,12 +70,12 @@ use lib "$ENV{'LINTIAN_TEST_ROOT'}/lib";
 
 use Lintian::Internal::FrontendUtil qw(default_parallel);
 
+use Test::Lintian::Build qw(build_subject);
 use Test::Lintian::ConfigFile qw(read_config);
 use Test::Lintian::Helper
   qw(rfc822date cache_dpkg_architecture_values get_latest_policy get_recommended_debhelper_version);
-use Test::Lintian::Hooks
-  qw(find_missing_prerequisites run_lintian sed_hook sort_lines calibrate);
-use Test::Lintian::Prepare qw(logged_prepare early_logpath);
+use Test::Lintian::Hooks qw(run_lintian sed_hook sort_lines calibrate);
+use Test::Lintian::Prepare qw(prepare);
 
 use constant SPACE => q{ };
 use constant INDENT => q{    };
@@ -130,13 +124,13 @@ die "Cannot find testset directory $testset"
   unless -d $testset;
 
 # make sure testset is an absolute path
-$testset = rel2abs($testset);
+$testset = path($testset)->absolute->stringify;
 
 # calculate a default test work directory if none given
-$outpath ||= dirname($testset) . '/debian/test-out';
+$outpath ||= path($testset)->parent->stringify . '/debian/test-out';
 
 # create test work directory unless it exists
-make_path($outpath)
+path($outpath)->mkpath
   unless -e $outpath;
 
 # make sure test work path is a directory
@@ -144,7 +138,7 @@ die "Test work directory $outpath is not a directory"
   unless -d $outpath;
 
 # make sure outpath is absolute
-$outpath = rel2abs($outpath);
+$outpath = path($outpath)->relative->stringify;
 
 say EMPTY;
 
@@ -164,7 +158,8 @@ $ENV{'DPKG_NLS'} = 0;
 
 my $helperpath = "$testset/bin";
 if (-d $helperpath) {
-    my $helpers = rel2abs($helperpath)// die("Cannot resolve $helperpath: $!");
+    my $helpers = path($helperpath)->absolute->stringify
+      // die("Cannot resolve $helperpath: $!");
     $ENV{'PATH'} = "$helpers:$ENV{'PATH'}";
 }
 
@@ -194,44 +189,64 @@ say EMPTY;
 my $status = 0;
 
 # find spec paths
-my @descfiles = File::Find::Rule->file()->name('desc')->in("$testset/tags");
+my @descfiles
+  = sort File::Find::Rule->file()->name('fill-values')->in("$testset/tags");
 
-my @testpaths;
-foreach my $descfile (@descfiles) {
-    my ($volume, $directories, $file) = splitpath($descfile);
-    push(@testpaths, catpath($volume, $directories, EMPTY));
-}
+my @specpaths = map { path($_)->parent->absolute->stringify } @descfiles;
 
 # prepare output directories
-say 'Preparing '. scalar @testpaths. ' work directories...'. NEWLINE
-  if @testpaths;
+say 'Preparing the sources for '. scalar @specpaths. ' test packages.'
+  if @specpaths;
 
-my @prepqueue = map { abs2rel($_) } @testpaths;
+my @prepqueue = map { path($_)->relative->stringify } @specpaths;
+
+# for filled templates
+my $sourceroot = "$outpath/package-sources";
+
+# for built test packages
+my $buildroot = "$outpath/packages";
+
+$ENV{PERL_PATH_TINY_NO_FLOCK} =1;
 
 my $prepare = IO::Async::Function->new(
     code => sub {
         my ($specpath) = @_;
 
-        # get runpath
-        my $relative = abs2rel($specpath, $testset);
-        my $runpath = rel2abs($relative, $outpath);
-
         # label process
-        $0 = "Processing $specpath";
+        $0 = "Lintian prepare test: $specpath";
 
-        try {
-            # prepare
-            logged_prepare($specpath, $runpath, $testset,$force_rebuild);
-        }catch {
-            # catch any error
-            my $error = $_;
+        # calculate destination
+        my $relative = path($specpath)->parent->relative($testset);
+        my $sourcepath = $relative->absolute($sourceroot)->stringify;
+        my $buildpath = $relative->absolute($buildroot)->relative->stringify;
 
-            my $message = "Preparation failed for $specpath";
-            $message .= ": $error" if length $error;
+        my $error;
 
-          # print log and warn on error (do not die; will mess up Ia::Function)
-            die $message;
+        # capture output
+        my $log = capture_merged {
+
+            try {
+
+                # remove destination
+                path($sourcepath)->remove_tree
+                  if -e $sourcepath;
+
+                # prepare
+                prepare($specpath, $sourcepath, $testset, $force_rebuild);
+
+            }catch {
+                # catch any error
+                $error = $_;
+            };
         };
+
+        # save log;
+        my $logfile = "$sourcepath.log";
+        path($logfile)->spew_utf8($log) if $log;
+
+        # print something if there was an error
+        die(($log // EMPTY) . "Preparation failed for $specpath: $error")
+          if $error;
 
         return $specpath;
     },
@@ -251,29 +266,19 @@ $loop->await($allprepared);
 
 my @failedprep = $allprepared->failed_futures;
 if (@failedprep) {
+    say EMPTY;
     say 'Failed preparation tasks:';
     say NEWLINE . $_->failure for @failedprep;
     exit 1;
 } else {
-    say 'All preparation tasks completed with success.';
+    say 'Package sources are ready.';
 }
 
 say EMPTY;
 
-# remap paths from testset to outpath to get work directories
-my @workpaths = map { rel2abs(abs2rel($_, $testset), $outpath) } @testpaths;
-
-# make all paths relative to current directory
-@workpaths = map { abs2rel($_) } @workpaths;
-
 my $build = IO::Async::Function->new(
     code => sub {
-        my ($path, $num, $total) = @_;
-
-        my $label = "Building in $path [$num/$total]";
-        say $label;
-
-        $0 = $label;
+        my ($specpath, $position, $total) = @_;
 
         # set a predictable locale
         $ENV{'LC_ALL'} = 'C';
@@ -281,18 +286,41 @@ my $build = IO::Async::Function->new(
         # many tests create files via debian/rules
         umask(022);
 
+        # get destination
+        my $relative = path($specpath)->parent->relative($testset);
+        my $sourcepath = $relative->absolute($sourceroot)->relative->stringify;
+        my $buildpath = $relative->absolute($buildroot)->relative->stringify;
+
+        my $sha1sums
+          = qx{cd $sourcepath; find . -type f -print0 | sort -z | xargs -0 sha1sum};
+
+        my $checksum_path = "$buildpath/source-files.sha1sums";
+        if (-r $checksum_path) {
+            my $previous = path($checksum_path)->slurp;
+
+            # only rebuild if needed
+            return
+              if $sha1sums eq $previous;
+        }
+
+        $0 = "Lintian build test: $specpath [$position/$total]";
+        say "Building in $buildpath [$position/$total]";
+
+        path($buildpath)->remove_tree
+          if -e $buildpath;
+        path($buildpath)->mkpath;
+
         # read dynamic file names
-        my $runfiles = "$path/files";
+        my $runfiles = "$sourcepath/files";
         my $files = read_config($runfiles);
 
-        # set path to logfile
-        my $betterlogpath = "$path/$files->{log}";
-
         my $error;
+
         my $log = capture_merged {
+
             try {
                 # call runner
-                build($path);
+                build_subject($sourcepath, $buildpath);
             }catch {
                 # catch any error
                 $error = $_;
@@ -300,10 +328,11 @@ my $build = IO::Async::Function->new(
         };
 
         # delete old runner log
+        my $betterlogpath = "$buildpath/$files->{log}";
         unlink $betterlogpath if -f $betterlogpath;
 
        # move the early log for directory preparation to position of runner log
-        my $earlylogpath = early_logpath($path);
+        my $earlylogpath = "$sourcepath.log";
         move($earlylogpath, $betterlogpath) if -f $earlylogpath;
 
         # append runner log to population log
@@ -312,11 +341,14 @@ my $build = IO::Async::Function->new(
         # add error if there was one
         path($betterlogpath)->append_utf8($error) if length $error;
 
-        # print log and warn on error (do not die; will mess up Ia::Function)
-        warn(($log // EMPTY) . "Builder died for $path: $error")
+        path($checksum_path)->spew($sha1sums)
+          unless length $error;
+
+        # print log and die on error
+        die(($log // EMPTY) . "Builder died for $buildpath: $error")
           if length $error;
 
-        return $path;
+        return $specpath;
     },
     max_workers => $numjobs,
     max_worker_calls => 1,
@@ -325,19 +357,23 @@ my $build = IO::Async::Function->new(
 $loop->add($build);
 
 $SIG{INT} = sub { $build->stop; die "Caught a sigint $!" };
+
 my $counter;
-my @buildtasks= map {$build->call(args => [$_, ++$counter, scalar @workpaths])}
-  sort @workpaths;
+my @buildtasks= map {$build->call(args => [$_, ++$counter, scalar @specpaths])}
+  sort @specpaths;
 
 my $allbuilt = Future->wait_all(@buildtasks);
 
 $loop->await($allbuilt);
 
-my @failedbuild = $allbuilt->failed_futures;
-if (@failedbuild) {
+my @failedbuilds = $allbuilt->failed_futures;
+if (@failedbuilds) {
     say EMPTY;
     say 'Failed build tasks:';
-    say TAB . $_ for @failedbuild;
+    say NEWLINE . $_->failure for @failedbuilds;
+    exit 1;
+} else {
+    say 'All test packages are up to date.';
 }
 
 say EMPTY;
@@ -345,64 +381,6 @@ say EMPTY;
 exit 0;
 
 # program is done
-
-sub build {
-    my ($path) = @_;
-
-    # check test architectures
-    die 'DEB_HOST_ARCH is not set.'
-      unless (length $ENV{'DEB_HOST_ARCH'});
-
-    # read dynamic file names
-    my $runfiles = "$path/files";
-    my $files = read_config($runfiles);
-
-    # read dynamic case data
-    my $rundescpath = "$path/$files->{test_specification}";
-    my $testcase = read_config($rundescpath);
-
-    # skip test if marked
-    my $skipfile = "$path/skip";
-    if (-f $skipfile) {
-        my $reason = path($skipfile)->slurp_utf8 || 'No reason given';
-        say "Skipping test: $reason";
-        return;
-    }
-
-    # skip if missing prerequisites
-    my $missing = find_missing_prerequisites($testcase);
-    if (length $missing) {
-        say "Missing prerequisites: $missing";
-        return;
-    }
-
-    my $platforms = $testcase->{test_architectures};
-    if ($platforms ne 'any') {
-        my @wildcards = split(SPACE, $platforms);
-        my @matches= map {
-            qx{dpkg-architecture -a $ENV{'DEB_HOST_ARCH'} -i $_; echo -n \$?}
-        } @wildcards;
-        unless (any { $_ == 0 } @matches) {
-            say 'Architecture mismatch';
-            return;
-        }
-    }
-
-    # get lintian subject
-    die 'Could not get subject of Lintian examination.'
-      unless exists $testcase->{build_product};
-    my $subject = "$path/$testcase->{build_product}";
-
-    if(exists $testcase->{build_command}) {
-        my $command= "cd $path; $testcase->{build_command}";
-        die "$command failed" if system($command);
-    }
-
-    die 'Build was unsuccessful.'
-      unless -f $subject;
-
-    return;
-}
 
 sub usage {
     print <<"END";

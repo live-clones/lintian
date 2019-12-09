@@ -1,0 +1,4 @@
+Testname: cruft-wasm
+Description: Misc errors related to wasm
+Skeleton: upload-non-native
+Extra-Build-Depends: file (>= 1:5.32)

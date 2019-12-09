@@ -1,0 +1,3 @@
+Template-Sets:
+ . (test-runner-tags),
+ . (lintian-invocation)

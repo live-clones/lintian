@@ -1,0 +1,4 @@
+Skeleton: upload-native
+Testname: files-uses-perl4-libs-without-dep
+Description: Check that script-uses-perl4-libs-without-dep works (positive)
+Extra-Build-Depends: perl

@@ -1,4 +1,0 @@
-Skeleton: deb
-Testname: control-files-bad
-Description: Test for bad owner of control files
-Check: control-files

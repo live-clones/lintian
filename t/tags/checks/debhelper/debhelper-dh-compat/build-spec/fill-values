@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: debhelper-dh-compat
+Description: Test the value of DH_COMPAT

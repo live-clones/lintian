@@ -1,8 +1,0 @@
-Skeleton: upload-native
-Testname: cruft-native-dash-version
-Source-Format: 1.0
-Version: 1.0-1
-Description: Test for native packages with dash version
-Test-Against:
- malformed-debian-changelog-version
-Check: debian/changelog

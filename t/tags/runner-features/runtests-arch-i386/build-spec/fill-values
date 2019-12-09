@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: runtests-arch-i386
+Description: Test a package that is supposedly i386-specific

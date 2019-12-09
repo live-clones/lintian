@@ -1,0 +1,6 @@
+Testname: shared-libs-ldconfig-not-symlink
+Package-Architecture: any
+Skeleton: upload-non-native
+Default-Build-Depends: debhelper (>= 9.20151004~)
+Dh-Compat-Level: 9
+Description: Test ldconfig symlink not being a symlink

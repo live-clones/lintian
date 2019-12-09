@@ -1,4 +1,0 @@
-Skeleton: upload-native
-Testname: scripts-interpreters-nodejs
-Description: Check various NodeJS issues
-Check: scripts

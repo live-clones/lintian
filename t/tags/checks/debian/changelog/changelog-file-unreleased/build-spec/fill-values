@@ -1,0 +1,5 @@
+Skeleton: upload-native
+Testname: changelog-file-unreleased
+Version: 2.0
+Distribution: UNRELEASED
+Description: Suppress new date warnings for UNRELEASED

@@ -1,0 +1,4 @@
+Skeleton: upload-native
+Testname: cruft-minified-js
+Description: Misc errors related to minified javascript
+Extra-Build-Depends: uglifyjs

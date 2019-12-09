@@ -1,0 +1,4 @@
+Testname: watch-file-pubkey-missing
+Skeleton: upload-non-native
+Version: 1+dfsg-1
+Description: Watch file if verify signature should check d/upstream/signing-key.{pgp,asc}

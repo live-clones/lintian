@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: rules-special-variables
+Description: Test for debian/rules using special variables

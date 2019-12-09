@@ -1,0 +1,4 @@
+Testname: debian-source-dir-gitpkg
+Skeleton: upload-non-native
+Source-Format: 3.0 (quilt)
+Description: Test for false positives in git-patches-not-exported

@@ -1,0 +1,3 @@
+Skeleton: deb
+Testname: files-missing-intermediate-dirs
+Description: Test for tarballs without intermediate dirs

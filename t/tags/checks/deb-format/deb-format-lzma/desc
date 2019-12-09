@@ -1,4 +1,0 @@
-Skeleton: deb
-Testname: deb-format-lzma
-Description: Test package with LZMA compression
-Check: deb-format

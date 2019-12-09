@@ -1,0 +1,4 @@
+Testname: fields-version-dsfg
+Skeleton: upload-non-native
+Version: 1.0+dsfg1-1
+Description: Check for the dsfg typo

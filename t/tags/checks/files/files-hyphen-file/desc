@@ -1,4 +1,0 @@
-Skeleton: upload-native
-Testname: files-hyphen-file
-Description: Test for files called "-"
-Check: files

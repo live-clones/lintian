@@ -1,6 +1,0 @@
-Skeleton: upload-native
-Testname: debhelper-autoreconf-build-depends
-Description: Test for useless autoreconf-related build dependencies
-Default-Build-Depends: debhelper (>= 10)
-Dh-Compat-Level: 10
-Check: debhelper

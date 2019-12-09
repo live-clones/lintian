@@ -1,0 +1,4 @@
+Testname: lintian-no-override
+Options: --no-override
+Match-Strategy: literal
+Output-Format: EWI

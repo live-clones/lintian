@@ -1,0 +1,6 @@
+Testname: nmu-case-insensitive
+Test-Against:
+ changelog-should-mention-nmu
+ source-nmu-has-incorrect-version-number
+References: Debian Bug#486795
+Check: nmu

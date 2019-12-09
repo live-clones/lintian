@@ -1,6 +1,0 @@
-Testname: lintian-color-html
-Skeleton: upload-non-native
-Options: --color=html --show-overrides
-Description: Test Lintian --color=html output escaping
-Match-Strategy: literal
-Output-Format: EWI

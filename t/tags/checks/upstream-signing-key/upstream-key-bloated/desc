@@ -1,7 +1,0 @@
-Testname: upstream-key-bloated
-Skeleton: upload-non-native
-Description: Check if public upstream signing key contains extra signatures
-Test-Against:
- public-upstream-key-unusable
- public-upstream-keys-in-multiple-locations
-Check: upstream-signing-key

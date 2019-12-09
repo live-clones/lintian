@@ -5,10 +5,8 @@ Template-Sets:
  debian (debian-native),
  debian (debian-extra-non-native),
  . (upload-make-builder),
- . (test-runner-tags),
- . (lintian-invocation)
 Fill-Targets:
  debian (debian-packaging),
  orig/debian (debian-packaging),
  . (make-builder),
- pre-upstream
+ pre-upstream,

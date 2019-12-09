@@ -1,6 +1,0 @@
-Skeleton: upload-native
-Testname: patch-systems-no-readme-source
-Description: Patch system with no README.source
-Extra-Build-Depends: quilt
-References: Debian Bug #537969
-Check: patch-systems

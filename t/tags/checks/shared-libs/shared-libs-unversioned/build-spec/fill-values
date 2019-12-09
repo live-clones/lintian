@@ -1,0 +1,4 @@
+Skeleton: upload-native
+Testname: shared-libs-unversioned
+Package-Architecture: any
+Description: Test handling of shared libraries without versioned SONAMEs

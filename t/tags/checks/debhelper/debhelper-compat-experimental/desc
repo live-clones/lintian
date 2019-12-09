@@ -1,9 +1,0 @@
-Skeleton: upload-native
-Testname: debhelper-compat-experimental
-Dh-Compat-Level: 13
-Default-Build-Depends: debhelper (>= 12~)
-Description: Test for old debian/compat file
-# Overrides the "data/debhelper/compat-level"
-Profile: lintian-test
-Options: --include-dir ./lintian-include-dir --pedantic
-Check: debhelper

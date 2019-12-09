@@ -1,4 +1,0 @@
-Skeleton: upload-native
-Testname: files-unknown-file-in-python-module-directory
-Description: Test for invalid files in Python module directory
-Check: files

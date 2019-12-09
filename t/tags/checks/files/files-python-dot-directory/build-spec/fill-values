@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: files-python-dot-directory
+Description: Check for Python .foo dirs

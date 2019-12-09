@@ -1,4 +1,0 @@
-Testname: executable-menu-file
-Skeleton: upload-native
-Description: Test with an executable menu file
-Check: menus

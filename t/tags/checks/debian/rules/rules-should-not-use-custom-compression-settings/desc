@@ -1,4 +1,0 @@
-Skeleton: upload-native
-Testname: rules-should-not-use-custom-compression-settings
-Description: Test for over-eager tarball compression etc.
-Check: debian/rules

@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: fields-bioconductor-homepage
+Description: Bioconductor Homepage URLs should be canonical

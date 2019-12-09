@@ -1,4 +1,0 @@
-Skeleton: upload-native
-Testname: cruft-unsafe-symlinks
-Description: General tests of unsafe symlinks
-Check: cruft

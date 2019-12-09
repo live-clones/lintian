@@ -1,0 +1,4 @@
+Skeleton: source-non-native
+Testname: changelog-file-symlink
+Source-Format: 3.0 (quilt)
+Description: Test for d/changelog being a symlink

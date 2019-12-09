@@ -1,0 +1,4 @@
+Skeleton: upload-native
+Testname: python-source-package-encodes-python-version
+Source: python3-foo
+Description: Check packages that encode their Python version in their name

@@ -1,4 +1,0 @@
-Skeleton: upload-native
-Testname: upstream-key-native
-Description: Check for public upstream signing key in native package
-Check: upstream-signing-key

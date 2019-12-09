@@ -1,0 +1,5 @@
+Skeleton: upload-native
+Testname: binaries-doesnt-match-sonames
+Default-Build-Depends: debhelper (>= 9.20151004~)
+Dh-Compat-Level: 9
+Description: Test for library package that does not match SONAME

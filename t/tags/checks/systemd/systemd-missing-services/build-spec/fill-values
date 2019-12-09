@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: systemd-missing-services
+Description: Check for missing service files

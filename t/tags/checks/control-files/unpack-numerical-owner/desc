@@ -1,5 +1,0 @@
-Skeleton: deb
-Testname: unpack-numerical-owner
-Description: Test for tarballs with numerical owner only
-Test-Against: control-file-has-bad-owner
-Check: control-files

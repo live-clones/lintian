@@ -1,4 +1,0 @@
-Testname: upstream-keyring
-Skeleton: upload-non-native
-Description: Test with a keyring (false positive, from inkscape)
-Check: upstream-signing-key

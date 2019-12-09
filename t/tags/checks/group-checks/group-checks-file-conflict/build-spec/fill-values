@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: group-checks-file-conflict
+Description: Test for overlapping files

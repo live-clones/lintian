@@ -1,6 +1,0 @@
-Skeleton: upload-native
-Testname: runtests-todo
-Todo: yes
-Description: Test todo tests support
-Match-Strategy: literal
-Output-Format: EWI

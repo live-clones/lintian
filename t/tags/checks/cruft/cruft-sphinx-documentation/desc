@@ -1,5 +1,0 @@
-Skeleton: upload-native
-Testname: cruft-sphinx-documentation
-Description: Detect sphinx documentation
-Options: --pedantic
-Check: cruft

@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: bad-so-link-in-manpage
+Description: Manual page with a bad .so link

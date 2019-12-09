@@ -1,0 +1,4 @@
+Testname: phppear-pear
+Description: phppear tests for PEAR packages
+Extra-Build-Depends: pkg-php-tools
+Skeleton: upload-non-native

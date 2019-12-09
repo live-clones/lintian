@@ -1,0 +1,5 @@
+Skeleton: upload-native
+Testname: changelog-file-strange-date
+Version: 2.0
+Description: Test some strange date in changelog
+Extra-Build-Depends: dpkg (<< 1.18.2)

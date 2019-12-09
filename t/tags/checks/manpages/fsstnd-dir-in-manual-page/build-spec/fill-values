@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: fsstnd-dir-in-manual-page
+Description: Manual page references a directory specified in the FSSTND

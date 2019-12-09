@@ -1,6 +1,0 @@
-Skeleton: upload-native
-Testname: cruft-current-libtool
-Description: Test that a current ltmain.sh is detected correctly
-Test-Against: ancient-libtool
-References: Debian Bug#293296
-Check: cruft

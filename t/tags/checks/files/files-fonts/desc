@@ -1,4 +1,0 @@
-Skeleton: upload-native
-Testname: files-fonts
-Description: Font file checks
-Check: files

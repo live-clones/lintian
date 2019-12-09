@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: debhelper-dh-runit-but-lacks-breaks-substvar
+Description: Check Breaks requirements for dh --with dh_runit

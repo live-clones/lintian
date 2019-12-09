@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: control-file-suggests-itself
+Description: Test a package Suggesting itself

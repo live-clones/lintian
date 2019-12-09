@@ -1,0 +1,2 @@
+Testname: binaries-golang
+Check: debian/control

@@ -1,4 +1,0 @@
-Skeleton: upload-native
-Testname: files-bad-perm-owner
-Description: General permissions and owner tests
-Check: files

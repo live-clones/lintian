@@ -1,0 +1,4 @@
+Skeleton: upload-native
+Testname: maintscript-includes-maint-script-parameters
+Dh-Compat-Level: 11
+Description: Check dh_installdeb .maintscript files

@@ -1,0 +1,4 @@
+Skeleton: upload-native
+Testname: changelog-file-unreleased-signed-changes
+Distribution: UNRELEASED
+Description: Warn about UNRELEASED distribution in changelog if changes is signed

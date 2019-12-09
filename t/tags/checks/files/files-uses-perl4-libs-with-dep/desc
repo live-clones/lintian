@@ -1,5 +1,0 @@
-Skeleton: upload-native
-Testname: files-uses-perl4-libs-with-dep
-Description: Check that script-uses-perl4-libs-without-dep works (negative)
-Test-Against: perl-module-uses-perl4-libs-without-dep
-Check: files

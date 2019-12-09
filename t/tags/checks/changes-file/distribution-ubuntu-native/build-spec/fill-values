@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: distribution-ubuntu-native
+Description: Check *.changes distribution checking for Ubuntu

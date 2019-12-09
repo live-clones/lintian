@@ -1,0 +1,4 @@
+Skeleton: upload-native
+Testname: conffiles-general
+Package-Architecture: all
+Description: Test for conffile-related checks

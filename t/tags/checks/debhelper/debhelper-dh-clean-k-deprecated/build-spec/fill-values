@@ -1,0 +1,4 @@
+Skeleton: upload-native
+Testname: debhelper-dh-clean-k-deprecated
+Dh-Compat-Level: 11
+Description: Test for debhelper >=7 packages using dh_clean -k

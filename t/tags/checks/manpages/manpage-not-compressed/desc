@@ -1,4 +1,0 @@
-Testname: manpage-not-compressed
-Skeleton: upload-native
-Description: Man page is not compressed
-Check: manpages

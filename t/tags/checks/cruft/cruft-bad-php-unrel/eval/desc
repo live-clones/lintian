@@ -1,0 +1,5 @@
+Testname: cruft-bad-php-unrel
+Test-Against:
+ license-problem-php-license
+ license-problem-bad-php-license
+Check: cruft

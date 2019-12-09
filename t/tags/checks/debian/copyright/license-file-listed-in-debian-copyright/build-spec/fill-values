@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: license-file-listed-in-debian-copyright
+Description: License files do not need entries in d/copyright.

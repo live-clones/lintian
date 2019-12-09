@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: changelog-file-epoch-changed-upstream-version-decrease
+Description: Check changelog for accidental epoch changes (decrease)

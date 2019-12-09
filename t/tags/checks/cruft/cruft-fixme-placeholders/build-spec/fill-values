@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: cruft-fixme-placeholders
+Description: Check for placeholders in various maintainer scripts

@@ -1,0 +1,4 @@
+Testname: rules-missing-targets
+Version: 1.0+dfsg-1
+Skeleton: upload-non-native
+Description: Test for missing targets in debian/rules

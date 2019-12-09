@@ -1,0 +1,4 @@
+Skeleton: upload-native
+Testname: debhelper-lacks-versioned-deps
+Dh-Compat-Level: 9
+Description: Test pedantic dependency requirements for debhelper

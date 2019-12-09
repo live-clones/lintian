@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: missing-security-features-fp
+Description: Test with hardened PE binaries not missing any security features

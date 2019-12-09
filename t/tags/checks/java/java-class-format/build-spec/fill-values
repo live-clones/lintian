@@ -1,0 +1,6 @@
+Testname: java-class-format
+Skeleton: upload-non-native
+Package-Architecture: all
+Description: Various checks for Java Class format
+Section: java
+Extra-Build-Depends: javahelper, default-jdk

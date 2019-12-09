@@ -71,7 +71,6 @@ use Test::Lintian::ConfigFile qw(read_config);
 use Test::Lintian::Helper qw(rfc822date);
 use Test::Lintian::Hooks
   qw(find_missing_prerequisites run_lintian sed_hook sort_lines calibrate);
-use Test::Lintian::Prepare qw(early_logpath);
 use Test::Lintian::Output::Universal qw(get_tagnames order);
 
 use constant SPACE => q{ };
@@ -106,12 +105,12 @@ sub logged_runner {
     my $files = read_config($runfiles);
 
     # set path to logfile
-    my $betterlogpath = "$runpath/$files->{log}";
+    my $logpath = "$runpath/$files->{log}";
 
     my $log = capture_merged {
         try {
             # call runner
-            runner($runpath, $betterlogpath)
+            runner($runpath, $logpath)
 
         }catch {
             # catch any error
@@ -119,18 +118,11 @@ sub logged_runner {
         };
     };
 
-    # delete old runner log
-    unlink $betterlogpath if -f $betterlogpath;
-
-    # move the early log for directory preparation to position of runner log
-    my $earlylogpath = early_logpath($runpath);
-    move($earlylogpath, $betterlogpath) if -f $earlylogpath;
-
     # append runner log to population log
-    path($betterlogpath)->append_utf8($log) if length $log;
+    path($logpath)->append_utf8($log) if length $log;
 
     # add error if there was one
-    path($betterlogpath)->append_utf8($error) if length $error;
+    path($logpath)->append_utf8($error) if length $error;
 
     # print log and die on error
     if ($error) {
@@ -239,20 +231,24 @@ sub runner {
         }
     }
 
+    plan skip_all => 'No package found'
+      unless -f "$runpath/subject";
+
     # set the testing plan
     plan tests => 1;
 
+    my $subject = path("$runpath/subject")->realpath;
+
     # get lintian subject
     die 'Could not get subject of Lintian examination.'
-      unless exists $testcase->{build_product};
-    my $subject = "$runpath/$testcase->{build_product}";
+      unless -f $subject;
 
     # run lintian
     $ENV{'LINTIAN_COVERAGE'}.= ",-db,./cover_db-$testcase->{testname}"
       if exists $ENV{'LINTIAN_COVERAGE'};
 
     my $command
-      = "cd $runpath; $ENV{'LINTIAN_FRONTEND'} $testcase->{lintian_command_line} $testcase->{subject}";
+      = "cd $runpath; $ENV{'LINTIAN_FRONTEND'} $testcase->{lintian_command_line} $subject";
     say $command;
     my ($output, $status) = capture_merged { system($command); };
     $status = ($status >> 8) & 255;

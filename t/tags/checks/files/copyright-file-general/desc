@@ -1,5 +1,0 @@
-Skeleton: upload-native
-Testname: copyright-file-general
-Description: Test checking of copyright files
-Options: --pedantic
-Check: files

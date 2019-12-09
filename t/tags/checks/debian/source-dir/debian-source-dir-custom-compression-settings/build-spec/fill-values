@@ -1,0 +1,4 @@
+Skeleton: upload-native
+Testname: debian-source-dir-custom-compression-settings
+Source-Format: 3.0 (native)
+Description: Check for custom compression settings in debian/source/format

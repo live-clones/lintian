@@ -1,0 +1,5 @@
+Skeleton: upload-native
+Testname: fields-maintainer-bounces
+Description: test e-mail addresses which are known to bounce e-mails
+Author: Ubuntu Developers <ubuntu-devel-discuss@lists.ubuntu.com>
+# To avoid NMU warnings / having a changelog.in

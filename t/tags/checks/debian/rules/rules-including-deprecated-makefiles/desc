@@ -1,7 +1,0 @@
-Skeleton: upload-native
-Testname: rules-including-deprecated-makefiles
-Dh-Compat-Level: 10
-Description: Test for debian/rules with deprecated included file
-Extra-Build-Depends: cdbs
-Test-Conflicts: dh-buildinfo
-Check: debian/rules

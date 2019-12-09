@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: lintian-ftp-rejects
+Description: Test Lintian --ftp-master-rejects handling

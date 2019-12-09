@@ -77,7 +77,7 @@ foreach my $descpath (@descpaths) {
     my $testcase = read_config($descpath);
 
     # get test path
-    my $testpath = path($descpath)->parent->stringify;
+    my $testpath = path($descpath)->parent->parent->stringify;
 
     # get name from encapsulating directory
     my $name = path($testpath)->basename;

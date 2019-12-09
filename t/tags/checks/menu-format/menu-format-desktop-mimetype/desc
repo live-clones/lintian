@@ -1,6 +1,0 @@
-Skeleton: upload-native
-Testname: menu-format-desktop-mimetype
-Section: doc
-Description: Check mime-related issues in desktop files
-References: Debian Bug#488832, Debian Bug#525133, #757383, #760677
-Check: menu-format

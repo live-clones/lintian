@@ -1,0 +1,4 @@
+Skeleton: upload-native
+Testname: patch-systems-dpatch-description
+Description: Test patch-system tags for a dpatch package
+Extra-Build-Depends: dpatch

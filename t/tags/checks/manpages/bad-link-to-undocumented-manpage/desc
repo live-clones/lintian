@@ -1,5 +1,0 @@
-Skeleton: upload-native
-Testname: bad-link-to-undocumented-manpage
-Description: Manual page that is a bad link to an undocumented man page
-Test-Depends: groff-base (>= 1.22.4)
-Check: manpages

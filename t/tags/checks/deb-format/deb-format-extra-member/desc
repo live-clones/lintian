@@ -1,4 +1,0 @@
-Skeleton: deb
-Testname: deb-format-extra-member
-Description: Test package for an ar archive in the wrong order
-Check: deb-format

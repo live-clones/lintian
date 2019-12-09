@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: fields-wrong-section
+Description: Packages placed in the wrong sections

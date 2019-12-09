@@ -1,5 +1,0 @@
-Skeleton: upload-native
-Testname: binaries-unsafe-open
-Package-Architecture: any
-Description: Test for possible command execution when processing filenames
-Check: binaries

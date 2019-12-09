@@ -1,5 +1,0 @@
-Skeleton: upload-native
-Testname: control-file-pedantic
-Options: --pedantic
-Description: Pedantic tests for control file issues
-Check: debian/control

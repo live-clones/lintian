@@ -1,0 +1,4 @@
+Skeleton: upload-native
+Testname: binaries-embedded-libs
+Package-Architecture: any
+Description: Package with binary with library-unique strings

@@ -1,4 +1,0 @@
-Skeleton: upload-native
-Testname: fields-uncanonical-vcs-fields
-Description: Test for vcs fields needing canonization
-Check: fields/vcs

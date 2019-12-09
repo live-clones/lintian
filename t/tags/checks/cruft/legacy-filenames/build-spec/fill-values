@@ -1,0 +1,5 @@
+Skeleton: upload-non-native
+Testname: legacy-filenames
+Source: filenames
+Version: 1:12-0.1
+Description: Legacy test "filenames"

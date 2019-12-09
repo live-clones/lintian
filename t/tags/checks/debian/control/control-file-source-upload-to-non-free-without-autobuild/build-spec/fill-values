@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: control-file-source-upload-to-non-free-without-autobuild
+Description: Check for source-only uploads to non-free without autobuild

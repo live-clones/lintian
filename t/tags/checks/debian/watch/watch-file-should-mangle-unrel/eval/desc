@@ -1,0 +1,4 @@
+Testname: watch-file-should-mangle-unrel
+Test-Against:
+ debian-watch-file-should-mangle-version
+Check: debian/watch

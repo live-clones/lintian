@@ -1,0 +1,4 @@
+Skeleton: upload-native
+Testname: menu-format-desktop-mimetype
+Section: doc
+Description: Check mime-related issues in desktop files

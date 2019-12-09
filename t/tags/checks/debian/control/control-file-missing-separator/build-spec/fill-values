@@ -1,0 +1,4 @@
+Skeleton: source-native
+Testname: control-file-missing-separator
+Version: 1
+Description: Test for missing separators in control files

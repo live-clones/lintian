@@ -1,4 +1,0 @@
-Skeleton: deb
-Testname: control-files-traversal
-Description: Test for bad owner of control files
-Check: control-files

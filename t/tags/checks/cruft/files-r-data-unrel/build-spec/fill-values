@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: files-r-data-unrel
+Description: Checks for R statistical data files (false positives)

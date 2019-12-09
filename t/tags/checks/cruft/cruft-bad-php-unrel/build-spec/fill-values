@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: cruft-bad-php-unrel
+Description: Check for the bad php license (false-positives)

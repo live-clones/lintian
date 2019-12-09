@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: unpack-slashes-in-field-name
+Description: Test package with slashes in a control field name

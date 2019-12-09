@@ -1,4 +1,0 @@
-Skeleton: upload-native
-Testname: cruft-non-free-utf
-Description: Check for non free utf
-Check: cruft

@@ -1,7 +1,0 @@
-Skeleton: upload-native
-Testname: init.d-symlink
-Description: Check proper handling of symlinked init scripts
-Test-Against:
- init.d-script-not-included-in-package
- init.d-script-not-marked-as-conffile
-Check: init.d

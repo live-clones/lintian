@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: manpage-locale-dir-country-specific
+Description: Manual page in a locale directory that includes the country name
