@@ -142,12 +142,7 @@ sub changelog_version {
     my $version = Lintian::Inspect::Changelog::Version->new;
     try {
         $version->set($versionstring, $self->native);
-    } catch {
-        undef $version;
     };
-
-    return
-      unless defined $version;
 
     $self->saved_changelog_version($version);
 
