@@ -1,8 +1,36 @@
-lintian (2.40.0+git) UNRELEASED; urgency=medium
+lintian (2.41.0) unstable; urgency=medium
 
-  * WIP (generated upon release).
+  [ Felix Lechner ]
+  * Check for tab characters in debian/copyright files. (Closes: #946026)
+  * Add checks for incorrect/duplicate filenames amongst packaging files,
+    including files called "TODO" and potentially-misnamed files with
+    lowercase "debian" (eg. "NEWS.debian"). (Closes: #946126)
+  * Do not access network when validating XML files by adding XML::LibXML
+    as a binary dependency and removing XML::Simple. (Closes: #926543)
+  * When analysing debian/copyright, take files from the unpatched
+    "orig_index" tree to prevent false-positives with respect to
+    wildcard-matches-nothing-in-dep5-copyright.  (Closes: #844274)
+  * Warn about out image files with unrelated or conflicting names.
+    (Closes: #717818)
+  * Issue a classification tag for the specific uscan(1) standard version
+    in use. (Closes: #542713)
+  * Warn with manpage-without-executable when a manpage is not accompanied by
+    an executable in, for example, /usr/bin. (Closes: #583125)
+  * Remove references to the obsolete IPv4.php PEAR module. (Closes: #935609)
+  * Switch templates for tests to use the debhelper-compat virtual package
+    instead of debian/compat.
+  * Allow long values for the Package-List field.
+  * Adjust a test for the new locations of obsolete DES routines in
+    glibc >= 2.29-5.
 
- -- Chris Lamb <lamby@debian.org>  Tue, 03 Dec 2019 22:02:38 +0100
+  [ Chris Lamb ]
+  * Move field-to-long exceptions to a list.
+  * Drop an unused List::MoreUtils "any" import.
+
+  [ Paul Wise ]
+  * Add several spelling corrections.
+
+ -- Chris Lamb <lamby@debian.org>  Mon, 09 Dec 2019 11:24:05 +0000
 
 lintian (2.40.0) unstable; urgency=medium
 
