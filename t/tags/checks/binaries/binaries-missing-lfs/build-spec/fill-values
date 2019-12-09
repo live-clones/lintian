@@ -1,0 +1,6 @@
+Skeleton: upload-native
+Testname: binaries-missing-lfs
+Default-Build-Depends: debhelper (>= 9.20151004~)
+Dh-Compat-Level: 9
+Description: Test for missing lfs
+Package-Architecture: any

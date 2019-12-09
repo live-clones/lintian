@@ -1,0 +1,3 @@
+Skeleton: deb
+Testname: deb-format-errors-tar
+Description: Test package emitting errors from tar

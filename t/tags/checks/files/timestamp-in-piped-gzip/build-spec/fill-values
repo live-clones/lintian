@@ -1,0 +1,4 @@
+Skeleton: upload-native
+Testname: timestamp-in-piped-gzip
+Description: Look for timestamps in gzipped files prior to gzip 1.10
+Extra-Build-Depends: gzip (<< 1.10)

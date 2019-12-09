@@ -1,4 +1,0 @@
-Skeleton: upload-native
-Testname: rules-dh-order
-Description: Test order of dh command invocations
-Check: debian/rules

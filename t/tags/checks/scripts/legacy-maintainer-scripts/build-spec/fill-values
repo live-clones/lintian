@@ -1,0 +1,6 @@
+Skeleton: upload-non-native
+Testname: legacy-maintainer-scripts
+Source: maintainer-scripts
+Version: 7+dfsg-0.1
+Description: Legacy test "maintainer-scripts"
+Extra-Build-Depends: dash (>= 0.5.10.2)

@@ -1,4 +1,0 @@
-Skeleton: upload-native
-Testname: apache2-webapplications-general
-Description: Several tests related to Apache2 web application packages
-Check: apache2

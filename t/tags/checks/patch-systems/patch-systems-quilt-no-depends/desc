@@ -1,6 +1,0 @@
-Skeleton: upload-native
-Testname: patch-systems-quilt-no-depends
-Description: Test for quilt series but no B-D on quilt
-Test-Against:
- patch-file-present-but-not-mentioned-in-series
-Check: patch-systems

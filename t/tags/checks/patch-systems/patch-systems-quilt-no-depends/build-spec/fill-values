@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: patch-systems-quilt-no-depends
+Description: Test for quilt series but no B-D on quilt

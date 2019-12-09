@@ -1,2 +1,1 @@
-Subject: [% $build_product %]
 Lintian-Command-Line: --no-user-dirs [% $options %] --profile [% $profile %] --allow-root --no-cfg --exp-output format=[% $output_format %] [% $default_lintian_options %]

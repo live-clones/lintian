@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: rules-dh-auto-test-does-not-check-deb-build-options
+Description: Test for missing checks for DEB_BUILD_PROFILES

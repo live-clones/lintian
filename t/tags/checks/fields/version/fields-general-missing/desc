@@ -1,5 +1,0 @@
-Skeleton: deb
-Testname: fields-general-missing
-Version: 1.0-1
-Description: Test for missing control fields
-Check: fields/version

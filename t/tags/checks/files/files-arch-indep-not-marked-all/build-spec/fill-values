@@ -1,0 +1,4 @@
+Skeleton: upload-native
+Testname: files-arch-indep-not-marked-all
+Package-Architecture: any
+Description: Test of arch indep package not marked arch:all

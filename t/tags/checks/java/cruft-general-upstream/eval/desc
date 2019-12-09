@@ -1,0 +1,4 @@
+Testname: cruft-general-upstream
+Options: --pedantic
+Test-Against: source-contains-prebuilt-java-object
+Check: java

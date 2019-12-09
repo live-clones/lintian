@@ -1,4 +1,0 @@
-Skeleton: upload-native
-Testname: fields-multiple-x-deps
-Description: Tests for multiple depends on X
-Check: fields/package-relations

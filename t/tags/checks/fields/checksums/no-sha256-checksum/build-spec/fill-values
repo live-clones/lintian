@@ -1,0 +1,6 @@
+Skeleton: source-native
+Testname: no-sha256-checksum
+Version: 1
+Source-Format: 3.0 (native)
+Dh-Compat-Level: 9
+Description: Test for missing Checksums-Sha256 field

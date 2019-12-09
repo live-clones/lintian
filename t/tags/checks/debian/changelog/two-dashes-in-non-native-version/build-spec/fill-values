@@ -1,0 +1,4 @@
+Skeleton: upload-non-native
+Testname: two-dashes-in-non-native-version
+Version: 4.6.2-1-1
+Description: Two dashes in a non-native version

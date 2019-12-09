@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: debhelper-package-uses-debhelper-with-prefix-minus
+Description: Test for packages using debhelper with a - prefix

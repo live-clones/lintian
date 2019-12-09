@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: python-build-depends-on-sphinx
+Description: Check packages that Build-Depend on python-sphinx

@@ -1,4 +1,0 @@
-Testname: executable-in-docbase
-Skeleton: upload-native
-Description: Test with an executable file in /usr/share/doc-base
-Check: menus

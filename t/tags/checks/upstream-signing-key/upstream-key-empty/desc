@@ -1,5 +1,0 @@
-Testname: upstream-key-empty
-Skeleton: upload-non-native
-Source-Format: 3.0 (quilt)
-Description: Test with an empty public upstream signing key (requires source format 3.0)
-Check: upstream-signing-key

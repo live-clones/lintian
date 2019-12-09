@@ -1,0 +1,4 @@
+Skeleton: upload-native
+Testname: patch-systems-quilt-description
+Description: Test for quilt patches which do not have accompanying descriptions
+Extra-Build-Depends: quilt

@@ -1,0 +1,4 @@
+Testname: cruft-general-upstream
+Skeleton: upload-non-native
+Extra-Build-Depends: zip
+Description: Check for cruft in the upstream source

@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: rules-missing-targets-with-includes
+Description: Test a debian/rules with targets included from another file

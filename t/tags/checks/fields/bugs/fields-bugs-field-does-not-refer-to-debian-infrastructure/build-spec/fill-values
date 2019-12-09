@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: fields-bugs-field-does-not-refer-to-debian-infrastructure
+Description: Check for packages with invalid Bugs fields

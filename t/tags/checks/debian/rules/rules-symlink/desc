@@ -1,4 +1,0 @@
-Skeleton: upload-native
-Testname: rules-symlink
-Description: Test for debian/rules being a symlink
-Check: debian/rules

@@ -1,0 +1,6 @@
+Skeleton: upload-native
+Testname: binaries-from-other-arch
+Package-Architecture: any
+Dh-Compat-Level: 10
+Description: Test package with a pseudo binary from a different architecture
+# since debhelper 12.5.2, objdump no longer fails silently for compat > 10, need better binary

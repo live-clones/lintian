@@ -1,5 +1,0 @@
-Skeleton: upload-native
-Testname: huge-usr-share-percent
-Description: Check passing the percentage limit of /usr/share data
-Package-Architecture: any
-Check: huge-usr-share

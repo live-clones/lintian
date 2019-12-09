@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: menus-foo-calls-bar
+Description: check for installdocs and updatemenus calls

@@ -1,4 +1,0 @@
-Skeleton: upload-native
-Testname: files-ieee-data
-Description: Check for different ieee data install
-Check: files

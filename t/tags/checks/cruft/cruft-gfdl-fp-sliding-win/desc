@@ -1,5 +1,0 @@
-Skeleton: upload-native
-Testname: cruft-gfdl-fp-sliding-win
-Description: Check for FP with GFDL invariants sections
-Test-Against: license-problem-gfdl-invariants
-Check: cruft

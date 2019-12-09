@@ -1,0 +1,4 @@
+Testname: changelog-file-new-upstream
+Skeleton: upload-non-native
+Version: 1.0-2
+Description: Check a new upstream version without a version change

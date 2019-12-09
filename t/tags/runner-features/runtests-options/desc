@@ -1,6 +1,0 @@
-Skeleton: upload-native
-Testname: runtests-options
-Description: Test a bad package but use -C to only catch some tags
-Check: fields/standards-version
-Match-Strategy: literal
-Output-Format: EWI

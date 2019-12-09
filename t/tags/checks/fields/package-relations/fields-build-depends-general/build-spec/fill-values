@@ -1,0 +1,4 @@
+Skeleton: upload-native
+Testname: fields-build-depends-general
+Package-Architecture: all
+Description: General tests for build dependencies

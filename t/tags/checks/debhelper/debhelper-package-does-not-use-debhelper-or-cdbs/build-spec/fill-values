@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: debhelper-package-does-not-use-debhelper-or-cdbs
+Description: Test for packages not using debhelper or CDBS

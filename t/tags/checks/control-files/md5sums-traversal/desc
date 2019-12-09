@@ -1,4 +1,0 @@
-Skeleton: deb
-Testname: md5sums-traversal
-Description: Test for traversals via md5sums symlink
-Check: control-files

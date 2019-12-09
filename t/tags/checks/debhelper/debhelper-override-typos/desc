@@ -1,4 +1,0 @@
-Skeleton: upload-native
-Testname: debhelper-override-typos
-Description: Test for typos in override targets
-Check: debhelper

@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: files-header-has-overly-generic-name
+Description: Test tags for headers with overly generic names

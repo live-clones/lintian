@@ -1,4 +1,0 @@
-Testname: invalid-potfiles-in
-Skeleton: upload-native
-Description: Test for invalid POTFILES.in for debconf template
-Check: debian/po-debconf

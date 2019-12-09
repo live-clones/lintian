@@ -1,4 +1,0 @@
-Skeleton: upload-native
-Testname: debconf-missing-dep
-Description: Test for missing debconf dependency
-Check: debian/debconf

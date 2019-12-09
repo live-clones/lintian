@@ -1,4 +1,0 @@
-Skeleton: upload-native
-Testname: scripts-maintainer-script-empty
-Description: Test for empty maintainer scripts
-Check: scripts

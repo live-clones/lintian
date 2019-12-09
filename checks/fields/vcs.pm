@@ -168,7 +168,14 @@ sub always {
     my $type = $self->type;
     my $processable = $self->processable;
 
+    # team-maintained = maintainer or uploaders field contains a mailing list
+    my $is_teammaintained = 0;
+    my $team_email = '';
+    # co-maintained = maintained by an informal group of people,
+    # i. e. >= 1 uploader and not team-maintained
     my $is_comaintained = 0;
+    my $is_maintained_by_individual = 1;
+    my $num_uploaders = 0;
     for my $field (qw(maintainer uploaders)) {
 
         my $maintainer = $processable->unfolded_field($field);
@@ -176,9 +183,13 @@ sub always {
         next
           unless defined $maintainer;
 
-        my $is_list = $maintainer =~ /\@lists(?:\.alioth)?\.debian\.org\b/;
-        $is_comaintained = 1
-          if $is_list;
+        my $is_list
+          = $maintainer =~ /\b(\S+\@lists(?:\.alioth)?\.debian\.org)\b/;
+        if ($is_list) {
+            $is_teammaintained = 1;
+            $team_email = $1;
+            $is_maintained_by_individual = 0;
+        }
 
         if ($field eq 'uploaders') {
 
@@ -189,10 +200,23 @@ sub always {
             my @uploaders = map { split /\@\S+\K\s*,\s*/ }
               split />\K\s*,\s*/, $maintainer;
 
-            $is_comaintained = 1
-              if @uploaders;
+            $num_uploaders = scalar @uploaders;
+
+            if (@uploaders) {
+                $is_comaintained = 1
+                  unless $is_teammaintained;
+                $is_maintained_by_individual = 0;
+            }
+
         }
     }
+
+    $self->tag('package-is-team-maintained', $team_email, $num_uploaders)
+      if $is_teammaintained;
+    $self->tag('package-is-co-maintained', $num_uploaders)
+      if $is_comaintained;
+    $self->tag('package-is-maintained-by-individual')
+      if $is_maintained_by_individual;
 
     my %seen_vcs;
     while (my ($platform, $splitter) = each %VCS_EXTRACT) {
@@ -288,7 +312,7 @@ sub always {
 
     $self->tag('co-maintained-package-with-no-vcs-fields')
       if $type eq 'source'
-      and $is_comaintained
+      and ($is_comaintained or $is_teammaintained)
       and not %seen_vcs;
 
     # Check for missing Vcs-Browser headers

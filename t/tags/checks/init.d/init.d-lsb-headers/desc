@@ -1,4 +1,0 @@
-Skeleton: upload-native
-Testname: init.d-lsb-headers
-Description: Test tags related to init script LSB headers
-Check: init.d

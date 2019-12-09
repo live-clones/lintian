@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: cruft-readme-source
+Description: Check for cruft in README.source

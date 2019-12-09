@@ -1,0 +1,4 @@
+Skeleton: upload-native
+Testname: fields-perl-provides
+Version: 0.26
+Description: Test for packages provided by perl

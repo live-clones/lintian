@@ -1,0 +1,3 @@
+Skeleton: deb
+Testname: fields-obsolete-relation
+Description: Test for obsolete relation syntax in a binary package

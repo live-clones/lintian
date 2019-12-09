@@ -1,0 +1,4 @@
+Skeleton: upload-native
+Testname: debhelper-unused-cdbs
+Extra-Build-Depends: cdbs
+Description: Test for unused build-depends on cdbs

@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: cruft-non-free-md5sums
+Description: Test of md5sums forbidden-file

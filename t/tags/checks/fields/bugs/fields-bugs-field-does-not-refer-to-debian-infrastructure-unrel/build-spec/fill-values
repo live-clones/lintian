@@ -1,0 +1,4 @@
+Skeleton: upload-native
+Testname: fields-bugs-field-does-not-refer-to-debian-infrastructure-unrel
+Package-Architecture: all
+Description: Check for Bugs: field parsing false positive

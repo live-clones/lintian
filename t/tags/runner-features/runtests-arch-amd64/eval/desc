@@ -1,0 +1,4 @@
+Testname: runtests-arch-amd64
+Test-Architectures: amd64
+Match-Strategy: literal
+Output-Format: EWI

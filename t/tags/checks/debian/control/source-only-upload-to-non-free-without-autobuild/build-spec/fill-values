@@ -1,0 +1,5 @@
+Testname: source-only-upload-to-non-free-without-autobuild
+Skeleton: upload-native
+Section: non-free/devel
+Upload-Type: source
+Description: This source-only upload to non-free will never appear in the archive

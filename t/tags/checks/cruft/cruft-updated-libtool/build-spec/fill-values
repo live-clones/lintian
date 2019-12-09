@@ -1,0 +1,4 @@
+Skeleton: upload-native
+Testname: cruft-updated-libtool
+Extra-Build-Depends: libtool
+Description: Old ltmain.sh/ltconfig is fine with build-depend

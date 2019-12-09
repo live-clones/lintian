@@ -1,4 +1,0 @@
-Testname: unknown-menu-tag
-Skeleton: upload-native
-Description: Test with a menu file that contains an unknown tag
-Check: menu-format

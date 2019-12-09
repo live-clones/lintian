@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: init.d-symlink
+Description: Check proper handling of symlinked init scripts

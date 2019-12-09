@@ -1,4 +1,0 @@
-Skeleton: upload-native
-Testname: systemd-service-file-pidfile-refers-to-var-run
-Description: Check for PIDFile=/var/run/foo
-Check: systemd

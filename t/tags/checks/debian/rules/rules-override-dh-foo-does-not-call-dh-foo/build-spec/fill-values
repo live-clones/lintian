@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: rules-override-dh-foo-does-not-call-dh-foo
+Description: Test for missing calls to dh_foo in override_dh_foo

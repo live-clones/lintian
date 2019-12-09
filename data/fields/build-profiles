@@ -4,6 +4,7 @@ nocheck
 nodoc
 nogolang
 noguile
+noinsttest
 nojava
 nolua
 noperl

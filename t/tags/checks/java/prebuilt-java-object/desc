@@ -1,6 +1,0 @@
-Testname: prebuilt-java-object
-Skeleton: upload-native
-Description: Source package with a prebuilt java object
-Options: --pedantic
-Section: java
-Check: java

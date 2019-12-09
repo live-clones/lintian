@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: fields-vcs-fields
+Description: Test well formed VCS-* fields

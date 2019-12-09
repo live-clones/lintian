@@ -1,0 +1,4 @@
+Skeleton: upload-native
+Testname: debhelper-arch-depends
+Extra-Build-Depends: cli-common-dev (>= 0.5.7) [i386 sparc amd64 ia64]
+Description: Test arch-specific dependencies on dh commands

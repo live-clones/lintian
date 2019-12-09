@@ -1,0 +1,4 @@
+Testname: nmu-multi-author
+Skeleton: upload-non-native
+Version: 1.0-1.1
+Description: Test an NMU with a multi-author changelog

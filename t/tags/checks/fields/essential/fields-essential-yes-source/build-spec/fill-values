@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: fields-essential-yes-source
+Description: Canary test for Essential field-related checks and assumptions

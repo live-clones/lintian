@@ -1,0 +1,4 @@
+Testname: watch-file-pgpmode-none
+Skeleton: upload-non-native
+Version: 2.0-1
+Description: Watch file with pgpmode=none

@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: lintian-no-override
+Description: Test no-override option

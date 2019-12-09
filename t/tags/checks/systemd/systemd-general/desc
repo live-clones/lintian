@@ -1,6 +1,0 @@
-Skeleton: upload-native
-Testname: systemd-general
-Description: General systemd tests
-Test-Against:
- omitted-systemd-service-for-init.d-script
-Check: systemd

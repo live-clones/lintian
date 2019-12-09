@@ -12,7 +12,7 @@ debiandir = $(builddir)/DEBIAN
 rootdir = $(builddir)/root
 docdir = $(rootdir)/usr/share/doc/$(name)
 
-mandatorydir = doc
+mandatorydir = $(ROOT_DIR)/doc
 changelogfile = $(mandatorydir)/changelog
 copyrightfile = $(mandatorydir)/copyright
 
@@ -40,7 +40,7 @@ controlmembers = $(shell tr '\n' ' ' < $(ROOT_DIR)/control-members)
 $(package): fix-perm
 	-mkdir -p $(deb_member_build_path)
 	if [ -d $(deb_member_source_path) \
-             -a $(deb_member_source_path) -ne $(deb_member_build_path)] ; then \
+		-a $(deb_member_source_path) != $(deb_member_build_path) ] ; then \
 		cp -rp $(deb_member_source_path)/. $(deb_member_build_path) ; \
 	fi
 
@@ -115,5 +115,7 @@ clean:
 # permissions.
 .PHONY: fix-perm
 fix-perm:
-	[ ! -d root/ ] || (find root/ -type d | xargs -r chmod 0755 && \
-			   find root/ -type f | xargs -r chmod 0644)
+	if [ -d $(datadir) ] ; then \
+		find $(datadir) -type d | xargs -r chmod 0755 ; \
+		find $(datadir) -type f | xargs -r chmod 0644 ; \
+	fi

@@ -1,0 +1,4 @@
+Skeleton: upload-native
+Testname: fields-dep-without-arch-dep-binary
+Package-Architecture: all
+Description: Test for B-D-A and no architecture-dependent pkgs

@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: usrmerge-bin
+Description: Check for file installed in /usr/bin /bin

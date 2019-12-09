@@ -1,5 +1,0 @@
-Skeleton: upload-native
-Testname: scripts-ocamlrun
-Description: Test correct handling of ocamlrun scripts
-References: Debian Bug#495431
-Check: manpages

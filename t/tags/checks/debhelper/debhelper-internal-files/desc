@@ -1,4 +1,0 @@
-Skeleton: upload-native
-Testname: debhelper-internal-files
-Description: Test for spotting unremoved debhelper temp files
-Check: debhelper

@@ -1,4 +1,0 @@
-Skeleton: upload-native
-Testname: homepage-refers-to-obsolete-debian-infrastructure
-Description: Check for packages with deprecated Homepage fields
-Check: fields/homepage

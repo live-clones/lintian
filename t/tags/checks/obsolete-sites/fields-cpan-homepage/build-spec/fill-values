@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: fields-cpan-homepage
+Description: CPAN Homepage URLs shouldn't have versions

@@ -1,4 +1,0 @@
-Skeleton: upload-native
-Testname: files-privacybreach
-Description: Check for different html privacy breach
-Check: files

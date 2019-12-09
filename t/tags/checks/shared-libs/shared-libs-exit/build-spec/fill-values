@@ -1,0 +1,6 @@
+Skeleton: upload-native
+Testname: shared-libs-exit
+Package-Architecture: any
+Default-Build-Depends: debhelper (>= 9.20151004~)
+Dh-Compat-Level: 9
+Description: Test checks related to libs invoking exit(3)

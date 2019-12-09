@@ -1,0 +1,5 @@
+Skeleton: upload-native
+Testname: standards-version-old
+Description: Test old standards version on recent package
+# Overrides the "data/standards-version/ancient-date"
+# data file to avoid turning "old" into "ancient".

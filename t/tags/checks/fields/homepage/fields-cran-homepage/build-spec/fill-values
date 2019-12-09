@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: fields-cran-homepage
+Description: CRAN Homepage URLs should be canonical

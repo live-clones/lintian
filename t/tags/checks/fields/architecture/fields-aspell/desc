@@ -1,5 +1,0 @@
-Skeleton: upload-native
-Testname: fields-aspell
-Description: Tests for Architecture of an aspell package
-Package-Architecture: any
-Check: fields/architecture

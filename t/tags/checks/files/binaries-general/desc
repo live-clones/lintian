@@ -1,5 +1,0 @@
-Skeleton: upload-native
-Testname: binaries-general
-Description: Misc errors related to binaries
-Package-Architecture: any
-Check: files

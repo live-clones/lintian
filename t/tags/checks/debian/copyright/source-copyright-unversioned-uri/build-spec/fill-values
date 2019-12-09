@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: source-copyright-unversioned-uri
+Description: Test for unversioned DEP 5-like URI

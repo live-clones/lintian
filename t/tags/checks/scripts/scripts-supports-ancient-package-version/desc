@@ -1,5 +1,0 @@
-Testname: scripts-supports-ancient-package-version
-Skeleton: upload-non-native
-Description: Check for maintainer scripts supporting old versions
-Options: --pedantic
-Check: scripts

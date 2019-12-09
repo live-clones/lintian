@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: menus-doc-base-file-references-missing-file
+Description: check for missing files in doc-base

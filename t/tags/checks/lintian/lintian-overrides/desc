@@ -1,4 +1,0 @@
-Skeleton: upload-native
-Testname: lintian-overrides
-Description: Test the couple of overrides-related tags
-Check: lintian

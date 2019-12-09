@@ -1,0 +1,4 @@
+Skeleton: upload-native
+Testname: debhelper-dh-exec
+Dh-Compat-Level: 9
+Description: Tests related to executable, dh-exec using packaging files

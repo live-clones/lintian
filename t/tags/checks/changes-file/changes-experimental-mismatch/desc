@@ -1,4 +1,0 @@
-Skeleton: changes
-Testname: changes-experimental-mismatch
-Description: Test for experimental package to be installed in unstable
-Check: changes-file

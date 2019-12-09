@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: fields-uncanonical-salsa-vcs-fields
+Description: Test for vcs fields needing canonization (salsa)

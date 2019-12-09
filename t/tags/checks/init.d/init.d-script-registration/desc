@@ -1,4 +1,0 @@
-Skeleton: upload-native
-Testname: init.d-script-registration
-Description: Test tags related to the registration of init scripts
-Check: init.d

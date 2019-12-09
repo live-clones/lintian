@@ -1,4 +1,0 @@
-Skeleton: upload-native
-Testname: python-new-python2-package
-Description: Check various Python 2 issues
-Check: python

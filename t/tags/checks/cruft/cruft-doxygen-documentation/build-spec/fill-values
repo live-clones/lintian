@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: cruft-doxygen-documentation
+Description: Detect doxygen documentation

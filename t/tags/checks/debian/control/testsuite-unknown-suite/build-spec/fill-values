@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: testsuite-unknown-suite
+Description: Tests for unknown suite in the control being non-file

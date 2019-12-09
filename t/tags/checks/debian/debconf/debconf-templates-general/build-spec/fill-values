@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: debconf-templates-general
+Description: Test for various debconf template issues

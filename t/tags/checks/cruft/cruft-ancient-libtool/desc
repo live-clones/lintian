@@ -1,5 +1,0 @@
-Skeleton: upload-native
-Testname: cruft-ancient-libtool
-Description: Test that a very old ltmain.sh/ltconfig is detected correctly
-References: Debian Bug#293296
-Check: cruft

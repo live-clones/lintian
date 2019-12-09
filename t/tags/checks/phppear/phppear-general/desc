@@ -1,6 +1,0 @@
-Testname: phppear-general
-Description: General phppear tests
-Test-Against:
- missing-pkg-php-tools-buildsystem
-Skeleton: upload-non-native
-Check: phppear

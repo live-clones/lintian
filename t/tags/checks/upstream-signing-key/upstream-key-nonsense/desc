@@ -1,4 +1,0 @@
-Testname: upstream-key-nonsense
-Skeleton: upload-non-native
-Description: Check for nonsense data in public upstream signing key
-Check: upstream-signing-key

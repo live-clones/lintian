@@ -1,0 +1,4 @@
+Testname: nmu-with-maintainer-ack
+Skeleton: upload-non-native
+Description: Test a variation on NMU wording
+Version: 1.0-1.1

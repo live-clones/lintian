@@ -1,6 +1,0 @@
-Skeleton: upload-native
-Testname: legacy-relations
-Source: relations
-Version: 5
-Description: Legacy test "relations"
-Check: fields/standards-version

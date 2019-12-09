@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: manpage-section-mismatch
+Description: Manual page for which the file extension does not match the section

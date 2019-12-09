@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: control-file-library-dev
+Description: Check control file handling of library dev packages

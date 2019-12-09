@@ -1,5 +1,0 @@
-Skeleton: upload-native
-Testname: cruft-doxygen-documentation
-Description: Detect doxygen documentation
-Options: --pedantic
-Check: cruft

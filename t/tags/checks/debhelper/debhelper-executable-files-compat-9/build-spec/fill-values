@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: debhelper-executable-files-compat-9
+Description: Tests related to executable packaging files

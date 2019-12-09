@@ -1,0 +1,4 @@
+Testname: changelog-version-bzr
+Version: 0.7+bzr49+repack1-1
+Description: Test for +bzr in version (vs binNMU)
+Skeleton: upload-non-native

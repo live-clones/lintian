@@ -1,5 +1,0 @@
-Skeleton: upload-native
-Testname: fsstnd-dir-in-manual-page
-Description: Manual page references a directory specified in the FSSTND
-Test-Depends: groff-base (>= 1.22.4)
-Check: manpages

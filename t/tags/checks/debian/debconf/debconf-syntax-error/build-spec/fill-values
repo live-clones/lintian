@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: debconf-syntax-error
+Description: Test for syntax error in debconf files

@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: po-debconf-general
+Description: General tests for debconf translations

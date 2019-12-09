@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: debhelper-compat-multiple-unrel
+Description: Test debian/compat file with multiple entries (false-positives)

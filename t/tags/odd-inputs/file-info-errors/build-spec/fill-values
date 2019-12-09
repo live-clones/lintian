@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: file-info-errors
+Description: Test handling of errors from file

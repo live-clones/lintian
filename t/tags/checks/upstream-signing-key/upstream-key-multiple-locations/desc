@@ -1,4 +1,0 @@
-Testname: upstream-key-multiple-locations
-Skeleton: upload-non-native
-Description: Check if upstream signing keys are present in multiple locations
-Check: upstream-signing-key

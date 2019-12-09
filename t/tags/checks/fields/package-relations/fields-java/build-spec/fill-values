@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: fields-java
+Description: General tests for java package (build) dependencies

@@ -1,0 +1,3 @@
+Skeleton: deb
+Testname: control-files-weird-files
+Description: Test for bad owner of control files

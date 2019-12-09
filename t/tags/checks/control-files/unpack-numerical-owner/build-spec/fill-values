@@ -1,0 +1,3 @@
+Skeleton: deb
+Testname: unpack-numerical-owner
+Description: Test for tarballs with numerical owner only

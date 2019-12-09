@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: debhelper-script-token
+Description: Check debhelper script token with rule minimization

@@ -1,4 +1,0 @@
-Skeleton: upload-native
-Testname: python-depends-python2-and-python3
-Description: Check for packages that depend on Python 2.x and Python 3.x
-Check: python

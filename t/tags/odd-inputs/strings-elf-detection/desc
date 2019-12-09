@@ -1,6 +1,0 @@
-Skeleton: upload-native
-Testname: strings-elf-detection
-Package-Architecture: any
-Description: Test the ability to detect ELF objects
-Match-Strategy: literal
-Output-Format: EWI

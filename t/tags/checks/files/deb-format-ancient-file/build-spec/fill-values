@@ -1,0 +1,3 @@
+Skeleton: deb
+Testname: deb-format-ancient-file
+Description: Test package containing an ancient file

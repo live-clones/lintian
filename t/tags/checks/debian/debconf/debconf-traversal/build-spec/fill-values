@@ -1,0 +1,4 @@
+Skeleton: source-native
+Testname: debconf-traversal
+Version: 1
+Description: Test for traversal issues via debconf templates

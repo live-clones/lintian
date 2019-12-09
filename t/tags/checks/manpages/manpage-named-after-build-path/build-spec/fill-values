@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: manpage-named-after-build-path
+Description: Manual page that is named after a build path

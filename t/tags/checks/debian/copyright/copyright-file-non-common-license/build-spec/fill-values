@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: copyright-file-non-common-license
+Description: Test for false positive for a common license

@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: rules-ignore-define
+Description: Ignore define blocks when checking rule files

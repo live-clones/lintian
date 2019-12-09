@@ -1,0 +1,4 @@
+Skeleton: upload-native
+Testname: rules-unnecessary-source-date-epoch
+Dh-Compat-Level: 10
+Description: Test for unnecessary SOURCE_DATE_EPOCH assignments

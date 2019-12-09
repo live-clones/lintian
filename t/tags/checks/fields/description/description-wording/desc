@@ -1,4 +1,0 @@
-Skeleton: upload-native
-Testname: description-wording
-Description: Tests for description wording
-Check: fields/description

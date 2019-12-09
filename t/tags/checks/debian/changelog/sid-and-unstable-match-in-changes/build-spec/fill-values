@@ -1,0 +1,4 @@
+Testname: sid-and-unstable-match-in-changes
+Skeleton: upload-native
+Distribution: sid
+Description: Test if Debian changelog is missing

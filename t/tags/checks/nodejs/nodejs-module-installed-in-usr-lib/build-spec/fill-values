@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: nodejs-module-installed-in-usr-lib
+Description: Check if nodejs modules are no more installed in /usr/lib/nodejs

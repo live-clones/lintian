@@ -1,0 +1,6 @@
+Skeleton: upload-native
+Testname: shared-libs-missing-soname
+Package-Architecture: any
+Default-Build-Depends: debhelper (>= 9.20151004~)
+Dh-Compat-Level: 9
+Description: Test for shlib without SONAME

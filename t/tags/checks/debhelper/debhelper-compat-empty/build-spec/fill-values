@@ -1,0 +1,4 @@
+Skeleton: upload-native
+Testname: debhelper-compat-empty
+Description: Test empty debian/compat file
+Default-Build-Depends: debhelper (<< 9.20151101~)

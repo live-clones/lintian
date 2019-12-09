@@ -1,4 +1,0 @@
-Skeleton: upload-native
-Testname: files-flash-non-free
-Description: non-free flash files
-Check: files

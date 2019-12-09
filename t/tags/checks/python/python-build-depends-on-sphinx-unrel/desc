@@ -1,7 +1,0 @@
-Skeleton: upload-native
-Testname: python-build-depends-on-sphinx-unrel
-Description: Check packages that Build-Depend on python-sphinx
-Test-Against:
- alternatively-build-depends-on-python-sphinx-and-python3-sphinx
- build-depends-on-python-sphinx-only
-Check: python

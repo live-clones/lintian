@@ -1,4 +1,0 @@
-Skeleton: upload-native
-Testname: changelog-file-symlink
-Description: Test if Debian changelog is a symlink
-Check: debian/changelog

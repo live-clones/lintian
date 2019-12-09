@@ -1,0 +1,5 @@
+Skeleton: upload-native
+Testname: files-wrong-ma-foreign
+Description: Test for wrong usage of Multi-Arch foreign
+Default-Build-Depends: debhelper (>= 9.20151004~)
+Dh-Compat-Level: 9

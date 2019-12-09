@@ -1,4 +1,0 @@
-Skeleton: upload-native
-Testname: python-malformed-py-version
-Description: Test for malformed python-version field
-Check: python

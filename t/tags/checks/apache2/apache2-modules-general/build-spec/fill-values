@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: apache2-modules-general
+Description: Several tests related to Apache2 module packages

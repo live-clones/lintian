@@ -73,7 +73,8 @@ foreach my $descpath (@descpaths) {
     my $check = $checks[0];
 
     # get the relative location of folder containing test
-    my $relative = path($testpath)->parent->relative($checkpath)->stringify;
+    my $parent = path($testpath)->parent->parent;
+    my $relative = $parent->relative($checkpath)->stringify;
 
     # relative location should match check
     is($relative, $check,

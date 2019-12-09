@@ -1,0 +1,3 @@
+Skeleton: changes
+Testname: changes-distribution-mismatch
+Description: Test for unstable package to be installed in stable

@@ -1,0 +1,4 @@
+Skeleton: upload-native
+Testname: overrides-shown
+Package-Architecture: any
+Description: Test override handling

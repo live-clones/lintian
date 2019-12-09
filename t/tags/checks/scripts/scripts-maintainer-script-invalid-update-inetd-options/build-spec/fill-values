@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: scripts-maintainer-script-invalid-update-inetd-options
+Description: Check for incorrect calls to update-inetd

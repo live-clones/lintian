@@ -1,5 +1,0 @@
-Skeleton: upload-native
-Testname: manpage-section-mismatch
-Description: Manual page for which the file extension does not match the section
-Test-Depends: groff-base (>= 1.22.4)
-Check: manpages

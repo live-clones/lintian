@@ -1,6 +1,0 @@
-Testname: cruft-general-quilt
-Skeleton: upload-non-native
-Source-Format: 3.0 (quilt)
-Description: Check for cruft added in a 3.0 (quilt) package
-References: Debian Bug#598251
-Check: cruft

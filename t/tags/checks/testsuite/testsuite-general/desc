@@ -1,7 +1,0 @@
-Skeleton: upload-native
-Testname: testsuite-general
-Description: General tests of the autopkgtest control file
-Options: --pedantic
-Test-Against:
- unnecessary-testsuite-autopkgtest-field
-Check: testsuite
