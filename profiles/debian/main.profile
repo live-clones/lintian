@@ -85,6 +85,7 @@ Enable-Tags-From-Check:
  triggers,
  udev,
  upstream-metadata,
+ upstream-signature,
  upstream-signing-key,
  usrmerge,
 Extends:
