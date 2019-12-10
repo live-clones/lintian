@@ -495,35 +495,6 @@ sub source {
       and $processable->is_non_free
       and $processable->source_field('xs-autobuild', 'no') eq 'no';
 
-    # Ensure all orig tarballs have a signature if we have an upstream
-    # signature.
-    my $files = $processable->files;
-    my $has_signing_key = 0;
-    for my $key_name ($SIGNING_KEY_FILENAMES->all) {
-        my $path = $processable->index_resolved_path("debian/$key_name");
-        if ($path and $path->is_file) {
-            $has_signing_key = 1;
-            last;
-        }
-    }
-
-    # If we are using uscan in git tag mode, the signature will never
-    # match the tarball so pretend we don't have/need a signing key.
-    my $watch = $processable->index_resolved_path('debian/watch');
-    if ($watch && $watch->file_contents =~ m/pgpmode=gittag/) {
-        $has_signing_key = 0;
-    }
-
-    foreach my $file (keys %$files) {
-        if (   $has_signing_key
-            && $file =~ m/(^.*\.orig(?:-[A-Za-z\d-]+)?\.tar)\./
-            && $file !~ m/\.asc$/
-            && !$processable->repacked) {
-            $self->tag('orig-tarball-missing-upstream-signature', $file)
-              if none { exists $files->{"$_.asc"} } ($file, $1);
-        }
-    }
-
     return;
 }
 
