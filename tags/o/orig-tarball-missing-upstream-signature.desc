@@ -1,7 +1,7 @@
 Tag: orig-tarball-missing-upstream-signature
 Severity: normal
 Certainty: certain
-Check: debian/control
+Check: upstream-signature
 Info: The packaging includes an upstream signing key but the corresponding
  <tt>.asc</tt> signature for one or more source tarballs are not included
  in your .changes file.
