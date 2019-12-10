@@ -1,4 +1,4 @@
 Testname: control-file-upstream-signature-not-missing
 Test-Against:
  orig-tarball-missing-upstream-signature
-Check: debian/control
+Check: upstream-signature
