@@ -222,7 +222,7 @@ sub always {
     while (my ($platform, $splitter) = each %VCS_EXTRACT) {
 
         my $fieldname = "vcs-$platform";
-
+        my $maintainer = $processable->field('maintainer', EMPTY);
         my $uri = $processable->unfolded_field($fieldname);
 
         next
@@ -301,10 +301,17 @@ sub always {
             $self->tag(
                 'orphaned-package-not-maintained-in-debian-infrastructure',
                 $fieldname, $uri)
-              if $processable->field('maintainer', EMPTY)
-              =~ /packages\@qa.debian.org/
+              if $maintainer =~ /packages\@qa.debian.org/
               && $platform ne 'browser';
         }
+
+        $self->tag('wrong-vcs-location-for-dpmt')
+          if $maintainer =~ m{python-modules-team\@lists\.alioth\.debian\.org}
+          and $uri !~ m{salsa.debian.org/python-team/modules/.+};
+
+        $self->tag('wrong-vcs-location-for-papt')
+          if $maintainer =~ m{python-apps-team\@lists\.alioth\.debian\.org}
+          and $uri !~ m{salsa.debian.org/python-team/applications/.+};
     }
 
     $self->tag('vcs-fields-use-more-than-one-vcs', sort keys %seen_vcs)
