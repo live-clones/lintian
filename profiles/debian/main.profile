@@ -63,6 +63,7 @@ Enable-Tags-From-Check:
  init.d,
  java,
  lintian,
+ mailcap,
  manpages,
  md5sums,
  menu-format,
