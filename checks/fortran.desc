@@ -1,0 +1,6 @@
+Check-Script: fortran
+Author: Felix Lechner <felix.lechner@lease-up.com>
+Type: binary, udeb
+Needs-Info: unpacked, file-info
+Info: This script checks FORTRAN files.
+
