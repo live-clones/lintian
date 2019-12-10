@@ -55,6 +55,7 @@ Enable-Tags-From-Check:
  fields/version,
  filename-length,
  files,
+ fortran,
  gir,
  group-checks,
  huge-usr-share,
