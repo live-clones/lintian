@@ -35,7 +35,7 @@ $(product): $(origtargz)
 	if [ -r $(origtargz) -a -r $(private_key) ] ; then \
 		tmpdir=$(shell mktemp -d) ; \
 		gpg --homedir "$$tmpdir" --import $(private_key) ; \
-		gpg --homedir "$$tmpdir" --batch --yes --output $(origtargz).asc \
+		gpg --homedir "$$tmpdir" --batch --yes --armor --output $(origtargz).asc \
 			--detach-sign $(origtargz) ; \
 		gpg-connect-agent --homedir "$$tmpdir" KILLAGENT /bye ; \
 		rm -rf "$$tmpdir" ; \
