@@ -23,7 +23,10 @@ package Lintian::upstream_signature;
 use strict;
 use warnings;
 
+use Path::Tiny;
 use List::Util qw(none);
+
+use constant SLASH => q{/};
 
 use Moo;
 use namespace::clean;
@@ -74,6 +77,36 @@ sub source {
             $self->tag('orig-tarball-missing-upstream-signature', $filename)
               unless scalar @{$signatures{$filename}};
         }
+    }
+
+    # check signatures
+    my @allsigs = map { @{$signatures{$_}} } @origtar;
+    for my $signature (@allsigs) {
+
+        my $path = $processable->groupdir . SLASH . $signature;
+        my $contents = path($path)->slurp;
+
+        if ($contents =~ /^-----BEGIN PGP ARMORED FILE-----/m) {
+
+            if ($contents =~ /^LS0tLS1CRUd/m) {
+                # doubly armored
+                $self->tag('doubly-armored-upstream-signature', $signature);
+
+            } else {
+                # non standard armored header
+                $self->tag('explicitly-armored-upstream-signature',$signature);
+            }
+
+            my @spurious = ($contents =~ /\n([^:\n]+):/g);
+            $self->tag('spurious-fields-in-upstream-signature',
+                $signature, @spurious)
+              if @spurious;
+        }
+
+        # multiple signatures in one file
+        $self->tag('concatenated-upstream-signatures', $signature)
+          if $contents
+          =~ m/(?:-----BEGIN PGP SIGNATURE-----[^-]*-----END PGP SIGNATURE-----\s*){2,}/;
     }
 
     return;
