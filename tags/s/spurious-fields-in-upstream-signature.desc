@@ -1,0 +1,10 @@
+Tag: spurious-fields-in-upstream-signature
+Severity: wishlist
+Certainty: certain
+Check: upstream-signature
+Info: The packaging includes a detached upstream signature file that contains
+ spurious fields like <tt>Comment:</tt> or <tt>Version:</tt>. They are
+ sometimes added by <tt>gpg --enarmor</tt>.
+ .
+ Please generate the signature with <tt>gpg --armor --detach-sig</tt> instead.
+
