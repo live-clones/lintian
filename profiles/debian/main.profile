@@ -73,6 +73,7 @@ Enable-Tags-From-Check:
  nodejs,
  obsolete-sites,
  ocaml,
+ origtar,
  patch-systems,
  pe,
  phppear,
