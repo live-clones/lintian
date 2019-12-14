@@ -228,10 +228,17 @@ sub check_dep5_copyright {
 
     my (@dep5, @lines);
 
-    if (    $contents =~ m/^Files-Excluded:/
-        and $contents
-        !~ m{^Format:.*/doc/packaging-manuals/copyright-format/1.0$}) {
-        $self->tag('files-excluded-without-copyright-format-1.0');
+    if ($contents =~ /^Files-Excluded:/m) {
+
+        if ($contents
+            =~ m{^Format:.*/doc/packaging-manuals/copyright-format/1.0/?$}m) {
+
+            $self->tag('repackaged-source-not-advertised')
+              unless $processable->repacked;
+
+        } else {
+            $self->tag('files-excluded-without-copyright-format-1.0');
+        }
     }
 
     if (
