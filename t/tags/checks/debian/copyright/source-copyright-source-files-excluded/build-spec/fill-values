@@ -1,4 +1,4 @@
 Testname: source-copyright-source-files-excluded
 Skeleton: upload-non-native
-Source-Format: 3.0 (quilt)
+Version: 1.0+dfsg-1
 Description: Test for files listed in Files-Excluded
