@@ -402,11 +402,7 @@ sub extract_service_file_values {
     my (@values, $section);
 
     my @lines = service_file_lines($file);
-    my $key_ws = first_index { /^[[:alnum:]]+(\s*=\s|\s+=)/ } @lines;
-    if ($key_ws > -1) {
-        $self->tag('service-key-has-whitespace', $file, 'at line', $key_ws)
-          unless $skip_tag;
-    }
+
     if (any { /^\.include / } @lines) {
         my $parent_dir = $file->parent_dir;
         @lines = map {
