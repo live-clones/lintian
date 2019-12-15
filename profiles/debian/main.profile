@@ -21,6 +21,7 @@ Enable-Tags-From-Check:
  debian/po-debconf,
  debian/readme,
  debian/rules,
+ debian/rules/dh-sequencer,
  debian/source-dir,
  debian/symbols,
  debian/version-substvars,
