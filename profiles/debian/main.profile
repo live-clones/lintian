@@ -56,6 +56,8 @@ Enable-Tags-From-Check:
  fields/version,
  filename-length,
  files,
+ fonts/opentype,
+ fonts/truetype,
  fortran,
  gir,
  group-checks,
