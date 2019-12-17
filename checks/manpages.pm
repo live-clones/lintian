@@ -1,6 +1,7 @@
 # manpages -- lintian check script -*- perl -*-
 
-# Copyright (C) 1998 Christian Schwarz
+# Copyright © 1998 Christian Schwarz
+# Copyright © 2019 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -25,6 +26,7 @@ use warnings;
 use autodie;
 
 use File::Basename;
+use List::Compare;
 use List::MoreUtils qw(any none);
 use Text::ParseWords ();
 
@@ -32,18 +34,17 @@ use Lintian::Spelling qw(check_spelling);
 use Lintian::Util qw(clean_env do_fork drain_pipe internal_error open_gz);
 
 use constant LINTIAN_COVERAGE => ($ENV{'LINTIAN_COVERAGE'}?1:0);
+use constant EMPTY => q{};
 
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
 
-has binary => (is => 'rwp', default => sub { {} });
-has link => (is => 'rwp', default => sub { {} });
-has manpage => (is => 'rwp', default => sub { {} });
+has local_manpages => (is => 'rw', default => sub { {} });
 
-has running_man => (is => 'rwp', default => sub { [] });
-has running_lexgrog => (is => 'rwp', default => sub { [] });
+has running_man => (is => 'rw', default => sub { [] });
+has running_lexgrog => (is => 'rw', default => sub { [] });
 
 sub spelling_tag_emitter {
     my ($self, @orig_args) = @_;
@@ -52,74 +53,51 @@ sub spelling_tag_emitter {
     };
 }
 
+my @user_locations= qw(bin/ usr/bin/ usr/bin/X11/ usr/bin/mh/ usr/games/);
+my @admin_locations= qw(sbin/ usr/sbin/);
+
 sub files {
     my ($self, $file) = @_;
 
-    my $file_info = $file->file_info;
-    my $link = $file->link || '';
-    my ($fname, $path, undef) = fileparse($file);
+    return
+      unless $file->is_file || $file->is_symlink;
 
-    # Binary that wants a manual page?
-    #
-    # It's tempting to check the section of the man page depending on the
-    # location of the binary, but there are too many mismatches between
-    # bin/sbin and 1/8 that it's not clear it's the right thing to do.
-    if (
-        ($file->is_symlink or $file->is_file)
-        and (  ($path eq 'bin/')
-            or ($path eq 'sbin/')
-            or ($path eq 'usr/bin/')
-            or ($path eq 'usr/bin/X11/')
-            or ($path eq 'usr/bin/mh/')
-            or ($path eq 'usr/sbin/')
-            or ($path eq 'usr/games/'))
-    ) {
+    my ($manpage, $path, undef) = fileparse($file);
 
-        my $bin  = $fname;
-        my $sbin = ($path eq 'sbin/') || ($path eq 'usr/sbin/');
-        $self->binary->{$bin} = { file => $file, sbin => $sbin };
-        $self->link->{$bin} = $link
-          if $link;
-
-        return;
-    }
-
-    if (($path =~ m,usr/share/man/$,) and ($fname ne '')) {
+    if ($path =~ m{^usr/share/man/$} && $manpage ne EMPTY) {
         $self->tag('manpage-in-wrong-directory', $file);
         return;
     }
 
     # manual page?
+    my ($subdir) = ($path =~ m{^usr/share/man(/\S+)});
     return
-      unless ($file->is_symlink or $file->is_file)
-      and $path =~ m,^usr/share/man(/\S+),o;
+      unless defined $subdir;
 
-    my $t = $1;
+    $self->tag('manpage-named-after-build-path', $file)
+      if $file =~ m{/_build_} || $file =~ m{_tmp_buildd};
 
-    if ($file =~ m{/_build_} or $file =~ m{_tmp_buildd}) {
-        $self->tag('manpage-named-after-build-path', $file);
-    }
+    $self->tag('manpage-has-overly-generic-name', $file)
+      if $file =~ m{/README\.};
 
-    if ($file =~ m,/README\.,) {
-        $self->tag('manpage-has-overly-generic-name', $file);
-    }
-
-    if (not $t =~ m,^.*man(\d)/$,o) {
+    my ($section) = ($subdir =~ m{^.*man(\d)/$});
+    unless (defined $section) {
         $self->tag('manpage-in-wrong-directory', $file);
         return;
     }
-    my $section = $1;
-    my $lang = '';
-    $lang = $1 if $t =~ m,^/([^/]+)/man\d/$,o;
+
+    my ($language) = ($subdir =~ m{^/([^/]+)/man\d/$});
+    $language //= EMPTY;
 
     # The country should not be part of the man page locale
     # directory unless it's one of the known cases where the
     # language is significantly different between countries.
-    if ($lang =~ /_/ && $lang !~ /^(?:pt_BR|zh_[A-Z][A-Z])$/) {
-        $self->tag('manpage-locale-dir-country-specific', $file);
-    }
+    $self->tag('manpage-locale-dir-country-specific', $file)
+      if $language =~ /_/ && $language !~ /^(?:pt_BR|zh_[A-Z][A-Z])$/;
 
-    my @pieces = split(/\./, $fname);
+    my $file_info = $file->file_info;
+
+    my @pieces = split(/\./, $manpage);
     my $ext = pop @pieces;
     if ($ext ne 'gz') {
         push @pieces, $ext;
@@ -135,10 +113,10 @@ sub files {
     my $section_num = $fn_section;
     if (scalar @pieces && $section_num =~ s/^(\d).*$/$1/) {
         my $bin = join('.', @pieces);
-        $self->manpage->{$bin} = []
-          unless $self->manpage->{$bin};
-        push @{$self->manpage->{$bin}},
-          { file => $file, lang => $lang, section => $section };
+        $self->local_manpages->{$bin} = []
+          unless $self->local_manpages->{$bin};
+        push @{$self->local_manpages->{$bin}},
+          { file => $file, language => $language, section => $section };
 
         # number of directory and manpage extension equal?
         if ($section_num != $section) {
@@ -150,7 +128,7 @@ sub files {
 
     # check symbolic links to other manual pages
     if ($file->is_symlink) {
-        if ($link =~ m,(^|/)undocumented,o) {
+        if ($file->link =~ m,(^|/)undocumented,o) {
             # undocumented link in /usr/share/man -- possibilities
             #    undocumented... (if in the appropriate section)
             #    ../man?/undocumented...
@@ -158,15 +136,15 @@ sub files {
             #    ../../../share/man/man?/undocumented...
             #    ../../../../usr/share/man/man?/undocumented...
             if ((
-                        $link =~ m,^undocumented\.([237])\.gz,o
+                        $file->link =~ m,^undocumented\.([237])\.gz,o
                     and $path =~ m,^usr/share/man/man$1,
                 )
-                or $link =~ m,^\.\./man[237]/undocumented\.[237]\.gz$,o
-                or $link
+                or $file->link =~ m,^\.\./man[237]/undocumented\.[237]\.gz$,o
+                or $file->link
                 =~ m,^\.\./\.\./man/man[237]/undocumented\.[237]\.gz$,o
-                or $link
+                or $file->link
                 =~ m,^\.\./\.\./\.\./share/man/man[237]/undocumented\.[237]\.gz$,o
-                or $link
+                or $file->link
                 =~ m,^\.\./\.\./\.\./\.\./usr/share/man/man[237]/undocumented\.[237]\.gz$,o
             ) {
                 $self->tag('link-to-undocumented-manpage', $file);
@@ -283,7 +261,7 @@ sub files {
         }
         # man can have a high start up time, so revisit this
         # later.
-        push(@{$self->running_man}, [$file, $read, $pid, $lang, \@manfile]);
+        push(@{$self->running_man},[$file, $read, $pid, $language, \@manfile]);
 
         # Now we search through the whole man page for some common errors
         my $lc = 0;
@@ -323,70 +301,102 @@ sub files {
 sub breakdown {
     my ($self) = @_;
 
-    my $processable = $self->processable;
-    my $group = $self->group;
+    my %user_executables;
+    my %admin_executables;
 
-    my $ginfo = $group->info;
+    for my $file ($self->processable->sorted_index) {
+
+        next
+          unless $file->is_symlink || $file->is_file;
+
+        my ($basename, $dirname, undef) = fileparse($file->name);
+
+        $user_executables{$basename} = $file
+          if any { $dirname eq $_ } @user_locations;
+
+        $admin_executables{$basename} = $file
+          if any { $dirname eq $_ } @admin_locations;
+    }
+
+    my $group = $self->group;
+    my @direct_prerequisites
+      = @{$group->info->direct_dependencies($self->processable)};
+    my @distant_files = map { $_->sorted_index } @direct_prerequisites;
+    my %distant_manpages;
+
+    for my $file (@distant_files) {
+
+        next
+          unless $file->is_file || $file->is_symlink;
+
+        my ($name, $path, undef) = fileparse($file, qr{\..+$});
+
+        next
+          unless $path =~ m{^usr/share/man/\S+};
+
+        next
+          unless $path =~ m{man\d/$};
+
+        my ($language) = ($path =~ m{/([^/]+)/man\d/$});
+        $language //= EMPTY;
+        $language = EMPTY if $language eq 'man';
+
+        $distant_manpages{$name} = []
+          unless exists $distant_manpages{$name};
+
+        push @{$distant_manpages{$name}},
+          {file => $file, language => $language};
+    }
+
+    my %local_manpages = %{$self->local_manpages};
+    my %related_manpages = (%local_manpages, %distant_manpages);
+
+    my %all_executables = (%user_executables, %admin_executables);
+    my @commands = keys %all_executables;
+
+    # provides sorted output
+    my $related = List::Compare->new(\@commands, [keys %related_manpages]);
+    my @documented = $related->get_intersection;
+    my @manpage_missing = $related->get_Lonly;
+
+    my @english_missing = grep {
+        none {$_->{language} eq EMPTY}
+        @{$related_manpages{$_}}
+    } @documented;
+
+    for my $command (keys %admin_executables) {
+
+        my $file = $admin_executables{$command};
+        my @manpages = @{$related_manpages{$command}};
+
+        $self->tag('command-in-sbin-has-manpage-in-incorrect-section', $file)
+          if $file->is_regular_file
+          && any { $_->{section} == 1 } @manpages;
+    }
+
+    $self->tag('binary-without-english-manpage', $_)
+      for map {$all_executables{$_}} @english_missing;
+
+    $self->tag('binary-without-manpage', $_)
+      for map {$all_executables{$_}} @manpage_missing;
+
+    # surplus manpages only for this package; provides sorted output
+    my $local = List::Compare->new(\@commands, [keys %local_manpages]);
+    my @surplus_manpages = $local->get_Ronly;
+
+    for my $manpage (map { @{$local_manpages{$_}} } @surplus_manpages) {
+
+        my $file = $manpage->{file};
+        my $section = $manpage->{section};
+
+        $self->tag('manpage-without-executable', $file)
+          if $section == 1 || $section == 8;
+    }
 
     # If we have any running sub processes, wait for them here.
     $self->process_lexgrog_output($self->running_lexgrog)
       if @{$self->running_lexgrog};
     $self->process_man_output($self->running_man) if @{$self->running_man};
-
-    # Check our dependencies:
-    foreach my $depproc (@{ $ginfo->direct_dependencies($processable) }) {
-        # Find the manpages in our related dependencies
-
-        foreach my $file ($depproc->sorted_index){
-            my ($fname, $path, undef) = fileparse($file, qr,\..+$,o);
-            my $lang = '';
-
-            next
-              unless ($file->is_file or $file->is_symlink)
-              and $path =~ m,^usr/share/man/\S+,o;
-
-            next
-              unless ($path =~ m,man\d/$,o);
-
-            $self->manpage->{$fname} = []
-              unless exists $self->manpage->{$fname};
-
-            $lang = $1 if $path =~ m,/([^/]+)/man\d/$,o;
-            $lang = '' if $lang eq 'man';
-            push @{$self->manpage->{$fname}}, {file => $file, lang => $lang};
-        }
-    }
-
-    for my $f (sort keys %{$self->binary}) {
-        my $binfo = $self->binary->{$f};
-        my $minfo = $self->manpage->{$f};
-
-        if ($minfo) {
-            $self->tag('command-in-sbin-has-manpage-in-incorrect-section',
-                $binfo->{file})
-              if $binfo->{sbin}
-              and $binfo->{file}->is_regular_file
-              and $minfo->[0]{section} == 1;
-            if (none { $_->{lang} eq '' } @{$minfo}) {
-                $self->tag('binary-without-english-manpage', $binfo->{file});
-            }
-        } else {
-            $self->tag('binary-without-manpage', $binfo->{file});
-        }
-    }
-
-    for my $f (sort keys %{$self->manpage}) {
-        my $minfo = $self->manpage->{$f};
-        my $binfo = $self->binary->{$f};
-        my $link = $self->link->{$f};
-
-        my $section = $minfo->[0]{section};
-
-        unless ($binfo || $link) {
-            $self->tag('manpage-without-executable', $minfo->[0]{file})
-              if $section == 1 || $section == 8;
-        }
-    }
 
     return;
 }
@@ -418,7 +428,7 @@ sub process_lexgrog_output {
 sub process_man_output {
     my ($self, $running) = @_;
     for my $man_proc (@{$running}) {
-        my ($file, $read, $pid, $lang, $contents) = @{$man_proc};
+        my ($file, $read, $pid, $language, $contents) = @{$man_proc};
         while (<$read>) {
             # Devel::Cover causes some annoying deep recursion
             # warnings and sometimes in our child process.
@@ -433,7 +443,7 @@ sub process_man_output {
             # ignore errors from gzip, will be dealt with at other places
             next if /^(?:man|gzip)/;
             # ignore wrapping failures for Asian man pages (groff problem)
-            if ($lang =~ /^(?:ja|ko|zh)/) {
+            if ($language =~ /^(?:ja|ko|zh)/) {
                 next if /warning \[.*\]: cannot adjust line/;
                 next if /warning \[.*\]: can\'t break line/;
             }
