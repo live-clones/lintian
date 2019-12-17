@@ -381,7 +381,6 @@ sub breakdown {
         my $link = $self->link->{$f};
 
         my $section = $minfo->[0]{section};
-        next unless defined $section;
 
         unless ($binfo || $link) {
             $self->tag('manpage-without-executable', $minfo->[0]{file})
