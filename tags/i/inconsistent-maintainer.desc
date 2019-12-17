@@ -1,0 +1,11 @@
+Tag: inconsistent-maintainer
+Severity: serious
+Certainty: certain
+Check: fields/maintainer
+Info: The Maintainer address in a group of related processables is
+ inconsistent as indicated.
+ .
+ This sometimes happens when environmental variables like <tt>DEBEMAIL</tt>
+ are set to different values when building sources and changes separately.
+ Please use the same maintainer everywhere.
+Ref: #546525
