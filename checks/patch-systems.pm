@@ -313,7 +313,7 @@ sub check_patch {
         my $tag_emitter
           = $self->spelling_tag_emitter('spelling-error-in-patch-description',
             $patch_file);
-        check_spelling($description, $group->info->spelling_exceptions,
+        check_spelling($description, $group->spelling_exceptions,
             $tag_emitter, 0);
     }
     # Use --strip=1 to strip off the first layer of directory in case

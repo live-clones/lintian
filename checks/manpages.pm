@@ -289,7 +289,7 @@ sub files {
                 $self->tag('manpage-has-errors-from-pod2man', "$file:$lc");
             }
             # Check for spelling errors if the manpage is English
-            check_spelling($line, $self->group->info->spelling_exceptions,
+            check_spelling($line, $self->group->spelling_exceptions,
                 $stag_emitter, 0)
               if ($path =~ m,/man/man\d/,);
         }
@@ -320,7 +320,7 @@ sub breakdown {
 
     my $group = $self->group;
     my @direct_prerequisites
-      = @{$group->info->direct_dependencies($self->processable)};
+      = @{$group->direct_dependencies($self->processable)};
     my @distant_files = map { $_->sorted_index } @direct_prerequisites;
     my %distant_manpages;
 

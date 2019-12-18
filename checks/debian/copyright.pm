@@ -1166,7 +1166,7 @@ qr/GNU (?:Lesser|Library) General Public License|(?-i:\bLGPL\b)/i
 
     check_spelling(
         $_,
-        $group->info->spelling_exceptions,
+        $group->spelling_exceptions,
         $self->spelling_tag_emitter('spelling-error-in-copyright'), 0
     );
 

@@ -90,7 +90,7 @@ sub binary {
 
     check_spelling(
         $readme,
-        $group->info->spelling_exceptions,
+        $group->spelling_exceptions,
         $self->spelling_tag_emitter('spelling-error-in-readme-debian'));
 
     return;

@@ -443,7 +443,7 @@ sub check_doc_base_field {
                 "${dbfile}:${line}");
             check_spelling(
                 join(' ', @$vals),
-                $group->info->spelling_exceptions,
+                $group->spelling_exceptions,
                 $stag_emitter
             );
             check_spelling_picky(join(' ', @$vals), $stag_emitter);
@@ -520,7 +520,7 @@ sub check_doc_base_field {
                 "${dbfile}:${line}");
             check_spelling(
                 join(' ', @$vals),
-                $group->info->spelling_exceptions,
+                $group->spelling_exceptions,
                 $stag_emitter
             );
             check_spelling_picky(join(' ', @$vals), $stag_emitter);

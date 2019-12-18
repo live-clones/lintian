@@ -75,7 +75,7 @@ sub breakdown {
 
     # get prerequisites from same source package
     my @prerequisites
-      = @{$self->group->info->direct_dependencies($self->processable)};
+      = @{$self->group->direct_dependencies($self->processable)};
 
     foreach my $file (@{$self->wildcard_links}){
 
