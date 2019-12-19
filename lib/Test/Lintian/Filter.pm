@@ -53,10 +53,10 @@ use File::Spec::Functions qw(rel2abs splitpath catpath);
 use File::Find::Rule;
 use List::MoreUtils qw(uniq);
 use List::Util qw(any all);
+use Path::Tiny;
 use Text::CSV;
 
 use Lintian::Profile;
-
 use Test::Lintian::ConfigFile qw(read_config);
 
 use constant TAGS => 'tags';
@@ -203,7 +203,7 @@ sub find_selected_lintian_testpaths {
             }
 
             for my $testpath (find_all_testpaths($suitepath)) {
-                my $desc = read_config("$testpath/" . DESC);
+                my $desc = read_config("$testpath/eval/" . DESC);
 
                 next unless exists $desc->{check};
 
@@ -220,7 +220,7 @@ sub find_selected_lintian_testpaths {
             my %wanted = map { $_ => 1 } @{$filter->{skeleton}};
 
             for my $testpath (find_all_testpaths($suitepath)) {
-                my $desc = read_config("$testpath/" . DESC);
+                my $desc = read_config("$testpath/build-spec/fill-values");
 
                 next unless exists $desc->{skeleton};
 
@@ -259,12 +259,10 @@ sub find_all_testpaths {
     my ($directory) = @_;
     my @descfiles = File::Find::Rule->file()->name(DESC)->in($directory);
 
-    my @testpaths;
-    foreach my $descfile (@descfiles) {
-        my ($volume, $directories, $file) = splitpath($descfile);
-        croak('Filename should be ' . DESC) unless $file eq DESC;
-        push(@testpaths, catpath($volume, $directories, EMPTY));
-    }
+    my @testpaths
+      = map { my $parent = path($_)->parent->parent; $parent->stringify }
+      @descfiles;
+
     return @testpaths;
 }
 
@@ -281,8 +279,8 @@ sub find_testpaths_by_name {
     my ($path, $name) = @_;
 
     my @named = File::Find::Rule->directory()->name($name)->in($path);
-    my @testpaths
-      = grep { defined } map { -f rel2abs(DESC, $_) ? $_ : undef } @named;
+    my @testpaths= grep { defined }
+      map { -f rel2abs('eval/' . DESC, $_) ? $_ : undef } @named;
 
     return @testpaths;
 }
@@ -297,7 +295,7 @@ located in TEST_PATH.
 sub find_all_tags {
     my ($testpath) = @_;
 
-    my $desc = read_config("$testpath/" . DESC);
+    my $desc = read_config("$testpath/eval/" . DESC);
 
     return EMPTY unless length $desc->{check};
 

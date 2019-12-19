@@ -2,3 +2,4 @@ Skeleton: upload-native
 Testname: control-file-duplicate
 Package-Architecture: all
 Description: Pedantic test for duplicate relations
+Default-Build-Depends: debhelper (>= [% $dh_compat_level %]~)

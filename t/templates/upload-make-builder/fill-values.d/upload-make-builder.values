@@ -1,4 +1,4 @@
 Upload-Type: [% $host_architecture %]
 Build-Product: [% $source %]_[% $no_epoch %]_[% $upload_type %].changes
 Build-Command: make --trace -f [% $source_path %]/Makefile DEFAULT_DH_COMPAT=[% $dh_compat_level %]
-Default-Build-Depends: debhelper (>= [% $dh_compat_level %]~)
+Default-Build-Depends: debhelper-compat (= [% $dh_compat_level %])

@@ -17,8 +17,6 @@ variables:
     - tags
   before_script:
     - apt-get -q update
-  script:
-    - time t/bin/build-test-packages-if-needed .cache
   artifacts:
     paths:
       - test-packages.tar.xz
@@ -39,14 +37,20 @@ variables:
 unstable-test-packages:
   <<: *test-packages
   image: debian:unstable
+  script:
+    - time t/bin/build-test-packages-if-needed .cache unstable
 
 testing-test-packages:
   <<: *test-packages
   image: debian:testing
+  script:
+    - time t/bin/build-test-packages-if-needed .cache testing
 
 stable-bpo-test-packages:
   <<: *test-packages
   image: debian:stable-backports
+  script:
+    - time t/bin/build-test-packages-if-needed .cache stable
 
 ##
 

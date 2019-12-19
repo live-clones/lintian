@@ -1,3 +1,4 @@
 Testname: compat-level-not-a-number
 Skeleton: upload-native
 Description: Test if the value of DH_COMPAT is a number
+Default-Build-Depends: debhelper (>= [% $dh_compat_level %]~)

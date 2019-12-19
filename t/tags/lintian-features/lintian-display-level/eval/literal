@@ -15,4 +15,3 @@ P: lintian-display-level source: debian-control-has-unusual-field-spacing line 1
 X: lintian-display-level source: debian-watch-does-not-check-gpg-signature
 P: lintian-display-level: example-unusual-interpreter usr/share/doc/lintian-display-level/examples/example #!/usr/bin/foo
 P: lintian-display-level source: no-homepage-field
-P: lintian-display-level source: uses-debhelper-compat-file

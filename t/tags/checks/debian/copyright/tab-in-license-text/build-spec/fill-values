@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: tab-in-license-text
+Description: Test for disallowed tab character in DEP-5 long license text

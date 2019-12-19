@@ -198,33 +198,33 @@ sub set {
 
 =cut
 
-has literal => (is => 'rwp',);
+has literal => (is => 'rwp', default => EMPTY);
 
-has epoch => (is => 'rwp',);
+has epoch => (is => 'rwp', default => EMPTY);
 
-has no_epoch => (is => 'rwp',);
+has no_epoch => (is => 'rwp', default => EMPTY);
 
-has upstream => (is => 'rwp',);
+has upstream => (is => 'rwp', default => EMPTY);
 
-has maintainer_revision => (is => 'rwp',);
+has maintainer_revision => (is => 'rwp', default => EMPTY);
 
-has debian_source => (is => 'rwp',);
+has debian_source => (is => 'rwp', default => EMPTY);
 
-has debian_no_epoch => (is => 'rwp',);
+has debian_no_epoch => (is => 'rwp', default => EMPTY);
 
-has source_nmu => (is => 'rwp',);
+has source_nmu => (is => 'rwp', default => EMPTY);
 
-has binary_nmu => (is => 'rwp',);
+has binary_nmu => (is => 'rwp', default => EMPTY);
 
-has without_source_nmu => (is => 'rwp',);
+has without_source_nmu => (is => 'rwp', default => EMPTY);
 
-has debian_without_backport => (is => 'rwp',);
+has debian_without_backport => (is => 'rwp', default => EMPTY);
 
-has backport_release => (is => 'rwp',);
+has backport_release => (is => 'rwp', default => EMPTY);
 
-has backport_revision => (is => 'rwp',);
+has backport_revision => (is => 'rwp', default => EMPTY);
 
-has without_backport => (is => 'rwp',);
+has without_backport => (is => 'rwp', default => EMPTY);
 
 =back
 

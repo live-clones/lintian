@@ -1,3 +1,2 @@
-basic-non-native-1.0 (source): uses-debhelper-compat-file
 basic-non-native-1.0 (source): older-source-format 1.0
 basic-non-native-1.0 (source): debian-watch-does-not-check-gpg-signature

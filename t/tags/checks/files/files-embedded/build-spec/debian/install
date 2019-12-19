@@ -1,4 +1,3 @@
-IPv4.php usr/share/php
 jquery*  usr/share/php
 mocha.* usr/share/javascript/mocha
 bootstrap-*  usr/share/php

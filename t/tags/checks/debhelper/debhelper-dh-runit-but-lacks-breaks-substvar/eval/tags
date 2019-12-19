@@ -1,2 +1,1 @@
-debhelper-dh-runit-but-lacks-breaks-substvar (source): uses-debhelper-compat-file
 debhelper-dh-runit-but-lacks-breaks-substvar (source): package-uses-dh-runit-but-lacks-breaks-substvar debhelper-dh-runit-but-lacks-breaks-substvar-missing

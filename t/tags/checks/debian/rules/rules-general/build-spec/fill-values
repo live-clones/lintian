@@ -2,3 +2,4 @@ Skeleton: upload-native
 Testname: rules-general
 Package-Architecture: all
 Description: Test various debian/rules checks
+Default-Build-Depends: debhelper (>= [% $dh_compat_level %]~)

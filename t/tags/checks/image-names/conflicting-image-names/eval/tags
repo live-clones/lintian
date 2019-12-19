@@ -1,0 +1,7 @@
+conflicting-image-names (binary): image-file-has-conflicting-name usr/share/images/is_xpm.ppm (is XPM)
+conflicting-image-names (binary): image-file-has-conflicting-name usr/share/images/is_tiff.gif (is TIFF)
+conflicting-image-names (binary): image-file-has-conflicting-name usr/share/images/is_svg.xpm (is SVG)
+conflicting-image-names (binary): image-file-has-conflicting-name usr/share/images/is_png.SVG (is PNG)
+conflicting-image-names (binary): image-file-has-conflicting-name usr/share/images/is_pbm.tif (is Netpbm)
+conflicting-image-names (binary): image-file-has-conflicting-name usr/share/images/is_jpg.png (is JPEG)
+conflicting-image-names (binary): image-file-has-conflicting-name usr/share/images/is_gif.jpeg (is GIF)
