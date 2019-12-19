@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: conflicting-image-names
+Description: Image files have names usually associated with other formats

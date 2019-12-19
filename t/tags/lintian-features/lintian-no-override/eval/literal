@@ -1,3 +1,2 @@
 W: lintian-no-override: non-standard-dir-in-usr usr/bad/
 I: lintian-no-override: package-contains-empty-directory usr/bad/dir/
-P: lintian-no-override source: uses-debhelper-compat-file

@@ -352,7 +352,7 @@ my $filleval = IO::Async::Function->new(
         $0 = "Lintian prepare test: $specpath";
 
         # calculate destination
-        my $relative = path($specpath)->parent->relative($testset);
+        my $relative = path($specpath)->relative($testset);
         my $buildpath = $relative->absolute($buildroot)->stringify;
         my $evalpath = $relative->absolute($evalroot)->relative->stringify;
 
@@ -370,7 +370,7 @@ my $filleval = IO::Async::Function->new(
                 path($evalpath)->mkpath;
 
                 # prepare
-                filleval($specpath, $evalpath, $testset);
+                filleval("$specpath/eval", $evalpath, $testset);
 
                 my $traversal = Cwd::realpath("$buildpath/subject");
 
@@ -425,7 +425,7 @@ my @workpaths
 # }
 
 # make all paths relative to current directory
-@workpaths = map { path($_)->parent->relative } @workpaths;
+@workpaths = map { path($_)->relative } @workpaths;
 
 # add the scripts in generated tests to be run
 my @workscripts;
@@ -469,7 +469,7 @@ if (-t STDOUT && !$unattended) {
         next
           unless $testcase->{match_strategy} eq 'tags';
 
-        my $relative = abs2rel($workpath, $outpath);
+        my $relative = abs2rel($workpath, $evalroot);
         my $testpath = abs2rel(rel2abs($relative, $testset));
 
         my $diffpath = "$workpath/tagdiff";
@@ -495,7 +495,7 @@ if (-t STDOUT && !$unattended) {
             }
 
             # create tags if needed; helps when writing new tests
-            my $tagspath = "$testpath/tags";
+            my $tagspath = "$testpath/eval/tags";
             path($tagspath)->touch
               unless -e $tagspath;
 

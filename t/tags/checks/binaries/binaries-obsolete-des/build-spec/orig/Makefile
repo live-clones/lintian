@@ -6,6 +6,10 @@
 # the obsolete functions, which has to be dug out of libcrypt.so with nm.
 
 LIBCRYPT_FILE := $(shell dpkg -L libc6-dev | grep 'libcrypt\.so$$')
+ifeq "$(LIBCRYPT_FILE)" ""
+LIBCRYPT_FILE := $(shell dpkg -L libcrypt1-dev | grep 'libcrypt\.so$$')
+endif
+
 SYMVER := $(shell nm --dynamic --with-symbol-versions $(LIBCRYPT_FILE) | \
     grep ' setkey@' | cut -d@ -f2)
 

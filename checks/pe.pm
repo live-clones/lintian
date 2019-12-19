@@ -24,8 +24,6 @@ use strict;
 use warnings;
 use autodie;
 
-use List::MoreUtils qw(any);
-
 use constant SPACE  =>  q{ };
 
 use Moo;

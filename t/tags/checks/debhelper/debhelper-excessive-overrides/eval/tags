@@ -1,2 +1,1 @@
-debhelper-excessive-overrides (source): uses-debhelper-compat-file
 debhelper-excessive-overrides (source): excessive-debhelper-overrides 21

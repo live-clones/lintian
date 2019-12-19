@@ -2,3 +2,4 @@ Skeleton: upload-native
 Testname: debhelper-executable-files
 Dh-Compat-Level: 8
 Description: Tests related to executable packaging files
+Default-Build-Depends: debhelper (>= [% $dh_compat_level %]~)

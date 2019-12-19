@@ -22,7 +22,6 @@ php-mail-mime       ~~ (?i)/mime(Part)?$EXT
 php-mail-mimedecode ~~ /mimeDecode$EXT
 php-net-ftp         ~~ /FTP$EXT
 php-net-imap        ~~ (?<!/Container)/IMAP$EXT
-php-net-ipv4        ~~ /IPv4$EXT
 php-net-ldap        ~~ (?<!/Container)/LDAP$EXT
 php-net-smtp        ~~ /SMTP$EXT
 php-net-socket      ~~ (?<!/FTP)/Socket$EXT

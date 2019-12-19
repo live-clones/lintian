@@ -1,4 +1,3 @@
-maintscript-includes-maint-script-parameters (source): uses-debhelper-compat-file
 maintscript-includes-maint-script-parameters (source): package-uses-old-debhelper-compat-version 11
 maintscript-includes-maint-script-parameters (source): maintscript-includes-maint-script-parameters maintscript (line 4)
 maintscript-includes-maint-script-parameters (source): maintscript-includes-maint-script-parameters maintscript (line 3)

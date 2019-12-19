@@ -18,5 +18,4 @@ tag:P:pedantic:certain:X:lintian-output-colons:1.0+dsfg-1.1:source:source:debian
 tag:P:pedantic:possible::lintian-output-colons:1.0+dsfg-1.1:all:binary:example-unusual-interpreter:usr/share/doc/lintian-output-colons/examples/example #!/usr/bin/foo:
 tag:P:pedantic:possible::lintian-output-colons:1.0+dsfg-1.1:source:source:no-homepage-field::
 tag:P:pedantic:certain::lintian-output-colons:1.0+dsfg-1.1:source:source:package-uses-deprecated-source-override-location::
-tag:P:pedantic:certain::lintian-output-colons:1.0+dsfg-1.1:source:source:uses-debhelper-compat-file::
 tag:W:minor:certain:O:lintian-output-colons:1.0+dsfg-1.1:source:source:dfsg-version-misspelled:1.0+dsfg-1.1:dfsg-version-misspelled 1.0*

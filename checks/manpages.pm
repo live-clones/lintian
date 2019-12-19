@@ -375,6 +375,19 @@ sub breakdown {
         }
     }
 
+    for my $f (sort keys %{$self->manpage}) {
+        my $minfo = $self->manpage->{$f};
+        my $binfo = $self->binary->{$f};
+        my $link = $self->link->{$f};
+
+        my $section = $minfo->[0]{section};
+
+        unless ($binfo || $link) {
+            $self->tag('manpage-without-executable', $minfo->[0]{file})
+              if $section == 1 || $section == 8;
+        }
+    }
+
     return;
 }
 

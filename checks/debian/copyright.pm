@@ -30,7 +30,7 @@ use List::Compare;
 use List::MoreUtils qw(any none);
 use Path::Tiny;
 use Text::Levenshtein qw(distance);
-use XML::Simple qw(:strict);
+use XML::LibXML;
 
 use Lintian::Data;
 use Lintian::Deb822Parser qw(read_dpkg_control parse_dpkg_control);
@@ -52,9 +52,10 @@ use constant {
 use constant {
     WC_TYPE_REGEX => 'REGEX',
     WC_TYPE_FILE => 'FILE',
-    WC_TYPE_DECENDANTS => 'DECENDANTS',
+    WC_TYPE_DESCENDANTS => 'DESCENDANTS',
 };
 
+use constant EMPTY => q{};
 use constant SPACE => q{ };
 
 use Moo;
@@ -353,17 +354,24 @@ sub parse_dep5 {
         }
     }
 
-    my @shippedfiles = sort grep { $_->is_file } $processable->sorted_index;
+    my @shipped = $processable->sorted_orig_index;
+
+    my $debian_dir = $processable->index_resolved_path('debian/');
+    if ($debian_dir) {
+
+        push(@shipped, $debian_dir->children('breadth-first'));
+    }
+
+    my @shippedfiles = sort grep { $_->is_file } @shipped;
 
     my @licensefiles= grep { m,(^|/)(COPYING[^/]*|LICENSE)$, } @shippedfiles;
-
     my @quiltfiles = grep { m,^\.pc/, } @shippedfiles;
 
     my (@commas_in_files, %file_para_coverage, %file_licenses);
     my %file_coverage = map { $_ => 0 } @shippedfiles;
     my $i = 0;
     my $current_line = 0;
-    my $commas_in_files = any { m/,/xsm } $processable->sorted_index;
+    my $commas_in_files = any { m/,/xsm } @shipped;
 
     for my $para (@dep5) {
         $i++;
@@ -465,29 +473,46 @@ sub parse_dep5 {
 
                     my $used = 0;
                     $file_para_coverage{$current_line} = 0;
+
                     if ($wc_type eq WC_TYPE_FILE) {
                         if (exists($file_coverage{$wc_value})) {
                             $used = 1;
                             $file_coverage{$wildcard} = $current_line;
                             $file_licenses{$wildcard} = $short_license;
                         }
-                    } elsif ($wc_type eq WC_TYPE_DECENDANTS) {
+
+                    } elsif ($wc_type eq WC_TYPE_DESCENDANTS) {
                         my @wlist;
-                        if (my $dir = $processable->index($wc_value)) {
-                            if ($wc_value eq q{}) {
-                                # Special-case => Files: *
-                                push(@wlist, @shippedfiles);
-                            } else {
-                                push(@wlist,
-                                    grep { $_->is_file }
-                                      $dir->children('breadth-first'));
+
+                        if ($wc_value eq q{}) {
+                            # Special-case => Files: *
+                            push(@wlist, @shippedfiles);
+
+                        } elsif ($wc_value =~ /^debian\//) {
+                            my $dir = $processable->index($wc_value);
+                            if ($dir) {
+                                my @files = grep { $_->is_file }
+                                  $dir->children('breadth-first');
+                                push(@wlist, @files);
                             }
-                            $used = 1 if @wlist;
+
+                        } else {
+                            my $dir = $processable->orig_index($wc_value);
+                            if ($dir) {
+                                my @files = grep { $_->is_file }
+                                  $dir->children('breadth-first');
+                                push(@wlist, @files);
+                            }
                         }
+
+                        $used = 1
+                          if @wlist;
+
                         for my $entry (@wlist) {
                             $file_coverage{$entry->name} = $current_line;
                             $file_licenses{$entry->name} = $short_license;
                         }
+
                     } else {
                         for my $srcfile (@shippedfiles) {
                             if ($srcfile =~ $wc_value) {
@@ -563,15 +588,32 @@ sub parse_dep5 {
             $lines[$paragraph_no]{$field_name});
     } else {
         foreach my $srcfile (sort keys %file_licenses) {
-            next if $srcfile =~ '^\.pc/';
-            next unless $srcfile =~ /\.xml$/;
+            next
+              if $srcfile =~ '^\.pc/';
+            next
+              unless $srcfile =~ /\.xml$/;
+
+            my $parser = XML::LibXML->new;
+            $parser->set_option('no_network', 1);
+
             my $file = $processable->index_resolved_path($srcfile);
-            my $seen = eval {
-                my $xml
-                  = XMLin($file->fs_path, ForceArray => [], KeyAttr => []);
-                lc($xml->{'metadata_license'} // '');
-            };
-            next unless $seen;
+            my $doc = eval {$parser->parse_file($file->fs_path);};
+            next
+              unless $doc;
+
+            my @nodes = $doc->findnodes('/component/metadata_license');
+            next
+              unless @nodes;
+
+            # take first one
+            my $first = $nodes[0];
+            next
+              unless $first;
+
+            my $seen = lc($first->firstChild->data // EMPTY);
+            next
+              unless $seen;
+
             my $wanted = $file_licenses{$srcfile};
             $self->tag('inconsistent-appstream-metadata-license',
                 $srcfile,"($seen != $wanted)")
@@ -594,6 +636,7 @@ sub parse_dep5 {
             "paragraph at line $_")
           for sort keys %file_para_coverage;
     }
+
     while ((my $license, $i) = each %required_standalone_licenses) {
         if (not defined $standalone_licenses{$license}) {
             $self->tag('missing-license-paragraph-in-dep5-copyright',
@@ -654,6 +697,11 @@ sub parse_license {
         ($short_license, $full_license) = split /\n/, $license_block, 2;
     }else {
         $short_license = $license_block;
+    }
+    if(defined $full_license) {
+        $self->tag('tab-in-license-text',
+            "debian/copyright (paragraph at line $line)")
+          if $full_license =~ /\t/;
     }
     $short_license =~ s/[(),]/ /g;
     if ($short_license =~ m/\A\s*\Z/) {
@@ -718,7 +766,7 @@ sub parse_wildcard {
     $regex_src =~ s,^\./+,,;
     $regex_src =~ s,//+,/,g;
     if ($regex_src eq '*') {
-        return ('', WC_TYPE_DECENDANTS, undef);
+        return ('', WC_TYPE_DESCENDANTS, undef);
     }
     if (index($regex_src, '?') == -1) {
         my $star_index = index($regex_src, '*');
@@ -737,7 +785,7 @@ sub parse_wildcard {
             if ($bslash_index > -1) {
                 ($regex_src, $error) = dequote_backslashes($regex_src);
             }
-            return ($regex_src, WC_TYPE_DECENDANTS, $error);
+            return ($regex_src, WC_TYPE_DESCENDANTS, $error);
         }
     }
 
