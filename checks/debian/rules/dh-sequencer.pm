@@ -50,7 +50,7 @@ sub source {
     my $contents = path($rules->fs_path)->slurp;
 
     $self->tag('no-dh-sequencer')
-      unless $contents =~ /^\%:[^ \t]*\n\t+dh[ \t]+\$\@/m
+      unless $contents =~ /^\%:[^ \t]*\n\t+dh[ \t]+\$(?:\@|\{\@\})/m
       || $contents =~ m{^\s*include\s+/usr/share/cdbs/1/class/hlibrary.mk\s*$}m
       || $contents =~ m{\bDEB_CABAL_PACKAGE\b};
 

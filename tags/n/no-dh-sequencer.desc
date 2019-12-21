@@ -2,7 +2,7 @@ Tag: no-dh-sequencer
 Severity: wishlist
 Certainty: certain
 Check: debian/rules/dh-sequencer
-Info: The <tt>debian/rules</tt> does not use the <tt>dh &amp;@</tt> sequencer.
+Info: The <tt>debian/rules</tt> does not use the <tt>dh &dollar;@</tt> sequencer.
  .
  While maintainers may use a variety of build systems, this one
  is by far the most popular.
