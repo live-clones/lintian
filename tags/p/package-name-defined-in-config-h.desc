@@ -1,0 +1,10 @@
+Tag: package-name-defined-in-config-h
+Severity: normal
+Certainty: certain
+Check: includes/config-h
+Info: This package installs a file named config.h under /usr/include.
+ The file mentions the identifier PACKAGE_NAME. It is a strong indication
+ that the config.h file is incompatible with other packages using autoconf.
+ .
+ Please remove the file or mangle the declared names.
+Ref: #733598
