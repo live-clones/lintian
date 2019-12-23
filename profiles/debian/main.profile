@@ -63,6 +63,7 @@ Enable-Tags-From-Check:
  group-checks,
  huge-usr-share,
  image-names,
+ includes/config-h,
  infofiles,
  init.d,
  java,
