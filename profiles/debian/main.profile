@@ -23,6 +23,7 @@ Enable-Tags-From-Check:
  debian/rules,
  debian/rules/dh-sequencer,
  debian/source-dir,
+ debian/source/include-binaries,
  debian/symbols,
  debian/version-substvars,
  debian/watch,
