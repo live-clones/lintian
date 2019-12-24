@@ -49,8 +49,13 @@ sub source {
 
     my $contents = path($rules->fs_path)->slurp;
 
+    my $plain = qr/\$\@/;
+    my $curly = qr/\$\{\@\}/;
+    my $parentheses = qr/\$\(\@\)/;
+    my $rule_target = qr/(?:$plain|$curly|$parentheses)/;
+
     $self->tag('no-dh-sequencer')
-      unless $contents =~ /^\%:[^ \t]*\n\t+dh[ \t]+\$(?:\@|\{\@\})/m
+      unless $contents =~ /^\%:[^ \t]*\n\t+dh[ \t]+$rule_target/m
       || $contents =~ m{^\s*include\s+/usr/share/cdbs/1/class/hlibrary.mk\s*$}m
       || $contents =~ m{\bDEB_CABAL_PACKAGE\b};
 
