@@ -2,14 +2,25 @@ Tag: package-uses-vendor-specific-patch-series
 Severity: important
 Certainty: certain
 Check: patch-systems
-Info: The specified series file is a vendor-specific patch series file.
+Info: The specified series file for patches is vendor-specific.
  .
- This is feature of dpkg that can be used to apply a different series of
- quilt patches when the source package is unpacked on different systems.
- However, since Debian source packages are usually treated as a pure
- transport format this can cause confusion and frustration.
+ Source packages may contain vendor (i.e. distribution) specific patches,
+ but such packages must not be uploaded to the Debian archive if they
+ are used in conjunction with vendor-specific series files.
  .
- Please migrate away from such series files and consider alternatives
- such differing source packages or modify the build process to behave
- conditionally or to conditionally patch files explicitly.
-Ref: #904302, https://lists.debian.org/debian-devel-announce/2018/11/msg00004.html
+ Vendor specific series files were carefully implemented as a <tt>dpkg</tt>
+ feature. Unfortunately, they currently conflict with some workflow goals
+ in Debian. They are presently disallowed in Debian.
+ .
+ The preferred approach for distributions other than Debian is now to
+ apply such patches programmatically via <tt>debian/rules</tt>. You can
+ also create multiple, vendor-specific sources and upload them separately
+ for each distribution.
+ .
+ The decision to prohibit the use of that particular <tt>dpkg</tt> feature
+ in Debian was made by the project's technical committee in consideration of
+ other planned workflow modifications, and may be revisited.
+ .
+ You should only see this tag in Debian or other distributions when 
+ targeting an upload for Debian.
+Ref: #904302, #922531, https://lists.debian.org/debian-devel-announce/2018/11/msg00004.html
