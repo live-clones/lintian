@@ -50,13 +50,12 @@ sub source {
 
     # The packages a.k.a. nodes
     my (@nodes, %edges, $sccs);
-    my $ginfo = $group->info;
     my @procs = $group->get_processables('binary');
 
     $self->check_file_overlap(@procs);
 
     foreach my $processable (@procs) {
-        my $deps = $ginfo->direct_dependencies($processable);
+        my $deps = $group->direct_dependencies($processable);
         if (scalar @$deps > 0) {
             # it depends on another package - it can cause
             # a circular dependency

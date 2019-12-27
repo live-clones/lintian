@@ -1,3 +1,36 @@
+lintian (2.42.0) unstable; urgency=medium
+
+  [ Felix Lechner ]
+  * Add new checks to identify and notify about issues in upstream
+    signatures. (Closes: #929429, #929434, #929435, #929436)
+  * Do not consider manpages from related packages when looking for
+    manpages without executables. (Closes: #946471)
+  * Add a new check for unsafe mailcap entries. (Closes: #33486)
+  * Add new Fortran checks to validate module versions and
+    prerequisites. (Closes: #796352)
+  * Add new checks for empty upstream sources and for when repackaged
+    sources are not properly advertised as such. (Closes: #471537)
+  * Drop the source-contains-empty-directory tag as it was mostly ignored.
+    (Closes: #907727)
+  * Remove the bogus service-key-has-whitespace tag. (Closes: #946763)
+  * Check TrueType and OpenType fonts for licensing terms.
+    (Closes: #635068)
+  * Allow "boolean false" directory components in link targets.
+    (Closes: #892127)
+  * Add a new tag for consistent maintainer fields between changes and
+    source processables. (Closes: #546525)
+  * Add a new no-dh-sequencer tag to be issued when the debhelper(7) dh(1)
+    sequencer is not used.
+
+  [ Guido Günther ]
+  * Update the PureOS distribution names in the "vendor" configuration.
+
+  [ Louis-Philippe Véronneau ]
+  * Ensure proper VCS location for Debian Python Module Team and Debian
+    Python Application Team packages.
+
+ -- Chris Lamb <lamby@debian.org>  Thu, 19 Dec 2019 12:01:30 +0000
+
 lintian (2.41.0~bpo10+1) buster-backports; urgency=medium
 
   * Rebuild for buster-backports.

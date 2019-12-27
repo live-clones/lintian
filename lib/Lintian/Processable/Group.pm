@@ -977,7 +977,6 @@ sub add_processable{
         $phash->{$id} = $processable;
     }
 
-    $processable->group($self);
     $processable->shared_storage($self->shared_storage);
 
     return 1;

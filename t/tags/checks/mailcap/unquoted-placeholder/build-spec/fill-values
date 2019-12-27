@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: unquoted-placeholder
+Description: Placeholder in mailcap file inside single quotes.

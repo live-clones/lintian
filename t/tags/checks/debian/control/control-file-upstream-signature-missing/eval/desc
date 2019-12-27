@@ -1,3 +1,0 @@
-Testname: control-file-upstream-signature-missing
-Check: debian/control
-# dpkg 1.18.5 required in order to create multiple tarballs with detached signatures

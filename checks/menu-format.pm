@@ -530,9 +530,8 @@ sub verify_icon {
         $iconfile
           = $processable->index_resolved_path("usr/share/pixmaps/$icon");
         if (not $iconfile) {
-            my $ginfo = $group->info;
             foreach
-              my $depproc (@{ $ginfo->direct_dependencies($processable) }) {
+              my $depproc (@{ $group->direct_dependencies($processable) }) {
 
                 $iconfile = $depproc->index_resolved_path($icon);
                 last if $iconfile;
