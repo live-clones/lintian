@@ -1,8 +1,31 @@
-lintian (2.42.0+git) UNRELEASED; urgency=medium
+lintian (2.43.0) unstable; urgency=medium
 
-  * WIP (generated upon release).
+  * Summary of tag changes:
+    + Added:
+      - obsolete-commands-in-modprobe.d-file
+      - package-name-defined-in-config-h
+      - unused-entry-in-debian-source-include-binaries
 
- -- Chris Lamb <lamby@debian.org>  Thu, 19 Dec 2019 15:52:43 +0000
+  [ Felix Lechner ]
+  * Allow curly braces in $@ for the dh-sequencer tag.
+    (Closes: #947115)
+  * Fix the tag description of the no-dh-sequencer tag. (Closes: #947269)
+  * Add a check for PACKAGE_NAME in config.h C/C++ include files.
+    (Closes: #733598)
+  * Add add check for unused entries in debian/source/include-binaries.
+    (Closes: #528001)
+  * Look for COM (not COFF) binaries when warning against Windows
+    executables in sources. See #913867 for more info.
+
+  [ Chris Lamb ]
+  * Add missing tag summaries to older debian/changelog entries and fix the
+    generate-tag-summary script to match our newer style of changelog entry
+    placeholder in the future.
+
+  [ Topi Miettinen ]
+  * Check for obsolete "install" or "remove" commands in modprobe.d files.
+
+ -- Chris Lamb <lamby@debian.org>  Fri, 27 Dec 2019 18:28:08 +0000
 
 lintian (2.42.0) unstable; urgency=medium
 
