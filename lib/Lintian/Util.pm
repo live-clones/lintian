@@ -1148,7 +1148,7 @@ sub normalize_pkg_path {
     #
     # Note that @normalised will be empty if we end in the root
     # (e.g. '/' + 'usr' + '..' -> '/'), this is fine.
-    while (my $target = shift(@queue)) {
+    while (defined(my $target = shift(@queue))) {
         if ($target eq '..') {
             # are we out of bounds?
             return unless @normalised;

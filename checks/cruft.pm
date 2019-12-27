@@ -455,12 +455,6 @@ sub source {
         }
     }
 
-    foreach my $file ($processable->sorted_orig_index) {
-        $self->tag('source-contains-empty-directory', $file)
-          if $file->is_dir
-          and scalar($file->children) == 0;
-    }
-
     return;
 }    # </run>
 

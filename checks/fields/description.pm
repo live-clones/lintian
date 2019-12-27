@@ -239,7 +239,7 @@ sub always {
     if ($synopsis) {
         check_spelling(
             $synopsis,
-            $group->info->spelling_exceptions,
+            $group->spelling_exceptions,
             $self->spelling_tag_emitter(
                 'spelling-error-in-description-synopsis'));
         # Auto-generated dbgsym packages will use the package name in
@@ -256,7 +256,7 @@ sub always {
     if ($description) {
         check_spelling(
             $description,
-            $group->info->spelling_exceptions,
+            $group->spelling_exceptions,
             $self->spelling_tag_emitter('spelling-error-in-description'));
         check_spelling_picky($description,
             $self->spelling_tag_emitter('capitalization-error-in-description')

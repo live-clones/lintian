@@ -1,0 +1,10 @@
+Tag: missing-prerequisite-for-fortran-module
+Severity: minor
+Certainty: certain
+Check: fortran
+Info: The installation package ships a GFORTRAN module but does not depend
+ on gfortran-mod-<n>, where <n> is the module version (e.g. gfortran-mod-14
+ for modules built using GCC 5).
+Ref: #796352,
+ #714730,
+ https://salsa.debian.org/science-team/dh-fortran-mod/blob/debian/master/dh_fortran_mod.in

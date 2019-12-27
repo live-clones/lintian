@@ -1,0 +1,11 @@
+Tag: wrong-vcs-location-for-dpmt
+Severity: important
+Certainty: certain
+Ref: DPMT policy
+Check: fields/vcs
+Info: This package is maintained within the Debian Python Modules Team (DPMT)
+ and as such, its VCS should live in Salsa under
+ <tt>https://salsa.debian.org/python-team/modules/</tt>.
+ .
+ This is not currently the case and the package's VCS should be migrated to the
+ proper location.

@@ -1,3 +1,0 @@
-Testname: cruft-source-contains-empty-directory
-Options: --pedantic
-Check: cruft

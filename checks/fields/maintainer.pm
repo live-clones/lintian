@@ -30,6 +30,8 @@ use autodie;
 
 use Lintian::Maintainer qw(check_maintainer);
 
+use constant EMPTY => q{};
+
 use Moo;
 use namespace::clean;
 
@@ -38,9 +40,7 @@ with 'Lintian::Check';
 sub source {
     my ($self) = @_;
 
-    my $processable = $self->processable;
-
-    my $maintainer = $processable->unfolded_field('maintainer');
+    my $maintainer = $self->processable->unfolded_field('maintainer');
 
     return
       unless defined $maintainer;
@@ -48,7 +48,29 @@ sub source {
     my $is_list = $maintainer =~ /\@lists(?:\.alioth)?\.debian\.org\b/;
 
     $self->tag('no-human-maintainers')
-      if $is_list && !defined $processable->field('uploaders');
+      if $is_list && !defined $self->processable->field('uploaders');
+
+    return;
+}
+
+sub changes {
+    my ($self) = @_;
+
+    my $group = $self->group;
+    return
+      unless defined $group;
+
+    my $source = $group->source;
+    return
+      unless defined $source;
+
+    my $changes_maintainer = $self->processable->unfolded_field('maintainer')
+      // EMPTY;
+    my $source_maintainer = $source->unfolded_field('maintainer') // EMPTY;
+
+    $self->tag('inconsistent-maintainer',
+        $changes_maintainer . ' (changes vs. source) ' .$source_maintainer)
+      unless $changes_maintainer eq $source_maintainer;
 
     return;
 }
@@ -56,9 +78,10 @@ sub source {
 sub always {
     my ($self) = @_;
 
-    my $processable = $self->processable;
+    return
+      if $self->type eq 'changes';
 
-    my $maintainer = $processable->unfolded_field('maintainer');
+    my $maintainer = $self->processable->unfolded_field('maintainer');
 
     unless (defined $maintainer) {
         $self->tag('no-maintainer-field');

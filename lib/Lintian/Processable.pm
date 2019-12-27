@@ -136,10 +136,6 @@ Returns a reference to lab this Processable is in.
 
 Returns the base directory of this package inside the lab.
 
-=item group
-
-Returns a reference to the Processable::Group related to this entry.
-
 =item link_label
 
 Returns a reference to the extra fields related to this entry.
@@ -206,7 +202,6 @@ has unfolded => (is => 'rwp', default => sub { {} });
 
 has pooldir => (is => 'rw', default => EMPTY);
 has groupdir => (is => 'rw', default => EMPTY);
-has group => (is => 'rw');
 
 has link_label => (is => 'rw', default => EMPTY);
 has saved_link => (is => 'rw', default => EMPTY);

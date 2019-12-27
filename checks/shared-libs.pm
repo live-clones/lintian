@@ -61,7 +61,8 @@ sub always {
     my $processable = $self->processable;
     my $group = $self->group;
 
-    my ($must_call_ldconfig, %SONAME, %SONAMES, %STATIC_LIBS, %sharedobject);
+    my ($must_call_ldconfig, %SONAME, %SHARED_LIB_PRESENT,
+        %STATIC_LIB_PRESENT, %sharedobject);
     my @shlibs;
     my @words;
     my @devpkgs;
@@ -74,8 +75,9 @@ sub always {
     }
 
     foreach my $file ($processable->sorted_index) {
-        $SONAMES{$1} = 1 if $file =~ m,.*\/lib([^/]+)\.so$,;
-        $STATIC_LIBS{$1} = 1 if $file =~ m,.*\/lib([^/]+)\.a$,;
+        $SHARED_LIB_PRESENT{$1} = 1
+          if $file =~ m%.*\/lib([^/]+)\.so(?:\.\d+){0,3}$%;
+        $STATIC_LIB_PRESENT{$1} = 1 if $file =~ m,.*\/lib([^/]+)\.a$,;
         next if not $file->is_file;
         my $fileinfo = $file->file_info;
         if (   $fileinfo =~ m/^[^,]*\bELF\b/
@@ -760,8 +762,8 @@ sub always {
                 $self->tag('pkg-config-references-unknown-shared-library',
                     $file, "-l$1", "(line $.)")
                   unless $1 =~ m/\$\{.+\}/
-                  or exists($SONAMES{$1})
-                  or exists($STATIC_LIBS{$1})
+                  or exists($SHARED_LIB_PRESENT{$1})
+                  or exists($STATIC_LIB_PRESENT{$1})
                   or $UNKNOWN_SHARED_LIBRARY_EXCEPTIONS->known($1);
             }
         }

@@ -385,7 +385,7 @@ sub binary {
             }
             check_spelling(
                 $news->Changes,
-                $group->info->spelling_exceptions,
+                $group->spelling_exceptions,
                 $self->spelling_tag_emitter('spelling-error-in-news-debian'));
             if ($news->Changes =~ /^\s*\*\s/) {
                 $self->tag('debian-news-entry-uses-asterisk');
@@ -706,7 +706,7 @@ sub binary {
         $changes =~ s/^.*(?:spelling|typo).*\n//gm;
         check_spelling(
             $changes,
-            $group->info->spelling_exceptions,
+            $group->spelling_exceptions,
             $self->spelling_tag_emitter('spelling-error-in-changelog'));
     }
 
