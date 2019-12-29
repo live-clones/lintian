@@ -320,7 +320,7 @@ sub breakdown {
 
     my $group = $self->group;
     my @direct_prerequisites
-      = @{$group->direct_dependencies($self->processable)};
+      = @{$group->direct_dependencies($self->processable) // []};
     my @distant_files = map { $_->sorted_index } @direct_prerequisites;
     my %distant_manpages;
 
@@ -341,8 +341,7 @@ sub breakdown {
         $language //= EMPTY;
         $language = EMPTY if $language eq 'man';
 
-        $distant_manpages{$name} = []
-          unless exists $distant_manpages{$name};
+        $distant_manpages{$name} //= [];
 
         push @{$distant_manpages{$name}},
           {file => $file, language => $language};
@@ -361,13 +360,13 @@ sub breakdown {
 
     my @english_missing = grep {
         none {$_->{language} eq EMPTY}
-        @{$related_manpages{$_}}
+        @{$related_manpages{$_} // []}
     } @documented;
 
     for my $command (keys %admin_executables) {
 
         my $file = $admin_executables{$command};
-        my @manpages = @{$related_manpages{$command}};
+        my @manpages = @{$related_manpages{$command} // []};
 
         $self->tag('command-in-sbin-has-manpage-in-incorrect-section', $file)
           if $file->is_regular_file
@@ -384,7 +383,7 @@ sub breakdown {
     my $local = List::Compare->new(\@commands, [keys %local_manpages]);
     my @surplus_manpages = $local->get_Ronly;
 
-    for my $manpage (map { @{$local_manpages{$_}} } @surplus_manpages) {
+    for my $manpage (map { @{$local_manpages{$_} // []} } @surplus_manpages) {
 
         my $file = $manpage->{file};
         my $section = $manpage->{section};
