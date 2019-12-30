@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: obsolete-commands-in-modprobe
+Description: Test package with obsolete commands in modprobe.d file
