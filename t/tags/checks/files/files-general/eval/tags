@@ -12,10 +12,6 @@ files-general (binary): package-contains-file-in-usr-share-hal usr/share/hal/foo
 files-general (binary): package-contains-file-in-etc-skel etc/skel/.lintianrc
 files-general (binary): package-contains-empty-directory usr/share/man/man1/random/
 files-general (binary): package-contains-compiled-glib-schema usr/share/glib-2.0/schemas/gschemas.compiled
-files-general (binary): package-contains-compiled-font-file usr/share/fonts/X11/misc/fonts.scale
-files-general (binary): package-contains-compiled-font-file usr/share/fonts/X11/misc/fonts.dir
-files-general (binary): package-contains-compiled-font-file usr/share/fonts/X11/misc/fonts.alias
-files-general (binary): package-contains-compiled-font-file usr/share/fonts/X11/misc/encodings.dir
 files-general (binary): obsolete-comments-style-in-php-ini etc/php/7.0/mods-available/php-foo.ini
 files-general (binary): non-standard-toplevel-dir new-top-level-dir/
 files-general (binary): non-conf-file-in-modprobe.d etc/modprobe.d/--lzma
