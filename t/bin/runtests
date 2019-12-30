@@ -310,8 +310,10 @@ my $scriptpath = "$testset/scripts";
 push(@runscripts, find_selected_scripts($scriptpath, $onlyrun));
 
 # always add internal harness tests
-my @requiredscripts
-  = sort File::Find::Rule->file()->name('*.t')->in("$scriptpath/harness");
+my @requiredscripts;
+@requiredscripts
+  = sort File::Find::Rule->file()->name('*.t')->in("$scriptpath/harness")
+  unless length $onlyrun;
 push(@runscripts, @requiredscripts);
 
 # remove any duplicates
@@ -326,7 +328,7 @@ say EMPTY;
 # run scripts through harness
 $harness->aggregate_tests($aggregator, sort @runscripts);
 
-unless ($aggregator->all_passed || $keep_going) {
+unless (!@runscripts || $aggregator->all_passed || $keep_going) {
     $aggregator->stop;
     $formatter->summary($aggregator);
     exit 1;
