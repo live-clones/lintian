@@ -24,6 +24,8 @@ use strict;
 use warnings;
 use autodie;
 
+use List::MoreUtils qw(uniq);
+
 use Moo;
 use namespace::clean;
 
@@ -40,8 +42,9 @@ sub files {
     } elsif ($file->name =~ m,^etc/modprobe\.d/(.+)$,
         or $file->name =~ m,^etc/modules-load\.d/(.+)$,) {
 
-        $self->tag('obsolete-commands-in-modprobe.d-file', $file->name)
-          if $file->file_contents =~ m/^\s*(install|remove)/;
+        my @obsolete = uniq($file->file_contents =~ /^\s*(install|remove)/mg);
+        $self->tag('obsolete-command-in-modprobe.d-file', $file->name, $_)
+          for @obsolete;
     }
 
     return;
