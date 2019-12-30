@@ -1,7 +1,7 @@
 Tag: package-contains-compiled-font-file
 Severity: serious
 Certainty: certain
-Check: files
+Check: x11
 Info: This package appears to contain a compiled font file. These files
  should be generated automatically by triggers and it must not be shipped
  in any package.
