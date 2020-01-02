@@ -13,11 +13,13 @@ MountFlags
 NoNewPrivileges
 PrivateDevices
 PrivateMounts
+PrivateNetwork
 PrivateTmp
 PrivateUsers
 ProtectControlGroups
 ProtectHome
 ProtectHostname
+ProtectKernelLogs
 ProtectKernelModules
 ProtectKernelTunables
 ProtectSystem
