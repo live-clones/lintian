@@ -125,7 +125,7 @@ sub source {
                 for (@opts) {
                     $repack_mangle = 1
                       if defined $repack
-                      and /^[ud]?versionmangle\s*=.*$repack/;
+                      and /^[ud]?versionmangle\s*=\s*(?:auto|.*$repack.*)/;
                     $repack_dmangle = 1
                       if defined $repack
                       and /^dversionmangle\s*=\s*(?:auto|.*$repack.*)$/;
