@@ -45,8 +45,8 @@ use Lintian::SlidingWindow;
 # not less than 8192 for source missing
 use constant BLOCKSIZE => 16_384;
 
-# constant for insane line length
-use constant INSANE_LINE_LENGTH => 512;
+# constant for very long line lengths
+use constant VERY_LONG_LINE_LENGTH => 512;
 use constant SAFE_LINE_LENGTH => 256;
 
 use Moo;
@@ -1264,14 +1264,14 @@ sub linelength_test {
     my $line;
     my $nextblock;
 
-    ($linelength)= _linelength_test_maxlength($block,INSANE_LINE_LENGTH);
-    # first check if line >  INSANE_LINE_LENGTH that is likely minification
+    ($linelength)= _linelength_test_maxlength($block,VERY_LONG_LINE_LENGTH);
+    # first check if line >  VERY_LONG_LINE_LENGTH that is likely minification
     # avoid problem by recursive regex with longline
     if($linelength) {
         $self->tag(
             'very-long-line-length-in-source-file',
             $name,'line length is',
-            int($linelength),'characters (>'.INSANE_LINE_LENGTH.')'
+            int($linelength),'characters (>'.VERY_LONG_LINE_LENGTH.')'
         );
         # clean up jslint craps line
         $block =~ s,^\s*/[*][^\n]*[*]/\s*$,,gm;
@@ -1294,12 +1294,13 @@ sub linelength_test {
         # detect browserification
         $self->detect_browserify($entry, $name, $basename, $dirname, $block);
 
-        # retry insane line length test now: if insane length likely minified
-        ($linelength)= _linelength_test_maxlength($block,INSANE_LINE_LENGTH);
+        # retry very long line length test now: likely minified
+        ($linelength)
+          = _linelength_test_maxlength($block,VERY_LONG_LINE_LENGTH);
 
         if($linelength) {
             $self->warn_prebuilt_javascript($entry, $name, $basename,
-                $dirname,$linelength,INSANE_LINE_LENGTH);
+                $dirname,$linelength,VERY_LONG_LINE_LENGTH);
             return 1;
         }
     }
