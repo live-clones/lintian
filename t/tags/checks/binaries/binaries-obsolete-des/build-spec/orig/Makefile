@@ -5,10 +5,7 @@
 # around, but we have to know the exact "symbol version" associated with
 # the obsolete functions, which has to be dug out of libcrypt.so with nm.
 
-LIBCRYPT_FILE := $(shell dpkg -L libc6-dev | grep 'libcrypt\.so$$')
-ifeq "$(LIBCRYPT_FILE)" ""
-LIBCRYPT_FILE := $(shell dpkg -L libcrypt-dev | grep 'libcrypt\.so$$')
-endif
+LIBCRYPT_FILE := $(shell $(CC) $(CFLAGS) $(LDFLAGS) -print-file-name=libcrypt.so)
 
 SYMVER := $(shell nm --dynamic --with-symbol-versions $(LIBCRYPT_FILE) | \
     grep ' setkey@' | cut -d@ -f2)
