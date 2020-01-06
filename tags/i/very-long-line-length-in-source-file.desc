@@ -1,4 +1,4 @@
-Tag: insane-line-length-in-source-file
+Tag: very-long-line-length-in-source-file
 Severity: pedantic
 Certainty: certain
 Check: cruft

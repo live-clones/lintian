@@ -10,6 +10,6 @@ Info: The source of the following file is missing. Lintian checked a few
  .
  If this is a false-positive, please report a bug against Lintian.
  .
- Please note, that insane-line-length-in-source-file tagged files
+ Please note, that very-long-line-length-in-source-file tagged files
  are likely tagged source-is-missing. It is a feature not
  a bug.

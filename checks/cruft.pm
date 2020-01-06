@@ -1269,7 +1269,7 @@ sub linelength_test {
     # avoid problem by recursive regex with longline
     if($linelength) {
         $self->tag(
-            'insane-line-length-in-source-file',
+            'very-long-line-length-in-source-file',
             $name,'line length is',
             int($linelength),'characters (>'.INSANE_LINE_LENGTH.')'
         );
