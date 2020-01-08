@@ -1,8 +1,46 @@
-lintian (2.43.0+git) UNRELEASED; urgency=medium
+lintian (2.44.0) unstable; urgency=medium
 
-  * WIP (generated upon release).
+  * Summary of tag changes:
+    + Added:
+      - manpage-in-udeb
+      - orphaned-package-maintained-in-private-space
+    + Renamed:
+      - obsolete-commands-in-modprobe.d-file ->
+          obsolete-command-in-modprobe.d-file
+      - very-long-line-length-in-source-file ->
+          insane-line-length-in-source-file
 
- -- Chris Lamb <lamby@debian.org>  Fri, 27 Dec 2019 19:11:00 +0000
+  [ Chris Lamb ]
+  * Adjust certainty of no-dh-sequencer to "possible". (Closes: #948376)
+  * Replace loaded term in the name of the check for suspiciously-long
+    lines in source files.
+
+  [ Paul Wise ]
+  * Add several spelling corrections.
+  * Correct a couple of misspelled corrections.
+
+  [ Felix Lechner ]
+  * Avoid Perl undefined array references when checking manpages.
+    (Closes: #947429, #947682)
+  * Add a check for orphaned packages maintained privately. (Closes: #947671)
+  * Change test prerequisite to libcrypt-dev following a recent change to
+    glibc.
+  * Reduce the severity of repackaged-source-not-advertised. (Re: #471537)
+  * Do not warn about explicit targets when looking for dh sequencer.
+    (Re: #930679)
+  * Ensure that no new tags are added from Lintian that are not tested.
+  * Rename obsolete-command-in-modprobe.d-file from its plural equivalent.
+  * Do not run internal harness tests on partial selections to aid tag
+    renaming after tag coverage test was tightened.
+
+  [ Topi Miettinen ]
+  * Update systemd hardening flags to include "PrivateNetwork" and
+    "ProtectKernelLogs".
+
+  [ Xavier Guimard ]
+  * Fix debian/watch parsing for "dversionmangle=auto".
+
+ -- Chris Lamb <lamby@debian.org>  Wed, 08 Jan 2020 11:41:45 +0000
 
 lintian (2.43.0) unstable; urgency=medium
 
