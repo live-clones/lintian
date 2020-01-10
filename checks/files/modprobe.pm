@@ -37,6 +37,11 @@ sub files {
         and not $file->is_dir) {
 
         $self->tag('non-conf-file-in-modprobe.d', $file->name);
+    } elsif ($file->name =~ m,^etc/modprobe\.d/(.+)$,
+        or $file->name =~ m,^etc/modules-load\.d/(.+)$,) {
+
+        $self->tag('obsolete-commands-in-modprobe.d-file', $file->name)
+          if $file->file_contents =~ m/^\s*(install|remove)/;
     }
 
     return;

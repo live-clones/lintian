@@ -1,4 +1,4 @@
-# debian/rules/dh-sequencer -- lintian check script -*- perl -*-
+# includes/config-h -- lintian check script -*- perl -*-
 
 # Copyright © 2019 Felix Lechner
 #
@@ -18,7 +18,7 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-package Lintian::debian::rules::dh_sequencer;
+package Lintian::includes::config_h;
 
 use strict;
 use warnings;
@@ -30,34 +30,25 @@ use namespace::clean;
 
 with 'Lintian::Check';
 
-sub source {
-    my ($self) = @_;
-
-    my $processable = $self->processable;
-    my $group = $self->group;
-
-    my $debian_dir = $processable->index_resolved_path('debian');
-    return
-      unless $debian_dir;
-
-    my $rules = $debian_dir->child('rules');
-    return
-      unless $rules;
+sub files {
+    my ($self, $file) = @_;
 
     return
-      unless $rules->is_open_ok;
+      unless $file->is_file;
 
-    my $contents = path($rules->fs_path)->slurp;
+    return
+      unless $file->name =~ m{^usr/include/};
 
-    my $plain = qr/\$\@/;
-    my $curly = qr/\$\{\@\}/;
-    my $parentheses = qr/\$\(\@\)/;
-    my $rule_target = qr/(?:$plain|$curly|$parentheses)/;
+    return
+      unless $file->name =~ m{/config.h$};
 
-    $self->tag('no-dh-sequencer')
-      unless $contents =~ /^\%:[^ \t]*\n\t+dh[ \t]+$rule_target/m
-      || $contents =~ m{^\s*include\s+/usr/share/cdbs/1/class/hlibrary.mk\s*$}m
-      || $contents =~ m{\bDEB_CABAL_PACKAGE\b};
+    return
+      unless $file->is_open_ok;
+
+    my $contents = path($file->fs_path)->slurp;
+
+    $self->tag('package-name-defined-in-config-h', $file->name)
+      if $contents =~ m{\bPACKAGE_NAME\b};
 
     return;
 }

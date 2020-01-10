@@ -1,0 +1,4 @@
+Testname: non-existing-file
+Skeleton: source-native
+Description: An entry in d/source/include-binaries does not exist.
+References: dpkg-source(1), Bug#528001, https://stackoverflow.com/questions/21057015/debian-include-binaries-format

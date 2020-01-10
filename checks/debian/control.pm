@@ -338,31 +338,37 @@ sub source {
       and not $seen_main
       and $area eq 'main';
 
-    # Check for duplicate descriptions.
-    my (%seen_short, %seen_long);
-    for my $i (0 .. $#descriptions) {
-        my (@short, @long);
-        for my $j (($i + 1) .. $#descriptions) {
-            if ($descriptions[$i][1] eq $descriptions[$j][1]) {
-                my $package = $descriptions[$j][0];
-                push(@short, $package) unless $seen_short{$package};
-            }
-            next unless ($descriptions[$i][2] and $descriptions[$j][2]);
-            if ($descriptions[$i][2] eq $descriptions[$j][2]) {
-                my $package = $descriptions[$j][0];
-                push(@long, $package) unless $seen_long{$package};
-            }
+    my %short_descriptions;
+    my %long_descriptions;
+
+    for my $paragraph (@descriptions) {
+
+        my $package = @{$paragraph}[0];
+
+        my $short = @{$paragraph}[1];
+        if (length $short) {
+            $short_descriptions{$short} //= [];
+            push(@{$short_descriptions{$short}}, $package);
         }
-        if (@short) {
-            $self->tag('duplicate-short-description', $descriptions[$i][0],
-                @short);
-            for (@short) { $seen_short{$_} = 1 }
+
+        my $long = @{$paragraph}[2];
+        if (length $long) {
+            $long_descriptions{$long} //= [];
+            push(@{$long_descriptions{$long}}, $package);
         }
-        if (@long) {
-            $self->tag('duplicate-long-description', $descriptions[$i][0],
-                @long);
-            for (@long) { $seen_long{$_} = 1 }
-        }
+    }
+
+    # check for duplicate short description
+    for my $short (keys %short_descriptions) {
+        $self->tag('duplicate-short-description',
+            @{$short_descriptions{$short}})
+          if scalar @{$short_descriptions{$short}} > 1;
+    }
+
+    # check for duplicate long description
+    for my $long (keys %long_descriptions) {
+        $self->tag('duplicate-long-description', @{$long_descriptions{$long}})
+          if scalar @{$long_descriptions{$long}} > 1;
     }
 
     # check the syntax of the Build-Profiles field

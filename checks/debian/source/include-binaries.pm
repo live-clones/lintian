@@ -1,4 +1,4 @@
-# debian/rules/dh-sequencer -- lintian check script -*- perl -*-
+# debian/source/include-binaries -- lintian check script -*- perl -*-
 
 # Copyright © 2019 Felix Lechner
 #
@@ -18,7 +18,7 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-package Lintian::debian::rules::dh_sequencer;
+package Lintian::debian::source::include_binaries;
 
 use strict;
 use warnings;
@@ -33,31 +33,31 @@ with 'Lintian::Check';
 sub source {
     my ($self) = @_;
 
-    my $processable = $self->processable;
-    my $group = $self->group;
-
-    my $debian_dir = $processable->index_resolved_path('debian');
+    my $sourcedir = $self->processable->index_resolved_path('debian/source/');
     return
-      unless $debian_dir;
+      unless $sourcedir;
 
-    my $rules = $debian_dir->child('rules');
+    my $file = $sourcedir->child('include-binaries');
     return
-      unless $rules;
+      unless $file && $file->is_open_ok;
 
-    return
-      unless $rules->is_open_ok;
+    my @lines = path($file->fs_path)->lines({ chomp => 1 });
 
-    my $contents = path($rules->fs_path)->slurp;
+    # format described in dpkg-source (1)
+    for my $line (@lines) {
 
-    my $plain = qr/\$\@/;
-    my $curly = qr/\$\{\@\}/;
-    my $parentheses = qr/\$\(\@\)/;
-    my $rule_target = qr/(?:$plain|$curly|$parentheses)/;
+        next
+          if $line =~ /^\s*$/;
 
-    $self->tag('no-dh-sequencer')
-      unless $contents =~ /^\%:[^ \t]*\n\t+dh[ \t]+$rule_target/m
-      || $contents =~ m{^\s*include\s+/usr/share/cdbs/1/class/hlibrary.mk\s*$}m
-      || $contents =~ m{\bDEB_CABAL_PACKAGE\b};
+        next
+          if $line =~ /^#/;
+
+        # trim both ends
+        $line =~ s/^\s+|\s+$//g;
+
+        $self->tag('unused-entry-in-debian-source-include-binaries', $line)
+          unless $self->processable->index_resolved_path($line);
+    }
 
     return;
 }

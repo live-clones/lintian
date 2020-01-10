@@ -1,0 +1,9 @@
+Tag: unused-entry-in-debian-source-include-binaries
+Severity: wishlist
+Certainty: certain
+Check: debian/source/include-binaries
+Info: An entry in <tt>debian/source/include-binaries</tt> does not exist
+ in the patched source tree. Please remove the entry.
+ .
+ The format for the file is described in the manpage for <tt>dpkg-source</tt>.
+Ref: dpkg-source(1), #528001, https://stackoverflow.com/questions/21057015/debian-include-binaries-format

@@ -6,11 +6,6 @@ Info: Each manpage in <tt>/usr/share/man</tt> should have a reason to be
  there. This manpage does not appear to have a valid reason to be shipped.
  .
  For manpages in sections 1 and 8, an executable (or a link to one) should
- exist. Both the manpage and the executable should ship in the same package.
- .
- This check currently looks for executables only in the same installation
- (deb) package. Section 12.1 of the the policy states: "Each program,
- utility, and function should have an associated manual page included in
- the same package." Please override this tag if you ship manpages separately
- from your executables.
+ exist. This check currently considers all installation packages created
+ by the same sources, as long as they are present.
 Ref: policy 12.1, #583125
