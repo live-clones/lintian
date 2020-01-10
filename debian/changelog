@@ -1,3 +1,32 @@
+lintian (2.43.0) unstable; urgency=medium
+
+  * Summary of tag changes:
+    + Added:
+      - obsolete-commands-in-modprobe.d-file
+      - package-name-defined-in-config-h
+      - unused-entry-in-debian-source-include-binaries
+
+  [ Felix Lechner ]
+  * Allow curly braces in $@ for the dh-sequencer tag.
+    (Closes: #947115)
+  * Fix the tag description of the no-dh-sequencer tag. (Closes: #947269)
+  * Add a check for PACKAGE_NAME in config.h C/C++ include files.
+    (Closes: #733598)
+  * Add add check for unused entries in debian/source/include-binaries.
+    (Closes: #528001)
+  * Look for COM (not COFF) binaries when warning against Windows
+    executables in sources. See #913867 for more info.
+
+  [ Chris Lamb ]
+  * Add missing tag summaries to older debian/changelog entries and fix the
+    generate-tag-summary script to match our newer style of changelog entry
+    placeholder in the future.
+
+  [ Topi Miettinen ]
+  * Check for obsolete "install" or "remove" commands in modprobe.d files.
+
+ -- Chris Lamb <lamby@debian.org>  Fri, 27 Dec 2019 18:28:08 +0000
+
 lintian (2.42.0~bpo10+1) buster-backports; urgency=medium
 
   * Rebuild for buster-backports.
@@ -5,6 +34,29 @@ lintian (2.42.0~bpo10+1) buster-backports; urgency=medium
  -- Chris Lamb <lamby@debian.org>  Fri, 27 Dec 2019 18:17:46 +0000
 
 lintian (2.42.0) unstable; urgency=medium
+
+  * Summary of tag changes:
+    + Added:
+      - concatenated-upstream-signatures
+      - doubly-armored-upstream-signature
+      - empty-upstream-sources
+      - explicitly-armored-upstream-signature
+      - fortran-module-does-not-declare-version
+      - inconsistent-maintainer
+      - missing-prerequisite-for-fortran-module
+      - no-dh-sequencer
+      - opentype-font-prohibits-installable-embedding
+      - opentype-font-wrong-filename
+      - quoted-placeholder-in-mailcap-entry
+      - repackaged-source-not-advertised
+      - spurious-fields-in-upstream-signature
+      - truetype-font-prohibits-installable-embedding
+      - truetype-font-wrong-filename
+      - wrong-vcs-location-for-dpmt
+      - wrong-vcs-location-for-papt
+    + Removed:
+      - service-key-has-whitespace
+      - source-contains-empty-directory
 
   [ Felix Lechner ]
   * Add new checks to identify and notify about issues in upstream
@@ -44,6 +96,16 @@ lintian (2.41.0~bpo10+1) buster-backports; urgency=medium
  -- Chris Lamb <lamby@debian.org>  Thu, 19 Dec 2019 10:55:22 +0000
 
 lintian (2.41.0) unstable; urgency=medium
+
+  * Summary of tag changes:
+    + Added:
+      - debian-watch-file-standard
+      - duplicate-packaging-file
+      - image-file-has-conflicting-name
+      - image-file-has-unexpected-name
+      - incorrect-packaging-filename
+      - manpage-without-executable
+      - tab-in-license-text
 
   [ Felix Lechner ]
   * Check for tab characters in debian/copyright files. (Closes: #946026)
@@ -85,6 +147,12 @@ lintian (2.40.0~bpo10+1) buster-backports; urgency=medium
 
 lintian (2.40.0) unstable; urgency=medium
 
+  * Summary of tag changes:
+    + Added:
+      - package-is-co-maintained
+      - package-is-maintained-by-individual
+      - package-is-team-maintained
+
   [ Chris Lamb ]
   * Sync data/fields/build-profiles and the long description of
     invalid-profile-name-in-build-profiles-field with the latest profiles,
@@ -114,6 +182,11 @@ lintian (2.39.0~bpo10+1) buster-backports; urgency=medium
 
 lintian (2.39.0) unstable; urgency=medium
 
+  * Summary of tag changes:
+    + Added:
+      - debian-rules-not-executable
+      - package-depends-on-an-x-font-package
+
   [ Scott Talbert ]
   * Add wmem{cpy,move,set} to the list of excluded hardened functions to
     avoid many false-positives. (Closes: #921136)
@@ -136,6 +209,10 @@ lintian (2.38.0~bpo10+1) buster-backports; urgency=medium
  -- Chris Lamb <lamby@debian.org>  Thu, 28 Nov 2019 10:25:03 +0000
 
 lintian (2.38.0) unstable; urgency=medium
+
+  * Summary of tag changes:
+    + Removed:
+      - package-depends-on-an-x-font-package
 
   [ Felix Lechner ]
   * Process all overrides for a particular tag, not just the last one.

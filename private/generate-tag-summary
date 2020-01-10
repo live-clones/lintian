@@ -12,7 +12,6 @@ BEGIN {
 use lib "$ENV{'LINTIAN_ROOT'}/lib/";
 use Lintian::Util qw(safe_qx);
 
-my $WIP = '  * WIP';
 my (%added, %removed, %opt);
 
 my %opthash = ('in-place|i' => \$opt{'in-place'},);
@@ -71,7 +70,7 @@ if ($opt{'in-place'}) {
     open(my $out_fd, '>', 'debian/changelog.tmp');
     while (my $line = <$in_fd>) {
         chomp $line;
-        if ($line eq $WIP) {
+        if ($line =~ m/^  \* WIP\b/) {
             emit_tag_summary($out_fd);
             $matched++;
         } else {
@@ -81,7 +80,7 @@ if ($opt{'in-place'}) {
     close($out_fd);
     close($in_fd);
     if ($matched != 1) {
-        die("changelog did not match '$WIP' exactly once\n");
+        die("changelog did not match WIP placeholder exactly once\n");
     }
     rename('debian/changelog.tmp', 'debian/changelog');
     print "Updated debian/changelog\n";

@@ -13,5 +13,5 @@ source-contains-prebuilt-flash-project      ~~ ^Composite \s Document \s File   
 source-contains-prebuilt-javascript-object  ~~ .*                                                                        ~~ (?i)[-._](?:compiled|compressed|lite|min|pack(?:ed)?|prod|umd|yc)\.js$ ~~ map{'s/(?i)(?:[-._](?:compiled|compressed|lite|min|pack(?:ed)?|prod|umd|yc))?\.js$/'.$_.'/'} qw(.js _orig.js .js.orig .src.js -src.js .debug.js -debug.js -nc.js)
 source-contains-prebuilt-python-object      ~~ ^python \s \d(\.\d+)? \s byte-compiled                                    ~~ .*                                ~~ s/(?i)(?:\.cpython-\d{2}|\.pypy)?\.py[co]$/.py/
 source-contains-prebuilt-silverlight-object ~~ ^Zip \s archive \s data                                                   ~~ (?i)\.xac$
-source-contains-prebuilt-windows-binary     ~~ \b(?:PE(?:32|64)|(?:MS-DOS|COFF)\s executable)\b
+source-contains-prebuilt-windows-binary     ~~ \b(?:PE(?:32|64)|(?:MS-DOS|COM)\s executable)\b
 source-contains-prebuilt-wasm-binary        ~~ ^WebAssembly \s \(wasm\) \s binary \s module
