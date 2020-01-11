@@ -311,8 +311,8 @@ sub check_systemd_service_file {
         my @pidfile
           = $self->extract_service_file_values($file,'Service','PIDFile',1);
         foreach my $x (@pidfile) {
-            $self->tag('systemd-service-file-pidfile-refers-to-var-run',
-                $file, $x)
+            $self->tag('systemd-service-file-refers-to-var-run',
+                $file, 'PIDFile', $x)
               if $x =~ m,^/var/run/,;
         }
         my $seen_hardening;
