@@ -98,6 +98,7 @@ sub binary {
     }
 
     $self->check_maintainer_scripts();
+    $self->check_systemd_socket_files();
 
     return;
 }
@@ -481,6 +482,25 @@ sub check_maintainer_scripts {
             }
         }
         close($sfd);
+    }
+
+    return;
+}
+
+sub check_systemd_socket_files {
+    my ($self) = @_;
+
+    my @files = $self->processable->sorted_index;
+
+    foreach my $file (grep { m,/systemd/system/.*\.socket$, } @files) {
+        my @xs
+          = $self->extract_service_file_values($file,'Socket','ListenStream',
+            1);
+        foreach my $x (@xs) {
+            $self->tag('systemd-service-file-refers-to-var-run',
+                $file, 'ListenStream', $x)
+              if $x =~ m,^/var/run/,;
+        }
     }
 
     return;
