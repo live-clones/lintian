@@ -11,7 +11,7 @@ Info: The <tt>debian/copyright</tt> file mentions <tt>Files-Excluded</tt>
  .
  The choice of repack suffix depends on the reason for repackaging.
  When some files were excluded because licensing was a concern, the
- suffix <tt>-dfsg</tt> may be appropriate. In more generic cases, one
+ suffix <tt>+dfsg</tt> may be appropriate. In more generic cases, one
  could chose <tt>-ds</tt>.
  .
  Upstream sources are sometimes repackaged by accident when using old
