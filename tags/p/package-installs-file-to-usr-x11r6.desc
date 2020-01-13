@@ -1,7 +1,7 @@
 Tag: package-installs-file-to-usr-x11r6
 Severity: important
 Certainty: certain
-Check: files
+Check: x11
 Info: Packages using the X Window System should not be configured to install
  files under the /usr/X11R6/ directory. Debian has switched to the modular
  X tree which now uses regular FHS paths and all packages should follow.

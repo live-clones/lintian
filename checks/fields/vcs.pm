@@ -297,12 +297,22 @@ sub always {
                 $fieldname, $uri)
               unless $1 =~ m{^(?:salsa|.*\.dgit)$};
 
-        } else {
-            $self->tag(
-                'orphaned-package-not-maintained-in-debian-infrastructure',
-                $fieldname, $uri)
-              if $maintainer =~ /packages\@qa.debian.org/
-              && $platform ne 'browser';
+        }
+
+        # orphaned
+        if ($maintainer =~ /packages\@qa.debian.org/ && $platform ne 'browser')
+        {
+            if ($uri =~ m{//(.+)\.debian\.org/}) {
+                $self->tag('orphaned-package-maintained-in-private-space',
+                    $fieldname, $uri)
+                  unless $uri =~ m{//salsa\.debian\.org/debian/}
+                  || $uri =~ m{//git\.dgit\.debian\.org/};
+            } else {
+                $self->tag(
+                    'orphaned-package-not-maintained-in-debian-infrastructure',
+                    $fieldname, $uri
+                );
+            }
         }
 
         $self->tag('wrong-vcs-location-for-dpmt')

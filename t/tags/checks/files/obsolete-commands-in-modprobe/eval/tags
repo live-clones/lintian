@@ -1,0 +1,4 @@
+obsolete-commands-in-modprobe (binary): obsolete-command-in-modprobe.d-file etc/modules-load.d/lintian-install.conf remove
+obsolete-commands-in-modprobe (binary): obsolete-command-in-modprobe.d-file etc/modules-load.d/lintian-install.conf install
+obsolete-commands-in-modprobe (binary): obsolete-command-in-modprobe.d-file etc/modprobe.d/lintian-install.conf remove
+obsolete-commands-in-modprobe (binary): obsolete-command-in-modprobe.d-file etc/modprobe.d/lintian-install.conf install

@@ -29,9 +29,6 @@ filenames (binary): subdir-in-usr-bin usr/bin/bin/
 filenames (binary): package-installs-nonbinary-perl-in-usr-lib-perl5 usr/lib/ma-dir/perl/version/foo/bar.pm
 filenames (binary): package-installs-nonbinary-perl-in-usr-lib-perl5 usr/lib/ma-dir/perl/version/foo/ancient.pm
 filenames (binary): package-installs-into-etc-gconf-schemas etc/gconf/schemas/test.schema
-filenames (binary): package-installs-file-to-usr-x11r6 usr/X11R6/bin/testxbin2
-filenames (binary): package-installs-file-to-usr-x11r6 usr/X11R6/bin/
-filenames (binary): package-installs-file-to-usr-x11r6 usr/X11R6/
 filenames (binary): package-contains-vcs-control-file usr/lib/ma-dir/perl/version/foo/.hgtags
 filenames (binary): package-contains-vcs-control-file usr/lib/ma-dir/perl/version/foo/.hgignore
 filenames (binary): package-contains-vcs-control-file usr/lib/ma-dir/perl/version/foo/.hg_archival.txt

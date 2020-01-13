@@ -94,6 +94,7 @@ Enable-Tags-From-Check:
  upstream-signature,
  upstream-signing-key,
  usrmerge,
+ x11,
 Extends:
  debian/ftp-master-auto-reject
 

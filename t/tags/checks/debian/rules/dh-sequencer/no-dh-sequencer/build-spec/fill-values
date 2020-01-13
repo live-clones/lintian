@@ -1,0 +1,6 @@
+Testname: no-dh-sequencer
+Skeleton: upload-native
+Package-Architecture: any
+Dh-Compat-Level: 7
+Description: Uses standard debhelper targets but not the dh sequencer
+Default-Build-Depends: debhelper (>= [% $dh_compat_level %]~)
