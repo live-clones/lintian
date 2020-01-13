@@ -6,7 +6,7 @@ binary: binary-arch binary-indep
 binary-arch:
 binary-indep:
 	-dh_clideps
-	-dh_gtkmodules
+	-dh_gstscancodecs
 	dh_lisp || true
 	# Should trigger a versioned dependency requirement for dpatch
 	-dh_dpatch_patch
