@@ -1,0 +1,5 @@
+Tag: manpage-in-udeb
+Severity: important
+Certainty: certain
+Check: files
+Info: udeb packages should not contain any manual pages.

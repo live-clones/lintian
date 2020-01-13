@@ -47,6 +47,34 @@ use constant SPACE => q{ };
 use constant EMPTY => q{};
 use constant NEWLINE => qq{\n};
 
+my @known_missing = qw(
+  bin-sbin-mismatch
+  changed-by-invalid-for-derivative
+  debian-files-list-in-source
+  debian-rules-not-executable
+  embedded-pear-module
+  invalid-field-for-derivative
+  invalid-version-number-for-derivative
+  manpage-in-udeb
+  old-python-version-field
+  package-is-co-maintained
+  package-is-maintained-by-individual
+  package-is-team-maintained
+  package-uses-deprecated-source-override-location
+  patch-modifying-debian-files
+  patch-system
+  patch-system-but-direct-changes-in-diff
+  quilt-series-references-non-existent-patch
+  sphinxdoc-but-no-sphinxdoc-depends
+  tar-errors-from-control
+  unused-override
+  uses-deprecated-adttmp
+  vcs
+  vcs-uri
+  wrong-vcs-location-for-dpmt
+  wrong-vcs-location-for-papt
+);
+
 my $profile = Lintian::Profile->new(undef, [$ENV{LINTIAN_ROOT}]);
 
 # find known checks
@@ -97,7 +125,7 @@ my @wanted = uniq $profile->tags;
 my $total = scalar @wanted;
 
 # set the testing plan
-plan tests => scalar @wanted;
+plan tests => scalar @wanted + 2;
 
 for my $name (@wanted) {
   TODO: {
@@ -121,6 +149,16 @@ diag 'Missing '
 
 diag "Untested tag: $_" for @missing;
 #diag "Extra: $_" for @extra;
+
+my $exceptions = List::Compare->new(\@missing, \@known_missing);
+my @unknown = $exceptions->get_Lonly;
+my @solved = $exceptions->get_Ronly;
+
+is(scalar @unknown, 0, 'All missing tags are known');
+diag "Unknown missing tag: $_" for @unknown;
+
+is(scalar @solved, 0, 'Solved tags from remove from known Missing set');
+diag "Solved tag: $_" for @solved;
 
 # Local Variables:
 # indent-tabs-mode: nil

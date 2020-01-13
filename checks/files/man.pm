@@ -36,7 +36,7 @@ sub files {
       unless $file->name =~ m,^usr/share/man/\S+,;
 
     if ($self->type eq 'udeb') {
-        $self->tag('udeb-contains-documentation-file', $file->name);
+        $self->tag('manpage-in-udeb', $file->name);
     }
 
     if ($file->is_dir) {

@@ -28,9 +28,9 @@ cruft-minified-js (source): source-contains-prebuilt-javascript-object oldfalsep
 cruft-minified-js (source): source-contains-prebuilt-javascript-object oldfalsepositives/-debug.js/src/test-min.js
 cruft-minified-js (source): source-contains-prebuilt-javascript-object build/js/foo.min.js
 cruft-minified-js (source): source-contains-browserified-javascript deployJava/deployJava.browser.js code fragment:CODE
-cruft-minified-js (source): insane-line-length-in-source-file usr/share/javascript/jswithoutminextwithoutsource/jsonnotsourced.js line length is NUMBER characters (>CUTOFF)
-cruft-minified-js (source): insane-line-length-in-source-file usr/share/javascript/jswithoutminext/json.js line length is NUMBER characters (>CUTOFF)
-cruft-minified-js (source): insane-line-length-in-source-file src/js/foo.html line length is NUMBER characters (>CUTOFF)
-cruft-minified-js (source): insane-line-length-in-source-file oldfalsepositives/longlicensetext.js line length is NUMBER characters (>CUTOFF)
-cruft-minified-js (source): insane-line-length-in-source-file oldfalsepositives/jslint.js line length is NUMBER characters (>CUTOFF)
+cruft-minified-js (source): very-long-line-length-in-source-file usr/share/javascript/jswithoutminextwithoutsource/jsonnotsourced.js line length is NUMBER characters (>CUTOFF)
+cruft-minified-js (source): very-long-line-length-in-source-file usr/share/javascript/jswithoutminext/json.js line length is NUMBER characters (>CUTOFF)
+cruft-minified-js (source): very-long-line-length-in-source-file src/js/foo.html line length is NUMBER characters (>CUTOFF)
+cruft-minified-js (source): very-long-line-length-in-source-file oldfalsepositives/longlicensetext.js line length is NUMBER characters (>CUTOFF)
+cruft-minified-js (source): very-long-line-length-in-source-file oldfalsepositives/jslint.js line length is NUMBER characters (>CUTOFF)
 cruft-minified-js (source): embedded-script-includes-copyright-statement src/js/foo.html extract of copyright statement: COPYRIGHT

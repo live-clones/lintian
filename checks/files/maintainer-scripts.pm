@@ -24,79 +24,54 @@ use strict;
 use warnings;
 use autodie;
 
-use List::MoreUtils qw(none);
+use List::MoreUtils qw(any);
 
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
 
-has bin_binaries => (is => 'rwp', default => sub { [] });
-
-sub get_checks_for_file {
-    my ($self, $file) = @_;
-
-    my %checks;
-
-    return %checks
-      if $self->processable->source eq 'lintian';
-
-    $checks{'missing-depends-on-sensible-utils'}
-      = '(?:select-editor|sensible-(?:browser|editor|pager))\b'
-      if $file->name !~ m,^usr/share/(?:doc|locale)/,
-      and not $self->processable->relation('all')->implies('sensible-utils')
-      and not $self->processable->source eq 'sensible-utils';
-
-    $checks{'uses-dpkg-database-directly'} = '/var/lib/dpkg'
-      if $file->name !~ m,^usr/share/(?:doc|locale)/,
-      and $file->basename !~ m/^README(?:\..*)?$/
-      and $file->basename !~ m/^changelog(?:\..*)?$/i
-      and $file->basename !~ m/\.(?:html|txt)$/i
-      and $self->processable->field('section', '') ne 'debian-installer'
-      and none { $_ eq $self->processable->source }
-    qw(base-files dpkg lintian);
-
-    $checks{'file-references-package-build-path'}= quotemeta($self->build_path)
-      if $self->build_path =~ m,^/.+,g;
-
-    # If we have a /usr/sbin/foo, check for references to /usr/bin/foo
-    $checks{'bin-sbin-mismatch'}
-      = '(' . join('|', @{$self->bin_binaries}) . ')'
-      if @{$self->bin_binaries};
-
-    return %checks;
-}
-
-sub files {
-    my ($self, $file) = @_;
-
-    return
-      unless $file->is_file;
-
-    # for /usr/sbin/foo check for references to /usr/bin/foo
-    push(@{$self->bin_binaries}, '/'.($1 // '')."bin/$2")
-      if $file->name =~ m,^(usr/)?sbin/(.+),;
-
-    return;
-}
-
-sub breakdown {
+sub always {
     my ($self) = @_;
 
     # get maintainer scripts
-    my %control = %{$self->processable->control_scripts};
+    my @names = keys %{$self->processable->control_scripts};
+    my @files
+      =map { $self->processable->control_index_resolved_path($_) } @names;
 
-    for my $key (keys %control) {
+    for my $file (@files) {
 
-        my $file = $self->processable->control_index_resolved_path($key);
         next
           unless $file && $file->is_open_ok;
 
-        my %checks= $self->get_checks_for_file($file);
+        # why is lintian exempt from this check?
+        next
+          if $self->processable->source eq 'lintian';
+
+        my %checks;
+
+        $checks{'missing-depends-on-sensible-utils'}
+          = '(?:select-editor|sensible-(?:browser|editor|pager))\b'
+          unless $file->name =~ m,^usr/share/(?:doc|locale)/,
+          || $self->processable->relation('all')->implies('sensible-utils')
+          || $self->processable->source eq 'sensible-utils';
+
+        $checks{'uses-dpkg-database-directly'} = '/var/lib/dpkg'
+          unless $file->name =~ m,^usr/share/(?:doc|locale)/,
+          || $file->basename =~ m/^README(?:\..*)?$/
+          || $file->basename =~ m/^changelog(?:\..*)?$/i
+          || $file->basename =~ m/\.(?:html|txt)$/i
+          || $self->processable->field('section', '') eq 'debian-installer'
+          || any { $_ eq $self->processable->source }
+        qw(base-files dpkg lintian);
+
+        $checks{'file-references-package-build-path'}
+          = quotemeta($self->build_path)
+          if $self->build_path =~ m,^/.+,g;
 
         my $fd = $file->open;
         while (<$fd>) {
-            foreach my $tag (sort keys %checks) {
+            for my $tag (keys %checks) {
                 $self->tag($tag, $file->name, "(line $.)")
                   if $_ =~ $checks{$tag};
             }

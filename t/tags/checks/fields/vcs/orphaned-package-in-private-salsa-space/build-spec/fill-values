@@ -1,0 +1,4 @@
+Skeleton: source-native
+Testname: orphaned-package-in-private-salsa-space
+Description: Orphaned package maintained in private salsa space
+Package-Architecture: all

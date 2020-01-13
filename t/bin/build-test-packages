@@ -214,15 +214,15 @@ my @buildpaths = map {$_->absolute($buildroot)->stringify } @relative;
 # remove obsolete package sources
 my @foundsources = map { path($_)->parent->absolute->stringify; }
   File::Find::Rule->file->name('fill-values')->in($sourceroot);
-my $lc = List::Compare->new('--unsorted', \@foundsources, \@sourcepaths);
-my @obsoletesources = $lc->get_Lonly;
+my $sourcelc = List::Compare->new('--unsorted', \@foundsources, \@sourcepaths);
+my @obsoletesources = $sourcelc->get_Lonly;
 path($_)->remove_tree for @obsoletesources;
 
 # remove obsolete built packages
 my @foundpackages = map { path($_)->parent->absolute->stringify; }
   File::Find::Rule->file->name('source-files.sha1sums')->in($buildroot);
-my $lc = List::Compare->new('--unsorted', \@foundpackages, \@buildpaths);
-my @obsoletepackages = $lc->get_Lonly;
+my $packagelc= List::Compare->new('--unsorted', \@foundpackages, \@buildpaths);
+my @obsoletepackages = $packagelc->get_Lonly;
 path($_)->remove_tree for @obsoletepackages;
 
 # remove empty directories
