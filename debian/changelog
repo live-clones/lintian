@@ -1,8 +1,24 @@
-lintian (2.44.0+git) UNRELEASED; urgency=medium
+lintian (2.45.0) unstable; urgency=medium
 
-  * WIP (generated upon release).
+  * Summary of tag changes:
+    + Renamed:
+      - systemd-service-file-pidfile-refers-to-var-run ->
+          systemd-service-file-refers-to-var-run
 
- -- Chris Lamb <lamby@debian.org>  Wed, 08 Jan 2020 12:00:35 +0000
+  [ Chris Lamb ]
+  * Check for ListenStream configuration keys in systemd .socket files that
+    refer to /var/run. (Closes: #948478)
+  * Prevent false positives in missing-build-dependency-for-dh_-command by
+    adding entries for dh-sequence-ada and dh-sequence-sphinxdoc.
+    (Closes: #947836)
+  * Refresh all "private" debhelper data.
+  * Create .cache directory in the test runner if it does not exist.
+
+  [ Louis-Philippe Véronneau ]
+  * Recommend the use of the "+dfsg" version suffix over "-dfsg" in the
+    repackaged-source-not-advertised tag's long description.
+
+ -- Chris Lamb <lamby@debian.org>  Mon, 13 Jan 2020 12:23:40 +0000
 
 lintian (2.44.0) unstable; urgency=medium
 
