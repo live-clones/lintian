@@ -1,0 +1,3 @@
+systemd-service-file-refers-to-var-run-good (binary): systemd-service-file-refers-to-var-run lib/systemd/system/systemd-service-file-refers-to-var-run-good.service PIDFile /var/run/$NAME.pid
+systemd-service-file-refers-to-var-run-good (binary): systemd-service-file-missing-hardening-features lib/systemd/system/systemd-service-file-refers-to-var-run-good.service
+systemd-service-file-refers-to-var-run-bad (binary): systemd-service-file-missing-hardening-features lib/systemd/system/systemd-service-file-refers-to-var-run-bad.service

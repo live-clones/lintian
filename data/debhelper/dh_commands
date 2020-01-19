@@ -1,5 +1,5 @@
 # This file is generated from private/refresh-debhelper-data.
-# It was generated on 2018-08-09 15:25
+# It was generated on 2020-01-12 23:20
 #
 # If the script generates an insufficient/incorrect value for a
 # single item, please have a look at dh_commands-manual.
@@ -62,7 +62,6 @@ dh_gnustep=gnustep-make
 dh_golang=dh-golang
 dh_golang_autopkgtest=dh-golang
 dh_gstscancodecs=libgstreamer1.0-dev
-dh_gtkmodules=libgtk2.0-dev
 dh_haskell_blurbs=haskell-devscripts-minimal
 dh_haskell_depends=haskell-devscripts-minimal
 dh_haskell_extra_depends=haskell-devscripts-minimal
@@ -98,6 +97,7 @@ dh_installmodules=debhelper | debhelper-compat
 dh_installpam=debhelper | debhelper-compat
 dh_installppp=debhelper | debhelper-compat
 dh_installsystemd=debhelper | debhelper-compat
+dh_installsystemduser=debhelper | debhelper-compat
 dh_installtex=tex-common
 dh_installudev=debhelper | debhelper-compat
 dh_installwm=debhelper | debhelper-compat
@@ -105,8 +105,6 @@ dh_installxfonts=debhelper | debhelper-compat
 dh_installxmlcatalogs=xml-core
 dh_installxsp=dh-xsp
 dh_installyorick=yorick-dev
-dh_installzope=zope-debhelper
-dh_installzopeinstance=zope-debhelper
 dh_kodiaddon_depends=kodi-addons-dev
 dh_libva=libva-dev
 dh_link=debhelper | debhelper-compat
@@ -123,10 +121,9 @@ dh_makeshlibs=debhelper | debhelper-compat
 dh_md5sums=debhelper | debhelper-compat
 dh_metainit=dh-metainit
 dh_missing=debhelper | debhelper-compat
+dh_mkdocs=mkdocs
 dh_movefiles=debhelper | debhelper-compat
 dh_movelibkdeinit=pkg-kde-tools
-dh_nativejava=libgcj-common
-dh_nodejs=pkg-js-tools
 dh_numpy3=python3-numpy
 dh_numpy=python-numpy
 dh_ocaml=dh-ocaml
@@ -141,6 +138,9 @@ dh_octave_make=dh-octave
 dh_octave_substvar=dh-octave
 dh_octave_version=dh-octave
 dh_pdl=pdl
+dh_perl6_depsfile=dh-perl6
+dh_perl6_maintscript=dh-perl6
+dh_perl6_test=dh-perl6
 dh_perl=debhelper | debhelper-compat
 dh_perl_dbi=libdbi-perl
 dh_perl_imager=libimager-perl
@@ -151,7 +151,6 @@ dh_phppear=pkg-php-tools
 dh_pidgin=pidgin-dev
 dh_ppp=ppp-dev
 dh_prep=debhelper | debhelper-compat
-dh_pydeb=python-van.pydeb
 dh_pyppd=pyppd
 dh_pypy=dh-python
 dh_python-ply=python-ply
@@ -175,7 +174,6 @@ dh_sodeps=pkg-kde-tools
 dh_sphinxdoc=sphinx-common
 dh_strip=debhelper | debhelper-compat
 dh_strip_nondeterminism=dh-strip-nondeterminism
-dh_swi_prolog=swi-prolog-nox
 dh_systemd_enable=debhelper | debhelper-compat
 dh_systemd_start=debhelper | debhelper-compat
 dh_sysuser=dh-sysuser
@@ -189,6 +187,7 @@ dh_vagrant_plugin=vagrant
 dh_vdrplugin_depends=vdr-dev
 dh_vdrplugin_enable=vdr-dev
 dh_vignette=dh-r
+dh_vim-addon=dh-vim-addon
 dh_virtualenv=dh-virtualenv
 dh_webext=mozilla-devscripts
 dh_xine=libxine2-dev

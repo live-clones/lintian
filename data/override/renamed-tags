@@ -13,5 +13,6 @@ privacy-breach-may-use-debian-package => privacy-breach-uses-embedded-file
 source-copyright-license-header => source-copyright-license-field
 systemd-no-service-for-init-rcS-script => missing-systemd-service-for-init.d-rcS-script
 systemd-no-service-for-init-script => omitted-systemd-service-for-init.d-script
+systemd-service-file-pidfile-refers-to-var-run => systemd-service-file-refers-to-var-run
 testsuite-unnecessary-testsuite-autopkgtest-header => testsuite-unnecessary-testsuite-autopkgtest-field
 transitional-package-should-be-oldlibs-extra => transitional-package-should-be-oldlibs-optional
