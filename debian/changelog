@@ -1,8 +1,9 @@
-lintian (2.45.0+git) UNRELEASED; urgency=medium
+lintian (2.46.0) unstable; urgency=medium
 
-  * WIP (generated upon release).
+  [ Gianfranco Costamagna ]
+  * Build Lintian with the new "python2" package. (Closes: #949065)
 
- -- Chris Lamb <lamby@debian.org>  Mon, 13 Jan 2020 14:57:26 +0000
+ -- Chris Lamb <lamby@debian.org>  Sun, 19 Jan 2020 10:06:28 +0000
 
 lintian (2.45.0) unstable; urgency=medium
 
