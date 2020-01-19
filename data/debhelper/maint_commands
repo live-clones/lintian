@@ -1,5 +1,5 @@
 # This file is generated from private/refresh-debhelper-data.
-# It was generated on 2018-03-12 00:09
+# It was generated on 2020-01-12 23:20
 
 dh_apache2
 dh_apparmor
@@ -9,6 +9,7 @@ dh_configpackage
 dh_consoledata
 dh_dkms
 dh_elpa
+dh_fortran_mod
 dh_icons
 dh_installcatalogs
 dh_installcliframework
@@ -17,19 +18,19 @@ dh_installdeb
 dh_installdebconf
 dh_installemacsen
 dh_installinit
+dh_installinitramfs
 dh_installlisting
 dh_installmenu
 dh_installmodules
 dh_installsystemd
+dh_installsystemduser
 dh_installtex
 dh_installwm
 dh_installxfonts
 dh_installxmlcatalogs
 dh_installxsp
-dh_installzope
-dh_installzopeinstance
 dh_metainit
-dh_nativejava
+dh_perl6_maintscript
 dh_php
 dh_runit
 dh_systemd_enable

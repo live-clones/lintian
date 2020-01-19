@@ -1,5 +1,5 @@
 # This file is generated from private/refresh-debhelper-data.
-# It was generated on 2018-08-09 15:25
+# It was generated on 2020-01-12 23:20
 
 apache2-dev
 autotools-dev
@@ -29,6 +29,7 @@ dh-metainit
 dh-ocaml
 dh-octave
 dh-octave-autopkgtest
+dh-perl6
 dh-php
 dh-python
 dh-r
@@ -36,6 +37,7 @@ dh-rebar
 dh-runit
 dh-strip-nondeterminism
 dh-sysuser
+dh-vim-addon
 dh-virtualenv
 dh-xsp
 dictionaries-common-dev
@@ -51,14 +53,12 @@ haskell-devscripts-minimal
 kodi-addons-dev
 libaqbanking-dev
 libdbi-perl
-libgcj-common
 libgstreamer1.0-dev
-libgtk2.0-dev
 libimager-perl
 libva-dev
 libxine2-dev
+mkdocs
 mozilla-devscripts
-pkg-js-tools
 pdl
 perl-openssl-defaults
 pidgin-dev
@@ -71,7 +71,6 @@ pyppd
 python-numpy
 python-ply
 python-sip-dev
-python-van.pydeb
 python2
 python3-numpy
 python3-ply
@@ -79,7 +78,6 @@ python3-sip-dev
 quilt
 scour
 sphinx-common
-swi-prolog-nox
 tex-common
 uwsgi-dev
 vagrant
@@ -88,4 +86,3 @@ xml-core
 xserver-xorg-dev
 yorick-dev
 zathura-dev
-zope-debhelper

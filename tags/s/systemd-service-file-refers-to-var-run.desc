@@ -1,4 +1,4 @@
-Tag: systemd-service-file-pidfile-refers-to-var-run
+Tag: systemd-service-file-refers-to-var-run
 Severity: wishlist
 Certainty: certain
 Check: systemd
