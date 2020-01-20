@@ -170,4 +170,4 @@ Description: Debian package checker
  compliance with Debian policy. Every Debian maintainer should check packages
  with this tool before uploading them to the archive.
  .
- This version of Lintian is calibrated for Debian Policy version 4.4.1.
+ This version of Lintian is calibrated for Debian Policy version 4.5.0.
