@@ -205,13 +205,7 @@ sub source {
 
         if (defined $latest_version && defined $previous_version) {
 
-            $self->tag('latest-debian-changelog-entry-without-new-version')
-              unless versions_gt($latest_version->literal,
-                $previous_version->literal)
-              or $latest_entry->Changes =~ /backport/i
-              or $latest_entry->Distribution eq 'buster'
-              or $latest_entry->Distribution =~ /-security$/i
-              or $latest_entry->Source ne $previous_entry->Source;
+            # a reused version literal is caught by the broader previous check
 
             # start with a reasonable default
             my $expected_previous = $previous_version->literal;
