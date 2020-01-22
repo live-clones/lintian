@@ -81,6 +81,7 @@ Enable-Tags-From-Check:
  origtar,
  patch-systems,
  pe,
+ perl/prebuilt/yapp,
  phppear,
  python,
  scripts,
