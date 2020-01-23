@@ -1,6 +1,6 @@
-# fortran -- lintian check script -*- perl -*-
+# fortran/gfortran -- lintian check script -*- perl -*-
 
-# Copyright (C) 1998 Christian Schwarz and Richard Braakman
+# Copyright © 2020 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -18,7 +18,7 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-package Lintian::fortran;
+package Lintian::fortran::gfortran;
 
 use strict;
 use warnings;
@@ -64,12 +64,12 @@ sub files {
     close($fd);
 
     unless (length $module_version) {
-        $self->tag('fortran-module-does-not-declare-version', $file->name);
+        $self->tag('gfortran-module-does-not-declare-version', $file->name);
         return;
     }
 
     my $depends = $self->processable->field('depends') // EMPTY;
-    $self->tag('missing-prerequisite-for-fortran-module', $file->name)
+    $self->tag('missing-prerequisite-for-gfortran-module', $file->name)
       unless $depends =~ /\bgfortran-mod-$module_version\b/;
 
     return;

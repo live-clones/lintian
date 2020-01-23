@@ -1,7 +1,7 @@
-Tag: fortran-module-does-not-declare-version
+Tag: gfortran-module-does-not-declare-version
 Severity: minor
 Certainty: certain
-Check: fortran
+Check: fortran/gfortran
 Info: The installation package ships a GFORTRAN module which does not
  declare a module version number. That number is needed to establish the
  proper prerequisites for binary rebuilds.
