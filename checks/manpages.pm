@@ -301,30 +301,53 @@ sub files {
 sub breakdown {
     my ($self) = @_;
 
-    my %user_executables;
-    my %admin_executables;
+    my %local_user_executables;
+    my %local_admin_executables;
 
     for my $file ($self->processable->sorted_index) {
 
         next
           unless $file->is_symlink || $file->is_file;
 
-        my ($basename, $dirname, undef) = fileparse($file->name);
+        my ($name, $path, undef) = fileparse($file->name);
 
-        $user_executables{$basename} = $file
-          if any { $dirname eq $_ } @user_locations;
+        $local_user_executables{$name} = $file
+          if any { $path eq $_ } @user_locations;
 
-        $admin_executables{$basename} = $file
-          if any { $dirname eq $_ } @admin_locations;
+        $local_admin_executables{$name} = $file
+          if any { $path eq $_ } @admin_locations;
     }
 
-    my $group = $self->group;
-    my @direct_prerequisites
-      = @{$group->direct_dependencies($self->processable) // []};
-    my @distant_files = map { $_->sorted_index } @direct_prerequisites;
-    my %distant_manpages;
+    my %local_executables= (%local_user_executables, %local_admin_executables);
+    my @local_commands = keys %local_executables;
 
-    for my $file (@distant_files) {
+    my @direct_reliants
+      =@{$self->group->direct_reliants($self->processable) // []};
+    my@reliant_files = map { $_->sorted_index } @direct_reliants;
+
+    # for executables, look at packages relying on the current processable
+    my %distant_executables;
+    for my $file (@reliant_files) {
+
+        next
+          unless $file->is_file || $file->is_symlink;
+
+        my ($name, $path, undef) = fileparse($file, qr{\..+$});
+
+        $distant_executables{$name} = $file
+          if any { $path eq $_ } (@user_locations, @admin_locations);
+    }
+
+    my @distant_commands = keys %distant_executables;
+    my @related_commands = (@local_commands, @distant_commands);
+
+    my @direct_prerequisites
+      =@{$self->group->direct_dependencies($self->processable) // []};
+    my@prerequisite_files = map { $_->sorted_index } @direct_prerequisites;
+
+    # for manpages, look at packages the current processable relies upon
+    my %distant_manpages;
+    for my $file (@prerequisite_files) {
 
         next
           unless $file->is_file || $file->is_symlink;
@@ -350,11 +373,9 @@ sub breakdown {
     my %local_manpages = %{$self->local_manpages};
     my %related_manpages = (%local_manpages, %distant_manpages);
 
-    my %all_executables = (%user_executables, %admin_executables);
-    my @commands = keys %all_executables;
-
     # provides sorted output
-    my $related = List::Compare->new(\@commands, [keys %related_manpages]);
+    my $related
+      = List::Compare->new(\@local_commands, [keys %related_manpages]);
     my @documented = $related->get_intersection;
     my @manpage_missing = $related->get_Lonly;
 
@@ -363,9 +384,9 @@ sub breakdown {
         @{$related_manpages{$_} // []}
     } @documented;
 
-    for my $command (keys %admin_executables) {
+    for my $command (keys %local_admin_executables) {
 
-        my $file = $admin_executables{$command};
+        my $file = $local_admin_executables{$command};
         my @manpages = @{$related_manpages{$command} // []};
 
         $self->tag('command-in-sbin-has-manpage-in-incorrect-section', $file)
@@ -374,13 +395,13 @@ sub breakdown {
     }
 
     $self->tag('binary-without-english-manpage', $_)
-      for map {$all_executables{$_}} @english_missing;
+      for map {$local_executables{$_}} @english_missing;
 
     $self->tag('binary-without-manpage', $_)
-      for map {$all_executables{$_}} @manpage_missing;
+      for map {$local_executables{$_}} @manpage_missing;
 
     # surplus manpages only for this package; provides sorted output
-    my $local = List::Compare->new(\@commands, [keys %local_manpages]);
+    my $local = List::Compare->new(\@related_commands, [keys %local_manpages]);
     my @surplus_manpages = $local->get_Ronly;
 
     for my $manpage (map { @{$local_manpages{$_} // []} } @surplus_manpages) {
