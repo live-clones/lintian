@@ -36,6 +36,7 @@ Enable-Tags-From-Check:
  fields/derivatives,
  fields/description,
  fields/dm-upload-allowed,
+ fields/empty,
  fields/essential,
  fields/format,
  fields/homepage,
