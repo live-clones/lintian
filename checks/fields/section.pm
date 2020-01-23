@@ -92,10 +92,8 @@ sub always {
     return
       unless defined $section;
 
-    if ($section eq EMPTY) {
-        $self->tag('empty-section-field');
-        return;
-    }
+    return
+      if $section eq EMPTY;
 
     return
       if $type eq 'udeb';
