@@ -59,7 +59,7 @@ Enable-Tags-From-Check:
  files,
  fonts/opentype,
  fonts/truetype,
- fortran,
+ fortran/gfortran,
  gir,
  group-checks,
  huge-usr-share,
