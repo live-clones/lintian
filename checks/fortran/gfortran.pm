@@ -35,17 +35,18 @@ with 'Lintian::Check';
 sub files {
     my ($self, $file) = @_;
 
-    # perhaps an unnecessary precaution
-    return
-      unless $file->name =~ m{^usr/lib/};
-
     # file-info would be great, but files are zipped
     return
       unless $file->name =~ m{\.mod$};
 
-    # allow for subdirectories in between
     return
-      unless $file->name =~ m{/fortran/};
+      unless $file->name =~ m{^usr/lib/};
+
+    # do not look at flang, grub or libreoffice modules
+    return
+         if $file->name =~ m{/flang-\d+/}
+      || $file->name =~ m{^usr/lib/grub}
+      || $file->name =~ m{^usr/lib/libreoffice};
 
     return
       unless $file->is_file && $file->is_open_ok;
