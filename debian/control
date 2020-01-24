@@ -81,7 +81,7 @@ Build-Depends:
  perl <!nocheck>,
  pkg-js-tools <!nocheck>,
  pkg-php-tools <!nocheck>,
- python <!nocheck>,
+ python2 <!nocheck>,
  python-all-dev <!nocheck>,
  python-numpy <!nocheck>,
  python3-docutils,

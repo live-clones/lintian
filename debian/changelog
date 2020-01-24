@@ -1,3 +1,10 @@
+lintian (2.46.0) unstable; urgency=medium
+
+  [ Gianfranco Costamagna ]
+  * Build Lintian with the new "python2" package. (Closes: #949065)
+
+ -- Chris Lamb <lamby@debian.org>  Sun, 19 Jan 2020 10:06:28 +0000
+
 lintian (2.45.0~bpo9+1) stretch-backports; urgency=medium
 
   * Rebuild for stretch-backports.
