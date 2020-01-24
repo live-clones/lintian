@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: home-in-var-run
+Description: Test for {pre,post}inst script which calls adduser --home /var/run
