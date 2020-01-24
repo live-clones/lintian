@@ -47,8 +47,8 @@ echo '//comment' > "${dir}/fake.min.js"
 echo '' > "${dir}/fake.py"
 echo 'import fake' > "${dir}/main.py"
 unset PYTHONDONTWRITEBYTECODE
-PYTHONPATH="${dir}" python "${dir}/main.py" > /dev/null
-PYTHONPATH="${dir}" python -O "${dir}/main.py"  > /dev/null
+PYTHONPATH="${dir}" python2 "${dir}/main.py" > /dev/null
+PYTHONPATH="${dir}" python2 -O "${dir}/main.py"  > /dev/null
 rm -f "${dir}"/main.py*
 
 zip -q "${dir}/fake.jar" "${dir}/fake.min.js"
