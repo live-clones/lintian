@@ -35,6 +35,8 @@ sub source {
 
     my $processable = $self->processable;
 
+    return if $processable->source eq 'lintian';
+
     for my $file ($processable->sorted_index) {
 
         next
