@@ -470,7 +470,7 @@ sub unpack {
         };
     }
 
-    return 0
+    return 1
       unless %worklists;
 
     $self->worktable(\%worklists);
