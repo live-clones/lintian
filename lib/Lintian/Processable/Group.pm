@@ -574,7 +574,7 @@ sub coll_hook {
             "Collection script $coll for $procid done ($tres)");
         $OUTPUT->perf_log("$procid,coll/$coll,${raw_res}");
 
-        return 0;
+        return 1;
     }
 
     # unknown event
