@@ -86,7 +86,8 @@ my %code_priority = (
     'I' => 50,
     'P' => 60,
     'X' => 70,
-    'O' => 80,
+    'C' => 80,
+    'O' => 90,
 );
 
 my %type_priority = (
