@@ -636,6 +636,33 @@ sub process {
                 die $err if not ref $err or $err->errno != ENOENT;
             }
 
+            my %alias = %{$TAGS->{profile}->aliases};
+
+            # treat renamed tags in overrides
+            for my $tagname (keys %{$declared_overrides}) {
+
+                # use new name if tag was renamed
+                my $current = $alias{$tagname};
+
+                next
+                  unless defined $current;
+
+                unless ($current eq $tagname) {
+
+                    $processable->tag('renamed-tag',
+                        "$tagname => $current at line "
+                          .$declared_overrides->{$tagname}{$_}{line})
+                      for keys %{$declared_overrides->{$tagname}};
+
+                    $declared_overrides->{$current} //= {};
+                    $declared_overrides->{$current}{$_}
+                      = $declared_overrides->{$tagname}{$_}
+                      for keys %{$declared_overrides->{$tagname}};
+
+                    delete $declared_overrides->{$tagname};
+                }
+            }
+
             push(@found, @{$processable->found});
 
             # remove found tags from Processable

@@ -30,6 +30,9 @@ use Lintian::Tag::TextUtil
   qw(dtml_to_html dtml_to_text split_paragraphs wrap_paragraphs);
 use Lintian::Tags qw();
 
+use constant EMPTY => q{};
+use constant SPACE => q{ };
+
 # The URL to a web man page service.  NAME is replaced by the man page
 # name and SECTION with the section to form a valid URL.  This is used
 # when formatting references to manual pages into HTML to provide a link
@@ -402,6 +405,17 @@ Returns the tag name.
 sub tag {
     my ($self) = @_;
     return $self->{tag};
+}
+
+=item aliases()
+
+Returns old tag names, if any.
+
+=cut
+
+sub aliases {
+    my ($self) = @_;
+    return split(SPACE, $self->{'renamed-from'} // EMPTY);
 }
 
 =back
