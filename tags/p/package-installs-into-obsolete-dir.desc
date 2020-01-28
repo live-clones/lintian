@@ -4,3 +4,5 @@ Certainty: certain
 Check: files
 Info: The package installs files to an obsolete directory.
  Please use a newer path.
+Renamed-From:
+ package-install-into-obsolete-dir

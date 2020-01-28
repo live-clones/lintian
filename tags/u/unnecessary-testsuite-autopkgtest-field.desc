@@ -7,3 +7,5 @@ Info: You do not need to specify a <tt>Testsuite: autopkgtest</tt> field if
  dpkg-source(1) since dpkg 1.17.1.
  .
  Please remove this line from your <tt>debian/control</tt> file.
+Renamed-From:
+ unnecessary-testsuite-autopkgtest-header
