@@ -1,5 +1,4 @@
 Testname: cruft-package-does-not-install-examples-symlink
-Options: --pedantic
 Test-Against:
  package-does-not-install-examples
 Check: cruft

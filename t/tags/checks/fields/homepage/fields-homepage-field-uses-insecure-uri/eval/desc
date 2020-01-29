@@ -1,3 +1,2 @@
 Testname: fields-homepage-field-uses-insecure-uri
-Options: --pedantic
 Check: fields/homepage

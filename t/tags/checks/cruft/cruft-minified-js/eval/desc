@@ -1,3 +1,2 @@
 Testname: cruft-minified-js
-Options: --pedantic
 Check: cruft

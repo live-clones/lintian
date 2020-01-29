@@ -1,3 +1,2 @@
 Testname: python-script-uses-unversioned-python-in-shebang
-Options: --pedantic
 Check: python

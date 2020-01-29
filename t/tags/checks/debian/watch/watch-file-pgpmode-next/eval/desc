@@ -1,5 +1,4 @@
 Testname: watch-file-pgpmode-next
-Options: --pedantic
 Test-Against: debian-watch-does-not-check-gpg-signature
 References: #841000
 Check: debian/watch

@@ -1,3 +1,2 @@
 Testname: overrides
-Options: --pedantic
 Check: lintian

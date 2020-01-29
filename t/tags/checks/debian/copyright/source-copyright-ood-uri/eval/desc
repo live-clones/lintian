@@ -1,3 +1,2 @@
 Testname: source-copyright-ood-uri
-Options: --pedantic
 Check: debian/copyright

@@ -1,3 +1,2 @@
 Testname: changelog-file-experimental
-Options: --pedantic
 Check: debian/changelog

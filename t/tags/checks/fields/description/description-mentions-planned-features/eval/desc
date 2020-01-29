@@ -1,3 +1,2 @@
 Testname: description-mentions-planned-features
-Options: --pedantic
 Check: fields/description

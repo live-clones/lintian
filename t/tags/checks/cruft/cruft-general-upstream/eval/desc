@@ -1,3 +1,2 @@
 Testname: cruft-general-upstream
-Options: --pedantic
 Check: cruft

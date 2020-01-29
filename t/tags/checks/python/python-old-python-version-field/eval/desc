@@ -1,5 +1,4 @@
 Testname: python-old-python-version-field
-Options: --pedantic
 Test-Against:
  old-python-version-field
 Check: python

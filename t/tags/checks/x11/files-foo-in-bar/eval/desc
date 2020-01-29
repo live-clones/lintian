@@ -1,3 +1,2 @@
 Testname: files-foo-in-bar
-Options: --pedantic
 Check: x11

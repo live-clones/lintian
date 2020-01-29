@@ -1,3 +1,2 @@
 Testname: source-copyright-unknown-uri
-Options: --pedantic
 Check: debian/copyright

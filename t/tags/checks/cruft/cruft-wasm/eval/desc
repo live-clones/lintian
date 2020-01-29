@@ -1,3 +1,2 @@
 Testname: cruft-wasm
-Options: --pedantic
 Check: cruft

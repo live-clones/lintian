@@ -1,3 +1,2 @@
 Testname: fields-vcs-obsolete-in-debian-infrastructure
-Options: --pedantic
 Check: fields/vcs

@@ -1,3 +1,2 @@
 Testname: patch-systems-no-patch-system
-Options: --pedantic
 Check: patch-systems

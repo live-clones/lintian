@@ -1,3 +1,2 @@
 Testname: patch-systems-dpatch-description
-Options: --pedantic
 Check: patch-systems

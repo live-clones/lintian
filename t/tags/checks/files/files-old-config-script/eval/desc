@@ -1,3 +1,2 @@
 Testname: files-old-config-script
-Options: --pedantic
 Check: files

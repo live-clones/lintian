@@ -1,3 +1,2 @@
 Testname: changelog-file-consecutive-debian-revision-unrel
-Options: --pedantic
 Check: debian/watch

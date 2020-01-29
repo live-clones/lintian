@@ -1,3 +1,2 @@
 Testname: rules-debug-symbol-migration-possibly-complete
-Options: --pedantic
 Check: debian/rules

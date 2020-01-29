@@ -1,3 +1,2 @@
 Testname: control-file-duplicate
-Options: --pedantic
 Check: debian/control
