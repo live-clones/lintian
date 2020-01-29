@@ -796,7 +796,7 @@ sub main {
             chomp $line;
 
             next
-              if $line =~ /^\s*/;
+              if $line =~ /^\s*$/;
 
             push(@subjects, $line);
         }
