@@ -1,4 +1,5 @@
 scripts-maintainer-script-invalid-update-inetd-options (binary): maintainer-script-needs-depends-on-update-inetd postinst
+scripts-maintainer-script-invalid-update-inetd-options (binary): maintainer-script-interpreter control/postinst /bin/sh
 scripts-maintainer-script-invalid-update-inetd-options (binary): maintainer-script-has-invalid-update-inetd-options postinst:9 (--pattern with --add)
 scripts-maintainer-script-invalid-update-inetd-options (binary): maintainer-script-has-invalid-update-inetd-options postinst:8 (--group without --add)
 scripts-maintainer-script-invalid-update-inetd-options (binary): maintainer-script-has-invalid-update-inetd-options postinst:10 (--pattern with --add)

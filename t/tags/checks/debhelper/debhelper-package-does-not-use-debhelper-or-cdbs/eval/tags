@@ -1,1 +1,2 @@
 debhelper-package-does-not-use-debhelper-or-cdbs (source): package-does-not-use-debhelper-or-cdbs
+debhelper-package-does-not-use-debhelper-or-cdbs (source): debian-build-system other

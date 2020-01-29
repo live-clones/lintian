@@ -1,1 +1,3 @@
+control-has-empty-field (source): package-is-co-maintained 1
 control-has-empty-field (source): co-maintained-package-with-no-vcs-fields
+control-has-empty-field (binary): package-is-maintained-by-individual

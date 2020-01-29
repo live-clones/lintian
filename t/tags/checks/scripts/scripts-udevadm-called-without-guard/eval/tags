@@ -1,4 +1,8 @@
 scripts-udevadm-called-without-guard (binary): udevadm-called-without-guard prerm:7
 scripts-udevadm-called-without-guard (binary): udevadm-called-without-guard postrm:7
 scripts-udevadm-called-without-guard (binary): udevadm-called-without-guard postinst:7
+scripts-udevadm-called-without-guard (binary): maintainer-script-interpreter control/prerm /bin/sh
+scripts-udevadm-called-without-guard (binary): maintainer-script-interpreter control/preinst /bin/sh
+scripts-udevadm-called-without-guard (binary): maintainer-script-interpreter control/postrm /bin/sh
+scripts-udevadm-called-without-guard (binary): maintainer-script-interpreter control/postinst /bin/sh
 scripts-udevadm-called-without-guard (binary): maintainer-script-ignores-errors preinst

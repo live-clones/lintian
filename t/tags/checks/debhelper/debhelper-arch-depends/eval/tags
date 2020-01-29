@@ -1,1 +1,3 @@
 debhelper-arch-depends (source): uses-debhelper-compat-file
+debhelper-arch-depends (source): debian-build-system dh
+debhelper-arch-depends (source): debhelper-compat-level 12

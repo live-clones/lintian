@@ -1,2 +1,4 @@
 deb-format-lzma (binary): uses-deprecated-compression-for-data-tarball lzma
 deb-format-lzma (binary): lzma-deb-archive
+deb-format-lzma (binary): data-tarball-compression-format lzma
+deb-format-lzma (binary): control-tarball-compression-format gz

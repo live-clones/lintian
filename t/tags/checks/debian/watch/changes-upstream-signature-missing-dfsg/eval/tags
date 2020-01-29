@@ -1,2 +1,3 @@
+changes-upstream-signature-missing-dfsg (source): debian-watch-file-standard
 changes-upstream-signature-missing-dfsg (source): debian-watch-does-not-check-gpg-signature
 changes-upstream-signature-missing-dfsg (source): debian-watch-could-verify-download debian/upstream/signing-key.asc

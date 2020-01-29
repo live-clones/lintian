@@ -1,1 +1,3 @@
+scripts-calls-init-script (binary): maintainer-script-interpreter control/postrm /bin/sh
+scripts-calls-init-script (binary): maintainer-script-interpreter control/postinst /bin/sh
 scripts-calls-init-script (binary): maintainer-script-calls-init-script-directly postinst:5

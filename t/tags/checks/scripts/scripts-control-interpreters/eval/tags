@@ -1,15 +1,27 @@
 scripts-control-interpreters-unknown (binary): unknown-control-interpreter control/postinst #!/usr/bin/unknown
+scripts-control-interpreters-unknown (binary): maintainer-script-interpreter control/postinst /usr/bin/unknown
 scripts-control-interpreters-python (binary): unusual-control-interpreter control/preinst #!/usr/bin/python
 scripts-control-interpreters-python (binary): unusual-control-interpreter control/postinst #!/usr/bin/python
 scripts-control-interpreters-python (binary): preinst-interpreter-without-predepends #!/usr/bin/python
+scripts-control-interpreters-python (binary): maintainer-script-interpreter control/preinst /usr/bin/python
+scripts-control-interpreters-python (binary): maintainer-script-interpreter control/postinst /usr/bin/python
 scripts-control-interpreters-prepython (binary): unusual-control-interpreter control/preinst #!/usr/bin/python
 scripts-control-interpreters-prepython (binary): unusual-control-interpreter control/postinst #!/usr/bin/python
+scripts-control-interpreters-prepython (binary): maintainer-script-interpreter control/preinst /usr/bin/python
+scripts-control-interpreters-prepython (binary): maintainer-script-interpreter control/postinst /usr/bin/python
 scripts-control-interpreters-paths (binary): wrong-path-for-interpreter #!/usr/bin/bash != /bin/bash (control/postinst)
 scripts-control-interpreters-paths (binary): wrong-path-for-interpreter #!/bin/python != /usr/bin/python (control/prerm)
 scripts-control-interpreters-paths (binary): unusual-control-interpreter control/prerm #!/bin/python
+scripts-control-interpreters-paths (binary): maintainer-script-interpreter control/prerm /bin/python
+scripts-control-interpreters-paths (binary): maintainer-script-interpreter control/preinst /usr/local/bin/bash
+scripts-control-interpreters-paths (binary): maintainer-script-interpreter control/postinst /usr/bin/bash
 scripts-control-interpreters-paths (binary): control-interpreter-without-depends control/prerm #!/bin/python
 scripts-control-interpreters-paths (binary): control-interpreter-in-usr-local control/preinst #!/usr/local/bin/bash
 scripts-control-interpreters-forbidden (binary): unusual-control-interpreter control/postinst #!/usr/bin/python
+scripts-control-interpreters-forbidden (binary): maintainer-script-interpreter control/postrm /usr/bin/python
+scripts-control-interpreters-forbidden (binary): maintainer-script-interpreter control/postinst /usr/bin/python
+scripts-control-interpreters-forbidden (binary): maintainer-script-interpreter control/config /usr/bin/python
 scripts-control-interpreters-forbidden (binary): forbidden-postrm-interpreter #!/usr/bin/python
 scripts-control-interpreters-forbidden (binary): forbidden-config-interpreter #!/usr/bin/python
+scripts-control-interpreters-forbidden (binary): debhelper-autoscript-in-maintainer-scripts dh_installdebconf/12.7.3~bpo10+1
 scripts-control-interpreters-forbidden (binary): control-interpreter-without-depends control/postinst #!/usr/bin/python

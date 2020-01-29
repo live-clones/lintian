@@ -4,3 +4,4 @@ scripts-supports-ancient-package-version (binary): maintainer-script-supports-an
 scripts-supports-ancient-package-version (binary): maintainer-script-supports-ancient-package-version postinst:6 0.5 (2009-02-07 < 2017-06-18)
 scripts-supports-ancient-package-version (binary): maintainer-script-supports-ancient-package-version postinst:11 0.5 (2009-02-07 < 2017-06-18)
 scripts-supports-ancient-package-version (binary): maintainer-script-supports-ancient-package-version postinst:10 0.5 (2009-02-07 < 2017-06-18)
+scripts-supports-ancient-package-version (binary): maintainer-script-interpreter control/postinst /bin/sh

@@ -1,1 +1,4 @@
 scripts-missing-call-to-update-fonts (binary): missing-call-to-update-fonts usr/share/fonts/X11/Type1/foo.afm
+scripts-missing-call-to-update-fonts (binary): maintainer-script-interpreter control/postrm /bin/sh
+scripts-missing-call-to-update-fonts (binary): maintainer-script-interpreter control/postinst /bin/sh
+scripts-missing-call-to-update-fonts (binary): debhelper-autoscript-in-maintainer-scripts dh_installxfonts/12.7.3~bpo10+1

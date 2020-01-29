@@ -1,1 +1,3 @@
 scripts-skip-systemd-native-without (binary): skip-systemd-native-flag-missing-pre-depends postinst:8
+scripts-skip-systemd-native-without (binary): maintainer-script-interpreter control/postinst /bin/sh
+scripts-skip-systemd-native-with (binary): maintainer-script-interpreter control/postinst /bin/sh

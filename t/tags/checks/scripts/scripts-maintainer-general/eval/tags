@@ -61,9 +61,15 @@ scripts-maintainer-general (binary): maintainer-script-needs-depends-on-adduser 
 scripts-maintainer-general (binary): maintainer-script-modifies-inetd-conf postinst:68
 scripts-maintainer-general (binary): maintainer-script-modifies-inetd-conf postinst:67
 scripts-maintainer-general (binary): maintainer-script-may-use-dir_to_symlink_helper postinst:205
+scripts-maintainer-general (binary): maintainer-script-interpreter control/prerm /bin/sh
+scripts-maintainer-general (binary): maintainer-script-interpreter control/preinst /bin/sh
+scripts-maintainer-general (binary): maintainer-script-interpreter control/postrm /bin/sh
+scripts-maintainer-general (binary): maintainer-script-interpreter control/postinst /bin/sh
 scripts-maintainer-general (binary): maintainer-script-ignores-errors postrm
 scripts-maintainer-general (binary): maintainer-script-has-unexpanded-debhelper-token postinst
 scripts-maintainer-general (binary): install-info-used-in-maintainer-script postinst:105
+scripts-maintainer-general (binary): debhelper-autoscript-in-maintainer-scripts dh_installdeb/12.7.3~bpo10+1
+scripts-maintainer-general (binary): debhelper-autoscript-in-maintainer-scripts dh_dummy/12
 scripts-maintainer-general (binary): command-with-path-in-maintainer-script postinst:91 /usr/bin/baz
 scripts-maintainer-general (binary): command-with-path-in-maintainer-script postinst:181 /usr/sbin/dpkg-state-override
 scripts-maintainer-general (binary): command-with-path-in-maintainer-script postinst:178 /usr/sbin/dpkg-divert

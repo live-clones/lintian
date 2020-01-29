@@ -100,3 +100,5 @@ scripts-bashisms (binary): possible-bashism-in-maintainer-script postinst:10 '. 
 scripts-bashisms (binary): maintainer-shell-script-fails-syntax-check prerm
 scripts-bashisms (binary): maintainer-shell-script-fails-syntax-check postinst
 scripts-bashisms (binary): maintainer-script-without-set-e postinst
+scripts-bashisms (binary): maintainer-script-interpreter control/prerm /bin/sh
+scripts-bashisms (binary): maintainer-script-interpreter control/postinst /bin/sh

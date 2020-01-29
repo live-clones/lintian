@@ -1,3 +1,4 @@
 patch-systems-quilt-description (source): quilt-patch-using-template-description 04_template_description
 patch-systems-quilt-description (source): quilt-patch-missing-description 03_a_git_patch
 patch-systems-quilt-description (source): quilt-patch-missing-description 02_this_one_has_no_description
+patch-systems-quilt-description (source): patch-system quilt

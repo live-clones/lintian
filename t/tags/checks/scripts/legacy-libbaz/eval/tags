@@ -1,6 +1,10 @@
 libbaz1-dev (binary): maintainer-script-without-set-e prerm
 libbaz1-dev (binary): maintainer-script-without-set-e postinst
+libbaz1-dev (binary): maintainer-script-interpreter control/prerm /bin/sh
+libbaz1-dev (binary): maintainer-script-interpreter control/postinst /bin/sh
 libbaz1 (binary): maintainer-shell-script-fails-syntax-check postinst
 libbaz1 (binary): maintainer-script-without-set-e prerm
 libbaz1 (binary): maintainer-script-without-set-e postinst
 libbaz1 (binary): maintainer-script-may-use-dir_to_symlink_helper postinst:8
+libbaz1 (binary): maintainer-script-interpreter control/prerm /bin/sh
+libbaz1 (binary): maintainer-script-interpreter control/postinst /bin/sh

@@ -1,1 +1,2 @@
 patch-systems-quilt-no-newline (source): quilt-series-without-trailing-newline
+patch-systems-quilt-no-newline (source): patch-system quilt
