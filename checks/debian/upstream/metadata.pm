@@ -26,6 +26,8 @@ use warnings;
 use YAML::XS;
 $YAML::XS::LoadBlessed = 0;
 
+use constant EMPTY => q{};
+
 use Moo;
 use namespace::clean;
 
@@ -34,35 +36,49 @@ with 'Lintian::Check';
 sub source {
     my ($self) = @_;
 
-    my $processable = $self->processable;
+    return
+      if $self->processable->native;
 
-    my $yamlfile
-      = $processable->index_resolved_path('debian/upstream/metadata');
+    my $file
+      = $self->processable->index_resolved_path('debian/upstream/metadata');
 
-    if (not $yamlfile) {
-        $self->tag('upstream-metadata-file-is-missing')
-          unless $processable->native;
+    unless (defined $file) {
+        $self->tag('upstream-metadata-file-is-missing');
         return;
     }
 
-    if ($yamlfile->is_open_ok) {
-        # Need 0.69 for $LoadBlessed (#861958)
-        return if $YAML::XS::VERSION < 0.69;
-        my $yaml;
-        eval { $yaml = YAML::XS::LoadFile($yamlfile->fs_path); };
-        if (!$yaml) {
-            my $msg;
-            if (my ($reason, $doc, $line, $col)
-                = $@
-                =~ m/\AYAML::XS::Load Error: The problem:\n\n ++(.+)\n\nwas found at document: (\d+), line: (\d+), column: (\d+)\n/
-            ) {
-                $msg = "$reason (at document $doc, line $line, column $col)";
-            }
-            $self->tag(('upstream-metadata-yaml-invalid', $msg));
-        }
-    } else {
-        $self->tag(('upstream-metadata-is-not-a-file'));
+    unless ($file->is_open_ok) {
+        $self->tag('upstream-metadata-is-not-a-file');
+        return;
     }
+
+    # Need 0.69 for $LoadBlessed (#861958)
+    return
+      if $YAML::XS::VERSION < 0.69;
+
+    my $yaml;
+    eval { $yaml = YAML::XS::LoadFile($file->fs_path); };
+
+    if ($@ && !defined $yaml) {
+        my $message = $@;
+        my ($reason, $document, $line, $column)= (
+            $message =~ /
+                \AYAML::XS::Load\sError:\sThe\sproblem:\n
+                \n\s++(.+)\n
+                \n
+                was\sfound\sat\sdocument:\s(\d+),\sline:\s(\d+),\scolumn:\s(\d+)\n/x
+        );
+
+        $message
+          = "$reason (at document $document, line $line, column $column)"
+          if ( length $reason
+            && length $document
+            && length $line
+            && length $document);
+
+        $self->tag('upstream-metadata-yaml-invalid', $message);
+    }
+
     return;
 }
 
