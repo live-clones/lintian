@@ -1,3 +1,37 @@
+lintian (2.47.0) unstable; urgency=medium
+
+  * Summary of tag changes:
+    + Added:
+      - empty-field
+      - source-contains-prebuilt-yapp-parser
+    + Removed:
+      - empty-section-field
+      - latest-debian-changelog-entry-without-new-version
+    + Renamed:
+      - fortran-module-does-not-declare-version ->
+          gfortran-module-does-not-declare-version
+      - missing-prerequisite-for-fortran-module ->
+        - missing-prerequisite-for-gfortran-module
+
+  [ Chris Lamb ]
+  * Recognise 4.5.0 as the latest Standards-Version.
+  * Ensure that Lintian itself is "Lintian clean" by not warning about our
+    Yapp::Parser test fixture.
+
+  [ Felix Lechner ]
+  * Skip only empty lines when packages to be checked are specified in a
+    file. (Closes: #949398)
+  * Add a check for empty fields in binary packages. (Closes: #879809)
+  * Check for prebuilt Parse::Yapp parser files. (Closes: #921080)
+  * Remove tag latest-debian-changelog-entry-without-new-version.
+    (Closes: #935070)
+  * Look at binaries from entire group when finding unused manpages.
+    (Closes: #949063)
+  * Exclude "flang" modules from the check for GFortran modules.
+    (Closes: #948033)
+
+ -- Chris Lamb <lamby@debian.org>  Fri, 24 Jan 2020 11:15:46 +0000
+
 lintian (2.46.0~bpo9+1) stretch-backports; urgency=medium
 
   * Rebuild for stretch-backports.

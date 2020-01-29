@@ -92,7 +92,7 @@ Build-Depends:
  zip <!nocheck>,
 Build-Conflicts:
  libperl-critic-pulp-perl <!nocheck>,
-Standards-Version: 4.4.1
+Standards-Version: 4.5.0
 Rules-Requires-Root: no
 Vcs-Git: https://salsa.debian.org/lintian/lintian.git
 Vcs-Browser: https://salsa.debian.org/lintian/lintian
@@ -170,4 +170,4 @@ Description: Debian package checker
  compliance with Debian policy. Every Debian maintainer should check packages
  with this tool before uploading them to the archive.
  .
- This version of Lintian is calibrated for Debian Policy version 4.4.1.
+ This version of Lintian is calibrated for Debian Policy version 4.5.0.

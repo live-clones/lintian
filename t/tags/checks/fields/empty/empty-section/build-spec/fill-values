@@ -1,0 +1,4 @@
+Skeleton: deb
+Testname: empty-section
+Section:
+Description: Test for package with empty section field

@@ -166,6 +166,8 @@ Hash with active jobs.
 
 =item C<saved_direct_dependencies>
 
+=item C<saved_direct_reliants>
+
 =item C<saved_spelling_exceptions>
 
 =item C<shared_storage>
@@ -199,6 +201,7 @@ has extra_coll => (is => 'rw', default => sub { [] });
 has queue => (is => 'rw', default => sub { [] });
 
 has saved_direct_dependencies => (is => 'rw', default => sub { {} });
+has saved_direct_reliants => (is => 'rw', default => sub { {} });
 has saved_spelling_exceptions => (is => 'rw', default => sub { {} });
 
 has shared_storage => (is => 'rw', default => sub { {} });
@@ -1138,6 +1141,56 @@ sub direct_dependencies {
       if $processable;
 
     return $self->saved_direct_dependencies;
+}
+
+=item direct_reliants (PROC)
+
+If PROC is a part of the underlying processable group, this method
+returns a listref containing all the packages in the group that rely
+on PROC.  If PROC is not a part of the group, this returns undef.
+
+Note: Only strong dependencies (Pre-Depends and Depends) are
+considered.
+
+Note: Self-dependencies (if any) are I<not> included in the result.
+
+=cut
+
+# sub direct_reliants Needs-Info <>
+sub direct_reliants {
+    my ($self, $processable) = @_;
+
+    unless (keys %{$self->saved_direct_reliants}) {
+
+        my @processables = $self->get_processables('binary');
+        push @processables, $self->get_processables('udeb');
+
+        my %reliants;
+        foreach my $that (@processables) {
+
+            my @specific;
+            foreach my $this (@processables) {
+
+                # Ignore self deps - we have checks for that and it
+                # will just end up complicating "correctness" of
+                # otherwise simple checks.
+                next
+                  if $this->name eq $that->name;
+
+                my $relation = $this->relation('strong');
+                push @specific, $this
+                  if $relation->implies($that->name);
+            }
+            $reliants{$that->name} = \@specific;
+        }
+
+        $self->saved_direct_reliants(\%reliants);
+    }
+
+    return $self->saved_direct_reliants->{$processable->name}
+      if $processable;
+
+    return $self->saved_direct_reliants;
 }
 
 =item $ginfo->type
