@@ -36,11 +36,14 @@ with 'Lintian::Check';
 sub source {
     my ($self) = @_;
 
-    return
-      if $self->processable->native;
-
     my $file
       = $self->processable->index_resolved_path('debian/upstream/metadata');
+
+    if ($self->processable->native) {
+        $self->tag('upstream-metadata-in-native-source')
+          if defined $file;
+        return;
+    }
 
     unless (defined $file) {
         $self->tag('upstream-metadata-file-is-missing');
