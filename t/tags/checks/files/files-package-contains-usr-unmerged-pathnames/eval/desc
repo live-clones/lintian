@@ -1,3 +1,2 @@
 Testname: files-package-contains-usr-unmerged-pathnames
-Options: -L +classification
 Check: files
