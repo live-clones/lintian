@@ -1,0 +1,63 @@
+Source: [% $source %]
+Priority: optional
+Section: [% $section %]
+Maintainer: [% $author %]
+Standards-Version: [% $standards_version %]
+Build-Depends: [% $build_depends %]
+Rules-Requires-Root: no
+
+Package: [% $source %]-paths
+Architecture: [% $package_architecture %]
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: [% $description %] (paths)
+ Interpreters with bad paths.
+ .
+ This is a test package designed to exercise some feature or tag of
+ Lintian.  It is part of the Lintian test suite and may do very odd
+ things.  It should not be installed like a regular package.  It may
+ be an empty package.
+
+Package: [% $source %]-forbidden
+Architecture: [% $package_architecture %]
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: [% $description %] (forbidden)
+ Forbidden control interpreters.
+ .
+ This is a test package designed to exercise some feature or tag of
+ Lintian.  It is part of the Lintian test suite and may do very odd
+ things.  It should not be installed like a regular package.  It may
+ be an empty package.
+
+Package: [% $source %]-unknown
+Architecture: [% $package_architecture %]
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: [% $description %] (unknown)
+ Unknown control interpreters.
+ .
+ This is a test package designed to exercise some feature or tag of
+ Lintian.  It is part of the Lintian test suite and may do very odd
+ things.  It should not be installed like a regular package.  It may
+ be an empty package.
+
+Package: [% $source %]-python
+Architecture: [% $package_architecture %]
+Depends: python, ${shlibs:Depends}, ${misc:Depends}
+Description: [% $description %] (Python)
+ Python control interpreters with depends.
+ .
+ This is a test package designed to exercise some feature or tag of
+ Lintian.  It is part of the Lintian test suite and may do very odd
+ things.  It should not be installed like a regular package.  It may
+ be an empty package.
+
+Package: [% $source %]-prepython
+Architecture: [% $package_architecture %]
+Pre-Depends: python
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: [% $description %] (Python preinst)
+ Python control interpreters with pre-depends.
+ .
+ This is a test package designed to exercise some feature or tag of
+ Lintian.  It is part of the Lintian test suite and may do very odd
+ things.  It should not be installed like a regular package.  It may
+ be an empty package.
