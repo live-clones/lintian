@@ -72,6 +72,7 @@ Enable-Tags-From-Check:
  java,
  lintian,
  mailcap,
+ maintainer-scripts/generated,
  manpages,
  md5sums,
  menu-format,
