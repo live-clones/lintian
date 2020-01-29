@@ -1,4 +1,4 @@
-# upstream-metadata -- lintian check script -*- perl -*-
+# debian/upstream/metadata -- lintian check script -*- perl -*-
 
 # Copyright © 2016 Petter Reinholdtsen
 #
@@ -18,7 +18,7 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-package Lintian::upstream_metadata;
+package Lintian::debian::upstream::metadata;
 
 use strict;
 use warnings;

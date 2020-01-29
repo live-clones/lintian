@@ -1,4 +1,4 @@
-Check-Script: upstream-metadata
+Check-Script: debian/upstream/metadata
 Author: Petter Reinholdtsen <pere@hungry.com>
 Type: source
 Needs-Info: unpacked
