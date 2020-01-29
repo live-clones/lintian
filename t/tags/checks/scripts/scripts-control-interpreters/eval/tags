@@ -23,5 +23,4 @@ scripts-control-interpreters-forbidden (binary): maintainer-script-interpreter c
 scripts-control-interpreters-forbidden (binary): maintainer-script-interpreter control/config /usr/bin/python
 scripts-control-interpreters-forbidden (binary): forbidden-postrm-interpreter #!/usr/bin/python
 scripts-control-interpreters-forbidden (binary): forbidden-config-interpreter #!/usr/bin/python
-scripts-control-interpreters-forbidden (binary): debhelper-autoscript-in-maintainer-scripts dh_installdebconf/12.7.3~bpo10+1
 scripts-control-interpreters-forbidden (binary): control-interpreter-without-depends control/postinst #!/usr/bin/python
