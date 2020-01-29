@@ -1,2 +1,14 @@
 W: lintian-color-html: <span style="color: yellow">privacy-breach-generic</span> usr/share/doc/lintian-color-html/foo.xml [&lt;img src=&quot;http://1984.ow/bigbrotheriswatchingyou.png&quot; /&gt;] (http://1984.ow/bigbrotheriswatchingyou.png)
 X: lintian-color-html source: <span style="color: green">debian-watch-does-not-check-gpg-signature</span>
+C: lintian-color-html: <span style="color: blue">control-tarball-compression-format</span> xz
+C: lintian-color-html: <span style="color: blue">data-tarball-compression-format</span> xz
+C: lintian-color-html source: <span style="color: blue">debhelper-compat-level</span> 12
+C: lintian-color-html source: <span style="color: blue">debhelper-compat-virtual-relation</span> 12
+C: lintian-color-html source: <span style="color: blue">debian-build-system</span> dh
+C: lintian-color-html source: <span style="color: blue">debian-watch-file-standard</span>
+C: lintian-color-html: <span style="color: blue">no-ctrl-scripts</span>
+C: lintian-color-html source: <span style="color: blue">package-is-maintained-by-individual</span>
+C: lintian-color-html: <span style="color: blue">package-is-maintained-by-individual</span>
+C: lintian-color-html source: <span style="color: blue">rules-does-not-require-root</span>
+C: lintian-color-html source: <span style="color: blue">source-format</span> 3.0 (quilt)
+C: lintian-color-html source: <span style="color: blue">standards-version</span> 4.5.0

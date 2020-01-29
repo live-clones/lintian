@@ -18,4 +18,17 @@ X[P!]: lintian-output-letter source: debian-watch-does-not-check-gpg-signature
 P[P ]: lintian-output-letter: example-unusual-interpreter usr/share/doc/lintian-output-letter/examples/example #!/usr/bin/foo
 P[P ]: lintian-output-letter source: no-homepage-field
 P[P!]: lintian-output-letter source: package-uses-deprecated-source-override-location
+C[C!]: lintian-output-letter: control-tarball-compression-format xz
+C[C!]: lintian-output-letter: data-tarball-compression-format xz
+C[C!]: lintian-output-letter source: debhelper-compat-level 12
+C[C!]: lintian-output-letter source: debhelper-compat-virtual-relation 12
+C[C!]: lintian-output-letter source: debian-build-system dh
+C[C!]: lintian-output-letter source: debian-watch-file-standard
+C[C!]: lintian-output-letter: no-ctrl-scripts
+C[C!]: lintian-output-letter source: package-is-maintained-by-individual
+C[C!]: lintian-output-letter: package-is-maintained-by-individual
+C[C!]: lintian-output-letter source: patch-system quilt
+C[C!]: lintian-output-letter source: rules-does-not-require-root
+C[C!]: lintian-output-letter source: source-format 3.0 (quilt)
+C[C!]: lintian-output-letter source: standards-version 4.5.0
 O[M!]: lintian-output-letter source: dfsg-version-misspelled 1.0+dsfg-1.1
