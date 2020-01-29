@@ -1,3 +1,2 @@
 Testname: duplicate-files
-Options: -L +pedantic
 Check: duplicate-files
