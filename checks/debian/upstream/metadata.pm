@@ -50,6 +50,8 @@ sub source {
         return;
     }
 
+    $self->tag('upstream-metadata-exists');
+
     unless ($file->is_open_ok) {
         $self->tag('upstream-metadata-is-not-a-file');
         return;
@@ -62,7 +64,7 @@ sub source {
     my $yaml;
     eval { $yaml = YAML::XS::LoadFile($file->fs_path); };
 
-    if ($@ && !defined $yaml) {
+    if ($@ || !defined $yaml) {
         my $message = $@;
         my ($reason, $document, $line, $column)= (
             $message =~ /
@@ -80,7 +82,11 @@ sub source {
             && length $document);
 
         $self->tag('upstream-metadata-yaml-invalid', $message);
+
+        return;
     }
+
+    $self->tag('upstream-metadata-field-present', $_) for keys %{$yaml};
 
     return;
 }
