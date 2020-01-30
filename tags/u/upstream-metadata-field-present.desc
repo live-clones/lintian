@@ -1,0 +1,6 @@
+Tag: upstream-metadata-field-present
+Severity: classification
+Certainty: certain
+Check: debian/upstream/metadata
+Ref: https://dep-team.pages.debian.net/deps/dep12/
+Info: The DEP 12 metadata contains the field indicated.
