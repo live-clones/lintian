@@ -32,3 +32,6 @@ C: lintian-output-fullewi source (1.0+dsfg-1.1) [source]: patch-system quilt
 C: lintian-output-fullewi source (1.0+dsfg-1.1) [source]: rules-does-not-require-root
 C: lintian-output-fullewi source (1.0+dsfg-1.1) [source]: source-format 3.0 (quilt)
 C: lintian-output-fullewi source (1.0+dsfg-1.1) [source]: standards-version 4.5.0
+C: lintian-output-fullewi source (1.0+dsfg-1.1) [source]: upstream-metadata-exists
+C: lintian-output-fullewi source (1.0+dsfg-1.1) [source]: upstream-metadata-field-present Contact
+C: lintian-output-fullewi source (1.0+dsfg-1.1) [source]: upstream-metadata-field-present Name

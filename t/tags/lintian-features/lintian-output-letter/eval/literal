@@ -31,4 +31,7 @@ C[C!]: lintian-output-letter source: patch-system quilt
 C[C!]: lintian-output-letter source: rules-does-not-require-root
 C[C!]: lintian-output-letter source: source-format 3.0 (quilt)
 C[C!]: lintian-output-letter source: standards-version 4.5.0
+C[C!]: lintian-output-letter source: upstream-metadata-exists
+C[C!]: lintian-output-letter source: upstream-metadata-field-present Contact
+C[C!]: lintian-output-letter source: upstream-metadata-field-present Name
 O[M!]: lintian-output-letter source: dfsg-version-misspelled 1.0+dsfg-1.1

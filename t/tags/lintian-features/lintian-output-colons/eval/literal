@@ -31,4 +31,7 @@ tag:C:classification:certain::lintian-output-colons:1.0+dsfg-1.1:source:source:p
 tag:C:classification:certain::lintian-output-colons:1.0+dsfg-1.1:source:source:rules-does-not-require-root::
 tag:C:classification:certain::lintian-output-colons:1.0+dsfg-1.1:source:source:source-format:3.0 (quilt):
 tag:C:classification:certain::lintian-output-colons:1.0+dsfg-1.1:source:source:standards-version:4.5.0:
+tag:C:classification:certain::lintian-output-colons:1.0+dsfg-1.1:source:source:upstream-metadata-exists::
+tag:C:classification:certain::lintian-output-colons:1.0+dsfg-1.1:source:source:upstream-metadata-field-present:Contact:
+tag:C:classification:certain::lintian-output-colons:1.0+dsfg-1.1:source:source:upstream-metadata-field-present:Name:
 tag:W:minor:certain:O:lintian-output-colons:1.0+dsfg-1.1:source:source:dfsg-version-misspelled:1.0+dsfg-1.1:dfsg-version-misspelled 1.0*

@@ -12,3 +12,6 @@ C: lintian-color-html: <span style="color: blue">package-is-maintained-by-indivi
 C: lintian-color-html source: <span style="color: blue">rules-does-not-require-root</span>
 C: lintian-color-html source: <span style="color: blue">source-format</span> 3.0 (quilt)
 C: lintian-color-html source: <span style="color: blue">standards-version</span> 4.5.0
+C: lintian-color-html source: <span style="color: blue">upstream-metadata-exists</span>
+C: lintian-color-html source: <span style="color: blue">upstream-metadata-field-present</span> Contact
+C: lintian-color-html source: <span style="color: blue">upstream-metadata-field-present</span> Name

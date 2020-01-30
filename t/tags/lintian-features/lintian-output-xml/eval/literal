@@ -18,6 +18,9 @@
 <tag severity="classification" certainty="certain" name="rules-does-not-require-root" />
 <tag severity="classification" certainty="certain" name="source-format">3.0 (quilt)</tag>
 <tag severity="classification" certainty="certain" name="standards-version">4.5.0</tag>
+<tag severity="classification" certainty="certain" name="upstream-metadata-exists" />
+<tag severity="classification" certainty="certain" name="upstream-metadata-field-present">Contact</tag>
+<tag severity="classification" certainty="certain" name="upstream-metadata-field-present">Name</tag>
 </package>
 <package type="binary" name="lintian-output-xml" architecture="all" version="1.0+dsfg-1.1">
 <tag severity="serious" certainty="certain" name="dir-in-usr-local">usr/local/share/</tag>
