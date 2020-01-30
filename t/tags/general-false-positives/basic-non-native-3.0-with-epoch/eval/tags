@@ -1,3 +1,6 @@
+basic-non-native-3.0-with-epoch (source): upstream-metadata-field-present Name
+basic-non-native-3.0-with-epoch (source): upstream-metadata-field-present Contact
+basic-non-native-3.0-with-epoch (source): upstream-metadata-exists
 basic-non-native-3.0-with-epoch (source): standards-version 4.5.0
 basic-non-native-3.0-with-epoch (source): source-format 3.0 (quilt)
 basic-non-native-3.0-with-epoch (source): rules-does-not-require-root

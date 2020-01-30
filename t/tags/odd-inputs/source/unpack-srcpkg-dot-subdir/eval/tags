@@ -1,3 +1,6 @@
+unpack-srcpkg-dot-subdir (source): upstream-metadata-field-present Name
+unpack-srcpkg-dot-subdir (source): upstream-metadata-field-present Contact
+unpack-srcpkg-dot-subdir (source): upstream-metadata-exists
 unpack-srcpkg-dot-subdir (source): standards-version 4.5.0
 unpack-srcpkg-dot-subdir (source): source-format 3.0 (quilt)
 unpack-srcpkg-dot-subdir (source): rules-does-not-require-root
