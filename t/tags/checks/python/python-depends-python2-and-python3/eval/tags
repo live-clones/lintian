@@ -1,1 +1,0 @@
-python3-python-depends-python2-and-python3 (binary): depends-on-python2-and-python3 Depends: python, [..], python3
