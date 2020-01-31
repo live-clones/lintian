@@ -64,6 +64,23 @@ sub source {
     my $pkg = $self->package;
     my $processable = $self->processable;
 
+    my @package_names = $processable->binaries;
+    foreach my $bin (@package_names) {
+        # Python 2 modules
+        if ($bin =~ /^python2?-(.*)$/) {
+            my $suffix = $1;
+            next if any { $bin =~ /$_/ } @IGNORE;
+            next if any { $_ eq "python3-${suffix}" } @package_names;
+            # Don't trigger if we ship any Python 3 module
+            next if any {
+                $processable->binary_relation($_, 'all')
+                  ->implies('${python3:Depends}')
+            }
+            @package_names;
+            $self->tag('python-foo-but-no-python3-foo', $bin);
+        }
+    }
+
     my $build_all = $processable->relation('build-depends-all');
     $self->tag('build-depends-on-python-sphinx-only')
       if $build_all->implies('python-sphinx')
@@ -185,6 +202,42 @@ sub binary {
                 and not $deps->implies($REQUIRED_DEPENDS{$+{version}})) {
                 $self->tag('python-package-missing-depends-on-python');
                 last;
+            }
+        }
+    }
+
+    # Check for duplicate dependencies
+    for my $field (@FIELDS) {
+        my $dep = $processable->relation($field);
+      FIELD: for my $py2 (@PYTHON2) {
+            for my $py3 (@PYTHON3) {
+                if ($dep->implies("$py2:any") and $dep->implies("$py3:any")) {
+                    $self->tag('depends-on-python2-and-python3',
+                        "$field: $py2, [..], $py3");
+                    last FIELD;
+                }
+            }
+        }
+    }
+
+    # Python 2 modules
+    if (    $pkg =~ /^python2?-/
+        and none { $pkg =~ /$_$/ } @IGNORE
+        and @entries == 1
+        and $entries[0]->Changes
+        !~ /\bpython ?2(?:\.x)? (?:variant|version)\b/im
+        and index($entries[0]->Changes, $pkg) == -1) {
+        $self->tag('new-package-should-not-package-python2-module', $pkg);
+    }
+
+    # Python applications
+    if ($pkg !~ /^python[23]?-/ and none { $_ eq $pkg } @PYTHON2) {
+        for my $field (@FIELDS) {
+            for my $dep (@PYTHON2) {
+                $self->tag(
+                    'dependency-on-python-version-marked-for-end-of-life',
+                    "($field: $dep)")
+                  if $processable->relation($field)->implies("$dep:any");
             }
         }
     }

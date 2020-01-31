@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: python-new-python2-package-unrel
+Description: Check various Python 2 issues (false positives)

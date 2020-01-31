@@ -1,0 +1,6 @@
+pkg-suggests (binary): dependency-on-python-version-marked-for-end-of-life (Suggests: python2.7)
+pkg-suggests (binary): dependency-on-python-version-marked-for-end-of-life (Suggests: python)
+pkg-recommends (binary): dependency-on-python-version-marked-for-end-of-life (Recommends: python-dev)
+pkg-pre-depends (binary): dependency-on-python-version-marked-for-end-of-life (Pre-Depends: python2.7)
+pkg-depends-any (binary): dependency-on-python-version-marked-for-end-of-life (Depends: python)
+pkg-depends (binary): dependency-on-python-version-marked-for-end-of-life (Depends: python)

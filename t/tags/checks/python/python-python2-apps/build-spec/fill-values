@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: python-python2-apps
+Description: Check packages that Depend/Suggest etc. on Python 2.x
