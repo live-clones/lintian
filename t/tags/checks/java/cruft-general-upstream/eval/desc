@@ -1,3 +1,0 @@
-Testname: cruft-general-upstream
-Test-Against: source-contains-prebuilt-java-object
-Check: java
