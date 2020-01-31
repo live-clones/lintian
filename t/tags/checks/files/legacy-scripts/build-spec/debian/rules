@@ -20,7 +20,6 @@ binary-indep:
 	install -d $(tmp)/etc/fish.d/
 	install -d $(tmp)/usr/share/scripts/
 	install -d $(tmp)/usr/share/doc/scripts/
-	install -d $(tmp)/usr/lib/python2.3/site-packages/
 	install -d $(tmp)/usr/lib/cgi-bin
 	install -d $(tmp)/usr/src/scripts
 	install -d $(tmp)/DEBIAN
@@ -85,7 +84,6 @@ binary-indep:
 	dh_testroot # dummy to test missing debhelper dependency
 
 
-	touch $(tmp)/usr/lib/python2.3/site-packages/test.pyc
 	install -m 644 debian/changelog $(tmp)/usr/share/doc/scripts/changelog.Debian
 	gzip -n -9 $(tmp)/usr/share/doc/scripts/changelog.Debian
 	install -m 644 debian/copyright $(tmp)/usr/share/doc/scripts/copyright
