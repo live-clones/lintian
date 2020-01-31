@@ -1,4 +1,0 @@
-Testname: files-python-general
-References: Debian Bug#608810, Debian Bug#756005
-Test-Against: debian-control-has-obsolete-dbg-package
-Check: debian/control
