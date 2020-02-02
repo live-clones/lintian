@@ -3,9 +3,8 @@ Severity: minor
 Certainty: possible
 Check: debian/copyright
 Ref: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
-Info: The <tt>Files</tt> paragraph in debian/copyright appears to be
- superfluous as it is does not match any files.
+Info: The indicated <tt>Files</tt> paragraph in debian/copyright is not
+ needed. It does not match any files. You can probably remove it.
  .
- You should be able to safely remove it.
- .
- This can also be caused by incorrect relative ordering of paragraphs.
+ False positives can occur when the paragraphs are listed in the wrong
+ order.
