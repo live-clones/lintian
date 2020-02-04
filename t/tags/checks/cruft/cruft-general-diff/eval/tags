@@ -10,6 +10,7 @@ cruft-general-diff (source): diff-contains-hg-tags-file .hgtags
 cruft-general-diff (source): diff-contains-hg-control-dir .hg
 cruft-general-diff (source): diff-contains-git-control-dir .git
 cruft-general-diff (source): diff-contains-editor-backup-file foo~
+cruft-general-diff (source): diff-contains-editor-backup-file debian/watch~
 cruft-general-diff (source): diff-contains-cvs-control-dir CVS
 cruft-general-diff (source): diff-contains-cvs-conflict-copy .#foo.1.1
 cruft-general-diff (source): diff-contains-cmake-cache-file CMakeCache.txt

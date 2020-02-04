@@ -6,7 +6,7 @@ basic-non-native-3.0-purge-debian (source): source-format 3.0 (quilt)
 basic-non-native-3.0-purge-debian (source): rules-does-not-require-root
 basic-non-native-3.0-purge-debian (source): patch-system quilt
 basic-non-native-3.0-purge-debian (source): package-is-maintained-by-individual
-basic-non-native-3.0-purge-debian (source): debian-watch-file-standard
+basic-non-native-3.0-purge-debian (source): debian-watch-file-standard 3
 basic-non-native-3.0-purge-debian (source): debian-watch-does-not-check-gpg-signature
 basic-non-native-3.0-purge-debian (source): debian-build-system dh
 basic-non-native-3.0-purge-debian (source): debhelper-compat-virtual-relation 12

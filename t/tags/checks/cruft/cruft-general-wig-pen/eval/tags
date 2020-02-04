@@ -7,6 +7,7 @@ cruft-general-wig-pen (source): diff-contains-patch-failure-file debian/foo.rej
 cruft-general-wig-pen (source): diff-contains-hg-tags-file debian/.hgtags
 cruft-general-wig-pen (source): diff-contains-hg-control-dir debian/.hg
 cruft-general-wig-pen (source): diff-contains-git-control-dir debian/.git
+cruft-general-wig-pen (source): diff-contains-editor-backup-file debian/watch~
 cruft-general-wig-pen (source): diff-contains-editor-backup-file debian/foo~
 cruft-general-wig-pen (source): diff-contains-cvs-control-dir debian/CVS
 cruft-general-wig-pen (source): diff-contains-cvs-conflict-copy debian/.#foo.1.1

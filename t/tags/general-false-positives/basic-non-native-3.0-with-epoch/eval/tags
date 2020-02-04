@@ -5,7 +5,7 @@ basic-non-native-3.0-with-epoch (source): standards-version 4.5.0
 basic-non-native-3.0-with-epoch (source): source-format 3.0 (quilt)
 basic-non-native-3.0-with-epoch (source): rules-does-not-require-root
 basic-non-native-3.0-with-epoch (source): package-is-maintained-by-individual
-basic-non-native-3.0-with-epoch (source): debian-watch-file-standard
+basic-non-native-3.0-with-epoch (source): debian-watch-file-standard 3
 basic-non-native-3.0-with-epoch (source): debian-watch-does-not-check-gpg-signature
 basic-non-native-3.0-with-epoch (source): debian-build-system dh
 basic-non-native-3.0-with-epoch (source): debhelper-compat-virtual-relation 12

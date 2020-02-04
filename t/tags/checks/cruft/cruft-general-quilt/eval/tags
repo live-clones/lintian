@@ -9,6 +9,7 @@ cruft-general-quilt (source): diff-contains-patch-failure-file debian/foo.rej
 cruft-general-quilt (source): diff-contains-hg-tags-file debian/.hgtags
 cruft-general-quilt (source): diff-contains-hg-control-dir debian/.hg
 cruft-general-quilt (source): diff-contains-git-control-dir debian/.git
+cruft-general-quilt (source): diff-contains-editor-backup-file debian/watch~
 cruft-general-quilt (source): diff-contains-editor-backup-file debian/foo~
 cruft-general-quilt (source): diff-contains-cvs-control-dir debian/CVS
 cruft-general-quilt (source): diff-contains-cvs-conflict-copy debian/.#foo.1.1
