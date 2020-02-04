@@ -5,8 +5,7 @@ unpack-srcpkg-xz (source): standards-version 4.5.0
 unpack-srcpkg-xz (source): source-format 3.0 (quilt)
 unpack-srcpkg-xz (source): rules-does-not-require-root
 unpack-srcpkg-xz (source): package-is-maintained-by-individual
-unpack-srcpkg-xz (source): debian-watch-file-standard
-unpack-srcpkg-xz (source): debian-watch-does-not-check-gpg-signature
+unpack-srcpkg-xz (source): debian-watch-file-missing-version
 unpack-srcpkg-xz (source): debian-build-system dh
 unpack-srcpkg-xz (source): debhelper-compat-virtual-relation 12
 unpack-srcpkg-xz (source): debhelper-compat-level 12

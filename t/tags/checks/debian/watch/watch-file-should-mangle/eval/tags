@@ -1,4 +1,4 @@
 watch-file-should-mangle (source): debian-watch-file-standard 2
-watch-file-should-mangle (source): debian-watch-file-should-mangle-version line 5
-watch-file-should-mangle (source): debian-watch-file-should-mangle-version line 11
+watch-file-should-mangle (source): debian-watch-file-should-mangle-version https://www.example.com/dist/ dh7-test\.([\d.]+)\.tar\.gz debian uupdate
+watch-file-should-mangle (source): debian-watch-file-should-mangle-version https://www.example.com/dist/ dh7-test\.([\d.]+)\.tar\.gz
 watch-file-should-mangle (source): debian-watch-does-not-check-gpg-signature
