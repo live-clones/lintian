@@ -136,9 +136,8 @@ sub source {
     return
       if $standard == 1;
 
-    my $separator = qr/,/;
-    $separator = qr/\s*,\s*/
-      if $standard >= 4;
+    # allow spaces for all watch file versions (#950250, #950277)
+    my $separator = qr/\s*,\s*/;
 
     my @errors;
     my $withgpgverification = 0;
