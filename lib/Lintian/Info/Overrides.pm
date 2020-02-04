@@ -31,9 +31,6 @@ use constant EMPTY => q{};
 use Moo::Role;
 use namespace::clean;
 
-# renamed tag list
-my $RENAMED_TAGS = Lintian::Data->new('override/renamed-tags',qr/\s*=>\s*/);
-
 =head1 NAME
 
 Lintian::Info::Overrides - access to override data
@@ -70,48 +67,47 @@ sub overrides {
     my $architecture = $self->architecture;
     my $type = $self->type;
 
-    my $comments = [];
-    my $last_over;
+    my @comments;
+    my %previous;
 
-    my $overrides_path= path($self->groupdir)->child('override')->stringify;
+    my $path = path($self->groupdir)->child('override')->stringify;
 
     return
-      unless -f $overrides_path;
+      unless -f $path;
 
     my %override_data;
 
-    open(my $fh, '<:encoding(UTF-8)', $overrides_path);
+    open(my $fh, '<:encoding(UTF-8)', $path);
 
   OVERRIDE:
     while (my $line = <$fh>) {
 
-        strip $line;
+        my $processed = $line;
+        strip $processed;
 
-        if ($line eq EMPTY) {
+        if ($processed eq EMPTY) {
             # Throw away comments, as they are not attached to a tag
             # also throw away the option of "carrying over" the last
             # comment
-            $comments = [];
-            $last_over = undef;
+            @comments = ();
+            %previous = ();
             next;
         }
 
-        if ($line =~ /^#/) {
-            $line =~ s/^# ?//;
-            push @$comments, $line;
+        if ($processed =~ /^#/) {
+            $processed =~ s/^# ?//;
+            push(@comments, $processed);
             next;
         }
 
-        $line =~ s/\s+/ /g;
-
-        my $override = $line;
+        $processed =~ s/\s+/ /g;
 
         # The override looks like the following:
         # [[pkg-name] [arch-list] [pkg-type]:] <tag> [extra]
         # - Note we do a strict package name check here because
         #   parsing overrides is a bit ambiguous (see #699628)
         if (
-            $override =~ m/\A (?:                   # start optional part
+            $processed =~ m/\A (?:                   # start optional part
                   (?:\Q$package\E)?                 # optionally starts with package name -> $1
                   (?: \s*+ \[([^\]]+?)\])?          # optionally followed by an [arch-list] (like in B-D) -> $2
                   (?:\s*+ ([a-z]+) \s*+ )?          # optionally followed by the type -> $3
@@ -122,18 +118,18 @@ sub overrides {
             # Valid - so far at least
             my ($archlist, $opkg_type, $tagdata)= ($1, $2, $3, $4);
 
-            my ($rawtag, $extra) = split(/ /, $tagdata, 2);
+            my ($tagname, $extra) = split(/ /, $tagdata, 2);
 
             if ($opkg_type and $opkg_type ne $type) {
                 $self->tag('malformed-override',
-"Override of $rawtag for package type $opkg_type (expecting $type) at line $."
+"Override of $tagname for package type $opkg_type (expecting $type) at line $."
                 );
                 next;
             }
 
             if ($architecture eq 'all' && $archlist) {
                 $self->tag('malformed-override',
-"Architecture list for arch:all package at line $. (for tag $rawtag)"
+"Architecture list for arch:all package at line $. (for tag $tagname)"
                 );
                 next;
             }
@@ -153,7 +149,7 @@ sub overrides {
                         $found = 1 if $a eq $architecture;
                     } else {
                         $self->tag('malformed-override',
-"Unknown architecture \"$a\" at line $. (for tag $rawtag)"
+"Unknown architecture \"$a\" at line $. (for tag $tagname)"
                         );
                         next OVERRIDE;
                     }
@@ -162,7 +158,7 @@ sub overrides {
                 if ($negated > 0 && scalar @archs != $negated){
                     # missing a ! somewhere
                     $self->tag('malformed-override',
-"Inconsistent architecture negation at line $. (for tag $rawtag)"
+"Inconsistent architecture negation at line $. (for tag $tagname)"
                     );
                     next;
                 }
@@ -176,35 +172,28 @@ sub overrides {
                   unless $found;
             }
 
-            if (   $last_over
-                && $last_over->{tag} eq $rawtag
-                && !scalar @$comments){
+            if (($previous{tag} // EMPTY) eq $tagname
+                && !scalar @comments){
                 # There are no new comments, no "empty line" in between and
                 # this tag is the same as the last, so we "carry over" the
                 # comment from the previous override (if any).
                 #
                 # Since L::T::Override is (supposed to be) immutable, the new
                 # override can share the reference with the previous one.
-                $comments = $last_over->{comments};
+                push(@comments, @{$previous{comments}});
             }
 
-            my $tagover = {};
+            my %current;
+            $current{tag} = $tagname;
 
-            # use new name if tag was renamed
-            my $tag = $rawtag;
-            $tag = $RENAMED_TAGS->value($rawtag)
-              if $RENAMED_TAGS->known($rawtag);
-
-            $tagover->{tag} = $tag;
-
-            $self->tag('renamed-tag',"$rawtag => $tag at line $.")
-              unless $tag eq $rawtag;
+            # record line number
+            $current{line} = $.;
 
             # does not seem to be used anywhere
-            $tagover->{arch} = 'any';
+            $current{arch} = 'any';
 
             $extra //= EMPTY;
-            $tagover->{extra} = $extra;
+            $current{extra} = $extra;
 
             if ($extra =~ m/\*/o) {
                 # It is a pattern, pre-compute it
@@ -227,21 +216,22 @@ sub overrides {
                     $pat = $pattern;
                 }
 
-                $tagover->{pattern} = qr/$pat$end/;
+                $current{pattern} = qr/$pat$end/;
             }
 
-            $tagover->{comments} = $comments;
-            $comments = [];
+            $current{comments} = [];
+            push(@{$current{comments}}, @comments);
+            @comments = ();
 
-            $override_data{$tag} //= {};
-            $override_data{$tag}{$extra} = $tagover;
+            $override_data{$tagname} //= {};
+            $override_data{$tagname}{$extra} = \%current;
 
-            $last_over = $tagover;
+            %previous = %current;
 
         } else {
             # We know this to be a bad override; check if it might be
             # an override for a different package.
-            if ($override !~ m/^\Q$package\E[\s:\[]/) {
+            unless ($processed =~ m/^\Q$package\E[\s:\[]/) {
                 # So, we got an override that does not start with the
                 # package name - cases include:
                 #  1 <tag> ...
@@ -254,10 +244,10 @@ sub overrides {
 
                 # First, remove the archlist if present (simplifies
                 # the next step)
-                $override =~ s/([^:\[]+)?\[[^\]]+\]([^:]*):/$1 $2:/;
-                $override =~ s/\s\s++/ /g;
+                $processed =~ s/([^:\[]+)?\[[^\]]+\]([^:]*):/$1 $2:/;
+                $processed =~ s/\s\s++/ /g;
 
-                if ($override
+                if ($processed
                     =~ m/^($PKGNAME_REGEX)?(?: (?:binary|changes|source|udeb))? ?:/o
                 ) {
                     my $opkg = $1;

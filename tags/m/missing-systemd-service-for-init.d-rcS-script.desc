@@ -12,3 +12,5 @@ Info: The rcS init.d script has no systemd equivalent.
  .
  Services in rcS.d are particularly problematic, because they often cause
  dependency loops, as they are ordered very early in the boot sequence.
+Renamed-From:
+ systemd-no-service-for-init-rcS-script

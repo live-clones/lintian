@@ -10,3 +10,5 @@ Info: The specified systemd service file declares a <tt>PIDFile=</tt>
  directly.
  .
  Please update the specified service file.
+Renamed-From:
+ systemd-service-file-pidfile-refers-to-var-run

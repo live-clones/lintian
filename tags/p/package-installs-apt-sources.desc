@@ -12,3 +12,5 @@ Info: Debian packages should not install files under
  .
  Packages whose names end in <tt>-apt-source</tt> or
  <tt>-archive-keyring</tt> are permitted to install such files.
+Renamed-From:
+ package-install-apt-sources
