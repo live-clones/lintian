@@ -1,4 +1,3 @@
 filenames (source): file-contains-trailing-whitespace debian/rules (line 9)
 filenames (source): file-contains-trailing-whitespace debian/rules (line 4)
 filenames (source): file-contains-trailing-whitespace debian/rules (line 14)
-filenames (source): diff-contains-editor-backup-file debian/watch~
