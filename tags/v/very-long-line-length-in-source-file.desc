@@ -19,3 +19,5 @@ Info: The source file includes a line length that is well beyond
  comments.
  .
  You may report this issue upstream.
+Renamed-From:
+ insane-line-length-in-source-file

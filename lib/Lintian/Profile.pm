@@ -134,6 +134,8 @@ sub new {
         'check-tagnames'       => {},
         # maps tag name to Lintian::Tag::Info
         'known-tags'           => {},
+        # maps old tag names to new tag names
+        'renamed-tags'         => {},
     };
     $self = bless $self, $type;
     if (not defined $name) {
@@ -168,6 +170,15 @@ sub new {
                     @{$self->{'check-tagnames'}{$taginfo->script}},
                     $taginfo->tag
                 );
+            }
+
+            for my $alias ($taginfo->aliases) {
+                my $taken = $self->{'renamed-tags'}{$alias};
+                die "Internal error: tags $taken and "
+                  . $taginfo->tag
+                  . " share same alias $alias."
+                  if defined $taken;
+                $self->{'renamed-tags'}{$alias} = $taginfo->tag;
             }
         }
     }
@@ -216,6 +227,17 @@ sub tags {
     my ($self, $known) = @_;
     return keys %{ $self->{'known-tags'} } if $known;
     return keys %{ $self->{'enabled-tags'} };
+}
+
+=item $prof->aliases()
+
+Returns a hash with old names that have new names.
+
+=cut
+
+sub aliases {
+    my ($self) = @_;
+    return $self->{'renamed-tags'};
 }
 
 =item $prof->scripts ([$known])

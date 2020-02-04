@@ -10,3 +10,5 @@ Info: Debian package should not install ieee oui.txt or iab.txt file
  Package should symlinks to /usr/share/ieee-data/iab.txt or
  /usr/share/ieee-data/oui.txt. Moreover, you should also
  depends on ieee-data package.
+Renamed-From:
+ package-install-ieee-data

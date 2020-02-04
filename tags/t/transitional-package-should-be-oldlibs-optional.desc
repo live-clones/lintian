@@ -8,3 +8,5 @@ Info: The package appears to be a transitional package, but it is not
  .
  Using oldlibs/optional assists package managers in handling the
  transition package correctly.
+Renamed-From:
+ transitional-package-should-be-oldlibs-extra

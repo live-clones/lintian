@@ -1,3 +1,16 @@
+lintian (2.48.0) unstable; urgency=medium
+
+  [ Felix Lechner ]
+  * Return the correct status code for successful collection tasks.
+    (Closes: #949805)
+  * Correctly order classification tags in output. (Closes: #949797)
+  * For one i386-only test package, only build it on i386.
+    (Closes: #949066)
+  * Remove data/override/renamed-tags; they are defined in the tag
+    declarations now.
+
+ -- Chris Lamb <lamby@debian.org>  Wed, 29 Jan 2020 10:21:40 +0000
+
 lintian (2.47.0~bpo9+1) stretch-backports; urgency=medium
 
   * Rebuild for stretch-backports.

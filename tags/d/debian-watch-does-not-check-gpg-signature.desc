@@ -17,3 +17,5 @@ Info: This watch file does not specify a means to verify the upstream
  request them as a way of verifying that no third party has modified the
  code after its release (projects such as phpmyadmin, unrealircd, and
  proftpd have suffered from this kind of attack).
+Renamed-From:
+ debian-watch-may-check-gpg-signature

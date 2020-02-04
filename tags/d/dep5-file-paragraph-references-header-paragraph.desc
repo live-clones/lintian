@@ -8,3 +8,5 @@ Info: The Files paragraph uses a reference to a license which is
  requires that the Files paragraph either contains the full license
  itself or references a "stand-alone" License paragraph, and not the
  Header paragraph.
+Renamed-From:
+ dep5-file-paragraph-reference-header-paragraph

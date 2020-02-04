@@ -7,3 +7,5 @@ Info: Debian packages should not install files under <tt>/etc/apt/preferences.d/
  This directory is under the control of the local administrator.
  .
  Package should not override local administrator choices.
+Renamed-From:
+ package-install-apt-preferences
