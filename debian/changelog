@@ -1,8 +1,23 @@
-lintian (2.48.0+git) UNRELEASED; urgency=medium
+lintian (2.49.0) unstable; urgency=medium
 
-  * WIP (generated upon release).
+  * Summary of tag changes:
+    + Added:
+      - upstream-metadata-exists
+      - upstream-metadata-field-present
+      - upstream-metadata-in-native-source
 
- -- Chris Lamb <lamby@debian.org>  Wed, 29 Jan 2020 11:51:54 +0100
+  [ Felix Lechner ]
+  * Issue new classification tags upstream-metadata-exists and
+    upstream-metadata-field-present. (Closes: #950115, #950117)
+  * Clarify meaning of 'arch dependent' in tag description for
+    tags/n/nodejs-module-installed-in-usr-lib.desc. (Closes: #950231)
+  * Reword tag description for unused-file-paragraph-in-dep5-copyright.
+    (Closes: #950471)
+  * Add new upstream-metadata-in-native-source tag.
+  * Free up lab space unconditionally and as part of regular processing.
+    (re: #924449)
+
+ -- Chris Lamb <lamby@debian.org>  Tue, 04 Feb 2020 16:47:30 +0000
 
 lintian (2.48.0) unstable; urgency=medium
 
