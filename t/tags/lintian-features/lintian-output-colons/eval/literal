@@ -23,7 +23,7 @@ tag:C:classification:certain::lintian-output-colons:1.0+dsfg-1.1:all:binary:data
 tag:C:classification:certain::lintian-output-colons:1.0+dsfg-1.1:source:source:debhelper-compat-level:12:
 tag:C:classification:certain::lintian-output-colons:1.0+dsfg-1.1:source:source:debhelper-compat-virtual-relation:12:
 tag:C:classification:certain::lintian-output-colons:1.0+dsfg-1.1:source:source:debian-build-system:dh:
-tag:C:classification:certain::lintian-output-colons:1.0+dsfg-1.1:source:source:debian-watch-file-standard::
+tag:C:classification:certain::lintian-output-colons:1.0+dsfg-1.1:source:source:debian-watch-file-standard:3:
 tag:C:classification:certain::lintian-output-colons:1.0+dsfg-1.1:all:binary:no-ctrl-scripts::
 tag:C:classification:certain::lintian-output-colons:1.0+dsfg-1.1:source:source:package-is-maintained-by-individual::
 tag:C:classification:certain::lintian-output-colons:1.0+dsfg-1.1:all:binary:package-is-maintained-by-individual::

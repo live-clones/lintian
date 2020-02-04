@@ -12,7 +12,7 @@
 <tag severity="classification" certainty="certain" name="debhelper-compat-level">12</tag>
 <tag severity="classification" certainty="certain" name="debhelper-compat-virtual-relation">12</tag>
 <tag severity="classification" certainty="certain" name="debian-build-system">dh</tag>
-<tag severity="classification" certainty="certain" name="debian-watch-file-standard" />
+<tag severity="classification" certainty="certain" name="debian-watch-file-standard">3</tag>
 <tag severity="classification" certainty="certain" name="package-is-maintained-by-individual" />
 <tag severity="classification" certainty="certain" name="patch-system">quilt</tag>
 <tag severity="classification" certainty="certain" name="rules-does-not-require-root" />

@@ -24,7 +24,7 @@ C: lintian-output-fullewi binary (1.0+dsfg-1.1) [all]: data-tarball-compression-
 C: lintian-output-fullewi source (1.0+dsfg-1.1) [source]: debhelper-compat-level 12
 C: lintian-output-fullewi source (1.0+dsfg-1.1) [source]: debhelper-compat-virtual-relation 12
 C: lintian-output-fullewi source (1.0+dsfg-1.1) [source]: debian-build-system dh
-C: lintian-output-fullewi source (1.0+dsfg-1.1) [source]: debian-watch-file-standard
+C: lintian-output-fullewi source (1.0+dsfg-1.1) [source]: debian-watch-file-standard 3
 C: lintian-output-fullewi binary (1.0+dsfg-1.1) [all]: no-ctrl-scripts
 C: lintian-output-fullewi source (1.0+dsfg-1.1) [source]: package-is-maintained-by-individual
 C: lintian-output-fullewi binary (1.0+dsfg-1.1) [all]: package-is-maintained-by-individual

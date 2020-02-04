@@ -23,7 +23,7 @@ C[C!]: lintian-output-letter: data-tarball-compression-format xz
 C[C!]: lintian-output-letter source: debhelper-compat-level 12
 C[C!]: lintian-output-letter source: debhelper-compat-virtual-relation 12
 C[C!]: lintian-output-letter source: debian-build-system dh
-C[C!]: lintian-output-letter source: debian-watch-file-standard
+C[C!]: lintian-output-letter source: debian-watch-file-standard 3
 C[C!]: lintian-output-letter: no-ctrl-scripts
 C[C!]: lintian-output-letter source: package-is-maintained-by-individual
 C[C!]: lintian-output-letter: package-is-maintained-by-individual
