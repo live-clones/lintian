@@ -1,1 +1,2 @@
-
+scripts-missing-call-to-update-fonts-unrel (binary): maintainer-script-interpreter control/postrm /bin/sh
+scripts-missing-call-to-update-fonts-unrel (binary): maintainer-script-interpreter control/postinst /bin/sh

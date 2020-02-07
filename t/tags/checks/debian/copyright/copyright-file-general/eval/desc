@@ -1,3 +1,2 @@
 Testname: copyright-file-general
-Options: --pedantic
 Check: debian/copyright

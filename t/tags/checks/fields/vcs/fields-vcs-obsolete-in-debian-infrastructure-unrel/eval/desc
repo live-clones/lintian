@@ -1,5 +1,4 @@
 Testname: fields-vcs-obsolete-in-debian-infrastructure-unrel
-Options: --pedantic
 Test-Against:
  vcs-obsolete-in-debian-infrastructure
  vcs-field-not-canonical

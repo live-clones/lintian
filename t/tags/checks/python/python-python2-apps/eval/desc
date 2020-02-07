@@ -1,3 +1,2 @@
 Testname: python-python2-apps
-Options: --pedantic
 Check: python

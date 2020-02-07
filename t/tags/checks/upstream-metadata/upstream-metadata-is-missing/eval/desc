@@ -1,3 +1,0 @@
-Testname: upstream-metadata-is-missing
-Options: --pedantic
-Check: upstream-metadata

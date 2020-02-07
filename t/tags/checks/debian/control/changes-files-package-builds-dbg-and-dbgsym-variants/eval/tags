@@ -1,2 +1,3 @@
+changes-files-package-builds-dbg-and-dbgsym-variants (source): rules-does-not-require-root
 changes-files-package-builds-dbg-and-dbgsym-variants (source): debian-control-has-obsolete-dbg-package changes-files-package-builds-dbg-and-dbgsym-variants-dbg
 changes-files-package-builds-dbg-and-dbgsym-variants (source): debian-control-has-dbgsym-package changes-files-package-builds-dbg-and-dbgsym-variants-dbgsym

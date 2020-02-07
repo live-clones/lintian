@@ -1,3 +1,2 @@
 Testname: version-substvars-general
-Options: --pedantic
 Check: debian/version-substvars

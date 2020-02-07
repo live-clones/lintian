@@ -1,5 +1,4 @@
 Testname: copyright-file-non-common-license
-Options: --pedantic
 Test-Against:
  copyright-should-refer-to-common-license-file-for-gpl
  copyright-should-refer-to-common-license-file-for-gfdl

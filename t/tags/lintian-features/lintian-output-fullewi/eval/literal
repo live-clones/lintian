@@ -19,3 +19,19 @@ X: lintian-output-fullewi source (1.0+dsfg-1.1) [source]: debian-watch-does-not-
 P: lintian-output-fullewi binary (1.0+dsfg-1.1) [all]: example-unusual-interpreter usr/share/doc/lintian-output-fullewi/examples/example #!/usr/bin/foo
 P: lintian-output-fullewi source (1.0+dsfg-1.1) [source]: no-homepage-field
 P: lintian-output-fullewi source (1.0+dsfg-1.1) [source]: package-uses-deprecated-source-override-location
+C: lintian-output-fullewi binary (1.0+dsfg-1.1) [all]: control-tarball-compression-format xz
+C: lintian-output-fullewi binary (1.0+dsfg-1.1) [all]: data-tarball-compression-format xz
+C: lintian-output-fullewi source (1.0+dsfg-1.1) [source]: debhelper-compat-level 12
+C: lintian-output-fullewi source (1.0+dsfg-1.1) [source]: debhelper-compat-virtual-relation 12
+C: lintian-output-fullewi source (1.0+dsfg-1.1) [source]: debian-build-system dh
+C: lintian-output-fullewi source (1.0+dsfg-1.1) [source]: debian-watch-file-standard 3
+C: lintian-output-fullewi binary (1.0+dsfg-1.1) [all]: no-ctrl-scripts
+C: lintian-output-fullewi source (1.0+dsfg-1.1) [source]: package-is-maintained-by-individual
+C: lintian-output-fullewi binary (1.0+dsfg-1.1) [all]: package-is-maintained-by-individual
+C: lintian-output-fullewi source (1.0+dsfg-1.1) [source]: patch-system quilt
+C: lintian-output-fullewi source (1.0+dsfg-1.1) [source]: rules-does-not-require-root
+C: lintian-output-fullewi source (1.0+dsfg-1.1) [source]: source-format 3.0 (quilt)
+C: lintian-output-fullewi source (1.0+dsfg-1.1) [source]: standards-version 4.5.0
+C: lintian-output-fullewi source (1.0+dsfg-1.1) [source]: upstream-metadata-exists
+C: lintian-output-fullewi source (1.0+dsfg-1.1) [source]: upstream-metadata-field-present Contact
+C: lintian-output-fullewi source (1.0+dsfg-1.1) [source]: upstream-metadata-field-present Name

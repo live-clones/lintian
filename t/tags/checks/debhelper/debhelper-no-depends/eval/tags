@@ -8,4 +8,6 @@ debhelper-no-depends (source): missing-build-dependency-for-dh_-command dh_lisp 
 debhelper-no-depends (source): missing-build-dependency-for-dh_-command dh_gstscancodecs => libgstreamer1.0-dev
 debhelper-no-depends (source): missing-build-dependency-for-dh_-command dh_dpatch_patch => dpatch
 debhelper-no-depends (source): missing-build-dependency-for-dh_-command dh_clideps => cli-common-dev
+debhelper-no-depends (source): debian-build-system dh
+debhelper-no-depends (source): debhelper-compat-level 9
 debhelper-no-depends (source): debhelper-but-no-misc-depends debhelper-no-depends

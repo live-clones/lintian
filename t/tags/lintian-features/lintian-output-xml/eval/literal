@@ -9,6 +9,18 @@
 <tag severity="pedantic" certainty="certain" flags="experimental" name="debian-watch-does-not-check-gpg-signature" />
 <tag severity="pedantic" certainty="possible" name="no-homepage-field" />
 <tag severity="pedantic" certainty="certain" name="package-uses-deprecated-source-override-location" />
+<tag severity="classification" certainty="certain" name="debhelper-compat-level">12</tag>
+<tag severity="classification" certainty="certain" name="debhelper-compat-virtual-relation">12</tag>
+<tag severity="classification" certainty="certain" name="debian-build-system">dh</tag>
+<tag severity="classification" certainty="certain" name="debian-watch-file-standard">3</tag>
+<tag severity="classification" certainty="certain" name="package-is-maintained-by-individual" />
+<tag severity="classification" certainty="certain" name="patch-system">quilt</tag>
+<tag severity="classification" certainty="certain" name="rules-does-not-require-root" />
+<tag severity="classification" certainty="certain" name="source-format">3.0 (quilt)</tag>
+<tag severity="classification" certainty="certain" name="standards-version">4.5.0</tag>
+<tag severity="classification" certainty="certain" name="upstream-metadata-exists" />
+<tag severity="classification" certainty="certain" name="upstream-metadata-field-present">Contact</tag>
+<tag severity="classification" certainty="certain" name="upstream-metadata-field-present">Name</tag>
 </package>
 <package type="binary" name="lintian-output-xml" architecture="all" version="1.0+dsfg-1.1">
 <tag severity="serious" certainty="certain" name="dir-in-usr-local">usr/local/share/</tag>
@@ -22,6 +34,10 @@
 <tag severity="normal" certainty="wild-guess" name="desktop-entry-limited-to-environments">usr/share/applications/script.desktop</tag>
 <tag severity="wishlist" certainty="possible" name="package-contains-empty-directory">usr/local/share/lintian/</tag>
 <tag severity="pedantic" certainty="possible" name="example-unusual-interpreter">usr/share/doc/lintian-output-xml/examples/example #!/usr/bin/foo</tag>
+<tag severity="classification" certainty="certain" name="control-tarball-compression-format">xz</tag>
+<tag severity="classification" certainty="certain" name="data-tarball-compression-format">xz</tag>
+<tag severity="classification" certainty="certain" name="no-ctrl-scripts" />
+<tag severity="classification" certainty="certain" name="package-is-maintained-by-individual" />
 </package>
 <package type="changes" name="lintian-output-xml" architecture="source all" version="1.0+dsfg-1.1">
 </package>

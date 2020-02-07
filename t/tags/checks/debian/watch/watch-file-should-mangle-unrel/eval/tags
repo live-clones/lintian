@@ -1,1 +1,2 @@
+watch-file-should-mangle-unrel (source): debian-watch-file-standard 4
 watch-file-should-mangle-unrel (source): debian-watch-does-not-check-gpg-signature

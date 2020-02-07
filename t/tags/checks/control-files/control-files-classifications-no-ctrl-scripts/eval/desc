@@ -1,3 +1,2 @@
 Testname: control-files-classifications-no-ctrl-scripts
-Options: -L +=classification
 Check: control-files

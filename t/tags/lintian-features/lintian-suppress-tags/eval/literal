@@ -1,0 +1,11 @@
+C: lintian-suppress-tags: control-tarball-compression-format xz
+C: lintian-suppress-tags: data-tarball-compression-format xz
+C: lintian-suppress-tags source: debhelper-compat-level 12
+C: lintian-suppress-tags source: debhelper-compat-virtual-relation 12
+C: lintian-suppress-tags source: debian-build-system dh
+C: lintian-suppress-tags: no-ctrl-scripts
+C: lintian-suppress-tags source: package-is-maintained-by-individual
+C: lintian-suppress-tags: package-is-maintained-by-individual
+C: lintian-suppress-tags source: rules-does-not-require-root
+C: lintian-suppress-tags source: source-format 3.0 (native)
+C: lintian-suppress-tags source: standards-version 4.5.0

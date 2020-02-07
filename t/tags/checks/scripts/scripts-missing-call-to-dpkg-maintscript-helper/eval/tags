@@ -1,3 +1,5 @@
 scripts-missing-call-to-dpkg-maintscript-helper (binary): missing-call-to-dpkg-maintscript-helper postrm (symlink_to_dir)
 scripts-missing-call-to-dpkg-maintscript-helper (binary): maintainer-script-should-not-use-dpkg-maintscript-helper preinst:7
 scripts-missing-call-to-dpkg-maintscript-helper (binary): maintainer-script-should-not-use-dpkg-maintscript-helper postinst:7
+scripts-missing-call-to-dpkg-maintscript-helper (binary): maintainer-script-interpreter control/preinst /bin/sh
+scripts-missing-call-to-dpkg-maintscript-helper (binary): maintainer-script-interpreter control/postinst /bin/sh

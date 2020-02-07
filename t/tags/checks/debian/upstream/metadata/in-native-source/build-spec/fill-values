@@ -1,0 +1,4 @@
+Skeleton: source-native
+Testname: in-native-source
+Description: Tests for d/upstream/metadata in native sources.
+Extra-Build-Depends: libyaml-libyaml-perl (>= 0.69)

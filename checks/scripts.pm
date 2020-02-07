@@ -594,7 +594,7 @@ sub binary {
     # normal scripts above, because there were just enough differences to
     # make a shared function awkward.
 
-    my (%added_diversions, %removed_diversions, %dh_cmd_substs);
+    my (%added_diversions, %removed_diversions);
     my $expand_diversions = 0;
     for my $file (keys %control) {
 
@@ -722,20 +722,20 @@ sub binary {
                 $self->tag('maintainer-script-has-unexpanded-debhelper-token',
                     $file);
             }
-            if (/^# Automatically added by (\S+)\s*$/) {
-                my $dh_cmd = $1;
-                # dh_python puts a trailing ":", remove that.
-                $dh_cmd =~ s/:++$//g;
-                $self->tag('debhelper-autoscript-in-maintainer-scripts',
-                    $dh_cmd)
-                  if not $dh_cmd_substs{$dh_cmd}++;
-                $in_automatic_section = 1;
-            }
+
+            $in_automatic_section = 1
+              if /^# Automatically added by \S+\s*$/;
+
             $in_automatic_section = 0
               if $_ eq '# End automatically added section';
 
-            next if m,^\s*$,;  # skip empty lines
-            next if m,^\s*\#,; # skip comment lines
+            # skip empty lines
+            next
+              if m,^\s*$,;
+
+            # skip comment lines
+            next
+              if m,^\s*\#,;
             $_ = remove_comments($_);
 
             # Concatenate lines containing continuation character (\)

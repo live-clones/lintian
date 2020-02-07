@@ -1,3 +1,2 @@
 Testname: control-file-pedantic
-Options: --pedantic
 Check: debian/control

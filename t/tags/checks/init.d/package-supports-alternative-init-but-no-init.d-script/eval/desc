@@ -1,3 +1,2 @@
 Testname: package-supports-alternative-init-but-no-init.d-script
-Options: --pedantic
 Check: init.d

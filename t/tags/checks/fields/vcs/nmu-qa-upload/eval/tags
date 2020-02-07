@@ -1,1 +1,3 @@
+nmu-qa-upload (source): package-is-co-maintained 1
 nmu-qa-upload (source): co-maintained-package-with-no-vcs-fields
+nmu-qa-upload (binary): package-is-maintained-by-individual

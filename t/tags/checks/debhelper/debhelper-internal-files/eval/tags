@@ -1,2 +1,5 @@
 debhelper-internal-files (source): temporary-debhelper-file package.postinst.debhelper
 debhelper-internal-files (source): temporary-debhelper-file package.debhelper.log
+debhelper-internal-files (source): debian-build-system dh
+debhelper-internal-files (source): debhelper-compat-virtual-relation 12
+debhelper-internal-files (source): debhelper-compat-level 12

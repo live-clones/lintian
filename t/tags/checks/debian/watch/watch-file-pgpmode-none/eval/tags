@@ -1,1 +1,2 @@
+watch-file-pgpmode-none (source): debian-watch-file-standard 4
 watch-file-pgpmode-none (source): debian-watch-does-not-check-gpg-signature

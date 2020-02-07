@@ -1,3 +1,4 @@
 control-file-library-dev (source): weak-library-dev-dependency libcontrol-file-dev on libcontrol-file-baz9-4 (>= ${binary:Version})
 control-file-library-dev (source): weak-library-dev-dependency libcontrol-file-dev on libcontrol-file-bar7ldbl
 control-file-library-dev (source): weak-library-dev-dependency libcontrol-file-all-dev on libcontrol-file-baz9-4 (>= ${source:Version})
+control-file-library-dev (source): rules-does-not-require-root

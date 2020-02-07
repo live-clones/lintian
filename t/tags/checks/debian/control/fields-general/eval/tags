@@ -1,1 +1,2 @@
+fields-general (source): rules-does-not-require-root
 fields-general (source): debian-control-has-obsolete-dbg-package fields-general-dbg

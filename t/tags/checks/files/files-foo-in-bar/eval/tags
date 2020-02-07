@@ -20,6 +20,10 @@ files-foo-in-bar (binary): package-installs-apt-preferences etc/apt/preferences.
 files-foo-in-bar (binary): package-installs-apt-preferences etc/apt/preferences
 files-foo-in-bar (binary): package-installs-apt-keyring etc/apt/trusted.gpg.d/bar
 files-foo-in-bar (binary): package-contains-xvpics-dir usr/share/doc/files-foo-in-bar/.xvpics/
+files-foo-in-bar (binary): package-contains-usr-unmerged-pathnames libx32/bar
+files-foo-in-bar (binary): package-contains-usr-unmerged-pathnames lib64/bar
+files-foo-in-bar (binary): package-contains-usr-unmerged-pathnames lib32/bar
+files-foo-in-bar (binary): package-contains-usr-unmerged-pathnames bin/foo/bar
 files-foo-in-bar (binary): package-contains-thumbnails-dir usr/share/doc/files-foo-in-bar/.thumbnails/
 files-foo-in-bar (binary): package-contains-mime-file-outside-package-dir usr/share/mime/foo/bar
 files-foo-in-bar (binary): package-contains-mime-file-outside-package-dir usr/share/mime/foo/

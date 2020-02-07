@@ -1,3 +1,7 @@
+scripts-maintainer-script-empty (binary): maintainer-script-interpreter control/prerm /bin/sh
+scripts-maintainer-script-empty (binary): maintainer-script-interpreter control/preinst /bin/sh
+scripts-maintainer-script-empty (binary): maintainer-script-interpreter control/postrm /bin/sh
+scripts-maintainer-script-empty (binary): maintainer-script-interpreter control/postinst /bin/sh
 scripts-maintainer-script-empty (binary): maintainer-script-empty prerm
 scripts-maintainer-script-empty (binary): maintainer-script-empty preinst
 scripts-maintainer-script-empty (binary): maintainer-script-empty postrm

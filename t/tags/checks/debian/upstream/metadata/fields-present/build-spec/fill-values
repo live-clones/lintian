@@ -1,0 +1,4 @@
+Skeleton: upload-non-native
+Testname: fields-present
+Description: Tests for classification tags on upstream metadata
+Extra-Build-Depends: libyaml-libyaml-perl (>= 0.69)

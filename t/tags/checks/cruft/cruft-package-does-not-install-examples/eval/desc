@@ -1,3 +1,2 @@
 Testname: cruft-package-does-not-install-examples
-Options: --pedantic
 Check: cruft

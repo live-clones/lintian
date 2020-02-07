@@ -2,3 +2,6 @@ maintscript-includes-maint-script-parameters (source): package-uses-old-debhelpe
 maintscript-includes-maint-script-parameters (source): maintscript-includes-maint-script-parameters maintscript (line 4)
 maintscript-includes-maint-script-parameters (source): maintscript-includes-maint-script-parameters maintscript (line 3)
 maintscript-includes-maint-script-parameters (source): maintscript-includes-maint-script-parameters maintscript (line 2)
+maintscript-includes-maint-script-parameters (source): debian-build-system dh
+maintscript-includes-maint-script-parameters (source): debhelper-compat-virtual-relation 11
+maintscript-includes-maint-script-parameters (source): debhelper-compat-level 11

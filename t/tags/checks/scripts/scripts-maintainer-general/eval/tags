@@ -61,6 +61,10 @@ scripts-maintainer-general (binary): maintainer-script-needs-depends-on-adduser 
 scripts-maintainer-general (binary): maintainer-script-modifies-inetd-conf postinst:68
 scripts-maintainer-general (binary): maintainer-script-modifies-inetd-conf postinst:67
 scripts-maintainer-general (binary): maintainer-script-may-use-dir_to_symlink_helper postinst:205
+scripts-maintainer-general (binary): maintainer-script-interpreter control/prerm /bin/sh
+scripts-maintainer-general (binary): maintainer-script-interpreter control/preinst /bin/sh
+scripts-maintainer-general (binary): maintainer-script-interpreter control/postrm /bin/sh
+scripts-maintainer-general (binary): maintainer-script-interpreter control/postinst /bin/sh
 scripts-maintainer-general (binary): maintainer-script-ignores-errors postrm
 scripts-maintainer-general (binary): maintainer-script-has-unexpanded-debhelper-token postinst
 scripts-maintainer-general (binary): install-info-used-in-maintainer-script postinst:105

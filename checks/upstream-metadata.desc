@@ -1,5 +1,0 @@
-Check-Script: upstream-metadata
-Author: Petter Reinholdtsen <pere@hungry.com>
-Type: source
-Needs-Info: unpacked
-Info: This script checks the upstream/metadata file for problems.

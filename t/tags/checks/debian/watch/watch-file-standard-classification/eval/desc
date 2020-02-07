@@ -1,3 +1,2 @@
 Testname: watch-file-standard-classification
-Options: --display-level +classification
 Check: debian/watch

@@ -7,4 +7,5 @@ scripts-missing-dep (binary): mawk-script-but-no-mawk-dep usr/bin/mawk-script #!
 scripts-missing-dep (binary): maintainer-script-needs-depends-on-xfonts-utils postinst
 scripts-missing-dep (binary): maintainer-script-needs-depends-on-update-inetd postinst
 scripts-missing-dep (binary): maintainer-script-needs-depends-on-adduser postinst
+scripts-missing-dep (binary): maintainer-script-interpreter control/postinst /bin/sh
 scripts-missing-dep (binary): gawk-script-but-no-gawk-dep usr/bin/gawk-script #!/usr/bin/gawk

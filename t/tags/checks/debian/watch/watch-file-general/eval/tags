@@ -2,6 +2,7 @@ watch-file-general (source): debian-watch-uses-insecure-uri http://insecure.com
 watch-file-general (source): debian-watch-file-uses-deprecated-sf-redirector-method line 5
 watch-file-general (source): debian-watch-file-uses-deprecated-githubredir line 24
 watch-file-general (source): debian-watch-file-unknown-version 42
+watch-file-general (source): debian-watch-file-standard 42
 watch-file-general (source): debian-watch-file-specifies-wrong-upstream-version 2.0.ds1-1 line 21
 watch-file-general (source): debian-watch-file-should-use-sf-redirector line 8
 watch-file-general (source): debian-watch-file-should-use-sf-redirector line 15

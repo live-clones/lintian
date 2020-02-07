@@ -1,1 +1,2 @@
+control-file-symlink (source): rules-does-not-require-root
 control-file-symlink (source): debian-control-file-is-a-symlink

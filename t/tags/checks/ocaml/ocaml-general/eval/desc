@@ -1,3 +1,2 @@
 Testname: ocaml-general
-Options: --pedantic
 Check: ocaml

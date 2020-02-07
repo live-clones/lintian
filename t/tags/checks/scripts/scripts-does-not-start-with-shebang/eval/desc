@@ -1,3 +1,2 @@
 Testname: scripts-does-not-start-with-shebang
-Options: -L +classification
 Check: scripts

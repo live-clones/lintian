@@ -1,3 +1,2 @@
 Testname: copyright-file-license-symlink
-Options: --pedantic
 Check: debian/copyright

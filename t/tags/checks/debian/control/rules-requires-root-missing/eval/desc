@@ -1,3 +1,2 @@
 Testname: rules-requires-root-missing
-Options: --pedantic
 Check: debian/control
