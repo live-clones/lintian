@@ -1,2 +1,3 @@
+control-files-bad (binary): ctrl-script md5sums
 control-files-bad (binary): control-file-has-bad-permissions md5sums 0755 != 0644
 control-files-bad (binary): control-file-has-bad-owner md5sums nobody/root != root/root

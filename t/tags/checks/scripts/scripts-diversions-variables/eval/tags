@@ -3,6 +3,8 @@ scripts-diversions-variables (binary): remove-of-unknown-diversion usr/lib/*/old
 scripts-diversions-variables (binary): package-uses-local-diversion preinst:15
 scripts-diversions-variables (binary): orphaned-diversion usr/share/scripts/t1/* preinst
 scripts-diversions-variables (binary): orphaned-diversion usr/share/scripts/other-file preinst
+scripts-diversions-variables (binary): maintainer-script-interpreter control/preinst /bin/sh
+scripts-diversions-variables (binary): maintainer-script-interpreter control/postrm /bin/sh
 scripts-diversions-variables (binary): diversion-for-unknown-file usr/share/scripts/other-file preinst:15
 scripts-diversions-variables (binary): diversion-for-unknown-file usr/share/foo/* preinst:30
 scripts-diversions-variables (binary): diversion-for-unknown-file etc/scripts/* preinst:26

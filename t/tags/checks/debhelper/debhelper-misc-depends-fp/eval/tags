@@ -1,1 +1,3 @@
-
+debhelper-misc-depends-fp (source): debian-build-system dh
+debhelper-misc-depends-fp (source): debhelper-compat-virtual-relation 12
+debhelper-misc-depends-fp (source): debhelper-compat-level 12

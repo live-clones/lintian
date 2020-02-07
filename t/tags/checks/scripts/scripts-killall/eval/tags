@@ -1,1 +1,2 @@
+scripts-killall (binary): maintainer-script-interpreter control/postinst /bin/sh
 scripts-killall (binary): killall-is-dangerous postinst:5

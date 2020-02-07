@@ -1,3 +1,2 @@
 Testname: source-copyright-missing-repack-explanation
-Options: --pedantic
 Check: debian/copyright

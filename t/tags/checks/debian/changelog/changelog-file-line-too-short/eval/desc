@@ -1,3 +1,2 @@
 Testname: changelog-file-line-too-short
-Options: --pedantic
 Check: debian/changelog

@@ -1,3 +1,2 @@
 Testname: prebuilt-java-object
-Options: --pedantic
 Check: java

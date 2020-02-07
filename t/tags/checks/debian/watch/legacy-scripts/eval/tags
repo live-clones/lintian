@@ -1,4 +1,5 @@
 scripts (source): debian-watch-file-uses-deprecated-sf-redirector-method line 5
+scripts (source): debian-watch-file-standard 3
 scripts (source): debian-watch-file-specifies-old-upstream-version 5 line 8
 scripts (source): debian-watch-file-should-use-sf-redirector line 8
 scripts (source): debian-watch-file-should-dversionmangle-not-uversionmangle line 5

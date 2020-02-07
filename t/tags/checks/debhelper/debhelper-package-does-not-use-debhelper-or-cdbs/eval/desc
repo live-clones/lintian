@@ -1,3 +1,2 @@
 Testname: debhelper-package-does-not-use-debhelper-or-cdbs
-Options: --pedantic
 Check: debhelper

@@ -1,1 +1,17 @@
+basic-non-native-3.0-purge-debian (source): upstream-metadata-field-present Name
+basic-non-native-3.0-purge-debian (source): upstream-metadata-field-present Contact
+basic-non-native-3.0-purge-debian (source): upstream-metadata-exists
+basic-non-native-3.0-purge-debian (source): standards-version 4.5.0
+basic-non-native-3.0-purge-debian (source): source-format 3.0 (quilt)
+basic-non-native-3.0-purge-debian (source): rules-does-not-require-root
+basic-non-native-3.0-purge-debian (source): patch-system quilt
+basic-non-native-3.0-purge-debian (source): package-is-maintained-by-individual
+basic-non-native-3.0-purge-debian (source): debian-watch-file-standard 3
 basic-non-native-3.0-purge-debian (source): debian-watch-does-not-check-gpg-signature
+basic-non-native-3.0-purge-debian (source): debian-build-system dh
+basic-non-native-3.0-purge-debian (source): debhelper-compat-virtual-relation 12
+basic-non-native-3.0-purge-debian (source): debhelper-compat-level 12
+basic-non-native-3.0-purge-debian (binary): package-is-maintained-by-individual
+basic-non-native-3.0-purge-debian (binary): no-ctrl-scripts
+basic-non-native-3.0-purge-debian (binary): data-tarball-compression-format xz
+basic-non-native-3.0-purge-debian (binary): control-tarball-compression-format xz

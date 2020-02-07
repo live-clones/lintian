@@ -1,3 +1,2 @@
 Testname: source-copyright-wiki-uri
-Options: --pedantic
 Check: debian/copyright

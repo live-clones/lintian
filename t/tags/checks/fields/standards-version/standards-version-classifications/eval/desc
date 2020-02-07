@@ -1,3 +1,2 @@
 Testname: standards-version-classifications
-Options: -L +classification
 Check: fields/standards-version

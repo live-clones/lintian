@@ -1,3 +1,2 @@
 Testname: files-doxygen-documentation
-Options: --pedantic
 Check: files

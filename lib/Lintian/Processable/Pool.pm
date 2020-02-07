@@ -237,6 +237,9 @@ sub process{
 
     my %override_count;
 
+    # do not remove lab if so selected
+    $self->keep($opt->{'keep-lab'} // 0);
+
     my @sorted = sort { $a->name cmp $b->name } values %{$self->groups};
     foreach my $group (@sorted) {
         my $success = 1;
@@ -297,9 +300,8 @@ sub process{
             }
         }
 
-        # remove group files unless we are keeping the lab
-        $group->clean_lab($OUTPUT)
-          unless ($self->keep);
+        # remove group files
+        $group->clean_lab($OUTPUT);
 
        # Wait for any remaining jobs - There will usually not be any
        # unless we had an issue examining the last package.  We patiently wait
@@ -318,9 +320,6 @@ sub process{
         }
         $OUTPUT->v_msg('Finished processing group ' . $group->name);
     }
-
-    # do not remove lab if so selected
-    $self->keep($opt->{'keep-lab'});
 
     if (    $action eq 'check'
         and not $opt->{'no-override'}
@@ -383,6 +382,9 @@ sub process{
         }
     }
 
+    path($self->basedir)->remove_tree
+      if length $self->basedir && -d $self->basedir;
+
     return;
 }
 
@@ -433,7 +435,7 @@ sub DEMOLISH {
     my ($self, $in_global_destruction) = @_;
 
     path($self->basedir)->remove_tree
-      if length $self->basedir && -d $self->basedir && !$self->keep;
+      if length $self->basedir && -d $self->basedir;
 
     return;
 }

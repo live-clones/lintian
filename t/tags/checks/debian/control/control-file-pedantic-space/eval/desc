@@ -1,3 +1,2 @@
 Testname: control-file-pedantic-space
-Options: --pedantic
 Check: debian/control

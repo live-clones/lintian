@@ -1,3 +1,2 @@
 Testname: scripts-supports-ancient-package-version
-Options: --pedantic
 Check: scripts

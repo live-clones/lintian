@@ -1,3 +1,2 @@
 Testname: cruft-file-contains-trailing-whitespace
-Options: --pedantic
 Check: cruft

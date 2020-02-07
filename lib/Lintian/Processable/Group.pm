@@ -898,6 +898,8 @@ sub process {
         }
     }
 
+    $self->clean_lab($OUTPUT);
+
     return $all_ok;
 }
 

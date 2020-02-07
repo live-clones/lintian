@@ -1,3 +1,5 @@
 debhelper-compat-multiple (source): uses-debhelper-compat-file
 debhelper-compat-multiple (source): package-uses-old-debhelper-compat-version 11
+debhelper-compat-multiple (source): debian-build-system dh
+debhelper-compat-multiple (source): debhelper-compat-level 11
 debhelper-compat-multiple (source): debhelper-compat-file-contains-multiple-levels (line 3)

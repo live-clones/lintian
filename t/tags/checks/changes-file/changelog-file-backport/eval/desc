@@ -1,5 +1,5 @@
 Testname: changelog-file-backport
-Options: --include-dir ./lintian-include-dir --pedantic
+Options: --include-dir ./lintian-include-dir
 Profile: lintian-test
 Test-Against:
  upload-has-backports-version-number

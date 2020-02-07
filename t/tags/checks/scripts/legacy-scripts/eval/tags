@@ -16,6 +16,10 @@ scripts (binary): missing-dep-for-interpreter python2 => python:any | python-min
 scripts (binary): missing-dep-for-interpreter lefty => graphviz (usr/bin/lefty-foo) #!/usr/local/bin/lefty
 scripts (binary): missing-dep-for-interpreter jruby => jruby | jruby1.0 | jruby1.1 | jruby1.2 (usr/bin/jruby-broken) #!/usr/bin/jruby
 scripts (binary): maintainer-script-without-set-e postrm
+scripts (binary): maintainer-script-interpreter control/prerm
+scripts (binary): maintainer-script-interpreter control/preinst /bin/sh
+scripts (binary): maintainer-script-interpreter control/postrm /bin/sh
+scripts (binary): maintainer-script-interpreter control/postinst /bin/sh
 scripts (binary): maintainer-script-ignores-errors postinst
 scripts (binary): maintainer-script-has-unexpanded-debhelper-token preinst
 scripts (binary): maintainer-script-empty preinst

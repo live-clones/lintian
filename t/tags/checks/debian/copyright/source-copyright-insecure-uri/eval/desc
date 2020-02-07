@@ -1,3 +1,2 @@
 Testname: source-copyright-insecure-uri
-Options: --pedantic
 Check: debian/copyright

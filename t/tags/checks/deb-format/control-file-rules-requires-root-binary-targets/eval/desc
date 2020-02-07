@@ -1,3 +1,2 @@
 Testname: control-file-rules-requires-root-binary-targets
-Options: -L +classification
 Check: deb-format

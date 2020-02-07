@@ -1,0 +1,4 @@
+Skeleton: upload-non-native
+Testname: upstream-metadata-invalid-yml
+Description: Tests for upstream-metadata being invalid yml
+Extra-Build-Depends: libyaml-libyaml-perl (>= 0.69)

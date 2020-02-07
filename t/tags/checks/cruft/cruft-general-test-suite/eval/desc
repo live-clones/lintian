@@ -1,5 +1,4 @@
 Testname: cruft-general-test-suite
-Options: --pedantic
 Test-Against:
  configure-generated-file-in-source
  source-contains-arch-control-dir

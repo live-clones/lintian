@@ -1,3 +1,2 @@
 Testname: cruft-upstream-binaries
-Options: --pedantic
 Check: cruft

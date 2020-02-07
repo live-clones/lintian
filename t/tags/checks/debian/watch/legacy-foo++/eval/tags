@@ -1,4 +1,5 @@
 foo++ (source): debian-watch-uses-insecure-uri http://domain.tld/file-(.*)\.tar\.gz
 foo++ (source): debian-watch-file-unknown-version 0
+foo++ (source): debian-watch-file-standard 0
 foo++ (source): debian-watch-file-in-native-package
 foo++ (source): debian-watch-does-not-check-gpg-signature

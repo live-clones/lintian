@@ -1,3 +1,2 @@
 Testname: control-has-empty-field
-Options: --pedantic
 Check: debian/control

@@ -5,9 +5,6 @@ scripts (binary): binary-without-manpage usr/bin/suidperlfoo2
 scripts (binary): binary-without-manpage usr/bin/suidperlfoo
 scripts (binary): binary-without-manpage usr/bin/sh-broken
 scripts (binary): binary-without-manpage usr/bin/rubyfoo
-scripts (binary): binary-without-manpage usr/bin/pyfoo
-scripts (binary): binary-without-manpage usr/bin/py2foo
-scripts (binary): binary-without-manpage usr/bin/py2.Xfoo
 scripts (binary): binary-without-manpage usr/bin/perlfoo
 scripts (binary): binary-without-manpage usr/bin/perl-bizarre-3
 scripts (binary): binary-without-manpage usr/bin/perl-bizarre-2

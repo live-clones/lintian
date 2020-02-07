@@ -2,9 +2,6 @@ scripts (binary): setuid-binary usr/bin/suidperlfoo2 4751 root/root
 scripts (binary): setuid-binary usr/bin/suidperlfoo 4555 root/root
 scripts (binary): script-with-language-extension usr/bin/test.sh
 scripts (binary): script-in-usr-share-doc usr/share/doc/scripts/rubyfoo
-scripts (binary): script-in-usr-share-doc usr/share/doc/scripts/py2foo
-scripts (binary): script-in-usr-share-doc usr/share/doc/scripts/py2.Xfoo
-scripts (binary): package-installs-python-bytecode usr/lib/python2.3/site-packages/test.pyc
 scripts (binary): non-standard-setuid-executable-perm usr/bin/suidperlfoo 4555
 scripts (binary): non-standard-executable-perm usr/bin/perl-bizarre-3 0754 != 0755
 scripts (binary): missing-depends-on-sensible-utils usr/src/scripts/gccbug.dpatch

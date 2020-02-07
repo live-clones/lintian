@@ -57,20 +57,15 @@ my @known_missing = qw(
   invalid-version-number-for-derivative
   manpage-in-udeb
   old-python-version-field
-  package-is-co-maintained
-  package-is-maintained-by-individual
   package-is-team-maintained
   package-uses-deprecated-source-override-location
   patch-modifying-debian-files
-  patch-system
   patch-system-but-direct-changes-in-diff
   quilt-series-references-non-existent-patch
   sphinxdoc-but-no-sphinxdoc-depends
   tar-errors-from-control
   unused-override
   uses-deprecated-adttmp
-  vcs
-  vcs-uri
   wrong-vcs-location-for-dpmt
   wrong-vcs-location-for-papt
 );
@@ -157,7 +152,7 @@ my @solved = $exceptions->get_Ronly;
 is(scalar @unknown, 0, 'All missing tags are known');
 diag "Unknown missing tag: $_" for @unknown;
 
-is(scalar @solved, 0, 'Solved tags from remove from known Missing set');
+is(scalar @solved, 0, 'Solved tags should be removed from known missing set');
 diag "Solved tag: $_" for @solved;
 
 # Local Variables:

@@ -1,3 +1,2 @@
 Testname: cruft-python
-Options: --pedantic
 Check: cruft

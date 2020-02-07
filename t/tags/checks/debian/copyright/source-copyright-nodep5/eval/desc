@@ -1,3 +1,2 @@
 Testname: source-copyright-nodep5
-Options: --pedantic
 Check: debian/copyright

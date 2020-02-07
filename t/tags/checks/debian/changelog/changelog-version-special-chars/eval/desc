@@ -1,5 +1,4 @@
 Testname: changelog-version-special-chars
-Options: --pedantic
 Test-Against:
  malformed-debian-changelog-version
 Check: debian/changelog

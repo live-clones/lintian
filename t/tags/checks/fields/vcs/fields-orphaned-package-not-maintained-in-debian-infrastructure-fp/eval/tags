@@ -1,0 +1,4 @@
+fields-orphaned-package-not-maintained-in-debian-infrastructure-fp (source): vcs-uri https://git.dgit.debian.org/python-ofxhome
+fields-orphaned-package-not-maintained-in-debian-infrastructure-fp (source): vcs git
+fields-orphaned-package-not-maintained-in-debian-infrastructure-fp (source): package-is-maintained-by-individual
+fields-orphaned-package-not-maintained-in-debian-infrastructure-fp (binary): package-is-maintained-by-individual

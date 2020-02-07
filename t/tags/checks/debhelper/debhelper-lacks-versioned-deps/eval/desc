@@ -1,3 +1,2 @@
 Testname: debhelper-lacks-versioned-deps
-Options: --pedantic
 Check: debhelper

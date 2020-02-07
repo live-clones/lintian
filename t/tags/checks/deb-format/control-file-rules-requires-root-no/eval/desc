@@ -1,3 +1,2 @@
 Testname: control-file-rules-requires-root-no
-Options: -L +classification
 Check: deb-format

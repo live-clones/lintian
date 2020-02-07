@@ -1,1 +1,4 @@
 debhelper-dh-unnecessary-arguments (source): debian-rules-uses-unnecessary-dh-argument dh ... --parallel (line 4)
+debhelper-dh-unnecessary-arguments (source): debian-build-system dh
+debhelper-dh-unnecessary-arguments (source): debhelper-compat-virtual-relation 12
+debhelper-dh-unnecessary-arguments (source): debhelper-compat-level 12

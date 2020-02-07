@@ -1,4 +1,4 @@
 Testname: lintian-output-fullewi
-Options: --pedantic --show-overrides
+Options: --show-overrides
 Output-Format: fullewi
 Match-Strategy: literal
