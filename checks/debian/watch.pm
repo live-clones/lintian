@@ -251,6 +251,12 @@ sub source {
           if $needs_prerelease_mangling
           && $prerelease_mangle
           && !$prerelease_umangle;
+
+        my $upstream_url = $remainder;
+        # Keep only URL part
+        $upstream_url =~ s/(.*?\S)\s.*$/$1/;
+        $self->tag('debian-watch-upstream-component', $upstream_url)
+          if any { /^component=/ } @options;
     }
 
     $self->tag('debian-watch-line-invalid', $_)for @errors;
