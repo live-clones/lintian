@@ -1,0 +1,1 @@
+binary (binary): non-standard-file-permissions-for-etc-init.d-script etc/init.d/binary 0765 != 0755

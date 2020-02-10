@@ -1,3 +1,0 @@
-Testname: files-uses-perl4-libs-with-dep
-Test-Against: perl-module-uses-perl4-libs-without-dep
-Check: files

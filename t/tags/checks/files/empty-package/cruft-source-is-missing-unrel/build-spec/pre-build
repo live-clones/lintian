@@ -1,0 +1,11 @@
+#!/bin/sh
+
+set -e
+
+cd "$1"
+
+mkdir -p debian/missing-sources/bar
+cp main.c debian/missing-sources/bar/main.c
+
+ln -s bar debian/missing-sources/foo
+ln -s bar debian/missing-sources/quux

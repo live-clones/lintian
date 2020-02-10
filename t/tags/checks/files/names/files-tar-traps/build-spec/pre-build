@@ -1,0 +1,28 @@
+#!/bin/sh
+dir="$1/strangename"
+mkdir -p "$dir"
+
+# All file names are quoted twice, once for the shell and once for tar
+# (-T)
+
+# File named <quote><backslash><space>
+echo "foo" > "$dir/'\\ "
+# File named <backslash>
+echo "bar" > "$dir/\\"
+# File named <backslash><backslash>
+# - causes md5sums-lists-nonexistent-file
+echo "bar" > "$dir/\\\\"
+
+# File named a<backslash><backslash>b
+# - causes md5sums-lists-nonexistent-file
+echo "bar" > "$dir/a\\\\b"
+
+# Symlink to file named a<backslash><backslash>b
+ln -s 'a\\b' "$dir/link-to-weird-file1"
+
+# Because the above is not insane enough...
+# If Lintian gets this wrong, it will become an
+# "unsafe-symlink".
+mkdir -p "$dir/\\.\\./\\.\\."
+echo "golf" > "$dir/\\.\\./\\.\\./\\.\\."
+ln -s '\.\./\.\./\.\.' "$dir/some-file"
