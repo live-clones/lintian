@@ -1,6 +1,7 @@
 # files/contents -- lintian check script -*- perl -*-
 
-# Copyright (C) 1998 Christian Schwarz and Richard Braakman
+# Copyright © 1998 Christian Schwarz and Richard Braakman
+# Copyright © 2020 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -128,6 +129,41 @@ sub files {
                 close($fd);
             }
         }
+    }
+
+    return;
+}
+
+sub always {
+    my ($self) = @_;
+
+    # get maintainer scripts
+    my @names = keys %{$self->processable->control_scripts};
+    my @scripts
+      =map { $self->processable->control_index_resolved_path($_) } @names;
+
+    for my $file (@scripts) {
+
+        next
+          unless $file && $file->is_open_ok;
+
+        # why is lintian exempt from this check?
+        next
+          if $self->processable->source eq 'lintian';
+
+        my %checks = $self->get_checks_for_file($file);
+
+        return
+          unless %checks;
+
+        my $fd = $file->open;
+        while (<$fd>) {
+            for my $tag (keys %checks) {
+                $self->tag($tag, $file->name, "(line $.)")
+                  if $_ =~ $checks{$tag};
+            }
+        }
+        close $fd;
     }
 
     return;
