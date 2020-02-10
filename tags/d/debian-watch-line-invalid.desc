@@ -1,0 +1,7 @@
+Tag: debian-watch-line-invalid
+Severity: normal
+Certainty: certain
+Check: debian/watch
+Ref: uscan(1)
+Info: The indicated line in the <tt>debian/watch</tt> file in this
+ package does not have a regnized format.

@@ -1,3 +1,21 @@
+lintian (2.50.0) unstable; urgency=medium
+
+  * Summary of tag changes:
+    + Added:
+      - debian-watch-line-invalid
+
+  [ Felix Lechner ]
+  * In watch files, allow spaces between options when commas are present.
+    (Closes: #950250, #950277)
+  * Add a new "debian-watch-line-invalid" for watch lines that fail to
+    parse.
+
+  [ Andrius Merkys ]
+  * Fix '<' and '>' in the long description of
+    pkg-js-autopkgtest-test-is-missing.
+
+ -- Chris Lamb <lamby@debian.org>  Fri, 07 Feb 2020 13:05:25 +0000
+
 lintian (2.49.0~bpo9+1) stretch-backports; urgency=medium
 
   * Rebuild for stretch-backports.
