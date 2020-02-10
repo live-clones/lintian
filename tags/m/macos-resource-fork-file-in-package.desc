@@ -1,7 +1,7 @@
 Tag: macos-resource-fork-file-in-package
 Severity: normal
 Certainty: certain
-Check: files
+Check: files/foreign-operating-systems
 Info: There is a file in the package with a name starting with
  <tt>._</tt>, the file name pattern used by Mac OS X to store resource
  forks in non-native file systems. Such files are generally useless in

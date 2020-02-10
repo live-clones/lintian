@@ -1,7 +1,7 @@
 Tag: obsolete-comments-style-in-php-ini
 Severity: normal
 Certainty: certain
-Check: files
+Check: files/php
 Info: This package ships a <tt>.ini</tt> file used to configure php but
  it has comments using the old-style comment separator <tt>#</tt>.
  Instead, the <tt>;</tt> separator should be used.

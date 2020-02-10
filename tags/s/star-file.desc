@@ -1,7 +1,7 @@
 Tag: star-file
 Severity: important
 Certainty: possible
-Check: files
+Check: files/names
 Info: The given file is literally installed as <tt>*</tt> (star
  symbol). Normally this indicates a mistake in the installation
  process of the package either when creating symlinks or renaming files.

@@ -1,7 +1,7 @@
 Tag: executable-is-not-world-readable
 Severity: normal
 Certainty: certain
-Check: files
+Check: files/permissions
 Info: All executables should be readable by any user. Since anyone can
  download the Debian package and obtain a copy of the executable, no
  security is gained by making the executable unreadable even for setuid

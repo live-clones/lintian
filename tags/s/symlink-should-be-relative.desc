@@ -1,7 +1,7 @@
 Tag: symlink-should-be-relative
 Severity: normal
 Certainty: certain
-Check: files
+Check: files/symbolic-links
 Info: Symlinks to files which are in the same top-level directory should be
  relative according to policy. (In other words, a link in /usr to another
  file in /usr should be relative, while a link in /usr to a file in /etc

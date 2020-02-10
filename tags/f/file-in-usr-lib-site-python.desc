@@ -1,7 +1,7 @@
 Tag: file-in-usr-lib-site-python
 Severity: important
 Certainty: certain
-Check: files
+Check: files/python
 Ref: python-policy 2.5
 Info: The directory /usr/lib/site-python has been deprecated as a
  location for installing Python modules and may be dropped from Python's

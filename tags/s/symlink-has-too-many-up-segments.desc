@@ -1,6 +1,6 @@
 Tag: symlink-has-too-many-up-segments
 Severity: serious
 Certainty: certain
-Check: files
+Check: files/symbolic-links
 Ref: policy 10.5
 Info: The symlink references a directory beyond the root directory "/".

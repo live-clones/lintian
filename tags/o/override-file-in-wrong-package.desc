@@ -1,7 +1,7 @@
 Tag: override-file-in-wrong-package
 Severity: important
 Certainty: certain
-Check: files
+Check: files/lintian
 Info: This package includes Lintian overrides intended for another package.
  Lintian overrides should be put in a regular file named
  /usr/share/lintian/overrides/<tt>package</tt>

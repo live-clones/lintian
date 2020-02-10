@@ -1,7 +1,7 @@
 Tag: package-contains-python-doctree-file
 Severity: normal
 Certainty: certain
-Check: files
+Check: files/names
 Info: This package appears to contain a pickled cache of reStructuredText
  (*.rst) documentation in a <tt>.doctree</tt> file.
  .

@@ -1,7 +1,7 @@
 Tag: windows-thumbnail-database-in-package
 Severity: normal
 Certainty: certain
-Check: files
+Check: files/foreign-operating-systems
 Info: There is a file in the package named <tt>Thumbs.db</tt> or
  <tt>Thumbs.db.gz</tt>, which is normally a Windows image thumbnail
  database. Such databases are generally useless in Debian packages and

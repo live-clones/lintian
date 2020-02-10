@@ -1,6 +1,6 @@
 Tag: bad-permissions-for-etc-cron.d-script
 Severity: important
 Certainty: certain
-Check: files
+Check: files/cron
 Info: Files in <tt>/etc/cron.d</tt> are configuration files for cron and not
  scripts. Thus, they should not be marked executable.

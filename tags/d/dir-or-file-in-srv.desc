@@ -1,7 +1,7 @@
 Tag: dir-or-file-in-srv
 Severity: serious
 Certainty: certain
-Check: files
+Check: files/hierarchy-standard
 Info: Debian packages should not install into <tt>/srv</tt>. The
  specification of <tt>/srv</tt> states that its structure is at the
  discretion of the local administrator and no package should rely on any

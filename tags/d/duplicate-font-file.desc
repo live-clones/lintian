@@ -1,7 +1,7 @@
 Tag: duplicate-font-file
 Severity: normal
 Certainty: possible
-Check: files
+Check: files/fonts
 Info: This package appears to include a font file that is already provided
  by another package in Debian. Ideally it should instead depend on the
  relevant font package. If the application in this package loads the font

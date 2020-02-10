@@ -1,7 +1,7 @@
 Tag: pkg-config-multi-arch-wrong-dir
 Severity: important
 Certainty: possible
-Check: files
+Check: files/pkgconfig
 Info: The arch all pkg-config file contains a reference to a multi-arch path.
  .
  This can be usually be fixed by moving this file to a multi-arch path.

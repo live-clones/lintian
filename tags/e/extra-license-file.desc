@@ -1,7 +1,7 @@
 Tag: extra-license-file
 Severity: wishlist
 Certainty: possible
-Check: files
+Check: files/licenses
 Ref: policy 12.5
 Info: All license information should be collected in the
  <tt>debian/copyright</tt> file. This usually makes it unnecessary

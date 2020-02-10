@@ -1,7 +1,7 @@
 Tag: package-section-games-but-has-usr-bin
 Severity: normal
 Certainty: possible
-Check: files
+Check: files/games
 Ref: policy 11.11
 Info: This package is marked as part of the section games, but contains
  executables in <tt>/bin</tt> or <tt>/usr/bin/</tt>. This can be intentional,

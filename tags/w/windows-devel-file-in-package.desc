@@ -1,7 +1,7 @@
 Tag: windows-devel-file-in-package
 Severity: normal
 Certainty: possible
-Check: files
+Check: files/foreign-operating-systems
 Info: This package appears to contain development files only meaningful to
  Windows environments. Such files are generally useless in Debian packages and
  were usually accidentally included by copying complete directories from the
