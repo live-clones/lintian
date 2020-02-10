@@ -1,8 +1,16 @@
-lintian (2.50.0+git) UNRELEASED; urgency=medium
+lintian (2.51.0) unstable; urgency=medium
 
-  * WIP (generated upon release).
+  * Summary of tag changes:
+    + Added:
+      - debian-watch-upstream-component
 
- -- Chris Lamb <lamby@debian.org>  Fri, 07 Feb 2020 14:45:23 +0000
+  [ Peter Pentchev ]
+  * Allow quoted "$@" arguments when checking for no-dh-sequencer.
+
+  [ Xavier Guimard ]
+  * Add debian-watch-upstream-component classification tag.
+
+ -- Chris Lamb <lamby@debian.org>  Mon, 10 Feb 2020 11:53:42 +0000
 
 lintian (2.50.0) unstable; urgency=medium
 
