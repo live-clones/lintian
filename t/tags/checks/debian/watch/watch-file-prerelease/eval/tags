@@ -1,3 +1,3 @@
 watch-file-prerelease (source): debian-watch-file-standard 3
-watch-file-prerelease (source): debian-watch-file-should-uversionmangle-not-dversionmangle line 3
+watch-file-prerelease (source): debian-watch-file-should-uversionmangle-not-dversionmangle opts=dversionmangle=s/~rc/-rc/ https://www.example.com/software/foo/ .*/foo-([^-]+)\.tar\.gz
 watch-file-prerelease (source): debian-watch-does-not-check-gpg-signature

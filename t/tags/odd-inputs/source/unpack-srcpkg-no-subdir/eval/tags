@@ -5,8 +5,7 @@ unpack-srcpkg-no-subdir (source): standards-version 4.5.0
 unpack-srcpkg-no-subdir (source): source-format 3.0 (quilt)
 unpack-srcpkg-no-subdir (source): rules-does-not-require-root
 unpack-srcpkg-no-subdir (source): package-is-maintained-by-individual
-unpack-srcpkg-no-subdir (source): debian-watch-file-standard
-unpack-srcpkg-no-subdir (source): debian-watch-does-not-check-gpg-signature
+unpack-srcpkg-no-subdir (source): debian-watch-file-missing-version
 unpack-srcpkg-no-subdir (source): debian-build-system dh
 unpack-srcpkg-no-subdir (source): debhelper-compat-virtual-relation 12
 unpack-srcpkg-no-subdir (source): debhelper-compat-level 12
