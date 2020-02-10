@@ -63,7 +63,7 @@ sub tag_build_tree_path {
     foreach my $buildpath ($BUILD_PATH_REGEX->all) {
         my $regex = $BUILD_PATH_REGEX->value($buildpath);
         if ($path =~ m{$regex}xms) {
-            $self->tag('dir-or-file-in-build-tree', $msg);
+            $self->tag('symlink-target-in-build-tree', $msg);
         }
     }
     return;
@@ -102,7 +102,7 @@ sub files {
             "symlink $file point to $mylink");
 
         if(is_tmp_path($flinkname)) {
-            $self->tag('dir-or-file-in-tmp', 'symlink', $file->name,
+            $self->tag('symlink-target-in-tmp', 'symlink', $file->name,
                 "point to $mylink");
         }
 
