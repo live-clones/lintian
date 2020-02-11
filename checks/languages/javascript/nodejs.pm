@@ -1,4 +1,4 @@
-# nodejs -- lintian check script -*- perl -*-
+# languages/javascript/nodejs -- lintian check script -*- perl -*-
 
 # Copyright (C) 2019, Xavier Guimard <yadd@debian.org>
 #
@@ -18,7 +18,7 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-package Lintian::nodejs;
+package Lintian::languages::javascript::nodejs;
 
 use strict;
 use warnings;

@@ -1,2 +1,2 @@
 Testname: pkg-js-tools-test-is-empty
-Check: nodejs
+Check: languages/javascript/nodejs

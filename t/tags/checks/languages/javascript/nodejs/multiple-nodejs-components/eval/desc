@@ -1,2 +1,2 @@
 Testname: multiple-nodejs-components
-Check: nodejs
+Check: languages/javascript/nodejs

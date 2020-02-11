@@ -1,2 +1,2 @@
 Testname: pkg-js-autopkgtest-file-does-not-exist
-Check: nodejs
+Check: languages/javascript/nodejs

@@ -1,2 +1,2 @@
 Testname: nodejs-module-installed-in-usr-lib
-Check: nodejs
+Check: languages/javascript/nodejs

@@ -1,7 +1,7 @@
 Tag: nodejs-module-installed-in-usr-lib
 Severity: normal
 Certainty: certain
-Check: nodejs
+Check: languages/javascript/nodejs
 Info: This package installs the specified file under <tt>/usr/lib/nodejs</tt>.
  Since the release of Buster, these files should be installed under
  <tt>/usr/share/nodejs</tt> (for arch <i>independent</i> modules) or

@@ -1,4 +1,4 @@
-Check-Script: nodejs
+Check-Script: languages/javascript/nodejs
 Author: Xavier Guimard <yadd@debian.org>
 Type: source, binary
 Info: This script checks nodejs-related issues
