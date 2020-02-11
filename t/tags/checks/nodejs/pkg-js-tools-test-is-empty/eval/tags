@@ -1,1 +1,2 @@
 pkg-js-tools-test-is-empty (source): pkg-js-tools-test-is-empty debian/tests/pkg-js/test
+pkg-js-tools-test-is-empty (binary): nodejs-module test 0.1 usr/share/nodejs/test/package.json

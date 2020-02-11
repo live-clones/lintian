@@ -24,7 +24,9 @@ use strict;
 use warnings;
 use autodie;
 
+use JSON;
 use List::MoreUtils qw(any);
+use Path::Tiny;
 
 use Lintian::Relation;
 
@@ -107,6 +109,7 @@ sub source {
 
 sub files {
     my ($self, $file) = @_;
+    return if $file->is_dir;
 
     return
       if $self->package =~ /-dbg$/;
@@ -120,6 +123,31 @@ sub files {
       =~ m#usr/(?:share|lib(?:/[^/]+)?)/nodejs/(?:package\.json|[^/]*\.js)$#
       && $file->is_file;
 
+    if($file->name
+           =~ m#usr/(?:share|lib(?:/[^/]+)?)/nodejs/([^/]+)(.*/)package\.json$#
+        && $file->is_file
+        && $file->is_open_ok) {
+
+        my $dirname = $1; # directory in /**/nodejs
+        my $subpath = $2; # subpath in /**/nodejs/module/ (node_modules/foo)
+
+        my $content = path($file->fs_path)->slurp;
+
+        my $pac;
+        eval {$pac = decode_json($content);};
+        if(not $@ and length $pac->{name}) {
+
+            # Store node module name & version (classification)
+            $self->tag('nodejs-module', $pac->{name},
+                $pac->{version} // 'undef',
+                $file->name);
+            # Warn if module name is not equal to nodejs directory
+            $self->tag('nodejs-module-installed-in-bad-directory',
+                $file->name, $pac->{name}, $dirname)
+              if ($subpath eq '/')
+              and ($dirname ne $pac->{name});
+        }
+    }
     return;
 }
 
