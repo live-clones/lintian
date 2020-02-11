@@ -1,2 +1,2 @@
 Testname: obsolete-commands-in-modprobe
-Check: files/modprobe
+Check: modprobe
