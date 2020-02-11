@@ -1,4 +1,4 @@
-Check-Script: java
+Check-Script: languages/java
 Author: Vincent Fourmond <fourmond@debian.org>
 Abbrev: java
 Type: binary, source

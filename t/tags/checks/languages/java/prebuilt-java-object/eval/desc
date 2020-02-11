@@ -1,2 +1,2 @@
 Testname: prebuilt-java-object
-Check: java
+Check: languages/java

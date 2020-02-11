@@ -1,4 +1,4 @@
 Testname: java-jars
 Test-Against:
  source-contains-prebuilt-java-object
-Check: java
+Check: languages/java

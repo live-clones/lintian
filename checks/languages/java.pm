@@ -1,4 +1,4 @@
-# java -- lintian check script -*- perl -*-
+# languages/java -- lintian check script -*- perl -*-
 
 # Copyright (C) 2011 Vincent Fourmond
 #
@@ -18,7 +18,7 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-package Lintian::java;
+package Lintian::languages::java;
 
 use strict;
 use warnings;

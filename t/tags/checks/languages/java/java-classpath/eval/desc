@@ -1,2 +1,2 @@
 Testname: java-classpath
-Check: java
+Check: languages/java
