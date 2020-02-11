@@ -1,4 +1,4 @@
-Check-Script: files/examples
+Check-Script: documentation/examples
 Author: Christian Schwarz <schwarz@debian.org>
 Abbrev: fil
 Type: binary, udeb
