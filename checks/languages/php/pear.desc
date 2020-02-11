@@ -1,4 +1,4 @@
-Check-Script: phppear
+Check-Script: languages/php/pear
 Author: Mathieu Parent <sathieu@debian.org>
 Abbrev: phppear
 Type: source

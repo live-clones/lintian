@@ -1,4 +1,4 @@
-# phppear -- lintian check script -*- perl -*-
+# langauges/php/pear -- lintian check script -*- perl -*-
 
 # Copyright (C) 2013 Mathieu Parent <math.parent@gmail.com>
 #
@@ -18,7 +18,7 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-package Lintian::phppear;
+package Lintian::languages::php::pear;
 
 use strict;
 use warnings;

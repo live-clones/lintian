@@ -5,4 +5,4 @@ Test-Against:
  pear-package-but-missing-dependency
  pear-package-not-using-substvar
  pecl-package-requires-build-dependency
-Check: phppear
+Check: languages/php/pear

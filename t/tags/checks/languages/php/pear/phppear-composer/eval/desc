@@ -1,4 +1,4 @@
 Testname: phppear-composer
 Test-Against:
  missing-pkg-php-tools-addon
-Check: phppear
+Check: languages/php/pear
