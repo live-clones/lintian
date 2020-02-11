@@ -1,4 +1,4 @@
-# files/foreign-operating-systems -- lintian check script -*- perl -*-
+# foreign-operating-systems -- lintian check script -*- perl -*-
 
 # Copyright (C) 1998 Christian Schwarz and Richard Braakman
 #
@@ -18,7 +18,7 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-package Lintian::files::foreign_operating_systems;
+package Lintian::foreign_operating_systems;
 
 use strict;
 use warnings;
