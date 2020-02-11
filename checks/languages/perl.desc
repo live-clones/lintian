@@ -1,4 +1,4 @@
-Check-Script: files/perl
+Check-Script: languages/perl
 Author: Christian Schwarz <schwarz@debian.org>
 Abbrev: fil
 Type: binary, udeb

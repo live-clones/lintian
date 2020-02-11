@@ -1,2 +1,2 @@
 Testname: legacy-filenames
-Check: files/perl
+Check: languages/perl

@@ -1,4 +1,4 @@
-# files/perl -- lintian check script -*- perl -*-
+# languages/perl -- lintian check script -*- perl -*-
 
 # Copyright (C) 1998 Christian Schwarz and Richard Braakman
 #
@@ -18,7 +18,7 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-package Lintian::files::perl;
+package Lintian::languages::perl;
 
 use strict;
 use warnings;
