@@ -1,7 +1,7 @@
 Tag: package-contains-linda-override
 Severity: normal
 Certainty: certain
-Check: files/linda
+Check: linda
 Info: This package contains a linda override file in
  <tt>/usr/share/linda/overrides</tt>. Linda is obsolete and has been
  removed from the archive as of 2008-03-04. Linda overrides should

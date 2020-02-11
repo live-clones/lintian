@@ -1,2 +1,2 @@
 Testname: files-package-contains-foo
-Check: files/linda
+Check: linda
