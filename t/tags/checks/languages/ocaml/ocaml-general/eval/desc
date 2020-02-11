@@ -1,2 +1,2 @@
 Testname: ocaml-general
-Check: ocaml
+Check: languages/ocaml

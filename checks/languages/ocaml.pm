@@ -1,4 +1,4 @@
-# ocaml -- lintian check script -*- perl -*-
+# languages/ocaml -- lintian check script -*- perl -*-
 #
 # Copyright © 2009 Stéphane Glondu
 #
@@ -18,7 +18,7 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-package Lintian::ocaml;
+package Lintian::languages::ocaml;
 
 use strict;
 use warnings;
