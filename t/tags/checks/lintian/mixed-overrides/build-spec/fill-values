@@ -1,4 +1,4 @@
 Skeleton: upload-native
-Testname: overrides
+Testname: mixed-overrides
 Package-Architecture: any
 Description: Test override handling
