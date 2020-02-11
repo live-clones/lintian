@@ -1,4 +1,4 @@
-Check-Script: infofiles
+Check-Script: documentation/texinfo
 Author: Josip Rodin <jrodin@jagor.srce.hr>
 Abbrev: info
 Type: binary
