@@ -1,7 +1,7 @@
 Tag: manpage-without-executable
 Severity: minor
 Certainty: possible
-Check: manpages
+Check: documentation/man
 Info: Each manpage in <tt>/usr/share/man</tt> should have a reason to be
  there. This manpage does not appear to have a valid reason to be shipped.
  .
