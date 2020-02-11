@@ -59,6 +59,21 @@ my @admin_locations= qw(sbin/ usr/sbin/);
 sub files {
     my ($self, $file) = @_;
 
+    if ($file->name =~ m,^usr/share/man/\S+,) {
+
+        $self->tag('manpage-in-udeb', $file->name)
+          if $self->type eq 'udeb';
+
+        if ($file->is_dir) {
+            $self->tag('stray-directory-in-manpage-directory', $file->name)
+              unless $file->name
+              =~ m,^usr/(?:X11R6|share)/man/(?:[^/]+/)?(?:man\d/)?$,;
+
+        } elsif ($file->is_file && ($file->operm & 0111)) {
+            $self->tag('executable-manpage', $file->name);
+        }
+    }
+
     return
       unless $file->is_file || $file->is_symlink;
 
