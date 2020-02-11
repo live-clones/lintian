@@ -1,4 +1,4 @@
-# perl/prebuilt/yapp -- lintian check script -*- perl -*-
+# languages/perl/yapp -- lintian check script -*- perl -*-
 #
 # Copyright © 2019 Felix Lechner
 #
@@ -18,7 +18,7 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-package Lintian::perl::prebuilt::yapp;
+package Lintian::languages::perl::yapp;
 
 use warnings;
 use strict;

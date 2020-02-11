@@ -1,4 +1,4 @@
-Check-Script: perl/prebuilt/yapp
+Check-Script: languages/perl/yapp
 Author: Felix Lechner <felix.lechner@lease-up.com>
 Type: source
 Needs-Info: unpacked
