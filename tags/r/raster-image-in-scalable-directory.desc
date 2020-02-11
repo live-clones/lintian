@@ -1,6 +1,6 @@
 Tag: raster-image-in-scalable-directory
 Severity: normal
 Certainty: certain
-Check: files/icons
+Check: desktop/icons
 Info: The given raster image was installed into a "scalable" icon directory.
  Only vector graphics (e.g. SVG) should be installed into those directories.
