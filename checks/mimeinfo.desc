@@ -1,4 +1,4 @@
-Check-Script: files/mimeinfo
+Check-Script: mimeinfo
 Author: Christian Schwarz <schwarz@debian.org>
 Abbrev: fil
 Type: binary, udeb
