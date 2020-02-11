@@ -1,4 +1,4 @@
-# automake -- lintian check script -*- perl -*-
+# build-systems/automake -- lintian check script -*- perl -*-
 #
 # Copyright (C) 2013 Gautier Minster
 #
@@ -18,7 +18,7 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-package Lintian::automake;
+package Lintian::build_systems::automake;
 
 use strict;
 use warnings;

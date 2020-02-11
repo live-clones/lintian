@@ -1,4 +1,4 @@
-Check-Script: automake
+Check-Script: build-systems/automake
 Author: Gautier Minster <gautier+debian@minster.io>
 Abbrev: autom
 Type: source
