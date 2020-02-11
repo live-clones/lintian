@@ -1,4 +1,4 @@
-# elpa -- lintian check script -*- perl -*-
+# emacs/elpa -- lintian check script -*- perl -*-
 
 # Copyright (C) 2017 Sean Whitton
 #
@@ -18,7 +18,7 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-package Lintian::elpa;
+package Lintian::emacs::elpa;
 
 use strict;
 use warnings;

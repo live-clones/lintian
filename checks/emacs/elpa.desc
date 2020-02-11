@@ -1,4 +1,4 @@
-Check-Script: elpa
+Check-Script: emacs/elpa
 Author: Sean Whitton <spwhitton@spwhitton.name>
 Abbrev: elpa
 Type: binary
