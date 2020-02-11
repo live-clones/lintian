@@ -1,2 +1,2 @@
 Testname: legacy-etcfiles
-Check: files/cron
+Check: cron

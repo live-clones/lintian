@@ -1,2 +1,2 @@
 Testname: files-foo-violates-expected-naming
-Check: files/cron
+Check: cron
