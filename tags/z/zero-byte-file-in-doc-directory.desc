@@ -1,7 +1,7 @@
 Tag: zero-byte-file-in-doc-directory
 Severity: normal
 Certainty: possible
-Check: files/documentation
+Check: documentation
 Info: The documentation directory for this package contains an empty
  file. This is often due to installing an upstream NEWS or README file
  without realizing it's empty and hence not useful.

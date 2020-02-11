@@ -1,7 +1,7 @@
 Tag: package-contains-readme-for-other-platform-or-distro
 Severity: normal
 Certainty: certain
-Check: files/documentation
+Check: documentation
 Info: package contains a README.(platform) file that contains instructions
  specific to a platform or distribution other than Debian and thus can
  most likely be removed. If it contains information that pertains to

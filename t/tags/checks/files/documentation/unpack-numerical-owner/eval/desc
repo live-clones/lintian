@@ -1,3 +1,0 @@
-Testname: unpack-numerical-owner
-Test-Against: bad-owner-for-doc-file
-Check: files/documentation
