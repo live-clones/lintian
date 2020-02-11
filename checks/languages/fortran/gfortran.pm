@@ -1,4 +1,4 @@
-# fortran/gfortran -- lintian check script -*- perl -*-
+# languages/fortran/gfortran -- lintian check script -*- perl -*-
 
 # Copyright © 2020 Felix Lechner
 #
@@ -18,7 +18,7 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-package Lintian::fortran::gfortran;
+package Lintian::languages::fortran::gfortran;
 
 use strict;
 use warnings;
