@@ -1,2 +1,2 @@
 Testname: files-unknown-file-in-python-module-directory
-Check: files/python
+Check: languages/python

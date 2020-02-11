@@ -1,2 +1,2 @@
 Testname: files-python-modules
-Check: files/python
+Check: languages/python

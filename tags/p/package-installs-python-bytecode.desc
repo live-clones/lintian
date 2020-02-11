@@ -1,7 +1,7 @@
 Tag: package-installs-python-bytecode
 Severity: serious
 Certainty: certain
-Check: files/python
+Check: languages/python
 Ref: python-policy 3.7
 Info: Compiled Python source files must not be included in the package.
  These files should be removed from the package and created at package
