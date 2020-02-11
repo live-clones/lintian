@@ -1,4 +1,4 @@
-Check-Script: files/gnome
+Check-Script: desktop/gnome
 Author: Christian Schwarz <schwarz@debian.org>
 Abbrev: fil
 Type: binary, udeb
