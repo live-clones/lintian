@@ -1,4 +1,4 @@
-Check-Script: symlinks
+Check-Script: files/symbolic-links/broken
 Author: Niels Thykier <niels@thykier.net>
 Abbrev: sym
 Type: binary, udeb

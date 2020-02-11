@@ -1,4 +1,4 @@
-# symlinks -- lintian check script -*- perl -*-
+# files/symbolic-links/broken -- lintian check script -*- perl -*-
 #
 # Copyright (C) 2011 Niels Thykier
 #
@@ -18,7 +18,7 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-package Lintian::symlinks;
+package Lintian::files::symbolic_links::broken;
 
 use strict;
 use warnings;
