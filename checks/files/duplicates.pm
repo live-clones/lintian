@@ -1,4 +1,4 @@
-# duplicate-files -- lintian check script -*- perl -*-
+# files/duplicates -- lintian check script -*- perl -*-
 
 # Copyright (C) 2011 Niels Thykier
 #
@@ -18,7 +18,7 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-package Lintian::duplicate_files;
+package Lintian::files::duplicates;
 
 use strict;
 use warnings;

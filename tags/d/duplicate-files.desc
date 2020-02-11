@@ -1,7 +1,7 @@
 Tag: duplicate-files
 Severity: pedantic
 Certainty: possible
-Check: duplicate-files
+Check: files/duplicates
 Experimental: yes
 Ref: jdupes(1)
 Info: The package ships the two (or more) files with the exact same

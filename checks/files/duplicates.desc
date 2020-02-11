@@ -1,4 +1,4 @@
-Check-Script: duplicate-files
+Check-Script: files/duplicates
 Author: Niels Thykier <niels@thykier.net>
 Abbrev: dupf
 Type: binary
