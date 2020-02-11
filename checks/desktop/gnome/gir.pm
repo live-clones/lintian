@@ -1,4 +1,4 @@
-# gir -- lintian check script for GObject-Introspection -*- perl -*-
+# desktop/gnome/gir -- lintian check script for GObject-Introspection -*- perl -*-
 #
 # Copyright © 2012 Arno Töll
 # Copyright © 2014 Collabora Ltd.
@@ -20,7 +20,7 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-package Lintian::gir;
+package Lintian::desktop::gnome::gir;
 
 use strict;
 use warnings;

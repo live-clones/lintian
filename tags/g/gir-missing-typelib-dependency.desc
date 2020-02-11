@@ -1,7 +1,7 @@
 Tag: gir-missing-typelib-dependency
 Severity: normal
 Certainty: possible
-Check: gir
+Check: desktop/gnome/gir
 Info: Development packages that contain GObject-Introspection XML files
  (<tt>/usr/share/gir-1.0/Foo-23.gir</tt>) must depend on the package
  containing the corresponding binary typelib, which is conventionally named
