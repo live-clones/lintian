@@ -1,4 +1,4 @@
-# files/fonts -- lintian check script -*- perl -*-
+# fonts -- lintian check script -*- perl -*-
 
 # Copyright (C) 1998 Christian Schwarz and Richard Braakman
 #
@@ -18,7 +18,7 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-package Lintian::files::fonts;
+package Lintian::fonts;
 
 use strict;
 use warnings;
