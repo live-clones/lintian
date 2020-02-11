@@ -1,4 +1,4 @@
-# changes-file -- lintian check script -*- perl -*-
+# debian/upstream/signing-key -- lintian check script -*- perl -*-
 
 # Copyright (C) 2018 Felix Lechner
 #
@@ -18,7 +18,7 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-package Lintian::upstream_signing_key;
+package Lintian::debian::upstream::signing_key;
 
 use strict;
 use warnings;

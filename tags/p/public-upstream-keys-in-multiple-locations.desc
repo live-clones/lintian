@@ -1,7 +1,7 @@
 Tag: public-upstream-keys-in-multiple-locations
 Severity: wishlist
 Certainty: certain
-Check: upstream-signing-key
+Check: debian/upstream/signing-key
 Ref: uscan(1)
 Info: The source package contains public upstream signing keys
  (or keyrings) in multiple locations. This situation is potentially

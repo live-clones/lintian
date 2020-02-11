@@ -1,4 +1,4 @@
-Check-Script: upstream-signing-key
+Check-Script: debian/upstream/signing-key
 Author: Felix Lechner <felix.lechner@lease-up.com>
 Type: source
 Needs-Info: unpacked
