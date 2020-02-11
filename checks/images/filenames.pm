@@ -1,4 +1,4 @@
-# image-names -- lintian check script -*- perl -*-
+# images/filenames -- lintian check script -*- perl -*-
 
 # Copyright © 2019 Felix Lechner
 #
@@ -18,7 +18,7 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-package Lintian::image_names;
+package Lintian::images::filenames;
 
 use strict;
 use warnings;
