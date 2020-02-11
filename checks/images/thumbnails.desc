@@ -1,4 +1,4 @@
-Check-Script: files/thumbnails
+Check-Script: images/thumbnails
 Author: Christian Schwarz <schwarz@debian.org>
 Abbrev: fil
 Type: binary, udeb
