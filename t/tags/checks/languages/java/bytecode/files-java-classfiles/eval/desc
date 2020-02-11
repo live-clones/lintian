@@ -1,2 +1,2 @@
 Testname: files-java-classfiles
-Check: files/java
+Check: languages/java/bytecode

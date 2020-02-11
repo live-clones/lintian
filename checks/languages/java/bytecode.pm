@@ -1,4 +1,4 @@
-# files/java -- lintian check script -*- perl -*-
+# languages/java/bytecode -- lintian check script -*- perl -*-
 
 # Copyright (C) 1998 Christian Schwarz and Richard Braakman
 #
@@ -18,7 +18,7 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-package Lintian::files::java;
+package Lintian::languages::java::bytecode;
 
 use strict;
 use warnings;
