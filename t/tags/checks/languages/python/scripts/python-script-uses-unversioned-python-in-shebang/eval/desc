@@ -1,2 +1,2 @@
 Testname: python-script-uses-unversioned-python-in-shebang
-Check: languages/python
+Check: languages/python/scripts

@@ -1,0 +1,5 @@
+Check-Script: languages/python/scripts
+Author: Chris Lamb <lamby@debian.org>
+Type: binary, udeb
+Info: This script checks Python-related scripts
+Needs-Info: unpacked, scripts

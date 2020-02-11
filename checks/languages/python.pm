@@ -163,23 +163,6 @@ sub source {
     return;
 }
 
-sub files {
-    my ($self, $file) = @_;
-
-    return
-      unless $file->name =~ m,(usr/)?bin/[^/]+,;
-
-    if ($self->processable->is_script($file->name)) {
-        my $interpreter
-          = $self->processable->scripts->{$file->name}->{interpreter};
-
-        $self->tag('script-uses-unversioned-python-in-shebang', $file)
-          if $interpreter =~ m,^(/usr/bin/)?python$,;
-    }
-
-    return;
-}
-
 sub binary {
     my ($self) = @_;
 
