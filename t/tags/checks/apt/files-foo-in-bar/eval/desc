@@ -1,2 +1,2 @@
 Testname: files-foo-in-bar
-Check: files/apt
+Check: apt
