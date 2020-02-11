@@ -1,2 +1,2 @@
 Testname: files-package-contains-foo
-Check: files/cmake
+Check: build-systems/cmake
