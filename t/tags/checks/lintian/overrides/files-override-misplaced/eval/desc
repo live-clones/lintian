@@ -1,2 +1,2 @@
 Testname: files-override-misplaced
-Check: files/lintian
+Check: lintian/overrides

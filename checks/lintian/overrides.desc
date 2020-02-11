@@ -1,4 +1,4 @@
-Check-Script: files/lintian
+Check-Script: lintian/overrides
 Author: Christian Schwarz <schwarz@debian.org>
 Abbrev: fil
 Type: binary, udeb
