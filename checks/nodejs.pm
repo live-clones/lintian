@@ -41,7 +41,7 @@ sub source {
 
     # debian/control check
     my @testsuites
-      = split(m/\s*,\s*/, $processable->source_field('testsuite', ''));
+      = split(m/\s*,\s*/, $processable->source_field('testsuite') // q{});
     if (any { /^autopkgtest-pkg-nodejs$/ } @testsuites) {
         # Check control file exists in sources
         my $filename = 'debian/tests/pkg-js/test';
