@@ -1,6 +1,6 @@
 Tag: bad-permissions-for-etc-emacs-script
 Severity: important
 Certainty: certain
-Check: files/emacs
+Check: emacs
 Info: Files in the <tt>/etc/emacs*</tt> directories should not be marked
  executable.

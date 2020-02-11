@@ -1,2 +1,2 @@
 Testname: files-bad-perm-owner
-Check: files/emacs
+Check: emacs
