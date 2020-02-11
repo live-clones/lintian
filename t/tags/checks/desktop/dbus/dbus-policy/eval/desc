@@ -1,2 +1,2 @@
 Testname: dbus-policy
-Check: dbus
+Check: desktop/dbus

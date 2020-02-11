@@ -1,2 +1,2 @@
 Testname: dbus-services
-Check: dbus
+Check: desktop/dbus

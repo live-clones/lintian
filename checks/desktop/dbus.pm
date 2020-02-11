@@ -1,4 +1,4 @@
-# dbus -- lintian check script, vaguely based on apache2 -*- perl -*-
+# desktop/dbus -- lintian check script, vaguely based on apache2 -*- perl -*-
 #
 # Copyright © 2012 Arno Töll
 # Copyright © 2014 Collabora Ltd.
@@ -19,7 +19,7 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-package Lintian::dbus;
+package Lintian::desktop::dbus;
 
 use strict;
 use warnings;
