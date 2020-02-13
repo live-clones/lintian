@@ -361,7 +361,12 @@ sub parse_dep5 {
         }
     }
 
-    my @shipped = $processable->sorted_orig_index;
+    my @shipped;
+    if($processable->native) {
+        @shipped = $processable->sorted_index;
+    } else {
+        @shipped = $processable->sorted_orig_index;
+    }
 
     my $debian_dir = $processable->index_resolved_path('debian/');
     if ($debian_dir) {
