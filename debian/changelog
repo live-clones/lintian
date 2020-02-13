@@ -1,3 +1,17 @@
+lintian (2.51.0) unstable; urgency=medium
+
+  * Summary of tag changes:
+    + Added:
+      - debian-watch-upstream-component
+
+  [ Peter Pentchev ]
+  * Allow quoted "$@" arguments when checking for no-dh-sequencer.
+
+  [ Xavier Guimard ]
+  * Add debian-watch-upstream-component classification tag.
+
+ -- Chris Lamb <lamby@debian.org>  Mon, 10 Feb 2020 11:53:42 +0000
+
 lintian (2.50.0~bpo9+1) stretch-backports; urgency=medium
 
   * Rebuild for stretch-backports.

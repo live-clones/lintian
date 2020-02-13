@@ -52,7 +52,8 @@ sub source {
     my $plain = qr/\$\@/;
     my $curly = qr/\$\{\@\}/;
     my $parentheses = qr/\$\(\@\)/;
-    my $rule_target = qr/(?:$plain|$curly|$parentheses)/;
+    my $rule_altern = qr/(?:$plain|$curly|$parentheses)/;
+    my $rule_target = qr/(?:$rule_altern|'$rule_altern'|"$rule_altern")/;
 
     $self->tag('no-dh-sequencer')
       unless $contents =~ /^[^:]+:[^ \t]*\n\t+dh[ \t]+$rule_target/m
