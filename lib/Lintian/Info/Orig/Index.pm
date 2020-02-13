@@ -21,6 +21,8 @@ use strict;
 use warnings;
 use autodie;
 
+use Lintian::Index;
+
 use Moo::Role;
 use namespace::clean;
 
@@ -41,6 +43,43 @@ Lintian::Info::Orig::Index provides an interface to collected data about the ups
 
 =over 4
 
+=item saved_orig
+
+An index object for orig.tar.gz.
+
+=item orig
+
+Returns the index for orig.tar.gz.
+
+=cut
+
+has saved_orig => (is => 'rw');
+
+sub orig {
+    my ($self) = @_;
+
+    unless (defined $self->saved_orig) {
+
+        my $load_info = {
+            'index_file' => 'src-orig-index',
+            'index_owner_file' => undef,
+            'fs_root_sub' => undef,
+            # source packages do not have anchored roots as they can be
+            # unpacked anywhere...
+            'has_anchored_root_dir' => 1,
+            'allow_empty' => 1,
+        };
+
+        my $orig = Lintian::Index->new('load_info' => $load_info);
+
+        $orig->basedir($self->groupdir);
+
+        $self->saved_orig($orig);
+    }
+
+    return $self->saved_orig;
+}
+
 =item orig_index (FILE)
 
 Like L</index> except orig_index is based on the "orig tarballs" of
@@ -60,26 +99,7 @@ Needs-Info requirements for using I<orig_index>: src-orig-index
 sub orig_index {
     my ($self, $file) = @_;
 
-    if (my $cache = $self->{'orig_index'}) {
-
-        return $cache->{$file}
-          if exists $cache->{$file};
-
-        return;
-    }
-
-    my $load_info = {
-        'field' => 'orig_index',
-        'index_file' => 'src-orig-index',
-        'index_owner_file' => undef,
-        'fs_root_sub' => undef,
-        # source packages do not have anchored roots as they can be
-        # unpacked anywhere...
-        'has_anchored_root_dir' => 1,
-        'allow_empty' => 1,
-    };
-
-    return $self->_fetch_index_data($load_info, $file);
+    return $self->orig->index($file);
 }
 
 =item sorted_orig_index
@@ -102,13 +122,7 @@ Needs-Info requirements for using I<sorted_orig_index>: L<Same as orig_index|/or
 sub sorted_orig_index {
     my ($self) = @_;
 
-    # orig_index does all our work for us, so call it if
-    # sorted_orig_index has not been created yet.
-
-    $self->orig_index('')
-      unless exists $self->{'sorted_orig_index'};
-
-    return @{ $self->{'sorted_orig_index'} };
+    return $self->orig->sorted_list;
 }
 
 =item orig_index_resolved_path(PATH)
@@ -130,7 +144,7 @@ Needs-Info requirements for using I<orig_index_resolved_path>: L<Same as orig_in
 sub orig_index_resolved_path {
     my ($self, $path) = @_;
 
-    return $self->orig_index('')->resolve_path($path);
+    return $self->orig->index->resolve_path($path);
 }
 
 =back

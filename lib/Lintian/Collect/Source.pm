@@ -28,6 +28,7 @@ use Path::Tiny;
 use Try::Tiny;
 
 use Lintian::Deb822Parser qw(read_dpkg_control);
+use Lintian::Index;
 use Lintian::Inspect::Changelog::Version;
 use Lintian::Relation;
 use Lintian::Util
@@ -460,45 +461,45 @@ sub relation_noarch {
     return $result;
 }
 
-=item debfiles ([FILE])
+=item patched
 
-B<This method is deprecated>.  Consider using
-L<index_resolved_path(PATH)|Lintian::Info::Package/index_resolved_path(PATH)>
-instead, which returns L<Lintian::Path> objects.
+Returns a index object representing a patched source tree.
 
-Returns the path to FILE in the debian dir of the extracted source
-package.  FILE must be relative to the root of the debian dir and
-should be without leading slash (and without "./").  If FILE is
-not in the debian dir, it returns the path to a non-existent file
-entry.
+=item saved_patched
 
-It is not permitted for FILE to be C<undef>.  If the "root" dir is
-desired either invoke this method without any arguments at all or use
-the empty string.
-
-The caveats of L<unpacked|Lintian::Info::Package/unpacked ([FILE])>
-also apply to this method.
-
-Needs-Info requirements for using I<debfiles>: debfiles
+An index object for a patched source tree.
 
 =cut
 
-sub debfiles {
-    ## no critic (Subroutines::RequireArgUnpacking)
-    # - see L::Collect::unpacked for why
-    my $self = shift(@_);
-    my $f = $_[0] // '';
-    if (defined($_[0]) && blessed($_[0])) {
-        croak('debfiles does not accept blessed objects');
-    }
-    warnings::warnif(
-        'deprecated',
-        '[deprecated] The debfiles method is deprecated.  '
-          . "Consider using \$info->index_resolved_path(\"debian/$f\") instead."
-          . '  Called' # warnif appends " at <...>"
-    );
+has saved_patched => (is => 'rw');
 
-    return $self->_fetch_extracted_dir('debfiles', 'debfiles', @_);
+sub patched {
+    my ($self) = @_;
+
+    unless (defined $self->saved_patched) {
+
+        my $load_info = {
+            'index_file' => 'index',
+            'index_owner_file' => undef,
+            'fs_root_sub' => sub {
+                return $self->_fetch_extracted_dir('unpacked', 'unpacked', @_);
+            },
+            # source packages do not have anchored roots as they can be
+            # unpacked anywhere...
+            'has_anchored_root_dir' => 0,
+            'file_info_sub' => sub {
+                return $self->file_info(@_);
+            },
+        };
+
+        my $patched = Lintian::Index->new('load_info' => $load_info);
+
+        $patched->basedir($self->groupdir);
+
+        $self->saved_patched($patched);
+    }
+
+    return $self->saved_patched;
 }
 
 =item index (FILE)
@@ -547,22 +548,50 @@ Needs-Info requirements for using I<index>: unpacked
 
 sub index {
     my ($self, $file) = @_;
-    if (my $cache = $self->{'index'}) {
-        return $cache->{$file}
-          if exists($cache->{$file});
-        return;
-    }
-    my $load_info = {
-        'field' => 'index',
-        'index_file' => 'index',
-        'index_owner_file' => undef,
-        'fs_root_sub' => 'unpacked',
-        # source packages do not have anchored roots as they can be
-        # unpacked anywhere...
-        'has_anchored_root_dir' => 0,
-        'file_info_sub' => 'file_info',
-    };
-    return $self->_fetch_index_data($load_info, $file);
+
+    return $self->patched->index($file);
+}
+
+=item sorted_index
+
+Returns a sorted array of file names listed in the package.  The names
+will not have a leading slash (or "./") and can be passed to
+L</unpacked ([FILE])> or L</index (FILE)> as is.
+
+The array will not contain the entry for the "root" of the package.
+
+NB: For source packages, please see the
+L<"index"-caveat|Lintian::Collect::Source/index (FILE)>.
+
+Needs-Info requirements for using I<sorted_index>: L<Same as index|/index (FILE)>
+
+=cut
+
+sub sorted_index {
+    my ($self) = @_;
+
+    return $self->patched->sorted_list;
+}
+
+=item index_resolved_path(PATH)
+
+Resolve PATH (relative to the root of the package) and return the
+L<entry|Lintian::Path> denoting the resolved path.
+
+The resolution is done using
+L<resolve_path|Lintian::Path/resolve_path([PATH])>.
+
+NB: For source packages, please see the
+L<"index"-caveat|Lintian::Collect::Source/index (FILE)>.
+
+Needs-Info requirements for using I<index_resolved_path>: L<Same as index|/index (FILE)>
+
+=cut
+
+sub index_resolved_path {
+    my ($self, $path) = @_;
+
+    return $self->patched->index->resolve_path($path);
 }
 
 =item is_non_free
