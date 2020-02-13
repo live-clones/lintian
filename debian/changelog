@@ -1,8 +1,22 @@
-lintian (2.51.0+git) UNRELEASED; urgency=medium
+lintian (2.52.0) unstable; urgency=medium
 
-  * WIP (generated upon release).
+  * Summary of tag changes:
+    + Added:
+      - nodejs-module
+      - nodejs-module-installed-in-bad-directory
+      - symlink-target-in-build-tree
+      - symlink-target-in-tmp
 
- -- Chris Lamb <lamby@debian.org>  Mon, 10 Feb 2020 12:19:54 +0000
+  [ Xavier Guimard ]
+  * Add classification tags for nodejs modules in order to check if modules
+    are installed in a directory with another name.
+
+  [ Felix Lechner ]
+  * Suppress inconsistent-maintainer on derivatives. (LP: #1862787)
+  * Differentiate dir-or-file-in-build-tree and dir-or-file-in-tmp
+    into the symlink-target-in-build-tree symlink-target-in-tmp tags.
+
+ -- Chris Lamb <lamby@debian.org>  Thu, 13 Feb 2020 12:18:18 +0000
 
 lintian (2.51.0) unstable; urgency=medium
 
