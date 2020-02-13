@@ -59,11 +59,16 @@ sub source {
 
         # Ensure all files referenced in debian/tests/pkg-js/files exist
         $path = $processable->index_resolved_path('debian/tests/pkg-js/files');
-        if ($path) {
-            my @list = map { chomp; s/^\s+(.*?)\s+$/$1/; $_ }
-              grep { /\w/ } split /\n/, $path->file_contents;
-            $self->path_exists($_) foreach (@list);
-        }
+
+        my @files;
+        @files = path($path->fs_path)->lines
+          if defined $path;
+
+        # trim leading and trailing whitespace
+        s/^\s+|\s+$//g for @files;
+
+        my @notfound = grep { !$self->path_exists($_) } @files;
+        $self->tag('pkg-js-autopkgtest-file-does-not-exist', $_) for @notfound;
     }
     # debian/rules check
     my $droot = $processable->index_resolved_path('debian/') or return;
@@ -178,7 +183,8 @@ sub path_exists {
               );
 
             # Stop searching: at least one element found
-            return unless @elem;
+            return 1
+              unless @elem;
 
             # If this is the last element of path, store current elements
             my $pwd = $dir[$i];
@@ -189,8 +195,7 @@ sub path_exists {
     }
 
     # No element found
-    $self->tag('pkg-js-autopkgtest-file-does-not-exist', $expr);
-    return;
+    return 0;
 }
 
 1;
