@@ -29,16 +29,18 @@ use strict;
 use warnings;
 use autodie;
 
+use BerkeleyDB;
 use Cwd();
 use IO::Async::Loop;
 use IO::Async::Process;
+use MLDBM qw(BerkeleyDB::Btree Storable);
 use Path::Tiny;
 
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
 
 use Lintian::Collect::Dispatcher qw(create_info);
 use Lintian::Processable::Source;
-use Lintian::Util qw(internal_error sort_file_index gzip);
+use Lintian::Util qw(internal_error);
 
 use constant EMPTY => q{};
 use constant SPACE => q{ };
@@ -50,75 +52,16 @@ sub collect {
 
     my $info = create_info($pkg, $type, $dir);
 
-    my $origpath = "$dir/src-orig-index.gz";
-    unlink($origpath)
-      if -f $origpath;
+    my $dbpath = "$dir/src-orig-index.db";
+    unlink($dbpath)
+      if -f $dbpath;
 
-    # for native packages, just link to regular index
-    if ($info->native) {
-        link("$dir/index.gz", $origpath);
-        return;
-    }
+    # do nothing for native packages
+    return
+      if $info->native;
 
-    index_orig($pkg, $dir, $info);
-
-    return;
-}
-
-# returns all (orig) tarballs.
-sub gather_tarballs {
-    my ($pkg, $dir, $info) = @_;
-    my $file = Cwd::realpath("$dir/dsc");
-    my $version;
-    my @tarballs;
-    my $base;
-    my $baserev;
-
-    internal_error(
-        "Cannot resolve \"dsc\" link for $pkg or it does not point to a file.")
-      unless $file and -e $file;
-
-    # Use Lintian::Processable::Package to determine source and
-    # version as it handles missing fields for us to some extent.
-
-    my $proc = Lintian::Processable::Source->new;
-    $proc->init($file);
-
-    #  Version handling is based on Dpkg::Version::parseversion.
-    $version = $proc->source_version;
-    if ($version =~ /:/) {
-        $version =~ s/^(?:\d+):(.+)/$1/
-          or internal_error("bad version number \"$version\"");
-    }
-
-    $baserev = $proc->source . '_' . $version;
-    $version =~ s/(.+)-(?:.*)$/$1/;
-    $base = $proc->source . '_' . $version;
-
-    for my $fs (split /\n/, $info->field('files', '')) {
-        $fs =~ s/^\s*//;
-        next if $fs eq '';
-        my @t = split /\s+/o, $fs;
-        next if $t[2] =~ m,/,;
-        # Look for $pkg_$version.orig(-$comp)?.tar.$ext (non-native)
-        #       or $pkg_$version.tar.$ext (native)
-        #  - This deliberately does not look for the debian packaging
-        #    even when this would be a tarball.
-        if ($t[2]
-            =~ /^(?:\Q$base\E\.orig(?:-(.*))?|\Q$baserev\E)\.tar\.(?:gz|bz2|lzma|xz)$/
-        ) {
-            push @tarballs, [$t[2], $1//''];
-        }
-    }
-    internal_error('could not find the source tarball') unless @tarballs;
-
-    return @tarballs;
-}
-
-# Creates an index of the orig tarballs the source package
-sub index_orig {
-    my ($pkg, $dir, $info) = @_;
     my @tarballs = gather_tarballs($pkg, $dir, $info);
+
     my @result;
     foreach my $tardata (@tarballs) {
         my ($tarball, $compname) = @$tardata;
@@ -236,14 +179,93 @@ sub index_orig {
         push @result, @index;
     }
 
-    # we have the file names, write sorted to the index
-    my $unsorted = join(EMPTY, @result);
+    tie my %h, 'MLDBM',
+      -Filename => $dbpath,
+      -Flags    => DB_CREATE
+      or die "Cannot open file $dbpath: $! $BerkeleyDB::Error\n";
 
-    # sorts according to LC_ALL=C
-    my $sorted = sort_file_index($unsorted);
-    gzip($sorted, "$dir/src-orig-index.gz");
+    my %all;
+
+    for my $line (@result) {
+        chomp $line;
+
+        my %entry;
+        my $name;
+
+        # Parse line from output of "tar -tvf" allowing for spaces within the
+        # ownership field whilst still allowing spaces in filenames. (#895175)
+        #
+        # Note this cannot ever be 100% reliable as the filename might contain
+        # "fake" dates.
+        (
+            $entry{perm}, $entry{ownership}, $entry{size}, $entry{date},
+            $entry{time}, $name
+          )
+          = ($line
+              =~ /^(.{10}) (.*?) (\d+) ([-\d]{10}) (?:([:\d]{5,8}(?:.\d+)?)[ ]+)?(.*)$/
+          );
+
+        die "cannot parse tar output for $dbpath: $line"
+          unless defined $entry{perm};
+
+        $all{$name} = \%entry;
+    }
+
+    $h{$_} = $all{$_} for keys %all;
+
+    untie %h;
 
     return;
+}
+
+# returns all (orig) tarballs.
+sub gather_tarballs {
+    my ($pkg, $dir, $info) = @_;
+    my $file = Cwd::realpath("$dir/dsc");
+    my $version;
+    my @tarballs;
+    my $base;
+    my $baserev;
+
+    internal_error(
+        "Cannot resolve \"dsc\" link for $pkg or it does not point to a file.")
+      unless $file and -e $file;
+
+    # Use Lintian::Processable::Package to determine source and
+    # version as it handles missing fields for us to some extent.
+
+    my $proc = Lintian::Processable::Source->new;
+    $proc->init($file);
+
+    #  Version handling is based on Dpkg::Version::parseversion.
+    $version = $proc->source_version;
+    if ($version =~ /:/) {
+        $version =~ s/^(?:\d+):(.+)/$1/
+          or internal_error("bad version number \"$version\"");
+    }
+
+    $baserev = $proc->source . '_' . $version;
+    $version =~ s/(.+)-(?:.*)$/$1/;
+    $base = $proc->source . '_' . $version;
+
+    for my $fs (split /\n/, $info->field('files', '')) {
+        $fs =~ s/^\s*//;
+        next if $fs eq '';
+        my @t = split /\s+/o, $fs;
+        next if $t[2] =~ m,/,;
+        # Look for $pkg_$version.orig(-$comp)?.tar.$ext (non-native)
+        #       or $pkg_$version.tar.$ext (native)
+        #  - This deliberately does not look for the debian packaging
+        #    even when this would be a tarball.
+        if ($t[2]
+            =~ /^(?:\Q$base\E\.orig(?:-(.*))?|\Q$baserev\E)\.tar\.(?:gz|bz2|lzma|xz)$/
+        ) {
+            push @tarballs, [$t[2], $1//''];
+        }
+    }
+    internal_error('could not find the source tarball') unless @tarballs;
+
+    return @tarballs;
 }
 
 collect(@ARGV) unless caller;

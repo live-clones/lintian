@@ -28,13 +28,15 @@ use strict;
 use warnings;
 use autodie;
 
+use BerkeleyDB;
 use IO::Async::Loop;
 use IO::Async::Process;
+use MLDBM qw(BerkeleyDB::Btree Storable);
 use Path::Tiny;
 
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
 
-use Lintian::Util qw(sort_file_index gzip safe_qx);
+use Lintian::Util qw(safe_qx);
 
 # read up to 40kB at a time.  this happens to be 4096 "tar records"
 # (with a block-size of 512 and a block factor of 20, which appear to
@@ -54,11 +56,11 @@ sub collect {
     path($controldir)->remove_tree
       if -d $controldir;
 
-    my $zipindexpath = "$dir/control-index.gz";
+    my $dbpath = "$dir/control-index.db";
     my $controlerrorspath = "$dir/control-errors";
     my $indexerrorspath = "$dir/control-index-errors";
 
-    for my $path ($zipindexpath, $controlerrorspath, $indexerrorspath) {
+    for my $path ($dbpath, $controlerrorspath, $indexerrorspath) {
         unlink($path) if -e $path;
     }
 
@@ -186,9 +188,43 @@ sub collect {
     path($indexerrorspath)->append($indexerror)
       if length $indexerror;
 
-    # sorts according to LC_ALL=C
-    $index = sort_file_index($index // EMPTY);
-    gzip($index, $zipindexpath);
+    my @lines = split(/\n/, $index);
+
+    tie my %h, 'MLDBM',
+      -Filename => $dbpath,
+      -Flags    => DB_CREATE
+      or die "Cannot open file $dbpath: $! $BerkeleyDB::Error\n";
+
+    my %all;
+
+    for my $line (@lines) {
+        chomp $line;
+
+        my %entry;
+        my $name;
+
+        # Parse line from output of "tar -tvf" allowing for spaces within the
+        # ownership field whilst still allowing spaces in filenames. (#895175)
+        #
+        # Note this cannot ever be 100% reliable as the filename might contain
+        # "fake" dates.
+        (
+            $entry{perm}, $entry{ownership}, $entry{size}, $entry{date},
+            $entry{time}, $name
+          )
+          = ($line
+              =~ /^(.{10}) (.*?) (\d+) ([-\d]{10}) (?:([:\d]{5,8}(?:.\d+)?)[ ]+)?(.*)$/
+          );
+
+        die "cannot parse tar output for $dbpath: $line"
+          unless defined $entry{perm};
+
+        $all{$name} = \%entry;
+    }
+
+    $h{$_} = $all{$_} for keys %all;
+
+    untie %h;
 
     # fix permissions
     safe_qx('chmod', '-R', 'u+rX,o-w', $controldir);

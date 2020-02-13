@@ -29,8 +29,10 @@ use strict;
 use warnings;
 use autodie;
 
+use BerkeleyDB;
 use IO::Async::Loop;
 use IO::Async::Process;
+use MLDBM qw(BerkeleyDB::Btree Storable);
 use Path::Tiny;
 
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
@@ -47,6 +49,7 @@ use constant READ_SIZE => 4096 * 1024 * 10;
 use constant SPACE => q{ };
 use constant EMPTY => q{};
 use constant COLON => q{:};
+use constant SLASH => q{/};
 use constant NEWLINE => qq{\n};
 
 sub collect {
@@ -56,7 +59,11 @@ sub collect {
     path($unpackedpath)->remove_tree
       if -d $unpackedpath;
 
-    for my $file (qw(index index.gz index-errors unpacked-errors)) {
+    my $dbpath = "$dir/index.db";
+    unlink($dbpath)
+      if -e $dbpath;
+
+    for my $file (qw(index-errors unpacked-errors)) {
         unlink("$dir/$file") if -e "$dir/$file";
     }
 
@@ -126,13 +133,41 @@ sub collect {
 
         my @unsorted = split(/\0/, $output);
 
-        # sorts according to LC_ALL=C
-        my @sorted
-          = sort { (split(SPACE, $a))[5] cmp(split(SPACE, $b))[5] } @unsorted;
+        tie my %h, 'MLDBM',
+          -Filename => $dbpath,
+          -Flags    => DB_CREATE
+          or die "Cannot open file $dbpath: $! $BerkeleyDB::Error\n";
 
-        my $uncompressed;
-        $uncompressed .= $_ . NEWLINE for @sorted;
-        gzip($uncompressed, "$dir/index.gz");
+        my %all;
+
+        for my $line (@unsorted) {
+            chomp $line;
+
+            my %entry;
+            my $name;
+
+         # Parse line from output of "tar -tvf" allowing for spaces within the
+         # ownership field whilst still allowing spaces in filenames. (#895175)
+         #
+         # Note this cannot ever be 100% reliable as the filename might contain
+         # "fake" dates.
+            (
+                $entry{perm}, $entry{ownership}, $entry{size}, $entry{date},
+                $entry{time}, $name
+              )
+              = ($line
+                  =~ /^(.{10}) (.*?) (\d+) ([-\d]{10}) (?:([:\d]{5,8}(?:.\d+)?)[ ]+)?(.*)$/
+              );
+
+            die "cannot parse tar output for $dbpath: $line"
+              unless defined $entry{perm};
+
+            $all{$name} = \%entry;
+        }
+
+        $h{$_} = $all{$_} for keys %all;
+
+        untie %h;
 
         # fix permissions
         safe_qx('chmod', '-R', 'u+rwX,o+rX,o-w', "$dir/unpacked");
@@ -290,13 +325,65 @@ sub collect {
         path("$dir/unpacked-errors")->append($extracterror // EMPTY);
         path("$dir/index-errors")->append($namederror // EMPTY);
 
-        # sorts according to LC_ALL=C
-        $named = sort_file_index($named // EMPTY);
-        gzip($named, "$dir/index.gz");
+        my @named_owner = split(/\n/, $named);
+        my @numeric_owner = split(/\n/, $numeric);
 
-        # sorts according to LC_ALL=C
-        $numeric = sort_file_index($numeric // EMPTY);
-        gzip($numeric, "$dir/index-owner-id.gz");
+        tie my %h, 'MLDBM',
+          -Filename => $dbpath,
+          -Flags    => DB_CREATE
+          or die "Cannot open file $dbpath: $! $BerkeleyDB::Error\n";
+
+        my %all;
+
+        for my $position (0..$#named_owner) {
+
+            my $line = $named_owner[$position];
+            chomp $line;
+
+            my %entry;
+            my $name;
+
+         # Parse line from output of "tar -tvf" allowing for spaces within the
+         # ownership field whilst still allowing spaces in filenames. (#895175)
+         #
+         # Note this cannot ever be 100% reliable as the filename might contain
+         # "fake" dates.
+            (
+                $entry{perm}, $entry{ownership}, $entry{size}, $entry{date},
+                $entry{time}, $name
+              )
+              = ($line
+                  =~ /^(.{10}) (.*?) (\d+) ([-\d]{10}) (?:([:\d]{5,8}(?:.\d+)?)[ ]+)?(.*)$/
+              );
+
+            die "cannot parse tar output for $dbpath: $line"
+              unless defined $entry{perm};
+
+            # get numerical owners, too
+            my $numericline = $numeric_owner[$position];
+            chomp $numericline;
+            die 'cannot read index with numerical ownership'
+              unless defined $numericline;
+
+            my ($owner_id, $name_chk) = (split(SPACE, $numericline, 6))[1, 5];
+            die "mismatching contents of index files: $name $name_chk"
+              if $name ne $name_chk;
+
+            my ($uid, $gid) = split(SLASH, $owner_id, 2);
+
+            # Memory-optimise for 0/0.  Perl has an insane overhead
+            # for each field, so this is sadly worth it!
+            $entry{uid} = int($uid)
+              if $uid;
+            $entry{gid} = int($gid)
+              if $gid;
+
+            $all{$name} = \%entry;
+        }
+
+        $h{$_} = $all{$_} for keys %all;
+
+        untie %h;
 
         # remove error files if empty
         unlink("$dir/index-errors") if -z "$dir/index-errors";
