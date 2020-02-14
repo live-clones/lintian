@@ -22,6 +22,9 @@ use warnings;
 use autodie;
 
 use Carp;
+use BerkeleyDB;
+use MLDBM qw(BerkeleyDB::Btree Storable);
+use Path::Tiny;
 
 use Lintian::Path;
 use Lintian::Path::FSInfo;
@@ -180,90 +183,86 @@ sub sorted_list {
 sub _fetch_index_data {
     my ($self, $load_info) = @_;
 
-    my (%idxh, %children, $num_idx, %rhlinks, @sorted, @check_dirs);
-    my $basedir = $self->basedir;
-    my $index = $load_info->{'index_file'};
-    my $indexown = $load_info->{'index_owner_file'};
+    my $index = $load_info->{'index_file'} // EMPTY;
     my $allow_empty = $load_info->{'allow_empty'} // 0;
-    my $idx = open_gz("$basedir/${index}.gz");
+    my $has_anchored_root_dir = $load_info->{'has_anchored_root_dir'} // 0;
+    my $fs_root_sub = $load_info->{'fs_root_sub'};
+    my $file_info_sub = $load_info->{'file_info_sub'};
+
     my $fs_info = Lintian::Path::FSInfo->new(
-        '_collect_path_sub' => $load_info->{'fs_root_sub'},
-        '_collect_file_info_sub' => $load_info->{'file_info_sub'},
-        'has_anchored_root_dir' => $load_info->{'has_anchored_root_dir'},
+        '_collect_path_sub' => $fs_root_sub,
+        '_collect_file_info_sub' => $file_info_sub,
+        'has_anchored_root_dir' => $has_anchored_root_dir,
     );
 
-    if ($indexown) {
-        $num_idx = open_gz("$basedir/${indexown}.gz");
-    }
-    while (my $line = <$idx>) {
-        chomp($line);
+    my %all;
 
-        my (%file, $perm, $operm, $ownership, $name, $raw_type, $size);
-        my ($date, $time);
+    my $dbpath = path($self->basedir)->child("$index.db")->stringify;
 
-        # Parse line from output of "tar -tvf" allowing for spaces within the
-        # ownership field whilst still allowing spaces in filenames. (#895175)
-        #
-        # Note this cannot ever be 100% reliable as the filename might contain
-        # "fake" dates.
-        ($perm,$ownership,$size,$date,$time,$name)
-          = $line
-          =~ /^(.{10}) (.*?) (\d+) ([-\d]{10}) (?:([:\d]{5,8}(?:.\d+)?)[ ]+)?(.*)$/;
-        croak "cannot parse tar output from $index: \"$line\""
-          unless defined $perm;
+    return {}
+      unless -f $dbpath;
+
+    tie my %h, 'MLDBM',-Filename => $dbpath
+      or die "Cannot open file $dbpath: $! $BerkeleyDB::Error\n";
+
+    $all{$_} = $h{$_} for keys %h;
+
+    untie %h;
+
+    my (%idxh, %children, %rhlinks, @check_dirs);
+
+    my @names = keys %all;
+    for my $name (@names) {
+
+        my %entry = %{$all{$name}};
+
+        my $perm = $entry{perm};
+        my $ownership = $entry{ownership};
+        my $size = $entry{size};
+        my $date = $entry{date};
+        my $time = $entry{time};
+        my $uid = $entry{uid};
+        my $gid = $entry{gid};
+
+        my (%file, $operm, $raw_type);
+
         $ownership =~ s/\s+$//;
         $time //= '00:00';
 
-        $file{'date_time'} = "${date} ${time}";
+        $file{'date_time'} = "$date $time";
         $raw_type = substr($perm, 0, 1);
 
         # Only set size if it is non-zero and even then, only for
         # regular files.  When we set it, insist on it being an int.
         # This makes perl store it slightly more efficient.
-        $file{'size'} = int($size) if $size and $raw_type eq '-';
+        $file{'size'} = int($size)
+          if $size and $raw_type eq '-';
 
         # This may appear to be obscene, but the call overhead of
         # perm2oct is measurable on (e.g.) chromium-browser.  With
         # the cache we go from ~1.5s to ~0.1s.
         #   Of the 115363 paths here, only 306 had an "uncached"
         # permission string (chromium-browser/32.0.1700.123-2).
-        if (exists($PERM_CACHE{$perm})) {
-            $operm = $PERM_CACHE{$perm};
-        } else {
-            $operm = perm2oct($perm);
-        }
+        $operm = $PERM_CACHE{$perm};
+        $operm = perm2oct($perm)
+          unless defined $operm;
+
         $file{'_path_info'} = $operm
           | ($FILE_CODE2LPATH_TYPE{$raw_type} // Lintian::Path::TYPE_OTHER);
 
-        if ($num_idx) {
-            # If we have a "numeric owner" index file, read that as well
-            my $numeric = <$num_idx>;
-            chomp $numeric;
-            croak 'cannot read index file $indexown' unless defined $numeric;
-            my ($owner_id, $name_chk) = (split(' ', $numeric, 6))[1, 5];
-            croak "mismatching contents of index files: $name $name_chk"
-              if $name ne $name_chk;
-            my ($uid, $gid) = split('/', $owner_id, 2);
-            # Memory-optimise for 0/0.  Perl has an insane overhead
-            # for each field, so this is sadly worth it!
-            if ($uid) {
-                $file{'uid'} = int($uid);
-            }
-            if ($gid) {
-                $file{'gid'} = int($gid);
-            }
-        }
+        $file{'uid'} = $uid
+          if $uid;
+        $file{'gid'} = $gid
+          if $gid;
 
         my ($owner, $group) = split('/', $ownership, 2);
 
         # Memory-optimise for root/root.  Perl has an insane overhead
         # for each field, so this is sadly worth it!
-        if ($owner ne 'root' and $owner ne '0') {
-            $file{'owner'} = $owner;
-        }
-        if ($group ne 'root' and $group ne '0') {
-            $file{'group'} = $group;
-        }
+        $file{'owner'} = $owner
+          if $owner ne 'root' and $owner ne '0';
+        $file{'group'} = $group
+          if $group ne 'root' and $group ne '0';
 
         if ($name =~ s/ link to (.*)//) {
             my $target = dequote_name($1);
@@ -277,7 +276,8 @@ sub _fetch_index_data {
         } elsif ($raw_type eq 'd') {
             # Ensure directory names always end with  / or we will add them
             # multiple times to our index.
-            $name .= '/' if substr($name, -1) ne '/';
+            $name .= '/'
+              if substr($name, -1) ne '/';
         }
         # We store the name here, but will replace it later.  The
         # reason for storing it now is that we may need it during the
@@ -287,95 +287,102 @@ sub _fetch_index_data {
         $idxh{$name} = \%file;
 
         # Record children
-        $children{$name} ||= [] if $raw_type eq 'd';
+        $children{$name} ||= []
+          if $raw_type eq 'd';
         my ($parent) = ($name =~ m,^(.+/)?(?:[^/]+/?)$,);
-        $parent = '' unless defined $parent;
+        $parent //= EMPTY;
 
-        $children{$parent} = [] unless exists $children{$parent};
+        $children{$parent} = []
+          unless exists $children{$parent};
 
         # coll/unpacked sorts its output, so the parent dir ought to
         # have been created before this entry.  However, it might not
         # be if an intermediate directory is missing.  NB: This
         # often triggers for the root directory, which is normal.
-        push(@check_dirs, $parent) if not exists($idxh{$parent});
+        push(@check_dirs, $parent)
+          unless exists $idxh{$parent};
 
         # Ensure the "root" is not its own child.  It is not really helpful
         # from an analysis PoV and it creates ref cycles  (and by extension
         # leaks like #695866).
-        push @{ $children{$parent} }, $name unless $parent eq $name;
+        push(@{ $children{$parent} }, $name)
+          unless $parent eq $name;
     }
-
-    close($idx);
-    close($num_idx) if $num_idx;
 
     while (defined(my $name = pop(@check_dirs))) {
         # check_dirs /can/ contain the same item multiple times.
-        if (!exists($idxh{$name})) {
+        if (!exists $idxh{$name}) {
             my %cpy = %INDEX_FAUX_DIR_TEMPLATE;
             my ($parent) = ($name =~ m,^(.+/)?(?:[^/]+/?)$,);
             $parent //= '';
             $cpy{'name'} = $name;
             $idxh{$name} = \%cpy;
-            $children{$parent} = [] unless exists $children{$parent};
-            push @{ $children{$parent} }, $name unless $parent eq $name;
-            push(@check_dirs, $parent) if not exists($idxh{$parent});
+            $children{$parent} = []
+              unless exists $children{$parent};
+            push(@{ $children{$parent} }, $name)
+              unless $parent eq $name;
+            push(@check_dirs, $parent)
+              unless exists $idxh{$parent};
         }
     }
-    if (!$allow_empty && !exists($idxh{''})) {
-        internal_error('The root dir should be present or have been faked');
-    }
-    if (%rhlinks) {
-        foreach my $file (sort keys %rhlinks) {
-            # We remove entries we have fixed up, so check the entry
-            # is still there.
-            next unless exists $rhlinks{$file};
-            my $e = $idxh{$file};
-            my @check = ($e->{name});
-            my (%candidates, @sorted, $target);
-            while (my $current = pop @check) {
-                $candidates{$current} = 1;
-                foreach my $rdep (@{$rhlinks{$current}}) {
-                    # There should not be any cycles, but just in case
-                    push @check, $rdep unless $candidates{$rdep};
-                }
-                # Remove links we are fixing
-                delete $rhlinks{$current};
-            }
-            # keys %candidates will be a complete list of hardlinks
-            # that points (in)directly to $file.  Time to normalize
-            # the links.
-            #
-            # Sort in reverse order (allows pop instead of unshift)
-            @sorted = reverse sort keys %candidates;
-            # Our preferred target
-            $target = pop @sorted;
 
-            foreach my $link (@sorted) {
-                next unless exists $idxh{$target};
-                my $le = $idxh{$link};
-                # We may be "demoting" a "real file" to a "hardlink"
-                $le->{'_path_info'}
-                  = ($le->{'_path_info'} & ~Lintian::Path::TYPE_FILE)
-                  | Lintian::Path::TYPE_HARDLINK;
-                $le->{link} = $target;
+    die 'The root dir should be present or have been faked'
+      unless $allow_empty || exists $idxh{''};
+
+    for my $file (sort keys %rhlinks) {
+        # We remove entries we have fixed up, so check the entry
+        # is still there.
+        next
+          unless exists $rhlinks{$file};
+        my $e = $idxh{$file};
+        my @check = ($e->{name});
+        my (%candidates, @sorted, $target);
+        while (my $current = pop @check) {
+            $candidates{$current} = 1;
+            foreach my $rdep (@{$rhlinks{$current}}) {
+                # There should not be any cycles, but just in case
+                push(@check, $rdep)
+                  unless $candidates{$rdep};
             }
-            if (defined($target) and $target ne $e->{name}) {
-                $idxh{$target}{'_path_info'}
-                  = ($idxh{$target}{'_path_info'}
-                      & ~Lintian::Path::TYPE_HARDLINK)
-                  | Lintian::Path::TYPE_FILE;
-                # hardlinks does not have size, so copy that from the original
-                # entry.
-                $idxh{$target}{'size'} = $e->{'size'} if exists($e->{'size'});
-                delete($e->{'size'});
-                delete $idxh{$target}{link};
-            }
+            # Remove links we are fixing
+            delete $rhlinks{$current};
+        }
+        # keys %candidates will be a complete list of hardlinks
+        # that points (in)directly to $file.  Time to normalize
+        # the links.
+        #
+        # Sort in reverse order (allows pop instead of unshift)
+        my @links = reverse sort keys %candidates;
+        # Our preferred target
+        $target = pop @links;
+
+        foreach my $link (@links) {
+            next
+              unless exists $idxh{$target};
+            my $le = $idxh{$link};
+            # We may be "demoting" a "real file" to a "hardlink"
+            $le->{'_path_info'}
+              = ($le->{'_path_info'} & ~Lintian::Path::TYPE_FILE)
+              | Lintian::Path::TYPE_HARDLINK;
+            $le->{link} = $target;
+        }
+        if (defined($target) and $target ne $e->{name}) {
+            $idxh{$target}{'_path_info'}
+              = ($idxh{$target}{'_path_info'}& ~Lintian::Path::TYPE_HARDLINK)
+              | Lintian::Path::TYPE_FILE;
+            # hardlinks does not have size, so copy that from the original
+            # entry.
+            $idxh{$target}{'size'} = $e->{'size'}
+              if exists($e->{'size'});
+            delete($e->{'size'});
+            delete $idxh{$target}{link};
         }
     }
-    @sorted = sort keys %idxh;
-    foreach my $file (reverse @sorted) {
-        # Add them in reverse order - entries in a dir are made
-        # objects before the dir itself.
+
+    # Add them in reverse order - entries in a dir are made
+    # objects before the dir itself.
+    my @sorted = reverse sort keys %idxh;
+    foreach my $file (@sorted) {
         my $entry = $idxh{$file};
         if ($entry->{'_path_info'} & Lintian::Path::TYPE_DIR) {
             my (%child_table, @sorted_children);

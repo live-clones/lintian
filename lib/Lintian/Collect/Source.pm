@@ -480,7 +480,6 @@ sub patched {
 
         my $load_info = {
             'index_file' => 'index',
-            'index_owner_file' => undef,
             'fs_root_sub' => sub {
                 return $self->_fetch_extracted_dir('unpacked', 'unpacked', @_);
             },

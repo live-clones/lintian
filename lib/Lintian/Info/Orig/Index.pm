@@ -62,8 +62,6 @@ sub orig {
 
         my $load_info = {
             'index_file' => 'src-orig-index',
-            'index_owner_file' => undef,
-            'fs_root_sub' => undef,
             # source packages do not have anchored roots as they can be
             # unpacked anywhere...
             'has_anchored_root_dir' => 1,
