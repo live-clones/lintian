@@ -119,39 +119,58 @@ sub files {
     return
       if $self->package =~ /-dbg$/;
 
+    # Warn if a file is installed in old nodejs root dir
     $self->tag('nodejs-module-installed-in-usr-lib', $file->name)
-      if $file->name =~ m#usr/lib/nodejs/.*#
-      && $file->is_file;
+      if $file->name =~ m#usr/lib/nodejs/.*#;
 
+    # Warn if package is not installed in a subdirectory of nodejs root
+    # directories
     $self->tag('node-package-install-in-nodejs-rootdir', $file->name)
       if $file->name
-      =~ m#usr/(?:share|lib(?:/[^/]+)?)/nodejs/(?:package\.json|[^/]*\.js)$#
-      && $file->is_file;
+      =~ m#usr/(?:share|lib(?:/[^/]+)?)/nodejs/(?:package\.json|[^/]*\.js)$#;
 
-    if($file->name
-           =~ m#usr/(?:share|lib(?:/[^/]+)?)/nodejs/([^/]+)(.*/)package\.json$#
-        && $file->is_file
-        && $file->is_open_ok) {
+    # Now we have to open package.json
+    return unless $file->is_open_ok;
 
-        my $dirname = $1; # directory in /**/nodejs
-        my $subpath = $2; # subpath in /**/nodejs/module/ (node_modules/foo)
+    # Look only nodejs package.json files
+    return
+      unless $file->name
+      =~ m#usr/(?:share|lib(?:/[^/]+)?)/nodejs/([^/]+)(.*/)package\.json$#;
 
-        my $content = path($file->fs_path)->slurp;
+    my $declared = $self->package;
+    my $processable = $self->processable;
+    my $version = $processable->field('version');
+    $declared .= "( = $version)" if defined $version;
+    $version //= '0-1';
+    my $provides
+      = Lintian::Relation->and($processable->relation('provides'), $declared);
 
-        my $pac;
-        eval {$pac = decode_json($content);};
-        if(not $@ and length $pac->{name}) {
+    my $dirname = $1; # directory in /**/nodejs
+    my $subpath = $2; # subpath in /**/nodejs/module/ (node_modules/foo)
 
-            # Store node module name & version (classification)
-            $self->tag('nodejs-module', $pac->{name},
-                $pac->{version} // 'undef',
-                $file->name);
-            # Warn if module name is not equal to nodejs directory
-            $self->tag('nodejs-module-installed-in-bad-directory',
-                $file->name, $pac->{name}, $dirname)
-              if ($subpath eq '/')
-              and ($dirname ne $pac->{name});
-        }
+    my $content = path($file->fs_path)->slurp;
+
+    # Look only valid package.json files
+    my $pac;
+    eval {$pac = decode_json($content);};
+    return if $@ or not length $pac->{name};
+
+    # Store node module name & version (classification)
+    $self->tag('nodejs-module', $pac->{name},$pac->{version} // 'undef',
+        $file->name);
+
+    # Warn if module name is not equal to nodejs directory
+    if (($subpath eq '/') and ($dirname ne $pac->{name})) {
+        $self->tag('nodejs-module-installed-in-bad-directory',
+            $file->name, $pac->{name}, $dirname);
+    } else {
+        # Else verify that module is declared at least in Provides: field
+        my $name = 'node-' . $pac->{name};
+        $name =~ s/_/-/g;
+        $name =~ s/\@//g;
+        $self->tag('nodejs-module-not-declared', $name)
+          if $subpath eq '/'
+          and not $provides->implies($name);
     }
     return;
 }
