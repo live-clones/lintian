@@ -22,6 +22,7 @@ use warnings;
 use autodie;
 
 use BerkeleyDB;
+use MLDBM qw(BerkeleyDB::Btree Storable);
 use Path::Tiny;
 
 use Moo::Role;
