@@ -1022,6 +1022,8 @@ Remove initial ./ by default
 
 sub dequote_name {
     my ($name, $slsd) = @_;
+    return
+      unless defined $name;
     $slsd = 1 unless defined $slsd;
     $name =~ s,^\.?/,, if $slsd;
     # Optimise for the case where the filename does not contain
