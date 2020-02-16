@@ -82,7 +82,7 @@ sub control {
 
 =item control_index (FILE)
 
-Returns a L<path object|Lintian::Path> to FILE in the control.tar.gz.
+Returns a L<path object|Lintian::File::Path> to FILE in the control.tar.gz.
 FILE must be relative to the root of the control.tar.gz and must be
 without leading slash (or "./").  If FILE is not in the
 control.tar.gz, it returns C<undef>.
@@ -126,10 +126,10 @@ sub sorted_control_index {
 =item control_index_resolved_path(PATH)
 
 Resolve PATH (relative to the root of the package) and return the
-L<entry|Lintian::Path> denoting the resolved path.
+L<entry|Lintian::File::Path> denoting the resolved path.
 
 The resolution is done using
-L<resolve_path|Lintian::Path/resolve_path([PATH])>.
+L<resolve_path|Lintian::File::Path/resolve_path([PATH])>.
 
 Needs-Info requirements for using I<control_index_resolved_path>: L<Same as control_index|/control_index (FILE)>
 

@@ -26,7 +26,7 @@ use BerkeleyDB;
 use MLDBM qw(BerkeleyDB::Btree Storable);
 use Path::Tiny;
 
-use Lintian::Path;
+use Lintian::File::Path;
 use Lintian::Path::FSInfo;
 use Lintian::Util qw(internal_error open_gz perm2oct dequote_name);
 
@@ -48,13 +48,13 @@ my %PERM_CACHE = map { $_ => perm2oct($_) } (
 );
 
 my %FILE_CODE2LPATH_TYPE = (
-    '-' => Lintian::Path::TYPE_FILE     | Lintian::Path::OPEN_IS_OK,
-    'h' => Lintian::Path::TYPE_HARDLINK | Lintian::Path::OPEN_IS_OK,
-    'd' => Lintian::Path::TYPE_DIR      | Lintian::Path::FS_PATH_IS_OK,
-    'l' => Lintian::Path::TYPE_SYMLINK,
-    'b' => Lintian::Path::TYPE_BLOCK_DEV,
-    'c' => Lintian::Path::TYPE_CHAR_DEV,
-    'p' => Lintian::Path::TYPE_PIPE,
+    '-' => Lintian::File::Path::TYPE_FILE| Lintian::File::Path::OPEN_IS_OK,
+    'h' => Lintian::File::Path::TYPE_HARDLINK| Lintian::File::Path::OPEN_IS_OK,
+    'd' => Lintian::File::Path::TYPE_DIR| Lintian::File::Path::FS_PATH_IS_OK,
+    'l' => Lintian::File::Path::TYPE_SYMLINK,
+    'b' => Lintian::File::Path::TYPE_BLOCK_DEV,
+    'c' => Lintian::File::Path::TYPE_CHAR_DEV,
+    'p' => Lintian::File::Path::TYPE_PIPE,
 );
 
 my %INDEX_FAUX_DIR_TEMPLATE = (
@@ -247,8 +247,8 @@ sub _fetch_index_data {
         $operm = perm2oct($perm)
           unless defined $operm;
 
-        $file{'_path_info'} = $operm
-          | ($FILE_CODE2LPATH_TYPE{$raw_type} // Lintian::Path::TYPE_OTHER);
+        $file{'_path_info'} = $operm| ($FILE_CODE2LPATH_TYPE{$raw_type}
+              // Lintian::File::Path::TYPE_OTHER);
 
         $file{'uid'} = $uid
           if $uid;
@@ -362,14 +362,15 @@ sub _fetch_index_data {
             my $le = $idxh{$link};
             # We may be "demoting" a "real file" to a "hardlink"
             $le->{'_path_info'}
-              = ($le->{'_path_info'} & ~Lintian::Path::TYPE_FILE)
-              | Lintian::Path::TYPE_HARDLINK;
+              = ($le->{'_path_info'} & ~Lintian::File::Path::TYPE_FILE)
+              | Lintian::File::Path::TYPE_HARDLINK;
             $le->{link} = $target;
         }
         if (defined($target) and $target ne $e->{name}) {
             $idxh{$target}{'_path_info'}
-              = ($idxh{$target}{'_path_info'}& ~Lintian::Path::TYPE_HARDLINK)
-              | Lintian::Path::TYPE_FILE;
+              = ($idxh{$target}{'_path_info'}
+                  & ~Lintian::File::Path::TYPE_HARDLINK)
+              | Lintian::File::Path::TYPE_FILE;
             # hardlinks does not have size, so copy that from the original
             # entry.
             $idxh{$target}{'size'} = $e->{'size'}
@@ -384,7 +385,7 @@ sub _fetch_index_data {
     my @sorted = reverse sort keys %idxh;
     foreach my $file (@sorted) {
         my $entry = $idxh{$file};
-        if ($entry->{'_path_info'} & Lintian::Path::TYPE_DIR) {
+        if ($entry->{'_path_info'} & Lintian::File::Path::TYPE_DIR) {
             my (%child_table, @sorted_children);
             for my $cname (sort(@{ $children{$file} })) {
                 my $child = $idxh{$cname};
@@ -401,7 +402,7 @@ sub _fetch_index_data {
         }
         # Insert name here to share the same storage with the hash key
         $entry->{'name'} = $file;
-        $idxh{$file} = Lintian::Path->new($entry);
+        $idxh{$file} = Lintian::File::Path->new($entry);
     }
 
     return \%idxh;

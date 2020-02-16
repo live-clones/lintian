@@ -112,7 +112,7 @@ sub installed {
 
 =item index (FILE)
 
-Returns a L<path object|Lintian::Path> to FILE in the package.  FILE
+Returns a L<path object|Lintian::File::Path> to FILE in the package.  FILE
 must be relative to the root of the unpacked package and must be
 without leading slash (or "./").  If FILE is not in the package, it
 returns C<undef>.  If FILE is supposed to be a directory, it must be
@@ -162,10 +162,10 @@ sub sorted_index {
 =item index_resolved_path(PATH)
 
 Resolve PATH (relative to the root of the package) and return the
-L<entry|Lintian::Path> denoting the resolved path.
+L<entry|Lintian::File::Path> denoting the resolved path.
 
 The resolution is done using
-L<resolve_path|Lintian::Path/resolve_path([PATH])>.
+L<resolve_path|Lintian::File::Path/resolve_path([PATH])>.
 
 NB: For source packages, please see the
 L<"index"-caveat|Lintian::Collect::Source/index (FILE)>.

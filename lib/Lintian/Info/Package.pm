@@ -27,7 +27,7 @@ use Carp qw(croak);
 use Path::Tiny;
 use Scalar::Util qw(blessed);
 
-use Lintian::Path;
+use Lintian::File::Path;
 use Lintian::Path::FSInfo;
 use Lintian::Util
   qw(internal_error open_gz perm2oct normalize_pkg_path dequote_name);
@@ -51,13 +51,13 @@ my %PERM_CACHE = map { $_ => perm2oct($_) } (
 );
 
 my %FILE_CODE2LPATH_TYPE = (
-    '-' => Lintian::Path::TYPE_FILE     | Lintian::Path::OPEN_IS_OK,
-    'h' => Lintian::Path::TYPE_HARDLINK | Lintian::Path::OPEN_IS_OK,
-    'd' => Lintian::Path::TYPE_DIR      | Lintian::Path::FS_PATH_IS_OK,
-    'l' => Lintian::Path::TYPE_SYMLINK,
-    'b' => Lintian::Path::TYPE_BLOCK_DEV,
-    'c' => Lintian::Path::TYPE_CHAR_DEV,
-    'p' => Lintian::Path::TYPE_PIPE,
+    '-' => Lintian::File::Path::TYPE_FILE| Lintian::File::Path::OPEN_IS_OK,
+    'h' => Lintian::File::Path::TYPE_HARDLINK| Lintian::File::Path::OPEN_IS_OK,
+    'd' => Lintian::File::Path::TYPE_DIR| Lintian::File::Path::FS_PATH_IS_OK,
+    'l' => Lintian::File::Path::TYPE_SYMLINK,
+    'b' => Lintian::File::Path::TYPE_BLOCK_DEV,
+    'c' => Lintian::File::Path::TYPE_CHAR_DEV,
+    'p' => Lintian::File::Path::TYPE_PIPE,
 );
 
 my %INDEX_FAUX_DIR_TEMPLATE = (
@@ -112,8 +112,10 @@ sub _fetch_extracted_dir {
         $normalized = 1;
     } else {
         if (ref($file)) {
-            if (!blessed($file) || !$file->isa('Lintian::Path')) {
-                croak('Input file must be a string or a Lintian::Path object');
+            if (!blessed($file) || !$file->isa('Lintian::File::Path')) {
+                croak(
+'Input file must be a string or a Lintian::File::Path object'
+                );
             }
             $filename = $file->name;
             $normalized = 1;

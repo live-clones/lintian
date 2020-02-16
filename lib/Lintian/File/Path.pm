@@ -1,5 +1,5 @@
 # -*- perl -*-
-# Lintian::Path -- Representation of path entry in a package
+# Lintian::File::Path -- Representation of path entry in a package
 
 # Copyright (C) 2011 Niels Thykier
 #
@@ -16,7 +16,7 @@
 # You should have received a copy of the GNU General Public License along with
 # this program.  If not, see <http://www.gnu.org/licenses/>.
 
-package Lintian::Path;
+package Lintian::File::Path;
 
 use strict;
 use warnings;
@@ -66,7 +66,7 @@ use constant SLASH => q{/};
 
 =head1 NAME
 
-Lintian::Path - Lintian representation of a path entry in a package
+Lintian::File::Path - Lintian representation of a path entry in a package
 
 =head1 SYNOPSIS
 
@@ -95,7 +95,7 @@ Lintian::Path - Lintian representation of a path entry in a package
 
 =over 4
 
-=item Lintian::Path->new ($data)
+=item Lintian::File::Path->new ($data)
 
 Internal constructor (used by Lintian::Info::Package).
 
@@ -289,7 +289,7 @@ sub date {
 =item parent_dir
 
 Returns the parent directory entry of this entry as a
-L<Lintian::Path>.
+L<Lintian::File::Path>.
 
 NB: Returns C<undef> for the "root" dir.
 
@@ -342,7 +342,7 @@ happen if a package does not include all intermediate directories.
 
 =cut
 
-Lintian::Path->mk_ro_accessors(qw(name link parent_dir faux));
+Lintian::File::Path->mk_ro_accessors(qw(name link parent_dir faux));
 
 =item operm
 
@@ -361,7 +361,7 @@ sub operm {
 
 =item children([RECURSIVE_MODE])
 
-Returns a list of children (as Lintian::Path objects) of this entry.
+Returns a list of children (as Lintian::File::Path objects) of this entry.
 The list and its contents should not be modified.
 
 The optional RECURSIVE_MODE parameter can be used to control if and
@@ -506,7 +506,7 @@ root dir of the package.
 Only available on "links" (i.e. symlinks or hardlinks).  On non-links
 this will croak.
 
-I<Symlinks only>: If you want the symlink target as a L<Lintian::Path>
+I<Symlinks only>: If you want the symlink target as a L<Lintian::File::Path>
 object, use the L<resolve_path|/resolve_path([PATH])> method with no
 arguments instead.
 
