@@ -2,7 +2,7 @@
 # bin-pkg-control -- lintian collector script
 
 # Copyright © 1998 Christian Schwarz
-# Copyright © 2019 Felix Lechner
+# Copyright © 2020 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -29,10 +29,13 @@ use warnings;
 use autodie;
 
 use BerkeleyDB;
+use Data::ParseBinary;
 use IO::Async::Loop;
 use IO::Async::Process;
+use List::MoreUtils qw(all);
 use MLDBM qw(BerkeleyDB::Btree Storable);
 use Path::Tiny;
+use Text::Balanced qw(extract_delimited);
 
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
 
@@ -47,7 +50,10 @@ use constant READ_SIZE => 4096 * 20 * 512;
 
 use constant EMPTY => q{};
 use constant COLON => q{:};
+use constant DOUBLEQUOTE => q{"};
+use constant BACKSLASH => q{\\};
 use constant NEWLINE => qq{\n};
+use constant NULL => qq{\x00};
 
 sub collect {
     my ($pkg, $type, $dir) = @_;
@@ -127,7 +133,10 @@ sub collect {
     my $index;
     my $indexerror;
     my $indexer = $loop->new_future;
-    my @indexcommand = ('tar', '-stvf', '-');
+    my @indexcommand = (
+        'tar', '--list','--verbose','--utc','--full-time','--quoting-style=c',
+        '--file', '-'
+    );
     my $indexprocess = IO::Async::Process->new(
         command => [@indexcommand],
         stdin => { via => 'pipe_write' },
@@ -190,37 +199,54 @@ sub collect {
 
     my @lines = split(/\n/, $index);
 
+    my $datepattern = qr/\d{4}-\d{2}-\d{2}/;
+    my $timepattern = qr/\d{2}\:\d{2}(?:\:\d{2})?/;
+
+    my $cstyle = CString('tar filename', encoding => 'utf8');
+
+    my %all;
+    for my $line (@lines) {
+
+        chomp $line;
+
+        # allow spaces in ownership and filenames (#895175 and #950589)
+
+        my ($initial, $size, $date, $time, $remainder)
+          = split(/\s+(\d+)\s+($datepattern)\s+($timepattern)\s+/, $line,2);
+
+        my %entry;
+        $entry{size} = $size;
+        $entry{date} = $date;
+        $entry{time} = $time;
+
+        my ($permissions, $ownership) = split(/\s+/, $initial, 2);
+
+        $entry{perm} = $permissions;
+        $entry{ownership} = $ownership;
+
+        # extract quoted file name
+        my $delimited
+          = extract_delimited($remainder, DOUBLEQUOTE, EMPTY, BACKSLASH);
+
+        # drop quotes and add a null terminator
+        my $cstring= substr($delimited, 1, (length $delimited) - 2) . NULL;
+
+        # convert c-style escapes
+        my $name = $cstyle->parse($cstring);
+
+        # strip relative prefix
+        $name =~ s{^\./+}{};
+
+        die "Cannot parse tar output for $dbpath: $line"
+          unless defined $name && all { defined $entry{$_} } keys %entry;
+
+        $all{$name} = \%entry;
+    }
+
     tie my %h, 'MLDBM',
       -Filename => $dbpath,
       -Flags    => DB_CREATE
       or die "Cannot open file $dbpath: $! $BerkeleyDB::Error\n";
-
-    my %all;
-
-    for my $line (@lines) {
-        chomp $line;
-
-        my %entry;
-        my $name;
-
-        # Parse line from output of "tar -tvf" allowing for spaces within the
-        # ownership field whilst still allowing spaces in filenames. (#895175)
-        #
-        # Note this cannot ever be 100% reliable as the filename might contain
-        # "fake" dates.
-        (
-            $entry{perm}, $entry{ownership}, $entry{size}, $entry{date},
-            $entry{time}, $name
-          )
-          = ($line
-              =~ /^(.{10}) (.*?) (\d+) ([-\d]{10}) (?:([:\d]{5,8}(?:.\d+)?)[ ]+)?(.*)$/
-          );
-
-        die "cannot parse tar output for $dbpath: $line"
-          unless defined $entry{perm};
-
-        $all{$name} = \%entry;
-    }
 
     $h{$_} = $all{$_} for keys %all;
 
