@@ -1,7 +1,7 @@
 Tag: macos-ds-store-file-in-package
 Severity: normal
 Certainty: certain
-Check: files
+Check: foreign-operating-systems
 Info: There is a file in the package named <tt>.DS_Store</tt> or
  <tt>.DS_Store.gz</tt>, the file name used by Mac OS X to store folder
  attributes. Such files are generally useless in Debian packages and were

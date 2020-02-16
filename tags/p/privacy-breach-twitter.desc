@@ -1,7 +1,7 @@
 Tag: privacy-breach-twitter
 Severity: serious
 Certainty: possible
-Check: files
+Check: files/privacy-breach
 Info: This package creates a potential privacy breach by
  exchanging data with Twitter at runtime via plugins.
  .

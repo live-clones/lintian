@@ -1,7 +1,7 @@
 Tag: svn-commit-file-in-package
 Severity: normal
 Certainty: certain
-Check: files
+Check: files/vcs
 Info: The package contains an svn-commit(.NNN).tmp file. This file is
  almost certainly a left-over from a failed Subversion commit, and does
  not belong in a Debian package.

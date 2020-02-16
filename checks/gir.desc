@@ -1,5 +1,0 @@
-Check-Script: gir
-Author: Simon McVittie <smcv@debian.org>
-Type: binary, source
-Info: Checks for GObject-Introspection mini-policy compliance
-Needs-Info: unpacked, bin-pkg-control

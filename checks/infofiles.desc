@@ -1,6 +1,0 @@
-Check-Script: infofiles
-Author: Josip Rodin <jrodin@jagor.srce.hr>
-Abbrev: info
-Type: binary
-Needs-Info: unpacked, file-info
-Info: This script checks if a binary package conforms to info document policy.

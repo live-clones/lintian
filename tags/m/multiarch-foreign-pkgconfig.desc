@@ -1,7 +1,7 @@
 Tag: multiarch-foreign-pkgconfig
 Severity: important
 Certainty: certain
-Check: files
+Check: files/multi-arch
 Info: The package is architecture-dependent, ships a pkg-config file in a
  public, architecture-dependent pkg-config search path and is marked
  <tt>Multi-Arch: foreign</tt>. pkg-config will be unable to find this file,

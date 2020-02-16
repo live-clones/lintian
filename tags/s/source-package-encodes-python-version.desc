@@ -1,7 +1,7 @@
 Tag: source-package-encodes-python-version
 Severity: normal
 Certainty: certain
-Check: python
+Check: languages/python
 Info: This source package encodes a Python version in its name such
  as <tt>python2-foo</tt> or <tt>python3-bar</tt>.
  .

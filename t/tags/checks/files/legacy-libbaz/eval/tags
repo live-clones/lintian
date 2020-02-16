@@ -1,4 +1,0 @@
-libbaz2 (binary): symlink-should-be-relative usr/share/doc/libbaz2/changelog.gz /usr/share/doc/lintian/changelog.gz
-libbaz1-dev (binary): package-contains-empty-directory usr/include/
-libbaz1 (binary): zero-byte-file-in-doc-directory usr/share/doc/README.Debian
-libbaz1 (binary): file-directly-in-usr-share-doc usr/share/doc/README.Debian

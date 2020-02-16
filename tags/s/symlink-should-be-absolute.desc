@@ -1,7 +1,7 @@
 Tag: symlink-should-be-absolute
 Severity: important
 Certainty: certain
-Check: files
+Check: files/symbolic-links
 Info: Symbolic links between different top-level directories should be
  absolute.
  .

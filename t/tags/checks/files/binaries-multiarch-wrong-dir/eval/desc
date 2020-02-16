@@ -1,3 +1,0 @@
-Testname: binaries-multiarch-wrong-dir
-Test-Architectures: i386 amd64
-Check: files

@@ -1,7 +1,7 @@
 Tag: unknown-java-class-version
 Severity: normal
 Certainty: certain
-Check: java
+Check: languages/java
 Info: The package contains a Jar file with Java class files compiled for an
  unknown Java version. Most likely the class file is corrupt or compiled
  for a newer version of Java than Lintian knows about. In the latter case,

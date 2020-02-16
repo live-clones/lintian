@@ -1,7 +1,7 @@
 Tag: package-contains-vcs-control-file
 Severity: normal
 Certainty: certain
-Check: files
+Check: files/vcs
 Info: The package contains a VCS control file such as .(cvs|git|hg)ignore.
  Files such as these are used by revision control systems to, for example,
  specify untracked files it should ignore or inventory files. This file

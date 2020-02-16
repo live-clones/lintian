@@ -1,0 +1,4 @@
+Skeleton: upload-native
+Testname: files-general
+Description: Test tags for file paths, names, and modes
+# tar -t is buggy and does not list \\\ filename

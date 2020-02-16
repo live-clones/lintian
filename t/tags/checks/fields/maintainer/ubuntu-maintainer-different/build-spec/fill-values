@@ -1,0 +1,4 @@
+Skeleton: upload-native
+Testname: ubuntu-maintainer-different
+Distribution: focal
+Description: Maintainer in changes files is different from source, but in Ubuntu (false positive)

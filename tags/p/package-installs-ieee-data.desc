@@ -1,7 +1,7 @@
 Tag: package-installs-ieee-data
 Severity: important
 Certainty: possible
-Check: files
+Check: files/ieee-data
 Ref: #785662
 Info: Debian package should not install ieee oui.txt or iab.txt file
  These files are shipped in the package ieee-data and package should

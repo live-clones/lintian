@@ -1,0 +1,6 @@
+Check-Script: files/symbolic-links/broken
+Author: Niels Thykier <niels@thykier.net>
+Abbrev: sym
+Type: binary, udeb
+Needs-Info: unpacked
+Info: This script checks for broken symlinks.

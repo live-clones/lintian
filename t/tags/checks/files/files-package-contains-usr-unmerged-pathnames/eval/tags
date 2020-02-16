@@ -1,2 +1,0 @@
-files-package-contains-usr-unmerged-pathnames (binary): subdir-in-bin bin/subdir/
-files-package-contains-usr-unmerged-pathnames (binary): package-contains-usr-unmerged-pathnames bin/subdir/file-outside-usr

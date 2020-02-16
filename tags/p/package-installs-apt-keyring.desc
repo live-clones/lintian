@@ -1,7 +1,7 @@
 Tag: package-installs-apt-keyring
 Severity: serious
 Certainty: possible
-Check: files
+Check: apt
 Ref: apt-key(8)
 Info: Debian packages should not install files under
  <tt>/etc/apt/trusted.gpg.d/</tt> or install an

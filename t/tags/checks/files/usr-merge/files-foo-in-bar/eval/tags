@@ -1,0 +1,4 @@
+files-foo-in-bar (binary): package-contains-usr-unmerged-pathnames libx32/bar
+files-foo-in-bar (binary): package-contains-usr-unmerged-pathnames lib64/bar
+files-foo-in-bar (binary): package-contains-usr-unmerged-pathnames lib32/bar
+files-foo-in-bar (binary): package-contains-usr-unmerged-pathnames bin/foo/bar

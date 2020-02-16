@@ -1,5 +1,0 @@
-Testname: missing-prerequisite-for-module
-Check: fortran/gfortran
-References: Debian Bug #796352,
- Debian Bug #714730,
- https://salsa.debian.org/science-team/dh-fortran-mod/blob/debian/master/dh_fortran_mod.in

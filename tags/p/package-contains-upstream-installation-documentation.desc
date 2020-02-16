@@ -1,7 +1,7 @@
 Tag: package-contains-upstream-installation-documentation
 Severity: normal
 Certainty: possible
-Check: files
+Check: documentation
 Ref: policy 12.3
 Info: Binary packages do not need to contain the instructions for building
  and installing the package as this info is not needed by package users.

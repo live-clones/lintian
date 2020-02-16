@@ -1,3 +1,0 @@
-Testname: files-general
-Check: x11
-# tar -t is buggy and does not list \\\ filename

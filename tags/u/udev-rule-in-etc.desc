@@ -1,7 +1,7 @@
 Tag: udev-rule-in-etc
 Severity: important
 Certainty: certain
-Check: files
+Check: udev
 Ref: #559208
 Info: This package ships a udev rule and installs it under
  <tt>/etc/udev/rules.d</tt>, which is reserved for user-installed files.

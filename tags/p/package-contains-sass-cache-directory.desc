@@ -1,7 +1,7 @@
 Tag: package-contains-sass-cache-directory
 Severity: normal
 Certainty: certain
-Check: files
+Check: files/names
 Info: This package appears to ship a <tt>.sass-cache/</tt> directory,
  the result of running a the "Sass" utility that compiles CSS from SASS
  or SCSS files.

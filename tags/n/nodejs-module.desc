@@ -1,0 +1,5 @@
+Tag: nodejs-module
+Severity: classification
+Certainty: certain
+Check: languages/javascript/nodejs
+Info: Display nodejs module name, version and path

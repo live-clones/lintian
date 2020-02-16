@@ -1,0 +1,1 @@
+files-foo-in-bar (binary): debug-package-should-be-named-dbg usr/lib/debug/bar

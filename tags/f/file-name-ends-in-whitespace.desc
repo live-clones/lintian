@@ -1,7 +1,7 @@
 Tag: file-name-ends-in-whitespace
 Severity: normal
 Certainty: possible
-Check: files
+Check: files/names
 Info: This package installs a file or directory whose name ends in
  whitespace. This might be intentional but it's normally a mistake. If
  it is intentional, add a Lintian override.

@@ -1,7 +1,7 @@
 Tag: public-upstream-key-not-minimal
 Severity: wishlist
 Certainty: certain
-Check: upstream-signing-key
+Check: debian/upstream/signing-key
 Ref: uscan(1)
 Info: The package contains a public upstream signing key with extra
  signatures. The signatures are unnecessary and take up space in

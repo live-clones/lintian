@@ -1,4 +1,0 @@
-Testname: scripts-maintainer-general
-Profile: ubuntu/main
-References: Debian Bug#532984
-Check: files
