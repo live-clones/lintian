@@ -1,7 +1,7 @@
 Tag: non-standard-file-perm
 Severity: normal
 Certainty: certain
-Check: files
+Check: files/permissions
 Info: The file has a mode different from 0644. In some cases this is
  intentional, but in other cases this is a bug.
 Ref: policy 10.9

@@ -1,7 +1,7 @@
 Tag: package-contains-no-arch-dependent-files
 Severity: minor
 Certainty: possible
-Check: files
+Check: files/architecture
 Experimental: yes
 Info: The package is not marked architecture all, but all the files it
  ships are installed in /usr/share.

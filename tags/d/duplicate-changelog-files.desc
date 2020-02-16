@@ -1,7 +1,7 @@
 Tag: duplicate-changelog-files
 Severity: normal
 Certainty: possible
-Check: duplicate-files
+Check: files/duplicates
 Info: The package appears to be shipping two copies of the changelog.
  .
  If the second copy is really needed, consider making it a symlink to

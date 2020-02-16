@@ -1,3 +1,0 @@
-Testname: manpage-useless-whatis
-Test-Depends: groff-base (>= 1.22.4)
-Check: manpages

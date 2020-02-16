@@ -1,7 +1,7 @@
 Tag: python-debug-in-wrong-location
 Severity: normal
 Certainty: possible
-Check: files
+Check: languages/python
 Ref: #576014
 Info: The package appears to be installing debug modules in
  /usr/lib/debug/usr/lib/pyshared/pythonX.Y/. However, gdb(1)

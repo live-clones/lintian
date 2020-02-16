@@ -1,7 +1,7 @@
 Tag: pkg-config-unavailable-for-cross-compilation
 Severity: normal
 Certainty: certain
-Check: files
+Check: files/pkgconfig
 Info: The specified pkg-config(1) file is installed to
  <tt>/usr/lib/pkgconfig</tt>. As the cross-compilation wrapper of pkg-config
  does not search this directory the file is unavailable under

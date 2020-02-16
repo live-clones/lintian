@@ -1,7 +1,7 @@
 Tag: pkg-js-autopkgtest-file-does-not-exist
 Severity: serious
 Certainty: certain
-Check: nodejs
+Check: languages/javascript/nodejs
 Info: One of the files referenced the specified file does not exist in sources
  and thus <tt>pkg-js-autopkgtest</tt> will likely fail.
  .

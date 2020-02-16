@@ -1,0 +1,7 @@
+Check-Script: languages/php/pear
+Author: Mathieu Parent <sathieu@debian.org>
+Abbrev: phppear
+Type: source
+Needs-Info: unpacked
+Info: This script checks if the packages comply with various aspects of the
+ Debian PHP policy.

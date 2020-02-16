@@ -1,7 +1,7 @@
 Tag: dbus-policy-without-send-destination
 Severity: normal
 Certainty: certain
-Check: dbus
+Check: desktop/dbus
 Info: The package contains D-Bus policy configuration that uses
  one of the <tt>send_*</tt> conditions, but does not specify a
  <tt>send_destination</tt>, and is not specific to root.

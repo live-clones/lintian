@@ -1,5 +1,5 @@
 Tag: udeb-contains-documentation-file
 Severity: important
 Certainty: certain
-Check: files
+Check: documentation
 Info: udeb packages should not contain any documentation.

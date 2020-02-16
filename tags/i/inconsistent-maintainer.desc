@@ -8,4 +8,4 @@ Info: The Maintainer address in a group of related processables is
  This sometimes happens when environmental variables like <tt>DEBEMAIL</tt>
  are set to different values when building sources and changes separately.
  Please use the same maintainer everywhere.
-Ref: #546525
+Ref: #546525, https://wiki.ubuntu.com/DebianMaintainerField, Ubuntu Bug#1862787

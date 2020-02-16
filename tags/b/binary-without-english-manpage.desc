@@ -1,7 +1,7 @@
 Tag: binary-without-english-manpage
 Severity: normal
 Certainty: certain
-Check: manpages
+Check: documentation/man
 Info: Each binary in <tt>/usr/bin</tt>, <tt>/usr/sbin</tt>, <tt>/bin</tt>,
  <tt>/sbin</tt> or <tt>/usr/games</tt> should have a manual page. You don't
  provide an English, only a translated manpage. Since English is fallback,

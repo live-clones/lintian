@@ -1,7 +1,7 @@
 Tag: typelib-package-name-does-not-match
 Severity: normal
 Certainty: possible
-Check: gir
+Check: desktop/gnome/gir
 Info: GObject-Introspection binary typelibs (<tt>Foo-23.typelib</tt>)
  should normally be made available in a package named gir1.2-foo-23.
  .

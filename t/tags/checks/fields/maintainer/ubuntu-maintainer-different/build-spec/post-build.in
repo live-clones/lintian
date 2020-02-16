@@ -1,0 +1,7 @@
+#!/bin/sh
+
+set -e
+
+product="[% $build_product %]"
+
+sed -i 's/^Maintainer:.*$/Maintainer: Unknown <never@heard.of>/' "$product"

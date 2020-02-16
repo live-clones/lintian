@@ -1,0 +1,7 @@
+files-python-general (source): python-foo-but-no-python3-foo python-kinterbasdb-dbg
+files-python-general (source): python-foo-but-no-python3-foo python-kinterbasdb
+python-kinterbasdb-dbg (binary): python-debug-in-wrong-location usr/lib/debug/usr/lib/pyshared/python2.7/python-module.so usr/lib/debug/usr/lib/pymodules/python2.7/python-module.so
+python-kinterbasdb (binary): package-installs-python-pycache-dir usr/share/python-kinterbasdb/__pycache__/
+python-kinterbasdb (binary): package-installs-python-egg usr/share/python-kinterbasdb/python.egg
+python-kinterbasdb (binary): package-installs-python-bytecode usr/share/python-kinterbasdb/code.pyo
+python-kinterbasdb (binary): package-installs-python-bytecode usr/share/python-kinterbasdb/code.pyc

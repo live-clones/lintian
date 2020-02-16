@@ -1,7 +1,7 @@
 Tag: embedded-pear-module
 Severity: normal
 Certainty: possible
-Check: files
+Check: files/embedded-libraries
 Experimental: yes
 Info: This package appears to contain an embedded copy of a PEAR module.
  Please depend on the respective PEAR package providing the module and

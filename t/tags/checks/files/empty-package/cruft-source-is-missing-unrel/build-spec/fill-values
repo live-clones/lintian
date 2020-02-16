@@ -1,0 +1,5 @@
+Testname: cruft-source-is-missing-unrel
+Skeleton: upload-non-native
+Source-Format: 3.0 (quilt)
+Package-Architecture: any
+Description: Check for source-is-missing false positives

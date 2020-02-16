@@ -1,0 +1,2 @@
+filenames (binary): non-standard-dir-perm usr/lib/filenames/readonly/ 0555 != 0755
+filenames (binary): bad-permissions-for-ali-file usr/lib/ada/adalib/test.ali

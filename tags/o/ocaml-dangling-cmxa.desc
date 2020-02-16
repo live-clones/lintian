@@ -1,6 +1,6 @@
 Tag: ocaml-dangling-cmxa
 Severity: serious
 Certainty: certain
-Check: ocaml
+Check: languages/ocaml
 Info: This package provides a <tt>.cmxa</tt> library without its
  implementation (<tt>.a</tt> static library).

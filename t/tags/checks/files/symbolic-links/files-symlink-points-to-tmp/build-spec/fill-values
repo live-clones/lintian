@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: files-symlink-points-to-tmp
+Description: Symlink point to /tmp

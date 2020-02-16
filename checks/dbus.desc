@@ -1,5 +1,0 @@
-Check-Script: dbus
-Author: Simon McVittie <simon.mcvittie@collabora.co.uk>
-Type: binary
-Info: Checks for deprecated or harmful D-Bus configuration
-Needs-Info: unpacked

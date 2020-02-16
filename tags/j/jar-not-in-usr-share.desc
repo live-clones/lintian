@@ -1,7 +1,7 @@
 Tag: jar-not-in-usr-share
 Severity: normal
 Certainty: possible
-Check: java
+Check: languages/java
 Ref: java-policy 2.2, java-policy 2.3
 Info: The classpath listed in some of the files references files outside
  of /usr/share, while all installed JAR files must be within

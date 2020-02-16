@@ -1,7 +1,7 @@
 Tag: uses-dpkg-database-directly
 Severity: normal
 Certainty: possible
-Check: files
+Check: files/contents
 Info: The listed file or maintainer script appears to access the
  internal database(s) of dpkg.
  .

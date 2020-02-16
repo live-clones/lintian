@@ -1,7 +1,7 @@
 Tag: django-package-does-not-depend-on-django
 Severity: normal
 Certainty: certain
-Check: python
+Check: languages/python
 Info: This package appears to be library module for the Django web development
  framework but it does not specify a binary dependency on the Django package
  itself.

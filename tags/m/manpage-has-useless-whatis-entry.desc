@@ -1,7 +1,7 @@
 Tag: manpage-has-useless-whatis-entry
 Severity: normal
 Certainty: certain
-Check: manpages
+Check: documentation/man
 Info: The whatis entry for this manual page (the brief description found
  in the NAME section) is of the form:
  .

@@ -1,7 +1,7 @@
 Tag: unknown-locale-code
 Severity: normal
 Certainty: certain
-Check: files
+Check: files/locales
 Ref: http://www.loc.gov/standards/iso639-2/php/code_list.php
 Info: The package appears to ship locales for a language but uses an
  unknown locale code as a subdirectory of <tt>/usr/share/locale</tt>.

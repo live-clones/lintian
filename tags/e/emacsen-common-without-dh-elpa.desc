@@ -1,7 +1,7 @@
 Tag: emacsen-common-without-dh-elpa
 Severity: normal
 Certainty: certain
-Check: elpa
+Check: emacs/elpa
 Info: The package uses the emacsen-common infrastructure but the
  package was not built with dh-elpa. Please consider transitioning
  the package build to use dh-elpa, unless the package is required to

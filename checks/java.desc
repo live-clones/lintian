@@ -1,7 +1,0 @@
-Check-Script: java
-Author: Vincent Fourmond <fourmond@debian.org>
-Abbrev: java
-Type: binary, source
-Needs-Info: java-info, unpacked
-Info: This script checks if the packages comply with various aspects of the
- Debian Java policy.

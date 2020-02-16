@@ -1,6 +1,7 @@
 # fields/maintainer -- lintian check script (rewrite) -*- perl -*-
 #
-# Copyright (C) 2004 Marc Brockschmidt
+# Copyright © 2004 Marc Brockschmidt
+# Copyright © 2020 Felix Lechner
 #
 # Parts of the code were taken from the old check script, which
 # was Copyright (C) 1998 Richard Braakman (also licensed under the
@@ -28,6 +29,7 @@ use strict;
 use warnings;
 use autodie;
 
+use Lintian::Data;
 use Lintian::Maintainer qw(check_maintainer);
 
 use constant EMPTY => q{};
@@ -36,6 +38,8 @@ use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
+
+my $KNOWN_DISTS = Lintian::Data->new('changes-file/known-dists');
 
 sub source {
     my ($self) = @_;
@@ -66,11 +70,16 @@ sub changes {
 
     my $changes_maintainer = $self->processable->unfolded_field('maintainer')
       // EMPTY;
+    my $changes_distribution
+      = $self->processable->unfolded_field('distribution')// EMPTY;
+
     my $source_maintainer = $source->unfolded_field('maintainer') // EMPTY;
 
+    # not for derivatives; https://wiki.ubuntu.com/DebianMaintainerField
     $self->tag('inconsistent-maintainer',
         $changes_maintainer . ' (changes vs. source) ' .$source_maintainer)
-      unless $changes_maintainer eq $source_maintainer;
+      unless $changes_maintainer eq $source_maintainer
+      || !$KNOWN_DISTS->known($changes_distribution);
 
     return;
 }

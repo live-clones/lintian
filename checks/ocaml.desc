@@ -1,6 +1,0 @@
-Check-Script: ocaml
-Author: Stephane Glondu <steph@glondu.net>
-Abbrev: ocaml
-Type: binary
-Info: This looks for common mistakes in OCaml binary packages.
-Needs-Info: ar-info, unpacked

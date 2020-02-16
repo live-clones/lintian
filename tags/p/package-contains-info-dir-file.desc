@@ -1,7 +1,7 @@
 Tag: package-contains-info-dir-file
 Severity: serious
 Certainty: certain
-Check: files
+Check: documentation
 Info: This package contains a file named <tt>dir</tt> or <tt>dir.old</tt>,
  possibly compressed, in <tt>/usr/share/info</tt>. This is the directory
  (or backup) of info pages and is generated automatically by install-info

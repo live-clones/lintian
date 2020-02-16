@@ -1,7 +1,7 @@
 Tag: privacy-breach-statistics-website
 Severity: serious
 Certainty: possible
-Check: files
+Check: files/privacy-breach
 Info: This package creates a privacy breach by fetching data from
  an external website in order to compile visitor statistics.
  .

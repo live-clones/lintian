@@ -1,6 +1,0 @@
-Check-Script: duplicate-files
-Author: Niels Thykier <niels@thykier.net>
-Abbrev: dupf
-Type: binary
-Needs-Info: md5sums, unpacked
-Info: This script checks for duplicate files using checksums

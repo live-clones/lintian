@@ -1,0 +1,5 @@
+Skeleton: upload-native
+Testname: files-python-general
+Dh-Compat-Level: 7
+Description: Test general Python related tags
+Default-Build-Depends: debhelper (>= [% $dh_compat_level %]~)

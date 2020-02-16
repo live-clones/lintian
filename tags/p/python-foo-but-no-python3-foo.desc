@@ -1,7 +1,7 @@
 Tag: python-foo-but-no-python3-foo
 Severity: normal
 Certainty: certain
-Check: python
+Check: languages/python
 Info: This source package appears to generate the specified Python 2 package
  without creating a variant for Python 3.
  .

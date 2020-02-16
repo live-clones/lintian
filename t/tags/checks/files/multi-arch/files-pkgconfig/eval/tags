@@ -1,0 +1,3 @@
+pkgconfig-any (binary): multiarch-foreign-pkgconfig usr/lib/ARCH/pkgconfig/arch-include-arch.pc
+pkgconfig-any (binary): multiarch-foreign-pkgconfig usr/lib/ARCH/pkgconfig/arch-good.pc
+pkgconfig-any (binary): multiarch-foreign-pkgconfig usr/lib/ARCH/pkgconfig/arch-cross.pc

@@ -1,7 +1,7 @@
 Tag: package-installs-python-pycache-dir
 Severity: serious
 Certainty: certain
-Check: files
+Check: languages/python
 Ref: python-policy 3.7
 Info: The package installs a __pycache__ directory, which is normally
  only used to store compiled Python source files. Compiled Python

@@ -1,7 +1,7 @@
 Tag: package-contains-mime-cache-file
 Severity: serious
 Certainty: certain
-Check: files
+Check: mimeinfo
 Info: This package contains a cache file generated automatically by
  update-mime-database when a package containing MIME-Info Database
  files is installed. Some upstream build systems create them
