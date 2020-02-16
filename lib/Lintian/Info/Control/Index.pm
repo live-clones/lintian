@@ -21,7 +21,7 @@ use strict;
 use warnings;
 use autodie;
 
-use Lintian::Index;
+use Lintian::File::Index;
 
 use Moo::Role;
 use namespace::clean;
@@ -70,7 +70,7 @@ sub control {
             'has_anchored_root_dir' => 0,
         };
 
-        my $control = Lintian::Index->new('load_info' => $load_info);
+        my $control = Lintian::File::Index->new('load_info' => $load_info);
 
         $control->basedir($self->groupdir);
 

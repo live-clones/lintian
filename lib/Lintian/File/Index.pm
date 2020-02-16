@@ -1,4 +1,4 @@
-# -*- perl -*- Lintian::Index
+# -*- perl -*- Lintian::File::Index
 #
 # Copyright © 2020 Felix Lechner
 #
@@ -15,7 +15,7 @@
 # You should have received a copy of the GNU General Public License along with
 # this program.  If not, see <http://www.gnu.org/licenses/>.
 
-package Lintian::Index;
+package Lintian::File::Index;
 
 use strict;
 use warnings;
@@ -68,7 +68,7 @@ my %INDEX_FAUX_DIR_TEMPLATE = (
 
 =head1 NAME
 
-Lintian::Index - access to collected data about the upstream (orig) sources
+Lintian::File::Index - access to collected data about the upstream (orig) sources
 
 =head1 SYNOPSIS
 

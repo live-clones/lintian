@@ -28,7 +28,7 @@ use Path::Tiny;
 use Try::Tiny;
 
 use Lintian::Deb822Parser qw(read_dpkg_control);
-use Lintian::Index;
+use Lintian::File::Index;
 use Lintian::Inspect::Changelog::Version;
 use Lintian::Relation;
 use Lintian::Util
@@ -491,7 +491,7 @@ sub patched {
             },
         };
 
-        my $patched = Lintian::Index->new('load_info' => $load_info);
+        my $patched = Lintian::File::Index->new('load_info' => $load_info);
 
         $patched->basedir($self->groupdir);
 

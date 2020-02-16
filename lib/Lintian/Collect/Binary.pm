@@ -31,7 +31,7 @@ use MLDBM qw(BerkeleyDB::Btree Storable);
 use Path::Tiny;
 
 use Lintian::Deb822Parser qw(parse_dpkg_control);
-use Lintian::Index;
+use Lintian::File::Index;
 use Lintian::Relation;
 use Lintian::Util qw(open_gz get_file_checksum strip rstrip);
 
@@ -100,7 +100,7 @@ sub installed {
             },
         };
 
-        my $installed = Lintian::Index->new('load_info' => $load_info);
+        my $installed = Lintian::File::Index->new('load_info' => $load_info);
 
         $installed->basedir($self->groupdir);
 

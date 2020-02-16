@@ -21,7 +21,7 @@ use strict;
 use warnings;
 use autodie;
 
-use Lintian::Index;
+use Lintian::File::Index;
 
 use Moo::Role;
 use namespace::clean;
@@ -68,7 +68,7 @@ sub orig {
             'allow_empty' => 1,
         };
 
-        my $orig = Lintian::Index->new('load_info' => $load_info);
+        my $orig = Lintian::File::Index->new('load_info' => $load_info);
 
         $orig->basedir($self->groupdir);
 
