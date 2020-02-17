@@ -1,7 +1,8 @@
 # -*- perl -*-
 # Lintian::File::Path -- Representation of path entry in a package
-
-# Copyright (C) 2011 Niels Thykier
+#
+# Copyright © 2011 Niels Thykier
+# Copyright © 2020 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by the Free
@@ -20,7 +21,20 @@ package Lintian::File::Path;
 
 use strict;
 use warnings;
-use parent qw(Class::Accessor::Fast);
+
+use Date::Parse qw(str2time);
+use Carp qw(croak confess);
+use Scalar::Util qw(weaken);
+use Path::Tiny;
+
+use Lintian::Util qw(normalize_pkg_path strip);
+
+use constant EMPTY => q{};
+use constant SPACE => q{ };
+use constant SLASH => q{/};
+
+use Moo;
+use namespace::clean;
 
 use constant {
     TYPE_FILE      => 0x00_01_00_00,
@@ -54,16 +68,6 @@ use overload (
     'fallback' => 0,
 );
 
-use Date::Parse qw(str2time);
-use Carp qw(croak confess);
-use Scalar::Util qw(weaken);
-use Path::Tiny;
-
-use Lintian::Util qw(normalize_pkg_path strip);
-
-use constant EMPTY => q{};
-use constant SLASH => q{/};
-
 =head1 NAME
 
 Lintian::File::Path - Lintian representation of a path entry in a package
@@ -94,27 +98,6 @@ Lintian::File::Path - Lintian representation of a path entry in a package
 =head1 INSTANCE METHODS
 
 =over 4
-
-=item Lintian::File::Path->new ($data)
-
-Internal constructor (used by Lintian::Info::Package).
-
-Argument is a hash containing the data read from the index file.
-
-=cut
-
-sub new {
-    my ($type, $data) = @_;
-    my $self = $data;
-    my $ftype = $data->{'_path_info'};
-    bless($self, $type);
-    if ($ftype & TYPE_DIR) {
-        for my $child ($self->children) {
-            $child->_set_parent_dir($self);
-        }
-    }
-    return $self;
-}
 
 =item name
 
@@ -194,11 +177,7 @@ this may return a numerical owner (except uid 0 is always mapped to
 
 =cut
 
-sub owner {
-    my ($self) = @_;
-    return 'root' if not exists($self->{'owner'});
-    return $self->{'owner'};
-}
+has owner => (is => 'rw', default => 'root');
 
 =item group
 
@@ -210,11 +189,7 @@ this may return a numerical group (except gid 0 is always mapped to
 
 =cut
 
-sub group {
-    my ($self) = @_;
-    return 'root' if not exists($self->{'group'});
-    return $self->{'group'};
-}
+has group => (is => 'rw', default => 'root');
 
 =item uid
 
@@ -226,11 +201,7 @@ source packages)
 
 =cut
 
-sub uid {
-    my ($self) = @_;
-    return 0 if not exists($self->{'uid'});
-    return $self->{'uid'};
-}
+has uid => (is => 'rw', default => 0);
 
 =item gid
 
@@ -242,11 +213,7 @@ source packages)
 
 =cut
 
-sub gid {
-    my ($self) = @_;
-    return 0 if not exists($self->{'gid'});
-    return $self->{'gid'};
-}
+has gid => (is => 'rw', default => 0);
 
 =item link
 
@@ -269,11 +236,7 @@ NB: Only regular files can have a non-zero file size.
 
 =cut
 
-sub size {
-    my ($self) = @_;
-    return 0 if not exists($self->{'size'});
-    return $self->{'size'};
-}
+has size => (is => 'rw', default => 0);
 
 =item date
 
@@ -281,10 +244,13 @@ Return the modification date as YYYY-MM-DD.
 
 =cut
 
-sub date {
-    my ($self) = @_;
-    return (split(' ', $self->{'date_time'}, 2))[0];
-}
+has date => (is => 'rw');
+
+=item time
+
+=cut
+
+has time => (is => 'rw', default => '00:00');
 
 =item parent_dir
 
@@ -340,9 +306,33 @@ sub basename {
 Returns a truth value if this entry absent in the package.  This can
 happen if a package does not include all intermediate directories.
 
+=item perm
+
+=item fs_info
+
+=item path_info
+
+=item link_target
+
+=item sorted_children
+
+=item child_table
+
 =cut
 
-Lintian::File::Path->mk_ro_accessors(qw(name link parent_dir faux));
+has name => (is => 'rw', default => EMPTY);
+has link => (is => 'rw');
+has parent_dir => (is => 'rw');
+has faux => (is => 'rw', default => 0);
+
+has perm => (is => 'rw');
+has fs_info => (is => 'rw');
+has path_info => (is => 'rw');
+has link_target => (is => 'rw');
+
+has sorted_children => (is => 'rw', default => sub { [] });
+
+has child_table => (is => 'rw', default => sub { {} });
 
 =item operm
 
@@ -356,7 +346,7 @@ for symlinks.
 
 sub operm {
     my ($self) = @_;
-    return $self->{'_path_info'} & OPERM_MASK;
+    return $self->path_info & OPERM_MASK;
 }
 
 =item children([RECURSIVE_MODE])
@@ -389,12 +379,12 @@ NB: Returns the empty list for non-dir entries.
 
 sub children {
     my ($self, $recursive) = @_;
-    return @{$self->{'_sorted_children'} }
+    return @{$self->sorted_children }
       if not defined($recursive)
       or $recursive eq 'direct';
     croak("Unsupported recursive mode ${recursive}")
       if $recursive ne 'breadth-first';
-    my @all = @{$self->{'_sorted_children'} };
+    my @all = @{$self->sorted_children };
     my @remaining_dirs = grep { $_->is_dir } @all;
     while (my $dir = shift(@remaining_dirs)) {
         my @children = $dir->children;
@@ -413,7 +403,10 @@ seconds since the start of Unix epoch in UTC.
 
 sub timestamp {
     my ($self) = @_;
-    return str2time($self->{'date_time'}, 'GMT');
+
+    my $timestamp = $self->date . SPACE . $self->time;
+
+    return str2time($timestamp, 'GMT');
 }
 
 =item child(BASENAME)
@@ -435,7 +428,7 @@ Example:
 
 sub child {
     my ($self, $basename) = @_;
-    my $children = $self->{'children'};
+    my $child_table = $self->child_table;
     my ($child, $had_trailing_slash);
 
     # Remove the trailing slash (for dirs)
@@ -443,8 +436,8 @@ sub child {
         $basename = substr($basename, 0, -1);
         $had_trailing_slash = 1;
     }
-    return if not $children or not exists($children->{$basename});
-    $child = $children->{$basename};
+    return if not $child_table or not exists($child_table->{$basename});
+    $child = $child_table->{$basename};
     # Only directories are allowed to be fetched with trailing slash.
     return if $had_trailing_slash and not $child->is_dir;
     return $child;
@@ -485,14 +478,14 @@ symlinks, even if the symlink points to a file.
 
 =cut
 
-sub is_symlink { return $_[0]{'_path_info'} & TYPE_SYMLINK ? 1 : 0; }
-sub is_hardlink { return $_[0]{'_path_info'} & TYPE_HARDLINK ? 1 : 0; }
-sub is_dir { return $_[0]{'_path_info'} & TYPE_DIR ? 1 : 0; }
+sub is_symlink { return $_[0]->path_info & TYPE_SYMLINK ? 1 : 0; }
+sub is_hardlink { return $_[0]->path_info & TYPE_HARDLINK ? 1 : 0; }
+sub is_dir { return $_[0]->path_info & TYPE_DIR ? 1 : 0; }
 
 sub is_file {
-    return $_[0]{'_path_info'} & (TYPE_FILE | TYPE_HARDLINK) ? 1 : 0;
+    return $_[0]->path_info & (TYPE_FILE | TYPE_HARDLINK) ? 1 : 0;
 }
-sub is_regular_file { return $_[0]{'_path_info'} & TYPE_FILE ? 1 : 0; }
+sub is_regular_file { return $_[0]->path_info & TYPE_FILE ? 1 : 0; }
 
 =item link_normalized
 
@@ -514,15 +507,24 @@ arguments instead.
 
 sub link_normalized {
     my ($self) = @_;
-    return $self->{'link_target'} if exists $self->{'link_target'};
+
+    return $self->link_target
+      if length $self->link_target;
+
     my $name = $self->name;
     my $link = $self->link;
-    croak "$name is not a link" unless defined $link;
+
+    croak "$name is not a link"
+      unless defined $link;
+
     my $dir = $self->dirname;
     # hardlinks are always relative to the package root
-    $dir = '/' if $self->is_hardlink;
+
+    $dir = '/'
+      if $self->is_hardlink;
+
     my $target = normalize_pkg_path($dir, $link);
-    $self->{'link_target'} = $target;
+    $self->link_target($target);
     return $target;
 }
 
@@ -545,7 +547,7 @@ at least one bit denoting executability set (bitmask 0111).
 
 sub _any_bit_in_operm {
     my ($self, $bitmask) = @_;
-    return ($self->{'_path_info'} & $bitmask) ? 1 : 0;
+    return ($self->path_info & $bitmask) ? 1 : 0;
 }
 
 sub is_readable   { return $_[0]->_any_bit_in_operm(0444); }
@@ -616,7 +618,7 @@ Returns a truth value if the path may be opened.
 
 sub is_open_ok {
     my ($self) = @_;
-    my $path_info = $self->{'_path_info'};
+    my $path_info = $self->path_info;
     return 1 if ($path_info & OPEN_IS_OK) == OPEN_IS_OK;
     return 0 if $path_info & ACCESS_INFO;
     eval {
@@ -638,24 +640,24 @@ sub _fs_info {
     # - though calling is_dir first is probably more expensive than just
     #   blindly calling parent_dir
     my $dir = $self->parent_dir // $self;
-    return $dir->{'_fs_info'};
+    return $dir->fs_info;
 }
 
 sub _check_access {
     my ($self) = @_;
-    my $path_info = $self->{'_path_info'};
+    my $path_info = $self->path_info;
     return 1 if ($path_info & FS_PATH_IS_OK) == FS_PATH_IS_OK;
     return 0 if $path_info & ACCESS_INFO;
     my $resolvable = $self->resolve_path;
     if (not $resolvable) {
-        $self->{'_path_info'} |= UNSAFE_PATH;
+        $self->path_info($self->path_info | UNSAFE_PATH);
         # NB: We are deliberately vague here to avoid suggesting
         # whether $path exists.  In some cases (e.g. lintian.d.o)
         # the output is readily available to wider public.
         confess('Attempt to access through broken or unsafe symlink:'. ' '
               . $self->name);
     }
-    $self->{'_path_info'} |= FS_PATH_IS_OK;
+    $self->path_info($self->path_info | FS_PATH_IS_OK);
     return 1;
 }
 
@@ -665,7 +667,7 @@ sub _check_open {
     # Symlinks can point to a "non-file" object inside the
     # package root
     if ($self->is_file or ($self->is_symlink and -f $path)) {
-        $self->{'_path_info'} |= OPEN_IS_OK;
+        $self->path_info($self->path_info | OPEN_IS_OK);
         return 1;
     }
     # Leave "_path_access" here as _check_access marks it either as
@@ -758,7 +760,7 @@ sub root_dir {
 
 sub _set_parent_dir {
     my ($self, $parent) = @_;
-    weaken($self->{'parent_dir'} = $parent);
+    $self->parent_dir($parent);
     return 1;
 }
 
