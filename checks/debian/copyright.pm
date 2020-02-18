@@ -835,7 +835,7 @@ sub check_files_excluded {
 
     my $processable = $self->processable;
 
-    my @files = grep { $_->is_file } $processable->sorted_orig_index;
+    my @files = grep { $_->is_file } $processable->orig->sorted_list;
     my @wildcards = split /[\n\t ]+/, $excluded;
     for my $wildcard (@wildcards) {
         $wildcard =~ s/^\s+|\s+$//g;
