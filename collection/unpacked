@@ -1,9 +1,8 @@
 #!/usr/bin/perl
 # unpacked -- lintian collector/unpack script
 #
-
 # Copyright © 1998 Christian Schwarz and Richard Braakman
-# Copyright © 2019 Felix Lechner
+# Copyright © 2020 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -37,7 +36,8 @@ use Path::Tiny;
 
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
 
-use Lintian::Util qw(sort_file_index gzip safe_qx);
+use Lintian::File::Path;
+use Lintian::Util qw(safe_qx);
 
 # Read up to 40kB at the time.  This happens to be 4096 "tar records"
 # (with a block-size of 512 and a block factor of 20, which appears to
@@ -46,8 +46,8 @@ use Lintian::Util qw(sort_file_index gzip safe_qx);
 # record.
 use constant READ_SIZE => 4096 * 1024 * 10;
 
-use constant SPACE => q{ };
 use constant EMPTY => q{};
+use constant SPACE => q{ };
 use constant COLON => q{:};
 use constant SLASH => q{/};
 use constant NEWLINE => qq{\n};
@@ -232,12 +232,18 @@ sub collect {
                 return;
             });
 
+        my @tar_options= (
+            '--list', '--verbose',
+            '--utc', '--full-time',
+            '--quoting-style=c','--file'
+        );
+
         # create index (named-owner)
         my $named;
         my $namederror;
         my $namedindexer = $loop->new_future;
         my $namedindexprocess = IO::Async::Process->new(
-            command => ['tar', '--utc', '--full-time', '-stvf', '-'],
+            command => ['tar', @tar_options, '-'],
             stdin => { via => 'pipe_write' },
             stdout => { into => \$named },
             stderr => { into => \$namederror },
@@ -262,8 +268,7 @@ sub collect {
         my $numericerror;
         my $numericindexer = $loop->new_future;
         my $numericindexprocess = IO::Async::Process->new(
-            command =>
-              ['tar', '--utc','--full-time', '--numeric-owner','-stvf','-'],
+            command =>['tar', '--numeric-owner', @tar_options, '-'],
             stdin => { via => 'pipe_write' },
             stdout => { into => \$numeric },
             stderr => { into => \$numericerror },
@@ -328,58 +333,34 @@ sub collect {
         my @named_owner = split(/\n/, $named);
         my @numeric_owner = split(/\n/, $numeric);
 
+        my %all;
+        for my $line (@named_owner) {
+
+            my $entry = Lintian::File::Path->new;
+            $entry->init_from_tar_output($line);
+
+            $all{$entry->name} = $entry;
+        }
+
+        # get numerical owners from second list
+        for my $line (@numeric_owner) {
+
+            my $entry = Lintian::File::Path->new;
+            $entry->init_from_tar_output($line);
+
+            die"Numerical index lists extra files in $dbpath for file name "
+              . $entry->name
+              unless exists $all{$entry->name};
+
+            # copy numerical uid and gid
+            $all{$entry->name}->uid($entry->owner);
+            $all{$entry->name}->gid($entry->group);
+        }
+
         tie my %h, 'MLDBM',
           -Filename => $dbpath,
           -Flags    => DB_CREATE
           or die "Cannot open file $dbpath: $! $BerkeleyDB::Error\n";
-
-        my %all;
-
-        for my $position (0..$#named_owner) {
-
-            my $line = $named_owner[$position];
-            chomp $line;
-
-            my %entry;
-            my $name;
-
-         # Parse line from output of "tar -tvf" allowing for spaces within the
-         # ownership field whilst still allowing spaces in filenames. (#895175)
-         #
-         # Note this cannot ever be 100% reliable as the filename might contain
-         # "fake" dates.
-            (
-                $entry{perm}, $entry{ownership}, $entry{size}, $entry{date},
-                $entry{time}, $name
-              )
-              = ($line
-                  =~ /^(.{10}) (.*?) (\d+) ([-\d]{10}) (?:([:\d]{5,8}(?:.\d+)?)[ ]+)?(.*)$/
-              );
-
-            die "cannot parse tar output for $dbpath: $line"
-              unless defined $entry{perm};
-
-            # get numerical owners, too
-            my $numericline = $numeric_owner[$position];
-            chomp $numericline;
-            die 'cannot read index with numerical ownership'
-              unless defined $numericline;
-
-            my ($owner_id, $name_chk) = (split(SPACE, $numericline, 6))[1, 5];
-            die "mismatching contents of index files: $name $name_chk"
-              if $name ne $name_chk;
-
-            my ($uid, $gid) = split(SLASH, $owner_id, 2);
-
-            # Memory-optimise for 0/0.  Perl has an insane overhead
-            # for each field, so this is sadly worth it!
-            $entry{uid} = int($uid)
-              if $uid;
-            $entry{gid} = int($gid)
-              if $gid;
-
-            $all{$name} = \%entry;
-        }
 
         $h{$_} = $all{$_} for keys %all;
 
