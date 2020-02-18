@@ -310,7 +310,7 @@ sub source {
         $self->tag('package-uses-dh-runit-but-lacks-breaks-substvar', $binpkg)
           if $seen{'runit'}
           and $strong->implies('runit')
-          and any { m,^etc/sv/, } $proc->sorted_index
+          and any { m,^etc/sv/, } $proc->installed->sorted_list
           and not $breaks->implies('${runit:Breaks}');
     }
 

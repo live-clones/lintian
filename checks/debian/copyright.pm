@@ -203,11 +203,11 @@ sub check_apache_notice_files {
               $_->basename =~ m/^NOTICE(\.txt)?$/
           and $_->is_open_ok
           and $_->file_contents =~ m/apache/i
-    } $processable->sorted_index;
+    } $processable->patched->sorted_list;
     return if not @notice_files;
 
     foreach my $binpkg (@procs) {
-        my @files = map { $_->name } $binpkg->sorted_index;
+        my @files = map { $_->name } $binpkg->installed->sorted_list;
         my $java_info = $binpkg->java_info;
         for my $jar_file (sort keys %{$java_info}) {
             push @files, keys %{$java_info->{$jar_file}{files}};
@@ -363,9 +363,9 @@ sub parse_dep5 {
 
     my @shipped;
     if($processable->native) {
-        @shipped = $processable->sorted_index;
+        @shipped = $processable->patched->sorted_list;
     } else {
-        @shipped = $processable->sorted_orig_index;
+        @shipped = $processable->orig->sorted_list;
     }
 
     my $debian_dir = $processable->index_resolved_path('debian/');

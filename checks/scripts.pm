@@ -254,7 +254,7 @@ sub binary {
     # no dependency for install-menu, because the menu package specifically
     # says not to depend on it.
 
-    foreach my $file ($processable->sorted_index) {
+    foreach my $file ($processable->installed->sorted_list) {
         next if not $file->is_file;
         $ELF{$file} = 1 if $file->file_info =~ /^[^,]*\bELF\b/o;
         next unless $file->operm & 0111;
@@ -267,7 +267,7 @@ sub binary {
 
     my @x11_fonts
       = grep {m,^usr/share/fonts/X11/.*\.(?:afm|pcf|pfa|pfb)(?:\.gz)?$,}
-      $processable->sorted_index;
+      $processable->installed->sorted_list;
 
     my %old_versions;
     for my $entry (

@@ -41,7 +41,8 @@ sub source {
     my $processable = $self->processable;
 
     # Don't check package if it doesn't contain a .php file
-    if (none { $_->basename =~ m/\.php$/i } $processable->sorted_index) {
+    if (none { $_->basename =~ m/\.php$/i } $processable->patched->sorted_list)
+    {
         return;
     }
 

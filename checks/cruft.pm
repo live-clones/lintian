@@ -1745,7 +1745,7 @@ sub _ships_examples {
         my $name = $binpkg->name;
         # If we have an -examples package, assume we ship examples.
         return 1 if $name =~ m{-examples$};
-        my @files = $binpkg->sorted_index;
+        my @files = $binpkg->installed->sorted_list;
         # Check each package for a directory (or symlink) called "examples".
         return 1
           if any { m{^usr/share/doc/(.+/)?examples/?$} } @files;

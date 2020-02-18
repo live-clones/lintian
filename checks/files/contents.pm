@@ -39,7 +39,7 @@ has bin_binaries => (is => 'rwp', default => sub { [] });
 sub setup {
     my ($self) = @_;
 
-    for my $file ($self->processable->sorted_index) {
+    for my $file ($self->processable->installed->sorted_list) {
 
         next
           unless $file->is_file;

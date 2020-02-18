@@ -429,7 +429,7 @@ sub source {
       BINARY:
         foreach my $proc ($group->get_binary_processables) {
             my $pkg = $proc->name;
-            foreach my $file ($proc->sorted_index) {
+            foreach my $file ($proc->installed->sorted_list) {
                 my $owner = $file->owner . ':' . $file->group;
                 next if $owner eq 'root:root';
                 $self->tag('should-specify-rules-requires-root',

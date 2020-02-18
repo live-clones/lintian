@@ -161,7 +161,7 @@ sub binary {
         next
           unless $processable->name eq $bin->name
           or $processable->relation('strong')->implies($bin->name);
-        for my $file ($bin->sorted_index) {
+        for my $file ($bin->installed->sorted_list) {
             add_file_link_info($bin, $file->name, \%all_files,\%all_links);
         }
     }

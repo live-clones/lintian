@@ -74,7 +74,7 @@ sub always {
           if exists($objdump->{$file}{SONAME});
     }
 
-    foreach my $file ($processable->sorted_index) {
+    foreach my $file ($processable->installed->sorted_list) {
         $SHARED_LIB_PRESENT{$1} = 1
           if $file =~ m%.*\/lib([^/]+)\.so(?:\.\d+){0,3}$%;
         $STATIC_LIB_PRESENT{$1} = 1 if $file =~ m,.*\/lib([^/]+)\.a$,;
@@ -103,7 +103,7 @@ sub always {
 
     # 2nd step: read package contents
 
-    for my $cur_file ($processable->sorted_index) {
+    for my $cur_file ($processable->installed->sorted_list) {
         # shared library?
 
         my $normalized_target;
@@ -752,7 +752,7 @@ sub always {
         }
     }
 
-    foreach my $file ($processable->sorted_index) {
+    foreach my $file ($processable->installed->sorted_list) {
         next unless $file =~ m,^usr/(lib(/[^/]+)?|share)/pkgconfig/[^/]+\.pc$,;
         next unless $file->is_open_ok;
         my $fd = $file->open;

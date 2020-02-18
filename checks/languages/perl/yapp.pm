@@ -37,7 +37,7 @@ sub source {
 
     return if $processable->source eq 'lintian';
 
-    for my $file ($processable->sorted_index) {
+    for my $file ($processable->patched->sorted_list) {
 
         next
           unless $file->name =~ /\.pm$/;
