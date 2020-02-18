@@ -31,13 +31,10 @@ use autodie;
 
 use BerkeleyDB;
 use Cwd();
-use Data::ParseBinary;
 use IO::Async::Loop;
 use IO::Async::Process;
-use List::MoreUtils qw(all);
 use MLDBM qw(BerkeleyDB::Btree Storable);
 use Path::Tiny;
-use Text::Balanced qw(extract_delimited);
 
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
 
@@ -49,10 +46,7 @@ use constant EMPTY => q{};
 use constant SPACE => q{ };
 use constant COLON => q{:};
 use constant SLASH => q{/};
-use constant DOUBLEQUOTE => q{"};
-use constant BACKSLASH => q{\\};
 use constant NEWLINE => qq{\n};
-use constant NULL => qq{\x00};
 
 sub collect {
     my ($pkg, $type, $dir) = @_;
@@ -126,11 +120,6 @@ sub collect {
     die "Could not find any source components for $pkg"
       unless %components;
 
-    my $datepattern = qr/\d{4}-\d{2}-\d{2}/;
-    my $timepattern = qr/\d{2}\:\d{2}(?:\:\d{2}(?:\.\d+)?)?/;
-
-    my $cstyle = CString('tar filename', encoding => 'utf8');
-
     my %all;
     for my $tarball (sort keys %components) {
 
@@ -186,41 +175,10 @@ sub collect {
         my %single;
         for my $line (@lines) {
 
-            chomp $line;
+            my $entry = Lintian::File::Path->new;
+            $entry->init_from_tar_output($line);
 
-            # allow spaces in ownership and filenames (#895175 and #950589)
-
-            my ($initial, $size, $date, $time, $remainder)
-              = split(/\s+(\d+)\s+($datepattern)\s+($timepattern)\s+/, $line,
-                2);
-
-            my %entry;
-            $entry{size} = $size;
-            $entry{date} = $date;
-            $entry{time} = $time;
-
-            my ($permissions, $ownership) = split(/\s+/, $initial, 2);
-
-            $entry{perm} = $permissions;
-            $entry{ownership} = $ownership;
-
-            # extract quoted file name
-            my $delimited
-              = extract_delimited($remainder, DOUBLEQUOTE, EMPTY, BACKSLASH);
-
-            # drop quotes and add a null terminator
-            my $cstring= substr($delimited, 1, (length $delimited) - 2) . NULL;
-
-            # convert c-style escapes
-            my $name = $cstyle->parse($cstring);
-
-            # strip relative prefix
-            $name =~ s{^\./+}{};
-
-            die "Cannot parse tar output for $dbpath: $line"
-              unless defined $name && all { defined $entry{$_} } keys %entry;
-
-            $single{$name} = \%entry;
+            $single{$entry->name} = $entry;
         }
 
         # remove base directory from output
@@ -238,7 +196,7 @@ sub collect {
             }
 
             if ($candidate eq $name
-                && !$single{$name}{perm} =~ m/^d/) {
+                && !$single{$name}->perm =~ m/^d/) {
                 $unwanted = EMPTY;
                 next;
             }
@@ -271,6 +229,10 @@ sub collect {
                 $adjusted = $component . SLASH . $adjusted
                   if length $component;
 
+                # change name of entry
+                $single{$name}->name($adjusted);
+
+                # store entry under new name
                 $copy{$adjusted} = $single{$name};
             }
 
@@ -281,7 +243,11 @@ sub collect {
     }
 
     # treat hard links like regular files
-    $all{$_}{perm} =~ s/^h/-/ for keys %all;
+    for my $name (keys %all) {
+        my $perm = $all{$name}->perm;
+        $perm =~ s/^h/-/;
+        $all{$name}->perm($perm);
+    }
 
     tie my %h, 'MLDBM',
       -Filename => $dbpath,
