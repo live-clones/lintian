@@ -52,7 +52,7 @@ sub always {
     my $has_ctrl_script = 0;
 
     # process control-index file
-    foreach my $file ($processable->sorted_control_index) {
+    foreach my $file ($processable->control->sorted_list) {
 
         # the control.tar.gz should only contain files (and the "root"
         # dir, but that is excluded from the index)
