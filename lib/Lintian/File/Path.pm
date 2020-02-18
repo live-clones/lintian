@@ -24,14 +24,17 @@ use warnings;
 
 use Date::Parse qw(str2time);
 use Carp qw(croak confess);
-use Scalar::Util qw(weaken);
+use List::MoreUtils qw(all);
 use Path::Tiny;
+use Text::Balanced qw(extract_delimited);
 
 use Lintian::Util qw(normalize_pkg_path strip);
 
 use constant EMPTY => q{};
 use constant SPACE => q{ };
 use constant SLASH => q{/};
+use constant DOUBLEQUOTE => q{"};
+use constant BACKSLASH => q{\\};
 
 use Moo;
 use namespace::clean;
@@ -98,6 +101,124 @@ Lintian::File::Path - Lintian representation of a path entry in a package
 =head1 INSTANCE METHODS
 
 =over 4
+
+=item init_from_tar_output
+
+=item get_quoted_filename
+
+=item unescape_c_style
+
+=cut
+
+my $datepattern = qr/\d{4}-\d{2}-\d{2}/;
+my $timepattern = qr/\d{2}\:\d{2}(?:\:\d{2}(?:\.\d+)?)?/;
+my $symlinkpattern = qr/\s+->\s+/;
+my $hardlinkpattern = qr/\s+link\s+to\s+/;
+
+# adapted from https://www.perlmonks.org/?node_id=1056606
+my %T = (
+    (map {chr() => chr} 0..0377),
+    (map {sprintf('%o',$_) => chr} 0..07),
+    (map {sprintf('%02o',$_) => chr} 0..077),
+    (map {sprintf('%03o',$_) => chr} 0..0377),
+    (split //, "r\rn\nb\ba\af\ft\tv\013"));
+
+sub unescape_c_style {
+    my ($escaped) = @_;
+
+    (my $result = $escaped) =~ s/\\([0-7]{1,3}|.)/$T{$1}/g;
+
+    return $result;
+}
+
+sub get_quoted_filename {
+    my ($unknown, $skip) = @_;
+
+    # extract quoted file name
+    my ($delimited, $extra)
+      = extract_delimited($unknown, DOUBLEQUOTE, $skip, BACKSLASH);
+
+    return
+      unless defined $delimited;
+
+    # drop quotes
+    my $cstylename = substr($delimited, 1, (length $delimited) - 2);
+
+    # convert c-style escapes
+    my $name = unescape_c_style($cstylename);
+
+    return ($name, $extra);
+}
+
+sub init_from_tar_output {
+    my ($self, $line) = @_;
+
+    chomp $line;
+
+    # allow spaces in ownership and filenames (#895175 and #950589)
+
+    my ($initial, $size, $date, $time, $remainder)
+      = split(/\s+(\d+)\s+($datepattern)\s+($timepattern)\s+/, $line,2);
+
+    die "Cannot parse tar output: $line"
+      unless all { defined } ($initial, $size, $date, $time, $remainder);
+
+    $self->size($size);
+    $self->date($date);
+    $self->time($time);
+
+    my ($permissions, $ownership) = split(/\s+/, $initial, 2);
+    die "Cannot parse permissions and ownership in tar output: $line"
+      unless all { defined } ($permissions, $ownership);
+
+    $self->perm($permissions);
+
+    my ($owner, $group) = split(qr{/}, $ownership, 2);
+    die "Cannot parse owner and group in tar output: $line"
+      unless all { defined } ($owner, $group);
+
+    $self->owner($owner);
+    $self->group($group);
+
+    my ($name, $extra) = get_quoted_filename($remainder, EMPTY);
+    die "Cannot parse file name in tar output: $line"
+      unless all { defined } ($name, $extra);
+
+    # strip relative prefix
+    $name =~ s{^\./+}{};
+
+    # make sure directories end with a slash, except root
+    $name .= SLASH
+      if length $name && $self->perm =~ /^d/ && substr($name, -1) ne SLASH;
+
+    $self->name($name);
+
+    # look for symbolic link target
+    if ($self->perm =~ /^l/) {
+
+        my ($linktarget, undef) = get_quoted_filename($extra, $symlinkpattern);
+        die "Cannot parse symbolic link target in tar output: $line"
+          unless defined $linktarget;
+
+        # do not strip relative prefix for symbolic links
+        $self->link($linktarget);
+    }
+
+    # look for hard link target
+    if ($self->perm =~ /^h/) {
+
+        my ($linktarget, undef)= get_quoted_filename($extra, $hardlinkpattern);
+        die "Cannot parse hard link target in tar output: $line"
+          unless defined $linktarget;
+
+        # strip relative prefix
+        $linktarget =~ s{^\./+}{};
+
+        $self->link($linktarget);
+    }
+
+    return;
+}
 
 =item name
 
@@ -201,7 +322,11 @@ source packages)
 
 =cut
 
-has uid => (is => 'rw', default => 0);
+has uid => (
+    is => 'rw',
+    coerce => sub { my ($value) = @_; return int($value); },
+    default => 0
+);
 
 =item gid
 
@@ -213,7 +338,11 @@ source packages)
 
 =cut
 
-has gid => (is => 'rw', default => 0);
+has gid => (
+    is => 'rw',
+    coerce => sub { my ($value) = @_; return int($value); },
+    default => 0
+);
 
 =item link
 
