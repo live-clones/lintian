@@ -25,6 +25,7 @@ use Carp;
 use BerkeleyDB;
 use MLDBM qw(BerkeleyDB::Btree Storable);
 use Path::Tiny;
+use Scalar::Util qw(blessed);
 
 use Lintian::File::Path;
 use Lintian::Path::FSInfo;
@@ -232,13 +233,17 @@ sub load {
     my @names = keys %all;
     for my $name (@names) {
 
-        my %entry = %{$all{$name}};
+        my $entry = $all{$name};
 
-        $entry{ownership} =~ s/\s+$//;
+        # only deal with old-style parsing here
+        next
+          if blessed($entry) && $entry->isa('Lintian::File::Path');
 
-        my $file = Lintian::File::Path->new(\%entry);
+        $entry->{ownership} =~ s/\s+$//;
 
-        my $raw_type = substr($entry{perm}, 0, 1);
+        my $file = Lintian::File::Path->new($entry);
+
+        my $raw_type = substr($entry->{perm}, 0, 1);
 
         $file->size(0)
           unless $raw_type eq '-';
@@ -257,7 +262,7 @@ sub load {
                   // Lintian::File::Path::TYPE_OTHER
             ));
 
-        my ($owner, $group) = split('/', $entry{ownership}, 2);
+        my ($owner, $group) = split('/', $entry->{ownership}, 2);
 
         # Memory-optimise for root/root.  Perl has an insane overhead
         # for each field, so this is sadly worth it!
@@ -274,7 +279,9 @@ sub load {
             my $target;
             ($name, $target) = split ' -> ', $name, 2;
             $file->link(dequote_name($target, 0));
-        } elsif ($raw_type eq 'd') {
+        }
+
+        if ($raw_type eq 'd') {
             # Ensure directory names always end with  / or we will add them
             # multiple times to our index.
             $name .= '/'
@@ -287,11 +294,59 @@ sub load {
         $file->name($name);
 
         $idxh{$name} = $file;
+    }
 
-        # Record children
+    # re-read names
+    @names = keys %all;
+
+    for my $name (@names) {
+
+        my $entry = $all{$name};
+
+        # only deal with objects here
+        next
+          unless blessed($entry) && $entry->isa('Lintian::File::Path');
+
+        my $raw_type = substr($entry->perm, 0, 1);
+
+        $entry->size(0)
+          unless $raw_type eq '-';
+
+        # This may appear to be obscene, but the call overhead of
+        # perm2oct is measurable on (e.g.) chromium-browser.  With
+        # the cache we go from ~1.5s to ~0.1s.
+        #   Of the 115363 paths here, only 306 had an "uncached"
+        # permission string (chromium-browser/32.0.1700.123-2).
+        my $operm = $PERM_CACHE{$entry->perm};
+        $operm //= perm2oct($entry->perm);
+
+        $entry->path_info(
+            $operm | (
+                $FILE_CODE2LPATH_TYPE{$raw_type}
+                  // Lintian::File::Path::TYPE_OTHER
+            ));
+
+        $idxh{$name} = $entry;
+
+        push(@{$rhlinks{$entry->link}}, $name)
+          if $raw_type eq 'h';
+    }
+
+    # re-read names
+    @names = keys %idxh;
+
+    # Record children
+    for my $name (@names) {
+
+        my $entry = $idxh{$name};
+
+        my $raw_type = substr($entry->perm, 0, 1);
+
         $children{$name} ||= []
           if $raw_type eq 'd';
-        my ($parent) = ($name =~ m,^(.+/)?(?:[^/]+/?)$,);
+
+        # allow newline in names; need /s for dot matching (#929729)
+        my ($parent) = ($name =~ m{^(.+/)?(?:[^/]+/?)$}s);
         $parent //= EMPTY;
 
         $children{$parent} = []
@@ -315,7 +370,9 @@ sub load {
         # check_dirs /can/ contain the same item multiple times.
         if (!exists $idxh{$name}) {
             my $cpy = Lintian::File::Path->new(\%INDEX_FAUX_DIR_TEMPLATE);
-            my ($parent) = ($name =~ m,^(.+/)?(?:[^/]+/?)$,);
+
+            # allow newline in names; need /s for dot matching (#929729)
+            my ($parent) = ($name =~ m{^(.+/)?(?:[^/]+/?)$}s);
             $parent //= '';
             $cpy->name($name);
             $idxh{$name} = $cpy;
