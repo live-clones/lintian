@@ -138,7 +138,7 @@ sub collect {
                 my $type = $2;
 
                 unless(length $path && length $type) {
-                    generatedone->fail(
+                    $generatedone->fail(
                         "syntax error in file-info output: '$path' '$type'");
 
                     next;
