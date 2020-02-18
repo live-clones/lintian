@@ -58,7 +58,7 @@ sub collect {
     chdir("$dir/unpacked");
 
     my @archives;
-    foreach my $file ($info->sorted_index) {
+    foreach my $file ($info->installed->sorted_list) {
         next unless $file->is_regular_file && $file =~ m{ \. a \Z }xsm;
 
         # skip empty archives to avoid ar error message; happens in tests

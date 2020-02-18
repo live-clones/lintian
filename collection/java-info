@@ -47,15 +47,21 @@ use constant DASH => q{-};
 sub collect {
     my ($pkg, $type, $dir) = @_;
 
-    my $info = create_info($pkg, $type, $dir);
-
     my $unpackedpath = "$dir/unpacked/";
     die "Directory with unpacked data not found in java-info: $unpackedpath"
       unless -d $unpackedpath;
     chdir($unpackedpath);
 
+    my @files;
+
+    my $processable = create_info($pkg, $type, $dir);
+    @files = $processable->patched->sorted_list
+      if $type eq 'source';
+    @files = $processable->installed->sorted_list
+      if $type eq 'binary' || $type eq 'udeb';
+
     my @lines;
-    foreach my $file ($info->sorted_index) {
+    foreach my $file (@files) {
 
         next
           unless $file->is_file;
@@ -65,7 +71,7 @@ sub collect {
         # Wheezy's version of file calls "jar files" for "Zip archive".
         # Newer versions seem to call them "Java Jar file".
         # Jessie also introduced "Java archive data (JAR)"...
-        next unless $info->file_info($filename) =~ m/
+        next unless $processable->file_info($filename) =~ m/
                      Java [ ] (?:Jar [ ] file|archive [ ] data)
                    | Zip [ ] archive
                    | JAR /xo;

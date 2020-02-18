@@ -161,8 +161,15 @@ sub collect {
 
     $loop->add($generate);
 
-    my $info = create_info($pkg, $type, $dir);
-    foreach my $path ($info->sorted_index) {
+    my @files;
+
+    my $processable = create_info($pkg, $type, $dir);
+    @files = $processable->patched->sorted_list
+      if $type eq 'source';
+    @files = $processable->installed->sorted_list
+      if $type eq 'binary' || $type eq 'udeb';
+
+    foreach my $path (@files) {
 
         next
           unless $path->is_file;
