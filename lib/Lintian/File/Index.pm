@@ -28,7 +28,7 @@ use Path::Tiny;
 
 use Lintian::File::Path;
 use Lintian::Path::FSInfo;
-use Lintian::Util qw(internal_error open_gz perm2oct dequote_name);
+use Lintian::Util qw(open_gz perm2oct dequote_name);
 
 use constant EMPTY => q{};
 use constant SPACE => q{ };
@@ -85,11 +85,9 @@ Lintian::Info::Orig::Index provides an interface to collected data about the ups
 
 =over 4
 
-=item load_info
+=item name
 
-Returns the hash used during setup.
-
-=item saved_index
+=item index
 
 Returns a reference to a hash with elements indexed by path names.
 
@@ -101,55 +99,27 @@ Returns a reference to a sorted array with path names.
 
 Returns the base directory for file references.
 
+=item C<anchored>
+
+=item C<allow_empty>
+
+=item C<fs_root_sub>
+
+=item C<file_info_sub>
+
+=item C<fs_info>
+
 =cut
 
-has load_info => (is => 'rw', default => sub { {} });
-has saved_index => (is => 'rw', default => sub { {} });
+has name => (is => 'rw', default => EMPTY);
+has index => (is => 'rw', default => sub { {} });
 has saved_sorted_list => (is => 'rw', default => sub { [] });
 has basedir => (is => 'rw', default => EMPTY);
-
-=item index (FILE)
-
-Like L</index> except orig_index is based on the "orig tarballs" of
-the source packages.
-
-For native packages L</index> and L</orig_index> are generally
-identical.
-
-NB: If sorted_index includes a debian packaging, it is was
-contained in upstream part of the source package (or the package is
-native).
-
-Needs-Info requirements for using I<orig_index>: src-orig-index
-
-=cut
-
-sub index {
-    my ($self, $file) = @_;
-
-    # get root dir by default
-    $file //= EMPTY;
-
-    unless (scalar keys %{$self->saved_index}) {
-
-        my $index = $self->_fetch_index_data($self->load_info);
-        $self->saved_index($index);
-
-        my @sorted = sort keys %{$index};
-        # remove "top" dir in sorted_index; it is hardly ever used
-        # it is always present because we create it if needed
-        # it is always the first entry; the list is sorted
-        shift @sorted;
-        @sorted = map { $index->{$_} } @sorted;
-
-        $self->saved_sorted_list(\@sorted);
-    }
-
-    return $self->saved_index->{$file}
-      if exists $self->saved_index->{$file};
-
-    return;
-}
+has anchored => (is => 'rw', default => 0);
+has allow_empty => (is => 'rw', default => 0);
+has fs_root_sub => (is => 'rw');
+has file_info_sub => (is => 'rw');
+has fs_info => (is => 'rw', default => sub { {} });
 
 =item sorted_list
 
@@ -171,31 +141,77 @@ Needs-Info requirements for using I<sorted_orig_index>: L<Same as orig_index|/or
 sub sorted_list {
     my ($self) = @_;
 
-    # orig_index does all our work for us, so call it if
-    # sorted_orig_index has not been created yet.
+    unless (scalar @{ $self->saved_sorted_list }) {
 
-    $self->index
-      unless scalar @{ $self->saved_sorted_list };
+        my @names = sort keys %{$self->index};
+        my @sorted = map { $self->index->{$_} } @names;
+
+        # remove automatic root dir; list is sorted
+        shift @sorted;
+
+        $self->saved_sorted_list(\@sorted);
+    }
 
     return @{ $self->saved_sorted_list };
 }
 
-# Backing method for index and others; this is not a part of the API.
-# sub _fetch_index_data Needs-Info none
-sub _fetch_index_data {
-    my ($self, $load_info) = @_;
+=item lookup (FILE)
 
-    my $index = $load_info->{'index_file'} // EMPTY;
-    my $allow_empty = $load_info->{'allow_empty'} // 0;
-    my $has_anchored_root_dir = $load_info->{'has_anchored_root_dir'} // 0;
-    my $fs_root_sub = $load_info->{'fs_root_sub'};
-    my $file_info_sub = $load_info->{'file_info_sub'};
+Like L</index> except orig_index is based on the "orig tarballs" of
+the source packages.
+
+For native packages L</index> and L</orig_index> are generally
+identical.
+
+NB: If sorted_index includes a debian packaging, it is was
+contained in upstream part of the source package (or the package is
+native).
+
+Needs-Info requirements for using I<orig_index>: src-orig-index
+
+=cut
+
+sub lookup {
+    my ($self, $name) = @_;
+
+    # get root dir by default
+    $name //= EMPTY;
+
+    croak 'Name is not a string'
+      unless ref $name eq EMPTY;
+
+    return $self->index->{$name}
+      if exists $self->index->{$name};
+
+    return;
+}
+
+=item resolve_path
+
+=cut
+
+sub resolve_path {
+    my ($self, $name) = @_;
+
+    return $self->lookup->resolve_path($name);
+}
+
+=item load
+
+=cut
+
+sub load {
+    my ($self) = @_;
+
+    my $index = $self->name;
+    my $allow_empty = $self->allow_empty;
 
     my $fs_info = Lintian::Path::FSInfo->new(
-        '_collect_path_sub' => $fs_root_sub,
-        '_collect_file_info_sub' => $file_info_sub,
-        'has_anchored_root_dir' => $has_anchored_root_dir,
+        '_collect_path_sub' => $self->fs_root_sub,
+        '_collect_file_info_sub' => $self->file_info_sub,
+        'has_anchored_root_dir' => $self->anchored,
     );
+    $self->fs_info($fs_info);
 
     my %all;
 
@@ -383,7 +399,7 @@ sub _fetch_index_data {
             }
             $entry->sorted_children(\@sorted_children);
             $entry->child_table(\%child_table);
-            $entry->fs_info($fs_info);
+            $entry->fs_info($self->fs_info);
         }
         # Insert name here to share the same storage with the hash key
         $entry->name($file);
@@ -395,7 +411,9 @@ sub _fetch_index_data {
         }
     }
 
-    return \%idxh;
+    $self->index(\%idxh);
+
+    return;
 }
 
 =back

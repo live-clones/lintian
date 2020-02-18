@@ -1,6 +1,6 @@
 # -*- perl -*- Lintian::Info::Control::Index
 #
-# Copyright © 2019 Felix Lechner
+# Copyright © 2020 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by the Free
@@ -60,19 +60,17 @@ sub control {
 
     unless (defined $self->saved_control) {
 
-        my $load_info = {
-            'index_file' => 'control-index',
-            'fs_root_sub' => sub {
+        my $control = Lintian::File::Index->new;
+
+        # control files are not installed relative to the system root
+        # disallow absolute paths and symbolic links
+        $control->name('control-index');
+        $control->fs_root_sub(
+            sub {
                 return $self->_fetch_extracted_dir('control', 'control', @_);
-            },
-            # Control files are not installed relative to the system root.
-            # Accordingly, we forbid absolute paths and symlinks..
-            'has_anchored_root_dir' => 0,
-        };
-
-        my $control = Lintian::File::Index->new('load_info' => $load_info);
-
+            });
         $control->basedir($self->groupdir);
+        $control->load;
 
         $self->saved_control($control);
     }
@@ -101,7 +99,7 @@ Needs-Info requirements for using I<control_index>: bin-pkg-control
 sub control_index {
     my ($self, $file) = @_;
 
-    return $self->control->index($file);
+    return $self->control->lookup($file);
 }
 
 =item sorted_control_index
@@ -138,7 +136,7 @@ Needs-Info requirements for using I<control_index_resolved_path>: L<Same as cont
 sub control_index_resolved_path {
     my ($self, $path) = @_;
 
-    return $self->control->index->resolve_path($path);
+    return $self->control->resolve_path($path);
 }
 
 =back

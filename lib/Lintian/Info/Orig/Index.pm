@@ -1,6 +1,6 @@
 # -*- perl -*- Lintian::Info::Orig::Index
 #
-# Copyright © 2019 Felix Lechner
+# Copyright © 2020 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by the Free
@@ -60,17 +60,14 @@ sub orig {
 
     unless (defined $self->saved_orig) {
 
-        my $load_info = {
-            'index_file' => 'src-orig-index',
-            # source packages do not have anchored roots as they can be
-            # unpacked anywhere...
-            'has_anchored_root_dir' => 1,
-            'allow_empty' => 1,
-        };
+        my $orig = Lintian::File::Index->new;
 
-        my $orig = Lintian::File::Index->new('load_info' => $load_info);
-
+        # source packages can be unpacked anywhere; no anchored roots
+        $orig->name('src-orig-index');
+        $orig->anchored(1);
+        $orig->allow_empty(1);
         $orig->basedir($self->groupdir);
+        $orig->load;
 
         $self->saved_orig($orig);
     }
@@ -97,7 +94,7 @@ Needs-Info requirements for using I<orig_index>: src-orig-index
 sub orig_index {
     my ($self, $file) = @_;
 
-    return $self->orig->index($file);
+    return $self->orig->lookup($file);
 }
 
 =item sorted_orig_index
@@ -142,7 +139,7 @@ Needs-Info requirements for using I<orig_index_resolved_path>: L<Same as orig_in
 sub orig_index_resolved_path {
     my ($self, $path) = @_;
 
-    return $self->orig->index->resolve_path($path);
+    return $self->orig->resolve_path($path);
 }
 
 =back

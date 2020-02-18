@@ -1,8 +1,9 @@
 # -*- perl -*-
 # Lintian::Collect::Source -- interface to source package data collection
 
-# Copyright (C) 2008 Russ Allbery
-# Copyright (C) 2009 Raphael Geissert
+# Copyright © 2008 Russ Allbery
+# Copyright © 2009 Raphael Geissert
+# Copyright © 2020 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by the Free
@@ -478,22 +479,20 @@ sub patched {
 
     unless (defined $self->saved_patched) {
 
-        my $load_info = {
-            'index_file' => 'index',
-            'fs_root_sub' => sub {
+        my $patched = Lintian::File::Index->new;
+
+        # source packages can be unpacked anywhere; no anchored roots
+        $patched->name('index');
+        $patched->fs_root_sub(
+            sub {
                 return $self->_fetch_extracted_dir('unpacked', 'unpacked', @_);
-            },
-            # source packages do not have anchored roots as they can be
-            # unpacked anywhere...
-            'has_anchored_root_dir' => 0,
-            'file_info_sub' => sub {
+            });
+        $patched->file_info_sub(
+            sub {
                 return $self->file_info(@_);
-            },
-        };
-
-        my $patched = Lintian::File::Index->new('load_info' => $load_info);
-
+            });
         $patched->basedir($self->groupdir);
+        $patched->load;
 
         $self->saved_patched($patched);
     }
@@ -548,7 +547,7 @@ Needs-Info requirements for using I<index>: unpacked
 sub index {
     my ($self, $file) = @_;
 
-    return $self->patched->index($file);
+    return $self->patched->lookup($file);
 }
 
 =item sorted_index
@@ -590,7 +589,7 @@ Needs-Info requirements for using I<index_resolved_path>: L<Same as index|/index
 sub index_resolved_path {
     my ($self, $path) = @_;
 
-    return $self->patched->index->resolve_path($path);
+    return $self->patched->resolve_path($path);
 }
 
 =item is_non_free

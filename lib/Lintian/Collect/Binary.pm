@@ -1,9 +1,10 @@
 # -*- perl -*-
 # Lintian::Collect::Binary -- interface to binary package data collection
 
-# Copyright (C) 2008, 2009 Russ Allbery
-# Copyright (C) 2008 Frank Lichtenheld
-# Copyright (C) 2012 Kees Cook
+# Copyright © 2008, 2009 Russ Allbery
+# Copyright © 2008 Frank Lichtenheld
+# Copyright © 2012 Kees Cook
+# Copyright © 2020 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by the Free
@@ -89,20 +90,21 @@ sub installed {
 
     unless (defined $self->saved_installed) {
 
-        my $load_info = {
-            'index_file' => 'index',
-            'fs_root_sub' => sub {
+        my $installed = Lintian::File::Index->new;
+
+        # binary packages are anchored to the system root
+        # allow absolute paths and symbolic links
+        $installed->name('index');
+        $installed->fs_root_sub(
+            sub {
                 return $self->_fetch_extracted_dir('unpacked', 'unpacked', @_);
-            },
-            'has_anchored_root_dir' => 0,
-            'file_info_sub' => sub {
+            });
+        $installed->file_info_sub(
+            sub {
                 return $self->file_info(@_);
-            },
-        };
-
-        my $installed = Lintian::File::Index->new('load_info' => $load_info);
-
+            });
         $installed->basedir($self->groupdir);
+        $installed->load;
 
         $self->saved_installed($installed);
     }
@@ -135,7 +137,7 @@ Needs-Info requirements for using I<index>: unpacked
 sub index {
     my ($self, $file) = @_;
 
-    return $self->installed->index($file);
+    return $self->installed->lookup($file);
 }
 
 =item sorted_index
@@ -177,7 +179,7 @@ Needs-Info requirements for using I<index_resolved_path>: L<Same as index|/index
 sub index_resolved_path {
     my ($self, $path) = @_;
 
-    return $self->installed->index->resolve_path($path);
+    return $self->installed->resolve_path($path);
 }
 
 =item strings (FILE)
