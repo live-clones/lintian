@@ -127,7 +127,7 @@ sub collect {
       unless %components;
 
     my $datepattern = qr/\d{4}-\d{2}-\d{2}/;
-    my $timepattern = qr/\d{2}\:\d{2}(?:\:\d{2})?/;
+    my $timepattern = qr/\d{2}\:\d{2}(?:\:\d{2}(?:\.\d+))?/;
 
     my $cstyle = CString('tar filename', encoding => 'utf8');
 
