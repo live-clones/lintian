@@ -62,7 +62,7 @@ sub conffiles {
     $self->{'conffiles'} = [];
 
     # read conffiles if it exists and is a file
-    my $cf = $self->control_index_resolved_path('conffiles');
+    my $cf = $self->control->resolve_path('conffiles');
     return
       unless $cf && $cf->is_file && $cf->is_open_ok;
 
