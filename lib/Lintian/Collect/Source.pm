@@ -298,7 +298,7 @@ sub binary_field {
 sub _load_dctrl {
     my ($self) = @_;
     # Load the fields from d/control
-    my $dctrl = $self->index_resolved_path('debian/control');
+    my $dctrl = $self->patched->resolve_path('debian/control');
     my $ok = 0;
     $ok = 1 if $dctrl and $dctrl->is_open_ok;
     $self->{binary_names} = [];
