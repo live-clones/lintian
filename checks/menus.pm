@@ -149,12 +149,13 @@ sub binary {
     my %prerm;
     my %postrm;
 
-    $self->check_script(scalar $processable->control_index('preinst'),
+    $self->check_script(scalar $processable->control->lookup('preinst'),
         \%preinst);
-    $self->check_script(scalar $processable->control_index('postinst'),
+    $self->check_script(scalar $processable->control->lookup('postinst'),
         \%postinst);
-    $self->check_script(scalar $processable->control_index('prerm'), \%prerm);
-    $self->check_script(scalar $processable->control_index('postrm'),\%postrm);
+    $self->check_script(scalar $processable->control->lookup('prerm'),\%prerm);
+    $self->check_script(scalar $processable->control->lookup('postrm'),
+        \%postrm);
 
     # Populate all_{files,links} from current package and its dependencies
     foreach my $bin ($group->get_binary_processables) {

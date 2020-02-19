@@ -351,8 +351,8 @@ sub always {
     $provides
       = Lintian::Relation->and($processable->relation('provides'), $provides);
 
-    my $shlibsf = $processable->control_index('shlibs');
-    my $symbolsf = $processable->control_index('symbols');
+    my $shlibsf = $processable->control->lookup('shlibs');
+    my $symbolsf = $processable->control->lookup('symbols');
     my (%shlibs_control, %symbols_control);
 
     # control files are not symlinks (or other "weird" things).

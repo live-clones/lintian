@@ -88,10 +88,10 @@ sub binary {
     my $processable = $self->processable;
 
     my $initd_dir = $processable->installed->resolve_path('etc/init.d/');
-    my $postinst = $processable->control_index('postinst');
-    my $preinst = $processable->control_index('preinst');
-    my $postrm = $processable->control_index('postrm');
-    my $prerm = $processable->control_index('prerm');
+    my $postinst = $processable->control->lookup('postinst');
+    my $preinst = $processable->control->lookup('preinst');
+    my $postrm = $processable->control->lookup('postrm');
+    my $prerm = $processable->control->lookup('prerm');
 
     my (%initd_postinst, %initd_postrm);
 

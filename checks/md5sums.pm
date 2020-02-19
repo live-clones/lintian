@@ -55,7 +55,7 @@ sub files {
 sub breakdown {
     my ($self) = @_;
 
-    my $control = $self->processable->control_index('md5sums');
+    my $control = $self->processable->control->lookup('md5sums');
 
     # Is there an md5sums control file?
     unless ($control) {
@@ -118,7 +118,7 @@ sub read_md5sums_file {
 sub binary {
     my ($self) = @_;
 
-    my $control = $self->processable->control_index('md5sums');
+    my $control = $self->processable->control->lookup('md5sums');
 
     # Is there an md5sums control file?
     return
