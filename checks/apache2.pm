@@ -199,7 +199,7 @@ sub check_maintainer_scripts {
 
     for my $key (keys %control) {
 
-        my $path = $self->processable->control_index_resolved_path($key);
+        my $path = $self->processable->control->resolve_path($key);
         my $interpreter = $control{$key};
 
         next

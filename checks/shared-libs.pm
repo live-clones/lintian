@@ -667,7 +667,7 @@ sub always {
     }
 
     # 6th step: check pre- and post- control files
-    if (my $preinst = $processable->control_index_resolved_path('preinst')) {
+    if (my $preinst = $processable->control->resolve_path('preinst')) {
         if ($preinst->is_open_ok) {
             if ($preinst->file_contents =~ m/^[^\#]*\bldconfig\b/m) {
                 $self->tag(
@@ -679,7 +679,7 @@ sub always {
     }
 
     my $we_trigger_ldconfig = 0;
-    if (my $postinst = $processable->control_index_resolved_path('postinst')) {
+    if (my $postinst = $processable->control->resolve_path('postinst')) {
         if ($postinst->is_open_ok) {
             # Decide if we call ldconfig
             if ($postinst->file_contents =~ m/^[^\#]*\bldconfig\b/m) {
@@ -695,7 +695,7 @@ sub always {
         }
     }
 
-    if (my $triggers = $processable->control_index_resolved_path('triggers')) {
+    if (my $triggers = $processable->control->resolve_path('triggers')) {
         if ($triggers->is_open_ok) {
             # Determine if the package had an ldconfig trigger
             my $fd = $triggers->open;
@@ -727,7 +727,7 @@ sub always {
         $self->tag('shlib-in-multi-arch-foreign-package', $must_call_ldconfig);
     }
 
-    if (my $prerm = $processable->control_index_resolved_path('prerm')) {
+    if (my $prerm = $processable->control->resolve_path('prerm')) {
         if ($prerm->is_open_ok) {
             if ($prerm->file_contents =~ m/^[^\#]*\bldconfig\b/m) {
                 $self->tag(
@@ -738,7 +738,7 @@ sub always {
         }
     }
 
-    if (my $postrm = $processable->control_index_resolved_path('postrm')) {
+    if (my $postrm = $processable->control->resolve_path('postrm')) {
         if ($postrm->is_open_ok) {
             my $contents = $postrm->file_contents;
 

@@ -598,7 +598,7 @@ sub binary {
     my $expand_diversions = 0;
     for my $file (keys %control) {
 
-        my $path = $processable->control_index_resolved_path($file);
+        my $path = $processable->control->resolve_path($file);
         my $interpreter = $control{$file};
 
         $interpreter =~ m|([^/]*)$|;
