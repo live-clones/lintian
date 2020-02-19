@@ -1302,7 +1302,10 @@ m,$LEADIN(?:/usr/bin/)?dpkg\s+--compare-versions\s+.*\b\Q$ver\E(?!\.)\b,
 
         if ($expand_diversions) {
             $self->tag('diversion-for-unknown-file', $divert, "$script:$line")
-              unless (any { $_ =~ m/$divertrx/ } $processable->sorted_index);
+              unless (
+                any { $_ =~ m/$divertrx/ }
+                $processable->installed->sorted_list
+              );
         } else {
             $self->tag('diversion-for-unknown-file', $divert, "$script:$line")
               unless $processable->installed->lookup($divert);
