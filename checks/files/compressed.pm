@@ -73,7 +73,7 @@ sub files {
     # both compressed and uncompressed present
     if ($file->name =~ $DUPLICATED_COMPRESSED_FILE_REGEX) {
         $self->tag('duplicated-compressed-file', $file->name)
-          if $self->processable->index($1);
+          if $self->processable->installed->lookup($1);
     }
 
     # gzip files

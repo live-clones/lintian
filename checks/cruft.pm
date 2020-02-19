@@ -601,7 +601,7 @@ sub find_cruft {
     my $ships_examples = _ships_examples($self->group);
 
     # start with the top-level dirs
-    push(@worklist, $processable->index('')->children);
+    push(@worklist, $processable->patched->lookup->children);
 
   ENTRY:
     while (my $entry = shift(@worklist)) {

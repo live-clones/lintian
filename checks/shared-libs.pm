@@ -214,7 +214,7 @@ sub always {
     # 3rd step: check if shlib symlinks are present and in correct order
     for my $shlib_file (keys %SONAME) {
         # file found?
-        if (not $processable->index($shlib_file)) {
+        if (not $processable->installed->lookup($shlib_file)) {
             internal_error(
                 "shlib $shlib_file not found in package (should not happen!)");
         }
@@ -226,7 +226,7 @@ sub always {
 
         # symlink found?
         my $link_file = "$dir/$SONAME{$shlib_file}";
-        if (not $processable->index($link_file)) {
+        if (not $processable->installed->lookup($link_file)) {
             $self->tag('ldconfig-symlink-missing-for-shlib',
                 "$link_file $shlib_file $SONAME{$shlib_file}");
         } else {
@@ -235,18 +235,20 @@ sub always {
                 # the library file uses its SONAME, this is ok...
             } else {
                 # $link_file really a symlink?
-                if ($processable->index($link_file)->is_symlink) {
+                if ($processable->installed->lookup($link_file)->is_symlink) {
                     # yes.
 
                     # $link_file pointing to correct file?
-                    if ($processable->index($link_file)->link eq $shlib_name) {
+                    if ($processable->installed->lookup($link_file)->link eq
+                        $shlib_name) {
                         # ok.
                     } else {
                         $self->tag(
                             'ldconfig-symlink-referencing-wrong-file',
                             join(q{ },
                                 "$link_file ->",
-                                $processable->index($link_file)->link,
+                                $processable->installed->lookup($link_file)
+                                  ->link,
                                 "instead of $shlib_name"));
                     }
                 } else {
@@ -265,7 +267,8 @@ sub always {
         # if shlib doesn't _have_ a version, then $link_file and
         # $shlib_file will be equal, and it's not a development link,
         # so don't complain.
-        if ($processable->index($link_file) and $link_file ne $shlib_file) {
+        if (    $processable->installed->lookup($link_file)
+            and $link_file ne $shlib_file) {
             $self->tag('non-dev-pkg-with-shlib-symlink',
                 "$shlib_file $link_file");
         } elsif (@devpkgs) {
@@ -325,7 +328,7 @@ sub always {
             foreach my $devpkg (@devpkgs) {
 
                 foreach my $link (@alt) {
-                    if ($devpkg->index($link)) {
+                    if ($devpkg->installed->lookup($link)) {
                         $ok = 1;
                         last PKG;
                     }

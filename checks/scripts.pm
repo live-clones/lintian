@@ -565,7 +565,7 @@ sub binary {
     }
 
     foreach (keys %executable) {
-        my $index_info = $processable->index($_);
+        my $index_info = $processable->installed->lookup($_);
         my $ok = 0;
         if ($index_info->is_hardlink) {
             # We don't collect script information for hardlinks, so check
@@ -1305,7 +1305,7 @@ m,$LEADIN(?:/usr/bin/)?dpkg\s+--compare-versions\s+.*\b\Q$ver\E(?!\.)\b,
               unless (any { $_ =~ m/$divertrx/ } $processable->sorted_index);
         } else {
             $self->tag('diversion-for-unknown-file', $divert, "$script:$line")
-              unless $processable->index($divert);
+              unless $processable->installed->lookup($divert);
         }
     }
 

@@ -119,7 +119,8 @@ sub overlap_check {
         my $name = $a_file->name;
         my $b_file;
         $name =~ s,/$,,o;
-        $b_file = $b_info->index($name) // $b_info->index("$name/");
+        $b_file = $b_info->installed->lookup($name)
+          // $b_info->installed->lookup("$name/");
         if ($b_file) {
             next if $a_file->is_dir and $b_file->is_dir;
             $self->tag('binaries-have-file-conflict',

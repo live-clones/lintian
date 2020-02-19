@@ -50,8 +50,8 @@ sub source {
     my $package_type = 'unknown';
 
     # PEAR or PECL package
-    my $package_xml = $processable->index('package.xml');
-    my $package2_xml = $processable->index('package2.xml');
+    my $package_xml = $processable->patched->lookup('package.xml');
+    my $package2_xml = $processable->patched->lookup('package2.xml');
     if (defined($package_xml) || defined($package2_xml)) {
         # Checking source builddep
         if (!$bdepends->implies('pkg-php-tools')) {
@@ -117,14 +117,14 @@ sub source {
         }
     }
     # PEAR channel
-    my $channel_xml = $processable->index('channel.xml');
+    my $channel_xml = $processable->patched->lookup('channel.xml');
     if (defined($channel_xml)) {
         if (!$bdepends->implies('pkg-php-tools')) {
             $self->tag('pear-channel-without-pkg-php-tools-builddep');
         }
     }
     # Composer package
-    my $composer_json = $processable->index('composer.json');
+    my $composer_json = $processable->patched->lookup('composer.json');
     if (   !defined($package_xml)
         && !defined($package2_xml)
         && defined($composer_json)) {

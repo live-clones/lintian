@@ -71,7 +71,7 @@ sub binary {
         $count{$relative}++;
 
         $self->tag('conffile-is-not-in-package', $relative)
-          unless defined $self->processable->index($relative);
+          unless defined $self->processable->installed->lookup($relative);
 
         $self->tag('file-in-etc-rc.d-marked-as-conffile', $relative)
           if $relative =~ m,^etc/rc.\.d/,;

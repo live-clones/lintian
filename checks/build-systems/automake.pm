@@ -34,12 +34,12 @@ sub source {
 
     my $processable = $self->processable;
 
-    my $makefile = $processable->index('Makefile.am');
+    my $makefile = $processable->patched->lookup('Makefile.am');
 
     # If there's no Makefile.am, automake probably isn't used, we're fine
     return unless defined $makefile;
 
-    my $deprecated_configure = $processable->index('configure.in');
+    my $deprecated_configure = $processable->patched->lookup('configure.in');
 
     if (defined $deprecated_configure) {
         $self->tag('deprecated-configure-filename');

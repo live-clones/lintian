@@ -501,7 +501,7 @@ sub parse_dep5 {
                             push(@wlist, @shippedfiles);
 
                         } elsif ($wc_value =~ /^debian\//) {
-                            my $dir = $processable->index($wc_value);
+                            my $dir = $processable->patched->lookup($wc_value);
                             if ($dir) {
                                 my @files = grep { $_->is_file }
                                   $dir->children('breadth-first');
@@ -887,12 +887,12 @@ sub binary {
     my $linked = 0;
     my $path = "usr/share/doc/$pkg";
 
-    if ($processable->index("$path/copyright.gz")) {
+    if ($processable->installed->lookup("$path/copyright.gz")) {
         $self->tag('copyright-file-compressed');
         $found = 1;
     }
 
-    if (my $index_info = $processable->index("$path/copyright")) {
+    if (my $index_info = $processable->installed->lookup("$path/copyright")) {
         $found = 1;
         if ($index_info->is_symlink) {
             $self->tag('copyright-file-is-symlink');
@@ -903,7 +903,7 @@ sub binary {
     }
 
     if (not $found) {
-        my $index_info = $processable->index($path);
+        my $index_info = $processable->installed->lookup($path);
         if (defined $index_info && $index_info->is_symlink) {
             my $link = $index_info->link;
 

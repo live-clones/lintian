@@ -130,7 +130,7 @@ sub binary {
                 while ($line =~ /[\0][\b]\[image src="((?:\\.|[^\"])+)"/smg) {
                     my $src = $1;
                     $src =~ s/\\(.)/$1/g;   # unbackslash
-                    $processable->index(
+                    $processable->installed->lookup(
                         normalize_pkg_path('usr/share/info', $src))
                       or $self->tag('info-document-missing-image-file',
                         $file, $src);

@@ -561,8 +561,8 @@ sub check_doc_base_file_section {
 # links have to include a leading /.
 sub add_file_link_info {
     my ($processable, $file, $all_files, $all_links) = @_;
-    my $link = $processable->index($file)->link;
-    my $ishard = $processable->index($file)->is_hardlink;
+    my $link = $processable->installed->lookup($file)->link;
+    my $ishard = $processable->installed->lookup($file)->is_hardlink;
 
     $file = '/' . $file if (not $file =~ m%^/%); # make file absolute
     $file =~ s%/+%/%g;                           # remove duplicated `/'

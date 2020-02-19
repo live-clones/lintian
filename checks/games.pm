@@ -47,7 +47,7 @@ sub files {
 sub dir_counts {
     my ($self, $filename) = @_;
 
-    my $file = $self->processable->index($filename);
+    my $file = $self->processable->installed->lookup($filename);
 
     return 0
       unless $file;
