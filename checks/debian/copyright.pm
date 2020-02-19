@@ -509,7 +509,7 @@ sub parse_dep5 {
                             }
 
                         } else {
-                            my $dir = $processable->orig_index($wc_value);
+                            my $dir = $processable->orig->lookup($wc_value);
                             if ($dir) {
                                 my @files = grep { $_->is_file }
                                   $dir->children('breadth-first');
