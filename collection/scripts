@@ -94,7 +94,7 @@ sub collect {
       -Flags    => DB_CREATE
       or die "Cannot open file $control_dbpath: $! $BerkeleyDB::Error\n";
 
-    for my $path ($info->control_index(EMPTY)->children) {
+    for my $path ($info->control->lookup->children) {
         next unless $path->is_open_ok;
 
         # skip anything other than maintainer scripts
