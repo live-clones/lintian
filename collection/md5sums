@@ -2,7 +2,7 @@
 # md5sums -- lintian collection script
 
 # Copyright © 1998 Richard Braakman
-# Copyright © 2019 Felix Lechner
+# Copyright © 2020 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -36,11 +36,12 @@ use Path::Tiny;
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
 
 use Lintian::Collect::Dispatcher qw(create_info);
-use Lintian::Util qw(drop_relative_prefix safe_qx);
+use Lintian::Util qw(drop_relative_prefix read_md5sums safe_qx);
 
 use constant EMPTY => q{};
 use constant SPACE => q{ };
 use constant COLON => q{:};
+use constant BACKSLASH => q{\\};
 use constant NEWLINE => qq{\n};
 use constant NULL => qq{\0};
 
@@ -53,12 +54,13 @@ sub collect {
     my $future = $loop->new_future;
 
     my @command= ('xargs', '--null', '--no-run-if-empty', 'md5sum', '--');
+    my $stdout;
     my $errors;
 
     my $calculate = IO::Async::Process->new(
         command => [@command],
         stdin => { via => 'pipe_write' },
-        stdout => { via => 'pipe_read' },
+        stdout => { into => \$stdout },
         stderr => { into => \$errors },
         on_finish => sub {
             my ($self, $exitcode) = @_;
@@ -76,6 +78,26 @@ sub collect {
             return;
         });
 
+    $loop->add($calculate);
+
+    my @candidates;
+
+    my $processable = create_info($pkg, $type, $dir);
+    @candidates = $processable->patched->sorted_list
+      if $type eq 'source';
+    @candidates = $processable->installed->sorted_list
+      if $type eq 'binary' || $type eq 'udeb';
+
+    my @files = grep { $_->is_file } @candidates;
+
+    # pipe names to xargs process
+    $calculate->stdin->write($_->name . NULL)for @files;
+
+    $calculate->stdin->close_when_empty;
+    $future->get;
+
+    my ($md5sums, undef) = read_md5sums($stdout);
+
     my $dbpath = "$dir/md5sums.db";
     unlink $dbpath
       if -e $dbpath;
@@ -86,72 +108,7 @@ sub collect {
       -Flags    => DB_CREATE
       or die "Cannot open file $dbpath: $! $BerkeleyDB::Error\n";
 
-    $calculate->stdout->configure(
-        on_read => sub {
-            my ($stream, $buffref, $eof) = @_;
-
-            local $\ = NULL;
-
-            while($$buffref =~ s/^(\S*)\s+([^\n]*)\n//) {
-
-                my $sum = $1;
-                my $path = $2;
-
-                unless (length $sum && length $path) {
-                    $future->fail(
-                        "syntax error in md5sum output: '$sum' '$path'");
-                    next;
-                }
-
-                # remove relative prefix, if present
-                $path = drop_relative_prefix($path);
-
-                $h{$path} = $sum;
-            }
-
-            return 0;
-        },
-    );
-
-    $loop->add($calculate);
-
-    my @special;
-
-    my @files;
-
-    my $processable = create_info($pkg, $type, $dir);
-    @files = $processable->patched->sorted_list
-      if $type eq 'source';
-    @files = $processable->installed->sorted_list
-      if $type eq 'binary' || $type eq 'udeb';
-
-    foreach my $path (@files) {
-
-        next
-          unless $path->is_file;
-
-        if (index($path->name, NEWLINE) >= 0) {
-            push(@special, $path->name);
-
-            next;
-        }
-
-        $calculate->stdin->write($path . NULL);
-    }
-
-    $calculate->stdin->close_when_empty;
-    $future->get;
-
-    for my $path (@special) {
-
-        my $output = safe_qx('md5sum', '--', $path);
-        my ($md5sum) = ($output =~ qr/^(\S+)/);
-
-        next
-          unless length $md5sum;
-
-        $h{path} = $md5sum;
-    }
+    $h{$_} = $md5sums->{$_}for keys %{$md5sums};
 
     untie %h;
 
