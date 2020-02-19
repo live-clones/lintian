@@ -36,7 +36,7 @@ sub source {
     my $processable = $self->processable;
     my $group = $self->group;
 
-    my $debian_dir = $processable->index_resolved_path('debian');
+    my $debian_dir = $processable->patched->resolve_path('debian');
     return
       unless $debian_dir;
 

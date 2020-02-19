@@ -69,7 +69,7 @@ sub source {
 
             $self->tag('multi-arch-same-package-has-arch-specific-overrides',
                 $specific)
-              if $processable->index_resolved_path($specific);
+              if $processable->patched->resolve_path($specific);
         }
     }
 

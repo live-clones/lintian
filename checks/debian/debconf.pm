@@ -82,7 +82,7 @@ sub always {
 
         foreach my $file (@files) {
             my $dfile = "debian/$file";
-            my $templates_file = $processable->index_resolved_path($dfile);
+            my $templates_file = $processable->patched->resolve_path($dfile);
             my $binary = $file;
             $binary =~ s/\.?templates$//;
             # Single binary package (so @files contains "templates" and
@@ -572,7 +572,7 @@ sub always {
     return if ($pkg eq 'debconf') || ($type eq 'udeb');
 
     foreach my $filename (sort keys %{$processable->scripts}) {
-        my $path = $processable->index_resolved_path($filename);
+        my $path = $processable->installed->resolve_path($filename);
         next if not $path or not $path->is_open_ok;
         my $fd = $path->open;
         while (<$fd>) {

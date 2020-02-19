@@ -66,7 +66,8 @@ sub binary {
     # case this is the best we can do
     $madir = '${DEB_HOST_MULTIARCH}' unless defined $madir;
 
-    if (my $xmldir = $processable->index_resolved_path('usr/share/gir-1.0/')) {
+    if (my $xmldir
+        = $processable->installed->resolve_path('usr/share/gir-1.0/')) {
         foreach my $child ($xmldir->children) {
             next unless $child =~ m/\.gir$/;
             push @girs, $child;
@@ -74,7 +75,7 @@ sub binary {
     }
 
     if (my $dir
-        = $processable->index_resolved_path('usr/lib/girepository-1.0/')) {
+        = $processable->installed->resolve_path('usr/lib/girepository-1.0/')) {
         push @typelibs, $dir->children;
         foreach my $typelib ($dir->children) {
             $self->tag((
@@ -84,9 +85,10 @@ sub binary {
         }
     }
 
-    if (my $dir
-        = $processable->index_resolved_path("usr/lib/$madir/girepository-1.0"))
-    {
+    if (
+        my $dir= $processable->installed->resolve_path(
+            "usr/lib/$madir/girepository-1.0")
+    ){
         push @typelibs, $dir->children;
     }
 

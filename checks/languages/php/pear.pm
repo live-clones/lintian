@@ -140,7 +140,7 @@ sub source {
             || defined($channel_xml)
             || defined($composer_json))
     ) {
-        my $rules = $processable->index_resolved_path('debian/rules');
+        my $rules = $processable->patched->resolve_path('debian/rules');
         if ($rules and $rules->is_open_ok) {
             my $has_buildsystem_phppear = 0;
             my $has_addon_phppear = 0;

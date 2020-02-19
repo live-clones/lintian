@@ -197,7 +197,8 @@ sub binary {
 
     # check consistency
     # docbase file?
-    if (my $db_dir = $processable->index_resolved_path('usr/share/doc-base/')){
+    if (my $db_dir
+        = $processable->installed->resolve_path('usr/share/doc-base/')){
         for my $dbpath ($db_dir->children) {
             next if not $dbpath->is_open_ok;
             if ($dbpath->resolve_path->is_executable) {

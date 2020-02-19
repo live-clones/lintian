@@ -377,7 +377,7 @@ sub binary {
             and $filename !~ m,^etc/csh/login\.d/,)
           and not $in_docs;
 
-        $path = $processable->index_resolved_path($filename);
+        $path = $processable->installed->resolve_path($filename);
         next if not $path or not $path->is_open_ok;
         # Syntax-check most shell scripts, but don't syntax-check
         # scripts that end in .dpatch.  bash -n doesn't stop checking

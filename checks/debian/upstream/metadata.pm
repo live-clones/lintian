@@ -37,7 +37,7 @@ sub source {
     my ($self) = @_;
 
     my $file
-      = $self->processable->index_resolved_path('debian/upstream/metadata');
+      = $self->processable->patched->resolve_path('debian/upstream/metadata');
 
     if ($self->processable->native) {
         $self->tag('upstream-metadata-in-native-source')

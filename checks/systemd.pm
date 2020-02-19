@@ -76,7 +76,8 @@ sub binary {
     my $processable = $self->processable;
 
     # non-service checks
-    if (my $tmpfiles = $processable->index_resolved_path('etc/tmpfiles.d/')) {
+    if (my $tmpfiles= $processable->installed->resolve_path('etc/tmpfiles.d/'))
+    {
         for my $file ($tmpfiles->children('breadth-first')) {
             if ($file->basename =~ m,\.conf$,) {
                 $self->tag('systemd-tmpfiles.d-outside-usr-lib', $file);
@@ -118,7 +119,8 @@ sub get_init_scripts {
 
     my @scripts;
     if ($processable->name ne 'initscripts'
-        and my $initd_path = $processable->index_resolved_path('etc/init.d/')){
+        and my $initd_path
+        = $processable->installed->resolve_path('etc/init.d/')){
         for my $init_script ($initd_path->children) {
             # sysv generator drops the .sh suffix
             my $basename = get_init_service_name($init_script);
@@ -284,7 +286,7 @@ sub check_systemd_service_file {
             my $service = $1;
             for my $x (qw(path timer)) {
                 $is_standalone = 0
-                  if $processable->index_resolved_path(
+                  if $processable->installed->resolve_path(
                     "lib/systemd/system/${service}.${x}");
             }
         }

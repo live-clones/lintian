@@ -47,7 +47,7 @@ sub source {
     if (any { /^autopkgtest-pkg-nodejs$/ } @testsuites) {
         # Check control file exists in sources
         my $filename = 'debian/tests/pkg-js/test';
-        my $path = $processable->index_resolved_path($filename);
+        my $path = $processable->patched->resolve_path($filename);
 
         # Ensure test file contains something
         if ($path and $path->is_open_ok) {
@@ -58,7 +58,8 @@ sub source {
         }
 
         # Ensure all files referenced in debian/tests/pkg-js/files exist
-        $path = $processable->index_resolved_path('debian/tests/pkg-js/files');
+        $path
+          = $processable->patched->resolve_path('debian/tests/pkg-js/files');
 
         my @files;
         @files = path($path->fs_path)->lines
@@ -71,7 +72,7 @@ sub source {
         $self->tag('pkg-js-autopkgtest-file-does-not-exist', $_) for @notfound;
     }
     # debian/rules check
-    my $droot = $processable->index_resolved_path('debian/') or return;
+    my $droot = $processable->patched->resolve_path('debian/') or return;
     my $drules = $droot->child('rules') or return;
     return unless $drules->is_open_ok;
     my $rules_fd = $drules->open;
@@ -100,7 +101,7 @@ sub source {
         and not $override_test
         and not $seen_dh_dynamic) {
         my $filename = 'debian/tests/pkg-js/test';
-        my $path = $processable->index_resolved_path($filename);
+        my $path = $processable->patched->resolve_path($filename);
         # Ensure test file contains something
         if ($path) {
             $self->tag('pkg-js-tools-test-is-empty', $filename)
@@ -193,7 +194,7 @@ sub path_exists {
 
             next
               unless
-              defined($dir = $processable->index_resolved_path($dir[$i]));
+              defined($dir = $processable->patched->resolve_path($dir[$i]));
             next unless $dir->is_dir;
             last LOOP
               unless (

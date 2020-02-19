@@ -167,7 +167,7 @@ sub binary {
 
     my (@menufiles, %desktop_cmds);
     for my $dirname (qw(usr/share/menu/ usr/lib/menu/)) {
-        if (my $dir = $processable->index_resolved_path($dirname)) {
+        if (my $dir = $processable->installed->resolve_path($dirname)) {
             push(@menufiles, $dir->children);
         }
     }
@@ -525,18 +525,19 @@ sub verify_icon {
     }
 
     # Try the explicit location, and if that fails, try the standard path.
-    my $iconfile = $processable->index_resolved_path($icon);
+    my $iconfile = $processable->installed->resolve_path($icon);
     if (not $iconfile) {
         $iconfile
-          = $processable->index_resolved_path("usr/share/pixmaps/$icon");
+          = $processable->installed->resolve_path("usr/share/pixmaps/$icon");
         if (not $iconfile) {
             foreach
               my $depproc (@{ $group->direct_dependencies($processable) }) {
 
-                $iconfile = $depproc->index_resolved_path($icon);
+                $iconfile = $depproc->installed->resolve_path($icon);
                 last if $iconfile;
                 $iconfile
-                  = $depproc->index_resolved_path("usr/share/pixmaps/$icon");
+                  = $depproc->installed->resolve_path(
+                    "usr/share/pixmaps/$icon");
                 last if $iconfile;
             }
         }

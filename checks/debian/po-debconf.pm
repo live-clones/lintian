@@ -46,7 +46,7 @@ sub source {
     my $has_template = 0;
     my @lang_templates;
     my $full_translation = 0;
-    my $debian_dir = $processable->index_resolved_path('debian/');
+    my $debian_dir = $processable->patched->resolve_path('debian/');
     return if not $debian_dir;
     my $debian_po_dir = $debian_dir->resolve_path('po');
     my ($templ_pot_path, $potfiles_in_path);

@@ -59,7 +59,7 @@ sub source {
     my $processable = $self->processable;
     my $group = $self->group;
 
-    my $droot = $processable->index_resolved_path('debian/');
+    my $droot = $processable->patched->resolve_path('debian/');
     my ($drules, $dh_bd_version, $level);
 
     my $seencommand = '';

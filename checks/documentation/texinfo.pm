@@ -37,7 +37,7 @@ sub binary {
 
     my $processable = $self->processable;
 
-    my $info_dir = $processable->index_resolved_path('usr/share/info/');
+    my $info_dir = $processable->installed->resolve_path('usr/share/info/');
     return
       unless $info_dir;
 

@@ -253,7 +253,7 @@ sub always {
     my $is_transitional = $processable->is_pkg_class('transitional');
     if (!$has_public_jars && !$is_transitional && $pkg =~ /^lib[^\s,]+-java$/){
         # Skip this if it installs a symlink in usr/share/java
-        my $java_dir = $processable->index_resolved_path('usr/share/java/');
+        my $java_dir= $processable->installed->resolve_path('usr/share/java/');
         my $has_jars = 0;
         $has_jars = 1
           if $java_dir

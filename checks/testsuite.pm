@@ -62,9 +62,9 @@ sub source {
     my $processable = $self->processable;
 
     my $testsuites = $processable->field('testsuite', '');
-    my $control = $processable->index_resolved_path('debian/tests/control');
+    my $control = $processable->patched->resolve_path('debian/tests/control');
     my $control_autodep8
-      = $processable->index_resolved_path('debian/tests/control.autodep8');
+      = $processable->patched->resolve_path('debian/tests/control.autodep8');
     my $needs_control = 0;
 
     $self->tag('testsuite-autopkgtest-missing')
@@ -230,7 +230,7 @@ sub check_test_file {
 
     # Special case with "Tests-Directory: ." (see #849880)
     my $path = $directory eq '.' ? $name : "$directory/$name";
-    my $index = $processable->index_resolved_path($path);
+    my $index = $processable->patched->resolve_path($path);
 
     if ($name !~ m{^ [ [:alnum:] \+ \- \. / ]++ $}xsm) {
         $self->tag(

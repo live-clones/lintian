@@ -100,7 +100,7 @@ sub source {
     my $processable = $self->processable;
     my $group = $self->group;
 
-    my $debian_dir = $processable->index_resolved_path('debian/');
+    my $debian_dir = $processable->patched->resolve_path('debian/');
     return if not $debian_dir;
     my $copyright_path = $debian_dir->child('copyright');
 
@@ -368,7 +368,7 @@ sub parse_dep5 {
         @shipped = $processable->orig->sorted_list;
     }
 
-    my $debian_dir = $processable->index_resolved_path('debian/');
+    my $debian_dir = $processable->patched->resolve_path('debian/');
     if ($debian_dir) {
 
         push(@shipped, $debian_dir->children('breadth-first'));
@@ -608,7 +608,7 @@ sub parse_dep5 {
             my $parser = XML::LibXML->new;
             $parser->set_option('no_network', 1);
 
-            my $file = $processable->index_resolved_path($srcfile);
+            my $file = $processable->patched->resolve_path($srcfile);
             my $doc = eval {$parser->parse_file($file->fs_path);};
             next
               unless $doc;

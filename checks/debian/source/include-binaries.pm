@@ -33,7 +33,7 @@ with 'Lintian::Check';
 sub source {
     my ($self) = @_;
 
-    my $sourcedir = $self->processable->index_resolved_path('debian/source/');
+    my $sourcedir= $self->processable->patched->resolve_path('debian/source/');
     return
       unless $sourcedir;
 
@@ -56,7 +56,7 @@ sub source {
         $line =~ s/^\s+|\s+$//g;
 
         $self->tag('unused-entry-in-debian-source-include-binaries', $line)
-          unless $self->processable->index_resolved_path($line);
+          unless $self->processable->patched->resolve_path($line);
     }
 
     return;
