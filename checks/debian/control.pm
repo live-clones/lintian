@@ -418,7 +418,7 @@ sub source {
     if (defined(my $r3 = $processable->source_field('rules-requires-root'))) {
         if ($r3 eq 'no') {
             $self->tag('rules-does-not-require-root');
-        } elsif ($r3 eq 'binary-targets') {
+        } else {
             $self->tag('rules-requires-root-explicitly');
         }
     } else {
