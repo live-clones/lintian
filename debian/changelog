@@ -1,8 +1,21 @@
-lintian (2.53.0+git) UNRELEASED; urgency=medium
+lintian (2.54.0) unstable; urgency=medium
 
-  * WIP (generated upon release).
+  [ Chris Lamb ]
+  * Also permit millisecond-resolution timestamps in tar archives. (Closes: #951594)
 
- -- Chris Lamb <lamby@debian.org>  Sun, 16 Feb 2020 20:36:23 +0000
+  [ Felix Lechner ]
+  * Parse the output of the md5sum utility properly in all circumstances.
+    (Closes: #951136)
+  * Parse file indices for .deb files with a new utility in
+    Lintian::File::Path. (Closes: #929729)
+  * Revert adding libdata-parsebinary-perl to Depends and Build-Depends
+    and related functionality; Data::ParseBinary did not function as
+    required.
+
+  [ Xavier Guimard ]
+  * Replace the deprecated node-uglify with uglifyjs in build dependencies.
+
+ -- Chris Lamb <lamby@debian.org>  Thu, 20 Feb 2020 20:42:40 +0000
 
 lintian (2.53.0) unstable; urgency=medium
 
