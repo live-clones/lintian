@@ -296,10 +296,6 @@ NB: If only numerical owner information is available in the package,
 this may return a numerical owner (except uid 0 is always mapped to
 "root")
 
-=cut
-
-has owner => (is => 'rw', default => 'root');
-
 =item group
 
 Returns the group of the path entry as a username.
@@ -308,10 +304,6 @@ NB: If only numerical owner information is available in the package,
 this may return a numerical group (except gid 0 is always mapped to
 "root")
 
-=cut
-
-has group => (is => 'rw', default => 'root');
-
 =item uid
 
 Returns the uid of the owner of the path entry.
@@ -319,14 +311,6 @@ Returns the uid of the owner of the path entry.
 NB: If the uid is not available, 0 will be returned.
 This usually happens if the numerical data is not collected (e.g. in
 source packages)
-
-=cut
-
-has uid => (
-    is => 'rw',
-    coerce => sub { my ($value) = @_; return int($value); },
-    default => 0
-);
 
 =item gid
 
@@ -338,9 +322,24 @@ source packages)
 
 =cut
 
+has owner => (
+    is => 'rw',
+    coerce => sub { my ($string) = @_; return $string // 'root'; },
+    default => 'root'
+);
+has group => (
+    is => 'rw',
+    coerce => sub { my ($string) = @_; return $string // 'root'; },
+    default => 'root'
+);
+has uid => (
+    is => 'rw',
+    coerce => sub { my ($value) = @_; return int($value // 0); },
+    default => 0
+);
 has gid => (
     is => 'rw',
-    coerce => sub { my ($value) = @_; return int($value); },
+    coerce => sub { my ($value) = @_; return int($value // 0); },
     default => 0
 );
 
