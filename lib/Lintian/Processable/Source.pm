@@ -38,6 +38,7 @@ with 'Lintian::Collect::Source', 'Lintian::Processable::Diffstat',
   'Lintian::Processable::Fields::Files', 'Lintian::Processable::Orig',
   'Lintian::Processable::Overrides',
   'Lintian::Processable::Package',
+  'Lintian::Processable::Patched',
   'Lintian::Processable';
 
 =for Pod::Coverage BUILDARGS
