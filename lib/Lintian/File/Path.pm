@@ -449,7 +449,24 @@ happen if a package does not include all intermediate directories.
 
 =cut
 
-has name => (is => 'rw', default => EMPTY);
+has name => (
+    is => 'rw',
+    coerce => sub { my ($string) = @_; return $string // EMPTY;},
+    trigger => sub {
+        my ($self, $name) = @_;
+
+        # allow newline in names; need /s for dot matching (#929729)
+        my ($parentname) = ($name =~ m{^(.+/)?(?:[^/]+/?)$}s);
+
+        $self->parentname($parentname);
+    },
+    default => EMPTY
+);
+has parentname => (
+    is => 'rw',
+    coerce => sub { my ($string) = @_; return $string // EMPTY;},
+    default => EMPTY
+);
 has link => (is => 'rw');
 has parent_dir => (is => 'rw');
 has faux => (is => 'rw', default => 0);
