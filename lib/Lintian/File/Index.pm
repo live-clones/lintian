@@ -23,6 +23,7 @@ use autodie;
 
 use Carp;
 use BerkeleyDB;
+use List::MoreUtils qw(any);
 use MLDBM qw(BerkeleyDB::Btree Storable);
 use Path::Tiny;
 use Scalar::Util qw(blessed);
@@ -33,21 +34,10 @@ use Lintian::Util qw(open_gz perm2oct dequote_name);
 
 use constant EMPTY => q{};
 use constant SPACE => q{ };
+use constant SLASH => q{/};
 
 use Moo;
 use namespace::clean;
-
-# A cache for (probably) the 5 most common permission strings seen in
-# the wild.
-# It may seem obscene, but it has an extreme "hit-ratio" and it is
-# cheaper vastly than perm2oct.
-my %PERM_CACHE = map { $_ => perm2oct($_) } (
-    '-rw-r--r--', # standard (non-executable) file
-    '-rwxr-xr-x', # standard executable file
-    'drwxr-xr-x', # standard dir perm
-    'drwxr-sr-x', # standard dir perm with suid (lintian-lab on lintian.d.o)
-    'lrwxrwxrwx', # symlinks
-);
 
 my %FILE_CODE2LPATH_TYPE = (
     '-' => Lintian::File::Path::TYPE_FILE| Lintian::File::Path::OPEN_IS_OK,
@@ -57,16 +47,6 @@ my %FILE_CODE2LPATH_TYPE = (
     'b' => Lintian::File::Path::TYPE_BLOCK_DEV,
     'c' => Lintian::File::Path::TYPE_CHAR_DEV,
     'p' => Lintian::File::Path::TYPE_PIPE,
-);
-
-my %INDEX_FAUX_DIR_TEMPLATE = (
-    'name'       => '',
-    'path_info' => $FILE_CODE2LPATH_TYPE{'d'} | 0755,
-    # Pick a "random" (but fixed) date
-    # - hint, it's a good read.  :)
-    'date'       => '1998-01-25',
-    'time'       => '22:55:34',
-    'faux'       => 1,
 );
 
 =head1 NAME
@@ -228,247 +208,166 @@ sub load {
 
     untie %h;
 
-    my (%idxh, %children, %rhlinks, @check_dirs);
-
-    my @names = keys %all;
-    for my $name (@names) {
-
-        my $entry = $all{$name};
-
-        # only deal with old-style parsing here
-        next
-          if blessed($entry) && $entry->isa('Lintian::File::Path');
-
-        $entry->{ownership} =~ s/\s+$//;
-
-        my $file = Lintian::File::Path->new($entry);
-
-        my $raw_type = substr($entry->{perm}, 0, 1);
-
-        $file->size(0)
-          unless $raw_type eq '-';
-
-        # This may appear to be obscene, but the call overhead of
-        # perm2oct is measurable on (e.g.) chromium-browser.  With
-        # the cache we go from ~1.5s to ~0.1s.
-        #   Of the 115363 paths here, only 306 had an "uncached"
-        # permission string (chromium-browser/32.0.1700.123-2).
-        my $operm = $PERM_CACHE{$file->perm};
-        $operm //= perm2oct($file->perm);
-
-        $file->path_info(
-            $operm | (
-                $FILE_CODE2LPATH_TYPE{$raw_type}
-                  // Lintian::File::Path::TYPE_OTHER
-            ));
-
-        my ($owner, $group) = split('/', $entry->{ownership}, 2);
-
-        # Memory-optimise for root/root.  Perl has an insane overhead
-        # for each field, so this is sadly worth it!
-        $file->owner($owner);
-        $file->group($group);
-
-        if ($name =~ s/ link to (.*)//) {
-            my $target = dequote_name($1);
-            $file->path_info($FILE_CODE2LPATH_TYPE{'h'} | $operm);
-            $file->link($target);
-
-            push @{$rhlinks{$target}}, dequote_name($name);
-        } elsif ($raw_type eq 'l') {
-            my $target;
-            ($name, $target) = split ' -> ', $name, 2;
-            $file->link(dequote_name($target, 0));
-        }
-
-        if ($raw_type eq 'd') {
-            # Ensure directory names always end with  / or we will add them
-            # multiple times to our index.
-            $name .= '/'
-              if substr($name, -1) ne '/';
-        }
-        # We store the name here, but will replace it later.  The
-        # reason for storing it now is that we may need it during the
-        # "hard-link fixup"-phase.
-        $name = dequote_name($name);
-        $file->name($name);
-
-        $idxh{$name} = $file;
-    }
-
-    # re-read names
-    @names = keys %all;
-
-    for my $name (@names) {
-
-        my $entry = $all{$name};
-
-        # only deal with objects here
-        next
-          unless blessed($entry) && $entry->isa('Lintian::File::Path');
+    # set internal permissions flags
+    for my $entry (values %all) {
 
         my $raw_type = substr($entry->perm, 0, 1);
 
-        $entry->size(0)
-          unless $raw_type eq '-';
-
-        # This may appear to be obscene, but the call overhead of
-        # perm2oct is measurable on (e.g.) chromium-browser.  With
-        # the cache we go from ~1.5s to ~0.1s.
-        #   Of the 115363 paths here, only 306 had an "uncached"
-        # permission string (chromium-browser/32.0.1700.123-2).
-        my $operm = $PERM_CACHE{$entry->perm};
-        $operm //= perm2oct($entry->perm);
-
+        my $operm = perm2oct($entry->perm);
         $entry->path_info(
             $operm | (
                 $FILE_CODE2LPATH_TYPE{$raw_type}
                   // Lintian::File::Path::TYPE_OTHER
             ));
-
-        $idxh{$name} = $entry;
-
-        push(@{$rhlinks{$entry->link}}, $name)
-          if $raw_type eq 'h';
     }
 
-    # re-read names
-    @names = keys %idxh;
+    # find all entries that are not regular files
+    my @nosize
+      = grep { !$_->path_info & Lintian::File::Path::TYPE_FILE } values %all;
 
-    # Record children
-    for my $name (@names) {
+    # reset size for anything but regular files
+    $_->size(0) for @nosize;
 
-        my $entry = $idxh{$name};
+    # add entries for missing directories
+    for my $entry (values %all) {
 
-        my $raw_type = substr($entry->perm, 0, 1);
+        my $current = $entry;
+        my $parentname;
 
-        $children{$name} ||= []
-          if $raw_type eq 'd';
+        # travel up the directory tree
+        do {
+            $parentname = $current->parentname;
 
-        # allow newline in names; need /s for dot matching (#929729)
-        my ($parent) = ($name =~ m{^(.+/)?(?:[^/]+/?)$}s);
-        $parent //= EMPTY;
+            # insert new entry for missing intermediate directories
+            unless (exists $all{$parentname}) {
 
-        $children{$parent} = []
-          unless exists $children{$parent};
+                my $added = Lintian::File::Path->new;
+                $added->name($parentname);
+                $added->path_info($FILE_CODE2LPATH_TYPE{'d'} | 0755);
 
-        # coll/unpacked sorts its output, so the parent dir ought to
-        # have been created before this entry.  However, it might not
-        # be if an intermediate directory is missing.  NB: This
-        # often triggers for the root directory, which is normal.
-        push(@check_dirs, $parent)
-          unless exists $idxh{$parent};
+                # random but fixed date; hint, it's a good read. :)
+                $added->date('1998-01-25');
+                $added->time('22:55:34');
+                $added->faux(1);
+
+                $all{$parentname} = $added;
+            }
+
+            $current = $all{$parentname};
+
+        } while ($parentname ne EMPTY);
+    }
+
+    die 'The root dir should be present or have been faked'
+      unless exists $all{''} || $allow_empty;
+
+    # add filesystem info to all entries, including generated
+    $_->fs_info($self->fs_info) for values %all;
+
+    my @directories
+      = grep { $_->path_info & Lintian::File::Path::TYPE_DIR } values %all;
+
+    # make space for children
+    my %children;
+    $children{$_->name} = [] for @directories;
+
+    # record children
+    for my $entry (values %all) {
+
+        my $parentname = $entry->parentname;
 
         # Ensure the "root" is not its own child.  It is not really helpful
         # from an analysis PoV and it creates ref cycles  (and by extension
         # leaks like #695866).
-        push(@{ $children{$parent} }, $name)
-          unless $parent eq $name;
+        push(@{ $children{$parentname} }, $entry)
+          unless $parentname eq $entry->name;
     }
 
-    while (defined(my $name = pop(@check_dirs))) {
-        # check_dirs /can/ contain the same item multiple times.
-        if (!exists $idxh{$name}) {
-            my $cpy = Lintian::File::Path->new(\%INDEX_FAUX_DIR_TEMPLATE);
+    # add in reverse; children are made before parent
+    my @reverse = reverse sort { $a->name cmp $b->name } @directories;
 
-            # allow newline in names; need /s for dot matching (#929729)
-            my ($parent) = ($name =~ m{^(.+/)?(?:[^/]+/?)$}s);
-            $parent //= '';
-            $cpy->name($name);
-            $idxh{$name} = $cpy;
-            $children{$parent} = []
-              unless exists $children{$parent};
-            push(@{ $children{$parent} }, $name)
-              unless $parent eq $name;
-            push(@check_dirs, $parent)
-              unless exists $idxh{$parent};
+    foreach my $entry (@reverse) {
+
+        my @sorted_children = sort @{ $children{$entry->name}};
+        $entry->sorted_children(\@sorted_children);
+
+        my %child_table;
+        for my $child (@sorted_children) {
+
+            my $basename = $child->basename;
+
+            # remove trailing slash, if any
+            $basename =~ s{/$}{}s;
+
+            $child_table{$basename} = $child;
         }
+
+        $entry->child_table(\%child_table);
+        $_->_set_parent_dir($entry) for $entry->children;
     }
 
-    die 'The root dir should be present or have been faked'
-      unless $allow_empty || exists $idxh{''};
+    # ensure root is not its own child; may create leaks like #695866
+    die 'Root directory is its own parent'
+      if any { $_ eq EMPTY } $all{''}->sorted_children;
 
-    for my $file (sort keys %rhlinks) {
-        # We remove entries we have fixed up, so check the entry
-        # is still there.
+    # find all hard links
+    my @hardlinks
+      = grep { $_->path_info & Lintian::File::Path::TYPE_HARDLINK }values %all;
+
+    # catalog where they point
+    my %backlinks;
+    push(@{$backlinks{$_->link}}, $_) for @hardlinks;
+
+    # add the master files for proper sort results
+    push(@{$backlinks{$_}}, $all{$_}) for keys %backlinks;
+
+    # point hard links to shortest path
+    for my $mastername (keys %backlinks) {
+
+        my @group = @{$backlinks{$mastername}};
+
+        # sort for path length
+        my @links = sort { $a->name cmp $b->name } @group;
+
+        # pick the shortest path
+        my $preferred = shift @links;
+
+        # get the previous master entry
+        my $master = $all{$mastername};
+
+        # skip if done
         next
-          unless exists $rhlinks{$file};
-        my $e = $idxh{$file};
-        my @check = ($e->name);
-        my (%candidates, @sorted, $target);
-        while (my $current = pop @check) {
-            $candidates{$current} = 1;
-            foreach my $rdep (@{$rhlinks{$current}}) {
-                # There should not be any cycles, but just in case
-                push(@check, $rdep)
-                  unless $candidates{$rdep};
-            }
-            # Remove links we are fixing
-            delete $rhlinks{$current};
-        }
-        # keys %candidates will be a complete list of hardlinks
-        # that points (in)directly to $file.  Time to normalize
-        # the links.
-        #
-        # Sort in reverse order (allows pop instead of unshift)
-        my @links = reverse sort keys %candidates;
-        # Our preferred target
-        $target = pop @links;
+          if $preferred->name eq $master->name;
 
-        foreach my $link (@links) {
-            next
-              unless exists $idxh{$target};
-            my $le = $idxh{$link};
-            # We may be "demoting" a "real file" to a "hardlink"
-            $le->path_info(($le->path_info & ~Lintian::File::Path::TYPE_FILE)
+        # unset link for preferred
+        $preferred->link(EMPTY);
+
+        # copy size from original
+        $preferred->size($master->size);
+
+        $preferred->path_info(
+            ($preferred->path_info& ~Lintian::File::Path::TYPE_HARDLINK)
+            | Lintian::File::Path::TYPE_FILE);
+
+        foreach my $pointer (@links) {
+
+            # turn into a hard link
+            $pointer->path_info(
+                ($pointer->path_info & ~Lintian::File::Path::TYPE_FILE)
                 | Lintian::File::Path::TYPE_HARDLINK);
-            $le->link($target);
-        }
-        if (defined($target) and $target ne $e->name) {
-            $idxh{$target}->path_info((
-                    $idxh{$target}->path_info
-                      & ~Lintian::File::Path::TYPE_HARDLINK
-                )| Lintian::File::Path::TYPE_FILE
-            );
-            # hardlinks does not have size, so copy that from the original
-            # entry.
-            $idxh{$target}->size($e->size);
-            $e->size(0);
-            $idxh{$target}->link(EMPTY);
+
+            # set link to preferred path
+            $pointer->link($preferred->name);
+
+            # no size for hardlinks
+            $pointer->size(0);
         }
     }
 
-    # Add them in reverse order - entries in a dir are made
-    # objects before the dir itself.
-    my @sorted = reverse sort keys %idxh;
-    foreach my $file (@sorted) {
-        my $entry = $idxh{$file};
-        if ($entry->path_info & Lintian::File::Path::TYPE_DIR) {
-            my (%child_table, @sorted_children);
-            for my $cname (sort(@{ $children{$file} })) {
-                my $child = $idxh{$cname};
-                my $basename = $child->basename;
-                if (substr($basename, -1, 1) eq '/') {
-                    $basename = substr($basename, 0, -1);
-                }
-                $child_table{$basename} = $child;
-                push(@sorted_children, $child);
-            }
-            $entry->sorted_children(\@sorted_children);
-            $entry->child_table(\%child_table);
-            $entry->fs_info($self->fs_info);
-        }
-        # Insert name here to share the same storage with the hash key
-        $entry->name($file);
+    # make sure recorded names match hash keys
+    $all{$_}->name($_)for keys %all;
 
-        if ($entry->path_info & Lintian::File::Path::TYPE_DIR) {
-            for my $child ($entry->children) {
-                $child->_set_parent_dir($entry);
-            }
-        }
-    }
-
-    $self->index(\%idxh);
+    $self->index(\%all);
 
     return;
 }
