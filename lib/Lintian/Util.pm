@@ -111,6 +111,17 @@ use constant NEWLINE => qq{\n};
 # record.
 use constant READ_SIZE => 4096 * 20 * 512;
 
+# preload cache for common permission strings
+# call overhead o perm2oct was measurable on chromium-browser/32.0.1700.123-2
+# load time went from ~1.5s to ~0.1s; of 115363 paths, only 306 were uncached
+my %OCTAL_LOOKUP = map { $_ => perm2oct($_) } (
+    '-rw-r--r--', # standard (non-executable) file
+    '-rwxr-xr-x', # standard executable file
+    'drwxr-xr-x', # standard dir perm
+    'drwxr-sr-x', # standard dir perm with suid (lintian-lab on lintian.d.o)
+    'lrwxrwxrwx', # symlinks
+);
+
 =head1 NAME
 
 Lintian::Util - Lintian utility functions
@@ -517,40 +528,46 @@ Examples:
 =cut
 
 sub perm2oct {
-    my ($t) = @_;
+    my ($text) = @_;
 
-    my $o = 0;
+    my $lookup = $OCTAL_LOOKUP{$text};
+    return $lookup
+      if defined $lookup;
+
+    my $octal = 0;
 
     # Types:
     #  file (-), block/character device (b & c), directory (d),
     #  hardlink (h), symlink (l), named pipe (p).
     if (
-        $t !~ m/^   [-bcdhlp]                # file type
+        $text !~ m/^   [-bcdhlp]                # file type
                     ([-r])([-w])([-xsS])     # user
                     ([-r])([-w])([-xsS])     # group
                     ([-r])([-w])([-xtT])     # other
-               /xsmo
+               /xsm
     ) {
-        croak "$t does not appear to be a permission string";
+        croak "$text does not appear to be a permission string";
     }
 
-    $o += 00400 if $1 eq 'r';   # owner read
-    $o += 00200 if $2 eq 'w';   # owner write
-    $o += 00100 if $3 eq 'x';   # owner execute
-    $o += 04000 if $3 eq 'S';   # setuid
-    $o += 04100 if $3 eq 's';   # setuid + owner execute
-    $o += 00040 if $4 eq 'r';   # group read
-    $o += 00020 if $5 eq 'w';   # group write
-    $o += 00010 if $6 eq 'x';   # group execute
-    $o += 02000 if $6 eq 'S';   # setgid
-    $o += 02010 if $6 eq 's';   # setgid + group execute
-    $o += 00004 if $7 eq 'r';   # other read
-    $o += 00002 if $8 eq 'w';   # other write
-    $o += 00001 if $9 eq 'x';   # other execute
-    $o += 01000 if $9 eq 'T';   # stickybit
-    $o += 01001 if $9 eq 't';   # stickybit + other execute
+    $octal += 00400 if $1 eq 'r';   # owner read
+    $octal += 00200 if $2 eq 'w';   # owner write
+    $octal += 00100 if $3 eq 'x';   # owner execute
+    $octal += 04000 if $3 eq 'S';   # setuid
+    $octal += 04100 if $3 eq 's';   # setuid + owner execute
+    $octal += 00040 if $4 eq 'r';   # group read
+    $octal += 00020 if $5 eq 'w';   # group write
+    $octal += 00010 if $6 eq 'x';   # group execute
+    $octal += 02000 if $6 eq 'S';   # setgid
+    $octal += 02010 if $6 eq 's';   # setgid + group execute
+    $octal += 00004 if $7 eq 'r';   # other read
+    $octal += 00002 if $8 eq 'w';   # other write
+    $octal += 00001 if $9 eq 'x';   # other execute
+    $octal += 01000 if $9 eq 'T';   # stickybit
+    $octal += 01001 if $9 eq 't';   # stickybit + other execute
 
-    return $o;
+    $OCTAL_LOOKUP{$text} = $octal;
+
+    return $octal;
 }
 
 =item run_cmd([OPTS, ]COMMAND[, ARGS...])
