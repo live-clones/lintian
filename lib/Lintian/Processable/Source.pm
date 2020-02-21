@@ -35,7 +35,7 @@ use namespace::clean;
 
 with 'Lintian::Collect::Source', 'Lintian::Processable::Diffstat',
   'Lintian::Processable::Changelog',
-  'Lintian::Processable::Fields::Files', 'Lintian::Processable::Orig::Index',
+  'Lintian::Processable::Fields::Files', 'Lintian::Processable::Orig',
   'Lintian::Processable::Overrides',
   'Lintian::Processable::Package',
   'Lintian::Processable';
