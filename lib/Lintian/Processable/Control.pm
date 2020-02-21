@@ -1,4 +1,4 @@
-# -*- perl -*- Lintian::Processable::Control::Index
+# -*- perl -*- Lintian::Processable::Control
 #
 # Copyright © 2020 Felix Lechner
 #
@@ -15,7 +15,7 @@
 # You should have received a copy of the GNU General Public License along with
 # this program.  If not, see <http://www.gnu.org/licenses/>.
 
-package Lintian::Processable::Control::Index;
+package Lintian::Processable::Control;
 
 use strict;
 use warnings;
@@ -28,7 +28,7 @@ use namespace::clean;
 
 =head1 NAME
 
-Lintian::Processable::Control::Index - access to collected control file data
+Lintian::Processable::Control - access to collected control file data
 
 =head1 SYNOPSIS
 
@@ -37,7 +37,7 @@ Lintian::Processable::Control::Index - access to collected control file data
 
 =head1 DESCRIPTION
 
-Lintian::Processable::Control::Index provides an interface to control file data.
+Lintian::Processable::Control provides an interface to control file data.
 
 =head1 INSTANCE METHODS
 

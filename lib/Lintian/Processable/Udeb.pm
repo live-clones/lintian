@@ -34,7 +34,7 @@ use Moo;
 use namespace::clean;
 
 with 'Lintian::Collect::Binary', 'Lintian::Processable::Changelog',
-  'Lintian::Processable::Control::Index',
+  'Lintian::Processable::Control',
   'Lintian::Processable::Control::Conffiles',
   'Lintian::Processable::Hardening', 'Lintian::Processable::Objdump',
   'Lintian::Processable::Overrides', 'Lintian::Processable::Package',
