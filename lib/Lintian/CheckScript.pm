@@ -202,7 +202,7 @@ sub tags {
 =item $cs->run_check ($proc, $group)
 
 Run the check on C<$proc>, which is in the
-L<group|Lintian::Processable::Group> C<$group>.
+L<group|Lintian::Group> C<$group>.
 
 The method may error out if loading the check failed or if the check
 itself calls die/croak/fail/etc.

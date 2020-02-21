@@ -17,7 +17,7 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-package Lintian::Processable::Group;
+package Lintian::Group;
 
 use strict;
 use warnings;
@@ -62,13 +62,13 @@ my %SUPPORTED_TYPES = (
 
 =head1 NAME
 
-Lintian::Processable::Group -- A group of objects that Lintian can process
+Lintian::Group -- A group of objects that Lintian can process
 
 =head1 SYNOPSIS
 
- use Lintian::Processable::Group;
+ use Lintian::Group;
 
- my $group = Lintian::Processable::Group->new('lintian_2.5.0_i386.changes');
+ my $group = Lintian::Group->new('lintian_2.5.0_i386.changes');
 
 =head1 DESCRIPTION
 
@@ -206,7 +206,7 @@ has saved_spelling_exceptions => (is => 'rw', default => sub { {} });
 
 has shared_storage => (is => 'rw', default => sub { {} });
 
-=item Lintian::Processable::Group->init_from_file (FILE)
+=item Lintian::Group->init_from_file (FILE)
 
 Add all processables from .changes or .buildinfo file FILE.
 

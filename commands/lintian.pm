@@ -44,7 +44,7 @@ use Lintian::Inspect::Changelog;
 use Lintian::Internal::FrontendUtil
   qw(default_parallel sanitize_environment open_file_or_fd);
 use Lintian::Output::Standard;
-use Lintian::Processable::Pool;
+use Lintian::Pool;
 use Lintian::Profile;
 use Lintian::Tags;
 use Lintian::Util qw(internal_error parse_boolean strip safe_qx);
@@ -807,7 +807,7 @@ sub main {
           unless fileno($fd) == fileno(STDIN);
     }
 
-    my $pool = Lintian::Processable::Pool->new;
+    my $pool = Lintian::Pool->new;
 
     for my $path (@subjects) {
 
@@ -822,7 +822,7 @@ sub main {
 
         eval {
             # create a new group
-            my $group = Lintian::Processable::Group->new;
+            my $group = Lintian::Group->new;
             $group->pooldir($pool->basedir);
             $group->init_from_file($absolute);
 

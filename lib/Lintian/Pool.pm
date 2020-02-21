@@ -18,7 +18,7 @@
 # MA 02110-1301, USA.
 
 ## Represents a pool of processables (Lintian::Processable)
-package Lintian::Processable::Pool;
+package Lintian::Pool;
 
 use strict;
 use warnings;
@@ -32,7 +32,7 @@ use POSIX qw(:sys_wait_h);
 
 use Lintian::DepMap;
 use Lintian::DepMap::Properties;
-use Lintian::Processable::Group;
+use Lintian::Group;
 use Lintian::Util;
 
 use constant EMPTY => q{};
@@ -43,13 +43,13 @@ use namespace::clean;
 
 =head1 NAME
 
-Lintian::Processable::Pool -- Pool of processables
+Lintian::Pool -- Pool of processables
 
 =head1 SYNOPSIS
 
- use Lintian::Processable::Pool;
+ use Lintian::Pool;
  
- my $pool = Lintian::Processable::Pool->new;
+ my $pool = Lintian::Pool->new;
  $pool->add_file('foo.changes');
  $pool->add_file('bar.dsc');
  $pool->add_file('baz.deb');
@@ -452,7 +452,7 @@ lintian(1)
 
 L<Lintian::Processable>
 
-L<Lintian::Processable::Group>
+L<Lintian::Group>
 
 =cut
 

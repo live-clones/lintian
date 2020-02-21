@@ -52,7 +52,7 @@ Lintian::Processable::Changes -- A changes file Lintian can process
 =head1 DESCRIPTION
 
 This class represents a 'changes' file that Lintian can process. Objects
-of this kind are often part of a L<Lintian::Processable::Group>, which
+of this kind are often part of a L<Lintian::Group>, which
 represents all the files in a changes or buildinfo file.
 
 =head1 INSTANCE METHODS
