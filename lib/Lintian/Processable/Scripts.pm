@@ -1,4 +1,4 @@
-# -*- perl -*- Lintian::Info::Scripts -- access to collected scripts data
+# -*- perl -*- Lintian::Processable::Scripts -- access to collected scripts data
 #
 # Copyright © 2019 Felix Lechner
 #
@@ -15,7 +15,7 @@
 # You should have received a copy of the GNU General Public License along with
 # this program.  If not, see <http://www.gnu.org/licenses/>.
 
-package Lintian::Info::Scripts;
+package Lintian::Processable::Scripts;
 
 use strict;
 use warnings;
@@ -30,7 +30,7 @@ use namespace::clean;
 
 =head1 NAME
 
-Lintian::Info::Scripts - access to collected scripts data
+Lintian::Processable::Scripts - access to collected scripts data
 
 =head1 SYNOPSIS
 
@@ -39,7 +39,7 @@ Lintian::Info::Scripts - access to collected scripts data
 
 =head1 DESCRIPTION
 
-Lintian::Info::Scripts provides an interface to script data for packages.
+Lintian::Processable::Scripts provides an interface to script data for packages.
 
 =head1 INSTANCE METHODS
 

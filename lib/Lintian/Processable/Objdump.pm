@@ -1,4 +1,4 @@
-# -*- perl -*- Lintian::Info::Objdump
+# -*- perl -*- Lintian::Processable::Objdump
 #
 # Copyright © 2019 Felix Lechner
 #
@@ -15,7 +15,7 @@
 # You should have received a copy of the GNU General Public License along with
 # this program.  If not, see <http://www.gnu.org/licenses/>.
 
-package Lintian::Info::Objdump;
+package Lintian::Processable::Objdump;
 
 use strict;
 use warnings;
@@ -31,7 +31,7 @@ use namespace::clean;
 
 =head1 NAME
 
-Lintian::Info::Objdump - access to collected binary object data
+Lintian::Processable::Objdump - access to collected binary object data
 
 =head1 SYNOPSIS
 
@@ -40,7 +40,7 @@ Lintian::Info::Objdump - access to collected binary object data
 
 =head1 DESCRIPTION
 
-Lintian::Info::Objdump provides an interface to collected binary object data.
+Lintian::Processable::Objdump provides an interface to collected binary object data.
 
 =head1 INSTANCE METHODS
 

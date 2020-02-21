@@ -1,4 +1,4 @@
-# -*- perl -*- Lintian::Info::Diffstat -- access to collected diffstat data
+# -*- perl -*- Lintian::Processable::FileInfo -- access to collected file-info data
 #
 # Copyright © 2019 Felix Lechner
 #
@@ -15,22 +15,22 @@
 # You should have received a copy of the GNU General Public License along with
 # this program.  If not, see <http://www.gnu.org/licenses/>.
 
-package Lintian::Info::Diffstat;
+package Lintian::Processable::FileInfo;
 
 use strict;
 use warnings;
 use autodie;
 
+use BerkeleyDB;
+use MLDBM qw(BerkeleyDB::Btree Storable);
 use Path::Tiny;
-
-use constant EMPTY => q{};
 
 use Moo::Role;
 use namespace::clean;
 
 =head1 NAME
 
-Lintian::Info::Diffstat - access to collected diffstat data
+Lintian::Processable::FileInfo - access to collected file-info data
 
 =head1 SYNOPSIS
 
@@ -39,43 +39,50 @@ Lintian::Info::Diffstat - access to collected diffstat data
 
 =head1 DESCRIPTION
 
-Lintian::Info::Diffstat provides an interface to diffstat data.
+Lintian::Processable::FileInfo provides an interface to package data for
+file(1) information, aka magic data.
 
 =head1 INSTANCE METHODS
 
 =over 4
 
-=item diffstat
+=item file_info (FILE)
 
-Returns the path to diffstat output run on the Debian packaging diff
-(a.k.a. the "diff.gz") for 1.0 non-native packages.  For source
-packages without a "diff.gz" component, this returns the path to an
-empty file (this may be a device like /dev/null).
+Returns the output of file(1) for FILE (if it exists) or C<undef>.
 
-Needs-Info requirements for using I<diffstat>: diffstat
+NB: The value may have been calibrated by Lintian.  A notorious example
+is gzip files, where file(1) can be unreliable at times (see #620289)
 
-=item saved_diffstat
+Needs-Info requirements for using I<file_info>: file-info
 
-Returns the cached diffstat information.
+=item saved_file_info
+
+Returns the cached file (1) information.
 
 =cut
 
-has saved_diffstat => (is => 'rw', default => EMPTY);
+has saved_file_info => (is => 'rwp');
 
-sub diffstat {
-    my ($self) = @_;
+sub file_info {
+    my ($self, $path) = @_;
 
-    return $self->saved_diffstat
-      if length $self->saved_diffstat;
+    unless ($self->saved_file_info) {
 
-    my $dstat = path($self->groupdir)->child('diffstat')->stringify;
+        my $dbpath = path($self->groupdir)->child('file-info.db')->stringify;
 
-    $dstat = '/dev/null'
-      unless -e $dstat;
+        my %file_info;
 
-    $self->saved_diffstat($dstat);
+        tie my %h, 'BerkeleyDB::Btree',-Filename => $dbpath
+          or die "Cannot open file $dbpath: $! $BerkeleyDB::Error\n";
 
-    return $self->saved_diffstat;
+        $file_info{$_} = $h{$_} for keys %h;
+
+        untie %h;
+
+        $self->_set_saved_file_info(\%file_info);
+    }
+
+    return $self->saved_file_info->{$path};
 }
 
 1;

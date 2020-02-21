@@ -1,5 +1,5 @@
 # -*- perl -*-
-# Lintian::Info::Fields::Files -- interface to .buildinfo file data collection
+# Lintian::Processable::Fields::Files -- interface to .buildinfo file data collection
 #
 # Copyright © 2010 Adam D. Barratt
 # Copyright © 2018 Chris Lamb
@@ -18,7 +18,7 @@
 # You should have received a copy of the GNU General Public License along with
 # this program.  If not, see <http://www.gnu.org/licenses/>.
 
-package Lintian::Info::Fields::Files;
+package Lintian::Processable::Fields::Files;
 
 use strict;
 use warnings;
@@ -30,17 +30,17 @@ use namespace::clean;
 
 =head1 NAME
 
-Lintian::Info::Fields::Files - Lintian interface to .buildinfo or changes file data collection
+Lintian::Processable::Fields::Files - Lintian interface to .buildinfo or changes file data collection
 
 =head1 SYNOPSIS
 
    use Moo;
 
-   with 'Lintian::Info::Fields::Files';
+   with 'Lintian::Processable::Fields::Files';
 
 =head1 DESCRIPTION
 
-Lintian::Info::Fields::Files provides an interface to data for .buildinfo
+Lintian::Processable::Fields::Files provides an interface to data for .buildinfo
 and changes files.  It implements data collection methods specific to .buildinfo
 and changes files.
 

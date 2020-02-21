@@ -1,4 +1,4 @@
-# -*- perl -*- Lintian::Info::Control::Conffiles
+# -*- perl -*- Lintian::Processable::Control::Conffiles
 #
 # Copyright © 2019 Felix Lechner
 #
@@ -15,7 +15,7 @@
 # You should have received a copy of the GNU General Public License along with
 # this program.  If not, see <http://www.gnu.org/licenses/>.
 
-package Lintian::Info::Control::Conffiles;
+package Lintian::Processable::Control::Conffiles;
 
 use strict;
 use warnings;
@@ -30,7 +30,7 @@ use namespace::clean;
 
 =head1 NAME
 
-Lintian::Info::Control::Conffiles - access to collected control data for conffiles
+Lintian::Processable::Control::Conffiles - access to collected control data for conffiles
 
 =head1 SYNOPSIS
 
@@ -39,7 +39,7 @@ Lintian::Info::Control::Conffiles - access to collected control data for conffil
 
 =head1 DESCRIPTION
 
-Lintian::Info::Control::Conffiles provides an interface to control data for conffiles.
+Lintian::Processable::Control::Conffiles provides an interface to control data for conffiles.
 
 =head1 INSTANCE METHODS
 

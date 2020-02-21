@@ -1,5 +1,5 @@
 # -*- perl -*-
-# Lintian::Info::Checksums::Md5 -- access to collected md5 data
+# Lintian::Processable::Checksums::Md5 -- access to collected md5 data
 
 # Copyright © 2019 Felix Lechner
 #
@@ -16,7 +16,7 @@
 # You should have received a copy of the GNU General Public License along with
 # this program.  If not, see <http://www.gnu.org/licenses/>.
 
-package Lintian::Info::Checksums::Md5;
+package Lintian::Processable::Checksums::Md5;
 
 use strict;
 use warnings;
@@ -31,7 +31,7 @@ use namespace::clean;
 
 =head1 NAME
 
-Lintian::Info::Checksums::Md5 - access to collected md5 data
+Lintian::Processable::Checksums::Md5 - access to collected md5 data
 
 =head1 SYNOPSIS
 
@@ -40,7 +40,7 @@ Lintian::Info::Checksums::Md5 - access to collected md5 data
 
 =head1 DESCRIPTION
 
-Lintian::Info::Checksums::Md5 provides an interface to package data for
+Lintian::Processable::Checksums::Md5 provides an interface to package data for
 file checksums in MD5 format.
 
 =head1 INSTANCE METHODS

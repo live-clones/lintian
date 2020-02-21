@@ -33,7 +33,7 @@ use constant SLASH => q{/};
 use Moo;
 use namespace::clean;
 
-with 'Lintian::Info::Fields::Files', 'Lintian::Info::Overrides',
+with 'Lintian::Processable::Fields::Files', 'Lintian::Processable::Overrides',
   'Lintian::Processable';
 
 =for Pod::Coverage BUILDARGS

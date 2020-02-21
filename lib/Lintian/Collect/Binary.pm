@@ -69,7 +69,7 @@ Native heuristics are only available in source packages.
 
 In addition to the instance methods listed below, all instance methods
 documented in the L<Lintian::Collect> and the
-L<Lintian::Info::Package> modules are also available.
+L<Lintian::Processable::Package> modules are also available.
 
 =over 4
 

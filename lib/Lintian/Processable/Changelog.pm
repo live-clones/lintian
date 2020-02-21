@@ -1,4 +1,4 @@
-# -*- perl -*- Lintian::Info::Changelog -- access to collected changelog data
+# -*- perl -*- Lintian::Processable::Changelog -- access to collected changelog data
 #
 # Copyright © 2019 Felix Lechner
 #
@@ -15,7 +15,7 @@
 # You should have received a copy of the GNU General Public License along with
 # this program.  If not, see <http://www.gnu.org/licenses/>.
 
-package Lintian::Info::Changelog;
+package Lintian::Processable::Changelog;
 
 use strict;
 use warnings;
@@ -30,7 +30,7 @@ use namespace::clean;
 
 =head1 NAME
 
-Lintian::Info::Changelog - access to collected changelog data
+Lintian::Processable::Changelog - access to collected changelog data
 
 =head1 SYNOPSIS
 
@@ -39,7 +39,7 @@ Lintian::Info::Changelog - access to collected changelog data
 
 =head1 DESCRIPTION
 
-Lintian::Info::Changelog provides an interface to changelog data.
+Lintian::Processable::Changelog provides an interface to changelog data.
 
 =head1 INSTANCE METHODS
 
@@ -61,7 +61,7 @@ For source:
 Returns the changelog of the source package as a Parse::DebianChangelog
 object, or C<undef> if the changelog cannot be resolved safely.
 
-Needs-Info requirements for using I<changelog>: L<Same as index_resolved_path|Lintian::Info::Package/index_resolved_path(PATH)>
+Needs-Info requirements for using I<changelog>: L<Same as index_resolved_path|Lintian::Processable::Package/index_resolved_path(PATH)>
 
 =item saved_changelog
 

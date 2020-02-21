@@ -1,4 +1,4 @@
-# -*- perl -*- Lintian::Info::Hardening
+# -*- perl -*- Lintian::Processable::Hardening
 #
 # Copyright © 2019 Felix Lechner
 #
@@ -15,7 +15,7 @@
 # You should have received a copy of the GNU General Public License along with
 # this program.  If not, see <http://www.gnu.org/licenses/>.
 
-package Lintian::Info::Hardening;
+package Lintian::Processable::Hardening;
 
 use strict;
 use warnings;
@@ -32,7 +32,7 @@ use namespace::clean;
 
 =head1 NAME
 
-Lintian::Info::Hardening - access to collected hardening data
+Lintian::Processable::Hardening - access to collected hardening data
 
 =head1 SYNOPSIS
 
@@ -41,7 +41,7 @@ Lintian::Info::Hardening - access to collected hardening data
 
 =head1 DESCRIPTION
 
-Lintian::Info::Hardening provides an interface to collected hardening data.
+Lintian::Processable::Hardening provides an interface to collected hardening data.
 
 =head1 INSTANCE METHODS
 

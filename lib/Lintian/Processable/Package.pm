@@ -1,5 +1,5 @@
 # -*- perl -*-
-# Lintian::Info::Package -- interface to data collection for packages
+# Lintian::Processable::Package -- interface to data collection for packages
 
 # Copyright (C) 2011 Niels Thykier
 #
@@ -16,7 +16,7 @@
 # You should have received a copy of the GNU General Public License along with
 # this program.  If not, see <http://www.gnu.org/licenses/>.
 
-package Lintian::Info::Package;
+package Lintian::Processable::Package;
 
 use strict;
 use warnings;
@@ -35,8 +35,8 @@ use Lintian::Util
 use Moo::Role;
 use namespace::clean;
 
-with 'Lintian::Info::Checksums::Md5', 'Lintian::Info::FileInfo',
-  'Lintian::Info::Java', 'Lintian::Info::Scripts::Control';
+with 'Lintian::Processable::Checksums::Md5', 'Lintian::Processable::FileInfo',
+  'Lintian::Processable::Java', 'Lintian::Processable::Scripts::Control';
 
 # A cache for (probably) the 5 most common permission strings seen in
 # the wild.
@@ -62,7 +62,7 @@ my %FILE_CODE2LPATH_TYPE = (
 
 =head1 NAME
 
-Lintian::Info::Package - Lintian base interface to binary and source package data collection
+Lintian::Processable::Package - Lintian base interface to binary and source package data collection
 
 =head1 SYNOPSIS
 
@@ -71,7 +71,7 @@ Lintian::Info::Package - Lintian base interface to binary and source package dat
 
 =head1 DESCRIPTION
 
-Lintian::Info::Package provides an interface to package data for
+Lintian::Processable::Package provides an interface to package data for
 source and binary packages.  It implements data collection methods
 specific to packages that can be unpacked (or can contain files)
 

@@ -48,7 +48,7 @@ Lintian::Path::FSInfo - File System information for L<Lintian::Path>
 
 =item new(OPTS)
 
-Internal constructor (used by Lintian::Info::Package)
+Internal constructor (used by Lintian::Processable::Package)
 
 =cut
 

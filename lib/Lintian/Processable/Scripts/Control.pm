@@ -1,4 +1,4 @@
-# -*- perl -*- Lintian::Info::FileInfo -- access to collected file-info data
+# -*- perl -*- Lintian::Processable::Scripts::Control -- access to control script data
 #
 # Copyright © 2019 Felix Lechner
 #
@@ -15,7 +15,7 @@
 # You should have received a copy of the GNU General Public License along with
 # this program.  If not, see <http://www.gnu.org/licenses/>.
 
-package Lintian::Info::FileInfo;
+package Lintian::Processable::Scripts::Control;
 
 use strict;
 use warnings;
@@ -30,7 +30,7 @@ use namespace::clean;
 
 =head1 NAME
 
-Lintian::Info::FileInfo - access to collected file-info data
+Lintian::Processable::Scripts::Control - access to control script data
 
 =head1 SYNOPSIS
 
@@ -39,50 +39,48 @@ Lintian::Info::FileInfo - access to collected file-info data
 
 =head1 DESCRIPTION
 
-Lintian::Info::FileInfo provides an interface to package data for
-file(1) information, aka magic data.
+Lintian::Processable::Scripts::Control provides an interface to package
+data for control scripts.
 
 =head1 INSTANCE METHODS
 
 =over 4
 
-=item file_info (FILE)
+=item control_scripts
 
-Returns the output of file(1) for FILE (if it exists) or C<undef>.
+Returns a hashref mapping a FILE to data about how it is run.
 
-NB: The value may have been calibrated by Lintian.  A notorious example
-is gzip files, where file(1) can be unreliable at times (see #620289)
+Needs-Info requirements for using I<control_scripts>: scripts
 
-Needs-Info requirements for using I<file_info>: file-info
+=item saved_control_scripts
 
-=item saved_file_info
-
-Returns the cached file (1) information.
+Returns the cached control scripts.
 
 =cut
 
-has saved_file_info => (is => 'rwp');
+has saved_control_scripts => (is => 'rwp', default => sub { {} });
 
-sub file_info {
-    my ($self, $path) = @_;
+sub control_scripts {
+    my ($self) = @_;
 
-    unless ($self->saved_file_info) {
+    unless (keys %{$self->saved_control_scripts}) {
 
-        my $dbpath = path($self->groupdir)->child('file-info.db')->stringify;
+        my $dbpath
+          = path($self->groupdir)->child('control-scripts.db')->stringify;
 
-        my %file_info;
+        my %control;
 
         tie my %h, 'BerkeleyDB::Btree',-Filename => $dbpath
           or die "Cannot open file $dbpath: $! $BerkeleyDB::Error\n";
 
-        $file_info{$_} = $h{$_} for keys %h;
+        $control{$_} = $h{$_} for keys %h;
 
         untie %h;
 
-        $self->_set_saved_file_info(\%file_info);
+        $self->_set_saved_control_scripts(\%control);
     }
 
-    return $self->saved_file_info->{$path};
+    return $self->saved_control_scripts;
 }
 
 1;

@@ -68,7 +68,7 @@ data in memory.
 =head1 INSTANCE METHODS
 
 In addition to the instance methods listed below, all instance methods
-documented in the L<Lintian::Collect> and L<Lintian::Info::Package>
+documented in the L<Lintian::Collect> and L<Lintian::Processable::Package>
 modules are also available.
 
 =over 4
@@ -243,7 +243,7 @@ modified.
 NB: If a field from the "dsc" file itself is desired, please use
 L<field|Lintian::Collect/field> instead.
 
-Needs-Info requirements for using I<source_field>: L<Same as index_resolved_path|Lintian::Info::Package/index_resolved_path(PATH)>
+Needs-Info requirements for using I<source_field>: L<Same as index_resolved_path|Lintian::Processable::Package/index_resolved_path(PATH)>
 
 =cut
 
@@ -272,7 +272,7 @@ modified.
 If PACKAGE is not a binary built from this source, this returns
 DEFAULT.
 
-Needs-Info requirements for using I<binary_field>: L<Same as index_resolved_path|Lintian::Info::Package/index_resolved_path(PATH)>
+Needs-Info requirements for using I<binary_field>: L<Same as index_resolved_path|Lintian::Processable::Package/index_resolved_path(PATH)>
 
 =cut
 
@@ -504,7 +504,7 @@ sub patched {
 
 For the general documentation of this method, please refer to the
 documentation of it in
-L<Lintian::Info::Package|Lintian::Info::Package/index (FILE)>.
+L<Lintian::Processable::Package|Lintian::Processable::Package/index (FILE)>.
 
 The index of a source package is not very well defined for non-native
 source packages.  This method gives the index of the "unpacked"

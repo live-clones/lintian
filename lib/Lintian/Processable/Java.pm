@@ -1,4 +1,4 @@
-# -*- perl -*- Lintian::Info::Java -- access to collected java-info data
+# -*- perl -*- Lintian::Processable::Java -- access to collected java-info data
 #
 # Copyright © 2019 Felix Lechner
 #
@@ -15,7 +15,7 @@
 # You should have received a copy of the GNU General Public License along with
 # this program.  If not, see <http://www.gnu.org/licenses/>.
 
-package Lintian::Info::Java;
+package Lintian::Processable::Java;
 
 use strict;
 use warnings;
@@ -30,7 +30,7 @@ use namespace::clean;
 
 =head1 NAME
 
-Lintian::Info::Java - access to collected java-info data
+Lintian::Processable::Java - access to collected java-info data
 
 =head1 SYNOPSIS
 
@@ -39,7 +39,7 @@ Lintian::Info::Java - access to collected java-info data
 
 =head1 DESCRIPTION
 
-Lintian::Info::Java provides an interface to package data for java files.
+Lintian::Processable::Java provides an interface to package data for java files.
 
 =head1 INSTANCE METHODS
 

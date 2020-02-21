@@ -1,4 +1,4 @@
-# -*- perl -*- Lintian::Info::Overrides -- access to override data
+# -*- perl -*- Lintian::Processable::Overrides -- access to override data
 #
 # Copyright © 2019 Felix Lechner
 #
@@ -15,7 +15,7 @@
 # You should have received a copy of the GNU General Public License along with
 # this program.  If not, see <http://www.gnu.org/licenses/>.
 
-package Lintian::Info::Overrides;
+package Lintian::Processable::Overrides;
 
 use strict;
 use warnings;
@@ -33,7 +33,7 @@ use namespace::clean;
 
 =head1 NAME
 
-Lintian::Info::Overrides - access to override data
+Lintian::Processable::Overrides - access to override data
 
 =head1 SYNOPSIS
 
@@ -42,7 +42,7 @@ Lintian::Info::Overrides - access to override data
 
 =head1 DESCRIPTION
 
-Lintian::Info::Overrides provides an interface to package data for overrides.
+Lintian::Processable::Overrides provides an interface to package data for overrides.
 
 =head1 INSTANCE METHODS
 

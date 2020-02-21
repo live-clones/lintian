@@ -1,4 +1,4 @@
-# -*- perl -*- Lintian::Info::Orig::Index
+# -*- perl -*- Lintian::Processable::Orig::Index
 #
 # Copyright © 2020 Felix Lechner
 #
@@ -15,7 +15,7 @@
 # You should have received a copy of the GNU General Public License along with
 # this program.  If not, see <http://www.gnu.org/licenses/>.
 
-package Lintian::Info::Orig::Index;
+package Lintian::Processable::Orig::Index;
 
 use strict;
 use warnings;
@@ -28,7 +28,7 @@ use namespace::clean;
 
 =head1 NAME
 
-Lintian::Info::Orig::Index - access to collected data about the upstream (orig) sources
+Lintian::Processable::Orig::Index - access to collected data about the upstream (orig) sources
 
 =head1 SYNOPSIS
 
@@ -37,7 +37,7 @@ Lintian::Info::Orig::Index - access to collected data about the upstream (orig) 
 
 =head1 DESCRIPTION
 
-Lintian::Info::Orig::Index provides an interface to collected data about the upstream (orig) sources.
+Lintian::Processable::Orig::Index provides an interface to collected data about the upstream (orig) sources.
 
 =head1 INSTANCE METHODS
 

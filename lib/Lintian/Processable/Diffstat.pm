@@ -1,4 +1,4 @@
-# -*- perl -*- Lintian::Info::Scripts::Control -- access to control script data
+# -*- perl -*- Lintian::Processable::Diffstat -- access to collected diffstat data
 #
 # Copyright © 2019 Felix Lechner
 #
@@ -15,22 +15,22 @@
 # You should have received a copy of the GNU General Public License along with
 # this program.  If not, see <http://www.gnu.org/licenses/>.
 
-package Lintian::Info::Scripts::Control;
+package Lintian::Processable::Diffstat;
 
 use strict;
 use warnings;
 use autodie;
 
-use BerkeleyDB;
-use MLDBM qw(BerkeleyDB::Btree Storable);
 use Path::Tiny;
+
+use constant EMPTY => q{};
 
 use Moo::Role;
 use namespace::clean;
 
 =head1 NAME
 
-Lintian::Info::Scripts::Control - access to control script data
+Lintian::Processable::Diffstat - access to collected diffstat data
 
 =head1 SYNOPSIS
 
@@ -39,48 +39,43 @@ Lintian::Info::Scripts::Control - access to control script data
 
 =head1 DESCRIPTION
 
-Lintian::Info::Scripts::Control provides an interface to package
-data for control scripts.
+Lintian::Processable::Diffstat provides an interface to diffstat data.
 
 =head1 INSTANCE METHODS
 
 =over 4
 
-=item control_scripts
+=item diffstat
 
-Returns a hashref mapping a FILE to data about how it is run.
+Returns the path to diffstat output run on the Debian packaging diff
+(a.k.a. the "diff.gz") for 1.0 non-native packages.  For source
+packages without a "diff.gz" component, this returns the path to an
+empty file (this may be a device like /dev/null).
 
-Needs-Info requirements for using I<control_scripts>: scripts
+Needs-Info requirements for using I<diffstat>: diffstat
 
-=item saved_control_scripts
+=item saved_diffstat
 
-Returns the cached control scripts.
+Returns the cached diffstat information.
 
 =cut
 
-has saved_control_scripts => (is => 'rwp', default => sub { {} });
+has saved_diffstat => (is => 'rw', default => EMPTY);
 
-sub control_scripts {
+sub diffstat {
     my ($self) = @_;
 
-    unless (keys %{$self->saved_control_scripts}) {
+    return $self->saved_diffstat
+      if length $self->saved_diffstat;
 
-        my $dbpath
-          = path($self->groupdir)->child('control-scripts.db')->stringify;
+    my $dstat = path($self->groupdir)->child('diffstat')->stringify;
 
-        my %control;
+    $dstat = '/dev/null'
+      unless -e $dstat;
 
-        tie my %h, 'BerkeleyDB::Btree',-Filename => $dbpath
-          or die "Cannot open file $dbpath: $! $BerkeleyDB::Error\n";
+    $self->saved_diffstat($dstat);
 
-        $control{$_} = $h{$_} for keys %h;
-
-        untie %h;
-
-        $self->_set_saved_control_scripts(\%control);
-    }
-
-    return $self->saved_control_scripts;
+    return $self->saved_diffstat;
 }
 
 1;
