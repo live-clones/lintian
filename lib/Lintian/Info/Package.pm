@@ -60,15 +60,6 @@ my %FILE_CODE2LPATH_TYPE = (
     'p' => Lintian::File::Path::TYPE_PIPE,
 );
 
-my %INDEX_FAUX_DIR_TEMPLATE = (
-    'name'       => '',
-    '_path_info' => $FILE_CODE2LPATH_TYPE{'d'} | 0755,
-    # Pick a "random" (but fixed) date
-    # - hint, it's a good read.  :)
-    'date_time'  => '1998-01-25 22:55:34',
-    'faux'       => 1,
-);
-
 =head1 NAME
 
 Lintian::Info::Package - Lintian base interface to binary and source package data collection
