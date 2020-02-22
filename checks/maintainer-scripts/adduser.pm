@@ -42,7 +42,7 @@ sub binary {
 
     for my $name (keys %scripts) {
 
-        my $file = $self->processable->control_index_resolved_path($name);
+        my $file = $self->processable->control->resolve_path($name);
 
         next
           unless $file;
