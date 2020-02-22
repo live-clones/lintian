@@ -45,22 +45,17 @@ Lintian::Processable::Orig provides an interface to collected data about the ups
 
 =over 4
 
-=item saved_orig
-
-An index object for orig.tar.gz.
-
 =item orig
 
 Returns the index for orig.tar.gz.
 
 =cut
 
-has saved_orig => (is => 'rw');
-
-sub orig {
-    my ($self) = @_;
-
-    unless (defined $self->saved_orig) {
+has orig => (
+    is => 'rw',
+    lazy => 1,
+    default => sub {
+        my ($self) = @_;
 
         my $orig = Lintian::File::Index->new;
 
@@ -71,11 +66,8 @@ sub orig {
           = path($self->groupdir)->child('src-orig-index.db')->stringify;
         $orig->load($dbpath);
 
-        $self->saved_orig($orig);
-    }
-
-    return $self->saved_orig;
-}
+        return $orig;
+    });
 
 =item orig_index (FILE)
 

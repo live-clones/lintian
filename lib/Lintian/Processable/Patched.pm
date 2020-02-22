@@ -51,23 +51,17 @@ Lintian::Processable::Patched provides an interface to collected data about patc
 
 Returns a index object representing a patched source tree.
 
-=item saved_patched
-
-An index object for a patched source tree.
-
 =cut
 
-has saved_patched => (is => 'rw');
-
-sub patched {
-    my ($self) = @_;
-
-    unless (defined $self->saved_patched) {
+has patched => (
+    is => 'rw',
+    lazy => 1,
+    default => sub {
+        my ($self) = @_;
 
         my $patched = Lintian::File::Index->new;
 
         # source packages can be unpacked anywhere; no anchored roots
-
         my $basedir = path($self->groupdir)->child('unpacked')->stringify;
         $patched->basedir($basedir);
 
@@ -79,11 +73,8 @@ sub patched {
         my $dbpath = path($self->groupdir)->child('index.db')->stringify;
         $patched->load($dbpath);
 
-        $self->saved_patched($patched);
-    }
-
-    return $self->saved_patched;
-}
+        return $patched;
+    });
 
 =item index (FILE)
 

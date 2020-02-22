@@ -45,22 +45,17 @@ Lintian::Processable::Control provides an interface to control file data.
 
 =over 4
 
-=item saved_control
-
-An index object for binary control files.
-
 =item control
 
 Returns the index for a binary control file.
 
 =cut
 
-has saved_control => (is => 'rw');
-
-sub control {
-    my ($self) = @_;
-
-    unless (defined $self->saved_control) {
+has control => (
+    is => 'rw',
+    lazy => 1,
+    default => sub {
+        my ($self) = @_;
 
         my $control = Lintian::File::Index->new;
 
@@ -74,11 +69,8 @@ sub control {
           = path($self->groupdir)->child('control-index.db')->stringify;
         $control->load($dbpath);
 
-        $self->saved_control($control);
-    }
-
-    return $self->saved_control;
-}
+        return $control;
+    });
 
 =item control_index (FILE)
 

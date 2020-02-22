@@ -52,18 +52,13 @@ Lintian::Processable::Installed provides an interface to collected data about th
 
 Returns a index object representing installed files from a binary package.
 
-=item saved_installed
-
-An index object for installed binary files.
-
 =cut
 
-has saved_installed => (is => 'rw');
-
-sub installed {
-    my ($self) = @_;
-
-    unless (defined $self->saved_installed) {
+has installed => (
+    is => 'rw',
+    lazy => 1,
+    default => sub {
+        my ($self) = @_;
 
         my $installed = Lintian::File::Index->new;
 
@@ -82,11 +77,8 @@ sub installed {
         my $dbpath = path($self->groupdir)->child('index.db')->stringify;
         $installed->load($dbpath);
 
-        $self->saved_installed($installed);
-    }
-
-    return $self->saved_installed;
-}
+        return $installed;
+    });
 
 =item index (FILE)
 
