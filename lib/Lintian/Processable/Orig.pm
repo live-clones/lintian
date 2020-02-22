@@ -65,7 +65,6 @@ sub orig {
         my $orig = Lintian::File::Index->new;
 
         # source packages can be unpacked anywhere; no anchored roots
-        $orig->anchored(1);
         $orig->allow_empty(1);
 
         my $dbpath

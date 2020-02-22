@@ -69,6 +69,7 @@ sub installed {
 
         # binary packages are anchored to the system root
         # allow absolute paths and symbolic links
+        $installed->anchored(1);
 
         my $basedir = path($self->groupdir)->child('unpacked')->stringify;
         $installed->basedir($basedir);
