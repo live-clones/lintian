@@ -292,15 +292,7 @@ sub load {
         $entry->sorted_children(\@sorted_children);
 
         my %child_table;
-        for my $child (@sorted_children) {
-
-            my $basename = $child->basename;
-
-            # remove trailing slash, if any
-            $basename =~ s{/$}{}s;
-
-            $child_table{$basename} = $child;
-        }
+        $child_table{$_->basename} = $_ for @sorted_children;
 
         $entry->child_table(\%child_table);
         $_->_set_parent_dir($entry) for $entry->children;

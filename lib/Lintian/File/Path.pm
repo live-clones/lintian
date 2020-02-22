@@ -408,26 +408,9 @@ sub dirname {
 
 Returns the "filename" part of the name, similar basename(1) or
 File::Basename::basename (without passing a suffix to strip in either
-case).  For dirs, the basename will end with a trailing slash (except
-for the "root" dir - see below).
+case).
 
 NB: Returns the empty string for the "root" dir.
-
-=cut
-
-sub basename {
-    my ($self) = @_;
-    my $name = $self->name;
-    my $slash;
-    return $name if $name eq q{}; # Root dir
-    if (substr($name, -1, 1) eq '/') {
-        $slash = rindex($name, '/', length($name) - 2);
-    } else {
-        $slash = rindex($name, '/');
-    }
-    return $name if $slash == -1; # E.g. Top level-dirs
-    return substr($name, $slash+1);
-}
 
 =item faux
 
@@ -450,19 +433,29 @@ happen if a package does not include all intermediate directories.
 
 has name => (
     is => 'rw',
+    lazy => 1,
     coerce => sub { my ($string) = @_; return $string // EMPTY;},
     trigger => sub {
         my ($self, $name) = @_;
 
+        my ($basename) = ($name =~ m{([^/]*)/?$}s);
+        $self->basename($basename);
+
         # allow newline in names; need /s for dot matching (#929729)
         my ($parentname) = ($name =~ m{^(.+/)?(?:[^/]+/?)$}s);
-
         $self->parentname($parentname);
     },
     default => EMPTY
 );
+has basename => (
+    is => 'rw',
+    lazy => 1,
+    coerce => sub { my ($string) = @_; return $string // EMPTY;},
+    default => EMPTY
+);
 has parentname => (
     is => 'rw',
+    lazy => 1,
     coerce => sub { my ($string) = @_; return $string // EMPTY;},
     default => EMPTY
 );

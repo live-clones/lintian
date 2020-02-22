@@ -222,7 +222,11 @@ sub binary {
     for my $script ($initd_dir->children) {
         my $tagname = 'script-in-etc-init.d-not-registered-via-update-rc.d';
         my $basename = $script->basename;
-        next if any {$basename eq $_} qw(README skeleton rc rcS);
+        next
+          if (
+            any {$basename eq $_}
+            qw(README skeleton rc rcS)
+          ) && !$script->is_dir;
 
         # In an upstart system, such as Ubuntu, init scripts are symlinks to
         # upstart-job which are not registered with update-rc.d.
@@ -353,7 +357,7 @@ sub check_init {
         if (
                $l =~ m{^\s*\.\s+/lib/lsb/init-functions}
             && !$processable->relation('strong')->implies('lsb-base')
-            && none { $_->basename =~ m/\.service$/ }
+            && none { $_->basename =~ m/\.service$/ && !$_->is_dir }
             $processable->installed->sorted_list
         ) {
             $self->tag('init.d-script-needs-depends-on-lsb-base',
