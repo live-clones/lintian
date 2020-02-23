@@ -24,6 +24,7 @@ use warnings;
 use v5.16;
 
 use Carp;
+use Devel::Size qw(total_size);
 use File::Spec;
 use IO::Async::Loop;
 use IO::Async::Routine;
@@ -40,7 +41,7 @@ use Lintian::Processable::Source;
 use Lintian::Processable::Udeb;
 use Lintian::Tags qw(tag);
 use Lintian::Unpack::Task;
-use Lintian::Util qw(internal_error get_dsc_info strip);
+use Lintian::Util qw(internal_error get_dsc_info strip human_bytes);
 
 use constant EMPTY => q{};
 use constant SPACE => q{ };
@@ -588,9 +589,7 @@ Process group.
 =cut
 
 sub process {
-    my ($self, $TAGS, $exit_code_ref, $override_count,$opt, $memory_usage,
-        $OUTPUT)
-      = @_;
+    my ($self, $TAGS, $exit_code_ref, $override_count, $opt, $OUTPUT)= @_;
 
     my $all_ok = 1;
 
@@ -882,19 +881,20 @@ sub process {
     $OUTPUT->perf_log($self->name . ",total-group-check,${raw_res}");
 
     if ($opt->{'debug'} > 2) {
+
+        # supress warnings without reliable sizes
+        $Devel::Size::warn = 0;
+
         my $pivot = ($self->get_processables)[0];
         my $group_id = $pivot->source . '/' . $pivot->source_version;
         my $group_usage
-          = $memory_usage->([map { $_ } $self->get_processables]);
-        $OUTPUT->debug_msg(3, "Memory usage [$group_id]: $group_usage");
+          = human_bytes(total_size([map { $_ } $self->get_processables]));
+        $OUTPUT->debug_msg(3, "Memory usage [group:$group_id]: $group_usage");
+
         for my $processable ($self->get_processables) {
             my $id = $processable->identifier;
-            my $usage = $memory_usage->($processable);
-            my $breakdown = $processable->_memory_usage($memory_usage);
+            my $usage = human_bytes(total_size($processable));
             $OUTPUT->debug_msg(3, "Memory usage [$id]: $usage");
-            for my $field (sort(keys(%{$breakdown}))) {
-                $OUTPUT->debug_msg(4, "  -- $field: $breakdown->{$field}");
-            }
         }
     }
 

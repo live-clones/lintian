@@ -66,7 +66,7 @@ BEGIN {
           lstrip
           rstrip
           copy_dir
-          sort_file_index
+          human_bytes
           gunzip_file
           open_gz
           gzip
@@ -720,26 +720,26 @@ sub copy_dir {
     return run_cmd('cp', '-a', '--reflink=auto', '--', @_);
 }
 
-=item sort_file_index (STRING)
-
-Sorts the file index data given in STRING and returns the sorted
-result, also in a string.
+=item human_bytes(SIZE)
 
 =cut
 
-sub sort_file_index {
-    my ($input) = @_;
+sub human_bytes {
+    my ($size) = @_;
 
-    my @unsorted = split(NEWLINE, $input);
+    my @units = ('B', 'kiB', 'MiB', 'GiB');
 
-    # sorts according to LC_ALL=C
-    my @sorted
-      = sort { (split(SPACE, $a))[5] cmp(split(SPACE, $b))[5] } @unsorted;
+    my $unit = shift @units;
 
-    my $output = EMPTY;
-    $output .= $_ . NEWLINE for @sorted;
+    while ($size > 1536 && @units) {
 
-    return $output;
+        $size /= 1024;
+        $unit = shift @units;
+    }
+
+    my $human = sprintf('%.0f %s', $size, $unit);
+
+    return $human;
 }
 
 =item gunzip_file (IN, OUT)

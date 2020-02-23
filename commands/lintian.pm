@@ -99,8 +99,6 @@ my $user_dirs = $ENV{'LINTIAN_ENABLE_USER_DIRS'} // 1;
 my $exit_code = 0;
 my $STATUS_FD;
 
-my $memory_usage = sub { 'N/A'; };
-
 # }}}
 
 # {{{ Setup Code
@@ -657,41 +655,9 @@ sub main {
         $opt{'verbose'} = 1;
         $ENV{'LINTIAN_DEBUG'} = $opt{'debug'};
         $SIG{__DIE__} = sub { Carp::confess(@_) };
-        if ($opt{'debug'} > 2) {
-            eval {
-                require Devel::Size;
-                Devel::Size->import(qw(total_size));
-                {
-                    no warnings qw(once);
-                    # Disable warnings about stuff Devel::Size cannot
-                    # give reliable sizes for.
-                    $Devel::Size::warn = 0;
-                }
-
-                $memory_usage = sub {
-                    my ($obj) = @_;
-                    my $size = total_size($obj);
-                    my $unit = 'B';
-                    if ($size > 1536) {
-                        $size /= 1024;
-                        $unit = 'kB';
-                        if ($size > 1536) {
-                            $size /= 1024;
-                            $unit = 'MB';
-                        }
-                    }
-                    return sprintf('%.2f %s', $size, $unit);
-                };
-                print "N: Using Devel::Size to debug memory usage\n";
-            };
-            if ($@) {
-                print "N: Cannot load Devel::Size ($@)\n";
-                print "N: Running memory usage will not be checked.\n";
-            }
-        }
     } else {
         # Ensure verbose has a defined value
-        $opt{'verbose'} = 0 unless defined($opt{'verbose'});
+        $opt{'verbose'} //= 0;
     }
 
     $OUTPUT->verbosity_level($opt{'verbose'});
@@ -841,10 +807,8 @@ sub main {
 
     $ENV{INIT_ROOT} = $INIT_ROOT;
 
-    $pool->process(
-        $action, $PROFILE,$TAGS,\$exit_code, \%opt,
-        $memory_usage,$STATUS_FD, \@unpack_info, $OUTPUT
-    );
+    $pool->process($action, $PROFILE,$TAGS,\$exit_code, \%opt,
+        $STATUS_FD, \@unpack_info, $OUTPUT);
 
     retrigger_signal()
       if $received_signal;

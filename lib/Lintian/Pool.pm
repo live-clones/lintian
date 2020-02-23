@@ -146,11 +146,9 @@ Process the pool.
 =cut
 
 sub process{
-    my (
-        $self, $action,$PROFILE,$TAGS,
-        $exit_code_ref, $opt,$memory_usage,$STATUS_FD,
-        $unpack_info_ref, $OUTPUT
-    ) = @_;
+    my ($self, $action,$PROFILE,$TAGS,$exit_code_ref, $opt, $STATUS_FD,
+        $unpack_info_ref, $OUTPUT)
+      = @_;
 
     # $map is just here to check that all the needed collections are present.
     my $map = Lintian::DepMap->new;
@@ -268,8 +266,7 @@ sub process{
         if ($action eq 'check') {
             if (
                 !$group->process(
-                    $TAGS,$exit_code_ref, \%override_count,
-                    $opt,$memory_usage, $OUTPUT
+                    $TAGS,$exit_code_ref, \%override_count,$opt, $OUTPUT
                 )
             ) {
                 $success = 0;
