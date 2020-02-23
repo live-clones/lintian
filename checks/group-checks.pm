@@ -115,11 +115,12 @@ sub check_file_overlap {
 
 sub overlap_check {
     my ($self, $a_proc, $a_info, $b_proc, $b_info) = @_;
-    foreach my $a_file ($a_info->sorted_index) {
+    foreach my $a_file ($a_info->installed->sorted_list) {
         my $name = $a_file->name;
         my $b_file;
         $name =~ s,/$,,o;
-        $b_file = $b_info->index($name) // $b_info->index("$name/");
+        $b_file = $b_info->installed->lookup($name)
+          // $b_info->installed->lookup("$name/");
         if ($b_file) {
             next if $a_file->is_dir and $b_file->is_dir;
             $self->tag('binaries-have-file-conflict',

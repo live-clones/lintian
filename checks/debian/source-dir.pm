@@ -45,7 +45,7 @@ sub source {
 
     my $processable = $self->processable;
 
-    my $dsrc = $processable->index_resolved_path('debian/source/');
+    my $dsrc = $processable->patched->resolve_path('debian/source/');
     my ($format_file, $git_pfile, $format, $format_extra);
 
     $format_file = $dsrc->child('format') if $dsrc;
@@ -85,7 +85,7 @@ sub source {
         my $git_patches_fd = $git_pfile->open;
         if (any { !/^\s*+#|^\s*+$/o} <$git_patches_fd>) {
             my $dpseries
-              = $processable->index_resolved_path('debian/patches/series');
+              = $processable->patched->resolve_path('debian/patches/series');
             # gitpkg does not create series as a link, so this is most likely
             # a traversal attempt.
             if (not $dpseries or not $dpseries->is_open_ok) {
@@ -111,7 +111,7 @@ sub source {
           unless $KNOWN_FILES->known($file);
     }
 
-    my $options = $processable->index_resolved_path('debian/source/options');
+    my $options = $processable->patched->resolve_path('debian/source/options');
     if ($options and $options->is_open_ok) {
         my $fd = $options->open;
         while (<$fd>) {

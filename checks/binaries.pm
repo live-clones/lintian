@@ -321,7 +321,7 @@ sub always {
       if @sonames && !$match_found && $type ne 'udeb';
 
     # process all files in package
-    foreach my $file ($processable->sorted_index) {
+    foreach my $file ($processable->installed->sorted_list) {
         my ($fileinfo, $objdump, $fname);
 
         next if not $file->is_file;
@@ -473,7 +473,7 @@ sub always {
         # rpath is disallowed, except in private directories
         if (exists($objdump->{RPATH}) or exists($objdump->{RUNPATH})) {
             if (not %directories) {
-                for my $file ($processable->sorted_index) {
+                for my $file ($processable->installed->sorted_list) {
                     my $name;
                     next unless $file->is_dir || $file->is_symlink;
                     $name = $file->name;

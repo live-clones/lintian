@@ -60,7 +60,7 @@ sub source {
     my $processable = $self->processable;
     my $group = $self->group;
 
-    my $debian_dir = $processable->index_resolved_path('debian/');
+    my $debian_dir = $processable->patched->resolve_path('debian/');
     my $dcontrol;
     $dcontrol = $debian_dir->child('control') if $debian_dir;
 
@@ -429,7 +429,7 @@ sub source {
       BINARY:
         foreach my $proc ($group->get_binary_processables) {
             my $pkg = $proc->name;
-            foreach my $file ($proc->sorted_index) {
+            foreach my $file ($proc->installed->sorted_list) {
                 my $owner = $file->owner . ':' . $file->group;
                 next if $owner eq 'root:root';
                 $self->tag('should-specify-rules-requires-root',

@@ -100,7 +100,7 @@ sub source {
     my $processable = $self->processable;
     my $group = $self->group;
 
-    my $debian_dir = $processable->index_resolved_path('debian/');
+    my $debian_dir = $processable->patched->resolve_path('debian/');
     return if not $debian_dir;
     my $copyright_path = $debian_dir->child('copyright');
 
@@ -203,11 +203,11 @@ sub check_apache_notice_files {
               $_->basename =~ m/^NOTICE(\.txt)?$/
           and $_->is_open_ok
           and $_->file_contents =~ m/apache/i
-    } $processable->sorted_index;
+    } $processable->patched->sorted_list;
     return if not @notice_files;
 
     foreach my $binpkg (@procs) {
-        my @files = map { $_->name } $binpkg->sorted_index;
+        my @files = map { $_->name } $binpkg->installed->sorted_list;
         my $java_info = $binpkg->java_info;
         for my $jar_file (sort keys %{$java_info}) {
             push @files, keys %{$java_info->{$jar_file}{files}};
@@ -361,9 +361,14 @@ sub parse_dep5 {
         }
     }
 
-    my @shipped = $processable->sorted_orig_index;
+    my @shipped;
+    if($processable->native) {
+        @shipped = $processable->patched->sorted_list;
+    } else {
+        @shipped = $processable->orig->sorted_list;
+    }
 
-    my $debian_dir = $processable->index_resolved_path('debian/');
+    my $debian_dir = $processable->patched->resolve_path('debian/');
     if ($debian_dir) {
 
         push(@shipped, $debian_dir->children('breadth-first'));
@@ -496,7 +501,7 @@ sub parse_dep5 {
                             push(@wlist, @shippedfiles);
 
                         } elsif ($wc_value =~ /^debian\//) {
-                            my $dir = $processable->index($wc_value);
+                            my $dir = $processable->patched->lookup($wc_value);
                             if ($dir) {
                                 my @files = grep { $_->is_file }
                                   $dir->children('breadth-first');
@@ -504,7 +509,7 @@ sub parse_dep5 {
                             }
 
                         } else {
-                            my $dir = $processable->orig_index($wc_value);
+                            my $dir = $processable->orig->lookup($wc_value);
                             if ($dir) {
                                 my @files = grep { $_->is_file }
                                   $dir->children('breadth-first');
@@ -603,7 +608,7 @@ sub parse_dep5 {
             my $parser = XML::LibXML->new;
             $parser->set_option('no_network', 1);
 
-            my $file = $processable->index_resolved_path($srcfile);
+            my $file = $processable->patched->resolve_path($srcfile);
             my $doc = eval {$parser->parse_file($file->fs_path);};
             next
               unless $doc;
@@ -830,7 +835,7 @@ sub check_files_excluded {
 
     my $processable = $self->processable;
 
-    my @files = grep { $_->is_file } $processable->sorted_orig_index;
+    my @files = grep { $_->is_file } $processable->orig->sorted_list;
     my @wildcards = split /[\n\t ]+/, $excluded;
     for my $wildcard (@wildcards) {
         $wildcard =~ s/^\s+|\s+$//g;
@@ -882,12 +887,12 @@ sub binary {
     my $linked = 0;
     my $path = "usr/share/doc/$pkg";
 
-    if ($processable->index("$path/copyright.gz")) {
+    if ($processable->installed->lookup("$path/copyright.gz")) {
         $self->tag('copyright-file-compressed');
         $found = 1;
     }
 
-    if (my $index_info = $processable->index("$path/copyright")) {
+    if (my $index_info = $processable->installed->lookup("$path/copyright")) {
         $found = 1;
         if ($index_info->is_symlink) {
             $self->tag('copyright-file-is-symlink');
@@ -898,7 +903,7 @@ sub binary {
     }
 
     if (not $found) {
-        my $index_info = $processable->index($path);
+        my $index_info = $processable->installed->lookup($path);
         if (defined $index_info && $index_info->is_symlink) {
             my $link = $index_info->link;
 

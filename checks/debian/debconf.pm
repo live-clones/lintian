@@ -82,7 +82,7 @@ sub always {
 
         foreach my $file (@files) {
             my $dfile = "debian/$file";
-            my $templates_file = $processable->index_resolved_path($dfile);
+            my $templates_file = $processable->patched->resolve_path($dfile);
             my $binary = $file;
             $binary =~ s/\.?templates$//;
             # Single binary package (so @files contains "templates" and
@@ -122,9 +122,9 @@ sub always {
         return;
     }
 
-    my $preinst = $processable->control_index('preinst');
-    my $ctrl_config = $processable->control_index('config');
-    my $ctrl_templates = $processable->control_index('templates');
+    my $preinst = $processable->control->lookup('preinst');
+    my $ctrl_config = $processable->control->lookup('config');
+    my $ctrl_templates = $processable->control->lookup('templates');
 
     if ($preinst and $preinst->is_file and $preinst->is_open_ok) {
         my $fd = $preinst->open;
@@ -401,7 +401,7 @@ sub always {
     my (%templates_used, %template_aliases);
     for my $file (qw(config prerm postrm preinst postinst)) {
         my $potential_makedev = {};
-        my $path = $processable->control_index($file);
+        my $path = $processable->control->lookup($file);
         if ($path and $path->is_file and $path->is_open_ok) {
             my ($usesconfmodule, $obsoleteconfmodule, $db_input, $isdefault);
 
@@ -572,7 +572,7 @@ sub always {
     return if ($pkg eq 'debconf') || ($type eq 'udeb');
 
     foreach my $filename (sort keys %{$processable->scripts}) {
-        my $path = $processable->index_resolved_path($filename);
+        my $path = $processable->installed->resolve_path($filename);
         next if not $path or not $path->is_open_ok;
         my $fd = $path->open;
         while (<$fd>) {

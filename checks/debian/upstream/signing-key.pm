@@ -44,7 +44,7 @@ sub source {
     # Check all possible locations for signing keys
     my %key_locations;
     for my $key_name ($SIGNING_KEY_FILENAMES->all) {
-        my $path = $processable->index_resolved_path("debian/$key_name");
+        my $path = $processable->patched->resolve_path("debian/$key_name");
         $key_locations{$key_name} = $path->fs_path
           if $path && $path->is_file;
     }

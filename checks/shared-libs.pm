@@ -74,7 +74,7 @@ sub always {
           if exists($objdump->{$file}{SONAME});
     }
 
-    foreach my $file ($processable->sorted_index) {
+    foreach my $file ($processable->installed->sorted_list) {
         $SHARED_LIB_PRESENT{$1} = 1
           if $file =~ m%.*\/lib([^/]+)\.so(?:\.\d+){0,3}$%;
         $STATIC_LIB_PRESENT{$1} = 1 if $file =~ m,.*\/lib([^/]+)\.a$,;
@@ -103,7 +103,7 @@ sub always {
 
     # 2nd step: read package contents
 
-    for my $cur_file ($processable->sorted_index) {
+    for my $cur_file ($processable->installed->sorted_list) {
         # shared library?
 
         my $normalized_target;
@@ -214,7 +214,7 @@ sub always {
     # 3rd step: check if shlib symlinks are present and in correct order
     for my $shlib_file (keys %SONAME) {
         # file found?
-        if (not $processable->index($shlib_file)) {
+        if (not $processable->installed->lookup($shlib_file)) {
             internal_error(
                 "shlib $shlib_file not found in package (should not happen!)");
         }
@@ -226,7 +226,7 @@ sub always {
 
         # symlink found?
         my $link_file = "$dir/$SONAME{$shlib_file}";
-        if (not $processable->index($link_file)) {
+        if (not $processable->installed->lookup($link_file)) {
             $self->tag('ldconfig-symlink-missing-for-shlib',
                 "$link_file $shlib_file $SONAME{$shlib_file}");
         } else {
@@ -235,18 +235,20 @@ sub always {
                 # the library file uses its SONAME, this is ok...
             } else {
                 # $link_file really a symlink?
-                if ($processable->index($link_file)->is_symlink) {
+                if ($processable->installed->lookup($link_file)->is_symlink) {
                     # yes.
 
                     # $link_file pointing to correct file?
-                    if ($processable->index($link_file)->link eq $shlib_name) {
+                    if ($processable->installed->lookup($link_file)->link eq
+                        $shlib_name) {
                         # ok.
                     } else {
                         $self->tag(
                             'ldconfig-symlink-referencing-wrong-file',
                             join(q{ },
                                 "$link_file ->",
-                                $processable->index($link_file)->link,
+                                $processable->installed->lookup($link_file)
+                                  ->link,
                                 "instead of $shlib_name"));
                     }
                 } else {
@@ -265,7 +267,8 @@ sub always {
         # if shlib doesn't _have_ a version, then $link_file and
         # $shlib_file will be equal, and it's not a development link,
         # so don't complain.
-        if ($processable->index($link_file) and $link_file ne $shlib_file) {
+        if (    $processable->installed->lookup($link_file)
+            and $link_file ne $shlib_file) {
             $self->tag('non-dev-pkg-with-shlib-symlink',
                 "$shlib_file $link_file");
         } elsif (@devpkgs) {
@@ -325,7 +328,7 @@ sub always {
             foreach my $devpkg (@devpkgs) {
 
                 foreach my $link (@alt) {
-                    if ($devpkg->index($link)) {
+                    if ($devpkg->installed->lookup($link)) {
                         $ok = 1;
                         last PKG;
                     }
@@ -348,8 +351,8 @@ sub always {
     $provides
       = Lintian::Relation->and($processable->relation('provides'), $provides);
 
-    my $shlibsf = $processable->control_index('shlibs');
-    my $symbolsf = $processable->control_index('symbols');
+    my $shlibsf = $processable->control->lookup('shlibs');
+    my $symbolsf = $processable->control->lookup('symbols');
     my (%shlibs_control, %symbols_control);
 
     # control files are not symlinks (or other "weird" things).
@@ -667,7 +670,7 @@ sub always {
     }
 
     # 6th step: check pre- and post- control files
-    if (my $preinst = $processable->control_index_resolved_path('preinst')) {
+    if (my $preinst = $processable->control->resolve_path('preinst')) {
         if ($preinst->is_open_ok) {
             if ($preinst->file_contents =~ m/^[^\#]*\bldconfig\b/m) {
                 $self->tag(
@@ -679,7 +682,7 @@ sub always {
     }
 
     my $we_trigger_ldconfig = 0;
-    if (my $postinst = $processable->control_index_resolved_path('postinst')) {
+    if (my $postinst = $processable->control->resolve_path('postinst')) {
         if ($postinst->is_open_ok) {
             # Decide if we call ldconfig
             if ($postinst->file_contents =~ m/^[^\#]*\bldconfig\b/m) {
@@ -695,7 +698,7 @@ sub always {
         }
     }
 
-    if (my $triggers = $processable->control_index_resolved_path('triggers')) {
+    if (my $triggers = $processable->control->resolve_path('triggers')) {
         if ($triggers->is_open_ok) {
             # Determine if the package had an ldconfig trigger
             my $fd = $triggers->open;
@@ -727,7 +730,7 @@ sub always {
         $self->tag('shlib-in-multi-arch-foreign-package', $must_call_ldconfig);
     }
 
-    if (my $prerm = $processable->control_index_resolved_path('prerm')) {
+    if (my $prerm = $processable->control->resolve_path('prerm')) {
         if ($prerm->is_open_ok) {
             if ($prerm->file_contents =~ m/^[^\#]*\bldconfig\b/m) {
                 $self->tag(
@@ -738,7 +741,7 @@ sub always {
         }
     }
 
-    if (my $postrm = $processable->control_index_resolved_path('postrm')) {
+    if (my $postrm = $processable->control->resolve_path('postrm')) {
         if ($postrm->is_open_ok) {
             my $contents = $postrm->file_contents;
 
@@ -752,7 +755,7 @@ sub always {
         }
     }
 
-    foreach my $file ($processable->sorted_index) {
+    foreach my $file ($processable->installed->sorted_list) {
         next unless $file =~ m,^usr/(lib(/[^/]+)?|share)/pkgconfig/[^/]+\.pc$,;
         next unless $file->is_open_ok;
         my $fd = $file->open;

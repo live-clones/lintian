@@ -42,11 +42,11 @@ sub source {
 
     my @keynames = $SIGNING_KEY_FILENAMES->all;
     my @keypaths
-      = map { $processable->index_resolved_path("debian/$_") } @keynames;
+      = map { $processable->patched->resolve_path("debian/$_") } @keynames;
     my @keys = grep { $_ && $_->is_file } @keypaths;
 
     # in uscan's gittag mode,signature will never match
-    my $watch = $processable->index_resolved_path('debian/watch');
+    my $watch = $processable->patched->resolve_path('debian/watch');
     my $gittag = $watch && $watch->file_contents =~ m/pgpmode=gittag/;
 
     my @filenames = sort keys %{$processable->files};

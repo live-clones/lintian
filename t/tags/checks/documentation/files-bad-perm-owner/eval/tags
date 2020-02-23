@@ -1,2 +1,2 @@
 binary (binary): executable-in-usr-share-doc usr/share/doc/binary/some-file 0755
-binary (binary): bad-owner-for-doc-file usr/share/doc/binary/README daemon/daemon != root/root
+binary (binary): bad-owner-for-doc-file usr/share/doc/binary/README daemon/daemon != root/root (or 0/0)

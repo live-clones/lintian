@@ -39,7 +39,7 @@ has bin_binaries => (is => 'rwp', default => sub { [] });
 sub setup {
     my ($self) = @_;
 
-    for my $file ($self->processable->sorted_index) {
+    for my $file ($self->processable->installed->sorted_list) {
 
         next
           unless $file->is_file;
@@ -139,8 +139,7 @@ sub always {
 
     # get maintainer scripts
     my @names = keys %{$self->processable->control_scripts};
-    my @scripts
-      =map { $self->processable->control_index_resolved_path($_) } @names;
+    my @scripts=map { $self->processable->control->resolve_path($_) } @names;
 
     for my $file (@scripts) {
 

@@ -87,11 +87,11 @@ sub binary {
     my $pkg = $self->package;
     my $processable = $self->processable;
 
-    my $initd_dir = $processable->index_resolved_path('etc/init.d/');
-    my $postinst = $processable->control_index('postinst');
-    my $preinst = $processable->control_index('preinst');
-    my $postrm = $processable->control_index('postrm');
-    my $prerm = $processable->control_index('prerm');
+    my $initd_dir = $processable->installed->resolve_path('etc/init.d/');
+    my $postinst = $processable->control->lookup('postinst');
+    my $preinst = $processable->control->lookup('preinst');
+    my $postrm = $processable->control->lookup('postrm');
+    my $prerm = $processable->control->lookup('prerm');
 
     my (%initd_postinst, %initd_postrm);
 
@@ -354,7 +354,7 @@ sub check_init {
                $l =~ m{^\s*\.\s+/lib/lsb/init-functions}
             && !$processable->relation('strong')->implies('lsb-base')
             && none { $_->basename =~ m/\.service$/ }
-            $processable->sorted_index
+            $processable->installed->sorted_list
         ) {
             $self->tag('init.d-script-needs-depends-on-lsb-base',
                 $initd_path, "(line $.)");
@@ -518,7 +518,7 @@ sub check_defaults {
 
     my $processable = $self->processable;
 
-    my $dir = $processable->index_resolved_path('etc/default/');
+    my $dir = $processable->installed->resolve_path('etc/default/');
     return unless $dir and $dir->is_dir;
     for my $path ($dir->children) {
         return if not $path->is_open_ok;
@@ -545,18 +545,19 @@ sub files {
 
         $self->tag('package-supports-alternative-init-but-no-init.d-script',
             $file)
-          unless $self->processable->index_resolved_path(
+          unless $self->processable->installed->resolve_path(
             "etc/init.d/${service}")
-          or $self->processable->index_resolved_path(
+          or $self->processable->installed->resolve_path(
             "lib/systemd/system/${service}.path")
-          or $self->processable->index_resolved_path(
+          or $self->processable->installed->resolve_path(
             "lib/systemd/system/${service}.timer");
     }
 
     if ($file =~ m,etc/sv/([^/]+)/$,) {
         my $service = $1;
         my $file
-          = $self->processable->index_resolved_path("etc/sv/${service}/run");
+          = $self->processable->installed->resolve_path(
+            "etc/sv/${service}/run");
         $self->tag(
             'directory-in-etc-sv-directory-without-executable-run-script',
             $file)

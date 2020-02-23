@@ -39,7 +39,7 @@ sub binary {
     my $processable = $self->processable;
     my $group = $self->group;
 
-    my $rules_dir = $processable->index_resolved_path('lib/udev/rules.d/');
+    my $rules_dir = $processable->installed->resolve_path('lib/udev/rules.d/');
     return unless $rules_dir;
     foreach my $file ($rules_dir->children) {
         if (!$file->is_open_ok) {

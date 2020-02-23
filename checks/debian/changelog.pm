@@ -287,10 +287,10 @@ sub binary {
 
     # skip packages which have a /usr/share/doc/$pkg -> foo symlink
     return
-      if  $processable->index("usr/share/doc/$pkg")
-      and $processable->index("usr/share/doc/$pkg")->is_symlink;
+      if  $processable->installed->lookup("usr/share/doc/$pkg")
+      and $processable->installed->lookup("usr/share/doc/$pkg")->is_symlink;
 
-    if (my $docdir = $processable->index("usr/share/doc/$pkg/")) {
+    if (my $docdir = $processable->installed->lookup("usr/share/doc/$pkg/")) {
         for my $path ($docdir->children) {
             my $basename = $path->basename;
 

@@ -47,7 +47,7 @@ sub source {
     if (any { /^autopkgtest-pkg-nodejs$/ } @testsuites) {
         # Check control file exists in sources
         my $filename = 'debian/tests/pkg-js/test';
-        my $path = $processable->index_resolved_path($filename);
+        my $path = $processable->patched->resolve_path($filename);
 
         # Ensure test file contains something
         if ($path and $path->is_open_ok) {
@@ -58,15 +58,21 @@ sub source {
         }
 
         # Ensure all files referenced in debian/tests/pkg-js/files exist
-        $path = $processable->index_resolved_path('debian/tests/pkg-js/files');
-        if ($path) {
-            my @list = map { chomp; s/^\s+(.*?)\s+$/$1/; $_ }
-              grep { /\w/ } split /\n/, $path->file_contents;
-            $self->path_exists($_) foreach (@list);
-        }
+        $path
+          = $processable->patched->resolve_path('debian/tests/pkg-js/files');
+
+        my @files;
+        @files = path($path->fs_path)->lines
+          if defined $path;
+
+        # trim leading and trailing whitespace
+        s/^\s+|\s+$//g for @files;
+
+        my @notfound = grep { !$self->path_exists($_) } @files;
+        $self->tag('pkg-js-autopkgtest-file-does-not-exist', $_) for @notfound;
     }
     # debian/rules check
-    my $droot = $processable->index_resolved_path('debian/') or return;
+    my $droot = $processable->patched->resolve_path('debian/') or return;
     my $drules = $droot->child('rules') or return;
     return unless $drules->is_open_ok;
     my $rules_fd = $drules->open;
@@ -95,7 +101,7 @@ sub source {
         and not $override_test
         and not $seen_dh_dynamic) {
         my $filename = 'debian/tests/pkg-js/test';
-        my $path = $processable->index_resolved_path($filename);
+        my $path = $processable->patched->resolve_path($filename);
         # Ensure test file contains something
         if ($path) {
             $self->tag('pkg-js-tools-test-is-empty', $filename)
@@ -114,39 +120,58 @@ sub files {
     return
       if $self->package =~ /-dbg$/;
 
+    # Warn if a file is installed in old nodejs root dir
     $self->tag('nodejs-module-installed-in-usr-lib', $file->name)
-      if $file->name =~ m#usr/lib/nodejs/.*#
-      && $file->is_file;
+      if $file->name =~ m#usr/lib/nodejs/.*#;
 
+    # Warn if package is not installed in a subdirectory of nodejs root
+    # directories
     $self->tag('node-package-install-in-nodejs-rootdir', $file->name)
       if $file->name
-      =~ m#usr/(?:share|lib(?:/[^/]+)?)/nodejs/(?:package\.json|[^/]*\.js)$#
-      && $file->is_file;
+      =~ m#usr/(?:share|lib(?:/[^/]+)?)/nodejs/(?:package\.json|[^/]*\.js)$#;
 
-    if($file->name
-           =~ m#usr/(?:share|lib(?:/[^/]+)?)/nodejs/([^/]+)(.*/)package\.json$#
-        && $file->is_file
-        && $file->is_open_ok) {
+    # Now we have to open package.json
+    return unless $file->is_open_ok;
 
-        my $dirname = $1; # directory in /**/nodejs
-        my $subpath = $2; # subpath in /**/nodejs/module/ (node_modules/foo)
+    # Look only nodejs package.json files
+    return
+      unless $file->name
+      =~ m#usr/(?:share|lib(?:/[^/]+)?)/nodejs/([^/]+)(.*/)package\.json$#;
 
-        my $content = path($file->fs_path)->slurp;
+    my $declared = $self->package;
+    my $processable = $self->processable;
+    my $version = $processable->field('version');
+    $declared .= "( = $version)" if defined $version;
+    $version //= '0-1';
+    my $provides
+      = Lintian::Relation->and($processable->relation('provides'), $declared);
 
-        my $pac;
-        eval {$pac = decode_json($content);};
-        if(not $@ and length $pac->{name}) {
+    my $dirname = $1; # directory in /**/nodejs
+    my $subpath = $2; # subpath in /**/nodejs/module/ (node_modules/foo)
 
-            # Store node module name & version (classification)
-            $self->tag('nodejs-module', $pac->{name},
-                $pac->{version} // 'undef',
-                $file->name);
-            # Warn if module name is not equal to nodejs directory
-            $self->tag('nodejs-module-installed-in-bad-directory',
-                $file->name, $pac->{name}, $dirname)
-              if ($subpath eq '/')
-              and ($dirname ne $pac->{name});
-        }
+    my $content = path($file->fs_path)->slurp;
+
+    # Look only valid package.json files
+    my $pac;
+    eval {$pac = decode_json($content);};
+    return if $@ or not length $pac->{name};
+
+    # Store node module name & version (classification)
+    $self->tag('nodejs-module', $pac->{name},$pac->{version} // 'undef',
+        $file->name);
+
+    # Warn if module name is not equal to nodejs directory
+    if (($subpath eq '/') and ($dirname ne $pac->{name})) {
+        $self->tag('nodejs-module-installed-in-bad-directory',
+            $file->name, $pac->{name}, $dirname);
+    } else {
+        # Else verify that module is declared at least in Provides: field
+        my $name = 'node-' . $pac->{name};
+        $name =~ s/_/-/g;
+        $name =~ s/\@//g;
+        $self->tag('nodejs-module-not-declared', $name)
+          if $subpath eq '/'
+          and not $provides->implies($name);
     }
     return;
 }
@@ -169,7 +194,7 @@ sub path_exists {
 
             next
               unless
-              defined($dir = $processable->index_resolved_path($dir[$i]));
+              defined($dir = $processable->patched->resolve_path($dir[$i]));
             next unless $dir->is_dir;
             last LOOP
               unless (
@@ -178,7 +203,8 @@ sub path_exists {
               );
 
             # Stop searching: at least one element found
-            return unless @elem;
+            return 1
+              unless @elem;
 
             # If this is the last element of path, store current elements
             my $pwd = $dir[$i];
@@ -189,8 +215,7 @@ sub path_exists {
     }
 
     # No element found
-    $self->tag('pkg-js-autopkgtest-file-does-not-exist', $expr);
-    return;
+    return 0;
 }
 
 1;

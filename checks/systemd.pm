@@ -54,7 +54,7 @@ sub setup {
     my ($self) = @_;
 
     my @timers = grep { m,^lib/systemd/system/[^\/]+\.timer$, }
-      $self->processable->sorted_index;
+      $self->processable->installed->sorted_list;
     $self->_set_timers(\@timers);
 
     return;
@@ -76,7 +76,8 @@ sub binary {
     my $processable = $self->processable;
 
     # non-service checks
-    if (my $tmpfiles = $processable->index_resolved_path('etc/tmpfiles.d/')) {
+    if (my $tmpfiles= $processable->installed->resolve_path('etc/tmpfiles.d/'))
+    {
         for my $file ($tmpfiles->children('breadth-first')) {
             if ($file->basename =~ m,\.conf$,) {
                 $self->tag('systemd-tmpfiles.d-outside-usr-lib', $file);
@@ -118,7 +119,8 @@ sub get_init_scripts {
 
     my @scripts;
     if ($processable->name ne 'initscripts'
-        and my $initd_path = $processable->index_resolved_path('etc/init.d/')){
+        and my $initd_path
+        = $processable->installed->resolve_path('etc/init.d/')){
         for my $init_script ($initd_path->children) {
             # sysv generator drops the .sh suffix
             my $basename = get_init_service_name($init_script);
@@ -196,7 +198,8 @@ sub get_systemd_service_files {
     my $processable = $self->processable;
     my @res;
     my @potential
-      = grep { m,/systemd/system/.*\.service$, } $processable->sorted_index;
+      = grep { m,/systemd/system/.*\.service$, }
+      $processable->installed->sorted_list;
 
     for my $file (@potential) {
         push(@res, $file) if $self->check_systemd_service_file($file);
@@ -283,7 +286,7 @@ sub check_systemd_service_file {
             my $service = $1;
             for my $x (qw(path timer)) {
                 $is_standalone = 0
-                  if $processable->index_resolved_path(
+                  if $processable->installed->resolve_path(
                     "lib/systemd/system/${service}.${x}");
             }
         }
@@ -459,7 +462,7 @@ sub check_maintainer_scripts {
 
     for my $file (keys %control) {
 
-        my $path = $processable->control_index_resolved_path($file);
+        my $path = $processable->control->resolve_path($file);
         my $interpreter = $control{$file};
 
         # Don't follow unsafe links
@@ -490,7 +493,7 @@ sub check_maintainer_scripts {
 sub check_systemd_socket_files {
     my ($self) = @_;
 
-    my @files = $self->processable->sorted_index;
+    my @files = $self->processable->installed->sorted_list;
 
     foreach my $file (grep { m,/systemd/system/.*\.socket$, } @files) {
         my @xs

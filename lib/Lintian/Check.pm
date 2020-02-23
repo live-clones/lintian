@@ -76,7 +76,7 @@ sub run {
     if ($type eq 'binary' || $type eq 'udeb') {
 
         if ($self->can('files')) {
-            $self->files($_)for $self->processable->sorted_index;
+            $self->files($_)for $self->processable->installed->sorted_list;
         }
     }
 

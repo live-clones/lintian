@@ -34,8 +34,12 @@ sub binary {
     my $processable = $self->processable;
 
     $self->tag('emacsen-common-without-dh-elpa')
-      if ($processable->index('usr/lib/emacsen-common/packages/install/')
-        && (not $processable->index('usr/share/emacs/site-lisp/elpa-src/')));
+      if (
+        $processable->installed->lookup(
+            'usr/lib/emacsen-common/packages/install/')
+        && (
+            not $processable->installed->lookup(
+                'usr/share/emacs/site-lisp/elpa-src/')));
 
     return;
 }

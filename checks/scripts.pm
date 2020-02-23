@@ -254,7 +254,7 @@ sub binary {
     # no dependency for install-menu, because the menu package specifically
     # says not to depend on it.
 
-    foreach my $file ($processable->sorted_index) {
+    foreach my $file ($processable->installed->sorted_list) {
         next if not $file->is_file;
         $ELF{$file} = 1 if $file->file_info =~ /^[^,]*\bELF\b/o;
         next unless $file->operm & 0111;
@@ -267,7 +267,7 @@ sub binary {
 
     my @x11_fonts
       = grep {m,^usr/share/fonts/X11/.*\.(?:afm|pcf|pfa|pfb)(?:\.gz)?$,}
-      $processable->sorted_index;
+      $processable->installed->sorted_list;
 
     my %old_versions;
     for my $entry (
@@ -377,7 +377,7 @@ sub binary {
             and $filename !~ m,^etc/csh/login\.d/,)
           and not $in_docs;
 
-        $path = $processable->index_resolved_path($filename);
+        $path = $processable->installed->resolve_path($filename);
         next if not $path or not $path->is_open_ok;
         # Syntax-check most shell scripts, but don't syntax-check
         # scripts that end in .dpatch.  bash -n doesn't stop checking
@@ -565,7 +565,7 @@ sub binary {
     }
 
     foreach (keys %executable) {
-        my $index_info = $processable->index($_);
+        my $index_info = $processable->installed->lookup($_);
         my $ok = 0;
         if ($index_info->is_hardlink) {
             # We don't collect script information for hardlinks, so check
@@ -598,7 +598,7 @@ sub binary {
     my $expand_diversions = 0;
     for my $file (keys %control) {
 
-        my $path = $processable->control_index_resolved_path($file);
+        my $path = $processable->control->resolve_path($file);
         my $interpreter = $control{$file};
 
         $interpreter =~ m|([^/]*)$|;
@@ -1302,10 +1302,13 @@ m,$LEADIN(?:/usr/bin/)?dpkg\s+--compare-versions\s+.*\b\Q$ver\E(?!\.)\b,
 
         if ($expand_diversions) {
             $self->tag('diversion-for-unknown-file', $divert, "$script:$line")
-              unless (any { $_ =~ m/$divertrx/ } $processable->sorted_index);
+              unless (
+                any { $_ =~ m/$divertrx/ }
+                $processable->installed->sorted_list
+              );
         } else {
             $self->tag('diversion-for-unknown-file', $divert, "$script:$line")
-              unless $processable->index($divert);
+              unless $processable->installed->lookup($divert);
         }
     }
 

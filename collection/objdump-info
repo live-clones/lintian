@@ -53,7 +53,7 @@ sub collect {
     chdir("$dir/unpacked");
 
     my $uncompressed;
-    foreach my $path ($info->sorted_index) {
+    foreach my $path ($info->installed->sorted_list) {
         next if not $path->is_file;
 
         my $name = $path->name;

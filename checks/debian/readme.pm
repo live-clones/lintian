@@ -41,7 +41,7 @@ sub spelling_tag_emitter {
 sub open_readme {
     my ($pkg_name, $processable) = @_;
     my $doc_dir
-      = $processable->index_resolved_path("usr/share/doc/${pkg_name}/");
+      = $processable->installed->resolve_path("usr/share/doc/${pkg_name}/");
     if ($doc_dir) {
         for my $name (
             qw(README.Debian.gz README.Debian README.debian.gz README.debian)){

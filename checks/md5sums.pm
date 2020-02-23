@@ -1,6 +1,7 @@
 # md5sums -- lintian check script -*- perl -*-
 
-# Copyright (C) 1998 Christian Schwarz and Richard Braakman
+# Copyright © 1998 Christian Schwarz and Richard Braakman
+# Copyright © 2020 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -24,8 +25,10 @@ use strict;
 use warnings;
 use autodie;
 
-use Lintian::Util qw(dequote_name);
 use Path::Tiny;
+use Try::Tiny;
+
+use Lintian::Util qw(read_md5sums drop_relative_prefix);
 
 use Moo;
 use namespace::clean;
@@ -55,7 +58,7 @@ sub files {
 sub breakdown {
     my ($self) = @_;
 
-    my $control = $self->processable->control_index('md5sums');
+    my $control = $self->processable->control->lookup('md5sums');
 
     # Is there an md5sums control file?
     unless ($control) {
@@ -72,53 +75,10 @@ sub breakdown {
     return;
 }
 
-sub read_md5sums_file {
-    my ($self, $file) = @_;
-
-    my %checksums;
-
-    # read in md5sums control file
-    my $fd = $file->open;
-
-    while (my $line = <$fd>) {
-
-        chop $line;
-
-        next
-          if $line =~ m/^\s*$/;
-
-        if ($line=~ m{^(\\)?([a-f0-9]+)\s*(?:\./)?(\S.*)$}) {
-
-            my $escaped = $1;
-            my $checksum = $2;
-            my $path = $3;
-
-            if (length($checksum) != 32) {
-                $self->tag('malformed-md5sums-control-file', "line $.");
-
-                next;
-            }
-
-            $path = dequote_name($path)
-              if $escaped;
-
-            $checksums{$path} = $checksum;
-
-            next;
-        }
-
-        $self->tag('malformed-md5sums-control-file', "line $.");
-    }
-
-    close($fd);
-
-    return \%checksums;
-}
-
 sub binary {
     my ($self) = @_;
 
-    my $control = $self->processable->control_index('md5sums');
+    my $control = $self->processable->control->lookup('md5sums');
 
     # Is there an md5sums control file?
     return
@@ -136,10 +96,16 @@ sub binary {
     return
       if $control->size == 0;
 
-    my %md5sums = %{$self->read_md5sums_file($control)};
+    my $text = path($control->fs_path)->slurp;
+    my ($md5sums, $errors) = read_md5sums($text);
+
+    $self->tag('malformed-md5sums-control-file', $_)for @{$errors};
+
+    my %noprefix
+      = map { drop_relative_prefix($_) => $md5sums->{$_} } keys %{$md5sums};
 
     # iterate over files found in control file
-    for my $file (keys %md5sums) {
+    for my $file (keys %noprefix) {
 
         my $calculated = $self->processable->md5sums->{$file};
         unless (defined $calculated) {
@@ -149,14 +115,14 @@ sub binary {
         }
 
         $self->tag('md5sum-mismatch', $file)
-          unless $calculated eq $md5sums{$file};
+          unless $calculated eq $noprefix{$file};
     }
 
     # iterate over files present in package
     for my $file (keys %{ $self->processable->md5sums }) {
 
         next
-          if $md5sums{$file};
+          if $noprefix{$file};
 
         $self->tag('file-missing-in-md5sums', $file)
           unless $self->processable->is_conffile($file)

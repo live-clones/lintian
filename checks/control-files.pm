@@ -24,6 +24,8 @@ use strict;
 use warnings;
 use autodie;
 
+use constant SPACE => q{ };
+
 use Moo;
 use namespace::clean;
 
@@ -50,8 +52,7 @@ sub always {
     my $has_ctrl_script = 0;
 
     # process control-index file
-    foreach my $file ($processable->sorted_control_index) {
-        my ($owner, $operm, $experm);
+    foreach my $file ($processable->control->sorted_list) {
 
         # the control.tar.gz should only contain files (and the "root"
         # dir, but that is excluded from the index)
@@ -73,7 +74,7 @@ sub always {
             }
         }
 
-        $experm = $ctrl->value($file);
+        my $experm = $ctrl->value($file);
 
         if ($file->size == 0 and $file->basename ne 'md5sums') {
             $self->tag('control-file-is-empty', $file);
@@ -84,7 +85,7 @@ sub always {
         # anyways)
         next if $file eq 'control';
 
-        $operm = $file->operm;
+        my $operm = $file->operm;
         if ($operm & 0111 or $experm & 0111) {
             $has_ctrl_script = 1;
             $self->tag('ctrl-script', $file);
@@ -96,12 +97,12 @@ sub always {
                 sprintf('%s %04o != %04o', $file, $operm, $experm));
         }
 
-        $owner = $file->owner . '/' . $file->group;
+        my $ownership = $file->owner . '/' . $file->group;
 
         # correct owner?
-        unless ($owner eq 'root/root') {
+        unless ($file->identity eq 'root/root' || $file->identity eq '0/0') {
             $self->tag('control-file-has-bad-owner',
-                "$file $owner != root/root");
+                $file->name. SPACE. $file->identity. ' != root/root (or 0/0)');
         }
 
         # for other maintainer scripts checks, see the scripts check

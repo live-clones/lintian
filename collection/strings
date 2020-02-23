@@ -55,7 +55,7 @@ sub collect {
 
     my $info = create_info($pkg, $type, $dir);
 
-    foreach my $file ($info->sorted_index) {
+    foreach my $file ($info->installed->sorted_list) {
 
         next
           unless $file->is_file;

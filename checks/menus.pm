@@ -149,19 +149,20 @@ sub binary {
     my %prerm;
     my %postrm;
 
-    $self->check_script(scalar $processable->control_index('preinst'),
+    $self->check_script(scalar $processable->control->lookup('preinst'),
         \%preinst);
-    $self->check_script(scalar $processable->control_index('postinst'),
+    $self->check_script(scalar $processable->control->lookup('postinst'),
         \%postinst);
-    $self->check_script(scalar $processable->control_index('prerm'), \%prerm);
-    $self->check_script(scalar $processable->control_index('postrm'),\%postrm);
+    $self->check_script(scalar $processable->control->lookup('prerm'),\%prerm);
+    $self->check_script(scalar $processable->control->lookup('postrm'),
+        \%postrm);
 
     # Populate all_{files,links} from current package and its dependencies
     foreach my $bin ($group->get_binary_processables) {
         next
           unless $processable->name eq $bin->name
           or $processable->relation('strong')->implies($bin->name);
-        for my $file ($bin->sorted_index) {
+        for my $file ($bin->installed->sorted_list) {
             add_file_link_info($bin, $file->name, \%all_files,\%all_links);
         }
     }
@@ -197,7 +198,8 @@ sub binary {
 
     # check consistency
     # docbase file?
-    if (my $db_dir = $processable->index_resolved_path('usr/share/doc-base/')){
+    if (my $db_dir
+        = $processable->installed->resolve_path('usr/share/doc-base/')){
         for my $dbpath ($db_dir->children) {
             next if not $dbpath->is_open_ok;
             if ($dbpath->resolve_path->is_executable) {
@@ -560,8 +562,8 @@ sub check_doc_base_file_section {
 # links have to include a leading /.
 sub add_file_link_info {
     my ($processable, $file, $all_files, $all_links) = @_;
-    my $link = $processable->index($file)->link;
-    my $ishard = $processable->index($file)->is_hardlink;
+    my $link = $processable->installed->lookup($file)->link;
+    my $ishard = $processable->installed->lookup($file)->is_hardlink;
 
     $file = '/' . $file if (not $file =~ m%^/%); # make file absolute
     $file =~ s%/+%/%g;                           # remove duplicated `/'

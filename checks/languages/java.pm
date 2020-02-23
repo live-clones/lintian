@@ -73,7 +73,7 @@ sub always {
     for my $jar_file (sort keys %{$java_info}) {
         my $files = $java_info->{$jar_file}{files};
         my $manifest = $java_info->{$jar_file}{manifest};
-        my $operm = $processable->index($jar_file)->operm;
+        my $operm = $processable->installed->lookup($jar_file)->operm;
         my $jar_dir = dirname($jar_file);
         my $classes = 0;
         my $datafiles = 1;
@@ -188,7 +188,7 @@ sub always {
                         next
                           if $target =~ m,^usr/share/java/[^/]+.jar$,o
                           and @java_lib_depends;
-                        $tinfo = $processable->index($target);
+                        $tinfo = $processable->installed->lookup($target);
                         # Points to file or link in this package,
                         #  which is sometimes easier than
                         #  re-writing the classpath.
@@ -253,7 +253,7 @@ sub always {
     my $is_transitional = $processable->is_pkg_class('transitional');
     if (!$has_public_jars && !$is_transitional && $pkg =~ /^lib[^\s,]+-java$/){
         # Skip this if it installs a symlink in usr/share/java
-        my $java_dir = $processable->index_resolved_path('usr/share/java/');
+        my $java_dir= $processable->installed->resolve_path('usr/share/java/');
         my $has_jars = 0;
         $has_jars = 1
           if $java_dir

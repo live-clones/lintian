@@ -80,7 +80,7 @@ sub changelog {
     my $dch;
 
     if ($self->type eq 'source') {
-        my $file = $self->index_resolved_path('debian/changelog');
+        my $file = $self->patched->resolve_path('debian/changelog');
 
         return
           unless $file && $file->is_open_ok;

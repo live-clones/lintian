@@ -45,9 +45,9 @@ sub source {
         my $correct = 'debian/' . $relative->{correct};
         my $problematic = 'debian/' . $relative->{problematic};
 
-        if ($self->processable->index_resolved_path($problematic)) {
+        if ($self->processable->patched->resolve_path($problematic)) {
 
-            if ($self->processable->index_resolved_path($correct)) {
+            if ($self->processable->patched->resolve_path($correct)) {
                 $self->tag('duplicate-packaging-file',
                     "$problematic -> $correct");
 
