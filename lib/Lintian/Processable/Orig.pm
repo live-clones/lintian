@@ -21,6 +21,8 @@ use strict;
 use warnings;
 use autodie;
 
+use Path::Tiny;
+
 use Lintian::File::Index;
 
 use Moo::Role;
@@ -63,11 +65,12 @@ sub orig {
         my $orig = Lintian::File::Index->new;
 
         # source packages can be unpacked anywhere; no anchored roots
-        $orig->name('src-orig-index');
         $orig->anchored(1);
         $orig->allow_empty(1);
-        $orig->basedir($self->groupdir);
-        $orig->load;
+
+        my $dbpath
+          = path($self->groupdir)->child('src-orig-index.db')->stringify;
+        $orig->load($dbpath);
 
         $self->saved_orig($orig);
     }

@@ -21,6 +21,8 @@ use strict;
 use warnings;
 use autodie;
 
+use Path::Tiny;
+
 use Lintian::File::Index;
 
 use Moo::Role;
@@ -64,13 +66,13 @@ sub control {
 
         # control files are not installed relative to the system root
         # disallow absolute paths and symbolic links
-        $control->name('control-index');
-        $control->fs_root_sub(
-            sub {
-                return $self->_fetch_extracted_dir('control', 'control', @_);
-            });
-        $control->basedir($self->groupdir);
-        $control->load;
+
+        my $basedir = path($self->groupdir)->child('control')->stringify;
+        $control->basedir($basedir);
+
+        my $dbpath
+          = path($self->groupdir)->child('control-index.db')->stringify;
+        $control->load($dbpath);
 
         $self->saved_control($control);
     }

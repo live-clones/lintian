@@ -24,6 +24,8 @@ use strict;
 use warnings;
 use autodie;
 
+use Path::Tiny;
+
 use Lintian::File::Index;
 
 use Moo::Role;
@@ -67,17 +69,17 @@ sub installed {
 
         # binary packages are anchored to the system root
         # allow absolute paths and symbolic links
-        $installed->name('index');
-        $installed->fs_root_sub(
-            sub {
-                return $self->_fetch_extracted_dir('unpacked', 'unpacked', @_);
-            });
-        $installed->file_info_sub(
+
+        my $basedir = path($self->groupdir)->child('unpacked')->stringify;
+        $installed->basedir($basedir);
+
+        $installed->fileinfo_sub(
             sub {
                 return $self->file_info(@_);
             });
-        $installed->basedir($self->groupdir);
-        $installed->load;
+
+        my $dbpath = path($self->groupdir)->child('index.db')->stringify;
+        $installed->load($dbpath);
 
         $self->saved_installed($installed);
     }

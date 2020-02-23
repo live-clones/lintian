@@ -23,6 +23,8 @@ use strict;
 use warnings;
 use autodie;
 
+use Path::Tiny;
+
 use Lintian::File::Index;
 
 use Moo::Role;
@@ -65,17 +67,17 @@ sub patched {
         my $patched = Lintian::File::Index->new;
 
         # source packages can be unpacked anywhere; no anchored roots
-        $patched->name('index');
-        $patched->fs_root_sub(
-            sub {
-                return $self->_fetch_extracted_dir('unpacked', 'unpacked', @_);
-            });
-        $patched->file_info_sub(
+
+        my $basedir = path($self->groupdir)->child('unpacked')->stringify;
+        $patched->basedir($basedir);
+
+        $patched->fileinfo_sub(
             sub {
                 return $self->file_info(@_);
             });
-        $patched->basedir($self->groupdir);
-        $patched->load;
+
+        my $dbpath = path($self->groupdir)->child('index.db')->stringify;
+        $patched->load($dbpath);
 
         $self->saved_patched($patched);
     }

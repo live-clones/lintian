@@ -29,7 +29,6 @@ use Path::Tiny;
 use Scalar::Util qw(blessed);
 
 use Lintian::File::Path;
-use Lintian::Path::FSInfo;
 use Lintian::Util qw(open_gz perm2oct dequote_name);
 
 use constant EMPTY => q{};
@@ -66,8 +65,6 @@ Lintian::Processable::Orig::Index provides an interface to collected data about 
 
 =over 4
 
-=item name
-
 =item index
 
 Returns a reference to a hash with elements indexed by path names.
@@ -84,23 +81,16 @@ Returns the base directory for file references.
 
 =item C<allow_empty>
 
-=item C<fs_root_sub>
-
-=item C<file_info_sub>
-
-=item C<fs_info>
+=item C<fileinfo_sub>
 
 =cut
 
-has name => (is => 'rw', default => EMPTY);
 has index => (is => 'rw', default => sub { {} });
 has saved_sorted_list => (is => 'rw', default => sub { [] });
 has basedir => (is => 'rw', default => EMPTY);
 has anchored => (is => 'rw', default => 0);
 has allow_empty => (is => 'rw', default => 0);
-has fs_root_sub => (is => 'rw');
-has file_info_sub => (is => 'rw');
-has fs_info => (is => 'rw', default => sub { {} });
+has fileinfo_sub => (is => 'rw');
 
 =item sorted_list
 
@@ -182,21 +172,7 @@ sub resolve_path {
 =cut
 
 sub load {
-    my ($self) = @_;
-
-    my $index = $self->name;
-    my $allow_empty = $self->allow_empty;
-
-    my $fs_info = Lintian::Path::FSInfo->new(
-        '_collect_path_sub' => $self->fs_root_sub,
-        '_collect_file_info_sub' => $self->file_info_sub,
-        'has_anchored_root_dir' => $self->anchored,
-    );
-    $self->fs_info($fs_info);
-
-    my %all;
-
-    my $dbpath = path($self->basedir)->child("$index.db")->stringify;
+    my ($self, $dbpath) = @_;
 
     return {}
       unless -f $dbpath;
@@ -204,6 +180,7 @@ sub load {
     tie my %h, 'MLDBM',-Filename => $dbpath
       or die "Cannot open file $dbpath: $! $BerkeleyDB::Error\n";
 
+    my %all;
     $all{$_} = $h{$_} for keys %h;
 
     untie %h;
@@ -258,11 +235,18 @@ sub load {
         } while ($parentname ne EMPTY);
     }
 
+    # all missing directories have been generated
     die 'The root dir should be present or have been faked'
-      unless exists $all{''} || $allow_empty;
+      unless exists $all{''} || $self->allow_empty;
 
-    # add filesystem info to all entries, including generated
-    $_->fs_info($self->fs_info) for values %all;
+    # add base directory to all entries, including generated
+    $_->basedir($self->basedir) for values %all;
+
+    # add anchored parameter to all entries, including generated
+    $_->anchored($self->anchored) for values %all;
+
+    # add file info generator to all entries, including generated
+    $_->fileinfo_sub($self->fileinfo_sub) for values %all;
 
     my @directories
       = grep { $_->path_info & Lintian::File::Path::TYPE_DIR } values %all;

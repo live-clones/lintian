@@ -87,7 +87,10 @@ Needs-Info requirements for using I<strings>: strings
 
 sub strings {
     my ($self, $file) = @_;
-    my $real = $self->_fetch_extracted_dir('strings', 'strings', "${file}.gz");
+
+    my $real = path($self->groupdir)->child('strings')->child("${file}.gz")
+      ->stringify;
+
     if (not -f $real) {
         open(my $fd, '<', '/dev/null');
         return $fd;
