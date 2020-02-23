@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: service-file-no-install-key
+Description: Service file lacks the required Install key
