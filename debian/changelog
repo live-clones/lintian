@@ -1,8 +1,26 @@
-lintian (2.54.0+git) UNRELEASED; urgency=medium
+lintian (2.55.0) unstable; urgency=medium
 
-  * WIP (generated upon release).
+  * Summary of tag changes:
+    + Added:
+      - adduser-with-home-var-run
 
- -- Chris Lamb <lamby@debian.org>  Thu, 20 Feb 2020 13:07:05 -0800
+  [ Chris Lamb ]
+  * Emit rules-requires-root-explicitly for values other than
+    "binary-targets". (Closes: #951650)
+
+  [ Felix Lechner ]
+  * In checks related to debian/copyright DEP-5 parsing, use the 'patched'
+    to match files. (Closes: #951760)
+  * Do not sort hard links when printing tag as the order is
+    predetermined in File::Index.
+  * For directories, File::Path->basename no longer returns a trailing slash.
+  * Add libdevel-size-perl to Depends and Build-Depends.
+  * Correct false positives for missing systemd keys.
+
+  [ Topi Miettinen ]
+  * Add check for adduser --home /var/run in {pre,post}inst.
+
+ -- Chris Lamb <lamby@debian.org>  Sun, 23 Feb 2020 17:43:29 +0000
 
 lintian (2.54.0) unstable; urgency=medium
 
