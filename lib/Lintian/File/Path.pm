@@ -371,35 +371,29 @@ sub timestamp {
 =item child(BASENAME)
 
 Returns the child named BASENAME if it is a child of this directory.
-Otherwise, this method returns C<undef>.  Note if BASENAME has a
-trailing slash, the child entry must be a directory.  If the child
-exist, but is not a directory, C<undef> will be returned instead.
+Otherwise, this method returns C<undef>.
 
-For non-dirs, this method always returns C<undef>.
+Even for directories, BASENAME should not end with a slash.
+
+When invoked on non-dirs, this method always returns C<undef>.
 
 Example:
 
   $dir_entry->child('foo') => $entry OR undef
 
-  $dir_entry->child('foo/') => $dir_entry OR undef
-
 =cut
 
 sub child {
     my ($self, $basename) = @_;
-    my $child_table = $self->child_table;
-    my ($child, $had_trailing_slash);
 
-    # Remove the trailing slash (for dirs)
-    if (substr($basename, -1, 1) eq '/') {
-        $basename = substr($basename, 0, -1);
-        $had_trailing_slash = 1;
-    }
-    return if not $child_table or not exists($child_table->{$basename});
-    $child = $child_table->{$basename};
-    # Only directories are allowed to be fetched with trailing slash.
-    return if $had_trailing_slash and not $child->is_dir;
-    return $child;
+    croak 'Basename is required'
+      unless length $basename;
+
+    my $child_table = $self->child_table;
+    return
+      unless defined $child_table;
+
+    return $child_table->{$basename};
 }
 
 =item is_symlink
