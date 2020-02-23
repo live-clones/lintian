@@ -67,10 +67,6 @@ Native heuristics are only available in source packages.
 
 =head1 INSTANCE METHODS
 
-In addition to the instance methods listed below, all instance methods
-documented in the L<Lintian::Collect> and the
-L<Lintian::Processable::Package> modules are also available.
-
 =over 4
 
 =item strings (FILE)

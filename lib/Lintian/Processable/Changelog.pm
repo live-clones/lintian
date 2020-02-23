@@ -61,8 +61,6 @@ For source:
 Returns the changelog of the source package as a Parse::DebianChangelog
 object, or C<undef> if the changelog cannot be resolved safely.
 
-Needs-Info requirements for using I<changelog>: L<Same as index_resolved_path|Lintian::Processable::Package/index_resolved_path(PATH)>
-
 =item saved_changelog
 
 Returns the cached changelog information.

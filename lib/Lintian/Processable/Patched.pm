@@ -87,10 +87,6 @@ sub patched {
 
 =item index (FILE)
 
-For the general documentation of this method, please refer to the
-documentation of it in
-L<Lintian::Processable::Package|Lintian::Processable::Package/index (FILE)>.
-
 The index of a source package is not very well defined for non-native
 source packages.  This method gives the index of the "unpacked"
 package (with 3.0 (quilt), this implies patches have been applied).

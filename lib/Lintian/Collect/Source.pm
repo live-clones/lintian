@@ -67,10 +67,6 @@ data in memory.
 
 =head1 INSTANCE METHODS
 
-In addition to the instance methods listed below, all instance methods
-documented in the L<Lintian::Collect> and L<Lintian::Processable::Package>
-modules are also available.
-
 =over 4
 
 =item C<saved_changelog_version>
@@ -243,8 +239,6 @@ modified.
 NB: If a field from the "dsc" file itself is desired, please use
 L<field|Lintian::Collect/field> instead.
 
-Needs-Info requirements for using I<source_field>: L<Same as index_resolved_path|Lintian::Processable::Package/index_resolved_path(PATH)>
-
 =cut
 
 # NB: We don't say "same as _load_ctrl" in the above, because
@@ -271,8 +265,6 @@ modified.
 
 If PACKAGE is not a binary built from this source, this returns
 DEFAULT.
-
-Needs-Info requirements for using I<binary_field>: L<Same as index_resolved_path|Lintian::Processable::Package/index_resolved_path(PATH)>
 
 =cut
 

@@ -33,12 +33,17 @@ use constant SLASH => q{/};
 use Moo;
 use namespace::clean;
 
-with 'Lintian::Collect::Source', 'Lintian::Processable::Diffstat',
+with 'Lintian::Collect::Source',
+  'Lintian::Processable::Checksums::Md5',
+  'Lintian::Processable::Diffstat',
   'Lintian::Processable::Changelog',
-  'Lintian::Processable::Fields::Files', 'Lintian::Processable::Orig',
+  'Lintian::Processable::Fields::Files',
+  'Lintian::Processable::FileInfo',
+  'Lintian::Processable::Java',
+  'Lintian::Processable::Orig',
   'Lintian::Processable::Overrides',
-  'Lintian::Processable::Package',
   'Lintian::Processable::Patched',
+  'Lintian::Processable::Scripts::Control',
   'Lintian::Processable';
 
 =for Pod::Coverage BUILDARGS
