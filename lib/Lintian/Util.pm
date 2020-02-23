@@ -1026,9 +1026,10 @@ Remove an initial ./ from STRING, if present
 sub drop_relative_prefix {
     my ($name) = @_;
 
-    $name =~ s,^\.?/,,;
+    my $copy = $name;
+    $copy =~ s{^\./}{}s;
 
-    return $name;
+    return $copy;
 }
 
 =item dequote_name(STR, REMOVESLASH)
