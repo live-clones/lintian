@@ -292,9 +292,11 @@ NB: Returns the empty string for the "root" dir.
 
 sub dirname {
     my ($self) = @_;
-    my $dir = $self->parent_dir;
-    return $dir->name if $dir;
-    return q{};
+
+    return $self->parent_dir->name
+      if $self->parent_dir;
+
+    return EMPTY;
 }
 
 =item operm
@@ -309,6 +311,7 @@ for symlinks.
 
 sub operm {
     my ($self) = @_;
+
     return $self->path_info & OPERM_MASK;
 }
 
@@ -482,13 +485,14 @@ sub link_normalized {
       unless length $link;
 
     my $dir = $self->dirname;
-    # hardlinks are always relative to the package root
 
-    $dir = '/'
+    # hardlinks are always relative to the package root
+    $dir = SLASH
       if $self->is_hardlink;
 
     my $target = normalize_pkg_path($dir, $link);
     $self->link_target($target);
+
     return $target;
 }
 
@@ -568,11 +572,14 @@ defined entry, for which L</is_dir> returns a truth value.
 
 sub fs_path {
     my ($self) = @_;
-    my $path = $self->_collect_path;
+
     $self->_check_access;
-    return $path if $self->resolve_path->is_dir;
-    $self->_check_open($path);
-    return $path;
+
+    $self->_check_open
+      unless $self->resolve_path->is_dir;
+
+    return $self->_collect_path;
+
 }
 
 =item is_open_ok
@@ -586,14 +593,20 @@ Returns a truth value if the path may be opened.
 
 sub is_open_ok {
     my ($self) = @_;
+
     my $path_info = $self->path_info;
-    return 1 if ($path_info & OPEN_IS_OK) == OPEN_IS_OK;
-    return 0 if $path_info & ACCESS_INFO;
-    eval {
-        my $path = $self->_collect_path;
-        $self->_check_open($path);
-    };
-    return 0 if $@;
+
+    return 1
+      if ($path_info & OPEN_IS_OK) == OPEN_IS_OK;
+
+    return 0
+      if $path_info & ACCESS_INFO;
+
+    eval {$self->_check_open;};
+
+    return 0
+      if $@;
+
     return 1;
 }
 
@@ -608,11 +621,17 @@ sub _collect_path {
 
 sub _check_access {
     my ($self) = @_;
+
     my $path_info = $self->path_info;
-    return 1 if ($path_info & FS_PATH_IS_OK) == FS_PATH_IS_OK;
-    return 0 if $path_info & ACCESS_INFO;
+
+    return 1
+      if ($path_info & FS_PATH_IS_OK) == FS_PATH_IS_OK;
+
+    return 0
+      if $path_info & ACCESS_INFO;
+
     my $resolvable = $self->resolve_path;
-    if (not $resolvable) {
+    unless ($resolvable) {
         $self->path_info($self->path_info | UNSAFE_PATH);
         # NB: We are deliberately vague here to avoid suggesting
         # whether $path exists.  In some cases (e.g. lintian.d.o)
@@ -620,29 +639,28 @@ sub _check_access {
         confess('Attempt to access through broken or unsafe symlink:'. ' '
               . $self->name);
     }
+
     $self->path_info($self->path_info | FS_PATH_IS_OK);
+
     return 1;
 }
 
 sub _check_open {
-    my ($self, $path) = @_;
+    my ($self) = @_;
+
     $self->_check_access;
+
     # Symlinks can point to a "non-file" object inside the
     # package root
-    if ($self->is_file or ($self->is_symlink and -f $path)) {
-        $self->path_info($self->path_info | OPEN_IS_OK);
-        return 1;
-    }
     # Leave "_path_access" here as _check_access marks it either as
     # "UNSAFE_PATH" or "FS_PATH_IS_OK"
-    confess("Attempt to open non-file (e.g. dir or pipe): $self");
-}
 
-sub _do_open {
-    my ($self, $open_sub) = @_;
-    my $path = $self->_collect_path;
-    $self->_check_open($path);
-    return $open_sub->($path);
+    confess 'Opening of irregular file not supported: ' . $self->name
+      unless $self->is_file || ($self->is_symlink && -f $self->_collect_path);
+
+    $self->path_info($self->path_info | OPEN_IS_OK);
+
+    return 1;
 }
 
 =item open([LAYER])
@@ -668,15 +686,23 @@ It is possible to test for these by using L</is_open_ok>.
 
 sub open {
     my ($self, $layer) = @_;
+
     # Scoped autodie in here to avoid it overwriting our
     # method "open"
-    $layer //= '';
+    $layer //= EMPTY;
+
+    $self->_check_open;
+
     my $opener = sub {
+        my ($path) = @_;
+
         use autodie qw(open);
-        open(my $fd, "<${layer}", $_[0]);
+        open(my $fd, "<$layer", $path);
+
         return $fd;
     };
-    return $self->_do_open($opener);
+
+    return $opener->($self->_collect_path);
 }
 
 =item open_gz
@@ -690,7 +716,12 @@ The returned handle may be a pipe from an external process.
 
 sub open_gz {
     my ($self) = @_;
-    return $self->_do_open(\&Lintian::Util::open_gz);
+
+    $self->_check_open;
+
+    my $opener = \&Lintian::Util::open_gz;
+
+    return $opener->($self->_collect_path);
 }
 
 =item file_contents
@@ -703,6 +734,7 @@ This method may fail for the same reasons as L</open([LAYER])>.
 
 sub file_contents {
     my ($self) = @_;
+
     return path($self->fs_path)->slurp;
 }
 
@@ -714,10 +746,13 @@ Return the root dir entry of this the path entry.
 
 sub root_dir {
     my ($self) = @_;
+
     my $current = $self;
+
     while (my $next = $current->parent_dir) {
         $current = $next;
     }
+
     return $current;
 }
 
