@@ -715,7 +715,7 @@ sub find_cruft {
             && $entry->is_open_ok
             && $file_info =~ /gzip compressed data/
             && !$processable->patched->resolve_path('debian/README.source')) {
-            my $fd = $entry->open_gz;
+            my $fd = open_gz($entry->unpacked_path);
             read($fd, my $magic, 4);
             close($fd);
             $self->tag('r-data-without-readme-source', $name)

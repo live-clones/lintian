@@ -695,25 +695,6 @@ sub open {
     return $opener->($self->unpacked_path);
 }
 
-=item open_gz
-
-Open a read handle to the file and decompress it as a GZip compressed
-file.  This method may fail for the same reasons as L</open([LAYER])>.
-
-The returned handle may be a pipe from an external process.
-
-=cut
-
-sub open_gz {
-    my ($self) = @_;
-
-    $self->_check_open;
-
-    my $opener = \&Lintian::Util::open_gz;
-
-    return $opener->($self->unpacked_path);
-}
-
 =item file_contents
 
 Return the file contents as a scalar.

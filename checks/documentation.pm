@@ -25,6 +25,8 @@ use strict;
 use warnings;
 use autodie;
 
+use Lintian::Util qw(open_gz);
+
 use Moo;
 use namespace::clean;
 
@@ -162,7 +164,7 @@ sub files {
             and $file->is_regular_file
             and $file->size <= 276
             and $file->file_info =~ m/gzip compressed/) {
-            my $fd = $file->open_gz;
+            my $fd = open_gz($file->unpacked_path);
             my $f = <$fd>;
             close($fd);
             unless (defined $f and length $f) {

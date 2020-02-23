@@ -171,7 +171,7 @@ sub files {
         my $unpacked_path = $file->unpacked_path;
         my $fd;
         if ($file_info =~ m/gzip compressed/) {
-            $fd = $file->open_gz;
+            $fd = open_gz($file->unpacked_path);
         } else {
             $fd = $file->open;
         }
