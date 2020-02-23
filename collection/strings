@@ -68,7 +68,7 @@ sub collect {
           unless $info->file_info($file->name) =~ m/\bELF\b/o;
 
         # prior implementations sometimes made the list unique
-        my $allstrings = safe_qx('strings', '--all', '--',$file->fs_path);
+        my $allstrings= safe_qx('strings', '--all', '--',$file->unpacked_path);
 
         # calculate destination path
         my $relative = $file->name . DOT . GZ;

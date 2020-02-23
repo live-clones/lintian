@@ -73,7 +73,7 @@ sub source {
     return if not $dcontrol->is_open_ok;
 
     # check that control is UTF-8 encoded
-    my $line = file_is_encoded_in_non_utf8($dcontrol->fs_path);
+    my $line = file_is_encoded_in_non_utf8($dcontrol->unpacked_path);
     if ($line) {
         $self->tag('debian-control-file-uses-obsolete-national-encoding',
             "at line $line");
@@ -134,7 +134,7 @@ sub source {
     eval {
         # check we can parse it, but ignore the result - we will fetch
         # the fields we need from $processable.
-        read_dpkg_control($dcontrol->fs_path);
+        read_dpkg_control($dcontrol->unpacked_path);
     };
     if ($@) {
         chomp $@;

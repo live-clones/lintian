@@ -1428,7 +1428,7 @@ sub script_is_evil_and_wrong {
 sub check_script_syntax {
     my ($interpreter, $path) = @_;
 
-    safe_qx($interpreter, '-n', $path->fs_path);
+    safe_qx($interpreter, '-n', $path->unpacked_path);
     return $?;
 }
 

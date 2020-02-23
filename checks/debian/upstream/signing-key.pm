@@ -45,7 +45,7 @@ sub source {
     my %key_locations;
     for my $key_name ($SIGNING_KEY_FILENAMES->all) {
         my $path = $processable->patched->resolve_path("debian/$key_name");
-        $key_locations{$key_name} = $path->fs_path
+        $key_locations{$key_name} = $path->unpacked_path
           if $path && $path->is_file;
     }
 

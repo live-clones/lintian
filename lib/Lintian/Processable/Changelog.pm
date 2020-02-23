@@ -83,7 +83,7 @@ sub changelog {
         return
           unless $file && $file->is_open_ok;
 
-        $dch = $file->fs_path;
+        $dch = $file->unpacked_path;
 
     } else {
         $dch = path($self->groupdir)->child('changelog')->stringify;

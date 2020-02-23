@@ -181,7 +181,7 @@ sub source {
         mkdir($tempdir);
         # Copy the templates dir because intltool-update might
         # write to it.
-        copy_dir($d_templates->fs_path, $tempdir_templates)
+        copy_dir($d_templates->unpacked_path, $tempdir_templates)
           if $d_templates;
 
         my $error;
@@ -192,7 +192,7 @@ sub source {
                 $ENV{INTLTOOL_EXTRACT}
                   = '/usr/share/intltool-debian/intltool-extract';
                 # use of $debian_po is safe; we accessed two children by now.
-                $ENV{srcdir} = $debian_po_dir->fs_path;
+                $ENV{srcdir} = $debian_po_dir->unpacked_path;
 
                 chdir($tempdir);
 
@@ -229,7 +229,7 @@ sub source {
                 # compare our "test.pot" with the existing "templates.pot"
                 my @testleft = (
                     'msgcmp', '--use-untranslated',
-                    $test_pot, $templ_pot_path->fs_path
+                    $test_pot, $templ_pot_path->unpacked_path
                 );
                 system(@testleft) == 0
                   or die "system @testleft failed: $?";
@@ -237,7 +237,7 @@ sub source {
                 # is this not equivalent to the previous command? - FL
                 my @testright = (
                     'msgcmp', '--use-untranslated',
-                    $templ_pot_path->fs_path, $test_pot
+                    $templ_pot_path->unpacked_path, $test_pot
                 );
                 system(@testright) == 0
                   or die "system @testright failed: $?";
@@ -288,7 +288,7 @@ sub source {
                 clean_env(1);
                 my @msgfmt = (
                     'msgfmt', '-o', '/dev/null', '--statistics',
-                    $po_path->fs_path
+                    $po_path->unpacked_path
                 );
                 system(@msgfmt) == 0
                   or die "system @msgfmt failed: $?";

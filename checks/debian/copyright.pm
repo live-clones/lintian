@@ -614,7 +614,7 @@ sub parse_dep5 {
             $parser->set_option('no_network', 1);
 
             my $file = $processable->patched->resolve_path($srcfile);
-            my $doc = eval {$parser->parse_file($file->fs_path);};
+            my $doc = eval {$parser->parse_file($file->unpacked_path);};
             next
               unless $doc;
 

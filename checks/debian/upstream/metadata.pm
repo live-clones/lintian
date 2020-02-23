@@ -62,7 +62,7 @@ sub source {
       if $YAML::XS::VERSION < 0.69;
 
     my $yaml;
-    eval { $yaml = YAML::XS::LoadFile($file->fs_path); };
+    eval { $yaml = YAML::XS::LoadFile($file->unpacked_path); };
 
     if ($@ || !defined $yaml) {
         my $message = $@;

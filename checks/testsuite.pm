@@ -84,7 +84,7 @@ sub source {
         if (not $control->is_regular_file) {
             die 'debian tests control is not a regular file';
         } elsif ($control->is_open_ok) {
-            my $path = $control->fs_path;
+            my $path = $control->unpacked_path;
             my $not_utf8_line = file_is_encoded_in_non_utf8($path);
 
             if ($not_utf8_line) {

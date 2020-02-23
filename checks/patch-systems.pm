@@ -322,7 +322,7 @@ sub check_patch {
     # patches that modify files in the debian/* directory, but as of
     # 2010-01-01, all cases where the first level of the patch path is
     # "debian/" in the archive are false positives.
-    open(my $fd, '-|', 'lsdiff', '--strip=1', $patch_file->fs_path);
+    open(my $fd, '-|', 'lsdiff', '--strip=1', $patch_file->unpacked_path);
     while (<$fd>) {
         chomp;
         if (m|^(?:\./)?debian/|o) {

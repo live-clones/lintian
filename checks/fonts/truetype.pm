@@ -47,7 +47,7 @@ sub files {
     $self->tag('truetype-font-wrong-filename', $file->name)
       unless $file->name =~ /\.ttf$/i;
 
-    my $font = Font::TTF::Font->open($file->fs_path);
+    my $font = Font::TTF::Font->open($file->unpacked_path);
     return
       unless $font;
 

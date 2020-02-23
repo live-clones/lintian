@@ -540,7 +540,7 @@ sub file_info {
     return $self->fileinfo_sub->($self->name);
 }
 
-=item fs_path
+=item unpacked_path
 
 Returns the path to this object on the file system, which must be a
 regular file, a hardlink or a directory.
@@ -570,16 +570,15 @@ defined entry, for which L</is_dir> returns a truth value.
 
 =cut
 
-sub fs_path {
+sub unpacked_path {
     my ($self) = @_;
 
     $self->_check_access;
 
-    $self->_check_open
-      unless $self->resolve_path->is_dir;
+    croak 'No base directory'
+      unless length $self->basedir;
 
-    return $self->_collect_path;
-
+    return path($self->basedir)->child($self->name)->stringify;
 }
 
 =item is_open_ok
@@ -608,15 +607,6 @@ sub is_open_ok {
       if $@;
 
     return 1;
-}
-
-sub _collect_path {
-    my ($self) = @_;
-
-    croak 'No base directory'
-      unless length $self->basedir;
-
-    return path($self->basedir)->child($self->name)->stringify;
 }
 
 sub _check_access {
@@ -656,7 +646,7 @@ sub _check_open {
     # "UNSAFE_PATH" or "FS_PATH_IS_OK"
 
     confess 'Opening of irregular file not supported: ' . $self->name
-      unless $self->is_file || ($self->is_symlink && -f $self->_collect_path);
+      unless $self->is_file || ($self->is_symlink && -f $self->unpacked_path);
 
     $self->path_info($self->path_info | OPEN_IS_OK);
 
@@ -702,7 +692,7 @@ sub open {
         return $fd;
     };
 
-    return $opener->($self->_collect_path);
+    return $opener->($self->unpacked_path);
 }
 
 =item open_gz
@@ -721,7 +711,7 @@ sub open_gz {
 
     my $opener = \&Lintian::Util::open_gz;
 
-    return $opener->($self->_collect_path);
+    return $opener->($self->unpacked_path);
 }
 
 =item file_contents
@@ -735,7 +725,7 @@ This method may fail for the same reasons as L</open([LAYER])>.
 sub file_contents {
     my ($self) = @_;
 
-    return path($self->fs_path)->slurp;
+    return path($self->unpacked_path)->slurp;
 }
 
 =item root_dir

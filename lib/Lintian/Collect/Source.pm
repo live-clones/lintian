@@ -301,8 +301,8 @@ sub _load_dctrl {
         return;
     }
     my (@control_data, %packages);
-    my $fs_path = $dctrl->fs_path;
-    eval {@control_data = read_dpkg_control($fs_path);};
+    my $unpacked_path = $dctrl->unpacked_path;
+    eval {@control_data = read_dpkg_control($unpacked_path);};
     if ($@) {
         # If it is a syntax error, ignore it (we emit
         # syntax-error-in-control-file in this case via

@@ -259,7 +259,7 @@ sub check_doc_base_file {
     my $group = $self->group;
 
     my $dbfile = $dbpath->basename;
-    my $line = file_is_encoded_in_non_utf8($dbpath->fs_path);
+    my $line = file_is_encoded_in_non_utf8($dbpath->unpacked_path);
     if ($line) {
         $self->tag('doc-base-file-uses-obsolete-national-encoding',
             "$dbfile:$line");

@@ -47,7 +47,7 @@ sub source {
     return
       unless $rules->is_open_ok;
 
-    my $contents = path($rules->fs_path)->slurp;
+    my $contents = path($rules->unpacked_path)->slurp;
 
     my $plain = qr/\$\@/;
     my $curly = qr/\$\{\@\}/;

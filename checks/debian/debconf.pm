@@ -95,7 +95,7 @@ sub always {
                 my @templates;
                 eval {
                     @templates
-                      = read_dpkg_control($templates_file->fs_path,
+                      = read_dpkg_control($templates_file->unpacked_path,
                         DCTRL_DEBCONF_TEMPLATE);
                 };
                 if ($@) {
@@ -194,8 +194,7 @@ sub always {
             # $seentemplates (above) will be false if $ctrl_templates is a
             # symlink or not a file, so this should be safe without
             # (re-checking) with -f/-l.
-            @templates
-              = read_dpkg_control($ctrl_templates->fs_path,
+            @templates= read_dpkg_control($ctrl_templates->unpacked_path,
                 DCTRL_DEBCONF_TEMPLATE);
         };
         if ($@) {

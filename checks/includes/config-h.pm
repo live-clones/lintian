@@ -45,7 +45,7 @@ sub files {
     return
       unless $file->is_open_ok;
 
-    my $contents = path($file->fs_path)->slurp;
+    my $contents = path($file->unpacked_path)->slurp;
 
     $self->tag('package-name-defined-in-config-h', $file->name)
       if $contents =~ m{\bPACKAGE_NAME\b};

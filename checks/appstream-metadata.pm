@@ -116,10 +116,10 @@ sub check_modalias {
     my $parser = XML::LibXML->new;
     $parser->set_option('no_network', 1);
 
-    my $doc = eval {$parser->parse_file($metadatafile->fs_path);};
+    my $doc = eval {$parser->parse_file($metadatafile->unpacked_path);};
     if ($@) {
         $self->tag('appstream-metadata-invalid',
-            basename($metadatafile->fs_path));
+            basename($metadatafile->unpacked_path));
         return 0;
     }
 

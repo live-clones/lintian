@@ -168,7 +168,7 @@ sub files {
             }
         }
     } else { # not a symlink
-        my $fs_path = $file->fs_path;
+        my $unpacked_path = $file->unpacked_path;
         my $fd;
         if ($file_info =~ m/gzip compressed/) {
             $fd = $file->open_gz;
@@ -226,7 +226,7 @@ sub files {
             if ($pid == 0) {
                 clean_env;
                 open(STDERR, '>&', \*STDOUT);
-                exec('lexgrog', $fs_path)
+                exec('lexgrog', $unpacked_path)
                   or internal_error("exec lexgrog failed: $!");
             }
             if (@{$self->running_lexgrog} > 2) {
@@ -244,11 +244,11 @@ sub files {
         # pages with .so but aren't simple links; rbash, for instance.)
         my @cmd = qw(man --warnings -E UTF-8 -l -Tutf8 -Z);
         my $dir;
-        if ($fs_path =~ m,^(.*)/(man\d/.*)$,) {
+        if ($unpacked_path =~ m,^(.*)/(man\d/.*)$,) {
             $dir = $1;
             push @cmd, $2;
         } else {
-            push(@cmd, $fs_path);
+            push(@cmd, $unpacked_path);
         }
         my ($read, $write);
         pipe($read, $write);

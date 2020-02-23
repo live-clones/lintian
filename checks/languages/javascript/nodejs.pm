@@ -62,7 +62,7 @@ sub source {
           = $processable->patched->resolve_path('debian/tests/pkg-js/files');
 
         my @files;
-        @files = path($path->fs_path)->lines
+        @files = path($path->unpacked_path)->lines
           if defined $path;
 
         # trim leading and trailing whitespace
@@ -149,7 +149,7 @@ sub files {
     my $dirname = $1; # directory in /**/nodejs
     my $subpath = $2; # subpath in /**/nodejs/module/ (node_modules/foo)
 
-    my $content = path($file->fs_path)->slurp;
+    my $content = path($file->unpacked_path)->slurp;
 
     # Look only valid package.json files
     my $pac;
