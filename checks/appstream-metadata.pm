@@ -57,7 +57,7 @@ sub binary {
               = $processable->installed->resolve_path(
                 'usr/share/applications/'))
     ) {
-        for my $file ($dir->children('breadth-first')) {
+        for my $file ($dir->descendants) {
             $desktopfiles{$file} = 1 if ($file->is_file);
         }
     }
@@ -78,7 +78,7 @@ sub binary {
             my $dir
               = $processable->installed->resolve_path('usr/share/appdata/'))
     ) {
-        for my $file ($dir->children('breadth-first')) {
+        for my $file ($dir->descendants) {
             if ($file->is_file) {
                 $self->tag(('appstream-metadata-in-legacy-location', $file));
                 $found_modalias|= $self->check_modalias($file, $modaliases);
@@ -90,7 +90,7 @@ sub binary {
             my $dir= $processable->installed->resolve_path('lib/udev/rules.d/')
         )
     ) {
-        for my $file ($dir->children('breadth-first')) {
+        for my $file ($dir->descendants) {
             push(@udevrules, $file) if ($file->is_file);
         }
     }

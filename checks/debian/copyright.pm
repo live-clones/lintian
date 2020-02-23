@@ -371,7 +371,7 @@ sub parse_dep5 {
     my $debian_dir = $processable->patched->resolve_path('debian/');
     if ($debian_dir) {
 
-        push(@shipped, $debian_dir->children('breadth-first'));
+        push(@shipped, $debian_dir->descendants);
     }
 
     my @shippedfiles = sort grep { $_->is_file } @shipped;
@@ -503,8 +503,8 @@ sub parse_dep5 {
                         } elsif ($wc_value =~ /^debian\//) {
                             my $dir = $processable->patched->lookup($wc_value);
                             if ($dir) {
-                                my @files = grep { $_->is_file }
-                                  $dir->children('breadth-first');
+                                my @files
+                                  = grep { $_->is_file }$dir->descendants;
                                 push(@wlist, @files);
                             }
 
@@ -516,8 +516,8 @@ sub parse_dep5 {
                                 $dir = $processable->orig->lookup($wc_value);
                             }
                             if ($dir) {
-                                my @files = grep { $_->is_file }
-                                  $dir->children('breadth-first');
+                                my @files
+                                  = grep { $_->is_file }$dir->descendants;
                                 push(@wlist, @files);
                             }
                         }

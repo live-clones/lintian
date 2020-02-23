@@ -42,7 +42,7 @@ sub binary {
       unless $info_dir;
 
     # Read package contents...
-    foreach my $file ($info_dir->children('breadth-first')) {
+    foreach my $file ($info_dir->descendants) {
         # NB: file_info can be undef (e.g. symlinks)
         my $file_info = $file->file_info // '';
         my $fname = $file->basename;

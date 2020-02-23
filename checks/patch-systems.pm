@@ -265,7 +265,7 @@ sub source {
               if $file =~ /\.series$/;
         }
 
-        foreach my $file ($dpdir->children('breadth-first')) {
+        foreach my $file ($dpdir->descendants) {
             next
               if $file->basename =~ /^README(\.patches)?$/
               or $file->basename =~ /\.in/g;

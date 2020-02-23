@@ -78,7 +78,7 @@ sub binary {
     # non-service checks
     if (my $tmpfiles= $processable->installed->resolve_path('etc/tmpfiles.d/'))
     {
-        for my $file ($tmpfiles->children('breadth-first')) {
+        for my $file ($tmpfiles->descendants) {
             if ($file->is_file && $file->basename =~ m,\.conf$,) {
                 $self->tag('systemd-tmpfiles.d-outside-usr-lib', $file);
             }
