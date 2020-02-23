@@ -731,12 +731,6 @@ sub root_dir {
     return $current;
 }
 
-sub _set_parent_dir {
-    my ($self, $parent) = @_;
-    $self->parent_dir($parent);
-    return 1;
-}
-
 =item resolve_path([PATH])
 
 Resolve PATH relative to this path entry.

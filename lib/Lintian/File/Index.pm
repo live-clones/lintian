@@ -279,7 +279,7 @@ sub load {
         $child_table{$_->basename} = $_ for @sorted_children;
 
         $entry->child_table(\%child_table);
-        $_->_set_parent_dir($entry) for $entry->children;
+        $_->parent_dir($entry) for $entry->children;
     }
 
     # ensure root is not its own child; may create leaks like #695866
