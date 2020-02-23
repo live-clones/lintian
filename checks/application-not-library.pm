@@ -61,7 +61,7 @@ sub binary {
 
     my @programs = ();
     foreach my $binpath (qw(bin sbin usr/bin usr/sbin usr/games)) {
-        my $bindir = $processable->index("$binpath/");
+        my $bindir = $processable->installed->lookup("$binpath/");
         next unless $bindir;
 
         push(

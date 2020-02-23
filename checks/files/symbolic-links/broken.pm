@@ -84,12 +84,15 @@ sub breakdown {
 
         # destination is in the package
         next
-          if $self->processable->index($path)
-          || $self->processable->index("$path/");
+          if $self->processable->installed->lookup($path)
+          || $self->processable->installed->lookup("$path/");
 
         # does the link point to any prerequisites in same source package
         next
-          if any { $_->index($path) || $_->index("$path/") } @prerequisites;
+          if any {
+            $_->installed->lookup($path) || $_->installed->lookup("$path/")
+        }
+        @prerequisites;
 
         # link target
         my $target = $file->link // EMPTY;

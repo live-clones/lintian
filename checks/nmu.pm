@@ -43,7 +43,7 @@ sub source {
     my $changelog_mentions_local = 0;
     my $changelog_mentions_qa = 0;
     my $changelog_mentions_team_upload = 0;
-    my $debian_dir = $processable->index_resolved_path('debian/');
+    my $debian_dir = $processable->patched->resolve_path('debian/');
     my $chf;
     $chf = $debian_dir->child('changelog') if $debian_dir;
 

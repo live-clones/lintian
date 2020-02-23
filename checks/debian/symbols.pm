@@ -36,7 +36,7 @@ with 'Lintian::Check';
 sub source {
     my ($self) = @_;
 
-    for my $file ($self->processable->sorted_index) {
+    for my $file ($self->processable->patched->sorted_list) {
 
         # look at symbols files
         $self->check_symbols_file($file)

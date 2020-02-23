@@ -54,7 +54,7 @@ sub collect {
       or die "Cannot open file $script_dbpath: $! $BerkeleyDB::Error\n";
 
     my $info = create_info($pkg, $type, $dir);
-    foreach my $path ($info->sorted_index) {
+    foreach my $path ($info->installed->sorted_list) {
         next unless $path->is_regular_file and $path->is_open_ok;
 
         # skip lincity data files; magic: #!#!#!
@@ -94,7 +94,7 @@ sub collect {
       -Flags    => DB_CREATE
       or die "Cannot open file $control_dbpath: $! $BerkeleyDB::Error\n";
 
-    for my $path ($info->control_index(EMPTY)->children) {
+    for my $path ($info->control->lookup->children) {
         next unless $path->is_open_ok;
 
         # skip anything other than maintainer scripts

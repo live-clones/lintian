@@ -1,9 +1,8 @@
 #!/usr/bin/perl
 # unpacked -- lintian collector/unpack script
 #
-
 # Copyright © 1998 Christian Schwarz and Richard Braakman
-# Copyright © 2019 Felix Lechner
+# Copyright © 2020 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -29,13 +28,16 @@ use strict;
 use warnings;
 use autodie;
 
+use BerkeleyDB;
 use IO::Async::Loop;
 use IO::Async::Process;
+use MLDBM qw(BerkeleyDB::Btree Storable);
 use Path::Tiny;
 
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
 
-use Lintian::Util qw(sort_file_index gzip safe_qx);
+use Lintian::File::Path;
+use Lintian::Util qw(safe_qx);
 
 # Read up to 40kB at the time.  This happens to be 4096 "tar records"
 # (with a block-size of 512 and a block factor of 20, which appears to
@@ -44,9 +46,10 @@ use Lintian::Util qw(sort_file_index gzip safe_qx);
 # record.
 use constant READ_SIZE => 4096 * 1024 * 10;
 
-use constant SPACE => q{ };
 use constant EMPTY => q{};
+use constant SPACE => q{ };
 use constant COLON => q{:};
+use constant SLASH => q{/};
 use constant NEWLINE => qq{\n};
 
 sub collect {
@@ -56,7 +59,11 @@ sub collect {
     path($unpackedpath)->remove_tree
       if -d $unpackedpath;
 
-    for my $file (qw(index index.gz index-errors unpacked-errors)) {
+    my $dbpath = "$dir/index.db";
+    unlink($dbpath)
+      if -e $dbpath;
+
+    for my $file (qw(index-errors unpacked-errors)) {
         unlink("$dir/$file") if -e "$dir/$file";
     }
 
@@ -107,32 +114,63 @@ sub collect {
 
         # chdir for index_src
         chdir("$dir/unpacked");
-        my $output = safe_qx(
-            'find', '(',  '-type', 'l',
-            # If symlink
-            '-printf', '%M 0/0 %s %AY-%Am-%Ad %AH:%AM %p -> %l\0',
-            '-true',             # elif dir [needs trailing slash]
-            ')', '-o', '(',  '-type', 'd',
-            '-printf', '%M 0/0 %s %AY-%Am-%Ad %AH:%AM %p/\0', '-true',
-            # else (not dir and not symlink)
-            ')', '-o', '-printf', '%M 0/0 %s %AY-%Am-%Ad %AH:%AM %p\0'
-        );
 
-        # Link targets can have newlines in them.  A lesson learned by
-        # clasp (#765311) - We must also escape backslashes.  That would
-        # be the \x5c values (used to avoid a mass of backslashes).
-        $output =~ s/\x5c/\x5c\x5c/g;
-        $output =~ s/\n/\\\n/g;
+        # get times in UTC
+        my $output
+          = safe_qx('env', 'TZ=UTC', 'find', '-printf', '%M %s %A+\0%p\0%l\0');
 
-        my @unsorted = split(/\0/, $output);
+        my $permissionspattern = qr,\S{10},;
+        my $sizepattern = qr,\d+,;
+        my $datepattern = qr,\d{4}-\d{2}-\d{2},;
+        my $timepattern = qr,\d{2}:\d{2}:\d{2}\.\d+,;
+        my $pathpattern = qr,[^\0]*,;
 
-        # sorts according to LC_ALL=C
-        my @sorted
-          = sort { (split(SPACE, $a))[5] cmp(split(SPACE, $b))[5] } @unsorted;
+        my %all;
+        while (
+            $output
+            =~ s/^($permissionspattern)\ ($sizepattern)\ ($datepattern)\+($timepattern)\0
+                  ($pathpattern)\0
+                  ($pathpattern)\0//xs
+        ) {
 
-        my $uncompressed;
-        $uncompressed .= $_ . NEWLINE for @sorted;
-        gzip($uncompressed, "$dir/index.gz");
+            my $entry = Lintian::File::Path->new;
+
+            $entry->perm($1);
+            $entry->size($2);
+            $entry->date($3);
+            $entry->time($4);
+
+            my $name = $5;
+            my $linktarget = $6;
+
+            # for non-links, string is empty
+            $entry->link($linktarget)
+              if length $linktarget;
+
+            # strip relative prefix
+            $name =~ s{^\./+}{};
+
+            # make sure directories end with a slash, except root
+            $name .= SLASH
+              if length $name
+              && $entry->perm =~ /^d/
+              && substr($name, -1) ne SLASH;
+            $entry->name($name);
+
+            $all{$entry->name} = $entry;
+        }
+
+        die 'Could not parse output from find command'
+          if length $output;
+
+        tie my %h, 'MLDBM',
+          -Filename => $dbpath,
+          -Flags    => DB_CREATE
+          or die "Cannot open file $dbpath: $! $BerkeleyDB::Error\n";
+
+        $h{$_} = $all{$_} for keys %all;
+
+        untie %h;
 
         # fix permissions
         safe_qx('chmod', '-R', 'u+rwX,o+rX,o-w', "$dir/unpacked");
@@ -197,12 +235,18 @@ sub collect {
                 return;
             });
 
+        my @tar_options= (
+            '--list', '--verbose',
+            '--utc', '--full-time',
+            '--quoting-style=c','--file'
+        );
+
         # create index (named-owner)
         my $named;
         my $namederror;
         my $namedindexer = $loop->new_future;
         my $namedindexprocess = IO::Async::Process->new(
-            command => ['tar', '--utc', '--full-time', '-stvf', '-'],
+            command => ['tar', @tar_options, '-'],
             stdin => { via => 'pipe_write' },
             stdout => { into => \$named },
             stderr => { into => \$namederror },
@@ -227,8 +271,7 @@ sub collect {
         my $numericerror;
         my $numericindexer = $loop->new_future;
         my $numericindexprocess = IO::Async::Process->new(
-            command =>
-              ['tar', '--utc','--full-time', '--numeric-owner','-stvf','-'],
+            command =>['tar', '--numeric-owner', @tar_options, '-'],
             stdin => { via => 'pipe_write' },
             stdout => { into => \$numeric },
             stderr => { into => \$numericerror },
@@ -290,13 +333,41 @@ sub collect {
         path("$dir/unpacked-errors")->append($extracterror // EMPTY);
         path("$dir/index-errors")->append($namederror // EMPTY);
 
-        # sorts according to LC_ALL=C
-        $named = sort_file_index($named // EMPTY);
-        gzip($named, "$dir/index.gz");
+        my @named_owner = split(/\n/, $named);
+        my @numeric_owner = split(/\n/, $numeric);
 
-        # sorts according to LC_ALL=C
-        $numeric = sort_file_index($numeric // EMPTY);
-        gzip($numeric, "$dir/index-owner-id.gz");
+        my %all;
+        for my $line (@named_owner) {
+
+            my $entry = Lintian::File::Path->new;
+            $entry->init_from_tar_output($line);
+
+            $all{$entry->name} = $entry;
+        }
+
+        # get numerical owners from second list
+        for my $line (@numeric_owner) {
+
+            my $entry = Lintian::File::Path->new;
+            $entry->init_from_tar_output($line);
+
+            die"Numerical index lists extra files in $dbpath for file name "
+              . $entry->name
+              unless exists $all{$entry->name};
+
+            # copy numerical uid and gid
+            $all{$entry->name}->uid($entry->owner);
+            $all{$entry->name}->gid($entry->group);
+        }
+
+        tie my %h, 'MLDBM',
+          -Filename => $dbpath,
+          -Flags    => DB_CREATE
+          or die "Cannot open file $dbpath: $! $BerkeleyDB::Error\n";
+
+        $h{$_} = $all{$_} for keys %all;
+
+        untie %h;
 
         # remove error files if empty
         unlink("$dir/index-errors") if -z "$dir/index-errors";

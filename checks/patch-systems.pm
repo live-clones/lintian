@@ -62,7 +62,7 @@ sub source {
     my $format = $processable->field('format', '');
     my $quilt_format = ($format =~ /3\.\d+ \(quilt\)/) ? 1 : 0;
 
-    my $droot = $processable->index_resolved_path('debian/');
+    my $droot = $processable->patched->resolve_path('debian/');
     return if not $droot;
     my $dpdir = $droot->resolve_path('patches');
     my $patch_series;

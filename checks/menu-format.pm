@@ -167,7 +167,7 @@ sub binary {
 
     my (@menufiles, %desktop_cmds);
     for my $dirname (qw(usr/share/menu/ usr/lib/menu/)) {
-        if (my $dir = $processable->index_resolved_path($dirname)) {
+        if (my $dir = $processable->installed->resolve_path($dirname)) {
             push(@menufiles, $dir->children);
         }
     }
@@ -175,7 +175,7 @@ sub binary {
     # Find the desktop files in the package for verification.
     my @desktop_files;
     for my $subdir (qw(applications xsessions)) {
-        if (my $dir = $processable->index("usr/share/$subdir/")) {
+        if (my $dir = $processable->installed->lookup("usr/share/$subdir/")) {
             for my $file ($dir->children) {
                 next unless $file->is_file;
                 next unless $file->basename =~ m/\.desktop$/;
@@ -525,18 +525,19 @@ sub verify_icon {
     }
 
     # Try the explicit location, and if that fails, try the standard path.
-    my $iconfile = $processable->index_resolved_path($icon);
+    my $iconfile = $processable->installed->resolve_path($icon);
     if (not $iconfile) {
         $iconfile
-          = $processable->index_resolved_path("usr/share/pixmaps/$icon");
+          = $processable->installed->resolve_path("usr/share/pixmaps/$icon");
         if (not $iconfile) {
             foreach
               my $depproc (@{ $group->direct_dependencies($processable) }) {
 
-                $iconfile = $depproc->index_resolved_path($icon);
+                $iconfile = $depproc->installed->resolve_path($icon);
                 last if $iconfile;
                 $iconfile
-                  = $depproc->index_resolved_path("usr/share/pixmaps/$icon");
+                  = $depproc->installed->resolve_path(
+                    "usr/share/pixmaps/$icon");
                 last if $iconfile;
             }
         }
@@ -798,10 +799,10 @@ sub verify_cmd {
     }
     my $okay = $cmd
       && ( $cmd =~ /^[\'\"]/
-        || $processable->index($cmd_file)
+        || $processable->installed->lookup($cmd_file)
         || $cmd =~ m,^(/bin/)?sh,
         || $cmd =~ m,^(/usr/bin/)?sensible-(pager|editor|browser),
-        || any { $processable->index($_ . $cmd) } @path);
+        || any { $processable->installed->lookup($_ . $cmd) } @path);
     return ($okay, $cmd_file);
 }
 

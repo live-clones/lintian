@@ -54,7 +54,8 @@ sub binary {
     if (
         defined(
             my $dir
-              = $processable->index_resolved_path('usr/share/applications/'))
+              = $processable->installed->resolve_path(
+                'usr/share/applications/'))
     ) {
         for my $file ($dir->children('breadth-first')) {
             $desktopfiles{$file} = 1 if ($file->is_file);
@@ -62,7 +63,8 @@ sub binary {
     }
     if (
         defined(
-            my $dir = $processable->index_resolved_path('usr/share/metainfo/'))
+            my $dir
+              = $processable->installed->resolve_path('usr/share/metainfo/'))
     ) {
         for my $file ($dir->children) {
             if ($file->is_file) {
@@ -73,7 +75,8 @@ sub binary {
     }
     if (
         defined(
-            my $dir = $processable->index_resolved_path('usr/share/appdata/'))
+            my $dir
+              = $processable->installed->resolve_path('usr/share/appdata/'))
     ) {
         for my $file ($dir->children('breadth-first')) {
             if ($file->is_file) {
@@ -84,7 +87,8 @@ sub binary {
     }
     if (
         defined(
-            my $dir = $processable->index_resolved_path('lib/udev/rules.d/'))
+            my $dir= $processable->installed->resolve_path('lib/udev/rules.d/')
+        )
     ) {
         for my $file ($dir->children('breadth-first')) {
             push(@udevrules, $file) if ($file->is_file);

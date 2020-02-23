@@ -57,7 +57,7 @@ sub always {
 
     my $processable = $self->processable;
 
-    my $triggers_file = $processable->control_index('triggers');
+    my $triggers_file = $processable->control->lookup('triggers');
     return if not $triggers_file or not $triggers_file->is_open_ok;
     my $fd = $triggers_file->open;
     my %seen_triggers;

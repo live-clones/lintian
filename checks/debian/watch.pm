@@ -45,7 +45,7 @@ our $SIGNING_KEY_FILENAMES= Lintian::Data->new('common/signing-key-filenames');
 sub source {
     my ($self) = @_;
 
-    my $file = $self->processable->index_resolved_path('debian/watch');
+    my $file = $self->processable->patched->resolve_path('debian/watch');
     unless ($file && $file->is_file) {
         $self->tag('debian-watch-file-is-missing')
           unless $self->processable->native;
@@ -266,7 +266,7 @@ sub source {
 
     # look for upstream signing key
     my @candidates
-      = map { $self->processable->index_resolved_path("debian/$_") }
+      = map { $self->processable->patched->resolve_path("debian/$_") }
       $SIGNING_KEY_FILENAMES->all;
     my $keyfile = firstval {$_ && $_->is_file} @candidates;
 

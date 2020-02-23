@@ -1,7 +1,8 @@
 # Hey emacs! This is a -*- Perl -*- script!
 # Lintian::Util -- Perl utility functions for lintian
 
-# Copyright (C) 1998 Christian Schwarz
+# Copyright © 1998 Christian Schwarz
+# Copyright © 2020 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -81,6 +82,7 @@ BEGIN {
           drop_relative_prefix
           dequote_name
           pipe_tee
+          read_md5sums
           untaint
           $PKGNAME_REGEX
           $PKGREPACK_REGEX
@@ -99,6 +101,7 @@ use Lintian::Relation::Version qw(versions_equal versions_comparator);
 use constant EMPTY => q{};
 use constant SPACE => q{ };
 use constant COLON => q{:};
+use constant BACKSLASH => q{\\};
 use constant NEWLINE => qq{\n};
 
 # read up to 40kB at a time.  this happens to be 4096 "tar records"
@@ -1022,6 +1025,8 @@ Remove initial ./ by default
 
 sub dequote_name {
     my ($name, $slsd) = @_;
+    return
+      unless defined $name;
     $slsd = 1 unless defined $slsd;
     $name =~ s,^\.?/,, if $slsd;
     # Optimise for the case where the filename does not contain
@@ -1285,6 +1290,93 @@ sub pipe_tee {
         }
     }
     return 1;
+}
+
+=item read_md5sums
+
+Untaint VALUE
+
+=cut
+
+sub read_md5sums {
+    my ($text) = @_;
+
+    # make a local copy
+    my $buffer = $text;
+
+    my %checksums;
+    my @errors;
+
+  TRY_AGAIN:
+
+    # start with checksum; processing style inspired by IO::Async::Stream
+    while ($buffer =~ s/^((?:\\)?\S{32}) [ *]//) {
+
+        my $checksum = $1;
+        my $path = EMPTY;
+        my $problematic = 0;
+
+        # leading slash in checksum indicates an escaped name
+        $problematic = 1
+          if $checksum =~ s{^\\}{};
+
+        # read up until the next newline
+        while ($buffer =~ s/^([^\n]+)\n//) {
+            my $section = $1;
+
+            # done if newline means end of record
+            unless ($problematic) {
+                $path .= $section;
+                last;
+            }
+
+            # split into individual characters
+            my @array = split(//, $section);
+
+# https://www.gnu.org/software/coreutils/manual/html_node/md5sum-invocation.html
+            my $escaped = 0;
+            for my $char (@array) {
+
+                # take next character verbatim
+                if ($escaped || $char ne BACKSLASH) {
+                    $path .= $char;
+                    $escaped = 0;
+                    next;
+                }
+
+                # start escape sequence
+                if ($char eq BACKSLASH) {
+                    $escaped = 1;
+                    next;
+                }
+            }
+
+            # do not stop inside an escape sequence
+            last
+              unless $escaped;
+
+            # add the newline that was stripped and read more
+            $path .= NEWLINE;
+        }
+
+        push(@errors, "Empty name for checksum $checksum")
+          unless length $path;
+
+        $checksums{$path} = $checksum;
+    }
+
+    if ($buffer =~ s/([^\n]*)(?:\n|\z)//) {
+        my $unreadable = $1;
+
+        # this skips empty lines
+        push(@errors, "Odd text: $unreadable")
+          if length $unreadable;
+
+        goto TRY_AGAIN
+          if length $buffer;
+    }
+
+    return (\%checksums, \@errors);
 }
 
 =item untaint(VALUE)

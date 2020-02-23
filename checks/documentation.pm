@@ -124,9 +124,9 @@ sub files {
     if ($file->name =~ m,^usr/share/doc/\S,) {
 
         # file not owned by root?
-        if ($file->identity ne 'root/root') {
+        unless ($file->identity eq 'root/root' || $file->identity eq '0/0') {
             $self->tag('bad-owner-for-doc-file', $file->name, $file->identity,
-                '!= root/root');
+                '!= root/root (or 0/0)');
         }
 
         # executable in /usr/share/doc ?

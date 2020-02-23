@@ -37,7 +37,7 @@ sub source {
     return
       if $processable->native;
 
-    my @origfiles = $processable->sorted_orig_index;
+    my @origfiles = $processable->orig->sorted_list;
 
     $self->tag('empty-upstream-sources')
       unless @origfiles;

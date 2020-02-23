@@ -181,7 +181,7 @@ sub binary {
 
     # Check for missing dependencies
     if ($pkg !~ /-dbg$/) {
-        foreach my $file ($processable->sorted_index) {
+        foreach my $file ($processable->installed->sorted_list) {
             if (    $file->is_file
                 and $file
                 =~ m,usr/lib/(?<version>python[23])[\d.]*/(?:site|dist)-packages,

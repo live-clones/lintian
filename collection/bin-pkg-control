@@ -2,7 +2,7 @@
 # bin-pkg-control -- lintian collector script
 
 # Copyright © 1998 Christian Schwarz
-# Copyright © 2019 Felix Lechner
+# Copyright © 2020 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -28,13 +28,16 @@ use strict;
 use warnings;
 use autodie;
 
+use BerkeleyDB;
 use IO::Async::Loop;
 use IO::Async::Process;
+use MLDBM qw(BerkeleyDB::Btree Storable);
 use Path::Tiny;
 
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
 
-use Lintian::Util qw(sort_file_index gzip safe_qx);
+use Lintian::File::Path;
+use Lintian::Util qw(safe_qx);
 
 # read up to 40kB at a time.  this happens to be 4096 "tar records"
 # (with a block-size of 512 and a block factor of 20, which appear to
@@ -54,11 +57,11 @@ sub collect {
     path($controldir)->remove_tree
       if -d $controldir;
 
-    my $zipindexpath = "$dir/control-index.gz";
+    my $dbpath = "$dir/control-index.db";
     my $controlerrorspath = "$dir/control-errors";
     my $indexerrorspath = "$dir/control-index-errors";
 
-    for my $path ($zipindexpath, $controlerrorspath, $indexerrorspath) {
+    for my $path ($dbpath, $controlerrorspath, $indexerrorspath) {
         unlink($path) if -e $path;
     }
 
@@ -125,7 +128,10 @@ sub collect {
     my $index;
     my $indexerror;
     my $indexer = $loop->new_future;
-    my @indexcommand = ('tar', '-stvf', '-');
+    my @indexcommand = (
+        'tar', '--list','--verbose','--utc','--full-time','--quoting-style=c',
+        '--file', '-'
+    );
     my $indexprocess = IO::Async::Process->new(
         command => [@indexcommand],
         stdin => { via => 'pipe_write' },
@@ -186,9 +192,25 @@ sub collect {
     path($indexerrorspath)->append($indexerror)
       if length $indexerror;
 
-    # sorts according to LC_ALL=C
-    $index = sort_file_index($index // EMPTY);
-    gzip($index, $zipindexpath);
+    my @lines = split(/\n/, $index);
+
+    my %all;
+    for my $line (@lines) {
+
+        my $entry = Lintian::File::Path->new;
+        $entry->init_from_tar_output($line);
+
+        $all{$entry->name} = $entry;
+    }
+
+    tie my %h, 'MLDBM',
+      -Filename => $dbpath,
+      -Flags    => DB_CREATE
+      or die "Cannot open file $dbpath: $! $BerkeleyDB::Error\n";
+
+    $h{$_} = $all{$_} for keys %all;
+
+    untie %h;
 
     # fix permissions
     safe_qx('chmod', '-R', 'u+rX,o-w', $controldir);

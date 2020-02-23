@@ -1,4 +1,5 @@
 multiple-nodejs-components (source): pkg-js-tools-test-is-empty debian/tests/pkg-js/test
+multiple-nodejs-components (binary): nodejs-module-not-declared node-mongodb
 multiple-nodejs-components (binary): nodejs-module-installed-in-bad-directory usr/share/nodejs/badname/package.json bson badname
 multiple-nodejs-components (binary): nodejs-module sparse-bitfield 3.0.3 usr/share/nodejs/mongodb/node_modules/sparse-bitfield/package.json
 multiple-nodejs-components (binary): nodejs-module saslprep 1.0.3 usr/share/nodejs/mongodb/node_modules/saslprep/package.json

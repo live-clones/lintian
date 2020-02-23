@@ -180,13 +180,13 @@ sub check_module_package {
     $load_file =~ s#^mod.(.*)$#etc/apache2/mods-available/$1.load#;
     $conf_file =~ s#^mod.(.*)$#etc/apache2/mods-available/$1.conf#;
 
-    if (my $f = $processable->index($load_file)) {
+    if (my $f = $processable->installed->lookup($load_file)) {
         $self->inspect_conf_file('mods', $f);
     } else {
         $self->tag('apache2-module-does-not-ship-load-file', $load_file);
     }
 
-    if (my $f = $processable->index($conf_file)) {
+    if (my $f = $processable->installed->lookup($conf_file)) {
         $self->inspect_conf_file('mods', $f);
     }
     return;
@@ -199,7 +199,7 @@ sub check_maintainer_scripts {
 
     for my $key (keys %control) {
 
-        my $path = $self->processable->control_index_resolved_path($key);
+        my $path = $self->processable->control->resolve_path($key);
         my $interpreter = $control{$key};
 
         next

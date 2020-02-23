@@ -1,9 +1,10 @@
 # -*- perl -*-
 # Lintian::Collect::Binary -- interface to binary package data collection
 
-# Copyright (C) 2008, 2009 Russ Allbery
-# Copyright (C) 2008 Frank Lichtenheld
-# Copyright (C) 2012 Kees Cook
+# Copyright © 2008, 2009 Russ Allbery
+# Copyright © 2008 Frank Lichtenheld
+# Copyright © 2012 Kees Cook
+# Copyright © 2020 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by the Free
@@ -31,6 +32,7 @@ use MLDBM qw(BerkeleyDB::Btree Storable);
 use Path::Tiny;
 
 use Lintian::Deb822Parser qw(parse_dpkg_control);
+use Lintian::File::Index;
 use Lintian::Relation;
 use Lintian::Util qw(open_gz get_file_checksum strip rstrip);
 
@@ -71,9 +73,48 @@ L<Lintian::Info::Package> modules are also available.
 
 =over 4
 
+=item installed
+
+Returns a index object representing installed files from a binary package.
+
+=item saved_installed
+
+An index object for installed binary files.
+
+=cut
+
+has saved_installed => (is => 'rw');
+
+sub installed {
+    my ($self) = @_;
+
+    unless (defined $self->saved_installed) {
+
+        my $installed = Lintian::File::Index->new;
+
+        # binary packages are anchored to the system root
+        # allow absolute paths and symbolic links
+        $installed->name('index');
+        $installed->fs_root_sub(
+            sub {
+                return $self->_fetch_extracted_dir('unpacked', 'unpacked', @_);
+            });
+        $installed->file_info_sub(
+            sub {
+                return $self->file_info(@_);
+            });
+        $installed->basedir($self->groupdir);
+        $installed->load;
+
+        $self->saved_installed($installed);
+    }
+
+    return $self->saved_installed;
+}
+
 =item index (FILE)
 
-Returns a L<path object|Lintian::Path> to FILE in the package.  FILE
+Returns a L<path object|Lintian::File::Path> to FILE in the package.  FILE
 must be relative to the root of the unpacked package and must be
 without leading slash (or "./").  If FILE is not in the package, it
 returns C<undef>.  If FILE is supposed to be a directory, it must be
@@ -95,20 +136,50 @@ Needs-Info requirements for using I<index>: unpacked
 
 sub index {
     my ($self, $file) = @_;
-    if (my $cache = $self->{'index'}) {
-        return $cache->{$file}
-          if exists($cache->{$file});
-        return;
-    }
-    my $load_info = {
-        'field' => 'index',
-        'index_file' => 'index',
-        'index_owner_file' => 'index-owner-id',
-        'fs_root_sub' => 'unpacked',
-        'has_anchored_root_dir' => 0,
-        'file_info_sub' => 'file_info',
-    };
-    return $self->_fetch_index_data($load_info, $file);
+
+    return $self->installed->lookup($file);
+}
+
+=item sorted_index
+
+Returns a sorted array of file names listed in the package.  The names
+will not have a leading slash (or "./") and can be passed to
+L</unpacked ([FILE])> or L</index (FILE)> as is.
+
+The array will not contain the entry for the "root" of the package.
+
+NB: For source packages, please see the
+L<"index"-caveat|Lintian::Collect::Source/index (FILE)>.
+
+Needs-Info requirements for using I<sorted_index>: L<Same as index|/index (FILE)>
+
+=cut
+
+sub sorted_index {
+    my ($self) = @_;
+
+    return $self->installed->sorted_list;
+}
+
+=item index_resolved_path(PATH)
+
+Resolve PATH (relative to the root of the package) and return the
+L<entry|Lintian::File::Path> denoting the resolved path.
+
+The resolution is done using
+L<resolve_path|Lintian::File::Path/resolve_path([PATH])>.
+
+NB: For source packages, please see the
+L<"index"-caveat|Lintian::Collect::Source/index (FILE)>.
+
+Needs-Info requirements for using I<index_resolved_path>: L<Same as index|/index (FILE)>
+
+=cut
+
+sub index_resolved_path {
+    my ($self, $path) = @_;
+
+    return $self->installed->resolve_path($path);
 }
 
 =item strings (FILE)

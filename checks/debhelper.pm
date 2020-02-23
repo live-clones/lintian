@@ -59,7 +59,7 @@ sub source {
     my $processable = $self->processable;
     my $group = $self->group;
 
-    my $droot = $processable->index_resolved_path('debian/');
+    my $droot = $processable->patched->resolve_path('debian/');
     my ($drules, $dh_bd_version, $level);
 
     my $seencommand = '';
@@ -310,7 +310,7 @@ sub source {
         $self->tag('package-uses-dh-runit-but-lacks-breaks-substvar', $binpkg)
           if $seen{'runit'}
           and $strong->implies('runit')
-          and any { m,^etc/sv/, } $proc->sorted_index
+          and any { m,^etc/sv/, } $proc->installed->sorted_list
           and not $breaks->implies('${runit:Breaks}');
     }
 

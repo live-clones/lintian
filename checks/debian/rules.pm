@@ -141,7 +141,7 @@ sub source {
     my $processable = $self->processable;
     my $group = $self->group;
 
-    my $debian_dir = $processable->index_resolved_path('debian');
+    my $debian_dir = $processable->patched->resolve_path('debian');
     my $rules;
     $rules = $debian_dir->child('rules') if $debian_dir;
 

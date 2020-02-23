@@ -73,26 +73,20 @@ that it represents.
 
 sub _underlying_fs_path {
     my ($self, $path) = @_;
-    my $fs_root;
-    my $fname = $path->name;
-    if ($fs_root = $self->{'_root_fs_path'}) {
-        return join('/', $fs_root, $fname) if $fname ne q{};
-        return $fs_root;
+
+    unless (defined $self->{'_root_fs_path'}) {
+
+        my $collect_sub = $self->{'_collect_path_sub'};
+        confess $self->name . ' does not have an underlying FS object'
+          unless defined $collect_sub;
+
+        $self->{'_root_fs_path'} = $collect_sub->();
     }
-    my $collect = $self->{'_collect'};
-    my $collect_sub = $self->{'_collect_path_sub'};
-    if (not defined($collect_sub)) {
-        confess($self->name . ' does not have an underlying FS object');
-    }
-    {
-        # Disable the deprecation warning from (e.g.) control.  It is
-        # not meant for this call.
-        no warnings qw(deprecated);
-        $fs_root = $collect->$collect_sub();
-    };
-    $self->{'_root_fs_path'} = $fs_root;
-    return join('/', $fs_root, $fname) if $fname ne q{};
-    return $fs_root;
+
+    return join('/', $self->{'_root_fs_path'}, $path->name)
+      if length $path->name;
+
+    return $self->{'_root_fs_path'};
 }
 
 =item _file_info(PATH)
@@ -105,12 +99,12 @@ available.
 
 sub _file_info {
     my ($self, $path) = @_;
-    my $collect = $self->{'_collect'};
+
     my $collect_sub = $self->{'_collect_file_info_sub'};
-    if (not defined($collect_sub)) {
-        confess($path->name . ' has not had collected file(1) info');
-    }
-    return $collect->$collect_sub($path->name);
+    confess $path->name . ' has not had collected file(1) info'
+      unless defined $collect_sub;
+
+    return $collect_sub->($path->name);
 }
 
 =item has_anchored_root_dir

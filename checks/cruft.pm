@@ -356,14 +356,15 @@ sub source {
 
     my $processable = $self->processable;
 
-    my $d_files = $processable->index_resolved_path('debian/files');
+    my $d_files = $processable->patched->resolve_path('debian/files');
 
     if ($d_files and $d_files->is_file and $d_files->size != 0) {
         $self->tag('debian-files-list-in-source');
     }
 
     $self->tag('package-uses-deprecated-source-override-location')
-      if $processable->index_resolved_path('debian/source.lintian-overrides');
+      if $processable->patched->resolve_path(
+        'debian/source.lintian-overrides');
 
     # Check if the package build-depends on autotools-dev, automake,
     # or libtool.
@@ -383,7 +384,7 @@ sub source {
     $self->find_cruft(\%warned, $ltinbd);
 
     for my $file (@EOL_TERMINATORS_FILES) {
-        my $path = $processable->index_resolved_path("debian/$file");
+        my $path = $processable->patched->resolve_path("debian/$file");
         next if not $path or not $path->is_open_ok;
         my $fd = $path->open;
         while (my $line = <$fd>) {
@@ -396,7 +397,7 @@ sub source {
     }
 
     for my $file (@TRAILING_WHITESPACE_FILES) {
-        my $path = $processable->index_resolved_path($file->[0]);
+        my $path = $processable->patched->resolve_path($file->[0]);
         next if not $path or not $path->is_open_ok;
         my $fd = $path->open;
         my @empty_lines;
@@ -416,12 +417,12 @@ sub source {
         }
     }
 
-    if (my $pycompat = $processable->index_resolved_path('debian/pycompat')) {
+    if (my $pycompat = $processable->patched->resolve_path('debian/pycompat')){
         $self->tag('debian-pycompat-is-obsolete') if $pycompat->is_file;
     }
 
-    if (my $pyversions= $processable->index_resolved_path('debian/pyversions'))
-    {
+    if (my $pyversions
+        = $processable->patched->resolve_path('debian/pyversions')){
         $self->tag('debian-pyversions-is-obsolete') if $pyversions->is_file;
     }
 
@@ -531,7 +532,7 @@ sub check_debian_dir {
 
     my $processable = $self->processable;
 
-    my $droot = $processable->index_resolved_path('debian/');
+    my $droot = $processable->patched->resolve_path('debian/');
     return if not $droot;
 
     my @worklist = $droot->children;
@@ -600,7 +601,7 @@ sub find_cruft {
     my $ships_examples = _ships_examples($self->group);
 
     # start with the top-level dirs
-    push(@worklist, $processable->index('')->children);
+    push(@worklist, $processable->patched->lookup->children);
 
   ENTRY:
     while (my $entry = shift(@worklist)) {
@@ -714,7 +715,7 @@ sub find_cruft {
             && $entry->is_file
             && $entry->is_open_ok
             && $file_info =~ /gzip compressed data/
-            && !$processable->index_resolved_path('debian/README.source')) {
+            && !$processable->patched->resolve_path('debian/README.source')) {
             my $fd = $entry->open_gz;
             read($fd, my $magic, 4);
             close($fd);
@@ -887,7 +888,7 @@ sub check_missing_source {
     # As a special-case, check debian/missing-sources including symlinks, etc.
     foreach my $ext (($file, $basename)) {
         my $path = normalize_pkg_path("debian/missing-sources/$ext");
-        return if $path and $processable->index_resolved_path($path);
+        return if $path and $processable->patched->resolve_path($path);
     }
 
     # try to find for each replacement
@@ -936,7 +937,7 @@ sub check_missing_source {
                 next PATH;
             }
             # found source file or directory
-            if($processable->index_resolved_path($newpath)) {
+            if($processable->patched->resolve_path($newpath)) {
                 return;
             }
         }
@@ -1490,7 +1491,8 @@ sub php_source_whitelist {
 
     my $processable = $self->processable;
 
-    my $copyright_path = $processable->index_resolved_path('debian/copyright');
+    my $copyright_path
+      = $processable->patched->resolve_path('debian/copyright');
     if (    $copyright_path
         and $copyright_path->file_contents
         =~ m{^Source: https?://pecl.php.net/package/.*$}m) {
@@ -1745,7 +1747,7 @@ sub _ships_examples {
         my $name = $binpkg->name;
         # If we have an -examples package, assume we ship examples.
         return 1 if $name =~ m{-examples$};
-        my @files = $binpkg->sorted_index;
+        my @files = $binpkg->installed->sorted_list;
         # Check each package for a directory (or symlink) called "examples".
         return 1
           if any { m{^usr/share/doc/(.+/)?examples/?$} } @files;
