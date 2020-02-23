@@ -86,7 +86,7 @@ sub files {
              ,x
         # base-files (which is required to ship them)
         and not $file->name =~ m,^usr/share/common-licenses/[^/]+$,o
-        and not defined $file->link
+        and not length $file->link
         # Sphinx includes various license files
         and not $file->name =~ m,/_sources/license(\.rst)?\.txt$,oi
     ) {

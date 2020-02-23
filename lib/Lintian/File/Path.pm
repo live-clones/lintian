@@ -489,7 +489,7 @@ sub link_normalized {
     my $link = $self->link;
 
     croak "$name is not a link"
-      unless defined $link;
+      unless length $link;
 
     my $dir = $self->dirname;
     # hardlinks are always relative to the package root
@@ -989,7 +989,11 @@ has parentname => (
     default => EMPTY
 );
 
-has link => (is => 'rw');
+has link => (
+    is => 'rw',
+    coerce => sub { my ($string) = @_; return $string // EMPTY;},
+    default => EMPTY
+);
 has link_target => (is => 'rw');
 has faux => (is => 'rw', default => 0);
 

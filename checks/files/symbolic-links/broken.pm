@@ -62,7 +62,7 @@ sub files {
     # for other broken symlinks as people keep adding new special
     # cases and it is not worth it.
     push(@{$self->wildcard_links}, $file)
-      if $file->link && index($file->link, '*') >= 0;
+      if index($file->link, '*') >= 0;
 
     return;
 }
@@ -95,7 +95,7 @@ sub breakdown {
         @prerequisites;
 
         # link target
-        my $target = $file->link // EMPTY;
+        my $target = $file->link;
 
         # strip leading slashes for reporting
         $target =~ s,^/++,,o;

@@ -569,7 +569,7 @@ sub add_file_link_info {
     $file =~ s%/+%/%g;                           # remove duplicated `/'
     $all_files->{$file} = 1;
 
-    if (defined $link) {
+    if (length $link) {
         $link = './' . $link if $link !~ m,^/,;
         if ($ishard) {
             $link =~ s,^\./,/,;

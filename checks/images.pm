@@ -34,7 +34,7 @@ sub files {
 
     if (    $file->name =~ m,^usr/lib/,
         and $file->name =~ m,\.(?:bmp|gif|jpe?g|png|tiff|x[pb]m)$,
-        and not defined $file->link) {
+        and not length $file->link) {
 
         $self->tag('image-file-in-usr-lib', $file->name);
     }

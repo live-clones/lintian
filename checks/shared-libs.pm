@@ -108,7 +108,7 @@ sub always {
 
         my $normalized_target;
         $normalized_target = $cur_file->link_normalized
-          if defined($cur_file->link);
+          if length $cur_file->link;
 
         if (
             exists $SONAME{$cur_file}
@@ -180,7 +180,7 @@ sub always {
             && exists $sharedobject{$cur_file}) {
             $self->tag('sharedobject-in-library-directory-missing-soname',
                 $cur_file);
-        } elsif ($cur_file =~ m/\.la$/ and not defined $cur_file->link) {
+        } elsif ($cur_file =~ m/\.la$/ and not length $cur_file->link) {
             local $_;
             my $fd = $cur_file->open;
             while(<$fd>) {
