@@ -34,6 +34,8 @@ use Lintian::Util qw(normalize_pkg_path strip);
 use constant EMPTY => q{};
 use constant SPACE => q{ };
 use constant SLASH => q{/};
+use constant DOT => q{.};
+use constant DOUBLEDOT => q{..};
 use constant DOUBLEQUOTE => q{"};
 use constant BACKSLASH => q{\\};
 
@@ -281,25 +283,6 @@ sub identity {
     return $self->owner . SLASH . $self->group;
 }
 
-=item dirname
-
-Returns the "directory" part of the name, similar to dirname(1) or
-File::Basename::dirname.  The dirname will end with a trailing slash
-(except the "root" dir - see below).
-
-NB: Returns the empty string for the "root" dir.
-
-=cut
-
-sub dirname {
-    my ($self) = @_;
-
-    return $self->parent_dir->name
-      if $self->parent_dir;
-
-    return EMPTY;
-}
-
 =item operm
 
 Returns the file permissions of this object in octal (e.g. 0644).
@@ -330,7 +313,12 @@ NB: Returns the empty list for non-dir entries.
 sub children {
     my ($self) = @_;
 
-    return @{$self->sorted_children};
+    my @names = values %{$self->childnames};
+
+    croak 'No index in ' . $self->name
+      unless defined $self->index;
+
+    return map { $self->index->lookup($_) } @names;
 }
 
 =item descendants
@@ -393,11 +381,14 @@ sub child {
     croak 'Basename is required'
       unless length $basename;
 
-    my $child_table = $self->child_table;
+    my $childname = $self->childnames->{$basename};
     return
-      unless defined $child_table;
+      unless $childname;
 
-    return $child_table->{$basename};
+    croak 'No index in ' . $self->name
+      unless defined $self->index;
+
+    return $self->index->lookup($childname);
 }
 
 =item is_symlink
@@ -476,8 +467,8 @@ arguments instead.
 sub link_normalized {
     my ($self) = @_;
 
-    return $self->link_target
-      if length $self->link_target;
+    return $self->normalized
+      if length $self->normalized;
 
     my $name = $self->name;
     my $link = $self->link;
@@ -492,7 +483,7 @@ sub link_normalized {
       if $self->is_hardlink;
 
     my $target = normalize_pkg_path($dir, $link);
-    $self->link_target($target);
+    $self->normalized($target);
 
     return $target;
 }
@@ -535,10 +526,15 @@ files.
 sub file_info {
     my ($self) = @_;
 
-    confess $self->name . ' has not had collected file(1) info'
-      unless defined $self->fileinfo_sub;
+    croak 'No index in ' . $self->name
+      unless defined $self->index;
 
-    return $self->fileinfo_sub->($self->name);
+    my $fileinfo_sub = $self->index->fileinfo_sub;
+
+    confess $self->name . ' has not had collected file(1) info'
+      unless defined $fileinfo_sub;
+
+    return $fileinfo_sub->($self->name);
 }
 
 =item unpacked_path
@@ -576,10 +572,15 @@ sub unpacked_path {
 
     $self->_check_access;
 
-    croak 'No base directory'
-      unless length $self->basedir;
+    croak 'No index in ' . $self->name
+      unless defined $self->index;
 
-    return path($self->basedir)->child($self->name)->stringify;
+    my $basedir = $self->index->basedir;
+
+    croak 'No base directory'
+      unless length $basedir;
+
+    return path($basedir)->child($self->name)->stringify;
 }
 
 =item is_open_ok
@@ -671,22 +672,50 @@ sub slurp {
     return path($self->unpacked_path)->slurp;
 }
 
-=item root_dir
+=item follow
 
-Return the root dir entry of this the path entry.
+Return dereferenced link if applicable
 
 =cut
 
-sub root_dir {
-    my ($self) = @_;
+sub follow {
+    my ($self, $maxlinks) = @_;
 
-    my $current = $self;
+    return $self->dereferenced
+      if defined $self->dereferenced;
 
-    while (my $next = $current->parent_dir) {
-        $current = $next;
+    # set limit
+    $maxlinks //= 18;
+
+    # catch recursive links
+    return
+      unless $maxlinks > 0;
+
+    # reduce counter
+    $maxlinks--;
+
+    my $reference;
+
+    croak 'No index in ' . $self->name
+      unless defined $self->index;
+
+    if ($self->is_hardlink) {
+        # hard links are resolved against package root
+        $reference = $self->index->lookup;
+
+    } else {
+        # otherwise resolve against the parent
+        $reference = $self->parent_dir;
     }
 
-    return $current;
+    return
+      unless defined $reference;
+
+    # follow link
+    my $dereferenced = $reference->resolve_path($self->link, $maxlinks);
+    $self->dereferenced($dereferenced);
+
+    return $self->dereferenced;
 }
 
 =item resolve_path([PATH])
@@ -735,80 +764,84 @@ Examples:
 =cut
 
 sub resolve_path {
-    my ($self, $path_str) = @_;
-    my $current = $self;
-    my (@queue, %traversed_links, $had_trailing_slash);
+    my ($self, $request, $maxlinks) = @_;
 
-    if (defined($path_str) and ref($path_str) ne q{}) {
-        croak('resolve_path only accepts string arguments');
+    croak 'Can only resolve string arguments'
+      if defined $request && ref($request) ne EMPTY;
+
+    $request //= EMPTY;
+
+    croak 'No index in ' . $self->name
+      unless defined $self->index;
+
+    if (length $self->link) {
+        # follow the link
+        my $dereferenced = $self->follow($maxlinks);
+        return
+          unless defined $dereferenced;
+
+        # and use that to resolve the request
+        return $dereferenced->resolve_path($request, $maxlinks);
     }
 
-    $path_str //= '';
+    my $reference;
 
-    if (not $self->is_dir and not $self->is_symlink) {
-        return $self if $path_str eq '';
-        croak("Path \"$self\" is not a directory or a symlink");
-    }
+    # check for absolute reference; remove slash
+    if ($request =~ s{^/+}{}s) {
 
-    $path_str =~ s{//++}{/}g;
-    $had_trailing_slash = $path_str =~ s{/\z}{};
+        # require anchoring for absolute references
+        return
+          unless $self->index->anchored;
 
-    if ($path_str =~ s{^/}{} or ($path_str eq q{} and $had_trailing_slash)) {
-        # Find the root entry
-        return unless $self->anchored;
-        $current = $self->root_dir;
-        return $current if $path_str eq q{};
-    }
-    if ($path_str eq q{} or $path_str eq q{.}) {
-        if (not $current->is_symlink) {
-            return $current if ($current->is_dir or not $had_trailing_slash);
-            return;
-        }
+        # get root entry
+        $reference = $self->index->lookup;
+
+    } elsif ($self->is_dir) {
+        # directories are their own starting point
+        $reference = $self;
+
     } else {
-        # Add all segments to the queue
-        @queue = split(m{/}, $path_str);
+        # otherwise, use parent directory
+        $reference = $self->parent_dir;
     }
 
-    if ($had_trailing_slash) {
-        # If there is a trailing slash, then the final path segment
-        # must be a directory.
-        push(@queue, q{.});
-    }
+    return
+      unless defined $reference;
 
-    while (1) {
-        my $target;
-        if ($current->is_symlink) {
-            # Stop if we already traversed this link.
-            return if $traversed_links{$current->name}++;
-            my $link_text = $current->link;
-            $link_text =~ s{//++}{/}g;
-            if ($link_text eq q{/} or $link_text =~ s{^/}{}) {
-                return unless $self->anchored;
-                $current = $current->root_dir;
-            } else {
-                $current = $current->parent_dir;
-            }
-            $link_text =~ s{/\z}{};
-            return if $link_text eq q{};
-            unshift(@queue, split(m@/@, $link_text));
+    # read the first path segment
+    if ($request =~ s{^([^/]+/?)}{}s) {
+
+        my $segment = $1;
+
+        # strip trailing slash
+        $segment =~ s{/$}{}s;
+
+        # single dot, or two slashes in a row
+        return $reference->resolve_path($request, $maxlinks)
+          if $segment eq DOT || !length $segment;
+
+        # for double dot, go up a level
+        if ($segment eq DOUBLEDOT) {
+            my $parent = $reference->parent_dir;
+            return
+              unless defined $parent;
+
+            return $parent->resolve_path($request, $maxlinks);
         }
-        last if not @queue;
-        $target = shift(@queue);
 
-        if ($target eq q{..}) {
-            $current = $current->parent_dir;
-            return unless $current;
-        } else {
-            # if there is segment (even a "."), then the current path
-            # must be a directory.
-            return if not $current->is_dir;
-            if ($target ne q{.}) {
-                $current = $current->child($target);
-                return if not $current;
-            }
-        }
+        # look for child otherwise
+        my $child = $reference->child($segment);
+        return
+          unless defined $child;
+
+        return $child->resolve_path($request, $maxlinks);
     }
-    return $current;
+
+    croak "Cannot parse path resolution request: $request"
+      if length $request;
+
+    # nothing else to resolve
+    return $self;
 }
 
 =item name
@@ -825,6 +858,14 @@ case).
 
 NB: Returns the empty string for the "root" dir.
 
+=item dirname
+
+Returns the "directory" part of the name, similar to dirname(1) or
+File::Basename::dirname.  The dirname will end with a trailing slash
+(except the "root" dir - see below).
+
+NB: Returns the empty string for the "root" dir.
+
 =item link
 
 If this is a link (i.e. is_symlink or is_hardlink returns a truth
@@ -838,7 +879,7 @@ where the link target is always relative to the root.
 
 NB: Even for symlinks, a leading "./" will be stripped.
 
-=item link_target
+=item normalized
 
 =item faux
 
@@ -895,20 +936,26 @@ source packages)
 
 =item C<basedir>
 
-=item anchored
-
-=item fileinfo_sub
+=item index
 
 =item parent_dir
+
+=item child_table
+
+=item sorted_children
 
 Returns the parent directory entry of this entry as a
 L<Lintian::File::Path>.
 
 NB: Returns C<undef> for the "root" dir.
 
-=item sorted_children
+=item C<childnames>
 
-=item child_table
+=item parent_dir
+
+Return the parent dir entry of this the path entry.
+
+=item dereferenced
 
 =cut
 
@@ -923,8 +970,8 @@ has name => (
         $self->basename($basename);
 
         # allow newline in names; need /s for dot matching (#929729)
-        my ($parentname) = ($name =~ m{^(.+/)?(?:[^/]+/?)$}s);
-        $self->parentname($parentname);
+        my ($dirname) = ($name =~ m{^(.+/)?(?:[^/]+/?)$}s);
+        $self->dirname($dirname);
     },
     default => EMPTY
 );
@@ -934,7 +981,7 @@ has basename => (
     coerce => sub { my ($string) = @_; return $string // EMPTY;},
     default => EMPTY
 );
-has parentname => (
+has dirname => (
     is => 'rw',
     lazy => 1,
     coerce => sub { my ($string) = @_; return $string // EMPTY;},
@@ -946,12 +993,26 @@ has link => (
     coerce => sub { my ($string) = @_; return $string // EMPTY;},
     default => EMPTY
 );
-has link_target => (is => 'rw');
+has normalized => (
+    is => 'rw',
+    coerce => sub { my ($string) = @_; return $string // EMPTY;},
+    default => EMPTY
+);
 has faux => (is => 'rw', default => 0);
 
 has size => (is => 'rw', default => 0);
-has date => (is => 'rw');
-has time => (is => 'rw', default => '00:00');
+has date => (
+    is => 'rw',
+    default => sub {
+        my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = gmtime;
+        return sprintf('%04d-%02d-%02d', $year, $mon, $mday);
+    });
+has time => (
+    is => 'rw',
+    default => sub {
+        my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = gmtime;
+        return sprintf('%02d:%02d:%02d', $hour, $min, $sec);
+    });
 
 has perm => (is => 'rw');
 has path_info => (is => 'rw');
@@ -977,13 +1038,25 @@ has gid => (
     default => 0
 );
 
-has basedir => (is => 'rw', default => EMPTY);
-has anchored => (is => 'rw', default => 0);
-has fileinfo_sub => (is => 'rw');
+has index => (is => 'rw');
+has childnames => (is => 'rw', default => sub { {} });
+has parent_dir => (
+    is => 'rw',
+    lazy => 1,
+    default => sub {
+        my ($self) = @_;
 
-has parent_dir => (is => 'rw');
-has sorted_children => (is => 'rw', default => sub { [] });
-has child_table => (is => 'rw', default => sub { {} });
+        # do not return root as its own parent
+        return
+          if $self->name eq EMPTY;
+
+        croak 'No index in ' . $self->name
+          unless defined $self->index;
+
+        # returns root by default
+        return $self->index->lookup($self->dirname);
+    });
+has dereferenced => (is => 'rw');
 
 ### OVERLOADED OPERATORS ###
 

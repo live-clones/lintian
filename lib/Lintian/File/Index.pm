@@ -65,9 +65,9 @@ Lintian::Processable::Orig::Index provides an interface to collected data about 
 
 =over 4
 
-=item index
+=item catalog
 
-Returns a reference to a hash with elements indexed by path names.
+Returns a reference to a hash with elements catalogued by path names.
 
 =item saved_sorted_list
 
@@ -85,7 +85,7 @@ Returns the base directory for file references.
 
 =cut
 
-has index => (is => 'rw', default => sub { {} });
+has catalog => (is => 'rw', default => sub { {} });
 has saved_sorted_list => (is => 'rw', default => sub { [] });
 has basedir => (is => 'rw', default => EMPTY);
 has anchored => (is => 'rw', default => 0);
@@ -114,8 +114,7 @@ sub sorted_list {
 
     unless (scalar @{ $self->saved_sorted_list }) {
 
-        my @names = sort keys %{$self->index};
-        my @sorted = map { $self->index->{$_} } @names;
+        my @sorted = sort { $a->name cmp $b->name } values %{$self->catalog};
 
         # remove automatic root dir; list is sorted
         shift @sorted;
@@ -151,8 +150,10 @@ sub lookup {
     croak 'Name is not a string'
       unless ref $name eq EMPTY;
 
-    return $self->index->{$name}
-      if exists $self->index->{$name};
+    my $found = $self->catalog->{$name};
+
+    return $found
+      if defined $found;
 
     return;
 }
@@ -213,7 +214,7 @@ sub load {
 
         # travel up the directory tree
         do {
-            $parentname = $current->parentname;
+            $parentname = $current->dirname;
 
             # insert new entry for missing intermediate directories
             unless (exists $all{$parentname}) {
@@ -239,14 +240,8 @@ sub load {
     die 'The root dir should be present or have been faked'
       unless exists $all{''} || $self->allow_empty;
 
-    # add base directory to all entries, including generated
-    $_->basedir($self->basedir) for values %all;
-
-    # add anchored parameter to all entries, including generated
-    $_->anchored($self->anchored) for values %all;
-
-    # add file info generator to all entries, including generated
-    $_->fileinfo_sub($self->fileinfo_sub) for values %all;
+    # add index to all entries, including generated
+    $_->index($self) for values %all;
 
     my @directories
       = grep { $_->path_info & Lintian::File::Path::TYPE_DIR } values %all;
@@ -258,7 +253,7 @@ sub load {
     # record children
     for my $entry (values %all) {
 
-        my $parentname = $entry->parentname;
+        my $parentname = $entry->dirname;
 
         # Ensure the "root" is not its own child.  It is not really helpful
         # from an analysis PoV and it creates ref cycles  (and by extension
@@ -267,24 +262,15 @@ sub load {
           unless $parentname eq $entry->name;
     }
 
-    # add in reverse; children are made before parent
-    my @reverse = reverse sort { $a->name cmp $b->name } @directories;
-
-    foreach my $entry (@reverse) {
-
-        my @sorted_children = sort @{ $children{$entry->name}};
-        $entry->sorted_children(\@sorted_children);
-
-        my %child_table;
-        $child_table{$_->basename} = $_ for @sorted_children;
-
-        $entry->child_table(\%child_table);
-        $_->parent_dir($entry) for $entry->children;
+    foreach my $entry (@directories) {
+        my %childnames
+          = map {$_->basename => $_->name }@{ $children{$entry->name} };
+        $entry->childnames(\%childnames);
     }
 
     # ensure root is not its own child; may create leaks like #695866
     die 'Root directory is its own parent'
-      if any { $_ eq EMPTY } $all{''}->sorted_children;
+      if defined $all{''}->parent_dir;
 
     # find all hard links
     my @hardlinks
@@ -343,7 +329,7 @@ sub load {
     # make sure recorded names match hash keys
     $all{$_}->name($_)for keys %all;
 
-    $self->index(\%all);
+    $self->catalog(\%all);
 
     return;
 }
