@@ -173,7 +173,7 @@ sub files {
         if ($file_info =~ m/gzip compressed/) {
             $fd = open_gz($file->unpacked_path);
         } else {
-            $fd = $file->open;
+            open($fd, '<', $file->unpacked_path);
         }
         my @manfile = <$fd>;
         close $fd;

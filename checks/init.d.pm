@@ -101,7 +101,7 @@ sub binary {
 
     # read postinst control file
     if ($postinst and $postinst->is_file and $postinst->is_open_ok) {
-        my $fd = $postinst->open;
+        open(my $fd, '<', $postinst->unpacked_path);
         while (<$fd>) {
             next if /$EXCLUDE_R/o;
             s/\#.*$//o;
@@ -123,7 +123,7 @@ sub binary {
 
     # read preinst control file
     if ($preinst and $preinst->is_file and $preinst->is_open_ok) {
-        my $fd = $preinst->open;
+        open(my $fd, '<', $preinst->unpacked_path);
         while (<$fd>) {
             next if /$EXCLUDE_R/o;
             s/\#.*$//o;
@@ -139,7 +139,7 @@ sub binary {
 
     # read postrm control file
     if ($postrm and $postrm->is_file and $postrm->is_open_ok) {
-        my $fd = $postrm->open;
+        open(my $fd, '<', $postrm->unpacked_path);
         while (<$fd>) {
             next if /$EXCLUDE_R/o;
             s/\#.*$//o;
@@ -158,7 +158,7 @@ sub binary {
 
     # read prerm control file
     if ($prerm and $prerm->is_file and $prerm->is_open_ok) {
-        my $fd = $prerm->open;
+        open(my $fd, '<', $prerm->unpacked_path);
         while (<$fd>) {
             next if /$EXCLUDE_R/o;
             s/\#.*$//o;
@@ -265,7 +265,7 @@ sub check_init {
     my (%tag, %lsb);
     my $in_file_test = 0;
     my $needs_fs = 0;
-    my $fd = $initd_path->open;
+    open(my $fd, '<', $initd_path->unpacked_path);
     while (my $l = <$fd>) {
         if ($. == 1) {
             if ($l
@@ -526,7 +526,7 @@ sub check_defaults {
     return unless $dir and $dir->is_dir;
     for my $path ($dir->children) {
         return if not $path->is_open_ok;
-        my $fd = $path->open;
+        open(my $fd, '<', $path->unpacked_path);
         while (<$fd>) {
             $self->tag('init.d-script-should-always-start-service',
                 $path, "(line $.)")

@@ -22,6 +22,7 @@ package Lintian::udev;
 
 use strict;
 use warnings;
+use autodie qw(open);
 
 use Moo;
 use namespace::clean;
@@ -101,7 +102,7 @@ sub check_rule {
 sub check_udev_rules {
     my ($self, $file) = @_;
 
-    my $fd = $file->open;
+    open(my $fd, '<', $file->unpacked_path);
     my $linenum = 0;
     my $cont;
     my $retval = 0;

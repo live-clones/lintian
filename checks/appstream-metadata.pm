@@ -31,6 +31,7 @@ package Lintian::appstream_metadata;
 
 use strict;
 use warnings;
+use autodie qw(open);
 
 use File::Basename qw(basename);
 use XML::LibXML;
@@ -202,7 +203,7 @@ sub provides_user_device {
 sub check_udev_rules {
     my ($self, $file, $data) = @_;
 
-    my $fd = $file->open;
+    open(my $fd, '<', $file->unpacked_path);
     my $linenum = 0;
     my $cont;
     my $retval = 0;

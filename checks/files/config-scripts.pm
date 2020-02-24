@@ -48,7 +48,7 @@ sub files {
         # try to find some indication of
         # config file (read only one block)
 
-        my $fd = $file->open(':raw');
+        open(my $fd, '<:raw', $file->unpacked_path);
         my $sfd = Lintian::SlidingWindow->new($fd);
         my $block = $sfd->readwindow;
 

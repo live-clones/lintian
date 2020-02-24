@@ -22,6 +22,7 @@ package Lintian::fonts::opentype;
 
 use strict;
 use warnings;
+use autodie qw(open);
 
 use Font::TTF::Font;
 

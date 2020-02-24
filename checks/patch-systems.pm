@@ -92,7 +92,7 @@ sub source {
               = grep {$_->basename =~ m/^00list.*/ and $_->is_open_ok;}
               $dpdir->children;
             if ($opt_file and $opt_file->is_open_ok) {
-                my $fd = $opt_file->open;
+                open(my $fd, '<', $opt_file->unpacked_path);
                 $known_files{$opt_file->basename}++;
                 while(<$fd>) {
                     if (/DPATCH_OPTION_CPP=1/) {
@@ -105,7 +105,7 @@ sub source {
             for my $list_file (@list_files) {
                 my @patches;
                 $known_files{$list_file->basename}++;
-                my $fd = $list_file->open;
+                open(my $fd, '<', $list_file->unpacked_path);
                 while(<$fd>) {
                     chomp;
                     next if (/^\#/); #ignore comments or CPP directive
@@ -135,7 +135,7 @@ sub source {
                     next unless $patch_file->is_open_ok;
 
                     my $description = '';
-                    my $fd = $patch_file->open;
+                    open(my $fd, '<', $patch_file->unpacked_path);
                     while (<$fd>) {
                         # stop if something looking like a patch
                         # starts:
@@ -167,7 +167,7 @@ sub source {
         } else {
             $self->tag('patch-system', 'quilt');
             my (@patches, @badopts);
-            my $series_fd = $patch_series->open;
+            open(my $series_fd, '<', $patch_series->unpacked_path);
             while (my $patch = <$series_fd>) {
                 $patch =~ s/(?:^|\s+)#.*$//; # Strip comment
                 if (rindex($patch,"\n") < 0) {
@@ -200,7 +200,7 @@ sub source {
                 next if not $patch->is_open_ok;
                 my $description = '';
                 my $has_template_description = 0;
-                my $patch_fd = $patch->open;
+                open(my $patch_fd, '<', $patch->unpacked_path);
                 while (<$patch_fd>) {
                     # stop if something looking like a patch starts:
                     last if /^---/;
@@ -255,7 +255,7 @@ sub source {
             next unless $file =~ /\/(.+\.)?series$/;
             next unless $file->is_open_ok;
             $known_files{$file->basename}++;
-            my $fd = $file->open;
+            open(my $fd, '<', $file->unpacked_path);
             while (<$fd>) {
                 $known_files{$1}++ if m{^\s*(?:#+\s*)?(\S+)};
             }

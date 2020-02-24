@@ -81,7 +81,7 @@ sub source {
 
     # Nag about dh_make Vcs comment only once
     my $seen_vcs_comment = 0;
-    my $fd = $dcontrol->open;
+    open(my $fd, '<', $dcontrol->unpacked_path);
     while (<$fd>) {
         s/\s*\n$//;
 

@@ -66,7 +66,7 @@ sub conffiles {
     return
       unless $cf && $cf->is_file && $cf->is_open_ok;
 
-    my $fd = $cf->open;
+    open(my $fd, '<', $cf->unpacked_path);
     while (my $absolute = <$fd>) {
 
         chomp $absolute;

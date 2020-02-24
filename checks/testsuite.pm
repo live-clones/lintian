@@ -246,7 +246,7 @@ sub check_test_file {
     } elsif (not $index->is_open_ok) {
         $self->tag('runtime-test-file-is-not-a-regular-file', $path);
     } else {
-        my $fd = $index->open;
+        open(my $fd, '<', $index->unpacked_path);
         while (my $x = <$fd>) {
             if ($x =~ m/ADTTMP/) {
                 $self->tag('uses-deprecated-adttmp', $path, "(line $.)");

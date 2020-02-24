@@ -386,7 +386,7 @@ sub source {
     for my $file (@EOL_TERMINATORS_FILES) {
         my $path = $processable->patched->resolve_path("debian/$file");
         next if not $path or not $path->is_open_ok;
-        my $fd = $path->open;
+        open(my $fd, '<', $path->unpacked_path);
         while (my $line = <$fd>) {
             if ($line =~ m{ \r \n \Z}xsm) {
                 $self->tag('control-file-with-CRLF-EOLs', $path);
@@ -399,7 +399,7 @@ sub source {
     for my $file (@TRAILING_WHITESPACE_FILES) {
         my $path = $processable->patched->resolve_path($file->[0]);
         next if not $path or not $path->is_open_ok;
-        my $fd = $path->open;
+        open(my $fd, '<', $path->unpacked_path);
         my @empty_lines;
         while (my $line = <$fd>) {
             if ($line eq "\n") {
@@ -686,7 +686,7 @@ sub find_cruft {
         # waf is not allowed
         if ($basename =~ /\bwaf$/) {
             my $marker = 0;
-            my $fd = $entry->open;
+            open(my $fd, '<', $entry->unpacked_path);
             while (my $line = <$fd>) {
                 next unless $line =~ m/^#/o;
                 if ($marker && $line =~ m/^#BZ[h0][0-9]/o) {
@@ -725,7 +725,7 @@ sub find_cruft {
         if (   $name =~ m,configure.(in|ac)$,
             && $entry->is_file
             && $entry->is_open_ok) {
-            my $fd = $entry->open;
+            open(my $fd, '<', $entry->unpacked_path);
             while (my $line = <$fd>) {
                 next if $line =~ m{^\s*dnl};
                 $self->tag(
@@ -789,7 +789,7 @@ sub find_cruft {
         if (   $name =~ m{^debian/(README.source|copyright|rules|control)$}
             && $entry->is_file
             && $entry->is_open_ok) {
-            my $fd = $entry->open;
+            open(my $fd, '<', $entry->unpacked_path);
             while (my $line = <$fd>) {
                 next unless $line =~ m/(?<!")(FIX_?ME)(?!")/;
                 $self->tag('file-contains-fixme-placeholder', "$name:$. $1");
@@ -841,7 +841,7 @@ sub find_cruft {
         }elsif ($basename eq 'ltconfig' and not $ltinbd) {
             $self->tag('ancient-libtool', $name);
         }elsif ($basename eq 'ltmain.sh', and not $ltinbd) {
-            my $fd = $entry->open;
+            open(my $fd, '<', $entry->unpacked_path);
             while (<$fd>) {
                 if (/^VERSION=[\"\']?(1\.(\d)\.(\d+)(?:-(\d))?)/) {
                     my ($version, $major, $minor, $debian)=($1, $2, $3, $4);
@@ -963,7 +963,7 @@ sub full_text_check {
         return;
     }
 
-    my $fd = $entry->open(':raw');
+    open(my $fd, '<:raw', $entry->unpacked_path);
     # check only text files
     unless (-T $fd) {
         close($fd);

@@ -90,7 +90,7 @@ sub detect_privacy_breach {
     return
       unless $file->is_regular_file;
 
-    my $fd = $file->open(':raw');
+    open(my $fd, '<:raw', $file->unpacked_path);
 
     my $sfd = Lintian::SlidingWindow->new($fd,sub { $_=lc($_); },BLOCKSIZE);
 

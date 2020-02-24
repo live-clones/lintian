@@ -21,6 +21,7 @@ package Lintian::File::Path;
 
 use strict;
 use warnings;
+use autodie qw(open);
 
 use Date::Parse qw(str2time);
 use Carp qw(croak confess);
@@ -234,7 +235,7 @@ sub magic {
 
     my $magic;
 
-    my $fd = $self->open;
+    open(my $fd, '<', $self->unpacked_path);
     die "Could not read $count bytes from ", $self->name
       unless read($fd, $magic, $count) == $count;
     close $fd;
@@ -254,7 +255,7 @@ sub get_interpreter {
     my $magic;
     my $interpreter;
 
-    my $fd = $self->open;
+    open(my $fd, '<', $self->unpacked_path);
     if (read($fd, $magic, 2) && $magic eq '#!' && !eof($fd)) {
         $interpreter = <$fd>;
         strip($interpreter);
@@ -651,48 +652,6 @@ sub _check_open {
     $self->path_info($self->path_info | OPEN_IS_OK);
 
     return 1;
-}
-
-=item open([LAYER])
-
-Open and return a read handle to the file.  It optionally accepts the
-LAYER argument.  If given it should specify the layer/discipline to
-use when opening the file including the initial colon (e.g. ':raw').
-
-Beyond regular issues with opening a file, this method may fail if:
-
-=over
-
-=item * The object is not a file-like object (e.g. a directory or a named pipe).
-
-=item * If the object is dangling symlink or the path traverses a symlink
-outside the package root.
-
-=back
-
-It is possible to test for these by using L</is_open_ok>.
-
-=cut
-
-sub open {
-    my ($self, $layer) = @_;
-
-    # Scoped autodie in here to avoid it overwriting our
-    # method "open"
-    $layer //= EMPTY;
-
-    $self->_check_open;
-
-    my $opener = sub {
-        my ($path) = @_;
-
-        use autodie qw(open);
-        open(my $fd, "<$layer", $path);
-
-        return $fd;
-    };
-
-    return $opener->($self->unpacked_path);
 }
 
 =item file_contents

@@ -117,7 +117,7 @@ sub files {
                   if $strings =~ m,^\Q$regex\E,m;
 
             } else {
-                my $fd = $file->open(':raw');
+                open(my $fd, '<:raw', $file->unpacked_path);
                 my $sfd = Lintian::SlidingWindow->new($fd);
                 while (my $block = $sfd->readwindow) {
                     next
@@ -155,7 +155,7 @@ sub always {
         return
           unless %checks;
 
-        my $fd = $file->open;
+        open(my $fd, '<', $file->unpacked_path);
         while (<$fd>) {
             for my $tag (keys %checks) {
                 $self->tag($tag, $file->name, "(line $.)")

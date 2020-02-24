@@ -127,7 +127,7 @@ sub always {
     my $ctrl_templates = $processable->control->lookup('templates');
 
     if ($preinst and $preinst->is_file and $preinst->is_open_ok) {
-        my $fd = $preinst->open;
+        open(my $fd, '<', $preinst->unpacked_path);
         while (<$fd>) {
             s/\#.*//;    # Not perfect for Perl, but should be OK
             if (   m,/usr/share/debconf/confmodule,
@@ -404,7 +404,7 @@ sub always {
         if ($path and $path->is_file and $path->is_open_ok) {
             my ($usesconfmodule, $obsoleteconfmodule, $db_input, $isdefault);
 
-            my $fd = $path->open;
+            open(my $fd, '<', $path->unpacked_path);
             # Only check scripts.
             my $fl = <$fd>;
             unless ($fl && $fl =~ /^\#!/) {
@@ -573,7 +573,7 @@ sub always {
     foreach my $filename (sort keys %{$processable->scripts}) {
         my $path = $processable->installed->resolve_path($filename);
         next if not $path or not $path->is_open_ok;
-        my $fd = $path->open;
+        open(my $fd, '<', $path->unpacked_path);
         while (<$fd>) {
             s/#.*//;    # Not perfect for Perl, but should be OK
             if (   m,/usr/share/debconf/confmodule,

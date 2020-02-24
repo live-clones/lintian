@@ -51,7 +51,8 @@ sub open_readme {
             if ($name =~ m/\.gz$/) {
                 return open_gz($path->unpacked_path);
             }
-            return $path->open;
+            open(my $fd, '<', $path->unpacked_path);
+            return $fd;
         }
     }
     return;

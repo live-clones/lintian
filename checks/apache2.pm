@@ -209,7 +209,7 @@ sub check_maintainer_scripts {
         next
           unless $interpreter =~ m/sh\b/;
 
-        my $sfd = $path->open;
+        open(my $sfd, '<', $path->unpacked_path);
         while (<$sfd>) {
 
             # skip comments
@@ -247,7 +247,7 @@ sub inspect_conf_file {
 
     # Don't follow unsafe links
     return if not $file->is_open_ok;
-    my $fd = $file->open;
+    open(my $fd, '<', $file->unpacked_path);
     my $skip = 0;
     while (<$fd>)  {
         $skip++

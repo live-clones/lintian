@@ -182,7 +182,7 @@ sub always {
                 $cur_file);
         } elsif ($cur_file =~ m/\.la$/ and not length $cur_file->link) {
             local $_;
-            my $fd = $cur_file->open;
+            open(my $fd, '<', $cur_file->unpacked_path);
             while(<$fd>) {
                 next
                   unless (m/^(libdir)='(.+?)'$/)
@@ -395,7 +395,7 @@ sub always {
             }
         } elsif ($shlibsf->is_open_ok) {
             my (%shlibs_control_used, @shlibs_depends);
-            my $fd = $shlibsf->open;
+            open(my $fd, '<', $shlibsf->unpacked_path);
             while (<$fd>) {
                 chop;
                 next if m/^\s*$/ or /^#/;
@@ -491,7 +491,7 @@ sub always {
         my $warned = 0;
         my $symbol_count = 0;
 
-        my $fd = $symbolsf->open;
+        open(my $fd, '<', $symbolsf->unpacked_path);
         while (<$fd>) {
             chomp;
             next if m/^\s*$/ or /^#/;
@@ -701,7 +701,7 @@ sub always {
     if (my $triggers = $processable->control->resolve_path('triggers')) {
         if ($triggers->is_open_ok) {
             # Determine if the package had an ldconfig trigger
-            my $fd = $triggers->open;
+            open(my $fd, '<', $triggers->unpacked_path);
             while (my $line = <$fd>) {
                 strip($line);
                 $line =~ tr/ \t/ /s;
@@ -758,7 +758,7 @@ sub always {
     foreach my $file ($processable->installed->sorted_list) {
         next unless $file =~ m,^usr/(lib(/[^/]+)?|share)/pkgconfig/[^/]+\.pc$,;
         next unless $file->is_open_ok;
-        my $fd = $file->open;
+        open(my $fd, '<', $file->unpacked_path);
         while (<$fd>) {
             next unless m,^Libs:,;
             while (/[:\s]-l(\S+)/g) {

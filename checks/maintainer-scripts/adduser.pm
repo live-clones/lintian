@@ -50,7 +50,7 @@ sub binary {
         next
           unless $file->is_open_ok;
 
-        my $fd = $file->open;
+        open(my $fd, '<', $file->unpacked_path);
         my $continuation = undef;
 
         while (<$fd>) {

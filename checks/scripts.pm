@@ -464,7 +464,7 @@ sub binary {
             &&!$str_deps->implies(
                 'libperl4-corelibs-perl | perl (<< 5.12.3-7)')
         ) {
-            my $fd = $path->open;
+            open(my $fd, '<', $path->unpacked_path);
             while (<$fd>) {
                 if (
                     m{ (?:do|require)\s+['"] # do/require
@@ -699,7 +699,7 @@ sub binary {
         }
 
         # now scan the file contents themselves
-        my $fd = $path->open;
+        open(my $fd, '<', $path->unpacked_path);
 
         my (
             $saw_init, $saw_invoke,
@@ -1359,7 +1359,7 @@ sub script_is_evil_and_wrong {
     my $i = 0;
     my $var = '0';
     my $backgrounded = 0;
-    my $fd = $path->open;
+    open(my $fd, '<', $path->unpacked_path);
     local $_;
     while (<$fd>) {
         chomp;

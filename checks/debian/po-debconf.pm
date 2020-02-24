@@ -66,7 +66,7 @@ sub source {
         if ($basename =~ m/^(.+\.)?templates(\..+)?$/) {
             if ($basename =~ m/templates\.\w\w(_\w\w)?$/) {
                 push(@lang_templates, $basename);
-                my $fd = $path->open;
+                open(my $fd, '<', $path->unpacked_path);
                 while (<$fd>) {
                     $self->tag('untranslatable-debconf-templates',
                         "$basename: $.")
@@ -74,7 +74,7 @@ sub source {
                 }
                 close($fd);
             } else {
-                my $fd = $path->open;
+                open(my $fd, '<', $path->unpacked_path);
                 my $in_template = 0;
                 my $saw_tl_note = 0;
                 while (<$fd>) {
@@ -134,7 +134,7 @@ sub source {
     my $missing_files = 0;
 
     if ($potfiles_in_path and $potfiles_in_path->is_open_ok) {
-        my $fd = $potfiles_in_path->open;
+        open(my $fd, '<', $potfiles_in_path->unpacked_path);
         while (<$fd>) {
             chomp;
             next if /^\s*\#/;
@@ -260,7 +260,7 @@ sub source {
         next unless $po_path->is_open_ok;
         local ($/) = "\n\n";
         $_ = '';
-        my $fd = $po_path->open;
+        open(my $fd, '<', $po_path->unpacked_path);
         while (<$fd>) {
 
             if (/Language\-Team:.*debian-i18n\@lists\.debian\.org/i) {

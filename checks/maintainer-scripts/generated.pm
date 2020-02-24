@@ -57,7 +57,7 @@ sub binary {
           unless $file->is_open_ok;
 
         # scan contents
-        my $fd = $file->open;
+        open(my $fd, '<', $file->unpacked_path);
         while (<$fd>) {
 
             # skip empty lines

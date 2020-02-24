@@ -22,6 +22,7 @@ package Lintian::mailcap;
 
 use strict;
 use warnings;
+use autodie qw(open);
 
 use List::MoreUtils qw(uniq);
 use Text::Balanced qw(extract_delimited extract_multiple);
@@ -44,7 +45,7 @@ sub files {
     return
       unless $file->is_file && $file->is_open_ok;
 
-    my $fd = $file->open;
+    open(my $fd, '<', $file->unpacked_path);
 
     my @continuation;
 

@@ -152,7 +152,7 @@ sub check_init_script {
             return;
         }
     }
-    my $fh = $file->open;
+    open(my $fh, '<', $file->unpacked_path);
     while (<$fh>) {
         lstrip;
         $lsb_source_seen = 1
@@ -371,7 +371,7 @@ sub service_file_lines {
     my (@lines, $continuation);
     return if $path->is_symlink and $path->link eq '/dev/null';
 
-    my $fh = $path->open;
+    open(my $fh, '<', $path->unpacked_path);
     while (<$fh>) {
         chomp;
 
@@ -473,7 +473,7 @@ sub check_maintainer_scripts {
         next
           unless $interpreter =~ m/sh\b/;
 
-        my $sfd = $path->open;
+        open(my $sfd, '<', $path->unpacked_path);
         while (<$sfd>) {
             # skip comments
             next if substr($_, 0, $-[0]) =~ /#/;

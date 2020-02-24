@@ -82,7 +82,7 @@ sub files {
         if ($file->file_info !~ m/gzip compressed/) {
             $self->tag('gz-file-not-gzip', $file->name);
         } else {
-            my $fd = $file->open;
+            open(my $fd, '<', $file->unpacked_path);
             my $buff;
 
             # need at least 8 bytes
