@@ -147,8 +147,11 @@ sub collect {
             $entry->link($linktarget)
               if length $linktarget;
 
+            # find prints single dot for base; removed in next step
+            $name =~ s{^\.$}{\./}s;
+
             # strip relative prefix
-            $name =~ s{^\./+}{};
+            $name =~ s{^\./+}{}s;
 
             # make sure directories end with a slash, except root
             $name .= SLASH
