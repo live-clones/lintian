@@ -52,7 +52,7 @@ sub source {
         # Ensure test file contains something
         if ($path and $path->is_open_ok) {
             $self->tag('pkg-js-autopkgtest-test-is-empty', $filename)
-              unless any { /^[^#]*\w/m } $path->file_contents;
+              unless any { /^[^#]*\w/m } $path->slurp;
         } else {
             $self->tag('pkg-js-autopkgtest-test-is-missing', $filename);
         }
@@ -105,7 +105,7 @@ sub source {
         # Ensure test file contains something
         if ($path) {
             $self->tag('pkg-js-tools-test-is-empty', $filename)
-              unless any { /^[^#]*\w/m } $path->file_contents;
+              unless any { /^[^#]*\w/m } $path->slurp;
         } else {
             $self->tag('pkg-js-tools-test-is-missing', $filename);
         }
@@ -149,7 +149,7 @@ sub files {
     my $dirname = $1; # directory in /**/nodejs
     my $subpath = $2; # subpath in /**/nodejs/module/ (node_modules/foo)
 
-    my $content = path($file->unpacked_path)->slurp;
+    my $content = $file->slurp;
 
     # Look only valid package.json files
     my $pac;

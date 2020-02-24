@@ -705,7 +705,7 @@ sub find_cruft {
         if (   $basename =~ /\.chm$/i
             && $file_info eq 'MS Windows HtmlHelp Data'
             && $entry->is_open_ok
-            && index($entry->file_contents, 'Halibut,') == -1) {
+            && index($entry->slurp, 'Halibut,') == -1) {
             $self->tag('source-contains-prebuilt-ms-help-file', $name);
         }
 
@@ -777,7 +777,7 @@ sub find_cruft {
         if (   $name eq 'debian/README.source'
             && $entry->is_file
             && $entry->is_open_ok) {
-            my $contents = $entry->file_contents;
+            my $contents = $entry->slurp;
             if (
                 index($contents,
                     'You WILL either need to modify or delete this file') >= 0
@@ -807,7 +807,7 @@ sub find_cruft {
                 && $name !~ m{^debian/(?:.+\.)?install$}
                 && $entry->is_file
                 && $entry->is_open_ok) {
-                my $contents = $entry->file_contents;
+                my $contents = $entry->slurp;
 
                 # ignore comments
                 $contents =~ s/#.*$//m;
@@ -1493,7 +1493,7 @@ sub php_source_whitelist {
     my $copyright_path
       = $processable->patched->resolve_path('debian/copyright');
     if (    $copyright_path
-        and $copyright_path->file_contents
+        and $copyright_path->slurp
         =~ m{^Source: https?://pecl.php.net/package/.*$}m) {
         return 0;
     }

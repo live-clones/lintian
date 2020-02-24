@@ -23,8 +23,6 @@ package Lintian::languages::perl::yapp;
 use warnings;
 use strict;
 
-use Path::Tiny;
-
 use Moo;
 use namespace::clean;
 
@@ -42,7 +40,7 @@ sub source {
         next
           unless $file->name =~ /\.pm$/;
 
-        my $contents = path($file->unpacked_path)->slurp;
+        my $contents = $file->slurp;
 
         $self->tag('source-contains-prebuilt-yapp-parser', $file->name)
           if $contents

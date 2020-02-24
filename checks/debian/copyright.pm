@@ -120,7 +120,7 @@ sub source {
     }
 
     if ($copyright_path->is_open_ok) {
-        my $contents = $copyright_path->file_contents;
+        my $contents = $copyright_path->slurp;
 
         $self->check_dep5_copyright($contents);
         $self->check_apache_notice_files($contents);
@@ -202,7 +202,7 @@ sub check_apache_notice_files {
     my @notice_files = grep {
               $_->basename =~ m/^NOTICE(\.txt)?$/
           and $_->is_open_ok
-          and $_->file_contents =~ m/apache/i
+          and $_->slurp =~ m/apache/i
     } $processable->patched->sorted_list;
     return if not @notice_files;
 

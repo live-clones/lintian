@@ -96,7 +96,7 @@ sub binary {
     return
       if $control->size == 0;
 
-    my $text = path($control->unpacked_path)->slurp;
+    my $text = $control->slurp;
     my ($md5sums, $errors) = read_md5sums($text);
 
     $self->tag('malformed-md5sums-control-file', $_)for @{$errors};

@@ -271,8 +271,7 @@ sub check_tag_url_privacy_breach {
     # followed automatically.
     if(    $file->basename =~ '.xml$'
         && $tagattr eq 'link'
-        && $file->file_contents
-        =~ qr{ xmlns="http://projectmallard\.org/1\.0/"}) {
+        && $file->slurp=~ qr{ xmlns="http://projectmallard\.org/1\.0/"}) {
         return;
     }
 

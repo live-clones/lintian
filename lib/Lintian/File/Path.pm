@@ -654,7 +654,7 @@ sub _check_open {
     return 1;
 }
 
-=item file_contents
+=item slurp
 
 Return the file contents as a scalar.
 
@@ -662,8 +662,11 @@ This method may fail for the same reasons as L</open([LAYER])>.
 
 =cut
 
-sub file_contents {
+sub slurp {
     my ($self) = @_;
+
+    return
+      unless $self->is_open_ok;
 
     return path($self->unpacked_path)->slurp;
 }

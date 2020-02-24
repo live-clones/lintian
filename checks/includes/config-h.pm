@@ -23,8 +23,6 @@ package Lintian::includes::config_h;
 use strict;
 use warnings;
 
-use Path::Tiny;
-
 use Moo;
 use namespace::clean;
 
@@ -42,10 +40,7 @@ sub files {
     return
       unless $file->name =~ m{/config.h$};
 
-    return
-      unless $file->is_open_ok;
-
-    my $contents = path($file->unpacked_path)->slurp;
+    my $contents = $file->slurp;
 
     $self->tag('package-name-defined-in-config-h', $file->name)
       if $contents =~ m{\bPACKAGE_NAME\b};

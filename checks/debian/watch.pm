@@ -70,7 +70,7 @@ sub source {
     return
       unless $file->is_open_ok;
 
-    my $contents = path($file->unpacked_path)->slurp;
+    my $contents = $file->slurp;
 
     # each pattern marks a multi-line (!) selection for the tag message
     my @templatepatterns
