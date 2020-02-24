@@ -24,7 +24,7 @@ use strict;
 use warnings;
 use autodie;
 
-use JSON;
+use JSON::MaybeXS;
 use List::MoreUtils qw(any);
 use Path::Tiny;
 
