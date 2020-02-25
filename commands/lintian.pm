@@ -381,6 +381,11 @@ sub display_pedantictags {
     return;
 }
 
+sub display_classificationtags {
+    push(@display_level, ['+', '=', 'classification']);
+    return;
+}
+
 # Process --default-display-level flag
 sub default_display_level {
     push(@display_level,
@@ -1088,6 +1093,7 @@ sub _update_profile {
             @display_level = ();
             display_infotags();
             display_pedantictags();
+            display_classificationtags();
             $profile->enable_tags(split /,/, $check_tags);
         } else {
             for my $c (split /,/, $checks) {
