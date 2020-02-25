@@ -81,6 +81,9 @@ my $OPTS_R = qr/-\S+\s*/;
 my $ACTION_R = qr/\w+/;
 my $EXCLUDE_R = qr/if\s+\[\s+-x\s+\S*update-rc\.d/;
 
+my $ALWAYS_START
+  = qr/^\s*#*\s*(?:[A-Z]_)?(?:ENABLED|DISABLED|[A-Z]*RUN|(?:NO_)?START)=/;
+
 sub binary {
     my ($self) = @_;
 
@@ -530,7 +533,7 @@ sub check_defaults {
         while (<$fd>) {
             $self->tag('init.d-script-should-always-start-service',
                 $path, "(line $.)")
-              if m/^\s*#*\s*(?:ENABLED|DISABLED|[A-Z]*RUN)=/;
+              if m/$ALWAYS_START/;
         }
         close($fd);
     }
