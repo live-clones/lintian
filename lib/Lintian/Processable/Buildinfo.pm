@@ -33,7 +33,7 @@ use constant SLASH => q{/};
 use Moo;
 use namespace::clean;
 
-with 'Lintian::Info::Fields::Files', 'Lintian::Info::Overrides',
+with 'Lintian::Processable::Fields::Files', 'Lintian::Processable::Overrides',
   'Lintian::Processable';
 
 =for Pod::Coverage BUILDARGS
@@ -52,7 +52,7 @@ Lintian::Processable::Buildinfo -- A buildinfo file Lintian can process
 =head1 DESCRIPTION
 
 This class represents a 'buildinfo' file that Lintian can process. Objects
-of this kind are often part of a L<Lintian::Processable::Group>, which
+of this kind are often part of a L<Lintian::Group>, which
 represents all the files in a changes or buildinfo file.
 
 =head1 INSTANCE METHODS

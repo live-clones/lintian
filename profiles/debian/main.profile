@@ -138,6 +138,7 @@ Enable-Tags-From-Check:
  lintian,
  lintian/overrides,
  mailcap,
+ maintainer-scripts/adduser,
  maintainer-scripts/generated,
  md5sums,
  menu-format,

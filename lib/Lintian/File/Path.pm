@@ -220,14 +220,6 @@ sub init_from_tar_output {
     return;
 }
 
-=item name
-
-Returns the name of the file (relative to the package root).
-
-NB: It will never have any leading "./" (or "/") in it.
-
-=cut
-
 =item magic(COUNT)
 
 Returns the specified COUNT of magic bytes for the file.
@@ -288,106 +280,6 @@ sub identity {
     return $self->owner . SLASH . $self->group;
 }
 
-=item owner
-
-Returns the owner of the path entry as a username.
-
-NB: If only numerical owner information is available in the package,
-this may return a numerical owner (except uid 0 is always mapped to
-"root")
-
-=cut
-
-has owner => (is => 'rw', default => 'root');
-
-=item group
-
-Returns the group of the path entry as a username.
-
-NB: If only numerical owner information is available in the package,
-this may return a numerical group (except gid 0 is always mapped to
-"root")
-
-=cut
-
-has group => (is => 'rw', default => 'root');
-
-=item uid
-
-Returns the uid of the owner of the path entry.
-
-NB: If the uid is not available, 0 will be returned.
-This usually happens if the numerical data is not collected (e.g. in
-source packages)
-
-=cut
-
-has uid => (
-    is => 'rw',
-    coerce => sub { my ($value) = @_; return int($value); },
-    default => 0
-);
-
-=item gid
-
-Returns the gid of the owner of the path entry.
-
-NB: If the gid is not available, 0 will be returned.
-This usually happens if the numerical data is not collected (e.g. in
-source packages)
-
-=cut
-
-has gid => (
-    is => 'rw',
-    coerce => sub { my ($value) = @_; return int($value); },
-    default => 0
-);
-
-=item link
-
-If this is a link (i.e. is_symlink or is_hardlink returns a truth
-value), this method returns the target of the link.
-
-If this is not a link, then this returns undef.
-
-If the path is a symlink this method can be used to determine if the
-symlink is relative or absolute.  This is I<not> true for hardlinks,
-where the link target is always relative to the root.
-
-NB: Even for symlinks, a leading "./" will be stripped.
-
-=item size
-
-Returns the size of the path in bytes.
-
-NB: Only regular files can have a non-zero file size.
-
-=cut
-
-has size => (is => 'rw', default => 0);
-
-=item date
-
-Return the modification date as YYYY-MM-DD.
-
-=cut
-
-has date => (is => 'rw');
-
-=item time
-
-=cut
-
-has time => (is => 'rw', default => '00:00');
-
-=item parent_dir
-
-Returns the parent directory entry of this entry as a
-L<Lintian::File::Path>.
-
-NB: Returns C<undef> for the "root" dir.
-
 =item dirname
 
 Returns the "directory" part of the name, similar to dirname(1) or
@@ -404,64 +296,6 @@ sub dirname {
     return $dir->name if $dir;
     return q{};
 }
-
-=item basename
-
-Returns the "filename" part of the name, similar basename(1) or
-File::Basename::basename (without passing a suffix to strip in either
-case).  For dirs, the basename will end with a trailing slash (except
-for the "root" dir - see below).
-
-NB: Returns the empty string for the "root" dir.
-
-=cut
-
-sub basename {
-    my ($self) = @_;
-    my $name = $self->name;
-    my $slash;
-    return $name if $name eq q{}; # Root dir
-    if (substr($name, -1, 1) eq '/') {
-        $slash = rindex($name, '/', length($name) - 2);
-    } else {
-        $slash = rindex($name, '/');
-    }
-    return $name if $slash == -1; # E.g. Top level-dirs
-    return substr($name, $slash+1);
-}
-
-=item faux
-
-Returns a truth value if this entry absent in the package.  This can
-happen if a package does not include all intermediate directories.
-
-=item perm
-
-=item fs_info
-
-=item path_info
-
-=item link_target
-
-=item sorted_children
-
-=item child_table
-
-=cut
-
-has name => (is => 'rw', default => EMPTY);
-has link => (is => 'rw');
-has parent_dir => (is => 'rw');
-has faux => (is => 'rw', default => 0);
-
-has perm => (is => 'rw');
-has fs_info => (is => 'rw');
-has path_info => (is => 'rw');
-has link_target => (is => 'rw');
-
-has sorted_children => (is => 'rw', default => sub { [] });
-
-has child_table => (is => 'rw', default => sub { {} });
 
 =item operm
 
@@ -607,14 +441,25 @@ symlinks, even if the symlink points to a file.
 
 =cut
 
-sub is_symlink { return $_[0]->path_info & TYPE_SYMLINK ? 1 : 0; }
-sub is_hardlink { return $_[0]->path_info & TYPE_HARDLINK ? 1 : 0; }
-sub is_dir { return $_[0]->path_info & TYPE_DIR ? 1 : 0; }
+sub is_symlink {
+    return $_[0]->path_info & TYPE_SYMLINK ? 1 : 0;
+}
+
+sub is_hardlink {
+    return $_[0]->path_info & TYPE_HARDLINK ? 1 : 0;
+}
+
+sub is_dir {
+    return $_[0]->path_info & TYPE_DIR ? 1 : 0;
+}
 
 sub is_file {
     return $_[0]->path_info & (TYPE_FILE | TYPE_HARDLINK) ? 1 : 0;
 }
-sub is_regular_file { return $_[0]->path_info & TYPE_FILE ? 1 : 0; }
+
+sub is_regular_file {
+    return $_[0]->path_info & TYPE_FILE ? 1 : 0;
+}
 
 =item link_normalized
 
@@ -644,7 +489,7 @@ sub link_normalized {
     my $link = $self->link;
 
     croak "$name is not a link"
-      unless defined $link;
+      unless length $link;
 
     my $dir = $self->dirname;
     # hardlinks are always relative to the package root
@@ -694,7 +539,11 @@ files.
 
 sub file_info {
     my ($self) = @_;
-    return $self->_fs_info->_file_info($self);
+
+    confess $self->name . ' has not had collected file(1) info'
+      unless defined $self->fileinfo_sub;
+
+    return $self->fileinfo_sub->($self->name);
 }
 
 =item fs_path
@@ -760,16 +609,11 @@ sub is_open_ok {
 
 sub _collect_path {
     my ($self) = @_;
-    return $self->_fs_info->_underlying_fs_path($self);
-}
 
-sub _fs_info {
-    my ($self) = @_;
-    # Technically, this will look up the parent dir even if $self is a dir
-    # - though calling is_dir first is probably more expensive than just
-    #   blindly calling parent_dir
-    my $dir = $self->parent_dir // $self;
-    return $dir->fs_info;
+    croak 'No base directory'
+      unless length $self->basedir;
+
+    return path($self->basedir)->child($self->name)->stringify;
 }
 
 sub _check_access {
@@ -942,7 +786,6 @@ sub resolve_path {
     my ($self, $path_str) = @_;
     my $current = $self;
     my (@queue, %traversed_links, $had_trailing_slash);
-    my $fs_info = $self->_fs_info;
 
     if (defined($path_str) and ref($path_str) ne q{}) {
         croak('resolve_path only accepts string arguments');
@@ -960,7 +803,7 @@ sub resolve_path {
 
     if ($path_str =~ s{^/}{} or ($path_str eq q{} and $had_trailing_slash)) {
         # Find the root entry
-        return if not $fs_info->has_anchored_root_dir;
+        return unless $self->anchored;
         $current = $self->root_dir;
         return $current if $path_str eq q{};
     }
@@ -988,7 +831,7 @@ sub resolve_path {
             my $link_text = $current->link;
             $link_text =~ s{//++}{/}g;
             if ($link_text eq q{/} or $link_text =~ s{^/}{}) {
-                return if not $fs_info->has_anchored_root_dir;
+                return unless $self->anchored;
                 $current = $current->root_dir;
             } else {
                 $current = $current->parent_dir;
@@ -1015,6 +858,180 @@ sub resolve_path {
     }
     return $current;
 }
+
+=item name
+
+Returns the name of the file (relative to the package root).
+
+NB: It will never have any leading "./" (or "/") in it.
+
+=item basename
+
+Returns the "filename" part of the name, similar basename(1) or
+File::Basename::basename (without passing a suffix to strip in either
+case).
+
+NB: Returns the empty string for the "root" dir.
+
+=item link
+
+If this is a link (i.e. is_symlink or is_hardlink returns a truth
+value), this method returns the target of the link.
+
+If this is not a link, then this returns undef.
+
+If the path is a symlink this method can be used to determine if the
+symlink is relative or absolute.  This is I<not> true for hardlinks,
+where the link target is always relative to the root.
+
+NB: Even for symlinks, a leading "./" will be stripped.
+
+=item link_target
+
+=item faux
+
+Returns a truth value if this entry absent in the package.  This can
+happen if a package does not include all intermediate directories.
+
+=item size
+
+Returns the size of the path in bytes.
+
+NB: Only regular files can have a non-zero file size.
+
+=item date
+
+Return the modification date as YYYY-MM-DD.
+
+=item time
+
+=item perm
+
+=item path_info
+
+=item owner
+
+Returns the owner of the path entry as a username.
+
+NB: If only numerical owner information is available in the package,
+this may return a numerical owner (except uid 0 is always mapped to
+"root")
+
+=item group
+
+Returns the group of the path entry as a username.
+
+NB: If only numerical owner information is available in the package,
+this may return a numerical group (except gid 0 is always mapped to
+"root")
+
+=item uid
+
+Returns the uid of the owner of the path entry.
+
+NB: If the uid is not available, 0 will be returned.
+This usually happens if the numerical data is not collected (e.g. in
+source packages)
+
+=item gid
+
+Returns the gid of the owner of the path entry.
+
+NB: If the gid is not available, 0 will be returned.
+This usually happens if the numerical data is not collected (e.g. in
+source packages)
+
+=item C<basedir>
+
+=item anchored
+
+=item fileinfo_sub
+
+=item parent_dir
+
+Returns the parent directory entry of this entry as a
+L<Lintian::File::Path>.
+
+NB: Returns C<undef> for the "root" dir.
+
+=item sorted_children
+
+=item child_table
+
+=cut
+
+has name => (
+    is => 'rw',
+    lazy => 1,
+    coerce => sub { my ($string) = @_; return $string // EMPTY;},
+    trigger => sub {
+        my ($self, $name) = @_;
+
+        my ($basename) = ($name =~ m{([^/]*)/?$}s);
+        $self->basename($basename);
+
+        # allow newline in names; need /s for dot matching (#929729)
+        my ($parentname) = ($name =~ m{^(.+/)?(?:[^/]+/?)$}s);
+        $self->parentname($parentname);
+    },
+    default => EMPTY
+);
+has basename => (
+    is => 'rw',
+    lazy => 1,
+    coerce => sub { my ($string) = @_; return $string // EMPTY;},
+    default => EMPTY
+);
+has parentname => (
+    is => 'rw',
+    lazy => 1,
+    coerce => sub { my ($string) = @_; return $string // EMPTY;},
+    default => EMPTY
+);
+
+has link => (
+    is => 'rw',
+    coerce => sub { my ($string) = @_; return $string // EMPTY;},
+    default => EMPTY
+);
+has link_target => (is => 'rw');
+has faux => (is => 'rw', default => 0);
+
+has size => (is => 'rw', default => 0);
+has date => (is => 'rw');
+has time => (is => 'rw', default => '00:00');
+
+has perm => (is => 'rw');
+has path_info => (is => 'rw');
+
+has owner => (
+    is => 'rw',
+    coerce => sub { my ($string) = @_; return $string // 'root'; },
+    default => 'root'
+);
+has group => (
+    is => 'rw',
+    coerce => sub { my ($string) = @_; return $string // 'root'; },
+    default => 'root'
+);
+has uid => (
+    is => 'rw',
+    coerce => sub { my ($value) = @_; return int($value // 0); },
+    default => 0
+);
+has gid => (
+    is => 'rw',
+    coerce => sub { my ($value) = @_; return int($value // 0); },
+    default => 0
+);
+
+has basedir => (is => 'rw', default => EMPTY);
+has anchored => (is => 'rw', default => 0);
+has fileinfo_sub => (is => 'rw');
+
+has parent_dir => (is => 'rw');
+has sorted_children => (is => 'rw', default => sub { [] });
+has child_table => (is => 'rw', default => sub { {} });
 
 ### OVERLOADED OPERATORS ###
 

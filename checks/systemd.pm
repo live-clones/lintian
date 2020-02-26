@@ -79,7 +79,7 @@ sub binary {
     if (my $tmpfiles= $processable->installed->resolve_path('etc/tmpfiles.d/'))
     {
         for my $file ($tmpfiles->children('breadth-first')) {
-            if ($file->basename =~ m,\.conf$,) {
+            if ($file->is_file && $file->basename =~ m,\.conf$,) {
                 $self->tag('systemd-tmpfiles.d-outside-usr-lib', $file);
             }
         }

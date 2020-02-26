@@ -38,17 +38,8 @@ sub files {
     my $target_dir = $file->link;
     $target_dir =~ s,[^/]*$,,;
 
-    # It may look weird to sort the file and link target here,
-    # but since it's a hard link, both files are equal and
-    # either could be legitimately reported first.  tar will
-    # generate different tar files depending on the hashing of
-    # the directory, and this sort produces stable lintian
-    # output despite that.
-    #
-    # TODO: actually, policy says 'conffile', not '/etc' ->
-    # extend!
-    $self->tag('package-contains-hardlink',
-        join(' -> ', sort($file->name, $file->link)))
+    # link always sorts after target; hard links are calibrated
+    $self->tag('package-contains-hardlink',$file->name . ' -> ' . $file->link)
       if $file->name =~ m,^etc/,
       or $file->link =~ m,^etc/,
       or $file->name !~ m,^\Q$target_dir\E[^/]*$,;

@@ -617,7 +617,6 @@ sub find_cruft {
             # included the slash for these tags and there is no
             # particular reason to change that now).
             $name     = substr($name,     0, -1);
-            $basename = substr($basename, 0, -1);
 
             # Ignore the .pc directory and its contents, created as
             # part of the unpacking of a 3.0 (quilt) source package.
