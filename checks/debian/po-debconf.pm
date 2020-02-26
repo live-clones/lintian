@@ -254,7 +254,7 @@ sub source {
 
     for my $po_path ($debian_po_dir->children) {
         my $basename = $po_path->basename;
-        next unless $basename =~ m/\.po$/;
+        next unless $basename =~ m/\.po$/ || $po_path->is_dir;
         $self->tag('misnamed-po-file', $po_path)
           unless ($basename =~ /^[a-z]{2,3}(_[A-Z]{2})?(?:\@[^\.]+)?\.po$/o);
         next unless $po_path->is_open_ok;

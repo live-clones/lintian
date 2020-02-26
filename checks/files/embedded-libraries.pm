@@ -93,7 +93,8 @@ sub files {
 
     # ignore embedded jQuery libraries for Doxygen (#736360)
     unless (
-        $file->basename eq 'jquery.js'
+           $file->basename eq 'jquery.js'
+        && !$file->is_dir
         && defined$self->processable->installed->resolve_path(
             $file->dirname . 'doxygen.css'
         )

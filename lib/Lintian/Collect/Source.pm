@@ -67,10 +67,6 @@ data in memory.
 
 =head1 INSTANCE METHODS
 
-In addition to the instance methods listed below, all instance methods
-documented in the L<Lintian::Collect> and L<Lintian::Info::Package>
-modules are also available.
-
 =over 4
 
 =item C<saved_changelog_version>
@@ -243,8 +239,6 @@ modified.
 NB: If a field from the "dsc" file itself is desired, please use
 L<field|Lintian::Collect/field> instead.
 
-Needs-Info requirements for using I<source_field>: L<Same as index_resolved_path|Lintian::Info::Package/index_resolved_path(PATH)>
-
 =cut
 
 # NB: We don't say "same as _load_ctrl" in the above, because
@@ -271,8 +265,6 @@ modified.
 
 If PACKAGE is not a binary built from this source, this returns
 DEFAULT.
-
-Needs-Info requirements for using I<binary_field>: L<Same as index_resolved_path|Lintian::Info::Package/index_resolved_path(PATH)>
 
 =cut
 
@@ -460,136 +452,6 @@ sub relation_noarch {
     my $result = $self->relation($field)->restriction_less;
     $self->{relation_noarch}{$field} = $result;
     return $result;
-}
-
-=item patched
-
-Returns a index object representing a patched source tree.
-
-=item saved_patched
-
-An index object for a patched source tree.
-
-=cut
-
-has saved_patched => (is => 'rw');
-
-sub patched {
-    my ($self) = @_;
-
-    unless (defined $self->saved_patched) {
-
-        my $patched = Lintian::File::Index->new;
-
-        # source packages can be unpacked anywhere; no anchored roots
-        $patched->name('index');
-        $patched->fs_root_sub(
-            sub {
-                return $self->_fetch_extracted_dir('unpacked', 'unpacked', @_);
-            });
-        $patched->file_info_sub(
-            sub {
-                return $self->file_info(@_);
-            });
-        $patched->basedir($self->groupdir);
-        $patched->load;
-
-        $self->saved_patched($patched);
-    }
-
-    return $self->saved_patched;
-}
-
-=item index (FILE)
-
-For the general documentation of this method, please refer to the
-documentation of it in
-L<Lintian::Info::Package|Lintian::Info::Package/index (FILE)>.
-
-The index of a source package is not very well defined for non-native
-source packages.  This method gives the index of the "unpacked"
-package (with 3.0 (quilt), this implies patches have been applied).
-
-If you want the index of what is listed in the upstream orig tarballs,
-then there is L</orig_index>.
-
-For native packages, the two indices are generally the same as they
-only have one tarball and their debian packaging is included in that
-tarball.
-
-IMPLEMENTATION DETAIL/CAVEAT: Lintian currently (2.5.11) generates
-this by running "find(1)" after unpacking the source package.
-This has three consequences.
-
-First it means that (original) owner/group data is lost; Lintian
-inserts "root/root" here.  This is usually not a problem as
-owner/group information for source packages do not really follow any
-standards.
-
-Secondly, permissions are modified by A) umask and B) laboratory
-set{g,u}id bits (the laboratory on lintian.d.o has setgid).  This is
-*not* corrected/altered.  Note Lintian (usually) breaks if any of the
-"user" bits are set in the umask, so that part of the permission bit
-I<should> be reliable.
-
-Again, this shouldn't be a problem as permissions in source packages
-are usually not important.  Though if accuracy is needed here,
-L</orig_index> may used instead (assuming it has the file in
-question).
-
-Third, hardlinking information is lost and no attempt has been made
-to restore it.
-
-Needs-Info requirements for using I<index>: unpacked
-
-=cut
-
-sub index {
-    my ($self, $file) = @_;
-
-    return $self->patched->lookup($file);
-}
-
-=item sorted_index
-
-Returns a sorted array of file names listed in the package.  The names
-will not have a leading slash (or "./") and can be passed to
-L</unpacked ([FILE])> or L</index (FILE)> as is.
-
-The array will not contain the entry for the "root" of the package.
-
-NB: For source packages, please see the
-L<"index"-caveat|Lintian::Collect::Source/index (FILE)>.
-
-Needs-Info requirements for using I<sorted_index>: L<Same as index|/index (FILE)>
-
-=cut
-
-sub sorted_index {
-    my ($self) = @_;
-
-    return $self->patched->sorted_list;
-}
-
-=item index_resolved_path(PATH)
-
-Resolve PATH (relative to the root of the package) and return the
-L<entry|Lintian::File::Path> denoting the resolved path.
-
-The resolution is done using
-L<resolve_path|Lintian::File::Path/resolve_path([PATH])>.
-
-NB: For source packages, please see the
-L<"index"-caveat|Lintian::Collect::Source/index (FILE)>.
-
-Needs-Info requirements for using I<index_resolved_path>: L<Same as index|/index (FILE)>
-
-=cut
-
-sub index_resolved_path {
-    my ($self, $path) = @_;
-
-    return $self->patched->resolve_path($path);
 }
 
 =item is_non_free

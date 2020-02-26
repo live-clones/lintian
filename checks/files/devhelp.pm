@@ -66,7 +66,7 @@ sub files {
     # /usr/share/gtk-doc/html.  We therefore look for any links in one of
     # those directories to another directory.  The presence of such a link
     # blesses any file below that other directory.
-    if (defined $file->link
+    if (length $file->link
         && $file->name =~ m,^usr/share/(?:devhelp/books|gtk-doc/html)/,) {
         my $blessed = $file->link_normalized // '<broken-link>';
         push(@{$self->links}, $blessed);

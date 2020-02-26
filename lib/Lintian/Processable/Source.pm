@@ -33,11 +33,17 @@ use constant SLASH => q{/};
 use Moo;
 use namespace::clean;
 
-with 'Lintian::Collect::Source', 'Lintian::Info::Diffstat',
-  'Lintian::Info::Changelog',
-  'Lintian::Info::Fields::Files', 'Lintian::Info::Orig::Index',
-  'Lintian::Info::Overrides',
-  'Lintian::Info::Package',
+with 'Lintian::Collect::Source',
+  'Lintian::Processable::Checksums::Md5',
+  'Lintian::Processable::Diffstat',
+  'Lintian::Processable::Changelog',
+  'Lintian::Processable::Fields::Files',
+  'Lintian::Processable::FileInfo',
+  'Lintian::Processable::Java',
+  'Lintian::Processable::Orig',
+  'Lintian::Processable::Overrides',
+  'Lintian::Processable::Patched',
+  'Lintian::Processable::Scripts::Control',
   'Lintian::Processable';
 
 =for Pod::Coverage BUILDARGS
@@ -56,7 +62,7 @@ Lintian::Processable::Source -- A dsc source package Lintian can process
 =head1 DESCRIPTION
 
 This class represents a 'dsc' file that Lintian can process. Objects
-of this kind are often part of a L<Lintian::Processable::Group>, which
+of this kind are often part of a L<Lintian::Group>, which
 represents all the files in a changes or buildinfo file.
 
 =head1 INSTANCE METHODS

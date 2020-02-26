@@ -323,7 +323,7 @@ sub binary {
                 my $file_info = $path->file_info;
                 if ($path->is_symlink) {
                     my $normalized = $path->link_normalized;
-                    if (defined($normalized)) {
+                    if (length $normalized) {
                         $file_info = $path->file_info;
                     }
                 }

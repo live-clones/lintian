@@ -178,7 +178,7 @@ sub binary {
         if (my $dir = $processable->installed->lookup("usr/share/$subdir/")) {
             for my $file ($dir->children) {
                 next unless $file->is_file;
-                next unless $file->basename =~ m/\.desktop$/;
+                next unless $file->basename =~ m/\.desktop$/ && !$file->is_dir;
                 if ($file->is_executable) {
                     $self->tag('executable-desktop-file',
                         sprintf('%s %04o',$file, $file->operm));
@@ -203,7 +203,7 @@ sub binary {
         my $fullname = $menufile->name;
 
         # README is a special case
-        next if $menufile->basename eq 'README';
+        next if $menufile->basename eq 'README' && !$menufile->is_dir;
         my $menufile_line ='';
         my $fd = $menufile->open;
         # line below is commented out in favour of the while loop

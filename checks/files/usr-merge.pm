@@ -38,7 +38,7 @@ sub files {
       if $file->name =~ m,^(?:bin|sbin|lib.*)/.+$,
       and not $file->is_symlink
       and not $file->is_dir
-      and ($file->link // '') !~ m,^usr/$quotedpath$,;
+      and $file->link !~ m,^usr/$quotedpath$,;
 
     return;
 }

@@ -33,11 +33,20 @@ use constant SLASH => q{/};
 use Moo;
 use namespace::clean;
 
-with 'Lintian::Collect::Binary', 'Lintian::Info::Changelog',
-  'Lintian::Info::Control::Index', 'Lintian::Info::Control::Conffiles',
-  'Lintian::Info::Hardening', 'Lintian::Info::Objdump',
-  'Lintian::Info::Overrides', 'Lintian::Info::Package',
-  'Lintian::Info::Scripts', 'Lintian::Processable';
+with 'Lintian::Collect::Binary',
+  'Lintian::Processable::Changelog',
+  'Lintian::Processable::Checksums::Md5',
+  'Lintian::Processable::Control',
+  'Lintian::Processable::Control::Conffiles',
+  'Lintian::Processable::FileInfo',
+  'Lintian::Processable::Installed',
+  'Lintian::Processable::Java',
+  'Lintian::Processable::Hardening',
+  'Lintian::Processable::Objdump',
+  'Lintian::Processable::Overrides',
+  'Lintian::Processable::Scripts',
+  'Lintian::Processable::Scripts::Control',
+  'Lintian::Processable';
 
 =for Pod::Coverage BUILDARGS
 
@@ -56,7 +65,7 @@ Lintian::Processable::Udeb -- A udeb installation package Lintian can process
 
 This class represents a 'udeb' file that Lintian can process. Objects
 
-of this kind are often part of a L<Lintian::Processable::Group>, which
+of this kind are often part of a L<Lintian::Group>, which
 represents all the files in a changes or buildinfo file.
 
 =head1 INSTANCE METHODS

@@ -62,7 +62,7 @@ Lintian::Processable -- An (abstract) object that Lintian can process
 
 Instances of this perl class are objects that Lintian can process (e.g.
 deb files).  Multiple objects can then be combined into
-L<groups|Lintian::Processable::Group>, which Lintian will process
+L<groups|Lintian::Group>, which Lintian will process
 together.
 
 =head1 INSTANCE METHODS
@@ -494,7 +494,7 @@ L<Lintian::Processable::Source>
 
 L<Lintian::Processable::Udeb>
 
-L<Lintian::Processable::Group>
+L<Lintian::Group>
 
 =cut
 

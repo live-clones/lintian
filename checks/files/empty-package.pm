@@ -56,7 +56,7 @@ sub files {
 
     # ignore directories
     return
-      if $file->name =~ m,/$,;
+      if $file->is_dir;
 
     my $pkg = $self->package;
     my $ppkg = quotemeta($self->package);
