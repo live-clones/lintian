@@ -1,8 +1,29 @@
-lintian (2.55.0+git) UNRELEASED; urgency=medium
+lintian (2.56.0) unstable; urgency=medium
 
-  * WIP (generated upon release).
+  * Summary of tag changes:
+    + Added:
+      - nodejs-lock-file
 
- -- Chris Lamb <lamby@debian.org>  Sun, 23 Feb 2020 10:06:08 -0800
+  [ Chris Lamb ]
+  * Check for NO_START and FOO_NO_START etc. in /etc/default scripts.
+    (Closes: #950238)
+  * Deprecate debhelper compat level 9. (Closes: #950453)
+
+  [ Felix Lechner ]
+  * Fix POD markup in man page; indent level caused literal display of
+    formatting codes. (Closes: #952529)
+  * Fix the selection of classification tags with -T command line switch.
+    (Closes: #952539)
+  * Use JSON::MaybeXS instead of plain JSON in the NodeJS checks.
+  * Remove and replace the open_gz, open and file_contents subroutines from
+    File::Path.
+  * Provide method for all ->descendants in File::Path and use it, retiring
+    breadth-first recursion.
+
+  [ Xavier Guimard ]
+  * Check if NodeJS modules install lock files.
+
+ -- Chris Lamb <lamby@debian.org>  Wed, 26 Feb 2020 18:30:19 +0000
 
 lintian (2.55.0) unstable; urgency=medium
 
