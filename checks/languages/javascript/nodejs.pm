@@ -1,6 +1,6 @@
 # languages/javascript/nodejs -- lintian check script -*- perl -*-
 
-# Copyright (C) 2019, Xavier Guimard <yadd@debian.org>
+# Copyright (C) 2019-2020, Xavier Guimard <yadd@debian.org>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -132,6 +132,11 @@ sub files {
 
     # Now we have to open package.json
     return unless $file->is_open_ok;
+
+    # Return an error if a package-lock.json or a yanr.lock file is installed
+    $self->tag('nodejs-lock-file', $file->name)
+      if $file->name
+      =~ m#usr/(?:share|lib(?:/[^/]+)?)/nodejs/([^/]+)(.*/)(package-lock\.json|yarn\.lock)$#;
 
     # Look only nodejs package.json files
     return
