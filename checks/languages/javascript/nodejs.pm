@@ -179,7 +179,7 @@ sub files {
         # (replace invalid characters by "-")
         $name =~ s#[/_\@]#-#g;
         $name =~ s/\-\-+/\-/g;
-        $self->tag('nodejs-module-not-declared', $name)
+        $self->tag('nodejs-module-not-declared', $name, $file->name)
           if $subpath eq '/'
           and not $provides->implies($name);
     }
