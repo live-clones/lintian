@@ -14,6 +14,9 @@ opts="searchmode=plain,pgpmode=none,component=requireoptional" \
 opts="searchmode=plain,pgpmode=none,component=bson" \
  https://registry.npmjs.org/bson https://registry.npmjs.org/bson/-/bson-(1[\d\.]*)@ARCHIVE_EXT@ ignore
 
+opts="searchmode=plain,pgpmode=none,component=foobar" \
+ https://registry.npmjs.org/bson https://registry.npmjs.org/foobar/-/foobar-(1[\d\.]*)@ARCHIVE_EXT@ ignore
+
 # It is not recommended use npmregistry. Please investigate more.
 # Take a look at https://wiki.debian.org/debian/watch/
 opts="searchmode=plain,component=denque,pgpmode=none" \
