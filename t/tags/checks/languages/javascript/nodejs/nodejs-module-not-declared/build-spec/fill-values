@@ -1,0 +1,4 @@
+Testname: nodejs-module-not-declared
+Skeleton: upload-native
+Description: Test if nodejs modules are declared
+Extra-Build-Depends: pkg-js-tools (>= 0.9.6~), nodejs (>= 8.11.1)
