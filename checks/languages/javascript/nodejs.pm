@@ -141,7 +141,13 @@ sub files {
     # Look only nodejs package.json files
     return
       unless $file->name
-      =~ m#usr/(?:share|lib(?:/[^/]+)?)/nodejs/([^/]+)(.*/)package\.json$#;
+      =~ m#usr/(?:share|lib(?:/[^/]+)?)/nodejs/([^\@/]+|\@[^/]+/[^/]+)(.*/)package\.json$#;
+
+    # First regexp arg: directory in /**/nodejs or @foo/bar when dir starts
+    #                   with '@', following npm registry policy
+    my $dirname = $1;
+    # Second regex arg: subpath in /**/nodejs/module/ (eg: node_modules/foo)
+    my $subpath = $2;
 
     my $declared = $self->package;
     my $processable = $self->processable;
@@ -150,9 +156,6 @@ sub files {
     $version //= '0-1';
     my $provides
       = Lintian::Relation->and($processable->relation('provides'), $declared);
-
-    my $dirname = $1; # directory in /**/nodejs
-    my $subpath = $2; # subpath in /**/nodejs/module/ (node_modules/foo)
 
     my $content = $file->slurp;
 
@@ -172,8 +175,10 @@ sub files {
     } else {
         # Else verify that module is declared at least in Provides: field
         my $name = 'node-' . $pac->{name};
-        $name =~ s/_/-/g;
-        $name =~ s/\@//g;
+        # Normalize name following Debian policy
+        # (replace invalid characters by "-")
+        $name =~ s#[/_\@]#-#g;
+        $name =~ s/\-\-+/\-/g;
         $self->tag('nodejs-module-not-declared', $name)
           if $subpath eq '/'
           and not $provides->implies($name);
