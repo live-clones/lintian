@@ -149,8 +149,8 @@ my $exceptions = List::Compare->new(\@missing, \@known_missing);
 my @unknown = $exceptions->get_Lonly;
 my @solved = $exceptions->get_Ronly;
 
-is(scalar @unknown, 0, 'All missing tags are known');
-diag "Unknown missing tag: $_" for @unknown;
+is(scalar @unknown, 0, 'All tags are covered in the testsuite');
+diag "Unknown/missing tag: $_" for @unknown;
 
 is(scalar @solved, 0, 'Solved tags should be removed from known missing set');
 diag "Solved tag: $_" for @solved;
