@@ -1,3 +1,5 @@
+unpack-srcpkg-xz (source): upstream-metadata-missing-repository debian/upstream/metadata
+unpack-srcpkg-xz (source): upstream-metadata-missing-bug-tracking debian/upstream/metadata
 unpack-srcpkg-xz (source): upstream-metadata-field-present Name
 unpack-srcpkg-xz (source): upstream-metadata-field-present Contact
 unpack-srcpkg-xz (source): upstream-metadata-exists

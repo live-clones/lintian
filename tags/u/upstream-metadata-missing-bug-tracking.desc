@@ -1,0 +1,8 @@
+Tag: upstream-metadata-missing-bug-tracking
+Severity: wishlist
+Certainty: certain
+Check: debian/upstream/metadata
+Ref: https://dep-team.pages.debian.net/deps/dep12/
+Info: The DEP 12 metadata file does not specify any upstream bug
+ tracking information (ie. the <tt>Bug-Database</tt> or
+ <tt>Bug-Submit</tt> fields are missing).

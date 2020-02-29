@@ -22,6 +22,7 @@ package Lintian::debian::upstream::metadata;
 
 use strict;
 use warnings;
+use List::Util qw(none);
 
 use YAML::XS;
 $YAML::XS::LoadBlessed = 0;
@@ -87,6 +88,11 @@ sub source {
     }
 
     $self->tag('upstream-metadata-field-present', $_) for keys %{$yaml};
+
+    $self->tag('upstream-metadata-missing-repository', $file)
+      if none { defined $yaml->{$_} } qw(Repository Repository-Browse);
+    $self->tag('upstream-metadata-missing-bug-tracking', $file)
+      if none { defined $yaml->{$_} } qw(Bug-Database Bug-Submit);
 
     return;
 }

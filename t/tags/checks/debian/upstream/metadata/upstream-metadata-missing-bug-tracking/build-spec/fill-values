@@ -1,0 +1,4 @@
+Skeleton: upload-non-native
+Testname: upstream-metadata-missing-bug-tracking
+Description: Tests for upstream-metadata missing upstream repo info
+Extra-Build-Depends: libyaml-libyaml-perl (>= 0.69)
