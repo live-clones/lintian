@@ -174,7 +174,7 @@ sub files {
             $file->name, $pac->{name}, $dirname);
     } else {
         # Else verify that module is declared at least in Provides: field
-        my $name = 'node-' . $pac->{name};
+        my $name = 'node-' . lc($pac->{name});
         # Normalize name following Debian policy
         # (replace invalid characters by "-")
         $name =~ s#[/_\@]#-#g;
