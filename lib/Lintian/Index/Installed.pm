@@ -51,6 +51,7 @@ use namespace::clean;
 
 with 'Lintian::Index',
   'Lintian::Index::FileInfo',
+  'Lintian::Index::Java',
   'Lintian::Index::Md5sums',
   'Lintian::Index::Objdump',
   'Lintian::Index::Scripts',
@@ -104,6 +105,7 @@ sub collect {
     $self->add_scripts(@args);
     $self->add_objdump(@args);
     $self->add_strings(@args);
+    $self->add_java(@args);
 
     return;
 }
