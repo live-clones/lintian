@@ -13,8 +13,8 @@ tag:I:minor:possible::lintian-output-colons:1.0+dsfg-1.1:all:binary:description-
 tag:I:normal:wild-guess::lintian-output-colons:1.0+dsfg-1.1:all:binary:desktop-entry-limited-to-environments:usr/share/applications/script.desktop:
 tag:I:wishlist:possible::lintian-output-colons:1.0+dsfg-1.1:all:binary:package-contains-empty-directory:usr/local/share/lintian/:
 tag:I:wishlist:certain::lintian-output-colons:1.0+dsfg-1.1:source:source:quilt-patch-using-template-description:debian-changes-1.0+dsfg-1.1:
-tag:I:wishlist:certain::lintian-output-colons:1.0+dsfg-1.1:source:source:upstream-metadata-missing-bug-tracking:debian/upstream/metadata:
-tag:I:wishlist:certain::lintian-output-colons:1.0+dsfg-1.1:source:source:upstream-metadata-missing-repository:debian/upstream/metadata:
+tag:I:wishlist:certain::lintian-output-colons:1.0+dsfg-1.1:source:source:upstream-metadata-missing-bug-tracking::
+tag:I:wishlist:certain::lintian-output-colons:1.0+dsfg-1.1:source:source:upstream-metadata-missing-repository::
 tag:P:pedantic:certain::lintian-output-colons:1.0+dsfg-1.1:source:source:debian-control-has-unusual-field-spacing:line 12:
 tag:P:pedantic:certain:X:lintian-output-colons:1.0+dsfg-1.1:source:source:debian-watch-does-not-check-gpg-signature::
 tag:P:pedantic:possible::lintian-output-colons:1.0+dsfg-1.1:all:binary:example-unusual-interpreter:usr/share/doc/lintian-output-colons/examples/example #!/usr/bin/foo:

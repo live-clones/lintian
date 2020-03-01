@@ -1,5 +1,5 @@
-basic-non-native-3.0-with-epoch (source): upstream-metadata-missing-repository debian/upstream/metadata
-basic-non-native-3.0-with-epoch (source): upstream-metadata-missing-bug-tracking debian/upstream/metadata
+basic-non-native-3.0-with-epoch (source): upstream-metadata-missing-repository
+basic-non-native-3.0-with-epoch (source): upstream-metadata-missing-bug-tracking
 basic-non-native-3.0-with-epoch (source): upstream-metadata-field-present Name
 basic-non-native-3.0-with-epoch (source): upstream-metadata-field-present Contact
 basic-non-native-3.0-with-epoch (source): upstream-metadata-exists

@@ -89,9 +89,9 @@ sub source {
 
     $self->tag('upstream-metadata-field-present', $_) for keys %{$yaml};
 
-    $self->tag('upstream-metadata-missing-repository', $file)
+    $self->tag('upstream-metadata-missing-repository')
       if none { defined $yaml->{$_} } qw(Repository Repository-Browse);
-    $self->tag('upstream-metadata-missing-bug-tracking', $file)
+    $self->tag('upstream-metadata-missing-bug-tracking')
       if none { defined $yaml->{$_} } qw(Bug-Database Bug-Submit);
 
     return;
