@@ -32,44 +32,8 @@ use strict;
 use warnings;
 use autodie;
 
-use FileHandle;
-use IO::Async::Loop;
-use Path::Tiny;
-
-use lib "$ENV{'LINTIAN_ROOT'}/lib/";
-
-use Lintian::Collect::Dispatcher qw(create_info);
-use Lintian::Util qw(locate_helper_tool gzip safe_qx);
-
-use constant EMPTY => q{};
-
-my $helper = locate_helper_tool('coll/objdump-info-helper');
-
 sub collect {
     my ($pkg, $type, $dir) = @_;
-
-    my $info = create_info($pkg, $type, $dir);
-
-    chdir("$dir/unpacked");
-
-    my $uncompressed;
-    foreach my $path ($info->installed->sorted_list) {
-        next if not $path->is_file;
-
-        my $name = $path->name;
-        my $info = $info->file_info($name);
-
-        # must be elf or static library
-        next
-          unless $info =~ m/\bELF\b/
-          || ($info =~ m/\bcurrent ar archive\b/ && $name =~ m/\.a$/);
-
-        my $output = safe_qx($helper, $name);
-        $uncompressed .= $output;
-    }
-
-    # write even if empty; binaries check depends on it
-    gzip($uncompressed // EMPTY, "$dir/objdump-info.gz");
 
     return;
 }

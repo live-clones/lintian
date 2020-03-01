@@ -52,6 +52,7 @@ use namespace::clean;
 with 'Lintian::Index',
   'Lintian::Index::FileInfo',
   'Lintian::Index::Md5sums',
+  'Lintian::Index::Objdump',
   'Lintian::Index::Scripts';
 
 =encoding utf-8
@@ -100,6 +101,7 @@ sub collect {
     $self->add_md5sums(@args);
     $self->add_fileinfo(@args);
     $self->add_scripts(@args);
+    $self->add_objdump(@args);
 
     return;
 }
