@@ -28,59 +28,8 @@ use strict;
 use warnings;
 use autodie;
 
-use Path::Tiny;
-
-use lib "$ENV{'LINTIAN_ROOT'}/lib";
-
-use Lintian::Collect::Dispatcher qw(create_info);
-use Lintian::Util qw(gzip safe_qx);
-
-use constant DOT => q{.};
-use constant GZ => q{gz};
-
 sub collect {
     my ($pkg, $type, $dir) = @_;
-
-    my $stringdir = "$dir/strings";
-    path($stringdir)->remove_tree
-      if -d $stringdir;
-
-    # stop if we are asked to only remove the files
-    return
-      if $type =~ m/^remove-/;
-
-    # the directory is required, even if it stays empty.
-    path($stringdir)->mkpath
-      unless -e $stringdir;
-
-    my $info = create_info($pkg, $type, $dir);
-
-    foreach my $file ($info->installed->sorted_list) {
-
-        next
-          unless $file->is_file;
-
-        next
-          if $file->name =~ m,^usr/lib/debug/,;
-
-        # skip non-binaries
-        next
-          unless $info->file_info($file->name) =~ m/\bELF\b/o;
-
-        # prior implementations sometimes made the list unique
-        my $allstrings= safe_qx('strings', '--all', '--',$file->unpacked_path);
-
-        # calculate destination path
-        my $relative = $file->name . DOT . GZ;
-        my $zippath = path($relative)->absolute($stringdir)->stringify;
-
-        # make sure destination folder exists
-        path($zippath)->parent->mkpath
-          unless path($zippath)->parent->exists;
-
-        # write file
-        gzip($allstrings, $zippath);
-    }
 
     return;
 }

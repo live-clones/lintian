@@ -53,7 +53,8 @@ with 'Lintian::Index',
   'Lintian::Index::FileInfo',
   'Lintian::Index::Md5sums',
   'Lintian::Index::Objdump',
-  'Lintian::Index::Scripts';
+  'Lintian::Index::Scripts',
+  'Lintian::Index::Strings';
 
 =encoding utf-8
 
@@ -102,6 +103,7 @@ sub collect {
     $self->add_fileinfo(@args);
     $self->add_scripts(@args);
     $self->add_objdump(@args);
+    $self->add_strings(@args);
 
     return;
 }
