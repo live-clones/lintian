@@ -1,8 +1,11 @@
 Tag: portable-executable-missing-security-features
-Severity: important
+Severity: pedantic
 Certainty: certain
 Check: pe
-Info: The package ships a Microsoft Windows Portable Executable (PE) file
+Experimental: yes
+Info: Please read the note at the bottom before proceeding.
+ .
+ The package ships a Microsoft Windows Portable Executable (PE) file
  that appears to be lacking security hardening features.
  .
  You can see which are missing using the <tt>pesec</tt> tool from the
@@ -22,3 +25,10 @@ Info: The package ships a Microsoft Windows Portable Executable (PE) file
        dynamic-base nx-compatible no-SEH
  .
  Please change the flags, if possible, instead of overriding the tag.
+ .
+ NB: Due to recent changes in <tt>binutils-mingw-w64>/tt> the foregoing
+ advice is incorrect. Current tools do not actually create safe binaries,
+ and advertising such settings with <tt>genpeimg</tt> is pointless.
+ .
+ More information can be found via the link in the references.
+Ref: https://www.kb.cert.org/vuls/id/307144/
