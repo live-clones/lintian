@@ -467,39 +467,65 @@ if (-t STDOUT && !$unattended) {
         my $descpath = "$workpath/desc";
         my $testcase = read_config($descpath);
 
-        # only offer when matching tags
-        next
-          unless $testcase->{match_strategy} eq 'tags';
-
         my $relative = abs2rel($workpath, $evalroot);
         my $testpath = abs2rel(rel2abs($relative, $testset));
 
-        my $diffpath = "$workpath/tagdiff";
-        if (-r $diffpath) {
+        say EMPTY;
+        say 'Failed test: ' . colored($testpath, 'bold white on_blue');
 
-            unless ($accept_all) {
+        if ($testcase->{match_strategy} eq 'tags') {
 
-                say EMPTY;
-                say 'Failed test: ' . colored($testpath, 'bold white on_blue');
+            my $diffpath = "$workpath/tagdiff";
+            next
+              unless -r $diffpath;
 
-                my $diff = path($diffpath)->slurp_utf8;
-                print $diff;
+            my $diff = path($diffpath)->slurp_utf8;
+            print $diff;
 
-                print '>>>  Fix and step through tags (y/a/n/q)? ';
+        } elsif ($testcase->{match_strategy} eq 'literal') {
 
-                my $decision = <STDIN>;
-                chomp $decision;
-                last if $decision eq 'q' || $decision eq EMPTY;
-                next unless $decision eq 'y' || $decision eq 'a';
+            my $actualpath = "$workpath/literal.actual";
+            next
+              unless -r $actualpath;
+            my @command
+              = ('diff', '-uN', "$testpath/eval/literal", $actualpath);
+            say join(SPACE, @command);
+            system(@command);
 
-                $accept_all = 1
-                  if $decision eq 'a';
-            }
+        } else {
+            say 'Do not know how to fix tests using matching strategy '
+              . $testcase->{match_strategy} . '.';
+            next;
+        }
+
+        unless ($accept_all) {
+
+            print
+'>>>  Fix test (y), accept all (a), do not fix (n), quit (q/default)? ';
+
+            my $decision = <STDIN>;
+            chomp $decision;
+
+            last
+              if $decision eq 'q' || $decision eq EMPTY;
+
+            next
+              unless $decision eq 'y' || $decision eq 'a';
+
+            $accept_all = 1
+              if $decision eq 'a';
+        }
+
+        if ($testcase->{match_strategy} eq 'tags') {
 
             # create tags if needed; helps when writing new tests
             my $tagspath = "$testpath/eval/tags";
             path($tagspath)->touch
               unless -e $tagspath;
+
+            my $diffpath = "$workpath/tagdiff";
+            next
+              unless -r $diffpath;
 
             my @adjustargs = ($diffpath, $tagspath);
             unshift(@adjustargs, '-i')
@@ -511,6 +537,16 @@ if (-t STDOUT && !$unattended) {
             # also copy the new tags to workpath; no need to rebuild
             die "Cannot copy updated tags to $workpath"
               if system('cp', $tagspath, "$workpath/tags");
+
+        } elsif ($testcase->{match_strategy} eq 'literal') {
+
+            my $actualpath = "$workpath/literal.actual";
+            next
+              unless -r $actualpath;
+
+            die "Cannot copy to accept literal output for $testpath"
+              if system('cp', $actualpath, "$testpath/eval/literal");
+
         }
     }
 
