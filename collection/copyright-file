@@ -28,42 +28,8 @@ use strict;
 use warnings;
 use autodie;
 
-use lib "$ENV{'LINTIAN_ROOT'}/lib";
-use Lintian::Util qw(internal_error gunzip_file is_ancestor_of);
-
-use File::Copy qw(copy);
-
 sub collect {
     my ($pkg, $type, $dir) = @_;
-
-    my $unpackedpath = "$dir/unpacked";
-    return unless -d $unpackedpath;
-
-    my $copyrightpath = "$dir/copyright";
-    unlink($copyrightpath)
-      if -e $copyrightpath;
-
-    my $packagepath = "$unpackedpath/usr/share/doc/$pkg";
-    return unless -d $packagepath;
-
-    # do not proceed if the parent dir is outside the package
-    return unless is_ancestor_of($unpackedpath, $packagepath);
-
-    my $packagecopyrightpath = "$packagepath/copyright";
-
-    # make copy if symlink; hardlink could dangle; also check link path
-    if (-l $packagecopyrightpath) {
-        my $link = readlink($packagecopyrightpath);
-        unless ($link =~ /\.\./
-            || ($link =~ m%/% && $link !~ m%^[^/]+(?:/+[^/]+)*\z%)) {
-            copy($packagecopyrightpath, $copyrightpath)
-              or internal_error("cannot copy $packagecopyrightpath: $!");
-        }
-    } elsif (-f $packagecopyrightpath) {
-        link($packagecopyrightpath, $copyrightpath);
-    } elsif (-f "$packagecopyrightpath.gz") {
-        gunzip_file("$packagecopyrightpath.gz", $copyrightpath);
-    }
 
     return;
 }
