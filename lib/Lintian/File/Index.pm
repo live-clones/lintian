@@ -206,6 +206,38 @@ sub load {
     # reset size for anything but regular files
     $_->size(0) for @nosize;
 
+    if ($self->anchored) {
+
+        my %relative;
+        for my $name (keys %all) {
+            my $entry = $all{$name};
+
+            # remove leading slash from absolute names
+            my $name = $entry->name;
+            $name =~ s{^/+}{}s;
+            $entry->name($name);
+
+            # remove leading slash from absolute hardlink targets
+            if ($entry->is_hardlink) {
+                my $target = $entry->link;
+                $target =~ s{^/+}{}s;
+                $entry->link($target);
+            }
+
+            $relative{$name} = $entry;
+        }
+
+        %all = %relative;
+    }
+
+    # disallow absolute names
+    die 'Index contains absolute path names'
+      if any { $_->name =~ m{^/}s } values %all;
+
+    # disallow absolute hardlink targets
+    die 'Index contains absolute hardlink targets'
+      if any { $_->link =~ m{^/}s } grep { $_->is_hardlink } values %all;
+
     # add entries for missing directories
     for my $entry (values %all) {
 
