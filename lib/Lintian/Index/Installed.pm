@@ -50,6 +50,7 @@ use Moo;
 use namespace::clean;
 
 with 'Lintian::Index',
+  'Lintian::Index::Ar',
   'Lintian::Index::FileInfo',
   'Lintian::Index::Java',
   'Lintian::Index::Md5sums',
@@ -101,6 +102,8 @@ sub collect {
     $self->load("$dir/index.db");
 
     $self->add_md5sums(@args);
+    $self->add_ar(@args);
+
     $self->add_fileinfo(@args);
     $self->add_scripts(@args);
     $self->add_objdump(@args);

@@ -28,55 +28,8 @@ use strict;
 use warnings;
 use autodie;
 
-use lib "$ENV{LINTIAN_ROOT}/lib";
-
-use Path::Tiny;
-
-use Lintian::Collect::Dispatcher qw(create_info);
-use Lintian::Util qw(safe_qx);
-
-use constant EMPTY => q{};
-use constant SPACE => q{ };
-use constant COLON => q{:};
-use constant NEWLINE => qq{\n};
-
 sub collect {
     my ($pkg, $type, $dir) = @_;
-    my $info;
-
-    my $basket = "$dir/ar-info";
-
-    unlink($basket)
-      if -e $basket;
-
-    # stop here if we are only removing the files
-    return
-      if $type =~ m/^remove-/;
-
-    $info = create_info($pkg, $type, $dir);
-
-    chdir("$dir/unpacked");
-
-    my @archives;
-    foreach my $file ($info->installed->sorted_list) {
-        next unless $file->is_regular_file && $file =~ m{ \. a \Z }xsm;
-
-        # skip empty archives to avoid ar error message; happens in tests
-        next unless $file->size;
-
-    # fails silently for non-ar files (#934899); probably creates empty entries
-    # in case of trouble, please try: "next if $?;" underneath it
-        my $output = safe_qx('ar', 't', $file);
-        my @contents = split(/\n/, $output);
-
-        my $line = $file . COLON;
-        $line .= SPACE . $_ for @contents;
-        push(@archives, $line);
-    }
-
-    my $string = EMPTY;
-    $string .= $_ . NEWLINE for @archives;
-    path($basket)->spew($string);
 
     return;
 }
