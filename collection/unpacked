@@ -33,6 +33,7 @@ use lib "$ENV{'LINTIAN_ROOT'}/lib";
 use Lintian::Index::Installed;
 use Lintian::Index::Patched;
 
+use Lintian::Collect::Changelog;
 use Lintian::Collect::Diffstat;
 
 sub collect {
@@ -48,6 +49,8 @@ sub collect {
         # binary package
         my $installed = Lintian::Index::Installed->new;
         $installed->collect($pkg, $type, $dir);
+
+        Lintian::Collect::Changelog::collect($pkg, $type, $dir);
     }
 
     return;
