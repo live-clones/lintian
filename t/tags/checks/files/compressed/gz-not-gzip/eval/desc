@@ -1,2 +1,2 @@
-Testname: files-gzip
+Testname: gz-not-gzip
 Check: files/compressed
