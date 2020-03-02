@@ -1,4 +1,4 @@
-# -*- perl -*- Lintian::File::Index
+# -*- perl -*- Lintian::Index
 #
 # Copyright © 2020 Felix Lechner
 #
@@ -15,7 +15,7 @@
 # You should have received a copy of the GNU General Public License along with
 # this program.  If not, see <http://www.gnu.org/licenses/>.
 
-package Lintian::File::Index;
+package Lintian::Index;
 
 use strict;
 use warnings;
@@ -35,7 +35,7 @@ use constant EMPTY => q{};
 use constant SPACE => q{ };
 use constant SLASH => q{/};
 
-use Moo;
+use Moo::Role;
 use namespace::clean;
 
 my %FILE_CODE2LPATH_TYPE = (
@@ -50,7 +50,7 @@ my %FILE_CODE2LPATH_TYPE = (
 
 =head1 NAME
 
-Lintian::File::Index - access to collected data about the upstream (orig) sources
+Lintian::Index - access to collected data about the upstream (orig) sources
 
 =head1 SYNOPSIS
 

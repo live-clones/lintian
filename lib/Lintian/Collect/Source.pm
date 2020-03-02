@@ -29,7 +29,6 @@ use Path::Tiny;
 use Try::Tiny;
 
 use Lintian::Deb822Parser qw(read_dpkg_control);
-use Lintian::File::Index;
 use Lintian::Inspect::Changelog::Version;
 use Lintian::Relation;
 use Lintian::Util

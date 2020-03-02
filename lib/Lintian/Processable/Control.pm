@@ -23,7 +23,7 @@ use autodie;
 
 use Path::Tiny;
 
-use Lintian::File::Index;
+use Lintian::Index::Control;
 
 use Moo::Role;
 use namespace::clean;
@@ -57,7 +57,7 @@ has control => (
     default => sub {
         my ($self) = @_;
 
-        my $control = Lintian::File::Index->new;
+        my $control = Lintian::Index::Control->new;
 
         # control files are not installed relative to the system root
         # disallow absolute paths and symbolic links

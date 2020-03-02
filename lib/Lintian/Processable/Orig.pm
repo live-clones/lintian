@@ -23,7 +23,7 @@ use autodie;
 
 use Path::Tiny;
 
-use Lintian::File::Index;
+use Lintian::Index::Orig;
 
 use Moo::Role;
 use namespace::clean;
@@ -57,7 +57,7 @@ has orig => (
     default => sub {
         my ($self) = @_;
 
-        my $orig = Lintian::File::Index->new;
+        my $orig = Lintian::Index::Orig->new;
 
         # source packages can be unpacked anywhere; no anchored roots
         $orig->allow_empty(1);

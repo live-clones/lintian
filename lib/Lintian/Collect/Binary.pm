@@ -32,7 +32,6 @@ use MLDBM qw(BerkeleyDB::Btree Storable);
 use Path::Tiny;
 
 use Lintian::Deb822Parser qw(parse_dpkg_control);
-use Lintian::File::Index;
 use Lintian::Relation;
 use Lintian::Util qw(open_gz get_file_checksum strip rstrip);
 

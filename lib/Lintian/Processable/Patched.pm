@@ -25,7 +25,7 @@ use autodie;
 
 use Path::Tiny;
 
-use Lintian::File::Index;
+use Lintian::Index::Patched;
 
 use Moo::Role;
 use namespace::clean;
@@ -59,7 +59,7 @@ has patched => (
     default => sub {
         my ($self) = @_;
 
-        my $patched = Lintian::File::Index->new;
+        my $patched = Lintian::Index::Patched->new;
 
         # source packages can be unpacked anywhere; no anchored roots
         my $basedir = path($self->groupdir)->child('unpacked')->stringify;

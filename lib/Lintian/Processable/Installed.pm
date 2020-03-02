@@ -26,7 +26,7 @@ use autodie;
 
 use Path::Tiny;
 
-use Lintian::File::Index;
+use Lintian::Index::Installed;
 
 use Moo::Role;
 use namespace::clean;
@@ -60,7 +60,7 @@ has installed => (
     default => sub {
         my ($self) = @_;
 
-        my $installed = Lintian::File::Index->new;
+        my $installed = Lintian::Index::Installed->new;
 
         # binary packages are anchored to the system root
         # allow absolute paths and symbolic links
