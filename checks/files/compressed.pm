@@ -24,6 +24,8 @@ use strict;
 use warnings;
 use autodie;
 
+use Time::Piece;
+
 use Moo;
 use namespace::clean;
 
@@ -67,48 +69,33 @@ sub files {
     return
       unless $file->is_file;
 
-    my $architecture = $self->processable->field('architecture', '');
-    my $multiarch = $self->processable->field('multi-arch', 'no');
-
     # both compressed and uncompressed present
     if ($file->name =~ $DUPLICATED_COMPRESSED_FILE_REGEX) {
         $self->tag('duplicated-compressed-file', $file->name)
           if $self->processable->installed->lookup($1);
     }
 
+    $self->tag('gz-file-not-gzip', $file->name)
+      if $file->name =~ m/\.gz$/s && $file->file_info !~ /gzip compressed/;
+
     # gzip files
-    if ($file->name =~ m/\.gz$/) {
+    if ($file->file_info =~ /gzip compressed/) {
 
-        if ($file->file_info !~ m/gzip compressed/) {
-            $self->tag('gz-file-not-gzip', $file->name);
-        } else {
-            open(my $fd, '<', $file->unpacked_path);
-            my $buff;
+        my $architecture = $self->processable->field('architecture', '');
+        my $multiarch = $self->processable->field('multi-arch', 'no');
 
-            # need at least 8 bytes
-            die "reading $file failed: $!"
-              unless sysread($fd, $buff, 1024) >= 8;
+        $self->tag('gzip-file-is-not-multi-arch-same-safe', $file->name)
+          if $multiarch eq 'same' && $file->name !~ /\Q$architecture\E/;
 
-            # Extract the flags and the mtime.
-            #  NN NN  NN NN, NN NN NN NN  - bytes read
-            #  __ __  __ __,    $mtime    - variables
-            my (undef, $mtime) = unpack('NN', $buff);
-            close($fd);
+# get timestamp of first member; https://tools.ietf.org/html/rfc1952.html#page-5
+        my $bytes = $file->magic(8);
+        my (undef, $gziptime) = unpack('VV', $bytes);
 
-            if ($mtime != 0) {
-                if (   $multiarch eq 'same'
-                    && $file->name !~ m/\Q$architecture\E/) {
-                    $self->tag('gzip-file-is-not-multi-arch-same-safe',
-                        $file->name);
-                } else {
-                    # see https://bugs.debian.org/762105
-                    my $diff= $file->timestamp - $self->changelog_timestamp;
-
-                    $self->tag('package-contains-timestamped-gzip',$file->name)
-                      if $diff > 0;
-                }
-            }
-        }
+        # see https://bugs.debian.org/762105
+        my $from_build = ($gziptime - $self->changelog_timestamp) > 0;
+        $self->tag('package-contains-timestamped-gzip',
+            $file->name, gmtime($gziptime)->datetime)
+          if $gziptime != 0 && $from_build;
     }
 
     return;
