@@ -47,7 +47,7 @@ use constant NEWLINE => qq{\n};
 use Moo;
 use namespace::clean;
 
-with 'Lintian::Index';
+with 'Lintian::Index','Lintian::Index::Control::Scripts';
 
 =encoding utf-8
 
@@ -90,6 +90,8 @@ sub collect {
 
     $self->unpack(@args);
     $self->load("$dir/control-index.db");
+
+    $self->add_scripts(@args);
 
     return;
 }
