@@ -33,12 +33,16 @@ use lib "$ENV{'LINTIAN_ROOT'}/lib";
 use Lintian::Index::Installed;
 use Lintian::Index::Patched;
 
+use Lintian::Collect::Diffstat;
+
 sub collect {
     my ($pkg, $type, $dir) = @_;
 
     if ($type eq 'source') {
         my $patched = Lintian::Index::Patched->new;
         $patched->collect($pkg, $type, $dir);
+
+        Lintian::Collect::Diffstat::collect($pkg, $type, $dir);
 
     } else {
         # binary package

@@ -34,71 +34,8 @@ use strict;
 use warnings;
 use autodie;
 
-use lib "$ENV{'LINTIAN_ROOT'}/lib";
-
-use Path::Tiny;
-
-use Lintian::Util qw(get_dsc_info safe_qx);
-
-use constant EMPTY => q{};
-use constant NEWLINE => qq{\n};
-
 sub collect {
     my ($pkg, undef, $dir) = @_;
-
-    my $dscpath = "$dir/dsc";
-    die 'diffstat invoked with wrong dir argument'
-      unless -f $dscpath;
-
-    my $data = get_dsc_info($dscpath);
-    my $ver = $data->{'version'};
-
-    my $patchpath = "$dir/debian-patch";
-    unlink($patchpath)
-      if -e $patchpath
-      or -l $patchpath;
-
-    $ver =~ s/^\d://; #Remove epoch for this
-
-    my $diffpath = "$dir/${pkg}_${ver}.diff.gz";
-    return
-      unless -f $diffpath;
-
-    my $contents = safe_qx('gunzip', '--stdout', $diffpath);
-    path($patchpath)->spew($contents);
-
-    my $loop = IO::Async::Loop->new;
-    my $future = $loop->new_future;
-
-    my @command = ('diffstat',  '-p1', $patchpath);
-    $loop->run_child(
-        command => [@command],
-        on_finish => sub {
-            my ($pid, $exitcode, $stdout, $stderr) = @_;
-            my $status = ($exitcode >> 8);
-
-            if ($status) {
-                my $message = "Command @command exited with status $status";
-                $message .= ": $stderr" if length $stderr;
-                $future->fail($message);
-                return;
-            }
-
-            $future->done($stdout);
-        });
-
-    # will raise an exception when failed
-    my $diffstat = $future->get;
-
-    # remove the last line;
-    chomp $diffstat;
-    my @lines = split(/\n/, $diffstat);
-    pop @lines;
-    $diffstat = EMPTY;
-    $diffstat .= $_ . NEWLINE for @lines;
-
-    # copy all lines except the last
-    path("$dir/diffstat")->spew($diffstat);
 
     return;
 }
