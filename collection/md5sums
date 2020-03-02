@@ -28,89 +28,8 @@ use strict;
 use warnings;
 use autodie;
 
-use BerkeleyDB;
-use IO::Async::Loop;
-use IO::Async::Process;
-use Path::Tiny;
-
-use lib "$ENV{'LINTIAN_ROOT'}/lib";
-
-use Lintian::Collect::Dispatcher qw(create_info);
-use Lintian::Util qw(drop_relative_prefix read_md5sums safe_qx);
-
-use constant EMPTY => q{};
-use constant SPACE => q{ };
-use constant COLON => q{:};
-use constant BACKSLASH => q{\\};
-use constant NEWLINE => qq{\n};
-use constant NULL => qq{\0};
-
 sub collect {
     my ($pkg, $type, $dir) = @_;
-
-    chdir("$dir/unpacked");
-
-    my $loop = IO::Async::Loop->new;
-    my $future = $loop->new_future;
-
-    my @command= ('xargs', '--null', '--no-run-if-empty', 'md5sum', '--');
-    my $stdout;
-    my $errors;
-
-    my $calculate = IO::Async::Process->new(
-        command => [@command],
-        stdin => { via => 'pipe_write' },
-        stdout => { into => \$stdout },
-        stderr => { into => \$errors },
-        on_finish => sub {
-            my ($self, $exitcode) = @_;
-            my $status = ($exitcode >> 8);
-
-            if ($status) {
-                my $message = "Command @command exited with status $status";
-                $message .= COLON . NEWLINE . $errors
-                  if length $errors;
-                $future->fail($message);
-                return;
-            }
-
-            $future->done('Done with @command');
-            return;
-        });
-
-    $loop->add($calculate);
-
-    my @candidates;
-
-    my $processable = create_info($pkg, $type, $dir);
-    @candidates = $processable->patched->sorted_list
-      if $type eq 'source';
-    @candidates = $processable->installed->sorted_list
-      if $type eq 'binary' || $type eq 'udeb';
-
-    my @files = grep { $_->is_file } @candidates;
-
-    # pipe names to xargs process
-    $calculate->stdin->write($_->name . NULL)for @files;
-
-    $calculate->stdin->close_when_empty;
-    $future->get;
-
-    my ($md5sums, undef) = read_md5sums($stdout);
-
-    my $dbpath = "$dir/md5sums.db";
-    unlink $dbpath
-      if -e $dbpath;
-
-    my %h;
-    tie %h, 'BerkeleyDB::Btree',
-      -Filename => $dbpath,
-      -Flags    => DB_CREATE
-      or die "Cannot open file $dbpath: $! $BerkeleyDB::Error\n";
-
-    $h{$_} = $md5sums->{$_}for keys %{$md5sums};
-
-    untie %h;
 
     return;
 }

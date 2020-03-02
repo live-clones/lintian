@@ -49,7 +49,7 @@ use constant NEWLINE => qq{\n};
 use Moo;
 use namespace::clean;
 
-with 'Lintian::Index';
+with 'Lintian::Index', 'Lintian::Index::Md5sums';
 
 =encoding utf-8
 
@@ -91,6 +91,8 @@ sub collect {
 
     $self->unpack(@args);
     $self->load("$dir/index.db");
+
+    $self->add_md5sums(@args);
 
     return;
 }
