@@ -333,7 +333,8 @@ sub parse_dep5 {
                 $field,$renamed_to, "(line $lines[0]{$field})");
         }
     }
-    $self->check_files_excluded($first_para->{'files-excluded'} // '');
+    $self->check_files_excluded($first_para->{'files-excluded'} // '')
+      unless $processable->native;
 
     $self->tag('missing-field-in-dep5-copyright',
         'format',"(line $lines[0]{'format'})")
