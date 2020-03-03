@@ -433,17 +433,13 @@ sub always {
             $self->tag('binary-from-other-architecture', $file) if $bad;
         }
 
-        my $stringsfd = $processable->strings($file);
-        my $strings = do { local $/; <$stringsfd> };
-        close($stringsfd)
-          or warn "Error closing strings fd: $!";
         my $exceptions = {
             %{ $group->info->spelling_exceptions },
             map { $_ => 1} $BINARY_SPELLING_EXCEPTIONS->all
         };
         my $tag_emitter
           = $self->spelling_tag_emitter('spelling-error-in-binary', $file);
-        check_spelling($strings, $exceptions, $tag_emitter, 0);
+        check_spelling($file->strings, $exceptions, $tag_emitter, 0);
 
         # stripped?
         if ($fileinfo =~ m,\bnot stripped\b,o) {
@@ -457,7 +453,7 @@ sub always {
                 or $fname =~ GUILE_PATH_REGEX
                 or $fname =~ m,\.gox$,o) {
                 if (    $fileinfo =~ m/executable/
-                    and $strings =~ m/^Caml1999X0[0-9][0-9]$/m) {
+                    and $file->strings =~ m/^Caml1999X0[0-9][0-9]$/m) {
                     # Check for OCaml custom executables (#498138)
                     $self->tag('ocaml-custom-executable', $file);
                 } else {
@@ -512,7 +508,7 @@ sub always {
             } else {
                 next if $processable->source eq $ldata->{'source'};
             }
-            if ($strings =~ $ldata->{'match'}) {
+            if ($file->strings =~ $ldata->{'match'}) {
                 $self->tag('embedded-library', "$fname: $ldata->{'libname'}");
             }
         }
@@ -521,7 +517,9 @@ sub always {
         next
           unless ($fileinfo =~ m/executable/)
           or ($fileinfo =~ m/shared object/);
-        next if $type eq 'udeb';
+
+        next
+          if $type eq 'udeb';
 
         # Perl library?
         if ($fname =~ m,^usr/lib/(?:[^/]+/)?perl5/.*\.so$,) {
@@ -539,7 +537,8 @@ sub always {
             or(     $fname =~ m,usr/lib/python3/.+\.cpython-\d+([a-z]+)\.so$,
                 and $1 !~ /d/)
         ) {
-            if (index($strings, 'numpy') > -1 and $strings =~ NUMPY_REGEX) {
+            if (index($file->strings, 'numpy') > -1
+                and $file->strings =~ NUMPY_REGEX) {
                 $uses_numpy_c_abi = 1;
             }
         }

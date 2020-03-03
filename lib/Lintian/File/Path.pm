@@ -937,6 +937,8 @@ files.
 
 =item script
 
+=item strings
+
 =item C<basedir>
 
 =item index
@@ -1059,6 +1061,11 @@ has script => (
     is => 'rw',
     coerce => sub { my ($hashref) = @_; return ($hashref // {}); },
     default => sub { {} });
+has strings => (
+    is => 'rw',
+    coerce => sub { my ($text) = @_; return ($text // EMPTY); },
+    default => EMPTY
+);
 
 has index => (is => 'rw');
 has childnames => (is => 'rw', default => sub { {} });

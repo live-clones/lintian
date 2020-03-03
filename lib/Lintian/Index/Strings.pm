@@ -53,24 +53,10 @@ Lintian::Index::Strings strings in binary files.
 =cut
 
 sub add_strings {
-    my ($self, $pkg, $type, $dir) = @_;
+    my ($self) = @_;
 
-    my $stringdir = "$dir/strings";
-    path($stringdir)->remove_tree
-      if -d $stringdir;
-
-    # stop if we are asked to only remove the files
-    return
-      if $type =~ m/^remove-/;
-
-    # the directory is required, even if it stays empty.
-    path($stringdir)->mkpath
-      unless -e $stringdir;
-
-    foreach my $file ($self->sorted_list) {
-
-        next
-          unless $file->is_file;
+    my @files = grep { $_->is_file } $self->sorted_list;
+    foreach my $file (@files) {
 
         next
           if $file->name =~ m,^usr/lib/debug/,;
@@ -82,16 +68,7 @@ sub add_strings {
         # prior implementations sometimes made the list unique
         my $allstrings= safe_qx('strings', '--all', '--',$file->unpacked_path);
 
-        # calculate destination path
-        my $relative = $file->name . DOT . GZ;
-        my $zippath = path($relative)->absolute($stringdir)->stringify;
-
-        # make sure destination folder exists
-        path($zippath)->parent->mkpath
-          unless path($zippath)->parent->exists;
-
-        # write file
-        gzip($allstrings, $zippath);
+        $file->strings($allstrings);
     }
 
     return;

@@ -105,32 +105,6 @@ sub unpack {
     return;
 }
 
-=item strings (FILE)
-
-Returns an open handle, which will read the data from coll/strings for
-FILE.  If coll/strings did not collect any strings about FILE, this
-returns an open read handle with no content.
-
-Caller is responsible for closing the handle either way.
-
-Needs-Info requirements for using I<strings>: strings
-
-=cut
-
-sub strings {
-    my ($self, $file) = @_;
-
-    my $real = path($self->groupdir)->child('strings')->child("${file}.gz")
-      ->stringify;
-
-    if (not -f $real) {
-        open(my $fd, '<', '/dev/null');
-        return $fd;
-    }
-    my $fd = open_gz($real);
-    return $fd;
-}
-
 =item relation (FIELD)
 
 Returns a L<Lintian::Relation> object for the specified FIELD, which should

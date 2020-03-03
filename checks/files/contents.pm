@@ -101,33 +101,25 @@ sub files {
 
     my %checks = $self->get_checks_for_file($file);
 
-    if (%checks) {
+    foreach my $tag (sort keys %checks) {
+        my $regex = $checks{$tag};
 
-        my $stringsfd = $self->processable->strings($file);
-        my $strings = do { local $/; <$stringsfd> };
-        close($stringsfd)
-          or warn "Error closing strings fd: $!";
+        # prefer strings(1) output (eg. for ELF) if we have it
+        if (length $file->strings) {
+            $self->tag($tag, $file->name)
+              if $file->strings =~ m,^\Q$regex\E,m;
 
-        foreach my $tag (sort keys %checks) {
-            my $regex = $checks{$tag};
+        } else {
+            open(my $fd, '<:raw', $file->unpacked_path);
+            my $sfd = Lintian::SlidingWindow->new($fd);
+            while (my $block = $sfd->readwindow) {
+                next
+                  unless $block =~ $regex;
 
-            # prefer strings(1) output (eg. for ELF) if we have it
-            if ($strings) {
-                $self->tag($tag, $file->name)
-                  if $strings =~ m,^\Q$regex\E,m;
-
-            } else {
-                open(my $fd, '<:raw', $file->unpacked_path);
-                my $sfd = Lintian::SlidingWindow->new($fd);
-                while (my $block = $sfd->readwindow) {
-                    next
-                      unless $block =~ $regex;
-
-                    $self->tag($tag, $file->name);
-                    last;
-                }
-                close($fd);
+                $self->tag($tag, $file->name);
+                last;
             }
+            close($fd);
         }
     }
 
