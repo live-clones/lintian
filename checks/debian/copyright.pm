@@ -234,7 +234,7 @@ sub check_dep5_copyright {
             =~ m{^Format:.*/doc/packaging-manuals/copyright-format/1.0/?$}m) {
 
             $self->tag('repackaged-source-not-advertised')
-              unless $processable->repacked;
+              unless $processable->repacked || $processable->native;
 
         } else {
             $self->tag('files-excluded-without-copyright-format-1.0');
@@ -333,8 +333,12 @@ sub parse_dep5 {
                 $field,$renamed_to, "(line $lines[0]{$field})");
         }
     }
+
     $self->check_files_excluded($first_para->{'files-excluded'} // '')
       unless $processable->native;
+
+    $self->tag('copyright-excludes-files-in-native-package')
+      if exists $first_para->{'files-excluded'} && $processable->native;
 
     $self->tag('missing-field-in-dep5-copyright',
         'format',"(line $lines[0]{'format'})")
