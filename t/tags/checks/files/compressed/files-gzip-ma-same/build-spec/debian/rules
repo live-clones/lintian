@@ -8,7 +8,7 @@ override_dh_installchangelogs:
 	dh_installchangelogs
 	[ -f debian/$(pkg)/usr/share/doc/$(pkg)/changelog ] || \
 		gunzip debian/$(pkg)/usr/share/doc/$(pkg)/changelog.gz
-	gzip --best debian/$(pkg)/usr/share/doc/$(pkg)/changelog
+	gzip --no-name --best debian/$(pkg)/usr/share/doc/$(pkg)/changelog
 
 override_dh_strip_nondeterminism:
 	# Skip, it messes with our test

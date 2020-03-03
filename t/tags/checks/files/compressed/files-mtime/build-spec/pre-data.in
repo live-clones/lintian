@@ -6,7 +6,7 @@ rootdir="$1"
 name="$2"
 
 rm -f "$rootdir/usr/share/$name/foo.gz"
-gzip --best "$rootdir/usr/share/$name/foo"
+gzip --no-name --best "$rootdir/usr/share/$name/foo"
 
 # we set the mtime to "right" now.  We use that as "now" to be
 # more robust about being built in the past/present/future or
