@@ -1,5 +1,5 @@
 # Copyright © 2011 Niels Thykier <niels@thykier.net>
-# Copyright © 2019 Felix Lechner
+# Copyright © 2020 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -30,8 +30,6 @@ use Time::HiRes qw(gettimeofday tv_interval);
 use Path::Tiny;
 use POSIX qw(:sys_wait_h);
 
-use Lintian::DepMap;
-use Lintian::DepMap::Properties;
 use Lintian::Group;
 use Lintian::Util;
 
@@ -150,89 +148,6 @@ sub process{
         $unpack_info_ref, $OUTPUT)
       = @_;
 
-    # $map is just here to check that all the needed collections are present.
-    my $map = Lintian::DepMap->new;
-    my $collmap = Lintian::DepMap::Properties->new;
-
-    my $dirname = "$ENV{INIT_ROOT}/collection";
-    opendir(my $dir, $dirname)
-      or die "Cannot open directory $dirname";
-
-    foreach my $file (readdir $dir) {
-        next
-          if $file =~ m/^\./;
-        next
-          unless $file =~ m/\.desc$/;
-
-        my $cs = Lintian::CollScript->new("$dirname/$file");
-
-        $OUTPUT->debug_msg(2,
-            'Read collector description for ' . $cs->name . '...');
-        $collmap->add($cs->name, $cs->needs_info, $cs);
-        $map->addp('coll-' . $cs->name, 'coll-', $cs->needs_info);
-    }
-
-    closedir($dir)
-      or warn 'Close failed';
-
-    my @scripts = sort $PROFILE->scripts;
-    $OUTPUT->debug_msg(
-        1,
-        "Selected action: $action",
-        sprintf('Selected checks: %s', join(',', @scripts)),
-        "Parallelization limit: $opt->{'jobs'}",
-    );
-
-    for my $c (@scripts) {
-        # Add the checks with their dependency information
-        my $cs = $PROFILE->get_script($c);
-        die "Cannot find check $c" unless defined $cs;
-        my @deps = $cs->needs_info;
-        $map->add('check-' . $c);
-        if (@deps) {
-            # In case a (third-party) check gets their needs-info wrong,
-            # present the user with useful error message.
-            my @missing;
-            for my $dep (@deps) {
-                if (!$map->known('coll-' . $dep)) {
-                    push(@missing, $dep);
-                }
-            }
-            if (@missing) {
-                my $str = join(', ', @missing);
-                internal_error(
-                    "The check \"$c\" depends unknown collection(s): $str");
-            }
-            $map->addp('check-' . $c, 'coll-', @deps);
-        }
-    }
-
-    # Make sure the resolver is in a sane state
-    # - This can happen if we break collections (inter)dependencies.
-    if ($map->missing) {
-        internal_error('There are missing nodes in the resolver: '
-              . join(', ', $map->missing));
-    }
-
-    my @requested;
-    if ($action eq 'check') {
-
-        # add collections requested by user (--unpack-info)
-        @requested
-          = map { split(/,/) } (@{$unpack_info_ref // []});
-
-        my @unknown = grep { !collmap->getp($_) } @requested;
-        die 'unrecognized items in --unpack-info:', join(SPACE, @unknown)
-          if @unknown;
-
-        # need 'override-file' for overrides
-        push(@requested, 'override-file')
-          unless $opt->{'no-override'};
-    }
-
-    # With --unpack we want all of them.  That's the default so,
-    # "done!"
-
     my %override_count;
 
     # do not remove lab if so selected
@@ -247,15 +162,10 @@ sub process{
         my $total_start = [gettimeofday];
         my $group_start = [gettimeofday];
 
-        # for checking, pass profile to limit what it unpacks
         $group->profile($PROFILE);
-
-        $group->extra_coll(\@requested);
         $group->jobs($opt->{'jobs'});
 
-        if (!$group->unpack($collmap, $action,$exit_code_ref, $OUTPUT)) {
-            $success = 0;
-        }
+        $group->unpack($OUTPUT);
 
         my $raw_res = tv_interval($group_start);
         my $tres = sprintf('%.3fs', $raw_res);
@@ -299,13 +209,6 @@ sub process{
 
         # remove group files
         $group->clean_lab($OUTPUT);
-
-       # Wait for any remaining jobs - There will usually not be any
-       # unless we had an issue examining the last package.  We patiently wait
-       # for them here; if the user cannot be bothered to wait, he/she can send
-       # us a signal and the END handler will kill any remaining jobs.
-
-        $group->wait_for_jobs;
 
         my $total_raw_res = tv_interval($total_start);
         my $total_tres = sprintf('%.3fs', $total_raw_res);

@@ -20,10 +20,16 @@ package Lintian::Processable::Source;
 
 use strict;
 use warnings;
+use autodie;
 
 use Carp qw(croak);
+use Cwd;
 use Path::Tiny;
 
+use Lintian::Collect::Diffstat;
+use Lintian::Collect::Overrides;
+use Lintian::Index::Orig;
+use Lintian::Index::Patched;
 use Lintian::Util qw(get_dsc_info strip);
 
 use constant EMPTY => q{};
@@ -118,6 +124,36 @@ sub init {
       || $self->architecture ne $architecture
       || $self->source ne $source
       || $self->source_version ne $source_version;
+
+    return;
+}
+
+=item unpack
+
+=cut
+
+sub unpack {
+    my ($self) = @_;
+
+    my $savedir = getcwd;
+
+    my $pkg = $self->name;
+    my $type = $self->type;
+    my $dir = $self->groupdir;
+
+    my $patched = Lintian::Index::Patched->new;
+    $patched->collect($pkg, $type, $dir);
+
+    Lintian::Collect::Diffstat::collect($pkg, $type, $dir);
+
+    Lintian::Collect::Overrides::collect($pkg, $type, $dir);
+
+    unless ($self->native) {
+        my $orig = Lintian::Index::Orig->new;
+        $orig->collect($pkg, $type, $dir);
+    }
+
+    chdir($savedir);
 
     return;
 }

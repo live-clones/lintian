@@ -27,11 +27,17 @@ use autodie;
 
 use BerkeleyDB;
 use Carp qw(croak);
+use Cwd;
 use List::Util qw(any);
 use MLDBM qw(BerkeleyDB::Btree Storable);
 use Path::Tiny;
 
+use Lintian::Collect::Changelog;
+use Lintian::Collect::Copyright;
+use Lintian::Collect::Overrides;
 use Lintian::Deb822Parser qw(parse_dpkg_control);
+use Lintian::Index::Control;
+use Lintian::Index::Installed;
 use Lintian::Relation;
 use Lintian::Util qw(open_gz get_file_checksum strip rstrip);
 
@@ -67,6 +73,35 @@ Native heuristics are only available in source packages.
 =head1 INSTANCE METHODS
 
 =over 4
+
+=item unpack
+
+=cut
+
+sub unpack {
+    my ($self) = @_;
+
+    my $savedir = getcwd;
+
+    my $pkg = $self->name;
+    my $type = $self->type;
+    my $dir = $self->groupdir;
+
+    my $installed = Lintian::Index::Installed->new;
+    $installed->collect($pkg, $type, $dir);
+
+    my $control = Lintian::Index::Control->new;
+    $control->collect($pkg, $type, $dir);
+
+    Lintian::Collect::Changelog::collect($pkg, $type, $dir);
+    Lintian::Collect::Copyright::collect($pkg, $type, $dir);
+
+    Lintian::Collect::Overrides::collect($pkg, $type, $dir);
+
+    chdir($savedir);
+
+    return;
+}
 
 =item strings (FILE)
 
