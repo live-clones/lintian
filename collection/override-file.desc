@@ -1,7 +1,0 @@
-Collector-Script: override-file
-Author: Darren Benham <gecko@debian.org>
-Info: This script copies the <tt>override</tt> file of a package into the
- lintian directory.
-Type: binary, udeb, source
-Needs-Info: unpacked
-Interface: perl-coll
