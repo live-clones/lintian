@@ -24,10 +24,8 @@ use strict;
 use warnings;
 use autodie;
 
-use BerkeleyDB;
 use IO::Async::Loop;
 use IO::Async::Process;
-use MLDBM qw(BerkeleyDB::Btree Storable);
 use Path::Tiny;
 
 use Lintian::File::Path;
@@ -89,7 +87,7 @@ sub collect {
     $self->basedir($basedir);
 
     $self->unpack(@args);
-    $self->load("$dir/control-index.db");
+    $self->load;
 
     $self->add_scripts(@args);
 
@@ -103,11 +101,10 @@ sub unpack {
     path($controldir)->remove_tree
       if -d $controldir;
 
-    my $dbpath = "$dir/control-index.db";
     my $controlerrorspath = "$dir/control-errors";
     my $indexerrorspath = "$dir/control-index-errors";
 
-    for my $path ($dbpath, $controlerrorspath, $indexerrorspath) {
+    for my $path ($controlerrorspath, $indexerrorspath) {
         unlink($path) if -e $path;
     }
 
@@ -249,14 +246,7 @@ sub unpack {
         $all{$entry->name} = $entry;
     }
 
-    tie my %h, 'MLDBM',
-      -Filename => $dbpath,
-      -Flags    => DB_CREATE
-      or die "Cannot open file $dbpath: $! $BerkeleyDB::Error\n";
-
-    $h{$_} = $all{$_} for keys %all;
-
-    untie %h;
+    $self->catalog(\%all);
 
     # fix permissions
     safe_qx('chmod', '-R', 'u+rX,o-w', $controldir);

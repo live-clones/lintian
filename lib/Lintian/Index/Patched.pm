@@ -24,10 +24,8 @@ use strict;
 use warnings;
 use autodie;
 
-use BerkeleyDB;
 use IO::Async::Loop;
 use IO::Async::Process;
-use MLDBM qw(BerkeleyDB::Btree Storable);
 use Path::Tiny;
 
 use Lintian::File::Path;
@@ -93,7 +91,7 @@ sub collect {
     $self->basedir($basedir);
 
     $self->unpack(@args);
-    $self->load("$dir/index.db");
+    $self->load;
 
     $self->add_md5sums(@args);
     $self->add_fileinfo(@args);
@@ -108,10 +106,6 @@ sub unpack {
     my $unpackedpath = "$dir/unpacked/";
     path($unpackedpath)->remove_tree
       if -d $unpackedpath;
-
-    my $dbpath = "$dir/index.db";
-    unlink($dbpath)
-      if -e $dbpath;
 
     for my $file (qw(index-errors unpacked-errors)) {
         unlink("$dir/$file") if -e "$dir/$file";
@@ -211,14 +205,7 @@ sub unpack {
     die 'Could not parse output from find command'
       if length $output;
 
-    tie my %h, 'MLDBM',
-      -Filename => $dbpath,
-      -Flags    => DB_CREATE
-      or die "Cannot open file $dbpath: $! $BerkeleyDB::Error\n";
-
-    $h{$_} = $all{$_} for keys %all;
-
-    untie %h;
+    $self->catalog(\%all);
 
     # fix permissions
     safe_qx('chmod', '-R', 'u+rwX,o+rX,o-w', "$dir/unpacked");

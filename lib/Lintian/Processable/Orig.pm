@@ -51,23 +51,7 @@ Returns the index for orig.tar.gz.
 
 =cut
 
-has orig => (
-    is => 'rw',
-    lazy => 1,
-    default => sub {
-        my ($self) = @_;
-
-        my $orig = Lintian::Index::Orig->new;
-
-        # source packages can be unpacked anywhere; no anchored roots
-        $orig->allow_empty(1);
-
-        my $dbpath
-          = path($self->groupdir)->child('src-orig-index.db')->stringify;
-        $orig->load($dbpath);
-
-        return $orig;
-    });
+has orig => (is => 'rw');
 
 =item orig_index (FILE)
 

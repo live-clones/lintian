@@ -88,10 +88,16 @@ sub unpack {
     my $dir = $self->groupdir;
 
     my $installed = Lintian::Index::Installed->new;
+    $installed->fileinfo_sub(
+        sub {
+            return $self->file_info(@_);
+        });
     $installed->collect($pkg, $type, $dir);
+    $self->installed($installed);
 
     my $control = Lintian::Index::Control->new;
     $control->collect($pkg, $type, $dir);
+    $self->control($control);
 
     Lintian::Collect::Changelog::collect($pkg, $type, $dir);
     Lintian::Collect::Copyright::collect($pkg, $type, $dir);

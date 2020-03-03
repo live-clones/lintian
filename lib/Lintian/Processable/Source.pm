@@ -142,7 +142,12 @@ sub unpack {
     my $dir = $self->groupdir;
 
     my $patched = Lintian::Index::Patched->new;
+    $patched->fileinfo_sub(
+        sub {
+            return $self->file_info(@_);
+        });
     $patched->collect($pkg, $type, $dir);
+    $self->patched($patched);
 
     Lintian::Collect::Diffstat::collect($pkg, $type, $dir);
 
@@ -151,6 +156,7 @@ sub unpack {
     unless ($self->native) {
         my $orig = Lintian::Index::Orig->new;
         $orig->collect($pkg, $type, $dir);
+        $self->orig($orig);
     }
 
     chdir($savedir);

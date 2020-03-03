@@ -24,10 +24,8 @@ use strict;
 use warnings;
 use autodie;
 
-use BerkeleyDB;
 use IO::Async::Loop;
 use IO::Async::Process;
-use MLDBM qw(BerkeleyDB::Btree Storable);
 use Path::Tiny;
 
 use Lintian::File::Path;
@@ -99,7 +97,7 @@ sub collect {
     $self->basedir($basedir);
 
     $self->unpack(@args);
-    $self->load("$dir/index.db");
+    $self->load;
 
     $self->add_md5sums(@args);
     $self->add_ar(@args);
@@ -119,10 +117,6 @@ sub unpack {
     my $unpackedpath = "$dir/unpacked/";
     path($unpackedpath)->remove_tree
       if -d $unpackedpath;
-
-    my $dbpath = "$dir/index.db";
-    unlink($dbpath)
-      if -e $dbpath;
 
     for my $file (qw(index-errors unpacked-errors)) {
         unlink("$dir/$file") if -e "$dir/$file";
@@ -302,8 +296,7 @@ sub unpack {
         my $entry = Lintian::File::Path->new;
         $entry->init_from_tar_output($line);
 
-        die"Numerical index lists extra files in $dbpath for file name "
-          . $entry->name
+        die 'Numerical index lists extra files for file name '. $entry->name
           unless exists $all{$entry->name};
 
         # copy numerical uid and gid
@@ -311,14 +304,7 @@ sub unpack {
         $all{$entry->name}->gid($entry->group);
     }
 
-    tie my %h, 'MLDBM',
-      -Filename => $dbpath,
-      -Flags    => DB_CREATE
-      or die "Cannot open file $dbpath: $! $BerkeleyDB::Error\n";
-
-    $h{$_} = $all{$_} for keys %all;
-
-    untie %h;
+    $self->catalog(\%all);
 
     # remove error files if empty
     unlink("$dir/index-errors") if -z "$dir/index-errors";

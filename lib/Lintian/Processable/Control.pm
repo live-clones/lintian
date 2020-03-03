@@ -51,26 +51,7 @@ Returns the index for a binary control file.
 
 =cut
 
-has control => (
-    is => 'rw',
-    lazy => 1,
-    default => sub {
-        my ($self) = @_;
-
-        my $control = Lintian::Index::Control->new;
-
-        # control files are not installed relative to the system root
-        # disallow absolute paths and symbolic links
-
-        my $basedir = path($self->groupdir)->child('control')->stringify;
-        $control->basedir($basedir);
-
-        my $dbpath
-          = path($self->groupdir)->child('control-index.db')->stringify;
-        $control->load($dbpath);
-
-        return $control;
-    });
+has control => (is => 'rw');
 
 =item control_index (FILE)
 

@@ -54,31 +54,7 @@ Returns a index object representing installed files from a binary package.
 
 =cut
 
-has installed => (
-    is => 'rw',
-    lazy => 1,
-    default => sub {
-        my ($self) = @_;
-
-        my $installed = Lintian::Index::Installed->new;
-
-        # binary packages are anchored to the system root
-        # allow absolute paths and symbolic links
-        $installed->anchored(1);
-
-        my $basedir = path($self->groupdir)->child('unpacked')->stringify;
-        $installed->basedir($basedir);
-
-        $installed->fileinfo_sub(
-            sub {
-                return $self->file_info(@_);
-            });
-
-        my $dbpath = path($self->groupdir)->child('index.db')->stringify;
-        $installed->load($dbpath);
-
-        return $installed;
-    });
+has installed => (is => 'rw');
 
 =item index (FILE)
 

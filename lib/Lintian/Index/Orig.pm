@@ -24,12 +24,10 @@ use strict;
 use warnings;
 use autodie;
 
-use BerkeleyDB;
 use Carp;
 use Cwd();
 use IO::Async::Loop;
 use IO::Async::Process;
-use MLDBM qw(BerkeleyDB::Btree Storable);
 use Path::Tiny;
 
 use Lintian::Collect::Dispatcher qw(create_info);
@@ -84,7 +82,7 @@ sub collect {
     $self->allow_empty(1);
 
     $self->create(@args);
-    $self->load("$dir/src-orig-index.db");
+    $self->load;
 
     return;
 }
@@ -93,10 +91,6 @@ sub create {
     my ($self, $pkg, $type, $dir) = @_;
 
     my $info = create_info($pkg, $type, $dir);
-
-    my $dbpath = "$dir/src-orig-index.db";
-    unlink($dbpath)
-      if -f $dbpath;
 
     # do nothing for native packages
     return
@@ -302,14 +296,7 @@ sub create {
         $all{$name}->perm($perm);
     }
 
-    tie my %h, 'MLDBM',
-      -Filename => $dbpath,
-      -Flags    => DB_CREATE
-      or die "Cannot open file $dbpath: $! $BerkeleyDB::Error\n";
-
-    $h{$_} = $all{$_} for keys %all;
-
-    untie %h;
+    $self->catalog(\%all);
 
     return;
 }

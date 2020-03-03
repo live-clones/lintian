@@ -22,9 +22,7 @@ use warnings;
 use autodie;
 
 use Carp;
-use BerkeleyDB;
 use List::MoreUtils qw(any);
-use MLDBM qw(BerkeleyDB::Btree Storable);
 use Path::Tiny;
 use Scalar::Util qw(blessed);
 
@@ -173,18 +171,9 @@ sub resolve_path {
 =cut
 
 sub load {
-    my ($self, $dbpath) = @_;
+    my ($self) = @_;
 
-    return {}
-      unless -f $dbpath;
-
-    tie my %h, 'MLDBM',-Filename => $dbpath
-      or die "Cannot open file $dbpath: $! $BerkeleyDB::Error\n";
-
-    my %all;
-    $all{$_} = $h{$_} for keys %h;
-
-    untie %h;
+    my %all = %{$self->catalog};
 
     # set internal permissions flags
     for my $entry (values %all) {

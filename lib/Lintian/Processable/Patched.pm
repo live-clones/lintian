@@ -53,28 +53,7 @@ Returns a index object representing a patched source tree.
 
 =cut
 
-has patched => (
-    is => 'rw',
-    lazy => 1,
-    default => sub {
-        my ($self) = @_;
-
-        my $patched = Lintian::Index::Patched->new;
-
-        # source packages can be unpacked anywhere; no anchored roots
-        my $basedir = path($self->groupdir)->child('unpacked')->stringify;
-        $patched->basedir($basedir);
-
-        $patched->fileinfo_sub(
-            sub {
-                return $self->file_info(@_);
-            });
-
-        my $dbpath = path($self->groupdir)->child('index.db')->stringify;
-        $patched->load($dbpath);
-
-        return $patched;
-    });
+has patched => (is => 'rw');
 
 =item index (FILE)
 
