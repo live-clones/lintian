@@ -918,6 +918,8 @@ Return the data from L<file(1)> if it has been collected.
 Note this is only defined for files as Lintian only runs L<file(1)> on
 files.
 
+=item java_info
+
 =item C<basedir>
 
 =item index
@@ -1032,6 +1034,10 @@ has file_info => (
     coerce => sub { my ($text) = @_; return ($text // EMPTY); },
     default => EMPTY
 );
+has java_info => (
+    is => 'rw',
+    coerce => sub { my ($hashref) = @_; return ($hashref // {}); },
+    default => sub { {} });
 
 has index => (is => 'rw');
 has childnames => (is => 'rw', default => sub { {} });

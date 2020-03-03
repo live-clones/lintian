@@ -192,27 +192,36 @@ sub find_dep5_version {
 sub check_apache_notice_files {
     my ($self, $contents) = @_;
 
-    my $processable = $self->processable;
-    my $group = $self->group;
+    return
+      unless $contents =~ m/apache[-\s]+2\./i;
 
-    my @procs = $group->get_processables('binary');
-    return if not @procs;
-    return if $contents !~ m/apache[-\s]+2\./i;
+    my $processable = $self->processable;
 
     my @notice_files = grep {
               $_->basename =~ m/^NOTICE(\.txt)?$/
           and $_->is_open_ok
           and $_->slurp =~ m/apache/i
     } $processable->patched->sorted_list;
-    return if not @notice_files;
+    return
+      unless @notice_files;
 
-    foreach my $binpkg (@procs) {
-        my @files = map { $_->name } $binpkg->installed->sorted_list;
-        my $java_info = $binpkg->java_info;
-        for my $jar_file (sort keys %{$java_info}) {
-            push @files, keys %{$java_info->{$jar_file}{files}};
-        }
-        return if any { m{/NOTICE(\.txt)?(\.gz)?$} } @files;
+    my $group = $self->group;
+    my @binaries = $group->get_processables('binary');
+    return
+      unless @binaries;
+
+    foreach my $binary (@binaries) {
+
+        # look at all path names in the package
+        my @names = map { $_->name } $binary->installed->sorted_list;
+
+        # and also those shipped in jars
+        my @jars = grep { scalar keys %{$_->java_info} } $binary->installed->sorted_list;
+        push(@names, keys %{$_->java_info->{files}})
+          for @jars;
+
+        return
+          if any { m{/NOTICE(\.txt)?(\.gz)?$} } @names;
     }
 
     $self->tag('missing-notice-file-for-apache-license',

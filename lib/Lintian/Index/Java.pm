@@ -22,9 +22,7 @@ use warnings;
 use autodie;
 
 use Archive::Zip qw( :ERROR_CODES :CONSTANTS );
-use BerkeleyDB;
-use FileHandle;
-use MLDBM qw(BerkeleyDB::Btree Storable);
+use Cwd;
 use Path::Tiny;
 
 use Lintian::Util qw(rstrip);
@@ -59,20 +57,15 @@ Lintian::Index::Java java information.
 =cut
 
 sub add_java {
-    my ($self, $pkg, $type, $dir) = @_;
+    my ($self) = @_;
 
-    my $unpackedpath = "$dir/unpacked/";
-    die "Directory with unpacked data not found in java-info: $unpackedpath"
-      unless -d $unpackedpath;
-    chdir($unpackedpath);
+    my $savedir = getcwd;
+    chdir($self->basedir);
 
-    my @files = $self->sorted_list;
+    my @files = grep { $_->is_file } $self->sorted_list;
 
     my @lines;
     foreach my $file (@files) {
-
-        next
-          unless $file->is_file;
 
         # Wheezy's version of file calls "jar files" for "Zip archive".
         # Newer versions seem to call them "Java Jar file".
@@ -81,7 +74,7 @@ sub add_java {
           unless $file->file_info=~ m/
                      Java [ ] (?:Jar [ ] file|archive [ ] data)
                    | Zip [ ] archive
-                   | JAR /xo;
+                   | JAR /x;
 
         push(@lines, parse_jar($file->name))
           if $file->name =~ m#\S+\.jar$#i;
@@ -89,16 +82,6 @@ sub add_java {
 
     return
       unless @lines;
-
-    # any scripts shipped in the package
-    my $dbpath = "$dir/java-info.db";
-    unlink $dbpath
-      if -e $dbpath;
-
-    tie my %h, 'MLDBM',
-      -Filename => $dbpath,
-      -Flags    => DB_CREATE
-      or die "Cannot open file $dbpath: $! $BerkeleyDB::Error\n";
 
     my $file;
     my $file_list;
@@ -135,9 +118,9 @@ sub add_java {
         }
     }
 
-    $h{$_} = $java_info{$_} for keys %java_info;
+    $_->java_info($java_info{$_->name}) for @files;
 
-    untie %h;
+    chdir($savedir);
 
     return;
 }

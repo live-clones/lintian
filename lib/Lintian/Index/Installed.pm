@@ -106,7 +106,7 @@ sub collect {
     $self->add_scripts(@args);
     $self->add_objdump(@args);
     $self->add_strings(@args);
-    $self->add_java(@args);
+    $self->add_java;
 
     return;
 }

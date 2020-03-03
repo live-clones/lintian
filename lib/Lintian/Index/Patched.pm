@@ -95,7 +95,7 @@ sub collect {
 
     $self->add_md5sums;
     $self->add_fileinfo;
-    $self->add_java(@args);
+    $self->add_java;
 
     return;
 }

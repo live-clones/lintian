@@ -45,16 +45,19 @@ sub always {
     my $type = $self->type;
     my $processable = $self->processable;
 
-    my $java_info = $processable->java_info;
     my $missing_jarwrapper = 0;
     my $has_public_jars = 0;
     my $has_jars = 0;
     my $jmajlow = '-';
 
     if ($type eq 'source') {
-        for my $jar_file (sort keys %{$java_info}) {
-            my $files = $java_info->{$jar_file}{files};
-            $self->tag('source-contains-prebuilt-java-object', $jar_file)
+        for my $file ($processable->patched->sorted_list) {
+            my $java_info = $file->java_info;
+            next
+              unless scalar keys %{$java_info};
+
+            my $files = $java_info->{files};
+            $self->tag('source-contains-prebuilt-java-object', $file)
               if any { m/$CLASS_REGEX$/i } keys %{$files}
               and $processable->name ne 'lintian';
         }
@@ -70,49 +73,60 @@ sub always {
 
     # We first loop over jar files to find problems
 
-    for my $jar_file (sort keys %{$java_info}) {
-        my $files = $java_info->{$jar_file}{files};
-        my $manifest = $java_info->{$jar_file}{manifest};
-        my $operm = $processable->installed->lookup($jar_file)->operm;
-        my $jar_dir = dirname($jar_file);
+    for my $file ($processable->installed->sorted_list) {
+
+        my $java_info = $file->java_info;
+        next
+          unless scalar keys %{$java_info};
+
+        my $files = $java_info->{files};
+        my $manifest = $java_info->{manifest};
+        my $operm = $file->operm;
+        my $jar_dir = dirname($file);
         my $classes = 0;
         my $datafiles = 1;
         my $cp = '';
         my $bsname = '';
 
-        if (exists $java_info->{$jar_file}{error}) {
-            $self->tag('zip-parse-error', "$jar_file:",
-                $java_info->{$jar_file}{error});
+        if (exists $java_info->{error}) {
+            $self->tag('zip-parse-error', "$file:",$java_info->{error});
             next;
         }
 
         # The Java Policy says very little about requires for (jars in) JVMs
-        next if $jar_file =~ m#usr/lib/jvm(?:-exports)?/[^/]++/#o;
+        next
+          if $file->name =~ m#usr/lib/jvm(?:-exports)?/[^/]++/#o;
+
         # Ignore Mozilla's jar files, see #635495
-        next if $jar_file =~ m#usr/lib/xul(?:-ext|runner[^/]*+)/#o;
+        next
+          if $file->name =~ m#usr/lib/xul(?:-ext|runner[^/]*+)/#o;
 
         $has_jars = 1;
-        if($jar_file =~ m#^usr/share/java/[^/]+\.jar$#o) {
+        if($file->name =~ m#^usr/share/java/[^/]+\.jar$#o) {
             $has_public_jars = 1;
-            $self->tag('bad-jar-name', $jar_file)
-              unless basename($jar_file) =~ /^$PKGNAME_REGEX\.jar$/;
+            $self->tag('bad-jar-name', $file)
+              unless basename($file->name) =~ /^$PKGNAME_REGEX\.jar$/;
         }
         # check for common code files like .class or .clj (Clojure files)
         foreach my $class (grep { m/$CLASS_REGEX$/i } sort keys %{$files}){
             my $mver = $files->{$class};
             (my $src = $class) =~ s/\.[^.]+$/\.java/;
-            $self->tag('jar-contains-source', $jar_file, $src)
+            $self->tag('jar-contains-source', $file, $src)
               if %{$files}{$src};
             $classes = 1;
-            next if $class =~ m/\.cljc?$/;
+
+            next
+              if $class =~ m/\.cljc?$/;
+
             # .class but no major version?
-            next if $mver eq '-';
+            next
+              if $mver eq '-';
             if (   $mver <= $MAX_BYTECODE->value('min-bytecode-version') - 1
                 or $mver
                 > $MAX_BYTECODE->value('max-bytecode-existing-version')) {
                 # First public major version was 45 (Java1), latest
                 # version is 55 (Java11).
-                $self->tag('unknown-java-class-version', $jar_file,
+                $self->tag('unknown-java-class-version', $file,
                     "($class -> $mver)");
                 # Skip the rest of this Jar.
                 last;
@@ -134,15 +148,15 @@ sub always {
 
         if($operm & 0111) {
             # Executable ?
-            $self->tag('executable-jar-without-main-class', $jar_file)
+            $self->tag('executable-jar-without-main-class', $file->name)
               unless $manifest && $manifest->{'Main-Class'};
 
             # Here, we need to check that the package depends on
             # jarwrapper.
             $missing_jarwrapper = 1
               unless $processable->relation('strong')->implies('jarwrapper');
-        } elsif ($jar_file !~ m#^usr/share/#) {
-            $self->tag('jar-not-in-usr-share', $jar_file);
+        } elsif ($file->name !~ m#^usr/share/#) {
+            $self->tag('jar-not-in-usr-share', $file->name);
         }
 
         $cp = $manifest->{'Class-Path'}//'' if $manifest;
@@ -157,17 +171,18 @@ sub always {
                #   classes but HTML files, images and CSS files
                 if ((
                            $bsname !~ m/\.source$/o
-                        && $jar_file!~ m#^usr/share/maven-repo/.*-javadoc\.jar#
-                        && $jar_file!~m#\.doc(?:\.(?:user|isv))?_[^/]+.jar#
-                        && $jar_file!~m#\.source_[^/]+.jar#
+                        && $file->name
+                        !~ m#^usr/share/maven-repo/.*-javadoc\.jar#
+                        && $file->name!~m#\.doc(?:\.(?:user|isv))?_[^/]+.jar#
+                        && $file->name!~m#\.source_[^/]+.jar#
                     )
                     || $cp
                 ) {
-                    $self->tag('codeless-jar', $jar_file);
+                    $self->tag('codeless-jar', $file->name);
                 }
             }
         } elsif ($classes) {
-            $self->tag('missing-manifest', $jar_file);
+            $self->tag('missing-manifest', $file->name);
         }
 
         if ($cp) {
@@ -205,15 +220,15 @@ sub always {
 
             $self->tag(
                 'classpath-contains-relative-path',
-                "$jar_file: " . join(', ', @relative)) if @relative;
+                $file->name . ': ' . join(', ', @relative))if @relative;
         }
 
         if (   $has_public_jars
             && $pkg =~ /^lib.*maven.*plugin.*/
-            && $jar_file !~ m#^usr/share/maven-repo/.*\.jar#) {
+            && $file->name !~ m#^usr/share/maven-repo/.*\.jar#) {
             # Trigger a warning when a maven plugin lib is installed in
             # /usr/share/java/
-            $self->tag('maven-plugin-in-usr-share-java', $jar_file);
+            $self->tag('maven-plugin-in-usr-share-java', $file->name);
         }
 
     }
