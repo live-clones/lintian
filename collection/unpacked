@@ -36,6 +36,7 @@ use Lintian::Index::Patched;
 use Lintian::Collect::Changelog;
 use Lintian::Collect::Copyright;
 use Lintian::Collect::Diffstat;
+use Lintian::Collect::Overrides;
 
 sub collect {
     my ($pkg, $type, $dir) = @_;
@@ -54,6 +55,8 @@ sub collect {
         Lintian::Collect::Changelog::collect($pkg, $type, $dir);
         Lintian::Collect::Copyright::collect($pkg, $type, $dir);
     }
+
+    Lintian::Collect::Overrides::collect($pkg, $type, $dir);
 
     return;
 }

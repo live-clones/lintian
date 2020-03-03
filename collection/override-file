@@ -29,49 +29,8 @@ use strict;
 use warnings;
 use autodie;
 
-use lib "$ENV{'LINTIAN_ROOT'}/lib";
-use Lintian::Util qw(gunzip_file is_ancestor_of);
-
 sub collect {
     my ($pkg, $type, $dir) = @_;
-
-    my $unpackedpath = "$dir/unpacked";
-    die 'wrong dir argument $dir'
-      unless -d $unpackedpath;
-
-    my $overridepath = "$dir/override";
-    unlink($overridepath)
-      if -e $overridepath;
-
-    # pick the first
-    my @candidates;
-    if ($type eq 'source') {
-        # prefer source/lintian-overrides to source.lintian-overrides
-        @candidates = ('debian/source/lintian-overrides',
-            'debian/source.lintian-overrides');
-    } else {
-        @candidates = ("usr/share/lintian/overrides/$pkg");
-    }
-
-    my $packageoverridepath;
-    for my $relative (@candidates) {
-        my $candidate = "$unpackedpath/$relative";
-        if (-f $candidate) {
-            $packageoverridepath = $candidate;
-        } elsif (-f "$candidate.gz") {
-            $packageoverridepath = "$candidate.gz";
-        }
-        last if $packageoverridepath;
-    }
-
-    return unless length $packageoverridepath;
-    return unless is_ancestor_of($unpackedpath, $packageoverridepath);
-
-    if ($packageoverridepath =~ /\.gz$/) {
-        gunzip_file($packageoverridepath, $overridepath);
-    } else {
-        link($packageoverridepath, $overridepath);
-    }
 
     return;
 }
