@@ -36,17 +36,19 @@ use Lintian::Util qw(internal_error strip);
 use constant NUMPY_REGEX => qr/
     \Qmodule compiled against ABI version \E (?:0x)?%x
     \Q but this version of numpy is \E (?:0x)?%x
-/xo;
+/x;
 
 # Guile object files do not objdump/strip correctly, so exclude them
 # from a number of tests. (#918444)
-use constant GUILE_PATH_REGEX => qr,^usr/lib/[^/]+/[^/]+/guile/[^/]+/.+\.go$,o;
+use constant GUILE_PATH_REGEX => qr,^usr/lib/[^/]+/[^/]+/guile/[^/]+/.+\.go$,;
 
 # These are the ones file(1) looks for.  The ".zdebug_info" being the
 # compressed version of .debug_info.
 # - Technically, file(1) also looks for .symtab, but that is apparently
 #   not strippable for static libs.  Accordingly, it is omitted below.
 use constant DEBUG_SECTIONS => qw(.debug_info .zdebug_info);
+
+use constant EMPTY => q{};
 
 use Moo;
 use namespace::clean;
@@ -165,13 +167,17 @@ sub always {
         $built_with_octave = $pkg =~ m/^octave-/;
     }
 
-    foreach my $file (sort keys %{$processable->objdump_info}) {
-        my $objdump = $processable->objdump_info->{$file};
+    foreach my $name (sort keys %{$processable->objdump_info}) {
+        my $objdump = $processable->objdump_info->{$name};
         my ($has_lfs, %unharded_functions, @hardened_functions);
         my $is_profiled = 0;
-        # $file can be an object inside a static lib.  These do
+
+        # $name can be an object inside a static lib.  These do
         # not appear in the output of our file_info collection.
-        my $file_info = $processable->file_info($file) // '';
+        my $file = $processable->installed->lookup($name);
+        my $file_info = EMPTY;
+        $file_info = $file->file_info
+          if defined $file;
 
         # The LFS check only works reliably for ELF files due to the
         # architecture regex.
@@ -181,13 +187,13 @@ sub always {
               unless defined $ARCH_32_REGEX;
             $has_lfs = 1 unless $file_info =~ m/$ARCH_32_REGEX/o;
             # We don't care if it is a debug file
-            $has_lfs = 1 if $file =~ m,^usr/lib/debug/,;
+            $has_lfs = 1 if $name =~ m,^usr/lib/debug/,;
         }
 
         if (defined $objdump->{SONAME}) {
             foreach my $soname (@{$objdump->{SONAME}}) {
                 $SONAME{$soname} ||= [];
-                push @{$SONAME{$soname}}, $file;
+                push @{$SONAME{$soname}}, $name;
             }
         }
         foreach my $symbol (@{$objdump->{SYMBOLS}}) {
@@ -219,7 +225,7 @@ sub always {
             if ($foo eq 'UND' and $OBSOLETE_CRYPT_FUNCTIONS->known($sym)) {
                 # Using an obsolete DES encryption function.
                 my $tag = $OBSOLETE_CRYPT_FUNCTIONS->value($sym);
-                $self->tag($tag, $file);
+                $self->tag($tag, $name);
             }
 
             next if $is_profiled;
@@ -238,23 +244,23 @@ sub always {
                     $is_profiled = 1;
                 }
             }
-            $self->tag('binary-compiled-with-profiling-enabled', $file)
+            $self->tag('binary-compiled-with-profiling-enabled', $name)
               if $is_profiled;
         }
         if (    %unharded_functions
             and not @hardened_functions
             and not $built_with_golang
             and $arch_hardening->{'hardening-no-fortify-functions'}) {
-            $self->tag('hardening-no-fortify-functions', $file);
+            $self->tag('hardening-no-fortify-functions', $name);
         }
 
-        $self->tag('apparently-corrupted-elf-binary', $file)
+        $self->tag('apparently-corrupted-elf-binary', $name)
           if $objdump->{'ERRORS'};
-        $self->tag('binary-file-built-without-LFS-support', $file)
+        $self->tag('binary-file-built-without-LFS-support', $name)
           if defined $has_lfs and not $has_lfs;
         if ($objdump->{'BAD-DYNAMIC-TABLE'}) {
-            $self->tag('binary-with-bad-dynamic-table', $file)
-              unless $file =~ m%^usr/lib/debug/%;
+            $self->tag('binary-with-bad-dynamic-table', $name)
+              unless $name =~ m%^usr/lib/debug/%;
         }
     }
 
@@ -324,7 +330,8 @@ sub always {
     foreach my $file ($processable->installed->sorted_list) {
         my ($fileinfo, $objdump, $fname);
 
-        next if not $file->is_file;
+        next
+          unless $file->is_file;
 
         $fileinfo = $file->file_info;
 

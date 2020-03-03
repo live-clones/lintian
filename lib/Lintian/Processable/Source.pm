@@ -43,7 +43,6 @@ with 'Lintian::Collect::Source',
   'Lintian::Processable::Diffstat',
   'Lintian::Processable::Changelog',
   'Lintian::Processable::Fields::Files',
-  'Lintian::Processable::FileInfo',
   'Lintian::Processable::Java',
   'Lintian::Processable::Orig',
   'Lintian::Processable::Overrides',
@@ -141,10 +140,6 @@ sub unpack {
     my $dir = $self->groupdir;
 
     my $patched = Lintian::Index::Patched->new;
-    $patched->fileinfo_sub(
-        sub {
-            return $self->file_info(@_);
-        });
     $patched->collect($pkg, $type, $dir);
     $self->patched($patched);
 

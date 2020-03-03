@@ -93,8 +93,8 @@ sub collect {
     $self->unpack(@args);
     $self->load;
 
-    $self->add_md5sums(@args);
-    $self->add_fileinfo(@args);
+    $self->add_md5sums;
+    $self->add_fileinfo;
     $self->add_java(@args);
 
     return;

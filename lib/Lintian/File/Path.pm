@@ -514,29 +514,6 @@ sub is_readable   { return $_[0]->_any_bit_in_operm(0444); }
 sub is_writable   { return $_[0]->_any_bit_in_operm(0222); }
 sub is_executable { return $_[0]->_any_bit_in_operm(0111); }
 
-=item file_info
-
-Return the data from L<file(1)> if it has been collected.
-
-Note this is only defined for files as Lintian only runs L<file(1)> on
-files.
-
-=cut
-
-sub file_info {
-    my ($self) = @_;
-
-    croak 'No index in ' . $self->name
-      unless defined $self->index;
-
-    my $fileinfo_sub = $self->index->fileinfo_sub;
-
-    confess $self->name . ' has not had collected file(1) info'
-      unless defined $fileinfo_sub;
-
-    return $fileinfo_sub->($self->name);
-}
-
 =item unpacked_path
 
 Returns the path to this object on the file system, which must be a
@@ -934,6 +911,13 @@ NB: If the gid is not available, 0 will be returned.
 This usually happens if the numerical data is not collected (e.g. in
 source packages)
 
+=item file_info
+
+Return the data from L<file(1)> if it has been collected.
+
+Note this is only defined for files as Lintian only runs L<file(1)> on
+files.
+
 =item C<basedir>
 
 =item index
@@ -1042,6 +1026,11 @@ has md5sum => (
     is => 'rw',
     coerce => sub { my ($checksum) = @_; return ($checksum // 0); },
     default => 0
+);
+has file_info => (
+    is => 'rw',
+    coerce => sub { my ($text) = @_; return ($text // EMPTY); },
+    default => EMPTY
 );
 
 has index => (is => 'rw');

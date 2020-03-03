@@ -99,10 +99,10 @@ sub collect {
     $self->unpack(@args);
     $self->load;
 
-    $self->add_md5sums(@args);
+    $self->add_md5sums;
     $self->add_ar(@args);
 
-    $self->add_fileinfo(@args);
+    $self->add_fileinfo;
     $self->add_scripts(@args);
     $self->add_objdump(@args);
     $self->add_strings(@args);

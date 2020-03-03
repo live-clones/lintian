@@ -88,10 +88,6 @@ sub unpack {
     my $dir = $self->groupdir;
 
     my $installed = Lintian::Index::Installed->new;
-    $installed->fileinfo_sub(
-        sub {
-            return $self->file_info(@_);
-        });
     $installed->collect($pkg, $type, $dir);
     $self->installed($installed);
 

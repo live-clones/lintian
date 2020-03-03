@@ -79,8 +79,6 @@ Returns the base directory for file references.
 
 =item C<allow_empty>
 
-=item C<fileinfo_sub>
-
 =cut
 
 has catalog => (is => 'rw', default => sub { {} });
@@ -88,7 +86,6 @@ has saved_sorted_list => (is => 'rw', default => sub { [] });
 has basedir => (is => 'rw', default => EMPTY);
 has anchored => (is => 'rw', default => 0);
 has allow_empty => (is => 'rw', default => 0);
-has fileinfo_sub => (is => 'rw');
 
 =item sorted_list
 

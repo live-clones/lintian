@@ -74,20 +74,17 @@ sub add_java {
         next
           unless $file->is_file;
 
-        my $filename = $file->name;
-
         # Wheezy's version of file calls "jar files" for "Zip archive".
         # Newer versions seem to call them "Java Jar file".
         # Jessie also introduced "Java archive data (JAR)"...
         next
-          unless $self->fileinfo($filename)
-          =~ m/
+          unless $file->file_info=~ m/
                      Java [ ] (?:Jar [ ] file|archive [ ] data)
                    | Zip [ ] archive
                    | JAR /xo;
 
-        push(@lines, parse_jar($filename))
-          if $filename =~ m#\S+\.jar$#i;
+        push(@lines, parse_jar($file->name))
+          if $file->name =~ m#\S+\.jar$#i;
     }
 
     return

@@ -61,20 +61,18 @@ sub add_objdump {
     chdir("$dir/unpacked");
 
     my $uncompressed;
-    foreach my $path ($self->sorted_list) {
+    foreach my $file ($self->sorted_list) {
 
         next
-          unless $path->is_file;
-
-        my $name = $path->name;
-        my $file_info = $self->fileinfo($name);
+          unless $file->is_file;
 
         # must be elf or static library
         next
-          unless $file_info =~ m/\bELF\b/
-          || ($file_info =~ m/\bcurrent ar archive\b/ && $name =~ m/\.a$/);
+          unless $file->file_info =~ m/\bELF\b/
+          || ( $file->file_info =~ m/\bcurrent ar archive\b/
+            && $file->name =~ m/\.a$/);
 
-        my $output = safe_qx($helper, $name);
+        my $output = safe_qx($helper, $file->name);
         $uncompressed .= $output;
     }
 

@@ -21,7 +21,7 @@ use strict;
 use warnings;
 use autodie;
 
-use BerkeleyDB;
+use Cwd;
 use IO::Async::Loop;
 use IO::Async::Process;
 use IO::Async::Routine;
@@ -56,23 +56,6 @@ Lintian::Index::FileInfo determine file type via magic.
 =head1 INSTANCE METHODS
 
 =over 4
-
-=item C<saved_fileinfo>
-
-=item C<fileinfo>
-
-=cut
-
-has saved_fileinfo => (is => 'rw');
-
-sub fileinfo {
-    my ($self, $path) = @_;
-
-    die 'No file info available'
-      unless defined $self->saved_fileinfo;
-
-    return $self->saved_fileinfo->{$path};
-}
 
 =item check_magic
 
@@ -129,9 +112,10 @@ sub check_magic {
 =cut
 
 sub add_fileinfo {
-    my ($self, $pkg, $type, $dir) = @_;
+    my ($self) = @_;
 
-    chdir("$dir/unpacked");
+    my $savedir = getcwd;
+    chdir($self->basedir);
 
     my $loop = IO::Async::Loop->new;
 
@@ -153,15 +137,7 @@ sub add_fileinfo {
             return;
         });
 
-    my $dbpath = "$dir/file-info.db";
-    unlink $dbpath
-      if -e $dbpath;
-
-    my %h;
-    tie %h, 'BerkeleyDB::Btree',
-      -Filename => $dbpath,
-      -Flags    => DB_CREATE
-      or die "Cannot open file $dbpath: $! $BerkeleyDB::Error\n";
+    my %fileinfo;
 
     $generate->stdout->configure(
         on_read => sub {
@@ -184,11 +160,8 @@ sub add_fileinfo {
                 # remove relative prefix, if present
                 $path = drop_relative_prefix($path);
 
-                $h{$path} = $type;
+                $fileinfo{$path} = $type;
             }
-
-            untie %h
-              if $eof;
 
             return 0;
         },
@@ -204,16 +177,9 @@ sub add_fileinfo {
     $generate->stdin->close_when_empty;
     $generatedone->get;
 
-    my %fileinfo;
+    $_->file_info($fileinfo{$_->name}) for @files;
 
-    tie my %ondisk, 'BerkeleyDB::Btree',-Filename => $dbpath
-      or die "Cannot open file $dbpath: $! $BerkeleyDB::Error\n";
-
-    $fileinfo{$_} = $ondisk{$_} for keys %ondisk;
-
-    untie %ondisk;
-
-    $self->saved_fileinfo(\%fileinfo);
+    chdir($savedir);
 
     return;
 }
