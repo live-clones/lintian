@@ -21,7 +21,6 @@ use strict;
 use warnings;
 use autodie;
 
-use BerkeleyDB;
 use Cwd;
 use IO::Async::Loop;
 use IO::Async::Process;
