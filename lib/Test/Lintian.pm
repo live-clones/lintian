@@ -122,15 +122,6 @@ OPTS may contain the following key/value pairs:
 
 =over 4
 
-=item coll-dir
-
-Path to the collection directory (defaults to:
-/usr/share/lintian/collection).  This is mostly useful for testing
-Lintian itself.
-
-If set to C<undef>, the test of Needs-Info containing only existing
-collections will be skipped.
-
 =item filter
 
 If defined, it is a filter function that examines $_ (or its first
@@ -162,7 +153,6 @@ sub test_check_desc {
 
     if (ref $_[0] eq 'HASH') {
         $opts = shift;
-        $colldir = $opts->{'coll-dir'}//'' if exists $opts->{'coll-dir'};
         $find_opt->{'filter'} = $opts->{'filter'} if exists $opts->{'filter'};
     }
     $opts //= {};
@@ -211,22 +201,6 @@ sub test_check_desc {
             );
         }
 
-        if ($needs and $colldir ne '') {
-            my @bad;
-            # new lines are not allowed, map them to "\\n" for readability.
-            $needs =~ s/\n/\\n/go;
-            foreach my $need (split m/\s*+,\s*+/o, $needs) {
-                push @bad, $need unless -f "$colldir/$need.desc";
-            }
-            $builder->is_eq(join(', ', @bad),
-                '', "$cname has unknown collections in Needs-Info");
-        } else {
-            $builder->ok(1, "$content_type has a valid Needs-Info (empty)")
-              if $colldir ne '';
-            $builder->skip(
-                'Needs-Info test checks skipped due to empty coll-dir')
-              if $needs ne '';
-        }
         if (my $d = $header->{'info'}) {
             my $mistakes = 0;
             my $handler = sub {
