@@ -26,6 +26,8 @@ use Path::Tiny;
 use Lintian::Deb822Parser qw(parse_dpkg_control);
 use Lintian::Util qw(open_gz strip);
 
+use constant EMPTY => q{};
+
 use Moo::Role;
 use namespace::clean;
 
@@ -62,12 +64,13 @@ sub objdump_info {
     return $self->{objdump_info}
       if exists $self->{objdump_info};
 
-    my $objf = path($self->groupdir)->child('objdump-info.gz')->stringify;
+    my @objdump = map { $_->objdump } $self->installed->sorted_list;
+    my $concatenated = join(EMPTY, @objdump);
+
+    open(my $fd, '<', \$concatenated);
 
     my %objdump_info;
     local $_;
-
-    my $fd = open_gz($objf);
 
     foreach my $pg (parse_dpkg_control($fd)) {
         my %info;

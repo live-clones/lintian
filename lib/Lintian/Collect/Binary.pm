@@ -91,6 +91,9 @@ sub unpack {
     $installed->collect($pkg, $type, $dir);
     $self->installed($installed);
 
+    # cause parsing of concatenated data
+    $self->objdump_info;
+
     my $control = Lintian::Index::Control->new;
     $control->collect($pkg, $type, $dir);
     $self->control($control);

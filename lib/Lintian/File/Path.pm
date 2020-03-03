@@ -939,6 +939,8 @@ files.
 
 =item strings
 
+=item objdump
+
 =item C<basedir>
 
 =item index
@@ -1062,6 +1064,11 @@ has script => (
     coerce => sub { my ($hashref) = @_; return ($hashref // {}); },
     default => sub { {} });
 has strings => (
+    is => 'rw',
+    coerce => sub { my ($text) = @_; return ($text // EMPTY); },
+    default => EMPTY
+);
+has objdump => (
     is => 'rw',
     coerce => sub { my ($text) = @_; return ($text // EMPTY); },
     default => EMPTY

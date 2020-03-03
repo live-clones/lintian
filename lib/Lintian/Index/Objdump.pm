@@ -21,11 +21,11 @@ use strict;
 use warnings;
 use autodie;
 
-use FileHandle;
+use Cwd;
 use IO::Async::Loop;
 use Path::Tiny;
 
-use Lintian::Util qw(locate_helper_tool gzip safe_qx);
+use Lintian::Util qw(locate_helper_tool safe_qx);
 
 use constant EMPTY => q{};
 
@@ -54,17 +54,15 @@ Lintian::Index::Objdump binary symbol information.
 =cut
 
 sub add_objdump {
-    my ($self, $pkg, $type, $dir) = @_;
+    my ($self) = @_;
+
+    my $savedir = getcwd;
+    chdir($self->basedir);
 
     my $helper = locate_helper_tool('coll/objdump-info-helper');
 
-    chdir("$dir/unpacked");
-
-    my $uncompressed;
-    foreach my $file ($self->sorted_list) {
-
-        next
-          unless $file->is_file;
+    my @files = grep { $_->is_file } $self->sorted_list;
+    for my $file (@files) {
 
         # must be elf or static library
         next
@@ -73,11 +71,8 @@ sub add_objdump {
             && $file->name =~ m/\.a$/);
 
         my $output = safe_qx($helper, $file->name);
-        $uncompressed .= $output;
+        $file->objdump($output);
     }
-
-    # write even if empty; binaries check depends on it
-    gzip($uncompressed // EMPTY, "$dir/objdump-info.gz");
 
     return;
 }
