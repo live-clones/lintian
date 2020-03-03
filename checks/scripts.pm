@@ -280,9 +280,15 @@ sub binary {
           if $timestamp < $OLDSTABLE_RELEASE;
     }
 
-    for my $filename (sort keys %{$processable->scripts}) {
-        my $interpreter = $processable->scripts->{$filename}{interpreter};
-        my $calls_env = $processable->scripts->{$filename}{calls_env};
+    for my $file ($processable->installed->sorted_list) {
+
+        next
+          unless $file->is_script;
+
+        my $interpreter = $file->script->{interpreter};
+        my $calls_env = $file->script->{calls_env};
+
+        my $filename = $file->name;
         my $path;
         $scripts{$filename} = 1;
 
@@ -298,7 +304,8 @@ sub binary {
 
         # no checks necessary at all for scripts in /usr/share/doc/
         # unless they are examples
-        next if $in_docs and not $in_examples;
+        next
+          if $in_docs && !$in_examples;
 
         my ($base) = $interpreter =~ m,([^/]*)$,;
 
@@ -377,22 +384,22 @@ sub binary {
             and $filename !~ m,^etc/csh/login\.d/,)
           and not $in_docs;
 
-        $path = $processable->installed->resolve_path($filename);
-        next if not $path or not $path->is_open_ok;
+        next
+          unless $file->is_open_ok;
         # Syntax-check most shell scripts, but don't syntax-check
         # scripts that end in .dpatch.  bash -n doesn't stop checking
         # at exit 0 and goes on to blow up on the patch itself.
         if ($base =~ /^$known_shells_regex$/) {
             if (
                     -x $interpreter
-                and not script_is_evil_and_wrong($path)
+                and not script_is_evil_and_wrong($file)
                 and $filename !~ m,\.dpatch$,
                 and $filename !~ m,\.erb$,
                 # exclude some shells. zsh -n is broken, see #485885
                 and $base !~ m/^(?:z|t?c)sh$/
             ) {
 
-                if (check_script_syntax($interpreter, $path)) {
+                if (check_script_syntax($interpreter, $file)) {
                     $self->script_tag('shell-script-fails-syntax-check',
                         $filename);
                 }
@@ -464,7 +471,7 @@ sub binary {
             &&!$str_deps->implies(
                 'libperl4-corelibs-perl | perl (<< 5.12.3-7)')
         ) {
-            open(my $fd, '<', $path->unpacked_path);
+            open(my $fd, '<', $file->unpacked_path);
             while (<$fd>) {
                 if (
                     m{ (?:do|require)\s+['"] # do/require
@@ -564,26 +571,27 @@ sub binary {
         }
     }
 
-    foreach (keys %executable) {
-        my $index_info = $processable->installed->lookup($_);
+    for my $name (keys %executable) {
+        my $file = $processable->installed->lookup($name);
         my $ok = 0;
-        if ($index_info->is_hardlink) {
+        if ($file->is_hardlink) {
             # We don't collect script information for hardlinks, so check
             # if the target is a script.
-            my $target = $index_info->link_normalized;
-            if (exists $processable->scripts->{$target}) {
-                $ok = 1;
-            }
+            my $targetname = $file->link_normalized;
+            my $target = $processable->installed->lookup($targetname);
+
+            $ok = 1
+              if $target->is_script;
         }
 
-        $self->tag('executable-not-elf-or-script', $_)
+        $self->tag('executable-not-elf-or-script', $name)
           unless (
                $ok
-            or $ELF{$_}
-            or $scripts{$_}
-            or $_ =~ m,^usr(?:/X11R6)?/man/,
-            or $_ =~ m/\.exe$/ # mono convention
-            or $_ =~ m/\.jar$/ # Debian Java policy 2.2
+            or $ELF{$name}
+            or $scripts{$name}
+            or $name =~ m,^usr(?:/X11R6)?/man/,
+            or $name =~ m/\.exe$/ # mono convention
+            or $name =~ m/\.jar$/ # Debian Java policy 2.2
           );
     }
 

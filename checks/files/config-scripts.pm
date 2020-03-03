@@ -42,7 +42,7 @@ sub files {
     # check old style config scripts
     if (    $file->name =~ m,^usr/bin/,
         and $file->name =~ m,-config$,
-        and $self->processable->is_script($file->name)
+        and $file->is_script
         and $file->is_regular_file) {
 
         # try to find some indication of

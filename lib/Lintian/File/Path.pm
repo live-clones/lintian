@@ -267,6 +267,21 @@ sub get_interpreter {
     return $interpreter;
 }
 
+=item is_script
+
+Returns true if file is a script and false otherwise.
+
+=cut
+
+sub is_script {
+    my ($self) = @_;
+
+    return 1
+      if scalar keys %{$self->script};
+
+    return 0;
+}
+
 =item identity
 
 Returns the owner and group of the path, separated by a slash.
@@ -920,6 +935,8 @@ files.
 
 =item java_info
 
+=item script
+
 =item C<basedir>
 
 =item index
@@ -1035,6 +1052,10 @@ has file_info => (
     default => EMPTY
 );
 has java_info => (
+    is => 'rw',
+    coerce => sub { my ($hashref) = @_; return ($hashref // {}); },
+    default => sub { {} });
+has script => (
     is => 'rw',
     coerce => sub { my ($hashref) = @_; return ($hashref // {}); },
     default => sub { {} });

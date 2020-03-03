@@ -103,7 +103,7 @@ sub collect {
     $self->add_ar(@args);
 
     $self->add_fileinfo;
-    $self->add_scripts(@args);
+    $self->add_scripts;
     $self->add_objdump(@args);
     $self->add_strings(@args);
     $self->add_java;

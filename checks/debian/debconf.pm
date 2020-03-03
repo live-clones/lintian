@@ -568,17 +568,21 @@ sub always {
     # the following checks is ignored if the package being checked is debconf
     # itself.
 
-    return if ($pkg eq 'debconf') || ($type eq 'udeb');
+    return
+      if ($pkg eq 'debconf') || ($type eq 'udeb');
 
-    foreach my $filename (sort keys %{$processable->scripts}) {
-        my $path = $processable->installed->resolve_path($filename);
-        next if not $path or not $path->is_open_ok;
-        open(my $fd, '<', $path->unpacked_path);
+    my @scripts = grep { $_->is_script } $processable->installed->sorted_list;
+    foreach my $file (@scripts) {
+
+        next
+          unless $file->is_open_ok;
+
+        open(my $fd, '<', $file->unpacked_path);
         while (<$fd>) {
             s/#.*//;    # Not perfect for Perl, but should be OK
             if (   m,/usr/share/debconf/confmodule,
                 or m/(?:Debconf|Debian::DebConf)::Client::ConfModule/) {
-                $self->tag('debconf-is-not-a-registry', $filename);
+                $self->tag('debconf-is-not-a-registry', $file->name);
                 last;
             }
         }

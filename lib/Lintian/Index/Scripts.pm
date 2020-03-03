@@ -21,8 +21,6 @@ use strict;
 use warnings;
 use autodie;
 
-use BerkeleyDB;
-use MLDBM qw(BerkeleyDB::Btree Storable);
 use Path::Tiny;
 
 use constant EMPTY => q{};
@@ -56,27 +54,18 @@ Lintian::Index::Scripts information about scripts.
 sub add_scripts {
     my ($self, $pkg, $type, $dir) = @_;
 
-    # any scripts shipped in the package
-    my $script_dbpath = "$dir/scripts.db";
-    unlink $script_dbpath
-      if -e $script_dbpath;
+    my %scripts;
 
-    tie my %plain, 'MLDBM',
-      -Filename => $script_dbpath,
-      -Flags    => DB_CREATE
-      or die "Cannot open file $script_dbpath: $! $BerkeleyDB::Error\n";
-
-    foreach my $path ($self->sorted_list) {
-
-        next
-          unless $path->is_regular_file && $path->is_open_ok;
+    my @files
+      = grep { $_->is_regular_file && $_->is_open_ok } $self->sorted_list;
+    foreach my $file (@files) {
 
         # skip lincity data files; magic: #!#!#!
         next
-          if $path->magic(6) eq '#!#!#!';
+          if $file->magic(6) eq '#!#!#!';
 
         # no shebang => no script
-        my $interpreter = $path->get_interpreter;
+        my $interpreter = $file->get_interpreter;
         next
           unless defined $interpreter;
 
@@ -94,10 +83,10 @@ sub add_scripts {
 
         $record{interpreter} = $stripped || $interpreter;
 
-        $plain{$path} = \%record;
+        $scripts{$file->name} = \%record;
     }
 
-    untie %plain;
+    $_->script($scripts{$_->name}) for @files;
 
     return;
 }
