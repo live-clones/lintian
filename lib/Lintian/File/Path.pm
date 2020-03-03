@@ -1038,6 +1038,12 @@ has gid => (
     default => 0
 );
 
+has md5sum => (
+    is => 'rw',
+    coerce => sub { my ($checksum) = @_; return ($checksum // 0); },
+    default => 0
+);
+
 has index => (is => 'rw');
 has childnames => (is => 'rw', default => sub { {} });
 has parent_dir => (

@@ -40,7 +40,6 @@ use Moo;
 use namespace::clean;
 
 with 'Lintian::Collect::Source',
-  'Lintian::Processable::Checksums::Md5',
   'Lintian::Processable::Diffstat',
   'Lintian::Processable::Changelog',
   'Lintian::Processable::Fields::Files',

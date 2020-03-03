@@ -25,6 +25,7 @@ use strict;
 use warnings;
 use autodie;
 
+use List::Compare;
 use Path::Tiny;
 use Try::Tiny;
 
@@ -104,29 +105,29 @@ sub binary {
     my %noprefix
       = map { drop_relative_prefix($_) => $md5sums->{$_} } keys %{$md5sums};
 
-    # iterate over files found in control file
-    for my $file (keys %noprefix) {
+    my @listed = keys %noprefix;
+    my @found = grep { $_->is_file} $self->processable->installed->sorted_list;
 
-        my $calculated = $self->processable->md5sums->{$file};
-        unless (defined $calculated) {
+    my $lc = List::Compare->new(\@listed, \@found);
 
-            $self->tag('md5sums-lists-nonexistent-file', $file);
-            next;
-        }
+    # find files that should exist but do not
+    $self->tag('md5sums-lists-nonexistent-file', $_)for $lc->get_Lonly;
 
-        $self->tag('md5sum-mismatch', $file)
-          unless $calculated eq $noprefix{$file};
+    # find files that should be listed but are not
+    for my $name ($lc->get_Ronly) {
+
+        $self->tag('file-missing-in-md5sums', $name)
+          unless $self->processable->is_conffile($name)
+          || $name =~ m%^var/lib/[ai]spell/.%;
     }
 
-    # iterate over files present in package
-    for my $file (keys %{ $self->processable->md5sums }) {
+    # checksum should match for common files
+    for my $name ($lc->get_intersection) {
 
-        next
-          if $noprefix{$file};
+        my $file = $self->processable->installed->lookup($name);
 
-        $self->tag('file-missing-in-md5sums', $file)
-          unless $self->processable->is_conffile($file)
-          || $file =~ m%^var/lib/[ai]spell/.%;
+        $self->tag('md5sum-mismatch', $name)
+          unless $file->md5sum eq $noprefix{$name};
     }
 
     return;

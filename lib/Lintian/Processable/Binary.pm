@@ -35,7 +35,6 @@ use namespace::clean;
 
 with 'Lintian::Collect::Binary',
   'Lintian::Processable::Changelog',
-  'Lintian::Processable::Checksums::Md5',
   'Lintian::Processable::Control',
   'Lintian::Processable::Control::Conffiles',
   'Lintian::Processable::FileInfo',

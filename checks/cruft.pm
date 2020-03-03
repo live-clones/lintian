@@ -664,7 +664,7 @@ sub find_cruft {
           if $self->processable->source eq 'lintian' && $istestsetdir;
 
         # check non free file
-        my $md5sum = $processable->md5sums->{$name};
+        my $md5sum = $processable->patched->lookup($name)->md5sum;
         if(
             $self->md5sum_based_check(
                 $name, $md5sum, $NON_DISTRIBUTABLE_FILES,

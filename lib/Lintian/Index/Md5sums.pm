@@ -22,6 +22,7 @@ use warnings;
 use autodie;
 
 use BerkeleyDB;
+use Cwd;
 use IO::Async::Loop;
 use IO::Async::Process;
 use Path::Tiny;
@@ -60,9 +61,10 @@ Lintian::Index::Md5sums calculates checksums for an index.
 =cut
 
 sub add_md5sums {
-    my ($self, $pkg, $type, $dir) = @_;
+    my ($self) = @_;
 
-    chdir("$dir/unpacked");
+    my $savedir = getcwd;
+    chdir($self->basedir);
 
     my $loop = IO::Async::Loop->new;
     my $future = $loop->new_future;
@@ -105,19 +107,9 @@ sub add_md5sums {
 
     my ($md5sums, undef) = read_md5sums($stdout);
 
-    my $dbpath = "$dir/md5sums.db";
-    unlink $dbpath
-      if -e $dbpath;
+    $_->md5sum($md5sums->{$_->name})for @files;
 
-    my %h;
-    tie %h, 'BerkeleyDB::Btree',
-      -Filename => $dbpath,
-      -Flags    => DB_CREATE
-      or die "Cannot open file $dbpath: $! $BerkeleyDB::Error\n";
-
-    $h{$_} = $md5sums->{$_} for keys %{$md5sums};
-
-    untie %h;
+    chdir($savedir);
 
     return;
 }
