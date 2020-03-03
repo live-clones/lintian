@@ -216,9 +216,9 @@ sub check_apache_notice_files {
         my @names = map { $_->name } $binary->installed->sorted_list;
 
         # and also those shipped in jars
-        my @jars = grep { scalar keys %{$_->java_info} } $binary->installed->sorted_list;
-        push(@names, keys %{$_->java_info->{files}})
-          for @jars;
+        my @jars = grep { scalar keys %{$_->java_info} }
+          $binary->installed->sorted_list;
+        push(@names, keys %{$_->java_info->{files}})for @jars;
 
         return
           if any { m{/NOTICE(\.txt)?(\.gz)?$} } @names;
