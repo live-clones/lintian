@@ -109,11 +109,6 @@ L</unpacked ([FILE])> or L</index (FILE)> as is.
 
 The array will not contain the entry for the "root" of the package.
 
-NB: For source packages, please see the
-L<"index"-caveat|Lintian::Collect::Source/index (FILE)>.
-
-Needs-Info requirements for using I<sorted_index>: L<Same as index|/index (FILE)>
-
 =cut
 
 sub sorted_index {
@@ -130,11 +125,6 @@ L<entry|Lintian::File::Path> denoting the resolved path.
 The resolution is done using
 L<resolve_path|Lintian::File::Path/resolve_path([PATH])>.
 
-NB: For source packages, please see the
-L<"index"-caveat|Lintian::Collect::Source/index (FILE)>.
-
-Needs-Info requirements for using I<index_resolved_path>: L<Same as index|/index (FILE)>
-
 =cut
 
 sub index_resolved_path {
@@ -148,12 +138,11 @@ sub index_resolved_path {
 =head1 AUTHOR
 
 Originally written by Felix Lechner <felix.lechner@lease-up.com> for
-Lintian. Large portions were copied from Collect::Binary.
+Lintian.
 
 =head1 SEE ALSO
 
-lintian(1), L<Lintian::Collect>, L<Lintian::Collect::Binary>,
-L<Lintian::Collect::Source>
+lintian(1)
 
 =cut
 

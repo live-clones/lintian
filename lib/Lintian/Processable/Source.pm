@@ -39,14 +39,19 @@ use constant SLASH => q{/};
 use Moo;
 use namespace::clean;
 
-with 'Lintian::Collect::Source',
+with 'Lintian::Processable',
   'Lintian::Processable::Diffstat',
   'Lintian::Processable::Changelog',
+  'Lintian::Processable::Changelog::Version',
   'Lintian::Processable::Fields::Files',
+  'Lintian::Processable::IsNonFree',
   'Lintian::Processable::Orig',
   'Lintian::Processable::Overrides',
   'Lintian::Processable::Patched',
-  'Lintian::Processable';
+  'Lintian::Processable::Source::Fields',
+  'Lintian::Processable::Source::Format',
+  'Lintian::Processable::Source::Relation',
+  'Lintian::Processable::Source::Repacked';
 
 =for Pod::Coverage BUILDARGS
 

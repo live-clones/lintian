@@ -81,25 +81,6 @@ Lintian::File::Path - Lintian representation of a path entry in a package
 =head1 SYNOPSIS
 
     my ($name, $type, $dir) = ('lintian', 'source', '/path/to/entry');
-    my $info = Lintian::Collect::Source->new($name);
-    my $path = $info->index('bin/ls');
-    if ($path->is_file) {
-       # is file (or hardlink)
-       if ($path->is_hardlink) { }
-       if ($path->is_regular_file) { }
-    } elsif ($path->is_dir) {
-       # is dir
-       if ($path->owner eq 'root') { }
-       if ($path->group eq 'root') { }
-    } elsif ($path->is_symlink) {
-       my $normalized = $path->link_normalized;
-       if (defined($normalized)) {
-           my $more_info = $info->index($normalized);
-           if (defined($more_info)) {
-               # target exists in the package...
-           }
-       }
-    }
 
 =head1 INSTANCE METHODS
 
@@ -1171,8 +1152,7 @@ Originally written by Niels Thykier <niels@thykier.net> for Lintian.
 
 =head1 SEE ALSO
 
-lintian(1), Lintian::Collect(3), Lintian::Collect::Binary(3),
-Lintian::Collect::Source(3)
+lintian(1)
 
 =cut
 

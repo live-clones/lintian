@@ -122,8 +122,7 @@ Lintian.
 
 =head1 SEE ALSO
 
-lintian(1), L<Lintian::Collect>, L<Lintian::Collect::Binary>,
-L<Lintian::Collect::Source>
+lintian(1)
 
 =cut
 
