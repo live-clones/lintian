@@ -41,7 +41,6 @@ with 'Lintian::Collect::Binary',
   'Lintian::Processable::Hardening',
   'Lintian::Processable::Objdump',
   'Lintian::Processable::Overrides',
-  'Lintian::Processable::Scripts::Control',
   'Lintian::Processable';
 
 =for Pod::Coverage BUILDARGS

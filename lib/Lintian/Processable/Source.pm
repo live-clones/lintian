@@ -46,7 +46,6 @@ with 'Lintian::Collect::Source',
   'Lintian::Processable::Orig',
   'Lintian::Processable::Overrides',
   'Lintian::Processable::Patched',
-  'Lintian::Processable::Scripts::Control',
   'Lintian::Processable';
 
 =for Pod::Coverage BUILDARGS
