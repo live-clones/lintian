@@ -363,8 +363,13 @@ sub binary {
         $self->script_tag('interpreter-not-absolute', $filename,
             "#!$interpreter")
           unless $is_absolute;
+
+        my $bash_completion_regex
+          = qr{^usr/share/bash-completion/completions/.*};
+
         $self->tag('script-not-executable', $filename)
-          unless ($executable{$filename}
+          unless (
+               $executable{$filename}
             or $filename =~ m,^usr/(?:lib|share)/.*\.pm,
             or $filename =~ m,^usr/(?:lib|share)/.*\.py,
             or $filename =~ m,^usr/(?:lib|share)/ruby/.*\.rb,
@@ -374,8 +379,13 @@ sub binary {
             or $filename =~ m,\.ex$,
             or $filename eq 'etc/init.d/skeleton'
             or $filename =~ m,^etc/menu-methods,
-            or $filename =~ m,^etc/X11/Xsession\.d,)
-          or $in_docs;
+            or $filename =~ $bash_completion_regex,
+            or $filename =~ m,^etc/X11/Xsession\.d,
+          )or $in_docs;
+
+        # for bash completion issue this instead
+        $self->tag('bash-completion-with-hashbang', $filename)
+          if $filename =~ $bash_completion_regex;
 
         # Warn about csh scripts.
         $self->tag('csh-considered-harmful', $filename)
