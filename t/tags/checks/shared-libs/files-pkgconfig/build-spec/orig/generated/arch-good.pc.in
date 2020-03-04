@@ -1,6 +1,0 @@
-Name: indep-good
-Description: A library good
-Requires:
-Version: 3.1.3
-Libs:
-Cflags: -I/usr/include/indep-good

@@ -1,2 +1,0 @@
-s/full text contains architecture specific dir \S+$/full text contains architecture specific dir ARCH/
-s, usr/lib/[^/]+/pkgconfig/, usr/lib/ARCH/pkgconfig/,

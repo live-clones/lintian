@@ -755,24 +755,6 @@ sub always {
         }
     }
 
-    foreach my $file ($processable->installed->sorted_list) {
-        next unless $file =~ m,^usr/(lib(/[^/]+)?|share)/pkgconfig/[^/]+\.pc$,;
-        next unless $file->is_open_ok;
-        open(my $fd, '<', $file->unpacked_path);
-        while (<$fd>) {
-            next unless m,^Libs:,;
-            while (/[:\s]-l(\S+)/g) {
-                $self->tag('pkg-config-references-unknown-shared-library',
-                    $file, "-l$1", "(line $.)")
-                  unless $1 =~ m/\$\{.+\}/
-                  or exists($SHARED_LIB_PRESENT{$1})
-                  or exists($STATIC_LIB_PRESENT{$1})
-                  or $UNKNOWN_SHARED_LIBRARY_EXCEPTIONS->known($1);
-            }
-        }
-        close($fd);
-    }
-
     return;
 }
 
