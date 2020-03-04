@@ -573,6 +573,8 @@ sub _main {
 
 sub main {
 
+    $0 = join(' ', $0, @ARGV);
+
     #turn off file buffering
     STDOUT->autoflush;
     binmode(STDOUT, ':utf8');
