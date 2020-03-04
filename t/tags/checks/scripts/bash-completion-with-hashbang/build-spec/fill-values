@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: bash-completion-with-hashbang
+Description: A bash completion script that designates an interpreter.
