@@ -30,7 +30,6 @@ use IO::Async::Loop;
 use IO::Async::Process;
 use Path::Tiny;
 
-use Lintian::Collect::Dispatcher qw(create_info);
 use Lintian::Util qw(get_dsc_info);
 
 use constant EMPTY => q{};
@@ -90,12 +89,6 @@ sub collect {
 sub create {
     my ($self, $pkg, $type, $dir) = @_;
 
-    my $info = create_info($pkg, $type, $dir);
-
-    # do nothing for native packages
-    return
-      if $info->native;
-
     my $dsclink = "$dir/dsc";
     my $dscpath = Cwd::realpath($dsclink);
     die "Cannot resolve 'dsc' link for $pkg: $dsclink"
@@ -132,7 +125,7 @@ sub create {
     $noepoch =~ s/(.+)-(?:.*)$/$1/;
     my $base = $source . '_' . $noepoch;
 
-    my @files = split(/\n/, $info->field('files') // EMPTY);
+    my @files = split(/\n/, $dinfo->{files} // EMPTY);
 
     my %components;
     for my $line (@files) {

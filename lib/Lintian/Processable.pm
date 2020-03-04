@@ -26,7 +26,6 @@ use warnings::register;
 use Carp qw(croak);
 use Path::Tiny;
 
-use Lintian::Collect::Dispatcher qw(create_info);
 use Lintian::Util qw(get_dsc_info get_deb_info);
 
 use constant EMPTY => q{};

@@ -23,7 +23,6 @@ use autodie;
 
 use Path::Tiny;
 
-use Lintian::Collect::Dispatcher qw(create_info);
 use Lintian::Util qw(safe_qx);
 
 use constant EMPTY => q{};
