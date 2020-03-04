@@ -130,13 +130,13 @@ sub always {
     my ($self) = @_;
 
     # get maintainer scripts
-    my @names = keys %{$self->processable->control_scripts};
-    my @scripts=map { $self->processable->control->resolve_path($_) } @names;
+    my @control
+      = grep { $_->is_control } $self->processable->control->sorted_list;
 
-    for my $file (@scripts) {
+    for my $file (@control) {
 
         next
-          unless $file && $file->is_open_ok;
+          unless $file->is_open_ok;
 
         # why is lintian exempt from this check?
         next

@@ -195,21 +195,20 @@ sub check_module_package {
 sub check_maintainer_scripts {
     my ($self) = @_;
 
-    my %control = %{$self->processable->control_scripts};
+    my @control
+      = grep { $_->is_control } $self->processable->control->sorted_list;
+    for my $file (@control) {
 
-    for my $key (keys %control) {
-
-        my $path = $self->processable->control->resolve_path($key);
-        my $interpreter = $control{$key};
-
-        next
-          unless $path && $path->is_open_ok;
+        my $interpreter = $file->control->{interpreter};
 
         # skip anything but shell scripts
         next
           unless $interpreter =~ m/sh\b/;
 
-        open(my $sfd, '<', $path->unpacked_path);
+        next
+          unless $file->is_open_ok;
+
+        open(my $sfd, '<', $file->unpacked_path);
         while (<$sfd>) {
 
             # skip comments
@@ -220,14 +219,14 @@ sub check_maintainer_scripts {
             if (m/\b(a2(?:en|dis)(?:conf|site|mod))\b/) {
 
                 $self->tag('apache2-reverse-dependency-calls-wrapper-script',
-                    $path,$1);
+                    $file,$1);
             }
 
             # Do not allow reverse dependencies to call "invoke-rc.d apache2
             if (m/invoke-rc\.d\s+apache2/) {
 
                 $self->tag('apache2-reverse-dependency-calls-invoke-rc.d',
-                    $path);
+                    $file);
             }
 
             # XXX: Check whether apache2-maintscript-helper is used

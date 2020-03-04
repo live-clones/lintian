@@ -596,7 +596,8 @@ sub binary {
     }
 
     # get maintainer scripts
-    my %control = %{$self->processable->control_scripts};
+    my @control
+      = grep { $_->is_control } $self->processable->control->sorted_list;
 
     # Handle control scripts.  This is an edited version of the code for
     # normal scripts above, because there were just enough differences to
@@ -604,10 +605,9 @@ sub binary {
 
     my (%added_diversions, %removed_diversions);
     my $expand_diversions = 0;
-    for my $file (keys %control) {
+    for my $file (@control) {
 
-        my $path = $processable->control->resolve_path($file);
-        my $interpreter = $control{$file};
+        my $interpreter = $file->control->{interpreter};
 
         $interpreter =~ m|([^/]*)$|;
         my $base = $1;
@@ -690,7 +690,8 @@ sub binary {
         $self->tag('csh-considered-harmful', "control/$file")
           if ($base eq 'csh' or $base eq 'tcsh');
 
-        next if not $path or not $path->is_open_ok;
+        next
+          unless $file->is_open_ok;
 
         my $shellscript = $base =~ /^$known_shells_regex$/ ? 1 : 0;
 
@@ -699,7 +700,7 @@ sub binary {
         if ($shellscript) {
             $checkbashisms = $base eq 'sh' ? 1 : 0;
             if ($base eq 'sh' or $base eq 'bash') {
-                if (check_script_syntax("/bin/${base}", $path)) {
+                if (check_script_syntax("/bin/${base}", $file)) {
                     $self->tag('maintainer-shell-script-fails-syntax-check',
                         $file);
                 }
@@ -707,7 +708,7 @@ sub binary {
         }
 
         # now scan the file contents themselves
-        open(my $fd, '<', $path->unpacked_path);
+        open(my $fd, '<', $file->unpacked_path);
 
         my (
             $saw_init, $saw_invoke,

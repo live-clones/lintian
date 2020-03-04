@@ -21,8 +21,6 @@ use strict;
 use warnings;
 use autodie;
 
-use BerkeleyDB;
-use MLDBM qw(BerkeleyDB::Btree Storable);
 use Path::Tiny;
 
 use constant EMPTY => q{};
@@ -57,40 +55,32 @@ sub add_scripts {
     my ($self, $pkg, $type, $dir) = @_;
 
     # maintainer scripts
-    my $control_dbpath = "$dir/control-scripts.db";
-    unlink $control_dbpath
-      if -e $control_dbpath;
+    my %control;
 
-    tie my %control, 'BerkeleyDB::Btree',
-      -Filename => $control_dbpath,
-      -Flags    => DB_CREATE
-      or die "Cannot open file $control_dbpath: $! $BerkeleyDB::Error\n";
-
-    for my $path ($self->lookup->children) {
-
-        next
-          unless $path->is_open_ok;
+    # children of root directory
+    my @files = grep { $_->is_open_ok } $self->lookup->children;
+    for my $file (@files) {
 
         # skip anything other than maintainer scripts
         next
-          unless $path =~ m/^(?:(?:pre|post)(?:inst|rm)|config)$/;
+          unless $file =~ m/^(?:(?:pre|post)(?:inst|rm)|config)$/;
 
         # allow elf binary
-        if ($path->magic(4) eq "\x7FELF") {
-            $control{$path} = 'ELF';
+        if ($file->magic(4) eq "\x7FELF") {
+            $control{$file->name}{interpreter} = 'ELF';
             next;
         }
 
         # check for hashbang
-        my $interpreter = $path->get_interpreter // EMPTY;
+        my $interpreter = $file->get_interpreter // EMPTY;
 
         # get base command without options
         $interpreter =~ s/\s++ .++ \Z//xsm;
 
-        $control{$path} = $interpreter;
+        $control{$file->name}{interpreter} = $interpreter;
     }
 
-    untie %control;
+    $_->control($control{$_->name})for map { $self->lookup($_) } keys %control;
 
     return;
 }

@@ -25,11 +25,9 @@ use strict;
 use warnings;
 use autodie;
 
-use BerkeleyDB;
 use Carp qw(croak);
 use Cwd;
 use List::Util qw(any);
-use MLDBM qw(BerkeleyDB::Btree Storable);
 use Path::Tiny;
 
 use Lintian::Collect::Changelog;

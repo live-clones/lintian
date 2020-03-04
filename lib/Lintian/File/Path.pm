@@ -282,6 +282,21 @@ sub is_script {
     return 0;
 }
 
+=item is_control
+
+Returns true if file is a maintainer script and false otherwise.
+
+=cut
+
+sub is_control {
+    my ($self) = @_;
+
+    return 1
+      if scalar keys %{$self->control};
+
+    return 0;
+}
+
 =item identity
 
 Returns the owner and group of the path, separated by a slash.
@@ -941,6 +956,8 @@ files.
 
 =item objdump
 
+=item control
+
 =item C<basedir>
 
 =item index
@@ -1073,6 +1090,10 @@ has objdump => (
     coerce => sub { my ($text) = @_; return ($text // EMPTY); },
     default => EMPTY
 );
+has control => (
+    is => 'rw',
+    coerce => sub { my ($hashref) = @_; return ($hashref // {}); },
+    default => sub { {} });
 
 has index => (is => 'rw');
 has childnames => (is => 'rw', default => sub { {} });

@@ -455,25 +455,22 @@ sub extract_service_file_values {
 sub check_maintainer_scripts {
     my ($self) = @_;
 
-    my $processable = $self->processable;
-
     # get maintainer scripts
-    my %control = %{$self->processable->control_scripts};
+    my @control
+      = grep { $_->is_control } $self->processable->control->sorted_list;
 
-    for my $file (keys %control) {
-
-        my $path = $processable->control->resolve_path($file);
-        my $interpreter = $control{$file};
-
-        # Don't follow unsafe links
-        next
-          unless $path && $path->is_open_ok;
+    for my $file (@control) {
 
         # skip anything but shell scripts
+        my $interpreter = $file->control->{interpreter};
         next
           unless $interpreter =~ m/sh\b/;
 
-        open(my $sfd, '<', $path->unpacked_path);
+        # Don't follow unsafe links
+        next
+          unless $file->is_open_ok;
+
+        open(my $sfd, '<', $file->unpacked_path);
         while (<$sfd>) {
             # skip comments
             next if substr($_, 0, $-[0]) =~ /#/;
