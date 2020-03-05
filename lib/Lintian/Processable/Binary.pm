@@ -33,13 +33,17 @@ use constant SLASH => q{/};
 use Moo;
 use namespace::clean;
 
-with 'Lintian::Collect::Binary',
+with
   'Lintian::Processable::Binary::Changelog',
+  'Lintian::Processable::Binary::Class',
   'Lintian::Processable::Binary::Copyright',
+  'Lintian::Processable::Binary::Relation',
   'Lintian::Processable::Changelog',
   'Lintian::Processable::Control',
   'Lintian::Processable::Control::Conffiles',
+  'Lintian::Processable::Installable',
   'Lintian::Processable::Installed',
+  'Lintian::Processable::IsNonFree',
   'Lintian::Processable::Hardening',
   'Lintian::Processable::Objdump',
   'Lintian::Processable::Overrides',

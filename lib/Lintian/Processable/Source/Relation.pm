@@ -159,8 +159,6 @@ Build-Conflicts-Indep.
 If FIELD isn't present in the package, the returned Lintian::Relation
 object will be empty (always satisfied and implies nothing).
 
-Needs-Info requirements for using I<relation>: L<Same as field|Lintian::Collect/field ([FIELD[, DEFAULT]])>
-
 =item saved_relation
 
 =cut
@@ -203,8 +201,6 @@ sub relation {
 
 The same as L</relation (FIELD)>, but ignores architecture
 restrictions and build profile restrictions in the FIELD field.
-
-Needs-Info requirements for using I<relation_noarch>: L<Same as relation|Lintian::Collect/relation (FIELD)>
 
 =item saved_relations_noarch
 

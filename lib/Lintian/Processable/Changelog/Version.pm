@@ -66,8 +66,6 @@ data in memory.
 Returns a fully parsed Lintian::Inspect::Changelog::Version for the
 source package's version string.
 
-Needs-Info requirements for using I<changelog_version>: L<Same as field|Lintian::Collect/field ([FIELD[, DEFAULT]])>
-
 =cut
 
 has changelog_version => (

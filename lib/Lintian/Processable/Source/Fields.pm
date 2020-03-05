@@ -139,7 +139,7 @@ values (in this case DEFAULT is ignored).  This hashref should not be
 modified.
 
 NB: If a field from the "dsc" file itself is desired, please use
-L<field|Lintian::Collect/field> instead.
+L<field> instead.
 
 =cut
 

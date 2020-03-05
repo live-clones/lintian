@@ -70,9 +70,18 @@ has is_non_free => (
     default => sub {
         my ($self) = @_;
 
+        my $section;
+
+        if ($self->type eq 'source') {
+            $section = $self->source_field('section');
+        } else {
+            $section = $self->field('section');
+        }
+
+        $section //= 'main';
+
         return 1
-          if $self->source_field('section', 'main')
-          =~ m,^(?:non-free|restricted|multiverse)/,;
+          if $section =~ m,^(?:non-free|restricted|multiverse)/,;
 
         return 0;
     });
@@ -86,7 +95,7 @@ Amended by Felix Lechner <felix.lechner@lease-up.com> for Lintian.
 
 =head1 SEE ALSO
 
-lintian(1), Lintian::Collect(3), Lintian::Relation(3)
+lintian(1)
 
 =cut
 
