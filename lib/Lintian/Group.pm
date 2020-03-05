@@ -21,9 +21,11 @@ package Lintian::Group;
 
 use strict;
 use warnings;
+use autodie;
 use v5.16;
 
 use Carp;
+use Cwd;
 use Devel::Size qw(total_size);
 use File::Spec;
 use List::Compare;
@@ -291,7 +293,10 @@ sub unpack {
     $OUTPUT->v_msg('Unpacking packages in group ' . $self->name);
 
     my @unpack = grep { $_->can('unpack') } @processables;
+
+    my $savedir = getcwd;
     $_->unpack for @unpack;
+    chdir($savedir);
 
     return;
 }

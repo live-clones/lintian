@@ -51,7 +51,12 @@ Returns the index for orig.tar.gz.
 
 =cut
 
-has orig => (is => 'rw');
+has orig => (
+    is => 'rw',
+    lazy => 1,
+    default => sub {
+        return Lintian::Index::Orig->new;
+    });
 
 =item orig_index (FILE)
 

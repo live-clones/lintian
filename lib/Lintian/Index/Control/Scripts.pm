@@ -52,7 +52,7 @@ Lintian::Index::Control::Scripts information about maintainer scripts.
 =cut
 
 sub add_scripts {
-    my ($self, $pkg, $type, $dir) = @_;
+    my ($self) = @_;
 
     # maintainer scripts
     my %control;

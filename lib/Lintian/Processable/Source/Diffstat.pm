@@ -38,6 +38,7 @@ use Path::Tiny;
 use Lintian::Util qw(get_dsc_info safe_qx);
 
 use constant EMPTY => q{};
+use constant UNDERSCORE => q{_};
 use constant NEWLINE => qq{\n};
 
 use Moo::Role;
@@ -64,23 +65,23 @@ Lintian::Processable::Source::Diffstat collects diffstat information.
 =cut
 
 sub add_diffstat {
-    my ($self, $pkg, undef, $dir) = @_;
+    my ($self) = @_;
 
-    my $dscpath = "$dir/dsc";
+    my $dscpath = path($self->groupdir)->child('dsc')->stringify;
     die 'diffstat invoked with wrong dir argument'
       unless -f $dscpath;
 
-    my $data = get_dsc_info($dscpath);
-    my $ver = $data->{'version'};
-
-    my $patchpath = "$dir/debian-patch";
+    my $patchpath = path($self->groupdir)->child('debian-patch')->stringify;
     unlink($patchpath)
       if -e $patchpath
       or -l $patchpath;
 
-    $ver =~ s/^\d://; #Remove epoch for this
+    my $data = get_dsc_info($dscpath);
+    my $version = $data->{'version'};
+    $version =~ s/^\d://; #Remove epoch for this
 
-    my $diffpath = "$dir/${pkg}_${ver}.diff.gz";
+    my $diffname = $self->name . UNDERSCORE . $version . '.diff.gz';
+    my $diffpath = path($self->groupdir)->child($diffname)->stringify;
     return
       unless -f $diffpath;
 
@@ -118,7 +119,7 @@ sub add_diffstat {
     $diffstat .= $_ . NEWLINE for @lines;
 
     # copy all lines except the last
-    path("$dir/diffstat")->spew($diffstat);
+    path($self->groupdir)->child('diffstat')->spew($diffstat);
 
     return;
 }

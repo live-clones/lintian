@@ -53,24 +53,24 @@ Lintian::Processable::Overrides provides an interface to package data for overri
 =cut
 
 sub add_overrides {
-    my ($self, $pkg, $type, $dir) = @_;
+    my ($self) = @_;
 
-    my $unpackedpath = "$dir/unpacked";
-    die 'wrong dir argument $dir'
+    my $unpackedpath = path($self->groupdir)->child('unpacked')->stringify;
+    die "No unpacked data in $unpackedpath"
       unless -d $unpackedpath;
 
-    my $overridepath = "$dir/override";
+    my $overridepath = path($self->groupdir)->child('override')->stringify;
     unlink($overridepath)
       if -e $overridepath;
 
     # pick the first
     my @candidates;
-    if ($type eq 'source') {
+    if ($self->type eq 'source') {
         # prefer source/lintian-overrides to source.lintian-overrides
         @candidates = ('debian/source/lintian-overrides',
             'debian/source.lintian-overrides');
     } else {
-        @candidates = ("usr/share/lintian/overrides/$pkg");
+        @candidates = ('usr/share/lintian/overrides/' . $self->name);
     }
 
     my $packageoverridepath;

@@ -23,11 +23,8 @@ use warnings;
 use autodie;
 
 use Carp qw(croak);
-use Cwd;
 use Path::Tiny;
 
-use Lintian::Index::Orig;
-use Lintian::Index::Patched;
 use Lintian::Util qw(get_dsc_info strip);
 
 use constant EMPTY => q{};
@@ -135,27 +132,13 @@ sub init {
 sub unpack {
     my ($self) = @_;
 
-    my $savedir = getcwd;
+    $self->patched->collect($self->groupdir);
 
-    my $pkg = $self->name;
-    my $type = $self->type;
-    my $dir = $self->groupdir;
+    $self->add_diffstat;
+    $self->add_overrides;
 
-    my $patched = Lintian::Index::Patched->new;
-    $patched->collect($pkg, $type, $dir);
-    $self->patched($patched);
-
-    $self->add_diffstat($pkg, $type, $dir);
-
-    $self->add_overrides($pkg, $type, $dir);
-
-    unless ($self->native) {
-        my $orig = Lintian::Index::Orig->new;
-        $orig->collect($pkg, $type, $dir);
-        $self->orig($orig);
-    }
-
-    chdir($savedir);
+    $self->orig->collect($self->groupdir)
+      unless $self->native;
 
     return;
 }

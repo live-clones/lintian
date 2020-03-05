@@ -33,9 +33,10 @@ use strict;
 use warnings;
 use autodie;
 
-use Lintian::Util qw(gunzip_file is_ancestor_of);
-
 use File::Copy qw(copy);
+use Path::Tiny;
+
+use Lintian::Util qw(gunzip_file is_ancestor_of);
 
 use Moo::Role;
 use namespace::clean;
@@ -61,16 +62,17 @@ Lintian::Processable::Binary::Copyright collects copyright information.
 =cut
 
 sub add_copyright {
-    my ($self, $pkg, undef, $dir) = @_;
+    my ($self) = @_;
 
-    my $unpackedpath = "$dir/unpacked";
-    return unless -d $unpackedpath;
+    my $unpackedpath = path($self->groupdir)->child('unpacked')->stringify;
+    return
+      unless -d $unpackedpath;
 
-    my $copyrightpath = "$dir/copyright";
+    my $copyrightpath = path($self->groupdir)->child('copyright')->stringify;
     unlink($copyrightpath)
       if -e $copyrightpath;
 
-    my $packagepath = "$unpackedpath/usr/share/doc/$pkg";
+    my $packagepath = "$unpackedpath/usr/share/doc/" . $self->name;
     return
       unless -d $packagepath;
 

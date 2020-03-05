@@ -53,7 +53,12 @@ Returns a index object representing a patched source tree.
 
 =cut
 
-has patched => (is => 'rw');
+has patched => (
+    is => 'rw',
+    lazy => 1,
+    default => sub {
+        return Lintian::Index::Patched->new;
+    });
 
 =item index (FILE)
 

@@ -54,7 +54,12 @@ Returns a index object representing installed files from a binary package.
 
 =cut
 
-has installed => (is => 'rw');
+has installed => (
+    is => 'rw',
+    lazy => 1,
+    default => sub {
+        return Lintian::Index::Installed->new;
+    });
 
 =item index (FILE)
 

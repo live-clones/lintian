@@ -24,6 +24,7 @@ use strict;
 use warnings;
 use autodie;
 
+use Cwd;
 use IO::Async::Loop;
 use IO::Async::Process;
 use Path::Tiny;
@@ -82,15 +83,13 @@ in the collections scripts used previously.
 =cut
 
 sub collect {
-    my ($self, @args) = @_;
-
-    my ($pkg, $type, $dir) = @args;
+    my ($self, $groupdir) = @_;
 
     # source packages can be unpacked anywhere; no anchored roots
-    my $basedir = path($dir)->child('unpacked')->stringify;
+    my $basedir = path($groupdir)->child('unpacked')->stringify;
     $self->basedir($basedir);
 
-    $self->unpack(@args);
+    $self->unpack($groupdir);
     $self->load;
 
     $self->add_md5sums;
@@ -101,21 +100,18 @@ sub collect {
 }
 
 sub unpack {
-    my ($self, $pkg, $type, $dir) = @_;
+    my ($self, $groupdir) = @_;
 
-    my $unpackedpath = "$dir/unpacked/";
-    path($unpackedpath)->remove_tree
-      if -d $unpackedpath;
+    my $savedir = getcwd;
+
+    path($self->basedir)->remove_tree
+      if -d $self->basedir;
 
     for my $file (qw(index-errors unpacked-errors)) {
-        unlink("$dir/$file") if -e "$dir/$file";
+        unlink("$groupdir/$file") if -e "$groupdir/$file";
     }
 
-    # stop here if we are only asked to remove the files
-    return
-      if $type =~ m/^remove-/;
-
-    print "N: Using dpkg-source to unpack $pkg\n"
+    print "N: Using dpkg-source to unpack\n"
       if $ENV{'LINTIAN_DEBUG'};
 
     # Ignore STDOUT of the child process because older versions of
@@ -125,8 +121,10 @@ sub unpack {
     my $dpkgerror;
 
     my $process = IO::Async::Process->new(
-        command =>
-          ['dpkg-source', '-q','--no-check', '-x',"$dir/dsc", "$dir/unpacked"],
+        command =>[
+            'dpkg-source', '-q','--no-check', '-x',
+            "$groupdir/dsc", $self->basedir
+        ],
         stderr => { into => \$dpkgerror },
         on_finish => sub {
             my ($self, $exitcode) = @_;
@@ -149,10 +147,10 @@ sub unpack {
     # awaits, and dies with message on failure
     $future->get;
 
-    path("$dir/unpacked-errors")->append($dpkgerror // EMPTY);
+    path("$groupdir/unpacked-errors")->append($dpkgerror // EMPTY);
 
     # chdir for index_src
-    chdir("$dir/unpacked");
+    chdir($self->basedir);
 
     # get times in UTC
     my $output
@@ -208,10 +206,12 @@ sub unpack {
     $self->catalog(\%all);
 
     # fix permissions
-    safe_qx('chmod', '-R', 'u+rwX,o+rX,o-w', "$dir/unpacked");
+    safe_qx('chmod', '-R', 'u+rwX,o+rX,o-w', $self->basedir);
 
     # remove error file if empty
-    unlink("$dir/unpacked-errors") if -z "$dir/unpacked-errors";
+    unlink("$groupdir/unpacked-errors") if -z "$groupdir/unpacked-errors";
+
+    chdir($savedir);
 
     return;
 }

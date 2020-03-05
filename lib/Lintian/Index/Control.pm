@@ -77,40 +77,37 @@ in the collections scripts used previously.
 =cut
 
 sub collect {
-    my ($self, @args) = @_;
-
-    my ($pkg, $type, $dir) = @args;
+    my ($self, $groupdir) = @_;
 
     # control files are not installed relative to the system root
     # disallow absolute paths and symbolic links
-    my $basedir = path($dir)->child('control')->stringify;
+    my $basedir = path($groupdir)->child('control')->stringify;
     $self->basedir($basedir);
 
-    $self->unpack(@args);
+    $self->unpack($groupdir);
     $self->load;
 
-    $self->add_scripts(@args);
+    $self->add_scripts;
 
     return;
 }
 
 sub unpack {
-    my ($self, $pkg, $type, $dir) = @_;
+    my ($self, $groupdir) = @_;
 
-    my $controldir = "$dir/control";
-    path($controldir)->remove_tree
-      if -d $controldir;
+    path($self->basedir)->remove_tree
+      if -d $self->basedir;
 
-    my $controlerrorspath = "$dir/control-errors";
-    my $indexerrorspath = "$dir/control-index-errors";
+    my $controlerrorspath = "$groupdir/control-errors";
+    my $indexerrorspath = "$groupdir/control-index-errors";
 
     for my $path ($controlerrorspath, $indexerrorspath) {
         unlink($path) if -e $path;
     }
 
-    mkdir($controldir, 0777);
+    mkdir($self->basedir, 0777);
 
-    my $debpath = "$dir/deb";
+    my $debpath = "$groupdir/deb";
     return
       unless -f $debpath;
 
@@ -145,7 +142,7 @@ sub unpack {
     my $extractor = $loop->new_future;
     my @extractcommand = (
         'tar', '--no-same-owner','--no-same-permissions', '-mxf',
-        '-', '-C', $controldir
+        '-', '-C', $self->basedir
     );
     my $extractprocess = IO::Async::Process->new(
         command => [@extractcommand],
@@ -249,7 +246,7 @@ sub unpack {
     $self->catalog(\%all);
 
     # fix permissions
-    safe_qx('chmod', '-R', 'u+rX,o-w', $controldir);
+    safe_qx('chmod', '-R', 'u+rX,o-w', $self->basedir);
 
     return;
 }

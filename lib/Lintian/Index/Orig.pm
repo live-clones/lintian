@@ -73,27 +73,25 @@ in the collections scripts used previously.
 =cut
 
 sub collect {
-    my ($self, @args) = @_;
-
-    my ($pkg, $type, $dir) = @args;
+    my ($self, $groupdir) = @_;
 
     # source packages can be unpacked anywhere; no anchored roots
     $self->allow_empty(1);
 
-    $self->create(@args);
+    $self->create($groupdir);
     $self->load;
 
     return;
 }
 
 sub create {
-    my ($self, $pkg, $type, $dir) = @_;
+    my ($self, $groupdir) = @_;
 
-    my $dsclink = "$dir/dsc";
+    my $dsclink = "$groupdir/dsc";
     my $dscpath = Cwd::realpath($dsclink);
-    die "Cannot resolve 'dsc' link for $pkg: $dsclink"
+    die "Cannot resolve 'dsc' link: $dsclink"
       unless $dscpath;
-    die "The 'dsc' link for $pkg does not point to a file: $dscpath"
+    die "The 'dsc' link does not point to a file: $dscpath"
       unless -e $dscpath;
 
     # determine source and version; handles missing fields
@@ -157,7 +155,7 @@ sub create {
         }
     }
 
-    die "Could not find any source components for $pkg"
+    die 'Could not find any source components'
       unless %components;
 
     my %all;
@@ -176,7 +174,7 @@ sub create {
             unshift @tar_options, "--$1";
         }
 
-        my @tar = ('tar', @tar_options, "$dir/$tarball");
+        my @tar = ('tar', @tar_options, "$groupdir/$tarball");
 
         my $loop = IO::Async::Loop->new;
         my $future = $loop->new_future;
@@ -191,7 +189,7 @@ sub create {
                 my ($self, $exitcode) = @_;
                 my $status = ($exitcode >> 8);
 
-                path("$dir/orig-index-errors")->append($stderr // EMPTY);
+                path("$groupdir/orig-index-errors")->append($stderr // EMPTY);
 
                 if ($status) {
                     my $message

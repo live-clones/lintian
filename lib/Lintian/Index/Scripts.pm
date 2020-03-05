@@ -52,7 +52,7 @@ Lintian::Index::Scripts information about scripts.
 =cut
 
 sub add_scripts {
-    my ($self, $pkg, $type, $dir) = @_;
+    my ($self) = @_;
 
     my %scripts;
 

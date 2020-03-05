@@ -25,11 +25,6 @@ use strict;
 use warnings;
 use autodie;
 
-use Cwd;
-
-use Lintian::Index::Control;
-use Lintian::Index::Installed;
-
 use constant EMPTY => q{};
 
 use Moo::Role;
@@ -70,29 +65,16 @@ Native heuristics are only available in source packages.
 sub unpack {
     my ($self) = @_;
 
-    my $savedir = getcwd;
-
-    my $pkg = $self->name;
-    my $type = $self->type;
-    my $dir = $self->groupdir;
-
-    my $installed = Lintian::Index::Installed->new;
-    $installed->collect($pkg, $type, $dir);
-    $self->installed($installed);
+    $self->installed->collect($self->groupdir);
 
     # cause parsing of concatenated data
     $self->objdump_info;
 
-    my $control = Lintian::Index::Control->new;
-    $control->collect($pkg, $type, $dir);
-    $self->control($control);
+    $self->control->collect($self->groupdir);
 
-    $self->add_changelog($pkg, $type, $dir);
-    $self->add_copyright($pkg, $type, $dir);
-
-    $self->add_overrides($pkg, $type, $dir);
-
-    chdir($savedir);
+    $self->add_changelog;
+    $self->add_copyright;
+    $self->add_overrides;
 
     return;
 }

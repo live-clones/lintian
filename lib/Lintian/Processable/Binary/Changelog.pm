@@ -63,22 +63,22 @@ Lintian::Processable::Binary::Changelog collects changelog information.
 =cut
 
 sub add_changelog {
-    my ($self, $pkg, undef, $dir) = @_;
+    my ($self) = @_;
 
-    my $changelogpath = "$dir/changelog";
+    my $changelogpath = path($self->groupdir)->child('changelog')->stringify;
     unlink($changelogpath)
       if -e $changelogpath || -l $changelogpath;
 
     # Extract NEWS.Debian files as well, with similar precautions.
     # Ignore any symlinks to other packages here; in that case, we
     # just won't check the file.
-    my $newspath = "$dir/NEWS.Debian";
+    my $newspath = path($self->groupdir)->child('NEWS.Debian')->stringify;
     unlink($newspath)
       if -l $newspath
       or -e _;
 
-    my $unpackedpath = "$dir/unpacked";
-    my $packagepath = "$unpackedpath/usr/share/doc/$pkg";
+    my $unpackedpath = path($self->groupdir)->child('unpacked')->stringify;
+    my $packagepath = "$unpackedpath/usr/share/doc/" . $self->name;
 
     # pretend we did not find anything if parent dir is outside package
     return
@@ -124,7 +124,8 @@ sub add_changelog {
         my $link = readlink($packagechangelogpath);
         if ($link =~ /\.\./
             || ($link =~ m%/% && $link !~ m%^[^/]+(?:/+[^/]+)*\z%)) {
-            symlink("$dir/file-is-in-another-package", $changelogpath);
+            symlink($self->groupdir . '/file-is-in-another-package',
+                $changelogpath);
             undef $packagechangelogpath;
         } elsif (!-f $packagechangelogpath) {
             undef $packagechangelogpath;

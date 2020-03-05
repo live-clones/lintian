@@ -74,6 +74,8 @@ sub add_objdump {
         $file->objdump($output);
     }
 
+    chdir($savedir);
+
     return;
 }
 

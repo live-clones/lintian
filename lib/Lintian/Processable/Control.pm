@@ -51,7 +51,12 @@ Returns the index for a binary control file.
 
 =cut
 
-has control => (is => 'rw');
+has control => (
+    is => 'rw',
+    lazy => 1,
+    default => sub {
+        return Lintian::Index::Control->new;
+    });
 
 =item control_index (FILE)
 

@@ -86,25 +86,23 @@ in the collections scripts used previously.
 =cut
 
 sub collect {
-    my ($self, @args) = @_;
-
-    my ($pkg, $type, $dir) = @args;
+    my ($self, $groupdir) = @_;
 
     # binary packages are anchored to the system root
     # allow absolute paths and symbolic links
     $self->anchored(1);
-    my $basedir = path($dir)->child('unpacked')->stringify;
+    my $basedir = path($groupdir)->child('unpacked')->stringify;
     $self->basedir($basedir);
 
-    $self->unpack(@args);
+    $self->unpack($groupdir);
     $self->load;
 
     $self->add_md5sums;
-    $self->add_ar(@args);
+    $self->add_ar($groupdir);
 
     $self->add_fileinfo;
     $self->add_scripts;
-    $self->add_objdump(@args);
+    $self->add_objdump;
     $self->add_strings;
     $self->add_java;
 
@@ -112,21 +110,17 @@ sub collect {
 }
 
 sub unpack {
-    my ($self, $pkg, $type, $dir) = @_;
+    my ($self, $groupdir) = @_;
 
-    my $unpackedpath = "$dir/unpacked/";
-    path($unpackedpath)->remove_tree
-      if -d $unpackedpath;
+    path($self->basedir)->remove_tree
+      if -d $self->basedir;
 
     for my $file (qw(index-errors unpacked-errors)) {
-        unlink("$dir/$file") if -e "$dir/$file";
+        unlink("$groupdir/$file")
+          if -e "$groupdir/$file";
     }
 
-    # stop here if we are only asked to remove the files
-    return
-      if $type =~ m/^remove-/;
-
-    mkdir("$dir/unpacked", 0777);
+    mkdir($self->basedir, 0777);
 
     my $loop = IO::Async::Loop->new;
 
@@ -134,7 +128,7 @@ sub unpack {
     my $deberror;
     my $dpkgdeb = $loop->new_future;
     my $debprocess = IO::Async::Process->new(
-        command => ['dpkg-deb', '--fsys-tarfile', "$dir/deb"],
+        command => ['dpkg-deb', '--fsys-tarfile', "$groupdir/deb"],
         stdout => { via => 'pipe_read' },
         stderr => { into => \$deberror },
         on_finish => sub {
@@ -160,7 +154,7 @@ sub unpack {
     my $extractprocess = IO::Async::Process->new(
         command => [
             'tar', '--no-same-owner', '--no-same-permissions',
-            '-mxf','-', '-C', "$dir/unpacked"
+            '-mxf','-', '-C', $self->basedir
         ],
         stdin => { via => 'pipe_write' },
         stderr => { into => \$extracterror },
@@ -274,9 +268,9 @@ sub unpack {
     # awaits, and dies on failure with message from failed constituent
     $composite->get;
 
-    path("$dir/unpacked-errors")->append($deberror // EMPTY);
-    path("$dir/unpacked-errors")->append($extracterror // EMPTY);
-    path("$dir/index-errors")->append($namederror // EMPTY);
+    path("$groupdir/unpacked-errors")->append($deberror // EMPTY);
+    path("$groupdir/unpacked-errors")->append($extracterror // EMPTY);
+    path("$groupdir/index-errors")->append($namederror // EMPTY);
 
     my @named_owner = split(/\n/, $named);
     my @numeric_owner = split(/\n/, $numeric);
@@ -307,11 +301,13 @@ sub unpack {
     $self->catalog(\%all);
 
     # remove error files if empty
-    unlink("$dir/index-errors") if -z "$dir/index-errors";
-    unlink("$dir/unpacked-errors") if -z "$dir/unpacked-errors";
+    unlink("$groupdir/index-errors")
+      if -z "$groupdir/index-errors";
+    unlink("$groupdir/unpacked-errors")
+      if -z "$groupdir/unpacked-errors";
 
     # fix permissions
-    safe_qx('chmod', '-R', 'u+rwX,go-w', "$dir/unpacked");
+    safe_qx('chmod', '-R', 'u+rwX,go-w', $self->basedir);
 
     return;
 }

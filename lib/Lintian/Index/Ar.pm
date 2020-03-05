@@ -21,6 +21,7 @@ use strict;
 use warnings;
 use autodie;
 
+use Cwd;
 use Path::Tiny;
 
 use Lintian::Util qw(safe_qx);
@@ -55,18 +56,15 @@ Lintian::Index::Ar binary symbol information.
 =cut
 
 sub add_ar {
-    my ($self, $pkg, $type, $dir) = @_;
+    my ($self, $groupdir) = @_;
 
-    my $basket = "$dir/ar-info";
+    my $basket = "$groupdir/ar-info";
 
     unlink($basket)
       if -e $basket;
 
-    # stop here if we are only removing the files
-    return
-      if $type =~ m/^remove-/;
-
-    chdir("$dir/unpacked");
+    my $savedir = getcwd;
+    chdir($self->basedir);
 
     my @archives;
     foreach my $file ($self->sorted_list) {
@@ -91,6 +89,8 @@ sub add_ar {
     my $string = EMPTY;
     $string .= $_ . NEWLINE for @archives;
     path($basket)->spew($string);
+
+    chdir($savedir);
 
     return;
 }
