@@ -1,6 +1,6 @@
 # -*- perl -*-
 #
-# Lintian::Collect::Copyright -- lintian collection script
+# Lintian::Processable::Binary::Copyright -- lintian collection script
 
 # Copyright © 1998 Richard Braakman
 # Copyright © 2020 Felix Lechner
@@ -27,7 +27,7 @@
 # perl code will be perl modules, so only one perl interpreter
 # need be started.
 
-package Lintian::Collect::Copyright;
+package Lintian::Processable::Binary::Copyright;
 
 use strict;
 use warnings;
@@ -37,28 +37,31 @@ use Lintian::Util qw(gunzip_file is_ancestor_of);
 
 use File::Copy qw(copy);
 
+use Moo::Role;
+use namespace::clean;
+
 =head1 NAME
 
-Lintian::Collect::Copyright - collect copyright information
+Lintian::Processable::Binary::Copyright - collect copyright information
 
 =head1 SYNOPSIS
 
-    Lintian::Collect::Copyright::collect(undef, undef, undef);
+    Lintian::Processable::Binary::Copyright::collect(undef, undef, undef);
 
 =head1 DESCRIPTION
 
-Lintian::Collect::Copyright collects copyright information.
+Lintian::Processable::Binary::Copyright collects copyright information.
 
 =head1 INSTANCE METHODS
 
 =over 4
 
-=item collect
+=item add_copyright
 
 =cut
 
-sub collect {
-    my ($pkg, undef, $dir) = @_;
+sub add_copyright {
+    my ($self, $pkg, undef, $dir) = @_;
 
     my $unpackedpath = "$dir/unpacked";
     return unless -d $unpackedpath;

@@ -26,8 +26,6 @@ use Carp qw(croak);
 use Cwd;
 use Path::Tiny;
 
-use Lintian::Collect::Diffstat;
-use Lintian::Collect::Overrides;
 use Lintian::Index::Orig;
 use Lintian::Index::Patched;
 use Lintian::Util qw(get_dsc_info strip);
@@ -48,6 +46,7 @@ with 'Lintian::Processable',
   'Lintian::Processable::Orig',
   'Lintian::Processable::Overrides',
   'Lintian::Processable::Patched',
+  'Lintian::Processable::Source::Diffstat',
   'Lintian::Processable::Source::Fields',
   'Lintian::Processable::Source::Format',
   'Lintian::Processable::Source::Relation',
@@ -146,9 +145,9 @@ sub unpack {
     $patched->collect($pkg, $type, $dir);
     $self->patched($patched);
 
-    Lintian::Collect::Diffstat::collect($pkg, $type, $dir);
+    $self->add_diffstat($pkg, $type, $dir);
 
-    Lintian::Collect::Overrides::collect($pkg, $type, $dir);
+    $self->add_overrides($pkg, $type, $dir);
 
     unless ($self->native) {
         my $orig = Lintian::Index::Orig->new;

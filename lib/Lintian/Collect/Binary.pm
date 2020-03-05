@@ -30,9 +30,6 @@ use Cwd;
 use List::Util qw(any);
 use Path::Tiny;
 
-use Lintian::Collect::Changelog;
-use Lintian::Collect::Copyright;
-use Lintian::Collect::Overrides;
 use Lintian::Deb822Parser qw(parse_dpkg_control);
 use Lintian::Index::Control;
 use Lintian::Index::Installed;
@@ -96,10 +93,10 @@ sub unpack {
     $control->collect($pkg, $type, $dir);
     $self->control($control);
 
-    Lintian::Collect::Changelog::collect($pkg, $type, $dir);
-    Lintian::Collect::Copyright::collect($pkg, $type, $dir);
+    $self->add_changelog($pkg, $type, $dir);
+    $self->add_copyright($pkg, $type, $dir);
 
-    Lintian::Collect::Overrides::collect($pkg, $type, $dir);
+    $self->add_overrides($pkg, $type, $dir);
 
     chdir($savedir);
 

@@ -1,6 +1,6 @@
 # -*- perl -*-
 #
-# Lintian::Collect::Changelog -- lintian collection script for source packages
+# Lintian::Processable::Binary::Changelog -- lintian collection script for source packages
 
 # Copyright © 1998 Richard Braakman
 # Copyright © 2019 Felix Lechner
@@ -27,7 +27,7 @@
 # perl code will be perl modules, so only one perl interpreter
 # need be started.
 
-package Lintian::Collect::Changelog;
+package Lintian::Processable::Binary::Changelog;
 
 use strict;
 use warnings;
@@ -39,28 +39,31 @@ use Path::Tiny;
 
 use Lintian::Util qw(is_ancestor_of safe_qx);
 
+use Moo::Role;
+use namespace::clean;
+
 =head1 NAME
 
-Lintian::Collect::Changelog - collect changelog information
+Lintian::Processable::Binary::Changelog - collect changelog information
 
 =head1 SYNOPSIS
 
-    Lintian::Collect::Changelog::collect(undef, undef, undef);
+    Lintian::Processable::Binary::Changelog::collect(undef, undef, undef);
 
 =head1 DESCRIPTION
 
-Lintian::Collect::Changelog collects changelog information.
+Lintian::Processable::Binary::Changelog collects changelog information.
 
 =head1 INSTANCE METHODS
 
 =over 4
 
-=item collect
+=item add_changelog
 
 =cut
 
-sub collect {
-    my ($pkg, undef, $dir) = @_;
+sub add_changelog {
+    my ($self, $pkg, undef, $dir) = @_;
 
     my $changelogpath = "$dir/changelog";
     unlink($changelogpath)

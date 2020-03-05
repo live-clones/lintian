@@ -1,6 +1,6 @@
 # -*- perl -*-
 #
-# Lintian::Collect::Diffstat -- lintian collection script for source packages
+# Lintian::Processable::Source::Diffstat -- lintian collection script for source packages
 
 # Copyright © 1998 Richard Braakman
 # Copyright © 2019 Felix Lechner
@@ -27,7 +27,7 @@
 # perl code will be perl modules, so only one perl interpreter
 # need be started.
 
-package Lintian::Collect::Diffstat;
+package Lintian::Processable::Source::Diffstat;
 
 use strict;
 use warnings;
@@ -40,28 +40,31 @@ use Lintian::Util qw(get_dsc_info safe_qx);
 use constant EMPTY => q{};
 use constant NEWLINE => qq{\n};
 
+use Moo::Role;
+use namespace::clean;
+
 =head1 NAME
 
-Lintian::Collect::Diffstat - collect diffstat information
+Lintian::Processable::Source::Diffstat - collect diffstat information
 
 =head1 SYNOPSIS
 
-    Lintian::Collect::Diffstat::collect(undef, undef, undef);
+    Lintian::Processable::Source::Diffstat::collect(undef, undef, undef);
 
 =head1 DESCRIPTION
 
-Lintian::Collect::Diffstat collects diffstat information.
+Lintian::Processable::Source::Diffstat collects diffstat information.
 
 =head1 INSTANCE METHODS
 
 =over 4
 
-=item collect
+=item add_diffstat
 
 =cut
 
-sub collect {
-    my ($pkg, undef, $dir) = @_;
+sub add_diffstat {
+    my ($self, $pkg, undef, $dir) = @_;
 
     my $dscpath = "$dir/dsc";
     die 'diffstat invoked with wrong dir argument'

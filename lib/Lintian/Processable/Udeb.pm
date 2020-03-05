@@ -34,6 +34,8 @@ use Moo;
 use namespace::clean;
 
 with 'Lintian::Collect::Binary',
+  'Lintian::Processable::Binary::Changelog',
+  'Lintian::Processable::Binary::Copyright',
   'Lintian::Processable::Changelog',
   'Lintian::Processable::Control',
   'Lintian::Processable::Control::Conffiles',
