@@ -1312,9 +1312,48 @@ sub pipe_tee {
 
 =item read_md5sums
 
-Untaint VALUE
+=item unescape_md5sum_filename
 
 =cut
+
+sub unescape_md5sum_filename {
+    my ($string, $problematic) = @_;
+
+    # done if there are no escapes
+    return $string
+      unless $problematic;
+
+    # split into individual characters
+    my @array = split(//, $string);
+
+# https://www.gnu.org/software/coreutils/manual/html_node/md5sum-invocation.html
+    my $path;
+    my $escaped = 0;
+    for my $char (@array) {
+
+        # start escape sequence
+        if ($char eq BACKSLASH && !$escaped) {
+            $escaped = 1;
+            next;
+        }
+
+        # unescape newline
+        $char = NEWLINE
+          if $char eq 'n' && $escaped;
+
+        # append character
+        $path .= $char;
+
+        # end any escape sequence
+        $escaped = 0;
+    }
+
+    # do not stop inside an escape sequence
+    die 'Name terminated inside an escape sequence'
+      if $escaped;
+
+    return $path;
+}
 
 sub read_md5sums {
     my ($text) = @_;
@@ -1331,7 +1370,6 @@ sub read_md5sums {
     while ($buffer =~ s/^((?:\\)?\S{32}) [ *]//) {
 
         my $checksum = $1;
-        my $path = EMPTY;
         my $problematic = 0;
 
         # leading slash in checksum indicates an escaped name
@@ -1339,43 +1377,10 @@ sub read_md5sums {
           if $checksum =~ s{^\\}{};
 
         # read up until the next newline
-        while ($buffer =~ s/^([^\n]+)\n//) {
-            my $section = $1;
+        $buffer =~ s/^([^\n]+)\n//;
+        my $string = $1;
 
-            # done if newline means end of record
-            unless ($problematic) {
-                $path .= $section;
-                last;
-            }
-
-            # split into individual characters
-            my @array = split(//, $section);
-
-# https://www.gnu.org/software/coreutils/manual/html_node/md5sum-invocation.html
-            my $escaped = 0;
-            for my $char (@array) {
-
-                # take next character verbatim
-                if ($escaped || $char ne BACKSLASH) {
-                    $path .= $char;
-                    $escaped = 0;
-                    next;
-                }
-
-                # start escape sequence
-                if ($char eq BACKSLASH) {
-                    $escaped = 1;
-                    next;
-                }
-            }
-
-            # do not stop inside an escape sequence
-            last
-              unless $escaped;
-
-            # add the newline that was stripped and read more
-            $path .= NEWLINE;
-        }
+        my $path = unescape_md5sum_filename($string, $problematic);
 
         push(@errors, "Empty name for checksum $checksum")
           unless length $path;
