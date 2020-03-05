@@ -337,8 +337,6 @@ sub process {
         $OUTPUT->debug_msg(1,
             'Base directory for group: ' . $processable->groupdir);
 
-        my @found;
-
         unless ($opt->{'no-override'}) {
 
             $OUTPUT->debug_msg(1, 'Loading overrides file (if any) ...');
@@ -375,11 +373,6 @@ sub process {
                 }
             }
 
-            push(@found, @{$processable->found});
-
-            # remove found tags from Processable
-            $processable->found([]);
-
             # treat ignored overrides here
             for my $tagname (keys %{$declared_overrides}) {
 
@@ -399,6 +392,13 @@ sub process {
                 $used_overrides{$tagname}{$_} = 0 for keys %{$extras};
             }
         }
+
+        # retrieve any tags issued during unpacking or data collection
+        my @found;
+        push(@found, @{$processable->found});
+
+        # remove found tags from Processable
+        $processable->found([]);
 
         # Filter out the "lintian" check if present - it does no real harm,
         # but it adds a bit of noise in the debug output.
