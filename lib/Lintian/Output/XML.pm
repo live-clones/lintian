@@ -142,7 +142,6 @@ sub print_tag {
     }
     my @attrs = (
         [severity  => $tag_info->effective_severity],
-        [certainty => $tag_info->certainty],
         [flags     => $flags],
         [name      => $tag_info->name]);
     print { $self->stdout }

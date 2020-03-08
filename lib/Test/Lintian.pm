@@ -85,7 +85,6 @@ use Lintian::Util qw(is_string_utf8_encoded);
 $Lintian::Data::LAZY_LOAD = 0;
 
 my %severities = map { $_ => 1 } @Lintian::Tag::Info::SEVERITIES;
-my %certainties = map { $_ => 1 } @Lintian::Tag::Info::CERTAINTIES;
 my %check_types = map { $_ => 1 } qw(binary changes source udeb);
 my %known_html_tags = map { $_ => 1 } qw(a em i tt);
 
@@ -203,7 +202,6 @@ sub test_check_desc {
         foreach my $tpara (@tagpara) {
             my $tag = $tpara->{'tag'}//'';
             my $severity = $tpara->{'severity'}//'';
-            my $certainty = $tpara->{'certainty'}//'';
             my $info = $tpara->{'info'} // '';
             my (@htmltags, %seen);
 
@@ -218,13 +216,10 @@ sub test_check_desc {
             $builder->cmp_ok(length $tag, '<=', 68, 'Tag is not too long')
               or $builder->diag("$cname: $tag\n");
 
-            # Severity / Certainty
+            # Severity
             $builder->ok($severity && exists $severities{$severity},
                 'Tag has valid severity')
               or $builder->diag("$cname: $tag severity: $severity\n");
-            $builder->ok($certainty && exists $certainties{$certainty},
-                'Tag has valid certainty')
-              or $builder->diag("$cname: $tag certainty: $certainty\n");
 
             # Info
             my $mistakes = 0;

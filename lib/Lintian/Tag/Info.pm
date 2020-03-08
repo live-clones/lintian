@@ -37,10 +37,8 @@ use constant SPACE => q{ };
 use Moo;
 use namespace::clean;
 
-# Ordered lists of severities and certainties, used for display level parsing.
-our @SEVERITIES
-  = qw(classification pedantic wishlist minor normal important serious);
-our @CERTAINTIES = qw(wild-guess possible certain);
+# Ordered lists of severities, used for display level parsing.
+our @SEVERITIES= qw(classification pedantic info warning error);
 
 # The URL to a web man page service.  NAME is replaced by the man page
 # name and SECTION with the section to form a valid URL.  This is used
@@ -74,8 +72,6 @@ metadata elements or to format the tag description.
 
 =item tag
 
-=item certainty
-
 =item original_severity
 
 =item effective_severity
@@ -97,21 +93,6 @@ metadata elements or to format the tag description.
 has name => (
     is => 'rw',
     coerce => sub { my ($text) = @_; return ($text // EMPTY); },
-    default => EMPTY
-);
-
-has certainty => (
-    is => 'rw',
-    lazy => 1,
-    coerce => sub {
-        my ($text) = @_;
-
-        $text //= EMPTY;
-        croak "Unknown tag certainty $text"
-          if none { $text eq $_ } @CERTAINTIES;
-
-        return $text;
-    },
     default => EMPTY
 );
 
@@ -198,7 +179,6 @@ sub load {
 
     my %fields = %{ $paragraphs[0] };
     $self->name($fields{tag});
-    $self->certainty($fields{certainty});
     $self->original_severity($fields{severity});
 
     $self->check($fields{check});
@@ -220,28 +200,26 @@ sub load {
 =item code()
 
 Returns the one-letter code for the tag.  This will be a letter chosen
-from C<E>, C<W>, C<I>, or C<P>, based on the tag severity, certainty, and
+from C<E>, C<W>, C<I>, or C<P>, based on the tag severity, and
 other attributes (such as whether experimental is set).  This code will
 never be C<O> or C<X>; overrides and experimental tags are handled
 separately.
 
 =cut
 
-# Map severity/certainty levels to tag codes.
+# Map severity levels to tag codes.
 our %CODES = (
-    classification => { 'wild-guess' => 'C', possible => 'C', certain => 'C' },
-    pedantic  => { 'wild-guess' => 'P', possible => 'P', certain => 'P' },
-    wishlist  => { 'wild-guess' => 'I', possible => 'I', certain => 'I' },
-    minor     => { 'wild-guess' => 'I', possible => 'I', certain => 'W' },
-    normal    => { 'wild-guess' => 'I', possible => 'W', certain => 'W' },
-    important => { 'wild-guess' => 'W', possible => 'E', certain => 'E' },
-    serious   => { 'wild-guess' => 'E', possible => 'E', certain => 'E' },
+    'error' => 'E',
+    'warning' => 'W',
+    'info' => 'I',
+    'pedantic' => 'P',
+    'classification' => 'C',
 );
 
 sub code {
     my ($self) = @_;
 
-    return $CODES{$self->effective_severity}{$self->certainty};
+    return $CODES{$self->effective_severity};
 }
 
 =item description([FORMAT [, INDENT]])
@@ -364,12 +342,7 @@ sub description {
     push(@paragraphs, EMPTY, _format_reference($self->references))
       if length $self->references;
 
-    push(@paragraphs,
-        EMPTY,
-        'Severity: '
-          . $self->original_severity
-          . ', Certainty: '
-          . $self->certainty);
+    push(@paragraphs,EMPTY,'Severity: '. $self->original_severity);
 
     push(@paragraphs,
         EMPTY, 'Check: ' . $self->check . ', Type: ' . $self->check_type)

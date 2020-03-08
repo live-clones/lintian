@@ -127,7 +127,6 @@ sub print_tag {
         'tag',
         $tag_info->code,
         $tag_info->effective_severity,
-        $tag_info->certainty,
         ($tag_info->experimental ? 'X' : EMPTY)
           . (defined $override ? 'O' : EMPTY),
         $processable->name,

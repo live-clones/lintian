@@ -317,7 +317,6 @@ sub process {
     my %statistics = (
         types     => {},
         severity  => {},
-        certainty => {},
         tags      => {},
         overrides => {},
     );
@@ -536,7 +535,6 @@ sub process {
 
         $record->{tags}{$tag->name}++;
         $record->{severity}{$tag->info->effective_severity}++;
-        $record->{certainty}{$tag->info->certainty}++;
 
         my $code = $tag->info->code;
         $code = 'X' if $tag->info->experimental;

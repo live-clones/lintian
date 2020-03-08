@@ -91,16 +91,14 @@ sub to_universal {
         shift @fields;
 
         my (
-            $code, $severity, $certainty, $override,
-            $package, $version, $architecture, $type,
-            $name, $details
+            $code, $severity, $override,
+            $package, $version, $architecture,
+            $type,$name, $details
         ) = @fields;
 
         croak "Cannot parse line $line"
-          unless all { length } (
-            $code, $severity, $certainty, $package, $version,
-            $architecture, $type, $name
-          );
+          unless all { length }
+        ($code, $severity, $package, $version,$architecture, $type, $name);
 
         my $converted = universal_string($package, $type, $name, $details);
         push(@unsorted, $converted);

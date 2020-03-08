@@ -3,38 +3,34 @@
 
   <p>
     This is a list of all tags that occur at least once in the archive
-    sorted by severity and then by certainty.  This includes all tags,
-    even experimental and info tags.
+    sorted by severity.  This includes all tags, even experimental and
+    info tags.
   </p>
 
 {
     my @tags = sort keys %tags;
-    for my $severity (qw/serious important normal minor wishlist pedantic classification/) {
-        for my $certainty (qw/certain possible wild-guess/) {
-            my $heading = 0;
-            for my $tag (@tags) {
-                my ($first) = @{ $tags{$tag} };
-                my $tag_info = $first->{tag_info};
-                next unless $tag_info->effective_severity eq $severity;
-                next unless $tag_info->certainty eq $certainty;
-                unless ($heading) {
-                    $OUT .= "  <h2>Severity: $severity,";
-                    $OUT .= " Certainty: $certainty</h2>\n\n";
-                    $OUT .= "  <ul>\n";
-                    $heading = 1;
-                }
-                my $packages = $stats{$tag}{'packages'};
-                my $count = $stats{$tag}{'count'};
-                my $overrides = $stats{$tag}{'overrides'};
-                my $q_tag = html_quote($tag);
-                $OUT .= qq(    <li><a href="${path_prefix}tags/${q_tag}.html">${q_tag}</a>)
-                    . " ($packages packages, $count tags"
-                    . ($overrides > 0 ? ", plus $overrides overrides" : "")
-                    . ")</li>\n";
+    for my $severity (qw/error warning info pedantic classification/) {
+        my $heading = 0;
+        for my $tag (@tags) {
+            my ($first) = @{ $tags{$tag} };
+            my $tag_info = $first->{tag_info};
+            next unless $tag_info->effective_severity eq $severity;
+            unless ($heading) {
+                $OUT .= "  <h2>Severity: $severity,";
+                $OUT .= "  <ul>\n";
+                $heading = 1;
             }
-            if ($heading) {
-                $OUT .= "  </ul>\n\n";
-            }
+            my $packages = $stats{$tag}{'packages'};
+            my $count = $stats{$tag}{'count'};
+            my $overrides = $stats{$tag}{'overrides'};
+            my $q_tag = html_quote($tag);
+            $OUT .= qq(    <li><a href="${path_prefix}tags/${q_tag}.html">${q_tag}</a>)
+                . " ($packages packages, $count tags"
+                . ($overrides > 0 ? ", plus $overrides overrides" : "")
+                . ")</li>\n";
+        }
+        if ($heading) {
+            $OUT .= "  </ul>\n\n";
         }
     }
 }

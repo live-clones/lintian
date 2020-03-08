@@ -155,11 +155,10 @@
                 }
 
                 my $class = '';
-                # No HTML quote needed; severity and certainty are from a fixed
+                # No HTML quote needed; severity is from a fixed
                 # whitelist of known safe words.
                 my $severity = $tag_info->effective_severity;
-                my $certainty = $tag_info->certainty;
-                $class = qq( title="$severity, $certainty");
+                $class = qq( title="$severity");
 
                 # Display tag name only once.
                 if ($tag ne $next_tag or $new_binary) {

@@ -96,13 +96,11 @@ has display_level_lookup => (
     coerce => sub { my ($hashref) = @_; return ($hashref // {}); },
     default => sub {
         {
-            classification =>
-              { 'wild-guess' => 0, possible => 0, certain => 0 },
-            wishlist  => { 'wild-guess' => 0, possible => 0, certain => 0 },
-            minor     => { 'wild-guess' => 0, possible => 0, certain => 1 },
-            normal    => { 'wild-guess' => 0, possible => 1, certain => 1 },
-            important => { 'wild-guess' => 1, possible => 1, certain => 1 },
-            serious   => { 'wild-guess' => 1, possible => 1, certain => 1 },
+            classification => 0,
+            pedantic       => 0,
+            info           => 0,
+            warning        => 1,
+            error          => 1,
         }
     });
 
@@ -809,8 +807,7 @@ sub display_level_for_tag {
     croak "Unknown tag $tag"
       unless defined $taginfo;
 
-    return $self->display_level_lookup->{$taginfo->effective_severity}
-      {$taginfo->certainty};
+    return $self->display_level_lookup->{$taginfo->effective_severity};
 }
 
 =item tag_is_enabled(TAG)
@@ -826,34 +823,33 @@ sub tag_is_enabled {
     return 0;
 }
 
-=item display(OPERATION, RELATION, SEVERITY, CERTAINTY)
+=item display(OPERATION, RELATION, SEVERITY)
 
-Configure which tags are displayed by severity and certainty.  OPERATION
+Configure which tags are displayed by severity.  OPERATION
 is C<+> to display the indicated tags, C<-> to not display the indicated
 tags, or C<=> to not display any tags except the indicated ones.  RELATION
 is one of C<< < >>, C<< <= >>, C<=>, C<< >= >>, or C<< > >>.  The
-OPERATION will be applied to all pairs of severity and certainty that
-match the given RELATION on the SEVERITY and CERTAINTY arguments.  If
+OPERATION will be applied to all values of severity that
+match the given RELATION on the SEVERITY argument.  If
 either of those arguments are undefined, the action applies to any value
 for that variable.  For example:
 
-    $tags->display('=', '>=', 'important');
+    $tags->display('=', '>=', 'error');
 
-turns off display of all tags and then enables display of any tag (with
-any certainty) of severity important or higher.
+turns off display of all tags and then enables display of any tag of
+severity error or higher.
 
-    $tags->display('+', '>', 'normal', 'possible');
+    $tags->display('+', '>', 'warning');
 
 adds to the current configuration display of all tags with a severity
-higher than normal and a certainty higher than possible (so
-important/certain and serious/certain).
+higher than warning.
 
-    $tags->display('-', '=', 'minor', 'possible');
+    $tags->display('-', '=', 'info');
 
-turns off display of tags of severity minor and certainty possible.
+turns off display of tags of severity info.
 
 This method throws an exception on errors, such as an unknown severity or
-certainty or an impossible constraint (like C<< > serious >>).
+an impossible constraint (like C<< > serious >>).
 
 =cut
 
@@ -893,41 +889,35 @@ sub _relation_subset {
     return @list[($found + 1) .. $#list];
 }
 
-# Given the operation, relation, severity, and certainty, produce a
+# Given the operation, relation, and severity, produce a
 # human-readable representation of the display level string for errors.
 sub _format_level {
-    my ($self, $op, $rel, $severity, $certainty) = @_;
+    my ($self, $op, $rel, $severity) = @_;
 
-    if (not defined $severity and not defined $certainty) {
+    if (not defined $severity) {
         return "$op $rel";
-    } elsif (not defined $severity) {
-        return "$op $rel $certainty (certainty)";
-    } elsif (not defined $certainty) {
-        return "$op $rel $severity (severity)";
     } else {
-        return "$op $rel $severity/$certainty";
+        return "$op $rel $severity (severity)";
     }
 }
 
 sub display {
-    my ($self, $op, $rel, $severity, $certainty) = @_;
+    my ($self, $op, $rel, $severity) = @_;
 
     unless ($op =~ /^[+=-]\z/ and $rel =~ /^(?:[<>]=?|=)\z/) {
-        my $error = $self->_format_level($op, $rel, $severity, $certainty);
+        my $error = $self->_format_level($op, $rel, $severity);
         die 'invalid display constraint ' . $error;
     }
 
     if ($op eq '=') {
         for my $s (@Lintian::Tag::Info::SEVERITIES) {
-            for my $c (@Lintian::Tag::Info::CERTAINTIES) {
-                $self->display_level_lookup->{$s}{$c} = 0;
-            }
+            $self->display_level_lookup->{$s} = 0;
         }
     }
 
     my $status = ($op eq '-' ? 0 : 1);
 
-    my (@severities, @certainties);
+    my @severities;
     if ($severity) {
         @severities = $self->_relation_subset($severity, $rel,
             @Lintian::Tag::Info::SEVERITIES);
@@ -935,22 +925,13 @@ sub display {
         @severities = @Lintian::Tag::Info::SEVERITIES;
     }
 
-    if ($certainty) {
-        @certainties = $self->_relation_subset($certainty, $rel,
-            @Lintian::Tag::Info::CERTAINTIES);
-    } else {
-        @certainties = @Lintian::Tag::Info::CERTAINTIES;
-    }
-
-    unless (@severities and @certainties) {
-        my $error = $self->_format_level($op, $rel, $severity, $certainty);
+    unless (@severities) {
+        my $error = $self->_format_level($op, $rel, $severity);
         die 'invalid display constraint ' . $error;
     }
 
     for my $s (@severities) {
-        for my $c (@certainties) {
-            $self->display_level_lookup->{$s}{$c} = $status;
-        }
+        $self->display_level_lookup->{$s} = $status;
     }
 
     return;

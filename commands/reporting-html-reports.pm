@@ -86,7 +86,7 @@ my (%statistics, %tag_statistics);
 # %by_maint holds a hash of maintainer names to packages and tags.  Each
 # maintainer is a key.  The value is a hash of package names to hashes.  Each
 # package hash is in turn a hash of versions to an anonymous array of hashes,
-# with each hash having keys code, package, type, tag, severity, certainty,
+# with each hash having keys code, package, type, tag, severity,
 # extra, and xref.  xref gets the partial URL of the maintainer page for that
 # source package.
 #

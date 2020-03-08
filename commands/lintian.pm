@@ -90,7 +90,6 @@ my $experimental_output_opts;
 
 my @CLOSE_AT_END;
 my $OUTPUT = Lintian::Output::Standard->new;
-my @certainties = qw(wild-guess possible certain);
 my (@display_level, %display_source, %suppress_tags);
 my ($action, $checks, $check_tags, $dont_check, $received_signal);
 my @unpack_info;
@@ -355,22 +354,16 @@ sub record_display_level {
     if ($level =~ s/^([<>]=?|=)//) {
         $rel = $1;
     }
-    my ($severity, $certainty) = split('/', $level);
+    my $severity = $level;
     $op = '=' unless defined $op;
     $rel = '=' unless defined $rel;
-    if (not defined $certainty) {
-        if (any { $severity eq $_ } @certainties) {
-            $certainty = $severity;
-            undef $severity;
-        }
-    }
-    push(@display_level, [$op, $rel, $severity, $certainty]);
+    push(@display_level, [$op, $rel, $severity]);
     return;
 }
 
 # Process -I|--display-info flag
 sub display_infotags {
-    push(@display_level, ['+', '>=', 'wishlist']);
+    push(@display_level, ['+', '>=', 'info']);
     return;
 }
 
@@ -387,11 +380,7 @@ sub display_classificationtags {
 
 # Process --default-display-level flag
 sub default_display_level {
-    push(@display_level,
-        ['=', '>=', 'important'],
-        ['+', '>=', 'normal', 'possible'],
-        ['+', '>=', 'minor', 'certain'],
-    );
+    push(@display_level,['=', '>=', 'warning'],);
     return;
 }
 
