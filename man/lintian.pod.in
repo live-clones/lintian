@@ -161,7 +161,7 @@ Behavior options for B<lintian>.
 
 =item B<--color> (never|always|auto|html)
 
-Whether to colorize tags in lintian output based on their severity.
+Whether to colorize tags in lintian output based on their visibility.
 The default is "never", which never uses color.  "always" will always
 use color, "auto" will use color only if the output is going to a
 terminal, and "html" will use HTML E<lt>spanE<gt> tags with a color style
@@ -185,7 +185,7 @@ option behaves exactly like passing the following options to lintian:
 
 =over 4
 
-B<-L> ">=important" B<-L> "+>=normal/possible" B<-L> "+minor/certain"
+B<-L> ">=warning"
 
 =back
 
@@ -233,7 +233,7 @@ This option overrides B<info> variable in the configuration file.
 =item B<-I>, B<--display-info>
 
 Display informational ("I:") tags as well.  They are normally
-suppressed.  (This is equivalent to B<-L> ">=wishlist").
+suppressed.  (This is equivalent to B<-L> ">=info").
 
 This option overrides the B<display-info> variable in the
 configuration file.
@@ -244,11 +244,9 @@ configuration file.
 =item B<-L> [+|-|=][>=|>|=|<|<=][S|C|S/C], B<--display-level> [+|-|=][>=|>|=|<|<=][S|C|S/C]
 
 Fine-grained selection of tags to be displayed. It is possible to add,
-remove or set the levels to display, specifying a severity (S:
-serious, important, normal, minor, wishlist, pedantic), a certainty
-(C: certain, possible, wild-guess), or both (S/C).  The default
-settings are equivalent to B<-L> ">=important" B<-L>
-"+>=normal/possible" B<-L> "+minor/certain").
+remove or set the levels to display, specifying a visibility (error,
+warning, info, pedantic, or classification. The default settings are
+equivalent to B<-L> ">=warning".
 
 The value consists of 3 parts, where two of them are optional.  The
 parts are:
@@ -265,28 +263,11 @@ The default value is "=" (i.e. set the display level).
 
 =item set operator
 
-The set of severity and certainties to be selected.  The operator can
-be one of ">=", ">", "=", "<" or "<=".  As an example, this can be used
-to select all important (or "more severe") tags via ">=important".
+The visibility to be selected.  The operator can be one of ">=", ">",
+"=", "<" or "<=".  As an example, this can be used to select all info
+(and more serious) tags via ">=info".
 
-The selected values includes only items where I<both> the severity and
-the certainty are both included in the set.
-
-As an example, ">=important/possible" includes "important/possible",
-"important/certain", "serious/possible" and "serious/certain".  Note
-that it does I<not> include "serious/wild-guess" (since it does not
-satisfy the lower-bound for the certainty).
-
-The default value is "=", which means "exactly" the given severity
-or/and certainty.
-
-=item severity-certainty
-
-The severity or/and certainty.  This can be any of the 3 forms:
-I<severity>, I<certainty> or I<severity>/I<certainty>.
-
-If only a severity or a certainty is given, the other one defaults to
-"any" as in "any certainty with the given severity" (or vice versa).
+The default value is "=", which means "exactly" the given visibility.
 
 =back
 
@@ -807,10 +788,9 @@ Check binary package foo given by foo.deb.
 
 Check source package foo given by foo.dsc.
 
-=item B<$ lintian foo.dsc -L +minor/possible>
+=item B<$ lintian foo.dsc -L +info>
 
-Check source package foo given by foo.dsc, including minor/possible
-tags.
+Check source package foo given by foo.dsc, including info tags.
 
 =item B<$ lintian -i foo.changes>
 
