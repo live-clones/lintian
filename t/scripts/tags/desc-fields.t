@@ -47,7 +47,7 @@ my @descpaths = File::Find::Rule->file()->name('*.desc')->in('tags');
 diag scalar @descpaths . ' known tags.';
 
 # mandatory fields
-my @mandatory = qw(tag severity certainty check info);
+my @mandatory = qw(tag severity check info);
 
 # disallowed fields
 my @disallowed = qw();
