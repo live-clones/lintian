@@ -1,0 +1,7 @@
+Tag: binary-is-wrong-architecture
+Severity: serious
+Certainty: certain
+Check: xdeb
+Info: The binary or shared library is the wrong architecture.
+ This is usually a failure of the Emdebian patches to set the
+ correct compiler.
