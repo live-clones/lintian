@@ -35,6 +35,7 @@ use Dpkg::Vendor qw(get_current_vendor get_vendor_info);
 
 use Lintian::CheckScript;
 use Lintian::Deb822Parser qw(read_dpkg_control_utf8);
+use Lintian::Tag::Info;
 use Lintian::Util qw(parse_boolean strip);
 
 =head1 NAME
@@ -66,13 +67,8 @@ Lintian Profiles as well as loading the relevant Lintian checks.
 
 =cut
 
-# Ordered lists of severities and certainties, used for display level parsing.
-our @SEVERITIES
-  = qw(classification pedantic wishlist minor normal important serious);
-our @CERTAINTIES = qw(wild-guess possible certain);
-
 # map of known valid severity allowed by profiles
-my %SEVERITIES = map { $_ => 1} @SEVERITIES;
+my %SEVERITIES = map { $_ => 1} @Lintian::Tag::Info::SEVERITIES;
 
 # List of fields in the main profile paragraph
 my %MAIN_FIELDS = (
@@ -532,7 +528,7 @@ sub _read_profile_section {
                         q{and cannot not be assigned a severity},
                         qq{(profile "$pname", section $sno)}));
             }
-            $t->set_severity($severity);
+            $t->effective_severity($severity);
         }
         if ($overridable != -1) {
             if ($overridable) {
@@ -731,7 +727,7 @@ sub _parse_check {
     my @tagnames = @{$self->{'check-tagnames'}{$gcname}};
     for my $tagname (@tagnames) {
         my $taginfo = $self->{'known-tags'}{$tagname};
-        $taginfo->add_script_type($c->type);
+        $taginfo->script_type($c->type);
 
         $c->add_taginfo($taginfo);
     }
@@ -984,8 +980,8 @@ sub display {
         die 'invalid display constraint ' . $error;
     }
     if ($op eq '=') {
-        for my $s (@SEVERITIES) {
-            for my $c (@CERTAINTIES) {
+        for my $s (@Lintian::Tag::Info::SEVERITIES) {
+            for my $c (@Lintian::Tag::Info::CERTAINTIES) {
                 $self->{display_level}{$s}{$c} = 0;
             }
         }
@@ -993,14 +989,16 @@ sub display {
     my $status = ($op eq '-' ? 0 : 1);
     my (@severities, @certainties);
     if ($severity) {
-        @severities = $self->_relation_subset($severity, $rel, @SEVERITIES);
+        @severities = $self->_relation_subset($severity, $rel,
+            @Lintian::Tag::Info::SEVERITIES);
     } else {
-        @severities = @SEVERITIES;
+        @severities = @Lintian::Tag::Info::SEVERITIES;
     }
     if ($certainty) {
-        @certainties = $self->_relation_subset($certainty, $rel, @CERTAINTIES);
+        @certainties = $self->_relation_subset($certainty, $rel,
+            @Lintian::Tag::Info::CERTAINTIES);
     } else {
-        @certainties = @CERTAINTIES;
+        @certainties = @Lintian::Tag::Info::CERTAINTIES;
     }
     unless (@severities and @certainties) {
         my $error = $self->_format_level($op, $rel, $severity, $certainty);
