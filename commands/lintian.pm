@@ -1072,16 +1072,6 @@ sub parse_options {
 
 sub _update_profile {
     my ($profile, $tags, $sup_check, $sup_tags, $only_check) = @_;
-    my %abbrev = ();
-
-    if ($sup_check || $only_check) {
-        # Build an abbreviation map
-        for my $c ($profile->scripts(1)) {
-            my $cs = $profile->get_script($c, 1);
-            next unless $cs->abbrev;
-            $abbrev{$cs->abbrev} = $cs;
-        }
-    }
 
     # if tags are listed explicitly (--tags) then show them even if
     # they are pedantic/experimental etc.  However, for --check-part
@@ -1105,7 +1095,7 @@ sub _update_profile {
                     $profile->enable_tags($_->tags)for @all;
                     next;
                 }
-                my $cs = $profile->get_script($c, 1) || $abbrev{$c};
+                my $cs = $profile->get_script($c, 1);
                 fatal_error("Unrecognized check script (via -C): $c")
                   unless $cs;
                 $profile->enable_tags($cs->tags);
@@ -1114,7 +1104,7 @@ sub _update_profile {
     } elsif ($sup_check) {
         # we are disabling checks
         for my $c (split(/,/, $sup_check)) {
-            my $cs = $profile->get_script($c, 1) || $abbrev{$c};
+            my $cs = $profile->get_script($c, 1);
             fatal_error("Unrecognized check script (via -X): $c") unless $cs;
             $profile->disable_tags($cs->tags);
         }

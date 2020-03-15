@@ -76,12 +76,6 @@ has name => (
     default => EMPTY
 );
 
-has abbrev => (
-    is => 'rw',
-    coerce => sub { my ($string) = @_; return $string // EMPTY;},
-    default => EMPTY
-);
-
 has path => (
     is => 'rw',
     coerce => sub { my ($string) = @_; return $string // EMPTY;},
@@ -139,7 +133,6 @@ sub load {
 
     # lintian.desc has no type
     $self->type($header->{'type'});
-    $self->abbrev($header->{'abbrev'});
 
     my $module = $name;
 
