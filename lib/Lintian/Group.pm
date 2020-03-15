@@ -174,7 +174,8 @@ sub _get_processable {
     } elsif ($file =~ m/\.buildinfo$/o) {
         $processable = Lintian::Processable::Buildinfo->new;
 
-    } elsif ($file =~ m/\.deb$/o) {
+    } elsif ($file =~ m/\.d?deb$/) {
+        # in ubuntu, automatic dbgsym packages end with .ddeb
         $processable = Lintian::Processable::Binary->new;
 
     } elsif ($file =~ m/\.udeb$/o) {
@@ -248,9 +249,9 @@ sub init_from_file {
             exit 2;
         }
 
-        # Some file we do not care about (at least not here).
+        # only care about some files; ddeb is ubuntu dbgsym
         next
-          unless $file =~ /\.u?deb$/
+          unless $file =~ /\.(?:u|d)?deb$/
           || $file =~ m/\.dsc$/
           || $file =~ m/\.buildinfo$/;
 
