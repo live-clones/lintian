@@ -201,18 +201,6 @@ sub test_check_desc {
             );
         }
 
-        if (my $d = $header->{'info'}) {
-            my $mistakes = 0;
-            my $handler = sub {
-                my ($incorrect, $correct) = @_;
-                $builder->diag("Spelling ($cname): $incorrect => $correct");
-                $mistakes++;
-            };
-            check_spelling($d, $handler);
-            $builder->is_eq($mistakes, 0,"$cname Info has no spelling errors");
-        } else {
-            $builder->ok(0, "$cname has an Info field");
-        }
         foreach my $tpara (@tagpara) {
             my $tag = $tpara->{'tag'}//'';
             my $severity = $tpara->{'severity'}//'';
