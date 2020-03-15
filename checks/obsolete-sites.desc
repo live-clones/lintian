@@ -1,7 +1,3 @@
 Check-Script: obsolete-sites
-Author: Axel Beckert <abe@debian.org>
-Abbrev: obso
 Type: source
-Needs-Info: unpacked
 Experimental: yes
-Info: This script checks for obsolete (but still valid) URLs

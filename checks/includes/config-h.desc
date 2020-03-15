@@ -1,6 +1,2 @@
 Check-Script: includes/config-h
-Author: Felix Lechner <felix.lechner@lease-up.com>
 Type: binary, udeb
-Needs-Info: unpacked
-Info: This script checks a config.h file shipped in as an include file
- for common errors.

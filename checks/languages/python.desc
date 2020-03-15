@@ -1,5 +1,2 @@
 Check-Script: languages/python
-Author: Chris Lamb <lamby@debian.org>
 Type: source, binary
-Info: This script checks Python-related issues
-Needs-Info: unpacked, changelog-file, scripts
