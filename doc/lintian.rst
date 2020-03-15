@@ -1013,22 +1013,3 @@ Implementations should ensure the return value is undefined.
 If the run sub invokes a trappable error (e.g. "die"), no further checks
 are done on the package and Lintian will (eventually) exit with 2 to its
 caller. The check may still be run on other packages.
-
-The run sub may emit tags by invoking the sub "tag" from Lintian::Tags
-(it can be imported). The first argument is the name of the tag to emit.
-Any extra arguments will be used as the "tag extra" (or diagnostics).
-Example:
-
-::
-
-   use Lintian::Tags qw(tag);
-   sub run {
-       tag 'my-tag', 'hallo world';
-       return;
-   }
-
-would emit the tag "my-tag" with the extra note "hallo world" like this:
-
-::
-
-   I: package: my-tag hallo world
