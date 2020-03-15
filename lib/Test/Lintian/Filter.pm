@@ -169,7 +169,8 @@ sub find_selected_lintian_testpaths {
     }
 
     my $LINTIAN_ROOT = $ENV{'LINTIAN_ROOT'}//die('Cannot find LINTIAN_ROOT');
-    my $profile = Lintian::Profile->new(undef, [$LINTIAN_ROOT]);
+    my $profile = Lintian::Profile->new;
+    $profile->load(undef, [$LINTIAN_ROOT]);
 
     my @found;
     foreach my $suite (sort @LINTIAN_SUITES) {
@@ -302,7 +303,8 @@ sub find_all_tags {
     my %tags;
 
     my $LINTIAN_ROOT = $ENV{'LINTIAN_ROOT'}//die('Cannot find LINTIAN_ROOT');
-    my $profile = Lintian::Profile->new(undef, [$LINTIAN_ROOT]);
+    my $profile = Lintian::Profile->new;
+    $profile->load(undef, [$LINTIAN_ROOT]);
 
     my @checks = split(SPACE, $desc->{check});
     foreach my $check (@checks) {

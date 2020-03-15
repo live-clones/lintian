@@ -84,8 +84,8 @@ use Lintian::Util qw(is_string_utf8_encoded);
 # files ending up in releases (like in 2.5.17 and 2.5.18).
 $Lintian::Data::LAZY_LOAD = 0;
 
-my %severities = map { $_ => 1 } @Lintian::Profile::SEVERITIES;
-my %certainties = map { $_ => 1 } @Lintian::Profile::CERTAINTIES;
+my %severities = map { $_ => 1 } @Lintian::Tag::Info::SEVERITIES;
+my %certainties = map { $_ => 1 } @Lintian::Tag::Info::CERTAINTIES;
 my %check_types = map { $_ => 1 } qw(binary changes source udeb);
 my %known_html_tags = map { $_ => 1 } qw(a em i tt);
 
@@ -317,15 +317,17 @@ sub test_load_profiles {
 
     $opt{'wanted'} = sub {
         my $profname = $File::Find::name;
-        my ($err, $prof);
 
-        return unless $profname =~ s/\.profile$//o;
+        return
+          unless $profname =~ s/\.profile$//o;
         $profname =~ s,^$sre,,;
 
-        eval {$prof = Lintian::Profile->new($profname, \@inc);};
-        $err = $@;
+        my $profile = Lintian::Profile->new;
 
-        $builder->ok($prof, "$profname is loadable.")
+        eval {$profile->load($profname, \@inc);};
+        my $err = $@;
+
+        $builder->ok($profile, "$profname is loadable.")
           or $builder->diag("Load error: $err\n");
     };
 
@@ -622,7 +624,9 @@ sub load_profile_for_test {
     push(@inc, $location)
       unless @inc;
 
-    $PROFILE = Lintian::Profile->new($profname, \@inc);
+    $PROFILE = Lintian::Profile->new;
+    $PROFILE->load($profname, \@inc);
+
     Lintian::Data->set_vendor($PROFILE);
     $ENV{'LINTIAN_HELPER_DIRS'} = join(':', map { "$_/helpers" } @inc);
     $ENV{'LINTIAN_INCLUDE_DIRS'} = join(':', @inc);

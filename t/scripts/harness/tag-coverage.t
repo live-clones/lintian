@@ -70,7 +70,8 @@ my @known_missing = qw(
   wrong-vcs-location-for-papt
 );
 
-my $profile = Lintian::Profile->new(undef, [$ENV{LINTIAN_ROOT}]);
+my $profile = Lintian::Profile->new;
+$profile->load(undef, [$ENV{LINTIAN_ROOT}]);
 
 # find known checks
 my @known = uniq $profile->scripts;
