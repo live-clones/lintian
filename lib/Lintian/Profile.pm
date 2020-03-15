@@ -681,11 +681,17 @@ sub _load_check {
 
 sub _parse_check {
     my ($self, $gcname, $dir) = @_;
+
     # Have we already tried to load this before?  Possibly via an alias
     # or symlink
     return $self->{'check-scripts'}{$gcname}
       if exists $self->{'check-scripts'}{$gcname};
-    my $c = Lintian::CheckScript->new($dir, $gcname);
+
+    my $c = Lintian::CheckScript->new;
+    $c->basedir($dir);
+    $c->name($gcname);
+    $c->load;
+
     my $cname = $c->name;
     if (exists $self->{'check-scripts'}{$cname}) {
         # We have loaded the check under a different name

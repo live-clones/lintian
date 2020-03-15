@@ -416,8 +416,10 @@ sub test_load_checks {
     load_profile_for_test();
 
     foreach my $checkname (@checknames) {
-        my $cs;
-        eval {$cs = Lintian::CheckScript->new($dir, $checkname);};
+        my $cs = Lintian::CheckScript->new;
+        $cs->basedir($dir);
+        $cs->name($checkname);
+        eval {$cs->load;};
         if (my $err = $@) {
             $err =~ s/ at .*? line \d+\s*\n//;
             $builder->ok(0, "Cannot parse ${checkname}.desc");
@@ -427,7 +429,7 @@ sub test_load_checks {
         }
         my $cname = $cs->name;
         my $ppkg = $cname;
-        my $path = $cs->script_path;
+        my $path = $cs->path;
         my $err;
         my $rs_ref = 'MISSING';
 
@@ -557,8 +559,11 @@ sub test_tags_implemented {
     }
 
     foreach my $checkname (@checknames) {
-        my ($cs, @tags, $codestr, @missing);
-        eval {$cs = Lintian::CheckScript->new($dir, $checkname);};
+        my (@tags, $codestr, @missing);
+        my $cs = Lintian::CheckScript->new;
+        $cs->basedir($dir);
+        $cs->name($checkname);
+        eval {$cs->load;};
         if (my $err = $@) {
             $err =~ s/ at .*? line \d+\s*\n//;
             $builder->ok(0, "Cannot parse ${checkname}.desc");
@@ -566,7 +571,7 @@ sub test_tags_implemented {
             next;
         }
         my $cname = $cs->name;
-        my $check = $cs->script_path;
+        my $check = $cs->path;
 
         @tags = $cs->tags unless defined $pattern;
         @tags = grep { !m/$pattern/ } $cs->tags
