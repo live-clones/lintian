@@ -13,7 +13,6 @@ pod2mansources := $(wildcard man/*.pod)
 docsource := doc/lintian.rst README.md man/lintian.pod.in \
 	     $(pod2mansources)
 allchecks := $(wildcard checks/*)
-allcollect := $(wildcard collection/*)
 tagfiles := $(wildcard t/changes/*.changes t/*/*/tags)
 testfiles := $(wildcard t/tests/*/desc)
 perlprovides := data/fields/perl-provides
@@ -43,7 +42,7 @@ api-doc:
 	private/generate-html-docs doc/api.html
 
 .PHONY: runtests
-runtests: $(neededfiles) $(allchecks) $(allcollect) $(tagfiles) $(testfiles)
+runtests: $(neededfiles) $(allchecks) $(tagfiles) $(testfiles)
 	@echo .... building test packages ....
 	t/bin/build-test-packages \
 		$(PAR_ARGS) \
