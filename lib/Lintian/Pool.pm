@@ -144,7 +144,7 @@ Process the pool.
 =cut
 
 sub process{
-    my ($self, $action,$PROFILE,$TAGS,$exit_code_ref, $opt, $STATUS_FD,
+    my ($self, $action,$PROFILE,$exit_code_ref, $opt, $STATUS_FD,
         $unpack_info_ref, $OUTPUT)
       = @_;
 
@@ -176,7 +176,7 @@ sub process{
         if ($action eq 'check') {
             if (
                 !$group->process(
-                    $TAGS,$exit_code_ref, \%override_count,$opt, $OUTPUT
+                    $exit_code_ref, \%override_count,$opt, $OUTPUT
                 )
             ) {
                 $success = 0;

@@ -26,9 +26,9 @@ use Carp qw(croak);
 
 use Lintian::Data;
 use Lintian::Deb822Parser qw(read_dpkg_control_utf8);
+use Lintian::Profile;
 use Lintian::Tag::TextUtil
   qw(dtml_to_html dtml_to_text split_paragraphs wrap_paragraphs);
-use Lintian::Tags qw();
 
 use constant EMPTY => q{};
 use constant SPACE => q{ };
@@ -122,11 +122,11 @@ sub load {
     croak "Missing Certainty field for $tagname" unless $self->{'certainty'};
     croak "Tag $tagname has invalid severity ($self->{'severity'}):"
       . ' Must be one of '
-      . join(', ', @Lintian::Tags::SEVERITIES)
+      . join(', ', @Lintian::Profile::SEVERITIES)
       unless exists $CODES{$self->{'severity'}};
     croak "Tag $tagname has invalid certainty ($self->{'certainty'}):"
       . ' Must be one of '
-      . join(', ', @Lintian::Tags::CERTAINTIES)
+      . join(', ', @Lintian::Profile::CERTAINTIES)
       unless exists $CODES{$self->{'severity'}}{$self->{'certainty'}};
     $self->{'info'} = '' unless $self->{'info'};
 

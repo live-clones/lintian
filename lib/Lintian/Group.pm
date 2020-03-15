@@ -39,7 +39,6 @@ use Lintian::Processable::Buildinfo;
 use Lintian::Processable::Changes;
 use Lintian::Processable::Source;
 use Lintian::Processable::Udeb;
-use Lintian::Tags qw(tag);
 use Lintian::Util qw(internal_error get_dsc_info strip human_bytes);
 
 use constant EMPTY => q{};
@@ -308,7 +307,7 @@ Process group.
 =cut
 
 sub process {
-    my ($self, $TAGS, $exit_code_ref, $override_count, $opt, $OUTPUT)= @_;
+    my ($self, $exit_code_ref, $override_count, $opt, $OUTPUT)= @_;
 
     my $all_ok = 1;
 
@@ -330,9 +329,6 @@ sub process {
 
         my $path = $processable->path;
 
-        # required for global Lintian::Tags::tag usage
-        $TAGS->{current} = $path;
-
         my $declared_overrides;
         my %used_overrides;
 
@@ -351,7 +347,7 @@ sub process {
                 die $err if not ref $err or $err->errno != ENOENT;
             }
 
-            my %alias = %{$TAGS->{profile}->aliases};
+            my %alias = %{$self->profile->aliases};
 
             # treat renamed tags in overrides
             for my $tagname (keys %{$declared_overrides}) {
@@ -381,9 +377,7 @@ sub process {
             # treat ignored overrides here
             for my $tagname (keys %{$declared_overrides}) {
 
-                if ($TAGS->{profile}
-                    && !$TAGS->{profile}->is_overridable($tagname)) {
-
+                unless ($self->profile->is_overridable($tagname)) {
                     delete $declared_overrides->{$tagname};
                     $override_count->{ignored}{$tagname}++;
                 }
@@ -431,12 +425,6 @@ sub process {
             # remove found tags from Processable
             $processable->found([]);
 
-            # add any from the global queue
-            push(@found, @{$TAGS->{queue}});
-
-            # empty the global queue
-            $TAGS->{queue} = [];
-
             if ($err) {
                 print STDERR $err;
                 print STDERR "internal error: cannot run $check check",
@@ -453,8 +441,6 @@ sub process {
             $OUTPUT->perf_log("$procid,check/$check,${raw_res}");
         }
 
-        undef $TAGS->{current};
-
         my @keep;
 
         for my $tag (@found) {
@@ -468,7 +454,7 @@ sub process {
             $tag->info($taginfo);
 
             next
-              if $TAGS->suppressed($tag->name);
+              if $self->profile->suppressed($tag->name);
 
             my $override;
             my $extra = $tag->extra;
@@ -513,7 +499,7 @@ sub process {
         for my $tagname (sort keys %used_overrides) {
 
             next
-              if $TAGS->suppressed($tagname);
+              if $self->profile->suppressed($tagname);
 
             my $tag_overrides = $used_overrides{$tagname};
 
@@ -582,10 +568,10 @@ sub process {
 
         next
           if defined $tag->override
-          && !$TAGS->{show_overrides};
+          && !$opt->{'show-overrides'};
 
         next
-          unless $TAGS->displayed($tag->name);
+          unless $self->profile->displayed($tag->name);
 
         push(@print, $tag);
     }

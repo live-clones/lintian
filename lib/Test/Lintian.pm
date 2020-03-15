@@ -78,15 +78,14 @@ use Lintian::Data;
 use Lintian::Deb822Parser qw(read_dpkg_control);
 use Lintian::Profile;
 use Lintian::Tag::Info;
-use Lintian::Tags;
 use Lintian::Util qw(is_string_utf8_encoded);
 
 # We want data files loaded early to avoid problems with missing data
 # files ending up in releases (like in 2.5.17 and 2.5.18).
 $Lintian::Data::LAZY_LOAD = 0;
 
-my %severities = map { $_ => 1 } @Lintian::Tags::SEVERITIES;
-my %certainties = map { $_ => 1 } @Lintian::Tags::CERTAINTIES;
+my %severities = map { $_ => 1 } @Lintian::Profile::SEVERITIES;
+my %certainties = map { $_ => 1 } @Lintian::Profile::CERTAINTIES;
 my %check_types = map { $_ => 1 } qw(binary changes source udeb);
 my %known_html_tags = map { $_ => 1 } qw(a em i tt);
 
@@ -508,9 +507,7 @@ Consider the following example:
  $tagname = 'my-other-tag' if $condition;
 
 In this example, this test would conclude that 'my-tag' and
-'my-other-tag' are both implemented.  Which is good when $tagname is
-eventually passed to L<tag|Lintian::Tags/tag>, and a false-negative
-otherwise.
+'my-other-tag' are both implemented.
 
 Comment lines are I<not> ignored, so comments can be used as an
 alternative to the exclude-pattern (above).

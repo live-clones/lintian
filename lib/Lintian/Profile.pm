@@ -1,4 +1,5 @@
-# Copyright (C) 2011 Niels Thykier <niels@thykier.net>
+# Copyright © 2011 Niels Thykier <niels@thykier.net>
+# Copyright © 2020 Felix Lechner <felix.lechner@lease-up.com>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -27,13 +28,13 @@ use autodie qw(opendir closedir);
 
 use Carp qw(croak);
 use File::Find::Rule;
+use List::MoreUtils qw(any);
 use Path::Tiny;
 
 use Dpkg::Vendor qw(get_current_vendor get_vendor_info);
 
 use Lintian::CheckScript;
 use Lintian::Deb822Parser qw(read_dpkg_control_utf8);
-use Lintian::Tags;
 use Lintian::Util qw(parse_boolean strip);
 
 =head1 NAME
@@ -65,8 +66,13 @@ Lintian Profiles as well as loading the relevant Lintian checks.
 
 =cut
 
+# Ordered lists of severities and certainties, used for display level parsing.
+our @SEVERITIES
+  = qw(classification pedantic wishlist minor normal important serious);
+our @CERTAINTIES = qw(wild-guess possible certain);
+
 # map of known valid severity allowed by profiles
-my %SEVERITIES = map { $_ => 1} @Lintian::Tags::SEVERITIES;
+my %SEVERITIES = map { $_ => 1} @SEVERITIES;
 
 # List of fields in the main profile paragraph
 my %MAIN_FIELDS = (
@@ -100,7 +106,9 @@ If $ipath is not given, a default one will be used.
 
 sub new {
     my ($type, $name, $ipath, $extra) = @_;
+
     my ($profile, @full_inc_path);
+
     if (!defined $ipath) {
         # Temporary fix (see _safe_include_path)
         @full_inc_path = (_default_inc_path());
@@ -136,7 +144,21 @@ sub new {
         'known-tags'           => {},
         # maps old tag names to new tag names
         'renamed-tags'         => {},
+
+        display_level     => {
+            classification =>
+              { 'wild-guess' => 0, possible => 0, certain => 0 },
+            wishlist  => { 'wild-guess' => 0, possible => 0, certain => 0 },
+            minor     => { 'wild-guess' => 0, possible => 0, certain => 1 },
+            normal    => { 'wild-guess' => 0, possible => 1, certain => 1 },
+            important => { 'wild-guess' => 1, possible => 1, certain => 1 },
+            serious   => { 'wild-guess' => 1, possible => 1, certain => 1 },
+        },
+        display_source       => {},
+        files                => {},
+        show_experimental    => 0,
     };
+
     $self = bless $self, $type;
     if (not defined $name) {
         ($profile, $name) = $self->_find_vendor_profile;
@@ -187,7 +209,7 @@ sub new {
 
     # Implementation detail: Ensure that the "lintian" check is always
     # loaded to avoid "attempt to emit unknown tags" caused by
-    # the frontend or L::Tags.  Also default to enabling the Lintian
+    # the frontend.  Also default to enabling the Lintian
     # tags as they are helpful (e.g. for debugging overrides files)
     my $c = $self->_load_check($self->name, 'lintian');
     $self->enable_tags($c->tags);
@@ -795,6 +817,201 @@ sub _find_vendor_profile {
         join(q{ },
             'Could not find a profile matching',
             qq{"$prof" for vendor $vendors[0]}));
+}
+
+=item show_experimental(BOOL)
+
+If BOOL is true, configure experimental tags to be shown.  If BOOL is
+false, configure experimental tags to not be shown.
+
+=cut
+
+sub show_experimental {
+    my ($self, $bool) = @_;
+    $self->{show_experimental} = $bool ? 1 : 0;
+    return;
+}
+
+=item sources([SOURCE [, ...]])
+
+Limits the displayed tags to only those from the listed sources.  One or
+more sources may be given.  If no sources are given, resets the object
+ to display tags from any source.  Tag sources are the
+names of references from the Ref metadata for the tags.
+
+=cut
+
+sub sources {
+    my ($self, @sources) = @_;
+    $self->{display_source} = {};
+    for my $source (@sources) {
+        $self->{display_source}{$source} = 1;
+    }
+    return;
+}
+
+=item displayed(TAG)
+
+Returns true if the given tag would be displayed given the current
+configuration, false otherwise.  This does not check overrides, only whether
+the tag severity, certainty, and source warrants display given the
+configuration.
+
+=cut
+
+sub displayed {
+    my ($self, $tag) = @_;
+
+    # Note, we get the known as it will be suppressed by
+    # $self->suppressed below if the tag is not enabled.
+    my $info = $self->get_tag($tag, 1);
+    return 0
+      if ($info->experimental and not $self->{show_experimental});
+    return 0
+      if $self->suppressed($tag);
+    my $severity = $info->severity;
+    my $certainty = $info->certainty;
+
+    my $display = $self->{display_level}{$severity}{$certainty};
+
+    # If display_source is set, we need to check whether any of the references
+    # of this tag occur in display_source.
+    if (keys %{ $self->{display_source} }) {
+        my @sources = $info->sources;
+        unless (any { $self->{display_source}{$_} } @sources) {
+            $display = 0;
+        }
+    }
+    return $display;
+}
+
+=item suppressed(TAG)
+
+Returns true if the given tag would be suppressed given the current
+configuration, false otherwise.  This is different than displayed() in
+that a tag is only suppressed if Lintian treats the tag as if it's never
+been seen, doesn't update statistics, and doesn't change its exit status.
+Tags are suppressed via profile().
+
+=cut
+
+sub suppressed {
+    my ($self, $tag) = @_;
+
+    return 1
+      unless $self->get_tag($tag);
+
+    return;
+}
+
+=item display(OPERATION, RELATION, SEVERITY, CERTAINTY)
+
+Configure which tags are displayed by severity and certainty.  OPERATION
+is C<+> to display the indicated tags, C<-> to not display the indicated
+tags, or C<=> to not display any tags except the indicated ones.  RELATION
+is one of C<< < >>, C<< <= >>, C<=>, C<< >= >>, or C<< > >>.  The
+OPERATION will be applied to all pairs of severity and certainty that
+match the given RELATION on the SEVERITY and CERTAINTY arguments.  If
+either of those arguments are undefined, the action applies to any value
+for that variable.  For example:
+
+    $tags->display('=', '>=', 'important');
+
+turns off display of all tags and then enables display of any tag (with
+any certainty) of severity important or higher.
+
+    $tags->display('+', '>', 'normal', 'possible');
+
+adds to the current configuration display of all tags with a severity
+higher than normal and a certainty higher than possible (so
+important/certain and serious/certain).
+
+    $tags->display('-', '=', 'minor', 'possible');
+
+turns off display of tags of severity minor and certainty possible.
+
+This method throws an exception on errors, such as an unknown severity or
+certainty or an impossible constraint (like C<< > serious >>).
+
+=cut
+
+# Generate a subset of a list given the element and the relation.  This
+# function makes a hard assumption that $rel will be one of <, <=, =, >=,
+# or >.  It is not syntax-checked.
+sub _relation_subset {
+    my ($self, $element, $rel, @list) = @_;
+    if ($rel eq '=') {
+        return grep { $_ eq $element } @list;
+    }
+    if (substr($rel, 0, 1) eq '<') {
+        @list = reverse @list;
+    }
+    my $found;
+    for my $i (0..$#list) {
+        if ($element eq $list[$i]) {
+            $found = $i;
+            last;
+        }
+    }
+    return unless defined($found);
+    if (length($rel) > 1) {
+        return @list[$found .. $#list];
+    } else {
+        return if $found == $#list;
+        return @list[($found + 1) .. $#list];
+    }
+}
+
+# Given the operation, relation, severity, and certainty, produce a
+# human-readable representation of the display level string for errors.
+sub _format_level {
+    my ($self, $op, $rel, $severity, $certainty) = @_;
+    if (not defined $severity and not defined $certainty) {
+        return "$op $rel";
+    } elsif (not defined $severity) {
+        return "$op $rel $certainty (certainty)";
+    } elsif (not defined $certainty) {
+        return "$op $rel $severity (severity)";
+    } else {
+        return "$op $rel $severity/$certainty";
+    }
+}
+
+sub display {
+    my ($self, $op, $rel, $severity, $certainty) = @_;
+    unless ($op =~ /^[+=-]\z/ and $rel =~ /^(?:[<>]=?|=)\z/) {
+        my $error = $self->_format_level($op, $rel, $severity, $certainty);
+        die 'invalid display constraint ' . $error;
+    }
+    if ($op eq '=') {
+        for my $s (@SEVERITIES) {
+            for my $c (@CERTAINTIES) {
+                $self->{display_level}{$s}{$c} = 0;
+            }
+        }
+    }
+    my $status = ($op eq '-' ? 0 : 1);
+    my (@severities, @certainties);
+    if ($severity) {
+        @severities = $self->_relation_subset($severity, $rel, @SEVERITIES);
+    } else {
+        @severities = @SEVERITIES;
+    }
+    if ($certainty) {
+        @certainties = $self->_relation_subset($certainty, $rel, @CERTAINTIES);
+    } else {
+        @certainties = @CERTAINTIES;
+    }
+    unless (@severities and @certainties) {
+        my $error = $self->_format_level($op, $rel, $severity, $certainty);
+        die 'invalid display constraint ' . $error;
+    }
+    for my $s (@severities) {
+        for my $c (@certainties) {
+            $self->{display_level}{$s}{$c} = $status;
+        }
+    }
+    return;
 }
 
 =back

@@ -127,7 +127,7 @@ Print a tag.  The first two arguments are hash reference with the
 information about the package and the tag, $extra is the extra
 information for the tag (if any) as an array reference, and $override
 is either undef if the tag is not overridden or a hash with
-override info for this tag.  Called from Lintian::Tags::tag().
+override info for this tag.
 
 =cut
 
