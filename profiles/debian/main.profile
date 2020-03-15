@@ -159,6 +159,7 @@ Enable-Tags-From-Check:
  upstream-signature,
  usrmerge,
  vim,
+ xdeb,
 Extends:
  debian/ftp-master-auto-reject
 
