@@ -158,6 +158,7 @@ Enable-Tags-From-Check:
  triggers,
  udev,
  upstream-signature,
+ usr/lib,
  usrmerge,
  vim,
  xdeb,
