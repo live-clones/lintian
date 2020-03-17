@@ -39,7 +39,7 @@ use Lintian::Processable::Buildinfo;
 use Lintian::Processable::Changes;
 use Lintian::Processable::Source;
 use Lintian::Processable::Udeb;
-use Lintian::Util qw(internal_error get_dsc_info strip human_bytes);
+use Lintian::Util qw(get_dsc_info strip human_bytes);
 
 use constant EMPTY => q{};
 use constant SPACE => q{ };
@@ -209,7 +209,7 @@ sub init_from_file {
       unless defined $type;
 
     my $info = get_dsc_info($path)
-      or internal_error("$path is not a valid $type file");
+      or die "$path is not a valid $type file";
 
     my $dir = $path;
     if ($path =~ m,^/+[^/]++$,o){
@@ -686,7 +686,7 @@ sub add_processable{
     $processable->groupdir($dir);
 
     if ($pkg_type eq 'changes') {
-        internal_error("Cannot add another $pkg_type file")
+        die "Cannot add another $pkg_type file"
           if $self->changes;
         $self->changes($processable);
 
@@ -696,14 +696,14 @@ sub add_processable{
           unless $self->buildinfo;
 
     } elsif ($pkg_type eq 'source'){
-        internal_error('Cannot add another source package')
+        die 'Cannot add another source package'
           if $self->source;
         $self->source($processable);
 
     } else {
         my $phash;
         my $id = $processable->identifier;
-        internal_error("Unknown type $pkg_type")
+        die "Unknown type $pkg_type"
           unless ($pkg_type eq 'binary' or $pkg_type eq 'udeb');
         $phash = $self->$pkg_type;
 
@@ -782,7 +782,7 @@ sub get_processables {
         return values %{$self->$type}
           if $type eq 'binary'
           or $type eq 'udeb';
-        internal_error("Unknown type of processable: $type");
+        die "Unknown type of processable: $type";
     }
     # We return changes, dsc, buildinfo, debs and udebs in that order,
     # because that is the order lintian used to process a changes

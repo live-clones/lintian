@@ -27,7 +27,6 @@ use autodie;
 use File::Basename;
 
 use Lintian::Relation qw(:constants);
-use Lintian::Util qw(internal_error);
 
 use Moo;
 use namespace::clean;

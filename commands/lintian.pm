@@ -31,7 +31,7 @@ use utf8;
 use v5.16;
 
 use Cwd qw(abs_path);
-use Carp qw(verbose);
+use Carp qw(croak verbose);
 use Getopt::Long();
 use List::MoreUtils qw(any none);
 use Path::Tiny;
@@ -46,7 +46,7 @@ use Lintian::Internal::FrontendUtil
 use Lintian::Output::Standard;
 use Lintian::Pool;
 use Lintian::Profile;
-use Lintian::Util qw(internal_error parse_boolean strip safe_qx);
+use Lintian::Util qw(strip safe_qx);
 
 # only in GNOME; need original environment
 my $interactive = -t STDIN && (-t STDOUT || !(-f STDOUT || -c STDOUT));
@@ -952,6 +952,38 @@ sub parse_config_file {
     }
     close($fd);
     return;
+}
+
+=item parse_boolean (STR)
+
+Attempt to parse STR as a boolean and return its value.
+If STR is not a valid/recognised boolean, the sub will
+invoke croak.
+
+The following values recognised (string checks are not
+case sensitive):
+
+=over 4
+
+=item The integer 0 is considered false
+
+=item Any non-zero integer is considered true
+
+=item "true", "y" and "yes" are considered true
+
+=item "false", "n" and "no" are considered false
+
+=back
+
+=cut
+
+sub parse_boolean {
+    my ($str) = @_;
+    return $str == 0 ? 0 : 1 if $str =~ m/^-?\d++$/o;
+    $str = lc $str;
+    return 1 if $str eq 'true' or $str =~ m/^y(?:es)?$/;
+    return 0 if $str eq 'false' or $str =~ m/^no?$/;
+    croak "\"$str\" is not a valid boolean value";
 }
 
 sub _find_changes {

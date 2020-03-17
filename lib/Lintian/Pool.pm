@@ -194,8 +194,7 @@ sub process{
                 #
                 if (waitpid(-1, WNOHANG) != -1) {
                     $$exit_code_ref = 2;
-                    internal_error(
-                        'Unreaped processes after running checks!?');
+                    die 'Unreaped processes after running checks!?';
                 }
             } else {
                 # If we are interrupted in (e.g.) checks/manpages, it

@@ -26,7 +26,7 @@ use autodie;
 
 use Path::Tiny;
 
-use Lintian::Util qw(lstrip rstrip);
+use Lintian::Util qw(rstrip);
 
 use Moo;
 use namespace::clean;

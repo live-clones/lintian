@@ -57,8 +57,6 @@ BEGIN {
           get_file_digest
           file_is_encoded_in_non_utf8
           is_string_utf8_encoded
-          fail
-          internal_error
           do_fork
           run_cmd
           safe_qx
@@ -74,16 +72,11 @@ BEGIN {
           check_path
           clean_env
           normalize_pkg_path
-          parse_boolean
           is_ancestor_of
           locate_helper_tool
           drain_pipe
-          signal_number2name
           drop_relative_prefix
-          dequote_name
-          pipe_tee
           read_md5sums
-          untaint
           $PKGNAME_REGEX
           $PKGREPACK_REGEX
           $PKGVERSION_REGEX
@@ -854,41 +847,6 @@ sub gzip {
     return;
 }
 
-=item internal_error (MSG[, ...])
-
-Use to signal an internal error. The argument(s) will used to print a
-diagnostic message to the user.
-
-If multiple arguments are given, they will be merged into a single
-string (by join (' ', @_)).  If only one argument is given it will be
-stringified and used directly.
-
-=item fail (MSG[, ...])
-
-Deprecated alias of "internal_error".
-
-=cut
-
-sub fail {
-    warnings::warnif('deprecated',
-        '[deprecation] fail() has been replaced by internal_error()');
-    goto \&internal_error;
-}
-
-sub internal_error {
-    my $str = 'internal error: ';
-    if (@_) {
-        $str .= join ' ', @_;
-    } else {
-        if ($!) {
-            $str .= "$!";
-        } else {
-            $str .= 'No context.';
-        }
-    }
-    croak $str;
-}
-
 =item locate_helper_tool(TOOLNAME)
 
 Given the name of a helper tool, returns the path to it.  The tool
@@ -909,7 +867,7 @@ If the tool cannot be found, this sub will cause a trappable error.
     sub locate_helper_tool {
         my ($toolname) = @_;
         if ($toolname =~ m{(?:\A|/) \.\. (?:\Z|/)}xsm) {
-            internal_error("$toolname is not a valid tool name");
+            croak "$toolname is not a valid tool name";
         }
         return $_CACHE{$toolname} if exists $_CACHE{$toolname};
 
@@ -926,11 +884,8 @@ If the tool cannot be found, this sub will cause a trappable error.
             }
         }
         $toolpath_str //= '<N/A>';
-        internal_error(
-            sprintf(
-                'Cannot locate %s (search dirs: %s)',
-                $toolname, $toolpath_str
-            ));
+
+        croak "Cannot locate $toolname (search dirs: $toolpath_str)";
     }
 }
 
@@ -1030,30 +985,6 @@ sub drop_relative_prefix {
     $copy =~ s{^\./}{}s;
 
     return $copy;
-}
-
-=item dequote_name(STR, REMOVESLASH)
-
-Strip an extra layer quoting in index file names and optionally
-remove an initial "./" if any.
-
-Remove initial ./ by default
-
-=cut
-
-sub dequote_name {
-    my ($name, $slsd) = @_;
-    return
-      unless defined $name;
-    $slsd = 1 unless defined $slsd;
-    $name =~ s,^\.?/,, if $slsd;
-    # Optimise for the case where the filename does not contain
-    # backslashes.  It is a fairly rare to see that in practise.
-    if (index($name, '\\') > -1) {
-        $name =~ s/(\G|[^\\](?:\\\\)*)\\(\d{3})/"$1" . chr(oct $2)/ge;
-        $name =~ s/\\\\/\\/g;
-    }
-    return $name;
 }
 
 =item signal_number2name(NUM)
@@ -1187,38 +1118,6 @@ sub normalize_pkg_path {
     return join('/', @normalised);
 }
 
-=item parse_boolean (STR)
-
-Attempt to parse STR as a boolean and return its value.
-If STR is not a valid/recognised boolean, the sub will
-invoke croak.
-
-The following values recognised (string checks are not
-case sensitive):
-
-=over 4
-
-=item The integer 0 is considered false
-
-=item Any non-zero integer is considered true
-
-=item "true", "y" and "yes" are considered true
-
-=item "false", "n" and "no" are considered false
-
-=back
-
-=cut
-
-sub parse_boolean {
-    my ($str) = @_;
-    return $str == 0 ? 0 : 1 if $str =~ m/^-?\d++$/o;
-    $str = lc $str;
-    return 1 if $str eq 'true' or $str =~ m/^y(?:es)?$/;
-    return 0 if $str eq 'false' or $str =~ m/^no?$/;
-    croak "\"$str\" is not a valid boolean value";
-}
-
 =item is_ancestor_of(PARENTDIR, PATH)
 
 Returns true if and only if PATH is PARENTDIR or a path stored
@@ -1248,66 +1147,6 @@ sub is_ancestor_of {
         return 1;
     }
     return 0;
-}
-
-=item pipe_tee(INHANDLE, OUTHANDLES[, OPTS])
-
-Read bytes from INHANDLE and copy them into all of the handles in the
-listref OUTHANDLES. The optional OPTS argument is a hashref of
-options, see below.
-
-The subroutine will continue to read from INHANDLE until it is
-exhausted or an error occurs (either during read or write).  In case
-of errors, a trappable error will be raised.  The handles are left
-open when the subroutine returns, caller must close them afterwards.
-
-Caller should ensure that handles are using "blocking" I/O.  The
-subroutine will use L<sysread|perlfunc/sysread> and
-L<syswrite|perlfunc/syswrite> when reading and writing.
-
-
-OPTS, if given, may contain the following key-value pairs:
-
-=over 4
-
-=item chunk_size
-
-A suggested buffer size for read/write.  If given, it will be to
-sysread as LENGTH argument when reading from INHANDLE.
-
-=back
-
-=cut
-
-sub pipe_tee {
-    my ($in_fd, $out_ref, $opts) = @_;
-    my $read_size = ($opts && $opts->{'chunk_size'}) // 8096;
-    my @outs = @{$out_ref};
-    my $buffer;
-    while (1) {
-        # Disable autodie, because it includes the buffer
-        # exception.  Said buffer will get printed on errors
-        # yielding completely unreadable errors and a terminal
-        # drowned in binary characters.
-        no autodie qw(sysread syswrite);
-        my $rlen = sysread($in_fd, $buffer, $read_size);
-        if (not $rlen) {
-            last if defined($rlen);
-            croak("Failed to read from input handle: $!");
-        }
-        for my $out_fd (@outs) {
-            my $written = 0;
-            while ($written < $rlen) {
-                my $remain = $rlen - $written;
-                my $res = syswrite($out_fd, $buffer, $remain,$written);
-                if (!defined($res)) {
-                    croak("Failed to write to output handle: $!");
-                }
-                $written += $res;
-            }
-        }
-    }
-    return 1;
 }
 
 =item read_md5sums
@@ -1400,17 +1239,6 @@ sub read_md5sums {
     }
 
     return (\%checksums, \@errors);
-}
-
-=item untaint(VALUE)
-
-Untaint VALUE
-
-=cut
-
-sub untaint {
-    return $_[0] = $1 if $_[0] =~ m/^(.*)$/;
-    return;
 }
 
 =back

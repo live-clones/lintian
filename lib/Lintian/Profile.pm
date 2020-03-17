@@ -33,7 +33,7 @@ use Dpkg::Vendor qw(get_current_vendor get_vendor_info);
 use Lintian::CheckScript;
 use Lintian::Deb822Parser qw(read_dpkg_control_utf8);
 use Lintian::Tag::Info;
-use Lintian::Util qw(parse_boolean strip);
+use Lintian::Util qw(strip);
 
 use constant EMPTY => q{};
 use constant SPACE => q{ };
@@ -779,6 +779,38 @@ sub _parse_boolean {
       if $@;
 
     return $val;
+}
+
+=item parse_boolean (STR)
+
+Attempt to parse STR as a boolean and return its value.
+If STR is not a valid/recognised boolean, the sub will
+invoke croak.
+
+The following values recognised (string checks are not
+case sensitive):
+
+=over 4
+
+=item The integer 0 is considered false
+
+=item Any non-zero integer is considered true
+
+=item "true", "y" and "yes" are considered true
+
+=item "false", "n" and "no" are considered false
+
+=back
+
+=cut
+
+sub parse_boolean {
+    my ($str) = @_;
+    return $str == 0 ? 0 : 1 if $str =~ m/^-?\d++$/o;
+    $str = lc $str;
+    return 1 if $str eq 'true' or $str =~ m/^y(?:es)?$/;
+    return 0 if $str eq 'false' or $str =~ m/^no?$/;
+    croak "\"$str\" is not a valid boolean value";
 }
 
 # $self->_split_comma_sep_field($data)

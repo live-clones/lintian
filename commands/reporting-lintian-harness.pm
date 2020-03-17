@@ -39,7 +39,6 @@ use POSIX qw(strftime);
 use Lintian::Command qw(safe_qx);
 use Lintian::Reporting::Util
   qw(find_backlog load_state_cache save_state_cache);
-use Lintian::Util qw(untaint);
 
 my (@LINTIAN_CMD, $LINTIAN_VERSION);
 
@@ -72,6 +71,17 @@ sub main {
 }
 
 ### END OF SCRIPT -- below are helper subroutines ###
+
+=item untaint(VALUE)
+
+Untaint VALUE
+
+=cut
+
+sub untaint {
+    return $_[0] = $1 if $_[0] =~ m/^(.*)$/;
+    return;
+}
 
 sub check_parameters {
     for my $parameter (@REQUIRED_PARAMETERS) {
