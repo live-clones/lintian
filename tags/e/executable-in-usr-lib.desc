@@ -1,0 +1,6 @@
+Tag: executable-in-usr-lib
+Severity: pedantic
+Certainty: certain
+Check: usr/lib
+Info: policy, 9.1.1,
+ http://refspecs.linuxfoundation.org/FHS_3.0/fhs/ch04s07.html
