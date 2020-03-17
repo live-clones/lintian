@@ -1,3 +1,5 @@
+P: strings-elf-detection: executable-in-usr-lib usr/lib/bar::ELF/true
+P: strings-elf-detection: executable-in-usr-lib usr/lib/foo/true false
 P: strings-elf-detection source: file-contains-trailing-whitespace debian/rules (line 14)
 C: strings-elf-detection: control-tarball-compression-format xz
 C: strings-elf-detection-dbgsym: control-tarball-compression-format xz
