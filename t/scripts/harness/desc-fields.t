@@ -117,7 +117,7 @@ foreach my $descpath (@descpaths) {
 
     # listed checks exist
     ok(
-        (all { $profile->get_script($_) } @checks),
+        (all { $profile->get_checkinfo($_) } @checks),
         "All checks mentioned in $testpath exist"
     );
 
@@ -132,7 +132,7 @@ foreach my $descpath (@descpaths) {
     # listed test-against belong to listed checks
     $known_tests += scalar @against;
     my %relatedtags= map { $_ => 1 }
-      map { $profile->get_script($_)->tags } (@checks, 'lintian');
+      map { $profile->get_checkinfo($_)->tags } (@checks, 'lintian');
     for my $tag (@against) {
         ok(
             exists $relatedtags{$tag},

@@ -45,9 +45,10 @@ for my $desc (@tagpaths) {
 $known_tests += 2 * scalar @tagpaths;
 
 # checks exist
-ok(-f "checks/$_.desc", "check $_ exists")for keys %CHECKS;
+my @NOLINTIAN = grep { $_ ne 'lintian' } keys %CHECKS;
+ok(-f "checks/$_.desc", "check $_ exists") for sort @NOLINTIAN;
 
-$known_tests += keys %CHECKS;
+$known_tests += scalar @NOLINTIAN;
 
 my @profilepaths
   = File::Find::Rule->file->name('*.profile')->in("$root/profiles");
@@ -92,10 +93,9 @@ for my $profile (@profilepaths) {
 
         $known_tests += @sectiontags;
     }
-
 }
 
-cmp_ok($TAGS{$_}, '>', 0, $_)for sort keys %TAGS;
+cmp_ok($TAGS{$_}, '>', 0, "Tag $_ is covered by a profile")for sort keys %TAGS;
 
 $known_tests += keys %TAGS;
 

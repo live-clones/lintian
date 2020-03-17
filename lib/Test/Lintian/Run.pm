@@ -447,7 +447,7 @@ sub check_result {
         # use tags related to checks declared
         my @checks = split(SPACE, $testcase->{check});
         foreach my $check (@checks) {
-            my $checkscript = $profile->get_script($check);
+            my $checkscript = $profile->get_checkinfo($check);
             die "Unknown Lintian check $check"
               unless defined $checkscript;
 

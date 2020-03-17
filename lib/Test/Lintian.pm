@@ -405,7 +405,7 @@ sub test_load_checks {
     load_profile_for_test();
 
     foreach my $checkname (@checknames) {
-        my $cs = Lintian::CheckScript->new;
+        my $cs = Lintian::Check::Info->new;
         $cs->basedir($dir);
         $cs->name($checkname);
         eval {$cs->load;};
@@ -547,7 +547,7 @@ sub test_tags_implemented {
 
     foreach my $checkname (@checknames) {
         my (@tags, $codestr, @missing);
-        my $cs = Lintian::CheckScript->new;
+        my $cs = Lintian::Check::Info->new;
         $cs->basedir($dir);
         $cs->name($checkname);
         eval {$cs->load;};

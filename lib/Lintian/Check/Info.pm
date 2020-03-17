@@ -17,7 +17,7 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-package Lintian::CheckScript;
+package Lintian::Check::Info;
 
 use strict;
 use warnings;
@@ -36,11 +36,11 @@ use namespace::clean;
 
 =head1 NAME
 
-Lintian::CheckScript - Check script meta data
+Lintian::Check::Info - Check script meta data
 
 =head1 SYNOPSIS
 
- use Lintian::CheckScript;
+ use Lintian::Check::Info;
 
 =head1 DESCRIPTION
 
@@ -184,7 +184,7 @@ Associates a L<tag|Lintian::Tag::Info> as issued by this check.
 sub add_taginfo {
     my ($self, $taginfo) = @_;
 
-    $self->tag_table->{$taginfo->tag} = $taginfo;
+    $self->tag_table->{$taginfo->name} = $taginfo;
 
     return;
 }

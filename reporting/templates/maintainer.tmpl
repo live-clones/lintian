@@ -98,7 +98,7 @@
                 my $is_binary = ($pkg_info->{type} eq "binary" or $pkg_info->{type} eq "udeb");
                 my $new_binary = $pkg_info->{package} ne $binary if $is_binary;
                 my $tag_info = $info->{tag_info};
-                my $next_tag = $tag_info->tag;
+                my $next_tag = $tag_info->name;
 
                 my $component = ($pkg_info->{component} eq 'main') ? '' : "; $pkg_info->{component}";
                 $firstcomponent = $pkg_info->{component} unless $firstcomponent;
@@ -157,7 +157,7 @@
                 my $class = '';
                 # No HTML quote needed; severity and certainty are from a fixed
                 # whitelist of known safe words.
-                my $severity = $tag_info->severity;
+                my $severity = $tag_info->effective_severity;
                 my $certainty = $tag_info->certainty;
                 $class = qq( title="$severity, $certainty");
 

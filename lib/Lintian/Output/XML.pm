@@ -127,7 +127,7 @@ sub print_tag {
     my $information = $tag->extra;
     my $override = $tag->override;
 
-    $self->issuedtags->{$tag_info->tag}++;
+    $self->issuedtags->{$tag_info->name}++;
 
     my $flags = ($tag_info->experimental ? 'experimental' : '');
     my $comment;
@@ -141,10 +141,10 @@ sub print_tag {
         }
     }
     my @attrs = (
-        [severity  => $tag_info->severity],
+        [severity  => $tag_info->effective_severity],
         [certainty => $tag_info->certainty],
         [flags     => $flags],
-        [name      => $tag_info->tag]);
+        [name      => $tag_info->name]);
     print { $self->stdout }
       $self->_make_xml_tag('tag', \@attrs, $self->_quote_print($information),
         $comment),

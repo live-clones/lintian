@@ -122,7 +122,7 @@ sub print_tag {
     my $code = $tag_info->code;
     my $tag_color = $self->{colors}{$code};
     my $fpkg_info= $self->_format_pkg_info($processable, $tag_info, $override);
-    my $tag_name = $tag_info->tag;
+    my $tag_name = $tag_info->name;
     my $limit = $self->tag_display_limit;
     my $output;
 
@@ -164,7 +164,7 @@ sub print_tag {
     }
 
     $self->_print('', $fpkg_info, "$output$information");
-    if (not $self->issued_tag($tag_info->tag) and $self->showdescription) {
+    if (not $self->issued_tag($tag_info->name) and $self->showdescription) {
         my $description;
         if ($self->_do_color && $self->color eq 'html') {
             $description = $tag_info->description('html', '   ');

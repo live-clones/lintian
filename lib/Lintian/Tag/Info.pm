@@ -60,13 +60,7 @@ Lintian::Tag::Info - Lintian interface to tag metadata
 
 =head1 SYNOPSIS
 
-    my $cs = Lintian::CheckScript->new ("$ENV{'LINTIAN_ROOT'}/checks/",
-                                        'files');
-    my $tag_info = $cs->get_tag ('some-tag');
-    print "Tag info is:\n";
-    print $tag_info->description('text', '   ');
-    print "\nTag info in HTML is:\n";
-    print $tag_info->description('html', '   ');
+    my $taginfo = Lintian::Tag::Info->new;
 
 =head1 DESCRIPTION
 
@@ -86,9 +80,9 @@ metadata elements or to format the tag description.
 
 =item effective_severity
 
-=item script
+=item check
 
-=item script_type
+=item check_type
 
 =item experimental
 
@@ -100,7 +94,7 @@ metadata elements or to format the tag description.
 
 =cut
 
-has tag => (
+has name => (
     is => 'rw',
     coerce => sub { my ($text) = @_; return ($text // EMPTY); },
     default => EMPTY
@@ -151,13 +145,13 @@ has effective_severity => (
     default => EMPTY
 );
 
-has script => (
+has check => (
     is => 'rw',
     coerce => sub { my ($text) = @_; return ($text // EMPTY); },
     default => EMPTY
 );
 
-has script_type => (
+has check_type => (
     is => 'rw',
     coerce => sub { my ($text) = @_; return ($text // EMPTY); },
     default => EMPTY
@@ -203,11 +197,11 @@ sub load {
       unless scalar @paragraphs == 1;
 
     my %fields = %{ $paragraphs[0] };
-    $self->tag($fields{tag});
+    $self->name($fields{tag});
     $self->certainty($fields{certainty});
     $self->original_severity($fields{severity});
 
-    $self->script($fields{check});
+    $self->check($fields{check});
     $self->experimental(($fields{experimental} // EMPTY) eq 'yes');
 
     $self->info($fields{info});
@@ -216,7 +210,7 @@ sub load {
     $self->aliases(split(SPACE, $fields{'renamed-from'} // EMPTY));
 
     croak "No Tag field in $tagpath"
-      unless length $self->tag;
+      unless length $self->name;
 
     $self->effective_severity($self->original_severity);
 
@@ -378,8 +372,8 @@ sub description {
           . $self->certainty);
 
     push(@paragraphs,
-        EMPTY, 'Check: ' . $self->script . ', Type: ' . $self->script_type)
-      if length $self->script && length $self->script_type;
+        EMPTY, 'Check: ' . $self->check . ', Type: ' . $self->check_type)
+      if length $self->check && length $self->check_type;
 
     push(@paragraphs,
         EMPTY,
@@ -397,45 +391,6 @@ sub description {
       if $format eq 'html';
 
     return wrap_paragraphs($indent, dtml_to_text(@paragraphs));
-}
-
-=item severity([$original])
-
-Returns the severity of the tag; if $original is a truth value
-the original severity is returned, otherwise the effective
-severity is returned.
-
-=cut
-
-sub severity {
-    my ($self, $original) = @_;
-
-    return $self->original_severity
-      if $original;
-
-    return $self->effective_severity;
-}
-
-=item sources()
-
-Returns, as a list, the keywords for the sources of this tag from the
-references header.  This is only the top-level source, not any
-more-specific section or chapter.
-
-=cut
-
-sub sources {
-    my ($self) = @_;
-
-    my @references = split(/,/, $self->references);
-
-    # get the first word
-    s/^([\w-]+)\s.*/$1/ for @references;
-
-    # remove anything in parentheses at the end
-    s/\(\S+\)$// for @references;
-
-    return @references;
 }
 
 =back

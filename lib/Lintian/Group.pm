@@ -348,7 +348,7 @@ sub process {
                 die $err if not ref $err or $err->errno != ENOENT;
             }
 
-            my %alias = %{$self->profile->aliases};
+            my %alias = %{$self->profile->known_aliases};
 
             # treat renamed tags in overrides
             for my $tagname (keys %{$declared_overrides}) {
@@ -402,11 +402,11 @@ sub process {
 
         # Filter out the "lintian" check if present - it does no real harm,
         # but it adds a bit of noise in the debug output.
-        my @scripts = sort $self->profile->scripts;
+        my @scripts = sort $self->profile->enabled_checks;
         @scripts = grep { $_ ne 'lintian' } @scripts;
 
         foreach my $script (@scripts) {
-            my $cs = $self->profile->get_script($script);
+            my $cs = $self->profile->get_checkinfo($script);
             my $check = $cs->name;
             my $timer = [gettimeofday];
 
@@ -446,16 +446,14 @@ sub process {
 
         for my $tag (@found) {
 
-            # Note, we get the known as it will be suppressed by
-            # $self->suppressed below if the tag is not enabled.
-            my $taginfo = $self->profile->get_tag($tag->name, 1);
+            my $taginfo = $self->profile->get_taginfo($tag->name);
             croak 'tried to issue unknown tag ' . $tag->name
               unless $taginfo;
 
             $tag->info($taginfo);
 
             next
-              if $self->profile->suppressed($tag->name);
+              unless $self->profile->tag_is_enabled($tag->name);
 
             my $override;
             my $extra = $tag->extra;
@@ -500,7 +498,7 @@ sub process {
         for my $tagname (sort keys %used_overrides) {
 
             next
-              if $self->profile->suppressed($tagname);
+              unless $self->profile->tag_is_enabled($tagname);
 
             my $tag_overrides = $used_overrides{$tagname};
 
@@ -514,7 +512,7 @@ sub process {
                 $tag->name('unused-override');
                 $tag->arguments([$tagname, $extra]);
 
-                my $taginfo = $self->profile->get_tag('unused-override', 1);
+                my $taginfo = $self->profile->get_taginfo('unused-override');
                 $tag->info($taginfo);
 
                 push(@keep, $tag);
@@ -537,7 +535,7 @@ sub process {
           if $tag->override;
 
         $record->{tags}{$tag->name}++;
-        $record->{severity}{$tag->info->severity}++;
+        $record->{severity}{$tag->info->effective_severity}++;
         $record->{certainty}{$tag->info->certainty}++;
 
         my $code = $tag->info->code;
@@ -568,11 +566,32 @@ sub process {
     for my $tag (@reported) {
 
         next
+          unless $self->profile->tag_is_enabled($tag->name);
+
+        next
+          if $tag->info->experimental
+          && !$opt->{'display-experimental'};
+
+        next
           if defined $tag->override
           && !$opt->{'show-overrides'};
 
         next
-          unless $self->profile->displayed($tag->name);
+          unless $self->profile->display_level_for_tag($tag->name);
+
+        my @references = split(/,/, $tag->info->references);
+
+        # retain the first word
+        s/^([\w-]+)\s.*/$1/ for @references;
+
+        # remove anything in parentheses at the end
+        s/\(\S+\)$// for @references;
+
+        # check if tag refers to selected references
+        my $reference_limit = $opt->{'display-source'} // [];
+        my $referencelc = List::Compare->new(\@references, $reference_limit);
+        next
+          unless $referencelc->get_intersection || !@{$reference_limit};
 
         push(@print, $tag);
     }
@@ -587,7 +606,7 @@ sub process {
 
     if ($opt->{'debug'} > 2) {
 
-        # supress warnings without reliable sizes
+        # suppress warnings without reliable sizes
         $Devel::Size::warn = 0;
 
         my $pivot = ($self->get_processables)[0];

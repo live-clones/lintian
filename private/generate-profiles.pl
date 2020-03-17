@@ -65,6 +65,9 @@ foreach my $desc (@checkdescs){
     push @checks, $name;
 }
 
+# add check for tags issued by internal infrastructure
+push(@checks, 'lintian');
+
 my @dirs = ('profiles/debian');
 foreach my $dir (@dirs) {
     path($dir)->mkpath

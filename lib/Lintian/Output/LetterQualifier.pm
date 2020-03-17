@@ -196,7 +196,7 @@ sub print_tag {
     $code = 'X' if $tag_info->experimental;
     $code = 'O' if defined($override);
 
-    my $sev = $tag_info->severity;
+    my $sev = $tag_info->effective_severity;
     my $cer = $tag_info->certainty;
     my $lq = $codes{$sev}{$cer};
 
@@ -204,7 +204,7 @@ sub print_tag {
     my $type
       = ($processable->type ne 'binary') ? SPACE . $processable->type : EMPTY;
 
-    my $tagname = $tag_info->tag;
+    my $tagname = $tag_info->name;
 
     $information = ' ' . $self->_quote_print($information)
       if $information ne '';
@@ -216,7 +216,7 @@ sub print_tag {
     }
 
     $self->_print('', "$code\[$lq\]: $pkg$type", "$tagname$information");
-    if (not $self->issued_tag($tag_info->tag) and $self->showdescription) {
+    if (not $self->issued_tag($tag_info->name) and $self->showdescription) {
         my $description = $tag_info->description('text', '   ');
         $self->_print('', 'N', '');
         $self->_print('', 'N', split("\n", $description));

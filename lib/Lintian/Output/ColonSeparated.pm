@@ -119,14 +119,14 @@ sub print_tag {
           if length $extra;
     }
 
-    $self->issuedtags->{$tag_info->tag}++;
+    $self->issuedtags->{$tag_info->name}++;
 
     $information =~ s/[^[:print:]]/?/g;
 
     my @args = (
         'tag',
         $tag_info->code,
-        $tag_info->severity,
+        $tag_info->effective_severity,
         $tag_info->certainty,
         ($tag_info->experimental ? 'X' : EMPTY)
           . (defined $override ? 'O' : EMPTY),
@@ -134,7 +134,7 @@ sub print_tag {
         $processable->version,
         $processable->architecture,
         $processable->type,
-        $tag_info->tag,
+        $tag_info->name,
         $information,
         $odata,
     );

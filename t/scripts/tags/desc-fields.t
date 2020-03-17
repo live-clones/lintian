@@ -114,7 +114,7 @@ foreach my $descpath (@descpaths) {
 
     $checkname //= EMPTY;
 
-    ok($profile->get_script($checkname),
+    ok($profile->get_checkinfo($checkname),
         "Tag $tagname is associated with a valid check");
 }
 
