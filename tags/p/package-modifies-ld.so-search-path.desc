@@ -1,5 +1,5 @@
 Tag: package-modifies-ld.so-search-path
-Severity: important
+Severity: error
 Certainty: possible
 Check: files/ld-so
 Ref: policy 10.2

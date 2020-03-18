@@ -1,5 +1,5 @@
 Tag: empty-binary-package
-Severity: important
+Severity: warning
 Certainty: wild-guess
 Check: files/empty-package
 Info: This binary package appears to be empty, and its description does

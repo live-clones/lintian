@@ -1,5 +1,5 @@
 Tag: menu-icon-missing
-Severity: normal
+Severity: warning
 Certainty: possible
 Check: menu-format
 Info: This icon file couldn't be found. If the path to the icon in the

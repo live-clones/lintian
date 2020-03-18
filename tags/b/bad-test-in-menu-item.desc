@@ -1,6 +1,5 @@
 Tag: bad-test-in-menu-item
-Severity: important
-Certainty: certain
+Severity: error
 Check: menu-format
 Info: The menu file contains an item that does not start with the text
  "?package(somepackage):". All menu file lines must test for the existence

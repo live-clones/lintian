@@ -1,6 +1,5 @@
 Tag: desktop-entry-missing-required-key
-Severity: important
-Certainty: certain
+Severity: error
 Check: menu-format
 Info: Desktop entries must contain, at a minimum, the keys Type and Name.
  .

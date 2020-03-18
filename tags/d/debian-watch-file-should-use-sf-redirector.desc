@@ -1,6 +1,5 @@
 Tag: debian-watch-file-should-use-sf-redirector
-Severity: normal
-Certainty: certain
+Severity: warning
 Check: debian/watch
 Ref: uscan(1)
 Info: The watch file specifies a SourceForge page or download server

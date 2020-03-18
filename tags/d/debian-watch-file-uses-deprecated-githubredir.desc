@@ -1,6 +1,5 @@
 Tag: debian-watch-file-uses-deprecated-githubredir
-Severity: important
-Certainty: certain
+Severity: error
 Check: debian/watch
 Ref: https://lists.debian.org/debian-devel-announce/2014/10/msg00000.html
 Info: The watch file specifies a githubredir.debian.net URL, which is deprecated

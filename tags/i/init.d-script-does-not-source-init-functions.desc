@@ -1,6 +1,5 @@
 Tag: init.d-script-does-not-source-init-functions
-Severity: normal
-Certainty: certain
+Severity: warning
 Check: systemd
 Info: The <tt>/etc/init.d</tt> script does not source
  <tt>/lib/lsb/init-functions</tt>. The <tt>systemd</tt> package provides

@@ -1,6 +1,5 @@
 Tag: quilt-patch-using-template-description
-Severity: wishlist
-Certainty: certain
+Severity: info
 Check: patch-systems
 Info: The patch contains a standard DEP 3 template description
  included by dpkg-source(1). Please consider replacing the template

@@ -1,6 +1,5 @@
 Tag: package-contains-python-dot-directory
-Severity: normal
-Certainty: certain
+Severity: warning
 Check: files/names
 Info: The package contains a file that looks like cruft from the Python
  build process such as "pytest" cached output or similar.

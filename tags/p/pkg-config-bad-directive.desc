@@ -1,5 +1,5 @@
 Tag: pkg-config-bad-directive
-Severity: serious
+Severity: error
 Certainty: possible
 Check: files/pkgconfig
 Info: The pkg-config file contains a wrong directive.

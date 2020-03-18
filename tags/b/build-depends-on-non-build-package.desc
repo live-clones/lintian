@@ -1,6 +1,5 @@
 Tag: build-depends-on-non-build-package
-Severity: important
-Certainty: certain
+Severity: error
 Check: fields/package-relations
 Info: The package declares a build dependency on a package that is not
  appropriate for build dependencies, usually because it's only for

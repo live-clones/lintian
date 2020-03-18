@@ -1,5 +1,5 @@
 Tag: shlib-with-executable-stack
-Severity: normal
+Severity: warning
 Certainty: possible
 Check: shared-libs
 Info: The listed shared library declares the stack as executable.

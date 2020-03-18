@@ -1,6 +1,5 @@
 Tag: debian-watch-file-should-uversionmangle-not-dversionmangle
-Severity: wishlist
-Certainty: certain
+Severity: info
 Check: debian/watch
 Ref: https://wiki.debian.org/DEHS
 Info: The version of this package contains <tt>alpha</tt>, <tt>beta</tt>,

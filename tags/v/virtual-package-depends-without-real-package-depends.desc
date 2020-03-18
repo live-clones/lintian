@@ -1,5 +1,5 @@
 Tag: virtual-package-depends-without-real-package-depends
-Severity: normal
+Severity: warning
 Certainty: possible
 Check: fields/package-relations
 Info: The package declares a depends on a virtual package without listing a

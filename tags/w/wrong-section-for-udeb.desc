@@ -1,5 +1,4 @@
 Tag: wrong-section-for-udeb
-Severity: normal
-Certainty: certain
+Severity: warning
 Check: fields/section
 Info: udeb packages should have "Section: debian-installer".

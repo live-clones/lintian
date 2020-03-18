@@ -1,6 +1,5 @@
 Tag: executable-not-elf-or-script
-Severity: normal
-Certainty: certain
+Severity: warning
 Check: scripts
 Info: This executable file is not an ELF format binary, and does not start
  with the #! sequence that marks interpreted scripts. It might be a sh

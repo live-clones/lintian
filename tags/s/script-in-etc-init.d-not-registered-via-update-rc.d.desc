@@ -1,5 +1,5 @@
 Tag: script-in-etc-init.d-not-registered-via-update-rc.d
-Severity: normal
+Severity: warning
 Certainty: possible
 Check: init.d
 Info: The package installs an <tt>/etc/init.d</tt> script which is

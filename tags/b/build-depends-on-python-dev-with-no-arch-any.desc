@@ -1,5 +1,5 @@
 Tag: build-depends-on-python-dev-with-no-arch-any
-Severity: minor
+Severity: info
 Certainty: possible
 Check: fields/package-relations
 Info: The given package appears to have a Python development package

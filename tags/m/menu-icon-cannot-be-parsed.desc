@@ -1,6 +1,5 @@
 Tag: menu-icon-cannot-be-parsed
-Severity: normal
-Certainty: certain
+Severity: warning
 Check: menu-format
 Info: The icon file could not be parsed. Perhaps this means a bad XPM file,
  or perhaps it means the Lintian parsing needs to be improved. If the

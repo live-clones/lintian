@@ -1,6 +1,5 @@
 Tag: maintainer-script-should-not-use-adduser-system-without-home
-Severity: serious
-Certainty: certain
+Severity: error
 Check: scripts
 Info: The maintainer script apparently runs 'adduser --system'
  but hardcodes a path under '/home' for the '--home' option or

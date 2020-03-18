@@ -1,6 +1,5 @@
 Tag: debian-watch-file-is-missing
-Severity: wishlist
-Certainty: certain
+Severity: info
 Check: debian/watch
 Ref: policy 4.11, uscan(1)
 Info: This source package is not Debian-native but it does not have a

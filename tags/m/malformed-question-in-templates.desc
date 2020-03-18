@@ -1,6 +1,5 @@
 Tag: malformed-question-in-templates
-Severity: normal
-Certainty: certain
+Severity: warning
 Check: debian/debconf
 Info: The short description of a boolean debconf template should be
  phrased in the form of a question which should be kept short and should

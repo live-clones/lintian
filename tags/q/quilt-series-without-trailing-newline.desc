@@ -1,5 +1,5 @@
 Tag: quilt-series-without-trailing-newline
-Severity: serious
+Severity: error
 Certainty: possible
 Check: patch-systems
 Info: The package contains a debian/patches/series file

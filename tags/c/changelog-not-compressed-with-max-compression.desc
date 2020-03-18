@@ -1,6 +1,5 @@
 Tag: changelog-not-compressed-with-max-compression
-Severity: normal
-Certainty: certain
+Severity: warning
 Check: debian/changelog
 Info: Changelog files should be compressed using "gzip -9"; i.e., using
  the maximum compression level via the -9 option to gzip.

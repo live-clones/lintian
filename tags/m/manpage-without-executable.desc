@@ -1,5 +1,5 @@
 Tag: manpage-without-executable
-Severity: minor
+Severity: info
 Certainty: possible
 Check: documentation/man
 Info: Each manpage in <tt>/usr/share/man</tt> should have a reason to be

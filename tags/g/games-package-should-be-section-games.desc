@@ -1,5 +1,5 @@
 Tag: games-package-should-be-section-games
-Severity: normal
+Severity: warning
 Certainty: possible
 Check: games
 Info: All the executables in this package are in <tt>/usr/games</tt>, but

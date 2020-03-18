@@ -1,5 +1,5 @@
 Tag: no-debconf-templates
-Severity: normal
+Severity: warning
 Certainty: possible
 Check: debian/debconf
 Info: The package contains a "config" script in its control area but has no

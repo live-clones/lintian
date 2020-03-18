@@ -1,6 +1,5 @@
 Tag: wrong-vcs-location-for-dpmt
-Severity: important
-Certainty: certain
+Severity: error
 Ref: DPMT policy
 Check: fields/vcs
 Info: This package is maintained within the Debian Python Modules Team (DPMT)

@@ -1,5 +1,5 @@
 Tag: package-uses-debhelper-but-lacks-build-depends
-Severity: important
+Severity: error
 Certainty: possible
 Check: debhelper
 Info: If a package uses debhelper, it must declare a Build-Depends

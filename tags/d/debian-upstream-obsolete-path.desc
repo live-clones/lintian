@@ -1,6 +1,5 @@
 Tag: debian-upstream-obsolete-path
-Severity: important
-Certainty: certain
+Severity: error
 Check: cruft
 Info: Upstream metadata is stored under an obsolete path.
  .

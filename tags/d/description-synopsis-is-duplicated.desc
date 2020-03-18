@@ -1,6 +1,5 @@
 Tag: description-synopsis-is-duplicated
-Severity: important
-Certainty: certain
+Severity: error
 Check: fields/description
 Info: The first line of the extended Description: should not repeat the
  synopsis exactly. This indicates that either the synopsis is badly formed

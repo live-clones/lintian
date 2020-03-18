@@ -1,5 +1,5 @@
 Tag: package-relation-with-self
-Severity: normal
+Severity: warning
 Certainty: possible
 Check: fields/package-relations
 Info: The package declares a relationship with itself. This is not very

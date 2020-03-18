@@ -1,6 +1,5 @@
 Tag: package-does-not-use-debhelper-or-cdbs
 Severity: pedantic
-Certainty: certain
 Check: debhelper
 Info: This package does not appear to use a build system helper such as
  debhelper or cdbs.

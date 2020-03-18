@@ -1,6 +1,5 @@
 Tag: copyright-has-crs
 Severity: pedantic
-Certainty: certain
 Check: debian/copyright
 Info: The copyright file has lines ending in CRLF instead of just LF.
  .

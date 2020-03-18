@@ -1,5 +1,5 @@
 Tag: file-should-not-be-compressed
-Severity: normal
+Severity: warning
 Certainty: possible
 Check: documentation
 Info: The following file should not be compressed.

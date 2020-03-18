@@ -1,6 +1,5 @@
 Tag: package-uses-vendor-specific-patch-series
-Severity: important
-Certainty: certain
+Severity: error
 Check: patch-systems
 Info: The specified series file for patches is vendor-specific.
  .

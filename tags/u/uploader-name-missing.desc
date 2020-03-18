@@ -1,6 +1,5 @@
 Tag: uploader-name-missing
-Severity: serious
-Certainty: certain
+Severity: error
 Check: fields/uploaders
 Info: The uploader field seems to contain just an email address. It must
  contain the package uploader's name and email address.

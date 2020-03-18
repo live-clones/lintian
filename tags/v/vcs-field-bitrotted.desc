@@ -1,6 +1,5 @@
 Tag: vcs-field-bitrotted
-Severity: normal
-Certainty: certain
+Severity: warning
 Check: fields/vcs
 Info: The VCS-* field uses an address which no longer works. Please
  update it to use the current canonical URI instead.

@@ -1,6 +1,5 @@
 Tag: no-section-field
-Severity: normal
-Certainty: certain
+Severity: warning
 Check: fields/section
 Info: The package does not have a "Section:" field in its control file.
  .

@@ -1,5 +1,5 @@
 Tag: description-possibly-contains-homepage
-Severity: wishlist
+Severity: info
 Certainty: wild-guess
 Check: fields/description
 Info: This package has no Homepage field but has a URL in the description

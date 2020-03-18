@@ -1,5 +1,5 @@
 Tag: backports-changes-missing
-Severity: wishlist
+Severity: info
 Certainty: possible
 Check: changes-file
 Info: The changes file only has changelog entries from a single version. It

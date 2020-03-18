@@ -1,6 +1,5 @@
 Tag: md5sum-mismatch
-Severity: important
-Certainty: certain
+Severity: error
 Check: md5sums
 Info: The md5sum listed for the file does not match the actual file
  contents.

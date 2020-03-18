@@ -1,6 +1,5 @@
 Tag: systemd-service-file-refers-to-obsolete-target
-Severity: normal
-Certainty: certain
+Severity: warning
 Check: systemd
 Info: The systemd service file refers to an obsolete target.
  .

@@ -1,6 +1,5 @@
 Tag: readme-debian-contains-invalid-email-address
-Severity: normal
-Certainty: certain
+Severity: warning
 Check: debian/readme
 Info: The README.Debian file contains an invalid email address: the domain
  needs at least one dot. This looks like a mistake.

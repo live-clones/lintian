@@ -1,6 +1,5 @@
 Tag: odd-historical-debian-changelog-version
-Severity: minor
-Certainty: certain
+Severity: warning
 Check: debian/changelog
 Info: The version string in a historical changelog entry was not parsed
  correctly. Usually, that means it does not conform to policy.

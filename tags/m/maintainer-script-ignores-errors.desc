@@ -1,6 +1,5 @@
 Tag: maintainer-script-ignores-errors
-Severity: normal
-Certainty: certain
+Severity: warning
 Check: scripts
 Ref: policy 10.4
 Info: The maintainer script doesn't seem to set the <tt>-e</tt> flag which

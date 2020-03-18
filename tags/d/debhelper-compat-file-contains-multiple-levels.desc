@@ -1,6 +1,5 @@
 Tag: debhelper-compat-file-contains-multiple-levels
-Severity: important
-Certainty: certain
+Severity: error
 Check: debhelper
 Ref: debhelper(7)
 Info: The <tt>debian/compat</tt> file appears to contain multiple

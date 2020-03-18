@@ -1,5 +1,5 @@
 Tag: conflicts-with-version
-Severity: normal
+Severity: info
 Certainty: wild-guess
 Check: fields/package-relations
 Ref: policy 7.4

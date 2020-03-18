@@ -1,5 +1,5 @@
 Tag: hardening-no-fortify-functions
-Severity: normal
+Severity: info
 Certainty: wild-guess
 Check: binaries
 Info: This package provides an ELF binary that lacks the use of fortified

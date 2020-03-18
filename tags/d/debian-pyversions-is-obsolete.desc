@@ -1,6 +1,5 @@
 Tag: debian-pyversions-is-obsolete
-Severity: wishlist
-Certainty: certain
+Severity: info
 Check: cruft
 Info: This package contains a <tt>debian/pyversions</tt> file. Since
  dh_python2 it has been recommended to use the

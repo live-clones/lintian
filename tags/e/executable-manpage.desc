@@ -1,5 +1,4 @@
 Tag: executable-manpage
-Severity: important
-Certainty: certain
+Severity: error
 Check: documentation/man
 Info: Manual pages are not meant to be executed.

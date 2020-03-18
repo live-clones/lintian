@@ -1,6 +1,5 @@
 Tag: header-has-overly-generic-name
-Severity: important
-Certainty: certain
+Severity: error
 Check: files/includes
 Info: This package installs a header to the <tt>/usr/include</tt> global
  namespace with an overly generic name.

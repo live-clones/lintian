@@ -1,6 +1,5 @@
 Tag: missing-call-to-dpkg-maintscript-helper
-Severity: serious
-Certainty: certain
+Severity: error
 Check: scripts
 Info: The maintainer script is missing a call to the specified
  dpkg-maintscript-helper command which requires coordinated actions from

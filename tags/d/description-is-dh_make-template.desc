@@ -1,6 +1,5 @@
 Tag: description-is-dh_make-template
-Severity: serious
-Certainty: certain
+Severity: error
 Check: fields/description
 Info: The synopsis or the extended description has not been changed
  from the template provided by dh_make.

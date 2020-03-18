@@ -1,5 +1,5 @@
 Tag: desktop-mime-but-no-exec-code
-Severity: normal
+Severity: warning
 Certainty: possible
 Check: menu-format
 Info: The desktop entry lists support for at least one mime type, but does not

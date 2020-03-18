@@ -1,5 +1,4 @@
 Tag: source-format
 Severity: classification
-Certainty: certain
 Check: debian/source-dir
 Info: This is the source format declared in the package.

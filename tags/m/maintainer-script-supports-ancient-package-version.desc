@@ -1,5 +1,5 @@
 Tag: maintainer-script-supports-ancient-package-version
-Severity: minor
+Severity: info
 Certainty: possible
 Check: scripts
 Experimental: yes

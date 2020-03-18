@@ -1,6 +1,5 @@
 Tag: unknown-priority
-Severity: important
-Certainty: certain
+Severity: error
 Check: fields/priority
 Info: The "Priority:" field in this package's control file is not one of
  the priorities defined in the Policy Manual.

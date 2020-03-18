@@ -1,5 +1,5 @@
 Tag: libapp-perl-package-name
-Severity: important
+Severity: error
 Certainty: possible
 Check: application-not-library
 Info: This package contains a program in $PATH and is named

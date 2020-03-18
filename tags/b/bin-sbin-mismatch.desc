@@ -1,5 +1,5 @@
 Tag: bin-sbin-mismatch
-Severity: wishlist
+Severity: info
 Certainty: possible
 Check: files/contents
 Experimental: yes

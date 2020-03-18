@@ -1,5 +1,5 @@
 Tag: debian-control-has-obsolete-dbg-package
-Severity: wishlist
+Severity: info
 Certainty: possible
 Check: debian/control
 Ref: https://wiki.debian.org/AutomaticDebugPackages

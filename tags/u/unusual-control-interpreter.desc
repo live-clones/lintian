@@ -1,6 +1,5 @@
 Tag: unusual-control-interpreter
-Severity: minor
-Certainty: certain
+Severity: warning
 Check: scripts
 Info: This package contains a control script for an interpreter that is
  not normally used for control scripts. This is permissible but not

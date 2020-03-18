@@ -1,5 +1,4 @@
 Tag: duplicate-entry-in-shlibs-control-file
-Severity: important
-Certainty: certain
+Severity: error
 Check: shared-libs
 Info: The shlibs control file contains a duplicate entry.

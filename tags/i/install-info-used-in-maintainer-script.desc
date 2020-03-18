@@ -1,5 +1,5 @@
 Tag: install-info-used-in-maintainer-script
-Severity: serious
+Severity: error
 Certainty: possible
 Check: scripts
 Info: This script apparently runs <tt>install-info</tt>. Updating the

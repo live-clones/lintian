@@ -1,6 +1,5 @@
 Tag: ocaml-dangling-cmx
-Severity: serious
-Certainty: certain
+Severity: error
 Check: languages/ocaml
 Info: This package provides a <tt>.cmx</tt> module without its
  implementation (<tt>.o</tt> object file which may be embedded in a

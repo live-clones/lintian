@@ -1,6 +1,5 @@
 Tag: format-3.0-but-debian-changes-patch
-Severity: minor
-Certainty: certain
+Severity: warning
 Check: patch-systems
 Info: This package declares source format 3.0 (quilt), but the Debian
  .debian.tar.gz file contains a debian-changes-VERSION patch, which represents

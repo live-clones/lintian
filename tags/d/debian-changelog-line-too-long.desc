@@ -1,6 +1,5 @@
 Tag: debian-changelog-line-too-long
-Severity: normal
-Certainty: certain
+Severity: warning
 Check: debian/changelog
 Info: The given line of the latest changelog entry is over 80 columns.
  Such changelog entries may look poor in terminal windows and mail

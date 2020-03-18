@@ -1,6 +1,5 @@
 Tag: diff-contains-svk-commit-file
-Severity: minor
-Certainty: certain
+Severity: warning
 Check: cruft
 Info: The Debian diff or native package contains an
  <tt>svk-commitNNN.tmp</tt>, almost certainly a left-over from a failed

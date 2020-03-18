@@ -1,6 +1,5 @@
 Tag: stray-translated-debconf-templates
-Severity: normal
-Certainty: certain
+Severity: warning
 Check: debian/po-debconf
 Info: This package contains a file named *templates.XX or
  *templates.XX_XX. This was the naming convention for the translated

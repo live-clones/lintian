@@ -1,6 +1,5 @@
 Tag: malformed-title-in-templates
-Severity: normal
-Certainty: certain
+Severity: warning
 Check: debian/debconf
 Info: The short description of a note debconf template should be written
  as a title and therefore should not end with a period, question mark,

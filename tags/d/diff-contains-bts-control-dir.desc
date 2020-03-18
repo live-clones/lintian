@@ -1,6 +1,5 @@
 Tag: diff-contains-bts-control-dir
-Severity: normal
-Certainty: certain
+Severity: warning
 Check: cruft
 Info: The Debian diff or native package contains files in a directory
  used by a bug tracking system, which are not useful in a diff or native

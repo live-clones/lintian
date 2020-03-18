@@ -1,5 +1,5 @@
 Tag: debian-rules-parses-dpkg-parsechangelog
-Severity: wishlist
+Severity: info
 Certainty: possible
 Check: debian/rules
 Info: The rules file appears to be parsing the output of dpkg-parsechangelog to

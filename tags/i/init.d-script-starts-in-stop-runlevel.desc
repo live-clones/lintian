@@ -1,6 +1,5 @@
 Tag: init.d-script-starts-in-stop-runlevel
-Severity: serious
-Certainty: certain
+Severity: error
 Check: init.d
 Info: This <tt>/etc/init.d</tt> script specifies the 0 or 6 runlevels in
  Default-Start in its LSB keyword section. The 0 and 6 runlevels are

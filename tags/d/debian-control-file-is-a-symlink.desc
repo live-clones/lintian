@@ -1,6 +1,5 @@
 Tag: debian-control-file-is-a-symlink
-Severity: normal
-Certainty: certain
+Severity: warning
 Check: debian/control
 Info: The <tt>debian/control</tt> file is a symlink rather than a regular
  file. Using symlinks for required source package files is unnecessary and

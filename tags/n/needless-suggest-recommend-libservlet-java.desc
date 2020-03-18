@@ -1,6 +1,5 @@
 Tag: needless-suggest-recommend-libservlet-java
-Severity: normal
-Certainty: certain
+Severity: warning
 Check: fields/package-relations
 Info: Package should not suggest or recommend libservlet-java
  Java servlets are only used in the context of a server (example: Tomcat or

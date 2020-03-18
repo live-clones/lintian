@@ -1,6 +1,5 @@
 Tag: copyright-refers-to-deprecated-bsd-license-file
-Severity: minor
-Certainty: certain
+Severity: warning
 Check: debian/copyright
 Ref: policy 12.5
 Info: The copyright file refers to

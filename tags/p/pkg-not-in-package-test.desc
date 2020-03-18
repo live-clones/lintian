@@ -1,5 +1,5 @@
 Tag: pkg-not-in-package-test
-Severity: normal
+Severity: warning
 Certainty: possible
 Check: menu-format
 Info: This menu item doesn't test to see if the package containing it is

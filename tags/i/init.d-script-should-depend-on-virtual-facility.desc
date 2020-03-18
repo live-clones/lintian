@@ -1,5 +1,5 @@
 Tag: init.d-script-should-depend-on-virtual-facility
-Severity: important
+Severity: error
 Certainty: possible
 Check: init.d
 Info: The given <tt>/etc/init.d</tt> script depends on a non-virtual

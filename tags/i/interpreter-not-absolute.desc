@@ -1,6 +1,5 @@
 Tag: interpreter-not-absolute
-Severity: normal
-Certainty: certain
+Severity: warning
 Check: scripts
 Info: This script uses a relative path to locate its interpreter.
  This path will be taken relative to the caller's current directory, not

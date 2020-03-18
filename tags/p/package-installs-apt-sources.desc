@@ -1,5 +1,5 @@
 Tag: package-installs-apt-sources
-Severity: serious
+Severity: error
 Certainty: possible
 Check: apt
 Ref: sources.list(5)

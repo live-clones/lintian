@@ -1,5 +1,5 @@
 Tag: classpath-contains-relative-path
-Severity: normal
+Severity: warning
 Certainty: possible
 Check: languages/java
 Info: The classpath listed in the jar file refers to a potential

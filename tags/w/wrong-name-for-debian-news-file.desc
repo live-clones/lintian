@@ -1,5 +1,5 @@
 Tag: wrong-name-for-debian-news-file
-Severity: normal
+Severity: warning
 Certainty: possible
 Check: debian/changelog
 Info: The Debian news file must be installed as

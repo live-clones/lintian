@@ -1,6 +1,5 @@
 Tag: dpatch-missing-description
-Severity: wishlist
-Certainty: certain
+Severity: info
 Check: patch-systems
 Info: dpatch files should carry a description of the included patch.
  Description lines start with "## DP:".

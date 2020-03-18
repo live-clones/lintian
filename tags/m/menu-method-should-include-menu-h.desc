@@ -1,6 +1,5 @@
 Tag: menu-method-should-include-menu-h
-Severity: important
-Certainty: certain
+Severity: error
 Check: menus
 Info: A menu-method file must include the menu.h configuration file
  (using "!include menu.h").

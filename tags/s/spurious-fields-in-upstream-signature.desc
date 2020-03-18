@@ -1,6 +1,5 @@
 Tag: spurious-fields-in-upstream-signature
-Severity: wishlist
-Certainty: certain
+Severity: info
 Check: upstream-signature
 Info: The packaging includes a detached upstream signature file that contains
  spurious fields like <tt>Comment:</tt> or <tt>Version:</tt>. They are

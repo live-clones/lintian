@@ -1,5 +1,5 @@
 Tag: changelog-distribution-does-not-match-changes-file
-Severity: normal
+Severity: warning
 Certainty: possible
 Check: debian/changelog
 Info: The target distribution in the most recent entry in this package's

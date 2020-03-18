@@ -1,5 +1,5 @@
 Tag: setgid-binary
-Severity: normal
+Severity: warning
 Certainty: possible
 Check: files/permissions
 Info: The file is tagged SETGID. In some cases this is intentional, but in

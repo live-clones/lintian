@@ -1,6 +1,5 @@
 Tag: udeb-postinst-must-not-call-ldconfig
-Severity: important
-Certainty: certain
+Severity: error
 Check: shared-libs
 Info: The udeb invokes ldconfig on install, which is an error in udebs.
  .

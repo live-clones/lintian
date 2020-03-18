@@ -1,7 +1,6 @@
 Tag: systemd-service-file-shutdown-problems
-Severity: normal
+Severity: warning
 Experimental: no
-Certainty: certain
 Check: systemd
 Ref: https://github.com/systemd/systemd/issues/11821
 Info: The specified systemd <tt>.service</tt> file contains both

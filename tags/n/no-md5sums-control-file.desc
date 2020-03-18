@@ -1,6 +1,5 @@
 Tag: no-md5sums-control-file
-Severity: wishlist
-Certainty: certain
+Severity: info
 Check: md5sums
 Info: This package does not contain an md5sums control file. This control
  file listing the MD5 checksums of the contents of the package is not

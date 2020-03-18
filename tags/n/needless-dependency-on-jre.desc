@@ -1,5 +1,5 @@
 Tag: needless-dependency-on-jre
-Severity: normal
+Severity: warning
 Certainty: possible
 Check: fields/package-relations
 Info: The package appear to be a Java library and depending on one

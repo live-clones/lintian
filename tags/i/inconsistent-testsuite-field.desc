@@ -1,6 +1,5 @@
 Tag: inconsistent-testsuite-field
-Severity: wishlist
-Certainty: certain
+Severity: info
 Check: testsuite
 Info: The package provides a debian/tests/control file but no
  Testsuite field in the dsc file, or the field exists but not the

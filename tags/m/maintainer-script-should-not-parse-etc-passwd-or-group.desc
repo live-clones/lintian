@@ -1,5 +1,5 @@
 Tag: maintainer-script-should-not-parse-etc-passwd-or-group
-Severity: normal
+Severity: warning
 Certainty: possible
 Check: scripts
 Ref: getent(1), nss(5)

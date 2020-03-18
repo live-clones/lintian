@@ -1,5 +1,5 @@
 Tag: init.d-script-uses-usr-interpreter
-Severity: normal
+Severity: warning
 Certainty: possible
 Check: init.d
 Info: The given <tt>/etc/init.d</tt> script specifies an interpreter in

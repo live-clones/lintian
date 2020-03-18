@@ -1,6 +1,5 @@
 Tag: debian-changelog-file-missing
-Severity: serious
-Certainty: certain
+Severity: error
 Check: debian/changelog
 Info: Each Debian package (which provides a /usr/share/doc/<i>pkg</i>
  directory) has to install a Debian changelog file

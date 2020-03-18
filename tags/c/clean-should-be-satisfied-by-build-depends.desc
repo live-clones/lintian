@@ -1,6 +1,5 @@
 Tag: clean-should-be-satisfied-by-build-depends
-Severity: important
-Certainty: certain
+Severity: error
 Check: debian/rules
 Ref: policy 7.7
 Info: The specified package is required to run the clean target of

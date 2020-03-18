@@ -1,6 +1,5 @@
 Tag: no-priority-field
-Severity: normal
-Certainty: certain
+Severity: warning
 Check: fields/priority
 Info: The package does not have a "Priority:" field in its control file.
  .

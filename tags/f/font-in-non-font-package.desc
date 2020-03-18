@@ -1,5 +1,5 @@
 Tag: font-in-non-font-package
-Severity: wishlist
+Severity: info
 Certainty: possible
 Check: fonts
 Info: This package contains a *.ttf, *.otf, or *.pfb file, file

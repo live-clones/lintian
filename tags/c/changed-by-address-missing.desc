@@ -1,6 +1,5 @@
 Tag: changed-by-address-missing
-Severity: serious
-Certainty: certain
+Severity: error
 Check: changes-file
 Info: The Changed-By field should contain the package builder's name and
  email address, with the name followed by the address inside angle

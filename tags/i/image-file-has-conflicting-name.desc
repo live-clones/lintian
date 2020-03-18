@@ -1,6 +1,5 @@
 Tag: image-file-has-conflicting-name
-Severity: wishlist
-Certainty: certain
+Severity: info
 Check: images/filenames
 Info: An image file in this package has a name that is
  usually associated with another image format.

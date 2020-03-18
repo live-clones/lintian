@@ -1,6 +1,5 @@
 Tag: loads-obsolete-confmodule
-Severity: normal
-Certainty: certain
+Severity: warning
 Check: debian/debconf
 Info: The maintainer script uses an obsolete name for a debconf confmodule.
  Shell scripts should source <tt>/usr/share/debconf/confmodule</tt>, while

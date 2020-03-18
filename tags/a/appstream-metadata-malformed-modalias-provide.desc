@@ -1,6 +1,5 @@
 Tag: appstream-metadata-malformed-modalias-provide
-Severity: normal
-Certainty: certain
+Severity: warning
 Check: appstream-metadata
 Ref: https://wiki.debian.org/AppStream/Guidelines
 Info: The modalias matching rule in the AppStream metadata file is

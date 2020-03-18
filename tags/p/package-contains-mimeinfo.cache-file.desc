@@ -1,6 +1,5 @@
 Tag: package-contains-mimeinfo.cache-file
-Severity: serious
-Certainty: certain
+Severity: error
 Check: mimeinfo
 Info: This package contains a file named <tt>mimeinfo.cache</tt>,
  possibly compressed, in <tt>/usr/share/applications</tt>. This file is

@@ -1,6 +1,5 @@
 Tag: emacsen-common-without-dh-elpa
-Severity: normal
-Certainty: certain
+Severity: warning
 Check: emacs/elpa
 Info: The package uses the emacsen-common infrastructure but the
  package was not built with dh-elpa. Please consider transitioning

@@ -1,6 +1,5 @@
 Tag: postrm-has-useless-call-to-update-menus
-Severity: minor
-Certainty: certain
+Severity: warning
 Check: menus
 Info: The <tt>postrm</tt> script calls the <tt>update-menus</tt> program
  though no file is installed in <tt>/etc/menu-methods</tt>,

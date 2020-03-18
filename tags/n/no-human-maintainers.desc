@@ -1,5 +1,5 @@
 Tag: no-human-maintainers
-Severity: serious
+Severity: error
 Certainty: possible
 Check: fields/maintainer
 Info: The Maintainer address for this package is a mailing list and there

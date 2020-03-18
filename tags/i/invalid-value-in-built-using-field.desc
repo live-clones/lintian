@@ -1,6 +1,5 @@
 Tag: invalid-value-in-built-using-field
-Severity: serious
-Certainty: certain
+Severity: error
 Check: fields/built-using
 Info: The Built-Using field contains invalid fields.
  .

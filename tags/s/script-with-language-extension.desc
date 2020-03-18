@@ -1,6 +1,5 @@
 Tag: script-with-language-extension
-Severity: normal
-Certainty: certain
+Severity: warning
 Check: files/scripts
 Info: When scripts are installed into a directory in the system PATH, the
  script name should not include an extension such as <tt>.sh</tt> or

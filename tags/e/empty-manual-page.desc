@@ -1,5 +1,4 @@
 Tag: empty-manual-page
-Severity: important
-Certainty: certain
+Severity: error
 Check: documentation/man
 Info: The referenced manual page is empty.

@@ -1,5 +1,5 @@
 Tag: capitalization-error-in-description-synopsis
-Severity: minor
+Severity: info
 Certainty: wild-guess
 Check: fields/description
 Info: Lintian found a possible capitalization error in the package

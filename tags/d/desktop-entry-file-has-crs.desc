@@ -1,6 +1,5 @@
 Tag: desktop-entry-file-has-crs
-Severity: normal
-Certainty: certain
+Severity: warning
 Check: menu-format
 Info: The desktop entry file has lines ending in CRLF instead of just LF.
  The Desktop Entry Specification is explicit that lines should end with

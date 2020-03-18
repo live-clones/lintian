@@ -1,5 +1,5 @@
 Tag: misnamed-po-file
-Severity: normal
+Severity: warning
 Certainty: possible
 Check: debian/po-debconf
 Info: The name of this PO file doesn't appear to be a valid language

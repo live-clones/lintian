@@ -1,5 +1,5 @@
 Tag: doc-base-abstract-might-contain-extra-leading-whitespace
-Severity: normal
+Severity: warning
 Certainty: possible
 Check: menus
 Info: Continuation lines of the Abstract field of doc-base control file

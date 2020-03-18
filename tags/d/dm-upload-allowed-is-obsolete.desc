@@ -1,6 +1,5 @@
 Tag: dm-upload-allowed-is-obsolete
-Severity: normal
-Certainty: certain
+Severity: warning
 Check: fields/dm-upload-allowed
 Info: The implementation of the "Debian Maintainers" GR has changed
  and the "DM-Upload-Allowed" field is now obsolete.

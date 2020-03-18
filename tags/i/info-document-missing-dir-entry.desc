@@ -1,6 +1,5 @@
 Tag: info-document-missing-dir-entry
-Severity: important
-Certainty: certain
+Severity: error
 Check: documentation/texinfo
 Info: This info document has no directory entry. This is text between
  START-INFO-DIR-ENTRY and END-INFO-DIR-ENTRY lines which is copied into

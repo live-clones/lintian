@@ -1,5 +1,5 @@
 Tag: vcs-field-uses-not-recommended-uri-format
-Severity: normal
+Severity: warning
 Certainty: possible
 Check: fields/vcs
 Info: The VCS-* field uses a URI which doesn't match the recommended

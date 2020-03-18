@@ -1,6 +1,5 @@
 Tag: appstream-metadata-legacy-format
-Severity: important
-Certainty: certain
+Severity: error
 Check: appstream-metadata
 Ref: https://wiki.debian.org/AppStream/Guidelines,
  https://www.freedesktop.org/software/appstream/docs/chap-Metadata.html#sect-Metadata-GenericComponent

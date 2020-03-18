@@ -1,6 +1,5 @@
 Tag: should-specify-rules-requires-root
-Severity: wishlist
-Certainty: certain
+Severity: info
 Check: debian/control
 Info: This package builds a binary package containing at least one path
  with a UNIX ownership other than "root:root". It therefore requires

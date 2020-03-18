@@ -1,5 +1,5 @@
 Tag: debian-control-repeats-field-name-in-value
-Severity: normal
+Severity: warning
 Certainty: possible
 Check: debian/control
 Ref: policy 5.1

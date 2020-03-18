@@ -1,6 +1,5 @@
 Tag: systemd-service-file-refers-to-obsolete-bindto
-Severity: normal
-Certainty: certain
+Severity: warning
 Check: systemd
 Info: The systemd service file refers to the obsolete BindTo= option.
  .

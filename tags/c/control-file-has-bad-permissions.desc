@@ -1,6 +1,5 @@
 Tag: control-file-has-bad-permissions
-Severity: serious
-Certainty: certain
+Severity: error
 Check: control-files
 Ref: policy 10.9
 Info: The <tt>config</tt>, <tt>postinst</tt>, <tt>postrm</tt>,

@@ -1,6 +1,5 @@
 Tag: package-has-no-description
-Severity: serious
-Certainty: certain
+Severity: error
 Check: fields/description
 Info: The binary package does not have a "Description:" control field.
 Ref: policy 3.4

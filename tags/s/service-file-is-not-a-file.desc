@@ -1,6 +1,5 @@
 Tag: service-file-is-not-a-file
-Severity: serious
-Certainty: certain
+Severity: error
 Check: systemd
 Info: The package contains a service file that is not a regular file or
  resolvable symlink.

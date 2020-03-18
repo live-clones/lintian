@@ -1,6 +1,5 @@
 Tag: maintainer-script-should-not-use-service
-Severity: important
-Certainty: certain
+Severity: error
 Check: scripts
 Experimental: yes
 Info: The maintainer script apparently runs the service command. This

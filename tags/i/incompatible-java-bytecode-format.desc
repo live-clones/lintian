@@ -1,5 +1,5 @@
 Tag: incompatible-java-bytecode-format
-Severity: normal
+Severity: warning
 Certainty: possible
 Check: languages/java
 Info: The package contains Java class files with a minimum requirement on the

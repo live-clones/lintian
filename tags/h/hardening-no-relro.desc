@@ -1,6 +1,5 @@
 Tag: hardening-no-relro
-Severity: normal
-Certainty: certain
+Severity: warning
 Check: binaries
 Info: This package provides an ELF binary that lacks the "read-only
  relocation" link flag. This package was likely not built with the

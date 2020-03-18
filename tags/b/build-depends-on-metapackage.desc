@@ -1,6 +1,5 @@
 Tag: build-depends-on-metapackage
-Severity: important
-Certainty: certain
+Severity: error
 Check: fields/package-relations
 Info: Packages must not build-depend on metapackages.
  .

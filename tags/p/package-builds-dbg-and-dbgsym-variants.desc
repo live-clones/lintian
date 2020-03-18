@@ -1,6 +1,5 @@
 Tag: package-builds-dbg-and-dbgsym-variants
-Severity: normal
-Certainty: certain
+Severity: warning
 Check: changes-file
 Ref: dh_strip(1), https://wiki.debian.org/AutomaticDebugPackages
 Info: This package appears to build both -dbg and -dbgsym variants of a

@@ -1,6 +1,5 @@
 Tag: missing-explanation-for-contrib-or-non-free-package
-Severity: wishlist
-Certainty: certain
+Severity: info
 Check: debian/copyright
 Info: The specified package is in the contrib or non-free archive
  area but does not include a "Comment" (or "Disclaimer") field in

@@ -1,5 +1,5 @@
 Tag: empty-udeb-package
-Severity: minor
+Severity: info
 Certainty: wild-guess
 Check: files/empty-package
 Experimental: yes

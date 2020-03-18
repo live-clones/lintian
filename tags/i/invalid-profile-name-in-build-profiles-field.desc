@@ -1,5 +1,5 @@
 Tag: invalid-profile-name-in-build-profiles-field
-Severity: important
+Severity: error
 Certainty: possible
 Check: debian/control
 Info: The restriction formula in Build-Profiles field includes an unknown build

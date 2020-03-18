@@ -1,5 +1,5 @@
 Tag: extra-license-file
-Severity: wishlist
+Severity: info
 Certainty: possible
 Check: files/licenses
 Ref: policy 12.5

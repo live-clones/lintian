@@ -1,6 +1,5 @@
 Tag: init.d-script-missing-lsb-short-description
-Severity: wishlist
-Certainty: certain
+Severity: info
 Check: init.d
 Ref: https://wiki.debian.org/LSBInitScripts
 Info: This <tt>/etc/init.d</tt> script has an LSB keyword section, but it

@@ -1,6 +1,5 @@
 Tag: uses-no-compression-for-control-tarball
-Severity: important
-Certainty: certain
+Severity: error
 Check: deb-format
 Ref: deb(5)
 Info: The control portion of this binary package uses a non-compressed

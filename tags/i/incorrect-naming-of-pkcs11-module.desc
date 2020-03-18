@@ -1,6 +1,5 @@
 Tag: incorrect-naming-of-pkcs11-module
-Severity: important
-Certainty: certain
+Severity: error
 Check: files/p11-kit
 Info: This package ships a PKCS#11 module configuration file under
  <tt>/usr/share/p11-kit/modules</tt>, but its naming doesn't conform

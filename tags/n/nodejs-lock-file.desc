@@ -1,6 +1,5 @@
 Tag: nodejs-lock-file
-Severity: important
-Certainty: certain
+Severity: error
 Check: languages/javascript/nodejs
 Info: package-lock.json is automatically generated for any operations where
  npm modifies either the node_modules tree, or package.json. It

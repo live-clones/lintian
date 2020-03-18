@@ -1,6 +1,5 @@
 Tag: runtime-test-file-is-not-a-regular-file
-Severity: wishlist
-Certainty: certain
+Severity: info
 Check: testsuite
 Info: A runtime test listed by debian/tests/control is not a regular
  file or a relative symbolic link to a regular file in the source

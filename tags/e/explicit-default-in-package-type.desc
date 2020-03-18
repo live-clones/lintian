@@ -1,6 +1,5 @@
 Tag: explicit-default-in-package-type
-Severity: normal
-Certainty: certain
+Severity: warning
 Check: fields/package-type
 Info: Having <tt>Package-Type: deb</tt> is the same as not having
  the field at all, so it makes the Packages file longer with no

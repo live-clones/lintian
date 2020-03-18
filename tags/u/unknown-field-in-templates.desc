@@ -1,6 +1,5 @@
 Tag: unknown-field-in-templates
-Severity: important
-Certainty: certain
+Severity: error
 Check: debian/debconf
 Info: Valid fields are currently "Template:", "Type:", "Choices:", "Default:",
  and "Description:".

@@ -1,6 +1,5 @@
 Tag: missing-prerequisite-for-gfortran-module
-Severity: minor
-Certainty: certain
+Severity: warning
 Check: languages/fortran/gfortran
 Info: The installation package ships a GFORTRAN module but does not depend
  on gfortran-mod-<n>, where <n> is the module version (e.g. gfortran-mod-14

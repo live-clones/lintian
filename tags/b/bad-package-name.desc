@@ -1,6 +1,5 @@
 Tag: bad-package-name
-Severity: serious
-Certainty: certain
+Severity: error
 Check: fields/package
 Info: A package name should be at least two characters long, must consist
  of the alphanumerics and "+" "-" and ".", and must start with an

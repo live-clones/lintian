@@ -1,6 +1,5 @@
 Tag: special-file
-Severity: serious
-Certainty: certain
+Severity: error
 Check: files/special
 Info: The package contains a <i>special</i> file (e.g., a device file).
  This is forbidden by current policy. If your program needs this device,

@@ -1,6 +1,5 @@
 Tag: description-contains-invalid-control-statement
-Severity: serious
-Certainty: certain
+Severity: error
 Check: fields/description
 Info: The description contains an invalid control statement.
  .

@@ -1,6 +1,5 @@
 Tag: timewarp-standards-version
-Severity: normal
-Certainty: certain
+Severity: warning
 Check: fields/standards-version
 Info: The source package refers to a Standards-Version that was released
  after the date of the most recent <tt>debian/changelog</tt> entry.

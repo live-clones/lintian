@@ -1,5 +1,5 @@
 Tag: possible-new-upstream-release-without-new-version
-Severity: normal
+Severity: warning
 Certainty: possible
 Check: debian/changelog
 Info: The most recent changelog entry contains an entry that appears to

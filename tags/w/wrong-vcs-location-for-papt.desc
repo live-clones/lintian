@@ -1,6 +1,5 @@
 Tag: wrong-vcs-location-for-papt
-Severity: important
-Certainty: certain
+Severity: error
 Ref: PAPT policy
 Check: fields/vcs
 Info: This package is maintained within the Python Applications Packaging Team

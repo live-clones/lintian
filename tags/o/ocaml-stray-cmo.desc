@@ -1,5 +1,5 @@
 Tag: ocaml-stray-cmo
-Severity: minor
+Severity: info
 Certainty: wild-guess
 Check: languages/ocaml
 Info: This package installs a <tt>.cma</tt> file and a <tt>.cmo</tt> file

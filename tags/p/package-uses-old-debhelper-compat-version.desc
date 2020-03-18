@@ -1,6 +1,5 @@
 Tag: package-uses-old-debhelper-compat-version
 Severity: pedantic
-Certainty: certain
 Check: debhelper
 Ref: debhelper(7)
 Info: The debhelper compatibility version used by this package is marked

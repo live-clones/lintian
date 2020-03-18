@@ -1,6 +1,5 @@
 Tag: init.d-script-missing-start
-Severity: normal
-Certainty: certain
+Severity: warning
 Check: init.d
 Info: The given <tt>/etc/init.d</tt> script indicates it should be
  started at one of the runlevels 2-5 but not at all of them. This is a

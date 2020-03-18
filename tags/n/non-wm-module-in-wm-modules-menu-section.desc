@@ -1,6 +1,5 @@
 Tag: non-wm-module-in-wm-modules-menu-section
-Severity: important
-Certainty: certain
+Severity: error
 Check: menu-format
 Info: The menu item is in the FVWM Modules or Window Maker section but
  does not declare that it needs a specific window manager (using the needs

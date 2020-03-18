@@ -1,5 +1,5 @@
 Tag: javalib-but-no-public-jars
-Severity: minor
+Severity: info
 Certainty: possible
 Check: languages/java
 Info: The name of the package suggests that it contains a java library but

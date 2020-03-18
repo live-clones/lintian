@@ -1,5 +1,5 @@
 Tag: select-with-boolean-choices
-Severity: normal
+Severity: warning
 Certainty: possible
 Check: debian/debconf
 Info: Select templates with only yes and no choices should use the boolean

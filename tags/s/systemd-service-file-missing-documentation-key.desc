@@ -1,6 +1,5 @@
 Tag: systemd-service-file-missing-documentation-key
-Severity: wishlist
-Certainty: certain
+Severity: info
 Check: systemd
 Info: The systemd service file does not contain a <tt>Documentation</tt> key.
  .

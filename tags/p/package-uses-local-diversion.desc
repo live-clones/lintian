@@ -1,6 +1,5 @@
 Tag: package-uses-local-diversion
-Severity: serious
-Certainty: certain
+Severity: error
 Check: scripts
 Ref: policy 3.9
 Info: The maintainer script calls dpkg-divert with <tt>--local</tt> or

@@ -1,6 +1,5 @@
 Tag: command-with-path-in-maintainer-script
-Severity: normal
-Certainty: certain
+Severity: warning
 Check: scripts
 Info: The indicated program run in a maintainer script has a prepended
  path. Programs called from maintainer scripts normally should not have a

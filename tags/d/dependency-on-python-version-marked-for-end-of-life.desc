@@ -1,6 +1,5 @@
 Tag: dependency-on-python-version-marked-for-end-of-life
 Severity: pedantic
-Certainty: certain
 Check: languages/python
 Experimental: yes
 Ref: https://wiki.debian.org/Python/Python3Port,

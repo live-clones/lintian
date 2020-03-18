@@ -1,6 +1,5 @@
 Tag: absolute-symbolic-link-target-in-source
-Severity: normal
-Certainty: certain
+Severity: warning
 Check: files/symbolic-links
 Info: This symlink in a patched source tree points to an absolute target. It
  happens sometimes when people point toward /dev/null, but that can and should

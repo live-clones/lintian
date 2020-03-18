@@ -1,5 +1,5 @@
 Tag: binary-from-other-architecture
-Severity: serious
+Severity: error
 Certainty: possible
 Check: binaries
 Info: This ELF binary appears to have been built for an architecture other

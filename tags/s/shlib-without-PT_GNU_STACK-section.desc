@@ -1,6 +1,5 @@
 Tag: shlib-without-PT_GNU_STACK-section
-Severity: important
-Certainty: certain
+Severity: error
 Check: shared-libs
 Info: The listed shared library lacks a PT_GNU_STACK section. This forces
  the dynamic linker to make the stack executable.

@@ -1,6 +1,5 @@
 Tag: package-uses-deprecated-source-override-location
 Severity: pedantic
-Certainty: certain
 Check: cruft
 Info: This Debian package ships Lintian source-level overrides in the
  <tt>debian/source.lintian-overrides</tt> file.

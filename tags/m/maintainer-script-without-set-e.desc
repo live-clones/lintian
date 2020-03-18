@@ -1,6 +1,5 @@
 Tag: maintainer-script-without-set-e
 Severity: pedantic
-Certainty: certain
 Check: scripts
 Ref: policy 10.4
 Info: The maintainer script passes <tt>-e</tt> to the shell on the

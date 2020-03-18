@@ -1,5 +1,4 @@
 Tag: manpage-in-udeb
-Severity: important
-Certainty: certain
+Severity: error
 Check: documentation/man
 Info: udeb packages should not contain any manual pages.

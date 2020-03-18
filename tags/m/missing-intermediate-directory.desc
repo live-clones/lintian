@@ -1,6 +1,5 @@
 Tag: missing-intermediate-directory
-Severity: normal
-Certainty: certain
+Severity: warning
 Check: files/missing
 Info: The package contains files in the listed directory, but does
  not contain the actual directory itself. Some tools do not cope

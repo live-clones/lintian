@@ -1,6 +1,5 @@
 Tag: debian-watch-file-in-native-package
-Severity: normal
-Certainty: certain
+Severity: warning
 Check: debian/watch
 Ref: https://wiki.debian.org/DEHS
 Info: The package ships a watch file although it is a Debian native

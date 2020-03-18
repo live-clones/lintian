@@ -1,5 +1,5 @@
 Tag: init.d-script-should-always-start-service
-Severity: important
+Severity: error
 Certainty: possible
 Check: init.d
 Info: The specified file under <tt>/etc/default/</tt> includes a line

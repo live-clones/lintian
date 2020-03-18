@@ -1,5 +1,5 @@
 Tag: symbols-declares-dependency-on-other-package
-Severity: normal
+Severity: warning
 Certainty: possible
 Check: shared-libs
 Info: This package declares in its symbols control file a dependency on

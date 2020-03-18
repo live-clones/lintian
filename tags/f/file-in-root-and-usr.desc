@@ -1,6 +1,5 @@
 Tag: file-in-root-and-usr
-Severity: important
-Certainty: certain
+Severity: error
 Check: usrmerge
 Info: The package ships two files with the same name installed both in
  /{bin,sbin,lib*}/ and /usr/{bin,sbin,lib*}/.

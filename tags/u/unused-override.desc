@@ -1,6 +1,5 @@
 Tag: unused-override
-Severity: wishlist
-Certainty: certain
+Severity: info
 Check: lintian
 Ref: lintian 2.4.3
 Info: Lintian discovered an unused override entry in its database.

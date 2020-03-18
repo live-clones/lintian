@@ -1,5 +1,5 @@
 Tag: usr-share-doc-symlink-without-dependency
-Severity: serious
+Severity: error
 Certainty: possible
 Check: debian/copyright
 Info: If the package installs a symbolic link

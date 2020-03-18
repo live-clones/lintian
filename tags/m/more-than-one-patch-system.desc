@@ -1,6 +1,5 @@
 Tag: more-than-one-patch-system
-Severity: minor
-Certainty: certain
+Severity: warning
 Check: patch-systems
 Info: Either the build-dependencies list more than one patch system or the
  package uses the <tt>3.0 (quilt)</tt> source format but also has a

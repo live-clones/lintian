@@ -1,5 +1,5 @@
 Tag: epoch-change-without-comment
-Severity: normal
+Severity: warning
 Certainty: possible
 Check: debian/changelog
 Info: The previous version of this package had a different version epoch

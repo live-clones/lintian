@@ -1,6 +1,5 @@
 Tag: copyright-has-url-from-dh_make-boilerplate
-Severity: normal
-Certainty: certain
+Severity: warning
 Check: debian/copyright
 Ref: policy 12.5
 Info: There is "url://example.com" in your copyright file. This was most

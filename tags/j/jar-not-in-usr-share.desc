@@ -1,5 +1,5 @@
 Tag: jar-not-in-usr-share
-Severity: normal
+Severity: warning
 Certainty: possible
 Check: languages/java
 Ref: java-policy 2.2, java-policy 2.3

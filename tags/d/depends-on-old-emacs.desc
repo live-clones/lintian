@@ -1,5 +1,5 @@
 Tag: depends-on-old-emacs
-Severity: normal
+Severity: warning
 Certainty: possible
 Check: fields/package-relations
 Info: The package lists an old version of Emacs as its first dependency.

@@ -1,6 +1,5 @@
 Tag: debug-package-should-be-named-dbg
-Severity: normal
-Certainty: certain
+Severity: warning
 Check: files/debug
 Info: This package provides at least one file in <tt>/usr/lib/debug</tt>,
  which is intended for detached debugging symbols, but the package name

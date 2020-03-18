@@ -1,6 +1,5 @@
 Tag: description-contains-homepage
-Severity: normal
-Certainty: certain
+Severity: warning
 Check: fields/description
 Info: The extended description contains a "Homepage" pseudo-field
  following the old Developer's Reference recommendation. As of 1.14.6,

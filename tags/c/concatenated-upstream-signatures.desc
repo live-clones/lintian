@@ -1,6 +1,5 @@
 Tag: concatenated-upstream-signatures
-Severity: minor
-Certainty: certain
+Severity: warning
 Check: upstream-signature
 Info: The packaging includes a detached upstream signature file that contains
  multiple concatenated signature blocks. That is likely an error.

@@ -1,6 +1,5 @@
 Tag: copyright-excludes-files-in-native-package
-Severity: serious
-Certainty: certain
+Severity: error
 Check: debian/copyright
 Info: The Debian copyright notes excluded files with the <tt>Excluded-Files</tt> field,
  but the package is native.

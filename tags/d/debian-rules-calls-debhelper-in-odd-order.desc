@@ -1,6 +1,5 @@
 Tag: debian-rules-calls-debhelper-in-odd-order
-Severity: normal
-Certainty: certain
+Severity: warning
 Check: debian/rules
 Info: One of the targets in the <tt>debian/rules</tt> file for this
  package calls debhelper programs in an odd order. Normally,

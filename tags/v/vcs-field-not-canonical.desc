@@ -1,5 +1,5 @@
 Tag: vcs-field-not-canonical
-Severity: minor
+Severity: info
 Certainty: possible
 Check: fields/vcs
 Info: The VCS-* field contains an uncanonical URI. Please update to use

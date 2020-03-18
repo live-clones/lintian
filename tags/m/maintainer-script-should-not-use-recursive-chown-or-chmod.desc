@@ -1,6 +1,5 @@
 Tag: maintainer-script-should-not-use-recursive-chown-or-chmod
-Severity: normal
-Certainty: certain
+Severity: warning
 Check: scripts
 Info: The maintainer script appears to call <tt>chmod</tt> or
  <tt>chown</tt> with a <tt>--recursive</tt>/<tt>-R</tt> argument, or

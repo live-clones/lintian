@@ -1,6 +1,5 @@
 Tag: package-contains-unsafe-symlink
-Severity: serious
-Certainty: certain
+Severity: error
 Check: files/symbolic-links/broken
 Info: The package contains an unsafe symlink. If followed,
  the link will escape the package root.

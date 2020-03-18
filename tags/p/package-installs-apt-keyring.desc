@@ -1,5 +1,5 @@
 Tag: package-installs-apt-keyring
-Severity: serious
+Severity: error
 Certainty: possible
 Check: apt
 Ref: apt-key(8)

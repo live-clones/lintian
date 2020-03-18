@@ -1,6 +1,5 @@
 Tag: apache2-module-does-not-ship-load-file
-Severity: serious
-Certainty: certain
+Severity: error
 Check: apache2
 Info: The package is an Apache2 HTTPD server module but does not ship a
  "<tt>.load</tt>" file or it was installed under an unexpected name. The load

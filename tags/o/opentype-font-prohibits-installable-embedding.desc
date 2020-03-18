@@ -1,6 +1,5 @@
 Tag: opentype-font-prohibits-installable-embedding
-Severity: normal
-Certainty: certain
+Severity: warning
 Check: fonts/opentype
 Info: This package installs an OpenType font with restrictive license
  terms. The font does not permit installable embedding, as defined by

@@ -1,6 +1,5 @@
 Tag: debian-watch-file-unknown-version
-Severity: normal
-Certainty: certain
+Severity: warning
 Check: debian/watch
 Ref: uscan(1)
 Info: The <tt>version=</tt> line in the <tt>debian/watch</tt> file in this

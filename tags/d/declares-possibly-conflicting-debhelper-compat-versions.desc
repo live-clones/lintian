@@ -1,6 +1,5 @@
 Tag: declares-possibly-conflicting-debhelper-compat-versions
-Severity: important
-Certainty: certain
+Severity: error
 Check: debhelper
 Ref: debhelper(7)
 Info: The source package declares the debhelper compatibility version

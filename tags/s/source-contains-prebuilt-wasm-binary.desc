@@ -1,6 +1,5 @@
 Tag: source-contains-prebuilt-wasm-binary
 Severity: pedantic
-Certainty: certain
 Check: cruft
 Info: The source tarball contains a prebuilt binary wasm object.
  They are usually provided for the convenience of users. These files

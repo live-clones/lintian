@@ -1,6 +1,5 @@
 Tag: debian-watch-file-missing-version
-Severity: normal
-Certainty: certain
+Severity: warning
 Check: debian/watch
 Ref: uscan(1)
 Info: The <tt>debian/watch</tt> file in this package doesn't start a

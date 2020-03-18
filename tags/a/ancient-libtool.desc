@@ -1,5 +1,5 @@
 Tag: ancient-libtool
-Severity: normal
+Severity: warning
 Certainty: possible
 Check: cruft
 Info: The referenced file seems to be from a libtool version older than

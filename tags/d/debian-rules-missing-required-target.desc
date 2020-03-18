@@ -1,6 +1,5 @@
 Tag: debian-rules-missing-required-target
-Severity: serious
-Certainty: certain
+Severity: error
 Check: debian/rules
 Ref: policy 4.9
 Info: The <tt>debian/rules</tt> file for this package does not provide one

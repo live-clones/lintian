@@ -1,5 +1,4 @@
 Tag: bad-owner-for-doc-file
-Severity: important
-Certainty: certain
+Severity: error
 Check: documentation
 Info: Documentation files should be owned by <tt>root/root</tt>.

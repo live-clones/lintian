@@ -1,5 +1,5 @@
 Tag: copyright-contains-dh_make-todo-boilerplate
-Severity: serious
+Severity: error
 Certainty: possible
 Check: debian/copyright
 Ref: policy 12.5

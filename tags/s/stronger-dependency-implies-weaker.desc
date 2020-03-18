@@ -1,6 +1,5 @@
 Tag: stronger-dependency-implies-weaker
-Severity: normal
-Certainty: certain
+Severity: warning
 Check: debian/control
 Ref: policy 7.2
 Info: In the <tt>debian/control</tt> stanza for the given package, a

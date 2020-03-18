@@ -1,6 +1,5 @@
 Tag: malformed-override
-Severity: important
-Certainty: certain
+Severity: error
 Check: lintian
 Ref: lintian 2.4.1
 Info: Lintian discovered an override entry with an invalid format. An

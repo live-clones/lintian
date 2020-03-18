@@ -1,6 +1,5 @@
 Tag: manpage-not-compressed-with-max-compression
-Severity: important
-Certainty: certain
+Severity: error
 Check: documentation/man
 Info: Manual pages should be compressed with <tt>gzip -9n</tt>.
 Ref: policy 12.1

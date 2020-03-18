@@ -1,6 +1,5 @@
 Tag: web-application-should-not-depend-unconditionally-on-apache2
-Severity: normal
-Certainty: certain
+Severity: warning
 Check: apache2
 Info: The package appears to be a web application but declares a dependency
  against <tt>apache2</tt> without any alternative. Most web applications should

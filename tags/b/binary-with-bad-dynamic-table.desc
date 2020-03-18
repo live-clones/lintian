@@ -1,5 +1,5 @@
 Tag: binary-with-bad-dynamic-table
-Severity: serious
+Severity: error
 Certainty: possible
 Check: binaries
 Info: This appears to be an ELF file. According to readelf, the

@@ -1,6 +1,5 @@
 Tag: nfs-temporary-file-in-package
-Severity: normal
-Certainty: certain
+Severity: warning
 Check: files/unwanted
 Info: There is a file in the package whose name matches the format NFS
  uses to temporarily save files that were deleted while another process

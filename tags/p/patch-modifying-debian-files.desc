@@ -1,6 +1,5 @@
 Tag: patch-modifying-debian-files
-Severity: important
-Certainty: certain
+Severity: error
 Check: patch-systems
 Info: A patch stored in <tt>debian/patches/</tt> should never modify files
  in the <tt>debian</tt> directory (even when it's only creating new files)

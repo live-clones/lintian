@@ -1,5 +1,5 @@
 Tag: init.d-script-does-not-provide-itself
-Severity: minor
+Severity: info
 Certainty: possible
 Check: init.d
 Info: This <tt>/etc/init.d</tt> script indicates it provides one or

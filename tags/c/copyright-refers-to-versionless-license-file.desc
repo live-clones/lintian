@@ -1,5 +1,5 @@
 Tag: copyright-refers-to-versionless-license-file
-Severity: normal
+Severity: warning
 Certainty: possible
 Check: debian/copyright
 Info: The copyright file refers to the versionless symlink in

@@ -1,6 +1,5 @@
 Tag: depends-on-essential-package-without-using-version
-Severity: important
-Certainty: certain
+Severity: error
 Check: fields/package-relations
 Ref: policy 3.5
 Info: The package declares a depends on an essential package, e.g. dpkg,

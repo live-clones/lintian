@@ -1,5 +1,5 @@
 Tag: obsolete-des-encryption
-Severity: important
+Severity: error
 Certainty: possible
 Check: binaries
 Info: The listed ELF binary appears to use a C library function that

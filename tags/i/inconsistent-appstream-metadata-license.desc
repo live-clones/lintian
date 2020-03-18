@@ -1,5 +1,5 @@
 Tag: inconsistent-appstream-metadata-license
-Severity: normal
+Severity: warning
 Certainty: possible
 Check: debian/copyright
 Info: The specified AppStream metadata file specifies a

@@ -1,6 +1,5 @@
 Tag: gzip-file-is-not-multi-arch-same-safe
-Severity: important
-Certainty: certain
+Severity: error
 Check: files/compressed
 Info: The gzip file contains a timestamp that will differ between
  architectures. Multi-Arch: same implies all shared files must be

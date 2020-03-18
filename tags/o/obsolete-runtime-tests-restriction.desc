@@ -1,6 +1,5 @@
 Tag: obsolete-runtime-tests-restriction
-Severity: normal
-Certainty: certain
+Severity: warning
 Check: testsuite
 Info: A paragraph in debian/tests/control mentions an obsolete
  value for the Restrictions field. Though still allowed, this will

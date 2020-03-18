@@ -1,5 +1,5 @@
 Tag: diff-contains-patch-failure-file
-Severity: normal
+Severity: warning
 Certainty: possible
 Check: cruft
 Info: The Debian diff or native package contains a file that looks like

@@ -1,5 +1,5 @@
 Tag: setuid-gid-binary
-Severity: normal
+Severity: warning
 Certainty: possible
 Check: files/permissions
 Info: The file is tagged SETUID and SETGID. In some cases this is

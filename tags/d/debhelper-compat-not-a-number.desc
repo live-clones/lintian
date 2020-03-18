@@ -1,6 +1,5 @@
 Tag: debhelper-compat-not-a-number
-Severity: important
-Certainty: certain
+Severity: error
 Check: debhelper
 Ref: debhelper(7)
 Info: The debhelper compatibility level specified in

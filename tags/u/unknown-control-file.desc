@@ -1,5 +1,5 @@
 Tag: unknown-control-file
-Severity: normal
+Severity: warning
 Certainty: possible
 Check: control-files
 Ref: policy 2.2*

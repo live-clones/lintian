@@ -1,6 +1,5 @@
 Tag: out-of-date-standards-version
-Severity: wishlist
-Certainty: certain
+Severity: info
 Check: fields/standards-version
 Ref: https://www.debian.org/doc/debian-policy/upgrading-checklist.html
 Info: The source package refers to a Standards-Version older than the one

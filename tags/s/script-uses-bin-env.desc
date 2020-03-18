@@ -1,6 +1,5 @@
 Tag: script-uses-bin-env
-Severity: normal
-Certainty: certain
+Severity: warning
 Check: scripts
 Info: This script uses /bin/env as its interpreter (used to find the
  actual interpreter on the user's path). There is no /bin/env on Debian

@@ -1,5 +1,5 @@
 Tag: script-uses-perl4-libs-without-dep
-Severity: normal
+Severity: warning
 Certainty: possible
 Check: scripts
 Info: This package includes perl scripts using obsoleted perl 4-era

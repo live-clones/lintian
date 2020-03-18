@@ -1,6 +1,5 @@
 Tag: maintainer-script-needs-depends-on-update-inetd
-Severity: normal
-Certainty: certain
+Severity: warning
 Check: scripts
 Info: This script calls update-inetd, but the package does not depend or
  pre-depend on inet-superserver, any of the providers of inet-superserver

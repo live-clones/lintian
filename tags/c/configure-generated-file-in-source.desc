@@ -1,5 +1,5 @@
 Tag: configure-generated-file-in-source
-Severity: normal
+Severity: warning
 Certainty: possible
 Check: cruft
 Info: Leaving config.cache/status causes autobuilders problems.

@@ -1,6 +1,5 @@
 Tag: bad-permissions-for-ali-file
-Severity: normal
-Certainty: certain
+Severity: warning
 Check: files/permissions
 Ref: policy 8.4
 Info: Ada Library Information (*.ali) files are required to be read-only

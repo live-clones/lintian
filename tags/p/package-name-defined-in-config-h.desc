@@ -1,6 +1,5 @@
 Tag: package-name-defined-in-config-h
-Severity: normal
-Certainty: certain
+Severity: warning
 Check: includes/config-h
 Info: This package installs a file named config.h under /usr/include.
  The file mentions the identifier PACKAGE_NAME. It is a strong indication

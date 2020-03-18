@@ -1,6 +1,5 @@
 Tag: missing-systemd-service-for-init.d-rcS-script
-Severity: serious
-Certainty: certain
+Severity: error
 Check: systemd
 Ref: https://wiki.debian.org/Teams/pkg-systemd/rcSMigration
 Info: The rcS init.d script has no systemd equivalent.

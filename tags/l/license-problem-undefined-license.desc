@@ -1,5 +1,5 @@
 Tag: license-problem-undefined-license
-Severity: serious
+Severity: error
 Certainty: possible
 Check: debian/copyright
 Ref: https://ftp-master.debian.org/REJECT-FAQ.html

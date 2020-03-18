@@ -1,5 +1,5 @@
 Tag: debug-package-for-multi-arch-same-pkg-not-coinstallable
-Severity: minor
+Severity: info
 Certainty: possible
 Check: group-checks
 Info: The debug package appear to be containing debug symbols for a

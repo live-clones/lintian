@@ -1,6 +1,5 @@
 Tag: script-in-usr-share-doc
-Severity: wishlist
-Certainty: certain
+Severity: info
 Check: documentation
 Info: Scripts are usually not documentation files, unless they are
  examples, in which case they should be in the

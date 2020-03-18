@@ -1,6 +1,5 @@
 Tag: unused-entry-in-debian-source-include-binaries
-Severity: wishlist
-Certainty: certain
+Severity: info
 Check: debian/source/include-binaries
 Info: An entry in <tt>debian/source/include-binaries</tt> does not exist
  in the patched source tree. Please remove the entry.

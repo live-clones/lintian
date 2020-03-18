@@ -1,5 +1,5 @@
 Tag: description-starts-with-leading-spaces
-Severity: normal
+Severity: warning
 Certainty: possible
 Check: fields/description
 Info: The package's extended "Description:" paragraph starts with more than

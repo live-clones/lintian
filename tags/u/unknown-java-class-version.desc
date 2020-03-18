@@ -1,6 +1,5 @@
 Tag: unknown-java-class-version
-Severity: normal
-Certainty: certain
+Severity: warning
 Check: languages/java
 Info: The package contains a Jar file with Java class files compiled for an
  unknown Java version. Most likely the class file is corrupt or compiled

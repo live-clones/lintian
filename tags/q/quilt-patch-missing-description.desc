@@ -1,6 +1,5 @@
 Tag: quilt-patch-missing-description
-Severity: wishlist
-Certainty: certain
+Severity: info
 Check: patch-systems
 Info: quilt patch files should start with a description of patch. All
  lines before the start of the patch itself are considered part of the

@@ -1,6 +1,5 @@
 Tag: stray-directory-in-manpage-directory
-Severity: important
-Certainty: certain
+Severity: error
 Check: documentation/man
 Info: This package installs a directory under <tt>/usr/share/man</tt>
  that is not a manual section directory or locale directory.
