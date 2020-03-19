@@ -48,7 +48,7 @@ sub spelling_tag_emitter {
     };
 }
 
-sub always {
+sub installable {
     my ($self) = @_;
 
     my $pkg = $self->package;

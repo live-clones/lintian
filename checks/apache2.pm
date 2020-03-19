@@ -94,7 +94,7 @@ sub files {
     return;
 }
 
-sub binary {
+sub installable {
     my ($self) = @_;
 
     # Do nothing if the package in question appears to be related to

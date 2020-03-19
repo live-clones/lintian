@@ -99,15 +99,7 @@ our $OBSOLETE_PACKAGES
   = Lintian::Data->new('fields/obsolete-packages',qr/\s*=>\s*/);
 our $VIRTUAL_PACKAGES   = Lintian::Data->new('fields/virtual-packages');
 
-sub udeb {
-    my ($self) = @_;
-
-    $self->binary;
-
-    return;
-}
-
-sub binary {
+sub installable {
     my ($self) = @_;
 
     my $pkg = $self->package;

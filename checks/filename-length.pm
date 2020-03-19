@@ -19,6 +19,7 @@
 # MA 02110-1301, USA.
 
 package Lintian::filename_length;
+
 use strict;
 use warnings;
 use autodie;

@@ -41,7 +41,7 @@ my $DEB_PERMISSIONS
 my $UDEB_PERMISSIONS
   = Lintian::Data->new('control-files/udeb-permissions', qr/\s++/o, \&octify);
 
-sub always {
+sub installable {
     my ($self) = @_;
 
     my $type = $self->type;

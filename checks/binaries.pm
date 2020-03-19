@@ -128,7 +128,7 @@ our $OBSOLETE_CRYPT_FUNCTIONS
 
 our $ARCH_32_REGEX;
 
-sub always {
+sub installable {
     my ($self) = @_;
 
     my $pkg = $self->package;

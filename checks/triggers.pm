@@ -50,7 +50,7 @@ sub _parse_trigger_types {
 my $TRIGGER_TYPES = Lintian::Data->new('triggers/trigger-types',
     qr/\s*\Q=>\E\s*/, \&_parse_trigger_types);
 
-sub always {
+sub installable {
     my ($self) = @_;
 
     my $processable = $self->processable;

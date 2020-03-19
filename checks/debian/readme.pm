@@ -58,7 +58,7 @@ sub open_readme {
     return;
 }
 
-sub binary {
+sub installable {
     my ($self) = @_;
 
     my $pkg_name = $self->package;

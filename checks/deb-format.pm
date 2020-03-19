@@ -49,7 +49,7 @@ our %ERRORS = (
 
 my $EXTRA_MEMBERS = Lintian::Data->new('deb-format/extra-members');
 
-sub always {
+sub installable {
     my ($self) = @_;
 
     my $type = $self->type;

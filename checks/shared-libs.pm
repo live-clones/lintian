@@ -53,7 +53,7 @@ my %symbols_meta_fields = map { $_ => 1 }qw(
 my $ldconfig_dirs = Lintian::Data->new('shared-libs/ldconfig-dirs');
 my $MA_DIRS = Lintian::Data->new('common/multiarch-dirs', qr/\s++/);
 
-sub always {
+sub installable {
     my ($self) = @_;
 
     my $pkg = $self->package;

@@ -33,7 +33,7 @@ use namespace::clean;
 
 with 'Lintian::Check';
 
-sub always {
+sub udeb {
     my ($self) = @_;
 
     my $processable = $self->processable;

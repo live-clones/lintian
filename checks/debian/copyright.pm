@@ -895,7 +895,7 @@ sub check_incomplete_creative_commons_license {
     return;
 }
 
-sub binary {
+sub installable {
     my ($self) = @_;
 
     my $pkg = $self->package;

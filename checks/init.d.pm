@@ -84,7 +84,7 @@ my $EXCLUDE_R = qr/if\s+\[\s+-x\s+\S*update-rc\.d/;
 my $ALWAYS_START
   = qr/^\s*#*\s*(?:[A-Z]_)?(?:ENABLED|DISABLED|[A-Z]*RUN|(?:NO_)?START)=/;
 
-sub binary {
+sub installable {
     my ($self) = @_;
 
     my $pkg = $self->package;
