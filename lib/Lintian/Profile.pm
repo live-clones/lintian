@@ -240,13 +240,13 @@ sub load {
 
     for my $checkdir (@checkdirs) {
 
-        my @descpaths= File::Find::Rule->file->name('*.desc')->in($checkdir);
+        my @descpaths= File::Find::Rule->file->name('*.pm')->in($checkdir);
 
         for my $desc (@descpaths) {
             my $relative = path($desc)->relative($checkdir)->stringify;
-            my ($name) = ($relative =~ qr/^(.*)\.desc$/);
+            my ($name) = ($relative =~ qr/^(.*)\.pm$/);
             # _parse_check ignores duplicates on its own
-            my $c = $self->_parse_check($name, $checkdir);
+            $self->_parse_check($name, $checkdir);
         }
     }
 
@@ -713,10 +713,10 @@ sub _parse_check {
     $check->name($name);
     $check->load;
 
-    die "Check $name has mismatched name " . $check->name . " in $directory"
-      unless $check->name eq $name;
-
     $self->known_checks_by_name->{$name} = $check;
+
+    # needed for checks without tags
+    $self->check_tagnames->{$name} //= [];
 
     return $check;
 }

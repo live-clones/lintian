@@ -117,7 +117,20 @@ sub load {
     die 'No name'
       unless length $self->name;
 
+    my $module = $self->name;
+
+    # replace slashes with double colons
+    $module =~ s{/}{::}g;
+
+    # replace some characters with underscores
+    $module =~ s{[-.]}{_}g;
+
+    $self->module("Lintian::$module");
+    $self->path($self->basedir . SLASH . $self->name . '.pm');
+
     my $descpath = $self->basedir . SLASH . $self->name . '.desc';
+    return
+      unless -f $descpath;
 
     my @paragraphs = read_dpkg_control_utf8($descpath);
     die "$descpath does not have exactly one paragraph"
@@ -131,19 +144,7 @@ sub load {
     die "Wrong name $name vs " . $self->name
       unless $name eq $self->name;
 
-    # lintian.desc has no type
     $self->type($header->{'type'});
-
-    my $module = $name;
-
-    # replace slashes with double colons
-    $module =~ s{/}{::}g;
-
-    # replace some characters with underscores
-    $module =~ s{[-.]}{_}g;
-
-    $self->module("Lintian::$module");
-    $self->path($self->basedir . SLASH . $self->name . '.pm');
 
     my %type_table;
     if ($self->type ne 'ALL') {
@@ -168,6 +169,10 @@ inputs.
 
 sub is_check_type {
     my ($self, $type) = @_;
+
+    # checks without specification lack an explicit type
+    return 1
+      unless length $self->type;
 
     return 1
       if $self->type  eq 'ALL';
