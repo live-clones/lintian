@@ -143,7 +143,7 @@ translations.  Otherwise, they must be regular checks.
 =cut
 
 sub test_check_desc {
-    my ($opts, @descs);
+    my ($opts, @dirs);
     my $builder = $CLASS->builder;
     my $colldir = '/usr/share/lintian/collection';
     my $find_opt = {'filter' => undef,};
@@ -154,10 +154,11 @@ sub test_check_desc {
         $find_opt->{'filter'} = $opts->{'filter'} if exists $opts->{'filter'};
     }
     $opts //= {};
-    @descs = @_;
+    @dirs = @_;
     load_profile_for_test();
 
-    foreach my $desc_file (map { _find_check($find_opt, $_) } @descs) {
+    my @descs = map { _find_check($find_opt, $_) } @dirs;
+    foreach my $desc_file (@descs) {
         my ($header, @tagpara);
         eval {($header, @tagpara) = read_dpkg_control($desc_file);};
         if (my $err = $@) {
@@ -392,10 +393,12 @@ sub test_load_checks {
         my $find_opt = {'want-check-name' => 1,};
         $find_opt->{'filter'} = $opts->{'filter'} if exists $opts->{'filter'};
         @checknames = _find_check($find_opt, $dir);
-        $builder->cmp_ok(scalar @checknames, '>', 0, 'Found checks to test');
     } else {
         $builder->skip('Given an explicit list of checks');
     }
+
+    $builder->skip('No desc files found')
+      unless @checknames;
 
     load_profile_for_test();
 
@@ -530,7 +533,6 @@ sub test_tags_implemented {
         my $find_opt = {'want-check-name' => 1,};
         $find_opt->{'filter'} = $opts->{'filter'} if exists $opts->{'filter'};
         @checknames = _find_check($find_opt, $dir);
-        $builder->cmp_ok(scalar @checknames, '>', 0, 'Found checks to test');
     } else {
         $builder->skip('Given an explicit list of checks');
     }

@@ -8,6 +8,7 @@ use strict;
 use warnings;
 
 use File::Find::Rule;
+use Path::Tiny;
 use Test::More;
 
 use Lintian::Deb822Parser qw(read_dpkg_control);
@@ -19,6 +20,20 @@ my $known_tests = 0;
 my $root = $ENV{'LINTIAN_TEST_ROOT'} // q{.};
 
 my %CHECKS;
+my $checkdir = "$root/checks";
+
+# find all checks
+my @modulepaths = File::Find::Rule->file->name('*.pm')->in($checkdir);
+for my $modulepath (@modulepaths) {
+    my $relative = path($modulepath)->relative($checkdir)->stringify;
+    my ($name) = ($relative =~ qr/^(.*)\.pm$/);
+
+    $CHECKS{$name} = [];
+}
+
+# remember internal check lintian
+$CHECKS{lintian} = [];
+
 my %TAGS;
 
 # find all tags
@@ -30,25 +45,20 @@ for my $desc (@tagpaths) {
     my $header = $sections[0];
 
     ok(length $header->{'tag'}, "Field Tag exists in $desc");
-    ok(length $header->{'check'}. "Field Check exists in $desc");
+    ok(length $header->{'check'}, "Field Check exists in $desc");
 
     my $tagname = $header->{'tag'};
     my $checkname = $header->{'check'};
 
-    $CHECKS{$checkname} = []
-      unless exists $CHECKS{$checkname};
+    ok(exists $CHECKS{$checkname},
+        "Check $checkname mentioned in $desc exists");
+    $CHECKS{$checkname} //= [];
     push(@{$CHECKS{$checkname}}, $tagname);
 
     $TAGS{$tagname} = 0;
 }
 
-$known_tests += 2 * scalar @tagpaths;
-
-# checks exist
-my @NOLINTIAN = grep { $_ ne 'lintian' } keys %CHECKS;
-ok(-f "checks/$_.desc", "check $_ exists") for sort @NOLINTIAN;
-
-$known_tests += scalar @NOLINTIAN;
+$known_tests += 3 * scalar @tagpaths;
 
 my @profilepaths
   = File::Find::Rule->file->name('*.profile')->in("$root/profiles");
