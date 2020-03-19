@@ -120,7 +120,7 @@ sub print_tag {
     $information = ' ' . $self->_quote_print($information)
       if $information ne '';
     my $code = $tag_info->code;
-    my $tag_color = $self->{colors}{$code};
+    my $tag_color = ($tag->override ? 'bright_black' : $self->{colors}{$code});
     my $fpkg_info= $self->_format_pkg_info($processable, $tag_info, $override);
     my $tag_name = $tag_info->name;
     my $limit = $self->tag_display_limit;
