@@ -342,11 +342,10 @@ sub description {
     push(@paragraphs, EMPTY, _format_reference($self->references))
       if length $self->references;
 
-    push(@paragraphs,EMPTY,'Severity: '. $self->original_severity);
+    push(@paragraphs, EMPTY,'Severity: '. $self->original_severity);
 
-    push(@paragraphs,
-        EMPTY, 'Check: ' . $self->check . ', Type: ' . $self->check_type)
-      if length $self->check && length $self->check_type;
+    push(@paragraphs, EMPTY, 'Check: ' . $self->check)
+      if length $self->check;
 
     push(@paragraphs,
         EMPTY,
