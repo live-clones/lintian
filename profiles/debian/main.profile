@@ -66,6 +66,7 @@ Enable-Tags-From-Check:
  fields/section,
  fields/source,
  fields/standards-version,
+ fields/subarchitecture,
  fields/unknown,
  fields/uploaders,
  fields/vcs,
