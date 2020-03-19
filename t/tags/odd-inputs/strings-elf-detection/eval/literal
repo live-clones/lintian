@@ -13,6 +13,8 @@ C: strings-elf-detection-dbgsym: no-ctrl-scripts
 C: strings-elf-detection source: package-is-maintained-by-individual
 C: strings-elf-detection: package-is-maintained-by-individual
 C: strings-elf-detection-dbgsym: package-is-maintained-by-individual
+C: strings-elf-detection changes: package-is-maintained-by-individual
+C: strings-elf-detection buildinfo: package-is-maintained-by-individual
 C: strings-elf-detection source: rules-does-not-require-root
 C: strings-elf-detection source: source-format 3.0 (native)
 C: strings-elf-detection source: standards-version 4.5.0

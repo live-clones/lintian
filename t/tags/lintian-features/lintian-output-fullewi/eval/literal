@@ -30,6 +30,8 @@ C: lintian-output-fullewi source (1.0+dsfg-1.1) [source]: debian-watch-file-stan
 C: lintian-output-fullewi binary (1.0+dsfg-1.1) [all]: no-ctrl-scripts
 C: lintian-output-fullewi source (1.0+dsfg-1.1) [source]: package-is-maintained-by-individual
 C: lintian-output-fullewi binary (1.0+dsfg-1.1) [all]: package-is-maintained-by-individual
+C: lintian-output-fullewi changes (1.0+dsfg-1.1) [source all]: package-is-maintained-by-individual
+C: lintian-output-fullewi buildinfo (1.0+dsfg-1.1) [all source]: package-is-maintained-by-individual
 C: lintian-output-fullewi source (1.0+dsfg-1.1) [source]: patch-system quilt
 C: lintian-output-fullewi source (1.0+dsfg-1.1) [source]: rules-does-not-require-root
 C: lintian-output-fullewi source (1.0+dsfg-1.1) [source]: source-format 3.0 (quilt)

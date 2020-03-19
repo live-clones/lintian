@@ -29,6 +29,8 @@ C[C]: lintian-output-letter source: debian-watch-file-standard 3
 C[C]: lintian-output-letter: no-ctrl-scripts
 C[C]: lintian-output-letter source: package-is-maintained-by-individual
 C[C]: lintian-output-letter: package-is-maintained-by-individual
+C[C]: lintian-output-letter changes: package-is-maintained-by-individual
+C[C]: lintian-output-letter buildinfo: package-is-maintained-by-individual
 C[C]: lintian-output-letter source: patch-system quilt
 C[C]: lintian-output-letter source: rules-does-not-require-root
 C[C]: lintian-output-letter source: source-format 3.0 (quilt)

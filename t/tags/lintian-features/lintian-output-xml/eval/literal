@@ -42,6 +42,8 @@
 <tag severity="classification" name="package-is-maintained-by-individual" />
 </package>
 <package type="changes" name="lintian-output-xml" architecture="source all" version="1.0+dsfg-1.1">
+<tag severity="classification" name="package-is-maintained-by-individual" />
 </package>
 <package type="buildinfo" name="lintian-output-xml" architecture="all source" version="1.0+dsfg-1.1">
+<tag severity="classification" name="package-is-maintained-by-individual" />
 </package>

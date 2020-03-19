@@ -3,4 +3,6 @@ fields-vcs-field-insecure-uri (source): vcs-field-uses-insecure-uri vcs-git git:
 fields-vcs-field-insecure-uri (source): vcs-field-uses-insecure-uri vcs-browser http://salsa.debian.org/toddy/foobar
 fields-vcs-field-insecure-uri (source): vcs git
 fields-vcs-field-insecure-uri (source): package-is-maintained-by-individual
+fields-vcs-field-insecure-uri (changes): package-is-maintained-by-individual
+fields-vcs-field-insecure-uri (buildinfo): package-is-maintained-by-individual
 fields-vcs-field-insecure-uri (binary): package-is-maintained-by-individual

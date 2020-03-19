@@ -6,6 +6,8 @@ basic-native-1.0 (source): older-source-format 1.0
 basic-native-1.0 (source): debian-build-system dh
 basic-native-1.0 (source): debhelper-compat-virtual-relation 12
 basic-native-1.0 (source): debhelper-compat-level 12
+basic-native-1.0 (changes): package-is-maintained-by-individual
+basic-native-1.0 (buildinfo): package-is-maintained-by-individual
 basic-native-1.0 (binary): package-is-maintained-by-individual
 basic-native-1.0 (binary): no-ctrl-scripts
 basic-native-1.0 (binary): data-tarball-compression-format xz

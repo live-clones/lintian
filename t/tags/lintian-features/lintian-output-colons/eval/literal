@@ -29,6 +29,8 @@ tag:C:classification::lintian-output-colons:1.0+dsfg-1.1:source:source:debian-wa
 tag:C:classification::lintian-output-colons:1.0+dsfg-1.1:all:binary:no-ctrl-scripts::
 tag:C:classification::lintian-output-colons:1.0+dsfg-1.1:source:source:package-is-maintained-by-individual::
 tag:C:classification::lintian-output-colons:1.0+dsfg-1.1:all:binary:package-is-maintained-by-individual::
+tag:C:classification::lintian-output-colons:1.0+dsfg-1.1:source all:changes:package-is-maintained-by-individual::
+tag:C:classification::lintian-output-colons:1.0+dsfg-1.1:all source:buildinfo:package-is-maintained-by-individual::
 tag:C:classification::lintian-output-colons:1.0+dsfg-1.1:source:source:patch-system:quilt:
 tag:C:classification::lintian-output-colons:1.0+dsfg-1.1:source:source:rules-does-not-require-root::
 tag:C:classification::lintian-output-colons:1.0+dsfg-1.1:source:source:source-format:3.0 (quilt):

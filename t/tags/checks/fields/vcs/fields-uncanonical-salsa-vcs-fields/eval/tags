@@ -3,4 +3,6 @@ fields-uncanonical-salsa-vcs-fields (source): vcs-field-not-canonical https://sa
 fields-uncanonical-salsa-vcs-fields (source): vcs-field-not-canonical https://salsa.debian.org/foo/bar.git https://salsa.debian.org/foo/bar
 fields-uncanonical-salsa-vcs-fields (source): vcs git
 fields-uncanonical-salsa-vcs-fields (source): package-is-maintained-by-individual
+fields-uncanonical-salsa-vcs-fields (changes): package-is-maintained-by-individual
+fields-uncanonical-salsa-vcs-fields (buildinfo): package-is-maintained-by-individual
 fields-uncanonical-salsa-vcs-fields (binary): package-is-maintained-by-individual

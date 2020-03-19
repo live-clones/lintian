@@ -9,4 +9,6 @@ fields-malformed-vcs-fields (source): vcs-field-has-unexpected-spaces vcs-git ht
 fields-malformed-vcs-fields (source): vcs svn
 fields-malformed-vcs-fields (source): vcs git
 fields-malformed-vcs-fields (source): package-is-maintained-by-individual
+fields-malformed-vcs-fields (changes): package-is-maintained-by-individual
+fields-malformed-vcs-fields (buildinfo): package-is-maintained-by-individual
 fields-malformed-vcs-fields (binary): package-is-maintained-by-individual
