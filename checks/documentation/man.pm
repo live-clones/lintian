@@ -405,9 +405,10 @@ sub breakdown {
         my $file = $local_admin_executables{$command};
         my @manpages = @{$related_manpages{$command} // []};
 
+        my @sections = grep { defined } map { $_->{section} } @manpages;
         $self->tag('command-in-sbin-has-manpage-in-incorrect-section', $file)
           if $file->is_regular_file
-          && any { $_->{section} == 1 } @manpages;
+          && any { $_ == 1 } @sections;
     }
 
     $self->tag('binary-without-english-manpage', $_)
