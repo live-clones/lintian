@@ -57,7 +57,6 @@ use File::Find::Rule;
 use File::Path;
 use File::stat;
 use Path::Tiny;
-use File::Temp qw(tempfile);
 
 use constant NEWLINE => qq{\n};
 use constant SPACE => q{ };
@@ -158,7 +157,8 @@ sub find_missing_prerequisites {
       || $testcase->{test_conflicts};
 
     # create a temporary file
-    my ($temphandle, $tempfile)= tempfile('bd-test-XXXXXXXXX', TMPDIR => 1);
+    my $temp = Path::Tiny->tempfile(
+        TEMPLATE => 'lintian-test-build-depends-XXXXXXXXX');
     my @lines;
 
     # dpkg-checkbuilddeps requires a Source: field
@@ -177,16 +177,12 @@ sub find_missing_prerequisites {
     push(@lines, "Build-Conflicts: $build_conflicts")
       if length $build_conflicts;
 
-    say {$temphandle} join(NEWLINE, @lines);
-    close($temphandle) or carp "Could not close temporary file: $!";
+    $temp->spew(join(NEWLINE, @lines) . NEWLINE);
 
     # run dpkg-checkbuilddeps
-    my $command = "dpkg-checkbuilddeps $tempfile";
+    my $command = "dpkg-checkbuilddeps $temp";
     my ($missing, $status) = capture_merged { system($command); };
     $status = ($status >> 8) & 255;
-
-    # delete temporary file
-    unlink($tempfile);
 
     die "$command failed: $missing" if !$status && length $missing;
 
