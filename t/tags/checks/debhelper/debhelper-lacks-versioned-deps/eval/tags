@@ -1,4 +1,4 @@
-debhelper-lacks-versioned-deps (source): package-uses-old-debhelper-compat-version 9
+debhelper-lacks-versioned-deps (source): package-uses-deprecated-debhelper-compat-version 9
 debhelper-lacks-versioned-deps (source): package-lacks-versioned-build-depends-on-debhelper 9
 debhelper-lacks-versioned-deps (source): debian-build-system dh
 debhelper-lacks-versioned-deps (source): debhelper-compat-level 9

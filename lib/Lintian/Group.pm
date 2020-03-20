@@ -21,13 +21,13 @@ package Lintian::Group;
 
 use strict;
 use warnings;
+use autodie;
 use v5.16;
 
 use Carp;
+use Cwd;
 use Devel::Size qw(total_size);
 use File::Spec;
-use IO::Async::Loop;
-use IO::Async::Routine;
 use List::Compare;
 use List::MoreUtils qw(uniq firstval);
 use Path::Tiny;
@@ -39,8 +39,6 @@ use Lintian::Processable::Buildinfo;
 use Lintian::Processable::Changes;
 use Lintian::Processable::Source;
 use Lintian::Processable::Udeb;
-use Lintian::Tags qw(tag);
-use Lintian::Unpack::Task;
 use Lintian::Util qw(internal_error get_dsc_info strip human_bytes);
 
 use constant EMPTY => q{};
@@ -117,51 +115,11 @@ Returns or sets the max number of jobs to be processed in parallel.
 If the limit is 0, then there is no limit for the number of parallel
 jobs.
 
-=item active
-
-Hash reference for active jobs.
-
-=item failed
-
-Array reference for failed jobs.
-
 =item cache
 
 Cache for some items.
 
-=item coll2priority
-
-Hash linking collection to priority.
-
-=item coll_priorities
-
-Hash with active jobs.
-
-=item C<collmap>
-
-Hash with active jobs.
-
-=item colls_not_scheduled
-
-Hash with active jobs.
-
-=item extra_coll
-
-Hash with active jobs.
-
 =item profile
-
-Hash with active jobs.
-
-=item queue
-
-Hash with active jobs.
-
-=item running_jobs
-
-Hash with active jobs.
-
-=item worktable
 
 Hash with active jobs.
 
@@ -186,20 +144,8 @@ has udeb => (is => 'rw', default => sub{ {} });
 
 has jobs => (is => 'rw', default => 1);
 
-has coll_priorities => (is => 'rw');
-
 has cache => (is => 'rw', default => sub { {} });
-has coll2priority => (is => 'rw', default => sub { {} });
-has collmap => (is => 'rw', default => sub { {} });
 has profile => (is => 'rw', default => sub { {} });
-has running_jobs => (is => 'rw', default => sub { {} });
-has worktable => (is => 'rw', default => sub { {} });
-has active => (is => 'rw', default => sub { {} });
-has failed => (is => 'rw', default => sub { {} });
-has colls_not_scheduled => (is => 'rw', default => sub { {} });
-
-has extra_coll => (is => 'rw', default => sub { [] });
-has queue => (is => 'rw', default => sub { [] });
 
 has saved_direct_dependencies => (is => 'rw', default => sub { {} });
 has saved_direct_reliants => (is => 'rw', default => sub { {} });
@@ -228,7 +174,8 @@ sub _get_processable {
     } elsif ($file =~ m/\.buildinfo$/o) {
         $processable = Lintian::Processable::Buildinfo->new;
 
-    } elsif ($file =~ m/\.deb$/o) {
+    } elsif ($file =~ m/\.d?deb$/) {
+        # in ubuntu, automatic dbgsym packages end with .ddeb
         $processable = Lintian::Processable::Binary->new;
 
     } elsif ($file =~ m/\.udeb$/o) {
@@ -302,9 +249,9 @@ sub init_from_file {
             exit 2;
         }
 
-        # Some file we do not care about (at least not here).
+        # only care about some files; ddeb is ubuntu dbgsym
         next
-          unless $file =~ /\.u?deb$/
+          unless $file =~ /\.(?:u|d)?deb$/
           || $file =~ m/\.dsc$/
           || $file =~ m/\.buildinfo$/;
 
@@ -322,54 +269,8 @@ Unpack this group.
 =cut
 
 sub unpack {
-    my ($self, $collmap, $action, $exit_code_ref, $OUTPUT)= @_;
+    my ($self, $OUTPUT)= @_;
 
-    my $clonedmap = $collmap->clone;
-
-    if ($self->profile) {
-        my @requested;
-        foreach my $check ($self->profile->scripts) {
-            my $script = $self->profile->get_script($check);
-            push(@requested, $script->needs_info);
-        }
-        push(@requested, @{$self->extra_coll});
-
-        # For new entries we take everything in the collmap, which is
-        # a bit too much in some cases.  Since we have cloned collmap,
-        # we might as well prune the nodes we will not need in our
-        # copy.  While not perfect, it reduces the unnecessary work
-        # rather well.
-        #
-        #  Known issue: "lintian -oC files some.dsc" should not need
-        #  to do anything because "files" is "binary, udeb"-only.
-
-        # add all ancestors; List::Compare does not need a unique list
-        push(@requested, $clonedmap->non_unique_ancestors($_)) for @requested;
-
-        # remove unneeded nodes in our copy
-        my @known = $clonedmap->known;
-        my $lc = List::Compare->new('--unsorted', \@known, \@requested);
-        $clonedmap->unlink($_)for $lc->get_Lonly;
-
-        # clonedmap should remain internally consistent
-        die 'Inconsistent collmap after deletion'
-          if $clonedmap->missing;
-    }
-
-    # Initialise our copy
-    $clonedmap->initialise;
-
-    $self->collmap($clonedmap);
-
-    my $all_ok = 1;
-
-    # Kill pending jobs, if any
-    $self->kill_jobs;
-    $self->wait_for_jobs;
-
-    $self->worktable({});
-
-    # Stop here if there is nothing for us to do
     my @processables = $self->get_processables;
     for my $processable (@processables) {
 
@@ -389,197 +290,15 @@ sub unpack {
         }
     }
 
-    my %worklists;
-    foreach my $processable (@processables) {
-
-        my $type = $processable->type;
-        my $cmap;
-
-        if (exists $self->cache->{$type}) {
-            $cmap = $self->cache->{$type}->clone;
-        } else {
-            my $collmap = $self->collmap;
-            my $cmap2 = Lintian::DepMap::Properties->new;
-            my $cond = { 'type' => $type };
-            my $coll2priority = $self->coll2priority;
-
-            foreach my $node ($collmap->known) {
-                my $script = $collmap->getp($node);
-                if (not exists($coll2priority->{$node})) {
-                    $coll2priority->{$node} = $script->priority;
-                    $self->coll_priorities(undef);
-                }
-                $cmap2->add($node, $script->needs_info($cond), $script);
-            }
-
-            $cmap2->initialise;
-
-            $self->cache->{$type} = $cmap2;
-            $cmap = $cmap2->clone;
-        }
-
-        my $needed;
-        my %wanted;
-        my @requested;
-        my $profile = $self->profile;
-        if ($profile) {
-            if ($profile) {
-
-                foreach my $check ($profile->scripts) {
-                    my $script = $profile->get_script($check);
-                    push(@requested, $script->needs_info)
-                      if $script->is_check_type($type);
-                }
-
-                push(@requested, @{$self->extra_coll});
-                @requested = uniq @requested;
-
-            } else {
-                # not new
-                @requested = $cmap->known;
-            }
-
-            while (my $check = pop @requested) {
-                my $script = $cmap->getp($check);
-                # Skip collections not relevant to us (they will never
-                # be finished and we do not want to use their
-                # dependencies if they are the only ones using them)
-                next unless $script->is_type($type);
-                $wanted{$check} = 1;
-                push @requested, $script->needs_info;
-            }
-
-            # skip it unless we need to unpack something.
-            if (%wanted) {
-                $needed = \%wanted;
-            } else {
-                $cmap = undef;
-                $needed = undef;
-            }
-        } else {
-            # if its new and $profile is undef, we have to run all
-            # of collections.  So lets exit early.
-            $needed = undef;
-        }
-
-        next unless $cmap; # nothing to do
-
-        $worklists{$processable->identifier} = {
-            'collmap' => $cmap,
-            'lab-entry' => $processable,
-            'needed' => $needed,
-        };
-    }
-
-    return 1
-      unless %worklists;
-
-    $self->worktable(\%worklists);
-
-    unless($self->coll_priorities) {
-        my @priorities
-          = sort { $self->coll2priority->{$a} <=> $self->coll2priority->{$b} }
-          keys %{$self->coll2priority};
-
-        $self->coll_priorities(\@priorities);
-    }
-
     $OUTPUT->v_msg('Unpacking packages in group ' . $self->name);
 
-    my %timers;
-    my $hook = sub {
-        $self->coll_hook($OUTPUT, $action, $exit_code_ref, \%timers, @_)
-          or $all_ok = 0;
-    };
+    my @unpack = grep { $_->can('unpack') } @processables;
 
-    $self->active({ map { $_ => 1 } keys %{$self->worktable} });
+    my $savedir = getcwd;
+    $_->unpack for @unpack;
+    chdir($savedir);
 
-    for my $check (@{$self->coll_priorities}) {
-        my %procs;
-        $procs{$_} = 1 for keys %{$self->worktable};
-        $self->colls_not_scheduled->{$check} = \%procs;
-    }
-
-    my @slices;
-
-    my $loop = IO::Async::Loop->new;
-
-    for (0..$self->jobs-1) {
-        my $task = $self->find_next_task($OUTPUT);
-        last if not $task;
-
-        my $slice = $loop->new_future;
-        push(@slices, $slice);
-
-        $self->start_task($slice, $hook, $task, $OUTPUT);
-    }
-
-    Future->wait_all(@slices)->get;
-
-    return $all_ok;
-}
-
-=item coll_hook
-
-Collection hook.
-
-=cut
-
-sub coll_hook {
-    my ($self, $OUTPUT, $action, $exit_code_ref,$timers, $task, $event,
-        $exitval)= @_;
-
-    my $coll = $task->script->name;
-    my $procid = $task->processable->identifier;
-    my $pkg_name = $task->processable->name;
-    my $pkg_type = $task->processable->type;
-
-    if ($event eq 'start') {
-        $timers->{$task->id} = [gettimeofday];
-        $OUTPUT->debug_msg(1, "Collecting info: $coll for $procid ...");
-
-        return 1;
-
-    } elsif ($event eq 'start-failed' || ($event eq 'finish' && $exitval)) {
-
-        # failed
-        my $string
-          = "collection $coll failed for $pkg_type package $pkg_name, skipping $action";
-        $string .= " error: $exitval"
-          if $exitval;
-        $OUTPUT->warning($string);
-
-        my $pkg_type = $task->processable->type;
-        if (   $pkg_type eq 'source'
-            or $pkg_type eq 'changes'
-            or $pkg_type eq 'buildinfo'){
-
-            $self->$pkg_type(undef);
-        } else {
-            my $phash = $self->$pkg_type;
-            my $id = $task->processable->identifier;
-
-            delete $phash->{$id};
-        }
-
-        $$exit_code_ref = 2;
-
-        return 0;
-
-    } elsif ($event eq 'finish') {
-
-        # success
-        my $raw_res = tv_interval($timers->{$task->id});
-        my $tres = sprintf('%.3fs', $raw_res);
-        $OUTPUT->debug_msg(1,
-            "Collection script $coll for $procid done ($tres)");
-        $OUTPUT->perf_log("$procid,coll/$coll,${raw_res}");
-
-        return 1;
-    }
-
-    # unknown event
-    return 1;
+    return;
 }
 
 =item process
@@ -589,7 +308,7 @@ Process group.
 =cut
 
 sub process {
-    my ($self, $TAGS, $exit_code_ref, $override_count, $opt, $OUTPUT)= @_;
+    my ($self, $exit_code_ref, $override_count, $opt, $OUTPUT)= @_;
 
     my $all_ok = 1;
 
@@ -611,9 +330,6 @@ sub process {
 
         my $path = $processable->path;
 
-        # required for global Lintian::Tags::tag usage
-        $TAGS->{current} = $path;
-
         my $declared_overrides;
         my %used_overrides;
 
@@ -623,10 +339,7 @@ sub process {
         $OUTPUT->debug_msg(1,
             'Base directory for group: ' . $processable->groupdir);
 
-        my @found;
-
-        if (not $opt->{'no-override'}
-            and $self->collmap->getp('override-file')) {
+        unless ($opt->{'no-override'}) {
 
             $OUTPUT->debug_msg(1, 'Loading overrides file (if any) ...');
 
@@ -635,7 +348,7 @@ sub process {
                 die $err if not ref $err or $err->errno != ENOENT;
             }
 
-            my %alias = %{$TAGS->{profile}->aliases};
+            my %alias = %{$self->profile->aliases};
 
             # treat renamed tags in overrides
             for my $tagname (keys %{$declared_overrides}) {
@@ -662,17 +375,10 @@ sub process {
                 }
             }
 
-            push(@found, @{$processable->found});
-
-            # remove found tags from Processable
-            $processable->found([]);
-
             # treat ignored overrides here
             for my $tagname (keys %{$declared_overrides}) {
 
-                if ($TAGS->{profile}
-                    && !$TAGS->{profile}->is_overridable($tagname)) {
-
+                unless ($self->profile->is_overridable($tagname)) {
                     delete $declared_overrides->{$tagname};
                     $override_count->{ignored}{$tagname}++;
                 }
@@ -686,6 +392,13 @@ sub process {
                 $used_overrides{$tagname}{$_} = 0 for keys %{$extras};
             }
         }
+
+        # retrieve any tags issued during unpacking or data collection
+        my @found;
+        push(@found, @{$processable->found});
+
+        # remove found tags from Processable
+        $processable->found([]);
 
         # Filter out the "lintian" check if present - it does no real harm,
         # but it adds a bit of noise in the debug output.
@@ -713,12 +426,6 @@ sub process {
             # remove found tags from Processable
             $processable->found([]);
 
-            # add any from the global queue
-            push(@found, @{$TAGS->{queue}});
-
-            # empty the global queue
-            $TAGS->{queue} = [];
-
             if ($err) {
                 print STDERR $err;
                 print STDERR "internal error: cannot run $check check",
@@ -735,8 +442,6 @@ sub process {
             $OUTPUT->perf_log("$procid,check/$check,${raw_res}");
         }
 
-        undef $TAGS->{current};
-
         my @keep;
 
         for my $tag (@found) {
@@ -750,7 +455,7 @@ sub process {
             $tag->info($taginfo);
 
             next
-              if $TAGS->suppressed($tag->name);
+              if $self->profile->suppressed($tag->name);
 
             my $override;
             my $extra = $tag->extra;
@@ -795,7 +500,7 @@ sub process {
         for my $tagname (sort keys %used_overrides) {
 
             next
-              if $TAGS->suppressed($tagname);
+              if $self->profile->suppressed($tagname);
 
             my $tag_overrides = $used_overrides{$tagname};
 
@@ -864,10 +569,10 @@ sub process {
 
         next
           if defined $tag->override
-          && !$TAGS->{show_overrides};
+          && !$opt->{'show-overrides'};
 
         next
-          unless $TAGS->displayed($tag->name);
+          unless $self->profile->displayed($tag->name);
 
         push(@print, $tag);
     }
@@ -1285,255 +990,6 @@ sub clear_cache {
     for my $proc ($self->get_processables) {
         $proc->clear_cache;
     }
-
-    return;
-}
-
-=item find_next_task
-
-Find next task.
-
-=cut
-
-sub find_next_task {
-    my ($self, $OUTPUT) = @_;
-
-    my @coll_priorities = @{$self->coll_priorities};
-
-    unless (@{$self->queue}) {
-
-        for (my $i = 0; $i < @coll_priorities ; $i++) {
-
-            my $check = $coll_priorities[$i];
-            my $script = $self->collmap->getp($check);
-            my $unscheduled = $self->colls_not_scheduled->{$check};
-
-            foreach
-              my $procid (grep { $unscheduled->{$_} } keys %{$self->active}) {
-                my $wlist = $self->worktable->{$procid};
-                my $cmap = $wlist->{'collmap'};
-
-                next
-                  unless $cmap->selectable($check);
-
-                my $processable = $wlist->{'lab-entry'};
-                my $needed = $wlist->{'needed'};
-
-                delete $unscheduled->{$procid};
-
-                # current type?
-                unless ($script->is_type($processable->type)) {
-                    $cmap->satisfy($check);
-                    next;
-                }
-
-                # Check if its actually on our TODO list.
-                if (defined $needed and not exists $needed->{$check}) {
-                    $cmap->satisfy($check);
-                    next;
-                }
-
-                # collect info
-                $cmap->select($check);
-                $OUTPUT->debug_msg(3, "READY $check-$procid")
-                  if $OUTPUT->debug;
-
-                my $task = Lintian::Unpack::Task->new;
-                $task->id($check . HYPHEN . $procid);
-                $task->script($script);
-                $task->processable($processable);
-                $task->cmap($cmap);
-                push(@{$self->queue}, $task);
-
-               # If we are dealing with the highest priority type of task, then
-               # keep filling the cache (i.e. $i == 0).  Otherwise, stop here
-               # to avoid priority inversion due to filling the queue with
-               # unimportant tasks.
-                last if $i;
-            }
-
-            unless (keys %{$unscheduled}) {
-                $OUTPUT->debug_msg(3,
-                    "DISCARD $check (all instances have been scheduled)")
-                  if $OUTPUT->debug;
-                splice(@coll_priorities, $i, 1);
-                $i--;
-            }
-
-            last if @{$self->queue};
-        }
-    }
-
-    if (@{$self->queue}) {
-        $OUTPUT->debug_msg(4,
-                'QUEUE non-empty with '
-              . scalar(@{$self->queue})
-              . ' item(s).  Taking one.')
-          if $OUTPUT->debug;
-    }
-
-    return shift @{$self->queue}
-      if @{$self->queue};
-
-    return;
-}
-
-=item start_task
-
-Start task.
-
-=cut
-
-sub start_task {
-    my ($self, $slice, $hook, $task, $OUTPUT) = @_;
-
-    my $cmap = $task->cmap;
-
-    my $loop = IO::Async::Loop->new;
-    my $debug_enabled = $OUTPUT->debug;
-
-    $OUTPUT->debug_msg(3, 'START ' . $task->id);
-    my $pid = -1;
-
-    my $future = $loop->new_future;
-
-    $hook->($task, 'start')
-      if $hook;
-
-    eval {
-
-        $pid = $loop->fork(
-            code  => sub {
-
-                # fixed upstream in 0.73
-                undef($IO::Async::Loop::ONE_TRUE_LOOP);
-
-                my $check = $task->script->name;
-                my $procid = $task->processable->identifier;
-
-                my $package = $task->processable->name;
-                my $type = $task->processable->type;
-                my $groupdir = $task->processable->groupdir;
-
-                # change the process name; possible overwritten by exec
-                $0 = "$check (processing $procid)";
-
-                my $ret = 0;
-                eval {$task->script->collect($package, $type, $groupdir);};
-                if ($@) {
-                    print STDERR $@;
-                    $ret = 2;
-                }
-                POSIX::_exit($ret);
-            },
-
-            on_exit  => sub {
-                my ($pid, $status) = @_;
-
-                delete $self->running_jobs->{$future};
-
-                $OUTPUT->debug_msg(3, 'FINISH ' . $task->id . " ($status)");
-
-                $hook->($task, 'finish', $status)
-                  if $hook;
-
-                my $check = $task->script->name;
-                my $procid = $task->processable->identifier;
-
-                if ($status) {
-                    # failed ...
-                    $self->failed->{$procid} = 1;
-                    delete $self->active->{$procid};
-                }else {
-                    # The collection was success
-                    $cmap->satisfy($check);
-                    # If the entry is marked as failed, don't break the loop
-                    # for it.
-                    $self->active->{$procid} = 1
-                      unless $self->failed->{$procid}
-                      || !$cmap->selectable;
-                }
-
-                $future->done("Script $check for ". $procid. ' finished');
-
-            });
-    };
-
-    $future->on_ready(
-        sub {
-            my $task = $self->find_next_task($OUTPUT);
-            $slice->done('No more tasks')
-              unless $task;
-            $self->start_task($slice, $hook, $task, $OUTPUT)
-              if $task;
-
-            my $debug_enabled = $OUTPUT->debug;
-            if ($debug_enabled) {
-                my @ids = map { $_->{id} } values %{$self->running_jobs};
-                my $queue = join(', ', sort @ids);
-                $OUTPUT->debug_msg(3, "RUNNING QUEUE: $queue");
-            }
-        });
-
-    if ($hook) {
-        my $err = $@;
-        $hook->($task, 'failed', $err)
-          if $pid == -1;
-    }
-
-    $self->running_jobs->{$future} = { id => $task->id, pid => $pid };
-
-    return;
-}
-
-=item wait_for_jobs
-
-Block and wait for all running jobs to terminate.  Usually this is not
-needed unless process_tasks was interrupted somehow.
-
-=cut
-
-sub wait_for_jobs {
-    my ($self) = @_;
-
-    my @futures = keys %{$self->running_jobs};
-    Future->wait_all(@futures)->get;
-
-    $self->running_jobs({});
-    return;
-}
-
-=item kill_jobs
-
-Forcefully terminate all running jobs.  Usually this is not needed
-unless process_tasks was interrupted somehow.
-
-=cut
-
-sub kill_jobs {
-    my ($self) = @_;
-
-    my @pids = map { $_->{pid} } values %{$self->running_jobs};
-    if (@pids) {
-        kill('TERM', @pids);
-        kill('KILL', @pids);
-    }
-
-    $self->running_jobs({});
-    return;
-}
-
-=item DEMOLISH
-
-Moo destructor.
-
-=cut
-
-sub DEMOLISH {
-    my ($self, $in_global_destruction) = @_;
-
-    # kill any remaining jobs.
-    $self->kill_jobs;
 
     return;
 }

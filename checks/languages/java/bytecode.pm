@@ -36,9 +36,7 @@ sub files {
     if (   $file->name =~ m,\.class$,o
         && $file->name !~ m,(?:WEB-INF|demo|doc|example|sample|test),o) {
 
-        my $fd = $file->open;
-        read($fd, my $magic, 4);
-        close($fd);
+        my $magic = $file->magic(4);
 
         $self->tag('package-installs-java-bytecode', $file->name)
           if $magic eq "\xCA\xFE\xBA\xBE";

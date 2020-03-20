@@ -139,7 +139,8 @@ sub source {
                 and $minor == $CURRENT[1]
                 and $patch > $CURRENT[2])
         ) {
-            $self->tag('newer-standards-version', $tag);
+            $self->tag('newer-standards-version', $tag)
+              unless $dist =~ /backports/;
         } else {
             $self->tag('invalid-standards-version', $version);
         }

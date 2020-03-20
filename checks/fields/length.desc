@@ -1,6 +1,2 @@
 Check-Script: fields/length
-Author: Sylvestre Ledru <sylvestre@debian.org>
 Type: binary, udeb, source
-Needs-Info: unpacked
-Info: This script checks for fields that are too long in
-  package control files, as described in the Policy Manual.

@@ -120,7 +120,7 @@ sub source {
     }
 
     if ($copyright_path->is_open_ok) {
-        my $contents = $copyright_path->file_contents;
+        my $contents = $copyright_path->slurp;
 
         $self->check_dep5_copyright($contents);
         $self->check_apache_notice_files($contents);
@@ -192,27 +192,36 @@ sub find_dep5_version {
 sub check_apache_notice_files {
     my ($self, $contents) = @_;
 
-    my $processable = $self->processable;
-    my $group = $self->group;
+    return
+      unless $contents =~ m/apache[-\s]+2\./i;
 
-    my @procs = $group->get_processables('binary');
-    return if not @procs;
-    return if $contents !~ m/apache[-\s]+2\./i;
+    my $processable = $self->processable;
 
     my @notice_files = grep {
               $_->basename =~ m/^NOTICE(\.txt)?$/
           and $_->is_open_ok
-          and $_->file_contents =~ m/apache/i
+          and $_->slurp =~ m/apache/i
     } $processable->patched->sorted_list;
-    return if not @notice_files;
+    return
+      unless @notice_files;
 
-    foreach my $binpkg (@procs) {
-        my @files = map { $_->name } $binpkg->installed->sorted_list;
-        my $java_info = $binpkg->java_info;
-        for my $jar_file (sort keys %{$java_info}) {
-            push @files, keys %{$java_info->{$jar_file}{files}};
-        }
-        return if any { m{/NOTICE(\.txt)?(\.gz)?$} } @files;
+    my $group = $self->group;
+    my @binaries = $group->get_processables('binary');
+    return
+      unless @binaries;
+
+    foreach my $binary (@binaries) {
+
+        # look at all path names in the package
+        my @names = map { $_->name } $binary->installed->sorted_list;
+
+        # and also those shipped in jars
+        my @jars = grep { scalar keys %{$_->java_info} }
+          $binary->installed->sorted_list;
+        push(@names, keys %{$_->java_info->{files}})for @jars;
+
+        return
+          if any { m{/NOTICE(\.txt)?(\.gz)?$} } @names;
     }
 
     $self->tag('missing-notice-file-for-apache-license',
@@ -234,7 +243,7 @@ sub check_dep5_copyright {
             =~ m{^Format:.*/doc/packaging-manuals/copyright-format/1.0/?$}m) {
 
             $self->tag('repackaged-source-not-advertised')
-              unless $processable->repacked;
+              unless $processable->repacked || $processable->native;
 
         } else {
             $self->tag('files-excluded-without-copyright-format-1.0');
@@ -333,7 +342,12 @@ sub parse_dep5 {
                 $field,$renamed_to, "(line $lines[0]{$field})");
         }
     }
-    $self->check_files_excluded($first_para->{'files-excluded'} // '');
+
+    $self->check_files_excluded($first_para->{'files-excluded'} // '')
+      unless $processable->native;
+
+    $self->tag('copyright-excludes-files-in-native-package')
+      if exists $first_para->{'files-excluded'} && $processable->native;
 
     $self->tag('missing-field-in-dep5-copyright',
         'format',"(line $lines[0]{'format'})")
@@ -371,7 +385,7 @@ sub parse_dep5 {
     my $debian_dir = $processable->patched->resolve_path('debian/');
     if ($debian_dir) {
 
-        push(@shipped, $debian_dir->children('breadth-first'));
+        push(@shipped, $debian_dir->descendants);
     }
 
     my @shippedfiles = sort grep { $_->is_file } @shipped;
@@ -503,8 +517,8 @@ sub parse_dep5 {
                         } elsif ($wc_value =~ /^debian\//) {
                             my $dir = $processable->patched->lookup($wc_value);
                             if ($dir) {
-                                my @files = grep { $_->is_file }
-                                  $dir->children('breadth-first');
+                                my @files
+                                  = grep { $_->is_file }$dir->descendants;
                                 push(@wlist, @files);
                             }
 
@@ -516,8 +530,8 @@ sub parse_dep5 {
                                 $dir = $processable->orig->lookup($wc_value);
                             }
                             if ($dir) {
-                                my @files = grep { $_->is_file }
-                                  $dir->children('breadth-first');
+                                my @files
+                                  = grep { $_->is_file }$dir->descendants;
                                 push(@wlist, @files);
                             }
                         }
@@ -614,7 +628,7 @@ sub parse_dep5 {
             $parser->set_option('no_network', 1);
 
             my $file = $processable->patched->resolve_path($srcfile);
-            my $doc = eval {$parser->parse_file($file->fs_path);};
+            my $doc = eval {$parser->parse_file($file->unpacked_path);};
             next
               unless $doc;
 

@@ -48,6 +48,19 @@ my $COMPRESS_FILE_EXTENSIONS_OR_ALL = sub { qr/(:?$_[0])/ }
 my $COMPRESSED_SYMLINK_POINTING_TO_COMPRESSED_REGEX
   = qr/\.($COMPRESS_FILE_EXTENSIONS_OR_ALL)\s*$/;
 
+sub source {
+    my ($self) = @_;
+
+    for my $file ($self->processable->patched->sorted_list) {
+
+        $self->tag('absolute-symbolic-link-target-in-source',
+            $file->name, '->', $file->link)
+          if $file->is_symlink && $file->link =~ m{^/}s;
+    }
+
+    return;
+}
+
 sub is_tmp_path {
     my ($path) = @_;
     if(    $path =~ m,^tmp/.,

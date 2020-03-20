@@ -31,6 +31,7 @@ package Lintian::appstream_metadata;
 
 use strict;
 use warnings;
+use autodie qw(open);
 
 use File::Basename qw(basename);
 use XML::LibXML;
@@ -57,7 +58,7 @@ sub binary {
               = $processable->installed->resolve_path(
                 'usr/share/applications/'))
     ) {
-        for my $file ($dir->children('breadth-first')) {
+        for my $file ($dir->descendants) {
             $desktopfiles{$file} = 1 if ($file->is_file);
         }
     }
@@ -78,7 +79,7 @@ sub binary {
             my $dir
               = $processable->installed->resolve_path('usr/share/appdata/'))
     ) {
-        for my $file ($dir->children('breadth-first')) {
+        for my $file ($dir->descendants) {
             if ($file->is_file) {
                 $self->tag(('appstream-metadata-in-legacy-location', $file));
                 $found_modalias|= $self->check_modalias($file, $modaliases);
@@ -90,7 +91,7 @@ sub binary {
             my $dir= $processable->installed->resolve_path('lib/udev/rules.d/')
         )
     ) {
-        for my $file ($dir->children('breadth-first')) {
+        for my $file ($dir->descendants) {
             push(@udevrules, $file) if ($file->is_file);
         }
     }
@@ -116,10 +117,10 @@ sub check_modalias {
     my $parser = XML::LibXML->new;
     $parser->set_option('no_network', 1);
 
-    my $doc = eval {$parser->parse_file($metadatafile->fs_path);};
+    my $doc = eval {$parser->parse_file($metadatafile->unpacked_path);};
     if ($@) {
         $self->tag('appstream-metadata-invalid',
-            basename($metadatafile->fs_path));
+            basename($metadatafile->unpacked_path));
         return 0;
     }
 
@@ -202,7 +203,7 @@ sub provides_user_device {
 sub check_udev_rules {
     my ($self, $file, $data) = @_;
 
-    my $fd = $file->open;
+    open(my $fd, '<', $file->unpacked_path);
     my $linenum = 0;
     my $cont;
     my $retval = 0;

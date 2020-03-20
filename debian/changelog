@@ -1,3 +1,83 @@
+lintian (2.57.0) unstable; urgency=medium
+
+  * Summary of tag changes:
+    + Added:
+      - absolute-symbolic-link-target-in-source
+      - bash-completion-with-hashbang
+      - binary-is-wrong-architecture
+      - copyright-excludes-files-in-native-package
+      - explicit-default-in-package-type
+      - new-package-uses-date-based-version-number
+      - upstream-metadata-missing-bug-tracking
+      - upstream-metadata-missing-repository
+    + Removed:
+      - pkg-config-references-unknown-shared-library
+
+  [ Chris Lamb ]
+  * Check for debian/upstream/metadata files without bug tracking
+    information and upstream repository locations.
+    (Closes: #950115, #950117)
+  * Check for new packages that use a date-based versioning scheme
+    (eg. YYYYMMDD-1) without a 0~ suffix. (Closes: #953036)
+  * Don't report about using a newer Standards-Version when uploading to
+    backports.
+  * Clarify the error message when tags are not covered in the testsuite.
+
+  [ Felix Lechner ]
+  * Also analyse Ubuntu's automatic debug packages which have the
+    non-standard suffix .ddeb. (Closes: #951513, #953857)
+  * Parse newline escapes correctly in md5sum files. (Closes: #929729)
+  * Remove tag pkg-config-references-unknown-shared-library; outside of
+    Lintian's purview. (Closes: #953099)
+  * Rewrite check for compressed gzip archives; print modification time of
+    first member. (Re: #762105)
+  * Add a new tag called bash-completion-with-hashbang.
+  * Add tag and check for absolute symbolic link targets in source trees.
+  * Reduce severity and mark PE32+ related tag experimental; set security
+    features for test binary explicitly.
+  * Offer to calibrate test results for literal matching strategy.
+  * Strip leading slashes from absolute paths for file names and hard link
+    targets.
+  * Issue a tag when the Excluded-Files field is present in copyright
+    within native packages.
+  * Display Lintian's command-line options in the process table (eg.
+    top(1), etc.)
+
+  [ Paul Wise ]
+  * Add several spelling corrections.
+
+  [ Xavier Guimard ]
+  * Extend NodeJS checks to modules that use naming such as "@foo/bar".
+
+ -- Chris Lamb <lamby@debian.org>  Mon, 16 Mar 2020 23:21:34 +0000
+
+lintian (2.56.0) unstable; urgency=medium
+
+  * Summary of tag changes:
+    + Added:
+      - nodejs-lock-file
+
+  [ Chris Lamb ]
+  * Check for NO_START and FOO_NO_START etc. in /etc/default scripts.
+    (Closes: #950238)
+  * Deprecate debhelper compat level 9. (Closes: #950453)
+
+  [ Felix Lechner ]
+  * Fix POD markup in man page; indent level caused literal display of
+    formatting codes. (Closes: #952529)
+  * Fix the selection of classification tags with -T command line switch.
+    (Closes: #952539)
+  * Use JSON::MaybeXS instead of plain JSON in the NodeJS checks.
+  * Remove and replace the open_gz, open and file_contents subroutines from
+    File::Path.
+  * Provide method for all ->descendants in File::Path and use it, retiring
+    breadth-first recursion.
+
+  [ Xavier Guimard ]
+  * Check if NodeJS modules install lock files.
+
+ -- Chris Lamb <lamby@debian.org>  Wed, 26 Feb 2020 18:30:19 +0000
+
 lintian (2.55.0~bpo9+1) stretch-backports; urgency=medium
 
   * Rebuild for stretch-backports.

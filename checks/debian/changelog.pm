@@ -610,6 +610,10 @@ sub binary {
             if ($latest_entry->Version and $latest_entry->Version =~ /-1$/) {
                 $self->tag('new-package-should-close-itp-bug')
                   unless @{ $latest_entry->Closes };
+                $self->tag('new-package-uses-date-based-version-number',
+                    $latest_entry->Version,
+                    '(vs. 0~' . $latest_entry->Version .')')
+                  if $latest_entry->Version =~ m/^\d{8}/;
             }
             $self->tag('changelog-is-dh_make-template')
               if $changes

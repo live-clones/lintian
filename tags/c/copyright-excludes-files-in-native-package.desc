@@ -1,0 +1,9 @@
+Tag: copyright-excludes-files-in-native-package
+Severity: serious
+Certainty: certain
+Check: debian/copyright
+Info: The Debian copyright notes excluded files with the <tt>Excluded-Files</tt> field,
+ but the package is native.
+ .
+ Native packages cannot be repackaged. Please remove the field from
+ <tt>debian/copyright</tt> or make the package non-native.

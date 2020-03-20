@@ -1,5 +1,2 @@
 Check-Script: appstream-metadata
-Author: Petter Reinholdtsen <pere@hungry.com>
 Type: binary
-Needs-Info: unpacked
-Info: This script checks the AppStream metadata files for problems.

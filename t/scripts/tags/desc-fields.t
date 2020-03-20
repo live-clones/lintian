@@ -58,7 +58,8 @@ my $perfile = 6 + scalar @mandatory + scalar @disallowed;
 # set the testing plan
 my $known_tests = $perfile * scalar @descpaths;
 
-my $profile = Lintian::Profile->new(undef, [$ENV{LINTIAN_ROOT}]);
+my $profile = Lintian::Profile->new;
+$profile->load(undef, [$ENV{LINTIAN_ROOT}]);
 
 foreach my $descpath (@descpaths) {
 

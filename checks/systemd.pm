@@ -78,7 +78,7 @@ sub binary {
     # non-service checks
     if (my $tmpfiles= $processable->installed->resolve_path('etc/tmpfiles.d/'))
     {
-        for my $file ($tmpfiles->children('breadth-first')) {
+        for my $file ($tmpfiles->descendants) {
             if ($file->is_file && $file->basename =~ m,\.conf$,) {
                 $self->tag('systemd-tmpfiles.d-outside-usr-lib', $file);
             }
@@ -152,7 +152,7 @@ sub check_init_script {
             return;
         }
     }
-    my $fh = $file->open;
+    open(my $fh, '<', $file->unpacked_path);
     while (<$fh>) {
         lstrip;
         $lsb_source_seen = 1
@@ -371,7 +371,7 @@ sub service_file_lines {
     my (@lines, $continuation);
     return if $path->is_symlink and $path->link eq '/dev/null';
 
-    my $fh = $path->open;
+    open(my $fh, '<', $path->unpacked_path);
     while (<$fh>) {
         chomp;
 
@@ -455,25 +455,22 @@ sub extract_service_file_values {
 sub check_maintainer_scripts {
     my ($self) = @_;
 
-    my $processable = $self->processable;
-
     # get maintainer scripts
-    my %control = %{$self->processable->control_scripts};
+    my @control
+      = grep { $_->is_control } $self->processable->control->sorted_list;
 
-    for my $file (keys %control) {
-
-        my $path = $processable->control->resolve_path($file);
-        my $interpreter = $control{$file};
-
-        # Don't follow unsafe links
-        next
-          unless $path && $path->is_open_ok;
+    for my $file (@control) {
 
         # skip anything but shell scripts
+        my $interpreter = $file->control->{interpreter};
         next
           unless $interpreter =~ m/sh\b/;
 
-        my $sfd = $path->open;
+        # Don't follow unsafe links
+        next
+          unless $file->is_open_ok;
+
+        open(my $sfd, '<', $file->unpacked_path);
         while (<$sfd>) {
             # skip comments
             next if substr($_, 0, $-[0]) =~ /#/;

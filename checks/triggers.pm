@@ -22,6 +22,7 @@ package Lintian::triggers;
 
 use strict;
 use warnings;
+use autodie qw(open);
 
 use Lintian::Data;
 use Lintian::Util qw(internal_error strip);
@@ -59,7 +60,7 @@ sub always {
 
     my $triggers_file = $processable->control->lookup('triggers');
     return if not $triggers_file or not $triggers_file->is_open_ok;
-    my $fd = $triggers_file->open;
+    open(my $fd, '<', $triggers_file->unpacked_path);
     my %seen_triggers;
     while (my $line = <$fd>) {
         strip($line);

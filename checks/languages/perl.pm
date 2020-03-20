@@ -80,7 +80,7 @@ sub files {
         && $file->name =~ m,\.pm$,
         && !$dep->implies('libperl4-corelibs-perl | perl (<< 5.12.3-7)')) {
 
-        my $fd = $file->open;
+        open(my $fd, '<', $file->unpacked_path);
         while (<$fd>) {
             if (
                 m{ (?:do|require)\s+['"] # do/require

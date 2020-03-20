@@ -1,4 +1,5 @@
-# Copyright (C) 2012 Niels Thykier <niels@thykier.net>
+# Copyright © 2012 Niels Thykier <niels@thykier.net>
+# Copyright © 2020 Felix Lechner <felix.lechner@lease-up.com>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -21,15 +22,17 @@ package Lintian::CheckScript;
 use strict;
 use warnings;
 
-use Cwd qw(realpath);
-use File::Basename qw(dirname);
-use parent 'Class::Accessor::Fast';
-
-use Carp qw(croak);
 use Path::Tiny;
 
 use Lintian::Deb822Parser qw(read_dpkg_control_utf8);
 use Lintian::Tag::Info ();
+
+use constant EMPTY => q{};
+use constant SPACE => q{ };
+use constant SLASH => q{/};
+
+use Moo;
+use namespace::clean;
 
 =head1 NAME
 
@@ -38,114 +41,120 @@ Lintian::CheckScript - Check script meta data
 =head1 SYNOPSIS
 
  use Lintian::CheckScript;
- 
- my $cs = Lintian::CheckScript->new ("$ENV{'LINTIAN_ROOT'}/checks/",
-                                     'files');
- my $name = $cs->name;
- foreach my $tag ($cs->tags) {
-    # $ti is an instance of Lintian::Tag::Info
-    my $ti = $cs->get_tag ($tag);
-    print "$tag is a part of the check $name\n";
-    # Do something with $ti / $tag
- }
- foreach my $needs ($cs->needs_info) {
-    print "$name needs $needs\n";
- }
- if ($cs->is_check_type ('binary') && $cs->is_check_type ('source')) {
-    # Check applies to binary pkgs AND source pkgs
- }
 
 =head1 DESCRIPTION
 
-Instances of this class represents the data in the check ".desc"
-files.  It allows access to the tags (as Lintian::Tag::Info) and the
-common meta data of the check (such as Needs-Info).
+This class represents Lintian checks.
 
 =head1 CLASS METHODS
 
 =over 4
 
-=item Lintian::CheckScript->new($basedir, $checkname)
+=item C<basedir>
 
-Parses the $file as a check desc file.
+=item name
+
+=item module
+
+=item type
+
+=item type_table
+
+=item tag_table
 
 =cut
 
-sub new {
-    my ($class, $basedir, $checkname) = @_;
-    my $checkpath = "$basedir/${checkname}.desc";
-    my @sections = read_dpkg_control_utf8($checkpath);
-    croak "$checkpath does not have exactly one paragraph"
-      if (scalar(@sections) != 1);
-    my $header = $sections[0];
+has basedir => (
+    is => 'rw',
+    coerce => sub { my ($string) = @_; return $string // EMPTY;},
+    default => EMPTY
+);
 
-    my ($self, $name);
-    unless ($name = $header->{'check-script'}) {
-        croak "Missing Check-Script field in $basedir/${checkname}.desc";
-    }
+has name => (
+    is => 'rw',
+    coerce => sub { my ($string) = @_; return $string // EMPTY;},
+    default => EMPTY
+);
 
-    $self = {
-        'name' => $header->{'check-script'},
-        'type' => $header->{'type'}, # lintian.desc has no type
-        'abbrev' => $header->{'abbrev'},
-        'needs_info' => [split /\s*,\s*/, $header->{'needs-info'}//''],
-        'tags' => [split q{ }, $header->{'tags'}//''],
-    };
+has path => (
+    is => 'rw',
+    coerce => sub { my ($string) = @_; return $string // EMPTY;},
+    default => EMPTY
+);
 
-    $self->{'script_pkg'} = $self->{'name'};
-    $self->{'script_pkg'} =~ s,/,::,go;
-    $self->{'script_pkg'} =~ s,[-.],_,go;
+has module => (
+    is => 'rw',
+    coerce => sub { my ($string) = @_; return $string // EMPTY;},
+    default => EMPTY
+);
 
-    $self->{'script_path'} = $basedir . '/' . $self->{'name'} . '.pm';
+has type => (
+    is => 'rw',
+    coerce => sub { my ($string) = @_; return $string // 'ALL';},
+    default => 'ALL'
+);
 
-    if ($self->{'type'}//'ALL' ne 'ALL') {
-        $self->{'type-table'} = {};
-        for my $t (split /\s*,\s*/o, $self->{'type'}) {
-            $self->{'type-table'}{$t} = 1;
+has type_table => (
+    is => 'rw',
+    coerce => sub { my ($hashref) = @_; return ($hashref // {}); },
+    default => sub { {} });
+
+has tag_table => (
+    is => 'rw',
+    coerce => sub { my ($hashref) = @_; return ($hashref // {}); },
+    default => sub { {} });
+
+=item load
+
+=cut
+
+sub load {
+    my ($self) = @_;
+
+    die 'No base directory'
+      unless length $self->basedir;
+
+    die 'No name'
+      unless length $self->name;
+
+    my $descpath = $self->basedir . SLASH . $self->name . '.desc';
+
+    my @paragraphs = read_dpkg_control_utf8($descpath);
+    die "$descpath does not have exactly one paragraph"
+      unless scalar @paragraphs == 1;
+
+    my $header = $paragraphs[0];
+
+    my $name = $header->{'check-script'};
+    die "No name field in $descpath"
+      unless defined $name;
+    die "Wrong name $name vs " . $self->name
+      unless $name eq $self->name;
+
+    # lintian.desc has no type
+    $self->type($header->{'type'});
+
+    my $module = $name;
+
+    # replace slashes with double colons
+    $module =~ s{/}{::}g;
+
+    # replace some characters with underscores
+    $module =~ s{[-.]}{_}g;
+
+    $self->module("Lintian::$module");
+    $self->path($self->basedir . SLASH . $self->name . '.pm');
+
+    my %type_table;
+    if ($self->type ne 'ALL') {
+        for my $type (split /\s*,\s*/, $self->type) {
+            $type_table{$type} = 1;
         }
     }
 
-    bless $self, $class;
+    $self->type_table(\%type_table);
 
-    return $self;
-}
-
-=item $cs->name
-
-Returns the "name" of the check script.  This is the value in the
-Check-Script field in the file.
-
-=item $cs->type
-
-Returns the value stored in the "Type" field of the file.  For the
-purpose of testing if the check applies to a given package type, the
-L</is_check_type> method can be used instead.
-
-Note in rare cases this may return undef.  This is the case for the
-lintian.desc, where this field is simply not present.
-
-=item $cs->abbrev
-
-Returns the value of the Abbrev field from the desc file.
-
-=item $cs->script_path
-
-Returns the (expected) path to the script implementing this check.
-
-=cut
-
-Lintian::CheckScript->mk_ro_accessors(qw(name type abbrev script_path));
-
-=item needs_info
-
-Returns a list of all items listed in the Needs-Info field.  Neither
-the list nor its contents should be modified.
-
-=cut
-
-sub needs_info {
-    my ($self) = @_;
-    return @{ $self->{'needs_info'} };
+    return;
 }
 
 =item $cs->is_check_type ($type)
@@ -159,8 +168,11 @@ inputs.
 
 sub is_check_type {
     my ($self, $type) = @_;
-    return 1 if ($self->{'type'}//'ALL') eq 'ALL';
-    return $self->{'type-table'}{$type} // 0;
+
+    return 1
+      if $self->type  eq 'ALL';
+
+    return $self->type_table->{$type} // 0;
 }
 
 =item $cs->add_taginfo ($taginfo)
@@ -171,7 +183,9 @@ Associates a L<tag|Lintian::Tag::Info> as issued by this check.
 
 sub add_taginfo {
     my ($self, $taginfo) = @_;
-    $self->{'tag-table'}{$taginfo->tag} = $taginfo;
+
+    $self->tag_table->{$taginfo->tag} = $taginfo;
+
     return;
 }
 
@@ -183,8 +197,9 @@ this check).
 =cut
 
 sub get_tag {
-    my ($self, $tag) = @_;
-    return $self->{'tag-table'}{$tag};
+    my ($self, $tagname) = @_;
+
+    return $self->tag_table->{$tagname};
 }
 
 =item $cs->tags
@@ -196,40 +211,26 @@ should be modified.
 
 sub tags {
     my ($self) = @_;
-    return keys %{ $self->{'tag-table'}};
+    return keys %{ $self->tag_table };
 }
 
 =item $cs->run_check ($proc, $group)
 
-Run the check on C<$proc>, which is in the
-L<group|Lintian::Group> C<$group>.
-
-The method may error out if loading the check failed or if the check
-itself calls die/croak/fail/etc.
-
-Returns normally on success; the return value has no semantic meaning
-and is currently C<undef>.
-
-NB: load_check can be used to determine if the check itself is
-loadable.
-
 =cut
 
 sub run_check {
-    my ($self, $proc, $group) = @_;
+    my ($self, $processable, $group) = @_;
 
     # Special-case: has no perl module
     return
       if $self->name eq 'lintian';
 
-    require $self->{'script_path'};
+    require $self->path;
 
-    my $module = "Lintian::$self->{script_pkg}";
+    if ($self->module->DOES('Lintian::Check')) {
 
-    if ($module->DOES('Lintian::Check')) {
-
-        my $check = $module->new;
-        $check->processable($proc);
+        my $check = $self->module->new;
+        $check->processable($processable);
         $check->group($group);
 
         $check->run;
@@ -237,18 +238,20 @@ sub run_check {
         return;
     }
 
-    my @args = ($proc->name,$proc->type,$proc,$proc,$group);
+    my @args
+      = ($processable->name,$processable->type,$processable,$processable,
+        $group);
 
-    if ($module->can('run')) {
-        $module->can('run')->(@args);
+    if ($self->module->can('run')) {
+        $self->module->can('run')->(@args);
         return;
     }
 
-    $module->can($proc->type)->(@args)
-      if $module->can($proc->type);
+    $self->module->can($processable->type)->(@args)
+      if $self->module->can($processable->type);
 
-    $module->can('always')->(@args)
-      if $module->can('always');
+    $self->module->can('always')->(@args)
+      if $self->module->can('always');
 
     return;
 }
@@ -261,7 +264,7 @@ Originally written by Niels Thykier <niels@thykier.net> for Lintian.
 
 =head1 SEE ALSO
 
-lintian(1), Lintian::Profile(3), Lintian::Tag::Info(3)
+lintian(1)
 
 =cut
 

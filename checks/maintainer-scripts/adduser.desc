@@ -1,5 +1,2 @@
 Check-Script: maintainer-scripts/adduser
-Author: Topi Miettinen <toiwoton@gmail.com>
 Type: binary
-Needs-Info: scripts
-Info: Checks for {pre,post}inst scripts which call adduser --home /var/run

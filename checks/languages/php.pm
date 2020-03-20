@@ -36,7 +36,7 @@ sub files {
     if (   $file->is_file
         && $file->name =~ m,^etc/php/.*/mods-available/.+\.ini$,) {
 
-        my $fd = $file->open;
+        open(my $fd, '<', $file->unpacked_path);
         while (<$fd>) {
             next
               unless (m/^\s*#/);

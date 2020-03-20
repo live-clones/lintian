@@ -386,7 +386,7 @@ sub source {
     for my $file (@EOL_TERMINATORS_FILES) {
         my $path = $processable->patched->resolve_path("debian/$file");
         next if not $path or not $path->is_open_ok;
-        my $fd = $path->open;
+        open(my $fd, '<', $path->unpacked_path);
         while (my $line = <$fd>) {
             if ($line =~ m{ \r \n \Z}xsm) {
                 $self->tag('control-file-with-CRLF-EOLs', $path);
@@ -399,7 +399,7 @@ sub source {
     for my $file (@TRAILING_WHITESPACE_FILES) {
         my $path = $processable->patched->resolve_path($file->[0]);
         next if not $path or not $path->is_open_ok;
-        my $fd = $path->open;
+        open(my $fd, '<', $path->unpacked_path);
         my @empty_lines;
         while (my $line = <$fd>) {
             if ($line eq "\n") {
@@ -664,7 +664,7 @@ sub find_cruft {
           if $self->processable->source eq 'lintian' && $istestsetdir;
 
         # check non free file
-        my $md5sum = $processable->md5sums->{$name};
+        my $md5sum = $processable->patched->lookup($name)->md5sum;
         if(
             $self->md5sum_based_check(
                 $name, $md5sum, $NON_DISTRIBUTABLE_FILES,
@@ -686,7 +686,7 @@ sub find_cruft {
         # waf is not allowed
         if ($basename =~ /\bwaf$/) {
             my $marker = 0;
-            my $fd = $entry->open;
+            open(my $fd, '<', $entry->unpacked_path);
             while (my $line = <$fd>) {
                 next unless $line =~ m/^#/o;
                 if ($marker && $line =~ m/^#BZ[h0][0-9]/o) {
@@ -705,7 +705,7 @@ sub find_cruft {
         if (   $basename =~ /\.chm$/i
             && $file_info eq 'MS Windows HtmlHelp Data'
             && $entry->is_open_ok
-            && index($entry->file_contents, 'Halibut,') == -1) {
+            && index($entry->slurp, 'Halibut,') == -1) {
             $self->tag('source-contains-prebuilt-ms-help-file', $name);
         }
 
@@ -715,7 +715,7 @@ sub find_cruft {
             && $entry->is_open_ok
             && $file_info =~ /gzip compressed data/
             && !$processable->patched->resolve_path('debian/README.source')) {
-            my $fd = $entry->open_gz;
+            my $fd = open_gz($entry->unpacked_path);
             read($fd, my $magic, 4);
             close($fd);
             $self->tag('r-data-without-readme-source', $name)
@@ -725,7 +725,7 @@ sub find_cruft {
         if (   $name =~ m,configure.(in|ac)$,
             && $entry->is_file
             && $entry->is_open_ok) {
-            my $fd = $entry->open;
+            open(my $fd, '<', $entry->unpacked_path);
             while (my $line = <$fd>) {
                 next if $line =~ m{^\s*dnl};
                 $self->tag(
@@ -777,7 +777,7 @@ sub find_cruft {
         if (   $name eq 'debian/README.source'
             && $entry->is_file
             && $entry->is_open_ok) {
-            my $contents = $entry->file_contents;
+            my $contents = $entry->slurp;
             if (
                 index($contents,
                     'You WILL either need to modify or delete this file') >= 0
@@ -789,7 +789,7 @@ sub find_cruft {
         if (   $name =~ m{^debian/(README.source|copyright|rules|control)$}
             && $entry->is_file
             && $entry->is_open_ok) {
-            my $fd = $entry->open;
+            open(my $fd, '<', $entry->unpacked_path);
             while (my $line = <$fd>) {
                 next unless $line =~ m/(?<!")(FIX_?ME)(?!")/;
                 $self->tag('file-contains-fixme-placeholder', "$name:$. $1");
@@ -807,7 +807,7 @@ sub find_cruft {
                 && $name !~ m{^debian/(?:.+\.)?install$}
                 && $entry->is_file
                 && $entry->is_open_ok) {
-                my $contents = $entry->file_contents;
+                my $contents = $entry->slurp;
 
                 # ignore comments
                 $contents =~ s/#.*$//m;
@@ -841,7 +841,7 @@ sub find_cruft {
         }elsif ($basename eq 'ltconfig' and not $ltinbd) {
             $self->tag('ancient-libtool', $name);
         }elsif ($basename eq 'ltmain.sh', and not $ltinbd) {
-            my $fd = $entry->open;
+            open(my $fd, '<', $entry->unpacked_path);
             while (<$fd>) {
                 if (/^VERSION=[\"\']?(1\.(\d)\.(\d+)(?:-(\d))?)/) {
                     my ($version, $major, $minor, $debian)=($1, $2, $3, $4);
@@ -963,7 +963,7 @@ sub full_text_check {
         return;
     }
 
-    my $fd = $entry->open(':raw');
+    open(my $fd, '<:raw', $entry->unpacked_path);
     # check only text files
     unless (-T $fd) {
         close($fd);
@@ -1493,7 +1493,7 @@ sub php_source_whitelist {
     my $copyright_path
       = $processable->patched->resolve_path('debian/copyright');
     if (    $copyright_path
-        and $copyright_path->file_contents
+        and $copyright_path->slurp
         =~ m{^Source: https?://pecl.php.net/package/.*$}m) {
         return 0;
     }

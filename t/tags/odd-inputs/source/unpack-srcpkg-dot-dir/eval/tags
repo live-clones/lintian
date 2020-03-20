@@ -1,3 +1,5 @@
+unpack-srcpkg-dot-dir (source): upstream-metadata-missing-repository
+unpack-srcpkg-dot-dir (source): upstream-metadata-missing-bug-tracking
 unpack-srcpkg-dot-dir (source): upstream-metadata-field-present Name
 unpack-srcpkg-dot-dir (source): upstream-metadata-field-present Contact
 unpack-srcpkg-dot-dir (source): upstream-metadata-exists

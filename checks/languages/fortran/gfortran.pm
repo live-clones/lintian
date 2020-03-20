@@ -53,7 +53,7 @@ sub files {
 
     my $module_version;
 
-    my $fd = open_gz($file->fs_path);
+    my $fd = open_gz($file->unpacked_path);
     while (<$fd>) {
         next
           if /^\s*$/;

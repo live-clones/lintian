@@ -27,7 +27,6 @@ use Exporter qw(import);
 use Carp qw(croak);
 use Dpkg::Vendor;
 
-use Lintian::CollScript;
 use Lintian::Util qw(check_path safe_qx);
 
 our @EXPORT_OK= qw(check_test_feature default_parallel split_tag

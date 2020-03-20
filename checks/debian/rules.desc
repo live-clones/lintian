@@ -1,6 +1,2 @@
 Check-Script: debian/rules
-Author: Russ Allbery <rra@debian.org>
 Type: source
-Needs-Info: unpacked
-Info: Check targets and actions in debian/rules.
-Abbrev: rul

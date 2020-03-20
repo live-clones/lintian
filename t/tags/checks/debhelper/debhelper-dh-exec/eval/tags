@@ -1,4 +1,4 @@
-debhelper-dh-exec (source): package-uses-old-debhelper-compat-version 9
+debhelper-dh-exec (source): package-uses-deprecated-debhelper-compat-version 9
 debhelper-dh-exec (source): package-uses-dh-exec-but-lacks-build-depends
 debhelper-dh-exec (source): dh-exec-useless-usage debian/install "usr/lib/${DEB_HOST_MULTIARCH}/some-package/*.so"
 debhelper-dh-exec (source): dh-exec-useless-usage debian/install "usr/lib/${DEB_HOST_MULTIARCH}"

@@ -1,6 +1,2 @@
 Check-Script: menu-format
-Author: Joey Hess <joeyh@master.debian.org>
-Abbrev: mnf
-Needs-Info: unpacked
 Type: binary
-Info: This script validates the format of <b>menu</b> files.

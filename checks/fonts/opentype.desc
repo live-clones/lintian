@@ -1,5 +1,2 @@
 Check-Script: fonts/opentype
-Author: Felix Lechner <felix.lechner@lease-up.com>
 Type: binary, udeb
-Needs-Info: unpacked, file-info
-Info: Checks OpenType fonts for various settings and features.

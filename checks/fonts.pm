@@ -57,7 +57,7 @@ sub files {
 
         my $finfo = $file->file_info;
         if ($finfo =~ m/PostScript Type 1 font program data/) {
-            my $absolute = $file->fs_path;
+            my $absolute = $file->unpacked_path;
             my $foundadobeline = 0;
             open(my $t1pipe, '-|', 't1disasm', $absolute);
             while (my $line = <$t1pipe>) {

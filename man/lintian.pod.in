@@ -183,7 +183,11 @@ This option overrides the B<color> variable in the configuration file.
 Reset the current display level to the default.  Basically, this
 option behaves exactly like passing the following options to lintian:
 
-   B<-L> ">=important" B<-L> "+>=normal/possible" B<-L> "+minor/certain"
+=over 4
+
+B<-L> ">=important" B<-L> "+>=normal/possible" B<-L> "+minor/certain"
+
+=back
 
 The primary use for this is to ensure that lintian's display level has
 been reset to the built-in default values.  Notably, this can be used

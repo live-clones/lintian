@@ -23,7 +23,7 @@ use autodie;
 
 use Path::Tiny;
 
-use Lintian::File::Index;
+use Lintian::Index::Orig;
 
 use Moo::Role;
 use namespace::clean;
@@ -55,18 +55,7 @@ has orig => (
     is => 'rw',
     lazy => 1,
     default => sub {
-        my ($self) = @_;
-
-        my $orig = Lintian::File::Index->new;
-
-        # source packages can be unpacked anywhere; no anchored roots
-        $orig->allow_empty(1);
-
-        my $dbpath
-          = path($self->groupdir)->child('src-orig-index.db')->stringify;
-        $orig->load($dbpath);
-
-        return $orig;
+        return Lintian::Index::Orig->new;
     });
 
 =item orig_index (FILE)
@@ -92,19 +81,6 @@ sub orig_index {
 }
 
 =item sorted_orig_index
-
-Like L<sorted_index|Lintian::Collect/sorted_index> except
-sorted_orig_index is based on the "orig tarballs" of the source
-packages.
-
-For native packages L<sorted_index|Lintian::Collect/sorted_index> and
-L</sorted_orig_index> are generally identical.
-
-NB: If sorted_orig_index includes a debian packaging, it is was
-contained in upstream part of the source package (or the package is
-native).
-
-Needs-Info requirements for using I<sorted_orig_index>: L<Same as orig_index|/orig_index ([FILE])>
 
 =cut
 
@@ -145,8 +121,7 @@ Lintian.
 
 =head1 SEE ALSO
 
-lintian(1), L<Lintian::Collect>, L<Lintian::Collect::Binary>,
-L<Lintian::Collect::Source>
+lintian(1)
 
 =cut
 

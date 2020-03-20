@@ -441,7 +441,8 @@ sub check_result {
 
     if (length $testcase->{check} && $testcase->{check} ne 'all') {
 
-        my $profile = Lintian::Profile->new(undef, [$ENV{LINTIAN_ROOT}]);
+        my $profile = Lintian::Profile->new;
+        $profile->load(undef, [$ENV{LINTIAN_ROOT}]);
 
         # use tags related to checks declared
         my @checks = split(SPACE, $testcase->{check});

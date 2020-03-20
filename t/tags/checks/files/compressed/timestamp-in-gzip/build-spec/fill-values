@@ -1,0 +1,4 @@
+Testname: timestamp-in-gzip
+Skeleton: upload-native
+Description: Test for timestamps in gzipped files
+Date: Mon, 02 Mar 2020 17:44:19 +0000

@@ -24,7 +24,7 @@ use autodie;
 use Path::Tiny;
 
 use Lintian::Architecture qw(:all);
-use Lintian::Util qw($PKGNAME_REGEX strip);
+use Lintian::Util qw($PKGNAME_REGEX strip gunzip_file is_ancestor_of);
 
 use constant EMPTY => q{};
 
@@ -47,6 +47,61 @@ Lintian::Processable::Overrides provides an interface to package data for overri
 =head1 INSTANCE METHODS
 
 =over 4
+
+=item add_overrides
+
+=cut
+
+sub add_overrides {
+    my ($self) = @_;
+
+    my $unpackedpath = path($self->groupdir)->child('unpacked')->stringify;
+    die "No unpacked data in $unpackedpath"
+      unless -d $unpackedpath;
+
+    my $overridepath = path($self->groupdir)->child('override')->stringify;
+    unlink($overridepath)
+      if -e $overridepath;
+
+    # pick the first
+    my @candidates;
+    if ($self->type eq 'source') {
+        # prefer source/lintian-overrides to source.lintian-overrides
+        @candidates = ('debian/source/lintian-overrides',
+            'debian/source.lintian-overrides');
+    } else {
+        @candidates = ('usr/share/lintian/overrides/' . $self->name);
+    }
+
+    my $packageoverridepath;
+    for my $relative (@candidates) {
+
+        my $candidate = "$unpackedpath/$relative";
+        if (-f $candidate) {
+            $packageoverridepath = $candidate;
+
+        } elsif (-f "$candidate.gz") {
+            $packageoverridepath = "$candidate.gz";
+        }
+
+        last
+          if $packageoverridepath;
+    }
+
+    return
+      unless length $packageoverridepath;
+
+    return
+      unless is_ancestor_of($unpackedpath, $packageoverridepath);
+
+    if ($packageoverridepath =~ /\.gz$/) {
+        gunzip_file($packageoverridepath, $overridepath);
+    } else {
+        link($packageoverridepath, $overridepath);
+    }
+
+    return;
+}
 
 =item overrides(OVERRIDE-FILE)
 
@@ -284,8 +339,7 @@ Lintian.
 
 =head1 SEE ALSO
 
-lintian(1), L<Lintian::Collect>, L<Lintian::Collect::Binary>,
-L<Lintian::Collect::Source>
+lintian(1)
 
 =cut
 

@@ -22,6 +22,7 @@ package Lintian::fonts::opentype;
 
 use strict;
 use warnings;
+use autodie qw(open);
 
 use Font::TTF::Font;
 
@@ -47,7 +48,7 @@ sub files {
     $self->tag('opentype-font-wrong-filename', $file->name)
       unless $file->name =~ /\.otf$/i;
 
-    my $font = Font::TTF::Font->open($file->fs_path);
+    my $font = Font::TTF::Font->open($file->unpacked_path);
     return
       unless $font;
 

@@ -35,13 +35,13 @@ sub files {
     return
       unless $file->name =~ m,(usr/)?bin/[^/]+,;
 
-    if ($self->processable->is_script($file->name)) {
-        my $interpreter
-          = $self->processable->scripts->{$file->name}->{interpreter};
+    return
+      unless $file->is_script;
 
-        $self->tag('script-uses-unversioned-python-in-shebang', $file)
-          if $interpreter =~ m,^(/usr/bin/)?python$,;
-    }
+    my $interpreter = $file->script->{interpreter};
+
+    $self->tag('script-uses-unversioned-python-in-shebang', $file)
+      if $interpreter =~ m,^(/usr/bin/)?python$,;
 
     return;
 }

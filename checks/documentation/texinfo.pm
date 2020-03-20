@@ -42,7 +42,7 @@ sub binary {
       unless $info_dir;
 
     # Read package contents...
-    foreach my $file ($info_dir->children('breadth-first')) {
+    foreach my $file ($info_dir->descendants) {
         # NB: file_info can be undef (e.g. symlinks)
         my $file_info = $file->file_info // '';
         my $fname = $file->basename;
@@ -96,7 +96,7 @@ sub binary {
                 # "gzip compressed data".  But for good measure.
                 next;
             }
-            my $fd = $file->open_gz;
+            my $fd = open_gz($file->unpacked_path);
             local $_;
             my ($section, $start, $end);
             while (<$fd>) {
@@ -125,7 +125,7 @@ sub binary {
         # filename sought.
         #
         if ($file->is_file && $fname =~ /\.info(?:-\d+)?\.gz$/) {
-            my $fd = $file->open_gz;
+            my $fd = open_gz($file->unpacked_path);
             while (my $line = <$fd>) {
                 while ($line =~ /[\0][\b]\[image src="((?:\\.|[^\"])+)"/smg) {
                     my $src = $1;

@@ -1,6 +1,7 @@
 # Manually maintained list of known binary fields
 
 package
+package-type
 version
 architecture
 depends

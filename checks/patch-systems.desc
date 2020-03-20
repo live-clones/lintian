@@ -1,6 +1,2 @@
 Check-Script: patch-systems
-Author: Marc Brockschmidt <he@debian.org>
-Abbrev: pat
 Type: source
-Info: This script checks for various possible problems when using patch systems
-Needs-Info: unpacked, diffstat

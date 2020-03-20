@@ -25,6 +25,7 @@ use warnings;
 use autodie;
 
 use Lintian::Spelling qw(check_spelling);
+use Lintian::Util qw(open_gz);
 
 use Moo;
 use namespace::clean;
@@ -48,9 +49,10 @@ sub open_readme {
             my $path = $doc_dir->child($name);
             next if not $path or not $path->is_open_ok;
             if ($name =~ m/\.gz$/) {
-                return $path->open_gz;
+                return open_gz($path->unpacked_path);
             }
-            return $path->open;
+            open(my $fd, '<', $path->unpacked_path);
+            return $fd;
         }
     }
     return;

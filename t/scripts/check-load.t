@@ -37,7 +37,6 @@ $ENV{'LINTIAN_TEST_ROOT'} //= '.';
 
 load_profile_for_test('debian/main', $ENV{'LINTIAN_TEST_ROOT'});
 test_load_checks($opts, "$ENV{'LINTIAN_TEST_ROOT'}/checks");
-test_load_checks("$ENV{'LINTIAN_TEST_ROOT'}/doc/examples/checks");
 
 done_testing;
 

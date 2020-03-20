@@ -46,9 +46,6 @@ and changes files.
 
 =head1 INSTANCE METHODS
 
-In addition to the instance methods listed below, all instance methods
-documented in the L<Lintian::Collect> module are also available.
-
 =over 4
 
 =item files
@@ -93,8 +90,6 @@ checksum.
 =back
 
 =back
-
-Needs-Info requirements for using I<files>: L<Lintian::Collect/field ([FIELD[, DEFAULT]])>
 
 =item saved_files
 

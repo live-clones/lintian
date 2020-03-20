@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: explicit-type-deb
+Description: Explicit type deb is discouraged by policy

@@ -103,7 +103,7 @@ sub files {
             $self->_set_menumethod_file($file->name);
 
             if ($file->is_open_ok) {
-                my $fd = $file->open;
+                open(my $fd, '<', $file->unpacked_path);
                 while (<$fd>) {
                     chomp;
                     if (m,^!include menu.h,o) {
@@ -259,7 +259,7 @@ sub check_doc_base_file {
     my $group = $self->group;
 
     my $dbfile = $dbpath->basename;
-    my $line = file_is_encoded_in_non_utf8($dbpath->fs_path);
+    my $line = file_is_encoded_in_non_utf8($dbpath->unpacked_path);
     if ($line) {
         $self->tag('doc-base-file-uses-obsolete-national-encoding',
             "$dbfile:$line");
@@ -271,7 +271,7 @@ sub check_doc_base_file {
     my %sawformats;       # global for control file
     $line           = 0;  # global
 
-    my $fd = $dbpath->open;
+    open(my $fd, '<', $dbpath->unpacked_path);
 
     while (<$fd>) {
         chomp;
@@ -649,7 +649,7 @@ sub check_script {
     # control files are regular files and not symlinks, pipes etc.
     return if not $spath or $spath->is_symlink or not $spath->is_open_ok;
 
-    my $fd = $spath->open;
+    open(my $fd, '<', $spath->unpacked_path);
     $interp = <$fd>;
     $interp = '' unless defined $interp;
     if ($interp =~ m,^\#\!\s*/bin/$known_shells_regex,) {

@@ -52,7 +52,7 @@ sub check_symbols_file {
     return
       unless $file->is_file && $file->is_open_ok;
 
-    my $fd = $file->open;
+    open(my $fd, '<', $file->unpacked_path);
     while (<$fd>) {
 
         chop;
