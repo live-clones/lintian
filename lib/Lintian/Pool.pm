@@ -22,9 +22,10 @@ package Lintian::Pool;
 
 use strict;
 use warnings;
+use autodie;
 
 use Carp qw(croak);
-use Cwd();
+use Cwd;
 use Time::HiRes qw(gettimeofday tv_interval);
 use Path::Tiny;
 use POSIX qw(:sys_wait_h);
@@ -65,9 +66,13 @@ Lintian::Pool -- Pool of processables
 Returns a hash reference to the list of processable groups that are currently
 in the pool. The key is a unique identifier based on name and version.
 
+=item C<savedir>
+
 =cut
 
 has groups => (is => 'rwp', default => sub{ {} });
+
+has savedir => (is => 'rw', default => sub{ getcwd; });
 
 # must be absolute; frontend/lintian depends on it
 has basedir => (
@@ -328,6 +333,9 @@ returned from this lab will immediately become invalid.
 
 sub DEMOLISH {
     my ($self, $in_global_destruction) = @_;
+
+    # change back to where we were; otherwise removal may fail
+    chdir($self->savedir);
 
     path($self->basedir)->remove_tree
       if length $self->basedir && -d $self->basedir;
