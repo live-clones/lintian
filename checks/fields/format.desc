@@ -1,6 +1,2 @@
 Check-Script: fields/format
-Author: Marc 'HE' Brockschmidt <marc@marcbrockschmidt.de>
 Type: source
-Needs-Info: unpacked
-Info: This script checks the syntax of the 'Format' field
- in package control files, as described in the Policy Manual.

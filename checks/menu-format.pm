@@ -205,7 +205,7 @@ sub binary {
         # README is a special case
         next if $menufile->basename eq 'README' && !$menufile->is_dir;
         my $menufile_line ='';
-        my $fd = $menufile->open;
+        open(my $fd, '<', $menufile->unpacked_path);
         # line below is commented out in favour of the while loop
         # do { $_=<IN>; } while defined && (m/^\s* \#/ || m/^\s*$/);
         while (<$fd>) {
@@ -551,7 +551,7 @@ sub verify_icon {
     my $parse = 'XPM header';
     my $line;
 
-    my $fd = $iconfile->open;
+    open(my $fd, '<', $iconfile->unpacked_path);
 
     do { defined($line = <$fd>) or goto parse_error; }
       until ($line =~ /\/\*\s*XPM\s*\*\//);
@@ -583,7 +583,7 @@ sub verify_desktop_file {
     my $pkg = $self->package;
 
     my ($saw_first, $warned_cr, %vals, @pending);
-    my $fd = $file->open;
+    open(my $fd, '<', $file->unpacked_path);
     while (my $line = <$fd>) {
         chomp $line;
         next if ($line =~ m/^\s*\#/ or $line =~ m/^\s*$/);

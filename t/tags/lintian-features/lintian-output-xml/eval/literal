@@ -5,6 +5,8 @@
 <tag severity="normal" certainty="certain" name="maintainer-upload-has-incorrect-version-number">1.0+dsfg-1.1</tag>
 <tag severity="wishlist" certainty="certain" name="binary-control-field-duplicates-source">field &quot;section&quot; in package lintian-output-xml</tag>
 <tag severity="wishlist" certainty="certain" name="quilt-patch-using-template-description">debian-changes-1.0+dsfg-1.1</tag>
+<tag severity="wishlist" certainty="certain" name="upstream-metadata-missing-bug-tracking" />
+<tag severity="wishlist" certainty="certain" name="upstream-metadata-missing-repository" />
 <tag severity="pedantic" certainty="certain" name="debian-control-has-unusual-field-spacing">line 12</tag>
 <tag severity="pedantic" certainty="certain" flags="experimental" name="debian-watch-does-not-check-gpg-signature" />
 <tag severity="pedantic" certainty="possible" name="no-homepage-field" />

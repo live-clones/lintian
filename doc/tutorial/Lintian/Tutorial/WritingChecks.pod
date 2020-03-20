@@ -43,8 +43,6 @@ Start with the template:
  use strict;
  use warnings;
  
- use Lintian::Tags qw(tag);
- 
  sub run {
      my ($pkg, $type, $info, $proc, $group) = @_;
      return;
@@ -114,40 +112,6 @@ This is an instance of L<Lintian::ProcessableGroup>.
 
 Now back to the coding.
 
-=head2 Emitting a tag
-
-Emitting a tag is fairly simple in itself.  Simply invoke the
-L<tag|Lintian::Tags/tag(TAG, [EXTRA, ...])> sub with one or more
-arguments in the I<run> sub.  The first argument being the name of the
-tag to emit and the rest being the "extra" information (if any).
-
-The full example being:
-
- # deb/pkg-check is loaded as Lintian::deb::pkg_check
- # - See Lintian User Manual §3.3 for more info
- package Lintian::deb::pkg_check;
- 
- use strict;
- use warnings;
- 
- use Lintian::Tags qw(tag);
- 
- sub run {
-     my ($pkg, $type, $info, $proc, $group) = @_;
-     tag 'deb-pkg-check-works',
-         "I was emitted for $pkg, which was a $type package";
-     return;
- }
-
-Assuming there is a tag called "deb-pkg-check-works" in your I<.desc>
-file, the above will faithfully emit said tag for all packages
-processed by this check.
-
-Emitting a tag is fairly simple; the hard part is emitting exactly
-when there is an issue and without introducing a security hole in
-Lintian/your check.
-
-
 =head2 Accessing fields
 
 Let's do a slightly harder example.  Assume we wanted to emit a tag for
@@ -161,68 +125,9 @@ package.  It returns C<undef> if said field is not present or the
 content of said field otherwise.  Note that field names must be given
 in all lowercase letters (i.e. use "multi-arch", not "Multi-Arch").
 
- # deb/pkg-check is loaded as Lintian::deb::pkg_check
- # - See Lintian User Manual §3.3 for more info
- package Lintian::deb::pkg_check;
- 
- use strict;
- use warnings;
- 
- use Lintian::Tags qw(tag);
- 
- sub run {
-     my ($pkg, $type, $info, $proc, $group) = @_;
- 
-     my $multiarch = $info->field('multi-arch');
- 
-     # Emit a "missing-multi-arch-field" for all packages without the
-     # Multi-Arch field
-     tag 'missing-multi-arch-field' unless defined($multiarch);
-     return;
- }
-
 This was the first half.  Let's look at checking the value.  Multi-arch
 fields can (currently) be one of "no", "same", "foreign" or "allowed".
 One way of checking this would be using the regex:
-
-  /^(?:no|same|foreign|allowed)$/
-
-An alternative route is using a table like:
-
-  my %VALID_MULTI_ARCH_VALUES = map { $_ => 1} qw(no same foreign allowed);
-
-We will use the second here:
-
- # deb/pkg-check is loaded as Lintian::deb::pkg_check
- # - See Lintian User Manual §3.3 for more info
- package Lintian::deb::pkg_check;
- 
- use strict;
- use warnings;
- 
- use Lintian::Tags qw(tag);
- 
- my %VALID_MULTI_ARCH_VALUES = map { $_ => 1} qw(
-      no same foreign allowed
- );
- 
- sub run {
-     my ($pkg, $type, $info, $proc, $group) = @_;
- 
-     my $multiarch = $info->field('multi-arch');
- 
-     if (defined($multiarch)) {
-        # The field is present, lets check it is valid.
-        tag 'invalid-multi-arch-field', $multiarch
-            unless exists $VALID_MULTI_ARCH_VALUES{$multiarch};
-     } else {
-         # Emit a "missing-multi-arch-field" for all packages without the
-         # Multi-Arch field
-         tag 'missing-multi-arch-field';
-     }
-     return;
- }
-
 
 Notice that Lintian automatically strips leading and trailing spaces
 on the I<first> line in a field.  It also strips trailing spaces from
@@ -250,50 +155,6 @@ you definitely also satisfied relationB).
 As with the "field"-method, field names have to be given in all
 lowercase.  However "relation" will never return C<undef> (not even if the
 field is missing).
-
-For example:
-
- my $predepends = $info->relation('pre-depends');
- unless ($predepends->implies('multiarch-support')) {
-    tag 'missing-pre-depends-on-multiarch-support';
- }
-
-Inserted in the proper place, our check now looks like:
-
- # deb/pkg-check is loaded as Lintian::deb::pkg_check
- # - See Lintian User Manual §3.3 for more info
- package Lintian::deb::pkg_check;
- 
- use strict;
- use warnings;
- 
- use Lintian::Tags qw(tag);
- 
- my %VALID_MULTI_ARCH_VALUES = map { $_ => 1} qw(
-      no same foreign allowed
- );
- 
- sub run {
-     my ($pkg, $type, $info, $proc, $group) = @_;
- 
-     my $multiarch = $info->field('multi-arch');
- 
-     if (defined($multiarch)) {
-         # The field is present, lets check it is valid.
-         tag 'invalid-multi-arch-field', $multiarch
-             unless exists $VALID_MULTI_ARCH_VALUES{$multiarch};
-         if ($multiarch eq 'same') {
-             my $predepends = $info->relation('pre-depends');
-             tag 'missing-pre-depends-on-multiarch-support'
-                 unless $predepends->implies('multiarch-support');
-         }
-     } else {
-         # Emit a "missing-multi-arch-field" for all packages without the
-         # Multi-Arch field
-         tag 'missing-multi-arch-field';
-     }
-     return;
- }
 
 =head2 Using static data files
 
@@ -367,43 +228,6 @@ Basically we will be replacing:
 with
 
   unless $VALID_MULTI_ARCH_VALUES->known($multiarch);
-
-So the resulting check is:
-
- # deb/pkg-check is loaded as Lintian::deb::pkg_check
- # - See Lintian User Manual §3.3 for more info
- package Lintian::deb::pkg_check;
- 
- use strict;
- use warnings;
- 
- use Lintian::Data;
- use Lintian::Tags qw(tag);
- 
- my $VALID_MULTI_ARCH_VALUES =
-     Lintian::Data->new('deb/pkg-check/multiarch-values');
- 
- sub run {
-     my ($pkg, $type, $info, $proc, $group) = @_;
- 
-     my $multiarch = $info->field('multi-arch');
- 
-     if (defined($multiarch)) {
-         # The field is present, lets check it is valid.
-         tag 'invalid-multi-arch-field', $multiarch
-             unless $VALID_MULTI_ARCH_VALUES->known($multiarch);
-         if ($multiarch eq 'same') {
-             my $predepends = $info->relation('pre-depends');
-             tag 'missing-pre-depends-on-multiarch-support'
-                 unless $predepends->implies('multiarch-support');
-         }
-     } else {
-         # Emit a "missing-multi-arch-field" for all packages without the
-         # Multi-Arch field
-         tag 'missing-multi-arch-field';
-     }
-     return;
- }
 
 =head2 Accessing contents of the package
 

@@ -70,7 +70,8 @@ my @known_missing = qw(
   wrong-vcs-location-for-papt
 );
 
-my $profile = Lintian::Profile->new(undef, [$ENV{LINTIAN_ROOT}]);
+my $profile = Lintian::Profile->new;
+$profile->load(undef, [$ENV{LINTIAN_ROOT}]);
 
 # find known checks
 my @known = uniq $profile->scripts;
@@ -149,8 +150,8 @@ my $exceptions = List::Compare->new(\@missing, \@known_missing);
 my @unknown = $exceptions->get_Lonly;
 my @solved = $exceptions->get_Ronly;
 
-is(scalar @unknown, 0, 'All missing tags are known');
-diag "Unknown missing tag: $_" for @unknown;
+is(scalar @unknown, 0, 'All tags are covered in the testsuite');
+diag "Unknown/missing tag: $_" for @unknown;
 
 is(scalar @solved, 0, 'Solved tags should be removed from known missing set');
 diag "Solved tag: $_" for @solved;

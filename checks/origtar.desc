@@ -1,5 +1,2 @@
 Check-Script: origtar
-Author: Bernhard R. Link <brlink@debian.org>
 Type: source
-Info: This checks for an unadvertised upstream tar.
-Needs-Info: src-orig-index

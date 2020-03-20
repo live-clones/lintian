@@ -53,7 +53,7 @@ sub files {
         $self->tag('pkg-config-unavailable-for-cross-compilation', $file->name)
           if $prefix eq 'lib';
 
-        my $fd = $file->open(':raw');
+        open(my $fd, '<:raw', $file->unpacked_path);
         my $sfd = Lintian::SlidingWindow->new($fd);
 
       BLOCK:

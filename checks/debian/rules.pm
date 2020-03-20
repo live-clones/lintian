@@ -162,7 +162,7 @@ sub source {
     # If the version field is missing, we assume a neutral non-native one.
     $version = '0-1' unless defined $version;
 
-    my $rules_fd = $rules->open;
+    open(my $rules_fd, '<', $rules->unpacked_path);
 
     # Check for required #!/usr/bin/make -f opening line.  Allow -r or -e; a
     # strict reading of Policy doesn't allow either, but they seem harmless.
@@ -516,7 +516,7 @@ sub source {
         }
     }
 
-    $rules_fd = $rules->open;
+    open($rules_fd, '<', $rules->unpacked_path);
     my $sfd = Lintian::SlidingWindow->new($rules_fd);
     my $block;
     while ($block = $sfd->readwindow) {

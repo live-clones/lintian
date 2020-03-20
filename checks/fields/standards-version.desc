@@ -1,7 +1,2 @@
 Check-Script: fields/standards-version
-Author: Christian Schwarz <schwarz@debian.org>
-Abbrev: std
 Type: source
-Info: This script checks if a source package contains a valid
- Standards-Version field.
-Needs-Info: unpacked

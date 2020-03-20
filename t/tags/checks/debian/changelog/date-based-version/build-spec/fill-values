@@ -1,0 +1,4 @@
+Testname: date-based-version
+Version: 20180219-1
+Description: Date-based version number
+Skeleton: upload-non-native

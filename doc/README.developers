@@ -176,10 +176,5 @@ but it should generally be avoided for "heavy" tasks.  Unlike checks,
 collections can (and generally are) run in parallel to improve the
 effective runtime.
 
-
-An overview of how the collections and checks relate can be obtained
-by I<private/graph>, which generates a "Graphviz Dot" graph of the
-relations.
-
 =cut
 

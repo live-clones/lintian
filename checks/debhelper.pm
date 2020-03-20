@@ -88,7 +88,7 @@ sub source {
 
     return unless $drules and $drules->is_open_ok;
 
-    my $rules_fd = $drules->open;
+    open(my $rules_fd, '<', $drules->unpacked_path);
 
     my $command_prefix_pattern = qr/\s+[@+-]?(?:\S+=\S+\s+)*/;
 
@@ -330,7 +330,7 @@ sub source {
     # of the other files since we use the compat value when checking
     # for brace expansion.
     if ($compat_file and $compat_file->is_open_ok) {
-        my $fd = $compat_file->open;
+        open(my $fd, '<', $compat_file->unpacked_path);
         while (<$fd>) {
             if ($. == 1) {
                 $compat = strip($_);
@@ -427,7 +427,7 @@ sub source {
             # sure the token is there.
             my $binpkg = $1 || '';
             my $seentag = '';
-            my $fd = $file->open;
+            open(my $fd, '<', $file->unpacked_path);
             while (<$fd>) {
                 if (m/\#DEBHELPER\#/) {
                     $seentag = 1;
@@ -455,7 +455,7 @@ sub source {
             $self->tag('dh-make-template-in-source', $file);
         } elsif ($basename =~ m/^(?:(.*)\.)?maintscript$/) {
             next unless $file->is_open_ok;
-            my $fd = $file->open;
+            open(my $fd, '<', $file->unpacked_path);
             while (<$fd>) {
                 if (m/--\s+"\$(?:@|{@})"\s*$/) {
                     $self->tag('maintscript-includes-maint-script-parameters',
@@ -505,7 +505,7 @@ sub source {
                     }
                 }
 
-                my $fd = $file->open;
+                open(my $fd, '<', $file->unpacked_path);
                 local $_;
                 while (<$fd>) {
                     next if /^\s*$/;
@@ -636,7 +636,7 @@ sub check_dh_exec {
     }
 
     my ($dhe_subst, $dhe_install, $dhe_filter) = (0, 0, 0);
-    my $fd = $path->open;
+    open(my $fd, '<', $path->unpacked_path);
     while (<$fd>) {
         if (/\$\{([^\}]+)\}/) {
             my $sv = $1;
@@ -703,7 +703,7 @@ sub _shebang_cmd {
     my ($path) = @_;
     my $magic;
     my $cmd = '';
-    my $fd = $path->open;
+    open(my $fd, '<', $path->unpacked_path);
     if (read($fd, $magic, 2)) {
         if ($magic eq '#!') {
             $cmd = <$fd>;

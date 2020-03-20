@@ -1,5 +1,2 @@
 Check-Script: udev
-Author: Petter Reinholdtsen <pere@hungry.com>
 Type: binary
-Needs-Info: unpacked
-Info: This script checks the udev rules for problems.

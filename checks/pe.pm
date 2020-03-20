@@ -44,7 +44,7 @@ sub files {
       unless $file->is_open_ok;
 
     my $buf;
-    my $fd = $file->open;
+    open(my $fd, '<', $file->unpacked_path);
 
     eval {
         # offset to main header

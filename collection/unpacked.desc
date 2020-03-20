@@ -1,6 +1,0 @@
-Collector-Script: unpacked
-Author: Raphael Geissert <atomo64@gmail.com>
-Info: This script unpacks the package under the unpacked/ directory
-Type: binary, udeb, source
-Priority: 1
-Interface: perl-coll

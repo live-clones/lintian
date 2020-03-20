@@ -24,6 +24,9 @@ use strict;
 use warnings;
 use autodie;
 
+use List::MoreUtils qw(uniq);
+use Path::Tiny;
+
 use Moo;
 use namespace::clean;
 
@@ -32,15 +35,15 @@ with 'Lintian::Check';
 sub binary {
     my ($self) = @_;
 
-    my %tools_seen;
+    my @tools_seen;
 
     # get maintainer scripts
-    my %interpreters = %{$self->processable->control_scripts};
+    my @control
+      = grep { $_->is_control } $self->processable->control->sorted_list;
 
-    for my $name (keys %interpreters) {
+    for my $file (@control) {
 
-        my $interpreter = $interpreters{$name};
-
+        my $interpreter = $file->control->{interpreter};
         # do not check for empty interpreter
         next
           unless length $interpreter;
@@ -49,16 +52,13 @@ sub binary {
         next
           if $interpreter eq 'ELF';
 
-        my $file = $self->processable->control->resolve_path($name);
-        next
-          unless $file;
-
         next
           unless $file->is_open_ok;
 
+        my @lines = path($file->unpacked_path)->lines;
+
         # scan contents
-        my $fd = $file->open;
-        while (<$fd>) {
+        for (@lines) {
 
             # skip empty lines
             next
@@ -69,15 +69,13 @@ sub binary {
 # remove trailing ":" from dh_python
 # https://sources.debian.org/src/dh-python/4.20191017/dhpython/debhelper.py/#L200
                 $tool =~ s/:\s*$//g;
-                $tools_seen{$tool} = 1;
+                push(@tools_seen, $tool);
             }
         }
-
-        close($fd);
     }
 
     $self->tag('debhelper-autoscript-in-maintainer-scripts', $_)
-      for sort keys %tools_seen;
+      for uniq @tools_seen;
 
     return;
 }

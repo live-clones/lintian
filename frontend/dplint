@@ -213,7 +213,10 @@ sub load_profile {
     );
     require Lintian::Profile;
 
-    return Lintian::Profile->new($profile_name, \@INCLUDE_DIRS, \%opt);
+    my $profile = Lintian::Profile->new;
+    $profile->load($profile_name, \@INCLUDE_DIRS, \%opt);
+
+    return $profile;
 }
 
 sub main {

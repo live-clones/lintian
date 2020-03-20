@@ -1,6 +1,6 @@
 # languages/javascript/nodejs -- lintian check script -*- perl -*-
 
-# Copyright (C) 2019, Xavier Guimard <yadd@debian.org>
+# Copyright (C) 2019-2020, Xavier Guimard <yadd@debian.org>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -24,7 +24,7 @@ use strict;
 use warnings;
 use autodie;
 
-use JSON;
+use JSON::MaybeXS;
 use List::MoreUtils qw(any);
 use Path::Tiny;
 
@@ -52,7 +52,7 @@ sub source {
         # Ensure test file contains something
         if ($path and $path->is_open_ok) {
             $self->tag('pkg-js-autopkgtest-test-is-empty', $filename)
-              unless any { /^[^#]*\w/m } $path->file_contents;
+              unless any { /^[^#]*\w/m } $path->slurp;
         } else {
             $self->tag('pkg-js-autopkgtest-test-is-missing', $filename);
         }
@@ -62,7 +62,7 @@ sub source {
           = $processable->patched->resolve_path('debian/tests/pkg-js/files');
 
         my @files;
-        @files = path($path->fs_path)->lines
+        @files = path($path->unpacked_path)->lines
           if defined $path;
 
         # trim leading and trailing whitespace
@@ -75,7 +75,7 @@ sub source {
     my $droot = $processable->patched->resolve_path('debian/') or return;
     my $drules = $droot->child('rules') or return;
     return unless $drules->is_open_ok;
-    my $rules_fd = $drules->open;
+    open(my $rules_fd, '<', $drules->unpacked_path);
     my $command_prefix_pattern = qr/\s+[@+-]?(?:\S+=\S+\s+)*/;
     my ($seen_nodejs,$override_test,$seen_dh_dynamic);
     while (<$rules_fd>) {
@@ -105,7 +105,7 @@ sub source {
         # Ensure test file contains something
         if ($path) {
             $self->tag('pkg-js-tools-test-is-empty', $filename)
-              unless any { /^[^#]*\w/m } $path->file_contents;
+              unless any { /^[^#]*\w/m } $path->slurp;
         } else {
             $self->tag('pkg-js-tools-test-is-missing', $filename);
         }
@@ -133,10 +133,21 @@ sub files {
     # Now we have to open package.json
     return unless $file->is_open_ok;
 
+    # Return an error if a package-lock.json or a yanr.lock file is installed
+    $self->tag('nodejs-lock-file', $file->name)
+      if $file->name
+      =~ m#usr/(?:share|lib(?:/[^/]+)?)/nodejs/([^/]+)(.*/)(package-lock\.json|yarn\.lock)$#;
+
     # Look only nodejs package.json files
     return
       unless $file->name
-      =~ m#usr/(?:share|lib(?:/[^/]+)?)/nodejs/([^/]+)(.*/)package\.json$#;
+      =~ m#usr/(?:share|lib(?:/[^/]+)?)/nodejs/([^\@/]+|\@[^/]+/[^/]+)(.*/)package\.json$#;
+
+    # First regexp arg: directory in /**/nodejs or @foo/bar when dir starts
+    #                   with '@', following npm registry policy
+    my $dirname = $1;
+    # Second regex arg: subpath in /**/nodejs/module/ (eg: node_modules/foo)
+    my $subpath = $2;
 
     my $declared = $self->package;
     my $processable = $self->processable;
@@ -146,10 +157,7 @@ sub files {
     my $provides
       = Lintian::Relation->and($processable->relation('provides'), $declared);
 
-    my $dirname = $1; # directory in /**/nodejs
-    my $subpath = $2; # subpath in /**/nodejs/module/ (node_modules/foo)
-
-    my $content = path($file->fs_path)->slurp;
+    my $content = $file->slurp;
 
     # Look only valid package.json files
     my $pac;
@@ -166,10 +174,12 @@ sub files {
             $file->name, $pac->{name}, $dirname);
     } else {
         # Else verify that module is declared at least in Provides: field
-        my $name = 'node-' . $pac->{name};
-        $name =~ s/_/-/g;
-        $name =~ s/\@//g;
-        $self->tag('nodejs-module-not-declared', $name)
+        my $name = 'node-' . lc($pac->{name});
+        # Normalize name following Debian policy
+        # (replace invalid characters by "-")
+        $name =~ s#[/_\@]#-#g;
+        $name =~ s/\-\-+/\-/g;
+        $self->tag('nodejs-module-not-declared', $name, $file->name)
           if $subpath eq '/'
           and not $provides->implies($name);
     }

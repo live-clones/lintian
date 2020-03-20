@@ -61,6 +61,7 @@ Enable-Tags-From-Check:
  fields/origin,
  fields/package,
  fields/package-relations,
+ fields/package-type,
  fields/priority,
  fields/section,
  fields/source,
@@ -159,6 +160,7 @@ Enable-Tags-From-Check:
  upstream-signature,
  usrmerge,
  vim,
+ xdeb,
 Extends:
  debian/ftp-master-auto-reject
 

@@ -1,5 +1,2 @@
 Check-Script: debian/rules/dh-sequencer
-Author: Felix Lechner <felix.lechner@lease-up.com>
 Type: source
-Needs-Info: unpacked
-Info: Check usage of dh sequencer in debian/rules.

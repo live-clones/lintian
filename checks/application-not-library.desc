@@ -1,5 +1,2 @@
 Check-Script: application-not-library
-Author: Axel Beckert <abe@debian.org>
 Type: binary
-Needs-Info: unpacked
-Info: application packaged like a library (imported from pkg-perl-tools)

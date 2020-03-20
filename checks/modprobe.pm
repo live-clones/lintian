@@ -42,7 +42,7 @@ sub files {
     } elsif ($file->name =~ m,^etc/modprobe\.d/(.+)$,
         or $file->name =~ m,^etc/modules-load\.d/(.+)$,) {
 
-        my @obsolete = uniq($file->file_contents =~ /^\s*(install|remove)/mg);
+        my @obsolete = uniq($file->slurp =~ /^\s*(install|remove)/mg);
         $self->tag('obsolete-command-in-modprobe.d-file', $file->name, $_)
           for @obsolete;
     }

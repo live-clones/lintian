@@ -13,6 +13,8 @@ I[M ]: lintian-output-letter: description-synopsis-might-not-be-phrased-properly
 I[N?]: lintian-output-letter: desktop-entry-limited-to-environments usr/share/applications/script.desktop
 I[W ]: lintian-output-letter: package-contains-empty-directory usr/local/share/lintian/
 I[W!]: lintian-output-letter source: quilt-patch-using-template-description debian-changes-1.0+dsfg-1.1
+I[W!]: lintian-output-letter source: upstream-metadata-missing-bug-tracking
+I[W!]: lintian-output-letter source: upstream-metadata-missing-repository
 P[P!]: lintian-output-letter source: debian-control-has-unusual-field-spacing line 12
 X[P!]: lintian-output-letter source: debian-watch-does-not-check-gpg-signature
 P[P ]: lintian-output-letter: example-unusual-interpreter usr/share/doc/lintian-output-letter/examples/example #!/usr/bin/foo

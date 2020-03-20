@@ -90,7 +90,7 @@ sub detect_privacy_breach {
     return
       unless $file->is_regular_file;
 
-    my $fd = $file->open(':raw');
+    open(my $fd, '<:raw', $file->unpacked_path);
 
     my $sfd = Lintian::SlidingWindow->new($fd,sub { $_=lc($_); },BLOCKSIZE);
 
@@ -271,8 +271,7 @@ sub check_tag_url_privacy_breach {
     # followed automatically.
     if(    $file->basename =~ '.xml$'
         && $tagattr eq 'link'
-        && $file->file_contents
-        =~ qr{ xmlns="http://projectmallard\.org/1\.0/"}) {
+        && $file->slurp=~ qr{ xmlns="http://projectmallard\.org/1\.0/"}) {
         return;
     }
 

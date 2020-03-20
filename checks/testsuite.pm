@@ -84,7 +84,7 @@ sub source {
         if (not $control->is_regular_file) {
             die 'debian tests control is not a regular file';
         } elsif ($control->is_open_ok) {
-            my $path = $control->fs_path;
+            my $path = $control->unpacked_path;
             my $not_utf8_line = file_is_encoded_in_non_utf8($path);
 
             if ($not_utf8_line) {
@@ -246,7 +246,7 @@ sub check_test_file {
     } elsif (not $index->is_open_ok) {
         $self->tag('runtime-test-file-is-not-a-regular-file', $path);
     } else {
-        my $fd = $index->open;
+        open(my $fd, '<', $index->unpacked_path);
         while (my $x = <$fd>) {
             if ($x =~ m/ADTTMP/) {
                 $self->tag('uses-deprecated-adttmp', $path, "(line $.)");

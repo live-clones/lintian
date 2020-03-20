@@ -46,7 +46,6 @@ use Lintian::Internal::FrontendUtil
 use Lintian::Output::Standard;
 use Lintian::Pool;
 use Lintian::Profile;
-use Lintian::Tags;
 use Lintian::Util qw(internal_error parse_boolean strip safe_qx);
 
 # only in GNOME; need original environment
@@ -89,7 +88,7 @@ my %opt = (                     #hash of some flags from cmd or cfg
 
 my $experimental_output_opts;
 
-my (@CLOSE_AT_END, $TAGS);
+my @CLOSE_AT_END;
 my $OUTPUT = Lintian::Output::Standard->new;
 my @certainties = qw(wild-guess possible certain);
 my (@display_level, %display_source, %suppress_tags);
@@ -381,6 +380,11 @@ sub display_pedantictags {
     return;
 }
 
+sub display_classificationtags {
+    push(@display_level, ['+', '=', 'classification']);
+    return;
+}
+
 # Process --default-display-level flag
 sub default_display_level {
     push(@display_level,
@@ -568,6 +572,8 @@ sub _main {
 
 sub main {
 
+    $0 = join(' ', $0, @ARGV);
+
     #turn off file buffering
     STDOUT->autoflush;
     binmode(STDOUT, ':utf8');
@@ -723,19 +729,17 @@ sub main {
     $OUTPUT->v_msg('Using profile ' . $PROFILE->name . '.');
     Lintian::Data->set_vendor($PROFILE);
 
-    $TAGS = Lintian::Tags->new;
-    $TAGS->show_experimental($opt{'display-experimental'});
-    $TAGS->show_overrides($opt{'show-overrides'});
-    $TAGS->sources(keys(%display_source)) if %display_source;
-    $TAGS->profile($PROFILE);
+    $PROFILE->show_experimental($opt{'display-experimental'});
+    $PROFILE->sources(keys %display_source)
+      if %display_source;
 
     if ($dont_check || %suppress_tags || $checks || $check_tags) {
-        _update_profile($PROFILE, $TAGS, $dont_check, \%suppress_tags,$checks);
+        _update_profile($PROFILE, $dont_check, \%suppress_tags,$checks);
     }
 
     # Initialize display level settings.
     for my $level (@display_level) {
-        eval { $TAGS->display(@{$level}) };
+        eval { $PROFILE->display(@{$level}) };
         fatal_error($@) if $@;
     }
 
@@ -777,10 +781,11 @@ sub main {
 
     for my $path (@subjects) {
 
+        # in ubuntu, automatic dbgsym packages end with .ddeb
         fatal_error
-"bad package file name $path (neither .deb, .udeb, .changes, .dsc or .buildinfo file)"
+"bad package file name $path (neither .deb, .udeb, .ddeb, .changes, .dsc or .buildinfo file)"
           unless -f $path
-          && $path =~ m/\.(?:u?deb|dsc|changes|buildinfo)$/;
+          && $path =~ m/\.(?:[u|d]?deb|dsc|changes|buildinfo)$/;
 
         my $absolute = Cwd::abs_path($path);
         die "Cannot resolve $path: $!"
@@ -807,7 +812,7 @@ sub main {
 
     $ENV{INIT_ROOT} = $INIT_ROOT;
 
-    $pool->process($action, $PROFILE,$TAGS,\$exit_code, \%opt,
+    $pool->process($action, $PROFILE,\$exit_code, \%opt,
         $STATUS_FD, \@unpack_info, $OUTPUT);
 
     retrigger_signal()
@@ -1064,17 +1069,7 @@ sub parse_options {
 }
 
 sub _update_profile {
-    my ($profile, $tags, $sup_check, $sup_tags, $only_check) = @_;
-    my %abbrev = ();
-
-    if ($sup_check || $only_check) {
-        # Build an abbreviation map
-        for my $c ($profile->scripts(1)) {
-            my $cs = $profile->get_script($c, 1);
-            next unless $cs->abbrev;
-            $abbrev{$cs->abbrev} = $cs;
-        }
-    }
+    my ($profile, $sup_check, $sup_tags, $only_check) = @_;
 
     # if tags are listed explicitly (--tags) then show them even if
     # they are pedantic/experimental etc.  However, for --check-part
@@ -1082,12 +1077,13 @@ sub _update_profile {
     if ($checks || $check_tags) {
         $profile->disable_tags($profile->tags);
         if ($check_tags) {
-            $tags->show_experimental(1);
+            $profile->show_experimental(1);
             # discard whatever is in @display_level and request
             # everything
             @display_level = ();
             display_infotags();
             display_pedantictags();
+            display_classificationtags();
             $profile->enable_tags(split /,/, $check_tags);
         } else {
             for my $c (split /,/, $checks) {
@@ -1097,7 +1093,7 @@ sub _update_profile {
                     $profile->enable_tags($_->tags)for @all;
                     next;
                 }
-                my $cs = $profile->get_script($c, 1) || $abbrev{$c};
+                my $cs = $profile->get_script($c, 1);
                 fatal_error("Unrecognized check script (via -C): $c")
                   unless $cs;
                 $profile->enable_tags($cs->tags);
@@ -1106,7 +1102,7 @@ sub _update_profile {
     } elsif ($sup_check) {
         # we are disabling checks
         for my $c (split(/,/, $sup_check)) {
-            my $cs = $profile->get_script($c, 1) || $abbrev{$c};
+            my $cs = $profile->get_script($c, 1);
             fatal_error("Unrecognized check script (via -X): $c") unless $cs;
             $profile->disable_tags($cs->tags);
         }

@@ -1,6 +1,2 @@
 Check-Script: usrmerge
-Author: Marco d'Itri <md@linux.it>
-Abbrev: usr
 Type: binary
-Needs-Info: unpacked
-Info: This script checks for files with the same name installed in / and /usr.

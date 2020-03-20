@@ -11,6 +11,9 @@ all: $(safe) $(staticbase) $(dataexecution) $(unsafeseh)
 
 $(safe): $(sources)
 	$(MINGWCC) -o $@ $^
+	genpeimg -d +d $@
+	genpeimg -d +n $@
+	genpeimg -d -s $@
 
 $(staticbase): $(safe)
 	cp $< $@

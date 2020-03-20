@@ -20,6 +20,7 @@ package Lintian::Processable::Source;
 
 use strict;
 use warnings;
+use autodie;
 
 use Carp qw(croak);
 use Path::Tiny;
@@ -33,18 +34,20 @@ use constant SLASH => q{/};
 use Moo;
 use namespace::clean;
 
-with 'Lintian::Collect::Source',
-  'Lintian::Processable::Checksums::Md5',
+with 'Lintian::Processable',
   'Lintian::Processable::Diffstat',
   'Lintian::Processable::Changelog',
+  'Lintian::Processable::Changelog::Version',
   'Lintian::Processable::Fields::Files',
-  'Lintian::Processable::FileInfo',
-  'Lintian::Processable::Java',
+  'Lintian::Processable::IsNonFree',
   'Lintian::Processable::Orig',
   'Lintian::Processable::Overrides',
   'Lintian::Processable::Patched',
-  'Lintian::Processable::Scripts::Control',
-  'Lintian::Processable';
+  'Lintian::Processable::Source::Diffstat',
+  'Lintian::Processable::Source::Fields',
+  'Lintian::Processable::Source::Format',
+  'Lintian::Processable::Source::Relation',
+  'Lintian::Processable::Source::Repacked';
 
 =for Pod::Coverage BUILDARGS
 
@@ -118,6 +121,24 @@ sub init {
       || $self->architecture ne $architecture
       || $self->source ne $source
       || $self->source_version ne $source_version;
+
+    return;
+}
+
+=item unpack
+
+=cut
+
+sub unpack {
+    my ($self) = @_;
+
+    $self->patched->collect($self->groupdir);
+
+    $self->add_diffstat;
+    $self->add_overrides;
+
+    $self->orig->collect($self->groupdir)
+      unless $self->native;
 
     return;
 }

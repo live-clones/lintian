@@ -1,5 +1,2 @@
 Check-Script: fields/empty
-Author: Felix Lechner <felix.lechner@lease-up.com>
 Type: binary, udeb, source
-Needs-Info: unpacked
-Info: This script checks all fields for empty or all-whitespace values.

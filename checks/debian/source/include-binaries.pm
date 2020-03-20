@@ -41,7 +41,7 @@ sub source {
     return
       unless $file && $file->is_open_ok;
 
-    my @lines = path($file->fs_path)->lines({ chomp => 1 });
+    my @lines = path($file->unpacked_path)->lines({ chomp => 1 });
 
     # format described in dpkg-source (1)
     for my $line (@lines) {

@@ -1,4 +1,2 @@
 Check-Script: changes-file
-Abbrev: chng
 Type: changes
-Info: This script checks for various problems with .changes files

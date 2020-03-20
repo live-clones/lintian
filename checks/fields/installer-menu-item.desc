@@ -1,6 +1,2 @@
 Check-Script: fields/installer-menu-item
-Author: Marc 'HE' Brockschmidt <marc@marcbrockschmidt.de>
 Type: binary, udeb, source
-Needs-Info: unpacked
-Info: This script checks the syntax of the 'Installer-Menu-Item' field
- in package control files, as described in the Policy Manual.

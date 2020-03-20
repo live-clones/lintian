@@ -95,7 +95,7 @@ sub always {
                 my @templates;
                 eval {
                     @templates
-                      = read_dpkg_control($templates_file->fs_path,
+                      = read_dpkg_control($templates_file->unpacked_path,
                         DCTRL_DEBCONF_TEMPLATE);
                 };
                 if ($@) {
@@ -127,7 +127,7 @@ sub always {
     my $ctrl_templates = $processable->control->lookup('templates');
 
     if ($preinst and $preinst->is_file and $preinst->is_open_ok) {
-        my $fd = $preinst->open;
+        open(my $fd, '<', $preinst->unpacked_path);
         while (<$fd>) {
             s/\#.*//;    # Not perfect for Perl, but should be OK
             if (   m,/usr/share/debconf/confmodule,
@@ -194,8 +194,7 @@ sub always {
             # $seentemplates (above) will be false if $ctrl_templates is a
             # symlink or not a file, so this should be safe without
             # (re-checking) with -f/-l.
-            @templates
-              = read_dpkg_control($ctrl_templates->fs_path,
+            @templates= read_dpkg_control($ctrl_templates->unpacked_path,
                 DCTRL_DEBCONF_TEMPLATE);
         };
         if ($@) {
@@ -405,7 +404,7 @@ sub always {
         if ($path and $path->is_file and $path->is_open_ok) {
             my ($usesconfmodule, $obsoleteconfmodule, $db_input, $isdefault);
 
-            my $fd = $path->open;
+            open(my $fd, '<', $path->unpacked_path);
             # Only check scripts.
             my $fl = <$fd>;
             unless ($fl && $fl =~ /^\#!/) {
@@ -569,17 +568,21 @@ sub always {
     # the following checks is ignored if the package being checked is debconf
     # itself.
 
-    return if ($pkg eq 'debconf') || ($type eq 'udeb');
+    return
+      if ($pkg eq 'debconf') || ($type eq 'udeb');
 
-    foreach my $filename (sort keys %{$processable->scripts}) {
-        my $path = $processable->installed->resolve_path($filename);
-        next if not $path or not $path->is_open_ok;
-        my $fd = $path->open;
+    my @scripts = grep { $_->is_script } $processable->installed->sorted_list;
+    foreach my $file (@scripts) {
+
+        next
+          unless $file->is_open_ok;
+
+        open(my $fd, '<', $file->unpacked_path);
         while (<$fd>) {
             s/#.*//;    # Not perfect for Perl, but should be OK
             if (   m,/usr/share/debconf/confmodule,
                 or m/(?:Debconf|Debian::DebConf)::Client::ConfModule/) {
-                $self->tag('debconf-is-not-a-registry', $filename);
+                $self->tag('debconf-is-not-a-registry', $file->name);
                 last;
             }
         }

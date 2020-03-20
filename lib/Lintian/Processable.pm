@@ -26,7 +26,6 @@ use warnings::register;
 use Carp qw(croak);
 use Path::Tiny;
 
-use Lintian::Collect::Dispatcher qw(create_info);
 use Lintian::Util qw(get_dsc_info get_deb_info);
 
 use constant EMPTY => q{};
@@ -231,10 +230,6 @@ sub identifier {
 
 =item info
 
-Returns the L<info|Lintian::Collect> object associated with this entry.
-
-Overrides info from L<Lintian::Processable>.
-
 =cut
 
 sub info {
@@ -244,8 +239,6 @@ sub info {
 }
 
 =item clear_cache
-
-Clears any caches held; this includes discarding the L<info|Lintian::Collect> object.
 
 Overrides clear_cache from L<Lintian::Processable>.
 

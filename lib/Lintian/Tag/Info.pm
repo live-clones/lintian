@@ -1,8 +1,9 @@
 # -*- perl -*-
 # Lintian::Tag::Info -- interface to tag metadata
 
-# Copyright (C) 1998 Christian Schwarz and Richard Braakman
-# Copyright (C) 2009 Russ Allbery
+# Copyright © 1998 Christian Schwarz and Richard Braakman
+# Copyright © 2009 Russ Allbery
+# Copyright © 2020 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by the Free
@@ -23,15 +24,23 @@ use strict;
 use warnings;
 
 use Carp qw(croak);
+use List::MoreUtils qw(none);
 
 use Lintian::Data;
 use Lintian::Deb822Parser qw(read_dpkg_control_utf8);
 use Lintian::Tag::TextUtil
   qw(dtml_to_html dtml_to_text split_paragraphs wrap_paragraphs);
-use Lintian::Tags qw();
 
 use constant EMPTY => q{};
 use constant SPACE => q{ };
+
+use Moo;
+use namespace::clean;
+
+# Ordered lists of severities and certainties, used for display level parsing.
+our @SEVERITIES
+  = qw(classification pedantic wishlist minor normal important serious);
+our @CERTAINTIES = qw(wild-guess possible certain);
 
 # The URL to a web man page service.  NAME is replaced by the man page
 # name and SECTION with the section to form a valid URL.  This is used
@@ -44,17 +53,6 @@ our $MANURL
 # is called.
 our $MANUALS
   = Lintian::Data->new('output/manual-references', qr/::/,\&_load_manual_data);
-
-# Map severity/certainty levels to tag codes.
-our %CODES = (
-    classification => { 'wild-guess' => 'C', possible => 'C', certain => 'C' },
-    pedantic  => { 'wild-guess' => 'P', possible => 'P', certain => 'P' },
-    wishlist  => { 'wild-guess' => 'I', possible => 'I', certain => 'I' },
-    minor     => { 'wild-guess' => 'I', possible => 'I', certain => 'W' },
-    normal    => { 'wild-guess' => 'I', possible => 'W', certain => 'W' },
-    important => { 'wild-guess' => 'W', possible => 'E', certain => 'E' },
-    serious   => { 'wild-guess' => 'E', possible => 'E', certain => 'E' },
-);
 
 =head1 NAME
 
@@ -76,27 +74,117 @@ This module provides an interface to tag metadata as gleaned from the
 *.desc files describing the checks.  It can be used to retrieve specific
 metadata elements or to format the tag description.
 
-=head1 CLASS METHODS
-
-=over 4
-
-=item new(HASH, SCRIPT_NAME, SCRIPT_TYPE)
-
-Creates a new Lintian::Tag:Info.
-
-=cut
-
-sub new {
-    my ($class) = @_;
-
-    return bless {}, $class;
-}
-
-=back
-
 =head1 INSTANCE METHODS
 
 =over 4
+
+=item tag
+
+=item certainty
+
+=item original_severity
+
+=item effective_severity
+
+=item script
+
+=item script_type
+
+=item experimental
+
+=item info
+
+=item references
+
+=item aliases
+
+=cut
+
+has tag => (
+    is => 'rw',
+    coerce => sub { my ($text) = @_; return ($text // EMPTY); },
+    default => EMPTY
+);
+
+has certainty => (
+    is => 'rw',
+    lazy => 1,
+    coerce => sub {
+        my ($text) = @_;
+
+        $text //= EMPTY;
+        croak "Unknown tag certainty $text"
+          if none { $text eq $_ } @CERTAINTIES;
+
+        return $text;
+    },
+    default => EMPTY
+);
+
+has original_severity => (
+    is => 'rw',
+    lazy => 1,
+    coerce => sub {
+        my ($text) = @_;
+
+        $text //= EMPTY;
+        croak "Unknown tag severity $text"
+          if none { $text eq $_ } @SEVERITIES;
+
+        return $text;
+    },
+    default => EMPTY
+);
+
+has effective_severity => (
+    is => 'rw',
+    lazy => 1,
+    coerce => sub {
+        my ($text) = @_;
+
+        $text //= EMPTY;
+        croak "Unknown tag severity $text"
+          if none { $text eq $_ } @SEVERITIES;
+
+        return $text;
+    },
+    default => EMPTY
+);
+
+has script => (
+    is => 'rw',
+    coerce => sub { my ($text) = @_; return ($text // EMPTY); },
+    default => EMPTY
+);
+
+has script_type => (
+    is => 'rw',
+    coerce => sub { my ($text) = @_; return ($text // EMPTY); },
+    default => EMPTY
+);
+
+has experimental => (
+    is => 'rw',
+    coerce => sub { my ($boolean) = @_; return ($boolean // 0); },
+    default => 0
+);
+
+has info => (
+    is => 'rw',
+    coerce => sub { my ($text) = @_; return ($text // EMPTY); },
+    default => EMPTY
+);
+
+has references => (
+    is => 'rw',
+    coerce => sub { my ($text) = @_; return ($text // EMPTY); },
+    default => EMPTY
+);
+
+has aliases => (
+    is => 'rw',
+    coerce => sub { my ($arrayref) = @_; return ($arrayref // []); },
+    default => sub { [] });
 
 =item load(PATH)
 
@@ -107,61 +195,32 @@ Loads a tag description from PATH.
 sub load {
     my ($self, $tagpath) = @_;
 
-    croak "Cannot read tag file in $tagpath"
+    croak "Cannot read tag file from $tagpath"
       unless -r $tagpath;
 
     my @paragraphs = read_dpkg_control_utf8($tagpath);
     croak "$tagpath does not have exactly one paragraph"
-      if (scalar(@paragraphs) != 1);
+      unless scalar @paragraphs == 1;
 
-    $self->{$_} = $paragraphs[0]->{$_} for keys %{$paragraphs[0]};
+    my %fields = %{ $paragraphs[0] };
+    $self->tag($fields{tag});
+    $self->certainty($fields{certainty});
+    $self->original_severity($fields{severity});
 
-    croak 'Missing Tag field' unless $self->{'tag'};
-    my $tagname = $self->{'tag'};
-    croak "Missing Severity field for $tagname" unless $self->{'severity'};
-    croak "Missing Certainty field for $tagname" unless $self->{'certainty'};
-    croak "Tag $tagname has invalid severity ($self->{'severity'}):"
-      . ' Must be one of '
-      . join(', ', @Lintian::Tags::SEVERITIES)
-      unless exists $CODES{$self->{'severity'}};
-    croak "Tag $tagname has invalid certainty ($self->{'certainty'}):"
-      . ' Must be one of '
-      . join(', ', @Lintian::Tags::CERTAINTIES)
-      unless exists $CODES{$self->{'severity'}}{$self->{'certainty'}};
-    $self->{'info'} = '' unless $self->{'info'};
+    $self->script($fields{check});
+    $self->experimental(($fields{experimental} // EMPTY) eq 'yes');
 
-    #    ($self->{'script'}) = ($self->{'check'} =~ qr/^\s*(\S+)\s*$/);
-    $self->{'script'} = $self->{'check'};
-    delete $self->{'check'};
+    $self->info($fields{info});
+    $self->references($fields{ref});
 
-    $self->{'effective-severity'} = $self->{severity};
+    $self->aliases(split(SPACE, $fields{'renamed-from'} // EMPTY));
+
+    croak "No Tag field in $tagpath"
+      unless length $self->tag;
+
+    $self->effective_severity($self->original_severity);
 
     return;
-}
-
-=item add_script_type(STRING)
-
-Set script type to STRING. Only used to format output.
-
-=cut
-
-sub add_script_type {
-    my ($self, $type) = @_;
-
-    $self->{'script-type'} = $type;
-
-    return;
-}
-
-=item certainty()
-
-Returns the certainty of the tag.
-
-=cut
-
-sub certainty {
-    my ($self) = @_;
-    return $self->{certainty};
 }
 
 =item code()
@@ -174,9 +233,21 @@ separately.
 
 =cut
 
+# Map severity/certainty levels to tag codes.
+our %CODES = (
+    classification => { 'wild-guess' => 'C', possible => 'C', certain => 'C' },
+    pedantic  => { 'wild-guess' => 'P', possible => 'P', certain => 'P' },
+    wishlist  => { 'wild-guess' => 'I', possible => 'I', certain => 'I' },
+    minor     => { 'wild-guess' => 'I', possible => 'I', certain => 'W' },
+    normal    => { 'wild-guess' => 'I', possible => 'W', certain => 'W' },
+    important => { 'wild-guess' => 'W', possible => 'E', certain => 'E' },
+    serious   => { 'wild-guess' => 'E', possible => 'E', certain => 'E' },
+);
+
 sub code {
     my ($self) = @_;
-    return $CODES{$self->{'effective-severity'}}{$self->{certainty}};
+
+    return $CODES{$self->effective_severity}{$self->certainty};
 }
 
 =item description([FORMAT [, INDENT]])
@@ -283,101 +354,66 @@ sub _format_reference {
 # Returns the formatted tag description.
 sub description {
     my ($self, $format, $indent) = @_;
-    $indent = '' unless defined($indent);
-    $format = 'text' unless defined($format);
-    if ($format ne 'text' and $format ne 'html') {
-        croak("unknown output format $format");
-    }
 
-    # Build the tag description.
-    my $info = $self->{info};
+    $format //= 'text';
+    croak "unknown output format $format"
+      unless $format eq 'text' || $format eq 'html';
+
+    # build tag description
+    my $info = $self->info;
+
+    # remove leading spaces
     $info =~ s/\n[ \t]/\n/g;
-    my @text = split_paragraphs($info);
-    my $severity = $self->severity;
-    my $certainty = $self->certainty;
 
-    if ($self->{ref}) {
-        push(@text, '', _format_reference($self->{ref}));
-    }
-    push(@text, '', "Severity: $severity, Certainty: $certainty");
-    if ($self->{script} and $self->{'script-type'}){
-        my $script = $self->{script};
-        my $stype = $self->{'script-type'};
-        push(@text, '', "Check: $script, Type: $stype");
-    }
-    if ($self->experimental) {
-        push(@text,
-            '',
-            'This tag is marked experimental, which means that the code that'
-              . ' generates it is not as well-tested as the rest of Lintian'
-              . ' and might still give surprising results.  Feel free to'
-              . ' ignore experimental tags that do not seem to make sense,'
-              . ' though of course bug reports are always welcome.');
-    }
-    if ($severity eq 'classification') {
-        push(@text,
-            '',
-            'This tag intended as a classification'
-              . '  and is <i>not</i> an issue in the package.');
-    }
+    my @paragraphs = split_paragraphs($info);
 
-    # Format and return the output.
-    if ($format eq 'text') {
-        return wrap_paragraphs($indent, dtml_to_text(@text));
-    } elsif ($format eq 'html') {
-        return wrap_paragraphs('HTML', $indent, dtml_to_html(@text));
-    }
+    push(@paragraphs, EMPTY, _format_reference($self->references))
+      if length $self->references;
+
+    push(@paragraphs,
+        EMPTY,
+        'Severity: '
+          . $self->original_severity
+          . ', Certainty: '
+          . $self->certainty);
+
+    push(@paragraphs,
+        EMPTY, 'Check: ' . $self->script . ', Type: ' . $self->script_type)
+      if length $self->script && length $self->script_type;
+
+    push(@paragraphs,
+        EMPTY,
+'This tag is experimental. Please file a bug report if the tag seems wrong.'
+    )if $self->experimental;
+
+    push(@paragraphs,
+        EMPTY,
+        'This tag is a classification. There is no issue in your package.')
+      if $self->original_severity eq 'classification';
+
+    $indent //= EMPTY;
+
+    return wrap_paragraphs('HTML', $indent, dtml_to_html(@paragraphs))
+      if $format eq 'html';
+
+    return wrap_paragraphs($indent, dtml_to_text(@paragraphs));
 }
 
-=item experimental()
+=item severity([$original])
 
-Returns true if this tag is experimental, false otherwise.
-
-=cut
-
-sub experimental {
-    my ($self) = @_;
-    return ($self->{experimental} and $self->{experimental} eq 'yes');
-}
-
-=item severity([$real])
-
-Returns the severity of the tag; if $real is a truth value
-the real (original) severity is returned, otherwise the
-effective severity is returned.
-
-See set_severity()
+Returns the severity of the tag; if $original is a truth value
+the original severity is returned, otherwise the effective
+severity is returned.
 
 =cut
 
 sub severity {
-    my ($self, $real) = @_;
-    return $self->{'effective-severity'} unless $real;
-    return $self->{severity};
-}
+    my ($self, $original) = @_;
 
-=item set_severity($severity)
+    return $self->original_severity
+      if $original;
 
-Modifies the effective severity of the tag.
-
-=cut
-
-sub set_severity{
-    my ($self, $sev) = @_;
-    croak "Unknown severity $sev" unless exists $CODES{$sev};
-    $self->{'effective-severity'} = $sev;
-    return;
-}
-
-=item script()
-
-Returns the check script corresponding to this tag.
-
-=cut
-
-sub script {
-    my ($self) = @_;
-    return $self->{script};
+    return $self->effective_severity;
 }
 
 =item sources()
@@ -390,105 +426,17 @@ more-specific section or chapter.
 
 sub sources {
     my ($self) = @_;
-    return unless $self->{ref};
-    my @refs = split(',', $self->{ref});
-    @refs = map { s/^([\w-]+)\s.*/$1/; s/\(\S+\)$//; $_ } @refs;
-    return @refs;
+
+    my @references = split(/,/, $self->references);
+
+    # get the first word
+    s/^([\w-]+)\s.*/$1/ for @references;
+
+    # remove anything in parentheses at the end
+    s/\(\S+\)$// for @references;
+
+    return @references;
 }
-
-=item tag()
-
-Returns the tag name.
-
-=cut
-
-sub tag {
-    my ($self) = @_;
-    return $self->{tag};
-}
-
-=item aliases()
-
-Returns old tag names, if any.
-
-=cut
-
-sub aliases {
-    my ($self) = @_;
-    return split(SPACE, $self->{'renamed-from'} // EMPTY);
-}
-
-=back
-
-=head1 DIAGNOSTICS
-
-The following exceptions may be thrown:
-
-=over 4
-
-=item no tag specified
-
-The Lintian::Tag::Info::new constructor was called without passing a tag
-as an argument.
-
-=item unknown output format %s
-
-An unknown output format was passed as the FORMAT argument of
-description().  FORMAT must be either C<text> or C<html>.
-
-=back
-
-The following fatal internal errors may be reported:
-
-=over 4
-
-=item can't open %s: %s
-
-The specified file, which should be part of the standard Lintian data
-files, could not be opened.  The file may be missing or have the wrong
-permissions.
-
-=item missing Check-Script field in %s
-
-The specified check description file has no Check-Script field in its
-header section.  This probably indicates the file doesn't exist or has
-some significant formatting error.
-
-=item missing Tag field in %s
-
-The specified check description file has a tag section that has no Tag
-field.
-
-=back
-
-=head1 FILES
-
-=over 4
-
-=item LINTIAN_ROOT/checks/*.desc
-
-The tag description files, from which tag metadata is read.  All files
-matching this shell glob expression will be read looking for tag data.
-
-=item LINTIAN_ROOT/data/output/manual-references
-
-Information about manual references.  Each non-comment, non-empty line of
-this file contains four fields separated by C<::>.  The first field is the
-name of the manual, the second field is the section or empty for data
-about the whole manual, the third field is the title, and the fourth field
-is the URL.  The URL is optional.
-
-=back
-
-=head1 ENVIRONMENT
-
-=over 4
-
-=item LINTIAN_ROOT
-
-This variable specifies Lintian's root directory.  It defaults to
-F</usr/share/lintian> if not set.  The B<lintian> program normally takes
-care of setting it.
 
 =back
 

@@ -182,7 +182,7 @@ sub always {
                 $cur_file);
         } elsif ($cur_file =~ m/\.la$/ and not length $cur_file->link) {
             local $_;
-            my $fd = $cur_file->open;
+            open(my $fd, '<', $cur_file->unpacked_path);
             while(<$fd>) {
                 next
                   unless (m/^(libdir)='(.+?)'$/)
@@ -395,7 +395,7 @@ sub always {
             }
         } elsif ($shlibsf->is_open_ok) {
             my (%shlibs_control_used, @shlibs_depends);
-            my $fd = $shlibsf->open;
+            open(my $fd, '<', $shlibsf->unpacked_path);
             while (<$fd>) {
                 chop;
                 next if m/^\s*$/ or /^#/;
@@ -491,7 +491,7 @@ sub always {
         my $warned = 0;
         my $symbol_count = 0;
 
-        my $fd = $symbolsf->open;
+        open(my $fd, '<', $symbolsf->unpacked_path);
         while (<$fd>) {
             chomp;
             next if m/^\s*$/ or /^#/;
@@ -672,7 +672,7 @@ sub always {
     # 6th step: check pre- and post- control files
     if (my $preinst = $processable->control->resolve_path('preinst')) {
         if ($preinst->is_open_ok) {
-            if ($preinst->file_contents =~ m/^[^\#]*\bldconfig\b/m) {
+            if ($preinst->slurp =~ m/^[^\#]*\bldconfig\b/m) {
                 $self->tag(
                     'maintscript-calls-ldconfig', 'preinst'
                       # Assume it is needed if glibc does it
@@ -685,7 +685,7 @@ sub always {
     if (my $postinst = $processable->control->resolve_path('postinst')) {
         if ($postinst->is_open_ok) {
             # Decide if we call ldconfig
-            if ($postinst->file_contents =~ m/^[^\#]*\bldconfig\b/m) {
+            if ($postinst->slurp =~ m/^[^\#]*\bldconfig\b/m) {
                 if ($type eq 'udeb') {
                     $self->tag('udeb-postinst-must-not-call-ldconfig');
                 } else {
@@ -701,7 +701,7 @@ sub always {
     if (my $triggers = $processable->control->resolve_path('triggers')) {
         if ($triggers->is_open_ok) {
             # Determine if the package had an ldconfig trigger
-            my $fd = $triggers->open;
+            open(my $fd, '<', $triggers->unpacked_path);
             while (my $line = <$fd>) {
                 strip($line);
                 $line =~ tr/ \t/ /s;
@@ -732,7 +732,7 @@ sub always {
 
     if (my $prerm = $processable->control->resolve_path('prerm')) {
         if ($prerm->is_open_ok) {
-            if ($prerm->file_contents =~ m/^[^\#]*\bldconfig\b/m) {
+            if ($prerm->slurp =~ m/^[^\#]*\bldconfig\b/m) {
                 $self->tag(
                     'maintscript-calls-ldconfig', 'prerm'
                       # Assume it is needed if glibc does it
@@ -743,7 +743,7 @@ sub always {
 
     if (my $postrm = $processable->control->resolve_path('postrm')) {
         if ($postrm->is_open_ok) {
-            my $contents = $postrm->file_contents;
+            my $contents = $postrm->slurp;
 
             # Decide if we call ldconfig
             if ($contents =~ m/^[^\#]*\bldconfig\b/m) {
@@ -753,24 +753,6 @@ sub always {
                 ) if $processable->source ne 'glibc';
             }
         }
-    }
-
-    foreach my $file ($processable->installed->sorted_list) {
-        next unless $file =~ m,^usr/(lib(/[^/]+)?|share)/pkgconfig/[^/]+\.pc$,;
-        next unless $file->is_open_ok;
-        my $fd = $file->open;
-        while (<$fd>) {
-            next unless m,^Libs:,;
-            while (/[:\s]-l(\S+)/g) {
-                $self->tag('pkg-config-references-unknown-shared-library',
-                    $file, "-l$1", "(line $.)")
-                  unless $1 =~ m/\$\{.+\}/
-                  or exists($SHARED_LIB_PRESENT{$1})
-                  or exists($STATIC_LIB_PRESENT{$1})
-                  or $UNKNOWN_SHARED_LIBRARY_EXCEPTIONS->known($1);
-            }
-        }
-        close($fd);
     }
 
     return;

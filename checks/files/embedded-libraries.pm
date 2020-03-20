@@ -126,7 +126,7 @@ sub files {
 
                     if(defined $reinside) {
                         my $foundre = 0;
-                        my $fd = $file->open(':raw');
+                        open(my $fd, '<:raw', $file->unpacked_path);
                         my $sfd = Lintian::SlidingWindow->new($fd);
 
                       READWINDOW:
@@ -153,7 +153,7 @@ sub files {
     if (    $file->name =~ m,/feedparser\.py$,
         and $self->processable->source ne 'feedparser'){
 
-        my $fd = $file->open;
+        open(my $fd, '<', $file->unpacked_path);
         while (<$fd>) {
 
             if (m,Universal feed parser,) {

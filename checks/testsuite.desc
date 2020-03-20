@@ -1,6 +1,2 @@
 Check-Script: testsuite
-Author: Nicolas Boulenguez <nicolas@debian.org>
 Type: source
-Needs-Info: unpacked
-Info: This script checks the Testsuite field in package dsc files,
- and debian/tests/control if any.

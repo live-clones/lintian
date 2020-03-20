@@ -23,8 +23,6 @@ package Lintian::debian::rules::dh_sequencer;
 use strict;
 use warnings;
 
-use Path::Tiny;
-
 use Moo;
 use namespace::clean;
 
@@ -36,18 +34,11 @@ sub source {
     my $processable = $self->processable;
     my $group = $self->group;
 
-    my $debian_dir = $processable->patched->resolve_path('debian');
-    return
-      unless $debian_dir;
-
-    my $rules = $debian_dir->child('rules');
+    my $rules = $processable->patched->resolve_path('debian/rules');
     return
       unless $rules;
 
-    return
-      unless $rules->is_open_ok;
-
-    my $contents = path($rules->fs_path)->slurp;
+    my $contents = $rules->slurp;
 
     my $plain = qr/\$\@/;
     my $curly = qr/\$\{\@\}/;

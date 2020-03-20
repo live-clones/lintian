@@ -23,7 +23,7 @@ use autodie;
 
 use Path::Tiny;
 
-use Lintian::File::Index;
+use Lintian::Index::Control;
 
 use Moo::Role;
 use namespace::clean;
@@ -55,21 +55,7 @@ has control => (
     is => 'rw',
     lazy => 1,
     default => sub {
-        my ($self) = @_;
-
-        my $control = Lintian::File::Index->new;
-
-        # control files are not installed relative to the system root
-        # disallow absolute paths and symbolic links
-
-        my $basedir = path($self->groupdir)->child('control')->stringify;
-        $control->basedir($basedir);
-
-        my $dbpath
-          = path($self->groupdir)->child('control-index.db')->stringify;
-        $control->load($dbpath);
-
-        return $control;
+        return Lintian::Index::Control->new;
     });
 
 =item control_index (FILE)
@@ -142,8 +128,7 @@ Lintian.
 
 =head1 SEE ALSO
 
-lintian(1), L<Lintian::Collect>, L<Lintian::Collect::Binary>,
-L<Lintian::Collect::Source>
+lintian(1)
 
 =cut
 

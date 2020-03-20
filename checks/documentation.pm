@@ -25,6 +25,8 @@ use strict;
 use warnings;
 use autodie;
 
+use Lintian::Util qw(open_gz);
+
 use Moo;
 use namespace::clean;
 
@@ -110,7 +112,7 @@ sub files {
 
                 next
                   if $file->basename =~ m{^README}xi
-                  and $file->file_contents =~ m{this directory}xi;
+                  and $file->slurp =~ m{this directory}xi;
 
                 $self->tag(
                     'package-contains-documentation-outside-usr-share-doc',
@@ -133,7 +135,8 @@ sub files {
         if (    $file->is_file
             and $file->name !~ m,^usr/share/doc/(?:[^/]+/)?examples/,
             and ($file->operm & 0111)) {
-            if ($self->processable->is_script($file->name)) {
+
+            if ($file->is_script) {
                 $self->tag('script-in-usr-share-doc', $file->name);
             } else {
                 $self->tag('executable-in-usr-share-doc', $file->name,
@@ -162,7 +165,7 @@ sub files {
             and $file->is_regular_file
             and $file->size <= 276
             and $file->file_info =~ m/gzip compressed/) {
-            my $fd = $file->open_gz;
+            my $fd = open_gz($file->unpacked_path);
             my $f = <$fd>;
             close($fd);
             unless (defined $f and length $f) {

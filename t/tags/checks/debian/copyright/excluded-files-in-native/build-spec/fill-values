@@ -1,0 +1,4 @@
+Skeleton: upload-native
+Testname: excluded-files-in-native
+Description: Field Excluded-Files is present in native package.
+Version: 1.7+ds

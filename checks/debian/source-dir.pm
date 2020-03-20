@@ -51,7 +51,7 @@ sub source {
     $format_file = $dsrc->child('format') if $dsrc;
 
     if ($format_file and $format_file->is_open_ok) {
-        my $fd = $format_file->open;
+        open(my $fd, '<', $format_file->unpacked_path);
         $format = <$fd>;
         chomp $format;
         close($fd);
@@ -82,7 +82,7 @@ sub source {
     $git_pfile = $dsrc->child('git-patches');
 
     if ($git_pfile and $git_pfile->is_open_ok and $git_pfile->size != 0) {
-        my $git_patches_fd = $git_pfile->open;
+        open(my $git_patches_fd, '<', $git_pfile->unpacked_path);
         if (any { !/^\s*+#|^\s*+$/o} <$git_patches_fd>) {
             my $dpseries
               = $processable->patched->resolve_path('debian/patches/series');
@@ -91,7 +91,7 @@ sub source {
             if (not $dpseries or not $dpseries->is_open_ok) {
                 $self->tag('git-patches-not-exported');
             } else {
-                my $series_fd = $dpseries->open;
+                open(my $series_fd, '<', $dpseries->unpacked_path);
                 my $comment_line = <$series_fd>;
                 my $count = grep { !/^\s*+\#|^\s*+$/o } <$series_fd>;
                 $self->tag('git-patches-not-exported')
@@ -113,7 +113,7 @@ sub source {
 
     my $options = $processable->patched->resolve_path('debian/source/options');
     if ($options and $options->is_open_ok) {
-        my $fd = $options->open;
+        open(my $fd, '<', $options->unpacked_path);
         while (<$fd>) {
             $self->tag('debian-source-options-has-custom-compression-settings',
                 $1, "(line $.)")

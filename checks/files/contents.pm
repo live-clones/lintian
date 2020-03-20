@@ -101,33 +101,25 @@ sub files {
 
     my %checks = $self->get_checks_for_file($file);
 
-    if (%checks) {
+    foreach my $tag (sort keys %checks) {
+        my $regex = $checks{$tag};
 
-        my $stringsfd = $self->processable->strings($file);
-        my $strings = do { local $/; <$stringsfd> };
-        close($stringsfd)
-          or warn "Error closing strings fd: $!";
+        # prefer strings(1) output (eg. for ELF) if we have it
+        if (length $file->strings) {
+            $self->tag($tag, $file->name)
+              if $file->strings =~ m,^\Q$regex\E,m;
 
-        foreach my $tag (sort keys %checks) {
-            my $regex = $checks{$tag};
+        } else {
+            open(my $fd, '<:raw', $file->unpacked_path);
+            my $sfd = Lintian::SlidingWindow->new($fd);
+            while (my $block = $sfd->readwindow) {
+                next
+                  unless $block =~ $regex;
 
-            # prefer strings(1) output (eg. for ELF) if we have it
-            if ($strings) {
-                $self->tag($tag, $file->name)
-                  if $strings =~ m,^\Q$regex\E,m;
-
-            } else {
-                my $fd = $file->open(':raw');
-                my $sfd = Lintian::SlidingWindow->new($fd);
-                while (my $block = $sfd->readwindow) {
-                    next
-                      unless $block =~ $regex;
-
-                    $self->tag($tag, $file->name);
-                    last;
-                }
-                close($fd);
+                $self->tag($tag, $file->name);
+                last;
             }
+            close($fd);
         }
     }
 
@@ -138,13 +130,13 @@ sub always {
     my ($self) = @_;
 
     # get maintainer scripts
-    my @names = keys %{$self->processable->control_scripts};
-    my @scripts=map { $self->processable->control->resolve_path($_) } @names;
+    my @control
+      = grep { $_->is_control } $self->processable->control->sorted_list;
 
-    for my $file (@scripts) {
+    for my $file (@control) {
 
         next
-          unless $file && $file->is_open_ok;
+          unless $file->is_open_ok;
 
         # why is lintian exempt from this check?
         next
@@ -155,7 +147,7 @@ sub always {
         return
           unless %checks;
 
-        my $fd = $file->open;
+        open(my $fd, '<', $file->unpacked_path);
         while (<$fd>) {
             for my $tag (keys %checks) {
                 $self->tag($tag, $file->name, "(line $.)")

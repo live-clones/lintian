@@ -1,5 +1,2 @@
 Check-Script: systemd
-Author: Michael Stapelberg <stapelberg@debian.org>
 Type: binary
-Info: Checks various systemd policy things
-Needs-Info: scripts, unpacked, file-info, bin-pkg-control

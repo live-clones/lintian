@@ -78,15 +78,14 @@ use Lintian::Data;
 use Lintian::Deb822Parser qw(read_dpkg_control);
 use Lintian::Profile;
 use Lintian::Tag::Info;
-use Lintian::Tags;
 use Lintian::Util qw(is_string_utf8_encoded);
 
 # We want data files loaded early to avoid problems with missing data
 # files ending up in releases (like in 2.5.17 and 2.5.18).
 $Lintian::Data::LAZY_LOAD = 0;
 
-my %severities = map { $_ => 1 } @Lintian::Tags::SEVERITIES;
-my %certainties = map { $_ => 1 } @Lintian::Tags::CERTAINTIES;
+my %severities = map { $_ => 1 } @Lintian::Tag::Info::SEVERITIES;
+my %certainties = map { $_ => 1 } @Lintian::Tag::Info::CERTAINTIES;
 my %check_types = map { $_ => 1 } qw(binary changes source udeb);
 my %known_html_tags = map { $_ => 1 } qw(a em i tt);
 
@@ -122,15 +121,6 @@ OPTS may contain the following key/value pairs:
 
 =over 4
 
-=item coll-dir
-
-Path to the collection directory (defaults to:
-/usr/share/lintian/collection).  This is mostly useful for testing
-Lintian itself.
-
-If set to C<undef>, the test of Needs-Info containing only existing
-collections will be skipped.
-
 =item filter
 
 If defined, it is a filter function that examines $_ (or its first
@@ -162,7 +152,6 @@ sub test_check_desc {
 
     if (ref $_[0] eq 'HASH') {
         $opts = shift;
-        $colldir = $opts->{'coll-dir'}//'' if exists $opts->{'coll-dir'};
         $find_opt->{'filter'} = $opts->{'filter'} if exists $opts->{'filter'};
     }
     $opts //= {};
@@ -211,34 +200,6 @@ sub test_check_desc {
             );
         }
 
-        if ($needs and $colldir ne '') {
-            my @bad;
-            # new lines are not allowed, map them to "\\n" for readability.
-            $needs =~ s/\n/\\n/go;
-            foreach my $need (split m/\s*+,\s*+/o, $needs) {
-                push @bad, $need unless -f "$colldir/$need.desc";
-            }
-            $builder->is_eq(join(', ', @bad),
-                '', "$cname has unknown collections in Needs-Info");
-        } else {
-            $builder->ok(1, "$content_type has a valid Needs-Info (empty)")
-              if $colldir ne '';
-            $builder->skip(
-                'Needs-Info test checks skipped due to empty coll-dir')
-              if $needs ne '';
-        }
-        if (my $d = $header->{'info'}) {
-            my $mistakes = 0;
-            my $handler = sub {
-                my ($incorrect, $correct) = @_;
-                $builder->diag("Spelling ($cname): $incorrect => $correct");
-                $mistakes++;
-            };
-            check_spelling($d, $handler);
-            $builder->is_eq($mistakes, 0,"$cname Info has no spelling errors");
-        } else {
-            $builder->ok(0, "$cname has an Info field");
-        }
         foreach my $tpara (@tagpara) {
             my $tag = $tpara->{'tag'}//'';
             my $severity = $tpara->{'severity'}//'';
@@ -356,15 +317,17 @@ sub test_load_profiles {
 
     $opt{'wanted'} = sub {
         my $profname = $File::Find::name;
-        my ($err, $prof);
 
-        return unless $profname =~ s/\.profile$//o;
+        return
+          unless $profname =~ s/\.profile$//o;
         $profname =~ s,^$sre,,;
 
-        eval {$prof = Lintian::Profile->new($profname, \@inc);};
-        $err = $@;
+        my $profile = Lintian::Profile->new;
 
-        $builder->ok($prof, "$profname is loadable.")
+        eval {$profile->load($profname, \@inc);};
+        my $err = $@;
+
+        $builder->ok($profile, "$profname is loadable.")
           or $builder->diag("Load error: $err\n");
     };
 
@@ -442,8 +405,10 @@ sub test_load_checks {
     load_profile_for_test();
 
     foreach my $checkname (@checknames) {
-        my $cs;
-        eval {$cs = Lintian::CheckScript->new($dir, $checkname);};
+        my $cs = Lintian::CheckScript->new;
+        $cs->basedir($dir);
+        $cs->name($checkname);
+        eval {$cs->load;};
         if (my $err = $@) {
             $err =~ s/ at .*? line \d+\s*\n//;
             $builder->ok(0, "Cannot parse ${checkname}.desc");
@@ -453,7 +418,7 @@ sub test_load_checks {
         }
         my $cname = $cs->name;
         my $ppkg = $cname;
-        my $path = $cs->script_path;
+        my $path = $cs->path;
         my $err;
         my $rs_ref = 'MISSING';
 
@@ -544,9 +509,7 @@ Consider the following example:
  $tagname = 'my-other-tag' if $condition;
 
 In this example, this test would conclude that 'my-tag' and
-'my-other-tag' are both implemented.  Which is good when $tagname is
-eventually passed to L<tag|Lintian::Tags/tag>, and a false-negative
-otherwise.
+'my-other-tag' are both implemented.
 
 Comment lines are I<not> ignored, so comments can be used as an
 alternative to the exclude-pattern (above).
@@ -583,8 +546,11 @@ sub test_tags_implemented {
     }
 
     foreach my $checkname (@checknames) {
-        my ($cs, @tags, $codestr, @missing);
-        eval {$cs = Lintian::CheckScript->new($dir, $checkname);};
+        my (@tags, $codestr, @missing);
+        my $cs = Lintian::CheckScript->new;
+        $cs->basedir($dir);
+        $cs->name($checkname);
+        eval {$cs->load;};
         if (my $err = $@) {
             $err =~ s/ at .*? line \d+\s*\n//;
             $builder->ok(0, "Cannot parse ${checkname}.desc");
@@ -592,7 +558,7 @@ sub test_tags_implemented {
             next;
         }
         my $cname = $cs->name;
-        my $check = $cs->script_path;
+        my $check = $cs->path;
 
         @tags = $cs->tags unless defined $pattern;
         @tags = grep { !m/$pattern/ } $cs->tags
@@ -658,7 +624,9 @@ sub load_profile_for_test {
     push(@inc, $location)
       unless @inc;
 
-    $PROFILE = Lintian::Profile->new($profname, \@inc);
+    $PROFILE = Lintian::Profile->new;
+    $PROFILE->load($profname, \@inc);
+
     Lintian::Data->set_vendor($PROFILE);
     $ENV{'LINTIAN_HELPER_DIRS'} = join(':', map { "$_/helpers" } @inc);
     $ENV{'LINTIAN_INCLUDE_DIRS'} = join(':', @inc);

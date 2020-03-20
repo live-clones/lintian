@@ -89,7 +89,7 @@ sub source {
             if (defined($package_xml) && $package_xml->is_regular_file) {
                 # Wild guess package type as in
                 # PEAR_PackageFile_v2::getPackageType()
-                my $package_xml_fd = $package_xml->open;
+                open(my $package_xml_fd, '<', $package_xml->unpacked_path);
                 while (<$package_xml_fd>) {
                     if (
                         m{\A \s* <
@@ -148,7 +148,7 @@ sub source {
             my $has_addon_phppear = 0;
             my $has_addon_phpcomposer= 0;
             my $has_addon_php = 0;
-            my $rules_fd = $rules->open;
+            open(my $rules_fd, '<', $rules->unpacked_path);
             while (<$rules_fd>) {
                 while (s,\\$,, and defined(my $cont = <$rules_fd>)) {
                     $_ .= $cont;

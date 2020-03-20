@@ -1,0 +1,14 @@
+#!/usr/bin/make -f
+
+pkg := $(shell dh_listpackages)
+tmp := $(CURDIR)/debian/$(pkg)
+
+%:
+	dh $@
+
+override_dh_installdocs:
+	dh_installdocs
+	echo "Hello world :)" > $(tmp)/usr/share/doc/$(pkg)/changelog.gz
+
+override_dh_strip_nondeterminism:
+	# Skip, it messes with our test

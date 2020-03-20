@@ -45,17 +45,16 @@ sub files {
     return
       unless $file->size;
 
-    my $md5 = $self->processable->md5sums->{$file};
+    my $calculated = $file->md5sum;
     return
-      unless defined $md5;
+      unless defined $calculated;
 
     return
-      unless $file =~ m{\A usr/share/doc/}xsmo;
+      unless $file->name =~ m{\A usr/share/doc/}xsm;
 
-    $self->md5map->{$md5} = []
-      unless defined $self->md5map->{$md5};
+    $self->md5map->{$calculated} //= [];
 
-    push(@{$self->md5map->{$md5}}, $file);
+    push(@{$self->md5map->{$calculated}}, $file);
 
     return;
 }

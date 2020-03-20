@@ -1,7 +1,2 @@
 Check-Script: files/usr-merge
-Author: Christian Schwarz <schwarz@debian.org>
-Abbrev: fil
 Type: binary, udeb
-Needs-Info: unpacked, objdump-info, scripts, file-info, bin-pkg-control, strings
-Info: This script checks if a binary package conforms to policy
- WRT to files and directories.

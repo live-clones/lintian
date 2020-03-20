@@ -66,7 +66,7 @@ sub conffiles {
     return
       unless $cf && $cf->is_file && $cf->is_open_ok;
 
-    my $fd = $cf->open;
+    open(my $fd, '<', $cf->unpacked_path);
     while (my $absolute = <$fd>) {
 
         chomp $absolute;
@@ -135,8 +135,7 @@ Lintian.
 
 =head1 SEE ALSO
 
-lintian(1), L<Lintian::Collect>, L<Lintian::Collect::Binary>,
-L<Lintian::Collect::Source>
+lintian(1)
 
 =cut
 

@@ -24,7 +24,8 @@ use strict;
 use warnings;
 use autodie;
 
-use Lintian::Data;
+use Path::Tiny;
+
 use Lintian::Util qw(lstrip rstrip);
 
 use Moo;
@@ -35,25 +36,21 @@ with 'Lintian::Check';
 sub binary {
     my ($self) = @_;
 
-    my %scripts_found;
+    my @homevarrun;
 
     # get maintainer scripts
-    my %scripts = %{$self->processable->control_scripts};
+    my @control
+      = grep { $_->is_control } $self->processable->control->sorted_list;
 
-    for my $name (keys %scripts) {
-
-        my $file = $self->processable->control->resolve_path($name);
-
-        next
-          unless $file;
+    for my $file (@control) {
 
         next
           unless $file->is_open_ok;
 
-        my $fd = $file->open;
+        my @lines = path($file->unpacked_path)->lines;
         my $continuation = undef;
 
-        while (<$fd>) {
+        for (@lines) {
             chomp;
 
             # merge lines ending with '\'
@@ -74,18 +71,17 @@ sub binary {
               if /^\s*$/;
 
             # skip comments
-            next if /^[#\n]/;
+            next
+              if /^[#\n]/;
 
-            if (m/adduser .*--home +\/var\/run/) {
-                $scripts_found{$file} = 1;
+            if (/adduser .*--home +\/var\/run/) {
+                push(@homevarrun, $file);
                 next;
             }
         }
-
-        close($fd);
     }
 
-    $self->tag('adduser-with-home-var-run', $_) for sort keys %scripts_found;
+    $self->tag('adduser-with-home-var-run', $_->name) for @homevarrun;
 
     return;
 }

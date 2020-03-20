@@ -1,5 +1,2 @@
 Check-Script: apache2
-Author: Arno Töll <debian@toell.net>
 Type: binary
-Info: Checks various build mistakes in Apache2 reverse dependencies
-Needs-Info: bin-pkg-control, scripts, unpacked
