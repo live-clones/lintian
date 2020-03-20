@@ -25,7 +25,6 @@ use warnings;
 
 use Carp qw(croak);
 use Cwd();
-use File::Temp qw(tempdir);
 use Time::HiRes qw(gettimeofday tv_interval);
 use Path::Tiny;
 use POSIX qw(:sys_wait_h);
@@ -75,13 +74,10 @@ has basedir => (
     is => 'rwp',
     default => sub {
 
-        my $relative = tempdir('temp-lintian-lab-XXXXXXXXXX', 'TMPDIR' => 1);
+        my $absolute
+          = Path::Tiny->tempdir(TEMPLATE => 'lintian-pool-XXXXXXXXXX');
 
-        my $absolute = Cwd::abs_path($relative);
-        croak "Could not resolve $relative: $!"
-          unless $absolute;
-
-        path("$absolute/pool")->mkpath({mode => 0777});
+        $absolute->mkpath({mode => 0777});
 
         return $absolute;
     });
