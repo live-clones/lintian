@@ -1,8 +1,22 @@
-lintian (2.57.0+git) UNRELEASED; urgency=medium
+lintian (2.58.0) unstable; urgency=medium
 
-  * WIP (generated upon release).
+  * Summary of tag changes:
+    + Added:
+      - executable-in-usr-lib
 
- -- Chris Lamb <lamby@debian.org>  Mon, 16 Mar 2020 23:50:31 +0000
+  [ Felix Lechner ]
+  * Fix interaction between two gzip timestamp tags.
+    (Closes: #954146)
+  * In terminal output, print overrides in a subdued color.
+    (Closes: #954224)
+  * Add tag and check for executables in /usr/lib, which violates the FHS.
+    (Closes: #954149)
+  * Use the "Severity" field in tags to determine their display prominence
+    directly. (Closes: #935706)
+  * Remove temporary directories for pools when they are no longer needed.
+    (Closes: #924449)
+
+ -- Chris Lamb <lamby@debian.org>  Fri, 20 Mar 2020 09:56:18 +0000
 
 lintian (2.57.0) unstable; urgency=medium
 
