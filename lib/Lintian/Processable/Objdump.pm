@@ -117,7 +117,7 @@ sub objdump_info {
             my ($header, $val) = split(m/\s++/, $data, 2);
             if ($header eq 'RPATH' or $header eq 'RUNPATH') {
                 # RPATH is like PATH
-                foreach my $rpathcomponent (split(m/:/,$val)) {
+                for my $rpathcomponent (split(/:/, $val // EMPTY)) {
                     $info{$header}{$rpathcomponent} = 1;
                 }
             } elsif ($header eq 'NEEDED' or $header eq 'SONAME') {
