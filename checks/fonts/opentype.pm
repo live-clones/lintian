@@ -50,11 +50,15 @@ sub files {
 
     my $font = Font::TTF::Font->open($file->unpacked_path);
     return
-      unless $font;
+      unless defined $font;
 
-    my $table = $font->{'OS/2'}->read;
+    my $os2 = $font->{'OS/2'};
     return
-      unless $table;
+      unless defined $os2;
+
+    my $table = $os2->read;
+    return
+      unless defined $table;
 
     my $fsType = $table->{fsType};
     if (defined $fsType) {
