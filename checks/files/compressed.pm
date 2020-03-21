@@ -87,7 +87,7 @@ sub files {
         my $bytes = $file->magic(8);
         my (undef, $gziptime) = unpack('VV', $bytes);
 
-        if ($gziptime != 0) {
+        if (defined $gziptime && $gziptime != 0) {
 
             # see https://bugs.debian.org/762105
             my $time_from_build = $gziptime - $self->changelog_timestamp;
