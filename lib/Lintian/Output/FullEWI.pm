@@ -45,7 +45,7 @@ package Lintian::Output::FullEWI;
 use strict;
 use warnings;
 
-use CGI qw(escapeHTML);
+use HTML::Entities;
 use Term::ANSIColor ();
 
 # for tty hyperlinks
@@ -175,8 +175,8 @@ sub print_tag {
           if $emitted_count >= $limit-1;
     }
     if ($self->_do_color && $self->color eq 'html') {
-        my $escaped = escapeHTML($tag_name);
-        $information = escapeHTML($information);
+        my $escaped = encode_entities($tag_name);
+        $information = encode_entities($information);
         $output .= qq(<span style="color: $tag_color">$escaped</span>);
 
     } else {
