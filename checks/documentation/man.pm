@@ -59,6 +59,10 @@ my @admin_locations= qw(sbin/ usr/sbin/);
 sub files {
     my ($self, $file) = @_;
 
+    # no man pages in udebs
+    return
+      if $self->type eq 'udeb';
+
     if ($file->name =~ m,^usr/share/man/\S+,) {
 
         $self->tag('manpage-in-udeb', $file->name)
@@ -315,6 +319,10 @@ sub files {
 
 sub breakdown {
     my ($self) = @_;
+
+    # no man pages in udebs
+    return
+      if $self->type eq 'udeb';
 
     my %local_user_executables;
     my %local_admin_executables;

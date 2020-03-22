@@ -274,7 +274,8 @@ sub source {
     return;
 }
 
-sub installable {
+# no copyright in udebs
+sub binary {
     my ($self) = @_;
 
     my $pkg = $self->package;
