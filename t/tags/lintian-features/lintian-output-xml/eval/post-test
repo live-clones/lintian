@@ -1,4 +1,2 @@
-# Under reproducible builds, we also get an architecture dependent
-# (buildinfo) file.  This causes the architecture field of the changes
-# file to change.  This little script fixes that.
-s/architecture="source all ([^"]*)"/architecture="source all"/
+s/<lintian-version>\S+<\/lintian-version>/<lintian-version>VERSION<\/lintian-version>/
+s/<run-start>\S+<\/run-start>/<run-start>TIMESTAMP<\/run-start>/
