@@ -1,8 +1,18 @@
-lintian (2.58.0+git) UNRELEASED; urgency=medium
+lintian (2.59.0) unstable; urgency=medium
 
-  * WIP (generated upon release).
+  [ Chris Lamb ]
+  * Remove some <!nocheck> annotations. Thnaks to gregoa for the patch.
+    (Closes: #954338)
 
- -- Chris Lamb <lamby@debian.org>  Fri, 20 Mar 2020 10:19:59 +0000
+  [ Felix Lechner ]
+  * Do not check the length of the Installed-Build-Depends field.
+    (Closes: #954341)
+  * Disable checks for man pages, copyright and changelog in udebs.
+    (Closes: #954428)
+  * Update an expected XML output and regular expression for a reproducible
+    build.
+
+ -- Chris Lamb <lamby@debian.org>  Sun, 22 Mar 2020 20:22:08 +0000
 
 lintian (2.58.0) unstable; urgency=medium
 
