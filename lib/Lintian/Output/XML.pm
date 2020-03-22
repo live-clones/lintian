@@ -74,14 +74,28 @@ my %type_priority = (
 );
 
 sub issue_tags {
-    my ($self, $pending, $processables) = @_;
+    my ($self, $groups) = @_;
 
-    return
-      unless $pending && $processables;
+    my @processables = map { $_->get_processables } @{$groups // []};
+
+    my @pending;
+    for my $processable (@processables) {
+
+        # get tags
+        my @tags = @{$processable->tags};
+
+        # associate tags with processable
+        $_->processable($processable) for @tags;
+
+        # remove circular references
+        $processable->tags([]);
+
+        push(@pending, @tags);
+    }
 
     my %taglist;
 
-    for my $tag (@{$pending}) {
+    for my $tag (@pending) {
         $taglist{$tag->processable} //= [];
         push(@{$taglist{$tag->processable}}, $tag);
     }
@@ -89,7 +103,7 @@ sub issue_tags {
     my @ordered = sort {
              $type_priority{$a->type} <=> $type_priority{$b->type}
           || $a->name cmp $b->name
-    } @{$processables};
+    } @processables;
 
     for my $processable (@ordered) {
 
@@ -105,7 +119,7 @@ sub issue_tags {
         my @sorted = sort {
             $code_priority{$a->info->code} <=> $code_priority{$b->info->code}
               || $a->name cmp $b->name
-              || $a->extra cmp $b->extra
+              || $a->hint cmp $b->hint
         } @{$taglist{$processable} // []};
 
         $self->print_tag($_) for @sorted;
@@ -124,7 +138,7 @@ sub print_tag {
     my ($self, $tag) = @_;
 
     my $tag_info = $tag->info;
-    my $information = $tag->extra;
+    my $information = $tag->hint;
     my $override = $tag->override;
 
     $self->issuedtags->{$tag_info->name}++;

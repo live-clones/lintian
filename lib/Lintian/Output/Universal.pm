@@ -61,21 +61,35 @@ is necessary to report in case no tags were found.
 =cut
 
 sub issue_tags {
-    my ($self, $pending, $processables) = @_;
+    my ($self, $groups) = @_;
 
-    return
-      unless $pending && $processables;
+    my @processables = map { $_->get_processables } @{$groups // []};
+
+    my @pending;
+    for my $processable (@processables) {
+
+        # get tags
+        my @tags = @{$processable->tags};
+
+        # associate tags with processable
+        $_->processable($processable) for @tags;
+
+        # remove circular references
+        $processable->tags([]);
+
+        push(@pending, @tags);
+    }
 
     my %taglist;
 
-    for my $tag (@{$pending}) {
+    for my $tag (@pending) {
         $taglist{$tag->processable} //= [];
         push(@{$taglist{$tag->processable}}, $tag);
     }
 
     my @lines;
 
-    for my $processable (@{$processables}) {
+    for my $processable (@processables) {
 
         my $object = 'package';
         $object = 'file'
@@ -94,7 +108,7 @@ sub issue_tags {
 
         for my $tag (@subset) {
 
-            my $details = $tag->extra;
+            my $details = $tag->hint;
 
             my $line
               = $processable->name

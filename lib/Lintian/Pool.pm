@@ -154,8 +154,7 @@ sub process{
     # do not remove lab if so selected
     $self->keep($opt->{'keep-lab'} // 0);
 
-    my @sorted = sort { $a->name cmp $b->name } values %{$self->groups};
-    foreach my $group (@sorted) {
+    for my $group (values %{$self->groups}) {
         my $success = 1;
 
         $OUTPUT->v_msg('Starting on group ' . $group->name);
@@ -220,6 +219,9 @@ sub process{
         }
         $OUTPUT->v_msg('Finished processing group ' . $group->name);
     }
+
+    # pass everything, in case some groups or processables have no tags
+    $OUTPUT->issue_tags([values %{$self->groups}]);
 
     if (    $action eq 'check'
         and not $opt->{'no-override'}
