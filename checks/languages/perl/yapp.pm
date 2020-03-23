@@ -40,6 +40,9 @@ sub source {
         next
           unless $file->name =~ /\.pm$/;
 
+        next
+          unless $file->is_open_ok;
+
         my $contents = $file->slurp;
 
         $self->tag('source-contains-prebuilt-yapp-parser', $file->name)
