@@ -1,0 +1,4 @@
+Skeleton: upload-non-native
+Testname: yaml-sequence
+Description: File is YAML sequence instead of mapping
+Extra-Build-Depends: libyaml-libyaml-perl (>= 0.69)
