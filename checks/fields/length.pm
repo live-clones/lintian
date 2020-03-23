@@ -37,7 +37,7 @@ use namespace::clean;
 with 'Lintian::Check';
 
 my @ALLOWED_FIELDS
-  = qw(build-ids description package-list installed-build-depends);
+  = qw(build-ids description package-list installed-build-depends checksums-sha256);
 
 sub always {
     my ($self) = @_;
