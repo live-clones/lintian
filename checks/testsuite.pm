@@ -255,7 +255,6 @@ sub check_test_file {
         }
         close($fd);
     }
-    # Test files are allowed not to be executable.
     return;
 }
 
