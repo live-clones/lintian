@@ -42,6 +42,9 @@ my @ALLOWED_FIELDS
 sub always {
     my ($self) = @_;
 
+    return
+      if any { $self->type eq $_ } ('changes', 'buildinfo');
+
     my $maximum = 5_000;
 
     # all fields
