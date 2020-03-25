@@ -1,6 +1,5 @@
 Tag: apache2-reverse-dependency-uses-obsolete-directory
-Severity: normal
-Certainty: certain
+Severity: warning
 Check: apache2
 Info: The package is installing a file into the obsolete
  <tt>/etc/apache2/conf.d/</tt> directory. This file is not read by the Apache2

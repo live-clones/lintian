@@ -1,6 +1,5 @@
 Tag: testsuite-autopkgtest-missing
-Severity: wishlist
-Certainty: certain
+Severity: info
 Check: testsuite
 Info: This package does not declare a test suite.
  .

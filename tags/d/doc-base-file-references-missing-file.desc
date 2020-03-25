@@ -1,6 +1,5 @@
 Tag: doc-base-file-references-missing-file
-Severity: important
-Certainty: certain
+Severity: error
 Check: menus
 Info: One of the files referenced in an Index or Files field in this
  doc-base control file does not exist in the package. The doc-base

@@ -1,5 +1,5 @@
 Tag: old-style-config-script-multiarch-path-arch-all
-Severity: serious
+Severity: error
 Certainty: possible
 Check: files/config-scripts
 Info: The following file is an old style config file,

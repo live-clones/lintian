@@ -1,6 +1,5 @@
 Tag: intra-source-package-circular-dependency
-Severity: normal
-Certainty: certain
+Severity: warning
 Check: group-checks
 Info: The listed packages from the same source circularly depend
  (or pre-depend) on each other. This makes it difficult for tools

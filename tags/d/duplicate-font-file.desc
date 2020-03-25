@@ -1,5 +1,5 @@
 Tag: duplicate-font-file
-Severity: normal
+Severity: warning
 Certainty: possible
 Check: fonts
 Info: This package appears to include a font file that is already provided

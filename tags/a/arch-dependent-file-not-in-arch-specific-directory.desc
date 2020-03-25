@@ -1,5 +1,5 @@
 Tag: arch-dependent-file-not-in-arch-specific-directory
-Severity: serious
+Severity: error
 Certainty: possible
 Check: binaries
 Ref: https://wiki.ubuntu.com/MultiarchSpec

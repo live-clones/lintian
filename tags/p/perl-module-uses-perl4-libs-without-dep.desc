@@ -1,5 +1,5 @@
 Tag: perl-module-uses-perl4-libs-without-dep
-Severity: normal
+Severity: warning
 Certainty: possible
 Check: languages/perl
 Info: This package includes perl modules using obsoleted perl 4-era

@@ -1,6 +1,5 @@
 Tag: doc-base-file-separator-extra-whitespace
-Severity: normal
-Certainty: certain
+Severity: warning
 Check: menus
 Info: Unnecessary spaces were found in the doc-base file sections'
  separator. The section separator is an empty line and should not contain

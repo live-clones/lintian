@@ -31,7 +31,7 @@ use List::MoreUtils qw(any none);
 use Text::ParseWords ();
 
 use Lintian::Spelling qw(check_spelling);
-use Lintian::Util qw(clean_env do_fork drain_pipe internal_error open_gz);
+use Lintian::Util qw(clean_env do_fork drain_pipe open_gz);
 
 use constant LINTIAN_COVERAGE => ($ENV{'LINTIAN_COVERAGE'}?1:0);
 use constant EMPTY => q{};
@@ -58,6 +58,10 @@ my @admin_locations= qw(sbin/ usr/sbin/);
 
 sub files {
     my ($self, $file) = @_;
+
+    # no man pages in udebs
+    return
+      if $self->type eq 'udeb';
 
     if ($file->name =~ m,^usr/share/man/\S+,) {
 
@@ -227,7 +231,7 @@ sub files {
                 clean_env;
                 open(STDERR, '>&', \*STDOUT);
                 exec('lexgrog', $unpacked_path)
-                  or internal_error("exec lexgrog failed: $!");
+                  or die "exec lexgrog failed: $!";
             }
             if (@{$self->running_lexgrog} > 2) {
                 $self->process_lexgrog_output($self->running_lexgrog);
@@ -265,7 +269,7 @@ sub files {
             $ENV{MANROFFSEQ} = '';
             $ENV{MANWIDTH} = 80;
             exec { $cmd[0] } @cmd
-              or internal_error("cannot run man -E UTF-8 -l: $!");
+              or die "cannot run man -E UTF-8 -l: $!";
         } else {
             # parent - close write end
             close $write;
@@ -315,6 +319,10 @@ sub files {
 
 sub breakdown {
     my ($self) = @_;
+
+    # no man pages in udebs
+    return
+      if $self->type eq 'udeb';
 
     my %local_user_executables;
     my %local_admin_executables;
@@ -405,9 +413,10 @@ sub breakdown {
         my $file = $local_admin_executables{$command};
         my @manpages = @{$related_manpages{$command} // []};
 
+        my @sections = grep { defined } map { $_->{section} } @manpages;
         $self->tag('command-in-sbin-has-manpage-in-incorrect-section', $file)
           if $file->is_regular_file
-          && any { $_->{section} == 1 } @manpages;
+          && any { $_ == 1 } @sections;
     }
 
     $self->tag('binary-without-english-manpage', $_)
@@ -452,7 +461,8 @@ sub process_lexgrog_output {
         eval {close($lexgrog_fd);};
         if (my $err = $@) {
             # Problem closing the pipe?
-            internal_error("close pipe: $err") if $err->errno;
+            die "close pipe: $err: $!"
+              if $err->errno;
             # No, then lexgrog returned with a non-zero exit code.
             $self->tag('manpage-has-bad-whatis-entry', $file);
         }

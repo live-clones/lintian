@@ -157,7 +157,7 @@ my %needs_tag_vals_hash = map { $_ => 1 } @needs_tag_vals;
 
 # -----------------------------------
 
-sub binary {
+sub installable {
     my ($self) = @_;
 
     my $pkg = $self->package;

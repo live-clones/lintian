@@ -1,5 +1,5 @@
 Tag: uses-implicit-await-trigger
-Severity: normal
+Severity: warning
 Certainty: possible
 Check: triggers
 Info: The listed trigger is present in the control file of the package.

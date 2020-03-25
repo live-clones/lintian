@@ -1,6 +1,5 @@
 Tag: bash-completion-with-hashbang
-Severity: minor
-Certainty: certain
+Severity: warning
 Check: scripts
 Info: This file starts with the #! sequence that marks interpreted scripts,
  but it is a bash completion script that is merely intended to be sourced.

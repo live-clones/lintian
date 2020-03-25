@@ -1,6 +1,5 @@
 Tag: file-directly-in-usr-share-doc
-Severity: serious
-Certainty: certain
+Severity: error
 Check: documentation
 Info: Documentation files have to be installed in
  <tt>/usr/share/doc/<i>pkg</i></tt>.

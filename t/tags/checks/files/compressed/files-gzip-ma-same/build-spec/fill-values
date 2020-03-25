@@ -1,4 +1,5 @@
-Skeleton: upload-native
 Testname: files-gzip-ma-same
+Skeleton: upload-native
 Package-Architecture: any
 Description: Test for issues handling gz in Multi-Arch same pkgs
+Date: Mon, 02 Mar 2020 17:44:19 +0000

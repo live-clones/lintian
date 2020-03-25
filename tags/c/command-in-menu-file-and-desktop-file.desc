@@ -1,5 +1,5 @@
 Tag: command-in-menu-file-and-desktop-file
-Severity: normal
+Severity: warning
 Certainty: possible
 Check: menu-format
 Info: The command is listed both in a menu file and a desktop file

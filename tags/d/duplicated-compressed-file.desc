@@ -1,5 +1,5 @@
 Tag: duplicated-compressed-file
-Severity: minor
+Severity: info
 Certainty: possible
 Check: files/compressed
 Info: The given, apparently compressed, file is shipped in the package

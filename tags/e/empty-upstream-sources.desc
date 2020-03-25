@@ -1,6 +1,5 @@
 Tag: empty-upstream-sources
-Severity: serious
-Certainty: certain
+Severity: error
 Check: origtar
 Info: The .orig.tar.gz file is empty.
 Ref: #471537

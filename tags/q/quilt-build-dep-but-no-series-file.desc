@@ -1,6 +1,5 @@
 Tag: quilt-build-dep-but-no-series-file
-Severity: normal
-Certainty: certain
+Severity: warning
 Check: patch-systems
 Info: Using quilt requires you to explicitly list all patches you want
  to apply in debian/patches/series. This package build-depends on quilt,

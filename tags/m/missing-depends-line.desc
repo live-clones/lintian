@@ -1,6 +1,5 @@
 Tag: missing-depends-line
-Severity: normal
-Certainty: certain
+Severity: warning
 Check: binaries
 Info: The package contains an ELF binary with dynamic dependencies,
  but does not have a Depends line in its control file. This usually

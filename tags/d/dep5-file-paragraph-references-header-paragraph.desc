@@ -1,5 +1,5 @@
 Tag: dep5-file-paragraph-references-header-paragraph
-Severity: normal
+Severity: warning
 Certainty: possible
 Check: debian/copyright
 Ref: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/

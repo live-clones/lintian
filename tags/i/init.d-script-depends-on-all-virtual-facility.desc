@@ -1,5 +1,5 @@
 Tag: init.d-script-depends-on-all-virtual-facility
-Severity: serious
+Severity: error
 Certainty: possible
 Check: init.d
 Info: The given init script declares a dependency on the virtual

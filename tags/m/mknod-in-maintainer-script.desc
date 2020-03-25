@@ -1,6 +1,5 @@
 Tag: mknod-in-maintainer-script
-Severity: serious
-Certainty: certain
+Severity: error
 Check: scripts
 Ref: policy 10.6
 Info: Maintainer scripts must not create device files directly. They

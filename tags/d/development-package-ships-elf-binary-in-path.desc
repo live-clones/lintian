@@ -1,5 +1,5 @@
 Tag: development-package-ships-elf-binary-in-path
-Severity: minor
+Severity: info
 Certainty: possible
 Check: binaries
 Experimental: yes

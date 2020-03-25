@@ -1,5 +1,5 @@
 Tag: rc-version-greater-than-expected-version
-Severity: normal
+Severity: warning
 Certainty: possible
 Check: debian/changelog
 Ref: policy 5.6.12

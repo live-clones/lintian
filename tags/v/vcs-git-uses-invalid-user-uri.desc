@@ -1,6 +1,5 @@
 Tag: vcs-git-uses-invalid-user-uri
-Severity: normal
-Certainty: certain
+Severity: warning
 Check: fields/vcs
 Info: The Vcs-Git field is pointing to a personal repository using
  a git://(git|anonscm).debian.org/~$LOGIN/$PRJ.git style URI. This is not

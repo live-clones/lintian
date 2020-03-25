@@ -1,6 +1,5 @@
 Tag: missing-systemd-service-for-init.d-script
-Severity: normal
-Certainty: certain
+Severity: warning
 Check: systemd
 Info: The specified init.d script has no equivalent systemd service.
  .

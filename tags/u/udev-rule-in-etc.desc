@@ -1,6 +1,5 @@
 Tag: udev-rule-in-etc
-Severity: important
-Certainty: certain
+Severity: error
 Check: udev
 Ref: #559208
 Info: This package ships a udev rule and installs it under

@@ -1,5 +1,5 @@
 Tag: package-section-games-but-has-usr-bin
-Severity: normal
+Severity: warning
 Certainty: possible
 Check: games
 Ref: policy 11.11

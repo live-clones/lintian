@@ -1,6 +1,5 @@
 Tag: image-file-in-usr-lib
 Severity: pedantic
-Certainty: certain
 Check: images
 Info: This package installs a pixmap or a bitmap within <tt>/usr/lib</tt>.
  According to the Filesystem Hierarchy Standard, architecture-independent

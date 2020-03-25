@@ -1,6 +1,5 @@
 Tag: doc-base-file-no-format
-Severity: important
-Certainty: certain
+Severity: error
 Check: menus
 Info: A format section of this doc-base control file didn't specify a
  format. Each section after the first must specify a format.

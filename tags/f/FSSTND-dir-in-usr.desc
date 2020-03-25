@@ -1,6 +1,5 @@
 Tag: FSSTND-dir-in-usr
-Severity: serious
-Certainty: certain
+Severity: error
 Check: files/hierarchy-standard
 Info: As of policy version 3.0.0.0, Debian no longer follows the FSSTND.
  .

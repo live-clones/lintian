@@ -1,6 +1,5 @@
 Tag: manpage-section-mismatch
-Severity: normal
-Certainty: certain
+Severity: warning
 Check: documentation/man
 Info: A man page usually should contain a <tt>.TH</tt> header, specifying the
  section. The section in this manpage doesn't match with the section in the

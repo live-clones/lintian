@@ -1,5 +1,5 @@
 Tag: maintainer-script-does-not-check-for-existence-of-installdocs
-Severity: important
+Severity: error
 Certainty: possible
 Check: menus
 Info: The maintainer script calls the <tt>install-docs</tt> command without

@@ -1,6 +1,5 @@
 Tag: package-contains-vcs-control-file
-Severity: normal
-Certainty: certain
+Severity: warning
 Check: files/vcs
 Info: The package contains a VCS control file such as .(cvs|git|hg)ignore.
  Files such as these are used by revision control systems to, for example,

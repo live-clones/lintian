@@ -1,6 +1,5 @@
 Tag: description-synopsis-starts-with-article
-Severity: minor
-Certainty: certain
+Severity: warning
 Check: fields/description
 Info: The first line of the "Description:" should omit any initial indefinite
  or definite article: "a", "an", or "the". A good heuristic is that it should

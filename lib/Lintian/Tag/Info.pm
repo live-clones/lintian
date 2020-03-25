@@ -37,10 +37,8 @@ use constant SPACE => q{ };
 use Moo;
 use namespace::clean;
 
-# Ordered lists of severities and certainties, used for display level parsing.
-our @SEVERITIES
-  = qw(classification pedantic wishlist minor normal important serious);
-our @CERTAINTIES = qw(wild-guess possible certain);
+# Ordered lists of severities, used for display level parsing.
+our @SEVERITIES= qw(classification pedantic info warning error);
 
 # The URL to a web man page service.  NAME is replaced by the man page
 # name and SECTION with the section to form a valid URL.  This is used
@@ -60,13 +58,7 @@ Lintian::Tag::Info - Lintian interface to tag metadata
 
 =head1 SYNOPSIS
 
-    my $cs = Lintian::CheckScript->new ("$ENV{'LINTIAN_ROOT'}/checks/",
-                                        'files');
-    my $tag_info = $cs->get_tag ('some-tag');
-    print "Tag info is:\n";
-    print $tag_info->description('text', '   ');
-    print "\nTag info in HTML is:\n";
-    print $tag_info->description('html', '   ');
+    my $taginfo = Lintian::Tag::Info->new;
 
 =head1 DESCRIPTION
 
@@ -80,15 +72,13 @@ metadata elements or to format the tag description.
 
 =item tag
 
-=item certainty
-
 =item original_severity
 
 =item effective_severity
 
-=item script
+=item check
 
-=item script_type
+=item check_type
 
 =item experimental
 
@@ -100,24 +90,9 @@ metadata elements or to format the tag description.
 
 =cut
 
-has tag => (
+has name => (
     is => 'rw',
     coerce => sub { my ($text) = @_; return ($text // EMPTY); },
-    default => EMPTY
-);
-
-has certainty => (
-    is => 'rw',
-    lazy => 1,
-    coerce => sub {
-        my ($text) = @_;
-
-        $text //= EMPTY;
-        croak "Unknown tag certainty $text"
-          if none { $text eq $_ } @CERTAINTIES;
-
-        return $text;
-    },
     default => EMPTY
 );
 
@@ -151,13 +126,13 @@ has effective_severity => (
     default => EMPTY
 );
 
-has script => (
+has check => (
     is => 'rw',
     coerce => sub { my ($text) = @_; return ($text // EMPTY); },
     default => EMPTY
 );
 
-has script_type => (
+has check_type => (
     is => 'rw',
     coerce => sub { my ($text) = @_; return ($text // EMPTY); },
     default => EMPTY
@@ -203,11 +178,10 @@ sub load {
       unless scalar @paragraphs == 1;
 
     my %fields = %{ $paragraphs[0] };
-    $self->tag($fields{tag});
-    $self->certainty($fields{certainty});
+    $self->name($fields{tag});
     $self->original_severity($fields{severity});
 
-    $self->script($fields{check});
+    $self->check($fields{check});
     $self->experimental(($fields{experimental} // EMPTY) eq 'yes');
 
     $self->info($fields{info});
@@ -216,7 +190,7 @@ sub load {
     $self->aliases(split(SPACE, $fields{'renamed-from'} // EMPTY));
 
     croak "No Tag field in $tagpath"
-      unless length $self->tag;
+      unless length $self->name;
 
     $self->effective_severity($self->original_severity);
 
@@ -226,28 +200,26 @@ sub load {
 =item code()
 
 Returns the one-letter code for the tag.  This will be a letter chosen
-from C<E>, C<W>, C<I>, or C<P>, based on the tag severity, certainty, and
+from C<E>, C<W>, C<I>, or C<P>, based on the tag severity, and
 other attributes (such as whether experimental is set).  This code will
 never be C<O> or C<X>; overrides and experimental tags are handled
 separately.
 
 =cut
 
-# Map severity/certainty levels to tag codes.
+# Map severity levels to tag codes.
 our %CODES = (
-    classification => { 'wild-guess' => 'C', possible => 'C', certain => 'C' },
-    pedantic  => { 'wild-guess' => 'P', possible => 'P', certain => 'P' },
-    wishlist  => { 'wild-guess' => 'I', possible => 'I', certain => 'I' },
-    minor     => { 'wild-guess' => 'I', possible => 'I', certain => 'W' },
-    normal    => { 'wild-guess' => 'I', possible => 'W', certain => 'W' },
-    important => { 'wild-guess' => 'W', possible => 'E', certain => 'E' },
-    serious   => { 'wild-guess' => 'E', possible => 'E', certain => 'E' },
+    'error' => 'E',
+    'warning' => 'W',
+    'info' => 'I',
+    'pedantic' => 'P',
+    'classification' => 'C',
 );
 
 sub code {
     my ($self) = @_;
 
-    return $CODES{$self->effective_severity}{$self->certainty};
+    return $CODES{$self->effective_severity};
 }
 
 =item description([FORMAT [, INDENT]])
@@ -370,16 +342,10 @@ sub description {
     push(@paragraphs, EMPTY, _format_reference($self->references))
       if length $self->references;
 
-    push(@paragraphs,
-        EMPTY,
-        'Severity: '
-          . $self->original_severity
-          . ', Certainty: '
-          . $self->certainty);
+    push(@paragraphs, EMPTY,'Severity: '. $self->original_severity);
 
-    push(@paragraphs,
-        EMPTY, 'Check: ' . $self->script . ', Type: ' . $self->script_type)
-      if length $self->script && length $self->script_type;
+    push(@paragraphs, EMPTY, 'Check: ' . $self->check)
+      if length $self->check;
 
     push(@paragraphs,
         EMPTY,
@@ -397,45 +363,6 @@ sub description {
       if $format eq 'html';
 
     return wrap_paragraphs($indent, dtml_to_text(@paragraphs));
-}
-
-=item severity([$original])
-
-Returns the severity of the tag; if $original is a truth value
-the original severity is returned, otherwise the effective
-severity is returned.
-
-=cut
-
-sub severity {
-    my ($self, $original) = @_;
-
-    return $self->original_severity
-      if $original;
-
-    return $self->effective_severity;
-}
-
-=item sources()
-
-Returns, as a list, the keywords for the sources of this tag from the
-references header.  This is only the top-level source, not any
-more-specific section or chapter.
-
-=cut
-
-sub sources {
-    my ($self) = @_;
-
-    my @references = split(/,/, $self->references);
-
-    # get the first word
-    s/^([\w-]+)\s.*/$1/ for @references;
-
-    # remove anything in parentheses at the end
-    s/\(\S+\)$// for @references;
-
-    return @references;
 }
 
 =back

@@ -1,6 +1,5 @@
 Tag: non-standard-dir-in-var
-Severity: important
-Certainty: certain
+Severity: error
 Check: files/hierarchy-standard
 Info: The FHS says "Applications should generally not add directories to
  the top level of <tt>/var</tt>. Such directories should only be added

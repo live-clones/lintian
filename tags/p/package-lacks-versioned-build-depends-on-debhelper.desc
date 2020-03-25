@@ -1,6 +1,5 @@
 Tag: package-lacks-versioned-build-depends-on-debhelper
 Severity: pedantic
-Certainty: certain
 Check: debhelper
 Info: The package either doesn't declare a versioned build dependency on
  debhelper or does not declare a versioned build dependency on a new

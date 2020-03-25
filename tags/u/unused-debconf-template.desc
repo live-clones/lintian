@@ -1,5 +1,5 @@
 Tag: unused-debconf-template
-Severity: minor
+Severity: info
 Certainty: possible
 Check: debian/debconf
 Info: Templates which are not used by the package should be removed from

@@ -1,6 +1,5 @@
 Tag: wrong-name-for-debian-changelog-file
-Severity: important
-Certainty: certain
+Severity: error
 Check: debian/changelog
 Info: The Debian changelog file should usually be installed as
  /usr/share/doc/<i>pkg</i>/changelog.Debian.gz

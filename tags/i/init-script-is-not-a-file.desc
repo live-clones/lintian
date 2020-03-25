@@ -1,6 +1,5 @@
 Tag: init-script-is-not-a-file
-Severity: serious
-Certainty: certain
+Severity: error
 Check: systemd
 Info: The package contains an init script that is not a regular file or
  resolvable symlink.

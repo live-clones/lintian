@@ -1,6 +1,5 @@
 Tag: file-size-mismatch-in-changes-file
-Severity: serious
-Certainty: certain
+Severity: error
 Check: changes-file
 Info: The actual file size does not match what's listed in the
  <tt>.changes</tt> file.

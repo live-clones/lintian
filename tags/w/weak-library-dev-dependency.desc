@@ -1,5 +1,5 @@
 Tag: weak-library-dev-dependency
-Severity: important
+Severity: error
 Certainty: possible
 Check: debian/control
 Ref: policy 8.5

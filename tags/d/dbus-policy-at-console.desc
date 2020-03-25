@@ -1,6 +1,5 @@
 Tag: dbus-policy-at-console
-Severity: normal
-Certainty: certain
+Severity: warning
 Check: desktop/dbus
 Info: The package contains D-Bus policy configuration that uses the
  deprecated <tt>at_console</tt> condition to impose a different policy

@@ -1,5 +1,5 @@
 Tag: no-debconf-config
-Severity: important
+Severity: error
 Certainty: possible
 Check: debian/debconf
 Info: The package contains a "templates" file in its control area but has no

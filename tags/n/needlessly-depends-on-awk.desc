@@ -1,6 +1,5 @@
 Tag: needlessly-depends-on-awk
-Severity: important
-Certainty: certain
+Severity: error
 Check: fields/package-relations
 Info: The package seems to declare a relation on awk. awk is a virtual
  package, but it is special since it's de facto essential. If you don't

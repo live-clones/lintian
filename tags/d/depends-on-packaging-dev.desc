@@ -1,6 +1,5 @@
 Tag: depends-on-packaging-dev
 Info: You depend/recommend/build-depend on packaging-dev, which is
  only a metapackage to install common packages needed for packaging.
-Severity: normal
-Certainty: certain
+Severity: warning
 Check: fields/package-relations

@@ -1,5 +1,5 @@
 Tag: missing-dependency-on-libc
-Severity: serious
+Severity: error
 Certainty: possible
 Check: binaries
 Ref: policy 8.6.1

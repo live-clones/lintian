@@ -1,5 +1,5 @@
 Tag: zero-byte-file-in-doc-directory
-Severity: normal
+Severity: warning
 Certainty: possible
 Check: documentation
 Info: The documentation directory for this package contains an empty

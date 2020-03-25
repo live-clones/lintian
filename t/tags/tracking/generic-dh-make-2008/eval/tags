@@ -40,6 +40,8 @@ generic-dh-make-2008 (source): debian-build-system debhelper
 generic-dh-make-2008 (source): debhelper-compat-level 7
 generic-dh-make-2008 (source): bad-homepage <insert the upstream URL, if relevant>
 generic-dh-make-2008 (source): ancient-standards-version 3.7.3 (released 2007-12-03) (current is CURRENT)
+generic-dh-make-2008 (changes): package-is-maintained-by-individual
+generic-dh-make-2008 (buildinfo): package-is-maintained-by-individual
 generic-dh-make-2008 (binary): wrong-bug-number-in-closes l3:#nnnn
 generic-dh-make-2008 (binary): superfluous-clutter-in-homepage <insert the upstream URL, if relevant>
 generic-dh-make-2008 (binary): section-is-dh_make-template

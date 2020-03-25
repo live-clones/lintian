@@ -1,6 +1,5 @@
 Tag: package-contains-multiple-dpi-fonts
-Severity: normal
-Certainty: certain
+Severity: warning
 Check: desktop/x11
 Ref: policy 11.8.5
 Info: This package contains both 100dpi and 75dpi bitmapped fonts. Both

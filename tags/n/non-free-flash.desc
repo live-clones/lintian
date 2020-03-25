@@ -1,5 +1,5 @@
 Tag: non-free-flash
-Severity: serious
+Severity: error
 Certainty: possible
 Check: files/non-free
 Info: The given Flash file has a filename which suggests that it may be

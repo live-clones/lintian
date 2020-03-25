@@ -1,6 +1,5 @@
 Tag: example-incorrect-path-for-interpreter
-Severity: wishlist
-Certainty: certain
+Severity: info
 Check: scripts
 Info: The interpreter used by this example script is installed at another
  location on Debian systems. Normally the path should be updated to match

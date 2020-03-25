@@ -32,7 +32,7 @@ with 'Lintian::Check';
 # Check /lib/udev/rules.d/, detect use of MODE="0666" and use of
 # GROUP="plugdev" without TAG+="uaccess".
 
-sub binary {
+sub installable {
     my ($self) = @_;
 
     my $pkg = $self->package;

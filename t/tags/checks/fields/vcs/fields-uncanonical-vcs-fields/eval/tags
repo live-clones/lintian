@@ -28,4 +28,6 @@ fields-uncanonical-vcs-fields (source): vcs git
 fields-uncanonical-vcs-fields (source): vcs cvs
 fields-uncanonical-vcs-fields (source): vcs bzr
 fields-uncanonical-vcs-fields (source): package-is-maintained-by-individual
+fields-uncanonical-vcs-fields (changes): package-is-maintained-by-individual
+fields-uncanonical-vcs-fields (buildinfo): package-is-maintained-by-individual
 fields-uncanonical-vcs-fields (binary): package-is-maintained-by-individual

@@ -1,5 +1,5 @@
 Tag: missing-license-text-in-dep5-copyright
-Severity: normal
+Severity: warning
 Certainty: possible
 Check: debian/copyright
 Ref: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/

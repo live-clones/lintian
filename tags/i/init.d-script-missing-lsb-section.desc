@@ -1,6 +1,5 @@
 Tag: init.d-script-missing-lsb-section
-Severity: normal
-Certainty: certain
+Severity: warning
 Check: init.d
 Ref: https://wiki.debian.org/LSBInitScripts
 Info: This <tt>/etc/init.d</tt> script does not have an LSB keyword

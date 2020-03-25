@@ -1,6 +1,5 @@
 Tag: older-source-format
-Severity: wishlist
-Certainty: certain
+Severity: info
 Check: debian/source-dir
 Info:
  This package uses an older source format. Please consider migrating

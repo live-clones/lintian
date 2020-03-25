@@ -1,6 +1,5 @@
 Tag: init.d-script-has-bad-lsb-line
-Severity: normal
-Certainty: certain
+Severity: warning
 Check: init.d
 Ref: https://wiki.debian.org/LSBInitScripts
 Info: This line in the LSB keyword section of an <tt>/etc/init.d</tt>

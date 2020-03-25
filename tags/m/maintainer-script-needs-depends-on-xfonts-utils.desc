@@ -1,6 +1,5 @@
 Tag: maintainer-script-needs-depends-on-xfonts-utils
-Severity: normal
-Certainty: certain
+Severity: warning
 Check: scripts
 Info: This script calls a utility provided by the xfonts-utils package
  but does not depend or pre-depend on this package.

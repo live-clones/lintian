@@ -1,6 +1,5 @@
 Tag: magic-arch-in-arch-list
-Severity: serious
-Certainty: certain
+Severity: error
 Check: fields/architecture
 Info: The special architecture value "any" only makes sense if it occurs
  alone or (in a *.dsc file) together with "all". The value "all" may

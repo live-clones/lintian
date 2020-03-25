@@ -1,6 +1,5 @@
 Tag: debian-watch-file-uses-deprecated-sf-redirector-method
-Severity: normal
-Certainty: certain
+Severity: warning
 Check: debian/watch
 Info: The watch file seems to be passing arguments to the redirector
  other than a path. Calling the SourceForge redirector with parameters like

@@ -1,5 +1,5 @@
 Tag: binaries-have-file-conflict
-Severity: normal
+Severity: warning
 Certainty: possible
 Check: group-checks
 Experimental: no

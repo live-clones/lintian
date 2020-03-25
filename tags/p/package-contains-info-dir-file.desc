@@ -1,6 +1,5 @@
 Tag: package-contains-info-dir-file
-Severity: serious
-Certainty: certain
+Severity: error
 Check: documentation
 Info: This package contains a file named <tt>dir</tt> or <tt>dir.old</tt>,
  possibly compressed, in <tt>/usr/share/info</tt>. This is the directory

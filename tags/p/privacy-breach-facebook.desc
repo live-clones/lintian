@@ -1,5 +1,5 @@
 Tag: privacy-breach-facebook
-Severity: serious
+Severity: error
 Certainty: possible
 Check: files/privacy-breach
 Info: This package creates a privacy breach by exchanging data with

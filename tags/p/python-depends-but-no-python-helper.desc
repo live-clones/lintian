@@ -1,5 +1,5 @@
 Tag: python-depends-but-no-python-helper
-Severity: serious
+Severity: error
 Certainty: possible
 Check: debhelper
 Info: The source package declares a dependency on ${python:Depends} in the

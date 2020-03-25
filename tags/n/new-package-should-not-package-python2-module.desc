@@ -1,6 +1,5 @@
 Tag: new-package-should-not-package-python2-module
-Severity: normal
-Certainty: certain
+Severity: warning
 Check: languages/python
 Info: This package appears to be the initial packaging of a new upstream
  software package (ie. it contains a single changelog entry). However, it

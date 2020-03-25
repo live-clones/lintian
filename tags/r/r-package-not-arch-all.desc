@@ -1,6 +1,5 @@
 Tag: r-package-not-arch-all
-Severity: normal
-Certainty: certain
+Severity: warning
 Check: fields/architecture
 Info: This package appears to be an "R" progamming language package
  and has a corresponding <tt>DESCRIPTION</tt> file which contains

@@ -1,6 +1,5 @@
 Tag: jar-contains-source
-Severity: normal
-Certainty: certain
+Severity: warning
 Check: languages/java
 Info: The package ships the specified Jar file containing a
  <tt>.java</tt> file alongside a corresponding <tt>.class</tt> file.

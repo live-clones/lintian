@@ -20,10 +20,6 @@ package Lintian::Output;
 
 use strict;
 use warnings;
-use v5.8.0; # for PerlIO
-
-use CGI qw(escapeHTML);
-use List::MoreUtils qw(uniq);
 
 use Moo::Role;
 use namespace::clean;

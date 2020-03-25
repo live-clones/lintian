@@ -1,6 +1,5 @@
 Tag: file-name-in-PATH-is-not-ASCII
-Severity: serious
-Certainty: certain
+Severity: error
 Check: files/names
 Ref: policy 10.10
 Info: The given file is in PATH but consists of non-ASCII characters.

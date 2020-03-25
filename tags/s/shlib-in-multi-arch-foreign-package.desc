@@ -1,6 +1,5 @@
 Tag: shlib-in-multi-arch-foreign-package
-Severity: serious
-Certainty: certain
+Severity: error
 Check: shared-libs
 Ref: https://wiki.ubuntu.com/MultiarchSpec
 Info: The package is marked as Multi-Arch: foreign, but it includes a shared

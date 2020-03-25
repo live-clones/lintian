@@ -1,6 +1,5 @@
 Tag: no-section-field-for-source
-Severity: normal
-Certainty: certain
+Severity: warning
 Check: debian/control
 Ref: policy 5.2
 Info: The package does not have a "Section:" field in the source package

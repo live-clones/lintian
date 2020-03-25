@@ -1,6 +1,5 @@
 Tag: manpage-is-dh_make-template
-Severity: important
-Certainty: certain
+Severity: error
 Check: documentation/man
 Info: This manual page appears to be an unmodified or insufficiently
  modified copy of the dh_make manual page template. It has a whatis entry

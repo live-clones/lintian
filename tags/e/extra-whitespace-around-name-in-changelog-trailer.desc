@@ -1,6 +1,5 @@
 Tag: extra-whitespace-around-name-in-changelog-trailer
-Severity: normal
-Certainty: certain
+Severity: warning
 Check: nmu
 Info: There is too much whitespace around the name in debian/changelog.
  .

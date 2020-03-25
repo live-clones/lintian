@@ -76,7 +76,7 @@ sub source {
     return;
 }
 
-sub binary {
+sub installable {
     my ($self) = @_;
 
     my $pkg = $self->package;
@@ -89,7 +89,6 @@ sub binary {
     }
 
     my $multi = $processable->unfolded_field('multi-arch');
-
     return
       unless defined $multi;
 
@@ -106,15 +105,12 @@ sub binary {
 sub always {
     my ($self) = @_;
 
-    my $pkg = $self->package;
-    my $processable = $self->processable;
-
-    my $multi = $processable->unfolded_field('multi-arch');
+    my $multi = $self->processable->unfolded_field('multi-arch');
 
     return
       unless defined $multi;
 
-    $self->tag('unknown-multi-arch-value', $pkg, $multi)
+    $self->tag('unknown-multi-arch-value', $self->package, $multi)
       unless $multi =~ m/^(?:no|foreign|allowed|same)$/o;
 
     return;

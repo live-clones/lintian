@@ -1,5 +1,5 @@
 Tag: diff-contains-cmake-cache-file
-Severity: serious
+Severity: error
 Certainty: possible
 Check: cruft
 Info: The Debian diff contains a CMake cache file. These files embed the

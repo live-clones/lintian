@@ -1,6 +1,5 @@
 Tag: unsupported-source-format
-Severity: serious
-Certainty: certain
+Severity: error
 Check: fields/format
 Info: This package uses a different source package format than "1.0",
  "3.0 (quilt)" or "3.0 (native)". Other package formats are supported by

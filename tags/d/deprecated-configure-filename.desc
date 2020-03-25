@@ -1,6 +1,5 @@
 Tag: deprecated-configure-filename
-Severity: wishlist
-Certainty: certain
+Severity: info
 Check: build-systems/automake
 Info: The use of 'configure.in' with automake is deprecated and will
  not be supported in future versions of automake. Please consider

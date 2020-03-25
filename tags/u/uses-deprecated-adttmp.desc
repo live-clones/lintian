@@ -1,6 +1,5 @@
 Tag: uses-deprecated-adttmp
-Severity: normal
-Certainty: certain
+Severity: warning
 Check: testsuite
 Info: The specified test file appears to use the deprecated
  <tt>ADTTMP</tt> variable.

@@ -1,6 +1,5 @@
 Tag: empty-debian-tests-control
-Severity: important
-Certainty: certain
+Severity: error
 Check: testsuite
 Info:
  The debian/tests/control is empty when any comments are removed.

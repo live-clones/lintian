@@ -1,6 +1,5 @@
 Tag: symlink-contains-spurious-segments
-Severity: important
-Certainty: certain
+Severity: error
 Check: files/symbolic-links
 Info: The symbolic link has needless segments like ".." and "." in the
  middle. These are unneeded and make the link longer than it could be,

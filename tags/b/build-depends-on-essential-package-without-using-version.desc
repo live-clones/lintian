@@ -1,6 +1,5 @@
 Tag: build-depends-on-essential-package-without-using-version
-Severity: important
-Certainty: certain
+Severity: error
 Check: fields/package-relations
 Ref: policy 4.2
 Info: The package declares a build-depends on an essential package, e.g. dpkg,

@@ -1,5 +1,5 @@
 Tag: init.d-script-possible-missing-stop
-Severity: normal
+Severity: warning
 Certainty: possible
 Check: init.d
 Info: The given <tt>/etc/init.d</tt> script indicates it should be

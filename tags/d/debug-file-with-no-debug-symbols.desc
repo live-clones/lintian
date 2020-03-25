@@ -1,5 +1,5 @@
 Tag: debug-file-with-no-debug-symbols
-Severity: normal
+Severity: warning
 Certainty: possible
 Check: binaries
 Ref: #668437

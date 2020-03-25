@@ -1,5 +1,5 @@
 Tag: non-dev-pkg-with-shlib-symlink
-Severity: normal
+Severity: warning
 Certainty: possible
 Check: shared-libs
 Info: Although this package is not a "-dev" package, it installs a

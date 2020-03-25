@@ -1,6 +1,5 @@
 Tag: multiline-architecture-field
-Severity: important
-Certainty: certain
+Severity: error
 Check: debian/control
 Ref: policy 5.6.8
 Info: The values of the Architecture field in debian/control must not

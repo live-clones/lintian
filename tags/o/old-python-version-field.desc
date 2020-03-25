@@ -1,6 +1,5 @@
 Tag: old-python-version-field
 Severity: pedantic
-Certainty: certain
 Check: languages/python
 Ref: python-policy 3.4
 Info: The specified Python-Version or Python3-Version field is used to

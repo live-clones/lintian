@@ -1,5 +1,5 @@
 Tag: duplicate-short-description
-Severity: wishlist
+Severity: info
 Certainty: possible
 Check: debian/control
 Info: The listed binary packages all share the same short description (the

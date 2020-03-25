@@ -1,6 +1,5 @@
 Tag: upstream-metadata-is-not-a-file
-Severity: normal
-Certainty: certain
+Severity: warning
 Check: debian/upstream/metadata
 Ref: https://dep-team.pages.debian.net/deps/dep12/
 Info: The DEP 12 metadata file in the source is not readable. This

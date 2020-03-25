@@ -1,6 +1,5 @@
 Tag: lengthy-symlink
-Severity: important
-Certainty: certain
+Severity: error
 Check: files/symbolic-links
 Info: This link goes up, and then back down into the same subdirectory.
  Making it shorter will improve its chances of finding the right file

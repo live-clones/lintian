@@ -1,6 +1,5 @@
 Tag: file-in-usr-lib-site-python
-Severity: important
-Certainty: certain
+Severity: error
 Check: languages/python
 Ref: python-policy 2.5
 Info: The directory /usr/lib/site-python has been deprecated as a

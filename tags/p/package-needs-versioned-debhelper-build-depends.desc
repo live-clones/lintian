@@ -1,6 +1,5 @@
 Tag: package-needs-versioned-debhelper-build-depends
-Severity: minor
-Certainty: certain
+Severity: warning
 Check: debhelper
 Info: The package either doesn't declare a versioned build dependency on
  debhelper or does not declare a versioned build dependency on a new

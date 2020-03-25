@@ -135,7 +135,7 @@ sub files {
     return;
 }
 
-sub binary {
+sub installable {
     my ($self) = @_;
 
     my $pkg = $self->package;

@@ -1,5 +1,5 @@
 Tag: package-contains-broken-symlink-wildcard
-Severity: normal
+Severity: warning
 Certainty: possible
 Check: files/symbolic-links/broken
 Info: The package contains a symlink with a target that

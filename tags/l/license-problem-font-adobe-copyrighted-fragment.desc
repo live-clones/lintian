@@ -1,5 +1,5 @@
 Tag: license-problem-font-adobe-copyrighted-fragment
-Severity: serious
+Severity: error
 Certainty: possible
 Check: fonts
 Info: This type 1 font file includes some postscript fragment with a

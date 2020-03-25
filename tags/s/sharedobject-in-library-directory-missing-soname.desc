@@ -1,5 +1,5 @@
 Tag: sharedobject-in-library-directory-missing-soname
-Severity: important
+Severity: error
 Certainty: possible
 Check: shared-libs
 Info: A shared object was identified in a library directory (a directory

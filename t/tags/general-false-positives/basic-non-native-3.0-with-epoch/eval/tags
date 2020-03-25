@@ -12,6 +12,8 @@ basic-non-native-3.0-with-epoch (source): debian-watch-does-not-check-gpg-signat
 basic-non-native-3.0-with-epoch (source): debian-build-system dh
 basic-non-native-3.0-with-epoch (source): debhelper-compat-virtual-relation 12
 basic-non-native-3.0-with-epoch (source): debhelper-compat-level 12
+basic-non-native-3.0-with-epoch (changes): package-is-maintained-by-individual
+basic-non-native-3.0-with-epoch (buildinfo): package-is-maintained-by-individual
 basic-non-native-3.0-with-epoch (binary): package-is-maintained-by-individual
 basic-non-native-3.0-with-epoch (binary): no-ctrl-scripts
 basic-non-native-3.0-with-epoch (binary): data-tarball-compression-format xz

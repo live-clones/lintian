@@ -1,6 +1,5 @@
 Tag: maintainer-script-should-not-use-install-sgmlcatalog
-Severity: important
-Certainty: certain
+Severity: error
 Check: scripts
 Info: The maintainer script apparently runs install-sgmlcatalog.
  install-sgmlcatalog is deprecated and should only have been used

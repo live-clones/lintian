@@ -1,6 +1,5 @@
 Tag: file-in-etc-not-marked-as-conffile
-Severity: serious
-Certainty: certain
+Severity: error
 Check: conffiles
 Ref: policy 10.7
 Info: Files in <tt>/etc</tt> must be marked conffiles if they are included

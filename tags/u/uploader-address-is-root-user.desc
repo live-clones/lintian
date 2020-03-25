@@ -1,6 +1,5 @@
 Tag: uploader-address-is-root-user
-Severity: important
-Certainty: certain
+Severity: error
 Check: fields/uploaders
 Info: The uploader address includes root user, which is
  invalid. This might indicate that the package

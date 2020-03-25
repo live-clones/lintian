@@ -1,6 +1,5 @@
 Tag: alternates-not-allowed
-Severity: important
-Certainty: certain
+Severity: error
 Check: fields/package-relations
 Info: Only the "Depends", "Recommends", "Suggests" and "Pre-Depends"
  fields may specify alternate dependencies using the "|" symbol.

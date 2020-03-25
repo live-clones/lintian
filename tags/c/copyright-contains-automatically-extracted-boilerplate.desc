@@ -1,6 +1,5 @@
 Tag: copyright-contains-automatically-extracted-boilerplate
-Severity: normal
-Certainty: certain
+Severity: warning
 Check: debian/copyright
 Ref: policy 12.5
 Info: The string "This copyright info was automatically extracted"

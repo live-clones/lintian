@@ -1,6 +1,5 @@
 Tag: unknown-meta-field-in-symbols-file
-Severity: important
-Certainty: certain
+Severity: error
 Check: shared-libs
 Info: The symbols control file contains an unknown meta-information field.
  .

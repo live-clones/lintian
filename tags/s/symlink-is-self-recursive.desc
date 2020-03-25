@@ -1,5 +1,5 @@
 Tag: symlink-is-self-recursive
-Severity: normal
+Severity: warning
 Certainty: possible
 Check: files/symbolic-links
 Info: The symbolic link is recursive to a higher directory of the symlink

@@ -55,7 +55,7 @@ sub dir_counts {
     return scalar $file->children;
 }
 
-sub always {
+sub installable {
     my ($self) = @_;
 
     my $section = $self->processable->field('section', EMPTY);

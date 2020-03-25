@@ -1,5 +1,5 @@
 Tag: package-installs-python-egg
-Severity: serious
+Severity: error
 Certainty: possible
 Check: languages/python
 Ref: python-policy 3.7

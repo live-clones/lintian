@@ -1,6 +1,5 @@
 Tag: priority-extra-is-replaced-by-priority-optional
-Severity: minor
-Certainty: certain
+Severity: warning
 Check: fields/priority
 Info: Since Debian Policy version 4.0.1, the priority <tt>extra</tt>
  has been deprecated.

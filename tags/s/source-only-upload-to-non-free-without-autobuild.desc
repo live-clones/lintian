@@ -1,6 +1,5 @@
 Tag: source-only-upload-to-non-free-without-autobuild
-Severity: serious
-Certainty: certain
+Severity: error
 Check: debian/control
 Info: For licensing reasons packages from the non-free section are not
  built by the autobuilders by default, so this source-upload to

@@ -1,5 +1,5 @@
 Tag: spelling-error-in-copyright
-Severity: minor
+Severity: info
 Certainty: possible
 Check: debian/copyright
 Info: Lintian found a spelling error in the copyright file. Lintian has a

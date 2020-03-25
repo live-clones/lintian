@@ -1,6 +1,5 @@
 Tag: uses-debhelper-compat-file
 Severity: pedantic
-Certainty: certain
 Check: debhelper
 Info: This package uses a <tt>debian/compat</tt> file to denote the
  required debhelper compatibility number.

@@ -36,7 +36,7 @@ use Try::Tiny;
 use Lintian::Spelling qw($known_shells_regex);
 use Lintian::Data;
 use Lintian::Relation;
-use Lintian::Util qw(internal_error safe_qx strip);
+use Lintian::Util qw(safe_qx strip);
 
 use Moo;
 use namespace::clean;
@@ -107,8 +107,7 @@ my $BAD_MAINT_CMD = Lintian::Data->new(
     sub {
         my @sliptline = split(/\s*\~\~/, $_[1], 5);
         if(scalar(@sliptline) != 5) {
-            internal_error(
-                'Syntax error in scripts/maintainer-script-bad-command:', $.);
+            die "Syntax error in scripts/maintainer-script-bad-command: $.";
         }
         my ($incat,$inauto,$exceptinpackage,$inscript,$regexp) = @sliptline;
         $regexp =~ s/\$[{]LEADIN[}]/$LEADINSTR/;
@@ -243,7 +242,7 @@ sub script_tag {
     return;
 }
 
-sub binary {
+sub installable {
     my ($self) = @_;
 
     my $pkg = $self->package;
@@ -1172,7 +1171,7 @@ m,$LEADIN(?:/usr/bin/)?dpkg\s+--compare-versions\s+.*\b\Q$ver\E(?!\.)\b,
                     push @{$removed_diversions{$divert}},
                       {'script' => $file, 'line' => $.};
                 } else {
-                    internal_error("\$mode has unknown value: $mode");
+                    die "\$mode has unknown value: $mode";
                 }
             }
         }
@@ -1494,8 +1493,7 @@ sub _parse_interpreters {
     if ($dep eq '@NODEPS@') {
         $dep = '';
     } elsif ($dep =~ m/@/) {
-        internal_error(
-            "Unknown magic value $dep for versioned interpreter $interpreter");
+        die "Unknown magic value $dep for versioned interpreter $interpreter";
     }
     return [$path, $dep];
 }
@@ -1510,10 +1508,8 @@ sub _parse_versioned_interpreters {
     } elsif ($deprel eq '@SKIP_UNVERSIONED@') {
         $deprel = undef;
     } elsif ($deprel =~ m/@/) {
-        internal_error(
-            join(q{ },
-                "Unknown magic value $deprel",
-                "for versioned interpreter $interpreter"));
+        die
+          "Unknown magic value $deprel for versioned interpreter $interpreter";
     }
     return [$path, $deprel, qr/^$regex$/, $deptmp, \@versions];
 }

@@ -1,6 +1,5 @@
 Tag: debian-watch-file-should-dversionmangle-not-uversionmangle
-Severity: wishlist
-Certainty: certain
+Severity: info
 Check: debian/watch
 Ref: https://wiki.debian.org/DEHS
 Info: The version of this package contains <tt>dfsg</tt>, <tt>ds</tt>,

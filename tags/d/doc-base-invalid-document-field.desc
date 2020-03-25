@@ -1,6 +1,5 @@
 Tag: doc-base-invalid-document-field
-Severity: important
-Certainty: certain
+Severity: error
 Check: menus
 Info: The Document field should consists only of letters (a-z), digits
  (0-9), plus (+) or minus (-) signs, and dots (.). In particular,

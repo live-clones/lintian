@@ -1,6 +1,5 @@
 Tag: debian-changelog-file-contains-obsolete-user-emacs-settings
-Severity: normal
-Certainty: certain
+Severity: warning
 Check: debian/changelog
 Info: The add-log-mailing-address variable is no longer honored in
  debian-changelog-mode, and should not appear in packages' changelog

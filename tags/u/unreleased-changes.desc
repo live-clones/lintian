@@ -1,6 +1,5 @@
 Tag: unreleased-changes
-Severity: important
-Certainty: certain
+Severity: error
 Check: changes-file
 Info: The distribution in the <tt>Changes</tt> field copied from
  <tt>debian/changelog</tt> indicates that this package was not intended

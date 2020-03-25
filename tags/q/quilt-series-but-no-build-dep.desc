@@ -1,5 +1,5 @@
 Tag: quilt-series-but-no-build-dep
-Severity: normal
+Severity: warning
 Certainty: possible
 Check: patch-systems
 Info: The package contains a debian/patches/series file usually used by

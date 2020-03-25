@@ -1,5 +1,5 @@
 Tag: triplet-dir-and-architecture-mismatch
-Severity: serious
+Severity: error
 Certainty: possible
 Check: files/architecture
 Ref: policy 9.1.1

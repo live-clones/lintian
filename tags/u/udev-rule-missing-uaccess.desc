@@ -1,5 +1,5 @@
 Tag: udev-rule-missing-uaccess
-Severity: normal
+Severity: warning
 Certainty: possible
 Check: udev
 Ref: https://wiki.debian.org/USB/GadgetSetup

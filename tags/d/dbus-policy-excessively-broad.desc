@@ -1,5 +1,5 @@
 Tag: dbus-policy-excessively-broad
-Severity: serious
+Severity: error
 Certainty: possible
 Check: desktop/dbus
 Info: The package contains D-Bus policy configuration that

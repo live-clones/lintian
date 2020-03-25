@@ -1,6 +1,5 @@
 Tag: doc-base-file-unknown-field
-Severity: important
-Certainty: certain
+Severity: error
 Check: menus
 Info: The doc-base control file contains field which is either unknown
  or not valid for the section where was found. Possible reasons for this

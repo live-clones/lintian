@@ -1,5 +1,5 @@
 Tag: shlib-without-versioned-soname
-Severity: normal
+Severity: warning
 Certainty: possible
 Check: shared-libs
 Ref: policy 10.2, policy 8.6

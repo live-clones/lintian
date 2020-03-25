@@ -1,6 +1,5 @@
 Tag: package-contains-compiled-glib-schema
-Severity: serious
-Certainty: certain
+Severity: error
 Check: files/names
 Info: This package contains a file named <tt>gschemas.compiled</tt>. This
  file is generated automatically by triggers and it must not be shipped in

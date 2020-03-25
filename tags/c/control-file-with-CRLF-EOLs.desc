@@ -1,5 +1,5 @@
 Tag: control-file-with-CRLF-EOLs
-Severity: important
+Severity: error
 Certainty: possible
 Check: cruft
 Info: The given control file uses <tt>CRLF</tt> as line terminator

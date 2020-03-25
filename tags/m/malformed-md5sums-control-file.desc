@@ -1,6 +1,5 @@
 Tag: malformed-md5sums-control-file
-Severity: important
-Certainty: certain
+Severity: error
 Check: md5sums
 Info: The indicated line of the md5sums control file for this package was
  malformed. Each line of an md5sums control file should contain an MD5

@@ -21,7 +21,8 @@ package Lintian::Output::XML;
 use strict;
 use warnings;
 
-use HTML::Entities;
+use Time::Piece;
+use XML::Writer;
 
 use constant EMPTY => q{};
 use constant SPACE => q{ };
@@ -65,105 +66,140 @@ my %code_priority = (
     'O' => 90,
 );
 
-my %type_priority = (
-    'source' => 30,
-    'binary' => 40,
-    'udeb' => 50,
-    'changes' => 60,
-    'buildinfo' => 70,
-);
-
 sub issue_tags {
-    my ($self, $pending, $processables) = @_;
+    my ($self, $groups) = @_;
 
-    return
-      unless $pending && $processables;
+    my $writer
+      = XML::Writer->new(OUTPUT => 'self', DATA_MODE => 1, DATA_INDENT => 2);
 
-    my %taglist;
+    $writer->xmlDecl('utf-8');
 
-    for my $tag (@{$pending}) {
-        $taglist{$tag->processable} //= [];
-        push(@{$taglist{$tag->processable}}, $tag);
-    }
+    $writer->startTag('lintian-run');
+    $writer->dataElement('lintian-version', $ENV{LINTIAN_VERSION})
+      if length $ENV{LINTIAN_VERSION};
 
-    my @ordered = sort {
-             $type_priority{$a->type} <=> $type_priority{$b->type}
-          || $a->name cmp $b->name
-    } @{$processables};
+    $writer->startTag('groups');
 
-    for my $processable (@ordered) {
+    for my $group (@{$groups // []}) {
 
-        my @attrs = (
-            [type         => $processable->type],
-            [name         => $processable->name],
-            [architecture => $processable->architecture],
-            [version      => $processable->version]);
+        $writer->startTag('group');
 
-        my $preamble = $self->_open_xml_tag('package', \@attrs, 0);
-        print { $self->stdout } $preamble, NEWLINE;
+        # grab group data from first processable
+        my $first = ($group->get_processables)[0];
 
-        my @sorted = sort {
-            $code_priority{$a->info->code} <=> $code_priority{$b->info->code}
-              || $a->name cmp $b->name
-              || $a->extra cmp $b->extra
-        } @{$taglist{$processable} // []};
+        $writer->dataElement('source-name', $first->source);
+        $writer->dataElement('source-version', $first->source_version);
+        $writer->dataElement('run-start', gmtime->datetime);
 
-        $self->print_tag($_) for @sorted;
+        $writer->startTag('input-files');
 
-        print { $self->stdout } "</package>\n";
-    }
+        my @singles = grep { defined }
+          map { $group->$_ } ('source', 'changes', 'buildinfo');
+        for my $processable (@singles) {
 
-    return;
-}
-
-=item print_tag
-
-=cut
-
-sub print_tag {
-    my ($self, $tag) = @_;
-
-    my $tag_info = $tag->info;
-    my $information = $tag->extra;
-    my $override = $tag->override;
-
-    $self->issuedtags->{$tag_info->tag}++;
-
-    my $flags = ($tag_info->experimental ? 'experimental' : '');
-    my $comment;
-    if ($override) {
-        $flags .= ',' if $flags;
-        $flags .= 'overridden';
-        if (@{ $override->{comments} }) {
-            my $c = $self->_make_xml_tag('comment', [],
-                join("\n", @{ $override->{comments} }));
-            $comment = [$c];
+            $writer->startTag($processable->type);
+            $self->taglist($writer, $processable->tags);
+            $writer->endTag($processable->type);
         }
+
+        my @installables = $group->get_binary_processables;
+        if (@installables) {
+
+            $writer->startTag('installables');
+
+            my @sorted = sort { $a->type cmp $b->type } @installables;
+            for my $processable (@sorted) {
+
+                $writer->startTag('installable');
+
+                $writer->dataElement('package-name', $processable->name);
+                $writer->dataElement('version', $processable->version)
+                  if $processable->version ne $first->source_version;
+
+                $writer->dataElement('architecture',
+                    $processable->architecture);
+
+                my $container = $processable->type;
+                $container =~ s/^binary$/deb/;
+                $writer->dataElement('container', $container);
+
+                $self->taglist($writer, $processable->tags);
+
+                $writer->endTag('installable');
+            }
+
+            $writer->endTag('installables');
+        }
+
+        $writer->endTag('input-files');
+        $writer->endTag('group');
     }
-    my @attrs = (
-        [severity  => $tag_info->severity],
-        [certainty => $tag_info->certainty],
-        [flags     => $flags],
-        [name      => $tag_info->tag]);
-    print { $self->stdout }
-      $self->_make_xml_tag('tag', \@attrs, $self->_quote_print($information),
-        $comment),
-      "\n";
+
+    $writer->endTag('groups');
+
+    $writer->endTag('lintian-run');
+    $writer->end();
+
+    print { $self->stdout } $writer->to_string;
+
     return;
 }
 
-=item C<_quote_print($string)>
-
-Called to quote a string.  By default it will replace all
-non-printables with "?".  Sub-classes can override it if
-they allow non-ascii printables etc.
+=item C<taglist>
 
 =cut
 
-sub _quote_print {
-    my ($self, $string) = @_;
-    $string =~ s/[^[:print:]]/?/go;
-    return $string;
+sub taglist {
+    my ($self, $writer, $tags) = @_;
+
+    $writer->startTag('tags');
+
+    my @sorted = sort {
+               defined $a->override <=> defined $b->override
+          ||   $code_priority{$a->info->code}<=> $code_priority{$b->info->code}
+          || $a->name cmp $b->name
+          || $a->hint cmp $b->hint
+    } @{$tags // []};
+
+    for my $tag (@sorted) {
+
+        $writer->startTag('tag',(severity => $tag->info->effective_severity,));
+
+        $writer->dataElement('name', $tag->info->name);
+
+        my $printable = $tag->hint;
+        $printable =~ s/[^[:print:]]/?/g;
+
+        $writer->dataElement('hint', $printable)
+          if length $printable;
+
+        $writer->dataElement('experimental', 'yes')
+          if $tag->info->experimental;
+
+        if ($tag->override) {
+
+            $writer->startTag('override');
+            $writer->dataElement('origin', 'maintainer');
+
+            my @comments = @{ $tag->override->{comments} // [] };
+            if (@comments) {
+
+                $writer->startTag('comments');
+                $writer->dataElement('line', $_) for @comments;
+                $writer->endTag('comments');
+            }
+
+            $writer->endTag('override');
+        }
+
+        $writer->endTag('tag');
+
+        $self->issuedtags->{$tag->info->name}++;
+    }
+
+    $writer->endTag('tags');
+
+    return;
 }
 
 sub _delimiter {
@@ -176,46 +212,6 @@ sub _print {
     my $output = $self->string($lead, @args);
     print {$stream} $output;
     return;
-}
-
-# Create a start tag (or a self-closed tag)
-# $tag is the name of the tag
-# $attrs is an anonymous array of pairs of attributes and their values
-# $close is a boolean.  If a truth-value, the tag will closed
-#
-# returns the string.
-sub _open_xml_tag {
-    my ($self, $tag, $attrs, $close) = @_;
-    my $output = "<$tag";
-    for my $attr (@$attrs) {
-        my ($name, $value) = @$attr;
-        # Skip attributes with "empty" values
-        next unless defined $value && $value ne '';
-        $output .= " $name=" . '"' . $value . '"';
-    }
-    $output .= ' /' if $close;
-    $output .= '>';
-    return $output;
-}
-
-# Print a given XML tag to standard output.  Takes the tag, an anonymous array
-# of pairs of attributes and values, and then the contents of the tag.
-sub _make_xml_tag {
-    my ($self, $tag, $attrs, $content, $children) = @_;
-    # $empty is true if $content is empty and there are no children
-    my $empty = ($content//'') eq '' && (!defined $children || !@$children);
-    my $output = $self->_open_xml_tag($tag, $attrs, $empty);
-    if (!$empty) {
-        $output .= encode_entities($content, q{<>&"'}) if $content;
-        if (defined $children) {
-            foreach my $child (@$children) {
-                $output .= "\n\t$child";
-            }
-            $output .= "\n";
-        }
-        $output .= "</$tag>";
-    }
-    return $output;
 }
 
 =back

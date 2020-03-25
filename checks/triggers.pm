@@ -25,7 +25,7 @@ use warnings;
 use autodie qw(open);
 
 use Lintian::Data;
-use Lintian::Util qw(internal_error strip);
+use Lintian::Util qw(strip);
 
 use Moo;
 use namespace::clean;
@@ -40,12 +40,9 @@ sub _parse_trigger_types {
         $values{$k} = $v;
     }
     if (exists($values{'implicit-await'})) {
-        internal_error(
-            join(q{ },
-                'Invalid trigger-types data file:',
-                "$key is defined as implicit-await trigger,",
-                'but is not defined as an await trigger')
-        ) if $values{'implicit-await'} and not $values{'await'};
+        die
+"Invalid trigger-types: $key is defined as implicit-await but not await"
+          if $values{'implicit-await'} and not $values{'await'};
     }
     return \%values;
 }
@@ -53,7 +50,7 @@ sub _parse_trigger_types {
 my $TRIGGER_TYPES = Lintian::Data->new('triggers/trigger-types',
     qr/\s*\Q=>\E\s*/, \&_parse_trigger_types);
 
-sub always {
+sub installable {
     my ($self) = @_;
 
     my $processable = $self->processable;

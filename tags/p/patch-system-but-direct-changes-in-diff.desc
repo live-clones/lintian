@@ -1,6 +1,5 @@
 Tag: patch-system-but-direct-changes-in-diff
-Severity: minor
-Certainty: certain
+Severity: warning
 Check: patch-systems
 Info: The package uses a patch system, but the Debian diff.gz contains
  changes to files or creation of additional files outside of the

@@ -1,6 +1,5 @@
 Tag: desktop-entry-uses-reserved-category
-Severity: normal
-Certainty: certain
+Severity: warning
 Check: menu-format
 Info: This desktop entry includes a Reserved Category, one which has a
  desktop-specific meaning that has not yet been standardized, but does not

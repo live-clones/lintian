@@ -70,14 +70,20 @@ sub run {
 
     my $type = $self->type;
 
-    $self->setup
-      if $self->can('setup');
-
     if ($type eq 'binary' || $type eq 'udeb') {
+
+        $self->setup
+          if $self->can('setup');
 
         if ($self->can('files')) {
             $self->files($_)for $self->processable->installed->sorted_list;
         }
+
+        $self->breakdown
+          if $self->can('breakdown');
+
+        $self->installable
+          if $self->can('installable');
     }
 
     $self->$type
@@ -85,9 +91,6 @@ sub run {
 
     $self->always
       if $self->can('always');
-
-    $self->breakdown
-      if $self->can('breakdown');
 
     return;
 }

@@ -1,6 +1,5 @@
 Tag: node-package-install-in-nodejs-rootdir
-Severity: important
-Certainty: certain
+Severity: error
 Check: languages/javascript/nodejs
 Info: This package contains a file under /usr/*/nodejs
  instead of /usr/*/nodejs/${package}.

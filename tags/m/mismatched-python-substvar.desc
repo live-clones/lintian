@@ -1,6 +1,5 @@
 Tag: mismatched-python-substvar
-Severity: normal
-Certainty: certain
+Severity: warning
 Check: languages/python
 Info: The specified package declares a dependency on <tt>${python:Depends}</tt>
  whilst appearing to be a Python 2.x package or a dependency on

@@ -1,6 +1,5 @@
 Tag: orphaned-package-maintained-in-private-space
-Severity: normal
-Certainty: certain
+Severity: warning
 Check: fields/vcs
 Info:
  This package is orphaned and the specified VCS field points to a private

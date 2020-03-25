@@ -1,6 +1,5 @@
 Tag: package-uses-deprecated-debhelper-compat-version
-Severity: normal
-Certainty: certain
+Severity: warning
 Check: debhelper
 Ref: debhelper(7)
 Info: The debhelper compatibility version used by this package is marked

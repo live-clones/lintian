@@ -1,6 +1,5 @@
 Tag: depends-on-specific-java-doc-package
-Severity: normal
-Certainty: certain
+Severity: warning
 Check: fields/package-relations
 Info: The package should use default-jdk-doc instead of classpath-doc
  or openjdk-X-doc to ease transitions when the providing doc package

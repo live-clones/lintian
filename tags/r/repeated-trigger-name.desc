@@ -1,6 +1,5 @@
 Tag: repeated-trigger-name
-Severity: important
-Certainty: certain
+Severity: error
 Check: triggers
 Info: The package repeats the same trigger. There should be no reason to
  do this and it may lead to confusing results or errors.

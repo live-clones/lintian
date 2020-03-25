@@ -1,6 +1,5 @@
 Tag: maintainer-script-needs-depends-on-xml-core
-Severity: normal
-Certainty: certain
+Severity: warning
 Check: scripts
 Info: This script calls update-xmlcatalog, which comes from the xml-core
  package, but does not depend or pre-depend on xml-core. Packages that call

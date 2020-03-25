@@ -297,7 +297,7 @@ the reported tags:
    N:     Free Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
    N:     MA 02110-1301, USA.
    N:   
-   N:   Severity: normal, Certainty: certain
+   N:   Visibility: warning
    N:
    [...]
    $
@@ -632,12 +632,12 @@ The fields in the secondary paragraphs are:
    override for a tag marked as non-overridable (except if --quiet is
    passed).
 
-*Severity* (simple, optional)
-   The value must be a valid tag severity other than "classification".
-   The severity of the affected tags is set to this value. This cannot
+*Visibility* (simple, optional)
+   The value must be a valid tag visibility other than "classification".
+   The visibility of the affected tags is set to this value. This cannot
    be used on any tag that is defined as a "classification" tag.
 
-   Note that *experimental* is not a severity.
+   Note that *experimental* is not a visibility.
 
 The paragraph must contain at least one other field than the Tag field.
 
@@ -662,12 +662,12 @@ Below is a small example vendor profile for a fictive vendor called
    # Disable a tag
    Disable-Tags: dir-or-file-in-opt
 
-   # Bump severity of no-md5sums-control-file
+   # Bump visibility of no-md5sums-control-file
    # and file-missing-in-md5sums and make them
    # non-overridable
    Tags: no-md5sums-control-file,
          file-missing-in-md5sums,
-   Severity: serious
+   Visibility: error
    Overridable: no
 
 .. _section-2.6:
@@ -909,18 +909,11 @@ The fields in the tag description paragraph are:
    case characters ([a-zA-Z]), digits ([0-9]), underscore (_), dash (-)
    and period (.). The tag name should be at most 68 characters long.
 
-*Severity* (simple, mandatory)
-   Determines the default value for how "severe" the tag is. The value
-   must be one of "serious", "important", "normal", "minor", "wishlist"
-   and "pedantic". The effective severity and the value of the Certainty
-   field of a tag determine the "one-letter" code (of non-experimental
+*Visibility* (simple, mandatory)
+   Determines the default value for the alert level. The value must be
+   one of "error", "warning", "info", "pedantic", or "classification".
+   This correlates directly to the one-letter code (of non-experimental
    tags).
-
-*Certainty* (simple, mandatory)
-   How accurate the tag is (believed to be). The value must be one of
-   "certain", "possible", "wild-guess". The effective severity and the
-   value of the Certainty field of a tag determine the "one-letter" code
-   (of non-experimental tags).
 
 *Info* (multiline, mandatory)
    The description of the tag, which can be seen by using lintian-info

@@ -1,6 +1,5 @@
 Tag: invalid-potfiles-in
-Severity: normal
-Certainty: certain
+Severity: warning
 Check: debian/po-debconf
 Info: Errors were found in the <tt>debian/po/POTFILES.in</tt> file.
  .

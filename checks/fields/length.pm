@@ -28,33 +28,38 @@ use strict;
 use warnings;
 use autodie;
 
+use List::Compare;
+use List::MoreUtils qw(any);
+
 use Moo;
 use namespace::clean;
-use List::MoreUtils qw(any);
 
 with 'Lintian::Check';
 
-my @ALLOWED_FIELDS = qw(build-ids description package-list);
+my @ALLOWED_FIELDS
+  = qw(build-ids description package-list installed-build-depends);
 
 sub always {
     my ($self) = @_;
 
-    my $processable = $self->processable;
-
     my $maximum = 5_000;
 
-    # Ensure fields aren't too long
-    for my $name (keys %{$processable->field}) {
+    # all fields
+    my @all = keys %{$self->processable->field};
 
-        my $length = length $processable->field($name);
+    # longer than maximum
+    my @long = grep { length $self->processable->field($_) > $maximum } @all;
 
-        next
-          unless $length > $maximum;
+    # filter allowed fields
+    my $allowedlc = List::Compare->new(\@long, \@ALLOWED_FIELDS);
+    my @too_long = $allowedlc->get_Lonly;
 
-        next if any { $_ eq $name } @ALLOWED_FIELDS;
+    for my $name (@too_long) {
 
-        # Title-case the field name
+        # title-case the field name
         (my $label = $name) =~ s/\b(\w)/\U$1/g;
+
+        my $length = length $self->processable->field($name);
 
         $self->tag('field-too-long', $label, "($length chars > $maximum)");
     }

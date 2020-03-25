@@ -1,6 +1,5 @@
 Tag: source-contains-prebuilt-yapp-parser
 Severity: pedantic
-Certainty: certain
 Check: languages/perl/yapp
 Info: The source tarball contains a prebuilt Parse::Yapp parser.
  This is usually left by mistake when generating the tarball without

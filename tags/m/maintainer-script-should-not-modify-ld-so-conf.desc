@@ -1,5 +1,5 @@
 Tag: maintainer-script-should-not-modify-ld-so-conf
-Severity: important
+Severity: error
 Certainty: possible
 Check: scripts
 Info: This package appears to modify <tt>/etc/ld.so.conf</tt> and does not

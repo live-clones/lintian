@@ -1,6 +1,5 @@
 Tag: diff-contains-svn-control-dir
-Severity: normal
-Certainty: certain
+Severity: warning
 Check: cruft
 Info: The Debian diff or native package contains files in an .svn
  directory. These are usually artifacts of the revision control system

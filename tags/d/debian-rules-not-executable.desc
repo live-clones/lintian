@@ -1,6 +1,5 @@
 Tag: debian-rules-not-executable
 Severity: pedantic
-Certainty: certain
 Ref: policy 4.9
 Check: debian/rules
 Info: The <tt>debian/rules</tt> file for this package does not appear to

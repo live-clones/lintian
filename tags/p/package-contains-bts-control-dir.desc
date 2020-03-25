@@ -1,6 +1,5 @@
 Tag: package-contains-bts-control-dir
-Severity: normal
-Certainty: certain
+Severity: warning
 Check: files/bugs
 Info: The package contains a control directory for a bug tracking system.
  It was most likely installed by accident, since bug tracking directories

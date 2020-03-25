@@ -1,5 +1,5 @@
 Tag: possible-documentation-but-no-doc-base-registration
-Severity: wishlist
+Severity: info
 Certainty: possible
 Check: menus
 Info: The package ships a <tt>.html</tt> or <tt>.pdf</tt> file under

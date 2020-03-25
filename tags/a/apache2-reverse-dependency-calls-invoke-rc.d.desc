@@ -1,6 +1,5 @@
 Tag: apache2-reverse-dependency-calls-invoke-rc.d
-Severity: normal
-Certainty: certain
+Severity: warning
 Check: apache2
 Info: The package is invoking apache2's init script in its maintainer script
  albeit it shouldn't do so. Reverse dependencies installing apache2

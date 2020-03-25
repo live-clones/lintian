@@ -1,6 +1,5 @@
 Tag: missing-xs-go-import-path-for-golang-package
-Severity: wishlist
-Certainty: certain
+Severity: info
 Check: debian/control
 Info: This source package does not specify a <tt>XS-Go-Import-Path</tt>
  control field.

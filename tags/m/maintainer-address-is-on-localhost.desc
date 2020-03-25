@@ -1,6 +1,5 @@
 Tag: maintainer-address-is-on-localhost
-Severity: serious
-Certainty: certain
+Severity: error
 Check: fields/maintainer
 Info: The maintainer address includes localhost(.localdomain), which is
  an invalid e-mail address.

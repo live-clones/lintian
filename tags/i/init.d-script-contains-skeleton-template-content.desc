@@ -1,6 +1,5 @@
 Tag: init.d-script-contains-skeleton-template-content
-Severity: important
-Certainty: certain
+Severity: error
 Check: init.d
 Info: The given init script appears to contain content from the
  <tt>/etc/init.d/skeleton</tt> example.

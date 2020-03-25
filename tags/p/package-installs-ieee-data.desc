@@ -1,5 +1,5 @@
 Tag: package-installs-ieee-data
-Severity: important
+Severity: error
 Certainty: possible
 Check: files/ieee-data
 Ref: #785662

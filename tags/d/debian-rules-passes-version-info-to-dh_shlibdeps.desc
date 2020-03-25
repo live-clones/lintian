@@ -1,5 +1,5 @@
 Tag: debian-rules-passes-version-info-to-dh_shlibdeps
-Severity: normal
+Severity: warning
 Certainty: possible
 Check: debian/rules
 Info: The <tt>debian/rules</tt> file for this package has a call to

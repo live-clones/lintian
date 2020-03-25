@@ -1,6 +1,5 @@
 Tag: bad-provided-package-name
-Severity: serious
-Certainty: certain
+Severity: error
 Check: fields/package-relations
 Info: A package name should be at least two characters long, must consist
  of the alphanumerics (lowercase characters only) and "+" "-" and ".", and

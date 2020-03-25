@@ -1,6 +1,5 @@
 Tag: prerm-calls-updaterc.d
-Severity: important
-Certainty: certain
+Severity: error
 Check: init.d
 Info: The <tt>prerm</tt> package calls <tt>update-rc.d</tt>. Instead,
  you should call it in the <tt>postrm</tt> script.

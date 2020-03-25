@@ -26,6 +26,8 @@ use autodie;
 
 use Time::Piece;
 
+use constant EMPTY => q{};
+
 use Moo;
 use namespace::clean;
 
@@ -81,21 +83,31 @@ sub files {
     # gzip files
     if ($file->file_info =~ /gzip compressed/) {
 
-        my $architecture = $self->processable->field('architecture', '');
-        my $multiarch = $self->processable->field('multi-arch', 'no');
-
-        $self->tag('gzip-file-is-not-multi-arch-same-safe', $file->name)
-          if $multiarch eq 'same' && $file->name !~ /\Q$architecture\E/;
-
 # get timestamp of first member; https://tools.ietf.org/html/rfc1952.html#page-5
         my $bytes = $file->magic(8);
         my (undef, $gziptime) = unpack('VV', $bytes);
 
-        # see https://bugs.debian.org/762105
-        my $from_build = ($gziptime - $self->changelog_timestamp) > 0;
-        $self->tag('package-contains-timestamped-gzip',
-            $file->name, gmtime($gziptime)->datetime)
-          if $gziptime != 0 && $from_build;
+        if (defined $gziptime && $gziptime != 0) {
+
+            # see https://bugs.debian.org/762105
+            my $time_from_build = $gziptime - $self->changelog_timestamp;
+            if ($time_from_build > 0) {
+
+                my $architecture = $self->processable->field('architecture')
+                  // EMPTY;
+                my $multiarch = $self->processable->field('multi-arch')// 'no';
+
+                if ($multiarch eq 'same' && $file->name !~ /\Q$architecture\E/)
+                {
+                    $self->tag('gzip-file-is-not-multi-arch-same-safe',
+                        $file->name);
+
+                } else {
+                    $self->tag('package-contains-timestamped-gzip',
+                        $file->name,gmtime($gziptime)->datetime);
+                }
+            }
+        }
     }
 
     return;

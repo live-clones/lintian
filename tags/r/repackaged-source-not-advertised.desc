@@ -1,6 +1,5 @@
 Tag: repackaged-source-not-advertised
-Severity: wishlist
-Certainty: certain
+Severity: info
 Check: debian/copyright
 Info: The <tt>debian/copyright</tt> file mentions <tt>Files-Excluded</tt>
  but the source version has no repack suffix.

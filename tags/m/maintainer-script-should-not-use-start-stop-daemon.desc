@@ -1,6 +1,5 @@
 Tag: maintainer-script-should-not-use-start-stop-daemon
-Severity: normal
-Certainty: certain
+Severity: warning
 Check: scripts
 Info: The maintainer script seems to call <tt>start-stop-daemon</tt>
  directly. Long-running daemons should be started and stopped via init

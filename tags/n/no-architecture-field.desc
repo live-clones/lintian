@@ -1,6 +1,5 @@
 Tag: no-architecture-field
-Severity: serious
-Certainty: certain
+Severity: error
 Check: fields/architecture
 Info: The package does not have an "Architecture:" field in its control file.
 Ref: policy 5.3

@@ -1,6 +1,5 @@
 Tag: new-package-uses-date-based-version-number
-Severity: normal
-Certainty: certain
+Severity: warning
 Check: debian/changelog
 Info: This package appears to be the first packaging of a new upstream
  software package (there is only one changelog entry and the Debian

@@ -2,7 +2,6 @@ Tag: build-depends-on-build-essential
 Info: You depend on the build-essential package, which is only a
  metapackage depending on build tools that have to be installed in all
  build environments.
-Severity: important
-Certainty: certain
+Severity: error
 Check: fields/package-relations
 Ref: policy 7.7

@@ -1,6 +1,5 @@
 Tag: postinst-has-useless-call-to-install-docs
-Severity: minor
-Certainty: certain
+Severity: warning
 Check: menus
 Info: Explicitly calling <tt>install-docs</tt> in <tt>postinst</tt> is no
  longer required since doc-base file processing is handled by triggers.

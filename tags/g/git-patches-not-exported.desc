@@ -1,5 +1,5 @@
 Tag: git-patches-not-exported
-Severity: important
+Severity: error
 Certainty: possible
 Check: debian/source-dir
 Info: The source package contains non-empty debian/source/git-patches,

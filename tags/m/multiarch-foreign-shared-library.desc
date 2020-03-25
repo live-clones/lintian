@@ -1,5 +1,5 @@
 Tag: multiarch-foreign-shared-library
-Severity: important
+Severity: error
 Certainty: possible
 Check: files/multi-arch
 Info: The package is architecture-dependent, ships a shared library in

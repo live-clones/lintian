@@ -31,7 +31,7 @@ use List::MoreUtils qw(any);
 use Lintian::Data;
 use Lintian::Relation qw(:constants);
 use Lintian::Spelling qw(check_spelling);
-use Lintian::Util qw(internal_error strip);
+use Lintian::Util qw(strip);
 
 use constant NUMPY_REGEX => qr/
     \Qmodule compiled against ABI version \E (?:0x)?%x
@@ -88,15 +88,15 @@ sub _embedded_libs {
             } elsif ($opt eq 'source-regex') {
                 $result->{$opt} = qr/$val/;
             } else {
-                internal_error("Unknown option $opt used for $key"
-                      . ' (in binaries/embedded-libs)');
+                die
+"Unknown option $opt used for $key (in binaries/embedded-libs)";
             }
         }
     }
 
     if (defined $result->{'source'} and $result->{'source-regex'}) {
-        internal_error("Both source and source-regex used for $key"
-              . ' (in binaries/embedded-libs)');
+        die
+"Both source and source-regex used for $key (in binaries/embedded-libs)";
     } else {
         $result->{'source'} = $key unless defined $result->{'source'};
     }
@@ -128,7 +128,7 @@ our $OBSOLETE_CRYPT_FUNCTIONS
 
 our $ARCH_32_REGEX;
 
-sub always {
+sub installable {
     my ($self) = @_;
 
     my $pkg = $self->package;
@@ -375,8 +375,7 @@ sub always {
             foreach my $obj (@{ $objdump->{'objects'} }) {
                 my $libobj = $processable->objdump_info->{"${file}(${obj})"};
                 # Shouldn't happen, but...
-                internal_error(
-                    "object ($file $obj) in static lib is missing!?")
+                die "object ($file $obj) in static lib is missing!?"
                   unless defined $libobj;
 
                 if (any { exists($libobj->{'SH'}{$_}) } DEBUG_SECTIONS) {

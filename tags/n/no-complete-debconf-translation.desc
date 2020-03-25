@@ -1,5 +1,5 @@
 Tag: no-complete-debconf-translation
-Severity: wishlist
+Severity: info
 Certainty: possible
 Check: debian/po-debconf
 Info: Even though this package provides debconf translation support, there 

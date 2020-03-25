@@ -1,5 +1,5 @@
 Tag: gz-file-not-gzip
-Severity: normal
+Severity: warning
 Certainty: possible
 Check: files/compressed
 Info: The given file ends with <tt>.gz</tt>, which normally indicates it

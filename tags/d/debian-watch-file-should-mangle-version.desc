@@ -1,6 +1,5 @@
 Tag: debian-watch-file-should-mangle-version
-Severity: normal
-Certainty: certain
+Severity: warning
 Check: debian/watch
 Ref: uscan(1), https://wiki.debian.org/DEHS
 Info: The version of this package contains <tt>dfsg</tt>, <tt>ds</tt>,

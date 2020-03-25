@@ -1,6 +1,5 @@
 Tag: file-in-usr-lib-sgml
-Severity: normal
-Certainty: certain
+Severity: warning
 Check: files/sgml
 Ref: fhs theusrhierarchy
 Info: This package installs a file in <tt>/usr/lib/sgml</tt>. This was

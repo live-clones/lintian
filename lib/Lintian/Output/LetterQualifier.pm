@@ -34,74 +34,18 @@ use namespace::clean;
 with 'Lintian::Output';
 
 my %codes = (
-    'classification' => {
-        'wild-guess' => 'C?',
-        'possible' => 'C ',
-        'certain' => 'C!'
-    },
-    'pedantic' => {
-        'wild-guess' => 'P?',
-        'possible' => 'P ',
-        'certain' => 'P!'
-    },
-    'wishlist' => {
-        'wild-guess' => 'W?',
-        'possible' => 'W ',
-        'certain' => 'W!'
-    },
-    'minor' => {
-        'wild-guess' => 'M?',
-        'possible' => 'M ',
-        'certain' => 'M!'
-    },
-    'normal' => {
-        'wild-guess' => 'N?',
-        'possible' => 'N ',
-        'certain' => 'N!'
-    },
-    'important' => {
-        'wild-guess' => 'I?',
-        'possible' => 'I ',
-        'certain' => 'I!'
-    },
-    'serious' => {
-        'wild-guess' => 'S?',
-        'possible' => 'S ',
-        'certain' => 'S!'
-    },
+    'classification' => 'C',
+    'pedantic' => 'P',
+    'info' => 'I',
+    'warning' => 'W',
+    'error' => 'E',
 );
 
 my %lq_default_colors = (
-    'pedantic' => {
-        'wild-guess' => 'green',
-        'possible' => 'green',
-        'certain' => 'green'
-    },
-    'wishlist' => {
-        'wild-guess' => 'green',
-        'possible' => 'green',
-        'certain' => 'cyan'
-    },
-    'minor' => {
-        'wild-guess' => 'green',
-        'possible' => 'cyan',
-        'certain' => 'yellow'
-    },
-    'normal' => {
-        'wild-guess' => 'cyan',
-        'possible' => 'yellow',
-        'certain' => 'yellow'
-    },
-    'important' => {
-        'wild-guess' => 'yellow',
-        'possible' => 'red',
-        'certain' => 'red'
-    },
-    'serious' => {
-        'wild-guess' => 'yellow',
-        'possible' => 'red',
-        'certain' => 'magenta'
-    },
+    'pedantic' => 'green',
+    'info' => 'cyan',
+    'warning' => 'yellow',
+    'error' => 'red',
 );
 
 =head1 NAME
@@ -158,12 +102,26 @@ my %type_priority = (
 );
 
 sub issue_tags {
-    my ($self, $pending, $processables) = @_;
+    my ($self, $groups) = @_;
 
-    return
-      unless $pending && $processables;
+    my @processables = map { $_->get_processables } @{$groups // []};
 
-    $self->print_start_pkg($_)for @{$processables};
+    my @pending;
+    for my $processable (@processables) {
+
+        # get tags
+        my @tags = @{$processable->tags};
+
+        # associate tags with processable
+        $_->processable($processable) for @tags;
+
+        # remove circular references
+        $processable->tags([]);
+
+        push(@pending, @tags);
+    }
+
+    $self->print_start_pkg($_) for @processables;
 
     my @sorted = sort {
              defined $a->override <=> defined $b->override
@@ -172,8 +130,8 @@ sub issue_tags {
           || $type_priority{$a->processable->type}
           <=> $type_priority{$b->processable->type}
           || $a->processable->name cmp $b->processable->name
-          || $a->extra cmp $b->extra
-    } @{$pending};
+          || $a->hint cmp $b->hint
+    } @pending;
 
     $self->print_tag($_) for @sorted;
 
@@ -188,7 +146,7 @@ sub print_tag {
     my ($self, $tag) = @_;
 
     my $tag_info = $tag->info;
-    my $information = $tag->extra;
+    my $information = $tag->hint;
     my $override = $tag->override;
     my $processable = $tag->processable;
 
@@ -196,27 +154,26 @@ sub print_tag {
     $code = 'X' if $tag_info->experimental;
     $code = 'O' if defined($override);
 
-    my $sev = $tag_info->severity;
-    my $cer = $tag_info->certainty;
-    my $lq = $codes{$sev}{$cer};
+    my $severity = $tag_info->effective_severity;
+    my $lq = $codes{$severity};
 
     my $pkg = $processable->name;
     my $type
       = ($processable->type ne 'binary') ? SPACE . $processable->type : EMPTY;
 
-    my $tagname = $tag_info->tag;
+    my $tagname = $tag_info->name;
 
     $information = ' ' . $self->_quote_print($information)
       if $information ne '';
 
     if ($self->_do_color) {
-        my $color = $self->colors->{$sev}{$cer};
+        my $color = $self->colors->{$severity};
         $lq = colored($lq, $color);
         $tagname = colored($tagname, $color);
     }
 
     $self->_print('', "$code\[$lq\]: $pkg$type", "$tagname$information");
-    if (not $self->issued_tag($tag_info->tag) and $self->showdescription) {
+    if (not $self->issued_tag($tag_info->name) and $self->showdescription) {
         my $description = $tag_info->description('text', '   ');
         $self->_print('', 'N', '');
         $self->_print('', 'N', split("\n", $description));

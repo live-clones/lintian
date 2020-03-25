@@ -1,6 +1,5 @@
 Tag: invalid-versioned-provides
-Severity: important
-Certainty: certain
+Severity: error
 Check: fields/package-relations
 Ref: policy 7.1, #761219
 Info: The package declares a provides relation with an invalid version

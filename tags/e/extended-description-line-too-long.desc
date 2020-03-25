@@ -1,6 +1,5 @@
 Tag: extended-description-line-too-long
-Severity: normal
-Certainty: certain
+Severity: warning
 Check: fields/description
 Info: One or more lines in the extended part of the "Description:" field
  have been found to contain more than 80 characters. For the benefit of

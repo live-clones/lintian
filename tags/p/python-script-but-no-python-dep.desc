@@ -1,6 +1,5 @@
 Tag: python-script-but-no-python-dep
-Severity: important
-Certainty: certain
+Severity: error
 Check: scripts
 Info: Packages with Python scripts should depend on the package
  <tt>python</tt>. Those with scripts that specify a specific version of

@@ -1,6 +1,5 @@
 Tag: example-interpreter-not-absolute
-Severity: wishlist
-Certainty: certain
+Severity: info
 Check: scripts
 Info: This example script uses a relative path to locate its interpreter.
  This path will be taken relative to the caller's current directory, not

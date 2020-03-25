@@ -6,6 +6,8 @@ C: lintian-suppress-tags source: debian-build-system dh
 C: lintian-suppress-tags: no-ctrl-scripts
 C: lintian-suppress-tags source: package-is-maintained-by-individual
 C: lintian-suppress-tags: package-is-maintained-by-individual
+C: lintian-suppress-tags changes: package-is-maintained-by-individual
+C: lintian-suppress-tags buildinfo: package-is-maintained-by-individual
 C: lintian-suppress-tags source: rules-does-not-require-root
 C: lintian-suppress-tags source: source-format 3.0 (native)
 C: lintian-suppress-tags source: standards-version 4.5.0

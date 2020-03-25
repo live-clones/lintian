@@ -1,6 +1,5 @@
 Tag: build-info-in-binary-control-file-section
-Severity: serious
-Certainty: certain
+Severity: error
 Check: debian/control
 Ref: policy 5.2
 Info: The control file has a Build-Depends, Build-Depends-Indep,

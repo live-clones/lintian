@@ -1,5 +1,5 @@
 Tag: tar-errors-from-data
-Severity: important
+Severity: error
 Certainty: possible
 Check: deb-format
 Info: tar produced an error while listing the contents of the data

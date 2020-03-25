@@ -1,6 +1,5 @@
 Tag: debug-file-should-use-detached-symbols
-Severity: normal
-Certainty: certain
+Severity: warning
 Check: binaries
 Ref: devref 6.7.9
 Info: This file is in a location generally used for detached debugging

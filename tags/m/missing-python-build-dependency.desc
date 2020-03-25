@@ -1,6 +1,5 @@
 Tag: missing-python-build-dependency
-Severity: important
-Certainty: certain
+Severity: error
 Check: debian/rules
 Ref: policy 4.2
 Info: The package appears to use Python as part of its build process in

@@ -1,6 +1,5 @@
 Tag: inconsistent-maintainer
-Severity: serious
-Certainty: certain
+Severity: error
 Check: fields/maintainer
 Info: The Maintainer address in a group of related processables is
  inconsistent as indicated.

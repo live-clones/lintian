@@ -1,6 +1,5 @@
 Tag: nodejs-module-not-declared
-Severity: normal
-Certainty: certain
+Severity: warning
 Check: languages/javascript/nodejs
 Info: This package installs the specified nodejs module in a nodejs root
  directory without declaring it in "Provides:" field in debian/control.

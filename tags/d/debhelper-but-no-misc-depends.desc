@@ -1,5 +1,5 @@
 Tag: debhelper-but-no-misc-depends
-Severity: normal
+Severity: warning
 Certainty: possible
 Check: debhelper
 Ref: debhelper(7)

@@ -1,6 +1,5 @@
 Tag: dh-exec-private-helper
-Severity: important
-Certainty: certain
+Severity: error
 Check: debhelper
 Info: The packaging file uses dh-exec, but it does not use /usr/bin/dh-exec.
  .

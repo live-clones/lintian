@@ -1,6 +1,5 @@
 Tag: dpatch-index-references-non-existent-patch
-Severity: important
-Certainty: certain
+Severity: error
 Check: patch-systems
 Info: In the 00list file listing all your dpatches, you referenced a file
  that does not exist. This will lead to a fatal error when calling dpatch.

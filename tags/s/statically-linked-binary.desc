@@ -1,5 +1,5 @@
 Tag: statically-linked-binary
-Severity: important
+Severity: error
 Certainty: possible
 Check: binaries
 Info: The package installs a statically linked binary or object file.

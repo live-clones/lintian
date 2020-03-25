@@ -1,5 +1,5 @@
 Tag: depends-on-obsolete-package
-Severity: important
+Severity: error
 Certainty: possible
 Check: fields/package-relations
 Info: The package depends on a package that has been superseded.

@@ -28,7 +28,7 @@ use autodie;
 use List::MoreUtils qw(none);
 
 use Lintian::Spelling qw(check_spelling);
-use Lintian::Util qw(internal_error strip);
+use Lintian::Util qw(strip);
 
 use constant PATCH_DESC_TEMPLATE => 'TODO: Put a short summary on'
   . ' the line above and replace this paragraph';
@@ -284,7 +284,7 @@ sub source {
     open(my $fd, '<', $processable->diffstat);
     while (<$fd>) {
         my ($file) = (m,^\s+(.*?)\s+\|,)
-          or internal_error("syntax error in diffstat file: $_");
+          or die "syntax error in diffstat file: $_";
         push(@direct, $file) if ($file !~ m,^debian/,);
     }
     close($fd);

@@ -1,6 +1,5 @@
 Tag: systemd-service-file-refers-to-var-run
-Severity: wishlist
-Certainty: certain
+Severity: info
 Check: systemd
 Info: The specified systemd service file declares a <tt>PIDFile=</tt>
  that references <tt>/var/run</tt>.

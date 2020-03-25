@@ -86,7 +86,7 @@ my (%statistics, %tag_statistics);
 # %by_maint holds a hash of maintainer names to packages and tags.  Each
 # maintainer is a key.  The value is a hash of package names to hashes.  Each
 # package hash is in turn a hash of versions to an anonymous array of hashes,
-# with each hash having keys code, package, type, tag, severity, certainty,
+# with each hash having keys code, package, type, tag, severity,
 # extra, and xref.  xref gets the partial URL of the maintainer page for that
 # source package.
 #
@@ -416,8 +416,8 @@ sub process_data {
 
     # Create the pages for each tag.  Each page shows the extended description
     # for the tag and all the packages for which that tag was issued.
-    for my $tag (sort $profile->tags(1)) {
-        my $info = $profile->get_tag($tag, 1);
+    for my $tag (sort $profile->known_tags) {
+        my $info = $profile->get_taginfo($tag);
         my $description = $info->description('html', '    ');
         my ($count, $overrides) = (0, 0);
         my $tmpl = 'tag-not-seen';
@@ -599,7 +599,7 @@ sub collect_statistics {
         }
     }
 
-    for my $tag ($profile->tags(1)) {
+    for my $tag ($profile->known_tags) {
         my ($count, $overrides) = (0, 0);
         my %seen_tags;
         next if (not exists($by_tag{$tag}));
@@ -916,8 +916,10 @@ sub parse_lintian_log {
           unless ($type eq 'source' || $type eq 'binary' || $type eq 'udeb');
         # Ignore unknown tags - happens if we removed a tag that is
         # still present in the log file.
-        my $tag_info = $profile->get_tag($tag, 1);
-        next if not $tag_info or $tag_info->severity eq 'classification';
+        my $tag_info = $profile->get_taginfo($tag);
+        next
+          if not $tag_info
+          or $tag_info->effective_severity eq 'classification';
 
         # Update statistics.
         my $key = $expanded_code{$code};
@@ -1012,7 +1014,7 @@ sub parse_lintian_log {
             # Code depends on whether the given tag was overridden or not
             $info->{code} = $code;
             $info->{extra} = $extra;
-            if ($info->{tag_info}->tag ne $tag) {
+            if ($info->{tag_info}->name ne $tag) {
                 $info->{tag_info} = $tag_info;
             }
             # saves a map_maintainer call
@@ -1197,7 +1199,7 @@ sub by_tag {
       || $a_pi->{version}        cmp $b_pi->{version}
       || $a_pi->{component}      cmp $b_pi->{component}
       || $a_pi->{type}           cmp $b_pi->{type}
-      || $a->{tag_info}->tag     cmp $b->{tag_info}->tag
+      || $a->{tag_info}->name    cmp $b->{tag_info}->name
       || $a->{extra}             cmp $b->{extra};
 }
 

@@ -1,6 +1,5 @@
 Tag: doc-base-index-references-multiple-files
-Severity: important
-Certainty: certain
+Severity: error
 Check: menus
 Info: The Index field in a doc-base file should reference the single index
  file for that document. Any other files belonging to the same document

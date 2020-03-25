@@ -1,6 +1,5 @@
 Tag: web-application-depends-on-apache2-data-package
-Severity: normal
-Certainty: certain
+Severity: warning
 Check: apache2
 Info: The package appears to be a web application but declares a package
  relation with <tt>apache2-bin</tt>, <tt>apache2-data</tt> or any of its

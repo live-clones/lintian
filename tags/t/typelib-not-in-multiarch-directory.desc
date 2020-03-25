@@ -1,6 +1,5 @@
 Tag: typelib-not-in-multiarch-directory
-Severity: wishlist
-Certainty: certain
+Severity: info
 Check: desktop/gnome/gir
 Info: Public GObject-Introspection binary typelibs
  (<tt>Foo-23.typelib</tt>) should be installed in the multi-arch

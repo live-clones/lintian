@@ -1,6 +1,5 @@
 Tag: systemd-service-file-wraps-init-script
-Severity: normal
-Certainty: certain
+Severity: warning
 Check: systemd
 Info: The listed service file simply uses ths existing SysV init script
  via ExecStart, ExecStop, etc.

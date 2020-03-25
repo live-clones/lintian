@@ -1,6 +1,5 @@
 Tag: debian-watch-line-invalid
-Severity: normal
-Certainty: certain
+Severity: warning
 Check: debian/watch
 Ref: uscan(1)
 Info: The indicated line in the <tt>debian/watch</tt> file in this

@@ -1,6 +1,5 @@
 Tag: package-contains-cmake-private-file
-Severity: important
-Certainty: certain
+Severity: error
 Check: build-systems/cmake
 Ref: https://wiki.debian.org/CMake, https://cmake.org/cmake/help/v3.10/manual/cmake-packages.7.html#config-file-packages
 Info: This package contains a file in a path reserved solely for

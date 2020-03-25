@@ -1,6 +1,5 @@
 Tag: desktop-entry-contains-deprecated-key
-Severity: normal
-Certainty: certain
+Severity: warning
 Check: menu-format
 Info: The key on this line of the desktop entry has been deprecated in the
  FreeDesktop specification.

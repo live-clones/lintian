@@ -1,6 +1,5 @@
 Tag: temporary-debhelper-file
-Severity: important
-Certainty: certain
+Severity: error
 Check: debhelper
 Ref: dh_clean(1)
 Info: The package contains temporary debhelper files, which are normally

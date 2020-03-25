@@ -1,5 +1,5 @@
 Tag: invalid-profile-name-in-source-relation
-Severity: important
+Severity: error
 Certainty: possible
 Check: fields/package-relations
 Info: The restriction formula in the source relation includes an unknown build

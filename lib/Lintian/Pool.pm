@@ -22,10 +22,10 @@ package Lintian::Pool;
 
 use strict;
 use warnings;
+use autodie;
 
 use Carp qw(croak);
-use Cwd();
-use File::Temp qw(tempdir);
+use Cwd;
 use Time::HiRes qw(gettimeofday tv_interval);
 use Path::Tiny;
 use POSIX qw(:sys_wait_h);
@@ -66,22 +66,23 @@ Lintian::Pool -- Pool of processables
 Returns a hash reference to the list of processable groups that are currently
 in the pool. The key is a unique identifier based on name and version.
 
+=item C<savedir>
+
 =cut
 
 has groups => (is => 'rwp', default => sub{ {} });
+
+has savedir => (is => 'rw', default => sub{ getcwd; });
 
 # must be absolute; frontend/lintian depends on it
 has basedir => (
     is => 'rwp',
     default => sub {
 
-        my $relative = tempdir('temp-lintian-lab-XXXXXXXXXX', 'TMPDIR' => 1);
+        my $absolute
+          = Path::Tiny->tempdir(TEMPLATE => 'lintian-pool-XXXXXXXXXX');
 
-        my $absolute = Cwd::abs_path($relative);
-        croak "Could not resolve $relative: $!"
-          unless $absolute;
-
-        path("$absolute/pool")->mkpath({mode => 0777});
+        $absolute->mkpath({mode => 0777});
 
         return $absolute;
     });
@@ -153,8 +154,7 @@ sub process{
     # do not remove lab if so selected
     $self->keep($opt->{'keep-lab'} // 0);
 
-    my @sorted = sort { $a->name cmp $b->name } values %{$self->groups};
-    foreach my $group (@sorted) {
+    for my $group (values %{$self->groups}) {
         my $success = 1;
 
         $OUTPUT->v_msg('Starting on group ' . $group->name);
@@ -194,8 +194,7 @@ sub process{
                 #
                 if (waitpid(-1, WNOHANG) != -1) {
                     $$exit_code_ref = 2;
-                    internal_error(
-                        'Unreaped processes after running checks!?');
+                    die 'Unreaped processes after running checks!?';
                 }
             } else {
                 # If we are interrupted in (e.g.) checks/manpages, it
@@ -220,6 +219,9 @@ sub process{
         }
         $OUTPUT->v_msg('Finished processing group ' . $group->name);
     }
+
+    # pass everything, in case some groups or processables have no tags
+    $OUTPUT->issue_tags([values %{$self->groups}]);
 
     if (    $action eq 'check'
         and not $opt->{'no-override'}
@@ -333,6 +335,9 @@ returned from this lab will immediately become invalid.
 
 sub DEMOLISH {
     my ($self, $in_global_destruction) = @_;
+
+    # change back to where we were; otherwise removal may fail
+    chdir($self->savedir);
 
     path($self->basedir)->remove_tree
       if length $self->basedir && -d $self->basedir;

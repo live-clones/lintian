@@ -93,12 +93,11 @@ sub to_universal {
         foreach my $tagnode (@tagsnodes) {
 
             my $severity = $tagnode->getAttribute('severity');
-            my $certainty = $tagnode->getAttribute('certainty');
             my $name = $tagnode->getAttribute('name');
             my $details = $tagnode->to_literal;
 
             croak 'Cannot parse tag node in XML'
-              unless all { length } ($severity, $certainty, $name);
+              unless all { length } ($severity, $name);
 
             my $converted = universal_string($package, $type, $name, $details);
             push(@unsorted, $converted);

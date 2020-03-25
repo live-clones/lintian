@@ -1,6 +1,5 @@
 Tag: no-debian-copyright
-Severity: minor
-Certainty: certain
+Severity: warning
 Check: debian/copyright
 Ref: policy 12.5
 Info: Every package must include the file <tt>/usr/share/doc/<i>pkg</i>/copyright</tt>.

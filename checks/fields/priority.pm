@@ -39,7 +39,7 @@ with 'Lintian::Check';
 
 my $KNOWN_PRIOS = Lintian::Data->new('fields/priorities');
 
-sub binary {
+sub installable {
     my ($self) = @_;
 
     my $processable = $self->processable;

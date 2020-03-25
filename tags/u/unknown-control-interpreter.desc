@@ -1,5 +1,5 @@
 Tag: unknown-control-interpreter
-Severity: important
+Severity: error
 Certainty: possible
 Check: scripts
 Info: This package contains a maintainer script that uses an interpreter

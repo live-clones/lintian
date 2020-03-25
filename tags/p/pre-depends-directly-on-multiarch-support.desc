@@ -1,5 +1,5 @@
 Tag: pre-depends-directly-on-multiarch-support
-Severity: important
+Severity: error
 Certainty: possible
 Check: debian/control
 Info: The control file mentions multiarch-support in a Pre-Depends line.

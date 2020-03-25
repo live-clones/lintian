@@ -30,7 +30,7 @@ our @EXPORT_OK= qw(split_paragraphs wrap_paragraphs dtml_to_html dtml_to_text);
 # requires wrap() function
 use Text::Wrap;
 
-use Lintian::Util qw(internal_error strip);
+use Lintian::Util qw(strip);
 
 =head1 NAME
 
@@ -123,7 +123,7 @@ sub split_paragraphs {
         }
         # what else can happen?
         else {
-            internal_error('internal error in wrap');
+            die 'internal error in wrap';
         }
     }
     #FLUSH;

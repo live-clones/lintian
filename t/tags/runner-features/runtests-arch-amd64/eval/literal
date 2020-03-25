@@ -6,6 +6,8 @@ C: runtests-arch-amd64 source: debian-build-system dh
 C: runtests-arch-amd64: no-ctrl-scripts
 C: runtests-arch-amd64 source: package-is-maintained-by-individual
 C: runtests-arch-amd64: package-is-maintained-by-individual
+C: runtests-arch-amd64 changes: package-is-maintained-by-individual
+C: runtests-arch-amd64 buildinfo: package-is-maintained-by-individual
 C: runtests-arch-amd64 source: rules-does-not-require-root
 C: runtests-arch-amd64 source: source-format 3.0 (native)
 C: runtests-arch-amd64 source: standards-version 4.5.0

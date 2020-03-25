@@ -1,5 +1,5 @@
 Tag: init.d-script-missing-dependency-on-local_fs
-Severity: important
+Severity: error
 Certainty: possible
 Check: init.d
 Info: The given init script seems to refer to <tt>/var</tt>, possibly

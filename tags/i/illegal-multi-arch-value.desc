@@ -1,6 +1,5 @@
 Tag: illegal-multi-arch-value
-Severity: serious
-Certainty: certain
+Severity: error
 Check: fields/multi-arch
 Info: The package is architecture all and has the Multi-Arch same value.
  .

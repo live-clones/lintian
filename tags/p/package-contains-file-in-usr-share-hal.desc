@@ -1,6 +1,5 @@
 Tag: package-contains-file-in-usr-share-hal
-Severity: normal
-Certainty: certain
+Severity: warning
 Check: files/names
 Info: This package installs the specified file under
  <tt>/usr/share/hal/</tt> but this directory is no longer looked at

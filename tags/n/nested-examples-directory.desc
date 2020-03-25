@@ -1,6 +1,5 @@
 Tag: nested-examples-directory
-Severity: important
-Certainty: certain
+Severity: error
 Check: documentation/examples
 Info: Package contains a <tt>usr/share/doc/something/examples/examples</tt>
  directory. It was most likely installed by accident, since one examples/

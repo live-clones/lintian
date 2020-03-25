@@ -1,6 +1,5 @@
 Tag: script-uses-unversioned-python-in-shebang
 Severity: pedantic
-Certainty: certain
 Check: languages/python/scripts
 Info: This package contains a script with unversioned Python shebang.
  .

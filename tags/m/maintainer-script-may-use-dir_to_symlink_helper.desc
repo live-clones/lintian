@@ -1,5 +1,5 @@
 Tag: maintainer-script-may-use-dir_to_symlink_helper
-Severity: serious
+Severity: error
 Certainty: possible
 Check: scripts
 Experimental: yes

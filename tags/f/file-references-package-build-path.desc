@@ -1,5 +1,5 @@
 Tag: file-references-package-build-path
-Severity: wishlist
+Severity: info
 Certainty: possible
 Check: files/contents
 Info: The listed file or maintainer script appears to reference

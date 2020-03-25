@@ -8,7 +8,7 @@
 
   <ul>
 {
-    for my $tag (sort $profile->tags (1)) {
+    for my $tag (sort $profile->known_tags) {
         my $text;
         my $q_tag = html_quote($tag);
         if ($stats{$tag}) {

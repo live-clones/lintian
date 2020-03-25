@@ -1,5 +1,5 @@
 Tag: copyright-should-refer-to-common-license-file-for-lgpl
-Severity: important
+Severity: error
 Certainty: possible
 Check: debian/copyright
 Ref: policy 12.5

@@ -1,5 +1,5 @@
 Tag: spelling-error-in-manpage
-Severity: minor
+Severity: info
 Certainty: possible
 Check: documentation/man
 Info: Lintian found a spelling error in the manpage. Lintian has a list

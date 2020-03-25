@@ -1,6 +1,5 @@
 Tag: desktop-entry-lacks-main-category
-Severity: normal
-Certainty: certain
+Severity: warning
 Check: menu-format
 Info: The categories for this desktop entry do not contain any Main
  Categories, only Additional Categories. Additional Categories should

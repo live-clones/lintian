@@ -1,6 +1,5 @@
 Tag: malformed-prompt-in-templates
-Severity: normal
-Certainty: certain
+Severity: warning
 Check: debian/debconf
 Info: The short description of a select, multiselect, string and password
  debconf template is a prompt and not a title. Avoid question style

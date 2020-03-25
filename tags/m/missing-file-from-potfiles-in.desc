@@ -1,6 +1,5 @@
 Tag: missing-file-from-potfiles-in
-Severity: normal
-Certainty: certain
+Severity: warning
 Check: debian/po-debconf
 Info: A file listed in <tt>debian/po/POTFILES.in</tt> could not be found
  in the source package.

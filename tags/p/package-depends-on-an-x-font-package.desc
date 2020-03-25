@@ -1,6 +1,5 @@
 Tag: package-depends-on-an-x-font-package
-Severity: important
-Certainty: certain
+Severity: error
 Check: fields/package-relations
 Info: Packages must not depend on X Window System font packages.
  .

@@ -88,7 +88,7 @@ sub always {
     my ($self) = @_;
 
     return
-      if $self->type eq 'changes';
+      if $self->type eq 'changes' || $self->type eq 'buildinfo';
 
     my $maintainer = $self->processable->unfolded_field('maintainer');
 

@@ -1,6 +1,5 @@
 Tag: invalid-field-for-derivative
-Severity: serious
-Certainty: certain
+Severity: error
 Check: fields/derivatives
 Info: The specified field in <tt>debian/control</tt> does not match the
  required format for this Debian derivative.

@@ -1,5 +1,5 @@
 Tag: depends-on-python2-and-python3
-Severity: minor
+Severity: info
 Certainty: possible
 Check: languages/python
 Info: The specified package has a relation to both the Python 2 and

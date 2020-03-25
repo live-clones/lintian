@@ -1,6 +1,5 @@
 Tag: source-contains-prebuilt-binary
 Severity: pedantic
-Certainty: certain
 Check: cruft
 Info: The source tarball contains a prebuilt ELF object. They are usually
  left by mistake when generating the tarball by not cleaning the source
