@@ -1,5 +1,5 @@
 Tag: no-dh-sequencer
-Severity: wishlist
+Severity: info
 Certainty: possible
 Check: debian/rules/dh-sequencer
 Info: This package does not use the <tt>dh</tt> sequencer in <tt>debian/rules</tt>.

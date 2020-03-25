@@ -1,6 +1,5 @@
 Tag: udev-rule-unreadable
-Severity: serious
-Certainty: certain
+Severity: error
 Check: udev
 Ref: https://wiki.debian.org/USB/GadgetSetup
 Info: The udev rule entry should be a file

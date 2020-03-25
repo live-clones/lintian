@@ -1,6 +1,5 @@
 Tag: diff-contains-editor-backup-file
-Severity: minor
-Certainty: certain
+Severity: warning
 Check: cruft
 Info: The Debian diff or native package contains a file ending in
  <tt>~</tt> or of the form <tt>.xxx.swp</tt>, which is normally either an

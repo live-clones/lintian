@@ -30,7 +30,6 @@ use List::Util qw(first);
 use POSIX qw(strftime);
 
 use Lintian::Data;
-use Lintian::Util qw(internal_error);
 
 use Moo;
 use namespace::clean;
@@ -43,12 +42,12 @@ my $ANCIENT_DATE_DATA = Lintian::Data->new(
     qr{\s*<\s*},
     sub {
         my $date = str2time($_[1])
-          or internal_error("Cannot parse ANCIENT_DATE: $!");
+          or die "Cannot parse ANCIENT_DATE: $!";
         return $date;
     });
 
 my $ANCIENT_DATE = $ANCIENT_DATE_DATA->value('ANCIENT')
-  or internal_error('Cannot get ANCIENT_DATE');
+  or die 'Cannot get ANCIENT_DATE';
 
 my $STANDARDS= Lintian::Data->new('standards-version/release-dates', qr/\s+/o);
 

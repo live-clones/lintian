@@ -1,5 +1,5 @@
 Tag: doc-package-depends-on-main-package
-Severity: normal
+Severity: warning
 Certainty: possible
 Check: fields/package-relations
 Info: The name of this package suggests that it is a documentation package.

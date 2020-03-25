@@ -1,6 +1,5 @@
 Tag: override-file-in-wrong-location
-Severity: important
-Certainty: certain
+Severity: error
 Check: lintian/overrides
 Info: Lintian overrides should be put in a regular file named
  /usr/share/lintian/overrides/<tt>package</tt>, not in a subdirectory

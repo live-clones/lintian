@@ -1,5 +1,5 @@
 Tag: read-in-maintainer-script
-Severity: serious
+Severity: error
 Certainty: possible
 Check: scripts
 Ref: policy 3.9.1 

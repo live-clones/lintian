@@ -49,12 +49,10 @@ my $NAME_SECTION_MAPPINGS = Lintian::Data->new(
 
 our %KNOWN_ARCHIVE_PARTS = map { $_ => 1 } ('non-free', 'contrib');
 
-sub binary {
+sub installable {
     my ($self) = @_;
 
-    my $processable = $self->processable;
-
-    my $section = $processable->unfolded_field('section');
+    my $section = $self->processable->unfolded_field('section');
 
     unless (defined $section) {
         $self->tag('no-section-field');
@@ -67,10 +65,7 @@ sub binary {
 sub udeb {
     my ($self) = @_;
 
-    my $processable = $self->processable;
-
-    my $section = $processable->unfolded_field('section');
-
+    my $section = $self->processable->unfolded_field('section');
     return
       unless defined $section;
 

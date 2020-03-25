@@ -1,6 +1,5 @@
 Tag: section-is-dh_make-template
-Severity: serious
-Certainty: certain
+Severity: error
 Check: fields/section
 Info: The "Section:" field in this package's control file is set to
  unknown. This is not a valid section, and usually means a dh_make

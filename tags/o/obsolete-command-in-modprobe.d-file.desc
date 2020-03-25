@@ -1,6 +1,5 @@
 Tag: obsolete-command-in-modprobe.d-file
-Severity: normal
-Certainty: certain
+Severity: warning
 Check: modprobe
 Info: Use of 'install' and 'remove' commands in module files in
  <tt>/etc/modprobe.d</tt> and <tt>/etc/modules-load.d</tt> is

@@ -1,6 +1,5 @@
 Tag: wrong-path-for-interpreter
-Severity: important
-Certainty: certain
+Severity: error
 Check: scripts
 Info: The interpreter you used is installed at another location on Debian
  systems.

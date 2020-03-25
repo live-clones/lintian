@@ -1,6 +1,5 @@
 Tag: uses-deprecated-compression-for-data-tarball
-Severity: important
-Certainty: certain
+Severity: error
 Check: deb-format
 Info: The data portion of this binary package uses a deprecated compression
  format. Although dpkg will support extracting such binary packages for

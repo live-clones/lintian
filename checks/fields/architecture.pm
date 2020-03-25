@@ -28,6 +28,9 @@ use strict;
 use warnings;
 use autodie;
 
+use List::Compare;
+use List::MoreUtils qw(any);
+
 use Lintian::Architecture qw(:all);
 
 use constant EMPTY => q{};
@@ -37,8 +40,8 @@ use namespace::clean;
 
 with 'Lintian::Check';
 
-has architecture => (is => 'rwp', default => EMPTY);
-has have_r_package_not_arch_all => (is => 'rwp', default => 0);
+has architecture => (is => 'rw', default => EMPTY);
+has have_r_package_not_arch_all => (is => 'rw', default => 0);
 
 sub setup {
     my ($self) = @_;
@@ -48,12 +51,12 @@ sub setup {
     return
       unless defined $unsplit;
 
-    my @list = split(m/ /o, $unsplit);
+    my @architectures = split(m/ /o, $unsplit);
 
     return
-      unless @list;
+      unless @architectures;
 
-    $self->_set_architecture($list[0]);
+    $self->architecture($architectures[0]);
 
     return;
 }
@@ -61,7 +64,7 @@ sub setup {
 sub files {
     my ($self, $file) = @_;
 
-    $self->_set_have_r_package_not_arch_all(1)
+    $self->have_r_package_not_arch_all(1)
       if $file->name =~ m,^usr/lib/R/.*/DESCRIPTION,
       && !$file->is_dir
       && $self->package =~ /^r-(?:cran|bioc|other)-/
@@ -80,7 +83,7 @@ sub breakdown {
     return;
 }
 
-sub binary {
+sub installable {
     my ($self) = @_;
 
     my $pkg = $self->package;
@@ -91,19 +94,19 @@ sub binary {
     return
       unless defined $unsplit;
 
-    my @list = split(m/ /o, $unsplit);
+    my @architectures = split(m/ /o, $unsplit);
 
     return
-      unless @list;
+      unless @architectures;
 
-    for my $architecture (@list) {
+    for my $architecture (@architectures) {
         $self->tag('arch-wildcard-in-binary-package', $architecture)
           if is_arch_wildcard($architecture);
     }
 
-    $self->tag('too-many-architectures') if @list > 1;
+    $self->tag('too-many-architectures') if @architectures > 1;
 
-    my $architecture = $list[0];
+    my $architecture = $architectures[0];
 
     return
       if $architecture eq 'all';
@@ -123,51 +126,54 @@ sub always {
     my $type = $self->type;
     my $processable = $self->processable;
 
-    my $architecture = $processable->unfolded_field('architecture');
+    my $value = $processable->unfolded_field('architecture');
 
-    unless (defined $architecture) {
+    unless (defined $value) {
         $self->tag('no-architecture-field');
         return;
     }
 
-    my @list = split(m/ /o, $architecture);
+    my @architectures = split(/ /, $value);
 
-    for my $arch (@list) {
+    for my $architecture (@architectures) {
 
-        $self->tag('unknown-architecture', $arch)
-          unless is_arch_or_wildcard($arch);
+        $self->tag('unknown-architecture', $architecture)
+          unless is_arch_or_wildcard($architecture)
+          || ($architecture eq 'source'
+            && ($type eq 'changes' || $type eq 'buildinfo'));
     }
 
-    if (@list > 1) {    # Check for magic architecture combinations.
+    # check for magic architecture combinations
+    if (@architectures > 1) {
 
-        my %archmap;
-        my $magic = 0;
+        my $magic_error = 0;
 
-        $archmap{$_}++ for (@list);
+        if (any { $_ eq 'all' } @architectures) {
+            $magic_error++
+              unless any { $type eq $_ } ('source', 'changes', 'buildinfo');
+        }
 
-        $magic++
-          if $type ne 'source' && $archmap{'all'};
+        my $anylc = List::Compare->new(\@architectures, ['any']);
+        if ($anylc->get_intersection) {
 
-        if ($archmap{'any'}) {
-
-            delete $archmap{'any'};
+            my @errorset = $anylc->get_Lonly;
 
             # Allow 'all' to be present in source packages as well
             # (#626775)
-            delete $archmap{'all'}
-              if $type eq 'source';
+            @errorset = grep { $_ ne 'all' } @errorset
+              if any { $type eq $_ } ('source', 'changes', 'buildinfo');
 
-            $magic++
-              if %archmap;
+            $magic_error++
+              if @errorset;
         }
 
-        $self->tag('magic-arch-in-arch-list') if $magic;
+        $self->tag('magic-arch-in-arch-list') if $magic_error;
     }
 
     # Used for later tests.
     my $arch_indep = 0;
     $arch_indep = 1
-      if @list == 1 && $list[0] eq 'all';
+      if @architectures == 1 && $architectures[0] eq 'all';
 
     return;
 }

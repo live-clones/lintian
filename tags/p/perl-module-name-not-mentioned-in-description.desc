@@ -1,7 +1,6 @@
 # Imported from pkg-perl-tools (named no-module-name-in-description there)
 Tag: perl-module-name-not-mentioned-in-description
-Severity: minor
-Certainty: certain
+Severity: warning
 Check: fields/description
 Experimental: yes
 Info: Debian users are likely to look for perl modules by their name, e.g.

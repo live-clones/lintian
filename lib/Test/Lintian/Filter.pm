@@ -51,7 +51,7 @@ BEGIN {
 use Carp;
 use File::Spec::Functions qw(rel2abs splitpath catpath);
 use File::Find::Rule;
-use List::MoreUtils qw(uniq);
+use List::MoreUtils qw(uniq none);
 use List::Util qw(any all);
 use Path::Tiny;
 use Text::CSV;
@@ -195,12 +195,19 @@ sub find_selected_lintian_testpaths {
             my %wanted = map { $_ => 1 } @{$filter->{check}};
 
             for my $tag (@{$filter->{tag}}) {
-                my $taginfo = $profile->get_tag($tag);
+
+                my $taginfo = $profile->get_taginfo($tag);
                 unless ($taginfo) {
                     say "Tag $tag not found";
                     return;
                 }
-                $wanted{$taginfo->script} = 1;
+
+                if (none { $tag eq $_ } $profile->enabled_tags) {
+                    say "Tag $tag not enabled";
+                    return;
+                }
+
+                $wanted{$taginfo->check} = 1;
             }
 
             for my $testpath (find_all_testpaths($suitepath)) {
@@ -235,7 +242,7 @@ sub find_selected_lintian_testpaths {
         foreach my $parameter (@filter_no_prefix) {
             push(@insuite,find_testpaths_by_name($suitepath, $parameter));
 
-            my $checkscript = $profile->get_script($parameter);
+            my $checkscript = $profile->get_checkinfo($parameter);
             if ($parameter eq 'legacy' || defined $checkscript) {
                 push(@insuite,
                     find_testpaths_by_name($suitepath, "$parameter-*"));
@@ -308,7 +315,7 @@ sub find_all_tags {
 
     my @checks = split(SPACE, $desc->{check});
     foreach my $check (@checks) {
-        my $checkscript = $profile->get_script($check);
+        my $checkscript = $profile->get_checkinfo($check);
         die "Unknown Lintian check $check"
           unless defined $checkscript;
 

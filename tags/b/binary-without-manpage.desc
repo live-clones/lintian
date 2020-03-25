@@ -1,5 +1,5 @@
 Tag: binary-without-manpage
-Severity: normal
+Severity: warning
 Certainty: possible
 Check: documentation/man
 Info: Each binary in <tt>/usr/bin</tt>, <tt>/usr/sbin</tt>, <tt>/bin</tt>,

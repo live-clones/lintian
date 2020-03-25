@@ -1,6 +1,5 @@
 Tag: file-in-usr-marked-as-conffile
-Severity: serious
-Certainty: certain
+Severity: error
 Check: conffiles
 Ref: policy 10.7.2
 Info: All configuration files must reside in <tt>/etc</tt>. Files below

@@ -1,6 +1,5 @@
 Tag: subdir-in-bin
-Severity: serious
-Certainty: certain
+Severity: error
 Check: files/hierarchy-standard
 Info: The Filesystem Hierarchy Standard forbids the installation of new
  directories in <tt>/bin</tt>.

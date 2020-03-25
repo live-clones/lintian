@@ -1,6 +1,5 @@
 Tag: package-has-unnecessary-activation-of-ldconfig-trigger
-Severity: minor
-Certainty: certain
+Severity: warning
 Check: shared-libs
 Info: The package activates the ldconfig trigger even though no shared
  libraries are installed in a directory controlled by the dynamic

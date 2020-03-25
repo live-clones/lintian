@@ -1,6 +1,5 @@
 Tag: gir-section-not-libdevel
-Severity: normal
-Certainty: certain
+Severity: warning
 Check: desktop/gnome/gir
 Info: GObject-Introspection XML files
  (<tt>/usr/share/gir-1.0/Foo-23.gir</tt>) must be made available in

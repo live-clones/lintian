@@ -1,6 +1,5 @@
 Tag: doc-base-document-field-ends-in-whitespace
-Severity: important
-Certainty: certain
+Severity: error
 Check: menus
 Info: The Document field in a doc-base file should not end in whitespace.
  doc-base (at least as of 0.8.5) cannot cope with such fields and

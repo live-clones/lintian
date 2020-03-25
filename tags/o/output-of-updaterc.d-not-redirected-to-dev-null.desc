@@ -1,6 +1,5 @@
 Tag: output-of-updaterc.d-not-redirected-to-dev-null
-Severity: wishlist
-Certainty: certain
+Severity: info
 Check: init.d
 Info: The output messages of the <tt>update-rc.d</tt> command should be
  redirected to <tt>/dev/null</tt> because it is currently very chatty

@@ -1,5 +1,5 @@
 Tag: embedded-php-library
-Severity: normal
+Severity: warning
 Certainty: possible
 Check: files/embedded-libraries
 Info: This package appears to contain an embedded copy of a PHP library.

@@ -24,10 +24,9 @@ use autodie;
 use Carp;
 use List::MoreUtils qw(any);
 use Path::Tiny;
-use Scalar::Util qw(blessed);
 
 use Lintian::File::Path;
-use Lintian::Util qw(open_gz perm2oct dequote_name);
+use Lintian::Util qw(perm2oct);
 
 use constant EMPTY => q{};
 use constant SPACE => q{ };

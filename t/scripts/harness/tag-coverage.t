@@ -74,13 +74,13 @@ my $profile = Lintian::Profile->new;
 $profile->load(undef, [$ENV{LINTIAN_ROOT}]);
 
 # find known checks
-my @known = uniq $profile->scripts;
+my @known = uniq $profile->known_checks;
 
 my %checktags;
 for my $check (@known) {
 
     # get all tags belonging to that check
-    my $script = $profile->get_script($check);
+    my $script = $profile->get_checkinfo($check);
     $checktags{$check} = [$script->tags];
 }
 
@@ -117,7 +117,7 @@ for my $descpath (@descpaths) {
 }
 
 # find known tags
-my @wanted = uniq $profile->tags;
+my @wanted = uniq $profile->known_tags;
 my $total = scalar @wanted;
 
 # set the testing plan

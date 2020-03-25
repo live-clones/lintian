@@ -1,6 +1,5 @@
 Tag: debian-rules-should-not-use-sanitize-all-buildflag
-Severity: important
-Certainty: certain
+Severity: error
 Check: debian/rules
 Info: This package's <tt>debian/rules</tt> file contains a
  <tt>DEB_BUILD_MAINT_OPTIONS</tt> assignment that enables the

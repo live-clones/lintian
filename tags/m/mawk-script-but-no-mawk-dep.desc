@@ -1,6 +1,5 @@
 Tag: mawk-script-but-no-mawk-dep
-Severity: important
-Certainty: certain
+Severity: error
 Check: scripts
 Info: Packages that use mawk scripts must depend on the mawk package.
  If they don't need mawk-specific features, and can just as easily work

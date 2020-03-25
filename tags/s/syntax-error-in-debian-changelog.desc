@@ -1,5 +1,5 @@
 Tag: syntax-error-in-debian-changelog
-Severity: normal
+Severity: warning
 Certainty: possible
 Check: debian/changelog
 Info: While parsing the Debian changelog, a syntax error was found. If

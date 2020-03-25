@@ -29,7 +29,7 @@ use List::MoreUtils qw(any none uniq);
 
 use Lintian::Data;
 use Lintian::Relation;
-use Lintian::Util qw(internal_error strip);
+use Lintian::Util qw(strip);
 
 use Moo;
 use namespace::clean;
@@ -53,7 +53,7 @@ my %symbols_meta_fields = map { $_ => 1 }qw(
 my $ldconfig_dirs = Lintian::Data->new('shared-libs/ldconfig-dirs');
 my $MA_DIRS = Lintian::Data->new('common/multiarch-dirs', qr/\s++/);
 
-sub always {
+sub installable {
     my ($self) = @_;
 
     my $pkg = $self->package;
@@ -215,8 +215,7 @@ sub always {
     for my $shlib_file (keys %SONAME) {
         # file found?
         if (not $processable->installed->lookup($shlib_file)) {
-            internal_error(
-                "shlib $shlib_file not found in package (should not happen!)");
+            die "shlib $shlib_file not found in package (should not happen!)";
         }
 
         my ($dir, $shlib_name) = $shlib_file =~ m,(.*)/([^/]+)$,;

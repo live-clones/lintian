@@ -1,3 +1,5 @@
 filename-length-really-really-really-really-long-package-name (source): source-package-component-has-long-file-name 111 > 80
 filename-length-really-really-really-really-long-package-name (source): package-has-long-file-name 101 > 80
+filename-length-really-really-really-really-long-package-name (changes): package-has-long-file-name 113 (117) > 80
+filename-length-really-really-really-really-long-package-name (buildinfo): package-has-long-file-name 113 (117) > 80
 filename-length-really-really-really-really-long-package-name (binary): package-has-long-file-name 105 > 80

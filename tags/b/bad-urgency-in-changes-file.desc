@@ -1,6 +1,5 @@
 Tag: bad-urgency-in-changes-file
-Severity: important
-Certainty: certain
+Severity: error
 Check: changes-file
 Info: The keyword value of the "Urgency" field in the .changes file is not
  one of the allowed values of low, medium, high, critical, and emergency

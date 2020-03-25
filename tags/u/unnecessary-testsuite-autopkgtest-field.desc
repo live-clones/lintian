@@ -1,6 +1,5 @@
 Tag: unnecessary-testsuite-autopkgtest-field
-Severity: normal
-Certainty: certain
+Severity: warning
 Check: testsuite
 Info: You do not need to specify a <tt>Testsuite: autopkgtest</tt> field if
  a <tt>debian/tests/control</tt> file exists. It is automatically added by

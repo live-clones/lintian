@@ -1,5 +1,5 @@
 Tag: hyphen-file
-Severity: important
+Severity: error
 Certainty: possible
 Check: files/names
 Info: The given file is literally installed as <tt>-</tt> (hyphen

@@ -1,6 +1,5 @@
 Tag: exclusive-runtime-tests-field
-Severity: normal
-Certainty: certain
+Severity: warning
 Check: testsuite
 Info: Exclusive field are specified in some paragraph of the
  debian/tests/control file.

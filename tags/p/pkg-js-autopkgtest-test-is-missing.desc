@@ -1,6 +1,5 @@
 Tag: pkg-js-autopkgtest-test-is-missing
-Severity: normal
-Certainty: certain
+Severity: warning
 Check: languages/javascript/nodejs
 Info: The <tt>Testsuite:</tt> field for this package points to
  <tt>autopkgtest-pkg-nodejs</tt> which attempts to execute

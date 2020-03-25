@@ -1,5 +1,5 @@
 Tag: source-contains-prebuilt-silverlight-object
-Severity: serious
+Severity: error
 Certainty: possible
 Check: cruft
 Info: The source tarball contains a prebuilt Silverlight control.

@@ -1,5 +1,5 @@
 Tag: dependency-is-not-multi-archified
-Severity: normal
+Severity: warning
 Certainty: possible
 Check: group-checks
 Info: The package is Multi-Arch "same", but it depends on a package that

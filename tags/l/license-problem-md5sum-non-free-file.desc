@@ -1,6 +1,5 @@
 Tag: license-problem-md5sum-non-free-file
-Severity: serious
-Certainty: certain
+Severity: error
 Check: cruft
 Info: The following file is not suitable for main or contrib.
  .

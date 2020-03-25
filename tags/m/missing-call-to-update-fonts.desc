@@ -1,5 +1,5 @@
 Tag: missing-call-to-update-fonts
-Severity: normal
+Severity: warning
 Certainty: possible
 Check: scripts
 Info: The maintainer script ships the specified X11 font but does not

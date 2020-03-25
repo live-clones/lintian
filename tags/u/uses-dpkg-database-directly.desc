@@ -1,5 +1,5 @@
 Tag: uses-dpkg-database-directly
-Severity: normal
+Severity: warning
 Certainty: possible
 Check: files/contents
 Info: The listed file or maintainer script appears to access the

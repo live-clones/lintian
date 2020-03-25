@@ -1,6 +1,5 @@
 Tag: omitted-systemd-service-for-init.d-script
-Severity: serious
-Certainty: certain
+Severity: error
 Check: systemd
 Info: The specified init.d script has no systemd equivalent and the
  package ships other units.

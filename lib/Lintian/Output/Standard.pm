@@ -21,7 +21,7 @@ package Lintian::Output::Standard;
 use strict;
 use warnings;
 
-use CGI qw(escapeHTML);
+use HTML::Entities;
 use Term::ANSIColor ();
 
 # for tty hyperlinks
@@ -77,12 +77,26 @@ my %type_priority = (
 );
 
 sub issue_tags {
-    my ($self, $pending, $processables) = @_;
+    my ($self, $groups) = @_;
 
-    return
-      unless $pending && $processables;
+    my @processables = map { $_->get_processables } @{$groups // []};
 
-    $self->print_start_pkg($_)for @{$processables};
+    my @pending;
+    for my $processable (@processables) {
+
+        # get tags
+        my @tags = @{$processable->tags};
+
+        # associate tags with processable
+        $_->processable($processable) for @tags;
+
+        # remove circular references
+        $processable->tags([]);
+
+        push(@pending, @tags);
+    }
+
+    $self->print_start_pkg($_) for @processables;
 
     my @sorted = sort {
              defined $a->override <=> defined $b->override
@@ -91,18 +105,18 @@ sub issue_tags {
           || $type_priority{$a->processable->type}
           <=> $type_priority{$b->processable->type}
           || $a->processable->name cmp $b->processable->name
-          || $a->extra cmp $b->extra
-    } @{$pending};
+          || $a->hint cmp $b->hint
+    } @pending;
 
     $self->print_tag($_) for @sorted;
 
     return;
 }
 
-=item C<print_tag($pkg_info, $tag_info, $extra, $override)>
+=item C<print_tag($pkg_info, $tag_info, $hint, $override)>
 
 Print a tag.  The first two arguments are hash reference with the
-information about the package and the tag, $extra is the extra
+information about the package and the tag, $hint is the hint
 information for the tag (if any) as an array reference, and $override
 is either undef if the tag is not overridden or a hash with
 override info for this tag.
@@ -113,16 +127,16 @@ sub print_tag {
     my ($self, $tag) = @_;
 
     my $tag_info = $tag->info;
-    my $information = $tag->extra;
+    my $information = $tag->hint;
     my $override = $tag->override;
     my $processable = $tag->processable;
 
     $information = ' ' . $self->_quote_print($information)
       if $information ne '';
     my $code = $tag_info->code;
-    my $tag_color = $self->{colors}{$code};
+    my $tag_color = ($tag->override ? 'bright_black' : $self->{colors}{$code});
     my $fpkg_info= $self->_format_pkg_info($processable, $tag_info, $override);
-    my $tag_name = $tag_info->tag;
+    my $tag_name = $tag_info->name;
     my $limit = $self->tag_display_limit;
     my $output;
 
@@ -139,8 +153,8 @@ sub print_tag {
           if $emitted_count >= $limit-1;
     }
     if ($self->_do_color && $self->color eq 'html') {
-        my $escaped = escapeHTML($tag_name);
-        $information = escapeHTML($information);
+        my $escaped = encode_entities($tag_name);
+        $information = encode_entities($information);
         $output .= qq(<span style="color: $tag_color">$escaped</span>);
 
     } else {
@@ -164,7 +178,7 @@ sub print_tag {
     }
 
     $self->_print('', $fpkg_info, "$output$information");
-    if (not $self->issued_tag($tag_info->tag) and $self->showdescription) {
+    if (not $self->issued_tag($tag_info->name) and $self->showdescription) {
         my $description;
         if ($self->_do_color && $self->color eq 'html') {
             $description = $tag_info->description('html', '   ');

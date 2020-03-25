@@ -193,14 +193,14 @@ sub create {
 
                 if ($status) {
                     my $message
-                      = "Non-zero status $status from dpkg-deb for control";
+                      = "Non-zero status $status from tar for $tarball";
                     $message .= COLON . NEWLINE . $stderr
                       if length $stderr;
                     $future->fail($message);
                     return;
                 }
 
-                $future->done('Done with dpkg-deb');
+                $future->done("Done with tar for $tarball");
                 return;
             });
 

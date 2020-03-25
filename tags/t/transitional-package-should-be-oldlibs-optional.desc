@@ -1,5 +1,5 @@
 Tag: transitional-package-should-be-oldlibs-optional
-Severity: normal
+Severity: warning
 Certainty: possible
 Check: fields/section
 Ref: #645438, devref 6.7.7

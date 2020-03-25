@@ -1,5 +1,5 @@
 Tag: shlib-missing-in-symbols-control-file
-Severity: normal
+Severity: warning
 Certainty: possible
 Check: shared-libs
 Info: The package contains a shared library that is not listed in the

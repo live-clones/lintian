@@ -85,7 +85,6 @@ use Lintian::Util qw(is_string_utf8_encoded);
 $Lintian::Data::LAZY_LOAD = 0;
 
 my %severities = map { $_ => 1 } @Lintian::Tag::Info::SEVERITIES;
-my %certainties = map { $_ => 1 } @Lintian::Tag::Info::CERTAINTIES;
 my %check_types = map { $_ => 1 } qw(binary changes source udeb);
 my %known_html_tags = map { $_ => 1 } qw(a em i tt);
 
@@ -144,7 +143,7 @@ translations.  Otherwise, they must be regular checks.
 =cut
 
 sub test_check_desc {
-    my ($opts, @descs);
+    my ($opts, @dirs);
     my $builder = $CLASS->builder;
     my $colldir = '/usr/share/lintian/collection';
     my $find_opt = {'filter' => undef,};
@@ -155,10 +154,11 @@ sub test_check_desc {
         $find_opt->{'filter'} = $opts->{'filter'} if exists $opts->{'filter'};
     }
     $opts //= {};
-    @descs = @_;
+    @dirs = @_;
     load_profile_for_test();
 
-    foreach my $desc_file (map { _find_check($find_opt, $_) } @descs) {
+    my @descs = map { _find_check($find_opt, $_) } @dirs;
+    foreach my $desc_file (@descs) {
         my ($header, @tagpara);
         eval {($header, @tagpara) = read_dpkg_control($desc_file);};
         if (my $err = $@) {
@@ -203,7 +203,6 @@ sub test_check_desc {
         foreach my $tpara (@tagpara) {
             my $tag = $tpara->{'tag'}//'';
             my $severity = $tpara->{'severity'}//'';
-            my $certainty = $tpara->{'certainty'}//'';
             my $info = $tpara->{'info'} // '';
             my (@htmltags, %seen);
 
@@ -218,13 +217,10 @@ sub test_check_desc {
             $builder->cmp_ok(length $tag, '<=', 68, 'Tag is not too long')
               or $builder->diag("$cname: $tag\n");
 
-            # Severity / Certainty
+            # Severity
             $builder->ok($severity && exists $severities{$severity},
                 'Tag has valid severity')
               or $builder->diag("$cname: $tag severity: $severity\n");
-            $builder->ok($certainty && exists $certainties{$certainty},
-                'Tag has valid certainty')
-              or $builder->diag("$cname: $tag certainty: $certainty\n");
 
             # Info
             my $mistakes = 0;
@@ -397,15 +393,17 @@ sub test_load_checks {
         my $find_opt = {'want-check-name' => 1,};
         $find_opt->{'filter'} = $opts->{'filter'} if exists $opts->{'filter'};
         @checknames = _find_check($find_opt, $dir);
-        $builder->cmp_ok(scalar @checknames, '>', 0, 'Found checks to test');
     } else {
         $builder->skip('Given an explicit list of checks');
     }
 
+    $builder->skip('No desc files found')
+      unless @checknames;
+
     load_profile_for_test();
 
     foreach my $checkname (@checknames) {
-        my $cs = Lintian::CheckScript->new;
+        my $cs = Lintian::Check::Info->new;
         $cs->basedir($dir);
         $cs->name($checkname);
         eval {$cs->load;};
@@ -441,7 +439,10 @@ sub test_load_checks {
 
         # setup and breakdown should only be used together with files
         my $has_entrypoint = any { $ppkg->can($_) }
-        ('source', 'binary', 'udeb', 'changes', 'always', 'files');
+        (
+            'source', 'binary', 'udeb', 'installable',
+            'changes', 'always', 'files'
+        );
 
         if (!$builder->ok($has_entrypoint, "Check $cname has entry point")) {
             $builder->diag("Expected package name is $ppkg\n");
@@ -532,7 +533,6 @@ sub test_tags_implemented {
         my $find_opt = {'want-check-name' => 1,};
         $find_opt->{'filter'} = $opts->{'filter'} if exists $opts->{'filter'};
         @checknames = _find_check($find_opt, $dir);
-        $builder->cmp_ok(scalar @checknames, '>', 0, 'Found checks to test');
     } else {
         $builder->skip('Given an explicit list of checks');
     }
@@ -547,7 +547,7 @@ sub test_tags_implemented {
 
     foreach my $checkname (@checknames) {
         my (@tags, $codestr, @missing);
-        my $cs = Lintian::CheckScript->new;
+        my $cs = Lintian::Check::Info->new;
         $cs->basedir($dir);
         $cs->name($checkname);
         eval {$cs->load;};

@@ -1,6 +1,5 @@
 Tag: package-placeholder-in-symbols-file
-Severity: normal
-Certainty: certain
+Severity: warning
 Check: debian/symbols
 Info: The symbols file for this package contains the invalid placeholder
  <tt>&num;PACKAGE&num;</tt> in the <tt>Build-Depends-Package</tt>

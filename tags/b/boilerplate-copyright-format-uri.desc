@@ -1,5 +1,5 @@
 Tag: boilerplate-copyright-format-uri
-Severity: normal
+Severity: warning
 Certainty: possible
 Check: debian/copyright
 Info: Format URI of the machine-readable copyright file contains

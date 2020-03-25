@@ -32,7 +32,7 @@ use List::MoreUtils qw(any first_index);
 use Text::ParseWords qw(shellwords);
 
 use Lintian::Data;
-use Lintian::Util qw(internal_error lstrip rstrip);
+use Lintian::Util qw(lstrip rstrip);
 
 use Moo;
 use namespace::clean;
@@ -69,7 +69,7 @@ sub files {
     return;
 }
 
-sub binary {
+sub installable {
     my ($self) = @_;
 
     my $pkg = $self->package;

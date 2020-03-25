@@ -1,5 +1,5 @@
 Tag: license-problem-cc-by-nc-sa
-Severity: serious
+Severity: error
 Certainty: possible
 Check: cruft
 Info: The given source file is copyrighted under the non-free

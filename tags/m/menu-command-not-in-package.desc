@@ -1,5 +1,5 @@
 Tag: menu-command-not-in-package
-Severity: normal
+Severity: warning
 Certainty: possible
 Check: menu-format
 Info: The menu item specifies a command which is not available in the package.

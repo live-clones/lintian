@@ -54,22 +54,22 @@ Store found tags for later processing.
 
 sub tag {
 
-    my ($self, $tagname, @extra) = @_;
+    my ($self, $tagname, @hint_components) = @_;
 
     my $tag = Lintian::Tag::Standard->new;
     $tag->name($tagname);
-    $tag->arguments(\@extra);
+    $tag->arguments(\@hint_components);
 
-    push(@{$self->found}, $tag);
+    push(@{$self->tags}, $tag);
 
     return;
 }
 
-=item found
+=item tags
 
 =cut
 
-has found => (is => 'rw', default => sub { [] });
+has tags => (is => 'rw', default => sub { [] });
 
 =back
 

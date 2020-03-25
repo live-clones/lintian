@@ -1,5 +1,5 @@
 Tag: missing-versioned-depends-on-init-system-helpers
-Severity: normal
+Severity: warning
 Certainty: possible
 Check: scripts
 Ref: update.d(8), #910593

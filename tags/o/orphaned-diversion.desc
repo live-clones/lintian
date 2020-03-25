@@ -1,6 +1,5 @@
 Tag: orphaned-diversion
-Severity: important
-Certainty: certain
+Severity: error
 Check: scripts
 Info: A diversion was added for the file, but not removed. This means
  your package doesn't restore the previous state after removal.

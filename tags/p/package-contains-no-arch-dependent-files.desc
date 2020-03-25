@@ -1,5 +1,5 @@
 Tag: package-contains-no-arch-dependent-files
-Severity: minor
+Severity: info
 Certainty: possible
 Check: files/architecture
 Experimental: yes

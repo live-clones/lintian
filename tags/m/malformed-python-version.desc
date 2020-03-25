@@ -1,6 +1,5 @@
 Tag: malformed-python-version
-Severity: important
-Certainty: certain
+Severity: error
 Check: languages/python
 Ref: python-policy 3.4
 Info: The Python-Version or Python3-Version control field is not in one

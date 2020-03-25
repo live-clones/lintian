@@ -1,6 +1,5 @@
 Tag: missing-dep-on-jarwrapper
-Severity: serious
-Certainty: certain
+Severity: error
 Check: languages/java
 Ref: java-policy 2.2
 Info: Packages containing an executable JAR must depend on jarwrapper or

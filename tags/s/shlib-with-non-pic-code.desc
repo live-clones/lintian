@@ -1,5 +1,5 @@
 Tag: shlib-with-non-pic-code
-Severity: serious
+Severity: error
 Certainty: possible
 Check: shared-libs
 Ref: policy 10.2

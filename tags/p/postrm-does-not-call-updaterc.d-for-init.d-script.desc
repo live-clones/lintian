@@ -1,6 +1,5 @@
 Tag: postrm-does-not-call-updaterc.d-for-init.d-script
-Severity: important
-Certainty: certain
+Severity: error
 Check: init.d
 Info: An <tt>/etc/init.d</tt> script which has been registered in the
  <tt>postinst</tt> script is not de-registered in the

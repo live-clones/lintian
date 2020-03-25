@@ -8,6 +8,8 @@ C: lintian-no-override source: debian-build-system dh
 C: lintian-no-override: no-ctrl-scripts
 C: lintian-no-override source: package-is-maintained-by-individual
 C: lintian-no-override: package-is-maintained-by-individual
+C: lintian-no-override changes: package-is-maintained-by-individual
+C: lintian-no-override buildinfo: package-is-maintained-by-individual
 C: lintian-no-override source: rules-does-not-require-root
 C: lintian-no-override source: source-format 3.0 (native)
 C: lintian-no-override source: standards-version 4.5.0

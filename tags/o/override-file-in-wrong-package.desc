@@ -1,6 +1,5 @@
 Tag: override-file-in-wrong-package
-Severity: important
-Certainty: certain
+Severity: error
 Check: lintian/overrides
 Info: This package includes Lintian overrides intended for another package.
  Lintian overrides should be put in a regular file named

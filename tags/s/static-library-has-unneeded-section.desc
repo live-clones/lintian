@@ -1,6 +1,5 @@
 Tag: static-library-has-unneeded-section
-Severity: wishlist
-Certainty: certain
+Severity: info
 Check: binaries
 Info: The static library is stripped, but still contains a section
  that is not useful. You should call strip with

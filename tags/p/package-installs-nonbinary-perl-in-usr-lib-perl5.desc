@@ -1,6 +1,5 @@
 Tag: package-installs-nonbinary-perl-in-usr-lib-perl5
-Severity: normal
-Certainty: certain
+Severity: warning
 Check: languages/perl
 Info: Architecture-independent Perl code should be placed in
  <tt>/usr/share/perl5</tt>, not <tt>/usr/lib/.../perl5</tt>

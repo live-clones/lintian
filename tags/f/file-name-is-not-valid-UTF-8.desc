@@ -1,6 +1,5 @@
 Tag: file-name-is-not-valid-UTF-8
-Severity: serious
-Certainty: certain
+Severity: error
 Check: files/names
 Ref: policy 10.10
 Info: The file name does not appear to be valid UTF-8.

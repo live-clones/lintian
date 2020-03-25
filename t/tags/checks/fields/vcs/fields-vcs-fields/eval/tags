@@ -22,4 +22,6 @@ fields-vcs-fields (source): vcs git
 fields-vcs-fields (source): vcs cvs
 fields-vcs-fields (source): vcs bzr
 fields-vcs-fields (source): package-is-maintained-by-individual
+fields-vcs-fields (changes): package-is-maintained-by-individual
+fields-vcs-fields (buildinfo): package-is-maintained-by-individual
 fields-vcs-fields (binary): package-is-maintained-by-individual

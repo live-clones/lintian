@@ -67,6 +67,7 @@ use Path::Tiny;
 # is simply a placeholder to make the command work out of the box in
 # the source tree.
 my $INIT_ROOT = find_source_root();
+
 # NB: @INCLUDE_DIRS + @RESTRICTED_INCLUDE_DIRS should /only/ have
 # absolute paths.  Various bit of lintian code implicitly rely on
 # this.
@@ -111,6 +112,9 @@ sub run_tool {
             # Update @INC before running the tool
             require lib;
             lib->import(grep { -d } map { "$_/lib" } @INCLUDE_DIRS);
+
+            $ENV{LINTIAN_VERSION} = lintian_version();
+
             $0 = $tool;
             $TOOL_RUNNER->($tool_pm_path);
             error('TOOL_RUNNER returned unexpectedly!?');

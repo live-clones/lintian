@@ -1,6 +1,5 @@
 Tag: checksum-count-mismatch-in-changes-file
-Severity: serious
-Certainty: certain
+Severity: error
 Check: changes-file
 Info: The number of checksums <tt>.changes</tt> file for the
  specified algorithm does not match the number of files.

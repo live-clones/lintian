@@ -38,7 +38,24 @@ with 'Lintian::Check';
 our $CLASS_REGEX = qr/\.(?:class|cljc?)/o;
 our $MAX_BYTECODE = Lintian::Data->new('java/constants', qr/\s*=\s*/o);
 
-sub always {
+sub source {
+    my ($self) = @_;
+
+    for my $file ($self->processable->patched->sorted_list) {
+        my $java_info = $file->java_info;
+        next
+          unless scalar keys %{$java_info};
+
+        my $files = $java_info->{files};
+        $self->tag('source-contains-prebuilt-java-object', $file)
+          if any { m/$CLASS_REGEX$/i } keys %{$files}
+          and $self->processable->name ne 'lintian';
+    }
+
+    return;
+}
+
+sub installable {
     my ($self) = @_;
 
     my $pkg = $self->package;
@@ -49,20 +66,6 @@ sub always {
     my $has_public_jars = 0;
     my $has_jars = 0;
     my $jmajlow = '-';
-
-    if ($type eq 'source') {
-        for my $file ($processable->patched->sorted_list) {
-            my $java_info = $file->java_info;
-            next
-              unless scalar keys %{$java_info};
-
-            my $files = $java_info->{files};
-            $self->tag('source-contains-prebuilt-java-object', $file)
-              if any { m/$CLASS_REGEX$/i } keys %{$files}
-              and $processable->name ne 'lintian';
-        }
-        return;
-    }
 
     my $depends = $processable->relation('strong')->unparse;
     # Remove all libX-java-doc packages to avoid thinking they are java libs

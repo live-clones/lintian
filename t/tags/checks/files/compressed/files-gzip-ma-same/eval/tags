@@ -1,1 +1,1 @@
-files-gzip-ma-same (binary): gzip-file-is-not-multi-arch-same-safe usr/share/doc/files-gzip-ma-same/changelog.gz
+files-gzip-ma-same (binary): gzip-file-is-not-multi-arch-same-safe etc/after-changelog.gz

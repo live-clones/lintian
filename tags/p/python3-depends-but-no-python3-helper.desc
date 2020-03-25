@@ -1,5 +1,5 @@
 Tag: python3-depends-but-no-python3-helper
-Severity: serious
+Severity: error
 Certainty: possible
 Check: debhelper
 Info: The source package declares a dependency on ${python3:Depends} in the

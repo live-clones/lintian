@@ -1,6 +1,5 @@
 Tag: package-installs-file-to-usr-x11r6
-Severity: important
-Certainty: certain
+Severity: error
 Check: desktop/x11
 Info: Packages using the X Window System should not be configured to install
  files under the /usr/X11R6/ directory. Debian has switched to the modular

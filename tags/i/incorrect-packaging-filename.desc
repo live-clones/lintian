@@ -1,6 +1,5 @@
 Tag: incorrect-packaging-filename
-Severity: minor
-Certainty: certain
+Severity: warning
 Check: debian/filenames
 Info: Some packaging files obtain different names when they are copied
  from source to installation packages. Debhelper sometimes adds *.Debian

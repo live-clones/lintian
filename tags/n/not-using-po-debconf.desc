@@ -1,6 +1,5 @@
 Tag: not-using-po-debconf
-Severity: serious
-Certainty: certain
+Severity: error
 Check: debian/po-debconf
 Info: This package seems to be using debconf templates, but it does not
  use po-debconf to make translations possible (<tt>debian/po</tt> doesn't

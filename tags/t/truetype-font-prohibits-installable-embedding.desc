@@ -1,6 +1,5 @@
 Tag: truetype-font-prohibits-installable-embedding
-Severity: normal
-Certainty: certain
+Severity: warning
 Check: fonts/truetype
 Info: This package installs a TrueType font with restrictive license
  terms. The font does not permit installable embedding, as defined by

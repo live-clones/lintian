@@ -1,6 +1,5 @@
 Tag: doc-base-file-lacks-required-field
-Severity: important
-Certainty: certain
+Severity: error
 Check: menus
 Info: The doc-base control file does not contain a required field for the
  appropriate section.

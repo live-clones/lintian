@@ -1,6 +1,5 @@
 Tag: field-too-long
-Severity: important
-Certainty: certain
+Severity: error
 Check: fields/length
 Info: The length of the specified field is too long.
  .

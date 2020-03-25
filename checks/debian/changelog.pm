@@ -274,6 +274,7 @@ sub source {
     return;
 }
 
+# no copyright in udebs
 sub binary {
     my ($self) = @_;
 

@@ -1,6 +1,5 @@
 Tag: forbidden-config-interpreter
-Severity: important
-Certainty: certain
+Severity: error
 Check: scripts
 Info: This package contains a <tt>config</tt> script for pre-configuring
  the package. During pre-configuration, however, only essential packages

@@ -1,5 +1,5 @@
 Tag: embedded-pear-module
-Severity: normal
+Severity: warning
 Certainty: possible
 Check: files/embedded-libraries
 Experimental: yes

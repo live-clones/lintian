@@ -1,6 +1,5 @@
 Tag: patch-system-but-no-source-readme
-Severity: normal
-Certainty: certain
+Severity: warning
 Check: patch-systems
 Info: This package build-depends on a patch system such as dpatch or
  quilt, but there is no <tt>debian/README.source</tt> file. This file is

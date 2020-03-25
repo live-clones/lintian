@@ -1,6 +1,5 @@
 Tag: typelib-in-arch-all-package
-Severity: serious
-Certainty: certain
+Severity: error
 Check: desktop/gnome/gir
 Info: GObject-Introspection binary typelibs
  (<tt>Foo-23.typelib</tt>) are architecture-dependent, therefore

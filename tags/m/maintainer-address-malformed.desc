@@ -1,6 +1,5 @@
 Tag: maintainer-address-malformed
-Severity: serious
-Certainty: certain
+Severity: error
 Check: fields/maintainer
 Info: The maintainer field could not be parsed according to the rules in
  the Policy Manual.

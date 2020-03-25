@@ -1,6 +1,5 @@
 Tag: ldconfig-symlink-is-not-a-symlink
-Severity: important
-Certainty: certain
+Severity: error
 Check: shared-libs
 Info: The package installs a file with the name, ldconfig would use for
  the symbolic link to reference the shared library.

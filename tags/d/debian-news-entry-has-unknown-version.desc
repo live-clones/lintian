@@ -1,5 +1,5 @@
 Tag: debian-news-entry-has-unknown-version
-Severity: normal
+Severity: warning
 Certainty: possible
 Check: debian/changelog
 Info: The version number of the most recent <tt>NEWS.Debian</tt> entry

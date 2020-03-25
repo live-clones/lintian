@@ -1,5 +1,5 @@
 Tag: shlib-calls-exit
-Severity: wishlist
+Severity: info
 Certainty: possible
 Check: shared-libs
 Experimental: yes

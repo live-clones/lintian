@@ -1,6 +1,5 @@
 Tag: maintainer-script-should-not-use-update-alternatives-set
-Severity: normal
-Certainty: certain
+Severity: warning
 Check: scripts
 Info: The maintainer script calls <tt>update-alternatives --set
  &lt;alternative&gt; foo</tt> or <tt>update-alternatives --config

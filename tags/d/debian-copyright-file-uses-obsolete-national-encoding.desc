@@ -1,6 +1,5 @@
 Tag: debian-copyright-file-uses-obsolete-national-encoding
-Severity: serious
-Certainty: certain
+Severity: error
 Check: debian/copyright
 Ref: policy 12.5
 Info: The Debian copyright file must be valid UTF-8, an encoding of

@@ -1,6 +1,5 @@
 Tag: standards-version
 Severity: classification
-Certainty: certain
 Check: fields/standards-version
 Info: The standards version of the package according to
  Standards-Version field in the <tt>debian/control</tt> file.

@@ -31,7 +31,7 @@ use utf8;
 use v5.16;
 
 use Cwd qw(abs_path);
-use Carp qw(verbose);
+use Carp qw(croak verbose);
 use Getopt::Long();
 use List::MoreUtils qw(any none);
 use Path::Tiny;
@@ -46,7 +46,7 @@ use Lintian::Internal::FrontendUtil
 use Lintian::Output::Standard;
 use Lintian::Pool;
 use Lintian::Profile;
-use Lintian::Util qw(internal_error parse_boolean strip safe_qx);
+use Lintian::Util qw(strip safe_qx);
 
 # only in GNOME; need original environment
 my $interactive = -t STDIN && (-t STDOUT || !(-f STDOUT || -c STDOUT));
@@ -90,7 +90,6 @@ my $experimental_output_opts;
 
 my @CLOSE_AT_END;
 my $OUTPUT = Lintian::Output::Standard->new;
-my @certainties = qw(wild-guess possible certain);
 my (@display_level, %display_source, %suppress_tags);
 my ($action, $checks, $check_tags, $dont_check, $received_signal);
 my @unpack_info;
@@ -355,22 +354,16 @@ sub record_display_level {
     if ($level =~ s/^([<>]=?|=)//) {
         $rel = $1;
     }
-    my ($severity, $certainty) = split('/', $level);
+    my $severity = $level;
     $op = '=' unless defined $op;
     $rel = '=' unless defined $rel;
-    if (not defined $certainty) {
-        if (any { $severity eq $_ } @certainties) {
-            $certainty = $severity;
-            undef $severity;
-        }
-    }
-    push(@display_level, [$op, $rel, $severity, $certainty]);
+    push(@display_level, [$op, $rel, $severity]);
     return;
 }
 
 # Process -I|--display-info flag
 sub display_infotags {
-    push(@display_level, ['+', '>=', 'wishlist']);
+    push(@display_level, ['+', '>=', 'info']);
     return;
 }
 
@@ -387,11 +380,7 @@ sub display_classificationtags {
 
 # Process --default-display-level flag
 sub default_display_level {
-    push(@display_level,
-        ['=', '>=', 'important'],
-        ['+', '>=', 'normal', 'possible'],
-        ['+', '>=', 'minor', 'certain'],
-    );
+    push(@display_level,['=', '>=', 'warning'],);
     return;
 }
 
@@ -729,9 +718,7 @@ sub main {
     $OUTPUT->v_msg('Using profile ' . $PROFILE->name . '.');
     Lintian::Data->set_vendor($PROFILE);
 
-    $PROFILE->show_experimental($opt{'display-experimental'});
-    $PROFILE->sources(keys %display_source)
-      if %display_source;
+    $opt{'display-source'} = [keys %display_source];
 
     if ($dont_check || %suppress_tags || $checks || $check_tags) {
         _update_profile($PROFILE, $dont_check, \%suppress_tags,$checks);
@@ -954,6 +941,38 @@ sub parse_config_file {
     return;
 }
 
+=item parse_boolean (STR)
+
+Attempt to parse STR as a boolean and return its value.
+If STR is not a valid/recognised boolean, the sub will
+invoke croak.
+
+The following values recognised (string checks are not
+case sensitive):
+
+=over 4
+
+=item The integer 0 is considered false
+
+=item Any non-zero integer is considered true
+
+=item "true", "y" and "yes" are considered true
+
+=item "false", "n" and "no" are considered false
+
+=back
+
+=cut
+
+sub parse_boolean {
+    my ($str) = @_;
+    return $str == 0 ? 0 : 1 if $str =~ m/^-?\d++$/o;
+    $str = lc $str;
+    return 1 if $str eq 'true' or $str =~ m/^y(?:es)?$/;
+    return 0 if $str eq 'false' or $str =~ m/^no?$/;
+    croak "\"$str\" is not a valid boolean value";
+}
+
 sub _find_changes {
     my $contents = path('debian/changelog')->slurp;
     my $changelog = Lintian::Inspect::Changelog->new;
@@ -1075,43 +1094,45 @@ sub _update_profile {
     # they are pedantic/experimental etc.  However, for --check-part
     # people explicitly have to pass the relevant options.
     if ($checks || $check_tags) {
-        $profile->disable_tags($profile->tags);
+        $profile->disable_tag($_) for $profile->enabled_tags;
         if ($check_tags) {
-            $profile->show_experimental(1);
+            $opt{'display-experimental'} = 1;
             # discard whatever is in @display_level and request
             # everything
             @display_level = ();
             display_infotags();
             display_pedantictags();
             display_classificationtags();
-            $profile->enable_tags(split /,/, $check_tags);
+            $profile->enable_tag($_) for split(/,/, $check_tags);
         } else {
             for my $c (split /,/, $checks) {
                 if ($c eq 'all') {
                     my @all
-                      = map {$profile->get_script($_, 1) }$profile->scripts(1);
-                    $profile->enable_tags($_->tags)for @all;
+                      = map {$profile->get_checkinfo($_)}
+                      $profile->known_checks;
+                    my @tags = map { $_->tags } @all;
+                    $profile->enable_tag($_) for @tags;
                     next;
                 }
-                my $cs = $profile->get_script($c, 1);
+                my $cs = $profile->get_checkinfo($c);
                 fatal_error("Unrecognized check script (via -C): $c")
                   unless $cs;
-                $profile->enable_tags($cs->tags);
+                $profile->enable_tag($_) for $cs->tags;
             }
         }
     } elsif ($sup_check) {
         # we are disabling checks
         for my $c (split(/,/, $sup_check)) {
-            my $cs = $profile->get_script($c, 1);
+            my $cs = $profile->get_checkinfo($c);
             fatal_error("Unrecognized check script (via -X): $c") unless $cs;
-            $profile->disable_tags($cs->tags);
+            $profile->disable_tag($_) for $cs->tags;
         }
     }
 
     # --suppress-tags{,-from-file} can appear alone, but can also be
     # mixed with -C or -X.  Though, ignore it with --tags.
     if (%$sup_tags and not $check_tags) {
-        $profile->disable_tags(keys %$sup_tags);
+        $profile->disable_tag($_) for keys %$sup_tags;
     }
     return;
 }

@@ -1,6 +1,5 @@
 Tag: portable-executable-missing-security-features
 Severity: pedantic
-Certainty: certain
 Check: pe
 Experimental: yes
 Info: Please read the note at the bottom before proceeding.

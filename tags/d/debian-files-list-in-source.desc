@@ -1,6 +1,5 @@
 Tag: debian-files-list-in-source
-Severity: important
-Certainty: certain
+Severity: error
 Check: cruft
 Info: Leaving <tt>debian/files</tt> causes problems for the autobuilders,
  since that file will likely include the list of .deb files for another

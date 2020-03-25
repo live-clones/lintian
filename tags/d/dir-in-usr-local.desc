@@ -1,6 +1,5 @@
 Tag: dir-in-usr-local
-Severity: serious
-Certainty: certain
+Severity: error
 Check: files/hierarchy-standard
 Info: The package installs a directory in <tt>/usr/local/...</tt> which is
  not allowed.

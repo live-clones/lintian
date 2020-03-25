@@ -26,14 +26,14 @@ use autodie;
 
 use Path::Tiny;
 
-use Lintian::Util qw(lstrip rstrip);
+use Lintian::Util qw(rstrip);
 
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
 
-sub binary {
+sub installable {
     my ($self) = @_;
 
     my @homevarrun;

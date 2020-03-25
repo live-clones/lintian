@@ -1,6 +1,5 @@
 Tag: dpatch-build-dep-but-no-patch-list
-Severity: normal
-Certainty: certain
+Severity: warning
 Check: patch-systems
 Info: Using dpatch requires you to explicitly list all patches you want
  to apply in debian/patches/00list. This package build-depends on dpatch,

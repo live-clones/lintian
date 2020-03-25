@@ -1,5 +1,5 @@
 Tag: distribution-and-changes-mismatch
-Severity: normal
+Severity: warning
 Certainty: possible
 Check: changes-file
 Info: The <tt>Distribution</tt> in the <tt>.changes</tt> file indicates

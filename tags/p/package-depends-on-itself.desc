@@ -1,6 +1,5 @@
 Tag: package-depends-on-itself
-Severity: normal
-Certainty: certain
+Severity: warning
 Check: debian/control
 Ref: policy 7.2
 Info: The given package declares a dependency on itself in its

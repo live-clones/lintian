@@ -1,6 +1,5 @@
 Tag: copyright-without-copyright-notice
-Severity: normal
-Certainty: certain
+Severity: warning
 Check: debian/copyright
 Ref: https://ftp-master.debian.org/REJECT-FAQ.html
 Info: The copyright file for this package does not appear to contain a

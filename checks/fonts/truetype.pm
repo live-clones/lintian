@@ -49,33 +49,34 @@ sub files {
       unless $file->name =~ /\.ttf$/i;
 
     my $font = Font::TTF::Font->open($file->unpacked_path);
+
+    my $os2 = defined $font ? $font->{'OS/2'} : undef;
+    my $table = defined $os2 ? $os2->read : undef;
+    my $fsType = defined $table ? $table->{fsType} : undef;
+
+    $font->release
+      if defined $font;
+
     return
-      unless $font;
+      unless defined $fsType;
 
-    my $table = $font->{'OS/2'}->read;
-    return
-      unless $table;
+    my @clauses;
 
-    my $fsType = $table->{fsType};
-    if (defined $fsType) {
+    my $permissions = $fsType & 0x00f;
+    push(@clauses, 'never embed')
+      if $permissions & 0x02;
+    push(@clauses, 'preview/print only')
+      if $permissions & 0x04;
+    push(@clauses, 'edit only')
+      if $permissions & 0x08;
 
-        my $permissions = $fsType & 0x00f;
-        my @clauses;
-        push(@clauses, 'never embed')
-          if $permissions & 0x02;
-        push(@clauses, 'preview/print only')
-          if $permissions & 0x04;
-        push(@clauses, 'edit only')
-          if $permissions & 0x08;
+    my $terms;
+    $terms = join(COMMA . SPACE, @clauses)
+      if @clauses;
 
-        my $terms = join(COMMA . SPACE, @clauses);
-        $terms = LSQUARE . $terms . RSQUARE
-          if @clauses > 0;
-
-        $self->tag('truetype-font-prohibits-installable-embedding',
-            $terms . SPACE . $file->name)
-          if $terms;
-    }
+    $self->tag('truetype-font-prohibits-installable-embedding',
+        "[$terms] " . $file->name)
+      if length $terms;
 
     return;
 }

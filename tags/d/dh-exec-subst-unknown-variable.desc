@@ -1,5 +1,5 @@
 Tag: dh-exec-subst-unknown-variable
-Severity: minor
+Severity: info
 Certainty: wild-guess
 Check: debhelper
 Info: The package uses a variable in one of its debhelper config

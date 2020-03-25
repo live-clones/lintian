@@ -158,7 +158,7 @@ sub overrides {
         $processed =~ s/\s+/ /g;
 
         # The override looks like the following:
-        # [[pkg-name] [arch-list] [pkg-type]:] <tag> [extra]
+        # [[pkg-name] [arch-list] [pkg-type]:] <tag> [hint]
         # - Note we do a strict package name check here because
         #   parsing overrides is a bit ambiguous (see #699628)
         if (
@@ -167,13 +167,13 @@ sub overrides {
                   (?: \s*+ \[([^\]]+?)\])?          # optionally followed by an [arch-list] (like in B-D) -> $2
                   (?:\s*+ ([a-z]+) \s*+ )?          # optionally followed by the type -> $3
                 :\s++)?                             # end optional part
-                ([\-\+\.a-zA-Z_0-9]+ (?:\s.+)?)     # <tag-name> [extra] -> $4
+                ([\-\+\.a-zA-Z_0-9]+ (?:\s.+)?)     # <tag-name> [hint] -> $4
                    \Z/xsm
         ) {
             # Valid - so far at least
             my ($archlist, $opkg_type, $tagdata)= ($1, $2, $3, $4);
 
-            my ($tagname, $extra) = split(/ /, $tagdata, 2);
+            my ($tagname, $hint) = split(/ /, $tagdata, 2);
 
             if ($opkg_type and $opkg_type ne $type) {
                 $self->tag('malformed-override',
@@ -247,12 +247,12 @@ sub overrides {
             # does not seem to be used anywhere
             $current{arch} = 'any';
 
-            $extra //= EMPTY;
-            $current{extra} = $extra;
+            $hint //= EMPTY;
+            $current{hint} = $hint;
 
-            if ($extra =~ m/\*/o) {
+            if ($hint =~ m/\*/o) {
                 # It is a pattern, pre-compute it
-                my $pattern = $extra;
+                my $pattern = $hint;
                 my $end = ''; # Trailing "match anything" (if any)
                 my $pat = ''; # The rest of the pattern
                  # Split does not help us if $pattern ends with *
@@ -279,7 +279,7 @@ sub overrides {
             @comments = ();
 
             $override_data{$tagname} //= {};
-            $override_data{$tagname}{$extra} = \%current;
+            $override_data{$tagname}{$hint} = \%current;
 
             %previous = %current;
 

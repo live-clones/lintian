@@ -1,6 +1,5 @@
 Tag: desktop-entry-lacks-icon-entry
-Severity: wishlist
-Certainty: certain
+Severity: info
 Check: menu-format
 Info: This .desktop file does not contain an "Icon" entry.
  .

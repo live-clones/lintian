@@ -1,6 +1,5 @@
 Tag: package-installs-java-bytecode
-Severity: normal
-Certainty: certain
+Severity: warning
 Check: languages/java/bytecode
 Ref: java-policy 2
 Info: Compiled Java source files must not be included in the package.

@@ -1,5 +1,5 @@
 Tag: ocaml-custom-executable
-Severity: normal
+Severity: warning
 Certainty: possible
 Check: binaries
 Info: This package provides an OCaml bytecode executable linked with a

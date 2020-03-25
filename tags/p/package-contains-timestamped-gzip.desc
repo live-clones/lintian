@@ -1,6 +1,5 @@
 Tag: package-contains-timestamped-gzip
-Severity: normal
-Certainty: certain
+Severity: warning
 Check: files/compressed
 Info: The package contains a gzip-compressed file that has timestamps.
  Such files make the packages unreproducible, because their

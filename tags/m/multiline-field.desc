@@ -1,6 +1,5 @@
 Tag: multiline-field
-Severity: important
-Certainty: certain
+Severity: error
 Check: fields/multi-line
 Info: Most control fields must have only a single line of data.
 Ref: policy 5.1

@@ -49,7 +49,9 @@ sub files {
       || $file->name =~ m{^usr/lib/libreoffice};
 
     return
-      unless $file->is_file && $file->is_open_ok;
+         unless $file->is_file
+      && $file->is_open_ok
+      && $file->file_info =~ /\bgzip compressed\b/;
 
     my $module_version;
 

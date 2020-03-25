@@ -1,6 +1,5 @@
 Tag: invalid-short-name-in-dep5-copyright
-Severity: minor
-Certainty: certain
+Severity: warning
 Check: debian/copyright
 Ref: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 Info: The “License” field contains a short name observed to be a

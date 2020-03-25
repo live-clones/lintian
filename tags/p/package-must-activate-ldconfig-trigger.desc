@@ -1,6 +1,5 @@
 Tag: package-must-activate-ldconfig-trigger
-Severity: serious
-Certainty: certain
+Severity: error
 Check: shared-libs
 Info: The package installs shared libraries in a directory controlled by
  the dynamic library loader. Therefore, the package must trigger libc's

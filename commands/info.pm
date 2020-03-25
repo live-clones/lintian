@@ -91,7 +91,7 @@ EOT
     Lintian::Data->set_vendor($profile);
 
     if ($list_tags) {
-        foreach my $tag (sort $profile->tags) {
+        foreach my $tag (sort $profile->enabled_tags) {
             print "$tag\n";
         }
         exit 0;
@@ -103,7 +103,7 @@ EOT
     if ($tags) {
         my $unknown = 0;
         for my $tag (@ARGV) {
-            my $info = $profile->get_tag($tag, 1);
+            my $info = $profile->get_taginfo($tag);
             if ($info) {
                 print $info->code . ": $tag\n";
                 print "N:\n";
@@ -149,7 +149,7 @@ EOT
             $tag = $parts[5];
         }
         next if $already_displayed{$tag}++;
-        my $info = $profile->get_tag($tag, 1);
+        my $info = $profile->get_taginfo($tag);
         next unless $info;
         print "N:\n";
         print $info->description('text', 'N:   ');

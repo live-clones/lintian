@@ -1,6 +1,5 @@
 Tag: depends-exclusively-on-makedev
-Severity: normal
-Certainty: certain
+Severity: warning
 Check: fields/package-relations
 Info: This package depends on makedev without a udev alternative. This
  probably means that it doesn't have udev rules and relies on makedev to

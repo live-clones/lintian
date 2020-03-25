@@ -1,5 +1,5 @@
 Tag: tar-errors-from-source
-Severity: normal
+Severity: info
 Certainty: wild-guess
 Check: cruft
 Info: tar produced an error while unpacking this source package. This

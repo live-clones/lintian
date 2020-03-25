@@ -1,6 +1,5 @@
 Tag: file-in-discouraged-x11-font-directory
-Severity: minor
-Certainty: certain
+Severity: warning
 Check: desktop/x11
 Ref: policy 11.8.5
 Info: For historical reasons, use of <tt>PEX</tt>, <tt>CID</tt>,

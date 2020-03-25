@@ -1,5 +1,5 @@
 Tag: desktop-command-not-in-package
-Severity: normal
+Severity: warning
 Certainty: possible
 Check: menu-format
 Info: The desktop entry specifies a command that is not available in the

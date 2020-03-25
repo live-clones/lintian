@@ -1,6 +1,5 @@
 Tag: package-mixes-misc-and-dpi-fonts
-Severity: normal
-Certainty: certain
+Severity: warning
 Check: desktop/x11
 Ref: policy 11.8.5
 Info: This package contains both bitmapped fonts for a specific DPI

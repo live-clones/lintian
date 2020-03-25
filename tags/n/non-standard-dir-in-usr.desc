@@ -1,6 +1,5 @@
 Tag: non-standard-dir-in-usr
-Severity: normal
-Certainty: certain
+Severity: warning
 Check: files/hierarchy-standard
 Info: The FHS says "No large software packages should use a direct
  subdirectory under the <tt>/usr</tt> hierarchy". This package contains

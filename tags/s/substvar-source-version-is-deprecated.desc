@@ -1,6 +1,5 @@
 Tag: substvar-source-version-is-deprecated
-Severity: normal
-Certainty: certain
+Severity: warning
 Check: debian/version-substvars
 Info: The package uses the now deprecated ${Source-Version} substvar,
  which has misleading semantics. Please switch to ${binary:Version} or

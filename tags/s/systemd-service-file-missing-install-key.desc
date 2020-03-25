@@ -1,5 +1,5 @@
 Tag: systemd-service-file-missing-install-key
-Severity: normal
+Severity: info
 Certainty: wild-guess
 Check: systemd
 Info: The systemd service file does not contain a <tt>WantedBy=</tt> or

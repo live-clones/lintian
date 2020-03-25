@@ -1,5 +1,5 @@
 Tag: missing-manifest
-Severity: minor
+Severity: info
 Certainty: possible
 Check: languages/java
 Info: The jar file contains .class files but no manifest. This may

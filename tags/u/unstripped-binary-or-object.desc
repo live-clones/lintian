@@ -1,6 +1,5 @@
 Tag: unstripped-binary-or-object
-Severity: important
-Certainty: certain
+Severity: error
 Check: binaries
 Ref: policy 10.1, policy 10.2
 Info: The package installs an unstripped binary or object file.

@@ -1,6 +1,5 @@
 Tag: debian-source-options-has-custom-compression-settings
-Severity: normal
-Certainty: certain
+Severity: warning
 Check: debian/source-dir
 Info: The <tt>debian/source/options</tt> file for this package specifies
  a custom compression level or algorithm.

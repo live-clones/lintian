@@ -1,5 +1,5 @@
 Tag: library-package-name-for-application
-Severity: normal
+Severity: info
 Certainty: wild-guess
 Check: application-not-library
 Experimental: yes

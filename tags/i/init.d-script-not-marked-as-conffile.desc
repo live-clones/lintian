@@ -1,5 +1,5 @@
 Tag: init.d-script-not-marked-as-conffile
-Severity: important
+Severity: warning
 Certainty: wild-guess
 Check: init.d
 Ref: policy 9.3.2

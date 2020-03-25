@@ -1,5 +1,5 @@
 Tag: package-has-a-duplicate-build-relation
-Severity: normal
+Severity: warning
 Certainty: possible
 Check: fields/package-relations
 Info: The package declares the given build relations on the same package

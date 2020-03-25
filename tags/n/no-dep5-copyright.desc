@@ -1,6 +1,5 @@
 Tag: no-dep5-copyright
 Severity: pedantic
-Certainty: certain
 Check: debian/copyright
 Info: This package does not use a machine-readable debian/copyright file.
  .

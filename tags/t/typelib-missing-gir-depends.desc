@@ -1,6 +1,5 @@
 Tag: typelib-missing-gir-depends
-Severity: normal
-Certainty: certain
+Severity: warning
 Check: desktop/gnome/gir
 Info: GObject-Introspection binary typelibs
  (<tt>Foo-23.typelib</tt>) can depend on other typelibs. To generate

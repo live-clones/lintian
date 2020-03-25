@@ -1,6 +1,5 @@
 Tag: truetype-font-wrong-filename
-Severity: normal
-Certainty: certain
+Severity: warning
 Check: fonts/truetype
 Info: This package installs a TrueType font with an extension other than
  <tt>.ttf</tt>. The check is insensitive to case.

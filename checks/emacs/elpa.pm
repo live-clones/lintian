@@ -28,7 +28,7 @@ use namespace::clean;
 
 with 'Lintian::Check';
 
-sub binary {
+sub installable {
     my ($self) = @_;
 
     my $processable = $self->processable;

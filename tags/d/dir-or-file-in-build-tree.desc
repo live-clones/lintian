@@ -1,5 +1,5 @@
 Tag: dir-or-file-in-build-tree
-Severity: serious
+Severity: error
 Certainty: possible
 Check: files/build-path
 Info: The package installs a file in common build paths.

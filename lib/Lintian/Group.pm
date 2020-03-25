@@ -39,7 +39,7 @@ use Lintian::Processable::Buildinfo;
 use Lintian::Processable::Changes;
 use Lintian::Processable::Source;
 use Lintian::Processable::Udeb;
-use Lintian::Util qw(internal_error get_dsc_info strip human_bytes);
+use Lintian::Util qw(get_dsc_info strip human_bytes);
 
 use constant EMPTY => q{};
 use constant SPACE => q{ };
@@ -209,7 +209,7 @@ sub init_from_file {
       unless defined $type;
 
     my $info = get_dsc_info($path)
-      or internal_error("$path is not a valid $type file");
+      or die "$path is not a valid $type file";
 
     my $dir = $path;
     if ($path =~ m,^/+[^/]++$,o){
@@ -317,18 +317,13 @@ sub process {
     my %statistics = (
         types     => {},
         severity  => {},
-        certainty => {},
         tags      => {},
         overrides => {},
     );
 
-    my @reported;
+    my @reported_tags;
 
-    foreach my $processable ($self->get_processables){
-        my $pkg_type = $processable->type;
-        my $procid = $processable->identifier;
-
-        my $path = $processable->path;
+    for my $processable ($self->get_processables){
 
         my $declared_overrides;
         my %used_overrides;
@@ -348,7 +343,7 @@ sub process {
                 die $err if not ref $err or $err->errno != ENOENT;
             }
 
-            my %alias = %{$self->profile->aliases};
+            my %alias = %{$self->profile->known_aliases};
 
             # treat renamed tags in overrides
             for my $tagname (keys %{$declared_overrides}) {
@@ -386,49 +381,39 @@ sub process {
 
             for my $tagname (keys %{$declared_overrides}) {
 
-                my $extras = $declared_overrides->{$tagname};
+                my $hints = $declared_overrides->{$tagname};
 
-                # set the use count to zero for each $extra
-                $used_overrides{$tagname}{$_} = 0 for keys %{$extras};
+                # set the use count to zero for each hint
+                $used_overrides{$tagname}{$_} = 0 for keys %{$hints};
             }
         }
 
-        # retrieve any tags issued during unpacking or data collection
-        my @found;
-        push(@found, @{$processable->found});
-
-        # remove found tags from Processable
-        $processable->found([]);
-
         # Filter out the "lintian" check if present - it does no real harm,
         # but it adds a bit of noise in the debug output.
-        my @scripts = sort $self->profile->scripts;
-        @scripts = grep { $_ ne 'lintian' } @scripts;
+        my @checknames
+          = grep { $_ ne 'lintian' } $self->profile->enabled_checks;
+        my @checkinfos = map { $self->profile->get_checkinfo($_) } @checknames;
 
-        foreach my $script (@scripts) {
-            my $cs = $self->profile->get_script($script);
-            my $check = $cs->name;
+        for my $checkinfo (@checkinfos) {
+            my $checkname = $checkinfo->name;
             my $timer = [gettimeofday];
 
             # The lintian check is done by this frontend and we
             # also skip the check if it is not for this type of
             # package.
             next
-              if !$cs->is_check_type($pkg_type);
+              if !$checkinfo->is_check_type($processable->type);
 
-            $OUTPUT->debug_msg(1, "Running check: $check on $procid  ...");
-            eval {$cs->run_check($processable, $self);};
+            my $procid = $processable->identifier;
+            $OUTPUT->debug_msg(1, "Running check: $checkname on $procid  ...");
+
+            eval {$checkinfo->run_check($processable, $self);};
             my $err = $@;
             my $raw_res = tv_interval($timer);
 
-            push(@found, @{$processable->found});
-
-            # remove found tags from Processable
-            $processable->found([]);
-
             if ($err) {
                 print STDERR $err;
-                print STDERR "internal error: cannot run $check check",
+                print STDERR "internal error: cannot run $checkname check",
                   " on package $procid\n";
                 $OUTPUT->warning("skipping check of $procid");
                 $$exit_code_ref = 2;
@@ -438,37 +423,37 @@ sub process {
             }
             my $tres = sprintf('%.3fs', $raw_res);
             $OUTPUT->debug_msg(1,
-                "Check script $check for $procid done ($tres)");
-            $OUTPUT->perf_log("$procid,check/$check,${raw_res}");
+                "Check script $checkname for $procid done ($tres)");
+            $OUTPUT->perf_log("$procid,check/$checkname,${raw_res}");
         }
 
-        my @keep;
+        my $knownlc
+          = List::Compare->new([map { $_->name } @{$processable->tags}],
+            [$self->profile->known_tags]);
+        my @unknown_tagnames = $knownlc->get_Lonly;
+        croak 'tried to issue unknown tags: ' . join(SPACE, @unknown_tagnames)
+          if @unknown_tagnames;
 
-        for my $tag (@found) {
+        # remove disabled tags
+        my @enabled_tags
+          = grep { $self->profile->tag_is_enabled($_->name) }
+          @{$processable->tags};
+        $processable->tags(\@enabled_tags);
 
-            # Note, we get the known as it will be suppressed by
-            # $self->suppressed below if the tag is not enabled.
-            my $taginfo = $self->profile->get_tag($tag->name, 1);
-            croak 'tried to issue unknown tag ' . $tag->name
-              unless $taginfo;
-
-            $tag->info($taginfo);
-
-            next
-              if $self->profile->suppressed($tag->name);
+        my @keep_tags;
+        for my $tag (@{$processable->tags}) {
 
             my $override;
-            my $extra = $tag->extra;
 
             my $tag_overrides= $declared_overrides->{$tag->name};
             if ($tag_overrides) {
 
                 # do not use EMPTY; hash keys literal
-                # empty extra in specification matches all
+                # empty hint in specification matches all
                 $override = $tag_overrides->{''};
 
-                # matches 'extra' exactly
-                $override = $tag_overrides->{$extra}
+                # matches hint exactly
+                $override = $tag_overrides->{$tag->hint}
                   unless $override;
 
                 # look for patterns
@@ -478,7 +463,7 @@ sub process {
                       keys %{$tag_overrides};
 
                     my $match= firstval {
-                        $extra =~ m/^$tag_overrides->{$_}{pattern}\z/
+                        $tag->hint =~ m/^$tag_overrides->{$_}{pattern}\z/
                     }
                     @candidates;
 
@@ -486,59 +471,58 @@ sub process {
                       if $match;
                 }
 
-                $used_overrides{$tag->name}{$override->{extra}}++
+                $used_overrides{$tag->name}{$override->{hint}}++
                   if $override;
             }
 
             $tag->override($override);
 
-            push(@keep, $tag);
+            push(@keep_tags, $tag);
         }
+
+        $processable->tags(\@keep_tags);
 
         # look for unused overrides
         # should this not iterate over $tag_overrides instead?
-        for my $tagname (sort keys %used_overrides) {
+        for my $tagname (keys %used_overrides) {
 
             next
-              if $self->profile->suppressed($tagname);
+              unless $self->profile->tag_is_enabled($tagname);
 
             my $tag_overrides = $used_overrides{$tagname};
 
-            for my $extra (sort keys %{$tag_overrides}) {
+            for my $hint (keys %{$tag_overrides}) {
 
                 next
-                  if $tag_overrides->{$extra};
+                  if $tag_overrides->{$hint};
 
                 # cannot be overridden or suppressed
-                my $tag = Lintian::Tag::Standard->new;
-                $tag->name('unused-override');
-                $tag->arguments([$tagname, $extra]);
-
-                my $taginfo = $self->profile->get_tag('unused-override', 1);
-                $tag->info($taginfo);
-
-                push(@keep, $tag);
+                $processable->tag('unused-override', $tagname, $hint);
 
                 $override_count->{unused}++;
             }
         }
 
         # associate all tags with processable
-        $_->processable($processable) for @keep;
+        $_->processable($processable) for @{$processable->tags};
 
-        push(@reported, @keep);
-        @keep = ();
+        push(@reported_tags, @{$processable->tags});
+
+        # remove circular references
+        $processable->tags([]);
     }
 
-    for my $tag (@reported) {
+    # copy tag specifications into tags
+    $_->info($self->profile->get_taginfo($_->name)) for @reported_tags;
+
+    for my $tag (@reported_tags) {
 
         my $record = \%statistics;
         $record = $statistics{overrides}
           if $tag->override;
 
         $record->{tags}{$tag->name}++;
-        $record->{severity}{$tag->info->severity}++;
-        $record->{certainty}{$tag->info->certainty}++;
+        $record->{severity}{$tag->info->effective_severity}++;
 
         my $code = $tag->info->code;
         $code = 'X' if $tag->info->experimental;
@@ -554,30 +538,58 @@ sub process {
     # Report override statistics.
     unless ($opt->{'no-override'} || $opt->{'show-overrides'}) {
 
-        my $errors = $statistics{overrides}{types}{E} || 0;
-        my $warnings = $statistics{overrides}{types}{W} || 0;
-        my $info = $statistics{overrides}{types}{I} || 0;
+        my $errors = $statistics{overrides}{types}{E} // 0;
+        my $warnings = $statistics{overrides}{types}{W} // 0;
+        my $info = $statistics{overrides}{types}{I} // 0;
 
         $override_count->{errors} += $errors;
         $override_count->{warnings} += $warnings;
         $override_count->{info} += $info;
     }
 
-    my @print;
+    # discard disabled tags
+    @reported_tags
+      = grep { $self->profile->tag_is_enabled($_->name) } @reported_tags;
 
-    for my $tag (@reported) {
+    # discard experimental tags
+    @reported_tags = grep { !$_->info->experimental } @reported_tags
+      unless $opt->{'display-experimental'};
 
-        next
-          if defined $tag->override
-          && !$opt->{'show-overrides'};
+    # discard overridden tags
+    @reported_tags = grep { !defined $_->override } @reported_tags
+      unless $opt->{'show-overrides'};
 
-        next
-          unless $self->profile->displayed($tag->name);
+    # discard outside the selected display level
+    @reported_tags
+      = grep { $self->profile->display_level_for_tag($_->name) }@reported_tags;
 
-        push(@print, $tag);
+    my $reference_limit = $opt->{'display-source'} // [];
+    if (@{$reference_limit}) {
+
+        my @topic_tags;
+        for my $tag (@reported_tags) {
+            my @references = split(/,/, $tag->info->references);
+
+            # retain the first word
+            s/^([\w-]+)\s.*/$1/ for @references;
+
+            # remove anything in parentheses at the end
+            s/\(\S+\)$// for @references;
+
+            # check if tag refers to the selected references
+            my $referencelc
+              = List::Compare->new(\@references, $reference_limit);
+            next
+              unless $referencelc->get_intersection;
+
+            push(@topic_tags, $tag);
+        }
+
+        @reported_tags = @topic_tags;
     }
 
-    $OUTPUT->issue_tags(\@print, [$self->get_processables]);
+    # put tags back into their respective processables
+    push(@{$_->processable->tags}, $_) for @reported_tags;
 
     my $raw_res = tv_interval($timer);
     my $tres = sprintf('%.3fs', $raw_res);
@@ -587,7 +599,7 @@ sub process {
 
     if ($opt->{'debug'} > 2) {
 
-        # supress warnings without reliable sizes
+        # suppress warnings without reliable sizes
         $Devel::Size::warn = 0;
 
         my $pivot = ($self->get_processables)[0];
@@ -657,13 +669,11 @@ added.
 sub add_processable{
     my ($self, $processable) = @_;
 
-    my $pkg_type = $processable->type;
-
     if ($processable->tainted) {
         warn(
             sprintf(
                 "warning: tainted %1\$s package '%2\$s', skipping\n",
-                $pkg_type, $processable->name
+                $processable->type, $processable->name
             ));
         return 0;
     }
@@ -678,40 +688,39 @@ sub add_processable{
     croak 'Please set pool directory first.'
       unless $self->pooldir;
 
-    croak "Not a supported type ($pkg_type)"
-      unless exists $SUPPORTED_TYPES{$pkg_type};
+    croak 'Not a supported type (' . $processable->type . ')'
+      unless exists $SUPPORTED_TYPES{$processable->type};
 
     my $dir = $self->_pool_path($processable);
 
     $processable->groupdir($dir);
 
-    if ($pkg_type eq 'changes') {
-        internal_error("Cannot add another $pkg_type file")
+    if ($processable->type eq 'changes') {
+        die 'Cannot add another ' . $processable->type . ' file'
           if $self->changes;
         $self->changes($processable);
 
-    } elsif ($pkg_type eq 'buildinfo') {
+    } elsif ($processable->type eq 'buildinfo') {
         # Ignore multiple .buildinfo files; use the first one
         $self->buildinfo($processable)
           unless $self->buildinfo;
 
-    } elsif ($pkg_type eq 'source'){
-        internal_error('Cannot add another source package')
+    } elsif ($processable->type eq 'source'){
+        die 'Cannot add another source package'
           if $self->source;
         $self->source($processable);
 
     } else {
-        my $phash;
+        my $type = $processable->type;
+        die 'Unknown type ' . $type
+          unless $type eq 'binary' || $type eq 'udeb';
+
+        # check for duplicate; should be rewritten with arrays
         my $id = $processable->identifier;
-        internal_error("Unknown type $pkg_type")
-          unless ($pkg_type eq 'binary' or $pkg_type eq 'udeb');
-        $phash = $self->$pkg_type;
-
-        # duplicate ?
         return 0
-          if exists $phash->{$id};
+          if exists $self->$type->{$id};
 
-        $phash->{$id} = $processable;
+        $self->$type->{$id} = $processable;
     }
 
     $processable->shared_storage($self->shared_storage);
@@ -782,7 +791,7 @@ sub get_processables {
         return values %{$self->$type}
           if $type eq 'binary'
           or $type eq 'udeb';
-        internal_error("Unknown type of processable: $type");
+        die "Unknown type of processable: $type";
     }
     # We return changes, dsc, buildinfo, debs and udebs in that order,
     # because that is the order lintian used to process a changes

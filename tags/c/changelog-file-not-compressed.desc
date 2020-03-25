@@ -1,6 +1,5 @@
 Tag: changelog-file-not-compressed
-Severity: important
-Certainty: certain
+Severity: error
 Check: debian/changelog
 Info: Changelog files should be compressed using "gzip -9". Even if they
  start out small, they will become large with time.

@@ -1,5 +1,5 @@
 Tag: vcs-field-uses-unknown-uri-format
-Severity: normal
+Severity: warning
 Certainty: possible
 Check: fields/vcs
 Info: The VCS-* field uses an URI which doesn't match any known format.

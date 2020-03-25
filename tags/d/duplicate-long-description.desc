@@ -1,6 +1,5 @@
 Tag: duplicate-long-description
-Severity: wishlist
-Certainty: certain
+Severity: info
 Check: debian/control
 Info: The listed binary packages all share the same extended description.
  Some additional information in the extended description explaining what

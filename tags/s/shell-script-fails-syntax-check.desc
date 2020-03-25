@@ -1,5 +1,5 @@
 Tag: shell-script-fails-syntax-check
-Severity: important
+Severity: error
 Certainty: possible
 Check: scripts
 Info: Running this shell script with the shell's -n option set fails,

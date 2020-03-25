@@ -1,5 +1,5 @@
 Tag: composer-package-without-pkg-php-tools-builddep
-Severity: wishlist
+Severity: info
 Certainty: possible
 Check: languages/php/pear
 Info: The package contains a composer.json file but doesn't build-depend on

@@ -1,6 +1,5 @@
 Tag: maintainer-script-should-not-modify-netbase-managed-file
-Severity: serious
-Certainty: certain
+Severity: error
 Check: scripts
 Info: The maintainer script modifies at least one of the files
  <tt>/etc/services</tt>, <tt>/etc/protocols</tt>, and <tt>/etc/rpc</tt>,

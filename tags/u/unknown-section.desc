@@ -1,6 +1,5 @@
 Tag: unknown-section
-Severity: normal
-Certainty: certain
+Severity: warning
 Check: fields/section
 Info: The "Section:" field in this package's control file is not one of
  the sections in use on the ftp archive. Valid sections are currently

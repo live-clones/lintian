@@ -53,17 +53,19 @@ print 'Found '
   . scalar @nonfatal
   . " non-fatal tags for profile ftp-master-auto-reject.\n";
 
-my @checkdescs
-  = File::Find::Rule->file->name('*.desc')->in("$ENV{LINTIAN_ROOT}/checks");
+my $checkdir = "$ENV{LINTIAN_ROOT}/checks";
+my @modulepaths = File::Find::Rule->file->name('*.pm')->in($checkdir);
 
 my @checks;
-foreach my $desc (@checkdescs){
-    my ($header, undef) = read_dpkg_control($desc);
-    my $name = $header->{'check-script'};
-    die "$desc missing check-script"
-      unless defined $name;
-    push @checks, $name;
+for my $modulepath (@modulepaths) {
+    my $relative = path($modulepath)->relative($checkdir)->stringify;
+    my ($name) = ($relative =~ qr/^(.*)\.pm$/);
+
+    push(@checks, $name);
 }
+
+# add check for tags issued by internal infrastructure
+push(@checks, 'lintian');
 
 my @dirs = ('profiles/debian');
 foreach my $dir (@dirs) {

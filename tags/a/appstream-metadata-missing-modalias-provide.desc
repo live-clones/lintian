@@ -1,6 +1,5 @@
 Tag: appstream-metadata-missing-modalias-provide
-Severity: normal
-Certainty: certain
+Severity: warning
 Check: appstream-metadata
 Ref: https://wiki.debian.org/AppStream/Guidelines
 Info: This package contain a udev rule for providing device access to

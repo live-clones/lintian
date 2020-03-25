@@ -1,5 +1,5 @@
 Tag: copyright-file-lacks-pointer-to-perl-license
-Severity: important
+Severity: error
 Certainty: possible
 Check: debian/copyright
 Ref: policy 12.5

@@ -1,6 +1,5 @@
 Tag: missing-built-using-field-for-golang-package
-Severity: wishlist
-Certainty: certain
+Severity: info
 Check: debian/control
 Info: This package builds a binary package which does not include
  <tt>${misc:Built-Using}</tt> in its <tt>Built-Using</tt> control field.

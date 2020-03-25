@@ -1,6 +1,5 @@
 Tag: bad-distribution-in-changes-file
-Severity: important
-Certainty: certain
+Severity: error
 Check: changes-file
 Info: You've specified an unknown target distribution for your upload in
  the <tt>debian/changelog</tt> file. It is possible that you are uploading

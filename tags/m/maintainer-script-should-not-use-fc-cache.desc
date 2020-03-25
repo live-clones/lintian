@@ -1,5 +1,5 @@
 Tag: maintainer-script-should-not-use-fc-cache
-Severity: normal
+Severity: warning
 Certainty: possible
 Check: scripts
 Info: This script apparently runs fc-cache. Updating of the fontconfig

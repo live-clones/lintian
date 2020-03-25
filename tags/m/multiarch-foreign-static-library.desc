@@ -1,5 +1,5 @@
 Tag: multiarch-foreign-static-library
-Severity: important
+Severity: error
 Certainty: possible
 Check: files/multi-arch
 Info: The package is architecture-dependent, ships a static library in a

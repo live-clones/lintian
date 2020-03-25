@@ -1,6 +1,5 @@
 Tag: menu-item-creates-new-root-section
-Severity: important
-Certainty: certain
+Severity: error
 Check: menu-format
 Info: The menu item has a line that specifies a new section to put a menu
  entry in, and this section appears right in the root menu. This is

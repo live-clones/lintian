@@ -1,5 +1,5 @@
 Tag: debian-rules-should-not-automatically-update-control
-Severity: serious
+Severity: error
 Certainty: possible
 Check: debian/rules
 Info: DEB_AUTO_UPDATE_DEBIAN_CONTROL appears to be set to <tt>yes</tt> in

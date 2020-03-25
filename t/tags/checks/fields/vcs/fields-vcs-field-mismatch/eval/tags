@@ -8,4 +8,6 @@ fields-vcs-field-mismatch (source): vcs svn
 fields-vcs-field-mismatch (source): vcs git
 fields-vcs-field-mismatch (source): vcs bzr
 fields-vcs-field-mismatch (source): package-is-maintained-by-individual
+fields-vcs-field-mismatch (changes): package-is-maintained-by-individual
+fields-vcs-field-mismatch (buildinfo): package-is-maintained-by-individual
 fields-vcs-field-mismatch (binary): package-is-maintained-by-individual

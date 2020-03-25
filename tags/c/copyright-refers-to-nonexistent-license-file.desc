@@ -1,6 +1,5 @@
 Tag: copyright-refers-to-nonexistent-license-file
-Severity: normal
-Certainty: certain
+Severity: warning
 Check: debian/copyright
 Info: The copyright file refers to a license in
  <tt>/usr/share/common-licenses</tt> that doesn't exist. Usually this is

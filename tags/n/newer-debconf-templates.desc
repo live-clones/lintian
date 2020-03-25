@@ -1,5 +1,5 @@
 Tag: newer-debconf-templates
-Severity: normal
+Severity: warning
 Certainty: possible
 Check: debian/po-debconf
 Info: debconf-updatepo has not been run since the last change to your

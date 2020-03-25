@@ -1,5 +1,5 @@
 Tag: unused-build-dependency-on-cdbs
-Severity: normal
+Severity: warning
 Certainty: possible
 Check: debhelper
 Info: The package build-depends on cdbs, but does not include any cdbs

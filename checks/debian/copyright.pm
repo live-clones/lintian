@@ -895,6 +895,7 @@ sub check_incomplete_creative_commons_license {
     return;
 }
 
+# no copyright in udebs
 sub binary {
     my ($self) = @_;
 

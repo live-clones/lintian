@@ -1,6 +1,5 @@
 Tag: unknown-testsuite
-Severity: normal
-Certainty: certain
+Severity: warning
 Check: testsuite
 Info: The dsc file sets Testsuite to an unrecognised value. This
  field is most probably copied by dpkg-source from Testsuite in

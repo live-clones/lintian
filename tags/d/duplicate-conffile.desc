@@ -1,6 +1,5 @@
 Tag: duplicate-conffile
-Severity: important
-Certainty: certain
+Severity: error
 Check: conffiles
 Info: The file is listed more than once in your <tt>debian/conffiles</tt> file.
  Usually, this is because debhelper (dh_installdeb, compat level 3 or higher)

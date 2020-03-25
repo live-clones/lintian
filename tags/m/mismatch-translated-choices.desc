@@ -1,6 +1,5 @@
 Tag: mismatch-translated-choices
-Severity: important
-Certainty: certain
+Severity: error
 Check: debian/debconf
 Info: A "Choices:" field is a comma separated list, and translated
  "Choices:" fields must have the exact same number of elements. One

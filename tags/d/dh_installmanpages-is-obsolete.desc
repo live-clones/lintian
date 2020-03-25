@@ -1,6 +1,5 @@
 Tag: dh_installmanpages-is-obsolete
-Severity: normal
-Certainty: certain
+Severity: warning
 Check: debhelper
 Ref: dh_installmanpages(1)
 Info: This package calls dh_installmanpages in its <tt>debian/rules</tt> file.

@@ -1,6 +1,5 @@
 Tag: hardening-no-bindnow
-Severity: wishlist
-Certainty: certain
+Severity: info
 Check: binaries
 Info: This package provides an ELF binary that lacks the "bindnow"
  linker flag.

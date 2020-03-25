@@ -1,6 +1,5 @@
 Tag: lzma-deb-archive
-Severity: serious
-Certainty: certain
+Severity: error
 Check: deb-format
 Info: The data portion of this binary package is compressed with lzma.
  This is supported by dpkg but not yet permitted in the Debian archive.

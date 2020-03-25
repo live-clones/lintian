@@ -1,5 +1,5 @@
 Tag: dfsg-version-with-period
-Severity: minor
+Severity: info
 Certainty: possible
 Check: fields/version
 Info: The version number of this package contains ".dfsg", probably in a

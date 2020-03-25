@@ -1,6 +1,5 @@
 Tag: init.d-script-has-unterminated-lsb-section
-Severity: important
-Certainty: certain
+Severity: error
 Check: init.d
 Ref: https://wiki.debian.org/LSBInitScripts
 Info: This <tt>/etc/init.d</tt> script has an LSB keyword section starting

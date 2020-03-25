@@ -1,6 +1,5 @@
 Tag: maintainer-address-is-root-user
-Severity: important
-Certainty: certain
+Severity: error
 Check: fields/maintainer
 Info: The maintainer address includes root user, which is
  invalid. This might indicate that the package

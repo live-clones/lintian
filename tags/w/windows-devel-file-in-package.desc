@@ -1,5 +1,5 @@
 Tag: windows-devel-file-in-package
-Severity: normal
+Severity: warning
 Certainty: possible
 Check: foreign-operating-systems
 Info: This package appears to contain development files only meaningful to

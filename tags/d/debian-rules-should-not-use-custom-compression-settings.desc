@@ -1,6 +1,5 @@
 Tag: debian-rules-should-not-use-custom-compression-settings
-Severity: normal
-Certainty: certain
+Severity: warning
 Check: debian/rules
 Info: The <tt>debian/rules</tt> file for this package has a call to
  <tt>dh_builddeb(1)</tt> that specifies a custom compression level or

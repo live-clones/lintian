@@ -1,6 +1,5 @@
 Tag: third-party-package-in-python-dir
-Severity: normal
-Certainty: certain
+Severity: warning
 Check: languages/python
 Info: Third-party Python packages should install their files in
  <tt>/usr/lib/python<i>VERSION</i>/site-packages</tt> for Python versions

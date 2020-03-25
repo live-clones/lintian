@@ -26,9 +26,8 @@ checks:
   references have them, and more generally that appropriate references are
   present.  (Need some way to track this sort of regular tag maintenance.)
 
-- Check current tag certainties and severities against the results from
-  lintian.d.o and adjust.  If something has legitimate overrides, it's not
-  severity: certain, for instance.
+- Check current tag severities against the results from lintian.d.o and
+  adjust.
 
 doc:
 
@@ -36,7 +35,7 @@ doc:
   somewhere and say that it's not going to be updated.
 
 - Update the Lintian manual:
-  + document severity/certainty
+  + document visibility
   + document other output formats
   + document the reporting framework
   + developer documentation of the test suite, submitting patches, etc.

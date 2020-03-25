@@ -1,5 +1,5 @@
 Tag: possible-debconf-note-abuse
-Severity: normal
+Severity: warning
 Certainty: possible
 Check: debian/debconf
 Info: Debconf notes should be used only for important notes that the

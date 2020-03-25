@@ -1,5 +1,5 @@
 Tag: vcs-field-has-unexpected-spaces
-Severity: normal
+Severity: warning
 Certainty: possible
 Check: fields/vcs
 Info: The VCS-* field contains more spaces than expected or spaces at

@@ -1,6 +1,5 @@
 Tag: too-long-extended-description-in-templates
-Severity: normal
-Certainty: certain
+Severity: warning
 Check: debian/debconf
 Info: Some debconf interfaces cannot deal very well with descriptions of
  more than about 20 lines, so try to keep the extended description below

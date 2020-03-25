@@ -1,6 +1,5 @@
 Tag: debian-revision-not-well-formed
-Severity: normal
-Certainty: certain
+Severity: warning
 Check: fields/version
 Info: The Debian version part (the part after the -) should consist of one
  or two dot-separated parts: one for a regular maintainer release or two

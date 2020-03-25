@@ -1,6 +1,5 @@
 Tag: debian-control-has-dbgsym-package
-Severity: serious
-Certainty: certain
+Severity: error
 Check: debian/control
 Ref: #858117, https://wiki.debian.org/DebugPackage
 Info: The <tt>debian/control</tt> file includes declaration of

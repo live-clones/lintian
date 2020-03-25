@@ -1,6 +1,5 @@
 Tag: debian-rules-should-not-use-pwd
-Severity: normal
-Certainty: certain
+Severity: warning
 Check: debian/rules
 Info: The <tt>debian/rules</tt> file for this package appears to use the
  variable $(PWD) to refer to the current directory. This variable is not

@@ -1,6 +1,5 @@
 Tag: upstream-metadata-in-native-source
-Severity: normal
-Certainty: certain
+Severity: warning
 Check: debian/upstream/metadata
 Ref: https://dep-team.pages.debian.net/deps/dep12/, https://wiki.debian.org/UpstreamMetadata
 Info: This source package is Debian-native and has a

@@ -53,9 +53,9 @@ Common facilities for Lintian tags found and to be issued
 =item override
 =item processable
 
-=item extra
+=item hint
 
-Calculate the string representation commonly referred to as 'extra'.
+Calculate the string representation commonly referred to as 'hint'.
 
 =cut
 
@@ -65,19 +65,19 @@ has name => (is => 'rw');
 has override => (is => 'rw');
 has processable => (is => 'rw');
 
-sub extra {
+sub hint {
     my ($self) = @_;
 
     # skip empty arguments
     my @relevant = grep { length } @{$self->arguments};
 
     # concatenate with spaces
-    my $extra = join(SPACE, @relevant) // EMPTY;
+    my $hint = join(SPACE, @relevant) // EMPTY;
 
     # escape newlines; maybe add others
-    $extra =~ s/\n/\\n/g;
+    $hint =~ s/\n/\\n/g;
 
-    return $extra;
+    return $hint;
 }
 
 =back

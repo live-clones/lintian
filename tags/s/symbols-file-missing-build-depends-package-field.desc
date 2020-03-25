@@ -1,6 +1,5 @@
 Tag: symbols-file-missing-build-depends-package-field
-Severity: wishlist
-Certainty: certain
+Severity: info
 Check: shared-libs
 Info: The symbols file for this package does not contain a
  <tt>Build-Depends-Package</tt> meta-information field.

@@ -1,5 +1,5 @@
 Tag: no-shlibs-control-file
-Severity: serious
+Severity: error
 Certainty: possible
 Check: shared-libs
 Info: Although the package includes a shared library, the package does not

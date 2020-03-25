@@ -1,5 +1,4 @@
 Tag: info-document-has-wrong-extension
-Severity: normal
-Certainty: certain
+Severity: warning
 Check: documentation/texinfo
 Info: The info document has an extension other than info*.gz.

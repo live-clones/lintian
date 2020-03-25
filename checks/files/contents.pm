@@ -126,7 +126,7 @@ sub files {
     return;
 }
 
-sub always {
+sub installable {
     my ($self) = @_;
 
     # get maintainer scripts

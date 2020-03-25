@@ -1,6 +1,5 @@
 Tag: package-installs-perllocal-pod
-Severity: normal
-Certainty: certain
+Severity: warning
 Check: languages/perl
 Info: This package installs a file <tt>perllocal.pod</tt>. Since that
  file is intended for local documentation, it is not likely that it is

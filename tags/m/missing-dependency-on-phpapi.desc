@@ -1,6 +1,5 @@
 Tag: missing-dependency-on-phpapi
-Severity: serious
-Certainty: certain
+Severity: error
 Check: binaries
 Info: This package includes a *.so file in <tt>/usr/lib/phpN</tt>
  (where N is a number representing the major PHP version), normally

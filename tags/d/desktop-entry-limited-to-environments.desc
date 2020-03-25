@@ -1,5 +1,5 @@
 Tag: desktop-entry-limited-to-environments
-Severity: normal
+Severity: info
 Certainty: wild-guess
 Check: menu-format
 Info: This desktop entry uses OnlyShowIn to limit the environments in

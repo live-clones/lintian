@@ -1,6 +1,5 @@
 Tag: insecure-copyright-format-uri
 Severity: pedantic
-Certainty: certain
 Check: debian/copyright
 Ref: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 Info: Format URI of the machine-readable copyright file uses the plain HTTP

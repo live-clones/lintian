@@ -1,6 +1,5 @@
 Tag: maintainer-script-calls-systemctl
-Severity: normal
-Certainty: certain
+Severity: warning
 Check: systemd
 Ref: https://wiki.debian.org/Teams/pkg-systemd/Packaging
 Info: The maintainer script calls systemctl directly. Actions such as enabling

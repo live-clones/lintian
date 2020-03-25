@@ -1,6 +1,5 @@
 Tag: public-upstream-keys-in-multiple-locations
-Severity: wishlist
-Certainty: certain
+Severity: info
 Check: debian/upstream/signing-key
 Ref: uscan(1)
 Info: The source package contains public upstream signing keys

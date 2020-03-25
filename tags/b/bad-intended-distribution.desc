@@ -1,5 +1,5 @@
 Tag: bad-intended-distribution
-Severity: normal
+Severity: info
 Certainty: wild-guess
 Check: debian/changelog
 Experimental: yes

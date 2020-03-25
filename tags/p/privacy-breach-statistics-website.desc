@@ -1,5 +1,5 @@
 Tag: privacy-breach-statistics-website
-Severity: serious
+Severity: error
 Certainty: possible
 Check: files/privacy-breach
 Info: This package creates a privacy breach by fetching data from

@@ -1,6 +1,5 @@
 Tag: debian-watch-file-standard
 Severity: classification
-Certainty: certain
 Check: debian/watch
 Ref: uscan(1)
 Info: The watch file uses this version standard. The currently known

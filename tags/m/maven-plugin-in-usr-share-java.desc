@@ -1,5 +1,5 @@
 Tag: maven-plugin-in-usr-share-java
-Severity: normal
+Severity: warning
 Certainty: possible
 Check: languages/java
 Info: A maven plugin is incorrectly installed in /usr/share/java.

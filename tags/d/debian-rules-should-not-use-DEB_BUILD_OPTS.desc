@@ -1,6 +1,5 @@
 Tag: debian-rules-should-not-use-DEB_BUILD_OPTS
-Severity: normal
-Certainty: certain
+Severity: warning
 Check: debian/rules
 Info: The standard environment variable for build options is
  DEB_BUILD_OPTIONS. Usually, referring to DEB_BUILD_OPTS is a mistake and

@@ -1,5 +1,5 @@
 Tag: changelog-news-debian-mismatch
-Severity: normal
+Severity: warning
 Certainty: possible
 Check: debian/changelog
 Info: The latest entries in the Debian changelog file and NEWS.Debian file

@@ -1,5 +1,5 @@
 Tag: init.d-script-needs-depends-on-lsb-base
-Severity: important
+Severity: error
 Certainty: possible
 Check: init.d
 Info: The given init script sources the <tt>/lib/lsb/init-functions</tt> utility

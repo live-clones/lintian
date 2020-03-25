@@ -1,6 +1,5 @@
 Tag: redundant-bugs-field
-Severity: normal
-Certainty: certain
+Severity: warning
 Check: fields/bugs
 Info: You use the Bugs field though the field value is the default 
  (debbugs://bugs.debian.org/). In this case the field is redundant and

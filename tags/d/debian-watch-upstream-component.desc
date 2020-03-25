@@ -1,6 +1,5 @@
 Tag: debian-watch-upstream-component
 Severity: classification
-Certainty: certain
 Check: debian/watch
 Ref: uscan(1)
 Info: Component embedded in debian/watch

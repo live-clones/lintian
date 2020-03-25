@@ -1,5 +1,5 @@
 Tag: maintainer-script-should-not-use-gconftool
-Severity: normal
+Severity: warning
 Certainty: possible
 Check: scripts
 Info: This script apparently runs gconftool or gconftool-2. It should

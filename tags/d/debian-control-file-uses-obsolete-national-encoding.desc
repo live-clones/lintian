@@ -1,6 +1,5 @@
 Tag: debian-control-file-uses-obsolete-national-encoding
-Severity: serious
-Certainty: certain
+Severity: error
 Check: debian/control
 Ref: policy 5.1
 Info: The Debian control file should be valid UTF-8, an encoding of

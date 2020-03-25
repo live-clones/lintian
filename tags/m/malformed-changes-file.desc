@@ -1,6 +1,5 @@
 Tag: malformed-changes-file
-Severity: serious
-Certainty: certain
+Severity: error
 Check: changes-file
 Info: There is no "Format" field in your .changes file. This probably
  indicates some serious problem with the file. Perhaps it's not actually

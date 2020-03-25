@@ -1,5 +1,5 @@
 Tag: maintainer-script-has-unexpanded-debhelper-token
-Severity: normal
+Severity: warning
 Certainty: possible
 Check: scripts
 Info: Lintian has detected the presence of a #DEBHELPER# token in the

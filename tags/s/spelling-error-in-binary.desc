@@ -1,5 +1,5 @@
 Tag: spelling-error-in-binary
-Severity: minor
+Severity: info
 Certainty: wild-guess
 Check: binaries
 Info: Lintian found a spelling error in the given binary. Lintian has a

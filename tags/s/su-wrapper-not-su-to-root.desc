@@ -1,6 +1,5 @@
 Tag: su-wrapper-not-su-to-root
-Severity: normal
-Certainty: certain
+Severity: warning
 Check: menu-format
 Info: The menu item or desktop file command uses an su wrapper other than
  su-to-root. On Debian systems, please use <tt>su-to-root -X</tt>, which

@@ -1,6 +1,5 @@
 Tag: su-to-root-with-usr-sbin
-Severity: normal
-Certainty: certain
+Severity: warning
 Check: menu-format
 Info: The menu item or desktop file command uses su-to-root as
  /usr/sbin/su-to-root. Since sarge su-to-root is located in /usr/bin and

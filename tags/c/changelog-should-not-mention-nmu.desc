@@ -1,5 +1,5 @@
 Tag: changelog-should-not-mention-nmu
-Severity: normal
+Severity: warning
 Certainty: possible
 Check: nmu
 Info: The first line of the changelog entry for this package appears to

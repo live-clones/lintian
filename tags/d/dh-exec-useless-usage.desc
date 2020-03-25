@@ -1,5 +1,5 @@
 Tag: dh-exec-useless-usage
-Severity: wishlist
+Severity: info
 Certainty: possible
 Check: debhelper
 Info: The package uses dh-exec for things it is not needed for.

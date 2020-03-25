@@ -1,5 +1,5 @@
 Tag: depends-on-metapackage
-Severity: important
+Severity: error
 Certainty: possible
 Check: fields/package-relations
 Info: This package is one of the packages that Lintian believes is a

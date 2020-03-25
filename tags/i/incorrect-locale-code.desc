@@ -1,5 +1,5 @@
 Tag: incorrect-locale-code
-Severity: normal
+Severity: warning
 Certainty: possible
 Check: files/locales
 Info: The package appears to ship locales for a language but uses an

@@ -1,5 +1,5 @@
 Tag: dh-make-template-in-source
-Severity: normal
+Severity: warning
 Certainty: possible
 Check: debhelper
 Info: This package contains debian/*.ex and/or debian/ex.* files

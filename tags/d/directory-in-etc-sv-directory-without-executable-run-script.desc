@@ -1,5 +1,5 @@
 Tag: directory-in-etc-sv-directory-without-executable-run-script
-Severity: important
+Severity: error
 Certainty: possible
 Check: init.d
 Info: This package provides the specified directory under

@@ -1,5 +1,5 @@
 Tag: wrong-section-according-to-package-name
-Severity: wishlist
+Severity: info
 Certainty: possible
 Check: fields/section
 Info: This package has a name suggesting that it belongs to a section

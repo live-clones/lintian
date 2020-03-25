@@ -1,6 +1,5 @@
 Tag: maintainer-address-missing
-Severity: serious
-Certainty: certain
+Severity: error
 Check: fields/maintainer
 Info: The maintainer field must contain the package maintainer's name and
  email address, with the name followed by the address inside angle

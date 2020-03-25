@@ -1,5 +1,5 @@
 Tag: possible-bashism-in-maintainer-script
-Severity: normal
+Severity: warning
 Certainty: possible
 Check: scripts
 Ref: policy 10.4

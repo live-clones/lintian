@@ -1,5 +1,5 @@
 Tag: debian-rules-should-not-use-underscore-variable
-Severity: normal
+Severity: warning
 Certainty: possible
 Check: debian/rules
 Ref: policy 4.9

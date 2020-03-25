@@ -1,5 +1,5 @@
 Tag: typelib-package-name-does-not-match
-Severity: normal
+Severity: warning
 Certainty: possible
 Check: desktop/gnome/gir
 Info: GObject-Introspection binary typelibs (<tt>Foo-23.typelib</tt>)

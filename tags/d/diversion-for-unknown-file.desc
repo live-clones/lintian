@@ -1,6 +1,5 @@
 Tag: diversion-for-unknown-file
-Severity: important
-Certainty: certain
+Severity: error
 Check: scripts
 Info: The maintainer script adds a diversion for a file that is not
  provided by this package.

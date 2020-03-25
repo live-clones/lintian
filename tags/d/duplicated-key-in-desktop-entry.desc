@@ -1,6 +1,5 @@
 Tag: duplicated-key-in-desktop-entry
-Severity: normal
-Certainty: certain
+Severity: warning
 Check: menu-format
 Info: The desktop entry contains two instances of the same key. The
  behavior of such desktop entries is not well-defined by the standard.

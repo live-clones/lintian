@@ -1,6 +1,5 @@
 Tag: built-using-field-on-arch-all-package
-Severity: wishlist
-Certainty: certain
+Severity: info
 Check: debian/control
 Info: This package builds a binary arch:all package which incorrectly
  specifies a Built-Using control field.

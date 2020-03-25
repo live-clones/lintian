@@ -1,6 +1,5 @@
 Tag: dbus-session-service-wrong-name
-Severity: wishlist
-Certainty: certain
+Severity: info
 Check: desktop/dbus
 Info: The package contains a D-Bus session service whose filename
  does not match the <tt>Name</tt> field found in the file.

@@ -1,5 +1,5 @@
 Tag: unknown-architecture
-Severity: normal
+Severity: warning
 Certainty: possible
 Check: fields/architecture
 Info: This package claims to be for an unknown architecture. The

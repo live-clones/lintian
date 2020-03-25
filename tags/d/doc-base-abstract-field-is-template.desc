@@ -1,5 +1,5 @@
 Tag: doc-base-abstract-field-is-template
-Severity: normal
+Severity: warning
 Certainty: possible
 Check: menus
 Info: The Abstract field of doc-base contains a "manage online manuals"

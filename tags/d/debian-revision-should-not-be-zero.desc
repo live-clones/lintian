@@ -1,6 +1,5 @@
 Tag: debian-revision-should-not-be-zero
-Severity: important
-Certainty: certain
+Severity: error
 Check: fields/version
 Info: The Debian version part (the part after the -) should start with one,
  not with zero. This is to ensure that a correctly-done Maintainer Upload will

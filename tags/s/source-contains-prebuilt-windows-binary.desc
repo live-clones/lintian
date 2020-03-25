@@ -1,6 +1,5 @@
 Tag: source-contains-prebuilt-windows-binary
-Severity: minor
-Certainty: certain
+Severity: warning
 Check: cruft
 Info: The source tarball contains a prebuilt binary for Microsoft Windows.
  They are usually provided for the convenience of users. These files

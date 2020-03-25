@@ -1,6 +1,5 @@
 Tag: build-depends-on-specific-java-doc-package
-Severity: normal
-Certainty: certain
+Severity: warning
 Check: fields/package-relations
 Info: The given package declares a build dependency on either openjdk-
  X-doc or classpath-doc instead of using default-jdk-doc. default-jdk-doc

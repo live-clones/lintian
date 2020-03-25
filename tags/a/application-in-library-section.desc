@@ -1,5 +1,5 @@
 Tag: application-in-library-section
-Severity: normal
+Severity: info
 Certainty: wild-guess
 Check: application-not-library
 Experimental: yes

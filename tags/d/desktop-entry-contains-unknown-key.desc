@@ -1,6 +1,5 @@
 Tag: desktop-entry-contains-unknown-key
-Severity: minor
-Certainty: certain
+Severity: warning
 Check: menu-format
 Info: The key on this line of the desktop entry is not one of the standard
  keys defined in the FreeDesktop specification, not one of the legacy KDE

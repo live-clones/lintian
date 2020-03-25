@@ -1,6 +1,5 @@
 Tag: conflicts-with-dependency
-Severity: important
-Certainty: certain
+Severity: error
 Check: fields/package-relations
 Ref: policy 7.4
 Info: The package seems to conflict with one of its dependencies,

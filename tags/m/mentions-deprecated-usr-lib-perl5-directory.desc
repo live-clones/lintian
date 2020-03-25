@@ -1,6 +1,6 @@
 # Imported from pkg-perl-tools (named usr-lib-perl5-mentioned there)
 Tag: mentions-deprecated-usr-lib-perl5-directory
-Severity: important
+Severity: error
 Certainty: possible
 Check: cruft
 Experimental: yes

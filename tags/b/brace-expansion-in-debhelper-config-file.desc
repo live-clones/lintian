@@ -1,5 +1,5 @@
 Tag: brace-expansion-in-debhelper-config-file
-Severity: normal
+Severity: warning
 Certainty: possible
 Check: debhelper
 Info: This debhelper config file appears to use shell brace expansion

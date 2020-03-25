@@ -1,6 +1,5 @@
 Tag: source-field-malformed
-Severity: serious
-Certainty: certain
+Severity: error
 Check: fields/source
 Info: In <tt>debian/control</tt> or a <tt>.dsc</tt> file, the Source field
  must contain only the name of the source package. In a binary package,

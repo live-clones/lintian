@@ -1,6 +1,5 @@
 Tag: unreleased-changelog-distribution
-Severity: wishlist
-Certainty: certain
+Severity: info
 Check: debian/changelog
 Info: The distribution in the latest Debian changelog entry indicates
  that this package was not intended to be released yet.

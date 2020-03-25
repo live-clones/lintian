@@ -1,3 +1,0 @@
-Check-Script: group-checks
-# This is a source check, so we only run it once per group
-Type: source

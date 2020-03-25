@@ -1,6 +1,5 @@
 Tag: homepage-for-bioconductor-package-not-canonical
-Severity: wishlist
-Certainty: certain
+Severity: info
 Check: fields/homepage
 Info: The Homepage field for this package points to an uncanonical Bioconductor URL.
  Please update to use the current canonical URL instead. The canonical URL is

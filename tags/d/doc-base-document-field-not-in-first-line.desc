@@ -1,6 +1,5 @@
 Tag: doc-base-document-field-not-in-first-line
-Severity: important
-Certainty: certain
+Severity: error
 Check: menus
 Info: The Document field in doc-base control file must be located at
  first line of the file. While unregistering documents, doc-base 0.8

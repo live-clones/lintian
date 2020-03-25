@@ -1,5 +1,5 @@
 Tag: binary-file-built-without-LFS-support
-Severity: minor
+Severity: info
 Certainty: possible
 Check: binaries
 Experimental: yes

@@ -1,6 +1,5 @@
 Tag: info-document-missing-dir-section
-Severity: important
-Certainty: certain
+Severity: error
 Check: documentation/texinfo
 Info: This info document has no INFO-DIR-SECTION line.
  <tt>install-info</tt> will be unable to determine the section into which

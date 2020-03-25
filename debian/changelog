@@ -1,3 +1,39 @@
+lintian (2.59.0) unstable; urgency=medium
+
+  [ Chris Lamb ]
+  * Remove some <!nocheck> annotations. Thnaks to gregoa for the patch.
+    (Closes: #954338)
+
+  [ Felix Lechner ]
+  * Do not check the length of the Installed-Build-Depends field.
+    (Closes: #954341)
+  * Disable checks for man pages, copyright and changelog in udebs.
+    (Closes: #954428)
+  * Update an expected XML output and regular expression for a reproducible
+    build.
+
+ -- Chris Lamb <lamby@debian.org>  Sun, 22 Mar 2020 20:22:08 +0000
+
+lintian (2.58.0) unstable; urgency=medium
+
+  * Summary of tag changes:
+    + Added:
+      - executable-in-usr-lib
+
+  [ Felix Lechner ]
+  * Fix interaction between two gzip timestamp tags.
+    (Closes: #954146)
+  * In terminal output, print overrides in a subdued color.
+    (Closes: #954224)
+  * Add tag and check for executables in /usr/lib, which violates the FHS.
+    (Closes: #954149)
+  * Use the "Severity" field in tags to determine their display prominence
+    directly. (Closes: #935706)
+  * Remove temporary directories for pools when they are no longer needed.
+    (Closes: #924449)
+
+ -- Chris Lamb <lamby@debian.org>  Fri, 20 Mar 2020 09:56:18 +0000
+
 lintian (2.57.0~bpo10+1) buster-backports; urgency=medium
 
   * Rebuild for buster-backports.

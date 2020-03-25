@@ -1,6 +1,5 @@
 Tag: unknown-debconf-priority
-Severity: important
-Certainty: certain
+Severity: error
 Check: debian/debconf
 Info: The given maintainer script calls db_input or db_text with a
  first argument that doesn't match one of the known priorities. The

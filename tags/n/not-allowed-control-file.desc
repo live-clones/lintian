@@ -1,6 +1,5 @@
 Tag: not-allowed-control-file
-Severity: serious
-Certainty: certain
+Severity: error
 Check: control-files
 Info: The package contains a control file that is not allowed in this
  type of package. Some control files are only allowed in either .deb

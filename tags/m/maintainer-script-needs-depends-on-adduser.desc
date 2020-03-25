@@ -1,6 +1,5 @@
 Tag: maintainer-script-needs-depends-on-adduser
-Severity: normal
-Certainty: certain
+Severity: warning
 Check: scripts
 Info: This script calls adduser, but the package does not depend or
  pre-depend on the adduser package.

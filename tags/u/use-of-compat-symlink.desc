@@ -1,6 +1,5 @@
 Tag: use-of-compat-symlink
-Severity: important
-Certainty: certain
+Severity: error
 Check: files/hierarchy-standard
 Info: This package uses a directory that, according to the Filesystem
  Hierarchy Standard, should exist only as a compatibility symlink.

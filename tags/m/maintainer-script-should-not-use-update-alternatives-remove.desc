@@ -1,6 +1,5 @@
 Tag: maintainer-script-should-not-use-update-alternatives-remove
-Severity: normal
-Certainty: certain
+Severity: warning
 Check: scripts
 Info: <tt>update-alternatives --remove &lt;alternative&gt; foo</tt> is
  called in the postrm. This can be dangerous because at the time the

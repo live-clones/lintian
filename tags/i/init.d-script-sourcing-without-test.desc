@@ -1,5 +1,5 @@
 Tag: init.d-script-sourcing-without-test
-Severity: serious
+Severity: error
 Certainty: possible
 Check: init.d
 Info: The given <tt>/etc/init.d</tt> script seems to be sourcing an

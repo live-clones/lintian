@@ -66,7 +66,54 @@ my $ANY_DEBCONF = Lintian::Relation->new(
           cdebconf-udeb libdebconfclient0 libdebconfclient0-udeb)
     ));
 
-sub always {
+sub source {
+    my ($self) = @_;
+
+    my @binaries = $self->processable->binaries;
+    my @files = map { "$_.templates" } @binaries;
+    push @files, 'templates';
+
+    foreach my $file (@files) {
+        my $dfile = "debian/$file";
+        my $templates_file = $self->processable->patched->resolve_path($dfile);
+        my $binary = $file;
+        $binary =~ s/\.?templates$//;
+        # Single binary package (so @files contains "templates" and
+        # "binary.templates")?
+        if (!$binary && @files == 2) {
+            $binary = $binaries[0];
+        }
+
+        if ($templates_file and $templates_file->is_open_ok) {
+            my @templates;
+            eval {
+                @templates= read_dpkg_control($templates_file->unpacked_path,
+                    DCTRL_DEBCONF_TEMPLATE);
+            };
+            if ($@) {
+                chomp $@;
+                $@ =~ s/^internal error: //;
+                $@ =~ s/^syntax error in //;
+                $self->tag('syntax-error-in-debconf-template',"$file: $@");
+                next;
+            }
+
+            foreach my $template (@templates) {
+                if (    exists $template->{template}
+                    and exists $template->{_choices}) {
+                    $self->tag(
+                        'template-uses-unsplit-choices',
+                        "$binary - $template->{template}"
+                    );
+                }
+            }
+        }
+    }
+
+    return;
+}
+
+sub installable {
     my ($self) = @_;
 
     my $pkg = $self->package;
@@ -74,53 +121,6 @@ sub always {
     my $processable = $self->processable;
 
     my ($seenconfig, $seentemplates, $usespreinst);
-
-    if ($type eq 'source') {
-        my @binaries = $processable->binaries;
-        my @files = map { "$_.templates" } @binaries;
-        push @files, 'templates';
-
-        foreach my $file (@files) {
-            my $dfile = "debian/$file";
-            my $templates_file = $processable->patched->resolve_path($dfile);
-            my $binary = $file;
-            $binary =~ s/\.?templates$//;
-            # Single binary package (so @files contains "templates" and
-            # "binary.templates")?
-            if (!$binary && @files == 2) {
-                $binary = $binaries[0];
-            }
-
-            if ($templates_file and $templates_file->is_open_ok) {
-                my @templates;
-                eval {
-                    @templates
-                      = read_dpkg_control($templates_file->unpacked_path,
-                        DCTRL_DEBCONF_TEMPLATE);
-                };
-                if ($@) {
-                    chomp $@;
-                    $@ =~ s/^internal error: //;
-                    $@ =~ s/^syntax error in //;
-                    $self->tag('syntax-error-in-debconf-template',"$file: $@");
-                    next;
-                }
-
-                foreach my $template (@templates) {
-                    if (    exists $template->{template}
-                        and exists $template->{_choices}) {
-                        $self->tag(
-                            'template-uses-unsplit-choices',
-                            "$binary - $template->{template}"
-                        );
-                    }
-                }
-            }
-        }
-
-        # The remainder of the checks are for binary packages, so we exit now
-        return;
-    }
 
     my $preinst = $processable->control->lookup('preinst');
     my $ctrl_config = $processable->control->lookup('config');

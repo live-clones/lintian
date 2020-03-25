@@ -1,6 +1,5 @@
 Tag: version-refers-to-distribution
-Severity: minor
-Certainty: certain
+Severity: warning
 Check: debian/changelog
 Info: The Debian portion of the package version contains a reference to a
  particular Debian release or distribution. This should only be done for

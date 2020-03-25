@@ -1,6 +1,5 @@
 Tag: package-installs-python-bytecode
-Severity: serious
-Certainty: certain
+Severity: error
 Check: languages/python
 Ref: python-policy 3.7
 Info: Compiled Python source files must not be included in the package.

@@ -1,6 +1,5 @@
 Tag: missing-debian-source-format
-Severity: normal
-Certainty: certain
+Severity: warning
 Check: debian/source-dir
 Info: Explicitly selecting a source format by putting the format in
  <tt>debian/source/format</tt> is recommended. This allows for

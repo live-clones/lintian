@@ -1,6 +1,5 @@
 Tag: uploader-address-is-on-localhost
-Severity: serious
-Certainty: certain
+Severity: error
 Check: fields/uploaders
 Info: The uploader address includes localhost(.localdomain), which is
  an invalid e-mail address.

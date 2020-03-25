@@ -1,5 +1,5 @@
 Tag: useless-autoreconf-build-depends
-Severity: normal
+Severity: warning
 Certainty: possible
 Check: debhelper
 Info: Since compatibility level 10, debhelper enables the <tt>autoreconf</tt>

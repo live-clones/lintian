@@ -1,6 +1,5 @@
 Tag: pkg-config-unavailable-for-cross-compilation
-Severity: normal
-Certainty: certain
+Severity: warning
 Check: files/pkgconfig
 Info: The specified pkg-config(1) file is installed to
  <tt>/usr/lib/pkgconfig</tt>. As the cross-compilation wrapper of pkg-config

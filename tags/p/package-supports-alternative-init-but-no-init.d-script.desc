@@ -1,5 +1,5 @@
 Tag: package-supports-alternative-init-but-no-init.d-script
-Severity: minor
+Severity: info
 Certainty: possible
 Check: init.d
 Ref: policy 9.11

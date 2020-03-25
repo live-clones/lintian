@@ -1,6 +1,5 @@
 Tag: binary-control-field-duplicates-source
-Severity: wishlist
-Certainty: certain
+Severity: info
 Check: debian/control
 Info: In <tt>debian/control</tt>, this field for a binary package
  duplicates the value inherited from the source package paragraph. This

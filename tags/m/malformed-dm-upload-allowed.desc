@@ -1,6 +1,5 @@
 Tag: malformed-dm-upload-allowed
-Severity: important
-Certainty: certain
+Severity: error
 Check: fields/dm-upload-allowed
 Ref: https://www.debian.org/vote/2007/vote_003
 Info: The Dm-Upload-Allowed field in this package is set to something

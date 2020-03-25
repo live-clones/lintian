@@ -1,6 +1,5 @@
 Tag: package-installs-packlist
-Severity: important
-Certainty: certain
+Severity: error
 Check: languages/perl
 Info: Packages built using the perl MakeMaker package will have a file
  named .packlist in them. Those files are useless, and (in some cases)

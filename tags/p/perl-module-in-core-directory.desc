@@ -1,6 +1,5 @@
 Tag: perl-module-in-core-directory
-Severity: important
-Certainty: certain
+Severity: error
 Check: languages/perl
 Info: Packaged modules must not be installed into the core perl
  directories as those directories change with each upstream perl

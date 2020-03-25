@@ -1,6 +1,5 @@
 Tag: adduser-with-home-var-run
-Severity: normal
-Certainty: certain
+Severity: warning
 Check: maintainer-scripts/adduser
 Info: {pre,post}inst script calls adduser --home /var/run, should be /run.
  Examples of such packages include pesign, pulseaudio and openssh-server

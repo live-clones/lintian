@@ -1,6 +1,5 @@
 Tag: debian-rules-uses-unnecessary-dh-argument
-Severity: minor
-Certainty: certain
+Severity: warning
 Check: debhelper
 Info: The <tt>debian/rules</tt> file passes the specified argument to
  <tt>dh $@</tt> but it is enabled by default from this debhelper

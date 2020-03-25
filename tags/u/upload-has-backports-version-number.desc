@@ -1,6 +1,5 @@
 Tag: upload-has-backports-version-number
-Severity: serious
-Certainty: certain
+Severity: error
 Check: changes-file
 Info: The version number looks like a backport, but the upload's target
  distribution is not a backport suite.
