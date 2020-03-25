@@ -20,7 +20,7 @@ lintian (2.60.0) unstable; urgency=medium
 
   [ Felix Lechner ]
   * Do not run the fields/length check on .changes or .buildinfo files.
-    (Closes: #954146)
+    (Closes: #954798)
   * Check for upstream metadata without a YAML mapping at the "document"
     level.
 
