@@ -56,7 +56,7 @@ sub files {
     return;
 }
 
-sub breakdown {
+sub binary {
     my ($self) = @_;
 
     my $control = $self->processable->control->lookup('md5sums');
@@ -71,19 +71,9 @@ sub breakdown {
 
         $self->tag('no-md5sums-control-file')
           unless $self->only_conffiles;
+
+        return;
     }
-
-    return;
-}
-
-sub binary {
-    my ($self) = @_;
-
-    my $control = $self->processable->control->lookup('md5sums');
-
-    # Is there an md5sums control file?
-    return
-      unless $control;
 
     # The md5sums file should not be a symlink.  If it is, the best
     # we can do is to leave it alone.
