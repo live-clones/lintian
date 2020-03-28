@@ -251,8 +251,8 @@ sub check_test_file {
             $self->tag('uses-deprecated-adttmp', $path, "(line $.)")
               if $x =~ m/ADTTMP/;
             $self->tag('runtime-test-file-uses-installed-python-versions',
-                $path, "(line $.)")
-              if $x =~ m/py3versions\s+(?:--installed|-i)/;
+                $path, "$1", "(line $.)")
+              if $x =~ m/(py3versions\s+([\w\-\s]*--installed|-\w*i\w*))/;
         }
         close($fd);
     }
