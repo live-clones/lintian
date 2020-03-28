@@ -267,6 +267,14 @@ sub source {
             }
         }
 
+        #<<< no Perl tidy
+        $self->tag(
+            'debian-rules-uses-supported-python-versions-without-python-all-build-depends',
+            $1, "(line $.)"
+        ) if $line =~ m/(py3versions\s+([\w\-\s]*--supported|-\w*s\w*))/
+          and not $build_all->implies('python3-all');
+        #>>>
+
         # General assignment - save the variable
         if (/^\s*(?:\S+\s+)*?(\S+)\s*[:\?\+]?=\s*(.*+)?$/so) {
             # This is far too simple from a theoretical PoV, but should do
