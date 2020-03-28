@@ -13,3 +13,4 @@ debian-rules-should-not-use-pwd                          ~~ \$[\(\{]PWD[\)\}]
 debian-rules-should-not-use-sanitize-all-buildflag       ~~ ^\s*(?:export\s+)?DEB_BUILD_MAINT_OPTIONS\s*:?=.*\bsanitize=\+all\b
 debian-rules-should-not-use-underscore-variable          ~~ \$[\(\{]_[\)\}]
 debian-rules-should-not-use-custom-compression-settings  ~~ (?<info>dh_builddeb\b.*--.*-[zZS].*)\n
+debian-rules-uses-installed-python-versions              ~~ (?<info>py3versions\s+([\w\-\s]*--installed|-\w*i\w*))
