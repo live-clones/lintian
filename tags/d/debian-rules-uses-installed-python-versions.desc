@@ -13,5 +13,5 @@ Info: The package appears to use <tt>py3versions -i</tt> to determine
  .
  Please replace this will a call to all "supported" packages instead
  (eg. <tt>py3versions -s</tt> and ensure <tt>python3-all</tt> is listed
- in the test dependencies.
+ in the build dependencies.
 Ref: https://lists.debian.org/debian-devel/2020/03/msg00280.html
