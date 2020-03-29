@@ -1,6 +1,3 @@
-runtime-test-file-uses-installed-python-versions (source): runtime-test-file-uses-supported-python-versions-without-python-all-build-depends debian/tests/test-1 py3versions -vs (line 5)
-runtime-test-file-uses-installed-python-versions (source): runtime-test-file-uses-supported-python-versions-without-python-all-build-depends debian/tests/test-1 py3versions -sv (line 6)
-runtime-test-file-uses-installed-python-versions (source): runtime-test-file-uses-supported-python-versions-without-python-all-build-depends debian/tests/test-1 py3versions -s (line 4)
 runtime-test-file-uses-installed-python-versions (source): runtime-test-file-uses-installed-python-versions debian/tests/test-1 py3versions -vi (line 11)
 runtime-test-file-uses-installed-python-versions (source): runtime-test-file-uses-installed-python-versions debian/tests/test-1 py3versions -i (line 10)
 runtime-test-file-uses-installed-python-versions (source): runtime-test-file-uses-installed-python-versions debian/tests/test-1 py3versions --verbose --installed (line 13)

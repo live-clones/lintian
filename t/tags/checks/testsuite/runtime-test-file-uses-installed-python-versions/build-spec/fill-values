@@ -1,3 +1,4 @@
 Skeleton: upload-native
 Testname: runtime-test-file-uses-installed-python-versions
 Description: Tests for py3versions -i
+Extra-Build-Depends: python3-all
