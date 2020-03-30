@@ -1,4 +1,0 @@
-Tag: binary-is-wrong-architecture
-Severity: error
-Check: xdeb
-Info: A binary or shared library is from the wrong architecture.

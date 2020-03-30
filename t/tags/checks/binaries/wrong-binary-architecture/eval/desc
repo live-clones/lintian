@@ -1,2 +1,2 @@
 Testname: wrong-binary-architecture
-Check: xdeb
+Check: binaries

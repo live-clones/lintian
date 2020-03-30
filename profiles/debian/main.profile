@@ -162,7 +162,6 @@ Enable-Tags-From-Check:
  usr/lib,
  usrmerge,
  vim,
- xdeb,
 Extends:
  debian/ftp-master-auto-reject
 
