@@ -1,0 +1,4 @@
+Testname: not-a-bz2
+Skeleton: upload-native
+Description: A file with .bz2 extension that is not a bzip2 file
+Extra-Build-Depends: bzip2
