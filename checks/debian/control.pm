@@ -360,6 +360,8 @@ sub source {
 
     # check for duplicate short description
     for my $short (keys %short_descriptions) {
+        # Assume that substvars are correctly handled
+        next if $short =~ m/\$\{.+\}/;
         $self->tag('duplicate-short-description',
             @{$short_descriptions{$short}})
           if scalar @{$short_descriptions{$short}} > 1;
@@ -367,6 +369,8 @@ sub source {
 
     # check for duplicate long description
     for my $long (keys %long_descriptions) {
+        # Assume that substvars are correctly handled
+        next if $long =~ m/\$\{.+\}/;
         $self->tag('duplicate-long-description', @{$long_descriptions{$long}})
           if scalar @{$long_descriptions{$long}} > 1;
     }
