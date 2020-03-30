@@ -248,14 +248,14 @@ sub check_test_file {
     } else {
         open(my $fd, '<', $index->unpacked_path);
         while (my $x = <$fd>) {
-            if ($x =~ m/ADTTMP/) {
-                $self->tag('uses-deprecated-adttmp', $path, "(line $.)");
-                last;
-            }
+            $self->tag('uses-deprecated-adttmp', $path, "(line $.)")
+              if $x =~ m/ADTTMP/;
+            $self->tag('runtime-test-file-uses-installed-python-versions',
+                $path, "(line $.)")
+              if $x =~ m/py3versions\s+(?:--installed|-i)/;
         }
         close($fd);
     }
-    # Test files are allowed not to be executable.
     return;
 }
 

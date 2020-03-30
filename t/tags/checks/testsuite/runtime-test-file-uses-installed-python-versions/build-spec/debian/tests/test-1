@@ -1,0 +1,13 @@
+#!/bin/sh
+
+# Good
+for X in $(py3versions -s)
+do
+	echo $X
+done
+
+# Bad
+for X in $(py3versions -i)
+do
+	echo $X
+done

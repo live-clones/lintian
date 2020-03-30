@@ -1,3 +1,30 @@
+lintian (2.60.0) unstable; urgency=medium
+
+  * Summary of tag changes:
+    + Added:
+      - runtime-test-file-uses-installed-python-versions
+      - upstream-metadata-not-yaml-mapping
+
+  [ Chris Lamb ]
+  * Do not check the length of Checksums-Sha256 fields. (Closes: #954798)
+  * Don't check for an md5sums control files in udebs. (Closes: #954803)
+  * Expand possible-missing-colon-in-closes to also check for semicolons
+    used in place of colons. (Closes: #954484)
+  * Check for calls to py3versions -i in autopkgtests. (Closes: #954763)
+
+  [ Felix Lechner ]
+  * Do not run the fields/length check on .changes or .buildinfo files.
+    (Closes: #954146)
+  * Check for upstream metadata without a YAML mapping at the "document"
+    level.
+
+  [ Scott Kitterman ]
+  * Update "old" and "ancient" python-version-field tags descriptions to
+    suggest also checking for incorrect use of "py3versons -r".
+    (Closes: #954819)
+
+ -- Chris Lamb <lamby@debian.org>  Wed, 25 Mar 2020 10:56:21 +0000
+
 lintian (2.59.0~bpo10+1) buster-backports; urgency=medium
 
   * Rebuild for buster-backports.

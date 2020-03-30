@@ -87,6 +87,11 @@ sub source {
         return;
     }
 
+    unless (ref $yaml eq 'HASH') {
+        $self->tag('upstream-metadata-not-yaml-mapping', $file->name);
+        return;
+    }
+
     $self->tag('upstream-metadata-field-present', $_) for keys %{$yaml};
 
     $self->tag('upstream-metadata-missing-repository')
