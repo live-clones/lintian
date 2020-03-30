@@ -1,3 +1,3 @@
 Testname: timestamp-in-gzip
-Check: files/compressed
+Check: files/compressed/gz
 Reference: Bug#762105

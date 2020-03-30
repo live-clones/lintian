@@ -1,6 +1,6 @@
 Tag: package-contains-timestamped-gzip
 Severity: warning
-Check: files/compressed
+Check: files/compressed/gz
 Info: The package contains a gzip-compressed file that has timestamps.
  Such files make the packages unreproducible, because their
  contents depend on the time when the package was built.

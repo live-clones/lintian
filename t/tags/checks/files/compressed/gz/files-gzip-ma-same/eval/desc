@@ -1,2 +1,2 @@
 Testname: files-gzip-ma-same
-Check: files/compressed
+Check: files/compressed/gz
