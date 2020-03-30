@@ -1,0 +1,4 @@
+Testname: not-an-xz
+Skeleton: upload-native
+Description: A file with .xz extension that is not an xz file
+Extra-Build-Depends: xz-utils
