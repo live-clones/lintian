@@ -76,7 +76,7 @@ sub breakdown {
     return;
 }
 
-sub installable {
+sub binary {
     my ($self) = @_;
 
     my $control = $self->processable->control->lookup('md5sums');

@@ -37,10 +37,13 @@ use namespace::clean;
 with 'Lintian::Check';
 
 my @ALLOWED_FIELDS
-  = qw(build-ids description package-list installed-build-depends);
+  = qw(build-ids description package-list installed-build-depends checksums-sha256);
 
 sub always {
     my ($self) = @_;
+
+    return
+      if any { $self->type eq $_ } ('changes', 'buildinfo');
 
     my $maximum = 5_000;
 
