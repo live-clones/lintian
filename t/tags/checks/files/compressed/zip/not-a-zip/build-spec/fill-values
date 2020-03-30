@@ -1,0 +1,4 @@
+Testname: not-a-zip
+Skeleton: upload-native
+Description: A file with .zip extension that is not a zip file
+Extra-Build-Depends: unzip
