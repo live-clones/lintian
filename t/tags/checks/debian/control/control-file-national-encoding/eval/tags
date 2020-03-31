@@ -1,2 +1,1 @@
-control-file-national-encoding (source): rules-does-not-require-root
-control-file-national-encoding (source): debian-control-file-uses-obsolete-national-encoding at line 18
+control-file-national-encoding (source): debian-control-file-uses-obsolete-national-encoding
