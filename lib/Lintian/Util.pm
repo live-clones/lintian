@@ -35,8 +35,10 @@ use IO::Async::Loop;
 use IO::Async::Process;
 use Path::Tiny;
 use POSIX qw(sigprocmask SIG_BLOCK SIG_UNBLOCK SIG_SETMASK);
+use Unicode::UTF8 qw(valid_utf8);
 
-use Lintian::Deb822Parser qw(read_dpkg_control parse_dpkg_control);
+use Lintian::Deb822Parser
+  qw(read_dpkg_control parse_dpkg_control parse_dpkg_control_string);
 
 # Force export as soon as possible, since some of the modules we load also
 # depend on us and the sequencing can cause things not to be exported
@@ -54,10 +56,9 @@ BEGIN {
     @EXPORT_OK = (qw(
           get_deb_info
           get_dsc_info
+          get_dsc_info_from_string
           get_file_checksum
           get_file_digest
-          file_is_encoded_in_non_utf8
-          is_string_utf8_encoded
           do_fork
           run_cmd
           safe_qx
@@ -286,9 +287,10 @@ sub get_deb_info {
     my $composite = Future->needs_all($dpkgfuture, $tarfuture);
     $composite->get;
 
-    open(my $fh, '<', \$control);
-    my @data = parse_dpkg_control($fh);
-    close $fh;
+    return {}
+      unless valid_utf8($control);
+
+    my @data = parse_dpkg_control_string($control);
 
     return $data[0];
 }
@@ -311,8 +313,22 @@ L</read_dpkg_control(FILE[, FLAGS[, LINES]])> do.
 
 sub get_dsc_info {
     my ($file) = @_;
+
     my @data = read_dpkg_control($file);
-    return (defined($data[0])? $data[0] : undef);
+
+    return $data[0];
+}
+
+=item get_dsc_info_from_string (STRING)
+
+=cut
+
+sub get_dsc_info_from_string {
+    my ($text) = @_;
+
+    my @data = parse_dpkg_control_string($text);
+
+    return $data[0];
 }
 
 =item drain_pipe(FD)
@@ -381,54 +397,6 @@ This sub is a convenience wrapper around Digest::{MD5,SHA}.
 sub get_file_checksum {
     my $digest = get_file_digest(@_);
     return $digest->hexdigest;
-}
-
-=item is_string_utf8_encoded(STRING)
-
-Returns a truth value if STRING can be decoded as valid UTF-8.
-
-=cut
-
-{
-    my $decoder = Encode::find_encoding('UTF-8');
-    die('No UTF-8 decoder !?') unless ref($decoder);
-
-    sub is_string_utf8_encoded {
-        my ($str) = @_;
-        if ($str =~ m,\e[-!"\$%()*+./],) {
-            # ISO-2022
-            return 0;
-        }
-        eval {$decoder->decode($str, Encode::FB_CROAK);};
-        if ($@) {
-            # fail
-            return 0;
-        }
-        # pass
-        return 1;
-    }
-}
-
-=item file_is_encoded_in_non_utf8 (...)
-
-Undocumented
-
-=cut
-
-sub file_is_encoded_in_non_utf8 {
-    my ($file) = @_;
-
-    open(my $fd, '<', $file);
-    my $line = 0;
-    while (<$fd>) {
-        if (!is_string_utf8_encoded($_)) {
-            $line = $.;
-            last;
-        }
-    }
-    close($fd);
-
-    return $line;
 }
 
 =item do_fork()

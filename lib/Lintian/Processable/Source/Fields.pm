@@ -28,8 +28,9 @@ use Carp qw(croak);
 use Scalar::Util qw(blessed);
 use Path::Tiny;
 use Try::Tiny;
+use Unicode::UTF8 qw(valid_utf8 decode_utf8);
 
-use Lintian::Deb822Parser qw(read_dpkg_control);
+use Lintian::Deb822Parser qw(parse_dpkg_control_string);
 use Lintian::Inspect::Changelog::Version;
 use Lintian::Relation;
 use Lintian::Util
@@ -229,8 +230,14 @@ sub load_debian_control {
     return 0
       unless defined $dctrl && $dctrl->is_open_ok;
 
+    my $bytes = path($dctrl->unpacked_path)->slurp;
+    return 0
+      unless valid_utf8($bytes);
+
+    my $contents = decode_utf8($bytes);
+
     my @control_data;
-    eval {@control_data = read_dpkg_control($dctrl->unpacked_path);};
+    eval {@control_data = parse_dpkg_control_string($contents);};
 
     if ($@) {
         # If it is a syntax error, ignore it (we emit

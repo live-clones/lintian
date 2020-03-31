@@ -24,8 +24,9 @@ use utf8;
 
 use Carp qw(croak);
 use Path::Tiny;
+use Unicode::UTF8 qw(valid_utf8 decode_utf8);
 
-use Lintian::Util qw(get_dsc_info);
+use Lintian::Util qw(get_dsc_info_from_string);
 
 use constant EMPTY => q{};
 use constant COLON => q{:};
@@ -80,7 +81,18 @@ sub init {
     $self->type('changes');
     $self->link_label('changes');
 
-    my $cinfo = get_dsc_info($self->path)
+    # dpkg will include news items in national encoding
+    my $bytes = path($self->path)->slurp;
+
+    my $contents;
+    if (valid_utf8($bytes)) {
+        $contents = decode_utf8($bytes);
+    } else {
+        # try to proceed with nat'l encoding; stopping here breaks tests
+        $contents = $bytes;
+    }
+
+    my $cinfo = get_dsc_info_from_string($contents)
       or croak $self->path. ' is not a valid '. $self->type . ' file';
 
     $self->verbatim($cinfo);
