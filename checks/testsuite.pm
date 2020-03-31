@@ -24,16 +24,16 @@ use warnings;
 use utf8;
 use autodie;
 
+use Path::Tiny;
+use Unicode::UTF8 qw(valid_utf8 decode_utf8);
+
 use Lintian::Data;
 use Lintian::Deb822Parser qw(
   DCTRL_COMMENTS_AT_EOL
-  read_dpkg_control
+  parse_dpkg_control_string
 );
 use Lintian::Relation;
-use Lintian::Util qw(
-  file_is_encoded_in_non_utf8
-  strip
-);
+use Lintian::Util qw(strip);
 
 use Moo;
 use namespace::clean;
@@ -84,15 +84,15 @@ sub source {
     if (defined($control)) {
         if (not $control->is_regular_file) {
             die 'debian tests control is not a regular file';
-        } elsif ($control->is_open_ok) {
-            my $path = $control->unpacked_path;
-            my $not_utf8_line = file_is_encoded_in_non_utf8($path);
 
-            if ($not_utf8_line) {
-                $self->tag('debian-tests-control-uses-national-encoding',
-                    "at line $not_utf8_line");
+        } elsif ($control->is_open_ok) {
+            my $bytes = path($control->unpacked_path)->slurp;
+            unless (valid_utf8($bytes)) {
+                $self->tag('debian-tests-control-uses-national-encoding');
+            } else {
+                my $contents = decode_utf8($bytes);
+                $self->check_control_contents($contents);
             }
-            $self->check_control_contents($path);
         }
 
         $self->tag('unnecessary-testsuite-autopkgtest-field')
@@ -110,15 +110,16 @@ sub source {
 }
 
 sub check_control_contents {
-    my ($self, $path) = @_;
+    my ($self, $contents) = @_;
 
     my $processable = $self->processable;
 
     my (@paragraphs, @lines);
-    if (
-        not eval {
+    unless (
+        eval {
             @paragraphs
-              = read_dpkg_control($path, DCTRL_COMMENTS_AT_EOL, \@lines);
+              = parse_dpkg_control_string($contents, DCTRL_COMMENTS_AT_EOL,
+                \@lines);
         }
     ) {
         chomp $@;
