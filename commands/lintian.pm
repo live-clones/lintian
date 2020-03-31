@@ -609,6 +609,9 @@ sub main {
                 } elsif ($opts{$_} eq 'xml') {
                     require Lintian::Output::XML;
                     $OUTPUT = Lintian::Output::XML->new;
+                } elsif ($opts{$_} eq 'json') {
+                    require Lintian::Output::JSON;
+                    $OUTPUT = Lintian::Output::JSON->new;
                 } elsif ($opts{$_} eq 'fullewi') {
                     require Lintian::Output::FullEWI;
                     $OUTPUT = Lintian::Output::FullEWI->new;
