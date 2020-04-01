@@ -20,8 +20,9 @@
 
 package Lintian::Tag::Info;
 
-use strict;
+use v5.20;
 use warnings;
+use utf8;
 
 use Carp qw(croak);
 use List::MoreUtils qw(none);

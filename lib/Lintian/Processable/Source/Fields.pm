@@ -20,8 +20,9 @@
 
 package Lintian::Processable::Source::Fields;
 
-use strict;
+use v5.20;
 use warnings;
+use utf8;
 
 use Carp qw(croak);
 use Scalar::Util qw(blessed);

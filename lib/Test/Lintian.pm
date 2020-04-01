@@ -49,8 +49,9 @@ errors.
 
 =cut
 
-use strict;
+use v5.20;
 use warnings;
+use utf8;
 
 my $CLASS = __PACKAGE__;
 my $PROFILE;

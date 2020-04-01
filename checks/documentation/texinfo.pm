@@ -21,8 +21,9 @@
 
 package Lintian::documentation::texinfo;
 
-use strict;
+use v5.20;
 use warnings;
+use utf8;
 use autodie;
 
 use Lintian::Util qw(open_gz normalize_pkg_path);

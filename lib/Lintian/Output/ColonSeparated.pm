@@ -21,8 +21,9 @@
 
 package Lintian::Output::ColonSeparated;
 
-use strict;
+use v5.20;
 use warnings;
+use utf8;
 
 use constant EMPTY => q{};
 use constant SPACE => q{ };

@@ -15,8 +15,9 @@
 
 package Lintian::Command::Simple;
 
-use strict;
+use v5.20;
 use warnings;
+use utf8;
 
 use Exporter qw(import);
 use POSIX qw(:sys_wait_h);

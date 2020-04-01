@@ -18,8 +18,9 @@
 
 package Lintian::Output::LetterQualifier;
 
-use strict;
+use v5.20;
 use warnings;
+use utf8;
 
 use Term::ANSIColor qw(colored);
 use Lintian::Tag::Info ();

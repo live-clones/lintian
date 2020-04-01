@@ -29,8 +29,9 @@ package Lintian::appstream_metadata;
 # For modaliases, maybe udev rules could give some hints.
 # Check modalias values to ensure hex numbers are using capital A-F.
 
-use strict;
+use v5.20;
 use warnings;
+use utf8;
 use autodie qw(open);
 
 use File::Basename qw(basename);

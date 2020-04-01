@@ -20,9 +20,10 @@
 
 package Lintian::Processable::Installed;
 
-use strict;
+use v5.20;
 use warnings;
 use autodie;
+use utf8;
 
 use Path::Tiny;
 

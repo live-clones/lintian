@@ -18,9 +18,9 @@
 
 package Lintian::Tag;
 
-use strict;
+use v5.20;
 use warnings;
-use v5.16;
+use utf8;
 
 use constant EMPTY => q{};
 use constant SPACE => q{ };

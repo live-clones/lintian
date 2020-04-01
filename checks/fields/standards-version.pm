@@ -21,8 +21,9 @@
 
 package Lintian::fields::standards_version;
 
-use strict;
+use v5.20;
 use warnings;
+use utf8;
 use autodie;
 
 use Date::Parse qw(str2time);

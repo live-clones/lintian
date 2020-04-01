@@ -21,8 +21,9 @@
 
 package Lintian::conffiles;
 
-use strict;
+use v5.20;
 use warnings;
+use utf8;
 use autodie;
 
 use Moo;

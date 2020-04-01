@@ -18,8 +18,9 @@
 
 package Lintian::Output::XML;
 
-use strict;
+use v5.20;
 use warnings;
+use utf8;
 
 use Time::Piece;
 use XML::Writer;

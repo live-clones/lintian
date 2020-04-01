@@ -20,8 +20,9 @@
 
 package Lintian::files::names;
 
-use strict;
+use v5.20;
 use warnings;
+use utf8;
 use autodie;
 
 use Lintian::Util qw(is_string_utf8_encoded);

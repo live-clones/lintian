@@ -20,8 +20,9 @@
 
 package Lintian::files::compressed::gz;
 
-use strict;
+use v5.20;
 use warnings;
+use utf8;
 
 use Capture::Tiny qw(capture);
 use Time::Piece;
