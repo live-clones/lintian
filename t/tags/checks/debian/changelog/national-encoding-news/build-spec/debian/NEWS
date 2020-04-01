@@ -1,6 +1,6 @@
 binary (4-1.1) UNRELEASED; urgency=high
 
-  This is a Debian NEWS entry that isn't encoded properly in UTF-8: Ã¼.
+  This is a Debian NEWS entry that isn't encoded properly in UTF-8: ü.
   It also has a usefull speling error.
 
  -- Russ Allbery <rra@debian.org>  Sun, 14 Oct 2007 17:11:36 -0700

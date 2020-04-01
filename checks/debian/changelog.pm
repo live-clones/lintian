@@ -33,13 +33,14 @@ use List::Util qw(first);
 use List::MoreUtils qw(any uniq);
 use Path::Tiny;
 use Try::Tiny;
+use Unicode::UTF8 qw(valid_utf8 decode_utf8);
 
 use Lintian::Data ();
 use Lintian::Inspect::Changelog;
 use Lintian::Inspect::Changelog::Version;
 use Lintian::Relation::Version qw(versions_gt);
 use Lintian::Spelling qw(check_spelling);
-use Lintian::Util qw(file_is_encoded_in_non_utf8 strip);
+use Lintian::Util qw(strip);
 
 use constant EMPTY => q{};
 
@@ -356,36 +357,41 @@ sub binary {
     my $news;
     my $dnews = path($processable->groupdir)->child('NEWS.Debian')->stringify;
     if (-f $dnews) {
-        my $line = file_is_encoded_in_non_utf8($dnews);
-        if ($line) {
-            $self->tag('debian-news-file-uses-obsolete-national-encoding',
-                "at line $line");
-        }
-        my $changelog = Lintian::Inspect::Changelog->new;
-        my $contents = path($dnews)->slurp;
-        $changelog->parse($contents);
 
-        if (my @errors = @{$changelog->errors}) {
-            for (@errors) {
-                $self->tag('syntax-error-in-debian-news-file',
-                    "line $_->[0]","\"$_->[1]\"");
-            }
-        }
+        my $bytes = path($dnews)->slurp;
+        if (valid_utf8($bytes)) {
 
-        # Some checks on the most recent entry.
-        if ($changelog->entries && defined @{$changelog->entries}[0]) {
-            ($news) = @{$changelog->entries};
-            if ($news->Distribution && $news->Distribution eq 'UNRELEASED') {
-                $self->tag('debian-news-entry-has-strange-distribution',
-                    $news->Distribution);
+            my $contents = decode_utf8($bytes);
+            my $changelog = Lintian::Inspect::Changelog->new;
+            $changelog->parse($contents);
+
+            if (my @errors = @{$changelog->errors}) {
+                for (@errors) {
+                    $self->tag('syntax-error-in-debian-news-file',
+                        "line $_->[0]","\"$_->[1]\"");
+                }
             }
-            check_spelling(
-                $news->Changes,
-                $group->spelling_exceptions,
-                $self->spelling_tag_emitter('spelling-error-in-news-debian'));
-            if ($news->Changes =~ /^\s*\*\s/) {
-                $self->tag('debian-news-entry-uses-asterisk');
+
+            # Some checks on the most recent entry.
+            if ($changelog->entries && defined @{$changelog->entries}[0]) {
+                ($news) = @{$changelog->entries};
+                if ($news->Distribution && $news->Distribution eq 'UNRELEASED')
+                {
+                    $self->tag('debian-news-entry-has-strange-distribution',
+                        $news->Distribution);
+                }
+                check_spelling(
+                    $news->Changes,
+                    $group->spelling_exceptions,
+                    $self->spelling_tag_emitter(
+                        'spelling-error-in-news-debian'));
+                if ($news->Changes =~ /^\s*\*\s/) {
+                    $self->tag('debian-news-entry-uses-asterisk');
+                }
             }
+
+        } else {
+            $self->tag('debian-news-file-uses-obsolete-national-encoding');
         }
     }
 
@@ -491,10 +497,10 @@ sub binary {
     }
 
     # check that changelog is UTF-8 encoded
-    my $line = file_is_encoded_in_non_utf8($dchpath);
-    if ($line) {
-        $self->tag('debian-changelog-file-uses-obsolete-national-encoding',
-            "at line $line");
+    my $bytes = path($dchpath)->slurp;
+    unless (valid_utf8($bytes)) {
+        $self->tag('debian-changelog-file-uses-obsolete-national-encoding');
+        return;
     }
 
     my $changelog = $processable->changelog;
@@ -728,7 +734,7 @@ sub check_dch {
     my ($prefix, $suffix);
     my $lineno = 0;
     my ($estart, $tstart) = (0, 0);
-    open(my $fd, '<', $path);
+    open(my $fd, '<:encoding(UTF-8)', $path);
     while (<$fd>) {
 
         unless ($tstart) {
