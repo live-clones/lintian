@@ -790,8 +790,7 @@ sub parse_wildcard {
     my ($regex_src) = @_;
 
     my ($error);
-    $regex_src =~ s,^\./+,,;
-    $regex_src =~ s,//+,/,g;
+
     if ($regex_src eq '*') {
         return ('', WC_TYPE_DESCENDANTS, undef);
     }
