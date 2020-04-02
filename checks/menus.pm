@@ -27,10 +27,13 @@ use warnings;
 use utf8;
 use autodie;
 
+use Path::Tiny;
+use Unicode::UTF8 qw(valid_utf8 decode_utf8);
+
 use Lintian::Data;
 use Lintian::Spelling
   qw(check_spelling check_spelling_picky $known_shells_regex);
-use Lintian::Util qw(file_is_encoded_in_non_utf8 strip);
+use Lintian::Util qw(strip);
 
 use Moo;
 use namespace::clean;
@@ -260,25 +263,28 @@ sub check_doc_base_file {
     my $group = $self->group;
 
     my $dbfile = $dbpath->basename;
-    my $line = file_is_encoded_in_non_utf8($dbpath->unpacked_path);
-    if ($line) {
-        $self->tag('doc-base-file-uses-obsolete-national-encoding',
-            "$dbfile:$line");
+
+    my $bytes = path($dbpath->unpacked_path)->slurp;
+    unless (valid_utf8($bytes)) {
+        $self->tag('doc-base-file-uses-obsolete-national-encoding', $dbfile);
+        return;
     }
+
+    my $contents = decode_utf8($bytes);
+    my @lines = split(/\n/, $contents);
 
     my $knownfields = \%KNOWN_DOCBASE_MAIN_FIELDS;
     my ($field, @vals);
     my %sawfields;        # local for each section of control file
     my %sawformats;       # global for control file
-    $line           = 0;  # global
+    my $line           = 0;  # global
 
-    open(my $fd, '<', $dbpath->unpacked_path);
-
-    while (<$fd>) {
-        chomp;
+    my $position = 1;
+    while (defined(my $string = shift @lines)) {
+        chomp $string;
 
         # New field.  check previous field, if we have any.
-        if (/^(\S+)\s*:\s*(.*)$/) {
+        if ($string =~ /^(\S+)\s*:\s*(.*)$/) {
             my (@new) = ($1, $2);
             if ($field) {
                 $self->check_doc_base_field(
@@ -289,19 +295,20 @@ sub check_doc_base_file {
             }
             $field = lc $new[0];
             @vals  = ($new[1]);
-            $line  = $.;
+            $line  = $position;
 
             # Continuation of previously defined field.
-        } elsif ($field && /^\s+\S/) {
-            push(@vals, $_);
+        } elsif ($field && $string =~ /^\s+\S/) {
+            push(@vals, $string);
 
             # All tags will be reported on the last continuation line of the
             # doc-base field.
-            $line  = $.;
+            $line  = $position;
 
             # Sections' separator.
-        } elsif (/^(\s*)$/) {
-            $self->tag('doc-base-file-separator-extra-whitespace',"$dbfile:$.")
+        } elsif ($string =~ /^(\s*)$/) {
+            $self->tag('doc-base-file-separator-extra-whitespace',
+                "$dbfile:$position")
               if $1;
             next unless $field; # skip successive empty lines
 
@@ -325,8 +332,11 @@ sub check_doc_base_file {
 
             # Everything else is a syntax error.
         } else {
-            $self->tag('doc-base-file-syntax-error', "$dbfile:$.");
+            $self->tag('doc-base-file-syntax-error', "$dbfile:$position");
         }
+
+    } continue {
+        ++$position;
     }
 
     # Check the last field/section of the control file.
@@ -341,10 +351,8 @@ sub check_doc_base_file {
     }
 
     # Make sure we saw at least one format.
-    $self->tag('doc-base-file-no-format-section', "$dbfile:$.")
+    $self->tag('doc-base-file-no-format-section', $dbfile)
       unless %sawformats;
-
-    close($fd);
 
     return;
 }
