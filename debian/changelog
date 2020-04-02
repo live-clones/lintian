@@ -1,3 +1,30 @@
+lintian (2.61.0) unstable; urgency=medium
+
+  * Summary of tag changes:
+    + Added:
+      - debian-rules-uses-installed-python-versions
+      - debian-rules-uses-supported-python-versions-without-python-all-build-depends
+      - runtime-test-file-uses-supported-python-versions-without-python-all-build-depends
+
+  [ Axel Beckert ]
+  * Switch links to http://refspecs.linuxfoundation.org to use HTTPS.
+
+  [ Chris Lamb ]
+  * Warn when "py3versions -s" is used without a python3-all dependency. (Closes: #954763)
+  * Improve checking for "py3versions -i" in autopkgtests and also check
+  * debian/rules files too.
+  * Make some cosmetic improvements to CONTRIBUTING.md.
+  * Correct reference to bug in previous changelog entry.
+
+  [ Felix Lechner ]
+  * Do not issue any tags for udebs in when checking md5sums. (Closes: #954803)
+  * Simplify mechanism when looking for foreign architectures. (Re: #954415)
+
+  [ Paul Wise ]
+  * Add several spelling corrections.
+
+ -- Chris Lamb <lamby@debian.org>  Mon, 30 Mar 2020 10:33:17 +0000
+
 lintian (2.60.0~bpo9+1) stretch-backports; urgency=medium
 
   * Rebuild for stretch-backports.
@@ -20,7 +47,7 @@ lintian (2.60.0) unstable; urgency=medium
 
   [ Felix Lechner ]
   * Do not run the fields/length check on .changes or .buildinfo files.
-    (Closes: #954146)
+    (Closes: #954798)
   * Check for upstream metadata without a YAML mapping at the "document"
     level.
 

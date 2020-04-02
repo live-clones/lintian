@@ -251,8 +251,15 @@ sub check_test_file {
             $self->tag('uses-deprecated-adttmp', $path, "(line $.)")
               if $x =~ m/ADTTMP/;
             $self->tag('runtime-test-file-uses-installed-python-versions',
-                $path, "(line $.)")
-              if $x =~ m/py3versions\s+(?:--installed|-i)/;
+                $path, "$1", "(line $.)")
+              if $x =~ m/(py3versions\s+([\w\-\s]*--installed|-\w*i\w*))/;
+            #<<< no Perl tidy
+            $self->tag(
+                'runtime-test-file-uses-supported-python-versions-without-python-all-build-depends',
+                $path, "$1", "(line $.)"
+            ) if $x =~ m/(py3versions\s+([\w\-\s]*--supported|-\w*s\w*))/
+              and not $processable->relation('build-depends-all')->implies('python3-all');
+            #>>>
         }
         close($fd);
     }
