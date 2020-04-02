@@ -41,8 +41,8 @@ our %elfpattern = (
     'm68k' => qr/ELF 32-bit MSB .* 680[02]0/,
     'arm' => qr/ELF 32-bit LSB .* ARM/,
     'armeb' => qr/ELF 32-bit MSB .* ARM/,
-    'armel' => qr/ELF 32-bit LSB .* SYSV/,
-    'armhf' => qr/ELF 32-bit LSB .* SYSV/,
+    'armel' => qr/ELF 32-bit LSB .* ARM/,
+    'armhf' => qr/ELF 32-bit LSB .* ARM/,
     'powerpc' => qr/ELF 32-bit MSB .* PowerPC/,
     'powerpc64' => qr/ELF 64-bit MSB .* PowerPC/,
     'mips' => qr/ELF 32-bit MSB .* MIPS/,
@@ -150,11 +150,7 @@ sub files {
     my $pattern = $elfpattern{$architecture};
 
     $self->tag('binary-is-wrong-architecture', $file)
-      if ( $architecture =~ /^arm[el|hf]$/
-        && $file->file_info !~ /ARM,(?: EABI5)? version 1 \(SYSV\)/)
-      || ( $architecture eq 'i386'
-        && $file->file_info !~ /x86-64, version 1 \(SYSV\)/)
-      || (defined $pattern && $file->file_info !~ /$pattern/);
+      if defined $pattern && $file->file_info !~ /$pattern/;
 
     return;
 }

@@ -66,16 +66,16 @@ Making changes
    (`debian/rules runtests onlyrun=suite:scripts`)
  * Check the changes against the test suite
    (`debian/rules runtests`)
- * Please format the commit messages with a short synopsis and (optionally) a long description.  Example:
+ * Please format the commit messages with a short synopsis and (optionally) a long description.
 
-````
+An example commit message might be:
+
     Add =encoding to the POD in Lintian::Collect
 
     We use a UTF-8 section symbol, and the current version of Pod::Simple
-    therefore requires explicitly declaring the character set.
-````
+    therefore requires explicitly declaring the character set.`
 
-For more on best practices on git commit messages, please review
+For more on best practices on Git commit messages, please review
 [A Note About Git Commit Messages][tbaggery-git-commit] for inspiration.
 
 
@@ -116,13 +116,10 @@ in all submissions.  In the cases where perltidy fails miserably,
 please format the piece manually and use a "no perltidy" rule.  As
 an example:
 
-````
-        #<<< no perltidy
-        something
-          that perltidy should not touch
-        #>>>
-
-````
+    #<<< no perltidy
+    something
+    that perltidy should not touch
+    #>>>
 
 Beyond perltidy, we also use perlcritic to enforce some semantic
 rules.  An example rule being that we forbid the use of `grep` in

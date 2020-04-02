@@ -1,13 +1,13 @@
 #!/bin/sh
 
 # Good
-for X in $(py3versions -s)
-do
-	echo $X
-done
+echo $(py3versions -s)
+echo $(py3versions -vs)
+echo $(py3versions -sv)
+echo $(py3versions -v)
 
 # Bad
-for X in $(py3versions -i)
-do
-	echo $X
-done
+echo $(py3versions -i)
+echo $(py3versions -vi)
+echo $(py3versions --installed)
+echo $(py3versions --verbose --installed)
