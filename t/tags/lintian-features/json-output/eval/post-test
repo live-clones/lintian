@@ -1,3 +1,4 @@
-s/"lintian-version" : "[^"]*"/"lintian-version" : "VERSION"/
-s/"processing-start" : "[^"]*"/"processing-start" : "TIMESTAMP"/
-s/"processing-end" : "[^"]*"/"processing-end" : "TIMESTAMP"/
+s/("lintian-version" : )"[^"]*"/\1"VERSION"/
+s/("processing-start" : )"[^"]*"/\1"TIMESTAMP"/
+s/("processing-end" : )"[^"]*"/\1"TIMESTAMP"/
+s/("path" : )"[^"]*"/\1"PATH"/

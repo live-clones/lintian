@@ -4,7 +4,7 @@
          "group-id" : "json-output/1.0+dsfg-1.1",
          "input-files" : [
             {
-               "path" : "/lcl/lechner/lintian/git/debian/test-out/packages/tags/lintian-features/json-output/json-output_1.0+dsfg-1.1.dsc",
+               "path" : "PATH",
                "tags" : [
                   {
                      "hint" : "0.0.1-1 -> 1.0+dsfg-1 (missing) -> 1.0+dsfg-1.1",
@@ -121,7 +121,7 @@
                ]
             },
             {
-               "path" : "/lcl/lechner/lintian/git/debian/test-out/packages/tags/lintian-features/json-output/json-output_1.0+dsfg-1.1_all.deb",
+               "path" : "PATH",
                "tags" : [
                   {
                      "hint" : "usr/local/share/",
@@ -197,7 +197,7 @@
                ]
             },
             {
-               "path" : "/lcl/lechner/lintian/git/debian/test-out/packages/tags/lintian-features/json-output/json-output_1.0+dsfg-1.1_amd64.buildinfo",
+               "path" : "PATH",
                "tags" : [
                   {
                      "name" : "package-is-maintained-by-individual",
@@ -206,7 +206,7 @@
                ]
             },
             {
-               "path" : "/lcl/lechner/lintian/git/debian/test-out/packages/tags/lintian-features/json-output/json-output_1.0+dsfg-1.1_amd64.changes",
+               "path" : "PATH",
                "tags" : [
                   {
                      "name" : "package-is-maintained-by-individual",
