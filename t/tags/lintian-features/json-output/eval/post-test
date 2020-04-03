@@ -1,0 +1,3 @@
+s/"lintian-version" : "[^"]*"/"lintian-version" : "VERSION"/
+s/"processing-start" : "[^"]*"/"processing-start" : "TIMESTAMP"/
+s/"processing-end" : "[^"]*"/"processing-end" : "TIMESTAMP"/

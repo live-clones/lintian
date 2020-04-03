@@ -1,0 +1,4 @@
+Testname: json-output
+Options: --show-overrides
+Output-Format: json
+Match-Strategy: literal

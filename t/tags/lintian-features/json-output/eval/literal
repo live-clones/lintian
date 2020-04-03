@@ -1,0 +1,224 @@
+{
+   "groups" : [
+      {
+         "group-id" : "json-output/1.0+dsfg-1.1",
+         "input-files" : [
+            {
+               "path" : "/lcl/lechner/lintian/git/debian/test-out/packages/tags/lintian-features/json-output/json-output_1.0+dsfg-1.1.dsc",
+               "tags" : [
+                  {
+                     "hint" : "0.0.1-1 -> 1.0+dsfg-1 (missing) -> 1.0+dsfg-1.1",
+                     "name" : "changelog-file-missing-explicit-entry",
+                     "severity" : "warning"
+                  },
+                  {
+                     "hint" : "1.0+dsfg-1.1",
+                     "name" : "dfsg-version-misspelled",
+                     "severity" : "warning"
+                  },
+                  {
+                     "name" : "format-3.0-but-debian-changes-patch",
+                     "severity" : "warning"
+                  },
+                  {
+                     "hint" : "1.0+dsfg-1.1",
+                     "name" : "maintainer-upload-has-incorrect-version-number",
+                     "severity" : "warning"
+                  },
+                  {
+                     "hint" : "field \"section\" in package json-output",
+                     "name" : "binary-control-field-duplicates-source",
+                     "severity" : "info"
+                  },
+                  {
+                     "hint" : "debian-changes-1.0+dsfg-1.1",
+                     "name" : "quilt-patch-using-template-description",
+                     "severity" : "info"
+                  },
+                  {
+                     "name" : "upstream-metadata-missing-bug-tracking",
+                     "severity" : "info"
+                  },
+                  {
+                     "name" : "upstream-metadata-missing-repository",
+                     "severity" : "info"
+                  },
+                  {
+                     "hint" : "line 12",
+                     "name" : "debian-control-has-unusual-field-spacing",
+                     "severity" : "pedantic"
+                  },
+                  {
+                     "experimental" : "yes",
+                     "name" : "debian-watch-does-not-check-gpg-signature",
+                     "severity" : "pedantic"
+                  },
+                  {
+                     "name" : "no-homepage-field",
+                     "severity" : "pedantic"
+                  },
+                  {
+                     "name" : "package-uses-deprecated-source-override-location",
+                     "severity" : "pedantic"
+                  },
+                  {
+                     "hint" : "12",
+                     "name" : "debhelper-compat-level",
+                     "severity" : "classification"
+                  },
+                  {
+                     "hint" : "12",
+                     "name" : "debhelper-compat-virtual-relation",
+                     "severity" : "classification"
+                  },
+                  {
+                     "hint" : "dh",
+                     "name" : "debian-build-system",
+                     "severity" : "classification"
+                  },
+                  {
+                     "hint" : "3",
+                     "name" : "debian-watch-file-standard",
+                     "severity" : "classification"
+                  },
+                  {
+                     "name" : "package-is-maintained-by-individual",
+                     "severity" : "classification"
+                  },
+                  {
+                     "hint" : "quilt",
+                     "name" : "patch-system",
+                     "severity" : "classification"
+                  },
+                  {
+                     "name" : "rules-does-not-require-root",
+                     "severity" : "classification"
+                  },
+                  {
+                     "hint" : "3.0 (quilt)",
+                     "name" : "source-format",
+                     "severity" : "classification"
+                  },
+                  {
+                     "hint" : "4.5.0",
+                     "name" : "standards-version",
+                     "severity" : "classification"
+                  },
+                  {
+                     "name" : "upstream-metadata-exists",
+                     "severity" : "classification"
+                  },
+                  {
+                     "hint" : "Contact",
+                     "name" : "upstream-metadata-field-present",
+                     "severity" : "classification"
+                  },
+                  {
+                     "hint" : "Name",
+                     "name" : "upstream-metadata-field-present",
+                     "severity" : "classification"
+                  }
+               ]
+            },
+            {
+               "path" : "/lcl/lechner/lintian/git/debian/test-out/packages/tags/lintian-features/json-output/json-output_1.0+dsfg-1.1_all.deb",
+               "tags" : [
+                  {
+                     "hint" : "usr/local/share/",
+                     "name" : "dir-in-usr-local",
+                     "severity" : "error"
+                  },
+                  {
+                     "hint" : "usr/local/share/lintian/",
+                     "name" : "dir-in-usr-local",
+                     "severity" : "error"
+                  },
+                  {
+                     "hint" : "var/lock/lintian/",
+                     "name" : "dir-or-file-in-var-lock",
+                     "severity" : "error"
+                  },
+                  {
+                     "name" : "new-essential-package",
+                     "severity" : "error"
+                  },
+                  {
+                     "name" : "possible-gpl-code-linked-with-openssl",
+                     "severity" : "error"
+                  },
+                  {
+                     "hint" : "usr/bin/script",
+                     "name" : "binary-without-manpage",
+                     "severity" : "warning"
+                  },
+                  {
+                     "hint" : "http://www.example.com/.",
+                     "name" : "description-possibly-contains-homepage",
+                     "severity" : "info"
+                  },
+                  {
+                     "hint" : "\"Test Lintian's JSON output format.\"",
+                     "name" : "description-synopsis-might-not-be-phrased-properly",
+                     "severity" : "info"
+                  },
+                  {
+                     "hint" : "usr/share/applications/script.desktop",
+                     "name" : "desktop-entry-limited-to-environments",
+                     "severity" : "info"
+                  },
+                  {
+                     "hint" : "usr/local/share/lintian/",
+                     "name" : "package-contains-empty-directory",
+                     "severity" : "info"
+                  },
+                  {
+                     "hint" : "usr/share/doc/json-output/examples/example #!/usr/bin/foo",
+                     "name" : "example-unusual-interpreter",
+                     "severity" : "pedantic"
+                  },
+                  {
+                     "hint" : "xz",
+                     "name" : "control-tarball-compression-format",
+                     "severity" : "classification"
+                  },
+                  {
+                     "hint" : "xz",
+                     "name" : "data-tarball-compression-format",
+                     "severity" : "classification"
+                  },
+                  {
+                     "name" : "no-ctrl-scripts",
+                     "severity" : "classification"
+                  },
+                  {
+                     "name" : "package-is-maintained-by-individual",
+                     "severity" : "classification"
+                  }
+               ]
+            },
+            {
+               "path" : "/lcl/lechner/lintian/git/debian/test-out/packages/tags/lintian-features/json-output/json-output_1.0+dsfg-1.1_amd64.buildinfo",
+               "tags" : [
+                  {
+                     "name" : "package-is-maintained-by-individual",
+                     "severity" : "classification"
+                  }
+               ]
+            },
+            {
+               "path" : "/lcl/lechner/lintian/git/debian/test-out/packages/tags/lintian-features/json-output/json-output_1.0+dsfg-1.1_amd64.changes",
+               "tags" : [
+                  {
+                     "name" : "package-is-maintained-by-individual",
+                     "severity" : "classification"
+                  }
+               ]
+            }
+         ],
+         "maintainer" : "Debian Lintian Maintainers <lintian-maint@debian.org>",
+         "processing-end" : "TIMESTAMP",
+         "processing-start" : "TIMESTAMP"
+      }
+   ],
+   "lintian-version" : "VERSION"
+}
