@@ -21,6 +21,7 @@ package Lintian::Output::JSON;
 use v5.20;
 use warnings;
 use utf8;
+use autodie;
 
 use Time::Piece;
 use JSON::MaybeXS;
@@ -103,10 +104,17 @@ sub issue_tags {
         }
     }
 
-    my $encoder = JSON->new->canonical->pretty;
+    # convert to UTF-8 prior to encoding in JSON
+    my $encoder = JSON->new;
+    $encoder->canonical;
+    $encoder->utf8;
+    $encoder->pretty;
     my $json = $encoder->encode(\%output);
 
-    print { $self->stdout } $json;
+    # avoid all PerlIO layers (such as utf8)
+    open(my $RAW, '>&:raw', *STDOUT);
+    print {$RAW} $json;
+    close $RAW;
 
     return;
 }
