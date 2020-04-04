@@ -564,7 +564,10 @@ sub main {
 
     #turn off file buffering
     STDOUT->autoflush;
-    binmode(STDOUT, ':utf8');
+    STDERR->autoflush;
+
+    binmode(STDOUT, ':encoding(UTF-8)');
+    binmode(STDERR, ':encoding(UTF-8)');
 
     # Globally ignore SIGPIPE.  We'd rather deal with error returns from write
     # than randomly delivered signals.
