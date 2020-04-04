@@ -23,6 +23,7 @@ use utf8;
 use autodie;
 
 use Path::Tiny;
+use Unicode::UTF8 qw(valid_utf8 decode_utf8);
 
 use Lintian::Util qw(get_file_checksum);
 
@@ -93,7 +94,13 @@ sub changelog {
           unless -f $dch && !-l $dch;
     }
 
-    my $contents = path($dch)->slurp;
+    my $bytes = path($dch)->slurp;
+    return
+      unless valid_utf8($bytes);
+
+    # check for UTF-8
+    my $contents = decode_utf8($bytes);
+
     my $changelog = Lintian::Inspect::Changelog->new;
     $changelog->parse($contents);
 

@@ -68,8 +68,11 @@ sub source {
     my $processable = $self->processable;
     my $group = $self->group;
 
-    my @entries = @{$processable->changelog->entries};
+    my $changelog = $processable->changelog;
+    return
+      unless defined $changelog;
 
+    my @entries = @{$changelog->entries};
     return
       unless @entries;
 
@@ -687,16 +690,10 @@ sub binary {
             }
         }
 
-        # We have to decode into UTF-8 to get the right length for the
-        # length check.  For some reason, use open ':utf8' isn't
-        # sufficient.  If the changelog uses a non-UTF-8 encoding,
-        # this will mangle it, but it doesn't matter for the length
-        # check.
-        #
         # Parse::DebianChangelog adds an additional space to the
         # beginning of each line, so we have to adjust for that in the
         # length check.
-        my @lines = split("\n", decode('utf-8', $changes));
+        my @lines = split(/\n/, $changes);
         for my $i (0 .. $#lines) {
             my $line = $i + $chloff;
             $self->tag('debian-changelog-line-too-short', $1, "(line $line)")
