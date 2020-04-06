@@ -18,9 +18,9 @@
 
 package Lintian::Tag::Bearer;
 
-use strict;
+use v5.20;
 use warnings;
-use v5.16;
+use utf8;
 
 use Lintian::Tag::Standard;
 

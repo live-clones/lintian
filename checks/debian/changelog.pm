@@ -21,8 +21,9 @@
 
 package Lintian::debian::changelog;
 
-use strict;
+use v5.20;
 use warnings;
+use utf8;
 use autodie;
 
 use Date::Format qw(time2str);

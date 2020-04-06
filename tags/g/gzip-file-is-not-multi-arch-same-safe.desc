@@ -1,6 +1,6 @@
 Tag: gzip-file-is-not-multi-arch-same-safe
 Severity: error
-Check: files/compressed
+Check: files/compressed/gz
 Info: The gzip file contains a timestamp that will differ between
  architectures. Multi-Arch: same implies all shared files must be
  byte-for-byte identical.

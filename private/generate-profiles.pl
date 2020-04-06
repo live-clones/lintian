@@ -3,8 +3,9 @@
 # Generates profiles for the Debian vendor
 #  - Remember to add new profiles to d/rules under profiles
 
-use strict;
+use v5.20;
 use warnings;
+use utf8;
 use autodie;
 
 BEGIN {

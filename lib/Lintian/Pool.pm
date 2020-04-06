@@ -20,8 +20,9 @@
 ## Represents a pool of processables (Lintian::Processable)
 package Lintian::Pool;
 
-use strict;
+use v5.20;
 use warnings;
+use utf8;
 use autodie;
 
 use Carp qw(croak);

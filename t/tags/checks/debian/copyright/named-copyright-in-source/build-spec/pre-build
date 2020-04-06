@@ -1,0 +1,4 @@
+#!/bin/sh
+
+cd "$1/debian"
+mv copyright named-copyright-in-source.copyright

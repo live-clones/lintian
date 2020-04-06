@@ -19,8 +19,9 @@
 
 package Lintian::Processable;
 
-use strict;
+use v5.20;
 use warnings;
+use utf8;
 use warnings::register;
 
 use Carp qw(croak);

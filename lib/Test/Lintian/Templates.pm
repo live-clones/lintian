@@ -37,10 +37,10 @@ Routines for dealing with templates in Lintian test specifications.
 
 =cut
 
-use strict;
+use v5.20;
 use warnings;
+use utf8;
 use autodie;
-use v5.10;
 
 use Exporter qw(import);
 

@@ -20,8 +20,9 @@
 
 package Lintian::debian::readme;
 
-use strict;
+use v5.20;
 use warnings;
+use utf8;
 use autodie;
 
 use Lintian::Spelling qw(check_spelling);

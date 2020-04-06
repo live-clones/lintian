@@ -8,8 +8,9 @@
 # Should be run from the top level of the Lintian source tree or with
 # LINTIAN_ROOT set appropriately.
 
-use strict;
+use v5.20;
 use warnings;
+use utf8;
 use autodie;
 
 use POSIX qw(strftime);

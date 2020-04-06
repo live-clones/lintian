@@ -20,8 +20,10 @@
 
 package Lintian::debian::upstream::metadata;
 
-use strict;
+use v5.20;
 use warnings;
+use utf8;
+
 use List::Util qw(none);
 
 use YAML::XS;

@@ -20,8 +20,9 @@
 
 package Lintian::Index::Control;
 
-use strict;
+use v5.20;
 use warnings;
+use utf8;
 use autodie;
 
 use IO::Async::Loop;

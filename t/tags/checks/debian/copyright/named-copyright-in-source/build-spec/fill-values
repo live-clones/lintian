@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: named-copyright-in-source
+Description: Builds single package and uses d/$package.copyright as name

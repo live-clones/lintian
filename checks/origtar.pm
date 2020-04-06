@@ -21,8 +21,9 @@
 
 package Lintian::origtar;
 
+use v5.20;
 use warnings;
-use strict;
+use utf8;
 
 use Moo;
 use namespace::clean;

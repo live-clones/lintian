@@ -1,0 +1,6 @@
+Skeleton: upload-native
+Testname: wrong-binary-architecture
+Description: Binary architecture does not match package declaration
+Package-Architecture: any
+Extra-Build-Depends:
+ gcc-arm-linux-gnueabihf [amd64 i386], gcc-x86-64-linux-gnu [!amd64 !i386]

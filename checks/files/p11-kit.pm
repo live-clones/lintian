@@ -20,8 +20,9 @@
 
 package Lintian::files::p11_kit;
 
-use strict;
+use v5.20;
 use warnings;
+use utf8;
 use autodie;
 
 use Moo;

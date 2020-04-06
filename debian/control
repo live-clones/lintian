@@ -144,6 +144,7 @@ Depends:
  libtimedate-perl,
  libtry-tiny-perl,
  libtype-tiny-perl,
+ libunicode-utf8-perl,
  liburi-perl,
  libxml-libxml-perl,
  libxml-writer-perl,

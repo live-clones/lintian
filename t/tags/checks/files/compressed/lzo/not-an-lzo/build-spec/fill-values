@@ -1,0 +1,4 @@
+Testname: not-an-lzo
+Skeleton: upload-native
+Description: A file with .lzo extension that is not an lzo file
+Extra-Build-Depends: lzop

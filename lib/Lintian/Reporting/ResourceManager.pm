@@ -19,8 +19,9 @@
 # A simple resource manager for html_reports
 package Lintian::Reporting::ResourceManager;
 
-use strict;
+use v5.20;
 use warnings;
+use utf8;
 use autodie;
 
 use Carp qw(croak);

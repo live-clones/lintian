@@ -18,10 +18,10 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA
 
-use strict;
+use v5.20;
 use warnings;
+use utf8;
 use autodie;
-use v5.10;
 
 use DBI;
 use Getopt::Long;

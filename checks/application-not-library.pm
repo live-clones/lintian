@@ -20,8 +20,9 @@
 
 package Lintian::application_not_library;
 
-use strict;
+use v5.20;
 use warnings;
+use utf8;
 
 use List::MoreUtils qw(any);
 

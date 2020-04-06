@@ -19,8 +19,9 @@
 
 package Lintian::Check::Info;
 
-use strict;
+use v5.20;
 use warnings;
+use utf8;
 
 use Path::Tiny;
 

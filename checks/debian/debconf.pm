@@ -20,8 +20,9 @@
 
 package Lintian::debian::debconf;
 
-use strict;
+use v5.20;
 use warnings;
+use utf8;
 use autodie;
 
 use Lintian::Deb822Parser qw(read_dpkg_control :constants);

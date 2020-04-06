@@ -20,8 +20,9 @@
 
 package Lintian::Processable::Source::Repacked;
 
-use strict;
+use v5.20;
 use warnings;
+use utf8;
 
 use Lintian::Util qw($PKGREPACK_REGEX);
 

@@ -24,8 +24,9 @@
 
 package Lintian::fields::uploaders;
 
-use strict;
+use v5.20;
 use warnings;
+use utf8;
 use autodie;
 
 use List::MoreUtils qw(true);

@@ -20,8 +20,9 @@
 
 package Lintian::debian::source_dir;
 
-use strict;
+use v5.20;
 use warnings;
+use utf8;
 use autodie;
 
 use List::MoreUtils qw(any);

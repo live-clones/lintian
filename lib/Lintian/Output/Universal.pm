@@ -18,9 +18,9 @@
 
 package Lintian::Output::Universal;
 
-use strict;
+use v5.20;
 use warnings;
-use v5.12;
+use utf8;
 
 use Carp;
 use List::MoreUtils qw(all);

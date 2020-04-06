@@ -1,0 +1,4 @@
+Testname: not-an-lz
+Skeleton: upload-native
+Description: A file with .lz extension that is not an lz file
+Extra-Build-Depends: mtools

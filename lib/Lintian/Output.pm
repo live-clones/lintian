@@ -18,8 +18,9 @@
 
 package Lintian::Output;
 
-use strict;
+use v5.20;
 use warnings;
+use utf8;
 
 use Moo::Role;
 use namespace::clean;
