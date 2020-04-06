@@ -1,8 +1,24 @@
-lintian (2.62.0+git) UNRELEASED; urgency=medium
+lintian (2.63.0) unstable; urgency=medium
 
-  * WIP (generated upon release).
+  * Summary of tag changes:
+    + Added:
+      - national-encoding-in-debconf-template
 
- -- Chris Lamb <lamby@debian.org>  Thu, 02 Apr 2020 17:33:02 +0100
+  [ Chris Lamb ]
+  * Do not warn about empty dh_dwz-generated "multifiles".
+    (Closes: #955752)
+
+  [ Felix Lechner ]
+  * Assume that all dpkg-style configuration files are encoded in UTF-8.
+  * Do not strip relative prefixes or extra slashes from wildcards in
+    debian/copyright files. (Closes: #955538)
+  * Add an experimental JSON output format.
+  * Prefer PerlIO layer :encoding(UTF-8) over :utf8 everywhere.
+
+  [ Paul Wise ]
+  * Add several spelling corrections.
+
+ -- Chris Lamb <lamby@debian.org>  Mon, 06 Apr 2020 09:41:12 +0000
 
 lintian (2.62.0) unstable; urgency=medium
 
