@@ -21,8 +21,9 @@
 
 package Lintian::md5sums;
 
-use strict;
+use v5.20;
 use warnings;
+use utf8;
 use autodie;
 
 use List::Compare;

@@ -20,8 +20,9 @@
 
 package Lintian::fonts::truetype;
 
-use strict;
+use v5.20;
 use warnings;
+use utf8;
 use autodie qw(open);
 
 use Font::TTF::Font;

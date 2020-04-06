@@ -25,15 +25,16 @@
 
 package Lintian::cruft;
 
-use strict;
+use v5.20;
 use warnings;
+use utf8;
 use autodie;
-use v5.10;
 
 use Carp qw(croak);
 use File::Basename qw(basename);
 use List::MoreUtils qw(any);
 use Path::Tiny;
+use Unicode::UTF8 qw(valid_utf8 decode_utf8);
 
 use Lintian::Data;
 use Lintian::Relation ();
@@ -345,9 +346,9 @@ our @EOL_TERMINATORS_FILES = qw(control changelog);
 
 # List of files to check for a trailing whitespace characters
 our @TRAILING_WHITESPACE_FILES = (
-    ['debian/changelog'        => qr,\s+\n$,],
-    ['debian/control'          => qr,\s+\n$,],
-    ['debian/rules'            => qr,[ ]+\n$,], # Allow trailing tabs in Make
+    ['debian/changelog'        => qr,\s+$,],
+    ['debian/control'          => qr,\s+$,],
+    ['debian/rules'            => qr,[ ]+$,], # Allow trailing tabs in Make
 );
 
 sub source {
@@ -396,24 +397,50 @@ sub source {
     }
 
     for my $file (@TRAILING_WHITESPACE_FILES) {
+
         my $path = $processable->patched->resolve_path($file->[0]);
-        next if not $path or not $path->is_open_ok;
-        open(my $fd, '<', $path->unpacked_path);
-        my @empty_lines;
-        while (my $line = <$fd>) {
-            if ($line eq "\n") {
-                push @empty_lines, $.;
-                next;
+        next
+          unless $path && $path->is_open_ok;
+
+        my $bytes = path($path->unpacked_path)->slurp;
+        next
+          unless valid_utf8($bytes);
+
+        my $contents = decode_utf8($bytes);
+        my @lines = split(/\n/, $contents, -1);
+
+        my @trailing_whitespace;
+        my @empty_at_end;
+
+        my $position = 1;
+        for my $line (@lines) {
+
+            push(@trailing_whitespace, $position)
+              if $line =~ $file->[1];
+
+            # keeps track of any empty lines at the end
+            if (length $line) {
+                @empty_at_end = ();
+            } else {
+                push(@empty_at_end, $position);
             }
-            @empty_lines = (); # reset; line is not empty
-            $self->tag('file-contains-trailing-whitespace', "$path (line $.)")
-              if ($line =~ $file->[1]);
+
+        } continue {
+            ++$position;
         }
-        close($fd);
-        for my $num (@empty_lines) {
-            $self->tag('file-contains-trailing-whitespace',
-                "$path (line $num)");
+
+        # require a newline at end and remove it
+        if (scalar @empty_at_end && $empty_at_end[-1] == scalar @lines) {
+            pop @empty_at_end;
+        } else {
+            $self->tag('no-newline-at-end', $path);
         }
+
+        push(@trailing_whitespace, @empty_at_end);
+
+        $self->tag('file-contains-trailing-whitespace', "$path (line $_)")
+          for @trailing_whitespace;
+
     }
 
     if (my $pycompat = $processable->patched->resolve_path('debian/pycompat')){

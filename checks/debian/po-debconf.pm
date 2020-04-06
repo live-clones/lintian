@@ -20,8 +20,9 @@
 
 package Lintian::debian::po_debconf;
 
-use strict;
+use v5.20;
 use warnings;
+use utf8;
 use autodie;
 
 use Capture::Tiny qw(capture_merged capture_stderr);

@@ -1,0 +1,4 @@
+Testname: not-an-lzma
+Skeleton: upload-native
+Description: A file with .lzma extension that is not a lzma file
+Extra-Build-Depends: xz-utils

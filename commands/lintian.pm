@@ -24,11 +24,10 @@
 # {{{ libraries and such
 no lib '.';
 
-use strict;
+use v5.20;
 use warnings;
-use autodie;
 use utf8;
-use v5.16;
+use autodie;
 
 use Cwd qw(abs_path);
 use Carp qw(croak verbose);

@@ -26,8 +26,9 @@ no lib '.';
 
 # In main scope, need an unnamed sub to avoid tainting the "main" namespace
 # in case we need to run a ".pm" tool.
-use strict;
+use v5.20;
 use warnings;
+use utf8;
 
 my $TOOL_RUNNER = sub {
     my ($tool_pm_path) = @_;

@@ -20,8 +20,9 @@
 
 package Lintian::upstream_signature;
 
-use strict;
+use v5.20;
 use warnings;
+use utf8;
 
 use Path::Tiny;
 use List::Util qw(none);

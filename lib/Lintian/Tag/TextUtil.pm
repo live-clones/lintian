@@ -21,8 +21,9 @@
 
 package Lintian::Tag::TextUtil;
 
-use strict;
+use v5.20;
 use warnings;
+use utf8;
 
 use Exporter qw(import);
 our @EXPORT_OK= qw(split_paragraphs wrap_paragraphs dtml_to_html dtml_to_text);

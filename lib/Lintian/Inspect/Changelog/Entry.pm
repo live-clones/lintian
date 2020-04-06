@@ -21,8 +21,9 @@
 
 package Lintian::Inspect::Changelog::Entry;
 
-use strict;
+use v5.20;
 use warnings;
+use utf8;
 
 use constant EMPTY => q{};
 use constant UNKNOWN => q{unknown};

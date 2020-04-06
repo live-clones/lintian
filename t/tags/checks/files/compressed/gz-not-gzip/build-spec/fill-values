@@ -1,3 +1,0 @@
-Testname: gz-not-gzip
-Skeleton: upload-non-native
-Description: Files with .gz extension that are not actually gzip files

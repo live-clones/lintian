@@ -18,9 +18,9 @@
 
 package Lintian::Inspect::Changelog::Version;
 
-use strict;
+use v5.20;
 use warnings;
-use v5.16;
+use utf8;
 
 use Carp;
 

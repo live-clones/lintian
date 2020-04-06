@@ -20,8 +20,9 @@
 
 package Lintian::Maintainer;
 
-use strict;
+use v5.20;
 use warnings;
+use utf8;
 
 use Exporter qw(import);
 use Email::Valid;

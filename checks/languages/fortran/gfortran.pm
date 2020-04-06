@@ -20,8 +20,9 @@
 
 package Lintian::languages::fortran::gfortran;
 
-use strict;
+use v5.20;
 use warnings;
+use utf8;
 
 use Lintian::Util qw(open_gz);
 

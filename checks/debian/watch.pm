@@ -23,8 +23,9 @@
 
 package Lintian::debian::watch;
 
-use strict;
+use v5.20;
 use warnings;
+use utf8;
 use autodie;
 
 use List::MoreUtils qw(any firstval firstres);

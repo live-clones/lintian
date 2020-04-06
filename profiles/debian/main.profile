@@ -76,6 +76,13 @@ Enable-Tags-From-Check:
  files/bugs,
  files/build-path,
  files/compressed,
+ files/compressed/bz2,
+ files/compressed/gz,
+ files/compressed/lz,
+ files/compressed/lzma,
+ files/compressed/lzo,
+ files/compressed/xz,
+ files/compressed/zip,
  files/config-scripts,
  files/contents,
  files/date,
@@ -162,7 +169,6 @@ Enable-Tags-From-Check:
  usr/lib,
  usrmerge,
  vim,
- xdeb,
 Extends:
  debian/ftp-master-auto-reject
 

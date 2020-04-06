@@ -46,8 +46,9 @@ Most subs are imported only on request.
 
 =cut
 
-use strict;
+use v5.20;
 use warnings;
+use utf8;
 use autodie;
 
 use Exporter qw(import);

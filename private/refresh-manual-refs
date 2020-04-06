@@ -25,8 +25,9 @@
 # developers-reference, doc-base, python, lintian, menu, java-policy and
 # vim-doc).
 
-use strict;
+use v5.20;
 use warnings;
+use utf8;
 use autodie;
 use open qw(:std :utf8);
 

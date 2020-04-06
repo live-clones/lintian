@@ -18,8 +18,9 @@
 
 package Lintian::Processable::Udeb;
 
-use strict;
+use v5.20;
 use warnings;
+use utf8;
 
 use Carp qw(croak);
 use Path::Tiny;

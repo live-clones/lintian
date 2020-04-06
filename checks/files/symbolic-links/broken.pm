@@ -20,8 +20,9 @@
 
 package Lintian::files::symbolic_links::broken;
 
-use strict;
+use v5.20;
 use warnings;
+use utf8;
 use autodie;
 
 use File::Basename qw(dirname);

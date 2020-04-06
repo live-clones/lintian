@@ -29,8 +29,9 @@
 
 package Lintian::Processable::Binary::Copyright;
 
-use strict;
+use v5.20;
 use warnings;
+use utf8;
 use autodie;
 
 use File::Copy qw(copy);

@@ -20,13 +20,10 @@
 
 package Lintian::files::compressed;
 
-use strict;
+use v5.20;
 use warnings;
+use utf8;
 use autodie;
-
-use Time::Piece;
-
-use constant EMPTY => q{};
 
 use Moo;
 use namespace::clean;
@@ -48,23 +45,6 @@ my $COMPRESS_FILE_EXTENSIONS_OR_ALL = sub { qr/(:?$_[0])/ }
 my $DUPLICATED_COMPRESSED_FILE_REGEX
   = qr/^(.+)\.(?:$COMPRESS_FILE_EXTENSIONS_OR_ALL)$/;
 
-has changelog_timestamp => (is => 'rwp', default => 0);
-
-sub setup {
-    my ($self) = @_;
-
-    # remains 0 if there is no timestamp
-    my $changelog = $self->processable->changelog;
-    if (defined $changelog) {
-
-        my ($entry) = @{$changelog->entries};
-        $self->_set_changelog_timestamp($entry->Timestamp)
-          if $entry && $entry->Timestamp;
-    }
-
-    return;
-}
-
 sub files {
     my ($self, $file) = @_;
 
@@ -75,39 +55,6 @@ sub files {
     if ($file->name =~ $DUPLICATED_COMPRESSED_FILE_REGEX) {
         $self->tag('duplicated-compressed-file', $file->name)
           if $self->processable->installed->lookup($1);
-    }
-
-    $self->tag('gz-file-not-gzip', $file->name)
-      if $file->name =~ m/\.gz$/s && $file->file_info !~ /gzip compressed/;
-
-    # gzip files
-    if ($file->file_info =~ /gzip compressed/) {
-
-# get timestamp of first member; https://tools.ietf.org/html/rfc1952.html#page-5
-        my $bytes = $file->magic(8);
-        my (undef, $gziptime) = unpack('VV', $bytes);
-
-        if (defined $gziptime && $gziptime != 0) {
-
-            # see https://bugs.debian.org/762105
-            my $time_from_build = $gziptime - $self->changelog_timestamp;
-            if ($time_from_build > 0) {
-
-                my $architecture = $self->processable->field('architecture')
-                  // EMPTY;
-                my $multiarch = $self->processable->field('multi-arch')// 'no';
-
-                if ($multiarch eq 'same' && $file->name !~ /\Q$architecture\E/)
-                {
-                    $self->tag('gzip-file-is-not-multi-arch-same-safe',
-                        $file->name);
-
-                } else {
-                    $self->tag('package-contains-timestamped-gzip',
-                        $file->name,gmtime($gziptime)->datetime);
-                }
-            }
-        }
     }
 
     return;

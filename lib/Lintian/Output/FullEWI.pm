@@ -42,8 +42,9 @@ package Lintian::Output::FullEWI;
 #   files.
 # * "(version)" may contain colon (i.e. epoch versions)
 
-use strict;
+use v5.20;
 use warnings;
+use utf8;
 
 use HTML::Entities;
 use Term::ANSIColor ();

@@ -24,10 +24,10 @@
 # doc/tutorial/Lintian/Tutorial/TestSuite.pod
 #
 
-use strict;
+use v5.20;
 use warnings;
+use utf8;
 use autodie;
-use v5.10;
 
 use Cwd;
 use Getopt::Long;

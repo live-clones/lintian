@@ -1,3 +1,38 @@
+lintian (2.62.0) unstable; urgency=medium
+
+  * Summary of tag changes:
+    + Added:
+      - broken-{bz2,gz,lz,lzma,lzo,xz,zip}
+      - named-copyright-for-single-installable
+      - no-debian-copyright-in-source
+      - no-newline-at-end
+    + Removed:
+      - binary-is-wrong-architecture
+      - field-name-typo-in-dep5-copyright
+      - gz-file-not-gzip
+      - no-debian-copyright
+
+  [ Chris Lamb ]
+  * Don't emit duplicate-short-description or duplicate-long-description if
+    they contain substitution variables. (Closes: #947168)
+  * Drop .travis.yml file; we are using Salsa now.
+
+  [ Felix Lechner ]
+  * Require Perl 5.20 and use "pragma utf8" throughout.
+  * Remove the xdeb check. (Closes: #954415)
+  * Check for broken gz, xz, zip, lz, lzo and lzma files. (Closes: #702545)
+  * Rename no-debian-copyright to no-debian-copyright-in-source.
+  * Add a new named-copyright-for-single-installable tag.
+  * Remove the field-name-typo-in-dep5-copyright tag.
+  * Add a new no-newline-at-end tag to check specific files for a newline
+    at EOF.
+
+  [ Paul Wise ]
+  * Add several spelling corrections.
+  * Sort the spelling dictionary.
+
+ -- Chris Lamb <lamby@debian.org>  Thu, 02 Apr 2020 16:02:11 +0000
+
 lintian (2.61.0~bpo10+1) buster-backports; urgency=medium
 
   * Rebuild for buster-backports.

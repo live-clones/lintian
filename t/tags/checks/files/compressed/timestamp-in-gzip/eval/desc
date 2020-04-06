@@ -1,3 +1,0 @@
-Testname: timestamp-in-gzip
-Check: files/compressed
-Reference: Bug#762105

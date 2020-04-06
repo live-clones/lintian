@@ -36,10 +36,10 @@ Helper routines to deal with C<FullEWI> tags and tag files
 
 =cut
 
-use strict;
+use v5.20;
 use warnings;
+use utf8;
 use autodie;
-use v5.10;
 
 use Exporter qw(import);
 
