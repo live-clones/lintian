@@ -80,15 +80,18 @@ lintian (2.61.0) unstable; urgency=medium
   * Switch links to http://refspecs.linuxfoundation.org to use HTTPS.
 
   [ Chris Lamb ]
-  * Warn when "py3versions -s" is used without a python3-all dependency. (Closes: #954763)
+  * Warn when "py3versions -s" is used without a python3-all dependency.
+    (Closes: #954763)
   * Improve checking for "py3versions -i" in autopkgtests and also check
-  * debian/rules files too.
+    debian/rules files too.
   * Make some cosmetic improvements to CONTRIBUTING.md.
   * Correct reference to bug in previous changelog entry.
 
   [ Felix Lechner ]
-  * Do not issue any tags for udebs in when checking md5sums. (Closes: #954803)
-  * Simplify mechanism when looking for foreign architectures. (Re: #954415)
+  * Do not issue any tags for udebs in when checking md5sums.
+    (Closes: #954803)
+  * Simplify mechanism when looking for foreign architectures.
+    (Re: #954415)
 
   [ Paul Wise ]
   * Add several spelling corrections.
