@@ -1,12 +1,11 @@
 Tag: shared-lib-without-dependency-information
 Severity: warning
 Check: binaries
-Info: The listed shared library doesn't include information about which
- other libraries the library was linked against. (When running "<tt>ldd
- foo.so</tt>" ldd should report about these other libraries. In your
- case, ldd just reports "statically linked".)
+Info: The listed shared library doesn't include information about the
+ other libraries against which it was linked.
  .
- To fix this, you should explicitly specify the libraries which are
- used (e.g., "-lc") when building the shared library with "ld".
+ More specifically, "<tt>ldd foo.so</tt>" should report such other
+ libraries. In your case, it reports "statically linked".
  .
- If you have questions about this, please contact &debdev;.
+ The fix is to specify the libraries. One way to do so is to add
+ something like "-lc" to the command-line options for "ld".
