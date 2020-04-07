@@ -81,7 +81,7 @@ lintian (2.61.0) unstable; urgency=medium
 
   [ Chris Lamb ]
   * Warn when "py3versions -s" is used without a python3-all dependency.
-    (Closes: #954763)
+    (Closes: #954763, #954868)
   * Improve checking for "py3versions -i" in autopkgtests and also check
     debian/rules files too.
   * Make some cosmetic improvements to CONTRIBUTING.md.
