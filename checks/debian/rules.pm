@@ -41,6 +41,8 @@ our $PYTHON3X_DEPEND= join(' | ',
     map { "python${_}:any | python${_}-dev:any" } qw(3.4 3.5 3.6 3.7));
 our $ANYPYTHON_DEPEND
   = "$PYTHON_DEPEND | $PYTHON2X_DEPEND | $PYTHON3_DEPEND | $PYTHON3X_DEPEND";
+our $PYTHON3_ALL_DEPEND
+  = 'python3-all:any | python3-all-dev:any | python3-all-dbg:any';
 
 my $KNOWN_MAKEFILES = Lintian::Data->new('rules/known-makefiles', '\|\|');
 my $DEPRECATED_MAKEFILES = Lintian::Data->new('rules/deprecated-makefiles');
@@ -273,7 +275,7 @@ sub source {
             'debian-rules-uses-supported-python-versions-without-python-all-build-depends',
             $1, "(line $.)"
         ) if $line =~ m/(py3versions\s+([\w\-\s]*--supported|-\w*s\w*))/
-          and not $build_all->implies('python3-all');
+          and not $build_all->implies($PYTHON3_ALL_DEPEND);
         #>>>
 
         # General assignment - save the variable

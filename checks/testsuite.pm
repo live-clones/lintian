@@ -50,6 +50,9 @@ my $KNOWN_OBSOLETE_RESTRICTIONS
   = Lintian::Data->new('testsuite/known-obsolete-restrictions');
 my $KNOWN_TESTSUITES = Lintian::Data->new('testsuite/known-testsuites');
 
+our $PYTHON3_ALL_DEPEND
+  = 'python3-all:any | python3-all-dev:any | python3-all-dbg:any';
+
 my %KNOWN_SPECIAL_DEPENDS = map { $_ => 1 } qw(
   @
   @builddeps@
@@ -260,7 +263,7 @@ sub check_test_file {
                 'runtime-test-file-uses-supported-python-versions-without-python-all-build-depends',
                 $path, "$1", "(line $.)"
             ) if $x =~ m/(py3versions\s+([\w\-\s]*--supported|-\w*s\w*))/
-              and not $processable->relation('build-depends-all')->implies('python3-all');
+              and not $processable->relation('build-depends-all')->implies($PYTHON3_ALL_DEPEND);
             #>>>
         }
         close($fd);
