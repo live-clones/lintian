@@ -135,8 +135,6 @@ Hash with active jobs.
 
 =item C<saved_spelling_exceptions>
 
-=item C<shared_storage>
-
 =cut
 
 has pooldir => (is => 'rw', default => EMPTY);
@@ -158,8 +156,6 @@ has profile => (is => 'rw', default => sub { {} });
 has saved_direct_dependencies => (is => 'rw', default => sub { {} });
 has saved_direct_reliants => (is => 'rw', default => sub { {} });
 has saved_spelling_exceptions => (is => 'rw', default => sub { {} });
-
-has shared_storage => (is => 'rw', default => sub { {} });
 
 =item Lintian::Group->init_from_file (FILE)
 
@@ -747,8 +743,6 @@ sub add_processable{
 
         $self->$type->{$id} = $processable;
     }
-
-    $processable->shared_storage($self->shared_storage);
 
     return 1;
 }

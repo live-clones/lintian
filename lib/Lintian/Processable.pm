@@ -89,10 +89,6 @@ Returns a hash to the raw, unedited and verbatim field values.
 Returns a hash to unfolded field values. Continuations lines
 have been connected.
 
-=item shared_storage
-
-Returns shared_storage.
-
 =item $proc->version
 =item $proc->pkg_version
 
@@ -205,8 +201,6 @@ has groupdir => (is => 'rw', default => EMPTY);
 
 has link_label => (is => 'rw', default => EMPTY);
 has saved_link => (is => 'rw', default => EMPTY);
-
-has shared_storage => (is => 'rw', default => sub { {} });
 
 =item C<identifier>
 

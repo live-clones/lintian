@@ -93,23 +93,9 @@ sub changelog {
           unless -f $dch && !-l $dch;
     }
 
-    my ($checksum, $changelog);
-
-    my $shared = $self->shared_storage;
-    if (defined $shared) {
-
-        $checksum = get_file_checksum('sha1', $dch);
-        $changelog = $shared->{'changelog'}{$checksum};
-    }
-
-    unless ($changelog) {
-        my $contents = path($dch)->slurp;
-        $changelog = Lintian::Inspect::Changelog->new;
-        $changelog->parse($contents);
-
-        $shared->{'changelog'}{$checksum} = $changelog
-          if defined $shared;
-    }
+    my $contents = path($dch)->slurp;
+    my $changelog = Lintian::Inspect::Changelog->new;
+    $changelog->parse($contents);
 
     $self->saved_changelog($changelog);
 
