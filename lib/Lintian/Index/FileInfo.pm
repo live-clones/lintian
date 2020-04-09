@@ -122,14 +122,15 @@ sub add_fileinfo {
 
     my @generatecommand = (
         'xargs', '--null','--no-run-if-empty', 'file',
-        '--no-pad', '--print0','--'
+        '--no-pad', '--print0', '--print0', '--'
     );
     my $generatedone = $loop->new_future;
 
+    my $output;
     my $generate = IO::Async::Process->new(
         command => [@generatecommand],
         stdin => { via => 'pipe_write' },
-        stdout => { via => 'pipe_read' },
+        stdout => { into => \$output },
         on_finish => sub {
             # ignore failures; file returns non-zero on parse errors
             # output then contains "ERROR" messages but is still usable
@@ -138,45 +139,42 @@ sub add_fileinfo {
             return;
         });
 
-    my %fileinfo;
-
-    $generate->stdout->configure(
-        on_read => sub {
-            my ($stream, $buffref, $eof) = @_;
-
-            while($$buffref =~ s/^([^\0]*)\x00: (.*)\n//) {
-
-                my $path = $1;
-                my $type = $2;
-
-                unless(length $path && length $type) {
-                    $generatedone->fail(
-                        "syntax error in file-info output: '$path' '$type'");
-
-                    next;
-                }
-
-                ($path, $type) = check_magic($path, $type);
-
-                # remove relative prefix, if present
-                $path = drop_relative_prefix($path);
-
-                $fileinfo{$path} = $type;
-            }
-
-            return 0;
-        },
-    );
-
     $loop->add($generate);
 
     # get the regular files in the index
     my @files = grep { $_->is_file } $self->sorted_list;
 
-    $generate->stdin->write($_ . NULL) for @files;
+    $generate->stdin->write($_->name . NULL) for @files;
 
     $generate->stdin->close_when_empty;
     $generatedone->get;
+
+    my %fileinfo;
+
+    $output =~ s/\0$//;
+
+    my @lines = split(/\0/, $output, -1);
+
+    die 'Did not get an even number lines from file command.'
+      unless @lines % 2 == 0;
+
+    while(defined(my $path = shift @lines)) {
+
+        my $type = shift @lines;
+
+        unless(length $path && length $type) {
+
+            warn "syntax error in file-info output: '$path' '$type'";
+            next;
+        }
+
+        ($path, $type) = check_magic($path, $type);
+
+        # remove relative prefix, if present
+        $path = drop_relative_prefix($path);
+
+        $fileinfo{$path} = $type;
+    }
 
     $_->file_info($fileinfo{$_->name}) for @files;
 
