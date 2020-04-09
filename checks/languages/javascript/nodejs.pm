@@ -53,7 +53,7 @@ sub source {
         # Ensure test file contains something
         if ($path and $path->is_open_ok) {
             $self->tag('pkg-js-autopkgtest-test-is-empty', $filename)
-              unless any { /^[^#]*\w/m } $path->slurp;
+              unless any { /^[^#]*\w/m } $path->bytes;
         } else {
             $self->tag('pkg-js-autopkgtest-test-is-missing', $filename);
         }
@@ -106,7 +106,7 @@ sub source {
         # Ensure test file contains something
         if ($path) {
             $self->tag('pkg-js-tools-test-is-empty', $filename)
-              unless any { /^[^#]*\w/m } $path->slurp;
+              unless any { /^[^#]*\w/m } $path->bytes;
         } else {
             $self->tag('pkg-js-tools-test-is-missing', $filename);
         }
@@ -158,7 +158,7 @@ sub files {
     my $provides
       = Lintian::Relation->and($processable->relation('provides'), $declared);
 
-    my $content = $file->slurp;
+    my $content = $file->bytes;
 
     # Look only valid package.json files
     my $pac;

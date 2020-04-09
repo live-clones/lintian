@@ -25,7 +25,6 @@ use utf8;
 use autodie;
 
 use Path::Tiny;
-use Unicode::UTF8 qw(valid_utf8 decode_utf8);
 
 use Lintian::Data;
 use Lintian::Deb822Parser qw(
@@ -88,14 +87,12 @@ sub source {
         if (not $control->is_regular_file) {
             die 'debian tests control is not a regular file';
 
-        } elsif ($control->is_open_ok) {
-            my $bytes = path($control->unpacked_path)->slurp;
-            unless (valid_utf8($bytes)) {
-                $self->tag('debian-tests-control-uses-national-encoding');
-            } else {
-                my $contents = decode_utf8($bytes);
-                $self->check_control_contents($contents);
-            }
+        } elsif ($control->is_valid_utf8) {
+            my $contents = $control->decoded_utf8;
+            $self->check_control_contents($contents);
+
+        } else {
+            $self->tag('debian-tests-control-uses-national-encoding');
         }
 
         $self->tag('unnecessary-testsuite-autopkgtest-field')

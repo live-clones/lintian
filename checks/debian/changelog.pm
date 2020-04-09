@@ -28,7 +28,6 @@ use autodie;
 
 use Date::Format qw(time2str);
 use Email::Valid;
-use Encode qw(decode);
 use List::Util qw(first);
 use List::MoreUtils qw(any uniq);
 use Path::Tiny;

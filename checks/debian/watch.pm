@@ -71,7 +71,7 @@ sub source {
     return
       unless $file->is_open_ok;
 
-    my $contents = $file->slurp;
+    my $contents = $file->bytes;
 
     # each pattern marks a multi-line (!) selection for the tag message
     my @templatepatterns

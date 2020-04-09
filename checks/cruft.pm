@@ -34,7 +34,6 @@ use Carp qw(croak);
 use File::Basename qw(basename);
 use List::MoreUtils qw(any);
 use Path::Tiny;
-use Unicode::UTF8 qw(valid_utf8 decode_utf8);
 
 use Lintian::Data;
 use Lintian::Relation ();
@@ -400,13 +399,9 @@ sub source {
 
         my $path = $processable->patched->resolve_path($file->[0]);
         next
-          unless $path && $path->is_open_ok;
+          unless $path->is_valid_utf8;
 
-        my $bytes = path($path->unpacked_path)->slurp;
-        next
-          unless valid_utf8($bytes);
-
-        my $contents = decode_utf8($bytes);
+        my $contents = $path->decoded_utf8;
         my @lines = split(/\n/, $contents, -1);
 
         my @trailing_whitespace;
@@ -731,7 +726,7 @@ sub find_cruft {
         if (   $basename =~ /\.chm$/i
             && $file_info eq 'MS Windows HtmlHelp Data'
             && $entry->is_open_ok
-            && index($entry->slurp, 'Halibut,') == -1) {
+            && index($entry->bytes, 'Halibut,') == -1) {
             $self->tag('source-contains-prebuilt-ms-help-file', $name);
         }
 
@@ -803,7 +798,7 @@ sub find_cruft {
         if (   $name eq 'debian/README.source'
             && $entry->is_file
             && $entry->is_open_ok) {
-            my $contents = $entry->slurp;
+            my $contents = $entry->bytes;
             if (
                 index($contents,
                     'You WILL either need to modify or delete this file') >= 0
@@ -833,7 +828,7 @@ sub find_cruft {
                 && $name !~ m{^debian/(?:.+\.)?install$}
                 && $entry->is_file
                 && $entry->is_open_ok) {
-                my $contents = $entry->slurp;
+                my $contents = $entry->bytes;
 
                 # ignore comments
                 $contents =~ s/#.*$//m;
@@ -1519,7 +1514,7 @@ sub php_source_whitelist {
     my $copyright_path
       = $processable->patched->resolve_path('debian/copyright');
     if (    $copyright_path
-        and $copyright_path->slurp
+        and $copyright_path->bytes
         =~ m{^Source: https?://pecl.php.net/package/.*$}m) {
         return 0;
     }

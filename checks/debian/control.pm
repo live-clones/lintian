@@ -28,7 +28,6 @@ use autodie;
 use List::MoreUtils qw(any);
 use List::Util qw(first none);
 use Path::Tiny;
-use Unicode::UTF8 qw(valid_utf8 decode_utf8);
 
 use Lintian::Data ();
 use Lintian::Deb822Parser qw(parse_dpkg_control_string);
@@ -78,14 +77,13 @@ sub source {
       unless $dcontrol->is_open_ok;
 
     # check that control is UTF-8 encoded
-    my $bytes = path($dcontrol->unpacked_path)->slurp;
-    unless (valid_utf8($bytes)) {
+    unless ($dcontrol->is_valid_utf8) {
 
         $self->tag('debian-control-file-uses-obsolete-national-encoding');
         return;
     }
 
-    my $contents = decode_utf8($bytes);
+    my $contents = $dcontrol->decoded_utf8;
     my @lines = split(/\n/, $contents);
 
     # Nag about dh_make Vcs comment only once

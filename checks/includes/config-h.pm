@@ -41,7 +41,7 @@ sub files {
     return
       unless $file->name =~ m{/config.h$};
 
-    my $contents = $file->slurp;
+    my $contents = $file->bytes;
 
     $self->tag('package-name-defined-in-config-h', $file->name)
       if $contents =~ m{\bPACKAGE_NAME\b};

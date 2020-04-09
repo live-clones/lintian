@@ -86,7 +86,7 @@ my $PROPERTIES = 'org.freedesktop.DBus.Properties';
 sub check_policy {
     my ($self, $file) = @_;
 
-    my $xml = $file->slurp;
+    my $xml = $file->bytes;
 
     # Parsing XML via regexes is evil, but good enough here...
     # note that we are parsing the entire file as one big string,
@@ -155,7 +155,7 @@ sub check_service {
     my ($self, $file, %kwargs) = @_;
 
     my $basename = $file->basename;
-    my $text = $file->slurp;
+    my $text = $file->bytes;
 
     while ($text =~ m{^Name=(.*)$}gm) {
         my $name = $1;
