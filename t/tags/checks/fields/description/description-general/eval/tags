@@ -10,11 +10,11 @@ description-general-4 (binary): spelling-error-in-description mroe more
 description-general-4 (binary): description-synopsis-is-duplicated
 description-general-4 (binary): description-contains-homepage
 description-general-4 (binary): capitalization-error-in-description debian Debian
-description-general-3 (binary): using-first-person-in-description line 5: I
-description-general-3 (binary): extended-description-line-too-long
+description-general-3 (binary): using-first-person-in-description line 6: I
+description-general-3 (binary): extended-description-line-too-long line 2
 description-general-3 (binary): description-synopsis-is-empty
+description-general-2 (binary): synopsis-too-long
 description-general-2 (binary): possible-unindented-list-in-extended-description
-description-general-2 (binary): description-too-long
 description-general-2 (binary): description-starts-with-leading-spaces
 description-general-2 (binary): description-contains-tabs
 description-general (binary): spelling-error-in-description these these (duplicate word) these

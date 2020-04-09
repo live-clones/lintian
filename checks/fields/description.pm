@@ -35,6 +35,8 @@ use Lintian::Util qw(strip);
 use constant DH_MAKE_PERL_TEMPLATE => 'this description was'
   . ' automagically extracted from the module by dh-make-perl';
 
+use constant EMPTY => q{};
+
 use Moo;
 use namespace::clean;
 
@@ -58,11 +60,8 @@ sub installable {
     my $group = $self->group;
 
     my $tabs = 0;
-    my $lines = 0;
     my $template = 0;
     my $unindented_list = 0;
-    my $synopsis;
-    my $description;
 
     # description?
     my $full_description = $processable->field('description');
@@ -72,17 +71,17 @@ sub installable {
     }
 
     $full_description =~ m/^([^\n]*)\n(.*)$/s;
-    ($synopsis, $description) = ($1, $2);
+    my ($synopsis, $extended) = ($1, $2);
     unless (defined $synopsis) {
         # The first line will always be completely stripped but
         # continuations may have leading whitespace.  Therefore we
         # have to strip $full_description to restore this property,
         # when we use it as a fall-back value of the synopsis.
         $synopsis = strip($full_description);
-        $description = '';
+        $extended = EMPTY;
     }
 
-    $description = '' unless defined($description);
+    $extended //= EMPTY;
 
     if ($synopsis =~ m/^\s*$/) {
         $self->tag('description-synopsis-is-empty');
@@ -126,16 +125,21 @@ sub installable {
         # this will mangle it, but it doesn't matter for the length
         # check.
         if (length(decode('utf-8', $synopsis)) >= 80) {
-            $self->tag('description-too-long');
+            $self->tag('synopsis-too-long');
         }
     }
 
     my $flagged_homepage;
-    foreach (split /\n/, $description) {
-        next if m/^ \.\s*$/o;
+    my @lines = split(/\n/, $extended);
 
-        if ($lines == 0) {
-            my $firstline = lc $_;
+    # count starts for extended description
+    my $position = 1;
+    for my $line (@lines) {
+        next
+          if $line =~ /^ \.\s*$/;
+
+        if ($position == 1) {
+            my $firstline = lc $line;
             my $lsyn = lc $synopsis;
             if ($firstline =~ /^\Q$lsyn\E$/) {
                 $self->tag('description-synopsis-is-duplicated');
@@ -148,75 +152,76 @@ sub installable {
             }
         }
 
-        $lines++;
-
-        if (m/^ \.\s*\S/o or m/^ \s+\.\s*$/o) {
+        if ($line =~ /^ \.\s*\S/ || $line =~ /^ \s+\.\s*$/) {
             $self->tag('description-contains-invalid-control-statement');
-        } elsif (m/^ [\-\*]/o) {
+        } elsif ($line =~ /^ [\-\*]/) {
        # Print it only the second time.  Just one is not enough to be sure that
        # it's a list, and after the second there's no need to repeat it.
             $self->tag('possible-unindented-list-in-extended-description')
               if $unindented_list++ == 2;
         }
 
-        if (m/\t/o) {
+        if ($line =~ /\t/) {
             $self->tag('description-contains-tabs') unless $tabs++;
         }
 
-        if (m,^\s*Homepage: <?https?://,i) {
+        if ($line =~ m,^\s*Homepage: <?https?://,i) {
             $self->tag('description-contains-homepage');
             $flagged_homepage = 1;
         }
 
-        if ($PLANNED_FEATURES->matches_any($_, 'i')) {
+        if ($PLANNED_FEATURES->matches_any($line, 'i')) {
             $self->tag('description-mentions-planned-features',
-                "(line $lines)");
+                "(line $position)");
         }
 
-        if (index(lc($_), DH_MAKE_PERL_TEMPLATE) != -1) {
+        if (index(lc($line), DH_MAKE_PERL_TEMPLATE) != -1) {
             $self->tag('description-contains-dh-make-perl-template');
         }
 
-        my $first_person = $_;
+        my $first_person = $line;
         while ($first_person
             =~ m/(?:^|\s)(I|[Mm]y|[Oo]urs?|mine|myself|me|us|[Ww]e)(?:$|\s)/) {
             my $word = $1;
             $first_person =~ s/\Q$word//;
             $self->tag('using-first-person-in-description',
-                "line $lines: $word");
+                "line $position: $word");
         }
 
-        if ($lines == 1) {
+        if ($position == 1) {
             # checks for the first line of the extended description:
-            if (m/^ \s/o) {
+            if ($line =~ /^ \s/) {
                 $self->tag('description-starts-with-leading-spaces');
             }
-            if (m/^\s*missing\s*$/oi) {
+            if ($line =~ /^\s*missing\s*$/i) {
                 $self->tag('description-is-debmake-template')
                   unless $template++;
-            } elsif (m/<insert long description, indented with spaces>/) {
+            } elsif (
+                $line =~ /<insert long description, indented with spaces>/) {
                 $self->tag('description-is-dh_make-template')
                   unless $template++;
             }
         }
 
-        if (length(decode('utf-8', $_)) > 80) {
-            $self->tag('extended-description-line-too-long');
-        }
+        $self->tag('extended-description-line-too-long', "line $position")
+          if length decode('utf-8', $line) > 80;
+
+    } continue {
+        ++$position;
     }
 
     if ($type ne 'udeb') {
-        if ($lines == 0) {
+        if (@lines == 0) {
             # Ignore debug packages with empty "extended" description
             # "debug symbols for pkg foo" is generally descriptive
             # enough.
             $self->tag('extended-description-is-empty')
               if not $processable->is_pkg_class('debug');
-        } elsif ($lines <= 2 and not $synopsis =~ /(?:dummy|transition)/i) {
+        } elsif (@lines < 2 && $synopsis !~ /(?:dummy|transition)/i) {
             $self->tag('extended-description-is-probably-too-short')
               unless $processable->is_pkg_class('any-meta')
               or $pkg =~ m{-dbg\Z}xsm;
-        } elsif ($description =~ /^ \.\s*\n|\n \.\s*\n \.\s*\n|\n \.\s*\n?$/) {
+        } elsif ($extended =~ /^ \.\s*\n|\n \.\s*\n \.\s*\n|\n \.\s*\n?$/) {
             $self->tag('extended-description-contains-empty-paragraph');
         }
     }
@@ -226,13 +231,13 @@ sub installable {
     # for the old Homepage: convention in the body.
     unless ($processable->field('homepage') or $flagged_homepage) {
         if (
-            $description =~ /homepage|webpage|website|url|upstream|web\s+site
+            $extended =~ /homepage|webpage|website|url|upstream|web\s+site
                          |home\s+page|further\s+information|more\s+info
                          |official\s+site|project\s+home/xi
-            and $description =~ m,\b(https?://[a-z0-9][^>\s]+),i
+            and $extended =~ m,\b(https?://[a-z0-9][^>\s]+),i
         ) {
             $self->tag('description-possibly-contains-homepage', $1);
-        } elsif ($description =~ m,\b(https?://[a-z0-9][^>\s]+)>?\.?\s*\z,i) {
+        } elsif ($extended =~ m,\b(https?://[a-z0-9][^>\s]+)>?\.?\s*\z,i) {
             $self->tag('description-possibly-contains-homepage', $1);
         }
     }
@@ -254,12 +259,12 @@ sub installable {
         )if not $processable->is_pkg_class('auto-generated');
     }
 
-    if ($description) {
+    if ($extended) {
         check_spelling(
-            $description,
+            $extended,
             $group->spelling_exceptions,
             $self->spelling_tag_emitter('spelling-error-in-description'));
-        check_spelling_picky($description,
+        check_spelling_picky($extended,
             $self->spelling_tag_emitter('capitalization-error-in-description')
         );
     }
@@ -282,7 +287,7 @@ sub installable {
         }
 
         $self->tag('perl-module-name-not-mentioned-in-description', $mod)
-          if (index(lc($description), $mod_lc) < 0 and $pm_found);
+          if (index(lc($extended), $mod_lc) < 0 and $pm_found);
     }
 
     return;
