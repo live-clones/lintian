@@ -484,7 +484,7 @@ if (-t STDOUT && !$unattended) {
 
         } elsif ($testcase->{match_strategy} eq 'literal') {
 
-            my $actualpath = "$workpath/literal.actual";
+            my $actualpath = "$workpath/literal.actual.parsed";
             next
               unless -r $actualpath;
             my @command
@@ -540,7 +540,7 @@ if (-t STDOUT && !$unattended) {
 
         } elsif ($testcase->{match_strategy} eq 'literal') {
 
-            my $actualpath = "$workpath/literal.actual";
+            my $actualpath = "$workpath/literal.actual.parsed";
             next
               unless -r $actualpath;
 

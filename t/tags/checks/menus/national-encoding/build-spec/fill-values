@@ -1,0 +1,5 @@
+Skeleton: upload-non-native
+Testname: national-encoding
+Source: binary
+Version: 4-1.1
+Description: National encoding in doc-base

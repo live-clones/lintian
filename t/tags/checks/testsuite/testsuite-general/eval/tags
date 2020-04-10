@@ -13,6 +13,5 @@ testsuite-general (source): missing-runtime-test-file debian/tests/asym1 paragra
 testsuite-general (source): missing-runtime-test-file debian/tests/asym paragraph starting at line 35
 testsuite-general (source): illegal-runtime-test-name under_score paragraph starting at line 5
 testsuite-general (source): exclusive-runtime-tests-field tests, test-command paragraph starting at line 20
-testsuite-general (source): debian-tests-control-uses-national-encoding at line 2
 testsuite-general (source): debian-tests-control-autodep8-is-obsolete debian/tests/control.autodep8
 testsuite-general (source): debian-tests-control-and-control-autodep8 debian/tests/control debian/tests/control.autodep8

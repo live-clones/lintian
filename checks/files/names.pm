@@ -25,7 +25,7 @@ use warnings;
 use utf8;
 use autodie;
 
-use Lintian::Util qw(is_string_utf8_encoded);
+use Unicode::UTF8 qw(valid_utf8);
 
 use Moo;
 use namespace::clean;
@@ -70,7 +70,7 @@ sub files {
           and $file->is_executable
           and $file->size == 0;
 
-    } elsif (!is_string_utf8_encoded($file->name)) {
+    } elsif (!valid_utf8($file->name)) {
         $self->tag('file-name-is-not-valid-UTF-8', $file->name);
     }
 

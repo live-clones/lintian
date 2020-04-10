@@ -31,33 +31,24 @@ use namespace::clean;
 
 with 'Lintian::Check';
 
-sub files {
-    my ($self, $file) = @_;
-
-    # files /etc must be conffiles, with some exceptions).
-    $self->tag('file-in-etc-not-marked-as-conffile', $file)
-      if $file->is_file
-      && $file->name =~ m,^etc/,
-      && !($self->processable->is_conffile($file->name)
-        || $file =~ m,/README$,
-        || $file eq 'etc/init.d/skeleton'
-        || $file eq 'etc/init.d/rc'
-        || $file eq 'etc/init.d/rcS');
-
-    return
-      unless $self->processable->is_conffile($file->name);
-
-    $self->tag('conffile-has-bad-file-type', $file)
-      unless $file->is_file;
-
-    return;
-}
-
-sub installable {
+sub binary {
     my ($self) = @_;
 
-    my %count;
+    my @files= grep { $_->is_file } $self->processable->installed->sorted_list;
 
+    # files /etc must be conffiles, with some exceptions).
+    my @etcfiles = grep { $_->name =~ m,^etc, } @files;
+    for my $file (@etcfiles) {
+
+        $self->tag('file-in-etc-not-marked-as-conffile', $file)
+          unless $self->processable->is_conffile($file->name)
+          || $file =~ m,/README$,
+          || $file eq 'etc/init.d/skeleton'
+          || $file eq 'etc/init.d/rc'
+          || $file eq 'etc/init.d/rcS';
+    }
+
+    my %count;
     for my $absolute ($self->processable->conffiles) {
 
         # all paths should be absolute
@@ -71,8 +62,14 @@ sub installable {
         $count{$relative} //= 0;
         $count{$relative}++;
 
-        $self->tag('conffile-is-not-in-package', $relative)
-          unless defined $self->processable->installed->lookup($relative);
+        my $shipped = $self->processable->installed->lookup($relative);
+        if (defined $shipped) {
+            $self->tag('conffile-has-bad-file-type', $shipped)
+              unless $shipped->is_file;
+
+        } else {
+            $self->tag('conffile-is-not-in-package', $relative);
+        }
 
         $self->tag('file-in-etc-rc.d-marked-as-conffile', $relative)
           if $relative =~ m,^etc/rc.\.d/,;

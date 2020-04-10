@@ -1,0 +1,2 @@
+national-encoding (source): national-encoding-in-debconf-template debian/templates
+national-encoding (binary): no-debconf-config

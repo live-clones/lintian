@@ -1,5 +1,4 @@
 foo++ (source): latest-debian-changelog-entry-without-new-date
 foo++ (binary): latest-changelog-entry-without-new-date
 foo++ (binary): debian-changelog-has-wrong-day-of-week 2003-04-14 is a Monday
-foo++ (binary): debian-changelog-file-uses-obsolete-national-encoding at line 11
 foo++ (binary): debian-changelog-file-contains-invalid-email-address he@unknown

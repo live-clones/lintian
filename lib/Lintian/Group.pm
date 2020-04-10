@@ -33,13 +33,15 @@ use List::MoreUtils qw(uniq firstval);
 use Path::Tiny;
 use POSIX qw(ENOENT);
 use Time::HiRes qw(gettimeofday tv_interval);
+use Time::Piece;
+use Unicode::UTF8 qw(valid_utf8 decode_utf8);
 
 use Lintian::Processable::Binary;
 use Lintian::Processable::Buildinfo;
 use Lintian::Processable::Changes;
 use Lintian::Processable::Source;
 use Lintian::Processable::Udeb;
-use Lintian::Util qw(get_dsc_info strip human_bytes);
+use Lintian::Util qw(get_dsc_info_from_string strip human_bytes);
 
 use constant EMPTY => q{};
 use constant SPACE => q{ };
@@ -115,6 +117,10 @@ Returns or sets the max number of jobs to be processed in parallel.
 If the limit is 0, then there is no limit for the number of parallel
 jobs.
 
+=item processing_start
+
+=item processing_end
+
 =item cache
 
 Cache for some items.
@@ -143,6 +149,8 @@ has source => (is => 'rw');
 has udeb => (is => 'rw', default => sub{ {} });
 
 has jobs => (is => 'rw', default => 1);
+has processing_start => (is => 'rw', default => EMPTY);
+has processing_end => (is => 'rw', default => EMPTY);
 
 has cache => (is => 'rw', default => sub { {} });
 has profile => (is => 'rw', default => sub { {} });
@@ -202,13 +210,26 @@ sub init_from_file {
       unless defined $path;
 
     my $processable = $self->_get_processable($path);
+    return
+      unless $processable;
+
     $self->add_processable($processable);
 
     my ($type) = $path =~ m/\.(buildinfo|changes)$/;
     return
       unless defined $type;
 
-    my $info = get_dsc_info($path)
+    my $bytes = path($path)->slurp;
+
+    my $contents;
+    if(valid_utf8($bytes)) {
+        $contents = decode_utf8($bytes);
+    } else {
+        # try to proceed with nat'l encoding; stopping here breaks tests
+        $contents = $bytes;
+    }
+
+    my $info = get_dsc_info_from_string($contents)
       or die "$path is not a valid $type file";
 
     my $dir = $path;
@@ -309,6 +330,8 @@ Process group.
 
 sub process {
     my ($self, $exit_code_ref, $override_count, $opt, $OUTPUT)= @_;
+
+    $self->processing_start(gmtime->datetime);
 
     my $all_ok = 1;
 
@@ -590,6 +613,8 @@ sub process {
 
     # put tags back into their respective processables
     push(@{$_->processable->tags}, $_) for @reported_tags;
+
+    $self->processing_end(gmtime->datetime);
 
     my $raw_res = tv_interval($timer);
     my $tres = sprintf('%.3fs', $raw_res);
