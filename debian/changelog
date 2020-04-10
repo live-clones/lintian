@@ -1,8 +1,28 @@
-lintian (2.64.0+git) UNRELEASED; urgency=medium
+lintian (2.65.0) unstable; urgency=medium
 
-  * WIP (generated upon release).
+  * Summary of tag changes:
+    + Renamed:
+      - description-too-long -> synopsis-too-long
 
- -- Chris Lamb <lamby@debian.org>  Tue, 07 Apr 2020 08:19:23 +0100
+  [ Chris Lamb ]
+  * Allow python3-all-dev and python3-all-dbg to satisfy the check for
+    packages that use "py3versions -s". (Closes: #955799, #956134)
+  * Don't warn about package-relation-with-self if we have specified a
+    required architecture; assume the maintainer knows what they are doing
+    in these cases. (Closes: #956227)
+
+  [ Felix Lechner ]
+  * Parse debian/changelog in source packages as UTF-8. (Closes: #956151)
+  * Improve line count in the fields/description check, renaming the tag to
+    synopsis-too-long.
+  * Speed up indexing for patched files from source packages.
+  * Significantly speed up parsing of output from md5sums(1).
+  * Also speed up parsing of magic file-info output from file(1).
+
+  [ Paul Wise ]
+  * Add several spelling corrections.
+
+ -- Chris Lamb <lamby@debian.org>  Fri, 10 Apr 2020 10:03:11 +0000
 
 lintian (2.64.0) unstable; urgency=medium
 
