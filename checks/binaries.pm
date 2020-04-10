@@ -464,8 +464,8 @@ sub installable {
             # stripped but a debug or profiling library?
             if (($fname =~ m,/lib/debug/,o) or ($fname =~ m,/lib/profile/,o)){
                 $self->tag(
-                    'library-in-debug-or-profile-should-not-be-stripped',
-                    $file);
+                    'library-in-debug-or-profile-should-not-be-stripped',$file)
+                  unless $file->size == 0;
             } else {
                 # appropriately stripped, but is it stripped enough?
                 $self->tag_unneeded_sections('binary-has-unneeded-section',

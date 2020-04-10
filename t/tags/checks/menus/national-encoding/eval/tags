@@ -1,0 +1,6 @@
+binary (binary): postrm-does-not-call-updatemenus etc/menu-methods/lintian
+binary (binary): postinst-does-not-call-updatemenus usr/share/menu/binary
+binary (binary): menu-method-should-include-menu-h etc/menu-methods/lintian
+binary (binary): menu-file-in-usr-lib usr/lib/menu/binary
+binary (binary): doc-base-file-uses-obsolete-national-encoding binary
+binary (binary): doc-base-file-no-format-section space 

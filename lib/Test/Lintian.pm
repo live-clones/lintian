@@ -73,13 +73,13 @@ use File::Basename qw(basename);
 use File::Find ();
 use List::MoreUtils qw{any};
 use Path::Tiny;
+use Unicode::UTF8 qw(valid_utf8 decode_utf8);
 
 use Lintian::Spelling qw(check_spelling);
 use Lintian::Data;
-use Lintian::Deb822Parser qw(read_dpkg_control);
+use Lintian::Deb822Parser qw(parse_dpkg_control_string);
 use Lintian::Profile;
 use Lintian::Tag::Info;
-use Lintian::Util qw(is_string_utf8_encoded);
 
 # We want data files loaded early to avoid problems with missing data
 # files ending up in releases (like in 2.5.17 and 2.5.18).
@@ -161,7 +161,13 @@ sub test_check_desc {
     my @descs = map { _find_check($find_opt, $_) } @dirs;
     foreach my $desc_file (@descs) {
         my ($header, @tagpara);
-        eval {($header, @tagpara) = read_dpkg_control($desc_file);};
+        my $bytes = path($desc_file)->slurp;
+        $builder->ok(valid_utf8($bytes),
+            "File $desc_file does not use a national encoding.");
+        next
+          unless valid_utf8($bytes);
+        my $contents = decode_utf8($bytes);
+        eval {($header, @tagpara) = parse_dpkg_control_string($contents);};
         if (my $err = $@) {
             $err =~ s/ at .*? line \d+\s*\n//;
             $builder->ok(0, "Cannot parse $desc_file");
@@ -251,10 +257,8 @@ sub test_check_desc {
                 'Tag info uses only two spaces after a full stop')
               or $builder->diag("$content_type $cname: $tag ($1)\n");
 
-            $builder->ok(
-                is_string_utf8_encoded($info),
-                'Tag info must be written in UTF-8'
-            ) or $builder->diag("$content_type $cname: $tag\n");
+            $builder->ok(valid_utf8($info),'Tag info must be written in UTF-8')
+              or $builder->diag("$content_type $cname: $tag\n");
 
             # Check the tag info for unescaped <> or for unknown tags (which
             # probably indicate the same thing).

@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: bad-email-format
+Description: Debian.README with email address in unknown format

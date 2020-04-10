@@ -8,7 +8,7 @@ foo++ ([% $version %]) [% $distribution %]; urgency=low
 
 foo++ (4) unstable; urgency=low
 
-  * This changelog now includes a ISO-8859-1 character: 'ä'
+  * This changelog now includes a ISO-8859-1 character: 'Ã¤'
 
  -- Frank Lichtenheld <djpig@debian.org>  Fri,  5 Mar 2004 13:41:39 +0100
 

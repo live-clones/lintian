@@ -27,11 +27,13 @@ use autodie;
 
 use List::MoreUtils qw(any);
 use List::Util qw(first none);
+use Path::Tiny;
+use Unicode::UTF8 qw(valid_utf8 decode_utf8);
 
 use Lintian::Data ();
-use Lintian::Deb822Parser qw(read_dpkg_control);
+use Lintian::Deb822Parser qw(parse_dpkg_control_string);
 use Lintian::Relation ();
-use Lintian::Util qw(file_is_encoded_in_non_utf8 rstrip strip);
+use Lintian::Util qw(rstrip strip);
 
 use Moo;
 use namespace::clean;
@@ -62,34 +64,43 @@ sub source {
     my $group = $self->group;
 
     my $debian_dir = $processable->patched->resolve_path('debian/');
-    my $dcontrol;
-    $dcontrol = $debian_dir->child('control') if $debian_dir;
+    return
+      unless $debian_dir;
 
-    # Unlikely, but assume nothing...
-    return if not $dcontrol;
+    my $dcontrol = $debian_dir->child('control');
+    return
+      unless $dcontrol;
 
-    if ($dcontrol->is_symlink) {
-        $self->tag('debian-control-file-is-a-symlink');
-    }
-    return if not $dcontrol->is_open_ok;
+    $self->tag('debian-control-file-is-a-symlink')
+      if $dcontrol->is_symlink;
+
+    return
+      unless $dcontrol->is_open_ok;
 
     # check that control is UTF-8 encoded
-    my $line = file_is_encoded_in_non_utf8($dcontrol->unpacked_path);
-    if ($line) {
-        $self->tag('debian-control-file-uses-obsolete-national-encoding',
-            "at line $line");
+    my $bytes = path($dcontrol->unpacked_path)->slurp;
+    unless (valid_utf8($bytes)) {
+
+        $self->tag('debian-control-file-uses-obsolete-national-encoding');
+        return;
     }
+
+    my $contents = decode_utf8($bytes);
+    my @lines = split(/\n/, $contents);
 
     # Nag about dh_make Vcs comment only once
     my $seen_vcs_comment = 0;
-    open(my $fd, '<', $dcontrol->unpacked_path);
-    while (<$fd>) {
-        s/\s*\n$//;
+
+    my $line;
+    my $position = 1;
+    while (defined($line = shift @lines)) {
+
+        $line =~ s/\s*$//;
 
         if (
-            m{\A \# \s* Vcs-(?:Git|Browser): \s*
+            $line =~ m{\A \# \s* Vcs-(?:Git|Browser): \s*
                   (?:git|http)://git\.debian\.org/
-                  (?:\?p=)?collab-maint/<pkg>\.git}osmx
+                  (?:\?p=)?collab-maint/<pkg>\.git}smx
         ) {
             # Emit it only once per package
             $self->tag('control-file-contains-dh_make-vcs-comment')
@@ -97,10 +108,11 @@ sub source {
             next;
         }
 
-        next if /^\#/;
+        next
+          if $line =~ /^\#/;
 
         # line with field:
-        if (/^(\S+):/) {
+        if ($line =~ /^(\S+):/) {
             my $field = lc($1);
             if ($field =~ /^xs-vcs-/) {
                 my $base = $field;
@@ -112,30 +124,32 @@ sub source {
                 $self->tag('xs-testsuite-field-in-debian-control', $field);
             }
             if ($field eq 'xc-package-type') {
-                $self->tag('xc-package-type-in-debian-control', "line $.");
+                $self->tag('xc-package-type-in-debian-control',
+                    "line $position");
             }
-            unless (/^\S+: \S/ || /^\S+:$/) {
+            unless ($line =~ /^\S+: \S/ || $line =~ /^\S+:$/) {
                 $self->tag('debian-control-has-unusual-field-spacing',
-                    "line $.");
+                    "line $position");
             }
             # something like "Maintainer: Maintainer: bad field"
-            if (/^\Q$field\E: \s* \Q$field\E \s* :/xsmi) {
+            if ($line =~ /^\Q$field\E: \s* \Q$field\E \s* :/xsmi) {
                 $self->tag('debian-control-repeats-field-name-in-value',
-                    "line $.");
+                    "line $position");
             }
             if (    $field =~ /^Rules?-Requires?-Roots?$/i
                 and $field ne 'rules-requires-root') {
                 $self->tag('spelling-error-in-rules-requires-root',
-                    $field,"(line $.)");
+                    $field,"(line $position)");
             }
         }
+    }continue {
+        ++$position;
     }
-    close($fd);
 
     eval {
         # check we can parse it, but ignore the result - we will fetch
         # the fields we need from $processable.
-        read_dpkg_control($dcontrol->unpacked_path);
+        parse_dpkg_control_string($contents);
     };
     if ($@) {
         chomp $@;

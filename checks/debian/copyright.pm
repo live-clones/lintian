@@ -31,13 +31,13 @@ use Encode qw(decode);
 use List::Compare;
 use List::MoreUtils qw(any none);
 use Path::Tiny;
+use Unicode::UTF8 qw[valid_utf8 decode_utf8];
 use XML::LibXML;
 
 use Lintian::Data;
-use Lintian::Deb822Parser qw(read_dpkg_control parse_dpkg_control);
+use Lintian::Deb822Parser qw(parse_dpkg_control_string);
 use Lintian::Relation::Version qw(versions_compare);
 use Lintian::Spelling qw(check_spelling);
-use Lintian::Util qw(file_is_encoded_in_non_utf8);
 
 use constant {
     WC_TYPE_REGEX => 'REGEX',
@@ -114,7 +114,16 @@ sub source {
     }
 
     if ($file->is_open_ok) {
-        my $contents = path($file->unpacked_path)->slurp;
+
+        my $bytes = path($file->unpacked_path)->slurp;
+        unless (valid_utf8($bytes)) {
+
+            $self->tag(
+                'debian-copyright-file-uses-obsolete-national-encoding');
+            return;
+        }
+
+        my $contents = decode_utf8($bytes);
 
         $self->check_dep5_copyright($contents);
         $self->check_apache_notice_files($contents);
@@ -298,11 +307,7 @@ sub check_dep5_copyright {
     my (@dep5, @lines);
 
     # probably DEP 5 format; let's try more checks
-    eval {
-        open(my $fd, '<', \$contents);
-        @dep5 = parse_dpkg_control($fd, 0, \@lines);
-        close($fd);
-    };
+    eval {@dep5 = parse_dpkg_control_string($contents, 0, \@lines);};
     if ($@) {
         chomp $@;
         $@ =~ s/^syntax error at //;
@@ -785,8 +790,7 @@ sub parse_wildcard {
     my ($regex_src) = @_;
 
     my ($error);
-    $regex_src =~ s,^\./+,,;
-    $regex_src =~ s,//+,/,g;
+
     if ($regex_src eq '*') {
         return ('', WC_TYPE_DESCENDANTS, undef);
     }
@@ -980,14 +984,15 @@ sub binary {
       = path($self->processable->groupdir)->child('copyright')->stringify;
 
     # check that copyright is UTF-8 encoded
-    my $line = file_is_encoded_in_non_utf8($dcopy);
-    if ($line) {
-        $self->tag('debian-copyright-file-uses-obsolete-national-encoding',
-            "at line $line");
+    my $bytes = path($dcopy)->slurp;
+    unless (valid_utf8($bytes)) {
+
+        $self->tag('debian-copyright-file-uses-obsolete-national-encoding');
+        return;
     }
 
     # check contents of copyright file
-    my $contents = path($dcopy)->slurp;
+    my $contents = decode_utf8($bytes);
 
     $self->tag('copyright-has-crs')
       if $contents =~ /\r/;
@@ -1317,19 +1322,16 @@ sub check_names_texts {
     my @paragraphs;
 
     local $@;
-    eval {@paragraphs = read_dpkg_control(\$contents);};
+    eval {@paragraphs = parse_dpkg_control_string($contents);};
 
     # parse error: copyright not in new format, just check text
     return $text_check->(\$contents)
       if $@;
 
-    foreach my $paragraph (@paragraphs) {
+    my @licenses = grep { length } map { $_->{license} } @paragraphs;
+    for my $license (@licenses) {
 
-        my $license = $paragraph->{license};
-        next
-          unless length $license;
-
-        my ($name, $text)= ($license =~ /^\s*([^\r\n]+)\r?\n(.*)\z/s);
+        my ($name, $text) = ($license =~ /^\s*([^\r\n]+)\r?\n(.*)\z/s);
 
         next
           unless length $text;

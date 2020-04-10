@@ -36,9 +36,10 @@ our %EXPORT_TAGS = (constants =>
       [qw(DCTRL_DEBCONF_TEMPLATE DCTRL_NO_COMMENTS DCTRL_COMMENTS_AT_EOL)],);
 our @EXPORT_OK = (qw(
       visit_dpkg_paragraph
+      visit_dpkg_paragraph_string
       parse_dpkg_control
+      parse_dpkg_control_string
       read_dpkg_control
-      read_dpkg_control_utf8
       ), @{ $EXPORT_TAGS{constants} });
 
 use Exporter qw(import);
@@ -49,10 +50,10 @@ Lintian::Deb822Parser - Lintian's generic Deb822 parser functions
 
 =head1 SYNOPSIS
 
- use Lintian::Deb822Parser qw(read_dpkg_control_utf8);
+ use Lintian::Deb822Parser qw(read_dpkg_control);
  
  my (@paragraphs);
- eval { @paragraphs = read_dpkg_control_utf8('some/debian/ctrl/file'); };
+ eval { @paragraphs = read_dpkg_control('some/debian/ctrl/file'); };
  if ($@) {
     # syntax error etc.
     die "ctrl/file: $@";
@@ -96,14 +97,14 @@ You have a I<.dsc> (or I<.changes>) file.  Alternative, it is also
 useful if you have a control file and only care about the first
 paragraph.
 
-=item Use L</read_dpkg_control_utf8> or L</read_dpkg_control> when
+=item Use L</read_dpkg_control> when
 
 You have a debian control file (such I<debian/control>) and you want
 a number of paragraphs from it.
 
 =item Use L</parse_dpkg_control> when
 
-When you would have used L</read_dpkg_control_utf8>, except you have an
+When you would have used L</read_dpkg_control>, except you have an
 open filehandle rather than a file name.
 
 =back
@@ -159,14 +160,36 @@ NB: parse_dpkg_control does I<not> close the handle for the caller.
 =cut
 
 sub parse_dpkg_control {
-    my ($handle, $flags, $lines) = @_;
+    my ($handle, $flags, $field_starts) = @_;
+
     my @result;
     my $c = sub {
         my ($para, $line) = @_;
         push @result, $para;
-        push @$lines, $line if defined $lines;
+        push @$field_starts, $line if defined $field_starts;
     };
+
     visit_dpkg_paragraph($c, $handle, $flags);
+
+    return @result;
+}
+
+=item parse_dpkg_control_string(STRING[, FLAGS[, LINES]])
+
+=cut
+
+sub parse_dpkg_control_string {
+    my ($string, $flags, $field_starts) = @_;
+    my @result;
+
+    my $c = sub {
+        my ($para, $line) = @_;
+        push @result, $para;
+        push @$field_starts, $line if defined $field_starts;
+    };
+
+    visit_dpkg_paragraph_string($c, $string, $flags);
+
     return @result;
 }
 
@@ -315,8 +338,21 @@ sub rstrip (_) {  ## no critic (Subroutines::RequireFinalReturn)
 
 sub visit_dpkg_paragraph {
     my ($code, $CONTROL, $flags) = @_;
+
+    local $/ = undef;
+    my $string = <$CONTROL>;
+
+    return visit_dpkg_paragraph_string($code, $string, $flags);
+}
+
+=item visit_dpkg_paragraph_string (CODE, STRING[, FLAGS])
+
+=cut
+
+sub visit_dpkg_paragraph_string {
+    my ($code, $string, $flags) = @_;
     $flags//=0;
-    my $lines = {};
+    my $field_starts = {};
     my $section = {};
     my $open_section = 0;
     my $last_tag;
@@ -324,22 +360,27 @@ sub visit_dpkg_paragraph {
     my $signed = 0;
     my $signature = 0;
 
-    local $_;
-    while (<$CONTROL>) {
-        chomp;
+    my @lines = split(/\n/, $string);
 
-        if (substr($_, 0, 1) eq '#') {
-            next unless $flags & DCTRL_NO_COMMENTS;
-            die "syntax error at line $.: Comments are not allowed.\n";
+    my $position = 1;
+
+    my $line;
+    while (defined($line = shift @lines)) {
+        chomp $line;
+
+        if (substr($line, 0, 1) eq '#') {
+            next
+              unless $flags & DCTRL_NO_COMMENTS;
+            die "syntax error at line $position: Comments are not allowed.\n";
         }
 
         # empty line?
-        if ($_ eq '' || (!$debconf && m/^\s*$/)) {
+        if ($line eq '' || (!$debconf && $line =~ /^\s*$/)) {
             if ($open_section) { # end of current section
                  # pass the current section to the handler
-                $code->($section, $lines);
+                $code->($section, $field_starts);
                 $section = {};
-                $lines = {};
+                $field_starts = {};
                 $open_section = 0;
             }
         }
@@ -347,34 +388,37 @@ sub visit_dpkg_paragraph {
         # According to http://tools.ietf.org/html/rfc4880#section-6.2
         # The header MUST start at the beginning of the line and MUST NOT have
         # any other text (except whitespace) after the header.
-        elsif (m/^-----BEGIN PGP SIGNATURE-----[ \r\t]*$/)
+        elsif ($line =~ m/^-----BEGIN PGP SIGNATURE-----[ \r\t]*$/)
         { # skip until end of signature
             my $saw_end = 0;
             if (not $signed or $signature) {
                 die join(q{ },
-                    "syntax error at line $.:",
+                    "syntax error at line $position:",
                     "PGP signature seen before start of signed message\n")
                   if not $signed;
                 die join(q{ },
-                    "syntax error at line $.:",
+                    "syntax error at line $position:",
                     "Two PGP signatures (first one at line $signature)\n");
             }
-            $signature = $.;
-            while (<$CONTROL>) {
-                if (m/^-----END PGP SIGNATURE-----[ \r\t]*$/o) {
+            $signature = $position;
+            while (defined($line = shift @lines)) {
+                if ($line =~ /^-----END PGP SIGNATURE-----[ \r\t]*$/) {
                     $saw_end = 1;
                     last;
                 }
+            }continue {
+                ++$position;
             }
+
             # The "at line X" may seem a little weird, but it keeps the
             # message format identical.
             die join(q{ },
-                "syntax error at line $.:",
+                "syntax error at line $position:",
                 qq{End of file but expected an "END PGP SIGNATURE" header\n})
               unless $saw_end;
         }
         # other pgp control?
-        elsif (m/^-----(?:BEGIN|END) PGP/) {
+        elsif ($line =~ /^-----(?:BEGIN|END) PGP/) {
             # At this point it could be a malformed PGP header or one
             # of the following valid headers (RFC4880):
             #  * BEGIN PGP MESSAGE
@@ -385,7 +429,7 @@ sub visit_dpkg_paragraph {
             #    - Valid, but we don't support partial messages, so
             #      bail on those.
 
-            unless (m/^-----BEGIN PGP SIGNED MESSAGE-----[ \r\t]*$/) {
+            unless ($line =~ /^-----BEGIN PGP SIGNED MESSAGE-----[ \r\t]*$/) {
                 # Not a (full) PGP MESSAGE; reject.
 
                 my $key = qr/(?:BEGIN|END) PGP (?:PUBLIC|PRIVATE) KEY BLOCK/;
@@ -393,15 +437,17 @@ sub visit_dpkg_paragraph {
                 my $msg
                   = qr/(?:BEGIN|END) PGP (?:(?:COMPRESSED|ENCRYPTED) )?MESSAGE/;
 
-                if (m/^-----($key|$msgpart|$msg)-----[ \r\t]*$/o) {
-                    die "syntax error at line $.: Unexpected $1 header\n";
+                if ($line =~ /^-----($key|$msgpart|$msg)-----[ \r\t]*$/) {
+                    die
+                      "syntax error at line $position: Unexpected $1 header\n";
                 } else {
-                    die "syntax error at line $.: Malformed PGP header\n";
+                    die
+                      "syntax error at line $position: Malformed PGP header\n";
                 }
             } else {
                 if ($signed) {
                     die join(q{ },
-                        "syntax error at line $.:",
+                        "syntax error at line $position:",
                         'Expected at most one signed message',
                         "(previous at line $signed)\n");
                 }
@@ -418,23 +464,27 @@ sub visit_dpkg_paragraph {
                     # true, it will remain so until the empty line
                     # after the PGP header.
                     die join(q{ },
-                        "syntax error at line $.:",
+                        "syntax error at line $position:",
                         'PGP MESSAGE header must be first',
                         "content if present\n");
                 }
-                $signed = $.;
+                $signed = $position;
             }
 
             # skip until the next blank line
-            while (<$CONTROL>) {
-                last if /^\s*$/o;
+            while (defined($line = shift @lines)) {
+                last
+                  if $line =~ /^\s*$/;
+            }continue {
+                ++$position;
             }
         }
        # did we see a signature already?  We allow all whitespace/comment lines
        # outside the signature.
         elsif ($signature) {
             # Accept empty lines after the signature.
-            next if m/^\s*$/;
+            next
+              if $line =~ /^\s*$/;
 
             # NB: If you remove this, keep in mind that it may allow
             # two paragraphs to merge.  Consider:
@@ -448,22 +498,25 @@ sub visit_dpkg_paragraph {
             # At the time of writing: If $open_section is true, it
             # will remain so until the empty line after the PGP
             # header.
-            die "syntax error at line $.: Data after the PGP SIGNATURE\n";
+            die
+              "syntax error at line $position: Data after the PGP SIGNATURE\n";
         }
         # new empty field?
-        elsif (m/^([^: \t]+):\s*$/o) {
-            $lines->{'START-OF-PARAGRAPH'} = $. if not $open_section;
+        elsif ($line =~ /^([^: \t]+):\s*$/) {
+            $field_starts->{'START-OF-PARAGRAPH'} = $position
+              if not $open_section;
             $open_section = 1;
 
             my ($tag) = (lc $1);
             $section->{$tag} = '';
-            $lines->{$tag} = $.;
+            $field_starts->{$tag} = $position;
 
             $last_tag = $tag;
         }
         # new field?
-        elsif (m/^([^: \t]+):\s*(.*)$/o) {
-            $lines->{'START-OF-PARAGRAPH'} = $. if not $open_section;
+        elsif ($line =~ /^([^: \t]+):\s*(.*)$/) {
+            $field_starts->{'START-OF-PARAGRAPH'} = $position
+              if not $open_section;
             $open_section = 1;
 
             # Policy: Horizontal whitespace (spaces and tabs) may occur
@@ -473,47 +526,53 @@ sub visit_dpkg_paragraph {
             if (exists $section->{$tag}) {
                 # Policy: A paragraph must not contain more than one instance
                 # of a particular field name.
-                die "syntax error at line $.: Duplicate field $tag.\n";
+                die "syntax error at line $position: Duplicate field $tag.\n";
             }
-            $value =~ s/#.*$// if $flags & DCTRL_COMMENTS_AT_EOL;
+            $value =~ s/#.*$//
+              if $flags & DCTRL_COMMENTS_AT_EOL;
             $section->{$tag} = $value;
-            $lines->{$tag} = $.;
+            $field_starts->{$tag} = $position;
 
             $last_tag = $tag;
         }
         # continued field?
-        elsif (m/^([ \t].*\S.*)$/o) {
+        elsif ($line =~ /^([ \t].*\S.*)$/) {
             $open_section
               or die join(q{ },
-                "syntax error at line $.:",
+                "syntax error at line $position:",
                 'Continuation line outside a paragraph (maybe line',
-                ($. - 1), qq{should be " .").\n});
+                ($position - 1),
+                qq{should be " .").\n});
 
             # Policy: Many fields' values may span several lines; in this case
             # each continuation line must start with a space or a tab.  Any
             # trailing spaces or tabs at the end of individual lines of a
             # field value are ignored.
             my $value = rstrip($1);
-            $value =~ s/#.*$// if $flags & DCTRL_COMMENTS_AT_EOL;
+            $value =~ s/#.*$//
+              if $flags & DCTRL_COMMENTS_AT_EOL;
             $section->{$last_tag} .= "\n" . $value;
         }
         # None of the above => syntax error
         else {
-            my $message = "syntax error at line $.";
-            if (m/^\s+$/) {
+            my $message = "syntax error at line $position";
+            if ($line =~ /^\s+$/) {
                 $message
                   .= ": Whitespace line not allowed (possibly missing a \".\").\n";
             } else {
                 # Replace non-printables and non-space characters with
                 # "_" - just in case.
-                s/[^[:graph:][:space:]]/_/go;
-                $message .= ": Cannot parse line \"$_\"\n";
+                $line =~ s/[^[:graph:][:space:]]/_/g;
+                $message .= ": Cannot parse line \"$line\"\n";
             }
             die $message;
         }
+    }continue {
+        ++$position;
     }
     # pass the last section (if not already done).
-    $code->($section, $lines) if $open_section;
+    $code->($section, $field_starts)
+      if $open_section;
 
     # Given the API, we cannot use this check to prevent any
     # paragraphs from being emitted to the code argument, so we might
@@ -522,12 +581,10 @@ sub visit_dpkg_paragraph {
         # The "at line X" may seem a little weird, but it keeps the
         # message format identical.
         die join(q{ },
-            "syntax error at line $.:",
+            "syntax error at line $position:",
             qq{End of file before "BEGIN PGP SIGNATURE"\n"});
     }
 }
-
-=item read_dpkg_control_utf8(FILE[, FLAGS[, LINES]])
 
 =item read_dpkg_control(FILE[, FLAGS[, LINES]])
 
@@ -552,20 +609,10 @@ autodie exceptions if open or close fails.
 =cut
 
 sub read_dpkg_control {
-    my ($file, $flags, $lines) = @_;
-
-    open(my $CONTROL, '<', $file);
-    my @data = parse_dpkg_control($CONTROL, $flags, $lines);
-    close($CONTROL);
-
-    return @data;
-}
-
-sub read_dpkg_control_utf8 {
-    my ($file, $flags, $lines) = @_;
+    my ($file, $flags, $field_starts) = @_;
 
     open(my $CONTROL, '<:encoding(UTF-8)', $file);
-    my @data = parse_dpkg_control($CONTROL, $flags, $lines);
+    my @data = parse_dpkg_control($CONTROL, $flags, $field_starts);
     close($CONTROL);
 
     return @data;

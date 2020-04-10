@@ -7,7 +7,6 @@ binary (binary): menu-file-in-usr-lib usr/lib/menu/binary
 binary (binary): doc-base-unknown-section binary:11 Non/Existant
 binary (binary): doc-base-invalid-document-field binary:1 binary!docs  
 binary (binary): doc-base-index-references-multiple-files binary:25
-binary (binary): doc-base-file-uses-obsolete-national-encoding binary:8
 binary (binary): doc-base-file-unknown-format binary:20 esp
 binary (binary): doc-base-file-unknown-field binary:18 unknown
 binary (binary): doc-base-file-unknown-field binary:12 unknown
@@ -17,7 +16,7 @@ binary (binary): doc-base-file-references-missing-file binary:25 /usr/share/doc/
 binary (binary): doc-base-file-references-missing-file binary:21 /usr/share/doc/binary/binary.txt
 binary (binary): doc-base-file-references-missing-file binary:17 /usr/share/doc/binary/binary.sgml.gz
 binary (binary): doc-base-file-no-index binary:35
-binary (binary): doc-base-file-no-format-section space :0
+binary (binary): doc-base-file-no-format-section space 
 binary (binary): doc-base-file-no-format binary:26
 binary (binary): doc-base-file-lacks-required-field binary:26 format
 binary (binary): doc-base-file-lacks-required-field binary:26 files

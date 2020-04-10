@@ -25,7 +25,10 @@ use warnings;
 use utf8;
 use autodie;
 
-use Lintian::Deb822Parser qw(read_dpkg_control :constants);
+use Path::Tiny;
+use Unicode::UTF8 qw (valid_utf8 decode_utf8);
+
+use Lintian::Deb822Parser qw(parse_dpkg_control_string :constants);
 use Lintian::Relation;
 use Lintian::Util qw($PKGNAME_REGEX);
 
@@ -85,10 +88,21 @@ sub source {
             $binary = $binaries[0];
         }
 
-        if ($templates_file and $templates_file->is_open_ok) {
+        if ($templates_file && $templates_file->is_open_ok) {
+
+            my $bytes = path($templates_file->unpacked_path)->slurp;
+            unless (valid_utf8($bytes)) {
+                $self->tag('national-encoding-in-debconf-template',
+                    $templates_file->name);
+                next;
+            }
+
+            my $contents = decode_utf8($bytes);
+
             my @templates;
             eval {
-                @templates= read_dpkg_control($templates_file->unpacked_path,
+                @templates
+                  = parse_dpkg_control_string($contents,
                     DCTRL_DEBCONF_TEMPLATE);
             };
             if ($@) {
@@ -191,19 +205,23 @@ sub installable {
     my (@templates, %potential_db_abuse, @templates_seen);
 
     if ($seentemplates) {
-        eval {
-            # $seentemplates (above) will be false if $ctrl_templates is a
-            # symlink or not a file, so this should be safe without
-            # (re-checking) with -f/-l.
-            @templates= read_dpkg_control($ctrl_templates->unpacked_path,
-                DCTRL_DEBCONF_TEMPLATE);
-        };
-        if ($@) {
-            chomp $@;
-            $@ =~ s/^internal error: //;
-            $@ =~ s/^syntax error in //;
-            $self->tag('syntax-error-in-debconf-template', "templates: $@");
-            @templates = ();
+        my $bytes = path($ctrl_templates->unpacked_path)->slurp;
+        if (valid_utf8($bytes)) {
+            my $contents = decode_utf8($bytes);
+            eval {
+                # $seentemplates (above) will be false if $ctrl_templates is a
+                # symlink or not a file, so this should be safe without
+                # (re-checking) with -f/-l.
+                @templates= parse_dpkg_control_string($contents,
+                    DCTRL_DEBCONF_TEMPLATE);
+            };
+            if ($@) {
+                chomp $@;
+                $@ =~ s/^internal error: //;
+                $@ =~ s/^syntax error in //;
+                $self->tag('syntax-error-in-debconf-template',"templates: $@");
+                @templates = ();
+            }
         }
     }
 

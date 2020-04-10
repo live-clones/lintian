@@ -564,7 +564,10 @@ sub main {
 
     #turn off file buffering
     STDOUT->autoflush;
-    binmode(STDOUT, ':utf8');
+    STDERR->autoflush;
+
+    binmode(STDOUT, ':encoding(UTF-8)');
+    binmode(STDERR, ':encoding(UTF-8)');
 
     # Globally ignore SIGPIPE.  We'd rather deal with error returns from write
     # than randomly delivered signals.
@@ -609,6 +612,9 @@ sub main {
                 } elsif ($opts{$_} eq 'xml') {
                     require Lintian::Output::XML;
                     $OUTPUT = Lintian::Output::XML->new;
+                } elsif ($opts{$_} eq 'json') {
+                    require Lintian::Output::JSON;
+                    $OUTPUT = Lintian::Output::JSON->new;
                 } elsif ($opts{$_} eq 'fullewi') {
                     require Lintian::Output::FullEWI;
                     $OUTPUT = Lintian::Output::FullEWI->new;

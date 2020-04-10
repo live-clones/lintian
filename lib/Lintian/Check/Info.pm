@@ -25,7 +25,7 @@ use utf8;
 
 use Path::Tiny;
 
-use Lintian::Deb822Parser qw(read_dpkg_control_utf8);
+use Lintian::Deb822Parser qw(read_dpkg_control);
 use Lintian::Tag::Info ();
 
 use constant EMPTY => q{};
@@ -133,7 +133,7 @@ sub load {
     return
       unless -f $descpath;
 
-    my @paragraphs = read_dpkg_control_utf8($descpath);
+    my @paragraphs = read_dpkg_control($descpath);
     die "$descpath does not have exactly one paragraph"
       unless scalar @paragraphs == 1;
 
