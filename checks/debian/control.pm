@@ -32,7 +32,7 @@ use Path::Tiny;
 use Lintian::Data ();
 use Lintian::Deb822Parser qw(parse_dpkg_control_string);
 use Lintian::Relation ();
-use Lintian::Util qw(rstrip strip);
+use Lintian::Util qw(strip);
 
 use Moo;
 use namespace::clean;
@@ -629,7 +629,8 @@ sub check_relation {
     ) {
         my ($prev, $next) = ($1, $2);
         for ($prev, $next) {
-            rstrip;
+            # trim right
+            s/\s+$//;
         }
         $self->tag('missing-separator-between-items',
             'in', $pkg,"$field field between '$prev' and '$next'");

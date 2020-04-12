@@ -63,8 +63,6 @@ BEGIN {
           run_cmd
           safe_qx
           strip
-          lstrip
-          rstrip
           copy_dir
           human_bytes
           gunzip_file
@@ -882,14 +880,6 @@ Otherwise, a copy of the string is returned:
     }
   }
 
-=item lstrip ([LINE])
-
-Like L<strip|/strip ([LINE])> but only strip leading whitespace.
-
-=item rstrip ([LINE])
-
-Like L<strip|/strip ([LINE])> but only strip trailing whitespace.
-
 =cut
 
 # prototype for default to $_
@@ -904,23 +894,6 @@ sub strip (_) { ## no critic (Subroutines::RequireFinalReturn)
     $_[0] =~ s/^\s++//;
     $_[0] = unpack('A*', $_[0]);
     # void context, so no return needed here.
-}
-
-# prototype for default to $_
-sub lstrip (_) { ## no critic (Subroutines::RequireFinalReturn)
-    if (defined wantarray) {
-        # perl 5.14 s///r would have been useful here.
-        my ($arg) = @_;
-        $arg =~ s/^\s++//;
-        return $arg;
-    }
-    $_[0] =~ s/^\s++//;
-    # void context, so no return needed here.
-}
-
-{
-    no warnings qw(once);
-    *rstrip = \&Lintian::Deb822Parser::rstrip;
 }
 
 =item check_path (CMD)

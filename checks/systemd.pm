@@ -33,7 +33,6 @@ use List::MoreUtils qw(any first_index);
 use Text::ParseWords qw(shellwords);
 
 use Lintian::Data;
-use Lintian::Util qw(lstrip rstrip);
 
 use Moo;
 use namespace::clean;
@@ -155,7 +154,10 @@ sub check_init_script {
     }
     open(my $fh, '<', $file->unpacked_path);
     while (<$fh>) {
-        lstrip;
+
+        # trim left
+        s/^\s+//;
+
         $lsb_source_seen = 1
           if $. == 1
           and m{\A [#]! \s* (?:/usr/bin/env)? \s* /lib/init/init-d-script}xsm;
@@ -387,7 +389,8 @@ sub service_file_lines {
             next;
         }
 
-        rstrip;
+        # trim right
+        s/\s+$//;
 
         next if $_ eq '';
 
