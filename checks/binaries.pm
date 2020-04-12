@@ -32,7 +32,6 @@ use List::MoreUtils qw(any);
 use Lintian::Data;
 use Lintian::Relation qw(:constants);
 use Lintian::Spelling qw(check_spelling);
-use Lintian::Util qw(strip);
 
 use constant NUMPY_REGEX => qr/
     \Qmodule compiled against ABI version \E (?:0x)?%x
@@ -81,7 +80,10 @@ sub _embedded_libs {
         $regex = $opts;
         $opts = '';
     } else {
-        strip($opts);
+
+        # trim both ends
+        $opts =~ s/^\s+|\s+$//g;
+
         foreach my $optstr (split m/\s++/, $opts) {
             my ($opt, $val) = split m/=/, $optstr, 2;
             if ($opt eq 'source' or $opt eq 'libname') {

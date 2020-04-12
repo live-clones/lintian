@@ -30,7 +30,6 @@ use Text::Levenshtein qw(distance);
 
 use Lintian::Data;
 use Lintian::Relation qw(:constants);
-use Lintian::Util qw(strip);
 
 use Moo;
 use namespace::clean;
@@ -334,7 +333,11 @@ sub source {
         open(my $fd, '<', $compat_file->unpacked_path);
         while (<$fd>) {
             if ($. == 1) {
-                $compat = strip($_);
+                $compat = $_;
+
+                # trim both ends
+                $compat =~ s/^\s+|\s+$//g;
+
             } elsif (m/^\d/) {
                 $self->tag('debhelper-compat-file-contains-multiple-levels',
                     "(line $.)");
@@ -714,7 +717,8 @@ sub _shebang_cmd {
             # correctly.
             $cmd = '' if $cmd =~ m/^#!/o;
 
-            strip($cmd);
+            # trim both ends
+            $cmd =~ s/^\s+|\s+$//g;
         }
     }
     close($fd);

@@ -37,7 +37,6 @@ use Lintian::Reporting::Util qw(
 );
 use Lintian::Util qw(
   open_gz
-  strip
 );
 
 my $DEFAULT_CHECKSUM = 'sha256';
@@ -367,7 +366,10 @@ sub _parse_srcs_pg {
     return unless $ACTIVE_GROUPS{$group_id};
     $dir .= '/' if $dir;
     foreach my $f (split m/\n/, $paragraph->{"checksums-${DEFAULT_CHECKSUM}"}){
-        strip($f);
+
+        # trim both ends
+        $f =~ s/^\s+|\s+$//g;
+
         next unless $f && $f =~ m/\.dsc$/;
         my ($checksum, undef, $basename) = split(m/\s++/, $f);
         my $b64_checksum = encode_base64(pack('H*', $checksum));

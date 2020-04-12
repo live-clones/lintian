@@ -37,7 +37,7 @@ use Path::Tiny;
 
 use Lintian::Data;
 use Lintian::Relation ();
-use Lintian::Util qw(normalize_pkg_path strip open_gz);
+use Lintian::Util qw(normalize_pkg_path open_gz);
 use Lintian::SlidingWindow;
 
 # Half of the size used in the "sliding window" for detecting bad
@@ -49,6 +49,8 @@ use constant BLOCKSIZE => 16_384;
 # constant for very long line lengths
 use constant VERY_LONG_LINE_LENGTH => 512;
 use constant SAFE_LINE_LENGTH => 256;
+
+use constant EMPTY => q{};
 
 use Moo;
 use namespace::clean;
@@ -98,18 +100,22 @@ my $WARN_FILE_TYPE =  Lintian::Data->new(
         my ($regtype, $regname, $transformlist) = @sliptline;
 
         # allow empty regname
-        $regname = defined($regname) ? strip($regname) : '';
+        $regname //= EMPTY;
+
+        # trim both ends
+        $regname =~ s/^\s+|\s+$//g;
+
         if (length($regname) == 0) {
             $regname = '.*';
         }
 
         # build transform pair
-        $transformlist //= '';
-        $transformlist = strip($transformlist);
+        $transformlist //= EMPTY;
+        $transformlist =~ s/^\s+|\s+$//g;
 
         my $syntaxerror = 'Syntax error in cruft/warn-file-type';
         my @transformpairs;
-        unless($transformlist eq '') {
+        unless($transformlist eq EMPTY) {
             my @transforms = split(/\s*\&\&\s*/, $transformlist);
             if(scalar(@transforms) > 0) {
                 foreach my $transform (@transforms) {
@@ -210,11 +216,18 @@ sub _get_license_check_file {
             }
             my ($keywords, $sentence, $regex, $firstregex, $callsub)
               = @splitline;
-            $keywords = defined($keywords) ? strip($keywords) : '';
-            $sentence = defined($sentence) ? strip($sentence) : '';
-            $regex = defined($regex) ? strip($regex) : '';
-            $firstregex = defined($firstregex) ? strip($firstregex) : '';
-            $callsub = defined($callsub) ? strip($callsub) : '';
+            $keywords //= EMPTY;
+            $sentence //= EMPTY;
+            $regex //= EMPTY;
+            $firstregex //= EMPTY;
+            $callsub //= EMPTY;
+
+            # trim both ends
+            $keywords =~ s/^\s+|\s+$//g;
+            $sentence =~ s/^\s+|\s+$//g;
+            $regex =~ s/^\s+|\s+$//g;
+            $firstregex =~ s/^\s+|\s+$//g;
+            $callsub =~ s/^\s+|\s+$//g;
 
             my @keywordlist = split(/\s*\&\&\s*/, $keywords);
             if(scalar(@keywordlist) < 1) {
@@ -225,10 +238,10 @@ sub _get_license_check_file {
                 die "$syntaxerror No sentence on line $.";
             }
 
-            if($regex eq '') {
+            if($regex eq EMPTY) {
                 $regex = '.*';
             }
-            if($firstregex eq '') {
+            if($firstregex eq EMPTY) {
                 $firstregex = $regex;
             }
             my %ret = (
@@ -237,7 +250,7 @@ sub _get_license_check_file {
                 'regex' => qr/$regex/xsm,
                 'firstregex' => qr/$firstregex/xsm,
             );
-            unless($callsub eq '') {
+            unless($callsub eq EMPTY) {
                 if(defined($LICENSE_CHECK_DISPATCH_TABLE{$callsub})) {
                     $ret{'callsub'} = $LICENSE_CHECK_DISPATCH_TABLE{$callsub};
                 } else {
@@ -265,15 +278,20 @@ my $GFDL_FRAGMENTS = Lintian::Data->new(
         my ($gfdlsectionsregex,$secondpart) = @_;
 
         # allow empty parameters
-        $gfdlsectionsregex
-          = defined($gfdlsectionsregex) ? strip($gfdlsectionsregex) : '';
+        $gfdlsectionsregex //= EMPTY;
 
-        $secondpart //= '';
+        # trim both ends
+        $gfdlsectionsregex =~ s/^\s+|\s+$//g;
+
+        $secondpart //= EMPTY;
         my ($acceptonlyinfile,$applytag)= split(/\s*\~\~\s*/, $secondpart, 2);
 
-        $acceptonlyinfile
-          = defined($acceptonlyinfile) ? strip($acceptonlyinfile) : '';
-        $applytag =defined($applytag) ? strip($applytag) : '';
+        $acceptonlyinfile //= EMPTY;
+        $applytag //= EMPTY;
+
+        # trim both ends
+        $acceptonlyinfile =~ s/^\s+|\s+$//g;
+        $applytag =~ s/^\s+|\s+$//g;
 
         # empty first field is everything
         if (length($gfdlsectionsregex) == 0) {
@@ -288,7 +306,7 @@ my $GFDL_FRAGMENTS = Lintian::Data->new(
             'gfdlsectionsregex'   => qr/$gfdlsectionsregex/xis,
             'acceptonlyinfile' => qr/$acceptonlyinfile/xs,
         );
-        unless ($applytag eq '') {
+        unless ($applytag eq EMPTY) {
             $ret{'tag'} = $applytag;
         }
 
@@ -889,7 +907,7 @@ sub check_missing_source {
     my $processable = $self->processable;
 
     my $basename_of_dirname = basename($dirname);
-    $extratext //= '';
+    $extratext //= EMPTY;
 
     # do not check missing source for non free
     if($processable->is_non_free) {
@@ -918,13 +936,13 @@ sub check_missing_source {
 
         my ($match, $replace) = @{$pair};
 
-        if($match eq '') {
+        if($match eq EMPTY) {
             $newbasename = $basename;
         } else {
             $newbasename =~ s/$match/$replace/;
         }
         # next but we may be return an error
-        if($newbasename eq '') {
+        if($newbasename eq EMPTY) {
             next REPLACEMENT;
         }
         # now try for each path
@@ -953,7 +971,7 @@ sub check_missing_source {
                 next PATH;
             }
             # do not check empty
-            if($newpath eq '') {
+            if($newpath eq EMPTY) {
                 next PATH;
             }
             # found source file or directory
@@ -1106,7 +1124,7 @@ sub check_html_cruft {
 sub check_js_script {
     my ($self, $entry, $name,$basename,$dirname,$lcscript) = @_;
 
-    my $firstline = '';
+    my $firstline = EMPTY;
     foreach (split /\n/, $lcscript) {
         if ($_ =~ m/^\s*$/) {
             next;
@@ -1166,7 +1184,7 @@ sub search_in_block0 {
         elsif($basename eq 'deployJava.js') {
             if($block =~ m/(?:\A|\v)\s*var\s+deployJava\s*=\s*function/xmsi) {
                 $self->check_missing_source($entry,$name,$basename,$dirname,
-                    [['(?i)\.js$','.txt'],['','']]);
+                    [['(?i)\.js$','.txt'],[EMPTY, EMPTY]]);
                 return;
             }
         }
@@ -1213,9 +1231,16 @@ sub warn_prebuilt_javascript{
     # Check for missing source.  It will check
     # for the source file in well known directories
     if($basename =~ m,\.js$,i) {
-        $self->check_missing_source($entry,$name,$basename,$dirname,
-            [['(?i)\.js$','.debug.js'],['(?i)\.js$','-debug.js'],['','']],
-            $extratext);
+        $self->check_missing_source(
+            $entry,$name,
+            $basename,
+            $dirname,
+            [
+                ['(?i)\.js$','.debug.js'],['(?i)\.js$','-debug.js'],
+                [EMPTY, EMPTY]
+            ],
+            $extratext
+        );
     } else  {
         # html file
         $self->check_missing_source($entry,$name,$basename,$dirname,
@@ -1234,7 +1259,7 @@ sub _linelength_test_maxlength {
             return ($linelength,$1,substr($block,pos($block)));
         }
     }
-    return (0,'',$block);
+    return (0, EMPTY, $block);
 }
 
 # strip C comment
@@ -1268,7 +1293,7 @@ sub detect_browserify {
     foreach my $browserifyregex ($BROWSERIFY_REGEX->all) {
         my $regex = $BROWSERIFY_REGEX->value($browserifyregex);
         if($block =~ m{$regex}) {
-            my $extra = (defined $1) ? 'code fragment:'.$1 : '';
+            my $extra = (defined $1) ? 'code fragment:'.$1 : EMPTY;
             $self->tag('source-contains-browserified-javascript',
                 $name, $extra);
             last;
@@ -1373,8 +1398,8 @@ sub check_gfdl_license_problem {
         %matchedhash
     )= @_;
 
-    my $rawgfdlsections  = $matchedhash{rawgfdlsections}  || '';
-    my $rawcontextbefore = $matchedhash{rawcontextbefore} || '';
+    my $rawgfdlsections  = $matchedhash{rawgfdlsections}  || EMPTY;
+    my $rawcontextbefore = $matchedhash{rawcontextbefore} || EMPTY;
 
     # strip punctuation
     my $gfdlsections  = _strip_punct($rawgfdlsections);
@@ -1416,7 +1441,7 @@ sub check_gfdl_license_problem {
         defined(
             $licenseproblemhash->{'license-problem-gfdl-invariants-empty'})
     ) {
-        if ($gfdlsections eq '') {
+        if ($gfdlsections eq EMPTY) {
             # lie in order to check more part
             $self->tag('license-problem-gfdl-invariants-empty', $name);
             $licenseproblemhash->{'license-problem-gfdl-invariants-empty'}= 1;
@@ -1635,7 +1660,9 @@ sub _clean_block {
     # delete double spacing now and normalize spacing
     # to space character
     $text =~ s{\s++}{ }gsm;
-    strip($text);
+
+    # trim both ends
+    $text =~ s/^\s+|\s+$//g;
 
     return $text;
 }
@@ -1652,7 +1679,9 @@ sub _strip_punct() {
     # delete double spacing now and normalize spacing
     # to space character
     $text =~ s{\s++}{ }gsm;
-    strip($text);
+
+    # trim both ends
+    $text =~ s/^\s+|\s+$//g;
 
     return $text;
 }

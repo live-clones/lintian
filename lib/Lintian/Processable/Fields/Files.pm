@@ -24,8 +24,6 @@ use v5.20;
 use warnings;
 use utf8;
 
-use Lintian::Util qw(strip);
-
 use Moo::Role;
 use namespace::clean;
 
@@ -111,7 +109,10 @@ sub files {
     local $_;
 
     for (split /\n/, $file_list) {
-        strip;
+
+        # trim both ends
+        s/^\s+|\s+$//g;
+
         next if $_ eq '';
 
         my @fields = split(/\s+/o, $_);
@@ -142,7 +143,10 @@ sub files {
         my $list = $self->field("checksums-$alg") || '';
 
         for (split /\n/, $list) {
-            strip;
+
+            # trim both ends
+            s/^\s+|\s+$//g;
+
             next if $_ eq '';
 
             my ($checksum, $size, $file) = split(/\s+/o, $_);

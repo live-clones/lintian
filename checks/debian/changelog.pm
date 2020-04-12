@@ -39,7 +39,6 @@ use Lintian::Inspect::Changelog;
 use Lintian::Inspect::Changelog::Version;
 use Lintian::Relation::Version qw(versions_gt);
 use Lintian::Spelling qw(check_spelling);
-use Lintian::Util qw(strip);
 
 use constant EMPTY => q{};
 

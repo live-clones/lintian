@@ -26,7 +26,7 @@ use autodie;
 use Carp qw(croak);
 use Path::Tiny;
 
-use Lintian::Util qw(get_dsc_info strip);
+use Lintian::Util qw(get_dsc_info);
 
 use constant EMPTY => q{};
 use constant COLON => q{:};

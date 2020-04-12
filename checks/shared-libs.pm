@@ -30,7 +30,6 @@ use List::MoreUtils qw(any none uniq);
 
 use Lintian::Data;
 use Lintian::Relation;
-use Lintian::Util qw(strip);
 
 use Moo;
 use namespace::clean;
@@ -703,7 +702,10 @@ sub installable {
             # Determine if the package had an ldconfig trigger
             open(my $fd, '<', $triggers->unpacked_path);
             while (my $line = <$fd>) {
-                strip($line);
+
+                # trim both ends
+                $line =~ s/^\s+|\s+$//g;
+
                 $line =~ tr/ \t/ /s;
                 if ($line eq 'activate-noawait ldconfig') {
                     $we_trigger_ldconfig=1;

@@ -31,8 +31,6 @@ our @EXPORT_OK= qw(split_paragraphs wrap_paragraphs dtml_to_html dtml_to_text);
 # requires wrap() function
 use Text::Wrap;
 
-use Lintian::Util qw(strip);
-
 =head1 NAME
 
 Lintian::Tag::TextUtil -- text utility functions related to tags
@@ -110,7 +108,10 @@ sub split_paragraphs {
         if (($t =~ s/^([ \t][^\n]*)\n?//o) or ($t =~ s/^()\n//o)) {
             #FLUSH;
             if ($l) {
-                strip($l);
+
+                # trim both ends
+                $l =~ s/^\s+|\s+$//g;
+
                 $l =~ s/\s++/ /go;
                 push(@o,$l);
                 undef $l;
@@ -129,7 +130,10 @@ sub split_paragraphs {
     }
     #FLUSH;
     if ($l) {
-        strip($l);
+
+        # trim both ends
+        $l =~ s/^\s+|\s+$//g;
+
         $l =~ s/\s++/ /go;
         push(@o,$l);
         undef $l;

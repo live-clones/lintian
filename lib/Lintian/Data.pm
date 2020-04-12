@@ -26,8 +26,6 @@ use autodie;
 use Carp qw(croak confess);
 use POSIX qw(ENOENT);
 
-use Lintian::Util qw(strip);
-
 our $LAZY_LOAD = 1;
 
 sub _checked_open {
@@ -157,7 +155,10 @@ sub _parse_file {
     $filename = $vendors->[$vno] . '/' . $data_name if $vno < scalar @$vendors;
     local $.;
     while (my $line = <$fd>) {
-        strip($line);
+
+        # trim both ends
+        $line =~ s/^\s+|\s+$//g;
+
         next if $line =~ m{ \A \#}xsm or $line eq '';
         if ($line =~ s/^\@//) {
             my ($op, $value) = split(m{ \s++ }xsm, $line, 2);

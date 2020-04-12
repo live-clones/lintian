@@ -37,7 +37,9 @@ use Try::Tiny;
 use Lintian::Spelling qw($known_shells_regex);
 use Lintian::Data;
 use Lintian::Relation;
-use Lintian::Util qw(safe_qx strip);
+use Lintian::Util qw(safe_qx);
+
+use constant EMPTY => q{};
 
 use Moo;
 use namespace::clean;
@@ -112,21 +114,36 @@ my $BAD_MAINT_CMD = Lintian::Data->new(
         }
         my ($incat,$inauto,$exceptinpackage,$inscript,$regexp) = @sliptline;
         $regexp =~ s/\$[{]LEADIN[}]/$LEADINSTR/;
+
+        $incat //= EMPTY;
+        $inauto //= EMPTY;
+
+        # trim both ends
+        $incat =~ s/^\s+|\s+$//g;
+        $inauto =~ s/^\s+|\s+$//g;
+
    # allow empty $exceptinpackage and set it synonymous to check in all package
-        $exceptinpackage
-          = defined($exceptinpackage) ? strip($exceptinpackage) : '';
+        $exceptinpackage //= EMPTY;
+
+        # trim both ends
+        $exceptinpackage =~ s/^\s+|\s+$//g;
+
         if (length($exceptinpackage) == 0) {
             $exceptinpackage = '\a\Z';
         }
         # allow empty $inscript and set to synonymous to check in all script
-        $inscript = defined($inscript) ? strip($inscript) : '';
+        $inscript //= EMPTY;
+
+        # trim both ends
+        $inscript =~ s/^\s+|\s+$//g;
+
         if (length($inscript) == 0) {
             $inscript = '.*';
         }
         return {
             # use not not to normalize boolean
-            'ignore_automatically_added' => not(not(strip($inauto))),
-            'in_cat_string' => not(not(strip($incat))),
+            'ignore_automatically_added' => not(not($inauto)),
+            'in_cat_string' => not(not($incat)),
             'in_package' => qr/$exceptinpackage/x,
             'in_script' => qr/$inscript/x,
             'regexp' => qr/$regexp/x,
@@ -1153,8 +1170,8 @@ m,$LEADIN(?:/usr/bin/)?dpkg\s+--compare-versions\s+.*\b\Q$ver\E(?!\.)\b,
                 # remove the leading / because it's not in the index hash
                 $divert =~ s,^/,,;
 
-                # remove any remaining leading or trailing whitespace.
-                strip($divert);
+                # trim both ends
+                $divert =~ s/^\s+|\s+$//g;
 
                 $divert = quotemeta($divert);
 

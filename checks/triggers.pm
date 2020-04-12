@@ -26,7 +26,6 @@ use utf8;
 use autodie qw(open);
 
 use Lintian::Data;
-use Lintian::Util qw(strip);
 
 use Moo;
 use namespace::clean;
@@ -61,7 +60,10 @@ sub installable {
     open(my $fd, '<', $triggers_file->unpacked_path);
     my %seen_triggers;
     while (my $line = <$fd>) {
-        strip($line);
+
+        # trim both ends
+        $line =~ s/^\s+|\s+$//g;
+
         next if $line =~ m/^(?:\s*)(?:#.*)?$/;
         my ($trigger_type, $arg) = split(m/\s++/, $line, 2);
         my $trigger_info = $TRIGGER_TYPES->value($trigger_type);

@@ -31,7 +31,7 @@ use Path::Tiny;
 use Text::Balanced qw(extract_delimited);
 use Unicode::UTF8 qw(valid_utf8 decode_utf8);
 
-use Lintian::Util qw(normalize_pkg_path strip);
+use Lintian::Util qw(normalize_pkg_path);
 
 use constant EMPTY => q{};
 use constant SPACE => q{ };
@@ -171,7 +171,7 @@ sub init_from_tar_output {
       unless all { defined } ($name, $extra);
 
     # strip relative prefix
-    $name =~ s{^\./+}{};
+    $name =~ s{^\./+}{}s;
 
     # make sure directories end with a slash, except root
     $name .= SLASH
@@ -198,7 +198,7 @@ sub init_from_tar_output {
           unless defined $linktarget;
 
         # strip relative prefix
-        $linktarget =~ s{^\./+}{};
+        $linktarget =~ s{^\./+}{}s;
 
         $self->link($linktarget);
     }
@@ -243,7 +243,9 @@ sub get_interpreter {
     open(my $fd, '<', $self->unpacked_path);
     if (read($fd, $magic, 2) && $magic eq '#!' && !eof($fd)) {
         $interpreter = <$fd>;
-        strip($interpreter);
+
+        # trim both ends
+        $interpreter =~ s/^\s+|\s+$//g;
     }
     close $fd;
 

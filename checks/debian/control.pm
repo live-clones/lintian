@@ -32,7 +32,6 @@ use Path::Tiny;
 use Lintian::Data ();
 use Lintian::Deb822Parser qw(parse_dpkg_control_string);
 use Lintian::Relation ();
-use Lintian::Util qw(strip);
 
 use Moo;
 use namespace::clean;
@@ -543,7 +542,9 @@ sub check_dev_depends {
 
     my $processable = $self->processable;
 
-    strip($depends);
+    # trim both ends
+    $depends =~ s/^\s+|\s+$//g;
+
     for my $target (@packages) {
         next
           unless ($target =~ /^lib[\w.+-]+\d/

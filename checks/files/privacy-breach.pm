@@ -26,9 +26,10 @@ use utf8;
 use autodie;
 
 use Lintian::SlidingWindow;
-use Lintian::Util qw(strip);
 
 use constant BLOCKSIZE => 16_384;
+
+use constant EMPTY => q{};
 
 use Moo;
 use namespace::clean;
@@ -40,7 +41,12 @@ my $PRIVACY_BREAKER_WEBSITES= Lintian::Data->new(
     qr/\s*\~\~/o,
     sub {
         my ($regex, $tag, $suggest) = split(/\s*\~\~\s*/, $_[1], 3);
-        $tag = defined($tag) ? strip($tag) : '';
+
+        $tag //= EMPTY;
+
+        # trim both ends
+        $tag =~ s/^\s+|\s+$//g;
+
         if (length($tag) == 0) {
             $tag = $_[0];
         }
