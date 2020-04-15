@@ -572,7 +572,14 @@ sub unpacked_path {
     croak 'No base directory'
       unless length $basedir;
 
-    return path($basedir)->child($self->name)->stringify;
+    my $unpacked = path($basedir)->child($self->name)->stringify;
+
+    # bug in perl, file operator should not care but does
+    # https://github.com/Perl/perl5/issues/10550
+    # also, https://github.com/Perl/perl5/issues/9674
+    utf8::downgrade $unpacked;
+
+    return $unpacked;
 }
 
 =item is_open_ok
