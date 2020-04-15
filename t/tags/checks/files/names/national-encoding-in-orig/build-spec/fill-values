@@ -1,0 +1,3 @@
+Skeleton: upload-non-native
+Testname: national-encoding-in-orig
+Description: File name in orig.tar.gz is not valid UTF-8
