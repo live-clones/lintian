@@ -71,7 +71,7 @@ sub files {
           and $file->size == 0;
 
     } elsif (!valid_utf8($file->name)) {
-        $self->tag('file-name-is-not-valid-UTF-8', $file->name);
+        $self->tag('shipped-file-without-utf8-name', $file->name);
     }
 
     return;
