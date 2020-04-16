@@ -23,6 +23,7 @@ use utf8;
 use autodie;
 
 use Path::Tiny;
+use Unicode::UTF8 qw(valid_utf8 decode_utf8);
 
 use Lintian::Util qw(get_file_checksum);
 
@@ -93,23 +94,15 @@ sub changelog {
           unless -f $dch && !-l $dch;
     }
 
-    my ($checksum, $changelog);
+    my $bytes = path($dch)->slurp;
+    return
+      unless valid_utf8($bytes);
 
-    my $shared = $self->shared_storage;
-    if (defined $shared) {
+    # check for UTF-8
+    my $contents = decode_utf8($bytes);
 
-        $checksum = get_file_checksum('sha1', $dch);
-        $changelog = $shared->{'changelog'}{$checksum};
-    }
-
-    unless ($changelog) {
-        my $contents = path($dch)->slurp;
-        $changelog = Lintian::Inspect::Changelog->new;
-        $changelog->parse($contents);
-
-        $shared->{'changelog'}{$checksum} = $changelog
-          if defined $shared;
-    }
+    my $changelog = Lintian::Inspect::Changelog->new;
+    $changelog->parse($contents);
 
     $self->saved_changelog($changelog);
 

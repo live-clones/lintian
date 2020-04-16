@@ -167,8 +167,9 @@ sub installable {
                 && $known_obsolete_emacs{$alternatives[0][0]});
 
             for my $part_d (@alternatives) {
-                my ($d_pkg, undef, $d_version, undef, undef, $rest,
-                    $part_d_orig)= @$part_d;
+                my ($d_pkg, $d_march, $d_version, undef, undef, $rest,
+                    $part_d_orig)
+                  = @$part_d;
 
                 $self->tag('invalid-versioned-provides', $part_d_orig)
                   if ( $field eq 'provides'
@@ -197,6 +198,7 @@ sub installable {
 
                 $self->tag('package-relation-with-self',"$field: $part_d_orig")
                   if ($pkg eq $d_pkg)
+                  && (!$d_march)
                   && ( $field ne 'conflicts'
                     && $field ne 'replaces'
                     && $field ne 'provides');

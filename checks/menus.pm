@@ -28,7 +28,6 @@ use utf8;
 use autodie;
 
 use Path::Tiny;
-use Unicode::UTF8 qw(valid_utf8 decode_utf8);
 
 use Lintian::Data;
 use Lintian::Spelling
@@ -264,13 +263,12 @@ sub check_doc_base_file {
 
     my $dbfile = $dbpath->basename;
 
-    my $bytes = path($dbpath->unpacked_path)->slurp;
-    unless (valid_utf8($bytes)) {
+    unless ($dbpath->is_valid_utf8) {
         $self->tag('doc-base-file-uses-obsolete-national-encoding', $dbfile);
         return;
     }
 
-    my $contents = decode_utf8($bytes);
+    my $contents = $dbpath->decoded_utf8;
     my @lines = split(/\n/, $contents);
 
     my $knownfields = \%KNOWN_DOCBASE_MAIN_FIELDS;

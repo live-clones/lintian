@@ -1166,27 +1166,34 @@ sub unescape_md5sum_filename {
 sub read_md5sums {
     my ($text) = @_;
 
-    # make a local copy
-    my $buffer = $text;
-
     my %checksums;
     my @errors;
 
-  TRY_AGAIN:
+    my @lines = split(/\n/, $text);
 
     # start with checksum; processing style inspired by IO::Async::Stream
-    while ($buffer =~ s/^((?:\\)?\S{32}) [ *]//) {
+    while (defined(my $line = shift @lines)) {
+
+        next
+          unless length $line;
+
+        # make sure there are two spaces in between
+        $line =~ /^((?:\\)?\S{32})  (.*)$/;
 
         my $checksum = $1;
+        my $string = $2;
+
+        unless (length $checksum && length $string) {
+
+            push(@errors, "Odd text: $line");
+            next;
+        }
+
         my $problematic = 0;
 
         # leading slash in checksum indicates an escaped name
         $problematic = 1
           if $checksum =~ s{^\\}{};
-
-        # read up until the next newline
-        $buffer =~ s/^([^\n]+)\n//;
-        my $string = $1;
 
         my $path = unescape_md5sum_filename($string, $problematic);
 
@@ -1194,17 +1201,6 @@ sub read_md5sums {
           unless length $path;
 
         $checksums{$path} = $checksum;
-    }
-
-    if ($buffer =~ s/([^\n]*)(?:\n|\z)//) {
-        my $unreadable = $1;
-
-        # this skips empty lines
-        push(@errors, "Odd text: $unreadable")
-          if length $unreadable;
-
-        goto TRY_AGAIN
-          if length $buffer;
     }
 
     return (\%checksums, \@errors);

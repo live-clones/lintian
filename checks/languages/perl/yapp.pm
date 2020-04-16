@@ -44,7 +44,7 @@ sub source {
         next
           unless $file->is_open_ok;
 
-        my $contents = $file->slurp;
+        my $contents = $file->bytes;
 
         $self->tag('source-contains-prebuilt-yapp-parser', $file->name)
           if $contents

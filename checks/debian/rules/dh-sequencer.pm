@@ -39,7 +39,7 @@ sub source {
     return
       unless $rules;
 
-    my $contents = $rules->slurp;
+    my $contents = $rules->bytes;
 
     my $plain = qr/\$\@/;
     my $curly = qr/\$\{\@\}/;

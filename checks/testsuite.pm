@@ -25,7 +25,6 @@ use utf8;
 use autodie;
 
 use Path::Tiny;
-use Unicode::UTF8 qw(valid_utf8 decode_utf8);
 
 use Lintian::Data;
 use Lintian::Deb822Parser qw(
@@ -49,6 +48,9 @@ my $KNOWN_RESTRICTIONS = Lintian::Data->new('testsuite/known-restrictions');
 my $KNOWN_OBSOLETE_RESTRICTIONS
   = Lintian::Data->new('testsuite/known-obsolete-restrictions');
 my $KNOWN_TESTSUITES = Lintian::Data->new('testsuite/known-testsuites');
+
+our $PYTHON3_ALL_DEPEND
+  = 'python3-all:any | python3-all-dev:any | python3-all-dbg:any';
 
 my %KNOWN_SPECIAL_DEPENDS = map { $_ => 1 } qw(
   @
@@ -85,14 +87,12 @@ sub source {
         if (not $control->is_regular_file) {
             die 'debian tests control is not a regular file';
 
-        } elsif ($control->is_open_ok) {
-            my $bytes = path($control->unpacked_path)->slurp;
-            unless (valid_utf8($bytes)) {
-                $self->tag('debian-tests-control-uses-national-encoding');
-            } else {
-                my $contents = decode_utf8($bytes);
-                $self->check_control_contents($contents);
-            }
+        } elsif ($control->is_valid_utf8) {
+            my $contents = $control->decoded_utf8;
+            $self->check_control_contents($contents);
+
+        } else {
+            $self->tag('debian-tests-control-uses-national-encoding');
         }
 
         $self->tag('unnecessary-testsuite-autopkgtest-field')
@@ -260,7 +260,7 @@ sub check_test_file {
                 'runtime-test-file-uses-supported-python-versions-without-python-all-build-depends',
                 $path, "$1", "(line $.)"
             ) if $x =~ m/(py3versions\s+([\w\-\s]*--supported|-\w*s\w*))/
-              and not $processable->relation('build-depends-all')->implies('python3-all');
+              and not $processable->relation('build-depends-all')->implies($PYTHON3_ALL_DEPEND);
             #>>>
         }
         close($fd);
