@@ -27,7 +27,6 @@ use warnings;
 use utf8;
 use autodie;
 
-use Encode qw(decode);
 use List::Compare;
 use List::MoreUtils qw(any none);
 use Path::Tiny;
@@ -113,21 +112,16 @@ sub source {
         $self->tag('debian-copyright-is-symlink');
     }
 
-    if ($file->is_open_ok) {
+    unless ($file->is_valid_utf8) {
 
-        my $bytes = path($file->unpacked_path)->slurp;
-        unless (valid_utf8($bytes)) {
-
-            $self->tag(
-                'debian-copyright-file-uses-obsolete-national-encoding');
-            return;
-        }
-
-        my $contents = decode_utf8($bytes);
-
-        $self->check_dep5_copyright($contents);
-        $self->check_apache_notice_files($contents);
+        $self->tag('debian-copyright-file-uses-obsolete-national-encoding');
+        return;
     }
+
+    my $contents = $file->decoded_utf8;
+
+    $self->check_dep5_copyright($contents);
+    $self->check_apache_notice_files($contents);
 
     return;
 }
@@ -203,7 +197,7 @@ sub check_apache_notice_files {
     my @notice_files = grep {
               $_->basename =~ m/^NOTICE(\.txt)?$/
           and $_->is_open_ok
-          and $_->slurp =~ m/apache/i
+          and $_->bytes =~ m/apache/i
     } $self->processable->patched->sorted_list;
     return
       unless @notice_files;

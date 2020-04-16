@@ -113,7 +113,7 @@ sub files {
 
                 next
                   if $file->basename =~ m{^README}xi
-                  and $file->slurp =~ m{this directory}xi;
+                  and $file->bytes =~ m{this directory}xi;
 
                 $self->tag(
                     'package-contains-documentation-outside-usr-share-doc',

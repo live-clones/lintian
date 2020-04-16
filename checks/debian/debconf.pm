@@ -26,7 +26,6 @@ use utf8;
 use autodie;
 
 use Path::Tiny;
-use Unicode::UTF8 qw (valid_utf8 decode_utf8);
 
 use Lintian::Deb822Parser qw(parse_dpkg_control_string :constants);
 use Lintian::Relation;
@@ -90,14 +89,13 @@ sub source {
 
         if ($templates_file && $templates_file->is_open_ok) {
 
-            my $bytes = path($templates_file->unpacked_path)->slurp;
-            unless (valid_utf8($bytes)) {
+            unless ($templates_file->is_valid_utf8) {
                 $self->tag('national-encoding-in-debconf-template',
                     $templates_file->name);
                 next;
             }
 
-            my $contents = decode_utf8($bytes);
+            my $contents = $templates_file->decoded_utf8;
 
             my @templates;
             eval {
@@ -205,9 +203,9 @@ sub installable {
     my (@templates, %potential_db_abuse, @templates_seen);
 
     if ($seentemplates) {
-        my $bytes = path($ctrl_templates->unpacked_path)->slurp;
-        if (valid_utf8($bytes)) {
-            my $contents = decode_utf8($bytes);
+
+        if ($ctrl_templates->is_valid_utf8) {
+            my $contents = $ctrl_templates->decoded_utf8;
             eval {
                 # $seentemplates (above) will be false if $ctrl_templates is a
                 # symlink or not a file, so this should be safe without

@@ -88,7 +88,8 @@ sub binary {
     return
       if $control->size == 0;
 
-    my $text = $control->slurp;
+    my $text = $control->bytes;
+
     my ($md5sums, $errors) = read_md5sums($text);
 
     $self->tag('malformed-md5sums-control-file', $_)for @{$errors};

@@ -69,7 +69,7 @@ sub files {
       if $file->name =~ m,^usr/lib/R/.*/DESCRIPTION,
       && !$file->is_dir
       && $self->package =~ /^r-(?:cran|bioc|other)-/
-      && $file->slurp =~ m/NeedsCompilation: no/m
+      && $file->bytes =~ m/NeedsCompilation: no/m
       && $self->architecture ne 'all';
 
     return;

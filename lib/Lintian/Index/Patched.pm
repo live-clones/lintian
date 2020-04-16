@@ -164,22 +164,28 @@ sub unpack {
     my $pathpattern = qr,[^\0]*,;
 
     my %all;
-    while (
-        $output
-        =~ s/^($permissionspattern)\ ($sizepattern)\ ($datepattern)\+($timepattern)\0
-                  ($pathpattern)\0
-                  ($pathpattern)\0//xs
-    ) {
+
+    $output =~ s/\0$//;
+
+    my @lines = split(/\0/, $output, -1);
+    die 'Did not get a multiple of three lines from find.'
+      unless @lines % 3 == 0;
+
+    while(defined(my $first = shift @lines)) {
 
         my $entry = Lintian::File::Path->new;
+
+        $first
+          =~ /^($permissionspattern)\ ($sizepattern)\ ($datepattern)\+($timepattern)$/s;
 
         $entry->perm($1);
         $entry->size($2);
         $entry->date($3);
         $entry->time($4);
 
-        my $name = $5;
-        my $linktarget = $6;
+        my $name = shift @lines;
+
+        my $linktarget = shift @lines;
 
         # for non-links, string is empty
         $entry->link($linktarget)
@@ -200,9 +206,6 @@ sub unpack {
 
         $all{$entry->name} = $entry;
     }
-
-    die 'Could not parse output from find command'
-      if length $output;
 
     $self->catalog(\%all);
 

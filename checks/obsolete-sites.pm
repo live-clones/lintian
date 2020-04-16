@@ -69,7 +69,7 @@ sub search_for_obsolete_sites {
 
     if (defined($dfile) and $dfile->is_regular_file and $dfile->is_open_ok) {
 
-        my $dcontents = $dfile->slurp;
+        my $dcontents = $dfile->bytes;
 
         # Strip comments
         $dcontents =~ s/^\s*#.*$//gm;

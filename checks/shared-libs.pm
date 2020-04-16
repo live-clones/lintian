@@ -672,7 +672,7 @@ sub installable {
     # 6th step: check pre- and post- control files
     if (my $preinst = $processable->control->resolve_path('preinst')) {
         if ($preinst->is_open_ok) {
-            if ($preinst->slurp =~ m/^[^\#]*\bldconfig\b/m) {
+            if ($preinst->bytes =~ m/^[^\#]*\bldconfig\b/m) {
                 $self->tag(
                     'maintscript-calls-ldconfig', 'preinst'
                       # Assume it is needed if glibc does it
@@ -685,7 +685,7 @@ sub installable {
     if (my $postinst = $processable->control->resolve_path('postinst')) {
         if ($postinst->is_open_ok) {
             # Decide if we call ldconfig
-            if ($postinst->slurp =~ m/^[^\#]*\bldconfig\b/m) {
+            if ($postinst->bytes =~ m/^[^\#]*\bldconfig\b/m) {
                 if ($type eq 'udeb') {
                     $self->tag('udeb-postinst-must-not-call-ldconfig');
                 } else {
@@ -732,7 +732,7 @@ sub installable {
 
     if (my $prerm = $processable->control->resolve_path('prerm')) {
         if ($prerm->is_open_ok) {
-            if ($prerm->slurp =~ m/^[^\#]*\bldconfig\b/m) {
+            if ($prerm->bytes =~ m/^[^\#]*\bldconfig\b/m) {
                 $self->tag(
                     'maintscript-calls-ldconfig', 'prerm'
                       # Assume it is needed if glibc does it
@@ -743,7 +743,7 @@ sub installable {
 
     if (my $postrm = $processable->control->resolve_path('postrm')) {
         if ($postrm->is_open_ok) {
-            my $contents = $postrm->slurp;
+            my $contents = $postrm->bytes;
 
             # Decide if we call ldconfig
             if ($contents =~ m/^[^\#]*\bldconfig\b/m) {

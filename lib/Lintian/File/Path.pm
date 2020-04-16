@@ -29,6 +29,7 @@ use Carp qw(croak confess);
 use List::MoreUtils qw(all);
 use Path::Tiny;
 use Text::Balanced qw(extract_delimited);
+use Unicode::UTF8 qw(valid_utf8 decode_utf8);
 
 use Lintian::Util qw(normalize_pkg_path strip);
 
@@ -644,23 +645,6 @@ sub _check_open {
     return 1;
 }
 
-=item slurp
-
-Return the file contents as a scalar.
-
-This method may fail for the same reasons as L</open([LAYER])>.
-
-=cut
-
-sub slurp {
-    my ($self) = @_;
-
-    return
-      unless $self->is_open_ok;
-
-    return path($self->unpacked_path)->slurp;
-}
-
 =item follow
 
 Return dereferenced link if applicable
@@ -1096,6 +1080,56 @@ has parent_dir => (
         return $self->index->lookup($self->dirname);
     });
 has dereferenced => (is => 'rw');
+
+=item bytes
+
+Returns verbatim file contents as a scalar.
+
+=item is_valid_utf8
+
+Boolean true if file contents are valid UTF-8.
+
+=item decoded_utf8
+
+Returns a decoded, wide-character string if file contents are valid UTF-8.
+
+=cut
+
+has bytes => (
+    is => 'rw',
+    lazy => 1,
+    default => sub {
+        my ($self) = @_;
+
+        return EMPTY
+          unless $self->is_open_ok;
+
+        my $bytes = path($self->unpacked_path)->slurp;
+
+        return $bytes;
+    });
+has is_valid_utf8 => (
+    is => 'rw',
+    lazy => 1,
+    default => sub {
+        my ($self) = @_;
+
+        return 0
+          unless defined $self->bytes;
+
+        return valid_utf8($self->bytes);
+    });
+has decoded_utf8 => (
+    is => 'rw',
+    lazy => 1,
+    default => sub {
+        my ($self) = @_;
+
+        return EMPTY
+          unless $self->is_valid_utf8;
+
+        return decode_utf8($self->bytes);
+    });
 
 ### OVERLOADED OPERATORS ###
 
