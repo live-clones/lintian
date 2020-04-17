@@ -1,8 +1,31 @@
-lintian (2.65.0+git) UNRELEASED; urgency=medium
+lintian (2.66.0) unstable; urgency=medium
 
-  * WIP (generated upon release).
+  * Summary of tag changes:
+    + Added:
+      - patched-file-without-utf8-name
+      - upstream-file-without-utf8-name
+    + Renamed:
+      - file-name-is-not-valid-UTF-8 ->
+          shipped-file-without-utf8-name
 
- -- Chris Lamb <lamby@debian.org>  Fri, 10 Apr 2020 11:26:11 +0100
+  [ Chris Lamb ]
+  * Build-Depends-Arch and Build-Depends-Indep do not imply each other so
+    don't warn about "duplicate" dependencies in this case.
+    (Closes: #956368)
+
+  [ Felix Lechner ]
+  * Warn about invalid UTF-8 file names in package sources.
+    (Closes: #956723)
+  * Downgrade internal uft8 flags on all file system paths delivered by
+    File::Path. (Re: #956233, #956723)
+  * Rename shipped-file-without-utf8-name from
+    file-name-is-not-valid-UTF-8. (Re: #956723)
+
+  [ Sandro Tosi ]
+  * Switch all checks, tests and tags over to use python3-numpy away from
+    the legacy Python 2.x version.
+
+ -- Chris Lamb <lamby@debian.org>  Fri, 17 Apr 2020 17:35:15 +0000
 
 lintian (2.65.0) unstable; urgency=medium
 
