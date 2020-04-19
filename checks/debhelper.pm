@@ -210,6 +210,9 @@ sub source {
             $dhcompatvalue = $1;
             # one can export and then set the value:
             $level = $1 if ($level);
+        } elsif (/^[^:]*override\s+(dh_[^:]*):/) {
+            $self->tag('typo-in-debhelper-override-target',
+                "override $1", '->', "override_$1","(line $.)");
         } elsif (/^([^:]*override_dh_[^:]*):/) {
             my $targets = $1;
             $needbuilddepends = 1;

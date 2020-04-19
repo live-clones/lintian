@@ -21,6 +21,9 @@ override_dh_testdirs: override_dh_ucfs
 # distance of "5" to "dh_override_build")
 override_dh_build:
 
+# Missing space
+override dh_install:
+
 # Good
 .PHONY: override_dh_ucfs
 override_dh_install:
