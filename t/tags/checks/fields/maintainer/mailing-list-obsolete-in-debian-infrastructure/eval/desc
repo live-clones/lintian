@@ -1,0 +1,2 @@
+Testname: mailing-list-obsolete-in-debian-infrastructure
+Check: fields/maintainer
