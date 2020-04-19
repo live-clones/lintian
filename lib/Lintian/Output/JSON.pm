@@ -111,9 +111,15 @@ sub issue_tags {
     $encoder->pretty;
     my $json = $encoder->encode(\%output);
 
-    # avoid all PerlIO layers (such as utf8)
-    open(my $RAW, '>&:raw', *STDOUT);
+    # duplicate STDOUT
+    open(my $RAW, '>&', *STDOUT) or die 'Cannot dup STDOUT';
+
+    # avoid all PerlIO layers such as utf8
+    binmode($RAW, ':raw');
+
+    # output encoded JSON to the raw handle
     print {$RAW} $json;
+
     close $RAW;
 
     return;

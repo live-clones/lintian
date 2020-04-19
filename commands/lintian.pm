@@ -569,7 +569,7 @@ sub main {
     STDOUT->autoflush;
     STDERR->autoflush;
 
-    binmode(STDOUT, ':encoding(UTF-8)');
+    # layers are additive; STDOUT already had UTF-8 from frontend/dplint
     binmode(STDERR, ':encoding(UTF-8)');
 
     # Globally ignore SIGPIPE.  We'd rather deal with error returns from write
