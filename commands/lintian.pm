@@ -543,24 +543,6 @@ my %opthash = (
     'exp-output:s' => \$experimental_output_opts,
 );
 
-# dplint has a similar wrapper; but it uses a different exit code
-# for uncaught exceptions (compared to what lintian documents).
-sub _main {
-    eval {_main();};
-    # Cocerce the error to a string
-    if (my $err = "$@") {
-        $err =~ s/\n//;
-        # Special-case the message from the signal handler as it is not
-        # entirely unexpected.
-        if ($err eq 'N: Interrupted') {
-            fatal_error($err);
-        }
-        print STDERR "$err\n";
-        fatal_error('Uncaught exception');
-    }
-    fatal_error('Assertion error: _main returned !?');
-}
-
 sub main {
 
     $0 = join(' ', $0, @ARGV);
