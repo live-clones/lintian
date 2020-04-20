@@ -101,11 +101,7 @@ sub source {
     # exclude quilt directory
     my @maintainer_fault = grep { !m{^.pc/} } @non_utf8;
 
-    # lintian's own packaging presently triggers this tag due to the test case
-    unless ($self->package eq 'lintian') {
-
-        $self->tag('patched-file-without-utf8-name', $_) for @maintainer_fault;
-    }
+    $self->tag('patched-file-without-utf8-name', $_) for @maintainer_fault;
 
     return;
 }
