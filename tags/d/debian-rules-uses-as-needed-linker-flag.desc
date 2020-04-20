@@ -1,0 +1,9 @@
+Tag: debian-rules-uses-as-needed-linker-flag
+Severity: warning
+Check: debian/rules
+Info: The <tt>debian/rules</tt> file for this package appears to use
+ <tt>-Wl,--as-needed</tt> linker flag.
+ .
+ The bullseye toolchain defaults to linking with <tt>as-needed</tt> and
+ therefore it should no longer be necessary to inject this into the
+ build process.
