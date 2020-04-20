@@ -9,4 +9,4 @@ export DEB_GOODFLAGS_MAINT_APPEND = -lprefix -Wl,--as-needed -Wl,--no-as-needed 
 	dh $@
 
 override_dh_autoreconf:
-	-dh_autoreconf .* --as-needed
+	-dh_autoreconf --as-needed
