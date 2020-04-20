@@ -101,7 +101,13 @@ sub source {
     # exclude quilt directory
     my @maintainer_fault = grep { !m{^.pc/} } @non_utf8;
 
-    $self->tag('patched-file-without-utf8-name', $_) for @maintainer_fault;
+    if ($self->processable->native) {
+        $self->tag('native-source-file-without-utf8-name', $_)
+          for @maintainer_fault;
+
+    } else {
+        $self->tag('patched-file-without-utf8-name', $_) for @maintainer_fault;
+    }
 
     return;
 }
