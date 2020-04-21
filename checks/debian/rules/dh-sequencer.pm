@@ -43,8 +43,9 @@ sub source {
 
     my $plain = qr/\$\@/;
     my $curly = qr/\$\{\@\}/;
+    my $asterisk = qr/\$\*/;
     my $parentheses = qr/\$\(\@\)/;
-    my $rule_altern = qr/(?:$plain|$curly|$parentheses)/;
+    my $rule_altern = qr/(?:$plain|$curly|$asterisk|$parentheses)/;
     my $rule_target = qr/(?:$rule_altern|'$rule_altern'|"$rule_altern")/;
 
     $self->tag('no-dh-sequencer')
