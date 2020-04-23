@@ -1,0 +1,3 @@
+Skeleton: upload-non-native
+Testname: national-encoding-in-diff
+Description: File name created by maintainer patch is not valid UTF-8

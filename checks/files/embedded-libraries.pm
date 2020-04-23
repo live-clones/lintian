@@ -26,7 +26,6 @@ use utf8;
 use autodie;
 
 use Lintian::SlidingWindow;
-use Lintian::Util qw(strip);
 
 use Moo;
 use namespace::clean;
@@ -42,15 +41,27 @@ sub load_file_package_list_mapping {
         $datafile,
         qr/\s*\~\~\s*/,
         sub {
-            my $pkg = strip($_[0]);
+            my ($pkg) = @_;
+
+            # trim both ends
+            $pkg =~ s/^\s+|\s+$//g;
+
             my $pkg_regexp = qr/^$pkg$/x;
             my @sliptline = split(/\s*\~\~/, $_[1], 2);
-            my $file_regexp = strip($sliptline[0]);
+            my $file_regexp = $sliptline[0];
+
+            # trim both ends
+            $file_regexp =~ s/^\s+|\s+$//g;
+
             $file_regexp =~ s/\$EXT/$ext/g;
             my $recontents = $reinside;
 
             if (scalar(@sliptline) == 2) {
-                my $contents = strip($sliptline[1]);
+                my $contents = $sliptline[1];
+
+                # trim both ends
+                $contents =~ s/^\s+|\s+$//g;
+
                 $recontents = qr/$contents/;
             }
 

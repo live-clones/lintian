@@ -562,13 +562,22 @@ sub source {
     }
 
     # Check for duplicates.
-    my $build_all = $processable->relation('build-depends-all');
-    my @dups = $build_all->duplicates;
-    for my $dup (@dups) {
-        $self->tag('package-has-a-duplicate-build-relation',join(', ', @$dup));
+    my @to_check = (
+        ['build-depends'],
+        ['build-depends', 'build-depends-indep'],
+        ['build-depends', 'build-depends-arch']);
+    foreach my $fields (@to_check) {
+        my $relation
+          = Lintian::Relation->and(map { $processable->relation($_) }@$fields);
+        my @dups = $relation->duplicates;
+        for my $dup (@dups) {
+            $self->tag('package-has-a-duplicate-build-relation',
+                join(', ', @$dup));
+        }
     }
 
     # Make sure build dependencies and conflicts are consistent.
+    my $build_all = $processable->relation('build-depends-all');
     for (
         $depend{'build-conflicts'},
         $depend{'build-conflicts-indep'},

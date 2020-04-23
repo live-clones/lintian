@@ -24,8 +24,6 @@ use autodie;
 
 use Path::Tiny;
 
-use Lintian::Util qw(rstrip);
-
 use constant EMPTY => q{};
 
 use Moo::Role;

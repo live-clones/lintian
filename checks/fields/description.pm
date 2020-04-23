@@ -29,7 +29,6 @@ use Encode qw(decode);
 
 use Lintian::Data;
 use Lintian::Spelling qw(check_spelling check_spelling_picky);
-use Lintian::Util qw(strip);
 
 # Compared to a lower-case string, so it must be all lower-case
 use constant DH_MAKE_PERL_TEMPLATE => 'this description was'
@@ -77,7 +76,11 @@ sub installable {
         # continuations may have leading whitespace.  Therefore we
         # have to strip $full_description to restore this property,
         # when we use it as a fall-back value of the synopsis.
-        $synopsis = strip($full_description);
+        $synopsis = $full_description;
+
+        # trim both ends
+        $synopsis =~ s/^\s+|\s+$//g;
+
         $extended = EMPTY;
     }
 

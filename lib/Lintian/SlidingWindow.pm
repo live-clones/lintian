@@ -25,8 +25,6 @@ use autodie;
 
 use Carp qw(croak);
 
-use Lintian::Util qw(strip);
-
 sub new {
     my ($class, $handle, $blocksub, $blocksize) = @_;
 

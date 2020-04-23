@@ -28,7 +28,6 @@ use Exporter qw(import);
 use Email::Valid;
 
 use Lintian::Data;
-use Lintian::Util qw(strip);
 
 our $KNOWN_BOUNCE_ADDRESSES = Lintian::Data->new('fields/bounce-addresses');
 

@@ -27,8 +27,6 @@ use autodie;
 
 use Path::Tiny;
 
-use Lintian::Util qw(rstrip);
-
 use Moo;
 use namespace::clean;
 
@@ -65,7 +63,8 @@ sub installable {
                 next;
             }
 
-            rstrip;
+            # trim right
+            s/\s+$//;
 
             # skip empty lines
             next

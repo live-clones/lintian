@@ -34,7 +34,7 @@ use Lintian::Deb822Parser qw(parse_dpkg_control_string);
 use Lintian::Inspect::Changelog::Version;
 use Lintian::Relation;
 use Lintian::Util
-  qw(get_file_checksum open_gz $PKGNAME_REGEX $PKGREPACK_REGEX strip);
+  qw(get_file_checksum open_gz $PKGNAME_REGEX $PKGREPACK_REGEX);
 
 use constant EMPTY => q{};
 

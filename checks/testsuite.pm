@@ -32,7 +32,6 @@ use Lintian::Deb822Parser qw(
   parse_dpkg_control_string
 );
 use Lintian::Relation;
-use Lintian::Util qw(strip);
 
 use Moo;
 use namespace::clean;
@@ -174,8 +173,12 @@ sub check_control_paragraph {
     }
 
     if (exists $paragraph->{'features'}) {
-        my $features = strip($paragraph->{'features'});
+        my $features = $paragraph->{'features'};
         for my $feature (split(/\s*,\s*|\s+/ms, $features)) {
+
+            next
+              unless length $feature;
+
             if (not exists $KNOWN_FEATURES{$feature}
                 and $feature !~ m/^test-name=\S+/) {
                 $self->tag(
@@ -187,8 +190,10 @@ sub check_control_paragraph {
     }
 
     if (exists $paragraph->{'restrictions'}) {
-        my $restrictions = strip($paragraph->{'restrictions'});
+        my $restrictions = $paragraph->{'restrictions'};
         for my $restriction (split(/\s*,\s*|\s+/ms, $restrictions)) {
+            next
+              unless length $restriction;
             $self->tag(
                 'unknown-runtime-tests-restriction', $restriction,
                 'paragraph starting at line', $line
@@ -200,17 +205,23 @@ sub check_control_paragraph {
     }
 
     if (exists $paragraph->{'tests'}) {
-        my $tests = strip($paragraph->{'tests'});
+        my $tests = $paragraph->{'tests'};
         my $directory = 'debian/tests';
         if (exists $paragraph->{'tests-directory'}) {
             $directory = $paragraph->{'tests-directory'};
         }
         for my $testname (split(/\s*,\s*|\s+/ms, $tests)) {
+
+            next
+              unless length $testname;
+
             $self->check_test_file($directory, $testname, $line);
         }
     }
     if (exists($paragraph->{'depends'})) {
-        my $dep = Lintian::Relation->new(strip($paragraph->{'depends'}));
+        my $depends = $paragraph->{'depends'};
+        $depends =~ s/^\s+|\s+$//g;
+        my $dep = Lintian::Relation->new($depends);
         for my $unparsable ($dep->unparsable_predicates) {
             # @ is not a valid predicate in general, but autopkgtests
             # allows it.

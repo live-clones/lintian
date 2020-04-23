@@ -45,7 +45,7 @@ use Lintian::Internal::FrontendUtil
 use Lintian::Output::Standard;
 use Lintian::Pool;
 use Lintian::Profile;
-use Lintian::Util qw(strip safe_qx);
+use Lintian::Util qw(safe_qx);
 
 # only in GNOME; need original environment
 my $interactive = -t STDIN && (-t STDOUT || !(-f STDOUT || -c STDOUT));
@@ -437,7 +437,10 @@ sub cfg_display_level {
         }
 
         return if @display_level;
-        strip($val);
+
+        # trim both ends
+        $val =~ s/^\s+|\s+$//g;
+
         foreach my $dl (split m/\s++/, $val) {
             record_display_level('display-level', $dl);
         }

@@ -26,8 +26,6 @@ use Archive::Zip qw( :ERROR_CODES :CONSTANTS );
 use Cwd;
 use Path::Tiny;
 
-use Lintian::Util qw(rstrip);
-
 use constant EMPTY => q{};
 use constant NEWLINE => qq{\n};
 use constant SPACE => q{ };
@@ -145,7 +143,10 @@ sub parse_jar {
     my $errorhandler = sub {
         my ($err) = @_;
         $err =~ s/\r?\n/ /g;
-        rstrip($err);
+
+        # trim right
+        $err =~ s/\s+$//;
+
         push(@lines, "-- ERROR: $err");
     };
     my $oldhandler = Archive::Zip::setErrorHandler($errorhandler);

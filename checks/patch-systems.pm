@@ -29,7 +29,6 @@ use autodie;
 use List::MoreUtils qw(none);
 
 use Lintian::Spelling qw(check_spelling);
-use Lintian::Util qw(strip);
 
 use constant PATCH_DESC_TEMPLATE => 'TODO: Put a short summary on'
   . ' the line above and replace this paragraph';
@@ -174,7 +173,10 @@ sub source {
                 if (rindex($patch,"\n") < 0) {
                     $self->tag('quilt-series-without-trailing-newline');
                 }
-                strip($patch); # Strip leading/trailing spaces
+
+                # trim both ends
+                $patch =~ s/^\s+|\s+$//g;
+
                 next if $patch eq '';
                 if ($patch =~ m{^(\S+)\s+(\S.*)$}) {
                     my $patch_options;

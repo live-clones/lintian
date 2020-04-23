@@ -25,7 +25,7 @@ use autodie;
 use Path::Tiny;
 
 use Lintian::Architecture qw(:all);
-use Lintian::Util qw($PKGNAME_REGEX strip gunzip_file is_ancestor_of);
+use Lintian::Util qw($PKGNAME_REGEX gunzip_file is_ancestor_of);
 
 use constant EMPTY => q{};
 
@@ -139,7 +139,9 @@ sub overrides {
     while (my $line = <$fh>) {
 
         my $processed = $line;
-        strip $processed;
+
+        # trim both ends
+        $processed =~ s/^\s+|\s+$//g;
 
         if ($processed eq EMPTY) {
             # Throw away comments, as they are not attached to a tag

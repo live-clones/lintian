@@ -22,8 +22,6 @@ use warnings;
 use utf8;
 use autodie;
 
-use Lintian::Util qw(rstrip);
-
 use constant EMPTY => q{};
 
 use Moo::Role;
@@ -74,7 +72,9 @@ sub conffiles {
 
         # dpkg strips whitespace (using isspace) from the right hand
         # side of the file name.
-        rstrip($absolute);
+
+        # trim right
+        $absolute =~ s/\s+$//;
 
         next
           if $absolute eq EMPTY;
