@@ -75,6 +75,7 @@ sub source {
     $bdepends = $processable->relation('build-depends-all');
     my $seen_dh = 0;
     my $seen_dh_dynamic = 0;
+    my $seen_dh_systemd = 0;
     my $seen_dh_parallel = 0;
     my %seen = (
         'python2' => 0,
@@ -176,6 +177,7 @@ sub source {
                         );
                         $uses_autotools_dev_dh = 1;
                     }
+                    $seen_dh_systemd = $. if $addon eq 'systemd';
                     $self->tag(
                         'dh-quilt-addon-but-quilt-source-format',
                         "dh ... --with ${orig_addon}",
@@ -418,6 +420,11 @@ sub source {
         'dh ... --parallel',
         "(line $seen_dh_parallel)"
     ) if $seen_dh_parallel and $level >= 10;
+
+    $self->tag(
+        'debian-rules-uses-unnecessary-dh-argument',
+        "dh ... --with=systemd (line $seen_dh_systemd)"
+    ) if $seen_dh_systemd and $level >= 10;
 
     # Check the files in the debian directory for various debhelper-related
     # things.
