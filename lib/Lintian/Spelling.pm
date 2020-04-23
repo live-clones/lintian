@@ -27,7 +27,6 @@ use utf8;
 use Exporter qw(import);
 
 use Lintian::Data;
-use Lintian::Util qw(strip);
 
 use constant DOUBLE_QUOTE => q{"};
 
@@ -121,7 +120,9 @@ sub check_spelling {
     $text =~ s/(\w-)\s*\n\s*/$1/;
     $text =~ tr/\r\n \t/ /s;
     $text =~ s/\s++/ /g;
-    strip($text);
+
+    # trim both ends
+    $text =~ s/^\s+|\s+$//g;
 
     for my $word (split(' ', $text)) {
         my $ends_with_punct = 0;
@@ -228,7 +229,10 @@ sub check_spelling_picky {
     $text =~ s/\[.+?\]//sg;
     $text =~ tr/\r\n \t/ /s;
     $text =~ s/\s++/ /g;
-    strip($text);
+
+    # trim both ends
+    $text =~ s/^\s+|\s+$//g;
+
     for my $word (split(/\s+/, $text)) {
         $word =~ s/^\(|[).,?!:;]+$//g;
         if ($corrections_case->known($word)) {

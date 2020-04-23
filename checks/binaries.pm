@@ -32,7 +32,6 @@ use List::MoreUtils qw(any);
 use Lintian::Data;
 use Lintian::Relation qw(:constants);
 use Lintian::Spelling qw(check_spelling);
-use Lintian::Util qw(strip);
 
 use constant NUMPY_REGEX => qr/
     \Qmodule compiled against ABI version \E (?:0x)?%x
@@ -81,7 +80,10 @@ sub _embedded_libs {
         $regex = $opts;
         $opts = '';
     } else {
-        strip($opts);
+
+        # trim both ends
+        $opts =~ s/^\s+|\s+$//g;
+
         foreach my $optstr (split m/\s++/, $opts) {
             my ($opt, $val) = split m/=/, $optstr, 2;
             if ($opt eq 'source' or $opt eq 'libname') {
@@ -722,8 +724,8 @@ sub installable {
         }
     }
 
-    # Check for dependency on python-numpy-abiN dependency (or strict versioned
-    # dependency on python-numpy)
+    # Check for dependency on python3-numpy-abiN dependency (or strict
+    # versioned dependency on python3-numpy)
     if ($uses_numpy_c_abi and $pkg !~ m{\A python3?-numpy \Z}xsm) {
         # We do not allow alternatives as it would mostly likely
         # defeat the purpose of this relation.  Also, we do not allow
@@ -731,8 +733,8 @@ sub installable {
         my $vflags = VISIT_OR_CLAUSE_FULL;
         $self->tag('missing-dependency-on-numpy-abi')
           unless $depends->matches(qr/^python3?-numpy-abi\d+$/, $vflags)
-          or (  $depends->matches(qr/^python-numpy \(>[>=][^\|]+$/, $vflags)
-            and $depends->matches(qr/^python-numpy \(<[<=][^\|]+$/, $vflags));
+          or (  $depends->matches(qr/^python3-numpy \(>[>=][^\|]+$/, $vflags)
+            and $depends->matches(qr/^python3-numpy \(<[<=][^\|]+$/, $vflags));
     }
 
     return;

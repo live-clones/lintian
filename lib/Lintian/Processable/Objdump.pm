@@ -25,7 +25,7 @@ use autodie;
 use Path::Tiny;
 
 use Lintian::Deb822Parser qw(parse_dpkg_control);
-use Lintian::Util qw(open_gz strip);
+use Lintian::Util qw(open_gz);
 
 use constant EMPTY => q{};
 
@@ -97,7 +97,10 @@ sub objdump_info {
             # sections.  If you are missing a section name for a
             # check, please update helpers/coll/objdump-info-helper to
             # retrain the section name you need.
-            strip($section);
+
+            # trim both ends
+            $section =~ s/^\s+|\s+$//g;
+
             $info{'SH'}{$section} = 1;
         }
         foreach my $data (split m/\s*\n\s*/, $pg->{'program-headers'}//'') {

@@ -41,7 +41,7 @@ use Lintian::Processable::Buildinfo;
 use Lintian::Processable::Changes;
 use Lintian::Processable::Source;
 use Lintian::Processable::Udeb;
-use Lintian::Util qw(get_dsc_info_from_string strip human_bytes);
+use Lintian::Util qw(get_dsc_info_from_string human_bytes);
 
 use constant EMPTY => q{};
 use constant SPACE => q{ };
@@ -244,7 +244,8 @@ sub init_from_file {
         next
           unless defined $line;
 
-        strip($line);
+        # trim both ends
+        $line =~ s/^\s+|\s+$//g;
 
         next
           if $line eq EMPTY;
@@ -297,7 +298,10 @@ sub unpack {
         if ($processable->type eq 'source') {
             my (undef, $dir, undef)= File::Spec->splitpath($processable->path);
             for my $fs (split(m/\n/o, $processable->field('files'))) {
-                strip($fs);
+
+                # trim both ends
+                $fs =~ s/^\s+|\s+$//g;
+
                 next if $fs eq '';
                 my @t = split(/\s+/o,$fs);
                 next if ($t[2] =~ m,/,o);

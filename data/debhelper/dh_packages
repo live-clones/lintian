@@ -68,7 +68,6 @@ pkg-php-tools
 postgresql-server-dev-all
 ppp-dev
 pyppd
-python-numpy
 python-ply
 python-sip-dev
 python2

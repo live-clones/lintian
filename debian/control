@@ -85,7 +85,7 @@ Build-Depends:
  pkg-php-tools <!nocheck>,
  python2 <!nocheck>,
  python-all-dev <!nocheck>,
- python-numpy <!nocheck>,
+ python3-numpy <!nocheck>,
  python3-docutils,
  quilt <!nocheck>,
  t1utils <!nocheck>,

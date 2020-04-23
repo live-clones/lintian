@@ -25,8 +25,6 @@ use warnings;
 use utf8;
 use autodie;
 
-use Lintian::Util qw(strip);
-
 use Moo;
 use namespace::clean;
 
@@ -88,7 +86,10 @@ sub always {
     foreach my $entry (split m/\n/o, $processable->field('files', '')){
         my $filename;
         my $flen;
-        strip($entry);
+
+        # trim both ends
+        $entry =~ s/^\s+|\s+$//g;
+
         next unless $entry;
         (undef, undef, $filename) = split m/\s++/o, $entry;
         next unless $filename;

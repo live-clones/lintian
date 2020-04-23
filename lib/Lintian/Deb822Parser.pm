@@ -320,21 +320,7 @@ present.
 
 =back
 
-=item rstrip
-
 =cut
-
-# Defined rstrip here to avoid having to depend on L::Util
-# prototype for default to $_
-
-sub rstrip (_) {  ## no critic (Subroutines::RequireFinalReturn)
-    if (defined wantarray) {
-        # unpack 'A*' is faster than s/\s++$//
-        return unpack('A*', $_[0]);
-    }
-    $_[0] = unpack('A*', $_[0]);
-    # void context, so no return needed here.
-}
 
 sub visit_dpkg_paragraph {
     my ($code, $CONTROL, $flags) = @_;
@@ -522,7 +508,10 @@ sub visit_dpkg_paragraph_string {
             # Policy: Horizontal whitespace (spaces and tabs) may occur
             # immediately before or after the value and is ignored there.
             my ($tag,$value) = (lc $1,$2);
-            rstrip($value);
+
+            # trim right
+            $value =~ s/\s+$//;
+
             if (exists $section->{$tag}) {
                 # Policy: A paragraph must not contain more than one instance
                 # of a particular field name.
@@ -548,7 +537,11 @@ sub visit_dpkg_paragraph_string {
             # each continuation line must start with a space or a tab.  Any
             # trailing spaces or tabs at the end of individual lines of a
             # field value are ignored.
-            my $value = rstrip($1);
+            my $value = $1;
+
+            # trim right
+            $value =~ s/\s+$//;
+
             $value =~ s/#.*$//
               if $flags & DCTRL_COMMENTS_AT_EOL;
             $section->{$last_tag} .= "\n" . $value;

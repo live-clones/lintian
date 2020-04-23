@@ -62,9 +62,6 @@ BEGIN {
           do_fork
           run_cmd
           safe_qx
-          strip
-          lstrip
-          rstrip
           copy_dir
           human_bytes
           gunzip_file
@@ -856,71 +853,6 @@ If the tool cannot be found, this sub will cause a trappable error.
 
         croak "Cannot locate $toolname (search dirs: $toolpath_str)";
     }
-}
-
-=item strip ([LINE])
-
-Strips whitespace from the beginning and the end of LINE and returns
-it.  If LINE is omitted, C<$_> will be used instead. Example
-
- @lines = map { strip } <$fd>;
-
-In void context, the input argument will be modified so it can be
-used as a replacement for chomp in some cases:
-
-  while ( my $line = <$fd> ) {
-    strip ($line);
-    # $line no longer has any leading or trailing whitespace
-  }
-
-Otherwise, a copy of the string is returned:
-
-  while ( my $orig = <$fd> ) {
-    my $stripped = strip ($orig);
-    if ($stripped ne $orig) {
-        # $orig had leading or/and trailing whitespace
-    }
-  }
-
-=item lstrip ([LINE])
-
-Like L<strip|/strip ([LINE])> but only strip leading whitespace.
-
-=item rstrip ([LINE])
-
-Like L<strip|/strip ([LINE])> but only strip trailing whitespace.
-
-=cut
-
-# prototype for default to $_
-sub strip (_) { ## no critic (Subroutines::RequireFinalReturn)
-    if (defined wantarray) {
-        # perl 5.14 s///r would have been useful here.
-        my ($arg) = @_;
-        $arg =~ s/^\s++//;
-        # unpack 'A*' is faster than s/\s++$//
-        return unpack('A*', $arg);
-    }
-    $_[0] =~ s/^\s++//;
-    $_[0] = unpack('A*', $_[0]);
-    # void context, so no return needed here.
-}
-
-# prototype for default to $_
-sub lstrip (_) { ## no critic (Subroutines::RequireFinalReturn)
-    if (defined wantarray) {
-        # perl 5.14 s///r would have been useful here.
-        my ($arg) = @_;
-        $arg =~ s/^\s++//;
-        return $arg;
-    }
-    $_[0] =~ s/^\s++//;
-    # void context, so no return needed here.
-}
-
-{
-    no warnings qw(once);
-    *rstrip = \&Lintian::Deb822Parser::rstrip;
 }
 
 =item check_path (CMD)

@@ -25,6 +25,7 @@ use warnings;
 use utf8;
 use autodie;
 
+use List::Compare;
 use Unicode::UTF8 qw(valid_utf8);
 
 use Moo;
@@ -71,7 +72,37 @@ sub files {
           and $file->size == 0;
 
     } elsif (!valid_utf8($file->name)) {
-        $self->tag('file-name-is-not-valid-UTF-8', $file->name);
+        $self->tag('shipped-file-without-utf8-name', $file->name);
+    }
+
+    return;
+}
+
+sub source {
+    my ($self) = @_;
+
+    my @orig_non_utf8_names;
+
+    @orig_non_utf8_names = grep { !valid_utf8($_) }
+      map { $_->name } $self->processable->orig->sorted_list
+      unless $self->processable->native;
+
+    $self->tag('upstream-file-without-utf8-name', $_) for @orig_non_utf8_names;
+
+    my @patched_non_utf8_names = grep { !valid_utf8($_) }
+      map { $_->name } $self->processable->patched->sorted_list;
+
+    my $lc
+      = List::Compare->new(\@orig_non_utf8_names, \@patched_non_utf8_names);
+    my @dpkg_created = $lc->get_Ronly;
+
+    # exclude quilt directory
+    my @maintainer_fault = grep { $_ !~ qr{^.pc/} } @dpkg_created;
+
+    # lintian's own packaging presently triggers this tag due to the test case
+    unless ($self->package eq 'lintian') {
+
+        $self->tag('patched-file-without-utf8-name', $_) for @maintainer_fault;
     }
 
     return;

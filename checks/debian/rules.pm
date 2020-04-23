@@ -25,7 +25,6 @@ use List::MoreUtils qw(any none);
 
 use Lintian::Data;
 use Lintian::SlidingWindow;
-use Lintian::Util qw(rstrip);
 
 use Moo;
 use namespace::clean;
@@ -327,7 +326,9 @@ sub source {
                         # we think we know what it will expand to - note
                         # we ought to "delay" it was a "=" variable rather
                         # than ":=" or "+=".
-                        for (split m/\s++/o, rstrip($val)) {
+
+                   # discards empty elements at end, effectively trimming right
+                        for (split(/\s+/, $val)) {
                             $seen{$_}++ if $POLICYRULES->known($_);
                         }
                         last;
@@ -370,7 +371,9 @@ sub source {
                             # we ought to "delay" it was a "=" variable rather
                             # than ":=" or "+=".
                             local $_;
-                            for (split m/\s++/o, rstrip($val)) {
+
+                   # discards empty elements at end, effectively trimming right
+                            for (split(/\s+/, $val)) {
                                 $seen{$_}++ if $POLICYRULES->known($_);
                             }
                             last;

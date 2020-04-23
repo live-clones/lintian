@@ -32,7 +32,6 @@ use Path::Tiny;
 use Lintian::Data;
 use Lintian::Spelling
   qw(check_spelling check_spelling_picky $known_shells_regex);
-use Lintian::Util qw(strip);
 
 use Moo;
 use namespace::clean;
@@ -420,7 +419,10 @@ sub check_doc_base_field {
         # Format field.
     } elsif ($field eq 'format') {
         my $format = join(' ', @$vals);
-        strip($format);
+
+        # trim both ends
+        $format =~ s/^\s+|\s+$//g;
+
         $format = lc $format;
         $self->tag('doc-base-file-unknown-format', "$dbfile:$line", $format)
           unless $known_doc_base_formats{$format};

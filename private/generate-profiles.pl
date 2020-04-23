@@ -19,7 +19,6 @@ use Path::Tiny;
 use lib "$ENV{LINTIAN_ROOT}/lib";
 
 use Lintian::Deb822Parser qw(read_dpkg_control);
-use Lintian::Util qw(strip);
 
 use constant EMPTY => q{};
 use constant SPACE => q{ };
@@ -135,7 +134,10 @@ sub read_tags {
     my @tags = ();
     open(my $fd, '<', $file);
     while (<$fd>) {
-        strip;
+
+        # trim both ends
+        s/^\s+|\s+$//g;
+
         next if /^#/ or $_ eq '';
         push @tags, $_;
     }

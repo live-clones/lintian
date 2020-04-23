@@ -125,7 +125,6 @@ dh_mkdocs=mkdocs
 dh_movefiles=debhelper | debhelper-compat
 dh_movelibkdeinit=pkg-kde-tools
 dh_numpy3=python3-numpy
-dh_numpy=python-numpy
 dh_ocaml=dh-ocaml
 dh_ocamlclean=dh-ocaml
 dh_ocamldoc=dh-ocaml

@@ -28,8 +28,6 @@ use autodie;
 use List::MoreUtils qw(any);
 use List::Util qw(first);
 
-use Lintian::Util qw(strip);
-
 use Moo;
 use namespace::clean;
 
@@ -92,7 +90,9 @@ sub source {
 
     if ($uploader =~ m/^\s|\s$/) {
         $self->tag('extra-whitespace-around-name-in-changelog-trailer');
-        strip($uploader);
+
+        # trim both ends
+        $uploader =~ s/^\s+|\s+$//g;
     }
 
     if ($version =~ /-[^.-]+(\.[^.-]+)?(\.[^.-]+)?$/) {
