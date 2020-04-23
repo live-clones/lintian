@@ -1,8 +1,37 @@
-lintian (2.66.0+git) UNRELEASED; urgency=medium
+lintian (2.67.0) unstable; urgency=medium
 
-  * WIP (generated upon release).
+  * Summary of tag changes:
+    + Added:
+      - debian-rules-uses-as-needed-linker-flag
+      - mailing-list-obsolete-in-debian-infrastructure
+      - native-source-file-without-utf8-name
 
- -- Chris Lamb <lamby@debian.org>  Fri, 17 Apr 2020 20:41:20 +0100
+  [ Axel Beckert ]
+  * Stop correcting "extraversion" to "extroversion" as it causes false
+    positives.
+
+  [ Chris Lamb ]
+  * Add a warning regarding lists.alioth.debian.org mailing list addresses.
+    (Closes: #958182)
+  * Check for debian/rules files that specify -Wl,--as-needed as this is
+    now the default linking method from bullseye. (Closes: #956146)
+  * Detect "dh $*" as using the Debhlper sequencer. (Closes: #930679)
+  * Also check for "override dh_install" in debian/rules; in 99% of cases
+    this will be an omission of an underscore.
+
+  [ Felix Lechner ]
+  * Do not check for circular root references when a file index is empty.
+    (Closes: #958113)
+  * Do not prompt for password for encrypted zip members. (Closes: #935292)
+  * Fix the output for JSON; it is encoded already.
+  * Dynamically generate file names that are not valid UTF-8 in tests.
+  * Add new tag for non-UTF-8 file name in the source tree.
+
+  [ Vincent Blut ]
+  * Add 'needs-internet' to the list of permitted values for the
+    restrictions field in autopkgtest control files.
+
+ -- Chris Lamb <lamby@debian.org>  Thu, 23 Apr 2020 10:21:16 +0000
 
 lintian (2.66.0) unstable; urgency=medium
 
