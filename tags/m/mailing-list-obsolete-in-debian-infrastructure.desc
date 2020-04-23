@@ -1,5 +1,5 @@
 Tag: mailing-list-obsolete-in-debian-infrastructure
-Severity: warning
+Severity: info
 Check: fields/maintainer
 Info: The specified field points to an area within the *.debian.org
  infrastructure that has been marked as obsolete.
