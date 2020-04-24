@@ -1,6 +1,7 @@
 Tag: mailing-list-obsolete-in-debian-infrastructure
 Severity: info
 Check: fields/maintainer
+Experimental: yes
 Info: The specified field points to an area within the *.debian.org
  infrastructure that has been marked as obsolete.
  .
