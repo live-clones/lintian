@@ -271,7 +271,7 @@ sub check_test_file {
                 'runtime-test-file-uses-supported-python-versions-without-python-all-build-depends',
                 $path, "$1", "(line $.)"
             ) if $x =~ m/(py3versions\s+([\w\-\s]*--supported|-\w*s\w*))/
-              and not $processable->relation('build-depends-all')->implies($PYTHON3_ALL_DEPEND);
+              and not $processable->relation_noarch('build-depends-all')->implies($PYTHON3_ALL_DEPEND);
             #>>>
         }
         close($fd);
