@@ -1,8 +1,19 @@
-lintian (2.67.0+git) UNRELEASED; urgency=medium
+lintian (2.68.0) unstable; urgency=medium
 
-  * WIP (generated upon release).
+  [ Chris Lamb ]
+  * Mark mailing-list-obsolete-in-debian-infrastructure as being
+    experimental, essentially hiding it. (Closes: #958666)
+  * Warn about packages --with=systemd with a debhelper compatibility level
+    of 10 or higher. (Closes: #949844)
 
- -- Chris Lamb <lamby@debian.org>  Thu, 23 Apr 2020 11:51:29 +0100
+  [ Michael Biebl ]
+  * Stop recommending dh-systemd as a Build-Depends alternative in the long
+    description of maintainer-script-calls-systemctl.
+
+  [ Simon Quigley ]
+  * Add "groovy" as a known Ubuntu distribution.
+
+ -- Chris Lamb <lamby@debian.org>  Sat, 25 Apr 2020 08:54:19 +0000
 
 lintian (2.67.0) unstable; urgency=medium
 
