@@ -383,7 +383,7 @@ sub parse_dep5 {
     push(@allpaths, $debian_dir->descendants)
       if $debian_dir;
 
-    my @shippedfiles = sort grep { $_->is_file } @allpaths;
+    my @shippedfiles = sort map { $_->name } grep { $_->is_file } @allpaths;
 
     my @licensefiles= grep { m,(^|/)(COPYING[^/]*|LICENSE)$, } @shippedfiles;
     my @quiltfiles = grep { m,^\.pc/, } @shippedfiles;
@@ -537,8 +537,8 @@ sub parse_dep5 {
                           if @wlist;
 
                         for my $entry (@wlist) {
-                            $file_coverage{$entry->name} = $current_line;
-                            $file_licenses{$entry->name} = $short_license;
+                            $file_coverage{$entry} = $current_line;
+                            $file_licenses{$entry} = $short_license;
                         }
 
                     } else {
