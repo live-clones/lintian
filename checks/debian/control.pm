@@ -455,18 +455,6 @@ sub source {
         }
     }
 
-    # find binary packages that Pre-Depend on multiarch-support without going
-    # via ${misc:Pre-Depends}
-    if ($processable->source_field('build-depends')) {
-        for my $bin (@package_names) {
-            my $raw = $processable->binary_field($bin, 'pre-depends');
-            next unless $raw;
-            if($raw =~ /multiarch-support/) {
-                $self->tag('pre-depends-directly-on-multiarch-support',$bin);
-            }
-        }
-    }
-
     # Make sure that the Architecture field in source packages is not multiline
     for my $bin (@package_names) {
         # The Architecture field is mandatory and dpkg-buildpackage
