@@ -13,5 +13,5 @@ debhelper-override-typos (source): typo-in-debhelper-override-target override_dh
 debhelper-override-typos (source): typo-in-debhelper-override-target override_dh_build -> override_dh_auto_build (line 22)
 debhelper-override-typos (source): typo-in-debhelper-override-target override dh_install -> override_dh_install (line 25)
 debhelper-override-typos (source): debian-build-system dh
-debhelper-override-typos (source): debhelper-compat-virtual-relation 12
-debhelper-override-typos (source): debhelper-compat-level 12
+debhelper-override-typos (source): debhelper-compat-virtual-relation 13
+debhelper-override-typos (source): debhelper-compat-level 13

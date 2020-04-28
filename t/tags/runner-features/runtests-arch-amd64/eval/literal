@@ -1,7 +1,7 @@
 C: runtests-arch-amd64: control-tarball-compression-format xz
 C: runtests-arch-amd64: data-tarball-compression-format xz
-C: runtests-arch-amd64 source: debhelper-compat-level 12
-C: runtests-arch-amd64 source: debhelper-compat-virtual-relation 12
+C: runtests-arch-amd64 source: debhelper-compat-level 13
+C: runtests-arch-amd64 source: debhelper-compat-virtual-relation 13
 C: runtests-arch-amd64 source: debian-build-system dh
 C: runtests-arch-amd64: no-ctrl-scripts
 C: runtests-arch-amd64 source: package-is-maintained-by-individual

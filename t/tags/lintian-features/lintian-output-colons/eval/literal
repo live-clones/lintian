@@ -22,8 +22,8 @@ tag:P:pedantic::lintian-output-colons:1.0+dsfg-1.1:source:source:no-homepage-fie
 tag:P:pedantic::lintian-output-colons:1.0+dsfg-1.1:source:source:package-uses-deprecated-source-override-location::
 tag:C:classification::lintian-output-colons:1.0+dsfg-1.1:all:binary:control-tarball-compression-format:xz:
 tag:C:classification::lintian-output-colons:1.0+dsfg-1.1:all:binary:data-tarball-compression-format:xz:
-tag:C:classification::lintian-output-colons:1.0+dsfg-1.1:source:source:debhelper-compat-level:12:
-tag:C:classification::lintian-output-colons:1.0+dsfg-1.1:source:source:debhelper-compat-virtual-relation:12:
+tag:C:classification::lintian-output-colons:1.0+dsfg-1.1:source:source:debhelper-compat-level:13:
+tag:C:classification::lintian-output-colons:1.0+dsfg-1.1:source:source:debhelper-compat-virtual-relation:13:
 tag:C:classification::lintian-output-colons:1.0+dsfg-1.1:source:source:debian-build-system:dh:
 tag:C:classification::lintian-output-colons:1.0+dsfg-1.1:source:source:debian-watch-file-standard:3:
 tag:C:classification::lintian-output-colons:1.0+dsfg-1.1:all:binary:no-ctrl-scripts::

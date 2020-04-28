@@ -4,5 +4,5 @@ debian-source-dir-traversal-1 (source): rules-does-not-require-root
 debian-source-dir-traversal-1 (source): patch-system quilt
 debian-source-dir-traversal-1 (source): package-is-maintained-by-individual
 debian-source-dir-traversal-1 (source): debian-build-system dh
-debian-source-dir-traversal-1 (source): debhelper-compat-virtual-relation 12
-debian-source-dir-traversal-1 (source): debhelper-compat-level 12
+debian-source-dir-traversal-1 (source): debhelper-compat-virtual-relation 13
+debian-source-dir-traversal-1 (source): debhelper-compat-level 13

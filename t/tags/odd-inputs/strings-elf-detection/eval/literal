@@ -5,8 +5,8 @@ C: strings-elf-detection: control-tarball-compression-format xz
 C: strings-elf-detection-dbgsym: control-tarball-compression-format xz
 C: strings-elf-detection: data-tarball-compression-format xz
 C: strings-elf-detection-dbgsym: data-tarball-compression-format xz
-C: strings-elf-detection source: debhelper-compat-level 12
-C: strings-elf-detection source: debhelper-compat-virtual-relation 12
+C: strings-elf-detection source: debhelper-compat-level 13
+C: strings-elf-detection source: debhelper-compat-virtual-relation 13
 C: strings-elf-detection source: debian-build-system dh
 C: strings-elf-detection: no-ctrl-scripts
 C: strings-elf-detection-dbgsym: no-ctrl-scripts
