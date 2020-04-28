@@ -1,1 +1,1 @@
-source-copyright-symlink (source): debian-copyright-is-symlink
+source-copyright-symlink (source): debian-copyright-is-symlink debian/copyright

@@ -88,38 +88,34 @@ sub source {
 
     my $debian_dir = $self->processable->patched->resolve_path('debian/');
     return
-      unless $debian_dir;
+      unless defined $debian_dir;
 
-    my $file = $debian_dir->child('copyright');
+    my @installables = $self->processable->debian_control->installables;
+    my @additional = map { $_ . '.copyright' } @installables;
 
-    unless ($file) {
+    my @candidates = ('copyright', @additional);
+    my @files = grep { defined } map { $debian_dir->child($_) } @candidates;
 
-        # also look for <pkgname>.copyright for a single installable
-        my @installables = $self->processable->debian_control->installables;
-        if (scalar @installables == 1) {
+    # look for <pkgname>.copyright for a single installable
+    if (@files == 1) {
+        my $single = $files[0];
 
-            $file = $debian_dir->child($installables[0] . '.copyright');
-            $self->tag('named-copyright-for-single-installable', $file->name)
-              if $file;
-        }
-
-        unless ($file) {
-            $self->tag('no-debian-copyright-in-source');
-            return;
-        }
-
-    } elsif ($file->is_symlink) {
-        $self->tag('debian-copyright-is-symlink');
+        $self->tag('named-copyright-for-single-installable', $single->name)
+          unless $single->name eq 'debian/copyright';
     }
 
-    # another check complains about invalid encoding
-    return
-      unless $file->is_valid_utf8;
+    $self->tag('no-debian-copyright-in-source')
+      unless @files;
 
-    my $contents = $file->decoded_utf8;
+    my @symlinks = grep { $_->is_symlink } @files;
+    $self->tag('debian-copyright-is-symlink', $_->name) for @symlinks;
 
-    $self->check_dep5_copyright($contents);
-    $self->check_apache_notice_files($contents);
+    # another check complains about legacy encoding, if needed
+    my @valid_utf8 = grep { $_->is_valid_utf8 } @files;
+
+    $self->check_dep5_copyright($_)for @valid_utf8;
+
+    $self->check_apache_notice_files($_)for @valid_utf8;
 
     return;
 }
@@ -187,15 +183,16 @@ sub find_dep5_version {
 }
 
 sub check_apache_notice_files {
-    my ($self, $contents) = @_;
+    my ($self, $file) = @_;
 
+    my $contents = $file->decoded_utf8;
     return
-      unless $contents =~ m/apache[-\s]+2\./i;
+      unless $contents =~ /apache[-\s]+2\./i;
 
     my @notice_files = grep {
-              $_->basename =~ m/^NOTICE(\.txt)?$/
+              $_->basename =~ /^NOTICE(\.txt)?$/
           and $_->is_open_ok
-          and $_->bytes =~ m/apache/i
+          and $_->bytes =~ /apache/i
     } $self->processable->patched->sorted_list;
     return
       unless @notice_files;
@@ -204,7 +201,7 @@ sub check_apache_notice_files {
     return
       unless @binaries;
 
-    foreach my $binary (@binaries) {
+    for my $binary (@binaries) {
 
         # look at all path names in the package
         my @names = map { $_->name } $binary->installed->sorted_list;
@@ -219,13 +216,15 @@ sub check_apache_notice_files {
     }
 
     $self->tag('missing-notice-file-for-apache-license',
-        join(' ', @notice_files));
+        join(SPACE, @notice_files));
 
     return;
 }
 
 sub check_dep5_copyright {
-    my ($self, $contents) = @_;
+    my ($self, $copyright_file) = @_;
+
+    my $contents = $copyright_file->decoded_utf8;
 
     if ($contents =~ /^Files-Excluded:/m) {
 
@@ -237,7 +236,8 @@ sub check_dep5_copyright {
               || $self->processable->native;
 
         } else {
-            $self->tag('files-excluded-without-copyright-format-1.0');
+            $self->tag('files-excluded-without-copyright-format-1.0',
+                $copyright_file->name);
         }
     }
 
@@ -253,7 +253,7 @@ sub check_dep5_copyright {
                ) }x
     ){
 
-        $self->tag('no-dep5-copyright');
+        $self->tag('no-dep5-copyright', $copyright_file->name);
         return;
     }
 
@@ -389,13 +389,12 @@ sub parse_dep5 {
 
     my (@commas_in_files, %file_para_coverage, %file_licenses);
     my %file_coverage = map { $_ => 0 } @shippedfiles;
-    my $i = 0;
     my $current_line = 0;
     my $commas_in_files = any { /,/s } @allpaths;
 
+    my $position = 1;
     for my $para (@dep5) {
-        $i++;
-        $current_line = $lines[$i]{'START-OF-PARAGRAPH'};
+        $current_line = $lines[$position]{'START-OF-PARAGRAPH'};
         my $files = $para->{Files};
         my $license   = $para->{License};
         my $copyright = $para->{Copyright};
@@ -410,7 +409,7 @@ sub parse_dep5 {
 
             # If it is the first paragraph, it might be an instance of
             # the (no-longer) optional "first Files-field".
-            $files = '*' if $i == 1;
+            $files = '*' if $position == 1;
         }
 
         if (defined $license and not defined $files) {
@@ -435,10 +434,10 @@ sub parse_dep5 {
                             "(paragraph at line $current_line)"
                         );
                     } else {
-                        $standalone_licenses{$_} = $i;
+                        $standalone_licenses{$_} = $position;
                         $full_licenses_seen{$_} = $current_line;
                     }
-                    $short_licenses_seen{$_} = $i;
+                    $short_licenses_seen{$_} = $position;
                 }
             }
         }elsif (defined $files) {
@@ -454,7 +453,7 @@ sub parse_dep5 {
             $self->tag(
                 'global-files-wildcard-not-first-paragraph-in-dep5-copyright',
                 "(paragraph at line $current_line)"
-            ) if $files eq '*' and $i > 1;
+            ) if $files eq '*' and $position > 1;
 
             my @listedfiles = split(SPACE, $files);
 
@@ -467,7 +466,7 @@ sub parse_dep5 {
 
             # Files paragraph
             if (not @commas_in_files and $files =~ /,/) {
-                @commas_in_files = ($i, 'Files');
+                @commas_in_files = ($position, 'Files');
             }
 
             my ($found_license, $full_license, $short_license, @short_licenses)
@@ -568,9 +567,9 @@ sub parse_dep5 {
             }
             if ($found_license) {
                 for (@short_licenses) {
-                    $short_licenses_seen{$_} = $i;
+                    $short_licenses_seen{$_} = $position;
                     if (not defined($full_license)) {
-                        $required_standalone_licenses{$_} = $i;
+                        $required_standalone_licenses{$_} = $position;
                     } else {
                         if(defined($full_licenses_seen{$_})
                             and $_ ne 'public-domain') {
@@ -606,7 +605,11 @@ sub parse_dep5 {
                 $current_line
             );
         }
+
+    } continue {
+        $position++;
     }
+
     if (@commas_in_files and not $commas_in_files) {
         my ($paragraph_no, $field_name) = @commas_in_files;
         $self->tag(
@@ -664,7 +667,7 @@ sub parse_dep5 {
           for sort keys %file_para_coverage;
     }
 
-    while ((my $license, $i) = each %required_standalone_licenses) {
+    while (my ($license,$i) = each %required_standalone_licenses) {
         if (not defined $standalone_licenses{$license}) {
             $self->tag('missing-license-paragraph-in-dep5-copyright',
                 $license,
@@ -676,7 +679,7 @@ sub parse_dep5 {
         }
 
     }
-    while ((my $license, $i) = each %standalone_licenses) {
+    while (my ($license, $i) = each %standalone_licenses) {
         if (not defined $required_standalone_licenses{$license}) {
             $self->tag('unused-license-paragraph-in-dep5-copyright',
                 $license,
@@ -684,7 +687,7 @@ sub parse_dep5 {
         }
     }
   LICENSE:
-    while ((my $license, $i) = each %short_licenses_seen) {
+    while (my ($license, $i) = each %short_licenses_seen) {
         if ($license =~ m,\s,) {
             if($license =~ m,[^ ]+ \s+ with \s+ (.*),x) {
                 my $exceptiontext = $1;

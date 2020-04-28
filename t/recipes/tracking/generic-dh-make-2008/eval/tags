@@ -9,7 +9,7 @@ generic-dh-make-2008 (source): rules-requires-root-missing
 generic-dh-make-2008 (source): package-uses-deprecated-debhelper-compat-version 7
 generic-dh-make-2008 (source): older-source-format 1.0
 generic-dh-make-2008 (source): no-dh-sequencer
-generic-dh-make-2008 (source): no-dep5-copyright
+generic-dh-make-2008 (source): no-dep5-copyright debian/copyright
 generic-dh-make-2008 (source): missing-debian-source-format
 generic-dh-make-2008 (source): dh-make-template-in-source debian/watch.ex
 generic-dh-make-2008 (source): dh-make-template-in-source debian/prerm.ex
