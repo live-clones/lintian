@@ -1,14 +1,13 @@
 Tag: package-uses-old-debhelper-compat-version
 Severity: pedantic
 Check: debhelper
-Ref: debhelper(7)
-Info: The debhelper compatibility version used by this package is marked
- as not recommended by the debhelper developer. You may consider
- using a recommended compatibility version.
+Info: This package uses a debhelper compatibility level that is no
+ longer recommended. Please consider using a recommended level.
  .
- The compatibility version can be set by specifying
- <tt>debhelper-compat (= 12)</tt> in your package's
- <tt>Build-Depends</tt>, by the legacy <tt>debian/compat</tt> file or
- even by setting and exporting DH_COMPAT in <tt>debian/rules</tt>. If it
- is not set in either place, debhelper defaults to the deprecated
- compatibility version 1.
+ For most packages, the best way to set the compatibility level is
+ to specify <tt>debhelper-compat (= X)</tt> as a <tt>Build-Depends</tt>
+ in <tt>debian/control</tt>. You can also use the <tt>debian/compat</tt>
+ file or export DH_COMPAT in <tt>debian/rules</tt>.
+ .
+ If no level is selected debhelper defaults to level 1, which is deprecated.
+Ref: debhelper(7)
