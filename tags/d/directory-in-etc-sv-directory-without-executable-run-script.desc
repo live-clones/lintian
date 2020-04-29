@@ -8,4 +8,4 @@ Info: This package provides the specified directory under
  .
  Please check that you are installing your <tt>run</tt> script to the
  right location and that has the correct executable permissions.
-Refs: dh_runit(1)
+Ref: dh_runit(1)
