@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: debian-rules-uses-as-needed-linker-flag
+Description: Test for --as-needed in debian/rules.

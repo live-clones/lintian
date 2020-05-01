@@ -1,3 +1,77 @@
+lintian (2.69.0) unstable; urgency=medium
+
+  * Summary of tag changes:
+    + Removed:
+      - pre-depends-directly-on-multiarch-support
+
+  [ Chris Lamb ]
+  * Ignore build profiles when checking packages for "py3versions -s"
+    without the corresponding Build-Depends. (Closes: #958794)
+  * Remove the pre-depends-directly-on-multiarch-support tag; any package
+    pre-depending on multiarch-support will not be installable in bullseye.
+    (Closes: #798762)
+  * Move debhelper itself to compatibility level 13 so it does not emit
+    package-uses-old-debhelper-compat-version for itself.
+
+  [ Felix Lechner ]
+  * Bump recommended debhelper compat-level to 13; move experimental to 14.
+    (Closes: #958932)
+  * Fix common prefix detection for extracted tar files. (Closes: #958845)
+
+ -- Chris Lamb <lamby@debian.org>  Tue, 28 Apr 2020 19:46:15 +0000
+
+lintian (2.68.0) unstable; urgency=medium
+
+  [ Chris Lamb ]
+  * Mark mailing-list-obsolete-in-debian-infrastructure as being
+    experimental, essentially hiding it. (Closes: #958666)
+  * Warn about packages --with=systemd with a debhelper compatibility level
+    of 10 or higher. (Closes: #949844)
+
+  [ Michael Biebl ]
+  * Stop recommending dh-systemd as a Build-Depends alternative in the long
+    description of maintainer-script-calls-systemctl.
+
+  [ Simon Quigley ]
+  * Add "groovy" as a known Ubuntu distribution.
+
+ -- Chris Lamb <lamby@debian.org>  Sat, 25 Apr 2020 08:54:19 +0000
+
+lintian (2.67.0) unstable; urgency=medium
+
+  * Summary of tag changes:
+    + Added:
+      - debian-rules-uses-as-needed-linker-flag
+      - mailing-list-obsolete-in-debian-infrastructure
+      - native-source-file-without-utf8-name
+
+  [ Axel Beckert ]
+  * Stop correcting "extraversion" to "extroversion" as it causes false
+    positives.
+
+  [ Chris Lamb ]
+  * Add a warning regarding lists.alioth.debian.org mailing list addresses.
+    (Closes: #958182)
+  * Check for debian/rules files that specify -Wl,--as-needed as this is
+    now the default linking method from bullseye. (Closes: #956146)
+  * Detect "dh $*" as using the Debhlper sequencer. (Closes: #930679)
+  * Also check for "override dh_install" in debian/rules; in 99% of cases
+    this will be an omission of an underscore.
+
+  [ Felix Lechner ]
+  * Do not check for circular root references when a file index is empty.
+    (Closes: #958113)
+  * Do not prompt for password for encrypted zip members. (Closes: #935292)
+  * Fix the output for JSON; it is encoded already.
+  * Dynamically generate file names that are not valid UTF-8 in tests.
+  * Add new tag for non-UTF-8 file name in the source tree.
+
+  [ Vincent Blut ]
+  * Add 'needs-internet' to the list of permitted values for the
+    restrictions field in autopkgtest control files.
+
+ -- Chris Lamb <lamby@debian.org>  Thu, 23 Apr 2020 10:21:16 +0000
+
 lintian (2.66.0~bpo9+1) stretch-backports; urgency=medium
 
   * Rebuild for stretch-backports.

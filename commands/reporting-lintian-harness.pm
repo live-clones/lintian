@@ -34,12 +34,18 @@ use Fcntl qw(F_GETFD F_SETFD FD_CLOEXEC SEEK_END);
 use File::Basename qw(basename);
 use File::Temp qw(tempfile);
 use Getopt::Long();
+use IO::Async::Loop;
+use IO::Async::Process;
 use List::MoreUtils qw(first_index);
 use POSIX qw(strftime);
 
-use Lintian::Command qw(safe_qx);
 use Lintian::Reporting::Util
   qw(find_backlog load_state_cache save_state_cache);
+use Lintian::Util qw(safe_qx);
+
+use constant EMPTY => q{};
+use constant COLON => q{:};
+use constant NEWLINE => qq{\n};
 
 my (@LINTIAN_CMD, $LINTIAN_VERSION);
 
@@ -209,7 +215,7 @@ sub process_worklist {
     while (@worklist) {
         my $len = scalar @worklist;
         my (@work_splice, @completed, %processed, %errors);
-        my ($lintpipe, $lint_stdin, $status_fd, $lint_status_out);
+        my ($status_fd, $lint_status_out);
         my $got_alarm = 0;
 
         # Bail if there is less than 5 minutes left
@@ -241,34 +247,130 @@ sub process_worklist {
 
         next if ($OPT{'dry-run'});
 
-        pipe($lint_stdin, $lintpipe);
         pipe($status_fd, $lint_status_out);
         my ($nfd, $new_lintian_log)
           = tempfile('lintian.log-XXXXXXX', DIR => $lintian_log_dir);
         # We do not mind if anyone reads the lintian log as it is being written
         chmod(0644, $nfd);
         log_msg("New lintian log at $new_lintian_log");
-        my $pid = fork();
-        if (not $pid) {
 
-            # child => juggle some fds, close some pipes and exec lintian
-            my $status_fileno = fileno($lint_status_out);
-            # Perl is helpful and sets close-on-exec by default for fd > $^F.
-            # - except, in this case, that is *not* what we want.
-            my $flags = fcntl($lint_status_out, F_GETFD, 0);
-            fcntl($lint_status_out, F_SETFD, $flags & ~FD_CLOEXEC);
-            open(STDIN, '<&', $lint_stdin);
-            open(STDOUT, '>&', $nfd);
-            open(STDERR, '>&', *STDOUT);
-            close($lintpipe);
-            close($status_fd);
-            push(@LINTIAN_CMD, '--status-log', '&' . ${status_fileno});
-            exec(@LINTIAN_CMD)
-              or die("exec @LINTIAN_CMD failed: $!");
-        }
-        # Close the end points only the child needs
-        close($lint_stdin);
-        close($lint_status_out);
+        my $loop = IO::Async::Loop->new;
+        my $future = $loop->new_future;
+        my $signalled_lintian = 0;
+
+        push(@LINTIAN_CMD, '--status-log', '&3');
+        my $process = IO::Async::Process->new(
+            command => [@LINTIAN_CMD],
+            stdin => { via => 'pipe_write' },
+            stdout => { via => 'pipe_read' },
+            stderr => { via => 'pipe_read' },
+            fd3 => { via => 'pipe_read' },
+            on_finish => sub {
+                my ($self, $exitcode) = @_;
+                my $status = ($exitcode >> 8);
+                my $signal = ($exitcode & 0xff);
+
+                if ($signal) {
+                    log_msg("Lintian terminated by signal: $signal");
+                    # If someone is sending us signals (e.g. SIGINT/Ctrl-C)
+                    # don't start the next round.
+                    log_msg(' - skipping the rest of the worklist');
+                    @worklist = ();
+                    $future->fail(
+                        "Command @LINTIAN_CMD received signal $signal");
+                    return;
+                }
+
+                if ($status == 0 || $status == 1) {
+                    # exit 1 (policy violations) happens all the time (sadly)
+                    # exit 2 (broken packages) also happens all the time...
+                    log_msg('Lintian finished successfully');
+                    $future->done("Done with @LINTIAN_CMD");
+                    return;
+                }
+
+                log_msg("warning: executing lintian returned status $status");
+                if ($got_alarm) {
+                    # Ideally, lintian would always die by the signal
+                    # but some times it catches it and terminates
+                    # "normally"
+                    log_msg('Stopped by a signal or time out');
+                    log_msg(' - skipping the rest of the worklist');
+                    @worklist = ();
+                }
+
+                $future->fail("Error status $status from @LINTIAN_CMD");
+                return;
+            });
+
+        $process->stdout->configure(
+            on_read => sub {
+                my ($stream, $buffref, $eof) = @_;
+
+                if (length $$buffref) {
+                    print {$nfd} $$buffref;
+                    $$buffref = EMPTY;
+                }
+
+                close($nfd)
+                  if $eof;
+
+                return 0;
+            },
+        );
+
+        $process->stderr->configure(
+            on_read => sub {
+                my ($stream, $buffref, $eof) = @_;
+
+                if (length $$buffref) {
+                    print STDOUT $$buffref;
+                    $$buffref = EMPTY;
+                }
+
+                return 0;
+            },
+        );
+
+        $process->fd3->configure(
+            on_read => sub {
+                my ($stream, $buffref, $eof) = @_;
+
+                while($$buffref =~ s/^(.*)\n//) {
+                    my $line = $1;
+
+                    # listen to status updates from lintian
+                    if ($line =~ m/^complete ([^ ]+) \(([^\)]+)\)$/) {
+                        my ($group_id, $runtime) = ($1, $2);
+                        push(@completed, $group_id);
+                        $processed{$group_id} = 1;
+                        log_msg("  [lintian] processed $group_id"
+                              . " successfully (time: $runtime)");
+                    } elsif ($line =~ m/^error ([^ ]+) \(([^\)]+)\)$/) {
+                        my ($group_id, $runtime) = ($1, $2);
+                        log_msg("  [lintian] error processing $group_id "
+                              . "(time: $runtime)");
+                        $processed{$group_id} = 1;
+                        # We ignore errors if we sent lintian a signal to avoid
+                        # *some* false-positives.
+                        $errors{$group_id} = 1 if not $signalled_lintian;
+                    } elsif ($line =~ m/^ack-signal (SIG\S+)$/) {
+                        my $signal = $1;
+                        log_msg(
+"Signal $signal acknowledged: disabled timed alarms"
+                        );
+                        alarm(0);
+                    }
+                }
+
+                alarm(0)
+                  if $eof;
+
+                return 0;
+            },
+        );
+
+        $loop->add($process);
 
         my $groups = $state->{'groups'};
         # Submit the tasks to Lintian
@@ -285,16 +387,15 @@ sub process_worklist {
             $members = $groups->{$group_id}{'members'};
             for my $member_id (sort(keys(%{${members}}))) {
                 my $path = $members->{$member_id}{'path'};
-                print {$lintpipe} "$path\n";
+                $process->stdin->write($path . NEWLINE);
             }
         }
-        close($lintpipe);
+        $process->stdin->close_when_empty;
 
         eval {
             my $time_limit
               = $start_time + BACKLOG_PROCESSING_TIME_LIMIT - time();
             my $count = 0;
-            my $signalled_lintian = 0;
             my $sig_handler = sub {
                 my ($signal_name) = @_;
                 $signalled_lintian = 1;
@@ -305,9 +406,10 @@ sub process_worklist {
                     $got_alarm = -1;
                 }
                 if ($count < 3) {
+                    my $pid = $process->pid;
                     log_msg("Received SIG${signal_name}, "
                           . "sending SIGTERM to $pid [${count}/3]");
-                    kill('TERM', $pid);
+                    $process->kill('TERM');
                     if ($signal_name eq 'ALRM') {
                         log_msg(
                             'Scheduling another alarm in 5 minutes from now...'
@@ -315,11 +417,12 @@ sub process_worklist {
                         alarm(300);
                     }
                 } else {
+                    my $pid = $process->pid;
                     log_msg("Received SIG${signal_name} as the third one, "
                           . "sending SIGKILL to $pid");
                     log_msg('You may have to clean up some '
                           . 'temporary directories manually');
-                    kill('KILL', $pid);
+                    $process->kill('KILL');
                 }
             };
             local $SIG{'TERM'} = $sig_handler;
@@ -327,73 +430,23 @@ sub process_worklist {
             local $SIG{'ALRM'} = $sig_handler;
 
             alarm($time_limit);
-
-            # Listen to status updates from lintian
-            while (my $line = <$status_fd>) {
-                chomp($line);
-                if ($line =~ m/^complete ([^ ]+) \(([^\)]+)\)$/) {
-                    my ($group_id, $runtime) = ($1, $2);
-                    push(@completed, $group_id);
-                    $processed{$group_id} = 1;
-                    log_msg("  [lintian] processed $group_id"
-                          . " successfully (time: $runtime)");
-                } elsif ($line =~ m/^error ([^ ]+) \(([^\)]+)\)$/) {
-                    my ($group_id, $runtime) = ($1, $2);
-                    log_msg("  [lintian] error processing $group_id "
-                          . "(time: $runtime)");
-                    $processed{$group_id} = 1;
-                    # We ignore errors if we sent lintian a signal to avoid
-                    # *some* false-positives.
-                    $errors{$group_id} = 1 if not $signalled_lintian;
-                } elsif ($line =~ m/^ack-signal (SIG\S+)$/) {
-                    my $signal = $1;
-                    log_msg(
-                        "Signal $signal acknowledged: disabled timed alarms");
-                    alarm(0);
-                }
-            }
-            alarm(0);
         };
-        close($status_fd);
 
         # Wait for lintian to terminate
-        waitpid($pid, 0) == $pid or die("waitpid($pid, 0) failed: $!");
-        if ($?) {
-            # exit 1 (policy violations) happens all the time (sadly)
-            # exit 2 (broken packages) also happens all the time...
-            my $res = ($? >> 8) & 0xff;
-            my $sig = $? & 0xff;
-            if ($res != 1 and $res != 0) {
-                log_msg("warning: executing lintian returned $res");
-                if ($got_alarm) {
-                    # Ideally, lintian would always die by the signal
-                    # but some times it catches it and terminates
-                    # "normally"
-                    log_msg('Stopped by a signal or time out');
-                    log_msg(' - skipping the rest of the worklist');
-                    @worklist = ();
-                }
-            } elsif ($sig) {
-                log_msg("Lintian terminated by signal: $sig");
-                # If someone is sending us signals (e.g. SIGINT/Ctrl-C)
-                # don't start the next round.
-                log_msg(' - skipping the rest of the worklist');
-                @worklist = ();
+        $future->await;
+
+        if ($got_alarm) {
+            if ($got_alarm == 1) {
+                # Lintian was (presumably) killed due to a
+                # time-out from this process
+                $exit_code = 2;
+            } else {
+                # Lintian was killed by another signal; notify
+                # harness that it should skip the rest as well.
+                $exit_code = 3;
             }
-            if ($got_alarm) {
-                if ($got_alarm == 1) {
-                    # Lintian was (presumably) killed due to a
-                    # time-out from this process
-                    $exit_code = 2;
-                } else {
-                    # Lintian was killed by another signal; notify
-                    # harness that it should skip the rest as well.
-                    $exit_code = 3;
-                }
-            }
-        } else {
-            log_msg('Lintian finished successfully');
         }
+
         log_msg('Updating the lintian log used for reporting');
         my $filter = generate_log_filter($state, \%processed);
         seek($nfd, 0, SEEK_END);

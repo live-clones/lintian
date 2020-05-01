@@ -2,9 +2,11 @@ Tag: typo-in-debhelper-override-target
 Severity: warning
 Certainty: possible
 Check: debhelper
-Info: The listed target in debian/rules command is a likely misspelling.
+Info: The listed target in debian/rules is a likely misspelling
+ or it is missing an underscore ("_") between the override and the
+ command name.
  .
- This can result in (for example) a <tt>dh_override_</tt>-style target
+ This can result in (for example) a <tt>override_dh_foo</tt>-style target
  silently not being executed by <tt>make</tt>.
  .
  Implementation detail: The typo is detected by using "Levenshtein

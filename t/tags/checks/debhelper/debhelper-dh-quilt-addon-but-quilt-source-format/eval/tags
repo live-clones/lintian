@@ -1,4 +1,4 @@
 debhelper-dh-quilt-addon-but-quilt-source-format (source): dh-quilt-addon-but-quilt-source-format dh ... --with quilt (line 4)
 debhelper-dh-quilt-addon-but-quilt-source-format (source): debian-build-system dh
-debhelper-dh-quilt-addon-but-quilt-source-format (source): debhelper-compat-virtual-relation 12
-debhelper-dh-quilt-addon-but-quilt-source-format (source): debhelper-compat-level 12
+debhelper-dh-quilt-addon-but-quilt-source-format (source): debhelper-compat-virtual-relation 13
+debhelper-dh-quilt-addon-but-quilt-source-format (source): debhelper-compat-level 13

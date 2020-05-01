@@ -1,6 +1,6 @@
 compat-level-not-a-number (source): uses-debhelper-compat-file
 compat-level-not-a-number (source): package-uses-old-debhelper-compat-version 11
-compat-level-not-a-number (source): declares-possibly-conflicting-debhelper-compat-versions rules=11a compat=12
+compat-level-not-a-number (source): declares-possibly-conflicting-debhelper-compat-versions rules=11a compat=13
 compat-level-not-a-number (source): debian-build-system dh
 compat-level-not-a-number (source): debhelper-compatibility-level-not-a-number 11a
 compat-level-not-a-number (source): debhelper-compat-level 11

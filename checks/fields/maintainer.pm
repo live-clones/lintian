@@ -52,6 +52,9 @@ sub source {
 
     my $is_list = $maintainer =~ /\@lists(?:\.alioth)?\.debian\.org\b/;
 
+    $self->tag('mailing-list-obsolete-in-debian-infrastructure', $maintainer)
+      if $maintainer =~ /\@lists\.alioth\.debian\.org\b/;
+
     $self->tag('no-human-maintainers')
       if $is_list && !defined $self->processable->field('uploaders');
 

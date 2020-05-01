@@ -1,1 +1,2 @@
 rules-special-variables (source): debian-rules-should-not-use-or-modify-user-only-variable line 3
+rules-special-variables (source): debian-rules-uses-as-needed-linker-flag line 3

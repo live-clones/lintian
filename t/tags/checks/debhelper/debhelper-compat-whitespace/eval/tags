@@ -1,3 +1,3 @@
 debhelper-compat-whitespace (source): uses-debhelper-compat-file
 debhelper-compat-whitespace (source): debian-build-system dh
-debhelper-compat-whitespace (source): debhelper-compat-level 12
+debhelper-compat-whitespace (source): debhelper-compat-level 13

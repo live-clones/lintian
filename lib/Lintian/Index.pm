@@ -275,7 +275,7 @@ sub load {
 
     # ensure root is not its own child; may create leaks like #695866
     die 'Root directory is its own parent'
-      if defined $all{''}->parent_dir;
+      if defined $all{''} && defined $all{''}->parent_dir;
 
     # find all hard links
     my @hardlinks

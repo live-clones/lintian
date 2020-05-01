@@ -51,11 +51,11 @@
             </tag>
             <tag severity="classification">
               <name>debhelper-compat-level</name>
-              <hint>12</hint>
+              <hint>13</hint>
             </tag>
             <tag severity="classification">
               <name>debhelper-compat-virtual-relation</name>
-              <hint>12</hint>
+              <hint>13</hint>
             </tag>
             <tag severity="classification">
               <name>debian-build-system</name>

@@ -22,8 +22,8 @@ P[P]: lintian-output-letter source: no-homepage-field
 P[P]: lintian-output-letter source: package-uses-deprecated-source-override-location
 C[C]: lintian-output-letter: control-tarball-compression-format xz
 C[C]: lintian-output-letter: data-tarball-compression-format xz
-C[C]: lintian-output-letter source: debhelper-compat-level 12
-C[C]: lintian-output-letter source: debhelper-compat-virtual-relation 12
+C[C]: lintian-output-letter source: debhelper-compat-level 13
+C[C]: lintian-output-letter source: debhelper-compat-virtual-relation 13
 C[C]: lintian-output-letter source: debian-build-system dh
 C[C]: lintian-output-letter source: debian-watch-file-standard 3
 C[C]: lintian-output-letter: no-ctrl-scripts

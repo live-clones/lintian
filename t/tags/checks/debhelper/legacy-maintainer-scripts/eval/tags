@@ -1,4 +1,4 @@
 maintainer-scripts (source): debian-build-system debhelper
-maintainer-scripts (source): debhelper-compat-virtual-relation 12
-maintainer-scripts (source): debhelper-compat-level 12
+maintainer-scripts (source): debhelper-compat-virtual-relation 13
+maintainer-scripts (source): debhelper-compat-level 13
 maintainer-scripts (source): debhelper-but-no-misc-depends maintainer-scripts

@@ -29,6 +29,7 @@ use Carp;
 use Cwd();
 use IO::Async::Loop;
 use IO::Async::Process;
+use List::MoreUtils qw(uniq);
 use Path::Tiny;
 
 use Lintian::Util qw(get_dsc_info);
@@ -224,35 +225,26 @@ sub create {
         delete $single{''}
           if exists $single{''};
 
+        # unwanted top-level common prefix
         my $unwanted = EMPTY;
-        for my $name (keys %single) {
 
-            my ($candidate) = ($name =~ m,^([^/]+),);
+        # find all top-level prefixes
+        my @prefixes = keys %single;
+        s{^([^/]+).*$}{$1}s for @prefixes;
 
-            unless (length $candidate) {
-                $unwanted = EMPTY;
-                next;
-            }
+        # squash identical values
+        my @unique = uniq @prefixes;
 
-            if ($candidate eq $name
-                && !$single{$name}->perm =~ m/^d/) {
-                $unwanted = EMPTY;
-                next;
-            }
+        # check for a single common value
+        if (@unique == 1) {
+            my $common = $unique[0];
 
-            unless (length $unwanted) {
-                $unwanted = $candidate;
-                next;
-            }
-
-            next
-              if $candidate eq $unwanted;
-
-            $unwanted = EMPTY;
+            # use only if there is no directory with that name
+            $unwanted = $common
+              unless $single{$common} && $single{$common}->perm =~ /^d/;
         }
 
-        # If there is a common prefix and it is $component, then we use that
-        # because that is where they will be extracted by unpacked.
+        # keep common prefix when equal to the source component
         unless ($unwanted eq $component) {
 
             my %copy;

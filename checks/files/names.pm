@@ -81,27 +81,31 @@ sub files {
 sub source {
     my ($self) = @_;
 
-    my @orig_non_utf8_names;
+    unless ($self->processable->native) {
 
-    @orig_non_utf8_names = grep { !valid_utf8($_) }
-      map { $_->name } $self->processable->orig->sorted_list
-      unless $self->processable->native;
+        my @orig_non_utf8 = grep { !valid_utf8($_->name) }
+          $self->processable->orig->sorted_list;
 
-    $self->tag('upstream-file-without-utf8-name', $_) for @orig_non_utf8_names;
+        $self->tag('upstream-file-without-utf8-name', $_->name)
+          for @orig_non_utf8;
+    }
 
-    my @patched_non_utf8_names = grep { !valid_utf8($_) }
-      map { $_->name } $self->processable->patched->sorted_list;
+    my @patched = map { $_->name } $self->processable->patched->sorted_list;
+    my @orig = map { $_->name } $self->processable->orig->sorted_list;
 
-    my $lc
-      = List::Compare->new(\@orig_non_utf8_names, \@patched_non_utf8_names);
-    my @dpkg_created = $lc->get_Ronly;
+    my $lc= List::Compare->new(\@patched, \@orig);
+    my @created = $lc->get_Lonly;
+
+    my @non_utf8 = grep { !valid_utf8($_) } @created;
 
     # exclude quilt directory
-    my @maintainer_fault = grep { $_ !~ qr{^.pc/} } @dpkg_created;
+    my @maintainer_fault = grep { !m{^.pc/} } @non_utf8;
 
-    # lintian's own packaging presently triggers this tag due to the test case
-    unless ($self->package eq 'lintian') {
+    if ($self->processable->native) {
+        $self->tag('native-source-file-without-utf8-name', $_)
+          for @maintainer_fault;
 
+    } else {
         $self->tag('patched-file-without-utf8-name', $_) for @maintainer_fault;
     }
 

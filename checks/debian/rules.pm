@@ -269,6 +269,10 @@ sub source {
             }
         }
 
+        if ($line =~ m/--as-needed/ and $line !~ m/--no-as-needed/) {
+            $self->tag('debian-rules-uses-as-needed-linker-flag',"line $.");
+        }
+
         #<<< no Perl tidy
         $self->tag(
             'debian-rules-uses-supported-python-versions-without-python-all-build-depends',

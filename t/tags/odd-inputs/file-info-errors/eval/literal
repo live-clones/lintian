@@ -1,7 +1,7 @@
 C: file-info-errors: control-tarball-compression-format xz
 C: file-info-errors: data-tarball-compression-format xz
-C: file-info-errors source: debhelper-compat-level 12
-C: file-info-errors source: debhelper-compat-virtual-relation 12
+C: file-info-errors source: debhelper-compat-level 13
+C: file-info-errors source: debhelper-compat-virtual-relation 13
 C: file-info-errors source: debian-build-system dh
 C: file-info-errors: no-ctrl-scripts
 C: file-info-errors source: package-is-maintained-by-individual
