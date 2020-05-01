@@ -39,10 +39,16 @@ sub files {
 
     if ($file->name =~ /\.zip$/si) {
 
+        # maybe rewrite with Archive::Zip
+
         capture {
+
+            # may prompt for password with -t; piping yes '' does not work
             $self->tag('broken-zip', $file->name)
-              if system('unzip', '-t', $file->unpacked_path);
+              if system('unzip', '-l', $file->unpacked_path);
         };
+
+        # should issue a tag for encrypted members, see Bug#935292
     }
 
     return;

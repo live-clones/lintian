@@ -435,6 +435,26 @@ sub do_fork() {
     return $pid;
 }
 
+=item system_env (CMD)
+
+Behaves like system (CMD) except that the environment of CMD is
+cleaned (as defined by L</clean_env>(1)).
+
+=cut
+
+sub system_env {
+    my $pid = do_fork;
+    if (not defined $pid) {
+        return -1;
+    } elsif ($pid == 0) {
+        clean_env(1);
+        exec @_ or die("exec of $_[0] failed: $!\n");
+    } else {
+        waitpid $pid, 0;
+        return $?;
+    }
+}
+
 =item clean_env ([CLOC])
 
 Destructively cleans %ENV - removes all variables %ENV except a

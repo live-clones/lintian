@@ -1,0 +1,3 @@
+Skeleton: source-native
+Testname: national-encoding-in-native
+Description: File name in native source tree is not valid UTF-8

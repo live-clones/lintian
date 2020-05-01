@@ -11,8 +11,8 @@ basic-non-native-3.0 (source): package-is-maintained-by-individual
 basic-non-native-3.0 (source): debian-watch-file-standard 3
 basic-non-native-3.0 (source): debian-watch-does-not-check-gpg-signature
 basic-non-native-3.0 (source): debian-build-system dh
-basic-non-native-3.0 (source): debhelper-compat-virtual-relation 12
-basic-non-native-3.0 (source): debhelper-compat-level 12
+basic-non-native-3.0 (source): debhelper-compat-virtual-relation 13
+basic-non-native-3.0 (source): debhelper-compat-level 13
 basic-non-native-3.0 (changes): package-is-maintained-by-individual
 basic-non-native-3.0 (buildinfo): package-is-maintained-by-individual
 basic-non-native-3.0 (binary): package-is-maintained-by-individual

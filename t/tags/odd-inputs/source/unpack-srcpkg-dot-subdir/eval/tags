@@ -9,5 +9,5 @@ unpack-srcpkg-dot-subdir (source): rules-does-not-require-root
 unpack-srcpkg-dot-subdir (source): package-is-maintained-by-individual
 unpack-srcpkg-dot-subdir (source): debian-watch-file-missing-version
 unpack-srcpkg-dot-subdir (source): debian-build-system dh
-unpack-srcpkg-dot-subdir (source): debhelper-compat-virtual-relation 12
-unpack-srcpkg-dot-subdir (source): debhelper-compat-level 12
+unpack-srcpkg-dot-subdir (source): debhelper-compat-virtual-relation 13
+unpack-srcpkg-dot-subdir (source): debhelper-compat-level 13

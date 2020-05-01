@@ -3,5 +3,5 @@ control-field-traversal-2 (source): source-format 3.0 (native)
 control-field-traversal-2 (source): rules-does-not-require-root
 control-field-traversal-2 (source): package-is-maintained-by-individual
 control-field-traversal-2 (source): debian-build-system dh
-control-field-traversal-2 (source): debhelper-compat-virtual-relation 12
-control-field-traversal-2 (source): debhelper-compat-level 12
+control-field-traversal-2 (source): debhelper-compat-virtual-relation 13
+control-field-traversal-2 (source): debhelper-compat-level 13

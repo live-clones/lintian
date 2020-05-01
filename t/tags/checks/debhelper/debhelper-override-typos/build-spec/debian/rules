@@ -21,6 +21,9 @@ override_dh_testdirs: override_dh_ucfs
 # distance of "5" to "dh_override_build")
 override_dh_build:
 
+# Missing space
+override dh_install:
+
 # Good
 .PHONY: override_dh_ucfs
 override_dh_install:
@@ -29,7 +32,6 @@ override_dh_install :
 prefix_override_dh_gconfs:
 override_dh_will_never_exist:
 override_dh_python2 override_dh_perl :
-override_dh_systemd_enable override_dh_systemd_disable:
 override_dh_auto_configure-% override_dh_auto_install-%:
 foo override_dh_installdeb bar override_dh_installxmlcatalogs: # combining regular and overrides
 override_dh_install: $(PY3VERS:%=install-python%) $(PY2VERS:%=install-python%)

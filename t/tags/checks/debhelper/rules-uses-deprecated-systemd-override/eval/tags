@@ -1,3 +1,4 @@
+rules-uses-deprecated-systemd-override (source): package-uses-old-debhelper-compat-version 12
 rules-uses-deprecated-systemd-override (source): debian-rules-uses-deprecated-systemd-override override_dh_systemd_start-arch (line 12)
 rules-uses-deprecated-systemd-override (source): debian-rules-uses-deprecated-systemd-override override_dh_systemd_enable (line 6)
 rules-uses-deprecated-systemd-override (source): debian-build-system dh

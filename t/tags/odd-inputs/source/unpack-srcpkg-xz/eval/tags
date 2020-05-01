@@ -9,5 +9,5 @@ unpack-srcpkg-xz (source): rules-does-not-require-root
 unpack-srcpkg-xz (source): package-is-maintained-by-individual
 unpack-srcpkg-xz (source): debian-watch-file-missing-version
 unpack-srcpkg-xz (source): debian-build-system dh
-unpack-srcpkg-xz (source): debhelper-compat-virtual-relation 12
-unpack-srcpkg-xz (source): debhelper-compat-level 12
+unpack-srcpkg-xz (source): debhelper-compat-virtual-relation 13
+unpack-srcpkg-xz (source): debhelper-compat-level 13

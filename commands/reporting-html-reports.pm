@@ -37,7 +37,6 @@ use Text::Template ();
 use URI::Escape;
 use YAML::XS ();
 
-use Lintian::Command qw(safe_qx);
 use Lintian::Data;
 use Lintian::Deb822Parser qw(read_dpkg_control);
 use Lintian::Internal::FrontendUtil qw(split_tag);
@@ -45,7 +44,7 @@ use Lintian::Profile;
 use Lintian::Relation::Version qw(versions_comparator);
 use Lintian::Reporting::ResourceManager;
 use Lintian::Reporting::Util qw(load_state_cache find_backlog);
-use Lintian::Util qw(copy_dir run_cmd check_path);
+use Lintian::Util qw(copy_dir run_cmd check_path safe_qx);
 
 my $CONFIG;
 my %OPT;
