@@ -1,8 +1,28 @@
-lintian (2.69.0+git) UNRELEASED; urgency=medium
+lintian (2.70.0) unstable; urgency=medium
 
-  * WIP (generated upon release).
+  * Summary of tag changes:
+    + Added:
+      - non-debug-file-in-debug-package
 
- -- Chris Lamb <lamby@debian.org>  Tue, 28 Apr 2020 21:11:29 +0100
+  [ Chris Lamb ]
+  * Warn about automatically-generated debug packages that ship files
+    other than .debug. (Closes: #958945)
+
+  [ Axel Beckert ]
+  * Fix misleading typo in the long description of the
+    testsuite-dependency-has-unparsable-elements tag.
+
+  [ Felix Lechner ]
+  * Exempt udebs from executable-in-usr-lib. (Closes: #959037)
+  * Fix text and formatting in tag description for
+    portable-executable-missing-security-features. (Re: #953212)
+  * Explain ordering of standalone License and Files paragraphs in the
+    description of missing-license-paragraph-in-dep5-copyright tag.
+    (Closes: #959067)
+  * Decouple a Debhelper-related tag description from the currently
+    recommended level. (Closes: #959126)
+
+ -- Chris Lamb <lamby@debian.org>  Sat, 02 May 2020 12:45:14 +0000
 
 lintian (2.69.0) unstable; urgency=medium
 
