@@ -2,6 +2,7 @@
 
 # Copyright © 1998 Christian Schwarz
 # Copyright © 2000 Sean 'Shaleh' Perry
+# Copyright © 2017 Chris Lamb <lamby@debian.org>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by

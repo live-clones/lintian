@@ -1,6 +1,6 @@
 # pe -- lintian check script -*- perl -*-
 
-# Copyright © 2017 Chris Lamb <lamby@debian.org>
+# Copyright © 2017-2019 Chris Lamb <lamby@debian.org>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by

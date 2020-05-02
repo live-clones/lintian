@@ -3,6 +3,7 @@
 # Lintian reporting harness -- Run lintian against an archive mirror
 #
 # Copyright © 2015 Niels Thykier
+# Copyright © 2018 Chris Lamb <lamby@debian.org>
 #
 # Based on "reporting/harness", which was:
 # Copyright © 1998 Christian Schwarz and Richard Braakman

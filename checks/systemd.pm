@@ -1,6 +1,7 @@
 # systemd -- lintian check script -*- perl -*-
 #
 # Copyright © 2013 Michael Stapelberg
+# Copyright © 2016-2020 Chris Lamb <lamby@debian.org>
 #
 # based on the apache2 checks file by:
 # Copyright © 2012 Arno Töll

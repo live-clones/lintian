@@ -2,6 +2,7 @@
 #
 # Copyright © 2004 Marc Brockschmidt
 # Copyright © 2020 Felix Lechner
+# Copyright © 2020 Chris Lamb <lamby@debian.org>
 #
 # Parts of the code were taken from the old check script, which
 # was Copyright © 1998 Richard Braakman (also licensed under the

@@ -1,6 +1,7 @@
 # fields/package-relations -- lintian check script (rewrite) -*- perl -*-
 #
 # Copyright © 2004 Marc Brockschmidt
+# Copyright © 2019-2020 Chris Lamb <lamby@debian.org>
 #
 # Parts of the code were taken from the old check script, which
 # was Copyright © 1998 Richard Braakman (also licensed under the

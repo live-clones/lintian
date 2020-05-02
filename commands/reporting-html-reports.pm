@@ -4,6 +4,7 @@
 #
 # Copyright © 1998 Christian Schwarz and Richard Braakman
 # Copyright © 2007 Russ Allbery
+# Copyright © 2017-2019 Chris Lamb <lamby@debian.org>
 #
 # This program is free software.  It is distributed under the terms of
 # the GNU General Public License as published by the Free Software

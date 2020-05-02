@@ -2,6 +2,7 @@
 #
 # Copyright © 2007 Marc Brockschmidt
 # Copyright © 2008 Raphael Hertzog
+# Copyright © 2018-2019 Chris Lamb <lamby@debian.org>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
