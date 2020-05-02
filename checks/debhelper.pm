@@ -1,6 +1,6 @@
 # debhelper format -- lintian check script -*- perl -*-
 
-# Copyright (C) 1999 by Joey Hess
+# Copyright © 1999 by Joey Hess
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by

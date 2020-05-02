@@ -1,6 +1,6 @@
 # languages/javascript/nodejs -- lintian check script -*- perl -*-
 
-# Copyright (C) 2019-2020, Xavier Guimard <yadd@debian.org>
+# Copyright © 2019-2020, Xavier Guimard <yadd@debian.org>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by

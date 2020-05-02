@@ -1,6 +1,6 @@
 # emacs -- lintian check script -*- perl -*-
 
-# Copyright (C) 1998 Christian Schwarz and Richard Braakman
+# Copyright © 1998 Christian Schwarz and Richard Braakman
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by

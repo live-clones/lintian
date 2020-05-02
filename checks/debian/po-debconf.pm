@@ -1,6 +1,6 @@
 # debian/po-debconf -- lintian check script -*- perl -*-
 
-# Copyright (C) 2002-2004 by Denis Barbier <barbier@linuxfr.org>
+# Copyright © 2002-2004 by Denis Barbier <barbier@linuxfr.org>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by

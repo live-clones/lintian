@@ -1,7 +1,7 @@
 # -*- perl -*-
 # Lintian::Data -- interface to query lists of keywords
 
-# Copyright (C) 2008 Russ Allbery
+# Copyright © 2008 Russ Allbery
 #
 # This program is free software; you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by the Free

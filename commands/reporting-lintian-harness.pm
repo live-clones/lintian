@@ -2,10 +2,10 @@
 
 # Lintian reporting harness -- Run lintian against an archive mirror
 #
-# Copyright (C) 2015 Niels Thykier
+# Copyright © 2015 Niels Thykier
 #
 # Based on "reporting/harness", which was:
-# Copyright (C) 1998 Christian Schwarz and Richard Braakman
+# Copyright © 1998 Christian Schwarz and Richard Braakman
 #
 # This program is free software.  It is distributed under the terms of
 # the GNU General Public License as published by the Free Software

@@ -1,6 +1,6 @@
 #!/bin/sh
-# Copyright 2008 Frank Lichtenheld <djpig@debian.org>, if at all copyrightable
-# Copyright 2009 Russ Allbery <rra@debian.org>
+# Copyright © 2008 Frank Lichtenheld <djpig@debian.org>, if at all copyrightable
+# Copyright © 2009 Russ Allbery <rra@debian.org>
 
 # Helper script for updating lintian.debian.org to the latest lintian release
 # Call with the release number as only argument, e.g.

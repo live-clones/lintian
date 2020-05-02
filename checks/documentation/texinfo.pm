@@ -1,7 +1,7 @@
 # documentation/texinfo -- lintian check script -*- perl -*-
 
-# Copyright (C) 1998 Christian Schwarz
-# Copyright (C) 2001 Josip Rodin
+# Copyright © 1998 Christian Schwarz
+# Copyright © 2001 Josip Rodin
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by

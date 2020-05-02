@@ -1,7 +1,7 @@
 # debian/rules -- lintian check script -*- perl -*-
 
-# Copyright (C) 2006 Russ Allbery <rra@debian.org>
-# Copyright (C) 2005 René van Bevern <rvb@pro-linux.de>
+# Copyright © 2006 Russ Allbery <rra@debian.org>
+# Copyright © 2005 René van Bevern <rvb@pro-linux.de>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by

@@ -1,7 +1,7 @@
 # -*- perl -*-
 # Lintian::Data -- interface to match using a sliding window algorithm
 
-# Copyright (C) 2013 Bastien ROUCARIÈS
+# Copyright © 2013 Bastien ROUCARIÈS
 #
 # This program is free software; you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by the Free

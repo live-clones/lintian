@@ -6,8 +6,8 @@ use utf8;
 
 # Generate a list of packages that provide mail-transport-agent
 
-# Copyright (C) 2008 Niko Tyni
-# Copyright (C) 2018 Chris Lamb <lamby@debian.org>
+# Copyright © 2008 Niko Tyni
+# Copyright © 2018 Chris Lamb <lamby@debian.org>
 #
 # This program is free software; you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by the Free

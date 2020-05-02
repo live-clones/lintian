@@ -1,7 +1,7 @@
 # binaries -- lintian check script -*- perl -*-
 
-# Copyright (C) 1998 Christian Schwarz and Richard Braakman
-# Copyright (C) 2012 Kees Cook
+# Copyright © 1998 Christian Schwarz and Richard Braakman
+# Copyright © 2012 Kees Cook
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by

@@ -1,11 +1,11 @@
 # cruft -- lintian check script -*- perl -*-
 #
 # based on debhelper check,
-# Copyright (C) 1999 Joey Hess
-# Copyright (C) 2000 Sean 'Shaleh' Perry
-# Copyright (C) 2002 Josip Rodin
-# Copyright (C) 2007 Russ Allbery
-# Copyright (C) 2013-2018 Bastien ROUCARIÈS
+# Copyright © 1999 Joey Hess
+# Copyright © 2000 Sean 'Shaleh' Perry
+# Copyright © 2002 Josip Rodin
+# Copyright © 2007 Russ Allbery
+# Copyright © 2013-2018 Bastien ROUCARIÈS
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by

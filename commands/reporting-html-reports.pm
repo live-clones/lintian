@@ -2,8 +2,8 @@
 #
 # Lintian HTML reporting tool -- Create Lintian web reports
 #
-# Copyright (C) 1998 Christian Schwarz and Richard Braakman
-# Copyright (C) 2007 Russ Allbery
+# Copyright © 1998 Christian Schwarz and Richard Braakman
+# Copyright © 2007 Russ Allbery
 #
 # This program is free software.  It is distributed under the terms of
 # the GNU General Public License as published by the Free Software

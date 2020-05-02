@@ -1,4 +1,4 @@
-# Copyright (C) 2010 Raphael Geissert <atomo64@gmail.com>
+# Copyright © 2010 Raphael Geissert <atomo64@gmail.com>
 #
 # This program is free software; you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by the Free
