@@ -1,8 +1,12 @@
-lintian (2.70.0+git) UNRELEASED; urgency=medium
+lintian (2.71.0) unstable; urgency=medium
 
-  * WIP (generated upon release).
+  * Mark the debian-rules-uses-as-needed-linker-flag tag as being pedantic
+    & experimental until (at least) the release of bullseye. Thanks to
+    Mattia Rizzolo and Christian Kastner. (Closes: #959696)
+  * Replace "Copyright (C)" with the Unicode copyright symbol in our own
+    code for consistency and update my copyright years.
 
- -- Chris Lamb <lamby@debian.org>  Sat, 02 May 2020 16:31:13 +0100
+ -- Chris Lamb <lamby@debian.org>  Tue, 05 May 2020 18:17:01 +0000
 
 lintian (2.70.0) unstable; urgency=medium
 
