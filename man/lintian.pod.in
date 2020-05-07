@@ -572,9 +572,9 @@ Lintian looks for its configuration file in the following locations:
 Deprecated in Lintian/2.5.12 and newer (use the XDG based variant
 above)
 
-=item * I<XGD_DIR/lintian/lintianrc>
+=item * I<XDG_DIR/lintian/lintianrc>
 
-Where XGD_DIR is a directories listed in I<$XDG_CONFIG_DIRS> (or
+Where XDG_DIR is a directories listed in I<$XDG_CONFIG_DIRS> (or
 I</etc/xdg> if I<$XDG_CONFIG_DIRS> is unset).
 
 =item * I</etc/lintianrc>
