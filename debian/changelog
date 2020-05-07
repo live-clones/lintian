@@ -1,6 +1,12 @@
 lintian (2.71.0+git) UNRELEASED; urgency=medium
 
+  [ Chris Lamb ]
   * WIP (generated upon release).
+
+  [ Paul Wise ]
+  * data/obsolete-sites/obsolete-sites:
+    + Add tigris.org to the list of obsolete sites;
+      "The site will be decommissioned and shut down on 1-July-2020"
 
  -- Chris Lamb <lamby@debian.org>  Tue, 05 May 2020 19:40:50 +0100
 
