@@ -1,9 +1,10 @@
 # fields/length -- lintian check script -*- perl -*-
 #
 # Copyright © 2019 Sylvestre Ledru
+# Copyright © 2019-2020 Chris Lamb <lamby@debian.org>
 #
 # Parts of the code were taken from the old check script, which
-# was Copyright (C) 1998 Richard Braakman (also licensed under the
+# was Copyright © 1998 Richard Braakman (also licensed under the
 # GPL 2 or higher)
 #
 # This program is free software; you can redistribute it and/or modify

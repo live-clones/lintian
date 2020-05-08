@@ -2,9 +2,9 @@
 #
 # dplint -- General purpose frontend for Debian package checker
 #
-# Copyright (C) 2013 Niels Thykier
+# Copyright © 2013 Niels Thykier
 # - Based on lintian, which is/was:
-#   Copyright (C) 1998 Christian Schwarz, Richard Braakman (and others)
+#   Copyright © 1998 Christian Schwarz, Richard Braakman (and others)
 #
 # This program is free software.  It is distributed under the terms of
 # the GNU General Public License as published by the Free Software

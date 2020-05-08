@@ -1,6 +1,7 @@
 # udev -- lintian check script -*- perl -*-
 
 # Copyright © 2016 Petter Reinholdtsen
+# Copyright © 2018 Chris Lamb <lamby@debian.org>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by

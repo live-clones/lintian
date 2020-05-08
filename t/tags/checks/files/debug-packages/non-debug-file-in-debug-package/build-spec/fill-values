@@ -1,0 +1,4 @@
+Skeleton: upload-native
+Testname: non-debug-file-in-debug-package
+Package-Architecture: any
+Description: Test for -dbgsym packages with non-.debug files

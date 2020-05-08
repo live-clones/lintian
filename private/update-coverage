@@ -1,5 +1,7 @@
 #!/usr/bin/perl -w
 #
+# Copyright © 2018 Chris Lamb <lamby@debian.org>
+#
 # Check all tags mentioned in Test-For in the new test suite and all tags seen
 # by the old test suite against the list of all documented tags and generate
 # output suitable for tags-never-seen that lists the untested tags.  Updates

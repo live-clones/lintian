@@ -1,14 +1,17 @@
 #!/usr/bin/perl
 # objdump-info-helper -- lintian collection script
-
+#
+# Copyright © 2017-2018 Chris Lamb <lamby@debian.org>
+#
 # Most of it is taken from objdump-info (Lintian 2.5.9), which had the
 # following copyright/license statements:
 #
+#
 # The original shell script version of this script is
-# Copyright (C) 1998 Christian Schwarz
+# Copyright © 1998 Christian Schwarz
 #
 # This version, including support for etch's binutils, is
-# Copyright (C) 2008 Adam D. Barratt
+# Copyright © 2008 Adam D. Barratt
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by

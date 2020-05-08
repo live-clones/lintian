@@ -33,6 +33,10 @@ with 'Lintian::Check';
 sub files {
     my ($self, $file) = @_;
 
+    # see Bug#959037 for details
+    return
+      if $self->type eq 'udeb';
+
     return
       unless $file->name =~ m{^usr/lib/};
 

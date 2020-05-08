@@ -1,6 +1,6 @@
 # langauges/php/pear -- lintian check script -*- perl -*-
 
-# Copyright (C) 2013 Mathieu Parent <math.parent@gmail.com>
+# Copyright © 2013 Mathieu Parent <math.parent@gmail.com>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by

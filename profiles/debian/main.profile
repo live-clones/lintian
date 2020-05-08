@@ -87,6 +87,7 @@ Enable-Tags-From-Check:
  files/contents,
  files/date,
  files/debug,
+ files/debug-packages,
  files/desktop,
  files/devhelp,
  files/duplicates,

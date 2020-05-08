@@ -1,6 +1,7 @@
 # testsuite -- lintian check script -*- perl -*-
 
-# Copyright (C) 2013 Nicolas Boulenguez <nicolas@debian.org>
+# Copyright © 2013 Nicolas Boulenguez <nicolas@debian.org>
+# Copyright © 2017-2020 Chris Lamb <lamby@debian.org>
 
 # This file is part of lintian.
 

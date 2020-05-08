@@ -9,7 +9,7 @@ use utf8;
 # The list will have the package name and the upstream version of the
 # corresponding module integrated in the currently installed Perl version.
 
-# Copyright (C) 2008 Niko Tyni
+# Copyright © 2008 Niko Tyni
 #
 # This program is free software; you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by the Free

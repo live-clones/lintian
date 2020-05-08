@@ -1,6 +1,6 @@
 # debian/upstream/signing-key -- lintian check script -*- perl -*-
 
-# Copyright (C) 2018 Felix Lechner
+# Copyright © 2018 Felix Lechner
 #
 # This program is free software.  It is distributed under the terms of
 # the GNU General Public License as published by the Free Software

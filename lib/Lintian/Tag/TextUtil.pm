@@ -1,7 +1,7 @@
 # Hey emacs! This is a -*- Perl -*- script!
 # Lintian::Tag::TextUtil -- Perl utility functions for lintian
 
-# Copyright (C) 1998 Christian Schwarz and Richard Braakman
+# Copyright © 1998 Christian Schwarz and Richard Braakman
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by

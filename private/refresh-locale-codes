@@ -1,10 +1,10 @@
 #!/usr/bin/perl
 # refresh-locale-codes -- Refresh the locale (aka ISO 639-1/639-2 codes)
 
-# Copyright (C) 2013 Niels Thykier <niels@thykier.net>
-# Copyright (C) 2019 Adam D. Barratt <adam@adam-barratt.org.uk>
+# Copyright © 2013 Niels Thykier <niels@thykier.net>
+# Copyright © 2019 Adam D. Barratt <adam@adam-barratt.org.uk>
 # Based on a shell script, which was:
-#   Copyright (C) 2010 Raphael Geissert <atomo64@gmail.com>
+#   Copyright © 2010 Raphael Geissert <atomo64@gmail.com>
 #
 # This file is free software: you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by

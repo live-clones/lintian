@@ -1,6 +1,6 @@
 # usrmerge -- lintian check script -*- perl -*-
 
-# Copyright (C) 2016 Marco d'Itri
+# Copyright © 2016 Marco d'Itri
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by

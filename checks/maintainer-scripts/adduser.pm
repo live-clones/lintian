@@ -1,6 +1,6 @@
 # maintainer_scripts::adduser -- lintian check script -*- perl -*-
 
-# Copyright (C) 2020 Topi Miettinen
+# Copyright © 2020 Topi Miettinen
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by

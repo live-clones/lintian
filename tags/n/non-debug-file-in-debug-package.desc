@@ -1,0 +1,10 @@
+Tag: non-debug-file-in-debug-package
+Severity: error
+Certainty: possible
+Check: files/debug-packages
+Info: This auto-generated package (eg. <tt>-dbgsym</tt>) contains the
+ specified file that is not a <tt>.debug</tt> file.
+ .
+ This may be due to the upstream build system miscalculating
+ installation paths.
+Ref: #958945

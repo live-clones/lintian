@@ -1,9 +1,9 @@
 # -*- perl -*-
 # Lintian::Relation::Version -- comparison operators on Debian versions
 
-# Copyright (C) 1998 Christian Schwarz and Richard Braakman
-# Copyright (C) 2004-2009 Russ Allbery <rra@debian.org>
-# Copyright (C) 2009 Adam D. Barratt <adam@adam-barratt.org.uk>
+# Copyright © 1998 Christian Schwarz and Richard Braakman
+# Copyright © 2004-2009 Russ Allbery <rra@debian.org>
+# Copyright © 2009 Adam D. Barratt <adam@adam-barratt.org.uk>
 #
 # This program is free software; you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by the Free

@@ -1,9 +1,9 @@
 # -*- perl -*-
 # Lintian::Maintainer -- Lintian maintainer hecks shared between multiple scripts
 
-# Copyright (C) 2009 Russ Allbery
-# Copyright (C) 2004 Marc Brockschmidt
-# Copyright (C) 1998 Richard Braakman
+# Copyright © 2009 Russ Allbery
+# Copyright © 2004 Marc Brockschmidt
+# Copyright © 1998 Richard Braakman
 #
 # This program is free software; you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by the Free

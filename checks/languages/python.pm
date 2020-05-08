@@ -1,6 +1,6 @@
 # languages/python -- lintian check script -*- perl -*-
 #
-# Copyright (C) 2016 Chris Lamb
+# Copyright © 2016 Chris Lamb
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by

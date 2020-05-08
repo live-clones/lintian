@@ -1,5 +1,6 @@
 # Copyright © 2011 Niels Thykier <niels@thykier.net>
 # Copyright © 2020 Felix Lechner <felix.lechner@lease-up.com>
+# Copyright © 2018 Chris Lamb <lamby@debian.org>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by

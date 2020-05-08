@@ -1,7 +1,8 @@
 # fields/standards-version -- lintian check script -*- perl -*-
 
-# Copyright (C) 1998 Christian Schwarz and Richard Braakman
-# Copyright (C) 2008-2009 Russ Allbery
+# Copyright © 1998 Christian Schwarz and Richard Braakman
+# Copyright © 2008-2009 Russ Allbery
+# Copyright © 2020 Chris Lamb <lamby@debian.org>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by

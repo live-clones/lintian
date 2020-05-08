@@ -1,4 +1,5 @@
-# Copyright 2010 Niels Thykier
+# Copyright © 2010 Niels Thykier
+# Copyright © 2017 Chris Lamb <lamby@debian.org>
 #  - based on the work Richard Braakman and Christian
 #    Schwarz (copyrighted 1998).
 #

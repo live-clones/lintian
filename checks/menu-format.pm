@@ -1,6 +1,7 @@
 # menu format -- lintian check script -*- perl -*-
 
-# Copyright (C) 1998 by Joey Hess
+# Copyright © 1998 by Joey Hess
+# Copyright © 2017-2018 Chris Lamb <lamby@debian.org>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
