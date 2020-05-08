@@ -1,3 +1,9 @@
+lintian (2.71.0~bpo10+1) buster-backports; urgency=medium
+
+  * Rebuild for buster-backports.
+
+ -- Chris Lamb <lamby@debian.org>  Fri, 08 May 2020 23:08:01 +0100
+
 lintian (2.71.0) unstable; urgency=medium
 
   * Mark the debian-rules-uses-as-needed-linker-flag tag as being pedantic
