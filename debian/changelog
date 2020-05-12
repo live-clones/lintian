@@ -1,8 +1,21 @@
-lintian (2.72.0+git) UNRELEASED; urgency=medium
+lintian (2.73.0) unstable; urgency=medium
 
-  * WIP (generated at release time: please do not add entries below).
+  * Summary of tag changes:
+    + Added:
+      - desktop-entry-unknown-type
+      - homepage-refers-to-filesystem-listing
 
- -- Chris Lamb <lamby@debian.org>  Sat, 09 May 2020 15:41:11 +0100
+  [ Chris Lamb ]
+  * Add dh_gnome (and dh_gnome_clean) as an explicit alternative to
+    dh-sequence-gnome in debhelper/dh_commands-manual. (Closes: #958500)
+  * Factor out matching Homepage fields to data/fields/bad-homepages.
+  * Check for Homepage fields that point to filesystem directory listings.
+    (Closes: #960366)
+
+  [ Kari Pahula ]
+  * Warn about unknown file types in desktop files.
+
+ -- Chris Lamb <lamby@debian.org>  Tue, 12 May 2020 21:57:51 +0000
 
 lintian (2.72.0) unstable; urgency=medium
 
