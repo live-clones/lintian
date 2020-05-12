@@ -16,4 +16,5 @@ homepage-field-uses-insecure-uri                       ~~ ^http://(www\.)?gnu\.o
 homepage-for-bioconductor-package-not-canonical        ~~ bioconductor\.org/packages/.*/bioc/html/.*\.html*$
 homepage-for-cpan-package-contains-version             ~~ (?:search\.cpan\.org|metacpan\.org)/.*-[0-9._]+/*
 homepage-for-cran-package-not-canonical                ~~ cran\.r-project\.org/web/packages/.+
+homepage-refers-to-filesystem-listing                  ~~ (https?|ftp)://ftp\.gnu\.org/gnu/(.*)
 homepage-refers-to-obsolete-debian-infrastructure      ~~ alioth\.debian\.org

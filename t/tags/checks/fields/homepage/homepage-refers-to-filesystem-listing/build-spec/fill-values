@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: homepage-refers-to-filesystem-listing
+Description: Check for packages pointing to a directory listing
