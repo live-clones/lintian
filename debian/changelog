@@ -1,3 +1,28 @@
+lintian (2.72.0) unstable; urgency=medium
+
+  * Summary of tag changes:
+    + Added:
+      - package-contains-icon-cache-in-generic-dir
+
+  [ Chris Lamb ]
+  * Check for packages installing /usr/share/icons/hicolor/icon-theme.cache
+    as they will invariably clash with other packages. (Closes: #959855)
+
+  [ Paul Wise ]
+  * Add "tigris.org" to the list of obsolete sites.
+  * Add several spelling corrections
+
+  [ Alex Muntada ]
+  * Correct the spelling of "XDG_DIR".
+
+  [ Felix Lechner ]
+  * Use aspcud solver in apt like the experimental buildds in an attempt to
+    restore Gitlab continuous integration tests.
+  * Ensure apt-get is non-interactive when installing apt-cudf and use
+    the cache.
+
+ -- Chris Lamb <lamby@debian.org>  Sat, 09 May 2020 13:14:55 +0000
+
 lintian (2.71.0~bpo10+1) buster-backports; urgency=medium
 
   * Rebuild for buster-backports.
