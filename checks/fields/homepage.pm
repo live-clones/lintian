@@ -36,8 +36,7 @@ use namespace::clean;
 
 with 'Lintian::Check';
 
-my $KNOWN_INSECURE_HOMEPAGE_URIS
-  = Lintian::Data->new('fields/insecure-homepage-uris');
+my $BAD_HOMEPAGES = Lintian::Data->new('fields/bad-homepages');
 
 sub source {
     my ($self) = @_;
@@ -96,20 +95,10 @@ sub always {
     $self->tag('bad-homepage', $orig)
       unless $uri->scheme && $uri->scheme =~ m/^(?:ftp|https?|gopher)$/o;
 
-    $self->tag('homepage-for-cpan-package-contains-version', $orig)
-      if $homepage=~ m,/(?:search\.cpan\.org|metacpan\.org)/.*-[0-9._]+/*$,;
-
-    $self->tag('homepage-for-cran-package-not-canonical', $orig)
-      if $homepage=~ m,/cran\.r-project\.org/web/packages/.+,;
-
-    $self->tag('homepage-for-bioconductor-package-not-canonical', $orig)
-      if $homepage=~ m,bioconductor\.org/packages/.*/bioc/html/.*\.html*$,;
-
-    $self->tag('homepage-field-uses-insecure-uri', $orig)
-      if $KNOWN_INSECURE_HOMEPAGE_URIS->matches_any($homepage);
-
-    $self->tag('homepage-refers-to-obsolete-debian-infrastructure', $orig)
-      if $homepage =~ m,alioth\.debian\.org,;
+    foreach my $line ($BAD_HOMEPAGES->all) {
+        my ($tag, $re) = split(/\s*~~\s*/, $line);
+        $self->tag($tag, $orig) if $homepage =~ m/$re/;
+    }
 
     return;
 }
