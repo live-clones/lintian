@@ -43,8 +43,7 @@ CHECKSUM="$(Checksum_input | sha1sum | cut -d ' ' -f1)"
 CACHE_FILENAME="${CACHE_DIR}/${PIPELINE}-${CHECKSUM}.tar.xz"
 
 # get prequisites early, otherwise tar fails for lack of xz-utils
-apt-get --quiet install apt-cudf
-env DEBIAN_FRONTEND=noninteractive apt-get --quiet --yes --solver aspcud --option dir::cache::archives="${CACHE_DIR}" build-dep .
+env DEBIAN_FRONTEND=noninteractive apt-get -q -y -o dir::cache::archives="${CACHE_DIR}" build-dep .
 
 mkdir -p .cache
 
