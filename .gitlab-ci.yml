@@ -72,3 +72,4 @@ stable-bpo:
   image: debian:stable-backports
   dependencies:
     - stable-bpo-test-packages
+  allow_failure: true
