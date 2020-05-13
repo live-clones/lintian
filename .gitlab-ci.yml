@@ -52,6 +52,7 @@ stable-bpo-test-packages:
   image: debian:stable-backports
   script:
     - time t/bin/build-test-packages-if-needed .cache stable
+  allow_failure: true
 
 ##
 
