@@ -27,7 +27,7 @@ variables:
     - tags
   before_script:
     - apt-get -q update
-    - env DEBIAN_FRONTEND=noninteractive apt-get --quiet --yes --option dir::cache::archives=".cache" install apt-cudf
+    - apt-get --quiet install apt-cudf
     - env DEBIAN_FRONTEND=noninteractive apt-get --quiet --yes --solver aspcud --option dir::cache::archives=".cache" build-dep .
   script:
     - tar xfJ test-packages.tar.xz
