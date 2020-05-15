@@ -42,6 +42,9 @@ sub source {
 
     my $contents = $rules->bytes;
 
+    # Strip all block comments to allow comments between "%:" and "dh ${@}"
+    $contents =~ s/#.*//g;
+
     my $plain = qr/\$\@/;
     my $curly = qr/\$\{\@\}/;
     my $asterisk = qr/\$\*/;
