@@ -1,8 +1,11 @@
-lintian (2.73.0+git) UNRELEASED; urgency=medium
+lintian (2.74.0) unstable; urgency=medium
 
-  * WIP (generated at release time: please do not add entries below).
+  [ Chris Lamb ]
+  * Ignore comments when checking for no-dh-sequencer. (Closes: #960485)
+  * Allow the stable-bpo and stable-bpo-test-packages Gitlab CI pipelines
+    on Salsa to pass for now.
 
- -- Chris Lamb <lamby@debian.org>  Tue, 12 May 2020 23:31:54 +0100
+ -- Chris Lamb <lamby@debian.org>  Sat, 16 May 2020 12:33:09 +0000
 
 lintian (2.73.0) unstable; urgency=medium
 
