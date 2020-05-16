@@ -647,7 +647,15 @@ sub verify_desktop_file {
     close($fd);
 
     # Now validate the data in the desktop file, but only if it's a known type.
-    return unless ($vals{'Type'} and $known_desktop_types{$vals{'Type'}});
+    # Warn if it's not.
+    my $type = $vals{'Type'};
+    return
+      unless defined $type;
+
+    unless ($known_desktop_types{$type}) {
+        $self->tag('desktop-entry-unknown-type', $file, $type);
+        return;
+    }
 
     # Now we can issue any pending tags.
     for my $pending (@pending) {
