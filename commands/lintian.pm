@@ -758,11 +758,11 @@ sub main {
     my $pool = Lintian::Pool->new;
 
     for my $path (@subjects) {
+        fatal_error("$path is not a file") unless -f $path;
 
         # in ubuntu, automatic dbgsym packages end with .ddeb
         fatal_error
 "bad package file name $path (neither .deb, .udeb, .ddeb, .changes, .dsc or .buildinfo file)"
-          unless -f $path
           && $path =~ m/\.(?:[u|d]?deb|dsc|changes|buildinfo)$/;
 
         my $absolute = Cwd::abs_path($path);
