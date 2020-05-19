@@ -1,3 +1,9 @@
+lintian (2.75.0+git) UNRELEASED; urgency=medium
+
+  * WIP (generated at release time: please do not add entries below).
+
+ -- Chris Lamb <lamby@debian.org>  Tue, 19 May 2020 14:39:18 +0100
+
 lintian (2.75.0) unstable; urgency=medium
 
   [ Chris Lamb ]
