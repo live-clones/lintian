@@ -763,7 +763,7 @@ sub main {
         # in ubuntu, automatic dbgsym packages end with .ddeb
         fatal_error
 "bad package file name $path (neither .deb, .udeb, .ddeb, .changes, .dsc or .buildinfo file)"
-          && $path =~ m/\.(?:[u|d]?deb|dsc|changes|buildinfo)$/;
+          unless $path =~ m/\.(?:[u|d]?deb|dsc|changes|buildinfo)$/;
 
         my $absolute = Cwd::abs_path($path);
         die "Cannot resolve $path: $!"
