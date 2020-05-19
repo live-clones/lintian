@@ -1,3 +1,12 @@
+lintian (2.74.0) unstable; urgency=medium
+
+  [ Chris Lamb ]
+  * Ignore comments when checking for no-dh-sequencer. (Closes: #960485)
+  * Allow the stable-bpo and stable-bpo-test-packages Gitlab CI pipelines
+    on Salsa to pass for now.
+
+ -- Chris Lamb <lamby@debian.org>  Sat, 16 May 2020 12:33:09 +0000
+
 lintian (2.73.0~bpo10+1) buster-backports; urgency=medium
 
   * Rebuild for buster-backports.
