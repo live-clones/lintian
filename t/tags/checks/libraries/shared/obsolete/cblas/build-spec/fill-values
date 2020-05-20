@@ -1,0 +1,4 @@
+Skeleton: upload-native
+Testname: cblas
+Description: Compiled executable that uses libcblas.so.
+Package-Architecture: any

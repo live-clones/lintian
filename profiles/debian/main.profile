@@ -152,6 +152,7 @@ Enable-Tags-From-Check:
  languages/python,
  languages/python/scripts,
  languages/r/site-library,
+ libraries/shared/obsolete,
  linda,
  lintian,
  lintian/overrides,
