@@ -48,6 +48,8 @@ use Lintian::Pool;
 use Lintian::Profile;
 use Lintian::Util qw(safe_qx);
 
+use constant COMMA => q{,};
+
 # only in GNOME; need original environment
 my $interactive = -t STDIN && (-t STDOUT || !(-f STDOUT || -c STDOUT));
 my $hyperlinks_capable = $interactive && qx{env | fgrep -i gnome};
@@ -85,6 +87,9 @@ my %option = (                     #hash of some flags from cmd or cfg
     'debug'             => 0,
     'jobs'              => default_parallel(),
 );
+
+# must be an empty array reference
+$option{'fail-on'} = [];
 
 my $experimental_output_opts;
 
@@ -161,6 +166,8 @@ Behavior options:
     --display-source X        restrict displayed tags by source
     -E, --display-experimental display "X:" tags (normally suppressed)
     --no-display-experimental suppress "X:" tags
+    --fail-on error,warning,info,pedantic,experimental,override
+                              define condition for exit status 2 (default: none)
     -i, --info                give detailed info about tags
     -I, --display-info        display "I:" tags (normally suppressed)
     -L, --display-level       display tags with the specified level
@@ -402,6 +409,16 @@ sub record_option_too_late {
             'should be the first option(s) if given'));
 }
 
+# Process overrides option in the cfg files
+sub cfg_fail_on {
+    my ($name, $value) = @_;
+
+    @{$option{'fail-on'}} = split(/,/, $value)
+      unless scalar @{$option{'fail-on'}};
+
+    return;
+}
+
 # Process display-info and display-level options in cfg files
 #  - dies if display-info and display-level are used together
 #  - adds the relevant display level unless the command-line
@@ -522,6 +539,7 @@ my %getoptions = (
     'hyperlinks=s' => \$option{'hyperlinks'},
     'unpack-info|U=s' => \@unpack_info,
     'allow-root' => \$option{'allow-root'},
+    'fail-on=s' => $option{'fail-on'},
     'keep-lab' => \$option{'keep-lab'},
     'no-tag-display-limit' => sub { $option{'tag-display-limit'} = 0; },
     'tag-display-limit=i' => \$option{'tag-display-limit'},
@@ -852,6 +870,7 @@ sub parse_config_file {
         'display-experimental' => \$option{'display-experimental'},
         'display-info'         => \&cfg_display_level,
         'display-level'        => \&cfg_display_level,
+        'fail-on'              => \&cfg_fail_on,
         'info'                 => \$option{'info'},
         'jobs'                 => \$option{'jobs'},
         'pedantic'             => \&cfg_display_level,
@@ -1074,6 +1093,13 @@ sub parse_options {
     # --ftp-master-rejects is implemented in a profile
     $option{'LINTIAN_PROFILE'} = 'debian/ftp-master-auto-reject'
       if $option{'ftp-master-rejects'};
+
+    # check arguments to --fail-on
+    @{$option{'fail-on'}} = split(/,/, join(COMMA, @{$option{'fail-on'}}));
+    my @unknown_fail_on
+      = grep {!/^(?:error|warning|info|pedantic|experimental|override)$/ }
+      @{$option{'fail-on'}};
+    fatal_error("Unrecognized fail-on argument: $_") for @unknown_fail_on;
 
     return;
 }

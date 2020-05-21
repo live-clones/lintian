@@ -27,6 +27,7 @@ use autodie;
 
 use Carp qw(croak);
 use Cwd;
+use List::MoreUtils qw(any);
 use Time::HiRes qw(gettimeofday tv_interval);
 use Path::Tiny;
 use POSIX qw(:sys_wait_h);
@@ -212,7 +213,7 @@ sub process{
         }
 
         $$exit_code_ref = 2
-          if $success && $reported_count{error};
+          if $success && any { $reported_count{$_} } @{$option->{'fail-on'}};
 
         # discard disabled tags
         @tags= grep { $PROFILE->tag_is_enabled($_->name) } @tags;
