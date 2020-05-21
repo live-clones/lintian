@@ -27,7 +27,7 @@ variables:
     - tags
   before_script:
     - apt-get -q update
-    - env DEBIAN_FRONTEND=noninteractive apt-get -q -y -o dir::cache::archives=".cache" build-dep .
+    - env DEBIAN_FRONTEND=noninteractive apt-get --quiet --yes --option dir::cache::archives=".cache" --option Debug::pkgProblemResolver=yes build-dep .
   script:
     - tar xfJ test-packages.tar.xz
     - time t/bin/runtests

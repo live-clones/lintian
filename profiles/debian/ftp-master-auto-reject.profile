@@ -53,6 +53,7 @@ Enable-Tags:
  extended-description-is-empty,
  file-in-etc-not-marked-as-conffile,
  file-in-usr-marked-as-conffile,
+ file-name-is-not-valid-UTF-8,
  forbidden-postrm-interpreter,
  gzip-file-is-not-multi-arch-same-safe,
  header-has-overly-generic-name,
