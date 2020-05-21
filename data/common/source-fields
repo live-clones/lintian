@@ -14,6 +14,21 @@ build-depends-indep
 checksums-md5
 checksums-sha1
 checksums-sha256
+
+# Allow for non-Debian profiles to specify the location of Debian VCSes
+#
+# NB: Do not rely on @if-vendor-is-not in your data files; it may
+# disappear without notice
+@if-vendor-is-not debian debian-vcs-arch
+@if-vendor-is-not debian debian-vcs-browser
+@if-vendor-is-not debian debian-vcs-bzr
+@if-vendor-is-not debian debian-vcs-cvs
+@if-vendor-is-not debian debian-vcs-darcs
+@if-vendor-is-not debian debian-vcs-git
+@if-vendor-is-not debian debian-vcs-hg
+@if-vendor-is-not debian debian-vcs-mtn
+@if-vendor-is-not debian debian-vcs-svn
+
 dgit
 dm-upload-allowed
 files
