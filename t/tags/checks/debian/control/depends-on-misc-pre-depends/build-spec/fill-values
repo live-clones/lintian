@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: depends-on-misc-pre-depends
+Description: Check for packages Depending on ${misc:Pre-Depends}
