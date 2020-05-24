@@ -329,7 +329,7 @@ Process group.
 =cut
 
 sub process {
-    my ($self, $exit_code_ref, $override_count, $option, $OUTPUT)= @_;
+    my ($self, $ignored_overrides, $option, $OUTPUT)= @_;
 
     $self->processing_start(gmtime->datetime);
 
@@ -337,22 +337,10 @@ sub process {
 
     my $timer = [gettimeofday];
 
-    my %statistics = (
-        types     => {},
-        severity  => {},
-        tags      => {},
-        overrides => {},
-    );
-
-    my @reported_tags;
-
     for my $processable ($self->get_processables){
 
         my $declared_overrides;
         my %used_overrides;
-
-        # to store tag names as well
-        my $override_count->{ignored} = {};
 
         $OUTPUT->debug_msg(1,
             'Base directory for group: ' . $processable->groupdir);
@@ -398,7 +386,7 @@ sub process {
 
                 unless ($self->profile->is_overridable($tagname)) {
                     delete $declared_overrides->{$tagname};
-                    $override_count->{ignored}{$tagname}++;
+                    $ignored_overrides->{$tagname}++;
                 }
             }
 
@@ -439,7 +427,6 @@ sub process {
                 print STDERR "internal error: cannot run $checkname check",
                   " on package $procid\n";
                 $OUTPUT->warning("skipping check of $procid");
-                $$exit_code_ref = 2;
                 $success = 0;
 
                 next;
@@ -521,98 +508,13 @@ sub process {
 
                 # cannot be overridden or suppressed
                 $processable->tag('unused-override', $tagname, $hint);
-
-                $override_count->{unused}++;
             }
         }
 
-        # associate all tags with processable
-        $_->processable($processable) for @{$processable->tags};
-
-        push(@reported_tags, @{$processable->tags});
-
-        # remove circular references
-        $processable->tags([]);
+        # copy tag specifications into tags
+        $_->info($self->profile->get_taginfo($_->name))
+          for @{$processable->tags};
     }
-
-    # copy tag specifications into tags
-    $_->info($self->profile->get_taginfo($_->name)) for @reported_tags;
-
-    for my $tag (@reported_tags) {
-
-        my $record = \%statistics;
-        $record = $statistics{overrides}
-          if $tag->override;
-
-        $record->{tags}{$tag->name}++;
-        $record->{severity}{$tag->info->effective_severity}++;
-
-        my $code = $tag->info->code;
-        $code = 'X' if $tag->info->experimental;
-        $record->{types}{$code}++;
-    }
-
-    unless ($$exit_code_ref) {
-        if ($statistics{types}{E}) {
-            $$exit_code_ref = 1;
-        }
-    }
-
-    # Report override statistics.
-    unless ($option->{'no-override'} || $option->{'show-overrides'}) {
-
-        my $errors = $statistics{overrides}{types}{E} // 0;
-        my $warnings = $statistics{overrides}{types}{W} // 0;
-        my $info = $statistics{overrides}{types}{I} // 0;
-
-        $override_count->{errors} += $errors;
-        $override_count->{warnings} += $warnings;
-        $override_count->{info} += $info;
-    }
-
-    # discard disabled tags
-    @reported_tags
-      = grep { $self->profile->tag_is_enabled($_->name) } @reported_tags;
-
-    # discard experimental tags
-    @reported_tags = grep { !$_->info->experimental } @reported_tags
-      unless $option->{'display-experimental'};
-
-    # discard overridden tags
-    @reported_tags = grep { !defined $_->override } @reported_tags
-      unless $option->{'show-overrides'};
-
-    # discard outside the selected display level
-    @reported_tags
-      = grep { $self->profile->display_level_for_tag($_->name) }@reported_tags;
-
-    my $reference_limit = $option->{'display-source'} // [];
-    if (@{$reference_limit}) {
-
-        my @topic_tags;
-        for my $tag (@reported_tags) {
-            my @references = split(/,/, $tag->info->references);
-
-            # retain the first word
-            s/^([\w-]+)\s.*/$1/ for @references;
-
-            # remove anything in parentheses at the end
-            s/\(\S+\)$// for @references;
-
-            # check if tag refers to the selected references
-            my $referencelc
-              = List::Compare->new(\@references, $reference_limit);
-            next
-              unless $referencelc->get_intersection;
-
-            push(@topic_tags, $tag);
-        }
-
-        @reported_tags = @topic_tags;
-    }
-
-    # put tags back into their respective processables
-    push(@{$_->processable->tags}, $_) for @reported_tags;
 
     $self->processing_end(gmtime->datetime);
 
