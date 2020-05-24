@@ -1,0 +1,4 @@
+Testname: fail-on-error-by-default
+Skeleton: source-native
+Description: Exit status for policy violations
+Extra-Build-Depends: quilt

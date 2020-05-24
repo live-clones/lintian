@@ -1,0 +1,10 @@
+E: fail-on-error-by-default source: quilt-series-references-non-existent-patch non-existing.patch
+W: fail-on-error-by-default source: patch-system-but-no-source-readme
+C: fail-on-error-by-default source: debhelper-compat-level 13
+C: fail-on-error-by-default source: debhelper-compat-virtual-relation 13
+C: fail-on-error-by-default source: debian-build-system dh
+C: fail-on-error-by-default source: package-is-maintained-by-individual
+C: fail-on-error-by-default source: patch-system quilt
+C: fail-on-error-by-default source: rules-does-not-require-root
+C: fail-on-error-by-default source: source-format 3.0 (native)
+C: fail-on-error-by-default source: standards-version 4.5.0
