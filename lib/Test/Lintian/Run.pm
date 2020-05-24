@@ -254,8 +254,15 @@ sub runner {
     my ($output, $status) = capture_merged { system($command); };
     $status = ($status >> 8) & 255;
 
-    die "$command exited with status $status" . NEWLINE . $output
-      unless $status == 0 || $status == 1;
+    say "$command exited with status $status.";
+    say $output if $status == 2;
+
+    my @errors;
+    push(@errors,
+"Exit code $status differs from expected value $testcase->{exit_status}."
+      )
+      if defined $testcase->{exit_status}
+      && $status != $testcase->{exit_status};
 
     # filter out some warnings if running under coverage
     my @lines = split(/\n/, $output);
@@ -275,11 +282,10 @@ sub runner {
     die 'No match strategy defined'
       unless length $testcase->{match_strategy};
 
-    my @errors;
     if ($testcase->{match_strategy} eq 'literal') {
-        @errors = check_literal($testcase, $runpath, $output);
+        push(@errors, check_literal($testcase, $runpath, $output));
     } elsif ($testcase->{match_strategy} eq 'tags') {
-        @errors = check_tags($testcase, $runpath, $output);
+        push(@errors, check_tags($testcase, $runpath, $output));
     } else {
         die "Unknown match strategy $testcase->{match_strategy}.";
     }
@@ -294,9 +300,9 @@ sub runner {
         return;
     }
 
-    ok($okay, "Lintian passes for $testcase->{testname}");
-
     diag $_ . NEWLINE for @errors;
+
+    ok($okay, "Lintian passes for $testcase->{testname}");
 
     return;
 }
