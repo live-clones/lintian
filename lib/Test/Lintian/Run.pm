@@ -71,7 +71,7 @@ use Lintian::Profile;
 use Test::Lintian::ConfigFile qw(read_config);
 use Test::Lintian::Helper qw(rfc822date);
 use Test::Lintian::Hooks
-  qw(find_missing_prerequisites run_lintian sed_hook sort_lines calibrate);
+  qw(find_missing_prerequisites sed_hook sort_lines calibrate);
 use Test::Lintian::Output::Universal qw(get_tagnames order);
 
 use constant SPACE => q{ };
