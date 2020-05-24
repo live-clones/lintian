@@ -239,7 +239,7 @@ sub init_from_file {
         $dir =~ s,(.+)/[^/]+$,$1,;
     }
     my $key = $type eq 'buildinfo' ? 'checksums-sha256' : 'files';
-    for my $line (split(/\n/o, $info->{$key}//'')) {
+    for my $line (split(/\n/, $info->{$key}//'')) {
 
         next
           unless defined $line;
@@ -329,11 +329,11 @@ Process group.
 =cut
 
 sub process {
-    my ($self, $exit_code_ref, $override_count, $opt, $OUTPUT)= @_;
+    my ($self, $exit_code_ref, $override_count, $option, $OUTPUT)= @_;
 
     $self->processing_start(gmtime->datetime);
 
-    my $all_ok = 1;
+    my $success = 1;
 
     my $timer = [gettimeofday];
 
@@ -357,7 +357,7 @@ sub process {
         $OUTPUT->debug_msg(1,
             'Base directory for group: ' . $processable->groupdir);
 
-        unless ($opt->{'no-override'}) {
+        unless ($option->{'no-override'}) {
 
             $OUTPUT->debug_msg(1, 'Loading overrides file (if any) ...');
 
@@ -440,7 +440,7 @@ sub process {
                   " on package $procid\n";
                 $OUTPUT->warning("skipping check of $procid");
                 $$exit_code_ref = 2;
-                $all_ok = 0;
+                $success = 0;
 
                 next;
             }
@@ -559,7 +559,7 @@ sub process {
     }
 
     # Report override statistics.
-    unless ($opt->{'no-override'} || $opt->{'show-overrides'}) {
+    unless ($option->{'no-override'} || $option->{'show-overrides'}) {
 
         my $errors = $statistics{overrides}{types}{E} // 0;
         my $warnings = $statistics{overrides}{types}{W} // 0;
@@ -576,17 +576,17 @@ sub process {
 
     # discard experimental tags
     @reported_tags = grep { !$_->info->experimental } @reported_tags
-      unless $opt->{'display-experimental'};
+      unless $option->{'display-experimental'};
 
     # discard overridden tags
     @reported_tags = grep { !defined $_->override } @reported_tags
-      unless $opt->{'show-overrides'};
+      unless $option->{'show-overrides'};
 
     # discard outside the selected display level
     @reported_tags
       = grep { $self->profile->display_level_for_tag($_->name) }@reported_tags;
 
-    my $reference_limit = $opt->{'display-source'} // [];
+    my $reference_limit = $option->{'display-source'} // [];
     if (@{$reference_limit}) {
 
         my @topic_tags;
@@ -622,7 +622,7 @@ sub process {
         'Checking all of group ' . $self->name . " done ($tres)");
     $OUTPUT->perf_log($self->name . ",total-group-check,${raw_res}");
 
-    if ($opt->{'debug'} > 2) {
+    if ($option->{'debug'} > 2) {
 
         # suppress warnings without reliable sizes
         $Devel::Size::warn = 0;
@@ -642,7 +642,7 @@ sub process {
 
     $self->clean_lab($OUTPUT);
 
-    return $all_ok;
+    return $success;
 }
 
 =item clean_lab

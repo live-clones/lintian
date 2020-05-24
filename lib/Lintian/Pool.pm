@@ -146,14 +146,14 @@ Process the pool.
 =cut
 
 sub process{
-    my ($self, $PROFILE,$exit_code_ref, $opt, $STATUS_FD,
+    my ($self, $PROFILE, $exit_code_ref, $option, $STATUS_FD,
         $unpack_info_ref, $OUTPUT)
       = @_;
 
     my %override_count;
 
     # do not remove lab if so selected
-    $self->keep($opt->{'keep-lab'} // 0);
+    $self->keep($option->{'keep-lab'} // 0);
 
     for my $group (values %{$self->groups}) {
         my $success = 1;
@@ -164,7 +164,7 @@ sub process{
         my $group_start = [gettimeofday];
 
         $group->profile($PROFILE);
-        $group->jobs($opt->{'jobs'});
+        $group->jobs($option->{'jobs'});
 
         $group->unpack($OUTPUT);
 
@@ -174,7 +174,11 @@ sub process{
         $OUTPUT->debug_msg(1, 'Unpack of ' . $group->name . " done ($tres)");
         $OUTPUT->perf_log($group->name . ",total-group-unpack,${raw_res}");
 
-        if (!$group->process($exit_code_ref, \%override_count,$opt, $OUTPUT)) {
+        if (
+            !$group->process(
+                $exit_code_ref, \%override_count, $option, $OUTPUT
+            )
+        ) {
             $success = 0;
         }
 
@@ -218,8 +222,8 @@ sub process{
     # pass everything, in case some groups or processables have no tags
     $OUTPUT->issue_tags([values %{$self->groups}]);
 
-    unless ($opt->{'no-override'}
-        || $opt->{'show-overrides'}) {
+    unless ($option->{'no-override'}
+        || $option->{'show-overrides'}) {
 
         my $errors = $override_count{errors} || 0;
         my $warnings = $override_count{warnings} || 0;
@@ -265,7 +269,7 @@ sub process{
             join(q{ },
                 'Some overrides were ignored,',
                 'since the tags were marked "non-overridable".'));
-        if ($opt->{'verbose'}) {
+        if ($option->{'verbose'}) {
             $OUTPUT->v_msg(
                 join(q{ },
                     'The following tags were "non-overridable"',
