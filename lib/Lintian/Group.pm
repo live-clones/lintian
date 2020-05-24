@@ -262,10 +262,8 @@ sub init_from_file {
         next
           if !$file || $file =~ m,/,;
 
-        unless (-f "$dir/$file") {
-            print STDERR "$dir/$file does not exist, exiting\n";
-            exit 2;
-        }
+        die "$dir/$file does not exist, exiting\n"
+          unless -f "$dir/$file";
 
         # only care about some files; ddeb is ubuntu dbgsym
         next

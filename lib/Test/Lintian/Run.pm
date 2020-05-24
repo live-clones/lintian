@@ -255,7 +255,7 @@ sub runner {
     $status = ($status >> 8) & 255;
 
     say "$command exited with status $status.";
-    say $output if $status == 2;
+    say $output if $status == 1;
 
     my @errors;
     push(@errors,

@@ -1,4 +1,4 @@
 Testname: fail-on-error-by-default
-Exit-Status: 1
+Exit-Status: 2
 Output-Format: EWI
 Match-Strategy: literal

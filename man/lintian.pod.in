@@ -699,11 +699,11 @@ No policy violations or major errors detected.
 
 =item B<1>
 
-Policy violations or major errors detected.
+Lintian run-time error. An error message is sent to stderr.
 
 =item B<2>
 
-Lintian run-time error. An error message is sent to stderr.
+Policy violations or major errors detected.
 
 =back
 

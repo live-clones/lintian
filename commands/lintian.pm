@@ -109,8 +109,7 @@ sub lintian_banner {
 sub fatal_error {
     my ($msg) = @_;
     $msg =~ s/ at .*//;
-    print STDERR  "$msg\n";
-    exit(2);
+    die "$msg\n";
 }
 
 # }}}
@@ -780,7 +779,7 @@ sub main {
         };
         if ($@) {
             print STDERR "Skipping $path: $@";
-            $exit_code = 2;
+            $exit_code = 1;
         }
     }
 
@@ -791,7 +790,7 @@ sub main {
 
     $ENV{INIT_ROOT} = $INIT_ROOT;
 
-    $pool->process($PROFILE,\$exit_code, \%option,
+    $pool->process($PROFILE, \$exit_code, \%option,
         $STATUS_FD, \@unpack_info, $OUTPUT);
 
     retrigger_signal()
@@ -989,7 +988,7 @@ sub _find_changes {
         } else {
             print STDERR "debian/changelog does not have any data?\n";
         }
-        exit 2;
+        exit 1;
     }
     $version = $last->Version;
     $source = $last->Source;
@@ -1000,7 +999,7 @@ sub _find_changes {
           "Cannot determine source and version from debian/changelog:\n";
         print STDERR "Source: $source\n";
         print STDERR "Version: $source\n";
-        exit 2;
+        exit 1;
     }
     # remove the epoch
     $version =~ s/^\d+://;

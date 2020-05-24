@@ -1004,5 +1004,5 @@ If the run sub returns "normally", the check was run successfully.
 Implementations should ensure the return value is undefined.
 
 If the run sub invokes a trappable error (e.g. "die"), no further checks
-are done on the package and Lintian will (eventually) exit with 2 to its
+are done on the package and Lintian will (eventually) exit with 1 to its
 caller. The check may still be run on other packages.

@@ -211,7 +211,7 @@ sub process{
             $override_count{experimental} += scalar @override_experimental;
         }
 
-        $$exit_code_ref = 1
+        $$exit_code_ref = 2
           if $success && $reported_count{error};
 
         # discard disabled tags
@@ -258,7 +258,7 @@ sub process{
 
         $group->clear_cache;
 
-        if ($$exit_code_ref != 2) {
+        if ($$exit_code_ref != 1) {
             # Double check that no processes are running;
             # hopefully it will catch regressions like 3bbcc3b
             # earlier.
@@ -267,7 +267,7 @@ sub process{
             # a worker unreaped; disabling. Should be revisited.
             #
             if (waitpid(-1, WNOHANG) != -1) {
-                $$exit_code_ref = 2;
+                $$exit_code_ref = 1;
                 die 'Unreaped processes after running checks!?';
             }
         } else {
@@ -289,6 +289,7 @@ sub process{
             print {$STATUS_FD} 'complete ' . $group->name . " ($total_tres)\n";
         } else {
             print {$STATUS_FD} 'error ' . $group->name . " ($total_tres)\n";
+            $$exit_code_ref = 1;
         }
         $OUTPUT->v_msg('Finished processing group ' . $group->name);
     }
