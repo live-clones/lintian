@@ -146,7 +146,7 @@ Process the pool.
 =cut
 
 sub process{
-    my ($self, $action,$PROFILE,$exit_code_ref, $opt, $STATUS_FD,
+    my ($self, $PROFILE,$exit_code_ref, $opt, $STATUS_FD,
         $unpack_info_ref, $OUTPUT)
       = @_;
 
@@ -174,37 +174,31 @@ sub process{
         $OUTPUT->debug_msg(1, 'Unpack of ' . $group->name . " done ($tres)");
         $OUTPUT->perf_log($group->name . ",total-group-unpack,${raw_res}");
 
-        if ($action eq 'check') {
-            if (
-                !$group->process(
-                    $exit_code_ref, \%override_count,$opt, $OUTPUT
-                )
-            ) {
-                $success = 0;
+        if (!$group->process($exit_code_ref, \%override_count,$opt, $OUTPUT)) {
+            $success = 0;
+        }
+
+        $group->clear_cache;
+
+        if ($$exit_code_ref != 2) {
+            # Double check that no processes are running;
+            # hopefully it will catch regressions like 3bbcc3b
+            # earlier.
+            #
+            # Unfortunately, the cleanup via IO::Async::Function seems keep
+            # a worker unreaped; disabling. Should be revisited.
+            #
+            if (waitpid(-1, WNOHANG) != -1) {
+                $$exit_code_ref = 2;
+                die 'Unreaped processes after running checks!?';
             }
+        } else {
+            # If we are interrupted in (e.g.) checks/manpages, it
+            # tends to leave processes behind.  No reason to flag
+            # an error for that - but we still try to reap the
+            # children if they are now done.
 
-            $group->clear_cache;
-
-            if ($$exit_code_ref != 2) {
-                # Double check that no processes are running;
-                # hopefully it will catch regressions like 3bbcc3b
-                # earlier.
-                #
-                # Unfortunately, the cleanup via IO::Async::Function seems keep
-                # a worker unreaped; disabling. Should be revisited.
-                #
-                if (waitpid(-1, WNOHANG) != -1) {
-                    $$exit_code_ref = 2;
-                    die 'Unreaped processes after running checks!?';
-                }
-            } else {
-                # If we are interrupted in (e.g.) checks/manpages, it
-                # tends to leave processes behind.  No reason to flag
-                # an error for that - but we still try to reap the
-                # children if they are now done.
-
-                1 while waitpid(-1, WNOHANG) > 0;
-            }
+            1 while waitpid(-1, WNOHANG) > 0;
         }
 
         # remove group files
@@ -224,9 +218,8 @@ sub process{
     # pass everything, in case some groups or processables have no tags
     $OUTPUT->issue_tags([values %{$self->groups}]);
 
-    if (    $action eq 'check'
-        and not $opt->{'no-override'}
-        and not $opt->{'show-overrides'}) {
+    unless ($opt->{'no-override'}
+        || $opt->{'show-overrides'}) {
 
         my $errors = $override_count{errors} || 0;
         my $warnings = $override_count{warnings} || 0;

@@ -790,7 +790,7 @@ sub main {
 
     $ENV{INIT_ROOT} = $INIT_ROOT;
 
-    $pool->process($action, $PROFILE,\$exit_code, \%opt,
+    $pool->process($PROFILE,\$exit_code, \%opt,
         $STATUS_FD, \@unpack_info, $OUTPUT);
 
     retrigger_signal()
