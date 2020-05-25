@@ -1,3 +1,4 @@
 Testname: control-field-traversal-4
 Check: control-files
-Todo: yes
+Output-Format: EWI
+Match-Strategy: literal
