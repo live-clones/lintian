@@ -52,7 +52,7 @@ my @mandatory = qw();
 my @disallowed = qw(test_for checks);
 
 # tests per desc
-my $perfile = 7 + scalar @mandatory + scalar @disallowed;
+my $perfile = 6 + scalar @mandatory + scalar @disallowed;
 
 # set the testing plan
 my $known_tests = $perfile * scalar @descpaths;
@@ -93,13 +93,6 @@ foreach my $descpath (@descpaths) {
     # disallowed fields
     ok(!exists $testcase->{$_}, "Field $_ does not exist in $name")
       for @disallowed;
-
-# force Match-Strategy: tags or default for tests directly associated with checks
-    ok(
-        ($testcase->{match_strategy} // 'tags') eq 'tags'
-          || $descpath !~ qr/^t\/tags\/check/,
-        "Test in $descpath must use Match-Strategy: tags or default"
-    );
 
     # no test-against without check
     ok(!exists $testcase->{test_against} || exists $testcase->{check},
