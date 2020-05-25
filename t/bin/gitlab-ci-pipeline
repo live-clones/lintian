@@ -1,0 +1,87 @@
+#!/bin/bash
+# ^^^ bash provides 'time', and is also the standard in .gitlab-ci.yml
+#
+# Copyright © 2019 Chris Lamb <lamby@debian.org>
+# Copyright © 2020 Felix Lechner <felix.lechner@lease-up.com>
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, you can find it on the World Wide
+# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
+# MA 02110-1301, USA.
+
+set -eu
+
+CACHE_DIR="${1}"
+PIPELINE="${2}"
+
+Checksum_input () {
+    # Local files that, if changed, should result in a rebuild of the test
+    # packages.
+    find \
+	t/bin/build-test-packages \
+	lib/Test/ \
+	-type f -print0 | sort -z | xargs -0 sha1sum
+
+    # Rebuild if any build-dependency or installed package changes
+    (
+	apt-get --quiet --yes --print-uris build-dep . 2>/dev/null | \
+	    grep MD5Sum: | cut -d' ' -f2 | cut -d_ -f1-2;
+	dpkg -l | awk '{ print $2 "_" $3 }'
+    ) | sort
+}
+
+# update package info
+apt-get --quiet update
+
+# get some debug output
+apt-cache --quiet policy
+apt-cache --quiet policy debhelper
+
+# get prequisites early, otherwise tar fails for lack of xz-utils
+env DEBIAN_FRONTEND=noninteractive apt-get --quiet --yes --option dir::cache::archives="${CACHE_DIR}" --option Debug::pkgProblemResolver=yes build-dep .
+
+mkdir -p "${CACHE_DIR}"
+echo "I: Showing artifacts in ${CACHE_DIR}" >&2
+ls -al "${CACHE_DIR}" >&2
+
+CHECKSUM="$(Checksum_input | sha1sum | cut -d ' ' -f1)"
+CACHE_FILENAME="${CACHE_DIR}/${PIPELINE}-${CHECKSUM}.tar.xz"
+echo "I: Looking for ${CACHE_FILENAME}" >&2
+
+if [ -f "${CACHE_FILENAME}" ]
+then
+    echo "I: Extracting ${CACHE_FILENAME}" >&2
+    rm -rf debian/test-out/packages
+    tar xfJ "${CACHE_FILENAME}"
+fi
+
+time t/bin/build-test-packages
+
+echo "I: Removing obsolete test package artifacts for ${PIPELINE} pipeline from ${CACHE_DIR}" >&2
+find "${CACHE_DIR}" \
+     -maxdepth 1 \
+     -type f \
+     -regextype posix-egrep \
+     -regex "^${CACHE_DIR}/${PIPELINE}-[[:xdigit:]]{40}\.tar\.xz\$" \
+     -print \
+     -delete
+
+echo "I: Creating ${CACHE_FILENAME}" >&2
+mkdir -p "$(dirname "${CACHE_FILENAME}")"
+tar cfJ "${CACHE_FILENAME}" debian/test-out/packages
+
+echo "I: Showing artifacts in ${CACHE_DIR}" >&2
+ls -al "${CACHE_DIR}" >&2
+
+time t/bin/runtests

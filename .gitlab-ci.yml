@@ -1,5 +1,4 @@
 stages:
- - test-packages
  - test
 
 cache:
@@ -9,67 +8,26 @@ cache:
 variables:
   GIT_DEPTH: "3"
 
-##
-
-.test-packages-template: &test-packages
-  stage: test-packages
-  except:
-    - tags
-  before_script:
-    - apt-get -q update
-  artifacts:
-    paths:
-      - test-packages.tar.xz
-
 .test-template: &test
   stage: test
   except:
     - tags
-  before_script:
-    - apt-get -q update
-    - env DEBIAN_FRONTEND=noninteractive apt-get --quiet --yes --option dir::cache::archives=".cache" --option Debug::pkgProblemResolver=yes build-dep .
-  script:
-    - tar xfJ test-packages.tar.xz
-    - time t/bin/runtests
-
-##
-
-unstable-test-packages:
-  <<: *test-packages
-  image: debian:unstable
-  script:
-    - time t/bin/build-test-packages-if-needed .cache unstable
-
-testing-test-packages:
-  <<: *test-packages
-  image: debian:testing
-  script:
-    - time t/bin/build-test-packages-if-needed .cache testing
-
-stable-bpo-test-packages:
-  <<: *test-packages
-  image: debian:stable-backports
-  script:
-    - time t/bin/build-test-packages-if-needed .cache stable
-  allow_failure: true
-
-##
 
 unstable:
   <<: *test
   image: debian:unstable
-  dependencies:
-    - unstable-test-packages
+  script:
+    - t/bin/gitlab-ci-pipeline .cache unstable
 
 testing:
   <<: *test
   image: debian:testing
-  dependencies:
-    - testing-test-packages
+  script:
+    - t/bin/gitlab-ci-pipeline .cache testing
 
 stable-bpo:
   <<: *test
   image: debian:stable-backports
-  dependencies:
-    - stable-bpo-test-packages
+  script:
+    - t/bin/gitlab-ci-pipeline .cache stable
   allow_failure: true
