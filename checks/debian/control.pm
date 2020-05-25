@@ -312,6 +312,7 @@ sub source {
     my @descriptions;
     my ($seen_main, $seen_contrib);
     foreach my $bin (@package_names) {
+        my $depends = $processable->binary_field($bin, 'depends', '');
 
         # Accumulate the description.
         my $desc = $processable->binary_field($bin, 'description');
@@ -321,10 +322,12 @@ sub source {
         }
 
         # If this looks like a -dev package, check its dependencies.
-        if ($bin =~ /-dev$/ and $processable->binary_field($bin,'depends')) {
-            $self->check_dev_depends($bin,
-                $processable->binary_field($bin, 'depends'),
-                @package_names);
+        if ($bin =~ /-dev$/ and $depends) {
+            $self->check_dev_depends($bin, $depends, @package_names);
+        }
+
+        if ($depends =~ m/\$\{misc:Pre-Depends\}/) {
+            $self->tag('depends-on-misc-pre-depends', $bin);
         }
 
         # Check mismatches in archive area.

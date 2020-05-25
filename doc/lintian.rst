@@ -16,14 +16,14 @@ Lintian uses an archive directory, called laboratory, in which it stores
 information about the packages it examines. It can keep this information
 between multiple invocations in order to avoid repeating expensive
 data-collection operations. It's also possible to check the complete
-Debian archive for bugs MDASH in a timely manner.
+Debian archive for bugs — in a timely manner.
 
 .. _section-1.2:
 
 The intention of Lintian
 ------------------------
 
-Packaging has become complicatedMDASHnot because dpkg is complicated
+Packaging has become complicated—not because dpkg is complicated
 (indeed, dpkg-deb is very simple to use) but because of the high
 requirements of our policy. If a developer releases a new package, she
 has to consider hundreds of guidelines to make the package \`policy
@@ -31,7 +31,7 @@ compliant.'
 
 All parts of our policy have been introduced by the same procedure: Some
 developer has a good idea how to make packages more \`unique' with
-respect to a certain aspectMDASHthen the idea is discussed and a policy
+respect to a certain aspect—then the idea is discussed and a policy
 proposal is prepared. If we have a consensus about the policy change,
 it's introduced in our manuals.
 
@@ -45,7 +45,7 @@ some statement included in the manual does not make Debian any better.
 What's needed is for that policy to become \`real life,' i.e., it's
 *implemented* in our packages. And this is where Lintian comes in:
 Lintian checks packages and reports possible policy violations. (Of
-course, not everything can be checked mechanically MDASH but a lot of
+course, not everything can be checked mechanically — but a lot of
 things can and this is what Lintian is for.)
 
 Thus, Lintian has the following goals:
@@ -58,13 +58,13 @@ Thus, Lintian has the following goals:
    policy aspects is worthless unless they are implemented. We first
    should fix packages to comply with current policy before searching
    for new ways to make policy more detailed. (Of course, there are also
-   important policy changes that need to be introduced MDASH but this is
+   important policy changes that need to be introduced — but this is
    not what's meant here.)
 
 -  *To make us re-think about certain aspects of our policy.*
 
    For example, it could turn out that some ideas that once sounded
-   great in theory are hard to implement in all our packages MDASH in
+   great in theory are hard to implement in all our packages — in
    which case we should rework this aspect of policy.
 
 -  *To show us where to concentrate our efforts in order to make Debian
@@ -791,7 +791,7 @@ Lintian is divided into the following layers:
    needed by the check modules
 
 When you check a package with Lintian, the following steps are performed
-(not exactly in this orderMDASHbut the details aren't important now):
+(not exactly in this order—but the details aren't important now):
 
 1. An entry is created for the package in the *laboratory* (or just
    *lab*).

@@ -13,8 +13,11 @@ BEGIN {
 }
 
 use File::Find::Rule;
+use List::Compare;
+use List::Util qw(uniq);
 use LWP::Simple;
 use Path::Tiny;
+use YAML::XS;
 
 use lib "$ENV{LINTIAN_ROOT}/lib";
 
@@ -23,65 +26,83 @@ use Lintian::Deb822Parser qw(read_dpkg_control);
 use constant EMPTY => q{};
 use constant SPACE => q{ };
 use constant COMMA => q{,};
+use constant HYPHEN => q{-};
+use constant INDENT => q{    };
 use constant NEWLINE => qq{\n};
 
-my $masterurl = 'https://ftp-master.debian.org/static/lintian.tags';
-my $contents = get($masterurl);
-
-die "Couldn't get $masterurl"
-  unless defined $contents;
-
-my ($nonfatal_string, $fatal_string)
-  = ($contents =~ qr/^lintian:[^:]*nonfatal:([^:]*)fatal:([^:]*)$/);
-die "Could not parse document downloaded from $masterurl"
-  unless defined $nonfatal_string && defined $fatal_string;
-
-# remove comments
-$nonfatal_string =~ s/#[^\n]*\n/\n/g;
-$fatal_string =~ s/#[^\n]*\n/\n/g;
-
-# remove hyphens
-$nonfatal_string =~ s/\s-\s/ /g;
-$fatal_string =~ s/\s-\s/ /g;
-
-my @nonfatal = split(' ', $nonfatal_string);
-my @fatal = split(' ', $fatal_string);
-
-print 'Found '
-  . scalar @fatal
-  . ' fatal and '
-  . scalar @nonfatal
-  . " non-fatal tags for profile ftp-master-auto-reject.\n";
-
+# generate main profile
 my $checkdir = "$ENV{LINTIAN_ROOT}/checks";
 my @modulepaths = File::Find::Rule->file->name('*.pm')->in($checkdir);
 
-my @checks;
+my @allchecks;
 for my $modulepath (@modulepaths) {
     my $relative = path($modulepath)->relative($checkdir)->stringify;
     my ($name) = ($relative =~ qr/^(.*)\.pm$/);
 
-    push(@checks, $name);
+    push(@allchecks, $name);
 }
 
 # add check for tags issued by internal infrastructure
-push(@checks, 'lintian');
-
-my @dirs = ('profiles/debian');
-foreach my $dir (@dirs) {
-    path($dir)->mkpath
-      unless -d $dir;
-}
+push(@allchecks, 'lintian');
 
 generate_profile(
-    'debian/main',
+    'debian', 'main',
     {
-        'Extends' => ['debian/ftp-master-auto-reject'],
-        'Enable-Tags-From-Check' => \@checks,
+        'Enable-Tags-From-Check' => \@allchecks,
     });
 
+# generate profile for FTP Master auto-reject
+my $auto_reject_url = 'https://ftp-master.debian.org/static/lintian.tags';
+my $contents = get($auto_reject_url);
+die "Couldn't get file from $auto_reject_url"
+  unless defined $contents;
+
+my $yaml = Load($contents);
+die "Couldn't parse output from $auto_reject_url"
+  unless defined $yaml;
+
+my $base = $yaml->{lintian};
+die "Couldn't parse document base for $auto_reject_url"
+  unless defined $base;
+
+my @want_fatal = uniq @{ $base->{fatal} // [] };
+my @want_nonfatal = uniq @{ $base->{nonfatal} // [] };
+
+# find all tags known to Lintian
+my @known_tags;
+my $tagroot = "$ENV{LINTIAN_ROOT}/tags";
+my @descfiles = File::Find::Rule->file()->name('*.desc')->in($tagroot);
+for my $tagpath (@descfiles) {
+    my @paragraphs = read_dpkg_control($tagpath);
+    die "Tag in $tagpath does not have exactly one paragraph"
+      unless scalar @paragraphs == 1;
+
+    my %fields = %{ $paragraphs[0] };
+    push(@known_tags, $fields{tag});
+}
+
+my $fatal_lc = List::Compare->new(\@want_fatal, \@known_tags);
+my @unknown_fatal = $fatal_lc->get_Lonly;
+my @fatal = $fatal_lc->get_intersection;
+
+my $nonfatal_lc = List::Compare->new(\@want_nonfatal, \@known_tags);
+my @unknown_nonfatal = $nonfatal_lc->get_Lonly;
+my @nonfatal = $nonfatal_lc->get_intersection;
+
+my @unknown = (@unknown_fatal, @unknown_nonfatal);
+say 'Warning, disregarding unknown tags for profile ftp-master-auto-reject:'
+  if @unknown;
+say INDENT . HYPHEN . SPACE . $_ for @unknown;
+
+say 'Found '
+  . scalar @fatal
+  . ' fatal and '
+  . scalar @nonfatal
+  . ' non-fatal tags for profile ftp-master-auto-reject.';
+
 generate_profile(
-    'debian/ftp-master-auto-reject',
+    'debian',
+    'ftp-master-auto-reject',
     {
         # "lintian" is enabled by default, so we explicitly disable it.
         'Disable-Tags-From-Check' => ['lintian'],
@@ -95,16 +116,20 @@ generate_profile(
 exit 0;
 
 sub generate_profile {
-    my ($name, @paragraphs) = @_;
+    my ($vendor, $name, @paragraphs) = @_;
 
     my $text =<<EOSTR;
 # This profile is auto-generated
-Profile: $name
+Profile: $vendor/$name
 EOSTR
 
-    $text .= write_paragraph($_)foreach @paragraphs;
+    $text .= write_paragraph($_) for @paragraphs;
 
-    path("profiles/$name.profile")->spew($text);
+    my $folder = "profiles/$vendor";
+    path($folder)->mkpath
+      unless -d $folder;
+
+    path("$folder/$name.profile")->spew($text);
 
     return;
 }
@@ -127,22 +152,6 @@ sub write_paragraph {
       if length $text;
 
     return $text;
-}
-
-sub read_tags {
-    my ($file) = @_;
-    my @tags = ();
-    open(my $fd, '<', $file);
-    while (<$fd>) {
-
-        # trim both ends
-        s/^\s+|\s+$//g;
-
-        next if /^#/ or $_ eq '';
-        push @tags, $_;
-    }
-    close($fd);
-    return @tags;
 }
 
 # Local Variables:

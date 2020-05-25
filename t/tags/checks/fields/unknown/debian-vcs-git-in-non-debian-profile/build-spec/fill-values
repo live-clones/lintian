@@ -1,0 +1,3 @@
+Skeleton: upload-non-native
+Testname: debian-vcs-git-in-non-debian-profile
+Description: Test to ensure that on non-Debian profiles, Debian-VCS works (false positive)
