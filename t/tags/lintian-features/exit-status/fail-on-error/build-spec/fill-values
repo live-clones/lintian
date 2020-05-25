@@ -1,0 +1,4 @@
+Testname: fail-on-error
+Skeleton: source-native
+Description: Fail on error tag
+Extra-Build-Depends: quilt

@@ -1,0 +1,5 @@
+Testname: fail-on-error
+Options: --fail-on error
+Exit-Status: 2
+Output-Format: EWI
+Match-Strategy: literal
