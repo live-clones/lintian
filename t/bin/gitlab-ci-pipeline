@@ -20,7 +20,7 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-set -eu
+set -eux
 
 CACHE_DIR="${1}"
 PIPELINE="${2}"
@@ -41,15 +41,24 @@ Checksum_input () {
     ) | sort
 }
 
+# for apt and friends
+export DEBIAN_FRONTEND="noninteractive"
+
 # update package info
 apt-get --quiet update
 
-# get some debug output
-apt-cache --quiet policy
-apt-cache --quiet policy debhelper
+if [ "${PIPELINE}" == "stable" ] ; then
+
+    # get the release code name
+    source /etc/os-release
+
+    # ignore status when backports repo is not set up, i.e. unstable or new releases
+    apt-get --quiet --yes --target-release "${VERSION_CODENAME}-backports" --option dir::cache::archives="${CACHE_DIR}" install debhelper || true
+
+fi
 
 # get prequisites early, otherwise tar fails for lack of xz-utils
-env DEBIAN_FRONTEND=noninteractive apt-get --quiet --yes --option dir::cache::archives="${CACHE_DIR}" --option Debug::pkgProblemResolver=yes build-dep .
+apt-get --quiet --yes --option dir::cache::archives="${CACHE_DIR}" --option Debug::pkgProblemResolver=yes build-dep .
 
 mkdir -p "${CACHE_DIR}"
 echo "I: Showing artifacts in ${CACHE_DIR}" >&2
