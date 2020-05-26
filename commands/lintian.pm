@@ -111,12 +111,6 @@ sub lintian_banner {
     return "Lintian v${lintian_version}";
 }
 
-sub fatal_error {
-    my ($msg) = @_;
-    $msg =~ s/ at .*//;
-    die "$msg\n";
-}
-
 # }}}
 
 # {{{ Process Command Line
@@ -246,7 +240,7 @@ sub banner {
 # Options: -S, -R, -c, -u, -r
 sub record_action {
     if ($action) {
-        fatal_error("too many actions specified: $_[0]");
+        die "too many actions specified: $_[0]\n";
     }
     $action = "$_[0]";
     return;
@@ -256,13 +250,11 @@ sub record_action {
 # Options: -C|--check-part
 sub record_check_part {
     if (defined $action and $action eq 'check' and $checks) {
-        fatal_error('multiple -C or --check-part options not allowed');
+        die "multiple -C or --check-part options not allowed\n";
     }
     if ($dont_check) {
-        fatal_error(
-            join(q{ },
-                'both -C or --check-part and -X',
-                'or --dont-check-part options not allowed'));
+        die
+"-C or --check-part and -X or --dont-check-part options may not appear together\n";
     }
     record_action('check');
     $checks = "$_[1]";
@@ -273,16 +265,15 @@ sub record_check_part {
 # Options: -T|--tags
 sub record_check_tags {
     if (defined $action and $action eq 'check' and $check_tags) {
-        fatal_error('multiple -T or --tags options not allowed');
+        die "multiple -T or --tags options not allowed\n";
     }
     if ($checks) {
-        fatal_error(
-            'both -T or --tags and -C or --check-part options not allowed');
+        die
+"both -T or --tags and -C or --check-part options may not appear together\n";
     }
     if ($dont_check) {
-        fatal_error(
-            'both -T or --tags and -X or --dont-check-part options not allowed'
-        );
+        die
+"both -T or --tags and -X or --dont-check-part options may not appear together\n";
     }
     record_action('check');
     $check_tags = "$_[1]";
@@ -337,13 +328,11 @@ sub record_suppress_tags_from_file {
 # Options: -X|--dont-check-part X
 sub record_dont_check_part {
     if (defined $action and $action eq 'check' and $dont_check) {
-        fatal_error('multiple -X or --dont-check-part options not allowed');
+        die "multiple -X or --dont-check-part options not allowed\n";
     }
     if ($checks) {
-        fatal_error(
-            join(q{ },
-                'both -C or --check-part and',
-                '-X or --dont-check-part options not allowed'));
+        die
+"both -C or --check-part and -X or --dont-check-part options may not appear together\n";
     }
     record_action('check');
     $dont_check = "$_[1]";
@@ -403,10 +392,8 @@ sub record_quiet {
 }
 
 sub record_option_too_late {
-    fatal_error(
-        join(q{ },
-            'Warning: --include-dir and --[no-]user-dirs',
-            'should be the first option(s) if given'));
+    die
+"Warning: --include-dir and --[no-]user-dirs should be the first option(s) if given\n";
 }
 
 # Process overrides option in the cfg files
@@ -428,8 +415,7 @@ sub cfg_fail_on {
 sub cfg_display_level {
     my ($var, $val) = @_;
     if ($var eq 'display-info' or $var eq 'pedantic'){
-        fatal_error(
-            "$var and display-level may not both appear in the config file.\n")
+        die "$var and display-level may not both appear in the config file.\n"
           if $conf_opt{'display-level'};
 
         return unless $val; # case "display-info=no" (or "pedantic=no")
@@ -447,10 +433,9 @@ sub cfg_display_level {
         display_pedantictags() if $var eq 'pedantic';
     } elsif ($var eq 'display-level'){
         foreach my $other (qw(pedantic display-info)) {
-            fatal_error(
-                join(q{ },
-                    "$other and display-level may not",
-                    'both appear in the config file.'))if $conf_opt{$other};
+            die
+"$other and display-level may not both appear in the config file.\n"
+              if $conf_opt{$other};
         }
 
         return if @display_level;
@@ -473,8 +458,7 @@ sub cfg_verbosity {
     my ($var, $val) = @_;
     if (   ($var eq 'verbose' && exists $conf_opt{'quiet'})
         || ($var eq 'quiet' && exists $conf_opt{'verbose'})) {
-        fatal_error(
-            'verbose and quiet may not both appear in the config file.');
+        die "verbose and quiet may not both appear in the config file.\n";
     }
     # quiet = no or verbose = no => no change
     return unless $val;
@@ -635,10 +619,7 @@ sub main {
     $option{'color'} = 'auto' unless defined($option{'color'});
     if (    $option{'color'}
         and $option{'color'} !~ /^(?:never|always|auto|html)$/) {
-        fatal_error(
-            join(q{ },
-                'The color value must be one of',
-                'never", "always", "auto" or "html"'));
+        die "The color value must be one of never, always, auto or html.\n";
     }
 
     if ($option{'color'} eq 'never') {
@@ -646,7 +627,7 @@ sub main {
     } else {
         $option{'hyperlinks'} //= 'on';
     }
-    fatal_error('The hyperlink value must be one of "on" or "off"')
+    die "The hyperlink value must be on or off\n"
       unless $option{'hyperlinks'} =~ /^(?:on|off)$/;
 
     if ($option{'verbose'} || !-t STDOUT) {
@@ -718,8 +699,8 @@ sub main {
         );
     }
 
-    my $PROFILE = eval { dplint::load_profile($option{'LINTIAN_PROFILE'}); };
-    fatal_error($@) if $@;
+    # dies on error
+    my $PROFILE = dplint::load_profile($option{'LINTIAN_PROFILE'});
 
     # Ensure $option{'LINTIAN_PROFILE'} is defined
     $option{'LINTIAN_PROFILE'} = $PROFILE->name
@@ -733,11 +714,8 @@ sub main {
         _update_profile($PROFILE, $dont_check, \%suppress_tags,$checks);
     }
 
-    # Initialize display level settings.
-    for my $level (@display_level) {
-        eval { $PROFILE->display(@{$level}) };
-        fatal_error($@) if $@;
-    }
+    # initialize display level settings; dies on error
+    $PROFILE->display(@{$_})for @display_level;
 
     $SIG{'TERM'} = \&interrupted;
     $SIG{'INT'} = \&interrupted;
@@ -749,7 +727,7 @@ sub main {
         not(   ($action eq 'unpack')
             or ($action eq 'check'))
     ) {
-        fatal_error("invalid action $action specified");
+        die "invalid action $action specified\n";
     }
 
     my @subjects;
@@ -776,11 +754,11 @@ sub main {
     my $pool = Lintian::Pool->new;
 
     for my $path (@subjects) {
-        fatal_error("$path is not a file") unless -f $path;
+        die "$path is not a file\n" unless -f $path;
 
         # in ubuntu, automatic dbgsym packages end with .ddeb
-        fatal_error
-"bad package file name $path (neither .deb, .udeb, .ddeb, .changes, .dsc or .buildinfo file)"
+        die
+"bad package file name $path (neither .deb, .udeb, .ddeb, .changes, .dsc or .buildinfo file)\n"
           unless $path =~ m/\.(?:[u|d]?deb|dsc|changes|buildinfo)$/;
 
         my $absolute = Cwd::abs_path($path);
@@ -915,8 +893,7 @@ sub parse_config_file {
             if (m/^\s*([-a-z]+)\s*=\s*(.*\S)\s*$/o){
                 my ($var, $val) = ($1, $2);
                 my $ref = $cfghash{$var};
-                fatal_error(
-                    "Unknown configuration variable $var at line: ${.}.")
+                die "Unknown configuration variable $var at line: ${.}.\n"
                   unless $ref;
                 if (exists $conf_opt{$var}){
                     print STDERR
@@ -944,7 +921,7 @@ sub parse_config_file {
             }
         }
         unless ($found) {
-            fatal_error("syntax error in configuration file: $_");
+            die "syntax error in configuration file: $_\n";
         }
     }
     close($fd);
@@ -1062,7 +1039,7 @@ sub parse_options {
 
     # process commandline options
     Getopt::Long::GetOptions(%getoptions)
-      or fatal_error("error parsing options\n");
+      or die "error parsing options\n";
 
     # root permissions?
     # check if effective UID is 0
@@ -1088,7 +1065,7 @@ sub parse_options {
     # check specified action
     $action = 'check' unless $action;
 
-    fatal_error('Cannot use profile together with --ftp-master-rejects.')
+    die "Cannot use profile together with --ftp-master-rejects.\n"
       if $option{'LINTIAN_PROFILE'} and $option{'ftp-master-rejects'};
     # --ftp-master-rejects is implemented in a profile
     $option{'LINTIAN_PROFILE'} = 'debian/ftp-master-auto-reject'
@@ -1099,7 +1076,7 @@ sub parse_options {
     my @unknown_fail_on
       = grep {!/^(?:error|warning|info|pedantic|experimental|override)$/ }
       @{$option{'fail-on'}};
-    fatal_error("Unrecognized fail-on argument: $_") for @unknown_fail_on;
+    die "Unrecognized fail-on argument: $_\n" for @unknown_fail_on;
 
     return;
 }
@@ -1132,7 +1109,7 @@ sub _update_profile {
                     next;
                 }
                 my $cs = $profile->get_checkinfo($c);
-                fatal_error("Unrecognized check script (via -C): $c")
+                die "Unrecognized check script (via -C): $c\n"
                   unless $cs;
                 $profile->enable_tag($_) for $cs->tags;
             }
@@ -1141,7 +1118,7 @@ sub _update_profile {
         # we are disabling checks
         for my $c (split(/,/, $sup_check)) {
             my $cs = $profile->get_checkinfo($c);
-            fatal_error("Unrecognized check script (via -X): $c") unless $cs;
+            die "Unrecognized check script (via -X): $c\n" unless $cs;
             $profile->disable_tag($_) for $cs->tags;
         }
     }
@@ -1193,7 +1170,7 @@ sub END {
 }
 
 sub _die_in_signal_handler {
-    die("N: Interrupted.\n");
+    die "N: Interrupted.\n";
 }
 
 sub retrigger_signal {
