@@ -32,7 +32,9 @@ use autodie;
 
 use Cwd qw(abs_path);
 use Carp qw(croak verbose);
+use Config::Tiny;
 use Getopt::Long();
+use List::Compare;
 use List::MoreUtils qw(any none);
 use Path::Tiny;
 use POSIX qw(:sys_wait_h);
@@ -48,7 +50,10 @@ use Lintian::Pool;
 use Lintian::Profile;
 use Lintian::Util qw(safe_qx);
 
+use constant EMPTY => q{};
+use constant SPACE => q{ };
 use constant COMMA => q{,};
+use constant NEWLINE => qq{\n};
 
 # only in GNOME; need original environment
 my $interactive = -t STDIN && (-t STDOUT || !(-f STDOUT || -c STDOUT));
@@ -81,9 +86,13 @@ my @ENV_VARS = (
       ));
 
 ### "Normal" application variables
-my %conf_opt;                   #names of options set in the cfg file
-my %option = (                     #hash of some flags from cmd or cfg
-     # Init some cmd-line value defaults
+
+# options set in config file
+my %config;
+
+# hash of some flags from cmd or cfg
+my %option = (
+    # init some cmd-line value defaults
     'debug'             => 0,
     'jobs'              => default_parallel(),
 );
@@ -416,7 +425,7 @@ sub cfg_display_level {
     my ($var, $val) = @_;
     if ($var eq 'display-info' or $var eq 'pedantic'){
         die "$var and display-level may not both appear in the config file.\n"
-          if $conf_opt{'display-level'};
+          if $config{'display-level'};
 
         return unless $val; # case "display-info=no" (or "pedantic=no")
 
@@ -426,16 +435,16 @@ sub cfg_display_level {
         # by checking if @display_level is empty.  We use
         # "__conf-display-opts" to determine if @display_level was set
         # by a conf option or not.
-        return if @display_level && !$conf_opt{'__conf-display-opts'};
+        return if @display_level && !$config{'__conf-display-opts'};
 
-        $conf_opt{'__conf-display-opts'} = 1;
+        $config{'__conf-display-opts'} = 1;
         display_infotags() if $var eq 'display-info';
         display_pedantictags() if $var eq 'pedantic';
     } elsif ($var eq 'display-level'){
         foreach my $other (qw(pedantic display-info)) {
             die
 "$other and display-level may not both appear in the config file.\n"
-              if $conf_opt{$other};
+              if $config{$other};
         }
 
         return if @display_level;
@@ -456,8 +465,8 @@ sub cfg_display_level {
 #   already set.
 sub cfg_verbosity {
     my ($var, $val) = @_;
-    if (   ($var eq 'verbose' && exists $conf_opt{'quiet'})
-        || ($var eq 'quiet' && exists $conf_opt{'verbose'})) {
+    if (   ($var eq 'verbose' && exists $config{'quiet'})
+        || ($var eq 'quiet' && exists $config{'verbose'})) {
         die "verbose and quiet may not both appear in the config file.\n";
     }
     # quiet = no or verbose = no => no change
@@ -841,8 +850,17 @@ sub _find_cfg_file {
 sub parse_config_file {
     my ($config_file) = @_;
 
+    # for keys appearing multiple times, now uses the last value
+    my $object = Config::Tiny->read($config_file, 'utf8');
+    my $error = $object->errstr;
+    die "syntax error in configuration file $config_file: " . $error . NEWLINE
+      if length $error;
+
+    # used elsewhere to check for values already set
+    %config = %{$object->{_}};
+
     # Options that can appear in the config file
-    my %cfghash = (
+    my %destination = (
         'color'                => \$option{'color'},
         'hyperlinks'           => \$option{'hyperlinks'},
         'display-experimental' => \$option{'display-experimental'},
@@ -861,70 +879,47 @@ sub parse_config_file {
         'verbose'              => \&cfg_verbosity,
     );
 
-    open(my $fd, '<', $config_file);
-    while (<$fd>) {
-        chomp;
-        s/\#.*$//go;
-        s/\"//go;
-        next if m/^\s*$/o;
+    # check keys against known settings
+    my $knownlc = List::Compare->new([keys %config], [keys %destination]);
+    my @unknown = $knownlc->get_Lonly;
+    die "Unknown setting in $config_file: " . join(SPACE, @unknown) . NEWLINE
+      if @unknown;
 
-        # substitute some special variables
-        s,\$HOME/,$ENV{'HOME'}/,go;
-        s,\~/,$ENV{'HOME'}/,go;
+    # some environment variables can be set from the config file
+    my $envlc = List::Compare->new([keys %config], \@ENV_VARS);
+    my @from_file = $envlc->get_intersection;
 
-        my $found = 0;
-        foreach my $var (@ENV_VARS) {
-            if (m/^\s*$var\s*=\s*(.*\S)\s*$/i) {
-                if (exists $conf_opt{$var}){
-                    print STDERR
-                      "Configuration variable $var appears more than once\n";
-                    print STDERR " in $option{'LINTIAN_CFG'} (line: $.)",
-                      " - Using the first value!\n";
-                    next;
-                }
-                $option{$var} = $1 unless defined $option{$var};
-                $conf_opt{$var} = 1;
-                $found = 1;
-                last;
-            }
-        }
-        unless ($found) {
-            # check if it is a config option
-            if (m/^\s*([-a-z]+)\s*=\s*(.*\S)\s*$/o){
-                my ($var, $val) = ($1, $2);
-                my $ref = $cfghash{$var};
-                die "Unknown configuration variable $var at line: ${.}.\n"
-                  unless $ref;
-                if (exists $conf_opt{$var}){
-                    print STDERR
-                      "Configuration variable $var appears more than once\n";
-                    print STDERR " in $option{'LINTIAN_CFG'} (line: $.)",
-                      " - Using the first value!\n";
-                    next;
-                }
-                $conf_opt{$var} = 1;
-                $found = 1;
-                # Translate boolean strings to "0" or "1"; ignore
-                # errors as not all values are (intended to be)
-                # booleans.
-                if (none { $var eq $_ } qw(jobs tag-display-limit)) {
-                    eval { $val = parse_boolean($val); };
-                }
-                if (ref $ref eq 'SCALAR'){
-                    # Check it was already set
-                    next if defined $$ref;
-                    $$ref = $val;
-                } elsif (ref $ref eq 'CODE'){
-                    $ref->($var, $val);
-                }
+    my @already = grep { defined $ENV{$_} } @from_file;
+    warn "Already have setting from $config_file in the environment: "
+      . join(SPACE, @already)
+      . NEWLINE
+      if @already;
 
-            }
-        }
-        unless ($found) {
-            die "syntax error in configuration file: $_\n";
-        }
-    }
-    close($fd);
+    my @not_yet = grep { !defined $ENV{$_} } @from_file;
+    $ENV{$_} = $config{$_} for @not_yet;
+
+    # substitute some special variables
+    s{\$HOME/}{$ENV{'HOME'}/}g for values %config;
+    s{\~/}{$ENV{'HOME'}/}g for values %config;
+
+    # Translate boolean strings to "0" or "1"; ignore
+    # errors as not all values are (intended to be)
+    # booleans.
+    my $booleanlc
+      = List::Compare->new([keys %config], [qw(jobs tag-display-limit)]);
+    eval { $config{$_} = parse_boolean($config{$_}); }
+      for $booleanlc->get_Lonly;
+
+    # initialize variables
+    my @names = grep { defined $config{$_} } keys %destination;
+
+    my @scalars = grep { ref $destination{$_} eq 'SCALAR' } @names;
+    my @undefined = grep { defined ${$destination{$_}} } @scalars;
+    ${$destination{$_}} = $config{$_} for @undefined;
+
+    my @coderefs = grep { ref $destination{$_} eq 'CODE' } @names;
+    $destination{$_}->($_, $config{$_}) for @coderefs;
+
     return;
 }
 
