@@ -35,6 +35,7 @@ Build-Depends:
 # makes Moo faster, https://metacpan.org/pod/Moo#MOO-AND-CLASS::XSACCESSOR
  libclass-xsaccessor-perl <!nocheck>,
  libclone-perl <!nocheck>,
+ libconfig-tiny-perl <!nocheck>,
  libcpanel-json-xs-perl <!nocheck>,
  libdevel-size-perl <!nocheck>,
  libdigest-sha-perl <!nocheck>,
@@ -118,6 +119,7 @@ Depends:
 # makes Moo faster, https://metacpan.org/pod/Moo#MOO-AND-CLASS::XSACCESSOR
  libclass-xsaccessor-perl,
  libclone-perl,
+ libconfig-tiny-perl,
  libcpanel-json-xs-perl,
  libdevel-size-perl,
  libdigest-sha-perl,
