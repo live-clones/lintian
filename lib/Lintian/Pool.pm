@@ -147,9 +147,7 @@ Process the pool.
 =cut
 
 sub process{
-    my ($self, $PROFILE, $exit_code_ref, $option, $STATUS_FD,
-        $unpack_info_ref, $OUTPUT)
-      = @_;
+    my ($self, $PROFILE, $exit_code_ref, $option, $STATUS_FD, $OUTPUT)= @_;
 
     my %override_count;
     my %ignored_overrides;

@@ -105,8 +105,7 @@ my $experimental_output_opts;
 my @CLOSE_AT_END;
 my $OUTPUT = Lintian::Output::Standard->new;
 my (@display_level, %display_source, %suppress_tags);
-my ($action, $checks, $check_tags, $dont_check, $received_signal);
-my @unpack_info;
+my ($checks, $check_tags, $dont_check, $received_signal);
 my $user_dirs = $ENV{'LINTIAN_ENABLE_USER_DIRS'} // 1;
 my $exit_code = 0;
 my $STATUS_FD;
@@ -154,7 +153,6 @@ Actions:
     -F, --ftp-master-rejects  only check for automatic reject tags
     -T X, --tags X            only run checks needed for requested tags
     --tags-from-file X        like --tags, but read list from file
-    -u, --unpack              only unpack packages in the lab
     -X X, --dont-check-part X don\'t check certain aspects
 General options:
     -h, --help                display short help text
@@ -212,7 +210,6 @@ Developer/Special usage options:
     --perf-debug              turn on performance debugging
     --perf-output X           send performance logging to file (or fd w. \&X)
     --status-log X            send status logging to file (or fd w. \&X) [internal use only]
-    -U X, --unpack-info X     specify which info should be collected
 EOT-EOT-EOT
     }
 
@@ -245,27 +242,16 @@ sub banner {
     exit 0;
 }
 
-# Record action requested
-# Options: -S, -R, -c, -u, -r
-sub record_action {
-    if ($action) {
-        die "too many actions specified: $_[0]\n";
-    }
-    $action = "$_[0]";
-    return;
-}
-
 # Record Parts requested for checking
 # Options: -C|--check-part
 sub record_check_part {
-    if (defined $action and $action eq 'check' and $checks) {
+    if ($checks) {
         die "multiple -C or --check-part options not allowed\n";
     }
     if ($dont_check) {
         die
 "-C or --check-part and -X or --dont-check-part options may not appear together\n";
     }
-    record_action('check');
     $checks = "$_[1]";
     return;
 }
@@ -273,7 +259,7 @@ sub record_check_part {
 # Record Parts requested for checking
 # Options: -T|--tags
 sub record_check_tags {
-    if (defined $action and $action eq 'check' and $check_tags) {
+    if ($check_tags) {
         die "multiple -T or --tags options not allowed\n";
     }
     if ($checks) {
@@ -284,7 +270,6 @@ sub record_check_tags {
         die
 "both -T or --tags and -X or --dont-check-part options may not appear together\n";
     }
-    record_action('check');
     $check_tags = "$_[1]";
     return;
 }
@@ -336,14 +321,13 @@ sub record_suppress_tags_from_file {
 # Record Parts requested not to check
 # Options: -X|--dont-check-part X
 sub record_dont_check_part {
-    if (defined $action and $action eq 'check' and $dont_check) {
+    if ($dont_check) {
         die "multiple -X or --dont-check-part options not allowed\n";
     }
     if ($checks) {
         die
 "both -C or --check-part and -X or --dont-check-part options may not appear together\n";
     }
-    record_action('check');
     $dont_check = "$_[1]";
     return;
 }
@@ -495,13 +479,12 @@ sub cfg_override {
 # Hash used to process commandline options
 my %getoptions = (
     # ------------------ actions
-    'check|c' => \&record_action,
+    'check|c' => \$option{check},
     'check-part|C=s' => \&record_check_part,
     'tags|T=s' => \&record_check_tags,
     'tags-from-file=s' => \&record_check_tags_from_file,
     'ftp-master-rejects|F' => \$option{'ftp-master-rejects'},
     'dont-check-part|X=s' => \&record_dont_check_part,
-    'unpack|u' => \&record_action,
 
     # ------------------ general options
     'help|h:s' => \&syntax,
@@ -530,7 +513,6 @@ my %getoptions = (
     'hide-overrides' => sub { $option{'show-overrides'} = 0; },
     'color=s' => \$option{'color'},
     'hyperlinks=s' => \$option{'hyperlinks'},
-    'unpack-info|U=s' => \@unpack_info,
     'allow-root' => \$option{'allow-root'},
     'fail-on=s' => $option{'fail-on'},
     'keep-lab' => \$option{'keep-lab'},
@@ -680,8 +662,7 @@ sub main {
     }
 
     # check for arguments
-    if (    $action =~ /^(?:check|unpack)$/
-        and $#ARGV == -1
+    if ($#ARGV == -1
         and not $option{'packages-from-file'}) {
         my $ok = 0;
         # If debian/changelog exists, assume an implied
@@ -729,15 +710,6 @@ sub main {
     $SIG{'TERM'} = \&interrupted;
     $SIG{'INT'} = \&interrupted;
     $SIG{'QUIT'} = \&interrupted;
-
-    #######################################
-    #  Check for non deb specific actions
-    if (
-        not(   ($action eq 'unpack')
-            or ($action eq 'check'))
-    ) {
-        die "invalid action $action specified\n";
-    }
 
     my @subjects;
     push(@subjects, @ARGV);
@@ -795,8 +767,7 @@ sub main {
 
     $ENV{INIT_ROOT} = $INIT_ROOT;
 
-    $pool->process($PROFILE, \$exit_code, \%option,
-        $STATUS_FD, \@unpack_info, $OUTPUT);
+    $pool->process($PROFILE, \$exit_code, \%option, $STATUS_FD, $OUTPUT);
 
     retrigger_signal()
       if $received_signal;
@@ -1056,9 +1027,6 @@ sub parse_options {
         print STDERR "(will ignore --packages-from-file option)\n";
         delete($option{'packages-from-file'});
     }
-
-    # check specified action
-    $action = 'check' unless $action;
 
     die "Cannot use profile together with --ftp-master-rejects.\n"
       if $option{'LINTIAN_PROFILE'} and $option{'ftp-master-rejects'};
