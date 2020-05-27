@@ -1,8 +1,11 @@
-lintian (2.77.0+git) UNRELEASED; urgency=medium
+lintian (2.77.1) unstable; urgency=medium
 
-  * WIP (generated at release time: please do not add entries below).
+  [ Felix Lechner ]
+  * Deal gracefully with empty configuration files. (Closes: #961684)
+  * Amend a tag description with how to add missing upstream signatures to
+    the archive. (Closes: #954743)
 
- -- Chris Lamb <lamby@debian.org>  Wed, 27 May 2020 10:14:46 +0100
+ -- Chris Lamb <lamby@debian.org>  Wed, 27 May 2020 22:07:44 +0000
 
 lintian (2.77.0) unstable; urgency=medium
 
