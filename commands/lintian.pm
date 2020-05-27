@@ -828,7 +828,7 @@ sub parse_config_file {
       if length $error;
 
     # used elsewhere to check for values already set
-    %config = %{$object->{_}};
+    %config = %{$object->{_} // {}};
 
     # Options that can appear in the config file
     my %destination = (
