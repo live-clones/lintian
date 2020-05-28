@@ -92,21 +92,10 @@ e-mail addresses  C<package@packages.debian.org> or
 C<package@packages.qa.debian.org>, or, alternatively refers to a mailing
 list which is known to bounce off-list mails sent by Debian role accounts.
 
-
-=item %s-address-looks-weird
-
-MAINTAINER may be syntactically correct, but it isn't conventionally
-formatted.  Currently this tag is only issued for missing whitespace
-between the name and the address.
-
 =item %s-address-malformed
 
 MAINTAINER doesn't fit the basic syntax of a maintainer name and address
 as specified in Policy.
-
-=item %s-address-missing
-
-MAINTAINER does not contain an e-mail address in angle brackets (<>).
 
 =item %s-name-missing
 
@@ -161,8 +150,6 @@ sub check_maintainer {
         push(@tags, ["$field-address-malformed", $maintainer]);
         $malformed = 1;
     }
-    push(@tags, ["$field-address-looks-weird", $maintainer])
-      if (not $del and $name and $mail);
 
     if (not $name) {
         push(@tags, ["$field-name-missing", $maintainer]);
@@ -173,12 +160,7 @@ sub check_maintainer {
     }
 
     # Don't issue the malformed tag twice if we already saw problems.
-    if (not $mail) {
-        # Cannot be done accurately for uploaders due to changes with commas
-        # (see #485705)
-        push(@tags, ["$field-address-missing", $maintainer])
-          unless $field eq 'uploader';
-    } else {
+    if ($mail) {
         if (not $malformed and not Email::Valid->address($mail)) {
             # Either not a valid email or possibly missing a comma between
             # two entries.

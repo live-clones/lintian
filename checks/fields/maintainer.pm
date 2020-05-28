@@ -31,6 +31,8 @@ use warnings;
 use utf8;
 use autodie;
 
+use Email::Address::XS;
+
 use Lintian::Data;
 use Lintian::Maintainer qw(check_maintainer);
 
@@ -47,7 +49,6 @@ sub source {
     my ($self) = @_;
 
     my $maintainer = $self->processable->unfolded_field('maintainer');
-
     return
       unless defined $maintainer;
 
@@ -95,14 +96,26 @@ sub always {
     return
       if $self->type eq 'changes' || $self->type eq 'buildinfo';
 
-    my $maintainer = $self->processable->unfolded_field('maintainer');
+    my $original = $self->processable->unfolded_field('maintainer');
 
-    unless (defined $maintainer) {
+    unless (defined $original) {
         $self->tag('no-maintainer-field');
         return;
     }
 
-    my @tags = check_maintainer($maintainer, 'maintainer');
+    my $validated;
+    my @parsed = Email::Address::XS->parse($original);
+    $validated = $parsed[0]->format
+      if @parsed == 1 && $parsed[0]->is_valid;
+
+    unless (length $validated) {
+        $self->tag('malformed-maintainer-field', $original);
+        return;
+    }
+
+    $self->tag('maintainer', $validated);
+
+    my @tags = check_maintainer($validated, 'maintainer');
     $self->tag(@{$_}) for @tags;
 
     return;

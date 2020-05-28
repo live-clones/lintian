@@ -27,6 +27,7 @@ use utf8;
 use autodie;
 
 use List::MoreUtils qw(any);
+use Email::Address::XS;
 use Path::Tiny;
 
 use Lintian::Data;
@@ -198,10 +199,22 @@ sub changes {
 
     # Changed-By is optional in Policy, but if set, must be
     # syntactically correct.  It's also used by dak.
-    if ($processable->field('changed-by')) {
-        my @tags
-          = check_maintainer($processable->field('changed-by'), 'changed-by');
-        $self->tag(@{$_}) for @tags;
+    my $changed_by = $processable->field('changed-by');
+    if (length $changed_by) {
+
+        my $validated;
+        my @parsed = Email::Address::XS->parse($changed_by);
+        $validated = $parsed[0]->format
+          if @parsed == 1 && $parsed[0]->is_valid;
+
+        if (length $validated) {
+            my @tags = check_maintainer($validated, 'changed-by');
+            $self->tag(@{$_}) for @tags;
+
+        } else {
+            $self->tag('malformed-changed-by-field', $changed_by);
+        }
+
     }
 
     my $files = $processable->files;

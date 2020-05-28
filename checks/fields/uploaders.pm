@@ -29,7 +29,8 @@ use warnings;
 use utf8;
 use autodie;
 
-use List::MoreUtils qw(true);
+use Email::Address::XS;
+use List::UtilsBy qw(count_by);
 
 use Lintian::Maintainer qw(check_maintainer);
 
@@ -58,19 +59,23 @@ sub always {
         $uploaders =~ s/,\s*,/,/g;
     }
 
-    my %duplicate_uploaders;
-    my @list = map { split /\@\S+\K\s*,\s*/ }
-      split />\K\s*,\s*/, $uploaders;
+    # may now enable #485705 to be solved
+    my @uploaders = Email::Address::XS->parse($uploaders);
 
-    for my $member (@list) {
-        my @tags = check_maintainer($member, 'uploader');
+    my @validated = grep { $_->is_valid } @uploaders;
+    $self->tag('uploader', $_->format) for @validated;
+
+    my @invalid = grep { !$_->is_valid } @uploaders;
+    $self->tag('malformed-uploaders-field') if @invalid;
+
+    for my $uploader (@validated) {
+        my @tags = check_maintainer($uploader->format, 'uploader');
         $self->tag(@{$_}) for @tags;
-
-        if (   ((true { $_ eq $member } @list) > 1)
-            and($duplicate_uploaders{$member}++ == 0)) {
-            $self->tag('duplicate-uploader', $member);
-        }
     }
+
+    my %counts = count_by { $_->format } @validated;
+    my @duplicates = grep { $counts{$_} > 1 } keys %counts;
+    $self->tag('duplicate-uploader', $_) for @duplicates;
 
     my $maintainer = $processable->field('maintainer');
     if (defined $maintainer) {

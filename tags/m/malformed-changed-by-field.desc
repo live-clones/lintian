@@ -1,0 +1,7 @@
+Tag: malformed-changed-by-field
+Severity: error
+Check: changes-file
+Renamed-From: changed-by-address-missing
+Info: The Changed-By field could not be parsed according to the rules in
+ the Policy Manual.
+Ref: policy 5.6.4
