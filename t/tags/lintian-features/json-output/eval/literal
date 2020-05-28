@@ -82,6 +82,11 @@
                      "severity" : "classification"
                   },
                   {
+                     "context" : "\"Debian Lintian Maintainers\" <lintian-maint@debian.org>",
+                     "name" : "maintainer",
+                     "severity" : "classification"
+                  },
+                  {
                      "name" : "package-is-maintained-by-individual",
                      "severity" : "classification"
                   },
@@ -184,6 +189,11 @@
                   {
                      "context" : "xz",
                      "name" : "data-tarball-compression-format",
+                     "severity" : "classification"
+                  },
+                  {
+                     "context" : "\"Debian Lintian Maintainers\" <lintian-maint@debian.org>",
+                     "name" : "maintainer",
                      "severity" : "classification"
                   },
                   {

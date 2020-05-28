@@ -1,3 +1,6 @@
-foo++ (source): wrong-debian-qa-address-set-as-maintainer Lintian Maintainer <debian-qa@lists.debian.org>
-foo++-helper (binary): wrong-debian-qa-address-set-as-maintainer Lintian Maintainer <debian-qa@lists.debian.org>
-foo++ (binary): wrong-debian-qa-address-set-as-maintainer Lintian Maintainer <debian-qa@lists.debian.org>
+foo++ (source): wrong-debian-qa-address-set-as-maintainer "Lintian Maintainer" <debian-qa@lists.debian.org>
+foo++ (source): maintainer "Lintian Maintainer" <debian-qa@lists.debian.org>
+foo++-helper (binary): wrong-debian-qa-address-set-as-maintainer "Lintian Maintainer" <debian-qa@lists.debian.org>
+foo++-helper (binary): maintainer "Lintian Maintainer" <debian-qa@lists.debian.org>
+foo++ (binary): wrong-debian-qa-address-set-as-maintainer "Lintian Maintainer" <debian-qa@lists.debian.org>
+foo++ (binary): maintainer "Lintian Maintainer" <debian-qa@lists.debian.org>

@@ -26,6 +26,8 @@ C[C]: lintian-output-letter source: debhelper-compat-level 13
 C[C]: lintian-output-letter source: debhelper-compat-virtual-relation 13
 C[C]: lintian-output-letter source: debian-build-system dh
 C[C]: lintian-output-letter source: debian-watch-file-standard 3
+C[C]: lintian-output-letter source: maintainer "Debian Lintian Maintainers" <lintian-maint@debian.org>
+C[C]: lintian-output-letter: maintainer "Debian Lintian Maintainers" <lintian-maint@debian.org>
 C[C]: lintian-output-letter: no-ctrl-scripts
 C[C]: lintian-output-letter source: package-is-maintained-by-individual
 C[C]: lintian-output-letter: package-is-maintained-by-individual

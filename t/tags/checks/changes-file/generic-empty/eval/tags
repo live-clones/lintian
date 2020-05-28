@@ -1,3 +1,2 @@
-generic-empty (changes): changed-by-address-missing a <>
-generic-empty (changes): changed-by-address-malformed a <>
+generic-empty (changes): malformed-changed-by-field a <>
 generic-empty (changes): bad-urgency-in-changes-file unknown

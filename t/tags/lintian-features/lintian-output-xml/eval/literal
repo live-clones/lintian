@@ -66,6 +66,10 @@
               <context>3</context>
             </tag>
             <tag severity="classification">
+              <name>maintainer</name>
+              <context>"Debian Lintian Maintainers" &lt;lintian-maint@debian.org&gt;</context>
+            </tag>
+            <tag severity="classification">
               <name>package-is-maintained-by-individual</name>
             </tag>
             <tag severity="classification">
@@ -172,6 +176,10 @@
               <tag severity="classification">
                 <name>data-tarball-compression-format</name>
                 <context>xz</context>
+              </tag>
+              <tag severity="classification">
+                <name>maintainer</name>
+                <context>"Debian Lintian Maintainers" &lt;lintian-maint@debian.org&gt;</context>
               </tag>
               <tag severity="classification">
                 <name>no-ctrl-scripts</name>

@@ -1,2 +1,4 @@
 fields-root-maint-address (source): maintainer-address-is-root-user root <someone@debian.org>
+fields-root-maint-address (source): maintainer root <someone@debian.org>
 fields-root-maint-address (binary): maintainer-address-is-root-user root <someone@debian.org>
+fields-root-maint-address (binary): maintainer root <someone@debian.org>

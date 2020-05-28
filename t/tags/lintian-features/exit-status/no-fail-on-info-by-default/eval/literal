@@ -8,6 +8,8 @@ C: no-fail-on-info-by-default source: debhelper-compat-level 13
 C: no-fail-on-info-by-default source: debhelper-compat-virtual-relation 13
 C: no-fail-on-info-by-default source: debian-build-system dh
 C: no-fail-on-info-by-default source: debian-watch-file-standard 3
+C: no-fail-on-info-by-default source: maintainer "Debian Lintian Maintainers" <lintian-maint@debian.org>
+C: no-fail-on-info-by-default: maintainer "Debian Lintian Maintainers" <lintian-maint@debian.org>
 C: no-fail-on-info-by-default: no-ctrl-scripts
 C: no-fail-on-info-by-default source: package-is-maintained-by-individual
 C: no-fail-on-info-by-default: package-is-maintained-by-individual

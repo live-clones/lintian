@@ -7,6 +7,7 @@ basic-non-native-3.0-with-epoch (source): standards-version 4.5.0
 basic-non-native-3.0-with-epoch (source): source-format 3.0 (quilt)
 basic-non-native-3.0-with-epoch (source): rules-does-not-require-root
 basic-non-native-3.0-with-epoch (source): package-is-maintained-by-individual
+basic-non-native-3.0-with-epoch (source): maintainer "Debian Lintian Maintainers" <lintian-maint@debian.org>
 basic-non-native-3.0-with-epoch (source): debian-watch-file-standard 3
 basic-non-native-3.0-with-epoch (source): debian-watch-does-not-check-gpg-signature
 basic-non-native-3.0-with-epoch (source): debian-build-system dh
@@ -16,5 +17,6 @@ basic-non-native-3.0-with-epoch (changes): package-is-maintained-by-individual
 basic-non-native-3.0-with-epoch (buildinfo): package-is-maintained-by-individual
 basic-non-native-3.0-with-epoch (binary): package-is-maintained-by-individual
 basic-non-native-3.0-with-epoch (binary): no-ctrl-scripts
+basic-non-native-3.0-with-epoch (binary): maintainer "Debian Lintian Maintainers" <lintian-maint@debian.org>
 basic-non-native-3.0-with-epoch (binary): data-tarball-compression-format xz
 basic-non-native-3.0-with-epoch (binary): control-tarball-compression-format xz

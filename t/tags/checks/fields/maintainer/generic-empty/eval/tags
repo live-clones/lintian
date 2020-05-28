@@ -1,2 +1,2 @@
-generic-empty (source): maintainer-address-missing a
-generic-empty (binary): maintainer-address-missing a
+generic-empty (source): malformed-maintainer-field a
+generic-empty (binary): malformed-maintainer-field a

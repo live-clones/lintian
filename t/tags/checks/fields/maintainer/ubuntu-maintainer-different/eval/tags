@@ -1,1 +1,2 @@
-
+ubuntu-maintainer-different (source): maintainer "Debian Lintian Maintainers" <lintian-maint@debian.org>
+ubuntu-maintainer-different (binary): maintainer "Debian Lintian Maintainers" <lintian-maint@debian.org>
