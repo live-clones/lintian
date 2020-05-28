@@ -106,7 +106,7 @@ sub issue_tags {
           || $type_priority{$a->processable->type}
           <=> $type_priority{$b->processable->type}
           || $a->processable->name cmp $b->processable->name
-          || $a->hint cmp $b->hint
+          || $a->context cmp $b->context
     } @pending;
 
     $self->print_tag($_) for @sorted;
@@ -114,10 +114,10 @@ sub issue_tags {
     return;
 }
 
-=item C<print_tag($pkg_info, $tag_info, $hint, $override)>
+=item C<print_tag($pkg_info, $tag_info, $context, $override)>
 
 Print a tag.  The first two arguments are hash reference with the
-information about the package and the tag, $hint is the hint
+information about the package and the tag, $context is the context
 information for the tag (if any) as an array reference, and $override
 is either undef if the tag is not overridden or a hash with
 override info for this tag.
@@ -128,7 +128,7 @@ sub print_tag {
     my ($self, $tag) = @_;
 
     my $tag_info = $tag->info;
-    my $information = $tag->hint;
+    my $information = $tag->context;
     my $override = $tag->override;
     my $processable = $tag->processable;
 

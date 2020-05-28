@@ -53,9 +53,9 @@ Common facilities for Lintian tags found and to be issued
 =item override
 =item processable
 
-=item hint
+=item context
 
-Calculate the string representation commonly referred to as 'hint'.
+Calculate the string representation commonly referred to as 'context'.
 
 =cut
 
@@ -65,19 +65,19 @@ has name => (is => 'rw');
 has override => (is => 'rw');
 has processable => (is => 'rw');
 
-sub hint {
+sub context {
     my ($self) = @_;
 
     # skip empty arguments
     my @relevant = grep { length } @{$self->arguments};
 
     # concatenate with spaces
-    my $hint = join(SPACE, @relevant) // EMPTY;
+    my $context = join(SPACE, @relevant) // EMPTY;
 
     # escape newlines; maybe add others
-    $hint =~ s/\n/\\n/g;
+    $context =~ s/\n/\\n/g;
 
-    return $hint;
+    return $context;
 }
 
 =back

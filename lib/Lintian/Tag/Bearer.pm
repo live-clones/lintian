@@ -54,11 +54,11 @@ Store found tags for later processing.
 
 sub tag {
 
-    my ($self, $tagname, @hint_components) = @_;
+    my ($self, $tagname, @context_components) = @_;
 
     my $tag = Lintian::Tag::Standard->new;
     $tag->name($tagname);
-    $tag->arguments(\@hint_components);
+    $tag->arguments(\@context_components);
 
     push(@{$self->tags}, $tag);
 

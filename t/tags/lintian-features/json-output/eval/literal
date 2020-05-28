@@ -7,12 +7,12 @@
                "path" : "PATH",
                "tags" : [
                   {
-                     "hint" : "0.0.1-1 -> 1.0+dsfg-1 (missing) -> 1.0+dsfg-1.1",
+                     "context" : "0.0.1-1 -> 1.0+dsfg-1 (missing) -> 1.0+dsfg-1.1",
                      "name" : "changelog-file-missing-explicit-entry",
                      "severity" : "warning"
                   },
                   {
-                     "hint" : "1.0+dsfg-1.1",
+                     "context" : "1.0+dsfg-1.1",
                      "name" : "dfsg-version-misspelled",
                      "severity" : "warning"
                   },
@@ -21,17 +21,17 @@
                      "severity" : "warning"
                   },
                   {
-                     "hint" : "1.0+dsfg-1.1",
+                     "context" : "1.0+dsfg-1.1",
                      "name" : "maintainer-upload-has-incorrect-version-number",
                      "severity" : "warning"
                   },
                   {
-                     "hint" : "field \"section\" in package json-output",
+                     "context" : "field \"section\" in package json-output",
                      "name" : "binary-control-field-duplicates-source",
                      "severity" : "info"
                   },
                   {
-                     "hint" : "debian-changes-1.0+dsfg-1.1",
+                     "context" : "debian-changes-1.0+dsfg-1.1",
                      "name" : "quilt-patch-using-template-description",
                      "severity" : "info"
                   },
@@ -44,7 +44,7 @@
                      "severity" : "info"
                   },
                   {
-                     "hint" : "line 12",
+                     "context" : "line 12",
                      "name" : "debian-control-has-unusual-field-spacing",
                      "severity" : "pedantic"
                   },
@@ -62,22 +62,22 @@
                      "severity" : "pedantic"
                   },
                   {
-                     "hint" : "13",
+                     "context" : "13",
                      "name" : "debhelper-compat-level",
                      "severity" : "classification"
                   },
                   {
-                     "hint" : "13",
+                     "context" : "13",
                      "name" : "debhelper-compat-virtual-relation",
                      "severity" : "classification"
                   },
                   {
-                     "hint" : "dh",
+                     "context" : "dh",
                      "name" : "debian-build-system",
                      "severity" : "classification"
                   },
                   {
-                     "hint" : "3",
+                     "context" : "3",
                      "name" : "debian-watch-file-standard",
                      "severity" : "classification"
                   },
@@ -86,7 +86,7 @@
                      "severity" : "classification"
                   },
                   {
-                     "hint" : "quilt",
+                     "context" : "quilt",
                      "name" : "patch-system",
                      "severity" : "classification"
                   },
@@ -95,12 +95,12 @@
                      "severity" : "classification"
                   },
                   {
-                     "hint" : "3.0 (quilt)",
+                     "context" : "3.0 (quilt)",
                      "name" : "source-format",
                      "severity" : "classification"
                   },
                   {
-                     "hint" : "4.5.0",
+                     "context" : "4.5.0",
                      "name" : "standards-version",
                      "severity" : "classification"
                   },
@@ -109,12 +109,12 @@
                      "severity" : "classification"
                   },
                   {
-                     "hint" : "Contact",
+                     "context" : "Contact",
                      "name" : "upstream-metadata-field-present",
                      "severity" : "classification"
                   },
                   {
-                     "hint" : "Name",
+                     "context" : "Name",
                      "name" : "upstream-metadata-field-present",
                      "severity" : "classification"
                   }
@@ -124,17 +124,17 @@
                "path" : "PATH",
                "tags" : [
                   {
-                     "hint" : "usr/local/share/",
+                     "context" : "usr/local/share/",
                      "name" : "dir-in-usr-local",
                      "severity" : "error"
                   },
                   {
-                     "hint" : "usr/local/share/lintian/",
+                     "context" : "usr/local/share/lintian/",
                      "name" : "dir-in-usr-local",
                      "severity" : "error"
                   },
                   {
-                     "hint" : "var/lock/lintian/",
+                     "context" : "var/lock/lintian/",
                      "name" : "dir-or-file-in-var-lock",
                      "severity" : "error"
                   },
@@ -147,42 +147,42 @@
                      "severity" : "error"
                   },
                   {
-                     "hint" : "usr/bin/script",
+                     "context" : "usr/bin/script",
                      "name" : "binary-without-manpage",
                      "severity" : "warning"
                   },
                   {
-                     "hint" : "http://www.example.com/.",
+                     "context" : "http://www.example.com/.",
                      "name" : "description-possibly-contains-homepage",
                      "severity" : "info"
                   },
                   {
-                     "hint" : "\"Test Lintian's JSON output format.\"",
+                     "context" : "\"Test Lintian's JSON output format.\"",
                      "name" : "description-synopsis-might-not-be-phrased-properly",
                      "severity" : "info"
                   },
                   {
-                     "hint" : "usr/share/applications/script.desktop",
+                     "context" : "usr/share/applications/script.desktop",
                      "name" : "desktop-entry-limited-to-environments",
                      "severity" : "info"
                   },
                   {
-                     "hint" : "usr/local/share/lintian/",
+                     "context" : "usr/local/share/lintian/",
                      "name" : "package-contains-empty-directory",
                      "severity" : "info"
                   },
                   {
-                     "hint" : "usr/share/doc/json-output/examples/example #!/usr/bin/foo",
+                     "context" : "usr/share/doc/json-output/examples/example #!/usr/bin/foo",
                      "name" : "example-unusual-interpreter",
                      "severity" : "pedantic"
                   },
                   {
-                     "hint" : "xz",
+                     "context" : "xz",
                      "name" : "control-tarball-compression-format",
                      "severity" : "classification"
                   },
                   {
-                     "hint" : "xz",
+                     "context" : "xz",
                      "name" : "data-tarball-compression-format",
                      "severity" : "classification"
                   },

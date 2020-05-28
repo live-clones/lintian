@@ -390,10 +390,10 @@ sub process {
 
             for my $tagname (keys %{$declared_overrides}) {
 
-                my $hints = $declared_overrides->{$tagname};
+                my $contexts = $declared_overrides->{$tagname};
 
-                # set the use count to zero for each hint
-                $used_overrides{$tagname}{$_} = 0 for keys %{$hints};
+                # set the use count to zero for each context
+                $used_overrides{$tagname}{$_} = 0 for keys %{$contexts};
             }
         }
 
@@ -457,11 +457,11 @@ sub process {
             if ($tag_overrides) {
 
                 # do not use EMPTY; hash keys literal
-                # empty hint in specification matches all
+                # empty context in specification matches all
                 $override = $tag_overrides->{''};
 
-                # matches hint exactly
-                $override = $tag_overrides->{$tag->hint}
+                # matches context exactly
+                $override = $tag_overrides->{$tag->context}
                   unless $override;
 
                 # look for patterns
@@ -471,7 +471,7 @@ sub process {
                       keys %{$tag_overrides};
 
                     my $match= firstval {
-                        $tag->hint =~ m/^$tag_overrides->{$_}{pattern}\z/
+                        $tag->context =~ m/^$tag_overrides->{$_}{pattern}\z/
                     }
                     @candidates;
 
@@ -479,7 +479,7 @@ sub process {
                       if $match;
                 }
 
-                $used_overrides{$tag->name}{$override->{hint}}++
+                $used_overrides{$tag->name}{$override->{context}}++
                   if $override;
             }
 
@@ -499,13 +499,13 @@ sub process {
 
             my $tag_overrides = $used_overrides{$tagname};
 
-            for my $hint (keys %{$tag_overrides}) {
+            for my $context (keys %{$tag_overrides}) {
 
                 next
-                  if $tag_overrides->{$hint};
+                  if $tag_overrides->{$context};
 
                 # cannot be overridden or suppressed
-                $processable->tag('unused-override', $tagname, $hint);
+                $processable->tag('unused-override', $tagname, $context);
             }
         }
 
