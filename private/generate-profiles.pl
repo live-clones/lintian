@@ -70,6 +70,7 @@ my @want_nonfatal = uniq @{ $base->{nonfatal} // [] };
 
 # find all tags known to Lintian
 my @known_tags;
+my %new_name;
 my $tagroot = "$ENV{LINTIAN_ROOT}/tags";
 my @descfiles = File::Find::Rule->file()->name('*.desc')->in($tagroot);
 for my $tagpath (@descfiles) {
@@ -78,8 +79,31 @@ for my $tagpath (@descfiles) {
       unless scalar @paragraphs == 1;
 
     my %fields = %{ $paragraphs[0] };
+
+    my $name = $fields{tag};
     push(@known_tags, $fields{tag});
+
+    my @renamed_from= grep { length }
+      grep { s/^\s*|\s*$//g } split(/,/, $fields{'renamed-from'} // EMPTY);
+
+    my @taken = grep { exists $new_name{$_} } @renamed_from;
+
+    say "Warning: Ignoring $_ as an alias for $new_name{$_} in favor of $name."
+      for @taken;
+
+    $new_name{$_} = $name for @renamed_from;
 }
+
+my $old_lc
+  = List::Compare->new([@want_fatal, @want_nonfatal], [keys %new_name]);
+my @old_names = $old_lc->get_intersection;
+say 'FTP Master uses old tag names for auto-rejection:'
+  if @old_names;
+say INDENT . "- $_  =>  $new_name{$_}" for @old_names;
+
+# replace old names
+@want_fatal = uniq map { $new_name{$_} // $_ } @want_fatal;
+@want_nonfatal = uniq map { $new_name{$_} // $_ } @want_nonfatal;
 
 my $fatal_lc = List::Compare->new(\@want_fatal, \@known_tags);
 my @unknown_fatal = $fatal_lc->get_Lonly;
