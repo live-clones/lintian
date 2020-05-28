@@ -1,3 +1,10 @@
+=====================
+Lintian User's Manual
+=====================
+.. sectnum::
+.. contents::
+   :depth: 3
+
 .. _chapter-1:
 
 Introduction
