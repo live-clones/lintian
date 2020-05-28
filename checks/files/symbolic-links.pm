@@ -109,7 +109,8 @@ sub files {
 
         if ($self->type ne 'udeb' and $filetop eq $linktop) {
             # absolute links within one toplevel directory are _not_ ok!
-            $self->tag('symlink-should-be-relative', $file->name, $file->link);
+            $self->tag('absolute-symlink-in-top-level-folder',
+                $file->name, $file->link);
         }
 
         $self->tag_build_tree_path($flinkname,
@@ -174,8 +175,7 @@ sub files {
                 || ($filetop ne $linkcomponent)) {
                 # relative link into other toplevel directory.
                 # this hits a relative symbolic link in the root too.
-                $self->tag('symlink-should-be-absolute', $file->name,
-                    $file->link);
+                $self->tag('relative-symlink', $file->name,$file->link);
             }
         }
 

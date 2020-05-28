@@ -1117,8 +1117,7 @@ sub binary {
                 qr/GNU Free Documentation License|(?-i:\bGFDL\b)/i
             )
         ) {
-            $self->tag(
-                'copyright-should-refer-to-common-license-file-for-gfdl');
+            $self->tag('copyright-not-using-common-license-for-gfdl');
         }elsif (
             check_names_texts(
                 $contents,
@@ -1126,8 +1125,7 @@ qr/\b(?:LGPL|gnu[-_](?:lesser|library)[-_]general[-_]public[-_]license)\b/i,
 qr/GNU (?:Lesser|Library) General Public License|(?-i:\bLGPL\b)/i
             )
         ) {
-            $self->tag(
-                'copyright-should-refer-to-common-license-file-for-lgpl');
+            $self->tag('copyright-not-using-common-license-for-lgpl');
         }elsif (
             check_names_texts(
                 $contents,
@@ -1135,8 +1133,7 @@ qr/GNU (?:Lesser|Library) General Public License|(?-i:\bLGPL\b)/i
                 qr/GNU General Public License|(?-i:\bGPL\b)/i
             )
         ) {
-            $self->tag(
-                'copyright-should-refer-to-common-license-file-for-gpl');
+            $self->tag('copyright-not-using-common-license-for-gpl');
             $gpl = 1;
         }elsif (
             check_names_texts(
@@ -1144,8 +1141,7 @@ qr/GNU (?:Lesser|Library) General Public License|(?-i:\bLGPL\b)/i
                 qr/\bApache License\s*,?\s*Version 2|\b(?-i:Apache)-2/i
             )
         ) {
-            $self->tag(
-                'copyright-should-refer-to-common-license-file-for-apache-2');
+            $self->tag('copyright-not-using-common-license-for-apache2');
         }
     }
 

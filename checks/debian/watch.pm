@@ -199,7 +199,7 @@ sub source {
         $self->tag('debian-watch-file-uses-deprecated-githubredir', $remainder)
           if $remainder =~ m{githubredir\.debian\.net};
 
-        $self->tag('debian-watch-file-should-use-sf-redirector', $remainder)
+        $self->tag('debian-watch-lacks-sourceforge-redirector', $remainder)
           if $remainder =~ m{ (?:https?|ftp)://
                               (?:(?:.+\.)?dl|(?:pr)?downloads?|ftp\d?|upload) \.
                               (?:sourceforge|sf)\.net}xsm
@@ -234,21 +234,19 @@ sub source {
         # If the version of the package contains dfsg, assume that it needs
         # to be mangled to get reasonable matches with upstream.
         my $needs_repack_mangling = ($repack && $lastversion eq 'debian');
-        $self->tag('debian-watch-file-should-mangle-version', $line)
+        $self->tag('debian-watch-not-mangling-version', $line)
           if $needs_repack_mangling
           && !$repack_mangle
           && !$repack_dmangle_auto;
 
-        $self->tag(
-            'debian-watch-file-should-dversionmangle-not-uversionmangle',$line)
+        $self->tag('debian-watch-mangles-debian-version-improperly',$line)
           if $needs_repack_mangling
           && $repack_mangle
           && !$repack_dmangle;
 
         my $needs_prerelease_mangling
           = ($prerelease && $lastversion eq 'debian');
-        $self->tag(
-            'debian-watch-file-should-uversionmangle-not-dversionmangle',$line)
+        $self->tag('debian-watch-mangles-upstream-version-improperly',$line)
           if $needs_prerelease_mangling
           && $prerelease_mangle
           && !$prerelease_umangle;

@@ -616,7 +616,7 @@ sub binary {
 
         if (@entries == 1) {
             if ($latest_entry->Version and $latest_entry->Version =~ /-1$/) {
-                $self->tag('new-package-should-close-itp-bug')
+                $self->tag('initial-upload-closes-no-bugs')
                   unless @{ $latest_entry->Closes };
                 $self->tag('new-package-uses-date-based-version-number',
                     $latest_entry->Version,

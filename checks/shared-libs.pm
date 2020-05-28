@@ -687,7 +687,7 @@ sub installable {
             # Decide if we call ldconfig
             if ($postinst->bytes =~ m/^[^\#]*\bldconfig\b/m) {
                 if ($type eq 'udeb') {
-                    $self->tag('udeb-postinst-must-not-call-ldconfig');
+                    $self->tag('udeb-postinst-calls-ldconfig');
                 } else {
                     # glibc (notably libc-bin) needs to call ldconfig in
                     # order to implement the "ldconfig" trigger.
@@ -723,8 +723,7 @@ sub installable {
     } else {
         $self->tag('package-has-unnecessary-activation-of-ldconfig-trigger')
           if $we_trigger_ldconfig and not $must_call_ldconfig;
-        $self->tag('package-must-activate-ldconfig-trigger',
-            $must_call_ldconfig)
+        $self->tag('lacks-ldconfig-trigger',$must_call_ldconfig)
           if not $we_trigger_ldconfig and $must_call_ldconfig;
     }
 

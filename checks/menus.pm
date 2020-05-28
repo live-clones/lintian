@@ -116,7 +116,7 @@ sub files {
                 }
                 close($fd);
             }
-            $self->tag('menu-method-should-include-menu-h', $file)
+            $self->tag('menu-method-lacks-include', $file)
               unless $menumethod_includes_menu_h
               or $self->package eq 'menu';
         }
@@ -368,7 +368,7 @@ sub check_doc_base_field {
 
     $self->tag('doc-base-file-unknown-field', "$dbfile:$line", $field)
       unless defined $knownfields->{$field};
-    $self->tag('doc-base-file-duplicated-field', "$dbfile:$line", $field)
+    $self->tag('duplicate-field-in-doc-base', "$dbfile:$line", $field)
       if $sawfields->{$field};
     $sawfields->{$field} = 1;
 
@@ -427,7 +427,7 @@ sub check_doc_base_field {
         $format = lc $format;
         $self->tag('doc-base-file-unknown-format', "$dbfile:$line", $format)
           unless $known_doc_base_formats{$format};
-        $self->tag('doc-base-file-duplicated-format', "$dbfile:$line", $format)
+        $self->tag('duplicate-format-in-doc-base', "$dbfile:$line", $format)
           if $sawformats->{$format};
         $sawformats->{$format} = 1;
 

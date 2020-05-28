@@ -494,7 +494,7 @@ sub check_init {
         next unless defined $lsb{$keyword};
         for my $dependency (split(/\s+/, $lsb{$keyword})) {
             if (defined $implied_dependencies{$dependency}) {
-                $self->tag('init.d-script-should-depend-on-virtual-facility',
+                $self->tag('non-virtual-facility-in-initd-script',
                     $initd_path,
                     "$dependency -> $implied_dependencies{$dependency}");
             } elsif ($keyword =~ m/^required-/ && $dependency =~ m/^\$/) {

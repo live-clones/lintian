@@ -338,8 +338,7 @@ sub verify_line {
         my $value = $2;
 
         if (exists $vals{$tag}) {
-            $self->tag('duplicated-tag-in-menu-item',
-                "$fullname $1:$linecount");
+            $self->tag('duplicate-tag-in-menu',"$fullname $1:$linecount");
         }
 
         # If the value was quoted, remove those quotes.
@@ -618,7 +617,7 @@ sub verify_desktop_file {
             my $basetag = $tag;
             $basetag =~ s/\[([^\]]+)\]$//;
             if (exists $vals{$tag}) {
-                $self->tag('duplicated-key-in-desktop-entry', "$file:$. $tag");
+                $self->tag('duplicate-key-in-desktop', "$file:$. $tag");
             } elsif ($DEPRECATED_DESKTOP_KEYS->known($basetag)) {
                 if ($basetag eq 'Encoding') {
                     push(

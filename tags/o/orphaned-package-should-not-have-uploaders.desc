@@ -1,6 +1,0 @@
-Tag: orphaned-package-should-not-have-uploaders
-Severity: error
-Check: nmu
-Info: Packages with their maintainer set to packages@qa.debian.org, i.e.
- orphaned packages, should not have uploaders. Adopt the package properly if
- you want to resume its maintenance.

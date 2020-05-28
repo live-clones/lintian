@@ -1,4 +1,0 @@
-Tag: doc-base-file-duplicated-field
-Severity: error
-Check: menus
-Info: The doc-base control file contains a duplicated field.

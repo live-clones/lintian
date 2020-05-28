@@ -148,7 +148,7 @@ sub always {
 
         my $priority = $processable->unfolded_field('priority') // EMPTY;
 
-        $self->tag('transitional-package-should-be-oldlibs-optional',
+        $self->tag('transitional-package-not-oldlibs-optional',
             "$fraction/$priority")
           unless $priority eq 'optional' && $fraction eq 'oldlibs';
     }

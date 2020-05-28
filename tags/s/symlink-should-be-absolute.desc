@@ -1,9 +1,0 @@
-Tag: symlink-should-be-absolute
-Severity: error
-Check: files/symbolic-links
-Info: Symbolic links between different top-level directories should be
- absolute.
- .
- If you use debhelper, running dh_link after creating the package structure
- will fix this problem for you.
-Ref: policy 10.5
