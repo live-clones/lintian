@@ -56,7 +56,7 @@ use namespace::clean;
 
 with 'Lintian::Check';
 
-my $ARCH_REGEX = Lintian::Data->new('binaries/arch-regex', qr/\s*\~\~/o,
+my $ARCH_REGEX = Lintian::Data->new('binaries/arch-regex', qr/\s*\~\~/,
     sub { return qr/$_[1]/ });
 my $ARCH_64BIT_EQUIVS
   = Lintian::Data->new('binaries/arch-64bit-equivs', qr/\s*\=\>\s*/);
@@ -119,16 +119,16 @@ our $MULTIARCH_DIRS = Lintian::Data->new('common/multiarch-dirs', qr/\s++/);
 sub _split_hash {
     my (undef, $val) = @_;
     my $hash = {};
-    map { $hash->{$_} = 1 } split m/\s*,\s*/o, $val;
+    map { $hash->{$_} = 1 } split /\s*,\s*/, $val;
     return $hash;
 }
 
-our $HARDENING= Lintian::Data->new('binaries/hardening-tags', qr/\s*\|\|\s*/o,
+our $HARDENING= Lintian::Data->new('binaries/hardening-tags', qr/\s*\|\|\s*/,
     \&_split_hash);
 our $HARDENED_FUNCTIONS = Lintian::Data->new('binaries/hardened-functions');
 our $LFS_SYMBOLS = Lintian::Data->new('binaries/lfs-symbols');
 our $OBSOLETE_CRYPT_FUNCTIONS
-  = Lintian::Data->new('binaries/obsolete-crypt-functions', qr/\s*\|\|\s*/o);
+  = Lintian::Data->new('binaries/obsolete-crypt-functions', qr/\s*\|\|\s*/);
 
 our $ARCH_32_REGEX;
 
@@ -185,11 +185,11 @@ sub installable {
 
         # The LFS check only works reliably for ELF files due to the
         # architecture regex.
-        if ($file_info =~ m/^[^,]*\bELF\b/o) {
+        if ($file_info =~ /^[^,]*\bELF\b/) {
             # Only 32bit ELF binaries can lack LFS.
             $ARCH_32_REGEX = $ARCH_REGEX->value('32')
               unless defined $ARCH_32_REGEX;
-            $has_lfs = 1 unless $file_info =~ m/$ARCH_32_REGEX/o;
+            $has_lfs = 1 unless $file_info =~ m/$ARCH_32_REGEX/;
             # We don't care if it is a debug file
             $has_lfs = 1 if $name =~ m,^usr/lib/debug/,;
         }
@@ -306,13 +306,13 @@ sub installable {
 
     # try to identify transition strings
     my $base_pkg = $pkg;
-    $base_pkg =~ s/c102\b//o;
-    $base_pkg =~ s/c2a?\b//o;
-    $base_pkg =~ s/\dg$//o;
-    $base_pkg =~ s/gf$//o;
-    $base_pkg =~ s/v[5-6]$//o; # GCC-5 / libstdc++6 C11 ABI breakage
-    $base_pkg =~ s/-udeb$//o;
-    $base_pkg =~ s/^lib64/lib/o;
+    $base_pkg =~ s/c102\b//;
+    $base_pkg =~ s/c2a?\b//;
+    $base_pkg =~ s/\dg$//;
+    $base_pkg =~ s/gf$//;
+    $base_pkg =~ s/v[5-6]$//; # GCC-5 / libstdc++6 C11 ABI breakage
+    $base_pkg =~ s/-udeb$//;
+    $base_pkg =~ s/^lib64/lib/;
 
     my $match_found = 0;
     foreach my $expected_name (@sonames) {
@@ -393,7 +393,7 @@ sub installable {
         }
 
         # ELF?
-        next unless $fileinfo =~ m/^[^,]*\bELF\b/o;
+        next unless $fileinfo =~ /^[^,]*\bELF\b/;
 
         $self->tag('development-package-ships-elf-binary-in-path', $file)
           if exists($PATH_DIRECTORIES{$file->dirname})
@@ -445,7 +445,7 @@ sub installable {
         check_spelling($file->strings, $exceptions, $tag_emitter, 0);
 
         # stripped?
-        if ($fileinfo =~ m,\bnot stripped\b,o) {
+        if ($fileinfo =~ m,\bnot stripped\b,) {
             # Is it an object file (which generally cannot be
             # stripped), a kernel module, debugging symbols, or
             # perhaps a debugging package?
@@ -454,7 +454,7 @@ sub installable {
                 or $pkg =~ m/debug/
                 or $fname =~ m,/lib/debug/,
                 or $fname =~ GUILE_PATH_REGEX
-                or $fname =~ m,\.gox$,o) {
+                or $fname =~ m,\.gox$,) {
                 if (    $fileinfo =~ m/executable/
                     and $file->strings =~ m/^Caml1999X0[0-9][0-9]$/m) {
                     # Check for OCaml custom executables (#498138)
@@ -465,7 +465,7 @@ sub installable {
             }
         } else {
             # stripped but a debug or profiling library?
-            if (($fname =~ m,/lib/debug/,o) or ($fname =~ m,/lib/profile/,o)){
+            if (($fname =~ m,/lib/debug/,) or ($fname =~ m,/lib/profile/,)){
                 $self->tag(
                     'library-in-debug-or-profile-should-not-be-stripped',$file)
                   unless $file->size == 0;
@@ -571,7 +571,7 @@ sub installable {
 
         # statically linked?
         if (!exists($objdump->{NEEDED})) {
-            if ($fileinfo =~ m/(shared object|pie executable)/o) {
+            if ($fileinfo =~ /(shared object|pie executable)/) {
                 # Some exceptions: kernel modules, syslinux modules, detached
                 # debugging information and the dynamic loader (which itself
                 # has no dependencies).

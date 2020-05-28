@@ -250,7 +250,7 @@ they allow non-ascii printables etc.
 
 sub _quote_print {
     my ($self, $string) = @_;
-    $string =~ s/[^[:print:]]/?/go;
+    $string =~ s/[^[:print:]]/?/g;
     return $string;
 }
 

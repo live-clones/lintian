@@ -728,15 +728,15 @@ sub find_cruft {
             my $marker = 0;
             open(my $fd, '<', $entry->unpacked_path);
             while (my $line = <$fd>) {
-                next unless $line =~ m/^#/o;
-                if ($marker && $line =~ m/^#BZ[h0][0-9]/o) {
+                next unless $line =~ m/^#/;
+                if ($marker && $line =~ m/^#BZ[h0][0-9]/) {
                     $self->tag('source-contains-waf-binary', $name);
                     last;
                 }
-                $marker = 1 if $line =~ m/^#==>/o;
+                $marker = 1 if $line =~ m/^#==>/;
 
                 # We could probably stop here, but just in case
-                $marker = 0 if $line =~ m/^#<==/o;
+                $marker = 0 if $line =~ m/^#<==/;
             }
             close($fd);
         }
@@ -1456,7 +1456,7 @@ sub check_gfdl_license_problem {
                           with [ ] no [ ] invariant [ ] sections[ ]?,
                           [ ]? no [ ] front(?:[ ]?-[ ]?|[ ])cover [ ] texts[ ]?,?
                           [ ]? and [ ] no [ ] back(?:[ ]?-?[ ]?|[ ])cover [ ] texts
-                          \Z/xso
+                          \Z/xs
     ) {
         return 0;
     }
@@ -1468,7 +1468,7 @@ sub check_gfdl_license_problem {
                             (?:[ ] after [ ] the [ ] copyright [ ] (?:line(?:\(s\)|s)?)?
                              (?:[ ] using [ ] all [ ] the [ ] features? [ ] of [ ] the [ ] gfdl)?
                             )?
-                           )? [ ]? [,:]? \Z/xso
+                           )? [ ]? [,:]? \Z/xs
     ){
         return 0;
     }

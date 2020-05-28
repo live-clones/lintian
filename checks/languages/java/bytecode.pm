@@ -34,8 +34,8 @@ sub files {
     my ($self, $file) = @_;
 
     # .class (compiled Java files)
-    if (   $file->name =~ m,\.class$,o
-        && $file->name !~ m,(?:WEB-INF|demo|doc|example|sample|test),o) {
+    if (   $file->name =~ m,\.class$,
+        && $file->name !~ m,(?:WEB-INF|demo|doc|example|sample|test),) {
 
         my $magic = $file->magic(4);
 

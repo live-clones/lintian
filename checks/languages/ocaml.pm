@@ -66,7 +66,7 @@ sub setup {
         if ($line =~ /^(?:\.\/)?([^:]+): (.*)$/) {
             my ($filename, $contents) = ($1, $2);
             my $dirname = dirname($filename);
-            for my $entry (split m/ /o, $contents) {
+            for my $entry (split m/ /, $contents) {
                 # Note: a .o may be legitimately in several different .a
                 $self->provided_o->{"$dirname/$entry"} = $filename;
             }

@@ -259,9 +259,9 @@ sub installable {
         }
 
         # libtool "-release" variant
-        $link_file =~ s/-[\d\.]+\.so$/.so/o;
+        $link_file =~ s/-[\d\.]+\.so$/.so/;
         # determine shlib link name (w/o version)
-        $link_file =~ s/\.so.+$/.so/o;
+        $link_file =~ s/\.so.+$/.so/;
 
         # shlib symlink may not exist.
         # if shlib doesn't _have_ a version, then $link_file and
@@ -282,7 +282,7 @@ sub installable {
 
             push @alt, $link_file;
 
-            if ($processable->source =~ m/^gcc-(\d+(?:.\d+)?)$/o) {
+            if ($processable->source =~ /^gcc-(\d+(?:.\d+)?)$/) {
                 # gcc has a lot of bi-arch libs and puts the dev symlink
                 # in slightly different directories (to be co-installable
                 # with itself I guess).  Allegedly, clang (etc.) have to
@@ -404,8 +404,8 @@ sub installable {
                 # dependencies, since packages may contain dependencies on
                 # other udeb packages.
                 my $udeb = '';
-                $udeb = 'udeb: ' if s/^udeb:\s+//o;
-                @words = split(/\s+/o,$_);
+                $udeb = 'udeb: ' if s/^udeb:\s+//;
+                @words = split(/\s+/, $_);
                 my $shlibs_string = $udeb.$words[0].' '.$words[1];
                 if ($shlibs_control{$shlibs_string}) {
                     $self->tag('duplicate-entry-in-shlibs-control-file',
@@ -782,7 +782,7 @@ sub format_soname {
 # to a libc nss plugin (libnss_<name>.so.$version).
 sub is_nss_plugin {
     my ($path) = @_;
-    return 1 if $path =~ m,^(.*/)?libnss_[^.]+\.so\.\d+$,o;
+    return 1 if $path =~ m,^(.*/)?libnss_[^.]+\.so\.\d+$,;
     return 0;
 }
 

@@ -39,9 +39,9 @@ sub octify {
 }
 
 my $DEB_PERMISSIONS
-  = Lintian::Data->new('control-files/deb-permissions',  qr/\s++/o, \&octify);
+  = Lintian::Data->new('control-files/deb-permissions',  qr/\s++/, \&octify);
 my $UDEB_PERMISSIONS
-  = Lintian::Data->new('control-files/udeb-permissions', qr/\s++/o, \&octify);
+  = Lintian::Data->new('control-files/udeb-permissions', qr/\s++/, \&octify);
 
 sub installable {
     my ($self) = @_;

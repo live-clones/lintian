@@ -146,7 +146,7 @@ is not anchored and does not enforce any "boundary" characters.
 
 =cut
 
-our $PKGNAME_REGEX = qr/[a-z0-9][-+\.a-z0-9]+/o;
+our $PKGNAME_REGEX = qr/[a-z0-9][-+\.a-z0-9]+/;
 
 =item $PKGREPACK_REGEX
 
@@ -156,7 +156,7 @@ be applied to the upstream portion (see #931846).
 
 =cut
 
-our $PKGREPACK_REGEX = qr/(dfsg|debian|ds|repack)/o;
+our $PKGREPACK_REGEX = qr/(dfsg|debian|ds|repack)/;
 
 =item $PKGVERSION_REGEX
 
@@ -170,7 +170,7 @@ our $PKGVERSION_REGEX = qr/
                  (?: \d+ : )?                # Optional epoch
                  [0-9][0-9A-Za-z.+:~]*       # Upstream version (with no hyphens)
                  (?: - [0-9A-Za-z.+:~]+ )*   # Optional debian revision (+ upstreams versions with hyphens)
-                          /xoa;
+                          /xa;
 
 =back
 
@@ -1012,12 +1012,12 @@ sub normalize_pkg_path {
         }
     }
 
-    $path =~ s,//++,/,go;
-    $path =~ s,/$,,o;
-    $path =~ s,^/,,o;
+    $path =~ s,//++,/,g;
+    $path =~ s,/$,,;
+    $path =~ s,^/,,;
 
     # Add all segments to the queue
-    @queue = split(m,/,o, $path);
+    @queue = split(m,/,, $path);
 
     # Loop through @queue and modify @normalised so that in the end of
     # the loop, @normalised will contain the path that.

@@ -157,11 +157,11 @@ sub add_changelog {
         my @lines = path($changelogpath)->lines;
         my $ok = 0;
         for my $line (@lines) {
-            next if $line =~ m/^\s*+$/o;
+            next if $line =~ /^\s*+$/;
             # look for something like
             # lintian (2.5.3) UNRELEASED; urgency=low
             if ($line
-                =~ m/^\S+\s*\([^\)]+\)\s*(?:UNRELEASED|(?:[^ \t;]+\s*)+)\;/o) {
+                =~ /^\S+\s*\([^\)]+\)\s*(?:UNRELEASED|(?:[^ \t;]+\s*)+)\;/) {
                 $ok = 1;
             }
             last;

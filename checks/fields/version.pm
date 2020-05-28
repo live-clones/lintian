@@ -117,16 +117,16 @@ sub always {
     # no revision.  So we need to check if the raw version
     # ends with "-0".
     $self->tag('debian-revision-should-not-be-zero', $version)
-      if $version =~ m/-0$/o;
+      if $version =~ /-0$/;
 
     my $ubuntu;
-    if($debian =~ m/^(?:[^.]+)(?:\.[^.]+)?(?:\.[^.]+)?(\..*)?$/o){
+    if($debian =~ /^(?:[^.]+)(?:\.[^.]+)?(?:\.[^.]+)?(\..*)?$/){
         my $extra = $1;
         if (
             defined $extra
-            && $debian =~ m/\A
+            && $debian =~ /\A
                             (?:[^.]+ubuntu[^.]+)(?:\.\d+){1,3}(\..*)?
-                            \Z/oxsm
+                            \Z/xsm
         ) {
             $ubuntu = 1;
             $extra = $1;
@@ -142,7 +142,7 @@ sub always {
     if ($type eq 'source') {
 
         $self->tag('binary-nmu-debian-revision-in-source', $version)
-          if $debian =~ /^[^.-]+\.[^.-]+\./o and not $ubuntu;
+          if $debian =~ /^[^.-]+\.[^.-]+\./ and not $ubuntu;
     }
 
     my $name = $processable->field('package');

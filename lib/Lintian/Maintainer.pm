@@ -157,7 +157,7 @@ sub check_maintainer {
     # name (Policy allows "." to be unquoted in names, Email::Valid
     # does not etc.).  Thus this check is to ensure we only pass the
     # "email"-part to Email::Valid.
-    if ($extra or ($mail && $mail =~ m/\@[^\>\@]+\>[^\>\@]*$/o)) {
+    if ($extra or ($mail && $mail =~ /\@[^\>\@]+\>[^\>\@]*$/)) {
         push(@tags, ["$field-address-malformed", $maintainer]);
         $malformed = 1;
     }

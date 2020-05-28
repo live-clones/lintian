@@ -56,7 +56,7 @@ with 'Lintian::Check';
 # $INTERPRETERS maps names of (unversioned) interpreters to the path
 # they are installed and what package to depend on to use them.
 #
-my $INTERPRETERS = Lintian::Data->new('scripts/interpreters', qr/\s*=\>\s*/o,
+my $INTERPRETERS = Lintian::Data->new('scripts/interpreters', qr/\s*=\>\s*/,
     \&_parse_interpreters);
 
 # The more complex case of interpreters that may have a version number.
@@ -91,7 +91,7 @@ my $INTERPRETERS = Lintian::Data->new('scripts/interpreters', qr/\s*=\>\s*/o,
 #
 my $VERSIONED_INTERPRETERS
   = Lintian::Data->new('scripts/versioned-interpreters',
-    qr/\s*=\>\s*/o,\&_parse_versioned_interpreters);
+    qr/\s*=\>\s*/,\&_parse_versioned_interpreters);
 
 # When detecting commands inside shell scripts, use this regex to match the
 # beginning of the command rather than checking whether the command is at the
@@ -274,7 +274,7 @@ sub installable {
 
     foreach my $file ($processable->installed->sorted_list) {
         next if not $file->is_file;
-        $ELF{$file} = 1 if $file->file_info =~ /^[^,]*\bELF\b/o;
+        $ELF{$file} = 1 if $file->file_info =~ /^[^,]*\bELF\b/;
         next unless $file->operm & 0111;
         $executable{$file} = 1;
     }
@@ -1400,8 +1400,8 @@ sub script_is_evil_and_wrong {
     local $_;
     while (<$fd>) {
         chomp;
-        next if m/^#/o;
-        next if m/^$/o;
+        next if m/^#/;
+        next if m/^$/;
         last if (++$i > 55);
         if (
             m~

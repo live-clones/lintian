@@ -257,7 +257,7 @@ sub source {
         my $basename = $po_path->basename;
         next unless $basename =~ m/\.po$/ || $po_path->is_dir;
         $self->tag('misnamed-po-file', $po_path)
-          unless ($basename =~ /^[a-z]{2,3}(_[A-Z]{2})?(?:\@[^\.]+)?\.po$/o);
+          unless ($basename =~ /^[a-z]{2,3}(_[A-Z]{2})?(?:\@[^\.]+)?\.po$/);
         next unless $po_path->is_open_ok;
         local ($/) = "\n\n";
         $_ = '';

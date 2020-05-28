@@ -73,7 +73,7 @@ sub source {
     $self->tag('testsuite-autopkgtest-missing')
       if ($testsuites !~ /autopkgtest/);
 
-    for my $testsuite (split(m/\s*,\s*/o, $testsuites)) {
+    for my $testsuite (split(m/\s*,\s*/, $testsuites)) {
         $self->tag('unknown-testsuite', $testsuite)
           unless $KNOWN_TESTSUITES->known($testsuite);
 

@@ -112,7 +112,7 @@ sub installable {
     my $javalib = 0;
     my $replaces = $processable->relation('replaces');
     my %nag_once;
-    $javalib = 1 if($pkg =~ m/^lib.*-java$/o);
+    $javalib = 1 if($pkg =~ m/^lib.*-java$/);
     for my $field (
         qw(depends pre-depends recommends suggests conflicts provides enhances replaces breaks)
     ) {
@@ -254,7 +254,7 @@ sub installable {
                 $self->tag('depends-on-libdb1-compat', $field)
                   if ( $d_pkg eq 'libdb1-compat'
                     && $pkg !~ /^libc(?:6|6.1|0.3)/
-                    && $field =~ m/^(?:pre-)?depends$/o);
+                    && $field =~ /^(?:pre-)?depends$/);
 
                 $self->tag('depends-on-python-minimal', $field,)
                   if ( $d_pkg =~ /^python[\d.]*-minimal$/
@@ -304,7 +304,7 @@ sub installable {
                        &$is_dep_field($field)
                     && $pkg ne 'default-jdk-doc'
                     && (   $d_pkg eq 'classpath-doc'
-                        || $d_pkg =~ m/openjdk-\d+-doc/o));
+                        || $d_pkg =~ /openjdk-\d+-doc/));
 
                 if ($javalib && $field eq 'depends'){
                     foreach my $reg (@known_java_pkg){
@@ -457,7 +457,7 @@ sub source {
                         }
                     }
 
-                    if (   $d_pkg =~ m/^openjdk-\d+-doc$/o
+                    if (   $d_pkg =~ /^openjdk-\d+-doc$/
                         or $d_pkg eq 'classpath-doc'){
                         $self->tag(
                             'build-depends-on-specific-java-doc-package',
@@ -469,7 +469,7 @@ sub source {
                             $d_pkg);
                     }
 
-                    if (    $d_pkg =~ m/^libdb\d+\.\d+.*-dev$/o
+                    if (    $d_pkg =~ /^libdb\d+\.\d+.*-dev$/
                         and &$is_dep_field($field)) {
                         $self->tag('build-depends-on-versioned-berkeley-db',
                             "$field:$d_pkg");

@@ -919,7 +919,7 @@ case sensitive):
 
 sub parse_boolean {
     my ($str) = @_;
-    return $str == 0 ? 0 : 1 if $str =~ m/^-?\d++$/o;
+    return $str == 0 ? 0 : 1 if $str =~ /^-?\d++$/;
     $str = lc $str;
     return 1 if $str eq 'true' or $str =~ m/^y(?:es)?$/;
     return 0 if $str eq 'false' or $str =~ m/^no?$/;

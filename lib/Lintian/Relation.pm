@@ -179,10 +179,10 @@ sub new {
     my ($class, $relation) = @_;
     $relation = '' unless defined($relation);
     my @result;
-    for my $element (split(/\s*,\s*/o, $relation)) {
+    for my $element (split(/\s*,\s*/, $relation)) {
         next if $element eq '';
         my @alternatives;
-        for my $alternative (split(/\s*\|\s*/o, $element)) {
+        for my $alternative (split(/\s*\|\s*/, $element)) {
             my $dep = $class->parse_element($alternative);
             next if not $dep;
             push(@alternatives, $dep);

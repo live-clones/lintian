@@ -234,8 +234,8 @@ sub _quote_char {
     my ($char, @items) = @_;
 
     foreach (@items) {
-        s/\\/\\\\/go;
-        s/\Q$char\E/\\$char/go;
+        s/\\/\\\\/g;
+        s/\Q$char\E/\\$char/g;
     }
 
     return @items;

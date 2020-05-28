@@ -36,8 +36,8 @@ use namespace::clean;
 
 with 'Lintian::Check';
 
-our $CLASS_REGEX = qr/\.(?:class|cljc?)/o;
-our $MAX_BYTECODE = Lintian::Data->new('java/constants', qr/\s*=\s*/o);
+our $CLASS_REGEX = qr/\.(?:class|cljc?)/;
+our $MAX_BYTECODE = Lintian::Data->new('java/constants', qr/\s*=\s*/);
 
 sub source {
     my ($self) = @_;
@@ -71,9 +71,9 @@ sub installable {
     my $depends = $processable->relation('strong')->unparse;
     # Remove all libX-java-doc packages to avoid thinking they are java libs
     #  - note the result may not be a valid dependency listing
-    $depends =~ s/lib[^\s,]+-java-doc//go;
+    $depends =~ s/lib[^\s,]+-java-doc//g;
 
-    my @java_lib_depends = ($depends =~ m/\b(lib[^\s,]+-java)\b/og);
+    my @java_lib_depends = ($depends =~ m/\b(lib[^\s,]+-java)\b/g);
 
     # We first loop over jar files to find problems
 
@@ -148,7 +148,7 @@ sub installable {
         }
 
         $datafiles = 0
-          if none { m/\.(?:xml|properties|x?html|xhp)$/io } keys %$files;
+          if none { m/\.(?:xml|properties|x?html|xhp)$/i } keys %$files;
 
         if($operm & 0111) {
             # Executable ?
@@ -174,7 +174,7 @@ sub installable {
                # Javadoc jars deployed in the Maven repository also do not ship
                #   classes but HTML files, images and CSS files
                 if ((
-                           $bsname !~ m/\.source$/o
+                           $bsname !~ m/\.source$/
                         && $file->name
                         !~ m#^usr/share/maven-repo/.*-javadoc\.jar#
                         && $file->name!~m#\.doc(?:\.(?:user|isv))?_[^/]+.jar#
@@ -192,12 +192,12 @@ sub installable {
         if ($cp) {
             # Only run the tests when a classpath is present
             my @relative;
-            my @paths = split(m/\s++/o, $cp);
+            my @paths = split(m/\s++/, $cp);
             for my $p (@paths) {
                 if ($p) {
                     # Strip leading ./
-                    $p =~ s#^\./++##og;
-                    if ($p !~ m#^(?:file://)?/#o and $p =~ m#/#o) {
+                    $p =~ s#^\./++##g;
+                    if ($p !~ m#^(?:file://)?/# and $p =~ m#/#) {
                         my $target = normalize_pkg_path($jar_dir, $p);
                         my $tinfo;
                         # Can it be normalized?
@@ -205,7 +205,7 @@ sub installable {
                         # Relative link to usr/share/java ? Works if
                         # we are depending of a Java library.
                         next
-                          if $target =~ m,^usr/share/java/[^/]+.jar$,o
+                          if $target =~ m,^usr/share/java/[^/]+.jar$,
                           and @java_lib_depends;
                         $tinfo = $processable->installed->lookup($target);
                         # Points to file or link in this package,

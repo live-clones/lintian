@@ -99,7 +99,7 @@ sub breakdown {
         my $target = $file->link;
 
         # strip leading slashes for reporting
-        $target =~ s,^/++,,o;
+        $target =~ s,^/++,,;
 
         # nope - not found in any of our direct dependencies.  Ergo it is
         # a broken "ln -s target/*.so link" expansion.

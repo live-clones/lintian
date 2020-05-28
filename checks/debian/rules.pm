@@ -210,11 +210,11 @@ sub source {
           if $line =~ m/dh_make generated override targets/;
 
         next if /^\s*\#/;
-        if (m/^\s*[s-]?include\s+(\S++)/o){
+        if (/^\s*[s-]?include\s+(\S++)/){
             my $makefile = $1;
             my $targets = $KNOWN_MAKEFILES->value($makefile);
             if (defined $targets){
-                foreach my $target (split m/\s*+,\s*+/o, $targets){
+                foreach my $target (split /\s*+,\s*+/, $targets){
                     $seen{$target}++ if $POLICYRULES->known($target);
                 }
             } else {
@@ -360,7 +360,7 @@ sub source {
             } split(' ', $target_dependencies);
             for my $target (@current_targets) {
                 $overridden{$1} = $. if $target =~ m/override_(.+)/;
-                if ($target =~ m/%/o) {
+                if ($target =~ /%/) {
                     my $pattern = quotemeta $target;
                     $pattern =~ s/\\%/.*/g;
                     for my $rulebypolicy ($POLICYRULES->all) {

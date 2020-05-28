@@ -83,7 +83,7 @@ sub always {
     # Reset to work with elements of the dsc file.
     $len = 0;
 
-    foreach my $entry (split m/\n/o, $processable->field('files', '')){
+    foreach my $entry (split /\n/, $processable->field('files', '')){
         my $filename;
         my $flen;
 
@@ -91,7 +91,7 @@ sub always {
         $entry =~ s/^\s+|\s+$//g;
 
         next unless $entry;
-        (undef, undef, $filename) = split m/\s++/o, $entry;
+        (undef, undef, $filename) = split /\s++/, $entry;
         next unless $filename;
         $flen = length($filename);
         $len = $flen if ($flen > $len);

@@ -170,7 +170,7 @@ sub check_module_package {
     $rel = Lintian::Relation->and(
         $processable->relation('strong'),
         $processable->relation('recommends'));
-    if (!$rel->matches(qr/^apache2-api-\d+$/o)) {
+    if (!$rel->matches(qr/^apache2-api-\d+$/)) {
         $self->tag('apache2-module-does-not-depend-on-apache2-api');
     }
 

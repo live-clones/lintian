@@ -194,12 +194,12 @@ sub overrides {
 
             if ($archlist) {
                 # parse and figure
-                my (@archs) = split(m/\s++/o, $archlist);
+                my (@archs) = split(m/\s++/, $archlist);
                 my $negated = 0;
                 my $found = 0;
 
                 foreach my $a (@archs){
-                    $negated++ if $a =~ s/^!//o;
+                    $negated++ if $a =~ s/^!//;
                     if (is_arch_wildcard($a)) {
                         $found = 1
                           if wildcard_includes_arch($a, $architecture);
@@ -253,22 +253,22 @@ sub overrides {
             $context //= EMPTY;
             $current{context} = $context;
 
-            if ($context =~ m/\*/o) {
+            if ($context =~ m/\*/) {
                 # It is a pattern, pre-compute it
                 my $pattern = $context;
                 my $end = ''; # Trailing "match anything" (if any)
                 my $pat = ''; # The rest of the pattern
                  # Split does not help us if $pattern ends with *
                  # so we deal with that now
-                if ($pattern =~ s/\Q*\E+\z//o){
+                if ($pattern =~ s/\Q*\E+\z//){
                     $end = '.*';
                 }
 
                 # Are there any * left (after the above)?
-                if ($pattern =~ m/\Q*\E/o) {
+                if ($pattern =~ m/\Q*\E/) {
                     # this works even if $text starts with a *, since
                     # that is split as '', <text>
-                    my @pargs = split(m/\Q*\E++/o, $pattern);
+                    my @pargs = split(m/\Q*\E++/, $pattern);
                     $pat = join('.*', map { quotemeta($_) } @pargs);
                 } else {
                     $pat = $pattern;
@@ -306,7 +306,7 @@ sub overrides {
                 $processed =~ s/\s\s++/ /g;
 
                 if ($processed
-                    =~ m/^($PKGNAME_REGEX)?(?: (?:binary|changes|source|udeb))? ?:/o
+                    =~ m/^($PKGNAME_REGEX)?(?: (?:binary|changes|source|udeb))? ?:/
                 ) {
                     my $opkg = $1;
                     # Looks like a wrong package name - technically,

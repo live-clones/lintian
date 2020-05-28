@@ -78,7 +78,7 @@ sub source {
             my $rel = $processable->binary_relation($pkg1, $field);
             my $svid = 0;
             my $visitor = sub {
-                if (m/\$[{]Source-Version[}]/o and not $svid) {
+                if (/\$[{]Source-Version[}]/ and not $svid) {
                     $svid++;
                     $self->tag('substvar-source-version-is-deprecated', $pkg1);
                 }

@@ -62,7 +62,7 @@ sub changes {
 
     # check distribution field
     if (defined $processable->field('distribution')) {
-        my @distributions = split /\s+/o, $processable->field('distribution');
+        my @distributions = split /\s+/, $processable->field('distribution');
         for my $distribution (@distributions) {
             if ($distribution eq 'UNRELEASED') {
                 # ignore
@@ -77,7 +77,7 @@ sub changes {
                                    |proposed(?:-updates)?
                                    |updates
                                    |security
-                                   |volatile)$//xsmo;
+                                   |volatile)$//xsm;
 
                     if ($distribution =~ /backports/) {
                         my $bpo1 = 1;
@@ -188,8 +188,8 @@ sub changes {
         $self->tag('no-urgency-in-changes-file');
     } else {
         my $urgency = lc $processable->field('urgency');
-        $urgency =~ s/ .*//o;
-        unless ($urgency =~ /^(?:low|medium|high|critical|emergency)$/o) {
+        $urgency =~ s/ .*//;
+        unless ($urgency =~ /^(?:low|medium|high|critical|emergency)$/) {
             $self->tag(
                 'bad-urgency-in-changes-file',
                 $processable->field('urgency'));
