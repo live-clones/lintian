@@ -575,8 +575,6 @@ sub main {
         $option{'LINTIAN_CFG'} //= '';
     }
 
-    $ENV{'TMPDIR'} = $option{'TMPDIR'} if defined($option{'TMPDIR'});
-
     if (defined $experimental_output_opts) {
         my %output = map { split(/=/) } split(/,/, $experimental_output_opts);
         foreach (keys %output) {
@@ -660,6 +658,23 @@ sub main {
     } else {
         open($STATUS_FD, '>', '/dev/null');
     }
+
+    # some environment variables can be set from the config file
+    my $envlc = List::Compare->new([keys %config], \@ENV_VARS);
+    my @from_file = $envlc->get_intersection;
+
+    my @already = grep { defined $ENV{$_} } @from_file;
+    warn 'The environment overrides these settings in the configuration file: '
+      . join(SPACE, @already)
+      . NEWLINE
+      if @already;
+
+    my @not_yet = grep { !defined $ENV{$_} } @from_file;
+    $OUTPUT->debug_msg(1,
+        'Setting environment variables from configuration file: '
+          . join(SPACE, @not_yet))
+      if @not_yet;
+    $ENV{$_} = $config{$_} for @not_yet;
 
     # check for arguments
     if ($#ARGV == -1
@@ -850,30 +865,6 @@ sub parse_config_file {
         'verbose'              => \&cfg_verbosity,
     );
 
-    # check keys against known settings
-    my $knownlc
-      = List::Compare->new([keys %config], [keys %destination, @ENV_VARS]);
-    my @unknown = $knownlc->get_Lonly;
-    die "Unknown setting in $config_file: " . join(SPACE, @unknown) . NEWLINE
-      if @unknown;
-
-    # some environment variables can be set from the config file
-    my $envlc = List::Compare->new([keys %config], \@ENV_VARS);
-    my @from_file = $envlc->get_intersection;
-
-    my @already = grep { defined $ENV{$_} } @from_file;
-    warn "Already have setting from $config_file in the environment: "
-      . join(SPACE, @already)
-      . NEWLINE
-      if @already;
-
-    my @not_yet = grep { !defined $ENV{$_} } @from_file;
-    $OUTPUT->debug_msg(1,
-        "Setting environment variables from $config_file: "
-          . join(SPACE, @not_yet))
-      if @not_yet;
-    $ENV{$_} = $config{$_} for @not_yet;
-
     # substitute some special variables
     s{\$HOME/}{$ENV{'HOME'}/}g for values %config;
     s{\~/}{$ENV{'HOME'}/}g for values %config;
@@ -885,6 +876,13 @@ sub parse_config_file {
       = List::Compare->new([keys %config], [qw(jobs tag-display-limit)]);
     eval { $config{$_} = parse_boolean($config{$_}); }
       for $booleanlc->get_Lonly;
+
+    # check keys against known settings
+    my $knownlc
+      = List::Compare->new([keys %config], [keys %destination, @ENV_VARS]);
+    my @unknown = $knownlc->get_Lonly;
+    die "Unknown setting in $config_file: " . join(SPACE, @unknown) . NEWLINE
+      if @unknown;
 
     # initialize variables
     my @names = grep { defined $config{$_} } keys %destination;
