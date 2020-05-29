@@ -884,11 +884,12 @@ sub parse_config_file {
     die "Unknown setting in $config_file: " . join(SPACE, @unknown) . NEWLINE
       if @unknown;
 
-    # initialize variables
-    my @names = grep { defined $config{$_} } keys %destination;
+    # get settings from configuration file
+    my @names = grep { defined $destination{$_} } keys %config;
 
     my @scalars = grep { ref $destination{$_} eq 'SCALAR' } @names;
-    my @undefined = grep { defined ${$destination{$_}} } @scalars;
+    my @undefined = grep { !defined ${$destination{$_}} } @scalars;
+
     ${$destination{$_}} = $config{$_} for @undefined;
 
     my @coderefs = grep { ref $destination{$_} eq 'CODE' } @names;
