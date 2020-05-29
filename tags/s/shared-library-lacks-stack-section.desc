@@ -1,6 +1,7 @@
-Tag: shlib-without-PT_GNU_STACK-section
+Tag: shared-library-lacks-stack-section
 Severity: error
 Check: shared-libs
+Renamed-From: shlib-without-PT_GNU_STACK-section
 Info: The listed shared library lacks a PT_GNU_STACK section. This forces
  the dynamic linker to make the stack executable.
  .

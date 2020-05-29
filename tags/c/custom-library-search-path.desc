@@ -1,7 +1,8 @@
-Tag: binary-or-shlib-defines-rpath
+Tag: custom-library-search-path
 Severity: error
 Certainty: possible
 Check: binaries
+Renamed-From: binary-or-shlib-defines-rpath
 Ref: https://wiki.debian.org/RpathIssue
 Info: The binary or shared library sets RPATH or RUNPATH. This
  overrides the normal library search path, possibly interfering with

@@ -1,7 +1,8 @@
-Tag: no-shlibs-control-file
+Tag: no-shlibs
 Severity: error
 Certainty: possible
 Check: shared-libs
+Renamed-From: no-shlibs-control-file
 Info: Although the package includes a shared library, the package does not
  have a shlibs control file. If this is intentional, please override this
  error.

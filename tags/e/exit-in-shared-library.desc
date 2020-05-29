@@ -1,8 +1,9 @@
-Tag: shlib-calls-exit
+Tag: exit-in-shared-library
 Severity: info
 Certainty: possible
 Check: shared-libs
 Experimental: yes
+Renamed-From: shlib-calls-exit
 Info: The listed shared library calls the C library exit() or _exit()
  functions.
  .

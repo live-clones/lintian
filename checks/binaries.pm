@@ -499,7 +499,7 @@ sub installable {
                 next
                   if $directories{$rpath}
                   and $rpath !~ m,^(?:/usr)?/lib(?:/$madir)?/?\z,;
-                $self->tag('binary-or-shlib-defines-rpath', $file, $rpath);
+                $self->tag('custom-library-search-path', $file, $rpath);
             }
         }
 
@@ -588,7 +588,7 @@ sub installable {
                                    ld-[\d.]+\.so$
                                 }xsm
                   );
-                $self->tag('shared-lib-without-dependency-information', $file);
+                $self->tag('shared-library-lacks-prerequisites', $file);
             } else {
                 # Some exceptions: files in /boot, /usr/lib/debug/*,
                 # named *-static or *.static, or *-static as

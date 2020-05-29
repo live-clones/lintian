@@ -1,5 +1,6 @@
-Tag: shlib-with-executable-bit
+Tag: shared-library-is-executable
 Severity: error
 Check: shared-libs
+Renamed-From: shlib-with-executable-bit
 Info: Shared libraries should be mode 0644.
 Ref: policy 8.1
