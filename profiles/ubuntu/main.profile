@@ -1,7 +1,7 @@
 # The default profile for Ubuntu and derivatives thereof.
 Profile: ubuntu/main
 Extends: debian/main
-Disable-Tags: changelog-should-mention-nmu,
+Disable-Tags: no-nmu-in-changelog,
  debian-changelog-file-is-a-symlink, lzma-deb-archive,
  maintainer-address-causes-mail-loops-or-bounces,
  maintainer-upload-has-incorrect-version-number,
