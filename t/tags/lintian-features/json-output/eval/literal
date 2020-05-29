@@ -162,11 +162,6 @@
                      "severity" : "info"
                   },
                   {
-                     "context" : "\"Test Lintian's JSON output format.\"",
-                     "name" : "description-synopsis-might-not-be-phrased-properly",
-                     "severity" : "info"
-                  },
-                  {
                      "context" : "usr/share/applications/script.desktop",
                      "name" : "desktop-entry-limited-to-environments",
                      "severity" : "info"
@@ -174,6 +169,11 @@
                   {
                      "context" : "usr/local/share/lintian/",
                      "name" : "package-contains-empty-directory",
+                     "severity" : "info"
+                  },
+                  {
+                     "context" : "\"Test Lintian's JSON output format.\"",
+                     "name" : "synopsis-is-a-sentence",
                      "severity" : "info"
                   },
                   {

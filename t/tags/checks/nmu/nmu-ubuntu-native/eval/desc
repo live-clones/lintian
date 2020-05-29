@@ -1,5 +1,5 @@
 Testname: nmu-ubuntu-native
 Profile: ubuntu/main
-Test-Against: changelog-should-mention-nmu
+Test-Against: no-nmu-in-changelog
 References: Debian Bug #507740
 Check: nmu

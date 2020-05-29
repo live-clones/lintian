@@ -1,1 +1,1 @@
-binaries-general (binary): debug-package-should-be-named-dbg usr/lib/debug/.build-id/
+binaries-general (binary): debug-suffix-not-dbg usr/lib/debug/.build-id/

@@ -1,1 +1,1 @@
-libbaz2 (binary): symlink-should-be-relative usr/share/doc/libbaz2/changelog.gz /usr/share/doc/lintian/changelog.gz
+libbaz2 (binary): absolute-symlink-in-top-level-folder usr/share/doc/libbaz2/changelog.gz /usr/share/doc/lintian/changelog.gz

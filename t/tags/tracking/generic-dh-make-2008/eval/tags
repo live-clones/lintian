@@ -52,8 +52,8 @@ generic-dh-make-2008 (binary): package-contains-no-arch-dependent-files
 generic-dh-make-2008 (binary): package-contains-empty-directory usr/sbin/
 generic-dh-make-2008 (binary): package-contains-empty-directory usr/bin/
 generic-dh-make-2008 (binary): no-ctrl-scripts
-generic-dh-make-2008 (binary): new-package-should-close-itp-bug
 generic-dh-make-2008 (binary): maintainer "Russ Allbery" <rra@debian.org>
+generic-dh-make-2008 (binary): initial-upload-closes-no-bugs
 generic-dh-make-2008 (binary): helper-templates-in-copyright
 generic-dh-make-2008 (binary): extended-description-is-probably-too-short
 generic-dh-make-2008 (binary): empty-binary-package

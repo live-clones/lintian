@@ -18,9 +18,9 @@ libbaz1 (binary): shlib-missing-in-symbols-control-file libbaz2 1.0 for usr/lib/
 libbaz1 (binary): shlib-missing-in-symbols-control-file libbaz.so for usr/lib/libbaz.so
 libbaz1 (binary): shlib-missing-in-control-file libbaz2 1.0 for usr/lib/libfoo2.so.1.0.3b
 libbaz1 (binary): sharedobject-in-library-directory-missing-soname usr/lib/libbaz1.so.1.0.3b
-libbaz1 (binary): package-must-activate-ldconfig-trigger usr/lib/libfoo2.so.1.0.3b
 libbaz1 (binary): ldconfig-symlink-missing-for-shlib usr/lib/libbaz3.so.1 usr/lib/libbaz3.so.1.0.3b libbaz3.so.1
 libbaz1 (binary): ldconfig-symlink-missing-for-shlib usr/lib/libbaz2.so.1.0 usr/lib/libfoo2.so.1.0.3b libbaz2.so.1.0
+libbaz1 (binary): lacks-ldconfig-trigger usr/lib/libfoo2.so.1.0.3b
 libbaz1 (binary): duplicate-entry-in-shlibs-control-file udeb: libdoesntexist2 1.0
 libbaz1 (binary): duplicate-entry-in-shlibs-control-file libdoesntexist2 1.0
 libbaz1 (binary): dev-pkg-without-shlib-symlink usr/lib/libfoo2.so.1.0.3b usr/lib/libbaz2.so

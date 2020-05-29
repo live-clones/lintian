@@ -1,8 +1,8 @@
 libhello0-dbg (binary): shared-lib-without-dependency-information usr/lib/libhello.so.dbg
 libhello0-dbg (binary): missing-dependency-on-libc needed by usr/lib/debug/lib/libhello.so.0.0 and 1 others
+libhello0-dbg (binary): debug-symbols-not-detached usr/lib/debug/lib/libhello.so.0.0
 libhello0-dbg (binary): debug-file-with-no-debug-symbols usr/lib/debug/usr/lib/libhello.so.0.0
 libhello0-dbg (binary): debug-file-with-no-debug-symbols usr/lib/debug/lib/libhello.so.0.0
-libhello0-dbg (binary): debug-file-should-use-detached-symbols usr/lib/debug/lib/libhello.so.0.0
 libhello0-dbg (binary): binary-with-bad-dynamic-table usr/lib/libhello.so.dbg
 hello-dbg (binary): debug-file-with-no-debug-symbols usr/lib/debug/usr/bin/hello
 hello (binary): unstripped-binary-or-object usr/bin/hello.dbg

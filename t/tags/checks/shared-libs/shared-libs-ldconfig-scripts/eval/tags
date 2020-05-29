@@ -1,7 +1,7 @@
 libuns1 (binary): symbols-file-missing-build-depends-package-field
 libuns1 (binary): maintscript-calls-ldconfig postrm
 libfoo1 (binary): symbols-file-missing-build-depends-package-field
-libfoo1 (binary): package-must-activate-ldconfig-trigger usr/lib/libfoo.so.1.0.1
+libfoo1 (binary): lacks-ldconfig-trigger usr/lib/libfoo.so.1.0.1
 libfish1 (binary): symbols-file-missing-build-depends-package-field
 libfish1 (binary): maintscript-calls-ldconfig prerm
 libfish1 (binary): maintscript-calls-ldconfig preinst

@@ -34,8 +34,8 @@ generic-dh-make-2005 (binary): readme-debian-contains-debmake-template
 generic-dh-make-2005 (binary): package-is-maintained-by-individual
 generic-dh-make-2005 (binary): package-contains-no-arch-dependent-files
 generic-dh-make-2005 (binary): no-ctrl-scripts
-generic-dh-make-2005 (binary): new-package-should-close-itp-bug
 generic-dh-make-2005 (binary): maintainer "Frank Lichtenheld" <djpig@debian.org>
+generic-dh-make-2005 (binary): initial-upload-closes-no-bugs
 generic-dh-make-2005 (binary): helper-templates-in-copyright
 generic-dh-make-2005 (binary): extended-description-is-probably-too-short
 generic-dh-make-2005 (binary): empty-binary-package

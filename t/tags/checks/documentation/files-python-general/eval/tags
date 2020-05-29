@@ -1,1 +1,1 @@
-python-kinterbasdb (binary): file-should-not-be-compressed usr/share/doc/python-kinterbasdb/docs/objects.inv.gz
+python-kinterbasdb (binary): compressed-documentation usr/share/doc/python-kinterbasdb/docs/objects.inv.gz

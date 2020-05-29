@@ -154,16 +154,16 @@
                 <context>http://www.example.com/.</context>
               </tag>
               <tag severity="info">
-                <name>description-synopsis-might-not-be-phrased-properly</name>
-                <context>"Test Lintian XML output format."</context>
-              </tag>
-              <tag severity="info">
                 <name>desktop-entry-limited-to-environments</name>
                 <context>usr/share/applications/script.desktop</context>
               </tag>
               <tag severity="info">
                 <name>package-contains-empty-directory</name>
                 <context>usr/local/share/lintian/</context>
+              </tag>
+              <tag severity="info">
+                <name>synopsis-is-a-sentence</name>
+                <context>"Test Lintian XML output format."</context>
               </tag>
               <tag severity="pedantic">
                 <name>example-unusual-interpreter</name>
