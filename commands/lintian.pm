@@ -851,7 +851,8 @@ sub parse_config_file {
     );
 
     # check keys against known settings
-    my $knownlc = List::Compare->new([keys %config], [keys %destination]);
+    my $knownlc
+      = List::Compare->new([keys %config], [keys %destination, @ENV_VARS]);
     my @unknown = $knownlc->get_Lonly;
     die "Unknown setting in $config_file: " . join(SPACE, @unknown) . NEWLINE
       if @unknown;
@@ -867,6 +868,10 @@ sub parse_config_file {
       if @already;
 
     my @not_yet = grep { !defined $ENV{$_} } @from_file;
+    $OUTPUT->debug_msg(1,
+        "Setting environment variables from $config_file: "
+          . join(SPACE, @not_yet))
+      if @not_yet;
     $ENV{$_} = $config{$_} for @not_yet;
 
     # substitute some special variables
