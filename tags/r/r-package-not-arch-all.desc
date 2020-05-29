@@ -1,7 +1,7 @@
 Tag: r-package-not-arch-all
 Severity: warning
 Check: fields/architecture
-Info: This package appears to be an "R" progamming language package
+Info: This package appears to be an "R" programming language package
  and has a corresponding <tt>DESCRIPTION</tt> file which contains
  <tt>NeedsCompilation: No</tt> whilst not being an Architecture: all
  package.

@@ -149,6 +149,7 @@ Enable-Tags-From-Check:
  languages/php/pear,
  languages/python,
  languages/python/scripts,
+ languages/r/site-library,
  linda,
  lintian,
  lintian/overrides,

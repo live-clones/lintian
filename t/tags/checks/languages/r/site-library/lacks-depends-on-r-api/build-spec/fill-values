@@ -1,0 +1,5 @@
+Skeleton: upload-non-native
+Testname: lacks-depends-on-r-api
+Description: Ships R site library but lacks Depends on r-api-N
+Package-Architecture: all
+Extra-Build-Depends: dh-r
