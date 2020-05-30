@@ -15,5 +15,9 @@ Info: The packaging includes an upstream signing key but the corresponding
  Guidelines compliance reasons, ensure that your package version includes
  <tt>dfsg</tt> or similar.
  .
- Support for signatures was added to <tt>pristine-tar</tt> in version 1.41
- and support in <tt>git-buildpackage</tt> is being tracked in #872864.
+ Sometimes, an upstream signature must be added for an <tt>orig.tar.gz</tt>
+ that is already present in the archive. Please include the upstream sources
+ again with <tt>dpkg-genchanges -sa</tt> while the signature is also present.
+ Your upload will be accepted as long as the new <tt>orig.tar.gz</tt> file
+ is identical to the old one.
+Ref: Bug#954743, Bug#872864

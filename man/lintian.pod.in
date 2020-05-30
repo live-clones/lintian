@@ -45,9 +45,8 @@ before uploading it.
 If you specify packages to be checked or use the option
 B<--packages-from-file>, the packages requested will be processed.
 Otherwise, if I<debian/changelog> exists, it is parsed to determine
-the name of the .changes file to look for in the parent directory
-(when using the actions B<--check> or B<--unpack>).  See
-L</CHECKING LAST BUILD> for more information.
+the name of the .changes file to look for in the parent directory.
+See L</CHECKING LAST BUILD> for more information.
 
 
 =head1 OPTIONS
@@ -94,14 +93,6 @@ to (potentially) issue.
 
 With this options all tags listed will be displayed regardless of the
 display settings.
-
-=item B<-u>, B<--unpack>
-
-Unpacks the package will all collections.  See the L</COLLECTION>
-section below.
-
-Note in this option will also run all collections.  See the
-L</COLLECTION> section below.
 
 =item B<-X> chk1,chk2,..., B<--dont-check-part> chk1,chk2,...
 
@@ -222,6 +213,19 @@ bug reports are always welcome (particularly if they include fixes).
 
 These options overrides the B<display-experimental> variable in the
 configuration file.
+
+=item B<--fail-on> {error | warning | info | pedantic | experimental | override}
+
+Causes B<lintian> to exit with a program status of 2 for the given
+conditions. This option can be a comma-separated list, or it may be
+specified multiple times.
+
+THERE IS NO DEFAULT, which is different from the way B<lintian> used
+to work. Also, 'warning' does not imply 'error'. Please specify both
+if you want both.
+
+This option overrides the B<fail-on> variable in the configuration
+file.
 
 =item B<-i>, B<--info>
 
@@ -438,9 +442,8 @@ B<Note>: This option should be the very first if given.
 
 =item B<-j> X, B<--jobs>=X
 
-Set the limit for how many unpacking jobs Lintian will run in
-parallel.  This option overrides the B<jobs> variable in the
-configuration file.
+Set the limit for how many jobs Lintian will run in parallel. This
+option overrides the B<jobs> variable in the configuration file.
 
 By default Lintian will use I<nproc> to determine a reasonable default
 (or 2, if the nproc fails).
@@ -530,20 +533,6 @@ If Lintian should write the output to a file starting with a literal
 "./+my-file").
 
 If this option omitted, Lintian will default to using STDOUT.
-
-=item B<-U> info1,info2,..., B<--unpack-info> info1,info2,...
-
-Collect information info1, info2, etc. even if these are not required
-by the checks.  Collections requested by this option are also not
-auto-removed (in this run).
-
-This option is mostly useful for debugging or special purpose setups.
-
-It is allowed to give this option more than once.  The following
-two lines of arguments are semantically equivalent:
-
- -U info1 -U info2
- -U info1,info2
 
 =back
 
@@ -694,16 +683,16 @@ A sample configuration file could look like:
 
 =item B<0>
 
-No policy violations or major errors detected.
-(There may have been warnings, though.)
+Normal operation.
 
 =item B<1>
 
-Policy violations or major errors detected.
+Lintian run-time error. An error message is sent to stderr.
 
 =item B<2>
 
-Lintian run-time error. An error message is sent to stderr.
+Detected a condition specified via the B<--fail-on> option. This can
+be used to trigger a non-zero exit value in case of policy violations.
 
 =back
 

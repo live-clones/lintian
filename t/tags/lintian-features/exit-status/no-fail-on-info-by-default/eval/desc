@@ -1,0 +1,4 @@
+Testname: no-fail-on-info-by-default
+Exit-Status: 0
+Output-Format: EWI
+Match-Strategy: literal

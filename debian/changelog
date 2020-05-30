@@ -1,3 +1,39 @@
+lintian (2.77.1) unstable; urgency=medium
+
+  [ Felix Lechner ]
+  * Deal gracefully with empty configuration files. (Closes: #961684)
+  * Amend a tag description with how to add missing upstream signatures to
+    the archive. (Closes: #954743)
+
+ -- Chris Lamb <lamby@debian.org>  Wed, 27 May 2020 22:07:44 +0000
+
+lintian (2.77.0) unstable; urgency=medium
+
+  [ Simon Quigley ]
+  * Add a new --fail-on command-line option for more control over the exit
+    status. (Closes: #709932)
+
+  [ Felix Lechner ]
+  * Fix several 'TODO' tests using the "literal" match strategy.
+    (Closes: #921112)
+  * Reverse the exit statuses for program errors and policy violations.
+    (Re: #709932)
+  * Pin installation of debhelper to -backports in the continuous
+    integration pipeline for buster.
+  * Use the Config::Tiny Perl module to parse configuration files.
+  * Merge two stages of the Gitlab CI pipeline.
+
+  [ Peter Pentchev ]
+  * Fix a Python 2.x -> 3.x typo in a tag description.
+
+  [ Chris Lamb ]
+  * Refresh data/fields/perl-provides.
+
+  [ Paul Wise ]
+  * Add several spelling corrections.
+
+ -- Chris Lamb <lamby@debian.org>  Wed, 27 May 2020 09:13:37 +0000
+
 lintian (2.76.0~bpo10+1) buster-backports; urgency=medium
 
   * Rebuild for buster-backports.

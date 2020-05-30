@@ -32,7 +32,9 @@ use autodie;
 
 use Cwd qw(abs_path);
 use Carp qw(croak verbose);
+use Config::Tiny;
 use Getopt::Long();
+use List::Compare;
 use List::MoreUtils qw(any none);
 use Path::Tiny;
 use POSIX qw(:sys_wait_h);
@@ -48,6 +50,11 @@ use Lintian::Pool;
 use Lintian::Profile;
 use Lintian::Util qw(safe_qx);
 
+use constant EMPTY => q{};
+use constant SPACE => q{ };
+use constant COMMA => q{,};
+use constant NEWLINE => qq{\n};
+
 # only in GNOME; need original environment
 my $interactive = -t STDIN && (-t STDOUT || !(-f STDOUT || -c STDOUT));
 my $hyperlinks_capable = $interactive && qx{env | fgrep -i gnome};
@@ -61,9 +68,9 @@ sanitize_environment();
 # Environment variables Lintian cares about - the list contains
 # the ones that can also be set via the config file
 #
-# %opt (defined below) will be updated with values of the env
-# after parsing cmd-line options.  A given value in %opt is
-# updated to use the ENV variable if the one in %opt is undef
+# %option (defined below) will be updated with values of the env
+# after parsing cmd-line options.  A given value in %option is
+# updated to use the ENV variable if the one in %option is undef
 # and ENV has a value.
 #
 # NB: Variables listed here are not always exported.
@@ -79,20 +86,26 @@ my @ENV_VARS = (
       ));
 
 ### "Normal" application variables
-my %conf_opt;                   #names of options set in the cfg file
-my %opt = (                     #hash of some flags from cmd or cfg
-     # Init some cmd-line value defaults
+
+# options set in config file
+my %config;
+
+# hash of some flags from cmd or cfg
+my %option = (
+    # init some cmd-line value defaults
     'debug'             => 0,
     'jobs'              => default_parallel(),
 );
+
+# must be an empty array reference
+$option{'fail-on'} = [];
 
 my $experimental_output_opts;
 
 my @CLOSE_AT_END;
 my $OUTPUT = Lintian::Output::Standard->new;
 my (@display_level, %display_source, %suppress_tags);
-my ($action, $checks, $check_tags, $dont_check, $received_signal);
-my @unpack_info;
+my ($checks, $check_tags, $dont_check, $received_signal);
 my $user_dirs = $ENV{'LINTIAN_ENABLE_USER_DIRS'} // 1;
 my $exit_code = 0;
 my $STATUS_FD;
@@ -104,13 +117,6 @@ my $STATUS_FD;
 sub lintian_banner {
     my $lintian_version = dplint::lintian_version();
     return "Lintian v${lintian_version}";
-}
-
-sub fatal_error {
-    my ($msg) = @_;
-    $msg =~ s/ at .*//;
-    print STDERR  "$msg\n";
-    exit(2);
 }
 
 # }}}
@@ -147,7 +153,6 @@ Actions:
     -F, --ftp-master-rejects  only check for automatic reject tags
     -T X, --tags X            only run checks needed for requested tags
     --tags-from-file X        like --tags, but read list from file
-    -u, --unpack              only unpack packages in the lab
     -X X, --dont-check-part X don\'t check certain aspects
 General options:
     -h, --help                display short help text
@@ -162,6 +167,8 @@ Behavior options:
     --display-source X        restrict displayed tags by source
     -E, --display-experimental display "X:" tags (normally suppressed)
     --no-display-experimental suppress "X:" tags
+    --fail-on error,warning,info,pedantic,experimental,override
+                              define condition for exit status 2 (default: none)
     -i, --info                give detailed info about tags
     -I, --display-info        display "I:" tags (normally suppressed)
     -L, --display-level       display tags with the specified level
@@ -203,7 +210,6 @@ Developer/Special usage options:
     --perf-debug              turn on performance debugging
     --perf-output X           send performance logging to file (or fd w. \&X)
     --status-log X            send status logging to file (or fd w. \&X) [internal use only]
-    -U X, --unpack-info X     specify which info should be collected
 EOT-EOT-EOT
     }
 
@@ -236,29 +242,16 @@ sub banner {
     exit 0;
 }
 
-# Record action requested
-# Options: -S, -R, -c, -u, -r
-sub record_action {
-    if ($action) {
-        fatal_error("too many actions specified: $_[0]");
-    }
-    $action = "$_[0]";
-    return;
-}
-
 # Record Parts requested for checking
 # Options: -C|--check-part
 sub record_check_part {
-    if (defined $action and $action eq 'check' and $checks) {
-        fatal_error('multiple -C or --check-part options not allowed');
+    if ($checks) {
+        die "multiple -C or --check-part options not allowed\n";
     }
     if ($dont_check) {
-        fatal_error(
-            join(q{ },
-                'both -C or --check-part and -X',
-                'or --dont-check-part options not allowed'));
+        die
+"-C or --check-part and -X or --dont-check-part options may not appear together\n";
     }
-    record_action('check');
     $checks = "$_[1]";
     return;
 }
@@ -266,19 +259,17 @@ sub record_check_part {
 # Record Parts requested for checking
 # Options: -T|--tags
 sub record_check_tags {
-    if (defined $action and $action eq 'check' and $check_tags) {
-        fatal_error('multiple -T or --tags options not allowed');
+    if ($check_tags) {
+        die "multiple -T or --tags options not allowed\n";
     }
     if ($checks) {
-        fatal_error(
-            'both -T or --tags and -C or --check-part options not allowed');
+        die
+"both -T or --tags and -C or --check-part options may not appear together\n";
     }
     if ($dont_check) {
-        fatal_error(
-            'both -T or --tags and -X or --dont-check-part options not allowed'
-        );
+        die
+"both -T or --tags and -X or --dont-check-part options may not appear together\n";
     }
-    record_action('check');
     $check_tags = "$_[1]";
     return;
 }
@@ -330,16 +321,13 @@ sub record_suppress_tags_from_file {
 # Record Parts requested not to check
 # Options: -X|--dont-check-part X
 sub record_dont_check_part {
-    if (defined $action and $action eq 'check' and $dont_check) {
-        fatal_error('multiple -X or --dont-check-part options not allowed');
+    if ($dont_check) {
+        die "multiple -X or --dont-check-part options not allowed\n";
     }
     if ($checks) {
-        fatal_error(
-            join(q{ },
-                'both -C or --check-part and',
-                '-X or --dont-check-part options not allowed'));
+        die
+"both -C or --check-part and -X or --dont-check-part options may not appear together\n";
     }
-    record_action('check');
     $dont_check = "$_[1]";
     return;
 }
@@ -392,15 +380,23 @@ sub record_display_source {
 
 # Process -q|--quite flag
 sub record_quiet {
-    $opt{'verbose'} = -1;
+    $option{'verbose'} = -1;
     return;
 }
 
 sub record_option_too_late {
-    fatal_error(
-        join(q{ },
-            'Warning: --include-dir and --[no-]user-dirs',
-            'should be the first option(s) if given'));
+    die
+"Warning: --include-dir and --[no-]user-dirs should be the first option(s) if given\n";
+}
+
+# Process overrides option in the cfg files
+sub cfg_fail_on {
+    my ($name, $value) = @_;
+
+    @{$option{'fail-on'}} = split(/,/, $value)
+      unless scalar @{$option{'fail-on'}};
+
+    return;
 }
 
 # Process display-info and display-level options in cfg files
@@ -412,9 +408,8 @@ sub record_option_too_late {
 sub cfg_display_level {
     my ($var, $val) = @_;
     if ($var eq 'display-info' or $var eq 'pedantic'){
-        fatal_error(
-            "$var and display-level may not both appear in the config file.\n")
-          if $conf_opt{'display-level'};
+        die "$var and display-level may not both appear in the config file.\n"
+          if $config{'display-level'};
 
         return unless $val; # case "display-info=no" (or "pedantic=no")
 
@@ -424,17 +419,16 @@ sub cfg_display_level {
         # by checking if @display_level is empty.  We use
         # "__conf-display-opts" to determine if @display_level was set
         # by a conf option or not.
-        return if @display_level && !$conf_opt{'__conf-display-opts'};
+        return if @display_level && !$config{'__conf-display-opts'};
 
-        $conf_opt{'__conf-display-opts'} = 1;
+        $config{'__conf-display-opts'} = 1;
         display_infotags() if $var eq 'display-info';
         display_pedantictags() if $var eq 'pedantic';
     } elsif ($var eq 'display-level'){
         foreach my $other (qw(pedantic display-info)) {
-            fatal_error(
-                join(q{ },
-                    "$other and display-level may not",
-                    'both appear in the config file.'))if $conf_opt{$other};
+            die
+"$other and display-level may not both appear in the config file.\n"
+              if $config{$other};
         }
 
         return if @display_level;
@@ -451,94 +445,92 @@ sub cfg_display_level {
 
 # Processes quiet and verbose options in cfg files.
 # - dies if quiet and verbose are used together
-# - sets the verbosity level ($opt{'verbose'}) unless
+# - sets the verbosity level ($option{'verbose'}) unless
 #   already set.
 sub cfg_verbosity {
     my ($var, $val) = @_;
-    if (   ($var eq 'verbose' && exists $conf_opt{'quiet'})
-        || ($var eq 'quiet' && exists $conf_opt{'verbose'})) {
-        fatal_error(
-            'verbose and quiet may not both appear in the config file.');
+    if (   ($var eq 'verbose' && exists $config{'quiet'})
+        || ($var eq 'quiet' && exists $config{'verbose'})) {
+        die "verbose and quiet may not both appear in the config file.\n";
     }
     # quiet = no or verbose = no => no change
     return unless $val;
     # Do not change the value if set by command line.
-    return if defined $opt{'verbose'};
+    return if defined $option{'verbose'};
     # quiet = yes => verbosity_level = -1
     #
     # technically this allows you to enable verbose by using "quiet =
     # -1" (etc.), but most people will probably not use this
     # "feature".
     $val = -$val if $var eq 'quiet';
-    $opt{'verbose'} = $val;
+    $option{'verbose'} = $val;
     return;
 }
 
 # Process overrides option in the cfg files
 sub cfg_override {
     my ($var, $val) = @_;
-    return if defined $opt{'no-override'};
+    return if defined $option{'no-override'};
     # This option is inverted in the config file
-    $opt{'no-override'} = !$val;
+    $option{'no-override'} = !$val;
     return;
 }
 
 # Hash used to process commandline options
-my %opthash = (
+my %getoptions = (
     # ------------------ actions
-    'check|c' => \&record_action,
+    'check|c' => \$option{check},
     'check-part|C=s' => \&record_check_part,
     'tags|T=s' => \&record_check_tags,
     'tags-from-file=s' => \&record_check_tags_from_file,
-    'ftp-master-rejects|F' => \$opt{'ftp-master-rejects'},
+    'ftp-master-rejects|F' => \$option{'ftp-master-rejects'},
     'dont-check-part|X=s' => \&record_dont_check_part,
-    'unpack|u' => \&record_action,
 
     # ------------------ general options
     'help|h:s' => \&syntax,
     'version|V' => \&banner,
     'print-version' => \&banner,
 
-    'verbose|v' => \$opt{'verbose'},
-    'debug|d+' => \$opt{'debug'}, # Count the -d flags
-    'quiet|q' => \&record_quiet, # sets $opt{'verbose'} to -1
-    'perf-debug' => \$opt{'perf-debug'},
-    'perf-output=s' => \$opt{'perf-output'},
-    'status-log=s' => \$opt{'status-log'},
+    'verbose|v' => \$option{'verbose'},
+    'debug|d+' => \$option{'debug'}, # Count the -d flags
+    'quiet|q' => \&record_quiet, # sets $option{'verbose'} to -1
+    'perf-debug' => \$option{'perf-debug'},
+    'perf-output=s' => \$option{'perf-output'},
+    'status-log=s' => \$option{'status-log'},
 
     # ------------------ behaviour options
-    'info|i' => \$opt{'info'},
+    'info|i' => \$option{'info'},
     'display-info|I' => \&display_infotags,
-    'display-experimental|E!' => \$opt{'display-experimental'},
+    'display-experimental|E!' => \$option{'display-experimental'},
     'pedantic' => \&display_pedantictags,
     'display-level|L=s' => \&record_display_level,
     'default-display-level' => \&default_display_level,
     'display-source=s' => \&record_display_source,
     'suppress-tags=s' => \&record_suppress_tags,
     'suppress-tags-from-file=s' => \&record_suppress_tags_from_file,
-    'no-override|o' => \$opt{'no-override'},
-    'show-overrides' => \$opt{'show-overrides'},
-    'hide-overrides' => sub { $opt{'show-overrides'} = 0; },
-    'color=s' => \$opt{'color'},
-    'hyperlinks=s' => \$opt{'hyperlinks'},
-    'unpack-info|U=s' => \@unpack_info,
-    'allow-root' => \$opt{'allow-root'},
-    'keep-lab' => \$opt{'keep-lab'},
-    'no-tag-display-limit' => sub { $opt{'tag-display-limit'} = 0; },
-    'tag-display-limit=i' => \$opt{'tag-display-limit'},
+    'no-override|o' => \$option{'no-override'},
+    'show-overrides' => \$option{'show-overrides'},
+    'hide-overrides' => sub { $option{'show-overrides'} = 0; },
+    'color=s' => \$option{'color'},
+    'hyperlinks=s' => \$option{'hyperlinks'},
+    'allow-root' => \$option{'allow-root'},
+    'fail-on=s' => $option{'fail-on'},
+    'keep-lab' => \$option{'keep-lab'},
+    'no-tag-display-limit' => sub { $option{'tag-display-limit'} = 0; },
+    'tag-display-limit=i' => \$option{'tag-display-limit'},
 
     # ------------------ configuration options
-    'cfg=s' => \$opt{'LINTIAN_CFG'},
-    'no-cfg' => \$opt{'no-cfg'},
-    'profile=s' => \$opt{'LINTIAN_PROFILE'},
+    'cfg=s' => \$option{'LINTIAN_CFG'},
+    'no-cfg' => \$option{'no-cfg'},
+    'profile=s' => \$option{'LINTIAN_PROFILE'},
 
-    'jobs|j=i' => \$opt{'jobs'},
-    'ignore-lintian-env' => \$opt{'ignore-lintian-env'},
+    'jobs|j=i' => \$option{'jobs'},
+    'ignore-lintian-env' => \$option{'ignore-lintian-env'},
     'include-dir=s' => \&record_option_too_late,
     'user-dirs!' => \&record_option_too_late,
 
     # ------------------ package selection options
-    'packages-from-file=s' => \$opt{'packages-from-file'},
+    'packages-from-file=s' => \$option{'packages-from-file'},
 
     # ------------------ experimental
     'exp-output:s' => \$experimental_output_opts,
@@ -564,47 +556,47 @@ sub main {
     # environment variables override settings in conf file, so load them now
     # assuming they were not set by cmd-line options
     foreach my $var (@ENV_VARS) {
-     # note $opt{$var} will usually always exists due to the call to GetOptions
-     # so we have to use "defined" here
-        $opt{$var} = $ENV{$var} if $ENV{$var} && !defined $opt{$var};
+  # note $option{$var} will usually always exists due to the call to GetOptions
+  # so we have to use "defined" here
+        $option{$var} = $ENV{$var} if $ENV{$var} && !defined $option{$var};
     }
 
     # Check if we should load a config file
-    if ($opt{'no-cfg'}) {
-        $opt{'LINTIAN_CFG'} = '';
+    if ($option{'no-cfg'}) {
+        $option{'LINTIAN_CFG'} = '';
     } else {
-        if (not $opt{'LINTIAN_CFG'}) {
-            $opt{'LINTIAN_CFG'} = _find_cfg_file();
+        if (not $option{'LINTIAN_CFG'}) {
+            $option{'LINTIAN_CFG'} = _find_cfg_file();
         }
         # _find_cfg_file() can return undef
-        if ($opt{'LINTIAN_CFG'}) {
-            parse_config_file($opt{'LINTIAN_CFG'});
+        if ($option{'LINTIAN_CFG'}) {
+            parse_config_file($option{'LINTIAN_CFG'});
         }
-        $opt{'LINTIAN_CFG'} //= '';
+        $option{'LINTIAN_CFG'} //= '';
     }
 
-    $ENV{'TMPDIR'} = $opt{'TMPDIR'} if defined($opt{'TMPDIR'});
+    $ENV{'TMPDIR'} = $option{'TMPDIR'} if defined($option{'TMPDIR'});
 
     if (defined $experimental_output_opts) {
-        my %opts = map { split(/=/) } split(/,/, $experimental_output_opts);
-        foreach (keys %opts) {
+        my %output = map { split(/=/) } split(/,/, $experimental_output_opts);
+        foreach (keys %output) {
             if ($_ eq 'format') {
-                if ($opts{$_} eq 'colons') {
+                if ($output{$_} eq 'colons') {
                     require Lintian::Output::ColonSeparated;
                     $OUTPUT= Lintian::Output::ColonSeparated->new;
-                } elsif ($opts{$_} eq 'letterqualifier') {
+                } elsif ($output{$_} eq 'letterqualifier') {
                     require Lintian::Output::LetterQualifier;
                     $OUTPUT= Lintian::Output::LetterQualifier->new;
-                } elsif ($opts{$_} eq 'xml') {
+                } elsif ($output{$_} eq 'xml') {
                     require Lintian::Output::XML;
                     $OUTPUT = Lintian::Output::XML->new;
-                } elsif ($opts{$_} eq 'json') {
+                } elsif ($output{$_} eq 'json') {
                     require Lintian::Output::JSON;
                     $OUTPUT = Lintian::Output::JSON->new;
-                } elsif ($opts{$_} eq 'fullewi') {
+                } elsif ($output{$_} eq 'fullewi') {
                     require Lintian::Output::FullEWI;
                     $OUTPUT = Lintian::Output::FullEWI->new;
-                } elsif ($opts{$_} eq 'universal') {
+                } elsif ($output{$_} eq 'universal') {
                     require Lintian::Output::Universal;
                     $OUTPUT = Lintian::Output::Universal->new;
                 }
@@ -615,54 +607,52 @@ sub main {
     # check permitted values for --color / color
     #  - We set the default to 'auto' here; because we cannot do
     #    it before the config check.
-    $opt{'color'} = 'auto' unless defined($opt{'color'});
-    if ($opt{'color'} and $opt{'color'} !~ /^(?:never|always|auto|html)$/) {
-        fatal_error(
-            join(q{ },
-                'The color value must be one of',
-                'never", "always", "auto" or "html"'));
+    $option{'color'} = 'auto' unless defined($option{'color'});
+    if (    $option{'color'}
+        and $option{'color'} !~ /^(?:never|always|auto|html)$/) {
+        die "The color value must be one of never, always, auto or html.\n";
     }
 
-    if ($opt{'color'} eq 'never') {
-        $opt{'hyperlinks'} //= 'off';
+    if ($option{'color'} eq 'never') {
+        $option{'hyperlinks'} //= 'off';
     } else {
-        $opt{'hyperlinks'} //= 'on';
+        $option{'hyperlinks'} //= 'on';
     }
-    fatal_error('The hyperlink value must be one of "on" or "off"')
-      unless $opt{'hyperlinks'} =~ /^(?:on|off)$/;
+    die "The hyperlink value must be on or off\n"
+      unless $option{'hyperlinks'} =~ /^(?:on|off)$/;
 
-    if ($opt{'verbose'} || !-t STDOUT) {
-        $opt{'tag-display-limit'} //= 0;
+    if ($option{'verbose'} || !-t STDOUT) {
+        $option{'tag-display-limit'} //= 0;
     } else {
-        $opt{'tag-display-limit'} //= 4;
+        $option{'tag-display-limit'} //= 4;
     }
 
-    if ($opt{'debug'}) {
-        $opt{'verbose'} = 1;
-        $ENV{'LINTIAN_DEBUG'} = $opt{'debug'};
+    if ($option{'debug'}) {
+        $option{'verbose'} = 1;
+        $ENV{'LINTIAN_DEBUG'} = $option{'debug'};
         $SIG{__DIE__} = sub { Carp::confess(@_) };
     } else {
         # Ensure verbose has a defined value
-        $opt{'verbose'} //= 0;
+        $option{'verbose'} //= 0;
     }
 
-    $OUTPUT->verbosity_level($opt{'verbose'});
-    $OUTPUT->debug($opt{'debug'});
+    $OUTPUT->verbosity_level($option{'verbose'});
+    $OUTPUT->debug($option{'debug'});
 
-    $OUTPUT->color($opt{'color'});
-    $OUTPUT->tty_hyperlinks($hyperlinks_capable&& $opt{hyperlinks} eq 'on');
-    $OUTPUT->tag_display_limit($opt{'tag-display-limit'});
-    $OUTPUT->showdescription($opt{'info'});
+    $OUTPUT->color($option{'color'});
+    $OUTPUT->tty_hyperlinks($hyperlinks_capable&& $option{hyperlinks} eq 'on');
+    $OUTPUT->tag_display_limit($option{'tag-display-limit'});
+    $OUTPUT->showdescription($option{'info'});
 
-    $OUTPUT->perf_debug($opt{'perf-debug'});
-    if (defined(my $perf_log = $opt{'perf-output'})) {
+    $OUTPUT->perf_debug($option{'perf-debug'});
+    if (defined(my $perf_log = $option{'perf-output'})) {
         my $fd = open_file_or_fd($perf_log, '>');
         $OUTPUT->perf_log_fd($fd);
 
         push(@CLOSE_AT_END, [$fd, $perf_log]);
     }
 
-    if (defined(my $status_log = $opt{'status-log'})) {
+    if (defined(my $status_log = $option{'status-log'})) {
         $STATUS_FD = open_file_or_fd($status_log, '>');
         $STATUS_FD->autoflush;
 
@@ -672,9 +662,8 @@ sub main {
     }
 
     # check for arguments
-    if (    $action =~ /^(?:check|unpack)$/
-        and $#ARGV == -1
-        and not $opt{'packages-from-file'}) {
+    if ($#ARGV == -1
+        and not $option{'packages-from-file'}) {
         my $ok = 0;
         # If debian/changelog exists, assume an implied
         # "../<source>_<version>_<arch>.changes" (or
@@ -687,58 +676,46 @@ sub main {
         syntax() unless $ok;
     }
 
-    if ($opt{'debug'}) {
+    if ($option{'debug'}) {
         my $banner = lintian_banner();
         # Print Debug banner, now that we're finished determining
         # the values and have Lintian::Output available
         $OUTPUT->debug_msg(
             1,$banner,
             "Lintian root directory: $INIT_ROOT",
-            "Configuration file: $opt{'LINTIAN_CFG'}",
+            "Configuration file: $option{'LINTIAN_CFG'}",
             'UTF-8: ✓ (☃)',
             $OUTPUT->delimiter,
         );
     }
 
-    my $PROFILE = eval { dplint::load_profile($opt{'LINTIAN_PROFILE'}); };
-    fatal_error($@) if $@;
+    # dies on error
+    my $PROFILE = dplint::load_profile($option{'LINTIAN_PROFILE'});
 
-    # Ensure $opt{'LINTIAN_PROFILE'} is defined
-    $opt{'LINTIAN_PROFILE'} = $PROFILE->name
-      unless defined($opt{'LINTIAN_PROFILE'});
+    # Ensure $option{'LINTIAN_PROFILE'} is defined
+    $option{'LINTIAN_PROFILE'} = $PROFILE->name
+      unless defined($option{'LINTIAN_PROFILE'});
     $OUTPUT->v_msg('Using profile ' . $PROFILE->name . '.');
     Lintian::Data->set_vendor($PROFILE);
 
-    $opt{'display-source'} = [keys %display_source];
+    $option{'display-source'} = [keys %display_source];
 
     if ($dont_check || %suppress_tags || $checks || $check_tags) {
         _update_profile($PROFILE, $dont_check, \%suppress_tags,$checks);
     }
 
-    # Initialize display level settings.
-    for my $level (@display_level) {
-        eval { $PROFILE->display(@{$level}) };
-        fatal_error($@) if $@;
-    }
+    # initialize display level settings; dies on error
+    $PROFILE->display(@{$_})for @display_level;
 
     $SIG{'TERM'} = \&interrupted;
     $SIG{'INT'} = \&interrupted;
     $SIG{'QUIT'} = \&interrupted;
 
-    #######################################
-    #  Check for non deb specific actions
-    if (
-        not(   ($action eq 'unpack')
-            or ($action eq 'check'))
-    ) {
-        fatal_error("invalid action $action specified");
-    }
-
     my @subjects;
     push(@subjects, @ARGV);
 
-    if ($opt{'packages-from-file'}){
-        my $fd = open_file_or_fd($opt{'packages-from-file'}, '<');
+    if ($option{'packages-from-file'}){
+        my $fd = open_file_or_fd($option{'packages-from-file'}, '<');
 
         while (my $line = <$fd>) {
             chomp $line;
@@ -758,11 +735,11 @@ sub main {
     my $pool = Lintian::Pool->new;
 
     for my $path (@subjects) {
-        fatal_error("$path is not a file") unless -f $path;
+        die "$path is not a file\n" unless -f $path;
 
         # in ubuntu, automatic dbgsym packages end with .ddeb
-        fatal_error
-"bad package file name $path (neither .deb, .udeb, .ddeb, .changes, .dsc or .buildinfo file)"
+        die
+"bad package file name $path (neither .deb, .udeb, .ddeb, .changes, .dsc or .buildinfo file)\n"
           unless $path =~ m/\.(?:[u|d]?deb|dsc|changes|buildinfo)$/;
 
         my $absolute = Cwd::abs_path($path);
@@ -779,7 +756,7 @@ sub main {
         };
         if ($@) {
             print STDERR "Skipping $path: $@";
-            $exit_code = 2;
+            $exit_code = 1;
         }
     }
 
@@ -790,8 +767,7 @@ sub main {
 
     $ENV{INIT_ROOT} = $INIT_ROOT;
 
-    $pool->process($action, $PROFILE,\$exit_code, \%opt,
-        $STATUS_FD, \@unpack_info, $OUTPUT);
+    $pool->process($PROFILE, \$exit_code, \%option, $STATUS_FD, $OUTPUT);
 
     retrigger_signal()
       if $received_signal;
@@ -845,90 +821,76 @@ sub _find_cfg_file {
 sub parse_config_file {
     my ($config_file) = @_;
 
+    # for keys appearing multiple times, now uses the last value
+    my $object = Config::Tiny->read($config_file, 'utf8');
+    my $error = $object->errstr;
+    die "syntax error in configuration file $config_file: " . $error . NEWLINE
+      if length $error;
+
+    # used elsewhere to check for values already set
+    %config = %{$object->{_} // {}};
+
     # Options that can appear in the config file
-    my %cfghash = (
-        'color'                => \$opt{'color'},
-        'hyperlinks'           => \$opt{'hyperlinks'},
-        'display-experimental' => \$opt{'display-experimental'},
+    my %destination = (
+        'color'                => \$option{'color'},
+        'hyperlinks'           => \$option{'hyperlinks'},
+        'display-experimental' => \$option{'display-experimental'},
         'display-info'         => \&cfg_display_level,
         'display-level'        => \&cfg_display_level,
-        'info'                 => \$opt{'info'},
-        'jobs'                 => \$opt{'jobs'},
+        'fail-on'              => \&cfg_fail_on,
+        'info'                 => \$option{'info'},
+        'jobs'                 => \$option{'jobs'},
         'pedantic'             => \&cfg_display_level,
         'quiet'                => \&cfg_verbosity,
         'override'             => \&cfg_override,
-        'show-overrides'       => \$opt{'show-overrides'},
+        'show-overrides'       => \$option{'show-overrides'},
         'suppress-tags'        => \&record_suppress_tags,
         'suppress-tags-from-file' => \&record_suppress_tags_from_file,
-        'tag-display-limit'    => \$opt{'tag-display-limit'},
+        'tag-display-limit'    => \$option{'tag-display-limit'},
         'verbose'              => \&cfg_verbosity,
     );
 
-    open(my $fd, '<', $config_file);
-    while (<$fd>) {
-        chomp;
-        s/\#.*$//go;
-        s/\"//go;
-        next if m/^\s*$/o;
+    # check keys against known settings
+    my $knownlc = List::Compare->new([keys %config], [keys %destination]);
+    my @unknown = $knownlc->get_Lonly;
+    die "Unknown setting in $config_file: " . join(SPACE, @unknown) . NEWLINE
+      if @unknown;
 
-        # substitute some special variables
-        s,\$HOME/,$ENV{'HOME'}/,go;
-        s,\~/,$ENV{'HOME'}/,go;
+    # some environment variables can be set from the config file
+    my $envlc = List::Compare->new([keys %config], \@ENV_VARS);
+    my @from_file = $envlc->get_intersection;
 
-        my $found = 0;
-        foreach my $var (@ENV_VARS) {
-            if (m/^\s*$var\s*=\s*(.*\S)\s*$/i) {
-                if (exists $conf_opt{$var}){
-                    print STDERR
-                      "Configuration variable $var appears more than once\n";
-                    print STDERR " in $opt{'LINTIAN_CFG'} (line: $.)",
-                      " - Using the first value!\n";
-                    next;
-                }
-                $opt{$var} = $1 unless defined $opt{$var};
-                $conf_opt{$var} = 1;
-                $found = 1;
-                last;
-            }
-        }
-        unless ($found) {
-            # check if it is a config option
-            if (m/^\s*([-a-z]+)\s*=\s*(.*\S)\s*$/o){
-                my ($var, $val) = ($1, $2);
-                my $ref = $cfghash{$var};
-                fatal_error(
-                    "Unknown configuration variable $var at line: ${.}.")
-                  unless $ref;
-                if (exists $conf_opt{$var}){
-                    print STDERR
-                      "Configuration variable $var appears more than once\n";
-                    print STDERR " in $opt{'LINTIAN_CFG'} (line: $.)",
-                      " - Using the first value!\n";
-                    next;
-                }
-                $conf_opt{$var} = 1;
-                $found = 1;
-                # Translate boolean strings to "0" or "1"; ignore
-                # errors as not all values are (intended to be)
-                # booleans.
-                if (none { $var eq $_ } qw(jobs tag-display-limit)) {
-                    eval { $val = parse_boolean($val); };
-                }
-                if (ref $ref eq 'SCALAR'){
-                    # Check it was already set
-                    next if defined $$ref;
-                    $$ref = $val;
-                } elsif (ref $ref eq 'CODE'){
-                    $ref->($var, $val);
-                }
+    my @already = grep { defined $ENV{$_} } @from_file;
+    warn "Already have setting from $config_file in the environment: "
+      . join(SPACE, @already)
+      . NEWLINE
+      if @already;
 
-            }
-        }
-        unless ($found) {
-            fatal_error("syntax error in configuration file: $_");
-        }
-    }
-    close($fd);
+    my @not_yet = grep { !defined $ENV{$_} } @from_file;
+    $ENV{$_} = $config{$_} for @not_yet;
+
+    # substitute some special variables
+    s{\$HOME/}{$ENV{'HOME'}/}g for values %config;
+    s{\~/}{$ENV{'HOME'}/}g for values %config;
+
+    # Translate boolean strings to "0" or "1"; ignore
+    # errors as not all values are (intended to be)
+    # booleans.
+    my $booleanlc
+      = List::Compare->new([keys %config], [qw(jobs tag-display-limit)]);
+    eval { $config{$_} = parse_boolean($config{$_}); }
+      for $booleanlc->get_Lonly;
+
+    # initialize variables
+    my @names = grep { defined $config{$_} } keys %destination;
+
+    my @scalars = grep { ref $destination{$_} eq 'SCALAR' } @names;
+    my @undefined = grep { defined ${$destination{$_}} } @scalars;
+    ${$destination{$_}} = $config{$_} for @undefined;
+
+    my @coderefs = grep { ref $destination{$_} eq 'CODE' } @names;
+    $destination{$_}->($_, $config{$_}) for @coderefs;
+
     return;
 }
 
@@ -988,7 +950,7 @@ sub _find_changes {
         } else {
             print STDERR "debian/changelog does not have any data?\n";
         }
-        exit 2;
+        exit 1;
     }
     $version = $last->Version;
     $source = $last->Source;
@@ -999,7 +961,7 @@ sub _find_changes {
           "Cannot determine source and version from debian/changelog:\n";
         print STDERR "Source: $source\n";
         print STDERR "Version: $source\n";
-        exit 2;
+        exit 1;
     }
     # remove the epoch
     $version =~ s/^\d+://;
@@ -1042,38 +1004,42 @@ sub parse_options {
         'no_getopt_compat','no_auto_abbrev','permute');
 
     # process commandline options
-    Getopt::Long::GetOptions(%opthash)
-      or fatal_error("error parsing options\n");
+    Getopt::Long::GetOptions(%getoptions)
+      or die "error parsing options\n";
 
     # root permissions?
     # check if effective UID is 0
-    if ($> == 0 and not $opt{'allow-root'}) {
+    if ($> == 0 and not $option{'allow-root'}) {
         print STDERR join(q{ },
             'warning: the authors of lintian do not',
             "recommend running it with root privileges!\n");
     }
 
-    if ($opt{'ignore-lintian-env'}) {
+    if ($option{'ignore-lintian-env'}) {
         delete($ENV{$_}) for grep { m/^LINTIAN_/ } keys %ENV;
     }
 
     # option --all and packages specified at the same time?
-    if ($opt{'packages-from-file'} and $#ARGV+1 > 0) {
+    if ($option{'packages-from-file'} and $#ARGV+1 > 0) {
         print STDERR join(q{ },
             'warning: option --packages-from-file',
             "cannot be mixed with package parameters!\n");
         print STDERR "(will ignore --packages-from-file option)\n";
-        delete($opt{'packages-from-file'});
+        delete($option{'packages-from-file'});
     }
 
-    # check specified action
-    $action = 'check' unless $action;
-
-    fatal_error('Cannot use profile together with --ftp-master-rejects.')
-      if $opt{'LINTIAN_PROFILE'} and $opt{'ftp-master-rejects'};
+    die "Cannot use profile together with --ftp-master-rejects.\n"
+      if $option{'LINTIAN_PROFILE'} and $option{'ftp-master-rejects'};
     # --ftp-master-rejects is implemented in a profile
-    $opt{'LINTIAN_PROFILE'} = 'debian/ftp-master-auto-reject'
-      if $opt{'ftp-master-rejects'};
+    $option{'LINTIAN_PROFILE'} = 'debian/ftp-master-auto-reject'
+      if $option{'ftp-master-rejects'};
+
+    # check arguments to --fail-on
+    @{$option{'fail-on'}} = split(/,/, join(COMMA, @{$option{'fail-on'}}));
+    my @unknown_fail_on
+      = grep {!/^(?:error|warning|info|pedantic|experimental|override)$/ }
+      @{$option{'fail-on'}};
+    die "Unrecognized fail-on argument: $_\n" for @unknown_fail_on;
 
     return;
 }
@@ -1087,7 +1053,7 @@ sub _update_profile {
     if ($checks || $check_tags) {
         $profile->disable_tag($_) for $profile->enabled_tags;
         if ($check_tags) {
-            $opt{'display-experimental'} = 1;
+            $option{'display-experimental'} = 1;
             # discard whatever is in @display_level and request
             # everything
             @display_level = ();
@@ -1106,7 +1072,7 @@ sub _update_profile {
                     next;
                 }
                 my $cs = $profile->get_checkinfo($c);
-                fatal_error("Unrecognized check script (via -C): $c")
+                die "Unrecognized check script (via -C): $c\n"
                   unless $cs;
                 $profile->enable_tag($_) for $cs->tags;
             }
@@ -1115,7 +1081,7 @@ sub _update_profile {
         # we are disabling checks
         for my $c (split(/,/, $sup_check)) {
             my $cs = $profile->get_checkinfo($c);
-            fatal_error("Unrecognized check script (via -X): $c") unless $cs;
+            die "Unrecognized check script (via -X): $c\n" unless $cs;
             $profile->disable_tag($_) for $cs->tags;
         }
     }
@@ -1167,7 +1133,7 @@ sub END {
 }
 
 sub _die_in_signal_handler {
-    die("N: Interrupted.\n");
+    die "N: Interrupted.\n";
 }
 
 sub retrigger_signal {

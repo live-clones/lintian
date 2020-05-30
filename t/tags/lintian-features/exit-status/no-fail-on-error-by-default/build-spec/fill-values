@@ -1,0 +1,4 @@
+Testname: no-fail-on-error-by-default
+Skeleton: source-native
+Description: Exit status for error tags
+Extra-Build-Depends: quilt

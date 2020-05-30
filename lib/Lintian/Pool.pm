@@ -27,6 +27,7 @@ use autodie;
 
 use Carp qw(croak);
 use Cwd;
+use List::MoreUtils qw(any);
 use Time::HiRes qw(gettimeofday tv_interval);
 use Path::Tiny;
 use POSIX qw(:sys_wait_h);
@@ -146,17 +147,16 @@ Process the pool.
 =cut
 
 sub process{
-    my ($self, $action,$PROFILE,$exit_code_ref, $opt, $STATUS_FD,
-        $unpack_info_ref, $OUTPUT)
-      = @_;
+    my ($self, $PROFILE, $exit_code_ref, $option, $STATUS_FD, $OUTPUT)= @_;
 
     my %override_count;
+    my %ignored_overrides;
+    my $unused_overrides = 0;
 
     # do not remove lab if so selected
-    $self->keep($opt->{'keep-lab'} // 0);
+    $self->keep($option->{'keep-lab'} // 0);
 
     for my $group (values %{$self->groups}) {
-        my $success = 1;
 
         $OUTPUT->v_msg('Starting on group ' . $group->name);
 
@@ -164,7 +164,7 @@ sub process{
         my $group_start = [gettimeofday];
 
         $group->profile($PROFILE);
-        $group->jobs($opt->{'jobs'});
+        $group->jobs($option->{'jobs'});
 
         $group->unpack($OUTPUT);
 
@@ -174,37 +174,108 @@ sub process{
         $OUTPUT->debug_msg(1, 'Unpack of ' . $group->name . " done ($tres)");
         $OUTPUT->perf_log($group->name . ",total-group-unpack,${raw_res}");
 
-        if ($action eq 'check') {
-            if (
-                !$group->process(
-                    $exit_code_ref, \%override_count,$opt, $OUTPUT
-                )
-            ) {
-                $success = 0;
+        my %reported_count;
+
+        my $success= $group->process(\%ignored_overrides, $option, $OUTPUT);
+
+        # associate all tags with processable
+        for my $processable ($group->get_processables){
+            $_->processable($processable) for @{$processable->tags};
+        }
+
+        my @tags = map { @{$_->tags} } $group->get_processables;
+
+        # remove circular references
+        $_->tags([]) for $group->get_processables;
+
+        my @reported = grep { !$_->override } @tags;
+        my @reported_trusted = grep { !$_->info->experimental } @reported;
+        my @reported_experimental = grep { $_->info->experimental } @reported;
+
+        my @override = grep { $_->override } @tags;
+        my @override_trusted = grep { !$_->info->experimental } @override;
+        my @override_experimental = grep { $_->info->experimental } @override;
+
+        $unused_overrides
+          += scalar grep { $_->name eq 'unused-override' } @tags;
+
+        $reported_count{$_->info->effective_severity}++ for @reported_trusted;
+        $reported_count{experimental} += scalar @reported_experimental;
+        $reported_count{override} += scalar @override;
+
+        unless ($option->{'no-override'} || $option->{'show-overrides'}) {
+
+            $override_count{$_->info->effective_severity}++
+              for @override_trusted;
+            $override_count{experimental} += scalar @override_experimental;
+        }
+
+        $$exit_code_ref = 2
+          if $success && any { $reported_count{$_} } @{$option->{'fail-on'}};
+
+        # discard disabled tags
+        @tags= grep { $PROFILE->tag_is_enabled($_->name) } @tags;
+
+        # discard experimental tags
+        @tags = grep { !$_->info->experimental } @tags
+          unless $option->{'display-experimental'};
+
+        # discard overridden tags
+        @tags = grep { !defined $_->override } @tags
+          unless $option->{'show-overrides'};
+
+        # discard outside the selected display level
+        @tags= grep { $PROFILE->display_level_for_tag($_->name) }@tags;
+
+        my $reference_limit = $option->{'display-source'} // [];
+        if (@{$reference_limit}) {
+
+            my @topic_tags;
+            for my $tag (@tags) {
+                my @references = split(/,/, $tag->info->references);
+
+                # retain the first word
+                s/^([\w-]+)\s.*/$1/ for @references;
+
+                # remove anything in parentheses at the end
+                s/\(\S+\)$// for @references;
+
+                # check if tag refers to the selected references
+                my $referencelc
+                  = List::Compare->new(\@references, $reference_limit);
+                next
+                  unless $referencelc->get_intersection;
+
+                push(@topic_tags, $tag);
             }
 
-            $group->clear_cache;
+            @tags = @topic_tags;
+        }
 
-            if ($$exit_code_ref != 2) {
-                # Double check that no processes are running;
-                # hopefully it will catch regressions like 3bbcc3b
-                # earlier.
-                #
-                # Unfortunately, the cleanup via IO::Async::Function seems keep
-                # a worker unreaped; disabling. Should be revisited.
-                #
-                if (waitpid(-1, WNOHANG) != -1) {
-                    $$exit_code_ref = 2;
-                    die 'Unreaped processes after running checks!?';
-                }
-            } else {
-                # If we are interrupted in (e.g.) checks/manpages, it
-                # tends to leave processes behind.  No reason to flag
-                # an error for that - but we still try to reap the
-                # children if they are now done.
+        # put tags back into their respective processables
+        push(@{$_->processable->tags}, $_) for @tags;
 
-                1 while waitpid(-1, WNOHANG) > 0;
+        $group->clear_cache;
+
+        if ($$exit_code_ref != 1) {
+            # Double check that no processes are running;
+            # hopefully it will catch regressions like 3bbcc3b
+            # earlier.
+            #
+            # Unfortunately, the cleanup via IO::Async::Function seems keep
+            # a worker unreaped; disabling. Should be revisited.
+            #
+            if (waitpid(-1, WNOHANG) != -1) {
+                $$exit_code_ref = 1;
+                die 'Unreaped processes after running checks!?';
             }
+        } else {
+            # If we are interrupted in (e.g.) checks/manpages, it
+            # tends to leave processes behind.  No reason to flag
+            # an error for that - but we still try to reap the
+            # children if they are now done.
+
+            1 while waitpid(-1, WNOHANG) > 0;
         }
 
         # remove group files
@@ -217,6 +288,7 @@ sub process{
             print {$STATUS_FD} 'complete ' . $group->name . " ($total_tres)\n";
         } else {
             print {$STATUS_FD} 'error ' . $group->name . " ($total_tres)\n";
+            $$exit_code_ref = 1;
         }
         $OUTPUT->v_msg('Finished processing group ' . $group->name);
     }
@@ -224,62 +296,62 @@ sub process{
     # pass everything, in case some groups or processables have no tags
     $OUTPUT->issue_tags([values %{$self->groups}]);
 
-    if (    $action eq 'check'
-        and not $opt->{'no-override'}
-        and not $opt->{'show-overrides'}) {
+    unless ($option->{'no-override'}
+        || $option->{'show-overrides'}) {
 
-        my $errors = $override_count{errors} || 0;
-        my $warnings = $override_count{warnings} || 0;
-        my $info = $override_count{info} || 0;
+        my $errors = $override_count{error} // 0;
+        my $warnings = $override_count{warning} // 0;
+        my $info = $override_count{info} // 0;
         my $total = $errors + $warnings + $info;
 
-        my $unused = $override_count{unused} || 0;
+        if ($total > 0 or $unused_overrides > 0) {
 
-        if ($total > 0 or $unused > 0) {
             my $text
               = ($total == 1)
               ? "$total tag overridden"
               : "$total tags overridden";
+
             my @output;
+
             if ($errors) {
                 push(@output,
                     ($errors == 1) ? "$errors error" : "$errors errors");
             }
+
             if ($warnings) {
                 push(@output,
                     ($warnings == 1)
                     ? "$warnings warning"
                     : "$warnings warnings");
             }
+
             if ($info) {
                 push(@output, "$info info");
             }
+
             if (@output) {
                 $text .= ' (' . join(', ', @output). ')';
             }
-            if ($unused == 1) {
-                $text .= "; $unused unused override";
-            } elsif ($unused > 1) {
-                $text .= "; $unused unused overrides";
+
+            if ($unused_overrides == 1) {
+                $text .= "; $unused_overrides unused override";
+            } elsif ($unused_overrides > 1) {
+                $text .= "; $unused_overrides unused overrides";
             }
+
             $OUTPUT->msg($text);
         }
     }
 
-    my $ign_over = $override_count{ignored};
-    if (keys %$ign_over) {
+    if (keys %ignored_overrides) {
         $OUTPUT->msg(
-            join(q{ },
-                'Some overrides were ignored,',
-                'since the tags were marked "non-overridable".'));
-        if ($opt->{'verbose'}) {
+'Some overrides were ignored, since the tags were marked non-overridable.'
+        );
+        if ($option->{'verbose'}) {
             $OUTPUT->v_msg(
-                join(q{ },
-                    'The following tags were "non-overridable"',
-                    'and had at least one override'));
-            foreach my $tag (sort keys %$ign_over) {
-                $OUTPUT->v_msg("  - $tag");
-            }
+'The following tags had at least one override but are non-overridable:'
+            );
+            $OUTPUT->v_msg("  - $_") for sort keys %ignored_overrides;
         } else {
             $OUTPUT->msg('Use --verbose for more information.');
         }

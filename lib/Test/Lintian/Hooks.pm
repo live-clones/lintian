@@ -46,7 +46,6 @@ BEGIN {
       sort_lines
       calibrate
       find_missing_prerequisites
-      run_lintian
     );
 }
 
@@ -196,71 +195,6 @@ sub find_missing_prerequisites {
           if $missing =~ s{\n}{\\n}gxsm;
         return $missing;
     }
-
-    return;
-}
-
-=item run_lintian(DESC, INPUT, INCLUDES, OUTPUT, DIR)
-
-Runs Lintian in directory DIR on the input file INPUT and a collects the
-output in file OUTPUT. Any include directories in INCLUDES, if present,
-are passed on.
-
-=cut
-
-sub run_lintian {
-    my ($directory, $subject, $profile, $includedir, $options, $product)= @_;
-
-    my @cmd;
-
-    # prepend some things for perl coverage
-    push(@cmd,
-        'perl', $ENV{'LINTIAN_COVERAGE'} . ",-db,$ENV{'LINTIAN_COVERDIR'}")
-      if exists $ENV{'LINTIAN_COVERAGE'};
-
-    # add lintan command
-    push(@cmd, "cd $directory; $ENV{'LINTIAN_FRONTEND'}");
-
-    # coverage has race conditions when using the same database
-    push(@cmd, '-j1') if exists $ENV{LINTIAN_COVERAGE};
-
-    # add other options
-    push(@cmd, '--include-dir', $includedir) if -d $includedir;
-    push(@cmd, '--no-user-dirs', '--profile', $profile);
-    push(@cmd, '--allow-root', '--no-cfg');
-
-    # properly escape any custom options
-    my @customized = split(SPACE, $options);
-    push(@cmd,
-        SINGLEQ . join(SINGLEQ . SPACE . SINGLEQ, @customized) . SINGLEQ);
-
-    # add file to be examined
-    push(@cmd, basename($subject));
-
-    # run lintian
-    my $command = join(SPACE, @cmd);
-    my ($output, $status) = capture_merged { system($command); };
-    $status = ($status >> 8) & 255;
-
-    my @lines = split(NEWLINE, $output);
-
-    if (exists $ENV{LINTIAN_COVERAGE}) {
-        # Devel::Cover causes deep recursion warnings.
-        @lines = grep {
-            !m{^Deep [ ] recursion [ ] on [ ] subroutine [ ]
-           "[^"]+" [ ] at [ ] .*B/Deparse.pm [ ] line [ ]
-           \d+}xsm
-        } @lines;
-    }
-
-    unless ($status == 0 || $status == 1) {
-        unshift(@lines, "$command exited with status $status");
-        die join(NEWLINE, @lines);
-    }
-
-    # do not forget the final newline, or sorting will fail
-    my $contents = scalar @lines ? join(NEWLINE, @lines) . NEWLINE : EMPTY;
-    path($product)->spew($contents);
 
     return;
 }
