@@ -17,7 +17,6 @@ lintian (2.78.0) unstable; urgency=medium
         malformed-maintainer-field
       - uploader-address-looks-weird -> malformed-uploaders-field
 
-
   [ Felix Lechner ]
   * Use settings from configuration files when they were previously
     undefined. (Closes: #961802)
