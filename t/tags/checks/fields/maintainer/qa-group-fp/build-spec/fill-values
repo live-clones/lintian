@@ -1,0 +1,4 @@
+Skeleton: upload-native
+Testname: qa-group-fp
+Author: Debian QA Group <packages@qa.debian.org>
+Description: QA in Maintainer field (false positive)
