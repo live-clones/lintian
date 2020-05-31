@@ -81,7 +81,6 @@ sanitize_environment();
 my @ENV_VARS = (
     # LINTIAN_CFG  - handled manually
     qw(
-      LINTIAN_PROFILE
       TMPDIR
       ));
 
@@ -522,7 +521,7 @@ my %getoptions = (
     # ------------------ configuration options
     'cfg=s' => \$option{'LINTIAN_CFG'},
     'no-cfg' => \$option{'no-cfg'},
-    'profile=s' => \$option{'LINTIAN_PROFILE'},
+    'profile=s' => \$option{profile},
 
     'jobs|j=i' => \$option{'jobs'},
     'ignore-lintian-env' => \$option{'ignore-lintian-env'},
@@ -704,13 +703,17 @@ sub main {
         );
     }
 
-    # dies on error
-    my $PROFILE = dplint::load_profile($option{'LINTIAN_PROFILE'});
+    if (defined $option{LINTIAN_PROFILE}) {
+        warn
+"Warning: Please use 'profile' in config file; LINTIAN_PROFILE is obsolete.\n";
+        $option{profile} //= $option{LINTIAN_PROFILE};
+        delete $option{LINTIAN_PROFILE};
+    }
 
-    # Ensure $option{'LINTIAN_PROFILE'} is defined
-    $option{'LINTIAN_PROFILE'} = $PROFILE->name
-      unless defined($option{'LINTIAN_PROFILE'});
+    # dies on error
+    my $PROFILE = dplint::load_profile($option{profile});
     $OUTPUT->v_msg('Using profile ' . $PROFILE->name . '.');
+
     Lintian::Data->set_vendor($PROFILE);
 
     $option{'display-source'} = [keys %display_source];
@@ -855,7 +858,9 @@ sub parse_config_file {
         'fail-on'              => \&cfg_fail_on,
         'info'                 => \$option{'info'},
         'jobs'                 => \$option{'jobs'},
+        'LINTIAN_PROFILE'      => \$option{LINTIAN_PROFILE},
         'pedantic'             => \&cfg_display_level,
+        'profile'              => \$option{profile},
         'quiet'                => \&cfg_verbosity,
         'override'             => \&cfg_override,
         'show-overrides'       => \$option{'show-overrides'},
@@ -1033,9 +1038,9 @@ sub parse_options {
     }
 
     die "Cannot use profile together with --ftp-master-rejects.\n"
-      if $option{'LINTIAN_PROFILE'} and $option{'ftp-master-rejects'};
+      if $option{profile} and $option{'ftp-master-rejects'};
     # --ftp-master-rejects is implemented in a profile
-    $option{'LINTIAN_PROFILE'} = 'debian/ftp-master-auto-reject'
+    $option{profile} = 'debian/ftp-master-auto-reject'
       if $option{'ftp-master-rejects'};
 
     # check arguments to --fail-on
