@@ -1,7 +1,7 @@
 foo++ (source): uploader-name-missing Yama@gotchi
+foo++ (source): uploader-address-malformed he@unknown
 foo++ (source): uploader-address-malformed Yama@gotchi
-foo++ (source): uploader-address-malformed "Marc 'HE' Brockschmidt" <he@unknown>
-foo++ (source): uploader-address-is-on-localhost "Jeroen van Wolffelaar" <jeroen@localhost.localdomain>
+foo++ (source): uploader-address-is-on-localhost jeroen@localhost.localdomain
 foo++ (source): uploader Yama@gotchi
 foo++ (source): uploader Frank <djpig@debian.org>
 foo++ (source): uploader "Marc 'HE' Brockschmidt" <he@unknown>

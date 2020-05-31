@@ -30,14 +30,18 @@ use utf8;
 use autodie;
 
 use Email::Address::XS;
+use Email::Valid;
+use List::MoreUtils qw(all);
 use List::UtilsBy qw(count_by);
 
-use Lintian::Maintainer qw(check_maintainer);
+use Lintian::Data;
 
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
+
+my $KNOWN_BOUNCE_ADDRESSES = Lintian::Data->new('fields/bounce-addresses');
 
 sub always {
     my ($self) = @_;
@@ -45,7 +49,6 @@ sub always {
     my $processable = $self->processable;
 
     my $uploaders = $processable->unfolded_field('uploaders');
-
     return
       unless defined $uploaders;
 
@@ -68,9 +71,33 @@ sub always {
     my @invalid = grep { !$_->is_valid } @uploaders;
     $self->tag('malformed-uploaders-field') if @invalid;
 
-    for my $uploader (@validated) {
-        my @tags = check_maintainer($uploader->format, 'uploader');
-        $self->tag(@{$_}) for @tags;
+    for my $parsed (@validated) {
+
+        unless (
+            all { length }
+            ($parsed->address, $parsed->user, $parsed->host)
+        ) {
+            $self->tag('uploader-address-malformed', $parsed->format);
+            next;
+        }
+
+        $self->tag('uploader-address-malformed', $parsed->address)
+          unless Email::Valid->address($parsed->address);
+
+        $self->tag('uploader-address-is-on-localhost', $parsed->address)
+          if $parsed->host =~ /(?:localhost|\.localdomain|\.localnet)$/;
+
+        $self->tag('uploader-address-causes-mail-loops-or-bounces',
+            $parsed->address)
+          if $KNOWN_BOUNCE_ADDRESSES->known($parsed->address);
+
+        unless (length $parsed->phrase) {
+            $self->tag('uploader-name-missing', $parsed->format);
+            next;
+        }
+
+        $self->tag('uploader-address-is-root-user', $parsed->format)
+          if $parsed->user eq 'root' || $parsed->phrase eq 'root';
     }
 
     my %counts = count_by { $_->format } @validated;

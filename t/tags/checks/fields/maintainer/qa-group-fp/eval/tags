@@ -1,4 +1,2 @@
-qa-group-fp (source): wrong-debian-qa-group-name "Debian QA Group" <packages@qa.debian.org>
 qa-group-fp (source): maintainer "Debian QA Group" <packages@qa.debian.org>
-qa-group-fp (binary): wrong-debian-qa-group-name "Debian QA Group" <packages@qa.debian.org>
 qa-group-fp (binary): maintainer "Debian QA Group" <packages@qa.debian.org>

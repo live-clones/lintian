@@ -32,9 +32,10 @@ use utf8;
 use autodie;
 
 use Email::Address::XS;
+use Email::Valid;
+use List::MoreUtils qw(all);
 
 use Lintian::Data;
-use Lintian::Maintainer qw(check_maintainer);
 
 use constant EMPTY => q{};
 
@@ -43,6 +44,7 @@ use namespace::clean;
 
 with 'Lintian::Check';
 
+my $KNOWN_BOUNCE_ADDRESSES = Lintian::Data->new('fields/bounce-addresses');
 my $KNOWN_DISTS = Lintian::Data->new('changes-file/known-dists');
 
 sub source {
@@ -103,20 +105,50 @@ sub always {
         return;
     }
 
-    my $validated;
-    my @parsed = Email::Address::XS->parse($original);
-    $validated = $parsed[0]->format
-      if @parsed == 1 && $parsed[0]->is_valid;
+    my $parsed;
+    my @list = Email::Address::XS->parse($original);
+    $parsed = $list[0]
+      if @list == 1;
 
-    unless (length $validated) {
+    unless ($parsed->is_valid) {
         $self->tag('malformed-maintainer-field', $original);
         return;
     }
 
-    $self->tag('maintainer', $validated);
+    $self->tag('maintainer', $parsed->format);
 
-    my @tags = check_maintainer($validated, 'maintainer');
-    $self->tag(@{$_}) for @tags;
+    unless (all { length } ($parsed->address, $parsed->user, $parsed->host)) {
+        $self->tag('maintainer-address-malformed', $parsed->format);
+        return;
+    }
+
+    $self->tag('maintainer-address-malformed', $parsed->address)
+      unless Email::Valid->address($parsed->address);
+
+    $self->tag('maintainer-address-is-on-localhost', $parsed->address)
+      if $parsed->host =~ /(?:localhost|\.localdomain|\.localnet)$/;
+
+    $self->tag('maintainer-address-causes-mail-loops-or-bounces',
+        $parsed->address)
+      if $KNOWN_BOUNCE_ADDRESSES->known($parsed->address);
+
+    unless (length $parsed->phrase) {
+        $self->tag('maintainer-name-missing', $parsed->format);
+        return;
+    }
+
+    $self->tag('maintainer-address-is-root-user', $parsed->format)
+      if $parsed->user eq 'root' || $parsed->phrase eq 'root';
+
+    # Debian QA Group
+    $self->tag('wrong-debian-qa-group-name', $parsed->phrase)
+      if $parsed->address eq 'packages@qa.debian.org'
+      && $parsed->phrase ne 'Debian QA Group';
+
+    $self->tag('wrong-debian-qa-address-set-as-maintainer',$parsed->address)
+      if ( $parsed->phrase =~ /\bdebian\s+qa\b/i
+        && $parsed->address ne 'packages@qa.debian.org')
+      || $parsed->address eq 'debian-qa@lists.debian.org';
 
     return;
 }
