@@ -1,0 +1,36 @@
+Source: [% $source %]
+Section: [% $section %]
+Priority: optional
+Maintainer: [% $author %]
+Standards-Version: [% $standards_version %]
+Build-Depends: [% $build_depends %]
+Rules-Requires-Root: no
+
+Package: [% $source %]
+Architecture: [% $package_architecture %]
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: [% $description %]
+ This is a test package designed to exercise some feature or tag of
+ Lintian.  It is part of the Lintian test suite and may do very odd
+ things.  It should not be installed like a regular package.  It may
+ be an empty package.
+
+Package: [% $source %]-dbg
+Section: debug
+Architecture: all
+Depends: [% $source %], ${shlibs:Depends}, ${misc:Depends}
+Description: Manual dbg package
+ This is a test package designed to exercise some feature or tag of
+ Lintian.  It is part of the Lintian test suite and may do very odd
+ things.  It should not be installed like a regular package.  It
+ may be an empty package.
+
+Package: [% $source %]-dbgsym
+Section: debug
+Architecture: all
+Depends: [% $source %], ${shlibs:Depends}, ${misc:Depends}
+Description: Manual dbgsym package
+ This is a test package designed to exercise some feature or tag of
+ Lintian.  It is part of the Lintian test suite and may do very odd
+ things.  It should not be installed like a regular package.  It may
+ even be an empty package.

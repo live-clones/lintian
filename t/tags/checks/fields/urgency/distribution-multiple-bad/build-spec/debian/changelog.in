@@ -1,0 +1,6 @@
+[% $source %] ([% $version %]) stable foo-backportss bar foo; urgency=low
+
+  * Lintian Test Suite.
+  * Test: [% $testname %]
+
+ -- [% $author %]  [% $date %]

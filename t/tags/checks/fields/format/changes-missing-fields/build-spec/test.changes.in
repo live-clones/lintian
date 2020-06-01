@@ -1,0 +1,9 @@
+Format: 1.8
+Date: [% $date %]
+Source: [% $source %]
+Binary: [% $source %]
+Architecture: source all
+Version: [% $version %]
+Distribution: unstable
+Maintainer: [% $author %]
+Changed-By: [% $author %]

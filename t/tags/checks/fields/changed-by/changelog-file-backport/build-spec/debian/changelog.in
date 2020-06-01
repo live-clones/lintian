@@ -1,0 +1,12 @@
+[% $source %] ([% $version %]) squeeze-backports; urgency=low
+
+  * Lintian Test Suite.
+  * Test: [% $testname %]
+
+ -- [% $author %]  [% $date %]
+
+[% $source %] (0.1) experimental; urgency=low
+
+  * First upload to experimental.
+
+ -- [% $author %]  Fri, 06 Feb 2009 22:22:37 -0800

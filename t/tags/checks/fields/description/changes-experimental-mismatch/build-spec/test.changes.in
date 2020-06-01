@@ -1,0 +1,16 @@
+Format: 1.8
+Date: [% $date %]
+Source: [% $source %]
+Binary: [% $source %]
+Architecture: source all
+Version: [% $version %]
+Distribution: unstable
+Urgency: low
+Maintainer: [% $author %]
+Changed-By: [% $author %]
+Description:
+ [% $source %] - [% $description %]
+Changes:
+ [% $source %] ([% $version %]) experimental; urgency=low
+ .
+   * I used the wrong argument to `sbuild -d`.

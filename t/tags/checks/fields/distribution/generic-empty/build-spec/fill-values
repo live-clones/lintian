@@ -1,0 +1,4 @@
+Skeleton: upload-native
+Testname: generic-empty
+Package-Architecture: all
+Description: Pathological empty package

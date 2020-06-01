@@ -1,5 +1,0 @@
-Testname: distribution-ubuntu-native
-Test-Against: bad-distribution-in-changes-file
-Profile: ubuntu/main
-References: Debian Bug#507740
-Check: changes-file
