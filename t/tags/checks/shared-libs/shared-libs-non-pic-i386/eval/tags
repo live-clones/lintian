@@ -1,2 +1,2 @@
 libbaz3-1 (binary): symbols-file-missing-build-depends-package-field
-libbaz3-1 (binary): shlib-with-non-pic-code usr/lib/libbaz3.so.1.0.3b
+libbaz3-1 (binary): specific-address-in-shared-library usr/lib/libbaz3.so.1.0.3b
