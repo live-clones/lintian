@@ -1,8 +1,21 @@
-lintian (2.78.0+git) UNRELEASED; urgency=medium
+lintian (2.79.0) unstable; urgency=medium
 
-  * WIP (generated at release time: please do not add entries below).
+  [ Felix Lechner ]
+  * Perform a mass-rename of tags for consistency according to the RFC.
+    (Closes: #922544)
+  * Use Email::Address::XS to parse all address components.
+    (Closes: #961924)
+  * Replace configuration option LINTIAN_PROFILE with 'profile'.
+    (Closes: #961855)
+  * Combine tags for missing native and non-native changelogs in
+    installation packages. (Closes: #935072)
+  * Clarify tag names related to shlibs control and shared libraries.
+    (Closes: #534938)
 
- -- Chris Lamb <lamby@debian.org>  Sat, 30 May 2020 10:20:31 +0100
+  [ Paul Wise ]
+  * Add several spelling corrections.
+
+ -- Chris Lamb <lamby@debian.org>  Mon, 01 Jun 2020 09:16:03 +0000
 
 lintian (2.78.0) unstable; urgency=medium
 
