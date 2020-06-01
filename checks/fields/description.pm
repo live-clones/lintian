@@ -295,6 +295,20 @@ sub installable {
     return;
 }
 
+sub changes {
+    my ($self) = @_;
+
+    my $description = $self->processable->field('description');
+    my $architecture = $self->processable->field('architecture') // EMPTY;
+
+    # Description is mandated by dak, but only makes sense if binary
+    # packages are included.  Don't tag pure source uploads.
+    $self->tag('no-description-in-changes-file')
+      unless length $description || $architecture eq 'source';
+
+    return;
+}
+
 1;
 
 # Local Variables:

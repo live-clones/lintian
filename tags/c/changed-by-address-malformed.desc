@@ -1,6 +1,6 @@
 Tag: changed-by-address-malformed
 Severity: error
-Check: changes-file
+Check: fields/changed-by
 Info: The Changed-By field should contain the package builder's name and
  email address, with the name followed by the address inside angle
  brackets (&lt; and &gt;). The address part seems to be malformed.
