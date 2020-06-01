@@ -3,5 +3,5 @@ libhello0-dbg (binary): debian-changelog-line-too-short NMU. (line 3)
 libhello0 (binary): debian-changelog-line-too-short NMU. (line 3)
 hi-dbg (binary): debian-changelog-line-too-short NMU. (line 3)
 hello-hello-dbg (binary): debian-changelog-line-too-short NMU. (line 3)
-hello-dbg (binary): changelog-file-missing-in-native-package
+hello-dbg (binary): no-changelog usr/share/doc/hello-dbg/changelog.gz (native package)
 hello (binary): debian-changelog-line-too-short NMU. (line 3)

@@ -434,7 +434,11 @@ sub binary {
             $self->tag('wrong-name-for-changelog-of-native-package',
                 "usr/share/doc/$pkg/$chg");
         } else {
-            $self->tag('changelog-file-missing-in-native-package');
+            $self->tag(
+                'no-changelog',
+                "usr/share/doc/$pkg/changelog.gz",
+                '(native package)'
+            );
         }
     } else {
         # non-native (foreign :) Debian package
@@ -470,7 +474,11 @@ sub binary {
             if ($foreign_pkg && $found_upstream_text_changelog) {
                 $self->tag('debian-changelog-file-missing-or-wrong-name');
             } elsif ($foreign_pkg) {
-                $self->tag('debian-changelog-file-missing');
+                $self->tag(
+                    'no-changelog',
+                    "usr/share/doc/$pkg/changelog.Debian.gz",
+                    '(non-native package)'
+                );
             }
             # TODO: if uncertain whether foreign or native, either
             # changelog.gz or changelog.debian.gz should exists
