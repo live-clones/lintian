@@ -5,6 +5,8 @@ C: lintian-no-override: data-tarball-compression-format xz
 C: lintian-no-override source: debhelper-compat-level 13
 C: lintian-no-override source: debhelper-compat-virtual-relation 13
 C: lintian-no-override source: debian-build-system dh
+C: lintian-no-override source: maintainer "Debian Lintian Maintainers" <lintian-maint@debian.org>
+C: lintian-no-override: maintainer "Debian Lintian Maintainers" <lintian-maint@debian.org>
 C: lintian-no-override: no-ctrl-scripts
 C: lintian-no-override source: package-is-maintained-by-individual
 C: lintian-no-override: package-is-maintained-by-individual

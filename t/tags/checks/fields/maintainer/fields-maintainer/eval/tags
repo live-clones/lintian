@@ -1,6 +1,6 @@
-fields-maintainer (source): maintainer-address-malformed Mrs. Localhost<user@localhost>
-fields-maintainer (source): maintainer-address-looks-weird Mrs. Localhost<user@localhost>
-fields-maintainer (source): maintainer-address-is-on-localhost Mrs. Localhost<user@localhost>
-fields-maintainer (binary): maintainer-address-malformed Mrs. Localhost<user@localhost>
-fields-maintainer (binary): maintainer-address-looks-weird Mrs. Localhost<user@localhost>
-fields-maintainer (binary): maintainer-address-is-on-localhost Mrs. Localhost<user@localhost>
+fields-maintainer (source): maintainer-address-malformed "Mrs. Localhost" <user@localhost>
+fields-maintainer (source): maintainer-address-is-on-localhost "Mrs. Localhost" <user@localhost>
+fields-maintainer (source): maintainer "Mrs. Localhost" <user@localhost>
+fields-maintainer (binary): maintainer-address-malformed "Mrs. Localhost" <user@localhost>
+fields-maintainer (binary): maintainer-address-is-on-localhost "Mrs. Localhost" <user@localhost>
+fields-maintainer (binary): maintainer "Mrs. Localhost" <user@localhost>

@@ -131,7 +131,7 @@ sub issue_tags {
           || $type_priority{$a->processable->type}
           <=> $type_priority{$b->processable->type}
           || $a->processable->name cmp $b->processable->name
-          || $a->hint cmp $b->hint
+          || $a->context cmp $b->context
     } @pending;
 
     $self->print_tag($_) for @sorted;
@@ -147,7 +147,7 @@ sub print_tag {
     my ($self, $tag) = @_;
 
     my $tag_info = $tag->info;
-    my $information = $tag->hint;
+    my $information = $tag->context;
     my $override = $tag->override;
     my $processable = $tag->processable;
 
@@ -218,7 +218,7 @@ they allow non-ascii printables etc.
 
 sub _quote_print {
     my ($self, $string) = @_;
-    $string =~ s/[^[:print:]]/?/go;
+    $string =~ s/[^[:print:]]/?/g;
     return $string;
 }
 

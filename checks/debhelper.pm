@@ -46,10 +46,10 @@ my $cdbscompat = 5;
 my $maint_commands = Lintian::Data->new('debhelper/maint_commands');
 my $dh_commands_depends = Lintian::Data->new('debhelper/dh_commands', '=');
 my $filename_configs = Lintian::Data->new('debhelper/filename-config-files');
-my $dh_ver_deps= Lintian::Data->new('debhelper/dh_commands-manual', qr/\|\|/o);
+my $dh_ver_deps= Lintian::Data->new('debhelper/dh_commands-manual', qr/\|\|/);
 my $dh_addons = Lintian::Data->new('common/dh_addons', '=');
 my $dh_addons_manual
-  = Lintian::Data->new('debhelper/dh_addons-manual', qr/\|\|/o);
+  = Lintian::Data->new('debhelper/dh_addons-manual', qr/\|\|/);
 my $compat_level = Lintian::Data->new('debhelper/compat-level',qr/=/);
 
 my $MISC_DEPENDS = Lintian::Relation->new('${misc:Depends}');
@@ -164,9 +164,9 @@ sub source {
             $needbuilddepends = 1;
             $needtomodifyscripts = 1;
 
-            while (m/\s--with(?:=|\s+)(['"]?)(\S+)\1/go) {
+            while (m/\s--with(?:=|\s+)(['"]?)(\S+)\1/g) {
                 my $addon_list = $2;
-                for my $addon (split(m/,/o, $addon_list)) {
+                for my $addon (split(/,/, $addon_list)) {
                     my $orig_addon = $addon;
                     $addon =~ y,-,_,;
                     my $depends = $dh_addons_manual->value($addon)
@@ -195,7 +195,7 @@ sub source {
                 }
             }
         } elsif (m,^include\s+/usr/share/cdbs/1/rules/debhelper.mk,
-            or m,^include\s+/usr/share/R/debian/r-cran.mk,o) {
+            or m,^include\s+/usr/share/R/debian/r-cran.mk,) {
             $build_systems{'cdbs-with-debhelper.mk'} = 1;
             delete($build_systems{'cdbs-without-debhelper.mk'});
             $seencommand = 1;
@@ -462,7 +462,7 @@ sub source {
                 }
             }
         } elsif ($basename eq 'control'
-            or $basename =~ m/^(?:.*\.)?(?:copyright|changelog|NEWS)$/o) {
+            or $basename =~ m/^(?:.*\.)?(?:copyright|changelog|NEWS)$/) {
             # Handle "control", [<pkg>.]copyright, [<pkg>.]changelog
             # and [<pkg>.]NEWS
             $self->tag_if_executable($file);
@@ -726,7 +726,7 @@ sub _shebang_cmd {
             # It is beyond me why anyone would place a lincity data
             # file here...  but if they do, we will handle it
             # correctly.
-            $cmd = '' if $cmd =~ m/^#!/o;
+            $cmd = '' if $cmd =~ /^#!/;
 
             # trim both ends
             $cmd =~ s/^\s+|\s+$//g;

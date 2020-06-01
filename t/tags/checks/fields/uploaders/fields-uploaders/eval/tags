@@ -1,5 +1,6 @@
-fields-uploaders (source): uploader-address-malformed Mrs. Localhost <user@localhost>
-fields-uploaders (source): uploader-address-malformed Malformed Email <@ddress@myspace.com>
-fields-uploaders (source): uploader-address-malformed Doris Double-Email <Doris Double-Email <doris@demail.com>>
-fields-uploaders (source): uploader-address-looks-weird Mr. Weird<no-space@somewhere.com>
-fields-uploaders (source): uploader-address-is-on-localhost Mrs. Localhost <user@localhost>
+fields-uploaders (source): uploader-address-malformed "Mrs. Localhost" <user@localhost>
+fields-uploaders (source): uploader-address-is-on-localhost "Mrs. Localhost" <user@localhost>
+fields-uploaders (source): uploader "Mrs. Localhost" <user@localhost>
+fields-uploaders (source): uploader "Mr. Weird" <no-space@somewhere.com>
+fields-uploaders (source): uploader "John A. J. Doe" <i.am.ok@somewhere.com>
+fields-uploaders (source): malformed-uploaders-field

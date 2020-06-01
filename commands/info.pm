@@ -121,7 +121,7 @@ EOT
         exit($unknown ? 1 : 0);
     }
 
-    my $type_re = qr/(?:binary|changes|source|udeb)/o;
+    my $type_re = qr/(?:binary|changes|source|udeb)/;
 
     # Otherwise, read input files or STDIN, watch for tags, and add
     # descriptions whenever we see one, can, and haven't already
@@ -142,9 +142,9 @@ EOT
                     (?: \s*+ \[[^\]]+?\])?         # optionally followed by an [arch-list] (like in B-D)
                     (?: \s*+ $type_re)?            # optionally followed by the type
                   :\s++)?                          # end optional part
-                ([\-\.a-zA-Z_0-9]+ (?:\s.+)?)$/ox; # <tag-name> [extra] -> $1
+                ([\-\.a-zA-Z_0-9]+ (?:\s.+)?)$/x; # <tag-name> [extra] -> $1
             $tagdata = $1;
-            ($tag, undef) = split m/ /o, $tagdata, 2;
+            ($tag, undef) = split / /, $tagdata, 2;
         } else {
             my @parts = split_tag($_);
             next unless @parts;

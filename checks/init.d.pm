@@ -108,17 +108,17 @@ sub installable {
     if ($postinst and $postinst->is_file and $postinst->is_open_ok) {
         open(my $fd, '<', $postinst->unpacked_path);
         while (<$fd>) {
-            next if /$EXCLUDE_R/o;
-            s/\#.*$//o;
+            next if /$EXCLUDE_R/;
+            s/\#.*$//;
             next unless /^(?:.+;|^\s*system[\s\(\']+)?\s*update-rc\.d\s+
-            (?:$OPTS_R)*($INITD_NAME_REGEX)\s+($ACTION_R)/xo;
+            (?:$OPTS_R)*($INITD_NAME_REGEX)\s+($ACTION_R)/x;
             my ($name,$opt) = ($1,$2);
             next if $opt eq 'remove';
             if ($initd_postinst{$name}++ == 1) {
                 $self->tag('duplicate-updaterc.d-calls-in-postinst', $name);
                 next;
             }
-            unless (m,>\s*/dev/null,o) {
+            unless (m,>\s*/dev/null,) {
                 $self->tag('output-of-updaterc.d-not-redirected-to-dev-null',
                     "$name postinst");
             }
@@ -130,11 +130,11 @@ sub installable {
     if ($preinst and $preinst->is_file and $preinst->is_open_ok) {
         open(my $fd, '<', $preinst->unpacked_path);
         while (<$fd>) {
-            next if /$EXCLUDE_R/o;
-            s/\#.*$//o;
+            next if /$EXCLUDE_R/;
+            s/\#.*$//;
             next unless m/update-rc\.d \s+
                        (?:$OPTS_R)*($INITD_NAME_REGEX) \s+
-                       ($ACTION_R)/ox;
+                       ($ACTION_R)/x;
             my ($name,$opt) = ($1,$2);
             next if $opt eq 'remove';
             $self->tag('preinst-calls-updaterc.d', $name);
@@ -146,14 +146,14 @@ sub installable {
     if ($postrm and $postrm->is_file and $postrm->is_open_ok) {
         open(my $fd, '<', $postrm->unpacked_path);
         while (<$fd>) {
-            next if /$EXCLUDE_R/o;
-            s/\#.*$//o;
-            next unless m/update-rc\.d\s+($OPTS_R)*($INITD_NAME_REGEX)/o;
+            next if /$EXCLUDE_R/;
+            s/\#.*$//;
+            next unless m/update-rc\.d\s+($OPTS_R)*($INITD_NAME_REGEX)/;
             if ($initd_postrm{$2}++ == 1) {
                 $self->tag('duplicate-updaterc.d-calls-in-postrm', $2);
                 next;
             }
-            unless (m,>\s*/dev/null,o) {
+            unless (m,>\s*/dev/null,) {
                 $self->tag('output-of-updaterc.d-not-redirected-to-dev-null',
                     "$2 postrm");
             }
@@ -165,9 +165,9 @@ sub installable {
     if ($prerm and $prerm->is_file and $prerm->is_open_ok) {
         open(my $fd, '<', $prerm->unpacked_path);
         while (<$fd>) {
-            next if /$EXCLUDE_R/o;
-            s/\#.*$//o;
-            next unless m/update-rc\.d\s+($OPTS_R)*($INITD_NAME_REGEX)/o;
+            next if /$EXCLUDE_R/;
+            s/\#.*$//;
+            next unless m/update-rc\.d\s+($OPTS_R)*($INITD_NAME_REGEX)/;
             $self->tag('prerm-calls-updaterc.d', $2);
         }
         close($fd);
@@ -355,7 +355,7 @@ sub check_init {
         # text and the arguments to echo, etc.
         $needs_fs = 1 if ($l =~ m,^[^\#]*/var/,);
 
-        while ($l =~ s/^[^\#]*?(start|stop|restart|force-reload|status)//o) {
+        while ($l =~ s/^[^\#]*?(start|stop|restart|force-reload|status)//) {
             $tag{$1} = 1;
         }
 

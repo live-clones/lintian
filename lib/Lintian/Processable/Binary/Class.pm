@@ -132,7 +132,7 @@ sub is_pkg_class {
     $desc = lc($desc);
     if ($class eq 'any-meta') {
         return 1
-          if $desc =~ m/$METAPKG_REGEX/o;
+          if $desc =~ /$METAPKG_REGEX/;
 
         # Section "tasks" or "metapackages" qualifies as well
         my ($section) = $self->field('section', '');

@@ -38,7 +38,7 @@ with 'Lintian::Check';
 
 my $PRIVACY_BREAKER_WEBSITES= Lintian::Data->new(
     'files/privacy-breaker-websites',
-    qr/\s*\~\~/o,
+    qr/\s*\~\~/,
     sub {
         my ($regex, $tag, $suggest) = split(/\s*\~\~\s*/, $_[1], 3);
 
@@ -62,7 +62,7 @@ my $PRIVACY_BREAKER_WEBSITES= Lintian::Data->new(
 
 my $PRIVACY_BREAKER_FRAGMENTS= Lintian::Data->new(
     'files/privacy-breaker-fragments',
-    qr/\s*\~\~/o,
+    qr/\s*\~\~/,
     sub {
         my ($regex, $tag) = split(/\s*\~\~\s*/, $_[1], 2);
         return {
@@ -74,7 +74,7 @@ my $PRIVACY_BREAKER_FRAGMENTS= Lintian::Data->new(
 
 my $PRIVACY_BREAKER_TAG_ATTR= Lintian::Data->new(
     'files/privacy-breaker-tag-attr',
-    qr/\s*\~\~\s*/o,
+    qr/\s*\~\~\s*/,
     sub {
         my ($keywords,$regex) = split(/\s*\~\~\s*/, $_[1], 2);
         $regex =~ s/&URL/(?:(?:ht|f)tps?:)?\/\/[^"\r\n]*/g;

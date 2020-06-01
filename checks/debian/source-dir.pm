@@ -84,7 +84,7 @@ sub source {
 
     if ($git_pfile and $git_pfile->is_open_ok and $git_pfile->size != 0) {
         open(my $git_patches_fd, '<', $git_pfile->unpacked_path);
-        if (any { !/^\s*+#|^\s*+$/o} <$git_patches_fd>) {
+        if (any { !/^\s*+#|^\s*+$/} <$git_patches_fd>) {
             my $dpseries
               = $processable->patched->resolve_path('debian/patches/series');
             # gitpkg does not create series as a link, so this is most likely
@@ -94,12 +94,11 @@ sub source {
             } else {
                 open(my $series_fd, '<', $dpseries->unpacked_path);
                 my $comment_line = <$series_fd>;
-                my $count = grep { !/^\s*+\#|^\s*+$/o } <$series_fd>;
+                my $count = grep { !/^\s*+\#|^\s*+$/ } <$series_fd>;
                 $self->tag('git-patches-not-exported')
-                  unless (
-                    $count
+                  unless ($count
                     && ($comment_line
-                        =~ m/^\s*\#.*quilt-patches-deb-export-hook/o));
+                        =~ /^\s*\#.*quilt-patches-deb-export-hook/));
                 close($series_fd);
             }
         }

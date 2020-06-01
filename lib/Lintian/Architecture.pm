@@ -102,7 +102,7 @@ my %ALT_ARCH_NAMES;
 sub _parse_arch {
     my ($archstr, $raw) = @_;
     # NB: "$os-$cpu" ne $archstr in some cases
-    my ($os, $cpu) = split /\s++/o, $raw;
+    my ($os, $cpu) = split /\s++/, $raw;
     # map $os-any (e.g. "linux-any") and any-$arch (e.g. "any-amd64") to
     # the relevant architectures.
     $ARCH_WILDCARDS{"$os-any"}{$archstr} = 1;
@@ -134,7 +134,7 @@ sub _parse_arch {
     return 1;
 }
 
-my $ARCH_RAW = Lintian::Data->new('common/architectures', qr/\s*+\Q||\E\s*+/o,
+my $ARCH_RAW = Lintian::Data->new('common/architectures', qr/\s*+\Q||\E\s*+/,
     \&_parse_arch);
 
 =item is_arch_wildcard ($wc)

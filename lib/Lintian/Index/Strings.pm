@@ -64,7 +64,7 @@ sub add_strings {
 
         # skip non-binaries
         next
-          unless $file->file_info =~ m/\bELF\b/o;
+          unless $file->file_info =~ /\bELF\b/;
 
         # prior implementations sometimes made the list unique
         my $allstrings= safe_qx('strings', '--all', '--',$file->unpacked_path);

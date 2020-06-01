@@ -1,6 +1,0 @@
-Tag: maintainer-address-looks-weird
-Severity: warning
-Certainty: possible
-Check: fields/maintainer
-Info: The maintainer address does not have whitespace between the name
- and the email address.

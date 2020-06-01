@@ -80,9 +80,9 @@ sub always {
       unless $KNOWN_PRIOS->known($priority);
 
     $self->tag('excessive-priority-for-library-package', $priority)
-      if $pkg =~ m/^lib/o
-      && $pkg !~ m/-bin$/o
-      && $pkg !~ m/^libc[0-9.]+$/o
+      if $pkg =~ /^lib/
+      && $pkg !~ /-bin$/
+      && $pkg !~ /^libc[0-9.]+$/
       && (any { $_ eq $processable->field('section', '') } qw(libdevel libs))
       && (any { $_ eq $priority } qw(required important standard));
 

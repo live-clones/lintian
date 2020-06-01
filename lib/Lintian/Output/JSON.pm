@@ -138,7 +138,7 @@ sub taglist {
                defined $a->override <=> defined $b->override
           ||   $code_priority{$a->info->code}<=> $code_priority{$b->info->code}
           || $a->name cmp $b->name
-          || $a->hint cmp $b->hint
+          || $a->context cmp $b->context
     } @{$arrayref // []};
 
     for my $input (@sorted) {
@@ -148,8 +148,8 @@ sub taglist {
 
         $tag{name} = $input->info->name;
 
-        $tag{hint} = $input->hint
-          if length $input->hint;
+        $tag{context} = $input->context
+          if length $input->context;
 
         $tag{severity} = $input->info->effective_severity;
         $tag{experimental} = 'yes'

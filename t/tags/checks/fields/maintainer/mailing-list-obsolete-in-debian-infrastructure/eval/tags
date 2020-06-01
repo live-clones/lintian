@@ -1,2 +1,4 @@
 mailing-list-obsolete-in-debian-infrastructure (source): no-human-maintainers
+mailing-list-obsolete-in-debian-infrastructure (source): maintainer "mailing-list-obsolete-in-debian-infrastructure maintainers" <mailing-list-obsolete-in-debian-infrastructure@lists.alioth.debian.org>
 mailing-list-obsolete-in-debian-infrastructure (source): mailing-list-obsolete-in-debian-infrastructure mailing-list-obsolete-in-debian-infrastructure maintainers <mailing-list-obsolete-in-debian-infrastructure@lists.alioth.debian.org>
+mailing-list-obsolete-in-debian-infrastructure (binary): maintainer "mailing-list-obsolete-in-debian-infrastructure maintainers" <mailing-list-obsolete-in-debian-infrastructure@lists.alioth.debian.org>

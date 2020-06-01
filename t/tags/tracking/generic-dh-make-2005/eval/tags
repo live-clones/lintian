@@ -11,6 +11,7 @@ generic-dh-make-2005 (source): no-homepage-field
 generic-dh-make-2005 (source): no-dh-sequencer
 generic-dh-make-2005 (source): no-dep5-copyright
 generic-dh-make-2005 (source): missing-debian-source-format
+generic-dh-make-2005 (source): maintainer "Frank Lichtenheld" <djpig@debian.org>
 generic-dh-make-2005 (source): file-contains-trailing-whitespace debian/rules (line 70)
 generic-dh-make-2005 (source): file-contains-trailing-whitespace debian/rules (line 54)
 generic-dh-make-2005 (source): file-contains-trailing-whitespace debian/rules (line 49)
@@ -34,6 +35,7 @@ generic-dh-make-2005 (binary): package-is-maintained-by-individual
 generic-dh-make-2005 (binary): package-contains-no-arch-dependent-files
 generic-dh-make-2005 (binary): no-ctrl-scripts
 generic-dh-make-2005 (binary): new-package-should-close-itp-bug
+generic-dh-make-2005 (binary): maintainer "Frank Lichtenheld" <djpig@debian.org>
 generic-dh-make-2005 (binary): helper-templates-in-copyright
 generic-dh-make-2005 (binary): extended-description-is-probably-too-short
 generic-dh-make-2005 (binary): empty-binary-package

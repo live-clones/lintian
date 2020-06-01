@@ -49,8 +49,8 @@ sub source {
       unless defined $source;
 
     my $filename = $processable->path;
-    my ($base) = ($filename =~ m,(?:\a|/)([^/]+)$,o);
-    my ($stem) = ($base =~ m/^([^_]+)_/o);
+    my ($base) = ($filename =~ m,(?:\a|/)([^/]+)$,);
+    my ($stem) = ($base =~ /^([^_]+)_/);
 
     die "Source field does not match package name $source != $stem"
       if $source ne $stem;

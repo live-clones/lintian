@@ -108,7 +108,7 @@ sub issue_tags {
 
         for my $tag (@subset) {
 
-            my $details = $tag->hint;
+            my $details = $tag->context;
 
             my $line
               = $processable->name

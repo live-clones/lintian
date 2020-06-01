@@ -123,9 +123,9 @@ sub files {
         push @pieces, $ext;
         $self->tag('manpage-not-compressed', $file);
     } elsif ($file->is_file) { # so it's .gz... files first; links later
-        if ($file_info !~ m/gzip compressed data/o) {
+        if ($file_info !~ m/gzip compressed data/) {
             $self->tag('manpage-not-compressed-with-gzip', $file);
-        } elsif ($file_info !~ m/max compression/o) {
+        } elsif ($file_info !~ m/max compression/) {
             $self->tag('manpage-not-compressed-with-max-compression',$file);
         }
     }
@@ -148,7 +148,7 @@ sub files {
 
     # check symbolic links to other manual pages
     if ($file->is_symlink) {
-        if ($file->link =~ m,(^|/)undocumented,o) {
+        if ($file->link =~ m,(^|/)undocumented,) {
             # undocumented link in /usr/share/man -- possibilities
             #    undocumented... (if in the appropriate section)
             #    ../man?/undocumented...
@@ -156,16 +156,16 @@ sub files {
             #    ../../../share/man/man?/undocumented...
             #    ../../../../usr/share/man/man?/undocumented...
             if ((
-                        $file->link =~ m,^undocumented\.([237])\.gz,o
+                        $file->link =~ m,^undocumented\.([237])\.gz,
                     and $path =~ m,^usr/share/man/man$1,
                 )
-                or $file->link =~ m,^\.\./man[237]/undocumented\.[237]\.gz$,o
+                or $file->link =~ m,^\.\./man[237]/undocumented\.[237]\.gz$,
                 or $file->link
-                =~ m,^\.\./\.\./man/man[237]/undocumented\.[237]\.gz$,o
+                =~ m,^\.\./\.\./man/man[237]/undocumented\.[237]\.gz$,
                 or $file->link
-                =~ m,^\.\./\.\./\.\./share/man/man[237]/undocumented\.[237]\.gz$,o
+                =~ m,^\.\./\.\./\.\./share/man/man[237]/undocumented\.[237]\.gz$,
                 or $file->link
-                =~ m,^\.\./\.\./\.\./\.\./usr/share/man/man[237]/undocumented\.[237]\.gz$,o
+                =~ m,^\.\./\.\./\.\./\.\./usr/share/man/man[237]/undocumented\.[237]\.gz$,
             ) {
                 $self->tag('link-to-undocumented-manpage', $file);
             } else {
@@ -290,7 +290,7 @@ sub files {
         foreach my $line (@manfile) {
             $lc++;
             chomp $line;
-            next if $line =~ /^\.\\\"/o; # comments .\"
+            next if $line =~ /^\.\\\"/; # comments .\"
             if ($line =~ /^\.TH\s/) { # header
                 my (undef, undef, $th_section, undef)
                   = Text::ParseWords::parse_line('\s+', 0, $line);
@@ -299,8 +299,8 @@ sub files {
                         "$file:$lc $fn_section != $th_section");
                 }
             }
-            if (   ($line =~ m,(/usr/(dict|doc|etc|info|man|adm|preserve)/),o)
-                || ($line =~ m,(/var/(adm|catman|named|nis|preserve)/),o)){
+            if (   ($line =~ m,(/usr/(dict|doc|etc|info|man|adm|preserve)/),)
+                || ($line =~ m,(/var/(adm|catman|named|nis|preserve)/),)){
                 # FSSTND dirs in man pages
                 # regexes taken from checks/files
                 $self->tag('FSSTND-dir-in-manual-page', "$file:$lc $1");
@@ -503,8 +503,8 @@ sub process_man_output {
             # ignore common undefined macros from pod2man << Perl 5.10
             next if /warning: (?:macro )?\'(?:Tr|IX)\' not defined/;
             chomp;
-            s/^[^:]+: //o;
-            s/^<standard input>://o;
+            s/^[^:]+: //;
+            s/^<standard input>://;
             $self->tag('manpage-has-errors-from-man', $file, $_);
             last;
         }

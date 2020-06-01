@@ -88,9 +88,9 @@ sub source {
         next if /^\s*\#/;
         if (m,^(?:$command_prefix_pattern)dh\s+,) {
             $seen_dh_dynamic = 1 if m/\$[({]\w/;
-            while (m/\s--with(?:=|\s+)(['"]?)(\S+)\1/go) {
+            while (/\s--with(?:=|\s+)(['"]?)(\S+)\1/g) {
                 my $addon_list = $2;
-                for my $addon (split(m/,/o, $addon_list)) {
+                for my $addon (split(/,/, $addon_list)) {
                     $seen_nodejs = 1 if $addon eq 'nodejs';
                 }
             }

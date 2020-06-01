@@ -76,7 +76,7 @@ sub files {
 
     if ($file->is_file) { # file checks
          # menu file?
-        if ($file =~ m,^usr/(lib|share)/menu/\S,o) { # correct permissions?
+        if ($file =~ m,^usr/(lib|share)/menu/\S,) { # correct permissions?
             if ($file->operm & 0111) {
                 $self->tag('executable-menu-file',
                     sprintf('%s %04o', $file, $file->operm));
@@ -85,19 +85,19 @@ sub files {
             return
               if $file =~ m,^usr/(?:lib|share)/menu/README$,;
 
-            if ($file =~ m,^usr/lib/,o) {
+            if ($file =~ m,^usr/lib/,) {
                 $self->tag('menu-file-in-usr-lib', $file);
             }
 
             $self->_set_menu_file($file->name);
 
-            if (    $file =~ m,usr/(?:lib|share)/menu/menu$,o
+            if (    $file =~ m,usr/(?:lib|share)/menu/menu$,
                 and $self->package ne 'menu') {
                 $self->tag('bad-menu-file-name', $file);
             }
         }
         #menu-methods file?
-        elsif ($file =~ m,^etc/menu-methods/\S,o) {
+        elsif ($file =~ m,^etc/menu-methods/\S,) {
             #TODO: we should test if the menu-methods file
             # is made executable in the postinst as recommended by
             # the menu manual
@@ -109,7 +109,7 @@ sub files {
                 open(my $fd, '<', $file->unpacked_path);
                 while (<$fd>) {
                     chomp;
-                    if (m,^!include menu.h,o) {
+                    if (m,^!include menu.h,) {
                         $menumethod_includes_menu_h = 1;
                         last;
                     }
@@ -124,12 +124,12 @@ sub files {
         elsif (
             $file =~ m{ \A usr/share/doc/(?:[^/]+/)?
                                  (.+\.(?:html|pdf))(?:\.gz)?
-                          \Z}xsmo
+                          \Z}xsm
         ) {
             my $name = $1;
-            unless ($name =~ m/^changelog\.html$/o
-                or $name =~ m/^README[.-]/o
-                or $name =~ m|examples|o) {
+            unless ($name =~ m/^changelog\.html$/
+                or $name =~ m/^README[.-]/
+                or $name =~ m/examples/) {
                 $self->_set_documentation(1);
             }
         }
@@ -499,19 +499,19 @@ sub check_doc_base_field {
         # Intentionally skipping the first line.
         for my $idx (1 .. $#{$vals}) {
             $_ = $vals->[$idx];
-            if (/manage\s+online\s+manuals\s.*Debian/o) {
+            if (/manage\s+online\s+manuals\s.*Debian/) {
                 $self->tag('doc-base-abstract-field-is-template',
                     "$dbfile:$line")
                   unless $pkg eq 'doc-base';
-            } elsif (/^(\s+)\.(\s*)$/o and ($1 ne ' ' or $2)) {
+            } elsif (/^(\s+)\.(\s*)$/ and ($1 ne ' ' or $2)) {
                 $self->tag(
                     'doc-base-abstract-field-separator-extra-whitespace',
                     "$dbfile:" . ($line - $#{$vals} + $idx));
-            } elsif (!$leadsp && /^(\s+)(\S)/o) {
+            } elsif (!$leadsp && /^(\s+)(\S)/) {
                 # The regexp should always match.
                 ($leadsp, $charafter) = ($1, $2);
                 $leadsp_ok = $leadsp eq ' ';
-            } elsif (!$leadsp_ok && /^(\s+)(\S)/o) {
+            } elsif (!$leadsp_ok && /^(\s+)(\S)/) {
                 # The regexp should always match.
                 undef $charafter if $charafter && $charafter ne $2;
                 $leadsp_ok = 1
@@ -680,7 +680,7 @@ sub check_script {
 
     while (<$fd>) {
         # skip comments
-        s/\#.*$//o;
+        s/\#.*$//;
 
         ##
         # update-menus will satisfy the checks that the menu file
@@ -688,9 +688,9 @@ sub check_script {
         ##
 
         # does the script check whether update-menus exists?
-        if (   /-x\s+\S*update-menus/o
-            or /(?:which|type)\s+update-menus/o
-            or /command\s+.*?update-menus/o) {
+        if (   /-x\s+\S*update-menus/
+            or /(?:which|type)\s+update-menus/
+            or /command\s+.*?update-menus/) {
             # yes, it does.
             $pres->{'checks-for-updatemenus'} = 1;
         }
@@ -716,9 +716,9 @@ sub check_script {
         }
 
         # does the script check whether install-docs exists?
-        if (   s/-x\s+\S*install-docs//o
-            or /(?:which|type)\s+install-docs/o
-            or s/command\s+.*?install-docs//o) {
+        if (   s/-x\s+\S*install-docs//
+            or /(?:which|type)\s+install-docs/
+            or s/command\s+.*?install-docs//) {
             # yes, it does.
             $pres->{'checks-for-installdocs'} = 1;
         }

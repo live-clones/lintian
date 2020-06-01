@@ -93,7 +93,7 @@ sub always {
 
     # not an absolute URI or (most likely) an invalid protocol
     $self->tag('bad-homepage', $orig)
-      unless $uri->scheme && $uri->scheme =~ m/^(?:ftp|https?|gopher)$/o;
+      unless $uri->scheme && $uri->scheme =~ /^(?:ftp|https?|gopher)$/;
 
     foreach my $line ($BAD_HOMEPAGES->all) {
         my ($tag, $re) = split(/\s*~~\s*/, $line);

@@ -27,6 +27,7 @@ use utf8;
 use autodie;
 
 use List::MoreUtils qw(any);
+use Email::Address::XS;
 use Path::Tiny;
 
 use Lintian::Data;
@@ -62,7 +63,7 @@ sub changes {
 
     # check distribution field
     if (defined $processable->field('distribution')) {
-        my @distributions = split /\s+/o, $processable->field('distribution');
+        my @distributions = split /\s+/, $processable->field('distribution');
         for my $distribution (@distributions) {
             if ($distribution eq 'UNRELEASED') {
                 # ignore
@@ -77,7 +78,7 @@ sub changes {
                                    |proposed(?:-updates)?
                                    |updates
                                    |security
-                                   |volatile)$//xsmo;
+                                   |volatile)$//xsm;
 
                     if ($distribution =~ /backports/) {
                         my $bpo1 = 1;
@@ -188,8 +189,8 @@ sub changes {
         $self->tag('no-urgency-in-changes-file');
     } else {
         my $urgency = lc $processable->field('urgency');
-        $urgency =~ s/ .*//o;
-        unless ($urgency =~ /^(?:low|medium|high|critical|emergency)$/o) {
+        $urgency =~ s/ .*//;
+        unless ($urgency =~ /^(?:low|medium|high|critical|emergency)$/) {
             $self->tag(
                 'bad-urgency-in-changes-file',
                 $processable->field('urgency'));
@@ -198,10 +199,22 @@ sub changes {
 
     # Changed-By is optional in Policy, but if set, must be
     # syntactically correct.  It's also used by dak.
-    if ($processable->field('changed-by')) {
-        my @tags
-          = check_maintainer($processable->field('changed-by'), 'changed-by');
-        $self->tag(@{$_}) for @tags;
+    my $changed_by = $processable->field('changed-by');
+    if (length $changed_by) {
+
+        my $validated;
+        my @parsed = Email::Address::XS->parse($changed_by);
+        $validated = $parsed[0]->format
+          if @parsed == 1 && $parsed[0]->is_valid;
+
+        if (length $validated) {
+            my @tags = check_maintainer($validated, 'changed-by');
+            $self->tag(@{$_}) for @tags;
+
+        } else {
+            $self->tag('malformed-changed-by-field', $changed_by);
+        }
+
     }
 
     my $files = $processable->files;

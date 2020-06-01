@@ -39,7 +39,7 @@ sub files {
 
     my $architecture = $self->processable->field('architecture', '');
 
-    if ($file->name =~ m,^(?:usr/)?lib/([^/]+)/$,o) {
+    if ($file->name =~ m,^(?:usr/)?lib/([^/]+)/$,) {
         my $subdir = $1;
         if ($TRIPLETS->known($subdir)) {
 
@@ -51,7 +51,7 @@ sub files {
 
     $self->_set_arch_dep_files(1)
       if not $file->is_dir
-      and $file->name !~ m,^usr/share/,o
+      and $file->name !~ m,^usr/share/,
       and $file->file_info
       and $file->file_info !~ m/\bASCII text\b/;
 

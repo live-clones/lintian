@@ -2,6 +2,7 @@ debian-symlink (source): standards-version 4.5.0
 debian-symlink (source): source-format 3.0 (native)
 debian-symlink (source): rules-does-not-require-root
 debian-symlink (source): package-is-maintained-by-individual
+debian-symlink (source): maintainer "Debian Lintian Maintainers" <lintian-maint@debian.org>
 debian-symlink (source): debian-build-system dh
 debian-symlink (source): debhelper-compat-virtual-relation 13
 debian-symlink (source): debhelper-compat-level 13

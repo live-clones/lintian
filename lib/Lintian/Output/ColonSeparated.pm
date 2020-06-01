@@ -105,7 +105,7 @@ sub issue_tags {
           || $type_priority{$a->processable->type}
           <=> $type_priority{$b->processable->type}
           || $a->processable->name cmp $b->processable->name
-          || $a->hint cmp $b->hint
+          || $a->context cmp $b->context
     } @pending;
 
     $self->print_tag($_) for @sorted;
@@ -121,17 +121,17 @@ sub print_tag {
     my ($self, $tag) = @_;
 
     my $tag_info = $tag->info;
-    my $information = $tag->hint;
+    my $information = $tag->context;
     my $override = $tag->override;
     my $processable = $tag->processable;
 
     my $odata = EMPTY;
     if ($override) {
         $odata = $override->{tag};
-        my $hint = $override->{hint};
-        $hint =~ s/[^[:print:]]/?/g;
-        $odata .= SPACE . $hint
-          if length $hint;
+        my $context = $override->{context};
+        $context =~ s/[^[:print:]]/?/g;
+        $odata .= SPACE . $context
+          if length $context;
     }
 
     $self->issuedtags->{$tag_info->name}++;
@@ -234,8 +234,8 @@ sub _quote_char {
     my ($char, @items) = @_;
 
     foreach (@items) {
-        s/\\/\\\\/go;
-        s/\Q$char\E/\\$char/go;
+        s/\\/\\\\/g;
+        s/\Q$char\E/\\$char/g;
     }
 
     return @items;

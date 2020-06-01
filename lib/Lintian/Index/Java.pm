@@ -91,7 +91,7 @@ sub add_java {
 
     for my $line (@lines) {
         chomp $line;
-        next if $line =~ m/^\s*$/o;
+        next if $line =~ /^\s*$/;
 
         if ($line =~ m#^-- ERROR:\s*(\S.++)$#o) {
             $java_info{$file}{error} = $1;
@@ -170,7 +170,7 @@ sub parse_jar {
 
             # add version if we can find it
             my $jversion;
-            if ($name =~ m/\.class$/o) {
+            if ($name =~ /\.class$/) {
                 # Collect the Major version of the class file.
                 my ($contents, $zerr) = $member->contents;
 
@@ -203,12 +203,12 @@ sub parse_jar {
                 foreach my $line (@list) {
 
                     # remove DOS type line feeds
-                    $line =~ s/\r//go;
+                    $line =~ s/\r//g;
 
-                    if ($line =~ m/^(\S+:)\s*(.*)/o) {
+                    if ($line =~ /^(\S+:)\s*(.*)/) {
                         push(@lines, SPACE . SPACE . "$1 $2");
                     }
-                    if ($line =~ m/^ (.*)/o) {
+                    if ($line =~ /^ (.*)/) {
                         push(@lines, $1);
                     }
                 }

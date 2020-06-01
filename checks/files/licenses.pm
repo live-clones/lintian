@@ -75,21 +75,21 @@ sub files {
         and not $file->name =~ m,/under\S+License\.docbook$,
         and not $file->name =~ m,^usr/share/doc/[^/]+/examples/,
         # liblicense has a manpage called license
-        and not $file->name =~ m,^usr/share/man/(?:[^/]+/)?man\d/,o
+        and not $file->name =~ m,^usr/share/man/(?:[^/]+/)?man\d/,
         # liblicense (again)
-        and not $file->name =~ m,^usr/share/pyshared-data/,o
+        and not $file->name =~ m,^usr/share/pyshared-data/,
         # Rust crate unmodified upstream sources
-        and not $file->name =~ m,^usr/share/cargo/registry/,o
+        and not $file->name =~ m,^usr/share/cargo/registry/,
         # Some GNOME/GTK software uses these to show the "license
         # header".
         and not $file->name =~ m,
                ^usr/share/(?:gnome/)?help/[^/]+/[^/]+/license\.page$
              ,x
         # base-files (which is required to ship them)
-        and not $file->name =~ m,^usr/share/common-licenses/[^/]+$,o
+        and not $file->name =~ m,^usr/share/common-licenses/[^/]+$,
         and not length $file->link
         # Sphinx includes various license files
-        and not $file->name =~ m,/_sources/license(\.rst)?\.txt$,oi
+        and not $file->name =~ m,/_sources/license(\.rst)?\.txt$,i
     ) {
 
         # okay, we cannot rule it out based on file name; but if

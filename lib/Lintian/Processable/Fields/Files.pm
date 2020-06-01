@@ -115,7 +115,7 @@ sub files {
 
         next if $_ eq '';
 
-        my @fields = split(/\s+/o, $_);
+        my @fields = split(/\s+/, $_);
         my $file = $fields[-1];
 
         next
@@ -149,7 +149,7 @@ sub files {
 
             next if $_ eq '';
 
-            my ($checksum, $size, $file) = split(/\s+/o, $_);
+            my ($checksum, $size, $file) = split(/\s+/, $_);
             next if $file =~ m,/,;
 
             $files{$file}{checksums}{$alg} = {

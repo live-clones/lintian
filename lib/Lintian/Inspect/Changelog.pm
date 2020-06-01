@@ -179,30 +179,30 @@ m/^(?<Source>\w[-+0-9a-z.]*) \((?<Version>[^\(\) \t]+)\)(?<Distribution>(?:\s+[-
             $expect= 'start of change data';
             $blanklines = 0;
 
-        } elsif (m/^(?:;;\s*)?Local variables:/io) {
+        } elsif (/^(?:;;\s*)?Local variables:/i) {
             last; # skip Emacs variables at end of file
 
-        } elsif (m/^vim:/io) {
+        } elsif (/^vim:/i) {
             last; # skip vim variables at end of file
 
-        } elsif (m/^\$\w+:.*\$/o) {
+        } elsif (/^\$\w+:.*\$/) {
             next; # skip stuff that look like a CVS keyword
 
-        } elsif (m/^\# /o) {
+        } elsif (/^\# /) {
             next; # skip comments, even that's not supported
 
-        } elsif (m,^/\*.*\*/,o) {
+        } elsif (m,^/\*.*\*/,) {
             next; # more comments
 
         } elsif (
-m/^(?:\w+\s+\w+\s+\d{1,2} \d{1,2}:\d{1,2}:\d{1,2}\s+[\w\s]*\d{4})\s+(?:.*)\s+(?:<|\()(?:.*)(?:\)|>)/o
-            || m/^(?:\w+\s+\w+\s+\d{1,2},?\s*\d{4})\s+(?:.*)\s+(?:<|\()(?:.*)(?:\)|>)/o
-            || m/^(?:\w[-+0-9a-z.]*) \((?:[^\(\) \t]+)\)\;?/io
-            || m/^(?:[\w.+-]+)(?:-| )\S+ Debian \S+/io
-            || m/^Changes from version (?:.*) to (?:.*):/io
-            || m/^Changes for [\w.+-]+-[\w.+-]+:?$/io
-            || m/^Old Changelog:$/io
-            || m/^(?:\d+:)?\w[\w.+~-]*:?$/o) {
+m/^(?:\w+\s+\w+\s+\d{1,2} \d{1,2}:\d{1,2}:\d{1,2}\s+[\w\s]*\d{4})\s+(?:.*)\s+(?:<|\()(?:.*)(?:\)|>)/
+            || m/^(?:\w+\s+\w+\s+\d{1,2},?\s*\d{4})\s+(?:.*)\s+(?:<|\()(?:.*)(?:\)|>)/
+            || m/^(?:\w[-+0-9a-z.]*) \((?:[^\(\) \t]+)\)\;?/i
+            || m/^(?:[\w.+-]+)(?:-| )\S+ Debian \S+/i
+            || m/^Changes from version (?:.*) to (?:.*):/i
+            || m/^Changes for [\w.+-]+-[\w.+-]+:?$/i
+            || m/^Old Changelog:$/i
+            || m/^(?:\d+:)?\w[\w.+~-]*:?$/) {
             # save entries on old changelog format verbatim
             # we assume the rest of the file will be in old format once we
             # hit it for the first time
@@ -212,7 +212,7 @@ m/^(?:\w+\s+\w+\s+\d{1,2} \d{1,2}:\d{1,2}:\d{1,2}\s+[\w\s]*\d{4})\s+(?:.*)\s+(?:
             push @{$self->errors},[$lineno,'badly formatted heading line', $_];
 
         } elsif (
-m/^ \-\- (?<name>.*) <(?<email>.*)>(?<sep>  ?)(?<date>(?:\w+\,\s*)?\d{1,2}\s+\w+\s+\d{4}\s+\d{1,2}:\d\d:\d\d\s+[-+]\d{4}(?:\s+\([^\\\(\)]\))?)$/o
+m/^ \-\- (?<name>.*) <(?<email>.*)>(?<sep>  ?)(?<date>(?:\w+\,\s*)?\d{1,2}\s+\w+\s+\d{4}\s+\d{1,2}:\d\d:\d\d\s+[-+]\d{4}(?:\s+\([^\\\(\)]\))?)$/
         ) {
 
             my $literal = $_;

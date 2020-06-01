@@ -33,7 +33,7 @@ use Lintian::Relation qw(:constants);
 use Lintian::Util qw($PKGNAME_REGEX $PKGVERSION_REGEX);
 
 use constant {
-    BUILT_USING_REGEX => qr/^$PKGNAME_REGEX \(= $PKGVERSION_REGEX\)$/o,
+    BUILT_USING_REGEX => qr/^$PKGNAME_REGEX \(= $PKGVERSION_REGEX\)$/,
 };
 
 use Moo;

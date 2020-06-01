@@ -27,6 +27,8 @@ C: lintian-output-fullewi source (1.0+dsfg-1.1) [source]: debhelper-compat-level
 C: lintian-output-fullewi source (1.0+dsfg-1.1) [source]: debhelper-compat-virtual-relation 13
 C: lintian-output-fullewi source (1.0+dsfg-1.1) [source]: debian-build-system dh
 C: lintian-output-fullewi source (1.0+dsfg-1.1) [source]: debian-watch-file-standard 3
+C: lintian-output-fullewi source (1.0+dsfg-1.1) [source]: maintainer "Debian Lintian Maintainers" <lintian-maint@debian.org>
+C: lintian-output-fullewi binary (1.0+dsfg-1.1) [all]: maintainer "Debian Lintian Maintainers" <lintian-maint@debian.org>
 C: lintian-output-fullewi binary (1.0+dsfg-1.1) [all]: no-ctrl-scripts
 C: lintian-output-fullewi source (1.0+dsfg-1.1) [source]: package-is-maintained-by-individual
 C: lintian-output-fullewi binary (1.0+dsfg-1.1) [all]: package-is-maintained-by-individual

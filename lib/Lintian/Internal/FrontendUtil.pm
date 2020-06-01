@@ -150,12 +150,12 @@ sub default_parallel {
     # Where the marked part(s) are optional values.  The numbers above
     # the example are the capture groups.
     my $TAG_REGEX
-      = qr/([EWIXOPC]): (\S+)(?: (\S+)(?:$verarchre)?)?: (\S+)(?:\s+(.*))?/o;
+      = qr/([EWIXOPC]): (\S+)(?: (\S+)(?:$verarchre)?)?: (\S+)(?:\s+(.*))?/;
 
     sub split_tag {
         my ($tag_input) = @_;
         my $pkg_type;
-        return unless $tag_input =~ m/^${TAG_REGEX}$/o;
+        return unless $tag_input =~ /^${TAG_REGEX}$/;
         # default value...
         $pkg_type = $3//'binary';
         return ($1, $2, $pkg_type, $4, $5, $6, $7);

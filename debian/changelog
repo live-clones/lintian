@@ -1,3 +1,34 @@
+lintian (2.78.0) unstable; urgency=medium
+
+  * Summary of tag changes:
+    + Added:
+      - maintainer
+      - uploader
+    + Renamed/split:
+      - changed-by-address-looks-weird & changed-by-address-missing ->
+        malformed-changed-by-field
+      - maintainer-address-looks-weird & maintainer-address-missing ->
+        malformed-maintainer-field
+      - uploader-address-looks-weird -> malformed-uploaders-field
+
+
+  [ Felix Lechner ]
+  * Use settings from configuration files when they were previously
+    undefined. (Closes: #961802)
+  * Accept some environmental variables as valid keys in the configuration
+    file. (Closes: #961800)
+  * Use Email::Address::XS to parse fields for Maintainer, Uploaders etc.
+  * Consider renamed tags when ignoring unknown tags obtained from
+    ftpmaster.
+
+  [ Raul Benencia ]
+  * Add section numbering to the user manual.
+
+  [ Paul Wise ]
+  * Add several spelling corrections.
+
+ -- Chris Lamb <lamby@debian.org>  Sat, 30 May 2020 09:15:59 +0000
+
 lintian (2.77.1~bpo10+1) buster-backports; urgency=medium
 
   * Rebuild for buster-backports.

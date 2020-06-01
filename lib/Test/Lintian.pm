@@ -197,8 +197,8 @@ sub test_check_desc {
         } elsif ($builder->isnt_eq($ctype, '', "$cname has a type")) {
             my @bad;
             # new lines are not allowed, map them to "\\n" for readability.
-            $ctype =~ s/\n/\\n/go;
-            foreach my $type (split m/\s*+,\s*+/o, $ctype) {
+            $ctype =~ s/\n/\\n/g;
+            foreach my $type (split /\s*+,\s*+/, $ctype) {
                 push @bad, $type unless exists $check_types{$type};
             }
             $builder->is_eq(join(', ', @bad),'',"The type of $cname is valid");
@@ -321,7 +321,7 @@ sub test_load_profiles {
         my $profname = $File::Find::name;
 
         return
-          unless $profname =~ s/\.profile$//o;
+          unless $profname =~ s/\.profile$//;
         $profname =~ s,^$sre,,;
 
         my $profile = Lintian::Profile->new;
@@ -434,8 +434,8 @@ sub test_load_checks {
             next;
         }
 
-        $ppkg =~ s,[-.],_,go;
-        $ppkg =~ s,/,::,go;
+        $ppkg =~ s,[-.],_,g;
+        $ppkg =~ s,/,::,g;
         $ppkg = "Lintian::$ppkg";
 
         if ($ppkg->can('run') && !$ppkg->DOES('Lintian::Check')) {

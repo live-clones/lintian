@@ -52,7 +52,7 @@ sub setup {
     return
       unless defined $unsplit;
 
-    my @architectures = split(m/ /o, $unsplit);
+    my @architectures = split(/ /, $unsplit);
 
     return
       unless @architectures;
@@ -95,7 +95,7 @@ sub installable {
     return
       unless defined $unsplit;
 
-    my @architectures = split(m/ /o, $unsplit);
+    my @architectures = split(/ /, $unsplit);
 
     return
       unless @architectures;

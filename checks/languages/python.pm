@@ -59,7 +59,7 @@ my %MISMATCHED_SUBSTVARS = (
 my $ALLOWED_PYTHON_FILES = Lintian::Data->new('files/allowed-python-files');
 my $GENERIC_PYTHON_MODULES= Lintian::Data->new('files/generic-python-modules');
 
-my $VERSIONS = Lintian::Data->new('python/versions', qr/\s*=\s*/o);
+my $VERSIONS = Lintian::Data->new('python/versions', qr/\s*=\s*/);
 my @VERSION_FIELDS = qw(x-python-version xs-python-version x-python3-version);
 
 sub source {
@@ -266,28 +266,28 @@ sub files {
     # .pyc/.pyo (compiled Python files)
     #  skip any file installed inside a __pycache__ directory
     #  - we have a separate check for that directory.
-    if ($file->name =~ m,\.py[co]$,o && $file->name !~ m,/__pycache__/,o) {
+    if ($file->name =~ m,\.py[co]$, && $file->name !~ m,/__pycache__/,) {
         $self->tag('package-installs-python-bytecode', $file->name);
     }
 
     # __pycache__ (directory for pyc/pyo files)
-    if ($file->is_dir && $file->name =~ m,/__pycache__/,o){
+    if ($file->is_dir && $file->name =~ m,/__pycache__/,){
         $self->tag('package-installs-python-pycache-dir', $file);
     }
 
     if (   $file->is_file
         && $file->name
-        =~ m,^usr/lib/debug/usr/lib/pyshared/(python\d?(?:\.\d+))/(.++)$,o) {
+        =~ m,^usr/lib/debug/usr/lib/pyshared/(python\d?(?:\.\d+))/(.++)$,) {
         my $correct = "usr/lib/debug/usr/lib/pymodules/$1/$2";
         $self->tag('python-debug-in-wrong-location', $file->name, $correct);
     }
 
     # .egg (Python egg files)
     $self->tag('package-installs-python-egg', $file->name)
-      if $file->name =~ m,\.egg$,o
-      && ( $file->name =~ m,^usr/lib/python\d+(?:\.\d+/),o
-        || $file->name =~ m,^usr/lib/pyshared,o
-        || $file->name =~ m,^usr/share/,o);
+      if $file->name =~ m,\.egg$,
+      && ( $file->name =~ m,^usr/lib/python\d+(?:\.\d+/),
+        || $file->name =~ m,^usr/lib/pyshared,
+        || $file->name =~ m,^usr/share/,);
 
     # /usr/lib/site-python
     $self->tag('file-in-usr-lib-site-python', $file->name)
@@ -324,7 +324,7 @@ sub files {
                    \Z}oxsm
     ){
         my ($debug, $pyver, $loc, $rest) = ($1, $2, $3, $4);
-        my ($pmaj, $pmin) = split(m/\./o, $pyver, 2);
+        my ($pmaj, $pmin) = split(m/\./, $pyver, 2);
         my @correction;
 
         $pmin = 0

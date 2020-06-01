@@ -135,7 +135,7 @@ sub objdump_info {
             }
         }
 
-        if ($pg->{'filename'} =~ m,^(.+)\(([^/\)]+)\)$,o) {
+        if ($pg->{'filename'} =~ m,^(.+)\(([^/\)]+)\)$,) {
             # object file in a static lib.
             my ($lib, $obj) = ($1, $2);
             my $libentry = $objdump_info{$lib};

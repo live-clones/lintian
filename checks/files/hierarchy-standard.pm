@@ -143,7 +143,7 @@ sub files {
         # /var/run
     } elsif ($self->type ne 'udeb' and $file->name =~ m,^var/run/.,) {
         $self->tag('dir-or-file-in-var-run', $file->name);
-    } elsif ($self->type ne 'udeb' and $file->name =~ m,^run/.,o) {
+    } elsif ($self->type ne 'udeb' and $file->name =~ m,^run/.,) {
         $self->tag('dir-or-file-in-run', $file->name);
     }
 
@@ -188,7 +188,7 @@ sub files {
     }
     # FHS directory?
     elsif (
-            $file->name =~ m,^[^/]+/$,o
+            $file->name =~ m,^[^/]+/$,
         and $file->name !~ m{\A (?:
                   bin|boot|dev|etc|home|lib
                  |mnt|opt|root|run|sbin|srv|sys

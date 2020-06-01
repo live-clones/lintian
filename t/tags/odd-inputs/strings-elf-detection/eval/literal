@@ -8,6 +8,9 @@ C: strings-elf-detection-dbgsym: data-tarball-compression-format xz
 C: strings-elf-detection source: debhelper-compat-level 13
 C: strings-elf-detection source: debhelper-compat-virtual-relation 13
 C: strings-elf-detection source: debian-build-system dh
+C: strings-elf-detection source: maintainer "Debian Lintian Maintainers" <lintian-maint@debian.org>
+C: strings-elf-detection: maintainer "Debian Lintian Maintainers" <lintian-maint@debian.org>
+C: strings-elf-detection-dbgsym: maintainer "Debian Lintian Maintainers" <lintian-maint@debian.org>
 C: strings-elf-detection: no-ctrl-scripts
 C: strings-elf-detection-dbgsym: no-ctrl-scripts
 C: strings-elf-detection source: package-is-maintained-by-individual

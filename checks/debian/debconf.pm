@@ -261,7 +261,7 @@ sub installable {
             my $nrchoices = count_choices($template->{choices});
             for my $key (keys %$template) {
                 if ($key =~ /^choices-/) {
-                    if (!$template->{$key} || ($template->{$key} =~ /^\s*$/o)){
+                    if (!$template->{$key} || ($template->{$key} =~ /^\s*$/)){
                         $self->tag(
                             'empty-translated-choices',
                             "$template->{template} $key"

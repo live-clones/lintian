@@ -1,2 +1,4 @@
-maintainer-scripts (source): wrong-debian-qa-group-name QA group <packages@qa.debian.org>
-maintainer-scripts (binary): wrong-debian-qa-group-name QA group <packages@qa.debian.org>
+maintainer-scripts (source): wrong-debian-qa-group-name "QA group" <packages@qa.debian.org>
+maintainer-scripts (source): maintainer "QA group" <packages@qa.debian.org>
+maintainer-scripts (binary): wrong-debian-qa-group-name "QA group" <packages@qa.debian.org>
+maintainer-scripts (binary): maintainer "QA group" <packages@qa.debian.org>

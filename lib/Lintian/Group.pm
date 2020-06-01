@@ -172,20 +172,20 @@ sub _get_processable {
 
     my $processable;
 
-    if ($file =~ m/\.dsc$/o) {
+    if ($file =~ /\.dsc$/) {
         $processable = Lintian::Processable::Source->new;
 
-    } elsif ($file =~ m/\.buildinfo$/o) {
+    } elsif ($file =~ /\.buildinfo$/) {
         $processable = Lintian::Processable::Buildinfo->new;
 
-    } elsif ($file =~ m/\.d?deb$/) {
+    } elsif ($file =~ /\.d?deb$/) {
         # in ubuntu, automatic dbgsym packages end with .ddeb
         $processable = Lintian::Processable::Binary->new;
 
-    } elsif ($file =~ m/\.udeb$/o) {
+    } elsif ($file =~ /\.udeb$/) {
         $processable = Lintian::Processable::Udeb->new;
 
-    } elsif ($file =~ m/\.changes$/o) {
+    } elsif ($file =~ /\.changes$/) {
         $processable = Lintian::Processable::Changes->new;
 
     } else {
@@ -229,7 +229,7 @@ sub init_from_file {
       or die "$path is not a valid $type file";
 
     my $dir = $path;
-    if ($path =~ m,^/+[^/]++$,o){
+    if ($path =~ m,^/+[^/]++$,){
         # it is "/files.changes?"
         #  - In case you were wondering, we were told not to ask :)
         #   See #624149
@@ -295,14 +295,14 @@ sub unpack {
         # for sources pull in all related files so unpacked does not fail
         if ($processable->type eq 'source') {
             my (undef, $dir, undef)= File::Spec->splitpath($processable->path);
-            for my $fs (split(m/\n/o, $processable->field('files'))) {
+            for my $fs (split(/\n/, $processable->field('files'))) {
 
                 # trim both ends
                 $fs =~ s/^\s+|\s+$//g;
 
                 next if $fs eq '';
-                my @t = split(/\s+/o,$fs);
-                next if ($t[2] =~ m,/,o);
+                my @t = split(/\s+/, $fs);
+                next if ($t[2] =~ m,/,);
                 symlink("$dir/$t[2]", $processable->groupdir . "/$t[2]")
                   or croak("cannot symlink file $t[2]: $!");
             }
@@ -390,10 +390,10 @@ sub process {
 
             for my $tagname (keys %{$declared_overrides}) {
 
-                my $hints = $declared_overrides->{$tagname};
+                my $contexts = $declared_overrides->{$tagname};
 
-                # set the use count to zero for each hint
-                $used_overrides{$tagname}{$_} = 0 for keys %{$hints};
+                # set the use count to zero for each context
+                $used_overrides{$tagname}{$_} = 0 for keys %{$contexts};
             }
         }
 
@@ -457,11 +457,11 @@ sub process {
             if ($tag_overrides) {
 
                 # do not use EMPTY; hash keys literal
-                # empty hint in specification matches all
+                # empty context in specification matches all
                 $override = $tag_overrides->{''};
 
-                # matches hint exactly
-                $override = $tag_overrides->{$tag->hint}
+                # matches context exactly
+                $override = $tag_overrides->{$tag->context}
                   unless $override;
 
                 # look for patterns
@@ -471,7 +471,7 @@ sub process {
                       keys %{$tag_overrides};
 
                     my $match= firstval {
-                        $tag->hint =~ m/^$tag_overrides->{$_}{pattern}\z/
+                        $tag->context =~ m/^$tag_overrides->{$_}{pattern}\z/
                     }
                     @candidates;
 
@@ -479,7 +479,7 @@ sub process {
                       if $match;
                 }
 
-                $used_overrides{$tag->name}{$override->{hint}}++
+                $used_overrides{$tag->name}{$override->{context}}++
                   if $override;
             }
 
@@ -499,13 +499,13 @@ sub process {
 
             my $tag_overrides = $used_overrides{$tagname};
 
-            for my $hint (keys %{$tag_overrides}) {
+            for my $context (keys %{$tag_overrides}) {
 
                 next
-                  if $tag_overrides->{$hint};
+                  if $tag_overrides->{$context};
 
                 # cannot be overridden or suppressed
-                $processable->tag('unused-override', $tagname, $hint);
+                $processable->tag('unused-override', $tagname, $context);
             }
         }
 
@@ -681,10 +681,10 @@ sub _pool_path {
 
     # Turn spaces into dashes - spaces do appear in architectures
     # (i.e. for changes files).
-    $path =~ s/\s/-/go;
+    $path =~ s/\s/-/g;
 
     # Also replace ":" with "_" as : is usually used for path separator
-    $path =~ s/:/_/go;
+    $path =~ s/:/_/g;
 
     return "$dir/pool/$path";
 }

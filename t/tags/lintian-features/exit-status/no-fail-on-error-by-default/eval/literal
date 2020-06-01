@@ -3,6 +3,7 @@ W: no-fail-on-error-by-default source: patch-system-but-no-source-readme
 C: no-fail-on-error-by-default source: debhelper-compat-level 13
 C: no-fail-on-error-by-default source: debhelper-compat-virtual-relation 13
 C: no-fail-on-error-by-default source: debian-build-system dh
+C: no-fail-on-error-by-default source: maintainer "Debian Lintian Maintainers" <lintian-maint@debian.org>
 C: no-fail-on-error-by-default source: package-is-maintained-by-individual
 C: no-fail-on-error-by-default source: patch-system quilt
 C: no-fail-on-error-by-default source: rules-does-not-require-root

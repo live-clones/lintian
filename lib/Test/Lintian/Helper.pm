@@ -100,7 +100,7 @@ sub get_latest_policy {
     Lintian::Data->set_vendor($profile);
 
     my $STANDARDS
-      = Lintian::Data->new('standards-version/release-dates', qr/\s+/o);
+      = Lintian::Data->new('standards-version/release-dates', qr/\s+/);
     my @STANDARDS = reverse sort { $a->[1] <=> $b->[1] }
       map { [$_, $STANDARDS->value($_)] } $STANDARDS->all;
 

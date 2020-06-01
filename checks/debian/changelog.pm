@@ -47,10 +47,9 @@ use namespace::clean;
 
 with 'Lintian::Check';
 
-my $BUGS_NUMBER
-  = Lintian::Data->new('changelog-file/bugs-number', qr/\s*=\s*/o);
+my $BUGS_NUMBER= Lintian::Data->new('changelog-file/bugs-number', qr/\s*=\s*/);
 my $INVALID_DATES
-  = Lintian::Data->new('changelog-file/invalid-dates', qr/\s*=\>\s*/o);
+  = Lintian::Data->new('changelog-file/invalid-dates', qr/\s*=\>\s*/);
 
 sub spelling_tag_emitter {
     my ($self, @orig_args) = @_;
@@ -739,10 +738,10 @@ sub check_dch {
         }
 
         if (
-               m/closes:\s*(((?:bug)?\#?\s?\d*)[[:alpha:]]\w*)/io
+               m/closes:\s*(((?:bug)?\#?\s?\d*)[[:alpha:]]\w*)/i
             || m/closes:\s*(?:bug)?\#?\s?\d+
               (?:,\s*(?:bug)?\#?\s?\d+)*
-              (?:,\s*(((?:bug)?\#?\s?\d*)[[:alpha:]]\w*))/iox
+              (?:,\s*(((?:bug)?\#?\s?\d*)[[:alpha:]]\w*))/ix
         ) {
             $self->tag('wrong-bug-number-in-closes', "l$.:$1") if $2;
         }

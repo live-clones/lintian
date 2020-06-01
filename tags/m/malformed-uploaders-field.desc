@@ -1,0 +1,6 @@
+Tag: malformed-uploaders-field
+Severity: error
+Check: fields/uploaders
+Info: The uploader field could not be parsed according to the rules in
+ the Policy Manual.
+Ref: policy 5.6.3

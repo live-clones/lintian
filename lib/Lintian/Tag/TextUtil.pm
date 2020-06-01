@@ -103,16 +103,16 @@ sub split_paragraphs {
 
     my ($l,@o);
     while ($t) {
-        $t =~ s/^\.\n/\n/o;
+        $t =~ s/^\.\n/\n/;
         # starts with space or empty line?
-        if (($t =~ s/^([ \t][^\n]*)\n?//o) or ($t =~ s/^()\n//o)) {
+        if (($t =~ s/^([ \t][^\n]*)\n?//) or ($t =~ s/^()\n//)) {
             #FLUSH;
             if ($l) {
 
                 # trim both ends
                 $l =~ s/^\s+|\s+$//g;
 
-                $l =~ s/\s++/ /go;
+                $l =~ s/\s++/ /g;
                 push(@o,$l);
                 undef $l;
             }
@@ -120,7 +120,7 @@ sub split_paragraphs {
             push(@o,$1);
         }
         # normal line?
-        elsif ($t =~ s/^([^\n]*)\n?//o) {
+        elsif ($t =~ s/^([^\n]*)\n?//) {
             $l .= "$1 ";
         }
         # what else can happen?
@@ -134,7 +134,7 @@ sub split_paragraphs {
         # trim both ends
         $l =~ s/^\s+|\s+$//g;
 
-        $l =~ s/\s++/ /go;
+        $l =~ s/\s++/ /g;
         push(@o,$l);
         undef $l;
     }
@@ -153,18 +153,18 @@ sub dtml_to_html {
     my $pre=0;
     for $_ (@_) {
         s{\&maint\;}
-          {<a href=\"mailto:lintian-maint\@debian.org\">Lintian maintainer</a>}xsmo;
+          {<a href=\"mailto:lintian-maint\@debian.org\">Lintian maintainer</a>}xsm;
         s{\&debdev\;}
-          {<a href=\"mailto:debian-devel\@lists.debian.org\">debian-devel</a>}xsmo;
+          {<a href=\"mailto:debian-devel\@lists.debian.org\">debian-devel</a>}xsm;
 
         # empty line?
-        if (/^\s*$/o) {
+        if (/^\s*$/) {
             if ($pre) {
                 push(@o,"\n");
             }
         }
         # preformatted line?
-        elsif (/^\s/o) {
+        elsif (/^\s/) {
             if (not $pre) {
                 push(@o,'<pre>');
                 $pre=1;
@@ -175,7 +175,7 @@ sub dtml_to_html {
         else {
             if ($pre) {
                 my $last = pop @o;
-                $last =~ s,\n?$,</pre>\n,o;
+                $last =~ s,\n?$,</pre>\n,;
                 push @o, $last;
                 $pre=0;
             }
@@ -184,7 +184,7 @@ sub dtml_to_html {
     }
     if ($pre) {
         my $last = pop @o;
-        $last =~ s,\n?$,</pre>\n,o;
+        $last =~ s,\n?$,</pre>\n,;
         push @o, $last;
         $pre=0;
     }
@@ -199,26 +199,26 @@ sub dtml_to_html {
 sub dtml_to_text {
     for $_ (@_) {
         # substitute Lintian &tags;
-        s,&maint;,lintian-maint\@debian.org,go;
-        s,&debdev;,debian-devel\@lists.debian.org,go;
+        s,&maint;,lintian-maint\@debian.org,g;
+        s,&debdev;,debian-devel\@lists.debian.org,g;
 
         # substitute HTML <tags>
-        s,<i>,&lt;,go;
-        s,</i>,&gt;,go;
-        s,<[^>]+>,,go;
+        s,<i>,&lt;,g;
+        s,</i>,&gt;,g;
+        s,<[^>]+>,,g;
 
         # substitute HTML &tags;
-        s,&lt;,<,go;
-        s,&gt;,>,go;
-        s,&amp;,\&,go;
+        s,&lt;,<,g;
+        s,&gt;,>,g;
+        s,&amp;,\&,g;
 
         # preformatted?
-        if (not /^\s/o) {
+        if (not /^\s/) {
             # no.
 
-            s,\s\s+, ,go;
-            s,^ ,,o;
-            s, $,,o;
+            s,\s\s+, ,g;
+            s,^ ,,;
+            s, $,,;
         }
     }
 

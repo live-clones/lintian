@@ -12,22 +12,22 @@
           <tags>
             <tag severity="warning">
               <name>changelog-file-missing-explicit-entry</name>
-              <hint>0.0.1-1 -&gt; 1.0+dsfg-1 (missing) -&gt; 1.0+dsfg-1.1</hint>
+              <context>0.0.1-1 -&gt; 1.0+dsfg-1 (missing) -&gt; 1.0+dsfg-1.1</context>
             </tag>
             <tag severity="warning">
               <name>format-3.0-but-debian-changes-patch</name>
             </tag>
             <tag severity="warning">
               <name>maintainer-upload-has-incorrect-version-number</name>
-              <hint>1.0+dsfg-1.1</hint>
+              <context>1.0+dsfg-1.1</context>
             </tag>
             <tag severity="info">
               <name>binary-control-field-duplicates-source</name>
-              <hint>field "section" in package lintian-output-xml</hint>
+              <context>field "section" in package lintian-output-xml</context>
             </tag>
             <tag severity="info">
               <name>quilt-patch-using-template-description</name>
-              <hint>debian-changes-1.0+dsfg-1.1</hint>
+              <context>debian-changes-1.0+dsfg-1.1</context>
             </tag>
             <tag severity="info">
               <name>upstream-metadata-missing-bug-tracking</name>
@@ -37,7 +37,7 @@
             </tag>
             <tag severity="pedantic">
               <name>debian-control-has-unusual-field-spacing</name>
-              <hint>line 12</hint>
+              <context>line 12</context>
             </tag>
             <tag severity="pedantic">
               <name>debian-watch-does-not-check-gpg-signature</name>
@@ -51,52 +51,56 @@
             </tag>
             <tag severity="classification">
               <name>debhelper-compat-level</name>
-              <hint>13</hint>
+              <context>13</context>
             </tag>
             <tag severity="classification">
               <name>debhelper-compat-virtual-relation</name>
-              <hint>13</hint>
+              <context>13</context>
             </tag>
             <tag severity="classification">
               <name>debian-build-system</name>
-              <hint>dh</hint>
+              <context>dh</context>
             </tag>
             <tag severity="classification">
               <name>debian-watch-file-standard</name>
-              <hint>3</hint>
+              <context>3</context>
+            </tag>
+            <tag severity="classification">
+              <name>maintainer</name>
+              <context>"Debian Lintian Maintainers" &lt;lintian-maint@debian.org&gt;</context>
             </tag>
             <tag severity="classification">
               <name>package-is-maintained-by-individual</name>
             </tag>
             <tag severity="classification">
               <name>patch-system</name>
-              <hint>quilt</hint>
+              <context>quilt</context>
             </tag>
             <tag severity="classification">
               <name>rules-does-not-require-root</name>
             </tag>
             <tag severity="classification">
               <name>source-format</name>
-              <hint>3.0 (quilt)</hint>
+              <context>3.0 (quilt)</context>
             </tag>
             <tag severity="classification">
               <name>standards-version</name>
-              <hint>4.5.0</hint>
+              <context>4.5.0</context>
             </tag>
             <tag severity="classification">
               <name>upstream-metadata-exists</name>
             </tag>
             <tag severity="classification">
               <name>upstream-metadata-field-present</name>
-              <hint>Contact</hint>
+              <context>Contact</context>
             </tag>
             <tag severity="classification">
               <name>upstream-metadata-field-present</name>
-              <hint>Name</hint>
+              <context>Name</context>
             </tag>
             <tag severity="warning">
               <name>dfsg-version-misspelled</name>
-              <hint>1.0+dsfg-1.1</hint>
+              <context>1.0+dsfg-1.1</context>
               <override>
                 <origin>maintainer</origin>
               </override>
@@ -125,15 +129,15 @@
             <tags>
               <tag severity="error">
                 <name>dir-in-usr-local</name>
-                <hint>usr/local/share/</hint>
+                <context>usr/local/share/</context>
               </tag>
               <tag severity="error">
                 <name>dir-in-usr-local</name>
-                <hint>usr/local/share/lintian/</hint>
+                <context>usr/local/share/lintian/</context>
               </tag>
               <tag severity="error">
                 <name>dir-or-file-in-var-lock</name>
-                <hint>var/lock/lintian/</hint>
+                <context>var/lock/lintian/</context>
               </tag>
               <tag severity="error">
                 <name>new-essential-package</name>
@@ -143,35 +147,39 @@
               </tag>
               <tag severity="warning">
                 <name>binary-without-manpage</name>
-                <hint>usr/bin/script</hint>
+                <context>usr/bin/script</context>
               </tag>
               <tag severity="info">
                 <name>description-possibly-contains-homepage</name>
-                <hint>http://www.example.com/.</hint>
+                <context>http://www.example.com/.</context>
               </tag>
               <tag severity="info">
                 <name>description-synopsis-might-not-be-phrased-properly</name>
-                <hint>"Test Lintian XML output format."</hint>
+                <context>"Test Lintian XML output format."</context>
               </tag>
               <tag severity="info">
                 <name>desktop-entry-limited-to-environments</name>
-                <hint>usr/share/applications/script.desktop</hint>
+                <context>usr/share/applications/script.desktop</context>
               </tag>
               <tag severity="info">
                 <name>package-contains-empty-directory</name>
-                <hint>usr/local/share/lintian/</hint>
+                <context>usr/local/share/lintian/</context>
               </tag>
               <tag severity="pedantic">
                 <name>example-unusual-interpreter</name>
-                <hint>usr/share/doc/lintian-output-xml/examples/example #!/usr/bin/foo</hint>
+                <context>usr/share/doc/lintian-output-xml/examples/example #!/usr/bin/foo</context>
               </tag>
               <tag severity="classification">
                 <name>control-tarball-compression-format</name>
-                <hint>xz</hint>
+                <context>xz</context>
               </tag>
               <tag severity="classification">
                 <name>data-tarball-compression-format</name>
-                <hint>xz</hint>
+                <context>xz</context>
+              </tag>
+              <tag severity="classification">
+                <name>maintainer</name>
+                <context>"Debian Lintian Maintainers" &lt;lintian-maint@debian.org&gt;</context>
               </tag>
               <tag severity="classification">
                 <name>no-ctrl-scripts</name>

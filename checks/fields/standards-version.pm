@@ -51,7 +51,7 @@ my $ANCIENT_DATE_DATA = Lintian::Data->new(
 my $ANCIENT_DATE = $ANCIENT_DATE_DATA->value('ANCIENT')
   or die 'Cannot get ANCIENT_DATE';
 
-my $STANDARDS= Lintian::Data->new('standards-version/release-dates', qr/\s+/o);
+my $STANDARDS= Lintian::Data->new('standards-version/release-dates', qr/\s+/);
 
 # In addition to the normal Lintian::Data structure, we also want a list of
 # all standards and their release dates so that we can check things like the

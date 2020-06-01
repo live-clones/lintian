@@ -65,7 +65,7 @@ sub source {
     # Check the first line for QA, NMU or team upload mentions.
     if ($firstline) {
         local $_ = $firstline;
-        if (/\bnmu\b/i or /non-maintainer upload/i or m/LowThresholdNMU/io) {
+        if (/\bnmu\b/i or /non-maintainer upload/i or m/LowThresholdNMU/i) {
             unless (
                 m/
                         (?:ackno|\back\b|confir|incorporat).*

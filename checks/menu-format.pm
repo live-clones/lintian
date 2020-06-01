@@ -221,7 +221,7 @@ sub installable {
 
         # Check first line of file to see if it matches the new menu
         # file format.
-        if ($menufile_line =~ m/^!C\s*menu-2/o) {
+        if ($menufile_line =~ m/^!C\s*menu-2/) {
             # we can't parse that yet
             close($fd);
             next;
@@ -234,7 +234,7 @@ sub installable {
             $lc++;
 
             # Ignore lines that are comments.
-            if ($menufile_line =~ m/^\s*\#/o) {
+            if ($menufile_line =~ m/^\s*\#/) {
                 next;
             }
             $line .= $menufile_line;
@@ -272,23 +272,23 @@ sub verify_line {
 
     # Replace all line continuation characters with whitespace.
     # (do not remove them completely, because update-menus doesn't)
-    $line =~ s/\\\n/ /mgo;
+    $line =~ s/\\\n/ /mg;
 
     # This is in here to fix a common mistake: whitespace after a '\'
     # character.
-    if ($line =~ s/\\\s+\n/ /mgo) {
+    if ($line =~ s/\\\s+\n/ /mg) {
         $self->tag('whitespace-after-continuation-character',
             "$fullname:$linecount");
     }
 
     # Ignore lines that are all whitespace or empty.
-    return if $line =~ m/^\s*$/o;
+    return if $line =~ m/^\s*$/;
 
     # Ignore lines that are comments.
-    return if $line =~ m/^\s*\#/o;
+    return if $line =~ m/^\s*\#/;
 
     # Start by testing the package check.
-    if (not $line =~ m/^\?package\((.*?)\):/o) {
+    if (not $line =~ m/^\?package\((.*?)\):/) {
         $self->tag('bad-test-in-menu-item', "$fullname:$linecount");
         return;
     }
@@ -332,7 +332,7 @@ sub verify_line {
              *                  # match as many times as we can
             )
            )
-           /ogcx
+           /gcx
     ) {
         my $tag = $1;
         my $value = $2;
@@ -364,7 +364,7 @@ sub verify_line {
     # We use this below when we look at how far along in the
     # string we matched. So the point of this line is to allow
     # trailing whitespace on the end of a line.
-    $line =~ m/\s*/ogc;
+    $line =~ m/\s*/gc;
 
     # If that loop didn't match up to end of line, we have a
     # problem..

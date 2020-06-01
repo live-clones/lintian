@@ -63,10 +63,10 @@ sub binary {
         if ($ext eq 'gz') { # ok!
             if ($file->is_file) {
                 # compressed with maximum compression rate?
-                if ($file_info !~ m/gzip compressed data/o) {
+                if ($file_info !~ m/gzip compressed data/) {
                     $self->tag('info-document-not-compressed-with-gzip',$file);
                 } else {
-                    if ($file_info !~ m/max compression/o) {
+                    if ($file_info !~ m/max compression/) {
                         $self->tag(
 'info-document-not-compressed-with-max-compression',
                             $file

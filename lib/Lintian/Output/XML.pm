@@ -159,7 +159,7 @@ sub taglist {
                defined $a->override <=> defined $b->override
           ||   $code_priority{$a->info->code}<=> $code_priority{$b->info->code}
           || $a->name cmp $b->name
-          || $a->hint cmp $b->hint
+          || $a->context cmp $b->context
     } @{$tags // []};
 
     for my $tag (@sorted) {
@@ -168,10 +168,10 @@ sub taglist {
 
         $writer->dataElement('name', $tag->info->name);
 
-        my $printable = $tag->hint;
+        my $printable = $tag->context;
         $printable =~ s/[^[:print:]]/?/g;
 
-        $writer->dataElement('hint', $printable)
+        $writer->dataElement('context', $printable)
           if length $printable;
 
         $writer->dataElement('experimental', 'yes')

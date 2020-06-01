@@ -86,7 +86,7 @@ sub installable {
     if ($pkg =~ /^x?fonts-/) {
         $self->tag('font-package-not-multi-arch-foreign')
           unless $processable->field('multi-arch', 'no')
-          =~m/^(?:foreign|allowed)$/o;
+          =~/^(?:foreign|allowed)$/;
     }
 
     my $multi = $processable->unfolded_field('multi-arch');
@@ -112,7 +112,7 @@ sub always {
       unless defined $multi;
 
     $self->tag('unknown-multi-arch-value', $self->package, $multi)
-      unless $multi =~ m/^(?:no|foreign|allowed|same)$/o;
+      unless $multi =~ /^(?:no|foreign|allowed|same)$/;
 
     return;
 }
