@@ -41,7 +41,7 @@ use constant NUMPY_REGEX => qr/
 
 # Guile object files do not objdump/strip correctly, so exclude them
 # from a number of tests. (#918444)
-use constant GUILE_PATH_REGEX => qr,^usr/lib/[^/]+/[^/]+/guile/[^/]+/.+\.go$,;
+use constant GUILE_PATH_REGEX => qr{^usr/lib(?:/[^/]+)+/guile/[^/]+/.+\.go$};
 
 # These are the ones file(1) looks for.  The ".zdebug_info" being the
 # compressed version of .debug_info.
