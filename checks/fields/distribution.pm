@@ -27,7 +27,13 @@ use warnings;
 use utf8;
 use autodie;
 
+use List::MoreUtils qw(any none);
+
 use Lintian::Data;
+
+use constant EMPTY => q{};
+use constant SPACE => q{ };
+use constant NEWLINE => qq{\n};
 
 use Moo;
 use namespace::clean;
@@ -39,122 +45,113 @@ my $KNOWN_DISTS = Lintian::Data->new('changes-file/known-dists');
 sub changes {
     my ($self) = @_;
 
-    my $original = $self->processable->fields->value('Distribution');
-    return
-      unless defined $original;
+    my @distributions
+      = $self->processable->fields->trimmed_list('Distribution');
 
-    my @list = split(/\s+/, $original);
+    $self->tag('multiple-distributions-in-changes-file',
+        join(SPACE, @distributions))
+      if @distributions > 1;
 
-    $self->tag('multiple-distributions-in-changes-file', $original)
-      if @list > 1;
+    my @targets = grep { $_ ne 'UNRELEASED' } @distributions;
 
-    for my $element (@list) {
+    # Strip common "extensions" for distributions
+    # (except sid and experimental, where they would
+    # make no sense)
+    my %major;
+    for my $target (@targets) {
 
-        next
-          if $element eq 'UNRELEASED';
-
-        my $dist = $element;
-        if ($dist !~ m/^(?:sid|unstable|experimental)/) {
-            # Strip common "extensions" for distributions
-            # (except sid and experimental, where they would
-            # make no sense)
-            $dist =~ s/- (?:backports(?:-sloppy)?
+        my $reduced = $target;
+        $reduced =~ s/- (?:backports(?:-sloppy)?
                                    |lts
                                    |proposed(?:-updates)?
                                    |updates
                                    |security
                                    |volatile)$//xsm;
 
-            if ($element =~ /backports/) {
-                my $bpo1 = 1;
-                if ($self->processable->fields->value('Version')
-                    =~ m/~bpo(\d+)\+(\d+)$/) {
-                    my $distnumber = $1;
-                    my $bpoversion = $2;
-                    if (
-                        ($dist eq 'squeeze' && $distnumber ne '60')
-                        ||(    $element eq 'wheezy-backports'
-                            && $distnumber ne '70')
-                        ||(    $element eq 'wheezy-backports-sloppy'
-                            && $distnumber ne '7')
-                        ||($dist eq 'jessie' && $distnumber ne '8')
-                    ) {
-                        $self->tag(
-                            'backports-upload-has-incorrect-version-number',
-                            $self->processable->fields->value('Version'),
-                            $element
-                        );
-                    }
-                    $bpo1 = 0 if ($bpoversion > 1);
-                } else {
-                    $self->tag(
-                        'backports-upload-has-incorrect-version-number',
-                        $self->processable->fields->value('Version'));
-                }
-                # for a ~bpoXX+2 or greater version, there
-                # probably will be only a single changelog entry
-                if ($bpo1) {
-                    my $changes_versions = 0;
-                    foreach my $change_line (
-                        split(
-                            "\n", $self->processable->fields->value('Changes'))
-                    ){
-                      # from Parse/DebianChangelog.pm
-                      # the changelog entries in the changes file are in a
-                      # different format than in the changelog, so the standard
-                      # parsers don't work. We just need to know if there is
-                      # info for more than 1 entry, so we just copy part of the
-                      # parse code here
-                        if ($change_line
-                            =~ m/^\s*(?:\w[-+0-9a-z.]*) \((?:[^\(\) \t]+)\)(?:(?:\s+[-+0-9a-z.]+)+)\;\s*(?:.*)$/i
-                        ) {
-                            $changes_versions++;
-                        }
-                    }
-                    # only complain if there is a single entry,
-                    # if we didn't find any changelog entry, there is
-                    # probably something wrong with the parsing, so we
-                    # don't emit a tag
-                    if ($changes_versions == 1) {
-                        $self->tag('backports-changes-missing');
-                    }
-                }
-            }
+        $major{$target} = $reduced;
+    }
+
+    my @unknown = grep { !$KNOWN_DISTS->known($major{$_}) } @targets;
+    $self->tag('bad-distribution-in-changes-file', $_) for @unknown;
+
+    my @new_version = qw(sid unstable experimental);
+    my $upload_lc = List::Compare->new(\@targets, \@new_version);
+
+    my @regular = $upload_lc->get_intersection;
+    my @special = $upload_lc->get_Lonly;
+
+    # from Parse/DebianChangelog.pm
+    # the changelog entries in the changes file are in a
+    # different format than in the changelog, so the standard
+    # parsers don't work. We just need to know if there is
+    # info for more than 1 entry, so we just copy part of the
+    # parse code here
+    my $changes = $self->processable->fields->value('Changes') // EMPTY;
+
+    # count occurrences
+    my @changes_versions
+      = ($changes =~/^\s*\S+\s+\(([^\(\)]+)\)(?:\s+\S+)+\s*;/mg);
+
+    my $version = $self->processable->fields->value('Version') // EMPTY;
+    my $distnumber;
+    my $bpoversion;
+    if ($version=~ /~bpo(\d+)\+(\d+)$/) {
+        $distnumber = $1;
+        $bpoversion = $2;
+
+        $self->tag('upload-has-backports-version-number', $version, $_)
+          for @regular;
+    }
+
+    my @backports = grep { /backports/ } @targets;
+    for my $target (@backports) {
+
+        $self->tag('backports-upload-has-incorrect-version-number',
+            $version, $target)
+          if (!defined $distnumber || !defined $bpoversion)
+          || ($major{$target} eq 'squeeze' && $distnumber ne '60')
+          || ($target eq 'wheezy-backports' && $distnumber ne '70')
+          || ($target eq 'wheezy-backports-sloppy' && $distnumber ne '7')
+          || ($major{$target} eq 'jessie' && $distnumber ne '8');
+
+        # for a ~bpoXX+2 or greater version, there
+        # probably will be only a single changelog entry
+        $self->tag('backports-changes-missing')
+          if ($bpoversion // 0) < 2 && @changes_versions == 1;
+    }
+
+    my $first_line = $changes;
+
+    # advance to first non-empty line
+    $first_line =~ s/^\s+//s;
+
+    my $multiple;
+    if ($first_line =~ /^\s*\S+\s+\([^\(\)]+\)([^;]+);/){
+        $multiple = $1;
+    }
+
+    my @changesdists = split(SPACE, $multiple // EMPTY);
+    return
+      unless @changesdists;
+
+    if (any { $_ eq 'UNRELEASED' } @changesdists) {
+
+        $self->tag('unreleased-changes');
+        return;
+    }
+
+    my $mismatch_lc = List::Compare->new(\@distributions, \@changesdists);
+    my @from_distribution = $mismatch_lc->get_Lonly;
+    my @from_changes = $mismatch_lc->get_Ronly;
+
+    if (@from_distribution || @from_changes) {
+
+        if (any { $_ eq 'experimental' } @from_changes) {
+            $self->tag('distribution-and-experimental-mismatch');
+
         } else {
-            $self->tag('upload-has-backports-version-number',
-                $self->processable->fields->value('Version'),$element)
-              if $self->processable->fields->value('Version')
-              =~ m/~bpo(\d+)\+(\d+)$/;
-        }
-        if (!$KNOWN_DISTS->known($dist)) {
-            # bad distribution entry
-            $self->tag('bad-distribution-in-changes-file',$element);
-        }
-
-        my $changes = $self->processable->fields->value('Changes');
-        if (defined $changes) {
-            # take the first non-empty line
-            $changes =~ s/^\s+//s;
-            $changes =~ s/\n.*//s;
-
-            if ($changes
-                =~ m/^\s*(?:\w[-+0-9a-z.]*)\s*\([^\(\) \t]+\)\s*([-+0-9A-Za-z.]+)\s*;/
-            ) {
-                my $changesdist = $1;
-                if ($changesdist eq 'UNRELEASED') {
-                    $self->tag('unreleased-changes');
-                } elsif ($changesdist ne $element
-                    && $changesdist ne $dist) {
-                    if (   $changesdist eq 'experimental'
-                        && $dist ne 'experimental') {
-                        $self->tag('distribution-and-experimental-mismatch',
-                            $element);
-                    } elsif ($KNOWN_DISTS->known($dist)) {
-                        $self->tag('distribution-and-changes-mismatch',
-                            $element, $changesdist);
-                    }
-                }
-            }
+            $self->tag('distribution-and-changes-mismatch',
+                join(SPACE, @from_distribution, @from_changes));
         }
     }
 
