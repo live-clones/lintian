@@ -97,6 +97,7 @@ Enable-Tags-From-Check:
  files/embedded-libraries,
  files/empty-directories,
  files/empty-package,
+ files/encoding,
  files/hard-links,
  files/hierarchy-standard,
  files/ieee-data,
