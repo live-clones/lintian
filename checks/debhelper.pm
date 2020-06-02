@@ -213,16 +213,19 @@ sub source {
             $dhcompatvalue = $1;
             # one can export and then set the value:
             $level = $1 if ($level);
-        } elsif (/^[^:]*override\s+(dh_[^:]*):/) {
+        } elsif (/^[^:]*(override|execute_(?:after|before))\s+(dh_[^:]*):/) {
             $self->tag('typo-in-debhelper-override-target',
-                "override $1", '->', "override_$1","(line $.)");
-        } elsif (/^([^:]*override_dh_[^:]*):/) {
+                "$1 $2", '->', "$1_$2","(line $.)");
+        } elsif (/^([^:]*(?:override|execute_(?:after|before))_dh_[^:]*):/) {
             my $targets = $1;
             $needbuilddepends = 1;
             # Can be multiple targets per rule.
-            while ($targets =~ /\boverride_dh_([^\s]+?)(-arch|-indep|)\b/g) {
-                my $cmd = $1;
-                my $arch = $2;
+            while ($targets
+                =~ /\b(override|execute_(?:before|after))_dh_([^\s]+?)(-arch|-indep|)\b/g
+            ) {
+                my $prefix = $1;
+                my $cmd = $2;
+                my $arch = $3;
                 my $dhcommand = "dh_$cmd";
                 $overrides{$dhcommand} = [$., $arch];
                 # If maintainer is using wildcards, it's unlikely to be a typo.
@@ -232,7 +235,7 @@ sub source {
                 foreach my $x (sort $dh_commands_depends->all) {
                     if ("dh_auto_$cmd" eq $x or distance($dhcommand, $x) < 3) {
                         $self->tag('typo-in-debhelper-override-target',
-                            "override_$dhcommand", '->', "override_$x",
+                            "${prefix}_$dhcommand", '->', "${prefix}_$x",
                             "(line $.)");
                         last; # Only emit a single match
                     }

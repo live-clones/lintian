@@ -24,6 +24,9 @@ override_dh_build:
 # Missing space
 override dh_install:
 
+execute_after_dh_nope:
+execute_before_dh_nope:
+
 # Good
 .PHONY: override_dh_ucfs
 override_dh_install:
@@ -36,3 +39,5 @@ override_dh_auto_configure-% override_dh_auto_install-%:
 foo override_dh_installdeb bar override_dh_installxmlcatalogs: # combining regular and overrides
 override_dh_install: $(PY3VERS:%=install-python%) $(PY2VERS:%=install-python%)
 # override_dh_instal: would be a typo, but in a comment it doesn't matter
+execute_after_dh_install:
+execute_before_dh_install:
