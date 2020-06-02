@@ -1,2 +1,4 @@
 Testname: qa-group-fp
 Check: fields/maintainer
+Test-Against:
+ wrong-debian-qa-group-name
