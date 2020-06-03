@@ -20,6 +20,7 @@ Enable-Tags-From-Check:
  debian/copyright,
  debian/debconf,
  debian/filenames,
+ debian/not-installed,
  debian/po-debconf,
  debian/readme,
  debian/rules,
