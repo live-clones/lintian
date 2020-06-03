@@ -139,8 +139,7 @@ sub check_web_application_package {
     # apache2 | httpd but don't worry about versions, virtual package
     # don't support that
     if ($rel->implies('apache2')) {
-        $self->tag(
-            'web-application-should-not-depend-unconditionally-on-apache2');
+        $self->tag('web-application-works-only-with-apache');
     }
 
     $self->inspect_conf_file($pkgtype, $file);

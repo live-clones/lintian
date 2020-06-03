@@ -120,11 +120,11 @@ sub source {
     $upload_is_nmu = 0 if not $uploader;
 
     if ($maintainer =~ /packages\@qa.debian.org/) {
-        $self->tag('orphaned-package-should-not-have-uploaders')
+        $self->tag('uploaders-in-orphan')
           if defined $uploaders;
         $self->tag('qa-upload-has-incorrect-version-number', $version)
           if $version_nmuness == 1;
-        $self->tag('changelog-should-mention-qa') if !$changelog_mentions_qa;
+        $self->tag('no-qa-in-changelog') if !$changelog_mentions_qa;
     } elsif ($changelog_mentions_team_upload) {
         $self->tag('team-upload-has-incorrect-version-number', $version)
           if $version_nmuness == 1;
@@ -132,14 +132,14 @@ sub source {
     } else {
         # Local packages may be either NMUs or not.
         unless ($changelog_mentions_local || $version_local) {
-            $self->tag('changelog-should-mention-nmu')
+            $self->tag('no-nmu-in-changelog')
               if !$changelog_mentions_nmu && $upload_is_nmu;
             $self->tag('source-nmu-has-incorrect-version-number', $version)
               if $upload_is_nmu
               && $version_nmuness != 1
               && !$upload_is_backport;
         }
-        $self->tag('changelog-should-not-mention-nmu')
+        $self->tag('nmu-in-changelog')
           if $changelog_mentions_nmu && !$upload_is_nmu;
         $self->tag('maintainer-upload-has-incorrect-version-number', $version)
           if !$upload_is_nmu && $version_nmuness;

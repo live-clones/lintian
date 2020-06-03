@@ -78,7 +78,7 @@ sub installable {
         }
 
     } elsif ($games > 0 and $section !~ m,games$,) {
-        $self->tag('games-package-should-be-section-games');
+        $self->tag('game-outside-section');
     }
 
     return;

@@ -8,6 +8,7 @@ maintainer-scripts (binary): read-in-maintainer-script prerm:180
 maintainer-scripts (binary): read-in-maintainer-script prerm:179
 maintainer-scripts (binary): read-in-maintainer-script prerm:177
 maintainer-scripts (binary): read-in-maintainer-script postinst:20
+maintainer-scripts (binary): postrm-removes-alternative postrm:4
 maintainer-scripts (binary): possibly-insecure-handling-of-tmp-files-in-maintainer-script postrm:40
 maintainer-scripts (binary): possibly-insecure-handling-of-tmp-files-in-maintainer-script postinst:51
 maintainer-scripts (binary): possible-bashism-in-maintainer-script prerm:98 '>& bar'
@@ -102,20 +103,8 @@ maintainer-scripts (binary): possible-bashism-in-maintainer-script postinst:109 
 maintainer-scripts (binary): maintainer-shell-script-fails-syntax-check prerm
 maintainer-scripts (binary): maintainer-shell-script-fails-syntax-check postinst
 maintainer-scripts (binary): maintainer-script-without-set-e postinst
-maintainer-scripts (binary): maintainer-script-should-not-use-update-alternatives-remove postrm:4
-maintainer-scripts (binary): maintainer-script-should-not-use-start-stop-daemon postinst:160
+maintainer-scripts (binary): maintainer-script-switches-dir-to-symlink-unsafely postinst:5
 maintainer-scripts (binary): maintainer-script-should-not-use-recursive-chown-or-chmod postinst:166
-maintainer-scripts (binary): maintainer-script-should-not-use-install-sgmlcatalog prerm:58
-maintainer-scripts (binary): maintainer-script-should-not-use-install-sgmlcatalog postrm:47
-maintainer-scripts (binary): maintainer-script-should-not-use-install-sgmlcatalog postinst:99
-maintainer-scripts (binary): maintainer-script-should-not-use-install-sgmlcatalog postinst:100
-maintainer-scripts (binary): maintainer-script-should-not-use-gconftool postinst:69
-maintainer-scripts (binary): maintainer-script-should-not-use-deprecated-chown-usage postinst:33 'chown root.root'
-maintainer-scripts (binary): maintainer-script-should-not-use-deprecated-chown-usage postinst:166 'chown -R root.root'
-maintainer-scripts (binary): maintainer-script-should-not-modify-netbase-managed-file postinst:86 '/etc/rpc'
-maintainer-scripts (binary): maintainer-script-should-not-modify-netbase-managed-file postinst:85 '/etc/protocols'
-maintainer-scripts (binary): maintainer-script-should-not-modify-netbase-managed-file postinst:84 '/etc/services'
-maintainer-scripts (binary): maintainer-script-should-not-hide-init-failure postinst:56
 maintainer-scripts (binary): maintainer-script-removes-device-files postrm:41 '/dev/device1'
 maintainer-scripts (binary): maintainer-script-removes-device-files postrm:40 '/dev/device'
 maintainer-scripts (binary): maintainer-script-needs-depends-on-xml-core postinst
@@ -123,7 +112,6 @@ maintainer-scripts (binary): maintainer-script-needs-depends-on-ucf postinst
 maintainer-scripts (binary): maintainer-script-needs-depends-on-gconf2 postinst
 maintainer-scripts (binary): maintainer-script-modifies-inetd-conf postinst:93
 maintainer-scripts (binary): maintainer-script-modifies-inetd-conf postinst:92
-maintainer-scripts (binary): maintainer-script-may-use-dir_to_symlink_helper postinst:5
 maintainer-scripts (binary): maintainer-script-interpreter control/prerm /bin/sh
 maintainer-scripts (binary): maintainer-script-interpreter control/preinst /bin/sh
 maintainer-scripts (binary): maintainer-script-interpreter control/postrm /bin/bash
@@ -131,8 +119,20 @@ maintainer-scripts (binary): maintainer-script-interpreter control/postinst /bin
 maintainer-scripts (binary): maintainer-script-interpreter control/config /usr/bin/python
 maintainer-scripts (binary): maintainer-script-ignores-errors preinst
 maintainer-scripts (binary): maintainer-script-ignores-errors postrm
+maintainer-scripts (binary): maintainer-script-hides-init-failure postinst:56
 maintainer-scripts (binary): maintainer-script-empty config
+maintainer-scripts (binary): maintainer-script-changes-netbase postinst:86 '/etc/rpc'
+maintainer-scripts (binary): maintainer-script-changes-netbase postinst:85 '/etc/protocols'
+maintainer-scripts (binary): maintainer-script-changes-netbase postinst:84 '/etc/services'
+maintainer-scripts (binary): maintainer-script-calls-start-stop-daemon postinst:160
+maintainer-scripts (binary): maintainer-script-calls-install-sgmlcatalog prerm:58
+maintainer-scripts (binary): maintainer-script-calls-install-sgmlcatalog postrm:47
+maintainer-scripts (binary): maintainer-script-calls-install-sgmlcatalog postinst:99
+maintainer-scripts (binary): maintainer-script-calls-install-sgmlcatalog postinst:100
 maintainer-scripts (binary): maintainer-script-calls-init-script-directly prerm:55
+maintainer-scripts (binary): maintainer-script-calls-gconftool postinst:69
+maintainer-scripts (binary): maintainer-script-calls-chown-improperly postinst:33 'chown root.root'
+maintainer-scripts (binary): maintainer-script-calls-chown-improperly postinst:166 'chown -R root.root'
 maintainer-scripts (binary): install-info-used-in-maintainer-script postinst:28
 maintainer-scripts (binary): forbidden-config-interpreter #!/usr/bin/python
 maintainer-scripts (binary): command-with-path-in-maintainer-script preinst:12 /bin/egrep

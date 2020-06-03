@@ -511,7 +511,8 @@ sub source {
         my $tag = $needed_clean{$package} || 'missing-build-dependency';
         unless ($build_regular->implies($package)) {
             if ($build_indep->implies($package)) {
-                $self->tag('clean-should-be-satisfied-by-build-depends',
+                $self->tag(
+                    'missing-build-depends-for-clean-target-in-debian-rules',
                     $package);
             } else {
                 if ($tag eq 'missing-build-dependency') {

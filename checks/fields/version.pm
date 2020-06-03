@@ -116,7 +116,7 @@ sub always {
     # Dpkg::Version sets the debian revision to 0 if there is
     # no revision.  So we need to check if the raw version
     # ends with "-0".
-    $self->tag('debian-revision-should-not-be-zero', $version)
+    $self->tag('debian-revision-is-zero', $version)
       if $version =~ /-0$/;
 
     my $ubuntu;

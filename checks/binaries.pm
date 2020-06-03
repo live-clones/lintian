@@ -466,8 +466,7 @@ sub installable {
         } else {
             # stripped but a debug or profiling library?
             if (($fname =~ m,/lib/debug/,) or ($fname =~ m,/lib/profile/,)){
-                $self->tag(
-                    'library-in-debug-or-profile-should-not-be-stripped',$file)
+                $self->tag('stripped-library',$file)
                   unless $file->size == 0;
             } else {
                 # appropriately stripped, but is it stripped enough?
@@ -500,7 +499,7 @@ sub installable {
                 next
                   if $directories{$rpath}
                   and $rpath !~ m,^(?:/usr)?/lib(?:/$madir)?/?\z,;
-                $self->tag('binary-or-shlib-defines-rpath', $file, $rpath);
+                $self->tag('custom-library-search-path', $file, $rpath);
             }
         }
 
@@ -552,7 +551,7 @@ sub installable {
             =~ m,^usr/lib/debug/(?:lib\d*|s?bin|usr|opt|dev|emul|\.build-id)/,)
         {
             if (exists($objdump->{NEEDED})) {
-                $self->tag('debug-file-should-use-detached-symbols', $file);
+                $self->tag('debug-symbols-not-detached', $file);
             }
             $self->tag('debug-file-with-no-debug-symbols', $file)
               unless (exists $objdump->{'SH'}{'.debug_line'}
@@ -589,7 +588,7 @@ sub installable {
                                    ld-[\d.]+\.so$
                                 }xsm
                   );
-                $self->tag('shared-lib-without-dependency-information', $file);
+                $self->tag('shared-library-lacks-prerequisites', $file);
             } else {
                 # Some exceptions: files in /boot, /usr/lib/debug/*,
                 # named *-static or *.static, or *-static as

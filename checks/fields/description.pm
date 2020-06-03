@@ -96,8 +96,7 @@ sub installable {
             $self->tag('description-synopsis-starts-with-article');
         }
         if ($synopsis =~ m/(.*\.)(?:\s*$|\s+\S+)/i) {
-            $self->tag('description-synopsis-might-not-be-phrased-properly',
-                "\"$synopsis\"")
+            $self->tag('synopsis-is-a-sentence',"\"$synopsis\"")
               unless $1 =~ m/\s+etc\.$/
               or $1 =~ m/\s+e\.?g\.$/
               or $1 =~ m/(?<!\.)\.\.\.$/;

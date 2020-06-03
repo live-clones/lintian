@@ -1,4 +1,4 @@
-nolibrary (binary): pkg-has-symbols-control-file-but-no-shared-libs
+nolibrary (binary): empty-shared-library-symbols
 libsym1 (binary): no-symbols-control-file usr/lib/libsym.so.1.0.1
 libfoo1 (binary): syntax-error-in-symbols-file 10
 libfoo1 (binary): symbols-file-missing-build-depends-package-field
@@ -7,4 +7,4 @@ libfoo1 (binary): symbols-file-contains-current-version-with-debian-revision on 
 libfoo1 (binary): invalid-template-id-in-symbols-file 9
 libfoo1 (binary): duplicate-entry-in-symbols-control-file libfoo 1
 libesym1 (binary): symbols-file-missing-build-depends-package-field
-libesym1 (binary): shlib-missing-in-symbols-control-file libesym 1 for usr/lib/libesym.so.1.0.1
+libesym1 (binary): shared-library-symbols-not-tracked libesym 1 for usr/lib/libesym.so.1.0.1

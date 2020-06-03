@@ -1,3 +1,4 @@
 Testname: shared-libs-dev-symlink-fp
-Test-Against: dev-pkg-without-shlib-symlink
+Test-Against:
+ lacks-unversioned-link-to-shared-library
 Check: shared-libs

@@ -1,5 +1,0 @@
-Tag: shlib-with-bad-permissions
-Severity: warning
-Check: shared-libs
-Info: Shared libraries should be mode 0644.
-Ref: policy 8.1

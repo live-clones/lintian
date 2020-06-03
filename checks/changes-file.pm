@@ -26,12 +26,12 @@ use warnings;
 use utf8;
 use autodie;
 
-use List::MoreUtils qw(any);
 use Email::Address::XS;
+use Email::Valid;
+use List::MoreUtils qw(all);
 use Path::Tiny;
 
 use Lintian::Data;
-use Lintian::Maintainer qw(check_maintainer);
 use Lintian::Util qw(get_file_checksum);
 
 use Moo;
@@ -197,25 +197,7 @@ sub changes {
         }
     }
 
-    # Changed-By is optional in Policy, but if set, must be
-    # syntactically correct.  It's also used by dak.
-    my $changed_by = $processable->field('changed-by');
-    if (length $changed_by) {
-
-        my $validated;
-        my @parsed = Email::Address::XS->parse($changed_by);
-        $validated = $parsed[0]->format
-          if @parsed == 1 && $parsed[0]->is_valid;
-
-        if (length $validated) {
-            my @tags = check_maintainer($validated, 'changed-by');
-            $self->tag(@{$_}) for @tags;
-
-        } else {
-            $self->tag('malformed-changed-by-field', $changed_by);
-        }
-
-    }
+    $self->check_changed_by_field;
 
     my $files = $processable->files;
     my $path
@@ -283,6 +265,61 @@ sub changes {
             "$seen $alg checksums != $expected files"
         ) if $seen != $expected;
     }
+
+    return;
+}
+
+sub check_changed_by_field {
+    my ($self) = @_;
+
+    # Changed-By is optional in Policy, but if set, must be
+    # syntactically correct.  It's also used by dak.
+    my $changed_by = $self->processable->field('changed-by');
+    return
+      unless defined $changed_by;
+
+    my $parsed;
+    my @list = Email::Address::XS->parse($changed_by);
+    $parsed = $list[0]
+      if @list == 1;
+
+    unless ($parsed->is_valid) {
+        $self->tag('malformed-changed-by-field', $changed_by);
+        return;
+    }
+
+    my $DERIVATIVE_CHANGED_BY
+      = Lintian::Data->new('common/derivative-changed-by',
+        qr/\s*~~\s*/, sub { $_[1]; });
+
+    for my $regex ($DERIVATIVE_CHANGED_BY->all) {
+
+        next
+          if $parsed->format =~ /$regex/;
+
+        my $explanation = $DERIVATIVE_CHANGED_BY->value($regex);
+        $self->tag('changed-by-invalid-for-derivative',
+            $parsed->format, "($explanation)");
+    }
+
+    unless (all { defined } ($parsed->address, $parsed->user, $parsed->host)) {
+        $self->tag('changed-by-address-malformed', $parsed->format);
+        return;
+    }
+
+    $self->tag('changed-by-address-malformed', $parsed->address)
+      unless Email::Valid->address($parsed->address);
+
+    $self->tag('changed-by-address-is-on-localhost',$parsed->address)
+      if $parsed->host=~ /(?:localhost|\.localdomain|\.localnet)$/;
+
+    unless (length $parsed->phrase) {
+        $self->tag('changed-by-name-missing', $parsed->format);
+        return;
+    }
+
+    $self->tag('changed-by-address-is-root-user', $parsed->format)
+      if $parsed->user eq 'root' || $parsed->phrase eq 'root';
 
     return;
 }

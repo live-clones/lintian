@@ -1,3 +1,22 @@
+lintian (2.79.0) unstable; urgency=medium
+
+  [ Felix Lechner ]
+  * Perform a mass-rename of tags for consistency according to the RFC.
+    (Closes: #922544)
+  * Use Email::Address::XS to parse all address components.
+    (Closes: #961924)
+  * Replace configuration option LINTIAN_PROFILE with 'profile'.
+    (Closes: #961855)
+  * Combine tags for missing native and non-native changelogs in
+    installation packages. (Closes: #935072)
+  * Clarify tag names related to shlibs control and shared libraries.
+    (Closes: #534938)
+
+  [ Paul Wise ]
+  * Add several spelling corrections.
+
+ -- Chris Lamb <lamby@debian.org>  Mon, 01 Jun 2020 09:16:03 +0000
+
 lintian (2.78.0~bpo10+1) buster-backports; urgency=medium
 
   * Rebuild for buster-backports.
@@ -16,7 +35,6 @@ lintian (2.78.0) unstable; urgency=medium
       - maintainer-address-looks-weird & maintainer-address-missing ->
         malformed-maintainer-field
       - uploader-address-looks-weird -> malformed-uploaders-field
-
 
   [ Felix Lechner ]
   * Use settings from configuration files when they were previously

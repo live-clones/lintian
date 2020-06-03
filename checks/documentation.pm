@@ -87,7 +87,7 @@ sub files {
         $file->name =~ m,^usr/share/doc/(?:.+/)?(?:doxygen|html)/
                          .*\.map\.$COMPRESS_FILE_EXTENSIONS_OR_ALL,x
     ) {
-        $self->tag('file-should-not-be-compressed', $file->name);
+        $self->tag('compressed-documentation', $file->name);
     }
 
     if(    $file->is_file
@@ -204,7 +204,7 @@ sub files {
     # sphinx-generated documentation?
     if (    $file->name=~ m,^usr/share/doc/$ppkg/(?:[^/]+/)+objects\.inv\.gz$,
         and $file->file_info =~ m/gzip compressed/) {
-        $self->tag('file-should-not-be-compressed', $file->name);
+        $self->tag('compressed-documentation', $file->name);
     }
 
     return;

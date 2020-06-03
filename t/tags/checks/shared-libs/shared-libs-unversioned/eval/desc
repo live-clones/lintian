@@ -1,4 +1,5 @@
 Testname: shared-libs-unversioned
-Test-Against: shlib-missing-in-control-file
+Test-Against:
+ ships-undeclared-shared-library
 References: Debian Bug#506673
 Check: shared-libs

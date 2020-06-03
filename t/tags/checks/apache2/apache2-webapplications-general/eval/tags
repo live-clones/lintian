@@ -9,7 +9,7 @@ phpmyfoo2 (binary): non-standard-apache2-configuration-name phpmyfoo2 != phpmyfo
 phpmyfoo2 (binary): non-standard-apache2-configuration-name local-phpmyfoo2.conf != phpmyfoo2.conf
 phpmyfoo2 (binary): non-standard-apache2-configuration-name false-positives.conf != phpmyfoo2.conf
 phpmyfoo2 (binary): apache2-configuration-files-need-conf-suffix etc/apache2/conf-available/phpmyfoo2
-phpmyfoo (binary): web-application-should-not-depend-unconditionally-on-apache2
+phpmyfoo (binary): web-application-works-only-with-apache
 phpmyfoo (binary): web-application-depends-on-apache2-data-package apache2-bin
 phpmyfoo (binary): apache2-unsupported-dependency etc/apache2/conf-available/phpmyfoo.conf Conflicts
 phpmyfoo (binary): apache2-unparsable-dependency etc/apache2/conf-available/phpmyfoo.conf (line 1) bar2.conf

@@ -26,5 +26,5 @@ menu-cmd (binary): menu-icon-cannot-be-parsed usr/share/pixmaps/broken.xpm: look
 menu-cmd (binary): menu-command-not-in-package usr/share/menu/menu-cmd:4 usr/bin/not-here
 menu-broken (binary): unparsable-menu-item usr/share/menu/menu-broken:12
 menu-broken (binary): pkg-not-in-package-test wrong-package usr/share/menu/menu-broken
-menu-broken (binary): duplicated-tag-in-menu-item usr/share/menu/menu-broken longtitle:12
+menu-broken (binary): duplicate-tag-in-menu usr/share/menu/menu-broken longtitle:12
 menu-broken (binary): bad-test-in-menu-item usr/share/menu/menu-broken:4

@@ -1,2 +1,2 @@
 libexecstack1 (binary): symbols-file-missing-build-depends-package-field
-libexecstack1 (binary): shlib-with-executable-stack usr/lib/libexecstack.so.1.0.1
+libexecstack1 (binary): executable-stack-in-shared-library usr/lib/libexecstack.so.1.0.1

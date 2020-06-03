@@ -1,8 +1,8 @@
 Testname: copyright-file-non-common-license
 Test-Against:
- copyright-should-refer-to-common-license-file-for-gpl
- copyright-should-refer-to-common-license-file-for-gfdl
- copyright-should-refer-to-common-license-file-for-lgpl
- copyright-should-refer-to-common-license-file-for-apache-2
+ copyright-not-using-common-license-for-gpl
+ copyright-not-using-common-license-for-gfdl
+ copyright-not-using-common-license-for-lgpl
+ copyright-not-using-common-license-for-apache2
  copyright-file-lacks-pointer-to-perl-license
 Check: debian/copyright

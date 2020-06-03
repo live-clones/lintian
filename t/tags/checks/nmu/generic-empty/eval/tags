@@ -1,2 +1,2 @@
 generic-empty (source): source-nmu-has-incorrect-version-number 1.0
-generic-empty (source): changelog-should-mention-nmu
+generic-empty (source): no-nmu-in-changelog

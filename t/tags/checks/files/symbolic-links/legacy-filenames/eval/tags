@@ -1,6 +1,3 @@
-filenames (binary): symlink-should-be-relative usr/lib/filenames/symlink3wrong /usr/lib/filenames/symlink2
-filenames (binary): symlink-should-be-absolute usr/lib/filenames/symlink1wrong ../../../etc/symlink
-filenames (binary): symlink-should-be-absolute usr/lib/filenames/symlink10wrong ../../..
 filenames (binary): symlink-is-self-recursive usr/lib/filenames/symlink7ok+warn /
 filenames (binary): symlink-is-self-recursive usr/lib/filenames/symlink6ok+warn .
 filenames (binary): symlink-is-self-recursive usr/lib/filenames/symlink5ok+warn ..
@@ -11,5 +8,8 @@ filenames (binary): symlink-ends-with-slash usr/lib/filenames/symlink9wrong ../m
 filenames (binary): symlink-contains-spurious-segments usr/lib/filenames/symlink7wrong ../menu/./something
 filenames (binary): symlink-contains-spurious-segments usr/lib/filenames/symlink6wrong ./file4
 filenames (binary): symlink-contains-spurious-segments usr/lib/filenames/symlink5wrong ../menu/../somethingelse
+filenames (binary): relative-symlink usr/lib/filenames/symlink1wrong ../../../etc/symlink
+filenames (binary): relative-symlink usr/lib/filenames/symlink10wrong ../../..
 filenames (binary): lengthy-symlink usr/share/doc/filenames/version.txt.gz ../filenames/doc/version6.txt.gz
 filenames (binary): lengthy-symlink usr/lib/filenames/symlink4wrong ../filenames/symlink2
+filenames (binary): absolute-symlink-in-top-level-folder usr/lib/filenames/symlink3wrong /usr/lib/filenames/symlink2

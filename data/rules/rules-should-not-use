@@ -5,12 +5,12 @@
 #
 debug-symbol-migration-possibly-complete                 ~~ dh_strip\b.*(?<info>--(?:ddeb|dbgsym)-migration=(?:'[^']*'|\S*))
 debian-rules-passes-version-info-to-dh_shlibdeps         ~~ dh_shlibdeps\b.*(?:--version-info|-V)\b
-debian-rules-should-not-automatically-update-control     ~~ ^\s*DEB_AUTO_UPDATE_DEBIAN_CONTROL\s*=\s*yes
-debian-rules-should-not-use-DEB_BUILD_OPTS               ~~ \$[\(\{]DEB_BUILD_OPTS[\)\}]
+debian-rules-updates-control-automatically               ~~ ^\s*DEB_AUTO_UPDATE_DEBIAN_CONTROL\s*=\s*yes
+debian-rules-uses-deb-build-opts                         ~~ \$[\(\{]DEB_BUILD_OPTS[\)\}]
 debian-rules-should-not-use-DH_EXTRA_ADDONS              ~~ ^\s*DH_EXTRA_ADDONS\s*=\s*(?<info>.*)\n
-debian-rules-should-not-use-or-modify-user-only-variable ~~ \bDEB_[^_ \t]+FLAGS_(?:SET|APPEND)\b
-debian-rules-should-not-use-pwd                          ~~ \$[\(\{]PWD[\)\}]
+debian-rules-uses-wrong-environment-variable             ~~ \bDEB_[^_ \t]+FLAGS_(?:SET|APPEND)\b
+debian-rules-calls-pwd                                   ~~ \$[\(\{]PWD[\)\}]
 debian-rules-should-not-use-sanitize-all-buildflag       ~~ ^\s*(?:export\s+)?DEB_BUILD_MAINT_OPTIONS\s*:?=.*\bsanitize=\+all\b
-debian-rules-should-not-use-underscore-variable          ~~ \$[\(\{]_[\)\}]
+debian-rules-uses-special-shell-variable                 ~~ \$[\(\{]_[\)\}]
 debian-rules-should-not-use-custom-compression-settings  ~~ (?<info>dh_builddeb\b.*--.*-[zZS].*)\n
 debian-rules-uses-installed-python-versions              ~~ (?<info>py3versions\s+([\w\-\s]*--installed|-\w*i\w*))

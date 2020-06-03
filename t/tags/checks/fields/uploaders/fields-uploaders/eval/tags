@@ -1,5 +1,5 @@
-fields-uploaders (source): uploader-address-malformed "Mrs. Localhost" <user@localhost>
-fields-uploaders (source): uploader-address-is-on-localhost "Mrs. Localhost" <user@localhost>
+fields-uploaders (source): uploader-address-malformed user@localhost
+fields-uploaders (source): uploader-address-is-on-localhost user@localhost
 fields-uploaders (source): uploader "Mrs. Localhost" <user@localhost>
 fields-uploaders (source): uploader "Mr. Weird" <no-space@somewhere.com>
 fields-uploaders (source): uploader "John A. J. Doe" <i.am.ok@somewhere.com>

@@ -1,2 +1,2 @@
 libfoo1 (binary): symbols-file-missing-build-depends-package-field
-libfoo1 (binary): non-dev-pkg-with-shlib-symlink usr/lib/libfoo.so.1.0.1 usr/lib/libfoo.so
+libfoo1 (binary): link-to-shared-library-in-wrong-package usr/lib/libfoo.so.1.0.1 usr/lib/libfoo.so

@@ -1,8 +1,0 @@
-Tag: maintainer-script-should-not-use-deprecated-chown-usage
-Severity: warning
-Check: scripts
-Info: <tt>chown user.group</tt> is called in one of the maintainer
- scripts. The correct syntax is <tt>chown user:group</tt>. Using "." as a
- separator is still supported by the GNU tools, but it will fail as soon
- as a system uses the "." in user or group names.
-Ref: chown(1)
