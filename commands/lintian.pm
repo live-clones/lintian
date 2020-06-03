@@ -1,4 +1,4 @@
-#!/usr/bin/perl -w
+#!/usr/bin/perl
 # {{{ Legal stuff
 # Lintian -- Debian package checker
 #
