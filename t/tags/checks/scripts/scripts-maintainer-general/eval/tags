@@ -1,4 +1,15 @@
 scripts-maintainer-general (binary): trailing-slash-for-dpkg-maintscript-helper-symlink_to_dir postinst:190
+scripts-maintainer-general (binary): recursive-privilege-change postinst:84
+scripts-maintainer-general (binary): recursive-privilege-change postinst:220
+scripts-maintainer-general (binary): recursive-privilege-change postinst:219
+scripts-maintainer-general (binary): recursive-privilege-change postinst:218
+scripts-maintainer-general (binary): recursive-privilege-change postinst:217
+scripts-maintainer-general (binary): recursive-privilege-change postinst:216
+scripts-maintainer-general (binary): recursive-privilege-change postinst:215
+scripts-maintainer-general (binary): recursive-privilege-change postinst:214
+scripts-maintainer-general (binary): recursive-privilege-change postinst:213
+scripts-maintainer-general (binary): recursive-privilege-change postinst:212
+scripts-maintainer-general (binary): recursive-privilege-change postinst:211
 scripts-maintainer-general (binary): read-in-maintainer-script postinst:10
 scripts-maintainer-general (binary): postrm-removes-alternative postrm:7
 scripts-maintainer-general (binary): possibly-insecure-handling-of-tmp-files-in-maintainer-script postinst:26
@@ -8,17 +19,6 @@ scripts-maintainer-general (binary): missing-call-to-dpkg-maintscript-helper pos
 scripts-maintainer-general (binary): maintainer-shell-script-fails-syntax-check prerm
 scripts-maintainer-general (binary): maintainer-script-updates-fontconfig-cache-improperly postinst:95
 scripts-maintainer-general (binary): maintainer-script-switches-dir-to-symlink-unsafely postinst:205
-scripts-maintainer-general (binary): maintainer-script-should-not-use-recursive-chown-or-chmod postinst:84
-scripts-maintainer-general (binary): maintainer-script-should-not-use-recursive-chown-or-chmod postinst:220
-scripts-maintainer-general (binary): maintainer-script-should-not-use-recursive-chown-or-chmod postinst:219
-scripts-maintainer-general (binary): maintainer-script-should-not-use-recursive-chown-or-chmod postinst:218
-scripts-maintainer-general (binary): maintainer-script-should-not-use-recursive-chown-or-chmod postinst:217
-scripts-maintainer-general (binary): maintainer-script-should-not-use-recursive-chown-or-chmod postinst:216
-scripts-maintainer-general (binary): maintainer-script-should-not-use-recursive-chown-or-chmod postinst:215
-scripts-maintainer-general (binary): maintainer-script-should-not-use-recursive-chown-or-chmod postinst:214
-scripts-maintainer-general (binary): maintainer-script-should-not-use-recursive-chown-or-chmod postinst:213
-scripts-maintainer-general (binary): maintainer-script-should-not-use-recursive-chown-or-chmod postinst:212
-scripts-maintainer-general (binary): maintainer-script-should-not-use-recursive-chown-or-chmod postinst:211
 scripts-maintainer-general (binary): maintainer-script-should-not-use-piuparts-variable postinst:248 'PIUPARTS_DISTRIBUTION_PREV'
 scripts-maintainer-general (binary): maintainer-script-should-not-use-piuparts-variable postinst:247 'PIUPARTS_DISTRIBUTION_NEXT'
 scripts-maintainer-general (binary): maintainer-script-should-not-use-piuparts-variable postinst:246 'PIUPARTS_DISTRIBUTION'

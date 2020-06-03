@@ -1,3 +1,4 @@
+maintainer-scripts (binary): recursive-privilege-change postinst:166
 maintainer-scripts (binary): read-in-maintainer-script prerm:66
 maintainer-scripts (binary): read-in-maintainer-script prerm:65
 maintainer-scripts (binary): read-in-maintainer-script prerm:64
@@ -104,7 +105,6 @@ maintainer-scripts (binary): maintainer-shell-script-fails-syntax-check prerm
 maintainer-scripts (binary): maintainer-shell-script-fails-syntax-check postinst
 maintainer-scripts (binary): maintainer-script-without-set-e postinst
 maintainer-scripts (binary): maintainer-script-switches-dir-to-symlink-unsafely postinst:5
-maintainer-scripts (binary): maintainer-script-should-not-use-recursive-chown-or-chmod postinst:166
 maintainer-scripts (binary): maintainer-script-removes-device-files postrm:41 '/dev/device1'
 maintainer-scripts (binary): maintainer-script-removes-device-files postrm:40 '/dev/device'
 maintainer-scripts (binary): maintainer-script-needs-depends-on-xml-core postinst
