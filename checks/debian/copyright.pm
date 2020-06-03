@@ -1204,7 +1204,7 @@ qr/GNU (?:Lesser|Library) General Public License|(?-i:\bLGPL\b)/i
     if ($found && !$linked) {
         $self->tag('copyright-without-copyright-notice')
           unless $contents
-          =~ /(?:Copyright|Copr\.|\302\251)(?:.*|[\(C\):\s]+)\b\d{4}\b
+          =~ /(?:Copyright|Copr\.|©)(?:.*|[\(C\):\s]+)\b\d{4}\b
                |\bpublic(?:\s+|-)domain\b/xi;
     }
 
