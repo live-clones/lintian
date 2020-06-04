@@ -388,16 +388,6 @@ sub record_option_too_late {
 "Warning: --include-dir and --[no-]user-dirs should be the first option(s) if given\n";
 }
 
-# Process overrides option in the cfg files
-sub cfg_fail_on {
-    my ($name, $value) = @_;
-
-    @{$option{'fail-on'}} = split(/,/, $value)
-      unless scalar @{$option{'fail-on'}};
-
-    return;
-}
-
 # Process display-info and display-level options in cfg files
 #  - dies if display-info and display-level are used together
 #  - adds the relevant display level unless the command-line
@@ -855,7 +845,6 @@ sub parse_config_file {
         'display-experimental' => \$option{'display-experimental'},
         'display-info'         => \&cfg_display_level,
         'display-level'        => \&cfg_display_level,
-        'fail-on'              => \&cfg_fail_on,
         'info'                 => \$option{'info'},
         'jobs'                 => \$option{'jobs'},
         'LINTIAN_PROFILE'      => \$option{LINTIAN_PROFILE},
