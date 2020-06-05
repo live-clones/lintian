@@ -479,7 +479,7 @@ if (-t STDOUT && !$unattended) {
             next
               unless -r $diffpath;
 
-            my $diff = path($diffpath)->slurp_utf8;
+            my $diff = path($diffpath)->slurp;
             print $diff;
 
         } elsif ($testcase->{match_strategy} eq 'literal') {
