@@ -30,7 +30,6 @@ use utf8;
 use autodie;
 
 use Email::Address::XS;
-use Email::Valid;
 use List::MoreUtils qw(all);
 use List::UtilsBy qw(count_by);
 
@@ -81,8 +80,9 @@ sub always {
             next;
         }
 
-        $self->tag('uploader-address-malformed', $parsed->address)
-          unless Email::Valid->address($parsed->address);
+        $self->tag('uploader-address-malformed', $parsed->address,
+            'not fully qualified')
+          unless $parsed->host =~ /\./;
 
         $self->tag('uploader-address-is-on-localhost', $parsed->address)
           if $parsed->host =~ /(?:localhost|\.localdomain|\.localnet)$/;

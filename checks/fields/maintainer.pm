@@ -32,7 +32,6 @@ use utf8;
 use autodie;
 
 use Email::Address::XS;
-use Email::Valid;
 use List::MoreUtils qw(all);
 
 use Lintian::Data;
@@ -122,8 +121,9 @@ sub always {
         return;
     }
 
-    $self->tag('maintainer-address-malformed', $parsed->address)
-      unless Email::Valid->address($parsed->address);
+    $self->tag('maintainer-address-malformed',
+        $parsed->address, 'not fully qualified')
+      unless $parsed->host =~ /\./;
 
     $self->tag('maintainer-address-is-on-localhost', $parsed->address)
       if $parsed->host =~ /(?:localhost|\.localdomain|\.localnet)$/;
