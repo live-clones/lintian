@@ -27,15 +27,19 @@ use utf8;
 use autodie;
 
 use File::Basename;
+use IO::Uncompress::Gunzip qw(gunzip $GunzipError);
 use List::Compare;
 use List::MoreUtils qw(any none);
 use Text::ParseWords ();
+use Unicode::UTF8 qw(valid_utf8 decode_utf8);
 
 use Lintian::Spelling qw(check_spelling);
 use Lintian::Util qw(clean_env do_fork drain_pipe open_gz);
 
 use constant LINTIAN_COVERAGE => ($ENV{'LINTIAN_COVERAGE'}?1:0);
+
 use constant EMPTY => q{};
+use constant COLON => q{:};
 
 use Moo;
 use namespace::clean;
@@ -313,6 +317,40 @@ sub files {
                 $stag_emitter, 0)
               if ($path =~ m,/man/man\d/,);
         }
+    }
+
+    # most man pages are zipped
+    my $bytes;
+    if ($file->file_info =~ /gzip compressed/) {
+
+        my $path = $file->unpacked_path;
+        gunzip($path => \$bytes)
+          or die "gunzip $path failed: $GunzipError";
+
+    } elsif ($file->file_info =~ /^troff/ || $file->file_info =~ /text$/) {
+        $bytes = $file->bytes;
+    }
+
+    return
+      unless length $bytes;
+
+    unless (valid_utf8($bytes)) {
+        $self->tag('national-encoding-in-manpage', $file->name);
+        return;
+    }
+
+    my $contents = decode_utf8($bytes);
+    my @lines = split(/\n/, $contents);
+
+    my $position = 1;
+    for my $line (@lines) {
+
+        # see Bug#554897 and Bug#507673; exclude string variables
+        $self->tag('acute-accent-in-manpage', $file->name . COLON . $position)
+          if $line =~ /\\'/ && $line !~ /^\.\s*ds\s/;
+
+    } continue {
+        $position++;
     }
 
     return;
