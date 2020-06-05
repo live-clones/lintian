@@ -287,6 +287,9 @@ Unpack this group.
 sub unpack {
     my ($self, $OUTPUT)= @_;
 
+    my $groupname = $self->name;
+    local $SIG{__WARN__} = sub { warn "Warning in group $groupname: $_[0]" };
+
     my @processables = $self->get_processables;
     for my $processable (@processables) {
 
@@ -334,6 +337,9 @@ sub process {
     my $success = 1;
 
     my $timer = [gettimeofday];
+
+    my $groupname = $self->name;
+    local $SIG{__WARN__} = sub { warn "Warning in group $groupname: $_[0]" };
 
     for my $processable ($self->get_processables){
 
