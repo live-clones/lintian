@@ -27,9 +27,9 @@ use utf8;
 use autodie;
 
 use Date::Format qw(time2str);
-use Email::Valid;
+use Email::Address::XS;
 use List::Util qw(first);
-use List::MoreUtils qw(any uniq);
+use List::MoreUtils qw(any all uniq);
 use Path::Tiny;
 use Try::Tiny;
 use Unicode::UTF8 qw(valid_utf8 decode_utf8);
@@ -533,13 +533,28 @@ sub binary {
     # checks applying to all entries
     for my $entry (@entries) {
         if (length $entry->Maintainer) {
-            my ($email) = ($entry->Maintainer =~ qr/<([^>]*)>/);
+            my ($email) = Email::Address::XS->parse($entry->Maintainer);
 
-           # cannot use Email::Valid->tld to check for dot until this is fixed:
-           # https://github.com/Perl-Email-Project/Email-Valid/issues/38
+            unless ($email->is_valid) {
+                $self->tag(
+                    'debian-changelog-file-contains-invalid-email-address',
+                    $entry->Maintainer);
+                next;
+            }
+
+            unless (
+                all { length }
+                ($email->address, $email->user, $email->host)
+            ) {
+                $self->tag(
+                    'debian-changelog-file-contains-invalid-email-address',
+                    $email->format);
+                next;
+            }
+
             $self->tag('debian-changelog-file-contains-invalid-email-address',
-                $email)
-              unless Email::Valid->rfc822($email) && $email =~ qr/\.[^.@]+$/;
+                $email->address, 'not fully qualified')
+              unless $email->host =~ /\./;
         }
     }
 
