@@ -70,6 +70,7 @@ Enable-Tags-From-Check:
  fields/source,
  fields/standards-version,
  fields/subarchitecture,
+ fields/terminal-control,
  fields/unknown,
  fields/uploaders,
  fields/urgency,
