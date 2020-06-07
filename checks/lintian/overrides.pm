@@ -35,7 +35,7 @@ has ppkg => (is => 'rwp');
 sub setup {
     my ($self) = @_;
 
-    $self->_set_ppkg(quotemeta($self->package));
+    $self->_set_ppkg(quotemeta($self->processable->name));
     return;
 }
 
@@ -53,7 +53,7 @@ sub files {
     } elsif ($file->name =~ m,^usr/share/lintian/overrides/(.+)/.+$,) {
 
         $self->tag('override-file-in-wrong-package', $file->name)
-          unless $1 eq $self->package;
+          unless $1 eq $self->processable->name;
     }
 
     return;

@@ -899,7 +899,7 @@ sub binary {
 
     # looking up entry without slash first; index should not be so picky
     my $doclink = $self->processable->installed->lookup(
-        'usr/share/doc/' . $self->package);
+        'usr/share/doc/' . $self->processable->name);
     if ($doclink && $doclink->is_symlink) {
 
         # check if this symlink references a directory elsewhere
@@ -940,7 +940,7 @@ sub binary {
     }
 
     my $docdir = $self->processable->installed->lookup(
-        'usr/share/doc/' . $self->package . '/');
+        'usr/share/doc/' . $self->processable->name . '/');
     unless ($docdir) {
         $self->tag('no-copyright-file');
         return;
@@ -969,7 +969,7 @@ sub binary {
 
         # #522827: special exception for perl for now
         $self->tag('no-copyright-file')
-          unless $self->package eq 'perl';
+          unless $self->processable->name eq 'perl';
 
         return;
     }

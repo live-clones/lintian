@@ -167,7 +167,7 @@ my %VCS_VALID_URIS = (
 sub always {
     my ($self) = @_;
 
-    my $type = $self->type;
+    my $type = $self->processable->type;
     my $processable = $self->processable;
 
     # team-maintained = maintainer or uploaders field contains a mailing list

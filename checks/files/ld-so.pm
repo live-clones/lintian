@@ -34,7 +34,7 @@ sub files {
     my ($self, $file) = @_;
 
     if (    $file->name =~ m,^etc/ld\.so\.conf\.d/.+$,
-        and $self->package !~ /^libc/){
+        and $self->processable->name !~ /^libc/){
         $self->tag('package-modifies-ld.so-search-path', $file->name);
     }
 

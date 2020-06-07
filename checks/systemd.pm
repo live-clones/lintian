@@ -73,7 +73,7 @@ sub files {
 sub installable {
     my ($self) = @_;
 
-    my $pkg = $self->package;
+    my $pkg = $self->processable->name;
     my $processable = $self->processable;
 
     # non-service checks
@@ -198,7 +198,7 @@ sub check_init_script {
 sub get_systemd_service_files {
     my ($self) = @_;
 
-    my $pkg = $self->package;
+    my $pkg = $self->processable->name;
     my $processable = $self->processable;
     my @res;
     my @potential
@@ -247,7 +247,7 @@ sub get_systemd_service_names {
 sub check_systemd_service_file {
     my ($self, $file) = @_;
 
-    my $pkg = $self->package;
+    my $pkg = $self->processable->name;
     my $processable = $self->processable;
 
     $self->tag('systemd-service-file-outside-lib', $file)

@@ -135,8 +135,8 @@ our $ARCH_32_REGEX;
 sub installable {
     my ($self) = @_;
 
-    my $pkg = $self->package;
-    my $type = $self->type;
+    my $pkg = $self->processable->name;
+    my $type = $self->processable->type;
     my $processable = $self->processable;
     my $group = $self->group;
 
@@ -437,7 +437,7 @@ sub installable {
         }
 
         my $exceptions = {
-            %{ $group->info->spelling_exceptions },
+            %{ $group->spelling_exceptions },
             map { $_ => 1} $BINARY_SPELLING_EXCEPTIONS->all
         };
         my $tag_emitter

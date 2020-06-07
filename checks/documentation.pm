@@ -53,7 +53,7 @@ has ppkg => (is => 'rwp');
 sub setup {
     my ($self) = @_;
 
-    $self->_set_ppkg(quotemeta($self->package));
+    $self->_set_ppkg(quotemeta($self->processable->name));
 
     return;
 }
@@ -63,7 +63,7 @@ sub files {
 
     my $ppkg = $self->ppkg;
 
-    if ($self->type eq 'udeb') {
+    if ($self->processable->type eq 'udeb') {
         if ($file->name =~ m,^usr/share/(?:doc|info)/\S,) {
 
             $self->tag('udeb-contains-documentation-file', $file->name);

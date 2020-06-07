@@ -37,8 +37,8 @@ with 'Lintian::Check';
 sub source {
     my ($self) = @_;
 
-    my $pkg = $self->package;
-    my $type = $self->type;
+    my $pkg = $self->processable->name;
+    my $type = $self->processable->type;
     my $processable = $self->processable;
 
     # Don't check package if it doesn't contain a .php file

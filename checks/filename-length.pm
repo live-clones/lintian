@@ -40,8 +40,8 @@ use constant LONGEST_ARCHITECTURE => length 'kfreebsd-amd64';
 sub always {
     my ($self) = @_;
 
-    my $pkg = $self->package;
-    my $type = $self->type;
+    my $pkg = $self->processable->name;
+    my $type = $self->processable->type;
     my $processable = $self->processable;
 
     # pkg_version(_arch)?.type

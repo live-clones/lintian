@@ -44,7 +44,7 @@ with 'Lintian::Check';
 sub source {
     my ($self) = @_;
 
-    my $pkg = $self->package;
+    my $pkg = $self->processable->name;
     my $processable = $self->processable;
 
     for my $bin ($processable->binaries) {
@@ -80,7 +80,7 @@ sub source {
 sub installable {
     my ($self) = @_;
 
-    my $pkg = $self->package;
+    my $pkg = $self->processable->name;
     my $processable = $self->processable;
 
     if ($pkg =~ /^x?fonts-/) {
@@ -111,7 +111,7 @@ sub always {
     return
       unless defined $multi;
 
-    $self->tag('unknown-multi-arch-value', $self->package, $multi)
+    $self->tag('unknown-multi-arch-value', $self->processable->name, $multi)
       unless $multi =~ /^(?:no|foreign|allowed|same)$/;
 
     return;

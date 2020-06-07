@@ -95,7 +95,8 @@ sub always {
     my ($self) = @_;
 
     return
-      if $self->type eq 'changes' || $self->type eq 'buildinfo';
+      if $self->processable->type eq 'changes'
+      || $self->processable->type eq 'buildinfo';
 
     my $original = $self->processable->unfolded_field('maintainer');
 

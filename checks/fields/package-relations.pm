@@ -104,8 +104,8 @@ our $VIRTUAL_PACKAGES   = Lintian::Data->new('fields/virtual-packages');
 sub installable {
     my ($self) = @_;
 
-    my $pkg = $self->package;
-    my $type = $self->type;
+    my $pkg = $self->processable->name;
+    my $type = $self->processable->type;
     my $processable = $self->processable;
     my $group = $self->group;
 
@@ -379,8 +379,8 @@ sub installable {
 sub source {
     my ($self) = @_;
 
-    my $pkg = $self->package;
-    my $type = $self->type;
+    my $pkg = $self->processable->name;
+    my $type = $self->processable->type;
     my $processable = $self->processable;
     my $group = $self->group;
 

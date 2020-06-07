@@ -89,7 +89,7 @@ my $ALWAYS_START
 sub installable {
     my ($self) = @_;
 
-    my $pkg = $self->package;
+    my $pkg = $self->processable->name;
     my $processable = $self->processable;
 
     my $initd_dir = $processable->installed->resolve_path('etc/init.d/');

@@ -58,7 +58,7 @@ my $SIGNING_KEY_FILENAMES = Lintian::Data->new('common/signing-key-filenames');
 sub source {
     my ($self) = @_;
 
-    my $pkg = $self->package;
+    my $pkg = $self->processable->name;
     my $processable = $self->processable;
     my $group = $self->group;
 

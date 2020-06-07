@@ -92,7 +92,7 @@ sub files {
             $self->_set_menu_file($file->name);
 
             if (    $file =~ m,usr/(?:lib|share)/menu/menu$,
-                and $self->package ne 'menu') {
+                and $self->processable->name ne 'menu') {
                 $self->tag('bad-menu-file-name', $file);
             }
         }
@@ -118,7 +118,7 @@ sub files {
             }
             $self->tag('menu-method-lacks-include', $file)
               unless $menumethod_includes_menu_h
-              or $self->package eq 'menu';
+              or $self->processable->name eq 'menu';
         }
         # package doc dir?
         elsif (
@@ -141,7 +141,7 @@ sub files {
 sub installable {
     my ($self) = @_;
 
-    my $pkg = $self->package;
+    my $pkg = $self->processable->name;
     my $processable = $self->processable;
     my $group = $self->group;
 
@@ -258,7 +258,7 @@ sub installable {
 sub check_doc_base_file {
     my ($self, $dbpath, $all_files, $all_links) = @_;
 
-    my $pkg = $self->package;
+    my $pkg = $self->processable->name;
     my $group = $self->group;
 
     my $dbfile = $dbpath->basename;
@@ -363,7 +363,7 @@ sub check_doc_base_field {
         $sawfields, $sawformats,$knownfields,$all_files, $all_links
     ) = @_;
 
-    my $pkg = $self->package;
+    my $pkg = $self->processable->name;
     my $group = $self->group;
 
     $self->tag('doc-base-file-unknown-field', "$dbfile:$line", $field)
@@ -652,7 +652,7 @@ sub delink {
 sub check_script {
     my ($self, $spath, $pres) = @_;
 
-    my $pkg = $self->package;
+    my $pkg = $self->processable->name;
 
     my ($no_check_menu, $no_check_installdocs, $interp);
 

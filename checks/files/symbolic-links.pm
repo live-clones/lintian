@@ -107,7 +107,7 @@ sub files {
         # determine top-level directory of link
         my $linktop = $1;
 
-        if ($self->type ne 'udeb' and $filetop eq $linktop) {
+        if ($self->processable->type ne 'udeb' and $filetop eq $linktop) {
             # absolute links within one toplevel directory are _not_ ok!
             $self->tag('absolute-symlink-in-top-level-folder',
                 $file->name, $file->link);
@@ -171,7 +171,8 @@ sub files {
 
         if ($#filecomponents == -1) {
             # we've reached the root directory
-            if (   ($self->type ne 'udeb') && (!defined $linkcomponent)
+            if (   ($self->processable->type ne 'udeb')
+                && (!defined $linkcomponent)
                 || ($filetop ne $linkcomponent)) {
                 # relative link into other toplevel directory.
                 # this hits a relative symbolic link in the root too.

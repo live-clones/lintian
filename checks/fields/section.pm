@@ -79,8 +79,8 @@ sub udeb {
 sub always {
     my ($self) = @_;
 
-    my $pkg = $self->package;
-    my $type = $self->type;
+    my $pkg = $self->processable->name;
+    my $type = $self->processable->type;
     my $processable = $self->processable;
 
     my $section = $processable->unfolded_field('section');

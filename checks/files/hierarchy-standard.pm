@@ -72,7 +72,8 @@ sub files {
         }
     }
     # /usr subdirs
-    elsif ($self->type ne 'udeb' and $file->name =~ m,^usr/[^/]+/$,){
+    elsif ( $self->processable->type ne 'udeb'
+        and $file->name =~ m,^usr/[^/]+/$,){
         # FSSTND dirs
         if ($file->name=~ m,^usr/(?:dict|doc|etc|info|man|adm|preserve)/,){
             $self->tag('FSSTND-dir-in-usr', $file->name);
@@ -94,7 +95,7 @@ sub files {
                 # these dirs, since their use appears to be by
                 # intention.
                 unless ($self->processable->source =~ m/^e?glibc$/
-                    or $self->package =~ m/^lib$libsuffix/) {
+                    or $self->processable->name =~ m/^lib$libsuffix/) {
 
                     $self->tag('non-multi-arch-lib-dir', $file->name);
                 }
@@ -112,13 +113,13 @@ sub files {
     }
 
     # /var subdirs
-    elsif ($self->type ne 'udeb' and $file->name =~ m,^var/[^/]+/$,)
-    { # FSSTND dirs
+    elsif ( $self->processable->type ne 'udeb'
+        and $file->name =~ m,^var/[^/]+/$,){ # FSSTND dirs
         if ($file->name =~ m,^var/(?:adm|catman|named|nis|preserve)/,) {
             $self->tag('FSSTND-dir-in-var', $file->name);
         }
         # base-files is special
-        elsif ($self->package eq 'base-files'
+        elsif ($self->processable->name eq 'base-files'
             && $file->name =~ m,^var/(?:backups|local)/,){
             # ignore
         }
@@ -133,17 +134,20 @@ sub files {
             $self->tag('non-standard-dir-in-var', $file->name);
         }
 
-    } elsif ($self->type ne 'udeb' and $file->name =~ m,^var/lib/games/.,) {
+    } elsif ($self->processable->type ne 'udeb'
+        and $file->name =~ m,^var/lib/games/.,) {
         $self->tag('non-standard-dir-in-var', $file->name);
 
         # /var/lock
-    } elsif ($self->type ne 'udeb' and $file->name =~ m,^var/lock/.,) {
+    } elsif ($self->processable->type ne 'udeb'
+        and $file->name =~ m,^var/lock/.,) {
         $self->tag('dir-or-file-in-var-lock', $file->name);
 
         # /var/run
-    } elsif ($self->type ne 'udeb' and $file->name =~ m,^var/run/.,) {
+    } elsif ($self->processable->type ne 'udeb'
+        and $file->name =~ m,^var/run/.,) {
         $self->tag('dir-or-file-in-var-run', $file->name);
-    } elsif ($self->type ne 'udeb' and $file->name =~ m,^run/.,) {
+    } elsif ($self->processable->type ne 'udeb' and $file->name =~ m,^run/.,) {
         $self->tag('dir-or-file-in-run', $file->name);
     }
 
@@ -204,15 +208,15 @@ sub files {
             my $libsuffix = $+{libsuffix};
             # see comments for ^usr/lib(?'libsuffix'64|x?32)
             unless ($self->processable->source =~ m/^e?glibc$/
-                or $self->package =~ m/^lib$libsuffix/) {
+                or $self->processable->name =~ m/^lib$libsuffix/) {
 
                 $self->tag('non-multi-arch-lib-dir', $file->name);
             }
         } else {
-            unless ($self->package eq 'base-files'
-                or $self->package eq 'hurd'
-                or $self->package eq 'hurd-udeb'
-                or $self->package =~ /^rootskel(?:-bootfloppy)?/) {
+            unless ($self->processable->name eq 'base-files'
+                or $self->processable->name eq 'hurd'
+                or $self->processable->name eq 'hurd-udeb'
+                or $self->processable->name =~ /^rootskel(?:-bootfloppy)?/) {
 
                 $self->tag('non-standard-toplevel-dir', $file->name);
             }
@@ -230,7 +234,7 @@ sub files {
     # any files
     if (not $file->is_dir) {
         unless (
-               $self->type eq 'udeb'
+               $self->processable->type eq 'udeb'
             or $file->name =~ m,^usr/(?:bin|dict|doc|games|
                                     include|info|lib(?:x?32|64)?|
                                     man|sbin|share|src|X11R6)/,x

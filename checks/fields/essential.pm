@@ -56,7 +56,7 @@ sub source {
 sub always {
     my ($self) = @_;
 
-    my $pkg = $self->package;
+    my $pkg = $self->processable->name;
     my $processable = $self->processable;
 
     my $essential = $processable->unfolded_field('essential');

@@ -68,7 +68,7 @@ sub files {
     $self->have_r_package_not_arch_all(1)
       if $file->name =~ m,^usr/lib/R/.*/DESCRIPTION,
       && !$file->is_dir
-      && $self->package =~ /^r-(?:cran|bioc|other)-/
+      && $self->processable->name =~ /^r-(?:cran|bioc|other)-/
       && $file->bytes =~ m/NeedsCompilation: no/m
       && $self->architecture ne 'all';
 
@@ -87,7 +87,7 @@ sub breakdown {
 sub installable {
     my ($self) = @_;
 
-    my $pkg = $self->package;
+    my $pkg = $self->processable->name;
     my $processable = $self->processable;
 
     my $unsplit = $processable->unfolded_field('architecture');
@@ -124,7 +124,7 @@ sub installable {
 sub always {
     my ($self) = @_;
 
-    my $type = $self->type;
+    my $type = $self->processable->type;
     my $processable = $self->processable;
 
     my $value = $processable->unfolded_field('architecture');

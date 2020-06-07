@@ -34,7 +34,7 @@ with 'Lintian::Check';
 sub installable {
     my ($self) = @_;
 
-    my $pkg = $self->package;
+    my $pkg = $self->processable->name;
     my $processable = $self->processable;
 
     return if # Big exception list for all tags

@@ -66,12 +66,12 @@ sub files {
 
     # no man pages in udebs
     return
-      if $self->type eq 'udeb';
+      if $self->processable->type eq 'udeb';
 
     if ($file->name =~ m,^usr/share/man/\S+,) {
 
         $self->tag('manpage-in-udeb', $file->name)
-          if $self->type eq 'udeb';
+          if $self->processable->type eq 'udeb';
 
         if ($file->is_dir) {
             $self->tag('stray-directory-in-manpage-directory', $file->name)
@@ -361,7 +361,7 @@ sub breakdown {
 
     # no man pages in udebs
     return
-      if $self->type eq 'udeb';
+      if $self->processable->type eq 'udeb';
 
     my %local_user_executables;
     my %local_admin_executables;

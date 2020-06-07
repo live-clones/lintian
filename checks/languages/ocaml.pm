@@ -76,12 +76,12 @@ sub setup {
 
     # is it a library package?
     $self->_set_is_lib_package(1)
-      if $self->package =~ /^lib/;
+      if $self->processable->name =~ /^lib/;
 
     # is it a development package?
     $self->_set_is_dev_package(1)
       if (
-        $self->package =~ m/
+        $self->processable->name =~ m/
            (?: -dev
               |\A camlp[45](?:-extra)?
               |\A ocaml  (?:

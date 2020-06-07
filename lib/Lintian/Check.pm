@@ -69,7 +69,7 @@ has group => (is => 'rw', default => sub { {} });
 sub run {
     my ($self) = @_;
 
-    my $type = $self->type;
+    my $type = $self->processable->type;
 
     if ($type eq 'binary' || $type eq 'udeb') {
 
@@ -94,42 +94,6 @@ sub run {
       if $self->can('always');
 
     return;
-}
-
-=item package
-
-Get package name from processable.
-
-=cut
-
-sub package {
-    my ($self) = @_;
-
-    return $self->processable->name;
-}
-
-=item type
-
-Get type of processable.
-
-=cut
-
-sub type {
-    my ($self) = @_;
-
-    return $self->processable->type;
-}
-
-=item info
-
-Get the info data structure from processable.
-
-=cut
-
-sub info {
-    my ($self) = @_;
-
-    return $self->processable;
 }
 
 =item build_path

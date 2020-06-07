@@ -35,7 +35,8 @@ sub files {
 
     # /etc/pam.conf
     $self->tag('config-file-reserved', $file->name, 'by libpam-runtime')
-      if $file->name =~ m,^etc/pam.conf, && $self->package ne 'libpam-runtime';
+      if $file->name =~ m,^etc/pam.conf,
+      && $self->processable->name ne 'libpam-runtime';
 
     return;
 }

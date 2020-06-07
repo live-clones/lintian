@@ -45,7 +45,7 @@ sub always {
     my ($self) = @_;
 
     return
-      if any { $self->type eq $_ } ('changes', 'buildinfo');
+      if any { $self->processable->type eq $_ } ('changes', 'buildinfo');
 
     my $maximum = 5_000;
 

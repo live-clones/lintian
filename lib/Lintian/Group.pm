@@ -754,16 +754,6 @@ sub get_binary_processables {
     return @result;
 }
 
-=item $group->info
-
-=cut
-
-sub info {
-    my ($self) = @_;
-
-    return $self;
-}
-
 =item direct_dependencies (PROC)
 
 If PROC is a part of the underlying processable group, this method

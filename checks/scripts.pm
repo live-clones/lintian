@@ -264,7 +264,7 @@ sub script_tag {
 sub installable {
     my ($self) = @_;
 
-    my $pkg = $self->package;
+    my $pkg = $self->processable->name;
     my $processable = $self->processable;
 
     my (%executable, %ELF, %scripts, %seen_helper_cmds);
@@ -1359,7 +1359,7 @@ sub generic_check_bad_command {
     my ($self, $line, $file, $lineno, $findincatstring, $in_automatic_section)
       = @_;
 
-    my $pkg = $self->package;
+    my $pkg = $self->processable->name;
 
     # try generic bad maintainer script command tagging
   BAD_CMD:

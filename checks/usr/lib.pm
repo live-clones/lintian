@@ -35,7 +35,7 @@ sub files {
 
     # see Bug#959037 for details
     return
-      if $self->type eq 'udeb';
+      if $self->processable->type eq 'udeb';
 
     return
       unless $file->name =~ m{^usr/lib/};

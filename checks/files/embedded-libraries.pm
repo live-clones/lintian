@@ -134,7 +134,7 @@ sub files {
                       unless $file->name =~ m,$filere,;
 
                     next LIBRARY
-                      if $self->package =~ m,$mainre,;
+                      if $self->processable->name =~ m,$mainre,;
 
                     if(defined $reinside) {
                         my $foundre = 0;

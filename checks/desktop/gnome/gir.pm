@@ -55,7 +55,7 @@ sub source {
 sub installable {
     my ($self) = @_;
 
-    my $pkg = $self->package;
+    my $pkg = $self->processable->name;
     my $processable = $self->processable;
     my $group = $self->group;
 

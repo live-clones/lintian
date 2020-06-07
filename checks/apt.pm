@@ -45,7 +45,7 @@ sub files {
 
     # /etc/apt/sources
     unless ($self->processable->source eq 'apt'
-        || $self->package =~ /-apt-source$/) {
+        || $self->processable->name =~ /-apt-source$/) {
 
         $self->tag('package-installs-apt-sources', $file->name)
           if $file->name =~ m,^etc/apt/sources\.list(?:$|\.d/[^/]+),;
@@ -53,7 +53,7 @@ sub files {
 
     # /etc/apt/trusted.gpg
     unless ($self->processable->source eq 'apt'
-        || $self->package =~ /(?:-apt-source|-archive-keyring)$/) {
+        || $self->processable->name =~ /(?:-apt-source|-archive-keyring)$/) {
 
         $self->tag('package-installs-apt-keyring', $file->name)
           if $file->name =~ m,^etc/apt/trusted\.gpg(?:$|\.d/[^/]+),;

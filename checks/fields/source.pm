@@ -64,7 +64,7 @@ sub source {
 sub always {
     my ($self) = @_;
 
-    my $type = $self->type;
+    my $type = $self->processable->type;
     my $processable = $self->processable;
 
     my $source = $processable->unfolded_field('source');

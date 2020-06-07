@@ -54,7 +54,7 @@ my $EXTRA_MEMBERS = Lintian::Data->new('deb-format/extra-members');
 sub installable {
     my ($self) = @_;
 
-    my $type = $self->type;
+    my $type = $self->processable->type;
     my $processable = $self->processable;
 
     my $deb = path($processable->groupdir)->child('deb')->stringify;

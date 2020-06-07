@@ -45,9 +45,10 @@ sub files {
         if (my $font_owner = $FONT_PACKAGES->value($font)) {
             $self->tag('duplicate-font-file', $file->name, 'also in',
                 $font_owner)
-              if ($self->package ne $font_owner and $self->type ne 'udeb');
+              if (  $self->processable->name ne $font_owner
+                and $self->processable->type ne 'udeb');
 
-        } elsif ($self->package !~ m/^(?:[ot]tf|t1|x?fonts)-/) {
+        } elsif ($self->processable->name !~ m/^(?:[ot]tf|t1|x?fonts)-/) {
             $self->tag('font-in-non-font-package', $file->name)
               unless $file->name =~ m,^usr/lib/R/site-library/,;
         }

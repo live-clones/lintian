@@ -39,7 +39,7 @@ with 'Lintian::Check';
 sub source {
     my ($self) = @_;
 
-    my $pkg = $self->package;
+    my $pkg = $self->processable->name;
     my $processable = $self->processable;
 
     # debian/control check
@@ -119,7 +119,7 @@ sub files {
     return if $file->is_dir;
 
     return
-      if $self->package =~ /-dbg$/;
+      if $self->processable->name =~ /-dbg$/;
 
     # Warn if a file is installed in old nodejs root dir
     $self->tag('nodejs-module-installed-in-usr-lib', $file->name)
@@ -150,7 +150,7 @@ sub files {
     # Second regex arg: subpath in /**/nodejs/module/ (eg: node_modules/foo)
     my $subpath = $2;
 
-    my $declared = $self->package;
+    my $declared = $self->processable->name;
     my $processable = $self->processable;
     my $version = $processable->field('version');
     $declared .= "( = $version)" if defined $version;

@@ -75,7 +75,7 @@ sub breakdown {
       unless $is_dummy
       || $self->arch_dep_files
       || $architecture eq 'all'
-      || $self->type eq 'udeb';
+      || $self->processable->type eq 'udeb';
 
     return;
 }

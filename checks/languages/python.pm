@@ -65,7 +65,7 @@ my @VERSION_FIELDS = qw(x-python-version xs-python-version x-python3-version);
 sub source {
     my ($self) = @_;
 
-    my $pkg = $self->package;
+    my $pkg = $self->processable->name;
     my $processable = $self->processable;
 
     my @package_names = $processable->binaries;
@@ -170,7 +170,7 @@ sub source {
 sub installable {
     my ($self) = @_;
 
-    my $pkg = $self->package;
+    my $pkg = $self->processable->name;
     my $processable = $self->processable;
 
     my $deps = Lintian::Relation->and($processable->relation('all'),

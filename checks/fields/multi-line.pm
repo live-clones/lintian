@@ -58,7 +58,7 @@ sub always {
 
     # for package relations, multi-line only in source (policy 7.1)
     push(@banned, @package_relations)
-      unless $self->type eq 'source';
+      unless $self->processable->type eq 'source';
 
     my @present = keys %{$self->processable->field};
 

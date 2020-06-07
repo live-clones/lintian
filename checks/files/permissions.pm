@@ -88,7 +88,7 @@ sub files {
 
             # 3rd special case: allow anything with suid in the name
             undef $setuid
-              if $self->package =~ m,-suid,;
+              if $self->processable->name =~ m,-suid,;
 
             # Check for setuid and setgid that isn't expected.
             if ($setuid and $setgid) {

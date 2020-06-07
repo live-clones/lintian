@@ -94,7 +94,7 @@ sub source {
 sub always {
     my ($self) = @_;
 
-    my $type = $self->type;
+    my $type = $self->processable->type;
     my $processable = $self->processable;
 
     my $version = $processable->unfolded_field('version');

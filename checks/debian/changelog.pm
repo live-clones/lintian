@@ -61,7 +61,7 @@ sub spelling_tag_emitter {
 sub source {
     my ($self) = @_;
 
-    my $pkg = $self->package;
+    my $pkg = $self->processable->name;
     my $processable = $self->processable;
     my $group = $self->group;
 
@@ -280,7 +280,7 @@ sub source {
 sub binary {
     my ($self) = @_;
 
-    my $pkg = $self->package;
+    my $pkg = $self->processable->name;
     my $processable = $self->processable;
     my $group = $self->group;
 

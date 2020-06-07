@@ -162,8 +162,8 @@ my %needs_tag_vals_hash = map { $_ => 1 } @needs_tag_vals;
 sub installable {
     my ($self) = @_;
 
-    my $pkg = $self->package;
-    my $type = $self->type;
+    my $pkg = $self->processable->name;
+    my $type = $self->processable->type;
     my $processable = $self->processable;
     my $group = $self->group;
 
@@ -261,8 +261,8 @@ sub installable {
 sub verify_line {
     my ($self, $menufile, $fullname, $line, $linecount,$desktop_cmds) = @_;
 
-    my $pkg = $self->package;
-    my $type = $self->type;
+    my $pkg = $self->processable->name;
+    my $type = $self->processable->type;
     my $processable = $self->processable;
     my $group = $self->group;
 
@@ -581,7 +581,7 @@ sub verify_icon {
 sub verify_desktop_file {
     my ($self, $file, $desktop_cmds) = @_;
 
-    my $pkg = $self->package;
+    my $pkg = $self->processable->name;
 
     my ($saw_first, $warned_cr, %vals, @pending);
     open(my $fd, '<', $file->unpacked_path);
@@ -752,7 +752,7 @@ sub verify_desktop_file {
 sub verify_cmd {
     my ($self, $file, $line, $exec) = @_;
 
-    my $pkg = $self->package;
+    my $pkg = $self->processable->name;
     my $processable = $self->processable;
 
     my $location = ($line ? "$file:$line" : $file);
