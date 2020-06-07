@@ -55,16 +55,21 @@ Get processable underlying this check.
 
 Get group that the processable is in.
 
+=item info
+
+Check::Info structure for this check.
+
 =cut
+
+has processable => (is => 'rw', default => sub { {} });
+has group => (is => 'rw', default => sub { {} });
+has info => (is => 'rw');
 
 =item run
 
 Run the check.
 
 =cut
-
-has processable => (is => 'rw', default => sub { {} });
-has group => (is => 'rw', default => sub { {} });
 
 sub run {
     my ($self) = @_;
@@ -121,6 +126,14 @@ Tag the processable associated with this check
 
 sub tag {
     my ($self, @arguments) = @_;
+
+    return
+      unless @arguments;
+
+    my $tagname = $arguments[0];
+
+    warn 'Check ' . $self->info->name . " has no tag $tagname."
+      unless defined $self->info->get_tag($tagname);
 
     return $self->processable->tag(@arguments);
 }

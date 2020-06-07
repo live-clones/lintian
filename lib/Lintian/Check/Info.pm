@@ -236,6 +236,7 @@ sub run_check {
     if ($self->module->DOES('Lintian::Check')) {
 
         my $check = $self->module->new;
+        $check->info($self);
         $check->processable($processable);
         $check->group($group);
 
