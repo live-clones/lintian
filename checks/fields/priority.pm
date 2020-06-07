@@ -40,19 +40,6 @@ with 'Lintian::Check';
 
 my $KNOWN_PRIOS = Lintian::Data->new('fields/priorities');
 
-sub installable {
-    my ($self) = @_;
-
-    my $processable = $self->processable;
-
-    my $priority = $processable->unfolded_field('priority');
-
-    unless (defined $priority) {
-        $self->tag('no-priority-field');
-        return;
-    }
-}
-
 sub always {
     my ($self) = @_;
 
@@ -61,9 +48,8 @@ sub always {
     my $processable = $self->processable;
 
     my $priority = $processable->unfolded_field('priority');
-
     return
-      unless defined $priority;
+      unless length $priority;
 
     if ($type eq 'source' || !$processable->is_pkg_class('auto-generated')) {
 

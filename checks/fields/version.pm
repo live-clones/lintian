@@ -49,9 +49,8 @@ sub source {
     my $processable = $self->processable;
 
     my $version = $processable->unfolded_field('version');
-
     return
-      unless defined $version;
+      unless length $version;
 
     # Checks for the dfsg convention for repackaged upstream
     # source.  Only check these against the source package to not
@@ -98,11 +97,8 @@ sub always {
     my $processable = $self->processable;
 
     my $version = $processable->unfolded_field('version');
-
-    unless (defined $version) {
-        $self->tag('no-version-field');
-        return;
-    }
+    return
+      unless length $version;
 
     my $dversion = Dpkg::Version->new($version);
     unless ($dversion->is_valid) {

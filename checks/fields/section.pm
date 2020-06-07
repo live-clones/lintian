@@ -50,25 +50,12 @@ my $NAME_SECTION_MAPPINGS = Lintian::Data->new(
 
 our %KNOWN_ARCHIVE_PARTS = map { $_ => 1 } ('non-free', 'contrib');
 
-sub installable {
-    my ($self) = @_;
-
-    my $section = $self->processable->unfolded_field('section');
-
-    unless (defined $section) {
-        $self->tag('no-section-field');
-        return;
-    }
-
-    return;
-}
-
 sub udeb {
     my ($self) = @_;
 
     my $section = $self->processable->unfolded_field('section');
     return
-      unless defined $section;
+      unless length $section;
 
     $self->tag('wrong-section-for-udeb', $section)
       unless $section eq 'debian-installer';
@@ -80,19 +67,13 @@ sub always {
     my ($self) = @_;
 
     my $pkg = $self->processable->name;
-    my $type = $self->processable->type;
-    my $processable = $self->processable;
 
-    my $section = $processable->unfolded_field('section');
+    my $section = $self->processable->unfolded_field('section');
+    return
+      unless length $section;
 
     return
-      unless defined $section;
-
-    return
-      if $section eq EMPTY;
-
-    return
-      if $type eq 'udeb';
+      if $self->processable->type eq 'udeb';
 
     my @parts = split(m{/}, $section, 2);
 
@@ -144,9 +125,9 @@ sub always {
           if $pkg !~ /-dbg(?:sym)?$/;
     }
 
-    if ($processable->is_pkg_class('transitional')) {
+    if ($self->processable->is_pkg_class('transitional')) {
 
-        my $priority = $processable->unfolded_field('priority') // EMPTY;
+        my $priority = $self->processable->unfolded_field('priority') // EMPTY;
 
         $self->tag('transitional-package-not-oldlibs-optional',
             "$fraction/$priority")

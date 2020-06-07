@@ -1,5 +1,0 @@
-Tag: no-version-field
-Severity: error
-Check: fields/version
-Info: The package does not have a "Version:" field in its control file.
-Ref: policy 5.3

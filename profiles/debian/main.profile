@@ -66,6 +66,8 @@ Enable-Tags-From-Check:
  fields/package-relations,
  fields/package-type,
  fields/priority,
+ fields/recommended,
+ fields/required,
  fields/section,
  fields/source,
  fields/standards-version,

@@ -1,5 +1,0 @@
-Tag: no-maintainer-field
-Severity: error
-Check: fields/maintainer
-Info: The package does not have a "Maintainer:" field in its control file.
-Ref: policy 5.3

@@ -80,10 +80,8 @@ sub source {
       if first { $processable->binary_package_type($_) ne 'udeb' }
     $processable->binaries;
 
-    if (not defined $version) {
-        $self->tag('no-standards-version-field') unless $all_udeb;
-        return;
-    }
+    return
+      unless length $version;
 
     # Check basic syntax and strip off the fourth digit.  People are allowed to
     # include the fourth digit if they want, but it indicates a non-normative

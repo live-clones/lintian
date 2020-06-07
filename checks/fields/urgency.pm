@@ -36,12 +36,8 @@ sub changes {
     my ($self) = @_;
 
     my $urgency = $self->processable->field('urgency');
-
-    # Urgency is merely recommended
-    unless (length $urgency) {
-        $self->tag('no-urgency-in-changes-file');
-        return;
-    }
+    return
+      unless length $urgency;
 
     # translate to lowercase
     my $lowercase = lc $urgency;

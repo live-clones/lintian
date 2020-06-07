@@ -7,7 +7,6 @@ control-file-general (source): rules-does-not-require-root
 control-file-general (source): package-depends-on-itself control-file-general depends
 control-file-general (source): obsolete-relation-form-in-source in source build-depends-indep: perl (> 5.8)
 control-file-general (source): obsolete-relation-form-in-source in control-file-general-1 breaks: libsqlite3-0 (< 3.6.12)
-control-file-general (source): no-section-field-for-source
 control-file-general (source): missing-separator-between-items in control-file-general depends field between '${shlibs:Depends}' and '${some:Depends}'
 control-file-general (source): duplicate-short-description control-file-general control-file-general-1
 control-file-general (source): duplicate-long-description control-file-general control-file-general-1 control-file-general-2 control-file-general-3 control-file-general-4 control-file-general-5 control-file-general-dbgsym control-file-general-dbg

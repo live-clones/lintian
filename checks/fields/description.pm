@@ -64,10 +64,8 @@ sub installable {
 
     # description?
     my $full_description = $processable->field('description');
-    unless (defined $full_description) {
-        $self->tag('package-has-no-description');
-        return;
-    }
+    return
+      unless length $full_description;
 
     $full_description =~ m/^([^\n]*)\n(.*)$/s;
     my ($synopsis, $extended) = ($1, $2);
@@ -291,20 +289,6 @@ sub installable {
         $self->tag('perl-module-name-not-mentioned-in-description', $mod)
           if (index(lc($extended), $mod_lc) < 0 and $pm_found);
     }
-
-    return;
-}
-
-sub changes {
-    my ($self) = @_;
-
-    my $description = $self->processable->field('description');
-    my $architecture = $self->processable->field('architecture') // EMPTY;
-
-    # Description is mandated by dak, but only makes sense if binary
-    # packages are included.  Don't tag pure source uploads.
-    $self->tag('no-description-in-changes-file')
-      unless length $description || $architecture eq 'source';
 
     return;
 }

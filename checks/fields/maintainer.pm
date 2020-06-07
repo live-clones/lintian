@@ -96,11 +96,8 @@ sub always {
       || $self->processable->type eq 'buildinfo';
 
     my $original = $self->processable->unfolded_field('maintainer');
-
-    unless (defined $original) {
-        $self->tag('no-maintainer-field');
-        return;
-    }
+    return
+      unless length $original;
 
     my $parsed;
     my @list = Email::Address::XS->parse($original);

@@ -306,9 +306,8 @@ sub source {
         } else {
             $area = 'main';
         }
-    } else {
-        $self->tag('no-section-field-for-source');
     }
+
     my @descriptions;
     my ($seen_main, $seen_contrib);
     foreach my $bin (@package_names) {

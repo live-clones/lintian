@@ -128,11 +128,8 @@ sub always {
     my $processable = $self->processable;
 
     my $value = $processable->unfolded_field('architecture');
-
-    unless (defined $value) {
-        $self->tag('no-architecture-field');
-        return;
-    }
+    return
+      unless length $value;
 
     my @architectures = split(/ /, $value);
 
