@@ -357,7 +357,7 @@ sub visit_dpkg_paragraph_string {
         if (substr($line, 0, 1) eq '#') {
             next
               unless $flags & DCTRL_NO_COMMENTS;
-            die "syntax error at line $position: Comments are not allowed.\n";
+            die "No comments allowed (line $position).\n";
         }
 
         # empty line?
@@ -377,15 +377,14 @@ sub visit_dpkg_paragraph_string {
         elsif ($line =~ m/^-----BEGIN PGP SIGNATURE-----[ \r\t]*$/)
         { # skip until end of signature
             my $saw_end = 0;
-            if (not $signed or $signature) {
-                die join(q{ },
-                    "syntax error at line $position:",
-                    "PGP signature seen before start of signed message\n")
-                  if not $signed;
-                die join(q{ },
-                    "syntax error at line $position:",
-                    "Two PGP signatures (first one at line $signature)\n");
-            }
+
+            die "PGP signature before message (line $position).\n"
+              unless $signed;
+
+            die
+"Found two PGP signatures (line $signature and line $position).\n"
+              if $signature;
+
             $signature = $position;
             while (defined($line = shift @lines)) {
                 if ($line =~ /^-----END PGP SIGNATURE-----[ \r\t]*$/) {
@@ -398,9 +397,7 @@ sub visit_dpkg_paragraph_string {
 
             # The "at line X" may seem a little weird, but it keeps the
             # message format identical.
-            die join(q{ },
-                "syntax error at line $position:",
-                qq{End of file but expected an "END PGP SIGNATURE" header\n})
+            die "Cannot find END PGP SIGNATURE header.\n"
               unless $saw_end;
         }
         # other pgp control?
@@ -424,36 +421,30 @@ sub visit_dpkg_paragraph_string {
                   = qr/(?:BEGIN|END) PGP (?:(?:COMPRESSED|ENCRYPTED) )?MESSAGE/;
 
                 if ($line =~ /^-----($key|$msgpart|$msg)-----[ \r\t]*$/) {
-                    die
-                      "syntax error at line $position: Unexpected $1 header\n";
-                } else {
-                    die
-                      "syntax error at line $position: Malformed PGP header\n";
+                    die "Unexpected $1 header (line $position).\n";
                 }
+
+                die "Malformed PGP header (line $position).\n";
+
             } else {
-                if ($signed) {
-                    die join(q{ },
-                        "syntax error at line $position:",
-                        'Expected at most one signed message',
-                        "(previous at line $signed)\n");
-                }
-                if ($last_tag) {
-                    # NB: If you remove this, keep in mind that it may
-                    # allow two paragraphs to merge.  Consider:
-                    #
-                    # Field-P1: some-value
-                    # -----BEGIN PGP SIGNATURE-----
-                    #
-                    # Field-P2: another value
-                    #
-                    # At the time of writing: If $open_section is
-                    # true, it will remain so until the empty line
-                    # after the PGP header.
-                    die join(q{ },
-                        "syntax error at line $position:",
-                        'PGP MESSAGE header must be first',
-                        "content if present\n");
-                }
+                die
+                  "Multiple PGP messages (line $signed and line $position).\n"
+                  if $signed;
+
+                # NB: If you remove this, keep in mind that it may
+                # allow two paragraphs to merge.  Consider:
+                #
+                # Field-P1: some-value
+                # -----BEGIN PGP SIGNATURE-----
+                #
+                # Field-P2: another value
+                #
+                # At the time of writing: If $open_section is
+                # true, it will remain so until the empty line
+                # after the PGP header.
+                die "Expected PGP MESSAGE header (line $position).\n"
+                  if $last_tag;
+
                 $signed = $position;
             }
 
@@ -484,13 +475,12 @@ sub visit_dpkg_paragraph_string {
             # At the time of writing: If $open_section is true, it
             # will remain so until the empty line after the PGP
             # header.
-            die
-              "syntax error at line $position: Data after the PGP SIGNATURE\n";
+            die "Data after PGP SIGNATURE (line $position).\n";
         }
         # new empty field?
         elsif ($line =~ /^([^: \t]+):\s*$/) {
             $field_starts->{'START-OF-PARAGRAPH'} = $position
-              if not $open_section;
+              unless $open_section;
             $open_section = 1;
 
             my ($tag) = (lc $1);
@@ -502,7 +492,7 @@ sub visit_dpkg_paragraph_string {
         # new field?
         elsif ($line =~ /^([^: \t]+):\s*(.*)$/) {
             $field_starts->{'START-OF-PARAGRAPH'} = $position
-              if not $open_section;
+              unless $open_section;
             $open_section = 1;
 
             # Policy: Horizontal whitespace (spaces and tabs) may occur
@@ -515,7 +505,7 @@ sub visit_dpkg_paragraph_string {
             if (exists $section->{$tag}) {
                 # Policy: A paragraph must not contain more than one instance
                 # of a particular field name.
-                die "syntax error at line $position: Duplicate field $tag.\n";
+                die "Duplicate field $tag (line $position).\n";
             }
             $value =~ s/#.*$//
               if $flags & DCTRL_COMMENTS_AT_EOL;
@@ -524,14 +514,12 @@ sub visit_dpkg_paragraph_string {
 
             $last_tag = $tag;
         }
+
         # continued field?
         elsif ($line =~ /^([ \t].*\S.*)$/) {
-            $open_section
-              or die join(q{ },
-                "syntax error at line $position:",
-                'Continuation line outside a paragraph (maybe line',
-                ($position - 1),
-                qq{should be " .").\n});
+            die
+"Continuation line not in paragraph (line $position). Missing a dot on the previous line?\n"
+              unless $open_section;
 
             # Policy: Many fields' values may span several lines; in this case
             # each continuation line must start with a space or a tab.  Any
@@ -548,21 +536,21 @@ sub visit_dpkg_paragraph_string {
         }
         # None of the above => syntax error
         else {
-            my $message = "syntax error at line $position";
-            if ($line =~ /^\s+$/) {
-                $message
-                  .= ": Whitespace line not allowed (possibly missing a \".\").\n";
-            } else {
-                # Replace non-printables and non-space characters with
-                # "_" - just in case.
-                $line =~ s/[^[:graph:][:space:]]/_/g;
-                $message .= ": Cannot parse line \"$line\"\n";
-            }
-            die $message;
+
+            die "Unexpected whitespace (line $position). Missing a dot?\n"
+              if $line =~ /^\s+$/;
+
+            # Replace non-printables and non-space characters with
+            # "_" - just in case.
+            $line =~ s/[^[:graph:][:space:]]/_/g;
+
+            die "Cannot parse line $position: $line\n";
         }
+
     }continue {
         ++$position;
     }
+
     # pass the last section (if not already done).
     $code->($section, $field_starts)
       if $open_section;
@@ -570,13 +558,11 @@ sub visit_dpkg_paragraph_string {
     # Given the API, we cannot use this check to prevent any
     # paragraphs from being emitted to the code argument, so we might
     # as well just do this last.
-    if ($signed and not $signature) {
-        # The "at line X" may seem a little weird, but it keeps the
-        # message format identical.
-        die join(q{ },
-            "syntax error at line $position:",
-            qq{End of file before "BEGIN PGP SIGNATURE"\n"});
-    }
+
+    die "Cannot find BEGIN PGP SIGNATURE\n."
+      if $signed && !$signature;
+
+    return;
 }
 
 =item read_dpkg_control(FILE[, FLAGS[, LINES]])
