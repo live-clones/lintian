@@ -2,3 +2,4 @@ Testname: lintian-output-fullewi
 Options: --show-overrides
 Output-Format: fullewi
 Match-Strategy: literal
+Default-Lintian-Options: --pedantic --display-info --display-experimental

@@ -1,14 +1,3 @@
 unpack-srcpkg-dot-dir (source): upstream-metadata-missing-repository
 unpack-srcpkg-dot-dir (source): upstream-metadata-missing-bug-tracking
-unpack-srcpkg-dot-dir (source): upstream-metadata-field-present Name
-unpack-srcpkg-dot-dir (source): upstream-metadata-field-present Contact
-unpack-srcpkg-dot-dir (source): upstream-metadata-exists
-unpack-srcpkg-dot-dir (source): standards-version 4.5.0
-unpack-srcpkg-dot-dir (source): source-format 3.0 (quilt)
-unpack-srcpkg-dot-dir (source): rules-does-not-require-root
-unpack-srcpkg-dot-dir (source): package-is-maintained-by-individual
-unpack-srcpkg-dot-dir (source): maintainer "Debian Lintian Maintainers" <lintian-maint@debian.org>
 unpack-srcpkg-dot-dir (source): debian-watch-file-missing-version
-unpack-srcpkg-dot-dir (source): debian-build-system dh
-unpack-srcpkg-dot-dir (source): debhelper-compat-virtual-relation 13
-unpack-srcpkg-dot-dir (source): debhelper-compat-level 13

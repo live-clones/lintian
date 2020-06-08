@@ -1,16 +1,1 @@
-basic-native-1.0 (source): standards-version 4.5.0
-basic-native-1.0 (source): source-format 1.0 [non-native]
-basic-native-1.0 (source): rules-does-not-require-root
-basic-native-1.0 (source): package-is-maintained-by-individual
 basic-native-1.0 (source): older-source-format 1.0
-basic-native-1.0 (source): maintainer "Debian Lintian Maintainers" <lintian-maint@debian.org>
-basic-native-1.0 (source): debian-build-system dh
-basic-native-1.0 (source): debhelper-compat-virtual-relation 13
-basic-native-1.0 (source): debhelper-compat-level 13
-basic-native-1.0 (changes): package-is-maintained-by-individual
-basic-native-1.0 (buildinfo): package-is-maintained-by-individual
-basic-native-1.0 (binary): package-is-maintained-by-individual
-basic-native-1.0 (binary): no-ctrl-scripts
-basic-native-1.0 (binary): maintainer "Debian Lintian Maintainers" <lintian-maint@debian.org>
-basic-native-1.0 (binary): data-tarball-compression-format xz
-basic-native-1.0 (binary): control-tarball-compression-format xz

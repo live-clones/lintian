@@ -20,24 +20,4 @@ tag:P:pedantic:X:lintian-output-colons:1.0+dsfg-1.1:source:source:debian-watch-d
 tag:P:pedantic::lintian-output-colons:1.0+dsfg-1.1:all:binary:example-unusual-interpreter:usr/share/doc/lintian-output-colons/examples/example #!/usr/bin/foo:
 tag:P:pedantic::lintian-output-colons:1.0+dsfg-1.1:source:source:no-homepage-field::
 tag:P:pedantic::lintian-output-colons:1.0+dsfg-1.1:source:source:package-uses-deprecated-source-override-location::
-tag:C:classification::lintian-output-colons:1.0+dsfg-1.1:all:binary:control-tarball-compression-format:xz:
-tag:C:classification::lintian-output-colons:1.0+dsfg-1.1:all:binary:data-tarball-compression-format:xz:
-tag:C:classification::lintian-output-colons:1.0+dsfg-1.1:source:source:debhelper-compat-level:13:
-tag:C:classification::lintian-output-colons:1.0+dsfg-1.1:source:source:debhelper-compat-virtual-relation:13:
-tag:C:classification::lintian-output-colons:1.0+dsfg-1.1:source:source:debian-build-system:dh:
-tag:C:classification::lintian-output-colons:1.0+dsfg-1.1:source:source:debian-watch-file-standard:3:
-tag:C:classification::lintian-output-colons:1.0+dsfg-1.1:source:source:maintainer:"Debian Lintian Maintainers" <lintian-maint@debian.org>:
-tag:C:classification::lintian-output-colons:1.0+dsfg-1.1:all:binary:maintainer:"Debian Lintian Maintainers" <lintian-maint@debian.org>:
-tag:C:classification::lintian-output-colons:1.0+dsfg-1.1:all:binary:no-ctrl-scripts::
-tag:C:classification::lintian-output-colons:1.0+dsfg-1.1:source:source:package-is-maintained-by-individual::
-tag:C:classification::lintian-output-colons:1.0+dsfg-1.1:all:binary:package-is-maintained-by-individual::
-tag:C:classification::lintian-output-colons:1.0+dsfg-1.1:source all:changes:package-is-maintained-by-individual::
-tag:C:classification::lintian-output-colons:1.0+dsfg-1.1:all source:buildinfo:package-is-maintained-by-individual::
-tag:C:classification::lintian-output-colons:1.0+dsfg-1.1:source:source:patch-system:quilt:
-tag:C:classification::lintian-output-colons:1.0+dsfg-1.1:source:source:rules-does-not-require-root::
-tag:C:classification::lintian-output-colons:1.0+dsfg-1.1:source:source:source-format:3.0 (quilt):
-tag:C:classification::lintian-output-colons:1.0+dsfg-1.1:source:source:standards-version:4.5.0:
-tag:C:classification::lintian-output-colons:1.0+dsfg-1.1:source:source:upstream-metadata-exists::
-tag:C:classification::lintian-output-colons:1.0+dsfg-1.1:source:source:upstream-metadata-field-present:Contact:
-tag:C:classification::lintian-output-colons:1.0+dsfg-1.1:source:source:upstream-metadata-field-present:Name:
 tag:W:warning:O:lintian-output-colons:1.0+dsfg-1.1:source:source:dfsg-version-misspelled:1.0+dsfg-1.1:dfsg-version-misspelled 1.0*

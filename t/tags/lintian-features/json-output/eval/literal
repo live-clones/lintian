@@ -60,68 +60,6 @@
                   {
                      "name" : "package-uses-deprecated-source-override-location",
                      "severity" : "pedantic"
-                  },
-                  {
-                     "context" : "13",
-                     "name" : "debhelper-compat-level",
-                     "severity" : "classification"
-                  },
-                  {
-                     "context" : "13",
-                     "name" : "debhelper-compat-virtual-relation",
-                     "severity" : "classification"
-                  },
-                  {
-                     "context" : "dh",
-                     "name" : "debian-build-system",
-                     "severity" : "classification"
-                  },
-                  {
-                     "context" : "3",
-                     "name" : "debian-watch-file-standard",
-                     "severity" : "classification"
-                  },
-                  {
-                     "context" : "\"Debian Lintian Maintainers\" <lintian-maint@debian.org>",
-                     "name" : "maintainer",
-                     "severity" : "classification"
-                  },
-                  {
-                     "name" : "package-is-maintained-by-individual",
-                     "severity" : "classification"
-                  },
-                  {
-                     "context" : "quilt",
-                     "name" : "patch-system",
-                     "severity" : "classification"
-                  },
-                  {
-                     "name" : "rules-does-not-require-root",
-                     "severity" : "classification"
-                  },
-                  {
-                     "context" : "3.0 (quilt)",
-                     "name" : "source-format",
-                     "severity" : "classification"
-                  },
-                  {
-                     "context" : "4.5.0",
-                     "name" : "standards-version",
-                     "severity" : "classification"
-                  },
-                  {
-                     "name" : "upstream-metadata-exists",
-                     "severity" : "classification"
-                  },
-                  {
-                     "context" : "Contact",
-                     "name" : "upstream-metadata-field-present",
-                     "severity" : "classification"
-                  },
-                  {
-                     "context" : "Name",
-                     "name" : "upstream-metadata-field-present",
-                     "severity" : "classification"
                   }
                ]
             },
@@ -180,49 +118,16 @@
                      "context" : "usr/share/doc/json-output/examples/example #!/usr/bin/foo",
                      "name" : "example-unusual-interpreter",
                      "severity" : "pedantic"
-                  },
-                  {
-                     "context" : "xz",
-                     "name" : "control-tarball-compression-format",
-                     "severity" : "classification"
-                  },
-                  {
-                     "context" : "xz",
-                     "name" : "data-tarball-compression-format",
-                     "severity" : "classification"
-                  },
-                  {
-                     "context" : "\"Debian Lintian Maintainers\" <lintian-maint@debian.org>",
-                     "name" : "maintainer",
-                     "severity" : "classification"
-                  },
-                  {
-                     "name" : "no-ctrl-scripts",
-                     "severity" : "classification"
-                  },
-                  {
-                     "name" : "package-is-maintained-by-individual",
-                     "severity" : "classification"
                   }
                ]
             },
             {
                "path" : "PATH",
-               "tags" : [
-                  {
-                     "name" : "package-is-maintained-by-individual",
-                     "severity" : "classification"
-                  }
-               ]
+               "tags" : []
             },
             {
                "path" : "PATH",
-               "tags" : [
-                  {
-                     "name" : "package-is-maintained-by-individual",
-                     "severity" : "classification"
-                  }
-               ]
+               "tags" : []
             }
          ],
          "maintainer" : "Debian Lintian Maintainers <lintian-maint@debian.org>",

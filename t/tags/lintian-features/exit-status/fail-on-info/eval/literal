@@ -1,16 +1,1 @@
 I: fail-on-info: manpage-without-executable usr/share/man/man8/lsmod.8.gz
-C: fail-on-info: control-tarball-compression-format xz
-C: fail-on-info: data-tarball-compression-format xz
-C: fail-on-info source: debhelper-compat-level 13
-C: fail-on-info source: debhelper-compat-virtual-relation 13
-C: fail-on-info source: debian-build-system dh
-C: fail-on-info source: maintainer "Debian Lintian Maintainers" <lintian-maint@debian.org>
-C: fail-on-info: maintainer "Debian Lintian Maintainers" <lintian-maint@debian.org>
-C: fail-on-info: no-ctrl-scripts
-C: fail-on-info source: package-is-maintained-by-individual
-C: fail-on-info: package-is-maintained-by-individual
-C: fail-on-info changes: package-is-maintained-by-individual
-C: fail-on-info buildinfo: package-is-maintained-by-individual
-C: fail-on-info source: rules-does-not-require-root
-C: fail-on-info source: source-format 3.0 (native)
-C: fail-on-info source: standards-version 4.5.0

@@ -2,3 +2,4 @@ Testname: runtests-todo
 Todo: yes
 Match-Strategy: literal
 Output-Format: EWI
+Default-Lintian-Options: --pedantic --display-info --display-experimental

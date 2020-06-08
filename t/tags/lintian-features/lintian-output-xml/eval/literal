@@ -49,55 +49,6 @@
             <tag severity="pedantic">
               <name>package-uses-deprecated-source-override-location</name>
             </tag>
-            <tag severity="classification">
-              <name>debhelper-compat-level</name>
-              <context>13</context>
-            </tag>
-            <tag severity="classification">
-              <name>debhelper-compat-virtual-relation</name>
-              <context>13</context>
-            </tag>
-            <tag severity="classification">
-              <name>debian-build-system</name>
-              <context>dh</context>
-            </tag>
-            <tag severity="classification">
-              <name>debian-watch-file-standard</name>
-              <context>3</context>
-            </tag>
-            <tag severity="classification">
-              <name>maintainer</name>
-              <context>"Debian Lintian Maintainers" &lt;lintian-maint@debian.org&gt;</context>
-            </tag>
-            <tag severity="classification">
-              <name>package-is-maintained-by-individual</name>
-            </tag>
-            <tag severity="classification">
-              <name>patch-system</name>
-              <context>quilt</context>
-            </tag>
-            <tag severity="classification">
-              <name>rules-does-not-require-root</name>
-            </tag>
-            <tag severity="classification">
-              <name>source-format</name>
-              <context>3.0 (quilt)</context>
-            </tag>
-            <tag severity="classification">
-              <name>standards-version</name>
-              <context>4.5.0</context>
-            </tag>
-            <tag severity="classification">
-              <name>upstream-metadata-exists</name>
-            </tag>
-            <tag severity="classification">
-              <name>upstream-metadata-field-present</name>
-              <context>Contact</context>
-            </tag>
-            <tag severity="classification">
-              <name>upstream-metadata-field-present</name>
-              <context>Name</context>
-            </tag>
             <tag severity="warning">
               <name>dfsg-version-misspelled</name>
               <context>1.0+dsfg-1.1</context>
@@ -108,18 +59,10 @@
           </tags>
         </source>
         <changes>
-          <tags>
-            <tag severity="classification">
-              <name>package-is-maintained-by-individual</name>
-            </tag>
-          </tags>
+          <tags></tags>
         </changes>
         <buildinfo>
-          <tags>
-            <tag severity="classification">
-              <name>package-is-maintained-by-individual</name>
-            </tag>
-          </tags>
+          <tags></tags>
         </buildinfo>
         <installables>
           <installable>
@@ -168,24 +111,6 @@
               <tag severity="pedantic">
                 <name>example-unusual-interpreter</name>
                 <context>usr/share/doc/lintian-output-xml/examples/example #!/usr/bin/foo</context>
-              </tag>
-              <tag severity="classification">
-                <name>control-tarball-compression-format</name>
-                <context>xz</context>
-              </tag>
-              <tag severity="classification">
-                <name>data-tarball-compression-format</name>
-                <context>xz</context>
-              </tag>
-              <tag severity="classification">
-                <name>maintainer</name>
-                <context>"Debian Lintian Maintainers" &lt;lintian-maint@debian.org&gt;</context>
-              </tag>
-              <tag severity="classification">
-                <name>no-ctrl-scripts</name>
-              </tag>
-              <tag severity="classification">
-                <name>package-is-maintained-by-individual</name>
               </tag>
             </tags>
           </installable>

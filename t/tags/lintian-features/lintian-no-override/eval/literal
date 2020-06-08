@@ -1,17 +1,2 @@
 W: lintian-no-override: non-standard-dir-in-usr usr/bad/
 I: lintian-no-override: package-contains-empty-directory usr/bad/dir/
-C: lintian-no-override: control-tarball-compression-format xz
-C: lintian-no-override: data-tarball-compression-format xz
-C: lintian-no-override source: debhelper-compat-level 13
-C: lintian-no-override source: debhelper-compat-virtual-relation 13
-C: lintian-no-override source: debian-build-system dh
-C: lintian-no-override source: maintainer "Debian Lintian Maintainers" <lintian-maint@debian.org>
-C: lintian-no-override: maintainer "Debian Lintian Maintainers" <lintian-maint@debian.org>
-C: lintian-no-override: no-ctrl-scripts
-C: lintian-no-override source: package-is-maintained-by-individual
-C: lintian-no-override: package-is-maintained-by-individual
-C: lintian-no-override changes: package-is-maintained-by-individual
-C: lintian-no-override buildinfo: package-is-maintained-by-individual
-C: lintian-no-override source: rules-does-not-require-root
-C: lintian-no-override source: source-format 3.0 (native)
-C: lintian-no-override source: standards-version 4.5.0
