@@ -1,0 +1,4 @@
+Skeleton: source-native
+Testname: alioth-list
+Author: Packaging Team <pkg-team@lists.alioth.debian.org>
+Description: Package with alioth list in maintainer field

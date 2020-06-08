@@ -55,9 +55,6 @@ sub source {
 
     my $is_list = $maintainer =~ /\@lists(?:\.alioth)?\.debian\.org\b/;
 
-    $self->tag('mailing-list-obsolete-in-debian-infrastructure', $maintainer)
-      if $maintainer =~ /\@lists\.alioth\.debian\.org\b/;
-
     $self->tag('no-human-maintainers')
       if $is_list && !defined $self->processable->field('uploaders');
 
@@ -150,6 +147,12 @@ sub always {
       if ( $parsed->phrase =~ /\bdebian\s+qa\b/i
         && $parsed->address ne 'packages@qa.debian.org')
       || $parsed->address eq 'debian-qa@lists.debian.org';
+
+    if ($parsed->host eq 'lists.alioth.debian.org') {
+        $self->tag('mailing-list-obsolete-in-debian-infrastructure',
+            $parsed->address)
+          unless $parsed->user eq 'pkg-java-maintainers';
+    }
 
     return;
 }

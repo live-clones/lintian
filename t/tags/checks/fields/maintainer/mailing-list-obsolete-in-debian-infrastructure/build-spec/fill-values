@@ -1,3 +1,0 @@
-Skeleton: upload-native
-Testname: mailing-list-obsolete-in-debian-infrastructure
-Description: Check for packages with deprecated Maintainer/list fields in the Debian infrastructure
