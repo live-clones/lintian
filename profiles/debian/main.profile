@@ -71,6 +71,7 @@ Enable-Tags-From-Check:
  fields/standards-version,
  fields/subarchitecture,
  fields/terminal-control,
+ fields/trimmed,
  fields/unknown,
  fields/uploaders,
  fields/urgency,
