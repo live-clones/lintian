@@ -148,11 +148,8 @@ sub always {
         && $parsed->address ne 'packages@qa.debian.org')
       || $parsed->address eq 'debian-qa@lists.debian.org';
 
-    if ($parsed->host eq 'lists.alioth.debian.org') {
-        $self->tag('mailing-list-obsolete-in-debian-infrastructure',
-            $parsed->address)
-          unless $parsed->user eq 'pkg-java-maintainers';
-    }
+    $self->tag('mailing-list-on-alioth', $parsed->address)
+      if $parsed->host eq 'lists.alioth.debian.org';
 
     return;
 }
