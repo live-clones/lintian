@@ -1,0 +1,12 @@
+two-maintainers (source): too-many-contacts Maintainer Work <me@work.com>, Home <me@debian.org>
+two-maintainers (source): mail-contact Maintainer Work <me@work.com>
+two-maintainers (source): mail-contact Maintainer Home <me@debian.org>
+two-maintainers (changes): too-many-contacts Maintainer Work <me@work.com>, Home <me@debian.org>
+two-maintainers (changes): too-many-contacts Changed-By Work <me@work.com>, Home <me@debian.org>
+two-maintainers (changes): mail-contact Maintainer Work <me@work.com>
+two-maintainers (changes): mail-contact Maintainer Home <me@debian.org>
+two-maintainers (changes): mail-contact Changed-By Work <me@work.com>
+two-maintainers (changes): mail-contact Changed-By Home <me@debian.org>
+two-maintainers (binary): too-many-contacts Maintainer Work <me@work.com>, Home <me@debian.org>
+two-maintainers (binary): mail-contact Maintainer Work <me@work.com>
+two-maintainers (binary): mail-contact Maintainer Home <me@debian.org>

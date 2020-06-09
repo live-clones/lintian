@@ -1,0 +1,18 @@
+Format: 1.8
+Date: [% $date %]
+Source: [% $source %]
+Binary: [% $source %]
+Architecture: source all
+Version: [% $version %]
+Distribution: unstable
+Urgency: low
+Maintainer: [% $author %]
+Changed-By: [% $author %]
+Files:
+ d41d8cd98f00b204e9800998ecf8427e 0 devel optional __some-file__
+Checksums-Sha1:
+ da39a3ee5e6b4b0d3255bfef95601890afd80709 0 __some-file__
+Checksums-Sha256:
+ e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855 0 __some-file__
+Description:
+ [% $source %] - [% $description %]

@@ -31,9 +31,6 @@ use warnings;
 use utf8;
 use autodie;
 
-use Email::Address::XS;
-use List::MoreUtils qw(all);
-
 use Lintian::Data;
 
 use constant EMPTY => q{};
@@ -49,7 +46,7 @@ my $KNOWN_DISTS = Lintian::Data->new('changes-file/known-dists');
 sub source {
     my ($self) = @_;
 
-    my $maintainer = $self->processable->unfolded_field('Maintainer');
+    my $maintainer = $self->processable->field('Maintainer');
     return
       unless defined $maintainer;
 
@@ -64,89 +61,21 @@ sub source {
 sub changes {
     my ($self) = @_;
 
-    my $group = $self->group;
-    return
-      unless defined $group;
-
-    my $source = $group->source;
+    my $source = $self->group->source;
     return
       unless defined $source;
 
-    my $changes_maintainer = $self->processable->unfolded_field('Maintainer')
-      // EMPTY;
+    my $changes_maintainer = $self->processable->field('Maintainer')// EMPTY;
     my $changes_distribution
-      = $self->processable->unfolded_field('Distribution')// EMPTY;
+      = $self->processable->field('Distribution')// EMPTY;
 
-    my $source_maintainer = $source->unfolded_field('Maintainer') // EMPTY;
+    my $source_maintainer = $source->field('Maintainer') // EMPTY;
 
     # not for derivatives; https://wiki.ubuntu.com/DebianMaintainerField
     $self->tag('inconsistent-maintainer',
         $changes_maintainer . ' (changes vs. source) ' .$source_maintainer)
       unless $changes_maintainer eq $source_maintainer
       || !$KNOWN_DISTS->known($changes_distribution);
-
-    return;
-}
-
-sub always {
-    my ($self) = @_;
-
-    return
-      if $self->processable->type eq 'changes'
-      || $self->processable->type eq 'buildinfo';
-
-    my $original = $self->processable->unfolded_field('Maintainer');
-    return
-      unless length $original;
-
-    my $parsed;
-    my @list = Email::Address::XS->parse($original);
-    $parsed = $list[0]
-      if @list == 1;
-
-    unless ($parsed->is_valid) {
-        $self->tag('malformed-maintainer-field', $original);
-        return;
-    }
-
-    $self->tag('maintainer', $parsed->format);
-
-    unless (all { length } ($parsed->address, $parsed->user, $parsed->host)) {
-        $self->tag('maintainer-address-malformed', $parsed->format);
-        return;
-    }
-
-    $self->tag('maintainer-address-malformed',
-        $parsed->address, 'not fully qualified')
-      unless $parsed->host =~ /\./;
-
-    $self->tag('maintainer-address-is-on-localhost', $parsed->address)
-      if $parsed->host =~ /(?:localhost|\.localdomain|\.localnet)$/;
-
-    $self->tag('maintainer-address-causes-mail-loops-or-bounces',
-        $parsed->address)
-      if $KNOWN_BOUNCE_ADDRESSES->known($parsed->address);
-
-    unless (length $parsed->phrase) {
-        $self->tag('maintainer-name-missing', $parsed->format);
-        return;
-    }
-
-    $self->tag('maintainer-address-is-root-user', $parsed->format)
-      if $parsed->user eq 'root' || $parsed->phrase eq 'root';
-
-    # Debian QA Group
-    $self->tag('wrong-debian-qa-group-name', $parsed->phrase)
-      if $parsed->address eq 'packages@qa.debian.org'
-      && $parsed->phrase ne 'Debian QA Group';
-
-    $self->tag('wrong-debian-qa-address-set-as-maintainer',$parsed->address)
-      if ( $parsed->phrase =~ /\bdebian\s+qa\b/i
-        && $parsed->address ne 'packages@qa.debian.org')
-      || $parsed->address eq 'debian-qa@lists.debian.org';
-
-    $self->tag('mailing-list-on-alioth', $parsed->address)
-      if $parsed->host eq 'lists.alioth.debian.org';
 
     return;
 }

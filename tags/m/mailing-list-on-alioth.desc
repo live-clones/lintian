@@ -1,6 +1,6 @@
 Tag: mailing-list-on-alioth
 Severity: classification
-Check: fields/maintainer
+Check: fields/mail-address
 Info: The specified email address uses lists.alioth.debian.org. That
  system was migrated to a separate debian.net system run by DDs.
  Teams were encouraged to migrate to the new system, but they are

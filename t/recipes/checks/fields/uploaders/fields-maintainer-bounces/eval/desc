@@ -1,5 +1,0 @@
-Testname: fields-maintainer-bounces
-Test-Against:
- uploader-address-causes-mail-loops-or-bounces
-Check: fields/uploaders
-# To avoid NMU warnings / having a changelog.in

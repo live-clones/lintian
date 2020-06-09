@@ -58,6 +58,7 @@ Enable-Tags-From-Check:
  fields/homepage,
  fields/installer-menu-item,
  fields/length,
+ fields/mail-address,
  fields/maintainer,
  fields/multi-arch,
  fields/multi-line,

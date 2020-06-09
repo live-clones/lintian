@@ -1,0 +1,4 @@
+Skeleton: upload-native
+Testname: fields-no-human-maintainer
+Description: Checks for a package maintained only by a list
+Author: Lintian Maintainers <debian-lint-maint@lists.debian.org>

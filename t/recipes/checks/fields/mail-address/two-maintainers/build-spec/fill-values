@@ -1,0 +1,4 @@
+Skeleton: upload-native
+Testname: two-maintainers
+Author: Work <me@work.com>, Home <me@debian.org>
+Description: Two contacts listed as maintainers

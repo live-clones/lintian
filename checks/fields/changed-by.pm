@@ -27,9 +27,6 @@ use warnings;
 use utf8;
 use autodie;
 
-use Email::Address::XS;
-use List::MoreUtils qw(all);
-
 use Lintian::Data;
 
 use Moo;
@@ -49,45 +46,15 @@ sub changes {
     return
       unless defined $changed_by;
 
-    my $parsed;
-    my @list = Email::Address::XS->parse($changed_by);
-    $parsed = $list[0]
-      if @list == 1;
-
-    unless ($parsed->is_valid) {
-        $self->tag('malformed-changed-by-field', $changed_by);
-        return;
-    }
-
     for my $regex ($DERIVATIVE_CHANGED_BY->all) {
 
         next
-          if $parsed->format =~ /$regex/;
+          if $changed_by =~ /$regex/;
 
         my $explanation = $DERIVATIVE_CHANGED_BY->value($regex);
         $self->tag('changed-by-invalid-for-derivative',
-            $parsed->format, "($explanation)");
+            $changed_by, "($explanation)");
     }
-
-    unless (all { length } ($parsed->address, $parsed->user, $parsed->host)) {
-        $self->tag('changed-by-address-malformed', $parsed->format);
-        return;
-    }
-
-    $self->tag('changed-by-address-malformed',
-        $parsed->address, 'not fully qualified')
-      unless $parsed->host =~ /\./;
-
-    $self->tag('changed-by-address-is-on-localhost',$parsed->address)
-      if $parsed->host=~ /(?:localhost|\.localdomain|\.localnet)$/;
-
-    unless (length $parsed->phrase) {
-        $self->tag('changed-by-name-missing', $parsed->format);
-        return;
-    }
-
-    $self->tag('changed-by-address-is-root-user', $parsed->format)
-      if $parsed->user eq 'root' || $parsed->phrase eq 'root';
 
     return;
 }

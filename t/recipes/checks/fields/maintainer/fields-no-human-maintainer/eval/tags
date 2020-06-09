@@ -1,3 +1,1 @@
 fields-no-human-maintainer (source): no-human-maintainers
-fields-no-human-maintainer (source): maintainer "Lintian Maintainers" <debian-lint-maint@lists.debian.org>
-fields-no-human-maintainer (binary): maintainer "Lintian Maintainers" <debian-lint-maint@lists.debian.org>

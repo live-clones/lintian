@@ -1,0 +1,5 @@
+Skeleton: upload-native
+Testname: changelog-file-backport
+Description: Check backport
+# Overrides the "data/changes-file/known-dists"
+# data file to avoid updating the test every release

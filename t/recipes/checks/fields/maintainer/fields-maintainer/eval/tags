@@ -1,6 +1,0 @@
-fields-maintainer (source): maintainer-address-malformed user@localhost not fully qualified
-fields-maintainer (source): maintainer-address-is-on-localhost user@localhost
-fields-maintainer (source): maintainer "Mrs. Localhost" <user@localhost>
-fields-maintainer (binary): maintainer-address-malformed user@localhost not fully qualified
-fields-maintainer (binary): maintainer-address-is-on-localhost user@localhost
-fields-maintainer (binary): maintainer "Mrs. Localhost" <user@localhost>
