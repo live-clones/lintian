@@ -2,7 +2,7 @@ TRIPLET := $(shell dpkg-architecture -qDEB_HOST_MULTIARCH)
 
 all:
 	gcc $(CFLAGS) $(CPPFLAGS) $(LDFLAGS) -fPIC -shared -Wl,-z,defs -Wl,-soname,libcblas.so.1 -o libcblas.so libcblas.c
-	gcc $(CFLAGS) $(CPPFLAGS) $(LDFLAGS) -L. -lcblas -o consumer consumer.c
+	gcc $(CFLAGS) $(CPPFLAGS) $(LDFLAGS) -o consumer consumer.c -L. -lcblas
 
 install:
 	install -d $(DESTDIR)/usr/lib/$(TRIPLET)
