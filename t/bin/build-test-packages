@@ -207,7 +207,7 @@ my $sourceroot = "$outpath/package-sources";
 # for built test packages
 my $buildroot = "$outpath/packages";
 
-my @relative = map { path($_)->parent->relative($testset) } @specpaths;
+my @relative = map { path($_)->parent->relative("$testset/tags") } @specpaths;
 my @sourcepaths = map {$_->absolute($sourceroot)->stringify } @relative;
 my @buildpaths = map {$_->absolute($buildroot)->stringify } @relative;
 
@@ -244,7 +244,7 @@ my $prepare = IO::Async::Function->new(
         $0 = "Lintian prepare test: $specpath";
 
         # calculate destination
-        my $relative = path($specpath)->parent->relative($testset);
+        my $relative = path($specpath)->parent->relative("$testset/tags");
         my $sourcepath = $relative->absolute($sourceroot)->stringify;
         my $buildpath = $relative->absolute($buildroot)->relative->stringify;
 
@@ -315,7 +315,7 @@ my $build = IO::Async::Function->new(
         umask(022);
 
         # get destination
-        my $relative = path($specpath)->parent->relative($testset);
+        my $relative = path($specpath)->parent->relative("$testset/tags");
         my $sourcepath = $relative->absolute($sourceroot)->relative->stringify;
         my $buildpath = $relative->absolute($buildroot)->relative->stringify;
 

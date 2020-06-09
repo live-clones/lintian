@@ -354,7 +354,7 @@ my $filleval = IO::Async::Function->new(
         $0 = "Lintian prepare test: $specpath";
 
         # calculate destination
-        my $relative = path($specpath)->relative($testset);
+        my $relative = path($specpath)->relative("$testset/tags");
         my $buildpath = $relative->absolute($buildroot)->stringify;
         my $evalpath = $relative->absolute($evalroot)->relative->stringify;
 
@@ -413,7 +413,7 @@ $loop->await($allfilled);
 
 # remap paths from testset to outpath to get work directories
 my @workpaths
-  = map { rel2abs(abs2rel($_, $testset), "$outpath/eval") } @testpaths;
+  = map { rel2abs(abs2rel($_, "$testset/tags"), "$outpath/eval") } @testpaths;
 
 # if ($platforms ne 'any') {
 #     my @wildcards = split(SPACE, $platforms);
