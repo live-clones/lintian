@@ -23,8 +23,6 @@ use v5.20;
 use warnings;
 use utf8;
 
-use constant EMPTY => q{};
-
 use Moo::Role;
 use namespace::clean;
 
@@ -99,23 +97,6 @@ sub run {
       if $self->can('always');
 
     return;
-}
-
-=item build_path
-
-Get the build path.
-
-=cut
-
-sub build_path {
-    my ($self) = @_;
-
-    my $buildinfo = $self->group->buildinfo;
-
-    return EMPTY
-      unless $buildinfo;
-
-    return $buildinfo->field('build-path', EMPTY);
 }
 
 =item tag

@@ -31,12 +31,25 @@ use List::MoreUtils qw(none);
 
 use Lintian::SlidingWindow;
 
+use constant EMPTY => q{};
+
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
 
 has bin_binaries => (is => 'rwp', default => sub { [] });
+
+sub build_path {
+    my ($self) = @_;
+
+    my $buildinfo = $self->group->buildinfo;
+
+    return EMPTY
+      unless $buildinfo;
+
+    return $buildinfo->field('build-path', EMPTY);
+}
 
 sub setup {
     my ($self) = @_;
