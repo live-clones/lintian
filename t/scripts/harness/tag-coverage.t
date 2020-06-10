@@ -86,7 +86,7 @@ for my $check (@known) {
 
 my %seen;
 
-my @descpaths = File::Find::Rule->file()->name('desc')->in('t/tags');
+my @descpaths = File::Find::Rule->file()->name('desc')->in('t/recipes');
 for my $descpath (@descpaths) {
 
     my $testcase = read_config($descpath);

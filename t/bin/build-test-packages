@@ -4,7 +4,7 @@
 # Copyright © 2008 Frank Lichtenheld
 # Copyright © 2008, 2009 Russ Allbery
 # Copyright © 2014 Niels Thykier
-# Copyright © 2018 Felix Lechner
+# Copyright © 2020 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -191,7 +191,7 @@ my $status = 0;
 
 # find spec paths
 my @descfiles
-  = sort File::Find::Rule->file()->name('fill-values')->in("$testset/tags");
+  = sort File::Find::Rule->file()->name('fill-values')->in("$testset/recipes");
 
 my @specpaths = map { path($_)->parent->absolute->stringify } @descfiles;
 
@@ -207,7 +207,8 @@ my $sourceroot = "$outpath/package-sources";
 # for built test packages
 my $buildroot = "$outpath/packages";
 
-my @relative = map { path($_)->parent->relative("$testset/tags") } @specpaths;
+my @relative
+  = map { path($_)->parent->relative("$testset/recipes") } @specpaths;
 my @sourcepaths = map {$_->absolute($sourceroot)->stringify } @relative;
 my @buildpaths = map {$_->absolute($buildroot)->stringify } @relative;
 
@@ -244,7 +245,7 @@ my $prepare = IO::Async::Function->new(
         $0 = "Lintian prepare test: $specpath";
 
         # calculate destination
-        my $relative = path($specpath)->parent->relative("$testset/tags");
+        my $relative = path($specpath)->parent->relative("$testset/recipes");
         my $sourcepath = $relative->absolute($sourceroot)->stringify;
         my $buildpath = $relative->absolute($buildroot)->relative->stringify;
 
@@ -315,7 +316,7 @@ my $build = IO::Async::Function->new(
         umask(022);
 
         # get destination
-        my $relative = path($specpath)->parent->relative("$testset/tags");
+        my $relative = path($specpath)->parent->relative("$testset/recipes");
         my $sourcepath = $relative->absolute($sourceroot)->relative->stringify;
         my $buildpath = $relative->absolute($buildroot)->relative->stringify;
 
