@@ -296,8 +296,19 @@ sub files {
             chomp $line;
             next if $line =~ /^\.\\\"/; # comments .\"
             if ($line =~ /^\.TH\s/) { # header
-                my (undef, undef, $th_section, undef)
-                  = Text::ParseWords::parse_line('\s+', 0, $line);
+                my @th_fields= Text::ParseWords::parse_line('\s+', 0, $line);
+                my $pkgname_idx = 1;
+                # Iterate over possible package names.  If there is
+                # more than one, they will be separated by a comma and
+                # a whitespace.  In case we find the comma, we advance
+                # $pkgname_idx.
+                while (substr($th_fields[$pkgname_idx], -1) eq ',') {
+                    $pkgname_idx++;
+                }
+                # We're now at the last package, so we should be able
+                # to obtain the manpage section number by incrementing
+                # 1 to the index.
+                my $th_section = $th_fields[++$pkgname_idx];
                 if ($th_section && (lc($fn_section) ne lc($th_section))) {
                     $self->tag('manpage-section-mismatch',
                         "$file:$lc $fn_section != $th_section");
