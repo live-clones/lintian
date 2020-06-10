@@ -32,7 +32,7 @@ our $LAZY_LOAD = 1;
 sub _checked_open {
     my ($path) = @_;
     my $fd;
-    eval {open($fd, '<', $path);};
+    eval {open($fd, '<:encoding(UTF-8)', $path);};
     if (my $err = $@) {
         die($err) if not ref $err or $err->errno != ENOENT;
         return;
