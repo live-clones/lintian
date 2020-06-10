@@ -469,7 +469,7 @@ if (-t STDOUT && !$unattended) {
         my $testcase = read_config($descpath);
 
         my $relative = abs2rel($workpath, $evalroot);
-        my $testpath = abs2rel(rel2abs($relative, $testset));
+        my $testpath = abs2rel(rel2abs($relative, "$testset/recipes"));
 
         say EMPTY;
         say 'Failed test: ' . colored($testpath, 'bold white on_blue');
