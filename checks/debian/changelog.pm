@@ -26,6 +26,7 @@ use warnings;
 use utf8;
 use autodie;
 
+use Data::Validate::Domain;
 use Date::Format qw(time2str);
 use Email::Address::XS;
 use List::Util qw(first);
@@ -533,9 +534,9 @@ sub binary {
     # checks applying to all entries
     for my $entry (@entries) {
         if (length $entry->Maintainer) {
-            my ($email) = Email::Address::XS->parse($entry->Maintainer);
+            my ($parsed) = Email::Address::XS->parse($entry->Maintainer);
 
-            unless ($email->is_valid) {
+            unless ($parsed->is_valid) {
                 $self->tag(
                     'debian-changelog-file-contains-invalid-email-address',
                     $entry->Maintainer);
@@ -544,17 +545,17 @@ sub binary {
 
             unless (
                 all { length }
-                ($email->address, $email->user, $email->host)
+                ($parsed->address, $parsed->user, $parsed->host)
             ) {
                 $self->tag(
                     'debian-changelog-file-contains-invalid-email-address',
-                    $email->format);
+                    $parsed->format);
                 next;
             }
 
-            $self->tag('debian-changelog-file-contains-invalid-email-address',
-                $email->address, 'not fully qualified')
-              unless $email->host =~ /\./;
+            $self->tag('bogus-mail-host-in-debian-changelog', $parsed->address)
+              unless is_domain($parsed->host,
+                {domain_disable_tld_validation => 1});
         }
     }
 
