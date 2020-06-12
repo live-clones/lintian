@@ -684,18 +684,6 @@ sub find_cruft {
             push(@worklist, $entry->children);
             next ENTRY;
         }
-        if ($entry->is_symlink) {
-            next ENTRY if $istestsetdir;
-
-            # An absolute link always escapes the root (of a source
-            # package).  For relative links, it escapes the root if we
-            # cannot normalize it.
-            if ($entry->link =~ m{\A / }xsm
-                or not defined($entry->link_normalized)){
-                $self->tag('source-contains-unsafe-symlink', $name);
-            }
-            next ENTRY;
-        }
 
         # we just need normal files for the rest
         next ENTRY unless $entry->is_file;

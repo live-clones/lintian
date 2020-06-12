@@ -1,0 +1,4 @@
+cruft-unsafe-symlinks (source): wayward-symbolic-link-target-in-source tests/relative-escape-from-tests -> ../../non-existent/path/lintian-should-not-open
+cruft-unsafe-symlinks (source): wayward-symbolic-link-target-in-source bad-symlinks/relative-escape -> ../../non-existent/path/lintian-should-not-open
+cruft-unsafe-symlinks (source): absolute-symbolic-link-target-in-source tests/absolute-escape-from-tests -> /../../non-existent/path/lintian-should-not-open
+cruft-unsafe-symlinks (source): absolute-symbolic-link-target-in-source bad-symlinks/absolute-escape -> /../../non-existent/path/lintian-should-not-open

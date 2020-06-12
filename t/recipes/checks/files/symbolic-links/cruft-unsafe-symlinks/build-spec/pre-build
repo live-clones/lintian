@@ -7,6 +7,6 @@ mkdir -p "$SOURCE_ROOT/bad-symlinks" "$SOURCE_ROOT/tests/"
 ln -s "../../$LINK_TARGET" "$SOURCE_ROOT/bad-symlinks/relative-escape"
 ln -s "/../../$LINK_TARGET" "$SOURCE_ROOT/bad-symlinks/absolute-escape"
 
-# Lintian ignores these - not sure to what extend it makes sense
-ln -s "../../$LINK_TARGET" "$SOURCE_ROOT/tests/relative-escape-but-ignored"
-ln -s "/../../$LINK_TARGET" "$SOURCE_ROOT/tests/absolute-escape-but-ignored"
+# Lintian no longer ignores these
+ln -s "../../$LINK_TARGET" "$SOURCE_ROOT/tests/relative-escape-from-tests"
+ln -s "/../../$LINK_TARGET" "$SOURCE_ROOT/tests/absolute-escape-from-tests"

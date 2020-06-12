@@ -52,12 +52,20 @@ my $COMPRESSED_SYMLINK_POINTING_TO_COMPRESSED_REGEX
 sub source {
     my ($self) = @_;
 
-    for my $file ($self->processable->patched->sorted_list) {
+    my @symlinks
+      = grep { $_->is_symlink } $self->processable->patched->sorted_list;
 
-        $self->tag('absolute-symbolic-link-target-in-source',
-            $file->name, '->', $file->link)
-          if $file->is_symlink && $file->link =~ m{^/}s;
-    }
+    my @absolute = grep { $_->link =~ m{^/} } @symlinks;
+    $self->tag('absolute-symbolic-link-target-in-source',
+        $_->name, '->', $_->link)
+      for @absolute;
+
+    # absolute links cannot be resolved either but have a different tag
+    my @wayward
+      = grep { $_->link !~ m{^/} && !defined $_->link_normalized} @symlinks;
+    $self->tag('wayward-symbolic-link-target-in-source',
+        $_->name, '->', $_->link)
+      for @wayward;
 
     return;
 }
