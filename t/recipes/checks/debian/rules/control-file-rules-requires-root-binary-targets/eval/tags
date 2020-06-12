@@ -1,1 +1,1 @@
-control-file-rules-requires-root-binary-targets (source): debian-rules-should-not-use-custom-compression-settings dh_builddeb -- -Zgzip (line 7)
+control-file-rules-requires-root-binary-targets (source): custom-compression-in-debian-rules dh_builddeb -- -Zgzip (line 7)

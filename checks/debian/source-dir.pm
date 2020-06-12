@@ -115,7 +115,7 @@ sub source {
     if ($options and $options->is_open_ok) {
         open(my $fd, '<', $options->unpacked_path);
         while (<$fd>) {
-            $self->tag('debian-source-options-has-custom-compression-settings',
+            $self->tag('custom-compression-in-debian-source-options',
                 $1, "(line $.)")
               if m/^\s*(compression(?:-level)?\s*=\s+\S+)\n/;
         }
