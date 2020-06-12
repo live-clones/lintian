@@ -115,6 +115,9 @@ sub unpack {
     print "N: Using dpkg-source to unpack\n"
       if $ENV{'LINTIAN_DEBUG'};
 
+    my $saved_umask = umask;
+    umask 0000;
+
     # Ignore STDOUT of the child process because older versions of
     # dpkg-source print things out even with -q.
     my $loop = IO::Async::Loop->new;
@@ -147,6 +150,8 @@ sub unpack {
 
     # awaits, and dies with message on failure
     $future->get;
+
+    umask $saved_umask;
 
     path("$groupdir/unpacked-errors")->append($dpkgerror // EMPTY);
 
