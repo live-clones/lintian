@@ -147,9 +147,6 @@ sub runner {
     # set a predictable locale
     $ENV{'LC_ALL'} = 'C';
 
-    # many tests create files via debian/rules
-    umask(022);
-
     say EMPTY;
     say '------- Runner starts here -------';
 
