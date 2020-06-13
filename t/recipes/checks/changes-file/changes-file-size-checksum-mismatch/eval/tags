@@ -1,4 +1,4 @@
 changes-file-size-checksum-mismatch (changes): file-size-mismatch-in-changes-file __some-file__ 0 != 12
-changes-file-size-checksum-mismatch (changes): checksum-mismatch-in-changes-file sha256 __some-file__
-changes-file-size-checksum-mismatch (changes): checksum-mismatch-in-changes-file sha1 __some-file__
-changes-file-size-checksum-mismatch (changes): checksum-mismatch-in-changes-file md5 __some-file__
+changes-file-size-checksum-mismatch (changes): checksum-mismatch-in-changes-file Checksum-Sha256 __some-file__
+changes-file-size-checksum-mismatch (changes): checksum-mismatch-in-changes-file Checksum-Sha1 __some-file__
+changes-file-size-checksum-mismatch (changes): checksum-mismatch-in-changes-file Checksum-Md5 __some-file__

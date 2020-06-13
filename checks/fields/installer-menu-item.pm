@@ -41,7 +41,7 @@ sub udeb {
 
     #---- Installer-Menu-Item (udeb)
 
-    my $menu_item = $processable->unfolded_field('installer-menu-item');
+    my $menu_item = $processable->unfolded_field('Installer-Menu-Item');
 
     return
       unless defined $menu_item;

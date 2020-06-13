@@ -5,6 +5,6 @@ binary (binary): spelling-error-in-news-debian usefull useful
 binary (binary): spelling-error-in-news-debian speling spelling
 binary (binary): debian-news-entry-has-strange-distribution UNRELEASED
 binary (binary): debian-changelog-file-missing-or-wrong-name
-binary (binary): changelog-news-debian-mismatch urgency low != high
-binary (binary): changelog-news-debian-mismatch distribution unstable != UNRELEASED
+binary (binary): changelog-news-debian-mismatch Urgency low != high
+binary (binary): changelog-news-debian-mismatch Distribution unstable != UNRELEASED
 binary (binary): changelog-file-not-compressed changelog

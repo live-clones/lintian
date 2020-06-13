@@ -39,7 +39,7 @@ with 'Lintian::Check';
 sub installable {
     my ($self) = @_;
 
-    my $name = $self->processable->unfolded_field('package');
+    my $name = $self->processable->unfolded_field('Package');
     return
       unless length $name;
 

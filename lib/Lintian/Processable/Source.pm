@@ -98,8 +98,8 @@ sub init {
 
     $self->verbatim($dinfo);
 
-    my $name = $dinfo->{source} // EMPTY;
-    my $version = $dinfo->{version} // EMPTY;
+    my $name = $dinfo->{Source} // EMPTY;
+    my $version = $dinfo->{Version} // EMPTY;
     my $architecture = 'source';
 
     # it is its own source package

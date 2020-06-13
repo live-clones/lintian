@@ -39,7 +39,7 @@ use namespace::clean;
 with 'Lintian::Check';
 
 my @ALLOWED_FIELDS
-  = qw(build-ids description package-list installed-build-depends checksums-sha256);
+  = qw(Build-Ids Description Package-List Installed-Build-Depends Checksums-Sha256);
 
 sub always {
     my ($self) = @_;
@@ -61,12 +61,9 @@ sub always {
 
     for my $name (@too_long) {
 
-        # title-case the field name
-        (my $label = $name) =~ s/\b(\w)/\U$1/g;
-
         my $length = length $self->processable->field($name);
 
-        $self->tag('field-too-long', $label, "($length chars > $maximum)");
+        $self->tag('field-too-long', $name, "($length chars > $maximum)");
     }
 
     return;

@@ -3,7 +3,7 @@ debconf-templates-general (binary): using-question-in-extended-description-in-te
 debconf-templates-general (binary): using-imperative-form-in-templates debconf/imperative-select
 debconf-templates-general (binary): using-first-person-in-templates debconf/first-person
 debconf-templates-general (binary): unknown-template-type lintian
-debconf-templates-general (binary): unknown-field-in-templates debconf/unknown-field unknown-field
+debconf-templates-general (binary): unknown-field-in-templates debconf/unknown-field Unknown-field
 debconf-templates-general (binary): too-long-short-description-in-templates debconf/too-long-short-desc
 debconf-templates-general (binary): too-long-extended-description-in-templates debconf/5-green-bottles-on-the-wall
 debconf-templates-general (binary): select-without-choices debconf/select-without-choices
@@ -11,12 +11,12 @@ debconf-templates-general (binary): select-with-boolean-choices debconf/select-b
 debconf-templates-general (binary): no-template-type debconf/no-type
 debconf-templates-general (binary): no-template-name
 debconf-templates-general (binary): no-template-description debconf/no-description
-debconf-templates-general (binary): mismatch-translated-choices debconf/select-empty-trans-choices choices-da
+debconf-templates-general (binary): mismatch-translated-choices debconf/select-empty-trans-choices Choices-Da
 debconf-templates-general (binary): malformed-title-in-templates debconf/malformed-note-title
 debconf-templates-general (binary): malformed-template-name debconf-malformed-template
 debconf-templates-general (binary): malformed-question-in-templates debconf/malformed-question
 debconf-templates-general (binary): malformed-prompt-in-templates debconf/malformed-prompt
 debconf-templates-general (binary): making-assumptions-about-interfaces-in-templates debconf/assumption
-debconf-templates-general (binary): empty-translated-choices debconf/select-empty-trans-choices choices-da
+debconf-templates-general (binary): empty-translated-choices debconf/select-empty-trans-choices Choices-Da
 debconf-templates-general (binary): duplicate-long-description-in-template debconf/duplicate-long-desc
 debconf-templates-general (binary): boolean-template-has-bogus-default debconf/boolean-bogus-default lintian

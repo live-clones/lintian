@@ -99,10 +99,10 @@ sub init {
 
     $self->verbatim($dinfo);
 
-    my $name = $dinfo->{package} // EMPTY;
-    my $version = $dinfo->{version} // EMPTY;
-    my $architecture = $dinfo->{architecture} // EMPTY;
-    my $source = $dinfo->{source} // EMPTY;
+    my $name = $dinfo->{Package} // EMPTY;
+    my $version = $dinfo->{Version} // EMPTY;
+    my $architecture = $dinfo->{Architecture} // EMPTY;
+    my $source = $dinfo->{Source} // EMPTY;
 
     my $source_version = $version;
 

@@ -88,7 +88,7 @@ sub issue_tags {
         $group_output{'processing-end'} = $group->processing_end;
 
         $group_output{'maintainer'}
-          = ($group->get_processables)[0]->unfolded_field('maintainer');
+          = ($group->get_processables)[0]->unfolded_field('Maintainer');
 
         push(@allgroups_output, \%group_output);
 

@@ -47,7 +47,7 @@ sub always {
 
     my $processable = $self->processable;
 
-    my $uploaders = $processable->unfolded_field('uploaders');
+    my $uploaders = $processable->unfolded_field('Uploaders');
     return
       unless defined $uploaders;
 
@@ -104,11 +104,11 @@ sub always {
     my @duplicates = grep { $counts{$_} > 1 } keys %counts;
     $self->tag('duplicate-uploader', $_) for @duplicates;
 
-    my $maintainer = $processable->field('maintainer');
+    my $maintainer = $processable->field('Maintainer');
     if (defined $maintainer) {
 
         $self->tag('maintainer-also-in-uploaders')
-          if $processable->field('uploaders') =~ m/\Q$maintainer/;
+          if $processable->field('Uploaders') =~ m/\Q$maintainer/;
     }
 
     return;

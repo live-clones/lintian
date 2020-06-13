@@ -74,9 +74,9 @@ has is_non_free => (
         my $section;
 
         if ($self->type eq 'source') {
-            $section = $self->source_field('section');
+            $section = $self->source_field('Section');
         } else {
-            $section = $self->field('section');
+            $section = $self->field('Section');
         }
 
         $section //= 'main';

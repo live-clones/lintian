@@ -43,7 +43,7 @@ sub source {
 
     my $processable = $self->processable;
 
-    my $homepage = $processable->unfolded_field('homepage');
+    my $homepage = $processable->unfolded_field('Homepage');
 
     unless (defined $homepage) {
 
@@ -53,7 +53,7 @@ sub source {
         my $binary_has_homepage_field = 0;
         for my $binary ($processable->binaries) {
 
-            if (defined $processable->binary_field($binary, 'homepage')) {
+            if (defined $processable->binary_field($binary, 'Homepage')) {
                 $binary_has_homepage_field = 1;
                 last;
             }
@@ -76,12 +76,12 @@ sub always {
 
     my $processable = $self->processable;
 
-    my $homepage = $processable->unfolded_field('homepage');
+    my $homepage = $processable->unfolded_field('Homepage');
 
     return
       unless defined $homepage;
 
-    my $orig = $processable->field('homepage');
+    my $orig = $processable->field('Homepage');
 
     if ($homepage =~ /^<(?:UR[LI]:)?.*>$/i) {
         $self->tag('superfluous-clutter-in-homepage', $orig);

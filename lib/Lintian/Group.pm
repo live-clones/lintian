@@ -238,7 +238,7 @@ sub init_from_file {
         # it is "<something>/files.changes"
         $dir =~ s,(.+)/[^/]+$,$1,;
     }
-    my $key = $type eq 'buildinfo' ? 'checksums-sha256' : 'files';
+    my $key = $type eq 'buildinfo' ? 'Checksums-Sha256' : 'Files';
     for my $line (split(/\n/, $info->{$key}//'')) {
 
         next
@@ -298,7 +298,7 @@ sub unpack {
         # for sources pull in all related files so unpacked does not fail
         if ($processable->type eq 'source') {
             my (undef, $dir, undef)= File::Spec->splitpath($processable->path);
-            for my $fs (split(/\n/, $processable->field('files'))) {
+            for my $fs (split(/\n/, $processable->field('Files'))) {
 
                 # trim both ends
                 $fs =~ s/^\s+|\s+$//g;

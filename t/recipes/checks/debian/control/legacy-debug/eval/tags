@@ -3,7 +3,7 @@ debug (source): debian-control-has-obsolete-dbg-package libhello0-dbg
 debug (source): debian-control-has-obsolete-dbg-package hi-dbg
 debug (source): debian-control-has-obsolete-dbg-package hello-hello-dbg
 debug (source): debian-control-has-obsolete-dbg-package hello-dbg
-debug (source): binary-control-field-duplicates-source field "priority" in package libhello0-dbg
-debug (source): binary-control-field-duplicates-source field "priority" in package hi-dbg
-debug (source): binary-control-field-duplicates-source field "priority" in package hello-hello-dbg
-debug (source): binary-control-field-duplicates-source field "priority" in package hello-dbg
+debug (source): binary-control-field-duplicates-source field "Priority" in package libhello0-dbg
+debug (source): binary-control-field-duplicates-source field "Priority" in package hi-dbg
+debug (source): binary-control-field-duplicates-source field "Priority" in package hello-hello-dbg
+debug (source): binary-control-field-duplicates-source field "Priority" in package hello-dbg

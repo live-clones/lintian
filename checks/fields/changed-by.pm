@@ -45,7 +45,7 @@ sub changes {
 
     # Changed-By is optional in Policy, but if set, must be
     # syntactically correct.  It's also used by dak.
-    my $changed_by = $self->processable->field('changed-by');
+    my $changed_by = $self->processable->field('Changed-By');
     return
       unless defined $changed_by;
 

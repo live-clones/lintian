@@ -160,8 +160,8 @@ sub source {
         return unless $rules->is_open_ok;
     }
 
-    my $architecture = $processable->field('architecture', '');
-    my $version = $processable->field('version');
+    my $architecture = $processable->field('Architecture', '');
+    my $version = $processable->field('Version');
     # If the version field is missing, we assume a neutral non-native one.
     $version = '0-1' unless defined $version;
 
@@ -191,7 +191,7 @@ sub source {
     # other files, since to chase all includes we'd have to have all
     # of its build dependencies installed.
     local $_;
-    my $build_all = $processable->relation('build-depends-all');
+    my $build_all = $processable->relation('Build-Depends-All');
     my @arch_rules = (qr/^clean$/, qr/^binary-arch$/, qr/^build-arch$/);
     my @indep_rules = (qr/^build$/, qr/^build-indep$/, qr/^binary-indep$/);
     my (@current_targets, %rules_per_target,  %debhelper_group);
@@ -504,8 +504,8 @@ sub source {
     # Make sure that all the required build dependencies are there.  Don't
     # issue missing-build-dependency errors for debhelper, since there's
     # another test that does that and it would just be a duplicate.
-    my $build_regular = $processable->relation('build-depends');
-    my $build_indep   = $processable->relation('build-depends-indep');
+    my $build_regular = $processable->relation('Build-Depends');
+    my $build_indep   = $processable->relation('Build-Depends-Indep');
     for my $package (keys %needed_clean) {
         delete $needed{$package};
         my $tag = $needed_clean{$package} || 'missing-build-dependency';
@@ -523,7 +523,7 @@ sub source {
             }
         }
     }
-    my $noarch = $processable->relation_noarch('build-depends-all');
+    my $noarch = $processable->relation_noarch('Build-Depends-All');
     for my $package (keys %needed) {
         my $tag = $needed{$package} || 'missing-build-dependency';
 

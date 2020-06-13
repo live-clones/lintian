@@ -39,7 +39,7 @@ my $KNOWN_DISTS = Lintian::Data->new('changes-file/known-dists');
 sub changes {
     my ($self) = @_;
 
-    my $original = $self->processable->field('distribution');
+    my $original = $self->processable->field('Distribution');
     return
       unless defined $original;
 
@@ -67,7 +67,7 @@ sub changes {
 
             if ($element =~ /backports/) {
                 my $bpo1 = 1;
-                if ($self->processable->field('version')
+                if ($self->processable->field('Version')
                     =~ m/~bpo(\d+)\+(\d+)$/) {
                     my $distnumber = $1;
                     my $bpoversion = $2;
@@ -81,19 +81,19 @@ sub changes {
                     ) {
                         $self->tag(
                             'backports-upload-has-incorrect-version-number',
-                            $self->processable->field('version'),$element);
+                            $self->processable->field('Version'),$element);
                     }
                     $bpo1 = 0 if ($bpoversion > 1);
                 } else {
                     $self->tag('backports-upload-has-incorrect-version-number',
-                        $self->processable->field('version'));
+                        $self->processable->field('Version'));
                 }
                 # for a ~bpoXX+2 or greater version, there
                 # probably will be only a single changelog entry
                 if ($bpo1) {
                     my $changes_versions = 0;
                     foreach my $change_line (
-                        split("\n", $self->processable->field('changes'))){
+                        split("\n", $self->processable->field('Changes'))){
                       # from Parse/DebianChangelog.pm
                       # the changelog entries in the changes file are in a
                       # different format than in the changelog, so the standard
@@ -117,15 +117,15 @@ sub changes {
             }
         } else {
             $self->tag('upload-has-backports-version-number',
-                $self->processable->field('version'),$element)
-              if $self->processable->field('version')=~ m/~bpo(\d+)\+(\d+)$/;
+                $self->processable->field('Version'),$element)
+              if $self->processable->field('Version')=~ m/~bpo(\d+)\+(\d+)$/;
         }
         if (!$KNOWN_DISTS->known($dist)) {
             # bad distribution entry
             $self->tag('bad-distribution-in-changes-file',$element);
         }
 
-        my $changes = $self->processable->field('changes');
+        my $changes = $self->processable->field('Changes');
         if (defined $changes) {
             # take the first non-empty line
             $changes =~ s/^\s+//s;

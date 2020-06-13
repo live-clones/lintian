@@ -38,8 +38,7 @@ use Path::Tiny;
 use POSIX qw(sigprocmask SIG_BLOCK SIG_UNBLOCK SIG_SETMASK);
 use Unicode::UTF8 qw(valid_utf8);
 
-use Lintian::Deb822Parser
-  qw(read_dpkg_control_lc parse_dpkg_control_string_lc);
+use Lintian::Deb822Parser qw(read_dpkg_control parse_dpkg_control_string);
 
 # Force export as soon as possible, since some of the modules we load also
 # depend on us and the sequencing can cause things not to be exported
@@ -183,7 +182,7 @@ our $PKGVERSION_REGEX = qr/
 Extracts the control file from DEBFILE and returns it as a hashref.
 
 Basically, this is a fancy convenience for setting up an ar + tar pipe
-and passing said pipe to L</parse_dpkg_control(HANDLE[, FLAGS[, LINES]])>.
+and passing said pipe to L</parse_dpkgcontrol(HANDLE[, FLAGS[, LINES]])>.
 
 DEBFILE must be an ar file containing a "control.tar.gz" member, which
 in turn should contain a "control" file.  If the "control" file is
@@ -288,7 +287,7 @@ sub get_deb_info {
     return {}
       unless valid_utf8($control);
 
-    my @data = parse_dpkg_control_string_lc($control);
+    my @data = parse_dpkg_control_string($control);
 
     return $data[0];
 }
@@ -312,7 +311,7 @@ L</read_dpkg_control(FILE[, FLAGS[, LINES]])> do.
 sub get_dsc_info {
     my ($file) = @_;
 
-    my @data = read_dpkg_control_lc($file);
+    my @data = read_dpkg_control($file);
 
     return $data[0];
 }
@@ -324,7 +323,7 @@ sub get_dsc_info {
 sub get_dsc_info_from_string {
     my ($text) = @_;
 
-    my @data = parse_dpkg_control_string_lc($text);
+    my @data = parse_dpkg_control_string($text);
 
     return $data[0];
 }
@@ -370,9 +369,9 @@ sub get_file_digest {
     my ($alg, $file) = @_;
     open(my $fd, '<', $file);
     my $digest;
-    if ($alg eq 'md5') {
+    if (lc($alg) eq 'md5') {
         $digest = Digest::MD5->new;
-    } elsif ($alg =~ /sha(\d+)/) {
+    } elsif (lc($alg) =~ /sha(\d+)/) {
         $digest = Digest::SHA->new($1);
     }
     $digest->addfile($fd);

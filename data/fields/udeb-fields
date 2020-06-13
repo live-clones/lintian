@@ -1,30 +1,30 @@
 # Manually maintained list of known udeb fields
 #  - note the Ubuntu original-maintainer field is handled separately.
 
-package
-version
-architecture
-subarchitecture
-depends
-recommends
-enhances
-provides
-replaces
-breaks
-replaces
-maintainer
-section
-priority
-source
-description
-installed-size
-kernel-version
-installer-menu-item
-bugs
-origin
-auto-built-package
-build-ids
-built-using
+Package
+Version
+Architecture
+Subarchitecture
+Depends
+Recommends
+Enhances
+Provides
+Replaces
+Breaks
+Replaces
+Maintainer
+Section
+Priority
+Source
+Description
+Installed-Size
+Kernel-Version
+Installer-Menu-Item
+Bugs
+Origin
+Auto-Built-Package
+Build-Ids
+Built-Using
 
 # Special-case, original-maintainer is not ok in Debian, but we allow
 # it in any non-Debian profile by default.

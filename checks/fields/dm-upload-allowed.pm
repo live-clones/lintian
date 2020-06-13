@@ -39,7 +39,7 @@ sub always {
 
     my $processable = $self->processable;
 
-    my $dmupload = $processable->unfolded_field('dm-upload-allowed');
+    my $dmupload = $processable->unfolded_field('Dm-Upload-Allowed');
 
     return
       unless defined $dmupload;

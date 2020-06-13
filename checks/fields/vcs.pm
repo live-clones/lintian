@@ -50,24 +50,24 @@ our $KNOWN_VCS_HOSTERS= Lintian::Data->new(
     });
 
 my %VCS_EXTRACT = (
-    browser => sub { return @_;},
-    arch    => sub { return @_;},
-    bzr     => sub { return @_;},
+    Browser => sub { return @_;},
+    Arch    => sub { return @_;},
+    Bzr     => sub { return @_;},
     # cvs rootdir followed by optional module name:
-    cvs     => sub { return shift =~ /^(.+?)(?:\s+(\S*))?$/;},
-    darcs   => sub { return @_;},
+    Cvs     => sub { return shift =~ /^(.+?)(?:\s+(\S*))?$/;},
+    Darcs   => sub { return @_;},
     # hg uri followed by optional -b branchname
-    hg      => sub { return shift =~ /^(.+?)(?:\s+-b\s+(\S*))?$/;},
+    Hg      => sub { return shift =~ /^(.+?)(?:\s+-b\s+(\S*))?$/;},
     # git uri followed by optional "[subdir]", "-b branchname" etc.
-    git     =>
+    Git     =>
       sub { return shift =~ /^(.+?)(?:\s+\[(\S*)\])?(?:\s+-b\s+(\S*))?$/;},
-    svn     => sub { return @_;},
+    Svn     => sub { return @_;},
     # New "mtn://host?branch" uri or deprecated "host branch".
-    mtn     => sub { return shift =~ /^(.+?)(?:\s+\S+)?$/;},
+    Mtn     => sub { return shift =~ /^(.+?)(?:\s+\S+)?$/;},
 );
 
 my %VCS_CANONIFY = (
-    browser => sub {
+    Browser => sub {
         $_[0] =~ s{https?://svn\.debian\.org/wsvn/}
                   {https://anonscm.debian.org/viewvc/};
         $_[0] =~ s{https?\Q://git.debian.org/?p=\E}
@@ -86,7 +86,7 @@ my %VCS_CANONIFY = (
             }
         }
     },
-    cvs      => sub {
+    Cvs      => sub {
         if (
             $_[0] =~ s{\@(?:cvs\.alioth|anonscm)\.debian\.org:/cvsroot/}
                       {\@anonscm.debian.org:/cvs/}
@@ -95,17 +95,17 @@ my %VCS_CANONIFY = (
         }
         $_[0]=~ s{\@\Qcvs.alioth.debian.org:/cvs/}{\@anonscm.debian.org:/cvs/};
     },
-    arch     => sub {
+    Arch     => sub {
         $_[0] =~ s{https?\Q://arch.debian.org/arch/\E}
                   {https://anonscm.debian.org/arch/};
     },
-    bzr     => sub {
+    Bzr     => sub {
         $_[0] =~ s{https?\Q://bzr.debian.org/\E}
                   {https://anonscm.debian.org/bzr/};
         $_[0] =~ s{https?\Q://anonscm.debian.org/bzr/bzr/\E}
                   {https://anonscm.debian.org/bzr/};
     },
-    git     => sub {
+    Git     => sub {
         if (
             $_[0] =~ s{git://(?:git|anonscm)\.debian\.org/~}
                       {https://anonscm.debian.org/git/users/}
@@ -124,13 +124,13 @@ my %VCS_CANONIFY = (
         $_[0] =~ s{https?\Q://salsa.debian.org/\E([^/]+/[^/\.]+)(?!\.git)$}
                   {https://salsa.debian.org/$1.git};
     },
-    hg      => sub {
+    Hg      => sub {
         $_[0] =~ s{https?\Q://hg.debian.org/\E}
                   {https://anonscm.debian.org/hg/};
         $_[0] =~ s{https?\Q://anonscm.debian.org/hg/hg/\E}
                   {https://anonscm.debian.org/hg/};
     },
-    svn     => sub {
+    Svn     => sub {
         $_[0] =~ s{\Qsvn://cvs.alioth.debian.org/\E}
                   {svn://anonscm.debian.org/};
         $_[0] =~ s{\Qsvn://svn.debian.org/\E}
@@ -143,25 +143,25 @@ my %VCS_CANONIFY = (
 # Valid URI formats for the Vcs-* fields
 # currently only checks the protocol, not the actual format of the URI
 my %VCS_RECOMMENDED_URIS = (
-    browser => qr;^https?://;,
-    arch    => qr;^https?://;,
-    bzr     => qr;^(?:lp:|(?:nosmart\+)?https?://);,
-    cvs     => qr;^:(?:pserver:|ext:_?anoncvs);,
-    darcs   => qr;^https?://;,
-    hg      => qr;^https?://;,
-    git     => qr;^(?:git|https?|rsync)://;,
-    svn     => qr;^(?:svn|(?:svn\+)?https?)://;,
-    mtn     => qr;^mtn://;,
+    Browser => qr;^https?://;,
+    Arch    => qr;^https?://;,
+    Bzr     => qr;^(?:lp:|(?:nosmart\+)?https?://);,
+    Cvs     => qr;^:(?:pserver:|ext:_?anoncvs);,
+    Darcs   => qr;^https?://;,
+    Hg      => qr;^https?://;,
+    Git     => qr;^(?:git|https?|rsync)://;,
+    Svn     => qr;^(?:svn|(?:svn\+)?https?)://;,
+    Mtn     => qr;^mtn://;,
 );
 
 my %VCS_VALID_URIS = (
-    arch    => qr;^https?://;,
-    bzr     => qr;^(?:sftp|(?:bzr\+)?ssh)://;,
-    cvs     => qr;^(?:-d\s*)?:(?:ext|pserver):;,
-    hg      => qr;^ssh://;,
-    git     => qr;^(?:git\+)?ssh://|^[\w.]+@[a-zA-Z0-9.]+:[/a-zA-Z0-9.];,
-    svn     => qr;^(?:svn\+)?ssh://;,
-    mtn     => qr;^[\w.-]+$;,
+    Arch    => qr;^https?://;,
+    Bzr     => qr;^(?:sftp|(?:bzr\+)?ssh)://;,
+    Cvs     => qr;^(?:-d\s*)?:(?:ext|pserver):;,
+    Hg      => qr;^ssh://;,
+    Git     => qr;^(?:git\+)?ssh://|^[\w.]+@[a-zA-Z0-9.]+:[/a-zA-Z0-9.];,
+    Svn     => qr;^(?:svn\+)?ssh://;,
+    Mtn     => qr;^[\w.-]+$;,
 );
 
 sub always {
@@ -178,7 +178,7 @@ sub always {
     my $is_comaintained = 0;
     my $is_maintained_by_individual = 1;
     my $num_uploaders = 0;
-    for my $field (qw(maintainer uploaders)) {
+    for my $field (qw(Maintainer Uploaders)) {
 
         my $maintainer = $processable->unfolded_field($field);
 
@@ -193,7 +193,7 @@ sub always {
             $is_maintained_by_individual = 0;
         }
 
-        if ($field eq 'uploaders') {
+        if ($field eq 'Uploaders') {
 
             # check for empty field see  #783628
             $maintainer =~ s/,\s*,/,/g
@@ -223,8 +223,8 @@ sub always {
     my %seen_vcs;
     while (my ($platform, $splitter) = each %VCS_EXTRACT) {
 
-        my $fieldname = "vcs-$platform";
-        my $maintainer = $processable->field('maintainer', EMPTY);
+        my $fieldname = "Vcs-$platform";
+        my $maintainer = $processable->field('Maintainer', EMPTY);
         my $uri = $processable->unfolded_field($fieldname);
 
         next
@@ -267,13 +267,13 @@ sub always {
               unless $canonicalized eq $parts[0];
         }
 
-        if ($platform eq 'browser') {
+        if ($platform eq 'Browser') {
 
             $self->tag('vcs-browser-links-to-empty-view', $uri)
               if $uri =~ m%rev=0&sc=0%;
 
         } else {
-            $self->tag('vcs', $platform);
+            $self->tag('vcs', lc $platform);
             $self->tag('vcs-uri', $uri);
             $seen_vcs{$platform}++;
 
@@ -282,10 +282,10 @@ sub always {
 
                     if (   $uri =~ m/^($regex.*)/xi
                         && $platform ne $re_vcs
-                        && $platform ne 'browser') {
+                        && $platform ne 'Browser') {
 
                         $self->tag('vcs-field-mismatch',
-                            "vcs-$platform != vcs-$re_vcs",$uri);
+                            "Vcs-$platform != Vcs-$re_vcs",$uri);
 
                         # warn once
                         last;
@@ -302,7 +302,7 @@ sub always {
         }
 
         # orphaned
-        if ($maintainer =~ /packages\@qa.debian.org/ && $platform ne 'browser')
+        if ($maintainer =~ /packages\@qa.debian.org/ && $platform ne 'Browser')
         {
             if ($uri =~ m{//(.+)\.debian\.org/}) {
                 $self->tag('orphaned-package-maintained-in-private-space',
@@ -326,7 +326,8 @@ sub always {
           and $uri !~ m{salsa.debian.org/python-team/applications/.+};
     }
 
-    $self->tag('vcs-fields-use-more-than-one-vcs', sort keys %seen_vcs)
+    $self->tag('vcs-fields-use-more-than-one-vcs',
+        sort map { lc } keys %seen_vcs)
       if keys %seen_vcs > 1;
 
     $self->tag('co-maintained-package-with-no-vcs-fields')
@@ -335,12 +336,12 @@ sub always {
       and not %seen_vcs;
 
     # Check for missing Vcs-Browser headers
-    unless (defined $processable->field('vcs-browser')) {
+    unless (defined $processable->field('Vcs-Browser')) {
 
         foreach my $regex ($KNOWN_VCS_HOSTERS->all) {
 
             my $platform = @{$KNOWN_VCS_HOSTERS->value($regex)}[0];
-            my $fieldname = "vcs-$platform";
+            my $fieldname = "Vcs-$platform";
 
             if ($processable->field($fieldname, EMPTY) =~ m/^($regex.*)/xi) {
                 $self->tag('missing-vcs-browser-field', $fieldname, $1);

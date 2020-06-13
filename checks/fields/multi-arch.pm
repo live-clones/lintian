@@ -50,10 +50,10 @@ sub source {
     for my $bin ($processable->binaries) {
 
         next
-          unless $processable->binary_field($bin, 'multi-arch', EMPTY) eq
+          unless $processable->binary_field($bin, 'Multi-Arch', EMPTY) eq
           'same';
 
-        my $wildcard = $processable->binary_field($bin, 'architecture');
+        my $wildcard = $processable->binary_field($bin, 'Architecture');
         my @arches   = split(
             SPACE,
             safe_qx(
@@ -85,15 +85,15 @@ sub installable {
 
     if ($pkg =~ /^x?fonts-/) {
         $self->tag('font-package-not-multi-arch-foreign')
-          unless $processable->field('multi-arch', 'no')
+          unless $processable->field('Multi-Arch', 'no')
           =~/^(?:foreign|allowed)$/;
     }
 
-    my $multi = $processable->unfolded_field('multi-arch');
+    my $multi = $processable->unfolded_field('Multi-Arch');
     return
       unless defined $multi;
 
-    my $architecture = $processable->unfolded_field('architecture');
+    my $architecture = $processable->unfolded_field('Architecture');
     if (defined $architecture) {
 
         $self->tag('illegal-multi-arch-value', $architecture, $multi)
@@ -106,8 +106,7 @@ sub installable {
 sub always {
     my ($self) = @_;
 
-    my $multi = $self->processable->unfolded_field('multi-arch');
-
+    my $multi = $self->processable->unfolded_field('Multi-Arch');
     return
       unless defined $multi;
 

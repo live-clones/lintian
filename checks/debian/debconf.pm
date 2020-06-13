@@ -27,7 +27,7 @@ use autodie;
 
 use Path::Tiny;
 
-use Lintian::Deb822Parser qw(parse_dpkg_control_string_lc :constants);
+use Lintian::Deb822Parser qw(parse_dpkg_control_string :constants);
 use Lintian::Relation;
 use Lintian::Util qw($PKGNAME_REGEX);
 
@@ -42,7 +42,7 @@ with 'Lintian::Check';
 # behavior. Likewise, help is supported as of cdebconf 0.143 but is not yet
 # supported by debconf.
 my %template_fields
-  = map { $_ => 1 } qw(template type choices indices default description help);
+  = map { $_ => 1 } qw(Template Type Choices Indices Default Description Help);
 
 # From debconf-devel(7), section 'THE TEMPLATES FILE', up to date with debconf
 # version 1.5.24.
@@ -100,7 +100,7 @@ sub source {
             my @templates;
             eval {
                 @templates
-                  = parse_dpkg_control_string_lc($contents,
+                  = parse_dpkg_control_string($contents,
                     DCTRL_DEBCONF_TEMPLATE);
             };
             if ($@) {
@@ -112,11 +112,11 @@ sub source {
             }
 
             foreach my $template (@templates) {
-                if (    exists $template->{template}
-                    and exists $template->{_choices}) {
+                if (    exists $template->{Template}
+                    and exists $template->{_Choices}) {
                     $self->tag(
                         'template-uses-unsplit-choices',
-                        "$binary - $template->{template}"
+                        "$binary - $template->{Template}"
                     );
                 }
             }
@@ -165,8 +165,8 @@ sub installable {
 
     # Consider every package to depend on itself.
     my $selfrel;
-    if (defined $processable->field('version')) {
-        $_ = $processable->field('version');
+    if (defined $processable->field('Version')) {
+        $_ = $processable->field('Version');
         $selfrel = "$pkg (= $_)";
     } else {
         $selfrel = "$pkg";
@@ -175,7 +175,7 @@ sub installable {
     # Include self and provides as a package providing debconf presumably
     # satisfies its own use of debconf (if any).
     my $selfrelation
-      = Lintian::Relation->and($processable->relation('provides'), $selfrel);
+      = Lintian::Relation->and($processable->relation('Provides'), $selfrel);
     my $alldependencies
       = Lintian::Relation->and($processable->relation('strong'),$selfrelation);
 
@@ -210,7 +210,7 @@ sub installable {
                 # $seentemplates (above) will be false if $ctrl_templates is a
                 # symlink or not a file, so this should be safe without
                 # (re-checking) with -f/-l.
-                @templates= parse_dpkg_control_string_lc($contents,
+                @templates= parse_dpkg_control_string($contents,
                     DCTRL_DEBCONF_TEMPLATE);
             };
             if ($@) {
@@ -226,73 +226,73 @@ sub installable {
     foreach my $template (@templates) {
         my $isselect = '';
 
-        if (not exists $template->{template}) {
+        if (not exists $template->{Template}) {
             $self->tag('no-template-name');
-            $template->{template} = 'no-template-name';
+            $template->{Template} = 'no-template-name';
         } else {
-            push @templates_seen, $template->{template};
-            if ($template->{template}!~m|[A-Za-z0-9.+-](?:/[A-Za-z0-9.+-])|) {
-                $self->tag('malformed-template-name', "$template->{template}");
+            push @templates_seen, $template->{Template};
+            if ($template->{Template}!~m|[A-Za-z0-9.+-](?:/[A-Za-z0-9.+-])|) {
+                $self->tag('malformed-template-name', "$template->{Template}");
             }
         }
 
-        if (not exists $template->{type}) {
-            $self->tag('no-template-type', "$template->{template}");
-        } elsif (not $valid_types{$template->{type}}) {
+        if (not exists $template->{Type}) {
+            $self->tag('no-template-type', "$template->{Template}");
+        } elsif (not $valid_types{$template->{Type}}) {
             # cdebconf has a special "entropy" type
-            $self->tag('unknown-template-type', "$template->{type}")
-              unless ($template->{type} eq 'entropy'
+            $self->tag('unknown-template-type', "$template->{Type}")
+              unless ($template->{Type} eq 'entropy'
                 and $alldependencies->implies('cdebconf'));
-        } elsif ($template->{type} eq 'select') {
+        } elsif ($template->{Type} eq 'select') {
             $isselect = 1;
-        } elsif ($template->{type} eq 'multiselect') {
+        } elsif ($template->{Type} eq 'multiselect') {
             $isselect = 1;
-        } elsif ($template->{type} eq 'boolean') {
+        } elsif ($template->{Type} eq 'boolean') {
             $self->tag(
                 'boolean-template-has-bogus-default',
-                "$template->{template} $template->{default}"
+                "$template->{Template} $template->{Default}"
               )
-              if defined $template->{default}
-              and $template->{default} ne 'true'
-              and $template->{default} ne 'false';
+              if defined $template->{Default}
+              and $template->{Default} ne 'true'
+              and $template->{Default} ne 'false';
         }
 
-        if ($template->{choices} && ($template->{choices} !~ /^\s*$/)) {
-            my $nrchoices = count_choices($template->{choices});
+        if ($template->{Choices} && ($template->{Choices} !~ /^\s*$/)) {
+            my $nrchoices = count_choices($template->{Choices});
             for my $key (keys %$template) {
-                if ($key =~ /^choices-/) {
+                if ($key =~ /^Choices-/) {
                     if (!$template->{$key} || ($template->{$key} =~ /^\s*$/)){
                         $self->tag(
                             'empty-translated-choices',
-                            "$template->{template} $key"
+                            "$template->{Template} $key"
                         );
                     }
                     if (count_choices($template->{$key}) != $nrchoices) {
                         $self->tag(
                             'mismatch-translated-choices',
-                            "$template->{template} $key"
+                            "$template->{Template} $key"
                         );
                     }
                 }
             }
-            if ($template->{choices} =~ /^\s*(yes\s*,\s*no|no\s*,\s*yes)\s*$/i)
+            if ($template->{Choices} =~ /^\s*(yes\s*,\s*no|no\s*,\s*yes)\s*$/i)
             {
                 $self->tag('select-with-boolean-choices',
-                    "$template->{template}");
+                    "$template->{Template}");
             }
         }
 
-        if ($isselect and not exists $template->{choices}) {
-            $self->tag('select-without-choices', "$template->{template}");
+        if ($isselect and not exists $template->{Choices}) {
+            $self->tag('select-without-choices', "$template->{Template}");
         }
 
-        if (not exists $template->{description}) {
-            $self->tag('no-template-description', "$template->{template}");
-        } elsif ($template->{description}=~m/^\s*(.*?)\s*?\n\s*\1\s*$/) {
+        if (not exists $template->{Description}) {
+            $self->tag('no-template-description', "$template->{Template}");
+        } elsif ($template->{Description}=~m/^\s*(.*?)\s*?\n\s*\1\s*$/) {
             # Check for duplication. Should all this be folded into the
             # description checks?
             $self->tag('duplicate-long-description-in-template',
-                "$template->{template}");
+                "$template->{Template}");
         }
 
         my %languages;
@@ -305,31 +305,31 @@ sub installable {
             unless ($template_fields{$mainfield}){ # Ignore language codes here
                 $self->tag(
                     'unknown-field-in-templates',
-                    "$template->{template} $field"
+                    "$template->{Template} $field"
                 );
             }
         }
 
-        if ($template->{template} && $template->{type}) {
-            $potential_db_abuse{$template->{template}} = 1
-              if ( ($template->{type} eq 'note')
-                or ($template->{type} eq 'text'));
+        if ($template->{Template} && $template->{Type}) {
+            $potential_db_abuse{$template->{Template}} = 1
+              if ( ($template->{Type} eq 'note')
+                or ($template->{Type} eq 'text'));
         }
 
         # Check the description against the best practices in the
         # Developer's Reference, but skip all templates where the
         # short description contains the string "for internal use".
         my ($short, $extended);
-        if (defined $template->{description}) {
-            ($short, $extended) = split(/\n/, $template->{description}, 2);
+        if (defined $template->{Description}) {
+            ($short, $extended) = split(/\n/, $template->{Description}, 2);
             unless (defined $short) {
-                $short = $template->{description};
+                $short = $template->{Description};
                 $extended = '';
             }
         } else {
             ($short, $extended) = ('', '');
         }
-        my $ttype = $template->{type} || '';
+        my $ttype = $template->{Type} || '';
         unless ($short =~ /for internal use/i) {
             my $isprompt = grep { $_ eq $ttype } qw(string password);
             if ($isprompt) {
@@ -339,49 +339,49 @@ sub installable {
                         || $short =~ m/^(what|who|when|where|which|how)/i)
                 ) {
                     $self->tag('malformed-prompt-in-templates',
-                        $template->{template});
+                        $template->{Template});
                 }
             }
             if ($isselect) {
                 if ($short =~ /^(Please|Cho+se|Enter|Select|Specify|Give)/) {
                     $self->tag('using-imperative-form-in-templates',
-                        $template->{template});
+                        $template->{Template});
                 }
             }
             if ($ttype eq 'boolean') {
                 if ($short !~ /\?/) {
                     $self->tag('malformed-question-in-templates',
-                        $template->{template});
+                        $template->{Template});
                 }
             }
             if (defined($extended) && $extended =~ /[^\?]\?(\s+|$)/) {
                 $self->tag(
                     'using-question-in-extended-description-in-templates',
-                    $template->{template});
+                    $template->{Template});
             }
             if ($ttype eq 'note') {
                 if ($short =~ /[.?;:]$/) {
                     $self->tag('malformed-title-in-templates',
-                        $template->{template});
+                        $template->{Template});
                 }
             }
             if (length($short) > 75) {
                 $self->tag('too-long-short-description-in-templates',
-                    $template->{template})
+                    $template->{Template})
                   unless $type eq 'udeb' && $ttype eq 'text';
             }
-            if (defined $template->{description}) {
-                if ($template->{description}
+            if (defined $template->{Description}) {
+                if ($template->{Description}
                     =~ /(\A|\s)(I|[Mm]y|[Ww]e|[Oo]ur|[Oo]urs|mine|myself|ourself|me|us)(\Z|\s)/
                 ) {
                     $self->tag('using-first-person-in-templates',
-                        $template->{template});
+                        $template->{Template});
                 }
-                if (    $template->{description} =~ /[ \'\"]yes[ \'\",;.]/i
+                if (    $template->{Description} =~ /[ \'\"]yes[ \'\",;.]/i
                     and $ttype eq 'boolean') {
                     $self->tag(
                         'making-assumptions-about-interfaces-in-templates',
-                        $template->{template});
+                        $template->{Template});
                 }
             }
 
@@ -405,7 +405,7 @@ sub installable {
                 }
                 if ($lines > 20) {
                     $self->tag('too-long-extended-description-in-templates',
-                        $template->{template});
+                        $template->{Template});
                 }
             }
         }
@@ -569,7 +569,7 @@ sub installable {
     # package that might provide debconf functionality.
 
     if ($usespreinst) {
-        unless ($processable->relation('pre-depends')->implies($ANY_DEBCONF)) {
+        unless ($processable->relation('Pre-Depends')->implies($ANY_DEBCONF)) {
             $self->tag('missing-debconf-dependency-for-preinst')
               unless $type eq 'udeb';
         }

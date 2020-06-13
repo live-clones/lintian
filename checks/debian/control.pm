@@ -2,6 +2,7 @@
 #
 # Copyright © 2004 Marc Brockschmidt
 # Copyright © 2020 Chris Lamb <lamby@debian.org>
+# Copyright © 2020 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -31,7 +32,7 @@ use List::Util qw(first none);
 use Path::Tiny;
 
 use Lintian::Data ();
-use Lintian::Deb822Parser qw(parse_dpkg_control_string_lc);
+use Lintian::Deb822Parser qw(parse_dpkg_control_string);
 use Lintian::Relation ();
 
 use Moo;
@@ -111,31 +112,38 @@ sub source {
 
         # line with field:
         if ($line =~ /^(\S+):/) {
-            my $field = lc($1);
-            if ($field =~ /^xs-vcs-/) {
+
+            my $field = $1;
+
+            if ($field =~ /^XS-Vcs-/) {
                 my $base = $field;
-                $base =~ s/^xs-//;
+                $base =~ s/^XS-//;
                 $self->tag('xs-vcs-field-in-debian-control', $field)
                   if $src_fields->known($base);
             }
-            if ($field eq 'xs-testsuite') {
+
+            if ($field eq 'XS-Testsuite') {
                 $self->tag('xs-testsuite-field-in-debian-control', $field);
             }
-            if ($field eq 'xc-package-type') {
+
+            if ($field eq 'XC-Package-Type') {
                 $self->tag('xc-package-type-in-debian-control',
                     "line $position");
             }
+
             unless ($line =~ /^\S+: \S/ || $line =~ /^\S+:$/) {
                 $self->tag('debian-control-has-unusual-field-spacing',
                     "line $position");
             }
+
             # something like "Maintainer: Maintainer: bad field"
             if ($line =~ /^\Q$field\E: \s* \Q$field\E \s* :/xsmi) {
                 $self->tag('debian-control-repeats-field-name-in-value',
                     "line $position");
             }
+
             if (    $field =~ /^Rules?-Requires?-Roots?$/i
-                and $field ne 'rules-requires-root') {
+                and $field ne 'Rules-Requires-Root') {
                 $self->tag('spelling-error-in-rules-requires-root',
                     $field,"(line $position)");
             }
@@ -147,7 +155,7 @@ sub source {
     eval {
         # check we can parse it, but ignore the result - we will fetch
         # the fields we need from $processable.
-        parse_dpkg_control_string_lc($contents);
+        parse_dpkg_control_string($contents);
     };
     if ($@) {
         chomp $@;
@@ -169,8 +177,8 @@ sub source {
         my $bfields = $processable->binary_field($bin);
         $self->tag('build-info-in-binary-control-file-section', "Package $bin")
           if (
-            first { $bfields->{"build-$_"} }
-            qw(depends depends-indep conflicts conflicts-indep)
+            first { $bfields->{"Build-$_"} }
+            qw(Depends Depends-Indep Conflicts Conflicts-Indep)
           );
         foreach my $field (keys %$bfields) {
             $self->tag(
@@ -217,8 +225,8 @@ sub source {
     # duplicates, which dpkg-source eliminates.
 
     for my $field (
-        qw(build-depends build-depends-indep
-        build-conflicts build-conflicts-indep)
+        qw(Build-Depends Build-Depends-Indep
+        Build-conflicts Build-Conflicts-Indep)
     ) {
         my $raw = $processable->source_field($field);
         my $rel;
@@ -229,8 +237,8 @@ sub source {
 
     for my $bin (@package_names) {
         for my $field (
-            qw(pre-depends depends recommends suggests breaks
-            conflicts provides replaces enhances)
+            qw(Pre-Depends Depends Recommends Suggests Breaks
+            Conflicts Provides Replaces Enhances)
         ) {
             my $raw = $processable->binary_field($bin, $field);
             my $rel;
@@ -252,7 +260,7 @@ sub source {
     # doesn't hard-code a dependency on libc.  We have to do the
     # latter check here rather than in checks/fields to distinguish
     # from dependencies created by ${shlibs:Depends}.
-    my @dep_fields = qw(pre-depends depends recommends suggests);
+    my @dep_fields = qw(Pre-Depends Depends Recommends Suggests);
     foreach my $bin (@package_names) {
         for my $strong (0 .. $#dep_fields) {
             next unless $processable->binary_field($bin, $dep_fields[$strong]);
@@ -299,7 +307,7 @@ sub source {
     # duplicate the descriptions of non-udeb packages and the package
     # description for udebs is much less important or significant to
     # the user.
-    my $area = $processable->source_field('section');
+    my $area = $processable->source_field('Section');
     if (defined $area) {
         if ($area =~ m%^([^/]+)/%) {
             $area = $1;
@@ -311,10 +319,10 @@ sub source {
     my @descriptions;
     my ($seen_main, $seen_contrib);
     foreach my $bin (@package_names) {
-        my $depends = $processable->binary_field($bin, 'depends', '');
+        my $depends = $processable->binary_field($bin, 'Depends', '');
 
         # Accumulate the description.
-        my $desc = $processable->binary_field($bin, 'description');
+        my $desc = $processable->binary_field($bin, 'Description');
         my $bin_area;
         if ($desc and $processable->binary_package_type($bin) ne 'udeb') {
             push @descriptions, [$bin, split("\n", $desc, 2)];
@@ -330,7 +338,7 @@ sub source {
         }
 
         # Check mismatches in archive area.
-        $bin_area = $processable->binary_field($bin, 'section');
+        $bin_area = $processable->binary_field($bin, 'Section');
         $seen_main = 1 if not $bin_area and ($area // '') eq 'main';
         next unless $area && $bin_area;
 
@@ -392,7 +400,7 @@ sub source {
 
     # check the syntax of the Build-Profiles field
     for my $bin (@package_names) {
-        my $raw = $processable->binary_field($bin, 'build-profiles');
+        my $raw = $processable->binary_field($bin, 'Build-Profiles');
         next unless $raw;
         if (
             $raw!~ m{^\s*              # skip leading whitespace
@@ -434,7 +442,7 @@ sub source {
     }
 
     # Check Rules-Requires-Root
-    if (defined(my $r3 = $processable->source_field('rules-requires-root'))) {
+    if (defined(my $r3 = $processable->source_field('Rules-Requires-Root'))) {
         if ($r3 eq 'no') {
             $self->tag('rules-does-not-require-root');
         } else {
@@ -444,7 +452,7 @@ sub source {
         $self->tag('rules-requires-root-missing');
     }
 
-    if ($processable->source_field('rules-requires-root', 'no') eq 'no') {
+    if ($processable->source_field('Rules-Requires-Root', 'no') eq 'no') {
       BINARY:
         foreach my $proc ($group->get_binary_processables) {
             my $pkg = $proc->name;
@@ -463,7 +471,7 @@ sub source {
         # The Architecture field is mandatory and dpkg-buildpackage
         # will already bail out if it's missing, so we don't need to
         # check that.
-        my $raw = $processable->binary_field($bin, 'architecture');
+        my $raw = $processable->binary_field($bin, 'Architecture');
         if ($raw =~ /\n./) {
             $self->tag('multiline-architecture-field',$bin);
         }
@@ -479,13 +487,13 @@ sub source {
           unless $relation->implies('${gir:Depends}');
     }
 
-    if ($processable->relation('build-depends')
+    if ($processable->relation('Build-Depends')
         ->implies('golang-go | golang-any')) {
         # Verify that golang binary packages set Built-Using (except for
         # arch:all library packages).
         foreach my $bin (@package_names) {
-            my $bu = $processable->binary_field($bin, 'built-using');
-            my $arch = $processable->binary_field($bin, 'architecture');
+            my $bu = $processable->binary_field($bin, 'Built-Using');
+            my $arch = $processable->binary_field($bin, 'Architecture');
             if ($arch eq 'all') {
                 $self->tag('built-using-field-on-arch-all-package', $bin)
                   if defined($bu);
@@ -498,15 +506,15 @@ sub source {
         }
 
         $self->tag('missing-xs-go-import-path-for-golang-package')
-          unless $processable->source_field('xs-go-import-path', '');
+          unless $processable->source_field('XS-Go-Import-Path', '');
     }
 
     my $changes = $group->changes;
     $self->tag('source-only-upload-to-non-free-without-autobuild')
       if defined($changes)
-      and $changes->field('architecture', '') eq 'source'
+      and $changes->field('Architecture', '') eq 'source'
       and $processable->is_non_free
-      and $processable->source_field('xs-autobuild', 'no') eq 'no';
+      and $processable->source_field('XS-Autobuild', 'no') eq 'no';
 
     return;
 }
@@ -572,7 +580,7 @@ sub check_dev_depends {
                 # arch:all as well.  The version-substvars check
                 # handles that for us.
                 next
-                  if $processable->binary_field($target, 'architecture', '')eq
+                  if $processable->binary_field($target, 'Architecture', '')eq
                   'all'
                   && $versions[0] =~ /^\s*=\s*\$\{source:Version\}/;
                 $self->tag('weak-library-dev-dependency',

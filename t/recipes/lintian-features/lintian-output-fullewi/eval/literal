@@ -8,7 +8,7 @@ W: lintian-output-fullewi source (1.0+dsfg-1.1) [source]: changelog-file-missing
 W: lintian-output-fullewi source (1.0+dsfg-1.1) [source]: dfsg-version-misspelled 1.0+dsfg-1.1
 W: lintian-output-fullewi source (1.0+dsfg-1.1) [source]: format-3.0-but-debian-changes-patch
 W: lintian-output-fullewi source (1.0+dsfg-1.1) [source]: maintainer-upload-has-incorrect-version-number 1.0+dsfg-1.1
-I: lintian-output-fullewi source (1.0+dsfg-1.1) [source]: binary-control-field-duplicates-source field "section" in package lintian-output-fullewi
+I: lintian-output-fullewi source (1.0+dsfg-1.1) [source]: binary-control-field-duplicates-source field "Section" in package lintian-output-fullewi
 I: lintian-output-fullewi binary (1.0+dsfg-1.1) [all]: description-possibly-contains-homepage http://www.example.com/.
 I: lintian-output-fullewi binary (1.0+dsfg-1.1) [all]: desktop-entry-limited-to-environments usr/share/applications/script.desktop
 I: lintian-output-fullewi binary (1.0+dsfg-1.1) [all]: package-contains-empty-directory usr/local/share/lintian/

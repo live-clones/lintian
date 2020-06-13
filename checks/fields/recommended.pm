@@ -48,17 +48,17 @@ with 'Lintian::Check';
 # super confusing
 
 # policy 5.2
-my @DEBIAN_CONTROL_SOURCE = qw(section priority);
-my @DEBIAN_CONTROL_INSTALLABLE = qw(); # section priority
+my @DEBIAN_CONTROL_SOURCE = qw(Section Priority);
+my @DEBIAN_CONTROL_INSTALLABLE = qw(); # Section Priority
 
 # policy 5.3
-my @INSTALLATION_CONTROL = qw(section priority);
+my @INSTALLATION_CONTROL = qw(Section Priority);
 
 # policy 5.4
-my @DSC = qw(package-list);
+my @DSC = qw(Package-List);
 
 # policy 5.5
-my @CHANGES = qw(urgency);
+my @CHANGES = qw(Urgency);
 
 sub source {
     my ($self) = @_;
@@ -119,9 +119,6 @@ sub tag_missing_fields {
     # select fields for announcement
     my $missinglc = List::Compare->new($required, $actual);
     my @missing = $missinglc->get_Lonly;
-
-    # title-case the field name
-    s/\b(\w)/\U$1/g for @missing;
 
     $self->tag('recommended-field', $location, $_) for @missing;
 

@@ -41,20 +41,11 @@ sub always {
 
     my @names = keys %{$self->processable->field};
 
-    for my $name (@names) {
+    # fields that contain ESC characters
+    my @escaped
+      = grep { index($self->processable->field($_), ESCAPE) >= 0 } @names;
 
-        my $value = $self->processable->field($name);
-
-        return
-          unless length $value;
-
-        # title-case the field name
-        (my $label = $name) =~ s/\b(\w)/\U$1/g;
-
-        # check if field contains and ESC character
-        $self->tag('ansi-escape', $label, $value)
-          if index($value, ESCAPE) >= 0;
-    }
+    $self->tag('ansi-escape', $_, $self->processable->field($_)) for @escaped;
 
     return;
 }

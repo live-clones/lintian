@@ -78,7 +78,7 @@ sub add_diffstat {
       or -l $patchpath;
 
     my $data = get_dsc_info($dscpath);
-    my $version = $data->{'version'};
+    my $version = $data->{'Version'};
     $version =~ s/^\d://; #Remove epoch for this
 
     my $diffname = $self->name . UNDERSCORE . $version . '.diff.gz';

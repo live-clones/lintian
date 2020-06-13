@@ -1,8 +1,8 @@
 # Known fields in data/tests/control
 
-tests
-restrictions
-features
-depends
-tests-directory
-test-command
+Tests
+Restrictions
+Features
+Depends
+Tests-Directory
+Test-Command

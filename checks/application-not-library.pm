@@ -87,7 +87,7 @@ sub installable {
     }
 
     # Check for wrong section
-    my $section = $processable->field('section', '');
+    my $section = $processable->field('Section', '');
     if ($section =~ /perl|python|ruby|(?:^|\/)libs/) { # oldlibs is ok
         $self->tag('application-in-library-section', "$section", @programs);
     }

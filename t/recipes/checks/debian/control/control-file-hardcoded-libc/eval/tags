@@ -1,5 +1,5 @@
 control-file-hardcoded-libc (source): rules-does-not-require-root
-control-file-hardcoded-libc (source): package-depends-on-hardcoded-libc control-file-hardcoded-libc suggests
-control-file-hardcoded-libc (source): package-depends-on-hardcoded-libc control-file-hardcoded-libc recommends
-control-file-hardcoded-libc (source): package-depends-on-hardcoded-libc control-file-hardcoded-libc pre-depends
-control-file-hardcoded-libc (source): package-depends-on-hardcoded-libc control-file-hardcoded-libc depends
+control-file-hardcoded-libc (source): package-depends-on-hardcoded-libc control-file-hardcoded-libc Suggests
+control-file-hardcoded-libc (source): package-depends-on-hardcoded-libc control-file-hardcoded-libc Recommends
+control-file-hardcoded-libc (source): package-depends-on-hardcoded-libc control-file-hardcoded-libc Pre-Depends
+control-file-hardcoded-libc (source): package-depends-on-hardcoded-libc control-file-hardcoded-libc Depends

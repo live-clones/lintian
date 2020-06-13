@@ -41,7 +41,7 @@ my $PKG_CONFIG_BAD_REGEX
 sub files {
     my ($self, $file) = @_;
 
-    my $architecture = $self->processable->field('architecture', '');
+    my $architecture = $self->processable->field('Architecture', '');
 
     # arch-indep pkgconfig
     if (   $file->is_regular_file

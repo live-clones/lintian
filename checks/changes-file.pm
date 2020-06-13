@@ -59,7 +59,7 @@ sub changes {
                 $file_info->{section});
         }
 
-        foreach my $alg (qw(sha1 sha256)) {
+        foreach my $alg (qw(Sha1 Sha256)) {
             my $checksum_info = $file_info->{checksums}{$alg};
             if (defined $checksum_info) {
                 if ($file_info->{size} != $checksum_info->{filesize}) {
@@ -80,14 +80,16 @@ sub changes {
         }
 
         # check checksums
-        foreach my $alg (qw(md5 sha1 sha256)) {
-            next unless exists $file_info->{checksums}{$alg};
+        foreach my $alg (qw(Md5 Sha1 Sha256)) {
+            next
+              unless exists $file_info->{checksums}{$alg};
 
             my $real_checksum = get_file_checksum($alg, $filename);
             $num_checksums{$alg}++;
 
             if ($real_checksum ne $file_info->{checksums}{$alg}{sum}) {
-                $self->tag('checksum-mismatch-in-changes-file', $alg, $file);
+                $self->tag('checksum-mismatch-in-changes-file',
+                    "Checksum-$alg", $file);
             }
         }
     }
@@ -107,7 +109,7 @@ sub changes {
         my $expected = keys %{$files};
         $self->tag(
             'checksum-count-mismatch-in-changes-file',
-            "$seen $alg checksums != $expected files"
+            "$seen Checksum-$alg checksums != $expected files"
         ) if $seen != $expected;
     }
 

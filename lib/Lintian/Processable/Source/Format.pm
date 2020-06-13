@@ -59,7 +59,7 @@ has source_format => (
     default => sub {
         my ($self) = @_;
 
-        my $format = $self->field('format') // '1.0';
+        my $format = $self->field('Format') // '1.0';
 
         return $format;
     });
@@ -97,7 +97,7 @@ has native => (
         return 1
           if $format =~ /^\s*3\.0\s+\(native\)\s*$/;
 
-        my $version = $self->field('version');
+        my $version = $self->field('Version');
         return 0
           unless defined $version;
 

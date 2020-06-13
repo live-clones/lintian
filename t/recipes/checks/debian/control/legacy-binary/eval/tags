@@ -1,3 +1,3 @@
-binary (source): xs-vcs-field-in-debian-control xs-vcs-browser
+binary (source): xs-vcs-field-in-debian-control XS-Vcs-Browser
 binary (source): rules-requires-root-missing
-binary (source): binary-control-field-duplicates-source field "vcs-svn" in package binary
+binary (source): binary-control-field-duplicates-source field "Vcs-Svn" in package binary

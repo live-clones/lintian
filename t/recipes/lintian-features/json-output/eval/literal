@@ -26,7 +26,7 @@
                      "severity" : "warning"
                   },
                   {
-                     "context" : "field \"section\" in package json-output",
+                     "context" : "field \"Section\" in package json-output",
                      "name" : "binary-control-field-duplicates-source",
                      "severity" : "info"
                   },

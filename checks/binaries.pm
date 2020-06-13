@@ -153,8 +153,8 @@ sub installable {
     my $has_php_ext = 0;
     my $uses_numpy_c_abi = 0;
 
-    my $arch = $processable->field('architecture', '');
-    my $multiarch = $processable->field('multi-arch', 'no');
+    my $arch = $processable->field('Architecture', '');
+    my $multiarch = $processable->field('Multi-Arch', 'no');
     my $srcpkg = $processable->source;
 
     $arch_hardening = $HARDENING->value($arch)
@@ -162,10 +162,10 @@ sub installable {
 
     my $src = $group->source;
     if (defined($src)) {
-        $built_with_golang = $src->relation('build-depends-all')
+        $built_with_golang = $src->relation('Build-Depends-All')
           ->implies('golang-go | golang-any');
         $built_with_octave
-          = $src->relation('build-depends')->implies('dh-octave');
+          = $src->relation('Build-Depends')->implies('dh-octave');
     } else {
         $built_with_golang = $pkg =~ m/^golang-/;
         $built_with_octave = $pkg =~ m/^octave-/;
@@ -397,8 +397,8 @@ sub installable {
 
         $self->tag('development-package-ships-elf-binary-in-path', $file)
           if exists($PATH_DIRECTORIES{$file->dirname})
-          and $processable->field('section', 'NONE') =~ m/(?:^|\/)libdevel$/
-          and $processable->field('multi-arch', 'NONE') ne 'foreign';
+          and $processable->field('Section', 'NONE') =~ m/(?:^|\/)libdevel$/
+          and $processable->field('Multi-Arch', 'NONE') ne 'foreign';
 
         $objdump = $processable->objdump_info->{$fname};
 

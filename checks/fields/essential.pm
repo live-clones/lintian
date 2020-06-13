@@ -43,7 +43,7 @@ sub source {
 
     my $processable = $self->processable;
 
-    my $essential = $processable->unfolded_field('essential');
+    my $essential = $processable->unfolded_field('Essential');
 
     return
       unless defined $essential;
@@ -59,7 +59,7 @@ sub always {
     my $pkg = $self->processable->name;
     my $processable = $self->processable;
 
-    my $essential = $processable->unfolded_field('essential');
+    my $essential = $processable->unfolded_field('Essential');
 
     return
       unless defined $essential;

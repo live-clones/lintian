@@ -1,5 +1,5 @@
 testsuite-general (source): unknown-runtime-tests-restriction unknownrestriction paragraph starting at line 24
-testsuite-general (source): unknown-runtime-tests-field comment paragraph starting at line 1
+testsuite-general (source): unknown-runtime-tests-field Comment paragraph starting at line 1
 testsuite-general (source): unknown-runtime-tests-feature unknownfeature paragraph starting at line 24
 testsuite-general (source): testsuite-dependency-has-unparsable-elements "missing a comma" (in paragraph starting at line 20)
 testsuite-general (source): runtime-test-file-is-not-a-regular-file debian/tests/lfifo

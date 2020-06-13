@@ -73,7 +73,7 @@ sub source {
     my $inclcdbs = 0;
 
     my ($bdepends_noarch, $bdepends, %build_systems, $uses_autotools_dev_dh);
-    $bdepends = $processable->relation('build-depends-all');
+    $bdepends = $processable->relation('Build-Depends-All');
     my $seen_dh = 0;
     my $seen_dh_dynamic = 0;
     my $seen_dh_systemd = 0;
@@ -185,7 +185,7 @@ sub source {
                         "(line $.)"
                       )
                       if $addon eq 'quilt'
-                      and $processable->field('format', '') eq '3.0 (quilt)';
+                      and $processable->field('Format', '') eq '3.0 (quilt)';
                     if (defined $depends) {
                         $missingbdeps_addons{$depends} = $addon;
                     }
@@ -314,7 +314,7 @@ sub source {
 
     for my $proc ($group->get_processables('binary')) {
         my $binpkg = $proc->name;
-        my $breaks = $processable->binary_relation($binpkg, 'breaks');
+        my $breaks = $processable->binary_relation($binpkg, 'Breaks');
         my $strong = $processable->binary_relation($binpkg, 'strong');
         $self->tag('package-uses-dh-runit-but-lacks-breaks-substvar', $binpkg)
           if $seen{'runit'}
@@ -539,8 +539,8 @@ sub source {
         }
     }
 
-    $bdepends_noarch = $processable->relation_noarch('build-depends-all');
-    $bdepends = $processable->relation('build-depends-all');
+    $bdepends_noarch = $processable->relation_noarch('Build-Depends-All');
+    $bdepends = $processable->relation('Build-Depends-All');
     if ($needbuilddepends) {
         $self->tag('package-uses-debhelper-but-lacks-build-depends')
           unless $bdepends->implies('debhelper')

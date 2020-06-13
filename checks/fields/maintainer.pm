@@ -49,14 +49,14 @@ my $KNOWN_DISTS = Lintian::Data->new('changes-file/known-dists');
 sub source {
     my ($self) = @_;
 
-    my $maintainer = $self->processable->unfolded_field('maintainer');
+    my $maintainer = $self->processable->unfolded_field('Maintainer');
     return
       unless defined $maintainer;
 
     my $is_list = $maintainer =~ /\@lists(?:\.alioth)?\.debian\.org\b/;
 
     $self->tag('no-human-maintainers')
-      if $is_list && !defined $self->processable->field('uploaders');
+      if $is_list && !defined $self->processable->field('Uploaders');
 
     return;
 }
@@ -72,12 +72,12 @@ sub changes {
     return
       unless defined $source;
 
-    my $changes_maintainer = $self->processable->unfolded_field('maintainer')
+    my $changes_maintainer = $self->processable->unfolded_field('Maintainer')
       // EMPTY;
     my $changes_distribution
-      = $self->processable->unfolded_field('distribution')// EMPTY;
+      = $self->processable->unfolded_field('Distribution')// EMPTY;
 
-    my $source_maintainer = $source->unfolded_field('maintainer') // EMPTY;
+    my $source_maintainer = $source->unfolded_field('Maintainer') // EMPTY;
 
     # not for derivatives; https://wiki.ubuntu.com/DebianMaintainerField
     $self->tag('inconsistent-maintainer',
@@ -95,7 +95,7 @@ sub always {
       if $self->processable->type eq 'changes'
       || $self->processable->type eq 'buildinfo';
 
-    my $original = $self->processable->unfolded_field('maintainer');
+    my $original = $self->processable->unfolded_field('Maintainer');
     return
       unless length $original;
 

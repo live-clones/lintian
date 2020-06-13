@@ -60,7 +60,7 @@ my $ALLOWED_PYTHON_FILES = Lintian::Data->new('files/allowed-python-files');
 my $GENERIC_PYTHON_MODULES= Lintian::Data->new('files/generic-python-modules');
 
 my $VERSIONS = Lintian::Data->new('python/versions', qr/\s*=\s*/);
-my @VERSION_FIELDS = qw(x-python-version xs-python-version x-python3-version);
+my @VERSION_FIELDS = qw(X-Python-Version XS-Python-Version X-Python3-Version);
 
 sub source {
     my ($self) = @_;
@@ -85,14 +85,14 @@ sub source {
         }
     }
 
-    my $build_all = $processable->relation('build-depends-all');
+    my $build_all = $processable->relation('Build-Depends-All');
     $self->tag('build-depends-on-python-sphinx-only')
       if $build_all->implies('python-sphinx')
       and not $build_all->implies('python3-sphinx');
 
     $self->tag(
         'alternatively-build-depends-on-python-sphinx-and-python3-sphinx')
-      if $processable->field('build-depends', '')
+      if $processable->field('Build-Depends', '')
       =~ m,\bpython-sphinx\s+\|\s+python3-sphinx\b,g;
 
     # Mismatched substvars
@@ -174,7 +174,7 @@ sub installable {
     my $processable = $self->processable;
 
     my $deps = Lintian::Relation->and($processable->relation('all'),
-        $processable->relation('provides'), $pkg);
+        $processable->relation('Provides'), $pkg);
     my @entries
       = $processable->changelog
       ? @{$processable->changelog->entries}

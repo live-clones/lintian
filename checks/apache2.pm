@@ -123,7 +123,7 @@ sub check_web_application_package {
 
     my $rel = Lintian::Relation->and(
         $processable->relation('strong'),
-        $processable->relation('recommends'));
+        $processable->relation('Recommends'));
 
     # A web application must not depend on apache2-whatever
     my $visit = sub {
@@ -168,7 +168,7 @@ sub check_module_package {
 
     $rel = Lintian::Relation->and(
         $processable->relation('strong'),
-        $processable->relation('recommends'));
+        $processable->relation('Recommends'));
     if (!$rel->matches(qr/^apache2-api-\d+$/)) {
         $self->tag('apache2-module-does-not-depend-on-apache2-api');
     }

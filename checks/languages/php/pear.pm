@@ -49,7 +49,7 @@ sub source {
         return;
     }
 
-    my $bdepends = $processable->relation('build-depends');
+    my $bdepends = $processable->relation('Build-Depends');
     my $package_type = 'unknown';
 
     # PEAR or PECL package
@@ -63,10 +63,10 @@ sub source {
             # Checking first binary relations
             my @binaries = $processable->binaries;
             my $binary = $binaries[0];
-            my $depends = $processable->binary_relation($binary, 'depends');
+            my $depends = $processable->binary_relation($binary, 'Depends');
             my $recommends
-              = $processable->binary_relation($binary, 'recommends');
-            my $breaks = $processable->binary_relation($binary, 'breaks');
+              = $processable->binary_relation($binary, 'Recommends');
+            my $breaks = $processable->binary_relation($binary, 'Breaks');
             if (!$depends->implies('${phppear:Debian-Depends}')) {
                 $self->tag('pear-package-but-missing-dependency', 'Depends');
             }
@@ -78,7 +78,7 @@ sub source {
             }
             # Checking description
             my $description
-              = $processable->binary_field($binary, 'description');
+              = $processable->binary_field($binary, 'Description');
             if ($description !~ /\$\{phppear:summary\}/) {
                 $self->tag('pear-package-not-using-substvar',
                     '${phppear:summary}');

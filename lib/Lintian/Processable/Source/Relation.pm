@@ -71,15 +71,15 @@ the following special values:
 
 =over 4
 
-=item all
+=item All
 
 The concatenation of Pre-Depends, Depends, Recommends, and Suggests.
 
-=item strong
+=item Strong
 
 The concatenation of Pre-Depends and Depends.
 
-=item weak
+=item Weak
 
 The concatenation of Recommends and Suggests.
 
@@ -103,18 +103,16 @@ has saved_binary_relations => (
     default => sub { {} });
 
 my %special = (
-    all    => [qw(pre-depends depends recommends suggests)],
-    strong => [qw(pre-depends depends)],
-    weak   => [qw(recommends suggests)]);
+    all    => [qw(Pre-Depends Depends Recommends Suggests)],
+    strong => [qw(Pre-Depends Depends)],
+    weak   => [qw(Recommends Suggests)]);
 
 my %known = map { $_ => 1 }
-  qw(pre-depends depends recommends suggests enhances breaks
-  conflicts provides replaces);
+  qw(Pre-Depends Depends Recommends Suggests Enhances Breaks
+  Conflicts Provides Replaces);
 
 sub binary_relation {
     my ($self, $package, $field) = @_;
-
-    $field = lc $field;
 
     return $self->saved_binary_relations->{$package}{$field}
       if exists $self->saved_binary_relations->{$package}{$field};
@@ -145,12 +143,12 @@ following special field names are supported:
 
 =over 4
 
-=item build-depends-all
+=item Build-Depends-All
 
 The concatenation of Build-Depends, Build-Depends-Arch and
 Build-Depends-Indep.
 
-=item build-conflicts-all
+=item Build-Conflicts-All
 
 The concatenation of Build-Conflicts, Build-Conflicts-Arch and
 Build-Conflicts-Indep.
@@ -172,19 +170,17 @@ has saved_relations => (
 sub relation {
     my ($self, $field) = @_;
 
-    $field = lc $field;
-
     my $relation = $self->saved_relations->{$field};
     unless (defined $relation) {
 
-        if ($field =~ /^build-(depends|conflicts)-all$/) {
+        if ($field =~ /^Build-(Depends|Conflicts)-All$/) {
             my $type = $1;
             my @fields
-              = ("build-$type", "build-$type-indep", "build-$type-arch");
+              = ("Build-$type", "Build-$type-Indep", "Build-$type-Arch");
             $relation
               = Lintian::Relation->and(map { $self->relation($_) } @fields);
 
-        } elsif ($field =~ /^build-(depends|conflicts)(?:-(?:arch|indep))?$/) {
+        } elsif ($field =~ /^Build-(Depends|Conflicts)(?:-(?:Arch|Indep))?$/) {
             my $value = $self->field($field);
             $relation = Lintian::Relation->new($value);
 
@@ -214,8 +210,6 @@ has saved_relations_noarch => (
 
 sub relation_noarch {
     my ($self, $field) = @_;
-
-    $field = lc $field;
 
     my $relation = $self->saved_relations_noarch->{$field};
     unless (defined $relation) {

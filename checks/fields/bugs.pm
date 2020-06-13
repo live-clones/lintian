@@ -40,7 +40,7 @@ sub always {
     my $pkg = $self->processable->name;
     my $processable = $self->processable;
 
-    my $bugs = $processable->unfolded_field('bugs');
+    my $bugs = $processable->unfolded_field('Bugs');
 
     return
       unless defined $bugs;

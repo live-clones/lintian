@@ -30,7 +30,7 @@ use Path::Tiny;
 use Lintian::Data;
 use Lintian::Deb822Parser qw(
   DCTRL_COMMENTS_AT_EOL
-  parse_dpkg_control_string_lc
+  parse_dpkg_control_string
 );
 use Lintian::Relation;
 
@@ -64,7 +64,7 @@ sub source {
     my $type = $self->processable->type;
     my $processable = $self->processable;
 
-    my $testsuites = $processable->field('testsuite', '');
+    my $testsuites = $processable->field('Testsuite', '');
     my $control = $processable->patched->resolve_path('debian/tests/control');
     my $control_autodep8
       = $processable->patched->resolve_path('debian/tests/control.autodep8');
@@ -96,7 +96,7 @@ sub source {
         }
 
         $self->tag('unnecessary-testsuite-autopkgtest-field')
-          if ($processable->source_field('testsuite') // '') eq 'autopkgtest';
+          if ($processable->source_field('Testsuite') // '') eq 'autopkgtest';
 
         $self->tag('debian-tests-control-and-control-autodep8',
             $control,$control_autodep8)
@@ -118,7 +118,7 @@ sub check_control_contents {
     unless (
         eval {
             @paragraphs
-              = parse_dpkg_control_string_lc($contents, DCTRL_COMMENTS_AT_EOL,
+              = parse_dpkg_control_string($contents, DCTRL_COMMENTS_AT_EOL,
                 \@lines);
         }
     ) {
@@ -133,7 +133,7 @@ sub check_control_contents {
                 $lines[$index]{'START-OF-PARAGRAPH'});
         }
         if (scalar(@paragraphs) == 1) {
-            my $cmd = $paragraphs[0]->{'test-command'} // '';
+            my $cmd = $paragraphs[0]->{'Test-Command'} // '';
             $self->tag('no-op-testsuite') if $cmd =~ m,^\s*(/bin/)?true,;
         }
     }
@@ -152,13 +152,13 @@ sub check_control_paragraph {
         }
     }
 
-    unless (exists $paragraph->{'tests'}
-        || exists $paragraph->{'test-command'}) {
+    unless (exists $paragraph->{'Tests'}
+        || exists $paragraph->{'Test-Command'}) {
         die
-"missing runtime tests field tests || test-command, paragraph starting at line $line";
+"missing runtime tests field Tests || Test-Command, paragraph starting at line $line";
     }
-    if (   exists $paragraph->{'tests'}
-        && exists $paragraph->{'test-command'}) {
+    if (   exists $paragraph->{'Tests'}
+        && exists $paragraph->{'Test-Command'}) {
         $self->tag(
             'exclusive-runtime-tests-field',
             'tests, test-command',
@@ -173,8 +173,8 @@ sub check_control_paragraph {
         ) unless $KNOWN_FIELDS->known($fieldname);
     }
 
-    if (exists $paragraph->{'features'}) {
-        my $features = $paragraph->{'features'};
+    if (exists $paragraph->{'Features'}) {
+        my $features = $paragraph->{'Features'};
         for my $feature (split(/\s*,\s*|\s+/ms, $features)) {
 
             next
@@ -190,8 +190,8 @@ sub check_control_paragraph {
         }
     }
 
-    if (exists $paragraph->{'restrictions'}) {
-        my $restrictions = $paragraph->{'restrictions'};
+    if (exists $paragraph->{'Restrictions'}) {
+        my $restrictions = $paragraph->{'Restrictions'};
         for my $restriction (split(/\s*,\s*|\s+/ms, $restrictions)) {
             next
               unless length $restriction;
@@ -205,11 +205,11 @@ sub check_control_paragraph {
         }
     }
 
-    if (exists $paragraph->{'tests'}) {
-        my $tests = $paragraph->{'tests'};
+    if (exists $paragraph->{'Tests'}) {
+        my $tests = $paragraph->{'Tests'};
         my $directory = 'debian/tests';
-        if (exists $paragraph->{'tests-directory'}) {
-            $directory = $paragraph->{'tests-directory'};
+        if (exists $paragraph->{'Tests-Directory'}) {
+            $directory = $paragraph->{'Tests-Directory'};
         }
         for my $testname (split(/\s*,\s*|\s+/ms, $tests)) {
 
@@ -219,8 +219,8 @@ sub check_control_paragraph {
             $self->check_test_file($directory, $testname, $line);
         }
     }
-    if (exists($paragraph->{'depends'})) {
-        my $depends = $paragraph->{'depends'};
+    if (exists($paragraph->{'Depends'})) {
+        my $depends = $paragraph->{'Depends'};
         $depends =~ s/^\s+|\s+$//g;
         my $dep = Lintian::Relation->new($depends);
         for my $unparsable ($dep->unparsable_predicates) {
@@ -272,7 +272,7 @@ sub check_test_file {
                 'runtime-test-file-uses-supported-python-versions-without-python-all-build-depends',
                 $path, "$1", "(line $.)"
             ) if $x =~ m/(py3versions\s+([\w\-\s]*--supported|-\w*s\w*))/
-              and not $processable->relation_noarch('build-depends-all')->implies($PYTHON3_ALL_DEPEND);
+              and not $processable->relation_noarch('Build-Depends-All')->implies($PYTHON3_ALL_DEPEND);
             #>>>
         }
         close($fd);

@@ -104,7 +104,7 @@ sub files {
 
     my %files;
 
-    my $file_list = $self->field('files') || '';
+    my $file_list = $self->field('Files') || '';
 
     local $_;
 
@@ -123,7 +123,7 @@ sub files {
 
         my ($md5sum, $size, $section, $priority) = @fields;
 
-        $files{$file}{checksums}{md5} = {
+        $files{$file}{checksums}{Md5} = {
             'sum' => $md5sum,
             'filesize' => $size,
         };
@@ -138,9 +138,9 @@ sub files {
         }
     }
 
-    foreach my $alg (qw(sha1 sha256)) {
+    foreach my $alg (qw(Sha1 Sha256)) {
 
-        my $list = $self->field("checksums-$alg") || '';
+        my $list = $self->field("Checksums-$alg") || '';
 
         for (split /\n/, $list) {
 

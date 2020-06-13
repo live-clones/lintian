@@ -44,7 +44,7 @@ sub source {
 
     # debian/control check
     my @testsuites
-      = split(m/\s*,\s*/, $processable->source_field('testsuite') // q{});
+      = split(m/\s*,\s*/, $processable->source_field('Testsuite') // q{});
     if (any { /^autopkgtest-pkg-nodejs$/ } @testsuites) {
         # Check control file exists in sources
         my $filename = 'debian/tests/pkg-js/test';
@@ -152,11 +152,11 @@ sub files {
 
     my $declared = $self->processable->name;
     my $processable = $self->processable;
-    my $version = $processable->field('version');
+    my $version = $processable->field('Version');
     $declared .= "( = $version)" if defined $version;
     $version //= '0-1';
     my $provides
-      = Lintian::Relation->and($processable->relation('provides'), $declared);
+      = Lintian::Relation->and($processable->relation('Provides'), $declared);
 
     my $content = $file->bytes;
 

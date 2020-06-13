@@ -292,9 +292,7 @@ sub check_doc_base_file {
                 );
             }
 
-            # title-case the field name
-            $field = lc $new[0];
-            $field =~ s/\b(\w)/\U$1/g;
+            $field = $new[0];
 
             @vals  = ($new[1]);
             $line  = $position;

@@ -40,15 +40,15 @@ with 'Lintian::Check';
 
 # based on policy 5.6
 my @always_single = (
-    qw(architecture bugs changed-by closes date distribution dm-upload-allowed),
-    qw(essential format homepage installed-size installer-menu-item maintainer),
-    qw(multi-arch origin package priority section source standards-version),
-    qw(subarchitecture urgency version)
+    qw(Architecture Bugs Changed-By Closes Date Distribution Dm-Upload-Allowed),
+    qw(Essential Format Homepage Installed-Size Installer-Menu-Item Maintainer),
+    qw(Multi-Arch Origin Package Priority Section Source Standards-Version),
+    qw(Subarchitecture Urgency Version)
 );
 
 my @package_relations
   = (
-    qw(depends pre-depends recommends suggests conflicts provides enhances replaces breaks)
+    qw(Depends Pre-Depends Recommends Suggests Conflicts Provides Enhances Replaces Breaks)
   );
 
 sub always {
@@ -62,21 +62,17 @@ sub always {
 
     my @present = keys %{$self->processable->field};
 
-    my $single_lc = List::Compare->new('--unsorted', \@present, \@banned);
+    my $single_lc = List::Compare->new(\@present, \@banned);
     my @enforce = $single_lc->get_intersection;
 
     for my $name (@enforce) {
 
         my $value = $self->processable->field($name);
-
         return
           unless length $value;
 
         # remove a final newline, if any
         $value =~ s/\n$//;
-
-        # capitalize first letters
-        $name =~ s/\b(\w)/\U$1/g;
 
         # check if fields have newlines in them
         $self->tag('multiline-field', $name)

@@ -47,7 +47,7 @@ sub always {
     my $type = $self->processable->type;
     my $processable = $self->processable;
 
-    my $priority = $processable->unfolded_field('priority');
+    my $priority = $processable->unfolded_field('Priority');
     return
       unless length $priority;
 
@@ -69,7 +69,7 @@ sub always {
       if $pkg =~ /^lib/
       && $pkg !~ /-bin$/
       && $pkg !~ /^libc[0-9.]+$/
-      && (any { $_ eq $processable->field('section', '') } qw(libdevel libs))
+      && (any { $_ eq $processable->field('Section', '') } qw(libdevel libs))
       && (any { $_ eq $priority } qw(required important standard));
 
     return;

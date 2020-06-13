@@ -47,7 +47,7 @@ has have_r_package_not_arch_all => (is => 'rw', default => 0);
 sub setup {
     my ($self) = @_;
 
-    my $unsplit = $self->processable->unfolded_field('architecture');
+    my $unsplit = $self->processable->unfolded_field('Architecture');
 
     return
       unless defined $unsplit;
@@ -90,7 +90,7 @@ sub installable {
     my $pkg = $self->processable->name;
     my $processable = $self->processable;
 
-    my $unsplit = $processable->unfolded_field('architecture');
+    my $unsplit = $processable->unfolded_field('Architecture');
 
     return
       unless defined $unsplit;
@@ -127,7 +127,7 @@ sub always {
     my $type = $self->processable->type;
     my $processable = $self->processable;
 
-    my $value = $processable->unfolded_field('architecture');
+    my $value = $processable->unfolded_field('Architecture');
     return
       unless length $value;
 

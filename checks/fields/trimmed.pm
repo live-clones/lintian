@@ -39,11 +39,8 @@ sub always {
 
     for my $name (@all) {
 
-        # title-case the field name
-        (my $label = $name) =~ s/\b(\w)/\U$1/g;
-
         my $value = $self->processable->field($name);
-        $self->tag('trimmed-field', $label, $value);
+        $self->tag('trimmed-field', $name, $value);
     }
 
     return;

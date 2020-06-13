@@ -85,9 +85,9 @@ sub init {
 
     $self->verbatim($cinfo);
 
-    my $name = $cinfo->{source} // EMPTY;
-    my $version = $cinfo->{version} // EMPTY;
-    my $architecture = $cinfo->{architecture} // EMPTY;
+    my $name = $cinfo->{Source} // EMPTY;
+    my $version = $cinfo->{Version} // EMPTY;
+    my $architecture = $cinfo->{Architecture} // EMPTY;
 
     unless (length $name) {
         $name = $self->guess_name($self->path);

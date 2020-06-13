@@ -7,7 +7,7 @@ tag:W:warning::lintian-output-colons:1.0+dsfg-1.1:all:binary:binary-without-manp
 tag:W:warning::lintian-output-colons:1.0+dsfg-1.1:source:source:changelog-file-missing-explicit-entry:0.0.1-1 -> 1.0+dsfg-1 (missing) -> 1.0+dsfg-1.1:
 tag:W:warning::lintian-output-colons:1.0+dsfg-1.1:source:source:format-3.0-but-debian-changes-patch::
 tag:W:warning::lintian-output-colons:1.0+dsfg-1.1:source:source:maintainer-upload-has-incorrect-version-number:1.0+dsfg-1.1:
-tag:I:info::lintian-output-colons:1.0+dsfg-1.1:source:source:binary-control-field-duplicates-source:field "section" in package lintian-output-colons:
+tag:I:info::lintian-output-colons:1.0+dsfg-1.1:source:source:binary-control-field-duplicates-source:field "Section" in package lintian-output-colons:
 tag:I:info::lintian-output-colons:1.0+dsfg-1.1:all:binary:description-possibly-contains-homepage:http\://www.example.com/.:
 tag:I:info::lintian-output-colons:1.0+dsfg-1.1:all:binary:desktop-entry-limited-to-environments:usr/share/applications/script.desktop:
 tag:I:info::lintian-output-colons:1.0+dsfg-1.1:all:binary:package-contains-empty-directory:usr/local/share/lintian/:

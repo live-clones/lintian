@@ -101,8 +101,8 @@ sub create {
     my $dinfo = get_dsc_info($dscpath)
       or croak $dscpath . ' is not valid dsc file';
 
-    my $name = $dinfo->{source} // EMPTY;
-    my $version = $dinfo->{version} // EMPTY;
+    my $name = $dinfo->{Source} // EMPTY;
+    my $version = $dinfo->{Version} // EMPTY;
     my $architecture = 'source';
 
     # it is its own source package
@@ -125,7 +125,7 @@ sub create {
     $noepoch =~ s/(.+)-(?:.*)$/$1/;
     my $base = $source . '_' . $noepoch;
 
-    my @files = split(/\n/, $dinfo->{files} // EMPTY);
+    my @files = split(/\n/, $dinfo->{Files} // EMPTY);
 
     my %components;
     for my $line (@files) {

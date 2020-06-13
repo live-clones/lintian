@@ -53,7 +53,7 @@ our %KNOWN_ARCHIVE_PARTS = map { $_ => 1 } ('non-free', 'contrib');
 sub udeb {
     my ($self) = @_;
 
-    my $section = $self->processable->unfolded_field('section');
+    my $section = $self->processable->unfolded_field('Section');
     return
       unless length $section;
 
@@ -68,7 +68,7 @@ sub always {
 
     my $pkg = $self->processable->name;
 
-    my $section = $self->processable->unfolded_field('section');
+    my $section = $self->processable->unfolded_field('Section');
     return
       unless length $section;
 
@@ -127,7 +127,7 @@ sub always {
 
     if ($self->processable->is_pkg_class('transitional')) {
 
-        my $priority = $self->processable->unfolded_field('priority') // EMPTY;
+        my $priority = $self->processable->unfolded_field('Priority') // EMPTY;
 
         $self->tag('transitional-package-not-oldlibs-optional',
             "$fraction/$priority")

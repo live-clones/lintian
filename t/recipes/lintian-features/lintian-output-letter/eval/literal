@@ -7,7 +7,7 @@ W[W]: lintian-output-letter: binary-without-manpage usr/bin/script
 W[W]: lintian-output-letter source: changelog-file-missing-explicit-entry 0.0.1-1 -> 1.0+dsfg-1 (missing) -> 1.0+dsfg-1.1
 W[W]: lintian-output-letter source: format-3.0-but-debian-changes-patch
 W[W]: lintian-output-letter source: maintainer-upload-has-incorrect-version-number 1.0+dsfg-1.1
-I[I]: lintian-output-letter source: binary-control-field-duplicates-source field "section" in package lintian-output-letter
+I[I]: lintian-output-letter source: binary-control-field-duplicates-source field "Section" in package lintian-output-letter
 I[I]: lintian-output-letter: description-possibly-contains-homepage http://www.example.com/.
 I[I]: lintian-output-letter: desktop-entry-limited-to-environments usr/share/applications/script.desktop
 I[I]: lintian-output-letter: package-contains-empty-directory usr/local/share/lintian/

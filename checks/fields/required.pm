@@ -36,20 +36,20 @@ use namespace::clean;
 with 'Lintian::Check';
 
 # policy 5.2
-my @DEBIAN_CONTROL_SOURCE = qw(source maintainer standards-version);
-my @DEBIAN_CONTROL_INSTALLABLE = qw(package architecture description);
+my @DEBIAN_CONTROL_SOURCE = qw(Source Maintainer Standards-Version);
+my @DEBIAN_CONTROL_INSTALLABLE = qw(Package Architecture Description);
 
 # policy 5.3
 my @INSTALLATION_CONTROL
-  = qw(package version architecture maintainer description);
+  = qw(Package Version Architecture Maintainer Description);
 
 # policy 5.4
-my @DSC = qw(format source version maintainer standards-version
-  checksums-sha1 checksums-sha256 files);
+my @DSC = qw(Format Source Version Maintainer Standards-Version
+  Checksums-Sha1 Checksums-Sha256 Files);
 
 # policy 5.5
-my @CHANGES = qw(format date source binary architecture version distribution
-  maintainer description changes checksums-sha1 checksums-sha256 files);
+my @CHANGES = qw(Format Date Source Binary Architecture Version Distribution
+  Maintainer Description Changes Checksums-Sha1 Checksums-Sha256 Files);
 
 sub source {
     my ($self) = @_;
@@ -110,9 +110,6 @@ sub tag_missing_fields {
     # select fields for announcement
     my $missinglc = List::Compare->new($required, $actual);
     my @missing = $missinglc->get_Lonly;
-
-    # title-case the field name
-    s/\b(\w)/\U$1/g for @missing;
 
     $self->tag('required-field', $location, $_) for @missing;
 

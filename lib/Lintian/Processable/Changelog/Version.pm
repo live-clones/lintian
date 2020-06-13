@@ -75,7 +75,7 @@ has changelog_version => (
     default => sub {
         my ($self) = @_;
 
-        my $versionstring = $self->field('version') // EMPTY;
+        my $versionstring = $self->field('Version') // EMPTY;
 
         my $version = Lintian::Inspect::Changelog::Version->new;
         try {

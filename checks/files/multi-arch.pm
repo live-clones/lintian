@@ -42,8 +42,8 @@ has has_public_shared_library => (is => 'rwp', default => 0);
 sub files {
     my ($self, $file) = @_;
 
-    my $architecture = $self->processable->field('architecture', '');
-    my $multiarch = $self->processable->field('multi-arch', 'no');
+    my $architecture = $self->processable->field('Architecture', '');
+    my $multiarch = $self->processable->field('Multi-Arch', 'no');
 
     my $multiarch_dir = $MULTIARCH_DIRS->value($architecture);
 
@@ -79,8 +79,8 @@ sub files {
 sub breakdown {
     my ($self) = @_;
 
-    my $architecture = $self->processable->field('architecture', '');
-    my $multiarch = $self->processable->field('multi-arch', 'no');
+    my $architecture = $self->processable->field('Architecture', '');
+    my $multiarch = $self->processable->field('Multi-Arch', 'no');
 
     $self->tag('multiarch-foreign-shared-library')
       if $architecture ne 'all'

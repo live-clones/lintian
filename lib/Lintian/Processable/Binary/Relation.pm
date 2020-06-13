@@ -71,15 +71,15 @@ the following special values:
 
 =over 4
 
-=item all
+=item All
 
 The concatenation of Pre-Depends, Depends, Recommends, and Suggests.
 
-=item strong
+=item Strong
 
 The concatenation of Pre-Depends and Depends.
 
-=item weak
+=item Weak
 
 The concatenation of Recommends and Suggests.
 
@@ -98,18 +98,16 @@ has saved_relations => (
     default => sub { {} });
 
 my %special = (
-    all    => [qw(pre-depends depends recommends suggests)],
-    strong => [qw(pre-depends depends)],
-    weak   => [qw(recommends suggests)]);
+    all    => [qw(Pre-Depends Depends Recommends Suggests)],
+    strong => [qw(Pre-Depends Depends)],
+    weak   => [qw(Recommends Suggests)]);
 
 my %known = map { $_ => 1 }
-  qw(pre-depends depends recommends suggests enhances breaks
-  conflicts provides replaces);
+  qw(Pre-Depends Depends Recommends Suggests Enhances Breaks
+  Conflicts Provides Replaces);
 
 sub relation {
     my ($self, $field) = @_;
-
-    $field = lc $field;
 
     my $result = $self->saved_relations->{$field};
     return $result

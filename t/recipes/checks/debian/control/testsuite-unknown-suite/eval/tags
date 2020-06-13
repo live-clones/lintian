@@ -1,2 +1,2 @@
-testsuite-unknown-suite (source): xs-testsuite-field-in-debian-control xs-testsuite
+testsuite-unknown-suite (source): xs-testsuite-field-in-debian-control XS-Testsuite
 testsuite-unknown-suite (source): rules-does-not-require-root

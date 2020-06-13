@@ -34,7 +34,7 @@ use Unicode::UTF8 qw[valid_utf8 decode_utf8];
 use XML::LibXML;
 
 use Lintian::Data;
-use Lintian::Deb822Parser qw(parse_dpkg_control_string_lc);
+use Lintian::Deb822Parser qw(parse_dpkg_control_string);
 use Lintian::Relation::Version qw(versions_compare);
 use Lintian::Spelling qw(check_spelling);
 
@@ -69,11 +69,11 @@ my $BAD_SHORT_LICENSES = Lintian::Data->new(
 my $dep5_last_normative_change = '0+svn~166';
 my $dep5_last_overhaul         = '0+svn~148';
 my %dep5_renamed_fields        = (
-    'format-specification' => 'format',
-    'maintainer'           => 'upstream-contact',
-    'upstream-maintainer'  => 'upstream-contact',
-    'contact'              => 'upstream-contact',
-    'name'                 => 'upstream-name',
+    'Format-Specification' => 'Format',
+    'Maintainer'           => 'Upstream-Contact',
+    'Upstream-Maintainer'  => 'Upstream-Contact',
+    'Contact'              => 'Upstream-Contact',
+    'Name'                 => 'Upstream-Name',
 );
 
 sub spelling_tag_emitter {
@@ -301,7 +301,7 @@ sub check_dep5_copyright {
     my (@dep5, @lines);
 
     # probably DEP 5 format; let's try more checks
-    eval {@dep5 = parse_dpkg_control_string_lc($contents, 0, \@lines);};
+    eval {@dep5 = parse_dpkg_control_string($contents, 0, \@lines);};
     if ($@) {
         chomp $@;
         $@ =~ s/^syntax error at //;
@@ -336,28 +336,28 @@ sub parse_dep5 {
           if length $new_name;
     }
 
-    $self->check_files_excluded($first_para->{'files-excluded'} // '')
+    $self->check_files_excluded($first_para->{'Files-Excluded'} // '')
       unless $self->processable->native;
 
     $self->tag('copyright-excludes-files-in-native-package')
-      if exists $first_para->{'files-excluded'} && $self->processable->native;
+      if exists $first_para->{'Files-Excluded'} && $self->processable->native;
 
     $self->tag('missing-field-in-dep5-copyright',
-        'format',"(line $lines[0]{'format'})")
-      if none { defined $first_para->{$_} } qw(format format-specification);
+        'Format',"(line $lines[0]{'Format'})")
+      if none { defined $first_para->{$_} } qw(Format Format-Specification);
 
     $self->tag('missing-explanation-for-contrib-or-non-free-package')
-      if $self->processable->source_field('section', '')
+      if $self->processable->source_field('Section', '')
       =~ m{^(contrib|non-free)(/.+)?$}
-      and none { defined $first_para->{$_} } qw(comment disclaimer);
+      and none { defined $first_para->{$_} } qw(Comment Disclaimer);
 
     $self->tag('missing-explanation-for-repacked-upstream-tarball')
       if $self->processable->repacked
-      and none { defined $first_para->{$_} } qw(comment files-excluded)
-      and ($first_para->{'source'} // '') =~ m{^https?://};
+      and none { defined $first_para->{$_} } qw(Comment Files-Excluded)
+      and ($first_para->{'Source'} // '') =~ m{^https?://};
 
     my (undef, $full_license_field, undef,@short_licenses_field)
-      = $self->parse_license($first_para->{'license'}, 1);
+      = $self->parse_license($first_para->{'License'}, 1);
 
     for my $short_license (@short_licenses_field) {
         $required_standalone_licenses{$short_license} = 0
@@ -397,9 +397,9 @@ sub parse_dep5 {
     for my $para (@dep5) {
         $i++;
         $current_line = $lines[$i]{'START-OF-PARAGRAPH'};
-        my $files = $para->{files};
-        my $license   = $para->{license};
-        my $copyright = $para->{copyright};
+        my $files = $para->{Files};
+        my $license   = $para->{License};
+        my $copyright = $para->{Copyright};
 
         if (    not defined $files
             and defined $license
@@ -446,7 +446,7 @@ sub parse_dep5 {
             if ($files =~ m/\A\s*\Z/mxs) {
                 $self->tag(
                     'missing-field-in-dep5-copyright',
-                    'files',
+                    'Files',
                     '(empty field,',
                     "paragraph at line $current_line)"
                 );
@@ -468,7 +468,7 @@ sub parse_dep5 {
 
             # Files paragraph
             if (not @commas_in_files and $files =~ /,/) {
-                @commas_in_files = ($i, 'files');
+                @commas_in_files = ($i, 'Files');
             }
 
             my ($found_license, $full_license, $short_license, @short_licenses)
@@ -585,16 +585,16 @@ sub parse_dep5 {
                 }
             }else {
                 $self->tag('missing-field-in-dep5-copyright',
-                    'license',"(paragraph at line $current_line)");
+                    'License',"(paragraph at line $current_line)");
             }
 
             if (not defined $copyright) {
                 $self->tag('missing-field-in-dep5-copyright',
-                    'copyright',"(paragraph at line $current_line)");
+                    'Copyright',"(paragraph at line $current_line)");
             }elsif ($copyright =~ m/\A\s*\Z/mxs) {
                 $self->tag(
                     'missing-field-in-dep5-copyright',
-                    'copyright',
+                    'Copyright',
                     '(empty field,',
                     "paragraph at line $current_line)"
                 );
@@ -1224,9 +1224,9 @@ qr/GNU (?:Lesser|Library) General Public License|(?-i:\bLGPL\b)/i
         !~ m{exception|exemption|/usr/share/common-licenses/(?!GPL)\S}){
 
         my @depends
-          = split(/\s*,\s*/, $self->processable->field('depends') // EMPTY);
+          = split(/\s*,\s*/, $self->processable->field('Depends') // EMPTY);
         my @predepends
-          = split(/\s*,\s*/,$self->processable->field('pre-depends') // EMPTY);
+          = split(/\s*,\s*/,$self->processable->field('Pre-Depends') // EMPTY);
 
         $self->tag('possible-gpl-code-linked-with-openssl')
           if any { /^libssl[0-9.]+(?:\s|\z)/ && !/\|/ }
@@ -1312,13 +1312,13 @@ sub check_names_texts {
     my @paragraphs;
 
     local $@;
-    eval {@paragraphs = parse_dpkg_control_string_lc($contents);};
+    eval {@paragraphs = parse_dpkg_control_string($contents);};
 
     # parse error: copyright not in new format, just check text
     return $text_check->(\$contents)
       if $@;
 
-    my @licenses = grep { length } map { $_->{license} } @paragraphs;
+    my @licenses = grep { length } map { $_->{License} } @paragraphs;
     for my $license (@licenses) {
 
         my ($name, $text) = ($license =~ /^\s*([^\r\n]+)\r?\n(.*)\z/s);

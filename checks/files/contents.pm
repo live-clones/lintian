@@ -1,8 +1,8 @@
 # files/contents -- lintian check script -*- perl -*-
 
 # Copyright © 1998 Christian Schwarz and Richard Braakman
-# Copyright © 2020 Felix Lechner
 # Copyright © 2019 Chris Lamb <lamby@debian.org>
+# Copyright © 2020 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -48,7 +48,7 @@ sub build_path {
     return EMPTY
       unless $buildinfo;
 
-    return $buildinfo->field('build-path', EMPTY);
+    return $buildinfo->field('Build-Path', EMPTY);
 }
 
 sub setup {
@@ -93,7 +93,7 @@ sub get_checks_for_file {
       and $file->basename !~ m/^README(?:\..*)?$/
       and $file->basename !~ m/^changelog(?:\..*)?$/i
       and $file->basename !~ m/\.(?:html|txt)$/i
-      and $self->processable->field('section', '') ne 'debian-installer'
+      and $self->processable->field('Section', '') ne 'debian-installer'
       and none { $_ eq $self->processable->source }
     qw(base-files dpkg lintian);
 

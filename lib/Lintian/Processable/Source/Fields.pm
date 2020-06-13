@@ -30,7 +30,7 @@ use Path::Tiny;
 use Try::Tiny;
 use Unicode::UTF8 qw(valid_utf8 decode_utf8);
 
-use Lintian::Deb822Parser qw(parse_dpkg_control_string_lc);
+use Lintian::Deb822Parser qw(parse_dpkg_control_string);
 use Lintian::Inspect::Changelog::Version;
 use Lintian::Relation;
 use Lintian::Util
@@ -116,8 +116,9 @@ sub binary_package_type {
         my %install;
         foreach my $packagename (keys %{ $self->binary_fields }) {
 
-            my $type = $self->binary_field($packagename, 'package-type');
-            $type //= $self->binary_field($packagename, 'xc-package-type');
+            my $type = $self->binary_field($packagename, 'Package-Type');
+
+            $type //= $self->binary_field($packagename, 'XC-Package-Type');
             $type //= 'deb';
 
             $install{$packagename} = lc $type;
@@ -237,7 +238,7 @@ sub load_debian_control {
     my $contents = decode_utf8($bytes);
 
     my @control_data;
-    eval {@control_data = parse_dpkg_control_string_lc($contents);};
+    eval {@control_data = parse_dpkg_control_string($contents);};
 
     if ($@) {
         # If it is a syntax error, ignore it (we emit
@@ -255,7 +256,7 @@ sub load_debian_control {
 
     my %install;
     foreach my $paragraph (@control_data) {
-        my $name = $paragraph->{'package'};
+        my $name = $paragraph->{'Package'};
         next
           unless defined $name && $name =~ m{\A $PKGNAME_REGEX \Z}xsm;
         $install{$name} = $paragraph;

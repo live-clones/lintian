@@ -23,7 +23,7 @@
             </tag>
             <tag severity="info">
               <name>binary-control-field-duplicates-source</name>
-              <context>field "section" in package lintian-output-xml</context>
+              <context>field "Section" in package lintian-output-xml</context>
             </tag>
             <tag severity="info">
               <name>quilt-patch-using-template-description</name>
