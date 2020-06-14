@@ -30,7 +30,7 @@ use Path::Tiny;
 use Lintian::Data;
 use Lintian::Deb822Parser qw(
   DCTRL_COMMENTS_AT_EOL
-  parse_dpkg_control_string
+  parse_dpkg_control_string_lc
 );
 use Lintian::Relation;
 
@@ -118,7 +118,7 @@ sub check_control_contents {
     unless (
         eval {
             @paragraphs
-              = parse_dpkg_control_string($contents, DCTRL_COMMENTS_AT_EOL,
+              = parse_dpkg_control_string_lc($contents, DCTRL_COMMENTS_AT_EOL,
                 \@lines);
         }
     ) {

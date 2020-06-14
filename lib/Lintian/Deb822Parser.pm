@@ -38,8 +38,11 @@ our @EXPORT_OK = (qw(
       visit_dpkg_paragraph
       visit_dpkg_paragraph_string
       parse_dpkg_control
+      parse_dpkg_control_lc
       parse_dpkg_control_string
+      parse_dpkg_control_string_lc
       read_dpkg_control
+      read_dpkg_control_lc
       ), @{ $EXPORT_TAGS{constants} });
 
 use Exporter qw(import);
@@ -174,6 +177,37 @@ sub parse_dpkg_control {
     return @result;
 }
 
+=item parse_dpkg_control_lc(HANDLE[, FLAGS[, LINES]])
+
+=cut
+
+sub parse_dpkg_control_lc {
+    my ($handle, $flags, $field_starts) = @_;
+
+    my @result = parse_dpkg_control(@_);
+
+    my $position = 0;
+    for my $paragraph (@result) {
+
+        my @fields = keys %{$paragraph};
+        my @mixedcase = grep { $_ ne lc($_) } @fields;
+
+        for my $old (@mixedcase) {
+            $result[$position]{lc $old} = $result[$position]{$old};
+            delete $result[$position]{$old};
+
+            $field_starts->[$position]{lc $old}
+              = $field_starts->[$position]{$old};
+            delete $field_starts->[$position]{$old};
+        }
+
+    } continue {
+        $position++;
+    }
+
+    return @result;
+}
+
 =item parse_dpkg_control_string(STRING[, FLAGS[, LINES]])
 
 =cut
@@ -189,6 +223,37 @@ sub parse_dpkg_control_string {
     };
 
     visit_dpkg_paragraph_string($c, $string, $flags);
+
+    return @result;
+}
+
+=item parse_dpkg_control_string_lc(STRING[, FLAGS[, LINES]])
+
+=cut
+
+sub parse_dpkg_control_string_lc {
+    my ($string, $flags, $field_starts) = @_;
+
+    my @result = parse_dpkg_control_string(@_);
+
+    my $position = 0;
+    for my $paragraph (@result) {
+
+        my @fields = keys %{$paragraph};
+        my @mixedcase = grep { $_ ne lc($_) } @fields;
+
+        for my $old (@mixedcase) {
+            $result[$position]{lc $old} = $result[$position]{$old};
+            delete $result[$position]{$old};
+
+            $field_starts->[$position]{lc $old}
+              = $field_starts->[$position]{$old};
+            delete $field_starts->[$position]{$old};
+        }
+
+    } continue {
+        $position++;
+    }
 
     return @result;
 }
@@ -483,7 +548,7 @@ sub visit_dpkg_paragraph_string {
               unless $open_section;
             $open_section = 1;
 
-            my ($tag) = (lc $1);
+            my $tag = $1;
             $section->{$tag} = '';
             $field_starts->{$tag} = $position;
 
@@ -497,7 +562,8 @@ sub visit_dpkg_paragraph_string {
 
             # Policy: Horizontal whitespace (spaces and tabs) may occur
             # immediately before or after the value and is ignored there.
-            my ($tag,$value) = (lc $1,$2);
+            my $tag = $1;
+            my $value = $2;
 
             # trim right
             $value =~ s/\s+$//;
@@ -592,6 +658,20 @@ sub read_dpkg_control {
 
     open(my $CONTROL, '<:encoding(UTF-8)', $file);
     my @data = parse_dpkg_control($CONTROL, $flags, $field_starts);
+    close($CONTROL);
+
+    return @data;
+}
+
+=item read_dpkg_control_lc(FILE[, FLAGS[, LINES]])
+
+=cut
+
+sub read_dpkg_control_lc {
+    my ($file, $flags, $field_starts) = @_;
+
+    open(my $CONTROL, '<:encoding(UTF-8)', $file);
+    my @data = parse_dpkg_control_lc($CONTROL, $flags, $field_starts);
     close($CONTROL);
 
     return @data;

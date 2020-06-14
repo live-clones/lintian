@@ -39,7 +39,7 @@ use POSIX qw(sigprocmask SIG_BLOCK SIG_UNBLOCK SIG_SETMASK);
 use Unicode::UTF8 qw(valid_utf8);
 
 use Lintian::Deb822Parser
-  qw(read_dpkg_control parse_dpkg_control parse_dpkg_control_string);
+  qw(read_dpkg_control_lc parse_dpkg_control_string_lc);
 
 # Force export as soon as possible, since some of the modules we load also
 # depend on us and the sequencing can cause things not to be exported
@@ -288,7 +288,7 @@ sub get_deb_info {
     return {}
       unless valid_utf8($control);
 
-    my @data = parse_dpkg_control_string($control);
+    my @data = parse_dpkg_control_string_lc($control);
 
     return $data[0];
 }
@@ -312,7 +312,7 @@ L</read_dpkg_control(FILE[, FLAGS[, LINES]])> do.
 sub get_dsc_info {
     my ($file) = @_;
 
-    my @data = read_dpkg_control($file);
+    my @data = read_dpkg_control_lc($file);
 
     return $data[0];
 }
@@ -324,7 +324,7 @@ sub get_dsc_info {
 sub get_dsc_info_from_string {
     my ($text) = @_;
 
-    my @data = parse_dpkg_control_string($text);
+    my @data = parse_dpkg_control_string_lc($text);
 
     return $data[0];
 }

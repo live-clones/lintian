@@ -33,7 +33,7 @@ BEGIN {
 use lib "$ENV{'LINTIAN_ROOT'}/lib/";
 
 use Lintian::Util qw(safe_qx);
-use Lintian::Deb822Parser qw(parse_dpkg_control);
+use Lintian::Deb822Parser qw(parse_dpkg_control_lc);
 
 my $datapath = shift;
 my %hardening = (
@@ -149,7 +149,7 @@ while (my $archstr = <$dlfd>) {
     $ENV{'DEB_HOST_ARCH'} = $archstr;
     delete($ENV{'DEB_BUILD_MAINT_OPTIONS'});
     open(my $dbfd, '-|', 'dpkg-buildflags', '--query-features', 'hardening');
-    @hardening = parse_dpkg_control($dbfd);
+    @hardening = parse_dpkg_control_lc($dbfd);
     close($dbfd);
     # First, find all hardening features enabled by default on this
     # architecture.
@@ -165,7 +165,7 @@ while (my $archstr = <$dlfd>) {
 
     $ENV{'DEB_BUILD_MAINT_OPTIONS'} = 'hardening=+all';
     open($dbfd, '-|', 'dpkg-buildflags', '--query-features', 'hardening');
-    @hardening = parse_dpkg_control($dbfd);
+    @hardening = parse_dpkg_control_lc($dbfd);
     close($dbfd);
     # Now scan over all hardening features for this architecture.
     foreach my $paragraph (@hardening) {

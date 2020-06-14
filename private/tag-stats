@@ -26,7 +26,7 @@ BEGIN {
 my $LINTIAN_ROOT = $ENV{'LINTIAN_ROOT'};
 
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
-use Lintian::Deb822Parser qw(read_dpkg_control);
+use Lintian::Deb822Parser qw(read_dpkg_control_lc);
 use Lintian::Tag::Info;
 
 my @severities = reverse qw(pedantic info warning error);
@@ -43,7 +43,7 @@ opendir(my $checkdir, "$LINTIAN_ROOT/checks");
 for my $check (readdir($checkdir)) {
     next unless $check =~ /\.desc$/;
 
-    my @tags = read_dpkg_control("$LINTIAN_ROOT/checks/$check");
+    my @tags = read_dpkg_control_lc("$LINTIAN_ROOT/checks/$check");
     my $desc = $tags[0];
     my @needs;
     if ($desc and exists $desc->{'needs-info'}) {

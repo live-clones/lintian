@@ -30,7 +30,7 @@ use Path::Tiny;
 use Try::Tiny;
 use Unicode::UTF8 qw(valid_utf8 decode_utf8);
 
-use Lintian::Deb822Parser qw(parse_dpkg_control_string);
+use Lintian::Deb822Parser qw(parse_dpkg_control_string_lc);
 use Lintian::Inspect::Changelog::Version;
 use Lintian::Relation;
 use Lintian::Util
@@ -237,7 +237,7 @@ sub load_debian_control {
     my $contents = decode_utf8($bytes);
 
     my @control_data;
-    eval {@control_data = parse_dpkg_control_string($contents);};
+    eval {@control_data = parse_dpkg_control_string_lc($contents);};
 
     if ($@) {
         # If it is a syntax error, ignore it (we emit

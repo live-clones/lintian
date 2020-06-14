@@ -33,7 +33,7 @@ use Path::Tiny;
 use Dpkg::Vendor qw(get_current_vendor get_vendor_info);
 
 use Lintian::Check::Info;
-use Lintian::Deb822Parser qw(read_dpkg_control);
+use Lintian::Deb822Parser qw(read_dpkg_control_lc);
 use Lintian::Tag::Info;
 
 use constant EMPTY => q{};
@@ -468,7 +468,7 @@ sub _find_profile {
 sub _read_profile {
     my ($self, $path) = @_;
 
-    my @paragraphs = read_dpkg_control($path, 0);
+    my @paragraphs = read_dpkg_control_lc($path, 0);
 
     for my $paragraph (@paragraphs) {
 

@@ -78,7 +78,7 @@ use Unicode::UTF8 qw(valid_utf8 decode_utf8);
 
 use Lintian::Spelling qw(check_spelling);
 use Lintian::Data;
-use Lintian::Deb822Parser qw(parse_dpkg_control_string);
+use Lintian::Deb822Parser qw(parse_dpkg_control_string_lc);
 use Lintian::Profile;
 use Lintian::Tag::Info;
 
@@ -168,7 +168,7 @@ sub test_check_desc {
         next
           unless valid_utf8($bytes);
         my $contents = decode_utf8($bytes);
-        eval {($header, @tagpara) = parse_dpkg_control_string($contents);};
+        eval {($header, @tagpara) = parse_dpkg_control_string_lc($contents);};
         if (my $err = $@) {
             $err =~ s/ at .*? line \d+\s*\n//;
             $builder->ok(0, "Cannot parse $desc_file");

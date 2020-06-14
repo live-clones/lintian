@@ -31,7 +31,7 @@ use List::Util qw(first none);
 use Path::Tiny;
 
 use Lintian::Data ();
-use Lintian::Deb822Parser qw(parse_dpkg_control_string);
+use Lintian::Deb822Parser qw(parse_dpkg_control_string_lc);
 use Lintian::Relation ();
 
 use Moo;
@@ -147,7 +147,7 @@ sub source {
     eval {
         # check we can parse it, but ignore the result - we will fetch
         # the fields we need from $processable.
-        parse_dpkg_control_string($contents);
+        parse_dpkg_control_string_lc($contents);
     };
     if ($@) {
         chomp $@;

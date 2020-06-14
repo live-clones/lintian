@@ -11,7 +11,7 @@ use File::Find::Rule;
 use Path::Tiny;
 use Test::More;
 
-use Lintian::Deb822Parser qw(read_dpkg_control);
+use Lintian::Deb822Parser qw(read_dpkg_control_lc);
 
 use constant EMPTY => q{};
 
@@ -39,7 +39,7 @@ my %TAGS;
 # find all tags
 my @tagpaths = File::Find::Rule->file->name('*.desc')->in("$root/tags");
 for my $desc (@tagpaths) {
-    my @sections = read_dpkg_control($desc);
+    my @sections = read_dpkg_control_lc($desc);
     BAIL_OUT("$desc does not have exactly one paragraph")
       if (scalar(@sections) != 1);
     my $header = $sections[0];
@@ -63,7 +63,7 @@ $known_tests += 3 * scalar @tagpaths;
 my @profilepaths
   = File::Find::Rule->file->name('*.profile')->in("$root/profiles");
 for my $profile (@profilepaths) {
-    my ($header, @sections) = read_dpkg_control($profile);
+    my ($header, @sections) = read_dpkg_control_lc($profile);
     my $en_checks = $header->{'enable-tags-from-check'}//EMPTY;
     my $dis_checks = $header->{'disable-tags-from-check'}//EMPTY;
     my $en_tag = $header->{'enable-tags'}//EMPTY;

@@ -28,7 +28,7 @@ use Carp qw(croak);
 use List::MoreUtils qw(none);
 
 use Lintian::Data;
-use Lintian::Deb822Parser qw(read_dpkg_control);
+use Lintian::Deb822Parser qw(read_dpkg_control_lc);
 use Lintian::Tag::TextUtil
   qw(dtml_to_html dtml_to_text split_paragraphs wrap_paragraphs);
 
@@ -174,7 +174,7 @@ sub load {
     croak "Cannot read tag file from $tagpath"
       unless -r $tagpath;
 
-    my @paragraphs = read_dpkg_control($tagpath);
+    my @paragraphs = read_dpkg_control_lc($tagpath);
     croak "$tagpath does not have exactly one paragraph"
       unless scalar @paragraphs == 1;
 

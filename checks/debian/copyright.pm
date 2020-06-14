@@ -34,7 +34,7 @@ use Unicode::UTF8 qw[valid_utf8 decode_utf8];
 use XML::LibXML;
 
 use Lintian::Data;
-use Lintian::Deb822Parser qw(parse_dpkg_control_string);
+use Lintian::Deb822Parser qw(parse_dpkg_control_string_lc);
 use Lintian::Relation::Version qw(versions_compare);
 use Lintian::Spelling qw(check_spelling);
 
@@ -301,7 +301,7 @@ sub check_dep5_copyright {
     my (@dep5, @lines);
 
     # probably DEP 5 format; let's try more checks
-    eval {@dep5 = parse_dpkg_control_string($contents, 0, \@lines);};
+    eval {@dep5 = parse_dpkg_control_string_lc($contents, 0, \@lines);};
     if ($@) {
         chomp $@;
         $@ =~ s/^syntax error at //;
@@ -1312,7 +1312,7 @@ sub check_names_texts {
     my @paragraphs;
 
     local $@;
-    eval {@paragraphs = parse_dpkg_control_string($contents);};
+    eval {@paragraphs = parse_dpkg_control_string_lc($contents);};
 
     # parse error: copyright not in new format, just check text
     return $text_check->(\$contents)

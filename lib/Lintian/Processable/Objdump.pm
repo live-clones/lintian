@@ -24,7 +24,7 @@ use autodie;
 
 use Path::Tiny;
 
-use Lintian::Deb822Parser qw(parse_dpkg_control);
+use Lintian::Deb822Parser qw(parse_dpkg_control_lc);
 use Lintian::Util qw(open_gz);
 
 use constant EMPTY => q{};
@@ -73,7 +73,7 @@ sub objdump_info {
     my %objdump_info;
     local $_;
 
-    foreach my $pg (parse_dpkg_control($fd)) {
+    foreach my $pg (parse_dpkg_control_lc($fd)) {
         my %info;
         if (lc($pg->{'broken'}//'no') eq 'yes') {
             $info{'ERRORS'} = 1;

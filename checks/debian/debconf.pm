@@ -27,7 +27,7 @@ use autodie;
 
 use Path::Tiny;
 
-use Lintian::Deb822Parser qw(parse_dpkg_control_string :constants);
+use Lintian::Deb822Parser qw(parse_dpkg_control_string_lc :constants);
 use Lintian::Relation;
 use Lintian::Util qw($PKGNAME_REGEX);
 
@@ -100,7 +100,7 @@ sub source {
             my @templates;
             eval {
                 @templates
-                  = parse_dpkg_control_string($contents,
+                  = parse_dpkg_control_string_lc($contents,
                     DCTRL_DEBCONF_TEMPLATE);
             };
             if ($@) {
@@ -210,7 +210,7 @@ sub installable {
                 # $seentemplates (above) will be false if $ctrl_templates is a
                 # symlink or not a file, so this should be safe without
                 # (re-checking) with -f/-l.
-                @templates= parse_dpkg_control_string($contents,
+                @templates= parse_dpkg_control_string_lc($contents,
                     DCTRL_DEBCONF_TEMPLATE);
             };
             if ($@) {

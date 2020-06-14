@@ -21,7 +21,7 @@ use YAML::XS;
 
 use lib "$ENV{LINTIAN_ROOT}/lib";
 
-use Lintian::Deb822Parser qw(read_dpkg_control);
+use Lintian::Deb822Parser qw(read_dpkg_control_lc);
 
 use constant EMPTY => q{};
 use constant SPACE => q{ };
@@ -74,7 +74,7 @@ my %new_name;
 my $tagroot = "$ENV{LINTIAN_ROOT}/tags";
 my @descfiles = File::Find::Rule->file()->name('*.desc')->in($tagroot);
 for my $tagpath (@descfiles) {
-    my @paragraphs = read_dpkg_control($tagpath);
+    my @paragraphs = read_dpkg_control_lc($tagpath);
     die "Tag in $tagpath does not have exactly one paragraph"
       unless scalar @paragraphs == 1;
 

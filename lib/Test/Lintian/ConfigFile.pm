@@ -52,7 +52,7 @@ use Carp;
 use List::MoreUtils qw(any);
 use Path::Tiny;
 
-use Lintian::Deb822Parser qw(read_dpkg_control);
+use Lintian::Deb822Parser qw(read_dpkg_control_lc);
 
 use constant NEWLINE => qq{\n};
 use constant SPACE => q{ };
@@ -74,7 +74,7 @@ sub read_config {
     croak "Cannot find file $configpath."
       unless -f $configpath;
 
-    my @paragraphs = read_dpkg_control($configpath);
+    my @paragraphs = read_dpkg_control_lc($configpath);
     croak "$configpath does not have exactly one paragraph"
       if (scalar(@paragraphs) != 1);
 
