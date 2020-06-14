@@ -6,9 +6,6 @@
 use strict;
 use warnings;
 
-use lib "$ENV{'LINTIAN_TEST_ROOT'}/lib";
-use Lintian::Deb822Parser qw(visit_dpkg_paragraph :constants);
-
 print <<EOF ;
 #!/bin/sh
 
@@ -18,15 +15,17 @@ set -e
 
 EOF
 
-visit_dpkg_paragraph (\&pg, \*STDIN, DCTRL_DEBCONF_TEMPLATE);
+for my $line ( <STDIN> ) {
+
+    if ($line =~ /^Template:\s*(\S+)\s*$/) {
+
+        my $template = $1;
+        next
+          unless defined $template;
+
+        print "db_input high $template || true\n";
+        print "db_go\n\n";
+    }
+}
 
 exit 0;
-
-sub pg {
-    my ($paragraph) = @_;
-    my $template = $paragraph->{'Template'};
-    # Some of them will not have a name, so skip those.
-    return unless $template;
-    print "db_input high $template || true\n";
-    print "db_go\n\n";
-}
