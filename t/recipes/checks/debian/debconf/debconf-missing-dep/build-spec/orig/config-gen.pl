@@ -24,7 +24,7 @@ exit 0;
 
 sub pg {
     my ($paragraph) = @_;
-    my $template = $paragraph->{'template'};
+    my $template = $paragraph->{'Template'};
     # Some of them will not have a name, so skip those.
     return unless $template;
     print "db_input high $template || true\n";
