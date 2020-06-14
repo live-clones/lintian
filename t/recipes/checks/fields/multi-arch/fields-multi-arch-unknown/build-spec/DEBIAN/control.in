@@ -1,7 +1,7 @@
 Package: [% $source %]
 Version: [% $version %]
 Architecture: [% $package_architecture %]
-Multi-arch: cheese
+Multi-Arch: cheese
 Maintainer: [% $author %]
 Section: [% $section %]
 Priority: optional

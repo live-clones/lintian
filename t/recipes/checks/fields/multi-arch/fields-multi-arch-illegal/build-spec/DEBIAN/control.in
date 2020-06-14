@@ -1,7 +1,7 @@
 Package: [% $source %]
 Version: [% $version %]
 Architecture: all
-Multi-arch: same
+Multi-Arch: same
 Maintainer: [% $author %]
 Section: [% $section %]
 Priority: optional
