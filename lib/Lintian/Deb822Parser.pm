@@ -186,24 +186,8 @@ sub parse_dpkg_control_lc {
 
     my @result = parse_dpkg_control(@_);
 
-    my $position = 0;
-    for my $paragraph (@result) {
-
-        my @fields = keys %{$paragraph};
-        my @mixedcase = grep { $_ ne lc($_) } @fields;
-
-        for my $old (@mixedcase) {
-            $result[$position]{lc $old} = $result[$position]{$old};
-            delete $result[$position]{$old};
-
-            $field_starts->[$position]{lc $old}
-              = $field_starts->[$position]{$old};
-            delete $field_starts->[$position]{$old};
-        }
-
-    } continue {
-        $position++;
-    }
+    lowercase_field_names(\@result);
+    lowercase_field_names($field_starts);
 
     return @result;
 }
@@ -236,26 +220,35 @@ sub parse_dpkg_control_string_lc {
 
     my @result = parse_dpkg_control_string(@_);
 
-    my $position = 0;
-    for my $paragraph (@result) {
+    lowercase_field_names(\@result);
+    lowercase_field_names($field_starts);
 
-        my @fields = keys %{$paragraph};
+    return @result;
+}
+
+=item lowercase_field_names
+
+=cut
+
+sub lowercase_field_names {
+    my ($arrayref) = @_;
+
+    return
+      unless $arrayref;
+
+    for my $paragraph (@{$arrayref}) {
+
+        # magic marker should only appear in field starts
+        my @fields = grep { $_ ne 'START-OF-PARAGRAPH' } keys %{$paragraph};
         my @mixedcase = grep { $_ ne lc($_) } @fields;
 
         for my $old (@mixedcase) {
-            $result[$position]{lc $old} = $result[$position]{$old};
-            delete $result[$position]{$old};
-
-            $field_starts->[$position]{lc $old}
-              = $field_starts->[$position]{$old};
-            delete $field_starts->[$position]{$old};
+            $paragraph->{lc $old} = $paragraph->{$old};
+            delete $paragraph->{$old};
         }
-
-    } continue {
-        $position++;
     }
 
-    return @result;
+    return;
 }
 
 =item visit_dpkg_paragraph (CODE, HANDLE[, FLAGS])
