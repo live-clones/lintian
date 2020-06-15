@@ -1,2 +1,2 @@
 Testname: files-package-contains-usr-unmerged-pathnames
-Check: files/hierarchy-standard
+Check: files/hierarchy/standard

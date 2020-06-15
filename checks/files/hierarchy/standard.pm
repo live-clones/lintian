@@ -1,4 +1,4 @@
-# files/hierarchy-standard -- lintian check script -*- perl -*-
+# files/hierarchy/standard -- lintian check script -*- perl -*-
 
 # Copyright © 1998 Christian Schwarz and Richard Braakman
 #
@@ -18,7 +18,7 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-package Lintian::files::hierarchy_standard;
+package Lintian::files::hierarchy::standard;
 
 use v5.20;
 use warnings;

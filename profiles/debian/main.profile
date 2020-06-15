@@ -105,7 +105,7 @@ Enable-Tags-From-Check:
  files/empty-package,
  files/encoding,
  files/hard-links,
- files/hierarchy-standard,
+ files/hierarchy/standard,
  files/ieee-data,
  files/includes,
  files/init,
