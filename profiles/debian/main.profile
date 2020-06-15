@@ -159,6 +159,7 @@ Enable-Tags-From-Check:
  libraries/shared/obsolete,
  linda,
  lintian,
+ lintian/override/comments,
  lintian/overrides,
  mailcap,
  maintainer-scripts/adduser,
