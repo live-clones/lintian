@@ -24,7 +24,7 @@ use autodie;
 
 use Path::Tiny;
 
-use Lintian::Deb822Parser qw(parse_dpkg_control_lc);
+use Lintian::Deb822Parser qw(parse_dpkg_control);
 use Lintian::Util qw(open_gz);
 
 use constant EMPTY => q{};
@@ -73,16 +73,16 @@ sub objdump_info {
     my %objdump_info;
     local $_;
 
-    foreach my $pg (parse_dpkg_control_lc($fd)) {
+    foreach my $pg (parse_dpkg_control($fd)) {
         my %info;
-        if (lc($pg->{'broken'}//'no') eq 'yes') {
+        if (lc($pg->{'Broken'}//'no') eq 'yes') {
             $info{'ERRORS'} = 1;
         }
-        if (lc($pg->{'bad-dynamic-table'}//'no') eq 'yes') {
+        if (lc($pg->{'Bad-Dynamic-Table'}//'no') eq 'yes') {
             $info{'BAD-DYNAMIC-TABLE'} = 1;
         }
-        $info{'ELF-TYPE'} = $pg->{'elf-type'} if $pg->{'elf-type'};
-        foreach my $symd (split m/\s*\n\s*/, $pg->{'dynamic-symbols'}//'') {
+        $info{'ELF-TYPE'} = $pg->{'Elf-Type'} if $pg->{'Elf-Type'};
+        foreach my $symd (split m/\s*\n\s*/, $pg->{'Dynamic-Symbols'}//'') {
             next unless $symd;
             if ($symd =~ m/^\s*(\S+)\s+(?:(\S+)\s+)?(\S+)$/){
                 # $ver is not always there
@@ -91,7 +91,7 @@ sub objdump_info {
                 push @{ $info{'SYMBOLS'} }, [$sec, $ver, $sym];
             }
         }
-        foreach my $section (split m/\s*\n\s*/, $pg->{'section-headers'}//'') {
+        foreach my $section (split m/\s*\n\s*/, $pg->{'Section-Headers'}//'') {
             next unless $section;
             # NB: helpers/coll/objdump-info-helper discards most
             # sections.  If you are missing a section name for a
@@ -103,7 +103,7 @@ sub objdump_info {
 
             $info{'SH'}{$section} = 1;
         }
-        foreach my $data (split m/\s*\n\s*/, $pg->{'program-headers'}//'') {
+        foreach my $data (split m/\s*\n\s*/, $pg->{'Program-Headers'}//'') {
             next unless $data;
             my ($header, @vals) = split m/\s++/, $data;
             foreach my $extra (@vals) {
@@ -115,7 +115,7 @@ sub objdump_info {
                 }
             }
         }
-        foreach my $data (split m/\s*\n\s*/, $pg->{'dynamic-section'}//'') {
+        foreach my $data (split m/\s*\n\s*/, $pg->{'Dynamic-Section'}//'') {
             next unless $data;
             # Here we just need RPATH and NEEDS, so ignore the rest for now
             my ($header, $val) = split(m/\s++/, $data, 2);
@@ -135,7 +135,7 @@ sub objdump_info {
             }
         }
 
-        if ($pg->{'filename'} =~ m,^(.+)\(([^/\)]+)\)$,) {
+        if ($pg->{'Filename'} =~ m,^(.+)\(([^/\)]+)\)$,) {
             # object file in a static lib.
             my ($lib, $obj) = ($1, $2);
             my $libentry = $objdump_info{$lib};
@@ -149,7 +149,7 @@ sub objdump_info {
                 push @{ $libentry->{'objects'} }, $obj;
             }
         }
-        $objdump_info{$pg->{'filename'}} = \%info;
+        $objdump_info{$pg->{'Filename'}} = \%info;
     }
     $self->{objdump_info} = \%objdump_info;
 
