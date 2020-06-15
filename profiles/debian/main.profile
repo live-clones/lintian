@@ -71,6 +71,7 @@ Enable-Tags-From-Check:
  fields/section,
  fields/source,
  fields/standards-version,
+ fields/style,
  fields/subarchitecture,
  fields/terminal-control,
  fields/trimmed,
