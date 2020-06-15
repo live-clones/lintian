@@ -25,7 +25,7 @@ use utf8;
 
 use Path::Tiny;
 
-use Lintian::Deb822Parser qw(read_dpkg_control_lc);
+use Lintian::Deb822Parser qw(read_dpkg_control);
 use Lintian::Tag::Info ();
 
 use constant EMPTY => q{};
@@ -133,19 +133,19 @@ sub load {
     return
       unless -f $descpath;
 
-    my @paragraphs = read_dpkg_control_lc($descpath);
+    my @paragraphs = read_dpkg_control($descpath);
     die "$descpath does not have exactly one paragraph"
       unless scalar @paragraphs == 1;
 
     my $header = $paragraphs[0];
 
-    my $name = $header->{'check-script'};
+    my $name = $header->{'Check-Script'};
     die "No name field in $descpath"
       unless defined $name;
     die "Wrong name $name vs " . $self->name
       unless $name eq $self->name;
 
-    $self->type($header->{'type'});
+    $self->type($header->{'Type'});
 
     my %type_table;
     if ($self->type ne 'ALL') {

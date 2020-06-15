@@ -28,7 +28,7 @@ use Carp qw(croak);
 use List::MoreUtils qw(none);
 
 use Lintian::Data;
-use Lintian::Deb822Parser qw(read_dpkg_control_lc);
+use Lintian::Deb822Parser qw(read_dpkg_control);
 use Lintian::Tag::TextUtil
   qw(dtml_to_html dtml_to_text split_paragraphs wrap_paragraphs);
 
@@ -174,21 +174,21 @@ sub load {
     croak "Cannot read tag file from $tagpath"
       unless -r $tagpath;
 
-    my @paragraphs = read_dpkg_control_lc($tagpath);
+    my @paragraphs = read_dpkg_control($tagpath);
     croak "$tagpath does not have exactly one paragraph"
       unless scalar @paragraphs == 1;
 
     my %fields = %{ $paragraphs[0] };
-    $self->name($fields{tag});
-    $self->original_severity($fields{severity});
+    $self->name($fields{Tag});
+    $self->original_severity($fields{Severity});
 
-    $self->check($fields{check});
-    $self->experimental(($fields{experimental} // EMPTY) eq 'yes');
+    $self->check($fields{Check});
+    $self->experimental(($fields{Experimental} // EMPTY) eq 'yes');
 
-    $self->info($fields{info});
-    $self->references($fields{ref});
+    $self->info($fields{Info});
+    $self->references($fields{Ref});
 
-    $self->aliases(split(SPACE, $fields{'renamed-from'} // EMPTY));
+    $self->aliases(split(SPACE, $fields{'Renamed-From'} // EMPTY));
 
     croak "No Tag field in $tagpath"
       unless length $self->name;

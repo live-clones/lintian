@@ -33,7 +33,7 @@ use Path::Tiny;
 use Dpkg::Vendor qw(get_current_vendor get_vendor_info);
 
 use Lintian::Check::Info;
-use Lintian::Deb822Parser qw(read_dpkg_control_lc);
+use Lintian::Deb822Parser qw(read_dpkg_control);
 use Lintian::Tag::Info;
 
 use constant EMPTY => q{};
@@ -468,7 +468,7 @@ sub _find_profile {
 sub _read_profile {
     my ($self, $path) = @_;
 
-    my @paragraphs = read_dpkg_control_lc($path, 0);
+    my @paragraphs = read_dpkg_control($path, 0);
 
     for my $paragraph (@paragraphs) {
 
@@ -487,7 +487,7 @@ sub _read_profile {
     croak "Profile has no header in $path"
       unless defined $header;
 
-    my $name = $header->{profile};
+    my $name = $header->{Profile};
     croak "Profile has no name in $path"
       unless length $name;
 
@@ -506,7 +506,7 @@ sub _read_profile {
     $self->name($name)
       unless length $self->name;
 
-    my $parentname = $header->{extends};
+    my $parentname = $header->{Extends};
     if (length $parentname){
         croak "Invalid Extends field in $path"
           if $parentname =~ m{\.};
@@ -541,25 +541,25 @@ sub _read_profile {
 sub _read_profile_section {
     my ($self, $profile, $paragraph, $section) = @_;
 
-    my @valid_fields = qw(tags overridable severity);
+    my @valid_fields = qw(Tags Overridable Severity);
     my $validlc = List::Compare->new([keys %{$paragraph}], \@valid_fields);
     my @unknown_fields = uniq $validlc->get_Lonly;
     croak "Unknown fields in section $section of profile $profile: "
       . join(SPACE, @unknown_fields)
       if @unknown_fields;
 
-    my @tags = split(/\s*,\s*/, $paragraph->{'tags'} // EMPTY);
+    my @tags = split(/\s*,\s*/, $paragraph->{'Tags'} // EMPTY);
     croak "Tags field missing or empty in section $section of profile $profile"
       unless @tags;
 
-    my $severity = $paragraph->{'severity'} // EMPTY;
+    my $severity = $paragraph->{'Severity'} // EMPTY;
     croak
 "Profile $profile contains invalid severity $severity in section $section"
       if length $severity && none { $severity eq $_ }
     @Lintian::Tag::Info::SEVERITIES;
 
     my $overridable
-      = $self->_parse_boolean($paragraph->{'overridable'},-1, $profile,
+      = $self->_parse_boolean($paragraph->{'Overridable'},-1, $profile,
         $section);
 
     foreach my $tag (@tags) {
@@ -600,7 +600,7 @@ sub _read_profile_tags{
     my ($self, $profile, $header) = @_;
 
     my @valid_fields
-      = qw(profile extends enable-tags-from-check disable-tags-from-check enable-tags disable-tags);
+      = qw(Profile Extends Enable-Tags-From-Check Disable-Tags-From-Check Enable-Tags Disable-Tags);
     my $validlc = List::Compare->new([keys %{$header}], \@valid_fields);
     my @unknown_fields = uniq $validlc->get_Lonly;
     croak "Unknown fields in header of profile $profile: "
@@ -608,9 +608,9 @@ sub _read_profile_tags{
       if @unknown_fields;
 
     my @enable_checks
-      = split(/\s*,\s*/, $header->{'enable-tags-from-check'} // EMPTY);
+      = split(/\s*,\s*/, $header->{'Enable-Tags-From-Check'} // EMPTY);
     my @disable_checks
-      = split(/\s*,\s*/, $header->{'disable-tags-from-check'} // EMPTY);
+      = split(/\s*,\s*/, $header->{'Disable-Tags-From-Check'} // EMPTY);
 
     # List::MoreUtils has 'duplicates' starting at 0.423
     my @allchecks = (@enable_checks, @disable_checks);
@@ -650,8 +650,8 @@ sub _read_profile_tags{
         $check->add_taginfo($_) for @taginfos;
     }
 
-    my @enable_tags= split(/\s*,\s*/, $header->{'enable-tags'} // EMPTY);
-    my @disable_tags= split(/\s*,\s*/, $header->{'disable-tags'} // EMPTY);
+    my @enable_tags= split(/\s*,\s*/, $header->{'Enable-Tags'} // EMPTY);
+    my @disable_tags= split(/\s*,\s*/, $header->{'Disable-Tags'} // EMPTY);
 
     # List::MoreUtils has 'duplicates' starting at 0.423
     my @alltags = (@enable_tags, @disable_tags);
