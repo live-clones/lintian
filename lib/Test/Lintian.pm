@@ -78,7 +78,7 @@ use Unicode::UTF8 qw(valid_utf8 decode_utf8);
 
 use Lintian::Spelling qw(check_spelling);
 use Lintian::Data;
-use Lintian::Deb822Parser qw(parse_dpkg_control_string_lc);
+use Lintian::Deb822Parser qw(parse_dpkg_control_string);
 use Lintian::Profile;
 use Lintian::Tag::Info;
 
@@ -168,7 +168,7 @@ sub test_check_desc {
         next
           unless valid_utf8($bytes);
         my $contents = decode_utf8($bytes);
-        eval {($header, @tagpara) = parse_dpkg_control_string_lc($contents);};
+        eval {($header, @tagpara) = parse_dpkg_control_string($contents);};
         if (my $err = $@) {
             $err =~ s/ at .*? line \d+\s*\n//;
             $builder->ok(0, "Cannot parse $desc_file");
@@ -176,9 +176,9 @@ sub test_check_desc {
             next;
         }
         my $content_type = 'Check';
-        my $cname = $header->{'check-script'}//'';
-        my $ctype = $header->{'type'} // '';
-        my $needs = $header->{'needs-info'} // '';
+        my $cname = $header->{'Check-Script'}//'';
+        my $ctype = $header->{'Type'} // '';
+        my $needs = $header->{'Needs-Info'} // '';
         my $i = 1; # paragraph counter.
         $builder->ok(1, "Can parse check $desc_file");
 
@@ -209,9 +209,9 @@ sub test_check_desc {
         }
 
         foreach my $tpara (@tagpara) {
-            my $tag = $tpara->{'tag'}//'';
-            my $severity = $tpara->{'severity'}//'';
-            my $info = $tpara->{'info'} // '';
+            my $tag = $tpara->{'Tag'}//'';
+            my $severity = $tpara->{'Severity'}//'';
+            my $info = $tpara->{'Info'} // '';
             my (@htmltags, %seen);
 
             $i++;
@@ -276,8 +276,8 @@ sub test_check_desc {
                 'Tag info has no stray angle brackets')
               or $builder->diag("$content_type $cname: $tag\n");
 
-            if ($tpara->{'ref'}) {
-                my @issues = _check_reference($tpara->{'ref'});
+            if ($tpara->{'Ref'}) {
+                my @issues = _check_reference($tpara->{'Ref'});
                 my $text = join("\n\t", @issues);
                 $builder->ok(!@issues, 'Proper references are used')
                   or $builder->diag("$content_type $cname: $tag\n\t$text");

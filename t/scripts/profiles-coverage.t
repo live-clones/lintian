@@ -11,7 +11,7 @@ use File::Find::Rule;
 use Path::Tiny;
 use Test::More;
 
-use Lintian::Deb822Parser qw(read_dpkg_control_lc);
+use Lintian::Deb822Parser qw(read_dpkg_control);
 
 use constant EMPTY => q{};
 
@@ -39,16 +39,16 @@ my %TAGS;
 # find all tags
 my @tagpaths = File::Find::Rule->file->name('*.desc')->in("$root/tags");
 for my $desc (@tagpaths) {
-    my @sections = read_dpkg_control_lc($desc);
+    my @sections = read_dpkg_control($desc);
     BAIL_OUT("$desc does not have exactly one paragraph")
       if (scalar(@sections) != 1);
     my $header = $sections[0];
 
-    ok(length $header->{'tag'}, "Field Tag exists in $desc");
-    ok(length $header->{'check'}, "Field Check exists in $desc");
+    ok(length $header->{'Tag'}, "Field Tag exists in $desc");
+    ok(length $header->{'Check'}, "Field Check exists in $desc");
 
-    my $tagname = $header->{'tag'};
-    my $checkname = $header->{'check'};
+    my $tagname = $header->{'Tag'};
+    my $checkname = $header->{'Check'};
 
     ok(exists $CHECKS{$checkname},
         "Check $checkname mentioned in $desc exists");
@@ -63,11 +63,11 @@ $known_tests += 3 * scalar @tagpaths;
 my @profilepaths
   = File::Find::Rule->file->name('*.profile')->in("$root/profiles");
 for my $profile (@profilepaths) {
-    my ($header, @sections) = read_dpkg_control_lc($profile);
-    my $en_checks = $header->{'enable-tags-from-check'}//EMPTY;
-    my $dis_checks = $header->{'disable-tags-from-check'}//EMPTY;
-    my $en_tag = $header->{'enable-tags'}//EMPTY;
-    my $dis_tag = $header->{'disable-tags'}//EMPTY;
+    my ($header, @sections) = read_dpkg_control($profile);
+    my $en_checks = $header->{'Enable-Tags-From-Check'}//EMPTY;
+    my $dis_checks = $header->{'Disable-Tags-From-Check'}//EMPTY;
+    my $en_tag = $header->{'Enable-Tags'}//EMPTY;
+    my $dis_tag = $header->{'Disable-Tags'}//EMPTY;
 
     my @checks = trim_split($en_checks);
     foreach my $check (@checks) {
@@ -96,7 +96,7 @@ for my $profile (@profilepaths) {
     $known_tests += @checks + @tags + @disabled_checks + @disabled_tags;
 
     foreach my $section (@sections) {
-        my @sectiontags = trim_split($section->{'tags'}//EMPTY);
+        my @sectiontags = trim_split($section->{'Tags'}//EMPTY);
         ok(exists $TAGS{$_},
             "Tag $_ in section $section exists in profile $profile")
           for @sectiontags;
