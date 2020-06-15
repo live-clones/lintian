@@ -11,7 +11,7 @@ BEGIN {
 }
 use lib $ENV{LINTIAN_ROOT} . '/lib/';
 
-use Lintian::Deb822Parser qw(read_dpkg_control_lc);
+use Lintian::Deb822Parser qw(read_dpkg_control);
 
 my @keywords = ();
 
@@ -77,14 +77,14 @@ sub extract_data {
     my ($folder, $fname) = @_;
     print "=over 4\n\n";
     foreach my $file (glob("$folder/*.desc")) {
-        my ($header, @ignore) = read_dpkg_control_lc($file);
+        my ($header, @ignore) = read_dpkg_control($file);
         my $name = $header->{$fname};
         my $desc;
 
         next
           if $name eq 'lintian';
 
-        $desc = $header->{'manpage'};
+        $desc = $header->{'Manpage'};
         next
           unless defined $desc;
 

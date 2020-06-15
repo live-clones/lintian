@@ -26,7 +26,7 @@ BEGIN {
 my $LINTIAN_ROOT = $ENV{'LINTIAN_ROOT'};
 
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
-use Lintian::Deb822Parser qw(read_dpkg_control_lc);
+use Lintian::Deb822Parser qw(read_dpkg_control);
 use Lintian::Tag::Info;
 
 my @severities = reverse qw(pedantic info warning error);
@@ -43,31 +43,23 @@ opendir(my $checkdir, "$LINTIAN_ROOT/checks");
 for my $check (readdir($checkdir)) {
     next unless $check =~ /\.desc$/;
 
-    my @tags = read_dpkg_control_lc("$LINTIAN_ROOT/checks/$check");
+    my @tags = read_dpkg_control("$LINTIAN_ROOT/checks/$check");
     my $desc = $tags[0];
-    my @needs;
-    if ($desc and exists $desc->{'needs-info'}) {
-        @needs = split(/\s*,\s*/, $desc->{'needs-info'});
-    }
 
     shift(@tags);
 
     foreach my $tag (@tags) {
-        my $name = $tag->{tag};
-        my $severity = $tag->{severity};
+        my $name = $tag->{Tag};
+        my $severity = $tag->{Severity};
 
         $severity = 'unclassified' if not $severity;
 
-        my $info = Lintian::Tag::Info->new($tag, $desc->{'check-script'},
-            $desc->{'type'});
+        my $info = Lintian::Tag::Info->new($tag, $desc->{'Check-Script'},
+            $desc->{'Type'});
         my $code = $info->code;
 
         push(@{$stats{severity}{$severity}}, $name);
         push(@{$stats{type}{severity}{$code}{$severity}}, $name);
-
-        for my $need (@needs) {
-            $stats{needs}{$severity}{$need} = 1;
-        }
 
         $num_tags++;
     }
@@ -77,7 +69,7 @@ closedir($checkdir);
 
 print "Severity\n";
 foreach my $s (@severities) {
-    my $tags = $stats{severity}{$s};
+    my $tags = $stats{severity}{$s} // [];
     print "  $s: " . @{$tags} . "\n";
     print '    ' . join("\n    ", sort @{$tags}) . "\n" if $verbose >= 3;
 }

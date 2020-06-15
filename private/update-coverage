@@ -30,7 +30,7 @@ BEGIN {
 my $LINTIAN_ROOT = $ENV{'LINTIAN_ROOT'};
 
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
-use Lintian::Deb822Parser qw(read_dpkg_control_lc);
+use Lintian::Deb822Parser qw(read_dpkg_control);
 
 # Check that we're being run from the right place (although the above probably
 # died if we weren't).
@@ -46,11 +46,11 @@ my ($tc, $ltc, $ctc, $cltc);
 my @legacy_in_new;
 
 for my $desc (glob('checks/*.desc')) {
-    for my $data (read_dpkg_control_lc($desc)) {
+    for my $data (read_dpkg_control($desc)) {
         $desc =~ s,.*/,,;
         $desc =~ s/\.desc$//;
-        if (exists $data->{tag}) {
-            $tags{$data->{tag}} = $desc;
+        if (exists $data->{Tag}) {
+            $tags{$data->{Tag}} = $desc;
             $checks{$desc}++;
         }
     }
@@ -66,15 +66,15 @@ for my $desc (
             't/tests/*/desc', 't/changes/*.desc',
             't/debs/*/desc', 't/source/*/desc'))
 ) {
-    my ($data) = read_dpkg_control_lc($desc);
-    my $testname = $data->{'testname'};
+    my ($data) = read_dpkg_control($desc);
+    my $testname = $data->{'Testname'};
     if ($testname =~ s{\A legacy- }{}xsm) {
         my $tagfile = $desc;
         $tagfile =~ s{ /desc \Z}{/tags}xsm;
         push(@legacy_in_new, [$testname, $tagfile]);
 
-    } elsif (exists $data->{'test-for'}) {
-        for my $tag (split(' ', $data->{'test-for'})) {
+    } elsif (exists $data->{'Test-For'}) {
+        for my $tag (split(' ', $data->{'Test-For'})) {
             my $check = $tags{$tag};
             delete $tags{$tag};
             if ($check) {
