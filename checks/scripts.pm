@@ -727,12 +727,10 @@ sub installable {
         my $checkbashisms;
         if ($shellscript) {
             $checkbashisms = $base eq 'sh' ? 1 : 0;
-            if ($base eq 'sh' or $base eq 'bash') {
-                if (check_script_syntax("/bin/${base}", $file)) {
-                    $self->tag('maintainer-shell-script-fails-syntax-check',
-                        $file);
-                }
-            }
+
+            $self->tag('maintainer-shell-script-fails-syntax-check', $file)
+              if ($base eq 'sh' && check_script_syntax('/bin/dash', $file))
+              || ($base eq 'bash' && check_script_syntax('/bin/bash', $file));
         }
 
         # now scan the file contents themselves
