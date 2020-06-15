@@ -67,6 +67,9 @@ sub installable {
     return
       unless length $full_description;
 
+    $self->tag('odd-mark-in-description', 'comma not followed by whitespace')
+      if $full_description =~ /,\S/;
+
     $full_description =~ m/^([^\n]*)\n(.*)$/s;
     my ($synopsis, $extended) = ($1, $2);
     unless (defined $synopsis) {
