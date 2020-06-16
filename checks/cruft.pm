@@ -7,6 +7,7 @@
 # Copyright © 2007 Russ Allbery
 # Copyright © 2013-2018 Bastien ROUCARIÈS
 # Copyright © 2017-2020 Chris Lamb <lamby@debian.org>
+# Copyright © 2020 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -918,16 +919,11 @@ sub find_source {
     my $index = $self->processable->patched;
     my @candidates;
 
-    # stop checking if these exist; resolves symlinks
-    my $fullpath
-      = $index->resolve_path('debian/missing-sources/' . $file->name);
-    return $fullpath
-      if defined $fullpath;
-
-    my $abbreviated
-      = $index->resolve_path('debian/missing-sources/' . $file->basename);
-    return $abbreviated
-      if defined $abbreviated;
+    # add standard locations
+    push(@candidates,
+        $index->resolve_path('debian/missing-sources/' . $file->name));
+    push(@candidates,
+        $index->resolve_path('debian/missing-sources/' . $file->basename));
 
     my $dirname = $file->dirname;
     my $parentname = basename($dirname);
