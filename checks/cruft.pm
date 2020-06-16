@@ -33,7 +33,7 @@ use autodie;
 
 use Carp qw(croak);
 use File::Basename qw(basename);
-use List::MoreUtils qw(any);
+use List::MoreUtils qw(any firstval);
 use Path::Tiny;
 
 use Lintian::Data;
@@ -52,6 +52,7 @@ use constant VERY_LONG_LINE_LENGTH => 512;
 use constant SAFE_LINE_LENGTH => 256;
 
 use constant EMPTY => q{};
+use constant SLASH => q{/};
 
 use Moo;
 use namespace::clean;
@@ -176,9 +177,6 @@ my $BAD_LINK_COPYRIGHT =  Lintian::Data->new(
     sub {
         return qr/$_[1]/xms;
     });
-
-my $MISSING_DIR_SEARCH_PATH
-  =  Lintian::Data->new('cruft/missing-dir-search-path');
 
 # get javascript name
 sub _minified_javascript_name_regexp {
@@ -788,8 +786,11 @@ sub find_cruft {
                 if($name =~ m{$regname}) {
                     $self->tag($tag_filetype, $name);
                     if($warn_data->{'checkmissing'}) {
-                        $self->check_missing_source($entry,$name, $basename,
-                            $dirname,$warn_data->{'transform'});
+                        my %hash;
+                        $hash{$_->[1]} = $_->[0]
+                          for @{$warn_data->{'transform'} // []};
+                        $self->tag('source-is-missing', $entry->name)
+                          unless $self->find_source($entry, \%hash);
                     }
                 }
             }
@@ -887,90 +888,92 @@ sub find_cruft {
     return;
 }
 
-# try to check if source is missing
-sub check_missing_source {
-    my ($self, $file, $name, $basename, $dirname,$replacementspairref,
-        $extratext)
-      = @_;
+sub find_source {
+    my ($self, $file, $patternref) = @_;
 
-    my $processable = $self->processable;
+    $patternref //= {};
 
-    my $basename_of_dirname = basename($dirname);
-    $extratext //= EMPTY;
+    return
+      unless $file->is_regular_file;
 
-    # do not check missing source for non free
-    if($processable->is_non_free) {
-        return;
+    return
+      if $self->processable->is_non_free;
+
+    my %patterns = %{$patternref};
+
+    my @alternatives;
+    for my $replacement (keys %patterns) {
+
+        my $newname = $file->basename;
+
+        # empty pattern would repeat the last regex compiled
+        my $pattern = $patterns{$replacement};
+        $newname =~ s/$pattern/$replacement/
+          if length $pattern;
+
+        push(@alternatives, $newname)
+          if length $newname;
     }
 
-    my @replacementspair;
-    if(defined($replacementspairref)) {
-        @replacementspair = @{$replacementspairref};
+    my $index = $self->processable->patched;
+    my @candidates;
+
+    # stop checking if these exist; resolves symlinks
+    my $fullpath
+      = $index->resolve_path('debian/missing-sources/' . $file->name);
+    return $fullpath
+      if defined $fullpath;
+
+    my $abbreviated
+      = $index->resolve_path('debian/missing-sources/' . $file->basename);
+    return $abbreviated
+      if defined $abbreviated;
+
+    my $dirname = $file->dirname;
+    my $parentname = basename($dirname);
+
+    my @absolute = (
+        # libtool
+        '.libs',
+        ".libs/$dirname",
+        # mathjax
+        'unpacked',
+        # for missing source set in debian
+        'debian',
+        'debian/missing-sources',
+        "debian/missing-sources/$dirname"
+    );
+
+    for my $absolute (@absolute) {
+        push(@candidates, $index->resolve_path("$absolute/$_"))
+          for @alternatives;
     }
 
-    unless ($file->is_regular_file) {
-        return;
+    my @relative = (
+        # likely in current dir
+        '.',
+        # for binary object built by libtool
+        '..',
+        # maybe in src subdir
+        './src',
+        # maybe in ../src subdir
+        '../src',
+        "../../src/$parentname",
+        # emscripten
+        './flash-src/src/net/gimite/websocket',
+    );
+
+    for my $relative (@relative) {
+        push(@candidates, $file->resolve_path("$relative/$_"))
+          for @alternatives;
     }
 
-    # As a special-case, check debian/missing-sources including symlinks, etc.
-    foreach my $ext (($file, $basename)) {
-        my $path = normalize_pkg_path("debian/missing-sources/$ext");
-        return if $path and $processable->patched->resolve_path($path);
-    }
+    my @found = grep { defined } @candidates;
 
-    # try to find for each replacement
-  REPLACEMENT:
-    foreach my $pair (@replacementspair) {
-        my $newbasename = $basename;
+    # careful with behavior around empty arrays
+    my $source = firstval { $_->name ne $file->name } @found;
 
-        my ($match, $replace) = @{$pair};
-
-        if($match eq EMPTY) {
-            $newbasename = $basename;
-        } else {
-            $newbasename =~ s/$match/$replace/;
-        }
-        # next but we may be return an error
-        if($newbasename eq EMPTY) {
-            next REPLACEMENT;
-        }
-        # now try for each path
-      PATH:
-        foreach my $path ($MISSING_DIR_SEARCH_PATH->all) {
-            my $newpath;
-            # first replace dir name
-            $path =~ s/\$dirname/$dirname/g;
-            $path =~ s/\$basename_of_dirname/$basename_of_dirname/g;
-            # absolute path
-            if(substr($path,0,1) eq '/') {
-                $path =~ s,^/+,,g;
-                $newpath = normalize_pkg_path($path.'/'.$newbasename);
-            }
-            # relative path
-            else {
-                $newpath
-                  = normalize_pkg_path($dirname.'/'.$path.'/'.$newbasename);
-            }
-            # path outside package
-            if(!defined($newpath)) {
-                next PATH;
-            }
-            # ok we get same name => next
-            if($newpath eq $name) {
-                next PATH;
-            }
-            # do not check empty
-            if($newpath eq EMPTY) {
-                next PATH;
-            }
-            # found source file or directory
-            if($processable->patched->resolve_path($newpath)) {
-                return;
-            }
-        }
-    }
-    $self->tag('source-is-missing', $name, $extratext);
-    return;
+    return $source;
 }
 
 # do basic license check against well known offender
@@ -1172,8 +1175,9 @@ sub search_in_block0 {
         # Be robust check also .js
         elsif($basename eq 'deployJava.js') {
             if($block =~ m/(?:\A|\v)\s*var\s+deployJava\s*=\s*function/xmsi) {
-                $self->check_missing_source($entry,$name,$basename,$dirname,
-                    [['(?i)\.js$','.txt'],[EMPTY, EMPTY]]);
+                $self->tag('source-is-missing', $entry->name)
+                  unless $self->find_source($entry,
+                    {'.txt' => '(?i)\.js$', '' => EMPTY});
                 return;
             }
         }
@@ -1220,20 +1224,18 @@ sub warn_prebuilt_javascript{
     # Check for missing source.  It will check
     # for the source file in well known directories
     if($basename =~ m,\.js$,i) {
-        $self->check_missing_source(
-            $entry,$name,
-            $basename,
-            $dirname,
-            [
-                ['(?i)\.js$','.debug.js'],['(?i)\.js$','-debug.js'],
-                [EMPTY, EMPTY]
-            ],
-            $extratext
-        );
+        $self->tag('source-is-missing', $entry->name, $extratext)
+          unless $self->find_source(
+            $entry,
+            {
+                '.debug.js' => '(?i)\.js$',
+                '-debug.js' => '(?i)\.js$',
+                '' => EMPTY
+            });
     } else  {
         # html file
-        $self->check_missing_source($entry,$name,$basename,$dirname,
-            [['$','.fragment.js']],$extratext);
+        $self->tag('source-is-missing', $entry->name, $extratext)
+          unless $self->find_source($entry, {'.fragment.js' => '$'});
     }
     return;
 }
