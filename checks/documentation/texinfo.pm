@@ -26,7 +26,7 @@ use warnings;
 use utf8;
 use autodie;
 
-use Lintian::Util qw(open_gz normalize_pkg_path);
+use Lintian::Util qw(open_gz normalize_link_target);
 
 use Moo;
 use namespace::clean;
@@ -132,7 +132,7 @@ sub binary {
                     my $src = $1;
                     $src =~ s/\\(.)/$1/g;   # unbackslash
                     $processable->installed->lookup(
-                        normalize_pkg_path('usr/share/info', $src))
+                        normalize_link_target('usr/share/info', $src))
                       or $self->tag('info-document-missing-image-file',
                         $file, $src);
                 }

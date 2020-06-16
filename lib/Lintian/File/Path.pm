@@ -31,7 +31,7 @@ use Path::Tiny;
 use Text::Balanced qw(extract_delimited);
 use Unicode::UTF8 qw(valid_utf8 decode_utf8);
 
-use Lintian::Util qw(normalize_pkg_path);
+use Lintian::Util qw(normalize_link_target);
 
 use constant EMPTY => q{};
 use constant SPACE => q{ };
@@ -497,7 +497,7 @@ sub link_normalized {
     $dir = SLASH
       if $self->is_hardlink;
 
-    my $target = normalize_pkg_path($dir, $link);
+    my $target = normalize_link_target($dir, $link);
     $self->normalized($target);
 
     return $target;
