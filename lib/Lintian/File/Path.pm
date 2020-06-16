@@ -790,13 +790,10 @@ sub resolve_path {
     return
       unless defined $reference;
 
-    # read the first path segment
-    if ($request =~ s{^([^/]+/?)}{}s) {
+    # read first segment; strip all trailing slashes for recursive use
+    if ($request =~ s{^([^/]+)/*}{}) {
 
         my $segment = $1;
-
-        # strip trailing slash
-        $segment =~ s{/$}{}s;
 
         # single dot, or two slashes in a row
         return $reference->resolve_path($request, $maxlinks)
