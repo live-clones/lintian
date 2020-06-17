@@ -97,35 +97,37 @@ has saved_relations => (
     coerce => sub { my ($hashref) = @_; return ($hashref // {}); },
     default => sub { {} });
 
-my %special = (
+my %alias = (
     all    => [qw(Pre-Depends Depends Recommends Suggests)],
     strong => [qw(Pre-Depends Depends)],
     weak   => [qw(Recommends Suggests)]);
 
 my %known = map { $_ => 1 }
-  qw(Pre-Depends Depends Recommends Suggests Enhances Breaks
-  Conflicts Provides Replaces);
+  qw(pre-depends depends recommends suggests enhances breaks
+  conflicts provides replaces);
 
 sub relation {
-    my ($self, $field) = @_;
+    my ($self, $name) = @_;
 
-    my $result = $self->saved_relations->{$field};
-    return $result
-      if defined $result;
+    my $lowercase = lc $name;
 
-    if ($special{$field}) {
-        $result = Lintian::Relation->and(map { $self->relation($_) }
-              @{ $special{$field} });
-    } else {
-        croak "unknown relation field $field"
-          unless $known{$field};
-        my $value = $self->field($field);
-        $result = Lintian::Relation->new($value);
+    my $relation = $self->saved_relations->{$lowercase};
+    unless (defined $relation) {
+
+        if (exists $alias{$lowercase}) {
+            $relation = Lintian::Relation->and(map { $self->relation($_) }
+                  @{ $alias{$lowercase} });
+        } else {
+            croak "unknown relation field $name"
+              unless $known{$lowercase};
+            my $value = $self->field($name);
+            $relation = Lintian::Relation->new($value);
+        }
+
+        $self->saved_relations->{$lowercase} = $relation;
     }
 
-    $self->saved_relations->{$field} = $result;
-
-    return $result;
+    return $relation;
 }
 
 =back

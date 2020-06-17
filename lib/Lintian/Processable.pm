@@ -79,6 +79,10 @@ Returns the name of the package.
 
 Returns the type of package (e.g. binary, source, udeb ...)
 
+=item legend
+
+Returns exact field names for their lowercase versions.
+
 =item verbatim
 =item extra_fields
 
@@ -193,6 +197,7 @@ has version => (
 
 has tainted => (is => 'rw', default => 0);
 
+has legend => (is => 'rw', default => sub { {} });
 has verbatim => (alias => 'extra_fields', is => 'rw', default => sub { {} });
 has unfolded => (is => 'rwp', default => sub { {} });
 
@@ -355,16 +360,18 @@ Needs-Info requirements for using I<unfolded_field>: none
 =cut
 
 sub unfolded_field {
-    my ($self, $field) = @_;
+    my ($self, $name) = @_;
 
     return
-      unless defined $field;
+      unless length $name;
 
-    return $self->unfolded->{$field}
-      if exists $self->unfolded->{$field};
+    my $lowercase = lc $name;
 
-    my $value = $self->field($field);
+    my $unfolded = $self->unfolded->{$lowercase};
+    return $unfolded
+      if defined $unfolded;
 
+    my $value = $self->field($name);
     return
       unless defined $value;
 
@@ -379,7 +386,7 @@ sub unfolded_field {
     #  http://somewhere.com/$
     $value =~ s/^\s*+//;
 
-    $self->unfolded->{$field} = $value;
+    $self->unfolded->{$lowercase} = $value;
 
     return $value;
 }
@@ -402,39 +409,20 @@ Needs-Info requirements for using I<field>: none
 =cut
 
 sub field {
-    my ($self, $field, $default) = @_;
-
-    unless (keys %{$self->verbatim}) {
-
-        my $groupdir = $self->groupdir;
-        my $verbatim;
-
-        if ($self->type eq 'changes' || $self->type eq 'source'){
-            my $file = 'changes';
-            $file = 'dsc'
-              if $self->type eq 'source';
-
-            $verbatim = get_dsc_info("$groupdir/$file");
-
-        } elsif ($self->type eq 'binary' || $self->type eq 'udeb'){
-            # (ab)use the unpacked control dir if it is present
-            if (   -f "$groupdir/control/control"
-                && -s "$groupdir/control/control") {
-
-                $verbatim = get_dsc_info("$groupdir/control/control");
-
-            } else {
-                $verbatim = (get_deb_info("$groupdir/deb"));
-            }
-        }
-
-        $self->verbatim($verbatim);
-    }
+    my ($self, $name, $default) = @_;
 
     return $self->verbatim
-      unless defined $field;
+      unless length $name;
 
-    return $self->verbatim->{$field} // $default;
+    unless(scalar keys %{$self->legend}) {
+        $self->legend->{lc $_} = $_ for keys %{$self->verbatim};
+    }
+
+    my $exact = $self->legend->{lc $name};
+    return $default
+      unless length $exact;
+
+    return $self->verbatim->{$exact} // $default;
 }
 
 =back

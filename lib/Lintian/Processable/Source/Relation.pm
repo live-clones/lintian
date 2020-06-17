@@ -102,37 +102,46 @@ has saved_binary_relations => (
     coerce => sub { my ($hashref) = @_; return ($hashref // {}); },
     default => sub { {} });
 
-my %special = (
+my %alias = (
     all    => [qw(Pre-Depends Depends Recommends Suggests)],
     strong => [qw(Pre-Depends Depends)],
     weak   => [qw(Recommends Suggests)]);
 
 my %known = map { $_ => 1 }
-  qw(Pre-Depends Depends Recommends Suggests Enhances Breaks
-  Conflicts Provides Replaces);
+  qw(pre-depends depends recommends suggests enhances breaks
+  conflicts provides replaces);
 
 sub binary_relation {
-    my ($self, $package, $field) = @_;
+    my ($self, $package, $name) = @_;
 
-    return $self->saved_binary_relations->{$package}{$field}
-      if exists $self->saved_binary_relations->{$package}{$field};
+    return
+      unless length $name;
 
-    my $result;
-    if ($special{$field}) {
-        $result
-          = Lintian::Relation->and(map { $self->binary_relation($package, $_) }
-              @{ $special{$field} });
+    my $lowercase = lc $name;
 
-    } else {
-        croak "unknown relation field $field"
-          unless $known{$field};
-        my $value = $self->binary_field($package, $field);
-        $result = Lintian::Relation->new($value);
+    return
+      unless length $package;
+
+    my $relation = $self->saved_binary_relations->{$package}{$lowercase};
+    unless (defined $relation) {
+
+        if (length $alias{$lowercase}) {
+            $relation
+              = Lintian::Relation->and(
+                map { $self->binary_relation($package, $_) }
+                  @{ $alias{$lowercase} });
+
+        } else {
+            croak "unknown relation field $name"
+              unless $known{$lowercase};
+            my $value = $self->binary_field($package, $name);
+            $relation = Lintian::Relation->new($value);
+        }
+
+        $self->saved_binary_relations->{$package}{$lowercase} = $relation;
     }
 
-    $self->saved_binary_relations->{$package}{$field} = $result;
-
-    return $result;
+    return $relation;
 }
 
 =item relation (FIELD)
@@ -168,27 +177,32 @@ has saved_relations => (
     default => sub { {} });
 
 sub relation {
-    my ($self, $field) = @_;
+    my ($self, $name) = @_;
 
-    my $relation = $self->saved_relations->{$field};
+    return
+      unless length $name;
+
+    my $lowercase = lc $name;
+
+    my $relation = $self->saved_relations->{$lowercase};
     unless (defined $relation) {
 
-        if ($field =~ /^Build-(Depends|Conflicts)-All$/) {
+        if ($name =~ /^Build-(Depends|Conflicts)-All$/i) {
             my $type = $1;
             my @fields
               = ("Build-$type", "Build-$type-Indep", "Build-$type-Arch");
             $relation
               = Lintian::Relation->and(map { $self->relation($_) } @fields);
 
-        } elsif ($field =~ /^Build-(Depends|Conflicts)(?:-(?:Arch|Indep))?$/) {
-            my $value = $self->field($field);
+        } elsif ($name =~ /^Build-(Depends|Conflicts)(?:-(?:Arch|Indep))?$/i){
+            my $value = $self->field($name);
             $relation = Lintian::Relation->new($value);
 
         } else {
-            croak("unknown relation field $field");
+            croak "unknown relation field $name";
         }
 
-        $self->saved_relations->{$field} = $relation;
+        $self->saved_relations->{$lowercase} = $relation;
     }
 
     return $relation;
@@ -209,13 +223,18 @@ has saved_relations_noarch => (
     default => sub { {} });
 
 sub relation_noarch {
-    my ($self, $field) = @_;
+    my ($self, $name) = @_;
 
-    my $relation = $self->saved_relations_noarch->{$field};
+    return
+      unless length $name;
+
+    my $lowercase = lc $name;
+
+    my $relation = $self->saved_relations_noarch->{$lowercase};
     unless (defined $relation) {
 
-        $relation = $self->relation($field)->restriction_less;
-        $self->saved_relations_noarch->{$field} = $relation;
+        $relation = $self->relation($name)->restriction_less;
+        $self->saved_relations_noarch->{$lowercase} = $relation;
     }
 
     return $relation;

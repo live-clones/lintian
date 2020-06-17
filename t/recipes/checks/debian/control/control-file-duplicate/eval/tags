@@ -1,4 +1,5 @@
 control-file-duplicate (source): rules-does-not-require-root
+control-file-duplicate (source): duplicate-in-relation-field in source Build-conflicts: bar, bar [i386]
 control-file-duplicate (source): duplicate-in-relation-field in source Build-Depends: debhelper (>= 13~), debhelper
 control-file-duplicate (source): duplicate-in-relation-field in source Build-Depends-Indep: foobar, foobar
 control-file-duplicate (source): duplicate-in-relation-field in control-file-duplicate Suggests: baz (= 1.0), baz, baz (>= 2.0)

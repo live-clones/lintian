@@ -158,7 +158,15 @@ sub source_field {
     return $self->source_fields
       unless length $name;
 
-    return $self->source_fields->{$name} // $default;
+    unless(scalar keys %{$self->source_legend}) {
+        $self->source_legend->{lc $_} = $_ for keys %{$self->source_fields};
+    }
+
+    my $exact = $self->source_legend->{lc $name};
+    return $default
+      unless length $exact;
+
+    return $self->source_fields->{$exact} // $default;
 }
 
 =item binary_field (PACKAGE[, FIELD[, DEFAULT]])
@@ -187,22 +195,41 @@ sub binary_field {
     $self->load_debian_control
       unless scalar keys %{$self->binary_fields};
 
-    my $fields = $self->binary_fields->{$package};
-    return $default
-      unless defined $fields;
+    return
+      unless length $package;
 
-    return $fields
+    my $per_package = $self->binary_fields->{$package};
+    return $default
+      unless defined $per_package;
+
+    return $per_package
       unless length $name;
 
-    return $fields->{$name} // $default;
+    unless(scalar keys %{$self->binary_legend}) {
+
+        for my $binary (keys %{$self->binary_fields}) {
+            $self->binary_legend->{$binary}{lc $_} = $_
+              for keys %{$self->binary_fields->{$binary}};
+        }
+    }
+
+    my $exact = $self->binary_legend->{$package}{lc $name};
+    return $default
+      unless length $exact;
+
+    return $per_package->{$exact} // $default;
 }
 
 =item load_debian_control
 
 =item binaries_data
 =item binary_names
+
 =item binary_fields
+=item binary_legend
+
 =item source_fields
+=item source_legend
 
 =cut
 
@@ -214,14 +241,18 @@ has binary_names => (
     is => 'rw',
     coerce => sub { my ($arrayref) = @_; return ($arrayref // []); },
     default => sub { [] });
+
 has binary_fields => (
     is => 'rw',
     coerce => sub { my ($hashref) = @_; return ($hashref // {}); },
     default => sub { {} });
+has binary_legend => (is => 'rw', default => sub { {} });
+
 has source_fields => (
     is => 'rw',
     coerce => sub { my ($hashref) = @_; return ($hashref // {}); },
     default => sub { {} });
+has source_legend => (is => 'rw', default => sub { {} });
 
 sub load_debian_control {
     my ($self) = @_;
