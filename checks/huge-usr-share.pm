@@ -26,6 +26,8 @@ use warnings;
 use utf8;
 use autodie;
 
+use constant EMPTY => q{};
+
 use Moo;
 use namespace::clean;
 
@@ -60,7 +62,7 @@ sub breakdown {
     my ($self) = @_;
 
     # skip architecture-dependent packages.
-    my $arch = $self->processable->field('Architecture', '');
+    my $arch = $self->processable->field('Architecture') // EMPTY;
     return
       if $arch eq 'all';
 

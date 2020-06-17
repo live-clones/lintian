@@ -32,6 +32,8 @@ use Text::Levenshtein qw(distance);
 use Lintian::Data;
 use Lintian::Relation qw(:constants);
 
+use constant EMPTY => q{};
+
 use Moo;
 use namespace::clean;
 
@@ -185,7 +187,8 @@ sub source {
                         "(line $.)"
                       )
                       if $addon eq 'quilt'
-                      and $processable->field('Format', '') eq '3.0 (quilt)';
+                      and ($processable->field('Format') // EMPTY) eq
+                      '3.0 (quilt)';
                     if (defined $depends) {
                         $missingbdeps_addons{$depends} = $addon;
                     }

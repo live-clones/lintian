@@ -33,6 +33,8 @@ use List::MoreUtils qw(any);
 
 use Lintian::Data ();
 
+use constant EMPTY => q{};
+
 use Moo;
 use namespace::clean;
 
@@ -69,8 +71,10 @@ sub always {
       if $pkg =~ /^lib/
       && $pkg !~ /-bin$/
       && $pkg !~ /^libc[0-9.]+$/
-      && (any { $_ eq $processable->field('Section', '') } qw(libdevel libs))
-      && (any { $_ eq $priority } qw(required important standard));
+      && (
+        any { $_ eq ($processable->field('Section') // EMPTY) }
+        qw(libdevel libs)
+      )&& (any { $_ eq $priority } qw(required important standard));
 
     return;
 }

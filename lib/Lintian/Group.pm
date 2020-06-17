@@ -298,7 +298,7 @@ sub unpack {
         # for sources pull in all related files so unpacked does not fail
         if ($processable->type eq 'source') {
             my (undef, $dir, undef)= File::Spec->splitpath($processable->path);
-            for my $fs (split(/\n/, $processable->field('Files'))) {
+            for my $fs (split(/\n/, ($processable->field('Files') // EMPTY))) {
 
                 # trim both ends
                 $fs =~ s/^\s+|\s+$//g;

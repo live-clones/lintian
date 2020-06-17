@@ -409,7 +409,7 @@ Needs-Info requirements for using I<field>: none
 =cut
 
 sub field {
-    my ($self, $name, $default) = @_;
+    my ($self, $name) = @_;
 
     return $self->verbatim
       unless length $name;
@@ -419,10 +419,10 @@ sub field {
     }
 
     my $exact = $self->legend->{lc $name};
-    return $default
+    return
       unless length $exact;
 
-    return $self->verbatim->{$exact} // $default;
+    return $self->verbatim->{$exact};
 }
 
 =back

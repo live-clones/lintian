@@ -135,7 +135,7 @@ sub is_pkg_class {
           if $desc =~ /$METAPKG_REGEX/;
 
         # Section "tasks" or "metapackages" qualifies as well
-        my ($section) = $self->field('Section', '');
+        my $section = $self->field('Section') // EMPTY;
         return 1
           if $section =~ m,(?:^|/)(?:tasks|metapackages)$,;
 

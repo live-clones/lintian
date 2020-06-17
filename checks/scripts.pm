@@ -1004,7 +1004,8 @@ sub installable {
                     $self->tag('multi-arch-same-package-calls-pycompile',
                         "$file:$.")
                       if m/^\s*py3?compile(?:\s|\z)/
-                      and $processable->field('Multi-Arch', 'no') eq 'same';
+                      and ($processable->field('Multi-Arch') // 'no') eq
+                      'same';
 
                     if (m,>\s*/etc/inetd\.conf(?:\s|\Z),) {
                         $self->tag('maintainer-script-modifies-inetd-conf',

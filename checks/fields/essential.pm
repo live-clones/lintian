@@ -44,7 +44,6 @@ sub source {
     my $processable = $self->processable;
 
     my $essential = $processable->unfolded_field('Essential');
-
     return
       unless defined $essential;
 
@@ -60,7 +59,6 @@ sub always {
     my $processable = $self->processable;
 
     my $essential = $processable->unfolded_field('Essential');
-
     return
       unless defined $essential;
 

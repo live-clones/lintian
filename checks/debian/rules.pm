@@ -27,6 +27,8 @@ use List::MoreUtils qw(any none);
 use Lintian::Data;
 use Lintian::SlidingWindow;
 
+use constant EMPTY => q{};
+
 use Moo;
 use namespace::clean;
 
@@ -160,10 +162,10 @@ sub source {
         return unless $rules->is_open_ok;
     }
 
-    my $architecture = $processable->field('Architecture', '');
-    my $version = $processable->field('Version');
+    my $architecture = $processable->field('Architecture') // EMPTY;
+
     # If the version field is missing, we assume a neutral non-native one.
-    $version = '0-1' unless defined $version;
+    my $version = $processable->field('Version') // '0-1';
 
     open(my $rules_fd, '<', $rules->unpacked_path);
 

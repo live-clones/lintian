@@ -31,6 +31,8 @@ use Path::Tiny;
 
 use Lintian::Relation;
 
+use constant EMPTY => q{};
+
 use Moo;
 use namespace::clean;
 
@@ -44,7 +46,7 @@ sub source {
 
     # debian/control check
     my @testsuites
-      = split(m/\s*,\s*/, $processable->source_field('Testsuite') // q{});
+      = split(m/\s*,\s*/, $processable->source_field('Testsuite') // EMPTY);
     if (any { /^autopkgtest-pkg-nodejs$/ } @testsuites) {
         # Check control file exists in sources
         my $filename = 'debian/tests/pkg-js/test';

@@ -34,6 +34,8 @@ use Lintian::Spelling qw(check_spelling);
 use constant PATCH_DESC_TEMPLATE => 'TODO: Put a short summary on'
   . ' the line above and replace this paragraph';
 
+use constant EMPTY => q{};
+
 use Moo;
 use namespace::clean;
 
@@ -60,7 +62,7 @@ sub source {
     # maintainer meant to use:
     my $build_deps = $processable->relation('Build-Depends-All');
     # Get source package format
-    my $format = $processable->field('Format', '');
+    my $format = $processable->field('Format') // EMPTY;
     my $quilt_format = ($format =~ /3\.\d+ \(quilt\)/) ? 1 : 0;
 
     my $droot = $processable->patched->resolve_path('debian/');

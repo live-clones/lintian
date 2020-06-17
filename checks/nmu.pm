@@ -29,6 +29,8 @@ use autodie;
 use List::MoreUtils qw(any);
 use List::Util qw(first);
 
+use constant EMPTY => q{};
+
 use Moo;
 use namespace::clean;
 
@@ -81,8 +83,8 @@ sub source {
 
     # If the version field is missing, assume it to be a native,
     # maintainer upload as it is probably the most likely case.
-    my $version = $processable->field('Version', '0-1');
-    my $maintainer = canonicalize($processable->field('Maintainer', ''));
+    my $version = $processable->field('Version') // '0-1';
+    my $maintainer = canonicalize($processable->field('Maintainer') // EMPTY);
     my $uploaders = $processable->field('Uploaders');
 
     my $version_nmuness = 0;

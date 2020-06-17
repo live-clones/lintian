@@ -153,8 +153,8 @@ sub installable {
     my $has_php_ext = 0;
     my $uses_numpy_c_abi = 0;
 
-    my $arch = $processable->field('Architecture', '');
-    my $multiarch = $processable->field('Multi-Arch', 'no');
+    my $arch = $processable->field('Architecture') // EMPTY;
+    my $multiarch = $processable->field('Multi-Arch') // 'no';
     my $srcpkg = $processable->source;
 
     $arch_hardening = $HARDENING->value($arch)
@@ -397,8 +397,9 @@ sub installable {
 
         $self->tag('development-package-ships-elf-binary-in-path', $file)
           if exists($PATH_DIRECTORIES{$file->dirname})
-          and $processable->field('Section', 'NONE') =~ m/(?:^|\/)libdevel$/
-          and $processable->field('Multi-Arch', 'NONE') ne 'foreign';
+          and ($processable->field('Section') // 'NONE')
+          =~ m/(?:^|\/)libdevel$/
+          and ($processable->field('Multi-Arch') // 'NONE') ne 'foreign';
 
         $objdump = $processable->objdump_info->{$fname};
 

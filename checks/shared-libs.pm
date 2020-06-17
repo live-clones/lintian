@@ -726,7 +726,7 @@ sub installable {
           if not $we_trigger_ldconfig and $must_call_ldconfig;
     }
 
-    my $multiarch = $processable->field('Multi-Arch', 'no');
+    my $multiarch = $processable->field('Multi-Arch') // 'no';
     if ($multiarch eq 'foreign' and $must_call_ldconfig) {
         $self->tag('shared-library-is-multi-arch-foreign',$must_call_ldconfig);
     }

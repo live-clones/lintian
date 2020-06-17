@@ -26,6 +26,8 @@ use utf8;
 
 use List::MoreUtils qw(any);
 
+use constant EMPTY => q{};
+
 use Moo;
 use namespace::clean;
 
@@ -87,7 +89,7 @@ sub installable {
     }
 
     # Check for wrong section
-    my $section = $processable->field('Section', '');
+    my $section = $processable->field('Section') // EMPTY;
     if ($section =~ /perl|python|ruby|(?:^|\/)libs/) { # oldlibs is ok
         $self->tag('application-in-library-section', "$section", @programs);
     }

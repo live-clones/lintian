@@ -35,6 +35,8 @@ use Lintian::Data ();
 use Lintian::Deb822Parser qw(parse_dpkg_control_string);
 use Lintian::Relation ();
 
+use constant EMPTY => q{};
+
 use Moo;
 use namespace::clean;
 
@@ -164,11 +166,11 @@ sub source {
         die "syntax error in debian/control: $@";
     }
 
-    foreach my $field (keys %{$processable->source_field()}) {
+    foreach my $field (keys %{$processable->source_field}) {
         $self->tag(
             'debian-control-has-empty-field',
             "field \"$field\" in source paragraph",
-        ) if $processable->source_field($field) eq '';
+        ) unless length $processable->source_field($field);
     }
 
     my @package_names = $processable->binaries;
@@ -319,7 +321,7 @@ sub source {
     my @descriptions;
     my ($seen_main, $seen_contrib);
     foreach my $bin (@package_names) {
-        my $depends = $processable->binary_field($bin, 'Depends', '');
+        my $depends = $processable->binary_field($bin, 'Depends') // EMPTY;
 
         # Accumulate the description.
         my $desc = $processable->binary_field($bin, 'Description');
@@ -452,7 +454,7 @@ sub source {
         $self->tag('rules-requires-root-missing');
     }
 
-    if ($processable->source_field('Rules-Requires-Root', 'no') eq 'no') {
+    if (($processable->source_field('Rules-Requires-Root') // 'no') eq 'no') {
       BINARY:
         foreach my $proc ($group->get_binary_processables) {
             my $pkg = $proc->name;
@@ -506,15 +508,15 @@ sub source {
         }
 
         $self->tag('missing-xs-go-import-path-for-golang-package')
-          unless $processable->source_field('XS-Go-Import-Path', '');
+          unless ($processable->source_field('XS-Go-Import-Path') // EMPTY);
     }
 
     my $changes = $group->changes;
     $self->tag('source-only-upload-to-non-free-without-autobuild')
       if defined($changes)
-      and $changes->field('Architecture', '') eq 'source'
+      and ($changes->field('Architecture') // EMPTY) eq 'source'
       and $processable->is_non_free
-      and $processable->source_field('XS-Autobuild', 'no') eq 'no';
+      and ($processable->source_field('XS-Autobuild') // 'no') eq 'no';
 
     return;
 }
@@ -580,8 +582,8 @@ sub check_dev_depends {
                 # arch:all as well.  The version-substvars check
                 # handles that for us.
                 next
-                  if $processable->binary_field($target, 'Architecture', '')eq
-                  'all'
+                  if ($processable->binary_field($target, 'Architecture')
+                    // EMPTY) eq 'all'
                   && $versions[0] =~ /^\s*=\s*\$\{source:Version\}/;
                 $self->tag('weak-library-dev-dependency',
                     "$package on $depends[0]");

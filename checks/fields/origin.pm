@@ -40,7 +40,6 @@ sub always {
     my $processable = $self->processable;
 
     my $origin = $processable->unfolded_field('Origin');
-
     return
       unless defined $origin;
 

@@ -59,7 +59,7 @@ sub dir_counts {
 sub installable {
     my ($self) = @_;
 
-    my $section = $self->processable->field('Section', EMPTY);
+    my $section = $self->processable->field('Section') // EMPTY;
 
     # section games but nothing in /usr/games
     # any binary counts to avoid game-data false positives:

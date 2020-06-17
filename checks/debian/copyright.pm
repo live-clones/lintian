@@ -347,7 +347,7 @@ sub parse_dep5 {
       if none { defined $first_para->{$_} } qw(Format Format-Specification);
 
     $self->tag('missing-explanation-for-contrib-or-non-free-package')
-      if $self->processable->source_field('Section', '')
+      if ($self->processable->source_field('Section') // EMPTY)
       =~ m{^(contrib|non-free)(/.+)?$}
       and none { defined $first_para->{$_} } qw(Comment Disclaimer);
 

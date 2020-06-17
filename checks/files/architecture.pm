@@ -25,6 +25,8 @@ use warnings;
 use utf8;
 use autodie;
 
+use constant EMPTY => q{};
+
 use Moo;
 use namespace::clean;
 
@@ -37,7 +39,7 @@ has arch_dep_files => (is => 'rwp', default => 0);
 sub files {
     my ($self, $file) = @_;
 
-    my $architecture = $self->processable->field('Architecture', '');
+    my $architecture = $self->processable->field('Architecture') // EMPTY;
 
     if ($file->name =~ m,^(?:usr/)?lib/([^/]+)/$,) {
         my $subdir = $1;
@@ -66,7 +68,7 @@ sub files {
 sub breakdown {
     my ($self) = @_;
 
-    my $architecture = $self->processable->field('Architecture', '');
+    my $architecture = $self->processable->field('Architecture') // EMPTY;
 
     # check if package is empty
     my $is_dummy = $self->processable->is_pkg_class('any-meta');

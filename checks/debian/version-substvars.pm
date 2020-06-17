@@ -47,6 +47,8 @@ use List::MoreUtils qw(any);
 use Lintian::Relation qw(:constants);
 use Lintian::Util qw($PKGNAME_REGEX);
 
+use constant EMPTY => q{};
+
 use Moo;
 use namespace::clean;
 
@@ -62,7 +64,7 @@ sub source {
 
     my @provided;
     foreach my $pkg ($processable->binaries) {
-        my $val = $processable->binary_field($pkg, 'Provides', '');
+        my $val = $processable->binary_field($pkg, 'Provides') // EMPTY;
         $val =~ s/^\s+|\s+$//g;
         push(@provided, split(/\s*,\s*/, $val));
     }
@@ -71,7 +73,8 @@ sub source {
         my ($pkg1_is_any, $pkg2, $pkg2_is_any, $substvar_strips_binNMU);
 
         $pkg1_is_any
-          = ($processable->binary_field($pkg1, 'Architecture', '') ne 'all');
+          = (($processable->binary_field($pkg1, 'Architecture') // EMPTY) ne
+              'all');
 
         foreach my $field (@dep_fields) {
             next unless $processable->binary_field($pkg1, $field);
@@ -107,8 +110,10 @@ sub source {
             split(
                 m/,/,
                 (
-                    $processable->binary_field($pkg1, 'Pre-Depends', '').', '
-                      . $processable->binary_field($pkg1, 'Depends', '')))
+                    ($processable->binary_field($pkg1, 'Pre-Depends') // EMPTY)
+                    .', '
+                      . ($processable->binary_field($pkg1, 'Depends') // EMPTY)
+                ))
         ) {
             next
               unless m/($PKGNAME_REGEX)(?: :any)? \s*               # pkg-name
@@ -126,7 +131,7 @@ sub source {
                 next;
             }
             $pkg2_is_any
-              = ($processable->binary_field($pkg2, 'Architecture', '') ne
+              = (($processable->binary_field($pkg2, 'Architecture') // EMPTY)ne
                   'all');
 
             if ($pkg1_is_any) {

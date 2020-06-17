@@ -48,7 +48,7 @@ sub build_path {
     return EMPTY
       unless $buildinfo;
 
-    return $buildinfo->field('Build-Path', EMPTY);
+    return $buildinfo->field('Build-Path') // EMPTY;
 }
 
 sub setup {
@@ -93,7 +93,7 @@ sub get_checks_for_file {
       and $file->basename !~ m/^README(?:\..*)?$/
       and $file->basename !~ m/^changelog(?:\..*)?$/i
       and $file->basename !~ m/\.(?:html|txt)$/i
-      and $self->processable->field('Section', '') ne 'debian-installer'
+      and ($self->processable->field('Section') // EMPTY) ne 'debian-installer'
       and none { $_ eq $self->processable->source }
     qw(base-files dpkg lintian);
 

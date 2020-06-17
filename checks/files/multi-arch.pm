@@ -25,6 +25,8 @@ use warnings;
 use utf8;
 use autodie;
 
+use constant EMPTY => q{};
+
 use Moo;
 use namespace::clean;
 
@@ -42,8 +44,8 @@ has has_public_shared_library => (is => 'rwp', default => 0);
 sub files {
     my ($self, $file) = @_;
 
-    my $architecture = $self->processable->field('Architecture', '');
-    my $multiarch = $self->processable->field('Multi-Arch', 'no');
+    my $architecture = $self->processable->field('Architecture') // EMPTY;
+    my $multiarch = $self->processable->field('Multi-Arch') // 'no';
 
     my $multiarch_dir = $MULTIARCH_DIRS->value($architecture);
 
@@ -79,8 +81,8 @@ sub files {
 sub breakdown {
     my ($self) = @_;
 
-    my $architecture = $self->processable->field('Architecture', '');
-    my $multiarch = $self->processable->field('Multi-Arch', 'no');
+    my $architecture = $self->processable->field('Architecture') // EMPTY;
+    my $multiarch = $self->processable->field('Multi-Arch') // 'no';
 
     $self->tag('multiarch-foreign-shared-library')
       if $architecture ne 'all'

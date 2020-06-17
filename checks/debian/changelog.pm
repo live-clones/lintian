@@ -87,7 +87,7 @@ sub source {
         }
     }
 
-    my $versionstring = $processable->field('Version', EMPTY);
+    my $versionstring = $processable->field('Version') // EMPTY;
     my $latest_version = Lintian::Inspect::Changelog::Version->new;
 
     try {
@@ -417,7 +417,7 @@ sub binary {
         # the most likely case.
         $native_pkg = 0;
     }
-    $version = $processable->field('Version', '0-1');
+    $version = $processable->field('Version') // '0-1';
     $foreign_pkg = (!$native_pkg && $version !~ m/-0\./);
     # A version of 1.2.3-0.1 could be either, so in that
     # case, both vars are false
@@ -619,7 +619,7 @@ sub binary {
 
             my $changes = $group->changes;
             if ($changes) {
-                my $changes_dist= lc($changes->field('Distribution', EMPTY));
+                my $changes_dist= lc($changes->field('Distribution') // EMPTY);
 
                 my %codename;
                 $codename{'unstable'} = 'sid';

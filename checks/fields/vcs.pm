@@ -224,7 +224,7 @@ sub always {
     while (my ($platform, $splitter) = each %VCS_EXTRACT) {
 
         my $fieldname = "Vcs-$platform";
-        my $maintainer = $processable->field('Maintainer', EMPTY);
+        my $maintainer = $processable->field('Maintainer') // EMPTY;
         my $uri = $processable->unfolded_field($fieldname);
 
         next
@@ -343,7 +343,8 @@ sub always {
             my $platform = @{$KNOWN_VCS_HOSTERS->value($regex)}[0];
             my $fieldname = "Vcs-$platform";
 
-            if ($processable->field($fieldname, EMPTY) =~ m/^($regex.*)/xi) {
+            if (($processable->field($fieldname) // EMPTY) =~ m/^($regex.*)/xi)
+            {
                 $self->tag('missing-vcs-browser-field', $fieldname, $1);
 
                 # warn once

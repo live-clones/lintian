@@ -50,7 +50,7 @@ sub source {
     for my $bin ($processable->binaries) {
 
         next
-          unless $processable->binary_field($bin, 'Multi-Arch', EMPTY) eq
+          unless ($processable->binary_field($bin, 'Multi-Arch') // EMPTY) eq
           'same';
 
         my $wildcard = $processable->binary_field($bin, 'Architecture');
@@ -85,7 +85,7 @@ sub installable {
 
     if ($pkg =~ /^x?fonts-/) {
         $self->tag('font-package-not-multi-arch-foreign')
-          unless $processable->field('Multi-Arch', 'no')
+          unless ($processable->field('Multi-Arch') // 'no')
           =~/^(?:foreign|allowed)$/;
     }
 

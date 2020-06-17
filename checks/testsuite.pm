@@ -34,6 +34,8 @@ use Lintian::Deb822Parser qw(
 );
 use Lintian::Relation;
 
+use constant EMPTY => q{};
+
 use Moo;
 use namespace::clean;
 
@@ -64,7 +66,7 @@ sub source {
     my $type = $self->processable->type;
     my $processable = $self->processable;
 
-    my $testsuites = $processable->field('Testsuite', '');
+    my $testsuites = $processable->field('Testsuite') // EMPTY;
     my $control = $processable->patched->resolve_path('debian/tests/control');
     my $control_autodep8
       = $processable->patched->resolve_path('debian/tests/control.autodep8');
@@ -96,7 +98,8 @@ sub source {
         }
 
         $self->tag('unnecessary-testsuite-autopkgtest-field')
-          if ($processable->source_field('Testsuite') // '') eq 'autopkgtest';
+          if ($processable->source_field('Testsuite') // EMPTY) eq
+          'autopkgtest';
 
         $self->tag('debian-tests-control-and-control-autodep8',
             $control,$control_autodep8)

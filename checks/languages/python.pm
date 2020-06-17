@@ -30,6 +30,8 @@ use List::MoreUtils qw(any none);
 use Lintian::Relation qw(:constants);
 use Lintian::Relation::Version qw(versions_lte);
 
+use constant EMPTY => q{};
+
 use Moo;
 use namespace::clean;
 
@@ -92,7 +94,7 @@ sub source {
 
     $self->tag(
         'alternatively-build-depends-on-python-sphinx-and-python3-sphinx')
-      if $processable->field('Build-Depends', '')
+      if ($processable->field('Build-Depends') // EMPTY)
       =~ m,\bpython-sphinx\s+\|\s+python3-sphinx\b,g;
 
     # Mismatched substvars

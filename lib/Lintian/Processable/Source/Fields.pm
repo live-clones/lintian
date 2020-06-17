@@ -150,7 +150,7 @@ L<field> instead.
 # _load_ctrl has no POD and would not appear in the generated
 # API-docs.
 sub source_field {
-    my ($self, $name, $default) = @_;
+    my ($self, $name) = @_;
 
     $self->load_debian_control
       unless scalar keys %{$self->source_fields};
@@ -163,10 +163,10 @@ sub source_field {
     }
 
     my $exact = $self->source_legend->{lc $name};
-    return $default
+    return
       unless length $exact;
 
-    return $self->source_fields->{$exact} // $default;
+    return $self->source_fields->{$exact};
 }
 
 =item binary_field (PACKAGE[, FIELD[, DEFAULT]])
@@ -190,7 +190,7 @@ DEFAULT.
 # _load_ctrl has no POD and would not appear in the generated
 # API-docs.
 sub binary_field {
-    my ($self, $package, $name, $default) = @_;
+    my ($self, $package, $name) = @_;
 
     $self->load_debian_control
       unless scalar keys %{$self->binary_fields};
@@ -199,7 +199,7 @@ sub binary_field {
       unless length $package;
 
     my $per_package = $self->binary_fields->{$package};
-    return $default
+    return
       unless defined $per_package;
 
     return $per_package
@@ -214,10 +214,10 @@ sub binary_field {
     }
 
     my $exact = $self->binary_legend->{$package}{lc $name};
-    return $default
+    return
       unless length $exact;
 
-    return $per_package->{$exact} // $default;
+    return $per_package->{$exact};
 }
 
 =item load_debian_control

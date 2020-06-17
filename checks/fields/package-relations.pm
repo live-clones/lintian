@@ -37,6 +37,8 @@ use Lintian::Architecture qw(:all);
 use Lintian::Data ();
 use Lintian::Relation qw(:constants);
 
+use constant EMPTY => q{};
+
 use Moo;
 use namespace::clean;
 
@@ -394,7 +396,7 @@ sub source {
     my $arch_indep_packages = 0;
     my $arch_dep_packages = 0;
     foreach my $binpkg (@binpkgs) {
-        my $arch = $processable->binary_field($binpkg, 'Architecture', '');
+        my $arch = $processable->binary_field($binpkg, 'Architecture')// EMPTY;
         if ($arch eq 'all') {
             $arch_indep_packages++;
         } else {
@@ -602,7 +604,8 @@ sub source {
         if ($binpkg =~ m/-dbg$/) {
             push(@dbg_pkgs, $gproc);
         } elsif (
-            $processable->binary_field($binpkg, 'Architecture', '') ne 'all'){
+            ($processable->binary_field($binpkg, 'Architecture') // EMPTY) ne
+            'all'){
             push @arch_dep_pkgs, $binpkg;
         }
     }
