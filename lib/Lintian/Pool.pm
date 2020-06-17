@@ -255,8 +255,6 @@ sub process{
         # put tags back into their respective processables
         push(@{$_->processable->tags}, $_) for @tags;
 
-        $group->clear_cache;
-
         if ($$exit_code_ref != 1) {
             # Double check that no processes are running;
             # hopefully it will catch regressions like 3bbcc3b

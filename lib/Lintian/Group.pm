@@ -855,20 +855,6 @@ sub direct_reliants {
     return $self->saved_direct_reliants;
 }
 
-=item $ginfo->type
-
-Return the type of this collect object (which is the string 'group').
-
-=cut
-
-# Return the package type.
-# sub type Needs-Info <>
-sub type {
-    my ($self) = @_;
-
-    return 'group';
-}
-
 =item spelling_exceptions
 
 Returns a hashref of words, which the spell checker should ignore.
@@ -903,23 +889,6 @@ sub spelling_exceptions {
     $self->saved_spelling_exceptions(\%exceptions);
 
     return $self->saved_spelling_exceptions;
-}
-
-=item $group->clear_cache
-
-Discard the info element of all members of this group, so the memory
-used by it can be reclaimed.  Mostly useful when checking a lot of
-packages (e.g. on lintian.d.o).
-
-=cut
-
-sub clear_cache {
-    my ($self) = @_;
-    for my $proc ($self->get_processables) {
-        $proc->clear_cache;
-    }
-
-    return;
 }
 
 =back

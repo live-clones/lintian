@@ -223,28 +223,6 @@ sub identifier {
     return $id;
 }
 
-=item info
-
-=cut
-
-sub info {
-    my ($self) = @_;
-
-    return $self;
-}
-
-=item clear_cache
-
-Overrides clear_cache from L<Lintian::Processable>.
-
-=cut
-
-sub clear_cache {
-    my ($self) = @_;
-
-    return;
-}
-
 =item remove
 
 Removes all unpacked parts of the package in the lab.  Returns a truth
@@ -254,8 +232,6 @@ value if successful.
 
 sub remove {
     my ($self) = @_;
-
-    $self->clear_cache;
 
     path($self->groupdir)->remove_tree
       if -e $self->groupdir;
