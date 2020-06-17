@@ -1,3 +1,0 @@
-Testname: distribution-multiple-bad
-References: Debian Bug#514853
-Check: fields/description

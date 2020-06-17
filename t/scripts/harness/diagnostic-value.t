@@ -46,47 +46,8 @@ my @known_undeclared = qw(
   t/recipes/checks/changes-file/changelog-file-backport
   t/recipes/checks/debian/changelog/changelog-version-bzr
   t/recipes/checks/debian/copyright/patch-empties-directory
-  t/recipes/checks/debian/rules/dh-sequencer/curly-braces
-  t/recipes/checks/debian/rules/dh-sequencer/double-quotes
-  t/recipes/checks/debian/rules/dh-sequencer/explicit-targets
-  t/recipes/checks/debian/rules/dh-sequencer/parentheses
-  t/recipes/checks/debian/rules/dh-sequencer/single-quotes
-  t/recipes/checks/debian/rules/dh-sequencer/with-comments
   t/recipes/checks/debian/upstream/signing-key/upstream-key-minimal
   t/recipes/checks/debian/upstream/signing-key/upstream-keyring
-  t/recipes/checks/emacs/elpa/elpa
-  t/recipes/checks/fields/changed-by/changelog-file-backport
-  t/recipes/checks/fields/changed-by/changes-bad-ubuntu-distribution
-  t/recipes/checks/fields/changed-by/changes-distribution-mismatch
-  t/recipes/checks/fields/changed-by/changes-experimental-mismatch
-  t/recipes/checks/fields/changed-by/changes-file-bad-section
-  t/recipes/checks/fields/changed-by/changes-file-size-checksum-mismatch
-  t/recipes/checks/fields/changed-by/changes-files-package-builds-dbg-and-dbgsym-variants
-  t/recipes/checks/fields/changed-by/changes-missing-fields
-  t/recipes/checks/fields/changed-by/changes-missing-format
-  t/recipes/checks/fields/changed-by/changes-unreleased
-  t/recipes/checks/fields/changed-by/changes-upload-has-backports-version-number
-  t/recipes/checks/fields/changed-by/checksum-count-mismatch
-  t/recipes/checks/fields/changed-by/distribution-multiple-bad
-  t/recipes/checks/fields/changed-by/watch-file-pgpmode-next
-  t/recipes/checks/fields/description/changed-by-localhost
-  t/recipes/checks/fields/description/changed-by-malformed
-  t/recipes/checks/fields/description/changed-by-no-name
-  t/recipes/checks/fields/description/changed-by-root
-  t/recipes/checks/fields/description/changed-by-root-email
-  t/recipes/checks/fields/description/changelog-file-backport
-  t/recipes/checks/fields/description/changes-bad-ubuntu-distribution
-  t/recipes/checks/fields/description/changes-distribution-mismatch
-  t/recipes/checks/fields/description/changes-experimental-mismatch
-  t/recipes/checks/fields/description/changes-file-bad-section
-  t/recipes/checks/fields/description/changes-file-size-checksum-mismatch
-  t/recipes/checks/fields/description/changes-files-package-builds-dbg-and-dbgsym-variants
-  t/recipes/checks/fields/description/changes-missing-format
-  t/recipes/checks/fields/description/changes-unreleased
-  t/recipes/checks/fields/description/changes-upload-has-backports-version-number
-  t/recipes/checks/fields/description/checksum-count-mismatch
-  t/recipes/checks/fields/description/distribution-multiple-bad
-  t/recipes/checks/fields/description/legacy-foo++
   t/recipes/checks/fields/description/watch-file-pgpmode-next
   t/recipes/checks/fields/distribution/changed-by-localhost
   t/recipes/checks/fields/distribution/changed-by-malformed
@@ -146,10 +107,7 @@ my @known_undeclared = qw(
   t/recipes/checks/fields/urgency/legacy-foo++
   t/recipes/checks/fields/urgency/watch-file-pgpmode-next
   t/recipes/checks/fields/version/fields-general-missing
-  t/recipes/checks/files/compressed/files-mtime
-  t/recipes/checks/files/hierarchy/standard/legacy-libbaz
   t/recipes/checks/mailcap/unquoted-placeholder
-  t/recipes/checks/pe/missing-security-features-fp
 );
 
 my @descpaths = File::Find::Rule->file()->name('desc')->in('t/recipes/checks');
