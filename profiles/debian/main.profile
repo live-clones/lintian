@@ -106,6 +106,7 @@ Enable-Tags-From-Check:
  files/encoding,
  files/hard-links,
  files/hierarchy/links,
+ files/hierarchy/path-segments,
  files/hierarchy/standard,
  files/ieee-data,
  files/includes,

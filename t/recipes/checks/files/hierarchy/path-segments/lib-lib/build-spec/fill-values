@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: lib-lib
+Description: Installs a file into /usr/lib/lib
