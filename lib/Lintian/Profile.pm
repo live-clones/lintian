@@ -614,8 +614,9 @@ sub _read_profile_tags{
 
     # List::MoreUtils has 'duplicates' starting at 0.423
     my @allchecks = (@enable_checks, @disable_checks);
-    my $checkslc = List::Compare->new(\@allchecks, [uniq @allchecks]);
-    my @duplicate_checks = uniq $checkslc->get_Lonly;
+    my %count;
+    $count{$_}++ for @allchecks;
+    my @duplicate_checks = grep { $count{$_} > 1 } keys %count;
     die "These checks appear in profile $profile more than once: "
       . join(SPACE, @duplicate_checks)
       if @duplicate_checks;
@@ -655,8 +656,9 @@ sub _read_profile_tags{
 
     # List::MoreUtils has 'duplicates' starting at 0.423
     my @alltags = (@enable_tags, @disable_tags);
-    my $tagslc = List::Compare->new(\@alltags, [uniq @alltags]);
-    my @duplicate_tags = uniq $checkslc->get_Lonly;
+    %count = ();
+    $count{$_}++ for @alltags;
+    my @duplicate_tags = grep { $count{$_} > 1 } keys %count;
     die "These tags appear in in profile $profile more than once: "
       . join(SPACE, @duplicate_tags)
       if @duplicate_tags;
