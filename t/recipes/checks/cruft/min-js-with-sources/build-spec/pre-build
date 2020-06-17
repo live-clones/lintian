@@ -1,0 +1,22 @@
+#!/bin/sh
+#
+# Create all the various junk that shouldn't exist in the diff so that we can
+# trigger all the tags.
+
+set -e
+dir="$1"
+
+sourcedir="$dir/debian/missing-sources"
+sourcejs="$sourcedir/ugly/fullpath.js"
+uglydir="$dir/ugly"
+uglyjs="$uglydir/fullpath.min.js"
+
+mkdir -p "$uglydir"
+
+# create a js file
+uglifyjs -o "$uglyjs" "$sourcejs"
+
+cp "$sourcejs" "$sourcedir/basename.js"
+cp "$uglyjs" "$uglydir/basename.min.js"
+
+cp "$uglyjs" "$uglydir/missing-source.min.js"
