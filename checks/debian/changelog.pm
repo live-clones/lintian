@@ -537,8 +537,7 @@ sub binary {
             my ($parsed) = Email::Address::XS->parse($entry->Maintainer);
 
             unless ($parsed->is_valid) {
-                $self->tag(
-                    'debian-changelog-file-contains-invalid-email-address',
+                $self->tag('bogus-mail-host-in-debian-changelog',
                     $entry->Maintainer);
                 next;
             }
@@ -547,8 +546,7 @@ sub binary {
                 all { length }
                 ($parsed->address, $parsed->user, $parsed->host)
             ) {
-                $self->tag(
-                    'debian-changelog-file-contains-invalid-email-address',
+                $self->tag('bogus-mail-host-in-debian-changelog',
                     $parsed->format);
                 next;
             }
