@@ -1,3 +1,0 @@
-Testname: changes-bad-ubuntu-distribution
-Profile: ubuntu/main
-Check: fields/format

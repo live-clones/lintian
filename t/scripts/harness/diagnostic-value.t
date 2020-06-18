@@ -48,49 +48,9 @@ my @known_undeclared = qw(
   t/recipes/checks/debian/copyright/patch-empties-directory
   t/recipes/checks/debian/upstream/signing-key/upstream-key-minimal
   t/recipes/checks/debian/upstream/signing-key/upstream-keyring
-  t/recipes/checks/fields/description/watch-file-pgpmode-next
-  t/recipes/checks/fields/distribution/changed-by-localhost
-  t/recipes/checks/fields/distribution/changed-by-malformed
-  t/recipes/checks/fields/distribution/changed-by-no-name
-  t/recipes/checks/fields/distribution/changed-by-root
-  t/recipes/checks/fields/distribution/changed-by-root-email
-  t/recipes/checks/fields/distribution/changes-file-bad-section
-  t/recipes/checks/fields/distribution/changes-file-size-checksum-mismatch
-  t/recipes/checks/fields/distribution/changes-files-package-builds-dbg-and-dbgsym-variants
-  t/recipes/checks/fields/distribution/changes-missing-fields
-  t/recipes/checks/fields/distribution/changes-missing-format
-  t/recipes/checks/fields/distribution/checksum-count-mismatch
-  t/recipes/checks/fields/distribution/generic-empty
-  t/recipes/checks/fields/distribution/legacy-foo++
-  t/recipes/checks/fields/distribution/watch-file-pgpmode-next
-  t/recipes/checks/fields/format/changed-by-localhost
-  t/recipes/checks/fields/format/changed-by-malformed
-  t/recipes/checks/fields/format/changed-by-no-name
-  t/recipes/checks/fields/format/changed-by-root
-  t/recipes/checks/fields/format/changed-by-root-email
-  t/recipes/checks/fields/format/changelog-file-backport
-  t/recipes/checks/fields/format/changes-bad-ubuntu-distribution
-  t/recipes/checks/fields/format/changes-distribution-mismatch
-  t/recipes/checks/fields/format/changes-experimental-mismatch
-  t/recipes/checks/fields/format/changes-file-bad-section
-  t/recipes/checks/fields/format/changes-file-size-checksum-mismatch
-  t/recipes/checks/fields/format/changes-files-package-builds-dbg-and-dbgsym-variants
-  t/recipes/checks/fields/format/changes-missing-fields
-  t/recipes/checks/fields/format/changes-unreleased
-  t/recipes/checks/fields/format/changes-upload-has-backports-version-number
-  t/recipes/checks/fields/format/checksum-count-mismatch
-  t/recipes/checks/fields/format/distribution-multiple-bad
-  t/recipes/checks/fields/format/generic-empty
-  t/recipes/checks/fields/format/legacy-foo++
-  t/recipes/checks/fields/format/watch-file-pgpmode-next
   t/recipes/checks/fields/section/generic-empty
   t/recipes/checks/fields/section/legacy-filenames
   t/recipes/checks/fields/standards-version/generic-empty
-  t/recipes/checks/fields/urgency/changed-by-localhost
-  t/recipes/checks/fields/urgency/changed-by-malformed
-  t/recipes/checks/fields/urgency/changed-by-no-name
-  t/recipes/checks/fields/urgency/changed-by-root
-  t/recipes/checks/fields/urgency/changed-by-root-email
   t/recipes/checks/fields/urgency/changelog-file-backport
   t/recipes/checks/fields/urgency/changes-bad-ubuntu-distribution
   t/recipes/checks/fields/urgency/changes-distribution-mismatch
