@@ -48,25 +48,6 @@ my @known_undeclared = qw(
   t/recipes/checks/debian/copyright/patch-empties-directory
   t/recipes/checks/debian/upstream/signing-key/upstream-key-minimal
   t/recipes/checks/debian/upstream/signing-key/upstream-keyring
-  t/recipes/checks/fields/section/generic-empty
-  t/recipes/checks/fields/section/legacy-filenames
-  t/recipes/checks/fields/standards-version/generic-empty
-  t/recipes/checks/fields/urgency/changelog-file-backport
-  t/recipes/checks/fields/urgency/changes-bad-ubuntu-distribution
-  t/recipes/checks/fields/urgency/changes-distribution-mismatch
-  t/recipes/checks/fields/urgency/changes-experimental-mismatch
-  t/recipes/checks/fields/urgency/changes-file-bad-section
-  t/recipes/checks/fields/urgency/changes-file-size-checksum-mismatch
-  t/recipes/checks/fields/urgency/changes-files-package-builds-dbg-and-dbgsym-variants
-  t/recipes/checks/fields/urgency/changes-missing-fields
-  t/recipes/checks/fields/urgency/changes-missing-format
-  t/recipes/checks/fields/urgency/changes-unreleased
-  t/recipes/checks/fields/urgency/changes-upload-has-backports-version-number
-  t/recipes/checks/fields/urgency/checksum-count-mismatch
-  t/recipes/checks/fields/urgency/distribution-multiple-bad
-  t/recipes/checks/fields/urgency/legacy-foo++
-  t/recipes/checks/fields/urgency/watch-file-pgpmode-next
-  t/recipes/checks/fields/version/fields-general-missing
   t/recipes/checks/mailcap/unquoted-placeholder
 );
 
