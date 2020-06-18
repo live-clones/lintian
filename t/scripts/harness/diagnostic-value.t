@@ -42,13 +42,6 @@ use constant SPACE => q{ };
 use constant EMPTY => q{};
 
 my @known_undeclared = qw(
-  t/recipes/checks/binaries/binaries-unsafe-open
-  t/recipes/checks/changes-file/changelog-file-backport
-  t/recipes/checks/debian/changelog/changelog-version-bzr
-  t/recipes/checks/debian/copyright/patch-empties-directory
-  t/recipes/checks/debian/upstream/signing-key/upstream-key-minimal
-  t/recipes/checks/debian/upstream/signing-key/upstream-keyring
-  t/recipes/checks/mailcap/unquoted-placeholder
 );
 
 my @descpaths = File::Find::Rule->file()->name('desc')->in('t/recipes/checks');
