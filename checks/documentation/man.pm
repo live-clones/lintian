@@ -302,7 +302,7 @@ sub files {
                 # more than one, they will be separated by a comma and
                 # a whitespace.  In case we find the comma, we advance
                 # $pkgname_idx.
-                while (substr($th_fields[$pkgname_idx], -1) eq ',') {
+                while ((substr($th_fields[$pkgname_idx], -1) // EMPTY) eq ','){
                     $pkgname_idx++;
                 }
                 # We're now at the last package, so we should be able
