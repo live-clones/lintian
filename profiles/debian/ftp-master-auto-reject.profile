@@ -111,6 +111,7 @@ Enable-Tags:
  stripped-library,
  symlink-has-too-many-up-segments,
  too-many-architectures,
+ uploader-name-missing,
  usr-share-doc-symlink-to-foreign-package,
  usr-share-doc-symlink-without-dependency,
  wrong-file-owner-uid-or-gid,
@@ -181,5 +182,6 @@ Tags:
  stripped-library,
  symlink-has-too-many-up-segments,
  too-many-architectures,
+ uploader-name-missing,
  usr-share-doc-symlink-to-foreign-package,
 
