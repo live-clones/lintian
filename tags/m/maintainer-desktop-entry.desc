@@ -1,0 +1,10 @@
+Tag: maintainer-desktop-entry
+Severity: pedantic
+Check: debian/desktop-entries
+Info: The maintainer keeps a manpage in ./debian. Please forward the
+ manpage upstream and ask them to include in their version control
+ system, and in their next release.
+ .
+ If the manpage was already forwarded or rejected, or the upstream is
+ gone, please override the tag and annotate it with a suitable comment.
+Ref: social contract item 2, devref 3.1.4, policy 4.3
