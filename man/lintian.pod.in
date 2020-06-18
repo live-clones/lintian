@@ -214,15 +214,14 @@ bug reports are always welcome (particularly if they include fixes).
 These options overrides the B<display-experimental> variable in the
 configuration file.
 
-=item B<--fail-on> {error | warning | info | pedantic | experimental | override}
+=item B<--fail-on> {error | warning | info | pedantic | experimental | override | none}
 
 Causes B<lintian> to exit with a program status of 2 for the given
 conditions. This option can be a comma-separated list, or it may be
 specified multiple times.
 
-THERE IS NO DEFAULT, which is different from the way B<lintian> used
-to work. Also, 'warning' does not imply 'error'. Please specify both
-if you want both.
+The default is B<error>. Also, 'warning' does not imply 'error'.
+Please specify both if you want both.
 
 =item B<-i>, B<--info>
 
