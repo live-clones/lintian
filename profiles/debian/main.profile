@@ -23,7 +23,7 @@ Enable-Tags-From-Check:
  debian/filenames,
  debian/files,
  debian/line-separators,
- debian/manpages,
+ debian/manual-pages,
  debian/not-installed,
  debian/po-debconf,
  debian/readme,
