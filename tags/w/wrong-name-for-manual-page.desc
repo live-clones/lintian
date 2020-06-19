@@ -1,6 +1,7 @@
-Tag: manpage-has-wrong-extension
+Tag: wrong-name-for-manual-page
 Severity: error
 Check: documentation/manual
+Renamed-From: manpage-has-wrong-extension
 Info: The manual page has an extension other than
  "<i>section</i>[<i>program</i>].gz".
 Ref: policy 12.1

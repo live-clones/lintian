@@ -91,7 +91,7 @@
                   },
                   {
                      "context" : "usr/bin/script",
-                     "name" : "binary-without-manpage",
+                     "name" : "no-manual-page",
                      "severity" : "warning"
                   },
                   {

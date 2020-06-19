@@ -70,16 +70,16 @@ sub files {
 
     if ($file->name =~ m,^usr/share/man/\S+,) {
 
-        $self->tag('manpage-in-udeb', $file->name)
+        $self->tag('manual-page-in-udeb', $file->name)
           if $self->processable->type eq 'udeb';
 
         if ($file->is_dir) {
-            $self->tag('stray-directory-in-manpage-directory', $file->name)
+            $self->tag('stray-folder-in-manual', $file->name)
               unless $file->name
               =~ m,^usr/(?:X11R6|share)/man/(?:[^/]+/)?(?:man\d/)?$,;
 
         } elsif ($file->is_file && ($file->operm & 0111)) {
-            $self->tag('executable-manpage', $file->name);
+            $self->tag('executable-manual-page', $file->name);
         }
     }
 
@@ -89,7 +89,7 @@ sub files {
     my ($manpage, $path, undef) = fileparse($file);
 
     if ($path =~ m{^usr/share/man/$} && $manpage ne EMPTY) {
-        $self->tag('manpage-in-wrong-directory', $file);
+        $self->tag('odd-place-for-manual-page', $file);
         return;
     }
 
@@ -98,15 +98,15 @@ sub files {
     return
       unless defined $subdir;
 
-    $self->tag('manpage-named-after-build-path', $file)
+    $self->tag('build-path-in-manual', $file)
       if $file =~ m{/_build_} || $file =~ m{_tmp_buildd};
 
-    $self->tag('manpage-has-overly-generic-name', $file)
+    $self->tag('manual-page-with-generic-name', $file)
       if $file =~ m{/README\.};
 
     my ($section) = ($subdir =~ m{^.*man(\d)/$});
     unless (defined $section) {
-        $self->tag('manpage-in-wrong-directory', $file);
+        $self->tag('odd-place-for-manual-page', $file);
         return;
     }
 
@@ -116,7 +116,7 @@ sub files {
     # The country should not be part of the man page locale
     # directory unless it's one of the known cases where the
     # language is significantly different between countries.
-    $self->tag('manpage-locale-dir-country-specific', $file)
+    $self->tag('country-in-manual', $file)
       if $language =~ /_/ && $language !~ /^(?:pt_BR|zh_[A-Z][A-Z])$/;
 
     my $file_info = $file->file_info;
@@ -125,12 +125,12 @@ sub files {
     my $ext = pop @pieces;
     if ($ext ne 'gz') {
         push @pieces, $ext;
-        $self->tag('manpage-not-compressed', $file);
+        $self->tag('uncompressed-manual-page', $file);
     } elsif ($file->is_file) { # so it's .gz... files first; links later
         if ($file_info !~ m/gzip compressed data/) {
-            $self->tag('manpage-not-compressed-with-gzip', $file);
+            $self->tag('wrong-compression-in-manual-page', $file);
         } elsif ($file_info !~ m/max compression/) {
-            $self->tag('manpage-not-compressed-with-max-compression',$file);
+            $self->tag('poor-compression-in-manual-page',$file);
         }
     }
     my $fn_section = pop @pieces;
@@ -147,7 +147,7 @@ sub files {
             $self->tag('manpage-in-wrong-directory', $file);
         }
     } else {
-        $self->tag('manpage-has-wrong-extension', $file);
+        $self->tag('wrong-name-for-manual-page', $file);
     }
 
     # check symbolic links to other manual pages
@@ -171,9 +171,9 @@ sub files {
                 or $file->link
                 =~ m,^\.\./\.\./\.\./\.\./usr/share/man/man[237]/undocumented\.[237]\.gz$,
             ) {
-                $self->tag('link-to-undocumented-manpage', $file);
+                $self->tag('undocumented-manual-page', $file);
             } else {
-                $self->tag('bad-link-to-undocumented-manpage', $file);
+                $self->tag('broken-link-to-undocumented', $file);
             }
         }
     } else { # not a symlink
@@ -290,7 +290,7 @@ sub files {
         # Now we search through the whole man page for some common errors
         my $lc = 0;
         my $stag_emitter
-          = $self->spelling_tag_emitter('spelling-error-in-manpage', $file);
+          = $self->spelling_tag_emitter('typo-in-manual-page', $file);
         foreach my $line (@manfile) {
             $lc++;
             chomp $line;
@@ -310,7 +310,7 @@ sub files {
                 # 1 to the index.
                 my $th_section = $th_fields[++$pkgname_idx];
                 if ($th_section && (lc($fn_section) ne lc($th_section))) {
-                    $self->tag('manpage-section-mismatch',
+                    $self->tag('wrong-manual-section',
                         "$file:$lc $fn_section != $th_section");
                 }
             }
@@ -321,7 +321,7 @@ sub files {
                 $self->tag('FSSTND-dir-in-manual-page', "$file:$lc $1");
             }
             if ($line eq '.SH "POD ERRORS"') {
-                $self->tag('manpage-has-errors-from-pod2man', "$file:$lc");
+                $self->tag('pod-conversion-message', "$file:$lc");
             }
             # Check for spelling errors if the manpage is English
             check_spelling($line, $self->group->spelling_exceptions,
@@ -346,7 +346,7 @@ sub files {
       unless length $bytes;
 
     unless (valid_utf8($bytes)) {
-        $self->tag('national-encoding-in-manpage', $file->name);
+        $self->tag('national-encoding-in-manual-page', $file->name);
         return;
     }
 
@@ -357,7 +357,8 @@ sub files {
     for my $line (@lines) {
 
         # see Bug#554897 and Bug#507673; exclude string variables
-        $self->tag('acute-accent-in-manpage', $file->name . COLON . $position)
+        $self->tag('acute-accent-in-manual-page',
+            $file->name . COLON . $position)
           if $line =~ /\\'/ && $line !~ /^\.\s*ds\s/;
 
     } continue {
@@ -464,15 +465,15 @@ sub breakdown {
         my @manpages = @{$related_manpages{$command} // []};
 
         my @sections = grep { defined } map { $_->{section} } @manpages;
-        $self->tag('command-in-sbin-has-manpage-in-incorrect-section', $file)
+        $self->tag('manual-page-for-system-command', $file)
           if $file->is_regular_file
           && any { $_ == 1 } @sections;
     }
 
-    $self->tag('binary-without-english-manpage', $_)
+    $self->tag('no-english-manual-page', $_)
       for map {$local_executables{$_}} @english_missing;
 
-    $self->tag('binary-without-manpage', $_)
+    $self->tag('no-manual-page', $_)
       for map {$local_executables{$_}} @manpage_missing;
 
     # surplus manpages only for this package; provides sorted output
@@ -484,7 +485,7 @@ sub breakdown {
         my $file = $manpage->{file};
         my $section = $manpage->{section};
 
-        $self->tag('manpage-without-executable', $file)
+        $self->tag('spare-manual-page', $file)
           if $section == 1 || $section == 8;
     }
 
@@ -503,9 +504,9 @@ sub process_lexgrog_output {
         my $desc = <$lexgrog_fd>;
         $desc =~ s/^[^:]+: \"(.*)\"$/$1/;
         if ($desc =~ /(\S+)\s+-\s+manual page for \1/i) {
-            $self->tag('manpage-has-useless-whatis-entry', $file);
+            $self->tag('useless-whatis-entry', $file);
         } elsif ($desc =~ /\S+\s+-\s+programs? to do something/i) {
-            $self->tag('manpage-is-dh_make-template', $file);
+            $self->tag('manual-page-from-template', $file);
         }
         drain_pipe($lexgrog_fd);
         eval {close($lexgrog_fd);};
@@ -514,7 +515,7 @@ sub process_lexgrog_output {
             die "close pipe: $err: $!"
               if $err->errno;
             # No, then lexgrog returned with a non-zero exit code.
-            $self->tag('manpage-has-bad-whatis-entry', $file);
+            $self->tag('bad-whatis-entry', $file);
         }
     }
     @{$running} = ();
@@ -554,7 +555,7 @@ sub process_man_output {
             chomp;
             s/^[^:]+: //;
             s/^<standard input>://;
-            $self->tag('manpage-has-errors-from-man', $file, $_);
+            $self->tag('groff-message', $file, $_);
             last;
         }
         close($read);

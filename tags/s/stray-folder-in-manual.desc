@@ -1,6 +1,7 @@
-Tag: stray-directory-in-manpage-directory
+Tag: stray-folder-in-manual
 Severity: error
 Check: documentation/manual
+Renamed-Tag: stray-directory-in-manpage-directory
 Info: This package installs a directory under <tt>/usr/share/man</tt>
  that is not a manual section directory or locale directory.
 Ref: fhs usrsharemanmanualpages

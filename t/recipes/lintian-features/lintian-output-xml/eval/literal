@@ -89,7 +89,7 @@
                 <name>possible-gpl-code-linked-with-openssl</name>
               </tag>
               <tag severity="warning">
-                <name>binary-without-manpage</name>
+                <name>no-manual-page</name>
                 <context>usr/bin/script</context>
               </tag>
               <tag severity="info">

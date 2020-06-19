@@ -1,2 +1,2 @@
-hello (binary): binary-without-manpage usr/bin/hello.dbg
-hello (binary): binary-without-manpage usr/bin/hello
+hello (binary): no-manual-page usr/bin/hello.dbg
+hello (binary): no-manual-page usr/bin/hello

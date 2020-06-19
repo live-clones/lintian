@@ -1,1 +1,1 @@
-command-in-sbin-has-manpage-in-incorrect-section (binary): command-in-sbin-has-manpage-in-incorrect-section usr/sbin/sbin-binary
+command-in-sbin-has-manpage-in-incorrect-section (binary): manual-page-for-system-command usr/sbin/sbin-binary

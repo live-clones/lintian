@@ -1,7 +1,7 @@
-Tag: manpage-without-executable
+Tag: spare-manual-page
 Severity: info
-Certainty: possible
 Check: documentation/manual
+Renamed-From: manpage-without-executable
 Info: Each manpage in <tt>/usr/share/man</tt> should have a reason to be
  there. This manpage does not appear to have a valid reason to be shipped.
  .

@@ -1,5 +1,6 @@
-Tag: manpage-not-compressed
+Tag: uncompressed-manual-page
 Severity: error
 Check: documentation/manual
+Renamed-From: manpage-not-compressed
 Info: Manual pages have to be installed compressed (using "<tt>gzip -9n</tt>").
 Ref: policy 12.1

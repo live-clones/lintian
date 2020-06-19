@@ -1,1 +1,1 @@
-scripts-ocamlrun (binary): binary-without-manpage usr/bin/script1
+scripts-ocamlrun (binary): no-manual-page usr/bin/script1

@@ -1,6 +1,7 @@
-Tag: manpage-has-errors-from-man
+Tag: groff-message
 Severity: warning
 Check: documentation/manual
+Renamed-From: manpage-has-errors-from-man
 Info: This man page provokes warnings or errors from man.
  .
  "cannot adjust" or "can't break" are trouble with paragraph filling,

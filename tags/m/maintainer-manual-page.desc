@@ -1,6 +1,7 @@
-Tag: maintainer-manpage
+Tag: maintainer-manual-page
 Severity: pedantic
 Check: debian/manual-pages
+Renamed-From: maintainer-manpage
 Info: The maintainer keeps a manpage in ./debian. Please forward the
  manpage upstream and ask them to include in their version control
  system, and in their next release.

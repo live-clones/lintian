@@ -1,10 +1,11 @@
-Tag: manpage-locale-dir-country-specific
+Tag: country-in-manual
 Severity: warning
 Check: documentation/manual
-Ref: policy 12.1
+Renamed-From: manpage-locale-dir-country-specific
 Info: This package installs a manual page in a locale directory that
  includes the country name. A country name should not be included in the
  directory name unless it indicates a significant difference in the
  language. The known cases where country names are appropriate are pt_BR
  and zh_*. Please file a bug against Lintian if this is another case
  where a country name is appropriate.
+Ref: policy 12.1

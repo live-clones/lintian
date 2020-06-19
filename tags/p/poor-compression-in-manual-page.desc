@@ -1,5 +1,6 @@
-Tag: manpage-not-compressed-with-max-compression
+Tag: poor-compression-in-manual-page
 Severity: error
 Check: documentation/manual
+Renamed-From: manpage-not-compressed-with-max-compression
 Info: Manual pages should be compressed with <tt>gzip -9n</tt>.
 Ref: policy 12.1

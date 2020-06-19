@@ -55,7 +55,7 @@ my @known_missing = qw(
   embedded-pear-module
   invalid-field-for-derivative
   invalid-version-number-for-derivative
-  manpage-in-udeb
+  manual-page-in-udeb
   old-python-version-field
   old-source-override-location
   package-is-team-maintained

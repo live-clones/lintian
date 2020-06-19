@@ -72,7 +72,7 @@ Enable-Tags:
  maintainer-script-removes-device-files,
  malformed-contact,
  malformed-deb-archive,
- manpage-has-overly-generic-name,
+ manual-page-with-generic-name,
  md5sum-mismatch,
  missing-build-dependency,
  missing-dependency-on-libc,

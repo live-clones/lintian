@@ -1,6 +1,7 @@
-Tag: manpage-is-dh_make-template
+Tag: manual-page-from-template
 Severity: error
 Check: documentation/manual
+Renamed-From: manpage-is-dh_make-template
 Info: This manual page appears to be an unmodified or insufficiently
  modified copy of the dh_make manual page template. It has a whatis entry
  (the brief description found in the NAME section) of the form:
