@@ -1,3 +1,0 @@
-Testname: files-general
-Check: documentation/man
-# tar -t is buggy and does not list \\\ filename

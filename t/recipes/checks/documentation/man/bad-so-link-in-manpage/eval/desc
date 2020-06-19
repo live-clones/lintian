@@ -1,3 +1,0 @@
-Testname: bad-so-link-in-manpage
-Test-Depends: groff-base (>= 1.22.4)
-Check: documentation/man

@@ -1,6 +1,6 @@
 Tag: manpage-has-overly-generic-name
 Severity: error
-Check: documentation/man
+Check: documentation/manual
 Info: The manual page appears to have an overly generic name that is likely to
  clash with other packages.
  .

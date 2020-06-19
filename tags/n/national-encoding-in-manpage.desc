@@ -1,6 +1,6 @@
 Tag: national-encoding-in-manpage
 Severity: info
-Check: documentation/man
+Check: documentation/manual
 Info: This man page is not valid UTF-8.
  .
  Debian has used UTF-8 for many years. Support for national encodings

@@ -1,3 +1,0 @@
-Testname: manpage-named-after-build-path
-Test-Depends: groff-base (>= 1.22.4)
-Check: documentation/man

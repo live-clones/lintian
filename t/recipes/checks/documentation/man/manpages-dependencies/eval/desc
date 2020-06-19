@@ -1,3 +1,0 @@
-Testname: manpages-dependencies
-Test-Against: binary-without-manpage
-Check: documentation/man

@@ -1,4 +1,4 @@
 Tag: manpage-in-udeb
 Severity: error
-Check: documentation/man
+Check: documentation/manual
 Info: udeb packages should not contain any manual pages.

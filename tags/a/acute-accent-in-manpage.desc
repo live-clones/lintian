@@ -1,6 +1,6 @@
 Tag: acute-accent-in-manpage
 Severity: info
-Check: documentation/man
+Check: documentation/manual
 Info: This manual page uses the \' groff sequence. Usually, the
  intent to generate an apostrophe, but that sequence actually
  renders as a an acute accent.

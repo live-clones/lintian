@@ -1,4 +1,4 @@
 Tag: executable-manpage
 Severity: error
-Check: documentation/man
+Check: documentation/manual
 Info: Manual pages are not meant to be executed.

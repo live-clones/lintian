@@ -1,6 +1,6 @@
 Tag: manpage-has-bad-whatis-entry
 Severity: warning
-Check: documentation/man
+Check: documentation/manual
 Info: Each manual page should start with a "NAME" section, which lists the
  name and a brief description of the page separated by "\-". The "NAME"
  section is parsed by lexgrog and used to generate a database that's

@@ -44,7 +44,7 @@ Enable-Tags-From-Check:
  desktop/x11,
  documentation,
  documentation/examples,
- documentation/man,
+ documentation/manual,
  documentation/texinfo,
  emacs,
  emacs/elpa,

@@ -1,6 +1,6 @@
 Tag: bad-so-link-within-manual-page
 Severity: error
-Check: documentation/man
+Check: documentation/manual
 Info: Manual files that use the .so links to include other pages should
  only point to a path relative to the top-level manual hierarchy, e.g.
  .

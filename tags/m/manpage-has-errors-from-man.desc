@@ -1,6 +1,6 @@
 Tag: manpage-has-errors-from-man
 Severity: warning
-Check: documentation/man
+Check: documentation/manual
 Info: This man page provokes warnings or errors from man.
  .
  "cannot adjust" or "can't break" are trouble with paragraph filling,

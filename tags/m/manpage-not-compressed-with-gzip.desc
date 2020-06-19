@@ -1,5 +1,5 @@
 Tag: manpage-not-compressed-with-gzip
 Severity: error
-Check: documentation/man
+Check: documentation/manual
 Info: Manual pages should be compressed with <tt>gzip -9n</tt>.
 Ref: policy 12.1

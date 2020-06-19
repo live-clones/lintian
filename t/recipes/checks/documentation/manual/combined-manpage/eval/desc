@@ -1,0 +1,6 @@
+Testname: combined-manpage
+Check: documentation/manual
+Test-Against:
+ manpage-section-mismatch
+References:
+ Bug#962601

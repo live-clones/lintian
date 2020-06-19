@@ -1,6 +1,6 @@
 Tag: manpage-is-dh_make-template
 Severity: error
-Check: documentation/man
+Check: documentation/manual
 Info: This manual page appears to be an unmodified or insufficiently
  modified copy of the dh_make manual page template. It has a whatis entry
  (the brief description found in the NAME section) of the form:
