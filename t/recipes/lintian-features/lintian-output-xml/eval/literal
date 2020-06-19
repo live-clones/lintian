@@ -47,7 +47,7 @@
               <name>no-homepage-field</name>
             </tag>
             <tag severity="pedantic">
-              <name>package-uses-deprecated-source-override-location</name>
+              <name>old-source-override-location</name>
             </tag>
             <tag severity="warning">
               <name>dfsg-version-misspelled</name>

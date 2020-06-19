@@ -1,4 +1,9 @@
 generic-dh-make-2008 (source): upstream-metadata-file-is-missing
+generic-dh-make-2008 (source): trailing-whitespace debian/rules (line 63)
+generic-dh-make-2008 (source): trailing-whitespace debian/rules (line 48)
+generic-dh-make-2008 (source): trailing-whitespace debian/rules (line 43)
+generic-dh-make-2008 (source): trailing-whitespace debian/rules (line 35)
+generic-dh-make-2008 (source): trailing-whitespace debian/rules (line 26)
 generic-dh-make-2008 (source): testsuite-autopkgtest-missing
 generic-dh-make-2008 (source): superfluous-clutter-in-homepage <insert the upstream URL, if relevant>
 generic-dh-make-2008 (source): rules-requires-root-missing
@@ -7,11 +12,6 @@ generic-dh-make-2008 (source): older-source-format 1.0
 generic-dh-make-2008 (source): no-dh-sequencer
 generic-dh-make-2008 (source): no-dep5-copyright
 generic-dh-make-2008 (source): missing-debian-source-format
-generic-dh-make-2008 (source): file-contains-trailing-whitespace debian/rules (line 63)
-generic-dh-make-2008 (source): file-contains-trailing-whitespace debian/rules (line 48)
-generic-dh-make-2008 (source): file-contains-trailing-whitespace debian/rules (line 43)
-generic-dh-make-2008 (source): file-contains-trailing-whitespace debian/rules (line 35)
-generic-dh-make-2008 (source): file-contains-trailing-whitespace debian/rules (line 26)
 generic-dh-make-2008 (source): dh-make-template-in-source debian/watch.ex
 generic-dh-make-2008 (source): dh-make-template-in-source debian/prerm.ex
 generic-dh-make-2008 (source): dh-make-template-in-source debian/preinst.ex

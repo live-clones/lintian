@@ -57,8 +57,8 @@ my @known_missing = qw(
   invalid-version-number-for-derivative
   manpage-in-udeb
   old-python-version-field
+  old-source-override-location
   package-is-team-maintained
-  package-uses-deprecated-source-override-location
   patch-modifying-debian-files
   patch-system-but-direct-changes-in-diff
   quilt-series-references-non-existent-patch
@@ -108,7 +108,7 @@ for my $descpath (@descpaths) {
         my @checks = split(SPACE, $testcase->{check});
         #        diag "Checks: " . join(SPACE, @checks);
         my @related;
-        push(@related, @{$checktags{$_}})for @checks;
+        push(@related, @{$checktags{$_} // []})for @checks;
         my $lc = List::Compare->new(\@testfor, \@related);
         @testfor = $lc->get_intersection;
     }

@@ -313,13 +313,6 @@ my $GFDL_FRAGMENTS = Lintian::Data->new(
         return \%ret;
     });
 
-# The files that contain error messages from tar, which we'll check and issue
-# tags for if they contain something unexpected, and their corresponding tags.
-our %ERRORS = (
-    'index-errors'    => 'tar-errors-from-source',
-    'unpacked-errors' => 'tar-errors-from-source'
-);
-
 # Directory checks.  These regexes match a directory that shouldn't be in the
 # source package and associate it with a tag (minus the leading
 # source-contains or diff-contains).  Note that only one of these regexes
@@ -357,31 +350,10 @@ my @file_checks = (
     [qr,((^|/)\.[^/]+\.swp|~)$,         => 'editor-backup-file', 1],
 );
 
-# List of files to check for a LF-only end of line terminator, relative
-# to the debian/ source directory
-our @EOL_TERMINATORS_FILES = qw(control changelog);
-
-# List of files to check for a trailing whitespace characters
-our @TRAILING_WHITESPACE_FILES = (
-    ['debian/changelog'        => qr,\s+$,],
-    ['debian/control'          => qr,\s+$,],
-    ['debian/rules'            => qr,[ ]+$,], # Allow trailing tabs in Make
-);
-
 sub source {
     my ($self) = @_;
 
     my $processable = $self->processable;
-
-    my $d_files = $processable->patched->resolve_path('debian/files');
-
-    if ($d_files and $d_files->is_file and $d_files->size != 0) {
-        $self->tag('debian-files-list-in-source');
-    }
-
-    $self->tag('package-uses-deprecated-source-override-location')
-      if $processable->patched->resolve_path(
-        'debian/source.lintian-overrides');
 
     # Check if the package build-depends on autotools-dev, automake,
     # or libtool.
@@ -398,105 +370,11 @@ sub source {
     }elsif (not $processable->native) {
         $self->check_diffstat(\%warned);
     }
+
     $self->find_cruft(\%warned, $ltinbd);
 
-    for my $file (@EOL_TERMINATORS_FILES) {
-        my $path = $processable->patched->resolve_path("debian/$file");
-        next if not $path or not $path->is_open_ok;
-        open(my $fd, '<', $path->unpacked_path);
-        while (my $line = <$fd>) {
-            if ($line =~ m{ \r \n \Z}xsm) {
-                $self->tag('control-file-with-CRLF-EOLs', $path);
-                last;
-            }
-        }
-        close($fd);
-    }
-
-    for my $file (@TRAILING_WHITESPACE_FILES) {
-
-        my $path = $processable->patched->resolve_path($file->[0]);
-        next
-          unless $path->is_valid_utf8;
-
-        my $contents = $path->decoded_utf8;
-        my @lines = split(/\n/, $contents, -1);
-
-        my @trailing_whitespace;
-        my @empty_at_end;
-
-        my $position = 1;
-        for my $line (@lines) {
-
-            push(@trailing_whitespace, $position)
-              if $line =~ $file->[1];
-
-            # keeps track of any empty lines at the end
-            if (length $line) {
-                @empty_at_end = ();
-            } else {
-                push(@empty_at_end, $position);
-            }
-
-        } continue {
-            ++$position;
-        }
-
-        # require a newline at end and remove it
-        if (scalar @empty_at_end && $empty_at_end[-1] == scalar @lines) {
-            pop @empty_at_end;
-        } else {
-            $self->tag('no-newline-at-end', $path);
-        }
-
-        push(@trailing_whitespace, @empty_at_end);
-
-        $self->tag('file-contains-trailing-whitespace', "$path (line $_)")
-          for @trailing_whitespace;
-
-    }
-
-    if (my $pycompat = $processable->patched->resolve_path('debian/pycompat')){
-        $self->tag('debian-pycompat-is-obsolete') if $pycompat->is_file;
-    }
-
-    if (my $pyversions
-        = $processable->patched->resolve_path('debian/pyversions')){
-        $self->tag('debian-pyversions-is-obsolete') if $pyversions->is_file;
-    }
-
-    # Report any error messages from tar while unpacking the source
-    # package if it isn't just tar cruft.
-    for my $file (keys %ERRORS) {
-        my $tag  = $ERRORS{$file};
-        my $path = path($processable->groupdir)->child($file)->stringify;
-        if (-s $path) {
-            open(my $fd, '<', $path);
-            local $_;
-            while (<$fd>) {
-                chomp;
-                s,^(?:[/\w]+/)?tar: ,,;
-
-                # Record size errors are harmless.  Skipping to next
-                # header apparently comes from star files.  Ignore all
-                # GnuPG noise from not having a valid GnuPG
-                # configuration directory.  Also ignore the tar
-                # "exiting with failure status" message, since it
-                # comes after some other error.
-                next if /^Record size =/;
-                next if /^Skipping to next header/;
-                next if /^gpgv?: /;
-                next if /^secmem usage: /;
-                next
-                  if /^Exiting with failure status due to previous errors/;
-                $self->tag($tag, $_);
-            }
-            close($fd);
-        }
-    }
-
     return;
-}    # </run>
+}
 
 # -----------------------------------
 

@@ -94,7 +94,7 @@ my @unknown = $exceptions->get_Lonly;
 my @solved = $exceptions->get_Ronly;
 
 is(scalar @unknown, 0, 'All tests without a declared purpose are known');
-diag "Unknown/missing test: $_" for @unknown;
+diag "New test without a declared purpose: $_" for @unknown;
 
 is(scalar @solved,0,'Solved test should be removed from known undeclared set');
 diag "Solved test: $_" for @solved;

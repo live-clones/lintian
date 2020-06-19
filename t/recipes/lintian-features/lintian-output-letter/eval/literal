@@ -19,5 +19,5 @@ P[P]: lintian-output-letter source: debian-control-has-unusual-field-spacing lin
 X[P]: lintian-output-letter source: debian-watch-does-not-check-gpg-signature
 P[P]: lintian-output-letter: example-unusual-interpreter usr/share/doc/lintian-output-letter/examples/example #!/usr/bin/foo
 P[P]: lintian-output-letter source: no-homepage-field
-P[P]: lintian-output-letter source: package-uses-deprecated-source-override-location
+P[P]: lintian-output-letter source: old-source-override-location
 O[W]: lintian-output-letter source: dfsg-version-misspelled 1.0+dsfg-1.1

@@ -59,6 +59,16 @@ sub files {
     return;
 }
 
+sub source {
+    my ($self) = @_;
+
+    $self->tag('old-source-override-location')
+      if $self->processable->patched->resolve_path(
+        'debian/source.lintian-overrides');
+
+    return;
+}
+
 1;
 
 # Local Variables:

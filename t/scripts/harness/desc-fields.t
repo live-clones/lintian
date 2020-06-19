@@ -124,8 +124,10 @@ foreach my $descpath (@descpaths) {
 
     # listed test-against belong to listed checks
     $known_tests += scalar @against;
+    my @checkinfos = grep { defined }
+      map { $profile->get_checkinfo($_) } (@checks, 'lintian');
     my %relatedtags= map { $_ => 1 }
-      map { $profile->get_checkinfo($_)->tags } (@checks, 'lintian');
+      map { $_->tags } @checkinfos;
     for my $tag (@against) {
         ok(
             exists $relatedtags{$tag},

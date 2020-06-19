@@ -58,7 +58,7 @@
                      "severity" : "pedantic"
                   },
                   {
-                     "name" : "package-uses-deprecated-source-override-location",
+                     "name" : "old-source-override-location",
                      "severity" : "pedantic"
                   }
                ]

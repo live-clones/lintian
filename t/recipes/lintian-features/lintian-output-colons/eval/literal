@@ -19,5 +19,5 @@ tag:P:pedantic::lintian-output-colons:1.0+dsfg-1.1:source:source:debian-control-
 tag:P:pedantic:X:lintian-output-colons:1.0+dsfg-1.1:source:source:debian-watch-does-not-check-gpg-signature::
 tag:P:pedantic::lintian-output-colons:1.0+dsfg-1.1:all:binary:example-unusual-interpreter:usr/share/doc/lintian-output-colons/examples/example #!/usr/bin/foo:
 tag:P:pedantic::lintian-output-colons:1.0+dsfg-1.1:source:source:no-homepage-field::
-tag:P:pedantic::lintian-output-colons:1.0+dsfg-1.1:source:source:package-uses-deprecated-source-override-location::
+tag:P:pedantic::lintian-output-colons:1.0+dsfg-1.1:source:source:old-source-override-location::
 tag:W:warning:O:lintian-output-colons:1.0+dsfg-1.1:source:source:dfsg-version-misspelled:1.0+dsfg-1.1:dfsg-version-misspelled 1.0*

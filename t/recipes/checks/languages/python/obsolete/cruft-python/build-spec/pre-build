@@ -1,0 +1,31 @@
+#!/bin/sh
+#
+# Create all the various junk that shouldn't exist in the diff so that we can
+# trigger all the tags.
+
+set -e
+dir="$1"
+fake="$dir/debian/missing-sources/fake.py"
+
+cp "$fake" "$dir"
+echo 'import fake' > "${dir}/main.py"
+unset PYTHONDONTWRITEBYTECODE
+PYTHONPATH="${dir}" python "${dir}/main.py" > /dev/null
+PYTHONPATH="${dir}" python -O "${dir}/main.py"  > /dev/null
+# now remove source
+rm -f "${dir}"/main.py
+rm -f "${dir}"/fake.py
+
+cp "$fake" "$dir/fake2.py"
+echo 'import fake2' > "${dir}/main.py"
+unset PYTHONDONTWRITEBYTECODE
+PYTHONPATH="${dir}" python "${dir}/main.py" > /dev/null
+PYTHONPATH="${dir}" python -O "${dir}/main.py"  > /dev/null
+# now remove source
+rm -f "${dir}"/main.py
+rm -f "${dir}"/fake2.py
+
+
+
+
+
