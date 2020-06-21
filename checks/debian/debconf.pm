@@ -1,6 +1,7 @@
 # debian/debconf -- lintian check script -*- perl -*-
 
 # Copyright © 2001 Colin Watson
+# Copyright © 2020 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -30,6 +31,8 @@ use Path::Tiny;
 use Lintian::Deb822Parser qw(parse_dpkg_control_string :constants);
 use Lintian::Relation;
 use Lintian::Util qw($PKGNAME_REGEX);
+
+use constant EMPTY => q{};
 
 use Moo;
 use namespace::clean;
@@ -72,53 +75,39 @@ my $ANY_DEBCONF = Lintian::Relation->new(
 sub source {
     my ($self) = @_;
 
-    my @binaries = $self->processable->binaries;
-    my @files = map { "$_.templates" } @binaries;
-    push @files, 'templates';
+    my @catalogs
+      = ('templates', map { "$_.templates" } $self->processable->binaries);
+    my @files = grep { defined }
+      map { $self->processable->patched->resolve_path("debian/$_") } @catalogs;
 
-    foreach my $file (@files) {
-        my $dfile = "debian/$file";
-        my $templates_file = $self->processable->patched->resolve_path($dfile);
-        my $binary = $file;
-        $binary =~ s/\.?templates$//;
-        # Single binary package (so @files contains "templates" and
-        # "binary.templates")?
-        if (!$binary && @files == 2) {
-            $binary = $binaries[0];
+    for my $file (@files) {
+
+        next
+          unless $file->is_open_ok;
+
+        next
+          unless $file->is_valid_utf8;
+
+        my $contents = $file->decoded_utf8;
+
+        my @templates;
+        eval {
+            @templates
+              = parse_dpkg_control_string($contents,DCTRL_DEBCONF_TEMPLATE);
+        };
+        if ($@) {
+            chomp $@;
+            $@ =~ s/^internal error: //;
+            $@ =~ s/^syntax error in //;
+            $self->tag('syntax-error-in-debconf-template',"$file: $@");
+            next;
         }
 
-        if ($templates_file && $templates_file->is_open_ok) {
+        my @unsplit_choices
+          = grep { exists $_->{Template} && exists $_->{_Choices} }@templates;
 
-            # another check complains about invalid encoding
-            next
-              unless $templates_file->is_valid_utf8;
-
-            my $contents = $templates_file->decoded_utf8;
-
-            my @templates;
-            eval {
-                @templates
-                  = parse_dpkg_control_string($contents,
-                    DCTRL_DEBCONF_TEMPLATE);
-            };
-            if ($@) {
-                chomp $@;
-                $@ =~ s/^internal error: //;
-                $@ =~ s/^syntax error in //;
-                $self->tag('syntax-error-in-debconf-template',"$file: $@");
-                next;
-            }
-
-            foreach my $template (@templates) {
-                if (    exists $template->{Template}
-                    and exists $template->{_Choices}) {
-                    $self->tag(
-                        'template-uses-unsplit-choices',
-                        "$binary - $template->{Template}"
-                    );
-                }
-            }
-        }
+        $self->tag('template-uses-unsplit-choices',$file->name, $_->{Template})
+          for @unsplit_choices;
     }
 
     return;
@@ -127,16 +116,8 @@ sub source {
 sub installable {
     my ($self) = @_;
 
-    my $pkg = $self->processable->name;
-    my $type = $self->processable->type;
-    my $processable = $self->processable;
-
-    my ($seenconfig, $seentemplates, $usespreinst);
-
-    my $preinst = $processable->control->lookup('preinst');
-    my $ctrl_config = $processable->control->lookup('config');
-    my $ctrl_templates = $processable->control->lookup('templates');
-
+    my $usespreinst;
+    my $preinst = $self->processable->control->lookup('preinst');
     if ($preinst and $preinst->is_file and $preinst->is_open_ok) {
         open(my $fd, '<', $preinst->unpacked_path);
         while (<$fd>) {
@@ -150,32 +131,48 @@ sub installable {
         close($fd);
     }
 
-    $seenconfig = 1 if $ctrl_config and $ctrl_config->is_file;
+    my $seenconfig;
+    my $ctrl_config = $self->processable->control->lookup('config');
+    if (defined $ctrl_config && $ctrl_config->is_file) {
+
+        $self->tag('debconf-config-not-executable')
+          unless $ctrl_config->is_executable;
+
+        $seenconfig = 1;
+    }
+
+    my $seentemplates;
+    my $ctrl_templates = $self->processable->control->lookup('templates');
     $seentemplates = 1 if $ctrl_templates and $ctrl_templates->is_file;
 
     # This still misses packages that use debconf only in the postrm.
     # Packages that ask debconf questions in the postrm should load
     # the confmodule in the postinst so that debconf can register
     # their templates.
-    return unless $seenconfig or $seentemplates or $usespreinst;
+    return
+         unless $seenconfig
+      or $seentemplates
+      or $usespreinst;
 
     # parse depends info for later checks
 
     # Consider every package to depend on itself.
     my $selfrel;
-    if (defined $processable->field('Version')) {
-        $_ = $processable->field('Version');
-        $selfrel = "$pkg (= $_)";
+    if (defined $self->processable->field('Version')) {
+        $_ = $self->processable->field('Version');
+        $selfrel = $self->processable->name . " (= $_)";
     } else {
-        $selfrel = "$pkg";
+        $selfrel = $self->processable->name;
     }
 
     # Include self and provides as a package providing debconf presumably
     # satisfies its own use of debconf (if any).
     my $selfrelation
-      = Lintian::Relation->and($processable->relation('Provides'), $selfrel);
+      = Lintian::Relation->and($self->processable->relation('Provides'),
+        $selfrel);
     my $alldependencies
-      = Lintian::Relation->and($processable->relation('strong'),$selfrelation);
+      = Lintian::Relation->and($self->processable->relation('strong'),
+        $selfrelation);
 
     # See if the package depends on dbconfig-common.  Packages that do
     # are allowed to have a config file with no templates, since they
@@ -188,18 +185,13 @@ sub installable {
     } elsif ($seentemplates
         and not $seenconfig
         and not $usespreinst
-        and $type ne 'udeb') {
+        and $self->processable->type ne 'udeb') {
         $self->tag('no-debconf-config');
-    }
-
-    if ($seenconfig and not $ctrl_config->is_executable) {
-        $self->tag('debconf-config-not-executable');
     }
 
     # Lots of template checks.
 
-    my (@templates, %potential_db_abuse, @templates_seen);
-
+    my @templates;
     if ($seentemplates) {
 
         if ($ctrl_templates->is_valid_utf8) {
@@ -215,13 +207,18 @@ sub installable {
                 chomp $@;
                 $@ =~ s/^internal error: //;
                 $@ =~ s/^syntax error in //;
-                $self->tag('syntax-error-in-debconf-template',"templates: $@");
+                $self->tag(
+                    'syntax-error-in-debconf-template',
+                    "DEBIAN/$ctrl_templates: $@"
+                );
                 @templates = ();
             }
         }
     }
 
-    foreach my $template (@templates) {
+    my @templates_seen;
+    my %potential_db_abuse;
+    for my $template (@templates) {
         my $isselect = '';
 
         if (not exists $template->{Template}) {
@@ -280,13 +277,14 @@ sub installable {
             }
         }
 
-        if ($isselect and not exists $template->{Choices}) {
-            $self->tag('select-without-choices', "$template->{Template}");
-        }
+        $self->tag('select-without-choices', "$template->{Template}")
+          if $isselect && !exists $template->{Choices};
 
-        if (not exists $template->{Description}) {
-            $self->tag('no-template-description', "$template->{Template}");
-        } elsif ($template->{Description}=~m/^\s*(.*?)\s*?\n\s*\1\s*$/) {
+        $self->tag('no-template-description', "$template->{Template}")
+          if !exists $template->{Description}
+          && !exists $template->{_Description};
+
+        if (($template->{Description} // EMPTY) =~ /^\s*(.*?)\s*?\n\s*\1\s*$/){
             # Check for duplication. Should all this be folded into the
             # description checks?
             $self->tag('duplicate-long-description-in-template',
@@ -300,7 +298,10 @@ sub installable {
             if (defined $lang) {
                 $languages{$lang}{$mainfield}=1;
             }
-            unless ($template_fields{$mainfield}){ # Ignore language codes here
+            my $stripped = $mainfield;
+            $stripped =~ s/^_//;
+            unless ($template_fields{$stripped}) {
+                # Ignore language codes here
                 $self->tag(
                     'unknown-field-in-templates',
                     "$template->{Template} $field"
@@ -366,7 +367,8 @@ sub installable {
             if (length($short) > 75) {
                 $self->tag('too-long-short-description-in-templates',
                     $template->{Template})
-                  unless $type eq 'udeb' && $ttype eq 'text';
+                  unless $self->processable->type eq 'udeb'
+                  && $ttype eq 'text';
             }
             if (defined $template->{Description}) {
                 if ($template->{Description}
@@ -415,7 +417,7 @@ sub installable {
     my (%templates_used, %template_aliases);
     for my $file (qw(config prerm postrm preinst postinst)) {
         my $potential_makedev = {};
-        my $path = $processable->control->lookup($file);
+        my $path = $self->processable->control->lookup($file);
         if ($path and $path->is_file and $path->is_open_ok) {
             my ($usesconfmodule, $obsoleteconfmodule, $db_input, $isdefault);
 
@@ -458,7 +460,7 @@ sub installable {
                     and not $config_calls_db_input) {
                     # TODO: Perl?
                     $self->tag('postinst-uses-db-input')
-                      unless $type eq 'udeb';
+                      unless $self->processable->type eq 'udeb';
                     $db_input=1;
                 }
                 if (m%/dev/%) {
@@ -469,8 +471,7 @@ sub installable {
                      [\"\']? (\S+?) [\"\']? \s+ (\S+)\s/xsm
                 ) {
                     my ($priority, $template) = ($1, $2);
-                    $templates_used{get_template_name($processable, $template)}
-                      = 1;
+                    $templates_used{$self->get_template_name($template)}= 1;
                     if ($priority !~ /^\$\S+$/) {
                         $self->tag('unknown-debconf-priority', "$file:$. $1")
                           unless ($valid_priorities{$priority});
@@ -488,7 +489,7 @@ sub installable {
                     m/ \A \s* (?:db_get|db_set(?:title)?) \s+ 
                        [\"\']? (\S+?) [\"\']? (?:\s|\Z)/xsm
                 ) {
-                    $templates_used{get_template_name($processable, $1)} = 1;
+                    $templates_used{$self->get_template_name($1)} = 1;
                 }
                 # Try to handle Perl somewhat.
                 if (   m/^\s*(?:.*=\s*get|set)\s*\(\s*[\"\'](\S+?)[\"\']/
@@ -512,7 +513,7 @@ sub installable {
             if ($file eq 'postinst' or $file eq 'config') {
                 unless ($usesconfmodule) {
                     $self->tag("$file-does-not-load-confmodule")
-                      unless ($type eq 'udeb'
+                      unless ($self->processable->type eq 'udeb'
                         || ($file eq 'postinst' && !$seenconfig));
                 }
             }
@@ -529,13 +530,13 @@ sub installable {
             close($fd);
         } elsif ($file eq 'postinst') {
             $self->tag('postinst-does-not-load-confmodule')
-              unless ($type eq 'udeb' || !$seenconfig);
+              unless ($self->processable->type eq 'udeb' || !$seenconfig);
         } elsif ($file eq 'postrm') {
             # Make an exception for debconf providing packages as some of
             # them (incl. "debconf" itself) cleans up in prerm and have no
             # postrm script at all.
             $self->tag('postrm-does-not-purge-debconf')
-              unless $type eq 'udeb'
+              unless $self->processable->type eq 'udeb'
               or $selfrelation->implies($ANY_DEBCONF);
         }
     }
@@ -556,7 +557,9 @@ sub installable {
             }
         }
 
-        unless ($used or $pkg eq 'debconf' or $type eq 'udeb') {
+        unless ($used
+            or $self->processable->name eq 'debconf'
+            or $self->processable->type eq 'udeb') {
             $self->tag('unused-debconf-template', $template)
               unless $template =~ m,^shared/packages-(wordlist|ispell)$,
               or $template =~ m,/languages$,;
@@ -567,9 +570,11 @@ sub installable {
     # package that might provide debconf functionality.
 
     if ($usespreinst) {
-        unless ($processable->relation('Pre-Depends')->implies($ANY_DEBCONF)) {
+        unless (
+            $self->processable->relation('Pre-Depends')->implies($ANY_DEBCONF))
+        {
             $self->tag('missing-debconf-dependency-for-preinst')
-              unless $type eq 'udeb';
+              unless $self->processable->type eq 'udeb';
         }
     } else {
         unless ($alldependencies->implies($ANY_DEBCONF) or $usesdbconfig) {
@@ -584,9 +589,11 @@ sub installable {
     # itself.
 
     return
-      if ($pkg eq 'debconf') || ($type eq 'udeb');
+      if ($self->processable->name eq 'debconf')
+      || ($self->processable->type eq 'udeb');
 
-    my @scripts = grep { $_->is_script } $processable->installed->sorted_list;
+    my @scripts
+      = grep { $_->is_script } $self->processable->installed->sorted_list;
     foreach my $file (@scripts) {
 
         next
@@ -631,9 +638,9 @@ sub count_choices {
 
 # Manually interpolate shell variables, eg. $DPKG_MAINTSCRIPT_PACKAGE
 sub get_template_name {
-    my ($processable, $name) = @_;
+    my ($self, $name) = @_;
 
-    my $package = $processable->name;
+    my $package = $self->processable->name;
     return $name =~ s/^\$DPKG_MAINTSCRIPT_PACKAGE/$package/r;
 }
 
