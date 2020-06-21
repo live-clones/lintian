@@ -1,5 +1,5 @@
 Tag: repeated-path-segment
-Severity: warning
+Severity: pedantic
 Check: files/hierarchy/path-segments
 Info: The file is installed into a location that repeats the given
  path segment. An example would be <tt>/usr/lib/lib</tt> or
