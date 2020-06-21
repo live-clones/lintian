@@ -2,7 +2,7 @@ Tag: typo-in-manual-page
 Severity: info
 Check: documentation/manual
 Renamed-From: spelling-error-in-manpage
-Info: Lintian found a spelling error in the manpage. Lintian has a list
+Info: Lintian found a spelling error in a manual page. Lintian has a list
  of common misspellings that it looks for. It does not have a
  dictionary like a spelling checker does.
  .

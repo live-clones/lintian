@@ -3,7 +3,8 @@ Severity: warning
 Check: documentation/manual
 Renamed-From: binary-without-english-manpage
 Info: Each binary in <tt>/usr/bin</tt>, <tt>/usr/sbin</tt>, <tt>/bin</tt>,
- <tt>/sbin</tt> or <tt>/usr/games</tt> should have a manual page. You don't
- provide an English, only a translated manpage. Since English is fallback,
- shipping only a non-English man page leaves most users without a man page
- at all.
+ <tt>/sbin</tt> or <tt>/usr/games</tt> should have a manual page. You do
+ not provide an English manual page, but only a translated one.
+ .
+ Since the English language serves as a fallback option, the lack of an
+ English page leaves most users without any kind of manual page at all.

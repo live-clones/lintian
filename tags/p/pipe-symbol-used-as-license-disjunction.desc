@@ -3,7 +3,9 @@ Severity: warning
 Certainty: possible
 Check: debian/copyright
 Ref: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
-Info: In contrast to package dependencies, the pipe symbol or vertical
- bar does not indicate a logical disjunction or OR-relationship
- between two license short names. Instead, the keyword "or" between
- two license names indicates the dual licensing.
+Info: A vertical bar | (also known as a pipe symbol) does not stand for
+ a logical OR relationhip in <tt>debian/copyright</tt>.
+ .
+ To describe dual licensing, please use the word "or" between license
+ names.
+
