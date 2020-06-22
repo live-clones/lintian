@@ -40,6 +40,9 @@ sub files_patched {
       unless $file->name =~ /^debian/;
 
     return
+      unless $file->is_file;
+
+    return
       unless $file->file_info =~ /text$/;
 
     $self->tag('national-encoding', $file->name)
@@ -52,7 +55,10 @@ sub files_control {
     my ($self, $file) = @_;
 
     return
-      unless $file->is_script;
+      unless $file->is_file;
+
+    return
+      unless $file->file_info =~ /text$/ || $file->is_script;
 
     $self->tag('national-encoding', 'CONTROL-FILE:' . $file->name)
       unless $file->is_valid_utf8;
