@@ -46,8 +46,10 @@ use constant NEWLINE => qq{\n};
 use Moo;
 use namespace::clean;
 
-with 'Lintian::Index','Lintian::Index::Scripts';
-with 'Lintian::Index','Lintian::Index::Control::Scripts';
+with 'Lintian::Index',
+  'Lintian::Index::Control::Scripts',
+  'Lintian::Index::FileInfo',
+  'Lintian::Index::Scripts';
 
 =encoding utf-8
 
@@ -89,6 +91,7 @@ sub collect {
     $self->unpack($groupdir);
     $self->load;
 
+    $self->add_fileinfo;
     $self->add_scripts;
     $self->add_control;
 
