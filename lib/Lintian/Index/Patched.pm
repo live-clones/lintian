@@ -30,7 +30,7 @@ use IO::Async::Loop;
 use IO::Async::Process;
 use Path::Tiny;
 
-use Lintian::File::Path;
+use Lintian::Index::Item;
 use Lintian::Util qw(safe_qx);
 
 # Read up to 40kB at the time.  This happens to be 4096 "tar records"
@@ -178,7 +178,7 @@ sub unpack {
 
     while(defined(my $first = shift @lines)) {
 
-        my $entry = Lintian::File::Path->new;
+        my $entry = Lintian::Index::Item->new;
 
         $first
           =~ /^($permissionspattern)\ ($sizepattern)\ ($datepattern)\+($timepattern)$/s;

@@ -33,6 +33,7 @@ use List::MoreUtils qw(uniq);
 use Path::Tiny;
 
 use Lintian::Deb822Parser qw(read_dpkg_control);
+use Lintian::Index::Item;
 
 use constant EMPTY => q{};
 use constant SPACE => q{ };
@@ -217,7 +218,7 @@ sub create {
         my %single;
         for my $line (@lines) {
 
-            my $entry = Lintian::File::Path->new;
+            my $entry = Lintian::Index::Item->new;
             $entry->init_from_tar_output($line);
 
             $single{$entry->name} = $entry;

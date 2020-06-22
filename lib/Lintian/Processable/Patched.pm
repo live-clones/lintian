@@ -26,6 +26,7 @@ use autodie;
 
 use Path::Tiny;
 
+use Lintian::Index::Item;
 use Lintian::Index::Patched;
 
 use Moo::Role;
@@ -126,10 +127,10 @@ sub sorted_index {
 =item index_resolved_path(PATH)
 
 Resolve PATH (relative to the root of the package) and return the
-L<entry|Lintian::File::Path> denoting the resolved path.
+L<entry|Lintian::Index::Item> denoting the resolved path.
 
 The resolution is done using
-L<resolve_path|Lintian::File::Path/resolve_path([PATH])>.
+L<resolve_path|Lintian::Index::Item/resolve_path([PATH])>.
 
 =cut
 

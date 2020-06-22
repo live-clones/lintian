@@ -1,5 +1,5 @@
 # -*- perl -*-
-# Lintian::File::Path -- Representation of path entry in a package
+# Lintian::Index::Item -- Representation of path entry in a package
 #
 # Copyright © 2011 Niels Thykier
 # Copyright © 2020 Felix Lechner
@@ -17,7 +17,7 @@
 # You should have received a copy of the GNU General Public License along with
 # this program.  If not, see <http://www.gnu.org/licenses/>.
 
-package Lintian::File::Path;
+package Lintian::Index::Item;
 
 use v5.20;
 use warnings;
@@ -78,7 +78,7 @@ use overload (
 
 =head1 NAME
 
-Lintian::File::Path - Lintian representation of a path entry in a package
+Lintian::Index::Item - Lintian representation of a path entry in a package
 
 =head1 SYNOPSIS
 
