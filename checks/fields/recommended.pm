@@ -63,28 +63,30 @@ my @CHANGES = qw(Urgency);
 sub source {
     my ($self) = @_;
 
-    my @control_fields = keys %{$self->processable->field};
+    my @missing_dsc
+      = $self->find_missing(\@DSC, [keys %{$self->processable->field}]);
 
     my $dscfile = path($self->processable->path)->basename;
-    $self->tag_missing_fields($dscfile, \@DSC, \@control_fields);
-
-    my $controlfile = 'debian/control';
+    $self->tag('recommended-field', $dscfile, $_) for @missing_dsc;
 
     # look at d/control source paragraph
-    my @source_fields = keys %{$self->processable->source_field};
-    $self->tag_missing_fields($controlfile . AT . 'source',
-        \@DEBIAN_CONTROL_SOURCE, \@source_fields);
+    my @missing_control_source = $self->find_missing(\@DEBIAN_CONTROL_SOURCE,
+        [keys %{$self->processable->source_field}]);
+
+    my $controlfile = 'debian/control';
+    $self->tag('recommended-field', $controlfile . AT . 'source', $_)
+      for @missing_control_source;
 
     # look at d/control installable paragraphs
     my @installables = $self->processable->binaries;
     for my $installable (@installables) {
-        my @installable_fields
-          = keys %{$self->processable->binary_field($installable)};
-        $self->tag_missing_fields(
-            $controlfile . AT . $installable,
-            \@DEBIAN_CONTROL_INSTALLABLE,
-            \@installable_fields
-        );
+
+        my @missing_control_installable
+          = $self->find_missing(\@DEBIAN_CONTROL_INSTALLABLE,
+            [keys %{$self->processable->binary_field($installable)}]);
+
+        $self->tag('recommended-field', $controlfile . AT . $installable, $_)
+          for @missing_control_installable;
     }
 
     return;
@@ -93,11 +95,13 @@ sub source {
 sub installable {
     my ($self) = @_;
 
-    my @control_fields = keys %{$self->processable->field};
+    my @missing_installation_control
+      = $self->find_missing(\@INSTALLATION_CONTROL,
+        [keys %{$self->processable->field}]);
 
     my $debfile = path($self->processable->path)->basename;
-    $self->tag_missing_fields($debfile, \@INSTALLATION_CONTROL,
-        \@control_fields);
+    $self->tag('recommended-field', $debfile, $_)
+      for @missing_installation_control;
 
     return;
 }
@@ -105,24 +109,29 @@ sub installable {
 sub changes {
     my ($self) = @_;
 
-    my @control_fields = keys %{$self->processable->field};
+    my @missing_changes
+      = $self->find_missing(\@CHANGES, [keys %{$self->processable->field}]);
 
     my $changesfile = path($self->processable->path)->basename;
-    $self->tag_missing_fields($changesfile, \@CHANGES, \@control_fields);
+    $self->tag('recommended-field', $changesfile, $_) for @missing_changes;
 
     return;
 }
 
-sub tag_missing_fields {
-    my ($self, $location, $required, $actual) = @_;
+sub find_missing {
+    my ($self, $required, $actual) = @_;
+
+    my %required_lookup = map { lc $_ => $_ } @{$required};
+    my @actual_lowercase = map { lc } @{$actual};
 
     # select fields for announcement
-    my $missinglc = List::Compare->new($required, $actual);
-    my @missing = $missinglc->get_Lonly;
+    my $missinglc
+      = List::Compare->new([keys %required_lookup], \@actual_lowercase);
+    my @missing_lowercase = $missinglc->get_Lonly;
 
-    $self->tag('recommended-field', $location, $_) for @missing;
+    my @missing = map { $required_lookup{$_} } @missing_lowercase;
 
-    return;
+    return @missing;
 }
 
 1;
