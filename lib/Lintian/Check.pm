@@ -63,6 +63,30 @@ has processable => (is => 'rw', default => sub { {} });
 has group => (is => 'rw', default => sub { {} });
 has info => (is => 'rw');
 
+=item loop
+
+=cut
+
+sub loop {
+    my ($self, $index) = @_;
+
+    my $setup_entry = "setup_$index";
+    $self->$setup_entry
+      if $self->can($setup_entry);
+
+    my $files_entry = "files_$index";
+    if ($self->can($files_entry)) {
+
+        $self->$files_entry($_) for $self->processable->$index->sorted_list;
+    }
+
+    my $breakdown_entry = "breakdown_$index";
+    $self->$breakdown_entry
+      if $self->can($breakdown_entry);
+
+    return;
+}
+
 =item run
 
 Run the check.
@@ -74,13 +98,20 @@ sub run {
 
     my $type = $self->processable->type;
 
+    $self->loop('patched')
+      if $type eq 'source';
+
     if ($type eq 'binary' || $type eq 'udeb') {
+
+        $self->loop('control');
+
+        $self->loop('installed');
 
         $self->setup
           if $self->can('setup');
 
         if ($self->can('files')) {
-            $self->files($_)for $self->processable->installed->sorted_list;
+            $self->files($_) for $self->processable->installed->sorted_list;
         }
 
         $self->breakdown
