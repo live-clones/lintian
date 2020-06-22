@@ -178,7 +178,6 @@ sub test_check_desc {
         my $content_type = 'Check';
         my $cname = $header->{'Check-Script'}//'';
         my $ctype = $header->{'Type'} // '';
-        my $needs = $header->{'Needs-Info'} // '';
         my $i = 1; # paragraph counter.
         $builder->ok(1, "Can parse check $desc_file");
 

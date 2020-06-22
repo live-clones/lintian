@@ -72,8 +72,6 @@ NB: If sorted_index includes a debian packaging, it is was
 contained in upstream part of the source package (or the package is
 native).
 
-Needs-Info requirements for using I<orig_index>: src-orig-index
-
 =cut
 
 sub orig_index {
@@ -103,8 +101,6 @@ L<resolve_path|Lintian::Index::Item/resolve_path([PATH])>.
 NB: If orig_index_resolved_path includes a debian packaging, it is was
 contained in upstream part of the source package (or the package is
 native).
-
-Needs-Info requirements for using I<orig_index_resolved_path>: L<Same as orig_index|/orig_index (FILE)>
 
 =cut
 

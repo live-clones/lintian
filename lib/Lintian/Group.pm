@@ -770,7 +770,6 @@ Note: Self-dependencies (if any) are I<not> included in the result.
 
 =cut
 
-# sub direct_dependencies Needs-Info <>
 sub direct_dependencies {
     my ($self, $processable) = @_;
 
@@ -821,7 +820,6 @@ Note: Self-dependencies (if any) are I<not> included in the result.
 
 =cut
 
-# sub direct_reliants Needs-Info <>
 sub direct_reliants {
     my ($self, $processable) = @_;
 
@@ -868,7 +866,6 @@ Example: Package alot-doc (#687464)
 
 =cut
 
-# sub spelling_exceptions Needs-Info <>
 sub spelling_exceptions {
     my ($self) = @_;
 

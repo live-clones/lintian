@@ -74,8 +74,6 @@ L</sorted_control_index>.  To actually access the underlying file
 Note that the "root directory" (denoted by the empty string) will
 always be present, even if the underlying tarball omits it.
 
-Needs-Info requirements for using I<control_index>: bin-pkg-control
-
 =cut
 
 sub control_index {
@@ -93,8 +91,6 @@ to L</control ([FILE])> or L</control_index (FILE)> as is.
 The array will not contain the entry for the "root" of the
 control.tar.gz.
 
-Needs-Info requirements for using I<sorted_control_index>: L<Same as control_index|/control_index (FILE)>
-
 =cut
 
 sub sorted_control_index {
@@ -110,8 +106,6 @@ L<entry|Lintian::Index::Item> denoting the resolved path.
 
 The resolution is done using
 L<resolve_path|Lintian::Index::Item/resolve_path([PATH])>.
-
-Needs-Info requirements for using I<control_index_resolved_path>: L<Same as control_index|/control_index (FILE)>
 
 =cut
 

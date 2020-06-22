@@ -91,8 +91,6 @@ object will be empty (always satisfied and implies nothing).
 Any substvars in F<debian/control> will be represented in the returned
 relation as packages named after the substvar.
 
-Needs-Info requirements for using I<binary_relation>: L<Same as binary_field|/binary_field (PACKAGE[, FIELD[, DEFAULT]])>
-
 =item saved_binary_relations
 
 =cut

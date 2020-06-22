@@ -78,8 +78,6 @@ returned list as they do in the control file.
 
 I<Note>: Package names that are not valid are silently ignored.
 
-Needs-Info requirements for using I<binaries>: L<Same as binary_package_type|/binary_package_type (BINARY)>
-
 =cut
 
 sub binaries {
@@ -99,8 +97,6 @@ X-Package-Type) field.  If the field is omitted, the default value
 
 If the BINARY is not a binary listed in the source packages
 F<debian/control> file, this method return C<undef>.
-
-Needs-Info requirements for using I<binary_package_type>: L<Same as binary_field|/binary_field (PACKAGE[, FIELD[, DEFAULT]])>
 
 =cut
 

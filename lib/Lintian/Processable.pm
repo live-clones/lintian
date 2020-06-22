@@ -353,8 +353,6 @@ control section of the package.
 
 If FIELD is passed but not present, then this method returns undef.
 
-Needs-Info requirements for using I<unfolded_field>: none
-
 =cut
 
 sub unfolded_field {
@@ -401,8 +399,6 @@ DEFAULT (if given) or undef.
 
 Otherwise this will return a hash of fields, where the key is the field
 name (in all lowercase).
-
-Needs-Info requirements for using I<field>: none
 
 =cut
 

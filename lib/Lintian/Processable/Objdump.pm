@@ -54,8 +54,6 @@ Returns a hashref mapping a FILE to the data collected by objdump-info
 or C<undef> if no data is available for that FILE.  Data is generally
 only collected for ELF files.
 
-Needs-Info requirements for using I<objdump_info>: objdump-info
-
 =cut
 
 sub objdump_info {

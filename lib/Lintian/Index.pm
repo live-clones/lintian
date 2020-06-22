@@ -120,8 +120,6 @@ NB: If sorted_index includes a debian packaging, it is was
 contained in upstream part of the source package (or the package is
 native).
 
-Needs-Info requirements for using I<orig_index>: src-orig-index
-
 =cut
 
 sub lookup {

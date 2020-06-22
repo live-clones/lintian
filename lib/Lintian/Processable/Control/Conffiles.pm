@@ -48,8 +48,6 @@ Lintian::Processable::Control::Conffiles provides an interface to control data f
 
 Returns a list of absolute filenames found for conffiles.
 
-Needs-Info requirements for using I<conffiles>: L<Same as control_index_resolved_path|/control_index_resolved_path(PATH)>
-
 =cut
 
 sub conffiles {
@@ -98,8 +96,6 @@ Note that FILE should be the filename relative to the package root
 (even though the control file uses absolute paths).  If the control
 file does relative paths, they are assumed to be relative to the
 package root as well (and used without warning).
-
-Needs-Info requirements for using I<is_conffile>: L<Same as control_index_resolved_path|/control_index_resolved_path(PATH)>
 
 =cut
 
