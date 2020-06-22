@@ -24,8 +24,7 @@ use autodie;
 
 use Path::Tiny;
 
-use Lintian::Deb822Parser qw(parse_dpkg_control);
-use Lintian::Util qw(open_gz);
+use Lintian::Deb822Parser qw(parse_dpkg_control_string);
 
 use constant EMPTY => q{};
 
@@ -68,31 +67,41 @@ sub objdump_info {
     my @objdump = map { $_->objdump } $self->installed->sorted_list;
     my $concatenated = join(EMPTY, @objdump);
 
-    open(my $fd, '<', \$concatenated);
+    my @paragraphs = parse_dpkg_control_string($concatenated);
 
     my %objdump_info;
     local $_;
 
-    foreach my $pg (parse_dpkg_control($fd)) {
+    for my $paragraph (@paragraphs) {
+
         my %info;
-        if (lc($pg->{'Broken'}//'no') eq 'yes') {
-            $info{'ERRORS'} = 1;
-        }
-        if (lc($pg->{'Bad-Dynamic-Table'}//'no') eq 'yes') {
-            $info{'BAD-DYNAMIC-TABLE'} = 1;
-        }
-        $info{'ELF-TYPE'} = $pg->{'Elf-Type'} if $pg->{'Elf-Type'};
-        foreach my $symd (split m/\s*\n\s*/, $pg->{'Dynamic-Symbols'}//'') {
-            next unless $symd;
+
+        $info{'ERRORS'} = 1
+          if lc($paragraph->{'Broken'}//'no') eq 'yes';
+
+        $info{'BAD-DYNAMIC-TABLE'} = 1
+          if lc($paragraph->{'Bad-Dynamic-Table'}//'no') eq 'yes';
+
+        $info{'ELF-TYPE'} = $paragraph->{'Elf-Type'}
+          if defined $paragraph->{'Elf-Type'};
+
+        for
+          my $symd (split m/\s*\n\s*/, $paragraph->{'Dynamic-Symbols'}//EMPTY){
+            next
+              unless length $symd;
+
             if ($symd =~ m/^\s*(\S+)\s+(?:(\S+)\s+)?(\S+)$/){
                 # $ver is not always there
                 my ($sec, $ver, $sym) = ($1, $2, $3);
-                $ver //= '';
+                $ver //= EMPTY;
                 push @{ $info{'SYMBOLS'} }, [$sec, $ver, $sym];
             }
         }
-        foreach my $section (split m/\s*\n\s*/, $pg->{'Section-Headers'}//'') {
-            next unless $section;
+
+        for my $section (split m/\s*\n\s*/,
+            $paragraph->{'Section-Headers'}//EMPTY){
+            next
+              unless length $section;
             # NB: helpers/coll/objdump-info-helper discards most
             # sections.  If you are missing a section name for a
             # check, please update helpers/coll/objdump-info-helper to
@@ -103,20 +112,31 @@ sub objdump_info {
 
             $info{'SH'}{$section} = 1;
         }
-        foreach my $data (split m/\s*\n\s*/, $pg->{'Program-Headers'}//'') {
-            next unless $data;
+
+        for
+          my $data (split m/\s*\n\s*/, $paragraph->{'Program-Headers'}//EMPTY){
+            next
+              unless length $data;
+
             my ($header, @vals) = split m/\s++/, $data;
-            foreach my $extra (@vals) {
+
+            for my $extra (@vals) {
+
                 my ($opt, $val) = split m/=/, $extra;
                 if ($opt eq 'interp' and $header eq 'INTERP') {
                     $info{'INTERP'} = $val;
+
                 } else {
                     $info{'PH'}{$header}{$opt} = $val;
                 }
             }
         }
-        foreach my $data (split m/\s*\n\s*/, $pg->{'Dynamic-Section'}//'') {
-            next unless $data;
+
+        for
+          my $data (split m/\s*\n\s*/, $paragraph->{'Dynamic-Section'}//EMPTY){
+            next
+              unless length $data;
+
             # Here we just need RPATH and NEEDS, so ignore the rest for now
             my ($header, $val) = split(m/\s++/, $data, 2);
             if ($header eq 'RPATH' or $header eq 'RUNPATH') {
@@ -124,10 +144,13 @@ sub objdump_info {
                 for my $rpathcomponent (split(/:/, $val // EMPTY)) {
                     $info{$header}{$rpathcomponent} = 1;
                 }
+
             } elsif ($header eq 'NEEDED' or $header eq 'SONAME') {
                 push @{ $info{$header} }, $val;
+
             } elsif ($header eq 'TEXTREL' or $header eq 'DEBUG') {
                 $info{$header} = 1;
+
             } elsif ($header eq 'FLAGS_1') {
                 for my $flag (split(m/\s++/, $val)) {
                     $info{$header}{$flag} = 1;
@@ -135,7 +158,8 @@ sub objdump_info {
             }
         }
 
-        if ($pg->{'Filename'} =~ m,^(.+)\(([^/\)]+)\)$,) {
+        if ($paragraph->{'Filename'} =~ m,^(.+)\(([^/\)]+)\)$,) {
+
             # object file in a static lib.
             my ($lib, $obj) = ($1, $2);
             my $libentry = $objdump_info{$lib};
@@ -145,15 +169,16 @@ sub objdump_info {
                     'objects'  => [$obj],
                 };
                 $objdump_info{$lib} = $libentry;
+
             } else {
                 push @{ $libentry->{'objects'} }, $obj;
             }
         }
-        $objdump_info{$pg->{'Filename'}} = \%info;
-    }
-    $self->{objdump_info} = \%objdump_info;
 
-    close($fd);
+        $objdump_info{$paragraph->{'Filename'}} = \%info;
+    }
+
+    $self->{objdump_info} = \%objdump_info;
 
     return $self->{objdump_info};
 }

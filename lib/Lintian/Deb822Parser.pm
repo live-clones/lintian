@@ -37,8 +37,6 @@ our %EXPORT_TAGS = (constants =>
 our @EXPORT_OK = (qw(
       visit_dpkg_paragraph
       visit_dpkg_paragraph_string
-      parse_dpkg_control
-      parse_dpkg_control_lc
       parse_dpkg_control_string
       parse_dpkg_control_string_lc
       read_dpkg_control
@@ -124,9 +122,67 @@ file is considered a syntax error.
 
 =over 4
 
-=item parse_dpkg_control(HANDLE[, FLAGS[, LINES]])
+=item read_dpkg_control(FILE[, FLAGS[, LINES]])
 
-Reads a debian control file from HANDLE and returns a list of
+This is a convenience function to ease using L</parse_dpkg_control>
+with paths to files (rather than open handles).  The first argument
+must be the path to a FILE, which should be read as a debian control
+file.  If the file is empty, an empty list is returned.
+
+Otherwise, this behaves like:
+
+ use autodie;
+ 
+ open(my $fd, '<:encoding(UTF-8)', FILE); # or '<'
+ my @p = parse_dpkg_control($fd, FLAGS, LINES);
+ close($fd);
+ return @p;
+
+This goes without saying that may fail with any of the messages that
+L</parse_dpkg_control(HANDLE[, FLAGS[, LINES]])> do.  It can also emit
+autodie exceptions if open or close fails.
+
+=cut
+
+sub read_dpkg_control {
+    my ($file, $flags, $field_starts) = @_;
+
+    open(my $handle, '<:encoding(UTF-8)', $file);
+
+    my @result;
+
+    my $visitor = sub {
+        my ($paragraph, $line) = @_;
+
+        push(@result, $paragraph);
+        push(@{$field_starts}, $line) if defined $field_starts;
+    };
+
+    visit_dpkg_paragraph($visitor, $handle, $flags);
+
+    close $handle;
+
+    return @result;
+}
+
+=item read_dpkg_control_lc(FILE[, FLAGS[, LINES]])
+
+=cut
+
+sub read_dpkg_control_lc {
+    my ($file, $flags, $field_starts) = @_;
+
+    my @result = read_dpkg_control(@_);
+
+    lowercase_field_names(\@result);
+    lowercase_field_names($field_starts);
+
+    return @result;
+}
+
+=item parse_dpkg_control_string(STRING[, FLAGS[, LINES]])
+
+Reads debian control data from STRING and returns a list of
 paragraphs in it.  A paragraph is represented via a hashref, which
 maps (lower cased) field names to their values.
 
@@ -148,40 +204,6 @@ L</visit_dpkg_paragraph> for the finer semantics of how the
 control file is parsed.
 
 NB: parse_dpkg_control does I<not> close the handle for the caller.
-
-=cut
-
-sub parse_dpkg_control {
-    my ($handle, $flags, $field_starts) = @_;
-
-    my @result;
-    my $c = sub {
-        my ($para, $line) = @_;
-        push @result, $para;
-        push @$field_starts, $line if defined $field_starts;
-    };
-
-    visit_dpkg_paragraph($c, $handle, $flags);
-
-    return @result;
-}
-
-=item parse_dpkg_control_lc(HANDLE[, FLAGS[, LINES]])
-
-=cut
-
-sub parse_dpkg_control_lc {
-    my ($handle, $flags, $field_starts) = @_;
-
-    my @result = parse_dpkg_control(@_);
-
-    lowercase_field_names(\@result);
-    lowercase_field_names($field_starts);
-
-    return @result;
-}
-
-=item parse_dpkg_control_string(STRING[, FLAGS[, LINES]])
 
 =cut
 
@@ -611,52 +633,6 @@ sub visit_dpkg_paragraph_string {
       if $signed && !$signature;
 
     return;
-}
-
-=item read_dpkg_control(FILE[, FLAGS[, LINES]])
-
-This is a convenience function to ease using L</parse_dpkg_control>
-with paths to files (rather than open handles).  The first argument
-must be the path to a FILE, which should be read as a debian control
-file.  If the file is empty, an empty list is returned.
-
-Otherwise, this behaves like:
-
- use autodie;
- 
- open(my $fd, '<:encoding(UTF-8)', FILE); # or '<'
- my @p = parse_dpkg_control($fd, FLAGS, LINES);
- close($fd);
- return @p;
-
-This goes without saying that may fail with any of the messages that
-L</parse_dpkg_control(HANDLE[, FLAGS[, LINES]])> do.  It can also emit
-autodie exceptions if open or close fails.
-
-=cut
-
-sub read_dpkg_control {
-    my ($file, $flags, $field_starts) = @_;
-
-    open(my $CONTROL, '<:encoding(UTF-8)', $file);
-    my @data = parse_dpkg_control($CONTROL, $flags, $field_starts);
-    close($CONTROL);
-
-    return @data;
-}
-
-=item read_dpkg_control_lc(FILE[, FLAGS[, LINES]])
-
-=cut
-
-sub read_dpkg_control_lc {
-    my ($file, $flags, $field_starts) = @_;
-
-    open(my $CONTROL, '<:encoding(UTF-8)', $file);
-    my @data = parse_dpkg_control_lc($CONTROL, $flags, $field_starts);
-    close($CONTROL);
-
-    return @data;
 }
 
 =back
