@@ -16,3 +16,5 @@ foo++ (changes): faulty-debian-qa-group-address Maintainer debian-qa@lists.debia
 foo++ (changes): bogus-mail-host Changed-By he@unknown
 foo++-helper (binary): mail-contact Maintainer "Lintian Maintainer" <debian-qa@lists.debian.org>
 foo++-helper (binary): faulty-debian-qa-group-address Maintainer debian-qa@lists.debian.org -> packages@qa.debian.org
+foo++ (binary): mail-contact Maintainer "Lintian Maintainer" <debian-qa@lists.debian.org>
+foo++ (binary): faulty-debian-qa-group-address Maintainer debian-qa@lists.debian.org -> packages@qa.debian.org

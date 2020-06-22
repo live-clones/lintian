@@ -180,9 +180,6 @@ our $PKGVERSION_REGEX = qr/
 
 Extracts the control file from DEBFILE and returns it as a hashref.
 
-Basically, this is a fancy convenience for setting up an ar + tar pipe
-and passing said pipe to L</parse_dpkgcontrol(HANDLE[, FLAGS[, LINES]])>.
-
 DEBFILE must be an ar file containing a "control.tar.gz" member, which
 in turn should contain a "control" file.  If the "control" file is
 empty this will return an empty list.
@@ -190,11 +187,6 @@ empty this will return an empty list.
 Note: the control file is only expected to have a single paragraph and
 thus only the first is returned (in the unlikely case that there are
 more than one).
-
-This function may fail with any of the messages that
-L</parse_dpkg_control> do.  It can also emit:
-
- "cannot fork to unpack %s: %s\n"
 
 =cut
 
@@ -282,9 +274,6 @@ sub get_deb_info {
     # awaits, and dies on failure with message from failed constituent
     my $composite = Future->needs_all($dpkgfuture, $tarfuture);
     $composite->get;
-
-    return {}
-      unless valid_utf8($control);
 
     my @data = parse_dpkg_control_string($control);
 
