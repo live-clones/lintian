@@ -131,6 +131,7 @@ Enable-Tags-From-Check:
  files/p11-kit,
  files/pam,
  files/permissions,
+ files/permissions/usr-lib,
  files/pkgconfig,
  files/privacy-breach,
  files/scripts,
@@ -190,7 +191,6 @@ Enable-Tags-From-Check:
  triggers,
  udev,
  upstream-signature,
- usr/lib,
  usrmerge,
  vim,
 
