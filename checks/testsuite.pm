@@ -90,11 +90,10 @@ sub source {
             die 'debian tests control is not a regular file';
 
         } elsif ($control->is_valid_utf8) {
+
+            # another check complains about invalid encoding
             my $contents = $control->decoded_utf8;
             $self->check_control_contents($contents);
-
-        } else {
-            $self->tag('debian-tests-control-uses-national-encoding');
         }
 
         $self->tag('unnecessary-testsuite-autopkgtest-field')

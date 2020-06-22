@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: debconf-in-western-encoding
+Description: Western encoding in debconf template

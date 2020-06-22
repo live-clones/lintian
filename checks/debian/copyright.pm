@@ -112,11 +112,9 @@ sub source {
         $self->tag('debian-copyright-is-symlink');
     }
 
-    unless ($file->is_valid_utf8) {
-
-        $self->tag('debian-copyright-file-uses-obsolete-national-encoding');
-        return;
-    }
+    # another check complains about invalid encoding
+    return
+      unless $file->is_valid_utf8;
 
     my $contents = $file->decoded_utf8;
 
@@ -977,13 +975,11 @@ sub binary {
     my $dcopy
       = path($self->processable->groupdir)->child('copyright')->stringify;
 
-    # check that copyright is UTF-8 encoded
     my $bytes = path($dcopy)->slurp;
-    unless (valid_utf8($bytes)) {
 
-        $self->tag('debian-copyright-file-uses-obsolete-national-encoding');
-        return;
-    }
+    # another check complains about invalid encoding
+    return
+      unless valid_utf8($bytes);
 
     # check contents of copyright file
     my $contents = decode_utf8($bytes);

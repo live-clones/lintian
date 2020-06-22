@@ -1,0 +1,5 @@
+Skeleton: upload-non-native
+Testname: doc-base-in-western-encoding
+Source: binary
+Version: 4-1.1
+Description: Western encoding in doc-base

@@ -345,10 +345,9 @@ sub files {
     return
       unless length $bytes;
 
-    unless (valid_utf8($bytes)) {
-        $self->tag('national-encoding-in-manual-page', $file->name);
-        return;
-    }
+    # another check complains about invalid encoding
+    return
+      unless valid_utf8($bytes);
 
     my $contents = decode_utf8($bytes);
     my @lines = split(/\n/, $contents);

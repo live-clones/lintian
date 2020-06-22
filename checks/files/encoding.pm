@@ -25,16 +25,46 @@ use warnings;
 use utf8;
 use autodie;
 
+use IO::Uncompress::Gunzip qw(gunzip $GunzipError);
+use Unicode::UTF8 qw(valid_utf8);
+
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
 
-sub files {
+sub files_patched {
     my ($self, $file) = @_;
 
     return
+      unless $file->name =~ /^debian/;
+
+    return
       unless $file->file_info =~ /text$/;
+
+    $self->tag('national-encoding', $file->name)
+      unless $file->is_valid_utf8;
+
+    return;
+}
+
+sub files_control {
+    my ($self, $file) = @_;
+
+    return
+      unless $file->is_script;
+
+    $self->tag('national-encoding', 'CONTROL-FILE:' . $file->name)
+      unless $file->is_valid_utf8;
+
+    return;
+}
+
+sub files_installed {
+    my ($self, $file) = @_;
+
+    return
+      unless $file->is_file;
 
     # this checks debs; most other nat'l encoding tags are for source
     # Bug#796170 also suggests limiting paths and including gzip files
@@ -45,8 +75,25 @@ sub files {
     #   || $file->name =~ m{\.(?:p[myl]|php|rb|tcl|sh|txt)(?:\.gz)?$}
     #   || $file->name =~ m{^usr/share/doc};
 
-    $self->tag('national-encoding-in-text-file', $file->name)
-      unless $file->is_valid_utf8;
+    if ($file->file_info =~ /text$/) {
+
+        $self->tag('national-encoding', $file->name)
+          unless $file->is_valid_utf8;
+    }
+
+    # for man pages also look at compressed files
+    if (   $file->name =~ m{^usr/share/man/}
+        && $file->file_info =~ /gzip compressed/) {
+
+        my $bytes;
+
+        my $path = $file->unpacked_path;
+        gunzip($path => \$bytes)
+          or die "gunzip $path failed: $GunzipError";
+
+        $self->tag('national-encoding', $file->name)
+          unless valid_utf8($bytes);
+    }
 
     return;
 }

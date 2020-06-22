@@ -263,10 +263,9 @@ sub check_doc_base_file {
 
     my $dbfile = $dbpath->basename;
 
-    unless ($dbpath->is_valid_utf8) {
-        $self->tag('doc-base-file-uses-obsolete-national-encoding', $dbfile);
-        return;
-    }
+    # another check complains about invalid encoding
+    return
+      unless ($dbpath->is_valid_utf8);
 
     my $contents = $dbpath->decoded_utf8;
     my @lines = split(/\n/, $contents);

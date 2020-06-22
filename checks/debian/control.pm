@@ -79,12 +79,9 @@ sub source {
     return
       unless $dcontrol->is_open_ok;
 
-    # check that control is UTF-8 encoded
-    unless ($dcontrol->is_valid_utf8) {
-
-        $self->tag('debian-control-file-uses-obsolete-national-encoding');
-        return;
-    }
+    # another check complains about invalid encoding
+    return
+      unless $dcontrol->is_valid_utf8;
 
     my $contents = $dcontrol->decoded_utf8;
     my @lines = split(/\n/, $contents);

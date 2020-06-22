@@ -360,6 +360,8 @@ sub binary {
     if (-f $dnews) {
 
         my $bytes = path($dnews)->slurp;
+
+        # another check complains about invalid encoding
         if (valid_utf8($bytes)) {
 
             my $contents = decode_utf8($bytes);
@@ -390,9 +392,6 @@ sub binary {
                     $self->tag('debian-news-entry-uses-asterisk');
                 }
             }
-
-        } else {
-            $self->tag('debian-news-file-uses-obsolete-national-encoding');
         }
     }
 
@@ -507,10 +506,10 @@ sub binary {
 
     # check that changelog is UTF-8 encoded
     my $bytes = path($dchpath)->slurp;
-    unless (valid_utf8($bytes)) {
-        $self->tag('debian-changelog-file-uses-obsolete-national-encoding');
-        return;
-    }
+
+    # another check complains about invalid encoding
+    return
+      unless valid_utf8($bytes);
 
     my $changelog = $processable->changelog;
     if (my @errors = @{$changelog->errors}) {

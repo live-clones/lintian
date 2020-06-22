@@ -89,11 +89,9 @@ sub source {
 
         if ($templates_file && $templates_file->is_open_ok) {
 
-            unless ($templates_file->is_valid_utf8) {
-                $self->tag('national-encoding-in-debconf-template',
-                    $templates_file->name);
-                next;
-            }
+            # another check complains about invalid encoding
+            next
+              unless $templates_file->is_valid_utf8;
 
             my $contents = $templates_file->decoded_utf8;
 
