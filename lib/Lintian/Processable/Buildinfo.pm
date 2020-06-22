@@ -25,7 +25,7 @@ use utf8;
 use Carp qw(croak);
 use Path::Tiny;
 
-use Lintian::Util qw(get_dsc_info);
+use Lintian::Deb822Parser qw(read_dpkg_control);
 
 use constant EMPTY => q{};
 use constant COLON => q{:};
@@ -80,8 +80,10 @@ sub init {
     $self->type('buildinfo');
     $self->link_label('buildinfo');
 
-    my $cinfo = get_dsc_info($self->path)
+    my @paragraphs;
+    @paragraphs = read_dpkg_control($self->path)
       or croak $self->path. ' is not a valid '. $self->type . ' file';
+    my $cinfo = $paragraphs[0];
 
     $self->verbatim($cinfo);
 

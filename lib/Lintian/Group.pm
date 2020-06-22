@@ -36,12 +36,13 @@ use Time::HiRes qw(gettimeofday tv_interval);
 use Time::Piece;
 use Unicode::UTF8 qw(valid_utf8 decode_utf8);
 
+use Lintian::Deb822Parser qw(parse_dpkg_control_string);
 use Lintian::Processable::Binary;
 use Lintian::Processable::Buildinfo;
 use Lintian::Processable::Changes;
 use Lintian::Processable::Source;
 use Lintian::Processable::Udeb;
-use Lintian::Util qw(get_dsc_info_from_string human_bytes);
+use Lintian::Util qw(human_bytes);
 
 use constant EMPTY => q{};
 use constant SPACE => q{ };
@@ -225,8 +226,10 @@ sub init_from_file {
         $contents = $bytes;
     }
 
-    my $info = get_dsc_info_from_string($contents)
+    my @paragraphs;
+    @paragraphs = parse_dpkg_control_string($contents)
       or die "$path is not a valid $type file";
+    my $info = $paragraphs[0];
 
     my $dir = $path;
     if ($path =~ m,^/+[^/]++$,){

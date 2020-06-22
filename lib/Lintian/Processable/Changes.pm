@@ -26,7 +26,7 @@ use Carp qw(croak);
 use Path::Tiny;
 use Unicode::UTF8 qw(valid_utf8 decode_utf8);
 
-use Lintian::Util qw(get_dsc_info_from_string);
+use Lintian::Deb822Parser qw(parse_dpkg_control_string);
 
 use constant EMPTY => q{};
 use constant COLON => q{:};
@@ -92,8 +92,10 @@ sub init {
         $contents = $bytes;
     }
 
-    my $cinfo = get_dsc_info_from_string($contents)
+    my @paragraphs;
+    @paragraphs = parse_dpkg_control_string($contents)
       or croak $self->path. ' is not a valid '. $self->type . ' file';
+    my $cinfo = $paragraphs[0];
 
     $self->verbatim($cinfo);
 

@@ -89,17 +89,6 @@ convenience functions are probably what you are looking for.
 
 =over 4
 
-=item Use L<Lintian::Util/get_deb_info> when
-
-You have a I<.deb> (or I<.udeb>) file and you want the control file
-from it.
-
-=item Use L<Lintian::Util/get_dsc_info> when
-
-You have a I<.dsc> (or I<.changes>) file.  Alternative, it is also
-useful if you have a control file and only care about the first
-paragraph.
-
 =item Use L</read_dpkg_control> when
 
 You have a debian control file (such I<debian/control>) and you want

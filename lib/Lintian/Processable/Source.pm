@@ -26,7 +26,7 @@ use autodie;
 use Carp qw(croak);
 use Path::Tiny;
 
-use Lintian::Util qw(get_dsc_info);
+use Lintian::Deb822Parser qw(read_dpkg_control);
 
 use constant EMPTY => q{};
 use constant COLON => q{:};
@@ -93,8 +93,10 @@ sub init {
     $self->type('source');
     $self->link_label('dsc');
 
-    my $dinfo = get_dsc_info($self->path)
+    my @paragraphs;
+    @paragraphs = read_dpkg_control($self->path)
       or croak $self->path . ' is not valid dsc file';
+    my $dinfo = $paragraphs[0];
 
     $self->verbatim($dinfo);
 

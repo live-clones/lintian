@@ -291,42 +291,6 @@ sub get_deb_info {
     return $data[0];
 }
 
-=item get_dsc_info (DSCFILE)
-
-Convenience function for reading dsc files.  It will read the DSCFILE
-using L</read_dpkg_control(FILE[, FLAGS[, LINES]])> and then return the
-first paragraph.  If the file has no paragraphs, C<undef> is returned
-instead.
-
-Note: the control file is only expected to have a single paragraph and
-thus only the first is returned (in the unlikely case that there are
-more than one).
-
-This function may fail with any of the messages that
-L</read_dpkg_control(FILE[, FLAGS[, LINES]])> do.
-
-=cut
-
-sub get_dsc_info {
-    my ($file) = @_;
-
-    my @data = read_dpkg_control($file);
-
-    return $data[0];
-}
-
-=item get_dsc_info_from_string (STRING)
-
-=cut
-
-sub get_dsc_info_from_string {
-    my ($text) = @_;
-
-    my @data = parse_dpkg_control_string($text);
-
-    return $data[0];
-}
-
 =item drain_pipe(FD)
 
 Reads and discards any remaining contents from FD, which is assumed to

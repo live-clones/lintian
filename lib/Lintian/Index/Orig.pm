@@ -32,7 +32,7 @@ use IO::Async::Process;
 use List::MoreUtils qw(uniq);
 use Path::Tiny;
 
-use Lintian::Util qw(get_dsc_info);
+use Lintian::Deb822Parser qw(read_dpkg_control);
 
 use constant EMPTY => q{};
 use constant SPACE => q{ };
@@ -98,8 +98,10 @@ sub create {
 
     # determine source and version; handles missing fields
 
-    my $dinfo = get_dsc_info($dscpath)
+    my @paragraphs;
+    @paragraphs = read_dpkg_control($dscpath)
       or croak $dscpath . ' is not valid dsc file';
+    my $dinfo = $paragraphs[0];
 
     my $name = $dinfo->{Source} // EMPTY;
     my $version = $dinfo->{Version} // EMPTY;
