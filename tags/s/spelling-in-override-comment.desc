@@ -1,6 +1,6 @@
 Tag: spelling-in-override-comment
 Severity: warning
-Check: lintian/override/comments
+Check: debian/lintian-overrides/comments
 Info: The comment attached to a Lintian override contains a spelling
  error.
  .

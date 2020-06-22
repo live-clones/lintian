@@ -1,4 +1,4 @@
-# lintian/override/comments -- lintian check script -*- perl -*-
+# debian/lintian-overrides/comments -- lintian check script -*- perl -*-
 
 # Copyright © 2020 Felix Lechner
 #
@@ -18,7 +18,7 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-package Lintian::lintian::override::comments;
+package Lintian::debian::lintian_overrides::comments;
 
 use v5.20;
 use warnings;

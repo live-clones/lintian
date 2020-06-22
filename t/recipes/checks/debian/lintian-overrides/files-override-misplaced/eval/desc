@@ -1,2 +1,2 @@
 Testname: files-override-misplaced
-Check: lintian/overrides
+Check: debian/lintian-overrides

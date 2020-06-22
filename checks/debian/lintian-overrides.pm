@@ -1,4 +1,4 @@
-# lintian/overrides -- lintian check script -*- perl -*-
+# debian/lintian-overrides -- lintian check script -*- perl -*-
 
 # Copyright © 1998 Christian Schwarz and Richard Braakman
 #
@@ -18,7 +18,7 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-package Lintian::lintian::overrides;
+package Lintian::debian::lintian_overrides;
 
 use v5.20;
 use warnings;

@@ -1,6 +1,6 @@
 Tag: capitalization-in-override-comment
 Severity: info
-Check: lintian/override/comments
+Check: debian/lintian-overrides/comments
 Info: The comment attached to a Lintian override probably contains
  a capitalization error.
  .

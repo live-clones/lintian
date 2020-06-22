@@ -1,6 +1,6 @@
 Tag: old-source-override-location
 Severity: pedantic
-Check: lintian/overrides
+Check: debian/lintian-overrides
 Renamed-From: package-uses-deprecated-source-override-location
 Info: This Debian package ships Lintian source-level overrides in the
  <tt>debian/source.lintian-overrides</tt> file.
