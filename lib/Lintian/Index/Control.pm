@@ -46,6 +46,7 @@ use constant NEWLINE => qq{\n};
 use Moo;
 use namespace::clean;
 
+with 'Lintian::Index','Lintian::Index::Scripts';
 with 'Lintian::Index','Lintian::Index::Control::Scripts';
 
 =encoding utf-8
@@ -89,6 +90,7 @@ sub collect {
     $self->load;
 
     $self->add_scripts;
+    $self->add_control;
 
     return;
 }
