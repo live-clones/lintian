@@ -63,26 +63,26 @@ has processable => (is => 'rw', default => sub { {} });
 has group => (is => 'rw', default => sub { {} });
 has info => (is => 'rw');
 
-=item loop
+=item visit
 
 =cut
 
-sub loop {
+sub visit {
     my ($self, $index) = @_;
 
-    my $setup_entry = "setup_$index";
-    $self->$setup_entry
-      if $self->can($setup_entry);
+    my $setup_hook = "setup_$index";
+    $self->$setup_hook
+      if $self->can($setup_hook);
 
-    my $files_entry = "files_$index";
-    if ($self->can($files_entry)) {
+    my $visit_hook = "visit_$index";
+    if ($self->can($visit_hook)) {
 
-        $self->$files_entry($_) for $self->processable->$index->sorted_list;
+        $self->$visit_hook($_) for $self->processable->$index->sorted_list;
     }
 
-    my $breakdown_entry = "breakdown_$index";
-    $self->$breakdown_entry
-      if $self->can($breakdown_entry);
+    my $breakdown_hook = "breakdown_$index";
+    $self->$breakdown_hook
+      if $self->can($breakdown_hook);
 
     return;
 }
@@ -98,14 +98,14 @@ sub run {
 
     my $type = $self->processable->type;
 
-    $self->loop('patched')
+    $self->visit('patched')
       if $type eq 'source';
 
     if ($type eq 'binary' || $type eq 'udeb') {
 
-        $self->loop('control');
+        $self->visit('control');
 
-        $self->loop('installed');
+        $self->visit('installed');
 
         $self->setup
           if $self->can('setup');

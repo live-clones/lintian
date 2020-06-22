@@ -33,71 +33,71 @@ use namespace::clean;
 
 with 'Lintian::Check';
 
-sub files_patched {
-    my ($self, $file) = @_;
+sub visit_patched {
+    my ($self, $item) = @_;
 
     return
-      unless $file->name =~ /^debian/;
+      unless $item->name =~ /^debian/;
 
     return
-      unless $file->is_file;
+      unless $item->is_file;
 
     return
-      unless $file->file_info =~ /text$/;
+      unless $item->file_info =~ /text$/;
 
-    $self->tag('national-encoding', $file->name)
-      unless $file->is_valid_utf8;
+    $self->tag('national-encoding', $item->name)
+      unless $item->is_valid_utf8;
 
     return;
 }
 
-sub files_control {
-    my ($self, $file) = @_;
+sub visit_control {
+    my ($self, $item) = @_;
 
     return
-      unless $file->is_file;
+      unless $item->is_file;
 
     return
-      unless $file->file_info =~ /text$/ || $file->is_script;
+      unless $item->file_info =~ /text$/ || $item->is_script;
 
-    $self->tag('national-encoding', 'CONTROL-FILE:' . $file->name)
-      unless $file->is_valid_utf8;
+    $self->tag('national-encoding', 'CONTROL-FILE:' . $item->name)
+      unless $item->is_valid_utf8;
 
     return;
 }
 
-sub files_installed {
-    my ($self, $file) = @_;
+sub visit_installed {
+    my ($self, $item) = @_;
 
     return
-      unless $file->is_file;
+      unless $item->is_file;
 
     # this checks debs; most other nat'l encoding tags are for source
     # Bug#796170 also suggests limiting paths and including gzip files
 
     # return
-    #   unless $file->name =~ m{^(?:usr/)?s?bin/}
-    #   || $file->name =~ m{^usr/games/}
-    #   || $file->name =~ m{\.(?:p[myl]|php|rb|tcl|sh|txt)(?:\.gz)?$}
-    #   || $file->name =~ m{^usr/share/doc};
+    #   unless $item->name =~ m{^(?:usr/)?s?bin/}
+    #   || $item->name =~ m{^usr/games/}
+    #   || $item->name =~ m{\.(?:p[myl]|php|rb|tcl|sh|txt)(?:\.gz)?$}
+    #   || $item->name =~ m{^usr/share/doc};
 
-    if ($file->file_info =~ /text$/) {
+    if ($item->file_info =~ /text$/) {
 
-        $self->tag('national-encoding', $file->name)
-          unless $file->is_valid_utf8;
+        $self->tag('national-encoding', $item->name)
+          unless $item->is_valid_utf8;
     }
 
     # for man pages also look at compressed files
-    if (   $file->name =~ m{^usr/share/man/}
-        && $file->file_info =~ /gzip compressed/) {
+    if (   $item->name =~ m{^usr/share/man/}
+        && $item->file_info =~ /gzip compressed/) {
 
         my $bytes;
 
-        my $path = $file->unpacked_path;
+        my $path = $item->unpacked_path;
         gunzip($path => \$bytes)
           or die "gunzip $path failed: $GunzipError";
 
-        $self->tag('national-encoding', $file->name)
+        $self->tag('national-encoding', $item->name)
           unless valid_utf8($bytes);
     }
 
