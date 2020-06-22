@@ -60,7 +60,7 @@ sub visit_control {
     return
       unless $item->file_info =~ /text$/ || $item->is_script;
 
-    $self->tag('national-encoding', 'CONTROL-FILE:' . $item->name)
+    $self->tag('national-encoding', 'DEBIAN/' . $item->name)
       unless $item->is_valid_utf8;
 
     return;
