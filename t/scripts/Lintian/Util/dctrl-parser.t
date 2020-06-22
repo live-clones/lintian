@@ -6,7 +6,7 @@ use autodie;
 
 use Test::More;
 
-use Lintian::Deb822Parser qw(visit_dpkg_paragraph);
+use Lintian::Deb822Parser qw(visit_dpkg_paragraph_string);
 
 my %TESTS_BAD = (
     'pgp-sig-before-start' => qr/PGP signature before message/,
@@ -38,12 +38,16 @@ plan tests => scalar keys %TESTS_BAD;
 
 foreach my $filename (sort keys %TESTS_BAD) {
     my $fail_regex = $TESTS_BAD{$filename};
+
     my $path = "$DATADIR/$filename";
     open(my $fd, '<', $path);
+    local $/ = undef;
+    my $string = <$fd>;
+    close $fd;
+
     eval {
-        visit_dpkg_paragraph(sub {}, $fd);
+        visit_dpkg_paragraph_string(sub {}, $string);
     };
-    close($fd);
     if (my $err = $@) {
         like($err, $fail_regex, $filename);
     } else {

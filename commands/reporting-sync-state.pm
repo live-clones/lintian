@@ -30,7 +30,7 @@ use File::Basename qw(basename);
 use YAML::XS ();
 use MIME::Base64 qw(encode_base64);
 
-use Lintian::Deb822Parser qw(visit_dpkg_paragraph);
+use Lintian::Deb822Parser qw(visit_dpkg_paragraph_string);
 use Lintian::Relation::Version qw(versions_comparator);
 use Lintian::Reporting::Util qw(
   find_backlog
@@ -454,40 +454,53 @@ sub local_mirror_manifests {
     foreach my $dist (@$dists) {
         foreach my $component (@{$components}) {
             my $srcs = "$mirdir/dists/$dist/$component/source/Sources";
-            my ($srcfd, $srcsub);
+
             my %extra_metadata = (
                 'component' => $component,
                 'mirror-dir' => $mirdir,
             );
+
             # Binaries have a "per arch" file.
             # - we check those first and then include the source packages that
             #   are referred to by these binaries.
+
             my $dist_path = "$mirdir/dists/$dist/$component";
-            foreach my $arch (@{$archs}) {
+            for my $arch (@{$archs}) {
+
                 my $pkgs = "${dist_path}/binary-$arch/Packages";
-                my $upkgs
-                  = "${dist_path}/debian-installer/binary-$arch/Packages";
                 my $pkgfd = _open_data_file($pkgs);
+                local $/ = undef;
+                my $pkgstring = <$pkgfd>;
+                close $pkgfd;
+
                 my $binsub = sub {
                     _parse_pkgs_pg($state, $blacklist, \%extra_metadata,
                         'binary', @_);
                 };
-                my $upkgfd;
+                visit_dpkg_paragraph_string($binsub, $pkgstring);
+
+                my $upkgs
+                  = "${dist_path}/debian-installer/binary-$arch/Packages";
+                my $upkgfd = _open_data_file($upkgs);
+                local $/ = undef;
+                my $upkgstring = <$upkgfd>;
+                close $upkgfd;
+
                 my $udebsub = sub {
                     _parse_pkgs_pg($state, $blacklist, \%extra_metadata,
                         'udeb', @_);
                 };
-                visit_dpkg_paragraph($binsub, $pkgfd);
-                close($pkgfd);
-                $upkgfd = _open_data_file($upkgs);
-                visit_dpkg_paragraph($udebsub, $upkgfd);
-                close($upkgfd);
+                visit_dpkg_paragraph_string($udebsub, $upkgstring);
             }
-            $srcfd = _open_data_file($srcs);
-            $srcsub
+
+            my $srcfd = _open_data_file($srcs);
+            local $/ = undef;
+            my $srcstring = <$srcfd>;
+            close $srcfd;
+
+            my $srcsub
               = sub { _parse_srcs_pg($state, $blacklist, \%extra_metadata, @_) };
-            visit_dpkg_paragraph($srcsub, $srcfd);
-            close($srcfd);
+            visit_dpkg_paragraph_string($srcsub, $srcstring);
         }
     }
     return;

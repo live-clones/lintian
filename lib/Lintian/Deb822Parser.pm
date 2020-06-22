@@ -35,7 +35,6 @@ use constant {
 our %EXPORT_TAGS = (constants =>
       [qw(DCTRL_DEBCONF_TEMPLATE DCTRL_NO_COMMENTS DCTRL_COMMENTS_AT_EOL)],);
 our @EXPORT_OK = (qw(
-      visit_dpkg_paragraph
       visit_dpkg_paragraph_string
       parse_dpkg_control_string
       parse_dpkg_control_string_lc
@@ -78,12 +77,8 @@ Most subs are imported only on request.
 
 At first glance, this module appears to contain several debian control
 parsers.  In practise, there is only one real parser
-(L</visit_dpkg_paragraph>) - the rest are convenience functions around
+(L</visit_dpkg_paragraph_string>) - the rest are convenience functions around
 it.
-
-If you have very large files (e.g. Packages_amd64), you almost
-certainly want L</visit_dpkg_paragraph>.  Otherwise, one of the
-convenience functions are probably what you are looking for.
 
 =over 4
 
@@ -91,11 +86,6 @@ convenience functions are probably what you are looking for.
 
 You have a debian control file (such I<debian/control>) and you want
 a number of paragraphs from it.
-
-=item Use L</parse_dpkg_control> when
-
-When you would have used L</read_dpkg_control>, except you have an
-open filehandle rather than a file name.
 
 =back
 
@@ -148,6 +138,9 @@ sub read_dpkg_control {
     my ($file, $flags, $field_starts) = @_;
 
     open(my $handle, '<:encoding(UTF-8)', $file);
+    local $/ = undef;
+    my $string = <$handle>;
+    close $handle;
 
     my @result;
 
@@ -158,9 +151,7 @@ sub read_dpkg_control {
         push(@{$field_starts}, $line) if defined $field_starts;
     };
 
-    visit_dpkg_paragraph($visitor, $handle, $flags);
-
-    close $handle;
+    visit_dpkg_paragraph_string($visitor, $string, $flags);
 
     return @result;
 }
@@ -262,9 +253,9 @@ sub lowercase_field_names {
     return;
 }
 
-=item visit_dpkg_paragraph (CODE, HANDLE[, FLAGS])
+=item visit_dpkg_paragraph_string (CODE, STRING[, FLAGS])
 
-Reads a debian control file from HANDLE and passes each paragraph to
+Reads debian control data from STRING and passes each paragraph to
 CODE.  A paragraph is represented via a hashref, which maps (lower
 cased) field names to their values.
 
@@ -388,19 +379,6 @@ The file had a "BEGIN PGP MESSAGE" header, but no signature was
 present.
 
 =back
-
-=cut
-
-sub visit_dpkg_paragraph {
-    my ($code, $CONTROL, $flags) = @_;
-
-    local $/ = undef;
-    my $string = <$CONTROL>;
-
-    return visit_dpkg_paragraph_string($code, $string, $flags);
-}
-
-=item visit_dpkg_paragraph_string (CODE, STRING[, FLAGS])
 
 =cut
 
