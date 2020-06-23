@@ -48,8 +48,9 @@ my @DSC = qw(Format Source Version Maintainer Standards-Version
   Checksums-Sha1 Checksums-Sha256 Files);
 
 # policy 5.5
-my @CHANGES = qw(Format Date Source Binary Architecture Version Distribution
-  Maintainer Description Changes Checksums-Sha1 Checksums-Sha256 Files);
+# Binary and Description were removed, see Bug#963524
+my @CHANGES = qw(Format Date Source Architecture Version Distribution
+  Maintainer Changes Checksums-Sha1 Checksums-Sha256 Files);
 
 sub source {
     my ($self) = @_;
