@@ -1,5 +1,0 @@
-filenames (source): recommended-field debian/control@source Section
-filenames (source): recommended-field debian/control@source Priority
-filenames (binary): recommended-field filenames_12-0.1_amd64.deb Section
-filenames (binary): recommended-field filenames_12-0.1_amd64.deb Priority
-filename-games (binary): recommended-field filename-games_12-0.1_all.deb Priority
