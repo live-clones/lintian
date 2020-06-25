@@ -1,3 +1,3 @@
-Testname: lib-lib
+Testname: share-doc-share
 Check: files/hierarchy/path-segments
 References: Bug#950052, Bug#950027

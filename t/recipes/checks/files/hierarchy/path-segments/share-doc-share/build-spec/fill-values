@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: share-doc-share
+Description: Installs a file into /usr/share/doc/share
