@@ -3,7 +3,7 @@ Severity: warning
 Certainty: possible
 Check: debhelper
 Info: The <tt>debian/rules</tt> file appears to include a suspiciously
- high number of <tt>dh_override_</tt>-style overrides.
+ high number of <tt>override_dh_</tt>-style overrides.
  .
  It is likely that is this was intended to optimise package builds by
  introducing "no-op" overrides that avoid specific debhelper commands.
