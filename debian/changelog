@@ -101,7 +101,7 @@ lintian (2.81.0) unstable; urgency=medium
   * Update data/fields/perl-provides for Perl 5.030003.
 
   [ Paul Wise ]
-  * spelling: Add several corrections and sort using the UTF-8 locale.
+  * Add several corrections and sort using the UTF-8 locale.
 
   [ Dylan Aïssi ]
   * Add the requires-r-api and ships-r-site-library tags for the R
