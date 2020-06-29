@@ -1,6 +1,7 @@
 # files/symbolic-links/broken -- lintian check script -*- perl -*-
 #
 # Copyright © 2020 Felix Lechner
+# Copyright © 2020 Chris Lamb <lamby@debian.org>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -43,6 +44,9 @@ sub files {
     my $target = $file->link_normalized;
     return
       unless defined $target;
+
+    # Don't emit for architecture-independent .jar files. (#963939)
+    return if $target->name =~ m{^usr/share/} and $target->name =~ m{\.jar};
 
     if ($file->name =~ m{^usr/lib/}) {
 
