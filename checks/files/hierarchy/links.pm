@@ -46,7 +46,7 @@ sub files {
       unless defined $target;
 
     # Don't emit for architecture-independent .jar files. (#963939)
-    return if $target->name =~ m{^usr/share/} and $target->name =~ m{\.jar};
+    return if $file->name =~ m{^usr/lib/} and $file->name =~ m{\.jar};
 
     if ($file->name =~ m{^usr/lib/}) {
 
