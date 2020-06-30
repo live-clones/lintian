@@ -9,4 +9,3 @@ filenames (binary): embedded-javascript-library usr/share/filenames/jquery.pack.
 filenames (binary): embedded-javascript-library usr/share/filenames/jquery.min.js please use libjs-jquery
 filenames (binary): embedded-javascript-library usr/share/filenames/jquery.lite.js please use libjs-jquery
 filenames (binary): embedded-javascript-library usr/share/filenames/jquery.js please use libjs-jquery
-filenames (binary): embedded-feedparser-library files/feedparser.py
