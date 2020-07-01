@@ -1,2 +1,0 @@
-absolute-target-in-source (source): absolute-symbolic-link-target-in-source debian/tests/asym2 -> /dev/null
-absolute-target-in-source (source): absolute-symbolic-link-target-in-source debian/tests/asym -> /dev/null
