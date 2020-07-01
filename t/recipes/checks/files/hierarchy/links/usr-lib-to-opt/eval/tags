@@ -1,0 +1,1 @@
+usr-lib-to-opt (binary): breakout-link usr/lib/myapp-module.so -> opt/myapp/a-module.so

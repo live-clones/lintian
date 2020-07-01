@@ -1,3 +1,3 @@
 Skeleton: upload-native
-Testname: one-level-up
+Testname: one-level-up-in-usr-lib
 Description: Links from a directory in /usr/lib to one level up

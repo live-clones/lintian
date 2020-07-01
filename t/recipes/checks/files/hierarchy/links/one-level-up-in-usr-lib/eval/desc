@@ -1,0 +1,5 @@
+Testname: one-level-up-in-usr-lib
+Check: files/hierarchy/links
+Test-Against:
+ breakout-link
+References: Bug#243158

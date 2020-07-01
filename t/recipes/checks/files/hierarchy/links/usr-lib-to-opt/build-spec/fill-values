@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: usr-lib-to-opt
+Description: Links from a directory in /usr/lib to /opt

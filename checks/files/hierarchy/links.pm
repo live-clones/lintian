@@ -40,21 +40,23 @@ sub files {
     return
       unless $file->is_symlink;
 
+    # only look at /usr/lib
+    return
+      unless $file->name =~ m{^usr/lib/};
+
+    # Don't emit for architecture-independent .jar files. (#963939)
+    return
+      if $file->name =~ m{\.jar};
+
     # must resolve
     my $target = $file->link_normalized;
     return
       unless defined $target;
 
-    # Don't emit for architecture-independent .jar files. (#963939)
-    return if $file->name =~ m{^usr/lib/} and $file->name =~ m{\.jar};
-
-    if ($file->name =~ m{^usr/lib/}) {
-
-        # see Bug#243158
-        my $dirname = $file->dirname;
-        $self->tag('breakout-link', $file->name . ARROW .  $target)
-          unless $target =~ /^\Q$dirname\E/;
-    }
+    # see Bug#243158, Bug#964111
+    my $dirname = $file->dirname;
+    $self->tag('breakout-link', $file->name . ARROW .  $target)
+      unless $target =~ m{^\Q$dirname\E} || $target =~ m{^usr/lib/};
 
     return;
 }
