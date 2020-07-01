@@ -91,6 +91,8 @@ qr{(?i)/mootools(?:(?:\.v|-)[\d\.]+)?(?:-(?:(?:core(?:-server)?)|more)(?:-(?:yc|
       . $JS_EXT,
     'node-html5shiv'               => qr{(?i)html5shiv(?:-printshiv)?}
       . $JS_EXT,
+    'sphinx'                       =>
+      qr{(?i)/_static/(?:doctools|language_data|searchtools)} . $JS_EXT,
     'tinymce'                      => qr{(?i)/tiny_mce(?:_(?:popup|src))?}
       . $JS_EXT,
 # not yet available in unstable
