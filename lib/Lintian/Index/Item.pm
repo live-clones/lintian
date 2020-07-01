@@ -31,6 +31,7 @@ use Path::Tiny;
 use Text::Balanced qw(extract_delimited);
 use Unicode::UTF8 qw(valid_utf8 decode_utf8);
 
+use Lintian::SlidingWindow;
 use Lintian::Util qw(normalize_link_target);
 
 use constant EMPTY => q{};
@@ -204,6 +205,40 @@ sub init_from_tar_output {
     }
 
     return;
+}
+
+=item bytes_match(REGEX)
+
+Returns true or false, depending on whether REGEX matches the
+file's byte contents.
+
+=cut
+
+sub bytes_match {
+    my ($self, $regex) = @_;
+
+    return 0
+      unless $self->is_file;
+
+    return 1
+      unless length $regex;
+
+    open(my $fd, '<:raw', $self->unpacked_path);
+    my $sfd = Lintian::SlidingWindow->new($fd);
+
+    my $match = 0;
+    while (my $block = $sfd->readwindow) {
+
+        if ($block =~ /$regex/) {
+
+            $match = 1;
+            last;
+        }
+    }
+
+    close $fd;
+
+    return $match;
 }
 
 =item magic(COUNT)
