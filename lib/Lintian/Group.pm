@@ -335,7 +335,7 @@ Process group.
 sub process {
     my ($self, $ignored_overrides, $option, $OUTPUT)= @_;
 
-    $self->processing_start(gmtime->datetime);
+    $self->processing_start(gmtime->datetime . 'Z');
 
     my $success = 1;
 
@@ -523,7 +523,7 @@ sub process {
           for @{$processable->tags};
     }
 
-    $self->processing_end(gmtime->datetime);
+    $self->processing_end(gmtime->datetime . 'Z');
 
     my $raw_res = tv_interval($timer);
     my $tres = sprintf('%.3fs', $raw_res);
