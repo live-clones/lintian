@@ -574,6 +574,9 @@ sub main {
                 } elsif ($output{$_} eq 'letterqualifier') {
                     require Lintian::Output::LetterQualifier;
                     $OUTPUT= Lintian::Output::LetterQualifier->new;
+                } elsif ($output{$_} eq 'html') {
+                    require Lintian::Output::HTML;
+                    $OUTPUT = Lintian::Output::HTML->new;
                 } elsif ($output{$_} eq 'xml') {
                     require Lintian::Output::XML;
                     $OUTPUT = Lintian::Output::XML->new;
