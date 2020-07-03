@@ -44,10 +44,6 @@ sub files {
     return
       unless $file->name =~ m{^usr/lib/};
 
-    # Don't emit for architecture-independent .jar files. (#963939)
-    return
-      if $file->name =~ m{\.jar};
-
     # must resolve
     my $target = $file->link_normalized;
     return
