@@ -7,4 +7,5 @@ helpers 		usr/share/lintian
 lib/Lintian		usr/share/perl5
 lib/Test		usr/share/perl5
 profiles		usr/share/lintian
+templates		usr/share/lintian
 vendors 		usr/share/lintian
