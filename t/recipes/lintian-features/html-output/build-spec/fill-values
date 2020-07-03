@@ -1,0 +1,5 @@
+Testname: html-output
+Skeleton: upload-non-native
+Version: 1.0+dsfg-1.1
+Package-Architecture: all
+Description: Test Lintian's HTML output format
