@@ -535,7 +535,7 @@ div.clear {
       </ul>
 
       <span class="tinycode" id="code-W">W</span>
-      <span class="tinytag"><a href="">changelog-file-missing-explicit-entry</a></span>
+      <span class="tinytag"><a href="https://lintian.debian.org/tags/changelog-file-missing-explicit-entry.html">changelog-file-missing-explicit-entry</a></span>
       <span class="tinycontext">0.0.1-1 -&gt; 1.0+dsfg-1 (missing) -&gt; 1.0+dsfg-1.1</span>
 
     </li>
@@ -545,7 +545,7 @@ div.clear {
       </ul>
 
       <span class="tinycode" id="code-W">W</span>
-      <span class="tinytag"><a href="">dfsg-version-misspelled</a></span>
+      <span class="tinytag"><a href="https://lintian.debian.org/tags/dfsg-version-misspelled.html">dfsg-version-misspelled</a></span>
       <span class="tinycontext">1.0+dsfg-1.1</span>
 
     </li>
@@ -555,7 +555,7 @@ div.clear {
       </ul>
 
       <span class="tinycode" id="code-W">W</span>
-      <span class="tinytag"><a href="">format-3.0-but-debian-changes-patch</a></span>
+      <span class="tinytag"><a href="https://lintian.debian.org/tags/format-3.0-but-debian-changes-patch.html">format-3.0-but-debian-changes-patch</a></span>
       <span class="tinycontext"></span>
 
     </li>
@@ -565,7 +565,7 @@ div.clear {
       </ul>
 
       <span class="tinycode" id="code-W">W</span>
-      <span class="tinytag"><a href="">maintainer-upload-has-incorrect-version-number</a></span>
+      <span class="tinytag"><a href="https://lintian.debian.org/tags/maintainer-upload-has-incorrect-version-number.html">maintainer-upload-has-incorrect-version-number</a></span>
       <span class="tinycontext">1.0+dsfg-1.1</span>
 
     </li>
@@ -575,7 +575,7 @@ div.clear {
       </ul>
 
       <span class="tinycode" id="code-I">I</span>
-      <span class="tinytag"><a href="">binary-control-field-duplicates-source</a></span>
+      <span class="tinytag"><a href="https://lintian.debian.org/tags/binary-control-field-duplicates-source.html">binary-control-field-duplicates-source</a></span>
       <span class="tinycontext">field &quot;Section&quot; in package html-output</span>
 
     </li>
@@ -585,7 +585,7 @@ div.clear {
       </ul>
 
       <span class="tinycode" id="code-I">I</span>
-      <span class="tinytag"><a href="">quilt-patch-using-template-description</a></span>
+      <span class="tinytag"><a href="https://lintian.debian.org/tags/quilt-patch-using-template-description.html">quilt-patch-using-template-description</a></span>
       <span class="tinycontext">debian-changes-1.0+dsfg-1.1</span>
 
     </li>
@@ -595,7 +595,7 @@ div.clear {
       </ul>
 
       <span class="tinycode" id="code-I">I</span>
-      <span class="tinytag"><a href="">upstream-metadata-missing-bug-tracking</a></span>
+      <span class="tinytag"><a href="https://lintian.debian.org/tags/upstream-metadata-missing-bug-tracking.html">upstream-metadata-missing-bug-tracking</a></span>
       <span class="tinycontext"></span>
 
     </li>
@@ -605,7 +605,7 @@ div.clear {
       </ul>
 
       <span class="tinycode" id="code-I">I</span>
-      <span class="tinytag"><a href="">upstream-metadata-missing-repository</a></span>
+      <span class="tinytag"><a href="https://lintian.debian.org/tags/upstream-metadata-missing-repository.html">upstream-metadata-missing-repository</a></span>
       <span class="tinycontext"></span>
 
     </li>
@@ -615,7 +615,7 @@ div.clear {
       </ul>
 
       <span class="tinycode" id="code-P">P</span>
-      <span class="tinytag"><a href="">debian-control-has-unusual-field-spacing</a></span>
+      <span class="tinytag"><a href="https://lintian.debian.org/tags/debian-control-has-unusual-field-spacing.html">debian-control-has-unusual-field-spacing</a></span>
       <span class="tinycontext">line 12</span>
 
     </li>
@@ -625,7 +625,7 @@ div.clear {
       </ul>
 
       <span class="tinycode" id="code-P">P</span>
-      <span class="tinytag"><a href="">debian-watch-does-not-check-gpg-signature</a></span>
+      <span class="tinytag"><a href="https://lintian.debian.org/tags/debian-watch-does-not-check-gpg-signature.html">debian-watch-does-not-check-gpg-signature</a></span>
       <span class="tinycontext"></span>
 
     </li>
@@ -635,7 +635,7 @@ div.clear {
       </ul>
 
       <span class="tinycode" id="code-P">P</span>
-      <span class="tinytag"><a href="">no-homepage-field</a></span>
+      <span class="tinytag"><a href="https://lintian.debian.org/tags/no-homepage-field.html">no-homepage-field</a></span>
       <span class="tinycontext"></span>
 
     </li>
@@ -645,7 +645,7 @@ div.clear {
       </ul>
 
       <span class="tinycode" id="code-P">P</span>
-      <span class="tinytag"><a href="">old-source-override-location</a></span>
+      <span class="tinytag"><a href="https://lintian.debian.org/tags/old-source-override-location.html">old-source-override-location</a></span>
       <span class="tinycontext"></span>
 
     </li>
@@ -662,7 +662,7 @@ div.clear {
       </ul>
 
       <span class="tinycode" id="code-E">E</span>
-      <span class="tinytag"><a href="">dir-in-usr-local</a></span>
+      <span class="tinytag"><a href="https://lintian.debian.org/tags/dir-in-usr-local.html">dir-in-usr-local</a></span>
       <span class="tinycontext">usr/local/share/</span>
 
     </li>
@@ -672,7 +672,7 @@ div.clear {
       </ul>
 
       <span class="tinycode" id="code-E">E</span>
-      <span class="tinytag"><a href="">dir-in-usr-local</a></span>
+      <span class="tinytag"><a href="https://lintian.debian.org/tags/dir-in-usr-local.html">dir-in-usr-local</a></span>
       <span class="tinycontext">usr/local/share/lintian/</span>
 
     </li>
@@ -682,7 +682,7 @@ div.clear {
       </ul>
 
       <span class="tinycode" id="code-E">E</span>
-      <span class="tinytag"><a href="">dir-or-file-in-var-lock</a></span>
+      <span class="tinytag"><a href="https://lintian.debian.org/tags/dir-or-file-in-var-lock.html">dir-or-file-in-var-lock</a></span>
       <span class="tinycontext">var/lock/lintian/</span>
 
     </li>
@@ -692,7 +692,7 @@ div.clear {
       </ul>
 
       <span class="tinycode" id="code-E">E</span>
-      <span class="tinytag"><a href="">new-essential-package</a></span>
+      <span class="tinytag"><a href="https://lintian.debian.org/tags/new-essential-package.html">new-essential-package</a></span>
       <span class="tinycontext"></span>
 
     </li>
@@ -702,7 +702,7 @@ div.clear {
       </ul>
 
       <span class="tinycode" id="code-E">E</span>
-      <span class="tinytag"><a href="">possible-gpl-code-linked-with-openssl</a></span>
+      <span class="tinytag"><a href="https://lintian.debian.org/tags/possible-gpl-code-linked-with-openssl.html">possible-gpl-code-linked-with-openssl</a></span>
       <span class="tinycontext"></span>
 
     </li>
@@ -712,7 +712,7 @@ div.clear {
       </ul>
 
       <span class="tinycode" id="code-W">W</span>
-      <span class="tinytag"><a href="">no-manual-page</a></span>
+      <span class="tinytag"><a href="https://lintian.debian.org/tags/no-manual-page.html">no-manual-page</a></span>
       <span class="tinycontext">usr/bin/script</span>
 
     </li>
@@ -722,7 +722,7 @@ div.clear {
       </ul>
 
       <span class="tinycode" id="code-I">I</span>
-      <span class="tinytag"><a href="">description-possibly-contains-homepage</a></span>
+      <span class="tinytag"><a href="https://lintian.debian.org/tags/description-possibly-contains-homepage.html">description-possibly-contains-homepage</a></span>
       <span class="tinycontext">http://www.example.com/.</span>
 
     </li>
@@ -732,7 +732,7 @@ div.clear {
       </ul>
 
       <span class="tinycode" id="code-I">I</span>
-      <span class="tinytag"><a href="">desktop-entry-limited-to-environments</a></span>
+      <span class="tinytag"><a href="https://lintian.debian.org/tags/desktop-entry-limited-to-environments.html">desktop-entry-limited-to-environments</a></span>
       <span class="tinycontext">usr/share/applications/script.desktop</span>
 
     </li>
@@ -742,7 +742,7 @@ div.clear {
       </ul>
 
       <span class="tinycode" id="code-I">I</span>
-      <span class="tinytag"><a href="">package-contains-empty-directory</a></span>
+      <span class="tinytag"><a href="https://lintian.debian.org/tags/package-contains-empty-directory.html">package-contains-empty-directory</a></span>
       <span class="tinycontext">usr/local/share/lintian/</span>
 
     </li>
@@ -752,7 +752,7 @@ div.clear {
       </ul>
 
       <span class="tinycode" id="code-I">I</span>
-      <span class="tinytag"><a href="">synopsis-is-a-sentence</a></span>
+      <span class="tinytag"><a href="https://lintian.debian.org/tags/synopsis-is-a-sentence.html">synopsis-is-a-sentence</a></span>
       <span class="tinycontext">&quot;Test Lintian&#39;s HTML output format.&quot;</span>
 
     </li>
@@ -762,7 +762,7 @@ div.clear {
       </ul>
 
       <span class="tinycode" id="code-P">P</span>
-      <span class="tinytag"><a href="">example-unusual-interpreter</a></span>
+      <span class="tinytag"><a href="https://lintian.debian.org/tags/example-unusual-interpreter.html">example-unusual-interpreter</a></span>
       <span class="tinycontext">usr/share/doc/html-output/examples/example #!/usr/bin/foo</span>
 
     </li>

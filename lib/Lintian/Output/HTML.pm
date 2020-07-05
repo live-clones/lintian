@@ -78,7 +78,8 @@ sub issue_tags {
 
     my %output;
 
-    $output{'lintian-version'} = $ENV{LINTIAN_VERSION};
+    my $lintian_version = $ENV{LINTIAN_VERSION};
+    $output{'lintian-version'} = $lintian_version;
 
     my @allgroups_output;
     $output{groups} = \@allgroups_output;
@@ -110,7 +111,8 @@ sub issue_tags {
             $group->get_processables) {
             my %file_output;
             $file_output{filename} = path($processable->path)->basename;
-            $file_output{tags} = $self->taglist($processable->tags);
+            $file_output{tags}
+              = $self->taglist($lintian_version, $processable->tags);
             push(@allfiles_output, \%file_output);
         }
     }
@@ -134,7 +136,7 @@ sub issue_tags {
 =cut
 
 sub taglist {
-    my ($self, $arrayref) = @_;
+    my ($self, $lintian_version, $arrayref) = @_;
 
     my @tags;
 
@@ -151,6 +153,9 @@ sub taglist {
         push(@tags, \%tag);
 
         $tag{name} = $input->info->name;
+
+        $tag{url}
+          = "https://lintian.debian.org/$lintian_version/tags/$tag{name}.html";
 
         $tag{context} = $input->context
           if length $input->context;
