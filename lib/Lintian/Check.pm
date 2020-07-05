@@ -77,7 +77,13 @@ sub visit {
     my $visit_hook = "visit_$index";
     if ($self->can($visit_hook)) {
 
-        $self->$visit_hook($_) for $self->processable->$index->sorted_list;
+        my @items = $self->processable->$index->sorted_list;
+
+        # exclude Lintian's test suite from source scans
+        @items = grep { $_->name !~ m{^t/} } @items
+          if $self->processable->name eq 'lintian' && $index eq 'patched';
+
+        $self->$visit_hook($_) for @items;
     }
 
     my $breakdown_hook = "breakdown_$index";

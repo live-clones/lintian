@@ -29,27 +29,19 @@ use namespace::clean;
 
 with 'Lintian::Check';
 
-sub source {
-    my ($self) = @_;
+sub visit_patched {
+    my ($self, $item) = @_;
 
-    my $processable = $self->processable;
+    return
+      unless $item->name =~ /\.pm$/;
 
-    return if $processable->source eq 'lintian';
+    my $bytes = $item->bytes;
+    return
+      unless $bytes;
 
-    for my $file ($processable->patched->sorted_list) {
-
-        next
-          unless $file->name =~ /\.pm$/;
-
-        next
-          unless $file->is_open_ok;
-
-        my $contents = $file->bytes;
-
-        $self->tag('source-contains-prebuilt-yapp-parser', $file->name)
-          if $contents
-          =~ /^#\s+This file was generated using Parse::Yapp version [\d.]+/m;
-    }
+    $self->tag('source-contains-prebuilt-yapp-parser', $item->name)
+      if $bytes
+      =~ /^#\s+This file was generated using Parse::Yapp version [\d.]+/m;
 
     return;
 }

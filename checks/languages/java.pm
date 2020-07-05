@@ -39,19 +39,16 @@ with 'Lintian::Check';
 our $CLASS_REGEX = qr/\.(?:class|cljc?)/;
 our $MAX_BYTECODE = Lintian::Data->new('java/constants', qr/\s*=\s*/);
 
-sub source {
-    my ($self) = @_;
+sub visit_patched {
+    my ($self, $item) = @_;
 
-    for my $file ($self->processable->patched->sorted_list) {
-        my $java_info = $file->java_info;
-        next
-          unless scalar keys %{$java_info};
+    my $java_info = $item->java_info;
+    return
+      unless scalar keys %{$java_info};
 
-        my $files = $java_info->{files};
-        $self->tag('source-contains-prebuilt-java-object', $file)
-          if any { m/$CLASS_REGEX$/i } keys %{$files}
-          and $self->processable->name ne 'lintian';
-    }
+    my $files = $java_info->{files};
+    $self->tag('source-contains-prebuilt-java-object', $item)
+      if any { m/$CLASS_REGEX$/i } keys %{$files};
 
     return;
 }
