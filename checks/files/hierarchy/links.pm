@@ -50,9 +50,13 @@ sub files {
       unless defined $target;
 
     # see Bug#243158, Bug#964111
-    my $dirname = $file->dirname;
+    my $restraint = $file->dirname;
+
+    # either /usr/lib or one level below for architecture, if applicable
+    $restraint =~ s{^((?:[^/]+/){3}).*$}{$1}s;
+
     $self->tag('breakout-link', $file->name . ARROW .  $target)
-      unless $target =~ m{^\Q$dirname\E} || $target =~ m{^usr/lib/};
+      unless $target =~ m{^\Q$restraint\E};
 
     return;
 }
