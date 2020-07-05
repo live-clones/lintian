@@ -26,13 +26,16 @@ use warnings;
 use utf8;
 use autodie;
 
-use List::MoreUtils qw(any);
+use List::Compare;
+use List::MoreUtils qw(any firstval);
+use List::UtilsBy qw(min_by);
 use Text::LevenshteinXS qw(distance);
 
 use Lintian::Data;
 use Lintian::Relation qw(:constants);
 
 use constant EMPTY => q{};
+use constant UNDERSCORE => q{_};
 
 use Moo;
 use namespace::clean;
@@ -55,6 +58,10 @@ my $dh_addons_manual
 my $compat_level = Lintian::Data->new('debhelper/compat-level',qr/=/);
 
 my $MISC_DEPENDS = Lintian::Relation->new('${misc:Depends}');
+
+my @KNOWN_DH_COMMANDS= map { $_, $_ . '-arch', $_ . '-indep' }
+  map { 'override' . $_, 'execute_before' . $_, 'execute_after' . $_ }
+  map { UNDERSCORE . $_ } $dh_commands_depends->all;
 
 sub source {
     my ($self) = @_;
@@ -216,34 +223,60 @@ sub source {
             $dhcompatvalue = $1;
             # one can export and then set the value:
             $level = $1 if ($level);
+
         } elsif (/^[^:]*(override|execute_(?:after|before))\s+(dh_[^:]*):/) {
             $self->tag('typo-in-debhelper-override-target',
                 "$1 $2", '->', "$1_$2","(line $.)");
-        } elsif (/^([^:]*(?:override|execute_(?:after|before))_dh_[^:]*):/) {
-            my $targets = $1;
-            $needbuilddepends = 1;
-            # Can be multiple targets per rule.
-            while ($targets
-                =~ /\b(override|execute_(?:before|after))_dh_([^\s]+?)(-arch|-indep|)\b/g
-            ) {
+
+        } elsif (/^([^:]*_dh_[^:]*):/) {
+            my $alltargets = $1;
+            # can be multiple targets per rule.
+            my @targets = split(/\s+/, $alltargets);
+            my @dh_targets = grep { /_dh_/ } @targets;
+
+            # If maintainer is using wildcards, it's unlikely to be a typo.
+            my @no_wildcards = grep { !/%/ } @dh_targets;
+
+            my $lc = List::Compare->new(\@no_wildcards, \@KNOWN_DH_COMMANDS);
+            my @unknown = $lc->get_Lonly;
+
+            for my $target (@unknown) {
+
+                my %distance
+                  = map { $_ => distance($target, $_) } @KNOWN_DH_COMMANDS;
+                my @near = grep { $distance{$_} < 3 } keys %distance;
+                my $nearest = min_by { $distance{$_} } @near;
+
+                $self->tag('typo-in-debhelper-override-target',
+                    $target, '->', $nearest, "(line $.)")
+                  if length $nearest;
+            }
+
+            for my $target (@no_wildcards) {
+
+                next
+                  unless $target
+                  =~ /^(override|execute_(?:before|after))_dh_([^\s]+?)(-arch|-indep|)$/;
+
                 my $prefix = $1;
                 my $cmd = $2;
                 my $arch = $3;
                 my $dhcommand = "dh_$cmd";
                 $overrides{$dhcommand} = [$., $arch];
-                # If maintainer is using wildcards, it's unlikely to be a typo.
-                next if ($dhcommand =~ /%/);
-                next if ($dh_commands_depends->known($dhcommand));
+                $needbuilddepends = 1;
+
+                next
+                  if $dh_commands_depends->known($dhcommand);
+
                 # Unknown command, so check for likely misspellings
-                foreach my $x (sort $dh_commands_depends->all) {
-                    if ("dh_auto_$cmd" eq $x or distance($dhcommand, $x) < 3) {
-                        $self->tag('typo-in-debhelper-override-target',
-                            "${prefix}_$dhcommand", '->', "${prefix}_$x",
-                            "(line $.)");
-                        last; # Only emit a single match
-                    }
-                }
+                my $missingauto = firstval { "dh_auto_$cmd" eq $_ }
+                $dh_commands_depends->all;
+                $self->tag('typo-in-debhelper-override-target',
+                    "${prefix}_$dhcommand", '->', "${prefix}_$missingauto",
+                    "(line $.)")
+                  if length $missingauto;
             }
+
         } elsif (m,^include\s+/usr/share/cdbs/,) {
             $inclcdbs = 1;
             $build_systems{'cdbs-without-debhelper.mk'} = 1
