@@ -220,6 +220,9 @@ sub bytes_match {
     return 0
       unless $self->is_file;
 
+    return 0
+      unless $self->is_open_ok;
+
     return 1
       unless length $regex;
 
