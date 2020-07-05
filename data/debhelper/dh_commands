@@ -1,5 +1,5 @@
 # This file is generated from private/refresh-debhelper-data.
-# It was generated on 2020-01-12 23:20
+# It was generated on 2020-07-05 21:45
 #
 # If the script generates an insufficient/incorrect value for a
 # single item, please have a look at dh_commands-manual.
@@ -9,7 +9,6 @@ dh_acc=dh-acc
 dh_ada_library=dh-ada-library
 dh_apache2=apache2-dev
 dh_apparmor=dh-apparmor
-dh_aqbanking=libaqbanking-dev
 dh_aspell-simple=dictionaries-common-dev
 dh_auto_build=debhelper | debhelper-compat
 dh_auto_build_nant=cli-common-dev
@@ -69,6 +68,7 @@ dh_haskell_provides=haskell-devscripts-minimal
 dh_haskell_shlibdeps=haskell-devscripts-minimal
 dh_icons=debhelper | debhelper-compat
 dh_install=debhelper | debhelper-compat
+dh_installalternatives=debhelper | debhelper-compat
 dh_installcatalogs=debhelper | debhelper-compat
 dh_installchangelogs=debhelper | debhelper-compat
 dh_installcliframework=cli-common-dev
@@ -86,7 +86,6 @@ dh_installinfo=debhelper | debhelper-compat
 dh_installinit=debhelper | debhelper-compat
 dh_installinitramfs=debhelper | debhelper-compat
 dh_installkpatches=dh-kpatches
-dh_installlisting=desktop-profiles
 dh_installlogcheck=debhelper | debhelper-compat
 dh_installlogrotate=debhelper | debhelper-compat
 dh_installman=debhelper | debhelper-compat
@@ -99,6 +98,7 @@ dh_installppp=debhelper | debhelper-compat
 dh_installsystemd=debhelper | debhelper-compat
 dh_installsystemduser=debhelper | debhelper-compat
 dh_installtex=tex-common
+dh_installtmpfiles=debhelper | debhelper-compat
 dh_installudev=debhelper | debhelper-compat
 dh_installwm=debhelper | debhelper-compat
 dh_installxfonts=debhelper | debhelper-compat
@@ -125,6 +125,7 @@ dh_mkdocs=mkdocs
 dh_movefiles=debhelper | debhelper-compat
 dh_movelibkdeinit=pkg-kde-tools
 dh_numpy3=python3-numpy
+dh_numpy=python-numpy
 dh_ocaml=dh-ocaml
 dh_ocamlclean=dh-ocaml
 dh_ocamldoc=dh-ocaml
@@ -168,7 +169,6 @@ dh_sameversiondep=pkg-kde-tools
 dh_scour=scour
 dh_shlibdeps=debhelper | debhelper-compat
 dh_sip3=python3-sip-dev
-dh_sip=python-sip-dev
 dh_sodeps=pkg-kde-tools
 dh_sphinxdoc=sphinx-common
 dh_strip=debhelper | debhelper-compat

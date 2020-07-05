@@ -1,10 +1,9 @@
 # This file is generated from private/refresh-debhelper-data.
-# It was generated on 2020-01-12 23:20
+# It was generated on 2020-07-05 21:45
 
 acc=dh-acc
 ada_library=dh-ada-library
 apache2=apache2-dev
-aqbanking=libaqbanking-dev
 aspell_simple=dictionaries-common-dev
 autoreconf=dh-autoreconf
 autotools_dev=autotools-dev
@@ -43,6 +42,7 @@ maven_repo_helper=maven-repo-helper
 mkdocs=mkdocs
 nodejs=pkg-js-tools
 numpy3=python3-numpy
+numpy=python-numpy
 ocaml=dh-ocaml
 octave=dh-octave
 perl6=dh-perl6
@@ -63,11 +63,11 @@ python_virtualenv=dh-virtualenv
 qmlcdeps=pkg-kde-tools
 quilt=quilt
 rebar=dh-rebar
+root_sequence=libdebhelper-perl
 ruby=gem2deb
 runit=dh-runit
 scour=scour
 sip3=python3-sip-dev
-sip=python-sip-dev
 sodeps=pkg-kde-tools
 sphinxdoc=sphinx-common
 systemd=libdebhelper-perl
