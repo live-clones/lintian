@@ -1,0 +1,3 @@
+Skeleton: source-non-native
+Testname: utf8-header-fix-encoding-patch
+Description: Debian patch to fix national encoding with UTF-8 header (false positive)

@@ -37,7 +37,7 @@ sub visit_patched {
     my ($self, $item) = @_;
 
     return
-      unless $item->name =~ /^debian/;
+      unless $item->name =~ m{^debian/};
 
     return
       unless $item->is_file;
@@ -45,8 +45,21 @@ sub visit_patched {
     return
       unless $item->file_info =~ /text$/;
 
-    $self->tag('national-encoding', $item->name)
-      unless $item->is_valid_utf8;
+    if ($item->name =~ m{^debian/patches/}) {
+
+        my $bytes = $item->bytes;
+        return
+          unless length $bytes;
+
+        my ($header)= split(/^This patch header follows DEP-3/mi, $bytes, 2);
+
+        $self->tag('national-encoding', 'DEP-3 header ' . $item->name)
+          unless valid_utf8($header);
+
+    } else {
+        $self->tag('national-encoding', $item->name)
+          unless $item->is_valid_utf8;
+    }
 
     return;
 }
