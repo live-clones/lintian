@@ -144,7 +144,7 @@ sub files {
 
         # number of directory and manpage extension equal?
         if ($section_num != $section) {
-            $self->tag('manpage-in-wrong-directory', $file);
+            $self->tag('odd-place-for-manual-page', $file);
         }
     } else {
         $self->tag('wrong-name-for-manual-page', $file);
