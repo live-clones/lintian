@@ -27,7 +27,7 @@ use utf8;
 use autodie;
 
 use List::MoreUtils qw(any);
-use Text::Levenshtein qw(distance);
+use Text::LevenshteinXS qw(distance);
 
 use Lintian::Data;
 use Lintian::Relation qw(:constants);
