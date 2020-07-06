@@ -255,9 +255,10 @@ sub mentions_in_operation {
     my ($self, $regex) = @_;
 
     # prefer strings(1) output (eg. for ELF) if we have it
+    # may not work as expected on ELF due to ld's SHF_MERGE
     if (length $self->strings) {
         return 1
-          if $self->strings =~ /^$regex/m;
+          if $self->strings =~ /$regex/;
 
     } elsif ($self->is_script) {
         return 1
