@@ -244,6 +244,29 @@ sub bytes_match {
     return $match;
 }
 
+=item mentions_in_operation(REGEX)
+
+Returns true or false, depending on whether REGEX matches in
+a location that is likely an operation (vs text).
+
+=cut
+
+sub mentions_in_operation {
+    my ($self, $regex) = @_;
+
+    # prefer strings(1) output (eg. for ELF) if we have it
+    if (length $self->strings) {
+        return 1
+          if $self->strings =~ /^$regex/m;
+
+    } elsif ($self->is_script) {
+        return 1
+          if $self->bytes_match($regex);
+    }
+
+    return 0;
+}
+
 =item magic(COUNT)
 
 Returns the specified COUNT of magic bytes for the file.
