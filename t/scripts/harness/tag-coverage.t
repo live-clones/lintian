@@ -48,7 +48,6 @@ use constant EMPTY => q{};
 use constant NEWLINE => qq{\n};
 
 my @known_missing = qw(
-  bin-sbin-mismatch
   changed-by-invalid-for-derivative
   debian-files-list-in-source
   debian-rules-not-executable

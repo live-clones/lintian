@@ -1,0 +1,4 @@
+Skeleton: upload-native
+Testname: bin-sbin-confusion-in-elf
+Description: Mix up bin and sbin when calling a package's own executables
+Package-Architecture: any
