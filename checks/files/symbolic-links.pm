@@ -25,6 +25,8 @@ use warnings;
 use utf8;
 use autodie;
 
+use constant ARROW => q{->};
+
 use Moo;
 use namespace::clean;
 
@@ -49,23 +51,25 @@ my $COMPRESS_FILE_EXTENSIONS_OR_ALL = sub { qr/(:?$_[0])/ }
 my $COMPRESSED_SYMLINK_POINTING_TO_COMPRESSED_REGEX
   = qr/\.($COMPRESS_FILE_EXTENSIONS_OR_ALL)\s*$/;
 
-sub source {
-    my ($self) = @_;
+sub visit_patched_files {
+    my ($self, $item) = @_;
 
-    my @symlinks
-      = grep { $_->is_symlink } $self->processable->patched->sorted_list;
+    return
+      unless $item->is_symlink;
 
-    my @absolute = grep { $_->link =~ m{^/} } @symlinks;
-    $self->tag('absolute-symbolic-link-target-in-source',
-        $_->name, '->', $_->link)
-      for @absolute;
+    # absolute links cannot be resolved
+    if ($item->link =~ m{^/}) {
 
-    # absolute links cannot be resolved either but have a different tag
-    my @wayward
-      = grep { $_->link !~ m{^/} && !defined $_->link_normalized} @symlinks;
+        # allow /dev/null link target for masked systemd service files
+        $self->tag('absolute-symbolic-link-target-in-source',
+            $item->name, ARROW, $item->link)
+          unless $item->link eq '/dev/null';
+    }
+
+    # some relative links cannot be resolved inside the source
     $self->tag('wayward-symbolic-link-target-in-source',
-        $_->name, '->', $_->link)
-      for @wayward;
+        $item->name, ARROW, $item->link)
+      unless defined $_->link_normalized || $item->link =~ m{^/};
 
     return;
 }
