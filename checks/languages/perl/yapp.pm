@@ -29,7 +29,7 @@ use namespace::clean;
 
 with 'Lintian::Check';
 
-sub visit_patched {
+sub visit_patched_files {
     my ($self, $item) = @_;
 
     return

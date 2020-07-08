@@ -120,7 +120,7 @@ sub check_item {
     return;
 }
 
-sub visit_installed {
+sub visit_installed_files {
     my ($self, $item) = @_;
 
     $self->check_item($item);
@@ -128,7 +128,7 @@ sub visit_installed {
     return;
 }
 
-sub visit_control {
+sub visit_control_files {
     my ($self, $item) = @_;
 
     return

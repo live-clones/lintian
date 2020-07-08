@@ -39,7 +39,7 @@ with 'Lintian::Check';
 our $CLASS_REGEX = qr/\.(?:class|cljc?)/;
 our $MAX_BYTECODE = Lintian::Data->new('java/constants', qr/\s*=\s*/);
 
-sub visit_patched {
+sub visit_patched_files {
     my ($self, $item) = @_;
 
     my $java_info = $item->java_info;

@@ -33,7 +33,7 @@ use namespace::clean;
 
 with 'Lintian::Check';
 
-sub visit_patched {
+sub visit_patched_files {
     my ($self, $item) = @_;
 
     return
@@ -64,7 +64,7 @@ sub visit_patched {
     return;
 }
 
-sub visit_control {
+sub visit_control_files {
     my ($self, $item) = @_;
 
     return
@@ -79,7 +79,7 @@ sub visit_control {
     return;
 }
 
-sub visit_installed {
+sub visit_installed_files {
     my ($self, $item) = @_;
 
     return

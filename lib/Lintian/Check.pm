@@ -23,6 +23,8 @@ use v5.20;
 use warnings;
 use utf8;
 
+use constant UNDERSCORE => q{_};
+
 use Moo::Role;
 use namespace::clean;
 
@@ -63,18 +65,18 @@ has processable => (is => 'rw', default => sub { {} });
 has group => (is => 'rw', default => sub { {} });
 has info => (is => 'rw');
 
-=item visit
+=item visit_files
 
 =cut
 
-sub visit {
+sub visit_files {
     my ($self, $index) = @_;
 
-    my $setup_hook = "setup_$index";
+    my $setup_hook = 'setup' . UNDERSCORE . $index . UNDERSCORE . 'files';
     $self->$setup_hook
       if $self->can($setup_hook);
 
-    my $visit_hook = "visit_$index";
+    my $visit_hook = 'visit' . UNDERSCORE . $index . UNDERSCORE . 'files';
     if ($self->can($visit_hook)) {
 
         my @items = $self->processable->$index->sorted_list;
@@ -86,7 +88,8 @@ sub visit {
         $self->$visit_hook($_) for @items;
     }
 
-    my $breakdown_hook = "breakdown_$index";
+    my $breakdown_hook
+      ='"breakdown' . UNDERSCORE . $index . UNDERSCORE . 'files';
     $self->$breakdown_hook
       if $self->can($breakdown_hook);
 
@@ -104,14 +107,14 @@ sub run {
 
     my $type = $self->processable->type;
 
-    $self->visit('patched')
+    $self->visit_files('patched')
       if $type eq 'source';
 
     if ($type eq 'binary' || $type eq 'udeb') {
 
-        $self->visit('control');
+        $self->visit_files('control');
 
-        $self->visit('installed');
+        $self->visit_files('installed');
 
         $self->setup
           if $self->can('setup');
