@@ -1,7 +1,6 @@
 Description: Convert a source file to UTF-8 encoding.
 Author: Felix Lechner <felix.lechner@lease-up.com>
----
-This patch header follows DEP-3: http://dep.debian.net/deps/dep3/
+
 --- a/cyassl/ctaocrypt/tfm.h
 +++ b/cyassl/ctaocrypt/tfm.h
 @@ -28,7 +28,7 @@
