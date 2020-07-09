@@ -46,7 +46,7 @@ sub breakdown {
 
     # no version allowed for virtual package; no alternatives
     $self->tag('requires-r-api')
-      unless $depends->matches(qr/^r-api-[\d\w+]+$/, VISIT_OR_CLAUSE_FULL);
+      unless $depends->matches(qr/^r-api-[\w\d+-.]+$/, VISIT_OR_CLAUSE_FULL);
 
     return;
 }
