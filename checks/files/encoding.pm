@@ -51,7 +51,7 @@ sub visit_patched_files {
         return
           unless length $bytes;
 
-        my ($header)= split(/^--- /m, $bytes, 2);
+        my ($header)= split(/^---/m, $bytes, 2);
 
         $self->tag('national-encoding', 'DEP-3 header ' . $item->name)
           unless valid_utf8($header);
