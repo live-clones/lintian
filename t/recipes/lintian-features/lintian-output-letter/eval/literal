@@ -12,6 +12,7 @@ I[I]: lintian-output-letter: description-possibly-contains-homepage http://www.e
 I[I]: lintian-output-letter: desktop-entry-limited-to-environments usr/share/applications/script.desktop
 I[I]: lintian-output-letter: package-contains-empty-directory usr/local/share/lintian/
 I[I]: lintian-output-letter source: quilt-patch-using-template-description debian-changes-1.0+dsfg-1.1
+I[I]: lintian-output-letter source: send-patch debian/patches/debian-changes-1.0+dsfg-1.1
 I[I]: lintian-output-letter: synopsis-is-a-sentence "Test Lintian letter qualifier output format."
 I[I]: lintian-output-letter source: upstream-metadata-missing-bug-tracking
 I[I]: lintian-output-letter source: upstream-metadata-missing-repository

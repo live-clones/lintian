@@ -30,6 +30,10 @@
               <context>debian-changes-1.0+dsfg-1.1</context>
             </tag>
             <tag severity="info">
+              <name>send-patch</name>
+              <context>debian/patches/debian-changes-1.0+dsfg-1.1</context>
+            </tag>
+            <tag severity="info">
               <name>upstream-metadata-missing-bug-tracking</name>
             </tag>
             <tag severity="info">

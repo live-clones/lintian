@@ -36,6 +36,11 @@
                      "severity" : "info"
                   },
                   {
+                     "context" : "debian/patches/debian-changes-1.0+dsfg-1.1",
+                     "name" : "send-patch",
+                     "severity" : "info"
+                  },
+                  {
                      "name" : "upstream-metadata-missing-bug-tracking",
                      "severity" : "info"
                   },

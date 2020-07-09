@@ -27,6 +27,7 @@ Enable-Tags-From-Check:
  debian/lintian-overrides/comments,
  debian/manual-pages,
  debian/not-installed,
+ debian/patches/dep3,
  debian/po-debconf,
  debian/readme,
  debian/rules,
