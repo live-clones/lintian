@@ -548,7 +548,7 @@ sub files {
     # check for missing init.d script when alternative init system is present
 
     if (   $file =~ m,etc/sv/([^/]+)/run$,
-        or $file =~ m,lib/systemd/system/([^/]*?)@?\.service,) {
+        or $file =~ m,lib/systemd/system/([^/@]+)\.service,) {
 
         my $service = $1;
 
