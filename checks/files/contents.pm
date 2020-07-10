@@ -59,7 +59,7 @@ has switched_locations => (
 
             my @variants = map { $_ . SLASH . $command->basename }
               qw(bin sbin usr/bin usr/sbin);
-            my @confused = grep { $_ !~ $command->name } @variants;
+            my @confused = grep { $_ ne $command->name } @variants;
 
             $switched_locations{$_} = $command->name for @confused;
         }
