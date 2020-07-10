@@ -25,6 +25,8 @@ use warnings;
 use utf8;
 use autodie;
 
+use List::Compare;
+use List::MoreUtils qw(any none);
 use Path::Tiny;
 
 use Lintian::Data;
@@ -62,51 +64,44 @@ my %KNOWN_SPECIAL_DEPENDS = map { $_ => 1 } qw(
 sub source {
     my ($self) = @_;
 
-    my $pkg = $self->processable->name;
-    my $type = $self->processable->type;
-    my $processable = $self->processable;
+    my $testsuite = $self->processable->source_field('Testsuite') // EMPTY;
+    my @testsuites = split(/\s*,\s*/, $testsuite);
 
-    my $testsuites = $processable->field('Testsuite') // EMPTY;
-    my $control = $processable->patched->resolve_path('debian/tests/control');
+    my $lc = List::Compare->new(\@testsuites, [$KNOWN_TESTSUITES->all]);
+    my @unknown = $lc->get_Lonly;
+
+    $self->tag('unknown-testsuite', $_) for @unknown;
+
+    my $tests_control
+      = $self->processable->patched->resolve_path('debian/tests/control');
+
+    # field added automatically since dpkg 1.17 when d/tests/control is present
+    $self->tag('unnecessary-testsuite-autopkgtest-field')
+      if (any { $_ eq 'autopkgtest' } @testsuites) && defined $tests_control;
+
+    # need d/tests/control for plain autopkgtest
+    $self->tag('missing-tests-control')
+      if (any { $_ eq 'autopkgtest' } @testsuites) && !defined $tests_control;
+
+    die 'debian tests control is not a regular file'
+      if defined $tests_control && !$tests_control->is_regular_file;
+
+    if (defined $tests_control && $tests_control->is_valid_utf8) {
+
+        # another check complains about invalid encoding
+        my $contents = $tests_control->decoded_utf8;
+        $self->check_control_contents($contents);
+    }
+
     my $control_autodep8
-      = $processable->patched->resolve_path('debian/tests/control.autodep8');
-    my $needs_control = 0;
-
-    $self->tag('testsuite-autopkgtest-missing')
-      if ($testsuites !~ /autopkgtest/);
-
-    for my $testsuite (split(m/\s*,\s*/, $testsuites)) {
-        $self->tag('unknown-testsuite', $testsuite)
-          unless $KNOWN_TESTSUITES->known($testsuite);
-
-        $needs_control = 1 if $testsuite eq 'autopkgtest';
-    }
-    if ($needs_control xor defined($control)) {
-        $self->tag('inconsistent-testsuite-field');
-    }
-
-    if (defined($control)) {
-        if (not $control->is_regular_file) {
-            die 'debian tests control is not a regular file';
-
-        } elsif ($control->is_valid_utf8) {
-
-            # another check complains about invalid encoding
-            my $contents = $control->decoded_utf8;
-            $self->check_control_contents($contents);
-        }
-
-        $self->tag('unnecessary-testsuite-autopkgtest-field')
-          if ($processable->source_field('Testsuite') // EMPTY) eq
-          'autopkgtest';
-
-        $self->tag('debian-tests-control-and-control-autodep8',
-            $control,$control_autodep8)
-          if defined($control_autodep8);
-    }
-
+      = $self->processable->patched->resolve_path(
+        'debian/tests/control.autodep8');
     $self->tag('debian-tests-control-autodep8-is-obsolete', $control_autodep8)
-      if defined($control_autodep8);
+      if defined $control_autodep8;
+
+    $self->tag('debian-tests-control-and-control-autodep8',
+        $tests_control,$control_autodep8)
+      if defined $tests_control && defined $control_autodep8;
 
     return;
 }

@@ -1,7 +1,0 @@
-Tag: inconsistent-testsuite-field
-Severity: info
-Check: testsuite
-Info: The package provides a debian/tests/control file but no
- Testsuite field in the dsc file, or the field exists but not the
- file.
-Ref: https://salsa.debian.org/ci-team/autopkgtest/tree/master/doc/README.package-tests.rst

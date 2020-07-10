@@ -4,7 +4,6 @@ generic-dh-make-2008 (source): trailing-whitespace debian/rules (line 48)
 generic-dh-make-2008 (source): trailing-whitespace debian/rules (line 43)
 generic-dh-make-2008 (source): trailing-whitespace debian/rules (line 35)
 generic-dh-make-2008 (source): trailing-whitespace debian/rules (line 26)
-generic-dh-make-2008 (source): testsuite-autopkgtest-missing
 generic-dh-make-2008 (source): superfluous-clutter-in-homepage <insert the upstream URL, if relevant>
 generic-dh-make-2008 (source): rules-requires-root-missing
 generic-dh-make-2008 (source): package-uses-deprecated-debhelper-compat-version 7
