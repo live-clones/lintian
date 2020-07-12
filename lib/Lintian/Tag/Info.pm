@@ -28,7 +28,7 @@ use Carp qw(croak);
 use List::MoreUtils qw(none);
 
 use Lintian::Data;
-use Lintian::Deb822::Parser qw(read_dpkg_control);
+use Lintian::Deb822::File;
 use Lintian::Tag::TextUtil
   qw(dtml_to_html dtml_to_text split_paragraphs wrap_paragraphs);
 
@@ -174,21 +174,23 @@ sub load {
     croak "Cannot read tag file from $tagpath"
       unless -r $tagpath;
 
-    my @paragraphs = read_dpkg_control($tagpath);
+    my $deb822 = Lintian::Deb822::File->new;
+    my @sections = $deb822->read_file($tagpath);
     croak "$tagpath does not have exactly one paragraph"
-      unless scalar @paragraphs == 1;
+      unless scalar @sections == 1;
 
-    my %fields = %{ $paragraphs[0] };
-    $self->name($fields{Tag});
-    $self->original_severity($fields{Severity});
+    my $fields = $sections[0];
 
-    $self->check($fields{Check});
-    $self->experimental(($fields{Experimental} // EMPTY) eq 'yes');
+    $self->name($fields->value('Tag'));
+    $self->original_severity($fields->value('Severity'));
 
-    $self->info($fields{Info});
-    $self->references($fields{Ref});
+    $self->check($fields->value('Check'));
+    $self->experimental(($fields->value('Experimental') // EMPTY) eq 'yes');
 
-    $self->aliases(split(SPACE, $fields{'Renamed-From'} // EMPTY));
+    $self->info($fields->value('Info'));
+    $self->references($fields->value('Ref'));
+
+    $self->aliases(split(SPACE, $fields->value('Renamed-From') // EMPTY));
 
     croak "No Tag field in $tagpath"
       unless length $self->name;
