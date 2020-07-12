@@ -24,7 +24,7 @@ use autodie;
 
 use Path::Tiny;
 
-use Lintian::Deb822Parser qw(parse_dpkg_control_string);
+use Lintian::Deb822::Parser qw(parse_dpkg_control_string);
 
 use constant EMPTY => q{};
 

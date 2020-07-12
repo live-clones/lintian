@@ -25,7 +25,7 @@ use utf8;
 use Carp qw(croak);
 use Path::Tiny;
 
-use Lintian::Deb822Parser qw(read_dpkg_control);
+use Lintian::Deb822::Parser qw(read_dpkg_control);
 
 use constant EMPTY => q{};
 use constant COLON => q{:};

@@ -32,7 +32,7 @@ use List::Util qw(first none);
 use Path::Tiny;
 
 use Lintian::Data ();
-use Lintian::Deb822Parser qw(parse_dpkg_control_string);
+use Lintian::Deb822::Parser qw(parse_dpkg_control_string);
 use Lintian::Relation ();
 
 use constant EMPTY => q{};

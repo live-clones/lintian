@@ -21,7 +21,7 @@ use YAML::XS;
 
 use lib "$ENV{LINTIAN_ROOT}/lib";
 
-use Lintian::Deb822Parser qw(read_dpkg_control);
+use Lintian::Deb822::Parser qw(read_dpkg_control);
 
 use constant EMPTY => q{};
 use constant SPACE => q{ };

@@ -1,5 +1,5 @@
 # Hey emacs! This is a -*- Perl -*- script!
-# Lintian::Deb822Parser -- Perl utility functions for parsing deb822 files
+# Lintian::Deb822::Parser -- Perl utility functions for parsing deb822 files
 
 # Copyright © 1998 Christian Schwarz
 #
@@ -19,7 +19,7 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-package Lintian::Deb822Parser;
+package Lintian::Deb822::Parser;
 
 use v5.20;
 use warnings;
@@ -46,11 +46,11 @@ use Exporter qw(import);
 
 =head1 NAME
 
-Lintian::Deb822Parser - Lintian's generic Deb822 parser functions
+Lintian::Deb822::Parser - Lintian's generic Deb822 parser functions
 
 =head1 SYNOPSIS
 
- use Lintian::Deb822Parser qw(read_dpkg_control);
+ use Lintian::Deb822::Parser qw(read_dpkg_control);
  
  my (@paragraphs);
  eval { @paragraphs = read_dpkg_control('some/debian/ctrl/file'); };

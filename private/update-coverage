@@ -30,7 +30,7 @@ BEGIN {
 my $LINTIAN_ROOT = $ENV{'LINTIAN_ROOT'};
 
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
-use Lintian::Deb822Parser qw(read_dpkg_control);
+use Lintian::Deb822::Parser qw(read_dpkg_control);
 
 # Check that we're being run from the right place (although the above probably
 # died if we weren't).

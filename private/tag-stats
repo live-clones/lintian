@@ -26,7 +26,7 @@ BEGIN {
 my $LINTIAN_ROOT = $ENV{'LINTIAN_ROOT'};
 
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
-use Lintian::Deb822Parser qw(read_dpkg_control);
+use Lintian::Deb822::Parser qw(read_dpkg_control);
 use Lintian::Tag::Info;
 
 my @severities = reverse qw(pedantic info warning error);

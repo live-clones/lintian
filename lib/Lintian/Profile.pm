@@ -33,7 +33,7 @@ use Path::Tiny;
 use Dpkg::Vendor qw(get_current_vendor get_vendor_info);
 
 use Lintian::Check::Info;
-use Lintian::Deb822Parser qw(read_dpkg_control);
+use Lintian::Deb822::Parser qw(read_dpkg_control);
 use Lintian::Tag::Info;
 
 use constant EMPTY => q{};

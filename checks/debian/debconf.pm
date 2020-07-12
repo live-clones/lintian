@@ -28,7 +28,7 @@ use autodie;
 
 use Path::Tiny;
 
-use Lintian::Deb822Parser qw(parse_dpkg_control_string :constants);
+use Lintian::Deb822::Parser qw(parse_dpkg_control_string :constants);
 use Lintian::Relation;
 use Lintian::Util qw($PKGNAME_REGEX);
 

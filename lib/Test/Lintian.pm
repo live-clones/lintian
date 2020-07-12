@@ -78,7 +78,7 @@ use Unicode::UTF8 qw(valid_utf8 decode_utf8);
 
 use Lintian::Spelling qw(check_spelling);
 use Lintian::Data;
-use Lintian::Deb822Parser qw(parse_dpkg_control_string);
+use Lintian::Deb822::Parser qw(parse_dpkg_control_string);
 use Lintian::Profile;
 use Lintian::Tag::Info;
 

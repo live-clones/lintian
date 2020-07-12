@@ -38,7 +38,7 @@ use Path::Tiny;
 use POSIX qw(sigprocmask SIG_BLOCK SIG_UNBLOCK SIG_SETMASK);
 use Unicode::UTF8 qw(valid_utf8);
 
-use Lintian::Deb822Parser qw(read_dpkg_control parse_dpkg_control_string);
+use Lintian::Deb822::Parser qw(read_dpkg_control parse_dpkg_control_string);
 
 # Force export as soon as possible, since some of the modules we load also
 # depend on us and the sequencing can cause things not to be exported

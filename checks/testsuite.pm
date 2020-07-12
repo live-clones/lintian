@@ -30,7 +30,7 @@ use List::MoreUtils qw(any none);
 use Path::Tiny;
 
 use Lintian::Data;
-use Lintian::Deb822Parser qw(
+use Lintian::Deb822::Parser qw(
   DCTRL_COMMENTS_AT_EOL
   parse_dpkg_control_string
 );

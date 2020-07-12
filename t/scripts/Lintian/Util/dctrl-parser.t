@@ -6,7 +6,7 @@ use autodie;
 
 use Test::More;
 
-use Lintian::Deb822Parser qw(visit_dpkg_paragraph_string);
+use Lintian::Deb822::Parser qw(visit_dpkg_paragraph_string);
 
 my %TESTS_BAD = (
     'pgp-sig-before-start' => qr/PGP signature before message/,

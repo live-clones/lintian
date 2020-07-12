@@ -62,7 +62,7 @@ use Path::Tiny;
 use POSIX qw(locale_h strftime);
 
 use Lintian::Data;
-use Lintian::Deb822Parser qw(read_dpkg_control_lc);
+use Lintian::Deb822::Parser qw(read_dpkg_control_lc);
 use Lintian::Profile;
 
 =head1 FUNCTIONS

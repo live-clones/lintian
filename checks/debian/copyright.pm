@@ -34,7 +34,7 @@ use Unicode::UTF8 qw[valid_utf8 decode_utf8];
 use XML::LibXML;
 
 use Lintian::Data;
-use Lintian::Deb822Parser qw(parse_dpkg_control_string);
+use Lintian::Deb822::Parser qw(parse_dpkg_control_string);
 use Lintian::Relation::Version qw(versions_compare);
 use Lintian::Spelling qw(check_spelling);
 

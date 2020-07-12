@@ -39,7 +39,7 @@ use URI::Escape;
 use YAML::XS ();
 
 use Lintian::Data;
-use Lintian::Deb822Parser qw(read_dpkg_control_lc);
+use Lintian::Deb822::Parser qw(read_dpkg_control_lc);
 use Lintian::Internal::FrontendUtil qw(split_tag);
 use Lintian::Profile;
 use Lintian::Relation::Version qw(versions_comparator);

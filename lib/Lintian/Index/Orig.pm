@@ -32,7 +32,7 @@ use IO::Async::Process;
 use List::MoreUtils qw(uniq);
 use Path::Tiny;
 
-use Lintian::Deb822Parser qw(read_dpkg_control);
+use Lintian::Deb822::Parser qw(read_dpkg_control);
 use Lintian::Index::Item;
 
 use constant EMPTY => q{};

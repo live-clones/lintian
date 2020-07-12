@@ -25,7 +25,7 @@ use utf8;
 
 use Path::Tiny;
 
-use Lintian::Deb822Parser qw(read_dpkg_control);
+use Lintian::Deb822::Parser qw(read_dpkg_control);
 use Lintian::Tag::Info ();
 
 use constant EMPTY => q{};
