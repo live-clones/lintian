@@ -163,7 +163,7 @@ sub source {
         die "syntax error in debian/control: $@";
     }
 
-    foreach my $field (keys %{$processable->source_field}) {
+    for my $field ($processable->source_fields->names) {
         $self->tag(
             'debian-control-has-empty-field',
             "field \"$field\" in source paragraph",
@@ -176,20 +176,21 @@ sub source {
         my $bfields = $processable->binary_field($bin);
         $self->tag('build-info-in-binary-control-file-section', "Package $bin")
           if (
-            first { $bfields->{"Build-$_"} }
+            first { $bfields->value("Build-$_") }
             qw(Depends Depends-Indep Conflicts Conflicts-Indep)
           );
-        foreach my $field (keys %$bfields) {
+        foreach my $field ($bfields->names) {
             $self->tag(
                 'binary-control-field-duplicates-source',
                 "field \"$field\" in package $bin"
               )
               if ( $processable->source_field($field)
-                && $bfields->{$field} eq $processable->source_field($field));
+                && $bfields->value($field) eq
+                $processable->source_field($field));
             $self->tag(
                 'debian-control-has-empty-field',
                 "field \"$field\" in package $bin",
-            ) if $bfields->{$field} eq '';
+            ) if $bfields->value($field) eq '';
         }
         if ($bin =~ /[-]dbgsym$/) {
             $self->tag('debian-control-has-dbgsym-package', $bin);
@@ -384,16 +385,18 @@ sub source {
     for my $short (keys %short_descriptions) {
         # Assume that substvars are correctly handled
         next if $short =~ m/\$\{.+\}/;
-        $self->tag('duplicate-short-description',
-            @{$short_descriptions{$short}})
-          if scalar @{$short_descriptions{$short}} > 1;
+        $self->tag(
+            'duplicate-short-description',
+            sort @{$short_descriptions{$short}}
+        )if scalar @{$short_descriptions{$short}} > 1;
     }
 
     # check for duplicate long description
     for my $long (keys %long_descriptions) {
         # Assume that substvars are correctly handled
         next if $long =~ m/\$\{.+\}/;
-        $self->tag('duplicate-long-description', @{$long_descriptions{$long}})
+        $self->tag('duplicate-long-description',
+            sort @{$long_descriptions{$long}})
           if scalar @{$long_descriptions{$long}} > 1;
     }
 

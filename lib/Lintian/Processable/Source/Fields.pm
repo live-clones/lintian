@@ -83,10 +83,7 @@ I<Note>: Package names that are not valid are silently ignored.
 sub binaries {
     my ($self) = @_;
 
-    $self->load_debian_control
-      unless scalar @{$self->binary_names};
-
-    return @{ $self->binary_names };
+    return keys %{$self->binary_fields};
 }
 
 =item binary_package_type (BINARY)
@@ -103,27 +100,16 @@ F<debian/control> file, this method return C<undef>.
 sub binary_package_type {
     my ($self, $name) = @_;
 
-    unless (scalar keys %{$self->binaries_data}) {
+    my $fields = $self->binary_fields->{$name};
+    return
+      unless defined $fields;
 
-        # we need the binary fields for this.
-        $self->load_debian_control
-          unless scalar keys %{$self->binary_fields};
+    my $type = $fields->value('Package-Type');
 
-        my %install;
-        foreach my $packagename (keys %{ $self->binary_fields }) {
+    $type //= $fields->value('XC-Package-Type');
+    $type //= 'deb';
 
-            my $type = $self->binary_field($packagename, 'Package-Type');
-
-            $type //= $self->binary_field($packagename, 'XC-Package-Type');
-            $type //= 'deb';
-
-            $install{$packagename} = lc $type;
-        }
-
-        $self->binaries_data(\%install);
-    }
-
-    return $self->binaries_data->{$name};
+    return lc $type;
 }
 
 =item source_field([FIELD[, DEFAULT]])
@@ -148,21 +134,10 @@ L<field> instead.
 sub source_field {
     my ($self, $name) = @_;
 
-    $self->load_debian_control
-      unless scalar keys %{$self->source_fields};
-
     return $self->source_fields
       unless length $name;
 
-    unless(scalar keys %{$self->source_legend}) {
-        $self->source_legend->{lc $_} = $_ for keys %{$self->source_fields};
-    }
-
-    my $exact = $self->source_legend->{lc $name};
-    return
-      unless length $exact;
-
-    return $self->source_fields->{$exact};
+    return $self->source_fields->value($name);
 }
 
 =item binary_field (PACKAGE[, FIELD[, DEFAULT]])
@@ -188,9 +163,6 @@ DEFAULT.
 sub binary_field {
     my ($self, $package, $name) = @_;
 
-    $self->load_debian_control
-      unless scalar keys %{$self->binary_fields};
-
     return
       unless length $package;
 
@@ -201,99 +173,80 @@ sub binary_field {
     return $per_package
       unless length $name;
 
-    unless(scalar keys %{$self->binary_legend}) {
-
-        for my $binary (keys %{$self->binary_fields}) {
-            $self->binary_legend->{$binary}{lc $_} = $_
-              for keys %{$self->binary_fields->{$binary}};
-        }
-    }
-
-    my $exact = $self->binary_legend->{$package}{lc $name};
-    return
-      unless length $exact;
-
-    return $per_package->{$exact};
+    return $per_package->value($name);
 }
 
-=item load_debian_control
-
-=item binaries_data
-=item binary_names
-
 =item binary_fields
-=item binary_legend
-
 =item source_fields
-=item source_legend
+=item debian_control_sections
 
 =cut
 
-has binaries_data => (
-    is => 'rw',
-    coerce => sub { my ($hashref) = @_; return ($hashref // {}); },
-    default => sub { {} });
-has binary_names => (
-    is => 'rw',
-    coerce => sub { my ($arrayref) = @_; return ($arrayref // []); },
-    default => sub { [] });
-
 has binary_fields => (
     is => 'rw',
-    coerce => sub { my ($hashref) = @_; return ($hashref // {}); },
-    default => sub { {} });
-has binary_legend => (is => 'rw', default => sub { {} });
+    lazy => 1,
+    default => sub {
+        my ($self) = @_;
+
+        my @sections = @{$self->debian_control_sections};
+
+        # in theory, one could craft a package in which d/control is empty
+        shift @sections;
+
+        my @named
+          = grep { ($_->value('Package') // EMPTY) =~ m{\A $PKGNAME_REGEX \Z}x }
+          @sections;
+
+        my %indexed = map { $_->value('Package') => $_ } @named;
+
+        return \%indexed;
+    });
 
 has source_fields => (
     is => 'rw',
-    coerce => sub { my ($hashref) = @_; return ($hashref // {}); },
-    default => sub { {} });
-has source_legend => (is => 'rw', default => sub { {} });
+    lazy => 1,
+    default => sub {
+        my ($self) = @_;
 
-sub load_debian_control {
-    my ($self) = @_;
+        my @sections = @{$self->debian_control_sections};
 
-    # Load the fields from d/control
-    my $dctrl = $self->patched->resolve_path('debian/control');
-    return 0
-      unless defined $dctrl && $dctrl->is_open_ok;
+        # in theory, one could craft a package in which d/control is empty
+        my $source = shift @sections;
 
-    my $bytes = path($dctrl->unpacked_path)->slurp;
-    return 0
-      unless valid_utf8($bytes);
+        return $source;
+    });
 
-    my $contents = decode_utf8($bytes);
+has debian_control_sections => (
+    is => 'rw',
+    lazy => 1,
+    default => sub {
+        my ($self) = @_;
 
-    my @control_data;
-    eval {@control_data = parse_dpkg_control_string($contents);};
+        my $file = $self->patched->resolve_path('debian/control');
+        return []
+          unless defined $file;
 
-    if ($@) {
-        # If it is a syntax error, ignore it (we emit
-        # syntax-error-in-control-file in this case via
-        # control-file).
-        die $@
-          unless $@ =~ /syntax error/;
+        return []
+          unless $file->is_valid_utf8;
 
-        return 0;
-    }
+        my $contents = $file->decoded_utf8;
+        my $deb822 = Lintian::Deb822::File->new;
 
-    # In theory you can craft a package such that d/control is empty.
-    my $source = shift @control_data;
-    $self->source_fields($source);
+        my @sections;
+        eval {@sections = $deb822->parse_string($contents);};
 
-    my %install;
-    foreach my $paragraph (@control_data) {
-        my $name = $paragraph->{'Package'};
-        next
-          unless defined $name && $name =~ m{\A $PKGNAME_REGEX \Z}xsm;
-        $install{$name} = $paragraph;
-        push(@{$self->binary_names}, $name);
-    }
+        if (length $@) {
+            # If it is a syntax error, ignore it (we emit
+            # syntax-error-in-control-file in this case via
+            # control-file).
+            die $@
+              unless $@ =~ /syntax error/;
 
-    $self->binary_fields(\%install);
+            return [];
+        }
 
-    return 1;
-}
+        return \@sections;
+    });
 
 =back
 

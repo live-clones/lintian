@@ -25,7 +25,6 @@ use warnings;
 use utf8;
 use autodie;
 
-use List::Compare;
 use Path::Tiny;
 
 use constant AT => q{@};
@@ -61,8 +60,8 @@ sub source {
     $self->tag('required-field', $dscfile, $_) for @missing_dsc;
 
     # look at d/control source paragraph
-    my @missing_control_source = $self->find_missing(\@DEBIAN_CONTROL_SOURCE,
-        [keys %{$self->processable->source_field}]);
+    my @missing_control_source
+      = $self->processable->source_fields->missing(@DEBIAN_CONTROL_SOURCE);
 
     my $controlfile = 'debian/control';
     $self->tag('required-field', $controlfile . AT . 'source', $_)
@@ -73,8 +72,8 @@ sub source {
     for my $installable (@installables) {
 
         my @missing_control_installable
-          = $self->find_missing(\@DEBIAN_CONTROL_INSTALLABLE,
-            [keys %{$self->processable->binary_field($installable)}]);
+          = $self->processable->binary_fields->{$installable}
+          ->missing(@DEBIAN_CONTROL_INSTALLABLE);
 
         $self->tag('required-field', $controlfile . AT . $installable, $_)
           for @missing_control_installable;
@@ -105,22 +104,6 @@ sub changes {
     $self->tag('required-field', $changesfile, $_) for @missing_changes;
 
     return;
-}
-
-sub find_missing {
-    my ($self, $required, $actual) = @_;
-
-    my %required_lookup = map { lc $_ => $_ } @{$required};
-    my @actual_lowercase = map { lc } @{$actual};
-
-    # select fields for announcement
-    my $missinglc
-      = List::Compare->new([keys %required_lookup], \@actual_lowercase);
-    my @missing_lowercase = $missinglc->get_Lonly;
-
-    my @missing = map { $required_lookup{$_} } @missing_lowercase;
-
-    return @missing;
 }
 
 1;

@@ -57,14 +57,14 @@ sub source {
     my $controlfile = 'debian/control';
 
     # look at d/control source paragraph
-    my @source_fields = keys %{$self->processable->source_field};
+    my @source_fields = $self->processable->source_fields->names;
     $self->check_style($controlfile . AT . 'source', @source_fields);
 
     # look at d/control installable paragraphs
     my @installables = $self->processable->binaries;
     for my $installable (@installables) {
         my @installable_fields
-          = keys %{$self->processable->binary_field($installable)};
+          = $self->processable->binary_fields->{$installable}->names;
         $self->check_style($controlfile . AT . $installable,
             @installable_fields);
     }
