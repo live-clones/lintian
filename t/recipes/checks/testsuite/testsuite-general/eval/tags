@@ -1,17 +1,17 @@
-testsuite-general (source): unknown-runtime-tests-restriction unknownrestriction paragraph starting at line 24
-testsuite-general (source): unknown-runtime-tests-field Comment paragraph starting at line 1
-testsuite-general (source): unknown-runtime-tests-feature unknownfeature paragraph starting at line 24
-testsuite-general (source): testsuite-dependency-has-unparsable-elements "missing a comma" (in paragraph starting at line 20)
+testsuite-general (source): unknown-runtime-tests-restriction unknownrestriction in line 26
+testsuite-general (source): unknown-runtime-tests-field Comment in line 2
+testsuite-general (source): unknown-runtime-tests-feature unknownfeature in line 25
+testsuite-general (source): testsuite-dependency-has-unparsable-elements "missing a comma" (in line 22)
 testsuite-general (source): runtime-test-file-is-not-a-regular-file debian/tests/lfifo
 testsuite-general (source): runtime-test-file-is-not-a-regular-file debian/tests/fifo
-testsuite-general (source): obsolete-runtime-tests-restriction needs-recommends paragraph starting at line 28
-testsuite-general (source): missing-runtime-test-file debian/tests/self1 paragraph starting at line 35
-testsuite-general (source): missing-runtime-test-file debian/tests/self paragraph starting at line 35
-testsuite-general (source): missing-runtime-test-file debian/tests/missing-test paragraph starting at line 5
-testsuite-general (source): missing-runtime-test-file debian/tests/broken paragraph starting at line 35
-testsuite-general (source): missing-runtime-test-file debian/tests/asym1 paragraph starting at line 35
-testsuite-general (source): missing-runtime-test-file debian/tests/asym paragraph starting at line 35
-testsuite-general (source): illegal-runtime-test-name under_score paragraph starting at line 5
+testsuite-general (source): obsolete-runtime-tests-restriction needs-recommends in line 29
+testsuite-general (source): missing-runtime-test-file debian/tests/self1 in line 35
+testsuite-general (source): missing-runtime-test-file debian/tests/self in line 35
+testsuite-general (source): missing-runtime-test-file debian/tests/missing-test in line 5
+testsuite-general (source): missing-runtime-test-file debian/tests/broken in line 35
+testsuite-general (source): missing-runtime-test-file debian/tests/asym1 in line 35
+testsuite-general (source): missing-runtime-test-file debian/tests/asym in line 35
+testsuite-general (source): illegal-runtime-test-name under_score in line 5
 testsuite-general (source): exclusive-runtime-tests-field tests, test-command paragraph starting at line 20
 testsuite-general (source): debian-tests-control-autodep8-is-obsolete debian/tests/control.autodep8
 testsuite-general (source): debian-tests-control-and-control-autodep8 debian/tests/control debian/tests/control.autodep8
