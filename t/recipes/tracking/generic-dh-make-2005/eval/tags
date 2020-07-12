@@ -5,8 +5,8 @@ generic-dh-make-2005 (source): trailing-whitespace debian/rules (line 49)
 generic-dh-make-2005 (source): trailing-whitespace debian/rules (line 32)
 generic-dh-make-2005 (source): trailing-whitespace debian/changelog (line 6)
 generic-dh-make-2005 (source): rules-requires-root-missing
-generic-dh-make-2005 (source): package-uses-deprecated-debhelper-compat-version 5
-generic-dh-make-2005 (source): package-lacks-versioned-build-depends-on-debhelper 5
+generic-dh-make-2005 (source): package-uses-deprecated-debhelper-compat-version 7
+generic-dh-make-2005 (source): package-lacks-versioned-build-depends-on-debhelper 7
 generic-dh-make-2005 (source): older-source-format 1.0
 generic-dh-make-2005 (source): no-homepage-field
 generic-dh-make-2005 (source): no-dh-sequencer

@@ -1,3 +1,2 @@
-debconf (source): debian-rules-sets-DH_COMPAT line 3
-debconf (source): debian-rules-calls-debhelper-in-odd-order dh_makeshlibs (line 60)
-debconf (source): debian-rules-calls-debhelper-in-odd-order dh_makeshlibs (line 56)
+debconf (source): debian-rules-calls-debhelper-in-odd-order dh_makeshlibs (line 58)
+debconf (source): debian-rules-calls-debhelper-in-odd-order dh_makeshlibs (line 54)

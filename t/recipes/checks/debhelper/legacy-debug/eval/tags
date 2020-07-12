@@ -1,6 +1,0 @@
-debug (source): package-uses-deprecated-debhelper-compat-version 5
-debug (source): dh-clean-k-is-deprecated
-debug (source): debian-build-system debhelper
-debug (source): debhelper-compat-level 5
-debug (source): debhelper-but-no-misc-depends hi-dbg
-debug (source): debhelper-but-no-misc-depends hello-hello-dbg

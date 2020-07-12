@@ -1,7 +1,0 @@
-debug (source): latest-debian-changelog-entry-reuses-existing-version 1.0 ~= 1.0 (last used: Sat,  4 Mar 2006 21:31:06 -0800)
-libhello0-dbg (binary): debian-changelog-line-too-short NMU. (line 3)
-libhello0 (binary): debian-changelog-line-too-short NMU. (line 3)
-hi-dbg (binary): debian-changelog-line-too-short NMU. (line 3)
-hello-hello-dbg (binary): debian-changelog-line-too-short NMU. (line 3)
-hello-dbg (binary): no-changelog usr/share/doc/hello-dbg/changelog.gz (native package)
-hello (binary): debian-changelog-line-too-short NMU. (line 3)

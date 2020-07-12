@@ -1,3 +1,0 @@
-debug (source): dbg-package-missing-depends libhello0-dbg
-debug (source): dbg-package-missing-depends hi-dbg
-debug (source): build-depends-indep-without-arch-indep

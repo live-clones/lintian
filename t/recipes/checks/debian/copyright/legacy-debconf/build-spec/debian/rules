@@ -1,7 +1,5 @@
 #!/usr/bin/make -f
 
-export DH_COMPAT = 5
-
 deb_dir		=	debian/debconf
 udeb_dir	=	debian/debconf-udeb
 build_dirs	=	$(deb_dir) $(udeb_dir)
@@ -32,7 +30,7 @@ binary-indep:	build
 binary-arch:	build
 	dh_testdir
 	dh_testroot
-	dh_clean -k -a
+	dh_prep
 	dh_installdirs -a
 
 	dh_installchangelogs -a

@@ -1,7 +1,5 @@
-debconf (source): package-uses-deprecated-debhelper-compat-version 5
-debconf (source): package-lacks-versioned-build-depends-on-debhelper 5
+debconf (source): uses-debhelper-compat-file
+debconf (source): package-needs-versioned-debhelper-build-depends 13
 debconf (source): maintainer-script-lacks-debhelper-token debian/debconf-test.postinst
-debconf (source): dh-clean-k-is-deprecated
-debconf (source): declares-possibly-conflicting-debhelper-compat-versions rules=5 compat=5
 debconf (source): debian-build-system debhelper
-debconf (source): debhelper-compat-level 5
+debconf (source): debhelper-compat-level 13
