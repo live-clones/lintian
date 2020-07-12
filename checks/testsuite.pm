@@ -123,8 +123,7 @@ sub check_control_paragraph {
     my $tests_field = $section->unfolded_value('Tests');
     my $test_command = $section->unfolded_value('Test-Command');
 
-    die
-"missing runtime tests field Tests || Test-Command, paragraph starting at line $line"
+    $self->tag('no-tests')
       unless defined $tests_field || defined $test_command;
 
     $self->tag(

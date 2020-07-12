@@ -55,6 +55,7 @@ my @known_missing = qw(
   invalid-field-for-derivative
   invalid-version-number-for-derivative
   manual-page-in-udeb
+  no-tests
   old-python-version-field
   old-source-override-location
   package-is-team-maintained
