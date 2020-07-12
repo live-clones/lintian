@@ -1,5 +1,5 @@
 # Copyright © 2011 Niels Thykier <niels@thykier.net>
-# Copyright © 2019 Felix Lechner
+# Copyright © 2019-2020 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -77,20 +77,6 @@ Returns the name of the package.
 
 Returns the type of package (e.g. binary, source, udeb ...)
 
-=item legend
-
-Returns exact field names for their lowercase versions.
-
-=item verbatim
-=item extra_fields
-
-Returns a hash to the raw, unedited and verbatim field values.
-
-=item unfolded
-
-Returns a hash to unfolded field values. Continuations lines
-have been connected.
-
 =item $proc->version
 =item $proc->pkg_version
 
@@ -125,6 +111,10 @@ Returns the version of the source package.
 Returns a truth value if one or more fields in this Processable is
 tainted.  On a best effort basis tainted fields will be sanitized
 to less dangerous (but possibly invalid) values.
+
+=item fields
+
+Lintian::Deb822::Section with primary field values.
 
 =item $proc->pooldir
 
@@ -195,9 +185,7 @@ has version => (
 
 has tainted => (is => 'rw', default => 0);
 
-has legend => (is => 'rw', default => sub { {} });
-has verbatim => (alias => 'extra_fields', is => 'rw', default => sub { {} });
-has unfolded => (is => 'rwp', default => sub { {} });
+has fields => (is => 'rw', default => sub { Lintian::Deb822::Section->new; });
 
 has pooldir => (is => 'rw', default => EMPTY);
 has groupdir => (is => 'rw', default => EMPTY);
@@ -358,33 +346,7 @@ If FIELD is passed but not present, then this method returns undef.
 sub unfolded_field {
     my ($self, $name) = @_;
 
-    return
-      unless length $name;
-
-    my $lowercase = lc $name;
-
-    my $unfolded = $self->unfolded->{$lowercase};
-    return $unfolded
-      if defined $unfolded;
-
-    my $value = $self->field($name);
-    return
-      unless defined $value;
-
-    # will also replace a newline at the very end
-    $value =~ s/\n//g;
-
-    # Remove leading space as it confuses some of the other checks
-    # that are anchored.  This happens if the field starts with a
-    # space and a newline, i.e ($ marks line end):
-    #
-    # Vcs-Browser: $
-    #  http://somewhere.com/$
-    $value =~ s/^\s*+//;
-
-    $self->unfolded->{$lowercase} = $value;
-
-    return $value;
+    return $self->fields->unfolded_value($name);
 }
 
 =item field ([FIELD[, DEFAULT]])
@@ -405,18 +367,7 @@ name (in all lowercase).
 sub field {
     my ($self, $name) = @_;
 
-    return $self->verbatim
-      unless length $name;
-
-    unless(scalar keys %{$self->legend}) {
-        $self->legend->{lc $_} = $_ for keys %{$self->verbatim};
-    }
-
-    my $exact = $self->legend->{lc $name};
-    return
-      unless length $exact;
-
-    return $self->verbatim->{$exact};
+    return $self->fields->value($name);
 }
 
 =back

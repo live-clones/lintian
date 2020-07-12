@@ -39,13 +39,15 @@ with 'Lintian::Check';
 sub always {
     my ($self) = @_;
 
-    my @names = keys %{$self->processable->field};
+    my @names = $self->processable->fields->names;
 
     # fields that contain ESC characters
     my @escaped
-      = grep { index($self->processable->field($_), ESCAPE) >= 0 } @names;
+      = grep { index($self->processable->fields->value($_), ESCAPE) >= 0 }
+      @names;
 
-    $self->tag('ansi-escape', $_, $self->processable->field($_)) for @escaped;
+    $self->tag('ansi-escape', $_, $self->processable->fields->value($_))
+      for @escaped;
 
     return;
 }

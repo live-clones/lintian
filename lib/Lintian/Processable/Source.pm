@@ -1,4 +1,4 @@
-# Copyright © 2019 Felix Lechner
+# Copyright © 2019-2020 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -26,7 +26,7 @@ use autodie;
 use Carp qw(croak);
 use Path::Tiny;
 
-use Lintian::Deb822::Parser qw(read_dpkg_control);
+use Lintian::Deb822::File;
 
 use constant EMPTY => q{};
 use constant COLON => q{:};
@@ -93,15 +93,14 @@ sub init {
     $self->type('source');
     $self->link_label('dsc');
 
-    my @paragraphs;
-    @paragraphs = read_dpkg_control($self->path)
+    my $primary = Lintian::Deb822::File->new;
+    my @sections = $primary->read_file($self->path)
       or croak $self->path . ' is not valid dsc file';
-    my $dinfo = $paragraphs[0];
 
-    $self->verbatim($dinfo);
+    $self->fields($sections[0]);
 
-    my $name = $dinfo->{Source} // EMPTY;
-    my $version = $dinfo->{Version} // EMPTY;
+    my $name = $self->fields->value('Source') // EMPTY;
+    my $version = $self->fields->value('Version') // EMPTY;
     my $architecture = 'source';
 
     # it is its own source package

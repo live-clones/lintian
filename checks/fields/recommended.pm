@@ -63,8 +63,7 @@ my @CHANGES = qw(Urgency);
 sub source {
     my ($self) = @_;
 
-    my @missing_dsc
-      = $self->find_missing(\@DSC, [keys %{$self->processable->field}]);
+    my @missing_dsc= $self->processable->fields->missing(@DSC);
 
     my $dscfile = path($self->processable->path)->basename;
     $self->tag('recommended-field', $dscfile, $_) for @missing_dsc;
@@ -96,8 +95,7 @@ sub installable {
     my ($self) = @_;
 
     my @missing_installation_control
-      = $self->find_missing(\@INSTALLATION_CONTROL,
-        [keys %{$self->processable->field}]);
+      = $self->processable->fields->missing(@INSTALLATION_CONTROL);
 
     my $debfile = path($self->processable->path)->basename;
     $self->tag('recommended-field', $debfile, $_)
@@ -109,8 +107,7 @@ sub installable {
 sub changes {
     my ($self) = @_;
 
-    my @missing_changes
-      = $self->find_missing(\@CHANGES, [keys %{$self->processable->field}]);
+    my @missing_changes= $self->processable->fields->missing(@CHANGES);
 
     my $changesfile = path($self->processable->path)->basename;
     $self->tag('recommended-field', $changesfile, $_) for @missing_changes;

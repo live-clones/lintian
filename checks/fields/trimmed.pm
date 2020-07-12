@@ -25,8 +25,6 @@ use warnings;
 use utf8;
 use autodie;
 
-use List::Compare;
-
 use Moo;
 use namespace::clean;
 
@@ -35,11 +33,11 @@ with 'Lintian::Check';
 sub always {
     my ($self) = @_;
 
-    my @all = keys %{$self->processable->field};
+    my @all = $self->processable->fields->names;
 
     for my $name (@all) {
 
-        my $value = $self->processable->field($name);
+        my $value = $self->processable->fields->value($name);
         $self->tag('trimmed-field', $name, $value);
     }
 

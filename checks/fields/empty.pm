@@ -32,8 +32,8 @@ with 'Lintian::Check';
 sub always {
     my ($self) = @_;
 
-    my @all = keys %{$self->processable->field};
-    my @empty = grep { $self->processable->field($_) =~ /^\s*$/ } @all;
+    my @all = $self->processable->fields->names;
+    my @empty = grep { $self->processable->fields->value($_) =~ /^\s*$/ } @all;
 
     $self->tag('empty-field', $_) for @empty;
 

@@ -29,7 +29,6 @@ use warnings;
 use utf8;
 use autodie;
 
-use List::Compare;
 use Path::Tiny;
 
 use Lintian::Data ();
@@ -46,8 +45,7 @@ our $KNOWN_UDEB_FIELDS = Lintian::Data->new('fields/udeb-fields');
 sub source {
     my ($self) = @_;
 
-    my @unknown= $self->find_missing([keys %{$self->processable->field}],
-        [$KNOWN_SOURCE_FIELDS->all]);
+    my @unknown= $self->processable->fields->extra($KNOWN_SOURCE_FIELDS->all);
 
     my $dscfile = path($self->processable->path)->basename;
     $self->tag('unknown-field', $dscfile, $_)for @unknown;
@@ -58,8 +56,7 @@ sub source {
 sub binary {
     my ($self) = @_;
 
-    my @unknown= $self->find_missing([keys %{$self->processable->field}],
-        [$KNOWN_BINARY_FIELDS->all]);
+    my @unknown= $self->processable->fields->extra($KNOWN_BINARY_FIELDS->all);
 
     my $debfile = path($self->processable->path)->basename;
     $self->tag('unknown-field', $debfile, $_)for @unknown;
@@ -70,29 +67,12 @@ sub binary {
 sub udeb {
     my ($self) = @_;
 
-    my @unknown= $self->find_missing([keys %{$self->processable->field}],
-        [$KNOWN_UDEB_FIELDS->all]);
+    my @unknown = $self->processable->fields->extra($KNOWN_UDEB_FIELDS->all);
 
     my $udebfile = path($self->processable->path)->basename;
     $self->tag('unknown-field', $udebfile, $_)for @unknown;
 
     return;
-}
-
-sub find_missing {
-    my ($self, $required, $actual) = @_;
-
-    my %required_lookup = map { lc $_ => $_ } @{$required};
-    my @actual_lowercase = map { lc } @{$actual};
-
-    # select fields for announcement
-    my $missinglc
-      = List::Compare->new([keys %required_lookup], \@actual_lowercase);
-    my @missing_lowercase = $missinglc->get_Lonly;
-
-    my @missing = map { $required_lookup{$_} } @missing_lowercase;
-
-    return @missing;
 }
 
 1;

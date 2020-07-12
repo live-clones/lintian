@@ -1,4 +1,4 @@
-# Copyright © 2019 Felix Lechner
+# Copyright © 2019-2020 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -26,7 +26,7 @@ use Carp qw(croak);
 use Path::Tiny;
 use Unicode::UTF8 qw(valid_utf8 decode_utf8);
 
-use Lintian::Deb822::Parser qw(parse_dpkg_control_string);
+use Lintian::Deb822::File;
 
 use constant EMPTY => q{};
 use constant COLON => q{:};
@@ -92,16 +92,15 @@ sub init {
         $contents = $bytes;
     }
 
-    my @paragraphs;
-    @paragraphs = parse_dpkg_control_string($contents)
+    my $primary = Lintian::Deb822::File->new;
+    my @sections = $primary->parse_string($contents)
       or croak $self->path. ' is not a valid '. $self->type . ' file';
-    my $cinfo = $paragraphs[0];
 
-    $self->verbatim($cinfo);
+    $self->fields($sections[0]);
 
-    my $name = $cinfo->{Source} // EMPTY;
-    my $version = $cinfo->{Version} // EMPTY;
-    my $architecture = $cinfo->{Architecture} // EMPTY;
+    my $name = $self->fields->value('Source') // EMPTY;
+    my $version = $self->fields->value('Version') // EMPTY;
+    my $architecture = $self->fields->value('Architecture') // EMPTY;
 
     unless (length $name) {
         $name = $self->guess_name($self->path);

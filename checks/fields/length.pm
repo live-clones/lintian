@@ -50,10 +50,11 @@ sub always {
     my $maximum = 5_000;
 
     # all fields
-    my @all = keys %{$self->processable->field};
+    my @all = $self->processable->fields->names;
 
     # longer than maximum
-    my @long = grep { length $self->processable->field($_) > $maximum } @all;
+    my @long
+      = grep { length $self->processable->fields->value($_) > $maximum } @all;
 
     # filter allowed fields
     my $allowedlc = List::Compare->new(\@long, \@ALLOWED_FIELDS);
@@ -61,7 +62,7 @@ sub always {
 
     for my $name (@too_long) {
 
-        my $length = length $self->processable->field($name);
+        my $length = length $self->processable->fields->value($name);
 
         $self->tag('field-too-long', $name, "($length chars > $maximum)");
     }

@@ -38,7 +38,7 @@ use Path::Tiny;
 use POSIX qw(sigprocmask SIG_BLOCK SIG_UNBLOCK SIG_SETMASK);
 use Unicode::UTF8 qw(valid_utf8);
 
-use Lintian::Deb822::Parser qw(read_dpkg_control parse_dpkg_control_string);
+use Lintian::Deb822::File;
 
 # Force export as soon as possible, since some of the modules we load also
 # depend on us and the sequencing can cause things not to be exported
@@ -55,8 +55,6 @@ BEGIN {
 
     @EXPORT_OK = (qw(
           get_deb_info
-          get_dsc_info
-          get_dsc_info_from_string
           get_file_checksum
           get_file_digest
           do_fork
@@ -275,9 +273,10 @@ sub get_deb_info {
     my $composite = Future->needs_all($dpkgfuture, $tarfuture);
     $composite->get;
 
-    my @data = parse_dpkg_control_string($control);
+    my $primary = Lintian::Deb822::File->new;
+    my @sections = $primary->parse_string($control);
 
-    return $data[0];
+    return $sections[0];
 }
 
 =item drain_pipe(FD)

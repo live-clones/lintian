@@ -49,7 +49,7 @@ with 'Lintian::Check';
 sub source {
     my ($self) = @_;
 
-    my @control_fields = keys %{$self->processable->field};
+    my @control_fields = $self->processable->fields->names;
 
     my $dscfile = path($self->processable->path)->basename;
     $self->check_style($dscfile, @control_fields);
@@ -75,7 +75,7 @@ sub source {
 sub installable {
     my ($self) = @_;
 
-    my @control_fields = keys %{$self->processable->field};
+    my @control_fields = $self->processable->fields->names;
 
     my $debfile = path($self->processable->path)->basename;
     $self->check_style($debfile, @control_fields);
@@ -86,7 +86,7 @@ sub installable {
 sub changes {
     my ($self) = @_;
 
-    my @control_fields = keys %{$self->processable->field};
+    my @control_fields = $self->processable->fields->names;
 
     my $changesfile = path($self->processable->path)->basename;
     $self->check_style($changesfile, @control_fields);

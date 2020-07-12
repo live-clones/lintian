@@ -102,7 +102,7 @@ sub parse_string {
         push(@{$self->sections}, $section);
     }
 
-    return;
+    return @{$self->sections};
 }
 
 =back
