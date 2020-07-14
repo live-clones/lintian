@@ -1,0 +1,4 @@
+Skeleton: upload-native
+Testname: old-buffer
+Description: Uses old NodeJS buffer
+Author: Javascript Team <pkg-javascript-maintainers@lists.alioth.debian.org>

@@ -1,0 +1,4 @@
+Skeleton: upload-native
+Testname: svn
+Description: Declares SVN as VCS.
+Author: Javascript Team <pkg-javascript-maintainers@lists.alioth.debian.org>

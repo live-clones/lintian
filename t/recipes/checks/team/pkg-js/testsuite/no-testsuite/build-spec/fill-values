@@ -1,0 +1,4 @@
+Skeleton: upload-native
+Testname: no-testsuite
+Description: Missing Testsuite field
+Author: Javascript Team <pkg-javascript-maintainers@lists.alioth.debian.org>
