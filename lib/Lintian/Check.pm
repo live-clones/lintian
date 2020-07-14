@@ -89,7 +89,7 @@ sub visit_files {
     }
 
     my $breakdown_hook
-      ='"breakdown' . UNDERSCORE . $index . UNDERSCORE . 'files';
+      ='breakdown' . UNDERSCORE . $index . UNDERSCORE . 'files';
     $self->$breakdown_hook
       if $self->can($breakdown_hook);
 
