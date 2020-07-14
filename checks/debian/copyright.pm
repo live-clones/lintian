@@ -95,7 +95,7 @@ sub source {
     unless ($file) {
 
         # also look for <pkgname>.copyright for a single installable
-        my @installables = $self->processable->binaries;
+        my @installables = $self->processable->debian_control->installables;
         if (scalar @installables == 1) {
 
             $file = $debian_dir->child($installables[0] . '.copyright');
@@ -344,8 +344,9 @@ sub parse_dep5 {
         'Format',"(line $lines[0]{'Format'})")
       if none { defined $first_para->{$_} } qw(Format Format-Specification);
 
+    my $debian_control = $self->processable->debian_control;
     $self->tag('missing-explanation-for-contrib-or-non-free-package')
-      if ($self->processable->source_field('Section') // EMPTY)
+      if ($debian_control->source_fields->value('Section') // EMPTY)
       =~ m{^(contrib|non-free)(/.+)?$}
       and none { defined $first_para->{$_} } qw(Comment Disclaimer);
 
@@ -1263,7 +1264,8 @@ sub check_cross_link {
     if ($source) {
         # source package is available; check its list of binaries
         return
-          if defined $source->binary_package_type($foreign);
+          if
+          defined $source->debian_control->installable_package_type($foreign);
 
         $self->tag('usr-share-doc-symlink-to-foreign-package', $foreign);
 

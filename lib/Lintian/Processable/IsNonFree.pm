@@ -74,7 +74,7 @@ has is_non_free => (
         my $section;
 
         if ($self->type eq 'source') {
-            $section = $self->source_field('Section');
+            $section = $self->debian_control->source_fields->value('Section');
         } else {
             $section = $self->fields->value('Section');
         }

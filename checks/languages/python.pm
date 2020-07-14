@@ -70,7 +70,7 @@ sub source {
     my $pkg = $self->processable->name;
     my $processable = $self->processable;
 
-    my @package_names = $processable->binaries;
+    my @package_names = $processable->debian_control->installables;
     foreach my $bin (@package_names) {
         # Python 2 modules
         if ($bin =~ /^python2?-(.*)$/) {
@@ -100,7 +100,7 @@ sub source {
     # Mismatched substvars
     foreach my $regex (keys %MISMATCHED_SUBSTVARS) {
         my $substvar = $MISMATCHED_SUBSTVARS{$regex};
-        for my $binpkg ($processable->binaries) {
+        for my $binpkg ($processable->debian_control->installables) {
             next if any { $binpkg =~ /$_/ } @IGNORE;
             next if $binpkg !~ qr/$regex/;
             $self->tag('mismatched-python-substvar', $binpkg, $substvar)
@@ -110,7 +110,8 @@ sub source {
     }
 
     foreach my $field (@VERSION_FIELDS) {
-        my $pyversion = $processable->source_field($field);
+        my $pyversion
+          = $processable->debian_control->source_fields->value($field);
         next unless defined($pyversion);
 
         my @valid = (

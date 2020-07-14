@@ -47,13 +47,14 @@ sub source {
     my $pkg = $self->processable->name;
     my $processable = $self->processable;
 
-    for my $bin ($processable->binaries) {
+    for my $bin ($processable->debian_control->installables) {
 
         next
-          unless ($processable->binary_field($bin, 'Multi-Arch') // EMPTY) eq
-          'same';
+          unless ($processable->debian_control->installable_fields($bin)
+            ->value('Multi-Arch') // EMPTY) eq 'same';
 
-        my $wildcard = $processable->binary_field($bin, 'Architecture');
+        my $wildcard = $processable->debian_control->installable_fields($bin)
+          ->value('Architecture');
         my @arches   = split(
             SPACE,
             safe_qx(

@@ -60,7 +60,9 @@ my %KNOWN_SPECIAL_DEPENDS = map { $_ => 1 } qw(
 sub source {
     my ($self) = @_;
 
-    my $testsuite = $self->processable->source_field('Testsuite') // EMPTY;
+    my $debian_control = $self->processable->debian_control;
+
+    my $testsuite = $debian_control->source_fields->value('Testsuite')// EMPTY;
     my @testsuites = split(/\s*,\s*/, $testsuite);
 
     my $lc = List::Compare->new(\@testsuites, [$KNOWN_TESTSUITES->all]);

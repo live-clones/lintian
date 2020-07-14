@@ -78,8 +78,10 @@ my $ANY_DEBCONF = Lintian::Relation->new(
 sub source {
     my ($self) = @_;
 
-    my @catalogs
-      = ('templates', map { "$_.templates" } $self->processable->binaries);
+    my @catalogs= (
+        'templates',
+        map { "$_.templates" }$self->processable->debian_control->installables
+    );
     my @files = grep { defined }
       map { $self->processable->patched->resolve_path("debian/$_") } @catalogs;
 

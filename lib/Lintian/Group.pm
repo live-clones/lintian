@@ -878,7 +878,7 @@ sub spelling_exceptions {
     foreach my $processable ($self->get_processables) {
 
         my @names = ($processable->name, $processable->source);
-        push(@names, $processable->binaries)
+        push(@names, $processable->debian_control->installables)
           if $processable->type eq 'source';
 
         foreach my $name (@names) {

@@ -330,13 +330,16 @@ sub source {
         return;
     }
 
-    my @pkgs = $processable->binaries;
+    my @pkgs = $processable->debian_control->installables;
     my $single_pkg = '';
-    $single_pkg =  $processable->binary_package_type($pkgs[0])
+    $single_pkg
+      =  $processable->debian_control->installable_package_type($pkgs[0])
       if scalar @pkgs == 1;
 
     for my $binpkg (@pkgs) {
-        next if $processable->binary_package_type($binpkg) ne 'deb';
+        next
+          if $processable->debian_control->installable_package_type($binpkg)ne
+          'deb';
         my $strong = $processable->binary_relation($binpkg, 'strong');
         my $all = $processable->binary_relation($binpkg, 'all');
 
@@ -490,8 +493,9 @@ sub source {
             }
             close($fd);
             if (!$seentag) {
-                my $binpkg_type = $processable->binary_package_type($binpkg)
-                  // 'deb';
+                my $binpkg_type
+                  = $processable->debian_control->installable_package_type(
+                    $binpkg)// 'deb';
                 my $is_udeb = 0;
                 $is_udeb = 1 if $binpkg and $binpkg_type eq 'udeb';
                 $is_udeb = 1 if not $binpkg and $single_pkg eq 'udeb';

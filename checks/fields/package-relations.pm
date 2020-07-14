@@ -391,13 +391,14 @@ sub source {
     my $processable = $self->processable;
     my $group = $self->group;
 
-    my @binpkgs = $processable->binaries;
+    my @binpkgs = $processable->debian_control->installables;
 
     #Get number of arch-indep packages:
     my $arch_indep_packages = 0;
     my $arch_dep_packages = 0;
     foreach my $binpkg (@binpkgs) {
-        my $arch = $processable->binary_field($binpkg, 'Architecture')// EMPTY;
+        my $arch = $processable->debian_control->installable_fields($binpkg)
+          ->value('Architecture')// EMPTY;
         if ($arch eq 'all') {
             $arch_indep_packages++;
         } else {
@@ -604,9 +605,11 @@ sub source {
         my $binpkg = $gproc->name;
         if ($binpkg =~ m/-dbg$/) {
             push(@dbg_pkgs, $gproc);
-        } elsif (
-            ($processable->binary_field($binpkg, 'Architecture') // EMPTY) ne
-            'all'){
+        } elsif ((
+                $processable->debian_control->installable_fields($binpkg)
+                ->value('Architecture') // EMPTY
+            ) ne 'all'
+        ){
             push @arch_dep_pkgs, $binpkg;
         }
     }

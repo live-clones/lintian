@@ -61,7 +61,7 @@ sub source {
             $self->tag('pear-package-without-pkg-php-tools-builddep');
         } else {
             # Checking first binary relations
-            my @binaries = $processable->binaries;
+            my @binaries = $processable->debian_control->installables;
             my $binary = $binaries[0];
             my $depends = $processable->binary_relation($binary, 'Depends');
             my $recommends
@@ -78,7 +78,8 @@ sub source {
             }
             # Checking description
             my $description
-              = $processable->binary_field($binary, 'Description');
+              = $processable->debian_control->installable_fields($binary)
+              ->value('Description');
             if ($description !~ /\$\{phppear:summary\}/) {
                 $self->tag('pear-package-not-using-substvar',
                     '${phppear:summary}');

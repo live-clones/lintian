@@ -67,20 +67,21 @@ sub source {
     my $dscfile = path($self->processable->path)->basename;
     $self->tag('recommended-field', $dscfile, $_) for @missing_dsc;
 
+    my $debian_control = $self->processable->debian_control;
+
     # look at d/control source paragraph
     my @missing_control_source
-      = $self->processable->source_fields->missing(@DEBIAN_CONTROL_SOURCE);
+      = $debian_control->source_fields->missing(@DEBIAN_CONTROL_SOURCE);
 
     my $controlfile = 'debian/control';
     $self->tag('recommended-field', $controlfile . AT . 'source', $_)
       for @missing_control_source;
 
     # look at d/control installable paragraphs
-    my @installables = $self->processable->binaries;
-    for my $installable (@installables) {
+    for my $installable ($debian_control->installables) {
 
         my @missing_control_installable
-          = $self->processable->binary_fields->{$installable}
+          = $debian_control->installable_fields($installable)
           ->missing(@DEBIAN_CONTROL_INSTALLABLE);
 
         $self->tag('recommended-field', $controlfile . AT . $installable, $_)

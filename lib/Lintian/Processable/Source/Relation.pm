@@ -132,7 +132,9 @@ sub binary_relation {
         } else {
             croak "unknown relation field $name"
               unless $known{$lowercase};
-            my $value = $self->binary_field($package, $name);
+            my $value
+              = $self->debian_control->installable_fields($package)
+              ->value($name);
             $relation = Lintian::Relation->new($value);
         }
 

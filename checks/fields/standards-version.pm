@@ -77,8 +77,10 @@ sub source {
     my $version = $processable->fields->value('Standards-Version');
     my $all_udeb = 1;
     $all_udeb = 0
-      if first { $processable->binary_package_type($_) ne 'udeb' }
-    $processable->binaries;
+      if first {
+        $processable->debian_control->installable_package_type($_) ne 'udeb'
+    }
+    $processable->debian_control->installables;
 
     return
       unless length $version;

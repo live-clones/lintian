@@ -39,7 +39,7 @@ sub source {
 
     my $processable = $self->processable;
 
-    foreach my $bin ($processable->binaries) {
+    foreach my $bin ($processable->debian_control->installables) {
         if ($bin =~ m/^gir1\.2-/) {
             if (
                 not $processable->binary_relation($bin, 'strong')
