@@ -189,6 +189,24 @@ sub position {
     return $self->positions->{$exact};
 }
 
+=item present
+
+=cut
+
+sub present {
+    my ($self, @candidates) = @_;
+
+    my %lookup = map { lc $_ => $_ } @candidates;
+
+    my $present_lc
+      = List::Compare->new([keys %lookup], [keys %{$self->legend}]);
+    my @present_lowercase = $present_lc->get_intersection;
+
+    my @present = map { $lookup{$_} } @present_lowercase;
+
+    return @present;
+}
+
 =item missing
 
 =cut
