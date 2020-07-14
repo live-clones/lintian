@@ -34,6 +34,7 @@ use Lintian::Tag::TextUtil
 
 use constant EMPTY => q{};
 use constant SPACE => q{ };
+use constant SLASH => q{/};
 
 use Moo;
 use namespace::clean;
@@ -78,6 +79,8 @@ metadata elements or to format the tag description.
 =item effective_severity
 
 =item check
+
+=item name_spaced
 
 =item check_type
 
@@ -133,6 +136,12 @@ has check => (
     default => EMPTY
 );
 
+has name_spaced => (
+    is => 'rw',
+    coerce => sub { my ($boolean) = @_; return ($boolean // 0); },
+    default => 0
+);
+
 has check_type => (
     is => 'rw',
     coerce => sub { my ($text) = @_; return ($text // EMPTY); },
@@ -181,10 +190,16 @@ sub load {
 
     my $fields = $sections[0];
 
-    $self->name($fields->value('Tag'));
-    $self->original_severity($fields->value('Severity'));
+    $self->check($fields->value('Check') // EMPTY);
+    $self->name_spaced(($fields->value('Name-Spaced') // EMPTY) eq 'yes');
 
-    $self->check($fields->value('Check'));
+    my $name = $fields->value('Tag') // EMPTY;
+    $name = $self->check . SLASH . $name
+      if $self->name_spaced;
+
+    $self->name($name);
+
+    $self->original_severity($fields->value('Severity'));
     $self->experimental(($fields->value('Experimental') // EMPTY) eq 'yes');
 
     $self->info($fields->value('Info'));

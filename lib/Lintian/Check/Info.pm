@@ -206,7 +206,22 @@ this check).
 sub get_tag {
     my ($self, $tagname) = @_;
 
-    return $self->tag_table->{$tagname};
+    my $global = $self->tag_table->{$tagname};
+
+    return $global
+      if defined $global;
+
+    # try name spaced
+    my $prefixed = $self->name . SLASH . $tagname;
+
+    my $name_spaced = $self->tag_table->{$prefixed};
+    return
+      unless defined $name_spaced;
+
+    warn "Using $prefixed as name spaced while not so declared."
+      unless $name_spaced->name_spaced;
+
+    return $name_spaced;
 }
 
 =item $cs->tags

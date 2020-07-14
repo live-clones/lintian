@@ -153,8 +153,13 @@ sub tag {
 
     my $tagname = $arguments[0];
 
+    my $taginfo = $self->info->get_tag($tagname);
+
     warn 'Check ' . $self->info->name . " has no tag $tagname."
-      unless defined $self->info->get_tag($tagname);
+      unless defined $taginfo;
+
+    # could be name-spaced
+    $arguments[0] = $taginfo->name;
 
     return $self->processable->tag(@arguments);
 }
