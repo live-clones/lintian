@@ -35,7 +35,7 @@ with 'Lintian::Check';
 sub changes {
     my ($self) = @_;
 
-    my $urgency = $self->processable->field('Urgency');
+    my $urgency = $self->processable->fields->value('Urgency');
     return
       unless length $urgency;
 

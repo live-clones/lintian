@@ -85,15 +85,15 @@ sub installable {
 
     if ($pkg =~ /^x?fonts-/) {
         $self->tag('font-package-not-multi-arch-foreign')
-          unless ($processable->field('Multi-Arch') // 'no')
+          unless ($processable->fields->value('Multi-Arch') // 'no')
           =~/^(?:foreign|allowed)$/;
     }
 
-    my $multi = $processable->unfolded_field('Multi-Arch');
+    my $multi = $processable->fields->unfolded_value('Multi-Arch');
     return
       unless defined $multi;
 
-    my $architecture = $processable->unfolded_field('Architecture');
+    my $architecture = $processable->fields->unfolded_value('Architecture');
     if (defined $architecture) {
 
         $self->tag('illegal-multi-arch-value', $architecture, $multi)
@@ -106,7 +106,7 @@ sub installable {
 sub always {
     my ($self) = @_;
 
-    my $multi = $self->processable->unfolded_field('Multi-Arch');
+    my $multi = $self->processable->fields->unfolded_value('Multi-Arch');
     return
       unless defined $multi;
 

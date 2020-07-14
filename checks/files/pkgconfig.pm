@@ -43,7 +43,8 @@ my $PKG_CONFIG_BAD_REGEX
 sub files {
     my ($self, $file) = @_;
 
-    my $architecture = $self->processable->field('Architecture') // EMPTY;
+    my $architecture = $self->processable->fields->value('Architecture')
+      // EMPTY;
 
     # arch-indep pkgconfig
     if (   $file->is_regular_file

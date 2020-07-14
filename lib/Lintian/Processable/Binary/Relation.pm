@@ -120,7 +120,7 @@ sub relation {
         } else {
             croak "unknown relation field $name"
               unless $known{$lowercase};
-            my $value = $self->field($name);
+            my $value = $self->fields->value($name);
             $relation = Lintian::Relation->new($value);
         }
 

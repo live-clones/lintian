@@ -162,8 +162,8 @@ sub installable {
 
     # Consider every package to depend on itself.
     my $selfrel;
-    if (defined $self->processable->field('Version')) {
-        $_ = $self->processable->field('Version');
+    if (defined $self->processable->fields->value('Version')) {
+        $_ = $self->processable->fields->value('Version');
         $selfrel = $self->processable->name . " (= $_)";
     } else {
         $selfrel = $self->processable->name;

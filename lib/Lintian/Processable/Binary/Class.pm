@@ -120,12 +120,12 @@ sub is_pkg_class {
 
     if ($class eq 'auto-generated') {
         return 1
-          if defined $self->field('Auto-Built-Package');
+          if defined $self->fields->value('Auto-Built-Package');
 
         return 0;
     }
 
-    my $desc = $self->field('Description') // EMPTY;
+    my $desc = $self->fields->value('Description') // EMPTY;
     return 1
       if $desc =~ m/transitional package/;
 
@@ -135,7 +135,7 @@ sub is_pkg_class {
           if $desc =~ /$METAPKG_REGEX/;
 
         # Section "tasks" or "metapackages" qualifies as well
-        my $section = $self->field('Section') // EMPTY;
+        my $section = $self->fields->value('Section') // EMPTY;
         return 1
           if $section =~ m,(?:^|/)(?:tasks|metapackages)$,;
 

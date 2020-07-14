@@ -41,7 +41,7 @@ sub source {
 
     my $processable = $self->processable;
 
-    my $source = $processable->unfolded_field('Source');
+    my $source = $processable->fields->unfolded_value('Source');
 
     # required in source packages, but dpkg-source already refuses to unpack
     # without this field (and fields depends on unpacked)
@@ -67,7 +67,7 @@ sub always {
     my $type = $self->processable->type;
     my $processable = $self->processable;
 
-    my $source = $processable->unfolded_field('Source');
+    my $source = $processable->fields->unfolded_value('Source');
 
     # optional in binary packages
     return

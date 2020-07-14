@@ -193,7 +193,7 @@ sub relation {
               = Lintian::Relation->and(map { $self->relation($_) } @fields);
 
         } elsif ($name =~ /^Build-(Depends|Conflicts)(?:-(?:Arch|Indep))?$/i){
-            my $value = $self->field($name);
+            my $value = $self->fields->value($name);
             $relation = Lintian::Relation->new($value);
 
         } else {

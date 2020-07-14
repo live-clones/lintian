@@ -171,8 +171,8 @@ sub installable {
 
             # executable stack.
             if (not defined $objdump->{$cur_file}{'PH'}{STACK}) {
-                if (defined $processable->field('Architecture')) {
-                    my $arch = $processable->field('Architecture');
+                if (defined $processable->fields->value('Architecture')) {
+                    my $arch = $processable->fields->value('Architecture');
                     $self->tag('shared-library-lacks-stack-section',$cur_file);
                 }
             } elsif ($objdump->{$cur_file}{'PH'}{STACK}{flags} ne 'rw-'){
@@ -345,7 +345,7 @@ sub installable {
 
     # 4th step: check shlibs control file
     # $version may be undef in very broken packages
-    my $version = $processable->field('Version');
+    my $version = $processable->fields->value('Version');
     my $provides = $pkg;
     $provides .= "( = $version)" if defined $version;
     # Assume the version to be a non-native version to avoid
@@ -726,7 +726,7 @@ sub installable {
           if not $we_trigger_ldconfig and $must_call_ldconfig;
     }
 
-    my $multiarch = $processable->field('Multi-Arch') // 'no';
+    my $multiarch = $processable->fields->value('Multi-Arch') // 'no';
     if ($multiarch eq 'foreign' and $must_call_ldconfig) {
         $self->tag('shared-library-is-multi-arch-foreign',$must_call_ldconfig);
     }

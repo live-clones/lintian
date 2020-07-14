@@ -343,33 +343,6 @@ If FIELD is passed but not present, then this method returns undef.
 
 =cut
 
-sub unfolded_field {
-    my ($self, $name) = @_;
-
-    return $self->fields->unfolded_value($name);
-}
-
-=item field ([FIELD[, DEFAULT]])
-
-If FIELD is given, this method returns the value of the control field
-FIELD in the control file for the package.  For a source package, this
-is the *.dsc file; for a binary package, this is the control file in
-the control section of the package.
-
-If FIELD is passed but not present, then this method will return
-DEFAULT (if given) or undef.
-
-Otherwise this will return a hash of fields, where the key is the field
-name (in all lowercase).
-
-=cut
-
-sub field {
-    my ($self, $name) = @_;
-
-    return $self->fields->value($name);
-}
-
 =back
 
 =head1 AUTHOR

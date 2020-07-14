@@ -58,12 +58,13 @@ sub always {
     my @groups = qw(Uploaders);
 
     my @singles_present
-      = grep { length $self->processable->field($_) } @singles;
-    my @groups_present = grep { length $self->processable->field($_) } @groups;
+      = grep { length $self->processable->fields->value($_) } @singles;
+    my @groups_present
+      = grep { length $self->processable->fields->value($_) } @groups;
 
     my %parsed;
     for my $role (@singles_present, @groups_present) {
-        my $value = $self->processable->field($role);
+        my $value = $self->processable->fields->value($role);
         $parsed{$role} = [Email::Address::XS->parse($value)];
     }
 
@@ -72,7 +73,8 @@ sub always {
     }
 
     for my $role (@singles_present) {
-        $self->tag('too-many-contacts', $role,$self->processable->field($role))
+        $self->tag('too-many-contacts', $role,
+            $self->processable->fields->value($role))
           if @{$parsed{$role}} > 1;
     }
 

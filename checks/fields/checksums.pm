@@ -40,7 +40,7 @@ sub source {
     my $processable = $self->processable;
 
     $self->tag('no-strong-digests-in-dsc')
-      unless $processable->field('Checksums-Sha256');
+      unless $processable->fields->value('Checksums-Sha256');
 
     return;
 }

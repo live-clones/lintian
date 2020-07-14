@@ -46,7 +46,7 @@ sub always {
 
     my $processable = $self->processable;
 
-    my $built_using = $processable->field('Built-Using');
+    my $built_using = $processable->fields->value('Built-Using');
 
     return
       unless defined $built_using;

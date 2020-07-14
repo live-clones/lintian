@@ -92,15 +92,15 @@ sub check_file_overlap {
     for (my $i = 0 ; $i < scalar @sorted ; $i++) {
         my $processable = $sorted[$i];
 
-        my @p
-          = grep { $_ } split(/,/, ($processable->field('Provides') // EMPTY));
+        my @p= grep { $_ }
+          split(/,/, ($processable->fields->value('Provides') // EMPTY));
         my $prov
           = Lintian::Relation->new(join(' |̈́ ', $processable->name, @p));
         for (my $j = $i ; $j < scalar @sorted ; $j++) {
             my $other = $sorted[$j];
 
-            my @op
-              = grep { $_ } split(/,/, ($other->field('Provides') // EMPTY));
+            my @op= grep { $_ }
+              split(/,/, ($other->fields->value('Provides') // EMPTY));
             my $oprov= Lintian::Relation->new(join(' | ', $other->name, @op));
             # poor man's "Multi-arch: same" work-around.
             next if $processable->name eq $other->name;
@@ -139,10 +139,10 @@ sub overlap_check {
 sub check_multiarch {
     my ($self, $processable, $deps) = @_;
 
-    my $ma = $processable->field('Multi-Arch') // 'no';
+    my $ma = $processable->fields->value('Multi-Arch') // 'no';
     if ($ma eq 'same') {
         foreach my $dep (@$deps) {
-            my $dma = $dep->field('Multi-Arch') // 'no';
+            my $dma = $dep->fields->value('Multi-Arch') // 'no';
             if ($dma eq 'same' or $dma eq 'foreign') {
                 1; # OK
             } else {
@@ -154,14 +154,16 @@ sub check_multiarch {
             }
         }
     } elsif ($ma ne 'same'
-        and ($processable->field('Section') // 'none') =~ m,(?:^|/)debug$,) {
+        and ($processable->fields->value('Section') // 'none')
+        =~ m,(?:^|/)debug$,) {
         # Debug package that isn't M-A: same, exploit that (non-debug)
         # dependencies is (almost certainly) a package for which the
         # debug carries debug symbols.
         foreach my $dep (@$deps) {
-            my $dma = $dep->field('Multi-Arch') // 'no';
+            my $dma = $dep->fields->value('Multi-Arch') // 'no';
             if ($dma eq 'same'
-                and ($dep->field('Section') // 'none') !~ m,(?:^|/)debug$,){
+                and ($dep->fields->value('Section') // 'none')
+                !~ m,(?:^|/)debug$,){
 
                 # Debug package isn't M-A: same, but depends on a
                 # package that is from same source that isn't a debug

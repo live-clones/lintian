@@ -39,7 +39,8 @@ has arch_dep_files => (is => 'rwp', default => 0);
 sub files {
     my ($self, $file) = @_;
 
-    my $architecture = $self->processable->field('Architecture') // EMPTY;
+    my $architecture = $self->processable->fields->value('Architecture')
+      // EMPTY;
 
     if ($file->name =~ m,^(?:usr/)?lib/([^/]+)/$,) {
         my $subdir = $1;
@@ -68,7 +69,8 @@ sub files {
 sub breakdown {
     my ($self) = @_;
 
-    my $architecture = $self->processable->field('Architecture') // EMPTY;
+    my $architecture = $self->processable->fields->value('Architecture')
+      // EMPTY;
 
     # check if package is empty
     my $is_dummy = $self->processable->is_pkg_class('any-meta');

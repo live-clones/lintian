@@ -100,7 +100,8 @@ sub issue_tags {
         $group_output{duration} = duration($start->delta_seconds($end));
 
         $group_output{'maintainer'}
-          = ($group->get_processables)[0]->unfolded_field('Maintainer');
+          = ($group->get_processables)[0]
+          ->fields->unfolded_value('Maintainer');
 
         push(@allgroups_output, \%group_output);
 

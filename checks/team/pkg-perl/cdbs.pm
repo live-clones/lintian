@@ -36,7 +36,7 @@ with 'Lintian::Check';
 sub source {
     my ($self) = @_;
 
-    my $maintainer = $self->processable->field('Maintainer');
+    my $maintainer = $self->processable->fields->value('Maintainer');
     return
       unless length $maintainer;
 
@@ -55,7 +55,8 @@ sub source {
 
         # arch:any and cdbs version 0.4.122
         $self->tag('arch-any-package-needs-newer-cdbs')
-          unless ($self->processable->field('Architecture') // EMPTY) eq 'all';
+          unless ($self->processable->fields->value('Architecture') // EMPTY)
+          eq 'all';
 
         # Module::Build::Tiny and cdbs version 0.4.122
         $self->tag('module-build-tiny-needs-newer-cdbs')

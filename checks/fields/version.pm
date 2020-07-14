@@ -48,7 +48,7 @@ sub source {
 
     my $processable = $self->processable;
 
-    my $version = $processable->unfolded_field('Version');
+    my $version = $processable->fields->unfolded_value('Version');
     return
       unless length $version;
 
@@ -96,7 +96,7 @@ sub always {
     my $type = $self->processable->type;
     my $processable = $self->processable;
 
-    my $version = $processable->unfolded_field('Version');
+    my $version = $processable->fields->unfolded_value('Version');
     return
       unless length $version;
 
@@ -141,7 +141,7 @@ sub always {
           if $debian =~ /^[^.-]+\.[^.-]+\./ and not $ubuntu;
     }
 
-    my $name = $processable->field('Package');
+    my $name = $processable->fields->value('Package');
     if (   $name
         && $PERL_CORE_PROVIDES->known($name)
         && perl_core_has_version($name, '>=', "$epoch:$upstream")) {

@@ -78,9 +78,10 @@ sub files {
             my $time_from_build = $gziptime - $self->changelog_timestamp;
             if ($time_from_build > 0) {
 
-                my $architecture = $self->processable->field('Architecture')
-                  // EMPTY;
-                my $multiarch = $self->processable->field('Multi-Arch')// 'no';
+                my $architecture
+                  = $self->processable->fields->value('Architecture')// EMPTY;
+                my $multiarch
+                  = $self->processable->fields->value('Multi-Arch')// 'no';
 
                 if ($multiarch eq 'same' && $file->name !~ /\Q$architecture\E/)
                 {

@@ -85,7 +85,8 @@ sub always {
     # Reset to work with elements of the dsc file.
     $len = 0;
 
-    foreach my $entry (split /\n/, ($processable->field('Files') // EMPTY)){
+    for
+      my $entry (split /\n/, ($processable->fields->value('Files') // EMPTY)){
         my $filename;
         my $flen;
 

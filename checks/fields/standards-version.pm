@@ -74,7 +74,7 @@ sub source {
 
     # udebs aren't required to conform to policy, so they don't need
     # Standards-Version. (If they have it, though, it should be valid.)
-    my $version = $processable->field('Standards-Version');
+    my $version = $processable->fields->value('Standards-Version');
     my $all_udeb = 1;
     $all_udeb = 0
       if first { $processable->binary_package_type($_) ne 'udeb' }

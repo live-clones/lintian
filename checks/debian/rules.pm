@@ -162,10 +162,10 @@ sub source {
         return unless $rules->is_open_ok;
     }
 
-    my $architecture = $processable->field('Architecture') // EMPTY;
+    my $architecture = $processable->fields->value('Architecture') // EMPTY;
 
     # If the version field is missing, we assume a neutral non-native one.
-    my $version = $processable->field('Version') // '0-1';
+    my $version = $processable->fields->value('Version') // '0-1';
 
     open(my $rules_fd, '<', $rules->unpacked_path);
 

@@ -45,7 +45,7 @@ sub setup_installed_files {
     my ($self) = @_;
 
     return
-      if $self->processable->field('Architecture') eq 'all';
+      if $self->processable->fields->value('Architecture') eq 'all';
 
     my $depends = $self->processable->relation('strong');
 

@@ -37,7 +37,7 @@ with 'Lintian::Check';
 sub source {
     my ($self) = @_;
 
-    my $maintainer = $self->processable->field('Maintainer');
+    my $maintainer = $self->processable->fields->value('Maintainer');
     return
       unless length $maintainer;
 
@@ -46,7 +46,7 @@ sub source {
       unless $maintainer
       =~ /pkg-javascript-maintainers\@lists\.alioth\.debian\.org/;
 
-    my $testsuite = $self->processable->field('Testsuite');
+    my $testsuite = $self->processable->fields->value('Testsuite');
     unless (defined $testsuite) {
 
         $self->tag('no-testsuite-header');

@@ -1220,9 +1220,11 @@ qr/GNU (?:Lesser|Library) General Public License|(?-i:\bLGPL\b)/i
         !~ m{exception|exemption|/usr/share/common-licenses/(?!GPL)\S}){
 
         my @depends
-          = split(/\s*,\s*/, $self->processable->field('Depends') // EMPTY);
+          = split(/\s*,\s*/,
+            $self->processable->fields->value('Depends') // EMPTY);
         my @predepends
-          = split(/\s*,\s*/,$self->processable->field('Pre-Depends') // EMPTY);
+          = split(/\s*,\s*/,
+            $self->processable->fields->value('Pre-Depends') // EMPTY);
 
         $self->tag('possible-gpl-code-linked-with-openssl')
           if any { /^libssl[0-9.]+(?:\s|\z)/ && !/\|/ }

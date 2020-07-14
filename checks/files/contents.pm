@@ -75,7 +75,7 @@ sub build_path {
     return EMPTY
       unless $buildinfo;
 
-    return $buildinfo->field('Build-Path') // EMPTY;
+    return $buildinfo->fields->value('Build-Path') // EMPTY;
 }
 
 sub check_item {
@@ -91,8 +91,8 @@ sub check_item {
           if $item->mentions_in_operation($SENSIBLE_REGEX);
     }
 
-    unless (
-        ($self->processable->field('Section') // EMPTY) eq 'debian-installer'
+    unless (($self->processable->fields->value('Section') // EMPTY) eq
+        'debian-installer'
         || any { $_ eq $self->processable->source } qw(base-files dpkg)) {
 
         $self->tag('uses-dpkg-database-directly', $item->name)

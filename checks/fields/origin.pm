@@ -39,7 +39,7 @@ sub always {
 
     my $processable = $self->processable;
 
-    my $origin = $processable->unfolded_field('Origin');
+    my $origin = $processable->fields->unfolded_value('Origin');
     return
       unless defined $origin;
 

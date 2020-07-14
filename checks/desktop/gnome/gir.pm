@@ -61,7 +61,7 @@ sub installable {
 
     my @girs;
     my @typelibs;
-    my $section = $processable->field('Section') // 'NONE';
+    my $section = $processable->fields->value('Section') // 'NONE';
     my $madir = $MA_DIRS->value($processable->architecture);
     # Slightly contrived, but it might be Architecture: all, in which
     # case this is the best we can do
@@ -119,11 +119,11 @@ sub installable {
         my $expected = 'gir1.2-' . lc($gir->basename);
         $expected =~ s/\.gir$//;
         $expected =~ tr/_/-/;
-        my $version = $processable->field('Version');
+        my $version = $processable->fields->value('Version');
 
         foreach my $bin ($group->get_binary_processables) {
             next unless $bin->name =~ m/^gir1\.2-/;
-            my $other = $bin->name.' (= '.$bin->field('Version').')';
+            my $other = $bin->name.' (= '.$bin->fields->value('Version').')';
             if (    $bin->relation('Provides')->implies($expected)
                 and $processable->relation('strong')->implies($other)) {
                 next GIR;

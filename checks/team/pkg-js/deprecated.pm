@@ -39,7 +39,7 @@ has javascript_team_maintained => (
 sub setup_installed_files {
     my ($self) = @_;
 
-    my $maintainer = $self->processable->field('Maintainer');
+    my $maintainer = $self->processable->fields->value('Maintainer');
     return
       unless length $maintainer;
 

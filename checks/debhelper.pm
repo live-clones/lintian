@@ -194,7 +194,7 @@ sub source {
                         "(line $.)"
                       )
                       if $addon eq 'quilt'
-                      and ($processable->field('Format') // EMPTY) eq
+                      and ($processable->fields->value('Format') // EMPTY) eq
                       '3.0 (quilt)';
                     if (defined $depends) {
                         $missingbdeps_addons{$depends} = $addon;

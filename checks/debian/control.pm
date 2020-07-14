@@ -514,7 +514,7 @@ sub source {
     my $changes = $group->changes;
     $self->tag('source-only-upload-to-non-free-without-autobuild')
       if defined($changes)
-      and ($changes->field('Architecture') // EMPTY) eq 'source'
+      and ($changes->fields->value('Architecture') // EMPTY) eq 'source'
       and $processable->is_non_free
       and ($processable->source_field('XS-Autobuild') // 'no') eq 'no';
 

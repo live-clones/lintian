@@ -83,9 +83,10 @@ sub source {
 
     # If the version field is missing, assume it to be a native,
     # maintainer upload as it is probably the most likely case.
-    my $version = $processable->field('Version') // '0-1';
-    my $maintainer = canonicalize($processable->field('Maintainer') // EMPTY);
-    my $uploaders = $processable->field('Uploaders');
+    my $version = $processable->fields->value('Version') // '0-1';
+    my $maintainer
+      = canonicalize($processable->fields->value('Maintainer') // EMPTY);
+    my $uploaders = $processable->fields->value('Uploaders');
 
     my $version_nmuness = 0;
     my $version_local = 0;

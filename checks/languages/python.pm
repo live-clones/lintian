@@ -94,7 +94,7 @@ sub source {
 
     $self->tag(
         'alternatively-build-depends-on-python-sphinx-and-python3-sphinx')
-      if ($processable->field('Build-Depends') // EMPTY)
+      if ($processable->fields->value('Build-Depends') // EMPTY)
       =~ m,\bpython-sphinx\s+\|\s+python3-sphinx\b,g;
 
     # Mismatched substvars

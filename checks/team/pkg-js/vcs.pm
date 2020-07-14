@@ -40,7 +40,7 @@ my @VCS_FIELDS = (@NON_GIT_VCS_FIELDS, qw(Vcs-Git Vcs-Browser));
 sub source {
     my ($self) = @_;
 
-    my $maintainer = $self->processable->field('Maintainer');
+    my $maintainer = $self->processable->fields->value('Maintainer');
     return
       unless length $maintainer;
 

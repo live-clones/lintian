@@ -87,7 +87,7 @@ sub source {
         }
     }
 
-    my $versionstring = $processable->field('Version') // EMPTY;
+    my $versionstring = $processable->fields->value('Version') // EMPTY;
     my $latest_version = Lintian::Inspect::Changelog::Version->new;
 
     try {
@@ -402,12 +402,12 @@ sub binary {
     # is this a native Debian package?
     # If the version is missing, we assume it to be non-native
     # as it is the most likely case.
-    my $source = $processable->field('Source');
+    my $source = $processable->fields->value('Source');
     my $version;
     if (defined $source && $source =~ m/\((.*)\)/) {
         $version = $1;
     } else {
-        $version = $processable->field('Version');
+        $version = $processable->fields->value('Version');
     }
     if (defined $version) {
         $native_pkg = ($version !~ m/-/);
@@ -416,7 +416,7 @@ sub binary {
         # the most likely case.
         $native_pkg = 0;
     }
-    $version = $processable->field('Version') // '0-1';
+    $version = $processable->fields->value('Version') // '0-1';
     $foreign_pkg = (!$native_pkg && $version !~ m/-0\./);
     # A version of 1.2.3-0.1 could be either, so in that
     # case, both vars are false
@@ -616,7 +616,8 @@ sub binary {
 
             my $changes = $group->changes;
             if ($changes) {
-                my $changes_dist= lc($changes->field('Distribution') // EMPTY);
+                my $changes_dist
+                  = lc($changes->fields->value('Distribution') // EMPTY);
 
                 my %codename;
                 $codename{'unstable'} = 'sid';

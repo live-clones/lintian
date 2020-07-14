@@ -39,7 +39,7 @@ with 'Lintian::Check';
 sub always {
     my ($self) = @_;
 
-    my $uploaders = $self->processable->field('Uploaders');
+    my $uploaders = $self->processable->fields->value('Uploaders');
     return
       unless defined $uploaders;
 
@@ -53,7 +53,7 @@ sub always {
         $uploaders =~ s/,\s*,/,/g;
     }
 
-    my $maintainer = $self->processable->field('Maintainer');
+    my $maintainer = $self->processable->fields->value('Maintainer');
     if (length $maintainer) {
 
         $self->tag('maintainer-also-in-uploaders')

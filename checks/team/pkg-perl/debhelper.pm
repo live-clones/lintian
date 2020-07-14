@@ -34,7 +34,7 @@ with 'Lintian::Check';
 sub source {
     my ($self) = @_;
 
-    my $maintainer = $self->processable->field('Maintainer');
+    my $maintainer = $self->processable->fields->value('Maintainer');
     return
       unless length $maintainer;
 

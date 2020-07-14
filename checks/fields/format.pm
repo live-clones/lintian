@@ -39,7 +39,7 @@ our @supported_source_formats = (qr/1\.0/, qr/3\.0\s*\((quilt|native)\)/);
 sub source {
     my ($self) = @_;
 
-    my $format = $self->processable->unfolded_field('Format');
+    my $format = $self->processable->fields->unfolded_value('Format');
     return
       unless defined $format;
 
@@ -58,7 +58,7 @@ sub source {
 sub changes {
     my ($self) = @_;
 
-    my $format = $self->processable->unfolded_field('Format');
+    my $format = $self->processable->fields->unfolded_value('Format');
 
     # without a Format field something is wrong
     unless (length $format) {

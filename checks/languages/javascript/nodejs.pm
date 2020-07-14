@@ -154,7 +154,7 @@ sub files {
 
     my $declared = $self->processable->name;
     my $processable = $self->processable;
-    my $version = $processable->field('Version');
+    my $version = $processable->fields->value('Version');
     $declared .= "( = $version)" if defined $version;
     $version //= '0-1';
     my $provides

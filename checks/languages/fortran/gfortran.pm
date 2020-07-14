@@ -72,7 +72,7 @@ sub files {
         return;
     }
 
-    my $depends = $self->processable->field('Depends') // EMPTY;
+    my $depends = $self->processable->fields->value('Depends') // EMPTY;
     $self->tag('missing-prerequisite-for-gfortran-module', $file->name)
       unless $depends =~ /\bgfortran-mod-$module_version\b/;
 

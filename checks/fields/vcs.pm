@@ -180,7 +180,7 @@ sub always {
     my $num_uploaders = 0;
     for my $field (qw(Maintainer Uploaders)) {
 
-        my $maintainer = $processable->unfolded_field($field);
+        my $maintainer = $processable->fields->unfolded_value($field);
 
         next
           unless defined $maintainer;
@@ -224,8 +224,8 @@ sub always {
     while (my ($platform, $splitter) = each %VCS_EXTRACT) {
 
         my $fieldname = "Vcs-$platform";
-        my $maintainer = $processable->field('Maintainer') // EMPTY;
-        my $uri = $processable->unfolded_field($fieldname);
+        my $maintainer = $processable->fields->value('Maintainer') // EMPTY;
+        my $uri = $processable->fields->unfolded_value($fieldname);
 
         next
           unless defined $uri;
@@ -336,15 +336,15 @@ sub always {
       and not %seen_vcs;
 
     # Check for missing Vcs-Browser headers
-    unless (defined $processable->field('Vcs-Browser')) {
+    unless (defined $processable->fields->value('Vcs-Browser')) {
 
         foreach my $regex ($KNOWN_VCS_HOSTERS->all) {
 
             my $platform = @{$KNOWN_VCS_HOSTERS->value($regex)}[0];
             my $fieldname = "Vcs-$platform";
 
-            if (($processable->field($fieldname) // EMPTY) =~ m/^($regex.*)/xi)
-            {
+            if (($processable->fields->value($fieldname) // EMPTY)
+                =~ m/^($regex.*)/xi){
                 $self->tag('missing-vcs-browser-field', $fieldname, $1);
 
                 # warn once

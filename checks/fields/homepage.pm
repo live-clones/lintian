@@ -43,7 +43,7 @@ sub source {
 
     my $processable = $self->processable;
 
-    my $homepage = $processable->unfolded_field('Homepage');
+    my $homepage = $processable->fields->unfolded_value('Homepage');
 
     unless (defined $homepage) {
 
@@ -76,12 +76,12 @@ sub always {
 
     my $processable = $self->processable;
 
-    my $homepage = $processable->unfolded_field('Homepage');
+    my $homepage = $processable->fields->unfolded_value('Homepage');
 
     return
       unless defined $homepage;
 
-    my $orig = $processable->field('Homepage');
+    my $orig = $processable->fields->value('Homepage');
 
     if ($homepage =~ /^<(?:UR[LI]:)?.*>$/i) {
         $self->tag('superfluous-clutter-in-homepage', $orig);

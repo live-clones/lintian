@@ -39,8 +39,9 @@ my $MULTIARCH_DIRS = Lintian::Data->new('common/multiarch-dirs', qr/\s++/);
 sub files {
     my ($self, $file) = @_;
 
-    my $architecture = $self->processable->field('Architecture') // EMPTY;
-    my $multiarch = $self->processable->field('Multi-Arch') // 'no';
+    my $architecture = $self->processable->fields->value('Architecture')
+      // EMPTY;
+    my $multiarch = $self->processable->fields->value('Multi-Arch') // 'no';
 
     # check old style config scripts
     if (    $file->name =~ m,^usr/bin/,

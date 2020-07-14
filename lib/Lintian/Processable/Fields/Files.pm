@@ -106,7 +106,7 @@ sub files {
 
     my %files;
 
-    my $file_list = $self->field('Files') // EMPTY;
+    my $file_list = $self->fields->value('Files') // EMPTY;
 
     local $_;
 
@@ -142,7 +142,7 @@ sub files {
 
     foreach my $alg (qw(Sha1 Sha256)) {
 
-        my $list = $self->field("Checksums-$alg") // EMPTY;
+        my $list = $self->fields->value("Checksums-$alg") // EMPTY;
 
         for (split /\n/, $list) {
 

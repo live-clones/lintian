@@ -118,9 +118,9 @@ sub installable {
     for my $field (
         qw(Depends Pre-Depends Recommends Suggests Conflicts Provides Enhances Replaces Breaks)
     ) {
-        next unless defined $processable->field($field);
+        next unless defined $processable->fields->value($field);
         #Get data and clean it
-        my $data = $processable->unfolded_field($field);
+        my $data = $processable->fields->unfolded_value($field);
         my $javadep = 0;
 
         my (@seen_libstdcs, @seen_tcls, @seen_tclxs,@seen_tks, @seen_libpngs);
@@ -365,14 +365,15 @@ sub installable {
     # the other dependency fields.
     for my $conflict (qw/Conflicts Breaks/) {
         next
-          unless $processable->field($conflict);
+          unless $processable->fields->value($conflict);
 
         for my $field (qw(Depends Pre-Depends Recommends Suggests)) {
             next
-              unless $processable->field($field);
+              unless $processable->fields->value($field);
 
             my $relation = $processable->relation($field);
-            for my $package (split /\s*,\s*/, $processable->field($conflict)) {
+            for my $package (split /\s*,\s*/,
+                $processable->fields->value($conflict)) {
                 $self->tag('conflicts-with-dependency', $field, $package)
                   if $relation->implies($package);
             }
@@ -405,10 +406,10 @@ sub source {
     }
 
     $self->tag('build-depends-indep-without-arch-indep')
-      if (defined $processable->field('Build-Depends-Indep')
+      if (defined $processable->fields->value('Build-Depends-Indep')
         && $arch_indep_packages == 0);
     $self->tag('build-depends-arch-without-arch-dependent-binary')
-      if (defined $processable->field('Build-Depends-Arch')
+      if (defined $processable->fields->value('Build-Depends-Arch')
         && $arch_dep_packages == 0);
 
     my $is_dep_field = sub {
@@ -420,9 +421,9 @@ sub source {
     for my $field (
         qw(Build-Depends Build-Depends-Indep Build-Depends-Arch Build-Conflicts Build-Conflicts-Indep Build-Conflicts-Arch)
     ) {
-        if (defined $processable->field($field)) {
+        if (defined $processable->fields->value($field)) {
             #Get data and clean it
-            my $data = $processable->unfolded_field($field);
+            my $data = $processable->fields->unfolded_value($field);
 
             $self->check_field($field, $data);
             $depend{$field} = $data;
