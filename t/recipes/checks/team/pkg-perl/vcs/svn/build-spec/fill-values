@@ -1,0 +1,4 @@
+Skeleton: upload-native
+Testname: svn
+Description: Declares SVN as VCS.
+Author: Perl Team <pkg-perl-maintainers@lists.alioth.debian.org>

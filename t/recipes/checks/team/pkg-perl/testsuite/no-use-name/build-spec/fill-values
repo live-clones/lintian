@@ -1,0 +1,4 @@
+Skeleton: upload-native
+Testname: no-use-name
+Description: Testsuite autopkgtest-pkg-perl but use-name not available
+Author: Perl Team <pkg-perl-maintainers@lists.alioth.debian.org>
