@@ -38,7 +38,7 @@ my $FNAMES = Lintian::Data->new('files/fnames', qr/\s*\~\~\s*/);
 my %PATH_DIRECTORIES = map { $_ => 1 } qw(
   bin/ sbin/ usr/bin/ usr/sbin/ usr/games/ );
 
-sub files {
+sub visit_installed_files {
     my ($self, $file) = @_;
 
     # unusual characters

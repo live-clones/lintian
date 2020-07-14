@@ -306,7 +306,7 @@ sub check_tag_url_privacy_breach {
     return;
 }
 
-sub files {
+sub visit_installed_files {
     my ($self, $file) = @_;
 
     # html/javascript

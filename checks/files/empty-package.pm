@@ -38,7 +38,7 @@ my $STANDARD_FILES = Lintian::Data->new('files/standard-files');
 has is_dummy => (is => 'rwp');
 has is_empty => (is => 'rwp', default => 1);
 
-sub setup {
+sub setup_installed_files {
     my ($self) = @_;
 
     # check if package is empty
@@ -47,7 +47,7 @@ sub setup {
     return;
 }
 
-sub files {
+sub visit_installed_files {
     my ($self, $file) = @_;
 
     return
@@ -118,7 +118,7 @@ sub files {
     return;
 }
 
-sub breakdown {
+sub breakdown_installed_files {
     my ($self) = @_;
 
     return

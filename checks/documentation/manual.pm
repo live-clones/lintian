@@ -61,7 +61,7 @@ sub spelling_tag_emitter {
 my @user_locations= qw(bin/ usr/bin/ usr/bin/X11/ usr/bin/mh/ usr/games/);
 my @admin_locations= qw(sbin/ usr/sbin/);
 
-sub files {
+sub visit_installed_files {
     my ($self, $file) = @_;
 
     # no man pages in udebs
@@ -367,7 +367,7 @@ sub files {
     return;
 }
 
-sub breakdown {
+sub breakdown_installed_files {
     my ($self) = @_;
 
     # no man pages in udebs

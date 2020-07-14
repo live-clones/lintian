@@ -36,7 +36,7 @@ with 'Lintian::Check';
 
 has changelog_timestamp => (is => 'rwp', default => 0);
 
-sub setup {
+sub setup_installed_files {
     my ($self) = @_;
 
     # remains 0 if there is no timestamp
@@ -51,7 +51,7 @@ sub setup {
     return;
 }
 
-sub files {
+sub visit_installed_files {
     my ($self, $file) = @_;
 
     return

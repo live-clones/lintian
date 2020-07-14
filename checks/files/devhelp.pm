@@ -33,7 +33,7 @@ with 'Lintian::Check';
 has related => (is => 'rwp', default => sub { [] });
 has links => (is => 'rwp', default => sub { [] });
 
-sub breakdown {
+sub breakdown_installed_files {
     my ($self) = @_;
 
     # Check for .devhelp2? files that aren't symlinked into paths searched by
@@ -59,7 +59,7 @@ sub breakdown {
     return;
 }
 
-sub files {
+sub visit_installed_files {
     my ($self, $file) = @_;
 
     # *.devhelp and *.devhelp2 files must be accessible from a directory in

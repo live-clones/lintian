@@ -63,7 +63,7 @@ my %PHP_FILES = (
     # 'libphp-kses'        => qr{(?i)/(?:class\.)?kses\.php$},
 );
 
-sub files {
+sub visit_installed_files {
     my ($self, $file) = @_;
 
     return

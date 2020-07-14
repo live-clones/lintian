@@ -40,7 +40,7 @@ sub _is_tmp_path {
     return 0;
 }
 
-sub files {
+sub visit_installed_files {
     my ($self, $file) = @_;
 
     # /etc/opt

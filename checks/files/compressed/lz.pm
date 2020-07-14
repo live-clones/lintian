@@ -31,7 +31,7 @@ use namespace::clean;
 
 with 'Lintian::Check';
 
-sub files {
+sub visit_installed_files {
     my ($self, $file) = @_;
 
     return

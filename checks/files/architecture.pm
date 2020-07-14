@@ -36,7 +36,7 @@ my $TRIPLETS = Lintian::Data->new('files/triplets', qr/\s++/);
 
 has arch_dep_files => (is => 'rwp', default => 0);
 
-sub files {
+sub visit_installed_files {
     my ($self, $file) = @_;
 
     my $architecture = $self->processable->fields->value('Architecture')
@@ -66,7 +66,7 @@ sub files {
     return;
 }
 
-sub breakdown {
+sub breakdown_installed_files {
     my ($self) = @_;
 
     my $architecture = $self->processable->fields->value('Architecture')

@@ -34,7 +34,7 @@ my $BUILD_PATH_REGEX
   = Lintian::Data->new('files/build-path-regex',qr/~~~~~/,
     sub { return  qr/$_[0]/xsm;});
 
-sub files {
+sub visit_installed_files {
     my ($self, $file) = @_;
 
     # build directory

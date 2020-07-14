@@ -59,7 +59,7 @@ my %PEAR_FILES = (
     'php-net-socket'      => qr{(?<!/FTP)/Socket} . $PEAR_EXT,
 );
 
-sub files {
+sub visit_installed_files {
     my ($self, $file) = @_;
 
     return

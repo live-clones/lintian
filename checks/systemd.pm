@@ -51,7 +51,7 @@ my $HARDENING_FLAGS = Lintian::Data->new('systemd/hardening-flags');
 # Usual WantedBy= targets
 my $WANTEDBY_WHITELIST = Lintian::Data->new('systemd/wantedby-whitelist');
 
-sub setup {
+sub setup_installed_files {
     my ($self) = @_;
 
     my @timers = grep { m,^lib/systemd/system/[^\/]+\.timer$, }
@@ -61,7 +61,7 @@ sub setup {
     return;
 }
 
-sub files {
+sub visit_installed_files {
     my ($self, $file) = @_;
 
     $self->tag('missing-systemd-timer-for-cron-script', $file)

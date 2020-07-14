@@ -129,7 +129,7 @@ sub check_udev_rules {
     return $retval;
 }
 
-sub files {
+sub visit_installed_files {
     my ($self, $file) = @_;
 
     return

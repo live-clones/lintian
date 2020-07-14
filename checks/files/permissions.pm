@@ -35,7 +35,7 @@ with 'Lintian::Check';
 has component => (is => 'rw');
 has linked_against_libvga => (is => 'rw');
 
-sub setup {
+sub setup_installed_files {
     my ($self) = @_;
 
     my $component = path($self->processable->path)->basename;
@@ -62,7 +62,7 @@ sub setup {
     return;
 }
 
-sub files {
+sub visit_installed_files {
     my ($self, $file) = @_;
 
     $self->tag(

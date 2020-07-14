@@ -33,7 +33,7 @@ use namespace::clean;
 
 with 'Lintian::Check';
 
-sub files {
+sub visit_installed_files {
     my ($self, $file) = @_;
 
     # file-info would be great, but files are zipped

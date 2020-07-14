@@ -39,7 +39,7 @@ my @flash_nonfree = (
     #    qr,(?i)xspf_jukebox\.swf$,
 );
 
-sub files {
+sub visit_installed_files {
     my ($self, $file) = @_;
 
     # only look at packages with undeclared non-free content

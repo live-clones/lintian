@@ -38,7 +38,7 @@ with 'Lintian::Check';
 # whether the package appears to be an Apache2 module/web application
 has seen_apache2_special_file => (is => 'rwp', default => 0);
 
-sub files {
+sub visit_installed_files {
     my ($self, $file) = @_;
 
     # Do nothing if the package in question appears to be related to

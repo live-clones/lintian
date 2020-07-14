@@ -116,7 +116,7 @@ sub source {
     return;
 }
 
-sub files {
+sub visit_installed_files {
     my ($self, $file) = @_;
     return if $file->is_dir;
 

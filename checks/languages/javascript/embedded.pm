@@ -99,7 +99,7 @@ qr{(?i)/mootools(?:(?:\.v|-)[\d\.]+)?(?:-(?:(?:core(?:-server)?)|more)(?:-(?:yc|
 # 'xinha'                      => qr{(?i)/(htmlarea|Xinha(Loader|Core))} . $JS_EXT,
 );
 
-sub files {
+sub visit_installed_files {
     my ($self, $file) = @_;
 
     return

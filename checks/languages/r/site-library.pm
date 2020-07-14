@@ -34,7 +34,7 @@ with 'Lintian::Check';
 
 has r_site_libraries => (is => 'rw', default => sub { [] });
 
-sub breakdown {
+sub breakdown_installed_files {
     my ($self) = @_;
 
     $self->tag('ships-r-site-library', $_) for @{$self->r_site_libraries};
@@ -51,7 +51,7 @@ sub breakdown {
     return;
 }
 
-sub files {
+sub visit_installed_files {
     my ($self, $file) = @_;
 
     # R site libraries

@@ -542,7 +542,7 @@ sub check_defaults {
     return;
 }
 
-sub files {
+sub visit_installed_files {
     my ($self, $file) = @_;
 
     # check for missing init.d script when alternative init system is present

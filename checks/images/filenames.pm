@@ -69,7 +69,7 @@ my @image_formats = ({
 
 # ICO format developed into a container and may contain PNG
 
-sub files {
+sub visit_installed_files {
     my ($self, $file) = @_;
 
     return

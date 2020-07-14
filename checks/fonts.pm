@@ -34,7 +34,7 @@ with 'Lintian::Check';
 
 my $FONT_PACKAGES = Lintian::Data->new('files/fonts', qr/\s++/);
 
-sub files {
+sub visit_installed_files {
     my ($self, $file) = @_;
 
     if (   $file->is_file

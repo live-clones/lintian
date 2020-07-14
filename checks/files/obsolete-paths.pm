@@ -50,7 +50,7 @@ my $OBSOLETE_PATHS = Lintian::Data->new(
         };
     });
 
-sub files {
+sub visit_installed_files {
     my ($self, $file) = @_;
 
     # check for generic obsolete path

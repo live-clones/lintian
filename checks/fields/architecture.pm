@@ -44,7 +44,7 @@ with 'Lintian::Check';
 has architecture => (is => 'rw', default => EMPTY);
 has have_r_package_not_arch_all => (is => 'rw', default => 0);
 
-sub setup {
+sub setup_installed_files {
     my ($self) = @_;
 
     my $unsplit = $self->processable->fields->unfolded_value('Architecture');
@@ -62,7 +62,7 @@ sub setup {
     return;
 }
 
-sub files {
+sub visit_installed_files {
     my ($self, $file) = @_;
 
     $self->have_r_package_not_arch_all(1)
@@ -75,7 +75,7 @@ sub files {
     return;
 }
 
-sub breakdown {
+sub breakdown_installed_files {
     my ($self) = @_;
 
     $self->tag('r-package-not-arch-all')

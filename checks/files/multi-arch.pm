@@ -41,7 +41,7 @@ my %PATH_DIRECTORIES = map { $_ => 1 } qw(
 has has_public_executable => (is => 'rwp', default => 0);
 has has_public_shared_library => (is => 'rwp', default => 0);
 
-sub files {
+sub visit_installed_files {
     my ($self, $file) = @_;
 
     my $architecture = $self->processable->fields->value('Architecture')
@@ -79,7 +79,7 @@ sub files {
     return;
 }
 
-sub breakdown {
+sub breakdown_installed_files {
     my ($self) = @_;
 
     my $architecture = $self->processable->fields->value('Architecture')

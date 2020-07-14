@@ -32,7 +32,7 @@ with 'Lintian::Check';
 
 has warned_debug_name => (is => 'rwp', default => 0);
 
-sub files {
+sub visit_installed_files {
     my ($self, $file) = @_;
 
     if ($file->name =~ m,^usr/lib/debug/\S,) {

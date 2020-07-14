@@ -71,7 +71,7 @@ sub spelling_tag_emitter {
     };
 }
 
-sub files {
+sub visit_installed_files {
     my ($self, $file) = @_;
 
     if ($file->is_file) { # file checks

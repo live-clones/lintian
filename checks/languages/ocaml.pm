@@ -56,7 +56,7 @@ has has_meta => (is => 'rwp', default => 0);
 # The maximum number of *.cmi files to show individually.
 our $MAX_CMI = 3;
 
-sub setup {
+sub setup_installed_files {
     my ($self) = @_;
 
     open(my $fd, '<',
@@ -95,7 +95,7 @@ sub setup {
     return;
 }
 
-sub files {
+sub visit_installed_files {
     my ($self, $file) = @_;
 
     # For each .cmxa file, there must be a matching .a file (#528367)
@@ -175,7 +175,7 @@ sub files {
     return;
 }
 
-sub breakdown {
+sub breakdown_installed_files {
     my ($self) = @_;
 
     if ($self->is_dev_package) {

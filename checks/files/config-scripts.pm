@@ -36,7 +36,7 @@ with 'Lintian::Check';
 
 my $MULTIARCH_DIRS = Lintian::Data->new('common/multiarch-dirs', qr/\s++/);
 
-sub files {
+sub visit_installed_files {
     my ($self, $file) = @_;
 
     my $architecture = $self->processable->fields->value('Architecture')

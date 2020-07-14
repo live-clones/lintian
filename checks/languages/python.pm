@@ -262,7 +262,7 @@ sub installable {
     return;
 }
 
-sub files {
+sub visit_installed_files {
     my ($self, $file) = @_;
 
     # .pyc/.pyo (compiled Python files)
