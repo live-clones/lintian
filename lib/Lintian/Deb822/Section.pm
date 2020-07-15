@@ -81,6 +81,30 @@ has verbatim => (is => 'rw', default => sub { {} });
 has unfolded => (is => 'rw', default => sub { {} });
 has positions => (is => 'rw', default => sub { {} });
 
+=item trimmed_list(FIELD [, SEPARATOR])
+
+=cut
+
+sub trimmed_list {
+    my ($self, $name, $regex) = @_;
+
+    $regex //= qr/\s+/;
+
+    my $value = $self->value($name);
+    return
+      unless defined $value;
+
+    # trim both ends
+    $value =~ s/^\s+|\s+$//g;
+
+    my @list = split($regex, $value);
+
+    # trim both ends of each element
+    s/^\s+|\s+$//g for @list;
+
+    return grep { length } @list;
+}
+
 =item unfolded_value (FIELD)
 
 This method returns the unfolded value of the control field FIELD in
