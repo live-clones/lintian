@@ -28,7 +28,7 @@ lintian (2.84.0) unstable; urgency=medium
       - testsuite-autopkgtest-missing
 
   [ Felix Lechner ]
-  * Strip architecture fron two filenames in tests, and ignore tags seen
+  * Strip architecture from two filenames in tests, and ignore tags seen
     only on some architectures as it causes autopkgtest regressions on
     arm64.
   * Unconditionally allow /dev/null as a symlink target in source packages.
