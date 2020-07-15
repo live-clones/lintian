@@ -1,8 +1,51 @@
-lintian (2.83.0+git) UNRELEASED; urgency=medium
+lintian (2.84.0) unstable; urgency=medium
 
-  * WIP (generated at release time: please do not add entries below).
+  * Summary of tag changes:
+    + Added:
+      - arch-any-package-needs-newer-cdbs
+      - autopkgtest-needs-use-name
+      - include
+      - legacy-vendorarch-directory
+      - missing-tests-control
+      - module-build-tiny-needs-newer-cdbs
+      - module-build-tiny-needs-newer-debhelper
+      - no-git
+      - no-team-tests
+      - no-team-url
+      - no-tests
+      - no-testsuite-header
+      - nodejs-bad-buffer-usage
+      - send-patch
+      - specification
+    + Removed:
+      - inconsistent-testsuite-field
+      - testsuite-autopkgtest-missing
 
- -- Chris Lamb <lamby@debian.org>  Wed, 08 Jul 2020 00:17:26 +0100
+  [ Felix Lechner ]
+  * Strip architecture fron two filenames in tests, and ignore tags seen
+    only on some architectures as it causes autopkgtest regressions on
+    arm64.
+  * Unconditionally allow /dev/null as a symlink target in source packages.
+    (Re: #964111)
+  * Fix national-encoding for DEP-3 patches without quilt notice.
+    (Closes: #964281)
+  * Add a reminder to send forwardable DEP-3 patches upstream.
+    (Closes: #755153)
+  * Add two classification tags for Salsa CI detection.
+  * For testsuites, parse debian/control instead of .dsc and drop the
+    inconsistent-testsuite-field tag.
+  * Convert program error for missing test fields to a tag and reinstate
+    old tag under new name.
+  * Removed debhelper compat 5 and 6 from tests.
+  * Allow optional, private namespaces for tags. (Re: #943525)
+  * Merge all checks and tags from pkg-perl and pkg-js.
+  * For R API version parsing, allow any character that is legal in package
+    names. (Re: #961709)
+
+  [ Trek ]
+  * Exclude some more templated (ie. "@") systemd .service files.
+
+ -- Chris Lamb <lamby@debian.org>  Wed, 15 Jul 2020 22:15:30 +0000
 
 lintian (2.83.0) unstable; urgency=medium
 
