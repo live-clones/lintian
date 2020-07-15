@@ -1,0 +1,3 @@
+Skeleton: source-native
+Testname: minimal
+Description: Minimal Salsa CI setup using standard pipelines

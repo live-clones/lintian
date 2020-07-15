@@ -1,0 +1,3 @@
+minimal (source): continuous-integration/salsa/specification debian/gitlab-ci.yml
+minimal (source): continuous-integration/salsa/include debian/gitlab-ci.yml https://salsa.debian.org/salsa-ci-team/pipeline/raw/master/salsa-ci.yml
+minimal (source): continuous-integration/salsa/include debian/gitlab-ci.yml https://salsa.debian.org/salsa-ci-team/pipeline/raw/master/pipeline-jobs.yml

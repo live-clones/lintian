@@ -10,6 +10,7 @@ Enable-Tags-From-Check:
  build-systems/cmake,
  changes-file,
  conffiles,
+ continuous-integration/salsa,
  control-files,
  cron,
  cruft,
