@@ -205,7 +205,7 @@ sub load {
     $self->info($fields->value('Info'));
     $self->references($fields->value('Ref'));
 
-    $self->aliases(split(SPACE, $fields->value('Renamed-From') // EMPTY));
+    $self->aliases([$fields->trimmed_list('Renamed-From')]);
 
     croak "No Tag field in $tagpath"
       unless length $self->name;

@@ -263,14 +263,15 @@ sub load {
     for my $taginfo (values %{ $self->known_tags_by_name }) {
 
         my @taken
-          = grep { defined $self->known_aliases->{$_} } $taginfo->aliases;
+          = grep { defined $self->known_aliases->{$_} } @{$taginfo->aliases};
+
         die 'These aliases of the tag '
           . $taginfo->name
           . ' are taken already: '
           . join(SPACE, @taken)
           if @taken;
 
-        $self->known_aliases->{$_} = $taginfo->name for $taginfo->aliases;
+        $self->known_aliases->{$_} = $taginfo->name for @{$taginfo->aliases};
     }
 
     return $self;
