@@ -1,0 +1,3 @@
+Skeleton: source-non-native
+Testname: applied-upstream
+Description: Debian patch with Applied-Upstream (false positive)

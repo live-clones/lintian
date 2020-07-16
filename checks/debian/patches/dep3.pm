@@ -30,7 +30,7 @@ use constant EMPTY => q{};
 use List::MoreUtils qw(none);
 use Unicode::UTF8 qw(valid_utf8 decode_utf8);
 
-use Lintian::Deb822::Parser qw(parse_dpkg_control_string);
+use Lintian::Deb822::File;
 
 use Moo;
 use namespace::clean;
@@ -62,21 +62,25 @@ sub visit_patched_files {
     return
       unless length $header;
 
-    my @paragraph;
-    eval { @paragraph = parse_dpkg_control_string($header) };
+    my $deb822 = Lintian::Deb822::File->new;
+
+    my @sections;
+    eval { @sections = $deb822->parse_string($header) };
     return
-      if $@;
+      if length $@;
 
     return
-      unless @paragraph;
+      unless @sections;
 
-    my $fields = $paragraph[0];
+    my $fields = $sections[0];
 
-    my $forwarded = $fields->{Forwarded} // EMPTY;
-    my $bug = $fields->{Bug} // EMPTY;
+    my $forwarded = $fields->value('Forwarded') // EMPTY;
+    my $bug = $fields->value('Bug') // EMPTY;
+    my $applied_upstream = $fields->value('Applied-Upstream') // EMPTY;
 
     $self->tag('send-patch', $item->name)
-      if $forwarded eq 'no' || none { length } ($bug, $forwarded);
+      if $forwarded eq 'no'
+      || none { length } ($applied_upstream, $bug, $forwarded);
 
     return;
 }
