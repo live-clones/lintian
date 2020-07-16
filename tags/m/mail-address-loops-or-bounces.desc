@@ -1,7 +1,8 @@
 Tag: mail-address-loops-or-bounces
 Severity: error
 Check: fields/mail-address
-Renamed-From: maintainer-address-causes-mail-loops-or-bounces,
+Renamed-From:
+ maintainer-address-causes-mail-loops-or-bounces
  uploader-address-causes-mail-loops-or-bounces
 Info: The contact's mail address either loops back to itself or is known
  to bounce.
