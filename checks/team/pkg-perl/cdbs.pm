@@ -1,4 +1,4 @@
-# team/pkg-perl/debhelper -- lintian check script for required debhelper versions -*- perl -*-
+# team/pkg-perl/debhelper -- lintian check script for required cdbs versions -*- perl -*-
 #
 # Copyright © 2013 Niels Thykier <niels@thykier.net>
 # Copyright © 2013 gregor herrmann <gregoa@debian.org>
