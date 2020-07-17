@@ -1180,8 +1180,12 @@ qr/GNU (?:Lesser|Library) General Public License|(?-i:\bLGPL\b)/i
         $self->tag('helper-templates-in-copyright');
     }
 
+    # dh-make-perl
     if ($contents =~ m/This copyright info was automatically extracted/) {
         $self->tag('copyright-contains-automatically-extracted-boilerplate');
+    }
+    if ($contents =~ m,\<INSERT COPYRIGHT YEAR\(S\) HERE\>,) {
+        $self->tag('helper-templates-in-copyright');
     }
 
     if ($contents =~ m,url://,) {
