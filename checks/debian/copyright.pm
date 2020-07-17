@@ -46,6 +46,7 @@ use constant {
 
 use constant EMPTY => q{};
 use constant SPACE => q{ };
+use constant ASTERISK => q{*};
 
 use Moo;
 use namespace::clean;
@@ -55,16 +56,6 @@ with 'Lintian::Check';
 our $KNOWN_ESSENTIAL = Lintian::Data->new('fields/essential');
 our $KNOWN_COMMON_LICENSES
   =  Lintian::Data->new('copyright-file/common-licenses');
-
-my $BAD_SHORT_LICENSES = Lintian::Data->new(
-    'source-copyright/bad-short-licenses',
-    qr/\s*\~\~\s*/,
-    sub {
-        return {
-            'regex' => qr/$_[0]/xms,
-            'tag'   => $_[1],
-        };
-    });
 
 my $dep5_last_normative_change = '0+svn~166';
 my $dep5_last_overhaul         = '0+svn~148';
@@ -296,84 +287,93 @@ sub check_dep5_copyright {
     return
       if versions_compare($version, '<<', $dep5_last_overhaul);
 
-    my (@dep5, @lines);
-
-    # probably DEP 5 format; let's try more checks
-    eval {@dep5 = parse_dpkg_control_string($contents, 0, \@lines);};
-    if ($@) {
-        chomp $@;
-        $@ =~ s/^syntax error at //;
-        $self->tag('syntax-error-in-dep5-copyright', $@);
-        return;
-    }
-
-    return
-      unless @dep5;
-
-    $self->parse_dep5(\@dep5, \@lines);
+    $self->parse_dep5($copyright_file, $contents);
 
     return;
 }
 
 sub parse_dep5 {
-    my ($self, $dep5ref, $linesref) = @_;
+    my ($self, $file, $contents) = @_;
 
-    my @dep5       = @$dep5ref;
-    my @lines      = @$linesref;
-    my $first_para = shift @dep5;
+    # probably DEP 5 format; let's try more checks
+    my $deb822 = Lintian::Deb822::File->new;
 
-    my %standalone_licenses;
-    my %required_standalone_licenses;
-    my %short_licenses_seen;
-    my %full_licenses_seen;
+    my @sections;
+    eval { @sections = $deb822->parse_string($contents); };
 
-    for my $name (keys %{$first_para}) {
-        my $new_name = $dep5_renamed_fields{$name};
-        $self->tag('obsolete-field-in-dep5-copyright',
-            $name, $new_name, "(line $lines[0]{$name})")
-          if length $new_name;
+    if (length $@) {
+        chomp $@;
+
+        $@ =~ s/^syntax error in //;
+        $self->tag('syntax-error-in-dep5-copyright', "$file: $@");
+
+        return;
     }
 
-    $self->check_files_excluded($first_para->{'Files-Excluded'} // '')
+    return
+      unless @sections;
+
+    my $header = shift @sections;
+
+    my @obsolete = $header->present(keys %dep5_renamed_fields);
+    for my $name (@obsolete) {
+
+        my $position = $header->position($name);
+        $self->tag(
+            'obsolete-field-in-dep5-copyright',
+            $name,
+            $dep5_renamed_fields{$name},
+            "(line $position)"
+        );
+    }
+
+    $self->check_files_excluded($header->value('Files-Excluded'))
       unless $self->processable->native;
 
     $self->tag('copyright-excludes-files-in-native-package')
-      if exists $first_para->{'Files-Excluded'} && $self->processable->native;
+      if $header->exists('Files-Excluded')
+      && $self->processable->native;
 
     $self->tag('missing-field-in-dep5-copyright',
-        'Format',"(line $lines[0]{'Format'})")
-      if none { defined $first_para->{$_} } qw(Format Format-Specification);
+        'Format','(line ' . $header->position . ')')
+      if $header->present(qw(Format Format-Specification)) == 0;
 
     my $debian_control = $self->processable->debian_control;
     $self->tag('missing-explanation-for-contrib-or-non-free-package')
-      if $debian_control->source_fields->value('Section')
-      =~ m{^(contrib|non-free)(/.+)?$}
-      and none { defined $first_para->{$_} } qw(Comment Disclaimer);
+      if ($debian_control->source_fields->value('Section'))
+      =~ m{^(?:contrib|non-free)(?:/.+)?$}
+      && $header->present(qw(Comment Disclaimer)) == 0;
 
     $self->tag('missing-explanation-for-repacked-upstream-tarball')
       if $self->processable->repacked
-      and none { defined $first_para->{$_} } qw(Comment Files-Excluded)
-      and ($first_para->{'Source'} // '') =~ m{^https?://};
+      && $header->present(qw(Comment Files-Excluded)) == 0
+      && $header->value('Source') =~ m{^https?://};
 
-    my (undef, $full_license_field, undef,@short_licenses_field)
-      = $self->parse_license($first_para->{'License'}, 1);
+    my ($license_text, undef,@short_licenses_field)
+      = $self->parse_license($header);
 
-    for my $short_license (@short_licenses_field) {
-        $required_standalone_licenses{$short_license} = 0
-          if not defined($full_license_field);
-        $short_licenses_seen{$short_license}          = 1;
-    }
+    my %license_name_seen;
+    my %license_text_seen;
+    my %standalone_licenses;
+    my %required_standalone;
 
-    if(defined($full_license_field)) {
-        for (@short_licenses_field) {
-            $standalone_licenses{$_} = -1;
-            $full_licenses_seen{$_} = 1;
-        }
+    for my $name (@short_licenses_field) {
+        $license_name_seen{$name} = $header;
+
+        $standalone_licenses{$name} = $header
+          if length $license_text;
+
+        $license_text_seen{$name} = $header
+          if length $license_text;
+
+        $required_standalone{$name} = $header
+          unless length $license_text;
     }
 
     my @allpaths;
-    if($self->processable->native) {
+    if ($self->processable->native) {
         @allpaths = $self->processable->patched->sorted_list;
+
     } else {
         @allpaths = $self->processable->orig->sorted_list;
     }
@@ -389,71 +389,146 @@ sub parse_dep5 {
 
     my (@commas_in_files, %file_para_coverage, %file_licenses);
     my %file_coverage = map { $_ => 0 } @shippedfiles;
-    my $current_line = 0;
-    my $commas_in_files = any { /,/s } @allpaths;
+    my $commas_in_files = any { /,/ } @allpaths;
 
-    my $position = 1;
-    for my $para (@dep5) {
-        $current_line = $lines[$position]{'START-OF-PARAGRAPH'};
-        my $files = $para->{Files};
-        my $license   = $para->{License};
-        my $copyright = $para->{Copyright};
+    my @license_sections = grep { $_->exists('License') } @sections;
+    for my $section (@license_sections) {
 
-        if (    not defined $files
-            and defined $license
-            and defined $copyright){
-            $self->tag(
-                'ambiguous-paragraph-in-dep5-copyright',
-                "paragraph at line $current_line"
-            );
+        $self->tag('tab-in-license-text',
+            'debian/copyright (starting at line '
+              . $section->position('License') . ')')
+          if $section->value('License') =~ /\t/;
+    }
 
-            # If it is the first paragraph, it might be an instance of
-            # the (no-longer) optional "first Files-field".
-            $files = '*' if $position == 1;
+    my @ambiguous_sections = grep {
+             $_->exists('License')
+          && $_->exists('Copyright')
+          && !$_->exists('Files')
+    } @sections;
+
+    $self->tag(
+        'ambiguous-paragraph-in-dep5-copyright',
+        'paragraph at line ' . $_->position
+    ) for @ambiguous_sections;
+
+    my @unknown_sections
+      = grep {!$_->exists('License')&& !$_->exists('Files')} @sections;
+
+    $self->tag(
+        'unknown-paragraph-in-dep5-copyright',
+        'paragraph at line',
+        $_->position
+    ) for @unknown_sections;
+
+    my @files_sections = grep {$_->exists('Files')} @sections;
+
+    for my $section (@files_sections) {
+
+        $self->tag('missing-field-in-dep5-copyright',
+            'Files','(empty field, line ' . $section->position('Files') . ')')
+          if $section->value('Files') =~ /^\s*$/;
+
+        $self->tag('missing-field-in-dep5-copyright',
+            'License', '(paragraph at line ' . $section->position . ')')
+          unless $section->exists('License');
+
+        $self->tag('missing-field-in-dep5-copyright',
+            'Copyright','(paragraph at line ' . $section->position . ')')
+          unless $section->exists('Copyright');
+
+        $self->tag('missing-field-in-dep5-copyright',
+            'Copyright',
+            '(empty field, line ' . $section->position('Copyright') . ')')
+          if $section->exists('Copyright')
+          && $section->value('Copyright') =~ /^\s*$/;
+    }
+
+    my $section_count = 0;
+    for my $section (@sections) {
+
+        my $license = $section->value('License');
+
+        # trim both ends
+        $license =~ s/^\s+|\s+$//g;
+
+        my ($license_text, $license_name, @short_licenses)
+          = $self->parse_license($section);
+
+        if ($license_name =~ /^cc-/ && length $license_text) {
+
+            my $num_lines = $license_text =~ tr/\n//;
+
+            $self->tag('incomplete-creative-commons-license',
+                $license_name, '(line ' . $section->position('License') . ')')
+              if $num_lines < 20;
         }
 
-        if (defined $license and not defined $files) {
-            my (undef, $full_license, $short_license,@short_licenses)
-              = $self->parse_license($license, $current_line);
-            $self->check_incomplete_creative_commons_license($short_license,
-                $license, $current_line);
-            # Standalone license paragraph
-            if (defined($short_license) and $short_license =~ /\s++\|\s++/) {
-                $self->tag('pipe-symbol-used-as-license-disjunction',
-                    $short_license,"(paragraph at line $current_line)");
-            }
-            if (not defined($full_license)) {
-                $self->tag('missing-license-text-in-dep5-copyright',
-                    $license,"(paragraph at line $current_line)");
-            }else {
-                for (@short_licenses) {
-                    if(defined($full_licenses_seen{$_})
-                        and $_ ne 'public-domain') {
-                        $self->tag(
-                            'dep5-copyright-license-name-not-unique',
-                            "(paragraph at line $current_line)"
-                        );
-                    } else {
-                        $standalone_licenses{$_} = $position;
-                        $full_licenses_seen{$_} = $current_line;
-                    }
-                    $short_licenses_seen{$_} = $position;
+        if ($license_name =~ m{\s+\|\s+}) {
+            $self->tag('pipe-symbol-used-as-license-disjunction',
+                $license_name,'(line '. $section->position('License') . ')');
+        }
+
+        if (length $license_text) {
+
+            for my $name (@short_licenses) {
+                if (defined $license_text_seen{$name}
+                    && $name ne 'public-domain') {
+
+                    $self->tag('dep5-copyright-license-name-not-unique',
+                        $name,'(line ' . $section->position('License') . ')');
                 }
             }
-        }elsif (defined $files) {
-            if ($files =~ m/\A\s*\Z/mxs) {
-                $self->tag(
-                    'missing-field-in-dep5-copyright',
-                    'Files',
-                    '(empty field,',
-                    "paragraph at line $current_line)"
-                );
+        }
+
+        if ($section->exists('Files') && !length $license_text) {
+
+            $required_standalone{$_} = $section for @short_licenses;
+        }
+
+        if (length $license_text && !$section->exists('Files')) {
+
+            for my $name (@short_licenses) {
+
+                $standalone_licenses{$name} = $section
+                  unless defined $license_text_seen{$name}
+                  && $name ne 'public-domain';
             }
+        }
+
+        $license_name_seen{$_} = $section for @short_licenses;
+
+        if (length $license_text) {
+            $license_text_seen{$_} //= $section for @short_licenses;
+        }
+
+        my $files = $section->value('Files');
+
+        # trim both ends
+        $files =~ s/^\s+|\s+$//g;
+
+        # If it is the first paragraph, it might be an instance of
+        # the (no-longer) optional "first Files-field".
+        if (   $section_count == 0
+            && $section->exists('License')
+            && $section->exists('Copyright')) {
+
+            $files ||= ASTERISK;
+        }
+
+        # stand-alone license paragraph
+        if ($section->exists('License') && !length $files) {
+
+            $self->tag('missing-license-text-in-dep5-copyright',
+                $license, '(line ' . $section->position('License') . ')')
+              unless length $license_text;
+        }
+
+        if (length $files) {
 
             $self->tag(
                 'global-files-wildcard-not-first-paragraph-in-dep5-copyright',
-                "(paragraph at line $current_line)"
-            ) if $files eq '*' and $position > 1;
+                '(line ' . $section->position('Files') . ')'
+            ) if $files eq ASTERISK && $section_count > 0;
 
             my @listedfiles = split(SPACE, $files);
 
@@ -465,38 +540,38 @@ sub parse_dep5 {
               for @listedlicensefiles;
 
             # Files paragraph
-            if (not @commas_in_files and $files =~ /,/) {
-                @commas_in_files = ($position, 'Files');
-            }
-
-            my ($found_license, $full_license, $short_license, @short_licenses)
-              = $self->parse_license($license, $current_line);
+            push(@commas_in_files, $section)
+              if $files =~ /,/;
 
             # only attempt to evaluate globbing if commas could be legal
-            if (not @commas_in_files or $commas_in_files) {
+            if (!@commas_in_files || $commas_in_files) {
                 my @wildcards = split /[\n\t ]+/, $files;
                 for my $wildcard (@wildcards) {
                     $wildcard =~ s/^\s+|\s+$//g;
-                    if ($wildcard eq '') {
-                        next;
-                    }
+
+                    next
+                      if $wildcard eq EMPTY;
+
                     my ($wc_value, $wc_type, $wildcard_error)
                       = parse_wildcard($wildcard);
                     if (defined $wildcard_error) {
                         $self->tag('invalid-escape-sequence-in-dep5-copyright',
-                            substr($wildcard_error, 0, 2)
-                              . " (paragraph at line $current_line)");
+                                substr($wildcard_error, 0, 2)
+                              . ' (paragraph at line '
+                              . $section->position
+                              . ')');
                         next;
                     }
 
                     my $used = 0;
-                    $file_para_coverage{$current_line} = 0;
+                    my $position = $section->position;
+                    $file_para_coverage{$position} = 0;
 
                     if ($wc_type eq WC_TYPE_FILE) {
                         if (exists($file_coverage{$wc_value})) {
                             $used = 1;
-                            $file_coverage{$wildcard} = $current_line;
-                            $file_licenses{$wildcard} = $short_license;
+                            $file_coverage{$wildcard} = $section->position;
+                            $file_licenses{$wildcard} = $license_name;
                         }
 
                     } elsif ($wc_type eq WC_TYPE_DESCENDANTS) {
@@ -535,89 +610,45 @@ sub parse_dep5 {
                           if @wlist;
 
                         for my $entry (@wlist) {
-                            $file_coverage{$entry} = $current_line;
-                            $file_licenses{$entry} = $short_license;
+                            $file_coverage{$entry} = $section->position;
+                            $file_licenses{$entry} = $license_name;
                         }
 
                     } else {
                         for my $srcfile (@shippedfiles) {
                             if ($srcfile =~ $wc_value) {
                                 $used = 1;
-                                $file_coverage{$srcfile} = $current_line;
-                                $file_licenses{$srcfile} = $short_license;
+                                $file_coverage{$srcfile} = $section->position;
+                                $file_licenses{$srcfile} = $license_name;
                             }
                         }
                     }
                     if ($used) {
-                        $file_para_coverage{$current_line} = 1;
+                        $file_para_coverage{$position} = 1;
                     } elsif (not $used) {
                         $self->tag(
                             'wildcard-matches-nothing-in-dep5-copyright',
-                            "$wildcard (paragraph at line $current_line)"
+                            "$wildcard (paragraph at line "
+                              . $section->position . ')'
                         );
                     }
                 }
             }
-
-            $self->check_incomplete_creative_commons_license($short_license,
-                $license, $current_line);
-            if (defined($short_license) and $short_license =~ /\s++\|\s++/) {
-                $self->tag('pipe-symbol-used-as-license-disjunction',
-                    $short_license,"(paragraph at line $current_line)");
-            }
-            if ($found_license) {
-                for (@short_licenses) {
-                    $short_licenses_seen{$_} = $position;
-                    if (not defined($full_license)) {
-                        $required_standalone_licenses{$_} = $position;
-                    } else {
-                        if(defined($full_licenses_seen{$_})
-                            and $_ ne 'public-domain') {
-                            $self->tag(
-                                'dep5-copyright-license-name-not-unique',
-                                $_, "(paragraph at line $current_line)");
-                        } else {
-                            $full_licenses_seen{$_} = $current_line;
-                        }
-                    }
-                }
-            }else {
-                $self->tag('missing-field-in-dep5-copyright',
-                    'License',"(paragraph at line $current_line)");
-            }
-
-            if (not defined $copyright) {
-                $self->tag('missing-field-in-dep5-copyright',
-                    'Copyright',"(paragraph at line $current_line)");
-            }elsif ($copyright =~ m/\A\s*\Z/mxs) {
-                $self->tag(
-                    'missing-field-in-dep5-copyright',
-                    'Copyright',
-                    '(empty field,',
-                    "paragraph at line $current_line)"
-                );
-            }
-
-        }else {
-            $self->tag(
-                'unknown-paragraph-in-dep5-copyright',
-                'paragraph at line',
-                $current_line
-            );
         }
 
     } continue {
-        $position++;
+        $section_count++;
     }
 
-    if (@commas_in_files and not $commas_in_files) {
-        my ($paragraph_no, $field_name) = @commas_in_files;
+    if (@commas_in_files && !$commas_in_files) {
+
         $self->tag(
             'comma-separated-files-in-dep5-copyright',
             'paragraph at line',
-            $lines[$paragraph_no]{$field_name});
+            $_->position('Files')) for @commas_in_files;
+
     } else {
-        foreach my $srcfile (sort keys %file_licenses) {
+        for my $srcfile (sort keys %file_licenses) {
             next
               if $srcfile =~ '^\.pc/';
             next
@@ -667,92 +698,92 @@ sub parse_dep5 {
           for sort keys %file_para_coverage;
     }
 
-    while (my ($license,$i) = each %required_standalone_licenses) {
-        if (not defined $standalone_licenses{$license}) {
-            $self->tag('missing-license-paragraph-in-dep5-copyright',
-                $license,
-                "(paragraph at line $lines[$i]{'START-OF-PARAGRAPH'})");
-        } elsif ($standalone_licenses{$license} == -1) {
-            $self->tag('dep5-file-paragraph-references-header-paragraph',
-                $license,
-                "(paragraph at line $lines[$i]{'START-OF-PARAGRAPH'})");
-        }
+    my $standalone_lc= List::Compare->new([keys %required_standalone],
+        [keys %standalone_licenses]);
+    my @missing_standalone = $standalone_lc->get_Lonly;
+    my @unused_standalone = $standalone_lc->get_Ronly;
 
-    }
-    while (my ($license, $i) = each %standalone_licenses) {
-        if (not defined $required_standalone_licenses{$license}) {
-            $self->tag('unused-license-paragraph-in-dep5-copyright',
-                $license,
-                "(paragraph at line $lines[$i]{'START-OF-PARAGRAPH'})");
-        }
-    }
-  LICENSE:
-    while (my ($license, $i) = each %short_licenses_seen) {
-        if ($license =~ m,\s,) {
-            if($license =~ m,[^ ]+ \s+ with \s+ (.*),x) {
+    $self->tag('missing-license-paragraph-in-dep5-copyright',
+        $_,'(line '. $required_standalone{$_}->position('License') . ')')
+      for @missing_standalone;
+
+    $self->tag('unused-license-paragraph-in-dep5-copyright',
+        $_,'(line ' . $standalone_licenses{$_}->position('License') . ')')
+      for @unused_standalone;
+
+    my @references_header = grep {
+        defined $standalone_licenses{$_}
+          && $standalone_licenses{$_} == $header
+    } keys %required_standalone;
+
+    $self->tag('dep5-file-paragraph-references-header-paragraph',
+        $_,'(line '. $required_standalone{$_}->position('License') . ')')
+      for @references_header;
+
+    for my $name (keys %license_name_seen) {
+        my $section = $license_name_seen{$name};
+        if ($name =~ m,\s,) {
+
+            if($name =~ m,[^ ]+ \s+ with \s+ (.*),x) {
                 my $exceptiontext = $1;
                 unless ($exceptiontext =~ m,[^ ]+ \s+ exception,x) {
-                    $self->tag(
-                        'bad-exception-format-in-dep5-copyright',
-                        $license,
-                        "(paragraph at line $lines[$i]{'START-OF-PARAGRAPH'})"
-                    );
+                    $self->tag('bad-exception-format-in-dep5-copyright',
+                        $name,'(line ' . $section->position('License') . ')');
                 }
+
             }else {
                 $self->tag('space-in-std-shortname-in-dep5-copyright',
-                    $license,
-                    "(paragraph at line $lines[$i]{'START-OF-PARAGRAPH'})");
-            }
-        }
-        foreach my $bad_short_license ($BAD_SHORT_LICENSES->all) {
-            my $value = $BAD_SHORT_LICENSES->value($bad_short_license);
-            my $regex = $value->{'regex'};
-            if ($license =~ m/$regex/x) {
-                $self->tag($value->{'tag'}, $license,
-                    "(paragraph at line $lines[$i]{'START-OF-PARAGRAPH'})");
-                next LICENSE;
+                    $name,'(line ' . $section->position('License') . ')');
             }
         }
     }
+
+    for my $name (keys %license_name_seen) {
+
+        $self->tag('invalid-short-name-in-dep5-copyright',
+            $name,
+            '(line ' . $license_name_seen{$name}->position('License') . ')')
+          if $name =~ m{^(?:agpl|gpl|lgpl)[^-]?\d(?:\.\d)?\+?$}
+          || $name =~ m{^bsd(?:[^-]?[234][^-]?(?:clause|cluase))?$};
+
+        $self->tag('license-problem-undefined-license',
+            $name,
+            '(line ' . $license_name_seen{$name}->position('License') . ')')
+          if $name =~ /^-$/
+          || $name=~ m{\b(?:fixmes?|todos?|undefined?|unknown?|unspecified)\b};
+    }
+
     return;
 }
 
-# parse a license block
 sub parse_license {
-    my ($self, $license_block, $line) = @_;
+    my ($self, $section) = @_;
 
-    return 0
-      unless defined $license_block;
+    return (EMPTY, EMPTY)
+      unless $section->exists('License');
 
-    my ($full_license, $short_license);
-    if ($license_block =~ /\n/) {
-        ($short_license, $full_license) = split(/\n/, $license_block, 2);
+    my $license = $section->value('License');
 
-    } else {
-        $short_license = $license_block;
-    }
+    my ($name, $text) = split(/\n/, $license, 2);
 
-    if(defined $full_license) {
-        $self->tag('tab-in-license-text',
-            "debian/copyright (paragraph at line $line)")
-          if $full_license =~ /\t/;
-    }
+    $name //= EMPTY;
+    $name =~ s/[(),]/ /g;
 
-    $short_license =~ s/[(),]/ /g;
+    $text //= EMPTY;
 
-    if ($short_license =~ m/\A\s*\Z/) {
-        $self->tag('empty-short-license-in-dep5-copyright',
-            "(paragraph at line $line)");
+    # trim both ends
+    $name =~ s/^\s+|\s+$//g;
 
-        return (1, $full_license, EMPTY);
-    }
+    my $lowercase = lc $name;
 
-    $short_license = lc($short_license);
+    my @constituents = split(/\s+(?:and|or)\s+/, $lowercase);
 
-    my @licenses
-      =map { "\L$_" } (split(m/\s++(?:and|or)\s++/, $short_license));
+    $self->tag(
+        'empty-short-license-in-dep5-copyright',
+        '(line ' . $section->position('License') . ')'
+    )unless length $name;
 
-    return (1, $full_license, $short_license, @licenses);
+    return ($text, $lowercase, @constituents);
 }
 
 sub dequote_backslashes {
@@ -874,23 +905,6 @@ sub check_files_excluded {
               if $srcfile =~ qr/^$wc_value/;
         }
     }
-
-    return;
-}
-
-sub check_incomplete_creative_commons_license {
-    my ($self, $short_license, $license, $current_line) = @_;
-
-    return
-      unless $short_license && $license;
-
-    my $num_lines = $license =~ tr/\n//;
-
-    $self->tag('incomplete-creative-commons-license',
-        $short_license,"(paragraph at line $current_line)")
-      if $short_license =~ /^cc-/
-      && $num_lines > 0
-      && $num_lines < 20;
 
     return;
 }
@@ -1266,7 +1280,7 @@ sub check_cross_link {
     my ($self, $foreign) = @_;
 
     my $source = $self->group->source;
-    if (defined $source) {
+    if ($source) {
 
         # source package is available; check its list of binaries
         return

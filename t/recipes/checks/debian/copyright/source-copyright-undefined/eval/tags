@@ -13,14 +13,14 @@ source-copyright-undefined (source): unused-file-paragraph-in-dep5-copyright par
 source-copyright-undefined (source): unused-file-paragraph-in-dep5-copyright paragraph at line 27
 source-copyright-undefined (source): unused-file-paragraph-in-dep5-copyright paragraph at line 22
 source-copyright-undefined (source): unused-file-paragraph-in-dep5-copyright paragraph at line 17
-source-copyright-undefined (source): space-in-std-shortname-in-dep5-copyright undefined license (paragraph at line 39)
-source-copyright-undefined (source): space-in-std-shortname-in-dep5-copyright common public license - v 1.0 (paragraph at line 51)
-source-copyright-undefined (source): license-problem-undefined-license unknown (paragraph at line 12)
-source-copyright-undefined (source): license-problem-undefined-license unknow (paragraph at line 17)
-source-copyright-undefined (source): license-problem-undefined-license undefined license (paragraph at line 39)
-source-copyright-undefined (source): license-problem-undefined-license undefined (paragraph at line 45)
-source-copyright-undefined (source): license-problem-undefined-license todo (paragraph at line 22)
-source-copyright-undefined (source): license-problem-undefined-license fixme (paragraph at line 6)
-source-copyright-undefined (source): license-problem-undefined-license - (paragraph at line 33)
-source-copyright-undefined (source): dep5-copyright-license-name-not-unique - (paragraph at line 33)
+source-copyright-undefined (source): space-in-std-shortname-in-dep5-copyright undefined license (line 42)
+source-copyright-undefined (source): space-in-std-shortname-in-dep5-copyright common public license - v 1.0 (line 54)
+source-copyright-undefined (source): license-problem-undefined-license unknown (line 14)
+source-copyright-undefined (source): license-problem-undefined-license unknow (line 19)
+source-copyright-undefined (source): license-problem-undefined-license undefined license (line 42)
+source-copyright-undefined (source): license-problem-undefined-license undefined (line 48)
+source-copyright-undefined (source): license-problem-undefined-license todo (line 24)
+source-copyright-undefined (source): license-problem-undefined-license fixme (line 8)
+source-copyright-undefined (source): license-problem-undefined-license - (line 36)
+source-copyright-undefined (source): dep5-copyright-license-name-not-unique - (line 36)
 source-copyright-undefined (binary): spelling-error-in-copyright unknow unknown
