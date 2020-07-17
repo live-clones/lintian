@@ -27,8 +27,6 @@ use autodie;
 
 use Lintian::SlidingWindow;
 
-use constant EMPTY => q{};
-
 use Moo;
 use namespace::clean;
 
@@ -43,8 +41,7 @@ my $PKG_CONFIG_BAD_REGEX
 sub visit_installed_files {
     my ($self, $file) = @_;
 
-    my $architecture = $self->processable->fields->value('Architecture')
-      // EMPTY;
+    my $architecture = $self->processable->fields->value('Architecture');
 
     # arch-indep pkgconfig
     if (   $file->is_regular_file

@@ -186,7 +186,7 @@ sub source {
                 'binary-control-field-duplicates-source',
                 "field \"$field\" in package $bin"
               )
-              if ( $processable->debian_control->source_fields->value($field)
+              if ( $processable->debian_control->source_fields->exists($field)
                 && $bfields->value($field) eq
                 $processable->debian_control->source_fields->value($field));
             $self->tag(
@@ -230,9 +230,10 @@ sub source {
         qw(Build-Depends Build-Depends-Indep
         Build-conflicts Build-Conflicts-Indep)
     ) {
+        next
+          unless $processable->debian_control->source_fields->exists($field);
         my $raw = $processable->debian_control->source_fields->value($field);
         my $rel;
-        next unless $raw;
         $rel = Lintian::Relation->new($raw);
         $self->check_relation('source', $field, $raw, $rel);
     }
@@ -242,11 +243,14 @@ sub source {
             qw(Pre-Depends Depends Recommends Suggests Breaks
             Conflicts Provides Replaces Enhances)
         ) {
+            next
+              unless $processable->debian_control->installable_fields($bin)
+              ->exists($field);
+
             my $raw
               = $processable->debian_control->installable_fields($bin)
               ->value($field);
             my $rel;
-            next unless $raw;
             $rel = $processable->binary_relation($bin, $field);
             $self->check_relation($bin, $field, $raw, $rel);
         }
@@ -269,7 +273,7 @@ sub source {
         for my $strong (0 .. $#dep_fields) {
             next
               unless $processable->debian_control->installable_fields($bin)
-              ->value($dep_fields[$strong]);
+              ->exists($dep_fields[$strong]);
             my $relation
               = $processable->binary_relation($bin, $dep_fields[$strong]);
             $self->tag('package-depends-on-itself', $bin, $dep_fields[$strong])
@@ -281,7 +285,7 @@ sub source {
             for my $weak (($strong + 1) .. $#dep_fields) {
                 next
                   unless $processable->debian_control->installable_fields($bin)
-                  ->value($dep_fields[$weak]);
+                  ->exists($dep_fields[$weak]);
                 for my $dependency (split /\s*,\s*/,
                     $processable->debian_control->installable_fields($bin)
                     ->value($dep_fields[$weak])) {
@@ -315,13 +319,13 @@ sub source {
     # duplicate the descriptions of non-udeb packages and the package
     # description for udebs is much less important or significant to
     # the user.
+
     my $area = $processable->debian_control->source_fields->value('Section');
-    if (defined $area) {
-        if ($area =~ m%^([^/]+)/%) {
-            $area = $1;
-        } else {
-            $area = 'main';
-        }
+
+    if ($area =~ m%^([^/]+)/%) {
+        $area = $1;
+    } else {
+        $area = 'main';
     }
 
     my @descriptions;
@@ -329,13 +333,13 @@ sub source {
     foreach my $bin (@package_names) {
         my $depends
           = $processable->debian_control->installable_fields($bin)
-          ->value('Depends')// EMPTY;
+          ->value('Depends');
 
         # Accumulate the description.
         my $desc = $processable->debian_control->installable_fields($bin)
           ->value('Description');
         my $bin_area;
-        if (    $desc
+        if (length $desc
             and $processable->debian_control->installable_package_type($bin)ne
             'udeb') {
             push @descriptions, [$bin, split("\n", $desc, 2)];
@@ -354,8 +358,9 @@ sub source {
         $bin_area
           = $processable->debian_control->installable_fields($bin)
           ->value('Section');
-        $seen_main = 1 if not $bin_area and ($area // '') eq 'main';
-        next unless $area && $bin_area;
+        $seen_main = 1 if not length($bin_area) and $area eq 'main';
+        next
+          unless length $area && length $bin_area;
 
         if ($bin_area =~ m%^([^/]+)/%) {
             $bin_area = $1;
@@ -461,10 +466,12 @@ sub source {
 
     # Check Rules-Requires-Root
     if (
-        defined(
-            my $r3 = $processable->debian_control->source_fields->value(
-                'Rules-Requires-Root'))
+        $processable->debian_control->source_fields->exists(
+            'Rules-Requires-Root')
     ) {
+        my $r3
+          = $processable->debian_control->source_fields->value(
+            'Rules-Requires-Root');
         if ($r3 eq 'no') {
             $self->tag('rules-does-not-require-root');
         } else {
@@ -476,7 +483,8 @@ sub source {
 
     if ((
             $processable->debian_control->source_fields->value(
-                'Rules-Requires-Root')// 'no'
+                'Rules-Requires-Root')
+            || 'no'
         ) eq 'no'
     ) {
       BINARY:
@@ -525,9 +533,9 @@ sub source {
               ->value('Architecture');
             if ($arch eq 'all') {
                 $self->tag('built-using-field-on-arch-all-package', $bin)
-                  if defined($bu);
+                  if length $bu;
             } else {
-                if (!defined($bu) || $bu !~ /\$\{misc:Built-Using\}/) {
+                if (!length($bu) || $bu !~ /\$\{misc:Built-Using\}/) {
                     $self->tag('missing-built-using-field-for-golang-package',
                         $bin);
                 }
@@ -537,17 +545,16 @@ sub source {
         $self->tag('missing-xs-go-import-path-for-golang-package')
           unless (
             $processable->debian_control->source_fields->value(
-                'XS-Go-Import-Path')// EMPTY
-          );
+                'XS-Go-Import-Path'));
     }
 
     my $changes = $group->changes;
     $self->tag('source-only-upload-to-non-free-without-autobuild')
       if defined($changes)
-      and ($changes->fields->value('Architecture') // EMPTY) eq 'source'
+      and $changes->fields->value('Architecture') eq 'source'
       and $processable->is_non_free
       and ($processable->debian_control->source_fields->value('XS-Autobuild')
-        // 'no')eq 'no';
+        || 'no')eq 'no';
 
     return;
 }
@@ -613,9 +620,8 @@ sub check_dev_depends {
                 # arch:all as well.  The version-substvars check
                 # handles that for us.
                 next
-                  if (
-                    $processable->debian_control->installable_fields($target)
-                    ->value('Architecture')// EMPTY) eq 'all'
+                  if$processable->debian_control->installable_fields($target)
+                  ->value('Architecture') eq 'all'
                   && $versions[0] =~ /^\s*=\s*\$\{source:Version\}/;
                 $self->tag('weak-library-dev-dependency',
                     "$package on $depends[0]");
@@ -670,8 +676,7 @@ sub check_relation {
             'in', $pkg,"$field field between '$prev' and '$next'");
     }
     while ($rawvalue =~ /([^\s\(]+\s*\([<>]\s*[^<>=]+\))/g) {
-        $self->tag('obsolete-relation-form-in-source', 'in', $pkg,
-            "$field: $1");
+        $self->tag('obsolete-relation-form-in-source','in', $pkg,"$field: $1");
     }
     return;
 }

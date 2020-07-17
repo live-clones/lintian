@@ -39,12 +39,13 @@ our @supported_source_formats = (qr/1\.0/, qr/3\.0\s*\((quilt|native)\)/);
 sub source {
     my ($self) = @_;
 
-    my $format = $self->processable->fields->unfolded_value('Format');
     return
-      unless defined $format;
+      unless $self->processable->fields->exists('Format');
+
+    my $format = $self->processable->fields->unfolded_value('Format');
 
     my $supported = 0;
-    foreach my $f (@supported_source_formats){
+    for my $f (@supported_source_formats){
 
         $supported = 1
           if $format =~ /^\s*$f\s*\z/;

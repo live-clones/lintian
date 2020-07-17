@@ -36,11 +36,8 @@ with 'Lintian::Check';
 sub source {
     my ($self) = @_;
 
-    my $maintainer = $self->processable->fields->value('Maintainer');
-    return
-      unless length $maintainer;
-
     # only for pkg-perl packages
+    my $maintainer = $self->processable->fields->value('Maintainer');
     return
       unless $maintainer=~ /pkg-perl-maintainers\@lists\.alioth\.debian\.org/;
 
@@ -55,8 +52,7 @@ sub source {
 
         # arch:any and cdbs version 0.4.122
         $self->tag('arch-any-package-needs-newer-cdbs')
-          unless ($self->processable->fields->value('Architecture') // EMPTY)
-          eq 'all';
+          unless $self->processable->fields->value('Architecture') eq 'all';
 
         # Module::Build::Tiny and cdbs version 0.4.122
         $self->tag('module-build-tiny-needs-newer-cdbs')

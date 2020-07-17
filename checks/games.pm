@@ -25,8 +25,6 @@ use warnings;
 use utf8;
 use autodie;
 
-use constant EMPTY => q{};
-
 use Moo;
 use namespace::clean;
 
@@ -59,7 +57,7 @@ sub dir_counts {
 sub installable {
     my ($self) = @_;
 
-    my $section = $self->processable->fields->value('Section') // EMPTY;
+    my $section = $self->processable->fields->value('Section');
 
     # section games but nothing in /usr/games
     # any binary counts to avoid game-data false positives:

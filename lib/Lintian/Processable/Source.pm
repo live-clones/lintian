@@ -28,7 +28,6 @@ use Path::Tiny;
 
 use Lintian::Deb822::File;
 
-use constant EMPTY => q{};
 use constant COLON => q{:};
 use constant SLASH => q{/};
 
@@ -99,8 +98,8 @@ sub init {
 
     $self->fields($sections[0]);
 
-    my $name = $self->fields->value('Source') // EMPTY;
-    my $version = $self->fields->value('Version') // EMPTY;
+    my $name = $self->fields->value('Source');
+    my $version = $self->fields->value('Version');
     my $architecture = 'source';
 
     # it is its own source package

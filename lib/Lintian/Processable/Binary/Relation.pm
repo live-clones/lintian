@@ -30,8 +30,6 @@ use Carp qw(croak);
 
 use Lintian::Relation;
 
-use constant EMPTY => q{};
-
 use Moo::Role;
 use namespace::clean;
 

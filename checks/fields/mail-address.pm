@@ -58,9 +58,9 @@ sub always {
     my @groups = qw(Uploaders);
 
     my @singles_present
-      = grep { length $self->processable->fields->value($_) } @singles;
+      = grep { $self->processable->fields->exists($_) } @singles;
     my @groups_present
-      = grep { length $self->processable->fields->value($_) } @groups;
+      = grep { $self->processable->fields->exists($_) } @groups;
 
     my %parsed;
     for my $role (@singles_present, @groups_present) {

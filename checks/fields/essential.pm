@@ -41,13 +41,10 @@ our $KNOWN_ESSENTIAL = Lintian::Data->new('fields/essential');
 sub source {
     my ($self) = @_;
 
-    my $processable = $self->processable;
+    my $fields = $self->processable->fields;
 
-    my $essential = $processable->fields->unfolded_value('Essential');
-    return
-      unless defined $essential;
-
-    $self->tag('essential-in-source-package');
+    $self->tag('essential-in-source-package')
+      if $fields->exists('Essential');
 
     return;
 }
@@ -55,12 +52,12 @@ sub source {
 sub always {
     my ($self) = @_;
 
-    my $pkg = $self->processable->name;
-    my $processable = $self->processable;
+    my $fields = $self->processable->fields;
 
-    my $essential = $processable->fields->unfolded_value('Essential');
     return
-      unless defined $essential;
+      unless $fields->exists('Essential');
+
+    my $essential = $fields->unfolded_value('Essential');
 
     unless ($essential eq 'yes' || $essential eq 'no') {
         $self->tag('unknown-essential-value');
@@ -70,7 +67,8 @@ sub always {
     $self->tag('essential-no-not-needed') if $essential eq 'no';
 
     $self->tag('new-essential-package')
-      if $essential eq 'yes' && !$KNOWN_ESSENTIAL->known($pkg);
+      if $essential eq 'yes'
+      && !$KNOWN_ESSENTIAL->known($self->processable->name);
 
     return;
 }

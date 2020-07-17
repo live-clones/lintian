@@ -29,8 +29,6 @@ use autodie;
 use List::MoreUtils qw(any);
 use List::Util qw(first);
 
-use constant EMPTY => q{};
-
 use Moo;
 use namespace::clean;
 
@@ -83,9 +81,8 @@ sub source {
 
     # If the version field is missing, assume it to be a native,
     # maintainer upload as it is probably the most likely case.
-    my $version = $processable->fields->value('Version') // '0-1';
-    my $maintainer
-      = canonicalize($processable->fields->value('Maintainer') // EMPTY);
+    my $version = $processable->fields->value('Version') || '0-1';
+    my $maintainer= canonicalize($processable->fields->value('Maintainer'));
     my $uploaders = $processable->fields->value('Uploaders');
 
     my $version_nmuness = 0;
@@ -114,17 +111,17 @@ sub source {
     }
 
     my $upload_is_nmu = $uploader ne $maintainer;
-    if (defined $uploaders) {
-        my @uploaders = map { canonicalize($_) } split />\K\s*,\s*/,$uploaders;
-        $upload_is_nmu = 0 if any { $_ eq $uploader } @uploaders;
-    }
+
+    my @uploaders = map { canonicalize($_) } split />\K\s*,\s*/,$uploaders;
+    $upload_is_nmu = 0 if any { $_ eq $uploader } @uploaders;
+
     # If the changelog entry is missing a maintainer (eg. "-- <blank>")
     # assume it's an upload still work in progress.
     $upload_is_nmu = 0 if not $uploader;
 
     if ($maintainer =~ /packages\@qa.debian.org/) {
         $self->tag('uploaders-in-orphan')
-          if defined $uploaders;
+          if $processable->fields->exists('Uploaders');
         $self->tag('qa-upload-has-incorrect-version-number', $version)
           if $version_nmuness == 1;
         $self->tag('no-qa-in-changelog') if !$changelog_mentions_qa;

@@ -41,21 +41,23 @@ my $BAD_HOMEPAGES = Lintian::Data->new('fields/bad-homepages');
 sub source {
     my ($self) = @_;
 
-    my $processable = $self->processable;
+    my $fields = $self->processable->fields;
 
-    my $homepage = $processable->fields->unfolded_value('Homepage');
+    unless ($fields->exists('Homepage')) {
 
-    unless (defined $homepage) {
+        my $homepage = $fields->unfolded_value('Homepage');
 
         return
-          if $processable->native;
+          if $self->processable->native;
+
+        my $debian_control = $self->processable->debian_control;
 
         my $binary_has_homepage_field = 0;
-        for my $binary ($processable->debian_control->installables) {
+        for my $binary ($debian_control->installables) {
 
-            if (
-                defined $processable->debian_control->installable_fields(
-                    $binary)->value('Homepage')) {
+            if ($debian_control->installable_fields($binary)
+                ->exists('Homepage')) {
+
                 $binary_has_homepage_field = 1;
                 last;
             }
@@ -63,6 +65,7 @@ sub source {
 
         if ($binary_has_homepage_field) {
             $self->tag('homepage-in-binary-package');
+
         } else {
             $self->tag('no-homepage-field');
         }
@@ -76,14 +79,14 @@ sub source {
 sub always {
     my ($self) = @_;
 
-    my $processable = $self->processable;
-
-    my $homepage = $processable->fields->unfolded_value('Homepage');
+    my $fields = $self->processable->fields;
 
     return
-      unless defined $homepage;
+      unless $fields->exists('Homepage');
 
-    my $orig = $processable->fields->value('Homepage');
+    my $homepage = $fields->unfolded_value('Homepage');
+
+    my $orig = $fields->value('Homepage');
 
     if ($homepage =~ /^<(?:UR[LI]:)?.*>$/i) {
         $self->tag('superfluous-clutter-in-homepage', $orig);

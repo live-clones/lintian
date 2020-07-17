@@ -37,8 +37,6 @@ use Lintian::Architecture qw(:all);
 use Lintian::Data ();
 use Lintian::Relation qw(:constants);
 
-use constant EMPTY => q{};
-
 use Moo;
 use namespace::clean;
 
@@ -118,8 +116,10 @@ sub installable {
     for my $field (
         qw(Depends Pre-Depends Recommends Suggests Conflicts Provides Enhances Replaces Breaks)
     ) {
-        next unless defined $processable->fields->value($field);
-        #Get data and clean it
+        next
+          unless $processable->fields->exists($field);
+
+        # get data and clean it
         my $data = $processable->fields->unfolded_value($field);
         my $javadep = 0;
 
@@ -365,15 +365,16 @@ sub installable {
     # the other dependency fields.
     for my $conflict (qw/Conflicts Breaks/) {
         next
-          unless $processable->fields->value($conflict);
+          unless $processable->fields->exists($conflict);
 
         for my $field (qw(Depends Pre-Depends Recommends Suggests)) {
             next
-              unless $processable->fields->value($field);
+              unless $processable->fields->exists($field);
 
             my $relation = $processable->relation($field);
             for my $package (split /\s*,\s*/,
                 $processable->fields->value($conflict)) {
+
                 $self->tag('conflicts-with-dependency', $field, $package)
                   if $relation->implies($package);
             }
@@ -396,9 +397,11 @@ sub source {
     #Get number of arch-indep packages:
     my $arch_indep_packages = 0;
     my $arch_dep_packages = 0;
-    foreach my $binpkg (@binpkgs) {
+
+    for my $binpkg (@binpkgs) {
         my $arch = $processable->debian_control->installable_fields($binpkg)
-          ->value('Architecture')// EMPTY;
+          ->value('Architecture');
+
         if ($arch eq 'all') {
             $arch_indep_packages++;
         } else {
@@ -407,10 +410,11 @@ sub source {
     }
 
     $self->tag('build-depends-indep-without-arch-indep')
-      if (defined $processable->fields->value('Build-Depends-Indep')
+      if ( $processable->fields->exists('Build-Depends-Indep')
         && $arch_indep_packages == 0);
+
     $self->tag('build-depends-arch-without-arch-dependent-binary')
-      if (defined $processable->fields->value('Build-Depends-Arch')
+      if ( $processable->fields->exists('Build-Depends-Arch')
         && $arch_dep_packages == 0);
 
     my $is_dep_field = sub {
@@ -422,8 +426,9 @@ sub source {
     for my $field (
         qw(Build-Depends Build-Depends-Indep Build-Depends-Arch Build-Conflicts Build-Conflicts-Indep Build-Conflicts-Arch)
     ) {
-        if (defined $processable->fields->value($field)) {
-            #Get data and clean it
+        if ($processable->fields->exists($field)) {
+
+            # get data and clean it
             my $data = $processable->fields->unfolded_value($field);
 
             $self->check_field($field, $data);
@@ -575,7 +580,8 @@ sub source {
         ['Build-Depends'],
         ['Build-Depends', 'Build-Depends-Indep'],
         ['Build-Depends', 'Build-Depends-Arch']);
-    foreach my $fields (@to_check) {
+
+    for my $fields (@to_check) {
         my $relation
           = Lintian::Relation->and(map { $processable->relation($_) }@$fields);
         my @dups = $relation->duplicates;
@@ -605,11 +611,8 @@ sub source {
         my $binpkg = $gproc->name;
         if ($binpkg =~ m/-dbg$/) {
             push(@dbg_pkgs, $gproc);
-        } elsif ((
-                $processable->debian_control->installable_fields($binpkg)
-                ->value('Architecture') // EMPTY
-            ) ne 'all'
-        ){
+        } elsif ($processable->debian_control->installable_fields($binpkg)
+            ->value('Architecture') ne 'all'){
             push @arch_dep_pkgs, $binpkg;
         }
     }

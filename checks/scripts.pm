@@ -1004,7 +1004,7 @@ sub installable {
                     $self->tag('multi-arch-same-package-calls-pycompile',
                         "$file:$.")
                       if m/^\s*py3?compile(?:\s|\z)/
-                      and ($processable->fields->value('Multi-Arch') // 'no')
+                      and ($processable->fields->value('Multi-Arch') || 'no')
                       eq 'same';
 
                     if (m,>\s*/etc/inetd\.conf(?:\s|\Z),) {

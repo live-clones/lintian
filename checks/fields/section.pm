@@ -54,8 +54,6 @@ sub udeb {
     my ($self) = @_;
 
     my $section = $self->processable->fields->unfolded_value('Section');
-    return
-      unless length $section;
 
     $self->tag('wrong-section-for-udeb', $section)
       unless $section eq 'debian-installer';
@@ -68,9 +66,10 @@ sub always {
 
     my $pkg = $self->processable->name;
 
-    my $section = $self->processable->fields->unfolded_value('Section');
     return
-      unless length $section;
+      unless $self->processable->fields->exists('Section');
+
+    my $section = $self->processable->fields->unfolded_value('Section');
 
     return
       if $self->processable->type eq 'udeb';
@@ -127,8 +126,7 @@ sub always {
 
     if ($self->processable->is_pkg_class('transitional')) {
 
-        my $priority = $self->processable->fields->unfolded_value('Priority')
-          // EMPTY;
+        my $priority = $self->processable->fields->unfolded_value('Priority');
 
         $self->tag('transitional-package-not-oldlibs-optional',
             "$fraction/$priority")

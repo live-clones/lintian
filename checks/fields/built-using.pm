@@ -46,10 +46,10 @@ sub always {
 
     my $processable = $self->processable;
 
-    my $built_using = $processable->fields->value('Built-Using');
-
     return
-      unless defined $built_using;
+      unless $processable->fields->exists('Built-Using');
+
+    my $built_using = $processable->fields->value('Built-Using');
 
     my $built_using_rel = Lintian::Relation->new($built_using);
     $built_using_rel->visit(

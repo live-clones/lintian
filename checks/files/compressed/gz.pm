@@ -27,8 +27,6 @@ use utf8;
 use Capture::Tiny qw(capture);
 use Time::Piece;
 
-use constant EMPTY => q{};
-
 use Moo;
 use namespace::clean;
 
@@ -79,9 +77,9 @@ sub visit_installed_files {
             if ($time_from_build > 0) {
 
                 my $architecture
-                  = $self->processable->fields->value('Architecture')// EMPTY;
+                  = $self->processable->fields->value('Architecture');
                 my $multiarch
-                  = $self->processable->fields->value('Multi-Arch')// 'no';
+                  = $self->processable->fields->value('Multi-Arch') || 'no';
 
                 if ($multiarch eq 'same' && $file->name !~ /\Q$architecture\E/)
                 {

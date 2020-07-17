@@ -34,7 +34,6 @@ use Text::LevenshteinXS qw(distance);
 use Lintian::Data;
 use Lintian::Relation qw(:constants);
 
-use constant EMPTY => q{};
 use constant UNDERSCORE => q{_};
 
 use Moo;
@@ -194,7 +193,7 @@ sub source {
                         "(line $.)"
                       )
                       if $addon eq 'quilt'
-                      and ($processable->fields->value('Format') // EMPTY) eq
+                      and $processable->fields->value('Format') eq
                       '3.0 (quilt)';
                     if (defined $depends) {
                         $missingbdeps_addons{$depends} = $addon;
@@ -495,7 +494,7 @@ sub source {
             if (!$seentag) {
                 my $binpkg_type
                   = $processable->debian_control->installable_package_type(
-                    $binpkg)// 'deb';
+                    $binpkg);
                 my $is_udeb = 0;
                 $is_udeb = 1 if $binpkg and $binpkg_type eq 'udeb';
                 $is_udeb = 1 if not $binpkg and $single_pkg eq 'udeb';

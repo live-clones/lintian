@@ -86,13 +86,13 @@ sub changes {
     # parsers don't work. We just need to know if there is
     # info for more than 1 entry, so we just copy part of the
     # parse code here
-    my $changes = $self->processable->fields->value('Changes') // EMPTY;
+    my $changes = $self->processable->fields->value('Changes');
 
     # count occurrences
     my @changes_versions
       = ($changes =~/^\s*\S+\s+\(([^\(\)]+)\)(?:\s+\S+)+\s*;/mg);
 
-    my $version = $self->processable->fields->value('Version') // EMPTY;
+    my $version = $self->processable->fields->value('Version');
     my $distnumber;
     my $bpoversion;
     if ($version=~ /~bpo(\d+)\+(\d+)$/) {

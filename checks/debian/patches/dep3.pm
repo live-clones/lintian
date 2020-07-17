@@ -25,8 +25,6 @@ use warnings;
 use utf8;
 use autodie;
 
-use constant EMPTY => q{};
-
 use List::MoreUtils qw(none);
 use Unicode::UTF8 qw(valid_utf8 decode_utf8);
 
@@ -74,9 +72,9 @@ sub visit_patched_files {
 
     my $fields = $sections[0];
 
-    my $forwarded = $fields->value('Forwarded') // EMPTY;
-    my $bug = $fields->value('Bug') // EMPTY;
-    my $applied_upstream = $fields->value('Applied-Upstream') // EMPTY;
+    my $forwarded = $fields->value('Forwarded');
+    my $bug = $fields->value('Bug');
+    my $applied_upstream = $fields->value('Applied-Upstream');
 
     $self->tag('send-patch', $item->name)
       if $forwarded eq 'no'

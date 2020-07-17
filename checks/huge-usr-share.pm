@@ -26,8 +26,6 @@ use warnings;
 use utf8;
 use autodie;
 
-use constant EMPTY => q{};
-
 use Moo;
 use namespace::clean;
 
@@ -62,7 +60,7 @@ sub breakdown_installed_files {
     my ($self) = @_;
 
     # skip architecture-dependent packages.
-    my $arch = $self->processable->fields->value('Architecture') // EMPTY;
+    my $arch = $self->processable->fields->value('Architecture');
     return
       if $arch eq 'all';
 

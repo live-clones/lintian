@@ -38,20 +38,19 @@ sub source {
     my ($self) = @_;
 
     my $maintainer = $self->processable->fields->value('Maintainer');
-    return
-      unless length $maintainer;
 
     # only for pkg-perl packages
     return
       unless $maintainer
       =~ /pkg-javascript-maintainers\@lists\.alioth\.debian\.org/;
 
-    my $testsuite = $self->processable->fields->value('Testsuite');
-    unless (defined $testsuite) {
+    unless ($self->processable->fields->exists('Testsuite')) {
 
         $self->tag('no-testsuite-header');
         return;
     }
+
+    my $testsuite = $self->processable->fields->value('Testsuite');
 
     unless ($testsuite eq 'autopkgtest-pkg-nodejs') {
 

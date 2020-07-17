@@ -140,9 +140,11 @@ sub load {
 
     my $fields = $sections[0];
 
-    my $name = $fields->value('Check-Script');
     die "No name field in $descpath"
-      unless defined $name;
+      unless $fields->exists('Check-Script');
+
+    my $name = $fields->value('Check-Script');
+
     die "Wrong name $name vs " . $self->name
       unless $name eq $self->name;
 

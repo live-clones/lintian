@@ -26,8 +26,6 @@ use warnings;
 use utf8;
 use autodie;
 
-use constant EMPTY => q{};
-
 use Moo::Role;
 use namespace::clean;
 
@@ -120,12 +118,12 @@ sub is_pkg_class {
 
     if ($class eq 'auto-generated') {
         return 1
-          if defined $self->fields->value('Auto-Built-Package');
+          if $self->fields->exists('Auto-Built-Package');
 
         return 0;
     }
 
-    my $desc = $self->fields->value('Description') // EMPTY;
+    my $desc = $self->fields->value('Description');
     return 1
       if $desc =~ m/transitional package/;
 
@@ -135,7 +133,7 @@ sub is_pkg_class {
           if $desc =~ /$METAPKG_REGEX/;
 
         # Section "tasks" or "metapackages" qualifies as well
-        my $section = $self->fields->value('Section') // EMPTY;
+        my $section = $self->fields->value('Section');
         return 1
           if $section =~ m,(?:^|/)(?:tasks|metapackages)$,;
 

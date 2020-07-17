@@ -33,8 +33,6 @@ use List::MoreUtils qw(any);
 
 use Lintian::Data ();
 
-use constant EMPTY => q{};
-
 use Moo;
 use namespace::clean;
 
@@ -45,15 +43,15 @@ my $KNOWN_PRIOS = Lintian::Data->new('fields/priorities');
 sub always {
     my ($self) = @_;
 
-    my $pkg = $self->processable->name;
-    my $type = $self->processable->type;
-    my $processable = $self->processable;
+    my $fields = $self->processable->fields;
 
-    my $priority = $processable->fields->unfolded_value('Priority');
     return
-      unless length $priority;
+      unless $fields->exists('Priority');
 
-    if ($type eq 'source' || !$processable->is_pkg_class('auto-generated')) {
+    my $priority = $fields->unfolded_value('Priority');
+
+    if ($self->processable->type eq 'source'
+        || !$self->processable->is_pkg_class('auto-generated')) {
 
         $self->tag('priority-extra-is-replaced-by-priority-optional')
           if $priority eq 'extra';
@@ -68,11 +66,11 @@ sub always {
       unless $KNOWN_PRIOS->known($priority);
 
     $self->tag('excessive-priority-for-library-package', $priority)
-      if $pkg =~ /^lib/
-      && $pkg !~ /-bin$/
-      && $pkg !~ /^libc[0-9.]+$/
+      if $self->processable->name =~ /^lib/
+      && $self->processable->name !~ /-bin$/
+      && $self->processable->name !~ /^libc[0-9.]+$/
       && (
-        any { $_ eq ($processable->fields->value('Section') // EMPTY) }
+        any { $_ eq $self->processable->fields->value('Section') }
         qw(libdevel libs)
       )&& (any { $_ eq $priority } qw(required important standard));
 

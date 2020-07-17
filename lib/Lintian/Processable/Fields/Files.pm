@@ -24,8 +24,6 @@ use v5.20;
 use warnings;
 use utf8;
 
-use constant EMPTY => q{};
-
 use Moo::Role;
 use namespace::clean;
 
@@ -106,7 +104,7 @@ sub files {
 
     my %files;
 
-    my $file_list = $self->fields->value('Files') // EMPTY;
+    my $file_list = $self->fields->value('Files');
 
     local $_;
 
@@ -142,7 +140,7 @@ sub files {
 
     foreach my $alg (qw(Sha1 Sha256)) {
 
-        my $list = $self->fields->value("Checksums-$alg") // EMPTY;
+        my $list = $self->fields->value("Checksums-$alg");
 
         for (split /\n/, $list) {
 

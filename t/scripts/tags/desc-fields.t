@@ -39,7 +39,6 @@ use lib "$ENV{'LINTIAN_TEST_ROOT'}/lib";
 use Lintian::Deb822::File;
 use Lintian::Profile;
 
-use constant EMPTY => q{};
 use constant SPACE => q{ };
 
 my @descpaths = sort File::Find::Rule->file()->name('*.desc')->in('tags');
@@ -95,14 +94,13 @@ for my $descpath (@descpaths) {
         "$tagname.desc", "Tagfile for $tagname is named $tagname.desc");
 
     # mandatory fields
-    ok(defined $fields->value($_), "Field $_ exists in $descpath")
-      for @mandatory;
+    ok($fields->exists($_), "Field $_ exists in $descpath")for @mandatory;
 
     # disallowed fields
-    ok(!defined $fields->value($_), "Field $_ does not exist in $descpath")
+    ok(!$fields->exists($_), "Field $_ does not exist in $descpath")
       for @disallowed;
 
-    my $checkname = $fields->value('Check') // EMPTY;
+    my $checkname = $fields->value('Check');
 
     # tag is associated with a check
     ok(length $checkname, "Tag $tagname is associated with a check");
@@ -110,7 +108,7 @@ for my $descpath (@descpaths) {
     ok($profile->get_checkinfo($checkname),
         "Tag $tagname is associated with a valid check");
 
-    if (($fields->value('Name-Spaced') // EMPTY) eq 'yes') {
+    if ($fields->value('Name-Spaced') eq 'yes') {
         # encapsulating directory is name of check
         my $subdir = path($descpath)->parent->relative('tags');
         is($subdir, $checkname,
@@ -124,10 +122,8 @@ for my $descpath (@descpaths) {
             "Tag $tagname is in directory named '$firstletter'");
     }
 
-    ok(
-        ($fields->value('Renamed-From') // EMPTY) !~ m{,},
-        "Old tag names for $tagname are not separated by commas"
-    );
+    ok($fields->value('Renamed-From') !~ m{,},
+        "Old tag names for $tagname are not separated by commas");
 }
 
 # Local Variables:

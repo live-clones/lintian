@@ -34,8 +34,6 @@ use List::MoreUtils qw(any);
 
 use Lintian::Data ();
 
-use constant EMPTY => q{};
-
 use Moo;
 use namespace::clean;
 
@@ -180,10 +178,10 @@ sub always {
     my $num_uploaders = 0;
     for my $field (qw(Maintainer Uploaders)) {
 
-        my $maintainer = $processable->fields->unfolded_value($field);
-
         next
-          unless defined $maintainer;
+          unless $processable->fields->exists($field);
+
+        my $maintainer = $processable->fields->unfolded_value($field);
 
         my $is_list
           = $maintainer =~ /\b(\S+\@lists(?:\.alioth)?\.debian\.org)\b/;
@@ -224,11 +222,12 @@ sub always {
     while (my ($platform, $splitter) = each %VCS_EXTRACT) {
 
         my $fieldname = "Vcs-$platform";
-        my $maintainer = $processable->fields->value('Maintainer') // EMPTY;
-        my $uri = $processable->fields->unfolded_value($fieldname);
+        my $maintainer = $processable->fields->value('Maintainer');
 
         next
-          unless defined $uri;
+          unless $processable->fields->exists($fieldname);
+
+        my $uri = $processable->fields->unfolded_value($fieldname);
 
         my @parts = &$splitter($uri);
         if (not @parts or not $parts[0]) {
@@ -336,15 +335,15 @@ sub always {
       and not %seen_vcs;
 
     # Check for missing Vcs-Browser headers
-    unless (defined $processable->fields->value('Vcs-Browser')) {
+    unless ($processable->fields->exists('Vcs-Browser')) {
 
         foreach my $regex ($KNOWN_VCS_HOSTERS->all) {
 
             my $platform = @{$KNOWN_VCS_HOSTERS->value($regex)}[0];
             my $fieldname = "Vcs-$platform";
 
-            if (($processable->fields->value($fieldname) // EMPTY)
-                =~ m/^($regex.*)/xi){
+            if ($processable->fields->value($fieldname)=~ m/^($regex.*)/xi){
+
                 $self->tag('missing-vcs-browser-field', $fieldname, $1);
 
                 # warn once

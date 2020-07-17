@@ -190,17 +190,17 @@ sub load {
 
     my $fields = $sections[0];
 
-    $self->check($fields->value('Check') // EMPTY);
-    $self->name_spaced(($fields->value('Name-Spaced') // EMPTY) eq 'yes');
+    $self->check($fields->value('Check'));
+    $self->name_spaced($fields->value('Name-Spaced') eq 'yes');
 
-    my $name = $fields->value('Tag') // EMPTY;
+    my $name = $fields->value('Tag');
     $name = $self->check . SLASH . $name
       if $self->name_spaced;
 
     $self->name($name);
 
     $self->original_severity($fields->value('Severity'));
-    $self->experimental(($fields->value('Experimental') // EMPTY) eq 'yes');
+    $self->experimental($fields->value('Experimental') eq 'yes');
 
     $self->info($fields->value('Info'));
     $self->references($fields->value('Ref'));

@@ -94,7 +94,7 @@ sub source {
 
     $self->tag(
         'alternatively-build-depends-on-python-sphinx-and-python3-sphinx')
-      if ($processable->fields->value('Build-Depends') // EMPTY)
+      if $processable->fields->value('Build-Depends')
       =~ m,\bpython-sphinx\s+\|\s+python3-sphinx\b,g;
 
     # Mismatched substvars
@@ -110,9 +110,12 @@ sub source {
     }
 
     foreach my $field (@VERSION_FIELDS) {
+
+        next
+          unless $processable->debian_control->source_fields->exists($field);
+
         my $pyversion
           = $processable->debian_control->source_fields->value($field);
-        next unless defined($pyversion);
 
         my @valid = (
             ['\d+\.\d+', '\d+\.\d+'],['\d+\.\d+'],

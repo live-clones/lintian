@@ -79,7 +79,7 @@ has is_non_free => (
             $section = $self->fields->value('Section');
         }
 
-        $section //= 'main';
+        $section ||= 'main';
 
         return 1
           if $section =~ m,^(?:non-free|restricted|multiverse)/,;

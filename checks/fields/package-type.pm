@@ -39,9 +39,10 @@ with 'Lintian::Check';
 sub installable {
     my ($self) = @_;
 
-    my $type = $self->processable->fields->value('Package-Type');
     return
-      unless defined $type;
+      unless $self->processable->fields->exists('Package-Type');
+
+    my $type = $self->processable->fields->value('Package-Type');
 
     $self->tag('explicit-default-in-package-type')
       if $type eq 'deb';

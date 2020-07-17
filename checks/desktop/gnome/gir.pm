@@ -61,7 +61,8 @@ sub installable {
 
     my @girs;
     my @typelibs;
-    my $section = $processable->fields->value('Section') // 'NONE';
+
+    my $section = $processable->fields->value('Section') || 'NONE';
     my $madir = $MA_DIRS->value($processable->architecture);
     # Slightly contrived, but it might be Architecture: all, in which
     # case this is the best we can do

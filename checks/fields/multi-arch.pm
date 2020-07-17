@@ -33,7 +33,6 @@ use List::MoreUtils qw(uniq);
 
 use Lintian::Util qw(safe_qx);
 
-use constant EMPTY => q{};
 use constant SPACE => q{ };
 
 use Moo;
@@ -51,7 +50,7 @@ sub source {
 
         next
           unless ($processable->debian_control->installable_fields($bin)
-            ->value('Multi-Arch') // EMPTY) eq 'same';
+            ->value('Multi-Arch')) eq 'same';
 
         my $wildcard = $processable->debian_control->installable_fields($bin)
           ->value('Architecture');
@@ -81,21 +80,23 @@ sub source {
 sub installable {
     my ($self) = @_;
 
-    my $pkg = $self->processable->name;
-    my $processable = $self->processable;
+    my $fields = $self->processable->fields;
 
-    if ($pkg =~ /^x?fonts-/) {
+    if ($self->processable->name =~ /^x?fonts-/) {
+
         $self->tag('font-package-not-multi-arch-foreign')
-          unless ($processable->fields->value('Multi-Arch') // 'no')
+          unless ($fields->value('Multi-Arch') || 'no')
           =~/^(?:foreign|allowed)$/;
     }
 
-    my $multi = $processable->fields->unfolded_value('Multi-Arch');
     return
-      unless defined $multi;
+      unless $fields->exists('Multi-Arch');
 
-    my $architecture = $processable->fields->unfolded_value('Architecture');
-    if (defined $architecture) {
+    my $multi = $fields->unfolded_value('Multi-Arch');
+
+    if ($fields->exists('Architecture')) {
+
+        my $architecture = $fields->unfolded_value('Architecture');
 
         $self->tag('illegal-multi-arch-value', $architecture, $multi)
           if $architecture eq 'all' && $multi eq 'same';
@@ -107,9 +108,12 @@ sub installable {
 sub always {
     my ($self) = @_;
 
-    my $multi = $self->processable->fields->unfolded_value('Multi-Arch');
+    my $fields = $self->processable->fields;
+
     return
-      unless defined $multi;
+      unless $fields->exists('Multi-Arch');
+
+    my $multi = $fields->unfolded_value('Multi-Arch');
 
     $self->tag('unknown-multi-arch-value', $self->processable->name, $multi)
       unless $multi =~ /^(?:no|foreign|allowed|same)$/;

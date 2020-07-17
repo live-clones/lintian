@@ -35,6 +35,7 @@ use List::MoreUtils qw(any);
 use Lintian::Architecture qw(:all);
 
 use constant EMPTY => q{};
+use constant SPACE => q{ };
 
 use Moo;
 use namespace::clean;
@@ -49,10 +50,7 @@ sub setup_installed_files {
 
     my $unsplit = $self->processable->fields->unfolded_value('Architecture');
 
-    return
-      unless defined $unsplit;
-
-    my @architectures = split(/ /, $unsplit);
+    my @architectures = split(SPACE, $unsplit);
 
     return
       unless @architectures;
@@ -92,10 +90,7 @@ sub installable {
 
     my $unsplit = $processable->fields->unfolded_value('Architecture');
 
-    return
-      unless defined $unsplit;
-
-    my @architectures = split(/ /, $unsplit);
+    my @architectures = split(SPACE, $unsplit);
 
     return
       unless @architectures;
@@ -127,11 +122,9 @@ sub always {
     my $type = $self->processable->type;
     my $processable = $self->processable;
 
-    my $value = $processable->fields->unfolded_value('Architecture');
-    return
-      unless length $value;
+    my $unsplit = $processable->fields->unfolded_value('Architecture');
 
-    my @architectures = split(/ /, $value);
+    my @architectures = split(SPACE, $unsplit);
 
     for my $architecture (@architectures) {
 

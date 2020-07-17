@@ -346,7 +346,7 @@ sub parse_dep5 {
 
     my $debian_control = $self->processable->debian_control;
     $self->tag('missing-explanation-for-contrib-or-non-free-package')
-      if ($debian_control->source_fields->value('Section') // EMPTY)
+      if $debian_control->source_fields->value('Section')
       =~ m{^(contrib|non-free)(/.+)?$}
       and none { defined $first_para->{$_} } qw(Comment Disclaimer);
 
@@ -1228,11 +1228,9 @@ qr/GNU (?:Lesser|Library) General Public License|(?-i:\bLGPL\b)/i
         !~ m{exception|exemption|/usr/share/common-licenses/(?!GPL)\S}){
 
         my @depends
-          = split(/\s*,\s*/,
-            $self->processable->fields->value('Depends') // EMPTY);
+          = split(/\s*,\s*/,$self->processable->fields->value('Depends'));
         my @predepends
-          = split(/\s*,\s*/,
-            $self->processable->fields->value('Pre-Depends') // EMPTY);
+          = split(/\s*,\s*/,$self->processable->fields->value('Pre-Depends'));
 
         $self->tag('possible-gpl-code-linked-with-openssl')
           if any { /^libssl[0-9.]+(?:\s|\z)/ && !/\|/ }
@@ -1268,11 +1266,11 @@ sub check_cross_link {
     my ($self, $foreign) = @_;
 
     my $source = $self->group->source;
-    if ($source) {
+    if (defined $source) {
+
         # source package is available; check its list of binaries
         return
-          if
-          defined $source->debian_control->installable_package_type($foreign);
+          if any { $foreign eq $_ } $source->debian_control->installables;
 
         $self->tag('usr-share-doc-symlink-to-foreign-package', $foreign);
 

@@ -40,8 +40,6 @@ sub setup_installed_files {
     my ($self) = @_;
 
     my $maintainer = $self->processable->fields->value('Maintainer');
-    return
-      unless length $maintainer;
 
     # only for pkg-perl packages
     $self->javascript_team_maintained(1)

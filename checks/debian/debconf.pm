@@ -107,9 +107,7 @@ sub source {
         }
 
         my @unsplit_choices
-          = grep {
-            defined $_->value('Template') && defined $_->value('_Choices')}
-          @templates;
+          = grep {$_->exists('Template') && $_->exists('_Choices')}@templates;
 
         $self->tag('template-uses-unsplit-choices',
             $file->name, $_->value('Template'))
@@ -164,7 +162,7 @@ sub installable {
 
     # Consider every package to depend on itself.
     my $selfrel;
-    if (defined $self->processable->fields->value('Version')) {
+    if ($self->processable->fields->exists('Version')) {
         $_ = $self->processable->fields->value('Version');
         $selfrel = $self->processable->name . " (= $_)";
     } else {
@@ -232,7 +230,7 @@ sub installable {
         my $isselect = EMPTY;
 
         my $name = $template->value('Template');
-        if (!defined $name) {
+        if (!$template->exists('Template')) {
             $self->tag('no-template-name');
             $name = 'no-template-name';
 
@@ -243,7 +241,7 @@ sub installable {
         }
 
         my $type = $template->value('Type');
-        if (not defined $type) {
+        if (!$template->exists('Type')) {
             $self->tag('no-template-type', $name);
 
         } elsif (!$valid_types{$type}) {
@@ -258,12 +256,12 @@ sub installable {
         } elsif ($type eq 'boolean') {
             my $default = $template->value('Default');
             $self->tag('boolean-template-has-bogus-default', $name, $default)
-              if defined $default
+              if $template->exists('Default')
               && (none { $default eq $_ } ('true', 'false'));
         }
 
         my $choices = $template->value('Choices');
-        if (defined $choices && $choices !~ /^\s*$/) {
+        if ($template->exists('Choices') && $choices !~ /^\s*$/) {
 
             my $nrchoices = count_choices($choices);
             for my $key ($template->names) {
@@ -285,14 +283,14 @@ sub installable {
         }
 
         $self->tag('select-without-choices', $name)
-          if $isselect && !defined $choices;
+          if $isselect && !$template->exists('Choices');
 
         my $description = $template->value('Description');
         $self->tag('no-template-description', $name)
-          unless defined $description
-          || defined $template->value('_Description');
+          unless length $description
+          || length $template->value('_Description');
 
-        if (($description // EMPTY) =~ /^\s*(.*?)\s*?\n\s*\1\s*$/){
+        if ($description =~ /^\s*(.*?)\s*?\n\s*\1\s*$/){
             # Check for duplication. Should all this be folded into the
             # description checks?
             $self->tag('duplicate-long-description-in-template',$name);
@@ -322,7 +320,7 @@ sub installable {
         # Developer's Reference, but skip all templates where the
         # short description contains the string "for internal use".
         my ($short, $extended);
-        if (defined $description) {
+        if (length $description) {
             ($short, $extended) = split(/\n/, $description, 2);
             unless (defined $short) {
                 $short = $description;
@@ -333,7 +331,7 @@ sub installable {
             $extended = EMPTY;
         }
 
-        my $ttype = $type // EMPTY;
+        my $ttype = $type;
         unless ($short =~ /for internal use/i) {
             my $isprompt = grep { $_ eq $ttype } qw(string password);
             if ($isprompt) {

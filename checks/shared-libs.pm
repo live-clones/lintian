@@ -171,7 +171,7 @@ sub installable {
 
             # executable stack.
             if (not defined $objdump->{$cur_file}{'PH'}{STACK}) {
-                if (defined $processable->fields->value('Architecture')) {
+                if ($processable->fields->exists('Architecture')) {
                     my $arch = $processable->fields->value('Architecture');
                     $self->tag('shared-library-lacks-stack-section',$cur_file);
                 }
@@ -347,10 +347,10 @@ sub installable {
     # $version may be undef in very broken packages
     my $version = $processable->fields->value('Version');
     my $provides = $pkg;
-    $provides .= "( = $version)" if defined $version;
+    $provides .= "( = $version)" if length $version;
     # Assume the version to be a non-native version to avoid
     # uninitialization warnings later.
-    $version = '0-1' unless defined $version;
+    $version = '0-1' unless length $version;
     $provides
       = Lintian::Relation->and($processable->relation('Provides'), $provides);
 
@@ -726,7 +726,7 @@ sub installable {
           if not $we_trigger_ldconfig and $must_call_ldconfig;
     }
 
-    my $multiarch = $processable->fields->value('Multi-Arch') // 'no';
+    my $multiarch = $processable->fields->value('Multi-Arch') || 'no';
     if ($multiarch eq 'foreign' and $must_call_ldconfig) {
         $self->tag('shared-library-is-multi-arch-foreign',$must_call_ldconfig);
     }

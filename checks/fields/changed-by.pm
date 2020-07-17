@@ -42,9 +42,10 @@ sub changes {
 
     # Changed-By is optional in Policy, but if set, must be
     # syntactically correct.  It's also used by dak.
-    my $changed_by = $self->processable->fields->value('Changed-By');
     return
-      unless defined $changed_by;
+      unless $self->processable->fields->exists('Changed-By');
+
+    my $changed_by = $self->processable->fields->value('Changed-By');
 
     for my $regex ($DERIVATIVE_CHANGED_BY->all) {
 

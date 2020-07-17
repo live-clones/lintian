@@ -28,8 +28,6 @@ use Try::Tiny;
 
 use Lintian::Inspect::Changelog::Version;
 
-use constant EMPTY => q{};
-
 use Moo::Role;
 use namespace::clean;
 
@@ -75,7 +73,7 @@ has changelog_version => (
     default => sub {
         my ($self) = @_;
 
-        my $versionstring = $self->fields->value('Version') // EMPTY;
+        my $versionstring = $self->fields->value('Version');
 
         my $version = Lintian::Inspect::Changelog::Version->new;
         try {

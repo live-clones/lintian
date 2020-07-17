@@ -39,16 +39,16 @@ with 'Lintian::Check';
 sub source {
     my ($self) = @_;
 
-    my $processable = $self->processable;
-
-    my $source = $processable->fields->unfolded_value('Source');
+    my $fields = $self->processable->fields;
 
     # required in source packages, but dpkg-source already refuses to unpack
     # without this field (and fields depends on unpacked)
     return
-      unless defined $source;
+      unless $fields->exists('Source');
 
-    my $filename = $processable->path;
+    my $source = $fields->unfolded_value('Source');
+
+    my $filename = $self->processable->path;
     my ($base) = ($filename =~ m,(?:\a|/)([^/]+)$,);
     my ($stem) = ($base =~ /^([^_]+)_/);
 
@@ -64,20 +64,20 @@ sub source {
 sub always {
     my ($self) = @_;
 
-    my $type = $self->processable->type;
-    my $processable = $self->processable;
+    # treated separately above
+    return
+      if $self->processable->type eq 'source';
 
-    my $source = $processable->fields->unfolded_value('Source');
+    my $fields = $self->processable->fields;
 
     # optional in binary packages
     return
-      unless defined $source;
+      unless $fields->exists('Source');
 
-    return
-      if $type eq 'source';
+    my $source = $fields->unfolded_value('Source');
 
     $self->tag('source-field-malformed', $source)
-      if $source !~ /^ $PKGNAME_REGEX
+      unless $source =~ /^ $PKGNAME_REGEX
                          \s*
                          # Optional Version e.g. (1.0)
                          (?:\((?:\d+:)?(?:[-\.+:a-zA-Z0-9~]+?)(?:-[\.+a-zA-Z0-9~]+)?\))?\s*$/x;

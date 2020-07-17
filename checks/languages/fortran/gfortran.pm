@@ -26,8 +26,6 @@ use utf8;
 
 use Lintian::Util qw(open_gz);
 
-use constant EMPTY => q{};
-
 use Moo;
 use namespace::clean;
 
@@ -72,7 +70,7 @@ sub visit_installed_files {
         return;
     }
 
-    my $depends = $self->processable->fields->value('Depends') // EMPTY;
+    my $depends = $self->processable->fields->value('Depends');
     $self->tag('missing-prerequisite-for-gfortran-module', $file->name)
       unless $depends =~ /\bgfortran-mod-$module_version\b/;
 
