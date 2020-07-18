@@ -36,7 +36,8 @@ use autodie;
 
 use Path::Tiny;
 
-use Lintian::Util qw(get_dsc_info safe_qx);
+use Lintian::Deb822::Parser qw(read_dpkg_control);
+use Lintian::Util qw(safe_qx);
 
 use constant EMPTY => q{};
 use constant UNDERSCORE => q{_};
@@ -77,8 +78,11 @@ sub add_diffstat {
       if -e $patchpath
       or -l $patchpath;
 
-    my $data = get_dsc_info($dscpath);
-    my $version = $data->{'version'};
+    my @paragraphs;
+    @paragraphs = read_dpkg_control($dscpath);
+    my $data = $paragraphs[0];
+
+    my $version = $data->{'Version'};
     $version =~ s/^\d://; #Remove epoch for this
 
     my $diffname = $self->name . UNDERSCORE . $version . '.diff.gz';

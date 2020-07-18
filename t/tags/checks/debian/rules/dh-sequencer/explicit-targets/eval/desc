@@ -1,3 +1,0 @@
-Testname: explicit-targets
-Check: debian/rules/dh-sequencer
-References: Debian Bug#930679

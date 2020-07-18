@@ -1,5 +1,5 @@
 # Copyright © 2011 Niels Thykier <niels@thykier.net>
-# Copyright © 2019 Felix Lechner
+# Copyright © 2019-2020 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -26,8 +26,6 @@ use warnings::register;
 
 use Carp qw(croak);
 use Path::Tiny;
-
-use Lintian::Util qw(get_dsc_info get_deb_info);
 
 use constant EMPTY => q{};
 use constant COLON => q{:};
@@ -79,16 +77,6 @@ Returns the name of the package.
 
 Returns the type of package (e.g. binary, source, udeb ...)
 
-=item verbatim
-=item extra_fields
-
-Returns a hash to the raw, unedited and verbatim field values.
-
-=item unfolded
-
-Returns a hash to unfolded field values. Continuations lines
-have been connected.
-
 =item $proc->version
 =item $proc->pkg_version
 
@@ -123,6 +111,10 @@ Returns the version of the source package.
 Returns a truth value if one or more fields in this Processable is
 tainted.  On a best effort basis tainted fields will be sanitized
 to less dangerous (but possibly invalid) values.
+
+=item fields
+
+Lintian::Deb822::Section with primary field values.
 
 =item $proc->pooldir
 
@@ -193,8 +185,7 @@ has version => (
 
 has tainted => (is => 'rw', default => 0);
 
-has verbatim => (alias => 'extra_fields', is => 'rw', default => sub { {} });
-has unfolded => (is => 'rwp', default => sub { {} });
+has fields => (is => 'rw', default => sub { Lintian::Deb822::Section->new; });
 
 has pooldir => (is => 'rw', default => EMPTY);
 has groupdir => (is => 'rw', default => EMPTY);
@@ -223,28 +214,6 @@ sub identifier {
     return $id;
 }
 
-=item info
-
-=cut
-
-sub info {
-    my ($self) = @_;
-
-    return $self;
-}
-
-=item clear_cache
-
-Overrides clear_cache from L<Lintian::Processable>.
-
-=cut
-
-sub clear_cache {
-    my ($self) = @_;
-
-    return;
-}
-
 =item remove
 
 Removes all unpacked parts of the package in the lab.  Returns a truth
@@ -254,8 +223,6 @@ value if successful.
 
 sub remove {
     my ($self) = @_;
-
-    $self->clear_cache;
 
     path($self->groupdir)->remove_tree
       if -e $self->groupdir;
@@ -374,92 +341,7 @@ control section of the package.
 
 If FIELD is passed but not present, then this method returns undef.
 
-Needs-Info requirements for using I<unfolded_field>: none
-
 =cut
-
-sub unfolded_field {
-    my ($self, $field) = @_;
-
-    return
-      unless defined $field;
-
-    return $self->unfolded->{$field}
-      if exists $self->unfolded->{$field};
-
-    my $value = $self->field($field);
-
-    return
-      unless defined $value;
-
-    # will also replace a newline at the very end
-    $value =~ s/\n//g;
-
-    # Remove leading space as it confuses some of the other checks
-    # that are anchored.  This happens if the field starts with a
-    # space and a newline, i.e ($ marks line end):
-    #
-    # Vcs-Browser: $
-    #  http://somewhere.com/$
-    $value =~ s/^\s*+//;
-
-    $self->unfolded->{$field} = $value;
-
-    return $value;
-}
-
-=item field ([FIELD[, DEFAULT]])
-
-If FIELD is given, this method returns the value of the control field
-FIELD in the control file for the package.  For a source package, this
-is the *.dsc file; for a binary package, this is the control file in
-the control section of the package.
-
-If FIELD is passed but not present, then this method will return
-DEFAULT (if given) or undef.
-
-Otherwise this will return a hash of fields, where the key is the field
-name (in all lowercase).
-
-Needs-Info requirements for using I<field>: none
-
-=cut
-
-sub field {
-    my ($self, $field, $default) = @_;
-
-    unless (keys %{$self->verbatim}) {
-
-        my $groupdir = $self->groupdir;
-        my $verbatim;
-
-        if ($self->type eq 'changes' || $self->type eq 'source'){
-            my $file = 'changes';
-            $file = 'dsc'
-              if $self->type eq 'source';
-
-            $verbatim = get_dsc_info("$groupdir/$file");
-
-        } elsif ($self->type eq 'binary' || $self->type eq 'udeb'){
-            # (ab)use the unpacked control dir if it is present
-            if (   -f "$groupdir/control/control"
-                && -s "$groupdir/control/control") {
-
-                $verbatim = get_dsc_info("$groupdir/control/control");
-
-            } else {
-                $verbatim = (get_deb_info("$groupdir/deb"));
-            }
-        }
-
-        $self->verbatim($verbatim);
-    }
-
-    return $self->verbatim
-      unless defined $field;
-
-    return $self->verbatim->{$field} // $default;
-}
 
 =back
 

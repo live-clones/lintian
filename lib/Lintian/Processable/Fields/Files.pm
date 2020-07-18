@@ -24,6 +24,8 @@ use v5.20;
 use warnings;
 use utf8;
 
+use constant EMPTY => q{};
+
 use Moo::Role;
 use namespace::clean;
 
@@ -104,7 +106,7 @@ sub files {
 
     my %files;
 
-    my $file_list = $self->field('files') || '';
+    my $file_list = $self->fields->value('Files') // EMPTY;
 
     local $_;
 
@@ -123,7 +125,7 @@ sub files {
 
         my ($md5sum, $size, $section, $priority) = @fields;
 
-        $files{$file}{checksums}{md5} = {
+        $files{$file}{checksums}{Md5} = {
             'sum' => $md5sum,
             'filesize' => $size,
         };
@@ -138,9 +140,9 @@ sub files {
         }
     }
 
-    foreach my $alg (qw(sha1 sha256)) {
+    foreach my $alg (qw(Sha1 Sha256)) {
 
-        my $list = $self->field("checksums-$alg") || '';
+        my $list = $self->fields->value("Checksums-$alg") // EMPTY;
 
         for (split /\n/, $list) {
 

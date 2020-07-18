@@ -1,3 +1,0 @@
-Testname: changelog-file-stable
-Test-Against: bad-distribution-in-changes-file
-Check: changes-file

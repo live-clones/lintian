@@ -1,1 +1,0 @@
-patch-systems-dpatch-description (source): build-depends-on-obsolete-package build-depends: dpatch

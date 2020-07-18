@@ -71,15 +71,15 @@ the following special values:
 
 =over 4
 
-=item all
+=item All
 
 The concatenation of Pre-Depends, Depends, Recommends, and Suggests.
 
-=item strong
+=item Strong
 
 The concatenation of Pre-Depends and Depends.
 
-=item weak
+=item Weak
 
 The concatenation of Recommends and Suggests.
 
@@ -97,37 +97,37 @@ has saved_relations => (
     coerce => sub { my ($hashref) = @_; return ($hashref // {}); },
     default => sub { {} });
 
-my %special = (
-    all    => [qw(pre-depends depends recommends suggests)],
-    strong => [qw(pre-depends depends)],
-    weak   => [qw(recommends suggests)]);
+my %alias = (
+    all    => [qw(Pre-Depends Depends Recommends Suggests)],
+    strong => [qw(Pre-Depends Depends)],
+    weak   => [qw(Recommends Suggests)]);
 
 my %known = map { $_ => 1 }
   qw(pre-depends depends recommends suggests enhances breaks
   conflicts provides replaces);
 
 sub relation {
-    my ($self, $field) = @_;
+    my ($self, $name) = @_;
 
-    $field = lc $field;
+    my $lowercase = lc $name;
 
-    my $result = $self->saved_relations->{$field};
-    return $result
-      if defined $result;
+    my $relation = $self->saved_relations->{$lowercase};
+    unless (defined $relation) {
 
-    if ($special{$field}) {
-        $result = Lintian::Relation->and(map { $self->relation($_) }
-              @{ $special{$field} });
-    } else {
-        croak "unknown relation field $field"
-          unless $known{$field};
-        my $value = $self->field($field);
-        $result = Lintian::Relation->new($value);
+        if (exists $alias{$lowercase}) {
+            $relation = Lintian::Relation->and(map { $self->relation($_) }
+                  @{ $alias{$lowercase} });
+        } else {
+            croak "unknown relation field $name"
+              unless $known{$lowercase};
+            my $value = $self->fields->value($name);
+            $relation = Lintian::Relation->new($value);
+        }
+
+        $self->saved_relations->{$lowercase} = $relation;
     }
 
-    $self->saved_relations->{$field} = $result;
-
-    return $result;
+    return $relation;
 }
 
 =back

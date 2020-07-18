@@ -1,0 +1,6 @@
+rules-should-not-use-custom-compression-settings (source): custom-compression-in-debian-rules dh_builddeb -- -z9 -Zgzip (line 10)
+rules-should-not-use-custom-compression-settings (source): custom-compression-in-debian-rules dh_builddeb -- -z9 -Z xz (line 8)
+rules-should-not-use-custom-compression-settings (source): custom-compression-in-debian-rules dh_builddeb -- -z8 -Z xz (line 9)
+rules-should-not-use-custom-compression-settings (source): custom-compression-in-debian-rules dh_builddeb -- -Zxz -z9 -Sextreme (line 12)
+rules-should-not-use-custom-compression-settings (source): custom-compression-in-debian-rules dh_builddeb -- -Zxz -Sextreme -z9 (line 11)
+rules-should-not-use-custom-compression-settings (source): custom-compression-in-debian-rules dh_builddeb --  -Zxz  -z 9 (line 7)

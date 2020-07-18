@@ -7,6 +7,7 @@
 # Copyright © 2007 Russ Allbery
 # Copyright © 2013-2018 Bastien ROUCARIÈS
 # Copyright © 2017-2020 Chris Lamb <lamby@debian.org>
+# Copyright © 2020 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -33,7 +34,7 @@ use autodie;
 
 use Carp qw(croak);
 use File::Basename qw(basename);
-use List::MoreUtils qw(any);
+use List::MoreUtils qw(any firstval);
 use Path::Tiny;
 
 use Lintian::Data;
@@ -52,6 +53,7 @@ use constant VERY_LONG_LINE_LENGTH => 512;
 use constant SAFE_LINE_LENGTH => 256;
 
 use constant EMPTY => q{};
+use constant SLASH => q{/};
 
 use Moo;
 use namespace::clean;
@@ -176,9 +178,6 @@ my $BAD_LINK_COPYRIGHT =  Lintian::Data->new(
     sub {
         return qr/$_[1]/xms;
     });
-
-my $MISSING_DIR_SEARCH_PATH
-  =  Lintian::Data->new('cruft/missing-dir-search-path');
 
 # get javascript name
 sub _minified_javascript_name_regexp {
@@ -314,13 +313,6 @@ my $GFDL_FRAGMENTS = Lintian::Data->new(
         return \%ret;
     });
 
-# The files that contain error messages from tar, which we'll check and issue
-# tags for if they contain something unexpected, and their corresponding tags.
-our %ERRORS = (
-    'index-errors'    => 'tar-errors-from-source',
-    'unpacked-errors' => 'tar-errors-from-source'
-);
-
 # Directory checks.  These regexes match a directory that shouldn't be in the
 # source package and associate it with a tag (minus the leading
 # source-contains or diff-contains).  Note that only one of these regexes
@@ -358,146 +350,31 @@ my @file_checks = (
     [qr,((^|/)\.[^/]+\.swp|~)$,         => 'editor-backup-file', 1],
 );
 
-# List of files to check for a LF-only end of line terminator, relative
-# to the debian/ source directory
-our @EOL_TERMINATORS_FILES = qw(control changelog);
-
-# List of files to check for a trailing whitespace characters
-our @TRAILING_WHITESPACE_FILES = (
-    ['debian/changelog'        => qr,\s+$,],
-    ['debian/control'          => qr,\s+$,],
-    ['debian/rules'            => qr,[ ]+$,], # Allow trailing tabs in Make
-);
-
 sub source {
     my ($self) = @_;
 
     my $processable = $self->processable;
 
-    my $d_files = $processable->patched->resolve_path('debian/files');
-
-    if ($d_files and $d_files->is_file and $d_files->size != 0) {
-        $self->tag('debian-files-list-in-source');
-    }
-
-    $self->tag('package-uses-deprecated-source-override-location')
-      if $processable->patched->resolve_path(
-        'debian/source.lintian-overrides');
-
     # Check if the package build-depends on autotools-dev, automake,
     # or libtool.
-    my $ltinbd= $processable->relation('build-depends-all')->implies($LIBTOOL);
+    my $ltinbd= $processable->relation('Build-Depends-All')->implies($LIBTOOL);
     my %warned;
     # Assume the package to be non-native if the field is not present.
     # - while 1.0 is more likely in this case, Lintian will probably get
     #   better results by checking debfiles/ rather than looking for a diffstat
     #   that may not be present.
-    my $format = $processable->field('format', '3.0 (quilt)');
+    my $format = $processable->fields->value('Format') // '3.0 (quilt)';
 
     if ($format =~ /^\s*2\.0\s*\z/ or $format =~ /^\s*3\.0\s*\(quilt|git\)/) {
         $self->check_debian_dir(\%warned);
     }elsif (not $processable->native) {
         $self->check_diffstat(\%warned);
     }
+
     $self->find_cruft(\%warned, $ltinbd);
 
-    for my $file (@EOL_TERMINATORS_FILES) {
-        my $path = $processable->patched->resolve_path("debian/$file");
-        next if not $path or not $path->is_open_ok;
-        open(my $fd, '<', $path->unpacked_path);
-        while (my $line = <$fd>) {
-            if ($line =~ m{ \r \n \Z}xsm) {
-                $self->tag('control-file-with-CRLF-EOLs', $path);
-                last;
-            }
-        }
-        close($fd);
-    }
-
-    for my $file (@TRAILING_WHITESPACE_FILES) {
-
-        my $path = $processable->patched->resolve_path($file->[0]);
-        next
-          unless $path->is_valid_utf8;
-
-        my $contents = $path->decoded_utf8;
-        my @lines = split(/\n/, $contents, -1);
-
-        my @trailing_whitespace;
-        my @empty_at_end;
-
-        my $position = 1;
-        for my $line (@lines) {
-
-            push(@trailing_whitespace, $position)
-              if $line =~ $file->[1];
-
-            # keeps track of any empty lines at the end
-            if (length $line) {
-                @empty_at_end = ();
-            } else {
-                push(@empty_at_end, $position);
-            }
-
-        } continue {
-            ++$position;
-        }
-
-        # require a newline at end and remove it
-        if (scalar @empty_at_end && $empty_at_end[-1] == scalar @lines) {
-            pop @empty_at_end;
-        } else {
-            $self->tag('no-newline-at-end', $path);
-        }
-
-        push(@trailing_whitespace, @empty_at_end);
-
-        $self->tag('file-contains-trailing-whitespace', "$path (line $_)")
-          for @trailing_whitespace;
-
-    }
-
-    if (my $pycompat = $processable->patched->resolve_path('debian/pycompat')){
-        $self->tag('debian-pycompat-is-obsolete') if $pycompat->is_file;
-    }
-
-    if (my $pyversions
-        = $processable->patched->resolve_path('debian/pyversions')){
-        $self->tag('debian-pyversions-is-obsolete') if $pyversions->is_file;
-    }
-
-    # Report any error messages from tar while unpacking the source
-    # package if it isn't just tar cruft.
-    for my $file (keys %ERRORS) {
-        my $tag  = $ERRORS{$file};
-        my $path = path($processable->groupdir)->child($file)->stringify;
-        if (-s $path) {
-            open(my $fd, '<', $path);
-            local $_;
-            while (<$fd>) {
-                chomp;
-                s,^(?:[/\w]+/)?tar: ,,;
-
-                # Record size errors are harmless.  Skipping to next
-                # header apparently comes from star files.  Ignore all
-                # GnuPG noise from not having a valid GnuPG
-                # configuration directory.  Also ignore the tar
-                # "exiting with failure status" message, since it
-                # comes after some other error.
-                next if /^Record size =/;
-                next if /^Skipping to next header/;
-                next if /^gpgv?: /;
-                next if /^secmem usage: /;
-                next
-                  if /^Exiting with failure status due to previous errors/;
-                $self->tag($tag, $_);
-            }
-            close($fd);
-        }
-    }
-
     return;
-}    # </run>
+}
 
 # -----------------------------------
 
@@ -684,18 +561,6 @@ sub find_cruft {
             push(@worklist, $entry->children);
             next ENTRY;
         }
-        if ($entry->is_symlink) {
-            next ENTRY if $istestsetdir;
-
-            # An absolute link always escapes the root (of a source
-            # package).  For relative links, it escapes the root if we
-            # cannot normalize it.
-            if ($entry->link =~ m{\A / }xsm
-                or not defined($entry->link_normalized)){
-                $self->tag('source-contains-unsafe-symlink', $name);
-            }
-            next ENTRY;
-        }
 
         # we just need normal files for the rest
         next ENTRY unless $entry->is_file;
@@ -800,8 +665,11 @@ sub find_cruft {
                 if($name =~ m{$regname}) {
                     $self->tag($tag_filetype, $name);
                     if($warn_data->{'checkmissing'}) {
-                        $self->check_missing_source($entry,$name, $basename,
-                            $dirname,$warn_data->{'transform'});
+                        my %hash;
+                        $hash{$_->[1]} = $_->[0]
+                          for @{$warn_data->{'transform'} // []};
+                        $self->tag('source-is-missing', $entry->name)
+                          unless $self->find_source($entry, \%hash);
                     }
                 }
             }
@@ -899,90 +767,87 @@ sub find_cruft {
     return;
 }
 
-# try to check if source is missing
-sub check_missing_source {
-    my ($self, $file, $name, $basename, $dirname,$replacementspairref,
-        $extratext)
-      = @_;
+sub find_source {
+    my ($self, $file, $patternref) = @_;
 
-    my $processable = $self->processable;
+    $patternref //= {};
 
-    my $basename_of_dirname = basename($dirname);
-    $extratext //= EMPTY;
+    return
+      unless $file->is_regular_file;
 
-    # do not check missing source for non free
-    if($processable->is_non_free) {
-        return;
+    return
+      if $self->processable->is_non_free;
+
+    my %patterns = %{$patternref};
+
+    my @alternatives;
+    for my $replacement (keys %patterns) {
+
+        my $newname = $file->basename;
+
+        # empty pattern would repeat the last regex compiled
+        my $pattern = $patterns{$replacement};
+        $newname =~ s/$pattern/$replacement/
+          if length $pattern;
+
+        push(@alternatives, $newname)
+          if length $newname;
     }
 
-    my @replacementspair;
-    if(defined($replacementspairref)) {
-        @replacementspair = @{$replacementspairref};
+    my $index = $self->processable->patched;
+    my @candidates;
+
+    # add standard locations
+    push(@candidates,
+        $index->resolve_path('debian/missing-sources/' . $file->name));
+    push(@candidates,
+        $index->resolve_path('debian/missing-sources/' . $file->basename));
+
+    my $dirname = $file->dirname;
+    my $parentname = basename($dirname);
+
+    my @absolute = (
+        # libtool
+        '.libs',
+        ".libs/$dirname",
+        # mathjax
+        'unpacked',
+        # for missing source set in debian
+        'debian',
+        'debian/missing-sources',
+        "debian/missing-sources/$dirname"
+    );
+
+    for my $absolute (@absolute) {
+        push(@candidates, $index->resolve_path("$absolute/$_"))
+          for @alternatives;
     }
 
-    unless ($file->is_regular_file) {
-        return;
+    my @relative = (
+        # likely in current dir
+        '.',
+        # for binary object built by libtool
+        '..',
+        # maybe in src subdir
+        './src',
+        # maybe in ../src subdir
+        '../src',
+        "../../src/$parentname",
+        # emscripten
+        './flash-src/src/net/gimite/websocket',
+    );
+
+    for my $relative (@relative) {
+        push(@candidates, $file->resolve_path("$relative/$_"))
+          for @alternatives;
     }
 
-    # As a special-case, check debian/missing-sources including symlinks, etc.
-    foreach my $ext (($file, $basename)) {
-        my $path = normalize_pkg_path("debian/missing-sources/$ext");
-        return if $path and $processable->patched->resolve_path($path);
-    }
+    my @found = grep { defined } @candidates;
 
-    # try to find for each replacement
-  REPLACEMENT:
-    foreach my $pair (@replacementspair) {
-        my $newbasename = $basename;
+    # careful with behavior around empty arrays
+    my $source = firstval { $_->name ne $file->name } @found;
 
-        my ($match, $replace) = @{$pair};
-
-        if($match eq EMPTY) {
-            $newbasename = $basename;
-        } else {
-            $newbasename =~ s/$match/$replace/;
-        }
-        # next but we may be return an error
-        if($newbasename eq EMPTY) {
-            next REPLACEMENT;
-        }
-        # now try for each path
-      PATH:
-        foreach my $path ($MISSING_DIR_SEARCH_PATH->all) {
-            my $newpath;
-            # first replace dir name
-            $path =~ s/\$dirname/$dirname/g;
-            $path =~ s/\$basename_of_dirname/$basename_of_dirname/g;
-            # absolute path
-            if(substr($path,0,1) eq '/') {
-                $path =~ s,^/+,,g;
-                $newpath = normalize_pkg_path($path.'/'.$newbasename);
-            }
-            # relative path
-            else {
-                $newpath
-                  = normalize_pkg_path($dirname.'/'.$path.'/'.$newbasename);
-            }
-            # path outside package
-            if(!defined($newpath)) {
-                next PATH;
-            }
-            # ok we get same name => next
-            if($newpath eq $name) {
-                next PATH;
-            }
-            # do not check empty
-            if($newpath eq EMPTY) {
-                next PATH;
-            }
-            # found source file or directory
-            if($processable->patched->resolve_path($newpath)) {
-                return;
-            }
-        }
-    }
-    $self->tag('source-is-missing', $name, $extratext);
-    return;
+    return $source;
 }
 
 # do basic license check against well known offender
@@ -1184,8 +1049,9 @@ sub search_in_block0 {
         # Be robust check also .js
         elsif($basename eq 'deployJava.js') {
             if($block =~ m/(?:\A|\v)\s*var\s+deployJava\s*=\s*function/xmsi) {
-                $self->check_missing_source($entry,$name,$basename,$dirname,
-                    [['(?i)\.js$','.txt'],[EMPTY, EMPTY]]);
+                $self->tag('source-is-missing', $entry->name)
+                  unless $self->find_source($entry,
+                    {'.txt' => '(?i)\.js$', '' => EMPTY});
                 return;
             }
         }
@@ -1232,20 +1098,18 @@ sub warn_prebuilt_javascript{
     # Check for missing source.  It will check
     # for the source file in well known directories
     if($basename =~ m,\.js$,i) {
-        $self->check_missing_source(
-            $entry,$name,
-            $basename,
-            $dirname,
-            [
-                ['(?i)\.js$','.debug.js'],['(?i)\.js$','-debug.js'],
-                [EMPTY, EMPTY]
-            ],
-            $extratext
-        );
+        $self->tag('source-is-missing', $entry->name, $extratext)
+          unless $self->find_source(
+            $entry,
+            {
+                '.debug.js' => '(?i)\.js$',
+                '-debug.js' => '(?i)\.js$',
+                '' => EMPTY
+            });
     } else  {
         # html file
-        $self->check_missing_source($entry,$name,$basename,$dirname,
-            [['$','.fragment.js']],$extratext);
+        $self->tag('source-is-missing', $entry->name, $extratext)
+          unless $self->find_source($entry, {'.fragment.js' => '$'});
     }
     return;
 }

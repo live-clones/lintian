@@ -1,6 +1,6 @@
 Tag: bad-distribution-in-changes-file
 Severity: error
-Check: changes-file
+Check: fields/distribution
 Info: You've specified an unknown target distribution for your upload in
  the <tt>debian/changelog</tt> file. It is possible that you are uploading
  for a different distribution than the one Lintian is checking for. In

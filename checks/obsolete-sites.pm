@@ -45,8 +45,8 @@ my @interesting_files = qw(
 sub source {
     my ($self) = @_;
 
-    my $pkg = $self->package;
-    my $type = $self->type;
+    my $pkg = $self->processable->name;
+    my $type = $self->processable->type;
     my $processable = $self->processable;
 
     my $debian_dir = $processable->patched->resolve_path('debian/');

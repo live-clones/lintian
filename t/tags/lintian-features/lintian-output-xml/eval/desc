@@ -1,4 +1,0 @@
-Testname: lintian-output-xml
-Options: --show-overrides
-Output-Format: xml
-Match-Strategy: literal

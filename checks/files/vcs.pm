@@ -55,7 +55,7 @@ my $VCS_FILES = Lintian::Data->new(
 my $VCS_FILES_OR_ALL = sub { qr/(?:$_[0])/ }
   ->(join('|', map { $VCS_FILES->value($_) } $VCS_FILES->all));
 
-sub files {
+sub visit_installed_files {
     my ($self, $file) = @_;
 
     if ($file->is_file) {

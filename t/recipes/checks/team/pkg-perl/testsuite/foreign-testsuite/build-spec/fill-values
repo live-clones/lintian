@@ -1,0 +1,4 @@
+Skeleton: upload-native
+Testname: foreign-testsuite
+Description: Testsuite field with a foreign, non-team test suite
+Author: Perl Team <pkg-perl-maintainers@lists.alioth.debian.org>

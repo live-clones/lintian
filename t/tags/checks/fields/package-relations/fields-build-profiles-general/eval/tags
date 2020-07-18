@@ -1,1 +1,0 @@
-fields-build-profiles-general (source): invalid-profile-name-in-source-relation foobar [build-depends: bpfail1 <foobar>]

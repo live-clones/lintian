@@ -1,0 +1,4 @@
+Testname: missing-security-features-fp
+Check: pe
+Test-Against:
+ portable-executable-missing-security-features

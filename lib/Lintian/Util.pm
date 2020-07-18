@@ -2,8 +2,8 @@
 # Lintian::Util -- Perl utility functions for lintian
 
 # Copyright © 1998 Christian Schwarz
-# Copyright © 2020 Felix Lechner
 # Copyright © 2018-2019 Chris Lamb <lamby@debian.org>
+# Copyright © 2020 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -38,8 +38,7 @@ use Path::Tiny;
 use POSIX qw(sigprocmask SIG_BLOCK SIG_UNBLOCK SIG_SETMASK);
 use Unicode::UTF8 qw(valid_utf8);
 
-use Lintian::Deb822Parser
-  qw(read_dpkg_control parse_dpkg_control parse_dpkg_control_string);
+use Lintian::Deb822::File;
 
 # Force export as soon as possible, since some of the modules we load also
 # depend on us and the sequencing can cause things not to be exported
@@ -56,8 +55,6 @@ BEGIN {
 
     @EXPORT_OK = (qw(
           get_deb_info
-          get_dsc_info
-          get_dsc_info_from_string
           get_file_checksum
           get_file_digest
           do_fork
@@ -72,6 +69,7 @@ BEGIN {
           check_path
           clean_env
           normalize_pkg_path
+          normalize_link_target
           is_ancestor_of
           locate_helper_tool
           drain_pipe
@@ -93,7 +91,10 @@ use Lintian::Relation::Version qw(versions_equal versions_comparator);
 
 use constant EMPTY => q{};
 use constant SPACE => q{ };
+use constant SLASH => q{/};
 use constant COLON => q{:};
+use constant DOT => q{.};
+use constant DOUBLEDOT => q{..};
 use constant BACKSLASH => q{\\};
 use constant NEWLINE => qq{\n};
 
@@ -121,12 +122,7 @@ Lintian::Util - Lintian utility functions
 
 =head1 SYNOPSIS
 
- use Lintian::Util qw(normalize_pkg_path);
-
- my $path = normalize_pkg_path('usr/bin/', '../lib/git-core/git-pull');
- if (defined $path) {
-    # ...
- }
+ use Lintian::Util;
 
 =head1 DESCRIPTION
 
@@ -182,9 +178,6 @@ our $PKGVERSION_REGEX = qr/
 
 Extracts the control file from DEBFILE and returns it as a hashref.
 
-Basically, this is a fancy convenience for setting up an ar + tar pipe
-and passing said pipe to L</parse_dpkg_control(HANDLE[, FLAGS[, LINES]])>.
-
 DEBFILE must be an ar file containing a "control.tar.gz" member, which
 in turn should contain a "control" file.  If the "control" file is
 empty this will return an empty list.
@@ -192,11 +185,6 @@ empty this will return an empty list.
 Note: the control file is only expected to have a single paragraph and
 thus only the first is returned (in the unlikely case that there are
 more than one).
-
-This function may fail with any of the messages that
-L</parse_dpkg_control> do.  It can also emit:
-
- "cannot fork to unpack %s: %s\n"
 
 =cut
 
@@ -285,48 +273,10 @@ sub get_deb_info {
     my $composite = Future->needs_all($dpkgfuture, $tarfuture);
     $composite->get;
 
-    return {}
-      unless valid_utf8($control);
+    my $primary = Lintian::Deb822::File->new;
+    my @sections = $primary->parse_string($control);
 
-    my @data = parse_dpkg_control_string($control);
-
-    return $data[0];
-}
-
-=item get_dsc_info (DSCFILE)
-
-Convenience function for reading dsc files.  It will read the DSCFILE
-using L</read_dpkg_control(FILE[, FLAGS[, LINES]])> and then return the
-first paragraph.  If the file has no paragraphs, C<undef> is returned
-instead.
-
-Note: the control file is only expected to have a single paragraph and
-thus only the first is returned (in the unlikely case that there are
-more than one).
-
-This function may fail with any of the messages that
-L</read_dpkg_control(FILE[, FLAGS[, LINES]])> do.
-
-=cut
-
-sub get_dsc_info {
-    my ($file) = @_;
-
-    my @data = read_dpkg_control($file);
-
-    return $data[0];
-}
-
-=item get_dsc_info_from_string (STRING)
-
-=cut
-
-sub get_dsc_info_from_string {
-    my ($text) = @_;
-
-    my @data = parse_dpkg_control_string($text);
-
-    return $data[0];
+    return $sections[0];
 }
 
 =item drain_pipe(FD)
@@ -370,9 +320,9 @@ sub get_file_digest {
     my ($alg, $file) = @_;
     open(my $fd, '<', $file);
     my $digest;
-    if ($alg eq 'md5') {
+    if (lc($alg) eq 'md5') {
         $digest = Digest::MD5->new;
-    } elsif ($alg =~ /sha(\d+)/) {
+    } elsif (lc($alg) =~ /sha(\d+)/) {
         $digest = Digest::SHA->new($1);
     }
     $digest->addfile($fd);
@@ -955,15 +905,7 @@ normalize_pkg_path will return C<q{}> (i.e. the empty string) if PATH
 is normalized to the root dir and C<undef> if the path cannot be
 normalized without escaping the package root.
 
-Examples:
-  normalize_pkg_path('usr/share/java/../../../usr/share/ant/file')
-    eq 'usr/share/ant/file'
-  normalize_pkg_path('usr/..') eq q{};
-
- The following will return C<undef>:
-  normalize_pkg_path('usr/bin/../../../../etc/passwd')
-
-=item normalize_pkg_path(CURDIR, LINK_TARGET)
+=item normalize_link_target(CURDIR, LINK_TARGET)
 
 Normalize the path obtained by following a link with LINK_TARGET as
 its target from CURDIR as the current directory.  CURDIR is assumed to
@@ -980,64 +922,52 @@ L<is_ancestor_of|Lintian::Util/is_ancestor_of(PARENTDIR, PATH)> for
 that.  If you must use this function, remember to check that the
 target is not a symlink (or if it is, that it can be resolved safely).
 
-Examples:
-
-  normalize_pkg_path('usr/share/java', '../ant/file') eq 'usr/share/ant/file'
-  normalize_pkg_path('usr/share/java', '../../../usr/share/ant/file')
-  normalize_pkg_path('usr/share/java', '/usr/share/ant/file')
-    eq 'usr/share/ant/file'
-  normalize_pkg_path('/usr/share/java', '/') eq q{};
-  normalize_pkg_path('/', 'usr/..') eq q{};
-
- The following will return C<undef>:
-  normalize_pkg_path('usr/bin', '../../../../etc/passwd')
-  normalize_pkg_path('usr/bin', '/../etc/passwd')
-
 =cut
 
+sub normalize_link_target {
+    my ($path, $target) = @_;
+
+    if (substr($target, 0, 1) eq SLASH) {
+        # Link is absolute
+        $path = $target;
+    } else {
+        # link is relative
+        $path = "$path/$target";
+    }
+
+    return normalize_pkg_path($path);
+}
+
 sub normalize_pkg_path {
-    my ($path, $dest) = @_;
-    my (@normalised, @queue);
+    my ($path) = @_;
 
-    if (@_ == 2) {
-        # We are doing CURDIR + LINK_TARGET
-        if (substr($dest, 0, 1) eq '/') {
-            # Link is absolute
-            # short circuit $dest eq '/' case.
-            return q{} if $dest eq '/';
-            $path = $dest;
-        } else {
-            # link is relative
-            $path = join('/', $path, $dest);
-        }
-    }
+    return EMPTY
+      if $path eq SLASH;
 
-    $path =~ s,//++,/,g;
-    $path =~ s,/$,,;
-    $path =~ s,^/,,;
+    my @dirty = split(m{/}, $path);
+    my @clean = grep { length } @dirty;
 
-    # Add all segments to the queue
-    @queue = split(m,/,, $path);
+    my @final;
+    for my $component (@clean) {
 
-    # Loop through @queue and modify @normalised so that in the end of
-    # the loop, @normalised will contain the path that.
-    #
-    # Note that @normalised will be empty if we end in the root
-    # (e.g. '/' + 'usr' + '..' -> '/'), this is fine.
-    while (defined(my $target = shift(@queue))) {
-        if ($target eq '..') {
+        if ($component eq DOT) {
+            # do nothing
+
+        } elsif ($component eq DOUBLEDOT) {
             # are we out of bounds?
-            return unless @normalised;
-            # usr/share/java + '..' -> usr/share
-            pop(@normalised);
+            my $discard = pop @final;
+            return
+              unless defined $discard;
+
         } else {
-            # usr/share + java -> usr/share/java
-            # but usr/share + "." -> usr/share
-            push(@normalised, $target) if $target ne '.';
+            push(@final, $component);
         }
     }
-    return q{} unless @normalised;
-    return join('/', @normalised);
+
+    # empty if we end in the root
+    my $normalized = join(SLASH, @final);
+
+    return $normalized;
 }
 
 =item is_ancestor_of(PARENTDIR, PATH)

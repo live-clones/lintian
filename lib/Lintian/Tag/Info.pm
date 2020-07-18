@@ -28,12 +28,13 @@ use Carp qw(croak);
 use List::MoreUtils qw(none);
 
 use Lintian::Data;
-use Lintian::Deb822Parser qw(read_dpkg_control);
+use Lintian::Deb822::File;
 use Lintian::Tag::TextUtil
   qw(dtml_to_html dtml_to_text split_paragraphs wrap_paragraphs);
 
 use constant EMPTY => q{};
 use constant SPACE => q{ };
+use constant SLASH => q{/};
 
 use Moo;
 use namespace::clean;
@@ -78,6 +79,8 @@ metadata elements or to format the tag description.
 =item effective_severity
 
 =item check
+
+=item name_spaced
 
 =item check_type
 
@@ -133,6 +136,12 @@ has check => (
     default => EMPTY
 );
 
+has name_spaced => (
+    is => 'rw',
+    coerce => sub { my ($boolean) = @_; return ($boolean // 0); },
+    default => 0
+);
+
 has check_type => (
     is => 'rw',
     coerce => sub { my ($text) = @_; return ($text // EMPTY); },
@@ -174,21 +183,29 @@ sub load {
     croak "Cannot read tag file from $tagpath"
       unless -r $tagpath;
 
-    my @paragraphs = read_dpkg_control($tagpath);
+    my $deb822 = Lintian::Deb822::File->new;
+    my @sections = $deb822->read_file($tagpath);
     croak "$tagpath does not have exactly one paragraph"
-      unless scalar @paragraphs == 1;
+      unless scalar @sections == 1;
 
-    my %fields = %{ $paragraphs[0] };
-    $self->name($fields{tag});
-    $self->original_severity($fields{severity});
+    my $fields = $sections[0];
 
-    $self->check($fields{check});
-    $self->experimental(($fields{experimental} // EMPTY) eq 'yes');
+    $self->check($fields->value('Check') // EMPTY);
+    $self->name_spaced(($fields->value('Name-Spaced') // EMPTY) eq 'yes');
 
-    $self->info($fields{info});
-    $self->references($fields{ref});
+    my $name = $fields->value('Tag') // EMPTY;
+    $name = $self->check . SLASH . $name
+      if $self->name_spaced;
 
-    $self->aliases(split(SPACE, $fields{'renamed-from'} // EMPTY));
+    $self->name($name);
+
+    $self->original_severity($fields->value('Severity'));
+    $self->experimental(($fields->value('Experimental') // EMPTY) eq 'yes');
+
+    $self->info($fields->value('Info'));
+    $self->references($fields->value('Ref'));
+
+    $self->aliases(split(SPACE, $fields->value('Renamed-From') // EMPTY));
 
     croak "No Tag field in $tagpath"
       unless length $self->name;

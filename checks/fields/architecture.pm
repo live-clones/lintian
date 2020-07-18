@@ -44,10 +44,10 @@ with 'Lintian::Check';
 has architecture => (is => 'rw', default => EMPTY);
 has have_r_package_not_arch_all => (is => 'rw', default => 0);
 
-sub setup {
+sub setup_installed_files {
     my ($self) = @_;
 
-    my $unsplit = $self->processable->unfolded_field('architecture');
+    my $unsplit = $self->processable->fields->unfolded_value('Architecture');
 
     return
       unless defined $unsplit;
@@ -62,20 +62,20 @@ sub setup {
     return;
 }
 
-sub files {
+sub visit_installed_files {
     my ($self, $file) = @_;
 
     $self->have_r_package_not_arch_all(1)
       if $file->name =~ m,^usr/lib/R/.*/DESCRIPTION,
       && !$file->is_dir
-      && $self->package =~ /^r-(?:cran|bioc|other)-/
+      && $self->processable->name =~ /^r-(?:cran|bioc|other)-/
       && $file->bytes =~ m/NeedsCompilation: no/m
       && $self->architecture ne 'all';
 
     return;
 }
 
-sub breakdown {
+sub breakdown_installed_files {
     my ($self) = @_;
 
     $self->tag('r-package-not-arch-all')
@@ -87,10 +87,10 @@ sub breakdown {
 sub installable {
     my ($self) = @_;
 
-    my $pkg = $self->package;
+    my $pkg = $self->processable->name;
     my $processable = $self->processable;
 
-    my $unsplit = $processable->unfolded_field('architecture');
+    my $unsplit = $processable->fields->unfolded_value('Architecture');
 
     return
       unless defined $unsplit;
@@ -124,15 +124,12 @@ sub installable {
 sub always {
     my ($self) = @_;
 
-    my $type = $self->type;
+    my $type = $self->processable->type;
     my $processable = $self->processable;
 
-    my $value = $processable->unfolded_field('architecture');
-
-    unless (defined $value) {
-        $self->tag('no-architecture-field');
-        return;
-    }
+    my $value = $processable->fields->unfolded_value('Architecture');
+    return
+      unless length $value;
 
     my @architectures = split(/ /, $value);
 

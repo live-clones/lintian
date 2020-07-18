@@ -3,11 +3,10 @@ Profile: ubuntu/main
 Extends: debian/main
 Disable-Tags: no-nmu-in-changelog,
  debian-changelog-file-is-a-symlink, lzma-deb-archive,
- maintainer-address-causes-mail-loops-or-bounces,
+ mail-address-loops-or-bounces,
  maintainer-upload-has-incorrect-version-number,
  qa-upload-has-incorrect-version-number,
  source-nmu-has-incorrect-version-number,
  team-upload-has-incorrect-version-number,
- uploader-address-causes-mail-loops-or-bounces,
  upstart-job-in-etc-init.d-not-registered-via-update-rc.d,
  no-human-maintainers, bugs-field-does-not-refer-to-debian-infrastructure

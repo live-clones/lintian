@@ -1,0 +1,9 @@
+#!/bin/sh
+
+set -e
+
+DIR="$1"
+mkfifo            "$DIR/debian/tests/fifo"
+ln -s nonexistent "$DIR/debian/tests/broken"
+ln -s fifo        "$DIR/debian/tests/lfifo"
+ln -s test-1      "$DIR/debian/tests/working"

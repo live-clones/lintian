@@ -32,7 +32,7 @@ with 'Lintian::Check';
 
 my $ALLOWED_ANCIENT_FILES = Lintian::Data->new('files/allowed-ancient-files');
 
-sub files {
+sub visit_installed_files {
     my ($self, $file) = @_;
 
     my ($year) = ($file->date =~ /^(\d{4})/);

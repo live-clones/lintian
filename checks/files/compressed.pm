@@ -45,7 +45,7 @@ my $COMPRESS_FILE_EXTENSIONS_OR_ALL = sub { qr/(:?$_[0])/ }
 my $DUPLICATED_COMPRESSED_FILE_REGEX
   = qr/^(.+)\.(?:$COMPRESS_FILE_EXTENSIONS_OR_ALL)$/;
 
-sub files {
+sub visit_installed_files {
     my ($self, $file) = @_;
 
     return

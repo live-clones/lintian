@@ -1,0 +1,4 @@
+/Produced by Lintian version/ d
+/The run started/ d
+s/(lintian\.debian\.org\/)[^/]*\//\1/
+s/_[[:alnum:]]+\.(changes|buildinfo)/\.\1/

@@ -12,5 +12,5 @@ debian-rules-uses-wrong-environment-variable             ~~ \bDEB_[^_ \t]+FLAGS_
 debian-rules-calls-pwd                                   ~~ \$[\(\{]PWD[\)\}]
 debian-rules-should-not-use-sanitize-all-buildflag       ~~ ^\s*(?:export\s+)?DEB_BUILD_MAINT_OPTIONS\s*:?=.*\bsanitize=\+all\b
 debian-rules-uses-special-shell-variable                 ~~ \$[\(\{]_[\)\}]
-debian-rules-should-not-use-custom-compression-settings  ~~ (?<info>dh_builddeb\b.*--.*-[zZS].*)\n
+custom-compression-in-debian-rules                       ~~ (?<info>dh_builddeb\b.*--.*-[zZS].*)\n
 debian-rules-uses-installed-python-versions              ~~ (?<info>py3versions\s+([\w\-\s]*--installed|-\w*i\w*))

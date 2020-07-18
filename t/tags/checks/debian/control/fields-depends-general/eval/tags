@@ -1,2 +1,0 @@
-fields-depends-general (source): rules-does-not-require-root
-fields-depends-general (source): package-depends-on-itself fields-depends-general depends

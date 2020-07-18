@@ -43,7 +43,7 @@ sub source {
 
     my $processable = $self->processable;
 
-    my $homepage = $processable->unfolded_field('homepage');
+    my $homepage = $processable->fields->unfolded_value('Homepage');
 
     unless (defined $homepage) {
 
@@ -51,9 +51,11 @@ sub source {
           if $processable->native;
 
         my $binary_has_homepage_field = 0;
-        for my $binary ($processable->binaries) {
+        for my $binary ($processable->debian_control->installables) {
 
-            if (defined $processable->binary_field($binary, 'homepage')) {
+            if (
+                defined $processable->debian_control->installable_fields(
+                    $binary)->value('Homepage')) {
                 $binary_has_homepage_field = 1;
                 last;
             }
@@ -76,12 +78,12 @@ sub always {
 
     my $processable = $self->processable;
 
-    my $homepage = $processable->unfolded_field('homepage');
+    my $homepage = $processable->fields->unfolded_value('Homepage');
 
     return
       unless defined $homepage;
 
-    my $orig = $processable->field('homepage');
+    my $orig = $processable->fields->value('Homepage');
 
     if ($homepage =~ /^<(?:UR[LI]:)?.*>$/i) {
         $self->tag('superfluous-clutter-in-homepage', $orig);

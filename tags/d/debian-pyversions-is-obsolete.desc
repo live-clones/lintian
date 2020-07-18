@@ -1,6 +1,6 @@
 Tag: debian-pyversions-is-obsolete
 Severity: info
-Check: cruft
+Check: languages/python/obsolete
 Info: This package contains a <tt>debian/pyversions</tt> file. Since
  dh_python2 it has been recommended to use the
  <tt>X-Python3-Version</tt> field in <tt>debian/control</tt> instead.

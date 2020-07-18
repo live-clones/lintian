@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: up-inside-architecture
+Description: Links up a level from a folder in a multilib directory

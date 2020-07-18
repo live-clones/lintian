@@ -33,7 +33,7 @@ with 'Lintian::Check';
 has perl_sources_in_lib => (is => 'rwp', default => sub { [] });
 has has_perl_binaries => (is => 'rwp', default => 0);
 
-sub breakdown {
+sub breakdown_installed_files {
     my ($self) = @_;
 
     unless ($self->has_perl_binaries) {
@@ -48,7 +48,7 @@ sub breakdown {
     return;
 }
 
-sub files {
+sub visit_installed_files {
     my ($self, $file) = @_;
 
     # perllocal.pod

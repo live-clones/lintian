@@ -1,3 +1,0 @@
-Testname: with-comments
-Check: debian/rules/dh-sequencer
-References: Debian Bug#960485

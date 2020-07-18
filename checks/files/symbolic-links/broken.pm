@@ -37,7 +37,7 @@ with 'Lintian::Check';
 
 has wildcard_links => (is => 'rwp', default => sub{ [] });
 
-sub files {
+sub visit_installed_files {
     my ($self, $file) = @_;
 
     return
@@ -68,7 +68,7 @@ sub files {
     return;
 }
 
-sub breakdown {
+sub breakdown_installed_files {
     my ($self) = @_;
 
     return

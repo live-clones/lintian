@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: shy-prefix
+Description: Second letter lowercase in field name with XS- prefix

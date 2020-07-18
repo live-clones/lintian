@@ -1,4 +1,0 @@
-fields-maintainer-bounces (source): maintainer-address-causes-mail-loops-or-bounces ubuntu-devel-discuss@lists.ubuntu.com
-fields-maintainer-bounces (source): maintainer "Ubuntu Developers" <ubuntu-devel-discuss@lists.ubuntu.com>
-fields-maintainer-bounces (binary): maintainer-address-causes-mail-loops-or-bounces ubuntu-devel-discuss@lists.ubuntu.com
-fields-maintainer-bounces (binary): maintainer "Ubuntu Developers" <ubuntu-devel-discuss@lists.ubuntu.com>

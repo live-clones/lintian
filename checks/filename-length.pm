@@ -25,6 +25,8 @@ use warnings;
 use utf8;
 use autodie;
 
+use constant EMPTY => q{};
+
 use Moo;
 use namespace::clean;
 
@@ -40,8 +42,8 @@ use constant LONGEST_ARCHITECTURE => length 'kfreebsd-amd64';
 sub always {
     my ($self) = @_;
 
-    my $pkg = $self->package;
-    my $type = $self->type;
+    my $pkg = $self->processable->name;
+    my $type = $self->processable->type;
     my $processable = $self->processable;
 
     # pkg_version(_arch)?.type
@@ -83,7 +85,8 @@ sub always {
     # Reset to work with elements of the dsc file.
     $len = 0;
 
-    foreach my $entry (split /\n/, $processable->field('files', '')){
+    for
+      my $entry (split /\n/, ($processable->fields->value('Files') // EMPTY)){
         my $filename;
         my $flen;
 

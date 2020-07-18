@@ -30,7 +30,7 @@ use IO::Async::Loop;
 use IO::Async::Process;
 use Path::Tiny;
 
-use Lintian::File::Path;
+use Lintian::Index::Item;
 use Lintian::Util qw(safe_qx);
 
 # Read up to 40kB at the time.  This happens to be 4096 "tar records"
@@ -115,6 +115,9 @@ sub unpack {
     print "N: Using dpkg-source to unpack\n"
       if $ENV{'LINTIAN_DEBUG'};
 
+    my $saved_umask = umask;
+    umask 0000;
+
     # Ignore STDOUT of the child process because older versions of
     # dpkg-source print things out even with -q.
     my $loop = IO::Async::Loop->new;
@@ -148,6 +151,8 @@ sub unpack {
     # awaits, and dies with message on failure
     $future->get;
 
+    umask $saved_umask;
+
     path("$groupdir/unpacked-errors")->append($dpkgerror // EMPTY);
 
     # chdir for index_src
@@ -173,7 +178,7 @@ sub unpack {
 
     while(defined(my $first = shift @lines)) {
 
-        my $entry = Lintian::File::Path->new;
+        my $entry = Lintian::Index::Item->new;
 
         $first
           =~ /^($permissionspattern)\ ($sizepattern)\ ($datepattern)\+($timepattern)$/s;

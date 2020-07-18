@@ -1,8 +1,8 @@
 # files/contents -- lintian check script -*- perl -*-
 
 # Copyright © 1998 Christian Schwarz and Richard Braakman
-# Copyright © 2020 Felix Lechner
 # Copyright © 2019 Chris Lamb <lamby@debian.org>
+# Copyright © 2020 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -27,137 +27,114 @@ use warnings;
 use utf8;
 use autodie;
 
-use List::MoreUtils qw(none);
+use List::MoreUtils qw(any);
 
-use Lintian::SlidingWindow;
+use constant EMPTY => q{};
+use constant SLASH => q{/};
+use constant WORD_BOUNDARY => q{\b};
+use constant NON_WORD_BOUNDARY => q{\B};
+use constant ARROW => q{ -> };
 
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
 
-has bin_binaries => (is => 'rwp', default => sub { [] });
+my $SENSIBLE_REGEX = qr{(?:select-editor|sensible-(?:browser|editor|pager))\b};
 
-sub setup {
+# with this Moo default, maintainer scripts are also checked
+has switched_locations => (
+    is => 'rw',
+    lazy => 1,
+    default => sub {
+        my ($self) = @_;
+
+        my @files
+          = grep { $_->is_file } $self->processable->installed->sorted_list;
+
+        my @commands = grep { $_->name =~ m{^(?:usr/)?s?bin/} } @files;
+
+        my %switched_locations;
+        for my $command (@commands) {
+
+            my @variants = map { $_ . SLASH . $command->basename }
+              qw(bin sbin usr/bin usr/sbin);
+            my @confused = grep { $_ ne $command->name } @variants;
+
+            $switched_locations{$_} = $command->name for @confused;
+        }
+
+        return \%switched_locations;
+    });
+
+sub build_path {
     my ($self) = @_;
 
-    for my $file ($self->processable->installed->sorted_list) {
+    my $buildinfo = $self->group->buildinfo;
 
-        next
-          unless $file->is_file;
+    return EMPTY
+      unless $buildinfo;
 
-        # for /usr/sbin/foo check for references to /usr/bin/foo
-        push(@{$self->bin_binaries}, '/'.($1 // '')."bin/$2")
-          if $file->name =~ m,^(usr/)?sbin/(.+),;
-    }
-
-    return;
+    return $buildinfo->fields->value('Build-Path') // EMPTY;
 }
 
-sub breakdown {
-    my ($self) = @_;
-
-    $self->_set_bin_binaries([]);
-    return;
-}
-
-sub get_checks_for_file {
-    my ($self, $file) = @_;
-
-    my %checks;
-
-    return %checks
-      if $self->processable->source eq 'lintian';
-
-    $checks{'missing-depends-on-sensible-utils'}
-      = '(?:select-editor|sensible-(?:browser|editor|pager))\b'
-      if $file->name !~ m,^usr/share/(?:doc|locale)/,
-      and not $self->processable->relation('all')->implies('sensible-utils')
-      and not $self->processable->source eq 'sensible-utils';
-
-    $checks{'uses-dpkg-database-directly'} = '/var/lib/dpkg'
-      if $file->name !~ m,^usr/share/(?:doc|locale)/,
-      and $file->basename !~ m/^README(?:\..*)?$/
-      and $file->basename !~ m/^changelog(?:\..*)?$/i
-      and $file->basename !~ m/\.(?:html|txt)$/i
-      and $self->processable->field('section', '') ne 'debian-installer'
-      and none { $_ eq $self->processable->source }
-    qw(base-files dpkg lintian);
-
-    $checks{'file-references-package-build-path'}= quotemeta($self->build_path)
-      if $self->build_path =~ m,^/.+,g;
-
-    # If we have a /usr/sbin/foo, check for references to /usr/bin/foo
-    $checks{'bin-sbin-mismatch'}
-      = '(' . join('|', @{$self->bin_binaries}) . ')'
-      if @{$self->bin_binaries};
-
-    return %checks;
-}
-
-sub files {
-    my ($self, $file) = @_;
+sub check_item {
+    my ($self, $item) = @_;
 
     return
-      unless $file->is_file;
+      unless $item->is_file;
 
-    my %checks = $self->get_checks_for_file($file);
+    unless ($self->processable->relation('all')->implies('sensible-utils')
+        || $self->processable->source eq 'sensible-utils') {
 
-    foreach my $tag (sort keys %checks) {
-        my $regex = $checks{$tag};
+        $self->tag('missing-depends-on-sensible-utils', $item->name)
+          if $item->mentions_in_operation($SENSIBLE_REGEX);
+    }
 
-        # prefer strings(1) output (eg. for ELF) if we have it
-        if (length $file->strings) {
-            $self->tag($tag, $file->name)
-              if $file->strings =~ m,^\Q$regex\E,m;
+    unless (($self->processable->fields->value('Section') // EMPTY) eq
+        'debian-installer'
+        || any { $_ eq $self->processable->source } qw(base-files dpkg)) {
 
-        } else {
-            open(my $fd, '<:raw', $file->unpacked_path);
-            my $sfd = Lintian::SlidingWindow->new($fd);
-            while (my $block = $sfd->readwindow) {
-                next
-                  unless $block =~ $regex;
+        $self->tag('uses-dpkg-database-directly', $item->name)
+          if $item->mentions_in_operation(qr{/var/lib/dpkg});
+    }
 
-                $self->tag($tag, $file->name);
-                last;
-            }
-            close($fd);
-        }
+    # if we have a /usr/sbin/foo, check for references to /usr/bin/foo
+    my %switched_locations = %{$self->switched_locations};
+    for my $confused (keys %switched_locations) {
+
+  # may not work as expected on ELF due to ld's SHF_MERGE
+  # but word boundaries are also superior in strings spanning multiple commands
+        my $correct = $switched_locations{$confused};
+        $self->tag('bin-sbin-mismatch', $item->name,
+            $confused . ARROW . $correct)
+          if $item->mentions_in_operation(
+            NON_WORD_BOUNDARY . quotemeta(SLASH . $confused) . WORD_BOUNDARY);
+    }
+
+    if (length $self->build_path) {
+        $self->tag('file-references-package-build-path', $item->name)
+          if $item->bytes_match(quotemeta($self->build_path));
     }
 
     return;
 }
 
-sub installable {
-    my ($self) = @_;
+sub visit_installed_files {
+    my ($self, $item) = @_;
 
-    # get maintainer scripts
-    my @control
-      = grep { $_->is_control } $self->processable->control->sorted_list;
+    $self->check_item($item);
 
-    for my $file (@control) {
+    return;
+}
 
-        next
-          unless $file->is_open_ok;
+sub visit_control_files {
+    my ($self, $item) = @_;
 
-        # why is lintian exempt from this check?
-        next
-          if $self->processable->source eq 'lintian';
+    return
+      unless $item->is_control;
 
-        my %checks = $self->get_checks_for_file($file);
-
-        return
-          unless %checks;
-
-        open(my $fd, '<', $file->unpacked_path);
-        while (<$fd>) {
-            for my $tag (keys %checks) {
-                $self->tag($tag, $file->name, "(line $.)")
-                  if $_ =~ $checks{$tag};
-            }
-        }
-        close $fd;
-    }
+    $self->check_item($item);
 
     return;
 }

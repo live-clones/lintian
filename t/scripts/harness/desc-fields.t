@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 
-# Copyright © 2019 Felix Lechner
+# Copyright © 2020 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -43,7 +43,7 @@ use Test::Lintian::ConfigFile qw(read_config);
 use constant SPACE => q{ };
 use constant EMPTY => q{};
 
-my @descpaths = File::Find::Rule->file()->name('desc')->in('t/tags');
+my @descpaths = File::Find::Rule->file()->name('desc')->in('t/recipes');
 
 # mandatory fields
 my @mandatory = qw();
@@ -124,8 +124,10 @@ foreach my $descpath (@descpaths) {
 
     # listed test-against belong to listed checks
     $known_tests += scalar @against;
+    my @checkinfos = grep { defined }
+      map { $profile->get_checkinfo($_) } (@checks, 'lintian');
     my %relatedtags= map { $_ => 1 }
-      map { $profile->get_checkinfo($_)->tags } (@checks, 'lintian');
+      map { $_->tags } @checkinfos;
     for my $tag (@against) {
         ok(
             exists $relatedtags{$tag},

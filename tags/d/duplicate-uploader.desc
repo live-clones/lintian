@@ -1,5 +1,0 @@
-Tag: duplicate-uploader
-Severity: warning
-Check: fields/uploaders
-Info: The uploader appears more than once in the <tt>Uploaders</tt>
- field. The duplicate information should be removed.

@@ -27,6 +27,8 @@ use autodie;
 
 use Lintian::SlidingWindow;
 
+use constant EMPTY => q{};
+
 use Moo;
 use namespace::clean;
 
@@ -34,11 +36,12 @@ with 'Lintian::Check';
 
 my $MULTIARCH_DIRS = Lintian::Data->new('common/multiarch-dirs', qr/\s++/);
 
-sub files {
+sub visit_installed_files {
     my ($self, $file) = @_;
 
-    my $architecture = $self->processable->field('architecture', '');
-    my $multiarch = $self->processable->field('multi-arch', 'no');
+    my $architecture = $self->processable->fields->value('Architecture')
+      // EMPTY;
+    my $multiarch = $self->processable->fields->value('Multi-Arch') // 'no';
 
     # check old style config scripts
     if (    $file->name =~ m,^usr/bin/,

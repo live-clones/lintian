@@ -1,0 +1,2 @@
+national-encoding (source): debian-tests-control-autodep8-is-obsolete debian/tests/control.autodep8
+national-encoding (source): debian-tests-control-and-control-autodep8 debian/tests/control debian/tests/control.autodep8

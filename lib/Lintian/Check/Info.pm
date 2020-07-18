@@ -25,7 +25,7 @@ use utf8;
 
 use Path::Tiny;
 
-use Lintian::Deb822Parser qw(read_dpkg_control);
+use Lintian::Deb822::File;
 use Lintian::Tag::Info ();
 
 use constant EMPTY => q{};
@@ -133,19 +133,20 @@ sub load {
     return
       unless -f $descpath;
 
-    my @paragraphs = read_dpkg_control($descpath);
+    my $deb822 = Lintian::Deb822::File->new;
+    my @sections = $deb822->read_file($descpath);
     die "$descpath does not have exactly one paragraph"
-      unless scalar @paragraphs == 1;
+      unless scalar @sections == 1;
 
-    my $header = $paragraphs[0];
+    my $fields = $sections[0];
 
-    my $name = $header->{'check-script'};
+    my $name = $fields->value('Check-Script');
     die "No name field in $descpath"
       unless defined $name;
     die "Wrong name $name vs " . $self->name
       unless $name eq $self->name;
 
-    $self->type($header->{'type'});
+    $self->type($fields->value('Type'));
 
     my %type_table;
     if ($self->type ne 'ALL') {
@@ -205,7 +206,22 @@ this check).
 sub get_tag {
     my ($self, $tagname) = @_;
 
-    return $self->tag_table->{$tagname};
+    my $global = $self->tag_table->{$tagname};
+
+    return $global
+      if defined $global;
+
+    # try name spaced
+    my $prefixed = $self->name . SLASH . $tagname;
+
+    my $name_spaced = $self->tag_table->{$prefixed};
+    return
+      unless defined $name_spaced;
+
+    warn "Using $prefixed as name spaced while not so declared."
+      unless $name_spaced->name_spaced;
+
+    return $name_spaced;
 }
 
 =item $cs->tags
@@ -236,6 +252,7 @@ sub run_check {
     if ($self->module->DOES('Lintian::Check')) {
 
         my $check = $self->module->new;
+        $check->info($self);
         $check->processable($processable);
         $check->group($group);
 

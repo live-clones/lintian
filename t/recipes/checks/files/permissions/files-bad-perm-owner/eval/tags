@@ -1,0 +1,79 @@
+files-bad-perm-owner (source): octal-permissions files-bad-perm-owner_1.0.dsc  777 script
+files-bad-perm-owner (source): octal-permissions files-bad-perm-owner_1.0.dsc  777 debian/tests/test
+files-bad-perm-owner (source): octal-permissions files-bad-perm-owner_1.0.dsc  777 debian/tests/
+files-bad-perm-owner (source): octal-permissions files-bad-perm-owner_1.0.dsc  777 debian/source/
+files-bad-perm-owner (source): octal-permissions files-bad-perm-owner_1.0.dsc  777 debian/rules
+files-bad-perm-owner (source): octal-permissions files-bad-perm-owner_1.0.dsc  777 debian/
+files-bad-perm-owner (source): octal-permissions files-bad-perm-owner_1.0.dsc  666 some-file
+files-bad-perm-owner (source): octal-permissions files-bad-perm-owner_1.0.dsc  666 sample.ali
+files-bad-perm-owner (source): octal-permissions files-bad-perm-owner_1.0.dsc  666 read-only
+files-bad-perm-owner (source): octal-permissions files-bad-perm-owner_1.0.dsc  666 debian/tests/control
+files-bad-perm-owner (source): octal-permissions files-bad-perm-owner_1.0.dsc  666 debian/source/format
+files-bad-perm-owner (source): octal-permissions files-bad-perm-owner_1.0.dsc  666 debian/game.manpages
+files-bad-perm-owner (source): octal-permissions files-bad-perm-owner_1.0.dsc  666 debian/game.install
+files-bad-perm-owner (source): octal-permissions files-bad-perm-owner_1.0.dsc  666 debian/copyright
+files-bad-perm-owner (source): octal-permissions files-bad-perm-owner_1.0.dsc  666 debian/control
+files-bad-perm-owner (source): octal-permissions files-bad-perm-owner_1.0.dsc  666 debian/clean
+files-bad-perm-owner (source): octal-permissions files-bad-perm-owner_1.0.dsc  666 debian/changelog
+files-bad-perm-owner (source): octal-permissions files-bad-perm-owner_1.0.dsc  666 debian/binary.manpages
+files-bad-perm-owner (source): octal-permissions files-bad-perm-owner_1.0.dsc  666 debian/binary.install
+files-bad-perm-owner (source): octal-permissions files-bad-perm-owner_1.0.dsc  666 debian/binary.init
+files-bad-perm-owner (source): octal-permissions files-bad-perm-owner_1.0.dsc  666 debian/binary.docs
+files-bad-perm-owner (source): octal-permissions files-bad-perm-owner_1.0.dsc  666 README
+game (binary): octal-permissions game_1.0_all.deb  755 usr/share/man/man1/
+game (binary): octal-permissions game_1.0_all.deb  755 usr/share/man/
+game (binary): octal-permissions game_1.0_all.deb  755 usr/share/doc/game/
+game (binary): octal-permissions game_1.0_all.deb  755 usr/share/doc/
+game (binary): octal-permissions game_1.0_all.deb  755 usr/share/
+game (binary): octal-permissions game_1.0_all.deb  755 usr/games/script
+game (binary): octal-permissions game_1.0_all.deb  755 usr/games/
+game (binary): octal-permissions game_1.0_all.deb  755 usr/
+game (binary): octal-permissions game_1.0_all.deb  644 usr/share/man/man1/script.1.gz
+game (binary): octal-permissions game_1.0_all.deb  644 usr/share/doc/game/copyright
+game (binary): octal-permissions game_1.0_all.deb  644 usr/share/doc/game/changelog.gz
+game (binary): non-standard-game-executable-perm usr/games/script 0755 != 2755
+binary (binary): setuid-gid-binary usr/bin/script-ugid 6755 root/root
+binary (binary): setuid-binary usr/bin/script-wuid 4744 root/root
+binary (binary): setuid-binary usr/bin/script-uid 4755 root/root
+binary (binary): setgid-binary usr/bin/script-gid 2755 root/root
+binary (binary): octal-permissions binary_1.0_all.deb 6755 usr/bin/script-ugid
+binary (binary): octal-permissions binary_1.0_all.deb 4755 usr/bin/script-uid
+binary (binary): octal-permissions binary_1.0_all.deb 4744 usr/bin/script-wuid
+binary (binary): octal-permissions binary_1.0_all.deb 2755 usr/bin/script-gid
+binary (binary): octal-permissions binary_1.0_all.deb  775 usr/bin/script-wexec
+binary (binary): octal-permissions binary_1.0_all.deb  765 etc/init.d/binary
+binary (binary): octal-permissions binary_1.0_all.deb  755 usr/share/man/man1/
+binary (binary): octal-permissions binary_1.0_all.deb  755 usr/share/man/
+binary (binary): octal-permissions binary_1.0_all.deb  755 usr/share/doc/binary/some-file
+binary (binary): octal-permissions binary_1.0_all.deb  755 usr/share/doc/
+binary (binary): octal-permissions binary_1.0_all.deb  755 usr/share/
+binary (binary): octal-permissions binary_1.0_all.deb  755 usr/lib/some-where/
+binary (binary): octal-permissions binary_1.0_all.deb  755 usr/lib/
+binary (binary): octal-permissions binary_1.0_all.deb  755 usr/bin/
+binary (binary): octal-permissions binary_1.0_all.deb  755 usr/
+binary (binary): octal-permissions binary_1.0_all.deb  755 etc/init.d/
+binary (binary): octal-permissions binary_1.0_all.deb  755 etc/emacs.d/script
+binary (binary): octal-permissions binary_1.0_all.deb  755 etc/emacs.d/
+binary (binary): octal-permissions binary_1.0_all.deb  755 etc/cron.d/script
+binary (binary): octal-permissions binary_1.0_all.deb  755 etc/cron.d/
+binary (binary): octal-permissions binary_1.0_all.deb  755 etc/
+binary (binary): octal-permissions binary_1.0_all.deb  751 usr/bin/script-ro
+binary (binary): octal-permissions binary_1.0_all.deb  744 usr/share/doc/binary/
+binary (binary): octal-permissions binary_1.0_all.deb  644 usr/share/man/man1/script-wuid.1.gz
+binary (binary): octal-permissions binary_1.0_all.deb  644 usr/share/man/man1/script-wexec.1.gz
+binary (binary): octal-permissions binary_1.0_all.deb  644 usr/share/man/man1/script-uid.1.gz
+binary (binary): octal-permissions binary_1.0_all.deb  644 usr/share/man/man1/script-ugid.1.gz
+binary (binary): octal-permissions binary_1.0_all.deb  644 usr/share/man/man1/script-ro.1.gz
+binary (binary): octal-permissions binary_1.0_all.deb  644 usr/share/man/man1/script-gid.1.gz
+binary (binary): octal-permissions binary_1.0_all.deb  644 usr/share/doc/binary/copyright
+binary (binary): octal-permissions binary_1.0_all.deb  644 usr/share/doc/binary/changelog.gz
+binary (binary): octal-permissions binary_1.0_all.deb  644 usr/share/doc/binary/README
+binary (binary): octal-permissions binary_1.0_all.deb  644 usr/lib/some-where/sample.ali
+binary (binary): octal-permissions binary_1.0_all.deb  444 usr/share/doc/binary/read-only
+binary (binary): non-standard-setuid-executable-perm usr/bin/script-wuid 4744
+binary (binary): non-standard-file-perm usr/share/doc/binary/read-only 0444 != 0644
+binary (binary): non-standard-executable-perm usr/bin/script-wexec 0775 != 0755
+binary (binary): non-standard-executable-perm etc/init.d/binary 0765 != 0755
+binary (binary): non-standard-dir-perm usr/share/doc/binary/ 0744 != 0755
+binary (binary): executable-is-not-world-readable usr/bin/script-ro 0751
+binary (binary): bad-permissions-for-ali-file usr/lib/some-where/sample.ali

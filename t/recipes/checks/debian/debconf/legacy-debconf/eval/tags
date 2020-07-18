@@ -1,0 +1,49 @@
+debconf-udeb (udeb): unknown-field-in-templates debian-installer/debconf-udeb/title description-de.UTF-8
+debconf-udeb (udeb): unknown-field-in-templates debian-installer/debconf-udeb/title description
+debconf-udeb (udeb): missing-debconf-dependency
+debconf (source): template-uses-unsplit-choices debian/debconf-test.templates debconf/testmulti-escape
+debconf-test-preinst (binary): unknown-field-in-templates debconf/test description
+debconf-test-preinst (binary): possible-debconf-note-abuse preinst:9 debconf/test
+debconf-test-preinst (binary): missing-debconf-dependency-for-preinst
+debconf-test-preinst (binary): loads-obsolete-confmodule preinst:5 /usr/share/debconf/confmodule.sh
+debconf-test-postinst (binary): unknown-field-in-templates debconf/test description
+debconf-test-postinst (binary): postinst-uses-db-input
+debconf-test-postinst (binary): possible-debconf-note-abuse postinst:6 debconf/test
+debconf-test-postinst (binary): no-debconf-config
+debconf-test-noscripts (binary): unused-debconf-template debconf/test
+debconf-test-noscripts (binary): unknown-field-in-templates debconf/test description
+debconf-test-noscripts (binary): postrm-does-not-purge-debconf
+debconf-test-noscripts (binary): no-debconf-config
+debconf-test (binary): using-question-in-extended-description-in-templates debconf/testboolean
+debconf-test (binary): using-imperative-form-in-templates debconf/should-be-boolean
+debconf-test (binary): using-imperative-form-in-templates debconf/1st-person
+debconf-test (binary): using-first-person-in-templates debconf/1st-person
+debconf-test (binary): unused-debconf-template debconf/translate
+debconf-test (binary): unused-debconf-template debconf/teststring
+debconf-test (binary): unused-debconf-template debconf/testnote
+debconf-test (binary): unused-debconf-template debconf/testmulti-escape
+debconf-test (binary): unused-debconf-template debconf/testmulti
+debconf-test (binary): unused-debconf-template debconf/testboolean
+debconf-test (binary): unused-debconf-template debconf/should-be-no-longer-a-problem
+debconf-test (binary): unused-debconf-template debconf/should-be-boolean
+debconf-test (binary): unused-debconf-template debconf/no-description
+debconf-test (binary): unused-debconf-template debconf/language
+debconf-test (binary): unused-debconf-template debconf/internal
+debconf-test (binary): unused-debconf-template debconf/error
+debconf-test (binary): unused-debconf-template debconf/1st-person
+debconf-test (binary): unknown-field-in-templates debconf/test description
+debconf-test (binary): unknown-debconf-priority config:11 normal
+debconf-test (binary): unknown-debconf-priority config:10 LOW
+debconf-test (binary): too-long-short-description-in-templates debconf/testnote
+debconf-test (binary): too-long-extended-description-in-templates debconf/teststring
+debconf-test (binary): select-with-boolean-choices debconf/should-be-boolean
+debconf-test (binary): possible-debconf-note-abuse postinst:8 debconf/test
+debconf-test (binary): possible-debconf-note-abuse config:19 debconf/test
+debconf-test (binary): no-template-type debconf/language
+debconf-test (binary): no-template-description debconf/no-description
+debconf-test (binary): mismatch-translated-choices debconf/testmulti-escape Choices-de.UTF-8
+debconf-test (binary): malformed-title-in-templates debconf/testnote
+debconf-test (binary): malformed-question-in-templates debconf/testboolean
+debconf-test (binary): malformed-question-in-templates debconf/should-be-no-longer-a-problem
+debconf-test (binary): malformed-prompt-in-templates debconf/teststring
+debconf-test (binary): making-assumptions-about-interfaces-in-templates debconf/testboolean

@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: lowercase-sql
+Description: PostgreSQL not properly capitalized in override comment

@@ -39,7 +39,7 @@ use URI::Escape;
 use YAML::XS ();
 
 use Lintian::Data;
-use Lintian::Deb822Parser qw(read_dpkg_control);
+use Lintian::Deb822::Parser qw(read_dpkg_control_lc);
 use Lintian::Internal::FrontendUtil qw(split_tag);
 use Lintian::Profile;
 use Lintian::Relation::Version qw(versions_comparator);
@@ -621,7 +621,7 @@ sub collect_statistics {
     # all of our statistics.
 
     if (-f $statistics_file) {
-        ($old_statistics) = read_dpkg_control($statistics_file);
+        ($old_statistics) = read_dpkg_control_lc($statistics_file);
     }
     $statistics{'groups-known'} = scalar(keys(%{$state_cache->{'groups'}}));
     $statistics{'groups-backlog'}

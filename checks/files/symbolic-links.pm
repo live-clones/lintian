@@ -25,6 +25,8 @@ use warnings;
 use utf8;
 use autodie;
 
+use constant ARROW => q{->};
+
 use Moo;
 use namespace::clean;
 
@@ -49,15 +51,25 @@ my $COMPRESS_FILE_EXTENSIONS_OR_ALL = sub { qr/(:?$_[0])/ }
 my $COMPRESSED_SYMLINK_POINTING_TO_COMPRESSED_REGEX
   = qr/\.($COMPRESS_FILE_EXTENSIONS_OR_ALL)\s*$/;
 
-sub source {
-    my ($self) = @_;
+sub visit_patched_files {
+    my ($self, $item) = @_;
 
-    for my $file ($self->processable->patched->sorted_list) {
+    return
+      unless $item->is_symlink;
 
+    # absolute links cannot be resolved
+    if ($item->link =~ m{^/}) {
+
+        # allow /dev/null link target for masked systemd service files
         $self->tag('absolute-symbolic-link-target-in-source',
-            $file->name, '->', $file->link)
-          if $file->is_symlink && $file->link =~ m{^/}s;
+            $item->name, ARROW, $item->link)
+          unless $item->link eq '/dev/null';
     }
+
+    # some relative links cannot be resolved inside the source
+    $self->tag('wayward-symbolic-link-target-in-source',
+        $item->name, ARROW, $item->link)
+      unless defined $_->link_normalized || $item->link =~ m{^/};
 
     return;
 }
@@ -83,7 +95,7 @@ sub tag_build_tree_path {
     return;
 }
 
-sub files {
+sub visit_installed_files {
     my ($self, $file) = @_;
 
     return
@@ -107,7 +119,7 @@ sub files {
         # determine top-level directory of link
         my $linktop = $1;
 
-        if ($self->type ne 'udeb' and $filetop eq $linktop) {
+        if ($self->processable->type ne 'udeb' and $filetop eq $linktop) {
             # absolute links within one toplevel directory are _not_ ok!
             $self->tag('absolute-symlink-in-top-level-folder',
                 $file->name, $file->link);
@@ -171,7 +183,8 @@ sub files {
 
         if ($#filecomponents == -1) {
             # we've reached the root directory
-            if (   ($self->type ne 'udeb') && (!defined $linkcomponent)
+            if (   ($self->processable->type ne 'udeb')
+                && (!defined $linkcomponent)
                 || ($filetop ne $linkcomponent)) {
                 # relative link into other toplevel directory.
                 # this hits a relative symbolic link in the root too.

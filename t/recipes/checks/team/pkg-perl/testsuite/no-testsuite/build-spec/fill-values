@@ -1,0 +1,4 @@
+Skeleton: upload-native
+Testname: no-testsuite
+Description: Missing Testsuite field
+Author: Perl Team <pkg-perl-maintainers@lists.alioth.debian.org>

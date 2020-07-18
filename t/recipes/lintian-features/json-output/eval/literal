@@ -1,0 +1,144 @@
+{
+   "groups" : [
+      {
+         "group-id" : "json-output/1.0+dsfg-1.1",
+         "input-files" : [
+            {
+               "path" : "PATH",
+               "tags" : [
+                  {
+                     "context" : "0.0.1-1 -> 1.0+dsfg-1 (missing) -> 1.0+dsfg-1.1",
+                     "name" : "changelog-file-missing-explicit-entry",
+                     "severity" : "warning"
+                  },
+                  {
+                     "context" : "1.0+dsfg-1.1",
+                     "name" : "dfsg-version-misspelled",
+                     "severity" : "warning"
+                  },
+                  {
+                     "name" : "format-3.0-but-debian-changes-patch",
+                     "severity" : "warning"
+                  },
+                  {
+                     "context" : "1.0+dsfg-1.1",
+                     "name" : "maintainer-upload-has-incorrect-version-number",
+                     "severity" : "warning"
+                  },
+                  {
+                     "context" : "field \"Section\" in package json-output",
+                     "name" : "binary-control-field-duplicates-source",
+                     "severity" : "info"
+                  },
+                  {
+                     "context" : "debian-changes-1.0+dsfg-1.1",
+                     "name" : "quilt-patch-using-template-description",
+                     "severity" : "info"
+                  },
+                  {
+                     "context" : "debian/patches/debian-changes-1.0+dsfg-1.1",
+                     "name" : "send-patch",
+                     "severity" : "info"
+                  },
+                  {
+                     "name" : "upstream-metadata-missing-bug-tracking",
+                     "severity" : "info"
+                  },
+                  {
+                     "name" : "upstream-metadata-missing-repository",
+                     "severity" : "info"
+                  },
+                  {
+                     "context" : "line 12",
+                     "name" : "debian-control-has-unusual-field-spacing",
+                     "severity" : "pedantic"
+                  },
+                  {
+                     "experimental" : "yes",
+                     "name" : "debian-watch-does-not-check-gpg-signature",
+                     "severity" : "pedantic"
+                  },
+                  {
+                     "name" : "no-homepage-field",
+                     "severity" : "pedantic"
+                  },
+                  {
+                     "name" : "old-source-override-location",
+                     "severity" : "pedantic"
+                  }
+               ]
+            },
+            {
+               "path" : "PATH",
+               "tags" : [
+                  {
+                     "context" : "usr/local/share/",
+                     "name" : "dir-in-usr-local",
+                     "severity" : "error"
+                  },
+                  {
+                     "context" : "usr/local/share/lintian/",
+                     "name" : "dir-in-usr-local",
+                     "severity" : "error"
+                  },
+                  {
+                     "context" : "var/lock/lintian/",
+                     "name" : "dir-or-file-in-var-lock",
+                     "severity" : "error"
+                  },
+                  {
+                     "name" : "new-essential-package",
+                     "severity" : "error"
+                  },
+                  {
+                     "name" : "possible-gpl-code-linked-with-openssl",
+                     "severity" : "error"
+                  },
+                  {
+                     "context" : "usr/bin/script",
+                     "name" : "no-manual-page",
+                     "severity" : "warning"
+                  },
+                  {
+                     "context" : "http://www.example.com/.",
+                     "name" : "description-possibly-contains-homepage",
+                     "severity" : "info"
+                  },
+                  {
+                     "context" : "usr/share/applications/script.desktop",
+                     "name" : "desktop-entry-limited-to-environments",
+                     "severity" : "info"
+                  },
+                  {
+                     "context" : "usr/local/share/lintian/",
+                     "name" : "package-contains-empty-directory",
+                     "severity" : "info"
+                  },
+                  {
+                     "context" : "\"Test Lintian's JSON output format.\"",
+                     "name" : "synopsis-is-a-sentence",
+                     "severity" : "info"
+                  },
+                  {
+                     "context" : "usr/share/doc/json-output/examples/example #!/usr/bin/foo",
+                     "name" : "example-unusual-interpreter",
+                     "severity" : "pedantic"
+                  }
+               ]
+            },
+            {
+               "path" : "PATH",
+               "tags" : []
+            },
+            {
+               "path" : "PATH",
+               "tags" : []
+            }
+         ],
+         "maintainer" : "Debian Lintian Maintainers <lintian-maint@debian.org>",
+         "processing-end" : "TIMESTAMP",
+         "processing-start" : "TIMESTAMP"
+      }
+   ],
+   "lintian-version" : "VERSION"
+}

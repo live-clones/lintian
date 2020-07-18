@@ -1,4 +1,0 @@
-Testname: no-fail-on-error-by-default
-Exit-Status: 0
-Output-Format: EWI
-Match-Strategy: literal

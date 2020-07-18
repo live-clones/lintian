@@ -38,13 +38,13 @@ with 'Lintian::Check';
 # whether the package appears to be an Apache2 module/web application
 has seen_apache2_special_file => (is => 'rwp', default => 0);
 
-sub files {
+sub visit_installed_files {
     my ($self, $file) = @_;
 
     # Do nothing if the package in question appears to be related to
     # the web server itself
     return
-      if $self->package =~ m/^apache2(:?\.2)?(?:-\w+)?$/;
+      if $self->processable->name =~ m/^apache2(:?\.2)?(?:-\w+)?$/;
 
     # File is probably not relevant to us, ignore it
     return
@@ -102,7 +102,7 @@ sub installable {
     # Do nothing if the package in question appears to be related to
     # the web server itself
     return
-      if $self->package =~ m/^apache2(:?\.2)?(?:-\w+)?$/;
+      if $self->processable->name =~ m/^apache2(:?\.2)?(?:-\w+)?$/;
 
     if ($self->seen_apache2_special_file) {
         $self->check_maintainer_scripts;
@@ -113,7 +113,7 @@ sub installable {
 sub check_web_application_package {
     my ($self, $file, $pkgtype, $webapp) = @_;
 
-    my $pkg = $self->package;
+    my $pkg = $self->processable->name;
     my $processable = $self->processable;
 
     $self->tag('non-standard-apache2-configuration-name',
@@ -123,7 +123,7 @@ sub check_web_application_package {
 
     my $rel = Lintian::Relation->and(
         $processable->relation('strong'),
-        $processable->relation('recommends'));
+        $processable->relation('Recommends'));
 
     # A web application must not depend on apache2-whatever
     my $visit = sub {
@@ -149,7 +149,7 @@ sub check_web_application_package {
 sub check_module_package {
     my ($self, $module) = @_;
 
-    my $pkg = $self->package;
+    my $pkg = $self->processable->name;
     my $processable = $self->processable;
 
     # We want packages to be follow our naming scheme. Modules should be named
@@ -168,7 +168,7 @@ sub check_module_package {
 
     $rel = Lintian::Relation->and(
         $processable->relation('strong'),
-        $processable->relation('recommends'));
+        $processable->relation('Recommends'));
     if (!$rel->matches(qr/^apache2-api-\d+$/)) {
         $self->tag('apache2-module-does-not-depend-on-apache2-api');
     }

@@ -1,4 +1,4 @@
-# Copyright © 2019 Felix Lechner
+# Copyright © 2019-2020 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -26,7 +26,7 @@ use autodie;
 use Carp qw(croak);
 use Path::Tiny;
 
-use Lintian::Util qw(get_dsc_info);
+use Lintian::Deb822::File;
 
 use constant EMPTY => q{};
 use constant COLON => q{:};
@@ -39,13 +39,13 @@ with 'Lintian::Processable',
   'Lintian::Processable::Diffstat',
   'Lintian::Processable::Changelog',
   'Lintian::Processable::Changelog::Version',
+  'Lintian::Processable::Debian::Control',
   'Lintian::Processable::Fields::Files',
   'Lintian::Processable::IsNonFree',
   'Lintian::Processable::Orig',
   'Lintian::Processable::Overrides',
   'Lintian::Processable::Patched',
   'Lintian::Processable::Source::Diffstat',
-  'Lintian::Processable::Source::Fields',
   'Lintian::Processable::Source::Format',
   'Lintian::Processable::Source::Relation',
   'Lintian::Processable::Source::Repacked';
@@ -93,13 +93,14 @@ sub init {
     $self->type('source');
     $self->link_label('dsc');
 
-    my $dinfo = get_dsc_info($self->path)
+    my $primary = Lintian::Deb822::File->new;
+    my @sections = $primary->read_file($self->path)
       or croak $self->path . ' is not valid dsc file';
 
-    $self->verbatim($dinfo);
+    $self->fields($sections[0]);
 
-    my $name = $dinfo->{source} // EMPTY;
-    my $version = $dinfo->{version} // EMPTY;
+    my $name = $self->fields->value('Source') // EMPTY;
+    my $version = $self->fields->value('Version') // EMPTY;
     my $architecture = 'source';
 
     # it is its own source package

@@ -29,7 +29,7 @@ use File::Basename;
 use List::MoreUtils qw(any none);
 
 use Lintian::Data ();
-use Lintian::Util qw(normalize_pkg_path $PKGNAME_REGEX);
+use Lintian::Util qw(normalize_link_target $PKGNAME_REGEX);
 
 use Moo;
 use namespace::clean;
@@ -39,19 +39,16 @@ with 'Lintian::Check';
 our $CLASS_REGEX = qr/\.(?:class|cljc?)/;
 our $MAX_BYTECODE = Lintian::Data->new('java/constants', qr/\s*=\s*/);
 
-sub source {
-    my ($self) = @_;
+sub visit_patched_files {
+    my ($self, $item) = @_;
 
-    for my $file ($self->processable->patched->sorted_list) {
-        my $java_info = $file->java_info;
-        next
-          unless scalar keys %{$java_info};
+    my $java_info = $item->java_info;
+    return
+      unless scalar keys %{$java_info};
 
-        my $files = $java_info->{files};
-        $self->tag('source-contains-prebuilt-java-object', $file)
-          if any { m/$CLASS_REGEX$/i } keys %{$files}
-          and $self->processable->name ne 'lintian';
-    }
+    my $files = $java_info->{files};
+    $self->tag('source-contains-prebuilt-java-object', $item)
+      if any { m/$CLASS_REGEX$/i } keys %{$files};
 
     return;
 }
@@ -59,8 +56,8 @@ sub source {
 sub installable {
     my ($self) = @_;
 
-    my $pkg = $self->package;
-    my $type = $self->type;
+    my $pkg = $self->processable->name;
+    my $type = $self->processable->type;
     my $processable = $self->processable;
 
     my $missing_jarwrapper = 0;
@@ -198,7 +195,7 @@ sub installable {
                     # Strip leading ./
                     $p =~ s#^\./++##g;
                     if ($p !~ m#^(?:file://)?/# and $p =~ m#/#) {
-                        my $target = normalize_pkg_path($jar_dir, $p);
+                        my $target = normalize_link_target($jar_dir, $p);
                         my $tinfo;
                         # Can it be normalized?
                         next unless defined($target);

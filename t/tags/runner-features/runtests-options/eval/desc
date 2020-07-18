@@ -1,4 +1,0 @@
-Testname: runtests-options
-Check: fields/standards-version
-Match-Strategy: literal
-Output-Format: EWI

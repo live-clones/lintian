@@ -38,7 +38,7 @@ my $STANDARD_FILES = Lintian::Data->new('files/standard-files');
 has is_dummy => (is => 'rwp');
 has is_empty => (is => 'rwp', default => 1);
 
-sub setup {
+sub setup_installed_files {
     my ($self) = @_;
 
     # check if package is empty
@@ -47,7 +47,7 @@ sub setup {
     return;
 }
 
-sub files {
+sub visit_installed_files {
     my ($self, $file) = @_;
 
     return
@@ -60,8 +60,8 @@ sub files {
     return
       if $file->is_dir;
 
-    my $pkg = $self->package;
-    my $ppkg = quotemeta($self->package);
+    my $pkg = $self->processable->name;
+    my $ppkg = quotemeta($self->processable->name);
 
     # skip if file is outside /usr/share/doc/$pkg directory
     if ($file->name !~ m,^usr/share/doc/\Q$pkg\E,) {
@@ -118,7 +118,7 @@ sub files {
     return;
 }
 
-sub breakdown {
+sub breakdown_installed_files {
     my ($self) = @_;
 
     return
@@ -127,10 +127,10 @@ sub breakdown {
     if ($self->is_empty) {
 
         $self->tag('empty-binary-package')
-          if $self->type eq 'binary';
+          if $self->processable->type eq 'binary';
 
         $self->tag('empty-udeb-package')
-          if $self->type eq 'udeb';
+          if $self->processable->type eq 'udeb';
     }
 
     return;

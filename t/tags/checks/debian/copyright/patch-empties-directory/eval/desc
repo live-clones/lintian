@@ -1,3 +1,0 @@
-Testname: patch-empties-directory
-Check: debian/copyright
-References: Bug#844274

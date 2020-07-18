@@ -1,5 +1,0 @@
-Tag: manpage-not-compressed
-Severity: error
-Check: documentation/man
-Info: Manual pages have to be installed compressed (using "<tt>gzip -9n</tt>").
-Ref: policy 12.1

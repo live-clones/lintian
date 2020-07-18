@@ -33,6 +33,8 @@ use List::MoreUtils qw(any);
 
 use Lintian::Data ();
 
+use constant EMPTY => q{};
+
 use Moo;
 use namespace::clean;
 
@@ -40,30 +42,16 @@ with 'Lintian::Check';
 
 my $KNOWN_PRIOS = Lintian::Data->new('fields/priorities');
 
-sub installable {
-    my ($self) = @_;
-
-    my $processable = $self->processable;
-
-    my $priority = $processable->unfolded_field('priority');
-
-    unless (defined $priority) {
-        $self->tag('no-priority-field');
-        return;
-    }
-}
-
 sub always {
     my ($self) = @_;
 
-    my $pkg = $self->package;
-    my $type = $self->type;
+    my $pkg = $self->processable->name;
+    my $type = $self->processable->type;
     my $processable = $self->processable;
 
-    my $priority = $processable->unfolded_field('priority');
-
+    my $priority = $processable->fields->unfolded_value('Priority');
     return
-      unless defined $priority;
+      unless length $priority;
 
     if ($type eq 'source' || !$processable->is_pkg_class('auto-generated')) {
 
@@ -83,8 +71,10 @@ sub always {
       if $pkg =~ /^lib/
       && $pkg !~ /-bin$/
       && $pkg !~ /^libc[0-9.]+$/
-      && (any { $_ eq $processable->field('section', '') } qw(libdevel libs))
-      && (any { $_ eq $priority } qw(required important standard));
+      && (
+        any { $_ eq ($processable->fields->value('Section') // EMPTY) }
+        qw(libdevel libs)
+      )&& (any { $_ eq $priority } qw(required important standard));
 
     return;
 }

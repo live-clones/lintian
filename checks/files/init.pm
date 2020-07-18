@@ -30,7 +30,7 @@ use namespace::clean;
 
 with 'Lintian::Check';
 
-sub files {
+sub visit_installed_files {
     my ($self, $file) = @_;
 
     # /etc/init
@@ -49,8 +49,8 @@ sub files {
     # /etc/rc.d && /etc/rc?.d
     $self->tag('package-installs-into-etc-rc.d', $file->name)
       if $file->name =~ m,^etc/rc(?:\d|S)?\.d/\S,
-      && $self->package !~ /^(?:sysvinit|file-rc)$/
-      && $self->type ne 'udeb';
+      && $self->processable->name !~ /^(?:sysvinit|file-rc)$/
+      && $self->processable->type ne 'udeb';
 
     # /etc/rc.boot
     $self->tag('package-installs-into-etc-rc.boot', $file->name)

@@ -39,7 +39,7 @@ with 'Lintian::Check';
 sub installable {
     my ($self) = @_;
 
-    my $type = $self->processable->field('package-type');
+    my $type = $self->processable->fields->value('Package-Type');
     return
       unless defined $type;
 

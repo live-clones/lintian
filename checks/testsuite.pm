@@ -25,22 +25,22 @@ use warnings;
 use utf8;
 use autodie;
 
+use List::Compare;
+use List::MoreUtils qw(any none);
 use Path::Tiny;
 
 use Lintian::Data;
-use Lintian::Deb822Parser qw(
-  DCTRL_COMMENTS_AT_EOL
-  parse_dpkg_control_string
-);
+use Lintian::Deb822::File;
+use Lintian::Deb822::Parser qw(DCTRL_COMMENTS_AT_EOL);
 use Lintian::Relation;
+
+use constant EMPTY => q{};
+use constant DOUBLE_QUOTE => q{"};
 
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
-
-# empty because it is test xor test-command
-my @MANDATORY_FIELDS = qw();
 
 my %KNOWN_FEATURES = map { $_ => 1 } qw();
 my $KNOWN_FIELDS = Lintian::Data->new('testsuite/known-fields');
@@ -60,223 +60,197 @@ my %KNOWN_SPECIAL_DEPENDS = map { $_ => 1 } qw(
 sub source {
     my ($self) = @_;
 
-    my $pkg = $self->package;
-    my $type = $self->type;
-    my $processable = $self->processable;
+    my $debian_control = $self->processable->debian_control;
 
-    my $testsuites = $processable->field('testsuite', '');
-    my $control = $processable->patched->resolve_path('debian/tests/control');
+    my $testsuite = $debian_control->source_fields->value('Testsuite')// EMPTY;
+    my @testsuites = split(/\s*,\s*/, $testsuite);
+
+    my $lc = List::Compare->new(\@testsuites, [$KNOWN_TESTSUITES->all]);
+    my @unknown = $lc->get_Lonly;
+
+    $self->tag('unknown-testsuite', $_) for @unknown;
+
+    my $tests_control
+      = $self->processable->patched->resolve_path('debian/tests/control');
+
+    # field added automatically since dpkg 1.17 when d/tests/control is present
+    $self->tag('unnecessary-testsuite-autopkgtest-field')
+      if (any { $_ eq 'autopkgtest' } @testsuites) && defined $tests_control;
+
+    # need d/tests/control for plain autopkgtest
+    $self->tag('missing-tests-control')
+      if (any { $_ eq 'autopkgtest' } @testsuites) && !defined $tests_control;
+
+    die 'debian tests control is not a regular file'
+      if defined $tests_control && !$tests_control->is_regular_file;
+
+    if (defined $tests_control && $tests_control->is_valid_utf8) {
+
+        # another check complains about invalid encoding
+        my $contents = $tests_control->decoded_utf8;
+
+        my $control_file = Lintian::Deb822::File->new;
+        $control_file->parse_string($contents, DCTRL_COMMENTS_AT_EOL);
+
+        my @sections = @{$control_file->sections};
+
+        $self->tag('empty-debian-tests-control')
+          unless @sections;
+
+        $self->check_control_paragraph($_) for @sections;
+
+        if (scalar @sections == 1) {
+            my $command = $sections[0]->unfolded_value('Test-Command')// EMPTY;
+            $self->tag('no-op-testsuite')
+              if $command =~ m{(?:/bin/)?true};
+        }
+    }
+
     my $control_autodep8
-      = $processable->patched->resolve_path('debian/tests/control.autodep8');
-    my $needs_control = 0;
-
-    $self->tag('testsuite-autopkgtest-missing')
-      if ($testsuites !~ /autopkgtest/);
-
-    for my $testsuite (split(m/\s*,\s*/, $testsuites)) {
-        $self->tag('unknown-testsuite', $testsuite)
-          unless $KNOWN_TESTSUITES->known($testsuite);
-
-        $needs_control = 1 if $testsuite eq 'autopkgtest';
-    }
-    if ($needs_control xor defined($control)) {
-        $self->tag('inconsistent-testsuite-field');
-    }
-
-    if (defined($control)) {
-        if (not $control->is_regular_file) {
-            die 'debian tests control is not a regular file';
-
-        } elsif ($control->is_valid_utf8) {
-            my $contents = $control->decoded_utf8;
-            $self->check_control_contents($contents);
-
-        } else {
-            $self->tag('debian-tests-control-uses-national-encoding');
-        }
-
-        $self->tag('unnecessary-testsuite-autopkgtest-field')
-          if ($processable->source_field('testsuite') // '') eq 'autopkgtest';
-
-        $self->tag('debian-tests-control-and-control-autodep8',
-            $control,$control_autodep8)
-          if defined($control_autodep8);
-    }
-
+      = $self->processable->patched->resolve_path(
+        'debian/tests/control.autodep8');
     $self->tag('debian-tests-control-autodep8-is-obsolete', $control_autodep8)
-      if defined($control_autodep8);
+      if defined $control_autodep8;
 
-    return;
-}
+    $self->tag('debian-tests-control-and-control-autodep8',
+        $tests_control,$control_autodep8)
+      if defined $tests_control && defined $control_autodep8;
 
-sub check_control_contents {
-    my ($self, $contents) = @_;
-
-    my $processable = $self->processable;
-
-    my (@paragraphs, @lines);
-    unless (
-        eval {
-            @paragraphs
-              = parse_dpkg_control_string($contents, DCTRL_COMMENTS_AT_EOL,
-                \@lines);
-        }
-    ) {
-        chomp $@;
-        $@ =~ s/^syntax error at //;
-        die "syntax error in debian tests control $@"
-          if length $@;
-        $self->tag('empty-debian-tests-control');
-    } else {
-        while (my ($index, $paragraph) = each(@paragraphs)) {
-            $self->check_control_paragraph($paragraph,
-                $lines[$index]{'START-OF-PARAGRAPH'});
-        }
-        if (scalar(@paragraphs) == 1) {
-            my $cmd = $paragraphs[0]->{'test-command'} // '';
-            $self->tag('no-op-testsuite') if $cmd =~ m,^\s*(/bin/)?true,;
-        }
-    }
     return;
 }
 
 sub check_control_paragraph {
-    my ($self, $paragraph, $line) = @_;
+    my ($self, $section) = @_;
 
-    my $processable = $self->processable;
+    my $tests_field = $section->unfolded_value('Tests');
+    my $test_command = $section->unfolded_value('Test-Command');
 
-    for my $fieldname (@MANDATORY_FIELDS) {
-        if (not exists $paragraph->{$fieldname}) {
-            die
-"missing runtime tests field $fieldname, paragraph starting at line $line";
-        }
+    $self->tag('no-tests')
+      unless defined $tests_field || defined $test_command;
+
+    $self->tag(
+        'exclusive-runtime-tests-field','tests, test-command',
+        'paragraph starting at line', $section->position
+    ) if defined $tests_field && defined $test_command;
+
+    my @lowercase_names = map { lc } $section->names;
+    my @lowercase_known = map { lc } $KNOWN_FIELDS->all;
+
+    my $lc = List::Compare->new(\@lowercase_names, \@lowercase_known);
+    my @lowercase_unknown = $lc->get_Lonly;
+
+    my @unknown = map { $section->literal_name($_) } @lowercase_unknown;
+    $self->tag('unknown-runtime-tests-field', $_,
+        'in line', $section->position($_))
+      for @unknown;
+
+    my $features_field = $section->unfolded_value('Features');
+    my @features
+      = grep { length } split(/\s*,\s*|\s+/, $features_field // EMPTY);
+    for my $feature (@features) {
+
+        $self->tag('unknown-runtime-tests-feature',
+            $feature,'in line', $section->position('Features'))
+          unless exists $KNOWN_FEATURES{$feature}
+          || $feature =~ m/^test-name=\S+/;
     }
 
-    unless (exists $paragraph->{'tests'}
-        || exists $paragraph->{'test-command'}) {
-        die
-"missing runtime tests field tests || test-command, paragraph starting at line $line";
-    }
-    if (   exists $paragraph->{'tests'}
-        && exists $paragraph->{'test-command'}) {
-        $self->tag(
-            'exclusive-runtime-tests-field',
-            'tests, test-command',
-            'paragraph starting at line', $line
-        );
-    }
+    my $restrictions_field = $section->unfolded_value('Restrictions');
+    my @restrictions
+      = grep { length } split(/\s*,\s*|\s+/, $restrictions_field // EMPTY);
+    for my $restriction (@restrictions) {
 
-    for my $fieldname (sort(keys(%{$paragraph}))) {
-        $self->tag(
-            'unknown-runtime-tests-field', $fieldname,
-            'paragraph starting at line', $line
-        ) unless $KNOWN_FIELDS->known($fieldname);
+        my $line = $section->position('Restrictions');
+
+        $self->tag('unknown-runtime-tests-restriction',
+            $restriction,'in line', $line)
+          unless $KNOWN_RESTRICTIONS->known($restriction);
+
+        $self->tag('obsolete-runtime-tests-restriction',
+            $restriction,'in line', $line)
+          if $KNOWN_OBSOLETE_RESTRICTIONS->known($restriction);
     }
 
-    if (exists $paragraph->{'features'}) {
-        my $features = $paragraph->{'features'};
-        for my $feature (split(/\s*,\s*|\s+/ms, $features)) {
+    my $directory = $section->unfolded_value('Tests-Directory')
+      // 'debian/tests';
 
-            next
-              unless length $feature;
+    my @tests = grep { length } split(/\s*,\s*|\s+/, $tests_field // EMPTY);
 
-            if (not exists $KNOWN_FEATURES{$feature}
-                and $feature !~ m/^test-name=\S+/) {
-                $self->tag(
-                    'unknown-runtime-tests-feature', $feature,
-                    'paragraph starting at line', $line
-                );
-            }
-        }
-    }
+    $self->check_test_file($directory, $_, $section->position('Tests'))
+      for @tests;
 
-    if (exists $paragraph->{'restrictions'}) {
-        my $restrictions = $paragraph->{'restrictions'};
-        for my $restriction (split(/\s*,\s*|\s+/ms, $restrictions)) {
-            next
-              unless length $restriction;
-            $self->tag(
-                'unknown-runtime-tests-restriction', $restriction,
-                'paragraph starting at line', $line
-            ) unless $KNOWN_RESTRICTIONS->known($restriction);
-            $self->tag('obsolete-runtime-tests-restriction',
-                $restriction,'paragraph starting at line', $line)
-              if $KNOWN_OBSOLETE_RESTRICTIONS->known($restriction);
-        }
-    }
+    my $depends = $section->unfolded_value('Depends');
+    if (defined $depends) {
 
-    if (exists $paragraph->{'tests'}) {
-        my $tests = $paragraph->{'tests'};
-        my $directory = 'debian/tests';
-        if (exists $paragraph->{'tests-directory'}) {
-            $directory = $paragraph->{'tests-directory'};
-        }
-        for my $testname (split(/\s*,\s*|\s+/ms, $tests)) {
-
-            next
-              unless length $testname;
-
-            $self->check_test_file($directory, $testname, $line);
-        }
-    }
-    if (exists($paragraph->{'depends'})) {
-        my $depends = $paragraph->{'depends'};
+        # trim both sides
         $depends =~ s/^\s+|\s+$//g;
-        my $dep = Lintian::Relation->new($depends);
-        for my $unparsable ($dep->unparsable_predicates) {
-            # @ is not a valid predicate in general, but autopkgtests
-            # allows it.
-            next if exists($KNOWN_SPECIAL_DEPENDS{$unparsable});
-            $self->tag(
-                'testsuite-dependency-has-unparsable-elements',
-                "\"$unparsable\"",
-                "(in paragraph starting at line $line)"
-            );
-        }
+
+        my $relation = Lintian::Relation->new($depends);
+
+        # autopkgtest allows @ as predicate as an exception
+        my @unparsable = grep { !exists $KNOWN_SPECIAL_DEPENDS{$_} }
+          $relation->unparsable_predicates;
+
+        my $line = $section->position('Depends');
+        $self->tag(
+            'testsuite-dependency-has-unparsable-elements',
+            DOUBLE_QUOTE . $_ . DOUBLE_QUOTE,
+            "(in line $line)"
+        )for @unparsable;
     }
+
     return;
 }
 
 sub check_test_file {
-    my ($self, $directory, $name, $line) = @_;
-
-    my $processable = $self->processable;
+    my ($self, $directory, $name, $position) = @_;
 
     # Special case with "Tests-Directory: ." (see #849880)
     my $path = $directory eq '.' ? $name : "$directory/$name";
-    my $index = $processable->patched->resolve_path($path);
 
-    if ($name !~ m{^ [ [:alnum:] \+ \- \. / ]++ $}xsm) {
-        $self->tag(
-            'illegal-runtime-test-name', $name,
-            'paragraph starting at line', $line
-        );
+    $self->tag('illegal-runtime-test-name', $name,'in line', $position)
+      unless $name =~ m{^ [ [:alnum:] \+ \- \. / ]+ $}x;
+
+    my $file = $self->processable->patched->resolve_path($path);
+    unless (defined $file) {
+        $self->tag('missing-runtime-test-file', $path,'in line', $position);
+        return;
     }
-    if (not defined($index)) {
-        $self->tag(
-            'missing-runtime-test-file', $path,
-            'paragraph starting at line', $line
-        );
-    } elsif (not $index->is_open_ok) {
+
+    unless ($file->is_open_ok) {
         $self->tag('runtime-test-file-is-not-a-regular-file', $path);
-    } else {
-        open(my $fd, '<', $index->unpacked_path);
-        while (my $x = <$fd>) {
-            $self->tag('uses-deprecated-adttmp', $path, "(line $.)")
-              if $x =~ m/ADTTMP/;
-            $self->tag('runtime-test-file-uses-installed-python-versions',
-                $path, "$1", "(line $.)")
-              if $x =~ m/(py3versions\s+([\w\-\s]*--installed|-\w*i\w*))/;
-            #<<< no Perl tidy
-            $self->tag(
-                'runtime-test-file-uses-supported-python-versions-without-python-all-build-depends',
-                $path, "$1", "(line $.)"
-            ) if $x =~ m/(py3versions\s+([\w\-\s]*--supported|-\w*s\w*))/
-              and not $processable->relation_noarch('build-depends-all')->implies($PYTHON3_ALL_DEPEND);
-            #>>>
-        }
-        close($fd);
+        return;
     }
+
+    open(my $fd, '<', $file->unpacked_path);
+    while (my $line = <$fd>) {
+
+        $self->tag('uses-deprecated-adttmp', $path, "(line $.)")
+          if $line =~ /ADTTMP/;
+
+        if ($line =~ /(py3versions)((?:\s+--?\w+)*)/) {
+
+            my $command = $1 . $2;
+            my $options = $2;
+
+            $self->tag('runtime-test-file-uses-installed-python-versions',
+                $path, $command, "(line $.)")
+              if $options =~ /\s(?:-\w*i|--installed)/;
+
+            $self->tag(
+'runtime-test-file-uses-supported-python-versions-without-python-all-build-depends',
+                $path,
+                $command,
+                "(line $.)"
+              )
+              if $options =~ /\s(?:-\w*s|--supported)/
+              && !$self->processable->relation_noarch('Build-Depends-All')
+              ->implies($PYTHON3_ALL_DEPEND);
+        }
+    }
+
+    close($fd);
+
     return;
 }
 

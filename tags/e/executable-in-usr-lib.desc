@@ -1,6 +1,6 @@
 Tag: executable-in-usr-lib
 Severity: pedantic
-Check: usr/lib
+Check: files/permissions/usr-lib
 Info: The package ships an executable file in /usr/lib.
  .
  Please move the file to <tt>/usr/libexec</tt>.

@@ -48,11 +48,11 @@ Lintian::Index::Control::Scripts information about maintainer scripts.
 
 =over 4
 
-=item add_scripts
+=item add_control
 
 =cut
 
-sub add_scripts {
+sub add_control {
     my ($self) = @_;
 
     # maintainer scripts

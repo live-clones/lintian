@@ -1,0 +1,118 @@
+Source: [% $source %]
+Priority: optional
+Maintainer: [% $author %]
+Standards-Version: [% $standards_version %]
+Build-Depends: [% $build_depends %],
+ fiddle [amd64 powerpc mips mipsel hppa s390],
+ faddle
+ (>>
+ 2) [
+ sparc i386 amd64
+ ]
+Build-Depends-Indep: perl (> 5.8)
+Rules-Requires-Root: no
+XS-Vcs-Svn: https://svn.example.com/[% $source %]/trunk
+#Vcs-Git: git://git.debian.org/collab-maint/<pkg>.git
+#Vcs-Browser: http://git.debian.org/?p=collab-maint/<pkg>.git;a=summary
+
+Package: [% $source %]
+Section: [% $section %]
+Maintainer: [% $author %]
+Build-Conflicts: foo
+Architecture: all
+Pre-depends: ${misc:Pre-depends}, multiarch-support
+Depends: [% $source %], foo, baz, ${shlibs:Depends} ${some:Depends}, ${misc:Depends}
+Recommends: foo, bar, no-match${lintian:Foo}, match${lintian:Match}, no-match${lintian:Bar}-foo
+Suggests: bar | baz, no-match${lintian:Bar}, match${lintian:Match}
+Description: [% $description %]
+ This is a test package designed to exercise some feature or tag of
+ Lintian.  It is part of the Lintian test suite and may do very odd
+ things.  It should not be installed like a regular package.  It may
+ be an empty package.
+
+Package: [% $source %]-1
+Section: [% $section %]
+Architecture: all
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Breaks: libsqlite3-0 (< 3.6.12)
+Description: [% $description %]
+ This is a test package designed to exercise some feature or tag of
+ Lintian.  It is part of the Lintian test suite and may do very odd
+ things.  It should not be installed like a regular package.  It may
+ be an empty package.
+
+Package: [% $source %]-2
+Section: [% $section %]
+Architecture: all
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: [% $description %] (two)
+ This is a test package designed to exercise some feature or tag of
+ Lintian.  It is part of the Lintian test suite and may do very odd
+ things.  It should not be installed like a regular package.  It may
+ be an empty package.
+
+Package: [% $source %]-3
+Section: [% $section %]
+Architecture: all
+Depends: ${shlibs:Depends}, ${misc:Depends}, foo (>= 1),
+  baz (<< 2),
+  fizz (= 2.0), gcc-${pv:gcc} ${reqv:gcc}
+Description: [% $description %] (three)
+ This is a test package designed to exercise some feature or tag of
+ Lintian.  It is part of the Lintian test suite and may do very odd
+ things.  It should not be installed like a regular package.  It may
+ be an empty package.
+
+Package: [% $source %]-4
+Section: [% $section %]
+Architecture: all
+Depends: ${shlibs:Depends}, ${misc:Depends}, foo |
+  bar (>= 1), baz
+Description: [% $description %] (four)
+ This is a test package designed to exercise some feature or tag of
+ Lintian.  It is part of the Lintian test suite and may do very odd
+ things.  It should not be installed like a regular package.  It may
+ be an empty package.
+
+Package: [% $source %]-5
+Section: [% $section %]
+Architecture: all
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: Description: [% $description %]
+ This is a test package designed to exercise some feature or tag of
+ Lintian.  It is part of the Lintian test suite and may do very odd
+ things.  It should not be installed like a regular package.  It may
+ be an empty package.
+
+Package: [% $source %]-dbgsym
+Section: debug
+Architecture: all
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: Description: dbg-sym
+ This is a test package designed to exercise some feature or tag of
+ Lintian.  It is part of the Lintian test suite and may do very odd
+ things.  It should not be installed like a regular package.  It may
+ be an empty package.
+
+Package: [% $source %]-dbg
+Section: debug
+Architecture: all
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: Description: debug
+ This is a test package designed to exercise some feature or tag of
+ Lintian.  It is part of the Lintian test suite and may do very odd
+ things.  It should not be installed like a regular package.  It may
+ be an empty package.
+
+Package: [% $source %]-udeb
+Section: debian-installer
+Package-Type: udeb
+Architecture: all
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: [% $description %] (udeb)
+ udeb tests.
+ .
+ This is a test package designed to exercise some feature or tag of
+ Lintian.  It is part of the Lintian test suite and may do very odd
+ things.  It should not be installed like a regular package.  It may
+ be an empty package.

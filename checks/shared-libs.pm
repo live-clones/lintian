@@ -57,8 +57,8 @@ my $MA_DIRS = Lintian::Data->new('common/multiarch-dirs', qr/\s++/);
 sub installable {
     my ($self) = @_;
 
-    my $pkg = $self->package;
-    my $type = $self->type;
+    my $pkg = $self->processable->name;
+    my $type = $self->processable->type;
     my $processable = $self->processable;
     my $group = $self->group;
 
@@ -171,8 +171,8 @@ sub installable {
 
             # executable stack.
             if (not defined $objdump->{$cur_file}{'PH'}{STACK}) {
-                if (defined $processable->field('architecture')) {
-                    my $arch = $processable->field('architecture');
+                if (defined $processable->fields->value('Architecture')) {
+                    my $arch = $processable->fields->value('Architecture');
                     $self->tag('shared-library-lacks-stack-section',$cur_file);
                 }
             } elsif ($objdump->{$cur_file}{'PH'}{STACK}{flags} ne 'rw-'){
@@ -345,14 +345,14 @@ sub installable {
 
     # 4th step: check shlibs control file
     # $version may be undef in very broken packages
-    my $version = $processable->field('version');
+    my $version = $processable->fields->value('Version');
     my $provides = $pkg;
     $provides .= "( = $version)" if defined $version;
     # Assume the version to be a non-native version to avoid
     # uninitialization warnings later.
     $version = '0-1' unless defined $version;
     $provides
-      = Lintian::Relation->and($processable->relation('provides'), $provides);
+      = Lintian::Relation->and($processable->relation('Provides'), $provides);
 
     my $shlibsf = $processable->control->lookup('shlibs');
     my $symbolsf = $processable->control->lookup('symbols');
@@ -726,7 +726,7 @@ sub installable {
           if not $we_trigger_ldconfig and $must_call_ldconfig;
     }
 
-    my $multiarch = $processable->field('multi-arch', 'no');
+    my $multiarch = $processable->fields->value('Multi-Arch') // 'no';
     if ($multiarch eq 'foreign' and $must_call_ldconfig) {
         $self->tag('shared-library-is-multi-arch-foreign',$must_call_ldconfig);
     }

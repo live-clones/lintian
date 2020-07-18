@@ -56,8 +56,6 @@ object, or undef if the changelog doesn't exist.  The changelog-file
 collection script must have been run to create the changelog file, which
 this method expects to find in F<changelog>.
 
-Needs-Info requirements for using I<changelog>: changelog-file
-
 For source:
 
 Returns the changelog of the source package as a Parse::DebianChangelog

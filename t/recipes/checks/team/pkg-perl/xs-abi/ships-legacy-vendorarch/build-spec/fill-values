@@ -1,0 +1,6 @@
+Skeleton: upload-native
+Testname: ships-legacy-vendorarch
+Description: Modern module ships legacy vendor-arch
+Package-Architecture: any
+# bump value here and the Depends in d/control.in to build on newer systems
+Extra-Build-Depends: perlapi-5.30.0

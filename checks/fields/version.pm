@@ -48,10 +48,9 @@ sub source {
 
     my $processable = $self->processable;
 
-    my $version = $processable->unfolded_field('version');
-
+    my $version = $processable->fields->unfolded_value('Version');
     return
-      unless defined $version;
+      unless length $version;
 
     # Checks for the dfsg convention for repackaged upstream
     # source.  Only check these against the source package to not
@@ -94,15 +93,12 @@ sub source {
 sub always {
     my ($self) = @_;
 
-    my $type = $self->type;
+    my $type = $self->processable->type;
     my $processable = $self->processable;
 
-    my $version = $processable->unfolded_field('version');
-
-    unless (defined $version) {
-        $self->tag('no-version-field');
-        return;
-    }
+    my $version = $processable->fields->unfolded_value('Version');
+    return
+      unless length $version;
 
     my $dversion = Dpkg::Version->new($version);
     unless ($dversion->is_valid) {
@@ -145,7 +141,7 @@ sub always {
           if $debian =~ /^[^.-]+\.[^.-]+\./ and not $ubuntu;
     }
 
-    my $name = $processable->field('package');
+    my $name = $processable->fields->value('Package');
     if (   $name
         && $PERL_CORE_PROVIDES->known($name)
         && perl_core_has_version($name, '>=', "$epoch:$upstream")) {

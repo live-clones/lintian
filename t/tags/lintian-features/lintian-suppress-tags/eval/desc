@@ -1,5 +1,0 @@
-Testname: lintian-suppress-tags
-Options: --suppress-tags extended-description-is-empty
- --suppress-tags-from-file ./suppress
-Match-Strategy: literal
-Output-Format: EWI

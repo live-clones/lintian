@@ -26,10 +26,11 @@ use warnings;
 use utf8;
 use autodie;
 
+use Data::Validate::Domain;
 use Date::Format qw(time2str);
-use Email::Valid;
+use Email::Address::XS;
 use List::Util qw(first);
-use List::MoreUtils qw(any uniq);
+use List::MoreUtils qw(any all uniq);
 use Path::Tiny;
 use Try::Tiny;
 use Unicode::UTF8 qw(valid_utf8 decode_utf8);
@@ -61,7 +62,7 @@ sub spelling_tag_emitter {
 sub source {
     my ($self) = @_;
 
-    my $pkg = $self->package;
+    my $pkg = $self->processable->name;
     my $processable = $self->processable;
     my $group = $self->group;
 
@@ -86,7 +87,7 @@ sub source {
         }
     }
 
-    my $versionstring = $processable->field('version', EMPTY);
+    my $versionstring = $processable->fields->value('Version') // EMPTY;
     my $latest_version = Lintian::Inspect::Changelog::Version->new;
 
     try {
@@ -280,7 +281,7 @@ sub source {
 sub binary {
     my ($self) = @_;
 
-    my $pkg = $self->package;
+    my $pkg = $self->processable->name;
     my $processable = $self->processable;
     my $group = $self->group;
 
@@ -359,6 +360,8 @@ sub binary {
     if (-f $dnews) {
 
         my $bytes = path($dnews)->slurp;
+
+        # another check complains about invalid encoding
         if (valid_utf8($bytes)) {
 
             my $contents = decode_utf8($bytes);
@@ -389,9 +392,6 @@ sub binary {
                     $self->tag('debian-news-entry-uses-asterisk');
                 }
             }
-
-        } else {
-            $self->tag('debian-news-file-uses-obsolete-national-encoding');
         }
     }
 
@@ -402,12 +402,12 @@ sub binary {
     # is this a native Debian package?
     # If the version is missing, we assume it to be non-native
     # as it is the most likely case.
-    my $source = $processable->field('source');
+    my $source = $processable->fields->value('Source');
     my $version;
     if (defined $source && $source =~ m/\((.*)\)/) {
         $version = $1;
     } else {
-        $version = $processable->field('version');
+        $version = $processable->fields->value('Version');
     }
     if (defined $version) {
         $native_pkg = ($version !~ m/-/);
@@ -416,7 +416,7 @@ sub binary {
         # the most likely case.
         $native_pkg = 0;
     }
-    $version = $processable->field('version', '0-1');
+    $version = $processable->fields->value('Version') // '0-1';
     $foreign_pkg = (!$native_pkg && $version !~ m/-0\./);
     # A version of 1.2.3-0.1 could be either, so in that
     # case, both vars are false
@@ -506,10 +506,10 @@ sub binary {
 
     # check that changelog is UTF-8 encoded
     my $bytes = path($dchpath)->slurp;
-    unless (valid_utf8($bytes)) {
-        $self->tag('debian-changelog-file-uses-obsolete-national-encoding');
-        return;
-    }
+
+    # another check complains about invalid encoding
+    return
+      unless valid_utf8($bytes);
 
     my $changelog = $processable->changelog;
     if (my @errors = @{$changelog->errors}) {
@@ -533,13 +533,26 @@ sub binary {
     # checks applying to all entries
     for my $entry (@entries) {
         if (length $entry->Maintainer) {
-            my ($email) = ($entry->Maintainer =~ qr/<([^>]*)>/);
+            my ($parsed) = Email::Address::XS->parse($entry->Maintainer);
 
-           # cannot use Email::Valid->tld to check for dot until this is fixed:
-           # https://github.com/Perl-Email-Project/Email-Valid/issues/38
-            $self->tag('debian-changelog-file-contains-invalid-email-address',
-                $email)
-              unless Email::Valid->rfc822($email) && $email =~ qr/\.[^.@]+$/;
+            unless ($parsed->is_valid) {
+                $self->tag('bogus-mail-host-in-debian-changelog',
+                    $entry->Maintainer);
+                next;
+            }
+
+            unless (
+                all { length }
+                ($parsed->address, $parsed->user, $parsed->host)
+            ) {
+                $self->tag('bogus-mail-host-in-debian-changelog',
+                    $parsed->format);
+                next;
+            }
+
+            $self->tag('bogus-mail-host-in-debian-changelog', $parsed->address)
+              unless is_domain($parsed->host,
+                {domain_disable_tld_validation => 1});
         }
     }
 
@@ -603,7 +616,8 @@ sub binary {
 
             my $changes = $group->changes;
             if ($changes) {
-                my $changes_dist= lc($changes->field('distribution', EMPTY));
+                my $changes_dist
+                  = lc($changes->fields->value('Distribution') // EMPTY);
 
                 my %codename;
                 $codename{'unstable'} = 'sid';
@@ -684,7 +698,7 @@ sub binary {
                 for my $field (qw/Distribution Urgency/) {
                     if ($latest_entry->$field ne $news->$field) {
                         $self->tag('changelog-news-debian-mismatch',
-                            lc($field),
+                            $field,
                             $latest_entry->$field . ' != ' . $news->$field);
                     }
                 }

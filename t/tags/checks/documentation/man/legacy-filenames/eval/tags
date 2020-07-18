@@ -1,5 +1,0 @@
-more-filename-games (binary): binary-without-manpage usr/games/yet-another-test-game
-more-filename-games (binary): binary-without-manpage usr/bin/another-test-game
-filenames (binary): binary-without-manpage usr/bin/mh/read
-filenames (binary): binary-without-manpage usr/bin/X11/testxbin
-filename-games (binary): binary-without-manpage usr/bin/test-game

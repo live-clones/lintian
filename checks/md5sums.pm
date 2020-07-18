@@ -40,7 +40,7 @@ with 'Lintian::Check';
 
 has only_conffiles => (is => 'rwp', default => 1);
 
-sub files {
+sub visit_installed_files {
     my ($self, $file) = @_;
 
     # check if package contains non-conffiles

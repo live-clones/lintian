@@ -1,5 +1,5 @@
 # This file is generated from private/refresh-debhelper-data.
-# It was generated on 2020-01-12 23:20
+# It was generated on 2020-07-05 21:45
 
 apache2-dev
 autotools-dev
@@ -8,7 +8,6 @@ cli-common-dev
 cme
 config-package-dev
 debhelper
-desktop-profiles
 dh-acc
 dh-ada-library
 dh-apparmor
@@ -51,7 +50,6 @@ gnustep-make
 gobject-introspection
 haskell-devscripts-minimal
 kodi-addons-dev
-libaqbanking-dev
 libdbi-perl
 libgstreamer1.0-dev
 libimager-perl
@@ -68,8 +66,8 @@ pkg-php-tools
 postgresql-server-dev-all
 ppp-dev
 pyppd
+python-numpy
 python-ply
-python-sip-dev
 python2
 python3-numpy
 python3-ply

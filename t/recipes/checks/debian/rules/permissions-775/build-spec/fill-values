@@ -1,0 +1,4 @@
+Skeleton: source-native
+Testname: permissions-775
+Package-Architecture: all
+Description: Test in which debian/rules has group write permissions.

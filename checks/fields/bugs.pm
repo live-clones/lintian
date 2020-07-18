@@ -37,10 +37,10 @@ with 'Lintian::Check';
 sub always {
     my ($self) = @_;
 
-    my $pkg = $self->package;
+    my $pkg = $self->processable->name;
     my $processable = $self->processable;
 
-    my $bugs = $processable->unfolded_field('bugs');
+    my $bugs = $processable->fields->unfolded_value('Bugs');
 
     return
       unless defined $bugs;

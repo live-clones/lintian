@@ -30,7 +30,7 @@ use File::Basename qw(basename);
 use YAML::XS ();
 use MIME::Base64 qw(encode_base64);
 
-use Lintian::Deb822Parser qw(visit_dpkg_paragraph);
+use Lintian::Deb822::Parser qw(visit_dpkg_paragraph_string);
 use Lintian::Relation::Version qw(versions_comparator);
 use Lintian::Reporting::Util qw(
   find_backlog
@@ -41,7 +41,7 @@ use Lintian::Util qw(
   open_gz
 );
 
-my $DEFAULT_CHECKSUM = 'sha256';
+my $DEFAULT_CHECKSUM = 'Sha256';
 my (%KNOWN_MEMBERS, %ACTIVE_GROUPS);
 my $CONFIG;
 my %OPT;
@@ -228,19 +228,20 @@ sub add_member_to_group {
     $KNOWN_MEMBERS{"${group_id} ${member_id}"} = 1;
     $ACTIVE_GROUPS{$group_id} = 1;
 
-    if (!exists($member->{$DEFAULT_CHECKSUM})
-        || $member->{$DEFAULT_CHECKSUM} ne $member_data->{$DEFAULT_CHECKSUM}) {
-        if (exists($member->{$DEFAULT_CHECKSUM})) {
+    if (!exists($member->{lc $DEFAULT_CHECKSUM})
+        || $member->{lc $DEFAULT_CHECKSUM} ne
+        $member_data->{lc $DEFAULT_CHECKSUM}) {
+        if (exists($member->{lc $DEFAULT_CHECKSUM})) {
             # This seems worth a note even if the group is already out of date
+            my $lowercase = lc $DEFAULT_CHECKSUM;
             log_debug(
                 "${group_id} is out-of-date: ${member_id} checksum mismatch"
-                  . " ($member->{$DEFAULT_CHECKSUM} != $member_data->{$DEFAULT_CHECKSUM})"
-            );
+                  . " ($member->{$lowercase} != $member_data->{$lowercase})");
         } elsif (not $group_data->{'out-of-date'} and not $new_group) {
             log_debug("${group_id} is out-of-date: New member (${member_id})");
         }
         $group_data->{'out-of-date'} = 1;
-        $member->{$DEFAULT_CHECKSUM} = $member_data->{$DEFAULT_CHECKSUM};
+        $member->{lc $DEFAULT_CHECKSUM} = $member_data->{lc $DEFAULT_CHECKSUM};
     }
     delete($member->{'sha1'});
 
@@ -354,12 +355,12 @@ sub cleanup_group_state {
 # Helper for local_mirror_manifests - it parses a paragraph from Sources file
 sub _parse_srcs_pg {
     my ($state, $blacklist, $extra_metadata, $paragraph) = @_;
-    my $dir = $paragraph->{'directory'}//'';
-    my $group_id = $paragraph->{'package'} . '/' . $paragraph->{'version'};
+    my $dir = $paragraph->{'Directory'}//'';
+    my $group_id = $paragraph->{'Package'} . '/' . $paragraph->{'Version'};
     my $member_id = "source:${group_id}";
     my (%data, %group_metadata, $group_mirror_md);
-    if (exists $blacklist->{$paragraph->{'package'}}) {
-        log_debug("Ignoring blacklisted package src:$paragraph->{'package'}");
+    if (exists $blacklist->{$paragraph->{'Package'}}) {
+        log_debug("Ignoring blacklisted package src:$paragraph->{'Package'}");
         return;
     }
     # only include the source if it has any binaries to be checked.
@@ -367,7 +368,7 @@ sub _parse_srcs_pg {
     #   (happens if the architecture is "behind" in building)
     return unless $ACTIVE_GROUPS{$group_id};
     $dir .= '/' if $dir;
-    foreach my $f (split m/\n/, $paragraph->{"checksums-${DEFAULT_CHECKSUM}"}){
+    foreach my $f (split m/\n/, $paragraph->{"Checksums-${DEFAULT_CHECKSUM}"}){
 
         # trim both ends
         $f =~ s/^\s+|\s+$//g;
@@ -376,7 +377,7 @@ sub _parse_srcs_pg {
         my ($checksum, undef, $basename) = split(m/\s++/, $f);
         my $b64_checksum = encode_base64(pack('H*', $checksum));
         # $dir should end with a slash if it is non-empty.
-        $data{$DEFAULT_CHECKSUM} = $b64_checksum;
+        $data{lc $DEFAULT_CHECKSUM} = $b64_checksum;
         $data{'path'} = $extra_metadata->{'mirror-dir'}  . "/$dir" . $basename;
         last;
     }
@@ -398,33 +399,34 @@ sub _parse_srcs_pg {
 sub _parse_pkgs_pg {
     my ($state, $blacklist, $extra_metadata, $type, $paragraph) = @_;
     my ($group_id, $member_id, %data, %group_metadata, $b64_checksum);
-    my $package = $paragraph->{'package'};
-    my $version = $paragraph->{'version'};
-    my $architecture = $paragraph->{'architecture'};
-    if (not defined($paragraph->{'source'})) {
-        $paragraph->{'source'} = $package;
-    } elsif ($paragraph->{'source'} =~ /^([-+\.\w]+)\s+\((.+)\)$/) {
-        $paragraph->{'source'} = $1;
-        $paragraph->{'source-version'} = $2;
+    my $package = $paragraph->{'Package'};
+    my $version = $paragraph->{'Version'};
+    my $architecture = $paragraph->{'Architecture'};
+    if (not defined($paragraph->{'Source'})) {
+        $paragraph->{'Source'} = $package;
+    } elsif ($paragraph->{'Source'} =~ /^([-+\.\w]+)\s+\((.+)\)$/) {
+        $paragraph->{'Source'} = $1;
+        $paragraph->{'Source-version'} = $2;
     }
-    if (exists $blacklist->{$paragraph->{'source'}}) {
+    if (exists $blacklist->{$paragraph->{'Source'}}) {
         log_debug("Ignoring binary package $package: it is part of "
-              . "blacklisted source package $paragraph->{'source'}");
+              . "blacklisted source package $paragraph->{'Source'}");
         return;
     }
-    if (not defined($paragraph->{'source-version'})) {
-        $paragraph->{'source-version'} = $paragraph->{'version'};
+    if (not defined($paragraph->{'Source-Version'})) {
+        $paragraph->{'Source-Version'} = $paragraph->{'Version'};
     }
-    $group_id = $paragraph->{'source'} . '/' . $paragraph->{'source-version'};
+    $group_id = $paragraph->{'Source'} . '/' . $paragraph->{'Source-Version'};
     $member_id = "${type}:${package}/${version}/${architecture}";
     $data{'path'}
       = $extra_metadata->{'mirror-dir'} . '/' . $paragraph->{'filename'};
-    $b64_checksum = encode_base64(pack('H*', $paragraph->{$DEFAULT_CHECKSUM}));
-    $data{$DEFAULT_CHECKSUM} = $b64_checksum;
+    $b64_checksum
+      = encode_base64(pack('H*', $paragraph->{lc $DEFAULT_CHECKSUM}));
+    $data{lc $DEFAULT_CHECKSUM} = $b64_checksum;
 
     $group_metadata{'mirror-metadata'}{'maintainer'}
-      = $paragraph->{'maintainer'};
-    if (my $uploaders = $paragraph->{'uploaders'}) {
+      = $paragraph->{'Maintainer'};
+    if (my $uploaders = $paragraph->{'Uploaders'}) {
         my @ulist = split(/>\K\s*,\s*/, $uploaders);
         $group_metadata{'mirror-metadata'}{'uploaders'} = \@ulist;
     }
@@ -452,40 +454,53 @@ sub local_mirror_manifests {
     foreach my $dist (@$dists) {
         foreach my $component (@{$components}) {
             my $srcs = "$mirdir/dists/$dist/$component/source/Sources";
-            my ($srcfd, $srcsub);
+
             my %extra_metadata = (
                 'component' => $component,
                 'mirror-dir' => $mirdir,
             );
+
             # Binaries have a "per arch" file.
             # - we check those first and then include the source packages that
             #   are referred to by these binaries.
+
             my $dist_path = "$mirdir/dists/$dist/$component";
-            foreach my $arch (@{$archs}) {
+            for my $arch (@{$archs}) {
+
                 my $pkgs = "${dist_path}/binary-$arch/Packages";
-                my $upkgs
-                  = "${dist_path}/debian-installer/binary-$arch/Packages";
                 my $pkgfd = _open_data_file($pkgs);
+                local $/ = undef;
+                my $pkgstring = <$pkgfd>;
+                close $pkgfd;
+
                 my $binsub = sub {
                     _parse_pkgs_pg($state, $blacklist, \%extra_metadata,
                         'binary', @_);
                 };
-                my $upkgfd;
+                visit_dpkg_paragraph_string($binsub, $pkgstring);
+
+                my $upkgs
+                  = "${dist_path}/debian-installer/binary-$arch/Packages";
+                my $upkgfd = _open_data_file($upkgs);
+                local $/ = undef;
+                my $upkgstring = <$upkgfd>;
+                close $upkgfd;
+
                 my $udebsub = sub {
                     _parse_pkgs_pg($state, $blacklist, \%extra_metadata,
                         'udeb', @_);
                 };
-                visit_dpkg_paragraph($binsub, $pkgfd);
-                close($pkgfd);
-                $upkgfd = _open_data_file($upkgs);
-                visit_dpkg_paragraph($udebsub, $upkgfd);
-                close($upkgfd);
+                visit_dpkg_paragraph_string($udebsub, $upkgstring);
             }
-            $srcfd = _open_data_file($srcs);
-            $srcsub
+
+            my $srcfd = _open_data_file($srcs);
+            local $/ = undef;
+            my $srcstring = <$srcfd>;
+            close $srcfd;
+
+            my $srcsub
               = sub { _parse_srcs_pg($state, $blacklist, \%extra_metadata, @_) };
-            visit_dpkg_paragraph($srcsub, $srcfd);
-            close($srcfd);
+            visit_dpkg_paragraph_string($srcsub, $srcstring);
         }
     }
     return;

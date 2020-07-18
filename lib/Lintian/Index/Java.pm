@@ -174,6 +174,10 @@ sub parse_jar {
                 # Collect the Major version of the class file.
                 my ($contents, $zerr) = $member->contents;
 
+       # bug in Archive::Zip; seen in android-platform-libcore_10.0.0+r36-1.dsc
+                last
+                  unless defined $zerr;
+
                 last
                   unless $zerr == AZ_OK;
 
@@ -195,6 +199,10 @@ sub parse_jar {
             push(@lines, "-- MANIFEST: $path");
 
             my ($contents, $zerr) = $manifest->contents;
+
+       # bug in Archive::Zip; seen in android-platform-libcore_10.0.0+r36-1.dsc
+            return
+              unless defined $zerr;
 
             if ($zerr == AZ_OK) {
                 my $partial = EMPTY;

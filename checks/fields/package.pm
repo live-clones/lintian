@@ -39,14 +39,9 @@ with 'Lintian::Check';
 sub installable {
     my ($self) = @_;
 
-    my $processable = $self->processable;
-
-    my $name = $processable->unfolded_field('package');
-
-    unless (defined $name) {
-        $self->tag('no-package-name');
-        return;
-    }
+    my $name = $self->processable->fields->unfolded_value('Package');
+    return
+      unless length $name;
 
     $self->tag('bad-package-name') unless $name =~ /^$PKGNAME_REGEX$/i;
 

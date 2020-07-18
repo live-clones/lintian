@@ -34,7 +34,7 @@ with 'Lintian::Check';
 
 has fontdirs => (is => 'rw', default => sub { {} });
 
-sub files {
+sub visit_installed_files {
     my ($self, $file) = @_;
 
     # links to FHS locations are allowed
@@ -69,7 +69,7 @@ sub files {
     return;
 }
 
-sub breakdown {
+sub breakdown_installed_files {
     my ($self) = @_;
 
     # X11 font directories with files

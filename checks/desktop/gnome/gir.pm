@@ -39,7 +39,7 @@ sub source {
 
     my $processable = $self->processable;
 
-    foreach my $bin ($processable->binaries) {
+    foreach my $bin ($processable->debian_control->installables) {
         if ($bin =~ m/^gir1\.2-/) {
             if (
                 not $processable->binary_relation($bin, 'strong')
@@ -55,13 +55,13 @@ sub source {
 sub installable {
     my ($self) = @_;
 
-    my $pkg = $self->package;
+    my $pkg = $self->processable->name;
     my $processable = $self->processable;
     my $group = $self->group;
 
     my @girs;
     my @typelibs;
-    my $section = $processable->field('section', 'NONE');
+    my $section = $processable->fields->value('Section') // 'NONE';
     my $madir = $MA_DIRS->value($processable->architecture);
     # Slightly contrived, but it might be Architecture: all, in which
     # case this is the best we can do
@@ -119,12 +119,12 @@ sub installable {
         my $expected = 'gir1.2-' . lc($gir->basename);
         $expected =~ s/\.gir$//;
         $expected =~ tr/_/-/;
-        my $version = $processable->field('version');
+        my $version = $processable->fields->value('Version');
 
         foreach my $bin ($group->get_binary_processables) {
             next unless $bin->name =~ m/^gir1\.2-/;
-            my $other = $bin->name.' (= '.$bin->field('version').')';
-            if (    $bin->relation('provides')->implies($expected)
+            my $other = $bin->name.' (= '.$bin->fields->value('Version').')';
+            if (    $bin->relation('Provides')->implies($expected)
                 and $processable->relation('strong')->implies($other)) {
                 next GIR;
             }
@@ -142,7 +142,7 @@ sub installable {
         $expected =~ s/\.typelib$//;
         $expected =~ tr/_/-/;
         if ($pkg ne $expected
-            and not $processable->relation('provides')->implies($expected)) {
+            and not $processable->relation('Provides')->implies($expected)) {
             $self->tag(
                 ('typelib-package-name-does-not-match', $typelib, $expected));
         }

@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<lintian-run>
+  <lintian-version>VERSION</lintian-version>
+  <groups>
+    <group>
+      <source-name>lintian-output-xml</source-name>
+      <source-version>1.0+dsfg-1.1</source-version>
+      <run-start>TIMESTAMP</run-start>
+      <input-files>
+        <source>
+          <tags>
+            <tag severity="warning">
+              <name>changelog-file-missing-explicit-entry</name>
+              <context>0.0.1-1 -&gt; 1.0+dsfg-1 (missing) -&gt; 1.0+dsfg-1.1</context>
+            </tag>
+            <tag severity="warning">
+              <name>format-3.0-but-debian-changes-patch</name>
+            </tag>
+            <tag severity="warning">
+              <name>maintainer-upload-has-incorrect-version-number</name>
+              <context>1.0+dsfg-1.1</context>
+            </tag>
+            <tag severity="info">
+              <name>binary-control-field-duplicates-source</name>
+              <context>field "Section" in package lintian-output-xml</context>
+            </tag>
+            <tag severity="info">
+              <name>quilt-patch-using-template-description</name>
+              <context>debian-changes-1.0+dsfg-1.1</context>
+            </tag>
+            <tag severity="info">
+              <name>send-patch</name>
+              <context>debian/patches/debian-changes-1.0+dsfg-1.1</context>
+            </tag>
+            <tag severity="info">
+              <name>upstream-metadata-missing-bug-tracking</name>
+            </tag>
+            <tag severity="info">
+              <name>upstream-metadata-missing-repository</name>
+            </tag>
+            <tag severity="pedantic">
+              <name>debian-control-has-unusual-field-spacing</name>
+              <context>line 12</context>
+            </tag>
+            <tag severity="pedantic">
+              <name>debian-watch-does-not-check-gpg-signature</name>
+              <experimental>yes</experimental>
+            </tag>
+            <tag severity="pedantic">
+              <name>no-homepage-field</name>
+            </tag>
+            <tag severity="pedantic">
+              <name>old-source-override-location</name>
+            </tag>
+            <tag severity="warning">
+              <name>dfsg-version-misspelled</name>
+              <context>1.0+dsfg-1.1</context>
+              <override>
+                <origin>maintainer</origin>
+              </override>
+            </tag>
+          </tags>
+        </source>
+        <changes>
+          <tags></tags>
+        </changes>
+        <buildinfo>
+          <tags></tags>
+        </buildinfo>
+        <installables>
+          <installable>
+            <package-name>lintian-output-xml</package-name>
+            <architecture>all</architecture>
+            <container>deb</container>
+            <tags>
+              <tag severity="error">
+                <name>dir-in-usr-local</name>
+                <context>usr/local/share/</context>
+              </tag>
+              <tag severity="error">
+                <name>dir-in-usr-local</name>
+                <context>usr/local/share/lintian/</context>
+              </tag>
+              <tag severity="error">
+                <name>dir-or-file-in-var-lock</name>
+                <context>var/lock/lintian/</context>
+              </tag>
+              <tag severity="error">
+                <name>new-essential-package</name>
+              </tag>
+              <tag severity="error">
+                <name>possible-gpl-code-linked-with-openssl</name>
+              </tag>
+              <tag severity="warning">
+                <name>no-manual-page</name>
+                <context>usr/bin/script</context>
+              </tag>
+              <tag severity="info">
+                <name>description-possibly-contains-homepage</name>
+                <context>http://www.example.com/.</context>
+              </tag>
+              <tag severity="info">
+                <name>desktop-entry-limited-to-environments</name>
+                <context>usr/share/applications/script.desktop</context>
+              </tag>
+              <tag severity="info">
+                <name>package-contains-empty-directory</name>
+                <context>usr/local/share/lintian/</context>
+              </tag>
+              <tag severity="info">
+                <name>synopsis-is-a-sentence</name>
+                <context>"Test Lintian XML output format."</context>
+              </tag>
+              <tag severity="pedantic">
+                <name>example-unusual-interpreter</name>
+                <context>usr/share/doc/lintian-output-xml/examples/example #!/usr/bin/foo</context>
+              </tag>
+            </tags>
+          </installable>
+        </installables>
+      </input-files>
+    </group>
+  </groups>
+</lintian-run>

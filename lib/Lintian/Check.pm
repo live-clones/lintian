@@ -23,7 +23,7 @@ use v5.20;
 use warnings;
 use utf8;
 
-use constant EMPTY => q{};
+use constant UNDERSCORE => q{_};
 
 use Moo::Role;
 use namespace::clean;
@@ -55,7 +55,46 @@ Get processable underlying this check.
 
 Get group that the processable is in.
 
+=item info
+
+Check::Info structure for this check.
+
 =cut
+
+has processable => (is => 'rw', default => sub { {} });
+has group => (is => 'rw', default => sub { {} });
+has info => (is => 'rw');
+
+=item visit_files
+
+=cut
+
+sub visit_files {
+    my ($self, $index) = @_;
+
+    my $setup_hook = 'setup' . UNDERSCORE . $index . UNDERSCORE . 'files';
+    $self->$setup_hook
+      if $self->can($setup_hook);
+
+    my $visit_hook = 'visit' . UNDERSCORE . $index . UNDERSCORE . 'files';
+    if ($self->can($visit_hook)) {
+
+        my @items = $self->processable->$index->sorted_list;
+
+        # exclude Lintian's test suite from source scans
+        @items = grep { $_->name !~ m{^t/} } @items
+          if $self->processable->name eq 'lintian' && $index eq 'patched';
+
+        $self->$visit_hook($_) for @items;
+    }
+
+    my $breakdown_hook
+      ='breakdown' . UNDERSCORE . $index . UNDERSCORE . 'files';
+    $self->$breakdown_hook
+      if $self->can($breakdown_hook);
+
+    return;
+}
 
 =item run
 
@@ -63,21 +102,25 @@ Run the check.
 
 =cut
 
-has processable => (is => 'rw', default => sub { {} });
-has group => (is => 'rw', default => sub { {} });
-
 sub run {
     my ($self) = @_;
 
-    my $type = $self->type;
+    my $type = $self->processable->type;
+
+    $self->visit_files('patched')
+      if $type eq 'source';
 
     if ($type eq 'binary' || $type eq 'udeb') {
+
+        $self->visit_files('control');
+
+        $self->visit_files('installed');
 
         $self->setup
           if $self->can('setup');
 
         if ($self->can('files')) {
-            $self->files($_)for $self->processable->installed->sorted_list;
+            $self->files($_) for $self->processable->installed->sorted_list;
         }
 
         $self->breakdown
@@ -96,59 +139,6 @@ sub run {
     return;
 }
 
-=item package
-
-Get package name from processable.
-
-=cut
-
-sub package {
-    my ($self) = @_;
-
-    return $self->processable->name;
-}
-
-=item type
-
-Get type of processable.
-
-=cut
-
-sub type {
-    my ($self) = @_;
-
-    return $self->processable->type;
-}
-
-=item info
-
-Get the info data structure from processable.
-
-=cut
-
-sub info {
-    my ($self) = @_;
-
-    return $self->processable;
-}
-
-=item build_path
-
-Get the build path.
-
-=cut
-
-sub build_path {
-    my ($self) = @_;
-
-    my $buildinfo = $self->group->buildinfo;
-
-    return EMPTY
-      unless $buildinfo;
-
-    return $buildinfo->field('build-path', EMPTY);
-}
-
 =item tag
 
 Tag the processable associated with this check
@@ -157,6 +147,19 @@ Tag the processable associated with this check
 
 sub tag {
     my ($self, @arguments) = @_;
+
+    return
+      unless @arguments;
+
+    my $tagname = $arguments[0];
+
+    my $taginfo = $self->info->get_tag($tagname);
+
+    warn 'Check ' . $self->info->name . " has no tag $tagname."
+      unless defined $taginfo;
+
+    # could be name-spaced
+    $arguments[0] = $taginfo->name;
 
     return $self->processable->tag(@arguments);
 }

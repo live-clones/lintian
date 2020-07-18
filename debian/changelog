@@ -1,3 +1,224 @@
+lintian (2.84.0) unstable; urgency=medium
+
+  * Summary of tag changes:
+    + Added:
+      - arch-any-package-needs-newer-cdbs
+      - autopkgtest-needs-use-name
+      - include
+      - legacy-vendorarch-directory
+      - missing-tests-control
+      - module-build-tiny-needs-newer-cdbs
+      - module-build-tiny-needs-newer-debhelper
+      - no-git
+      - no-team-tests
+      - no-team-url
+      - no-tests
+      - no-testsuite-header
+      - nodejs-bad-buffer-usage
+      - send-patch
+      - specification
+    + Removed:
+      - inconsistent-testsuite-field
+      - testsuite-autopkgtest-missing
+
+  [ Felix Lechner ]
+  * Strip architecture fron two filenames in tests, and ignore tags seen
+    only on some architectures as it causes autopkgtest regressions on
+    arm64.
+  * Unconditionally allow /dev/null as a symlink target in source packages.
+    (Re: #964111)
+  * Fix national-encoding for DEP-3 patches without quilt notice.
+    (Closes: #964281)
+  * Add a reminder to send forwardable DEP-3 patches upstream.
+    (Closes: #755153)
+  * Add two classification tags for Salsa CI detection.
+  * For testsuites, parse debian/control instead of .dsc and drop the
+    inconsistent-testsuite-field tag.
+  * Convert program error for missing test fields to a tag and reinstate
+    old tag under new name.
+  * Removed debhelper compat 5 and 6 from tests.
+  * Allow optional, private namespaces for tags. (Re: #943525)
+  * Merge all checks and tags from pkg-perl and pkg-js.
+  * For R API version parsing, allow any character that is legal in package
+    names. (Re: #961709)
+
+  [ Trek ]
+  * Exclude some more templated (ie. "@") systemd .service files.
+
+ -- Chris Lamb <lamby@debian.org>  Wed, 15 Jul 2020 22:15:30 +0000
+
+lintian (2.83.0) unstable; urgency=medium
+
+  [ Felix Lechner ]
+  * Add a new standalone HTML output mode.
+  * Warn about embedded javascript files provided by sphinx.
+    (Closes: #964013)
+  * Exempt links that stay inside /usr/lib from breakout-link.
+    (Closes: #964073)
+  * Rename second mention of tag manpage-in-wrong-directory.
+    (Closes: #964282)
+  * Extend spell check to all parts of debhelper rule targets.
+    (Closes: #963765)
+  * Only check the DEP-3 header for legacy encodings in debian/patches.
+    (Closes: #964281)
+  * Restrict top folder for breakout-link to architecture in /usr/lib and
+    permit links freely within. (Closes: #964073)
+  * Use the new path to test recipes in autopkgtest. (Closes: #964405)
+  * Drop a test no longer building due to new restraints on version
+    strings. (See: #953554)
+  * Exempt Lintian's own test suite from scans in source files and remove
+    programmatic conditionals in checks.
+  * Replace references to 'manpages' with 'manual pages' in tag
+    descriptions.
+
+  [ Chris Lamb ]
+  * Correct a reference to "override_dh_" in the long description of the
+    excessive-debhelper-overrides tag.
+
+  [ Lev Lamberov ]
+  * Update Debian Emacsen team wiki page link.
+
+  [ Paul Wise ]
+  * Add several spelling corrections.
+
+ -- Chris Lamb <lamby@debian.org>  Tue, 07 Jul 2020 22:50:19 +0000
+
+lintian (2.82.0) unstable; urgency=medium
+
+  [ Felix Lechner ]
+  * Replace files ignored by dpkg-source in dpkg-source; their absence was
+    causing a FTBFS on the official buildds.
+  * Drop two legacy tests that produced architecture-specific tags but were
+    not needed.
+
+  [ Dmitry Shachnev ]
+  * Add sphinx as a possible build-dependency for dh_sphinxdoc.
+
+ -- Chris Lamb <lamby@debian.org>  Fri, 26 Jun 2020 11:58:12 +0000
+
+lintian (2.81.0) unstable; urgency=medium
+
+  [ Felix Lechner ]
+  * Remove command line option --fail-on from the settings in configuration
+    files. (Closes: #962157)
+  * Use UTF-8 codepoint for copyright sign in copyright files.
+    (Closes: #961975)
+  * Add tag for architecture-specific paths in debian/not-installed.
+    (Closes: #961973)
+  * Rename tag to recursive-privilege-change and explain usage of
+    runuser(1). (Closes: #895597)
+  * Do not enable Perl warnings globally to reduce output clutter from
+    external modules.
+  * In debian/control, add dh-r to Build-Depends. (See: #961709)
+  * Add two test cases from Ansgar's 'colorful' test package.
+    (See: #962277)
+  * Drop Email::Valid as obsolete and use regex to check emails for fully
+    qualified hosts. (See: #962277)
+  * Flag the use of acute accents in manpages. (Closes: #554897)
+  * Flag ANSI escape characters in all fields of primary packaging control
+    files. (See: #962277)
+  * In check menus, title-case the hash keys representing field labels to
+    make the tag context more human-readable.
+  * Rename tag for mailing list on Alioth and convert to classification
+    tag. (Closes: #962448)
+  * Add a classification tag for field contents in primary package control
+    files.
+  * Find the correct section when looking at combined manpages.
+    (Closes: #962601)
+  * Read manual references as UTF-8 to show "en" dash correctly.
+    (Closes: #904885)
+  * Issue 'required-field' and 'recommended-field' tagsper Debian Policy
+    section 5 instead of field-specific tags.
+  * Fix mail host validation in debian/changelog and rename tag for bogus
+    hosts.
+  * Do not allow unsafe symlinks in autopkgtests. (Closes: #954860)
+  * Broaden tag descriptions for lower custom compression settings.
+    (Closes: #909696)
+  * Do not impose a umask when running tests as it partially obscured a bug
+    in Dpkg. (See: #945869 & #796257)
+  * Emit a classification tags with octal file permissions for all files
+    sources and installables. (See: #945869, #796257)
+  * Reset process umask before unpacking source tarballs. (Closes: #945869)
+  * Use case-sensitive field names in control files, package relations,
+    debconf templates and autopkgtest files.
+  * Mark commas not followed by whitespace in package descriptions.
+    (Closes: #591665)
+  * Do not use the Bash shell when syntax checking maintainer scripts using
+    /bin/sh. (Closes: #954459)
+  * Point out variant spellings of field names in control files.
+  * Use case-sensitive Deb822 parser for profiles, tags, checks, internal
+    harness tests,private scripts, and in readelf data within
+    Processable::Objdump.
+  * Add new tag breakout-link for such links in /usr/lib. (Closes: #243158)
+  * Stop exempting files in debian/missing-sources from source-is-missing.
+    (See: #962583)
+  * Provide test case with JS sources in subdir of d/missing-sources.
+    (Closes: #962583)
+  * Issue tag for repeated path segments in installed files.
+    (Closes: #950052)
+  * Restore case-invariant access to control fields, per Debian Policy
+    section 5.1.
+  * Add an internal harness test requiring a declared diagnostic value for
+    tag-related test. (Closes: #962671)
+  * Parse mail addresses in package control fields in one place and
+    validate domains using Data::Validate::Domain.
+  * Add new checks for maintainer-provided manpages and desktop entries.
+    (Closes: #755161)
+  * Restore program failure when error tags are found. (Closes: #962158)
+  * Rename documentation/man to documentation/manual and debian/manpages to
+    debian/manual-pages. Also rename tags that refer to a 'manpage' to
+    'manual-page' or another name.
+  * Combine various national encoding tags into one and issue all in one
+    check.
+  * Rename new item-looping entry points in checks as not all items are
+    files.
+  * Provide script diagnostics in the "control index".
+  * Remove conflict between no-template-description and
+    untranslatable-debconf-templates. (Closes: #914256)
+
+  [ Chris Lamb ]
+  * Update data/fields/perl-provides for Perl 5.030003.
+
+  [ Paul Wise ]
+  * Add several corrections and sort using the UTF-8 locale.
+
+  [ Dylan Aïssi ]
+  * Add the requires-r-api and ships-r-site-library tags for the R
+    statistics language. (Closes: #961709)
+
+  [ Mo Zhou ]
+  * Add a new "linked-with-obsolete-library" tag; marks only libcblas from
+    the Debian Science team for now.
+
+  [ Rafael Laboissière ]
+  * Fix false positives in the no-dh-sequencer tag when Makefile command
+    prefixes (eg. "+") are used. (Closes: #963212)
+
+ -- Chris Lamb <lamby@debian.org>  Tue, 23 Jun 2020 09:47:18 +0100
+
+lintian (2.80.0) unstable; urgency=medium
+
+  * Summary of tag changes:
+    + Added:
+      - national-encoding-in-text-file
+
+  [ Chris Lamb ]
+  * Check for execute_after/execute_before spelling mistakes, etc., just
+    like for override_.
+
+  [ Felix Lechner ]
+  * Add check for nationally encoded text files in installation packages.
+    (Closes: #796170)
+  * Mention discussion about allowing some paths for the
+    script-not-executable tag. (Closes: #368792)
+  * Fix regex for Guile bytecode with respect to ELF-related tags.
+    (Closes: #961961)
+
+  [ Paul Wise ]
+  * Add several spelling corrections.
+
+ -- Chris Lamb <lamby@debian.org>  Wed, 03 Jun 2020 09:30:24 +0000
+
 lintian (2.79.0~bpo10+1) buster-backports; urgency=medium
 
   * Rebuild for buster-backports.

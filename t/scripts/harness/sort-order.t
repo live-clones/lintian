@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 
-# Copyright © 2019 Felix Lechner
+# Copyright © 2020 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -42,7 +42,7 @@ use Test::Lintian::ConfigFile qw(read_config);
 use constant SPACE => q{ };
 use constant EMPTY => q{};
 
-my $checkpath = 't/tags/checks';
+my $checkpath = 't/recipes/checks';
 
 # find all test specifications related to only one check
 my @descpaths = sort File::Find::Rule->file()->name('desc')->in($checkpath);

@@ -1,5 +1,0 @@
-binary (binary): binary-without-manpage usr/bin/static-hello
-binary (binary): binary-without-manpage usr/bin/iminusrbin
-binary (binary): binary-without-manpage usr/bin/hello.static
-binary (binary): binary-without-manpage usr/bin/hello-static
-binary (binary): binary-without-manpage usr/bin/hello

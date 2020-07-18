@@ -25,15 +25,21 @@ use warnings;
 use utf8;
 use autodie;
 
+use Path::Tiny;
+
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
 
-has linked_against_libvga => (is => 'rwp');
+has component => (is => 'rw');
+has linked_against_libvga => (is => 'rw');
 
-sub setup {
+sub setup_installed_files {
     my ($self) = @_;
+
+    my $component = path($self->processable->path)->basename;
+    $self->component($component);
 
     my %linked_against_libvga;
 
@@ -52,12 +58,17 @@ sub setup {
         }
     }
 
-    $self->_set_linked_against_libvga(\%linked_against_libvga);
+    $self->linked_against_libvga(\%linked_against_libvga);
     return;
 }
 
-sub files {
+sub visit_installed_files {
     my ($self, $file) = @_;
+
+    $self->tag(
+        'octal-permissions', $self->component,
+        sprintf('%4o', $file->operm),  $file->name
+    );
 
     if ($file->is_file) {
 
@@ -88,7 +99,7 @@ sub files {
 
             # 3rd special case: allow anything with suid in the name
             undef $setuid
-              if $self->package =~ m,-suid,;
+              if $self->processable->name =~ m,-suid,;
 
             # Check for setuid and setgid that isn't expected.
             if ($setuid and $setgid) {
@@ -197,6 +208,18 @@ sub files {
                 sprintf('%04o != 0755', $file->operm));
         }
     }
+
+    return;
+}
+
+sub source {
+    my ($self) = @_;
+
+    my $component = path($self->processable->path)->basename;
+    $self->tag(
+        'octal-permissions', $component,
+        sprintf('%4o', $_->operm),  $_->name
+    )for $self->processable->patched->sorted_list;
 
     return;
 }

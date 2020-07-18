@@ -1,0 +1,4 @@
+Testname: western-encoding
+Check: fields/description
+Test-Against:
+ spelling-error-in-description

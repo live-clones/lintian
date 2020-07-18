@@ -1,5 +1,0 @@
-Testname: cruft-non-native-version
-Skeleton: upload-non-native
-Source-Format: 1.0
-Version: 1.0
-Description: Test non-native package with native version

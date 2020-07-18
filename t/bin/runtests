@@ -4,7 +4,7 @@
 # Copyright © 2008 Frank Lichtenheld
 # Copyright © 2008, 2009 Russ Allbery
 # Copyright © 2014 Niels Thykier
-# Copyright © 2018 Felix Lechner
+# Copyright © 2020 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -354,7 +354,7 @@ my $filleval = IO::Async::Function->new(
         $0 = "Lintian prepare test: $specpath";
 
         # calculate destination
-        my $relative = path($specpath)->relative($testset);
+        my $relative = path($specpath)->relative("$testset/recipes");
         my $buildpath = $relative->absolute($buildroot)->stringify;
         my $evalpath = $relative->absolute($evalroot)->relative->stringify;
 
@@ -413,7 +413,8 @@ $loop->await($allfilled);
 
 # remap paths from testset to outpath to get work directories
 my @workpaths
-  = map { rel2abs(abs2rel($_, $testset), "$outpath/eval") } @testpaths;
+  = map { rel2abs(abs2rel($_, "$testset/recipes"), "$outpath/eval") }
+  @testpaths;
 
 # if ($platforms ne 'any') {
 #     my @wildcards = split(SPACE, $platforms);
@@ -468,7 +469,7 @@ if (-t STDOUT && !$unattended) {
         my $testcase = read_config($descpath);
 
         my $relative = abs2rel($workpath, $evalroot);
-        my $testpath = abs2rel(rel2abs($relative, $testset));
+        my $testpath = abs2rel(rel2abs($relative, "$testset/recipes"));
 
         say EMPTY;
         say 'Failed test: ' . colored($testpath, 'bold white on_blue');
@@ -479,7 +480,7 @@ if (-t STDOUT && !$unattended) {
             next
               unless -r $diffpath;
 
-            my $diff = path($diffpath)->slurp_utf8;
+            my $diff = path($diffpath)->slurp;
             print $diff;
 
         } elsif ($testcase->{match_strategy} eq 'literal') {

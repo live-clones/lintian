@@ -1,3 +1,0 @@
-maintainer-scripts (binary): uses-dpkg-database-directly preinst (line 12)
-maintainer-scripts (binary): uses-dpkg-database-directly postinst (line 81)
-maintainer-scripts (binary): uses-dpkg-database-directly postinst (line 78)

@@ -6,22 +6,19 @@ use autodie;
 
 use Test::More;
 
-use Lintian::Deb822Parser qw(visit_dpkg_paragraph);
+use Lintian::Deb822::Parser qw(visit_dpkg_paragraph_string);
 
-my $syntax_error = qr/syntax error at line \d+/;
 my %TESTS_BAD = (
-#<<< no perl tidy (TODO: lines slightly too long)
-    'pgp-sig-before-start' => qr/${syntax_error}: PGP signature seen before start of signed message/,
-    'pgp-two-signatures' => qr/${syntax_error}: Two PGP signatures \(first one at line \d+\)/,
-    'pgp-unexpected-header' => qr/${syntax_error}: Unexpected .+ header/,
-    'pgp-malformed-header' => qr/${syntax_error}: Malformed PGP header/,
+    'pgp-sig-before-start' => qr/PGP signature before message/,
+    'pgp-two-signatures' => qr/Found two PGP signatures/,
+    'pgp-unexpected-header' => qr/Unexpected .+ header/,
+    'pgp-malformed-header' => qr/Malformed PGP header/,
 
-    'pgp-two-signed-msgs' => qr/${syntax_error}: Expected at most one signed message \(previous at line \d+\)/,
-    'pgp-no-end-pgp-header' => qr/${syntax_error}: End of file but expected an "END PGP SIGNATURE" header/,
-    'pgp-leading-unsigned' => qr/${syntax_error}: PGP MESSAGE header must be first content if present/,
-    'pgp-trailing-unsigned' => qr/${syntax_error}: Data after the PGP SIGNATURE/,
-    'pgp-eof-missing-sign' => qr/${syntax_error}: End of file before "BEGIN PGP SIGNATURE"/,
-#<<<
+    'pgp-two-signed-msgs' => qr/Multiple PGP messages/,
+    'pgp-no-end-pgp-header' => qr/Cannot find END PGP SIGNATURE/,
+    'pgp-leading-unsigned' => qr/Expected PGP MESSAGE header/,
+    'pgp-trailing-unsigned' => qr/Data after PGP SIGNATURE/,
+    'pgp-eof-missing-sign' => qr/Cannot find BEGIN PGP SIGNATURE/,
 );
 
 my $DATADIR = $0;
@@ -41,12 +38,16 @@ plan tests => scalar keys %TESTS_BAD;
 
 foreach my $filename (sort keys %TESTS_BAD) {
     my $fail_regex = $TESTS_BAD{$filename};
+
     my $path = "$DATADIR/$filename";
     open(my $fd, '<', $path);
+    local $/ = undef;
+    my $string = <$fd>;
+    close $fd;
+
     eval {
-        visit_dpkg_paragraph(sub {}, $fd);
+        visit_dpkg_paragraph_string(sub {}, $string);
     };
-    close($fd);
     if (my $err = $@) {
         like($err, $fail_regex, $filename);
     } else {

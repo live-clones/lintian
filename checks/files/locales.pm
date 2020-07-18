@@ -34,7 +34,7 @@ my $LOCALE_CODES = Lintian::Data->new('files/locale-codes', qr/\s++/);
 my $INCORRECT_LOCALE_CODES
   = Lintian::Data->new('files/incorrect-locale-codes', qr/\s++/);
 
-sub files {
+sub visit_installed_files {
     my ($self, $file) = @_;
 
     if (   $file->is_dir

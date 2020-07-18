@@ -42,9 +42,10 @@ $(product):
 		$(post_clean) $(packagedir) ; \
 	fi
 
+	mkdir $(origdata) || true
+	cp -rp $(origdata)/. $(packagedir)
+
 	if [ "[% $type %]" != "native" ] ; then \
-		mkdir $(origdata) || true ; \
-		cp -rp $(origdata)/. $(packagedir) ; \
 		if [ -x $(pre_orig) ] ; then \
 			$(pre_orig) $(shell realpath $(packagedir)) ; \
 		fi ; \

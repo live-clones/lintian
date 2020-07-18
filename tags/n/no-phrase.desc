@@ -1,0 +1,12 @@
+Tag: no-phrase
+Severity: error
+Check: fields/mail-address
+Renamed-From: maintainer-name-missing,
+ changed-by-name-missing
+Info: The named contact includes an email address, but no name
+ (which email folks call the <em>phrase</em>).
+ .
+ The contact information must contain both a name and a mail address.
+Ref: policy 5.6.2,
+ policy 5.6.3,
+ policy 5.6.4

@@ -1,7 +1,0 @@
-scripts (binary): setuid-binary usr/bin/suidperlfoo2 4751 root/root
-scripts (binary): setuid-binary usr/bin/suidperlfoo 4555 root/root
-scripts (binary): non-standard-setuid-executable-perm usr/bin/suidperlfoo 4555
-scripts (binary): non-standard-executable-perm usr/bin/perl-bizarre-3 0754 != 0755
-scripts (binary): executable-is-not-world-readable usr/bin/suidperlfoo2 4751
-scripts (binary): executable-is-not-world-readable usr/bin/perl-bizarre-2 0750
-scripts (binary): executable-is-not-world-readable usr/bin/guile-bizarre 0705

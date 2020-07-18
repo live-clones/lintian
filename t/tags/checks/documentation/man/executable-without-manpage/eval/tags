@@ -1,1 +1,0 @@
-executable-without-manpage (binary): binary-without-manpage usr/bin/telepathic

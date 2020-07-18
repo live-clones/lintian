@@ -34,6 +34,8 @@ use Lintian::Spelling qw(check_spelling);
 use constant PATCH_DESC_TEMPLATE => 'TODO: Put a short summary on'
   . ' the line above and replace this paragraph';
 
+use constant EMPTY => q{};
+
 use Moo;
 use namespace::clean;
 
@@ -58,9 +60,9 @@ sub source {
 
     # Get build deps so we can decide which build system the
     # maintainer meant to use:
-    my $build_deps = $processable->relation('build-depends-all');
+    my $build_deps = $processable->relation('Build-Depends-All');
     # Get source package format
-    my $format = $processable->field('format', '');
+    my $format = $processable->fields->value('Format') // EMPTY;
     my $quilt_format = ($format =~ /3\.\d+ \(quilt\)/) ? 1 : 0;
 
     my $droot = $processable->patched->resolve_path('debian/');
@@ -229,7 +231,7 @@ sub source {
         }
         if ($quilt_format) { # 3.0 (quilt) specific checks
              # Format 3.0 packages may generate a debian-changes-$version patch
-            my $version = $processable->field('version');
+            my $version = $processable->fields->value('Version');
             my $patch_header = $droot->resolve_path('source/patch-header');
             my $versioned_patch;
             $versioned_patch = $dpdir->resolve_path("debian-changes-$version")

@@ -1,3 +1,0 @@
-Testname: files-general
-Check: files/hierarchy-standard
-# tar -t is buggy and does not list \\\ filename

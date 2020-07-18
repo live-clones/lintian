@@ -264,7 +264,7 @@ sub script_tag {
 sub installable {
     my ($self) = @_;
 
-    my $pkg = $self->package;
+    my $pkg = $self->processable->name;
     my $processable = $self->processable;
 
     my (%executable, %ELF, %scripts, %seen_helper_cmds);
@@ -280,7 +280,7 @@ sub installable {
     }
 
     my $all_parsed = Lintian::Relation->and($processable->relation('all'),
-        $processable->relation('provides'),$pkg);
+        $processable->relation('Provides'),$pkg);
     my $str_deps = $processable->relation('strong');
 
     my @x11_fonts
@@ -691,7 +691,7 @@ sub installable {
             unless (not $data->[1]) {
                 my $depends = Lintian::Relation->new($data->[1]);
                 if ($file eq 'preinst') {
-                    unless ($processable->relation('pre-depends')
+                    unless ($processable->relation('Pre-Depends')
                         ->implies($depends)){
                         $self->tag('preinst-interpreter-without-predepends',
                             "#!$interpreter");
@@ -727,12 +727,10 @@ sub installable {
         my $checkbashisms;
         if ($shellscript) {
             $checkbashisms = $base eq 'sh' ? 1 : 0;
-            if ($base eq 'sh' or $base eq 'bash') {
-                if (check_script_syntax("/bin/${base}", $file)) {
-                    $self->tag('maintainer-shell-script-fails-syntax-check',
-                        $file);
-                }
-            }
+
+            $self->tag('maintainer-shell-script-fails-syntax-check', $file)
+              if ($base eq 'sh' && check_script_syntax('/bin/dash', $file))
+              || ($base eq 'bash' && check_script_syntax('/bin/bash', $file));
         }
 
         # now scan the file contents themselves
@@ -1006,18 +1004,19 @@ sub installable {
                     $self->tag('multi-arch-same-package-calls-pycompile',
                         "$file:$.")
                       if m/^\s*py3?compile(?:\s|\z)/
-                      and $processable->field('multi-arch', 'no') eq 'same';
+                      and ($processable->fields->value('Multi-Arch') // 'no')
+                      eq 'same';
 
                     if (m,>\s*/etc/inetd\.conf(?:\s|\Z),) {
                         $self->tag('maintainer-script-modifies-inetd-conf',
                             "$file:$.")
-                          unless $processable->relation('provides')
+                          unless $processable->relation('Provides')
                           ->implies('inet-superserver');
                     }
                     if (m,^\s*(?:cp|mv)\s+(?:.*\s)?/etc/inetd\.conf\s*$,) {
                         $self->tag('maintainer-script-modifies-inetd-conf',
                             "$file:$.")
-                          unless $processable->relation('provides')
+                          unless $processable->relation('Provides')
                           ->implies('inet-superserver');
                     }
 
@@ -1120,13 +1119,13 @@ m,$LEADIN(?:/usr/bin/)?dpkg\s+--compare-versions\s+.*\b\Q$ver\E(?!\.)\b,
                   if /--group/ && !/--add/;
             }
 
-            my $pdepends = $processable->relation('pre-depends');
+            my $pdepends = $processable->relation('Pre-Depends');
             $self->tag('skip-systemd-native-flag-missing-pre-depends',
                 "$file:$.")
               if m/invoke-rc.d\b.*--skip-systemd-native\b/
               && !$pdepends->implies('init-system-helpers (>= 1.54~)');
 
-            my $depends = $processable->relation('depends');
+            my $depends = $processable->relation('Depends');
             $self->tag(
                 'missing-versioned-depends-on-init-system-helpers',
                 "$file:$.",
@@ -1359,7 +1358,7 @@ sub generic_check_bad_command {
     my ($self, $line, $file, $lineno, $findincatstring, $in_automatic_section)
       = @_;
 
-    my $pkg = $self->package;
+    my $pkg = $self->processable->name;
 
     # try generic bad maintainer script command tagging
   BAD_CMD:

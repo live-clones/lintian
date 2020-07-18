@@ -1,0 +1,2 @@
+debconf-syntax-error (source): syntax-error-in-debconf-template debian/templates: Cannot parse line 3: Description whoops, I forgot a colon
+debconf-syntax-error (binary): syntax-error-in-debconf-template DEBIAN/templates: Cannot parse line 3: Description whoops, I forgot a colon

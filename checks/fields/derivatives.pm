@@ -31,6 +31,8 @@ use autodie;
 
 use Lintian::Data ();
 
+use constant HYPHEN => q{-};
+
 use Moo;
 use namespace::clean;
 
@@ -54,7 +56,7 @@ sub source {
 
     foreach my $field ($DERIVATIVE_FIELDS->all) {
 
-        my $val = $processable->field($field, '-');
+        my $val = $processable->fields->value($field) // HYPHEN;
         my $data = $DERIVATIVE_FIELDS->value($field);
 
         $self->tag('invalid-field-for-derivative',

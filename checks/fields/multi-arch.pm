@@ -44,16 +44,17 @@ with 'Lintian::Check';
 sub source {
     my ($self) = @_;
 
-    my $pkg = $self->package;
+    my $pkg = $self->processable->name;
     my $processable = $self->processable;
 
-    for my $bin ($processable->binaries) {
+    for my $bin ($processable->debian_control->installables) {
 
         next
-          unless $processable->binary_field($bin, 'multi-arch', EMPTY) eq
-          'same';
+          unless ($processable->debian_control->installable_fields($bin)
+            ->value('Multi-Arch') // EMPTY) eq 'same';
 
-        my $wildcard = $processable->binary_field($bin, 'architecture');
+        my $wildcard = $processable->debian_control->installable_fields($bin)
+          ->value('Architecture');
         my @arches   = split(
             SPACE,
             safe_qx(
@@ -80,20 +81,20 @@ sub source {
 sub installable {
     my ($self) = @_;
 
-    my $pkg = $self->package;
+    my $pkg = $self->processable->name;
     my $processable = $self->processable;
 
     if ($pkg =~ /^x?fonts-/) {
         $self->tag('font-package-not-multi-arch-foreign')
-          unless $processable->field('multi-arch', 'no')
+          unless ($processable->fields->value('Multi-Arch') // 'no')
           =~/^(?:foreign|allowed)$/;
     }
 
-    my $multi = $processable->unfolded_field('multi-arch');
+    my $multi = $processable->fields->unfolded_value('Multi-Arch');
     return
       unless defined $multi;
 
-    my $architecture = $processable->unfolded_field('architecture');
+    my $architecture = $processable->fields->unfolded_value('Architecture');
     if (defined $architecture) {
 
         $self->tag('illegal-multi-arch-value', $architecture, $multi)
@@ -106,12 +107,11 @@ sub installable {
 sub always {
     my ($self) = @_;
 
-    my $multi = $self->processable->unfolded_field('multi-arch');
-
+    my $multi = $self->processable->fields->unfolded_value('Multi-Arch');
     return
       unless defined $multi;
 
-    $self->tag('unknown-multi-arch-value', $self->package, $multi)
+    $self->tag('unknown-multi-arch-value', $self->processable->name, $multi)
       unless $multi =~ /^(?:no|foreign|allowed|same)$/;
 
     return;

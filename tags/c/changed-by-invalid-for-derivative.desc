@@ -1,6 +1,6 @@
 Tag: changed-by-invalid-for-derivative
 Severity: error
-Check: changes-file
+Check: fields/changed-by
 Info: The Changed-By field does not match the required format for this
  Debian derivative.
  .

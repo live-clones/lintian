@@ -39,10 +39,7 @@ our @supported_source_formats = (qr/1\.0/, qr/3\.0\s*\((quilt|native)\)/);
 sub source {
     my ($self) = @_;
 
-    my $processable = $self->processable;
-
-    my $format = $processable->unfolded_field('format');
-
+    my $format = $self->processable->fields->unfolded_value('Format');
     return
       unless defined $format;
 
@@ -54,6 +51,20 @@ sub source {
     }
 
     $self->tag('unsupported-source-format', $format) unless $supported;
+
+    return;
+}
+
+sub changes {
+    my ($self) = @_;
+
+    my $format = $self->processable->fields->unfolded_value('Format');
+
+    # without a Format field something is wrong
+    unless (length $format) {
+        $self->tag('malformed-changes-file');
+        return;
+    }
 
     return;
 }

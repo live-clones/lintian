@@ -27,6 +27,8 @@ use autodie;
 
 use Lintian::SlidingWindow;
 
+use constant EMPTY => q{};
+
 use Moo;
 use namespace::clean;
 
@@ -38,10 +40,11 @@ my $PKG_CONFIG_BAD_REGEX
   = Lintian::Data->new('files/pkg-config-bad-regex',qr/~~~~~/,
     sub { return  qr/$_[0]/xsm;});
 
-sub files {
+sub visit_installed_files {
     my ($self, $file) = @_;
 
-    my $architecture = $self->processable->field('architecture', '');
+    my $architecture = $self->processable->fields->value('Architecture')
+      // EMPTY;
 
     # arch-indep pkgconfig
     if (   $file->is_regular_file

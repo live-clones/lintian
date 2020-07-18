@@ -29,11 +29,6 @@ use warnings;
 use utf8;
 use autodie;
 
-use Email::Address::XS;
-use Email::Valid;
-use List::MoreUtils qw(all);
-use List::UtilsBy qw(count_by);
-
 use Lintian::Data;
 
 use Moo;
@@ -41,14 +36,10 @@ use namespace::clean;
 
 with 'Lintian::Check';
 
-my $KNOWN_BOUNCE_ADDRESSES = Lintian::Data->new('fields/bounce-addresses');
-
 sub always {
     my ($self) = @_;
 
-    my $processable = $self->processable;
-
-    my $uploaders = $processable->unfolded_field('uploaders');
+    my $uploaders = $self->processable->fields->value('Uploaders');
     return
       unless defined $uploaders;
 
@@ -57,58 +48,16 @@ sub always {
     # hurt in debian/control
 
     # check for empty field see  #783628
-    if($uploaders =~ m/,\s*,/) {
+    if ($uploaders =~ /,\s*,/) {
         $self->tag('uploader-name-missing','you have used a double comma');
         $uploaders =~ s/,\s*,/,/g;
     }
 
-    # may now enable #485705 to be solved
-    my @uploaders = Email::Address::XS->parse($uploaders);
-
-    my @validated = grep { $_->is_valid } @uploaders;
-    $self->tag('uploader', $_->format) for @validated;
-
-    my @invalid = grep { !$_->is_valid } @uploaders;
-    $self->tag('malformed-uploaders-field') if @invalid;
-
-    for my $parsed (@validated) {
-
-        unless (
-            all { length }
-            ($parsed->address, $parsed->user, $parsed->host)
-        ) {
-            $self->tag('uploader-address-malformed', $parsed->format);
-            next;
-        }
-
-        $self->tag('uploader-address-malformed', $parsed->address)
-          unless Email::Valid->address($parsed->address);
-
-        $self->tag('uploader-address-is-on-localhost', $parsed->address)
-          if $parsed->host =~ /(?:localhost|\.localdomain|\.localnet)$/;
-
-        $self->tag('uploader-address-causes-mail-loops-or-bounces',
-            $parsed->address)
-          if $KNOWN_BOUNCE_ADDRESSES->known($parsed->address);
-
-        unless (length $parsed->phrase) {
-            $self->tag('uploader-name-missing', $parsed->format);
-            next;
-        }
-
-        $self->tag('uploader-address-is-root-user', $parsed->format)
-          if $parsed->user eq 'root' || $parsed->phrase eq 'root';
-    }
-
-    my %counts = count_by { $_->format } @validated;
-    my @duplicates = grep { $counts{$_} > 1 } keys %counts;
-    $self->tag('duplicate-uploader', $_) for @duplicates;
-
-    my $maintainer = $processable->field('maintainer');
-    if (defined $maintainer) {
+    my $maintainer = $self->processable->fields->value('Maintainer');
+    if (length $maintainer) {
 
         $self->tag('maintainer-also-in-uploaders')
-          if $processable->field('uploaders') =~ m/\Q$maintainer/;
+          if $uploaders =~ m/\Q$maintainer/;
     }
 
     return;

@@ -51,7 +51,7 @@ my $HARDENING_FLAGS = Lintian::Data->new('systemd/hardening-flags');
 # Usual WantedBy= targets
 my $WANTEDBY_WHITELIST = Lintian::Data->new('systemd/wantedby-whitelist');
 
-sub setup {
+sub setup_installed_files {
     my ($self) = @_;
 
     my @timers = grep { m,^lib/systemd/system/[^\/]+\.timer$, }
@@ -61,7 +61,7 @@ sub setup {
     return;
 }
 
-sub files {
+sub visit_installed_files {
     my ($self, $file) = @_;
 
     $self->tag('missing-systemd-timer-for-cron-script', $file)
@@ -73,7 +73,7 @@ sub files {
 sub installable {
     my ($self) = @_;
 
-    my $pkg = $self->package;
+    my $pkg = $self->processable->name;
     my $processable = $self->processable;
 
     # non-service checks
@@ -198,7 +198,7 @@ sub check_init_script {
 sub get_systemd_service_files {
     my ($self) = @_;
 
-    my $pkg = $self->package;
+    my $pkg = $self->processable->name;
     my $processable = $self->processable;
     my @res;
     my @potential
@@ -247,7 +247,7 @@ sub get_systemd_service_names {
 sub check_systemd_service_file {
     my ($self, $file) = @_;
 
-    my $pkg = $self->package;
+    my $pkg = $self->processable->name;
     my $processable = $self->processable;
 
     $self->tag('systemd-service-file-outside-lib', $file)

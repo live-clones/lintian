@@ -1,4 +1,4 @@
-# Copyright © 2018 Felix Lechner
+# Copyright © 2020 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -59,9 +59,7 @@ use Text::CSV;
 use Lintian::Profile;
 use Test::Lintian::ConfigFile qw(read_config);
 
-use constant TAGS => 'tags';
-
-my @LINTIAN_SUITES = (TAGS);
+my @LINTIAN_SUITES = qw(recipes);
 
 use constant DESC => 'desc';
 use constant TWO_SEPARATED_BY_COLON => qr/([^:]+):([^:]+)/;

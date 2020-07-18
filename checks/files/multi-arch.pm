@@ -25,6 +25,8 @@ use warnings;
 use utf8;
 use autodie;
 
+use constant EMPTY => q{};
+
 use Moo;
 use namespace::clean;
 
@@ -39,11 +41,12 @@ my %PATH_DIRECTORIES = map { $_ => 1 } qw(
 has has_public_executable => (is => 'rwp', default => 0);
 has has_public_shared_library => (is => 'rwp', default => 0);
 
-sub files {
+sub visit_installed_files {
     my ($self, $file) = @_;
 
-    my $architecture = $self->processable->field('architecture', '');
-    my $multiarch = $self->processable->field('multi-arch', 'no');
+    my $architecture = $self->processable->fields->value('Architecture')
+      // EMPTY;
+    my $multiarch = $self->processable->fields->value('Multi-Arch') // 'no';
 
     my $multiarch_dir = $MULTIARCH_DIRS->value($architecture);
 
@@ -76,11 +79,12 @@ sub files {
     return;
 }
 
-sub breakdown {
+sub breakdown_installed_files {
     my ($self) = @_;
 
-    my $architecture = $self->processable->field('architecture', '');
-    my $multiarch = $self->processable->field('multi-arch', 'no');
+    my $architecture = $self->processable->fields->value('Architecture')
+      // EMPTY;
+    my $multiarch = $self->processable->fields->value('Multi-Arch') // 'no';
 
     $self->tag('multiarch-foreign-shared-library')
       if $architecture ne 'all'

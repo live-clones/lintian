@@ -1,0 +1,12 @@
+#!/bin/sh
+SOURCE_ROOT="$1"
+LINK_TARGET=non-existent/path/lintian-should-not-open
+
+
+mkdir -p "$SOURCE_ROOT/bad-symlinks" "$SOURCE_ROOT/tests/"
+ln -s "../../$LINK_TARGET" "$SOURCE_ROOT/bad-symlinks/relative-escape"
+ln -s "/../../$LINK_TARGET" "$SOURCE_ROOT/bad-symlinks/absolute-escape"
+
+# Lintian no longer ignores these
+ln -s "../../$LINK_TARGET" "$SOURCE_ROOT/tests/relative-escape-from-tests"
+ln -s "/../../$LINK_TARGET" "$SOURCE_ROOT/tests/absolute-escape-from-tests"

@@ -1,3 +1,0 @@
-Testname: curly-braces
-Check: debian/rules/dh-sequencer
-References: Debian Bug#947115

@@ -26,6 +26,8 @@ use warnings;
 use utf8;
 use autodie;
 
+use constant EMPTY => q{};
+
 use Moo;
 use namespace::clean;
 
@@ -40,7 +42,7 @@ my $THRESHOLD_PERCENTAGE = 50;
 has total_size => (is => 'rwp', default => 0);
 has usrshare_size => (is => 'rwp', default => 0);
 
-sub files {
+sub visit_installed_files {
     my ($self, $file) = @_;
 
     return
@@ -56,11 +58,11 @@ sub files {
     return;
 }
 
-sub breakdown {
+sub breakdown_installed_files {
     my ($self) = @_;
 
     # skip architecture-dependent packages.
-    my $arch = $self->processable->field('architecture', '');
+    my $arch = $self->processable->fields->value('Architecture') // EMPTY;
     return
       if $arch eq 'all';
 

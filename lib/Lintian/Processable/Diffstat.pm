@@ -53,8 +53,6 @@ Returns the path to diffstat output run on the Debian packaging diff
 packages without a "diff.gz" component, this returns the path to an
 empty file (this may be a device like /dev/null).
 
-Needs-Info requirements for using I<diffstat>: diffstat
-
 =item saved_diffstat
 
 Returns the cached diffstat information.

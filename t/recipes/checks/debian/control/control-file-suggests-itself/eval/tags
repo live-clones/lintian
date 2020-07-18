@@ -1,0 +1,2 @@
+control-file-suggests-itself (source): rules-does-not-require-root
+control-file-suggests-itself (source): package-depends-on-itself control-file-suggests-itself Suggests

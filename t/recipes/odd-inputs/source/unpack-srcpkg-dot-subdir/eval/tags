@@ -1,0 +1,3 @@
+unpack-srcpkg-dot-subdir (source): upstream-metadata-missing-repository
+unpack-srcpkg-dot-subdir (source): upstream-metadata-missing-bug-tracking
+unpack-srcpkg-dot-subdir (source): debian-watch-file-missing-version

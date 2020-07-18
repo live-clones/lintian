@@ -71,15 +71,15 @@ the following special values:
 
 =over 4
 
-=item all
+=item All
 
 The concatenation of Pre-Depends, Depends, Recommends, and Suggests.
 
-=item strong
+=item Strong
 
 The concatenation of Pre-Depends and Depends.
 
-=item weak
+=item Weak
 
 The concatenation of Recommends and Suggests.
 
@@ -91,8 +91,6 @@ object will be empty (always satisfied and implies nothing).
 Any substvars in F<debian/control> will be represented in the returned
 relation as packages named after the substvar.
 
-Needs-Info requirements for using I<binary_relation>: L<Same as binary_field|/binary_field (PACKAGE[, FIELD[, DEFAULT]])>
-
 =item saved_binary_relations
 
 =cut
@@ -102,39 +100,48 @@ has saved_binary_relations => (
     coerce => sub { my ($hashref) = @_; return ($hashref // {}); },
     default => sub { {} });
 
-my %special = (
-    all    => [qw(pre-depends depends recommends suggests)],
-    strong => [qw(pre-depends depends)],
-    weak   => [qw(recommends suggests)]);
+my %alias = (
+    all    => [qw(Pre-Depends Depends Recommends Suggests)],
+    strong => [qw(Pre-Depends Depends)],
+    weak   => [qw(Recommends Suggests)]);
 
 my %known = map { $_ => 1 }
   qw(pre-depends depends recommends suggests enhances breaks
   conflicts provides replaces);
 
 sub binary_relation {
-    my ($self, $package, $field) = @_;
+    my ($self, $package, $name) = @_;
 
-    $field = lc $field;
+    return
+      unless length $name;
 
-    return $self->saved_binary_relations->{$package}{$field}
-      if exists $self->saved_binary_relations->{$package}{$field};
+    my $lowercase = lc $name;
 
-    my $result;
-    if ($special{$field}) {
-        $result
-          = Lintian::Relation->and(map { $self->binary_relation($package, $_) }
-              @{ $special{$field} });
+    return
+      unless length $package;
 
-    } else {
-        croak "unknown relation field $field"
-          unless $known{$field};
-        my $value = $self->binary_field($package, $field);
-        $result = Lintian::Relation->new($value);
+    my $relation = $self->saved_binary_relations->{$package}{$lowercase};
+    unless (defined $relation) {
+
+        if (length $alias{$lowercase}) {
+            $relation
+              = Lintian::Relation->and(
+                map { $self->binary_relation($package, $_) }
+                  @{ $alias{$lowercase} });
+
+        } else {
+            croak "unknown relation field $name"
+              unless $known{$lowercase};
+            my $value
+              = $self->debian_control->installable_fields($package)
+              ->value($name);
+            $relation = Lintian::Relation->new($value);
+        }
+
+        $self->saved_binary_relations->{$package}{$lowercase} = $relation;
     }
 
-    $self->saved_binary_relations->{$package}{$field} = $result;
-
-    return $result;
+    return $relation;
 }
 
 =item relation (FIELD)
@@ -145,12 +152,12 @@ following special field names are supported:
 
 =over 4
 
-=item build-depends-all
+=item Build-Depends-All
 
 The concatenation of Build-Depends, Build-Depends-Arch and
 Build-Depends-Indep.
 
-=item build-conflicts-all
+=item Build-Conflicts-All
 
 The concatenation of Build-Conflicts, Build-Conflicts-Arch and
 Build-Conflicts-Indep.
@@ -170,29 +177,32 @@ has saved_relations => (
     default => sub { {} });
 
 sub relation {
-    my ($self, $field) = @_;
+    my ($self, $name) = @_;
 
-    $field = lc $field;
+    return
+      unless length $name;
 
-    my $relation = $self->saved_relations->{$field};
+    my $lowercase = lc $name;
+
+    my $relation = $self->saved_relations->{$lowercase};
     unless (defined $relation) {
 
-        if ($field =~ /^build-(depends|conflicts)-all$/) {
+        if ($name =~ /^Build-(Depends|Conflicts)-All$/i) {
             my $type = $1;
             my @fields
-              = ("build-$type", "build-$type-indep", "build-$type-arch");
+              = ("Build-$type", "Build-$type-Indep", "Build-$type-Arch");
             $relation
               = Lintian::Relation->and(map { $self->relation($_) } @fields);
 
-        } elsif ($field =~ /^build-(depends|conflicts)(?:-(?:arch|indep))?$/) {
-            my $value = $self->field($field);
+        } elsif ($name =~ /^Build-(Depends|Conflicts)(?:-(?:Arch|Indep))?$/i){
+            my $value = $self->fields->value($name);
             $relation = Lintian::Relation->new($value);
 
         } else {
-            croak("unknown relation field $field");
+            croak "unknown relation field $name";
         }
 
-        $self->saved_relations->{$field} = $relation;
+        $self->saved_relations->{$lowercase} = $relation;
     }
 
     return $relation;
@@ -213,15 +223,18 @@ has saved_relations_noarch => (
     default => sub { {} });
 
 sub relation_noarch {
-    my ($self, $field) = @_;
+    my ($self, $name) = @_;
 
-    $field = lc $field;
+    return
+      unless length $name;
 
-    my $relation = $self->saved_relations_noarch->{$field};
+    my $lowercase = lc $name;
+
+    my $relation = $self->saved_relations_noarch->{$lowercase};
     unless (defined $relation) {
 
-        $relation = $self->relation($field)->restriction_less;
-        $self->saved_relations_noarch->{$field} = $relation;
+        $relation = $self->relation($name)->restriction_less;
+        $self->saved_relations_noarch->{$lowercase} = $relation;
     }
 
     return $relation;

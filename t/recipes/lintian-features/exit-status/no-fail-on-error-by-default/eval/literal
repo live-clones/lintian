@@ -1,0 +1,2 @@
+E: no-fail-on-error-by-default source: quilt-series-references-non-existent-patch non-existing.patch
+W: no-fail-on-error-by-default source: patch-system-but-no-source-readme

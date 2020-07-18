@@ -1,0 +1,7 @@
+Tag: module-build-tiny-needs-newer-debhelper
+Severity: error
+Check: team/pkg-perl/debhelper
+Name-Spaced: yes
+Info: Packages using Module::Build::Tiny need to build-depend on
+ <tt>debhelper (>= 9.20140227~)</tt> (or <tt>debhelper-compat</tt>), which
+ uses long option names and realclean instead of distclean.

@@ -32,7 +32,7 @@ use namespace::clean;
 
 with 'Lintian::Check';
 
-sub files {
+sub visit_installed_files {
     my ($self, $file) = @_;
 
     # non-games-specific data in games subdirectory
@@ -59,7 +59,7 @@ sub dir_counts {
 sub installable {
     my ($self) = @_;
 
-    my $section = $self->processable->field('section', EMPTY);
+    my $section = $self->processable->fields->value('Section') // EMPTY;
 
     # section games but nothing in /usr/games
     # any binary counts to avoid game-data false positives:

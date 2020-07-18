@@ -1,0 +1,4 @@
+files-missing-depends-on-sensible-utils (binary): missing-depends-on-sensible-utils var/lib/test/test-script
+files-missing-depends-on-sensible-utils (binary): missing-depends-on-sensible-utils usr/share/locale/test-script
+files-missing-depends-on-sensible-utils (binary): missing-depends-on-sensible-utils usr/share/doc/files-missing-depends-on-sensible-utils/test-script
+files-missing-depends-on-sensible-utils (binary): missing-depends-on-sensible-utils postinst

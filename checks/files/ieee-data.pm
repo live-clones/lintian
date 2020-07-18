@@ -41,7 +41,7 @@ my $COMPRESS_FILE_EXTENSIONS_OR_ALL = sub { qr/(:?$_[0])/ }
         map {$COMPRESS_FILE_EXTENSIONS->value($_) }
           $COMPRESS_FILE_EXTENSIONS->all));
 
-sub files {
+sub visit_installed_files {
     my ($self, $file) = @_;
 
     if (   $file->is_regular_file

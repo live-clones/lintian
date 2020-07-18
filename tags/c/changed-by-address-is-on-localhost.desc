@@ -1,6 +1,0 @@
-Tag: changed-by-address-is-on-localhost
-Severity: error
-Check: changes-file
-Info: The Changed-By address includes localhost(.localdomain), which is
- an invalid e-mail address.
-Ref: policy 5.6.2

@@ -1,6 +1,0 @@
-Tag: manpage-has-wrong-extension
-Severity: error
-Check: documentation/man
-Info: The manual page has an extension other than
- "<i>section</i>[<i>program</i>].gz".
-Ref: policy 12.1

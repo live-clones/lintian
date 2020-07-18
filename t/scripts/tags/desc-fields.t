@@ -87,12 +87,6 @@ foreach my $descpath (@descpaths) {
     is(path($descpath)->basename,
         "$tagname.desc", "Tagfile for $tagname is named $tagname.desc");
 
-    # encapsulating directory is first letter of tag's name
-    my $parentdir = path($descpath)->parent->basename;
-    my $firstletter = lc(substr($tagname, 0, 1));
-    is($parentdir, $firstletter,
-        "Tag $tagname is in directory named '$firstletter'");
-
     # mandatory fields
     ok(exists $info->{$_}, "Field $_ exists in $descpath") for @mandatory;
 
@@ -100,12 +94,10 @@ foreach my $descpath (@descpaths) {
     ok(!exists $info->{$_}, "Field $_ does not exist in $descpath")
       for @disallowed;
 
-    my $checkfield = $info->{check};
+    my $checkfield = $info->{check} // EMPTY;
 
     # tag is associated with a check
     ok(length $checkfield, "Tag $tagname is associated with a check");
-
-    $checkfield //= EMPTY;
 
     my ($checkname) = $checkfield =~ qr/^(\S+)$/;
 
@@ -116,6 +108,20 @@ foreach my $descpath (@descpaths) {
 
     ok($profile->get_checkinfo($checkname),
         "Tag $tagname is associated with a valid check");
+
+    if (($info->{name_spaced} // EMPTY) eq 'yes') {
+        # encapsulating directory is name of check
+        my $subdir = path($descpath)->parent->relative('tags');
+        is($subdir, $checkname,
+            "Tag $tagname is in directory named '$checkname'");
+
+    } else {
+        # encapsulating directory is first letter of tag's name
+        my $parentdir = path($descpath)->parent->basename;
+        my $firstletter = lc(substr($tagname, 0, 1));
+        is($parentdir, $firstletter,
+            "Tag $tagname is in directory named '$firstletter'");
+    }
 }
 
 done_testing($known_tests);

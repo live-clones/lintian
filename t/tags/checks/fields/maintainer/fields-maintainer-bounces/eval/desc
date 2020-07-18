@@ -1,3 +1,0 @@
-Testname: fields-maintainer-bounces
-Check: fields/maintainer
-# To avoid NMU warnings / having a changelog.in

@@ -74,16 +74,16 @@ sub source {
 
     # udebs aren't required to conform to policy, so they don't need
     # Standards-Version. (If they have it, though, it should be valid.)
-    my $version = $processable->field('standards-version');
+    my $version = $processable->fields->value('Standards-Version');
     my $all_udeb = 1;
     $all_udeb = 0
-      if first { $processable->binary_package_type($_) ne 'udeb' }
-    $processable->binaries;
-
-    if (not defined $version) {
-        $self->tag('no-standards-version-field') unless $all_udeb;
-        return;
+      if first {
+        $processable->debian_control->installable_package_type($_) ne 'udeb'
     }
+    $processable->debian_control->installables;
+
+    return
+      unless length $version;
 
     # Check basic syntax and strip off the fourth digit.  People are allowed to
     # include the fourth digit if they want, but it indicates a non-normative

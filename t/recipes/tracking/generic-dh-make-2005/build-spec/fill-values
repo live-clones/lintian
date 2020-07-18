@@ -1,0 +1,8 @@
+Testname: generic-dh-make-2005
+Skeleton: upload-builder-only
+Author: Frank Lichtenheld <djpig@debian.org>
+Version: 1-1
+Package-Architecture: any
+Dh-Compat-Level: 7
+Description: Generic dh_make template generated in 2005
+Default-Build-Depends: debhelper (>= [% $dh_compat_level %]~)

@@ -1,0 +1,11 @@
+filenames (binary): embedded-javascript-library usr/share/filenames/yahoo-min.js please use libjs-yui
+filenames (binary): embedded-javascript-library usr/share/filenames/yahoo-dom-event.js please use libjs-yui
+filenames (binary): embedded-javascript-library usr/share/filenames/scriptaculous.js please use libjs-scriptaculous
+filenames (binary): embedded-javascript-library usr/share/filenames/prototype.js.gz please use libjs-prototype
+filenames (binary): embedded-javascript-library usr/share/filenames/prototype.js please use libjs-prototype
+filenames (binary): embedded-javascript-library usr/share/filenames/prototype-1.2.3.4.js please use libjs-prototype
+filenames (binary): embedded-javascript-library usr/share/filenames/mochikit.js please use libjs-mochikit
+filenames (binary): embedded-javascript-library usr/share/filenames/jquery.pack.js please use libjs-jquery
+filenames (binary): embedded-javascript-library usr/share/filenames/jquery.min.js please use libjs-jquery
+filenames (binary): embedded-javascript-library usr/share/filenames/jquery.lite.js please use libjs-jquery
+filenames (binary): embedded-javascript-library usr/share/filenames/jquery.js please use libjs-jquery

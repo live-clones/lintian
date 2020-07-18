@@ -33,7 +33,7 @@ use namespace::clean;
 
 with 'Lintian::Check';
 
-sub files {
+sub visit_installed_files {
     my ($self, $file) = @_;
 
     # file-info would be great, but files are zipped
@@ -72,7 +72,7 @@ sub files {
         return;
     }
 
-    my $depends = $self->processable->field('depends') // EMPTY;
+    my $depends = $self->processable->fields->value('Depends') // EMPTY;
     $self->tag('missing-prerequisite-for-gfortran-module', $file->name)
       unless $depends =~ /\bgfortran-mod-$module_version\b/;
 

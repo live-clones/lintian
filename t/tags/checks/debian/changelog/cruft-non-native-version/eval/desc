@@ -1,4 +1,0 @@
-Testname: cruft-non-native-version
-Test-Against:
- malformed-debian-changelog-version
-Check: debian/changelog

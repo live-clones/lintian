@@ -32,7 +32,8 @@ use IO::Async::Process;
 use List::MoreUtils qw(uniq);
 use Path::Tiny;
 
-use Lintian::Util qw(get_dsc_info);
+use Lintian::Deb822::Parser qw(read_dpkg_control);
+use Lintian::Index::Item;
 
 use constant EMPTY => q{};
 use constant SPACE => q{ };
@@ -98,11 +99,13 @@ sub create {
 
     # determine source and version; handles missing fields
 
-    my $dinfo = get_dsc_info($dscpath)
+    my @paragraphs;
+    @paragraphs = read_dpkg_control($dscpath)
       or croak $dscpath . ' is not valid dsc file';
+    my $dinfo = $paragraphs[0];
 
-    my $name = $dinfo->{source} // EMPTY;
-    my $version = $dinfo->{version} // EMPTY;
+    my $name = $dinfo->{Source} // EMPTY;
+    my $version = $dinfo->{Version} // EMPTY;
     my $architecture = 'source';
 
     # it is its own source package
@@ -125,7 +128,7 @@ sub create {
     $noepoch =~ s/(.+)-(?:.*)$/$1/;
     my $base = $source . '_' . $noepoch;
 
-    my @files = split(/\n/, $dinfo->{files} // EMPTY);
+    my @files = split(/\n/, $dinfo->{Files} // EMPTY);
 
     my %components;
     for my $line (@files) {
@@ -215,7 +218,7 @@ sub create {
         my %single;
         for my $line (@lines) {
 
-            my $entry = Lintian::File::Path->new;
+            my $entry = Lintian::Index::Item->new;
             $entry->init_from_tar_output($line);
 
             $single{$entry->name} = $entry;

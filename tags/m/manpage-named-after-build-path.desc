@@ -1,7 +1,0 @@
-Tag: manpage-named-after-build-path
-Severity: error
-Check: documentation/man
-Info: The manual page appears to be named after its build path and
- not after its content.
- .
- Please check your debian/rules or upstream Makefile.

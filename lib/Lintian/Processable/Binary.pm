@@ -1,4 +1,4 @@
-# Copyright © 2019 Felix Lechner
+# Copyright © 2019-2020 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -93,15 +93,15 @@ sub init {
     $self->type('binary');
     $self->link_label('deb');
 
-    my $dinfo = get_deb_info($self->path)
+    my $section = get_deb_info($self->path)
       or croak 'could not read control data in ' . $self->path . ": $!";
 
-    $self->verbatim($dinfo);
+    $self->fields($section);
 
-    my $name = $dinfo->{package} // EMPTY;
-    my $version = $dinfo->{version} // EMPTY;
-    my $architecture = $dinfo->{architecture} // EMPTY;
-    my $source = $dinfo->{source} // EMPTY;
+    my $name = $self->fields->value('Package') // EMPTY;
+    my $version = $self->fields->value('Version') // EMPTY;
+    my $architecture = $self->fields->value('Architecture') // EMPTY;
+    my $source = $self->fields->value('Source') // EMPTY;
 
     my $source_version = $version;
 

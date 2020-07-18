@@ -1,6 +1,6 @@
 Tag: dir-or-file-in-tmp
 Severity: error
-Check: files/hierarchy-standard
+Check: files/hierarchy/standard
 Info: Packages must not install files into <tt>/tmp</tt> or
  <tt>/var/tmp</tt>. The File Hierarchy Standard specifies that such files
  may be removed by the administrator and that programs may not depend on

@@ -1,1 +1,0 @@
-debhelper-compat-old (source): debian-rules-should-not-use-custom-compression-settings dh_builddeb -- -Zgzip (line 7)

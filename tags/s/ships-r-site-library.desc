@@ -1,0 +1,6 @@
+Tag: ships-r-site-library
+Severity: classification
+Check: languages/r/site-library
+Info: This package ships the named <tt>R</tt> programming
+ language site library.
+Ref: https://wiki.debian.org/Teams/r-pkg-team

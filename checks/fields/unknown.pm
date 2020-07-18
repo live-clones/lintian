@@ -29,6 +29,8 @@ use warnings;
 use utf8;
 use autodie;
 
+use Path::Tiny;
+
 use Lintian::Data ();
 
 use Moo;
@@ -36,20 +38,17 @@ use namespace::clean;
 
 with 'Lintian::Check';
 
+our $KNOWN_SOURCE_FIELDS = Lintian::Data->new('common/source-fields');
 our $KNOWN_BINARY_FIELDS = Lintian::Data->new('fields/binary-fields');
 our $KNOWN_UDEB_FIELDS = Lintian::Data->new('fields/udeb-fields');
-our $SOURCE_FIELDS      = Lintian::Data->new('common/source-fields');
 
 sub source {
     my ($self) = @_;
 
-    my $processable = $self->processable;
+    my @unknown= $self->processable->fields->extra($KNOWN_SOURCE_FIELDS->all);
 
-    for my $field (keys %{$processable->field}) {
-
-        $self->tag('unknown-field-in-dsc', $field)
-          unless $SOURCE_FIELDS->known($field);
-    }
+    my $dscfile = path($self->processable->path)->basename;
+    $self->tag('unknown-field', $dscfile, $_)for @unknown;
 
     return;
 }
@@ -57,13 +56,10 @@ sub source {
 sub binary {
     my ($self) = @_;
 
-    my $processable = $self->processable;
+    my @unknown= $self->processable->fields->extra($KNOWN_BINARY_FIELDS->all);
 
-    for my $field (keys %{$processable->field}) {
-
-        $self->tag('unknown-field-in-control', $field)
-          unless $KNOWN_BINARY_FIELDS->known($field);
-    }
+    my $debfile = path($self->processable->path)->basename;
+    $self->tag('unknown-field', $debfile, $_)for @unknown;
 
     return;
 }
@@ -71,13 +67,10 @@ sub binary {
 sub udeb {
     my ($self) = @_;
 
-    my $processable = $self->processable;
+    my @unknown = $self->processable->fields->extra($KNOWN_UDEB_FIELDS->all);
 
-    for my $field (keys %{$processable->field}) {
-
-        $self->tag('unknown-field-in-control', $field)
-          unless $KNOWN_UDEB_FIELDS->known($field);
-    }
+    my $udebfile = path($self->processable->path)->basename;
+    $self->tag('unknown-field', $udebfile, $_)for @unknown;
 
     return;
 }

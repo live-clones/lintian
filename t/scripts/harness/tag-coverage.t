@@ -48,19 +48,22 @@ use constant EMPTY => q{};
 use constant NEWLINE => qq{\n};
 
 my @known_missing = qw(
-  bin-sbin-mismatch
   changed-by-invalid-for-derivative
   debian-files-list-in-source
   debian-rules-not-executable
   embedded-pear-module
   invalid-field-for-derivative
   invalid-version-number-for-derivative
-  manpage-in-udeb
+  manual-page-in-udeb
+  no-tests
   old-python-version-field
+  old-source-override-location
   package-is-team-maintained
-  package-uses-deprecated-source-override-location
   patch-modifying-debian-files
   patch-system-but-direct-changes-in-diff
+  team/pkg-perl/cdbs/arch-any-package-needs-newer-cdbs
+  team/pkg-perl/cdbs/module-build-tiny-needs-newer-cdbs
+  team/pkg-perl/debhelper/module-build-tiny-needs-newer-debhelper
   quilt-series-references-non-existent-patch
   sphinxdoc-but-no-sphinxdoc-depends
   tar-errors-from-control
@@ -86,7 +89,7 @@ for my $check (@known) {
 
 my %seen;
 
-my @descpaths = File::Find::Rule->file()->name('desc')->in('t/tags');
+my @descpaths = File::Find::Rule->file()->name('desc')->in('t/recipes');
 for my $descpath (@descpaths) {
 
     my $testcase = read_config($descpath);
@@ -108,7 +111,7 @@ for my $descpath (@descpaths) {
         my @checks = split(SPACE, $testcase->{check});
         #        diag "Checks: " . join(SPACE, @checks);
         my @related;
-        push(@related, @{$checktags{$_}})for @checks;
+        push(@related, @{$checktags{$_} // []})for @checks;
         my $lc = List::Compare->new(\@testfor, \@related);
         @testfor = $lc->get_intersection;
     }

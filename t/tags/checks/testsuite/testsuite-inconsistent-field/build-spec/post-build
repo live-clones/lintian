@@ -1,7 +1,0 @@
-#!/bin/sh
-
-set -e
-
-product="$1"
-
-sed -i '/^Testsuite: /d' "$product"

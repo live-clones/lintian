@@ -46,8 +46,8 @@ with 'Lintian::Check';
 sub installable {
     my ($self) = @_;
 
-    my $pkg = $self->package;
-    my $type = $self->type;
+    my $pkg = $self->processable->name;
+    my $type = $self->processable->type;
     my $processable = $self->processable;
     my $group = $self->group;
 

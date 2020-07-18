@@ -53,8 +53,6 @@ Returns a hashref mapping a FILE to its hardening issues.
 NB: This is generally only useful for checks/binaries to emit the
 hardening-no-* tags.
 
-Needs-Info requirements for using I<hardening_info>: hardening-info
-
 =cut
 
 sub hardening_info {

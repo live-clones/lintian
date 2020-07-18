@@ -46,16 +46,16 @@ our %known_doc_base_formats = map { $_ => 1 }
 # Known fields for doc-base files.  The value is 1 for required fields and 0
 # for optional fields.
 our %KNOWN_DOCBASE_MAIN_FIELDS = (
-    'document' => 1,
-    'title'    => 1,
-    'section'  => 1,
-    'abstract' => 0,
-    'author'   => 0
+    'Document' => 1,
+    'Title'    => 1,
+    'Section'  => 1,
+    'Abstract' => 0,
+    'Author'   => 0
 );
 our %KNOWN_DOCBASE_FORMAT_FIELDS = (
-    'format'  => 1,
-    'files'   => 1,
-    'index'   => 0
+    'Format'  => 1,
+    'Files'   => 1,
+    'Index'   => 0
 );
 
 our $SECTIONS = Lintian::Data->new('doc-base/sections');
@@ -71,7 +71,7 @@ sub spelling_tag_emitter {
     };
 }
 
-sub files {
+sub visit_installed_files {
     my ($self, $file) = @_;
 
     if ($file->is_file) { # file checks
@@ -92,7 +92,7 @@ sub files {
             $self->_set_menu_file($file->name);
 
             if (    $file =~ m,usr/(?:lib|share)/menu/menu$,
-                and $self->package ne 'menu') {
+                and $self->processable->name ne 'menu') {
                 $self->tag('bad-menu-file-name', $file);
             }
         }
@@ -118,7 +118,7 @@ sub files {
             }
             $self->tag('menu-method-lacks-include', $file)
               unless $menumethod_includes_menu_h
-              or $self->package eq 'menu';
+              or $self->processable->name eq 'menu';
         }
         # package doc dir?
         elsif (
@@ -141,7 +141,7 @@ sub files {
 sub installable {
     my ($self) = @_;
 
-    my $pkg = $self->package;
+    my $pkg = $self->processable->name;
     my $processable = $self->processable;
     my $group = $self->group;
 
@@ -258,15 +258,14 @@ sub installable {
 sub check_doc_base_file {
     my ($self, $dbpath, $all_files, $all_links) = @_;
 
-    my $pkg = $self->package;
+    my $pkg = $self->processable->name;
     my $group = $self->group;
 
     my $dbfile = $dbpath->basename;
 
-    unless ($dbpath->is_valid_utf8) {
-        $self->tag('doc-base-file-uses-obsolete-national-encoding', $dbfile);
-        return;
-    }
+    # another check complains about invalid encoding
+    return
+      unless ($dbpath->is_valid_utf8);
 
     my $contents = $dbpath->decoded_utf8;
     my @lines = split(/\n/, $contents);
@@ -291,7 +290,9 @@ sub check_doc_base_file {
                     $knownfields,$all_files, $all_links
                 );
             }
-            $field = lc $new[0];
+
+            $field = $new[0];
+
             @vals  = ($new[1]);
             $line  = $position;
 
@@ -363,7 +364,7 @@ sub check_doc_base_field {
         $sawfields, $sawformats,$knownfields,$all_files, $all_links
     ) = @_;
 
-    my $pkg = $self->package;
+    my $pkg = $self->processable->name;
     my $group = $self->group;
 
     $self->tag('doc-base-file-unknown-field', "$dbfile:$line", $field)
@@ -380,10 +381,10 @@ sub check_doc_base_field {
     # We skip without validating wildcard patterns containing character
     # classes since otherwise we'd need to deal with wildcards inside
     # character classes and aren't there yet.
-    if ($field eq 'index' or $field eq 'files') {
+    if ($field eq 'Index' or $field eq 'Files') {
         my @files = map { split(' ', $_) } @$vals;
 
-        if ($field eq 'index' && @files > 1) {
+        if ($field eq 'Index' && @files > 1) {
             $self->tag('doc-base-index-references-multiple-files',
                 "$dbfile:$line");
         }
@@ -400,7 +401,7 @@ sub check_doc_base_field {
             my $found;
             if ($realfile =~ /[*?]/) {
                 my $regex = quotemeta($realfile);
-                unless ($field eq 'index') {
+                unless ($field eq 'Index') {
                     next if $regex =~ /\[/;
                     $regex =~ s%\\\*%[^/]*%g;
                     $regex =~ s%\\\?%[^/]%g;
@@ -418,7 +419,7 @@ sub check_doc_base_field {
         undef @files;
 
         # Format field.
-    } elsif ($field eq 'format') {
+    } elsif ($field eq 'Format') {
         my $format = join(' ', @$vals);
 
         # trim both ends
@@ -435,7 +436,7 @@ sub check_doc_base_field {
         $sawformats->{' *current* '} = $format;
 
         # Document field.
-    } elsif ($field eq 'document') {
+    } elsif ($field eq 'Document') {
         $_ = join(' ', @$vals);
 
         $self->tag('doc-base-invalid-document-field', "$dbfile:$line", $_)
@@ -447,7 +448,7 @@ sub check_doc_base_field {
           unless $line == 1;
 
         # Title field.
-    } elsif ($field eq 'title') {
+    } elsif ($field eq 'Title') {
         if (@$vals) {
             my $stag_emitter
               = $self->spelling_tag_emitter(
@@ -462,7 +463,7 @@ sub check_doc_base_field {
         }
 
         # Section field.
-    } elsif ($field eq 'section') {
+    } elsif ($field eq 'Section') {
         $_ = join(' ', @$vals);
         unless ($SECTIONS->known($_)) {
             if (m,^App(?:lication)?s/(.+)$, and $SECTIONS->known($1)) {
@@ -476,7 +477,7 @@ sub check_doc_base_field {
         }
 
         # Abstract field.
-    } elsif ($field eq 'abstract') {
+    } elsif ($field eq 'Abstract') {
         # The three following variables are used for checking if the field is
         # correctly phrased.  We detect if each line (except for the first
         # line and lines containing single dot) of the field starts with the
@@ -548,16 +549,16 @@ sub check_doc_base_file_section {
     my ($self, $dbfile, $line, $sawfields, $sawformats, $knownfields) = @_;
 
     $self->tag('doc-base-file-no-format', "$dbfile:$line")
-      if ((defined $sawfields->{'files'} || defined $sawfields->{'index'})
-        && !(defined $sawfields->{'format'}));
+      if ((defined $sawfields->{'Files'} || defined $sawfields->{'Index'})
+        && !(defined $sawfields->{'Format'}));
 
     # The current format is set by check_doc_base_field.
-    if ($sawfields->{'format'}) {
+    if ($sawfields->{'Format'}) {
         my $format =  $sawformats->{' *current* '};
         $self->tag('doc-base-file-no-index', "$dbfile:$line")
           if ( $format
             && ($format eq 'html' || $format eq 'info')
-            && !$sawfields->{'index'});
+            && !$sawfields->{'Index'});
     }
     for my $field (sort keys %$knownfields) {
         $self->tag('doc-base-file-lacks-required-field',
@@ -652,7 +653,7 @@ sub delink {
 sub check_script {
     my ($self, $spath, $pres) = @_;
 
-    my $pkg = $self->package;
+    my $pkg = $self->processable->name;
 
     my ($no_check_menu, $no_check_installdocs, $interp);
 

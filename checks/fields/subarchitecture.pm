@@ -42,7 +42,7 @@ sub always {
     #---- Subarchitecture (udeb)
 
     # may trigger unfolding tag
-    my $subarch = $processable->unfolded_field('subarchitecture');
+    my $subarch = $processable->fields->unfolded_value('Subarchitecture');
 
     return;
 }

@@ -26,6 +26,8 @@ use utf8;
 
 use List::MoreUtils qw(any);
 
+use constant EMPTY => q{};
+
 use Moo;
 use namespace::clean;
 
@@ -34,7 +36,7 @@ with 'Lintian::Check';
 sub installable {
     my ($self) = @_;
 
-    my $pkg = $self->package;
+    my $pkg = $self->processable->name;
     my $processable = $self->processable;
 
     return if # Big exception list for all tags
@@ -87,7 +89,7 @@ sub installable {
     }
 
     # Check for wrong section
-    my $section = $processable->field('section', '');
+    my $section = $processable->fields->value('Section') // EMPTY;
     if ($section =~ /perl|python|ruby|(?:^|\/)libs/) { # oldlibs is ok
         $self->tag('application-in-library-section', "$section", @programs);
     }

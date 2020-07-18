@@ -1,6 +1,0 @@
-Tag: bad-link-to-undocumented-manpage
-Severity: error
-Check: documentation/man
-Info: The symbolic link should reference
- "<tt>../man[237]/undocumented.[237].gz</tt>" for manual pages in
- <tt>/usr/share/man</tt>.

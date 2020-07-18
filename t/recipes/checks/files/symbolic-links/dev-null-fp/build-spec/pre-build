@@ -1,0 +1,5 @@
+#!/bin/sh
+SOURCE_ROOT="$1"
+
+mkdir -p "$SOURCE_ROOT/systemd/"
+ln -s /dev/null "$SOURCE_ROOT/systemd/masked.service"

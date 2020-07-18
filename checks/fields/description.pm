@@ -53,8 +53,8 @@ sub spelling_tag_emitter {
 sub installable {
     my ($self) = @_;
 
-    my $pkg = $self->package;
-    my $type = $self->type;
+    my $pkg = $self->processable->name;
+    my $type = $self->processable->type;
     my $processable = $self->processable;
     my $group = $self->group;
 
@@ -63,11 +63,12 @@ sub installable {
     my $unindented_list = 0;
 
     # description?
-    my $full_description = $processable->field('description');
-    unless (defined $full_description) {
-        $self->tag('package-has-no-description');
-        return;
-    }
+    my $full_description = $processable->fields->value('Description');
+    return
+      unless length $full_description;
+
+    $self->tag('odd-mark-in-description', 'comma not followed by whitespace')
+      if $full_description =~ /,\S/;
 
     $full_description =~ m/^([^\n]*)\n(.*)$/s;
     my ($synopsis, $extended) = ($1, $2);
@@ -231,7 +232,7 @@ sub installable {
     # Check for a package homepage in the description and no Homepage
     # field.  This is less accurate and more of a guess than looking
     # for the old Homepage: convention in the body.
-    unless ($processable->field('homepage') or $flagged_homepage) {
+    unless ($processable->fields->value('Homepage') or $flagged_homepage) {
         if (
             $extended =~ /homepage|webpage|website|url|upstream|web\s+site
                          |home\s+page|further\s+information|more\s+info

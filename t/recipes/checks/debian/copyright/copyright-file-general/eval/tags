@@ -1,0 +1,44 @@
+copyright-file-general (source): wiki-copyright-format-uri http://wiki.debian.org/Proposals/CopyrightFormat?recall=184
+copyright-file-general (source): unknown-copyright-format-uri
+copyright-file-general (source): no-dep5-copyright debian/copyright-w3c.copyright
+copyright-file-general (source): no-dep5-copyright debian/copyright-versionless.copyright
+copyright-file-general (source): no-dep5-copyright debian/copyright-poor-common-licenses.copyright
+copyright-file-general (source): no-dep5-copyright debian/copyright-php.copyright
+copyright-file-general (source): no-dep5-copyright debian/copyright-old-fsf.copyright
+copyright-file-general (source): no-dep5-copyright debian/copyright-missing-perl-license-pointer.copyright
+copyright-file-general (source): no-dep5-copyright debian/copyright-misc-errors.copyright
+copyright-file-general (source): no-dep5-copyright debian/copyright-full-lgpl.copyright
+copyright-file-general (source): no-dep5-copyright debian/copyright-full-gpl.copyright
+copyright-file-general (source): no-dep5-copyright debian/copyright-full-gpl-2.copyright
+copyright-file-general (source): no-dep5-copyright debian/copyright-full-gpl-1.copyright
+copyright-file-general (source): no-dep5-copyright debian/copyright-full-gfdl.copyright
+copyright-file-general (source): no-dep5-copyright debian/copyright-full-apache-2.copyright
+copyright-file-general (source): no-dep5-copyright debian/copyright-full-agpl-3.copyright
+copyright-symlink (binary): copyright-file-is-symlink
+copyright-poor-common-licenses (binary): copyright-not-using-common-license-for-gpl
+copyright-poor-common-licenses (binary): copyright-does-not-refer-to-common-license-file /GPL-3
+copyright-old-style (binary): no-copyright-file
+copyright-old-fsf (binary): old-fsf-address-in-copyright-file
+copyright-missing-perl-license-pointer (binary): copyright-file-lacks-pointer-to-perl-license
+copyright-missing-apache2-license-pointer (binary): copyright-not-using-common-license-for-apache2
+copyright-misc-errors (binary): helper-templates-in-copyright
+copyright-misc-errors (binary): copyright-refers-to-old-directory
+copyright-misc-errors (binary): copyright-refers-to-nonexistent-license-file usr/share/common-licenses/GPL2
+copyright-misc-errors (binary): copyright-refers-to-incorrect-directory usr/share/common-licences
+copyright-misc-errors (binary): copyright-refers-to-deprecated-bsd-license-file
+copyright-misc-errors (binary): copyright-refers-to-compressed-license usr/share/common-licenses/BSD.gz
+copyright-misc-errors (binary): copyright-has-url-from-dh_make-boilerplate
+copyright-misc-errors (binary): copyright-contains-automatically-extracted-boilerplate
+copyright-full-lgpl (binary): copyright-not-using-common-license-for-lgpl
+copyright-full-gpl-2 (binary): copyright-not-using-common-license-for-lgpl
+copyright-full-gpl-2 (binary): copyright-file-contains-full-gpl-license
+copyright-full-gpl-1 (binary): copyright-not-using-common-license-for-gpl
+copyright-full-gpl (binary): copyright-not-using-common-license-for-gpl
+copyright-full-gpl (binary): copyright-file-contains-full-gpl-license
+copyright-full-gfdl (binary): copyright-not-using-common-license-for-gfdl
+copyright-full-gfdl (binary): copyright-file-contains-full-gfdl-license
+copyright-full-apache-2 (binary): copyright-without-copyright-notice
+copyright-full-apache-2 (binary): copyright-not-using-common-license-for-apache2
+copyright-full-apache-2 (binary): copyright-file-contains-full-apache-2-license
+copyright-crln (binary): copyright-has-crs
+copyright-compressed (binary): copyright-file-compressed

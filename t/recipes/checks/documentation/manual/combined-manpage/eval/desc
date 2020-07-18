@@ -1,0 +1,6 @@
+Testname: combined-manpage
+Check: documentation/manual
+Test-Against:
+ wrong-manual-section
+References:
+ Bug#962601

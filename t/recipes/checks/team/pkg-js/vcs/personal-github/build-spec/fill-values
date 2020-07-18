@@ -1,0 +1,4 @@
+Skeleton: upload-native
+Testname: personal-github
+Description: Personal github as VCS
+Author: Javascript Team <pkg-javascript-maintainers@lists.alioth.debian.org>

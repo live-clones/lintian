@@ -26,11 +26,16 @@ use warnings;
 use utf8;
 use autodie;
 
-use List::MoreUtils qw(any);
-use Text::Levenshtein qw(distance);
+use List::Compare;
+use List::MoreUtils qw(any firstval);
+use List::UtilsBy qw(min_by);
+use Text::LevenshteinXS qw(distance);
 
 use Lintian::Data;
 use Lintian::Relation qw(:constants);
+
+use constant EMPTY => q{};
+use constant UNDERSCORE => q{_};
 
 use Moo;
 use namespace::clean;
@@ -54,6 +59,10 @@ my $compat_level = Lintian::Data->new('debhelper/compat-level',qr/=/);
 
 my $MISC_DEPENDS = Lintian::Relation->new('${misc:Depends}');
 
+my @KNOWN_DH_COMMANDS= map { $_, $_ . '-arch', $_ . '-indep' }
+  map { 'override' . $_, 'execute_before' . $_, 'execute_after' . $_ }
+  map { UNDERSCORE . $_ } $dh_commands_depends->all;
+
 sub source {
     my ($self) = @_;
 
@@ -73,7 +82,7 @@ sub source {
     my $inclcdbs = 0;
 
     my ($bdepends_noarch, $bdepends, %build_systems, $uses_autotools_dev_dh);
-    $bdepends = $processable->relation('build-depends-all');
+    $bdepends = $processable->relation('Build-Depends-All');
     my $seen_dh = 0;
     my $seen_dh_dynamic = 0;
     my $seen_dh_systemd = 0;
@@ -185,7 +194,8 @@ sub source {
                         "(line $.)"
                       )
                       if $addon eq 'quilt'
-                      and $processable->field('format', '') eq '3.0 (quilt)';
+                      and ($processable->fields->value('Format') // EMPTY) eq
+                      '3.0 (quilt)';
                     if (defined $depends) {
                         $missingbdeps_addons{$depends} = $addon;
                     }
@@ -213,31 +223,60 @@ sub source {
             $dhcompatvalue = $1;
             # one can export and then set the value:
             $level = $1 if ($level);
-        } elsif (/^[^:]*override\s+(dh_[^:]*):/) {
+
+        } elsif (/^[^:]*(override|execute_(?:after|before))\s+(dh_[^:]*):/) {
             $self->tag('typo-in-debhelper-override-target',
-                "override $1", '->', "override_$1","(line $.)");
-        } elsif (/^([^:]*override_dh_[^:]*):/) {
-            my $targets = $1;
-            $needbuilddepends = 1;
-            # Can be multiple targets per rule.
-            while ($targets =~ /\boverride_dh_([^\s]+?)(-arch|-indep|)\b/g) {
-                my $cmd = $1;
-                my $arch = $2;
+                "$1 $2", '->', "$1_$2","(line $.)");
+
+        } elsif (/^([^:]*_dh_[^:]*):/) {
+            my $alltargets = $1;
+            # can be multiple targets per rule.
+            my @targets = split(/\s+/, $alltargets);
+            my @dh_targets = grep { /_dh_/ } @targets;
+
+            # If maintainer is using wildcards, it's unlikely to be a typo.
+            my @no_wildcards = grep { !/%/ } @dh_targets;
+
+            my $lc = List::Compare->new(\@no_wildcards, \@KNOWN_DH_COMMANDS);
+            my @unknown = $lc->get_Lonly;
+
+            for my $target (@unknown) {
+
+                my %distance
+                  = map { $_ => distance($target, $_) } @KNOWN_DH_COMMANDS;
+                my @near = grep { $distance{$_} < 3 } keys %distance;
+                my $nearest = min_by { $distance{$_} } @near;
+
+                $self->tag('typo-in-debhelper-override-target',
+                    $target, '->', $nearest, "(line $.)")
+                  if length $nearest;
+            }
+
+            for my $target (@no_wildcards) {
+
+                next
+                  unless $target
+                  =~ /^(override|execute_(?:before|after))_dh_([^\s]+?)(-arch|-indep|)$/;
+
+                my $prefix = $1;
+                my $cmd = $2;
+                my $arch = $3;
                 my $dhcommand = "dh_$cmd";
                 $overrides{$dhcommand} = [$., $arch];
-                # If maintainer is using wildcards, it's unlikely to be a typo.
-                next if ($dhcommand =~ /%/);
-                next if ($dh_commands_depends->known($dhcommand));
+                $needbuilddepends = 1;
+
+                next
+                  if $dh_commands_depends->known($dhcommand);
+
                 # Unknown command, so check for likely misspellings
-                foreach my $x (sort $dh_commands_depends->all) {
-                    if ("dh_auto_$cmd" eq $x or distance($dhcommand, $x) < 3) {
-                        $self->tag('typo-in-debhelper-override-target',
-                            "override_$dhcommand", '->', "override_$x",
-                            "(line $.)");
-                        last; # Only emit a single match
-                    }
-                }
+                my $missingauto = firstval { "dh_auto_$cmd" eq $_ }
+                $dh_commands_depends->all;
+                $self->tag('typo-in-debhelper-override-target',
+                    "${prefix}_$dhcommand", '->', "${prefix}_$missingauto",
+                    "(line $.)")
+                  if length $missingauto;
             }
+
         } elsif (m,^include\s+/usr/share/cdbs/,) {
             $inclcdbs = 1;
             $build_systems{'cdbs-without-debhelper.mk'} = 1
@@ -291,13 +330,16 @@ sub source {
         return;
     }
 
-    my @pkgs = $processable->binaries;
+    my @pkgs = $processable->debian_control->installables;
     my $single_pkg = '';
-    $single_pkg =  $processable->binary_package_type($pkgs[0])
+    $single_pkg
+      =  $processable->debian_control->installable_package_type($pkgs[0])
       if scalar @pkgs == 1;
 
     for my $binpkg (@pkgs) {
-        next if $processable->binary_package_type($binpkg) ne 'deb';
+        next
+          if $processable->debian_control->installable_package_type($binpkg)ne
+          'deb';
         my $strong = $processable->binary_relation($binpkg, 'strong');
         my $all = $processable->binary_relation($binpkg, 'all');
 
@@ -311,7 +353,7 @@ sub source {
 
     for my $proc ($group->get_processables('binary')) {
         my $binpkg = $proc->name;
-        my $breaks = $processable->binary_relation($binpkg, 'breaks');
+        my $breaks = $processable->binary_relation($binpkg, 'Breaks');
         my $strong = $processable->binary_relation($binpkg, 'strong');
         $self->tag('package-uses-dh-runit-but-lacks-breaks-substvar', $binpkg)
           if $seen{'runit'}
@@ -451,8 +493,9 @@ sub source {
             }
             close($fd);
             if (!$seentag) {
-                my $binpkg_type = $processable->binary_package_type($binpkg)
-                  // 'deb';
+                my $binpkg_type
+                  = $processable->debian_control->installable_package_type(
+                    $binpkg)// 'deb';
                 my $is_udeb = 0;
                 $is_udeb = 1 if $binpkg and $binpkg_type eq 'udeb';
                 $is_udeb = 1 if not $binpkg and $single_pkg eq 'udeb';
@@ -536,8 +579,8 @@ sub source {
         }
     }
 
-    $bdepends_noarch = $processable->relation_noarch('build-depends-all');
-    $bdepends = $processable->relation('build-depends-all');
+    $bdepends_noarch = $processable->relation_noarch('Build-Depends-All');
+    $bdepends = $processable->relation('Build-Depends-All');
     if ($needbuilddepends) {
         $self->tag('package-uses-debhelper-but-lacks-build-depends')
           unless $bdepends->implies('debhelper')

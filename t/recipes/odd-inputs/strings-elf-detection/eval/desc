@@ -1,0 +1,4 @@
+Testname: strings-elf-detection
+Match-Strategy: literal
+Output-Format: EWI
+Default-Lintian-Options: --pedantic --display-info --display-experimental

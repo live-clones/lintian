@@ -1,0 +1,78 @@
+scripts-maintainer-general (binary): trailing-slash-for-dpkg-maintscript-helper-symlink_to_dir postinst:190
+scripts-maintainer-general (binary): recursive-privilege-change postinst:84
+scripts-maintainer-general (binary): recursive-privilege-change postinst:220
+scripts-maintainer-general (binary): recursive-privilege-change postinst:219
+scripts-maintainer-general (binary): recursive-privilege-change postinst:218
+scripts-maintainer-general (binary): recursive-privilege-change postinst:217
+scripts-maintainer-general (binary): recursive-privilege-change postinst:216
+scripts-maintainer-general (binary): recursive-privilege-change postinst:215
+scripts-maintainer-general (binary): recursive-privilege-change postinst:214
+scripts-maintainer-general (binary): recursive-privilege-change postinst:213
+scripts-maintainer-general (binary): recursive-privilege-change postinst:212
+scripts-maintainer-general (binary): recursive-privilege-change postinst:211
+scripts-maintainer-general (binary): read-in-maintainer-script postinst:10
+scripts-maintainer-general (binary): postrm-removes-alternative postrm:7
+scripts-maintainer-general (binary): possibly-insecure-handling-of-tmp-files-in-maintainer-script postinst:26
+scripts-maintainer-general (binary): mknod-in-maintainer-script postinst:125
+scripts-maintainer-general (binary): missing-call-to-dpkg-maintscript-helper preinst (symlink_to_dir)
+scripts-maintainer-general (binary): missing-call-to-dpkg-maintscript-helper postrm (symlink_to_dir)
+scripts-maintainer-general (binary): maintainer-shell-script-fails-syntax-check prerm
+scripts-maintainer-general (binary): maintainer-script-updates-fontconfig-cache-improperly postinst:95
+scripts-maintainer-general (binary): maintainer-script-switches-dir-to-symlink-unsafely postinst:205
+scripts-maintainer-general (binary): maintainer-script-should-not-use-piuparts-variable postinst:248 'PIUPARTS_DISTRIBUTION_PREV'
+scripts-maintainer-general (binary): maintainer-script-should-not-use-piuparts-variable postinst:247 'PIUPARTS_DISTRIBUTION_NEXT'
+scripts-maintainer-general (binary): maintainer-script-should-not-use-piuparts-variable postinst:246 'PIUPARTS_DISTRIBUTION'
+scripts-maintainer-general (binary): maintainer-script-should-not-use-piuparts-variable postinst:245 'PIUPARTS_PHASE'
+scripts-maintainer-general (binary): maintainer-script-should-not-use-piuparts-variable postinst:244 'PIUPARTS_OBJECTS'
+scripts-maintainer-general (binary): maintainer-script-should-not-use-piuparts-variable postinst:243 'PIUPARTS_TEST'
+scripts-maintainer-general (binary): maintainer-script-should-not-use-dpkg-maintscript-helper postinst:196
+scripts-maintainer-general (binary): maintainer-script-should-not-use-dpkg-maintscript-helper postinst:190
+scripts-maintainer-general (binary): maintainer-script-should-not-parse-etc-passwd-or-group postinst:239 'fgrep bad /etc/group'
+scripts-maintainer-general (binary): maintainer-script-should-not-parse-etc-passwd-or-group postinst:238 'fgrep bad /etc/group'
+scripts-maintainer-general (binary): maintainer-script-should-not-parse-etc-passwd-or-group postinst:237 'egrep bad /etc/passwd'
+scripts-maintainer-general (binary): maintainer-script-should-not-parse-etc-passwd-or-group postinst:236 'egrep bad /etc/passwd'
+scripts-maintainer-general (binary): maintainer-script-should-not-parse-etc-passwd-or-group postinst:235 'grep bad /etc/group'
+scripts-maintainer-general (binary): maintainer-script-should-not-parse-etc-passwd-or-group postinst:234 'grep bad /etc/passwd'
+scripts-maintainer-general (binary): maintainer-script-sets-alternative-improperly postinst:129
+scripts-maintainer-general (binary): maintainer-script-removes-device-files postinst:141 '/dev/null'
+scripts-maintainer-general (binary): maintainer-script-needs-depends-on-xml-core postinst
+scripts-maintainer-general (binary): maintainer-script-needs-depends-on-ucf postinst
+scripts-maintainer-general (binary): maintainer-script-needs-depends-on-gconf2 postinst
+scripts-maintainer-general (binary): maintainer-script-needs-depends-on-adduser postinst
+scripts-maintainer-general (binary): maintainer-script-modifies-inetd-conf postinst:68
+scripts-maintainer-general (binary): maintainer-script-modifies-inetd-conf postinst:67
+scripts-maintainer-general (binary): maintainer-script-lacks-home-in-adduser postinst:200 'adduser festival --quiet --system --ingroup audio --no-create-home'
+scripts-maintainer-general (binary): maintainer-script-lacks-home-in-adduser postinst:199 'adduser --system --quiet --ingroup ntp --no-create-home ntp'
+scripts-maintainer-general (binary): maintainer-script-lacks-home-in-adduser postinst:152 'adduser --home /home/fnord2 --system fnord2'
+scripts-maintainer-general (binary): maintainer-script-lacks-home-in-adduser postinst:149 'adduser --system foo2 --home /home/foo2'
+scripts-maintainer-general (binary): maintainer-script-lacks-home-in-adduser postinst:148 'adduser --system foo'
+scripts-maintainer-general (binary): maintainer-script-interpreter control/prerm /bin/sh
+scripts-maintainer-general (binary): maintainer-script-interpreter control/preinst /bin/sh
+scripts-maintainer-general (binary): maintainer-script-interpreter control/postrm /bin/sh
+scripts-maintainer-general (binary): maintainer-script-interpreter control/postinst /bin/sh
+scripts-maintainer-general (binary): maintainer-script-ignores-errors postrm
+scripts-maintainer-general (binary): maintainer-script-hides-init-failure postinst:31
+scripts-maintainer-general (binary): maintainer-script-has-unexpanded-debhelper-token postinst
+scripts-maintainer-general (binary): maintainer-script-changes-netbase postinst:61 '/etc/rpc'
+scripts-maintainer-general (binary): maintainer-script-changes-netbase postinst:60 '/etc/protocols'
+scripts-maintainer-general (binary): maintainer-script-changes-netbase postinst:59 '/etc/services'
+scripts-maintainer-general (binary): maintainer-script-changes-ld-so-conf postinst:110
+scripts-maintainer-general (binary): maintainer-script-changes-ld-so-conf postinst:108
+scripts-maintainer-general (binary): maintainer-script-calls-start-stop-daemon postinst:78
+scripts-maintainer-general (binary): maintainer-script-calls-start-stop-daemon postinst:138
+scripts-maintainer-general (binary): maintainer-script-calls-service postinst:158
+scripts-maintainer-general (binary): maintainer-script-calls-install-sgmlcatalog postinst:75
+scripts-maintainer-general (binary): maintainer-script-calls-install-sgmlcatalog postinst:74
+scripts-maintainer-general (binary): maintainer-script-calls-gconftool postinst:44
+scripts-maintainer-general (binary): maintainer-script-calls-gconftool postinst:155
+scripts-maintainer-general (binary): maintainer-script-calls-chown-improperly postinst:84 'chown -R root.root'
+scripts-maintainer-general (binary): maintainer-script-calls-chown-improperly postinst:14 'chown root.root'
+scripts-maintainer-general (binary): install-info-used-in-maintainer-script postinst:105
+scripts-maintainer-general (binary): command-with-path-in-maintainer-script postinst:91 /usr/bin/baz
+scripts-maintainer-general (binary): command-with-path-in-maintainer-script postinst:181 /usr/sbin/dpkg-state-override
+scripts-maintainer-general (binary): command-with-path-in-maintainer-script postinst:178 /usr/sbin/dpkg-divert
+scripts-maintainer-general (binary): command-with-path-in-maintainer-script postinst:177 /usr/sbin/dpkg-divert
+scripts-maintainer-general (binary): command-with-path-in-maintainer-script postinst:176 /usr/sbin/dpkg-divert
+scripts-maintainer-general (binary): command-with-path-in-maintainer-script postinst:155 /usr/bin/gconftool-2
+scripts-maintainer-general (binary): command-with-path-in-maintainer-script postinst:118 /usr/bin/foo
+scripts-maintainer-general (binary): command-with-path-in-maintainer-script postinst:117 /usr/bin/foo

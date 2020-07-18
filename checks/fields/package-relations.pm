@@ -37,6 +37,8 @@ use Lintian::Architecture qw(:all);
 use Lintian::Data ();
 use Lintian::Relation qw(:constants);
 
+use constant EMPTY => q{};
+
 use Moo;
 use namespace::clean;
 
@@ -104,27 +106,27 @@ our $VIRTUAL_PACKAGES   = Lintian::Data->new('fields/virtual-packages');
 sub installable {
     my ($self) = @_;
 
-    my $pkg = $self->package;
-    my $type = $self->type;
+    my $pkg = $self->processable->name;
+    my $type = $self->processable->type;
     my $processable = $self->processable;
     my $group = $self->group;
 
     my $javalib = 0;
-    my $replaces = $processable->relation('replaces');
+    my $replaces = $processable->relation('Replaces');
     my %nag_once;
     $javalib = 1 if($pkg =~ m/^lib.*-java$/);
     for my $field (
-        qw(depends pre-depends recommends suggests conflicts provides enhances replaces breaks)
+        qw(Depends Pre-Depends Recommends Suggests Conflicts Provides Enhances Replaces Breaks)
     ) {
-        next unless defined $processable->field($field);
+        next unless defined $processable->fields->value($field);
         #Get data and clean it
-        my $data = $processable->unfolded_field($field);
+        my $data = $processable->fields->unfolded_value($field);
         my $javadep = 0;
 
         my (@seen_libstdcs, @seen_tcls, @seen_tclxs,@seen_tks, @seen_libpngs);
 
         my $is_dep_field = sub {
-            any { $_ eq $_[0] }qw(depends pre-depends recommends suggests);
+            any { $_ eq $_[0] } qw(Depends Pre-Depends Recommends Suggests);
         };
 
         $self->tag('alternates-not-allowed', $field)
@@ -154,7 +156,7 @@ sub installable {
                 "$field: $alternatives[0][0]")
               if (
                    $VIRTUAL_PACKAGES->known($alternatives[0][0])
-                && ($field eq 'depends' || $field eq 'pre-depends')
+                && ($field eq 'Depends' || $field eq 'Pre-Depends')
                 && ($pkg ne 'base-files' || $alternatives[0][0] ne 'awk')
                 # ignore phpapi- dependencies as adding an
                 # alternative, real, package breaks its purpose
@@ -173,7 +175,7 @@ sub installable {
                   = @$part_d;
 
                 $self->tag('invalid-versioned-provides', $part_d_orig)
-                  if ( $field eq 'provides'
+                  if ( $field eq 'Provides'
                     && $d_version->[0]
                     && $d_version->[0] ne '=');
 
@@ -181,13 +183,13 @@ sub installable {
                   if $d_pkg !~ /^[a-z0-9][-+\.a-z0-9]+$/;
 
                 $self->tag('breaks-without-version', $part_d_orig)
-                  if ( $field eq 'breaks'
+                  if ( $field eq 'Breaks'
                     && !$d_version->[0]
                     && !$VIRTUAL_PACKAGES->known($d_pkg)
                     && !$replaces->implies($part_d_orig));
 
                 $self->tag('conflicts-with-version', $part_d_orig)
-                  if ($field eq 'conflicts' && $d_version->[0]);
+                  if ($field eq 'Conflicts' && $d_version->[0]);
 
                 $self->tag('obsolete-relation-form', "$field: $part_d_orig")
                   if (
@@ -200,9 +202,9 @@ sub installable {
                 $self->tag('package-relation-with-self',"$field: $part_d_orig")
                   if ($pkg eq $d_pkg)
                   && (!$d_march)
-                  && ( $field ne 'conflicts'
-                    && $field ne 'replaces'
-                    && $field ne 'provides');
+                  && ( $field ne 'Conflicts'
+                    && $field ne 'Replaces'
+                    && $field ne 'Provides');
 
                 $self->tag('bad-relation', "$field: $part_d_orig") if $rest;
 
@@ -230,19 +232,19 @@ sub installable {
 
                 $self->tag('package-depends-on-an-x-font-package',
                     "$field: $part_d_orig")
-                  if ( $field =~ /^(?:pre-)?depends$/
+                  if ( $field =~ /^(?:Pre-)?Depends$/
                     && $d_pkg =~ /^xfont.*/
                     && $d_pkg ne 'xfonts-utils'
                     && $d_pkg ne 'xfonts-encodings');
 
                 $self->tag('depends-on-packaging-dev',$field)
-                  if (($field =~ /^(?:pre-)?depends$/|| $field eq 'recommends')
+                  if (($field =~ /^(?:Pre-)?Depends$/|| $field eq 'Recommends')
                     && $d_pkg eq 'packaging-dev'
                     && !$processable->is_pkg_class('any-meta'));
 
                 $self->tag('needless-suggest-recommend-libservlet-java',
                     "$d_pkg")
-                  if (($field eq 'recommends' || $field eq 'suggests')
+                  if (($field eq 'Recommends' || $field eq 'Suggests')
                     && $d_pkg =~ m/libservlet[\d\.]+-java/);
 
                 $self->tag('needlessly-depends-on-awk', $field)
@@ -254,7 +256,7 @@ sub installable {
                 $self->tag('depends-on-libdb1-compat', $field)
                   if ( $d_pkg eq 'libdb1-compat'
                     && $pkg !~ /^libc(?:6|6.1|0.3)/
-                    && $field =~ /^(?:pre-)?depends$/);
+                    && $field =~ /^(?:Pre-)?Depends$/);
 
                 $self->tag('depends-on-python-minimal', $field,)
                   if ( $d_pkg =~ /^python[\d.]*-minimal$/
@@ -263,7 +265,7 @@ sub installable {
 
                 $self->tag('doc-package-depends-on-main-package', $field)
                   if ("$d_pkg-doc" eq $pkg
-                    && $field =~ /^(?:pre-)?depends$/);
+                    && $field =~ /^(?:Pre-)?Depends$/);
 
                 $self->tag(
                     'package-relation-with-perl-modules', "$field: $d_pkg"
@@ -271,17 +273,17 @@ sub installable {
                       # perl-modules-5.xx (>> 5.20)
                   )
                   if $d_pkg =~ /^perl-modules/
-                  && $field ne 'replaces'
+                  && $field ne 'Replaces'
                   && $processable->source ne 'perl';
 
                 $self->tag('depends-exclusively-on-makedev', $field,)
-                  if ( $field eq 'depends'
+                  if ( $field eq 'Depends'
                     && $d_pkg eq 'makedev'
                     && @alternatives == 1);
 
                 $self->tag('lib-recommends-documentation',
                     "$field: $part_d_orig")
-                  if ( $field eq 'recommends'
+                  if ( $field eq 'Recommends'
                     && $pkg =~ m/^lib/
                     && $pkg !~ m/-(?:dev|docs?|tools|bin)$/
                     && $part_d_orig =~ m/-docs?$/);
@@ -306,7 +308,7 @@ sub installable {
                     && (   $d_pkg eq 'classpath-doc'
                         || $d_pkg =~ /openjdk-\d+-doc/));
 
-                if ($javalib && $field eq 'depends'){
+                if ($javalib && $field eq 'Depends'){
                     foreach my $reg (@known_java_pkg){
                         if($d_pkg =~ m/$reg/){
                             $javadep++;
@@ -361,12 +363,17 @@ sub installable {
 
     # If Conflicts or Breaks is set, make sure it's not inconsistent with
     # the other dependency fields.
-    for my $conflict (qw/conflicts breaks/) {
-        next unless $processable->field($conflict);
-        for my $field (qw(depends pre-depends recommends suggests)) {
-            next unless $processable->field($field);
+    for my $conflict (qw/Conflicts Breaks/) {
+        next
+          unless $processable->fields->value($conflict);
+
+        for my $field (qw(Depends Pre-Depends Recommends Suggests)) {
+            next
+              unless $processable->fields->value($field);
+
             my $relation = $processable->relation($field);
-            for my $package (split /\s*,\s*/, $processable->field($conflict)) {
+            for my $package (split /\s*,\s*/,
+                $processable->fields->value($conflict)) {
                 $self->tag('conflicts-with-dependency', $field, $package)
                   if $relation->implies($package);
             }
@@ -379,18 +386,19 @@ sub installable {
 sub source {
     my ($self) = @_;
 
-    my $pkg = $self->package;
-    my $type = $self->type;
+    my $pkg = $self->processable->name;
+    my $type = $self->processable->type;
     my $processable = $self->processable;
     my $group = $self->group;
 
-    my @binpkgs = $processable->binaries;
+    my @binpkgs = $processable->debian_control->installables;
 
     #Get number of arch-indep packages:
     my $arch_indep_packages = 0;
     my $arch_dep_packages = 0;
     foreach my $binpkg (@binpkgs) {
-        my $arch = $processable->binary_field($binpkg, 'architecture', '');
+        my $arch = $processable->debian_control->installable_fields($binpkg)
+          ->value('Architecture')// EMPTY;
         if ($arch eq 'all') {
             $arch_indep_packages++;
         } else {
@@ -399,24 +407,24 @@ sub source {
     }
 
     $self->tag('build-depends-indep-without-arch-indep')
-      if (defined $processable->field('build-depends-indep')
+      if (defined $processable->fields->value('Build-Depends-Indep')
         && $arch_indep_packages == 0);
     $self->tag('build-depends-arch-without-arch-dependent-binary')
-      if (defined $processable->field('build-depends-arch')
+      if (defined $processable->fields->value('Build-Depends-Arch')
         && $arch_dep_packages == 0);
 
     my $is_dep_field = sub {
         any { $_ eq $_[0] }
-        qw(build-depends build-depends-indep build-depends-arch);
+        qw(Build-Depends Build-Depends-Indep Build-Depends-Arch);
     };
 
     my %depend;
     for my $field (
-        qw(build-depends build-depends-indep build-depends-arch build-conflicts build-conflicts-indep build-conflicts-arch)
+        qw(Build-Depends Build-Depends-Indep Build-Depends-Arch Build-Conflicts Build-Conflicts-Indep Build-Conflicts-Arch)
     ) {
-        if (defined $processable->field($field)) {
+        if (defined $processable->fields->value($field)) {
             #Get data and clean it
-            my $data = $processable->unfolded_field($field);
+            my $data = $processable->fields->unfolded_value($field);
 
             $self->check_field($field, $data);
             $depend{$field} = $data;
@@ -564,9 +572,9 @@ sub source {
 
     # Check for duplicates.
     my @to_check = (
-        ['build-depends'],
-        ['build-depends', 'build-depends-indep'],
-        ['build-depends', 'build-depends-arch']);
+        ['Build-Depends'],
+        ['Build-Depends', 'Build-Depends-Indep'],
+        ['Build-Depends', 'Build-Depends-Arch']);
     foreach my $fields (@to_check) {
         my $relation
           = Lintian::Relation->and(map { $processable->relation($_) }@$fields);
@@ -578,11 +586,11 @@ sub source {
     }
 
     # Make sure build dependencies and conflicts are consistent.
-    my $build_all = $processable->relation('build-depends-all');
+    my $build_all = $processable->relation('Build-Depends-All');
     for (
-        $depend{'build-conflicts'},
-        $depend{'build-conflicts-indep'},
-        $depend{'build-conflicts-arch'}
+        $depend{'Build-Conflicts'},
+        $depend{'Build-Conflicts-Indep'},
+        $depend{'Build-Conflicts-Arch'}
     ) {
         next unless $_;
         for my $conflict (split /\s*,\s*/, $_) {
@@ -597,8 +605,11 @@ sub source {
         my $binpkg = $gproc->name;
         if ($binpkg =~ m/-dbg$/) {
             push(@dbg_pkgs, $gproc);
-        } elsif (
-            $processable->binary_field($binpkg, 'architecture', '') ne 'all'){
+        } elsif ((
+                $processable->debian_control->installable_fields($binpkg)
+                ->value('Architecture') // EMPTY
+            ) ne 'all'
+        ){
             push @arch_dep_pkgs, $binpkg;
         }
     }
@@ -624,18 +635,18 @@ sub source {
         $self->tag('build-depends-on-python-dev-with-no-arch-any');
     }
 
-    my $bdepends = $processable->relation('build-depends');
+    my $bdepends = $processable->relation('Build-Depends');
 
     # libmodule-build-perl
     # matches() instead of implies() because of possible OR relation
     $self->tag('libmodule-build-perl-needs-to-be-in-build-depends')
-      if $processable->relation('build-depends-indep')
+      if $processable->relation('Build-Depends-Indep')
       ->matches(qr/^libmodule-build-perl$/, VISIT_PRED_NAME)
       && !$bdepends->matches(qr/^libmodule-build-perl$/,VISIT_PRED_NAME);
 
     # libmodule-build-tiny-perl
     $self->tag('libmodule-build-tiny-perl-needs-to-be-in-build-depends')
-      if $processable->relation('build-depends-indep')
+      if $processable->relation('Build-Depends-Indep')
       ->implies('libmodule-build-tiny-perl')
       && !$bdepends->implies('libmodule-build-tiny-perl');
 

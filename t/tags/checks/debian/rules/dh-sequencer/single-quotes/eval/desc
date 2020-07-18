@@ -1,3 +1,0 @@
-Testname: single-quotes
-Check: debian/rules/dh-sequencer
-References: https://salsa.debian.org/lintian/lintian/merge_requests/288

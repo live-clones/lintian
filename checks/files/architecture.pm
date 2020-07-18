@@ -25,6 +25,8 @@ use warnings;
 use utf8;
 use autodie;
 
+use constant EMPTY => q{};
+
 use Moo;
 use namespace::clean;
 
@@ -34,10 +36,11 @@ my $TRIPLETS = Lintian::Data->new('files/triplets', qr/\s++/);
 
 has arch_dep_files => (is => 'rwp', default => 0);
 
-sub files {
+sub visit_installed_files {
     my ($self, $file) = @_;
 
-    my $architecture = $self->processable->field('architecture', '');
+    my $architecture = $self->processable->fields->value('Architecture')
+      // EMPTY;
 
     if ($file->name =~ m,^(?:usr/)?lib/([^/]+)/$,) {
         my $subdir = $1;
@@ -63,10 +66,11 @@ sub files {
     return;
 }
 
-sub breakdown {
+sub breakdown_installed_files {
     my ($self) = @_;
 
-    my $architecture = $self->processable->field('architecture', '');
+    my $architecture = $self->processable->fields->value('Architecture')
+      // EMPTY;
 
     # check if package is empty
     my $is_dummy = $self->processable->is_pkg_class('any-meta');
@@ -75,7 +79,7 @@ sub breakdown {
       unless $is_dummy
       || $self->arch_dep_files
       || $architecture eq 'all'
-      || $self->type eq 'udeb';
+      || $self->processable->type eq 'udeb';
 
     return;
 }

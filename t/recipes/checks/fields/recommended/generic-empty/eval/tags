@@ -1,0 +1,4 @@
+generic-empty (source): recommended-field debian/control@source Section
+generic-empty (source): recommended-field debian/control@source Priority
+generic-empty (binary): recommended-field generic-empty_1.0_all.deb Section
+generic-empty (binary): recommended-field generic-empty_1.0_all.deb Priority

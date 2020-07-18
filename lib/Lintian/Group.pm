@@ -36,12 +36,13 @@ use Time::HiRes qw(gettimeofday tv_interval);
 use Time::Piece;
 use Unicode::UTF8 qw(valid_utf8 decode_utf8);
 
+use Lintian::Deb822::Parser qw(parse_dpkg_control_string);
 use Lintian::Processable::Binary;
 use Lintian::Processable::Buildinfo;
 use Lintian::Processable::Changes;
 use Lintian::Processable::Source;
 use Lintian::Processable::Udeb;
-use Lintian::Util qw(get_dsc_info_from_string human_bytes);
+use Lintian::Util qw(human_bytes);
 
 use constant EMPTY => q{};
 use constant SPACE => q{ };
@@ -225,8 +226,10 @@ sub init_from_file {
         $contents = $bytes;
     }
 
-    my $info = get_dsc_info_from_string($contents)
+    my @paragraphs;
+    @paragraphs = parse_dpkg_control_string($contents)
       or die "$path is not a valid $type file";
+    my $info = $paragraphs[0];
 
     my $dir = $path;
     if ($path =~ m,^/+[^/]++$,){
@@ -238,7 +241,7 @@ sub init_from_file {
         # it is "<something>/files.changes"
         $dir =~ s,(.+)/[^/]+$,$1,;
     }
-    my $key = $type eq 'buildinfo' ? 'checksums-sha256' : 'files';
+    my $key = $type eq 'buildinfo' ? 'Checksums-Sha256' : 'Files';
     for my $line (split(/\n/, $info->{$key}//'')) {
 
         next
@@ -287,6 +290,9 @@ Unpack this group.
 sub unpack {
     my ($self, $OUTPUT)= @_;
 
+    my $groupname = $self->name;
+    local $SIG{__WARN__} = sub { warn "Warning in group $groupname: $_[0]" };
+
     my @processables = $self->get_processables;
     for my $processable (@processables) {
 
@@ -295,7 +301,8 @@ sub unpack {
         # for sources pull in all related files so unpacked does not fail
         if ($processable->type eq 'source') {
             my (undef, $dir, undef)= File::Spec->splitpath($processable->path);
-            for my $fs (split(/\n/, $processable->field('files'))) {
+            for my $fs (
+                split(/\n/, ($processable->fields->value('Files') // EMPTY))) {
 
                 # trim both ends
                 $fs =~ s/^\s+|\s+$//g;
@@ -329,11 +336,14 @@ Process group.
 sub process {
     my ($self, $ignored_overrides, $option, $OUTPUT)= @_;
 
-    $self->processing_start(gmtime->datetime);
+    $self->processing_start(gmtime->datetime . 'Z');
 
     my $success = 1;
 
     my $timer = [gettimeofday];
+
+    my $groupname = $self->name;
+    local $SIG{__WARN__} = sub { warn "Warning in group $groupname: $_[0]" };
 
     for my $processable ($self->get_processables){
 
@@ -514,7 +524,7 @@ sub process {
           for @{$processable->tags};
     }
 
-    $self->processing_end(gmtime->datetime);
+    $self->processing_end(gmtime->datetime . 'Z');
 
     my $raw_res = tv_interval($timer);
     my $tres = sprintf('%.3fs', $raw_res);
@@ -748,16 +758,6 @@ sub get_binary_processables {
     return @result;
 }
 
-=item $group->info
-
-=cut
-
-sub info {
-    my ($self) = @_;
-
-    return $self;
-}
-
 =item direct_dependencies (PROC)
 
 If PROC is a part of the underlying processable group, this method
@@ -771,7 +771,6 @@ Note: Self-dependencies (if any) are I<not> included in the result.
 
 =cut
 
-# sub direct_dependencies Needs-Info <>
 sub direct_dependencies {
     my ($self, $processable) = @_;
 
@@ -822,7 +821,6 @@ Note: Self-dependencies (if any) are I<not> included in the result.
 
 =cut
 
-# sub direct_reliants Needs-Info <>
 sub direct_reliants {
     my ($self, $processable) = @_;
 
@@ -859,20 +857,6 @@ sub direct_reliants {
     return $self->saved_direct_reliants;
 }
 
-=item $ginfo->type
-
-Return the type of this collect object (which is the string 'group').
-
-=cut
-
-# Return the package type.
-# sub type Needs-Info <>
-sub type {
-    my ($self) = @_;
-
-    return 'group';
-}
-
 =item spelling_exceptions
 
 Returns a hashref of words, which the spell checker should ignore.
@@ -883,7 +867,6 @@ Example: Package alot-doc (#687464)
 
 =cut
 
-# sub spelling_exceptions Needs-Info <>
 sub spelling_exceptions {
     my ($self) = @_;
 
@@ -895,7 +878,7 @@ sub spelling_exceptions {
     foreach my $processable ($self->get_processables) {
 
         my @names = ($processable->name, $processable->source);
-        push(@names, $processable->binaries)
+        push(@names, $processable->debian_control->installables)
           if $processable->type eq 'source';
 
         foreach my $name (@names) {
@@ -907,23 +890,6 @@ sub spelling_exceptions {
     $self->saved_spelling_exceptions(\%exceptions);
 
     return $self->saved_spelling_exceptions;
-}
-
-=item $group->clear_cache
-
-Discard the info element of all members of this group, so the memory
-used by it can be reclaimed.  Mostly useful when checking a lot of
-packages (e.g. on lintian.d.o).
-
-=cut
-
-sub clear_cache {
-    my ($self) = @_;
-    for my $proc ($self->get_processables) {
-        $proc->clear_cache;
-    }
-
-    return;
 }
 
 =back

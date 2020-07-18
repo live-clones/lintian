@@ -1,5 +1,0 @@
-Tag: uploader
-Severity: classification
-Check: fields/uploaders
-Info: This is an uploader for the package. The tag may appear
- multiple times.

@@ -29,7 +29,7 @@ use IO::Async::Loop;
 use IO::Async::Process;
 use Path::Tiny;
 
-use Lintian::File::Path;
+use Lintian::Index::Item;
 use Lintian::Util qw(safe_qx);
 
 # read up to 40kB at a time.  this happens to be 4096 "tar records"
@@ -46,7 +46,10 @@ use constant NEWLINE => qq{\n};
 use Moo;
 use namespace::clean;
 
-with 'Lintian::Index','Lintian::Index::Control::Scripts';
+with 'Lintian::Index',
+  'Lintian::Index::Control::Scripts',
+  'Lintian::Index::FileInfo',
+  'Lintian::Index::Scripts';
 
 =encoding utf-8
 
@@ -88,7 +91,9 @@ sub collect {
     $self->unpack($groupdir);
     $self->load;
 
+    $self->add_fileinfo;
     $self->add_scripts;
+    $self->add_control;
 
     return;
 }
@@ -238,7 +243,7 @@ sub unpack {
     my %all;
     for my $line (@lines) {
 
-        my $entry = Lintian::File::Path->new;
+        my $entry = Lintian::Index::Item->new;
         $entry->init_from_tar_output($line);
 
         $all{$entry->name} = $entry;

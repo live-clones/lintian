@@ -1,4 +1,4 @@
-#!/usr/bin/perl -w
+#!/usr/bin/perl
 # {{{ Legal stuff
 # Lintian -- Debian package checker
 #
@@ -167,7 +167,7 @@ Behavior options:
     -E, --display-experimental display "X:" tags (normally suppressed)
     --no-display-experimental suppress "X:" tags
     --fail-on error,warning,info,pedantic,experimental,override
-                              define condition for exit status 2 (default: none)
+                              define condition for exit status 2 (default: error)
     -i, --info                give detailed info about tags
     -I, --display-info        display "I:" tags (normally suppressed)
     -L, --display-level       display tags with the specified level
@@ -388,16 +388,6 @@ sub record_option_too_late {
 "Warning: --include-dir and --[no-]user-dirs should be the first option(s) if given\n";
 }
 
-# Process overrides option in the cfg files
-sub cfg_fail_on {
-    my ($name, $value) = @_;
-
-    @{$option{'fail-on'}} = split(/,/, $value)
-      unless scalar @{$option{'fail-on'}};
-
-    return;
-}
-
 # Process display-info and display-level options in cfg files
 #  - dies if display-info and display-level are used together
 #  - adds the relevant display level unless the command-line
@@ -584,6 +574,9 @@ sub main {
                 } elsif ($output{$_} eq 'letterqualifier') {
                     require Lintian::Output::LetterQualifier;
                     $OUTPUT= Lintian::Output::LetterQualifier->new;
+                } elsif ($output{$_} eq 'html') {
+                    require Lintian::Output::HTML;
+                    $OUTPUT = Lintian::Output::HTML->new;
                 } elsif ($output{$_} eq 'xml') {
                     require Lintian::Output::XML;
                     $OUTPUT = Lintian::Output::XML->new;
@@ -855,7 +848,6 @@ sub parse_config_file {
         'display-experimental' => \$option{'display-experimental'},
         'display-info'         => \&cfg_display_level,
         'display-level'        => \&cfg_display_level,
-        'fail-on'              => \&cfg_fail_on,
         'info'                 => \$option{'info'},
         'jobs'                 => \$option{'jobs'},
         'LINTIAN_PROFILE'      => \$option{LINTIAN_PROFILE},
@@ -1007,6 +999,28 @@ sub _find_changes {
     exit 0;
 }
 
+sub parse_fail_on {
+    my $value = shift;
+
+    @{$option{'fail-on'}} = split(/,/, $value);
+    my @unknown_fail_on
+      = grep {!/^(?:error|warning|info|pedantic|experimental|override|none)$/ }
+      @{$option{'fail-on'}};
+    die "Unrecognized fail-on argument: @unknown_fail_on\n"
+      if @unknown_fail_on;
+
+    if (any { $_ eq 'none' } @{$option{'fail-on'}}) {
+        if (@{$option{'fail-on'}} > 1) {
+            die
+"Cannot combine 'none' with other conditions: @{$option{'fail-on'}}\n";
+        } else {
+            @{$option{'fail-on'}} = [];
+        }
+    }
+
+    return;
+}
+
 sub parse_options {
     # init commandline parser
     Getopt::Long::config('default', 'bundling',
@@ -1044,11 +1058,7 @@ sub parse_options {
       if $option{'ftp-master-rejects'};
 
     # check arguments to --fail-on
-    @{$option{'fail-on'}} = split(/,/, join(COMMA, @{$option{'fail-on'}}));
-    my @unknown_fail_on
-      = grep {!/^(?:error|warning|info|pedantic|experimental|override)$/ }
-      @{$option{'fail-on'}};
-    die "Unrecognized fail-on argument: $_\n" for @unknown_fail_on;
+    parse_fail_on(join(COMMA, @{$option{'fail-on'}}));
 
     return;
 }

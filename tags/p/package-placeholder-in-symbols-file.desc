@@ -1,18 +1,14 @@
 Tag: package-placeholder-in-symbols-file
 Severity: warning
 Check: debian/symbols
-Info: The symbols file for this package contains the invalid placeholder
- <tt>&num;PACKAGE&num;</tt> in the <tt>Build-Depends-Package</tt>
- field. It will be replaced with the wrong value during the build process.
- There is currently no placeholder that works. The
- development package for your shared library must be stated explicitly.
+Info: The symbols file contains the placeholder  <tt>&num;PACKAGE&num;</tt>
+ in the <tt>Build-Depends-Package</tt> field. During the build process, it
+ will be replaced with the wrong value. There is no placeholder that works.
  .
- Please do not use the placeholder <tt>&#35;PACKAGE&#35;</tt>.
+ The development package for your shared library must be stated explicitly.
  .
- The field should specify the name of the <tt>-dev</tt> package
- associated with the library. It is used by <tt>dpkg-shlibdeps(1)</tt>
- to make sure that the generated installation dependency is at least
- as strict as the build dependency.
+ With the information, <tt>dpkg-shlibdeps(1)</tt> can calculate the
+ installation prerequisites for your package from the build prerequisites.
 Ref:
  policy 8.6.3.2,
  deb-symbols(5),

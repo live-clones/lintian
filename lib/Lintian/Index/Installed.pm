@@ -29,7 +29,7 @@ use IO::Async::Loop;
 use IO::Async::Process;
 use Path::Tiny;
 
-use Lintian::File::Path;
+use Lintian::Index::Item;
 use Lintian::Util qw(safe_qx);
 
 # Read up to 40kB at the time.  This happens to be 4096 "tar records"
@@ -279,7 +279,7 @@ sub unpack {
     my %all;
     for my $line (@named_owner) {
 
-        my $entry = Lintian::File::Path->new;
+        my $entry = Lintian::Index::Item->new;
         $entry->init_from_tar_output($line);
 
         $all{$entry->name} = $entry;
@@ -288,7 +288,7 @@ sub unpack {
     # get numerical owners from second list
     for my $line (@numeric_owner) {
 
-        my $entry = Lintian::File::Path->new;
+        my $entry = Lintian::Index::Item->new;
         $entry->init_from_tar_output($line);
 
         die 'Numerical index lists extra files for file name '. $entry->name

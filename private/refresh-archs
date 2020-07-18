@@ -33,7 +33,7 @@ BEGIN {
 use lib "$ENV{'LINTIAN_ROOT'}/lib/";
 
 use Lintian::Util qw(safe_qx);
-use Lintian::Deb822Parser qw(parse_dpkg_control);
+use Lintian::Deb822::Parser qw(parse_dpkg_control_string);
 
 my $datapath = shift;
 my %hardening = (
@@ -134,59 +134,76 @@ my @lines = split(/\n/, $output);
 my $dver = shift @lines;
 chomp $dver;
 
-open(my $dlfd, '-|', 'dpkg-architecture', '-L');
-while (my $archstr = <$dlfd>) {
-    my (@hardening, %htags, %enabled_default);
+my @archlist = split(/\n/, safe_qx('dpkg-architecture', '-L'));
+while (defined(my $archstr = shift @archlist)) {
+
     delete $ENV{'DEB_HOST_ARCH'};
     chomp $archstr;
-    open(my $dafd, '-|', 'dpkg-architecture', "-a$archstr");
-    while (my $var = <$dafd>) {
+
+    say "Working on architecture $archstr.";
+
+    my @hostvars = split(/\n/, safe_qx('dpkg-architecture', "-a$archstr"));
+    while (defined(my $var = shift @hostvars)) {
         chomp $var;
         my ($key, $value) = split /=/, $var, 2;
         $archs{$archstr}{$key} = $value;
     }
-    close($dafd);
+
     $ENV{'DEB_HOST_ARCH'} = $archstr;
     delete($ENV{'DEB_BUILD_MAINT_OPTIONS'});
-    open(my $dbfd, '-|', 'dpkg-buildflags', '--query-features', 'hardening');
-    @hardening = parse_dpkg_control($dbfd);
-    close($dbfd);
+
+    my $default_features
+      = safe_qx('dpkg-buildflags', '--query-features', 'hardening');
+    my @hardening_defaults = parse_dpkg_control_string($default_features);
+
     # First, find all hardening features enabled by default on this
     # architecture.
-    foreach my $paragraph (@hardening) {
-        my $tag = 'hardening-no-' . $paragraph->{'feature'};
-        next if not exists $hardening{$paragraph->{'feature'}};
+    my (%htags, %enabled_default);
+    for my $paragraph (@hardening_defaults) {
+
+        my $tag = 'hardening-no-' . $paragraph->{'Feature'};
+        next
+          unless exists $hardening{$paragraph->{'Feature'}};
+
         $tag = 'hardening-no-fortify-functions'
           if $tag eq 'hardening-no-fortify';
-        if (($paragraph->{'enabled'}//'no') eq 'yes') {
+
+        if (($paragraph->{'Enabled'}//'no') eq 'yes') {
             $enabled_default{$tag} = 1;
         }
     }
 
     $ENV{'DEB_BUILD_MAINT_OPTIONS'} = 'hardening=+all';
-    open($dbfd, '-|', 'dpkg-buildflags', '--query-features', 'hardening');
-    @hardening = parse_dpkg_control($dbfd);
-    close($dbfd);
+
+    my $available_features
+      = safe_qx('dpkg-buildflags', '--query-features', 'hardening');
+    my @hardening_available = parse_dpkg_control_string($available_features);
+
     # Now scan over all hardening features for this architecture.
-    foreach my $paragraph (@hardening) {
-        my $tag = 'hardening-no-' . $paragraph->{'feature'};
-        next if not exists $hardening{$paragraph->{'feature'}};
+    for my $paragraph (@hardening_available) {
+
+        my $tag = 'hardening-no-' . $paragraph->{'Feature'};
+        next
+          unless exists $hardening{$paragraph->{'Feature'}};
+
         $tag = 'hardening-no-fortify-functions'
           if $tag eq 'hardening-no-fortify';
-        if (($paragraph->{'enabled'}//'no') eq 'yes') {
+
+        if (($paragraph->{'Enabled'}//'no') eq 'yes') {
             # It is available on the architecture - add it if it is
             # enabled by default or we flagged it as "always".
             $htags{$tag} = 1
               if $enabled_default{$tag}
-              or $hardening{$paragraph->{'feature'}} eq 'always';
+              or $hardening{$paragraph->{'Feature'}} eq 'always';
         }
     }
+
     $archs{$archstr}{'HARDENING'} = join(', ', sort(keys(%htags)));
 }
-close($dlfd);
 
 open_data_files($dver);
-foreach my $archstr (sort keys %archs) {
+
+for my $archstr (sort keys %archs) {
     my $arch = $archs{$archstr};
     write_data_line($arch);
 }

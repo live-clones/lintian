@@ -26,7 +26,7 @@ use Carp;
 use List::MoreUtils qw(any);
 use Path::Tiny;
 
-use Lintian::File::Path;
+use Lintian::Index::Item;
 use Lintian::Util qw(perm2oct);
 
 use constant EMPTY => q{};
@@ -37,13 +37,14 @@ use Moo::Role;
 use namespace::clean;
 
 my %FILE_CODE2LPATH_TYPE = (
-    '-' => Lintian::File::Path::TYPE_FILE| Lintian::File::Path::OPEN_IS_OK,
-    'h' => Lintian::File::Path::TYPE_HARDLINK| Lintian::File::Path::OPEN_IS_OK,
-    'd' => Lintian::File::Path::TYPE_DIR| Lintian::File::Path::FS_PATH_IS_OK,
-    'l' => Lintian::File::Path::TYPE_SYMLINK,
-    'b' => Lintian::File::Path::TYPE_BLOCK_DEV,
-    'c' => Lintian::File::Path::TYPE_CHAR_DEV,
-    'p' => Lintian::File::Path::TYPE_PIPE,
+    '-' => Lintian::Index::Item::TYPE_FILE| Lintian::Index::Item::OPEN_IS_OK,
+    'h' => Lintian::Index::Item::TYPE_HARDLINK
+      | Lintian::Index::Item::OPEN_IS_OK,
+    'd' => Lintian::Index::Item::TYPE_DIR| Lintian::Index::Item::FS_PATH_IS_OK,
+    'l' => Lintian::Index::Item::TYPE_SYMLINK,
+    'b' => Lintian::Index::Item::TYPE_BLOCK_DEV,
+    'c' => Lintian::Index::Item::TYPE_CHAR_DEV,
+    'p' => Lintian::Index::Item::TYPE_PIPE,
 );
 
 =head1 NAME
@@ -119,8 +120,6 @@ NB: If sorted_index includes a debian packaging, it is was
 contained in upstream part of the source package (or the package is
 native).
 
-Needs-Info requirements for using I<orig_index>: src-orig-index
-
 =cut
 
 sub lookup {
@@ -168,13 +167,13 @@ sub load {
         $entry->path_info(
             $operm | (
                 $FILE_CODE2LPATH_TYPE{$raw_type}
-                  // Lintian::File::Path::TYPE_OTHER
+                  // Lintian::Index::Item::TYPE_OTHER
             ));
     }
 
     # find all entries that are not regular files
     my @nosize
-      = grep { !$_->path_info & Lintian::File::Path::TYPE_FILE } values %all;
+      = grep { !$_->path_info & Lintian::Index::Item::TYPE_FILE } values %all;
 
     # reset size for anything but regular files
     $_->size(0) for @nosize;
@@ -224,7 +223,7 @@ sub load {
             # insert new entry for missing intermediate directories
             unless (exists $all{$parentname}) {
 
-                my $added = Lintian::File::Path->new;
+                my $added = Lintian::Index::Item->new;
                 $added->name($parentname);
                 $added->path_info($FILE_CODE2LPATH_TYPE{'d'} | 0755);
 
@@ -249,7 +248,7 @@ sub load {
     $_->index($self) for values %all;
 
     my @directories
-      = grep { $_->path_info & Lintian::File::Path::TYPE_DIR } values %all;
+      = grep { $_->path_info & Lintian::Index::Item::TYPE_DIR } values %all;
 
     # make space for children
     my %children;
@@ -279,7 +278,8 @@ sub load {
 
     # find all hard links
     my @hardlinks
-      = grep { $_->path_info & Lintian::File::Path::TYPE_HARDLINK }values %all;
+      = grep { $_->path_info & Lintian::Index::Item::TYPE_HARDLINK }
+      values %all;
 
     # catalog where they point
     my %backlinks;
@@ -313,15 +313,15 @@ sub load {
         $preferred->size($master->size);
 
         $preferred->path_info(
-            ($preferred->path_info& ~Lintian::File::Path::TYPE_HARDLINK)
-            | Lintian::File::Path::TYPE_FILE);
+            ($preferred->path_info& ~Lintian::Index::Item::TYPE_HARDLINK)
+            | Lintian::Index::Item::TYPE_FILE);
 
         foreach my $pointer (@links) {
 
             # turn into a hard link
             $pointer->path_info(
-                ($pointer->path_info & ~Lintian::File::Path::TYPE_FILE)
-                | Lintian::File::Path::TYPE_HARDLINK);
+                ($pointer->path_info & ~Lintian::Index::Item::TYPE_FILE)
+                | Lintian::Index::Item::TYPE_HARDLINK);
 
             # set link to preferred path
             $pointer->link($preferred->name);

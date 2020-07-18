@@ -30,6 +30,8 @@ use List::MoreUtils qw(any none);
 use Lintian::Relation qw(:constants);
 use Lintian::Relation::Version qw(versions_lte);
 
+use constant EMPTY => q{};
+
 use Moo;
 use namespace::clean;
 
@@ -60,15 +62,15 @@ my $ALLOWED_PYTHON_FILES = Lintian::Data->new('files/allowed-python-files');
 my $GENERIC_PYTHON_MODULES= Lintian::Data->new('files/generic-python-modules');
 
 my $VERSIONS = Lintian::Data->new('python/versions', qr/\s*=\s*/);
-my @VERSION_FIELDS = qw(x-python-version xs-python-version x-python3-version);
+my @VERSION_FIELDS = qw(X-Python-Version XS-Python-Version X-Python3-Version);
 
 sub source {
     my ($self) = @_;
 
-    my $pkg = $self->package;
+    my $pkg = $self->processable->name;
     my $processable = $self->processable;
 
-    my @package_names = $processable->binaries;
+    my @package_names = $processable->debian_control->installables;
     foreach my $bin (@package_names) {
         # Python 2 modules
         if ($bin =~ /^python2?-(.*)$/) {
@@ -85,20 +87,20 @@ sub source {
         }
     }
 
-    my $build_all = $processable->relation('build-depends-all');
+    my $build_all = $processable->relation('Build-Depends-All');
     $self->tag('build-depends-on-python-sphinx-only')
       if $build_all->implies('python-sphinx')
       and not $build_all->implies('python3-sphinx');
 
     $self->tag(
         'alternatively-build-depends-on-python-sphinx-and-python3-sphinx')
-      if $processable->field('build-depends', '')
+      if ($processable->fields->value('Build-Depends') // EMPTY)
       =~ m,\bpython-sphinx\s+\|\s+python3-sphinx\b,g;
 
     # Mismatched substvars
     foreach my $regex (keys %MISMATCHED_SUBSTVARS) {
         my $substvar = $MISMATCHED_SUBSTVARS{$regex};
-        for my $binpkg ($processable->binaries) {
+        for my $binpkg ($processable->debian_control->installables) {
             next if any { $binpkg =~ /$_/ } @IGNORE;
             next if $binpkg !~ qr/$regex/;
             $self->tag('mismatched-python-substvar', $binpkg, $substvar)
@@ -108,7 +110,8 @@ sub source {
     }
 
     foreach my $field (@VERSION_FIELDS) {
-        my $pyversion = $processable->source_field($field);
+        my $pyversion
+          = $processable->debian_control->source_fields->value($field);
         next unless defined($pyversion);
 
         my @valid = (
@@ -170,11 +173,11 @@ sub source {
 sub installable {
     my ($self) = @_;
 
-    my $pkg = $self->package;
+    my $pkg = $self->processable->name;
     my $processable = $self->processable;
 
     my $deps = Lintian::Relation->and($processable->relation('all'),
-        $processable->relation('provides'), $pkg);
+        $processable->relation('Provides'), $pkg);
     my @entries
       = $processable->changelog
       ? @{$processable->changelog->entries}
@@ -260,7 +263,7 @@ sub installable {
     return;
 }
 
-sub files {
+sub visit_installed_files {
     my ($self, $file) = @_;
 
     # .pyc/.pyo (compiled Python files)

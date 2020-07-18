@@ -33,7 +33,7 @@ use Path::Tiny;
 use Dpkg::Vendor qw(get_current_vendor get_vendor_info);
 
 use Lintian::Check::Info;
-use Lintian::Deb822Parser qw(read_dpkg_control);
+use Lintian::Deb822::File;
 use Lintian::Tag::Info;
 
 use constant EMPTY => q{};
@@ -468,26 +468,15 @@ sub _find_profile {
 sub _read_profile {
     my ($self, $path) = @_;
 
-    my @paragraphs = read_dpkg_control($path, 0);
-
-    for my $paragraph (@paragraphs) {
-
-        # unwrap continuation lines
-        $paragraph->{$_} =~ s/\n/ /g for keys %{$paragraph};
-
-        # trim both ends
-        $paragraph->{$_} =~ s/^\s+|\s+$//g for keys %{$paragraph};
-
-        # reduce multiple spaces to one
-        $paragraph->{$_} =~ s/\s+/ /g for keys %{$paragraph};
-    }
+    my $deb822 = Lintian::Deb822::File->new;
+    my @paragraphs = $deb822->read_file($path);
 
     my ($header, @sections) = @paragraphs;
 
     croak "Profile has no header in $path"
       unless defined $header;
 
-    my $name = $header->{profile};
+    my $name = neat_value($header->value('Profile'));
     croak "Profile has no name in $path"
       unless length $name;
 
@@ -506,7 +495,7 @@ sub _read_profile {
     $self->name($name)
       unless length $self->name;
 
-    my $parentname = $header->{extends};
+    my $parentname = neat_value($header->value('Extends'));
     if (length $parentname){
         croak "Invalid Extends field in $path"
           if $parentname =~ m{\.};
@@ -524,52 +513,76 @@ sub _read_profile {
 
     $self->_read_profile_tags($name, $header);
 
-    my $i = 2; # section counter
-    foreach my $psection (@sections){
-        $self->_read_profile_section($name, $psection, $i++);
+    my $counter = 2; # section counter
+    for my $section (@sections){
+        $self->_read_profile_section($name, $section, $counter++);
     }
 
     return;
 }
 
-# $self->_read_profile_section($profile, $paragraph, $section)
+=item neat_value
+
+=cut
+
+sub neat_value {
+    my ($input) = @_;
+
+    return
+      unless length $input;
+
+    my $output = $input;
+
+    # unwrap continuation lines
+    $output =~ s/\n/ /g;
+
+    # trim both ends
+    $output =~ s/^\s+|\s+$//g;
+
+    # reduce multiple spaces to one
+    $output =~ s/\s+/ /g;
+
+    return $output;
+}
+
+# $self->_read_profile_section($profile, $section, $position)
 #
-# Parses and applies the effects of $paragraph (a paragraph
+# Parses and applies the effects of $section (a paragraph
 # in the profile). $profile is the name of the profile and
 # $no is section number (both of these are only used for
 # error reporting).
 sub _read_profile_section {
-    my ($self, $profile, $paragraph, $section) = @_;
+    my ($self, $profile, $section, $position) = @_;
 
-    my @valid_fields = qw(tags overridable severity);
-    my $validlc = List::Compare->new([keys %{$paragraph}], \@valid_fields);
-    my @unknown_fields = uniq $validlc->get_Lonly;
-    croak "Unknown fields in section $section of profile $profile: "
+    my @valid_fields = qw(Tags Overridable Severity);
+    my @unknown_fields = $section->extra(@valid_fields);
+    croak "Unknown fields in section $position of profile $profile: "
       . join(SPACE, @unknown_fields)
       if @unknown_fields;
 
-    my @tags = split(/\s*,\s*/, $paragraph->{'tags'} // EMPTY);
-    croak "Tags field missing or empty in section $section of profile $profile"
+    my @tags = split(/\s*,\s*/, neat_value($section->value('Tags')) // EMPTY);
+    croak
+      "Tags field missing or empty in section $position of profile $profile"
       unless @tags;
 
-    my $severity = $paragraph->{'severity'} // EMPTY;
+    my $severity = neat_value($section->value('Severity')) // EMPTY;
     croak
-"Profile $profile contains invalid severity $severity in section $section"
+"Profile $profile contains invalid severity $severity in section $position"
       if length $severity && none { $severity eq $_ }
     @Lintian::Tag::Info::SEVERITIES;
 
     my $overridable
-      = $self->_parse_boolean($paragraph->{'overridable'},-1, $profile,
-        $section);
+      = $self->_parse_boolean(neat_value($section->value('Overridable')),
+        -1, $profile,$position);
 
     foreach my $tag (@tags) {
 
         my $taginfo = $self->known_tags_by_name->{$tag};
-        croak "Unknown check $tag in $profile (section $section)"
+        croak "Unknown check $tag in $profile (section $position)"
           unless defined $taginfo;
 
         croak
-"Classification tag $tag cannot take a severity (profile $profile, section $section"
+"Classification tag $tag cannot take a severity (profile $profile, section $position"
           if $taginfo->original_severity eq 'classification';
 
         $taginfo->effective_severity($severity)
@@ -600,22 +613,24 @@ sub _read_profile_tags{
     my ($self, $profile, $header) = @_;
 
     my @valid_fields
-      = qw(profile extends enable-tags-from-check disable-tags-from-check enable-tags disable-tags);
-    my $validlc = List::Compare->new([keys %{$header}], \@valid_fields);
-    my @unknown_fields = uniq $validlc->get_Lonly;
+      = qw(Profile Extends Enable-Tags-From-Check Disable-Tags-From-Check Enable-Tags Disable-Tags);
+    my @unknown_fields = $header->extra(@valid_fields);
     croak "Unknown fields in header of profile $profile: "
       . join(SPACE, @unknown_fields)
       if @unknown_fields;
 
     my @enable_checks
-      = split(/\s*,\s*/, $header->{'enable-tags-from-check'} // EMPTY);
+      = split(/\s*,\s*/,
+        neat_value($header->value('Enable-Tags-From-Check')) // EMPTY);
     my @disable_checks
-      = split(/\s*,\s*/, $header->{'disable-tags-from-check'} // EMPTY);
+      = split(/\s*,\s*/,
+        neat_value($header->value('Disable-Tags-From-Check')) // EMPTY);
 
     # List::MoreUtils has 'duplicates' starting at 0.423
     my @allchecks = (@enable_checks, @disable_checks);
-    my $checkslc = List::Compare->new(\@allchecks, [uniq @allchecks]);
-    my @duplicate_checks = uniq $checkslc->get_Lonly;
+    my %count;
+    $count{$_}++ for @allchecks;
+    my @duplicate_checks = grep { $count{$_} > 1 } keys %count;
     die "These checks appear in profile $profile more than once: "
       . join(SPACE, @duplicate_checks)
       if @duplicate_checks;
@@ -650,13 +665,16 @@ sub _read_profile_tags{
         $check->add_taginfo($_) for @taginfos;
     }
 
-    my @enable_tags= split(/\s*,\s*/, $header->{'enable-tags'} // EMPTY);
-    my @disable_tags= split(/\s*,\s*/, $header->{'disable-tags'} // EMPTY);
+    my @enable_tags
+      = split(/\s*,\s*/, neat_value($header->value('Enable-Tags')) // EMPTY);
+    my @disable_tags
+      = split(/\s*,\s*/, neat_value($header->value('Disable-Tags')) // EMPTY);
 
     # List::MoreUtils has 'duplicates' starting at 0.423
     my @alltags = (@enable_tags, @disable_tags);
-    my $tagslc = List::Compare->new(\@alltags, [uniq @alltags]);
-    my @duplicate_tags = uniq $checkslc->get_Lonly;
+    %count = ();
+    $count{$_}++ for @alltags;
+    my @duplicate_tags = grep { $count{$_} > 1 } keys %count;
     die "These tags appear in in profile $profile more than once: "
       . join(SPACE, @duplicate_tags)
       if @duplicate_tags;
@@ -679,13 +697,13 @@ sub _read_profile_tags{
     return;
 }
 
-# $self->_parse_boolean($text, $default, $profile, $section);
+# $self->_parse_boolean($text, $default, $profile, $position);
 #
 # Parse $text as a string representing a bool; if undefined return $default.
-# $profile and $section are the Profile name and section number - used for
+# $profile and $position are the Profile name and section number - used for
 # error reporting.
 sub _parse_boolean {
-    my ($self, $text, $default, $profile, $section) = @_;
+    my ($self, $text, $default, $profile, $position) = @_;
 
     return $default
       unless defined $text;
@@ -701,7 +719,7 @@ sub _parse_boolean {
     return 0
       if $text eq 'false' or $text =~ /^no?$/;
 
-    croak "$text is not a boolean value in $profile (section $section)";
+    croak "$text is not a boolean value in $profile (section $position)";
 }
 
 sub _parse_check {

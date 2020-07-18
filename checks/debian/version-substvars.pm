@@ -47,6 +47,8 @@ use List::MoreUtils qw(any);
 use Lintian::Relation qw(:constants);
 use Lintian::Util qw($PKGNAME_REGEX);
 
+use constant EMPTY => q{};
+
 use Moo;
 use namespace::clean;
 
@@ -58,23 +60,30 @@ sub source {
     my $processable = $self->processable;
 
     my @dep_fields
-      = qw(depends pre-depends recommends suggests conflicts replaces);
+      = qw(Depends Pre-Depends Recommends Suggests Conflicts Replaces);
 
     my @provided;
-    foreach my $pkg ($processable->binaries) {
-        my $val = $processable->binary_field($pkg, 'provides', '');
+    foreach my $pkg ($processable->debian_control->installables) {
+        my $val
+          = $processable->debian_control->installable_fields($pkg)
+          ->value('Provides')// EMPTY;
         $val =~ s/^\s+|\s+$//g;
         push(@provided, split(/\s*,\s*/, $val));
     }
 
-    foreach my $pkg1 ($processable->binaries) {
+    foreach my $pkg1 ($processable->debian_control->installables) {
         my ($pkg1_is_any, $pkg2, $pkg2_is_any, $substvar_strips_binNMU);
 
-        $pkg1_is_any
-          = ($processable->binary_field($pkg1, 'architecture', '') ne 'all');
+        $pkg1_is_any= ((
+                $processable->debian_control->installable_fields($pkg1)
+                  ->value('Architecture') // EMPTY
+            ) ne 'all'
+        );
 
         foreach my $field (@dep_fields) {
-            next unless $processable->binary_field($pkg1, $field);
+            next
+              unless $processable->debian_control->installable_fields($pkg1)
+              ->value($field);
             my $rel = $processable->binary_relation($pkg1, $field);
             my $svid = 0;
             my $visitor = sub {
@@ -95,7 +104,8 @@ sub source {
                     # those maintainers know what they're doing.
                     $self->tag('version-substvar-for-external-package',
                         "$pkg1 -> $other")
-                      unless $processable->binary_field($other, 'architecture')
+                      unless $processable->debian_control->installable_fields(
+                        $other)->value('Architecture')
                       or any { "$other (= $substvar)" eq $_ } @provided
                       or $other =~ /\$\{\S+\}/;
                 }
@@ -106,9 +116,15 @@ sub source {
         foreach (
             split(
                 m/,/,
-                (
-                    $processable->binary_field($pkg1, 'pre-depends', '').', '
-                      . $processable->binary_field($pkg1, 'depends', '')))
+                ((
+                        $processable->debian_control->installable_fields(
+                            $pkg1)->value('Pre-Depends') // EMPTY
+                    )
+                    .', '
+                      . (
+                        $processable->debian_control->installable_fields(
+                            $pkg1)->value('Depends') // EMPTY
+                      )))
         ) {
             next
               unless m/($PKGNAME_REGEX)(?: :any)? \s*               # pkg-name
@@ -120,14 +136,18 @@ sub source {
             $pkg2 = $1;
             $substvar_strips_binNMU = ($3 eq 'source:Version');
 
-            if (not $processable->binary_field($pkg2, 'architecture')) {
+            if (
+                not $processable->debian_control->installable_fields($pkg2)
+                ->value('Architecture')) {
                 # external relation or subst var package - either way,
                 # handled above.
                 next;
             }
-            $pkg2_is_any
-              = ($processable->binary_field($pkg2, 'architecture', '') ne
-                  'all');
+            $pkg2_is_any= ((
+                    $processable->debian_control->installable_fields($pkg2)
+                      ->value('Architecture') // EMPTY
+                )ne 'all'
+            );
 
             if ($pkg1_is_any) {
                 if ($pkg2_is_any and $substvar_strips_binNMU) {

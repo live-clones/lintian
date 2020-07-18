@@ -37,8 +37,8 @@ with 'Lintian::Check';
 sub source {
     my ($self) = @_;
 
-    my $pkg = $self->package;
-    my $type = $self->type;
+    my $pkg = $self->processable->name;
+    my $type = $self->processable->type;
     my $processable = $self->processable;
 
     # Don't check package if it doesn't contain a .php file
@@ -49,7 +49,7 @@ sub source {
         return;
     }
 
-    my $bdepends = $processable->relation('build-depends');
+    my $bdepends = $processable->relation('Build-Depends');
     my $package_type = 'unknown';
 
     # PEAR or PECL package
@@ -61,12 +61,12 @@ sub source {
             $self->tag('pear-package-without-pkg-php-tools-builddep');
         } else {
             # Checking first binary relations
-            my @binaries = $processable->binaries;
+            my @binaries = $processable->debian_control->installables;
             my $binary = $binaries[0];
-            my $depends = $processable->binary_relation($binary, 'depends');
+            my $depends = $processable->binary_relation($binary, 'Depends');
             my $recommends
-              = $processable->binary_relation($binary, 'recommends');
-            my $breaks = $processable->binary_relation($binary, 'breaks');
+              = $processable->binary_relation($binary, 'Recommends');
+            my $breaks = $processable->binary_relation($binary, 'Breaks');
             if (!$depends->implies('${phppear:Debian-Depends}')) {
                 $self->tag('pear-package-but-missing-dependency', 'Depends');
             }
@@ -78,7 +78,8 @@ sub source {
             }
             # Checking description
             my $description
-              = $processable->binary_field($binary, 'description');
+              = $processable->debian_control->installable_fields($binary)
+              ->value('Description');
             if ($description !~ /\$\{phppear:summary\}/) {
                 $self->tag('pear-package-not-using-substvar',
                     '${phppear:summary}');

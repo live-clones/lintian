@@ -62,7 +62,7 @@ sub open_readme {
 sub installable {
     my ($self) = @_;
 
-    my $pkg_name = $self->package;
+    my $pkg_name = $self->processable->name;
     my $processable = $self->processable;
     my $group = $self->group;
 

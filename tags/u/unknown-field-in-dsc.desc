@@ -1,6 +1,0 @@
-Tag: unknown-field-in-dsc
-Severity: warning
-Check: fields/unknown
-Info: See the Policy Manual for a list of the possible fields in
- a source package control file.
-Ref: policy 5.4

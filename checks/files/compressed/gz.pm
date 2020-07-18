@@ -36,7 +36,7 @@ with 'Lintian::Check';
 
 has changelog_timestamp => (is => 'rwp', default => 0);
 
-sub setup {
+sub setup_installed_files {
     my ($self) = @_;
 
     # remains 0 if there is no timestamp
@@ -51,7 +51,7 @@ sub setup {
     return;
 }
 
-sub files {
+sub visit_installed_files {
     my ($self, $file) = @_;
 
     return
@@ -78,9 +78,10 @@ sub files {
             my $time_from_build = $gziptime - $self->changelog_timestamp;
             if ($time_from_build > 0) {
 
-                my $architecture = $self->processable->field('architecture')
-                  // EMPTY;
-                my $multiarch = $self->processable->field('multi-arch')// 'no';
+                my $architecture
+                  = $self->processable->fields->value('Architecture')// EMPTY;
+                my $multiarch
+                  = $self->processable->fields->value('Multi-Arch')// 'no';
 
                 if ($multiarch eq 'same' && $file->name !~ /\Q$architecture\E/)
                 {

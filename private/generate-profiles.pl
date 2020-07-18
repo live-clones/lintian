@@ -21,7 +21,7 @@ use YAML::XS;
 
 use lib "$ENV{LINTIAN_ROOT}/lib";
 
-use Lintian::Deb822Parser qw(read_dpkg_control);
+use Lintian::Deb822::Parser qw(read_dpkg_control);
 
 use constant EMPTY => q{};
 use constant SPACE => q{ };
@@ -80,11 +80,11 @@ for my $tagpath (@descfiles) {
 
     my %fields = %{ $paragraphs[0] };
 
-    my $name = $fields{tag};
-    push(@known_tags, $fields{tag});
+    my $name = $fields{Tag};
+    push(@known_tags, $fields{Tag});
 
     my @renamed_from= grep { length }
-      grep { s/^\s*|\s*$//g } split(/,/, $fields{'renamed-from'} // EMPTY);
+      grep { s/^\s*|\s*$//g } split(/,/, $fields{'Renamed-From'} // EMPTY);
 
     my @taken = grep { exists $new_name{$_} } @renamed_from;
 

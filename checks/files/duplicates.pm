@@ -34,7 +34,7 @@ with 'Lintian::Check';
 
 has md5map => (is => 'rwp', default => sub{ {} });
 
-sub files {
+sub visit_installed_files {
     my ($self, $file) = @_;
 
     return
@@ -60,7 +60,7 @@ sub files {
     return;
 }
 
-sub breakdown {
+sub breakdown_installed_files {
     my ($self) = @_;
 
     foreach my $md5 (keys %{$self->md5map}){

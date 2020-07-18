@@ -1,0 +1,6 @@
+Tag: arch-any-package-needs-newer-cdbs
+Severity: error
+Check: team/pkg-perl/cdbs
+Name-Spaced: yes
+Info: arch:any packages need to build-depend on <tt>cdbs
+ (>= 0.4.122~)</tt> in order to get the default hardening flags.

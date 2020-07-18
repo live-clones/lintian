@@ -39,21 +39,22 @@ use namespace::clean;
 with 'Lintian::Check';
 
 my @ALLOWED_FIELDS
-  = qw(build-ids description package-list installed-build-depends checksums-sha256);
+  = qw(Build-Ids Description Package-List Installed-Build-Depends Checksums-Sha256);
 
 sub always {
     my ($self) = @_;
 
     return
-      if any { $self->type eq $_ } ('changes', 'buildinfo');
+      if any { $self->processable->type eq $_ } ('changes', 'buildinfo');
 
     my $maximum = 5_000;
 
     # all fields
-    my @all = keys %{$self->processable->field};
+    my @all = $self->processable->fields->names;
 
     # longer than maximum
-    my @long = grep { length $self->processable->field($_) > $maximum } @all;
+    my @long
+      = grep { length $self->processable->fields->value($_) > $maximum } @all;
 
     # filter allowed fields
     my $allowedlc = List::Compare->new(\@long, \@ALLOWED_FIELDS);
@@ -61,12 +62,9 @@ sub always {
 
     for my $name (@too_long) {
 
-        # title-case the field name
-        (my $label = $name) =~ s/\b(\w)/\U$1/g;
+        my $length = length $self->processable->fields->value($name);
 
-        my $length = length $self->processable->field($name);
-
-        $self->tag('field-too-long', $label, "($length chars > $maximum)");
+        $self->tag('field-too-long', $name, "($length chars > $maximum)");
     }
 
     return;

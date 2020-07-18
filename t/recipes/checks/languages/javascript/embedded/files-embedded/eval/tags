@@ -1,0 +1,6 @@
+files-embedded (binary): embedded-javascript-library usr/share/php/tiny_mce_popup.js please use tinymce
+files-embedded (binary): embedded-javascript-library usr/share/php/jquery.min.js please use libjs-jquery
+files-embedded (binary): embedded-javascript-library usr/share/php/jquery.js please use libjs-jquery
+files-embedded (binary): embedded-javascript-library usr/share/php/bootstrap-1.1.js please use libjs-bootstrap
+files-embedded (binary): embedded-javascript-library usr/share/javascript/mocha/mocha.js please use libjs-mocha
+files-embedded (binary): embedded-javascript-library usr/share/javascript/mocha/mocha.css please use libjs-mocha

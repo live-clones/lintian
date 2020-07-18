@@ -35,7 +35,7 @@ my $GENERIC_HEADER_FILES = Lintian::Data->new('files/generic-header-files');
 
 has header_dirs => (is => 'rwp');
 
-sub setup {
+sub setup_installed_files {
     my ($self) = @_;
 
     my %header_dirs = ('usr/include/' => 1);
@@ -50,7 +50,7 @@ sub setup {
     return;
 }
 
-sub files {
+sub visit_installed_files {
     my ($self, $file) = @_;
 
     # only look at files in header locations
