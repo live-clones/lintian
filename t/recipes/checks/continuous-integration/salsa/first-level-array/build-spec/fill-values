@@ -1,0 +1,3 @@
+Skeleton: source-native
+Testname: first-level-array
+Description: Salsa CI includes at the array level below root.
