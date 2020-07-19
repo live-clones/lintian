@@ -19,7 +19,7 @@ Info: The package either doesn't declare a versioned build dependency on
  alternatively Build-Depend on the debhelper-compat virtual package, for
  example:
  .
-  Build-Depends: debhelper-compat (= 12)
+  Build-Depends: debhelper-compat (= 13)
  .
  Note if you are using a compat level marked as experimental (such as
  compat 12 in debhelper 11.4~) please explicitly override this tag.

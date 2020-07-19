@@ -5,6 +5,6 @@ Check: debhelper
 Info: If a package uses debhelper, it must declare a Build-Depends
  on debhelper or on the debhelper-compat virtual package. For example:
  .
-  Build-Depends: debhelper (&gt;= 12~)
+  Build-Depends: debhelper (&gt;= 13~)
  .
-  Build-Depends: debhelper-compat (= 12)
+  Build-Depends: debhelper-compat (= 13)

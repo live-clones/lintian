@@ -11,5 +11,5 @@ Info: This package uses a <tt>debian/compat</tt> file to denote the
  Build-Depend on the <tt>debhelper-compat</tt> virtual package, for
  example:
  .
-  Build-Depends: debhelper-compat (= 12)
+  Build-Depends: debhelper-compat (= 13)
 Ref: debhelper(7)
