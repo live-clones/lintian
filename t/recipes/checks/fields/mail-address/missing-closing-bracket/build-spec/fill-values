@@ -1,0 +1,4 @@
+Skeleton: upload-native
+Testname: missing-closing-bracket
+Author: Work <me@work.com
+Description: Missing closing bracket in maintainer email address (false positive)
