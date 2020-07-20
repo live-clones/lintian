@@ -28,7 +28,7 @@ use utf8;
 use autodie;
 
 use List::Compare;
-use List::MoreUtils qw(any all none);
+use List::MoreUtils qw(any all none uniq);
 use Path::Tiny;
 use Unicode::UTF8 qw[valid_utf8 decode_utf8];
 use XML::LibXML;
@@ -47,6 +47,8 @@ use constant {
 use constant EMPTY => q{};
 use constant SPACE => q{ };
 use constant ASTERISK => q{*};
+use constant QUESTION_MARK => q{?};
+use constant BACKSLASH => q{\\};
 
 use Moo;
 use namespace::clean;
@@ -430,12 +432,41 @@ sub parse_dep5 {
         );
     }
 
-    $self->check_files_excluded($header->value('Files-Excluded'))
-      unless $self->processable->native;
-
     $self->tag('copyright-excludes-files-in-native-package')
       if $header->exists('Files-Excluded')
       && $self->processable->native;
+
+    unless ($self->processable->native) {
+
+        my @files = grep { $_->is_file } $self->processable->orig->sorted_list;
+
+        my @wildcards = $header->trimmed_list('Files-Excluded');
+
+        for my $wildcard (@wildcards) {
+
+            my ($wc_value, $wc_type, $wildcard_error)
+              = parse_wildcard($wildcard);
+
+            if (defined $wildcard_error) {
+                $self->tag('invalid-escape-sequence-in-dep5-copyright',
+                    $wildcard_error);
+                next;
+            }
+
+            # also match dir/filename for Files-Excluded: dir
+            $wc_value = qr{^$wc_value(?:/|$)}
+              if $wc_type eq WC_TYPE_FILE;
+
+            for my $srcfile (@files) {
+
+                next
+                  if $srcfile =~ m{^(?:debian|\.pc)/};
+
+                $self->tag('source-includes-file-in-files-excluded', $srcfile)
+                  if $srcfile =~ qr{^$wc_value};
+            }
+        }
+    }
 
     $self->tag('missing-field-in-dep5-copyright',
         'Format','(line ' . $header->position . ')')
@@ -472,13 +503,14 @@ sub parse_dep5 {
         $_->position
     ) for @unknown_sections;
 
-    my @allpaths;
+    my $index;
     if ($self->processable->native) {
-        @allpaths = $self->processable->patched->sorted_list;
-
+        $index = $self->processable->patched;
     } else {
-        @allpaths = $self->processable->orig->sorted_list;
+        $index = $self->processable->orig;
     }
+
+    my @allpaths = $index->sorted_list;
 
     my $debian_dir = $self->processable->patched->resolve_path('debian/');
     push(@allpaths, $debian_dir->descendants)
@@ -489,7 +521,7 @@ sub parse_dep5 {
     my @licensefiles= grep { m,(^|/)(COPYING[^/]*|LICENSE)$, } @shippedfiles;
     my @quiltfiles = grep { m,^\.pc/, } @shippedfiles;
 
-    my %file_coverage = map { $_ => 0 } @shippedfiles;
+    my %file_shipped = map { $_ => 1 } @shippedfiles;
 
     my @names_with_comma = grep { /,/ } @allpaths;
     my @fields_with_comma = grep { $_->value('Files') =~ /,/ } @followers;
@@ -501,6 +533,9 @@ sub parse_dep5 {
             'paragraph at line',
             $_->position('Files')) for @fields_with_comma;
     }
+
+    # only attempt to evaluate globbing if commas could be legal
+    my $check_wildcards = !@fields_with_comma || @names_with_comma;
 
     my @files_sections = grep {$_->exists('Files')} @followers;
 
@@ -525,8 +560,8 @@ sub parse_dep5 {
           && $section->value('Copyright') =~ /^\s*$/;
     }
 
-    my %file_para_coverage;
-    my %license_identifier_by_file;
+    my %section_by_wildcard;
+    my %wildcard_by_file;
     my %required_standalone;
 
     my $section_count = 0;
@@ -535,8 +570,6 @@ sub parse_dep5 {
         my @license_names
           = @{$license_names_by_section{$section->position} // []};
         my $license_text = $license_text_by_section{$section->position};
-        my $license_identifier
-          = $license_identifier_by_section{$section->position};
 
         if ($section->exists('Files') && !length $license_text) {
             $required_standalone{$_} = $section for @license_names;
@@ -557,6 +590,8 @@ sub parse_dep5 {
             @wildcards = $section->trimmed_list('Files');
         }
 
+        $section_by_wildcard{$_} = $section for @wildcards;
+
         $self->tag(
             'global-files-wildcard-not-first-paragraph-in-dep5-copyright',
             '(line ' . $section->position('Files') . ')')
@@ -572,113 +607,76 @@ sub parse_dep5 {
           && $section->exists('License')
           && !length $license_text;
 
-        if (@wildcards) {
+        next
+          unless $check_wildcards;
 
-            # license files do not require their own entries in d/copyright.
-            my $lc = List::Compare->new(\@licensefiles, \@wildcards);
-            my @listedlicensefiles = $lc->get_intersection;
+        for my $wildcard (@wildcards) {
 
-            $self->tag('license-file-listed-in-debian-copyright',$_)
-              for @listedlicensefiles;
+            my ($wc_value, $wc_type, $wildcard_error)
+              = parse_wildcard($wildcard);
 
-            # only attempt to evaluate globbing if commas could be legal
-            if (!@fields_with_comma || @names_with_comma) {
-
-                for my $wildcard (@wildcards) {
-
-                    my ($wc_value, $wc_type, $wildcard_error)
-                      = parse_wildcard($wildcard);
-                    if (defined $wildcard_error) {
-                        $self->tag('invalid-escape-sequence-in-dep5-copyright',
-                                substr($wildcard_error, 0, 2)
-                              . ' (paragraph at line '
-                              . $section->position
-                              . ')');
-                        next;
-                    }
-
-                    my $used = 0;
-                    my $position = $section->position;
-                    $file_para_coverage{$position} = 0;
-
-                    if ($wc_type eq WC_TYPE_FILE) {
-                        if (exists($file_coverage{$wc_value})) {
-                            $used = 1;
-                            $file_coverage{$wildcard} = $section->position;
-                            $license_identifier_by_file{$wildcard}
-                              = $license_identifier;
-                        }
-
-                    } elsif ($wc_type eq WC_TYPE_DESCENDANTS) {
-                        my @wlist;
-
-                        if ($wc_value eq q{}) {
-                            # Special-case => Files: *
-                            push(@wlist, @shippedfiles);
-
-                        } elsif ($wc_value =~ /^debian\//) {
-                            my $dir
-                              = $self->processable->patched->lookup($wc_value);
-                            if ($dir) {
-                                my @files
-                                  = grep { $_->is_file }$dir->descendants;
-                                push(@wlist, @files);
-                            }
-
-                        } else {
-                            my $dir;
-                            if ($self->processable->native) {
-                                $dir= $self->processable->patched->lookup(
-                                    $wc_value);
-                            } else {
-                                $dir = $self->processable->orig->lookup(
-                                    $wc_value);
-                            }
-                            if ($dir) {
-                                my @files
-                                  = grep { $_->is_file }$dir->descendants;
-                                push(@wlist, @files);
-                            }
-                        }
-
-                        $used = 1
-                          if @wlist;
-
-                        for my $entry (@wlist) {
-                            $file_coverage{$entry} = $section->position;
-                            $license_identifier_by_file{$entry}
-                              = $license_identifier;
-                        }
-
-                    } else {
-                        for my $srcfile (@shippedfiles) {
-                            if ($srcfile =~ $wc_value) {
-                                $used = 1;
-                                $file_coverage{$srcfile} = $section->position;
-                                $license_identifier_by_file{$srcfile}
-                                  = $license_identifier;
-                            }
-                        }
-                    }
-                    if ($used) {
-                        $file_para_coverage{$position} = 1;
-                    } elsif (not $used) {
-                        $self->tag(
-                            'wildcard-matches-nothing-in-dep5-copyright',
-                            "$wildcard (paragraph at line "
-                              . $section->position . ')'
-                        );
-                    }
-                }
+            if (defined $wildcard_error) {
+                $self->tag('invalid-escape-sequence-in-dep5-copyright',
+                        substr($wildcard_error, 0, 2)
+                      . ' (paragraph at line '
+                      . $section->position
+                      . ')');
+                next;
             }
+
+            my @covered_files;
+
+            if ($wc_type eq WC_TYPE_FILE) {
+                @covered_files = ($wc_value)
+                  if $file_shipped{$wc_value};
+
+            } elsif ($wc_type eq WC_TYPE_DESCENDANTS) {
+
+                # special-case Files: *
+                if ($wc_value eq EMPTY) {
+                    @covered_files = @shippedfiles;
+
+                } elsif ($wc_value =~ /^debian\//) {
+                    my $parent= $self->processable->patched->lookup($wc_value);
+                    @covered_files= grep { $_->is_file }$parent->descendants
+                      if $parent;
+
+                } else {
+                    my $parent = $index->lookup($wc_value);
+                    @covered_files= grep { $_->is_file }$parent->descendants
+                      if $parent;
+                }
+
+            } else {
+                @covered_files = grep { $_ =~ $wc_value } @shippedfiles;
+            }
+
+            # later matches take priority; depends on section ordering
+            $wildcard_by_file{$_} = $wildcard for @covered_files;
         }
 
     } continue {
         $section_count++;
     }
 
-    # only attempt to evaluate globbing if commas could be legal
-    if (!@fields_with_comma || @names_with_comma) {
+    if ($check_wildcards) {
+
+        my $wildcard_lc = List::Compare->new([keys %section_by_wildcard],
+            [values %wildcard_by_file]);
+        my @matches_nothing = $wildcard_lc->get_Lonly;
+
+        $self->tag('wildcard-matches-nothing-in-dep5-copyright',
+            "$_ (line " . $section_by_wildcard{$_}->position('Files') . ')')
+          for @matches_nothing;
+
+        my %section_by_file;
+        $section_by_file{$_} = $section_by_wildcard{$wildcard_by_file{$_}}
+          for keys %wildcard_by_file;
+
+        my %license_identifier_by_file;
+        $license_identifier_by_file{$_}
+          = $license_identifier_by_section{$section_by_file{$_}->position}
+          for keys %section_by_file;
 
         for my $srcfile (keys %license_identifier_by_file) {
             next
@@ -715,19 +713,24 @@ sub parse_dep5 {
         }
 
         my @no_license_needed = (@quiltfiles, @licensefiles);
-        my $lc = List::Compare->new(\@shippedfiles, \@no_license_needed);
-        my @license_needed = $lc->get_Lonly;
+        my $unlicensed_lc
+          = List::Compare->new(\@shippedfiles, \@no_license_needed);
+        my @license_needed = $unlicensed_lc->get_Lonly;
 
-        my @files_not_covered = grep { !$file_coverage{$_} } @license_needed;
+        my @files_not_covered = grep { !$section_by_file{$_} } @license_needed;
 
         $self->tag('file-without-copyright-information',$_)
           for @files_not_covered;
 
-        delete $file_para_coverage{$file_coverage{$_}} for keys %file_coverage;
+        my @all_positions
+          = map { $_->position } uniq values %section_by_wildcard;
+        my @used_positions = map { $_->position } uniq values %section_by_file;
+        my $unused_lc = List::Compare->new(\@all_positions, \@used_positions);
+        my @unused_positions = $unused_lc->get_Lonly;
 
         $self->tag('unused-file-paragraph-in-dep5-copyright',
             "paragraph at line $_")
-          for keys %file_para_coverage;
+          for @unused_positions;
     }
 
     my $standalone_lc= List::Compare->new([keys %required_standalone],
@@ -753,11 +756,22 @@ sub parse_dep5 {
           if all { $_ == $header } @{$found_standalone{$name}};
     }
 
+    # license files do not require their own entries in d/copyright.
+    my $license_lc
+      = List::Compare->new(\@licensefiles, [keys %section_by_wildcard]);
+    my @listedlicensefiles = $license_lc->get_intersection;
+
+    $self->tag('license-file-listed-in-debian-copyright',$_)
+      for @listedlicensefiles;
+
     return;
 }
 
 sub dequote_backslashes {
     my ($string) = @_;
+
+    return ($string, undef)
+      if index($string, BACKSLASH) == -1;
 
     my $error;
     eval {
@@ -776,38 +790,40 @@ sub dequote_backslashes {
             }
         }egx;
     };
+
     if ($@) {
         return (undef, $error);
-    } else {
-        return ($string, undef);
     }
+
+    return ($string, undef);
 }
 
 sub parse_wildcard {
     my ($regex_src) = @_;
 
-    my ($error);
+    return (EMPTY, WC_TYPE_DESCENDANTS, undef)
+      if $regex_src eq ASTERISK;
 
-    if ($regex_src eq '*') {
-        return ('', WC_TYPE_DESCENDANTS, undef);
-    }
-    if (index($regex_src, '?') == -1) {
-        my $star_index = index($regex_src, '*');
-        my $bslash_index = index($regex_src, '\\');
+    my $error;
+
+    if (index($regex_src, QUESTION_MARK) == -1) {
+
+        my $star_index = index($regex_src, ASTERISK);
+
         if ($star_index == -1) {
             # Regular file-match, dequote "\\" if any and stop here.
-            if ($bslash_index > -1) {
-                ($regex_src, $error) = dequote_backslashes($regex_src);
-            }
+            ($regex_src, $error) = dequote_backslashes($regex_src);
+
             return ($regex_src, WC_TYPE_FILE, $error);
         }
-        if (length($regex_src) - 1 == $star_index
-            and substr($regex_src, -2) eq '/*') {
+
+        if ($star_index + 1 == length $regex_src
+            && substr($regex_src, -2) eq '/*') {
             # Files: some-dir/*
             $regex_src = substr($regex_src, 0, -1);
-            if ($bslash_index > -1) {
-                ($regex_src, $error) = dequote_backslashes($regex_src);
-            }
+
+            ($regex_src, $error) = dequote_backslashes($regex_src);
+
             return ($regex_src, WC_TYPE_DESCENDANTS, $error);
         }
     }
@@ -839,44 +855,6 @@ sub parse_wildcard {
     } else {
         return (qr/^(?:$regex_src)$/, WC_TYPE_REGEX, undef);
     }
-}
-
-sub check_files_excluded {
-    my ($self, $excluded) = @_;
-
-    my @files = grep { $_->is_file } $self->processable->orig->sorted_list;
-
-    my @wildcards = split(/[\n\t ]+/, $excluded);
-    s/^\s+|\s+$//g for @wildcards;
-
-    for my $wildcard (@wildcards) {
-
-        next
-          if $wildcard eq EMPTY;
-
-        my ($wc_value, $wc_type, $wildcard_error)= parse_wildcard($wildcard);
-        if (defined $wildcard_error) {
-            $self->tag('invalid-escape-sequence-in-dep5-copyright',
-                $wildcard_error);
-            next;
-        }
-
-        if ($wc_type eq WC_TYPE_FILE) {
-            # Also match "dir/filename" for "Files-Excluded: dir"
-            $wc_value = qr/^${wc_value}(?:\/|$)/;
-        }
-
-        for my $srcfile (@files) {
-
-            next
-              if $srcfile =~ m/^(?:debian|\.pc)\//;
-
-            $self->tag('source-includes-file-in-files-excluded', $srcfile)
-              if $srcfile =~ qr/^$wc_value/;
-        }
-    }
-
-    return;
 }
 
 # no copyright in udebs

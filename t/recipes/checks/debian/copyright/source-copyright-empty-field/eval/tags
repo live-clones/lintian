@@ -1,4 +1,5 @@
-source-copyright-empty-field (source): wildcard-matches-nothing-in-dep5-copyright m4/ (paragraph at line 77)
+source-copyright-empty-field (source): wildcard-matches-nothing-in-dep5-copyright m4/ (line 77)
+source-copyright-empty-field (source): wildcard-matches-nothing-in-dep5-copyright * (line 7)
 source-copyright-empty-field (source): unused-file-paragraph-in-dep5-copyright paragraph at line 77
 source-copyright-empty-field (source): unused-file-paragraph-in-dep5-copyright paragraph at line 7
 source-copyright-empty-field (source): missing-license-text-in-dep5-copyright GPL-2+ (line 97)
