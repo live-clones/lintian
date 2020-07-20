@@ -61,6 +61,7 @@ Depends:
  libproc-processtable-perl,
  libsereal-decoder-perl,
  libsereal-encoder-perl,
+ libtext-glob-perl,
  libtext-levenshteinxs-perl,
  libtext-xslate-perl,
  libtime-duration-perl,
