@@ -8,5 +8,3 @@ Info: The following file is not suitable for main or contrib.
  .
  You could also split this package and move this file into the
  non-free archive.
- .
- If this is a false-positive, please report a bug against Lintian.

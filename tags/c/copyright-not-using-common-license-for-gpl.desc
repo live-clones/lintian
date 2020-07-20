@@ -9,7 +9,5 @@ Info: The strings "GNU General Public License" or "GPL" appear in the
  reference <tt>/usr/share/common-licenses</tt> as the location of the GPL
  on Debian systems.
  .
- If the package uses some other license that just mentions the GPL and
- that Lintian should detect as an exception, please file a Lintian bug.
  If the copyright file must mention the GPL for reasons other than stating
  the license of the package, please add a Lintian override.

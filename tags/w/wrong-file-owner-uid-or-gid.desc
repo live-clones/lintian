@@ -10,7 +10,5 @@ Info: The user or group ID of the owner of the file is invalid. The
  .
  It's possible for a Policy-compliant package to trigger this tag if the
  user is created in the preinst maintainer script, but this is a very rare
- case and doesn't appear to be necessary. If you found yourself needing
- to create a package that works this way, please file a bug against
- Lintian to let the maintainers know.
+ case and doesn't appear to be necessary. 
 Ref: policy 9.2

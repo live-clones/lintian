@@ -4,6 +4,4 @@ Certainty: wild-guess
 Check: debian/copyright
 Info: The copyright file appears to intended as machine-readable, but Lintian
  cannot recognize its format URI. It could be a typo for a common URI or a
- syntax error in the first paragraph. Please file a bug against Lintian if you
- believe that the copyright file in syntactically valid and the URI is
- correct.
+ syntax error in the first paragraph.

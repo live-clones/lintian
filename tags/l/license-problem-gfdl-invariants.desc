@@ -8,8 +8,6 @@ Info: The given source file is licensed under GFDL with invariant
  GFDL with invariant sections, front-cover or back-cover texts are not
  suitable for main.
  .
- Should this file be multi-licensed, please override the tag.
- .
- Should this be a false-positive, please report a bug.
+ If this file be multi-licensed, please override the tag.
 Ref: https://wiki.debian.org/qa.debian.org/gfdlinvariant,
  https://www.debian.org/vote/2006/vote_001
