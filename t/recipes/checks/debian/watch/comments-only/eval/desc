@@ -1,0 +1,5 @@
+Testname: comments-only
+Check: debian/watch
+Test-Against:
+ debian-watch-file-missing-version
+References: Bug#965385
