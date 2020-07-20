@@ -1,4 +1,5 @@
-source-copyright-unique (source): dep5-file-paragraph-references-header-paragraph some-license (line 10)
+source-copyright-unique (source): unused-license-paragraph-in-dep5-copyright other-license (line 35)
+source-copyright-unique (source): unused-license-paragraph-in-dep5-copyright other-license (line 32)
+source-copyright-unique (source): dep5-file-paragraph-references-header-paragraph some-license (line 8)
 source-copyright-unique (source): dep5-copyright-license-name-not-unique other-license (line 35)
 source-copyright-unique (source): dep5-copyright-license-name-not-unique other-license (line 32)
-source-copyright-unique (source): dep5-copyright-license-name-not-unique other-license (line 29)
