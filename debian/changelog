@@ -494,7 +494,7 @@ lintian (2.67.0) unstable; urgency=medium
     (Closes: #958182)
   * Check for debian/rules files that specify -Wl,--as-needed as this is
     now the default linking method from bullseye. (Closes: #956146)
-  * Detect "dh $*" as using the Debhlper sequencer. (Closes: #930679)
+  * Detect "dh $*" as using the Debhelper sequencer. (Closes: #930679)
   * Also check for "override dh_install" in debian/rules; in 99% of cases
     this will be an omission of an underscore.
 
@@ -6087,7 +6087,7 @@ lintian (2.5.52) unstable; urgency=medium
       possible implications for SOURCE_DATE_EPOCH/reproducible builds.
   * checks/control-file.pm:
     + [NT] Remove check for missing versioned build-depends for dpkg
-      and debhlper when using Build-Profiles.  The necessary versions
+      and debhelper when using Build-Profiles.  The necessary versions
       are now in oldstable.
     + [CL] Add check for GObject Introspection packages that are missing
       binary dependencies on ${gir:Depends}.  (Closes: #860801)
@@ -6122,7 +6122,7 @@ lintian (2.5.52) unstable; urgency=medium
       (Closes: #867042)
   * checks/fields.{desc,pm}:
     + [NT] Remove check for missing versioned build-depends for dpkg
-      and debhlper when using Build-Profiles.  The necessary versions
+      and debhelper when using Build-Profiles.  The necessary versions
       are now in oldstable.
     + [NT] Drop check for depending on multiple versions of tkx as
       tkx does not seem to be in Debian any longer.
