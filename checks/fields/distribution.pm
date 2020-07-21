@@ -134,7 +134,9 @@ sub changes {
     return
       unless @changesdists;
 
-    if (any { $_ eq 'UNRELEASED' } @changesdists) {
+    # issue only when not mentioned in the Distribution field
+    if ((any { $_ eq 'UNRELEASED' } @changesdists)
+        && none { $_ eq 'UNRELEASED' } @distributions) {
 
         $self->tag('unreleased-changes');
         return;
