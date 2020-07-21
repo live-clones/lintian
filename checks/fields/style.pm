@@ -103,8 +103,8 @@ sub check_style {
         my $standard = lc $name;
         $standard =~ s/\b(\w)/\U$1/g;
 
-        # capitalize first two letters when followed by hyphen
-        $standard =~ s/^(\S\S)-/\U$1-/;
+        # capitalize up to three letters after an X, if followed by hyphen
+        $standard =~ s/^(X(?:S|B|C){1,3})-/\U$1-/i;
 
         $self->tag('cute-field', $location, "$name vs $standard")
           unless $name eq $standard;

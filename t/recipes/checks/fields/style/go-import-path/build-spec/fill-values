@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: go-import-path
+Description: Go-Import-Path vs GO-Import-Path (false positive)

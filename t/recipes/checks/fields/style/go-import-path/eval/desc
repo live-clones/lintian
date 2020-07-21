@@ -1,0 +1,5 @@
+Testname: go-import-path
+Check: fields/style
+Test-Against:
+ cute-field
+References: Bug#965966
