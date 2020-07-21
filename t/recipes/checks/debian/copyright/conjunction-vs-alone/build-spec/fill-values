@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: conjunction-vs-alone
+Description: Uses the same license in a conjuntion and alone (false positive)
