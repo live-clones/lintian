@@ -680,7 +680,13 @@ sub parse_dep5 {
           = $license_identifier_by_section{$section_by_file{$_}->position}
           for keys %section_by_file;
 
-        for my $srcfile (keys %license_identifier_by_file) {
+        my @xml_searchspace = keys %license_identifier_by_file;
+
+        # do not search Lintian's test suite for appstream metadata
+        @xml_searchspace = grep { $_ !~ m{t/} } @xml_searchspace
+          if $self->processable->name eq 'lintian';
+
+        for my $srcfile (@xml_searchspace) {
             next
               if $srcfile =~ '^\.pc/';
             next
@@ -708,10 +714,10 @@ sub parse_dep5 {
               unless $seen;
 
             my $wanted = $license_identifier_by_file{$srcfile};
+
             $self->tag('inconsistent-appstream-metadata-license',
                 $srcfile,"($seen != $wanted)")
-              unless $seen eq $wanted
-              or $self->processable->name eq 'lintian';
+              unless $seen eq $wanted;
         }
 
         my @no_license_needed = (@quiltfiles, @licensefiles);
