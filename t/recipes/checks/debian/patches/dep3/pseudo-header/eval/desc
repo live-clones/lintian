@@ -1,0 +1,5 @@
+Testname: pseudo-header
+Check: debian/patches/dep3
+Test-Against:
+ send-patch
+References: Bug#966024

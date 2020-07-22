@@ -70,15 +70,21 @@ sub visit_patched_files {
     return
       unless @sections;
 
-    my $fields = $sections[0];
+    my @needed = qw(Forwarded Bug Applied-Upstream);
+    my %last_mention;
 
-    my $forwarded = $fields->value('Forwarded');
-    my $bug = $fields->value('Bug');
-    my $applied_upstream = $fields->value('Applied-Upstream');
+    # use last mention when present multiple times
+    for my $name (@needed) {
+
+        # empty when field not present
+        $last_mention{$name} ||= $_->value($name) for @sections;
+    }
 
     $self->tag('send-patch', $item->name)
-      if $forwarded eq 'no'
-      || none { length } ($applied_upstream, $bug, $forwarded);
+      if $last_mention{'Forwarded'} eq 'no'
+      || none { length } (
+        $last_mention{'Applied-Upstream'},
+        $last_mention{'Bug'}, $last_mention{'Forwarded'});
 
     return;
 }
