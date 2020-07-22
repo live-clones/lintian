@@ -226,30 +226,6 @@ sub position {
     return $self->positions->{$exact};
 }
 
-=item present
-
-=cut
-
-sub present {
-    my ($self, @candidates) = @_;
-
-    my @present = grep { $self->exists($_) } @candidates;
-
-    return @present;
-}
-
-=item missing
-
-=cut
-
-sub missing {
-    my ($self, @reference) = @_;
-
-    my @missing = grep { !$self->exists($_) } @reference;
-
-    return @missing;
-}
-
 =item extra
 
 =cut

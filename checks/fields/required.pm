@@ -54,16 +54,18 @@ my @CHANGES = qw(Format Date Source Architecture Version Distribution
 sub source {
     my ($self) = @_;
 
-    my @missing_dsc= $self->processable->fields->missing(@DSC);
+    my $fields = $self->processable->fields;
+    my $debian_control = $self->processable->debian_control;
+
+    my @missing_dsc = grep { !$fields->exists($_) } @DSC;
 
     my $dscfile = path($self->processable->path)->basename;
     $self->tag('required-field', $dscfile, $_) for @missing_dsc;
 
-    my $debian_control = $self->processable->debian_control;
-
     # look at d/control source paragraph
     my @missing_control_source
-      = $debian_control->source_fields->missing(@DEBIAN_CONTROL_SOURCE);
+      = grep { !$debian_control->source_fields->exists($_) }
+      @DEBIAN_CONTROL_SOURCE;
 
     my $controlfile = 'debian/control';
     $self->tag('required-field', $controlfile . AT . 'source', $_)
@@ -73,8 +75,8 @@ sub source {
     for my $installable ($debian_control->installables) {
 
         my @missing_control_installable
-          = $debian_control->installable_fields($installable)
-          ->missing(@DEBIAN_CONTROL_INSTALLABLE);
+          = grep {!$debian_control->installable_fields($installable)->exists($_)}
+          @DEBIAN_CONTROL_INSTALLABLE;
 
         $self->tag('required-field', $controlfile . AT . $installable, $_)
           for @missing_control_installable;
@@ -86,8 +88,10 @@ sub source {
 sub installable {
     my ($self) = @_;
 
+    my $fields = $self->processable->fields;
+
     my @missing_installation_control
-      = $self->processable->fields->missing(@INSTALLATION_CONTROL);
+      = grep { !$fields->exists($_) } @INSTALLATION_CONTROL;
 
     my $debfile = path($self->processable->path)->basename;
     $self->tag('required-field', $debfile, $_)
@@ -99,7 +103,9 @@ sub installable {
 sub changes {
     my ($self) = @_;
 
-    my @missing_changes= $self->processable->fields->missing(@CHANGES);
+    my $fields = $self->processable->fields;
+
+    my @missing_changes = grep { !$fields->exists($_) } @CHANGES;
 
     my $changesfile = path($self->processable->path)->basename;
     $self->tag('required-field', $changesfile, $_) for @missing_changes;

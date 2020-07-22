@@ -420,7 +420,7 @@ sub parse_dep5 {
 
     my ($header, @followers) = @sections;
 
-    my @obsolete = $header->present(keys %dep5_renamed_fields);
+    my @obsolete = grep { $header->exists($_) } keys %dep5_renamed_fields;
     for my $name (@obsolete) {
 
         my $position = $header->position($name);
@@ -470,18 +470,18 @@ sub parse_dep5 {
 
     $self->tag('missing-field-in-dep5-copyright',
         'Format','(line ' . $header->position . ')')
-      if $header->present(qw(Format Format-Specification)) == 0;
+      if none { $header->exists($_) } qw(Format Format-Specification);
 
     my $debian_control = $self->processable->debian_control;
     $self->tag('missing-explanation-for-contrib-or-non-free-package')
       if ($debian_control->source_fields->value('Section'))
       =~ m{^(?:contrib|non-free)(?:/.+)?$}
-      && $header->present(qw(Comment Disclaimer)) == 0;
+      && none { $header->exists($_) } qw(Comment Disclaimer);
 
     $self->tag('missing-explanation-for-repacked-upstream-tarball')
       if $self->processable->repacked
-      && $header->present(qw(Comment Files-Excluded)) == 0
-      && $header->value('Source') =~ m{^https?://};
+      && $header->value('Source') =~ m{^https?://}
+      && none { $header->exists($_) } qw(Comment Files-Excluded);
 
     my @ambiguous_sections = grep {
              $_->exists('License')
