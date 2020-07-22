@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: wildcard-out-of-order
+Description: Wildcards not ordered by depth in the directory tree

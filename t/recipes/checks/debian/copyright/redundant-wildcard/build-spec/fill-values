@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: redundant-wildcard
+Description: Two wildcards matching the same file in the same section

@@ -47,6 +47,8 @@ use constant {
 use constant EMPTY => q{};
 use constant SPACE => q{ };
 use constant ASTERISK => q{*};
+use constant LEFT_SQUARE => q{[};
+use constant RIGHT_SQUARE => q{]};
 use constant QUESTION_MARK => q{?};
 use constant BACKSLASH => q{\\};
 
@@ -562,9 +564,10 @@ sub parse_dep5 {
           && $section->value('Copyright') =~ /^\s*$/;
     }
 
-    my %section_by_wildcard;
+    my %sections_by_wildcard;
     my %wildcard_by_file;
     my %required_standalone;
+    my @redundant_wildcards;
 
     my $section_count = 0;
     for my $section (@followers) {
@@ -592,7 +595,10 @@ sub parse_dep5 {
             @wildcards = $section->trimmed_list('Files');
         }
 
-        $section_by_wildcard{$_} = $section for @wildcards;
+        for my $wildcard (@wildcards) {
+            $sections_by_wildcard{$wildcard} //= [];
+            push(@{$sections_by_wildcard{$wildcard}}, $section);
+        }
 
         $self->tag(
             'global-files-wildcard-not-first-paragraph-in-dep5-copyright',
@@ -611,6 +617,8 @@ sub parse_dep5 {
 
         next
           unless $check_wildcards;
+
+        my %wildcards_same_section_by_file;
 
         for my $wildcard (@wildcards) {
 
@@ -653,9 +661,46 @@ sub parse_dep5 {
                 @covered_files = grep { $_ =~ $wc_value } @shippedfiles;
             }
 
-            # later matches take priority; depends on section ordering
-            $wildcard_by_file{$_} = $wildcard for @covered_files;
+            for my $file (@covered_files) {
+                $wildcards_same_section_by_file{$file} //= [];
+                push(@{$wildcards_same_section_by_file{$file}}, $wildcard);
+            }
         }
+
+        my @overwritten = grep { $wildcard_by_file{$_} }
+          keys %wildcards_same_section_by_file;
+        for my $file (@overwritten) {
+
+            my $winning_wildcard
+              = @{$wildcards_same_section_by_file{$file}}[-1];
+            my $loosing_wildcard = $wildcard_by_file{$file};
+            my $winner_depth = ($winning_wildcard =~ tr{/}{});
+            my $looser_depth = ($loosing_wildcard =~ tr{/}{});
+
+            $self->tag('globbing-patterns-out-of-order',
+                $loosing_wildcard, $winning_wildcard)
+              if $looser_depth > $winner_depth;
+        }
+
+        # later matches have precendence; depends on section ordering
+        $wildcard_by_file{$_} = @{$wildcards_same_section_by_file{$_}}[-1]
+          for keys %wildcards_same_section_by_file;
+
+        my @overmatched_same_section
+          = grep { @{$wildcards_same_section_by_file{$_}} > 1 }
+          keys %wildcards_same_section_by_file;
+
+        $self->tag(
+            'redundant-globbing-patterns',
+            LEFT_SQUARE
+              . join(SPACE, @{$wildcards_same_section_by_file{$_}})
+              . RIGHT_SQUARE,
+            "for $_"
+        )for @overmatched_same_section;
+
+        push(@redundant_wildcards,
+            map { @{$wildcards_same_section_by_file{$_}} }
+              @overmatched_same_section);
 
     } continue {
         $section_count++;
@@ -663,24 +708,48 @@ sub parse_dep5 {
 
     if ($check_wildcards) {
 
-        my $wildcard_lc = List::Compare->new([keys %section_by_wildcard],
-            [values %wildcard_by_file]);
+        my @duplicate_wildcards= grep { @{$sections_by_wildcard{$_}} > 1 }
+          keys %sections_by_wildcard;
+        for my $wildcard (@duplicate_wildcards) {
+            $self->tag('duplicate-globbing-patterns', $wildcard, 'in lines',
+                map { $_->position('Files') }
+                  @{$sections_by_wildcard{$wildcard}});
+        }
+
+        # do not issue next tag for duplicates or redundant wildcards
+        my $wildcard_lc = List::Compare->new(
+            [keys %sections_by_wildcard],
+            [(
+                    values %wildcard_by_file, @duplicate_wildcards,
+                    @redundant_wildcards
+                )]);
         my @matches_nothing = $wildcard_lc->get_Lonly;
 
-        $self->tag('wildcard-matches-nothing-in-dep5-copyright',
-            "$_ (line " . $section_by_wildcard{$_}->position('Files') . ')')
-          for @matches_nothing;
+        for my $wildcard (@matches_nothing) {
+            $self->tag(
+                'wildcard-matches-nothing-in-dep5-copyright',
+                "$wildcard (line " . $_->position('Files') . ')'
+            )for @{$sections_by_wildcard{$wildcard}};
+        }
 
-        my %section_by_file;
-        $section_by_file{$_} = $section_by_wildcard{$wildcard_by_file{$_}}
-          for keys %wildcard_by_file;
+        my %sections_by_file;
+        for my $file (keys %wildcard_by_file) {
+            $sections_by_file{$file} //= [];
+            push(
+                @{$sections_by_file{$file}},
+                @{$sections_by_wildcard{$wildcard_by_file{$file}}});
+        }
 
-        my %license_identifier_by_file;
-        $license_identifier_by_file{$_}
-          = $license_identifier_by_section{$section_by_file{$_}->position}
-          for keys %section_by_file;
+        my %license_identifiers_by_file;
+        for my $file (keys %sections_by_file) {
+            $license_identifiers_by_file{$file} //= [];
+            push(
+                @{$license_identifiers_by_file{$file}},
+                $license_identifier_by_section{$_->position}
+            )for @{$sections_by_file{$file}};
+        }
 
-        my @xml_searchspace = keys %license_identifier_by_file;
+        my @xml_searchspace = keys %license_identifiers_by_file;
 
         # do not search Lintian's test suite for appstream metadata
         @xml_searchspace = grep { $_ !~ m{t/} } @xml_searchspace
@@ -713,11 +782,12 @@ sub parse_dep5 {
             next
               unless $seen;
 
-            my $wanted = $license_identifier_by_file{$srcfile};
+            my @wanted = @{$license_identifiers_by_file{$srcfile}};
+            my @mismatched = grep { $_ ne $seen } @wanted;
 
             $self->tag('inconsistent-appstream-metadata-license',
-                $srcfile,"($seen != $wanted)")
-              unless $seen eq $wanted;
+                $srcfile, "($seen != $_)")
+              for @mismatched;
         }
 
         my @no_license_needed = (@quiltfiles, @licensefiles);
@@ -725,14 +795,17 @@ sub parse_dep5 {
           = List::Compare->new(\@shippedfiles, \@no_license_needed);
         my @license_needed = $unlicensed_lc->get_Lonly;
 
-        my @files_not_covered = grep { !$section_by_file{$_} } @license_needed;
+        my @files_not_covered
+          = grep { !@{$sections_by_file{$_} // []} } @license_needed;
 
         $self->tag('file-without-copyright-information',$_)
           for @files_not_covered;
 
         my @all_positions
-          = map { $_->position } uniq values %section_by_wildcard;
-        my @used_positions = map { $_->position } uniq values %section_by_file;
+          = map { $_->position }
+          uniq map { @{$_} } values %sections_by_wildcard;
+        my @used_positions
+          = map { $_->position } uniq map { @{$_} } values %sections_by_file;
         my $unused_lc = List::Compare->new(\@all_positions, \@used_positions);
         my @unused_positions = $unused_lc->get_Lonly;
 
@@ -766,7 +839,7 @@ sub parse_dep5 {
 
     # license files do not require their own entries in d/copyright.
     my $license_lc
-      = List::Compare->new(\@licensefiles, [keys %section_by_wildcard]);
+      = List::Compare->new(\@licensefiles, [keys %sections_by_wildcard]);
     my @listedlicensefiles = $license_lc->get_intersection;
 
     $self->tag('license-file-listed-in-debian-copyright',$_)

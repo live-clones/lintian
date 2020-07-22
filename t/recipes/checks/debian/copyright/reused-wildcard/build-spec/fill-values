@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: reused-wildcard
+Description: Same globbing pattern appears twice
