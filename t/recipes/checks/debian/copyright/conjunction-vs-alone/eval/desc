@@ -1,5 +1,0 @@
-Testname: conjunction-vs-alone
-Check: debian/copyright
-Test-Against:
- dep5-copyright-license-name-not-unique
-References: Bug#801182

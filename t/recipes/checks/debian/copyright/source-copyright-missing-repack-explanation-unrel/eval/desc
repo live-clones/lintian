@@ -1,4 +1,0 @@
-Testname: source-copyright-missing-repack-explanation-unrel
-Test-Against:
- missing-explanation-for-repacked-upstream-tarball
-Check: debian/copyright

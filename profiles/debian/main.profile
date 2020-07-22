@@ -19,6 +19,8 @@ Enable-Tags-From-Check:
  debian/changelog,
  debian/control,
  debian/copyright,
+ debian/copyright/apache-notice,
+ debian/copyright/dep5,
  debian/debconf,
  debian/desktop-entries,
  debian/filenames,

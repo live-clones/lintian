@@ -1,6 +1,6 @@
 Tag: redundant-globbing-patterns
 Severity: error
-Check: debian/copyright
+Check: debian/copyright/dep5
 Info: Two globbing patterns in the same <tt>Files</tt> section in
  debian/copyright match the same file.
  .

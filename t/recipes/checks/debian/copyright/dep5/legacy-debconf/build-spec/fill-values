@@ -1,0 +1,6 @@
+Skeleton: upload-native
+Testname: legacy-debconf
+Source: debconf
+Version: 1~rc1
+Description: Legacy test "debconf"
+Default-Build-Depends: debhelper (>= [% $dh_compat_level %]~)

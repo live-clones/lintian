@@ -1,6 +1,6 @@
 Tag: global-files-wildcard-not-first-paragraph-in-dep5-copyright
 Severity: warning
-Check: debian/copyright
+Check: debian/copyright/dep5
 Info: The specified paragraph in the machine readable copyright file references
  all possible files but is not the first paragraph. For example:
  .

@@ -1,6 +1,6 @@
 Tag: tab-in-license-text
 Severity: warning
-Check: debian/copyright
+Check: debian/copyright/dep5
 Info: A long license text in <tt>debian/copyright</tt> contains
  a tab character. It often occurs when a license text is copied
  from another source, and not reformatted.

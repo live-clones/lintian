@@ -1,6 +1,6 @@
 Tag: repackaged-source-not-advertised
 Severity: info
-Check: debian/copyright
+Check: debian/copyright/dep5
 Info: The <tt>debian/copyright</tt> file mentions <tt>Files-Excluded</tt>
  but the source version has no repack suffix.
  .

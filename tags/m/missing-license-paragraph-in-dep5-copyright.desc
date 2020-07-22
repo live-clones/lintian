@@ -1,7 +1,7 @@
 Tag: missing-license-paragraph-in-dep5-copyright
 Severity: warning
 Certainty: possible
-Check: debian/copyright
+Check: debian/copyright/dep5
 Info: The <tt>Files</tt> paragraph in the machine readable copyright file
  references a license for which no stand-alone <tt>License</tt> paragraph
  exists.

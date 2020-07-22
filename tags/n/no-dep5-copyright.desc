@@ -1,6 +1,6 @@
 Tag: no-dep5-copyright
 Severity: pedantic
-Check: debian/copyright
+Check: debian/copyright/dep5
 Info: This package does not use a machine-readable debian/copyright file.
  .
  This format makes it easier to review licenses and can be easily parsed

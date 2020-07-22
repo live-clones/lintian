@@ -1,3 +1,0 @@
-Testname: file-does-not-exist
-Check: debian/copyright
-References: Bug#888001

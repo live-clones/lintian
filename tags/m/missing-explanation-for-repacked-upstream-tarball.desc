@@ -1,7 +1,7 @@
 Tag: missing-explanation-for-repacked-upstream-tarball
 Severity: info
 Certainty: possible
-Check: debian/copyright
+Check: debian/copyright/dep5
 Info: The version of this package contains <tt>dfsg</tt>, <tt>ds</tt>,
  or <tt>debian</tt> which normally indicates that the upstream source
  has been repackaged, but there is no "Comment" or "Files-Excluded"

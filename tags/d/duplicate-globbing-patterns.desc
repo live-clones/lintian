@@ -1,6 +1,6 @@
 Tag: duplicate-globbing-patterns
 Severity: error
-Check: debian/copyright
+Check: debian/copyright/dep5
 Info: A globbing pattern was used again in <tt>debian/copyright</tt>.
  It always an error and may indicate confusion about the applicable
  license for the autor or any reader of the file.
