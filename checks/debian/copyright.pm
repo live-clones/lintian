@@ -512,9 +512,11 @@ sub parse_dep5 {
 
     my @allpaths = $index->sorted_list;
 
-    my $debian_dir = $self->processable->patched->resolve_path('debian/');
-    push(@allpaths, $debian_dir->descendants)
-      if $debian_dir;
+    unless ($self->processable->native) {
+        my $debian_dir = $self->processable->patched->resolve_path('debian/');
+        push(@allpaths, $debian_dir->descendants)
+          if $debian_dir;
+    }
 
     my @shippedfiles = sort map { $_->name } grep { $_->is_file } @allpaths;
 
