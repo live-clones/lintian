@@ -1,0 +1,5 @@
+Testname: origin-upstream
+Check: debian/patches/dep3
+Test-Against:
+ send-patch
+References: Bug#966140

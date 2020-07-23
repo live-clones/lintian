@@ -25,10 +25,12 @@ use warnings;
 use utf8;
 use autodie;
 
-use List::MoreUtils qw(none);
+use List::MoreUtils qw(any none);
 use Unicode::UTF8 qw(valid_utf8 decode_utf8);
 
 use Lintian::Deb822::File;
+
+use constant EMPTY => q{};
 
 use Moo;
 use namespace::clean;
@@ -70,21 +72,20 @@ sub visit_patched_files {
     return
       unless @sections;
 
-    my @needed = qw(Forwarded Bug Applied-Upstream);
-    my %last_mention;
-
     # use last mention when present multiple times
-    for my $name (@needed) {
+    my $origin = $deb822->last_mention('Origin');
 
-        # empty when field not present
-        $last_mention{$name} ||= $_->value($name) for @sections;
-    }
+    my ($category) = split(m{\s*,\s*}, $origin, 2);
+    $category //= EMPTY;
+    return
+      if any { $category eq $_ } ('upstream', 'backport');
 
     $self->tag('send-patch', $item->name)
-      if $last_mention{'Forwarded'} eq 'no'
+      if $deb822->last_mention('Forwarded') eq 'no'
       || none { length } (
-        $last_mention{'Applied-Upstream'},
-        $last_mention{'Bug'}, $last_mention{'Forwarded'});
+        $deb822->last_mention('Applied-Upstream'),
+        $deb822->last_mention('Bug'),
+        $deb822->last_mention('Forwarded'));
 
     return;
 }
