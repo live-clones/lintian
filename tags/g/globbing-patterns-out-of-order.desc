@@ -3,7 +3,7 @@ Severity: warning
 Check: debian/copyright/dep5
 Info: The <tt>Files</tt> sections in debian/copyright are out of order.
  The relative directory depth should increase from one section to the next.
- That is the general pattern of the specification, with &ast at the top.
+ That is the general pattern of the specification, with &ast; at the top.
  .
  When sections are in another order, some files may be associated
  with the wrong license.
