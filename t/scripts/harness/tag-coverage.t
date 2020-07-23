@@ -61,9 +61,6 @@ my @known_missing = qw(
   package-is-team-maintained
   patch-modifying-debian-files
   patch-system-but-direct-changes-in-diff
-  team/pkg-perl/cdbs/arch-any-package-needs-newer-cdbs
-  team/pkg-perl/cdbs/module-build-tiny-needs-newer-cdbs
-  team/pkg-perl/debhelper/module-build-tiny-needs-newer-debhelper
   quilt-series-references-non-existent-patch
   sphinxdoc-but-no-sphinxdoc-depends
   tar-errors-from-control

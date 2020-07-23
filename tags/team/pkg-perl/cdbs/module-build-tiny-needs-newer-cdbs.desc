@@ -1,6 +1,0 @@
-Tag: module-build-tiny-needs-newer-cdbs
-Severity: error
-Check: team/pkg-perl/cdbs
-Name-Spaced: yes
-Info: Packages using Module::Build::Tiny need to build-depend on
- <tt>cdbs (>= 0.4.122~)</tt>, which uses long option names.

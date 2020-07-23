@@ -197,8 +197,6 @@ Enable-Tags-From-Check:
  team/pkg-js/deprecated,
  team/pkg-js/testsuite,
  team/pkg-js/vcs,
- team/pkg-perl/cdbs,
- team/pkg-perl/debhelper,
  team/pkg-perl/testsuite,
  team/pkg-perl/vcs,
  team/pkg-perl/xs-abi,
