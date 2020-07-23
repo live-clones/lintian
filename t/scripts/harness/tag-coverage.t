@@ -67,7 +67,6 @@ my @known_missing = qw(
   quilt-series-references-non-existent-patch
   sphinxdoc-but-no-sphinxdoc-depends
   tar-errors-from-control
-  unused-override
   uses-deprecated-adttmp
   wrong-vcs-location-for-dpmt
   wrong-vcs-location-for-papt

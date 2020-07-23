@@ -495,6 +495,10 @@ sub process {
         my @keep_tags;
         for my $tag (@{$processable->tags}) {
 
+            next
+              if $tag->name eq 'mismatched-override'
+              || $tag->name eq 'unused-override';
+
             my $override;
 
             my $declared = $declared_overrides->{$tag->name};
@@ -535,6 +539,8 @@ sub process {
 
         $processable->tags(\@keep_tags);
 
+        my %otherwise_visible = map { $_->name => 1 } @keep_tags;
+
         # look for unused overrides
         for my $tagname (keys %{$declared_overrides}) {
 
@@ -549,8 +555,14 @@ sub process {
             my @unused_contexts = $context_lc->get_Lonly;
 
             # cannot be overridden or suppressed
-            $processable->tag('unused-override', $tagname, $_)
-              for @unused_contexts;
+            if ($otherwise_visible{$tagname}) {
+                $processable->tag('mismatched-override', $tagname, $_)
+                  for @unused_contexts;
+
+            } else {
+                $processable->tag('unused-override', $tagname, $_)
+                  for @unused_contexts;
+            }
         }
 
         # copy tag specifications into tags

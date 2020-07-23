@@ -196,8 +196,10 @@ sub process{
         my @override_trusted = grep { !$_->info->experimental } @override;
         my @override_experimental = grep { $_->info->experimental } @override;
 
-        $unused_overrides
-          += scalar grep { $_->name eq 'unused-override' } @tags;
+        $unused_overrides+= scalar grep {
+                 $_->name eq 'mismatched-override'
+              || $_->name eq 'unused-override'
+        } @tags;
 
         $reported_count{$_->info->effective_severity}++ for @reported_trusted;
         $reported_count{experimental} += scalar @reported_experimental;
