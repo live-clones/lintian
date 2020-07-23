@@ -350,7 +350,6 @@ sub process {
     for my $processable ($self->get_processables){
 
         my $declared_overrides;
-        my %used_overrides;
 
         $OUTPUT->debug_msg(1,
             'Base directory for group: ' . $processable->groupdir);
@@ -398,14 +397,6 @@ sub process {
                     delete $declared_overrides->{$tagname};
                     $ignored_overrides->{$tagname}++;
                 }
-            }
-
-            for my $tagname (keys %{$declared_overrides}) {
-
-                my $contexts = $declared_overrides->{$tagname};
-
-                # set the use count to zero for each context
-                $used_overrides{$tagname}{$_} = 0 for keys %{$contexts};
             }
         }
 
@@ -499,37 +490,40 @@ sub process {
           @{$processable->tags};
         $processable->tags(\@enabled_tags);
 
+        my %used_overrides;
+
         my @keep_tags;
         for my $tag (@{$processable->tags}) {
 
             my $override;
 
-            my $tag_overrides= $declared_overrides->{$tag->name};
-            if ($tag_overrides) {
+            my $declared = $declared_overrides->{$tag->name};
+            if ($declared) {
 
                 # do not use EMPTY; hash keys literal
                 # empty context in specification matches all
-                $override = $tag_overrides->{''};
+                $override = $declared->{''};
 
                 # matches context exactly
-                $override = $tag_overrides->{$tag->context}
+                $override = $declared->{$tag->context}
                   unless $override;
 
                 # look for patterns
                 unless ($override) {
                     my @candidates
-                      = sort grep { length $tag_overrides->{$_}{pattern} }
-                      keys %{$tag_overrides};
+                      = sort grep { length $declared->{$_}{pattern} }
+                      keys %{$declared};
 
                     my $match= firstval {
-                        $tag->context =~ m/^$tag_overrides->{$_}{pattern}\z/
+                        $tag->context =~ m/^$declared->{$_}{pattern}\z/
                     }
                     @candidates;
 
-                    $override = $tag_overrides->{$match}
+                    $override = $declared->{$match}
                       if $match;
                 }
 
+                # new hash keys are autovivified to 0
                 $used_overrides{$tag->name}{$override->{context}}++
                   if $override;
             }
@@ -542,22 +536,21 @@ sub process {
         $processable->tags(\@keep_tags);
 
         # look for unused overrides
-        # should this not iterate over $tag_overrides instead?
-        for my $tagname (keys %used_overrides) {
+        for my $tagname (keys %{$declared_overrides}) {
 
             next
               unless $self->profile->tag_is_enabled($tagname);
 
-            my $tag_overrides = $used_overrides{$tagname};
+            my @declared_contexts = keys %{$declared_overrides->{$tagname}};
+            my @used_contexts = keys %{$used_overrides{$tagname} // {}};
 
-            for my $context (keys %{$tag_overrides}) {
+            my $context_lc
+              = List::Compare->new(\@declared_contexts, \@used_contexts);
+            my @unused_contexts = $context_lc->get_Lonly;
 
-                next
-                  if $tag_overrides->{$context};
-
-                # cannot be overridden or suppressed
-                $processable->tag('unused-override', $tagname, $context);
-            }
+            # cannot be overridden or suppressed
+            $processable->tag('unused-override', $tagname, $_)
+              for @unused_contexts;
         }
 
         # copy tag specifications into tags
