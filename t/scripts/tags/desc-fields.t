@@ -36,50 +36,56 @@ use Test::More;
 
 use lib "$ENV{'LINTIAN_TEST_ROOT'}/lib";
 
+use Lintian::Deb822::File;
 use Lintian::Profile;
-use Test::Lintian::ConfigFile qw(read_config);
 
 use constant SPACE => q{ };
-use constant EMPTY => q{};
 
-my @descpaths = File::Find::Rule->file()->name('*.desc')->in('tags');
+my @descpaths = sort File::Find::Rule->file()->name('*.desc')->in('tags');
 
 diag scalar @descpaths . ' known tags.';
 
 # mandatory fields
-my @mandatory = qw(tag severity check info);
+my @mandatory = qw(Tag Severity Check Info);
 
 # disallowed fields
-my @disallowed = qw();
+my @disallowed = qw(Reference References);
 
 # tests per desc
-my $perfile = 6 + scalar @mandatory + scalar @disallowed;
+my $perfile = 7 + scalar @mandatory + scalar @disallowed;
 
 # set the testing plan
-my $known_tests = $perfile * scalar @descpaths;
+plan tests => $perfile * scalar @descpaths;
 
 my $profile = Lintian::Profile->new;
 $profile->load(undef, [$ENV{LINTIAN_ROOT}]);
 
-foreach my $descpath (@descpaths) {
+for my $descpath (@descpaths) {
 
     # test for duplicate fields
     my %count;
+
     my @lines = path($descpath)->lines;
-    foreach my $line (@lines) {
+    for my $line (@lines) {
         my ($field) = $line =~ qr/^(\S+):/;
         $count{$field} += 1
           if defined $field;
     }
+
     ok(
         (all { $count{$_} == 1 } keys %count),
         "No duplicate fields in $descpath"
     );
 
-    my $info = read_config($descpath);
+    my $deb822 = Lintian::Deb822::File->new;
+
+    my @sections = $deb822->read_file($descpath);
+    is(scalar @sections, 1, "Tag in $descpath has exactly one section");
+
+    my $fields = $sections[0] // {};
 
     # tag has a name
-    my $tagname = $info->{tag};
+    my $tagname = $fields->value('Tag');
     BAIL_OUT("Tag described in $descpath has no name")
       unless length $tagname;
 
@@ -88,28 +94,21 @@ foreach my $descpath (@descpaths) {
         "$tagname.desc", "Tagfile for $tagname is named $tagname.desc");
 
     # mandatory fields
-    ok(exists $info->{$_}, "Field $_ exists in $descpath") for @mandatory;
+    ok($fields->exists($_), "Field $_ exists in $descpath")for @mandatory;
 
     # disallowed fields
-    ok(!exists $info->{$_}, "Field $_ does not exist in $descpath")
+    ok(!$fields->exists($_), "Field $_ does not exist in $descpath")
       for @disallowed;
 
-    my $checkfield = $info->{check} // EMPTY;
+    my $checkname = $fields->value('Check');
 
     # tag is associated with a check
-    ok(length $checkfield, "Tag $tagname is associated with a check");
-
-    my ($checkname) = $checkfield =~ qr/^(\S+)$/;
-
-    # tag is associated with a single check
-    ok(length $checkname, "Tag $tagname is associated with a single check");
-
-    $checkname //= EMPTY;
+    ok(length $checkname, "Tag $tagname is associated with a check");
 
     ok($profile->get_checkinfo($checkname),
         "Tag $tagname is associated with a valid check");
 
-    if (($info->{name_spaced} // EMPTY) eq 'yes') {
+    if ($fields->value('Name-Spaced') eq 'yes') {
         # encapsulating directory is name of check
         my $subdir = path($descpath)->parent->relative('tags');
         is($subdir, $checkname,
@@ -122,9 +121,10 @@ foreach my $descpath (@descpaths) {
         is($parentdir, $firstletter,
             "Tag $tagname is in directory named '$firstletter'");
     }
-}
 
-done_testing($known_tests);
+    ok($fields->value('Renamed-From') !~ m{,},
+        "Old tag names for $tagname are not separated by commas");
+}
 
 # Local Variables:
 # indent-tabs-mode: nil

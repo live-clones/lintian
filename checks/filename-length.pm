@@ -25,8 +25,6 @@ use warnings;
 use utf8;
 use autodie;
 
-use constant EMPTY => q{};
-
 use Moo;
 use namespace::clean;
 
@@ -85,8 +83,7 @@ sub always {
     # Reset to work with elements of the dsc file.
     $len = 0;
 
-    for
-      my $entry (split /\n/, ($processable->fields->value('Files') // EMPTY)){
+    for my $entry (split /\n/, $processable->fields->value('Files')){
         my $filename;
         my $flen;
 

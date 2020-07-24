@@ -12,6 +12,4 @@ Info: The source package contains a file in debian/source/ that Lintian
   * patch-header
  .
  This tag is emitted in case you mistyped the name of one of the above
- files. If that's not the case and if the file can be legitimately be
- expected in source packages, please file a bug against Lintian asking
- for the file to be recognized.
+ files.

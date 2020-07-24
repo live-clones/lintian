@@ -37,11 +37,12 @@ with 'Lintian::Check';
 sub always {
     my ($self) = @_;
 
-    my $processable = $self->processable;
+    my $fields = $self->processable->fields;
 
-    my $origin = $processable->fields->unfolded_value('Origin');
     return
-      unless defined $origin;
+      unless $fields->exists('Origin');
+
+    my $origin = $fields->unfolded_value('Origin');
 
     $self->tag('redundant-origin-field') if lc($origin) eq 'debian';
 

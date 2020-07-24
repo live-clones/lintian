@@ -46,16 +46,17 @@ our $PERL_CORE_PROVIDES = Lintian::Data->new('fields/perl-provides', '\s+');
 sub source {
     my ($self) = @_;
 
-    my $processable = $self->processable;
+    my $fields = $self->processable->fields;
 
-    my $version = $processable->fields->unfolded_value('Version');
     return
-      unless length $version;
+      unless $fields->exists('Version');
+
+    my $version = $fields->unfolded_value('Version');
 
     # Checks for the dfsg convention for repackaged upstream
     # source.  Only check these against the source package to not
     # repeat ourselves too much.
-    if ($version =~ /dfsg/ and $processable->native) {
+    if ($version =~ /dfsg/ && $self->processable->native) {
         $self->tag('dfsg-version-in-native-package', $version);
     } elsif ($version =~ /\.dfsg/) {
         $self->tag('dfsg-version-with-period', $version);
@@ -74,7 +75,7 @@ sub source {
     my ($epoch, $upstream, $debian)
       = ($dversion->epoch, $dversion->version, $dversion->revision);
 
-    unless ($processable->native) {
+    unless ($self->processable->native) {
         foreach my $re ($DERIVATIVE_VERSIONS->all) {
 
             next
@@ -93,12 +94,12 @@ sub source {
 sub always {
     my ($self) = @_;
 
-    my $type = $self->processable->type;
-    my $processable = $self->processable;
+    my $fields = $self->processable->fields;
 
-    my $version = $processable->fields->unfolded_value('Version');
     return
-      unless length $version;
+      unless $fields->exists('Version');
+
+    my $version = $fields->unfolded_value('Version');
 
     my $dversion = Dpkg::Version->new($version);
     unless ($dversion->is_valid) {
@@ -135,15 +136,14 @@ sub always {
         $self->tag('debian-revision-not-well-formed', $version);
     }
 
-    if ($type eq 'source') {
+    if ($self->processable->type eq 'source') {
 
         $self->tag('binary-nmu-debian-revision-in-source', $version)
           if $debian =~ /^[^.-]+\.[^.-]+\./ and not $ubuntu;
     }
 
-    my $name = $processable->fields->value('Package');
-    if (   $name
-        && $PERL_CORE_PROVIDES->known($name)
+    my $name = $fields->value('Package');
+    if ($PERL_CORE_PROVIDES->known($name)
         && perl_core_has_version($name, '>=', "$epoch:$upstream")) {
 
         my $core_version = $PERL_CORE_PROVIDES->value($name);

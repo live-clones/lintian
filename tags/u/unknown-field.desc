@@ -1,7 +1,7 @@
 Tag: unknown-field
 Severity: warning
 Check: fields/unknown
-Renamed-From: unknown-field-in-dsc,
+Renamed-From: unknown-field-in-dsc
  unknown-field-in-control
 Info: See the Policy Manual for a list of the possible fields in
  a package control files.

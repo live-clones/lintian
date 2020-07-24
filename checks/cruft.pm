@@ -363,7 +363,7 @@ sub source {
     # - while 1.0 is more likely in this case, Lintian will probably get
     #   better results by checking debfiles/ rather than looking for a diffstat
     #   that may not be present.
-    my $format = $processable->fields->value('Format') // '3.0 (quilt)';
+    my $format = $processable->fields->value('Format') || '3.0 (quilt)';
 
     if ($format =~ /^\s*2\.0\s*\z/ or $format =~ /^\s*3\.0\s*\(quilt|git\)/) {
         $self->check_debian_dir(\%warned);

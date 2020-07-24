@@ -34,7 +34,6 @@ use Lintian::Deb822::File;
 use Lintian::Deb822::Parser qw(DCTRL_COMMENTS_AT_EOL);
 use Lintian::Relation;
 
-use constant EMPTY => q{};
 use constant DOUBLE_QUOTE => q{"};
 
 use Moo;
@@ -62,7 +61,7 @@ sub source {
 
     my $debian_control = $self->processable->debian_control;
 
-    my $testsuite = $debian_control->source_fields->value('Testsuite')// EMPTY;
+    my $testsuite = $debian_control->source_fields->value('Testsuite');
     my @testsuites = split(/\s*,\s*/, $testsuite);
 
     my $lc = List::Compare->new(\@testsuites, [$KNOWN_TESTSUITES->all]);
@@ -100,7 +99,8 @@ sub source {
         $self->check_control_paragraph($_) for @sections;
 
         if (scalar @sections == 1) {
-            my $command = $sections[0]->unfolded_value('Test-Command')// EMPTY;
+            my $command = $sections[0]->unfolded_value('Test-Command');
+
             $self->tag('no-op-testsuite')
               if $command =~ m{(?:/bin/)?true};
         }
@@ -122,16 +122,16 @@ sub source {
 sub check_control_paragraph {
     my ($self, $section) = @_;
 
-    my $tests_field = $section->unfolded_value('Tests');
-    my $test_command = $section->unfolded_value('Test-Command');
-
     $self->tag('no-tests')
-      unless defined $tests_field || defined $test_command;
+      unless $section->exists('Tests') || $section->exists('Test-Command');
 
     $self->tag(
         'exclusive-runtime-tests-field','tests, test-command',
         'paragraph starting at line', $section->position
-    ) if defined $tests_field && defined $test_command;
+    ) if $section->exists('Tests') && $section->exists('Test-Command');
+
+    my $tests_field = $section->unfolded_value('Tests');
+    my $test_command = $section->unfolded_value('Test-Command');
 
     my @lowercase_names = map { lc } $section->names;
     my @lowercase_known = map { lc } $KNOWN_FIELDS->all;
@@ -145,8 +145,7 @@ sub check_control_paragraph {
       for @unknown;
 
     my $features_field = $section->unfolded_value('Features');
-    my @features
-      = grep { length } split(/\s*,\s*|\s+/, $features_field // EMPTY);
+    my @features= grep { length } split(/\s*,\s*|\s+/, $features_field);
     for my $feature (@features) {
 
         $self->tag('unknown-runtime-tests-feature',
@@ -157,7 +156,7 @@ sub check_control_paragraph {
 
     my $restrictions_field = $section->unfolded_value('Restrictions');
     my @restrictions
-      = grep { length } split(/\s*,\s*|\s+/, $restrictions_field // EMPTY);
+      = grep { length } split(/\s*,\s*|\s+/, $restrictions_field);
     for my $restriction (@restrictions) {
 
         my $line = $section->position('Restrictions');
@@ -172,15 +171,16 @@ sub check_control_paragraph {
     }
 
     my $directory = $section->unfolded_value('Tests-Directory')
-      // 'debian/tests';
+      || 'debian/tests';
 
-    my @tests = grep { length } split(/\s*,\s*|\s+/, $tests_field // EMPTY);
+    my @tests = grep { length } split(/\s*,\s*|\s+/, $tests_field);
 
     $self->check_test_file($directory, $_, $section->position('Tests'))
       for @tests;
 
-    my $depends = $section->unfolded_value('Depends');
-    if (defined $depends) {
+    if ($section->exists('Depends')) {
+
+        my $depends = $section->unfolded_value('Depends');
 
         # trim both sides
         $depends =~ s/^\s+|\s+$//g;

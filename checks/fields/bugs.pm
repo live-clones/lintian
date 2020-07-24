@@ -37,19 +37,19 @@ with 'Lintian::Check';
 sub always {
     my ($self) = @_;
 
-    my $pkg = $self->processable->name;
-    my $processable = $self->processable;
-
-    my $bugs = $processable->fields->unfolded_value('Bugs');
+    my $fields = $self->processable->fields;
 
     return
-      unless defined $bugs;
+      unless $fields->exists('Bugs');
+
+    my $bugs = $fields->unfolded_value('Bugs');
 
     $self->tag('redundant-bugs-field')
-      if $bugs =~ m,^debbugs://bugs.debian.org/?$,i;
+      if $bugs =~ m{^debbugs://bugs.debian.org/?$}i;
 
     $self->tag('bugs-field-does-not-refer-to-debian-infrastructure', $bugs)
-      unless $bugs =~ m,\.debian\.org, or $pkg =~ /[-]dbgsym$/;
+      unless $bugs =~ m{\.debian\.org}
+      || $self->processable->name =~ /[-]dbgsym$/;
 
     return;
 }

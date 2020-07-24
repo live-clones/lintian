@@ -30,7 +30,7 @@ use Cwd qw(realpath);
 use File::Temp();
 use Try::Tiny;
 
-use Lintian::Util qw(copy_dir clean_env);
+use Lintian::Util qw(copy_dir);
 
 use constant NEWLINE  =>  qq{\n};
 
@@ -283,10 +283,13 @@ sub source {
           unless length($charset);
 
         my $error;
-        my %save = %ENV;
+
         my $stats = capture_stderr {
             try {
-                clean_env(1);
+                delete local $ENV{$_}
+                  for grep { $_ ne 'PATH' && $_ ne 'TMPDIR' } keys %ENV;
+                local $ENV{LC_ALL} = 'C';
+
                 my @msgfmt = (
                     'msgfmt', '-o', '/dev/null', '--statistics',
                     $po_path->unpacked_path
@@ -296,9 +299,6 @@ sub source {
             }catch {
                 # catch any error
                 $error = $_;
-            }finally {
-                # restore environment
-                %ENV = %save;
             };
         };
 

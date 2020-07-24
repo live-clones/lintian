@@ -67,7 +67,6 @@ BEGIN {
           gzip
           perm2oct
           check_path
-          clean_env
           normalize_pkg_path
           normalize_link_target
           is_ancestor_of
@@ -384,56 +383,6 @@ sub do_fork() {
         $! = $fork_error;
     }
     return $pid;
-}
-
-=item system_env (CMD)
-
-Behaves like system (CMD) except that the environment of CMD is
-cleaned (as defined by L</clean_env>(1)).
-
-=cut
-
-sub system_env {
-    my $pid = do_fork;
-    if (not defined $pid) {
-        return -1;
-    } elsif ($pid == 0) {
-        clean_env(1);
-        exec @_ or die("exec of $_[0] failed: $!\n");
-    } else {
-        waitpid $pid, 0;
-        return $?;
-    }
-}
-
-=item clean_env ([CLOC])
-
-Destructively cleans %ENV - removes all variables %ENV except a
-selected few whitelisted variables.
-
-The list of whitelisted %ENV variables are:
-
- PATH
- LC_ALL (*)
- TMPDIR
-
-(*) LC_ALL is a special case as clean_env will change its value to
-either "C.UTF-8" or "C" (if CLOC is given and a truth value).
-
-=cut
-
-sub clean_env {
-    my ($cloc) = @_;
-    my @whitelist = qw(PATH TMPDIR);
-    my %newenv
-      = map { exists $ENV{$_} ? ($_ => $ENV{$_}) : () } (@whitelist);
-    %ENV = %newenv;
-    $ENV{'LC_ALL'} = 'C.UTF-8';
-
-    if ($cloc) {
-        $ENV{LC_ALL} = 'C';
-    }
-    return;
 }
 
 =item perm2oct(PERM)

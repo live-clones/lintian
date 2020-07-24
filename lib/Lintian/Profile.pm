@@ -263,14 +263,15 @@ sub load {
     for my $taginfo (values %{ $self->known_tags_by_name }) {
 
         my @taken
-          = grep { defined $self->known_aliases->{$_} } $taginfo->aliases;
+          = grep { defined $self->known_aliases->{$_} } @{$taginfo->aliases};
+
         die 'These aliases of the tag '
           . $taginfo->name
           . ' are taken already: '
           . join(SPACE, @taken)
           if @taken;
 
-        $self->known_aliases->{$_} = $taginfo->name for $taginfo->aliases;
+        $self->known_aliases->{$_} = $taginfo->name for @{$taginfo->aliases};
     }
 
     return $self;
@@ -528,7 +529,7 @@ sub _read_profile {
 sub neat_value {
     my ($input) = @_;
 
-    return
+    return EMPTY
       unless length $input;
 
     my $output = $input;
@@ -560,12 +561,12 @@ sub _read_profile_section {
       . join(SPACE, @unknown_fields)
       if @unknown_fields;
 
-    my @tags = split(/\s*,\s*/, neat_value($section->value('Tags')) // EMPTY);
+    my @tags = split(/\s*,\s*/, neat_value($section->value('Tags')));
     croak
       "Tags field missing or empty in section $position of profile $profile"
       unless @tags;
 
-    my $severity = neat_value($section->value('Severity')) // EMPTY;
+    my $severity = neat_value($section->value('Severity'));
     croak
 "Profile $profile contains invalid severity $severity in section $position"
       if length $severity && none { $severity eq $_ }
@@ -620,11 +621,9 @@ sub _read_profile_tags{
       if @unknown_fields;
 
     my @enable_checks
-      = split(/\s*,\s*/,
-        neat_value($header->value('Enable-Tags-From-Check')) // EMPTY);
+      = split(/\s*,\s*/,neat_value($header->value('Enable-Tags-From-Check')));
     my @disable_checks
-      = split(/\s*,\s*/,
-        neat_value($header->value('Disable-Tags-From-Check')) // EMPTY);
+      = split(/\s*,\s*/,neat_value($header->value('Disable-Tags-From-Check')));
 
     # List::MoreUtils has 'duplicates' starting at 0.423
     my @allchecks = (@enable_checks, @disable_checks);
@@ -666,9 +665,9 @@ sub _read_profile_tags{
     }
 
     my @enable_tags
-      = split(/\s*,\s*/, neat_value($header->value('Enable-Tags')) // EMPTY);
+      = split(/\s*,\s*/, neat_value($header->value('Enable-Tags')));
     my @disable_tags
-      = split(/\s*,\s*/, neat_value($header->value('Disable-Tags')) // EMPTY);
+      = split(/\s*,\s*/, neat_value($header->value('Disable-Tags')));
 
     # List::MoreUtils has 'duplicates' starting at 0.423
     my @alltags = (@enable_tags, @disable_tags);

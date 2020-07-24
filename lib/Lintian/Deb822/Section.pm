@@ -24,6 +24,8 @@ use utf8;
 
 use List::Compare;
 
+use constant EMPTY => q{};
+
 use Moo;
 use namespace::clean;
 
@@ -81,6 +83,28 @@ has verbatim => (is => 'rw', default => sub { {} });
 has unfolded => (is => 'rw', default => sub { {} });
 has positions => (is => 'rw', default => sub { {} });
 
+=item trimmed_list(FIELD [, SEPARATOR])
+
+=cut
+
+sub trimmed_list {
+    my ($self, $name, $regex) = @_;
+
+    $regex //= qr/\s+/;
+
+    my $value = $self->value($name);
+
+    # trim both ends
+    $value =~ s/^\s+|\s+$//g;
+
+    my @list = split($regex, $value);
+
+    # trim both ends of each element
+    s/^\s+|\s+$//g for @list;
+
+    return grep { length } @list;
+}
+
 =item unfolded_value (FIELD)
 
 This method returns the unfolded value of the control field FIELD in
@@ -95,7 +119,7 @@ If FIELD is passed but not present, then this method returns undef.
 sub unfolded_value {
     my ($self, $name) = @_;
 
-    return
+    return EMPTY
       unless length $name;
 
     my $lowercase = lc $name;
@@ -105,8 +129,6 @@ sub unfolded_value {
       if defined $unfolded;
 
     my $value = $self->value($name);
-    return
-      unless defined $value;
 
     # will also replace a newline at the very end
     $value =~ s/\n//g;
@@ -134,14 +156,29 @@ FIELD.
 sub value {
     my ($self, $name) = @_;
 
-    return
+    return EMPTY
       unless length $name;
 
     my $exact = $self->legend->{lc $name};
-    return
+    return EMPTY
       unless length $exact;
 
-    return $self->verbatim->{$exact};
+    return $self->verbatim->{$exact} // EMPTY;
+}
+
+=item exists (NAME)
+
+Returns a boolean for whether the named field exists.
+
+=cut
+
+sub exists {
+    my ($self, $name) = @_;
+
+    return 1
+      if defined $self->legend->{lc $name};
+
+    return 0;
 }
 
 =item names
@@ -196,13 +233,7 @@ sub position {
 sub present {
     my ($self, @candidates) = @_;
 
-    my %lookup = map { lc $_ => $_ } @candidates;
-
-    my $present_lc
-      = List::Compare->new([keys %lookup], [keys %{$self->legend}]);
-    my @present_lowercase = $present_lc->get_intersection;
-
-    my @present = map { $lookup{$_} } @present_lowercase;
+    my @present = grep { $self->exists($_) } @candidates;
 
     return @present;
 }
@@ -214,13 +245,7 @@ sub present {
 sub missing {
     my ($self, @reference) = @_;
 
-    my %lookup = map { lc $_ => $_ } @reference;
-
-    my $missing_lc
-      = List::Compare->new([keys %lookup], [keys %{$self->legend}]);
-    my @missing_lowercase = $missing_lc->get_Lonly;
-
-    my @missing = map { $lookup{$_} } @missing_lowercase;
+    my @missing = grep { !$self->exists($_) } @reference;
 
     return @missing;
 }

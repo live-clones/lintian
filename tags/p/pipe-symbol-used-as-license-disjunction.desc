@@ -2,10 +2,9 @@ Tag: pipe-symbol-used-as-license-disjunction
 Severity: warning
 Certainty: possible
 Check: debian/copyright
-Ref: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
-Info: A vertical bar | (also known as a pipe symbol) does not stand for
- a logical OR relationhip in <tt>debian/copyright</tt>.
+Info: A vertical bar &vert (also known as a pipe symbol) does not stand for
+ a logical OR relationship in <tt>debian/copyright</tt>.
  .
  To describe dual licensing, please use the word "or" between license
  names.
-
+Ref: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/

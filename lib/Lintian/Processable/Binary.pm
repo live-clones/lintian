@@ -27,7 +27,6 @@ use Path::Tiny;
 
 use Lintian::Util qw(get_deb_info);
 
-use constant EMPTY => q{};
 use constant COLON => q{:};
 use constant SLASH => q{/};
 
@@ -98,10 +97,10 @@ sub init {
 
     $self->fields($section);
 
-    my $name = $self->fields->value('Package') // EMPTY;
-    my $version = $self->fields->value('Version') // EMPTY;
-    my $architecture = $self->fields->value('Architecture') // EMPTY;
-    my $source = $self->fields->value('Source') // EMPTY;
+    my $name = $self->fields->value('Package');
+    my $version = $self->fields->value('Version');
+    my $architecture = $self->fields->value('Architecture');
+    my $source = $self->fields->value('Source');
 
     my $source_version = $version;
 

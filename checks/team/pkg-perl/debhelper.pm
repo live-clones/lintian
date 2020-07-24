@@ -34,11 +34,8 @@ with 'Lintian::Check';
 sub source {
     my ($self) = @_;
 
-    my $maintainer = $self->processable->fields->value('Maintainer');
-    return
-      unless length $maintainer;
-
     # only for pkg-perl packages
+    my $maintainer = $self->processable->fields->value('Maintainer');
     return
       unless $maintainer=~ /pkg-perl-maintainers\@lists\.alioth\.debian\.org/;
 

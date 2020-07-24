@@ -35,9 +35,10 @@ with 'Lintian::Check';
 sub changes {
     my ($self) = @_;
 
-    my $urgency = $self->processable->fields->value('Urgency');
     return
-      unless length $urgency;
+      unless $self->processable->fields->exists('Urgency');
+
+    my $urgency = $self->processable->fields->value('Urgency');
 
     # translate to lowercase
     my $lowercase = lc $urgency;

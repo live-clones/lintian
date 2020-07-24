@@ -101,6 +101,9 @@ sub source {
     # remove backslash at end; uscan will catch it
     $contents =~ s/(?<!\\)\\$//;
 
+    return
+      unless length $contents;
+
     my $versionpattern = qr/version\s*=\s*(\d+)/;
     my $standard;
 

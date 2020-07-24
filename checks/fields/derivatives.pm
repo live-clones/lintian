@@ -56,7 +56,7 @@ sub source {
 
     foreach my $field ($DERIVATIVE_FIELDS->all) {
 
-        my $val = $processable->fields->value($field) // HYPHEN;
+        my $val = $processable->fields->value($field) || HYPHEN;
         my $data = $DERIVATIVE_FIELDS->value($field);
 
         $self->tag('invalid-field-for-derivative',

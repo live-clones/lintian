@@ -37,13 +37,14 @@ with 'Lintian::Check';
 sub always {
     my ($self) = @_;
 
-    my $processable = $self->processable;
+    my $fields = $self->processable->fields;
 
-    my $dmupload = $processable->fields->unfolded_value('Dm-Upload-Allowed');
     return
-      unless defined $dmupload;
+      unless $fields->exists('DM-Upload-Allowed');
 
     $self->tag('dm-upload-allowed-is-obsolete');
+
+    my $dmupload = $fields->unfolded_value('DM-Upload-Allowed');
 
     $self->tag('malformed-dm-upload-allowed', $dmupload)
       unless $dmupload eq 'yes';

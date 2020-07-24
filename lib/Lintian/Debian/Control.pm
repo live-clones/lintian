@@ -31,8 +31,6 @@ use Lintian::Deb822::File;
 use Lintian::Deb822::Section;
 use Lintian::Util qw($PKGNAME_REGEX);
 
-use constant EMPTY => q{};
-
 use Moo;
 use namespace::clean;
 
@@ -114,8 +112,7 @@ sub load {
     $self->source_fields($source);
 
     my @named
-      = grep { ($_->value('Package') // EMPTY) =~ m{\A $PKGNAME_REGEX \Z}x }
-      @sections;
+      = grep { $_->value('Package') =~ m{\A $PKGNAME_REGEX \Z}x }@sections;
 
     my %by_name = map { $_->value('Package') => $_ } @named;
 
@@ -151,14 +148,14 @@ F<debian/control> file, this method return C<undef>.
 sub installable_package_type {
     my ($self, $name) = @_;
 
+    my $type;
+
     my $fields = $self->installable_fields_by_name->{$name};
-    return
-      unless defined $fields;
 
-    my $type = $fields->value('Package-Type');
+    $type = $fields->value('Package-Type') || $fields->value('XC-Package-Type')
+      if defined $fields;
 
-    $type //= $fields->value('XC-Package-Type');
-    $type //= 'deb';
+    $type ||= 'deb';
 
     return lc $type;
 }

@@ -6,5 +6,4 @@ Info: The VCS-* field uses an address which no longer works. Please
  .
  Note that this check is based on a list of known URIs or/and
  patterns. Lintian did not send an HTTP request to the URI to test
- this. Should the URI actually work, please file a bug against
- Lintian so the check can be updated accordingly.
+ this.

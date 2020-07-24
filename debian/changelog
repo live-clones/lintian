@@ -1,3 +1,34 @@
+lintian (2.85.0) unstable; urgency=medium
+
+  [ Felix Lechner ]
+  * Fix wildcard-matches-nothing-in-dep5-copyright. (Closes: #888001)
+  * Don't emit send-patch when Applied-Upstream is set. (Closes: #965119)
+  * Disregard watch files containing only comments. (Closes: #965385)
+  * Account properly for license identifiers in debian/copyright and split
+    wildcard matching from license parsing. (Closes: #779676)
+  * Expect only {S,B,C} to be capitalised when following a leading X in
+    field names. (Closes: #965966)
+  * Add test case demonstrating false-positive for
+    dep5-copyright-license-name-not-unique is fixed. (Closes: #801182)
+  * Parse lists of distributions in changes files.
+  * Add a test case for email address with missing closing bracket.
+    (Re: #965335)
+  * Move Salsa CI specification to debian/salsa-ci.yml.
+
+  [ gregor herrmann ]
+  * Add another debian/copyright template.
+
+  [ Axel Beckert ]
+  * Replace debhelper level 12 with 13 in tag descriptions examples.
+  * Add correction for a "debhelper" misspelling and correct in some
+    previous changelog entries.
+
+  [ Chris Lamb ]
+  * Drop reminders from 26 tags that false-positives should be reported to
+    Lintian as this is implicit in all ~1,500 tags.
+
+ -- Chris Lamb <lamby@debian.org>  Tue, 21 Jul 2020 22:02:39 +0000
+
 lintian (2.84.0~bpo10+1) buster-backports; urgency=medium
 
   * Rebuild for buster-backports.
@@ -28,7 +59,7 @@ lintian (2.84.0) unstable; urgency=medium
       - testsuite-autopkgtest-missing
 
   [ Felix Lechner ]
-  * Strip architecture fron two filenames in tests, and ignore tags seen
+  * Strip architecture from two filenames in tests, and ignore tags seen
     only on some architectures as it causes autopkgtest regressions on
     arm64.
   * Unconditionally allow /dev/null as a symlink target in source packages.
@@ -560,7 +591,7 @@ lintian (2.67.0) unstable; urgency=medium
     (Closes: #958182)
   * Check for debian/rules files that specify -Wl,--as-needed as this is
     now the default linking method from bullseye. (Closes: #956146)
-  * Detect "dh $*" as using the Debhlper sequencer. (Closes: #930679)
+  * Detect "dh $*" as using the Debhelper sequencer. (Closes: #930679)
   * Also check for "override dh_install" in debian/rules; in 99% of cases
     this will be an omission of an underscore.
 
@@ -6417,7 +6448,7 @@ lintian (2.5.52) unstable; urgency=medium
       possible implications for SOURCE_DATE_EPOCH/reproducible builds.
   * checks/control-file.pm:
     + [NT] Remove check for missing versioned build-depends for dpkg
-      and debhlper when using Build-Profiles.  The necessary versions
+      and debhelper when using Build-Profiles.  The necessary versions
       are now in oldstable.
     + [CL] Add check for GObject Introspection packages that are missing
       binary dependencies on ${gir:Depends}.  (Closes: #860801)
@@ -6452,7 +6483,7 @@ lintian (2.5.52) unstable; urgency=medium
       (Closes: #867042)
   * checks/fields.{desc,pm}:
     + [NT] Remove check for missing versioned build-depends for dpkg
-      and debhlper when using Build-Profiles.  The necessary versions
+      and debhelper when using Build-Profiles.  The necessary versions
       are now in oldstable.
     + [NT] Drop check for depending on multiple versions of tkx as
       tkx does not seem to be in Debian any longer.

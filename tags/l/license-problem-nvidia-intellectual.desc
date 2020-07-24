@@ -12,6 +12,4 @@ Info: The following source files include material under a
  If the package has been uploaded to Debian before, please
  remember to also notify snapshot.debian.org about this
  package containing a non-distributable file.
- .
- If this is a false-positive, please report a bug against Lintian.
 Ref: https://bugs.debian.org/724930#27

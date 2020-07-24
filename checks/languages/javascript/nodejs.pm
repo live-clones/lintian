@@ -31,8 +31,6 @@ use Path::Tiny;
 
 use Lintian::Relation;
 
-use constant EMPTY => q{};
-
 use Moo;
 use namespace::clean;
 
@@ -46,8 +44,8 @@ sub source {
 
     # debian/control check
     my @testsuites= split(m/\s*,\s*/,
-        $processable->debian_control->source_fields->value('Testsuite')
-          // EMPTY);
+        $processable->debian_control->source_fields->value('Testsuite'));
+
     if (any { /^autopkgtest-pkg-nodejs$/ } @testsuites) {
         # Check control file exists in sources
         my $filename = 'debian/tests/pkg-js/test';
@@ -156,8 +154,8 @@ sub visit_installed_files {
     my $declared = $self->processable->name;
     my $processable = $self->processable;
     my $version = $processable->fields->value('Version');
-    $declared .= "( = $version)" if defined $version;
-    $version //= '0-1';
+    $declared .= "( = $version)" if length $version;
+    $version ||= '0-1';
     my $provides
       = Lintian::Relation->and($processable->relation('Provides'), $declared);
 

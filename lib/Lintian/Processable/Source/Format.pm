@@ -26,7 +26,6 @@ use utf8;
 
 use Path::Tiny;
 
-use constant EMPTY => q{};
 use constant UNDERSCORE => q{_};
 
 use Moo::Role;
@@ -59,7 +58,7 @@ has source_format => (
     default => sub {
         my ($self) = @_;
 
-        my $format = $self->fields->value('Format') // '1.0';
+        my $format = $self->fields->value('Format') || '1.0';
 
         return $format;
     });
@@ -99,7 +98,7 @@ has native => (
 
         my $version = $self->fields->value('Version');
         return 0
-          unless defined $version;
+          unless length $version;
 
         # strip epoch
         $version =~ s/^\d+://;

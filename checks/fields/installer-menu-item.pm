@@ -37,14 +37,14 @@ with 'Lintian::Check';
 sub udeb {
     my ($self) = @_;
 
-    my $processable = $self->processable;
+    my $fields = $self->processable->fields;
 
     #---- Installer-Menu-Item (udeb)
 
-    my $menu_item= $processable->fields->unfolded_value('Installer-Menu-Item');
-
     return
-      unless defined $menu_item;
+      unless $fields->exists('Installer-Menu-Item');
+
+    my $menu_item = $fields->unfolded_value('Installer-Menu-Item');
 
     $self->tag('bad-menu-item', $menu_item) unless $menu_item =~ /^\d+$/;
 

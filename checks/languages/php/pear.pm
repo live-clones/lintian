@@ -76,18 +76,22 @@ sub source {
             if (!$breaks->implies('${phppear:Debian-Breaks}')) {
                 $self->tag('pear-package-but-missing-dependency', 'Breaks');
             }
-            # Checking description
+
+            # checking description
             my $description
               = $processable->debian_control->installable_fields($binary)
               ->value('Description');
+
             if ($description !~ /\$\{phppear:summary\}/) {
                 $self->tag('pear-package-not-using-substvar',
                     '${phppear:summary}');
             }
+
             if ($description !~ /\$\{phppear:description\}/) {
                 $self->tag('pear-package-not-using-substvar',
                     '${phppear:description}');
             }
+
             if (defined($package_xml) && $package_xml->is_regular_file) {
                 # Wild guess package type as in
                 # PEAR_PackageFile_v2::getPackageType()

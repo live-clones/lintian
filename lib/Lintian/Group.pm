@@ -28,6 +28,9 @@ use Carp;
 use Cwd;
 use Devel::Size qw(total_size);
 use File::Spec;
+use IO::Async::Channel;
+use IO::Async::Loop;
+use IO::Async::Routine;
 use List::Compare;
 use List::MoreUtils qw(uniq firstval);
 use Path::Tiny;
@@ -301,8 +304,7 @@ sub unpack {
         # for sources pull in all related files so unpacked does not fail
         if ($processable->type eq 'source') {
             my (undef, $dir, undef)= File::Spec->splitpath($processable->path);
-            for my $fs (
-                split(/\n/, ($processable->fields->value('Files') // EMPTY))) {
+            for my $fs (split(/\n/, $processable->fields->value('Files'))) {
 
                 # trim both ends
                 $fs =~ s/^\s+|\s+$//g;
@@ -407,10 +409,12 @@ sub process {
             }
         }
 
+        my $loop = IO::Async::Loop->new;
+
         # Filter out the "lintian" check if present - it does no real harm,
         # but it adds a bit of noise in the debug output.
         my @checknames
-          = grep { $_ ne 'lintian' } $self->profile->enabled_checks;
+          = sort grep { $_ ne 'lintian' }$self->profile->enabled_checks;
         my @checkinfos = map { $self->profile->get_checkinfo($_) } @checknames;
 
         for my $checkinfo (@checkinfos) {
@@ -426,23 +430,60 @@ sub process {
             my $procid = $processable->identifier;
             $OUTPUT->debug_msg(1, "Running check: $checkname on $procid  ...");
 
-            eval {$checkinfo->run_check($processable, $self);};
-            my $err = $@;
-            my $raw_res = tv_interval($timer);
+            my $future = $loop->new_future;
+            my $tag_channel  = IO::Async::Channel->new;
 
-            if ($err) {
-                print STDERR $err;
-                print STDERR "internal error: cannot run $checkname check",
-                  " on package $procid\n";
-                $OUTPUT->warning("skipping check of $procid");
-                $success = 0;
+            my $routine = IO::Async::Routine->new(
+                channels_out => [$tag_channel],
+                code => sub {
+                    # fixed upstream in 0.73
+                    undef $IO::Async::Loop::ONE_TRUE_LOOP;
 
-                next;
-            }
-            my $tres = sprintf('%.3fs', $raw_res);
-            $OUTPUT->debug_msg(1,
-                "Check script $checkname for $procid done ($tres)");
-            $OUTPUT->perf_log("$procid,check/$checkname,${raw_res}");
+                    # closed upon, tags still in parent
+                    $processable->tags([]);
+                    $checkinfo->run_check($processable, $self);
+                    $tag_channel->send($processable->tags);
+
+                    return;
+                },
+                on_return => sub {
+                    my ($self, $result) = @_;
+
+                    my $raw_res = tv_interval($timer);
+
+                    my $tres = sprintf('%.3fs', $raw_res);
+                    $OUTPUT->debug_msg(1,
+                        "Check script $checkname for $procid done ($tres)");
+                    $OUTPUT->perf_log("$procid,check/$checkname,${raw_res}");
+
+                    $future->fail("Done with check $checkname");
+                    return;
+                },
+                on_die => sub {
+                    my ($self, $exception) = @_;
+
+                    print STDERR $exception;
+                    print STDERR "internal error: cannot run $checkname check",
+                      " on package $procid\n";
+                    $OUTPUT->warning("skipping check of $procid");
+                    $success = 0;
+
+                    $future->fail("Cannot run check $checkname: $exception");
+
+                    return;
+                });
+
+            $loop->add($routine);
+
+            $tag_channel->recv(
+                on_recv => sub {
+                    my ($channel, $arrayref) = @_;
+
+                    # add tags to variable in parent
+                    push(@{$processable->tags}, @{$arrayref});
+                });
+
+            $loop->await($future);
         }
 
         my $knownlc

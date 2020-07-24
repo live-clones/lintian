@@ -39,11 +39,8 @@ my @VCS_FIELDS = (@NON_GIT_VCS_FIELDS, qw(Vcs-Git Vcs-Browser));
 sub source {
     my ($self) = @_;
 
-    my $maintainer = $self->processable->fields->value('Maintainer');
-    return
-      unless length $maintainer;
-
     # only for pkg-perl packages
+    my $maintainer = $self->processable->fields->value('Maintainer');
     return
       unless $maintainer=~ /pkg-perl-maintainers\@lists\.alioth\.debian\.org/;
 
@@ -53,9 +50,10 @@ sub source {
     # check for team locations
     for my $name (@VCS_FIELDS) {
 
-        my $value = $self->processable->fields->value($name);
         next
-          unless defined $value;
+          unless $self->processable->fields->exists($name);
+
+        my $value = $self->processable->fields->value($name);
 
         # get actual capitalization
         my $original_name = $self->processable->fields->literal_name($name);

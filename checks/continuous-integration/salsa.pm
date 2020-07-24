@@ -25,7 +25,9 @@ use warnings;
 use utf8;
 use autodie;
 
+use Data::DPath qw(dpath);
 use List::MoreUtils qw(any);
+use Scalar::Util qw(reftype);
 use YAML::XS qw(LoadFile);
 
 use Moo;
@@ -60,9 +62,23 @@ sub visit_patched_files {
     return
       unless defined $yaml;
 
-# tradiitonally examined via codesearch
+# traditionally examined via codesearch
 # https://codesearch.debian.net/search?q=salsa-ci-team%2Fpipeline%2Fraw%2Fmaster%2Fsalsa-ci.yml&literal=1
-    my @includes = @{$yaml->{include} // []};
+    my @items = dpath('//include')->match($yaml);
+
+    my @includes;
+    for my $item (@items) {
+
+        my $type = reftype $item;
+
+        if (!length $type) {
+            push(@includes, $item);
+
+        } elsif ($type eq 'ARRAY') {
+            push(@includes, @{$item});
+        }
+    }
+
     $self->tag('include', $item->name, $_) for @includes;
 
     return;

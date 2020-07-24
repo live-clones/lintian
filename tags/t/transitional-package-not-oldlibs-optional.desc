@@ -2,12 +2,13 @@ Tag: transitional-package-not-oldlibs-optional
 Severity: warning
 Certainty: possible
 Check: fields/section
-Ref: #645438, devref 6.7.7
+Renamed-From:
+ transitional-package-should-be-oldlibs-extra
+ transitional-package-should-be-oldlibs-optional
 Info: The package appears to be a transitional package, but it is not
  priority optional and in the oldlibs section.
  .
  Using oldlibs/optional assists package managers in handling the
  transition package correctly.
-Renamed-From:
- transitional-package-should-be-oldlibs-extra,
- transitional-package-should-be-oldlibs-optional
+Ref: Bug#645438,
+ devref 6.7.7

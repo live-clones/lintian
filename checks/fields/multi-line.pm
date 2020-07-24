@@ -68,8 +68,6 @@ sub always {
     for my $name (@enforce) {
 
         my $value = $self->processable->fields->value($name);
-        return
-          unless length $value;
 
         # remove a final newline, if any
         $value =~ s/\n$//;

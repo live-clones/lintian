@@ -39,9 +39,10 @@ with 'Lintian::Check';
 sub always {
     my ($self) = @_;
 
-    my $uploaders = $self->processable->fields->value('Uploaders');
     return
-      unless defined $uploaders;
+      unless $self->processable->fields->exists('Uploaders');
+
+    my $uploaders = $self->processable->fields->value('Uploaders');
 
     # Note, not expected to hit on uploaders anymore, as dpkg
     # now strips newlines for the .dsc, and the newlines don't
@@ -53,8 +54,9 @@ sub always {
         $uploaders =~ s/,\s*,/,/g;
     }
 
-    my $maintainer = $self->processable->fields->value('Maintainer');
-    if (length $maintainer) {
+    if ($self->processable->fields->exists('Maintainer')) {
+
+        my $maintainer = $self->processable->fields->value('Maintainer');
 
         $self->tag('maintainer-also-in-uploaders')
           if $uploaders =~ m/\Q$maintainer/;
