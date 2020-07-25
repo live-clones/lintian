@@ -31,13 +31,13 @@
                      "severity" : "info"
                   },
                   {
-                     "context" : "debian-changes-1.0+dsfg-1.1",
-                     "name" : "quilt-patch-using-template-description",
+                     "context" : "debian/patches/debian-changes-1.0+dsfg-1.1",
+                     "name" : "patch-not-forwarded-upstream",
                      "severity" : "info"
                   },
                   {
-                     "context" : "debian/patches/debian-changes-1.0+dsfg-1.1",
-                     "name" : "patch-not-forwarded-upstream",
+                     "context" : "debian-changes-1.0+dsfg-1.1",
+                     "name" : "quilt-patch-using-template-description",
                      "severity" : "info"
                   },
                   {
