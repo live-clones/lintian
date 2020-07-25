@@ -37,7 +37,7 @@
                   },
                   {
                      "context" : "debian/patches/debian-changes-1.0+dsfg-1.1",
-                     "name" : "send-patch",
+                     "name" : "patch-not-forwarded-upstream",
                      "severity" : "info"
                   },
                   {

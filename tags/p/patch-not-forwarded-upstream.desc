@@ -1,6 +1,7 @@
-Tag: send-patch
+Tag: patch-not-forwarded-upstream
 Severity: info
 Check: debian/patches/dep3
+Renamed-From: send-patch
 Info: According to the DEP-3 headers, this patch has not been forwarded
  upstream. Please forward the patch upstream and work with them to ensure
  the patch is included in the version control system and in the next

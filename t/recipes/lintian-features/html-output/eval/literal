@@ -595,7 +595,7 @@ div.clear {
       </ul>
 
       <span class="tinycode" id="code-I">I</span>
-      <span class="tinytag"><a href="https://lintian.debian.org/tags/send-patch.html">send-patch</a></span>
+      <span class="tinytag"><a href="https://lintian.debian.org/tags/patch-not-forwarded-upstream.html">patch-not-forwarded-upstream</a></span>
       <span class="tinycontext">debian/patches/debian-changes-1.0+dsfg-1.1</span>
 
     </li>

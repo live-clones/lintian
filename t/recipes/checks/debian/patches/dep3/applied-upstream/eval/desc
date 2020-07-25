@@ -1,5 +1,5 @@
 Testname: applied-upstream
 Check: debian/patches/dep3
 Test-Against:
- send-patch
+ patch-not-forwarded-upstream
 References: Bug#965119
