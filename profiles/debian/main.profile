@@ -147,6 +147,7 @@ Enable-Tags-From-Check:
  files/vcs,
  fonts,
  fonts/opentype,
+ fonts/postscript/type1,
  fonts/truetype,
  foreign-operating-systems,
  games,

@@ -1,6 +1,7 @@
 # fonts -- lintian check script -*- perl -*-
 
 # Copyright © 1998 Christian Schwarz and Richard Braakman
+# Copyright © 2020 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -25,84 +26,41 @@ use warnings;
 use utf8;
 use autodie;
 
-use Lintian::Util qw(drain_pipe);
-
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
 
-my $FONT_PACKAGES = Lintian::Data->new('files/fonts', qr/\s++/);
+my $FONT_PACKAGES = Lintian::Data->new('files/fonts', qr/\s+/);
 
 sub visit_installed_files {
-    my ($self, $file) = @_;
+    my ($self, $item) = @_;
 
-    if (   $file->is_file
-        && $file->name =~ m,/([\w-]+\.(?:[to]tf|pfb|woff2?|eot)(?:\.gz)?)$,i) {
+    return
+      unless $item->is_file;
 
-        my $font = lc $1;
+    my ($anycase)
+      = ($item->name =~ m{/([\w-]+\.(?:[to]tf|pfb|woff2?|eot)(?:\.gz)?)$}i);
+    return
+      unless length $anycase;
 
-        if (my $font_owner = $FONT_PACKAGES->value($font)) {
-            $self->tag('duplicate-font-file', $file->name, 'also in',
-                $font_owner)
-              if (  $self->processable->name ne $font_owner
-                and $self->processable->type ne 'udeb');
+    my $font = lc $anycase;
 
-        } elsif ($self->processable->name !~ m/^(?:[ot]tf|t1|x?fonts)-/) {
-            $self->tag('font-in-non-font-package', $file->name)
-              unless $file->name =~ m,^usr/lib/R/site-library/,;
-        }
+    my $owner = $FONT_PACKAGES->value($font);
+    if (length $owner) {
 
-        $self->tag('font-outside-font-dir', $file->name)
-          unless $file->name =~ m,^usr/share/fonts/,
-          or $file->name =~ m,^usr/lib/R/site-library/,;
+        $self->tag('duplicate-font-file', $item->name, 'also in', $owner)
+          unless $self->processable->name eq $owner
+          || $self->processable->type eq 'udeb';
 
-        my $finfo = $file->file_info;
-        if ($finfo =~ m/PostScript Type 1 font program data/) {
-            my $absolute = $file->unpacked_path;
-            my $foundadobeline = 0;
-            open(my $t1pipe, '-|', 't1disasm', $absolute);
-            while (my $line = <$t1pipe>) {
-                if ($foundadobeline) {
-                    if (
-                        $line =~ m{\A [%\s]*
-                                   All\s*Rights\s*Reserved\.?\s*
-                                       \Z}xsmi
-                    ) {
-                        $self->tag(
-                            'license-problem-font-adobe-copyrighted-fragment',
-                            $file
-                        );
+    } else {
+        unless ($item->name =~ m{^usr/lib/R/site-library/}) {
 
-                        last;
-                    } else {
-                        $foundadobeline = 0;
-                    }
-                }
-                if (
-                    $line =~ m{\A
-                               [%\s]*Copyright\s*\(c\) \s*
-                               19\d{2}[\-\s]19\d{2}\s*
-                               Adobe\s*Systems\s*Incorporated\.?\s*\Z}xsmi
-                ) {
-                    $foundadobeline = 1;
-                }
-                # If copy pasted from black book they are
-                # copyright adobe a few line before the only
-                # place where the startlock is documented is
-                # in the black book copyrighted fragment
-                if ($line =~ m/startlock\s*get\s*exec/) {
+            $self->tag('font-in-non-font-package', $item->name)
+              unless $self->processable->name =~ m/^(?:[ot]tf|t1|x?fonts)-/;
 
-                    $self->tag(
-'license-problem-font-adobe-copyrighted-fragment-no-credit',
-                        $file->name
-                    );
-
-                    last;
-                }
-            }
-            drain_pipe($t1pipe);
-            close($t1pipe);
+            $self->tag('font-outside-font-dir', $item->name)
+              unless $item->name =~ m{^usr/share/fonts/};
         }
     }
 
