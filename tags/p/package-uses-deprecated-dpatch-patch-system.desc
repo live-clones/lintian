@@ -1,6 +1,6 @@
 Tag: package-uses-deprecated-dpatch-patch-system
 Severity: pedantic
-Check: patch-systems
+Check: debian/patches/dpatch
 Info: The dpatch patch system has been deprecated and superceded by the
  "3.0 (quilt)" source format.
  .

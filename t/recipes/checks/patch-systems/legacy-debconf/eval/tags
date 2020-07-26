@@ -1,4 +1,0 @@
-debconf (source): patch-system-but-no-source-readme
-debconf (source): patch-system dpatch
-debconf (source): package-uses-deprecated-dpatch-patch-system
-debconf (source): dpatch-build-dep-but-no-patch-list

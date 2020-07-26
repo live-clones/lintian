@@ -1,0 +1,5 @@
+patch-systems-dpatch-description (source): package-uses-deprecated-dpatch-patch-system
+patch-systems-dpatch-description (source): dpatch-missing-description 04_i_dont_have_a_description_either.patch
+patch-systems-dpatch-description (source): dpatch-missing-description 02_i_dont_have_a_description.patch
+patch-systems-dpatch-description (source): dpatch-index-references-non-existent-patch 01_some_other_patch_thats_not_in_the_package.dpatch
+patch-systems-dpatch-description (source): dpatch-index-references-non-existent-patch 01_not_here_right_now.dpatch

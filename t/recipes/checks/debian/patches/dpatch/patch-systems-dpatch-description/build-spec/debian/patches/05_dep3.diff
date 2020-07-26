@@ -1,0 +1,7 @@
+#! /bin/sh /usr/share/dpatch/dpatch-run
+## 05_dep3.diff by Russ Allbery <rra@debian.org>
+#
+# Description: Patch using the DEP 3 patch header
+# Author: Russ Allbery <rra@debian.org>
+
+@DPATCH@

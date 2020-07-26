@@ -1,3 +1,0 @@
-Testname: cruft-general-wig-pen
-Test-Against: patch-file-present-but-not-mentioned-in-series
-Check: patch-systems

@@ -1,0 +1,6 @@
+scripts (source): patch-file-present-but-not-mentioned-in-series 04_i_dont_have_a_description_either.patch
+scripts (source): patch-file-present-but-not-mentioned-in-series 03_specified_without_dpatch.dpatch
+scripts (source): patch-file-present-but-not-mentioned-in-series 02_i_dont_have_a_description.patch
+scripts (source): patch-file-present-but-not-mentioned-in-series 00options
+scripts (source): patch-file-present-but-not-mentioned-in-series 00list.sparc
+scripts (source): patch-file-present-but-not-mentioned-in-series 00list

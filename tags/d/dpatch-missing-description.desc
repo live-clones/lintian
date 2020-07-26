@@ -1,6 +1,6 @@
 Tag: dpatch-missing-description
 Severity: info
-Check: patch-systems
+Check: debian/patches/dpatch
 Info: dpatch files should carry a description of the included patch.
  Description lines start with "## DP:".
  .
