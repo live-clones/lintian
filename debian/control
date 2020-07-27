@@ -58,6 +58,7 @@ Build-Depends:
  libmoox-aliases-perl <!nocheck>,
  libnamespace-clean-perl <!nocheck>,
  libpath-tiny-perl,
+ libperlio-gzip-perl <!nocheck>,
  libpod-coverage-trustpod-perl <!nocheck>,
  libsereal-decoder-perl <!nocheck>,
  libsereal-encoder-perl <!nocheck>,
@@ -148,6 +149,7 @@ Depends:
  libmoox-aliases-perl,
  libnamespace-clean-perl,
  libpath-tiny-perl,
+ libperlio-gzip-perl,
  libsereal-decoder-perl,
  libsereal-encoder-perl,
  libtext-levenshteinxs-perl,
@@ -169,8 +171,6 @@ Depends:
  xz-utils,
  ${misc:Depends},
  ${perl:Depends},
-Recommends:
- libperlio-gzip-perl,
 Suggests:
  binutils-multiarch,
  libtext-template-perl,

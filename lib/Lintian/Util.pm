@@ -677,6 +677,7 @@ sub __open_gz_pio {
     return $fd;
 }
 
+# Starting on 7/27/20, lintian depends on libperlio-gzip-perl
 # Fallback implementation of open_gz
 sub __open_gz_ext {
     my ($file) = @_;
