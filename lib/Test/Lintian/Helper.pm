@@ -64,6 +64,7 @@ use POSIX qw(locale_h strftime);
 use Lintian::Data;
 use Lintian::Deb822::Parser qw(read_dpkg_control_lc);
 use Lintian::Profile;
+use Lintian::Util qw(safe_qx);
 
 =head1 FUNCTIONS
 
@@ -76,14 +77,19 @@ Ensures that the output from dpkg-architecture has been cached.
 =cut
 
 sub cache_dpkg_architecture_values {
-    open(my $fd, '-|', 'dpkg-architecture')
-      or die('dpkg-architecture failed');
-    while (my $line = <$fd>) {
-        chomp($line);
+
+    my $output = safe_qx('dpkg-architecture');
+
+    die 'dpkg-architecture failed'
+      if $?;
+
+    my @lines = split(/\n/, $output);
+
+    for my $line (@lines) {
         my ($k, $v) = split(/=/, $line, 2);
         $ENV{$k} = $v;
     }
-    close($fd);
+
     return;
 }
 
