@@ -24,7 +24,7 @@ use v5.20;
 use warnings;
 use utf8;
 
-use Capture::Tiny qw(capture);
+use Lintian::Util qw(safe_qx);
 
 use Moo;
 use namespace::clean;
@@ -41,12 +41,11 @@ sub visit_installed_files {
 
         # maybe rewrite with Archive::Zip
 
-        capture {
+        # may prompt for password with -t; piping yes '' does not work
+        safe_qx('unzip', '-l', $file->unpacked_path);
 
-            # may prompt for password with -t; piping yes '' does not work
-            $self->tag('broken-zip', $file->name)
-              if system('unzip', '-l', $file->unpacked_path);
-        };
+        $self->tag('broken-zip', $file->name)
+          if $?;
 
         # should issue a tag for encrypted members, see Bug#935292
     }

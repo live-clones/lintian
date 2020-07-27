@@ -24,7 +24,7 @@ use v5.20;
 use warnings;
 use utf8;
 
-use Capture::Tiny qw(capture);
+use Lintian::Util qw(safe_qx);
 
 use Moo;
 use namespace::clean;
@@ -39,10 +39,10 @@ sub visit_installed_files {
 
     if ($file->name =~ /\.xz$/si) {
 
-        capture {
-            $self->tag('broken-xz', $file->name)
-              if system('xz', '--test', $file->unpacked_path);
-        };
+        safe_qx('xz', '--test', $file->unpacked_path);
+
+        $self->tag('broken-xz', $file->name)
+          if $?;
     }
 
     return;
