@@ -90,7 +90,7 @@ sub changes {
 
     # count occurrences
     my @changes_versions
-      = ($changes =~/^(?: \.)?\s*\S+\s+\(([^\(\)]+)\)\s+\S+;/mg);
+      = ($changes =~/^(?: \.)?\s*\S+\s+\(([^\(\)]+)\)\s+\S+/mg);
 
     my $version = $self->processable->fields->value('Version');
     my $distnumber;
