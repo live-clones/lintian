@@ -30,8 +30,8 @@ use autodie;
 
 use List::MoreUtils qw(any);
 
+use Lintian::IO::Async qw(safe_qx);
 use Lintian::Spelling qw(check_spelling);
-use Lintian::Util qw(safe_qx);
 
 use constant PATCH_DESC_TEMPLATE => 'TODO: Put a short summary on'
   . ' the line above and replace this paragraph';

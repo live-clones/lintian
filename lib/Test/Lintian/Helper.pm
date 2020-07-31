@@ -63,8 +63,8 @@ use POSIX qw(locale_h strftime);
 
 use Lintian::Data;
 use Lintian::Deb822::Parser qw(read_dpkg_control_lc);
+use Lintian::IO::Async qw(safe_qx);
 use Lintian::Profile;
-use Lintian::Util qw(safe_qx);
 
 =head1 FUNCTIONS
 

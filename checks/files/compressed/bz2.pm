@@ -24,7 +24,7 @@ use v5.20;
 use warnings;
 use utf8;
 
-use Lintian::Util qw(safe_qx);
+use Lintian::IO::Async qw(safe_qx);
 
 use Moo;
 use namespace::clean;

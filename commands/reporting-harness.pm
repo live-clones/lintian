@@ -34,10 +34,11 @@ use Path::Tiny;
 use POSIX qw(strftime);
 use YAML::XS ();
 
+use Lintian::IO::Async qw(safe_qx);
 use Lintian::Processable;
 use Lintian::Relation::Version qw(versions_comparator);
 use Lintian::Reporting::Util qw(load_state_cache save_state_cache);
-use Lintian::Util qw(open_gz safe_qx);
+use Lintian::Util qw(open_gz);
 
 use constant EMPTY => q{};
 

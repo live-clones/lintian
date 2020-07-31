@@ -28,17 +28,7 @@ use warnings;
 use utf8;
 use autodie;
 
-use Carp qw(croak);
-use Cwd qw(abs_path);
-use Errno qw(ENOENT);
 use Exporter qw(import);
-use IO::Async::Loop;
-use IO::Async::Process;
-use Path::Tiny;
-use POSIX qw(sigprocmask SIG_BLOCK SIG_UNBLOCK SIG_SETMASK);
-use Unicode::UTF8 qw(valid_utf8);
-
-use Lintian::Deb822::File;
 
 # Force export as soon as possible, since some of the modules we load also
 # depend on us and the sequencing can cause things not to be exported
@@ -54,17 +44,13 @@ BEGIN {
     }
 
     @EXPORT_OK = (qw(
-          get_deb_info
           get_file_checksum
           get_file_digest
           do_fork
           run_cmd
-          safe_qx
           copy_dir
           human_bytes
-          gunzip_file
           open_gz
-          gzip
           perm2oct
           check_path
           normalize_pkg_path
@@ -80,29 +66,28 @@ BEGIN {
     ));
 }
 
+use Carp qw(croak);
+use Cwd qw(abs_path);
 use Digest::MD5;
 use Digest::SHA;
 use Encode ();
+use Errno qw(ENOENT);
 use FileHandle;
+use Path::Tiny;
+use POSIX qw(sigprocmask SIG_BLOCK SIG_UNBLOCK SIG_SETMASK);
 use Scalar::Util qw(openhandle);
+use Unicode::UTF8 qw(valid_utf8);
 
+use Lintian::Deb822::File;
 use Lintian::Relation::Version qw(versions_equal versions_comparator);
 
 use constant EMPTY => q{};
 use constant SPACE => q{ };
 use constant SLASH => q{/};
-use constant COLON => q{:};
 use constant DOT => q{.};
 use constant DOUBLEDOT => q{..};
 use constant BACKSLASH => q{\\};
 use constant NEWLINE => qq{\n};
-
-# read up to 40kB at a time.  this happens to be 4096 "tar records"
-# (with a block-size of 512 and a block factor of 20, which appear to
-# be the defaults).  when we do full reads and writes of READ_SIZE (the
-# OS willing), the receiving end will never be with an incomplete
-# record.
-use constant READ_SIZE => 4096 * 20 * 512;
 
 # preload cache for common permission strings
 # call overhead o perm2oct was measurable on chromium-browser/32.0.1700.123-2
@@ -172,111 +157,6 @@ our $PKGVERSION_REGEX = qr/
 =head1 FUNCTIONS
 
 =over 4
-
-=item get_deb_info(DEBFILE)
-
-Extracts the control file from DEBFILE and returns it as a hashref.
-
-DEBFILE must be an ar file containing a "control.tar.gz" member, which
-in turn should contain a "control" file.  If the "control" file is
-empty this will return an empty list.
-
-Note: the control file is only expected to have a single paragraph and
-thus only the first is returned (in the unlikely case that there are
-more than one).
-
-=cut
-
-sub get_deb_info {
-    my ($path) = @_;
-
-    # dpkg-deb -f $file is very slow. Instead, we use ar and tar.
-
-    my $loop = IO::Async::Loop->new;
-
-    # get control tarball from deb
-    my $dpkgerror;
-    my $dpkgfuture = $loop->new_future;
-    my @dpkgcommand = ('dpkg-deb', '--ctrl-tarfile', $path);
-    my $dpkgprocess = IO::Async::Process->new(
-        command => [@dpkgcommand],
-        stdout => { via => 'pipe_read' },
-        stderr => { into => \$dpkgerror },
-        on_finish => sub {
-            my ($self, $exitcode) = @_;
-            my $status = ($exitcode >> 8);
-
-            if ($status) {
-                my $message= "Non-zero status $status from @dpkgcommand";
-                $message .= COLON . NEWLINE . $dpkgerror
-                  if length $dpkgerror;
-                $dpkgfuture->fail($message);
-                return;
-            }
-
-            $dpkgfuture->done("Done with @dpkgcommand");
-            return;
-        });
-
-    my $control;
-
-    # get the control file
-    my $tarerror;
-    my $tarfuture = $loop->new_future;
-    my @tarcommand = ('tar', '--wildcards', '-xO', '-f', '-', '*control');
-    my $tarprocess = IO::Async::Process->new(
-        command => [@tarcommand],
-        stdin => { via => 'pipe_write' },
-        stdout => { into => \$control },
-        stderr => { into => \$tarerror },
-        on_finish => sub {
-            my ($self, $exitcode) = @_;
-            my $status = ($exitcode >> 8);
-
-            if ($status) {
-                my $message = "Non-zero status $status from @tarcommand";
-                $message .= COLON . NEWLINE . $tarerror
-                  if length $tarerror;
-                $tarfuture->fail($message);
-                return;
-            }
-
-            $tarfuture->done("Done with @tarcommand");
-            return;
-        });
-
-    $tarprocess->stdin->configure(write_len => READ_SIZE);
-
-    $dpkgprocess->stdout->configure(
-        read_len => READ_SIZE,
-        on_read => sub {
-            my ($stream, $buffref, $eof) = @_;
-
-            if (length $$buffref) {
-                $tarprocess->stdin->write($$buffref);
-                $$buffref = EMPTY;
-            }
-
-            if ($eof) {
-                $tarprocess->stdin->close_when_empty;
-            }
-
-            return 0;
-        },
-    );
-
-    $loop->add($dpkgprocess);
-    $loop->add($tarprocess);
-
-    # awaits, and dies on failure with message from failed constituent
-    my $composite = Future->needs_all($dpkgfuture, $tarfuture);
-    $composite->get;
-
-    my $primary = Lintian::Deb822::File->new;
-    my @sections = $primary->parse_string($control);
-
-    return $sections[0];
-}
 
 =item drain_pipe(FD)
 
@@ -538,54 +418,6 @@ sub run_cmd {
     return 1;
 }
 
-=item C<safe_qx(@cmd)>
-
-Emulates the C<qx()> operator by returning the captured output
-just like Capture::Tiny;
-
-Examples:
-
-  # Capture the output of a simple command
-  my $output = safe_qx('grep', 'some-pattern', 'path/to/file');
-
-=cut
-
-sub safe_qx {
-    my @command = @_;
-
-    my $loop = IO::Async::Loop->new;
-    my $future = $loop->new_future;
-    my $status;
-
-    $loop->run_child(
-        command => [@command],
-        on_finish => sub {
-            my ($pid, $exitcode, $stdout, $stderr) = @_;
-            $status = ($exitcode >> 8);
-
-            if ($status) {
-                my $message = "Command @command exited with status $status";
-                $message .= ": $stderr" if length $stderr;
-                $future->fail($message);
-                return;
-            }
-
-            $future->done($stdout);
-        });
-
-    $loop->await($future);
-
-    if ($future->is_failed) {
-        $? = $status;
-        return $future->failure;
-    }
-
-    $? = 0;
-
-    # will raise an exception in case of failure
-    return $future->get;
-}
-
 =item copy_dir (ARGS)
 
 Convenient way of calling I<cp -a ARGS>.
@@ -621,44 +453,6 @@ sub human_bytes {
     return $human;
 }
 
-=item gunzip_file (IN, OUT)
-
-Decompresses contents of the file IN and stores the contents in the
-file OUT.  IN is I<not> removed by this call.  On error, this function
-will cause a trappable error.
-
-=cut
-
-sub gunzip_file {
-    my ($inpath, $outpath) = @_;
-
-    my $loop = IO::Async::Loop->new;
-    my $future = $loop->new_future;
-
-    my @command = ('gzip', '--decompress', '--stdout', $inpath);
-    $loop->run_child(
-        command => [@command],
-        on_finish => sub {
-            my ($pid, $exitcode, $stdout, $stderr) = @_;
-            my $status = ($exitcode >> 8);
-
-            if ($status) {
-                my $message = "Command @command exited with status $status";
-                $message .= ": $stderr" if length $stderr;
-                $future->fail($message);
-                return;
-            }
-
-            path($outpath)->spew($stdout);
-            $future->done;
-        });
-
-    # will raise an exception in case of failure
-    $future->get;
-
-    return;
-}
-
 =item open_gz (FILE)
 
 Opens a handle that reads from the GZip compressed FILE.
@@ -683,55 +477,6 @@ sub __open_gz_ext {
     my ($file) = @_;
     open(my $fd, '-|', 'gzip', '-dc', $file);
     return $fd;
-}
-
-=item gzip (DATA, PATH)
-
-Compresses DATA using gzip and stores result in file located at PATH.
-
-=cut
-
-sub gzip {
-    my ($data, $path) = @_;
-
-    unlink($path)
-      if -e $path;
-
-    $data //= EMPTY;
-
-    my $loop = IO::Async::Loop->new;
-    my $future = $loop->new_future;
-    my $compressed;
-    my $stderr;
-
-    my @command = ('gzip', '--best', '--no-name', '--stdout');
-    my $process = IO::Async::Process->new(
-        command => [@command],
-        stdin => { from => $data },
-        stdout => { into => \$compressed },
-        stderr => { into => \$stderr },
-        on_finish => sub {
-            my ($self, $exitcode) = @_;
-            my $status = ($exitcode >> 8);
-
-            if ($status) {
-                my $message = "Command @command exited with status $status";
-                $message .= ": $stderr" if length $stderr;
-                $future->fail($message);
-                return;
-            }
-
-            $future->done('Done with command @command');
-            return;
-        });
-
-    $loop->add($process);
-
-    $future->get;
-
-    path($path)->spew($compressed // EMPTY);
-
-    return;
 }
 
 =item locate_helper_tool(TOOLNAME)

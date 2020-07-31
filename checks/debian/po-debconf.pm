@@ -29,7 +29,8 @@ use Cwd qw(realpath);
 use File::Temp();
 use Try::Tiny;
 
-use Lintian::Util qw(copy_dir safe_qx);
+use Lintian::IO::Async qw(safe_qx);
+use Lintian::Util qw(copy_dir);
 
 use constant EMPTY => q{};
 use constant NEWLINE => qq{\n};

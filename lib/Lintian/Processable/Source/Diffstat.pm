@@ -37,7 +37,7 @@ use autodie;
 use Path::Tiny;
 
 use Lintian::Deb822::Parser qw(read_dpkg_control);
-use Lintian::Util qw(safe_qx);
+use Lintian::IO::Async qw(safe_qx);
 
 use constant EMPTY => q{};
 use constant UNDERSCORE => q{_};

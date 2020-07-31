@@ -22,10 +22,11 @@ use warnings;
 use utf8;
 use autodie;
 
+use IO::Uncompress::Gunzip qw(gunzip $GunzipError);
 use Path::Tiny;
 
 use Lintian::Architecture qw(:all);
-use Lintian::Util qw($PKGNAME_REGEX gunzip_file is_ancestor_of);
+use Lintian::Util qw($PKGNAME_REGEX is_ancestor_of);
 
 use constant EMPTY => q{};
 
@@ -96,7 +97,9 @@ sub add_overrides {
       unless is_ancestor_of($unpackedpath, $packageoverridepath);
 
     if ($packageoverridepath =~ /\.gz$/) {
-        gunzip_file($packageoverridepath, $overridepath);
+        gunzip($packageoverridepath => $overridepath)
+          or die "gunzip $packageoverridepath failed: $GunzipError";
+
     } else {
         link($packageoverridepath, $overridepath);
     }

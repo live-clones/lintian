@@ -29,7 +29,7 @@ use List::MoreUtils qw(first_index none);
 use Path::Tiny;
 
 use Lintian::Data;
-use Lintian::Util qw(safe_qx);
+use Lintian::IO::Async qw(safe_qx);
 
 use constant EMPTY => q{};
 use constant NEWLINE => qq{\n};

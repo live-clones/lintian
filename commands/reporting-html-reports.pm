@@ -41,11 +41,12 @@ use YAML::XS ();
 use Lintian::Data;
 use Lintian::Deb822::Parser qw(read_dpkg_control_lc);
 use Lintian::Internal::FrontendUtil qw(split_tag);
+use Lintian::IO::Async qw(safe_qx);
 use Lintian::Profile;
 use Lintian::Relation::Version qw(versions_comparator);
 use Lintian::Reporting::ResourceManager;
 use Lintian::Reporting::Util qw(load_state_cache find_backlog);
-use Lintian::Util qw(copy_dir run_cmd check_path safe_qx);
+use Lintian::Util qw(copy_dir run_cmd check_path);
 
 my $CONFIG;
 my %OPT;
