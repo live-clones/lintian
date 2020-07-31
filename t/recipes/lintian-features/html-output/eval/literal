@@ -805,7 +805,7 @@ div.clear {
 
 <footer>
   <p>
-    Comments about this web pages? Please report a bug against the
+    Comments about this web page? Please report a bug against the
     <a href="https://salsa.debian.org/lintian/lintian">lintian</a>
     package and mention the <em>standalone HTML</em> output format.
   </p>
