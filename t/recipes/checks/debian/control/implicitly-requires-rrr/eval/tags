@@ -1,2 +1,0 @@
-implicitly-requires-rrr (source): silent-on-rules-requiring-root
-implicitly-requires-rrr (source): rules-silently-require-root implicitly-requires-rrr usr/share/separate/controlled-by-owner (USER:GROUP)

@@ -31,7 +31,6 @@ game (binary): octal-permissions game_1.0_all.deb  755 usr/
 game (binary): octal-permissions game_1.0_all.deb  644 usr/share/man/man1/script.1.gz
 game (binary): octal-permissions game_1.0_all.deb  644 usr/share/doc/game/copyright
 game (binary): octal-permissions game_1.0_all.deb  644 usr/share/doc/game/changelog.gz
-game (binary): non-standard-game-executable-perm usr/games/script 0755 != 2755
 binary (binary): setuid-gid-binary usr/bin/script-ugid 6755 root/root
 binary (binary): setuid-binary usr/bin/script-wuid 4744 root/root
 binary (binary): setuid-binary usr/bin/script-uid 4755 root/root

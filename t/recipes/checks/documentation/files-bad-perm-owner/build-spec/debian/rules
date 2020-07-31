@@ -15,10 +15,7 @@ override_dh_auto_build:
 
 override_dh_fixperms:
 	dh_fixperms
-	# game
-	chown 'root:games' debian/$(GPKG)/usr/games/script
-	# binary
-	chown "daemon:daemon" debian/$(PKG)/usr/share/doc/$(PKG)/README
+
 	chmod 0444 debian/$(PKG)/usr/share/doc/$(PKG)/read-only
 	chmod 4755 debian/$(PKG)/usr/bin/script-uid
 	chmod 2755 debian/$(PKG)/usr/bin/script-gid
