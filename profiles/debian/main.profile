@@ -62,6 +62,7 @@ Enable-Tags-From-Check:
  fields/built-using,
  fields/changed-by,
  fields/checksums,
+ fields/deb822,
  fields/derivatives,
  fields/description,
  fields/distribution,
