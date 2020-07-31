@@ -1,6 +1,8 @@
-Tag: rules-requires-root-missing
+Tag: silent-on-rules-requiring-root
 Severity: pedantic
 Check: debian/control
+Renamed-From:
+ rules-requires-root-missing
 Info: The <tt>debian/control</tt> file is missing an explicit
  <tt>Rules-Requires-Root</tt> field.
  .

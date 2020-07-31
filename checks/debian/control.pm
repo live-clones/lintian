@@ -478,7 +478,7 @@ sub source {
             $self->tag('rules-requires-root-explicitly');
         }
     } else {
-        $self->tag('rules-requires-root-missing');
+        $self->tag('silent-on-rules-requiring-root');
     }
 
     if ((
@@ -493,7 +493,7 @@ sub source {
             foreach my $file ($proc->installed->sorted_list) {
                 my $owner = $file->owner . ':' . $file->group;
                 next if $owner eq 'root:root';
-                $self->tag('should-specify-rules-requires-root',
+                $self->tag('rules-silently-require-root',
                     $pkg, $file,"($owner)");
                 last BINARY;
             }

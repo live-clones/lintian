@@ -1,1 +1,1 @@
-generic-empty (source): rules-requires-root-missing
+generic-empty (source): silent-on-rules-requiring-root

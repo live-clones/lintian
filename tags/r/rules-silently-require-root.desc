@@ -1,6 +1,8 @@
-Tag: should-specify-rules-requires-root
+Tag: rules-silently-require-root
 Severity: info
 Check: debian/control
+Renamed-From:
+ should-specify-rules-requires-root
 Info: This package builds a binary package containing at least one path
  with a UNIX ownership other than "root:root". It therefore requires
  <tt>fakeroot(1)</tt> or similar to build its binary targets.
