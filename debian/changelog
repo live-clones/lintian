@@ -1,8 +1,34 @@
-lintian (2.85.0+git) UNRELEASED; urgency=medium
+lintian (2.86.0) unstable; urgency=medium
 
-  * WIP (generated at release time: please do not add entries below).
+  [ Felix Lechner ]
+  * Revert running each check in a separate process to prevent some file
+    descriptor regression. (Closes: #966122, #966368)
+  * Also consider pseudo-headers allowed by DEP-3 when examining patches.
+    (Closes: #966024)
+  * Do not issue the patch-not-forwarded-upstream tag when Origin: is
+    upstream or backport. (Closes: #966140)
+  * Analyse matching behavior and relative order of globbing patterns in
+    debian/copyright. (Closes: #905747)
+  * Rename two similar tags related to Rules-Requires-Root.
+  * Flag overrides with mismatched context separately from those that are
+    not used.
+  * Wait for each lexgrog and man and convert documentation/manual check to
+    IPC::Run3. (Closes: #966072)
+  * Salsa setup:
+    - Set CCACHE_DISABLE in t/bin/build-test-packages; otherwise standard
+      Salsa CI pipelines will fail.
+    - Use the Salsa CI team's standard pipeline instead of Lintian's custom
+      CI setup.
+  * Remove three obsolete tags from pkg-perl team checks.
 
- -- Chris Lamb <lamby@debian.org>  Tue, 21 Jul 2020 23:43:58 +0100
+  [ Chris Lamb ]
+  * Avoid false-positives when matching sensible-utils utilities (eg.
+    "i3-sensible-pager"). (Closes: #966022)
+  * Rename send-patch to patch-not-forwarded-upstream; tag names should
+    ideally be descriptions of the world, not instructions. Update regex to
+    search for released version numbers in a .changes file.
+
+ -- Chris Lamb <lamby@debian.org>  Sat, 01 Aug 2020 14:41:32 +0000
 
 lintian (2.85.0) unstable; urgency=medium
 
