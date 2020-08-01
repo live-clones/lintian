@@ -26,7 +26,7 @@ use utf8;
 
 use Time::Piece;
 
-use Lintian::IO::Async qw(safe_qx);
+use Lintian::IPC::Run3 qw(safe_qx);
 
 use Moo;
 use namespace::clean;

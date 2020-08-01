@@ -34,7 +34,7 @@ use List::MoreUtils qw(any);
 use POSIX qw(strftime);
 
 use Lintian::Data;
-use Lintian::IO::Async qw(safe_qx);
+use Lintian::IPC::Run3 qw(safe_qx);
 use Lintian::Relation;
 use Lintian::Spelling qw($known_shells_regex);
 

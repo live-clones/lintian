@@ -26,7 +26,7 @@ use warnings;
 use utf8;
 use autodie;
 
-use Lintian::IO::Async qw(safe_qx);
+use Lintian::IPC::Run3 qw(safe_qx);
 
 use Moo;
 use namespace::clean;
