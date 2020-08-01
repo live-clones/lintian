@@ -28,9 +28,8 @@ use autodie;
 
 use Cwd qw(getcwd);
 use File::Basename;
-use IO::Async::Loop;
-use IO::Async::Process;
 use IO::Uncompress::Gunzip qw(gunzip $GunzipError);
+use IPC::Run3;
 use List::Compare;
 use List::MoreUtils qw(any none);
 use Path::Tiny;
@@ -52,8 +51,6 @@ use namespace::clean;
 with 'Lintian::Check';
 
 has local_manpages => (is => 'rw', default => sub { {} });
-
-has running => (is => 'rw', default => sub { [] });
 
 sub spelling_tag_emitter {
     my ($self, @orig_args) = @_;
@@ -224,8 +221,6 @@ sub visit_installed_files {
             }
         }
 
-        my $loop = IO::Async::Loop->new;
-
         # If it's not a .so link, use lexgrog to find out if the
         # man page parses correctly and make sure the short
         # description is reasonable.
@@ -238,55 +233,41 @@ sub visit_installed_files {
         # man-db is fixed, this limitation should be removed.
         if ($path =~ m,/man/man\d/,) {
 
-            my $future = $loop->new_future;
-            my $stdout;
-            my $stderr;
-
-            my $check = $self;
-
             delete local $ENV{$_}
               for grep { $_ ne 'PATH' && $_ ne 'TMPDIR' } keys %ENV;
             local $ENV{LC_ALL} = 'C.UTF-8';
 
             my @command = ('lexgrog', $file->unpacked_path);
-            my $process = IO::Async::Process->new(
-                command => [@command],
-                stdout => { into => \$stdout },
-                stderr => { into => \$stderr },
-                on_finish => sub {
-                    my ($self, $exitcode) = @_;
-                    my $status = ($exitcode >> 8);
 
-                    $check->tag('bad-whatis-entry', $file)
-                      if $status == 2;
+            my $stdout;
+            my $stderr;
 
-                    if ($status != 0 && $status != 2) {
-                        my $message = "Non-zero status $status from @command";
-                        $message .= COLON . NEWLINE . $stderr
-                          if length $stderr;
-                        $future->fail($message);
-                        return;
-                    }
+            run3(\@command, undef, \$stdout, \$stderr);
 
-                    my $desc = $stdout;
-                    $desc =~ s/^[^:]+: \"(.*)\"$/$1/;
+            my $exitcode = $?;
+            my $status = ($exitcode >> 8);
 
-                    if ($desc =~ /(\S+)\s+-\s+manual page for \1/i) {
-                        $check->tag('useless-whatis-entry', $file);
+            $self->tag('bad-whatis-entry', $file)
+              if $status == 2;
 
-                    } elsif ($desc =~ /\S+\s+-\s+programs? to do something/i) {
-                        $check->tag('manual-page-from-template', $file);
-                    }
+            if ($status != 0 && $status != 2) {
+                my $message = "Non-zero status $status from @command";
+                $message .= COLON . NEWLINE . $stderr
+                  if length $stderr;
 
-                    $future->done("Done with @command");
-                    return;
-                });
+                warn $message;
 
-            $loop->add($process);
+            } else {
+                my $desc = $stdout;
+                $desc =~ s/^[^:]+: \"(.*)\"$/$1/;
 
-            $future->retain;
+                if ($desc =~ /(\S+)\s+-\s+manual page for \1/i) {
+                    $self->tag('useless-whatis-entry', $file);
 
-            push(@{$self->running}, $future);
+                } elsif ($desc =~ /\S+\s+-\s+programs? to do something/i) {
+                    $self->tag('manual-page-from-template', $file);
+                }
+            }
         }
 
         # If it's not a .so link, run it through 'man' to check for errors.
@@ -295,12 +276,6 @@ sub visit_installed_files {
         # processed properly.  (Yes, there are man pages that include other
         # pages with .so but aren't simple links; rbash, for instance.)
         {
-            my $future = $loop->new_future;
-            my $stdout;
-            my $stderr;
-
-            my $check = $self;
-
             delete local $ENV{$_}
               for grep { $_ ne 'PATH' && $_ ne 'TMPDIR' } keys %ENV;
             local $ENV{LC_ALL} = 'C.UTF-8';
@@ -308,7 +283,11 @@ sub visit_installed_files {
             local $ENV{MANROFFSEQ} = EMPTY;
             local $ENV{MANWIDTH} = 80;
 
+            my $stdout;
+            my $stderr;
+
             my @command = qw(man --warnings -E UTF-8 -l -Tutf8 -Z);
+            push(@command, $file->unpacked_path);
 
             my $localdir = path($file->unpacked_path)->parent->stringify;
             $localdir =~ s{^(.*)/man\d\b}{$1}s;
@@ -316,87 +295,74 @@ sub visit_installed_files {
             my $savedir = getcwd;
             chdir($localdir);
 
-            push(@command, $file->unpacked_path);
+            run3(\@command, undef, \$stdout, \$stderr);
 
-            my $process = IO::Async::Process->new(
-                command => [@command],
-                stdout => { into => \$stdout },
-                stderr => { into => \$stderr },
-                on_finish => sub {
-                    my ($self, $exitcode) = @_;
-                    my $status = ($exitcode >> 8);
+            my $exitcode = $?;
+            my $status = ($exitcode >> 8);
 
-                    my @lines = split(/\n/, $stderr);
+            my @lines = split(/\n/, $stderr);
 
-                    for (@lines) {
-                        # Devel::Cover causes some annoying deep recursion
-                        # warnings and sometimes in our child process.
-                        # Filter them out, but only during coverage.
-                        next
-                          if LINTIAN_COVERAGE
-                          and m{
-                                                       \A Deep [ ] recursion [ ] on [ ] subroutine [ ]
-                                                       "[^"]+" [ ] at [ ] .*B/Deparse.pm [ ] line [ ]
-                                                       \d+}xsm;
+            for (@lines) {
+                # Devel::Cover causes some annoying deep recursion
+                # warnings and sometimes in our child process.
+                # Filter them out, but only during coverage.
+                next
+                  if LINTIAN_COVERAGE
+                  and m{
+                      \A Deep [ ] recursion [ ] on [ ] subroutine [ ]
+                      "[^"]+" [ ] at [ ] .*B/Deparse.pm [ ] line [ ]
+                      \d+}xsm;
 
-                        # ignore progress information from man
-                        next
-                          if /^Reformatting/;
+                # ignore progress information from man
+                next
+                  if /^Reformatting/;
 
-                        next
-                          if /^\s*$/;
+                next
+                  if /^\s*$/;
 
-                  # ignore errors from gzip, will be dealt with at other places
-                        next
-                          if /^(?:man|gzip)/;
+                # ignore errors from gzip, will be dealt with at other places
+                next
+                  if /^(?:man|gzip)/;
 
-                 # ignore wrapping failures for Asian man pages (groff problem)
-                        if ($language =~ /^(?:ja|ko|zh)/) {
-                            next
-                              if /warning \[.*\]: cannot adjust line/;
-                            next
-                              if /warning \[.*\]: can\'t break line/;
-                        }
+                # ignore wrapping failures for Asian man pages (groff problem)
+                if ($language =~ /^(?:ja|ko|zh)/) {
+                    next
+                      if /warning \[.*\]: cannot adjust line/;
+                    next
+                      if /warning \[.*\]: can\'t break line/;
+                }
 
-                     # ignore wrapping failures if they contain URLs (.UE is an
-                     # extension for marking the end of a URL).
-                        next
-                          if
-/:(\d+): warning \[.*\]: (?:can\'t break|cannot adjust) line/
-                          and( $manfile[$1 - 1] =~ m,(?:https?|ftp|file)://.+,i
-                            or $manfile[$1 - 1] =~ m,^\s*\.\s*UE\b,);
+                # ignore wrapping failures if they contain URLs (.UE is an
+                # extension for marking the end of a URL).
+                next
+                  if
+                  /:(\d+): warning \[.*\]: (?:can\'t break|cannot adjust) line/
+                  and( $manfile[$1 - 1] =~ m,(?:https?|ftp|file)://.+,i
+                    or $manfile[$1 - 1] =~ m,^\s*\.\s*UE\b,);
 
-                     # ignore common undefined macros from pod2man << Perl 5.10
-                        next
-                          if /warning: (?:macro )?\'(?:Tr|IX)\' not defined/;
+                # ignore common undefined macros from pod2man << Perl 5.10
+                next
+                  if /warning: (?:macro )?\'(?:Tr|IX)\' not defined/;
 
-                        chomp;
-                        s/^[^:]+: //;
-                        s/^<standard input>://;
+                chomp;
+                s/^[^:]+: //;
+                s/^<standard input>://;
 
-                        $check->tag('groff-message', $file, $_);
+                $self->tag('groff-message', $file, $_);
 
-                        last;
-                    }
+                last;
+            }
 
-                    if ($status) {
-                        my $message = "Non-zero status $status from @command";
-                        $message .= COLON . NEWLINE . $stderr
-                          if length $stderr;
-                        $future->fail($message);
-                        return;
-                    }
+            if ($status) {
+                my $message = "Non-zero status $status from @command";
+                $message .= COLON . NEWLINE . $stderr
+                  if length $stderr;
 
-                    $future->done("Done with @command");
-                    return;
-                });
-
-            $loop->add($process);
-            $future->retain;
+                warn $message;
+            }
 
             chdir($savedir);
 
-            push(@{$self->running}, $future);
         }
 
         # Now we search through the whole man page for some common errors
@@ -599,15 +565,6 @@ sub breakdown_installed_files {
         $self->tag('spare-manual-page', $file)
           if $section == 1 || $section == 8;
     }
-
-    Future->wait_all(@{$self->running})->get;
-
-    for my $future (@{$self->running}) {
-        warn $future->failure
-          if $future->is_failed;
-    }
-
-    @{$self->running} = ();
 
     return;
 }
