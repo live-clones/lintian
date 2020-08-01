@@ -23,13 +23,12 @@ use warnings;
 use utf8;
 use autodie;
 
-use IO::Async::Loop;
-use IO::Async::Process;
+use IPC::Run3;
 use List::MoreUtils qw(first_index none);
 use Path::Tiny;
 
 use Lintian::Data;
-use Lintian::IO::Async qw(safe_qx);
+use Lintian::IPC::Run3 qw(safe_qx);
 
 use constant EMPTY => q{};
 use constant NEWLINE => qq{\n};
@@ -57,38 +56,20 @@ sub installable {
     my $type = $self->processable->type;
     my $processable = $self->processable;
 
+    # deb is a symlink.
     my $deb = path($processable->groupdir)->child('deb')->stringify;
 
-    # Run ar t on the *.deb file.  deb will be a symlink to it.
-    my $failed; # set to one when something is so bad that we can't continue
-
-    my $loop = IO::Async::Loop->new;
-    my $future = $loop->new_future;
+    # set to one when something is so bad that we can't continue
+    my $failed;
 
     my @command = ('ar', 't', $deb);
-    my $stdout = EMPTY;
-    my $stderr = EMPTY;
-    my $process = IO::Async::Process->new(
-        command => [@command],
-        stdout => { into => \$stdout },
-        stderr => { into => \$stderr },
-        on_finish => sub {
-            my ($self, $exitcode) = @_;
-            my $status = ($exitcode >> 8);
 
-            if ($status) {
-                $future->fail("Non-zero status $status from @command");
-                return;
-            }
+    my $stdout;
+    my $stderr;
 
-            $future->done("Done with @command");
-            return;
-        });
+    run3(\@command, undef, \$stdout, \$stderr);
 
-    $loop->add($process);
-    $loop->await($future);
-
-    if ($future->is_done) {
+    unless ($?) {
         my @members = split(/\n/, $stdout);
         my $count = scalar(@members);
         my ($ctrl_member, $data_member);

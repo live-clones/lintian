@@ -27,9 +27,10 @@ use autodie;
 
 use Cwd qw(realpath);
 use File::Temp();
+use IPC::Run3;
 use Try::Tiny;
 
-use Lintian::IO::Async qw(safe_qx);
+use Lintian::IPC::Run3 qw(safe_qx);
 use Lintian::Util qw(copy_dir);
 
 use constant EMPTY => q{};
@@ -289,45 +290,18 @@ sub source {
         my $error;
 
         my $stats;
-        try {
-            delete local $ENV{$_}
-              for grep { $_ ne 'PATH' && $_ ne 'TMPDIR' } keys %ENV;
-            local $ENV{LC_ALL} = 'C';
 
-            my $loop = IO::Async::Loop->new;
-            my $future = $loop->new_future;
+        delete local $ENV{$_}
+          for grep { $_ ne 'PATH' && $_ ne 'TMPDIR' } keys %ENV;
+        local $ENV{LC_ALL} = 'C';
 
-            my @command = (
-                'msgfmt', '-o', '/dev/null', '--statistics',
-                $po_path->unpacked_path
-            );
+        my @command = ('msgfmt', '-o', '/dev/null', '--statistics',
+            $po_path->unpacked_path);
 
-            $loop->run_child(
-                command => [@command],
-                on_finish => sub {
-                    my ($pid, $exitcode, $stdout, $stderr) = @_;
-                    my $status = ($exitcode >> 8);
+        run3(\@command, undef, undef, \$stats);
 
-                    if ($status) {
-                        my $message
-                          = "Command @command exited with status $status";
-                        $message .= ": $stderr" if length $stderr;
-                        $future->fail($message);
-                        return;
-                    }
-
-                    $future->done($stderr);
-                });
-
-            # will raise an exception in case of failure
-            $stats = $future->get;
-
-        }catch {
-            # catch any error
-            $error = $_;
-        };
-
-        $self->tag('invalid-po-file', $po_path) if length $error;
+        $self->tag('invalid-po-file', $po_path)
+          if $?;
 
         $stats //= EMPTY;
 
