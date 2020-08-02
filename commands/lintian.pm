@@ -43,8 +43,6 @@ my $INIT_ROOT = $ENV{'LINTIAN_ROOT'};
 
 use Lintian::Data;
 use Lintian::Inspect::Changelog;
-use Lintian::Internal::FrontendUtil
-  qw(default_parallel sanitize_environment open_file_or_fd);
 use Lintian::IO::Async qw(safe_qx);
 use Lintian::Output::Standard;
 use Lintian::Pool;
@@ -59,7 +57,35 @@ use constant NEWLINE => qq{\n};
 my $interactive = -t STDIN && (-t STDOUT || !(-f STDOUT || -c STDOUT));
 my $hyperlinks_capable = $interactive && qx{env | fgrep -i gnome};
 
-sanitize_environment();
+my %PRESERVE_ENV = map { $_ => 1 } qw(
+  DEBRELEASE_DEBS_DIR
+  HOME
+  LANG
+  LC_ALL
+  LC_MESSAGES
+  PATH
+  TMPDIR
+  XDG_CACHE_HOME
+  XDG_CONFIG_DIRS
+  XDG_CONFIG_HOME
+  XDG_DATA_DIRS
+  XDG_DATA_HOME
+);
+
+my @disallowed
+  = grep { !exists $PRESERVE_ENV{$_} && $_ !~ /^LINTIAN_/ } keys %ENV;
+
+delete $ENV{$_} for @disallowed;
+
+# needed for tar
+$ENV{'LC_ALL'} = 'C';
+$ENV{'TZ'} = '';
+
+# When run in some automated ways, Lintian may not have a
+# PATH, but we assume we can call standard utilities without
+# their full path.  If PATH is completely unset, add something
+# basic.
+$ENV{'PATH'} = '/bin:/usr/bin' unless exists $ENV{'PATH'};
 
 # }}}
 
@@ -75,9 +101,7 @@ sanitize_environment();
 #
 # NB: Variables listed here are not always exported.
 #
-# CAVEAT: If it does not start with "LINTIAN_", then it should
-# probably be listed in %PRESERVE_ENV in
-# L::Internal::FrontendUtil (!)
+
 my @ENV_VARS = (
     # LINTIAN_CFG  - handled manually
     qw(
@@ -1111,6 +1135,77 @@ sub _update_profile {
         $profile->disable_tag($_) for keys %$sup_tags;
     }
     return;
+}
+
+=item open_file_or_fd
+
+=cut
+
+# open_file_or_fd(TO_OPEN, MODE)
+#
+# Open a given file or FD based on TO_OPEN and MODE and returns the
+# open handle.  Will croak / throw a trappable error on failure.
+#
+# MODE can be one of "<" (read) or ">" (write).
+#
+# TO_OPEN is one of:
+#  * "-", alias of "&0" or "&1" depending on MODE
+#  * "&N", reads/writes to the file descriptor numbered N
+#          based on MODE.
+#  * "+FILE" (MODE eq '>' only), open FILE in append mode
+#  * "FILE", open FILE in read or write depending on MODE.
+#            Note that this will truncate the file if MODE
+#            is ">".
+sub open_file_or_fd {
+    my ($to_open, $mode) = @_;
+    my $fd;
+    # autodie trips this for some reasons (possibly fixed
+    # in v2.26)
+    no autodie qw(open);
+    if ($mode eq '<') {
+        if ($to_open eq '-' or $to_open eq '&0') {
+            $fd = \*STDIN;
+        } elsif ($to_open =~ m/^\&\d+$/) {
+            open($fd, '<&=', substr($to_open, 1))
+              or die("fdopen $to_open for reading: $!\n");
+        } else {
+            open($fd, '<', $to_open)
+              or die("open $to_open for reading: $!\n");
+        }
+    } elsif ($mode eq '>') {
+        if ($to_open eq '-' or $to_open eq '&1') {
+            $fd = \*STDOUT;
+        } elsif ($to_open =~ m/^\&\d+$/) {
+            open($fd, '>&=', substr($to_open, 1))
+              or die("fdopen $to_open for writing: $!\n");
+        } else {
+            $mode = ">$mode" if $to_open =~ s/^\+//;
+            open($fd, $mode, $to_open)
+              or die("open $to_open for write/append ($mode): $!\n");
+        }
+    } else {
+        croak("Invalid mode \"$mode\" for open_file_or_fd");
+    }
+    return $fd;
+}
+
+=item default_parallel
+
+=cut
+
+# Return the default number of parallelization to be used
+sub default_parallel {
+    # check cpuinfo for the number of cores...
+    my $cpus = safe_qx('nproc');
+    if ($cpus =~ m/^\d+$/) {
+        # Running up to twice the number of cores usually gets the most out
+        # of the CPUs and disks but it might be too aggressive to be the
+        # default for -j. Only use <cores>+1 then.
+        return $cpus + 1;
+    }
+
+    # No decent number of jobs? Just use 2 as a default
+    return 2;
 }
 
 # }}}

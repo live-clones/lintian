@@ -40,7 +40,6 @@ use YAML::XS ();
 
 use Lintian::Data;
 use Lintian::Deb822::Parser qw(read_dpkg_control_lc);
-use Lintian::Internal::FrontendUtil qw(split_tag);
 use Lintian::IO::Async qw(safe_qx);
 use Lintian::Profile;
 use Lintian::Relation::Version qw(versions_comparator);
@@ -1203,6 +1202,36 @@ sub by_tag {
       || $a_pi->{type}           cmp $b_pi->{type}
       || $a->{tag_info}->name    cmp $b->{tag_info}->name
       || $a->{extra}             cmp $b->{extra};
+}
+
+=item split_tag
+
+=cut
+
+{
+    # Matches something like:  (1:2.0-3) [arch1 arch2]
+    # - captures the version and the architectures
+    my $verarchre = qr,(?: \s* \(( [^)]++ )\) \s* \[ ( [^]]++ ) \]),xo;
+    #                             ^^^^^^^^          ^^^^^^^^^^^^
+    #                           ( version   )      [architecture ]
+
+    # matches the full deal:
+    #    1  222 3333  4444444   5555   666  777
+    # -  T: pkg type (version) [arch]: tag [...]
+    #           ^^^^^^^^^^^^^^^^^^^^^
+    # Where the marked part(s) are optional values.  The numbers above
+    # the example are the capture groups.
+    my $TAG_REGEX
+      = qr/([EWIXOPC]): (\S+)(?: (\S+)(?:$verarchre)?)?: (\S+)(?:\s+(.*))?/;
+
+    sub split_tag {
+        my ($tag_input) = @_;
+        my $pkg_type;
+        return unless $tag_input =~ /^${TAG_REGEX}$/;
+        # default value...
+        $pkg_type = $3//'binary';
+        return ($1, $2, $pkg_type, $4, $5, $6, $7);
+    }
 }
 
 1;

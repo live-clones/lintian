@@ -91,7 +91,7 @@ BEGIN {
 
 use lib "$ENV{'LINTIAN_TEST_ROOT'}/lib";
 
-use Lintian::Internal::FrontendUtil qw(default_parallel);
+use Lintian::IO::Async qw(safe_qx);
 
 use Test::Lintian::ConfigFile qw(read_config);
 use Test::Lintian::Filter
@@ -583,6 +583,25 @@ unless (scalar @runscripts - scalar @requiredscripts + scalar @workscripts
 exit $status;
 
 # program is done
+
+=item default_parallel
+
+=cut
+
+# Return the default number of parallelization to be used
+sub default_parallel {
+    # check cpuinfo for the number of cores...
+    my $cpus = safe_qx('nproc');
+    if ($cpus =~ m/^\d+$/) {
+        # Running up to twice the number of cores usually gets the most out
+        # of the CPUs and disks but it might be too aggressive to be the
+        # default for -j. Only use <cores>+1 then.
+        return $cpus + 1;
+    }
+
+    # No decent number of jobs? Just use 2 as a default
+    return 2;
+}
 
 sub usage {
     print <<"END";
