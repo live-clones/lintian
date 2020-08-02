@@ -60,6 +60,7 @@ BEGIN {
           drain_pipe
           drop_relative_prefix
           read_md5sums
+          version_from_changelog
           $PKGNAME_REGEX
           $PKGREPACK_REGEX
           $PKGVERSION_REGEX
@@ -80,6 +81,7 @@ use Scalar::Util qw(openhandle);
 use Unicode::UTF8 qw(valid_utf8);
 
 use Lintian::Deb822::File;
+use Lintian::Inspect::Changelog;
 use Lintian::Relation::Version qw(versions_equal versions_comparator);
 
 use constant EMPTY => q{};
@@ -551,6 +553,30 @@ sub drop_relative_prefix {
     $copy =~ s{^\./}{}s;
 
     return $copy;
+}
+
+=item version_from_changelog
+
+=cut
+
+sub version_from_changelog {
+    my ($package_path) = @_;
+
+    my $changelog_path = "$package_path/debian/changelog";
+
+    return EMPTY
+      unless -f $changelog_path;
+
+    my $contents = path($changelog_path)->slurp_utf8;
+    my $changelog = Lintian::Inspect::Changelog->new;
+
+    $changelog->parse($contents);
+    my @entries = @{$changelog->entries};
+
+    return $entries[0]->{'Version'}
+      if @entries;
+
+    return EMPTY;
 }
 
 =item signal_number2name(NUM)

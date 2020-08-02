@@ -39,6 +39,10 @@ use File::Basename;
 use Getopt::Long();
 use Path::Tiny;
 
+use Lintian::IPC::Run3 qw(safe_qx);
+use Lintian::Util qw(version_from_changelog);
+
+use constant EMPTY => q{};
 use constant COLON => q{:};
 
 binmode(STDOUT, ':encoding(UTF-8)');
@@ -165,51 +169,32 @@ for my $folder (@CONFIG_DIRS) {
 die "$cmd is not available";
 
 sub guess_version {
-    my $guess;
 
-    my $repopath = "$ENV{LINTIAN_BASE}/.git";
-    if (-d $repopath) {
-        # Lets try git
-        require IO::Async::Loop;
-        require IO::Async::Process;
+    my $guess = version_from_git($ENV{LINTIAN_BASE});
+    $guess ||= version_from_changelog($ENV{LINTIAN_BASE});
 
-        my $loop = IO::Async::Loop->new;
-        my $future = $loop->new_future;
-        my $process = IO::Async::Process->new(
-            command => ['git', "--git-dir=$repopath", 'describe'],
-            stdout => { into => \$guess },
-            on_finish => sub {
-                my ($self, $exitcode) = @_;
-                my $status = ($exitcode >> 8);
+    return $guess
+      if length $guess;
 
-                $future->done('Done with git describe');
-                return;
-            });
-
-        $loop->add($process);
-        $loop->await($future);
-
-        chomp $guess;
-        return $guess if $guess;
-    }
-
-    # git was not possible - maybe the changelog is available
-    my $changelogpath = "$ENV{LINTIAN_BASE}/debian/changelog";
-    if (-f $changelogpath) {
-
-        require Lintian::Inspect::Changelog;
-        my $contents = path($changelogpath)->slurp;
-        my $changelog = Lintian::Inspect::Changelog->new;
-
-        $changelog->parse($contents);
-        my @entries = @{$changelog->entries};
-        $guess = $entries[0]->{'Version'}
-          if @entries;
-
-        return $guess if $guess;
-    }
-    # Out of guesses ...
     die 'Unable to determine the version automatically!?';
+}
+
+=item version_from_git
+
+=cut
+
+sub version_from_git {
+    my ($source_path) = @_;
+
+    my $git_path = "$source_path/.git";
+
+    return EMPTY
+      unless -d $git_path;
+
+    my $guess = safe_qx('git', "--git-dir=$git_path", 'describe');
+    chomp $guess;
+
+    return ($guess // EMPTY);
 }
 
 # Local Variables:
