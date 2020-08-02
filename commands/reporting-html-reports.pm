@@ -47,7 +47,7 @@ use Lintian::Profile;
 use Lintian::Relation::Version qw(versions_comparator);
 use Lintian::Reporting::ResourceManager;
 use Lintian::Reporting::Util qw(load_state_cache find_backlog);
-use Lintian::Util qw(copy_dir run_cmd check_path);
+use Lintian::Util qw(copy_dir run_cmd locate_executable);
 
 my $CONFIG;
 my %OPT;
@@ -228,7 +228,7 @@ sub init_globals {
         $HISTORY = 1;
         $HISTORY_DIR = required_cfg_value('storage', 'historical-data-dir');
         print "Enabling history tracking as ${history_key} is set\n";
-        if (check_path('gnuplot')) {
+        if (length locate_executable('gnuplot')) {
             $GRAPHS = 1;
             print "Enabling graphs (gnuplot is in PATH)\n";
         } else {
@@ -236,7 +236,7 @@ sub init_globals {
             print "No graphs as \"gnuplot\" is not in PATH\n";
         }
         if ($GRAPHS) {
-            if (check_path('scour')) {
+            if (locate_executable('scour')) {
                 $SCOUR_ENABLED = 1;
                 print "Minimizing generated SVG files (scour is in PATH)\n";
             } else {

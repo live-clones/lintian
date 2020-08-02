@@ -52,7 +52,7 @@ BEGIN {
           human_bytes
           open_gz
           perm2oct
-          check_path
+          locate_executable
           normalize_pkg_path
           normalize_link_target
           is_ancestor_of
@@ -73,6 +73,7 @@ use Digest::SHA;
 use Encode ();
 use Errno qw(ENOENT);
 use FileHandle;
+use List::MoreUtils qw(first_value);
 use Path::Tiny;
 use POSIX qw(sigprocmask SIG_BLOCK SIG_UNBLOCK SIG_SETMASK);
 use Scalar::Util qw(openhandle);
@@ -521,22 +522,20 @@ If the tool cannot be found, this sub will cause a trappable error.
     }
 }
 
-=item check_path (CMD)
-
-Returns 1 if CMD can be found in PATH (i.e. $ENV{PATH}) and is
-executable.  Otherwise, the function return 0.
+=item locate_executable (CMD)
 
 =cut
 
-sub check_path {
-    my $command = shift;
+sub locate_executable {
+    my ($command) = @_;
 
-    return 0 unless exists $ENV{PATH};
-    for my $element (split ':', $ENV{PATH}) {
-        next unless length $element;
-        return 1 if -f "$element/$command" and -x _;
-    }
-    return 0;
+    return EMPTY
+      unless exists $ENV{PATH};
+
+    my @folders =  grep { length } split(/:/, $ENV{PATH});
+    my $path = first_value { -x "$_/$command" } @folders;
+
+    return ($path // EMPTY);
 }
 
 =item drop_relative_prefix(STRING)

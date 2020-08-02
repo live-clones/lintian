@@ -34,7 +34,8 @@ BEGIN {
 }
 
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
-use Lintian::Util qw(check_path);
+
+use Lintian::Util qw(locate_executable);
 
 my ($DATADIR) = @ARGV;
 my (%CODES, $outfile);
@@ -129,7 +130,7 @@ sub parse_iso_query {
 sub check_requirements {
     my @missing;
     push @missing, 'isoquery in PATH'
-      unless check_path('isoquery');
+      unless length locate_executable('isoquery');
     push @missing, 'The file /usr/share/xml/iso-codes/iso_639_3.xml'
       unless -f '/usr/share/xml/iso-codes/iso_639_3.xml';
 
