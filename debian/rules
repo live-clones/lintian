@@ -6,72 +6,54 @@ VER := $(shell head -1 debian/changelog | sed -e 's/^.*(//' -e 's/).*$$//')
 tmp := $(CURDIR)/debian/lintian
 profiles := profiles/debian/main.profile \
 	    profiles/debian/ftp-master-auto-reject.profile
-neededfiles := debian/rules frontend/lintian $(profiles) \
-	     $(wildcard commands/*)
 pod2man := pod2man --center "Debian Package Checker" --release "Lintian v$(VER)"
 pod2mansources := $(wildcard man/*.pod)
 docsource := doc/lintian.rst README.md man/lintian.pod.in \
 	     $(pod2mansources)
-allchecks := $(wildcard checks/*)
-tagfiles := $(wildcard t/changes/*.changes t/*/*/tags)
-testfiles := $(wildcard t/tests/*/desc)
 perlprovides := data/fields/perl-provides
 autoreject_data := $(wildcard private/build-time-data/*)
-
-# Work/output dir for tests
-# private/runtests gets TEST_WORK_DIR from environment
-export TEST_WORK_DIR ?= $(CURDIR)/debian/test-out
-CLEAN_TEST_WORK_DIR ?= 1
-
-ifeq (,$(filter nocheck,$(DEB_BUILD_OPTIONS)))
-	testtarget = runtests
-else
-	testtarget =
-endif
 
 ifneq (,$(filter parallel=%,$(DEB_BUILD_OPTIONS)))
 	jobs = $(patsubst parallel=%,%,$(filter parallel=%,$(DEB_BUILD_OPTIONS)))
 	PAR_ARGS=-j $(jobs)
 endif
 
+%:
+	dh $@
+
+override_dh_auto_build: generate-docs-stamp
+# check that the static data about perl core modules is up to date
+	$(PERL) -ne '/PERL_VERSION=(.+)/ and $$] > $$1 and warn q{*}x60 . qq{\n$(perlprovides) needs an update, please run\n  debian/rules refresh-perl-provides\n} . q{*}x60 . qq{\n}' $(perlprovides)
+
+
+override_dh_clean:
+	rm -rf doc/api.html doc/lintian.html
+	rm -rf man/man1/ man/man3/ l10n/
+	dh_clean
+
+override_dh_install:
+	dh_install -Xdata/README
+# some manual work
+	$(PERL) -p -i -e 's/my \$$LINTIAN_VERSION;/my \$$LINTIAN_VERSION = q{$(VER)};/;' \
+	     -e 's@my \$$INIT_ROOT(\s*=.*)?;@my \$$INIT_ROOT = q{/usr/share/lintian};@;' \
+	    $(tmp)/usr/share/lintian/frontend/dplint
+	$(tmp)/usr/share/lintian/frontend/dplint --print-version
+	install -m 644 doc/lintianrc.example $(tmp)/etc/lintianrc
+
 profiles: $(profiles);
-$(profiles): $(allchecks) $(autoreject_data) private/generate-profiles.pl
+
+$(profiles): $(autoreject_data) private/generate-profiles.pl
 	private/generate-profiles.pl
 
 api-doc:
 	private/generate-html-docs doc/api.html
 
-.PHONY: runtests
-runtests: $(neededfiles) $(allchecks) $(tagfiles) $(testfiles)
-	@echo .... building test packages ....
-	t/bin/build-test-packages \
-		$(PAR_ARGS) \
-		--work-dir="$(TEST_WORK_DIR)"
-	@echo .... running tests ....
-	t/bin/runtests \
-		$(PAR_ARGS) \
-		--unattended \
-		--keep-going \
-		--work-dir="$(TEST_WORK_DIR)"
-
-runtests-translation: $(neededfiles) $(allchecks)
-	@echo .... running translation tests ....
-	t/bin/runtests \
-		$(PAR_ARGS) \
-		--unattended \
-		--keep-going \
-		--work-dir="$(TEST_WORK_DIR)" \
-		t \
-		translation-check-descs
-
-# this target is only run manually
-refresh-perl-provides:
-	perl private/refresh-perl-provides > $(perlprovides)
-
+.PHONY: generate-docs
 generate-docs: generate-docs-stamp
+
 generate-docs-stamp: $(docsource)
 	dh_testdir
-	# A UTF-8 locale seemed appropriate; manual uses &sect; character
+# A UTF-8 locale seemed appropriate; manual uses &sect; character
 	cd doc && LC_ALL=en_US.UTF-8 rst2html lintian.rst > lintian.html
 	mkdir -p man/man1/ man/man3/
 	private/generate-lintian-pod | \
@@ -87,38 +69,7 @@ generate-docs-stamp: $(docsource)
 	private/generate-html-docs doc/api.html > /dev/null
 	touch $@
 
-# Target for updating things on lintian.d.o
-rebuild-lintian.debian.org: generate-docs-stamp
-	# done
-
-override_dh_auto_build: $(neededfiles) generate-docs-stamp
-	# check that the static data about perl core modules is up to date
-	$(PERL) -ne '/PERL_VERSION=(.+)/ and $$] > $$1 and warn q{*}x60 . qq{\n$(perlprovides) needs an update, please run\n  debian/rules refresh-perl-provides\n} . q{*}x60 . qq{\n}' $(perlprovides)
-
-
-override_dh_clean: $(neededfiles)
-	rm -rf doc/api.html doc/lintian.html
-ifneq ($(CLEAN_TEST_WORK_DIR),0)
-	rm -rf "$(TEST_WORK_DIR)"
-endif
-	rm -rf man/man1/ man/man3/ l10n/
-	dh_clean -X "$(TEST_WORK_DIR)"
-
-override_dh_install:
-	dh_install -Xdata/README
-# some manual work
-	perl -p -i -e 's/my \$$LINTIAN_VERSION;/my \$$LINTIAN_VERSION = q{$(VER)};/;' \
-	     -e 's@my \$$INIT_ROOT(\s*=.*)?;@my \$$INIT_ROOT = q{/usr/share/lintian};@;' \
-	    $(tmp)/usr/share/lintian/frontend/dplint
-	$(tmp)/usr/share/lintian/frontend/dplint --print-version
-	install -m 644 doc/lintianrc.example $(tmp)/etc/lintianrc
-
-override_dh_auto_test: $(testtarget)
-
-%:
-	dh $@
-
-# Unneeded helpers or helpers that messes up our test.
-override_dh_update_autotools_config override_dh_autoreconf override_dh_autoreconf_clean:
-
-.PHONY: refresh-perl-provides update-lintian.debian.org generate-docs
+# only used manually
+.PHONY: refresh-perl-provides
+refresh-perl-provides:
+	perl private/refresh-perl-provides > $(perlprovides)
