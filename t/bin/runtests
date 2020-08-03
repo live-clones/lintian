@@ -84,8 +84,6 @@ BEGIN {
         $ENV{'LINTIAN_FRONTEND'} = "$cwd/frontend/lintian";
     }
 
-    $ENV{'LINTIAN_DPLINT_FRONTEND'}= "$ENV{'LINTIAN_ROOT'}/frontend/dplint";
-
     $ENV{'LINTIAN_TEST_ROOT'} = $cwd;
 }
 
@@ -184,8 +182,7 @@ my @lintianparts = (
 );
 my @lintianfiles
   = map { File::Find::Rule->file->in("$ENV{'LINTIAN_ROOT'}/$_") }@lintianparts;
-push(@lintianfiles, $ENV{'LINTIAN_FRONTEND'});
-push(@lintianfiles, $ENV{'LINTIAN_DPLINT_FRONTEND'});
+push(@lintianfiles, Cwd::realpath($ENV{'LINTIAN_FRONTEND'}));
 $ENV{'LINTIAN_EPOCH'}
   = max(map { -e $_ ? stat($_)->mtime : time } @lintianfiles);
 say 'Lintian modified on '. rfc822date($ENV{'LINTIAN_EPOCH'});

@@ -22,6 +22,8 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
+package reporting_html_reports;
+
 use v5.20;
 use warnings;
 use utf8;
@@ -129,6 +131,23 @@ my (%by_maint, %by_uploader, %by_tag, %maintainer_table, %delta);
 my @attrs = qw(maintainers source-packages binary-packages udeb-packages
   errors warnings info experimental pedantic overridden groups-known
   groups-backlog classifications groups-with-errors);
+
+my @RESTRICTED_CONFIG_DIRS= split(/:/, $ENV{'LINTIAN_RESTRICTED_CONFIG_DIRS'});
+my @CONFIG_DIRS = split(/:/, $ENV{'LINTIAN_CONFIG_DIRS'});
+
+sub load_profile {
+    my ($profile_name, $options) = @_;
+    my %opt = (
+        'restricted-search-dirs' => \@RESTRICTED_CONFIG_DIRS,
+        %{$options // {}},
+    );
+    require Lintian::Profile;
+
+    my $profile = Lintian::Profile->new;
+    $profile->load($profile_name, \@CONFIG_DIRS, \%opt);
+
+    return $profile;
+}
 
 sub required_cfg_value {
     my (@keys) = @_;
@@ -243,11 +262,11 @@ sub init_globals {
     $TEMPLATE_CONFIG_VARS->{'LINTIAN_SOURCE'}
       //= 'https://salsa.debian.org/lintian/lintian.git';
 
-    my $profile = dplint::load_profile();
+    my $profile = load_profile();
 
     Lintian::Data->set_vendor($profile);
 
-    $LINTIAN_VERSION = dplint::lintian_version();
+    $LINTIAN_VERSION = $ENV{LINTIAN_VERSION};
     $timestamp = safe_qx(qw(date -u --rfc-822));
     chomp($LINTIAN_VERSION, $timestamp);
 

@@ -20,6 +20,8 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
+package reporting_sync_state;
+
 use v5.20;
 use warnings;
 use utf8;
@@ -542,7 +544,7 @@ sub log_debug {
 
 sub usage {
     my $cmd = basename($0);
-    my $me = "dplint $cmd";
+    my $me = "lintian $cmd";
     print <<EOF;
 Internal command for the Lintian reporting framework
 Usage: $me <args>
@@ -560,6 +562,8 @@ EOF
 
     exit(0);
 }
+
+1;
 
 # Local Variables:
 # indent-tabs-mode: nil

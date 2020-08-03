@@ -21,6 +21,8 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
+package lintian_info;
+
 use v5.20;
 use warnings;
 use utf8;
@@ -34,6 +36,23 @@ use Lintian::Data;
 use Lintian::Profile;
 
 sub compat();
+
+my @RESTRICTED_CONFIG_DIRS= split(/:/, $ENV{'LINTIAN_RESTRICTED_CONFIG_DIRS'});
+my @CONFIG_DIRS = split(/:/, $ENV{'LINTIAN_CONFIG_DIRS'});
+
+sub load_profile {
+    my ($profile_name, $options) = @_;
+    my %opt = (
+        'restricted-search-dirs' => \@RESTRICTED_CONFIG_DIRS,
+        %{$options // {}},
+    );
+    require Lintian::Profile;
+
+    my $profile = Lintian::Profile->new;
+    $profile->load($profile_name, \@CONFIG_DIRS, \%opt);
+
+    return $profile;
+}
 
 sub main {
     my ($annotate, $list_tags, $tags, $help, $prof);
@@ -59,7 +78,7 @@ sub main {
 
     # help
     if ($help) {
-        my $me = 'dplint info';
+        my $me = 'lintian info';
         $me = 'lintian-info' if compat;
         print <<"EOT";
 Usage: $me [log-file...] ...
@@ -87,7 +106,7 @@ EOT
         exit 0;
     }
 
-    $profile = dplint::load_profile($prof);
+    $profile = load_profile($prof);
 
     Lintian::Data->set_vendor($profile);
 
@@ -165,8 +184,8 @@ EOT
     sub compat() {
         return $backwards_compat if defined($backwards_compat);
         $backwards_compat = 0;
-        if (exists($ENV{'LINTIAN_DPLINT_CALLED_AS'})) {
-            my $called_as = $ENV{'LINTIAN_DPLINT_CALLED_AS'};
+        if (exists($ENV{'LINTIAN_CALLED_AS'})) {
+            my $called_as = $ENV{'LINTIAN_CALLED_AS'};
             $backwards_compat = 1
               if $called_as =~ m{ (?: \A | /) lintian-info \Z}xsm;
         }

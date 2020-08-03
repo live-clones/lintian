@@ -18,6 +18,8 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
+package spellintian;
+
 use v5.20;
 use warnings;
 use utf8;
@@ -30,8 +32,25 @@ use Lintian::Data;
 use Lintian::Spelling qw(check_spelling check_spelling_picky);
 use Lintian::Profile;
 
+my @RESTRICTED_CONFIG_DIRS= split(/:/, $ENV{'LINTIAN_RESTRICTED_CONFIG_DIRS'});
+my @CONFIG_DIRS = split(/:/, $ENV{'LINTIAN_CONFIG_DIRS'});
+
+sub load_profile {
+    my ($profile_name, $options) = @_;
+    my %opt = (
+        'restricted-search-dirs' => \@RESTRICTED_CONFIG_DIRS,
+        %{$options // {}},
+    );
+    require Lintian::Profile;
+
+    my $profile = Lintian::Profile->new;
+    $profile->load($profile_name, \@CONFIG_DIRS, \%opt);
+
+    return $profile;
+}
+
 sub show_version {
-    my $version = dplint::lintian_version();
+    my $version = $ENV{LINTIAN_VERSION};
     print "spellintian v${version}\n";
     exit 0;
 }
@@ -58,7 +77,7 @@ sub spellcheck {
 }
 
 sub main {
-    my $profile = dplint::load_profile();
+    my $profile = load_profile();
     my $picky = 0;
     my $exit_code = 0;
     Lintian::Data->set_vendor($profile);

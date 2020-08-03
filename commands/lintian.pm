@@ -1,9 +1,10 @@
 #!/usr/bin/perl
-# {{{ Legal stuff
+#
 # Lintian -- Debian package checker
 #
 # Copyright © 1998 Christian Schwarz and Richard Braakman
 # Copyright © 2017-2019 Chris Lamb <lamby@debian.org>
+# Copyright © 2020 Felix Lechner
 #
 # This program is free software.  It is distributed under the terms of
 # the GNU General Public License as published by the Free Software
@@ -20,10 +21,8 @@
 # Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
-# }}}
 
-# {{{ libraries and such
-no lib '.';
+package lintian;
 
 use v5.20;
 use warnings;
@@ -39,8 +38,6 @@ use List::MoreUtils qw(any none);
 use Path::Tiny;
 use POSIX qw(:sys_wait_h);
 
-my $INIT_ROOT = $ENV{'LINTIAN_ROOT'};
-
 use Lintian::Data;
 use Lintian::Inspect::Changelog;
 use Lintian::IO::Async qw(safe_qx);
@@ -52,6 +49,8 @@ use constant EMPTY => q{};
 use constant SPACE => q{ };
 use constant COMMA => q{,};
 use constant NEWLINE => qq{\n};
+
+my $INIT_ROOT = $ENV{'LINTIAN_ROOT'};
 
 # only in GNOME; need original environment
 my $interactive = -t STDIN && (-t STDOUT || !(-f STDOUT || -c STDOUT));
@@ -86,10 +85,6 @@ $ENV{'TZ'} = '';
 # their full path.  If PATH is completely unset, add something
 # basic.
 $ENV{'PATH'} = '/bin:/usr/bin' unless exists $ENV{'PATH'};
-
-# }}}
-
-# {{{ Application Variables
 
 # Environment variables Lintian cares about - the list contains
 # the ones that can also be set via the config file
@@ -133,18 +128,27 @@ my $user_dirs = $ENV{'LINTIAN_ENABLE_USER_DIRS'} // 1;
 my $exit_code = 0;
 my $STATUS_FD;
 
-# }}}
+my @RESTRICTED_CONFIG_DIRS= split(/:/, $ENV{'LINTIAN_RESTRICTED_CONFIG_DIRS'});
+my @CONFIG_DIRS = split(/:/, $ENV{'LINTIAN_CONFIG_DIRS'});
 
-# {{{ Setup Code
+sub load_profile {
+    my ($profile_name, $options) = @_;
+    my %opt = (
+        'restricted-search-dirs' => \@RESTRICTED_CONFIG_DIRS,
+        %{$options // {}},
+    );
+    require Lintian::Profile;
 
-sub lintian_banner {
-    my $lintian_version = dplint::lintian_version();
-    return "Lintian v${lintian_version}";
+    my $profile = Lintian::Profile->new;
+    $profile->load($profile_name, \@CONFIG_DIRS, \%opt);
+
+    return $profile;
 }
 
-# }}}
-
-# {{{ Process Command Line
+sub lintian_banner {
+    my $lintian_version = $ENV{LINTIAN_VERSION};
+    return "Lintian v${lintian_version}";
+}
 
 #######################################
 # Subroutines called by various options
@@ -256,7 +260,7 @@ EOT-EOT-EOT
 # Options: -V|--version, --print-version
 sub banner {
     if ($_[0] eq 'print-version') {
-        my $lintian_version = dplint::lintian_version();
+        my $lintian_version = $ENV{LINTIAN_VERSION};
         print "${lintian_version}\n";
     } else {
         my $banner = lintian_banner();
@@ -557,7 +561,7 @@ sub main {
     STDOUT->autoflush;
     STDERR->autoflush;
 
-    # layers are additive; STDOUT already had UTF-8 from frontend/dplint
+    # layers are additive; STDOUT already had UTF-8 from frontend/lintian
     binmode(STDERR, ':encoding(UTF-8)');
 
     # Globally ignore SIGPIPE.  We'd rather deal with error returns from write
@@ -728,7 +732,7 @@ sub main {
     }
 
     # dies on error
-    my $PROFILE = dplint::load_profile($option{profile});
+    my $PROFILE = load_profile($option{profile});
     $OUTPUT->v_msg('Using profile ' . $PROFILE->name . '.');
 
     Lintian::Data->set_vendor($PROFILE);
@@ -807,12 +811,8 @@ sub main {
     retrigger_signal()
       if $received_signal;
 
-    # }}}
-
     exit $exit_code;
 }
-
-# {{{ Some subroutines
 
 sub _find_cfg_file {
     return $ENV{'LINTIAN_CFG'}
@@ -1208,10 +1208,6 @@ sub default_parallel {
     return 2;
 }
 
-# }}}
-
-# {{{ Exit handler.
-
 sub END {
 
     $SIG{'INT'} = 'DEFAULT';
@@ -1265,7 +1261,7 @@ sub interrupted {
     return _die_in_signal_handler();
 }
 
-# }}}
+1;
 
 # Local Variables:
 # indent-tabs-mode: nil
