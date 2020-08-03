@@ -25,8 +25,8 @@ override_dh_auto_build: generate-docs-stamp
 # check that the static data about perl core modules is up to date
 	$(PERL) -ne '/PERL_VERSION=(.+)/ and $$] > $$1 and warn q{*}x60 . qq{\n$(perlprovides) needs an update, please run\n  debian/rules refresh-perl-provides\n} . q{*}x60 . qq{\n}' $(perlprovides)
 
-
 override_dh_clean:
+	rm -rf $(CURDIR)/debian/test-out
 	rm -rf doc/api.html doc/lintian.html
 	rm -rf man/man1/ man/man3/ l10n/
 	dh_clean
