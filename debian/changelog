@@ -26,6 +26,9 @@ lintian (2.86.0) unstable; urgency=medium
     - Use the Salsa CI team's standard pipeline instead of Lintian's custom
       CI setup.
   * Remove three obsolete tags from pkg-perl team checks.
+  * Add lzip to Depends and Build-Depends. Due to a particularity in the
+    implementation of safe_qx via IO::Async it was not recognised as a
+    requirement until now.
 
   [ Chris Lamb ]
   * Avoid false-positives when matching sensible-utils utilities (eg.
