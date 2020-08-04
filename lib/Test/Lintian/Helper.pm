@@ -48,7 +48,6 @@ BEGIN {
       cache_dpkg_architecture_values
       get_latest_policy
       get_recommended_debhelper_version
-      get_required_debhelper_version
       copy_dir_contents
       rfc822date
     );
@@ -62,7 +61,6 @@ use Path::Tiny;
 use POSIX qw(locale_h strftime);
 
 use Lintian::Data;
-use Lintian::Deb822::Parser qw(read_dpkg_control_lc);
 use Lintian::IO::Async qw(safe_qx);
 use Lintian::Profile;
 
@@ -132,35 +130,6 @@ sub get_recommended_debhelper_version {
     my $compat_level= Lintian::Data->new('debhelper/compat-level', qr/=/);
 
     return $compat_level->value('recommended');
-}
-
-=item get_required_debhelper_version()
-
-Returns the version of debhelper required in the file 'debian/control'
-relative to the established LINTIAN_ROOT. The return value is the exact
-string, which can include characters like a tilde.
-
-=cut
-
-sub get_required_debhelper_version {
-    my $controlfile = "$ENV{'LINTIAN_ROOT'}/debian/control";
-    die 'Cannot get latest version of debhelper from debian/control'
-      unless -f $controlfile;
-
-    my @paragraphs = read_dpkg_control_lc($controlfile);
-    die "$controlfile does not have even one paragraph"
-      if (scalar(@paragraphs) < 1);
-
-    my @builddeps = split(/,/, $paragraphs[0]->{'build-depends'});
-    chomp @builddeps;
-    my $version;
-    for my $builddep (@builddeps) {
-        ($version) = $builddep =~ /debhelper\s\(>=\s([^\)]+)\)/;
-        last if defined $version;
-    }
-    die 'Lintian does not depend on debhelper.' unless $version;
-
-    return $version;
 }
 
 =item copy_dir_contents(SRC_DIR, TARGET_DIR)
