@@ -1,5 +1,6 @@
 # files/compressed/lz -- lintian check script -*- perl -*-
 
+# Copyright © 2020 Chris Lamb
 # Copyright © 2020 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
@@ -24,9 +25,11 @@ use v5.20;
 use warnings;
 use utf8;
 
+use Lintian::Util qw(check_path);
 use Lintian::IPC::Run3 qw(safe_qx);
 
 use Moo;
+use Carp qw(croak);
 use namespace::clean;
 
 with 'Lintian::Check';
@@ -39,13 +42,22 @@ sub visit_installed_files {
 
     if ($file->name =~ /\.lz$/si) {
 
-        safe_qx('lzip', '--test', $file->unpacked_path);
+        safe_qx(get_lzip_helper(), '--test', $file->unpacked_path);
 
         $self->tag('broken-lz', $file->name)
           if $?;
     }
 
     return;
+}
+
+sub get_lzip_helper {
+
+    foreach my $helper (qw(lzip clzip)) {
+        return $helper if check_path($helper);
+    }
+
+    croak "Could not find any .lz helper in \$PATH";
 }
 
 1;
