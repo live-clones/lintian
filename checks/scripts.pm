@@ -30,15 +30,13 @@ use warnings;
 use utf8;
 use autodie;
 
-use Capture::Tiny qw(capture);
 use List::MoreUtils qw(any);
 use POSIX qw(strftime);
-use Try::Tiny;
 
-use Lintian::Spelling qw($known_shells_regex);
 use Lintian::Data;
+use Lintian::IPC::Run3 qw(safe_qx);
 use Lintian::Relation;
-use Lintian::Util qw(safe_qx);
+use Lintian::Spelling qw($known_shells_regex);
 
 use constant EMPTY => q{};
 

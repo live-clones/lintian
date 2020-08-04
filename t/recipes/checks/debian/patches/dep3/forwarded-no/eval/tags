@@ -1,1 +1,1 @@
-forwarded-no (source): send-patch debian/patches/not-forwarded.patch
+forwarded-no (source): patch-not-forwarded-upstream debian/patches/not-forwarded.patch

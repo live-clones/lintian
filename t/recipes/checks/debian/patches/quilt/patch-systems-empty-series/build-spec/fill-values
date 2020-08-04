@@ -1,0 +1,4 @@
+Skeleton: upload-native
+Testname: patch-systems-empty-series
+Description: Test for quilt patches with empty series
+Extra-Build-Depends: quilt

@@ -1,6 +1,6 @@
 Tag: patch-file-present-but-not-mentioned-in-series
 Severity: warning
-Check: patch-systems
+Check: debian/patches/quilt
 Info: The specified patch is present under the <tt>debian/patches</tt>
  directory but is not mentioned in any "series" or "00list" file.
  .

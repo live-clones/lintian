@@ -1,7 +1,7 @@
 Tag: out-of-date-copyright-format-uri
 Severity: pedantic
 Certainty: possible
-Check: debian/copyright
+Check: debian/copyright/dep5
 Ref: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 Info: A newer version of the machine-readable copyright file specification,
  than the one referenced by the copyright file, is available.

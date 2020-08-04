@@ -155,8 +155,10 @@ sub tag {
 
     my $taginfo = $self->info->get_tag($tagname);
 
-    warn 'Check ' . $self->info->name . " has no tag $tagname."
-      unless defined $taginfo;
+    unless (defined $taginfo) {
+        warn 'Check ' . $self->info->name . " has no tag $tagname.";
+        return;
+    }
 
     # could be name-spaced
     $arguments[0] = $taginfo->name;

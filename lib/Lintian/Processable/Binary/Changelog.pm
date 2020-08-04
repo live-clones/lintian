@@ -38,7 +38,8 @@ use File::Copy qw(copy);
 use List::MoreUtils qw(first_value);
 use Path::Tiny;
 
-use Lintian::Util qw(is_ancestor_of safe_qx);
+use Lintian::IO::Async qw(safe_qx);
+use Lintian::Util qw(is_ancestor_of);
 
 use Moo::Role;
 use namespace::clean;

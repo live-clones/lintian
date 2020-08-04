@@ -27,6 +27,8 @@ use Path::Tiny;
 use Lintian::Deb822::Parser qw(parse_dpkg_control_string);
 use Lintian::Deb822::Section;
 
+use constant EMPTY => q{};
+
 use Moo;
 use namespace::clean;
 
@@ -60,6 +62,40 @@ Line positions
 
 has sections => (is => 'rw', default => sub { [] });
 has positions => (is => 'rw', default => sub { [] });
+
+=item first_mention
+
+=cut
+
+sub first_mention {
+    my ($self, $name) = @_;
+
+    my $earliest;
+
+    # empty when field not present
+    $earliest ||= $_->value($name) for @{$self->sections};
+
+    return ($earliest // EMPTY);
+}
+
+=item last_mention
+
+=cut
+
+sub last_mention {
+    my ($self, $name) = @_;
+
+    my $latest;
+
+    for my $section (@{$self->sections}) {
+
+        # empty when field not present
+        $latest = $section->value($name)
+          if $section->exists($name);
+    }
+
+    return ($latest // EMPTY);
+}
 
 =item read_file
 

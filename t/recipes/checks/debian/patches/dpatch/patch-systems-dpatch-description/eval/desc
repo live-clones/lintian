@@ -1,0 +1,2 @@
+Testname: patch-systems-dpatch-description
+Check: debian/patches/dpatch

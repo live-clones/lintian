@@ -27,7 +27,8 @@ use IO::Async::Loop;
 use IO::Async::Process;
 use Path::Tiny;
 
-use Lintian::Util qw(drop_relative_prefix read_md5sums safe_qx);
+use Lintian::IO::Async qw(safe_qx);
+use Lintian::Util qw(drop_relative_prefix read_md5sums);
 
 use constant EMPTY => q{};
 use constant SPACE => q{ };

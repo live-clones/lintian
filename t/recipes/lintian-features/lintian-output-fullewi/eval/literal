@@ -12,8 +12,8 @@ I: lintian-output-fullewi source (1.0+dsfg-1.1) [source]: binary-control-field-d
 I: lintian-output-fullewi binary (1.0+dsfg-1.1) [all]: description-possibly-contains-homepage http://www.example.com/.
 I: lintian-output-fullewi binary (1.0+dsfg-1.1) [all]: desktop-entry-limited-to-environments usr/share/applications/script.desktop
 I: lintian-output-fullewi binary (1.0+dsfg-1.1) [all]: package-contains-empty-directory usr/local/share/lintian/
+I: lintian-output-fullewi source (1.0+dsfg-1.1) [source]: patch-not-forwarded-upstream debian/patches/debian-changes-1.0+dsfg-1.1
 I: lintian-output-fullewi source (1.0+dsfg-1.1) [source]: quilt-patch-using-template-description debian-changes-1.0+dsfg-1.1
-I: lintian-output-fullewi source (1.0+dsfg-1.1) [source]: send-patch debian/patches/debian-changes-1.0+dsfg-1.1
 I: lintian-output-fullewi binary (1.0+dsfg-1.1) [all]: synopsis-is-a-sentence "Test Lintian's 'fullewi' output format."
 I: lintian-output-fullewi source (1.0+dsfg-1.1) [source]: upstream-metadata-missing-bug-tracking
 I: lintian-output-fullewi source (1.0+dsfg-1.1) [source]: upstream-metadata-missing-repository

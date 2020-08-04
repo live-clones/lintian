@@ -1,4 +1,0 @@
-Testname: source-copyright-incomplete-creative-commons-unrel
-Test-Against:
- incomplete-creative-commons-license
-Check: debian/copyright

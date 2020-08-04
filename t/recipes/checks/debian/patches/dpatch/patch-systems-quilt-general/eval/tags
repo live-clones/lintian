@@ -1,0 +1,2 @@
+patch-systems-quilt-general (source): package-uses-deprecated-dpatch-patch-system
+patch-systems-quilt-general (source): dpatch-build-dep-but-no-patch-list

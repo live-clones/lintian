@@ -1,0 +1,5 @@
+scripts (source): package-uses-deprecated-dpatch-patch-system
+scripts (source): dpatch-missing-description 04_i_dont_have_a_description_either.patch
+scripts (source): dpatch-missing-description 02_i_dont_have_a_description.patch
+scripts (source): dpatch-index-references-non-existent-patch 01_some_other_patch_thats_not_in_the_package.dpatch
+scripts (source): dpatch-index-references-non-existent-patch 01_not_here_right_now.dpatch

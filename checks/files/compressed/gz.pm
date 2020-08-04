@@ -24,8 +24,9 @@ use v5.20;
 use warnings;
 use utf8;
 
-use Capture::Tiny qw(capture);
 use Time::Piece;
+
+use Lintian::IPC::Run3 qw(safe_qx);
 
 use Moo;
 use namespace::clean;
@@ -57,10 +58,10 @@ sub visit_installed_files {
 
     if ($file->name =~ /\.gz$/si) {
 
-        capture {
-            $self->tag('broken-gz', $file->name)
-              if system('gzip', '--test', $file->unpacked_path);
-        };
+        safe_qx('gzip', '--test', $file->unpacked_path);
+
+        $self->tag('broken-gz', $file->name)
+          if $?;
     }
 
     # gzip files

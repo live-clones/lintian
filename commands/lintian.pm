@@ -45,10 +45,10 @@ use Lintian::Data;
 use Lintian::Inspect::Changelog;
 use Lintian::Internal::FrontendUtil
   qw(default_parallel sanitize_environment open_file_or_fd);
+use Lintian::IO::Async qw(safe_qx);
 use Lintian::Output::Standard;
 use Lintian::Pool;
 use Lintian::Profile;
-use Lintian::Util qw(safe_qx);
 
 use constant EMPTY => q{};
 use constant SPACE => q{ };

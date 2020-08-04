@@ -1,0 +1,5 @@
+Testname: patch-systems-quilt-no-series
+Skeleton: upload-non-native
+Source-Format: 1.0
+Description: Test for quilt patches with no series
+Extra-Build-Depends: quilt

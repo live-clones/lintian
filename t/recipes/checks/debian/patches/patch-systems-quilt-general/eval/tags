@@ -1,0 +1,3 @@
+patch-systems-quilt-general (source): patch-system quilt
+patch-systems-quilt-general (source): patch-system dpatch
+patch-systems-quilt-general (source): more-than-one-patch-system

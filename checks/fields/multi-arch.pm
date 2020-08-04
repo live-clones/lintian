@@ -31,7 +31,7 @@ use autodie;
 
 use List::MoreUtils qw(uniq);
 
-use Lintian::Util qw(safe_qx);
+use Lintian::IPC::Run3 qw(safe_qx);
 
 use constant SPACE => q{ };
 

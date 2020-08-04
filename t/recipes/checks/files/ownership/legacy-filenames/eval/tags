@@ -1,4 +1,0 @@
-filenames (binary): wrong-file-owner-uid-or-gid usr/lib/filenames/wrong-owner-65535:65001 65535/65001
-filenames (binary): wrong-file-owner-uid-or-gid usr/lib/filenames/wrong-owner-30001:65535 30001/65535
-filenames (binary): wrong-file-owner-uid-or-gid usr/lib/filenames/wrong-owner-100:0 100/0
-filenames (binary): wrong-file-owner-uid-or-gid usr/lib/filenames/wrong-owner-0:2001 0/2001

@@ -28,9 +28,6 @@ use Carp;
 use Cwd;
 use Devel::Size qw(total_size);
 use File::Spec;
-use IO::Async::Channel;
-use IO::Async::Loop;
-use IO::Async::Routine;
 use List::Compare;
 use List::MoreUtils qw(uniq firstval);
 use Path::Tiny;
@@ -350,7 +347,6 @@ sub process {
     for my $processable ($self->get_processables){
 
         my $declared_overrides;
-        my %used_overrides;
 
         $OUTPUT->debug_msg(1,
             'Base directory for group: ' . $processable->groupdir);
@@ -399,22 +395,12 @@ sub process {
                     $ignored_overrides->{$tagname}++;
                 }
             }
-
-            for my $tagname (keys %{$declared_overrides}) {
-
-                my $contexts = $declared_overrides->{$tagname};
-
-                # set the use count to zero for each context
-                $used_overrides{$tagname}{$_} = 0 for keys %{$contexts};
-            }
         }
-
-        my $loop = IO::Async::Loop->new;
 
         # Filter out the "lintian" check if present - it does no real harm,
         # but it adds a bit of noise in the debug output.
         my @checknames
-          = sort grep { $_ ne 'lintian' }$self->profile->enabled_checks;
+          = grep { $_ ne 'lintian' } $self->profile->enabled_checks;
         my @checkinfos = map { $self->profile->get_checkinfo($_) } @checknames;
 
         for my $checkinfo (@checkinfos) {
@@ -430,60 +416,23 @@ sub process {
             my $procid = $processable->identifier;
             $OUTPUT->debug_msg(1, "Running check: $checkname on $procid  ...");
 
-            my $future = $loop->new_future;
-            my $tag_channel  = IO::Async::Channel->new;
+            eval {$checkinfo->run_check($processable, $self);};
+            my $err = $@;
+            my $raw_res = tv_interval($timer);
 
-            my $routine = IO::Async::Routine->new(
-                channels_out => [$tag_channel],
-                code => sub {
-                    # fixed upstream in 0.73
-                    undef $IO::Async::Loop::ONE_TRUE_LOOP;
+            if ($err) {
+                print STDERR $err;
+                print STDERR "internal error: cannot run $checkname check",
+                  " on package $procid\n";
+                $OUTPUT->warning("skipping check of $procid");
+                $success = 0;
 
-                    # closed upon, tags still in parent
-                    $processable->tags([]);
-                    $checkinfo->run_check($processable, $self);
-                    $tag_channel->send($processable->tags);
-
-                    return;
-                },
-                on_return => sub {
-                    my ($self, $result) = @_;
-
-                    my $raw_res = tv_interval($timer);
-
-                    my $tres = sprintf('%.3fs', $raw_res);
-                    $OUTPUT->debug_msg(1,
-                        "Check script $checkname for $procid done ($tres)");
-                    $OUTPUT->perf_log("$procid,check/$checkname,${raw_res}");
-
-                    $future->fail("Done with check $checkname");
-                    return;
-                },
-                on_die => sub {
-                    my ($self, $exception) = @_;
-
-                    print STDERR $exception;
-                    print STDERR "internal error: cannot run $checkname check",
-                      " on package $procid\n";
-                    $OUTPUT->warning("skipping check of $procid");
-                    $success = 0;
-
-                    $future->fail("Cannot run check $checkname: $exception");
-
-                    return;
-                });
-
-            $loop->add($routine);
-
-            $tag_channel->recv(
-                on_recv => sub {
-                    my ($channel, $arrayref) = @_;
-
-                    # add tags to variable in parent
-                    push(@{$processable->tags}, @{$arrayref});
-                });
-
-            $loop->await($future);
+                next;
+            }
+            my $tres = sprintf('%.3fs', $raw_res);
+            $OUTPUT->debug_msg(1,
+                "Check script $checkname for $procid done ($tres)");
+            $OUTPUT->perf_log("$procid,check/$checkname,${raw_res}");
         }
 
         my $knownlc
@@ -499,37 +448,44 @@ sub process {
           @{$processable->tags};
         $processable->tags(\@enabled_tags);
 
+        my %used_overrides;
+
         my @keep_tags;
         for my $tag (@{$processable->tags}) {
 
+            next
+              if $tag->name eq 'mismatched-override'
+              || $tag->name eq 'unused-override';
+
             my $override;
 
-            my $tag_overrides= $declared_overrides->{$tag->name};
-            if ($tag_overrides) {
+            my $declared = $declared_overrides->{$tag->name};
+            if ($declared) {
 
                 # do not use EMPTY; hash keys literal
                 # empty context in specification matches all
-                $override = $tag_overrides->{''};
+                $override = $declared->{''};
 
                 # matches context exactly
-                $override = $tag_overrides->{$tag->context}
+                $override = $declared->{$tag->context}
                   unless $override;
 
                 # look for patterns
                 unless ($override) {
                     my @candidates
-                      = sort grep { length $tag_overrides->{$_}{pattern} }
-                      keys %{$tag_overrides};
+                      = sort grep { length $declared->{$_}{pattern} }
+                      keys %{$declared};
 
                     my $match= firstval {
-                        $tag->context =~ m/^$tag_overrides->{$_}{pattern}\z/
+                        $tag->context =~ m/^$declared->{$_}{pattern}\z/
                     }
                     @candidates;
 
-                    $override = $tag_overrides->{$match}
+                    $override = $declared->{$match}
                       if $match;
                 }
 
+                # new hash keys are autovivified to 0
                 $used_overrides{$tag->name}{$override->{context}}++
                   if $override;
             }
@@ -541,22 +497,29 @@ sub process {
 
         $processable->tags(\@keep_tags);
 
+        my %otherwise_visible = map { $_->name => 1 } @keep_tags;
+
         # look for unused overrides
-        # should this not iterate over $tag_overrides instead?
-        for my $tagname (keys %used_overrides) {
+        for my $tagname (keys %{$declared_overrides}) {
 
             next
               unless $self->profile->tag_is_enabled($tagname);
 
-            my $tag_overrides = $used_overrides{$tagname};
+            my @declared_contexts = keys %{$declared_overrides->{$tagname}};
+            my @used_contexts = keys %{$used_overrides{$tagname} // {}};
 
-            for my $context (keys %{$tag_overrides}) {
+            my $context_lc
+              = List::Compare->new(\@declared_contexts, \@used_contexts);
+            my @unused_contexts = $context_lc->get_Lonly;
 
-                next
-                  if $tag_overrides->{$context};
+            # cannot be overridden or suppressed
+            if ($otherwise_visible{$tagname}) {
+                $processable->tag('mismatched-override', $tagname, $_)
+                  for @unused_contexts;
 
-                # cannot be overridden or suppressed
-                $processable->tag('unused-override', $tagname, $context);
+            } else {
+                $processable->tag('unused-override', $tagname, $_)
+                  for @unused_contexts;
             }
         }
 

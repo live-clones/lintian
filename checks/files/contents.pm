@@ -40,7 +40,8 @@ use namespace::clean;
 
 with 'Lintian::Check';
 
-my $SENSIBLE_REGEX = qr{(?:select-editor|sensible-(?:browser|editor|pager))\b};
+my $SENSIBLE_REGEX
+  = qr{(?<!-)(?:select-editor|sensible-(?:browser|editor|pager))\b};
 
 # with this Moo default, maintainer scripts are also checked
 has switched_locations => (

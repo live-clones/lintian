@@ -40,9 +40,9 @@ use IO::Async::Process;
 use List::MoreUtils qw(first_index);
 use POSIX qw(strftime);
 
+use Lintian::IO::Async qw(safe_qx);
 use Lintian::Reporting::Util
   qw(find_backlog load_state_cache save_state_cache);
-use Lintian::Util qw(safe_qx);
 
 use constant EMPTY => q{};
 use constant COLON => q{:};

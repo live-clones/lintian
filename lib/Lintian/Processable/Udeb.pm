@@ -25,7 +25,7 @@ use utf8;
 use Carp qw(croak);
 use Path::Tiny;
 
-use Lintian::Util qw(get_deb_info);
+use Lintian::IO::Async qw(get_deb_info);
 
 use constant COLON => q{:};
 use constant SLASH => q{/};

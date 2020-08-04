@@ -1,14 +1,19 @@
 Tag: unused-override
 Severity: info
 Check: lintian
+Info: Your package specifies the named override but there were no
+ tags that could have been silenced by it.
+ .
+ Maybe you fixed an underlying condition but forgot to remove the
+ override. It is also possible that the Lintian maintainers fixed a
+ false positive.
+ .
+ If the override is now unused, please remove it.
+ .
+ This tag is similar to <tt>mismatched-override</tt> except there a
+ tag could have been silenced if the context had matched.
+ .
+ Sometimes, overrides end up not being used because a tag appears
+ only on some architectures. In that case, overrides can be equipped
+ with an architecture qualifier.
 Ref: lintian 2.4.3
-Info: Lintian discovered an unused override entry in its database.
- Most likely it was used for a false-positive that has been fixed.
- However, some tags are only triggered in packages built on certain
- architectures. In this case, the override may need an architecture
- qualifier.
- .
- Alternatively, the additional information provided by Lintian in the
- tag's output may changed since the override was last modified.
- .
- If the override is unused, please remove it from the overrides file.

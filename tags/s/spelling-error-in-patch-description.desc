@@ -1,6 +1,6 @@
 Tag: spelling-error-in-patch-description
 Severity: warning
-Check: patch-systems
+Check: debian/patches/quilt
 Info: Lintian found a spelling, grammar or capitalization error in the
  description for this patch. Lintian has a list of common misspellings
  that it looks for. It does not have a dictionary like a spelling checker

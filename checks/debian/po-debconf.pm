@@ -25,14 +25,16 @@ use warnings;
 use utf8;
 use autodie;
 
-use Capture::Tiny qw(capture_merged capture_stderr);
 use Cwd qw(realpath);
 use File::Temp();
+use IPC::Run3;
 use Try::Tiny;
 
+use Lintian::IPC::Run3 qw(safe_qx);
 use Lintian::Util qw(copy_dir);
 
-use constant NEWLINE  =>  qq{\n};
+use constant EMPTY => q{};
+use constant NEWLINE => qq{\n};
 
 use Moo;
 use namespace::clean;
@@ -188,32 +190,33 @@ sub source {
         my $error;
         my %save = %ENV;
         my $cwd = Cwd::getcwd;
-        my $output = capture_merged {
-            try {
-                $ENV{INTLTOOL_EXTRACT}
-                  = '/usr/share/intltool-debian/intltool-extract';
-                # use of $debian_po is safe; we accessed two children by now.
-                $ENV{srcdir} = $debian_po_dir->unpacked_path;
 
-                chdir($tempdir);
+        try {
+            $ENV{INTLTOOL_EXTRACT}
+              = '/usr/share/intltool-debian/intltool-extract';
+            # use of $debian_po is safe; we accessed two children by now.
+            $ENV{srcdir} = $debian_po_dir->unpacked_path;
 
-                # generate a "test.pot" in a tempdir
-                my @intltool = (
-                    '/usr/share/intltool-debian/intltool-update',
-                    '--gettext-package=test','--pot'
-                );
-                system(@intltool) == 0
-                  or die "system @intltool failed: $?";
-            }catch {
-                # catch any error
-                $error = $_;
-            }finally {
-                # restore environment
-                %ENV = %save;
+            chdir($tempdir);
 
-                # restore working directory
-                chdir($cwd);
-            };
+            # generate a "test.pot" in a tempdir
+            my @intltool = (
+                '/usr/share/intltool-debian/intltool-update',
+                '--gettext-package=test','--pot'
+            );
+            safe_qx(@intltool);
+            die "system @intltool failed: $?"
+              if $?;
+
+        }catch {
+            # catch any error
+            $error = $_;
+        }finally {
+            # restore environment
+            %ENV = %save;
+
+            # restore working directory
+            chdir($cwd);
         };
 
         # output could be helpful to user but is currently not printed
@@ -225,27 +228,29 @@ sub source {
 
         # throw away output on the following commands
         $error = undef;
-        $output = capture_merged {
-            try {
-                # compare our "test.pot" with the existing "templates.pot"
-                my @testleft = (
-                    'msgcmp', '--use-untranslated',
-                    $test_pot, $templ_pot_path->unpacked_path
-                );
-                system(@testleft) == 0
-                  or die "system @testleft failed: $?";
 
-                # is this not equivalent to the previous command? - FL
-                my @testright = (
-                    'msgcmp', '--use-untranslated',
-                    $templ_pot_path->unpacked_path, $test_pot
-                );
-                system(@testright) == 0
-                  or die "system @testright failed: $?";
-            }catch {
-                # catch any error
-                $error = $_;
-            };
+        try {
+            # compare our "test.pot" with the existing "templates.pot"
+            my @testleft = (
+                'msgcmp', '--use-untranslated',
+                $test_pot, $templ_pot_path->unpacked_path
+            );
+            safe_qx(@testleft);
+            die "system @testleft failed: $?"
+              if $?;
+
+            # is this not equivalent to the previous command? - FL
+            my @testright = (
+                'msgcmp', '--use-untranslated',
+                $templ_pot_path->unpacked_path, $test_pot
+            );
+            safe_qx(@testright);
+            die "system @testright failed: $?"
+              if $?;
+
+        }catch {
+            # catch any error
+            $error = $_;
         };
 
         $self->tag('newer-debconf-templates') if length $error;
@@ -284,29 +289,24 @@ sub source {
 
         my $error;
 
-        my $stats = capture_stderr {
-            try {
-                delete local $ENV{$_}
-                  for grep { $_ ne 'PATH' && $_ ne 'TMPDIR' } keys %ENV;
-                local $ENV{LC_ALL} = 'C';
+        my $stats;
 
-                my @msgfmt = (
-                    'msgfmt', '-o', '/dev/null', '--statistics',
-                    $po_path->unpacked_path
-                );
-                system(@msgfmt) == 0
-                  or die "system @msgfmt failed: $?";
-            }catch {
-                # catch any error
-                $error = $_;
-            };
-        };
+        delete local $ENV{$_}
+          for grep { $_ ne 'PATH' && $_ ne 'TMPDIR' } keys %ENV;
+        local $ENV{LC_ALL} = 'C';
 
-        $self->tag('invalid-po-file', $po_path) if length $error;
+        my @command = ('msgfmt', '-o', '/dev/null', '--statistics',
+            $po_path->unpacked_path);
 
-        if (!$full_translation && $stats =~ m/^\w+ \w+ \w+\.$/) {
-            $full_translation = 1;
-        }
+        run3(\@command, undef, undef, \$stats);
+
+        $self->tag('invalid-po-file', $po_path)
+          if $?;
+
+        $stats //= EMPTY;
+
+        $full_translation = 1
+          if $stats =~ m/^\w+ \w+ \w+\.$/;
     }
 
     $self->tag('no-complete-debconf-translation') if !$full_translation;

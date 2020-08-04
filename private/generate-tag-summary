@@ -12,8 +12,10 @@ use Getopt::Long;
 BEGIN {
     $ENV{'LINTIAN_ROOT'} //= '.';
 }
+
 use lib "$ENV{'LINTIAN_ROOT'}/lib/";
-use Lintian::Util qw(safe_qx);
+
+use Lintian::IO::Async qw(safe_qx);
 
 my (%added, %removed, %opt);
 

@@ -1,5 +1,0 @@
-Testname: reuse-identifier-in-files
-Check: debian/copyright
-Test-Against:
- dep5-copyright-license-name-not-unique
-References: Bug#779676

@@ -24,7 +24,7 @@ use autodie;
 
 use Path::Tiny;
 
-use Lintian::Util qw(gzip safe_qx);
+use Lintian::IO::Async qw(safe_qx);
 
 use constant DOT => q{.};
 use constant GZ => q{gz};

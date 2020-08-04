@@ -1,7 +1,7 @@
 Tag: pipe-symbol-used-as-license-disjunction
 Severity: warning
 Certainty: possible
-Check: debian/copyright
+Check: debian/copyright/dep5
 Info: A vertical bar &vert (also known as a pipe symbol) does not stand for
  a logical OR relationship in <tt>debian/copyright</tt>.
  .

@@ -30,7 +30,7 @@ use IO::Async::Process;
 use Path::Tiny;
 
 use Lintian::Index::Item;
-use Lintian::Util qw(safe_qx);
+use Lintian::IO::Async qw(safe_qx);
 
 # read up to 40kB at a time.  this happens to be 4096 "tar records"
 # (with a block-size of 512 and a block factor of 20, which appear to

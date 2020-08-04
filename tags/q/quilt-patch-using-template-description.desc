@@ -1,6 +1,6 @@
 Tag: quilt-patch-using-template-description
 Severity: info
-Check: patch-systems
+Check: debian/patches/quilt
 Info: The patch contains a standard DEP 3 template description
  included by dpkg-source(1). Please consider replacing the template
  with a real description. You can edit the description by using

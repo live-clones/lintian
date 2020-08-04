@@ -23,10 +23,10 @@ use utf8;
 use autodie;
 
 use Cwd;
-use IO::Async::Loop;
 use Path::Tiny;
 
-use Lintian::Util qw(locate_helper_tool safe_qx);
+use Lintian::IO::Async qw(safe_qx);
+use Lintian::Util qw(locate_helper_tool);
 
 use constant EMPTY => q{};
 

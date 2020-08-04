@@ -3,8 +3,8 @@ relations (source): stronger-dependency-implies-weaker relations Recommends -> S
 relations (source): stronger-dependency-implies-weaker relations Pre-Depends -> Depends gawk | awk
 relations (source): stronger-dependency-implies-weaker relations Depends -> Recommends null
 relations (source): stronger-dependency-implies-weaker relations Depends -> Recommends dpkg
+relations (source): silent-on-rules-requiring-root
 relations (source): section-area-mismatch Package relations-multiple-libs
 relations (source): section-area-mismatch
-relations (source): rules-requires-root-missing
 relations (source): package-depends-on-itself relations-multiple-libs Recommends
 relations (source): package-depends-on-itself relations Depends

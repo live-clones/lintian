@@ -1,19 +1,3 @@
-copyright-file-general (source): wiki-copyright-format-uri http://wiki.debian.org/Proposals/CopyrightFormat?recall=184
-copyright-file-general (source): unknown-copyright-format-uri
-copyright-file-general (source): no-dep5-copyright debian/copyright-w3c.copyright
-copyright-file-general (source): no-dep5-copyright debian/copyright-versionless.copyright
-copyright-file-general (source): no-dep5-copyright debian/copyright-poor-common-licenses.copyright
-copyright-file-general (source): no-dep5-copyright debian/copyright-php.copyright
-copyright-file-general (source): no-dep5-copyright debian/copyright-old-fsf.copyright
-copyright-file-general (source): no-dep5-copyright debian/copyright-missing-perl-license-pointer.copyright
-copyright-file-general (source): no-dep5-copyright debian/copyright-misc-errors.copyright
-copyright-file-general (source): no-dep5-copyright debian/copyright-full-lgpl.copyright
-copyright-file-general (source): no-dep5-copyright debian/copyright-full-gpl.copyright
-copyright-file-general (source): no-dep5-copyright debian/copyright-full-gpl-2.copyright
-copyright-file-general (source): no-dep5-copyright debian/copyright-full-gpl-1.copyright
-copyright-file-general (source): no-dep5-copyright debian/copyright-full-gfdl.copyright
-copyright-file-general (source): no-dep5-copyright debian/copyright-full-apache-2.copyright
-copyright-file-general (source): no-dep5-copyright debian/copyright-full-agpl-3.copyright
 copyright-symlink (binary): copyright-file-is-symlink
 copyright-poor-common-licenses (binary): copyright-not-using-common-license-for-gpl
 copyright-poor-common-licenses (binary): copyright-does-not-refer-to-common-license-file /GPL-3

@@ -35,9 +35,10 @@ use utf8;
 use autodie;
 
 use File::Copy qw(copy);
+use IO::Uncompress::Gunzip qw(gunzip $GunzipError);
 use Path::Tiny;
 
-use Lintian::Util qw(gunzip_file is_ancestor_of);
+use Lintian::Util qw(is_ancestor_of);
 
 use Moo::Role;
 use namespace::clean;
@@ -98,7 +99,8 @@ sub add_copyright {
         link($packagecopyrightpath, $copyrightpath);
 
     } elsif (-f "$packagecopyrightpath.gz") {
-        gunzip_file("$packagecopyrightpath.gz", $copyrightpath);
+        gunzip("$packagecopyrightpath.gz" => $copyrightpath)
+          or die "gunzip $packagecopyrightpath failed: $GunzipError";
     }
 
     return;

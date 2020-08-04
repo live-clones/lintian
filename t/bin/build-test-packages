@@ -51,12 +51,17 @@ BEGIN {
       NO_PKG_MANGLE
       PATH
       TMPDIR
+      CCACHE_DIR
     );
 
     # TODO: MAKEFLAGS - some of the tests don't cope too well with it
     for my $var (keys %ENV) {
         delete $ENV{$var} unless exists $WHITELIST{$var};
     }
+
+   # Standard pipeline installs ccache; causes write permission errors on Salsa
+   # https://salsa.debian.org/salsa-ci-team/pipeline/-/issues/164
+    $ENV{'CCACHE_DISABLE'} = 1;
 
     # Ubuntu auto-builders run pkg-mangle which messes up test packages
     $ENV{'NO_PKG_MANGLE'} = 'true'

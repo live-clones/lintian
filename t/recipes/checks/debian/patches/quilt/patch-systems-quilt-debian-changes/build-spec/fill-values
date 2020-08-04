@@ -1,0 +1,4 @@
+Testname: patch-systems-quilt-debian-changes
+Description: Test a 3.0 (quilt) package which has a debian-changes-XXX patch
+Skeleton: upload-non-native
+Source-Format: 3.0 (quilt)

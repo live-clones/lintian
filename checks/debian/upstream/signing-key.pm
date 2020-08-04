@@ -28,7 +28,7 @@ use autodie;
 use File::Temp;
 
 use Lintian::Data;
-use Lintian::Util qw(safe_qx);
+use Lintian::IPC::Run3 qw(safe_qx);
 
 use Moo;
 use namespace::clean;

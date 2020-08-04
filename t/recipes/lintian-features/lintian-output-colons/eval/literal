@@ -11,8 +11,8 @@ tag:I:info::lintian-output-colons:1.0+dsfg-1.1:source:source:binary-control-fiel
 tag:I:info::lintian-output-colons:1.0+dsfg-1.1:all:binary:description-possibly-contains-homepage:http\://www.example.com/.:
 tag:I:info::lintian-output-colons:1.0+dsfg-1.1:all:binary:desktop-entry-limited-to-environments:usr/share/applications/script.desktop:
 tag:I:info::lintian-output-colons:1.0+dsfg-1.1:all:binary:package-contains-empty-directory:usr/local/share/lintian/:
+tag:I:info::lintian-output-colons:1.0+dsfg-1.1:source:source:patch-not-forwarded-upstream:debian/patches/debian-changes-1.0+dsfg-1.1:
 tag:I:info::lintian-output-colons:1.0+dsfg-1.1:source:source:quilt-patch-using-template-description:debian-changes-1.0+dsfg-1.1:
-tag:I:info::lintian-output-colons:1.0+dsfg-1.1:source:source:send-patch:debian/patches/debian-changes-1.0+dsfg-1.1:
 tag:I:info::lintian-output-colons:1.0+dsfg-1.1:all:binary:synopsis-is-a-sentence:"Test Lintian colon-separated output format.":
 tag:I:info::lintian-output-colons:1.0+dsfg-1.1:source:source:upstream-metadata-missing-bug-tracking::
 tag:I:info::lintian-output-colons:1.0+dsfg-1.1:source:source:upstream-metadata-missing-repository::

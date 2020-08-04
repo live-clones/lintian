@@ -40,25 +40,27 @@ my @VCS_FIELDS = (@NON_GIT_VCS_FIELDS, qw(Vcs-Git Vcs-Browser));
 sub source {
     my ($self) = @_;
 
+    my $fields = $self->processable->fields;
+
     # only for pkg-perl packages
-    my $maintainer = $self->processable->fields->value('Maintainer');
+    my $maintainer = $fields->value('Maintainer');
     return
       unless $maintainer
       =~ /pkg-javascript-maintainers\@lists\.alioth\.debian\.org/;
 
-    my @non_git = $self->processable->fields->present(@NON_GIT_VCS_FIELDS);
+    my @non_git = grep { $fields->exists($_) } @NON_GIT_VCS_FIELDS;
     $self->tag('no-git', $_) for @non_git;
 
     # check for team locations
     for my $name (@VCS_FIELDS) {
 
         next
-          unless $self->processable->fields->exists($name);
+          unless $fields->exists($name);
 
-        my $value = $self->processable->fields->value($name);
+        my $value = $fields->value($name);
 
         # get actual capitalization
-        my $original_name = $self->processable->fields->literal_name($name);
+        my $original_name = $fields->literal_name($name);
 
         $self->tag('no-team-url', $original_name, $value)
           unless $value=~ m{^https://salsa.debian.org/js-team}i;

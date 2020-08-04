@@ -47,31 +47,38 @@ use constant SPACE => q{ };
 use constant EMPTY => q{};
 use constant NEWLINE => qq{\n};
 
-my @known_missing = qw(
-  changed-by-invalid-for-derivative
-  debian-files-list-in-source
-  debian-rules-not-executable
-  embedded-pear-module
-  invalid-field-for-derivative
-  invalid-version-number-for-derivative
-  manual-page-in-udeb
-  no-tests
-  old-python-version-field
-  old-source-override-location
-  package-is-team-maintained
-  patch-modifying-debian-files
-  patch-system-but-direct-changes-in-diff
-  team/pkg-perl/cdbs/arch-any-package-needs-newer-cdbs
-  team/pkg-perl/cdbs/module-build-tiny-needs-newer-cdbs
-  team/pkg-perl/debhelper/module-build-tiny-needs-newer-debhelper
-  quilt-series-references-non-existent-patch
-  sphinxdoc-but-no-sphinxdoc-depends
-  tar-errors-from-control
-  unused-override
-  uses-deprecated-adttmp
-  wrong-vcs-location-for-dpmt
-  wrong-vcs-location-for-papt
-);
+my @known_missing = (qw(
+      changed-by-invalid-for-derivative
+      debian-files-list-in-source
+      debian-rules-not-executable
+      embedded-pear-module
+      invalid-field-for-derivative
+      invalid-version-number-for-derivative
+      manual-page-in-udeb
+      no-tests
+      old-python-version-field
+      old-source-override-location
+      package-is-team-maintained
+      patch-modifying-debian-files
+      patch-system-but-direct-changes-in-diff
+      quilt-series-references-non-existent-patch
+      sphinxdoc-but-no-sphinxdoc-depends
+      tar-errors-from-control
+      uses-deprecated-adttmp
+      wrong-vcs-location-for-dpmt
+      wrong-vcs-location-for-papt
+      ),
+
+# the following tags are not testable due to restrictions in reprotest
+# building the tests causes regressions due to an unknown problem, maybe in docker
+# possibly related to https://github.com/yarnpkg/yarn/pull/1837
+# their functionality is probably better tested in piuparts
+    qw(
+      wrong-file-owner-uid-or-gid
+      bad-owner-for-doc-file
+      non-standard-game-executable-perm
+      rules-silently-require-root
+));
 
 my $profile = Lintian::Profile->new;
 $profile->load(undef, [$ENV{LINTIAN_ROOT}]);

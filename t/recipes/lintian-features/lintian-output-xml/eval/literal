@@ -26,12 +26,12 @@
               <context>field "Section" in package lintian-output-xml</context>
             </tag>
             <tag severity="info">
-              <name>quilt-patch-using-template-description</name>
-              <context>debian-changes-1.0+dsfg-1.1</context>
+              <name>patch-not-forwarded-upstream</name>
+              <context>debian/patches/debian-changes-1.0+dsfg-1.1</context>
             </tag>
             <tag severity="info">
-              <name>send-patch</name>
-              <context>debian/patches/debian-changes-1.0+dsfg-1.1</context>
+              <name>quilt-patch-using-template-description</name>
+              <context>debian-changes-1.0+dsfg-1.1</context>
             </tag>
             <tag severity="info">
               <name>upstream-metadata-missing-bug-tracking</name>
