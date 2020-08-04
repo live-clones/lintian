@@ -50,6 +50,9 @@ use TAP::Formatter::File;
 use TAP::Harness;
 use TAP::Parser::Aggregator;
 use Term::ANSIColor;
+use Time::Duration;
+use Time::Moment;
+use Time::Piece;
 use Try::Tiny;
 
 BEGIN {
@@ -109,6 +112,8 @@ use constant NO => q{no};
 
 # display output immediately
 STDOUT->autoflush;
+
+my $processing_start = Time::Moment->from_string(gmtime->datetime . 'Z');
 
 # options
 my $coverage;
@@ -578,6 +583,12 @@ unless (scalar @runscripts - scalar @requiredscripts + scalar @workscripts
     quick_hint($onlyrun);
     exit 1;
 }
+
+my $processing_end = Time::Moment->from_string(gmtime->datetime . 'Z');
+my $duration = duration($processing_start->delta_seconds($processing_end));
+say "The test suite ran for $duration.";
+
+say EMPTY;
 
 exit $status;
 

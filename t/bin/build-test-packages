@@ -42,6 +42,9 @@ use IO::Async::Function;
 use IO::Async::Loop;
 use List::Compare;
 use Path::Tiny;
+use Time::Duration;
+use Time::Moment;
+use Time::Piece;
 use Try::Tiny;
 
 BEGIN {
@@ -91,6 +94,8 @@ use constant TAB => qq{\t};
 use constant EMPTY => q{};
 use constant YES => q{yes};
 use constant NO => q{no};
+
+my $processing_start = Time::Moment->from_string(gmtime->datetime . 'Z');
 
 # options
 my $debug;
@@ -410,6 +415,12 @@ if (@failedbuilds) {
 } else {
     say 'All test packages are up to date.';
 }
+
+say EMPTY;
+
+my $processing_end = Time::Moment->from_string(gmtime->datetime . 'Z');
+my $duration = duration($processing_start->delta_seconds($processing_end));
+say "Building the test packages took $duration.";
 
 say EMPTY;
 

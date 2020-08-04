@@ -1,4 +1,4 @@
-Tests: testsuite
+Tests: build-and-evaluate-test-packages
 Restrictions: allow-stderr
 # Conflicts:
 #  libperl-critic-pulp-perl,
