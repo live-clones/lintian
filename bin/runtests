@@ -243,7 +243,7 @@ $ENV{'DUMP_LOGS'} = $dump_logs//NO ? YES : NO;
 # unnecessary overhead.
 $ENV{'DPKG_NLS'} = 0;
 
-my $helperpath = "$testset/bin";
+my $helperpath = "$testset/../bin";
 if (-d $helperpath) {
     my $helpers = rel2abs($helperpath)// die("Cannot resolve $helperpath: $!");
     $ENV{'PATH'} = "$helpers:$ENV{'PATH'}";
@@ -265,7 +265,7 @@ say
 
 # get harness date, including templates, skeletons and whitelists
 my @harnessparts
-  = ('t/bin', 't/runners', 't/templates', 't/skeletons', 't/whitelists');
+  = ('bin', 't/runners', 't/templates', 't/skeletons', 't/whitelists');
 my @harnessfiles
   = map { File::Find::Rule->file->in("$ENV{'LINTIAN_TEST_ROOT'}/$_") }
   @harnessparts;
@@ -648,7 +648,7 @@ Usage: $0 [options] [-j [<jobs>]] <testset-directory>
 
 Test artifacts are cached in --work-dir [default: debian/test-out] and
 will generally be reused to save time. To recreate the test packages,
-run 't/bin/build-test-packages'.
+run 'bin/build-test-packages'.
 END
     return;
 }

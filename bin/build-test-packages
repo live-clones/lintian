@@ -168,7 +168,7 @@ $ENV{'DUMP_LOGS'} = $dump_logs//NO ? YES : NO;
 # unnecessary overhead.
 $ENV{'DPKG_NLS'} = 0;
 
-my $helperpath = "$testset/bin";
+my $helperpath = "$testset/../bin";
 if (-d $helperpath) {
     my $helpers = path($helperpath)->absolute->stringify
       // die("Cannot resolve $helperpath: $!");

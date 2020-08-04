@@ -329,8 +329,8 @@ sub find_all_tags {
     # read tags from specification
     my $temp = Path::Tiny->tempfile;
     die "tagextract failed: $!"
-      if system('t/bin/tagextract', '-f', 'EWI', "$testpath/tags",
-        $temp->stringify);
+      if
+      system('bin/tagextract', '-f', 'EWI', "$testpath/tags",$temp->stringify);
     my @lines = $temp->lines_utf8({ chomp => 1 });
 
     my $csv = Text::CSV->new({ sep_char => '|' });

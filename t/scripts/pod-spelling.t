@@ -33,8 +33,7 @@ chdir($ENV{'LINTIAN_TEST_ROOT'}//'.')
   or die("fatal error: could not chdir to $ENV{LINTIAN_TEST_ROOT}: $!");
 
 my @CHECKS = glob('checks/*[!.]*[!c]');
-my @DIRS
-  = qw(bin doc/tutorial lib private reporting t/scripts t/bin t/templates);
+my @DIRS= qw(bin doc/tutorial lib private reporting t/scripts t/templates);
 
 all_pod_files_spelling_ok(@CHECKS, @DIRS);
 
