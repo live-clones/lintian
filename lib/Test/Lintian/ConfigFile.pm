@@ -44,7 +44,6 @@ BEGIN {
     our @EXPORT_OK = qw(
       read_config
       write_config
-      read_field_from_file
     );
 }
 
@@ -52,10 +51,11 @@ use Carp;
 use List::MoreUtils qw(any);
 use Path::Tiny;
 
-use Lintian::Deb822::Parser qw(read_dpkg_control_lc);
+use Lintian::Deb822::File;
 
-use constant NEWLINE => qq{\n};
 use constant SPACE => q{ };
+use constant COLON => q{:};
+use constant NEWLINE => qq{\n};
 
 =head1 FUNCTIONS
 
@@ -69,35 +69,17 @@ returns it. When also passed a HASHREF, will fill that instead.
 =cut
 
 sub read_config {
-    my ($configpath, $hashref) = @_;
+    my ($configpath) = @_;
 
     croak "Cannot find file $configpath."
       unless -f $configpath;
 
-    my @paragraphs = read_dpkg_control_lc($configpath);
-    croak "$configpath does not have exactly one paragraph"
-      if (scalar(@paragraphs) != 1);
+    my $deb822 = Lintian::Deb822::File->new;
+    my @sections = $deb822->read_file($configpath);
+    die "$configpath does not have exactly one paragraph"
+      unless scalar @sections == 1;
 
-    my $config;
-
-    # use existing hash ref if supplied
-    $config = $hashref if defined $hashref;
-
-    # insert values into our hash ref
-    foreach my $key (keys %{$paragraphs[0]}) {
-        my $underscored = $key;
-        $underscored =~ s/-/_/g;
-        $config->{$underscored} = $paragraphs[0]->{$key};
-
-        # unwrap continuation lines
-        $config->{$underscored} =~ s/\n/ /g;
-
-        # trim both ends
-        $config->{$underscored} =~ s/^\s+|\s+$//g;
-
-        # reduce multiple spaces to one
-        $config->{$underscored} =~ s/\s+/ /g;
-    }
+    my $config = $sections[0];
 
     return $config;
 }
@@ -115,57 +97,25 @@ sub write_config {
     $desc->remove;
 
     my @lines;
-    foreach my $key (sort keys %{$testcase}) {
+    for my $name (sort $testcase->names) {
 
-        next unless defined $testcase->{$key};
-
-        my $label = $key;
-        $label =~ s/_/-/g;
-        $label =~ s/\b(\w)/\U$1/g;
-
-        my @elements = split(/ /, $testcase->{$key});
+        my @elements = $testcase->trimmed_list($name);
         unless (
-            scalar @elements > 1 && any { $_ eq $label }
+            scalar @elements > 1 && any { lc($_) eq lc($name) }
             ('Test-For', 'Test-Against')
         ) {
-            push(@lines, "$label: $testcase->{$key}" . NEWLINE);
+            push(@lines,
+                $name . COLON . SPACE . $testcase->value($name) . NEWLINE);
             next;
         }
 
-        push(@lines, "$label:" . NEWLINE);
-        push(@lines, SPACE . $_ . NEWLINE)for @elements;
+        push(@lines, $name . COLON . NEWLINE);
+        push(@lines, SPACE . $_ . NEWLINE) for @elements;
     }
 
     $desc->append_utf8(@lines);
 
     return;
-}
-
-=item read_field_from_file(FIELD, FILE)
-
-Returns the list of lines from file FILE which start with the string FIELD
-followed by a colon. The string FIELD and the colon are removed from each
-line.
-
-=cut
-
-sub read_field_from_file {
-    my ($requested, $path) = @_;
-
-    croak "Could not find file $path." unless -f $path;
-    my @lines = path($path)->lines_utf8;
-
-    my @values;
-    foreach my $line (@lines) {
-        next if $line =~ /^\s+$/;
-        next if $line =~ /^\s*#/;
-        my ($field, $value) = $line =~ /\s*([^\s:]+):\s+(.*)$/;
-        die "Poorly formatted line in $path." unless length $field;
-        if($field eq $requested) {
-            push(@values, $value);
-        }
-    }
-    return @values;
 }
 
 =back

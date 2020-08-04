@@ -175,7 +175,7 @@ sub fill_skeleton_templates {
               . "from templates using whitelist '$name'.";
             my $whitelist = read_config($whitelistpath);
 
-            my @candidates = split(SPACE, $whitelist->{may_generate});
+            my @candidates = $whitelist->trimmed_list('May-Generate');
             my $destination = "$runpath/$relative";
 
             say 'Fill templates'
@@ -225,7 +225,7 @@ sub fill_whitelisted_templates {
       unless -f $whitelistpath;
 
     my $whitelist = read_config($whitelistpath);
-    my @list = split(SPACE, $whitelist->{may_generate});
+    my @list = $whitelist->trimmed_list('May-Generate');
 
     foreach my $file (@list) {
         my $generated = rel2abs($file, $directory);

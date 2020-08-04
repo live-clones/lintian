@@ -71,75 +71,79 @@ prepare($specpath->stringify, $runpath->stringify, 't');
 # read resulting test description
 my $testcase = read_config($runpath->child('fill-values')->stringify);
 
-my @testarches = split(/\s+/, $testcase->{'test_architectures'});
+my @testarches = $testcase->trimmed_list('Test-Architectures');
 
 # test plan
 plan tests => 20 + scalar @testarches;
 
-is($testcase->{testname}, $TESTNAME, 'Correct name');
+is($testcase->unfolded_value('Testname'), $TESTNAME, 'Correct name');
 
-is($testcase->{version}, '1.0-2', 'Correct version');
-is($testcase->{'upstream_version'}, '1.0', 'Correct upstream version');
+is($testcase->unfolded_value('Version'), '1.0-2', 'Correct version');
+is($testcase->unfolded_value('Upstream-Version'),
+    '1.0', 'Correct upstream version');
 
 is(
-    $testcase->{'test_architectures'},
+    $testcase->unfolded_value('Test-Architectures'),
     'any-amd64 any-i386',
     'Correct test architectures'
 );
-isnt($testcase->{'test_architectures'}, 'any', 'Correct test architectures');
-foreach my $testarch (@testarches) {
+isnt($testcase->unfolded_value('Test-Architectures'),
+    'any', 'Correct test architectures');
+for my $testarch (@testarches) {
     my @known = qx{dpkg-architecture --list-known --match-wildcard $testarch};
     cmp_ok(scalar @known, '>', 1, "Known test architecture $testarch");
 }
 
-is($testcase->{host_architecture},
+is($testcase->unfolded_value('Host-Architecture'),
     $ENV{'DEB_HOST_ARCH'}, 'Correct host architecture');
 isnt(
-    $testcase->{host_architecture},
-    $testcase->{'test-architectures'},
+    $testcase->unfolded_value('Host-Architecture'),
+    $testcase->unfolded_value('Test-Architectures'),
     'Test and host architectures are different'
 );
 
-is($testcase->{package_architecture}, 'any', 'Changed package architecture');
-isnt($testcase->{package_architecture},
+is($testcase->unfolded_value('Package-Architecture'),
+    'any', 'Changed package architecture');
+isnt($testcase->unfolded_value('Package-Architecture'),
     'all', 'Not the default package architecture');
 
-is($testcase->{skeleton}, 'upload-native', 'Correct skeleton');
+is($testcase->unfolded_value('Skeleton'), 'upload-native', 'Correct skeleton');
 
 is(
-    $testcase->{'test_depends'},
+    $testcase->unfolded_value('Test-Depends'),
     'debhelper (>= 9.20151004~)',
     'Correct test dependencies'
 );
 
-is($testcase->{'test_for'}, 'shlib-with-non-pic-code', 'Correct Test-For');
-is($testcase->{'test_against'}, undef, 'Correct Test-Against');
+is($testcase->unfolded_value('Test-For'),
+    'shlib-with-non-pic-code','Correct Test-For');
+ok(!$testcase->exists('Test-Against'), 'Correct Test-Against');
 
-is($testcase->{'standards_version'},
+is($testcase->unfolded_value('Standards-Version'),
     $ENV{'POLICY_VERSION'}, 'Correct policy version');
 
-is($testcase->{type}, 'native', 'Test is native');
-isnt($testcase->{type}, 'yes', 'Native type not yes.');
+is($testcase->unfolded_value('Type'), 'native', 'Test is native');
+isnt($testcase->unfolded_value('Type'), 'yes', 'Native type not yes.');
 
 is(
-    $testcase->{'dh_compat_level'},
+    $testcase->unfolded_value('Dh-Compat-Level'),
     $ENV{'DEFAULT_DEBHELPER_COMPAT'},
     'Default debhelper compat level'
 );
 
 is(
-    $testcase->{description},
+    $testcase->unfolded_value('Description'),
     'Test checks related to non-pic code',
     'Correct description'
 );
 isnt(
-    $testcase->{description},
+    $testcase->unfolded_value('Description'),
     'No Description Available',
     'Not default description'
 );
 
 is(
-    $testcase->{author},
+    $testcase->unfolded_value('Author'),
     'Debian Lintian Maintainers <lintian-maint@debian.org>',
     'Default author'
 );

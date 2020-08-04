@@ -60,12 +60,12 @@ my $known_tests = $perfile * scalar @descpaths;
 my $profile = Lintian::Profile->new;
 $profile->load(undef, [$ENV{LINTIAN_ROOT}]);
 
-foreach my $descpath (@descpaths) {
+for my $descpath (@descpaths) {
 
     # test for duplicate fields
     my %count;
     my @lines = path($descpath)->lines_utf8;
-    foreach my $line (@lines) {
+    for my $line (@lines) {
         my ($field) = $line =~ qr/^(\S+):/;
         $count{$field} += 1
           if defined $field;
@@ -84,22 +84,22 @@ foreach my $descpath (@descpaths) {
     my $name = path($testpath)->basename;
 
     # name equals encapsulating directory
-    is($testcase->{testname}//EMPTY,
+    is($testcase->unfolded_value('Testname'),
         $name, "Test name matches encapsulating directory in $testpath");
 
     # mandatory fields
-    ok(exists $testcase->{$_}, "Field $_ exists in $name") for @mandatory;
+    ok($testcase->exists($_), "Field $_ exists in $name") for @mandatory;
 
     # disallowed fields
-    ok(!exists $testcase->{$_}, "Field $_ does not exist in $name")
+    ok(!$testcase->exists($_), "Field $_ does not exist in $name")
       for @disallowed;
 
     # no test-against without check
-    ok(!exists $testcase->{test_against} || exists $testcase->{check},
+    ok(!$testcase->exists('Test-Against') || $testcase->exists('Check'),
         "No Test-Against without Check in $name");
 
     # get checks
-    my @checks = split(SPACE, $testcase->{check}//EMPTY);
+    my @checks = $testcase->trimmed_list('Check');
 
     # no duplicates in checks
     is(
@@ -115,7 +115,7 @@ foreach my $descpath (@descpaths) {
     );
 
     # no duplicates in tags against
-    my @against = split(SPACE, $testcase->{test_against}//EMPTY);
+    my @against = $testcase->trimmed_list('Test-Against');
     is(
         (scalar @against),
         (scalar uniq @against),

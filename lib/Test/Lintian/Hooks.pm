@@ -56,6 +56,7 @@ use File::Basename;
 use File::Find::Rule;
 use File::Path;
 use File::stat;
+use List::MoreUtils qw(any);
 use Path::Tiny;
 
 use constant NEWLINE => qq{\n};
@@ -149,12 +150,10 @@ be necessary to run the test described by hash DESC.
 sub find_missing_prerequisites {
     my ($testcase) = @_;
 
-    # without prerequisites no need to look
+    # without prerequisites, no need to look
     return
-         unless $testcase->{build_depends}
-      || $testcase->{build_conflicts}
-      || $testcase->{test_depends}
-      || $testcase->{test_conflicts};
+      unless any { $testcase->exists($_) }
+    qw(Build-Depends Build-Conflicts Test-Depends Test-Conflicts);
 
     # create a temporary file
     my $temp = Path::Tiny->tempfile(
@@ -164,16 +163,20 @@ sub find_missing_prerequisites {
     # dpkg-checkbuilddeps requires a Source: field
     push(@lines, 'Source: bd-test-pkg');
 
-    my $build_depends = join(', ',
-        grep { $_ }
-          ($testcase->{build_depends}//'',$testcase->{test_depends}//''));
+    my $build_depends = join(
+        ', ',
+        grep { length }(
+            $testcase->value('Build-Depends'),$testcase->value('Test-Depends'))
+    );
 
     push(@lines, "Build-Depends: $build_depends")
       if length $build_depends;
 
-    my $build_conflicts = join(', ',
-        grep { $_ }
-          ($testcase->{build_conflicts}//'',$testcase->{test_conflicts}//''));
+    my $build_conflicts = join(
+        ', ',
+        grep { length }(
+            $testcase->value('Build-Conflicts'),
+            $testcase->value('Test-Conflicts')));
     push(@lines, "Build-Conflicts: $build_conflicts")
       if length $build_conflicts;
 

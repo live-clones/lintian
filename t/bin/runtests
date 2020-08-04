@@ -471,7 +471,9 @@ if (-t STDOUT && !$unattended) {
         say EMPTY;
         say 'Failed test: ' . colored($testpath, 'bold white on_blue');
 
-        if ($testcase->{match_strategy} eq 'tags') {
+        my $match_strategy = $testcase->unfolded_value('Match-Strategy');
+
+        if ($match_strategy eq 'tags') {
 
             my $diffpath = "$workpath/tagdiff";
             next
@@ -480,7 +482,7 @@ if (-t STDOUT && !$unattended) {
             my $diff = path($diffpath)->slurp;
             print $diff;
 
-        } elsif ($testcase->{match_strategy} eq 'literal') {
+        } elsif ($match_strategy eq 'literal') {
 
             my $actualpath = "$workpath/literal.actual.parsed";
             next
@@ -491,8 +493,8 @@ if (-t STDOUT && !$unattended) {
             system(@command);
 
         } else {
-            say 'Do not know how to fix tests using matching strategy '
-              . $testcase->{match_strategy} . '.';
+            say
+"Do not know how to fix tests using matching strategy $match_strategy.";
             next;
         }
 
@@ -514,7 +516,7 @@ if (-t STDOUT && !$unattended) {
               if $decision eq 'a';
         }
 
-        if ($testcase->{match_strategy} eq 'tags') {
+        if ($match_strategy eq 'tags') {
 
             # create tags if needed; helps when writing new tests
             my $tagspath = "$testpath/eval/tags";
@@ -536,7 +538,7 @@ if (-t STDOUT && !$unattended) {
             die "Cannot copy updated tags to $workpath"
               if system('cp', $tagspath, "$workpath/tags");
 
-        } elsif ($testcase->{match_strategy} eq 'literal') {
+        } elsif ($match_strategy eq 'literal') {
 
             my $actualpath = "$workpath/literal.actual.parsed";
             next

@@ -84,6 +84,7 @@ use Test::Lintian::Hooks qw(sed_hook sort_lines calibrate);
 use Test::Lintian::Prepare qw(prepare);
 
 use constant SPACE => q{ };
+use constant SLASH => q{/};
 use constant INDENT => q{    };
 use constant NEWLINE => qq{\n};
 use constant TAB => qq{\t};
@@ -362,7 +363,7 @@ my $build = IO::Async::Function->new(
         };
 
         # delete old runner log
-        my $betterlogpath = "$buildpath/$files->{log}";
+        my $betterlogpath = $buildpath . SLASH . $files->unfolded_value('Log');
         unlink $betterlogpath if -f $betterlogpath;
 
        # move the early log for directory preparation to position of runner log
