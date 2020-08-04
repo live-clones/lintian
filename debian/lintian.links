@@ -1,4 +1,4 @@
-usr/share/lintian/frontend/lintian usr/bin/lintian
-usr/share/lintian/frontend/lintian usr/bin/lintian-info
-usr/share/lintian/frontend/lintian usr/bin/spellintian
+usr/share/lintian/bin/lintian usr/bin/lintian
+usr/share/lintian/bin/lintian-info usr/bin/lintian-info
+usr/share/lintian/bin/spellintian usr/bin/spellintian
 usr/share/doc/lintian/lintian.rst usr/share/doc/lintian/lintian.txt

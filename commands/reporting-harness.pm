@@ -242,10 +242,9 @@ sub parse_options_and_config {
 
     $LINTIAN_ROOT = $ENV{'LINTIAN_ROOT'};
 
-    $lintian_cmd = "$LINTIAN_ROOT/frontend/lintian";
+    $lintian_cmd = "$LINTIAN_ROOT/bin/lintian";
 
-    $LINTIAN_VERSION
-      = safe_qx("$LINTIAN_ROOT/frontend/lintian",'--print-version');
+    $LINTIAN_VERSION= safe_qx("$LINTIAN_ROOT/bin/lintian",'--print-version');
     chomp($LINTIAN_VERSION);
 
     (
@@ -264,7 +263,7 @@ sub run_lintian {
         '--desired-version', $LINTIAN_VERSION,'--debug',
     );
     my @lintian_harness_args = (
-        '--lintian-frontend', "$LINTIAN_ROOT/frontend/lintian",
+        '--lintian-frontend', "$LINTIAN_ROOT/bin/lintian",
         '--lintian-log-dir', $LOG_DIR,
         '--schedule-chunk-size', $opt{'schedule-chunk-size'},
         '--schedule-limit-groups', $opt{'schedule-limit-groups'},

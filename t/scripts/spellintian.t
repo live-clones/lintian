@@ -30,7 +30,7 @@ use constant NEWLINE => qq{\n};
 
 $ENV{'LINTIAN_TEST_ROOT'} //= '.';
 
-my $cmd_path = "$ENV{LINTIAN_TEST_ROOT}/frontend/spellintian";
+my $cmd_path = "$ENV{LINTIAN_TEST_ROOT}/bin/spellintian";
 my $spelling_data = 'data/spelling/corrections';
 
 sub t {

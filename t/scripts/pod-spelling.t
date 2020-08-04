@@ -34,7 +34,7 @@ chdir($ENV{'LINTIAN_TEST_ROOT'}//'.')
 
 my @CHECKS = glob('checks/*[!.]*[!c]');
 my @DIRS
-  = qw(collection doc/tutorial frontend lib private reporting t/scripts t/bin t/templates);
+  = qw(bin doc/tutorial lib private reporting t/scripts t/bin t/templates);
 
 all_pod_files_spelling_ok(@CHECKS, @DIRS);
 

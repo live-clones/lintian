@@ -84,7 +84,7 @@ BEGIN {
         $ENV{'LINTIAN_FRONTEND'} = '/usr/bin/lintian';
     } else {
         $ENV{'LINTIAN_ROOT'} = $cwd;
-        $ENV{'LINTIAN_FRONTEND'} = "$cwd/frontend/lintian";
+        $ENV{'LINTIAN_FRONTEND'} = "$cwd/bin/lintian";
     }
 
     $ENV{'LINTIAN_TEST_ROOT'} = $cwd;
@@ -183,7 +183,7 @@ my $output_is_tty = -t STDOUT;
 # get lintian modification date
 my @lintianparts = (
     'checks', 'collection', 'commands', 'data',
-    'frontend', 'profiles', 'vendors', 'lib/Lintian'
+    'bin', 'profiles', 'vendors', 'lib/Lintian'
 );
 my @lintianfiles
   = map { File::Find::Rule->file->in("$ENV{'LINTIAN_ROOT'}/$_") }@lintianparts;
