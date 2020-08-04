@@ -10,10 +10,10 @@ use autodie;
 use Getopt::Long;
 
 BEGIN {
-    $ENV{'LINTIAN_ROOT'} //= '.';
+    $ENV{'LINTIAN_BASE'} //= '.';
 }
 
-use lib "$ENV{'LINTIAN_ROOT'}/lib/";
+use lib "$ENV{'LINTIAN_BASE'}/lib/";
 
 use Lintian::IO::Async qw(safe_qx);
 

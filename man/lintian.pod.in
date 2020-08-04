@@ -198,7 +198,7 @@ add additional sources.  Example sources are "policy" or "devref"
 being the Policy Manual and the Developer Reference (respectively).
 
 The entire list of sources can be found in
-I<$LINTIAN_ROOT/data/output/manual-references>
+I<$LINTIAN_BASE/data/output/manual-references>
 
 =item B<-E>, B<--display-experimental>, B<--no-display-experimental>
 
@@ -418,8 +418,8 @@ and all I<XDG_> variables).
 
 =item B<--include-dir> dir
 
-Use dir as an additional "LINTIAN_ROOT".  The directory is expected
-have a similar layout to the LINTIAN_ROOT (if it exists), but does not
+Use dir as an additional "LINTIAN_BASE".  The directory is expected
+have a similar layout to the LINTIAN_BASE (if it exists), but does not
 need to be a full self-contained root.
 
 B<lintian> will check this directory for (additional) profiles, data
@@ -432,7 +432,7 @@ command line.
 
 The additional directories will be checked I<after> the user
 directories (though see B<--no-user-dirs>) and I<before> the core
-LINTIAN_ROOT.
+LINTIAN_BASE.
 
 B<Note>: This option should be the very first if given.
 
@@ -451,7 +451,7 @@ supplied by the user or the local sysadmin (e.g. config files and
 profiles).  This default can be disabled (and re-enabled) by using
 B<--no-user-dirs> (and B<--user-dirs>, respectively).
 
-These options will I<not> affect the inclusion of LINTIAN_ROOT, which
+These options will I<not> affect the inclusion of LINTIAN_BASE, which
 is always included.
 
 These option can appear multiple times, in which case the last of them

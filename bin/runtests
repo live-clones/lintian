@@ -33,8 +33,12 @@ use warnings;
 use utf8;
 use autodie;
 
+# use Lintian modules that belong to this program
+use FindBin;
+use lib "$FindBin::RealBin/../lib";
+
 use Capture::Tiny qw(capture_merged);
-use Cwd;
+use Cwd qw(realpath);
 use File::Basename;
 use File::Path qw(make_path);
 use File::Spec::Functions qw(abs2rel rel2abs splitpath splitdir);
@@ -54,43 +58,6 @@ use Time::Duration;
 use Time::Moment;
 use Time::Piece;
 use Try::Tiny;
-
-BEGIN {
-    # whitelist the environment we permit to avoid things that mess up
-    # tests, like CFLAGS, DH_OPTIONS, DH_COMPAT, DEB_HOST_ARCH
-    my %WHITELIST = map { $_ => 1 } qw(
-      LINTIAN_TEST_INSTALLED
-      NO_PKG_MANGLE
-      PATH
-      TMPDIR
-    );
-
-    # TODO: MAKEFLAGS - some of the tests don't cope too well with it
-    for my $var (keys %ENV) {
-        delete $ENV{$var} unless exists $WHITELIST{$var};
-    }
-
-    # Ubuntu auto-builders run pkg-mangle which messes up test packages
-    $ENV{'NO_PKG_MANGLE'} = 'true'
-      unless exists($ENV{'NO_PKG_MANGLE'});
-
-    $ENV{'LINTIAN_TEST_INSTALLED'} = 'no'
-      unless exists $ENV{'LINTIAN_TEST_INSTALLED'};
-
-    my $cwd = Cwd::getcwd();
-
-    if ($ENV{'LINTIAN_TEST_INSTALLED'} eq 'yes') {
-        $ENV{'LINTIAN_ROOT'} = '/usr/share/lintian';
-        $ENV{'LINTIAN_FRONTEND'} = '/usr/bin/lintian';
-    } else {
-        $ENV{'LINTIAN_ROOT'} = $cwd;
-        $ENV{'LINTIAN_FRONTEND'} = "$cwd/bin/lintian";
-    }
-
-    $ENV{'LINTIAN_TEST_ROOT'} = $cwd;
-}
-
-use lib "$ENV{'LINTIAN_TEST_ROOT'}/lib";
 
 use Lintian::IO::Async qw(safe_qx);
 
@@ -114,6 +81,31 @@ use constant NO => q{no};
 STDOUT->autoflush;
 
 my $processing_start = Time::Moment->from_string(gmtime->datetime . 'Z');
+
+# whitelist the environment we permit to avoid things that mess up
+# tests, like CFLAGS, DH_OPTIONS, DH_COMPAT, DEB_HOST_ARCH
+my %PRESERVE_ENV = map { $_ => 1 } qw(
+  LINTIAN_TEST_INSTALLED
+  PATH
+  TMPDIR
+);
+
+my @disallowed = grep { !exists $PRESERVE_ENV{$_} } keys %ENV;
+
+delete $ENV{$_} for @disallowed;
+
+if (($ENV{LINTIAN_TEST_INSTALLED} // 'no') eq 'yes') {
+
+    $ENV{LINTIAN_UNDER_TEST} = realpath('/usr/bin/lintian')
+      // die 'Lintian is not installed';
+
+} else {
+    $ENV{LINTIAN_UNDER_TEST} = $FindBin::RealBin . '/lintian';
+}
+
+$ENV{LINTIAN_BASE}
+  = realpath(dirname(dirname($ENV{LINTIAN_UNDER_TEST})))
+  // die 'Cannot resolve LINTIAN_BASE';
 
 # options
 my $coverage;
@@ -186,15 +178,15 @@ my @lintianparts = (
     'bin', 'profiles', 'vendors', 'lib/Lintian'
 );
 my @lintianfiles
-  = map { File::Find::Rule->file->in("$ENV{'LINTIAN_ROOT'}/$_") }@lintianparts;
-push(@lintianfiles, Cwd::realpath($ENV{'LINTIAN_FRONTEND'}));
+  = map { File::Find::Rule->file->in("$ENV{'LINTIAN_BASE'}/$_") }@lintianparts;
+push(@lintianfiles, Cwd::realpath($ENV{'LINTIAN_UNDER_TEST'}));
 $ENV{'LINTIAN_EPOCH'}
   = max(map { -e $_ ? stat($_)->mtime : time } @lintianfiles);
 say 'Lintian modified on '. rfc822date($ENV{'LINTIAN_EPOCH'});
 
 my $error;
 my $string = capture_merged {
-    my @command = ($ENV{'LINTIAN_FRONTEND'}, '--version');
+    my @command = ($ENV{'LINTIAN_UNDER_TEST'}, '--version');
     system(@command) == 0
       or $error = "system @command failed: $?";
 };
@@ -267,8 +259,7 @@ say
 my @harnessparts
   = ('bin', 't/runners', 't/templates', 't/skeletons', 't/whitelists');
 my @harnessfiles
-  = map { File::Find::Rule->file->in("$ENV{'LINTIAN_TEST_ROOT'}/$_") }
-  @harnessparts;
+  = map { File::Find::Rule->file->in("$ENV{'LINTIAN_BASE'}/$_") }@harnessparts;
 my $harness_files_epoch
   = max(map { -e $_ ? stat($_)->mtime : time } @harnessfiles);
 $ENV{'HARNESS_EPOCH'}
@@ -299,7 +290,7 @@ $formatter = TAP::Formatter::Console->new({
 my $harness = TAP::Harness->new({
     formatter => $formatter,
     jobs => $numjobs,
-    lib => ["$ENV{'LINTIAN_TEST_ROOT'}/lib"],
+    lib => ["$ENV{'LINTIAN_BASE'}/lib"],
 });
 
 my $aggregator = TAP::Parser::Aggregator->new;

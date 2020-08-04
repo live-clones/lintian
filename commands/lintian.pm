@@ -50,8 +50,6 @@ use constant SPACE => q{ };
 use constant COMMA => q{,};
 use constant NEWLINE => qq{\n};
 
-my $INIT_ROOT = $ENV{'LINTIAN_ROOT'};
-
 # only in GNOME; need original environment
 my $interactive = -t STDIN && (-t STDOUT || !(-f STDOUT || -c STDOUT));
 my $hyperlinks_capable = $interactive && qx{env | fgrep -i gnome};
@@ -716,8 +714,9 @@ sub main {
         # Print Debug banner, now that we're finished determining
         # the values and have Lintian::Output available
         $OUTPUT->debug_msg(
-            1,$banner,
-            "Lintian root directory: $INIT_ROOT",
+            1,
+            $banner,
+            "Lintian root directory: $ENV{LINTIAN_BASE}",
             "Configuration file: $option{'LINTIAN_CFG'}",
             'UTF-8: ✓ (☃)',
             $OUTPUT->delimiter,
@@ -803,8 +802,6 @@ sub main {
         $OUTPUT->v_msg('No packages selected.');
         exit $exit_code;
     }
-
-    $ENV{INIT_ROOT} = $INIT_ROOT;
 
     $pool->process($PROFILE, \$exit_code, \%option, $STATUS_FD, $OUTPUT);
 

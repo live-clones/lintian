@@ -87,10 +87,10 @@ my $opts = {
     'filter' => \&accept_filter,
 };
 
-$ENV{'LINTIAN_TEST_ROOT'} //= '.';
+$ENV{'LINTIAN_BASE'} //= '.';
 
-test_tags_implemented($opts, "$ENV{LINTIAN_TEST_ROOT}/checks");
-test_tags_implemented("$ENV{LINTIAN_TEST_ROOT}/doc/examples/checks");
+test_tags_implemented($opts, "$ENV{LINTIAN_BASE}/checks");
+test_tags_implemented("$ENV{LINTIAN_BASE}/doc/examples/checks");
 
 done_testing;
 

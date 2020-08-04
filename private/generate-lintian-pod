@@ -7,9 +7,9 @@ use autodie;
 
 # Find the lib directory of lintian-root (defaulting to ./lib/)
 BEGIN {
-    $ENV{LINTIAN_ROOT} //= '.';
+    $ENV{LINTIAN_BASE} //= '.';
 }
-use lib $ENV{LINTIAN_ROOT} . '/lib/';
+use lib $ENV{LINTIAN_BASE} . '/lib/';
 
 use Lintian::Deb822::Parser qw(read_dpkg_control);
 

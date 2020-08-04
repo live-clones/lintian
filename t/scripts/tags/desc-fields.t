@@ -34,7 +34,7 @@ use List::Util qw(all);
 use Path::Tiny;
 use Test::More;
 
-use lib "$ENV{'LINTIAN_TEST_ROOT'}/lib";
+use lib "$ENV{'LINTIAN_BASE'}/lib";
 
 use Lintian::Deb822::File;
 use Lintian::Profile;
@@ -58,7 +58,7 @@ my $perfile = 7 + scalar @mandatory + scalar @disallowed;
 plan tests => $perfile * scalar @descpaths;
 
 my $profile = Lintian::Profile->new;
-$profile->load(undef, [$ENV{LINTIAN_ROOT}]);
+$profile->load(undef, [$ENV{LINTIAN_BASE}]);
 
 for my $descpath (@descpaths) {
 

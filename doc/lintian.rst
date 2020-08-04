@@ -181,7 +181,7 @@ Before you can start to check your packages with Lintian, you'll have to
 install the lintian Debian package.
 
 Alternatively you can checkout Lintian from the source repository and
-use that directly. By setting LINTIAN_ROOT (or using the --root option)
+use that directly. By setting LINTIAN_BASE (or using the --root option)
 lintian can be run from the source directory as if it had been installed
 on your system.
 
@@ -523,7 +523,7 @@ with that name in the following directories:
 
 -  ``/etc/lintian/profiles``
 
--  ``$LINTIAN_ROOT/profiles``
+-  ``$LINTIAN_BASE/profiles``
 
 Note that an implication of the handling of default vendor profiles
 implies that profiles must be in subdirectories of the directories above
@@ -706,7 +706,7 @@ specific data files:
 
 -  ``/etc/lintian/vendors/PROFILENAME/data``
 
--  ``$LINTIAN_ROOT/vendors/PROFILENAME/data``
+-  ``$LINTIAN_BASE/vendors/PROFILENAME/data``
 
 If none of the directories exists or none of them provide the data file
 in question, Lintian will (recursively) retry with the parent of the
@@ -838,7 +838,7 @@ Writing your own Lintian checks
 This section describes how to write and deploy your own Lintian checks.
 Lintian will load checks from the following directories (in order):
 
--  ``$LINTIAN_ROOT/checks``
+-  ``$LINTIAN_BASE/checks``
 
 Existing checks can be shadowed by placing a check with the same name in
 a directory appearing earlier in the list. This also holds for the

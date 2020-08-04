@@ -36,7 +36,7 @@ use List::MoreUtils qw(uniq);
 use Path::Tiny;
 use Test::More;
 
-use lib "$ENV{'LINTIAN_TEST_ROOT'}/lib";
+use lib "$ENV{'LINTIAN_BASE'}/lib";
 
 use Lintian::Profile;
 use Test::Lintian::ConfigFile qw(read_config);
@@ -81,7 +81,7 @@ my @known_missing = (qw(
 ));
 
 my $profile = Lintian::Profile->new;
-$profile->load(undef, [$ENV{LINTIAN_ROOT}]);
+$profile->load(undef, [$ENV{LINTIAN_BASE}]);
 
 # find known checks
 my @known = uniq $profile->known_checks;

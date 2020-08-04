@@ -23,15 +23,15 @@ use warnings;
 use autodie;
 
 BEGIN {
-    die('Cannot find LINTIAN_TEST_ROOT')
-      unless length $ENV{'LINTIAN_TEST_ROOT'};
+    die('Cannot find LINTIAN_BASE')
+      unless length $ENV{'LINTIAN_BASE'};
 }
 
 use Cwd qw(realpath);
 use File::Basename qw(dirname);
 use List::Util qw(max);
 
-use lib "$ENV{'LINTIAN_TEST_ROOT'}/lib";
+use lib "$ENV{'LINTIAN_BASE'}/lib";
 
 use Test::Lintian::Run qw(logged_runner);
 use Test::ScriptAge qw(our_modification_epoch perl_modification_epoch);

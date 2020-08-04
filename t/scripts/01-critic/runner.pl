@@ -32,8 +32,8 @@ eval 'use PPIx::Regexp';
 diag('libppix-regexp-perl is needed to enable some checks') if $@;
 
 my @test_paths = program_name_to_perl_paths($0);
-$ENV{'LINTIAN_TEST_ROOT'} //= '.';
-my $critic_profile = "$ENV{'LINTIAN_TEST_ROOT'}/.perlcriticrc";
+$ENV{'LINTIAN_BASE'} //= '.';
+my $critic_profile = "$ENV{'LINTIAN_BASE'}/.perlcriticrc";
 Test::Perl::Critic->import(-profile => $critic_profile);
 
 run_critic(@test_paths);

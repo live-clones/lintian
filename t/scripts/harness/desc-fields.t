@@ -35,7 +35,7 @@ use List::Util qw(all);
 use Path::Tiny;
 use Test::More;
 
-use lib "$ENV{'LINTIAN_TEST_ROOT'}/lib";
+use lib "$ENV{'LINTIAN_BASE'}/lib";
 
 use Lintian::Profile;
 use Test::Lintian::ConfigFile qw(read_config);
@@ -58,7 +58,7 @@ my $perfile = 6 + scalar @mandatory + scalar @disallowed;
 my $known_tests = $perfile * scalar @descpaths;
 
 my $profile = Lintian::Profile->new;
-$profile->load(undef, [$ENV{LINTIAN_ROOT}]);
+$profile->load(undef, [$ENV{LINTIAN_BASE}]);
 
 for my $descpath (@descpaths) {
 

@@ -26,19 +26,25 @@ use v5.20;
 use warnings;
 use utf8;
 
+# use Lintian modules that belong to this program
+use FindBin;
+use lib "$FindBin::RealBin/../lib";
+
+# substituted during package build
+my $LINTIAN_VERSION;
+
 use Cwd qw(getcwd realpath);
 use File::BaseDir qw(config_home config_files data_home);
-use File::Basename qw(dirname basename);
+use File::Basename;
 use Getopt::Long();
 use Path::Tiny;
 
 use constant COLON => q{:};
 
-# both substituted during package build
-my $INIT_ROOT = find_source_root();
-my $LINTIAN_VERSION;
-
 binmode(STDOUT, ':encoding(UTF-8)');
+
+$ENV{LINTIAN_BASE} = realpath("$FindBin::RealBin/..")
+  // die 'Cannot resolve LINTIAN_BASE';
 
 my @INCLUDE_DIRS;
 my $user_dirs = 1;
@@ -82,19 +88,17 @@ if ($user_dirs) {
 
 # only absolute paths
 my @CONFIG_DIRS = grep { -d }
-  grep { length } map { realpath($_) } ($INIT_ROOT, @INCLUDE_DIRS);
+  grep { length } map { realpath($_) } ($ENV{'LINTIAN_BASE'}, @INCLUDE_DIRS);
 
 my @HELPER_DIRS = grep { -d } map { "$_/helpers" } @CONFIG_DIRS;
 
-$ENV{'LINTIAN_ROOT'} = $INIT_ROOT;
 $ENV{'LINTIAN_CONFIG_DIRS'} = join(COLON, @CONFIG_DIRS);
 $ENV{'LINTIAN_RESTRICTED_CONFIG_DIRS'}= join(COLON, @RESTRICTED_CONFIG_DIRS);
 $ENV{'LINTIAN_HELPER_DIRS'} = join(COLON, @HELPER_DIRS);
 
 $ENV{'LINTIAN_ENABLE_USER_DIRS'} = $user_dirs ? 1 : 0;
 
-$ENV{'LINTIAN_CALLED_AS'} = $0;
-$ENV{'LINTIAN_FRONTEND'} = realpath($0) // die "Cannot resolve $0: $!";
+$ENV{'LINTIAN_CALLED_AS'} = $FindBin::Script;
 
 if (my $coverage_arg = $ENV{'LINTIAN_COVERAGE'}) {
     my $p5opt = $ENV{'PERL5OPT'}//q{};
@@ -103,7 +107,7 @@ if (my $coverage_arg = $ENV{'LINTIAN_COVERAGE'}) {
 }
 
 my $truename = $0;
-my $cmd = basename($0);
+my $cmd = $FindBin::Script;
 
 for my $folder (@CONFIG_DIRS) {
 
@@ -160,18 +164,11 @@ for my $folder (@CONFIG_DIRS) {
 
 die "$cmd is not available";
 
-sub find_source_root {
-    # Determine the $INIT_ROOT in case we are run from the source tree
-    my $path = realpath(__FILE__) // die "realpath($0) failed: $!\n";
-    # .../lintian.git/frontend/lintian  => .../lintian.git
-    return dirname(dirname($path));
-}
-
 sub guess_version {
-    my $rootdir = find_source_root();
     my $guess;
 
-    if (-d "$rootdir/.git") {
+    my $repopath = "$ENV{LINTIAN_BASE}/.git";
+    if (-d $repopath) {
         # Lets try git
         require IO::Async::Loop;
         require IO::Async::Process;
@@ -179,7 +176,7 @@ sub guess_version {
         my $loop = IO::Async::Loop->new;
         my $future = $loop->new_future;
         my $process = IO::Async::Process->new(
-            command => ['git', "--git-dir=$rootdir/.git", 'describe'],
+            command => ['git', "--git-dir=$repopath", 'describe'],
             stdout => { into => \$guess },
             on_finish => sub {
                 my ($self, $exitcode) = @_;
@@ -197,10 +194,11 @@ sub guess_version {
     }
 
     # git was not possible - maybe the changelog is available
-    if (-f "$rootdir/debian/changelog") {
+    my $changelogpath = "$ENV{LINTIAN_BASE}/debian/changelog";
+    if (-f $changelogpath) {
 
         require Lintian::Inspect::Changelog;
-        my $contents = path("$rootdir/debian/changelog")->slurp;
+        my $contents = path($changelogpath)->slurp;
         my $changelog = Lintian::Inspect::Changelog->new;
 
         $changelog->parse($contents);

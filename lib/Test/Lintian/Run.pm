@@ -251,7 +251,7 @@ sub runner {
     my $lintian_command_line
       = $testcase->unfolded_value('Lintian-Command-Line');
     my $command
-      = "cd $runpath; $ENV{'LINTIAN_FRONTEND'} $lintian_command_line $subject";
+      = "cd $runpath; $ENV{'LINTIAN_UNDER_TEST'} $lintian_command_line $subject";
     say $command;
     my ($output, $status) = capture_merged { system($command); };
     $status = ($status >> 8) & 255;
@@ -459,7 +459,7 @@ sub check_result {
         && $testcase->unfolded_value('Check') ne 'all') {
 
         my $profile = Lintian::Profile->new;
-        $profile->load(undef, [$ENV{LINTIAN_ROOT}]);
+        $profile->load(undef, [$ENV{LINTIAN_BASE}]);
 
         # use tags related to checks declared
         my @checks = $testcase->trimmed_list('Check');

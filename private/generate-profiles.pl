@@ -9,7 +9,7 @@ use utf8;
 use autodie;
 
 BEGIN {
-    $ENV{'LINTIAN_ROOT'} //= q{.};
+    $ENV{'LINTIAN_BASE'} //= q{.};
 }
 
 use File::Find::Rule;
@@ -19,7 +19,7 @@ use LWP::Simple;
 use Path::Tiny;
 use YAML::XS;
 
-use lib "$ENV{LINTIAN_ROOT}/lib";
+use lib "$ENV{LINTIAN_BASE}/lib";
 
 use Lintian::Deb822::Parser qw(read_dpkg_control);
 
@@ -31,7 +31,7 @@ use constant INDENT => q{    };
 use constant NEWLINE => qq{\n};
 
 # generate main profile
-my $checkdir = "$ENV{LINTIAN_ROOT}/checks";
+my $checkdir = "$ENV{LINTIAN_BASE}/checks";
 my @modulepaths = File::Find::Rule->file->name('*.pm')->in($checkdir);
 
 my @allchecks;
@@ -71,7 +71,7 @@ my @want_nonfatal = uniq @{ $base->{nonfatal} // [] };
 # find all tags known to Lintian
 my @known_tags;
 my %new_name;
-my $tagroot = "$ENV{LINTIAN_ROOT}/tags";
+my $tagroot = "$ENV{LINTIAN_BASE}/tags";
 my @descfiles = File::Find::Rule->file()->name('*.desc')->in($tagroot);
 for my $tagpath (@descfiles) {
     my @paragraphs = read_dpkg_control($tagpath);

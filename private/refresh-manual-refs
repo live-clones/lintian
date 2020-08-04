@@ -21,7 +21,7 @@
 # MA 02110-1301, USA.
 
 # Should be run from the top level of the Lintian source tree or with
-# LINTIAN_ROOT set appropriately.  You need copies of all the relevant manuals
+# LINTIAN_BASE set appropriately.  You need copies of all the relevant manuals
 # installed in the standard places locally (packages debian-policy,
 # developers-reference, doc-base, python, lintian, menu, java-policy and
 # vim-doc).
@@ -37,16 +37,16 @@ use List::MoreUtils qw(none);
 use POSIX qw(strftime);
 
 BEGIN {
-    my $LINTIAN_ROOT = $ENV{'LINTIAN_ROOT'};
-    if (not $LINTIAN_ROOT) {
+    my $LINTIAN_BASE = $ENV{'LINTIAN_BASE'};
+    if (not $LINTIAN_BASE) {
         require Cwd;
-        $ENV{'LINTIAN_ROOT'} = $LINTIAN_ROOT = Cwd::cwd();
+        $ENV{'LINTIAN_BASE'} = $LINTIAN_BASE = Cwd::cwd();
     } else {
-        chdir($LINTIAN_ROOT);
+        chdir($LINTIAN_BASE);
     }
 }
 
-my $LINTIAN_ROOT = $ENV{'LINTIAN_ROOT'};
+my $LINTIAN_BASE = $ENV{'LINTIAN_BASE'};
 
 # For each manual, we need:
 #  * Location of the manual index on the local filesystem

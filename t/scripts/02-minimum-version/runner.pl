@@ -14,7 +14,7 @@ plan skip_all => 'Test::MinimumVersion required to run this test' if $@;
 our $REQUIRED = 'v5.24.1';
 
 my @test_paths = program_name_to_perl_paths($0);
-$ENV{'LINTIAN_TEST_ROOT'} //= '.';
+$ENV{'LINTIAN_BASE'} //= '.';
 
 all_minimum_version_ok($REQUIRED, { paths => \@test_paths, no_plan => 1});
 
