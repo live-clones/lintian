@@ -65,7 +65,7 @@ sub installable {
     return
       unless $processable->fields->exists('Description');
 
-    my $full_description = $processable->fields->value('Description');
+    my $full_description= $processable->fields->untrimmed_value('Description');
 
     $self->tag('odd-mark-in-description', 'comma not followed by whitespace')
       if $full_description =~ /,\S/;

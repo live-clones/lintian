@@ -163,6 +163,31 @@ sub value {
     return EMPTY
       unless length $exact;
 
+    my $trimmed = $self->verbatim->{$exact} // EMPTY;
+
+    # trim both ends
+    $trimmed =~ s/^\s+|\s+$//g;
+
+    return $trimmed;
+}
+
+=item untrimmed_value (FIELD)
+
+If FIELD is given, this method returns the value of the control field
+FIELD.
+
+=cut
+
+sub untrimmed_value {
+    my ($self, $name) = @_;
+
+    return EMPTY
+      unless length $name;
+
+    my $exact = $self->legend->{lc $name};
+    return EMPTY
+      unless length $exact;
+
     return $self->verbatim->{$exact} // EMPTY;
 }
 

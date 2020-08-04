@@ -123,7 +123,7 @@ sub is_pkg_class {
         return 0;
     }
 
-    my $desc = $self->fields->value('Description');
+    my $desc = $self->fields->untrimmed_value('Description');
     return 1
       if $desc =~ m/transitional package/;
 

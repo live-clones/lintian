@@ -80,7 +80,7 @@ sub source {
             # checking description
             my $description
               = $processable->debian_control->installable_fields($binary)
-              ->value('Description');
+              ->untrimmed_value('Description');
 
             if ($description !~ /\$\{phppear:summary\}/) {
                 $self->tag('pear-package-not-using-substvar',

@@ -67,7 +67,7 @@ sub always {
 
     for my $name (@enforce) {
 
-        my $value = $self->processable->fields->value($name);
+        my $value = $self->processable->fields->untrimmed_value($name);
 
         # remove a final newline, if any
         $value =~ s/\n$//;
