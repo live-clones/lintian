@@ -1,1 +1,215 @@
-lintian
+#!/usr/bin/perl
+
+# Copyright © 1998 Christian Schwarz, Richard Braakman (and others)
+# Copyright © 2013 Niels Thykier
+# Copyright © 2014 Jakub Wilk <jwilk@jwilk.net>
+# Copyright © 2020 Felix Lechner
+
+# This program is free software.  It is distributed under the terms of
+# the GNU General Public License as published by the Free Software
+# Foundation; either version 2 of the License, or (at your option) any
+# later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, you can find it on the World Wide
+# Web at <https://www.gnu.org/copyleft/gpl.html>, or write to the Free
+# Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
+# MA 02110-1301, USA.
+
+use v5.20;
+use warnings;
+use utf8;
+use autodie;
+
+# use Lintian modules that belong to this program
+use FindBin;
+use lib "$FindBin::RealBin/../lib";
+
+# substituted during package build
+my $LINTIAN_VERSION;
+
+use Cwd qw(getcwd realpath);
+use File::BaseDir qw(config_home config_files data_home);
+use File::Basename;
+use Getopt::Long ();
+use Path::Tiny;
+
+use Lintian::Data;
+use Lintian::IPC::Run3 qw(safe_qx);
+use Lintian::Spelling qw(check_spelling check_spelling_picky);
+use Lintian::Profile;
+use Lintian::Util qw(version_from_changelog);
+
+use constant EMPTY => q{};
+use constant COLON => q{:};
+
+binmode(STDOUT, ':encoding(UTF-8)');
+
+$SIG{__WARN__} = sub {
+    my ($message) = @_;
+
+    $message =~ s/\A([[:upper:]])/lc($1)/e;
+    $message =~ s/\n+\z//;
+
+    die "spellintian: $message\n";
+};
+
+if (my $coverage_arg = $ENV{'LINTIAN_COVERAGE'}) {
+    my $p5opt = $ENV{'PERL5OPT'} // EMPTY;
+    $p5opt .= ' ' if $p5opt ne EMPTY;
+    $ENV{'PERL5OPT'} = "${p5opt} ${coverage_arg}";
+}
+
+$ENV{LINTIAN_BASE} = realpath("$FindBin::RealBin/..")
+  // die 'Cannot resolve LINTIAN_BASE';
+
+my @INCLUDE_DIRS;
+my $picky = 0;
+my $user_dirs = 1;
+
+my %options = (
+    'h|help' => \&show_help,
+    'include-dir=s' => \@INCLUDE_DIRS,
+    'picky' => \$picky,
+    'user-dirs!' => \$user_dirs,
+    'version' => \&show_version,
+);
+
+Getopt::Long::Configure('gnu_getopt');
+
+Getopt::Long::GetOptions(%options)
+  or die "error parsing options\n";
+
+# only absolute paths
+my @RESTRICTED_CONFIG_DIRS;
+
+if ($user_dirs) {
+    my $data_home;
+    my $legacy_user_data;
+
+    $data_home = data_home('lintian')
+      if exists $ENV{'HOME'} || exists $ENV{'XDG_CONFIG_HOME'};
+
+    $legacy_user_data = "$ENV{HOME}/.lintian"
+      if exists $ENV{'HOME'};
+
+    if (defined $data_home && $data_home !~ m{^/}) {
+        # Turn the path into an absolute one.  Just in case
+        # someone sets a relative HOME dir.
+        my $cwd = getcwd();
+        $data_home = "$cwd/$data_home";
+    }
+
+    @RESTRICTED_CONFIG_DIRS = grep { -d }
+      grep { length } ($data_home, $legacy_user_data, '/etc/lintian');
+}
+
+# only absolute paths
+my @CONFIG_DIRS = grep { -d }
+  grep { length } map { realpath($_) } ($ENV{'LINTIAN_BASE'}, @INCLUDE_DIRS);
+
+my $profile = Lintian::Profile->new;
+$profile->load(undef, \@CONFIG_DIRS,
+    { 'restricted-search-dirs' => \@RESTRICTED_CONFIG_DIRS });
+
+Lintian::Data->set_vendor($profile);
+
+my $exit_code = 0;
+
+unless (@ARGV) {
+    my $text = do { local $/; <STDIN> };
+    spellcheck(undef, $picky, $text);
+}
+
+for my $path (@ARGV) {
+
+    unless (-f $path) {
+        print STDERR "$path is not a file\n";
+        $exit_code = 1;
+
+        next;
+    }
+
+    my $text = path($path)->slurp;
+    spellcheck($path, $picky, $text);
+}
+
+exit $exit_code;
+
+sub guess_version {
+    my ($lintian_base) = @_;
+
+    my $guess = version_from_git($lintian_base);
+    $guess ||= version_from_changelog($lintian_base);
+
+    return $guess
+      if length $guess;
+
+    die 'Unable to determine the version automatically!?';
+}
+
+=item version_from_git
+
+=cut
+
+sub version_from_git {
+    my ($source_path) = @_;
+
+    my $git_path = "$source_path/.git";
+
+    return EMPTY
+      unless -d $git_path;
+
+    my $guess = safe_qx('git', "--git-dir=$git_path", 'describe');
+    chomp $guess;
+
+    return ($guess // EMPTY);
+}
+
+sub show_version {
+    my $version = $LINTIAN_VERSION // guess_version($ENV{LINTIAN_BASE});
+
+    say "spellintian v$version";
+    exit;
+}
+
+sub show_help {
+    print <<'EOF' ;
+Usage: spellintian [--picky] [FILE...]
+
+Options:
+    --picky            be extra picky
+    --include-dir DIR  check for Lintian data in DIR
+    --[no-]user-dirs   whether to include profiles from user directories
+    --version          show version info and exit
+EOF
+    exit;
+}
+
+sub spellcheck {
+    my ($path, $picky, $text) = @_;
+
+    my $prefix = $path ? "$path: " : EMPTY;
+
+    my $spelling_error_handler = sub {
+        my ($mistake, $correction) = @_;
+        say "$prefix$mistake -> $correction";
+    };
+
+    check_spelling($text, $spelling_error_handler);
+    check_spelling_picky($text, $spelling_error_handler)
+      if $picky;
+
+    return;
+}
+
+# Local Variables:
+# indent-tabs-mode: nil
+# cperl-indent-level: 4
+# End:
+# vim: syntax=perl sw=4 sts=4 sr et
