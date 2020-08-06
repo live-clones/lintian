@@ -60,6 +60,7 @@ Depends:
  libnamespace-clean-perl,
  libpath-tiny-perl,
  libperlio-gzip-perl,
+ libproc-processtable-perl,
  libsereal-decoder-perl,
  libsereal-encoder-perl,
  libtext-levenshteinxs-perl,

@@ -31,6 +31,7 @@ use List::MoreUtils qw(any);
 use Time::HiRes qw(gettimeofday tv_interval);
 use Path::Tiny;
 use POSIX qw(:sys_wait_h);
+use Proc::ProcessTable;
 
 use Lintian::Group;
 use Lintian::Util;
@@ -257,25 +258,28 @@ sub process{
         # put tags back into their respective processables
         push(@{$_->processable->tags}, $_) for @tags;
 
-        if ($$exit_code_ref != 1) {
-            # Double check that no processes are running;
-            # hopefully it will catch regressions like 3bbcc3b
-            # earlier.
-            #
-            # Unfortunately, the cleanup via IO::Async::Function seems keep
-            # a worker unreaped; disabling. Should be revisited.
-            #
-            if (waitpid(-1, WNOHANG) != -1) {
-                $$exit_code_ref = 1;
-                die 'Unreaped processes after running checks!?';
-            }
-        } else {
-            # If we are interrupted in (e.g.) checks/manpages, it
-            # tends to leave processes behind.  No reason to flag
-            # an error for that - but we still try to reap the
-            # children if they are now done.
-
+        # interruptions can leave processes behind (manpages); wait and reap
+        if ($$exit_code_ref == 1) {
             1 while waitpid(-1, WNOHANG) > 0;
+        }
+
+        # announce any left over processes, see commit 3bbcc3b
+        my $process_table = Proc::ProcessTable->new;
+        my @leftover= grep { $_->ppid == $$ } @{$process_table->table};
+
+        if (@leftover) {
+            warn "\nSome processes were left over (maybe unreaped):\n";
+
+            my $FORMAT = "    %-12s %-12s %-8s %-24s %s\n";
+            printf($FORMAT, 'PID', 'TTY', 'STATUS', 'START', 'COMMAND');
+
+            printf($FORMAT,
+                $_->pid,$_->ttydev,$_->state,scalar(localtime($_->start)),
+                $_->cmndline)
+              for @leftover;
+
+            $$exit_code_ref = 1;
+            die "Aborting.\n";
         }
 
         # remove group files
