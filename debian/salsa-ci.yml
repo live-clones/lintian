@@ -13,10 +13,3 @@ build-buster-backports:
     RELEASE: 'buster-backports'
   extends: .build-package
   allow_failure: true
-
-build-nocheck-profile:
-  variables:
-    RELEASE: 'unstable'
-    DEB_BUILD_PROFILES: 'nocheck'
-    DEB_BUILD_OPTIONS: 'nocheck'
-  extends: .build-package

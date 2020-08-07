@@ -93,9 +93,9 @@ my $testcase = read_config($descpath);
 my $defaultspath = 't/defaults/desc';
 my $defaults = read_config($defaultspath);
 
-foreach my $key (keys %{$defaults}) {
-    $testcase->{$key} = $defaults->{$key}
-      unless exists $testcase->{$key};
+for my $name ($defaults->names) {
+    $testcase->set($name, $defaults->value($name))
+      unless $testcase->exists($name);
 }
 
 # test plan

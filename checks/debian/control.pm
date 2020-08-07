@@ -337,7 +337,7 @@ sub source {
 
         # Accumulate the description.
         my $desc = $processable->debian_control->installable_fields($bin)
-          ->value('Description');
+          ->untrimmed_value('Description');
         my $bin_area;
         if (length $desc
             and $processable->debian_control->installable_package_type($bin)ne

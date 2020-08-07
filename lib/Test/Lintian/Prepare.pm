@@ -1,4 +1,4 @@
-# Copyright © 2018 Felix Lechner
+# Copyright © 2018-2020 Felix Lechner
 # Copyright © 2019 Chris Lamb <lamby@debian.org>
 #
 # This program is free software; you can redistribute it and/or modify
@@ -61,13 +61,16 @@ use Path::Tiny;
 use Text::Template;
 use Try::Tiny;
 
+use Lintian::Deb822::Section;
+
 use Test::Lintian::ConfigFile qw(read_config write_config);
 use Test::Lintian::Helper qw(rfc822date copy_dir_contents);
 use Test::Lintian::Templates
-  qw(copy_skeleton_template_sets remove_surplus_templates fill_skeleton_templates fill_template);
+  qw(copy_skeleton_template_sets remove_surplus_templates fill_skeleton_templates);
 
 use constant EMPTY => q{};
 use constant SPACE => q{ };
+use constant SLASH => q{/};
 use constant COMMA => q{,};
 use constant NEWLINE => qq{\n};
 
@@ -103,20 +106,22 @@ sub prepare {
     #    $data_epoch= max($data_epoch, stat($defaultfilespath)->mtime);
 
     # read test data
-    my $descpath = "$specpath/$files->{fill_values}";
+    my $descpath = $specpath . SLASH . $files->unfolded_value('Fill-Values');
     my $desc = read_config($descpath);
     #    $data_epoch= max($data_epoch, stat($descpath)->mtime);
 
     # read test defaults
-    my $descdefaultspath = "$defaultspath/$files->{fill_values}";
+    my $descdefaultspath
+      = $defaultspath . SLASH . $files->unfolded_value('Fill-Values');
     my $defaults = read_config($descdefaultspath);
     #    $data_epoch= max($data_epoch, stat($descdefaultspath)->mtime);
 
     # start with a shallow copy of defaults
-    my $testcase = {%$defaults};
+    my $testcase = Lintian::Deb822::Section->new;
+    $testcase->set($_, $defaults->value($_)) for $defaults->names;
 
     die "Name missing for $specpath"
-      unless length $desc->{testname};
+      unless $desc->exists('Testname');
 
     die 'Outdated test specification (./debian/debian exists).'
       if -e "$specpath/debian/debian";
@@ -151,20 +156,20 @@ sub prepare {
     my @oldrunners = File::Find::Rule->file->name('*.t')->in($sourcepath);
     unlink(@oldrunners);
 
-    my $skeletonname = ($desc->{skeleton} // EMPTY);
+    my $skeletonname = $desc->unfolded_value('Skeleton');
     if (length $skeletonname) {
 
         # load skeleton
         my $skeletonpath = "$testset/skeletons/$skeletonname";
         my $skeleton = read_config($skeletonpath);
 
-        $testcase->{$_} = $skeleton->{$_}for keys %{$skeleton};
+        $testcase->set($_, $skeleton->value($_)) for $skeleton->names;
     }
 
     # populate working directory with specified template sets
-    copy_skeleton_template_sets($testcase->{template_sets},
+    copy_skeleton_template_sets($testcase->value('Template-Sets'),
         $sourcepath, $testset)
-      if exists $testcase->{template_sets};
+      if $testcase->exists('Template-Sets');
 
     # delete templates for which we have originals
     remove_surplus_templates($specpath, $sourcepath);
@@ -174,7 +179,7 @@ sub prepare {
     say "Copy test specification $offset from $testset to $sourcepath.";
     copy_dir_contents($specpath, $sourcepath);
 
-    my $valuefolder = ($testcase->{fill_values_folder} // EMPTY);
+    my $valuefolder = $testcase->unfolded_value('Fill-Values-Folder');
     if (length $valuefolder) {
 
         # load all the values in the fill values folder
@@ -183,80 +188,94 @@ sub prepare {
           = File::Find::Rule->file->name('*.values')->in($valuepath);
 
         for my $filepath (sort @filepaths) {
-            my $values = read_config($filepath);
+            my $fill_values = read_config($filepath);
 
-            $testcase->{$_} = $values->{$_}for keys %{$values};
+            $testcase->set($_, $fill_values->value($_))for $fill_values->names;
         }
     }
 
     # add individual settings after skeleton
-    $testcase->{$_} = $desc->{$_}for keys %{$desc};
+    $testcase->set($_, $desc->value($_)) for $desc->names;
 
     # record path to specification
-    $testcase->{spec_path} = $specpath;
+    $testcase->set('Spec-Path', $specpath);
 
     # record path to specification
-    $testcase->{source_path} = $sourcepath;
+    $testcase->set('Source-Path', $sourcepath);
 
     # add other helpful info to testcase
-    $testcase->{source} ||= $testcase->{testname};
+    $testcase->set('Source', $testcase->unfolded_value('Testname'))
+      unless $testcase->exists('Source');
 
     # record our effective data age as date, unless given
-    $testcase->{date} ||= rfc822date($data_epoch);
+    $testcase->set('Date', rfc822date($data_epoch))
+      unless $testcase->exists('Date');
 
-    warn "Cannot override Architecture: in test $testcase->{testname}."
-      if length $testcase->{architecture};
+    warn 'Cannot override Architecture: in test '
+      . $testcase->unfolded_value('Testname')
+      if $testcase->exists('Architecture');
 
-    $testcase->{host_architecture} = $ENV{'DEB_HOST_ARCH'}
-      //die 'DEB_HOST_ARCH is not set.';
+    die 'DEB_HOST_ARCH is not set.'
+      unless defined $ENV{'DEB_HOST_ARCH'};
+    $testcase->set('Host-Architecture', $ENV{'DEB_HOST_ARCH'});
 
-    $testcase->{standards_version} ||= $ENV{'POLICY_VERSION'}
-      //die 'Could not get POLICY_VERSION.';
+    die 'Could not get POLICY_VERSION.'
+      unless defined $ENV{'POLICY_VERSION'};
+    $testcase->set('Standards-Version', $ENV{'POLICY_VERSION'})
+      unless $testcase->exists('Standards-Version');
 
-    $testcase->{dh_compat_level} //= $ENV{'DEFAULT_DEBHELPER_COMPAT'}
-      //die 'Could not get DEFAULT_DEBHELPER_COMPAT.';
+    die 'Could not get DEFAULT_DEBHELPER_COMPAT.'
+      unless defined $ENV{'DEFAULT_DEBHELPER_COMPAT'};
+    $testcase->set('Dh-Compat-Level', $ENV{'DEFAULT_DEBHELPER_COMPAT'})
+      unless $testcase->exists('Dh-Compat-Level');
 
     # add additional version components
-    if (length $testcase->{version}) {
+    if ($testcase->exists('Version')) {
 
         # add upstream version
-        $testcase->{upstream_version} = $testcase->{version};
-        $testcase->{upstream_version} =~ s/-[^-]+$//;
-        $testcase->{upstream_version} =~ s/(-|^)(\d+):/$1/;
+        my $upstream_version = $testcase->unfolded_value('Version');
+        $upstream_version =~ s/-[^-]+$//;
+        $upstream_version =~ s/(-|^)(\d+):/$1/;
+        $testcase->set('Upstream-Version', $upstream_version);
 
         # version without epoch
-        $testcase->{no_epoch} = $testcase->{version};
-        $testcase->{no_epoch} =~ s/^\d+://;
+        my $no_epoch = $testcase->unfolded_value('Version');
+        $no_epoch =~ s/^\d+://;
+        $testcase->set('No-Epoch', $no_epoch);
 
-        unless ($testcase->{prev_version}) {
-            $testcase->{prev_version} = '0.0.1';
-            $testcase->{prev_version} .= '-1'
-              unless ($testcase->{type} // EMPTY) eq 'native';
+        unless ($testcase->exists('Prev-Version')) {
+            my $prev_version = '0.0.1';
+            $prev_version .= '-1'
+              unless $testcase->unfolded_value('Type') eq 'native';
+
+            $testcase->set('Prev-Version', $prev_version);
         }
     }
 
     # calculate build dependencies
     warn 'Cannot override Build-Depends:'
-      if length $testcase->{build_depends};
-    combine_fields($testcase, 'build_depends', COMMA . SPACE,
-        'default_build_depends', 'extra_build_depends');
+      if $testcase->exists('Build-Depends');
+    combine_fields($testcase, 'Build-Depends', COMMA . SPACE,
+        'Default-Build-Depends', 'Extra-Build-Depends');
 
     # calculate build conflicts
     warn 'Cannot override Build-Conflicts:'
-      if length $testcase->{build_conflicts};
-    combine_fields($testcase, 'build_conflicts', COMMA . SPACE,
-        'default_build_conflicts', 'extra_build_conflicts');
+      if $testcase->exists('Build-Conflicts');
+    combine_fields($testcase, 'Build-Conflicts', COMMA . SPACE,
+        'Default-Build-Conflicts', 'Extra-Build-Conflicts');
 
     # fill testcase with itself; do it twice to make sure all is done
-    $testcase = fill_hash_from_hash($testcase);
-    $testcase = fill_hash_from_hash($testcase);
+    my $hashref = deb822_section_to_hash($testcase);
+    $hashref = fill_hash_from_hash($hashref);
+    $hashref = fill_hash_from_hash($hashref);
+    write_hash_to_deb822_section($hashref, $testcase);
 
     say EMPTY;
 
     # fill remaining templates
-    fill_skeleton_templates($testcase->{fill_targets},
-        $testcase, $data_epoch, $sourcepath, $testset)
-      if exists $testcase->{fill_targets};
+    fill_skeleton_templates($testcase->value('Fill-Targets'),
+        $hashref, $data_epoch, $sourcepath, $testset)
+      if $testcase->exists('Fill-Targets');
 
     # write the dynamic file names
     my $runfiles = path($sourcepath)->child('files');
@@ -266,7 +285,8 @@ sub prepare {
     $runfiles->touch($data_epoch);
 
     # write the dynamic test case file
-    my $rundesc = path($sourcepath)->child($files->{fill_values});
+    my $rundesc
+      = path($sourcepath)->child($files->unfolded_value('Fill-Values'));
     write_config($testcase, $rundesc->stringify);
 
     # set mtime for dynamic test data
@@ -304,41 +324,46 @@ sub filleval {
     my $files = read_config($defaultfilespath);
 
     # read test data
-    my $descpath = "$specpath/$files->{test_specification}";
+    my $descpath
+      = $specpath . SLASH . $files->unfolded_value('Test-Specification');
     my $desc = read_config($descpath);
 
     # read test defaults
-    my $descdefaultspath = "$defaultspath/$files->{test_specification}";
+    my $descdefaultspath
+      = $defaultspath . SLASH . $files->unfolded_value('Test-Specification');
     my $defaults = read_config($descdefaultspath);
 
     # start with a shallow copy of defaults
-    my $testcase = {%$defaults};
+    my $testcase = Lintian::Deb822::Section->new;
+    $testcase->set($_, $defaults->value($_)) for $defaults->names;
 
     die "Name missing for $specpath"
-      unless length $desc->{testname};
+      unless $desc->exists('Testname');
 
     # delete old test scripts
     my @oldrunners = File::Find::Rule->file->name('*.t')->in($evalpath);
     unlink(@oldrunners);
 
-    $testcase->{skeleton} //= $desc->{skeleton};
+    $testcase->set('Skeleton', $desc->value('Skeleton'))
+      unless $testcase->exists('Skeleton');
 
-    my $skeletonname = ($testcase->{skeleton} // EMPTY);
+    my $skeletonname = $testcase->unfolded_value('Skeleton');
     if (length $skeletonname) {
 
         # load skeleton
         my $skeletonpath = "$testset/skeletons/$skeletonname";
         my $skeleton = read_config($skeletonpath);
 
-        $testcase->{$_} = $skeleton->{$_}for keys %{$skeleton};
+        $testcase->set($_, $skeleton->value($_)) for $skeleton->names;
     }
 
     # add individual settings after skeleton
-    $testcase->{$_} = $desc->{$_}for keys %{$desc};
+    $testcase->set($_, $desc->value($_)) for $desc->names;
 
     # populate working directory with specified template sets
-    copy_skeleton_template_sets($testcase->{template_sets},$evalpath, $testset)
-      if exists $testcase->{template_sets};
+    copy_skeleton_template_sets($testcase->value('Template-Sets'),
+        $evalpath, $testset)
+      if $testcase->exists('Template-Sets');
 
     # delete templates for which we have originals
     remove_surplus_templates($specpath, $evalpath);
@@ -348,7 +373,7 @@ sub filleval {
     say "Copy test specification $offset from $testset to $evalpath.";
     copy_dir_contents($specpath, $evalpath);
 
-    my $valuefolder = ($testcase->{fill_values_folder} // EMPTY);
+    my $valuefolder = $testcase->unfolded_value('Fill-Values-Folder');
     if (length $valuefolder) {
 
         # load all the values in the fill values folder
@@ -357,32 +382,35 @@ sub filleval {
           = File::Find::Rule->file->name('*.values')->in($valuepath);
 
         for my $filepath (sort @filepaths) {
-            my $values = read_config($filepath);
+            my $fill_values = read_config($filepath);
 
-            $testcase->{$_} = $values->{$_}for keys %{$values};
+            $testcase->set($_, $fill_values->value($_))for $fill_values->names;
         }
     }
 
     # add individual settings after skeleton
-    $testcase->{$_} = $desc->{$_}for keys %{$desc};
+    $testcase->set($_, $desc->value($_)) for $desc->names;
 
     # fill testcase with itself; do it twice to make sure all is done
-    $testcase = fill_hash_from_hash($testcase);
-    $testcase = fill_hash_from_hash($testcase);
+    my $hashref = deb822_section_to_hash($testcase);
+    $hashref = fill_hash_from_hash($hashref);
+    $hashref = fill_hash_from_hash($hashref);
+    write_hash_to_deb822_section($hashref, $testcase);
 
     say EMPTY;
 
     # fill remaining templates
-    fill_skeleton_templates($testcase->{fill_targets},
-        $testcase, time, $evalpath, $testset)
-      if exists $testcase->{fill_targets};
+    fill_skeleton_templates($testcase->value('Fill-Targets'),
+        $hashref, time, $evalpath, $testset)
+      if $testcase->exists('Fill-Targets');
 
     # write the dynamic file names
     my $runfiles = path($evalpath)->child('files');
     write_config($files, $runfiles->stringify);
 
     # write the dynamic test case file
-    my $rundesc = path($evalpath)->child($files->{test_specification});
+    my $rundesc
+      = path($evalpath)->child($files->unfolded_value('Test-Specification'));
     write_config($testcase, $rundesc->stringify);
 
     say EMPTY;
@@ -397,25 +425,65 @@ sub filleval {
 sub combine_fields {
     my ($testcase, $destination, $delimiter, @sources) = @_;
 
-    return unless length $destination;
+    return
+      unless length $destination;
 
     # we are combining these contents
     my @contents;
-    foreach my $source (@sources) {
-        push(@contents, $testcase->{$source}//EMPTY)
+    for my $source (@sources) {
+        push(@contents, $testcase->value($source))
           if length $source;
-        delete $testcase->{$source};
+        $testcase->delete($source);
     }
 
     # combine
-    foreach my $content (@contents) {
-        $testcase->{$destination} = join($delimiter,
-            grep { $_ }($testcase->{$destination}//EMPTY,$content));
+    for my $content (@contents) {
+        $testcase->set(
+            $destination,
+            join($delimiter,
+                grep { length }($testcase->value($destination),$content)));
     }
 
     # delete the combined entry if it is empty
-    delete($testcase->{$destination})
-      unless length $testcase->{$destination};
+    $testcase->delete($destination)
+      unless length $testcase->value($destination);
+
+    return;
+}
+
+=item deb822_section_to_hash
+
+=cut
+
+sub deb822_section_to_hash {
+    my ($section) = @_;
+
+    my %hash;
+    for my $name ($section->names) {
+
+        my $transformed = lc $name;
+        $transformed =~ s/-/_/g;
+
+        $hash{$transformed} = $section->value($name);
+    }
+
+    return \%hash;
+}
+
+=item write_hash_to_deb822_section
+
+=cut
+
+sub write_hash_to_deb822_section {
+    my ($hashref, $section) = @_;
+
+    for my $name ($section->names) {
+
+        my $transformed = lc $name;
+        $transformed =~ s/-/_/g;
+
+        $section->set($name, $hashref->{$transformed});
+    }
 
     return;
 }
@@ -427,10 +495,10 @@ sub combine_fields {
 sub fill_hash_from_hash {
     my ($hashref, $delimiters) = @_;
 
+    $delimiters //= ['[%', '%]'];
+
     my %origin = %{$hashref};
     my %destination;
-
-    $delimiters //= ['[%', '%]'];
 
     # fill hash with itself
     for my $key (keys %origin) {

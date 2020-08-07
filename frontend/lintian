@@ -1,1 +1,221 @@
-dplint
+#!/usr/bin/perl
+#
+# frontend/lintian -- General purpose frontend for Debian package checker
+#
+# Copyright © 2013 Niels Thykier
+# - Based on lintian, which is/was:
+#   Copyright © 1998 Christian Schwarz, Richard Braakman (and others)
+#
+# This program is free software.  It is distributed under the terms of
+# the GNU General Public License as published by the Free Software
+# Foundation; either version 2 of the License, or (at your option) any
+# later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, you can find it on the World Wide
+# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
+# MA 02110-1301, USA.
+
+use v5.20;
+use warnings;
+use utf8;
+
+use Cwd qw(getcwd realpath);
+use File::BaseDir qw(config_home config_files data_home);
+use File::Basename qw(dirname basename);
+use Getopt::Long();
+use Path::Tiny;
+
+use constant COLON => q{:};
+
+# both substituted during package build
+my $INIT_ROOT = find_source_root();
+my $LINTIAN_VERSION;
+
+binmode(STDOUT, ':encoding(UTF-8)');
+
+my @INCLUDE_DIRS;
+my $user_dirs = 1;
+my %opthash = (
+    'include-dir=s' => \@INCLUDE_DIRS,
+    'user-dirs!' => \$user_dirs,
+);
+
+Getopt::Long::config(
+    'bundling', 'no_getopt_compat',
+    'no_auto_abbrev', 'require_order',
+    'pass_through'
+);
+
+Getopt::Long::GetOptions(%opthash)
+  or die "error parsing options\n";
+
+# only absolute paths
+my @RESTRICTED_CONFIG_DIRS;
+
+if ($user_dirs) {
+    my $data_home;
+    my $legacy_user_data;
+
+    $data_home = data_home('lintian')
+      if exists $ENV{'HOME'} || exists $ENV{'XDG_CONFIG_HOME'};
+
+    $legacy_user_data = "$ENV{HOME}/.lintian"
+      if exists $ENV{'HOME'};
+
+    if (defined($data_home) and $data_home !~ m@^/@) {
+        # Turn the path into an absolute one.  Just in case
+        # someone sets a relative HOME dir.
+        my $cwd = getcwd();
+        $data_home = "${cwd}/${data_home}";
+    }
+
+    @RESTRICTED_CONFIG_DIRS = grep { -d }
+      grep { length } ($data_home, $legacy_user_data, '/etc/lintian');
+}
+
+# only absolute paths
+my @CONFIG_DIRS = grep { -d }
+  grep { length } map { realpath($_) } ($INIT_ROOT, @INCLUDE_DIRS);
+
+my @HELPER_DIRS = grep { -d } map { "$_/helpers" } @CONFIG_DIRS;
+
+$ENV{'LINTIAN_ROOT'} = $INIT_ROOT;
+$ENV{'LINTIAN_CONFIG_DIRS'} = join(COLON, @CONFIG_DIRS);
+$ENV{'LINTIAN_RESTRICTED_CONFIG_DIRS'}= join(COLON, @RESTRICTED_CONFIG_DIRS);
+$ENV{'LINTIAN_HELPER_DIRS'} = join(COLON, @HELPER_DIRS);
+
+$ENV{'LINTIAN_ENABLE_USER_DIRS'} = $user_dirs ? 1 : 0;
+
+$ENV{'LINTIAN_CALLED_AS'} = $0;
+$ENV{'LINTIAN_FRONTEND'} = realpath($0) // die "Cannot resolve $0: $!";
+
+if (my $coverage_arg = $ENV{'LINTIAN_COVERAGE'}) {
+    my $p5opt = $ENV{'PERL5OPT'}//q{};
+    $p5opt .= ' ' if $p5opt ne q{};
+    $ENV{'PERL5OPT'} = "${p5opt} ${coverage_arg}";
+}
+
+my $truename = $0;
+my $cmd = basename($0);
+
+for my $folder (@CONFIG_DIRS) {
+
+    my $tool_path = "$folder/commands/$cmd";
+    if (-f $tool_path) {
+
+        die "$cmd ($tool_path) is present but not executable!"
+          unless -x $tool_path;
+
+        {
+            # Scope here it to avoid a warning about exec not returning.
+            exec {$tool_path} $truename, @ARGV;
+        }
+
+        die
+"Running $cmd failed!\n  Command: $tool_path @ARGV\n  Error from exec: $!";
+    }
+
+    my $tool_pm_path = "${tool_path}.pm";
+    if (-f $tool_pm_path) {
+
+        require lib;
+        lib->import(grep { -d } map { "$_/lib" } @CONFIG_DIRS);
+
+        $ENV{LINTIAN_VERSION} = $LINTIAN_VERSION // guess_version(__FILE__);
+
+        $0 = $cmd;
+
+        require $tool_pm_path;
+
+        my $module = $cmd;
+
+        # replace slashes with double colons
+        $module =~ s{/}{::}g;
+
+        # replace some characters with underscores
+        $module =~ s{[-.]}{_}g;
+
+        die "${tool_pm_path} does not define a main sub"
+          unless $module->can('main');
+
+        eval {$module->can('main')->();};
+
+        if (my $err = $@) {
+            # main threw an exception
+            $err .= "\n" if ($err !~ m/\n\Z/);
+            print STDERR $err;
+            exit(255);
+        }
+
+        exit;
+    }
+}
+
+die "$cmd is not available";
+
+sub find_source_root {
+    # Determine the $INIT_ROOT in case we are run from the source tree
+    my $path = realpath(__FILE__) // die "realpath($0) failed: $!\n";
+    # .../lintian.git/frontend/lintian  => .../lintian.git
+    return dirname(dirname($path));
+}
+
+sub guess_version {
+    my $rootdir = find_source_root();
+    my $guess;
+
+    if (-d "$rootdir/.git") {
+        # Lets try git
+        require IO::Async::Loop;
+        require IO::Async::Process;
+
+        my $loop = IO::Async::Loop->new;
+        my $future = $loop->new_future;
+        my $process = IO::Async::Process->new(
+            command => ['git', "--git-dir=$rootdir/.git", 'describe'],
+            stdout => { into => \$guess },
+            on_finish => sub {
+                my ($self, $exitcode) = @_;
+                my $status = ($exitcode >> 8);
+
+                $future->done('Done with git describe');
+                return;
+            });
+
+        $loop->add($process);
+        $loop->await($future);
+
+        chomp $guess;
+        return $guess if $guess;
+    }
+
+    # git was not possible - maybe the changelog is available
+    if (-f "$rootdir/debian/changelog") {
+
+        require Lintian::Inspect::Changelog;
+        my $contents = path("$rootdir/debian/changelog")->slurp;
+        my $changelog = Lintian::Inspect::Changelog->new;
+
+        $changelog->parse($contents);
+        my @entries = @{$changelog->entries};
+        $guess = $entries[0]->{'Version'}
+          if @entries;
+
+        return $guess if $guess;
+    }
+    # Out of guesses ...
+    die 'Unable to determine the version automatically!?';
+}
+
+# Local Variables:
+# indent-tabs-mode: nil
+# cperl-indent-level: 4
+# End:
+# vim: syntax=perl sw=4 sts=4 sr et

@@ -33,7 +33,7 @@ sub always {
     my ($self) = @_;
 
     my @all = $self->processable->fields->names;
-    my @empty = grep { $self->processable->fields->value($_) =~ /^\s*$/ } @all;
+    my @empty = grep { !length $self->processable->fields->value($_) } @all;
 
     $self->tag('empty-field', $_) for @empty;
 

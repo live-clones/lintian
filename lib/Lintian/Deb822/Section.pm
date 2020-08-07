@@ -163,7 +163,89 @@ sub value {
     return EMPTY
       unless length $exact;
 
+    my $trimmed = $self->verbatim->{$exact} // EMPTY;
+
+    # trim both ends
+    $trimmed =~ s/^\s+|\s+$//g;
+
+    return $trimmed;
+}
+
+=item untrimmed_value (FIELD)
+
+If FIELD is given, this method returns the value of the control field
+FIELD.
+
+=cut
+
+sub untrimmed_value {
+    my ($self, $name) = @_;
+
+    return EMPTY
+      unless length $name;
+
+    my $exact = $self->legend->{lc $name};
+    return EMPTY
+      unless length $exact;
+
     return $self->verbatim->{$exact} // EMPTY;
+}
+
+=item set (FIELD, VALUE)
+
+=cut
+
+sub set {
+    my ($self, $name, $value) = @_;
+
+    $value //= EMPTY;
+
+    return
+      unless length $name;
+
+    my $exact = $self->legend->{lc $name};
+
+    # add new value if key not found
+    unless (defined $exact) {
+
+        $exact = $name;
+
+        # update legend with exact spelling
+        $self->legend->{lc $exact} = $exact;
+
+        # remove any old position
+        $self->positions->{$exact} = -1;
+    }
+
+    $self->verbatim->{$exact} = $value;
+
+    # remove old unfolded value, if any
+    delete $self->unfolded->{$exact};
+
+    return;
+}
+
+=item delete (FIELD)
+
+=cut
+
+sub delete {
+    my ($self, $name) = @_;
+
+    return
+      unless length $name;
+
+    my $exact = $self->legend->{lc $name};
+    return
+      unless length $exact;
+
+    delete $self->legend->{lc $exact};
+
+    delete $self->verbatim->{$exact};
+    delete $self->unfolded->{$exact};
+    delete $self->positions->{$exact};
+
+    return;
 }
 
 =item exists (NAME)

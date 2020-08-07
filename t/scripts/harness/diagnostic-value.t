@@ -66,7 +66,7 @@ for my $testpath (@testpaths) {
     my $tagspath = "$testpath/eval/tags";
 
     my $testcase = read_config($descpath);
-    my @testagainst = uniq split(SPACE, $testcase->{test_against} // EMPTY);
+    my @testagainst = uniq $testcase->trimmed_list('Test-Against');
 
     my @lines = path($tagspath)->lines_utf8({ chomp => 1 });
     my @testfor = uniq map { tag_name($_) } @lines;

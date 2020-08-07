@@ -56,16 +56,18 @@ $profile->load(undef, [$ENV{LINTIAN_ROOT}]);
 foreach my $descpath (@descpaths) {
 
     my $testcase = read_config($descpath);
-    my $name = $testcase->{testname};
+    my $name = $testcase->unfolded_value('Testname');
 
     # get test path
     my $testpath = path($descpath)->parent->stringify;
 
-    ok(defined $testcase->{check},
+    ok($testcase->exists('Check'),
         "Test specification for $name defines a field Check");
 
-    next unless defined $testcase->{check};
-    my @checks = split(SPACE, $testcase->{check});
+    next
+      unless $testcase->exists('Check');
+
+    my @checks = $testcase->trimmed_list('Check');
 
     # test is only about one check
     is(scalar @checks, 1,"Test in $testpath is associate only with one check");

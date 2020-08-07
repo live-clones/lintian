@@ -55,6 +55,7 @@ use Test::Lintian::Hooks qw(find_missing_prerequisites);
 
 use constant EMPTY => q{};
 use constant SPACE => q{ };
+use constant SLASH => q{/};
 use constant COMMA => q{,};
 use constant NEWLINE => qq{\n};
 
@@ -81,7 +82,8 @@ sub build_subject {
     my $files = read_config($runfiles);
 
     # read dynamic case data
-    my $rundescpath = "$sourcepath/$files->{fill_values}";
+    my $rundescpath
+      = $sourcepath . SLASH . $files->unfolded_value('Fill-Values');
     my $testcase = read_config($rundescpath);
 
     # skip test if marked
@@ -106,19 +108,23 @@ sub build_subject {
 
     # get lintian subject
     croak 'Could not get subject of Lintian examination.'
-      unless exists $testcase->{build_product};
-    my $subject = "$buildpath/$testcase->{build_product}";
+      unless $testcase->exists('Build-Product');
 
-    if(exists $testcase->{build_command}) {
-        my $command= "cd $buildpath; $testcase->{build_command}";
+    my $build_product = $testcase->unfolded_value('Build-Product');
+
+    my $subject = "$buildpath/$build_product";
+
+    if ($testcase->exists('Build-Command')) {
+        my $command
+          = "cd $buildpath; " . $testcase->unfolded_value('Build-Command');
         croak "$command failed" if system($command);
     }
 
     croak 'Build was unsuccessful.'
       unless -f $subject;
 
-    die "Cannot link to build product $testcase->{build_product}"
-      if system("cd $buildpath; ln -s $testcase->{build_product} subject");
+    die "Cannot link to build product $build_product"
+      if system("cd $buildpath; ln -s $build_product subject");
 
     return;
 }
@@ -128,3 +134,9 @@ sub build_subject {
 =cut
 
 1;
+
+# Local Variables:
+# indent-tabs-mode: nil
+# cperl-indent-level: 4
+# End:
+# vim: syntax=perl sw=4 sts=4 sr et

@@ -1,9 +1,10 @@
 #!/usr/bin/perl
-# {{{ Legal stuff
+#
 # Lintian -- Debian package checker
 #
 # Copyright © 1998 Christian Schwarz and Richard Braakman
 # Copyright © 2017-2019 Chris Lamb <lamby@debian.org>
+# Copyright © 2020 Felix Lechner
 #
 # This program is free software.  It is distributed under the terms of
 # the GNU General Public License as published by the Free Software
@@ -20,10 +21,8 @@
 # Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
-# }}}
 
-# {{{ libraries and such
-no lib '.';
+package lintian;
 
 use v5.20;
 use warnings;
@@ -39,12 +38,8 @@ use List::MoreUtils qw(any none);
 use Path::Tiny;
 use POSIX qw(:sys_wait_h);
 
-my $INIT_ROOT = $ENV{'LINTIAN_ROOT'};
-
 use Lintian::Data;
 use Lintian::Inspect::Changelog;
-use Lintian::Internal::FrontendUtil
-  qw(default_parallel sanitize_environment open_file_or_fd);
 use Lintian::IO::Async qw(safe_qx);
 use Lintian::Output::Standard;
 use Lintian::Pool;
@@ -55,15 +50,41 @@ use constant SPACE => q{ };
 use constant COMMA => q{,};
 use constant NEWLINE => qq{\n};
 
+my $INIT_ROOT = $ENV{'LINTIAN_ROOT'};
+
 # only in GNOME; need original environment
 my $interactive = -t STDIN && (-t STDOUT || !(-f STDOUT || -c STDOUT));
 my $hyperlinks_capable = $interactive && qx{env | fgrep -i gnome};
 
-sanitize_environment();
+my %PRESERVE_ENV = map { $_ => 1 } qw(
+  DEBRELEASE_DEBS_DIR
+  HOME
+  LANG
+  LC_ALL
+  LC_MESSAGES
+  PATH
+  TMPDIR
+  XDG_CACHE_HOME
+  XDG_CONFIG_DIRS
+  XDG_CONFIG_HOME
+  XDG_DATA_DIRS
+  XDG_DATA_HOME
+);
 
-# }}}
+my @disallowed
+  = grep { !exists $PRESERVE_ENV{$_} && $_ !~ /^LINTIAN_/ } keys %ENV;
 
-# {{{ Application Variables
+delete $ENV{$_} for @disallowed;
+
+# needed for tar
+$ENV{'LC_ALL'} = 'C';
+$ENV{'TZ'} = '';
+
+# When run in some automated ways, Lintian may not have a
+# PATH, but we assume we can call standard utilities without
+# their full path.  If PATH is completely unset, add something
+# basic.
+$ENV{'PATH'} = '/bin:/usr/bin' unless exists $ENV{'PATH'};
 
 # Environment variables Lintian cares about - the list contains
 # the ones that can also be set via the config file
@@ -75,9 +96,7 @@ sanitize_environment();
 #
 # NB: Variables listed here are not always exported.
 #
-# CAVEAT: If it does not start with "LINTIAN_", then it should
-# probably be listed in %PRESERVE_ENV in
-# L::Internal::FrontendUtil (!)
+
 my @ENV_VARS = (
     # LINTIAN_CFG  - handled manually
     qw(
@@ -109,18 +128,27 @@ my $user_dirs = $ENV{'LINTIAN_ENABLE_USER_DIRS'} // 1;
 my $exit_code = 0;
 my $STATUS_FD;
 
-# }}}
+my @RESTRICTED_CONFIG_DIRS= split(/:/, $ENV{'LINTIAN_RESTRICTED_CONFIG_DIRS'});
+my @CONFIG_DIRS = split(/:/, $ENV{'LINTIAN_CONFIG_DIRS'});
 
-# {{{ Setup Code
+sub load_profile {
+    my ($profile_name, $options) = @_;
+    my %opt = (
+        'restricted-search-dirs' => \@RESTRICTED_CONFIG_DIRS,
+        %{$options // {}},
+    );
+    require Lintian::Profile;
 
-sub lintian_banner {
-    my $lintian_version = dplint::lintian_version();
-    return "Lintian v${lintian_version}";
+    my $profile = Lintian::Profile->new;
+    $profile->load($profile_name, \@CONFIG_DIRS, \%opt);
+
+    return $profile;
 }
 
-# }}}
-
-# {{{ Process Command Line
+sub lintian_banner {
+    my $lintian_version = $ENV{LINTIAN_VERSION};
+    return "Lintian v${lintian_version}";
+}
 
 #######################################
 # Subroutines called by various options
@@ -232,7 +260,7 @@ EOT-EOT-EOT
 # Options: -V|--version, --print-version
 sub banner {
     if ($_[0] eq 'print-version') {
-        my $lintian_version = dplint::lintian_version();
+        my $lintian_version = $ENV{LINTIAN_VERSION};
         print "${lintian_version}\n";
     } else {
         my $banner = lintian_banner();
@@ -533,7 +561,7 @@ sub main {
     STDOUT->autoflush;
     STDERR->autoflush;
 
-    # layers are additive; STDOUT already had UTF-8 from frontend/dplint
+    # layers are additive; STDOUT already had UTF-8 from frontend/lintian
     binmode(STDERR, ':encoding(UTF-8)');
 
     # Globally ignore SIGPIPE.  We'd rather deal with error returns from write
@@ -704,7 +732,7 @@ sub main {
     }
 
     # dies on error
-    my $PROFILE = dplint::load_profile($option{profile});
+    my $PROFILE = load_profile($option{profile});
     $OUTPUT->v_msg('Using profile ' . $PROFILE->name . '.');
 
     Lintian::Data->set_vendor($PROFILE);
@@ -783,12 +811,8 @@ sub main {
     retrigger_signal()
       if $received_signal;
 
-    # }}}
-
     exit $exit_code;
 }
-
-# {{{ Some subroutines
 
 sub _find_cfg_file {
     return $ENV{'LINTIAN_CFG'}
@@ -1113,9 +1137,76 @@ sub _update_profile {
     return;
 }
 
-# }}}
+=item open_file_or_fd
 
-# {{{ Exit handler.
+=cut
+
+# open_file_or_fd(TO_OPEN, MODE)
+#
+# Open a given file or FD based on TO_OPEN and MODE and returns the
+# open handle.  Will croak / throw a trappable error on failure.
+#
+# MODE can be one of "<" (read) or ">" (write).
+#
+# TO_OPEN is one of:
+#  * "-", alias of "&0" or "&1" depending on MODE
+#  * "&N", reads/writes to the file descriptor numbered N
+#          based on MODE.
+#  * "+FILE" (MODE eq '>' only), open FILE in append mode
+#  * "FILE", open FILE in read or write depending on MODE.
+#            Note that this will truncate the file if MODE
+#            is ">".
+sub open_file_or_fd {
+    my ($to_open, $mode) = @_;
+    my $fd;
+    # autodie trips this for some reasons (possibly fixed
+    # in v2.26)
+    no autodie qw(open);
+    if ($mode eq '<') {
+        if ($to_open eq '-' or $to_open eq '&0') {
+            $fd = \*STDIN;
+        } elsif ($to_open =~ m/^\&\d+$/) {
+            open($fd, '<&=', substr($to_open, 1))
+              or die("fdopen $to_open for reading: $!\n");
+        } else {
+            open($fd, '<', $to_open)
+              or die("open $to_open for reading: $!\n");
+        }
+    } elsif ($mode eq '>') {
+        if ($to_open eq '-' or $to_open eq '&1') {
+            $fd = \*STDOUT;
+        } elsif ($to_open =~ m/^\&\d+$/) {
+            open($fd, '>&=', substr($to_open, 1))
+              or die("fdopen $to_open for writing: $!\n");
+        } else {
+            $mode = ">$mode" if $to_open =~ s/^\+//;
+            open($fd, $mode, $to_open)
+              or die("open $to_open for write/append ($mode): $!\n");
+        }
+    } else {
+        croak("Invalid mode \"$mode\" for open_file_or_fd");
+    }
+    return $fd;
+}
+
+=item default_parallel
+
+=cut
+
+# Return the default number of parallelization to be used
+sub default_parallel {
+    # check cpuinfo for the number of cores...
+    my $cpus = safe_qx('nproc');
+    if ($cpus =~ m/^\d+$/) {
+        # Running up to twice the number of cores usually gets the most out
+        # of the CPUs and disks but it might be too aggressive to be the
+        # default for -j. Only use <cores>+1 then.
+        return $cpus + 1;
+    }
+
+    # No decent number of jobs? Just use 2 as a default
+    return 2;
+}
 
 sub END {
 
@@ -1170,7 +1261,7 @@ sub interrupted {
     return _die_in_signal_handler();
 }
 
-# }}}
+1;
 
 # Local Variables:
 # indent-tabs-mode: nil

@@ -258,10 +258,10 @@ sub parse_dep5 {
         $self->tag('tab-in-license-text',
             'debian/copyright (starting at line '
               . $section->position('License') . ')')
-          if $section->value('License') =~ /\t/;
+          if $section->untrimmed_value('License') =~ /\t/;
 
         my ($anycase_identifier, $license_text)
-          = split(/\n/, $section->value('License'), 2);
+          = split(/\n/, $section->untrimmed_value('License'), 2);
 
         $anycase_identifier //= EMPTY;
         $license_text //= EMPTY;
@@ -538,7 +538,7 @@ sub parse_dep5 {
         # stand-alone license paragraph
         $self->tag(
             'missing-license-text-in-dep5-copyright',
-            $section->value('License'),
+            $section->untrimmed_value('License'),
             '(line ' . $section->position('License') . ')'
           )
           if !@wildcards

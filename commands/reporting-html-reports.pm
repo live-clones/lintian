@@ -22,6 +22,8 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
+package reporting_html_reports;
+
 use v5.20;
 use warnings;
 use utf8;
@@ -40,7 +42,6 @@ use YAML::XS ();
 
 use Lintian::Data;
 use Lintian::Deb822::Parser qw(read_dpkg_control_lc);
-use Lintian::Internal::FrontendUtil qw(split_tag);
 use Lintian::IO::Async qw(safe_qx);
 use Lintian::Profile;
 use Lintian::Relation::Version qw(versions_comparator);
@@ -130,6 +131,23 @@ my (%by_maint, %by_uploader, %by_tag, %maintainer_table, %delta);
 my @attrs = qw(maintainers source-packages binary-packages udeb-packages
   errors warnings info experimental pedantic overridden groups-known
   groups-backlog classifications groups-with-errors);
+
+my @RESTRICTED_CONFIG_DIRS= split(/:/, $ENV{'LINTIAN_RESTRICTED_CONFIG_DIRS'});
+my @CONFIG_DIRS = split(/:/, $ENV{'LINTIAN_CONFIG_DIRS'});
+
+sub load_profile {
+    my ($profile_name, $options) = @_;
+    my %opt = (
+        'restricted-search-dirs' => \@RESTRICTED_CONFIG_DIRS,
+        %{$options // {}},
+    );
+    require Lintian::Profile;
+
+    my $profile = Lintian::Profile->new;
+    $profile->load($profile_name, \@CONFIG_DIRS, \%opt);
+
+    return $profile;
+}
 
 sub required_cfg_value {
     my (@keys) = @_;
@@ -244,11 +262,11 @@ sub init_globals {
     $TEMPLATE_CONFIG_VARS->{'LINTIAN_SOURCE'}
       //= 'https://salsa.debian.org/lintian/lintian.git';
 
-    my $profile = dplint::load_profile();
+    my $profile = load_profile();
 
     Lintian::Data->set_vendor($profile);
 
-    $LINTIAN_VERSION = dplint::lintian_version();
+    $LINTIAN_VERSION = $ENV{LINTIAN_VERSION};
     $timestamp = safe_qx(qw(date -u --rfc-822));
     chomp($LINTIAN_VERSION, $timestamp);
 
@@ -1203,6 +1221,36 @@ sub by_tag {
       || $a_pi->{type}           cmp $b_pi->{type}
       || $a->{tag_info}->name    cmp $b->{tag_info}->name
       || $a->{extra}             cmp $b->{extra};
+}
+
+=item split_tag
+
+=cut
+
+{
+    # Matches something like:  (1:2.0-3) [arch1 arch2]
+    # - captures the version and the architectures
+    my $verarchre = qr,(?: \s* \(( [^)]++ )\) \s* \[ ( [^]]++ ) \]),xo;
+    #                             ^^^^^^^^          ^^^^^^^^^^^^
+    #                           ( version   )      [architecture ]
+
+    # matches the full deal:
+    #    1  222 3333  4444444   5555   666  777
+    # -  T: pkg type (version) [arch]: tag [...]
+    #           ^^^^^^^^^^^^^^^^^^^^^
+    # Where the marked part(s) are optional values.  The numbers above
+    # the example are the capture groups.
+    my $TAG_REGEX
+      = qr/([EWIXOPC]): (\S+)(?: (\S+)(?:$verarchre)?)?: (\S+)(?:\s+(.*))?/;
+
+    sub split_tag {
+        my ($tag_input) = @_;
+        my $pkg_type;
+        return unless $tag_input =~ /^${TAG_REGEX}$/;
+        # default value...
+        $pkg_type = $3//'binary';
+        return ($1, $2, $pkg_type, $4, $5, $6, $7);
+    }
 }
 
 1;

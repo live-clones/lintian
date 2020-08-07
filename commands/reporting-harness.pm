@@ -20,6 +20,8 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
+package reporting_harness;
+
 use v5.20;
 use warnings;
 use utf8;
@@ -107,7 +109,7 @@ my %opthash = (
 # Global variables
 my (
     $log_file, $lintian_log, $lintian_perf_log,
-    $html_reports_log,$sync_state_log, $dplint_cmd,
+    $html_reports_log,$sync_state_log, $lintian_cmd,
     $STATE_DIR, $LINTIAN_VERSION, $LOG_FD,
     $CONFIG,$LOG_DIR, $HTML_DIR,
     $HTML_TMP_DIR,$LINTIAN_SCRATCH_SPACE, $LINTIAN_ROOT,
@@ -240,7 +242,7 @@ sub parse_options_and_config {
 
     $LINTIAN_ROOT = $ENV{'LINTIAN_ROOT'};
 
-    $dplint_cmd = "$LINTIAN_ROOT/frontend/dplint";
+    $lintian_cmd = "$LINTIAN_ROOT/frontend/lintian";
 
     $LINTIAN_VERSION
       = safe_qx("$LINTIAN_ROOT/frontend/lintian",'--print-version');
@@ -287,7 +289,7 @@ sub run_lintian {
     my $loop = IO::Async::Loop->new;
     my $syncdone = $loop->new_future;
 
-    my @synccommand = ($dplint_cmd, 'reporting-sync-state', @sync_state_args);
+    my @synccommand = ($lintian_cmd, 'reporting-sync-state', @sync_state_args);
     Log('Command: ' . join(' ', @synccommand));
 
     my $syncprocess = IO::Async::Process->new(
@@ -354,7 +356,7 @@ sub run_lintian {
     Log(
         'Command: '
           . join(' ',
-            $dplint_cmd, 'reporting-lintian-harness',@lintian_harness_args));
+            $lintian_cmd, 'reporting-lintian-harness',@lintian_harness_args));
     my %harness_lintian_opts = (
         'pipe_out'  => FileHandle->new,
         'err'       => '&1',
@@ -363,7 +365,8 @@ sub run_lintian {
 
     if (not $opt{'dry-run'}) {
         spawn(\%harness_lintian_opts,
-            [$dplint_cmd, 'reporting-lintian-harness', @lintian_harness_args]);
+            [$lintian_cmd, 'reporting-lintian-harness', @lintian_harness_args]
+        );
         my $child_out = $harness_lintian_opts{'pipe_out'};
         while (my $line = <$child_out>) {
             chomp($line);
@@ -402,13 +405,13 @@ sub generate_reports {
       = ('--reporting-config',$opt{'reporting-config'},$lintian_log,);
     # create html reports
     Log('Creating HTML reports...');
-    Log("Executing $dplint_cmd reporting-html-reports @html_reports_args");
+    Log("Executing $lintian_cmd reporting-html-reports @html_reports_args");
 
     my $loop = IO::Async::Loop->new;
     my $htmldone = $loop->new_future;
 
     my @htmlcommand
-      = ($dplint_cmd, 'reporting-html-reports', @html_reports_args);
+      = ($lintian_cmd, 'reporting-html-reports', @html_reports_args);
     my $htmlprocess = IO::Async::Process->new(
         command => [@htmlcommand],
         stdout => { via => 'pipe_read' },

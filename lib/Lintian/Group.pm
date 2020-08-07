@@ -400,7 +400,7 @@ sub process {
         # Filter out the "lintian" check if present - it does no real harm,
         # but it adds a bit of noise in the debug output.
         my @checknames
-          = grep { $_ ne 'lintian' } $self->profile->enabled_checks;
+          = sort grep { $_ ne 'lintian' } $self->profile->enabled_checks;
         my @checkinfos = map { $self->profile->get_checkinfo($_) } @checknames;
 
         for my $checkinfo (@checkinfos) {

@@ -50,6 +50,9 @@ use TAP::Formatter::File;
 use TAP::Harness;
 use TAP::Parser::Aggregator;
 use Term::ANSIColor;
+use Time::Duration;
+use Time::Moment;
+use Time::Piece;
 use Try::Tiny;
 
 BEGIN {
@@ -84,14 +87,12 @@ BEGIN {
         $ENV{'LINTIAN_FRONTEND'} = "$cwd/frontend/lintian";
     }
 
-    $ENV{'LINTIAN_DPLINT_FRONTEND'}= "$ENV{'LINTIAN_ROOT'}/frontend/dplint";
-
     $ENV{'LINTIAN_TEST_ROOT'} = $cwd;
 }
 
 use lib "$ENV{'LINTIAN_TEST_ROOT'}/lib";
 
-use Lintian::Internal::FrontendUtil qw(default_parallel);
+use Lintian::IO::Async qw(safe_qx);
 
 use Test::Lintian::ConfigFile qw(read_config);
 use Test::Lintian::Filter
@@ -111,6 +112,8 @@ use constant NO => q{no};
 
 # display output immediately
 STDOUT->autoflush;
+
+my $processing_start = Time::Moment->from_string(gmtime->datetime . 'Z');
 
 # options
 my $coverage;
@@ -184,8 +187,7 @@ my @lintianparts = (
 );
 my @lintianfiles
   = map { File::Find::Rule->file->in("$ENV{'LINTIAN_ROOT'}/$_") }@lintianparts;
-push(@lintianfiles, $ENV{'LINTIAN_FRONTEND'});
-push(@lintianfiles, $ENV{'LINTIAN_DPLINT_FRONTEND'});
+push(@lintianfiles, Cwd::realpath($ENV{'LINTIAN_FRONTEND'}));
 $ENV{'LINTIAN_EPOCH'}
   = max(map { -e $_ ? stat($_)->mtime : time } @lintianfiles);
 say 'Lintian modified on '. rfc822date($ENV{'LINTIAN_EPOCH'});
@@ -474,7 +476,9 @@ if (-t STDOUT && !$unattended) {
         say EMPTY;
         say 'Failed test: ' . colored($testpath, 'bold white on_blue');
 
-        if ($testcase->{match_strategy} eq 'tags') {
+        my $match_strategy = $testcase->unfolded_value('Match-Strategy');
+
+        if ($match_strategy eq 'tags') {
 
             my $diffpath = "$workpath/tagdiff";
             next
@@ -483,7 +487,7 @@ if (-t STDOUT && !$unattended) {
             my $diff = path($diffpath)->slurp;
             print $diff;
 
-        } elsif ($testcase->{match_strategy} eq 'literal') {
+        } elsif ($match_strategy eq 'literal') {
 
             my $actualpath = "$workpath/literal.actual.parsed";
             next
@@ -494,8 +498,8 @@ if (-t STDOUT && !$unattended) {
             system(@command);
 
         } else {
-            say 'Do not know how to fix tests using matching strategy '
-              . $testcase->{match_strategy} . '.';
+            say
+"Do not know how to fix tests using matching strategy $match_strategy.";
             next;
         }
 
@@ -517,7 +521,7 @@ if (-t STDOUT && !$unattended) {
               if $decision eq 'a';
         }
 
-        if ($testcase->{match_strategy} eq 'tags') {
+        if ($match_strategy eq 'tags') {
 
             # create tags if needed; helps when writing new tests
             my $tagspath = "$testpath/eval/tags";
@@ -539,7 +543,7 @@ if (-t STDOUT && !$unattended) {
             die "Cannot copy updated tags to $workpath"
               if system('cp', $tagspath, "$workpath/tags");
 
-        } elsif ($testcase->{match_strategy} eq 'literal') {
+        } elsif ($match_strategy eq 'literal') {
 
             my $actualpath = "$workpath/literal.actual.parsed";
             next
@@ -580,9 +584,34 @@ unless (scalar @runscripts - scalar @requiredscripts + scalar @workscripts
     exit 1;
 }
 
+my $processing_end = Time::Moment->from_string(gmtime->datetime . 'Z');
+my $duration = duration($processing_start->delta_seconds($processing_end));
+say "The test suite ran for $duration.";
+
+say EMPTY;
+
 exit $status;
 
 # program is done
+
+=item default_parallel
+
+=cut
+
+# Return the default number of parallelization to be used
+sub default_parallel {
+    # check cpuinfo for the number of cores...
+    my $cpus = safe_qx('nproc');
+    if ($cpus =~ m/^\d+$/) {
+        # Running up to twice the number of cores usually gets the most out
+        # of the CPUs and disks but it might be too aggressive to be the
+        # default for -j. Only use <cores>+1 then.
+        return $cpus + 1;
+    }
+
+    # No decent number of jobs? Just use 2 as a default
+    return 2;
+}
 
 sub usage {
     print <<"END";

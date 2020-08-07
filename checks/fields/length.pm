@@ -54,7 +54,8 @@ sub always {
 
     # longer than maximum
     my @long
-      = grep { length $self->processable->fields->value($_) > $maximum } @all;
+      = grep {length $self->processable->fields->untrimmed_value($_)> $maximum}
+      @all;
 
     # filter allowed fields
     my $allowedlc = List::Compare->new(\@long, \@ALLOWED_FIELDS);

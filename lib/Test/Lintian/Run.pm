@@ -66,6 +66,7 @@ use Test::More;
 use Text::Diff;
 use Try::Tiny;
 
+use Lintian::Deb822::File;
 use Lintian::Profile;
 
 use Test::Lintian::ConfigFile qw(read_config);
@@ -75,6 +76,7 @@ use Test::Lintian::Hooks
 use Test::Lintian::Output::Universal qw(get_tagnames order);
 
 use constant SPACE => q{ };
+use constant SLASH => q{/};
 use constant EMPTY => q{};
 use constant NEWLINE => qq{\n};
 use constant YES => q{yes};
@@ -106,7 +108,7 @@ sub logged_runner {
     my $files = read_config($runfiles);
 
     # set path to logfile
-    my $logpath = "$runpath/$files->{log}";
+    my $logpath = $runpath . SLASH . $files->unfolded_value('Log');
 
     my $log = capture_merged {
         try {
@@ -164,7 +166,8 @@ sub runner {
     my $spec_epoch = stat($runfiles)->mtime;
 
     # read dynamic case data
-    my $rundescpath = "$runpath/$files->{test_specification}";
+    my $rundescpath
+      = $runpath . SLASH . $files->unfolded_value('Test-Specification');
     my $testcase = read_config($rundescpath);
 
     # get data age
@@ -191,11 +194,11 @@ sub runner {
     my $lintian_epoch = $ENV{'LINTIAN_EPOCH'}//time;
     say 'Lintian modified on  : '. rfc822date($lintian_epoch);
 
+    my $testname = $testcase->unfolded_value('Testname');
     # name of encapsulating directory should be that of test
     my $expected_name = path($runpath)->basename;
-    die
-"Test in $runpath is called $testcase->{testname} instead of $expected_name"
-      if ($testcase->{testname} ne $expected_name);
+    die"Test in $runpath is called $testname instead of $expected_name"
+      unless $testname eq $expected_name;
 
     # skip test if marked
     my $skipfile = "$runpath/skip";
@@ -217,7 +220,7 @@ sub runner {
         say 'DEB_HOST_ARCH is not set.';
         BAIL_OUT('DEB_HOST_ARCH is not set.');
     }
-    my $platforms = $testcase->{test_architectures};
+    my $platforms = $testcase->unfolded_value('Test-Architectures');
     if ($platforms ne 'any') {
         my @wildcards = split(SPACE, $platforms);
         my @matches= map {
@@ -242,11 +245,13 @@ sub runner {
       unless -f $subject;
 
     # run lintian
-    $ENV{'LINTIAN_COVERAGE'}.= ",-db,./cover_db-$testcase->{testname}"
+    $ENV{'LINTIAN_COVERAGE'}.= ",-db,./cover_db-$testname"
       if exists $ENV{'LINTIAN_COVERAGE'};
 
+    my $lintian_command_line
+      = $testcase->unfolded_value('Lintian-Command-Line');
     my $command
-      = "cd $runpath; $ENV{'LINTIAN_FRONTEND'} $testcase->{lintian_command_line} $subject";
+      = "cd $runpath; $ENV{'LINTIAN_FRONTEND'} $lintian_command_line $subject";
     say $command;
     my ($output, $status) = capture_merged { system($command); };
     $status = ($status >> 8) & 255;
@@ -254,12 +259,13 @@ sub runner {
     say "$command exited with status $status.";
     say $output if $status == 1;
 
+    my $expected_status = $testcase->unfolded_value('Exit-Status');
+
     my @errors;
     push(@errors,
-"Exit code $status differs from expected value $testcase->{exit_status}."
-      )
-      if defined $testcase->{exit_status}
-      && $status != $testcase->{exit_status};
+        "Exit code $status differs from expected value $expected_status.")
+      if $testcase->exists('Exit-Status')
+      && $status != $expected_status;
 
     # filter out some warnings if running under coverage
     my @lines = split(/\n/, $output);
@@ -277,19 +283,23 @@ sub runner {
     $output .= $_ . NEWLINE for @lines;
 
     die 'No match strategy defined'
-      unless length $testcase->{match_strategy};
+      unless $testcase->exists('Match-Strategy');
 
-    if ($testcase->{match_strategy} eq 'literal') {
+    my $match_strategy = $testcase->unfolded_value('Match-Strategy');
+
+    if ($match_strategy eq 'literal') {
         push(@errors, check_literal($testcase, $runpath, $output));
-    } elsif ($testcase->{match_strategy} eq 'tags') {
+
+    } elsif ($match_strategy eq 'tags') {
         push(@errors, check_tags($testcase, $runpath, $output));
+
     } else {
-        die "Unknown match strategy $testcase->{match_strategy}.";
+        die "Unknown match strategy $match_strategy.";
     }
 
     my $okay = !(scalar @errors);
 
-    if($testcase->{todo} eq 'yes') {
+    if($testcase->unfolded_value('Todo') eq 'yes') {
       TODO: {
             local $TODO = 'Test marked as TODO.';
             ok($okay, 'Lintian passes for test marked TODO.');
@@ -299,7 +309,7 @@ sub runner {
 
     diag $_ . NEWLINE for @errors;
 
-    ok($okay, "Lintian passes for $testcase->{testname}");
+    ok($okay, "Lintian passes for $testname");
 
     return;
 }
@@ -391,7 +401,9 @@ sub check_result {
     push(@actuallines, NEWLINE)
       unless @actuallines;
 
-    if ($testcase->{match_strategy} eq 'tags') {
+    my $match_strategy = $testcase->unfolded_value('Match-Strategy');
+
+    if ($match_strategy eq 'tags') {
         @expectedlines
           = reverse sort { order($a) cmp order($b) } @expectedlines;
         @actuallines
@@ -406,10 +418,10 @@ sub check_result {
 
     if(@difflines) {
 
-        if ($testcase->{match_strategy} eq 'literal') {
+        if ($match_strategy eq 'literal') {
             push(@errors, 'Literal output does not match');
 
-        } elsif ($testcase->{match_strategy} eq 'tags') {
+        } elsif ($match_strategy eq 'tags') {
 
             push(@errors, 'Tags do not match');
 
@@ -419,7 +431,7 @@ sub check_result {
             path("$runpath/tagdiff")->spew($tagdiff // EMPTY);
 
         } else {
-            die "Unknown match strategy $testcase->{match_strategy}.";
+            die "Unknown match strategy $match_strategy.";
         }
 
         push(@errors, EMPTY);
@@ -433,7 +445,7 @@ sub check_result {
 
     # stop if the test is not about tags
     return @errors
-      unless $testcase->{match_strategy} eq 'tags';
+      unless $match_strategy eq 'tags';
 
     # get expected tags
     my @expected = sort +get_tagnames($expectedpath);
@@ -443,13 +455,14 @@ sub check_result {
     # look out for tags being tested
     my @related;
 
-    if (length $testcase->{check} && $testcase->{check} ne 'all') {
+    if (   $testcase->exists('Check')
+        && $testcase->unfolded_value('Check') ne 'all') {
 
         my $profile = Lintian::Profile->new;
         $profile->load(undef, [$ENV{LINTIAN_ROOT}]);
 
         # use tags related to checks declared
-        my @checks = split(SPACE, $testcase->{check});
+        my @checks = $testcase->trimmed_list('Check');
         foreach my $check (@checks) {
             my $checkscript = $profile->get_checkinfo($check);
             die "Unknown Lintian check $check"

@@ -42,6 +42,9 @@ use IO::Async::Function;
 use IO::Async::Loop;
 use List::Compare;
 use Path::Tiny;
+use Time::Duration;
+use Time::Moment;
+use Time::Piece;
 use Try::Tiny;
 
 BEGIN {
@@ -74,7 +77,7 @@ BEGIN {
 
 use lib "$ENV{'LINTIAN_TEST_ROOT'}/lib";
 
-use Lintian::Internal::FrontendUtil qw(default_parallel);
+use Lintian::IO::Async qw(safe_qx);
 
 use Test::Lintian::Build qw(build_subject);
 use Test::Lintian::ConfigFile qw(read_config);
@@ -84,12 +87,15 @@ use Test::Lintian::Hooks qw(sed_hook sort_lines calibrate);
 use Test::Lintian::Prepare qw(prepare);
 
 use constant SPACE => q{ };
+use constant SLASH => q{/};
 use constant INDENT => q{    };
 use constant NEWLINE => qq{\n};
 use constant TAB => qq{\t};
 use constant EMPTY => q{};
 use constant YES => q{yes};
 use constant NO => q{no};
+
+my $processing_start = Time::Moment->from_string(gmtime->datetime . 'Z');
 
 # options
 my $debug;
@@ -362,7 +368,7 @@ my $build = IO::Async::Function->new(
         };
 
         # delete old runner log
-        my $betterlogpath = "$buildpath/$files->{log}";
+        my $betterlogpath = $buildpath . SLASH . $files->unfolded_value('Log');
         unlink $betterlogpath if -f $betterlogpath;
 
        # move the early log for directory preparation to position of runner log
@@ -412,9 +418,34 @@ if (@failedbuilds) {
 
 say EMPTY;
 
+my $processing_end = Time::Moment->from_string(gmtime->datetime . 'Z');
+my $duration = duration($processing_start->delta_seconds($processing_end));
+say "Building the test packages took $duration.";
+
+say EMPTY;
+
 exit 0;
 
 # program is done
+
+=item default_parallel
+
+=cut
+
+# Return the default number of parallelization to be used
+sub default_parallel {
+    # check cpuinfo for the number of cores...
+    my $cpus = safe_qx('nproc');
+    if ($cpus =~ m/^\d+$/) {
+        # Running up to twice the number of cores usually gets the most out
+        # of the CPUs and disks but it might be too aggressive to be the
+        # default for -j. Only use <cores>+1 then.
+        return $cpus + 1;
+    }
+
+    # No decent number of jobs? Just use 2 as a default
+    return 2;
+}
 
 sub usage {
     print <<"END";

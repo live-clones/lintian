@@ -211,9 +211,10 @@ sub find_selected_lintian_testpaths {
             for my $testpath (find_all_testpaths($suitepath)) {
                 my $desc = read_config("$testpath/eval/" . DESC);
 
-                next unless exists $desc->{check};
+                next
+                  unless $desc->exists('Check');
 
-                foreach my $check (split(SPACE, $desc->{check})) {
+                for my $check ($desc->trimmed_list('Check')) {
                     push(@insuite, $testpath)
                       if exists $wanted{$check};
                 }
@@ -228,9 +229,10 @@ sub find_selected_lintian_testpaths {
             for my $testpath (find_all_testpaths($suitepath)) {
                 my $desc = read_config("$testpath/build-spec/fill-values");
 
-                next unless exists $desc->{skeleton};
+                next
+                  unless $desc->exists('Skeleton');
 
-                my $skeleton = $desc->{skeleton};
+                my $skeleton = $desc->unfolded_value('Skeleton');
                 push(@insuite, $testpath)
                   if exists $wanted{$skeleton};
             }
@@ -303,7 +305,8 @@ sub find_all_tags {
 
     my $desc = read_config("$testpath/eval/" . DESC);
 
-    return EMPTY unless length $desc->{check};
+    return EMPTY
+      unless $desc->exists('Check');
 
     my %tags;
 
@@ -311,8 +314,8 @@ sub find_all_tags {
     my $profile = Lintian::Profile->new;
     $profile->load(undef, [$LINTIAN_ROOT]);
 
-    my @checks = split(SPACE, $desc->{check});
-    foreach my $check (@checks) {
+    my @checks = $desc->trimmed_list('Check');
+    for my $check (@checks) {
         my $checkscript = $profile->get_checkinfo($check);
         die "Unknown Lintian check $check"
           unless defined $checkscript;
@@ -321,7 +324,7 @@ sub find_all_tags {
     }
 
     return keys %tags
-      unless length $desc->{test_against};
+      unless $desc->exists('Test-Against');
 
     # read tags from specification
     my $temp = Path::Tiny->tempfile;
@@ -354,7 +357,7 @@ sub find_all_tags {
     }
 
     # add tags listed in Test-Against
-    my @test_against = split(SPACE, $desc->{test_against});
+    my @test_against = $desc->trimmed_list('Test-Against');
     $tags{$_} = 1 for @test_against;
 
     return keys %tags;

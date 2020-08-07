@@ -24,6 +24,8 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
+package reporting_lintian_harness;
+
 use v5.20;
 use warnings;
 use utf8;
@@ -460,7 +462,7 @@ sub process_worklist {
         for my $group_id (@completed) {
             my $group_data;
             # In theory, they can disappear - in practise, that requires
-            # an external call to (e.g.) dplint reporting-sync-state.
+            # an external call to (e.g.) lintian reporting-sync-state.
             next if not exists($state->{'groups'}{$group_id});
             $group_data = $state->{'groups'}{$group_id};
             $group_data->{'last-processed-by'} = $LINTIAN_VERSION;
@@ -472,7 +474,7 @@ sub process_worklist {
         for my $group_id (sort(keys(%errors))) {
             my $group_data;
             # In theory, they can disappear - in practise, that requires
-            # an external call to (e.g.) dplint reporting-sync-state.
+            # an external call to (e.g.) lintian reporting-sync-state.
             next if not exists($state->{'groups'}{$group_id});
             $group_data = $state->{'groups'}{$group_id};
             if ($errors{$group_id}) {
@@ -570,7 +572,7 @@ sub rewrite_lintian_log {
 
 sub usage {
     my $cmd = basename($0);
-    my $me = "dplint $cmd";
+    my $me = "lintian $cmd";
     print <<EOF;
 Internal command for the Lintian reporting framework
 Usage: $me <args> -- <extra lintian args>
@@ -590,6 +592,8 @@ EOF
 
     exit(0);
 }
+
+1;
 
 # Local Variables:
 # indent-tabs-mode: nil
