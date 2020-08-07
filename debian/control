@@ -79,6 +79,7 @@ Depends:
  patchutils,
  perl,
  t1utils,
+ unzip,
  xz-utils,
  ${misc:Depends},
  ${perl:Depends},
