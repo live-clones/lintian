@@ -361,6 +361,20 @@ sub check_systemd_service_file {
                   unless $seen_before_shutdown;
             }
         }
+
+        my %bad_users = (
+            'User' => 'nobody',
+            'Group' => 'nogroup',
+        );
+        while ((my $key, my $value) = each(%bad_users)) {
+            if (
+                any { $_ eq $value }
+                $self->extract_service_file_values($file, 'Service',$key)
+            ) {
+                $self->tag('systemd-service-file-uses-nobody-or-nogroup',
+                    $file, "$key=$value");
+            }
+        }
     }
 
     return 1;

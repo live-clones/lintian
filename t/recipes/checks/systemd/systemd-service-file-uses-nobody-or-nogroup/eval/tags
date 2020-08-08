@@ -1,0 +1,4 @@
+systemd-service-file-uses-nobody-or-nogroup-good (binary): systemd-service-file-missing-hardening-features lib/systemd/system/systemd-service-file-uses-nobody-or-nogroup-good.service
+systemd-service-file-uses-nobody-or-nogroup-bad (binary): systemd-service-file-uses-nobody-or-nogroup lib/systemd/system/systemd-service-file-uses-nobody-or-nogroup-bad.service User=nobody
+systemd-service-file-uses-nobody-or-nogroup-bad (binary): systemd-service-file-uses-nobody-or-nogroup lib/systemd/system/systemd-service-file-uses-nobody-or-nogroup-bad.service Group=nogroup
+systemd-service-file-uses-nobody-or-nogroup-bad (binary): systemd-service-file-missing-hardening-features lib/systemd/system/systemd-service-file-uses-nobody-or-nogroup-bad.service
