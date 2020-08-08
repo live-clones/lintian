@@ -232,7 +232,7 @@ sub get_systemd_service_names {
         $safe_add_service->($name);
 
         my @aliases
-          = $self->extract_service_file_values($file, 'Install', 'Alias', 1);
+          = $self->extract_service_file_values($file, 'Install', 'Alias');
 
         for my $alias (@aliases) {
             $self->tag('systemd-service-alias-without-extension', $file)
@@ -266,22 +266,22 @@ sub check_systemd_service_file {
       for @obsolete;
 
     $self->tag('systemd-service-file-refers-to-obsolete-bindto', $file,)
-      if $self->extract_service_file_values($file, 'Unit', 'BindTo', 1);
+      if $self->extract_service_file_values($file, 'Unit', 'BindTo');
 
     for my $key (
         qw(ExecStart ExecStartPre ExecStartPost ExecReload ExecStop ExecStopPost)
     ) {
         $self->tag('systemd-service-file-wraps-init-script', $file, $key)
           if any { m,^/etc/init\.d/, }
-        $self->extract_service_file_values($file, 'Service', $key, 1);
+        $self->extract_service_file_values($file, 'Service', $key);
     }
 
     if (not $file->is_symlink or $file->link ne '/dev/null') {
 
         my @wanted_by
-          = $self->extract_service_file_values($file, 'Install', 'WantedBy',1);
+          = $self->extract_service_file_values($file, 'Install', 'WantedBy');
         my $is_oneshot =any { /^oneshot$/ }
-        $self->extract_service_file_values($file, 'Service', 'Type', 1);
+        $self->extract_service_file_values($file, 'Service', 'Type');
 
         # We are a "standalone" service file if we have no .path or .timer
         # equivalent.
@@ -304,20 +304,19 @@ sub check_systemd_service_file {
         }
         $self->tag('systemd-service-file-missing-documentation-key', $file,)
           unless $self->extract_service_file_values($file, 'Unit',
-            'Documentation',1);
+            'Documentation');
 
         $self->tag('systemd-service-file-missing-install-key', $file,)
           unless @wanted_by
-          or
-          $self->extract_service_file_values($file, 'Install', 'RequiredBy',1)
-          or $self->extract_service_file_values($file, 'Install', 'Also',1)
+          or$self->extract_service_file_values($file, 'Install', 'RequiredBy')
+          or $self->extract_service_file_values($file, 'Install', 'Also')
           or $is_oneshot
           or not $is_standalone
           or $file !~ m,^lib/systemd/[^\/]+/[^\/]+\.service$,
           or $file =~ m,@\.service$,;
 
         my @pidfile
-          = $self->extract_service_file_values($file,'Service','PIDFile',1);
+          = $self->extract_service_file_values($file,'Service','PIDFile');
         foreach my $x (@pidfile) {
             $self->tag('systemd-service-file-refers-to-var-run',
                 $file, 'PIDFile', $x)
@@ -326,8 +325,7 @@ sub check_systemd_service_file {
         my $seen_hardening;
         foreach my $x ($HARDENING_FLAGS->all) {
             next
-              unless $self->extract_service_file_values($file, 'Service', $x,
-                1);
+              unless $self->extract_service_file_values($file, 'Service', $x);
             $seen_hardening = 1;
             last;
         }
@@ -344,8 +342,7 @@ sub check_systemd_service_file {
 
             my $seen_conflicts_shutdown = 0;
             my @conflicts
-              = $self->extract_service_file_values($file, 'Unit','Conflicts',
-                1);
+              = $self->extract_service_file_values($file, 'Unit','Conflicts');
             foreach my $x (@conflicts) {
                 next unless $x eq 'shutdown.target';
                 $seen_conflicts_shutdown = 1;
@@ -354,8 +351,7 @@ sub check_systemd_service_file {
             if ($seen_conflicts_shutdown) {
                 my $seen_before_shutdown = 0;
                 my @before
-                  = $self->extract_service_file_values($file, 'Unit','Before',
-                    1);
+                  = $self->extract_service_file_values($file, 'Unit','Before');
                 foreach my $x (@before) {
                     next unless $x eq 'shutdown.target';
                     $seen_before_shutdown = 1;
@@ -406,7 +402,7 @@ sub service_file_lines {
 
 # Extracts the values of a specific Key from a .service file
 sub extract_service_file_values {
-    my ($self, $file, $extract_section, $extract_key, $skip_tag) = @_;
+    my ($self, $file, $extract_section, $extract_key) = @_;
 
     my (@values, $section);
 
@@ -499,8 +495,7 @@ sub check_systemd_socket_files {
 
     foreach my $file (grep { m,/systemd/system/.*\.socket$, } @files) {
         my @xs
-          = $self->extract_service_file_values($file,'Socket','ListenStream',
-            1);
+          = $self->extract_service_file_values($file,'Socket','ListenStream');
         foreach my $x (@xs) {
             $self->tag('systemd-service-file-refers-to-var-run',
                 $file, 'ListenStream', $x)
