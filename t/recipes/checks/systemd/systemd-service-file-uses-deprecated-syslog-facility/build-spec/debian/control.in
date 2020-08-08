@@ -1,0 +1,27 @@
+Source: [% $source %]
+Priority: optional
+Section: misc
+Maintainer: [% $author %]
+Standards-Version: [% $standards_version %]
+Build-Depends: [% $build_depends %]
+Rules-Requires-Root: no
+
+Package: [% $source %]-good
+Architecture: all
+Depends: ${misc:Depends}
+Description: [% $description %] (good)
+ This is a test package designed to exercise some feature or tag of
+ Lintian.  It is part of the Lintian test suite and may do very odd
+ things.  It should not be installed like a regular package.
+ .
+ Good case.
+
+Package: [% $source %]-bad
+Architecture: all
+Depends: ${misc:Depends}
+Description: [% $description %] (bad)
+ This is a test package designed to exercise some feature or tag of
+ Lintian.  It is part of the Lintian test suite and may do very odd
+ things.  It should not be installed like a regular package.
+ .
+ Bad case.

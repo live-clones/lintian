@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: systemd-service-file-uses-deprecated-syslog-facility
+Description: Check for StandardOutput=syslog etc.

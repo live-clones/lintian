@@ -1,0 +1,4 @@
+systemd-service-file-uses-deprecated-syslog-facility-good (binary): systemd-service-file-missing-hardening-features lib/systemd/system/systemd-service-file-uses-deprecated-syslog-facility-good.service
+systemd-service-file-uses-deprecated-syslog-facility-bad (binary): systemd-service-file-uses-deprecated-syslog-facility lib/systemd/system/systemd-service-file-uses-deprecated-syslog-facility-bad.service StandardOutput=syslog
+systemd-service-file-uses-deprecated-syslog-facility-bad (binary): systemd-service-file-uses-deprecated-syslog-facility lib/systemd/system/systemd-service-file-uses-deprecated-syslog-facility-bad.service StandardError=syslog-console
+systemd-service-file-uses-deprecated-syslog-facility-bad (binary): systemd-service-file-missing-hardening-features lib/systemd/system/systemd-service-file-uses-deprecated-syslog-facility-bad.service

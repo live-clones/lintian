@@ -375,6 +375,20 @@ sub check_systemd_service_file {
                     $file, "$key=$value");
             }
         }
+
+        foreach my $key (qw(StandardError StandardOutput)) {
+            foreach my $value (qw(syslog syslog-console)) {
+                if (
+                    any { $_ eq $value }
+                    $self->extract_service_file_values($file, 'Service',$key)
+                ) {
+                    $self->tag(
+                        'systemd-service-file-uses-deprecated-syslog-facility',
+                        $file, "$key=$value"
+                    );
+                }
+            }
+        }
     }
 
     return 1;
