@@ -445,6 +445,11 @@ sub parse_dep5 {
     my @allpaths = $index->sorted_list;
 
     unless ($self->processable->native) {
+
+        # remove existing ./debian folder, if any
+        @allpaths = grep { $_ !~ m{^debian/} } @allpaths
+          if $self->processable->fields->value('Format') eq '3.0 (quilt)';
+
         my $debian_dir = $self->processable->patched->resolve_path('debian/');
         push(@allpaths, $debian_dir->descendants)
           if $debian_dir;

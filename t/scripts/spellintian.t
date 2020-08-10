@@ -28,9 +28,9 @@ use Test::More tests => 8;
 
 use constant NEWLINE => qq{\n};
 
-$ENV{'LINTIAN_TEST_ROOT'} //= '.';
+$ENV{'LINTIAN_BASE'} //= '.';
 
-my $cmd_path = "$ENV{LINTIAN_TEST_ROOT}/frontend/spellintian";
+my $cmd_path = "$ENV{LINTIAN_BASE}/bin/spellintian";
 my $spelling_data = 'data/spelling/corrections';
 
 sub t {

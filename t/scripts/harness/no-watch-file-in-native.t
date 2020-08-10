@@ -23,8 +23,8 @@ use warnings;
 use autodie;
 
 BEGIN {
-    die('Cannot find LINTIAN_TEST_ROOT')
-      unless length $ENV{'LINTIAN_TEST_ROOT'};
+    die('Cannot find LINTIAN_BASE')
+      unless length $ENV{'LINTIAN_BASE'};
 }
 
 use File::Basename qw(basename);
@@ -33,7 +33,7 @@ use File::stat;
 use List::Util qw(max);
 use Test::More;
 
-use lib "$ENV{'LINTIAN_TEST_ROOT'}/lib";
+use lib "$ENV{'LINTIAN_BASE'}/lib";
 use Test::Lintian::Prepare qw(prepare);
 
 # dummy test name; used in desc and directory name

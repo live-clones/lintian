@@ -147,16 +147,16 @@ Lintian was designed to be run directly from the git repository.  This
 allows you to quickly test your changes on a live package.  In Lintian
 2.5.18, the frontends will automatically detect when they are being
 run from a source checkout and do the right thing.  Earlier versions
-need LINTIAN_ROOT (or --root).  The following shell snippet can be
+need LINTIAN_BASE (or --root).  The following shell snippet can be
 used for 2.5.17 and earlier:
 
  #!/bin/sh
  # ONLY FOR << 2.5.18~ OR EARLIER.  Lintian (>= 2.5.18~) will DTRT.
- LINTIAN_ROOT="<INSERT PATH TO LINTIAN GIT DIR>"
- export LINTIAN_ROOT
- exec "$LINTIAN_ROOT/frontend/lintian" "$@"
+ LINTIAN_BASE="<INSERT PATH TO LINTIAN GIT DIR>"
+ export LINTIAN_BASE
+ exec "$LINTIAN_BASE/frontend/lintian" "$@"
 
-Beware of two things: If LINTIAN_ROOT is not set, Lintian (<< 2.5.18~)
+Beware of two things: If LINTIAN_BASE is not set, Lintian (<< 2.5.18~)
 will attempt to use the code from the installed version (in
 /usr/share/lintian).
 

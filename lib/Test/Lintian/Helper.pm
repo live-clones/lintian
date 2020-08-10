@@ -100,7 +100,7 @@ of the Debian policy. The second is its effective date.
 
 sub get_latest_policy {
     my $profile = Lintian::Profile->new;
-    $profile->load(undef, [$ENV{'LINTIAN_ROOT'}]);
+    $profile->load(undef, [$ENV{'LINTIAN_BASE'}]);
     Lintian::Data->set_vendor($profile);
 
     my $STANDARDS
@@ -118,13 +118,13 @@ sub get_latest_policy {
 =item get_recommended_debhelper_version()
 
 Returns the version of debhelper recommended in 'debhelper/compat-level'
-via Lintian::Data, relative to the established LINTIAN_ROOT.
+via Lintian::Data, relative to the established LINTIAN_BASE.
 
 =cut
 
 sub get_recommended_debhelper_version {
     my $profile = Lintian::Profile->new;
-    $profile->load(undef, [$ENV{'LINTIAN_ROOT'}]);
+    $profile->load(undef, [$ENV{'LINTIAN_BASE'}]);
     Lintian::Data->set_vendor($profile);
 
     my $compat_level= Lintian::Data->new('debhelper/compat-level', qr/=/);

@@ -1,11 +1,11 @@
+bin			usr/share/lintian
 checks			usr/share/lintian
-tags			usr/share/lintian
-commands                usr/share/lintian
 data		  	usr/share/lintian
-frontend/lintian	usr/share/lintian/frontend
 helpers 		usr/share/lintian
+lib	 		usr/share/lintian
+# the following line will be removed when libconfig-model-dpkg-perl stopped using Lintian::Data (see commit 818b3aad)
 lib/Lintian		usr/share/perl5
-lib/Test		usr/share/perl5
 profiles		usr/share/lintian
+tags			usr/share/lintian
 templates		usr/share/lintian
 vendors 		usr/share/lintian

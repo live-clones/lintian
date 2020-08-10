@@ -40,7 +40,7 @@ BEGIN {
 }
 
 use Carp qw(croak);
-use IO::Async;
+use IO::Async::Loop;
 
 use Lintian::Deb822::File;
 

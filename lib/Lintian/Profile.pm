@@ -180,14 +180,10 @@ sub load {
 
     my ($profile, @full_inc_path);
 
-    if (!defined $ipath) {
+    unless (defined $ipath) {
         # Temporary fix (see _safe_include_path)
         @full_inc_path = (_default_inc_path());
-        if (defined $ENV{'LINTIAN_ROOT'}) {
-            $ipath = [$ENV{'LINTIAN_ROOT'}];
-        } else {
-            $ipath = ['/usr/share/lintian'];
-        }
+        $ipath = [$ENV{LINTIAN_BASE} // '/usr/share/lintian'];
     }
 
     if (defined $extra) {
@@ -743,17 +739,13 @@ sub _parse_check {
 sub _default_inc_path {
     my @path;
 
-    push @path, "$ENV{'HOME'}/.lintian"
-      if defined $ENV{'HOME'};
+    push(@path, "$ENV{'HOME'}/.lintian")
+      if length $ENV{'HOME'};
 
-    push @path, '/etc/lintian';
+    push(@path, '/etc/lintian');
 
-    # ENV{LINTIAN_ROOT} replaces /usr/share/lintian if present.
-    push @path, $ENV{'LINTIAN_ROOT'}
-      if defined $ENV{'LINTIAN_ROOT'};
-
-    push @path, '/usr/share/lintian'
-      unless defined $ENV{'LINTIAN_ROOT'};
+    # ENV{LINTIAN_BASE} replaces /usr/share/lintian if present.
+    push(@path, $ENV{LINTIAN_BASE} // '/usr/share/lintian');
 
     return @path;
 }

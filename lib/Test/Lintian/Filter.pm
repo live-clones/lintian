@@ -166,9 +166,8 @@ sub find_selected_lintian_testpaths {
         }
     }
 
-    my $LINTIAN_ROOT = $ENV{'LINTIAN_ROOT'}//die('Cannot find LINTIAN_ROOT');
     my $profile = Lintian::Profile->new;
-    $profile->load(undef, [$LINTIAN_ROOT]);
+    $profile->load(undef, [$ENV{LINTIAN_BASE}]);
 
     my @found;
     foreach my $suite (sort @LINTIAN_SUITES) {
@@ -310,9 +309,8 @@ sub find_all_tags {
 
     my %tags;
 
-    my $LINTIAN_ROOT = $ENV{'LINTIAN_ROOT'}//die('Cannot find LINTIAN_ROOT');
     my $profile = Lintian::Profile->new;
-    $profile->load(undef, [$LINTIAN_ROOT]);
+    $profile->load(undef, [$ENV{LINTIAN_BASE}]);
 
     my @checks = $desc->trimmed_list('Check');
     for my $check (@checks) {
@@ -329,8 +327,8 @@ sub find_all_tags {
     # read tags from specification
     my $temp = Path::Tiny->tempfile;
     die "tagextract failed: $!"
-      if system('t/bin/tagextract', '-f', 'EWI', "$testpath/tags",
-        $temp->stringify);
+      if
+      system('bin/tagextract', '-f', 'EWI', "$testpath/tags",$temp->stringify);
     my @lines = $temp->lines_utf8({ chomp => 1 });
 
     my $csv = Text::CSV->new({ sep_char => '|' });

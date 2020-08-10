@@ -34,7 +34,7 @@ use File::Find::Rule;
 use Path::Tiny;
 use Test::More;
 
-use lib "$ENV{'LINTIAN_TEST_ROOT'}/lib";
+use lib "$ENV{'LINTIAN_BASE'}/lib";
 
 use Lintian::Profile;
 use Test::Lintian::ConfigFile qw(read_config);
@@ -51,7 +51,7 @@ my @descpaths = sort File::Find::Rule->file()->name('desc')->in($checkpath);
 plan tests => 3 * scalar @descpaths;
 
 my $profile = Lintian::Profile->new;
-$profile->load(undef, [$ENV{LINTIAN_ROOT}]);
+$profile->load(undef, [$ENV{LINTIAN_BASE}]);
 
 foreach my $descpath (@descpaths) {
 

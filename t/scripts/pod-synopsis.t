@@ -16,9 +16,9 @@ plan skip_all => 'Test::Pod required for testing' if $@;
 eval 'use Test::Synopsis';
 plan skip_all => 'Test::Synopsis required for testing' if $@;
 
-$ENV{'LINTIAN_TEST_ROOT'} //= '.';
+$ENV{'LINTIAN_BASE'} //= '.';
 
-my @pod_files = all_pod_files("$ENV{'LINTIAN_TEST_ROOT'}/lib");
+my @pod_files = all_pod_files("$ENV{'LINTIAN_BASE'}/lib");
 plan tests => scalar(@pod_files);
 synopsis_ok(@pod_files);
 

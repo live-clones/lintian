@@ -32,12 +32,12 @@ use POSIX qw(strftime);
 use List::MoreUtils qw(uniq);
 
 BEGIN {
-    my $LINTIAN_ROOT = $ENV{'LINTIAN_ROOT'};
-    if (not $LINTIAN_ROOT) {
+    my $LINTIAN_BASE = $ENV{'LINTIAN_BASE'};
+    if (not $LINTIAN_BASE) {
         require Cwd;
-        $ENV{'LINTIAN_ROOT'} = $LINTIAN_ROOT = Cwd::cwd();
+        $ENV{'LINTIAN_BASE'} = $LINTIAN_BASE = Cwd::cwd();
     } else {
-        chdir($LINTIAN_ROOT);
+        chdir($LINTIAN_BASE);
     }
 }
 

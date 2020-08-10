@@ -17,7 +17,7 @@ use constant EMPTY => q{};
 
 my $known_tests = 0;
 
-my $root = $ENV{'LINTIAN_TEST_ROOT'} // q{.};
+my $root = $ENV{'LINTIAN_BASE'} // q{.};
 
 my %CHECKS;
 my $checkdir = "$root/checks";

@@ -29,26 +29,15 @@ use warnings;
 use utf8;
 use autodie;
 
+# use Lintian modules that belong to this program
+use FindBin;
+use lib "$FindBin::RealBin/../lib";
+
 use Cwd;
 use Getopt::Long;
 use List::Util qw(all);
 use Path::Tiny;
 use Term::ANSIColor;
-
-BEGIN {
-    $ENV{'LINTIAN_TEST_INSTALLED'} = 'no'
-      unless exists $ENV{'LINTIAN_TEST_INSTALLED'};
-
-    my $cwd = Cwd::getcwd();
-
-    if ($ENV{'LINTIAN_TEST_INSTALLED'} eq 'yes') {
-        $ENV{'LINTIAN_ROOT'} = '/usr/share/lintian';
-    } else {
-        $ENV{'LINTIAN_ROOT'} = $cwd;
-    }
-}
-
-use lib "$ENV{'LINTIAN_ROOT'}/lib";
 
 use Test::Lintian::Output::Universal qw(parse_line order);
 

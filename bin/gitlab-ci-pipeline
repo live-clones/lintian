@@ -29,7 +29,7 @@ Checksum_input () {
     # Local files that, if changed, should result in a rebuild of the test
     # packages.
     find \
-	t/bin/build-test-packages \
+	bin/build-test-packages \
 	lib/Test/ \
 	-type f -print0 | sort -z | xargs -0 sha1sum
 
@@ -75,7 +75,7 @@ then
     tar xfJ "${CACHE_FILENAME}"
 fi
 
-time t/bin/build-test-packages
+time bin/build-test-packages
 
 echo "I: Removing obsolete test package artifacts for ${PIPELINE} pipeline from ${CACHE_DIR}" >&2
 find "${CACHE_DIR}" \
@@ -93,4 +93,4 @@ tar cfJ "${CACHE_FILENAME}" debian/test-out/packages
 echo "I: Showing artifacts in ${CACHE_DIR}" >&2
 ls -al "${CACHE_DIR}" >&2
 
-time t/bin/runtests
+time bin/runtests

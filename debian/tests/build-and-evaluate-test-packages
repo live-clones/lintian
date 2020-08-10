@@ -5,7 +5,7 @@ set -e
 export LINTIAN_TEST_INSTALLED=yes
 WORKDIR="$AUTOPKGTEST_TMP/$(basename $0)"
 
-t/bin/build-test-packages --debug --work-dir="$WORKDIR"
-t/bin/runtests --debug --unattended --keep-going --work-dir="$WORKDIR" --onlyrun="suite:recipes"
+bin/build-test-packages --debug --work-dir="$WORKDIR"
+bin/runtests --debug --unattended --keep-going --work-dir="$WORKDIR" --onlyrun="suite:recipes"
 
 rm -rf "${WORKDIR}"

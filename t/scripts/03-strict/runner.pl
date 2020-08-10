@@ -18,14 +18,14 @@ plan skip_all => 'Test::Strict required to run this test' if $@;
     $Test::Strict::TEST_WARNINGS = 1;
 }
 
-$ENV{'LINTIAN_TEST_ROOT'} //= '.';
+$ENV{'LINTIAN_BASE'} //= '.';
 # Files in commands check for the presence of LINTIAN_INCLUDE_DIRS in
 # BEGIN, so make sure it is present for them.
-$ENV{'LINTIAN_INCLUDE_DIRS'} = $ENV{'LINTIAN_TEST_ROOT'};
+$ENV{'LINTIAN_INCLUDE_DIRS'} = $ENV{'LINTIAN_BASE'};
 
 if ($0 =~ m{^(?:.*/)?reporting\.t$}) {
     # html_reports loads ./config, so we have do chdir before checking it.
-    chdir("$ENV{'LINTIAN_TEST_ROOT'}/reporting");
+    chdir("$ENV{'LINTIAN_BASE'}/reporting");
     all_perl_files_ok('.');
 } else {
     my @test_paths = program_name_to_perl_paths($0);

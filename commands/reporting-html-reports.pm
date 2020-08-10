@@ -47,7 +47,7 @@ use Lintian::Profile;
 use Lintian::Relation::Version qw(versions_comparator);
 use Lintian::Reporting::ResourceManager;
 use Lintian::Reporting::Util qw(load_state_cache find_backlog);
-use Lintian::Util qw(copy_dir run_cmd check_path);
+use Lintian::Util qw(copy_dir run_cmd locate_executable);
 
 my $CONFIG;
 my %OPT;
@@ -60,7 +60,7 @@ my %OPT_HASH = ('reporting-config=s'=> \$OPT{'reporting-config'},);
 my (
     $RESOURCE_MANAGER, $LINTIAN_VERSION, $timestamp,
     $TEMPLATE_CONFIG_VARS,$HARNESS_STATE_DIR, $HISTORY_DIR,
-    $HISTORY, $GRAPHS, $LINTIAN_ROOT,
+    $HISTORY, $GRAPHS, $LINTIAN_BASE,
     $HTML_TMP_DIR, $SCOUR_ENABLED,
 );
 # FIXME: Should become obsolete if gnuplot is replaced by R like piuparts.d.o /
@@ -180,14 +180,14 @@ sub main {
 
     setup_output_dir(
         'output_dir'       => $HTML_TMP_DIR,
-        'lintian_manual'   => "${LINTIAN_ROOT}/doc/lintian.html",
-        'lintian_api_docs' => "${LINTIAN_ROOT}/doc/api.html",
+        'lintian_manual'   => "${LINTIAN_BASE}/doc/lintian.html",
+        'lintian_api_docs' => "${LINTIAN_BASE}/doc/api.html",
         'lintian_log_file' => $ARGV[0],
         'resource_dirs'    =>
-          [map { "${LINTIAN_ROOT}/reporting/$_"} qw(images resources)],
+          [map { "${LINTIAN_BASE}/reporting/$_"} qw(images resources)],
     );
 
-    load_templates("$LINTIAN_ROOT/reporting/templates");
+    load_templates("$LINTIAN_BASE/reporting/templates");
 
     # Create lintian.css from a template, install the output file as a resource
     # and discard the original output file.  We do this after installing all
@@ -218,7 +218,7 @@ sub init_globals {
         die("The --reporting-config parameter must point to an existing file\n"
         );
     }
-    $LINTIAN_ROOT = $ENV{'LINTIAN_ROOT'};
+    $LINTIAN_BASE = $ENV{'LINTIAN_BASE'};
 
     $CONFIG = YAML::XS::LoadFile($OPT{'reporting-config'});
     $HARNESS_STATE_DIR = required_cfg_value('storage', 'state-cache');
@@ -228,7 +228,7 @@ sub init_globals {
         $HISTORY = 1;
         $HISTORY_DIR = required_cfg_value('storage', 'historical-data-dir');
         print "Enabling history tracking as ${history_key} is set\n";
-        if (check_path('gnuplot')) {
+        if (length locate_executable('gnuplot')) {
             $GRAPHS = 1;
             print "Enabling graphs (gnuplot is in PATH)\n";
         } else {
@@ -236,7 +236,7 @@ sub init_globals {
             print "No graphs as \"gnuplot\" is not in PATH\n";
         }
         if ($GRAPHS) {
-            if (check_path('scour')) {
+            if (locate_executable('scour')) {
                 $SCOUR_ENABLED = 1;
                 print "Minimizing generated SVG files (scour is in PATH)\n";
             } else {
@@ -778,7 +778,7 @@ sub update_history_and_make_graphs {
 
         print "Plotting global statistics...\n";
         run_cmd({ 'chdir' => $graph_dir},
-            'gnuplot',"$LINTIAN_ROOT/reporting/graphs/statistics.gpi");
+            'gnuplot',"$LINTIAN_BASE/reporting/graphs/statistics.gpi");
 
         if ($SCOUR_ENABLED) {
             # Do a little "rename" dance to ensure that we keep the
@@ -811,7 +811,7 @@ sub update_history_and_make_graphs {
         if ($GRAPHS) {
             print {$gnuplot_fd} qq{print 'Plotting $tag statistics...'\n};
             print {$gnuplot_fd}
-              qq{call '$LINTIAN_ROOT/reporting/graphs/tags.gpi' '$tag'\n};
+              qq{call '$LINTIAN_BASE/reporting/graphs/tags.gpi' '$tag'\n};
             print {$gnuplot_fd} qq{reset\n};
         }
     }

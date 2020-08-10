@@ -118,7 +118,7 @@ sub issue_tags {
         }
     }
 
-    my $templatedir = "$ENV{LINTIAN_ROOT}/templates";
+    my $templatedir = "$ENV{LINTIAN_BASE}/templates";
     my $tx = Text::Xslate->new(path => [$templatedir]);
     my $page = $tx->render(
         'standalone-html.tx',

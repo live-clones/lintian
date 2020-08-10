@@ -11,7 +11,7 @@ plan skip_all => 'Not needed for coverage of Lintian'
 plan skip_all => 'Need newer version of aspell-en (>= 7.1)'
   if not check_aspell();
 
-use lib "$ENV{'LINTIAN_TEST_ROOT'}/lib";
+use lib "$ENV{'LINTIAN_BASE'}/lib";
 
 use Test::Lintian;
 
@@ -29,12 +29,11 @@ add_stopwords(@GOOD_WORDS);
 # aspell if installed, too. This avoids a "Build-Conflicts: spell".
 set_spell_cmd('aspell list -l en -p /dev/null');
 
-chdir($ENV{'LINTIAN_TEST_ROOT'}//'.')
-  or die("fatal error: could not chdir to $ENV{LINTIAN_TEST_ROOT}: $!");
+chdir($ENV{'LINTIAN_BASE'}//'.')
+  or die("fatal error: could not chdir to $ENV{LINTIAN_BASE}: $!");
 
 my @CHECKS = glob('checks/*[!.]*[!c]');
-my @DIRS
-  = qw(collection doc/tutorial frontend lib private reporting t/scripts t/bin t/templates);
+my @DIRS= qw(bin doc/tutorial lib private reporting t/scripts t/templates);
 
 all_pod_files_spelling_ok(@CHECKS, @DIRS);
 

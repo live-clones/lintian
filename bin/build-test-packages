@@ -32,8 +32,12 @@ use warnings;
 use utf8;
 use autodie;
 
+# use Lintian modules that belong to this program
+use FindBin;
+use lib "$FindBin::RealBin/../lib";
+
 use Capture::Tiny qw(capture_merged);
-use Cwd;
+use Cwd qw(realpath);
 use File::Copy;
 use File::Find::Rule;
 use File::stat;
@@ -46,36 +50,6 @@ use Time::Duration;
 use Time::Moment;
 use Time::Piece;
 use Try::Tiny;
-
-BEGIN {
-    # whitelist the environment we permit to avoid things that mess up
-    # tests, like CFLAGS, DH_OPTIONS, DH_COMPAT, DEB_HOST_ARCH
-    my %WHITELIST = map { $_ => 1 } qw(
-      NO_PKG_MANGLE
-      PATH
-      TMPDIR
-      CCACHE_DIR
-    );
-
-    # TODO: MAKEFLAGS - some of the tests don't cope too well with it
-    for my $var (keys %ENV) {
-        delete $ENV{$var} unless exists $WHITELIST{$var};
-    }
-
-   # Standard pipeline installs ccache; causes write permission errors on Salsa
-   # https://salsa.debian.org/salsa-ci-team/pipeline/-/issues/164
-    $ENV{'CCACHE_DISABLE'} = 1;
-
-    # Ubuntu auto-builders run pkg-mangle which messes up test packages
-    $ENV{'NO_PKG_MANGLE'} = 'true'
-      unless exists($ENV{'NO_PKG_MANGLE'});
-
-    my $cwd = Cwd::getcwd();
-    $ENV{'LINTIAN_ROOT'} = $cwd;
-    $ENV{'LINTIAN_TEST_ROOT'} = $cwd;
-}
-
-use lib "$ENV{'LINTIAN_TEST_ROOT'}/lib";
 
 use Lintian::IO::Async qw(safe_qx);
 
@@ -96,6 +70,30 @@ use constant YES => q{yes};
 use constant NO => q{no};
 
 my $processing_start = Time::Moment->from_string(gmtime->datetime . 'Z');
+
+# whitelist the environment we permit to avoid things that mess up
+# tests, like CFLAGS, DH_OPTIONS, DH_COMPAT, DEB_HOST_ARCH
+# TODO: MAKEFLAGS - some of the tests don't cope too well with it
+my %PRESERVE_ENV = map { $_ => 1 } qw(
+  NO_PKG_MANGLE
+  PATH
+  TMPDIR
+  CCACHE_DIR
+);
+
+my @disallowed = grep { !exists $PRESERVE_ENV{$_} } keys %ENV;
+
+delete $ENV{$_} for @disallowed;
+
+# Standard pipeline installs ccache; causes write permission errors on Salsa
+# https://salsa.debian.org/salsa-ci-team/pipeline/-/issues/164
+$ENV{CCACHE_DISABLE} = 1;
+
+# Ubuntu auto-builders run pkg-mangle which messes up test packages
+$ENV{NO_PKG_MANGLE} //= 'true';
+
+$ENV{LINTIAN_BASE} = realpath("$FindBin::RealBin/..")
+  // die 'Cannot resolve LINTIAN_BASE';
 
 # options
 my $debug;
@@ -168,7 +166,7 @@ $ENV{'DUMP_LOGS'} = $dump_logs//NO ? YES : NO;
 # unnecessary overhead.
 $ENV{'DPKG_NLS'} = 0;
 
-my $helperpath = "$testset/bin";
+my $helperpath = "$testset/../bin";
 if (-d $helperpath) {
     my $helpers = path($helperpath)->absolute->stringify
       // die("Cannot resolve $helperpath: $!");
