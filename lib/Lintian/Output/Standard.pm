@@ -163,7 +163,7 @@ sub print_tag {
         $text = Term::ANSIColor::colored($tag_name, $tag_color)
           if $self->_do_color;
 
-        if ($self->tty_hyperlinks) {
+        if ($self->tty_hyperlinks && $self->_do_color) {
             my $target
               = 'https://lintian.debian.org/tags/' . $tag_name . '.html';
             $output .= $self->osc_hyperlink($text, $target);
