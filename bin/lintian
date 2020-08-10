@@ -38,11 +38,11 @@ my $LINTIAN_VERSION;
 use Cwd qw(abs_path getcwd realpath);
 use Carp qw(croak verbose);
 use Config::Tiny;
-use File::BaseDir qw(config_home config_files data_home);
+use File::BaseDir qw(config_files data_home);
 use File::Basename;
 use Getopt::Long ();
 use List::Compare;
-use List::MoreUtils qw(any none);
+use List::MoreUtils qw(any none first_value);
 use Path::Tiny;
 use POSIX qw(:sys_wait_h);
 
@@ -58,6 +58,7 @@ use constant EMPTY => q{};
 use constant SPACE => q{ };
 use constant COMMA => q{,};
 use constant COLON => q{:};
+use constant SLASH => q{/};
 use constant NEWLINE => qq{\n};
 
 # only in GNOME; need original environment
@@ -67,6 +68,12 @@ my $hyperlinks_capable = $interactive && qx{env | fgrep -i gnome};
 # only do once; layers are additive
 binmode(STDOUT, ':encoding(UTF-8)');
 binmode(STDERR, ':encoding(UTF-8)');
+
+$0 = join(SPACE, $0, @ARGV);
+
+# Globally ignore SIGPIPE.  We'd rather deal with error returns from write
+# than randomly delivered signals.
+$SIG{PIPE} = 'IGNORE';
 
 my %PRESERVE_ENV = map { $_ => 1 } qw(
   DEBRELEASE_DEBS_DIR
@@ -88,6 +95,13 @@ my @disallowed
 
 delete $ENV{$_} for @disallowed;
 
+# PATH may be unset in some environments; use sane default
+$ENV{PATH} //= '/bin:/usr/bin';
+
+# needed for tar
+$ENV{LC_ALL} = 'C';
+$ENV{TZ} = EMPTY;
+
 $ENV{LINTIAN_BASE} = realpath("$FindBin::RealBin/..")
   // die 'Cannot resolve LINTIAN_BASE';
 
@@ -99,148 +113,331 @@ if (my $coverage_arg = $ENV{LINTIAN_COVERAGE}) {
     $ENV{PERL5OPT} = "${p5opt} ${coverage_arg}";
 }
 
-my $experimental_output_opts;
-
-# options set in config file
-my %config;
-
-my %selected = (
-    'checks-off'        => [],
-    'checks-on'         => [],
-    'color'             => 'auto',
-    'debug'             => 0,
-    'fail-on'           => [],
-    'include-dirs'      => [],
-    'jobs'              => default_jobs(),
-    'LINTIAN_CFG'       => EMPTY,
-    'quiet'             => 0,
-    'tags-off'          => [],
-    'tags-on'           => [],
-    'user-dirs'         => 1,
-    'verbose'           => 0,
+my @getoptions = qw(
+  allow-root
+  cfg=s
+  check|c
+  check-part|C=s@
+  color=s
+  debug|d+
+  default-display-level
+  display-experimental|E!
+  display-level|L=s@
+  display-info|I
+  display-source=s@
+  dont-check-part|X=s@
+  exp-output:s
+  fail-on=s@
+  ftp-master-rejects|F
+  help|h:s
+  hide-overrides
+  hyperlinks=s
+  ignore-lintian-env
+  include-dir=s@
+  info|i
+  jobs|j=i
+  keep-lab
+  no-cfg
+  no-override|o
+  no-tag-display-limit
+  packages-from-file=s
+  pedantic
+  perf-debug
+  perf-output=s
+  print-version
+  profile=s
+  quiet|q
+  show-overrides
+  status-log=s
+  suppress-tags=s@
+  suppress-tags-from-file=s
+  tag-display-limit=i
+  tags|T=s@
+  tags-from-file=s
+  user-dirs!
+  verbose|v
+  version|V
 );
 
-my %getoptions = (
-    'allow-root' => \$selected{'allow-root'},
-    'cfg=s' => \$selected{LINTIAN_CFG},
-    'check|c' => \$selected{check},
-    'check-part|C=s' => $selected{'checks-on'},
-    'color=s' => \$selected{color},
-    'debug|d+' => \$selected{debug},
-    'default-display-level' => \&default_display_level,
-    'display-experimental|E!' => \$selected{'display-experimental'},
-    'display-level|L=s' => \&record_display_level,
-    'display-info|I' => \&display_infotags,
-    'display-source=s' => \&record_display_source,
-    'dont-check-part|X=s' => $selected{'checks-off'},
-    'exp-output:s' => \$experimental_output_opts,
-    'fail-on=s' => $selected{'fail-on'},
-    'ftp-master-rejects|F' => \$selected{'ftp-master-rejects'},
-    'help|h:s' => \&show_help,
-    'hide-overrides' => sub { $selected{'show-overrides'} = 0; },
-    'hyperlinks=s' => \$selected{hyperlinks},
-    'ignore-lintian-env' => \$selected{'ignore-lintian-env'},
-    'include-dir=s' => $selected{'include-dirs'},
-    'info|i' => \$selected{info},
-    'jobs|j=i' => \$selected{jobs},
-    'keep-lab' => \$selected{'keep-lab'},
-    'no-cfg' => \$selected{'no-cfg'},
-    'no-override|o' => \$selected{'no-override'},
-    'no-tag-display-limit' => sub { $selected{'tag-display-limit'} = 0; },
-    'packages-from-file=s' => \$selected{'packages-from-file'},
-    'pedantic' => \&display_pedantictags,
-    'perf-debug' => \$selected{'perf-debug'},
-    'perf-output=s' => \$selected{'perf-output'},
-    'print-version' => \&print_version,
-    'profile=s' => \$selected{profile},
-    'quiet|q' => $selected{quiet},
-    'show-overrides' => \$selected{'show-overrides'},
-    'status-log=s' => \$selected{'status-log'},
-    'suppress-tags=s' => $selected{'tags-off'},
-    'suppress-tags-from-file=s' => \&record_suppress_tags_from_file,
-    'tag-display-limit=i' => \$selected{'tag-display-limit'},
-    'tags|T=s' => $selected{'tags-on'},
-    'tags-from-file=s' => \&record_check_tags_from_file,
-    'user-dirs!' => \$selected{'user-dirs'},
-    'verbose|v' => \$selected{verbose},
-    'version|V' => \&version,
-);
+my %command_line;
 
 Getopt::Long::Configure('default', 'bundling',
     'no_getopt_compat','no_auto_abbrev','permute');
 
-Getopt::Long::GetOptions(%getoptions)
+Getopt::Long::GetOptions(\%command_line, @getoptions)
   or die "error parsing options\n";
 
-# only absolute paths
+if (exists $command_line{'version'}) {
+    say "Lintian v$ENV{LINTIAN_VERSION}";
+    exit;
+}
+
+if (exists $command_line{'print-version'}) {
+    say $ENV{LINTIAN_VERSION};
+    exit;
+}
+
+show_help(undef, $command_line{help})
+  if exists $command_line{help};
+
+$command_line{'show-overrides'} = 0
+  if exists $command_line{'hide-overrides'};
+
+$command_line{'tag-display-limit'} = 0
+  if exists $command_line{'no-tag-display-limit'};
+
+my $LINTIAN_CFG = $command_line{cfg};
+
+$LINTIAN_CFG ||= $ENV{LINTIAN_CFG}
+  if length $ENV{LINTIAN_CFG} && -f $ENV{LINTIAN_CFG};
+
+# only absolute paths, for use elsewhere
 my @RESTRICTED_CONFIG_DIRS;
 
-if ($selected{'user-dirs'}) {
+unless ($command_line{'no-user-dirs'}) {
 
-    my $data_home;
-    $data_home = data_home('lintian')
-      if exists $ENV{HOME} || exists $ENV{'XDG_CONFIG_HOME'};
+    my $xdg_config_file;
+    my $xdg_data_home;
 
-    # make path absolute
-    if (length $data_home && $data_home !~ m{^/}) {
-        my $cwd = getcwd();
-        $data_home = "$cwd/$data_home";
+    if (length $ENV{HOME} || length $ENV{XDG_CONFIG_HOME}) {
+
+        $xdg_config_file = config_files('lintian/lintianrc');
+        $xdg_data_home = data_home('lintian');
     }
 
-    my $legacy_user_data;
-    $legacy_user_data = "$ENV{HOME}/.lintian"
-      if exists $ENV{HOME};
+    my $dot_config_file;
+    my $dot_data_home;
+
+    if (length $ENV{HOME}) {
+
+        $dot_config_file = "$ENV{HOME}/.lintianrc";
+        $dot_data_home = "$ENV{HOME}/.lintian";
+    }
+
+    $LINTIAN_CFG ||= first_value { length $_ && -f $_ }
+    ($xdg_config_file, $dot_config_file);
+
+    # make path absolute for use elsewhere
+    $xdg_data_home = getcwd() . SLASH . $xdg_data_home
+      if length $xdg_data_home && $xdg_data_home !~ m{^/};
 
     @RESTRICTED_CONFIG_DIRS = grep { -d }
-      grep { length } ($data_home, $legacy_user_data, '/etc/lintian');
+      grep { length } ($xdg_data_home, $dot_data_home, '/etc/lintian');
+}
+
+$LINTIAN_CFG = EMPTY
+  if $command_line{'no-cfg'};
+
+my %config;
+
+# some environment variables can be set from the config file
+my @ENV_FROM_CONFIG = qw(
+  TMPDIR
+);
+
+if (length $LINTIAN_CFG) {
+
+    # for keys appearing multiple times, now uses the last value
+    my $object = Config::Tiny->read($LINTIAN_CFG, 'utf8');
+    my $error = $object->errstr;
+    die "syntax error in configuration file $LINTIAN_CFG: $error\n"
+      if length $error;
+
+    # used elsewhere to check for values already set
+    %config = %{$object->{_} // {}};
+
+    my @allowed = qw(
+      color
+      display-experimental
+      display-info
+      display-level
+      hyperlinks
+      info
+      jobs
+      LINTIAN_PROFILE
+      override
+      pedantic
+      profile
+      quiet
+      show-overrides
+      suppress-tags
+      suppress-tags-from-file
+      tag-display-limit
+      TMPDIR
+      verbose
+    );
+
+    my $knownlc
+      = List::Compare->new([keys %config], [@allowed, @ENV_FROM_CONFIG]);
+    my @unknown = $knownlc->get_Lonly;
+    die "Unknown setting in $LINTIAN_CFG: " . join(SPACE, @unknown) . NEWLINE
+      if @unknown;
+}
+
+# substitute home directory
+s{\$HOME/}{$ENV{HOME}/}g for values %config;
+s{\~/}{$ENV{HOME}/}g for values %config;
+
+# option inverted in config file
+$config{'no-override'} = !$config{'no-override'}
+  if exists $config{'no-override'};
+
+my @GETOPT_ARRAYS = qw(
+  display-level
+  suppress-tags
+);
+
+# convert some strings to array references
+for my $name (@GETOPT_ARRAYS) {
+    if (exists $config{$name}) {
+        $config{$name} = [$config{$name}];
+    } else {
+        $config{$name} = [];
+    }
+}
+
+# Translate boolean strings to "0" or "1"; ignore
+# errors as not all values are (intended to be)
+# booleans.
+my $booleanlc
+  = List::Compare->new([keys %config], [qw(jobs tag-display-limit)]);
+eval { $config{$_} = parse_boolean($config{$_}); }for $booleanlc->get_Lonly;
+
+# our defaults
+my %selected = (
+    'check-part'        => [],
+    'color'             => 'auto',
+    'debug'             => 0,
+    'display-level'     => [],
+    'display-source'    => [],
+    'dont-check-part'   => [],
+    'fail-on'           => [],
+    'include-dir'       => [],
+    'jobs'              => default_jobs(),
+    'tags'              => [],
+    'suppress-tags'     => [],
+    'user-dirs'         => 1,
+    'verbose'           => 0,
+);
+
+$selected{$_} = $config{$_} for keys %config;
+
+my @MUTUAL_OPTIONS = (
+    [qw(verbose quiet)],
+    [qw(default-display-level display-level display-info pedantic)],
+);
+
+# for precedence of command line
+for my $set (@MUTUAL_OPTIONS) {
+
+    if (any { defined $command_line{$_} } @{$set}) {
+        my @scalars = grep { ref $selected{$_} eq 'SCALAR' } @{$set};
+        delete $selected{$_} for @scalars;
+
+        my @arrays = grep { ref $selected{$_} eq 'ARRAY' } @{$set};
+        $selected{$_} = [] for @arrays;
+    }
+}
+
+$selected{$_} = $command_line{$_} for keys %command_line;
+
+@{$selected{'display-level'}}
+  = split(/\s*,\s*/, join(COMMA, @{$selected{'display-level'}}));
+
+my @display_level;
+
+push(@display_level,['=', '>=', 'warning'])
+  if exists $selected{'default-display-level'};
+
+push(@display_level, ['+', '>=', 'info'])
+  if exists $selected{'display-info'};
+
+push(@display_level, ['+', '=', 'pedantic'])
+  if exists $selected{'pedantic'};
+
+sub display_classificationtags {
+    push(@display_level, ['+', '=', 'classification']);
+    return;
+}
+
+for my $level (@{$selected{'display-level'}}) {
+
+    my $operator;
+    if ($level =~ s/^([+=-])//) {
+        $operator = $1;
+    }
+
+    my $relation;
+    if ($level =~ s/^([<>]=?|=)//) {
+        $relation = $1;
+    }
+
+    my $severity = $level;
+    $operator //= '=';
+    $relation //= '=';
+
+    push(@display_level, [$operator, $relation, $severity]);
+}
+
+@{$selected{'display-source'}}
+  = split(/\s*,\s*/, join(COMMA, @{$selected{'display-source'}}));
+
+@{$selected{'check-part'}}
+  = split(/\s*,\s*/, join(COMMA, @{$selected{'check-part'}}));
+@{$selected{'dont-check-part'}}
+  = split(/\s*,\s*/, join(COMMA, @{$selected{'dont-check-part'}}));
+
+@{$selected{tags}} = split(/\s*,\s*/, join(COMMA, @{$selected{tags}}));
+@{$selected{'suppress-tags'}}
+  = split(/\s*,\s*/, join(COMMA, @{$selected{'suppress-tags'}}));
+
+if (length $selected{'tags-from-file'}) {
+
+    open(my $file, '<', $selected{'tags-from-file'});
+    my @activate;
+    for my $line (<$file>) {
+        $line =~ s/^\s+//;
+        $line =~ s/\s+$//;
+        next unless $line;
+        next if $line =~ /^\#/;
+        push(@activate, split(/\s*,\s*/, $line));
+    }
+    close $file;
+
+    push(@{$selected{tags}}, @activate);
+}
+
+if (length $selected{'suppress-tags-from-file'}) {
+
+    my @suppress;
+    open(my $file, '<', $selected{'suppress-tags-from-file'});
+    for my $line (<$file>) {
+        chomp $line;
+        $line =~ s/^\s+//;
+        # Remove trailing white-space/comments
+        $line =~ s/(\#.*+|\s+)$//;
+        next unless $line;
+        push(@suppress, split(/\s*,\s*/, $line));
+    }
+    close $file;
+
+    push(@{$selected{'suppress-tags'}}, @suppress);
 }
 
 # only absolute paths
 my @CONFIG_DIRS = grep { -d }
   grep { length }
-  map { realpath($_) } ($ENV{LINTIAN_BASE}, @{$selected{'include-dirs'}});
+  map { realpath($_) } ($ENV{LINTIAN_BASE}, @{$selected{'include-dir'}});
 
 my @HELPER_DIRS = grep { -d } map { "$_/helpers" } @CONFIG_DIRS;
 
 $ENV{LINTIAN_HELPER_DIRS} = join(COLON, @HELPER_DIRS);
 
-# needed for tar
-$ENV{LC_ALL} = 'C';
-$ENV{TZ} = EMPTY;
-
-# PATH may be unset in some environments; use sane default
-$ENV{PATH} //= '/bin:/usr/bin';
-
-# Environment variables Lintian cares about - the list contains
-# the ones that can also be set via the config file
-#
-# %selected (defined below) will be updated with values of the env
-# after parsing cmd-line options.  A given value in %selected is
-# updated to use the ENV variable if the one in %selected is undef
-# and ENV has a value.
-#
-# NB: Variables listed here are not always exported.
-#
-
-my @ENV_VARS = (
-    # LINTIAN_CFG  - handled manually
-    qw(
-      TMPDIR
-      ));
-
 my @CLOSE_AT_END;
 my $OUTPUT = Lintian::Output::Standard->new;
-my @display_level;
-my %display_source;
 my $received_signal;
 my $exit_code = 0;
 my $STATUS_FD;
-
-$0 = join(SPACE, $0, @ARGV);
-
-# Globally ignore SIGPIPE.  We'd rather deal with error returns from write
-# than randomly delivered signals.
-$SIG{PIPE} = 'IGNORE';
 
 # root permissions?
 # check if effective UID is 0
@@ -287,49 +484,55 @@ if (any { $_ eq 'none' } @{$selected{'fail-on'}}) {
 
 # environment variables override settings in conf file, so load them now
 # assuming they were not set by cmd-line options
-for my $var (@ENV_VARS) {
+for my $var (@ENV_FROM_CONFIG) {
 # note $selected{$var} will usually always exists due to the call to GetOptions
 # so we have to use "defined" here
     $selected{$var} = $ENV{$var} if $ENV{$var} && !defined $selected{$var};
 }
 
-if ($selected{'no-cfg'}) {
-    $selected{LINTIAN_CFG} = EMPTY;
-} else {
-    $selected{LINTIAN_CFG} ||= _find_cfg_file();
-
-    parse_config_file($selected{LINTIAN_CFG});
-}
-
-if (defined $experimental_output_opts) {
-    my %output = map { split(/=/) } split(/,/, $experimental_output_opts);
-    for (keys %output) {
-        if ($_ eq 'format') {
-            if ($output{$_} eq 'colons') {
-                require Lintian::Output::ColonSeparated;
-                $OUTPUT= Lintian::Output::ColonSeparated->new;
-            } elsif ($output{$_} eq 'letterqualifier') {
-                require Lintian::Output::LetterQualifier;
-                $OUTPUT= Lintian::Output::LetterQualifier->new;
-            } elsif ($output{$_} eq 'html') {
-                require Lintian::Output::HTML;
-                $OUTPUT = Lintian::Output::HTML->new;
-            } elsif ($output{$_} eq 'xml') {
-                require Lintian::Output::XML;
-                $OUTPUT = Lintian::Output::XML->new;
-            } elsif ($output{$_} eq 'json') {
-                require Lintian::Output::JSON;
-                $OUTPUT = Lintian::Output::JSON->new;
-            } elsif ($output{$_} eq 'fullewi') {
-                require Lintian::Output::FullEWI;
-                $OUTPUT = Lintian::Output::FullEWI->new;
-            } elsif ($output{$_} eq 'universal') {
-                require Lintian::Output::Universal;
-                $OUTPUT = Lintian::Output::Universal->new;
-            }
+my %output = map { split(/=/) } split(/,/, ($selected{'exp-output'} // EMPTY));
+for (keys %output) {
+    if ($_ eq 'format') {
+        if ($output{$_} eq 'colons') {
+            require Lintian::Output::ColonSeparated;
+            $OUTPUT= Lintian::Output::ColonSeparated->new;
+        } elsif ($output{$_} eq 'letterqualifier') {
+            require Lintian::Output::LetterQualifier;
+            $OUTPUT= Lintian::Output::LetterQualifier->new;
+        } elsif ($output{$_} eq 'html') {
+            require Lintian::Output::HTML;
+            $OUTPUT = Lintian::Output::HTML->new;
+        } elsif ($output{$_} eq 'xml') {
+            require Lintian::Output::XML;
+            $OUTPUT = Lintian::Output::XML->new;
+        } elsif ($output{$_} eq 'json') {
+            require Lintian::Output::JSON;
+            $OUTPUT = Lintian::Output::JSON->new;
+        } elsif ($output{$_} eq 'fullewi') {
+            require Lintian::Output::FullEWI;
+            $OUTPUT = Lintian::Output::FullEWI->new;
+        } elsif ($output{$_} eq 'universal') {
+            require Lintian::Output::Universal;
+            $OUTPUT = Lintian::Output::Universal->new;
         }
     }
 }
+
+my $envlc = List::Compare->new([keys %config], \@ENV_FROM_CONFIG);
+my @from_file = $envlc->get_intersection;
+
+my @already = grep { defined $ENV{$_} } @from_file;
+warn 'The environment overrides these settings in the configuration file: '
+  . join(SPACE, @already)
+  . NEWLINE
+  if @already;
+
+my @not_yet = grep { !defined $ENV{$_} } @from_file;
+$OUTPUT->debug_msg(1,
+    'Setting environment variables from configuration file: '
+      . join(SPACE, @not_yet))
+  if @not_yet;
+$ENV{$_} = $config{$_} for @not_yet;
 
 die "The color value must be one of never, always, auto or html.\n"
   unless (any { $selected{color} eq $_ } qw(never always auto html));
@@ -382,23 +585,6 @@ if (defined(my $status_log = $selected{'status-log'})) {
     open($STATUS_FD, '>', '/dev/null');
 }
 
-# some environment variables can be set from the config file
-my $envlc = List::Compare->new([keys %config], \@ENV_VARS);
-my @from_file = $envlc->get_intersection;
-
-my @already = grep { defined $ENV{$_} } @from_file;
-warn 'The environment overrides these settings in the configuration file: '
-  . join(SPACE, @already)
-  . NEWLINE
-  if @already;
-
-my @not_yet = grep { !defined $ENV{$_} } @from_file;
-$OUTPUT->debug_msg(1,
-    'Setting environment variables from configuration file: '
-      . join(SPACE, @not_yet))
-  if @not_yet;
-$ENV{$_} = $config{$_} for @not_yet;
-
 # check for arguments
 if ($#ARGV == -1
     && !$selected{'packages-from-file'}) {
@@ -420,7 +606,7 @@ if ($selected{debug}) {
         1,
         "Lintian v$ENV{LINTIAN_VERSION}",
         "Lintian root directory: $ENV{LINTIAN_BASE}",
-        "Configuration file: $selected{LINTIAN_CFG}",
+        "Configuration file: $LINTIAN_CFG",
         'UTF-8: ✓ (☃)',
         $OUTPUT->delimiter,
     );
@@ -442,61 +628,54 @@ $OUTPUT->v_msg('Using profile ' . $PROFILE->name . '.');
 
 Lintian::Data->set_vendor($PROFILE);
 
-$selected{'display-source'} = [keys %display_source];
-
 # if tags are listed explicitly (--tags) then show them even if
 # they are pedantic/experimental etc.  However, for --check-part
 # people explicitly have to pass the relevant options.
 
-@{$selected{'checks-on'}} = split(/,/, join(COMMA, @{$selected{'checks-on'}}));
-@{$selected{'checks-off'}}
-  = split(/,/, join(COMMA, @{$selected{'checks-off'}}));
-
-@{$selected{'tags-on'}} = split(/,/, join(COMMA, @{$selected{'tags-on'}}));
-@{$selected{'tags-off'}} = split(/,/, join(COMMA, @{$selected{'tags-off'}}));
-
-if (@{$selected{'checks-on'}} || @{$selected{'tags-on'}}) {
+if (@{$selected{'check-part'}} || @{$selected{tags}}) {
 
     $PROFILE->disable_tag($_) for $PROFILE->enabled_tags;
 
-    if (@{$selected{'tags-on'}}) {
+    if (@{$selected{tags}}) {
         $selected{'display-experimental'} = 1;
 
-        # discard @display_level and geteverything
-        @display_level = ();
-        display_infotags();
-        display_pedantictags();
-        display_classificationtags();
-        $PROFILE->enable_tag($_) for @{$selected{'tags-on'}};
+        # discard current display level; get everything
+        @display_level
+          = (['+', '>=', 'pedantic'], ['+', '=', 'classification']);
+
+        $PROFILE->enable_tag($_) for @{$selected{tags}};
 
     } else {
-        for my $c (@{$selected{'checks-on'}}) {
-            if ($c eq 'all') {
+        for my $checkname (@{$selected{'check-part'}}) {
+            if ($checkname eq 'all') {
                 my @all
                   = map {$PROFILE->get_checkinfo($_)}$PROFILE->known_checks;
                 my @tags = map { $_->tags } @all;
                 $PROFILE->enable_tag($_) for @tags;
                 next;
             }
-            my $cs = $PROFILE->get_checkinfo($c);
-            die "Unrecognized check script (via -C): $c\n"
-              unless $cs;
-            $PROFILE->enable_tag($_) for $cs->tags;
+            my $checkinfo = $PROFILE->get_checkinfo($checkname);
+            die "Unrecognized check (via -C): $checkname\n"
+              unless $checkinfo;
+
+            $PROFILE->enable_tag($_) for $checkinfo->tags;
         }
     }
 
-} elsif (@{$selected{'checks-off'}}) {
+} elsif (@{$selected{'dont-check-part'}}) {
     # we are disabling checks
-    for my $c (@{$selected{'checks-off'}}) {
-        my $cs = $PROFILE->get_checkinfo($c);
-        die "Unrecognized check script (via -X): $c\n" unless $cs;
-        $PROFILE->disable_tag($_) for $cs->tags;
+    for my $checkname (@{$selected{'dont-check-part'}}) {
+        my $checkinfo = $PROFILE->get_checkinfo($checkname);
+        die "Unrecognized check (via -X): $checkname\n"
+          unless $checkinfo;
+
+        $PROFILE->disable_tag($_) for $checkinfo->tags;
     }
 }
 
 # ignore --suppress-tags when used with --tags.
-if (@{$selected{'tags-off'}} && !@{$selected{'tags-on'}}) {
-    $PROFILE->disable_tag($_) for @{$selected{'tags-off'}};
+if (@{$selected{'suppress-tags'}} && !@{$selected{tags}}) {
+    $PROFILE->disable_tag($_) for @{$selected{'suppress-tags'}};
 }
 
 # initialize display level settings; dies on error
@@ -595,319 +774,6 @@ sub version_from_git {
     chomp $guess;
 
     return ($guess // EMPTY);
-}
-
-sub print_version {
-    say $ENV{LINTIAN_VERSION};
-    exit;
-}
-
-sub version {
-    say "Lintian v$ENV{LINTIAN_VERSION}";
-    exit;
-}
-
-sub record_check_tags_from_file {
-    my ($selected, $name) = @_;
-
-    open(my $file, '<', $name);
-    my @activate;
-    for my $line (<$file>) {
-        $line =~ s/^\s+//;
-        $line =~ s/\s+$//;
-        next unless $line;
-        next if $line =~ /^\#/;
-        push(@activate, split(/\s*,\s*/, $line));
-    }
-    close $file;
-
-    push(@{$selected{'tags-on'}}, @activate);
-    return;
-}
-
-sub record_suppress_tags {
-    my ($selected, $line) = @_;
-
-    my @suppress = split(/\s*,\s*/, $line);
-    push(@{$selected{'tags-off'}}, @suppress);
-
-    return;
-}
-
-sub record_suppress_tags_from_file {
-    my ($selected, $name) = @_;
-
-    my @suppress;
-    open(my $file, '<', $name);
-    for my $line (<$file>) {
-        chomp $line;
-        $line =~ s/^\s+//;
-        # Remove trailing white-space/comments
-        $line =~ s/(\#.*+|\s+)$//;
-        next unless $line;
-        push(@suppress, split(/\s*,\s*/, $line));
-    }
-    close $file;
-
-    push(@{$selected{'tags-off'}}, @suppress);
-
-    return;
-}
-
-sub record_display_level {
-    my ($selected, $level) = @_;
-
-    my $op;
-    if ($level =~ s/^([+=-])//) {
-        $op = $1;
-    }
-
-    my $rel;
-    if ($level =~ s/^([<>]=?|=)//) {
-        $rel = $1;
-    }
-    my $severity = $level;
-    $op //= '=';
-    $rel //= '=';
-    push(@display_level, [$op, $rel, $severity]);
-
-    return;
-}
-
-sub display_infotags {
-    push(@display_level, ['+', '>=', 'info']);
-    return;
-}
-
-sub display_pedantictags {
-    push(@display_level, ['+', '=', 'pedantic']);
-    return;
-}
-
-sub display_classificationtags {
-    push(@display_level, ['+', '=', 'classification']);
-    return;
-}
-
-sub default_display_level {
-    push(@display_level,['=', '>=', 'warning'],);
-    return;
-}
-
-sub record_display_source {
-    $display_source{$_[1]} = 1;
-    return;
-}
-
-# Process display-info and display-level options in cfg files
-#  - dies if display-info and display-level are used together
-#  - adds the relevant display level unless the command-line
-#    added something to it.
-#  - uses @display_level to track cmd-line appearances of
-#    --display-level/--display-info
-sub cfg_display_level {
-    my ($var, $val) = @_;
-
-    if ($var eq 'display-info' || $var eq 'pedantic'){
-        die "$var and display-level may not both appear in the config file.\n"
-          if $config{'display-level'};
-
-        # case "display-info=no" (or "pedantic=no")
-        return
-          unless $val;
-
-        # We are only supposed to modify @display_level if it was not
-        # set by a command-line option.  However, both display-info
-        # and pedantic comes here so we cannot determine this solely
-        # by checking if @display_level is empty.  We use
-        # "__conf-display-opts" to determine if @display_level was set
-        # by a conf option or not.
-        return
-          if @display_level && !$config{'__conf-display-opts'};
-
-        $config{'__conf-display-opts'} = 1;
-        display_infotags() if $var eq 'display-info';
-        display_pedantictags() if $var eq 'pedantic';
-
-    } elsif ($var eq 'display-level'){
-        for my $other (qw(pedantic display-info)) {
-            die
-"$other and display-level may not both appear in the config file.\n"
-              if $config{$other};
-        }
-
-        return if @display_level;
-
-        # trim both ends
-        $val =~ s/^\s+|\s+$//g;
-
-        for my $dl (split m/\s++/, $val) {
-            record_display_level('display-level', $dl);
-        }
-    }
-
-    return;
-}
-
-# Processes quiet and verbose options in cfg files.
-# - dies if quiet and verbose are used together
-# - sets the verbosity level ($selected{verbose}) unless
-#   already set.
-sub cfg_verbosity {
-    my ($var, $val) = @_;
-
-    if (   ($var eq 'verbose' && exists $config{quiet})
-        || ($var eq 'quiet' && exists $config{verbose})) {
-        die "verbose and quiet may not both appear in the config file.\n";
-    }
-
-    # quiet = no or verbose = no => no change
-    return
-      unless $val;
-
-    # Do not change the value if set by command line.
-    return
-      if defined $selected{verbose};
-
-    # quiet = yes => verbosity_level = -1
-    #
-    # technically this allows you to enable verbose by using "quiet =
-    # -1" (etc.), but most people will probably not use this
-    # "feature".
-    $val = -$val if $var eq 'quiet';
-    $selected{verbose} = $val;
-
-    return;
-}
-
-# Process overrides option in the cfg files
-sub cfg_override {
-    my ($var, $val) = @_;
-
-    return
-      if defined $selected{'no-override'};
-
-    # This option is inverted in the config file
-    $selected{'no-override'} = !$val;
-
-    return;
-}
-
-sub _find_cfg_file {
-    return $ENV{LINTIAN_CFG}
-      if length $ENV{LINTIAN_CFG} && -f $ENV{LINTIAN_CFG};
-
-    if ($selected{'user-dirs'}) {
-        my $rcfile;
-        {
-            # File::BaseDir spews warnings if $ENV{HOME} is undef, so
-            # make sure it is defined when we load the module.  Though,
-            # we need to scope this, so $ENV{HOME} becomes undef again
-            # when we check for it later.
-            local $ENV{HOME} //= '/nonexistent';
-            require File::BaseDir;
-            File::BaseDir->import(qw(config_home config_files));
-        };
-
-        # only accept config_home if either HOME or
-        # XDG_CONFIG_HOME was set.  If both are unset, then this
-        # will return the "bogus" path
-        # "/nonexistent/lintian/lintianrc" and we don't want that
-        # (in the however unlikely case that file actually
-        # exists).
-        $rcfile = config_home('lintian/lintianrc')
-          if exists $ENV{HOME}
-          || exists $ENV{XDG_CONFIG_HOME};
-
-        return $rcfile
-          if length $rcfile && -f $rcfile;
-
-        if (exists $ENV{HOME}) {
-            $rcfile = $ENV{HOME} . '/.lintianrc';
-            return $rcfile
-              if -f $rcfile;
-        }
-
-        return '/etc/lintianrc'
-          if -f '/etc/lintianrc';
-
-        # config_files checks that the file exists for us
-        $rcfile = config_files('lintian/lintianrc');
-        return $rcfile
-          if length $rcfile && $rcfile ne EMPTY;
-    }
-
-    # none found
-    return EMPTY;
-}
-
-sub parse_config_file {
-    my ($config_file) = @_;
-
-    return
-      unless length $config_file;
-
-    # for keys appearing multiple times, now uses the last value
-    my $object = Config::Tiny->read($config_file, 'utf8');
-    my $error = $object->errstr;
-    die "syntax error in configuration file $config_file: " . $error . NEWLINE
-      if length $error;
-
-    # used elsewhere to check for values already set
-    %config = %{$object->{_} // {}};
-
-    # Options that can appear in the config file
-    my %destination = (
-        'color'                => \$selected{color},
-        'hyperlinks'           => \$selected{hyperlinks},
-        'display-experimental' => \$selected{'display-experimental'},
-        'display-info'         => \&cfg_display_level,
-        'display-level'        => \&cfg_display_level,
-        'info'                 => \$selected{info},
-        'jobs'                 => \$selected{jobs},
-        'LINTIAN_PROFILE'      => \$selected{LINTIAN_PROFILE},
-        'pedantic'             => \&cfg_display_level,
-        'profile'              => \$selected{profile},
-        'quiet'                => \&cfg_verbosity,
-        'override'             => \&cfg_override,
-        'show-overrides'       => \$selected{'show-overrides'},
-        'suppress-tags'        => \&record_suppress_tags,
-        'suppress-tags-from-file' => \&record_suppress_tags_from_file,
-        'tag-display-limit'    => \$selected{'tag-display-limit'},
-        'verbose'              => \&cfg_verbosity,
-    );
-
-    # substitute some special variables
-    s{\$HOME/}{$ENV{HOME}/}g for values %config;
-    s{\~/}{$ENV{HOME}/}g for values %config;
-
-    # Translate boolean strings to "0" or "1"; ignore
-    # errors as not all values are (intended to be)
-    # booleans.
-    my $booleanlc
-      = List::Compare->new([keys %config], [qw(jobs tag-display-limit)]);
-    eval { $config{$_} = parse_boolean($config{$_}); }
-      for $booleanlc->get_Lonly;
-
-    # check keys against known settings
-    my $knownlc
-      = List::Compare->new([keys %config], [keys %destination, @ENV_VARS]);
-    my @unknown = $knownlc->get_Lonly;
-    die "Unknown setting in $config_file: " . join(SPACE, @unknown) . NEWLINE
-      if @unknown;
-
-    # get settings from configuration file
-    my @names = grep { defined $destination{$_} } keys %config;
-
-    my @scalars = grep { ref $destination{$_} eq 'SCALAR' } @names;
-    my @undefined = grep { !defined ${$destination{$_}} } @scalars;
-
-    ${$destination{$_}} = $config{$_} for @undefined;
-
-    my @coderefs = grep { ref $destination{$_} eq 'CODE' } @names;
-    $destination{$_}->($_, $config{$_}) for @coderefs;
-
-    return;
 }
 
 =item parse_boolean (STR)
