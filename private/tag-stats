@@ -13,21 +13,17 @@ use warnings;
 use utf8;
 use autodie qw(opendir closedir);
 
-BEGIN {
-    my $LINTIAN_BASE = $ENV{'LINTIAN_BASE'};
-    if (not $LINTIAN_BASE) {
-        require Cwd;
-        $ENV{'LINTIAN_BASE'} = $LINTIAN_BASE = Cwd::cwd();
-    } else {
-        chdir $LINTIAN_BASE or die "Cannot chdir to $LINTIAN_BASE: $!\n";
-    }
-}
+# use Lintian modules that belong to this program
+use FindBin;
+use lib "$FindBin::RealBin/../lib";
 
-my $LINTIAN_BASE = $ENV{'LINTIAN_BASE'};
+use Cwd qw(realpath);
 
-use lib "$ENV{'LINTIAN_BASE'}/lib";
 use Lintian::Deb822::Parser qw(read_dpkg_control);
 use Lintian::Tag::Info;
+
+$ENV{LINTIAN_BASE} = realpath("$FindBin::RealBin/..")
+  // die 'Cannot resolve LINTIAN_BASE';
 
 my @severities = reverse qw(pedantic info warning error);
 my @types = qw(E W I P);
@@ -39,11 +35,11 @@ my $percent = 0;
 
 my $verbose = $ARGV[0] ? ($ARGV[0] =~ s/v/v/g) : 0;
 
-opendir(my $checkdir, "$LINTIAN_BASE/checks");
+opendir(my $checkdir, "$ENV{LINTIAN_BASE}/checks");
 for my $check (readdir($checkdir)) {
     next unless $check =~ /\.desc$/;
 
-    my @tags = read_dpkg_control("$LINTIAN_BASE/checks/$check");
+    my @tags = read_dpkg_control("$ENV{LINTIAN_BASE}/checks/$check");
     my $desc = $tags[0];
 
     shift(@tags);

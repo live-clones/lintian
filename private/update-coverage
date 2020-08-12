@@ -6,31 +6,23 @@
 # by the old test suite against the list of all documented tags and generate
 # output suitable for tags-never-seen that lists the untested tags.  Updates
 # t/COVERAGE.
-#
-# Should be run from the top level of the Lintian source tree or with
-# LINTIAN_BASE set appropriately.
 
 use v5.20;
 use warnings;
 use utf8;
 use autodie;
 
+# use Lintian modules that belong to this program
+use FindBin;
+use lib "$FindBin::RealBin/../lib";
+
+use Cwd qw(realpath);
 use POSIX qw(strftime);
 
-BEGIN {
-    my $LINTIAN_BASE = $ENV{'LINTIAN_BASE'};
-    if (not $LINTIAN_BASE) {
-        require Cwd;
-        $ENV{'LINTIAN_BASE'} = $LINTIAN_BASE = Cwd::cwd();
-    } else {
-        chdir($LINTIAN_BASE);
-    }
-}
-
-my $LINTIAN_BASE = $ENV{'LINTIAN_BASE'};
-
-use lib "$ENV{'LINTIAN_BASE'}/lib";
 use Lintian::Deb822::Parser qw(read_dpkg_control);
+
+$ENV{LINTIAN_BASE} = realpath("$FindBin::RealBin/..")
+  // die 'Cannot resolve LINTIAN_BASE';
 
 # Check that we're being run from the right place (although the above probably
 # died if we weren't).

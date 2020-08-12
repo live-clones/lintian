@@ -27,19 +27,10 @@ use autodie;
 # Not a B-D and script is compile tested...
 require LWP::Simple;
 LWP::Simple->import(qw(get));
+
 use POSIX qw(strftime);
 
 use List::MoreUtils qw(uniq);
-
-BEGIN {
-    my $LINTIAN_BASE = $ENV{'LINTIAN_BASE'};
-    if (not $LINTIAN_BASE) {
-        require Cwd;
-        $ENV{'LINTIAN_BASE'} = $LINTIAN_BASE = Cwd::cwd();
-    } else {
-        chdir($LINTIAN_BASE);
-    }
-}
 
 our $YAML_URL = 'https://ftp-master.debian.org/static/lintian.tags';
 

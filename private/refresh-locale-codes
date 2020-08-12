@@ -24,16 +24,11 @@ use warnings;
 use utf8;
 use autodie;
 
+# use Lintian modules that belong to this program
+use FindBin;
+use lib "$FindBin::RealBin/../lib";
+
 use POSIX qw(strftime);
-
-BEGIN {
-    # determine LINTIAN_BASE
-    my $LINTIAN_BASE = $ENV{'LINTIAN_BASE'} || '.';
-    $ENV{'LINTIAN_BASE'} = $LINTIAN_BASE
-      unless exists $ENV{'LINTIAN_BASE'};
-}
-
-use lib "$ENV{'LINTIAN_BASE'}/lib";
 
 use Lintian::Util qw(locate_executable);
 

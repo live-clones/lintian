@@ -1,6 +1,5 @@
 #!/usr/bin/perl
 
-####################
 #    Copyright © 2012 Niels Thykier <niels@thykier.net>
 #     - Based on a shell script by Raphael Geissert <atomo64@gmail.com>
 #
@@ -16,21 +15,18 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with this file.  If not, see <http://www.gnu.org/licenses/>.
-####################
 
 use v5.20;
 use warnings;
 use utf8;
 use autodie;
 
+# use Lintian modules that belong to this program
+use FindBin;
+use lib "$FindBin::RealBin/../lib";
+
 use File::Temp qw(tempfile);
 use POSIX qw (strftime);
-
-BEGIN {
-    $ENV{'LINTIAN_BASE'} //= '.';
-}
-
-use lib "$ENV{'LINTIAN_BASE'}/lib/";
 
 use Lintian::Deb822::Parser qw(parse_dpkg_control_string);
 use Lintian::IPC::Run3 qw(safe_qx);

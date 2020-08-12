@@ -5,11 +5,9 @@ use warnings;
 use utf8;
 use autodie;
 
-# Find the lib directory of lintian-root (defaulting to ./lib/)
-BEGIN {
-    $ENV{LINTIAN_BASE} //= '.';
-}
-use lib $ENV{LINTIAN_BASE} . '/lib/';
+# use Lintian modules that belong to this program
+use FindBin;
+use lib "$FindBin::RealBin/../lib";
 
 use Lintian::Deb822::Parser qw(read_dpkg_control);
 

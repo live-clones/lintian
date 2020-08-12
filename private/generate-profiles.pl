@@ -8,18 +8,17 @@ use warnings;
 use utf8;
 use autodie;
 
-BEGIN {
-    $ENV{'LINTIAN_BASE'} //= q{.};
-}
+# use Lintian modules that belong to this program
+use FindBin;
+use lib "$FindBin::RealBin/../lib";
 
+use Cwd qw(realpath);
 use File::Find::Rule;
 use List::Compare;
 use List::Util qw(uniq);
 use LWP::Simple;
 use Path::Tiny;
 use YAML::XS;
-
-use lib "$ENV{LINTIAN_BASE}/lib";
 
 use Lintian::Deb822::Parser qw(read_dpkg_control);
 
@@ -29,6 +28,9 @@ use constant COMMA => q{,};
 use constant HYPHEN => q{-};
 use constant INDENT => q{    };
 use constant NEWLINE => qq{\n};
+
+$ENV{LINTIAN_BASE} = realpath("$FindBin::RealBin/..")
+  // die 'Cannot resolve LINTIAN_BASE';
 
 # generate main profile
 my $checkdir = "$ENV{LINTIAN_BASE}/checks";
