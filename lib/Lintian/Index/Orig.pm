@@ -25,18 +25,15 @@ use warnings;
 use utf8;
 use autodie;
 
-use Carp;
 use Cwd();
-use IO::Async::Loop;
-use IO::Async::Process;
+use IPC::Run3;
 use List::MoreUtils qw(uniq);
 use Path::Tiny;
 
-use Lintian::Deb822::Parser qw(read_dpkg_control);
+use Lintian::Deb822::File;
 use Lintian::Index::Item;
 
 use constant EMPTY => q{};
-use constant SPACE => q{ };
 use constant COLON => q{:};
 use constant SLASH => q{/};
 use constant NEWLINE => qq{\n};
@@ -97,22 +94,23 @@ sub create {
     die "The 'dsc' link does not point to a file: $dscpath"
       unless -e $dscpath;
 
-    # determine source and version; handles missing fields
+    my $deb822 = Lintian::Deb822::File->new;
 
-    my @paragraphs;
-    @paragraphs = read_dpkg_control($dscpath)
-      or croak $dscpath . ' is not valid dsc file';
-    my $dinfo = $paragraphs[0];
+    my @sections;
+    @sections = $deb822->read_file($dscpath)
+      or die $dscpath . ' is not valid dsc file';
+    my $fields = $sections[0];
 
-    my $name = $dinfo->{Source} // EMPTY;
-    my $version = $dinfo->{Version} // EMPTY;
+    # determine source and version; handle missing fields
+    my $name = $fields->value('Source');
+    my $version = $fields->value('Version');
     my $architecture = 'source';
 
     # it is its own source package
     my $source = $name;
     my $source_version = $version;
 
-    croak $dscpath . ' is missing Source field'
+    die $dscpath . ' is missing Source field'
       unless length $name;
 
     #  Version handling is based on Dpkg::Version::parseversion.
@@ -128,7 +126,7 @@ sub create {
     $noepoch =~ s/(.+)-(?:.*)$/$1/;
     my $base = $source . '_' . $noepoch;
 
-    my @files = split(/\n/, $dinfo->{Files} // EMPTY);
+    my @files = split(/\n/, $fields->value('Files'));
 
     my %components;
     for my $line (@files) {
@@ -181,37 +179,22 @@ sub create {
 
         my @tar = ('tar', @tar_options, "$groupdir/$tarball");
 
-        my $loop = IO::Async::Loop->new;
-        my $future = $loop->new_future;
         my $stdout;
         my $stderr;
 
-        my $process = IO::Async::Process->new(
-            command => [@tar],
-            stdout => { into => \$stdout },
-            stderr => { into => \$stderr },
-            on_finish => sub {
-                my ($self, $exitcode) = @_;
-                my $status = ($exitcode >> 8);
+        run3(\@tar, undef, \$stdout, \$stderr);
 
-                path("$groupdir/orig-index-errors")->append($stderr // EMPTY);
+        my $status = ($? >> 8);
 
-                if ($status) {
-                    my $message
-                      = "Non-zero status $status from tar for $tarball";
-                    $message .= COLON . NEWLINE . $stderr
-                      if length $stderr;
-                    $future->fail($message);
-                    return;
-                }
+        path("$groupdir/orig-index-errors")->append($stderr // EMPTY);
 
-                $future->done("Done with tar for $tarball");
-                return;
-            });
+        if ($status) {
+            my $message= "Non-zero status $status from @tar";
+            $message .= COLON . NEWLINE . $stderr
+              if length $stderr;
 
-        $loop->add($process);
-
-        $future->get;
+            die $message;
+        }
 
         my @lines = split(/\n/, $stdout);
 
