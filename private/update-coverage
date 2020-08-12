@@ -26,10 +26,10 @@ $ENV{LINTIAN_BASE} = realpath("$FindBin::RealBin/..")
 
 # Check that we're being run from the right place (although the above probably
 # died if we weren't).
-unless (-f 'bin/runtests') {
+unless (-f 'private/runtests') {
     warn "update-coverage source be run from the top level of the Lintian\n";
     warn "source tree.\n\n";
-    die "Cannot find bin/runtests -- run from the right directory?\n";
+    die "Cannot find private/runtests -- run from the right directory?\n";
 }
 
 # Gather a list of all tags.

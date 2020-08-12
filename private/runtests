@@ -100,7 +100,7 @@ if (($ENV{LINTIAN_TEST_INSTALLED} // 'no') eq 'yes') {
       // die 'Lintian is not installed';
 
 } else {
-    $ENV{LINTIAN_UNDER_TEST} = $FindBin::RealBin . '/lintian';
+    $ENV{LINTIAN_UNDER_TEST} = realpath($FindBin::RealBin . '/../bin/lintian');
 }
 
 $ENV{LINTIAN_BASE}
@@ -173,10 +173,8 @@ my $ACTIVE_JOBS = 0;
 my $output_is_tty = -t STDOUT;
 
 # get lintian modification date
-my @lintianparts = (
-    'checks', 'collection', 'commands', 'data',
-    'bin', 'profiles', 'vendors', 'lib/Lintian'
-);
+my @lintianparts
+  = ('checks', 'commands', 'data','bin', 'profiles', 'vendors', 'lib/Lintian');
 my @lintianfiles
   = map { File::Find::Rule->file->in("$ENV{'LINTIAN_BASE'}/$_") }@lintianparts;
 push(@lintianfiles, Cwd::realpath($ENV{'LINTIAN_UNDER_TEST'}));
@@ -235,7 +233,7 @@ $ENV{'DUMP_LOGS'} = $dump_logs//NO ? YES : NO;
 # unnecessary overhead.
 $ENV{'DPKG_NLS'} = 0;
 
-my $helperpath = "$testset/../bin";
+my $helperpath = "$testset/../private";
 if (-d $helperpath) {
     my $helpers = rel2abs($helperpath)// die("Cannot resolve $helperpath: $!");
     $ENV{'PATH'} = "$helpers:$ENV{'PATH'}";
@@ -639,7 +637,7 @@ Usage: $0 [options] [-j [<jobs>]] <testset-directory>
 
 Test artifacts are cached in --work-dir [default: debian/test-out] and
 will generally be reused to save time. To recreate the test packages,
-run 'bin/build-test-packages'.
+run 'private/build-test-packages'.
 END
     return;
 }

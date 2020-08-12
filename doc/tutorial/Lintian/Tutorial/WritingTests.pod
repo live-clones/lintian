@@ -208,7 +208,7 @@ run by using:
 
  OR
 
- $ t/bin/runtests --dump-logs t debian/test-out pkg-deb-check-general
+ $ private/runtests --dump-logs t debian/test-out pkg-deb-check-general
 
 However, it will not emit the correct tags unless pkg/deb-check is
 part of the debian/main lintian profile.  If your check is a part of a
