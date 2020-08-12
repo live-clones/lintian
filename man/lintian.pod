@@ -532,14 +532,6 @@ If this option omitted, Lintian will default to using STDOUT.
 
 =back
 
-=head1 CHECKS
-
-@CHECKS@
-
-=head1 COLLECTION
-
-@COLLECTION@
-
 =head1 FILES
 
 Lintian looks for its configuration file in the following locations:

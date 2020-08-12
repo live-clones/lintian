@@ -13,8 +13,10 @@ plan skip_all => 'Test::Pod 1.00 required for testing POD' if $@;
 
 my $dir = $ENV{'LINTIAN_BASE'} // '.';
 
-my @POD_FILES = all_pod_files("$dir/lib", "$dir/doc/tutorial");
-push(@POD_FILES, map { "$dir/man/$_" } 'lintian-info.pod', 'lintian.pod.in');
+my @POD_FILES = all_pod_files(
+    "$dir/lib", "$dir/doc/tutorial",
+    "$dir/man/lintian-info.pod", "$dir/man/lintian.pod"
+);
 
 all_pod_files_ok(@POD_FILES);
 
