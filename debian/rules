@@ -44,8 +44,8 @@ override_dh_install:
 
 profiles: $(profiles);
 
-$(profiles): $(autoreject_data) private/generate-profiles.pl
-	private/generate-profiles.pl
+$(profiles): $(autoreject_data) private/generate-profiles
+	private/generate-profiles
 
 api-doc:
 	private/generate-html-docs doc/api.html
