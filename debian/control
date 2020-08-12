@@ -10,7 +10,6 @@ Build-Depends:
  debhelper-compat (= 13),
  dpkg (>= 1.17.14),
  libfile-basedir-perl,
- libipc-run3-perl,
  libpath-tiny-perl,
  python3-docutils,
 Standards-Version: 4.5.0

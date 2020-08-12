@@ -5,13 +5,7 @@ use warnings;
 use utf8;
 use autodie;
 
-# use Lintian modules that belong to this program
-use FindBin;
-use lib "$FindBin::RealBin/../lib";
-
 use Pod::Simple::HTMLBatch;
-
-use Lintian::IPC::Run3 qw(safe_qx);
 
 my (@input, $output, $version);
 
@@ -74,7 +68,7 @@ sub guess_version {
 
         # For unreleased versions, git describe is probably a better
         # choice when available.
-        my $guess = safe_qx('git', 'describe');
+        my $guess = qx{git describe};
 
         chomp $guess;
         $version = $guess
