@@ -3,7 +3,7 @@
 # Lintian::Processable::Source::Diffstat -- lintian collection script for source packages
 
 # Copyright © 1998 Richard Braakman
-# Copyright © 2019 Felix Lechner
+# Copyright © 2019-2020 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -34,12 +34,12 @@ use warnings;
 use utf8;
 use autodie;
 
+use IPC::Run3;
 use Path::Tiny;
 
-use Lintian::Deb822::Parser qw(read_dpkg_control);
-use Lintian::IO::Async qw(safe_qx);
+use Lintian::Deb822::File;
 
-use constant EMPTY => q{};
+use constant COLON => q{:};
 use constant UNDERSCORE => q{_};
 use constant NEWLINE => qq{\n};
 
@@ -75,56 +75,57 @@ sub add_diffstat {
 
     my $patchpath = path($self->groupdir)->child('debian-patch')->stringify;
     unlink($patchpath)
-      if -e $patchpath
-      or -l $patchpath;
+      if -e $patchpath || -l $patchpath;
 
-    my @paragraphs;
-    @paragraphs = read_dpkg_control($dscpath);
-    my $data = $paragraphs[0];
+    my $deb822 = Lintian::Deb822::File->new;
 
-    my $version = $data->{'Version'};
-    $version =~ s/^\d://; #Remove epoch for this
+    my @sections;
+    eval { @sections = $deb822->read_file($dscpath) };
+    return
+      if length $@;
 
-    my $diffname = $self->name . UNDERSCORE . $version . '.diff.gz';
+    my $fields = $sections[0];
+
+    my $noepoch = $fields->value('Version');
+
+    # strip epoch
+    $noepoch =~ s/^\d://;
+
+    my $diffname = $self->name . UNDERSCORE . $noepoch . '.diff.gz';
     my $diffpath = path($self->groupdir)->child($diffname)->stringify;
     return
       unless -f $diffpath;
 
-    my $contents = safe_qx('gunzip', '--stdout', $diffpath);
-    path($patchpath)->spew($contents);
+    my @gunzip_command = ('gunzip', '--stdout', $diffpath);
+    my $gunzip_pid = open(my $from_gunzip, '-|', @gunzip_command)
+      or die "Cannot run @gunzip_command: $!";
 
-    my $loop = IO::Async::Loop->new;
-    my $future = $loop->new_future;
+    my $stdout;
+    my $stderr;
+    my @diffstat_command = ('diffstat',  '-p1');
+    run3(\@diffstat_command, $from_gunzip, \$stdout, \$stderr);
 
-    my @command = ('diffstat',  '-p1', $patchpath);
-    $loop->run_child(
-        command => [@command],
-        on_finish => sub {
-            my ($pid, $exitcode, $stdout, $stderr) = @_;
-            my $status = ($exitcode >> 8);
+    my $status = ($? >> 8);
+    if ($status) {
 
-            if ($status) {
-                my $message = "Command @command exited with status $status";
-                $message .= ": $stderr" if length $stderr;
-                $future->fail($message);
-                return;
-            }
+        my $message= "Non-zero status $status from @diffstat_command";
+        $message .= COLON . NEWLINE . $stderr
+          if length $stderr;
 
-            $future->done($stdout);
-        });
+        die $message;
+    }
 
-    # will raise an exception when failed
-    my $diffstat = $future->get;
+    close $from_gunzip
+      or warn "close failed for handle from @gunzip_command: $!";
 
-    # remove the last line;
-    chomp $diffstat;
-    my @lines = split(/\n/, $diffstat);
-    pop @lines;
-    $diffstat = EMPTY;
-    $diffstat .= $_ . NEWLINE for @lines;
+    waitpid($gunzip_pid, 0);
+
+    # remove summary in last line
+    chomp $stdout;
+    $stdout =~ s/.*\Z//;
 
     # copy all lines except the last
-    path($self->groupdir)->child('diffstat')->spew($diffstat);
+    path($self->groupdir)->child('diffstat')->spew($stdout);
 
     return;
 }

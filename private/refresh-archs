@@ -33,7 +33,7 @@ BEGIN {
 use lib "$ENV{'LINTIAN_BASE'}/lib/";
 
 use Lintian::Deb822::Parser qw(parse_dpkg_control_string);
-use Lintian::IO::Async qw(safe_qx);
+use Lintian::IPC::Run3 qw(safe_qx);
 
 my $datapath = shift;
 my %hardening = (

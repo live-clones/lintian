@@ -24,7 +24,7 @@ use autodie;
 
 use Path::Tiny;
 
-use Lintian::IO::Async qw(safe_qx);
+use Lintian::IPC::Run3 qw(safe_qx);
 
 use constant DOT => q{.};
 use constant GZ => q{gz};
@@ -57,7 +57,7 @@ sub add_strings {
     my ($self) = @_;
 
     my @files = grep { $_->is_file } $self->sorted_list;
-    foreach my $file (@files) {
+    for my $file (@files) {
 
         next
           if $file->name =~ m,^usr/lib/debug/,;

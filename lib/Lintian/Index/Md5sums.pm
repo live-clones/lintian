@@ -23,18 +23,11 @@ use utf8;
 use autodie;
 
 use Cwd;
-use IO::Async::Loop;
-use IO::Async::Process;
-use Path::Tiny;
+use IPC::Run3;
 
-use Lintian::IO::Async qw(safe_qx);
-use Lintian::Util qw(drop_relative_prefix read_md5sums);
+use Lintian::Util qw(read_md5sums);
 
 use constant EMPTY => q{};
-use constant SPACE => q{ };
-use constant COLON => q{:};
-use constant BACKSLASH => q{\\};
-use constant NEWLINE => qq{\n};
 use constant NULL => qq{\0};
 
 use Moo::Role;
@@ -67,48 +60,25 @@ sub add_md5sums {
     my $savedir = getcwd;
     chdir($self->basedir);
 
-    my $loop = IO::Async::Loop->new;
-    my $future = $loop->new_future;
-
-    my @command= ('xargs', '--null', '--no-run-if-empty', 'md5sum', '--');
-    my $stdout;
-    my $errors;
-
-    my $calculate = IO::Async::Process->new(
-        command => [@command],
-        stdin => { via => 'pipe_write' },
-        stdout => { into => \$stdout },
-        stderr => { into => \$errors },
-        on_finish => sub {
-            my ($self, $exitcode) = @_;
-            my $status = ($exitcode >> 8);
-
-            if ($status) {
-                my $message = "Command @command exited with status $status";
-                $message .= COLON . NEWLINE . $errors
-                  if length $errors;
-                $future->fail($message);
-                return;
-            }
-
-            $future->done('Done with @command');
-            return;
-        });
-
-    $loop->add($calculate);
-
     # get the regular files in the index
     my @files = grep { $_->is_file } $self->sorted_list;
 
-    # pipe file names to xargs process
-    $calculate->stdin->write($_->name . NULL) for @files;
+    my $input = EMPTY;
+    $input .= $_->name . NULL for @files;
 
-    $calculate->stdin->close_when_empty;
-    $future->get;
+    my $stdout;
+    my $errors;
+
+    my @command = ('xargs', '--null', '--no-run-if-empty', 'md5sum', '--');
+    run3(\@command, \$input, \$stdout, \$errors);
+
+    my $status = ($? >> 8);
+    die "Cannot run @command: $errors\n"
+      if $status;
 
     my ($md5sums, undef) = read_md5sums($stdout);
 
-    $_->md5sum($md5sums->{$_->name})for @files;
+    $_->md5sum($md5sums->{$_->name}) for @files;
 
     chdir($savedir);
 

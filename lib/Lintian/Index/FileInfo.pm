@@ -23,19 +23,11 @@ use utf8;
 use autodie;
 
 use Cwd;
-use IO::Async::Loop;
-use IO::Async::Process;
-use IO::Async::Routine;
-use Path::Tiny;
-use Try::Tiny;
-
-use Lintian::Util qw(drop_relative_prefix);
+use IPC::Run3;
 
 use constant EMPTY => q{};
 use constant SPACE => q{ };
 use constant COMMA => q{,};
-use constant COLON => q{:};
-use constant NEWLINE => qq{\n};
 use constant NULL => qq{\0};
 
 use Moo::Role;
@@ -58,56 +50,6 @@ Lintian::Index::FileInfo determine file type via magic.
 
 =over 4
 
-=item check_magic
-
-=cut
-
-sub check_magic {
-    my ($path, $type) = @_;
-
-    # the file program is regularly wrong here; determine type properly
-    return ($path, $type)
-      unless $path =~ m/\.gz$/
-      && -f $path
-      && !-l $path
-      && $type !~ m/compressed/;
-
-    open(my $fd, '<', $path)
-      or die "Cannot open $path";
-
-    my $size = sysread($fd, my $buffer, 1024);
-
-    close($fd)
-      or warn "Cannot close $path";
-
-    # need to read at least 9 bytes
-    return ($path, $type)
-      unless $size >= 9;
-
-    # translation of the unpack
-    #  nn nn ,  NN NN NN NN, nn nn, cc     - bytes read
-    #  $magic,  __ __ __ __, __ __, $comp  - variables
-    my ($magic, undef, undef, $compression) = unpack('nNnc', $buffer);
-
-    my $text = EMPTY;
-
-    # gzip file magic
-    if ($magic == 0x1f8b){
-
-        $text = 'gzip compressed data';
-
-        # 2 for max compression; RFC1952 suggests this is a
-        # flag and not a value, hence bit operation
-        $text .= COMMA . SPACE . 'max compression'
-          if $compression & 2;
-    }
-
-    $type .= COMMA . SPACE . $text
-      if $text;
-
-    return ($path, $type);
-}
-
 =item add_fileinfo
 
 =cut
@@ -118,42 +60,27 @@ sub add_fileinfo {
     my $savedir = getcwd;
     chdir($self->basedir);
 
-    my $loop = IO::Async::Loop->new;
+    my @files = grep { $_->is_file } $self->sorted_list;
 
-    my @generatecommand = (
+    my $input = EMPTY;
+    $input .= $_->name . NULL for @files;
+
+    my $stdout;
+
+    my @command = (
         'xargs', '--null','--no-run-if-empty', 'file',
         '--no-pad', '--print0', '--print0', '--'
     );
-    my $generatedone = $loop->new_future;
 
-    my $output;
-    my $generate = IO::Async::Process->new(
-        command => [@generatecommand],
-        stdin => { via => 'pipe_write' },
-        stdout => { into => \$output },
-        on_finish => sub {
-            # ignore failures; file returns non-zero on parse errors
-            # output then contains "ERROR" messages but is still usable
-
-            $generatedone->done('Done with @generatecommand');
-            return;
-        });
-
-    $loop->add($generate);
-
-    # get the regular files in the index
-    my @files = grep { $_->is_file } $self->sorted_list;
-
-    $generate->stdin->write($_->name . NULL) for @files;
-
-    $generate->stdin->close_when_empty;
-    $generatedone->get;
+    # ignore failures; file returns non-zero on parse errors
+    # output then contains "ERROR" messages but is still usable
+    run3(\@command, \$input, \$stdout);
 
     my %fileinfo;
 
-    $output =~ s/\0$//;
+    $stdout =~ s/\0$//;
 
-    my @lines = split(/\0/, $output, -1);
+    my @lines = split(/\0/, $stdout, -1);
 
     die 'Did not get an even number lines from file command.'
       unless @lines % 2 == 0;
@@ -162,21 +89,46 @@ sub add_fileinfo {
 
         my $type = shift @lines;
 
-        unless(length $path && length $type) {
+        die "syntax error in file-info output: '$path' '$type'"
+          unless length $path && length $type;
 
-            warn "syntax error in file-info output: '$path' '$type'";
-            next;
-        }
-
-        ($path, $type) = check_magic($path, $type);
-
-        # remove relative prefix, if present
-        $path = drop_relative_prefix($path);
+        # drop relative prefix, if present
+        $path =~ s{^\./}{};
 
         $fileinfo{$path} = $type;
     }
 
     $_->file_info($fileinfo{$_->name}) for @files;
+
+    # some files need to be corrected
+    my @probably_compressed
+      = grep { $_->name =~ /\.gz$/ && $_->file_info !~ /compressed/ } @files;
+
+    for my $file (@probably_compressed) {
+
+        my $buffer = $file->magic(9);
+        next
+          unless length $buffer;
+
+        # translation of the unpack
+        #  nn nn ,  NN NN NN NN, nn nn, cc     - bytes read
+        #  $magic,  __ __ __ __, __ __, $comp  - variables
+        my ($magic, undef, undef, $compression) = unpack('nNnc', $buffer);
+
+        # gzip file magic
+        return
+          unless $magic == 0x1f8b;
+
+        my $text = 'gzip compressed data';
+
+        # 2 for max compression; RFC1952 suggests this is a
+        # flag and not a value, hence bit operation
+        $text .= COMMA . SPACE . 'max compression'
+          if $compression & 2;
+
+        my $new_type = $file->file_info . COMMA . SPACE . $text;
+        $file->file_info($new_type);
+    }
 
     chdir($savedir);
 

@@ -25,7 +25,7 @@ use autodie;
 use Cwd;
 use Path::Tiny;
 
-use Lintian::IO::Async qw(safe_qx);
+use Lintian::IPC::Run3 qw(safe_qx);
 
 use constant EMPTY => q{};
 use constant SPACE => q{ };
@@ -68,7 +68,7 @@ sub add_ar {
     chdir($self->basedir);
 
     my @archives;
-    foreach my $file ($self->sorted_list) {
+    for my $file ($self->sorted_list) {
 
         next
           unless $file->is_regular_file && $file =~ m{ \. a \Z }xsm;

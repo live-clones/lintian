@@ -15,7 +15,7 @@ BEGIN {
 
 use lib "$ENV{'LINTIAN_BASE'}/lib/";
 
-use Lintian::IO::Async qw(safe_qx);
+use Lintian::IPC::Run3 qw(safe_qx);
 
 my (%added, %removed, %opt);
 
