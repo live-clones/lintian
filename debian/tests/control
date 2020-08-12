@@ -39,5 +39,4 @@ Depends:
  python3-numpy,
  quilt,
  uglifyjs,
- unzip,
  zip,

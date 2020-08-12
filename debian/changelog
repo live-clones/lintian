@@ -1,3 +1,29 @@
+lintian (2.89.0) unstable; urgency=medium
+
+  * Summary of tag changes:
+    + Added:
+      - systemd-service-file-uses-deprecated-syslog-facility
+      - systemd-service-file-uses-nobody-or-nogroup
+
+  [ Chris Lamb ]
+  * Check for User=nobody and Group=nogroup in systemd .service files.
+    (Closes: #966623)
+  * Check for StandardOutput= and StandardError= that uses the deprecated
+    "syslog" or "syslog-console" facility. (Closes: #966617)
+  * Fix a false positive with no-dh-sequencer due to target dependency.
+    (Closes: #968108)
+  * Drop an unused $skip_tag argument to "extract_service_file_values"
+    routine.
+
+  [ Felix Lechner ]
+  * Prefer settings in configuration files over other defaults and allow
+    command line to override both. (Closes: #968067)
+  * Add unzip to Depends in debian/control and drop from
+    debian/tests/control. Also add lzop to Depends in d/control.
+    (Closes: 968041)
+
+ -- Chris Lamb <lamby@debian.org>  Mon, 10 Aug 2020 09:59:45 +0000
+
 lintian (2.88.0~bpo10+1) buster-backports; urgency=medium
 
   * Rebuild for buster-backports.
