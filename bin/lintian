@@ -215,7 +215,7 @@ unless ($command_line{'no-user-dirs'}) {
     }
 
     $LINTIAN_CFG ||= first_value { length $_ && -f $_ }
-    ($xdg_config_file, $dot_config_file);
+    ($xdg_config_file, $dot_config_file, '/etc/lintianrc');
 
     # make path absolute for use elsewhere
     $xdg_data_home = getcwd() . SLASH . $xdg_data_home
