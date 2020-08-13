@@ -25,23 +25,7 @@ use warnings;
 use utf8;
 use autodie;
 
-use IO::Async::Loop;
-use IO::Async::Process;
 use Path::Tiny;
-
-use Lintian::Index::Item;
-use Lintian::IO::Async qw(safe_qx);
-
-# read up to 40kB at a time.  this happens to be 4096 "tar records"
-# (with a block-size of 512 and a block factor of 20, which appear to
-# be the defaults).  when we do full reads and writes of READ_SIZE (the
-# OS willing), the receiving end will never be with an incomplete
-# record.
-use constant READ_SIZE => 4096 * 20 * 512;
-
-use constant EMPTY => q{};
-use constant COLON => q{:};
-use constant NEWLINE => qq{\n};
 
 use Moo;
 use namespace::clean;
@@ -76,8 +60,6 @@ in the collections scripts used previously.
 
 =item collect
 
-=item unpack
-
 =cut
 
 sub collect {
@@ -88,164 +70,21 @@ sub collect {
     my $basedir = path($groupdir)->child('control')->stringify;
     $self->basedir($basedir);
 
-    $self->unpack($groupdir);
+    my @command = (qw(dpkg-deb --ctrl-tarfile), "$groupdir/deb");
+    my ($extract_errors, $index_errors)
+      = $self->create_from_piped_tar(\@command);
+
     $self->load;
 
     $self->add_fileinfo;
     $self->add_scripts;
     $self->add_control;
 
-    return;
-}
+    path("$groupdir/control-errors")->spew_utf8($extract_errors)
+      if length $extract_errors;
 
-sub unpack {
-    my ($self, $groupdir) = @_;
-
-    path($self->basedir)->remove_tree
-      if -d $self->basedir;
-
-    mkdir($self->basedir, 0777);
-
-    my $debpath = "$groupdir/deb";
-    return
-      unless -f $debpath;
-
-    my $loop = IO::Async::Loop->new;
-
-    # get control tarball from deb
-    my $deberror;
-    my $dpkgdeb = $loop->new_future;
-    my @debcommand = ('dpkg-deb', '--ctrl-tarfile', $debpath);
-    my $debprocess = IO::Async::Process->new(
-        command => [@debcommand],
-        stdout => { via => 'pipe_read' },
-        stderr => { into => \$deberror },
-        on_finish => sub {
-            my ($self, $exitcode) = @_;
-            my $status = ($exitcode >> 8);
-
-            if ($status) {
-                my $message= "Non-zero status $status from @debcommand";
-                $message .= COLON . NEWLINE . $deberror
-                  if length $deberror;
-                $dpkgdeb->fail($message);
-                return;
-            }
-
-            $dpkgdeb->done("Done with @debcommand");
-            return;
-        });
-
-    # extract the tarball's contents
-    my $extracterror;
-    my $extractor = $loop->new_future;
-    my @extractcommand = (
-        'tar', '--no-same-owner','--no-same-permissions', '-mxf',
-        '-', '-C', $self->basedir
-    );
-    my $extractprocess = IO::Async::Process->new(
-        command => [@extractcommand],
-        stdin => { via => 'pipe_write' },
-        stderr => { into => \$extracterror },
-        on_finish => sub {
-            my ($self, $exitcode) = @_;
-            my $status = ($exitcode >> 8);
-
-            if ($status) {
-                my $message = "Non-zero status $status from @extractcommand";
-                $message .= COLON . NEWLINE . $extracterror
-                  if length $extracterror;
-                $extractor->fail($message);
-                return;
-            }
-
-            $extractor->done("Done with @extractcommand");
-            return;
-        });
-
-    # create index of control.tar.gz
-    my $index;
-    my $indexerror;
-    my $indexer = $loop->new_future;
-    my @indexcommand = (
-        'tar', '--list','--verbose','--utc','--full-time','--quoting-style=c',
-        '--file', '-'
-    );
-    my $indexprocess = IO::Async::Process->new(
-        command => [@indexcommand],
-        stdin => { via => 'pipe_write' },
-        stdout => { into => \$index },
-        stderr => { into => \$indexerror },
-        on_finish => sub {
-            my ($self, $exitcode) = @_;
-            my $status = ($exitcode >> 8);
-
-            if ($status) {
-                my $message = "Non-zero status $status from @indexcommand";
-                $message .= COLON . NEWLINE . $indexerror
-                  if length $indexerror;
-                $indexer->fail($message);
-                return;
-            }
-
-            $indexer->done("Done with @indexcommand");
-            return;
-        });
-
-    $extractprocess->stdin->configure(write_len => READ_SIZE);
-    $indexprocess->stdin->configure(write_len => READ_SIZE);
-
-    $debprocess->stdout->configure(
-        read_len => READ_SIZE,
-        on_read => sub {
-            my ($stream, $buffref, $eof) = @_;
-
-            if (length $$buffref) {
-                $extractprocess->stdin->write($$buffref);
-                $indexprocess->stdin->write($$buffref);
-
-                $$buffref = EMPTY;
-            }
-
-            if ($eof) {
-                $extractprocess->stdin->close_when_empty;
-                $indexprocess->stdin->close_when_empty;
-            }
-
-            return 0;
-        },
-    );
-
-    $loop->add($debprocess);
-    $loop->add($indexprocess);
-    $loop->add($extractprocess);
-
-    my $composite = Future->needs_all($dpkgdeb, $extractor, $indexer);
-
-    # awaits, and dies on failure with message from failed constituent
-    $composite->get;
-
-    # not recording dpkg-deb errors anywhere
-    path("$groupdir/control-errors")->append($extracterror)
-      if length $extracterror;
-    path("$groupdir/control-index-errors")->append($indexerror)
-      if length $indexerror;
-
-    my @lines = split(/\n/, $index);
-
-    my %all;
-    for my $line (@lines) {
-
-        my $entry = Lintian::Index::Item->new;
-        $entry->init_from_tar_output($line);
-
-        $all{$entry->name} = $entry;
-    }
-
-    $self->catalog(\%all);
-
-    # fix permissions
-    safe_qx('chmod', '-R', 'u+rX,o-w', $self->basedir);
+    path("$groupdir/control-index-errors")->spew_utf8($index_errors)
+      if length $index_errors;
 
     return;
 }
