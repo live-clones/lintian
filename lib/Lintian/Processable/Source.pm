@@ -44,7 +44,6 @@ with 'Lintian::Processable',
   'Lintian::Processable::Orig',
   'Lintian::Processable::Overrides',
   'Lintian::Processable::Patched',
-  'Lintian::Processable::Source::Diffstat',
   'Lintian::Processable::Source::Format',
   'Lintian::Processable::Source::Relation',
   'Lintian::Processable::Source::Repacked';
