@@ -36,13 +36,16 @@ BEGIN {
     @EXPORT_OK = qw(
       get_deb_info
       safe_qx
+      unpack_and_index_piped_tar
     );
 }
 
 use Carp qw(croak);
 use IO::Async::Loop;
+use IO::Async::Process;
 
 use Lintian::Deb822::File;
+use Lintian::Index::Item;
 
 # read up to 40kB at a time.  this happens to be 4096 "tar records"
 # (with a block-size of 512 and a block factor of 20, which appear to
@@ -216,6 +219,162 @@ sub get_deb_info {
     my @sections = $primary->parse_string($control);
 
     return $sections[0];
+}
+
+=item unpack_and_index_piped_tar
+
+=cut
+
+sub unpack_and_index_piped_tar {
+    my ($command, $basedir) = @_;
+
+    my $loop = IO::Async::Loop->new;
+
+    # get system tarball from deb
+    my $deberror;
+    my $dpkgdeb = $loop->new_future;
+    my $debprocess = IO::Async::Process->new(
+        command => $command,
+        stdout => { via => 'pipe_read' },
+        stderr => { into => \$deberror },
+        on_finish => sub {
+            my ($self, $exitcode) = @_;
+            my $status = ($exitcode >> 8);
+
+            if ($status) {
+                my $message
+                  = "Non-zero status $status from dpkg-deb for control";
+                $message .= COLON . NEWLINE . $deberror
+                  if length $deberror;
+                $dpkgdeb->fail($message);
+                return;
+            }
+
+            $dpkgdeb->done('Done with dpkg-deb');
+            return;
+        });
+
+    # extract the tarball's contents
+    my $extracterror;
+    my $extractor = $loop->new_future;
+    my $extractprocess = IO::Async::Process->new(
+        command => [
+            qw(tar --no-same-owner --no-same-permissions --touch --extract --file - -C),
+            $basedir
+        ],
+        stdin => { via => 'pipe_write' },
+        stderr => { into => \$extracterror },
+        on_finish => sub {
+            my ($self, $exitcode) = @_;
+            my $status = ($exitcode >> 8);
+
+            if ($status) {
+                my $message = "Non-zero status $status from extract tar";
+                $message .= COLON . NEWLINE . $extracterror
+                  if length $extracterror;
+                $extractor->fail($message);
+                return;
+            }
+
+            $extractor->done('Done with extract tar');
+            return;
+        });
+
+    my @tar_options
+      = qw(--list --verbose --utc --full-time --quoting-style=c --file -);
+
+    # create index (named-owner)
+    my $named;
+    my $namederror;
+    my $namedindexer = $loop->new_future;
+    my $namedindexprocess = IO::Async::Process->new(
+        command => ['tar', @tar_options],
+        stdin => { via => 'pipe_write' },
+        stdout => { into => \$named },
+        stderr => { into => \$namederror },
+        on_finish => sub {
+            my ($self, $exitcode) = @_;
+            my $status = ($exitcode >> 8);
+
+            if ($status) {
+                my $message = "Non-zero status $status from index tar";
+                $message .= COLON . NEWLINE . $namederror
+                  if length $namederror;
+                $namedindexer->fail($message);
+                return;
+            }
+
+            $namedindexer->done('Done with named index tar');
+            return;
+        });
+
+    # create index (numeric-owner)
+    my $numeric;
+    my $numericerror;
+    my $numericindexer = $loop->new_future;
+    my $numericindexprocess = IO::Async::Process->new(
+        command =>['tar', '--numeric-owner', @tar_options],
+        stdin => { via => 'pipe_write' },
+        stdout => { into => \$numeric },
+        stderr => { into => \$numericerror },
+        on_finish => sub {
+            my ($self, $exitcode) = @_;
+            my $status = ($exitcode >> 8);
+
+            if ($status) {
+                my $message = "Non-zero status $status from index tar";
+                $message .= COLON . NEWLINE . $numericerror
+                  if length $numericerror;
+                $numericindexer->fail($message);
+                return;
+            }
+
+            $numericindexer->done('Done with tar');
+            return;
+        });
+
+    $extractprocess->stdin->configure(write_len => READ_SIZE,);
+    $namedindexprocess->stdin->configure(write_len => READ_SIZE,);
+    $numericindexprocess->stdin->configure(write_len => READ_SIZE,);
+
+    $debprocess->stdout->configure(
+        read_len => READ_SIZE,
+        on_read => sub {
+            my ($stream, $buffref, $eof) = @_;
+
+            if (length $$buffref) {
+                $extractprocess->stdin->write($$buffref);
+                $namedindexprocess->stdin->write($$buffref);
+                $numericindexprocess->stdin->write($$buffref);
+
+                $$buffref = EMPTY;
+            }
+
+            if ($eof) {
+                $extractprocess->stdin->close_when_empty;
+                $namedindexprocess->stdin->close_when_empty;
+                $numericindexprocess->stdin->close_when_empty;
+            }
+
+            return 0;
+        },
+    );
+
+    $loop->add($debprocess);
+    $loop->add($extractprocess);
+    $loop->add($namedindexprocess);
+    $loop->add($numericindexprocess);
+
+    my $composite
+      = Future->needs_all($dpkgdeb, $extractor, $namedindexer,$numericindexer);
+
+    # awaits, and dies on failure with message from failed constituent
+    $composite->get;
+
+    my $extract_errors = ($deberror // EMPTY) . ($extracterror // EMPTY);
+    my $index_errors = $namederror;
+
+    return ($named, $numeric, $extract_errors, $index_errors);
 }
 
 =back
