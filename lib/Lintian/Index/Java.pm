@@ -63,24 +63,22 @@ sub add_java {
 
     my @files = grep { $_->is_file } $self->sorted_list;
 
-    my @lines;
-    foreach my $file (@files) {
+    # Wheezy's version of file calls "jar files" for "Zip archive".
+    # Newer versions seem to call them "Java Jar file".
+    # Jessie also introduced "Java archive data (JAR)"...
+    my @java_files = grep {
+        $_->file_info=~ /
+            Java [ ] (?:Jar [ ] file|archive [ ] data)
+            | Zip [ ] archive
+            | JAR /x;
+    } @files;
 
-        # Wheezy's version of file calls "jar files" for "Zip archive".
-        # Newer versions seem to call them "Java Jar file".
-        # Jessie also introduced "Java archive data (JAR)"...
-        next
-          unless $file->file_info=~ m/
-                     Java [ ] (?:Jar [ ] file|archive [ ] data)
-                   | Zip [ ] archive
-                   | JAR /x;
+    my @lines;
+    for my $file (@java_files) {
 
         push(@lines, parse_jar($file->name))
           if $file->name =~ m#\S+\.jar$#i;
     }
-
-    return
-      unless @lines;
 
     my $file;
     my $file_list;
@@ -117,7 +115,7 @@ sub add_java {
         }
     }
 
-    $_->java_info($java_info{$_->name}) for @files;
+    $_->java_info($java_info{$_->name}) for @java_files;
 
     chdir($savedir);
 

@@ -25,7 +25,6 @@ use utf8;
 use autodie;
 
 use Carp;
-use Cwd;
 use Devel::Size qw(total_size);
 use File::Spec;
 use List::Compare;
@@ -319,9 +318,7 @@ sub unpack {
 
     my @unpack = grep { $_->can('unpack') } @processables;
 
-    my $savedir = getcwd;
     $_->unpack for @unpack;
-    chdir($savedir);
 
     return;
 }

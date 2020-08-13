@@ -116,7 +116,7 @@ sub add_fileinfo {
         my ($magic, undef, undef, $compression) = unpack('nNnc', $buffer);
 
         # gzip file magic
-        return
+        next
           unless $magic == 0x1f8b;
 
         my $text = 'gzip compressed data';
