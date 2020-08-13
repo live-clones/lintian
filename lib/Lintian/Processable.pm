@@ -30,6 +30,7 @@ use Path::Tiny;
 use constant EMPTY => q{};
 use constant COLON => q{:};
 use constant SLASH => q{/};
+use constant UNDERSCORE => q{_};
 
 use constant EVIL_CHARACTERS => qr,[/&|;\$"'<>],;
 
@@ -188,7 +189,42 @@ has tainted => (is => 'rw', default => 0);
 has fields => (is => 'rw', default => sub { Lintian::Deb822::Section->new; });
 
 has pooldir => (is => 'rw', default => EMPTY);
-has groupdir => (is => 'rw', default => EMPTY);
+has groupdir => (
+    is => 'rw',
+    lazy => 1,
+    default => sub {
+        my ($self) = @_;
+
+        my $sorter_length = 1;
+
+        # use libX if starts with lib and fourth character is available
+        $sorter_length = 4
+          if $self->source =~ /^lib./;
+
+        my $sorter = substr($self->source, 0, $sorter_length);
+
+        my $path
+          = $sorter
+          . SLASH
+          . $self->source
+          . SLASH
+          . $self->name
+          . UNDERSCORE
+          . $self->version;
+        $path .= UNDERSCORE . $self->architecture
+          unless $self->type eq 'source';
+        $path .= UNDERSCORE . $self->type;
+
+        # architectures can contain spaces in changes files
+        $path =~ s/\s/-/g;
+
+        # colon can be a path separator
+        $path =~ s/:/_/g;
+
+        my $groupdir = $self->pooldir . "/$path";
+
+        return $groupdir;
+    });
 
 has link_label => (is => 'rw', default => EMPTY);
 has saved_link => (is => 'rw', default => EMPTY);
@@ -283,31 +319,6 @@ sub link {
     }
 
     return $self->saved_link;
-}
-
-=item create
-
-Creates a link to the input file near where all files in that
-group will be unpacked and analyzed.
-
-=cut
-
-sub create {
-    my ($self) = @_;
-
-    return
-      if -l $self->link;
-
-    croak 'Please set base directory for processable first'
-      unless length $self->groupdir;
-
-    path($self->groupdir)->mkpath
-      unless -e $self->groupdir;
-
-    symlink($self->path, $self->link)
-      or croak 'symlinking ' . $self->path . "failed: $!";
-
-    return;
 }
 
 =item guess_name

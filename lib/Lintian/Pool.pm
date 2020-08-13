@@ -159,23 +159,10 @@ sub process{
 
     for my $group (values %{$self->groups}) {
 
-        $OUTPUT->v_msg('Starting on group ' . $group->name);
-
         my $total_start = [gettimeofday];
-        my $group_start = [gettimeofday];
 
         $group->profile($PROFILE);
         $group->jobs($option->{'jobs'});
-
-        $group->unpack($OUTPUT);
-
-        my $raw_res = tv_interval($group_start);
-        my $tres = sprintf('%.3fs', $raw_res);
-
-        $OUTPUT->debug_msg(1, 'Unpack of ' . $group->name . " done ($tres)");
-        $OUTPUT->perf_log($group->name . ",total-group-unpack,${raw_res}");
-
-        my %reported_count;
 
         my $success= $group->process(\%ignored_overrides, $option, $OUTPUT);
 
@@ -202,6 +189,7 @@ sub process{
               || $_->name eq 'unused-override'
         } @tags;
 
+        my %reported_count;
         $reported_count{$_->info->effective_severity}++ for @reported_trusted;
         $reported_count{experimental} += scalar @reported_experimental;
         $reported_count{override} += scalar @override;

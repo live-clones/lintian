@@ -24,10 +24,12 @@ use utf8;
 use autodie;
 
 use Carp qw(croak);
+use File::Spec;
 use Path::Tiny;
 
 use Lintian::Deb822::File;
 
+use constant EMPTY => q{};
 use constant COLON => q{:};
 use constant SLASH => q{/};
 
@@ -131,6 +133,15 @@ sub init {
 
 sub unpack {
     my ($self) = @_;
+
+    my $parent = path($self->path)->parent->stringify;
+
+    # pull in all related files for unpacking
+    for my $basename (keys %{$self->files}) {
+
+        symlink("$parent/$basename", $self->groupdir . "/$basename")
+          or die "cannot symlink file $basename: $!";
+    }
 
     $self->patched->collect($self->groupdir);
 
