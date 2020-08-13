@@ -116,11 +116,6 @@ sub unpack {
     path($self->basedir)->remove_tree
       if -d $self->basedir;
 
-    for my $file (qw(index-errors unpacked-errors)) {
-        unlink("$groupdir/$file")
-          if -e "$groupdir/$file";
-    }
-
     mkdir($self->basedir, 0777);
 
     my $loop = IO::Async::Loop->new;
@@ -269,10 +264,6 @@ sub unpack {
     # awaits, and dies on failure with message from failed constituent
     $composite->get;
 
-    path("$groupdir/unpacked-errors")->append($deberror // EMPTY);
-    path("$groupdir/unpacked-errors")->append($extracterror // EMPTY);
-    path("$groupdir/index-errors")->append($namederror // EMPTY);
-
     my @named_owner = split(/\n/, $named);
     my @numeric_owner = split(/\n/, $numeric);
 
@@ -301,14 +292,17 @@ sub unpack {
 
     $self->catalog(\%all);
 
-    # remove error files if empty
-    unlink("$groupdir/index-errors")
-      if -z "$groupdir/index-errors";
-    unlink("$groupdir/unpacked-errors")
-      if -z "$groupdir/unpacked-errors";
-
     # fix permissions
     safe_qx('chmod', '-R', 'u+rwX,go-w', $self->basedir);
+
+    my $extract_errors = ($deberror // EMPTY) . ($extracterror // EMPTY);
+    my $index_errors = $namederror;
+
+    path("$groupdir/unpacked-errors")->spew_utf8($extract_errors)
+      if length $extract_errors;
+
+    path("$groupdir/index-errors")->spew_utf8($index_errors)
+      if length $index_errors;
 
     return;
 }

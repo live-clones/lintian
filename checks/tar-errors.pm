@@ -46,7 +46,7 @@ sub source {
     my ($self) = @_;
 
     my $groupdir = $self->processable->groupdir;
-    my @paths = grep { -s } map { "$groupdir/$_" } @ERROR_LOGS;
+    my @paths = grep { -e $_ && -s _ } map { "$groupdir/$_" } @ERROR_LOGS;
 
     for my $path (@paths) {
 

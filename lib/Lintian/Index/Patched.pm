@@ -101,10 +101,6 @@ sub create {
     path($self->basedir)->remove_tree
       if -d $self->basedir;
 
-    for my $file (qw(index-errors unpacked-errors)) {
-        unlink("$groupdir/$file") if -e "$groupdir/$file";
-    }
-
     print "N: Using dpkg-source to unpack\n"
       if $ENV{'LINTIAN_DEBUG'};
 
@@ -193,9 +189,6 @@ sub create {
 
     # fix permissions
     safe_qx('chmod', '-R', 'u+rwX,o+rX,o-w', $self->basedir);
-
-    # remove error file if empty
-    unlink("$groupdir/unpacked-errors") if -z "$groupdir/unpacked-errors";
 
     chdir($savedir);
 

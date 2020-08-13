@@ -104,13 +104,6 @@ sub unpack {
     path($self->basedir)->remove_tree
       if -d $self->basedir;
 
-    my $controlerrorspath = "$groupdir/control-errors";
-    my $indexerrorspath = "$groupdir/control-index-errors";
-
-    for my $path ($controlerrorspath, $indexerrorspath) {
-        unlink($path) if -e $path;
-    }
-
     mkdir($self->basedir, 0777);
 
     my $debpath = "$groupdir/deb";
@@ -233,9 +226,9 @@ sub unpack {
     $composite->get;
 
     # not recording dpkg-deb errors anywhere
-    path($controlerrorspath)->append($extracterror)
+    path("$groupdir/control-errors")->append($extracterror)
       if length $extracterror;
-    path($indexerrorspath)->append($indexerror)
+    path("$groupdir/control-index-errors")->append($indexerror)
       if length $indexerror;
 
     my @lines = split(/\n/, $index);
