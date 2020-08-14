@@ -86,7 +86,22 @@ Returns the base directory for file references.
 
 has catalog => (is => 'rw', default => sub { {} });
 has saved_sorted_list => (is => 'rw', default => sub { [] });
-has basedir => (is => 'rw', default => EMPTY);
+
+has basedir => (
+    is => 'rw',
+    trigger => sub {
+        my ($self, $folder) = @_;
+
+        return
+          unless length $folder;
+
+        # create directory
+        path($folder)->mkpath({ chmod => 0777 })
+          unless -e $folder;
+    },
+    default => EMPTY
+);
+
 has anchored => (is => 'rw', default => 0);
 has allow_empty => (is => 'rw', default => 0);
 
@@ -156,15 +171,20 @@ sub resolve_path {
 =cut
 
 sub create_from_piped_tar {
-    my ($self, $command) = @_;
+    my ($self, $command, $subfolder) = @_;
 
-    mkdir($self->basedir, 0777);
+    my $extract_dir = $self->basedir;
+
+    if (length $subfolder) {
+        $extract_dir .= "/$subfolder";
+        path($extract_dir)->mkpath({ chmod => 0777 });
+    }
 
     my ($named, $numeric, $extract_errors, $index_errors)
-      = unpack_and_index_piped_tar($command, $self->basedir);
+      = unpack_and_index_piped_tar($command, $extract_dir);
 
     # fix permissions
-    safe_qx('chmod', '-R', 'u+rwX,go-w', $self->basedir);
+    safe_qx('chmod', '-R', 'u+rwX,go-w', $extract_dir);
 
     my @named_owner = split(/\n/, $named);
     my @numeric_owner = split(/\n/, $numeric);
