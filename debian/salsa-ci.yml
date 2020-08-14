@@ -13,3 +13,6 @@ build-buster-backports:
     RELEASE: 'buster-backports'
   extends: .build-package
   allow_failure: true
+
+variables:
+  SALSA_CI_LINTIAN_FAIL_WARNING: 1
