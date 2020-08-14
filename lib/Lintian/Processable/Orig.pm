@@ -22,9 +22,6 @@ use warnings;
 use utf8;
 use autodie;
 
-use Path::Tiny;
-
-use Lintian::Index::Item;
 use Lintian::Index::Orig;
 
 use Moo::Role;
@@ -59,56 +56,6 @@ has orig => (
     default => sub {
         return Lintian::Index::Orig->new;
     });
-
-=item orig_index (FILE)
-
-Like L</index> except orig_index is based on the "orig tarballs" of
-the source packages.
-
-For native packages L</index> and L</orig_index> are generally
-identical.
-
-NB: If sorted_index includes a debian packaging, it is was
-contained in upstream part of the source package (or the package is
-native).
-
-=cut
-
-sub orig_index {
-    my ($self, $file) = @_;
-
-    return $self->orig->lookup($file);
-}
-
-=item sorted_orig_index
-
-=cut
-
-sub sorted_orig_index {
-    my ($self) = @_;
-
-    return $self->orig->sorted_list;
-}
-
-=item orig_index_resolved_path(PATH)
-
-Resolve PATH (relative to the root of the package) and return the
-L<entry|Lintian::Index::Item> denoting the resolved path.
-
-The resolution is done using
-L<resolve_path|Lintian::Index::Item/resolve_path([PATH])>.
-
-NB: If orig_index_resolved_path includes a debian packaging, it is was
-contained in upstream part of the source package (or the package is
-native).
-
-=cut
-
-sub orig_index_resolved_path {
-    my ($self, $path) = @_;
-
-    return $self->orig->resolve_path($path);
-}
 
 =back
 

@@ -22,10 +22,7 @@ use warnings;
 use utf8;
 use autodie;
 
-use Path::Tiny;
-
 use Lintian::Index::Control;
-use Lintian::Index::Item;
 
 use Moo::Role;
 use namespace::clean;
@@ -59,61 +56,6 @@ has control => (
     default => sub {
         return Lintian::Index::Control->new;
     });
-
-=item control_index (FILE)
-
-Returns a L<path object|Lintian::Index::Item> to FILE in the control.tar.gz.
-FILE must be relative to the root of the control.tar.gz and must be
-without leading slash (or "./").  If FILE is not in the
-control.tar.gz, it returns C<undef>.
-
-To get a list of entries in the control.tar.gz, see
-L</sorted_control_index>.  To actually access the underlying file
-(e.g. the contents), use L</control ([FILE])>.
-
-Note that the "root directory" (denoted by the empty string) will
-always be present, even if the underlying tarball omits it.
-
-=cut
-
-sub control_index {
-    my ($self, $file) = @_;
-
-    return $self->control->lookup($file);
-}
-
-=item sorted_control_index
-
-Returns a sorted array of file names listed in the control.tar.gz.
-The names will not have a leading slash (or "./") and can be passed
-to L</control ([FILE])> or L</control_index (FILE)> as is.
-
-The array will not contain the entry for the "root" of the
-control.tar.gz.
-
-=cut
-
-sub sorted_control_index {
-    my ($self) = @_;
-
-    return $self->control->sorted_list;
-}
-
-=item control_index_resolved_path(PATH)
-
-Resolve PATH (relative to the root of the package) and return the
-L<entry|Lintian::Index::Item> denoting the resolved path.
-
-The resolution is done using
-L<resolve_path|Lintian::Index::Item/resolve_path([PATH])>.
-
-=cut
-
-sub control_index_resolved_path {
-    my ($self, $path) = @_;
-
-    return $self->control->resolve_path($path);
-}
 
 =back
 

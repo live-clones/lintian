@@ -24,9 +24,6 @@ use warnings;
 use utf8;
 use autodie;
 
-use Path::Tiny;
-
-use Lintian::Index::Item;
 use Lintian::Index::Patched;
 
 use Moo::Role;
@@ -61,82 +58,6 @@ has patched => (
     default => sub {
         return Lintian::Index::Patched->new;
     });
-
-=item index (FILE)
-
-The index of a source package is not very well defined for non-native
-source packages.  This method gives the index of the "unpacked"
-package (with 3.0 (quilt), this implies patches have been applied).
-
-If you want the index of what is listed in the upstream orig tarballs,
-then there is L</orig_index>.
-
-For native packages, the two indices are generally the same as they
-only have one tarball and their debian packaging is included in that
-tarball.
-
-IMPLEMENTATION DETAIL/CAVEAT: Lintian currently (2.5.11) generates
-this by running "find(1)" after unpacking the source package.
-This has three consequences.
-
-First it means that (original) owner/group data is lost; Lintian
-inserts "root/root" here.  This is usually not a problem as
-owner/group information for source packages do not really follow any
-standards.
-
-Secondly, permissions are modified by A) umask and B) laboratory
-set{g,u}id bits (the laboratory on lintian.d.o has setgid).  This is
-*not* corrected/altered.  Note Lintian (usually) breaks if any of the
-"user" bits are set in the umask, so that part of the permission bit
-I<should> be reliable.
-
-Again, this shouldn't be a problem as permissions in source packages
-are usually not important.  Though if accuracy is needed here,
-L</orig_index> may used instead (assuming it has the file in
-question).
-
-Third, hardlinking information is lost and no attempt has been made
-to restore it.
-
-=cut
-
-sub index {
-    my ($self, $file) = @_;
-
-    return $self->patched->lookup($file);
-}
-
-=item sorted_index
-
-Returns a sorted array of file names listed in the package.  The names
-will not have a leading slash (or "./") and can be passed to
-L</unpacked ([FILE])> or L</index (FILE)> as is.
-
-The array will not contain the entry for the "root" of the package.
-
-=cut
-
-sub sorted_index {
-    my ($self) = @_;
-
-    return $self->patched->sorted_list;
-}
-
-=item index_resolved_path(PATH)
-
-Resolve PATH (relative to the root of the package) and return the
-L<entry|Lintian::Index::Item> denoting the resolved path.
-
-The resolution is done using
-L<resolve_path|Lintian::Index::Item/resolve_path([PATH])>.
-
-=cut
-
-sub index_resolved_path {
-    my ($self, $path) = @_;
-
-    return $self->patched->resolve_path($path);
-}
 
 =back
 
