@@ -73,98 +73,24 @@ in the collections scripts used previously.
 =cut
 
 sub collect {
-    my ($self, $groupdir) = @_;
+    my ($self, $groupdir, $components) = @_;
 
     # source packages can be unpacked anywhere; no anchored roots
     $self->allow_empty(1);
 
-    $self->create($groupdir);
+    $self->create($groupdir, $components);
     $self->load;
 
     return;
 }
 
 sub create {
-    my ($self, $groupdir) = @_;
-
-    my $dsclink = "$groupdir/dsc";
-    my $dscpath = Cwd::realpath($dsclink);
-    die "Cannot resolve 'dsc' link: $dsclink"
-      unless $dscpath;
-    die "The 'dsc' link does not point to a file: $dscpath"
-      unless -e $dscpath;
-
-    my $deb822 = Lintian::Deb822::File->new;
-
-    my @sections;
-    @sections = $deb822->read_file($dscpath)
-      or die $dscpath . ' is not valid dsc file';
-    my $fields = $sections[0];
-
-    # determine source and version; handle missing fields
-    my $name = $fields->value('Source');
-    my $version = $fields->value('Version');
-    my $architecture = 'source';
-
-    # it is its own source package
-    my $source = $name;
-    my $source_version = $version;
-
-    die $dscpath . ' is missing Source field'
-      unless length $name;
-
-    #  Version handling is based on Dpkg::Version::parseversion.
-    my $noepoch = $source_version;
-    if ($noepoch =~ /:/) {
-        $noepoch =~ s/^(?:\d+):(.+)/$1/
-          or die "Bad version number '$noepoch'";
-    }
-
-    my $baserev = $source . '_' . $noepoch;
-
-    # strip debian revision
-    $noepoch =~ s/(.+)-(?:.*)$/$1/;
-    my $base = $source . '_' . $noepoch;
-
-    my @files = split(/\n/, $fields->value('Files'));
-
-    my %components;
-    for my $line (@files) {
-
-        # strip leading whitespace
-        $line =~ s/^\s*//;
-
-        next
-          unless length $line;
-
-        # get file name
-        my (undef, undef, $name) = split(/\s+/, $line);
-
-        next
-          unless length $name;
-
-        # skip if files in subdirs
-        next
-          if $name =~ m{/};
-
-        # Look for $pkg_$version.orig(-$comp)?.tar.$ext (non-native)
-        #       or $pkg_$version.tar.$ext (native)
-        #  - This deliberately does not look for the debian packaging
-        #    even when this would be a tarball.
-        if ($name
-            =~ /^(?:\Q$base\E\.orig(?:-(.*))?|\Q$baserev\E)\.tar\.(?:gz|bz2|lzma|xz)$/
-        ) {
-            $components{$name} = $1 // EMPTY;
-        }
-    }
-
-    die 'Could not find any source components'
-      unless %components;
+    my ($self, $groupdir, $components) = @_;
 
     my %all;
-    for my $tarball (sort keys %components) {
+    for my $tarball (sort keys %{$components}) {
 
-        my $component = $components{$tarball};
+        my $component = $components->{$tarball};
 
         my @tar_options= (
             '--list', '--verbose',

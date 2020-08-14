@@ -46,6 +46,7 @@ with 'Lintian::Processable',
   'Lintian::Processable::Orig',
   'Lintian::Processable::Overrides',
   'Lintian::Processable::Patched',
+  'Lintian::Processable::Source::Components',
   'Lintian::Processable::Source::Format',
   'Lintian::Processable::Source::Relation',
   'Lintian::Processable::Source::Repacked';
@@ -148,7 +149,7 @@ sub unpack {
     $self->add_diffstat;
     $self->add_overrides;
 
-    $self->orig->collect($self->groupdir)
+    $self->orig->collect($self->groupdir, $self->components)
       unless $self->native;
 
     return;
