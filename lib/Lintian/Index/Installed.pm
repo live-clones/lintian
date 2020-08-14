@@ -83,7 +83,7 @@ sub collect {
     $self->load;
 
     $self->add_md5sums;
-    $self->add_ar($groupdir);
+    $self->add_ar;
 
     $self->add_fileinfo;
     $self->add_scripts;

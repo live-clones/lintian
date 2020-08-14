@@ -1124,6 +1124,10 @@ has objdump => (
     coerce => sub { my ($text) = @_; return ($text // EMPTY); },
     default => EMPTY
 );
+has ar_info => (
+    is => 'rw',
+    coerce => sub { my ($hashref) = @_; return ($hashref // {}); },
+    default => sub { {} });
 has control => (
     is => 'rw',
     coerce => sub { my ($hashref) = @_; return ($hashref // {}); },
