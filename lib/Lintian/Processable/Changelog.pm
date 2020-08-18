@@ -61,51 +61,43 @@ For source:
 Returns the changelog of the source package as a Parse::DebianChangelog
 object, or C<undef> if the changelog cannot be resolved safely.
 
-=item saved_changelog
-
-Returns the cached changelog information.
-
 =cut
 
-has saved_changelog => (is => 'rw');
+has changelog => (
+    is => 'rw',
+    lazy => 1,
+    default => sub {
+        my ($self) = @_;
 
-sub changelog {
-    my ($self) = @_;
+        my $dch;
 
-    return $self->saved_changelog
-      if defined $self->saved_changelog;
+        if ($self->type eq 'source') {
+            my $file = $self->patched->resolve_path('debian/changelog');
 
-    my $dch;
+            return
+              unless $file && $file->is_open_ok;
 
-    if ($self->type eq 'source') {
-        my $file = $self->patched->resolve_path('debian/changelog');
+            $dch = $file->unpacked_path;
 
+        } else {
+            $dch = path($self->groupdir)->child('changelog')->stringify;
+
+            return
+              unless -f $dch && !-l $dch;
+        }
+
+        my $bytes = path($dch)->slurp;
         return
-          unless $file && $file->is_open_ok;
+          unless valid_utf8($bytes);
 
-        $dch = $file->unpacked_path;
+        # check for UTF-8
+        my $contents = decode_utf8($bytes);
 
-    } else {
-        $dch = path($self->groupdir)->child('changelog')->stringify;
+        my $changelog = Lintian::Inspect::Changelog->new;
+        $changelog->parse($contents);
 
-        return
-          unless -f $dch && !-l $dch;
-    }
-
-    my $bytes = path($dch)->slurp;
-    return
-      unless valid_utf8($bytes);
-
-    # check for UTF-8
-    my $contents = decode_utf8($bytes);
-
-    my $changelog = Lintian::Inspect::Changelog->new;
-    $changelog->parse($contents);
-
-    $self->saved_changelog($changelog);
-
-    return $self->saved_changelog;
-}
+        return $changelog;
+    });
 
 1;
 

@@ -24,7 +24,7 @@ use warnings;
 use utf8;
 use autodie;
 
-use Carp;
+use Carp qw(croak);
 use Devel::Size qw(total_size);
 use File::Spec;
 use List::Compare;
@@ -43,8 +43,6 @@ use Lintian::Util qw(human_bytes);
 
 use constant EMPTY => q{};
 use constant SPACE => q{ };
-use constant HYPHEN => q{-};
-use constant SLASH => q{/};
 
 use Moo;
 use namespace::clean;
@@ -130,8 +128,6 @@ Hash with active jobs.
 
 =item C<saved_direct_reliants>
 
-=item C<saved_spelling_exceptions>
-
 =cut
 
 has pooldir => (is => 'rw', default => EMPTY);
@@ -149,10 +145,6 @@ has processing_end => (is => 'rw', default => EMPTY);
 
 has cache => (is => 'rw', default => sub { {} });
 has profile => (is => 'rw', default => sub { {} });
-
-has saved_direct_dependencies => (is => 'rw', default => sub { {} });
-has saved_direct_reliants => (is => 'rw', default => sub { {} });
-has saved_spelling_exceptions => (is => 'rw', default => sub { {} });
 
 =item add_processable_from_file
 
@@ -631,6 +623,8 @@ Note: Self-dependencies (if any) are I<not> included in the result.
 
 =cut
 
+has saved_direct_dependencies => (is => 'rw', default => sub { {} });
+
 sub direct_dependencies {
     my ($self, $processable) = @_;
 
@@ -681,6 +675,8 @@ Note: Self-dependencies (if any) are I<not> included in the result.
 
 =cut
 
+has saved_direct_reliants => (is => 'rw', default => sub { {} });
+
 sub direct_reliants {
     my ($self, $processable) = @_;
 
@@ -727,30 +723,28 @@ Example: Package alot-doc (#687464)
 
 =cut
 
-sub spelling_exceptions {
-    my ($self) = @_;
+has spelling_exceptions => (
+    is => 'rw',
+    lazy => 1,
+    default => sub {
+        my ($self) = @_;
 
-    return $self->saved_spelling_exceptions
-      if keys %{$self->saved_spelling_exceptions};
+        my %exceptions;
 
-    my %exceptions;
+        for my $processable ($self->get_processables) {
 
-    foreach my $processable ($self->get_processables) {
+            my @names = ($processable->name, $processable->source);
+            push(@names, $processable->debian_control->installables)
+              if $processable->type eq 'source';
 
-        my @names = ($processable->name, $processable->source);
-        push(@names, $processable->debian_control->installables)
-          if $processable->type eq 'source';
-
-        foreach my $name (@names) {
-            $exceptions{$name} = 1;
-            $exceptions{$_} = 1 for split m/-/, $name;
+            foreach my $name (@names) {
+                $exceptions{$name} = 1;
+                $exceptions{$_} = 1 for split m/-/, $name;
+            }
         }
-    }
 
-    $self->saved_spelling_exceptions(\%exceptions);
-
-    return $self->saved_spelling_exceptions;
-}
+        return \%exceptions;
+    });
 
 =back
 

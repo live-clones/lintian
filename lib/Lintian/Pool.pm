@@ -25,8 +25,7 @@ use warnings;
 use utf8;
 use autodie;
 
-use Carp qw(croak);
-use Cwd;
+use Cwd qw(getcwd);
 use List::MoreUtils qw(any);
 use Time::HiRes qw(gettimeofday tv_interval);
 use Path::Tiny;
@@ -34,10 +33,6 @@ use POSIX qw(:sys_wait_h);
 use Proc::ProcessTable;
 
 use Lintian::Group;
-use Lintian::Util;
-
-use constant EMPTY => q{};
-use constant SPACE => q{ };
 
 use Moo;
 use namespace::clean;

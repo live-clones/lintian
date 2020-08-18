@@ -109,28 +109,17 @@ Returns the path to diffstat output run on the Debian packaging diff
 packages without a "diff.gz" component, this returns the path to an
 empty file (this may be a device like /dev/null).
 
-=item saved_diffstat
-
-Returns the cached diffstat information.
-
 =cut
-
-has saved_diffstat => (is => 'rw', default => EMPTY);
 
 sub diffstat {
     my ($self) = @_;
 
-    return $self->saved_diffstat
-      if length $self->saved_diffstat;
+    my $diffstat = path($self->groupdir)->child('diffstat')->stringify;
 
-    my $dstat = path($self->groupdir)->child('diffstat')->stringify;
+    $diffstat = '/dev/null'
+      unless -e $diffstat;
 
-    $dstat = '/dev/null'
-      unless -e $dstat;
-
-    $self->saved_diffstat($dstat);
-
-    return $self->saved_diffstat;
+    return $diffstat;
 }
 
 1;

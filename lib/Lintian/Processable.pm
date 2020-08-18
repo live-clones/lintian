@@ -129,10 +129,6 @@ Returns the base directory of this package inside the lab.
 
 Returns a reference to the extra fields related to this entry.
 
-=item saved_link
-
-Returns a reference to the extra fields related to this entry.
-
 =cut
 
 has path => (alias => 'pkg_path', is => 'rw', default => EMPTY);
@@ -227,7 +223,6 @@ has groupdir => (
     });
 
 has link_label => (is => 'rw', default => EMPTY);
-has saved_link => (is => 'rw', default => EMPTY);
 
 =item C<identifier>
 
@@ -303,10 +298,11 @@ Returns the link in the work area to the input data.
 
 =cut
 
-sub link {
-    my ($self) = @_;
-
-    unless (length $self->saved_link) {
+has link => (
+    is => 'rw',
+    lazy => 1,
+    default => sub {
+        my ($self) = @_;
 
         croak 'Please set base directory for processable first'
           unless length $self->groupdir;
@@ -315,11 +311,9 @@ sub link {
           unless length $self->link_label;
 
         my $link = path($self->groupdir)->child($self->link_label)->stringify;
-        $self->saved_link($link);
-    }
 
-    return $self->saved_link;
-}
+        return $link;
+    });
 
 =item guess_name
 
