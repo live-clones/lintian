@@ -46,23 +46,30 @@ sub always {
         for my $context (keys %{$declared_overrides->{$tagname}}) {
 
             my $entry = $declared_overrides->{$tagname}{$context};
-            my $line = $entry->{line};
+
             my @comments = @{$entry->{comments}};
+            my $override_position = $entry->{line};
 
-            check_spelling(
-                $_,
-                $self->group->spelling_exceptions,
-                $self->emitter(
-                    'spelling-in-override-comment',
-                    "$tagname (line $line)"
-                ))for @comments;
+            my $position = $override_position - scalar @comments;
+            for my $comment (@comments) {
 
-            check_spelling_picky(
-                $_,
-                $self->emitter(
-                    'capitalization-in-override-comment',
-                    "$tagname (line $line)"
-                ))for @comments;
+                check_spelling(
+                    $comment,
+                    $self->group->spelling_exceptions,
+                    $self->emitter(
+                        'spelling-in-override-comment',
+                        "$tagname (line $position)"
+                    ));
+
+                check_spelling_picky(
+                    $comment,
+                    $self->emitter(
+                        'capitalization-in-override-comment',
+                        "$tagname (line $position)"
+                    ));
+            } continue {
+                $position++;
+            }
         }
     }
 
