@@ -2,7 +2,7 @@ Tag: package-uses-old-debhelper-compat-version
 Severity: pedantic
 Check: debhelper
 Info: This package uses a debhelper compatibility level that is no
- longer recommended. Please consider using a recommended level.
+ longer recommended. Please consider using the recommended level.
  .
  For most packages, the best way to set the compatibility level is
  to specify <tt>debhelper-compat (= X)</tt> as a <tt>Build-Depends</tt>
