@@ -1,5 +1,5 @@
 Tag: spelling-error-in-doc-base-title-field
-Severity: warning
+Severity: pedantic
 Check: menus
 Info: Lintian found a spelling, grammar or capitalization error in the
  Title field of this doc-base control file. Lintian has a list of common
