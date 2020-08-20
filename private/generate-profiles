@@ -8,10 +8,11 @@ use warnings;
 use utf8;
 use autodie;
 
-BEGIN {
-    $ENV{'LINTIAN_BASE'} //= q{.};
-}
+# use Lintian modules that belong to this program
+use FindBin;
+use lib "$FindBin::RealBin/../lib";
 
+use Cwd qw(realpath);
 use File::Find::Rule;
 use List::Compare;
 use List::Util qw(uniq);
@@ -19,9 +20,7 @@ use LWP::Simple;
 use Path::Tiny;
 use YAML::XS;
 
-use lib "$ENV{LINTIAN_BASE}/lib";
-
-use Lintian::Deb822::Parser qw(read_dpkg_control);
+use Lintian::Deb822::File;
 
 use constant EMPTY => q{};
 use constant SPACE => q{ };
@@ -29,6 +28,9 @@ use constant COMMA => q{,};
 use constant HYPHEN => q{-};
 use constant INDENT => q{    };
 use constant NEWLINE => qq{\n};
+
+$ENV{LINTIAN_BASE} = realpath("$FindBin::RealBin/..")
+  // die 'Cannot resolve LINTIAN_BASE';
 
 # generate main profile
 my $checkdir = "$ENV{LINTIAN_BASE}/checks";
@@ -74,17 +76,18 @@ my %new_name;
 my $tagroot = "$ENV{LINTIAN_BASE}/tags";
 my @descfiles = File::Find::Rule->file()->name('*.desc')->in($tagroot);
 for my $tagpath (@descfiles) {
-    my @paragraphs = read_dpkg_control($tagpath);
+
+    my $deb822 = Lintian::Deb822::File->new;
+    my @sections = $deb822->read_file($tagpath);
     die "Tag in $tagpath does not have exactly one paragraph"
-      unless scalar @paragraphs == 1;
+      unless scalar @sections == 1;
 
-    my %fields = %{ $paragraphs[0] };
+    my $fields = $sections[0];
 
-    my $name = $fields{Tag};
-    push(@known_tags, $fields{Tag});
+    my $name = $fields->value('Tag');
+    push(@known_tags, $name);
 
-    my @renamed_from= grep { length }
-      grep { s/^\s*|\s*$//g } split(/,/, $fields{'Renamed-From'} // EMPTY);
+    my @renamed_from = $fields->trimmed_list('Renamed-From');
 
     my @taken = grep { exists $new_name{$_} } @renamed_from;
 

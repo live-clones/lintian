@@ -39,14 +39,15 @@ use Cwd qw(abs_path getcwd realpath);
 use Carp qw(croak verbose);
 use Config::Tiny;
 use File::BaseDir qw(config_files data_home);
-use File::Basename;
 use Getopt::Long ();
 use List::Compare;
 use List::MoreUtils qw(any none first_value);
 use Path::Tiny;
 use POSIX qw(:sys_wait_h);
+use Unicode::UTF8 qw(valid_utf8 decode_utf8);
 
 use Lintian::Data;
+use Lintian::Deb822::Parser qw(parse_dpkg_control_string);
 use Lintian::Inspect::Changelog;
 use Lintian::IPC::Run3 qw(safe_qx);
 use Lintian::Output::Standard;
@@ -215,7 +216,7 @@ unless ($command_line{'no-user-dirs'}) {
     }
 
     $LINTIAN_CFG ||= first_value { length $_ && -f $_ }
-    ($xdg_config_file, $dot_config_file);
+    ($xdg_config_file, $dot_config_file, '/etc/lintianrc');
 
     # make path absolute for use elsewhere
     $xdg_data_home = getcwd() . SLASH . $xdg_data_home
@@ -714,9 +715,9 @@ for my $path (@subjects) {
     # in ubuntu, automatic dbgsym packages end with .ddeb
     die
 "bad package file name $path (neither .deb, .udeb, .ddeb, .changes, .dsc or .buildinfo file)\n"
-      unless $path =~ m/\.(?:[u|d]?deb|dsc|changes|buildinfo)$/;
+      unless $path =~ /\.(?:[u|d]?deb|dsc|changes|buildinfo)$/;
 
-    my $absolute = Cwd::abs_path($path);
+    my $absolute = abs_path($path);
     die "Cannot resolve $path: $!"
       unless $absolute;
 
@@ -724,7 +725,34 @@ for my $path (@subjects) {
         # create a new group
         my $group = Lintian::Group->new;
         $group->pooldir($pool->basedir);
-        $group->init_from_file($absolute);
+
+        my $processable = $group->add_processable_from_file($absolute);
+
+        my $parent = path($absolute)->parent->stringify;
+
+        my @files;
+
+        # pull in any additional files
+        @files = keys %{$processable->files}
+          if $processable->can('files');
+
+        for my $basename (@files) {
+
+            # ignore traversal attempts
+            next
+              if $basename =~ m{/};
+
+            die "$parent/$basename does not exist, exiting\n"
+              unless -f "$parent/$basename";
+
+            # only care about some files; ddeb is ubuntu dbgsym
+            next
+              unless $basename =~ /\.(?:u|d)?deb$/
+              || $basename =~ /\.dsc$/
+              || $basename =~ /\.buildinfo$/;
+
+            $group->add_processable_from_file("$parent/$basename");
+        }
 
         $pool->add_group($group);
     };

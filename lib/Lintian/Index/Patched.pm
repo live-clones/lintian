@@ -26,22 +26,13 @@ use utf8;
 use autodie;
 
 use Cwd;
-use IO::Async::Loop;
-use IO::Async::Process;
+use IPC::Run3;
 use Path::Tiny;
 
 use Lintian::Index::Item;
-use Lintian::IO::Async qw(safe_qx);
-
-# Read up to 40kB at the time.  This happens to be 4096 "tar records"
-# (with a block-size of 512 and a block factor of 20, which appears to
-# be the default).  When we do full reads and writes of READ_SIZE (the
-# OS willing), the receiving end will never be with an incomplete
-# record.
-use constant READ_SIZE => 4096 * 1024 * 10;
+use Lintian::IPC::Run3 qw(safe_qx);
 
 use constant EMPTY => q{};
-use constant SPACE => q{ };
 use constant COLON => q{:};
 use constant SLASH => q{/};
 use constant NEWLINE => qq{\n};
@@ -79,8 +70,6 @@ in the collections scripts used previously.
 
 =item collect
 
-=item unpack
-
 =cut
 
 sub collect {
@@ -90,7 +79,7 @@ sub collect {
     my $basedir = path($groupdir)->child('unpacked')->stringify;
     $self->basedir($basedir);
 
-    $self->unpack($groupdir);
+    $self->create($groupdir);
     $self->load;
 
     $self->add_md5sums;
@@ -100,7 +89,11 @@ sub collect {
     return;
 }
 
-sub unpack {
+=item create
+
+=cut
+
+sub create {
     my ($self, $groupdir) = @_;
 
     my $savedir = getcwd;
@@ -108,52 +101,32 @@ sub unpack {
     path($self->basedir)->remove_tree
       if -d $self->basedir;
 
-    for my $file (qw(index-errors unpacked-errors)) {
-        unlink("$groupdir/$file") if -e "$groupdir/$file";
-    }
-
     print "N: Using dpkg-source to unpack\n"
       if $ENV{'LINTIAN_DEBUG'};
 
     my $saved_umask = umask;
     umask 0000;
 
-    # Ignore STDOUT of the child process because older versions of
-    # dpkg-source print things out even with -q.
-    my $loop = IO::Async::Loop->new;
-    my $future = $loop->new_future;
-    my $dpkgerror;
+    my @unpack_command = (qw(dpkg-source -q --no-check --extract),
+        "$groupdir/dsc", $self->basedir);
 
-    my $process = IO::Async::Process->new(
-        command =>[
-            'dpkg-source', '-q','--no-check', '-x',
-            "$groupdir/dsc", $self->basedir
-        ],
-        stderr => { into => \$dpkgerror },
-        on_finish => sub {
-            my ($self, $exitcode) = @_;
-            my $status = ($exitcode >> 8);
+    # ignore STDOUT; older versions are not completely quiet with -q
+    my $unpack_error;
 
-            if ($status) {
-                my $message = "Non-zero status $status from dpkg-source";
-                $message .= COLON . NEWLINE . $dpkgerror
-                  if length $dpkgerror;
-                $future->fail($message);
-                return;
-            }
+    run3(\@unpack_command, undef, undef, \$unpack_error);
 
-            $future->done('Done with dpkg-deb');
-            return;
-        });
+    my $status = ($? >> 8);
+    if ($status) {
+        my $message = "Non-zero status $status from @unpack_command";
+        $message .= COLON . NEWLINE . $unpack_error
+          if length $unpack_error;
 
-    $loop->add($process);
-
-    # awaits, and dies with message on failure
-    $future->get;
+        die $message;
+    }
 
     umask $saved_umask;
 
-    path("$groupdir/unpacked-errors")->append($dpkgerror // EMPTY);
+    path("$groupdir/unpacked-errors")->append($unpack_error // EMPTY);
 
     # chdir for index_src
     chdir($self->basedir);
@@ -216,9 +189,6 @@ sub unpack {
 
     # fix permissions
     safe_qx('chmod', '-R', 'u+rwX,o+rX,o-w', $self->basedir);
-
-    # remove error file if empty
-    unlink("$groupdir/unpacked-errors") if -z "$groupdir/unpacked-errors";
 
     chdir($savedir);
 

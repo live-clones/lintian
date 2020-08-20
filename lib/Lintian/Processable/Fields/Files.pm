@@ -3,7 +3,7 @@
 #
 # Copyright © 2010 Adam D. Barratt
 # Copyright © 2018 Chris Lamb
-# Copyright © 2019 Felix Lechner
+# Copyright © 2019-2020 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by the Free
@@ -94,75 +94,72 @@ checksum.
 
 =cut
 
-has saved_files => (is => 'rwp', default => sub { {} });
+has files => (
+    is => 'rw',
+    lazy => 1,
+    default =>
 
-sub files {
-    my ($self) = @_;
+      sub {
+        my ($self) = @_;
 
-    return $self->saved_files
-      if scalar keys %{$self->saved_files};
+        my %files;
 
-    my %files;
+        my @lines = split(/\n/, $self->fields->value('Files'));
 
-    my $file_list = $self->fields->value('Files');
+        # trim both ends of each line
+        s/^\s+|\s+$//g for @lines;
 
-    local $_;
+        for my $line (grep { length } @lines) {
 
-    for (split /\n/, $file_list) {
+            my @fields = split(/\s+/, $line);
+            my $basename = $fields[-1];
 
-        # trim both ends
-        s/^\s+|\s+$//g;
+            # ignore traversals
+            next
+              if $basename =~ m{/};
 
-        next if $_ eq '';
+            my ($md5sum, $size, $section, $priority) = @fields;
 
-        my @fields = split(/\s+/, $_);
-        my $file = $fields[-1];
-
-        next
-          if $file =~ m,/,;
-
-        my ($md5sum, $size, $section, $priority) = @fields;
-
-        $files{$file}{checksums}{Md5} = {
-            'sum' => $md5sum,
-            'filesize' => $size,
-        };
-
-        $files{$file}{name} = $file;
-        $files{$file}{size} = $size;
-
-        unless ($self->type eq 'source') {
-
-            $files{$file}{section} = $section;
-            $files{$file}{priority} = $priority;
-        }
-    }
-
-    foreach my $alg (qw(Sha1 Sha256)) {
-
-        my $list = $self->fields->value("Checksums-$alg");
-
-        for (split /\n/, $list) {
-
-            # trim both ends
-            s/^\s+|\s+$//g;
-
-            next if $_ eq '';
-
-            my ($checksum, $size, $file) = split(/\s+/, $_);
-            next if $file =~ m,/,;
-
-            $files{$file}{checksums}{$alg} = {
-                'sum' => $checksum,
-                'filesize' => $size
+            $files{$basename}{checksums}{Md5} = {
+                'sum' => $md5sum,
+                'filesize' => $size,
             };
+
+            $files{$basename}{name} = $basename;
+            $files{$basename}{size} = $size;
+
+            unless ($self->type eq 'source') {
+
+                $files{$basename}{section} = $section;
+                $files{$basename}{priority} = $priority;
+            }
         }
-    }
 
-    $self->_set_saved_files(\%files);
+        for my $algorithm (qw(Sha1 Sha256)) {
 
-    return $self->saved_files;
-}
+            my @lines
+              = split(/\n/, $self->fields->value("Checksums-$algorithm"));
+
+            # trim both ends of each line
+            s/^\s+|\s+$//g for @lines;
+
+            for my $line (grep { length } @lines) {
+
+                my ($checksum, $size, $basename) = split(/\s+/, $line);
+
+                # ignore traversals
+                next
+                  if $basename =~ m{/};
+
+                $files{$basename}{checksums}{$algorithm} = {
+                    'sum' => $checksum,
+                    'filesize' => $size
+                };
+            }
+        }
+
+        return \%files;
+    });
 
 =back
 

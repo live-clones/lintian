@@ -8,8 +8,7 @@ profiles := profiles/debian/main.profile \
 	    profiles/debian/ftp-master-auto-reject.profile
 pod2man := pod2man --center "Debian Package Checker" --release "Lintian v$(VER)"
 pod2mansources := $(wildcard man/*.pod)
-docsource := doc/lintian.rst README.md man/lintian.pod.in \
-	     $(pod2mansources)
+docsources := doc/lintian.rst README.md $(pod2mansources)
 perlprovides := data/fields/perl-provides
 autoreject_data := $(wildcard private/build-time-data/*)
 
@@ -41,12 +40,11 @@ override_dh_install:
 	    $(tmp)/usr/share/lintian/bin/lintian-info
 	$(PERL) -p -i -e 's/my \$$LINTIAN_VERSION;/my \$$LINTIAN_VERSION = q{$(VER)};/;' \
 	    $(tmp)/usr/share/lintian/bin/spellintian
-	install -m 644 doc/lintianrc.example $(tmp)/etc/lintianrc
 
 profiles: $(profiles);
 
-$(profiles): $(autoreject_data) private/generate-profiles.pl
-	private/generate-profiles.pl
+$(profiles): $(autoreject_data) private/generate-profiles
+	private/generate-profiles
 
 api-doc:
 	private/generate-html-docs doc/api.html
@@ -54,13 +52,12 @@ api-doc:
 .PHONY: generate-docs
 generate-docs: generate-docs-stamp
 
-generate-docs-stamp: $(docsource)
+generate-docs-stamp: $(docsources)
 	dh_testdir
 # A UTF-8 locale seemed appropriate; manual uses &sect; character
 	cd doc && LC_ALL=en_US.UTF-8 rst2html lintian.rst > lintian.html
 	mkdir -p man/man1/ man/man3/
-	private/generate-lintian-pod | \
-		$(pod2man) --name lintian --section=1 > man/man1/lintian.1
+	$(pod2man) --name lintian --section=1 man/lintian.pod > man/man1/lintian.1
 	set -e ; for POD in $(pod2mansources) ; do \
 		BASENAME=$$(basename "$$POD" .pod) ; \
 		$(pod2man) --section=1 "$$POD" > "man/man1/$$BASENAME".1 ; \

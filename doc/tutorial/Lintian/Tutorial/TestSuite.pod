@@ -24,7 +24,7 @@ of tests are currently located in the "tests" sub-suite.
 
 To run the full suite:
 
- $ rm -rf debian/test-out; t/bin/build-test-packages; t/bin/runtests
+ $ rm -rf debian/test-out; private/build-test-packages; private/runtests
 
 While writing a new tag (or check) you probably only want to run a
 particular (subset of the) test(s).  See L</Running a subset of the
@@ -34,7 +34,7 @@ tests> for the available options.
 
 First, you have to build the test packages with:
 
- $ rm -rf debian/test-out; t/bin/build-test-packages;
+ $ rm -rf debian/test-out; private/build-test-packages;
 
 Then, the following options are available:
 
@@ -44,13 +44,13 @@ Then, the following options are available:
 
 To run a single test by its name, use:
 
- $ t/bin/runtests --onlyrun=test:$name
+ $ private/runtests --onlyrun=test:$name
 
 =item Running all tests for a check
 
 To run all tests for a given check, use:
 
- $ t/bin/runtests --onlyrun=check:$name
+ $ private/runtests --onlyrun=check:$name
 
 $check must be the name of a check (it will test for
 checks/$check.desc) or "legacy".  This will run all tests that start
@@ -61,7 +61,7 @@ with "$check-".
 To run all tests that have a "Test-For" or a "Test-Against" for a given
 tag, use:
 
- $ t/bin/runtests --onlyrun=tag:$name
+ $ private/runtests --onlyrun=tag:$name
 
 =back
 
@@ -70,9 +70,9 @@ tag, use:
 This feature is currently untested.
 
 It is possible to run most of the tests under L<Devel::Cover>.  This is
-done by passing I<--coverage> to I<t/bin/runtests>.  Example:
+done by passing I<--coverage> to I<private/runtests>.  Example:
 
-  $ t/bin/runtests --coverage --dump-logs -j1 -k t debian/test-out
+  $ private/runtests --coverage --dump-logs -j1 -k t debian/test-out
 
 Please note that L<Devel::Cover> does not seem to handle multiple
 threads too well.  You may see spurious warnings/errors if you run the
@@ -96,15 +96,15 @@ Fortunately, L<Devel::Cover> "appends" to its cover database.  This
 allows you to "slowly" build up the coverage database over multiple
 runs. Example:
 
-  $ t/bin/runtests --coverage --dump-logs -j1 -k t debian/test-out suite:scripts
-  $ t/bin/runtests --coverage --dump-logs -j1 -k t debian/test-out suite:debs
-  $ t/bin/runtests --coverage --dump-logs -j1 -k t debian/test-out suite:source
+  $ private/runtests --coverage --dump-logs -j1 -k t debian/test-out suite:scripts
+  $ private/runtests --coverage --dump-logs -j1 -k t debian/test-out suite:debs
+  $ private/runtests --coverage --dump-logs -j1 -k t debian/test-out suite:source
   ...
 
 Or:
 
-  $ t/bin/runtests --coverage --dump-logs -j1 -k t debian/test-out $check
-  $ t/bin/runtests --coverage --dump-logs -j1 -k t debian/test-out legacy
+  $ private/runtests --coverage --dump-logs -j1 -k t debian/test-out $check
+  $ private/runtests --coverage --dump-logs -j1 -k t debian/test-out legacy
 
 
 =head1 SEE ALSO

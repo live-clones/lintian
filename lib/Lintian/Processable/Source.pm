@@ -24,10 +24,12 @@ use utf8;
 use autodie;
 
 use Carp qw(croak);
+use File::Spec;
 use Path::Tiny;
 
 use Lintian::Deb822::File;
 
+use constant EMPTY => q{};
 use constant COLON => q{:};
 use constant SLASH => q{/};
 
@@ -44,7 +46,7 @@ with 'Lintian::Processable',
   'Lintian::Processable::Orig',
   'Lintian::Processable::Overrides',
   'Lintian::Processable::Patched',
-  'Lintian::Processable::Source::Diffstat',
+  'Lintian::Processable::Source::Components',
   'Lintian::Processable::Source::Format',
   'Lintian::Processable::Source::Relation',
   'Lintian::Processable::Source::Repacked';
@@ -133,12 +135,21 @@ sub init {
 sub unpack {
     my ($self) = @_;
 
+    my $parent = path($self->path)->parent->stringify;
+
+    # pull in all related files for unpacking
+    for my $basename (keys %{$self->files}) {
+
+        symlink("$parent/$basename", $self->groupdir . "/$basename")
+          or die "cannot symlink file $basename: $!";
+    }
+
     $self->patched->collect($self->groupdir);
 
     $self->add_diffstat;
     $self->add_overrides;
 
-    $self->orig->collect($self->groupdir)
+    $self->orig->collect($self->groupdir, $self->components)
       unless $self->native;
 
     return;

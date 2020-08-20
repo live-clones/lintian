@@ -7,15 +7,13 @@ use warnings;
 use utf8;
 use autodie;
 
+# use Lintian modules that belong to this program
+use FindBin;
+use lib "$FindBin::RealBin/../lib";
+
 use Getopt::Long;
 
-BEGIN {
-    $ENV{'LINTIAN_BASE'} //= '.';
-}
-
-use lib "$ENV{'LINTIAN_BASE'}/lib/";
-
-use Lintian::IO::Async qw(safe_qx);
+use Lintian::IPC::Run3 qw(safe_qx);
 
 my (%added, %removed, %opt);
 

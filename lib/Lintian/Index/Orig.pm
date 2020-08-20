@@ -25,18 +25,15 @@ use warnings;
 use utf8;
 use autodie;
 
-use Carp;
 use Cwd();
-use IO::Async::Loop;
-use IO::Async::Process;
+use IPC::Run3;
 use List::MoreUtils qw(uniq);
 use Path::Tiny;
 
-use Lintian::Deb822::Parser qw(read_dpkg_control);
+use Lintian::Deb822::File;
 use Lintian::Index::Item;
 
 use constant EMPTY => q{};
-use constant SPACE => q{ };
 use constant COLON => q{:};
 use constant SLASH => q{/};
 use constant NEWLINE => qq{\n};
@@ -76,97 +73,24 @@ in the collections scripts used previously.
 =cut
 
 sub collect {
-    my ($self, $groupdir) = @_;
+    my ($self, $groupdir, $components) = @_;
 
     # source packages can be unpacked anywhere; no anchored roots
     $self->allow_empty(1);
 
-    $self->create($groupdir);
+    $self->create($groupdir, $components);
     $self->load;
 
     return;
 }
 
 sub create {
-    my ($self, $groupdir) = @_;
-
-    my $dsclink = "$groupdir/dsc";
-    my $dscpath = Cwd::realpath($dsclink);
-    die "Cannot resolve 'dsc' link: $dsclink"
-      unless $dscpath;
-    die "The 'dsc' link does not point to a file: $dscpath"
-      unless -e $dscpath;
-
-    # determine source and version; handles missing fields
-
-    my @paragraphs;
-    @paragraphs = read_dpkg_control($dscpath)
-      or croak $dscpath . ' is not valid dsc file';
-    my $dinfo = $paragraphs[0];
-
-    my $name = $dinfo->{Source} // EMPTY;
-    my $version = $dinfo->{Version} // EMPTY;
-    my $architecture = 'source';
-
-    # it is its own source package
-    my $source = $name;
-    my $source_version = $version;
-
-    croak $dscpath . ' is missing Source field'
-      unless length $name;
-
-    #  Version handling is based on Dpkg::Version::parseversion.
-    my $noepoch = $source_version;
-    if ($noepoch =~ /:/) {
-        $noepoch =~ s/^(?:\d+):(.+)/$1/
-          or die "Bad version number '$noepoch'";
-    }
-
-    my $baserev = $source . '_' . $noepoch;
-
-    # strip debian revision
-    $noepoch =~ s/(.+)-(?:.*)$/$1/;
-    my $base = $source . '_' . $noepoch;
-
-    my @files = split(/\n/, $dinfo->{Files} // EMPTY);
-
-    my %components;
-    for my $line (@files) {
-
-        # strip leading whitespace
-        $line =~ s/^\s*//;
-
-        next
-          unless length $line;
-
-        # get file name
-        my (undef, undef, $name) = split(/\s+/, $line);
-
-        next
-          unless length $name;
-
-        # skip if files in subdirs
-        next
-          if $name =~ m{/};
-
-        # Look for $pkg_$version.orig(-$comp)?.tar.$ext (non-native)
-        #       or $pkg_$version.tar.$ext (native)
-        #  - This deliberately does not look for the debian packaging
-        #    even when this would be a tarball.
-        if ($name
-            =~ /^(?:\Q$base\E\.orig(?:-(.*))?|\Q$baserev\E)\.tar\.(?:gz|bz2|lzma|xz)$/
-        ) {
-            $components{$name} = $1 // EMPTY;
-        }
-    }
-
-    die 'Could not find any source components'
-      unless %components;
+    my ($self, $groupdir, $components) = @_;
 
     my %all;
-    for my $tarball (sort keys %components) {
+    for my $tarball (sort keys %{$components}) {
 
-        my $component = $components{$tarball};
+        my $component = $components->{$tarball};
 
         my @tar_options= (
             '--list', '--verbose',
@@ -181,37 +105,22 @@ sub create {
 
         my @tar = ('tar', @tar_options, "$groupdir/$tarball");
 
-        my $loop = IO::Async::Loop->new;
-        my $future = $loop->new_future;
         my $stdout;
         my $stderr;
 
-        my $process = IO::Async::Process->new(
-            command => [@tar],
-            stdout => { into => \$stdout },
-            stderr => { into => \$stderr },
-            on_finish => sub {
-                my ($self, $exitcode) = @_;
-                my $status = ($exitcode >> 8);
+        run3(\@tar, undef, \$stdout, \$stderr);
 
-                path("$groupdir/orig-index-errors")->append($stderr // EMPTY);
+        my $status = ($? >> 8);
 
-                if ($status) {
-                    my $message
-                      = "Non-zero status $status from tar for $tarball";
-                    $message .= COLON . NEWLINE . $stderr
-                      if length $stderr;
-                    $future->fail($message);
-                    return;
-                }
+        path("$groupdir/orig-index-errors")->append($stderr // EMPTY);
 
-                $future->done("Done with tar for $tarball");
-                return;
-            });
+        if ($status) {
+            my $message= "Non-zero status $status from @tar";
+            $message .= COLON . NEWLINE . $stderr
+              if length $stderr;
 
-        $loop->add($process);
-
-        $future->get;
+            die $message;
+        }
 
         my @lines = split(/\n/, $stdout);
 

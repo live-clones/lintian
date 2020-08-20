@@ -27,6 +27,8 @@ use List::MoreUtils qw(any);
 use Path::Tiny;
 
 use Lintian::Index::Item;
+use Lintian::IO::Async qw(safe_qx unpack_and_index_piped_tar);
+
 use Lintian::Util qw(perm2oct);
 
 use constant EMPTY => q{};
@@ -147,6 +149,53 @@ sub resolve_path {
     my ($self, $name) = @_;
 
     return $self->lookup->resolve_path($name);
+}
+
+=item create_from_piped_tar
+
+=cut
+
+sub create_from_piped_tar {
+    my ($self, $command) = @_;
+
+    mkdir($self->basedir, 0777);
+
+    my ($named, $numeric, $extract_errors, $index_errors)
+      = unpack_and_index_piped_tar($command, $self->basedir);
+
+    # fix permissions
+    safe_qx('chmod', '-R', 'u+rwX,go-w', $self->basedir);
+
+    my @named_owner = split(/\n/, $named);
+    my @numeric_owner = split(/\n/, $numeric);
+
+    my %catalog;
+
+    for my $line (@named_owner) {
+
+        my $entry = Lintian::Index::Item->new;
+        $entry->init_from_tar_output($line);
+
+        $catalog{$entry->name} = $entry;
+    }
+
+    # get numerical owners from second list
+    for my $line (@numeric_owner) {
+
+        my $entry = Lintian::Index::Item->new;
+        $entry->init_from_tar_output($line);
+
+        die 'Numerical index lists extra files for file name '. $entry->name
+          unless exists $catalog{$entry->name};
+
+        # keep numerical uid and gid
+        $catalog{$entry->name}->uid($entry->owner);
+        $catalog{$entry->name}->gid($entry->group);
+    }
+
+    $self->catalog(\%catalog);
+
+    return ($extract_errors, $index_errors);
 }
 
 =item load

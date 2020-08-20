@@ -27,7 +27,7 @@ Checksum_input () {
 	# Local files that, if changed, should result in a rebuild of the test
 	# packages.
 	find \
-		bin/build-test-packages \
+		private/build-test-packages \
 		lib/Test/ \
 		-type f -print0 | sort -z | xargs -0 sha1sum
 
@@ -65,7 +65,7 @@ then
     tar xfJ "${CACHE_FILENAME}"
 fi
 
-bin/build-test-packages
+private/build-test-packages
 
 echo "I: Removing obsolete test package artifacts from .cache" >&2
 find .cache \

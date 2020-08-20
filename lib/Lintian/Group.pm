@@ -25,7 +25,6 @@ use utf8;
 use autodie;
 
 use Carp;
-use Cwd;
 use Devel::Size qw(total_size);
 use File::Spec;
 use List::Compare;
@@ -34,9 +33,7 @@ use Path::Tiny;
 use POSIX qw(ENOENT);
 use Time::HiRes qw(gettimeofday tv_interval);
 use Time::Piece;
-use Unicode::UTF8 qw(valid_utf8 decode_utf8);
 
-use Lintian::Deb822::Parser qw(parse_dpkg_control_string);
 use Lintian::Processable::Binary;
 use Lintian::Processable::Buildinfo;
 use Lintian::Processable::Changes;
@@ -48,7 +45,6 @@ use constant EMPTY => q{};
 use constant SPACE => q{ };
 use constant HYPHEN => q{-};
 use constant SLASH => q{/};
-use constant UNDERSCORE => q{_};
 
 use Moo;
 use namespace::clean;
@@ -158,13 +154,11 @@ has saved_direct_dependencies => (is => 'rw', default => sub { {} });
 has saved_direct_reliants => (is => 'rw', default => sub { {} });
 has saved_spelling_exceptions => (is => 'rw', default => sub { {} });
 
-=item Lintian::Group->init_from_file (FILE)
-
-Add all processables from .changes or .buildinfo file FILE.
+=item add_processable_from_file
 
 =cut
 
-sub _get_processable {
+sub add_processable_from_file {
     my ($self, $file) = @_;
 
     my $absolute = path($file)->realpath->stringify;
@@ -196,134 +190,9 @@ sub _get_processable {
     $processable->pooldir($self->pooldir);
     $processable->init($absolute);
 
-    return $processable;
-}
-
-#  populates $self from a buildinfo or changes file.
-sub init_from_file {
-    my ($self, $path) = @_;
-
-    return
-      unless defined $path;
-
-    my $processable = $self->_get_processable($path);
-    return
-      unless $processable;
-
     $self->add_processable($processable);
 
-    my ($type) = $path =~ m/\.(buildinfo|changes)$/;
-    return
-      unless defined $type;
-
-    my $bytes = path($path)->slurp;
-
-    my $contents;
-    if(valid_utf8($bytes)) {
-        $contents = decode_utf8($bytes);
-    } else {
-        # try to proceed with nat'l encoding; stopping here breaks tests
-        $contents = $bytes;
-    }
-
-    my @paragraphs;
-    @paragraphs = parse_dpkg_control_string($contents)
-      or die "$path is not a valid $type file";
-    my $info = $paragraphs[0];
-
-    my $dir = $path;
-    if ($path =~ m,^/+[^/]++$,){
-        # it is "/files.changes?"
-        #  - In case you were wondering, we were told not to ask :)
-        #   See #624149
-        $dir = '/';
-    } else {
-        # it is "<something>/files.changes"
-        $dir =~ s,(.+)/[^/]+$,$1,;
-    }
-    my $key = $type eq 'buildinfo' ? 'Checksums-Sha256' : 'Files';
-    for my $line (split(/\n/, $info->{$key}//'')) {
-
-        next
-          unless defined $line;
-
-        # trim both ends
-        $line =~ s/^\s+|\s+$//g;
-
-        next
-          if $line eq EMPTY;
-
-        # Ignore files that may lead to path traversal issues.
-
-        # We do not need (eg.) md5sum, size, section or priority
-        # - just the file name please.
-        my $file = (split(/\s+/, $line))[-1];
-
-        # If the field is malformed, $file may be undefined; we also
-        # skip it, if it contains a "/" since that is most likely a
-        # traversal attempt
-        next
-          if !$file || $file =~ m,/,;
-
-        die "$dir/$file does not exist, exiting\n"
-          unless -f "$dir/$file";
-
-        # only care about some files; ddeb is ubuntu dbgsym
-        next
-          unless $file =~ /\.(?:u|d)?deb$/
-          || $file =~ m/\.dsc$/
-          || $file =~ m/\.buildinfo$/;
-
-        my $payload = $self->_get_processable("$dir/$file");
-        $self->add_processable($payload);
-    }
-
-    return 1;
-}
-
-=item unpack
-
-Unpack this group.
-
-=cut
-
-sub unpack {
-    my ($self, $OUTPUT)= @_;
-
-    my $groupname = $self->name;
-    local $SIG{__WARN__} = sub { warn "Warning in group $groupname: $_[0]" };
-
-    my @processables = $self->get_processables;
-    for my $processable (@processables) {
-
-        $processable->create;
-
-        # for sources pull in all related files so unpacked does not fail
-        if ($processable->type eq 'source') {
-            my (undef, $dir, undef)= File::Spec->splitpath($processable->path);
-            for my $fs (split(/\n/, $processable->fields->value('Files'))) {
-
-                # trim both ends
-                $fs =~ s/^\s+|\s+$//g;
-
-                next if $fs eq '';
-                my @t = split(/\s+/, $fs);
-                next if ($t[2] =~ m,/,);
-                symlink("$dir/$t[2]", $processable->groupdir . "/$t[2]")
-                  or croak("cannot symlink file $t[2]: $!");
-            }
-        }
-    }
-
-    $OUTPUT->v_msg('Unpacking packages in group ' . $self->name);
-
-    my @unpack = grep { $_->can('unpack') } @processables;
-
-    my $savedir = getcwd;
-    $_->unpack for @unpack;
-    chdir($savedir);
-
-    return;
+    return $processable;
 }
 
 =item process
@@ -337,12 +206,41 @@ sub process {
 
     $self->processing_start(gmtime->datetime . 'Z');
 
+    my $groupname = $self->name;
+    local $SIG{__WARN__} = sub { warn "Warning in group $groupname: $_[0]" };
+
+    $OUTPUT->v_msg('Starting on group ' . $self->name);
+
+    my @processables = $self->get_processables;
+    for my $processable (@processables) {
+
+        path($processable->groupdir)->mkpath
+          unless -e $processable->groupdir;
+
+        symlink($processable->path, $processable->link)
+          unless -l $processable->link;
+
+        if ($processable->can('unpack')) {
+
+            my $unpack_start = [gettimeofday];
+            $OUTPUT->v_msg(
+                'Unpacking packages in processable ' . $processable->name);
+
+            $processable->unpack;
+
+            my $unpack_raw_res = tv_interval($unpack_start);
+            my $unpack_tres = sprintf('%.3fs', $unpack_raw_res);
+
+            $OUTPUT->debug_msg(1,
+                'Unpack of ' . $processable->name . " done ($unpack_tres)");
+            $OUTPUT->perf_log(
+                $self->name . ",total-processable-unpack,$unpack_raw_res");
+        }
+    }
+
     my $success = 1;
 
     my $timer = [gettimeofday];
-
-    my $groupname = $self->name;
-    local $SIG{__WARN__} = sub { warn "Warning in group $groupname: $_[0]" };
 
     for my $processable ($self->get_processables){
 
@@ -630,10 +528,6 @@ sub add_processable{
     croak 'Not a supported type (' . $processable->type . ')'
       unless exists $SUPPORTED_TYPES{$processable->type};
 
-    my $dir = $self->_pool_path($processable);
-
-    $processable->groupdir($dir);
-
     if ($processable->type eq 'changes') {
         die 'Cannot add another ' . $processable->type . ' file'
           if $self->changes;
@@ -663,44 +557,6 @@ sub add_processable{
     }
 
     return 1;
-}
-
-# Given the package meta data (src_name, type, name, version, arch) return the
-# path to it in the Lab.  The path returned will be absolute.
-sub _pool_path {
-    my ($self, $processable) = @_;
-
-    my $dir = $self->pooldir;
-    my $prefix;
-
-    # If it is at least 4 characters and starts with "lib", use "libX"
-    # as prefix
-    if ($processable->source =~ m/^lib./) {
-        $prefix = substr $processable->source, 0, 4;
-    } else {
-        $prefix = substr $processable->source, 0, 1;
-    }
-
-    my $path
-      = $prefix
-      . SLASH
-      . $processable->source
-      . SLASH
-      . $processable->name
-      . UNDERSCORE
-      . $processable->version;
-    $path .= UNDERSCORE . $processable->architecture
-      unless $processable->type eq 'source';
-    $path .= UNDERSCORE . $processable->type;
-
-    # Turn spaces into dashes - spaces do appear in architectures
-    # (i.e. for changes files).
-    $path =~ s/\s/-/g;
-
-    # Also replace ":" with "_" as : is usually used for path separator
-    $path =~ s/:/_/g;
-
-    return "$dir/pool/$path";
 }
 
 =item $group->get_processables([$type])

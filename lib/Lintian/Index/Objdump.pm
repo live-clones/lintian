@@ -25,7 +25,7 @@ use autodie;
 use Cwd;
 use Path::Tiny;
 
-use Lintian::IO::Async qw(safe_qx);
+use Lintian::IPC::Run3 qw(safe_qx);
 use Lintian::Util qw(locate_helper_tool);
 
 use constant EMPTY => q{};

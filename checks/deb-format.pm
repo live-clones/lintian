@@ -224,27 +224,34 @@ sub installable {
     # error output when processing the package.  We want to report
     # those as tags unless they're just tar noise that doesn't
     # represent an actual problem.
-    for my $file (keys %ERRORS) {
-        my $tag = $ERRORS{$file};
-        my $path = path($processable->groupdir)->child($file)->stringify;
-        if (-s $path) {
-            open(my $fd, '<', $path);
-            while (my $line = <$fd>) {
-                chomp($line);
-                $line =~ s,^(?:[/\w]+/)?tar: ,,;
 
-                # Record size errors are harmless.  Ignore implausibly
-                # old timestamps in the data section since we already
-                # check for that elsewhere, but still warn for
-                # control.
-                next if $line =~ /^Record size =/;
-                if ($tag eq 'tar-errors-from-data') {
-                    next if $line =~ /implausibly old time stamp/;
-                }
-                $self->tag($tag, $line);
-            }
-            close($fd);
+    for my $file (keys %ERRORS) {
+
+        my $path = path($processable->groupdir)->child($file)->stringify;
+        next
+          unless -e $path && -s _;
+
+        open(my $fd, '<', $path);
+
+        while (my $line = <$fd>) {
+            chomp($line);
+            $line =~ s,^(?:[/\w]+/)?tar: ,,;
+
+            # Record size errors are harmless.  Ignore implausibly
+            # old timestamps in the data section since we already
+            # check for that elsewhere, but still warn for
+            # control.
+            next
+              if $line =~ /^Record size =/;
+
+            next
+              if $line =~ /implausibly old time stamp/
+              && $ERRORS{$file} eq 'tar-errors-from-data';
+
+            $self->tag($ERRORS{$file}, $line);
         }
+
+        close $fd;
     }
 
     return;
