@@ -1,8 +1,17 @@
-lintian (2.90.0+git) UNRELEASED; urgency=medium
+lintian (2.91.0) unstable; urgency=medium
 
-  * WIP (generated at release time: please do not add entries below).
+  [ Felix Lechner ]
+  * Set most spelling-related tags to info or pedantic level and improve
+    line references for spelling errors in override files. (Re: #968416)
+  * Issue the repeated-path-segments tag only directories only.
+  * For the first time, unpack tarballs in orig index and use centralized
+    streaming unpacker.
 
- -- Chris Lamb <lamby@debian.org>  Fri, 14 Aug 2020 10:01:30 +0100
+  [ Chris Lamb ]
+  * Clarify the grammar of the package-uses-old-debhelper-compat-version
+    tag.
+
+ -- Chris Lamb <lamby@debian.org>  Thu, 20 Aug 2020 21:20:00 +0000
 
 lintian (2.90.0) unstable; urgency=medium
 
