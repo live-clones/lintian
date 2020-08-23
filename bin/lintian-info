@@ -122,19 +122,21 @@ if ($list_tags) {
     exit;
 }
 
-# If tag mode was specified, read the arguments as tags and display the
-# descriptions for each one.  (We don't currently display the severity,
-# although that would be nice.)
 if ($tags) {
-    my %taginfos = map { $_ => $profile->get_taginfo($_) } @ARGV;
 
-    for my $name (keys %taginfos) {
+    # show all tags when none were specified
+    my @selected = @ARGV;
+    @selected = $profile->enabled_tags
+      unless @selected;
+
+    for my $name (sort @selected) {
 
         my $code = 'N';
         my $description = 'N:   Unknown tag.';
 
-        my $info = $taginfos{$name};
+        my $info = $profile->get_taginfo($name);
         if (defined $info) {
+
             $code = $info->code;
             $description = $info->description('text', 'N:   ');
             chomp $description;
@@ -146,7 +148,7 @@ if ($tags) {
         say 'N:';
     }
 
-    exit !all { defined } values %taginfos;
+    exit !all { defined } map { $profile->get_taginfo($_) } @selected;
 }
 
 # Matches something like:  (1:2.0-3) [arch1 arch2]
