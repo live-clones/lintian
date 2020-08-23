@@ -48,8 +48,6 @@ Depends:
  libfile-find-rule-perl,
  libfont-ttf-perl,
  libhtml-parser-perl,
- libio-async-perl,
- libio-async-loop-epoll-perl (>= 0.20),
  libipc-run3-perl,
  libjson-maybexs-perl,
  liblist-compare-perl,

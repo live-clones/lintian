@@ -19,6 +19,8 @@ Depends:
  gcc-mingw-w64-x86-64,
  gpg-agent,
  javahelper,
+ libio-async-perl,
+ libio-async-loop-epoll-perl (>= 0.20),
  libpod-coverage-trustpod-perl,
  libtest-minimumversion-perl,
  libtest-perl-critic-perl,
