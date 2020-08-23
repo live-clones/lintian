@@ -92,8 +92,7 @@ sub visit_installed_files {
 
     if(    $file->is_file
         && $file->name !~ m,^etc/,
-        && $file->name !~ m,^usr/share/(?:doc|help)/,
-        && $self->processable->source ne 'lintian') {
+        && $file->name !~ m,^usr/share/(?:doc|help)/,) {
 
         foreach my $taboo ($DOCUMENTATION_FILE_REGEX->all) {
 
