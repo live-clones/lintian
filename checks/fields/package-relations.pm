@@ -559,7 +559,7 @@ sub source {
                     my ($dep, $pkg_name) = @{$d};
                     my $replacement = $OBSOLETE_PACKAGES->value($pkg_name)
                       // '';
-                    next if $processable->source eq 'lintian';
+
                     $replacement = ' => ' . $replacement
                       if $replacement ne '';
                     if (   $pkg_name eq $alternatives[0][0]
