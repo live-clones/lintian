@@ -27,7 +27,8 @@ use List::MoreUtils qw(any);
 use Path::Tiny;
 
 use Lintian::Index::Item;
-use Lintian::IO::Async qw(safe_qx unpack_and_index_piped_tar);
+use Lintian::IO::Select qw(unpack_and_index_piped_tar);
+use Lintian::IPC::Run3 qw(safe_qx);
 
 use Lintian::Util qw(perm2oct);
 
