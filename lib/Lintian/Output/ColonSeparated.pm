@@ -51,6 +51,18 @@ Provides colon-separated tag output.
 
 =over 4
 
+=item BUILD
+
+=cut
+
+sub BUILD {
+    my ($self, $args) = @_;
+
+    $self->delimiter(EMPTY);
+
+    return;
+}
+
 =item issue_tags
 
 Print all tags passed in array. A separate arguments with processables
@@ -96,8 +108,6 @@ sub issue_tags {
         push(@pending, @tags);
     }
 
-    $self->print_start_pkg($_) for @processables;
-
     my @sorted = sort {
              defined $a->override <=> defined $b->override
           || $code_priority{$a->info->code} <=> $code_priority{$b->info->code}
@@ -134,8 +144,6 @@ sub print_tag {
           if length $context;
     }
 
-    $self->issuedtags->{$tag_info->name}++;
-
     $information =~ s/[^[:print:]]/?/g;
 
     my @args = (
@@ -159,86 +167,9 @@ sub print_tag {
         $_
     } @args;
 
-    my $output = join(COLON, @quoted) . NEWLINE;
-    print {$self->stdout} $output;
+    say join(COLON, @quoted);
 
     return;
-}
-
-=item C<print_start_pkg($pkg_info)>
-
-Called before lintian starts to handle each package.  The version in
-Lintian::Output uses v_msg() for output.  Called from Tags::select_pkg().
-
-=cut
-
-sub print_start_pkg {
-    my ($self, $processable) = @_;
-
-    my $object = 'package';
-    $object = 'file'
-      if $processable->type eq 'changes';
-
-    $self->v_msg(
-        $self->delimiter,
-        'Processing '. $processable->type. " $object ". $processable->name,
-        '(version '
-          . $processable->version
-          . ', arch '
-          . $processable->architecture . ') ...'
-    );
-    return;
-}
-
-sub _delimiter {
-    return;
-}
-
-sub _message {
-    my ($self, @args) = @_;
-
-    foreach (@args) {
-        $self->_print('message', $_);
-    }
-    return;
-}
-
-sub _warning {
-    my ($self, @args) = @_;
-
-    foreach (@args) {
-        $self->_print('warning', $_);
-    }
-    return;
-}
-
-sub _print {
-    my ($self, @args) = @_;
-
-    my $output = $self->string(@args);
-    print {$self->stdout} $output;
-    return;
-}
-
-=item string
-
-=cut
-
-sub string {
-    my ($self, @args) = @_;
-
-    return join(':', _quote_char(':', @args))."\n";
-}
-
-sub _quote_char {
-    my ($char, @items) = @_;
-
-    foreach (@items) {
-        s/\\/\\\\/g;
-        s/\Q$char\E/\\$char/g;
-    }
-
-    return @items;
 }
 
 =back

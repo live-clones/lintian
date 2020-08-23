@@ -16,7 +16,7 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-package Lintian::Output::Standard;
+package Lintian::Output::EWI;
 
 use v5.20;
 use warnings;
@@ -38,11 +38,11 @@ with 'Lintian::Output';
 
 =head1 NAME
 
-Lintian::Output::Standard - standard tag output
+Lintian::Output::EWI - standard tag output
 
 =head1 SYNOPSIS
 
-    use Lintian::Output::Standard;
+    use Lintian::Output::EWI;
 
 =head1 DESCRIPTION
 
@@ -97,8 +97,6 @@ sub issue_tags {
         push(@pending, @tags);
     }
 
-    $self->print_start_pkg($_) for @processables;
-
     my @sorted = sort {
              defined $a->override <=> defined $b->override
           || $code_priority{$a->info->code} <=> $code_priority{$b->info->code}
@@ -145,15 +143,14 @@ sub print_tag {
     # insanely noisy (hi static-library-has-unneeded-section)
     if ($limit) {
         my $proc_id = $processable->identifier;
-        my $emitted_count
-          = $self->{'proc_id2tag_count'}{$proc_id}{$tag_name}++;
+        my $emitted_count= $self->proc_id2tag_count->{$proc_id}{$tag_name}++;
         return if $emitted_count >= $limit;
         my $msg
           = ' ... use --no-tag-display-limit to see all (or pipe to a file/program)';
         $information = $self->_quote_print($msg)
           if $emitted_count >= $limit-1;
     }
-    if ($self->_do_color && $self->color eq 'html') {
+    if ($self->color && $self->html) {
         my $escaped = encode_entities($tag_name);
         $information = encode_entities($information);
         $output .= qq(<span style="color: $tag_color">$escaped</span>);
@@ -161,9 +158,9 @@ sub print_tag {
     } else {
         my $text = $tag_name;
         $text = Term::ANSIColor::colored($tag_name, $tag_color)
-          if $self->_do_color;
+          if $self->color;
 
-        if ($self->tty_hyperlinks && $self->_do_color) {
+        if ($self->tty_hyperlinks && $self->color) {
             my $target
               = 'https://lintian.debian.org/tags/' . $tag_name . '.html';
             $output .= $self->osc_hyperlink($text, $target);
@@ -173,48 +170,26 @@ sub print_tag {
     }
 
     if ($override && @{ $override->{comments} }) {
-        foreach my $c (@{ $override->{comments} }) {
+        for my $c (@{ $override->{comments} }) {
             $self->msg($self->_quote_print($c));
         }
     }
 
-    $self->_print('', $fpkg_info, "$output$information");
-    if (not $self->issued_tag($tag_info->name) and $self->showdescription) {
+    say "$fpkg_info: $output$information";
+
+    if ($self->showdescription && !$self->issued_tag($tag_info->name)) {
         my $description;
-        if ($self->_do_color && $self->color eq 'html') {
+        if ($self->color && $self->html) {
             $description = $tag_info->description('html', '   ');
         } else {
             $description = $tag_info->description('text', '   ');
         }
-        $self->_print('', 'N', '');
-        $self->_print('', 'N', split("\n", $description));
-        $self->_print('', 'N', '');
+
+        say 'N:';
+        say "N: $_" for split(/\n/, $description);
+        say 'N:';
     }
-    return;
-}
 
-=item C<print_start_pkg($pkg_info)>
-
-Called before lintian starts to handle each package.  The version in
-Lintian::Output uses v_msg() for output.  Called from Tags::select_pkg().
-
-=cut
-
-sub print_start_pkg {
-    my ($self, $processable) = @_;
-
-    my $object = 'package';
-    $object = 'file'
-      if $processable->type eq 'changes';
-
-    $self->v_msg(
-        $self->delimiter,
-        'Processing '. $processable->type. " $object ". $processable->name,
-        '(version '
-          . $processable->version
-          . ', arch '
-          . $processable->architecture . ') ...'
-    );
     return;
 }
 
@@ -258,13 +233,32 @@ sub _format_pkg_info {
     return "$code: " . $processable->name . $type;
 }
 
+=item issuedtags
+
+Hash containing the names of tags which have been issued.
+
+=cut
+
+has issuedtags => (is => 'rw', default => sub { {} });
+
+=item C<issued_tag($tag_name)>
+
+Indicate that the named tag has been issued.  Returns a boolean value
+indicating whether the tag had previously been issued by the object.
+
+=cut
+
+sub issued_tag {
+    my ($self, $tag_name) = @_;
+
+    return $self->issuedtags->{$tag_name}++ ? 1 : 0;
+}
+
 =back
 
 =cut
 
 1;
-
-__END__
 
 # Local Variables:
 # indent-tabs-mode: nil

@@ -311,14 +311,17 @@ sub process {
             my $raw_res = tv_interval($timer);
 
             if ($err) {
-                print STDERR $err;
-                print STDERR "internal error: cannot run $checkname check",
-                  " on package $procid\n";
-                $OUTPUT->warning("skipping check of $procid");
+                my $message = $err;
+                $message
+                  .= "warning: cannot run $checkname check on package $procid\n";
+                $message .= "skipping check of $procid\n";
+                warn $message;
+
                 $success = 0;
 
                 next;
             }
+
             my $tres = sprintf('%.3fs', $raw_res);
             $OUTPUT->debug_msg(1,
                 "Check script $checkname for $procid done ($tres)");

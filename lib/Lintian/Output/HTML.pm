@@ -54,6 +54,18 @@ Provides standalone HTML tag output.
 
 =over 4
 
+=item BUILD
+
+=cut
+
+sub BUILD {
+    my ($self, $args) = @_;
+
+    $self->delimiter(EMPTY);
+
+    return;
+}
+
 =item issue_tags
 
 Print all tags passed in array. A separate arguments with processables
@@ -175,23 +187,9 @@ sub taglist {
             $tag{comments} = \@comments
               if @comments;
         }
-
-        $self->issuedtags->{$input->info->name}++;
     }
 
     return \@tags;
-}
-
-sub _delimiter {
-    return;
-}
-
-sub _print {
-    my ($self, $stream, $lead, @args) = @_;
-    $stream ||= $self->stderr;
-    my $output = $self->string($lead, @args);
-    print {$stream} $output;
-    return;
 }
 
 =back

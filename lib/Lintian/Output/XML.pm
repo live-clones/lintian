@@ -50,6 +50,18 @@ Provides XML tag output.
 
 =over 4
 
+=item BUILD
+
+=cut
+
+sub BUILD {
+    my ($self, $args) = @_;
+
+    $self->delimiter(EMPTY);
+
+    return;
+}
+
 =item issue_tags
 
 Print all tags passed in array. A separate arguments with processables
@@ -141,7 +153,7 @@ sub issue_tags {
     $writer->endTag('lintian-run');
     $writer->end();
 
-    print { $self->stdout } $writer->to_string;
+    print $writer->to_string;
 
     return;
 }
@@ -194,24 +206,10 @@ sub taglist {
         }
 
         $writer->endTag('tag');
-
-        $self->issuedtags->{$tag->info->name}++;
     }
 
     $writer->endTag('tags');
 
-    return;
-}
-
-sub _delimiter {
-    return;
-}
-
-sub _print {
-    my ($self, $stream, $lead, @args) = @_;
-    $stream ||= $self->stderr;
-    my $output = $self->string($lead, @args);
-    print {$stream} $output;
     return;
 }
 

@@ -50,7 +50,7 @@ use Lintian::Data;
 use Lintian::Deb822::Parser qw(parse_dpkg_control_string);
 use Lintian::Inspect::Changelog;
 use Lintian::IPC::Run3 qw(safe_qx);
-use Lintian::Output::Standard;
+use Lintian::Output::EWI;
 use Lintian::Pool;
 use Lintian::Profile;
 use Lintian::Util qw(version_from_changelog);
@@ -63,12 +63,12 @@ use constant SLASH => q{/};
 use constant NEWLINE => qq{\n};
 
 # only in GNOME; need original environment
-my $interactive = -t STDIN && (-t STDOUT || !(-f STDOUT || -c STDOUT));
+my $interactive = -t STDIN && (-t *STDOUT || !(-f *STDOUT || -c *STDOUT));
 my $hyperlinks_capable = $interactive && qx{env | fgrep -i gnome};
 
 # only do once; layers are additive
-binmode(STDOUT, ':encoding(UTF-8)');
-binmode(STDERR, ':encoding(UTF-8)');
+binmode(*STDOUT, ':encoding(UTF-8)');
+binmode(*STDERR, ':encoding(UTF-8)');
 
 $0 = join(SPACE, $0, @ARGV);
 
@@ -435,7 +435,7 @@ my @HELPER_DIRS = grep { -d } map { "$_/helpers" } @CONFIG_DIRS;
 $ENV{LINTIAN_HELPER_DIRS} = join(COLON, @HELPER_DIRS);
 
 my @CLOSE_AT_END;
-my $OUTPUT = Lintian::Output::Standard->new;
+my $OUTPUT = Lintian::Output::EWI->new;
 my $received_signal;
 my $exit_code = 0;
 my $STATUS_FD;
@@ -443,9 +443,7 @@ my $STATUS_FD;
 # root permissions?
 # check if effective UID is 0
 if ($> == 0 && !$selected{'allow-root'}) {
-    print STDERR join(q{ },
-        'warning: the authors of lintian do not',
-        "recommend running it with root privileges!\n");
+    warn "warning: running with root privileges is not recommended!\n";
 }
 
 if ($selected{'ignore-lintian-env'}) {
@@ -454,10 +452,10 @@ if ($selected{'ignore-lintian-env'}) {
 
 # option --all and packages specified at the same time?
 if ($selected{'packages-from-file'} && $#ARGV+1 > 0) {
-    print STDERR join(q{ },
-        'warning: option --packages-from-file',
-        "cannot be mixed with package parameters!\n");
-    print STDERR "(will ignore --packages-from-file option)\n";
+    warn
+"warning: option --packages-from-file cannot be mixed with package parameters!\n";
+    warn "(will ignore --packages-from-file option)\n";
+
     delete($selected{'packages-from-file'});
 }
 
@@ -549,7 +547,7 @@ die "The hyperlink value must be on or off\n"
 $selected{verbose} = -1
   if $selected{quiet};
 
-if ($selected{verbose} || !-t STDOUT) {
+if ($selected{verbose} || !-t *STDOUT) {
     $selected{'tag-display-limit'} //= 0;
 } else {
     $selected{'tag-display-limit'} //= 4;
@@ -561,10 +559,18 @@ if ($selected{debug}) {
     $SIG{__DIE__} = sub { Carp::confess(@_) };
 }
 
-$OUTPUT->verbosity_level($selected{verbose});
+$OUTPUT->verbosity($selected{verbose});
 $OUTPUT->debug($selected{debug});
 
-$OUTPUT->color($selected{color});
+$OUTPUT->html(1)
+  if $selected{color} eq 'html';
+
+$OUTPUT->color(1)
+  if $selected{color} eq 'always'
+  || $selected{color} eq 'html'
+  || ($selected{color} eq 'auto'
+    && -t *STDOUT);
+
 $OUTPUT->tty_hyperlinks($hyperlinks_capable&& $selected{hyperlinks} eq 'on');
 $OUTPUT->tag_display_limit($selected{'tag-display-limit'});
 $OUTPUT->showdescription($selected{info});
@@ -757,7 +763,7 @@ for my $path (@subjects) {
         $pool->add_group($group);
     };
     if ($@) {
-        print STDERR "Skipping $path: $@";
+        warn "Skipping $path: $@\n";
         $exit_code = 1;
     }
 }
@@ -861,12 +867,12 @@ sub _find_changes {
     if (not $last) {
         my @errors = @{$changelog->errors};
         if (@errors) {
-            print STDERR "Cannot parse debian/changelog due to errors:\n";
+            warn "Cannot parse debian/changelog due to errors:\n";
             for my $error (@errors) {
-                print STDERR "$error->[2] (line $error->[1])\n";
+                warn "$error->[2] (line $error->[1])\n";
             }
         } else {
-            print STDERR "debian/changelog does not have any data?\n";
+            warn "debian/changelog does not have any data?\n";
         }
         exit 1;
     }
@@ -875,10 +881,9 @@ sub _find_changes {
     unless (defined $version && defined $source) {
         $version //= '<N/A>';
         $source //= '<N/A>';
-        print STDERR
-          "Cannot determine source and version from debian/changelog:\n";
-        print STDERR "Source: $source\n";
-        print STDERR "Version: $source\n";
+        warn "Cannot determine source and version from debian/changelog:\n";
+        warn "Source: $source\n";
+        warn "Version: $source\n";
         exit 1;
     }
     # remove the epoch
@@ -907,12 +912,14 @@ sub _find_changes {
             return $changes if -f $changes;
         }
     }
-    print STDERR "Cannot find changes file for ${source}/${version}, tried:\n";
-    for my $arch (@archs) {
-        print STDERR "  ${source}_${version}_${arch}.changes\n";
-    }
-    print STDERR " in the following dirs:\n";
-    print STDERR '  ', join("\n  ", @dirs), "\n";
+
+    warn"Cannot find changes file for ${source}/${version}, tried:\n";
+
+    warn "  ${source}_${version}_${_}.changes\n" for @archs;
+
+    warn " in the following dirs:\n";
+    warn '  ', join("\n  ", @dirs), "\n";
+
     exit 0;
 }
 
@@ -1015,7 +1022,7 @@ sub END {
         if (my $err = $@) {
             # Don't use L::Output here as it might be (partly) cleaned
             # up.
-            print STDERR "warning: closing ${filename} failed: $err\n";
+            warn "warning: closing ${filename} failed: $err\n";
         }
     }
 }

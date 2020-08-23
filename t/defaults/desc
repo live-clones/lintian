@@ -5,6 +5,6 @@ Profile: debian
 Output-Format: universal
 Skeleton: testing
 Match-Strategy: tags
-Default-Lintian-Options: --pedantic --display-info --display-experimental --display-level +classification --check-part [% $check %]
+Default-Lintian-Options: --pedantic --display-info --display-experimental --display-level +classification --show-overrides --check-part [% $check %]
 Todo: no
 Test-Architectures: any

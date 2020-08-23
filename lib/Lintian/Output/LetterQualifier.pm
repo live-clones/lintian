@@ -122,8 +122,6 @@ sub issue_tags {
         push(@pending, @tags);
     }
 
-    $self->print_start_pkg($_) for @processables;
-
     my @sorted = sort {
              defined $a->override <=> defined $b->override
           || $code_priority{$a->info->code} <=> $code_priority{$b->info->code}
@@ -167,44 +165,23 @@ sub print_tag {
     $information = ' ' . $self->_quote_print($information)
       if $information ne '';
 
-    if ($self->_do_color) {
+    if ($self->color) {
         my $color = $self->colors->{$severity};
         $lq = colored($lq, $color);
         $tagname = colored($tagname, $color);
     }
 
-    $self->_print('', "$code\[$lq\]: $pkg$type", "$tagname$information");
-    if (not $self->issued_tag($tag_info->name) and $self->showdescription) {
+    say "$code\[$lq\]: $pkg$type: $tagname$information";
+
+    if ($self->showdescription && !$self->issued_tag($tag_info->name)) {
+
         my $description = $tag_info->description('text', '   ');
-        $self->_print('', 'N', '');
-        $self->_print('', 'N', split("\n", $description));
-        $self->_print('', 'N', '');
+
+        say 'N:';
+        say "N: $_" for split(/\n/, $description);
+        say 'N:';
     }
-    return;
-}
 
-=item C<print_start_pkg($pkg_info)>
-
-Called before lintian starts to handle each package.  The version in
-Lintian::Output uses v_msg() for output.  Called from Tags::select_pkg().
-
-=cut
-
-sub print_start_pkg {
-    my ($self, $processable) = @_;
-
-    my $object = 'package';
-    $object = 'file'
-      if $processable->type eq 'changes';
-
-    $self->v_msg(
-        $self->delimiter,
-        'Processing '. $processable->type. " $object ". $processable->name,
-        '(version '
-          . $processable->version
-          . ', arch '
-          . $processable->architecture . ') ...'
-    );
     return;
 }
 
@@ -220,6 +197,27 @@ sub _quote_print {
     my ($self, $string) = @_;
     $string =~ s/[^[:print:]]/?/g;
     return $string;
+}
+
+=item issuedtags
+
+Hash containing the names of tags which have been issued.
+
+=cut
+
+has issuedtags => (is => 'rw', default => sub { {} });
+
+=item C<issued_tag($tag_name)>
+
+Indicate that the named tag has been issued.  Returns a boolean value
+indicating whether the tag had previously been issued by the object.
+
+=cut
+
+sub issued_tag {
+    my ($self, $tag_name) = @_;
+
+    return $self->issuedtags->{$tag_name}++ ? 1 : 0;
 }
 
 =back
