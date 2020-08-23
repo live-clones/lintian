@@ -26,6 +26,7 @@ use utf8;
 use autodie;
 
 use File::Temp;
+use List::Util qw(pairs);
 
 use Lintian::Data;
 use Lintian::IPC::Run3 qw(safe_qx);
@@ -83,11 +84,14 @@ sub source {
             next;
         }
 
-        # parse command output into separate keys
-        my @keys
-          = ($output
-              =~ m/(^:public key packet:(?:\n|\z)(?:(?!:public key packet:).+(?:\n|\z))*)/mg
-          );
+        # remove comments
+        $output =~ s/^#[^\n]*$//mg;
+
+        # split into separate keys
+        my @keys = split(/^:public key packet:.*$/m, $output);
+
+        # discard leading information
+        shift @keys;
 
         unless (scalar @keys) {
             $self->tag('public-upstream-key-unusable',
@@ -95,20 +99,21 @@ sub source {
             next;
         }
 
-        foreach my $key (@keys) {
+        for my $key (@keys) {
 
             # parse each key into separate packets
-            my @packets = ($key =~ m/(^:.+(?:\n|\z)(?:^\t.+(?:\n|\z))*)/mg);
+            my ($public_key, @pieces) = split(/^(:.+)$/m, $key);
+            my @packets = pairs @pieces;
 
             # require at least one packet
-            unless (scalar @packets) {
+            unless (length $public_key) {
                 $self->tag('public-upstream-key-unusable',
-                    $key_name,'has no packets');
+                    $key_name,'has no public key');
                 next;
             }
 
             # look for key identifier
-            unless ($packets[0] =~ (qr/\skeyid:\s+(\S+)\s/)) {
+            unless ($public_key =~ qr/^\s*keyid:\s+(\S+)$/m) {
                 $self->tag('public-upstream-key-unusable',
                     $key_name, 'has no keyid');
                 next;
@@ -117,10 +122,14 @@ sub source {
 
             # look for third-party signatures
             my @thirdparty;
-            foreach my $packet (@packets) {
-                if ($packet =~ qr/^:signature packet: algo \d+, keyid (\S*)\n/)
-                {
-                    push(@thirdparty, $1) if $1 ne $keyid;
+            for my $packet (@packets) {
+
+                my $header = $packet->[0];
+                if ($header =~ qr/^:signature packet: algo \d+, keyid (\S*)$/){
+
+                    my $signatory = $1;
+                    push(@thirdparty, $signatory)
+                      unless $signatory eq $keyid;
                 }
             }
 
