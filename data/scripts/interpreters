@@ -79,6 +79,7 @@ procmail       => /usr/bin
 pypy           => /usr/bin
 python         => /usr/bin, python:any | python-minimal:any | python2:any | python2-minimal:any
 python2        => /usr/bin, python:any | python-minimal:any | python2:any | python2-minimal:any
+python3        => /usr/bin, python3:any | python3-minimal:any
 pforth         => /usr/bin
 racket         => /usr/bin
 rake           => /usr/bin
