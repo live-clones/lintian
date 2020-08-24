@@ -215,8 +215,9 @@ sub load {
         next
           unless -d $tagroot;
 
-        my @descfiles = File::Find::Rule->file()->name('*.desc')->in($tagroot);
-        for my $tagpath (@descfiles) {
+        my @tagpaths
+          = File::Find::Rule->file->name(qw(*.tag *.desc))->in($tagroot);
+        for my $tagpath (@tagpaths) {
 
             my $taginfo = Lintian::Tag::Info->new;
             $taginfo->load($tagpath);

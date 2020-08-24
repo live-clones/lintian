@@ -41,7 +41,7 @@ use Lintian::Profile;
 
 use constant SPACE => q{ };
 
-my @descpaths = sort File::Find::Rule->file()->name('*.desc')->in('tags');
+my @descpaths = sort File::Find::Rule->file()->name('*.tag')->in('tags');
 
 diag scalar @descpaths . ' known tags.';
 
@@ -89,9 +89,9 @@ for my $descpath (@descpaths) {
     BAIL_OUT("Tag described in $descpath has no name")
       unless length $tagname;
 
-    # tagfile is named $tagname.desc
+    # tagfile is named $tagname.tag
     is(path($descpath)->basename,
-        "$tagname.desc", "Tagfile for $tagname is named $tagname.desc");
+        "$tagname.tag", "Tagfile for $tagname is named $tagname.tag");
 
     # mandatory fields
     ok($fields->exists($_), "Field $_ exists in $descpath")for @mandatory;
