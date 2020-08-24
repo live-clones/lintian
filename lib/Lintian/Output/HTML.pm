@@ -167,8 +167,7 @@ sub taglist {
 
         $tag{name} = $input->info->name;
 
-        $tag{url}
-          = "https://lintian.debian.org/$lintian_version/tags/$tag{name}.html";
+        $tag{url} = "https://lintian.debian.org/tags/$tag{name}.html";
 
         $tag{context} = $input->context
           if length $input->context;
