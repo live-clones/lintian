@@ -2,4 +2,4 @@ Testname: pseudo-header
 Check: debian/patches/dep3
 Test-Against:
  patch-not-forwarded-upstream
-References: Bug#966024
+See-Also: Bug#966024

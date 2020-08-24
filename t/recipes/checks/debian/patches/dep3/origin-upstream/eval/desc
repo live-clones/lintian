@@ -2,4 +2,4 @@ Testname: origin-upstream
 Check: debian/patches/dep3
 Test-Against:
  patch-not-forwarded-upstream
-References: Bug#966140
+See-Also: Bug#966140

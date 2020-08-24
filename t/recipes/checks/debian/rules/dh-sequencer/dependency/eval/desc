@@ -2,4 +2,4 @@ Testname: dependency
 Check: debian/rules/dh-sequencer
 Test-Against:
  no-dh-sequencer
-References: #968108
+See-Also: #968108

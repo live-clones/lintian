@@ -1,4 +1,4 @@
 Testname: patch-systems-empty-series
 Test-Against: quilt-build-dep-but-no-series-file
-References: Debian Bug #525005
+See-Also: Debian Bug #525005
 Check: debian/patches/quilt

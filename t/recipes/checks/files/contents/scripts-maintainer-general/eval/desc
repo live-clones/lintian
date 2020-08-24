@@ -1,4 +1,4 @@
 Testname: scripts-maintainer-general
 Profile: ubuntu/main
-References: Debian Bug#532984
+See-Also: Debian Bug#532984
 Check: files/contents
