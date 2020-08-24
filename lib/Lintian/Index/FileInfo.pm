@@ -102,7 +102,7 @@ sub add_fileinfo {
 
     # some files need to be corrected
     my @probably_compressed
-      = grep { $_->name =~ /\.gz$/ && $_->file_info !~ /compressed/ } @files;
+      = grep { $_->name =~ /\.gz$/i && $_->file_info !~ /compressed/ } @files;
 
     for my $file (@probably_compressed) {
 
@@ -129,6 +129,12 @@ sub add_fileinfo {
         my $new_type = $file->file_info . COMMA . SPACE . $text;
         $file->file_info($new_type);
     }
+
+    # some TFMs are categorized as gzip, see Bug#963589
+    my @not_gzip
+      = grep { $_->name =~ /\.tfm$/i && $_->file_info =~ /gzip compressed data/ }
+      @files;
+    $_->file_info('data') for @not_gzip;
 
     chdir($savedir);
 
