@@ -302,63 +302,55 @@ sub visit_installed_files {
 
             my @lines = split(/\n/, $stderr);
 
-            for (@lines) {
+            for my $line (@lines) {
+
+                chomp $line;
+
                 # Devel::Cover causes some annoying deep recursion
                 # warnings and sometimes in our child process.
                 # Filter them out, but only during coverage.
                 next
                   if LINTIAN_COVERAGE
-                  and m{
+                  && $line =~ m{
                       \A Deep [ ] recursion [ ] on [ ] subroutine [ ]
                       "[^"]+" [ ] at [ ] .*B/Deparse.pm [ ] line [ ]
                       \d+}xsm;
 
                 # ignore progress information from man
                 next
-                  if /^Reformatting/;
+                  if $line =~ /^Reformatting/;
 
                 next
-                  if /^\s*$/;
+                  if $line =~ /^\s*$/;
 
-                # ignore errors from gzip, will be dealt with at other places
+                # ignore errors from gzip; dealt with elsewhere
                 next
-                  if /^(?:man|gzip)/;
+                  if $line =~ /^\bgzip\b/;
 
                 # ignore wrapping failures for Asian man pages (groff problem)
                 if ($language =~ /^(?:ja|ko|zh)/) {
                     next
-                      if /warning \[.*\]: cannot adjust line/;
+                      if $line =~ /warning \[.*\]: cannot adjust line/;
                     next
-                      if /warning \[.*\]: can\'t break line/;
+                      if $line =~ /warning \[.*\]: can\'t break line/;
                 }
 
                 # ignore wrapping failures if they contain URLs (.UE is an
                 # extension for marking the end of a URL).
                 next
-                  if
-                  /:(\d+): warning \[.*\]: (?:can\'t break|cannot adjust) line/
-                  and( $manfile[$1 - 1] =~ m,(?:https?|ftp|file)://.+,i
-                    or $manfile[$1 - 1] =~ m,^\s*\.\s*UE\b,);
+                  if $line
+                  =~ /:(\d+): warning \[.*\]: (?:can\'t break|cannot adjust) line/
+                  && ( $manfile[$1 - 1] =~ m,(?:https?|ftp|file)://.+,i
+                    || $manfile[$1 - 1] =~ m,^\s*\.\s*UE\b,);
 
                 # ignore common undefined macros from pod2man << Perl 5.10
                 next
-                  if /warning: (?:macro )?\'(?:Tr|IX)\' not defined/;
+                  if $line =~ /warning: (?:macro )?\'(?:Tr|IX)\' not defined/;
 
-                chomp;
-                s/^[^:]+: //;
-                s/^<standard input>://;
+                $line =~ s/^[^:]+: //;
+                $line =~ s/^<standard input>://;
 
-                $self->tag('groff-message', $file, $_);
-
-                last;
-            }
-
-            if ($status) {
-                my $message = "Non-zero status $status from @command";
-                $message .= COLON . NEWLINE . $stderr
-                  if length $stderr;
-
-                warn $message;
+                $self->tag('groff-message', $file, $line);
             }
 
             chdir($savedir);
