@@ -1,6 +1,5 @@
 Tag: changelog-news-debian-mismatch
 Severity: warning
-Certainty: possible
 Check: debian/changelog
 Info: The latest entries in the Debian changelog file and NEWS.Debian file
  are for the same version but the given field doesn't match. The

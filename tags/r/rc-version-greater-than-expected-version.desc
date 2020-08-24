@@ -1,6 +1,5 @@
 Tag: rc-version-greater-than-expected-version
 Severity: warning
-Certainty: possible
 Check: debian/changelog
 Ref: policy 5.6.12
 Info: The package appears to be a release candidate or preview release, but

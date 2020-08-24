@@ -1,6 +1,5 @@
 Tag: systemd-service-file-missing-install-key
 Severity: info
-Certainty: wild-guess
 Check: systemd
 Info: The systemd service file does not contain a <tt>WantedBy=</tt> or
  <tt>RequiredBy=</tt> key in its <tt>[Install]</tt> section.

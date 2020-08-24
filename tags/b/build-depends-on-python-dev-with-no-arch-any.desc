@@ -1,6 +1,5 @@
 Tag: build-depends-on-python-dev-with-no-arch-any
 Severity: info
-Certainty: possible
 Check: fields/package-relations
 Info: The given package appears to have a Python development package
  (python-dev, python-all-dev or pythonX.Y-dev) listed in its Build-Depends

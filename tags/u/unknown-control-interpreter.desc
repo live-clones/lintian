@@ -1,6 +1,5 @@
 Tag: unknown-control-interpreter
 Severity: error
-Certainty: possible
 Check: scripts
 Info: This package contains a maintainer script that uses an interpreter
  that the Lintian maintainers have not heard of. This is usually a typo

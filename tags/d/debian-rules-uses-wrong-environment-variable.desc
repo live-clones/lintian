@@ -1,6 +1,5 @@
 Tag: debian-rules-uses-wrong-environment-variable
 Severity: warning
-Certainty: possible
 Check: debian/rules
 Renamed-From: debian-rules-should-not-use-or-modify-user-only-variable
 Ref: #631786

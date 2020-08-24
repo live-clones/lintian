@@ -1,6 +1,5 @@
 Tag: bad-intended-distribution
 Severity: info
-Certainty: wild-guess
 Check: debian/changelog
 Experimental: yes
 Info: The last changelog entry implies this version is not for release.

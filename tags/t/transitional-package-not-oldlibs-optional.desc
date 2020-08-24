@@ -1,6 +1,5 @@
 Tag: transitional-package-not-oldlibs-optional
 Severity: warning
-Certainty: possible
 Check: fields/section
 Renamed-From:
  transitional-package-should-be-oldlibs-extra

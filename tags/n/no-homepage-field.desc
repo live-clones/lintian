@@ -1,6 +1,5 @@
 Tag: no-homepage-field
 Severity: pedantic
-Certainty: possible
 Check: fields/homepage
 Info: This non-native package lacks a <tt>Homepage</tt> field. If the
  package has an upstream home page that contains useful information or

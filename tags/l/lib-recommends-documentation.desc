@@ -1,6 +1,5 @@
 Tag: lib-recommends-documentation
 Severity: warning
-Certainty: possible
 Check: fields/package-relations
 Info: The given package appears to be a library package, but it recommends
  a documentation package. Doing this can pull in unwanted (and often

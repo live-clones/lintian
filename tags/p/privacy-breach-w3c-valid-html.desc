@@ -1,6 +1,5 @@
 Tag: privacy-breach-w3c-valid-html
 Severity: error
-Certainty: possible
 Check: files/privacy-breach
 Ref: http://validator.w3.org/docs/help.html#icon,
      http://www.w3.org/Consortium/Legal/logo-usage-20000308

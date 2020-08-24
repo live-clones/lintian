@@ -1,6 +1,5 @@
 Tag: non-etc-file-marked-as-conffile
 Severity: error
-Certainty: possible
 Check: conffiles
 Info: A file installed in some other directory than <tt>/etc</tt>
  is marked as conffile. A conffile typically implies a configuration

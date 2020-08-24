@@ -1,6 +1,5 @@
 Tag: development-package-ships-elf-binary-in-path
 Severity: info
-Certainty: possible
 Check: binaries
 Experimental: yes
 Info: This development package (ie. from the <tt>libdevel</tt> section of

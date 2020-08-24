@@ -1,6 +1,5 @@
 Tag: ships-undeclared-shared-library
 Severity: error
-Certainty: possible
 Check: shared-libs
 Renamed-From: shlib-missing-in-control-file
 Info: The package contains a shared library that is not listed in the

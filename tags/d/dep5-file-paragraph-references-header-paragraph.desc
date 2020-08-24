@@ -1,6 +1,5 @@
 Tag: dep5-file-paragraph-references-header-paragraph
 Severity: warning
-Certainty: possible
 Check: debian/copyright/dep5
 Ref: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 Info: The Files paragraph uses a reference to a license which is

@@ -1,6 +1,5 @@
 Tag: package-name-doesnt-match-sonames
 Severity: warning
-Certainty: possible
 Check: binaries
 Info: The package name of a library package should usually reflect
  the soname of the included library. The package name can determined

@@ -1,6 +1,5 @@
 Tag: git-patches-not-exported
 Severity: error
-Certainty: possible
 Check: debian/source-dir
 Info: The source package contains files in
  <tt>debian/source/git-patches</tt>. These patches should have been exported

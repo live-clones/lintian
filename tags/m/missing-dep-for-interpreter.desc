@@ -1,6 +1,5 @@
 Tag: missing-dep-for-interpreter
 Severity: error
-Certainty: possible
 Check: scripts
 Info: You used an interpreter for a script that is not in an essential
  package. In most cases, you will need to add a Dependency on the

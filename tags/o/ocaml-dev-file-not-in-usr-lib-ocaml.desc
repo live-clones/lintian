@@ -1,6 +1,5 @@
 Tag: ocaml-dev-file-not-in-usr-lib-ocaml
 Severity: pedantic
-Certainty: possible
 Check: languages/ocaml
 Info: This development package installs OCaml development files
  (<tt>.cmi</tt>, <tt>.cmx</tt> or <tt>.cmxa</tt>) outside

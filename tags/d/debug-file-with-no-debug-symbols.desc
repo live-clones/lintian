@@ -1,6 +1,5 @@
 Tag: debug-file-with-no-debug-symbols
 Severity: warning
-Certainty: possible
 Check: binaries
 Ref: #668437
 Info: The binary is installed as a detached "debug symbols" ELF file,

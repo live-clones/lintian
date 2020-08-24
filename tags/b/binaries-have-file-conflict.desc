@@ -1,6 +1,5 @@
 Tag: binaries-have-file-conflict
 Severity: warning
-Certainty: possible
 Check: group-checks
 Experimental: no
 Info: The binaries appears to have overlapping files without proper

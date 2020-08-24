@@ -1,6 +1,5 @@
 Tag: comma-separated-files-in-dep5-copyright
 Severity: warning
-Certainty: possible
 Check: debian/copyright/dep5
 Ref: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 Info: A list of files in the machine-readable copyright format appears to be

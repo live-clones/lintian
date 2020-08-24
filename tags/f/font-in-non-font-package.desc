@@ -1,6 +1,5 @@
 Tag: font-in-non-font-package
 Severity: info
-Certainty: possible
 Check: fonts
 Info: This package contains a *.ttf, *.otf, or *.pfb file, file
  extensions used by TrueType, OpenType, or Type 1 fonts, but the package

@@ -1,6 +1,5 @@
 Tag: no-shlibs
 Severity: error
-Certainty: possible
 Check: shared-libs
 Renamed-From: no-shlibs-control-file
 Info: Although the package includes a shared library, the package does not

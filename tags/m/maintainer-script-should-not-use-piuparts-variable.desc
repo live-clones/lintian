@@ -1,6 +1,5 @@
 Tag: maintainer-script-should-not-use-piuparts-variable
 Severity: warning
-Certainty: possible
 Check: scripts
 Ref: piuparts(1), https://piuparts.debian.org/doc/README.html
 Info: The maintainer script appears to reference one of the

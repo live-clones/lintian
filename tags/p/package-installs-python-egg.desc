@@ -1,6 +1,5 @@
 Tag: package-installs-python-egg
 Severity: error
-Certainty: possible
 Check: languages/python
 Ref: python-policy 3.7
 Info: Python eggs should not be installed, since the Debian package is

@@ -1,6 +1,5 @@
 Tag: directory-in-etc-sv-directory-without-executable-run-script
 Severity: error
-Certainty: possible
 Check: init.d
 Info: This package provides the specified directory under
  <tt>/etc/sv</tt> but it does not ship a <tt>run</tt> script under this

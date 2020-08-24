@@ -1,6 +1,5 @@
 Tag: compressed-documentation
 Severity: warning
-Certainty: possible
 Check: documentation
 Renamed-From: file-should-not-be-compressed
 Info: The following file should not be compressed.

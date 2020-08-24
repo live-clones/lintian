@@ -1,6 +1,5 @@
 Tag: ocaml-custom-executable
 Severity: warning
-Certainty: possible
 Check: binaries
 Info: This package provides an OCaml bytecode executable linked with a
  custom runtime. Such executables cannot be stripped and require

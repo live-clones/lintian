@@ -1,6 +1,5 @@
 Tag: library-not-linked-against-libc
 Severity: error
-Certainty: possible
 Check: binaries
 Ref: policy 10.2, #698720
 Info: The package installs a library which is not dynamically linked

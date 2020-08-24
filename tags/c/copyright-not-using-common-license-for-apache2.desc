@@ -1,6 +1,5 @@
 Tag: copyright-not-using-common-license-for-apache2
 Severity: error
-Certainty: possible
 Check: debian/copyright
 Renamed-From: copyright-should-refer-to-common-license-file-for-apache-2
 Ref: policy 12.5

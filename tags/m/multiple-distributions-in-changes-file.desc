@@ -1,6 +1,5 @@
 Tag: multiple-distributions-in-changes-file
 Severity: error
-Certainty: possible
 Check: fields/distribution
 Info: You've specified more than one target distribution for your upload
  in the <tt>*.changes</tt> file, probably via the most recent entry in the

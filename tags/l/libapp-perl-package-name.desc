@@ -1,6 +1,5 @@
 Tag: libapp-perl-package-name
 Severity: error
-Certainty: possible
 Check: application-not-library
 Info: This package contains a program in $PATH and is named
  libapp-*-perl which usually implies that the upstream project on CPAN

@@ -1,6 +1,5 @@
 Tag: privacy-breach-google-plus
 Severity: error
-Certainty: possible
 Check: files/privacy-breach
 Info: This package creates a potential privacy breach by
  exchanging data with Google+ at runtime via plugins such

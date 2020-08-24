@@ -1,6 +1,5 @@
 Tag: python-module-in-wrong-location
 Severity: warning
-Certainty: possible
 Check: languages/python
 Ref: python-policy 2.5, #576012
 Info: The package installs a Python module or debug information for a Python

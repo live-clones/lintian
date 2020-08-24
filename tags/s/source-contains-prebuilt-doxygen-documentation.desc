@@ -1,6 +1,5 @@
 Tag: source-contains-prebuilt-doxygen-documentation
 Severity: pedantic
-Certainty: possible
 Check: cruft
 Info: The source tarball contains prebuilt doxygen documentation.
  This is usually left by mistake when generating the tarball without

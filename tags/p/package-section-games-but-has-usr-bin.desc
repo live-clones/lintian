@@ -1,6 +1,5 @@
 Tag: package-section-games-but-has-usr-bin
 Severity: warning
-Certainty: possible
 Check: games
 Ref: policy 11.11
 Info: This package is marked as part of the section games, but contains

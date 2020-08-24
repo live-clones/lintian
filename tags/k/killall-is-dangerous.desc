@@ -1,6 +1,5 @@
 Tag: killall-is-dangerous
 Severity: warning
-Certainty: possible
 Check: scripts
 Info: The maintainer script seems to call <tt>killall</tt>. Since this
  utility kills processes by name, it may well end up killing unrelated

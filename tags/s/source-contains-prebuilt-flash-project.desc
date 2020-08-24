@@ -1,6 +1,5 @@
 Tag: source-contains-prebuilt-flash-project
 Severity: pedantic
-Certainty: possible
 Check: cruft
 Info: The source tarball contains a prebuilt file in the Shockwave Flash
  project (FLA) format. These are often included by mistake when

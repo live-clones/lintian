@@ -1,6 +1,5 @@
 Tag: dir-or-file-in-var-www
 Severity: error
-Certainty: possible
 Check: files/hierarchy/standard
 Ref: fhs thevarhierarchy
 Info: Debian packages should not install files under <tt>/var/www</tt>.

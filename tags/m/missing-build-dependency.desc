@@ -1,6 +1,5 @@
 Tag: missing-build-dependency
 Severity: error
-Certainty: possible
 Check: debian/rules
 Ref: policy 4.2
 Info: The package doesn't specify a build dependency on a package that is

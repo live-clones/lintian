@@ -1,6 +1,5 @@
 Tag: diff-contains-cmake-cache-file
 Severity: error
-Certainty: possible
 Check: cruft
 Info: The Debian diff contains a CMake cache file. These files embed the
  full path of the source tree in which they're created and cause build

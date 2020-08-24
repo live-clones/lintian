@@ -1,6 +1,5 @@
 Tag: co-maintained-package-with-no-vcs-fields
 Severity: pedantic
-Certainty: possible
 Check: fields/vcs
 Info: Based on the content of the maintainer and uploader fields this
  package is co-maintained but there are no Vcs-* fields.

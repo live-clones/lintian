@@ -1,6 +1,5 @@
 Tag: package-has-a-duplicate-build-relation
 Severity: warning
-Certainty: possible
 Check: fields/package-relations
 Info: The package declares the given build relations on the same package
  in either Build-Depends or Build-Depends-Indep, but the build relations

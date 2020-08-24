@@ -1,6 +1,5 @@
 Tag: build-depends-on-versioned-berkeley-db
 Severity: warning
-Certainty: possible
 Check: fields/package-relations
 Info: The package build-depends on a versioned development package of
  Berkeley DB (libdbX.Y-dev) instead of versionless package

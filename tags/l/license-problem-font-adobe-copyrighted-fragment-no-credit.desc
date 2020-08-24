@@ -1,6 +1,5 @@
 Tag: license-problem-font-adobe-copyrighted-fragment-no-credit
 Severity: error
-Certainty: possible
 Check: fonts/postscript/type1
 Info: This type 1 font file includes some postscript fragment with a
  non-free license of Adobe. In order to check if this tag is genuine

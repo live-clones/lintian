@@ -1,6 +1,5 @@
 Tag: binary-file-built-without-LFS-support
 Severity: info
-Certainty: possible
 Check: binaries
 Experimental: yes
 Info: The listed ELF binary appears to be (partially) built without

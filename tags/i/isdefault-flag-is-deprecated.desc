@@ -1,6 +1,5 @@
 Tag: isdefault-flag-is-deprecated
 Severity: warning
-Certainty: possible
 Check: debian/debconf
 Info: The "isdefault" flag on debconf questions is deprecated as of debconf
  0.5.00, and has been replaced by "seen" with the inverse meaning. From

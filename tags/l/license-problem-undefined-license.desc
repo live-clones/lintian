@@ -1,6 +1,5 @@
 Tag: license-problem-undefined-license
 Severity: error
-Certainty: possible
 Check: debian/copyright/dep5
 Ref: https://ftp-master.debian.org/REJECT-FAQ.html
 Info: Your copyright file references a license that is not defined.

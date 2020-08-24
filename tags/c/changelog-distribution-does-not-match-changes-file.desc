@@ -1,6 +1,5 @@
 Tag: changelog-distribution-does-not-match-changes-file
 Severity: warning
-Certainty: possible
 Check: debian/changelog
 Info: The target distribution in the most recent entry in this package's
  <tt>debian/changelog</tt> file does not match the target in the generated

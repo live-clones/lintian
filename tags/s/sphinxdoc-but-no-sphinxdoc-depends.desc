@@ -1,6 +1,5 @@
 Tag: sphinxdoc-but-no-sphinxdoc-depends
 Severity: warning
-Certainty: possible
 Check: debhelper
 Ref: dh_sphinxdoc(1)
 Info: The source package uses Sphinx via <tt>--with sphinxdoc</tt> or

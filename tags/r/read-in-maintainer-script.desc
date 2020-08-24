@@ -1,6 +1,5 @@
 Tag: read-in-maintainer-script
 Severity: error
-Certainty: possible
 Check: scripts
 Ref: policy 3.9.1 
 Info: This maintainer script appears to use read to get information from

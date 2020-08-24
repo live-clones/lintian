@@ -1,6 +1,5 @@
 Tag: source-contains-browserified-javascript
 Severity: pedantic
-Certainty: possible
 Check: cruft
 Info: The following file contains javascript built from browserify
  .

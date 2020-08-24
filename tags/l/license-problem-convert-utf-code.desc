@@ -1,6 +1,5 @@
 Tag: license-problem-convert-utf-code
 Severity: error
-Certainty: possible
 Check: cruft
 Info: The following file source files include material under a
  non-free license from Unicode Inc. Therefore, it is

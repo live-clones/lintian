@@ -1,6 +1,5 @@
 Tag: file-references-package-build-path
 Severity: info
-Certainty: possible
 Check: files/contents
 Info: The listed file or maintainer script appears to reference
  the build path used to build the package as specified in the

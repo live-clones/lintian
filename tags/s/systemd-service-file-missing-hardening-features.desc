@@ -1,7 +1,6 @@
 Tag: systemd-service-file-missing-hardening-features
 Severity: pedantic
 Experimental: yes
-Certainty: wild-guess
 Check: systemd
 Info: The specified systemd <tt>.service</tt> file does not appear to
  enable any hardening options.

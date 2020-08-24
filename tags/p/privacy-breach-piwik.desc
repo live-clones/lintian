@@ -1,6 +1,5 @@
 Tag: privacy-breach-piwik
 Severity: error
-Certainty: possible
 Check: files/privacy-breach
 Info: This package creates a privacy breach by using an online
  Piwik module.

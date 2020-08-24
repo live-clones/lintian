@@ -1,6 +1,5 @@
 Tag: syntax-error-in-debconf-template
 Severity: error
-Certainty: possible
 Check: debian/debconf
 Info: The template file contains a syntax error.
  .

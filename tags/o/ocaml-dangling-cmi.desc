@@ -1,6 +1,5 @@
 Tag: ocaml-dangling-cmi
 Severity: info
-Certainty: possible
 Check: languages/ocaml
 Info: This package installs a compiled interface (<tt>.cmi</tt>) without
  its text version (<tt>.mli</tt>). The text version should also be

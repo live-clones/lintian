@@ -1,6 +1,5 @@
 Tag: pear-channel-without-pkg-php-tools-builddep
 Severity: warning
-Certainty: possible
 Check: languages/php/pear
 Info: The package contains a channel.xml file but doesn't build-depend on
  pkg-php-tools.

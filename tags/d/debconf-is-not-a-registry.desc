@@ -1,6 +1,5 @@
 Tag: debconf-is-not-a-registry
 Severity: warning
-Certainty: wild-guess
 Check: debian/debconf
 Info: In the Unix tradition, Debian packages should have human-readable and
  human-editable configuration files. This package uses debconf commands

@@ -1,6 +1,5 @@
 Tag: copyright-not-using-common-license-for-lgpl
 Severity: error
-Certainty: possible
 Check: debian/copyright
 Renamed-From: copyright-should-refer-to-common-license-file-for-lgpl
 Ref: policy 12.5

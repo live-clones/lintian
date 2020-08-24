@@ -1,6 +1,5 @@
 Tag: missing-pkg-php-tools-buildsystem
 Severity: warning
-Certainty: possible
 Check: languages/php/pear
 Info: The package uses pkg-php-tools but dh command is called without
  --buildsystem=phppear

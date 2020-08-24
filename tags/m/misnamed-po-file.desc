@@ -1,6 +1,5 @@
 Tag: misnamed-po-file
 Severity: warning
-Certainty: possible
 Check: debian/po-debconf
 Info: The name of this PO file doesn't appear to be a valid language
  code. Any files in <tt>debian/po</tt> ending in <tt>.po</tt> will be

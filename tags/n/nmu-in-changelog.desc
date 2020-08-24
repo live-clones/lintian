@@ -1,6 +1,5 @@
 Tag: nmu-in-changelog
 Severity: warning
-Certainty: possible
 Check: nmu
 Renamed-From: changelog-should-not-mention-nmu
 Info: The first line of the changelog entry for this package appears to

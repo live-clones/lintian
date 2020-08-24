@@ -1,6 +1,5 @@
 Tag: source-contains-data-from-ieee-data-oui-db
 Severity: pedantic
-Certainty: possible
 Check: cruft
 Info: The following file contains data from the OUI database
  .

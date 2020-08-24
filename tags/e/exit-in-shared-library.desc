@@ -1,6 +1,5 @@
 Tag: exit-in-shared-library
 Severity: info
-Certainty: possible
 Check: shared-libs
 Experimental: yes
 Renamed-From: shlib-calls-exit

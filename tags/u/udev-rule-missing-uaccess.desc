@@ -1,6 +1,5 @@
 Tag: udev-rule-missing-uaccess
 Severity: warning
-Certainty: possible
 Check: udev
 Ref: https://wiki.debian.org/USB/GadgetSetup
 Info: The package set up a device for user access without using the

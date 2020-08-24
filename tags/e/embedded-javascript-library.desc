@@ -1,6 +1,5 @@
 Tag: embedded-javascript-library
 Severity: warning
-Certainty: possible
 Check: languages/javascript/embedded
 Info: This package contains an embedded copy of JavaScript libraries
  that are now available in their own packages (for example, JQuery,

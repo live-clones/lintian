@@ -1,6 +1,5 @@
 Tag: copyright-refers-to-versionless-license-file
 Severity: warning
-Certainty: possible
 Check: debian/copyright
 Info: The copyright file refers to the versionless symlink in
  <tt>/usr/share/common-licenses</tt> for the full text of the GPL, LGPL,

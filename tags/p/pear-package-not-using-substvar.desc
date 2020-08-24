@@ -1,6 +1,5 @@
 Tag: pear-package-not-using-substvar
 Severity: info
-Certainty: possible
 Check: languages/php/pear
 Info: The package is a PEAR package but the control file does not use
  ${phppear:summary} or ${phppear:description} in its description fields.

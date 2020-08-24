@@ -1,6 +1,5 @@
 Tag: doc-package-depends-on-main-package
 Severity: warning
-Certainty: possible
 Check: fields/package-relations
 Info: The name of this package suggests that it is a documentation package.
  It is usually not desirable for documentation packages to depend on the

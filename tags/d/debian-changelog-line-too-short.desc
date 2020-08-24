@@ -1,6 +1,5 @@
 Tag: debian-changelog-line-too-short
 Severity: pedantic
-Certainty: possible
 Check: debian/changelog
 Info: The given line of the latest changelog entry appears to contain a
  very terse entry.

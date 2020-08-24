@@ -1,6 +1,5 @@
 Tag: source-contains-prebuilt-python-object
 Severity: pedantic
-Certainty: possible
 Check: cruft
 Info: The source tarball contains a prebuilt Python object. They are
  usually left by mistake when generating the tarball by not cleaning the

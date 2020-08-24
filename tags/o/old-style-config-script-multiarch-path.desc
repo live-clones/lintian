@@ -1,6 +1,5 @@
 Tag: old-style-config-script-multiarch-path
 Severity: error
-Certainty: possible
 Check: files/config-scripts
 Info: The following file is an old style config file, used
  to retrieve information about installed libraries in the system.

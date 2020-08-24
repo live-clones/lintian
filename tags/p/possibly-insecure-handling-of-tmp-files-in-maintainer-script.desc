@@ -1,6 +1,5 @@
 Tag: possibly-insecure-handling-of-tmp-files-in-maintainer-script
 Severity: warning
-Certainty: possible
 Check: scripts
 Info: The maintainer script seems to access a file in <tt>/tmp</tt> or
  some other temporary directory. Since creating temporary files in a

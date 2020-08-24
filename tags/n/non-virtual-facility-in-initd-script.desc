@@ -1,6 +1,5 @@
 Tag: non-virtual-facility-in-initd-script
 Severity: error
-Certainty: possible
 Check: init.d
 Renamed-From: init.d-script-should-depend-on-virtual-facility
 Info: The given <tt>/etc/init.d</tt> script depends on a non-virtual

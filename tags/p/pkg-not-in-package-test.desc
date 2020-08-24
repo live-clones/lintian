@@ -1,6 +1,5 @@
 Tag: pkg-not-in-package-test
 Severity: warning
-Certainty: possible
 Check: menu-format
 Info: This menu item doesn't test to see if the package containing it is
  installed. The start of any menu item is a conditional testing whether

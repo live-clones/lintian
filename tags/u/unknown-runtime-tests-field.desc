@@ -1,6 +1,5 @@
 Tag: unknown-runtime-tests-field
 Severity: pedantic
-Certainty: wild-guess
 Check: testsuite
 Info: A paragraph in debian/tests/control mentions a non-standard
  field. Though allowed, this may indicate an error, as the whole

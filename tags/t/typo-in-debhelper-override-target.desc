@@ -1,6 +1,5 @@
 Tag: typo-in-debhelper-override-target
 Severity: warning
-Certainty: possible
 Check: debhelper
 Info: The listed target in debian/rules is a likely misspelling or it is
  missing an underscore ("_") between the <tt>override_dh</tt>,

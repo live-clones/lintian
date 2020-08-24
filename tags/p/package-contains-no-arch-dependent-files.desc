@@ -1,6 +1,5 @@
 Tag: package-contains-no-arch-dependent-files
 Severity: info
-Certainty: possible
 Check: files/architecture
 Experimental: yes
 Info: The package is not marked architecture all, but all the files it

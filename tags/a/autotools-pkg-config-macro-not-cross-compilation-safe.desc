@@ -1,6 +1,5 @@
 Tag: autotools-pkg-config-macro-not-cross-compilation-safe
 Severity: warning
-Certainty: possible
 Check: cruft
 Info: The package appears to use <tt>AC_PATH_PROG</tt> to discover the
  location of <tt>pkg-config(1)</tt>. This macro fails to select the correct

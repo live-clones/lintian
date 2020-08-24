@@ -1,6 +1,5 @@
 Tag: jar-not-in-usr-share
 Severity: warning
-Certainty: possible
 Check: languages/java
 Ref: java-policy 2.2, java-policy 2.3
 Info: The classpath listed in some of the files references files outside

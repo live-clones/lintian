@@ -1,6 +1,5 @@
 Tag: invalid-arch-string-in-source-relation
 Severity: error
-Certainty: possible
 Check: fields/package-relations
 Ref: policy 5.6.8
 Info: The architecture string in the source relation includes an unknown

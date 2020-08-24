@@ -1,6 +1,5 @@
 Tag: untranslatable-debconf-templates
 Severity: error
-Certainty: possible
 Check: debian/po-debconf
 Info: This package seems to be using debconf templates, but some
  descriptions are not translatable. You should prepend an underscore

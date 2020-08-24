@@ -1,6 +1,5 @@
 Tag: possible-unindented-list-in-extended-description
 Severity: warning
-Certainty: possible
 Check: fields/description
 Info: The package "Description:" contains an unindented line which
  starts with a dash (-) or asterisk (*). If this was meant to be a

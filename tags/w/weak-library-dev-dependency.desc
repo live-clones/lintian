@@ -1,6 +1,5 @@
 Tag: weak-library-dev-dependency
 Severity: error
-Certainty: possible
 Check: debian/control
 Ref: policy 8.5
 Info: The given package appears to be a shared library -dev package, but

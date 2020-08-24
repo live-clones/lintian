@@ -1,6 +1,5 @@
 Tag: no-human-maintainers
 Severity: error
-Certainty: possible
 Check: fields/maintainer
 Info: The Maintainer address for this package is a mailing list and there
  are no Uploaders listed. Team-maintained packages must list the human

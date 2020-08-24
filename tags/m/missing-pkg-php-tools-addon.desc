@@ -1,6 +1,5 @@
 Tag: missing-pkg-php-tools-addon
 Severity: warning
-Certainty: possible
 Check: languages/php/pear
 Info: The package uses pkg-php-tools but dh command is called without
  --with phppear or --with phpcomposer. A PECL package should also have

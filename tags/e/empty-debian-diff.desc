@@ -1,6 +1,5 @@
 Tag: empty-debian-diff
 Severity: warning
-Certainty: possible
 Check: cruft
 Info: The Debian diff of this non-native package appears to be completely
  empty. This usually indicates a mistake when generating the upstream

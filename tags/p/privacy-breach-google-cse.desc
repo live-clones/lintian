@@ -1,6 +1,5 @@
 Tag: privacy-breach-google-cse
 Severity: error
-Certainty: possible
 Check: files/privacy-breach
 Info: This package creates a potential privacy breach by fetching
  data from Google at runtime, and may feed private data to Google via

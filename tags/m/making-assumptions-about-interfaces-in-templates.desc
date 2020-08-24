@@ -1,6 +1,5 @@
 Tag: making-assumptions-about-interfaces-in-templates
 Severity: warning
-Certainty: possible
 Check: debian/debconf
 Info: Template text should not make reference to widgets belonging to
  some debconf interfaces. Sentences like "If you answer Yes..." have no

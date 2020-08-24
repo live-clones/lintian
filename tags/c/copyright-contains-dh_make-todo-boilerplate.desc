@@ -1,6 +1,5 @@
 Tag: copyright-contains-dh_make-todo-boilerplate
 Severity: error
-Certainty: possible
 Check: debian/copyright
 Ref: policy 12.5
 Info: The string "Please also look if..." appears in the copyright

@@ -1,6 +1,5 @@
 Tag: synopsis-is-a-sentence
 Severity: info
-Certainty: possible
 Check: fields/description
 Renamed-From: description-synopsis-might-not-be-phrased-properly
 Info: The package synopsis (also known as the "short" description, ie. the

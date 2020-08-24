@@ -1,6 +1,5 @@
 Tag: source-is-missing
 Severity: error
-Certainty: possible
 Check: cruft
 Info: The source of the following file is missing. Lintian checked a few
  possible paths to find the source, and did not find it.

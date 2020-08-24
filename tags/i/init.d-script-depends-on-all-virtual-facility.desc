@@ -1,6 +1,5 @@
 Tag: init.d-script-depends-on-all-virtual-facility
 Severity: error
-Certainty: possible
 Check: init.d
 Info: The given init script declares a dependency on the virtual
  facility "$all". This virtual facility is reserved for very special

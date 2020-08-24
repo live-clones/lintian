@@ -1,6 +1,5 @@
 Tag: distant-prerequisite-in-shlibs
 Severity: warning
-Certainty: possible
 Check: shared-libs
 Renamed-From: shlibs-declares-dependency-on-other-package
 Info: This package declares in its shlibs control file either a dependency

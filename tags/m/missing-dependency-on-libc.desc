@@ -1,6 +1,5 @@
 Tag: missing-dependency-on-libc
 Severity: error
-Certainty: possible
 Check: binaries
 Ref: policy 8.6.1
 Info: The listed file appears to be linked against the C library, but the

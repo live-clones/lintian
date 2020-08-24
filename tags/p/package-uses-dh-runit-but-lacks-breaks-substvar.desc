@@ -1,6 +1,5 @@
 Tag: package-uses-dh-runit-but-lacks-breaks-substvar
 Severity: warning
-Certainty: possible
 Check: debhelper
 Info: This source package appears to use <tt>dh_runit(1)</tt> but the
  specified binary package does not define a <tt>Breaks:</tt> including

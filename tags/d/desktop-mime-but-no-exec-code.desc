@@ -1,6 +1,5 @@
 Tag: desktop-mime-but-no-exec-code
 Severity: warning
-Certainty: possible
 Check: menu-format
 Info: The desktop entry lists support for at least one mime type, but does not
  provide codes like %f, %F, %u or %U for the Exec key.

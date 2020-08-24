@@ -1,6 +1,5 @@
 Tag: vcs-field-mismatch
 Severity: warning
-Certainty: possible
 Check: fields/vcs
 Info: The VCS-* field name appears to mismatch the target URI.
  .

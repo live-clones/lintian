@@ -1,6 +1,5 @@
 Tag: maintainer-script-switches-dir-to-symlink-unsafely
 Severity: error
-Certainty: possible
 Check: scripts
 Experimental: yes
 Renamed-From: maintainer-script-may-use-dir_to_symlink_helper

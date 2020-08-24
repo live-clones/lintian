@@ -1,6 +1,5 @@
 Tag: embedded-pear-module
 Severity: warning
-Certainty: possible
 Check: languages/php/pear/embedded
 Experimental: yes
 Info: This package appears to contain an embedded copy of a PEAR module.

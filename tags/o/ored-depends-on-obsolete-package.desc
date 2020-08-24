@@ -1,6 +1,5 @@
 Tag: ored-depends-on-obsolete-package
 Severity: info
-Certainty: possible
 Check: fields/package-relations
 Info: The package depends on an ORed group of packages which includes
  a package that has been superseded.

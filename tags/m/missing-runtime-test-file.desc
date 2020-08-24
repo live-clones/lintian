@@ -1,6 +1,5 @@
 Tag: missing-runtime-test-file
 Severity: warning
-Certainty: possible
 Check: testsuite
 Info: A test file listed in the debian/tests/control file does not
  exist in the package source.

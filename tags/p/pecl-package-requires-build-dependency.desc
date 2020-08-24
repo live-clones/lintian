@@ -1,6 +1,5 @@
 Tag: pecl-package-requires-build-dependency
 Severity: warning
-Certainty: possible
 Check: languages/php/pear
 Info: The package is a PECL package but its control file doesn't have
  php-dev or dh-php as a build dependency.

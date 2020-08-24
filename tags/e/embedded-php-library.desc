@@ -1,6 +1,5 @@
 Tag: embedded-php-library
 Severity: warning
-Certainty: possible
 Check: languages/php/embedded
 Info: This package appears to contain an embedded copy of a PHP library.
  Please depend on the respective package providing the library and

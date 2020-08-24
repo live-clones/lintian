@@ -1,6 +1,5 @@
 Tag: debian-control-repeats-field-name-in-value
 Severity: warning
-Certainty: possible
 Check: debian/control
 Ref: policy 5.1
 Info: The field on this line of <tt>debian/control</tt> repeats

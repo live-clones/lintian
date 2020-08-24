@@ -1,6 +1,5 @@
 Tag: no-manual-page
 Severity: warning
-Certainty: possible
 Check: documentation/manual
 Renamed-From: binary-without-manpage
 Info: Each binary in <tt>/usr/bin</tt>, <tt>/usr/sbin</tt>, <tt>/bin</tt>,

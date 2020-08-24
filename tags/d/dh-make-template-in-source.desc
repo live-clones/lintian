@@ -1,6 +1,5 @@
 Tag: dh-make-template-in-source
 Severity: warning
-Certainty: possible
 Check: debhelper
 Info: This package contains debian/*.ex and/or debian/ex.* files
  installed by dh_make. These are intended to be filled in with the

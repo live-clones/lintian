@@ -1,6 +1,5 @@
 Tag: init.d-script-sourcing-without-test
 Severity: error
-Certainty: possible
 Check: init.d
 Info: The given <tt>/etc/init.d</tt> script seems to be sourcing an
  <tt>/etc/default/</tt> file without checking for its existence first.

@@ -1,6 +1,5 @@
 Tag: depends-on-misc-pre-depends
 Severity: warning
-Certainty: possible
 Check: debian/control
 Info: This package has a <tt>Depends</tt> field that contains the
  <tt>${misc:Pre-Depends}</tt> substitution variable. This should be in

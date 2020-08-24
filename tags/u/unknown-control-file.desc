@@ -1,6 +1,5 @@
 Tag: unknown-control-file
 Severity: warning
-Certainty: possible
 Check: control-files
 Ref: policy 2.2*
 Info: The package contains an unknown control file. Policy says that

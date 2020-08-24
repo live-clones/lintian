@@ -1,6 +1,5 @@
 Tag: dfsg-version-with-period
 Severity: info
-Certainty: possible
 Check: fields/version
 Info: The version number of this package contains ".dfsg", probably in a
  form like "1.2.dfsg1". There is a subtle sorting problem with this

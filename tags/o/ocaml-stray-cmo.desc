@@ -1,6 +1,5 @@
 Tag: ocaml-stray-cmo
 Severity: info
-Certainty: wild-guess
 Check: languages/ocaml
 Info: This package installs a <tt>.cma</tt> file and a <tt>.cmo</tt> file
  with the same base name. Most of the time, the module provided by the

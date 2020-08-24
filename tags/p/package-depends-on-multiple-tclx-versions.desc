@@ -1,6 +1,5 @@
 Tag: package-depends-on-multiple-tclx-versions
 Severity: error
-Certainty: possible
 Check: fields/package-relations
 Info: The package seems to declare several relations to a tclx version.
  This is not only sloppy but in the case of libraries, it may well break

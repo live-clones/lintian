@@ -1,6 +1,5 @@
 Tag: build-depends-on-1-revision
 Severity: warning
-Certainty: possible
 Check: fields/package-relations
 Info: The package declares a build dependency on a version of a package
  with a -1 Debian revision such as "libfoo (&gt;= 1.2-1)". Such a

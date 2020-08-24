@@ -1,6 +1,5 @@
 Tag: maintainer-script-lacks-debhelper-token
 Severity: warning
-Certainty: possible
 Check: debhelper
 Info: This package is built using debhelper commands that may modify
  maintainer scripts, but the maintainer scripts do not contain

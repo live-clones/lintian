@@ -1,6 +1,5 @@
 Tag: script-uses-perl4-libs-without-dep
 Severity: warning
-Certainty: possible
 Check: scripts
 Info: This package includes perl scripts using obsoleted perl 4-era
  libraries. These libraries have been deprecated in perl in 5.14, and

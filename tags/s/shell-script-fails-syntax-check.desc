@@ -1,6 +1,5 @@
 Tag: shell-script-fails-syntax-check
 Severity: error
-Certainty: possible
 Check: scripts
 Info: Running this shell script with the shell's -n option set fails,
  which means that the script has syntax errors. The most common cause of

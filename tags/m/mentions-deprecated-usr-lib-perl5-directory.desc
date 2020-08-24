@@ -1,7 +1,6 @@
 # Imported from pkg-perl-tools (named usr-lib-perl5-mentioned there)
 Tag: mentions-deprecated-usr-lib-perl5-directory
 Severity: error
-Certainty: possible
 Check: cruft
 Experimental: yes
 Info: As of Perl 5.20, the vendorarch directory is /usr/lib/&lt;triplet&gt;/perl5,

@@ -1,6 +1,5 @@
 Tag: testsuite-dependency-has-unparsable-elements
 Severity: warning
-Certainty: possible
 Check: testsuite
 Info: Lintian cannot parse the Depends field for the given autopkgtest.
  .

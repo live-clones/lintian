@@ -1,6 +1,5 @@
 Tag: select-with-boolean-choices
 Severity: warning
-Certainty: possible
 Check: debian/debconf
 Info: Select templates with only yes and no choices should use the boolean
  type instead.

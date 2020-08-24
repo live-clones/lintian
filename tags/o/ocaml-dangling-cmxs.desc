@@ -1,6 +1,5 @@
 Tag: ocaml-dangling-cmxs
 Severity: warning
-Certainty: possible
 Check: languages/ocaml
 Info: This package seems to be a library package, and provides a native
  plugin (<tt>.cmxs</tt>). If the plugin is meant to be used as a library

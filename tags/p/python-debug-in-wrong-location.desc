@@ -1,6 +1,5 @@
 Tag: python-debug-in-wrong-location
 Severity: warning
-Certainty: possible
 Check: languages/python
 Ref: #576014
 Info: The package appears to be installing debug modules in

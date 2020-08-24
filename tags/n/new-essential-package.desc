@@ -1,6 +1,5 @@
 Tag: new-essential-package
 Severity: error
-Certainty: possible
 Check: fields/essential
 Info: This package has the Essential flag set. New Essential packages
  are sufficiently rare that it seems worth warning about. They should

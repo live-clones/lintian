@@ -1,6 +1,5 @@
 Tag: custom-library-search-path
 Severity: error
-Certainty: possible
 Check: binaries
 Renamed-From: binary-or-shlib-defines-rpath
 Ref: https://wiki.debian.org/RpathIssue

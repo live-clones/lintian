@@ -1,6 +1,5 @@
 Tag: menu-icon-missing
 Severity: warning
-Certainty: possible
 Check: menu-format
 Info: This icon file couldn't be found. If the path to the icon in the
  menu file is an absolute path, make sure that icon exists at that path in

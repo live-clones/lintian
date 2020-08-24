@@ -1,6 +1,5 @@
 Tag: link-to-shared-library-in-wrong-package
 Severity: warning
-Certainty: possible
 Check: shared-libs
 Renamed-From: non-dev-pkg-with-shlib-symlink
 Info: Although this package is not a "-dev" package, it installs a

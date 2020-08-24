@@ -1,6 +1,5 @@
 Tag: debian-rules-uses-special-shell-variable
 Severity: warning
-Certainty: possible
 Check: debian/rules
 Renamed-From: debian-rules-should-not-use-underscore-variable
 Ref: policy 4.9, https://stackoverflow.com/a/27628164

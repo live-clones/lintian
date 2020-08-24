@@ -1,6 +1,5 @@
 Tag: star-file
 Severity: error
-Certainty: possible
 Check: files/names
 Info: The given file is literally installed as <tt>*</tt> (star
  symbol). Normally this indicates a mistake in the installation

@@ -1,6 +1,5 @@
 Tag: weak-dependency-on-misc-depends
 Severity: warning
-Certainty: possible
 Check: debhelper
 Ref: debhelper(7)
 Info: The source package declares a weak dependency on ${misc:Depends} in

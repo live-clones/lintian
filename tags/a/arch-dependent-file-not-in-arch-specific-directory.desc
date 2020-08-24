@@ -1,6 +1,5 @@
 Tag: arch-dependent-file-not-in-arch-specific-directory
 Severity: error
-Certainty: possible
 Check: binaries
 Ref: https://wiki.ubuntu.com/MultiarchSpec
 Info: This package is Multi-Arch "same", but it installs an ELF binary in the

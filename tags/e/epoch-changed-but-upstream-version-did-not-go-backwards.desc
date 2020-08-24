@@ -1,6 +1,5 @@
 Tag: epoch-changed-but-upstream-version-did-not-go-backwards
 Severity: error
-Certainty: possible
 Check: debian/changelog
 Info: The previous version of this package had a different version epoch
  to the current version but the upstream version did not go "backwards".

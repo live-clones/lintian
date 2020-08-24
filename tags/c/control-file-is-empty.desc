@@ -1,6 +1,5 @@
 Tag: control-file-is-empty
 Severity: warning
-Certainty: possible
 Check: control-files
 Info: The package contains an empty control file, which is most probably
  an error.

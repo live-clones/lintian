@@ -1,6 +1,5 @@
 Tag: non-consecutive-debian-revision
 Severity: pedantic
-Certainty: possible
 Check: debian/changelog
 Experimental: yes
 Info: The latest changelog entry refers to a Debian revision (eg.

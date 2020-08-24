@@ -1,6 +1,5 @@
 Tag: shared-library-lacks-version
 Severity: warning
-Certainty: possible
 Check: shared-libs
 Renamed-From: shlib-without-versioned-soname
 Ref: policy 10.2, policy 8.6

@@ -1,6 +1,5 @@
 Tag: breaks-without-version
 Severity: warning
-Certainty: possible
 Check: fields/package-relations
 Ref: policy 7.3, policy 7.4, #605744
 Info: This package declares a Breaks relationship with another package

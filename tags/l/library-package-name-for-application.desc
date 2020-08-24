@@ -1,6 +1,5 @@
 Tag: library-package-name-for-application
 Severity: info
-Certainty: wild-guess
 Check: application-not-library
 Experimental: yes
 Info: This package contains a program in $PATH but is named like a

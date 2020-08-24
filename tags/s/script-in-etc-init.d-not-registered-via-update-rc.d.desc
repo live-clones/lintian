@@ -1,6 +1,5 @@
 Tag: script-in-etc-init.d-not-registered-via-update-rc.d
 Severity: warning
-Certainty: possible
 Check: init.d
 Info: The package installs an <tt>/etc/init.d</tt> script which is
  not registered in the <tt>postinst</tt> script. This is usually a bug

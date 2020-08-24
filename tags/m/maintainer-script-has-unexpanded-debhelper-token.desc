@@ -1,6 +1,5 @@
 Tag: maintainer-script-has-unexpanded-debhelper-token
 Severity: warning
-Certainty: possible
 Check: scripts
 Info: Lintian has detected the presence of a #DEBHELPER# token in the
  listed maintainer/control script. By default, dh_installdeb will remove

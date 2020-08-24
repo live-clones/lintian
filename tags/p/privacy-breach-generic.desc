@@ -1,6 +1,5 @@
 Tag: privacy-breach-generic
 Severity: warning
-Certainty: wild-guess
 Check: files/privacy-breach
 Info: This package creates a potential privacy breach by fetching data
  from an external website at runtime. Please remove these scripts or

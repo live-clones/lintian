@@ -1,6 +1,5 @@
 Tag: duplicate-changelog-files
 Severity: warning
-Certainty: possible
 Check: files/duplicates
 Info: The package appears to be shipping two copies of the changelog.
  .

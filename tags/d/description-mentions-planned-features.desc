@@ -1,6 +1,5 @@
 Tag: description-mentions-planned-features
 Severity: info
-Certainty: wild-guess
 Check: fields/description
 Info: This package appears to mention planned or upcoming features of
  the software.

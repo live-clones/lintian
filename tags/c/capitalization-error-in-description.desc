@@ -1,6 +1,5 @@
 Tag: capitalization-error-in-description
 Severity: info
-Certainty: wild-guess
 Check: fields/description
 Info: Lintian found a possible capitalization error in the package
  description. Lintian has a list of common capitalization errors,

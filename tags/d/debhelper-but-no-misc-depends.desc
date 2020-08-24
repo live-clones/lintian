@@ -1,6 +1,5 @@
 Tag: debhelper-but-no-misc-depends
 Severity: warning
-Certainty: possible
 Check: debhelper
 Ref: debhelper(7)
 Info: The source package uses debhelper, but it does not include

@@ -1,6 +1,5 @@
 Tag: perl-module-uses-perl4-libs-without-dep
 Severity: warning
-Certainty: possible
 Check: languages/perl
 Info: This package includes perl modules using obsoleted perl 4-era
  libraries. These libraries have been deprecated in perl in 5.14, and

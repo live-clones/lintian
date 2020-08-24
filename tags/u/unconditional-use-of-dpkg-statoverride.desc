@@ -1,6 +1,5 @@
 Tag: unconditional-use-of-dpkg-statoverride
 Severity: warning
-Certainty: possible
 Check: scripts
 Info: The maintainer script appears to use <tt>dpkg-statoverride --add</tt>
  without a prior call to <tt>dpkg-statoverride --list</tt> to check the

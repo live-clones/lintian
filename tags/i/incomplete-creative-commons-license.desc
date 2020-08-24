@@ -1,6 +1,5 @@
 Tag: incomplete-creative-commons-license
 Severity: warning
-Certainty: possible
 Check: debian/copyright/dep5
 Info: The package appears to be licensed under a Creative Commons
  license but only includes the human-readable summary in the

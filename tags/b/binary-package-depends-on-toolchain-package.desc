@@ -1,6 +1,5 @@
 Tag: binary-package-depends-on-toolchain-package
 Severity: warning
-Certainty: possible
 Check: fields/package-relations
 Info: This package specifies a binary dependency on a "toolchain" package
  such as debhelper or cdbs. This is likely to be a mistake; these

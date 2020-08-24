@@ -1,6 +1,5 @@
 Tag: package-contains-broken-symlink-wildcard
 Severity: warning
-Certainty: possible
 Check: files/symbolic-links/broken
 Info: The package contains a symlink with a target that
  appears to be a "failed" wildcard expansion. Furthermore

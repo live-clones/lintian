@@ -1,6 +1,5 @@
 Tag: tar-errors-from-control
 Severity: error
-Certainty: possible
 Check: deb-format
 Info: tar produced an error while listing the contents of the
  <tt>control.tar.gz</tt> member of this package. This probably means

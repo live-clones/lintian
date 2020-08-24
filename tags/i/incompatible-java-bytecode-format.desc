@@ -1,6 +1,5 @@
 Tag: incompatible-java-bytecode-format
 Severity: warning
-Certainty: possible
 Check: languages/java
 Info: The package contains Java class files with a minimum requirement on the
  listed Java version. This Java version is not supported by the default JVM

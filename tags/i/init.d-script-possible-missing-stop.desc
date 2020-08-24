@@ -1,6 +1,5 @@
 Tag: init.d-script-possible-missing-stop
 Severity: warning
-Certainty: possible
 Check: init.d
 Info: The given <tt>/etc/init.d</tt> script indicates it should be
  stopped at one of the runlevels 0, 1, or 6 but not at all of them.

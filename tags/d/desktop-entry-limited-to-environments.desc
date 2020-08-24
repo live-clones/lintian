@@ -1,6 +1,5 @@
 Tag: desktop-entry-limited-to-environments
 Severity: info
-Certainty: wild-guess
 Check: menu-format
 Info: This desktop entry uses OnlyShowIn to limit the environments in
  which it's displayed but lists multiple environments. This is often a

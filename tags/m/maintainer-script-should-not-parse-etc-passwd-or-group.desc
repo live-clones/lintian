@@ -1,6 +1,5 @@
 Tag: maintainer-script-should-not-parse-etc-passwd-or-group
 Severity: warning
-Certainty: possible
 Check: scripts
 Ref: getent(1), nss(5)
 Info: The maintainer script appears to manually parse <tt>/etc/passwd</tt>

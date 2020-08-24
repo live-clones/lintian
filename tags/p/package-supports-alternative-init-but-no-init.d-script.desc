@@ -1,6 +1,5 @@
 Tag: package-supports-alternative-init-but-no-init.d-script
 Severity: info
-Certainty: possible
 Check: init.d
 Ref: policy 9.11
 Info: The package provides daemon, but contains no init.d script

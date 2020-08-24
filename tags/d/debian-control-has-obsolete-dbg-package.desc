@@ -1,6 +1,5 @@
 Tag: debian-control-has-obsolete-dbg-package
 Severity: info
-Certainty: possible
 Check: debian/control
 Ref: https://wiki.debian.org/AutomaticDebugPackages
 Info: The <tt>debian/control</tt> file includes declaration of

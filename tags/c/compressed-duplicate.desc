@@ -1,6 +1,5 @@
 Tag: compressed-duplicate
 Severity: info
-Certainty: possible
 Check: files/compressed
 Renamed-From: duplicated-compressed-file
 Info: The given, apparently compressed, file is shipped in the package

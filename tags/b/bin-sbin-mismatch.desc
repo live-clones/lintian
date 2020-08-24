@@ -1,6 +1,5 @@
 Tag: bin-sbin-mismatch
 Severity: info
-Certainty: possible
 Check: files/contents
 Experimental: yes
 Info: The package installs a binary under <tt>/usr/sbin</tt> or

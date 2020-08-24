@@ -1,6 +1,5 @@
 Tag: empty-udeb-package
 Severity: info
-Certainty: wild-guess
 Check: files/empty-package
 Experimental: yes
 Info: This udeb package appears to be empty, and its description does

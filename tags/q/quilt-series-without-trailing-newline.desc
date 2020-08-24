@@ -1,6 +1,5 @@
 Tag: quilt-series-without-trailing-newline
 Severity: error
-Certainty: possible
 Check: debian/patches/quilt
 Info: The package contains a debian/patches/series file
  that doesn't end with a newline. dpkg-source may silently

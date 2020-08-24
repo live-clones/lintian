@@ -1,6 +1,5 @@
 Tag: embedded-script-includes-copyright-statement
 Severity: pedantic
-Certainty: possible
 Check: cruft
 Info: The specified file includes an embedded script with a copyright
  statement.

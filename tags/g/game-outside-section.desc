@@ -1,6 +1,5 @@
 Tag: game-outside-section
 Severity: warning
-Certainty: possible
 Check: games
 Renamed-From: games-package-should-be-section-games
 Info: All the executables in this package are in <tt>/usr/games</tt>, but

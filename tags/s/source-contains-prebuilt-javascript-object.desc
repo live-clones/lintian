@@ -1,6 +1,5 @@
 Tag: source-contains-prebuilt-javascript-object
 Severity: pedantic
-Certainty: possible
 Check: cruft
 Info: The source tarball contains a prebuilt (minified) JavaScript object.
  They are usually left by mistake when generating the tarball by not

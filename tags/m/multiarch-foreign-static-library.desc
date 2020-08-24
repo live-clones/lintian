@@ -1,6 +1,5 @@
 Tag: multiarch-foreign-static-library
 Severity: error
-Certainty: possible
 Check: files/multi-arch
 Info: The package is architecture-dependent, ships a static library in a
  public, architecture-dependent library search path and is marked

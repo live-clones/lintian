@@ -1,6 +1,5 @@
 Tag: wildcard-matches-nothing-in-dep5-copyright
 Severity: info
-Certainty: possible
 Check: debian/copyright/dep5
 Ref: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 Info: The wildcard that was specified matches no file in the source tree.

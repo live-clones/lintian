@@ -1,6 +1,5 @@
 Tag: udev-rule-missing-subsystem
 Severity: warning
-Certainty: possible
 Check: udev
 Ref: https://wiki.debian.org/USB/GadgetSetup
 Info: The package matches vendor/product IDs without specifying

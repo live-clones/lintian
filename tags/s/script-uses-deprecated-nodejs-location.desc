@@ -1,6 +1,5 @@
 Tag: script-uses-deprecated-nodejs-location
 Severity: warning
-Certainty: possible
 Check: scripts
 Info: You used <tt>/usr/bin/nodejs</tt> or <tt>/usr/bin/env nodejs</tt> as an
  interpreter for a script.

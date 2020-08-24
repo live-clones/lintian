@@ -1,6 +1,5 @@
 Tag: possible-new-upstream-release-without-new-version
 Severity: warning
-Certainty: possible
 Check: debian/changelog
 Info: The most recent changelog entry contains an entry that appears to
  say this is a new upstream release (a comment similar to "new upstream

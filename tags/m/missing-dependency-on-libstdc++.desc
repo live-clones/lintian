@@ -1,6 +1,5 @@
 Tag: missing-dependency-on-libstdc++
 Severity: error
-Certainty: possible
 Check: binaries
 Experimental: yes
 Ref: policy 8.6.1

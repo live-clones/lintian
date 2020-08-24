@@ -1,6 +1,5 @@
 Tag: unknown-architecture
 Severity: warning
-Certainty: possible
 Check: fields/architecture
 Info: This package claims to be for an unknown architecture. The
  architecture should be one of the values supported by dpkg or one of the

@@ -1,6 +1,5 @@
 Tag: duplicate-files
 Severity: pedantic
-Certainty: possible
 Check: files/duplicates
 Experimental: yes
 Ref: jdupes(1)

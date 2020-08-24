@@ -1,6 +1,5 @@
 Tag: backports-changes-missing
 Severity: info
-Certainty: possible
 Check: fields/distribution
 Info: The changes file only has changelog entries from a single version. It
  is recommended for backports to include all changes since (old)stable or

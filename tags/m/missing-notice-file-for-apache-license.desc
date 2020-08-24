@@ -1,6 +1,5 @@
 Tag: missing-notice-file-for-apache-license
 Severity: error
-Certainty: possible
 Check: debian/copyright/apache-notice
 Info: The package appears to be licensed under the Apache 2.0 license and
  a <tt>NOTICE</tt> file (or similar) exists in the source tree. However, no

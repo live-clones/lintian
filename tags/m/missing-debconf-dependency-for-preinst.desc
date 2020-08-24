@@ -1,6 +1,5 @@
 Tag: missing-debconf-dependency-for-preinst
 Severity: warning
-Certainty: possible
 Check: debian/debconf
 Info: Packages using debconf in their preinst scripts must pre-depend
  on debconf.

@@ -1,6 +1,5 @@
 Tag: license-problem-non-free-RFC-BCP78
 Severity: error
-Certainty: possible
 Check: cruft
 Info: The given source file is licensed under the non-free RFC
  license (BCP78).

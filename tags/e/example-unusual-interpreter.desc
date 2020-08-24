@@ -1,6 +1,5 @@
 Tag: example-unusual-interpreter
 Severity: pedantic
-Certainty: possible
 Check: scripts
 Info: This package contains an example script for an interpreter that
  is not shipped in the package and is not known to Lintian. It is

@@ -1,6 +1,5 @@
 Tag: privacy-breach-facebook
 Severity: error
-Certainty: possible
 Check: files/privacy-breach
 Info: This package creates a privacy breach by exchanging data with
  Facebook at runtime via plugins such as "Share" or "Like" buttons.

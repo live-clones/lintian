@@ -1,6 +1,5 @@
 Tag: depends-on-old-emacs
 Severity: warning
-Certainty: possible
 Check: fields/package-relations
 Info: The package lists an old version of Emacs as its first dependency.
  It should probably be updated to support the current version of Emacs
