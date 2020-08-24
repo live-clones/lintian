@@ -1,7 +1,7 @@
 Tag: package-installs-perllocal-pod
 Severity: warning
 Check: languages/perl
-Info: This package installs a file <tt>perllocal.pod</tt>. Since that
+Explanation: This package installs a file <tt>perllocal.pod</tt>. Since that
  file is intended for local documentation, it is not likely that it is
  a good place for documentation supplied by a Debian package. In fact,
  installing this package will wipe out whatever local documentation

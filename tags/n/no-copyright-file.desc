@@ -1,6 +1,6 @@
 Tag: no-copyright-file
 Severity: error
 Check: debian/copyright
-Info: Each binary package has to include a plain file
+Explanation: Each binary package has to include a plain file
  /usr/share/doc/<i>pkg</i>/copyright
-Ref: policy 12.5
+See-Also: policy 12.5

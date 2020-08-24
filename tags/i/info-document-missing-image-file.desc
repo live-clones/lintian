@@ -1,7 +1,7 @@
 Tag: info-document-missing-image-file
 Severity: warning
 Check: documentation/texinfo
-Info: This info document contains an "[image]" but the image file it
+Explanation: This info document contains an "[image]" but the image file it
  specifies is missing. Texinfo <tt>@image{}</tt> becomes
  .
   [image src="filename.png"]

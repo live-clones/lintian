@@ -1,7 +1,7 @@
 Tag: package-file-is-executable
 Severity: warning
 Check: debhelper
-Info: The packaging file is marked executable. For control, changelog and
+Explanation: The packaging file is marked executable. For control, changelog and
  copyright there is no reason for them to be executable.
  .
  This tag is also emitted if a debhelper file is marked executable without

@@ -1,7 +1,7 @@
 Tag: package-contains-eslint-config-file
 Severity: error
 Check: files/names
-Info: This package ships an ESLint config file. This file is
+Explanation: This package ships an ESLint config file. This file is
  a configuration file for the ESLint pluggable linting utility
  for JavaScript.
  .

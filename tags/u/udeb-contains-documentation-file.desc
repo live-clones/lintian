@@ -1,4 +1,4 @@
 Tag: udeb-contains-documentation-file
 Severity: error
 Check: documentation
-Info: udeb packages should not contain any documentation.
+Explanation: udeb packages should not contain any documentation.

@@ -1,7 +1,7 @@
 Tag: missing-depends-on-sensible-utils
 Severity: error
 Check: files/contents
-Info: The listed file appears to use one or more of the binaries
+Explanation: The listed file appears to use one or more of the binaries
  in <tt>sensible-utils</tt> but no binary declares a dependency for
  this package.
  .

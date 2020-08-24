@@ -1,7 +1,7 @@
 Tag: systemd-service-file-outside-lib
 Severity: error
 Check: systemd
-Info: The package ships a systemd service file outside
+Explanation: The package ships a systemd service file outside
  <tt>/lib/systemd/system/</tt>
  .
  Systemd in Debian searches for unit files in <tt>/lib/systemd/system/</tt>

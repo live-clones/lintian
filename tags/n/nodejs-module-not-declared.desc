@@ -1,7 +1,7 @@
 Tag: nodejs-module-not-declared
 Severity: warning
 Check: languages/javascript/nodejs
-Info: This package installs the specified nodejs module in a nodejs root
+Explanation: This package installs the specified nodejs module in a nodejs root
  directory without declaring it in "Provides:" field in debian/control.
  .
  You can use <tt>Provides: ${nodejs:Provides}</tt> provided by pkg-js-tools

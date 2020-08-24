@@ -1,7 +1,7 @@
 Tag: default-mta-dependency-not-listed-first
 Severity: warning
 Check: fields/package-relations
-Info: This package has a relationship with the mail-transport-agent
+Explanation: This package has a relationship with the mail-transport-agent
  or default-mta packages but does not specify the default-mta as an
  first option.
  .

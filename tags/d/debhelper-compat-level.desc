@@ -1,4 +1,4 @@
 Tag: debhelper-compat-level
 Severity: classification
 Check: debhelper
-Info: This is the debhelper compat level used specified by this package.
+Explanation: This is the debhelper compat level used specified by this package.

@@ -1,8 +1,8 @@
 Tag: dep5-copyright-license-name-not-unique
 Severity: warning
 Check: debian/copyright/dep5
-Ref: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
-Info: This paragraph defines an already defined license.
+See-Also: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Explanation: This paragraph defines an already defined license.
  .
  According to the specification, short license names are required to be
  unique within a single copyright file.

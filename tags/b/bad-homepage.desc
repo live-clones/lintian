@@ -1,7 +1,7 @@
 Tag: bad-homepage
 Severity: warning
 Check: fields/homepage
-Info: The "Homepage:" field in this package's control file does not
+Explanation: The "Homepage:" field in this package's control file does not
  contain a valid absolute URL. Most probably you forgot to specify
  the scheme (e.g. http).
  .

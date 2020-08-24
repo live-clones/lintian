@@ -1,7 +1,7 @@
 Tag: runtime-test-file-uses-supported-python-versions-without-python-all-build-depends
 Severity: warning
 Check: testsuite
-Info: The specified file appears to use <tt>py3versions -s</tt> to
+Explanation: The specified file appears to use <tt>py3versions -s</tt> to
  determine the "supported" Python versions without specifying
  <tt>python3-all</tt> (or equivalent) as a build-dependency.
  .

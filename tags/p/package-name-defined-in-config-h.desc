@@ -1,9 +1,9 @@
 Tag: package-name-defined-in-config-h
 Severity: warning
 Check: includes/config-h
-Info: This package installs a header file named <tt>config.h</tt> that
+Explanation: This package installs a header file named <tt>config.h</tt> that
  uses the identifier PACKAGE_NAME. It is probably incompatible with
  packages using autoconf.
  .
  Please remove the file or rename the identifier.
-Ref: #733598
+See-Also: #733598

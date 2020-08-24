@@ -1,7 +1,7 @@
 Tag: desktop-entry-unknown-type
 Severity: warning
 Check: menu-format
-Info: This desktop entry uses a type that's not one of the currently
+Explanation: This desktop entry uses a type that's not one of the currently
  recognized values of "Application", "Link" or "Directory".
  Implementations should ignore any unknown values but it's still likely
  an error if you used something else and this check should be updated if
@@ -10,4 +10,4 @@ Info: This desktop entry uses a type that's not one of the currently
  .
  The desktop-file-validate tool in the desktop-file-utils package is
  useful for checking the syntax of desktop entries.
-Ref: https://specifications.freedesktop.org/desktop-entry-spec/latest/ar01s06.html
+See-Also: https://specifications.freedesktop.org/desktop-entry-spec/latest/ar01s06.html

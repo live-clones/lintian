@@ -1,7 +1,7 @@
 Tag: privacy-breach-generic
 Severity: warning
 Check: files/privacy-breach
-Info: This package creates a potential privacy breach by fetching data
+Explanation: This package creates a potential privacy breach by fetching data
  from an external website at runtime. Please remove these scripts or
  external HTML resources.
  .

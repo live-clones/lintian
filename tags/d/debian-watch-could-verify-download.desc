@@ -1,8 +1,8 @@
 Tag: debian-watch-could-verify-download
 Severity: warning
 Check: debian/watch
-Ref: uscan(1)
-Info: One or more upstream signing keys are present in the Debian package
+See-Also: uscan(1)
+Explanation: One or more upstream signing keys are present in the Debian package
  but are not being used.
  .
  Please enable the cryptographic verification of downloads with the

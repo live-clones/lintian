@@ -1,7 +1,7 @@
 Tag: changelog-is-symlink
 Severity: warning
 Check: nmu
-Info: The file <tt>debian/changelog</tt> is a symlink instead of a regular
+Explanation: The file <tt>debian/changelog</tt> is a symlink instead of a regular
  file. This is unnecessary and makes package checking and manipulation
  more difficult. If the changelog should be available in the source
  package under multiple names, make <tt>debian/changelog</tt> the real

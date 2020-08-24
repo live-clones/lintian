@@ -1,7 +1,7 @@
 Tag: orphaned-package-not-maintained-in-debian-infrastructure
 Severity: warning
 Check: fields/vcs
-Info:
+Explanation:
  This package is orphaned but the specified VCS field does not point to
  an area within the *.debian.org infrastructure
  . 

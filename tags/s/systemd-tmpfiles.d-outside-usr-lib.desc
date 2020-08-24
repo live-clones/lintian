@@ -1,5 +1,5 @@
 Tag: systemd-tmpfiles.d-outside-usr-lib
 Severity: error
 Check: systemd
-Info: The package ships a systemd tmpfiles.d(5) conf file outside
+Explanation: The package ships a systemd tmpfiles.d(5) conf file outside
  <tt>/usr/lib/tmpfiles.d/</tt>

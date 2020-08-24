@@ -1,8 +1,8 @@
 Tag: missing-build-dependency
 Severity: error
 Check: debian/rules
-Ref: policy 4.2
-Info: The package doesn't specify a build dependency on a package that is
+See-Also: policy 4.2
+Explanation: The package doesn't specify a build dependency on a package that is
  used in <tt>debian/rules</tt>.
  .
  Lintian intentionally does not take into account transitive dependencies.

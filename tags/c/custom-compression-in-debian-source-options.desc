@@ -2,7 +2,7 @@ Tag: custom-compression-in-debian-source-options
 Severity: warning
 Check: debian/source-dir
 Renamed-From: debian-source-options-has-custom-compression-settings
-Info: This package selects a custom compression level or algorithm
+Explanation: This package selects a custom compression level or algorithm
  in  <tt>debian/source/options</tt>. Please remove the call and let
  dpkg-deb(1) select suitable defaults.
  .
@@ -20,4 +20,4 @@ Info: This package selects a custom compression level or algorithm
  make it harder to change the defauls on an archive-wide basis.
  .
  Some legitimate use cases trigger this tag. Please override it.
-Ref: Bug#829100, Bug#906614, Bug##909696, dpkg-deb(1)
+See-Also: Bug#829100, Bug#906614, Bug##909696, dpkg-deb(1)

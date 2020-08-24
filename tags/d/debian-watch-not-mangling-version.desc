@@ -2,8 +2,8 @@ Tag: debian-watch-not-mangling-version
 Severity: warning
 Check: debian/watch
 Renamed-From: debian-watch-file-should-mangle-version
-Ref: uscan(1), https://wiki.debian.org/DEHS
-Info: The version of this package contains <tt>dfsg</tt>, <tt>ds</tt>,
+See-Also: uscan(1), https://wiki.debian.org/DEHS
+Explanation: The version of this package contains <tt>dfsg</tt>, <tt>ds</tt>,
  or <tt>debian</tt>, which normally indicates that the upstream source
  has been repackaged to comply with the Debian Free Software Guidelines
  (or similar reason), but there is no version mangling in the

@@ -1,7 +1,7 @@
 Tag: global-data-in-games-directory
 Severity: error
 Check: games
-Info: This package contains files under <tt>/usr/share/games</tt>, such as
+Explanation: This package contains files under <tt>/usr/share/games</tt>, such as
  desktop files, icons, pixmaps, or MIME type entries, that are global
  system data. The user's desktop environment will only check in the
  directories directly under <tt>/usr/share</tt> and this information

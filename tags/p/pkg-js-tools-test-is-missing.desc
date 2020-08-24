@@ -1,7 +1,7 @@
 Tag: pkg-js-tools-test-is-missing
 Severity: warning
 Check: languages/javascript/nodejs
-Info: The <tt>debian/rules</tt> file for this package uses <tt>--with
+Explanation: The <tt>debian/rules</tt> file for this package uses <tt>--with
  nodejs</tt> which attempts to execute the specified file when running
  autopkgtests.
  .

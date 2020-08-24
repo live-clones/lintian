@@ -1,7 +1,7 @@
 Tag: conffile-is-not-in-package
 Severity: error
 Check: conffiles
-Info: The conffiles control file lists this path, but the path does
+Explanation: The conffiles control file lists this path, but the path does
  not appear to exist in the package. Lintian may also emit this tag
  when the file exists, but the canonical name is used in the
  "conffiles" control file (e.g. if a parent segment are symlinks).

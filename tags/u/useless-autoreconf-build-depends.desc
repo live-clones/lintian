@@ -1,7 +1,7 @@
 Tag: useless-autoreconf-build-depends
 Severity: warning
 Check: debhelper
-Info: Since compatibility level 10, debhelper enables the <tt>autoreconf</tt>
+Explanation: Since compatibility level 10, debhelper enables the <tt>autoreconf</tt>
  sequence by default.
  .
  It is therefore not necessary to specify build-dependencies on

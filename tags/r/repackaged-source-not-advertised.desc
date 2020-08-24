@@ -1,7 +1,7 @@
 Tag: repackaged-source-not-advertised
 Severity: info
 Check: debian/copyright/dep5
-Info: The <tt>debian/copyright</tt> file mentions <tt>Files-Excluded</tt>
+Explanation: The <tt>debian/copyright</tt> file mentions <tt>Files-Excluded</tt>
  but the source version has no repack suffix.
  .
  Repackaged sources are expected to indicate in their version number
@@ -23,4 +23,4 @@ Info: The <tt>debian/copyright</tt> file mentions <tt>Files-Excluded</tt>
  .
  Please include such a suffix in the changelog version number to avoid
  this warning.
-Ref: #471537, https://www.debian.org/doc/manuals/developers-reference/best-pkging-practices.html
+See-Also: #471537, https://www.debian.org/doc/manuals/developers-reference/best-pkging-practices.html

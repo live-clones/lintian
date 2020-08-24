@@ -1,7 +1,7 @@
 Tag: patch-modifying-debian-files
 Severity: error
 Check: debian/patches/quilt
-Info: A patch stored in <tt>debian/patches/</tt> modifies or creates files
+Explanation: A patch stored in <tt>debian/patches/</tt> modifies or creates files
  in the <tt>debian</tt> folder, but that folder is already under the
  maintainer's exclusive control.
  .

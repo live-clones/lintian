@@ -1,12 +1,12 @@
 Tag: quoted-placeholder-in-mailcap-entry
 Severity: warning
 Check: mailcap
-Info: The <tt>%s</tt> placeholder in a mailcap entry is quoted. That is
+Explanation: The <tt>%s</tt> placeholder in a mailcap entry is quoted. That is
  considered unsafe. Proper escaping should be left to the programs using
  the entry.
  .
  Please remove the single or double quotes around <tt>%s</tt>.
-Ref: #33486,
+See-Also: #33486,
  #90483,
  #745141,
  https://tools.ietf.org/rfc/rfc1524.txt,

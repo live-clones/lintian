@@ -1,9 +1,9 @@
 Tag: script-not-executable
 Severity: warning
 Check: scripts
-Info: This file starts with the #! sequence that marks interpreted scripts,
+Explanation: This file starts with the #! sequence that marks interpreted scripts,
  but it is not executable.
  .
  There has been some discussion to allow such files in paths other than
  <tt>/usr/bin</tt> but there was ultimately no broad support for it.
-Ref: Bug#368792
+See-Also: Bug#368792

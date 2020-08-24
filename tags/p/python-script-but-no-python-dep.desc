@@ -1,7 +1,7 @@
 Tag: python-script-but-no-python-dep
 Severity: error
 Check: scripts
-Info: Packages with Python scripts should depend on the package
+Explanation: Packages with Python scripts should depend on the package
  <tt>python</tt>. Those with scripts that specify a specific version of
  Python must depend, recommend or suggest on that version of Python
  (exactly).

@@ -1,7 +1,7 @@
 Tag: file-references-package-build-path
 Severity: info
 Check: files/contents
-Info: The listed file or maintainer script appears to reference
+Explanation: The listed file or maintainer script appears to reference
  the build path used to build the package as specified in the
  <tt>Build-Path</tt> field of the <tt>.buildinfo</tt> file.
  .
@@ -15,4 +15,4 @@ Info: The listed file or maintainer script appears to reference
  <tt>DEB_BUILD_OPTIONS=buildinfo=+path</tt> or use
  <tt>--buildinfo-option=--always-include-path</tt> with
  <tt>dpkg-buildpackage</tt> when building.
-Ref: https://reproducible-builds.org/, https://wiki.debian.org/ReproducibleBuilds/BuildinfoFiles, dpkg-genbuildinfo(1)
+See-Also: https://reproducible-builds.org/, https://wiki.debian.org/ReproducibleBuilds/BuildinfoFiles, dpkg-genbuildinfo(1)

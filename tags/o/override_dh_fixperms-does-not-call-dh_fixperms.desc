@@ -1,7 +1,7 @@
 Tag: override_dh_fixperms-does-not-call-dh_fixperms
 Severity: warning
 Check: debian/rules
-Info: The <tt>debian/rules</tt> file for this package has an
+Explanation: The <tt>debian/rules</tt> file for this package has an
  <tt>override_dh_fixperms</tt> target that does not reference
  <tt>dh_fixperms</tt>.
  .
@@ -9,4 +9,4 @@ Info: The <tt>debian/rules</tt> file for this package has an
  process, rendering the package unreproducible.
  .
  Please add a call to <tt>dh_fixperms</tt>.
-Ref: #885909
+See-Also: #885909

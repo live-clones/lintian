@@ -1,7 +1,7 @@
 Tag: package-contains-python-tests-in-global-namespace
 Severity: warning
 Check: files/names
-Info: This package appears to contain Python test files such as
+Explanation: This package appears to contain Python test files such as
  <tt>test_foo.py</tt> or <tt>test_foo/</tt> in the global module
  namespace.
  .

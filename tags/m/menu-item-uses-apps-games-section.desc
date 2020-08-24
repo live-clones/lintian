@@ -1,6 +1,6 @@
 Tag: menu-item-uses-apps-games-section
 Severity: warning
 Check: menu-format
-Info: The menu item has a line that specifies a section under "Apps/Games".
+Explanation: The menu item has a line that specifies a section under "Apps/Games".
  This section has been moved to just "Games".
-Ref: menu-policy 2.1
+See-Also: menu-policy 2.1

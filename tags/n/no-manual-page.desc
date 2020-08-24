@@ -2,7 +2,7 @@ Tag: no-manual-page
 Severity: warning
 Check: documentation/manual
 Renamed-From: binary-without-manpage
-Info: Each binary in <tt>/usr/bin</tt>, <tt>/usr/sbin</tt>, <tt>/bin</tt>,
+Explanation: Each binary in <tt>/usr/bin</tt>, <tt>/usr/sbin</tt>, <tt>/bin</tt>,
  <tt>/sbin</tt> or <tt>/usr/games</tt> should have a manual page
  .
  Note that though the <tt>man</tt> program has the capability to check for
@@ -20,4 +20,4 @@ Info: Each binary in <tt>/usr/bin</tt>, <tt>/usr/sbin</tt>, <tt>/bin</tt>,
  available. In this case, after confirming that all binaries do have
  manual pages after this package and its dependencies are installed, please
  add a Lintian override.
-Ref: policy 12.1
+See-Also: policy 12.1

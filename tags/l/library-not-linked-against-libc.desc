@@ -1,8 +1,8 @@
 Tag: library-not-linked-against-libc
 Severity: error
 Check: binaries
-Ref: policy 10.2, #698720
-Info: The package installs a library which is not dynamically linked
+See-Also: policy 10.2, #698720
+Explanation: The package installs a library which is not dynamically linked
  against libc.
  .
  It is theoretically possible to have a library which doesn't use any

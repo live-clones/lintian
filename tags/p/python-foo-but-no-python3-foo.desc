@@ -1,7 +1,7 @@
 Tag: python-foo-but-no-python3-foo
 Severity: warning
 Check: languages/python
-Info: This source package appears to generate the specified Python 2 package
+Explanation: This source package appears to generate the specified Python 2 package
  without creating a variant for Python 3.
  .
  The 2.x series of Python is due for deprecation and will not be maintained

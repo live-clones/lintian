@@ -1,7 +1,7 @@
 Tag: no-op-testsuite
 Severity: warning
 Check: testsuite
-Info: This package declares a single autopkgtest which will always
+Explanation: This package declares a single autopkgtest which will always
  pass as it uses a "no-op" command such as <tt>/bin/true</tt>.
  .
  As the results of autopkgtests influence migration from unstable
@@ -12,4 +12,4 @@ Info: This package declares a single autopkgtest which will always
  .
  Please update your autopkgtest to actually test the binary package(s)
  when installed.
-Ref: https://ci.debian.net/doc/
+See-Also: https://ci.debian.net/doc/

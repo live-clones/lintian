@@ -2,7 +2,7 @@ Tag: library-package-name-for-application
 Severity: info
 Check: application-not-library
 Experimental: yes
-Info: This package contains a program in $PATH but is named like a
+Explanation: This package contains a program in $PATH but is named like a
  library. E.g. instead of libfoo-bar-perl it should be named just
  foo-bar.
  .
@@ -12,4 +12,4 @@ Info: This package contains a program in $PATH but is named like a
  .
  In case the program in $PATH is only a helper tool and the package is
  primarily a library, please add a Lintian override for this tag.
-Ref: https://perl-team.pages.debian.net/policy.html#Package_Naming_Policy
+See-Also: https://perl-team.pages.debian.net/policy.html#Package_Naming_Policy

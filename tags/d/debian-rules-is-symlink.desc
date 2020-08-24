@@ -1,7 +1,7 @@
 Tag: debian-rules-is-symlink
 Severity: warning
 Check: debian/rules
-Info: The file <tt>debian/rules</tt> is a symlink instead of a regular
+Explanation: The file <tt>debian/rules</tt> is a symlink instead of a regular
  file. This is unnecessary and makes package checking and manipulation
  more difficult. If the rules file should be available in the source
  package under multiple names, make <tt>debian/rules</tt> the real

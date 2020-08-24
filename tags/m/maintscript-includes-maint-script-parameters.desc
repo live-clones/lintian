@@ -1,7 +1,7 @@
 Tag: maintscript-includes-maint-script-parameters
 Severity: warning
 Check: debhelper
-Info: Lines in a <tt>debian/*.maintscript</tt> correspond to
+Explanation: Lines in a <tt>debian/*.maintscript</tt> correspond to
  <tt>dpkg-maintscript-helper(1)</tt> commands and parameters. However, the
  "maint-script-parameters" should not be included as debhelper will add those
  automatically. See <tt>dh_installdeb(1)</tt> for more information.

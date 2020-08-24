@@ -4,7 +4,7 @@ Check: fields/mail-address
 Renamed-From:
  maintainer-address-causes-mail-loops-or-bounces
  uploader-address-causes-mail-loops-or-bounces
-Info: The contact's mail address either loops back to itself or is known
+Explanation: The contact's mail address either loops back to itself or is known
  to bounce.
  .
  Loops happen because an address is <tt>package@packages.debian.org</tt>
@@ -14,4 +14,4 @@ Info: The contact's mail address either loops back to itself or is known
  The mail address must accept messages from role accounts used to send
  automated mails regarding the package, including those from the bug
  tracking system.
-Ref: policy 3.3
+See-Also: policy 3.3

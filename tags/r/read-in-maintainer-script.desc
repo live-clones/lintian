@@ -1,8 +1,8 @@
 Tag: read-in-maintainer-script
 Severity: error
 Check: scripts
-Ref: policy 3.9.1 
-Info: This maintainer script appears to use read to get information from
+See-Also: policy 3.9.1 
+Explanation: This maintainer script appears to use read to get information from
  the user. Prompting in maintainer scripts must be done by communicating
  through a program such as debconf which conforms to the Debian
  Configuration management specification, version 2 or higher.

@@ -1,7 +1,7 @@
 Tag: package-uses-old-debhelper-compat-version
 Severity: pedantic
 Check: debhelper
-Info: This package uses a debhelper compatibility level that is no
+Explanation: This package uses a debhelper compatibility level that is no
  longer recommended. Please consider using the recommended level.
  .
  For most packages, the best way to set the compatibility level is
@@ -10,4 +10,4 @@ Info: This package uses a debhelper compatibility level that is no
  file or export DH_COMPAT in <tt>debian/rules</tt>.
  .
  If no level is selected debhelper defaults to level 1, which is deprecated.
-Ref: debhelper(7)
+See-Also: debhelper(7)

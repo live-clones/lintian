@@ -1,8 +1,8 @@
 Tag: privacy-breach-donation
 Severity: error
 Check: files/privacy-breach
-Ref: https://wiki.debian.org/UpstreamMetadata
-Info: This package create a potential privacy breach by fetching data
+See-Also: https://wiki.debian.org/UpstreamMetadata
+Explanation: This package create a potential privacy breach by fetching data
  from a donation website at runtime.
  .
  Please remove this privacy problem and add a note to the

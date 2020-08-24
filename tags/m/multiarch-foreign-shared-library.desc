@@ -1,7 +1,7 @@
 Tag: multiarch-foreign-shared-library
 Severity: error
 Check: files/multi-arch
-Info: The package is architecture-dependent, ships a shared library in
+Explanation: The package is architecture-dependent, ships a shared library in
  a public library search path and is marked <tt>Multi-Arch:
  foreign</tt>. Typically, shared libraries are marked <tt>Multi-Arch:
  same</tt> when possible. Sometimes, private shared libraries are put

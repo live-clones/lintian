@@ -1,8 +1,8 @@
 Tag: breaks-without-version
 Severity: warning
 Check: fields/package-relations
-Ref: policy 7.3, policy 7.4, #605744
-Info: This package declares a Breaks relationship with another package
+See-Also: policy 7.3, policy 7.4, #605744
+Explanation: This package declares a Breaks relationship with another package
  that has no version number. Normally, Breaks should be used to indicate
  an incompatibility with a specific version of another package, or with
  all versions predating a fix. If the two packages can never be installed

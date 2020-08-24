@@ -1,8 +1,8 @@
 Tag: malformed-override
 Severity: error
 Check: lintian
-Ref: lintian 2.4.1
-Info: Lintian discovered an override entry with an invalid format. An
+See-Also: lintian 2.4.1
+Explanation: Lintian discovered an override entry with an invalid format. An
  override entry should have the format:
  .
    [[&lt;package&gt;][ &lt;archlist&gt;][ &lt;type&gt;]:] &lt;tag&gt;[ &lt;extra&gt; ...]

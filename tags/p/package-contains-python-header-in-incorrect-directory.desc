@@ -1,7 +1,7 @@
 Tag: package-contains-python-header-in-incorrect-directory
 Severity: error
 Check: files/names
-Info: This package ships a header file such as
+Explanation: This package ships a header file such as
  <tt>/usr/include/python3.7/foo/bar.h</tt>. However,
  <tt>/usr/include/python3.7</tt> is a symlink to <tt>python3.7m</tt> in
  <tt>libpython3.7-dev</tt>.

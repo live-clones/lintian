@@ -1,7 +1,7 @@
 Tag: debug-symbol-migration-possibly-complete
 Severity: pedantic
 Check: debian/rules
-Info: The <tt>debian/rules</tt> file for this package has a call to
+Explanation: The <tt>debian/rules</tt> file for this package has a call to
  <tt>dh_strip(1)</tt> with the specified <tt>--dbgsym-migration</tt> or
  <tt>--ddeb-migration</tt> argument.
  .
@@ -15,4 +15,4 @@ Info: The <tt>debian/rules</tt> file for this package has a call to
  However, if the command was added later (and/or the package was not
  included in stretch) please wait until it has been included in a stable
  release before removing it.
-Ref: dh_strip(1), https://wiki.debian.org/AutomaticDebugPackages
+See-Also: dh_strip(1), https://wiki.debian.org/AutomaticDebugPackages

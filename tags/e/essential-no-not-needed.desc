@@ -1,6 +1,6 @@
 Tag: essential-no-not-needed
 Severity: warning
 Check: fields/essential
-Info: Having "Essential: no" is the same as not having the field at all,
+Explanation: Having "Essential: no" is the same as not having the field at all,
  so it just makes the Packages file longer with no benefit.
-Ref: policy 5.6.9
+See-Also: policy 5.6.9

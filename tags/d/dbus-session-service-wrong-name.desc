@@ -1,7 +1,7 @@
 Tag: dbus-session-service-wrong-name
 Severity: info
 Check: desktop/dbus
-Info: The package contains a D-Bus session service whose filename
+Explanation: The package contains a D-Bus session service whose filename
  does not match the <tt>Name</tt> field found in the file.
  This makes it possible that two non-conflicting packages could
  provide the same service name with the same search-path priority

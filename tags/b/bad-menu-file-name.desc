@@ -1,6 +1,6 @@
 Tag: bad-menu-file-name
 Severity: error
 Check: menus
-Info: The package installs a file <tt>/usr/lib/menu/menu</tt>, which is
+Explanation: The package installs a file <tt>/usr/lib/menu/menu</tt>, which is
  already in use by the <tt>menu</tt> package itself. The menu file should
  be named after the package that installs it.

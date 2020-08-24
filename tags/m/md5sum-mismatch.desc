@@ -1,7 +1,7 @@
 Tag: md5sum-mismatch
 Severity: error
 Check: md5sums
-Info: The md5sum listed for the file does not match the actual file
+Explanation: The md5sum listed for the file does not match the actual file
  contents.
  .
  Usually, this error occurs during the package build process if the

@@ -2,7 +2,7 @@ Tag: recursive-privilege-change
 Severity: warning
 Check: scripts
 Renamed-From: maintainer-script-should-not-use-recursive-chown-or-chmod
-Info: The named maintainer script appears to call <tt>chmod</tt> or
+Explanation: The named maintainer script appears to call <tt>chmod</tt> or
  <tt>chown</tt> with a <tt>--recursive</tt>/<tt>-R</tt> argument, or
  it uses <tt>find(1)</tt> with similar intent.
  .
@@ -24,4 +24,4 @@ Info: The named maintainer script appears to call <tt>chmod</tt> or
     relevant build parts to create files with correct ownership.
   - Given a static list of files to change, use non-recursive calls
     for each file. (Please do not generate the list with <tt>find<tt>.)
-Ref: Bug#895597, Bug#889060, Bug#889488, runuser(1)
+See-Also: Bug#895597, Bug#889060, Bug#889488, runuser(1)

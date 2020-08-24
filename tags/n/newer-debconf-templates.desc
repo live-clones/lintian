@@ -1,7 +1,7 @@
 Tag: newer-debconf-templates
 Severity: warning
 Check: debian/po-debconf
-Info: debconf-updatepo has not been run since the last change to your
+Explanation: debconf-updatepo has not been run since the last change to your
  debconf templates.
  .
  You should run debconf-updatepo whenever debconf templates files are

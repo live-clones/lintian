@@ -1,6 +1,6 @@
 Tag: dh-clean-k-is-deprecated
 Severity: warning
 Check: debhelper
-Ref: dh_clean(1)
-Info: This package calls dh_clean -k in its <tt>debian/rules</tt> file
+See-Also: dh_clean(1)
+Explanation: This package calls dh_clean -k in its <tt>debian/rules</tt> file
  instead of dh_prep.

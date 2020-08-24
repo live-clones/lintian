@@ -1,7 +1,7 @@
 Tag: dh-exec-subst-unknown-variable
 Severity: info
 Check: debhelper
-Info: The package uses a variable in one of its debhelper config
+Explanation: The package uses a variable in one of its debhelper config
  files, but the variable is not one known to dpkg-architecture.
  .
  It is recommended to use a known subset of variables. If the package

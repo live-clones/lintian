@@ -1,7 +1,7 @@
 Tag: package-contains-python-doctree-file
 Severity: warning
 Check: files/names
-Info: This package appears to contain a pickled cache of reStructuredText
+Explanation: This package appears to contain a pickled cache of reStructuredText
  (*.rst) documentation in a <tt>.doctree</tt> file.
  .
  These are not needed to display the documentation correctly and as they can
@@ -21,4 +21,4 @@ Info: This package appears to contain a pickled cache of reStructuredText
    override_dh_auto_clean:
            dh_auto_clean
            rm -rf debian/doctrees
-Ref: http://sphinx-doc.org/invocation.html#cmdoption-sphinx-build-d
+See-Also: http://sphinx-doc.org/invocation.html#cmdoption-sphinx-build-d

@@ -1,7 +1,7 @@
 Tag: package-installs-packlist
 Severity: error
 Check: languages/perl
-Info: Packages built using the perl MakeMaker package will have a file
+Explanation: Packages built using the perl MakeMaker package will have a file
  named .packlist in them. Those files are useless, and (in some cases)
  have the additional problem of creating an architecture-specific
  directory name in an architecture-independent package.
@@ -12,4 +12,4 @@ Info: Packages built using the perl MakeMaker package will have a file
  .
  or by telling MakeMaker to use vendor install dirs; consult a recent
  version of Perl policy. Perl 5.6.0-12 or higher supports this.
-Ref: perl-policy 4.1
+See-Also: perl-policy 4.1

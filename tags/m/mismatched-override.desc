@@ -1,7 +1,7 @@
 Tag: mismatched-override
 Severity: warning
 Check: lintian
-Info: The named tag could have been silenced but the context specified
+Explanation: The named tag could have been silenced but the context specified
  with the override did not match.
  .
  Lintian may now provide a different context for the tag, or something

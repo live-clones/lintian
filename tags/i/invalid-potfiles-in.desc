@@ -1,11 +1,11 @@
 Tag: invalid-potfiles-in
 Severity: warning
 Check: debian/po-debconf
-Info: Errors were found in the <tt>debian/po/POTFILES.in</tt> file.
+Explanation: Errors were found in the <tt>debian/po/POTFILES.in</tt> file.
  .
  Please make sure that all strings marked for translation are in uniform
  encoding (say UTF-8) then prepend the following line to POTFILES.in and
  rerun intltool-update.
  .
   [encoding: UTF-8]
-Ref: #849912, #883653
+See-Also: #849912, #883653

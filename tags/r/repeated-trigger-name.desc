@@ -1,7 +1,7 @@
 Tag: repeated-trigger-name
 Severity: error
 Check: triggers
-Info: The package repeats the same trigger. There should be no reason to
+Explanation: The package repeats the same trigger. There should be no reason to
  do this and it may lead to confusing results or errors.
  .
  For the same "base" type of trigger (e.g. two <tt>interest</tt>-type triggers)
@@ -15,4 +15,4 @@ Info: The package repeats the same trigger. There should be no reason to
  please use a Lintian override to state this.
  .
  Please remove any duplicate definitions.
-Ref: deb-triggers(5), #698723
+See-Also: deb-triggers(5), #698723

@@ -46,10 +46,10 @@ my @descpaths = sort File::Find::Rule->file()->name('*.desc')->in('tags');
 diag scalar @descpaths . ' known tags.';
 
 # mandatory fields
-my @mandatory = qw(Tag Severity Check Info);
+my @mandatory = qw(Tag Severity Check Explanation);
 
 # disallowed fields
-my @disallowed = qw(Reference References);
+my @disallowed = qw(Reference References Ref Info Certainty);
 
 # tests per desc
 my $perfile = 7 + scalar @mandatory + scalar @disallowed;

@@ -1,7 +1,7 @@
 Tag: wrong-name-for-debian-news-file
 Severity: warning
 Check: debian/changelog
-Info: The Debian news file must be installed as
+Explanation: The Debian news file must be installed as
  /usr/share/doc/<i>pkg</i>/NEWS.Debian.gz with exactly that capitalization
  or automated tools may not find it correctly.
-Ref: devref 6.3.4
+See-Also: devref 6.3.4

@@ -1,7 +1,7 @@
 Tag: embedded-script-includes-copyright-statement
 Severity: pedantic
 Check: cruft
-Info: The specified file includes an embedded script with a copyright
+Explanation: The specified file includes an embedded script with a copyright
  statement.
  .
  The script was likely copy-pasted and likely needs to be rebuilt from

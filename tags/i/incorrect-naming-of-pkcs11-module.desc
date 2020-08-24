@@ -1,7 +1,7 @@
 Tag: incorrect-naming-of-pkcs11-module
 Severity: error
 Check: files/p11-kit
-Info: This package ships a PKCS#11 module configuration file under
+Explanation: This package ships a PKCS#11 module configuration file under
  <tt>/usr/share/p11-kit/modules</tt>, but its naming doesn't conform
  to what <tt>p11-kit</tt> expects. Files in that directory should
  respect the following convention, case insensitive:

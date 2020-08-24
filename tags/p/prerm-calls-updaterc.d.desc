@@ -1,6 +1,6 @@
 Tag: prerm-calls-updaterc.d
 Severity: error
 Check: init.d
-Info: The <tt>prerm</tt> package calls <tt>update-rc.d</tt>. Instead,
+Explanation: The <tt>prerm</tt> package calls <tt>update-rc.d</tt>. Instead,
  you should call it in the <tt>postrm</tt> script.
-Ref: policy 9.3.3.1
+See-Also: policy 9.3.3.1

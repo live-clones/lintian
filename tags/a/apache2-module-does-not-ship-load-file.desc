@@ -1,7 +1,7 @@
 Tag: apache2-module-does-not-ship-load-file
 Severity: error
 Check: apache2
-Info: The package is an Apache2 HTTPD server module but does not ship a
+Explanation: The package is an Apache2 HTTPD server module but does not ship a
  "<tt>.load</tt>" file or it was installed under an unexpected name. The load
  files in "<tt>/etc/apache2/mods-available</tt>" are required to interact with
  the server package to enable and disable the module and must match the module

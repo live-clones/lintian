@@ -1,7 +1,7 @@
 Tag: missing-xs-go-import-path-for-golang-package
 Severity: info
 Check: debian/control
-Info: This source package does not specify a <tt>XS-Go-Import-Path</tt>
+Explanation: This source package does not specify a <tt>XS-Go-Import-Path</tt>
  control field.
  .
  The <tt>XS-Go-Import-Path</tt> exposes the import path of the Go

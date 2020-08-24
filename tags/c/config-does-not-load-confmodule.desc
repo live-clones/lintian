@@ -1,4 +1,4 @@
 Tag: config-does-not-load-confmodule
 Severity: warning
 Check: debian/debconf
-Info: The config script must load one of the debconf libraries.
+Explanation: The config script must load one of the debconf libraries.

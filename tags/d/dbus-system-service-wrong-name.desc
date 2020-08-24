@@ -1,7 +1,7 @@
 Tag: dbus-system-service-wrong-name
 Severity: error
 Check: desktop/dbus
-Info: The package contains a D-Bus system service whose filename
+Explanation: The package contains a D-Bus system service whose filename
  does not match the <tt>Name</tt> field found in the file.
  This will not work, because dbus-daemon-launch-helper specifically
  looks for that filename, in order to keep system-level activation

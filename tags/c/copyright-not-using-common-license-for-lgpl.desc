@@ -2,8 +2,8 @@ Tag: copyright-not-using-common-license-for-lgpl
 Severity: error
 Check: debian/copyright
 Renamed-From: copyright-should-refer-to-common-license-file-for-lgpl
-Ref: policy 12.5
-Info: The strings "GNU Lesser General Public License", "GNU Library
+See-Also: policy 12.5
+Explanation: The strings "GNU Lesser General Public License", "GNU Library
  General Public License", or "LGPL" appear in the copyright file for this
  package, but the copyright file does not reference
  <tt>/usr/share/common-licenses</tt> as the location of the LGPL on Debian

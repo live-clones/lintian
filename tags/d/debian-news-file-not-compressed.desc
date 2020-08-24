@@ -1,6 +1,6 @@
 Tag: debian-news-file-not-compressed
 Severity: warning
 Check: debian/changelog
-Info: NEWS.Debian files should be compressed using "gzip -9". The file
+Explanation: NEWS.Debian files should be compressed using "gzip -9". The file
  must always have the same name.
-Ref: devref 6.3.4
+See-Also: devref 6.3.4

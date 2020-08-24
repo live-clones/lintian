@@ -9,8 +9,8 @@ Renamed-From:
  no-standards-version-field
  no-version-field
  package-has-no-description
-Info: The named field is required by policy but not present in the
+Explanation: The named field is required by policy but not present in the
  package's primary control file.
-Ref: policy 5.3,
+See-Also: policy 5.3,
  policy 5.5,
  policy 5.6.11

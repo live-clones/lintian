@@ -1,7 +1,7 @@
 Tag: direct-changes-in-diff-but-no-patch-system
 Severity: pedantic
 Check: debian/patches
-Info: The Debian diff.gz contains changes to files or creation of additional
+Explanation: The Debian diff.gz contains changes to files or creation of additional
  files outside the <tt>debian</tt> directory. Keeping the changes as separate
  patches under the control of a patch system allows for more fine grained
  control over them. The package will also more easily support possible

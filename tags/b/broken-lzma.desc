@@ -1,6 +1,6 @@
 Tag: broken-lzma
 Severity: warning
 Check: files/compressed/lzma
-Info: The given file ends with <tt>.lzma</tt>, which normally indicates it
+Explanation: The given file ends with <tt>.lzma</tt>, which normally indicates it
  was compressed with lzma. However, it doesn't seem to be an
  lzma-compressed file.

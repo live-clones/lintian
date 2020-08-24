@@ -1,7 +1,7 @@
 Tag: global-files-wildcard-not-first-paragraph-in-dep5-copyright
 Severity: warning
 Check: debian/copyright/dep5
-Info: The specified paragraph in the machine readable copyright file references
+Explanation: The specified paragraph in the machine readable copyright file references
  all possible files but is not the first paragraph. For example:
  .
   Files: filea
@@ -12,4 +12,4 @@ Info: The specified paragraph in the machine readable copyright file references
  .
  As the paragraphs is matched on a "last match wins" principle, all proceeding
  paragraphs are overridden.
-Ref: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+See-Also: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/

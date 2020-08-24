@@ -2,7 +2,7 @@ Tag: binary-file-built-without-LFS-support
 Severity: info
 Check: binaries
 Experimental: yes
-Info: The listed ELF binary appears to be (partially) built without
+Explanation: The listed ELF binary appears to be (partially) built without
  "Large File Support" (LFS). If so, it may not be able to handle large
  files or files with large metadata values (ex: inode numbers) correctly.
  .
@@ -34,5 +34,5 @@ Info: The listed ELF binary appears to be (partially) built without
  systems with an ABI without LFS, defining <tt>_LARGEFILE64_SOURCE</tt>
  and exporting both 32 and 64-bit variants of the interfaces can avoid
  the SOVERSION bump, at the cost of more complex maintenance.
-Ref: http://www.unix.org/version2/whatsnew/lfs20mar.html,
+See-Also: http://www.unix.org/version2/whatsnew/lfs20mar.html,
  https://www.gnu.org/software/libc/manual/html_node/Feature-Test-Macros.html

@@ -1,7 +1,7 @@
 Tag: source-contains-waf-binary
 Severity: error
 Check: cruft
-Info: The source tarball contains a waf binary. This file is a Python
+Explanation: The source tarball contains a waf binary. This file is a Python
  script with an embedded bzip2 archive, which is uncompressed and unpacked
  at runtime.
  .
@@ -11,4 +11,4 @@ Info: The source tarball contains a waf binary. This file is a Python
  .
  You might want to follow these guidelines to obtain an unpacked waf:
  https://wiki.debian.org/UnpackWaf
-Ref: https://wiki.debian.org/UnpackWaf, #654523
+See-Also: https://wiki.debian.org/UnpackWaf, #654523

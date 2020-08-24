@@ -1,7 +1,7 @@
 Tag: gir-in-arch-all-package
 Severity: warning
 Check: desktop/gnome/gir
-Info: GObject-Introspection XML files
+Explanation: GObject-Introspection XML files
  (<tt>/usr/share/gir-1.0/Foo-23.gir</tt>) must be made available in
  an architecture-dependent package of the same source.
-Ref: /usr/share/doc/gobject-introspection/policy.txt
+See-Also: /usr/share/doc/gobject-introspection/policy.txt

@@ -1,4 +1,4 @@
 Tag: maintainer-script-interpreter
 Severity: classification
 Check: scripts
-Info: Interpreter used in maintainer script or ELF
+Explanation: Interpreter used in maintainer script or ELF

@@ -1,7 +1,7 @@
 Tag: hardening-no-fortify-functions
 Severity: info
 Check: binaries
-Info: This package provides an ELF binary that lacks the use of fortified
+Explanation: This package provides an ELF binary that lacks the use of fortified
  libc functions. Either there are no potentially unfortified functions
  called by any routines, all unfortified calls have already been fully
  validated at compile-time, or the package was not built with the default
@@ -10,4 +10,4 @@ Info: This package provides an ELF binary that lacks the use of fortified
  .
  NB: Due to false-positives, Lintian ignores some unprotected functions
  (e.g. memcpy).
-Ref: https://wiki.debian.org/Hardening, #673112
+See-Also: https://wiki.debian.org/Hardening, #673112

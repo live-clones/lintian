@@ -1,7 +1,7 @@
 Tag: vcs-field-not-canonical
 Severity: info
 Check: fields/vcs
-Info: The VCS-* field contains an uncanonical URI. Please update to use
+Explanation: The VCS-* field contains an uncanonical URI. Please update to use
  the current canonical URI instead. This reduces the network bandwidth used
  and makes debcheckout work independent of the port forwarding and
  redirections properly working.
@@ -11,4 +11,4 @@ Info: The VCS-* field contains an uncanonical URI. Please update to use
  .
  Note that this check is based on a list of known URIs. Lintian did not
  send an HTTP request to the URI to test this.
-Ref: https://lists.debian.org/debian-devel-announce/2011/05/msg00009.html
+See-Also: https://lists.debian.org/debian-devel-announce/2011/05/msg00009.html

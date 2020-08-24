@@ -1,7 +1,7 @@
 Tag: omitted-systemd-service-for-init.d-script
 Severity: error
 Check: systemd
-Info: The specified init.d script has no systemd equivalent and the
+Explanation: The specified init.d script has no systemd equivalent and the
  package ships other units.
  .
  This typically occurs when a maintainer missed script when adding

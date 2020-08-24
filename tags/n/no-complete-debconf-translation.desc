@@ -1,7 +1,7 @@
 Tag: no-complete-debconf-translation
 Severity: info
 Check: debian/po-debconf
-Info: Even though this package provides debconf translation support, there 
+Explanation: Even though this package provides debconf translation support, there 
  are no translations or none of the translations are complete. This may
  mean that translators weren't properly warned about new strings.
  .
@@ -10,4 +10,4 @@ Info: Even though this package provides debconf translation support, there
  .
   podebconf-report-po --call --withtranslators --deadline="+10 days" \
   --languageteam
-Ref: devref 6.5.2.2
+See-Also: devref 6.5.2.2

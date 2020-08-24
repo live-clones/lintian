@@ -1,9 +1,9 @@
 Tag: unusual-documentation-package-name
 Severity: info
 Check: fields/package
-Info: The specified package appears to be a documentation package
+Explanation: The specified package appears to be a documentation package
  that ends with the string "-docs". It is recommended that such
  packages use the more usual "-doc" suffix instead.
  .
  Please remove the superfluous trailing "s" from the package name.
-Ref: policy 12.3
+See-Also: policy 12.3

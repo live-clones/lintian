@@ -2,7 +2,7 @@ Tag: no-nmu-in-changelog
 Severity: warning
 Check: nmu
 Renamed-From: changelog-should-mention-nmu
-Info: When you NMU a package, that fact should be mentioned on the first line
+Explanation: When you NMU a package, that fact should be mentioned on the first line
  in the changelog entry. Use the words "NMU" or "Non-maintainer upload"
  (case insensitive).
  .
@@ -12,4 +12,4 @@ Info: When you NMU a package, that fact should be mentioned on the first line
  package (not intended for Debian), you can suppress this warning by
  putting "local" in the version number or "local package" on the first
  line of the changelog entry.
-Ref: devref 5.11.3
+See-Also: devref 5.11.3

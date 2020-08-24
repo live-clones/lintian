@@ -2,7 +2,7 @@ Tag: wayward-symbolic-link-target-in-source
 Severity: error
 Check: files/symbolic-links
 Renamed-From: source-contains-unsafe-symlink
-Info: The named symbolic link in a source package resolves outside
+Explanation: The named symbolic link in a source package resolves outside
  the shipped sources.
  .
  Please note that this tag is only issued for relative links targets.

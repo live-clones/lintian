@@ -1,7 +1,7 @@
 Tag: mismatch-translated-choices
 Severity: error
 Check: debian/debconf
-Info: A "Choices:" field is a comma separated list, and translated
+Explanation: A "Choices:" field is a comma separated list, and translated
  "Choices:" fields must have the exact same number of elements. One
  of the translations does not follow this rule, you should contact the
  translator and request for a new translation where elements of "Choices:"

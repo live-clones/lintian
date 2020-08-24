@@ -1,7 +1,7 @@
 Tag: template-uses-unsplit-choices
 Severity: warning
 Check: debian/debconf
-Info: The use of _Choices in templates is deprecated.
+Explanation: The use of _Choices in templates is deprecated.
  A _Choices field must be translated as a single string.
  .
  Using __Choices allows each choice to be translated separately, easing
@@ -12,4 +12,4 @@ Info: The use of _Choices in templates is deprecated.
  LIST", to avoid breaking existing translations.
  .
  If in doubt, please ask for help on the debian-i18n mailing list.
-Ref: po-debconf(7)
+See-Also: po-debconf(7)

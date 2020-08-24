@@ -1,12 +1,12 @@
 Tag: license-problem-gfdl-invariants
 Severity: error
 Check: cruft
-Info: The given source file is licensed under GFDL with invariant
+Explanation: The given source file is licensed under GFDL with invariant
  section or front-cover or back-cover text.
  .
  GFDL with invariant sections, front-cover or back-cover texts are not
  suitable for main.
  .
  If this file be multi-licensed, please override the tag.
-Ref: https://wiki.debian.org/qa.debian.org/gfdlinvariant,
+See-Also: https://wiki.debian.org/qa.debian.org/gfdlinvariant,
  https://www.debian.org/vote/2006/vote_001

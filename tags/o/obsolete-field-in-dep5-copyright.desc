@@ -1,8 +1,8 @@
 Tag: obsolete-field-in-dep5-copyright
 Severity: warning
 Check: debian/copyright/dep5
-Ref: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
-Info: The machine-readable copyright file uses a field, that used to be defined
+See-Also: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Explanation: The machine-readable copyright file uses a field, that used to be defined
  by the specification, but has been renamed since then.
  .
  Please use Format instead of Format-Specification.

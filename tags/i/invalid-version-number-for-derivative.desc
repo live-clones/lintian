@@ -1,7 +1,7 @@
 Tag: invalid-version-number-for-derivative
 Severity: error
 Check: fields/version
-Info: The version number for this package does not comply with the
+Explanation: The version number for this package does not comply with the
  required format for this Debian derivative.
  .
  Derivative distributions of Debian may enforce additional restrictions

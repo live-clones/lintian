@@ -2,7 +2,7 @@ Tag: application-in-library-section
 Severity: info
 Check: application-not-library
 Experimental: yes
-Info: This package contains a binary in $PATH but is in a section just
+Explanation: This package contains a binary in $PATH but is in a section just
  thought for libraries. It likely should be in another section like
  e.g. utils, text, devel, misc, etc., but not in e.g. perl, ruby or
  python.

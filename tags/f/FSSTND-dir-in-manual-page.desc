@@ -1,7 +1,7 @@
 Tag: FSSTND-dir-in-manual-page
 Severity: info
 Check: documentation/manual
-Info: The manual page references a directory that is specified
+Explanation: The manual page references a directory that is specified
  in the FSSTND but not in the FHS which is used by Debian.
  This can be an indicator of a mismatch of the location of
  files as installed for Debian and as described by the manual page.

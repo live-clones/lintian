@@ -1,7 +1,7 @@
 Tag: sharedobject-in-library-directory-missing-soname
 Severity: error
 Check: shared-libs
-Info: A shared object was identified in a library directory (a directory
+Explanation: A shared object was identified in a library directory (a directory
  in the standard linker path) which doesn't have a SONAME. This is
  usually an error.
  .

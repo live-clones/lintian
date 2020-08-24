@@ -2,7 +2,7 @@ Tag: non-consecutive-debian-revision
 Severity: pedantic
 Check: debian/changelog
 Experimental: yes
-Info: The latest changelog entry refers to a Debian revision (eg.
+Explanation: The latest changelog entry refers to a Debian revision (eg.
  <tt>1.2-3</tt>) that is not consecutive to the previous changelog entry
  (eg. <tt>1.2-2</tt>). Please use a consecutive Debian revision or use a
  UNRELEASED version instead.

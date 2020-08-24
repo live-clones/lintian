@@ -1,8 +1,8 @@
 Tag: debian-watch-file-specifies-wrong-upstream-version
 Severity: warning
 Check: debian/watch
-Ref: uscan(1)
-Info: The watch file specifies an upstream version which exactly matches
+See-Also: uscan(1)
+Explanation: The watch file specifies an upstream version which exactly matches
  the version of a <tt>debian/changelog</tt> entry, this is not a
  native package, and no version mangling is being done. The version
  field in a watch file should specify the expected upstream version, not

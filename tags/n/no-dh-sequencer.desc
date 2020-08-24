@@ -1,7 +1,7 @@
 Tag: no-dh-sequencer
 Severity: info
 Check: debian/rules/dh-sequencer
-Info: This package does not use the <tt>dh</tt> sequencer in <tt>debian/rules</tt>.
+Explanation: This package does not use the <tt>dh</tt> sequencer in <tt>debian/rules</tt>.
  .
  While maintainers may use a variety of build systems, this one
  is by far the most popular.

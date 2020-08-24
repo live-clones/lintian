@@ -1,7 +1,7 @@
 Tag: maintainer-script-does-not-check-for-existence-of-installdocs
 Severity: error
 Check: menus
-Info: The maintainer script calls the <tt>install-docs</tt> command without
+Explanation: The maintainer script calls the <tt>install-docs</tt> command without
  checking for existence first. (The <tt>doc-base</tt> package which provides
  the command is not marked as "essential" package.)
  .

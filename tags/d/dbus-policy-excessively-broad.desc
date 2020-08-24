@@ -1,7 +1,7 @@
 Tag: dbus-policy-excessively-broad
 Severity: error
 Check: desktop/dbus
-Info: The package contains D-Bus policy configuration that
+Explanation: The package contains D-Bus policy configuration that
  matches broad classes of messages. This will cause strange side-effects,
  is almost certainly unintended, and is a probable security flaw.
  .
@@ -26,4 +26,4 @@ Info: The package contains D-Bus policy configuration that
    &lt;/policy&gt;
  .
  which correctly allows method calls to that particular service only.
-Ref: http://www.openwall.com/lists/oss-security/2015/01/27/25
+See-Also: http://www.openwall.com/lists/oss-security/2015/01/27/25

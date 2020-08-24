@@ -1,7 +1,7 @@
 Tag: package-has-long-file-name
 Severity: warning
 Check: filename-length
-Info: The package has a very long filename. This may complicate
+Explanation: The package has a very long filename. This may complicate
  shipping the package on some media that put restrictions on the
  length of the filenames (such as CDs).
  .
@@ -10,4 +10,4 @@ Info: The package has a very long filename. This may complicate
  current architecture.
  .
  This length will be written in brackets after the actual length.
-Ref: https://lists.debian.org/debian-devel/2011/03/msg00943.html
+See-Also: https://lists.debian.org/debian-devel/2011/03/msg00943.html

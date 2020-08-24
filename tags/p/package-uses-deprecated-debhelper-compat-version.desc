@@ -1,8 +1,8 @@
 Tag: package-uses-deprecated-debhelper-compat-version
 Severity: warning
 Check: debhelper
-Ref: debhelper(7)
-Info: The debhelper compatibility version used by this package is marked
+See-Also: debhelper(7)
+Explanation: The debhelper compatibility version used by this package is marked
  as deprecated by the debhelper developer. You should really consider
  using a newer compatibility version.
  .

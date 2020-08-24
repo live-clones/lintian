@@ -1,7 +1,7 @@
 Tag: invalid-restriction-formula-in-build-profiles-field
 Severity: error
 Check: debian/control
-Info: The restriction formula in the Build-Profiles field must have the same
+Explanation: The restriction formula in the Build-Profiles field must have the same
  format as the restriction formula in the Build-Depends field with angle
  brackets.
-Ref: https://wiki.debian.org/BuildProfileSpec#The_Build-Profiles_field
+See-Also: https://wiki.debian.org/BuildProfileSpec#The_Build-Profiles_field

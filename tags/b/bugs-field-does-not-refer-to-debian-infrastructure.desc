@@ -1,9 +1,9 @@
 Tag: bugs-field-does-not-refer-to-debian-infrastructure
 Severity: warning
 Check: fields/bugs
-Info: The <tt>debian/control</tt> file contains a Bugs field that does
+Explanation: The <tt>debian/control</tt> file contains a Bugs field that does
  not refer to Debian infrastructure. This is recognized by the string
  ".debian.org".
  .
  This is likely to make reportbug(1) unable to report bugs.
-Ref: #740944
+See-Also: #740944

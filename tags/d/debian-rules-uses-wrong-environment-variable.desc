@@ -2,8 +2,8 @@ Tag: debian-rules-uses-wrong-environment-variable
 Severity: warning
 Check: debian/rules
 Renamed-From: debian-rules-should-not-use-or-modify-user-only-variable
-Ref: #631786
-Info: The rules file appears to be reading or modifying a variable not
+See-Also: #631786
+Explanation: The rules file appears to be reading or modifying a variable not
  intended for use by package maintainers.
  .
  The special variables <tt>DEB_*FLAGS_{SET,APPEND}</tt> can be used by

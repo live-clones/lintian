@@ -1,5 +1,5 @@
 Tag: unused-build-dependency-on-cdbs
 Severity: warning
 Check: debhelper
-Info: The package build-depends on cdbs, but does not include any cdbs
+Explanation: The package build-depends on cdbs, but does not include any cdbs
  files in <tt>debian/rules</tt>.

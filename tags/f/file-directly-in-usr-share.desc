@@ -1,7 +1,7 @@
 Tag: file-directly-in-usr-share
 Severity: error
 Check: files/hierarchy/standard
-Info: Packages should not install files directly in <tt>/usr/share</tt>,
+Explanation: Packages should not install files directly in <tt>/usr/share</tt>,
  i.e., without a subdirectory.
  .
  You should either create a subdirectory <tt>/usr/share/...</tt> for your

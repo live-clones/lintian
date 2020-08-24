@@ -1,7 +1,7 @@
 Tag: package-contains-python-hypothesis-example
 Severity: warning
 Check: files/names
-Info: This package appears to contain the output of running a Python
+Explanation: This package appears to contain the output of running a Python
  "Hypothesis" testsuite.
  .
  These are not useful in the binary package or to end-users. In addition,

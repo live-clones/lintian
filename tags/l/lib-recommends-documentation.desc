@@ -1,7 +1,7 @@
 Tag: lib-recommends-documentation
 Severity: warning
 Check: fields/package-relations
-Info: The given package appears to be a library package, but it recommends
+Explanation: The given package appears to be a library package, but it recommends
  a documentation package. Doing this can pull in unwanted (and often
  large) documentation packages since recommends are installed by default
  and library packages are pulled by applications that use them. Users

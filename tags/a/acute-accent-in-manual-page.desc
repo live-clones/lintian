@@ -2,11 +2,11 @@ Tag: acute-accent-in-manual-page
 Severity: info
 Check: documentation/manual
 Renamed-From: acute-accent-in-manpage
-Info: This manual page uses the \' groff sequence. Usually, the
+Explanation: This manual page uses the \' groff sequence. Usually, the
  intent to generate an apostrophe, but that sequence actually
  renders as an acute accent.
  .
  For an apostrophe or a single closing quote, use plain <tt>'</tt>.
  For single opening quote, i.e. a straight downward line <tt>'</tt>
  like the one used in shell commands, use <tt>'&#92;(aq'</tt>.
-Ref: Bug#554897, Bug#507673
+See-Also: Bug#554897, Bug#507673

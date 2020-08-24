@@ -2,8 +2,8 @@ Tag: debian-watch-lacks-sourceforge-redirector
 Severity: warning
 Check: debian/watch
 Renamed-From: debian-watch-file-should-use-sf-redirector
-Ref: uscan(1)
-Info: The watch file specifies a SourceForge page or download server
+See-Also: uscan(1)
+Explanation: The watch file specifies a SourceForge page or download server
  directly. This is not recommended; SourceForge changes their download
  servers and website periodically, requiring watch files to be modified
  every time. Instead, use the qa.debian.org redirector by using the magic

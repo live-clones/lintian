@@ -1,7 +1,7 @@
 Tag: missing-notice-file-for-apache-license
 Severity: error
 Check: debian/copyright/apache-notice
-Info: The package appears to be licensed under the Apache 2.0 license and
+Explanation: The package appears to be licensed under the Apache 2.0 license and
  a <tt>NOTICE</tt> file (or similar) exists in the source tree. However, no
  files called <tt>NOTICE</tt> or <tt>NOTICE.txt</tt> are installed in any
  of the binary packages.
@@ -15,4 +15,4 @@ Info: The package appears to be licensed under the Apache 2.0 license and
  .
  Please include the file in your package, for example by adding
  <tt>path/to/NOTICE</tt> to a <tt>debian/package.docs</tt> file.
-Ref: /usr/share/common-licenses/Apache-2.0
+See-Also: /usr/share/common-licenses/Apache-2.0

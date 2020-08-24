@@ -2,5 +2,5 @@ Tag: bad-intended-distribution
 Severity: info
 Check: debian/changelog
 Experimental: yes
-Info: The last changelog entry implies this version is not for release.
+Explanation: The last changelog entry implies this version is not for release.
     Instead it should specify the distribution it is to be uploaded to.

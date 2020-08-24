@@ -1,8 +1,8 @@
 Tag: init.d-script-not-marked-as-conffile
 Severity: warning
 Check: init.d
-Ref: policy 9.3.2
-Info: <tt>/etc/init.d</tt> scripts should be marked as conffiles.
+See-Also: policy 9.3.2
+Explanation: <tt>/etc/init.d</tt> scripts should be marked as conffiles.
  .
  This is usually an error, but the Policy allows for managing these files
  manually in maintainer scripts and Lintian cannot reliably detect that.

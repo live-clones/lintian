@@ -1,7 +1,7 @@
 Tag: description-mentions-planned-features
 Severity: info
 Check: fields/description
-Info: This package appears to mention planned or upcoming features of
+Explanation: This package appears to mention planned or upcoming features of
  the software.
  .
  Package descriptions should not mention features that are not yet implemented

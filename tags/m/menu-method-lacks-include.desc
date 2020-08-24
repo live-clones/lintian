@@ -2,6 +2,6 @@ Tag: menu-method-lacks-include
 Severity: error
 Check: menus
 Renamed-From: menu-method-should-include-menu-h
-Info: A menu-method file must include the menu.h configuration file
+Explanation: A menu-method file must include the menu.h configuration file
  (using "!include menu.h").
-Ref: menu 5, http://www.tldp.org/HOWTO/NCURSES-Programming-HOWTO/menus.html
+See-Also: menu 5, http://www.tldp.org/HOWTO/NCURSES-Programming-HOWTO/menus.html

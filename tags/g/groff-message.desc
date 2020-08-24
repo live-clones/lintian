@@ -2,7 +2,7 @@ Tag: groff-message
 Severity: warning
 Check: documentation/manual
 Renamed-From: manpage-has-errors-from-man
-Info: A manual page provoked warnings or errors from the <tt>man</tt>
+Explanation: A manual page provoked warnings or errors from the <tt>man</tt>
  program. Here are some common ones:
  .
  "cannot adjust" or "can't break" are issues with paragraph filling. They
@@ -36,4 +36,4 @@ Info: A manual page provoked warnings or errors from the <tt>man</tt>
  .
  <tt>LC_ALL=en_US.UTF-8 MANROFFSEQ='' MANWIDTH=80 \
          man --warnings -E UTF-8 -l -Tutf8 -Z &lt;file&gt; &gt;/dev/null<tt>
-Ref: groff_man(7), groff_mdoc(7)
+See-Also: groff_man(7), groff_mdoc(7)

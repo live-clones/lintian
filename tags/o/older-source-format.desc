@@ -1,7 +1,7 @@
 Tag: older-source-format
 Severity: info
 Check: debian/source-dir
-Info:
+Explanation:
  This package uses an older source format. Please consider migrating
  to a more modern format.
  .
@@ -12,4 +12,4 @@ Info:
  More information is available here:
  .
      https://wiki.debian.org/Projects/DebSrc3.0
-Ref: #884498, dpkg-source(1)
+See-Also: #884498, dpkg-source(1)

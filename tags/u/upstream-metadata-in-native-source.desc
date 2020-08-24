@@ -1,8 +1,8 @@
 Tag: upstream-metadata-in-native-source
 Severity: warning
 Check: debian/upstream/metadata
-Ref: https://dep-team.pages.debian.net/deps/dep12/, https://wiki.debian.org/UpstreamMetadata
-Info: This source package is Debian-native and has a
+See-Also: https://dep-team.pages.debian.net/deps/dep12/, https://wiki.debian.org/UpstreamMetadata
+Explanation: This source package is Debian-native and has a
  <tt>debian/upstream/metadata</tt> file.
  . 
  The Upstream MEtadata GAthered with YAml (UMEGAYA) project is an effort

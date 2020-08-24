@@ -1,7 +1,7 @@
 Tag: debian-rules-parses-dpkg-parsechangelog
 Severity: info
 Check: debian/rules
-Info: The rules file appears to be parsing the output of dpkg-parsechangelog to
+Explanation: The rules file appears to be parsing the output of dpkg-parsechangelog to
  determine the current package version name, version, or timestamp, etc.
  .
  Since dpkg 1.16.1, this could be replaced by including the

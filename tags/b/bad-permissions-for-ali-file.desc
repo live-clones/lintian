@@ -1,8 +1,8 @@
 Tag: bad-permissions-for-ali-file
 Severity: warning
 Check: files/permissions
-Ref: policy 8.4
-Info: Ada Library Information (*.ali) files are required to be read-only
+See-Also: policy 8.4
+Explanation: Ada Library Information (*.ali) files are required to be read-only
  (mode 0444) by GNAT.
  .
  If at least one user can write the *.ali file, GNAT considers whether

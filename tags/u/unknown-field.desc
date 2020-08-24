@@ -3,6 +3,6 @@ Severity: warning
 Check: fields/unknown
 Renamed-From: unknown-field-in-dsc
  unknown-field-in-control
-Info: See the Policy Manual for a list of the possible fields in
+Explanation: See the Policy Manual for a list of the possible fields in
  a package control files.
-Ref: policy 5.3, policy 5.4
+See-Also: policy 5.3, policy 5.4

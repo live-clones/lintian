@@ -1,8 +1,8 @@
 Tag: unversioned-copyright-format-uri
 Severity: pedantic
 Check: debian/copyright/dep5
-Ref: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
-Info: Format URI of the machine-readable copyright file is not versioned.
+See-Also: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Explanation: Format URI of the machine-readable copyright file is not versioned.
  .
  Please use
  <tt>https://www.debian.org/doc/packaging-manuals/copyright-format/<i>version</i>/</tt>

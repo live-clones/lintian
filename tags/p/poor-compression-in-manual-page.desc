@@ -2,6 +2,6 @@ Tag: poor-compression-in-manual-page
 Severity: error
 Check: documentation/manual
 Renamed-From: manpage-not-compressed-with-max-compression
-Info: Manual pages should be compressed with <tt>gzip -9n</tt>. It
+Explanation: Manual pages should be compressed with <tt>gzip -9n</tt>. It
  selects the highest compression available.
-Ref: policy 12.1
+See-Also: policy 12.1

@@ -2,7 +2,7 @@ Tag: portable-executable-missing-security-features
 Severity: pedantic
 Check: pe
 Experimental: yes
-Info: A portable executable (PE32+) file lacks security features.
+Explanation: A portable executable (PE32+) file lacks security features.
  .
  Due to changes in <tt>binutils-mingw-w64</tt> the historical
  advice is incorrect. Current tools do not create safe binaries,
@@ -37,4 +37,4 @@ Info: A portable executable (PE32+) file lacks security features.
  .
  Please change the flags, if possible, instead of overriding the tag.
  .
-Ref: https://www.kb.cert.org/vuls/id/307144/, Bug#953212
+See-Also: https://www.kb.cert.org/vuls/id/307144/, Bug#953212

@@ -1,7 +1,7 @@
 Tag: source-package-encodes-python-version
 Severity: warning
 Check: languages/python
-Info: This source package encodes a Python version in its name such
+Explanation: This source package encodes a Python version in its name such
  as <tt>python2-foo</tt> or <tt>python3-bar</tt>.
  .
  This could result in a misleading future situation where this source

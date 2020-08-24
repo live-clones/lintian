@@ -1,7 +1,7 @@
 Tag: uses-deprecated-compression-for-data-tarball
 Severity: error
 Check: deb-format
-Info: The data portion of this binary package uses a deprecated compression
+Explanation: The data portion of this binary package uses a deprecated compression
  format. Although dpkg will support extracting such binary packages for
  the foreseeable future, creating them will eventually be disallowed. A
  warning is emitted for lzma since dpkg 1.16.4, and for bzip2 since dpkg

@@ -213,7 +213,7 @@ sub load {
     $self->original_severity($fields->value('Severity'));
     $self->experimental($fields->value('Experimental') eq 'yes');
 
-    my $explanation = $fields->value('Info');
+    my $explanation = $fields->value('Explanation') || $fields->value('Info');
 
     # remove leading space in each line
     $explanation =~ s/^[ \t]//mg;
@@ -232,7 +232,7 @@ sub load {
 
     $self->explanation(\@paragraphs);
 
-    $self->references($fields->value('Ref'));
+    $self->references($fields->value('See-Also') || $fields->value('Ref'));
 
     $self->aliases([$fields->trimmed_list('Renamed-From')]);
 

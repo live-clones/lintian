@@ -1,9 +1,9 @@
 Tag: specific-address-in-shared-library
 Severity: error
 Check: shared-libs
-Ref: policy 10.2
+See-Also: policy 10.2
 Renamed-From: shlib-with-non-pic-code
-Info: The listed shared libraries contain object code that was compiled 
+Explanation: The listed shared libraries contain object code that was compiled 
  without -fPIC. All object code in shared libraries should be recompiled
  separately from the static libraries with the -fPIC option. 
  .

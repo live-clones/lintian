@@ -1,8 +1,8 @@
 Tag: missing-versioned-depends-on-init-system-helpers
 Severity: warning
 Check: scripts
-Ref: update.d(8), #910593
-Info: This package uses a command in the specified maintainer script
+See-Also: update.d(8), #910593
+Explanation: This package uses a command in the specified maintainer script
  but does not specify an appropriate minimum dependency on the
  <tt>init-system-helpers</tt> package. It may have been added to the
  package's <tt>Build-Depends</tt> instead of the corresponding binary

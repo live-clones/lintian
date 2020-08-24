@@ -2,8 +2,8 @@ Tag: systemd-service-file-shutdown-problems
 Severity: warning
 Experimental: no
 Check: systemd
-Ref: https://github.com/systemd/systemd/issues/11821
-Info: The specified systemd <tt>.service</tt> file contains both
+See-Also: https://github.com/systemd/systemd/issues/11821
+Explanation: The specified systemd <tt>.service</tt> file contains both
  <tt>DefaultDependencies=no</tt> and <tt>Conflicts=shutdown.target</tt>
  directives without <tt>Before=shutdown.target</tt>.
  .

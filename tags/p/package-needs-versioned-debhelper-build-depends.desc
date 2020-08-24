@@ -1,7 +1,7 @@
 Tag: package-needs-versioned-debhelper-build-depends
 Severity: warning
 Check: debhelper
-Info: The package either doesn't declare a versioned build dependency on
+Explanation: The package either doesn't declare a versioned build dependency on
  debhelper or does not declare a versioned build dependency on a new
  enough version of debhelper to satisfy the declared compatibility level.
  .
@@ -23,4 +23,4 @@ Info: The package either doesn't declare a versioned build dependency on
  .
  Note if you are using a compat level marked as experimental (such as
  compat 12 in debhelper 11.4~) please explicitly override this tag.
-Ref: debhelper(7)
+See-Also: debhelper(7)

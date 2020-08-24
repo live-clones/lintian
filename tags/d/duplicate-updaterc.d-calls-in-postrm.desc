@@ -1,5 +1,5 @@
 Tag: duplicate-updaterc.d-calls-in-postrm
 Severity: error
 Check: init.d
-Info: The <tt>postrm</tt> script calls <tt>update-rc.d</tt> several
+Explanation: The <tt>postrm</tt> script calls <tt>update-rc.d</tt> several
  times for the same <tt>/etc/init.d</tt> script.

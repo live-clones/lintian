@@ -1,7 +1,7 @@
 Tag: breakout-link
 Severity: warning
 Check: files/hierarchy/links
-Info: The named link is in <tt>/usr/lib</tt> and points to higher
+Explanation: The named link is in <tt>/usr/lib</tt> and points to higher
  location in the file system, or traverses through one.
  .
  At least for <tt>/usr/lib</tt>, it is usually an error and may
@@ -13,4 +13,4 @@ Info: The named link is in <tt>/usr/lib</tt> and points to higher
  Lateral connections to the same level in /usr/lib are not allowed
  if they traverse through a higher directory, because in a typical
  multi-lib layout that might point to another architecture.
-Ref: Bug#243158
+See-Also: Bug#243158

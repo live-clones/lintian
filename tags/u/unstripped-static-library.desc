@@ -1,7 +1,7 @@
 Tag: unstripped-static-library
 Severity: info
 Check: binaries
-Info: The package installs an unstripped static library.
+Explanation: The package installs an unstripped static library.
  .
  Please note, that static libraries have to be stripped with the
  <tt>--strip-debug</tt> option. You will probably also want to

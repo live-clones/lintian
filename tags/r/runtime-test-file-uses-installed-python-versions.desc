@@ -1,7 +1,7 @@
 Tag: runtime-test-file-uses-installed-python-versions
 Severity: warning
 Check: testsuite
-Info: The specified file appears to use <tt>py3versions -i</tt>
+Explanation: The specified file appears to use <tt>py3versions -i</tt>
  to determine the "installed" Python versions.
  .
  However, this can cause issues if a Python transition is in progress
@@ -14,4 +14,4 @@ Info: The specified file appears to use <tt>py3versions -i</tt>
  Please replace this will a call to all "supported" packages instead
  (eg. <tt>py3versions -s</tt> and ensure <tt>python3-all</tt> is listed
  in the test dependencies.
-Ref: https://lists.debian.org/debian-devel/2020/03/msg00280.html
+See-Also: https://lists.debian.org/debian-devel/2020/03/msg00280.html

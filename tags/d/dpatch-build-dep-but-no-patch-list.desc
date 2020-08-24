@@ -1,7 +1,7 @@
 Tag: dpatch-build-dep-but-no-patch-list
 Severity: warning
 Check: debian/patches/dpatch
-Info: Using dpatch requires you to explicitly list all patches you want
+Explanation: Using dpatch requires you to explicitly list all patches you want
  to apply in debian/patches/00list. This package build-depends on dpatch,
  but does not provide a patch list. You should either remove the dpatch
  build dependency or add a patch list.

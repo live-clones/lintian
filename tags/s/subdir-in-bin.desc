@@ -1,6 +1,6 @@
 Tag: subdir-in-bin
 Severity: error
 Check: files/hierarchy/standard
-Info: The Filesystem Hierarchy Standard forbids the installation of new
+Explanation: The Filesystem Hierarchy Standard forbids the installation of new
  directories in <tt>/bin</tt>.
-Ref: fhs binessentialusercommandbinaries
+See-Also: fhs binessentialusercommandbinaries

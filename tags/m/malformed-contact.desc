@@ -10,8 +10,8 @@ Renamed-From:
  maintainer-address-malformed
  uploader-address-malformed
  changed-by-address-malformed
-Info: The named field identifying contact persons could not be
+Explanation: The named field identifying contact persons could not be
  parsed according to the rules in the Policy Manual.
-Ref: policy 5.6.2,
+See-Also: policy 5.6.2,
  policy 5.6.3,
  policy 5.6.4

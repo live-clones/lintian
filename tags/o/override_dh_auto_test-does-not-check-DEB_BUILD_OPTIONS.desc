@@ -1,7 +1,7 @@
 Tag: override_dh_auto_test-does-not-check-DEB_BUILD_OPTIONS
 Severity: info
 Check: debian/rules
-Info: The <tt>debian/rules</tt> file for this package has an
+Explanation: The <tt>debian/rules</tt> file for this package has an
  <tt>override_dh_auto_test</tt> target that does not appear to
  check <tt>DEB_BUILD_OPTIONS</tt> against <tt>nocheck</tt>.
  .
@@ -26,4 +26,4 @@ Info: The <tt>debian/rules</tt> file for this package has an
  .
  This check is not required in Debhelper compat level 13 or greater
  (see #568897).
-Ref: policy 4.9.1, https://wiki.debian.org/BuildProfileSpec#Registered_profile_names
+See-Also: policy 4.9.1, https://wiki.debian.org/BuildProfileSpec#Registered_profile_names

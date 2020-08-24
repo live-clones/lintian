@@ -1,7 +1,7 @@
 Tag: typelib-package-name-does-not-match
 Severity: warning
 Check: desktop/gnome/gir
-Info: GObject-Introspection binary typelibs (<tt>Foo-23.typelib</tt>)
+Explanation: GObject-Introspection binary typelibs (<tt>Foo-23.typelib</tt>)
  should normally be made available in a package named gir1.2-foo-23.
  .
  If multiple typelibs are shipped in the same package, then that package
@@ -14,4 +14,4 @@ Info: GObject-Introspection binary typelibs (<tt>Foo-23.typelib</tt>)
  typelibs. It should have versioned <tt>Provides</tt> entries for
  <tt>gir1.2-gdk-3.0 (= ${binary:Version})</tt>
  and <tt>gir1.2-gdkx11-3.0 (= ${binary:Version})</tt> to indicate this.
-Ref: /usr/share/doc/gobject-introspection/policy.txt
+See-Also: /usr/share/doc/gobject-introspection/policy.txt

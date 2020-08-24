@@ -1,6 +1,6 @@
 Tag: non-standard-dir-perm
 Severity: warning
 Check: files/permissions
-Info: The directory has a mode different from 0755, and it's not one of the
+Explanation: The directory has a mode different from 0755, and it's not one of the
  known exceptions.
-Ref: policy 10.9
+See-Also: policy 10.9

@@ -1,7 +1,7 @@
 Tag: dir-in-usr-local
 Severity: error
 Check: files/hierarchy/standard
-Info: The package installs a directory in <tt>/usr/local/...</tt> which is
+Explanation: The package installs a directory in <tt>/usr/local/...</tt> which is
  not allowed.
  .
  If you want to provide an empty directory in <tt>/usr/local</tt> for
@@ -9,4 +9,4 @@ Info: The package installs a directory in <tt>/usr/local/...</tt> which is
  in the policy manual (section 9.1.2), i.e., create the directories in
  the postinst script but don't fail if this isn't possible (e.g. if
  <tt>/usr/local</tt> is mounted read-only).
-Ref: policy 9.1.2
+See-Also: policy 9.1.2

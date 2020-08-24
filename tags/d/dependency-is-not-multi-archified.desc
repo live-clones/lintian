@@ -1,6 +1,6 @@
 Tag: dependency-is-not-multi-archified
 Severity: warning
 Check: group-checks
-Info: The package is Multi-Arch "same", but it depends on a package that
+Explanation: The package is Multi-Arch "same", but it depends on a package that
  is neither Multi-Arch "same" nor "foreign".
-Ref: https://wiki.ubuntu.com/MultiarchSpec
+See-Also: https://wiki.ubuntu.com/MultiarchSpec

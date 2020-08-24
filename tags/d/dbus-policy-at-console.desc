@@ -1,7 +1,7 @@
 Tag: dbus-policy-at-console
 Severity: warning
 Check: desktop/dbus
-Info: The package contains D-Bus policy configuration that uses the
+Explanation: The package contains D-Bus policy configuration that uses the
  deprecated <tt>at_console</tt> condition to impose a different policy
  for users who are "logged in at the console" according to
  systemd-logind, ConsoleKit or similar APIs, such as:
@@ -22,4 +22,4 @@ Info: The package contains D-Bus policy configuration that uses the
  use system-administrator-configurable policies to make that decision,
  including distinguishing between users who are "at the console" and
  those who are not.
-Ref: https://bugs.freedesktop.org/show_bug.cgi?id=39611
+See-Also: https://bugs.freedesktop.org/show_bug.cgi?id=39611

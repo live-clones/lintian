@@ -1,7 +1,7 @@
 Tag: not-binnmuable-any-depends-all
 Severity: error
 Check: debian/version-substvars
-Info: The package is not safely binNMUable because an arch:any package
+Explanation: The package is not safely binNMUable because an arch:any package
  depends on an arch:all package with a (= ${binary:Version})
  relationship. Please use (= ${source:Version}) instead.
  .

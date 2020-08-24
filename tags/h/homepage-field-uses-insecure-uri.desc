@@ -1,5 +1,5 @@
 Tag: homepage-field-uses-insecure-uri
 Severity: pedantic
 Check: fields/homepage
-Info: The Homepage field uses an unencrypted transport protocol for the
+Explanation: The Homepage field uses an unencrypted transport protocol for the
  URI.

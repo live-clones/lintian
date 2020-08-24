@@ -1,6 +1,6 @@
 Tag: dir-or-file-in-run
 Severity: error
 Check: files/hierarchy/standard
-Info: <tt>/run</tt> may be a temporary filesystem, so any directories
+Explanation: <tt>/run</tt> may be a temporary filesystem, so any directories
  or files needed there must be created dynamically at boot time.
-Ref: policy 9.3.2
+See-Also: policy 9.3.2

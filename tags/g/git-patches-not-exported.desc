@@ -1,7 +1,7 @@
 Tag: git-patches-not-exported
 Severity: error
 Check: debian/source-dir
-Info: The source package contains files in
+Explanation: The source package contains files in
  <tt>debian/source/git-patches</tt>. These patches should have been exported
  via the <tt>quilt-patches-deb-export-hook</tt> of <tt>gitpkg</tt>.
  .

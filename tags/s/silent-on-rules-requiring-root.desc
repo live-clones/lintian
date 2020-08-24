@@ -3,7 +3,7 @@ Severity: pedantic
 Check: debian/control
 Renamed-From:
  rules-requires-root-missing
-Info: The <tt>debian/control</tt> file is missing an explicit
+Explanation: The <tt>debian/control</tt> file is missing an explicit
  <tt>Rules-Requires-Root</tt> field.
  .
  Traditionally, Debian packages have required root privileges for some
@@ -15,4 +15,4 @@ Info: The <tt>debian/control</tt> file is missing an explicit
  <tt>debian/control</tt> source stanza, but packagers should
  verify using <tt>diffoscope(1)</tt> that the binaries built with this
  field present are identical.
-Ref: /usr/share/doc/dpkg-dev/rootless-builds.txt.gz, policy 4.9.2, policy 5.6.31
+See-Also: /usr/share/doc/dpkg-dev/rootless-builds.txt.gz, policy 4.9.2, policy 5.6.31

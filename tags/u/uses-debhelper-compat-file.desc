@@ -1,7 +1,7 @@
 Tag: uses-debhelper-compat-file
 Severity: pedantic
 Check: debhelper
-Info: This package uses a <tt>debian/compat</tt> file to denote the
+Explanation: This package uses a <tt>debian/compat</tt> file to denote the
  required debhelper compatibility number.
  .
  However, debhelper has replaced <tt>debian/compat</tt> with the
@@ -12,4 +12,4 @@ Info: This package uses a <tt>debian/compat</tt> file to denote the
  example:
  .
   Build-Depends: debhelper-compat (= 13)
-Ref: debhelper(7)
+See-Also: debhelper(7)

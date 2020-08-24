@@ -1,7 +1,7 @@
 Tag: excessive-priority-for-library-package
 Severity: warning
 Check: fields/priority
-Info: The given package appears to be a library package, but it has "Priority"
+Explanation: The given package appears to be a library package, but it has "Priority"
  of "required", "important", or "standard".
  .
  In general, a library package should only get pulled in on a system because

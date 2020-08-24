@@ -1,6 +1,6 @@
 Tag: select-with-boolean-choices
 Severity: warning
 Check: debian/debconf
-Info: Select templates with only yes and no choices should use the boolean
+Explanation: Select templates with only yes and no choices should use the boolean
  type instead.
-Ref: debconf-devel(7)
+See-Also: debconf-devel(7)

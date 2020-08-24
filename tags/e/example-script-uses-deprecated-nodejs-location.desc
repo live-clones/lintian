@@ -1,7 +1,7 @@
 Tag: example-script-uses-deprecated-nodejs-location
 Severity: warning
 Check: scripts
-Info: You used <tt>/usr/bin/nodejs</tt> or <tt>/usr/bin/env nodejs</tt> as an
+Explanation: You used <tt>/usr/bin/nodejs</tt> or <tt>/usr/bin/env nodejs</tt> as an
  interpreter for an example script.
  .
  The <tt>/usr/bin/node</tt> binary was previously provided by
@@ -11,4 +11,4 @@ Info: You used <tt>/usr/bin/nodejs</tt> or <tt>/usr/bin/env nodejs</tt> as an
  the rest of the Node.js ecosystem.
  .
  Please update your package to use the <tt>node</tt> variant.
-Ref: #614907, #862051
+See-Also: #614907, #862051

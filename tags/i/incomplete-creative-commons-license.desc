@@ -1,7 +1,7 @@
 Tag: incomplete-creative-commons-license
 Severity: warning
 Check: debian/copyright/dep5
-Info: The package appears to be licensed under a Creative Commons
+Explanation: The package appears to be licensed under a Creative Commons
  license but only includes the human-readable summary in the
  debian/copyright file which is not the actual licence. The Creative
  Commons webpages contains the following disclaimer:
@@ -20,4 +20,4 @@ Info: The package appears to be licensed under a Creative Commons
  be found here:
  .
   https://creativecommons.org/2014/01/07/plaintext-versions-of-creative-commons-4-0-licenses/
-Ref: #903470, #795402
+See-Also: #903470, #795402

@@ -1,7 +1,7 @@
 Tag: emacsen-common-without-dh-elpa
 Severity: warning
 Check: emacs/elpa
-Info: The package uses the emacsen-common infrastructure but the
+Explanation: The package uses the emacsen-common infrastructure but the
  package was not built with dh-elpa. Please consider transitioning
  the package build to use dh-elpa, unless the package is required to
  work with XEmacs.
@@ -12,4 +12,4 @@ Info: The package uses the emacsen-common infrastructure but the
  .
  In addition, a package built with dh-elpa integrates with the GNU
  Emacs package manager, for a better user experience.
-Ref: dh_elpa(1), dh-make-elpa(1), https://wiki.debian.org/Teams/DebianEmacsenTeam/elpa-hello
+See-Also: dh_elpa(1), dh-make-elpa(1), https://wiki.debian.org/Teams/DebianEmacsenTeam/elpa-hello

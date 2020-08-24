@@ -1,7 +1,7 @@
 Tag: package-superseded-by-perl
 Severity: warning
 Check: fields/version
-Info: This package is also provided by one of the Perl core packages
+Explanation: This package is also provided by one of the Perl core packages
  (perl, perl-base, perl-modules), and the core version is at least
  as new as this one.
  .
@@ -20,4 +20,4 @@ Info: This package is also provided by one of the Perl core packages
  .
  Running <tt>cme fix dpkg -from control -filter Depends</tt> should be able
  to update these dependencies.
-Ref: policy 7.5
+See-Also: policy 7.5

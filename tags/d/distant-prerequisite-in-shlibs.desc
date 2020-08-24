@@ -2,7 +2,7 @@ Tag: distant-prerequisite-in-shlibs
 Severity: warning
 Check: shared-libs
 Renamed-From: shlibs-declares-dependency-on-other-package
-Info: This package declares in its shlibs control file either a dependency
+Explanation: This package declares in its shlibs control file either a dependency
  on some other package not listed in the Provides of this package or on a
  version of this package that the package version doesn't satisfy.
  .
@@ -14,4 +14,4 @@ Info: This package declares in its shlibs control file either a dependency
  In unusual circumstances where it's necessary to declare more complex
  dependencies in the shlibs control file, please add a Lintian override
  for this warning.
-Ref: policy 8.6
+See-Also: policy 8.6

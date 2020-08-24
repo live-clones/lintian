@@ -1,8 +1,8 @@
 Tag: skip-systemd-native-flag-missing-pre-depends
 Severity: warning
 Check: scripts
-Ref: invoke-rc.d(8), deb-systemd-invoke(1p)
-Info: This package uses the <tt>--skip-systemd-native</tt>
+See-Also: invoke-rc.d(8), deb-systemd-invoke(1p)
+Explanation: This package uses the <tt>--skip-systemd-native</tt>
  <tt>invoke-rc.d</tt> flag in the specified maintainer script but does
  not specify a <tt>Pre-Depends</tt> dependency on a recent version of
  <tt>init-system-helpers</tt>.

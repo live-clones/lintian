@@ -1,7 +1,7 @@
 Tag: package-contains-usr-unmerged-pathnames
 Severity: classification
 Check: files/usr-merge
-Info: The package installs the listed file to a directory in / (the
+Explanation: The package installs the listed file to a directory in / (the
  filesystem root) rather than to the corresponding directory inside /usr.
  .
  Debian requires systems to mount /usr prior to invoking init (using an

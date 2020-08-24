@@ -1,7 +1,7 @@
 Tag: apparently-corrupted-elf-binary
 Severity: warning
 Check: binaries
-Info: This appears to be an ELF file but readelf cannot parse it.
+Explanation: This appears to be an ELF file but readelf cannot parse it.
  .
  This may be a mistake or a corrupted file, you may need to
  install binutils-multiarch on the system running Lintian so that

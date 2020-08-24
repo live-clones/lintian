@@ -1,7 +1,7 @@
 Tag: format-3.0-but-debian-changes-patch
 Severity: warning
 Check: debian/patches/quilt
-Info: This package declares source format 3.0 (quilt), but the Debian
+Explanation: This package declares source format 3.0 (quilt), but the Debian
  .debian.tar.gz file contains a debian-changes-VERSION patch, which represents
  direct changes to files outside of the <tt>debian</tt> directory. This often
  indicates accidental changes that weren't meant to be in the package or changes

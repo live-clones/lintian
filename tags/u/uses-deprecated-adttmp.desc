@@ -1,7 +1,7 @@
 Tag: uses-deprecated-adttmp
 Severity: warning
 Check: testsuite
-Info: The specified test file appears to use the deprecated
+Explanation: The specified test file appears to use the deprecated
  <tt>ADTTMP</tt> variable.
  .
  Please replace this with <tt>AUTOPKGTEST_TMP</tt>.

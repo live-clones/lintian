@@ -1,8 +1,8 @@
 Tag: run-parts-cron-filename-contains-illegal-chars
 Severity: warning
 Check: cron
-Info: The script in /etc/cron.&lt;time-interval&gt; will not be executed by
+Explanation: The script in /etc/cron.&lt;time-interval&gt; will not be executed by
  run-parts(8) because the filename contains a "." (full stop) or "+" (plus).
  .
  It is recommended to use "_" (underscores) instead of these symbols.
-Ref: run-parts(8), policy 9.5.1
+See-Also: run-parts(8), policy 9.5.1

@@ -1,7 +1,7 @@
 Tag: duplicate-packaging-file
 Severity: warning
 Check: debian/filenames
-Info: Some packaging files obtain different names when they are copied
+Explanation: Some packaging files obtain different names when they are copied
  from source to installation packages. Debhelper sometimes adds *.Debian
  extensions to NEWS, README and TODO files. That can be confusing.
  .
@@ -11,4 +11,4 @@ Info: Some packaging files obtain different names when they are copied
  a file with incorrect name. Please remove the file as indicated.
  .
  Please merge all relevant information into the surviving file.
-Ref: #429510, #946126
+See-Also: #429510, #946126

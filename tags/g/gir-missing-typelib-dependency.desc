@@ -1,7 +1,7 @@
 Tag: gir-missing-typelib-dependency
 Severity: warning
 Check: desktop/gnome/gir
-Info: Development packages that contain GObject-Introspection XML files
+Explanation: Development packages that contain GObject-Introspection XML files
  (<tt>/usr/share/gir-1.0/Foo-23.gir</tt>) must depend on the package
  containing the corresponding binary typelib, which is conventionally named
  <tt>gir1.2-foo-23</tt>. The dependency must be strictly versioned
@@ -21,4 +21,4 @@ Info: Development packages that contain GObject-Introspection XML files
  entries for <tt>gir1.2-gdk-3.0 (= ${binary:Version})</tt>
  and <tt>gir1.2-gdkx11-3.0 (= ${binary:Version})</tt> signals this
  situation to Lintian.
-Ref: /usr/share/doc/gobject-introspection/policy.txt
+See-Also: /usr/share/doc/gobject-introspection/policy.txt

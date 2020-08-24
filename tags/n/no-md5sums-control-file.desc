@@ -1,7 +1,7 @@
 Tag: no-md5sums-control-file
 Severity: info
 Check: md5sums
-Info: This package does not contain an md5sums control file. This control
+Explanation: This package does not contain an md5sums control file. This control
  file listing the MD5 checksums of the contents of the package is not
  required, but if present debsums can use it to verify that no files
  shipped with your package have been modified. Providing it is

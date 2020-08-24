@@ -1,6 +1,6 @@
 Tag: non-standard-file-perm
 Severity: warning
 Check: files/permissions
-Info: The file has a mode different from 0644. In some cases this is
+Explanation: The file has a mode different from 0644. In some cases this is
  intentional, but in other cases this is a bug.
-Ref: policy 10.9
+See-Also: policy 10.9

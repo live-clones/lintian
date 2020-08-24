@@ -1,8 +1,8 @@
 Tag: copyright-without-copyright-notice
 Severity: warning
 Check: debian/copyright
-Ref: https://ftp-master.debian.org/REJECT-FAQ.html
-Info: The copyright file for this package does not appear to contain a
+See-Also: https://ftp-master.debian.org/REJECT-FAQ.html
+Explanation: The copyright file for this package does not appear to contain a
  copyright notice. You should copy the copyright notice from the upstream
  source (or add one of your own for a native package). A copyright notice
  must consist of Copyright, Copr., or the Unicode symbol of C in a circle

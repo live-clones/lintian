@@ -1,9 +1,9 @@
 Tag: bad-urgency-in-changes-file
 Severity: error
 Check: fields/urgency
-Info: The keyword value of the "Urgency" field in the .changes file is not
+Explanation: The keyword value of the "Urgency" field in the .changes file is not
  one of the allowed values of low, medium, high, critical, and emergency
  (case-insensitive). This value normally taken from the first line of the
  most recent entry in <tt>debian/changelog</tt>, which is probably where
  the error is.
-Ref: policy 5.6.17
+See-Also: policy 5.6.17

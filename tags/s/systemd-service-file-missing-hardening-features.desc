@@ -2,7 +2,7 @@ Tag: systemd-service-file-missing-hardening-features
 Severity: pedantic
 Experimental: yes
 Check: systemd
-Info: The specified systemd <tt>.service</tt> file does not appear to
+Explanation: The specified systemd <tt>.service</tt> file does not appear to
  enable any hardening options.
  .
  systemd has support for many security-oriented features such as
@@ -12,4 +12,4 @@ Info: The specified systemd <tt>.service</tt> file does not appear to
  .
  Please consider supporting some options, collaborating upstream where
  necessary about any potential changes.
-Ref: systemd.service(5), http://0pointer.de/blog/projects/security.html
+See-Also: systemd.service(5), http://0pointer.de/blog/projects/security.html

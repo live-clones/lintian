@@ -1,7 +1,7 @@
 Tag: init.d-script-should-always-start-service
 Severity: error
 Check: init.d
-Info: The specified file under <tt>/etc/default/</tt> includes a line
+Explanation: The specified file under <tt>/etc/default/</tt> includes a line
  such as <tt>ENABLED=</tt>, <tt>DISABLED=</tt>, <tt>RUN=</tt>, etc.
  .
  This is an older practice used so that the package's init script would
@@ -16,4 +16,4 @@ Info: The specified file under <tt>/etc/default/</tt> includes a line
  Please remove this mechanism and disable enabling the daemon on install
  via <tt>dh_installinit --no-enable</tt> or move to automatically
  starting it.
-Ref: policy 9.3.3.1, update-rc.d(8), dh_installinit(1)
+See-Also: policy 9.3.3.1, update-rc.d(8), dh_installinit(1)

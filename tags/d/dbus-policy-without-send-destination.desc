@@ -1,7 +1,7 @@
 Tag: dbus-policy-without-send-destination
 Severity: warning
 Check: desktop/dbus
-Info: The package contains D-Bus policy configuration that uses
+Explanation: The package contains D-Bus policy configuration that uses
  one of the <tt>send_*</tt> conditions, but does not specify a
  <tt>send_destination</tt>, and is not specific to root.
  .
@@ -32,4 +32,4 @@ Info: The package contains D-Bus policy configuration that uses
  name, so <tt>send_destination</tt> is not easily applicable.
  However, such rules should still be made as specific as possible to
  avoid undesired side-effects.
-Ref: https://bugs.freedesktop.org/show_bug.cgi?id=18961,http://lists.freedesktop.org/archives/dbus/2008-February/009401.html
+See-Also: https://bugs.freedesktop.org/show_bug.cgi?id=18961,http://lists.freedesktop.org/archives/dbus/2008-February/009401.html

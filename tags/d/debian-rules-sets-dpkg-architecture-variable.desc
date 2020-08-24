@@ -1,8 +1,8 @@
 Tag: debian-rules-sets-dpkg-architecture-variable
 Severity: warning
 Check: debian/rules
-Ref: dpkg-architecture(1)
-Info: The <tt>debian/rules</tt> file sets one or more
+See-Also: dpkg-architecture(1)
+Explanation: The <tt>debian/rules</tt> file sets one or more
  <tt>dpkg-architecture</tt> variables such as <tt>DEB_BUILD_ARCH</tt>.
  .
  These variables are pre-initialized in the environment when running under

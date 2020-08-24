@@ -1,7 +1,7 @@
 Tag: unused-override
 Severity: info
 Check: lintian
-Info: Your package specifies the named override but there were no
+Explanation: Your package specifies the named override but there were no
  tags that could have been silenced by it.
  .
  Maybe you fixed an underlying condition but forgot to remove the
@@ -16,4 +16,4 @@ Info: Your package specifies the named override but there were no
  Sometimes, overrides end up not being used because a tag appears
  only on some architectures. In that case, overrides can be equipped
  with an architecture qualifier.
-Ref: lintian 2.4.3
+See-Also: lintian 2.4.3

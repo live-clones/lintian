@@ -1,7 +1,7 @@
 Tag: latest-debian-changelog-entry-reuses-existing-version
 Severity: warning
 Check: debian/changelog
-Info: The latest changelog entry has a version that matches one used in
+Explanation: The latest changelog entry has a version that matches one used in
  the specified previous entry. All versions of a source package must be
  unique even after a leading epoch has been stripped off.
  .

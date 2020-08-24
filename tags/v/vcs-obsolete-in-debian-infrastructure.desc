@@ -1,7 +1,7 @@
 Tag: vcs-obsolete-in-debian-infrastructure
 Severity: warning
 Check: fields/vcs
-Info: The specified Vcs-* field points to an area within the *.debian.org
+Explanation: The specified Vcs-* field points to an area within the *.debian.org
  infrastructure but refers to a version control system that has been
  deprecated.
  .
@@ -12,5 +12,5 @@ Info: The specified Vcs-* field points to an area within the *.debian.org
  .
  For further information about salsa.debian.org, including how to add
  HTTP redirects from alioth, please consult the Debian Wiki.
-Ref: https://lists.debian.org/debian-devel-announce/2017/08/msg00008.html,
+See-Also: https://lists.debian.org/debian-devel-announce/2017/08/msg00008.html,
  https://wiki.debian.org/Salsa

@@ -2,7 +2,7 @@ Tag: maintainer-script-lacks-home-in-adduser
 Severity: error
 Check: scripts
 Renamed-From: maintainer-script-should-not-use-adduser-system-without-home
-Info: The maintainer script apparently runs 'adduser --system'
+Explanation: The maintainer script apparently runs 'adduser --system'
  but hardcodes a path under '/home' for the '--home' option or
  does not use the '--home' option.
  .
@@ -15,4 +15,4 @@ Info: The maintainer script apparently runs 'adduser --system'
  because home field of passwd file point to a non existing
  /home subdirectory. Please use
  <tt>adduser --no-create-home --home /nonexistent</tt> instead.
-Ref: fhs homeuserhomedirectories, adduser(8)
+See-Also: fhs homeuserhomedirectories, adduser(8)

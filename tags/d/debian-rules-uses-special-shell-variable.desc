@@ -2,8 +2,8 @@ Tag: debian-rules-uses-special-shell-variable
 Severity: warning
 Check: debian/rules
 Renamed-From: debian-rules-should-not-use-underscore-variable
-Ref: policy 4.9, https://stackoverflow.com/a/27628164
-Info: The rules file use the make variable $(_).
+See-Also: policy 4.9, https://stackoverflow.com/a/27628164
+Explanation: The rules file use the make variable $(_).
  .
  According to Policy 4.9, 'invoking either of <tt>make -f debian/rules
  &lt;...&gt;</tt> or <tt>./debian/rules

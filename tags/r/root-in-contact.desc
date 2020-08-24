@@ -5,7 +5,7 @@ Renamed-From:
  maintainer-address-is-root-user
  uploader-address-is-root-user
  changed-by-address-is-root-user
-Info: The named contact includes root as a name or as part of
+Explanation: The named contact includes root as a name or as part of
  the mail address, which is invalid.
  .
  The package may not have been built in a sane environment.

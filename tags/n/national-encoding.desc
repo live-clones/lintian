@@ -11,7 +11,7 @@ Renamed-From:
  doc-base-file-uses-obsolete-national-encoding
  national-encoding-in-debconf-template
  national-encoding-in-manpage
-Info: A file is not valid UTF-8.
+Explanation: A file is not valid UTF-8.
  .
  Debian has used UTF-8 for many years. Support for national encodings
  is being phased out. This file probably appears to users in mangled

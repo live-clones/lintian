@@ -1,8 +1,8 @@
 Tag: package-installs-apt-keyring
 Severity: error
 Check: apt
-Ref: apt-key(8)
-Info: Debian packages should not install files under
+See-Also: apt-key(8)
+Explanation: Debian packages should not install files under
  <tt>/etc/apt/trusted.gpg.d/</tt> or install an
  <tt>/etc/apt/trusted.gpg</tt> file.
  .

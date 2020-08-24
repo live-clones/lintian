@@ -1,7 +1,7 @@
 Tag: license-problem-md5sum-non-distributable-file
 Severity: error
 Check: cruft
-Info: The following file is not distributable even in the non-free
+Explanation: The following file is not distributable even in the non-free
  archive.
  .
  Please re-package the package without the file (if possible)

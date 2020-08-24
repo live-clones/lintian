@@ -1,7 +1,7 @@
 Tag: source-contains-browserified-javascript
 Severity: pedantic
 Check: cruft
-Info: The following file contains javascript built from browserify
+Explanation: The following file contains javascript built from browserify
  .
  This file may contain javascript that is build with the help of browserify
  or webpack tools.

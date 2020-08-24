@@ -1,7 +1,7 @@
 Tag: jar-contains-source
 Severity: warning
 Check: languages/java
-Info: The package ships the specified Jar file containing a
+Explanation: The package ships the specified Jar file containing a
  <tt>.java</tt> file alongside a corresponding <tt>.class</tt> file.
  .
  This wastes disk space as the source is always available via <tt>apt
@@ -9,4 +9,4 @@ Info: The package ships the specified Jar file containing a
  .
  Please ensure that the specified <tt>.java</tt> files are not shipped in
  the Jar file.
-Ref: java-policy 2.4
+See-Also: java-policy 2.4

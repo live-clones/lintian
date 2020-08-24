@@ -1,8 +1,8 @@
 Tag: weak-library-dev-dependency
 Severity: error
 Check: debian/control
-Ref: policy 8.5
-Info: The given package appears to be a shared library -dev package, but
+See-Also: policy 8.5
+Explanation: The given package appears to be a shared library -dev package, but
  the dependency on what seems to be a corresponding shared library package
  does not force the same package version. To ensure that compiling and
  linking works properly, and that the symlinks in the -dev package point

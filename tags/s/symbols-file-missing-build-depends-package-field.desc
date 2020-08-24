@@ -1,7 +1,7 @@
 Tag: symbols-file-missing-build-depends-package-field
 Severity: info
 Check: shared-libs
-Info: The symbols file for this package does not contain a
+Explanation: The symbols file for this package does not contain a
  <tt>Build-Depends-Package</tt> meta-information field.
  .
  This field specifies the name of the <tt>-dev</tt> package associated
@@ -17,7 +17,7 @@ Info: The symbols file for this package does not contain a
  the file and not be indented to align with the symbols themselves.
  Please do not use the placeholder <tt>&#35;PACKAGE&#35;</tt>. The
  development package for your shared library must be stated explicitly.
-Ref:
+See-Also:
  policy 8.6.3.2,
  deb-symbols(5),
  dpkg-shlibdeps(1),

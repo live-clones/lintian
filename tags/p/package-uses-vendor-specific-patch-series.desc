@@ -1,7 +1,7 @@
 Tag: package-uses-vendor-specific-patch-series
 Severity: error
 Check: debian/patches/quilt
-Info: The specified series file for patches is vendor-specific.
+Explanation: The specified series file for patches is vendor-specific.
  .
  Source packages may contain vendor (i.e. distribution) specific patches,
  but such packages must not be uploaded to the Debian archive if they
@@ -22,4 +22,4 @@ Info: The specified series file for patches is vendor-specific.
  .
  You should only see this tag in Debian or other distributions when 
  targeting an upload for Debian.
-Ref: #904302, #922531, https://lists.debian.org/debian-devel-announce/2018/11/msg00004.html
+See-Also: #904302, #922531, https://lists.debian.org/debian-devel-announce/2018/11/msg00004.html

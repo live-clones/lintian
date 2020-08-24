@@ -1,7 +1,7 @@
 Tag: usr-share-doc-symlink-without-dependency
 Severity: error
 Check: debian/copyright
-Info: If the package installs a symbolic link
+Explanation: If the package installs a symbolic link
  <tt>/usr/share/doc/<i>pkg1</i> -&gt; <i>pkg2</i></tt>, then <i>pkg1</i>
  must depend on <i>pkg2</i> directory, with the same version as
  <i>pkg1</i>.
@@ -18,4 +18,4 @@ Info: If the package installs a symbolic link
  level deep when resolving dependencies. Each package should have a
  direct dependency on the package which includes its documentation
  directory.
-Ref: policy 12.5
+See-Also: policy 12.5

@@ -2,7 +2,7 @@ Tag: trailing-whitespace
 Severity: pedantic
 Check: debian/trailing-whitespace
 Renamed-From: file-contains-trailing-whitespace
-Info: This file contains lines with trailing whitespace characters.
+Explanation: This file contains lines with trailing whitespace characters.
  .
  Whilst often harmless and unsightly, such extra whitespaces can also
  cause tools to interpret the whitespace characters literally. The

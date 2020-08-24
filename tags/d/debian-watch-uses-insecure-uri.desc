@@ -1,7 +1,7 @@
 Tag: debian-watch-uses-insecure-uri
 Severity: info
 Check: debian/watch
-Info: The watch file uses an unencrypted transport protocol for the
+Explanation: The watch file uses an unencrypted transport protocol for the
  URI such as http:// or ftp://. It is recommended to use a secure
  transport such as HTTPS for anonymous read-only access.
  .

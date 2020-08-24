@@ -2,5 +2,5 @@ Tag: odd-permissions-on-shared-library
 Severity: warning
 Check: shared-libs
 Renamed-From: shlib-with-bad-permissions
-Info: Shared libraries should be mode 0644.
-Ref: policy 8.1
+Explanation: Shared libraries should be mode 0644.
+See-Also: policy 8.1

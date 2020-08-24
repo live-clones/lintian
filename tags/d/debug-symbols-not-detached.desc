@@ -2,8 +2,8 @@ Tag: debug-symbols-not-detached
 Severity: warning
 Check: binaries
 Renamed-From: debug-file-should-use-detached-symbols
-Ref: devref 6.7.9
-Info: This file is in a location generally used for detached debugging
+See-Also: devref 6.7.9
+Explanation: This file is in a location generally used for detached debugging
  symbols, but it appears to contain a complete copy of the executable or
  library instead of only the debugging symbols. Files in subdirectories
  of <tt>/usr/lib/debug</tt> mirroring the main file system should contain

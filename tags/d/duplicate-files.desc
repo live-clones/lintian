@@ -2,8 +2,8 @@ Tag: duplicate-files
 Severity: pedantic
 Check: files/duplicates
 Experimental: yes
-Ref: jdupes(1)
-Info: The package ships the two (or more) files with the exact same
+See-Also: jdupes(1)
+Explanation: The package ships the two (or more) files with the exact same
  contents.
  .
  Duplicates can often be replaced with symlinks by running:

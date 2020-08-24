@@ -1,6 +1,6 @@
 Tag: non-standard-toplevel-dir
 Severity: error
 Check: files/hierarchy/standard
-Info: The Filesystem Hierarchy Standard forbids the installation of new
+Explanation: The Filesystem Hierarchy Standard forbids the installation of new
  files or directories in the root directory.
-Ref: fhs therootfilesystem
+See-Also: fhs therootfilesystem

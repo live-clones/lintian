@@ -1,7 +1,7 @@
 Tag: no-strong-digests-in-dsc
 Severity: error
 Check: fields/checksums
-Info: This .dsc file contains no Checksum-Sha256 field and hence only
+Explanation: This .dsc file contains no Checksum-Sha256 field and hence only
  weak digests.
  .
  This issue will only show up for source packages built with

@@ -1,8 +1,8 @@
 Tag: debian-watch-file-is-missing
 Severity: info
 Check: debian/watch
-Ref: policy 4.11, uscan(1)
-Info: This source package is not Debian-native but it does not have a
+See-Also: policy 4.11, uscan(1)
+Explanation: This source package is not Debian-native but it does not have a
  <tt>debian/watch</tt> file. This file is used for automatic detection of
  new upstream versions by the Debian External Health Status project and
  other project infrastructure. If this package is maintained upstream,

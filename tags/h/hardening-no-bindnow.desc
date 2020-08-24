@@ -1,7 +1,7 @@
 Tag: hardening-no-bindnow
 Severity: info
 Check: binaries
-Info: This package provides an ELF binary that lacks the "bindnow"
+Explanation: This package provides an ELF binary that lacks the "bindnow"
  linker flag.
  .
  This is needed (together with "relro") to make the "Global Offset
@@ -14,4 +14,4 @@ Info: This package provides an ELF binary that lacks the "bindnow"
  <tt>DEB_BUILD_MAINT_OPTIONS</tt>.
  .
  The relevant compiler flags are set in <tt>LDFLAGS</tt>.
-Ref: https://wiki.debian.org/Hardening
+See-Also: https://wiki.debian.org/Hardening

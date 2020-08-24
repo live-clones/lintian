@@ -1,7 +1,7 @@
 Tag: alternatively-build-depends-on-python-sphinx-and-python3-sphinx
 Severity: warning
 Check: languages/python
-Info: This package alternatively Build-Depends on the Python 2 or Python 3
+Explanation: This package alternatively Build-Depends on the Python 2 or Python 3
  version of the Sphinx documentation generator.
  .
  The 2.x series of Python is due for deprecation and will not be maintained

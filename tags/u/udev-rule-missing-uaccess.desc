@@ -1,8 +1,8 @@
 Tag: udev-rule-missing-uaccess
 Severity: warning
 Check: udev
-Ref: https://wiki.debian.org/USB/GadgetSetup
-Info: The package set up a device for user access without using the
+See-Also: https://wiki.debian.org/USB/GadgetSetup
+Explanation: The package set up a device for user access without using the
  uaccess tag. Some udev rules get the same effect using other markers
  enabling console user access using rules in
  /lib/udev/rules.d/70-uaccess.rules. Others should specify

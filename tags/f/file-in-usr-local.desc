@@ -1,6 +1,6 @@
 Tag: file-in-usr-local
 Severity: error
 Check: files/hierarchy/standard
-Info: The package installs a file in <tt>/usr/local/...</tt> which is
+Explanation: The package installs a file in <tt>/usr/local/...</tt> which is
  not allowed.
-Ref: policy 9.1.2
+See-Also: policy 9.1.2

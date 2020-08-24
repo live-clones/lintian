@@ -2,5 +2,5 @@ Tag: synopsis-too-long
 Severity: warning
 Check: fields/description
 Renamed-From: description-too-long
-Info: The first line of the "Description:" must be less than 80 characters long.
-Ref: policy 3.4.1
+Explanation: The first line of the "Description:" must be less than 80 characters long.
+See-Also: policy 3.4.1

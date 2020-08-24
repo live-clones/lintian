@@ -1,7 +1,7 @@
 Tag: debconf-is-not-a-registry
 Severity: warning
 Check: debian/debconf
-Info: In the Unix tradition, Debian packages should have human-readable and
+Explanation: In the Unix tradition, Debian packages should have human-readable and
  human-editable configuration files. This package uses debconf commands
  outside its maintainer scripts, which often indicates that it is taking
  configuration information directly from the debconf database. Typically,
@@ -14,4 +14,4 @@ Info: In the Unix tradition, Debian packages should have human-readable and
  for questions. If you maintain a package containing such a program,
  please install an override. Other exceptions to this check include
  configuration scripts called from the package's post-installation script.
-Ref: devref 6.5.1, debconf-devel(7)
+See-Also: devref 6.5.1, debconf-devel(7)

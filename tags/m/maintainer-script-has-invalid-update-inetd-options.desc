@@ -1,8 +1,8 @@
 Tag: maintainer-script-has-invalid-update-inetd-options
 Severity: warning
 Check: scripts
-Ref: update-inetd(1), #909758, #909506
-Info: The specified maintainer script seems to call
+See-Also: update-inetd(1), #909758, #909506
+Explanation: The specified maintainer script seems to call
  <tt>update-inetd(1)</tt> with an invalid option combination.
  .
  For example, the <tt>--group</tt< parameter is only valid in

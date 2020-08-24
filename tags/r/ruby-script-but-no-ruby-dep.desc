@@ -1,7 +1,7 @@
 Tag: ruby-script-but-no-ruby-dep
 Severity: error
 Check: scripts
-Info: Packages with Ruby scripts must depend on a valid Ruby interpreter.
+Explanation: Packages with Ruby scripts must depend on a valid Ruby interpreter.
  Those that have Ruby scripts that run under a specific version of Ruby need a
  dependency on the equivalent version of Ruby.
  .

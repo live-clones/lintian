@@ -1,7 +1,7 @@
 Tag: old-style-config-script
 Severity: pedantic
 Check: files/config-scripts
-Info: The following file is an old style config file,
+Explanation: The following file is an old style config file,
  used to retrieve information about installed libraries in the system.
  It is typically used to compile and link against one or more libraries.
  .
@@ -22,5 +22,5 @@ Info: The following file is an old style config file,
  under /usr/lib/$DEB_HOST_MULTIARCH/$PACKAGE/bin where
  $DEB_HOST_MULTIARCH is the multi-arch triplet and $PACKAGE is the
  package name. You should also consider to add a NEWS.Debian entry.
-Ref: pkg-config(1),
+See-Also: pkg-config(1),
      http://sources.debian.net/src/imagemagick/8:6.8.9.9-6/debian/NEWS/

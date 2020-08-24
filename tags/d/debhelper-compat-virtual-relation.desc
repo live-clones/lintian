@@ -1,5 +1,5 @@
 Tag: debhelper-compat-virtual-relation
 Severity: classification
 Check: debhelper
-Info: This package is using the <tt>debhelper-compat</tt> virtual
+Explanation: This package is using the <tt>debhelper-compat</tt> virtual
  package as a build-dependency.

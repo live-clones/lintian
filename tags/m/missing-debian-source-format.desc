@@ -1,7 +1,7 @@
 Tag: missing-debian-source-format
 Severity: warning
 Check: debian/source-dir
-Info: Explicitly selecting a source format by putting the format in
+Explanation: Explicitly selecting a source format by putting the format in
  <tt>debian/source/format</tt> is recommended. This allows for
  future removal of the 1.0 default for the package source format and,
  depending on the source format, may allow unambiguous declaration of
@@ -16,4 +16,4 @@ Info: Explicitly selecting a source format by putting the format in
  problems with the 3.0 format, the dpkg maintainers are interested in
  hearing, at debian-dpkg@lists.debian.org, the (technical) reasons why the
  new formats do not suit you.
-Ref: dpkg-source(1), https://wiki.debian.org/Projects/DebSrc3.0
+See-Also: dpkg-source(1), https://wiki.debian.org/Projects/DebSrc3.0

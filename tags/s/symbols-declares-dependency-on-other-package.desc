@@ -1,7 +1,7 @@
 Tag: symbols-declares-dependency-on-other-package
 Severity: warning
 Check: shared-libs
-Info: This package declares in its symbols control file a dependency on
+Explanation: This package declares in its symbols control file a dependency on
  some other package (and not one listed in the Provides of this package).
  .
  Packages should normally only list in their symbols control file the
@@ -12,4 +12,4 @@ Info: This package declares in its symbols control file a dependency on
  In unusual circumstances where it's necessary to declare more complex
  dependencies in the symbols control file, please add a Lintian override
  for this warning.
-Ref: policy 8.6
+See-Also: policy 8.6

@@ -1,7 +1,7 @@
 Tag: untranslatable-debconf-templates
 Severity: error
 Check: debian/po-debconf
-Info: This package seems to be using debconf templates, but some
+Explanation: This package seems to be using debconf templates, but some
  descriptions are not translatable. You should prepend an underscore
  before every translatable field, as described in po-debconf(7). This
  may mean that translators weren't properly warned about new strings.
@@ -14,4 +14,4 @@ Info: This package seems to be using debconf templates, but some
  .
  If the field is not intended for users to see, ensure the first line
  of the description contains "for internal use".
-Ref: policy 3.9.1
+See-Also: policy 3.9.1

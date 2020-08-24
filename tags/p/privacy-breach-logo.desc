@@ -1,7 +1,7 @@
 Tag: privacy-breach-logo
 Severity: error
 Check: files/privacy-breach
-Info: This package creates a potential privacy breach by fetching a
+Explanation: This package creates a potential privacy breach by fetching a
  logo at runtime.
  .
  Before using a local copy you should check that the logo is suitable

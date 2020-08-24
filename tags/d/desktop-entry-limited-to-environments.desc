@@ -1,7 +1,7 @@
 Tag: desktop-entry-limited-to-environments
 Severity: info
 Check: menu-format
-Info: This desktop entry uses OnlyShowIn to limit the environments in
+Explanation: This desktop entry uses OnlyShowIn to limit the environments in
  which it's displayed but lists multiple environments. This is often a
  sign of a desktop file written assuming that only GNOME, KDE, and Xfce
  are in use and the desktop file intended to exclude one of them. This
