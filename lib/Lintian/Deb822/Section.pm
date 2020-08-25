@@ -191,6 +191,24 @@ sub untrimmed_value {
     return $self->verbatim->{$exact} // EMPTY;
 }
 
+=item text (FIELD)
+
+=cut
+
+sub text {
+    my ($self, $name) = @_;
+
+    my $text = $self->untrimmed_value($name);
+
+    # remove leading space in each line
+    $text =~ s/^[ \t]//mg;
+
+    # remove dot place holder for empty lines
+    $text =~ s/^\.$//mg;
+
+    return $text;
+}
+
 =item set (FIELD, VALUE)
 
 =cut
