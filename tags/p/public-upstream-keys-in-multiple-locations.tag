@@ -8,4 +8,4 @@ Explanation: The source package contains public upstream signing keys
  integrity and authenticity of upstream sources.
  .
  Please remove all keys (or keyrings) except one at the recommended
- location <tt>debian/upstream/signing-key.asc</tt>.
+ location <code>debian/upstream/signing-key.asc</code>.

@@ -3,7 +3,7 @@ Severity: warning
 Check: debian/source-dir
 Renamed-From: debian-source-options-has-custom-compression-settings
 Explanation: This package selects a custom compression level or algorithm
- in  <tt>debian/source/options</tt>. Please remove the call and let
+ in  <code>debian/source/options</code>. Please remove the call and let
  dpkg-deb(1) select suitable defaults.
  .
  Custom compression settings are usually chosen for one of two

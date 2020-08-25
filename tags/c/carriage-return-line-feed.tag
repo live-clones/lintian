@@ -2,12 +2,12 @@ Tag: carriage-return-line-feed
 Severity: error
 Check: debian/line-separators
 Renamed-From: control-file-with-CRLF-EOLs
-Explanation: The given control file uses <tt>CRLF</tt> as line terminator
- instead of the traditional UNIX <tt>LF</tt> terminator. Since some
+Explanation: The given control file uses <code>CRLF</code> as line terminator
+ instead of the traditional UNIX <code>LF</code> terminator. Since some
  tools were only designed with the UNIX end-of-line terminators in mind,
  it is possible that they misbehave or lead to unexpected results.
  .
  Running the following command against the given file removes any
- <tt>CR</tt> character in the file:
+ <code>CR</code> character in the file:
  .
- <tt>sed -i 's/\r//g' path/to/file</tt>
+ <code>sed -i 's/\r//g' path/to/file</code>

@@ -1,12 +1,12 @@
 Tag: unwanted-path-too-specific
 Severity: warning
 Check: debian/not-installed
-Explanation: The file <tt>debian/not-installed</tt> lists a path that may
+Explanation: The file <code>debian/not-installed</code> lists a path that may
  cause unexpected build failures. The path is too specific.
  .
  A common problem are entries starting with
- <tt>usr/lib/x86_64-linux-gnu</tt>. The sources will build fine
- on <tt>amd64</tt> but not on other architectures, because the
+ <code>usr/lib/x86_64-linux-gnu</code>. The sources will build fine
+ on <code>amd64</code> but not on other architectures, because the
  paths to do exist.
  .
  Please consider using an asterisk, which will work fine.

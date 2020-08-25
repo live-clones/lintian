@@ -5,4 +5,4 @@ Explanation: The specified file is empty. This will produce erroneous autopkgtes
  success reports.
  .
  Please set a significant test in this file
- (see <tt>/usr/share/doc/pkg-js-autopkgtest/README.md</tt>).
+ (see <code>/usr/share/doc/pkg-js-autopkgtest/README.md</code>).

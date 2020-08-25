@@ -1,9 +1,9 @@
 Tag: debian-rules-should-not-use-sanitize-all-buildflag
 Severity: error
 Check: debian/rules
-Explanation: This package's <tt>debian/rules</tt> file contains a
- <tt>DEB_BUILD_MAINT_OPTIONS</tt> assignment that enables the
- <tt>sanitize=+all</tt> build flag.
+Explanation: This package's <code>debian/rules</code> file contains a
+ <code>DEB_BUILD_MAINT_OPTIONS</code> assignment that enables the
+ <code>sanitize=+all</code> build flag.
  .
  This option instructs the compiler to enable options designed to
  protect the binary against memory corruptions, memory leaks, use after
@@ -13,5 +13,5 @@ Explanation: This package's <tt>debian/rules</tt> file contains a
  as they can reduce reliability for conformant code, reduce security or
  even functionality.
  .
- Please remove the reference to <tt>sanitize=+all</tt>.
+ Please remove the reference to <code>sanitize=+all</code>.
 See-Also: dpkg-buildflags(1), #895811

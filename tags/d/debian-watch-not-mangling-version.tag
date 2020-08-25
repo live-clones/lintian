@@ -3,11 +3,11 @@ Severity: warning
 Check: debian/watch
 Renamed-From: debian-watch-file-should-mangle-version
 See-Also: uscan(1), https://wiki.debian.org/DEHS
-Explanation: The version of this package contains <tt>dfsg</tt>, <tt>ds</tt>,
- or <tt>debian</tt>, which normally indicates that the upstream source
+Explanation: The version of this package contains <code>dfsg</code>, <code>ds</code>,
+ or <code>debian</code>, which normally indicates that the upstream source
  has been repackaged to comply with the Debian Free Software Guidelines
  (or similar reason), but there is no version mangling in the
- <tt>debian/watch</tt> file. Since the <tt>dfsg</tt> string is not
- part of the upstream version, the <tt>debian/watch</tt> file should
- use the dversionmangle option to remove the <tt>dfsg</tt> before
+ <code>debian/watch</code> file. Since the <code>dfsg</code> string is not
+ part of the upstream version, the <code>debian/watch</code> file should
+ use the dversionmangle option to remove the <code>dfsg</code> before
  version number comparison.

@@ -3,7 +3,7 @@ Severity: error
 Check: debian/rules
 See-Also: policy 4.2
 Explanation: The package appears to use Python as part of its build process in
- <tt>debian/rules</tt> but doesn't depend on Python.
+ <code>debian/rules</code> but doesn't depend on Python.
  .
  Normally, packages that use Python as part of the build process should
  build-depend on one of python, python-all, python-dev, python-all-dev,

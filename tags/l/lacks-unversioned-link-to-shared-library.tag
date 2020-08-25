@@ -9,11 +9,11 @@ Explanation: A "-dev" package is supposed to install a "libsomething.so" symboli
  .
  The symlink is generally expected in the same directory as the library
  itself. The major exception to this rule is if the library is installed
- in (or beneath) <tt>/lib</tt>, where the symlink must be installed in the
- same dir beneath <tt>/usr</tt>.
+ in (or beneath) <code>/lib</code>, where the symlink must be installed in the
+ same dir beneath <code>/usr</code>.
  .
- Example: If the library is installed in <tt>/lib/i386-linux-gnu/libXYZ.so.V</tt>,
- the symlink is expected at <tt>/usr/lib/i386-linux-gnu/libXYZ.so</tt>.
+ Example: If the library is installed in <code>/lib/i386-linux-gnu/libXYZ.so.V</code>,
+ the symlink is expected at <code>/usr/lib/i386-linux-gnu/libXYZ.so</code>.
  .
  Implementation detail: This tag is emitted for the library package and not
  the "-dev" package.

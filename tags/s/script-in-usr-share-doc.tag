@@ -3,4 +3,4 @@ Severity: info
 Check: documentation
 Explanation: Scripts are usually not documentation files, unless they are
  examples, in which case they should be in the
- <tt>/usr/share/doc/<i>pkg</i>/examples</tt> directory.
+ <code>/usr/share/doc/<i>pkg</i>/examples</code> directory.

@@ -4,9 +4,9 @@ Check: pe
 Experimental: yes
 Explanation: A portable executable (PE32+) file lacks security features.
  .
- Due to changes in <tt>binutils-mingw-w64</tt> the historical
+ Due to changes in <code>binutils-mingw-w64</code> the historical
  advice is incorrect. Current tools do not create safe binaries,
- and advertising such settings with <tt>genpeimg</tt> is pointless.
+ and advertising such settings with <code>genpeimg</code> is pointless.
  .
  In short, the flags alone do nothing unless a binary is built
  specifically to support a missing flag. Merely setting the flag,
@@ -18,12 +18,12 @@ Explanation: A portable executable (PE32+) file lacks security features.
  .
  The package ships a Microsoft Windows Portable Executable (PE) file
  that appears to be lacking security hardening features. You can see
- which are missing using the <tt>pesec</tt> tool from the
- <tt>pev</tt> package.
+ which are missing using the <code>pesec</code> tool from the
+ <code>pev</code> package.
  .
  EFI binaries also often trigger this tag. The security flags are
  probably meaningless for them, but the flags are easily changed
- using the <tt>genpeimg</tt> tool from the <tt>mingw-w64-tools</tt>
+ using the <code>genpeimg</code> tool from the <code>mingw-w64-tools</code>
  package.
  .
      $ genpeimg -d +d -d +n -d +s $file

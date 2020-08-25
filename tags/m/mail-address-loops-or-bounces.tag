@@ -7,8 +7,8 @@ Renamed-From:
 Explanation: The contact's mail address either loops back to itself or is known
  to bounce.
  .
- Loops happen because an address is <tt>package@packages.debian.org</tt>
- or to <tt>package@packages.qa.debian.org</tt>. Bounces happen when the
+ Loops happen because an address is <code>package@packages.debian.org</code>
+ or to <code>package@packages.qa.debian.org</code>. Bounces happen when the
  receipient, typically a mailing list, is known to bounce mails.
  .
  The mail address must accept messages from role accounts used to send

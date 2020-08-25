@@ -1,12 +1,12 @@
 Tag: runtime-test-file-uses-supported-python-versions-without-python-all-build-depends
 Severity: warning
 Check: testsuite
-Explanation: The specified file appears to use <tt>py3versions -s</tt> to
+Explanation: The specified file appears to use <code>py3versions -s</code> to
  determine the "supported" Python versions without specifying
- <tt>python3-all</tt> (or equivalent) as a build-dependency.
+ <code>python3-all</code> (or equivalent) as a build-dependency.
  .
  With only the default version of Python installed, the autopkgtests may
  pass but the package subsequently faisl at runtime when another,
  non-default, Python version is present.
  .
- Please add <tt>python3-all</tt> as a build-dependency.
+ Please add <code>python3-all</code> as a build-dependency.

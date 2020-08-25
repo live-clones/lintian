@@ -1,11 +1,11 @@
 Tag: systemd-service-file-refers-to-var-run
 Severity: info
 Check: systemd
-Explanation: The specified systemd service file declares a <tt>PIDFile=</tt>
- that references <tt>/var/run</tt>.
+Explanation: The specified systemd service file declares a <code>PIDFile=</code>
+ that references <code>/var/run</code>.
  .
- <tt>/var/run</tt> is now merely a symlink pointing to <tt>/run</tt> and
- thus it is now considered best practice that packages use <tt>/run</tt>
+ <code>/var/run</code> is now merely a symlink pointing to <code>/run</code> and
+ thus it is now considered best practice that packages use <code>/run</code>
  directly.
  .
  Please update the specified service file.

@@ -3,9 +3,9 @@ Severity: info
 Check: binaries
 Explanation: The binary or shared library is stripped, but still contains a
  section that is not useful. You should call strip with
- <tt>--remove-section=.comment --remove-section=.note</tt> to remove the
- <tt>.note</tt> and <tt>.comment</tt> sections.
+ <code>--remove-section=.comment --remove-section=.note</code> to remove the
+ <code>.note</code> and <code>.comment</code> sections.
  .
- <tt>dh_strip</tt> will do this automatically for you, but
- <tt>install -s</tt> will not because it calls strip without any
+ <code>dh_strip</code> will do this automatically for you, but
+ <code>install -s</code> will not because it calls strip without any
  arguments.

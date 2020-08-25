@@ -1,12 +1,12 @@
 Tag: init.d-script-provides-virtual-facility
 Severity: warning
 Check: init.d
-Explanation: This <tt>/etc/init.d</tt> script indicates in its LSB headers that
+Explanation: This <code>/etc/init.d</code> script indicates in its LSB headers that
  it provides a virtual facility, denoted by the dollar sign in front of
  the name.
  .
  This is not the correct way to provide a virtual facility. Instead, the
- package should include a file in <tt>/etc/insserv.conf.d</tt>, usually
+ package should include a file in <code>/etc/insserv.conf.d</code>, usually
  named after the package, containing:
  .
   $virtual_facility_name +init-script-name

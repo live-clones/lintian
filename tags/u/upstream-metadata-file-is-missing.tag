@@ -4,7 +4,7 @@ Check: debian/upstream/metadata
 Experimental: yes
 See-Also: https://dep-team.pages.debian.net/deps/dep12/, https://wiki.debian.org/UpstreamMetadata
 Explanation: This source package is not Debian-native but it does not have a
- <tt>debian/upstream/metadata</tt> file.
+ <code>debian/upstream/metadata</code> file.
  . 
  The Upstream MEtadata GAthered with YAml (UMEGAYA) project is an effort
  to collect meta-information about upstream projects from any source
@@ -13,4 +13,4 @@ Explanation: This source package is not Debian-native but it does not have a
  authors want their software be cited in publications and some
  bibliographic references about the software.
  .
- Please add a <tt>debian/upstream/metadata</tt> file.
+ Please add a <code>debian/upstream/metadata</code> file.

@@ -6,7 +6,7 @@ Explanation: The desktop entry file has lines ending in CRLF instead of just LF.
  only LF. The CR may be taken by some software as part of the field.
  .
  Running the following command against the given file removes any
- <tt>CR</tt> character in the file:
+ <code>CR</code> character in the file:
  .
- <tt>sed -i 's/\r//g' path/to/file</tt>
+ <code>sed -i 's/\r//g' path/to/file</code>
 See-Also: https://specifications.freedesktop.org/desktop-entry-spec/latest/ar01s03.html

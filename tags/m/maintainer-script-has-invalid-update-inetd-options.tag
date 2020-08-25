@@ -3,14 +3,14 @@ Severity: warning
 Check: scripts
 See-Also: update-inetd(1), #909758, #909506
 Explanation: The specified maintainer script seems to call
- <tt>update-inetd(1)</tt> with an invalid option combination.
+ <code>update-inetd(1)</code> with an invalid option combination.
  .
- For example, the <tt>--group</tt< parameter is only valid in
- combination with <tt>--add</tt> and <tt>--pattern</tt> is only valid
- without <tt>--add</tt>.
+ For example, the <code>--group</code> parameter is only valid in
+ combination with <code>--add</code> and <code>--pattern</code> is only valid
+ without <code>--add</code>.
  .
  Whilst these have been ignored in the past they now emit a warning
  which will become an error in the future, resulting in upgrade/removal
  failures.
  .
- Please correct the call to <tt>update-inetd(1)</tt>.
+ Please correct the call to <code>update-inetd(1)</code>.

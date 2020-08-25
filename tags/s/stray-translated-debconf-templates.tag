@@ -5,4 +5,4 @@ Explanation: This package contains a file named *templates.XX or
  *templates.XX_XX. This was the naming convention for the translated
  templates merged using debconf-mergetemplate. Since the package is using
  po-debconf, these files should be replaced by language-specific files in
- the <tt>debian/po</tt> directory and should no longer be needed.
+ the <code>debian/po</code> directory and should no longer be needed.

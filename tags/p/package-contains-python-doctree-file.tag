@@ -2,14 +2,14 @@ Tag: package-contains-python-doctree-file
 Severity: warning
 Check: files/names
 Explanation: This package appears to contain a pickled cache of reStructuredText
- (*.rst) documentation in a <tt>.doctree</tt> file.
+ (*.rst) documentation in a <code>.doctree</code> file.
  .
  These are not needed to display the documentation correctly and as they can
  contain absolute build paths can affect the reproducibility of the package.
  .
- Either prevent the installation of the <tt>.doctree</tt> file (or parent
- <tt>doctrees</tt> directory if there is one) or pass the <tt>-d</tt>
- option to <tt>sphinx-build(1)</tt> to create the caches elsewhere.
+ Either prevent the installation of the <code>.doctree</code> file (or parent
+ <code>doctrees</code> directory if there is one) or pass the <code>-d</code>
+ option to <code>sphinx-build(1)</code> to create the caches elsewhere.
  .
  For example:
  .

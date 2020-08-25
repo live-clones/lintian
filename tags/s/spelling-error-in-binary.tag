@@ -16,4 +16,4 @@ Explanation: Lintian found a spelling error in the given binary. Lintian has a
   grep -rw &lt;word&gt; &lt;source-tree&gt;
  .
  This tag may produce false positives for words that contain non-ASCII
- characters due to limitations in <tt>strings</tt>.
+ characters due to limitations in <code>strings</code>.

@@ -2,7 +2,7 @@ Tag: missing-debian-source-format
 Severity: warning
 Check: debian/source-dir
 Explanation: Explicitly selecting a source format by putting the format in
- <tt>debian/source/format</tt> is recommended. This allows for
+ <code>debian/source/format</code> is recommended. This allows for
  future removal of the 1.0 default for the package source format and,
  depending on the source format, may allow unambiguous declaration of
  whether this package is native or non-native.

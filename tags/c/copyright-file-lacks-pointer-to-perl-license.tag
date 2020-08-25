@@ -4,4 +4,4 @@ Check: debian/copyright
 See-Also: policy 12.5
 Explanation: If your package is released under the same terms as Perl itself,
  it should refer to the Artistic and GPL license files in the
- <tt>/usr/share/common-licenses</tt> directory.
+ <code>/usr/share/common-licenses</code> directory.

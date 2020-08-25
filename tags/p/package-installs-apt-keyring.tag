@@ -3,11 +3,11 @@ Severity: error
 Check: apt
 See-Also: apt-key(8)
 Explanation: Debian packages should not install files under
- <tt>/etc/apt/trusted.gpg.d/</tt> or install an
- <tt>/etc/apt/trusted.gpg</tt> file.
+ <code>/etc/apt/trusted.gpg.d/</code> or install an
+ <code>/etc/apt/trusted.gpg</code> file.
  .
  Trusted keyrings are under the control of the local administrator and
  packages should not override local administrator choices.
  .
- Packages whose names end in <tt>-apt-source</tt> or
- <tt>-archive-keyring</tt> are permitted to install such files.
+ Packages whose names end in <code>-apt-source</code> or
+ <code>-archive-keyring</code> are permitted to install such files.

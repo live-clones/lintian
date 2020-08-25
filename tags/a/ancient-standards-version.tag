@@ -11,6 +11,6 @@ Explanation: The source package refers to a Standards-Version that has been
  control field. However, please remember to update this field next time
  you upload the package.
  .
- See <tt>/usr/share/doc/debian-policy/upgrading-checklist.txt.gz</tt> in
+ See <code>/usr/share/doc/debian-policy/upgrading-checklist.txt.gz</code> in
  the debian-policy package for a summary of changes in newer versions of
  Policy.

@@ -17,7 +17,7 @@ Explanation: The previous version of this package had a different version epoch
   - You need to permanently revert to a lower upstream version.
  .
  Temporary revertions (eg. after an NMU) should use not modify or
- introduce an epoch - please use the <tt>CURRENT+reallyFORMER</tt> until
+ introduce an epoch - please use the <code>CURRENT+reallyFORMER</code> until
  you can upload the latest version again.
  .
  If you are unsure whether you need to increase the epoch for a package,

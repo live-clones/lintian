@@ -3,6 +3,6 @@ Severity: warning
 Check: init.d
 See-Also: https://wiki.debian.org/LSBInitScripts
 Explanation: The given keyword was set in the LSB keyword section in this
- <tt>/etc/init.d</tt> script but isn't one of the known LSB keywords and
- doesn't begin with <tt>X-</tt>. One of the standard keywords may have
+ <code>/etc/init.d</code> script but isn't one of the known LSB keywords and
+ doesn't begin with <code>X-</code>. One of the standard keywords may have
  been misspelled.

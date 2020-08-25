@@ -2,13 +2,13 @@ Tag: sphinxdoc-but-no-sphinxdoc-depends
 Severity: warning
 Check: debhelper
 See-Also: dh_sphinxdoc(1)
-Explanation: The source package uses Sphinx via <tt>--with sphinxdoc</tt> or
- <tt>dh_sphinxdoc</tt> but no binary package specifies
- <tt>${sphinxdoc:Depends}</tt> as a dependency.
+Explanation: The source package uses Sphinx via <code>--with sphinxdoc</code> or
+ <code>dh_sphinxdoc</code> but no binary package specifies
+ <code>${sphinxdoc:Depends}</code> as a dependency.
  .
- The <tt>sphinxdoc<tt> helper is being used to make links to various
+ The <code>sphinxdoc</code> helper is being used to make links to various
  common files from other binary packages that are injected via the
- <tt>${sphinxdoc:Depends}</tt> substitution variable.
+ <code>${sphinxdoc:Depends}</code> substitution variable.
  .
- Please add <tt>${sphinxdoc:Depends}</tt> to the relevant binary
+ Please add <code>${sphinxdoc:Depends}</code> to the relevant binary
  package.

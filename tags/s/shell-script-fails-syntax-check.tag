@@ -3,10 +3,10 @@ Severity: error
 Check: scripts
 Explanation: Running this shell script with the shell's -n option set fails,
  which means that the script has syntax errors. The most common cause of
- this problem is a script expecting <tt>/bin/sh</tt> to be bash checked on
- a system using dash as <tt>/bin/sh</tt>.
+ this problem is a script expecting <code>/bin/sh</code> to be bash checked on
+ a system using dash as <code>/bin/sh</code>.
  .
- Run e.g. <tt>sh -n yourscript</tt> to see the errors yourself.
+ Run e.g. <code>sh -n yourscript</code> to see the errors yourself.
  .
  Note this can have false-positives, for an example with bash scripts
  using "extglob".

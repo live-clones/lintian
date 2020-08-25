@@ -10,7 +10,7 @@ Explanation: Your package specifies the named override but there were no
  .
  If the override is now unused, please remove it.
  .
- This tag is similar to <tt>mismatched-override</tt> except there a
+ This tag is similar to <code>mismatched-override</code> except there a
  tag could have been silenced if the context had matched.
  .
  Sometimes, overrides end up not being used because a tag appears

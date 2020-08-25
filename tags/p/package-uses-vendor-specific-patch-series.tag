@@ -7,16 +7,16 @@ Explanation: The specified series file for patches is vendor-specific.
  but such packages must not be uploaded to the Debian archive if they
  are used in conjunction with vendor-specific series files.
  .
- Vendor specific series files were carefully implemented as a <tt>dpkg</tt>
+ Vendor specific series files were carefully implemented as a <code>dpkg</code>
  feature. Unfortunately, they currently conflict with some workflow goals
  in Debian. They are presently disallowed in Debian.
  .
  The preferred approach for distributions other than Debian is now to
- apply such patches programmatically via <tt>debian/rules</tt>. You can
+ apply such patches programmatically via <code>debian/rules</code>. You can
  also create multiple, vendor-specific sources and upload them separately
  for each distribution.
  .
- The decision to prohibit the use of that particular <tt>dpkg</tt> feature
+ The decision to prohibit the use of that particular <code>dpkg</code> feature
  in Debian was made by the project's technical committee in consideration of
  other planned workflow modifications, and may be revisited.
  .

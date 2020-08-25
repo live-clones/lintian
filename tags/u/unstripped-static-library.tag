@@ -4,9 +4,9 @@ Check: binaries
 Explanation: The package installs an unstripped static library.
  .
  Please note, that static libraries have to be stripped with the
- <tt>--strip-debug</tt> option. You will probably also want to
- use <tt>--remove-section=.comment --remove-section=.note</tt>
+ <code>--strip-debug</code> option. You will probably also want to
+ use <code>--remove-section=.comment --remove-section=.note</code>
  to avoid the static-library-has-unneeded-section tag.
  .
- <tt>dh_strip</tt> (after debhelper/9.20150811) will do this
+ <code>dh_strip</code> (after debhelper/9.20150811) will do this
  automatically for you.

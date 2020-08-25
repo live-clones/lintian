@@ -2,5 +2,5 @@ Tag: diff-contains-arch-inventory-file
 Severity: warning
 Check: cruft
 Explanation: The Debian diff or native package contains an
- <tt>.arch-inventory</tt> file. This is Arch metadata that should
+ <code>.arch-inventory</code> file. This is Arch metadata that should
  normally not be distributed.

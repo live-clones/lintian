@@ -2,8 +2,8 @@ Tag: apache2-module-does-not-ship-load-file
 Severity: error
 Check: apache2
 Explanation: The package is an Apache2 HTTPD server module but does not ship a
- "<tt>.load</tt>" file or it was installed under an unexpected name. The load
- files in "<tt>/etc/apache2/mods-available</tt>" are required to interact with
+ "<code>.load</code>" file or it was installed under an unexpected name. The load
+ files in "<code>/etc/apache2/mods-available</code>" are required to interact with
  the server package to enable and disable the module and must match the module
- name without "<tt>mod_</tt> prefix, e.g. <tt>mod_foo</tt> must ship a load file
- named "<tt>foo.load</tt>".
+ name without "<code>mod_</code> prefix, e.g. <code>mod_foo</code> must ship a load file
+ named "<code>foo.load</code>".

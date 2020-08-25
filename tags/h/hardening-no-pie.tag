@@ -16,8 +16,8 @@ Explanation: This package provides an ELF executable that was not compiled
  overhead on i386. However, GCC &gt;= 5 has implemented an optimization
  that can reduce the overhead significantly.
  .
- If you use <tt>dpkg-buildflags</tt> with <tt>hardening=+all,-pie</tt>
- in <tt>DEB_BUILD_MAINT_OPTIONS</tt>, remove the <tt>-pie</tt>.
+ If you use <code>dpkg-buildflags</code> with <code>hardening=+all,-pie</code>
+ in <code>DEB_BUILD_MAINT_OPTIONS</code>, remove the <code>-pie</code>.
 See-Also: https://wiki.debian.org/Hardening,
  https://gcc.gnu.org/gcc-5/changes.html,
  https://software.intel.com/en-us/blogs/2014/12/26/new-optimizations-for-x86-in-upcoming-gcc-50-32bit-pic-mode

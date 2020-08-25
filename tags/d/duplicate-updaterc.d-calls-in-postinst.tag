@@ -1,5 +1,5 @@
 Tag: duplicate-updaterc.d-calls-in-postinst
 Severity: error
 Check: init.d
-Explanation: The <tt>postinst</tt> script calls <tt>update-rc.d</tt> several
- times for the same <tt>/etc/init.d</tt> script.
+Explanation: The <code>postinst</code> script calls <code>update-rc.d</code> several
+ times for the same <code>/etc/init.d</code> script.

@@ -1,9 +1,9 @@
 Tag: install-info-used-in-maintainer-script
 Severity: error
 Check: scripts
-Explanation: This script apparently runs <tt>install-info</tt>. Updating the
- <tt>/usr/share/info/dir</tt> file is now handled automatically by
- triggers, so running <tt>install-info</tt> from maintainer scripts is no
+Explanation: This script apparently runs <code>install-info</code>. Updating the
+ <code>/usr/share/info/dir</code> file is now handled automatically by
+ triggers, so running <code>install-info</code> from maintainer scripts is no
  longer necessary.
  .
  If debhelper generated the maintainer script fragment, rebuilding the

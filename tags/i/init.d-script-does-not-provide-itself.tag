@@ -1,7 +1,7 @@
 Tag: init.d-script-does-not-provide-itself
 Severity: info
 Check: init.d
-Explanation: This <tt>/etc/init.d</tt> script indicates it provides one or
+Explanation: This <code>/etc/init.d</code> script indicates it provides one or
  more facilities, but none of the provided facilities match the name of
  the init script. In certain cases, it may be necessary to not follow
  that convention, but normally init scripts should always provide a

@@ -2,7 +2,7 @@ Tag: brace-expansion-in-debhelper-config-file
 Severity: warning
 Check: debhelper
 Explanation: This debhelper config file appears to use shell brace expansion
- (such as <tt>{foo,bar}</tt>) to specify files. This happens to work due
+ (such as <code>{foo,bar}</code>) to specify files. This happens to work due
  to an accident of implementation but is not a supported feature. Only
- <tt>?</tt>, <tt>*</tt>, and <tt>[...]</tt> are supported.
+ <code>?</code>, <code>*</code>, and <code>[...]</code> are supported.
 See-Also: debhelper(1)

@@ -2,7 +2,7 @@ Tag: groff-message
 Severity: warning
 Check: documentation/manual
 Renamed-From: manpage-has-errors-from-man
-Explanation: A manual page provoked warnings or errors from the <tt>man</tt>
+Explanation: A manual page provoked warnings or errors from the <code>man</code>
  program. Here are some common ones:
  .
  "cannot adjust" or "can't break" are issues with paragraph filling. They
@@ -10,30 +10,30 @@ Explanation: A manual page provoked warnings or errors from the <tt>man</tt>
  can help with adjustments. Hyphenation can help with breaks.
  .
  For more information, please see "Manipulating Filling and Adjusting"
- and "Manipulating Hyphenation" in the Groff manual (see <tt>info groff</tt>).
+ and "Manipulating Hyphenation" in the Groff manual (see <code>info groff</code>).
  .
  "can't find numbered character" usually means that the input was in a
  national legacy encoding. The warning means that some characters were
- dropped. Please use escapes such as <tt>\[:a]</tt> as described on the
- <tt>groff_char</tt> manual page.
+ dropped. Please use escapes such as <code>\[:a]</code> as described on the
+ <code>groff_char</code> manual page.
  .
  Other common warnings are formatting typos. String arguments to
- <tt>.IP</tt> require quotes. Usually, some text is lost or mangled. See
- the <tt>groff_man</tt> (or <tt>groff_mdoc</tt> if using <tt>mdoc</tt>)
+ <code>.IP</code> require quotes. Usually, some text is lost or mangled. See
+ the <code>groff_man</code> (or <code>groff_mdoc</code> if using <code>mdoc</code>)
  manual page for details on macros.
  .
- The check for manual pages uses the <tt>--warnings</tt> option to
- <tt>man</tt> to catch common problems, like a <tt>.</tt> or a <tt>'</tt>
+ The check for manual pages uses the <code>--warnings</code> option to
+ <code>man</code> to catch common problems, like a <code>.</code> or a <code>'</code>
  at the beginning of a line as literal text. They are interpreted as
  Groff commands. Just reformat the paragraph so the characters are not at
- the beginning of a line. You can also add a zero-width space (<tt>\&</tt>)
+ the beginning of a line. You can also add a zero-width space (<code>\&</code>)
  in front of them.
  .
- Aside from overrides, warnings can be disabled with the <tt>.warn</tt>
+ Aside from overrides, warnings can be disabled with the <code>.warn</code>
  directive. Please see "Debugging" in the Groff manual.
  .
  You can see the warnings yourself by running the command used by Lintian:
  .
- <tt>LC_ALL=en_US.UTF-8 MANROFFSEQ='' MANWIDTH=80 \
-         man --warnings -E UTF-8 -l -Tutf8 -Z &lt;file&gt; &gt;/dev/null<tt>
+ <code>LC_ALL=en_US.UTF-8 MANROFFSEQ='' MANWIDTH=80 \
+         man --warnings -E UTF-8 -l -Tutf8 -Z &lt;file&gt; &gt;/dev/null</code>
 See-Also: groff_man(7), groff_mdoc(7)

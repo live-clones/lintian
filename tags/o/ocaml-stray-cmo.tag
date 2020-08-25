@@ -1,7 +1,7 @@
 Tag: ocaml-stray-cmo
 Severity: info
 Check: languages/ocaml
-Explanation: This package installs a <tt>.cma</tt> file and a <tt>.cmo</tt> file
+Explanation: This package installs a <code>.cma</code> file and a <code>.cmo</code> file
  with the same base name. Most of the time, the module provided by the
- <tt>.cmo</tt> file is also linked in the <tt>.cma</tt> file, so the
- <tt>.cmo</tt> file is useless.
+ <code>.cmo</code> file is also linked in the <code>.cma</code> file, so the
+ <code>.cmo</code> file is useless.

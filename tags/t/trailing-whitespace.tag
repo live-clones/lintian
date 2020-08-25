@@ -6,7 +6,7 @@ Explanation: This file contains lines with trailing whitespace characters.
  .
  Whilst often harmless and unsightly, such extra whitespaces can also
  cause tools to interpret the whitespace characters literally. The
- tool <tt>diff(1)</tt> does not like them, either. They are best
+ tool <code>diff(1)</code> does not like them, either. They are best
  avoided.
  .
  Some of these problems can be hard to track down.

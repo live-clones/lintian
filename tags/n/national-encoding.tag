@@ -19,5 +19,5 @@ Explanation: A file is not valid UTF-8.
  .
  Packaging control files must be encoded in valid UTF-8.
  .
- Please convert the file to UTF-8 using <tt>iconv</tt> or a similar
+ Please convert the file to UTF-8 using <code>iconv</code> or a similar
  tool.

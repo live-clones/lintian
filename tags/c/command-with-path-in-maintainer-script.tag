@@ -7,8 +7,8 @@ Explanation: The indicated program run in a maintainer script has a prepended
  and prepending a path may prevent the local administrator from using a
  replacement version of a command for some local reason.
  .
- If the path is used to test a program for existence, please use <tt>if
- which $program > /dev/null; then …</tt>.
+ If the path is used to test a program for existence, please use <code>if
+ which $program > /dev/null; then …</code>.
  .
  If you intend to override this tag, please make sure that you are in
  control of the installation path of the according program and that

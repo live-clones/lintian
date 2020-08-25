@@ -2,12 +2,12 @@ Tag: manual-page-for-system-command
 Check: documentation/manual
 Severity: pedantic
 Renamed-From: command-in-sbin-has-manpage-in-incorrect-section
-Explanation: The command in <tt>/sbin</tt> or <tt>/usr/sbin</tt> are system
+Explanation: The command in <code>/sbin</code> or <code>/usr/sbin</code> are system
  administration commands; their manual pages thus belong in section 8,
  not section 1.
  .
  Please check whether the command is actually useful to non-privileged
- user in which case it should be moved to <tt>/bin</tt> or
- <tt>/usr/bin</tt>, or alternatively the manual page should be moved to
- section 8 instead, ie. <tt>/usr/share/man/man8</tt>.
+ user in which case it should be moved to <code>/bin</code> or
+ <code>/usr/bin</code>, or alternatively the manual page should be moved to
+ section 8 instead, ie. <code>/usr/share/man/man8</code>.
 See-Also: hier(7)

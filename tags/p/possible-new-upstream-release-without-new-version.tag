@@ -6,4 +6,4 @@ Explanation: The most recent changelog entry contains an entry that appears to
  release," possibly with a word between "upstream" and "release"), but the
  upstream portion of the package version number didn't change. This may
  indicate that the package version was not updated properly in
- <tt>debian/changelog</tt>.
+ <code>debian/changelog</code>.

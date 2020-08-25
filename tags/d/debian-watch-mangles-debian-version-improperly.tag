@@ -3,10 +3,10 @@ Severity: info
 Check: debian/watch
 Renamed-From: debian-watch-file-should-dversionmangle-not-uversionmangle
 See-Also: https://wiki.debian.org/DEHS
-Explanation: The version of this package contains <tt>dfsg</tt>, <tt>ds</tt>,
- or <tt>debian</tt>, but a misleading upstream version mangling occurs in
- the <tt>debian/watch</tt> file. Since the <tt>dfsg</tt> string is not
+Explanation: The version of this package contains <code>dfsg</code>, <code>ds</code>,
+ or <code>debian</code>, but a misleading upstream version mangling occurs in
+ the <code>debian/watch</code> file. Since the <code>dfsg</code> string is not
  part of the upstream version and its addition is Debian-specific, the
- <tt>debian/watch</tt> file should use the dversionmangle option to
- remove, instead of adding in uversionmangle, the <tt>dfsg</tt> before
+ <code>debian/watch</code> file should use the dversionmangle option to
+ remove, instead of adding in uversionmangle, the <code>dfsg</code> before
  comparing version numbers.

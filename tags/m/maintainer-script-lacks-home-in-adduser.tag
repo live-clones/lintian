@@ -14,5 +14,5 @@ Explanation: The maintainer script apparently runs 'adduser --system'
  Note that passing --no-create-home alone does not solve the issue
  because home field of passwd file point to a non existing
  /home subdirectory. Please use
- <tt>adduser --no-create-home --home /nonexistent</tt> instead.
+ <code>adduser --no-create-home --home /nonexistent</code> instead.
 See-Also: fhs homeuserhomedirectories, adduser(8)

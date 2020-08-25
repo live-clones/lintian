@@ -6,6 +6,6 @@ Explanation: The VCS-* field contains more spaces than expected or spaces at
  spaces in URIs to avoid any ambiguity with respect to possible future
  additional optional fields.
  .
- This may be caused by incorrect use of the <tt>-b</tt> branch
+ This may be caused by incorrect use of the <code>-b</code> branch
  separator.
 See-Also: policy 5.6.26

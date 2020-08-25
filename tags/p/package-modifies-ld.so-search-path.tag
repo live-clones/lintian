@@ -2,13 +2,13 @@ Tag: package-modifies-ld.so-search-path
 Severity: error
 Check: files/ld-so
 Explanation: The package changes the search path for the runtime linker, but is
- not part of <tt>libc</tt>. The offending file is in
- <tt>/etc/ld.so.conf.d</tt>.
+ not part of <code>libc</code>. The offending file is in
+ <code>/etc/ld.so.conf.d</code>.
  .
  It is not okay to install libraries in a different directory and then
  modify the run-time link path. Shared libraries should go into
- <tt>/usr/lib</tt>. Alternatively, they can require binaries to set the
- <tt>RPATH<tt> to find the library.
+ <code>/usr/lib</code>. Alternatively, they can require binaries to set the
+ <code>RPATH</code> to find the library.
  .
  Without this precaution, conflicting libraries may trigger segmentation
  faults for what should have been a conflict in the package manager.

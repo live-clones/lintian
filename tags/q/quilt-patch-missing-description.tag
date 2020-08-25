@@ -3,7 +3,7 @@ Severity: info
 Check: debian/patches/quilt
 Explanation: quilt patch files should start with a description of patch. All
  lines before the start of the patch itself are considered part of the
- description. You can edit the description with <tt>quilt header -e</tt>
+ description. You can edit the description with <code>quilt header -e</code>
  when the patch is at the top of the stack.
  .
  As well as a description of the purpose and function of the patch, the

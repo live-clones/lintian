@@ -3,6 +3,6 @@ Severity: warning
 Check: debian/rules
 See-Also: debhelper(7)
 Explanation: As of debhelper version 4, the DH_COMPAT environment variable is
- only to be used for temporarily overriding <tt>debian/compat</tt>. Any
- line in <tt>debian/rules</tt> that sets it globally should be deleted and
- a separate <tt>debian/compat</tt> file created if needed.
+ only to be used for temporarily overriding <code>debian/compat</code>. Any
+ line in <code>debian/rules</code> that sets it globally should be deleted and
+ a separate <code>debian/compat</code> file created if needed.

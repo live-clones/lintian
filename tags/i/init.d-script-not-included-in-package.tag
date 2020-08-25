@@ -1,5 +1,5 @@
 Tag: init.d-script-not-included-in-package
 Severity: error
 Check: init.d
-Explanation: The <tt>/etc/init.d</tt> script is registered in the
- <tt>postinst</tt> script, but is not included in the package.
+Explanation: The <code>/etc/init.d</code> script is registered in the
+ <code>postinst</code> script, but is not included in the package.

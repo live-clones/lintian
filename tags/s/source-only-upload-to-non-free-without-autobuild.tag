@@ -6,6 +6,6 @@ Explanation: For licensing reasons packages from the non-free section are not
  "non-free" will result in the package never appearing in the archive.
  .
  Please either perform a regular binary upload or (after checking the
- license) add <tt>XS-Autobuild: yes</tt> into the header part of
+ license) add <code>XS-Autobuild: yes</code> into the header part of
  debian/control and get the package added to the "autobuild" whitelist.
 See-Also: devref 5.10.5

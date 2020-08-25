@@ -1,13 +1,13 @@
 Tag: override_dh_auto_test-does-not-check-DEB_BUILD_OPTIONS
 Severity: info
 Check: debian/rules
-Explanation: The <tt>debian/rules</tt> file for this package has an
- <tt>override_dh_auto_test</tt> target that does not appear to
- check <tt>DEB_BUILD_OPTIONS</tt> against <tt>nocheck</tt>.
+Explanation: The <code>debian/rules</code> file for this package has an
+ <code>override_dh_auto_test</code> target that does not appear to
+ check <code>DEB_BUILD_OPTIONS</code> against <code>nocheck</code>.
  .
  As this check is not automatically performed by debhelper(1), the
  specified testsuite is run regardless of another maintainer using
- the <tt>nocheck</tt> build option.
+ the <code>nocheck</code> build option.
  .
  Please add a check such as:
  .

@@ -6,8 +6,8 @@ Explanation: The rcS init.d script has no systemd equivalent.
  .
  Systemd has a SysV init.d script compatibility mode. It provides access to
  each SysV init.d script as long as there is no native service file with the
- same name (e.g. <tt>/lib/systemd/system/rsyslog.service</tt> corresponds to
- <tt>/etc/init.d/rsyslog</tt>).
+ same name (e.g. <code>/lib/systemd/system/rsyslog.service</code> corresponds to
+ <code>/etc/init.d/rsyslog</code>).
  .
  Services in rcS.d are particularly problematic, because they often cause
  dependency loops, as they are ordered very early in the boot sequence.

@@ -1,7 +1,7 @@
 Tag: globbing-patterns-out-of-order
 Severity: warning
 Check: debian/copyright/dep5
-Explanation: The <tt>Files</tt> sections in debian/copyright are out of order.
+Explanation: The <code>Files</code> sections in debian/copyright are out of order.
  The relative directory depth should increase from one section to the next.
  That is the general pattern of the specification, with &ast; at the top.
  .

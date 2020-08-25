@@ -13,4 +13,4 @@ Explanation: This source package appears to generate the specified Python 2 pack
  package and, if not, consider removing it.
  .
  Alternatively, ensure that the corresponding package specifies the
- <tt>${python3:Depends}</tt> substvar in its binary dependencies.
+ <code>${python3:Depends}</code> substvar in its binary dependencies.

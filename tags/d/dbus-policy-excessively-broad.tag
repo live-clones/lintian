@@ -12,11 +12,11 @@ Explanation: The package contains D-Bus policy configuration that
      &lt;allow send_destination="com.example.Bees"/&gt;
    &lt;/policy&gt;
  .
- in any system bus policy file would allow the <tt>daemon</tt> user to send
+ in any system bus policy file would allow the <code>daemon</code> user to send
  any method call to any service, including method calls which are meant to
  be restricted to root-only for security, such as
- <tt>org.freedesktop.systemd1.Manager.StartTransientUnit</tt>. (In addition,
- it allows that user to send any message to the <tt>com.example.Bees</tt>
+ <code>org.freedesktop.systemd1.Manager.StartTransientUnit</code>. (In addition,
+ it allows that user to send any message to the <code>com.example.Bees</code>
  service.)
  .
  The intended policy for that particular example was probably more like

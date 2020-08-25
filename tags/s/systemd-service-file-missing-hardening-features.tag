@@ -2,11 +2,11 @@ Tag: systemd-service-file-missing-hardening-features
 Severity: pedantic
 Experimental: yes
 Check: systemd
-Explanation: The specified systemd <tt>.service</tt> file does not appear to
+Explanation: The specified systemd <code>.service</code> file does not appear to
  enable any hardening options.
  .
  systemd has support for many security-oriented features such as
- isolating services from the network, private <tt>/tmp</tt> directories,
+ isolating services from the network, private <code>/tmp</code> directories,
  as well as control over making directories appear read-only or even
  inaccessible, etc.
  .

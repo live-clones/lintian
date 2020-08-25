@@ -5,5 +5,5 @@ Explanation: The package contains a file which isn't listed in the md5sums contr
  file.
  .
  Usually, this error occurs during the package build process if the
- <tt>debian/tmp/</tt> directory is touched after <tt>dh_md5sums</tt>
+ <code>debian/tmp/</code> directory is touched after <code>dh_md5sums</code>
  is run.

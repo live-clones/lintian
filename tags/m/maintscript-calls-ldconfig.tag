@@ -4,9 +4,9 @@ Check: shared-libs
 Explanation: The given maintainer script calls ldconfig. However, explicit
  calls in maintainer scripts should be replaced by a dpkg trigger.
  .
- Please replace the "ldconfig" call with an <tt>activate-noawait
- ldconfig</tt> trigger. With debhelper it is usually sufficient
- to simply add that line to <tt>debian/&lt;package&gt;.triggers</tt>.
+ Please replace the "ldconfig" call with an <code>activate-noawait
+ ldconfig</code> trigger. With debhelper it is usually sufficient
+ to simply add that line to <code>debian/&lt;package&gt;.triggers</code>.
  .
  If you use debhelper, this warning will appear if the package was
  compiled with debhelper before 9.20151004. Assuming all ldconfig

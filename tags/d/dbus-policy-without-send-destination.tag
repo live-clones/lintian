@@ -2,8 +2,8 @@ Tag: dbus-policy-without-send-destination
 Severity: warning
 Check: desktop/dbus
 Explanation: The package contains D-Bus policy configuration that uses
- one of the <tt>send_*</tt> conditions, but does not specify a
- <tt>send_destination</tt>, and is not specific to root.
+ one of the <code>send_*</code> conditions, but does not specify a
+ <code>send_destination</code>, and is not specific to root.
  .
  Rules of the form
  .
@@ -29,7 +29,7 @@ Explanation: The package contains D-Bus policy configuration that uses
  which are commonly used for the "agent" pattern seen in services like
  BlueZ and NetworkManager: a root-privileged daemon calls out to
  one or more per-user user interface agent processes with no specific
- name, so <tt>send_destination</tt> is not easily applicable.
+ name, so <code>send_destination</code> is not easily applicable.
  However, such rules should still be made as specific as possible to
  avoid undesired side-effects.
 See-Also: https://bugs.freedesktop.org/show_bug.cgi?id=18961,http://lists.freedesktop.org/archives/dbus/2008-February/009401.html

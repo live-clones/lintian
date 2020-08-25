@@ -6,7 +6,7 @@ Explanation: Packages built using the perl MakeMaker package will have a file
  have the additional problem of creating an architecture-specific
  directory name in an architecture-independent package.
  .
- They can be suppressed by adding the following to <tt>debian/rules</tt>:
+ They can be suppressed by adding the following to <code>debian/rules</code>:
  .
    find debian/<i>pkg</i> -type f -name .packlist -delete
  .

@@ -9,4 +9,4 @@ Explanation: This package alternatively Build-Depends on the Python 2 or Python 
  Debian "buster".
  .
  Please replace the alternative with a single build dependency on
- <tt>python3-sphinx</tt>.
+ <code>python3-sphinx</code>.

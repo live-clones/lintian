@@ -18,6 +18,6 @@ Explanation: This package is also provided by one of the Perl core packages
  .
  Example: perl (&gt;= 5.10.0) | libmodule-build-perl (&gt;= 0.26)
  .
- Running <tt>cme fix dpkg -from control -filter Depends</tt> should be able
+ Running <code>cme fix dpkg -from control -filter Depends</code> should be able
  to update these dependencies.
 See-Also: policy 7.5

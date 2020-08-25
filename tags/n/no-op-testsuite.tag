@@ -2,7 +2,7 @@ Tag: no-op-testsuite
 Severity: warning
 Check: testsuite
 Explanation: This package declares a single autopkgtest which will always
- pass as it uses a "no-op" command such as <tt>/bin/true</tt>.
+ pass as it uses a "no-op" command such as <code>/bin/true</code>.
  .
  As the results of autopkgtests influence migration from unstable
  to testing this is undesirable and could be even considered an

@@ -8,5 +8,5 @@ Explanation: The watch file specifies a githubredir.debian.net URL, which is dep
   version=3
   https://github.com/&lt;user&gt;/&lt;project&gt;/tags .*/(.*)\.tar\.gz
  .
- replacing <tt>&lt;user&gt;</tt> and <tt>&lt;project&gt;</tt> with the Github
+ replacing <code>&lt;user&gt;</code> and <code>&lt;project&gt;</code> with the Github
  username and project respectively.

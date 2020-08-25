@@ -11,4 +11,4 @@ Explanation: The package provides daemon, but contains no init.d script
  Package in question provides integration with some alternative init system,
  but corresponding init.d script is absent.
  .
- See <tt>init-d-script</tt>(5) for one of possible ways writing init.d scripts.
+ See <code>init-d-script</code>(5) for one of possible ways writing init.d scripts.

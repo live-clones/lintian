@@ -2,7 +2,7 @@ Tag: stronger-dependency-implies-weaker
 Severity: warning
 Check: debian/control
 See-Also: policy 7.2
-Explanation: In the <tt>debian/control</tt> stanza for the given package, a
+Explanation: In the <code>debian/control</code> stanza for the given package, a
  stronger dependency field implies one of the dependencies in a weaker
  dependency field. In other words, the Depends field of the package
  requires that one of the packages listed in Recommends or Suggests be

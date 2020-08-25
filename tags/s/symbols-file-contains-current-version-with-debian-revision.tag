@@ -11,5 +11,5 @@ Explanation: Debian revisions should be stripped from versions in symbols files.
  This problem normally means that the symbols were added automatically by
  dpkg-gensymbols. dpkg-gensymbols uses the full version number for the
  dependency associated to any new symbol that it detects. The maintainer
- must update the <tt>debian/&lt;package&gt;.symbols</tt> file by adding
+ must update the <code>debian/&lt;package&gt;.symbols</code> file by adding
  the new symbols with the corresponding upstream version.

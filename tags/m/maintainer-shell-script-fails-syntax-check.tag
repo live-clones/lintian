@@ -5,4 +5,4 @@ Explanation: Running this shell script with the shell's -n option set fails,
  which means that the script has syntax errors. This will likely make
  the package uninstallable.
  .
- Run e.g. <tt>sh -n yourscript</tt> to see the errors yourself.
+ Run e.g. <code>sh -n yourscript</code> to see the errors yourself.

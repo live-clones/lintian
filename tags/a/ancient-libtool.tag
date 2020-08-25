@@ -14,8 +14,8 @@ Explanation: The referenced file seems to be from a libtool version older than
   autoreconf -i --force
  .
  before running configure. Depending on how old the package is, this may
- require additional modifications to <tt>configure.ac</tt> or
- <tt>configure.in</tt> or other work. If you do this during the build,
+ require additional modifications to <code>configure.ac</code> or
+ <code>configure.in</code> or other work. If you do this during the build,
  determine which files it will add or update and be sure to remove those
  files in the clean target.
  .

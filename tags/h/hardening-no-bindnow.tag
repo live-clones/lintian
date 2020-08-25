@@ -9,9 +9,9 @@ Explanation: This package provides an ELF binary that lacks the "bindnow"
  time for improved security. Please consider enabling this feature
  or consider overriding the tag (possibly with a comment about why).
  .
- If you use <tt>dpkg-buildflags</tt>, you may have to add
- <tt>hardening=+bindnow</tt> or <tt>hardening=+all</tt> to
- <tt>DEB_BUILD_MAINT_OPTIONS</tt>.
+ If you use <code>dpkg-buildflags</code>, you may have to add
+ <code>hardening=+bindnow</code> or <code>hardening=+all</code> to
+ <code>DEB_BUILD_MAINT_OPTIONS</code>.
  .
- The relevant compiler flags are set in <tt>LDFLAGS</tt>.
+ The relevant compiler flags are set in <code>LDFLAGS</code>.
 See-Also: https://wiki.debian.org/Hardening

@@ -4,4 +4,4 @@ Check: documentation/manual
 Explanation: Manual files that use the .so links to include other pages should
  only point to a path relative to the top-level manual hierarchy, e.g.
  .
- <tt>.so man3/boo.1.gz</tt>
+ <code>.so man3/boo.1.gz</code>

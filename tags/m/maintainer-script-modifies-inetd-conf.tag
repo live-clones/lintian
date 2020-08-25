@@ -1,7 +1,7 @@
 Tag: maintainer-script-modifies-inetd-conf
 Severity: error
 Check: scripts
-Explanation: The maintainer script modifies <tt>/etc/inetd.conf</tt> directly.
+Explanation: The maintainer script modifies <code>/etc/inetd.conf</code> directly.
  This file must not be modified directly; instead, use the
- <tt>update-inetd</tt> script or the <tt>DebianNet.pm</tt> Perl module.
+ <code>update-inetd</code> script or the <code>DebianNet.pm</code> Perl module.
 See-Also: policy 11.2

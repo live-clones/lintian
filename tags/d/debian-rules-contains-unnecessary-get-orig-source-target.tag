@@ -1,8 +1,8 @@
 Tag: debian-rules-contains-unnecessary-get-orig-source-target
 Severity: info
 Check: debian/rules
-Explanation: This package's <tt>debian/rules</tt> file contains a
- <tt>get-orig-source</tt> target that appears to be unnecessary. For
+Explanation: This package's <code>debian/rules</code> file contains a
+ <code>get-orig-source</code> target that appears to be unnecessary. For
  example, the package might simply contain a single call to uscan(1).
  .
  Such calls are not ideal; maintainers should be able to call uscan with
@@ -10,6 +10,6 @@ Explanation: This package's <tt>debian/rules</tt> file contains a
  proliferation of boilerplate code across the archive.
  .
  Since Debian Policy 4.1.4, packages are encouraged to migrate to uscan
- and a <tt>Files-Excluded</tt> header in the <tt>debian/copyright</tt>
+ and a <code>Files-Excluded</code> header in the <code>debian/copyright</code>
  file.
 See-Also: uscan(1)

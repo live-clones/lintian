@@ -7,7 +7,7 @@ Explanation: In the Unix tradition, Debian packages should have human-readable a
  configuration information directly from the debconf database. Typically,
  packages should use debconf-supplied information to generate
  configuration files, and -- to avoid losing configuration information on
- upgrades -- should parse these configuration files in the <tt>config</tt>
+ upgrades -- should parse these configuration files in the <code>config</code>
  script if it is necessary to ask the user for changes.
  .
  Some standalone programs may legitimately use debconf to prompt the user

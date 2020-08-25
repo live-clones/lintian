@@ -8,6 +8,6 @@ Explanation: This package Build-Depends on the Python 2.x version of the Sphinx
  by upstream past 2020 and will likely be dropped after the release of
  Debian "buster".
  .
- Some Python modules may need to depend on both <tt>python-sphinx</tt> and
- <tt>python3-sphinx</tt> but please consider moving to only Build-Depending on
- the <tt>python3-sphinx</tt> package instead.
+ Some Python modules may need to depend on both <code>python-sphinx</code> and
+ <code>python3-sphinx</code> but please consider moving to only Build-Depending on
+ the <code>python3-sphinx</code> package instead.

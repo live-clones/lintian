@@ -1,7 +1,7 @@
 Tag: unreleased-changes
 Severity: error
 Check: fields/distribution
-Explanation: The distribution in the <tt>Changes</tt> field copied from
- <tt>debian/changelog</tt> indicates that this package was not intended
+Explanation: The distribution in the <code>Changes</code> field copied from
+ <code>debian/changelog</code> indicates that this package was not intended
  to be released yet.
 See-Also: #542747

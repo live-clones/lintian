@@ -5,5 +5,5 @@ See-Also: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 Explanation: Format URI of the machine-readable copyright file is not versioned.
  .
  Please use
- <tt>https://www.debian.org/doc/packaging-manuals/copyright-format/<i>version</i>/</tt>
+ <code>https://www.debian.org/doc/packaging-manuals/copyright-format/<i>version</i>/</code>
  as the format URI instead.

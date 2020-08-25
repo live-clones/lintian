@@ -1,7 +1,7 @@
 Tag: repackaged-source-not-advertised
 Severity: info
 Check: debian/copyright/dep5
-Explanation: The <tt>debian/copyright</tt> file mentions <tt>Files-Excluded</tt>
+Explanation: The <code>debian/copyright</code> file mentions <code>Files-Excluded</code>
  but the source version has no repack suffix.
  .
  Repackaged sources are expected to indicate in their version number
@@ -10,12 +10,12 @@ Explanation: The <tt>debian/copyright</tt> file mentions <tt>Files-Excluded</tt>
  .
  The choice of repack suffix depends on the reason for repackaging.
  When some files were excluded because licensing was a concern, the
- suffix <tt>+dfsg</tt> may be appropriate. In more generic cases, one
- could chose <tt>+ds</tt>.
+ suffix <code>+dfsg</code> may be appropriate. In more generic cases, one
+ could chose <code>+ds</code>.
  .
  Upstream sources are sometimes repackaged by accident when using old
- versions of <tt>dh_make</tt>. It can also happen when a maintainer
- invokes the dh_make option <tt>--createorig</tt> even though it is
+ versions of <code>dh_make</code>. It can also happen when a maintainer
+ invokes the dh_make option <code>--createorig</code> even though it is
  not needed.
  .
  According to the Debian Developer's Reference 6.7.8.2, the repack

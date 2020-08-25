@@ -3,5 +3,5 @@ Severity: warning
 Check: init.d
 See-Also: https://wiki.debian.org/LSBInitScripts
 Explanation: The given keyword was set twice in the LSB keyword section in this
- <tt>/etc/init.d</tt> script. This is probably a mistake; the behavior of
+ <code>/etc/init.d</code> script. This is probably a mistake; the behavior of
  setting the same keyword twice is undefined.

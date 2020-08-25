@@ -2,8 +2,8 @@ Tag: file-in-unknown-x11-font-directory
 Severity: error
 Check: desktop/x11
 See-Also: policy 11.8.5
-Explanation: Subdirectories of <tt>/usr/share/fonts/X11</tt> other than
- <tt>100dpi</tt>, <tt>75dpi</tt>, <tt>misc</tt>, <tt>Type1</tt>, and some
+Explanation: Subdirectories of <code>/usr/share/fonts/X11</code> other than
+ <code>100dpi</code>, <code>75dpi</code>, <code>misc</code>, <code>Type1</code>, and some
  historic exceptions must be neither created nor used. (The directories
- <tt>encodings</tt> and <tt>util</tt>, used by some X Window System
+ <code>encodings</code> and <code>util</code>, used by some X Window System
  packages, are also permitted by Lintian.)

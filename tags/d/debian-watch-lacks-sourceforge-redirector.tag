@@ -11,6 +11,6 @@ Explanation: The watch file specifies a SourceForge page or download server
  .
    http://sf.net/&lt;project&gt;/&lt;tar-name&gt;-(.+)\.tar\.gz
  .
- replacing <tt>&lt;project&gt;</tt> with the name of the SourceForge
- project and <tt>&lt;tar-name&gt;</tt> with the name of the tarball
+ replacing <code>&lt;project&gt;</code> with the name of the SourceForge
+ project and <code>&lt;tar-name&gt;</code> with the name of the tarball
  distributed within that project. Adjust the filename regex as necessary.

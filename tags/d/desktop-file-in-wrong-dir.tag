@@ -4,4 +4,4 @@ Check: files/desktop
 Explanation: The package contains a .desktop file in an obsolete directory.
  According to the menu-spec draft on freedesktop.org, those .desktop files
  that are intended to create a menu should be placed in
- <tt>/usr/share/applications</tt>, not <tt>/usr/share/gnome/apps</tt>.
+ <code>/usr/share/applications</code>, not <code>/usr/share/gnome/apps</code>.

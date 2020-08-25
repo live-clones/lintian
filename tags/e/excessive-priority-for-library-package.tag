@@ -8,5 +8,5 @@ Explanation: The given package appears to be a library package, but it has "Prio
  some other package depends on it; no library package needs installation on a
  system where nothing uses it.
  .
- Please update <tt>debian/control</tt> and downgrade the severity to, for
- example, <tt>Priority: optional</tt>.
+ Please update <code>debian/control</code> and downgrade the severity to, for
+ example, <code>Priority: optional</code>.

@@ -12,5 +12,5 @@ Explanation: The given binary package has a name of the form of "X-dbg", indicat
  .
  If this package provides debugging symbols for multiple other
  packages, it should normally depend on all of those packages as
- alternatives. In other words, <tt>pkga (= ${binary:Version}) | pkgb (=
- ${binary:Version})</tt> and so forth.
+ alternatives. In other words, <code>pkga (= ${binary:Version}) | pkgb (=
+ ${binary:Version})</code> and so forth.

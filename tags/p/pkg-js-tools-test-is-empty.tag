@@ -5,4 +5,4 @@ Explanation: The specified file is empty. This means that no test is played duri
  build.
  .
  Please set a significant test in this file
- (see <tt>/usr/share/doc/pkg-js-tools/README.md.gz</tt>).
+ (see <code>/usr/share/doc/pkg-js-tools/README.md.gz</code>).

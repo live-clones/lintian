@@ -2,20 +2,20 @@ Tag: symbols-file-missing-build-depends-package-field
 Severity: info
 Check: shared-libs
 Explanation: The symbols file for this package does not contain a
- <tt>Build-Depends-Package</tt> meta-information field.
+ <code>Build-Depends-Package</code> meta-information field.
  .
- This field specifies the name of the <tt>-dev</tt> package associated
- to the library and is used by <tt>dpkg-shlibdeps(1)</tt> to make sure
+ This field specifies the name of the <code>-dev</code> package associated
+ to the library and is used by <code>dpkg-shlibdeps(1)</code> to make sure
  that the dependency generated is at least as strict as the
  corresponding build dependency.
  .
  This is useful as allows packages to not hardcode this information
  multiple times.
  .
- Note that the format of <tt>deb-symbols(5)</tt> files requires that the
- <tt>* Build-Depends-Package:</tt> line should start in column one of
+ Note that the format of <code>deb-symbols(5)</code> files requires that the
+ <code>* Build-Depends-Package:</code> line should start in column one of
  the file and not be indented to align with the symbols themselves.
- Please do not use the placeholder <tt>&#35;PACKAGE&#35;</tt>. The
+ Please do not use the placeholder <code>&#35;PACKAGE&#35;</code>. The
  development package for your shared library must be stated explicitly.
 See-Also:
  policy 8.6.3.2,

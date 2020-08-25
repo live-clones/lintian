@@ -2,8 +2,8 @@ Tag: dir-or-file-in-var-www
 Severity: error
 Check: files/hierarchy/standard
 See-Also: fhs thevarhierarchy
-Explanation: Debian packages should not install files under <tt>/var/www</tt>.
- This is not one of the <tt>/var</tt> directories in the File Hierarchy
+Explanation: Debian packages should not install files under <code>/var/www</code>.
+ This is not one of the <code>/var</code> directories in the File Hierarchy
  Standard and is under the control of the local administrator. Packages
  should not assume that it is the document root for a web server; it is
  very common for users to change the default document root and packages
@@ -14,7 +14,7 @@ Explanation: Debian packages should not install files under <tt>/var/www</tt>.
  README.Debian file and ideally include configuration fragments for common
  web servers such as Apache.
  .
- As an exception, packages are permitted to create the <tt>/var/www</tt>
+ As an exception, packages are permitted to create the <code>/var/www</code>
  directory due to its past history as the default document root, but
  should at most copy over a default file in postinst for a new install.
  In this case, please add a Lintian override.

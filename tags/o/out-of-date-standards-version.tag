@@ -4,7 +4,7 @@ Check: fields/standards-version
 See-Also: https://www.debian.org/doc/debian-policy/upgrading-checklist.html
 Explanation: The source package refers to a Standards-Version older than the one
  that was current at the time the package was created (according to the
- timestamp of the latest <tt>debian/changelog</tt> entry). Please
+ timestamp of the latest <code>debian/changelog</code> entry). Please
  consider updating the package to current Policy and setting this control
  field appropriately.
  .
@@ -13,6 +13,6 @@ Explanation: The source package refers to a Standards-Version older than the one
  control field. However, please remember to update this field next time
  you upload the package.
  .
- See <tt>/usr/share/doc/debian-policy/upgrading-checklist.txt.gz</tt> in
+ See <code>/usr/share/doc/debian-policy/upgrading-checklist.txt.gz</code> in
  the debian-policy package for a summary of changes in newer versions of
  Policy.

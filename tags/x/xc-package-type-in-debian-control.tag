@@ -1,7 +1,7 @@
 Tag: xc-package-type-in-debian-control
 Severity: pedantic
 Check: debian/control
-Explanation: The <tt>debian/control</tt> file contains an XC-Package-Type field.
+Explanation: The <code>debian/control</code> file contains an XC-Package-Type field.
  As of dpkg-dev 1.15.7, the dpkg development utilities recognize
  Package-Type as an official field name and do not add it to binary
  packages (the previous concern with the dpkg-dev-supported Package-Type

@@ -6,7 +6,7 @@ Explanation: Leaving config.cache/status causes autobuilders problems.
  scripts. If they are left in the source package, autobuilders may pick
  up settings for the wrong architecture.
  .
- The clean rule in <tt>debian/rules</tt> should remove this file. This
+ The clean rule in <code>debian/rules</code> should remove this file. This
  should ideally be done by fixing the upstream build system to do it when
  you run the appropriate cleaning command (and don't forget to forward the
  fix to the upstream authors so it doesn't happen in the next release). If

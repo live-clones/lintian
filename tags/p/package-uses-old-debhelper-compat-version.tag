@@ -5,9 +5,9 @@ Explanation: This package uses a debhelper compatibility level that is no
  longer recommended. Please consider using the recommended level.
  .
  For most packages, the best way to set the compatibility level is
- to specify <tt>debhelper-compat (= X)</tt> as a <tt>Build-Depends</tt>
- in <tt>debian/control</tt>. You can also use the <tt>debian/compat</tt>
- file or export DH_COMPAT in <tt>debian/rules</tt>.
+ to specify <code>debhelper-compat (= X)</code> as a <code>Build-Depends</code>
+ in <code>debian/control</code>. You can also use the <code>debian/compat</code>
+ file or export DH_COMPAT in <code>debian/rules</code>.
  .
  If no level is selected debhelper defaults to level 1, which is deprecated.
 See-Also: debhelper(7)

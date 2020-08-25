@@ -8,6 +8,6 @@ Explanation:
  in the interim.
  .
  Please move the source repository to a location in
- <tt>https://salsa.debian.org/debian/</tt> or <tt>https://git.dgit.debian.org/</tt>
+ <code>https://salsa.debian.org/debian/</code> or <code>https://git.dgit.debian.org/</code>
  or update the specified VCS field if the information is incorrect.
 See-Also: #947671

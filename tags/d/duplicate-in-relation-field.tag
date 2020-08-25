@@ -1,8 +1,8 @@
 Tag: duplicate-in-relation-field
 Severity: pedantic
 Check: debian/control
-Explanation: The given field in the <tt>debian/control</tt> file contains
+Explanation: The given field in the <code>debian/control</code> file contains
  relations that are either identical or imply each other. The less
  restrictive one can be removed. This is done automatically by
- <tt>dpkg-source</tt> and <tt>dpkg-gencontrol</tt>, so this does not
+ <code>dpkg-source</code> and <code>dpkg-gencontrol</code>, so this does not
  affect the generated package.

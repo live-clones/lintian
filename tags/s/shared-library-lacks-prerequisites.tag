@@ -5,7 +5,7 @@ Renamed-From: shared-lib-without-dependency-information
 Explanation: The listed shared library doesn't include information about the
  other libraries against which it was linked.
  .
- More specifically, "<tt>ldd foo.so</tt>" should report such other
+ More specifically, "<code>ldd foo.so</code>" should report such other
  libraries. In your case, it reports "statically linked".
  .
  The fix is to specify the libraries. One way to do so is to add

@@ -1,11 +1,11 @@
 Tag: init.d-script-does-not-source-init-functions
 Severity: warning
 Check: systemd
-Explanation: The <tt>/etc/init.d</tt> script does not source
- <tt>/lib/lsb/init-functions</tt>. The <tt>systemd</tt> package provides
- <tt>/lib/lsb/init-functions.d/40-systemd</tt> to redirect
- <tt>/etc/init.d/$script</tt> calls to systemctl.
+Explanation: The <code>/etc/init.d</code> script does not source
+ <code>/lib/lsb/init-functions</code>. The <code>systemd</code> package provides
+ <code>/lib/lsb/init-functions.d/40-systemd</code> to redirect
+ <code>/etc/init.d/$script</code> calls to systemctl.
  .
- Please add a line like this to your <tt>/etc/init.d</tt> script:
+ Please add a line like this to your <code>/etc/init.d</code> script:
  .
   . /lib/lsb/init-functions

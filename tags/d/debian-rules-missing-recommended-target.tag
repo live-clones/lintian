@@ -2,7 +2,7 @@ Tag: debian-rules-missing-recommended-target
 Severity: warning
 Check: debian/rules
 See-Also: policy 4.9
-Explanation: The <tt>debian/rules</tt> file for this package does not provide
+Explanation: The <code>debian/rules</code> file for this package does not provide
  one of the recommended targets. All of build-arch and build-indep
  should be provided, even if they don't do anything for this package.
  If this package does not currently split building of architecture

@@ -5,8 +5,8 @@ Explanation: The md5sum listed for the file does not match the actual file
  contents.
  .
  Usually, this error occurs during the package build process if the
- <tt>debian/tmp/</tt> directory is touched after <tt>dh_md5sums</tt>
+ <code>debian/tmp/</code> directory is touched after <code>dh_md5sums</code>
  is run.
  .
- Font files regenerated at post-install time by <tt>t1c2pfb</tt>
+ Font files regenerated at post-install time by <code>t1c2pfb</code>
  should be overridden.

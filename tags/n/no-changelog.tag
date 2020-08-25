@@ -4,14 +4,14 @@ Check: debian/changelog
 Renamed-From:
  changelog-file-missing-in-native-package
  debian-changelog-file-missing
-Explanation: A Debian package that provides a <tt>/usr/share/doc/<i>pkg</i></tt>
+Explanation: A Debian package that provides a <code>/usr/share/doc/<i>pkg</i></code>
  directory must install a changelog file.
  .
  For native packages the best name is
- <tt>/usr/share/doc/<i>pkg</i>/changelog.gz</tt>.
+ <code>/usr/share/doc/<i>pkg</i>/changelog.gz</code>.
  .
  For non-native packages the best name is
- <tt>/usr/share/doc/<i>pkg</i>/changelog.Debian.gz</tt>.
+ <code>/usr/share/doc/<i>pkg</i>/changelog.Debian.gz</code>.
  .
  This tag may also be emitted when the changelog exists but does not
  otherwise resemble a Debian changelog.

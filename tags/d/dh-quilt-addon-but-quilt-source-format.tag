@@ -1,8 +1,8 @@
 Tag: dh-quilt-addon-but-quilt-source-format
 Severity: warning
 Check: debhelper
-Explanation: The package uses (for example) <tt>dh $@ --with quilt</tt> in
- <tt>debian/rules</tt> but is already using the <tt>3.0 (quilt)</tt>
- source format via the <tt>debian/source/format</tt> file.
+Explanation: The package uses (for example) <code>dh $@ --with quilt</code> in
+ <code>debian/rules</code> but is already using the <code>3.0 (quilt)</code>
+ source format via the <code>debian/source/format</code> file.
  .
- Please remove the <tt>--with quilt</tt> argument.
+ Please remove the <code>--with quilt</code> argument.

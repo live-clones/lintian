@@ -1,7 +1,7 @@
 Tag: package-installs-into-etc-gconf-schemas
 Severity: warning
 Check: desktop/gnome
-Explanation: The package installs files into the <tt>/etc/gconf/schemas</tt>
+Explanation: The package installs files into the <code>/etc/gconf/schemas</code>
  directory. No package should do this; this directory is reserved for
  local overrides. Instead, schemas should be installed into
- <tt>/usr/share/gconf/schemas</tt>.
+ <code>/usr/share/gconf/schemas</code>.

@@ -1,11 +1,11 @@
 Tag: override_dh_clean-does-not-call-dh_clean
 Severity: warning
 Check: debian/rules
-Explanation: The <tt>debian/rules</tt> file for this package has an
- <tt>override_dh_clean</tt> target that does not reference <tt>dh_clean</tt>.
+Explanation: The <code>debian/rules</code> file for this package has an
+ <code>override_dh_clean</code> target that does not reference <code>dh_clean</code>.
  .
- This can result in packages not cleaning up properly via <tt>debian/rules
- clean</tt>.
+ This can result in packages not cleaning up properly via <code>debian/rules
+ clean</code>.
  .
- Please add a call to <tt>dh_clean</tt>.
+ Please add a call to <code>dh_clean</code>.
 See-Also: #884419, #884815

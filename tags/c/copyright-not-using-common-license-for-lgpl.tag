@@ -6,7 +6,7 @@ See-Also: policy 12.5
 Explanation: The strings "GNU Lesser General Public License", "GNU Library
  General Public License", or "LGPL" appear in the copyright file for this
  package, but the copyright file does not reference
- <tt>/usr/share/common-licenses</tt> as the location of the LGPL on Debian
+ <code>/usr/share/common-licenses</code> as the location of the LGPL on Debian
  systems.
  .
  If the copyright file must mention the LGPL for reasons other than stating

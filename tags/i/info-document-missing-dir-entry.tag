@@ -3,8 +3,8 @@ Severity: error
 Check: documentation/texinfo
 Explanation: This info document has no directory entry. This is text between
  START-INFO-DIR-ENTRY and END-INFO-DIR-ENTRY lines which is copied into
- the <tt>dir</tt> file in <tt>/usr/share/info</tt> by
- <tt>install-info</tt>. The best solution is to add lines like:
+ the <code>dir</code> file in <code>/usr/share/info</code> by
+ <code>install-info</code>. The best solution is to add lines like:
  .
    @dircategory Software development
    @direntry

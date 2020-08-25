@@ -3,7 +3,7 @@ Severity: warning
 Check: debian/copyright
 See-Also: policy 12.5
 Explanation: The copyright file refers to
- <tt>/usr/share/common-licenses/BSD</tt>. Due to the brevity of this
+ <code>/usr/share/common-licenses/BSD</code>. Due to the brevity of this
  license, the specificity of this copy to code whose copyright is held by
  the Regents of the University of California, and the frequency of minor
  wording changes in the license, its text should be included in the

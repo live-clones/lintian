@@ -1,9 +1,9 @@
 Tag: package-contains-npm-ignore-file
 Severity: error
 Check: files/names
-Explanation: The package ships an <tt>.npmignore<tt> file. It is a
- configuration file for the <tt>Node.js</tt> package manager.
+Explanation: The package ships an <code>.npmignore</code> file. It is a
+ configuration file for the <code>Node.js</code> package manager.
  It is not needed in a Debian package.
  .
- The file tells the <tt>npm</tt> command to keep files out of
- a <tt>node</tt> package. Please remove it from your package.
+ The file tells the <code>npm</code> command to keep files out of
+ a <code>node</code> package. Please remove it from your package.

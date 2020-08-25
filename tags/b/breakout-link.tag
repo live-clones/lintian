@@ -1,10 +1,10 @@
 Tag: breakout-link
 Severity: warning
 Check: files/hierarchy/links
-Explanation: The named link is in <tt>/usr/lib</tt> and points to higher
+Explanation: The named link is in <code>/usr/lib</code> and points to higher
  location in the file system, or traverses through one.
  .
- At least for <tt>/usr/lib</tt>, it is usually an error and may
+ At least for <code>/usr/lib</code>, it is usually an error and may
  confuse some tools.
  .
  To escape this check, links in /usr/lib must point to targets

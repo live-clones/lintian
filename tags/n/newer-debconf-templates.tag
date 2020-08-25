@@ -9,5 +9,5 @@ Explanation: debconf-updatepo has not been run since the last change to your
  outdated.
  .
  This can be ensured by running debconf-updatepo in the 'clean' target
- of <tt>debian/rules</tt>. PO files will then always be up-to-date when
+ of <code>debian/rules</code>. PO files will then always be up-to-date when
  building the source package.

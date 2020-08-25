@@ -1,7 +1,7 @@
 Tag: debian-rules-ignores-make-clean-error
 Severity: warning
 Check: debian/rules
-Explanation: A rule in the <tt>debian/rules</tt> file for this package calls the
+Explanation: A rule in the <code>debian/rules</code> file for this package calls the
  package's clean or distclean target with a line like:
  .
   -$(MAKE) distclean

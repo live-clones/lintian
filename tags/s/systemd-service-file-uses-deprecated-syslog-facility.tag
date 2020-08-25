@@ -2,8 +2,8 @@ Tag: systemd-service-file-uses-deprecated-syslog-facility
 Severity: warning
 Check: systemd
 Explanation: The specified systemd service file specifies
- <tt>StandardOutput=</tt> or <tt>StandardError=</tt> that references
- <tt>syslog</tt> or <tt>syslog-console</tt>.
+ <code>StandardOutput=</code> or <code>StandardError=</code> that references
+ <code>syslog</code> or <code>syslog-console</code>.
  .
  This is discouraged, and systemd versions 246 and above will log a
  warning about this.

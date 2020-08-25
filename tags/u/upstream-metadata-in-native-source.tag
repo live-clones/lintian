@@ -3,7 +3,7 @@ Severity: warning
 Check: debian/upstream/metadata
 See-Also: https://dep-team.pages.debian.net/deps/dep12/, https://wiki.debian.org/UpstreamMetadata
 Explanation: This source package is Debian-native and has a
- <tt>debian/upstream/metadata</tt> file.
+ <code>debian/upstream/metadata</code> file.
  . 
  The Upstream MEtadata GAthered with YAml (UMEGAYA) project is an effort
  to collect meta-information about upstream projects from any source
@@ -12,4 +12,4 @@ Explanation: This source package is Debian-native and has a
  authors want their software be cited in publications and some
  bibliographic references about the software.
  .
- Please remove the <tt>debian/upstream/metadata</tt> file.
+ Please remove the <code>debian/upstream/metadata</code> file.

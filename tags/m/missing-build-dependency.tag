@@ -3,7 +3,7 @@ Severity: error
 Check: debian/rules
 See-Also: policy 4.2
 Explanation: The package doesn't specify a build dependency on a package that is
- used in <tt>debian/rules</tt>.
+ used in <code>debian/rules</code>.
  .
  Lintian intentionally does not take into account transitive dependencies.
  Even if the package build-depends on some package that in turn

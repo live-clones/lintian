@@ -1,12 +1,12 @@
 Tag: package-uses-dh-runit-but-lacks-breaks-substvar
 Severity: warning
 Check: debhelper
-Explanation: This source package appears to use <tt>dh_runit(1)</tt> but the
- specified binary package does not define a <tt>Breaks:</tt> including
- the <tt>${runit:Breaks}</tt> substitution variable.
+Explanation: This source package appears to use <code>dh_runit(1)</code> but the
+ specified binary package does not define a <code>Breaks:</code> including
+ the <code>${runit:Breaks}</code> substitution variable.
  .
- <tt>dh_runit(1)</tt> may generate scripts that make assumptions about
- the version of <tt>runit</tt> in use.
+ <code>dh_runit(1)</code> may generate scripts that make assumptions about
+ the version of <code>runit</code> in use.
  .
- Please add the corresponding <tt>Breaks</tt> relation.
+ Please add the corresponding <code>Breaks</code> relation.
 See-Also: dh_runit(1)

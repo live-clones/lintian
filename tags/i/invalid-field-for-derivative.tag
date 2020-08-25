@@ -1,7 +1,7 @@
 Tag: invalid-field-for-derivative
 Severity: error
 Check: fields/derivatives
-Explanation: The specified field in <tt>debian/control</tt> does not match the
+Explanation: The specified field in <code>debian/control</code> does not match the
  required format for this Debian derivative.
  .
  Derivative distributions of Debian may enforce additional restrictions
@@ -10,8 +10,8 @@ Explanation: The specified field in <tt>debian/control</tt> does not match the
    - Debian maintainers are not contacted for forked or packages that
      are otherwise modified by the derivative.
    - The original maintainer is still credited for their work (eg. in a
-     <tt>XSBC-Original-Maintainer</tt> fied.
-   - References to revision control systems (eg. <tt>Vcs-Git</tt>) are
+     <code>XSBC-Original-Maintainer</code> fied.
+   - References to revision control systems (eg. <code>Vcs-Git</code>) are
      pointing to the correct, updated location.
    - Fields that become misleading in the context of a derivative are
      removed.

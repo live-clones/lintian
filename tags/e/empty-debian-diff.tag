@@ -9,7 +9,7 @@ Explanation: The Debian diff of this non-native package appears to be completely
  If the Debian packaging is maintained in conjunction with upstream, this
  may be intentional, but it's not recommended best practice. If the
  software is only for Debian, it should be a native package; otherwise,
- it's better to omit the <tt>debian</tt> directory from upstream releases
+ it's better to omit the <code>debian</code> directory from upstream releases
  and add it in the Debian diff. Otherwise, it can cause problems for some
  package updates in Debian (files can't be removed from the
- <tt>debian</tt> directory via the diff, for example).
+ <code>debian</code> directory via the diff, for example).

@@ -2,11 +2,11 @@ Tag: obsolete-des-encryption
 Severity: error
 Check: binaries
 Explanation: The listed ELF binary appears to use a C library function that
-  performs DES encryption and/or decryption (<tt>encrypt</tt>,
-  <tt>encrypt_r</tt>, <tt>setkey</tt>, and/or <tt>setkey_r</tt>).
+  performs DES encryption and/or decryption (<code>encrypt</code>,
+  <code>encrypt_r</code>, <code>setkey</code>, and/or <code>setkey_r</code>).
   The DES block cipher can be broken by brute force on modern hardware,
   which makes any use of these functions insecure. Also, programs that
-  use these functions cannot be linked against the <tt>libcrypt.so</tt>
+  use these functions cannot be linked against the <code>libcrypt.so</code>
   provided by glibc 2.28 and higher.
   .
   The program will need to be revised to use modern cryptographic
@@ -15,14 +15,14 @@ Explanation: The listed ELF binary appears to use a C library function that
   circumstances (e.g. for protocol compatibility, or to retain the
   ability to decrypt old data on disk) but this should be done using
   the DES functions in a modern cryptographic <em>library</em>
-  (e.g. <tt>libgcrypt</tt>).
+  (e.g. <code>libgcrypt</code>).
   .
   This is almost certainly an upstream bug, and should be addressed
   in coordination with the upstream maintainers of the software.
   .
   A false positive for this check is possible if the binary expects the
-  definition of <tt>encrypt</tt>, <tt>encrypt_r</tt>, <tt>setkey</tt>,
-  and/or <tt>setkey_r</tt> to come from some shared library other than
-  <tt>libcrypt.so</tt>, <em>and</em> that shared library defines these
+  definition of <code>encrypt</code>, <code>encrypt_r</code>, <code>setkey</code>,
+  and/or <code>setkey_r</code> to come from some shared library other than
+  <code>libcrypt.so</code>, <em>and</em> that shared library defines these
   functions to do something other than perform DES encryption. If this
   is the case it is appropriate to override this tag.

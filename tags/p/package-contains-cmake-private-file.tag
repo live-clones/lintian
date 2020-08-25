@@ -1,12 +1,12 @@
 Tag: package-contains-cmake-private-file
 Severity: error
 Check: build-systems/cmake
-Explanation: The package ships a file in a location reserved for <tt>CMake</tt>.
- It usually means you shipped a <tt>Find</tt> module.
+Explanation: The package ships a file in a location reserved for <code>CMake</code>.
+ It usually means you shipped a <code>Find</code> module.
  .
  Libraries should not ship Find modules Config files. Config files should
  be installed in the unversioned path
- <tt>usr/(lib/&lt;arch&gt;|lib|share)/cmake/&lt;name&gt;*/</tt>
+ <code>usr/(lib/&lt;arch&gt;|lib|share)/cmake/&lt;name&gt;*/</code>
  .
  When CMake Config files are installed in an unversioned path, your
  package will continue to work when a new version of CMake is uploaded.

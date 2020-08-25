@@ -10,7 +10,7 @@ Explanation: The package ships the two (or more) files with the exact same
  .
     jdupes -rl debian/${binary}/usr
  .
- ... after they are installed, eg. in <tt>override_dh_link</tt>. In
+ ... after they are installed, eg. in <code>override_dh_link</code>. In
  addition, please consider reporting this upstream.
  .
  Note: empty files are exempt from this check.

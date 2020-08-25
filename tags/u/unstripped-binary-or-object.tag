@@ -5,4 +5,4 @@ See-Also: policy 10.1, policy 10.2
 Explanation: The package installs an unstripped binary or object file.
  .
  Please note, that shared libraries have to be stripped with the
- <tt>--strip-unneeded</tt> option.
+ <code>--strip-unneeded</code> option.

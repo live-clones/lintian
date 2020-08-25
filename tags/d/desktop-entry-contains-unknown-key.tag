@@ -3,7 +3,7 @@ Severity: warning
 Check: menu-format
 Explanation: The key on this line of the desktop entry is not one of the standard
  keys defined in the FreeDesktop specification, not one of the legacy KDE
- keywords, and one that does not begin with <tt>X-</tt>. It's most likely
+ keywords, and one that does not begin with <code>X-</code>. It's most likely
  that the key was misspelled.
  .
  The desktop-file-validate tool in the desktop-file-utils package is

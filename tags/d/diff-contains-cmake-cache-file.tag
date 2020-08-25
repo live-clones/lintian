@@ -7,4 +7,4 @@ Explanation: The Debian diff contains a CMake cache file. These files embed the
  so they will always cause errors on the buildds. The file was probably
  accidentally included. If it is present in the upstream source, don't
  modify it in the Debian diff; instead, delete it before the build in
- <tt>debian/rules</tt>.
+ <code>debian/rules</code>.
