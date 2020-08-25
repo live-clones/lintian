@@ -8,13 +8,14 @@ Explanation: This package creates a privacy breach by fetching data from
  Piwik, which respects the "Do Not Track" browser option.
  .
  This tag covers the following websites:
- * cruel-carlota.pagodabox.com
- * linkexchange.com (defunct)
- * nedstatbasic.net
- * onestat.com
- * statcounter.com
- * sitemeter.com
- * webstats.motigo.com
+ .
+ - cruel-carlota.pagodabox.com
+ - linkexchange.com (defunct)
+ - nedstatbasic.net
+ - onestat.com
+ - statcounter.com
+ - sitemeter.com
+ - webstats.motigo.com
  .
  Please replace any scripts, images, or other remote resources with
  non-remote resources. It is preferable to replace them with text and
