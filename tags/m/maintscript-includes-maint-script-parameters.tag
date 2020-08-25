@@ -4,4 +4,4 @@ Check: debhelper
 Explanation: Lines in a <code>debian/*.maintscript</code> correspond to
  <code>dpkg-maintscript-helper(1)</code> commands and parameters. However, the
  "maint-script-parameters" should not be included as debhelper will add those
- automatically. See <code>dh_installdeb(1)</code> for more information.
+ automatically. See <code>dh&lowbar;installdeb(1)</code> for more information.

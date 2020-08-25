@@ -11,7 +11,7 @@ Explanation: The debug package appear to be containing debug symbols for a
  when installing the debug symbols beneath:
    <code>/usr/lib/debug/.build-id/&lt;XX&gt;/&lt;rest-id&gt;.debug</code>
  .
- dh_strip does this in debhelper compat 9. Otherwise, the expected
+ dh&lowbar;strip does this in debhelper compat 9. Otherwise, the expected
  location of the debug symbols of a given ELF binary can be determined
  by using:
  .

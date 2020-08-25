@@ -17,7 +17,7 @@ Explanation: This package provides an ELF executable that was not compiled
  that can reduce the overhead significantly.
  .
  If you use <code>dpkg-buildflags</code> with <code>hardening=+all,-pie</code>
- in <code>DEB_BUILD_MAINT_OPTIONS</code>, remove the <code>-pie</code>.
+ in <code>DEB&lowbar;BUILD&lowbar;MAINT&lowbar;OPTIONS</code>, remove the <code>-pie</code>.
 See-Also: https://wiki.debian.org/Hardening,
  https://gcc.gnu.org/gcc-5/changes.html,
  https://software.intel.com/en-us/blogs/2014/12/26/new-optimizations-for-x86-in-upcoming-gcc-50-32bit-pic-mode

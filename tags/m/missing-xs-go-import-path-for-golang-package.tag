@@ -11,8 +11,8 @@ Explanation: This source package does not specify a <code>XS-Go-Import-Path</cod
  https://go-team.pages.debian.net/ci.html.
  .
  For packages using <code>dh-golang</code>, the field should be set to the same
- value as the <code>DH_GOPKG</code> variable in <code>debian/rules</code>.
- <code>dh-golang</code> will automatically set <code>DH_GOPKG</code> to the
+ value as the <code>DH&lowbar;GOPKG</code> variable in <code>debian/rules</code>.
+ <code>dh-golang</code> will automatically set <code>DH&lowbar;GOPKG</code> to the
  <code>XS-Go-Import-Path</code> value.
  .
  For packages which do not use <code>dh-golang</code> (or where upstream does

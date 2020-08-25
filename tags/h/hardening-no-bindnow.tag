@@ -11,7 +11,7 @@ Explanation: This package provides an ELF binary that lacks the "bindnow"
  .
  If you use <code>dpkg-buildflags</code>, you may have to add
  <code>hardening=+bindnow</code> or <code>hardening=+all</code> to
- <code>DEB_BUILD_MAINT_OPTIONS</code>.
+ <code>DEB&lowbar;BUILD&lowbar;MAINT&lowbar;OPTIONS</code>.
  .
  The relevant compiler flags are set in <code>LDFLAGS</code>.
 See-Also: https://wiki.debian.org/Hardening

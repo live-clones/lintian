@@ -9,6 +9,6 @@ Explanation: The maintainer script apparently runs the service command. This
  .
  Please replace with calls to <code>update-rc.d(8)</code> and
  <code>invoke-rc.d(8)</code>. If your package installs this service, this
- can be automated using <code>dh_installinit(1)</code> or
- <code>dh_installsystemd(1)</code>.
+ can be automated using <code>dh&lowbar;installinit(1)</code> or
+ <code>dh&lowbar;installsystemd(1)</code>.
 See-Also: policy 9.3.3

@@ -12,7 +12,7 @@ Explanation: The listed file or maintainer script appears to reference
  Please note that this tag will not appear unless the
  <code>.buildinfo</code> file contains a <code>Build-Path</code> field. That
  field is optional. You may have to set
- <code>DEB_BUILD_OPTIONS=buildinfo=+path</code> or use
+ <code>DEB&lowbar;BUILD&lowbar;OPTIONS=buildinfo=+path</code> or use
  <code>--buildinfo-option=--always-include-path</code> with
  <code>dpkg-buildpackage</code> when building.
 See-Also: https://reproducible-builds.org/, https://wiki.debian.org/ReproducibleBuilds/BuildinfoFiles, dpkg-genbuildinfo(1)

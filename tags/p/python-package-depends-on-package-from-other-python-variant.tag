@@ -6,5 +6,5 @@ Explanation: Either the specified Python 3.x package declares a dependency on a
  3.x package.
  .
  This is likely a typo in <code>debian/control</code> or due to misconfigured
- calls to, for example, <code>dh_installdocs --link-doc=PKG</code>.
+ calls to, for example, <code>dh&lowbar;installdocs --link-doc=PKG</code>.
 See-Also: #884692

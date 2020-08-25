@@ -3,7 +3,7 @@ Severity: warning
 Check: debian/rules
 See-Also: dpkg-architecture(1)
 Explanation: The <code>debian/rules</code> file sets one or more
- <code>dpkg-architecture</code> variables such as <code>DEB_BUILD_ARCH</code>.
+ <code>dpkg-architecture</code> variables such as <code>DEB&lowbar;BUILD&lowbar;ARCH</code>.
  .
  These variables are pre-initialized in the environment when running under
  <code>dpkg-buildpackage</code> - avoiding these assignments can reduce package

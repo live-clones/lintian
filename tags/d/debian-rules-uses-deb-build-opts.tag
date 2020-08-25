@@ -3,5 +3,5 @@ Severity: warning
 Check: debian/rules
 Renamed-From: debian-rules-should-not-use-DEB_BUILD_OPTS
 Explanation: The standard environment variable for build options is
- DEB_BUILD_OPTIONS. Usually, referring to DEB_BUILD_OPTS is a mistake and
- DEB_BUILD_OPTIONS was intended instead.
+ DEB&lowbar;BUILD&lowbar;OPTIONS. Usually, referring to DEB&lowbar;BUILD&lowbar;OPTS is a mistake and
+ DEB&lowbar;BUILD&lowbar;OPTIONS was intended instead.

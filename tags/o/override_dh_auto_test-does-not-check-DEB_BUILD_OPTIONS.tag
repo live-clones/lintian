@@ -2,8 +2,8 @@ Tag: override_dh_auto_test-does-not-check-DEB_BUILD_OPTIONS
 Severity: info
 Check: debian/rules
 Explanation: The <code>debian/rules</code> file for this package has an
- <code>override_dh_auto_test</code> target that does not appear to
- check <code>DEB_BUILD_OPTIONS</code> against <code>nocheck</code>.
+ <code>override&lowbar;dh&lowbar;auto&lowbar;test</code> target that does not appear to
+ check <code>DEB&lowbar;BUILD&lowbar;OPTIONS</code> against <code>nocheck</code>.
  .
  As this check is not automatically performed by debhelper(1), the
  specified testsuite is run regardless of another maintainer using
@@ -11,8 +11,8 @@ Explanation: The <code>debian/rules</code> file for this package has an
  .
  Please add a check such as:
  .
-  override_dh_auto_test:
-  ifeq (,$(filter nocheck,$(DEB_BUILD_OPTIONS)))
+  override&lowbar;dh&lowbar;auto&lowbar;test:
+  ifeq (,$(filter nocheck,$(DEB&lowbar;BUILD&lowbar;OPTIONS)))
           ./run-upstream-testsuite
   endif
  .
@@ -22,7 +22,7 @@ Explanation: The <code>debian/rules</code> file for this package has an
   : Disabled
   echo "Disabled"
   mkdir foo/
-  ENV=var dh_auto_test -- ARG=value
+  ENV=var dh&lowbar;auto&lowbar;test -- ARG=value
  .
  This check is not required in Debhelper compat level 13 or greater
  (see #568897).

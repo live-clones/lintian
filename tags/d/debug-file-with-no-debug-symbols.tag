@@ -7,6 +7,6 @@ Explanation: The binary is installed as a detached "debug symbols" ELF file,
  .
  A common cause is not passing <code>-g</code> to GCC when compiling.
  .
- Implementation detail: Lintian checks for the ".debug_line" and the
- ".debug_str" sections. If either of these are present, the binary
+ Implementation detail: Lintian checks for the ".debug&lowbar;line" and the
+ ".debug&lowbar;str" sections. If either of these are present, the binary
  is assumed to contain debug information.

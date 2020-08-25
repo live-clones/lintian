@@ -14,8 +14,8 @@ Explanation: The <code>debian/copyright</code> file mentions <code>Files-Exclude
  could chose <code>+ds</code>.
  .
  Upstream sources are sometimes repackaged by accident when using old
- versions of <code>dh_make</code>. It can also happen when a maintainer
- invokes the dh_make option <code>--createorig</code> even though it is
+ versions of <code>dh&lowbar;make</code>. It can also happen when a maintainer
+ invokes the dh&lowbar;make option <code>--createorig</code> even though it is
  not needed.
  .
  According to the Debian Developer's Reference 6.7.8.2, the repack

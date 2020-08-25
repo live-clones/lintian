@@ -6,7 +6,7 @@ Explanation: The specified pkg-config(1) file is installed to
  does not search this directory the file is unavailable under
  cross-compilation.
  .
- Please install the file to <code>/usr/lib/${DEB_HOST_MULTIARCH}/pkgconfig</code>
+ Please install the file to <code>/usr/lib/${DEB&lowbar;HOST&lowbar;MULTIARCH}/pkgconfig</code>
  instead.
  .
  For projects that use GNU Autotools, a simple method is moving to a debhelper

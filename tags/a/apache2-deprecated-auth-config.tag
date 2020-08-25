@@ -11,5 +11,5 @@ Explanation: The package is using some of the deprecated authentication configur
  Require ip, and Require method.
  .
  Alternatively, the offending lines can be wrapped between
- &lt;IfModule !mod_authz_core.c&gt; ... &lt;/IfModule&gt; or
+ &lt;IfModule !mod&lowbar;authz&lowbar;core.c&gt; ... &lt;/IfModule&gt; or
  &lt;IfVersion &lt; 2.3&gt; ... &lt;/IfVersion&gt; directives.

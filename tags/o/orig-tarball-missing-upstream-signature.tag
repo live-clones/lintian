@@ -6,9 +6,9 @@ Explanation: The packaging includes an upstream signing key but the correspondin
  in your .changes file.
  .
  Please ensure a
- <code>&lt;package&gt;_&lt;version&gt;.orig.tar.&lt;ext&gt;.asc</code> file
+ <code>&lt;package&gt;&lowbar;&lt;version&gt;.orig.tar.&lt;ext&gt;.asc</code> file
  exists in the same directory as your
- <code>&lt;package&gt;_&lt;version&gt;.orig.tar.&lt;ext&gt;</code> tarball prior
+ <code>&lt;package&gt;&lowbar;&lt;version&gt;.orig.tar.&lt;ext&gt;</code> tarball prior
  to <code>dpkg-source --build</code> being called.
  .
  If you are repackaging your source tarballs for Debian Free Software

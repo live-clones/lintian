@@ -1,7 +1,7 @@
 Tag: unnecessary-source-date-epoch-assignment
 Severity: info
 Check: debian/rules
-Explanation: There is an assignment to a <code>SOURCE_DATE_EPOCH</code> variable in the
+Explanation: There is an assignment to a <code>SOURCE&lowbar;DATE&lowbar;EPOCH</code> variable in the
  <code>debian/rules</code> file.
  .
  As of dpkg 1.18.8, this is no longer necessary as dpkg exports this

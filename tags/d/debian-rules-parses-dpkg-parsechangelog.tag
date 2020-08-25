@@ -6,7 +6,7 @@ Explanation: The rules file appears to be parsing the output of dpkg-parsechange
  .
  Since dpkg 1.16.1, this could be replaced by including the
  /usr/share/dpkg/pkg-info.mk Makefile library and using the
- DEB_{SOURCE,VERSION} or SOURCE_DATE_EPOCH variables.
+ DEB&lowbar;{SOURCE,VERSION} or SOURCE&lowbar;DATE&lowbar;EPOCH variables.
  .
  Using this library is not only cleaner and more efficient, it handles many
  corner-cases such as binNMUs, epoch versions, etc.

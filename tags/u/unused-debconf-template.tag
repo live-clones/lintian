@@ -12,7 +12,7 @@ Explanation: Templates which are not used by the package should be removed from
  .
  - the maintainer scripts embed a variable in the template name in
  order to allow a template to be selected from a range of similar
- templates (e.g. <code>db_input low start_$service_at_boot</code>)
+ templates (e.g. <code>db&lowbar;input low start&lowbar;$service&lowbar;at&lowbar;boot</code>)
  .
  - the template is not used by the maintainer scripts but is used by
  a program in the package

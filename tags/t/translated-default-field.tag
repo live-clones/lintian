@@ -8,11 +8,11 @@ Explanation: You should not mark as translatable "Default:" or "DefaultChoice:"
  brackets. For example:
  .
    # Translators: Default language name, but not translated
-   _Default: English
+   &lowbar;Default: English
  .
  Or:
  .
-   _Default: English[ Default language name, but not translated]
+   &lowbar;Default: English[ Default language name, but not translated]
  .
  Note that in the first case, Lintian ignores the comment unless it
  explicitly references translators and it is appears directly before

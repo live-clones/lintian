@@ -6,6 +6,6 @@ Explanation: The symbolic link has needless segments like ".." and "." in the
  which is in violation of policy. They can also cause problems in the
  presence of symlinked directories.
  .
- If you use debhelper, running dh_link after creating the package structure
+ If you use debhelper, running dh&lowbar;link after creating the package structure
  will fix this problem for you.
 See-Also: policy 10.5

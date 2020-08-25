@@ -3,7 +3,7 @@ Severity: warning
 Check: debhelper
 See-Also: dh_sphinxdoc(1)
 Explanation: The source package uses Sphinx via <code>--with sphinxdoc</code> or
- <code>dh_sphinxdoc</code> but no binary package specifies
+ <code>dh&lowbar;sphinxdoc</code> but no binary package specifies
  <code>${sphinxdoc:Depends}</code> as a dependency.
  .
  The <code>sphinxdoc</code> helper is being used to make links to various

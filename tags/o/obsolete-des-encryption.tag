@@ -3,7 +3,7 @@ Severity: error
 Check: binaries
 Explanation: The listed ELF binary appears to use a C library function that
   performs DES encryption and/or decryption (<code>encrypt</code>,
-  <code>encrypt_r</code>, <code>setkey</code>, and/or <code>setkey_r</code>).
+  <code>encrypt&lowbar;r</code>, <code>setkey</code>, and/or <code>setkey&lowbar;r</code>).
   The DES block cipher can be broken by brute force on modern hardware,
   which makes any use of these functions insecure. Also, programs that
   use these functions cannot be linked against the <code>libcrypt.so</code>
@@ -21,8 +21,8 @@ Explanation: The listed ELF binary appears to use a C library function that
   in coordination with the upstream maintainers of the software.
   .
   A false positive for this check is possible if the binary expects the
-  definition of <code>encrypt</code>, <code>encrypt_r</code>, <code>setkey</code>,
-  and/or <code>setkey_r</code> to come from some shared library other than
+  definition of <code>encrypt</code>, <code>encrypt&lowbar;r</code>, <code>setkey</code>,
+  and/or <code>setkey&lowbar;r</code> to come from some shared library other than
   <code>libcrypt.so</code>, <em>and</em> that shared library defines these
   functions to do something other than perform DES encryption. If this
   is the case it is appropriate to override this tag.

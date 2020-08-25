@@ -3,7 +3,7 @@ Severity: info
 Check: shared-libs
 Experimental: yes
 Renamed-From: shlib-calls-exit
-Explanation: The listed shared library calls the C library exit() or _exit()
+Explanation: The listed shared library calls the C library exit() or &lowbar;exit()
  functions.
  .
  In the case of an error, the library should instead return an appropriate

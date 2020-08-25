@@ -4,7 +4,7 @@ Check: cruft
 Explanation: The original source tarball contains the specified examples
  directory. However, no examples are installed in any binary packages.
  .
- Please use <code>dh_installexamples</code> to install these to the most
+ Please use <code>dh&lowbar;installexamples</code> to install these to the most
  relevant package, for example by adding the directory name followed
  by a wildcard to a <code>debian/pkgname.examples</code> file.
  .

@@ -8,5 +8,5 @@ Explanation: The package installs an unstripped static library.
  use <code>--remove-section=.comment --remove-section=.note</code>
  to avoid the static-library-has-unneeded-section tag.
  .
- <code>dh_strip</code> (after debhelper/9.20150811) will do this
+ <code>dh&lowbar;strip</code> (after debhelper/9.20150811) will do this
  automatically for you.

@@ -7,6 +7,6 @@ Explanation: Symlinks to files which are in the same top-level directory should 
  file in /usr should be relative, while a link in /usr to a file in /etc
  should be absolute.)
  .
- If you use debhelper, running dh_link after creating the package structure
+ If you use debhelper, running dh&lowbar;link after creating the package structure
  will fix this problem for you.
 See-Also: policy 10.5

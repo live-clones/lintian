@@ -5,4 +5,4 @@ See-Also: python-policy 2.5, #576012
 Explanation: The package installs a Python module or debug information for a Python
  module in the wrong location for the given version of Python.
  .
- dh_python3 can be used to fix this for Python 3 modules.
+ dh&lowbar;python3 can be used to fix this for Python 3 modules.

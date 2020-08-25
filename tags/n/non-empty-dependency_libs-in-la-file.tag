@@ -1,11 +1,11 @@
 Tag: non-empty-dependency_libs-in-la-file
 Severity: error
 Check: shared-libs
-Explanation: The dependency_libs field in the .la file has not been cleared. It has
+Explanation: The dependency&lowbar;libs field in the .la file has not been cleared. It has
  long been a release goal to get rid of unneeded .la files and clearing the
- dependency_libs field from the rest of them.
+ dependency&lowbar;libs field from the rest of them.
  .
- A non-empty dependency_libs field will also stall the Multi-Arch
+ A non-empty dependency&lowbar;libs field will also stall the Multi-Arch
  conversion.
  .
  The .la file in itself may be useful if the library is loaded dynamically

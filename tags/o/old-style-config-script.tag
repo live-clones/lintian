@@ -19,8 +19,8 @@ Explanation: The following file is an old style config file,
  After fixing every reverse depends of your package and use
  pkg-config reverse depends makefile, you should
  consider to put this script, as a temporary convenience of your users,
- under /usr/lib/$DEB_HOST_MULTIARCH/$PACKAGE/bin where
- $DEB_HOST_MULTIARCH is the multi-arch triplet and $PACKAGE is the
+ under /usr/lib/$DEB&lowbar;HOST&lowbar;MULTIARCH/$PACKAGE/bin where
+ $DEB&lowbar;HOST&lowbar;MULTIARCH is the multi-arch triplet and $PACKAGE is the
  package name. You should also consider to add a NEWS.Debian entry.
 See-Also: pkg-config(1),
      http://sources.debian.net/src/imagemagick/8:6.8.9.9-6/debian/NEWS/

@@ -5,7 +5,7 @@ Explanation: The file <code>debian/not-installed</code> lists a path that may
  cause unexpected build failures. The path is too specific.
  .
  A common problem are entries starting with
- <code>usr/lib/x86_64-linux-gnu</code>. The sources will build fine
+ <code>usr/lib/x86&lowbar;64-linux-gnu</code>. The sources will build fine
  on <code>amd64</code> but not on other architectures, because the
  paths to do exist.
  .

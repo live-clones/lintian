@@ -10,8 +10,8 @@ Explanation: This package appears to contain the output of running a Python
  .
  You can disable generation of these files by, for example:
  .
-   export HYPOTHESIS_DATABASE_FILE = $(CURDIR)/debian/hypothesis
+   export HYPOTHESIS&lowbar;DATABASE&lowbar;FILE = $(CURDIR)/debian/hypothesis
  .
-   override_dh_auto_clean:
-           dh_auto_clean
+   override&lowbar;dh&lowbar;auto&lowbar;clean:
+           dh&lowbar;auto&lowbar;clean
            rm -rf $(CURDIR)/debian/hypothesis

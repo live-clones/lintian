@@ -14,6 +14,6 @@ Explanation: The specified file under <code>/etc/default/</code> includes a line
  service actually starting.
  .
  Please remove this mechanism and disable enabling the daemon on install
- via <code>dh_installinit --no-enable</code> or move to automatically
+ via <code>dh&lowbar;installinit --no-enable</code> or move to automatically
  starting it.
 See-Also: policy 9.3.3.1, update-rc.d(8), dh_installinit(1)

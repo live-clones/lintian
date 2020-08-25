@@ -15,11 +15,11 @@ Explanation: A manual page provoked warnings or errors from the <code>man</code>
  "can't find numbered character" usually means that the input was in a
  national legacy encoding. The warning means that some characters were
  dropped. Please use escapes such as <code>\[:a]</code> as described on the
- <code>groff_char</code> manual page.
+ <code>groff&lowbar;char</code> manual page.
  .
  Other common warnings are formatting typos. String arguments to
  <code>.IP</code> require quotes. Usually, some text is lost or mangled. See
- the <code>groff_man</code> (or <code>groff_mdoc</code> if using <code>mdoc</code>)
+ the <code>groff&lowbar;man</code> (or <code>groff&lowbar;mdoc</code> if using <code>mdoc</code>)
  manual page for details on macros.
  .
  The check for manual pages uses the <code>--warnings</code> option to
@@ -34,6 +34,6 @@ Explanation: A manual page provoked warnings or errors from the <code>man</code>
  .
  You can see the warnings yourself by running the command used by Lintian:
  .
- <code>LC_ALL=en_US.UTF-8 MANROFFSEQ='' MANWIDTH=80 \
+ <code>LC&lowbar;ALL=en&lowbar;US.UTF-8 MANROFFSEQ='' MANWIDTH=80 \
          man --warnings -E UTF-8 -l -Tutf8 -Z &lt;file&gt; &gt;/dev/null</code>
 See-Also: groff_man(7), groff_mdoc(7)

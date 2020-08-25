@@ -9,6 +9,6 @@ Explanation: The package is not safely binNMUable because an arch:all package
  arch:any packages while having the package binNMUable, so please use
  one of these, whichever is more appropriate:
  .
-   Depends: arch_any (&gt;= ${source:Version})
-   Depends: arch_any (&gt;= ${source:Version}),
-    arch_any (&lt;&lt; ${source:Version}.1~)
+   Depends: arch&lowbar;any (&gt;= ${source:Version})
+   Depends: arch&lowbar;any (&gt;= ${source:Version}),
+    arch&lowbar;any (&lt;&lt; ${source:Version}.1~)

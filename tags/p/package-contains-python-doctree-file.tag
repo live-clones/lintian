@@ -13,12 +13,12 @@ Explanation: This package appears to contain a pickled cache of reStructuredText
  .
  For example:
  .
-   override_dh_auto_build:
-           dh_auto_build
+   override&lowbar;dh&lowbar;auto&lowbar;build:
+           dh&lowbar;auto&lowbar;build
            PYTHONPATH=. sphinx-build -bman docs/ -d debian/doctrees docs/build/html
            PYTHONPATH=. sphinx-build -bhtml docs/ -d debian/doctrees docs/build/html
  .
-   override_dh_auto_clean:
-           dh_auto_clean
+   override&lowbar;dh&lowbar;auto&lowbar;clean:
+           dh&lowbar;auto&lowbar;clean
            rm -rf debian/doctrees
 See-Also: http://sphinx-doc.org/invocation.html#cmdoption-sphinx-build-d

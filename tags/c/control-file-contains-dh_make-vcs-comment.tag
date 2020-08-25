@@ -2,5 +2,5 @@ Tag: control-file-contains-dh_make-vcs-comment
 Severity: warning
 Check: debian/control
 Explanation: The control file contains commented-out VCS-* lines, most
- probably a result of dh_make. These URLs should either be valid and
+ probably a result of dh&lowbar;make. These URLs should either be valid and
  uncommented, or removed.

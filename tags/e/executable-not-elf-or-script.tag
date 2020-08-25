@@ -7,6 +7,6 @@ Explanation: This executable file is not an ELF format binary, and does not star
  marked as executable. Sometimes upstream files developed on Windows are
  marked unnecessarily as executable on other systems.
  .
- If you are using debhelper to build your package, running dh_fixperms will
+ If you are using debhelper to build your package, running dh&lowbar;fixperms will
  often correct this problem for you.
 See-Also: policy 10.4

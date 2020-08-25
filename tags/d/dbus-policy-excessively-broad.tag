@@ -8,8 +8,8 @@ Explanation: The package contains D-Bus policy configuration that
  For instance,
  .
    &lt;policy user="daemon"&gt;
-     &lt;allow send_type="method_call"/&gt;
-     &lt;allow send_destination="com.example.Bees"/&gt;
+     &lt;allow send&lowbar;type="method&lowbar;call"/&gt;
+     &lt;allow send&lowbar;destination="com.example.Bees"/&gt;
    &lt;/policy&gt;
  .
  in any system bus policy file would allow the <code>daemon</code> user to send
@@ -22,7 +22,7 @@ Explanation: The package contains D-Bus policy configuration that
  The intended policy for that particular example was probably more like
  .
    &lt;policy user="daemon"&gt;
-     &lt;allow send_type="method_call" send_destination="com.example.Bees"/&gt;
+     &lt;allow send&lowbar;type="method&lowbar;call" send&lowbar;destination="com.example.Bees"/&gt;
    &lt;/policy&gt;
  .
  which correctly allows method calls to that particular service only.

@@ -13,6 +13,6 @@ Explanation: A manual page should start with a <code>NAME</code> section, which
  description.
  .
  Listed items may not contain any spaces. A manual page for a two-level
- command such as <code>fs listacl</code> must look like <code>fs_listacl</code>
+ command such as <code>fs listacl</code> must look like <code>fs&lowbar;listacl</code>
  so the list is read correctly.
 See-Also: lexgrog(1), groff_man(7), groff_mdoc(7)

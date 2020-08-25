@@ -2,7 +2,7 @@ Tag: custom-compression-in-debian-rules
 Severity: warning
 Check: debian/rules
 Renamed-From: debian-rules-should-not-use-custom-compression-settings
-Explanation: This package calls <code>dh_builddeb(1)</code> to select a custom
+Explanation: This package calls <code>dh&lowbar;builddeb(1)</code> to select a custom
  compression level or algorithm in <code>debian/rules</code>. Please remove
  the call and let dpkg-deb(1) select suitable defaults.
  .

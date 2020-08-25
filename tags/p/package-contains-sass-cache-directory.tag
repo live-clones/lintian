@@ -12,6 +12,6 @@ Explanation: This package appears to ship a <code>.sass-cache/</code> directory,
  Please ensure they are removed prior to final package build. For
  example, with:
  .
-   override_dh_install:
-           dh_install -X.sass-cache
+   override&lowbar;dh&lowbar;install:
+           dh&lowbar;install -X.sass-cache
 See-Also: https://reproducible-builds.org/, #920595

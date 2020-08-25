@@ -2,7 +2,7 @@ Tag: debug-symbol-migration-possibly-complete
 Severity: pedantic
 Check: debian/rules
 Explanation: The <code>debian/rules</code> file for this package has a call to
- <code>dh_strip(1)</code> with the specified <code>--dbgsym-migration</code> or
+ <code>dh&lowbar;strip(1)</code> with the specified <code>--dbgsym-migration</code> or
  <code>--ddeb-migration</code> argument.
  .
  Such arguments are used to migrate packages to use automatic debug

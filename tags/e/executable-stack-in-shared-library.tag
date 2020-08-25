@@ -11,5 +11,5 @@ Explanation: The listed shared library declares the stack as executable.
  section.
  .
  To see the permissions on the stack, run <code>readelf -l</code> on the
- shared library and look for the program header of type GNU_STACK. In the
+ shared library and look for the program header of type GNU&lowbar;STACK. In the
  flag column, there should not be an E flag set.

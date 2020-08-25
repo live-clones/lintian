@@ -2,7 +2,7 @@ Tag: debian-rules-should-not-use-sanitize-all-buildflag
 Severity: error
 Check: debian/rules
 Explanation: This package's <code>debian/rules</code> file contains a
- <code>DEB_BUILD_MAINT_OPTIONS</code> assignment that enables the
+ <code>DEB&lowbar;BUILD&lowbar;MAINT&lowbar;OPTIONS</code> assignment that enables the
  <code>sanitize=+all</code> build flag.
  .
  This option instructs the compiler to enable options designed to

@@ -2,7 +2,7 @@ Tag: copyright-with-old-dh-make-debian-copyright
 Severity: pedantic
 Check: debian/copyright
 Explanation: The copyright file contains the incomplete Debian packaging
- copyright boilerplate from older versions of <code>dh_make</code>.
+ copyright boilerplate from older versions of <code>dh&lowbar;make</code>.
  <code>(C)</code> alone is not considered a valid copyright notice in some
  countries. The word <code>Copyright</code> or the © symbol should be used
  instead or in addition to <code>(C)</code>.

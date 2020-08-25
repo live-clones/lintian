@@ -5,5 +5,5 @@ Explanation: The md5sums control file lists a file which is not included in the
  package.
  .
  Usually, this error occurs during the package build process if the
- <code>debian/tmp/</code> directory is touched after <code>dh_md5sums</code>
+ <code>debian/tmp/</code> directory is touched after <code>dh&lowbar;md5sums</code>
  is run.

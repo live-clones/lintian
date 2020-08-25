@@ -3,7 +3,7 @@ Severity: error
 Check: documentation/manual
 Renamed-From: manpage-is-dh_make-template
 Explanation: This manual page appears to be an unmodified or insufficiently
- modified copy of the dh_make manual page template. It has a whatis entry
+ modified copy of the dh&lowbar;make manual page template. It has a whatis entry
  (the brief description found in the NAME section) of the form:
  .
   package - program to do something

@@ -2,7 +2,7 @@ Tag: excessive-debhelper-overrides
 Severity: warning
 Check: debhelper
 Explanation: The <code>debian/rules</code> file appears to include a suspiciously
- high number of <code>override_dh_</code>-style overrides.
+ high number of <code>override&lowbar;dh&lowbar;</code>-style overrides.
  .
  It is likely that is this was intended to optimise package builds by
  introducing "no-op" overrides that avoid specific debhelper commands.

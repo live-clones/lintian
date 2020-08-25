@@ -10,5 +10,5 @@ Explanation: The specified patch is present under the <code>debian/patches</code
  Please either add the filename to the series file, or ensure it is
  commented-out in a form that Lintian can recognise, for example:
  .
-   0001_fix-foo.patch
-   # 0002_fix-bar.patch
+   0001&lowbar;fix-foo.patch
+   # 0002&lowbar;fix-bar.patch

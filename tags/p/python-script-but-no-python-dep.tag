@@ -14,8 +14,8 @@ Explanation: Packages with Python scripts should depend on the package
  <code>/usr/bin/python2.6</code> binary.
  .
  If you are using debhelper, adding <code>${python3:Depends}</code> or
- <code>${python:Depends}</code> to the Depends field and ensuring dh_python2 or
- dh_python3 are run during the build should take care of adding the correct
+ <code>${python:Depends}</code> to the Depends field and ensuring dh&lowbar;python2 or
+ dh&lowbar;python3 are run during the build should take care of adding the correct
  dependency.
  .
  In some cases a weaker relationship, such as Suggests or Recommends, will

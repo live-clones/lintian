@@ -7,7 +7,7 @@ Explanation: The named maintainer script appears to call <code>chmod</code> or
  it uses <code>find(1)</code> with similar intent.
  .
  All such uses are vulnerable to hardlink attacks on mainline (i.e.
- non-Debian) kernels that do not set <code>fs.protected_hardlinks=1</code>.
+ non-Debian) kernels that do not set <code>fs.protected&lowbar;hardlinks=1</code>.
  .
  The security risk arises when when a non-privileged user set links
  to files they do not own, such as such as <code>/etc/shadow</code> or

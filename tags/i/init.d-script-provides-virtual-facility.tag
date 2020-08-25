@@ -9,7 +9,7 @@ Explanation: This <code>/etc/init.d</code> script indicates in its LSB headers t
  package should include a file in <code>/etc/insserv.conf.d</code>, usually
  named after the package, containing:
  .
-  $virtual_facility_name +init-script-name
+  $virtual&lowbar;facility&lowbar;name +init-script-name
  .
  to declare that the named init script provides the named virtual
  facility.

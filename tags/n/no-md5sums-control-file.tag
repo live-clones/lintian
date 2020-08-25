@@ -8,5 +8,5 @@ Explanation: This package does not contain an md5sums control file. This control
  recommended.
  .
  If you are using debhelper to create your package, just add a call to
- <code>dh_md5sums</code> at the end of your binary-indep or binary-arch
- target, right before <code>dh_builddeb</code>.
+ <code>dh&lowbar;md5sums</code> at the end of your binary-indep or binary-arch
+ target, right before <code>dh&lowbar;builddeb</code>.
