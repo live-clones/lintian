@@ -180,9 +180,9 @@ sub print_tag {
     if ($self->showdescription && !$self->issued_tag($tag_info->name)) {
         my $description;
         if ($self->color && $self->html) {
-            $description = $tag_info->description('html', '   ');
+            $description = $tag_info->html_description;
         } else {
-            $description = $tag_info->description('text', '   ');
+            $description = $tag_info->text_description('   ');
         }
 
         say 'N:';

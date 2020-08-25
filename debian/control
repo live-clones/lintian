@@ -63,6 +63,7 @@ Depends:
  libsereal-encoder-perl,
  libtext-glob-perl,
  libtext-levenshteinxs-perl,
+ libtext-markdown-discount-perl,
  libtext-xslate-perl,
  libtime-duration-perl,
  libtime-moment-perl,

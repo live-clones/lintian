@@ -27,6 +27,7 @@ use utf8;
 use Carp qw(croak);
 use HTML::Entities;
 use List::MoreUtils qw(none);
+use Text::Markdown::Discount qw(markdown);
 use Text::Wrap;
 
 use Lintian::Data;
@@ -36,10 +37,11 @@ use constant EMPTY => q{};
 use constant SPACE => q{ };
 use constant SLASH => q{/};
 use constant COMMA => q{,};
-use constant NEWLINE => qq{\n};
+use constant LEFT_PARENTHESIS => q{(};
+use constant RIGHT_PARENTHESIS => q{)};
 
-use constant HTML_PARAGRAPH_START => q{<p>};
-use constant HTML_PARAGRAPH_END => q{</p>};
+use constant NEWLINE => qq{\n};
+use constant PARAGRAPH_BREAK => qq{\n\n};
 
 use Moo;
 use namespace::clean;
@@ -168,14 +170,14 @@ has experimental => (
 
 has explanation => (
     is => 'rw',
-    coerce => sub { my ($arrayref) = @_; return ($arrayref // []); },
-    default => sub { [] });
-
-has references => (
-    is => 'rw',
     coerce => sub { my ($text) = @_; return ($text // EMPTY); },
     default => EMPTY
 );
+
+has references => (
+    is => 'rw',
+    coerce => sub { my ($arrayref) = @_; return ($arrayref // []); },
+    default => sub { [] });
 
 has aliases => (
     is => 'rw',
@@ -213,26 +215,16 @@ sub load {
     $self->original_severity($fields->value('Severity'));
     $self->experimental($fields->value('Experimental') eq 'yes');
 
-    my $explanation = $fields->value('Explanation') || $fields->value('Info');
+    $self->explanation($fields->text('Explanation') || $fields->text('Info'));
 
-    # remove leading space in each line
-    $explanation =~ s/^[ \t]//mg;
+    my $references = $fields->value('See-Also') || $fields->value('Ref');
+    my @see_also = split(/,/, $references);
 
-    # remove dot place holder for empty lines
-    $explanation =~ s/^\.$//mg;
+    # trim both ends of each
+    s/^\s+|\s+$//g for @see_also;
 
-    # split into paragraphs
-    my @paragraphs = split(/\n\n/, $explanation);
-
-    # trim beginning and end
-    s/^\s+|\s+$//g for @paragraphs;
-
-    # replace contiguous white spaces with single spaces
-    s/\s+/ /g for @paragraphs;
-
-    $self->explanation(\@paragraphs);
-
-    $self->references($fields->value('See-Also') || $fields->value('Ref'));
+    my @markdown = map { markdown_citation($_) } @see_also;
+    $self->references(\@markdown);
 
     $self->aliases([$fields->trimmed_list('Renamed-From')]);
 
@@ -269,91 +261,102 @@ sub code {
     return $CODES{$self->effective_severity};
 }
 
-=item description([FORMAT [, INDENT]])
-
-Returns the formatted explanation for a tag.  FORMAT must
-be either C<text> or C<html> and defaults to C<text> if no format is
-specified.  If C<text>, returns wrapped paragraphs formatted in plain text
-with a right margin matching the Text::Wrap default, preserving as
-verbatim paragraphs that begin with whitespace.  If C<html>, return
-paragraphs formatted in HTML.
-
-If INDENT is specified, the string INDENT is prepended to each line of the
-formatted output.
+=item text_description
 
 =cut
 
-sub description {
-    my ($self, $format, $indent) = @_;
+sub text_description {
+    my ($self, $indent) = @_;
 
-    $format //= 'text';
-    $indent //= EMPTY;
+    my @paragraphs = split(/\n{2,}/, $self->markdown_description);
 
-    croak "unknown output format $format"
-      unless $format eq 'text' || $format eq 'html';
+    # use angular brackets for emphasis
+    s{<i>|<em>}{&lt;}g for @paragraphs;
+    s{</i>|</em>}{&gt;}g for @paragraphs;
 
-    my @paragraphs = @{$self->explanation};
+    # drop Markdown hyperlinks
+    s{\[([^\]]+)\]\([^\)]+\)}{$1}g for @paragraphs;
 
-    my @citations = split(/,/, $self->references);
+    # drop all HTML tags except Markdown shorthand <$url>
+    s{<(?![a-z]+://)[^>]+>}{}g for @paragraphs;
 
-    # trim both ends
-    s/^\s+|\s+$//g for @citations;
+    # drop brackets around Markdown shorthand <$url>
+    s{<([a-z]+://[^>]+)>}{$1}g for @paragraphs;
 
-    my @html_citations= map { html_citation($_) } @citations;
+    my @wrapped;
+    for my $paragraph (@paragraphs) {
 
-    push(@paragraphs, reference_statement(@html_citations))
-      if @html_citations;
+        # substitute HTML entities
+        $paragraph = decode_entities($paragraph);
 
-    push(@paragraphs, 'Severity: '. $self->original_severity);
+        if ($paragraph =~ /^\s/) {
 
-    push(@paragraphs, 'Check: ' . $self->check)
+            # do not wrap preformatted lines
+            my @lines = split(/\n/, $paragraph);
+
+            push(@wrapped, $indent . $_) for @lines;
+
+        } else {
+            # reduce whitespace throughout, including newlines
+            $paragraph =~ s/\s+/ /g;
+
+            # trim beginning and end of each line
+            $paragraph =~ s/^\s+|\s+$//mg;
+
+            # do not wrap long words like urls, see #719769
+            local $Text::Wrap::huge = 'overflow';
+
+            push(@wrapped, wrap($indent, $indent, $paragraph));
+        }
+    }
+
+    my $output = join(NEWLINE . $indent . NEWLINE, @wrapped) . NEWLINE;
+
+    return $output;
+}
+
+=item html_description
+
+=cut
+
+sub html_description {
+    my ($self) = @_;
+
+    return markdown($self->markdown_description);
+}
+
+=item markdown_description
+
+=cut
+
+sub markdown_description {
+    my ($self) = @_;
+
+    my $description = $self->explanation;
+
+    my @extras;
+
+    push(@extras, reference_statement(@{$self->references}))
+      if @{$self->references};
+
+    push(@extras, 'Severity: '. $self->original_severity);
+
+    push(@extras, 'Check: ' . $self->check)
       if length $self->check;
 
-    push(@paragraphs, 'Renamed from: ' . join(SPACE, @{$self->aliases}))
+    push(@extras, 'Renamed from: ' . join(SPACE, @{$self->aliases}))
       if @{$self->aliases};
 
-    push(@paragraphs, 'This tag is experimental.')
+    push(@extras, 'This tag is experimental.')
       if $self->experimental;
 
-    push(@paragraphs,
+    push(@extras,
         'This tag is a classification. There is no issue in your package.')
       if $self->original_severity eq 'classification';
 
-    # do not wrap long words like urls, see #719769
-    local $Text::Wrap::huge = 'overflow';
+    $description .= PARAGRAPH_BREAK . $_ for @extras;
 
-    my $output;
-    if ($format eq 'html') {
-
-        # encapsulate in HTML paragraphs
-        my @html
-          = map { HTML_PARAGRAPH_START . $_ . HTML_PARAGRAPH_END } @paragraphs;
-
-        # make page source legible
-        my @wrapped = map { wrap(EMPTY, EMPTY, $_) } @html;
-
-        # add empty lines between html paragraphs
-        $output = join(NEWLINE . NEWLINE, @wrapped);
-
-    } else {
-        my @text = map { $self->dtml_to_text($_) } @paragraphs;
-
-        my @wrapped;
-        for my $paragraph (@text) {
-
-            # do not wrap indented lines
-            if ($paragraph =~ /^\s/) {
-                push(@wrapped, $indent . $paragraph);
-
-            } else {
-                push(@wrapped, wrap($indent, $indent, $paragraph));
-            }
-        }
-
-        $output = join(NEWLINE . $indent . NEWLINE, @wrapped) . NEWLINE;
-    }
-
-    return $output;
+    return $description;
 }
 
 =item reference_statement
@@ -379,43 +382,45 @@ sub reference_statement {
     return "Refer to $text for details.";
 }
 
-=item html_citation
+=item markdown_citation
 
 =cut
 
-sub html_citation {
+sub markdown_citation {
     my ($citation) = @_;
 
-    my $html;
+    my $markdown;
 
     if ($citation =~ /^([\w-]+)\s+(.+)$/) {
-        $html = html_from_manuals($1, $2);
+        $markdown = markdown_from_manuals($1, $2);
 
     } elsif ($citation =~ /^([\w.-]+)\((\d\w*)\)$/) {
         my ($name, $section) = ($1, $2);
         my $url
           ="https://manpages.debian.org/cgi-bin/man.cgi?query=$name&amp;sektion=$section";
-        $html = qq{the <a href="$url">$citation</a> manual page};
+        my $hyperlink = markdown_hyperlink($citation, $url);
+        $markdown = "the $hyperlink manual page";
 
-    } elsif ($citation =~ m,^(ftp|https?)://,) {
-        $html = qq{<a href="$citation">$citation</a>};
+    } elsif ($citation =~ m{^(ftp|https?)://}) {
+        $markdown = markdown_hyperlink(undef, $citation);
 
-    } elsif ($citation =~ m,^/,) {
-        $html = qq{<a href="file://$citation">$citation</a>};
+    } elsif ($citation =~ m{^/}) {
+        $markdown = markdown_hyperlink($citation, "file://$citation");
 
-    } elsif ($citation =~ m,^#(\d+)$,) {
-        my $url = "https://bugs.debian.org/$1";
-        $html = qq{<a href="$url">$url</a>};
+    } elsif ($citation =~ m{^(?:Bug)?#(\d+)$}) {
+        my $bugnumber = $1;
+        $markdown
+          = markdown_hyperlink($citation,"https://bugs.debian.org/$bugnumber");
     }
 
-    return $html // $citation;
+    return $markdown // $citation;
 }
 
-=item html_from_manuals
+=item markdown_from_manuals
 
 =cut
 
-sub html_from_manuals {
+sub markdown_from_manuals {
     my ($volume, $section) = @_;
 
     return EMPTY
@@ -426,61 +431,53 @@ sub html_from_manuals {
     # start with the citation to the overall manual.
     my $title = $entry->{''}{title};
     my $url   = $entry->{''}{url};
-    my $html  = $url ? qq{<a href="$url">$title</a>} : $title;
 
-    return $html
+    my $markdown = markdown_hyperlink($title, $url);
+
+    return $markdown
       unless length $section;
 
     # Add the section information, if present, and a direct link to that
     # section of the manual where possible.
     if ($section =~ /^[A-Z]+$/) {
-        $html .= " appendix $section";
+        $markdown .= " appendix $section";
 
     } elsif ($section =~ /^\d+$/) {
-        $html .= " chapter $section";
+        $markdown .= " chapter $section";
 
     } elsif ($section =~ /^[A-Z\d.]+$/) {
-        $html .= " section $section";
+        $markdown .= " section $section";
     }
 
-    if (exists $entry->{$section}) {
-        my $section_title = $entry->{$section}{title};
-        my $section_url   = $entry->{$section}{url};
-        $html .=
-          $section_url
-          ? qq{ (<a href="$section_url">$section_title</a>)}
-          : qq{ ($section_title)};
-    }
+    return $markdown
+      unless exists $entry->{$section};
 
-    return $html;
+    my $section_title = $entry->{$section}{title};
+    my $section_url   = $entry->{$section}{url};
+
+    $markdown
+      .= SPACE
+      . LEFT_PARENTHESIS
+      . markdown_hyperlink($section_title, $section_url)
+      . RIGHT_PARENTHESIS;
+
+    return $markdown;
 }
 
-=item dtml_to_text
+=item markdown_hyperlink
 
 =cut
 
-sub dtml_to_text {
-    my ($self, $line) = @_;
+sub markdown_hyperlink {
+    my ($text, $url) = @_;
 
-    # use angular brackets for emphasis
-    $line =~ s{<i>|<em>}{&lt;}g;
-    $line =~ s{</i>|</em>}{&gt;}g;
+    return $text
+      unless length $url;
 
-    # drop all other HTML tags
-    $line =~ s{<[^>]+>}{}g;
+    return "<$url>"
+      unless length $text;
 
-    # substitute HTML entities
-    $line = decode_entities($line);
-
-    unless ($line =~ /^\s/) {
-
-        # preformatted
-        $line =~ s{\s\s+}{ }g;
-        $line =~ s{^ }{};
-        $line =~ s{ $}{};
-    }
-
-    return $line;
+    return "[$text]($url)";
 }
 
 =back

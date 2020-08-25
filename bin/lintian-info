@@ -135,7 +135,7 @@ if ($tags) {
         if (defined $info) {
 
             $code = $info->code;
-            $description = $info->description('text', 'N:   ');
+            $description = $info->text_description('N:   ');
             chomp $description;
         }
 
@@ -206,7 +206,7 @@ while (<>) {
       unless $info;
 
     print "N:\n";
-    print $info->description('text', 'N:   ');
+    print $info->text_description('N:   ');
     print "N:\n";
 }
 

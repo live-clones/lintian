@@ -175,7 +175,7 @@ sub print_tag {
 
     if ($self->showdescription && !$self->issued_tag($tag_info->name)) {
 
-        my $description = $tag_info->description('text', '   ');
+        my $description = $tag_info->text_description('   ');
 
         say 'N:';
         say "N: $_" for split(/\n/, $description);
