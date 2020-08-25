@@ -10,4 +10,4 @@ Explanation: This package provides an ELF binary that lacks the use of fortified
  .
  NB: Due to false-positives, Lintian ignores some unprotected functions
  (e.g. memcpy).
-See-Also: https://wiki.debian.org/Hardening, #673112
+See-Also: https://wiki.debian.org/Hardening, Bug#673112

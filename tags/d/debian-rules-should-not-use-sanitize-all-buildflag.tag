@@ -14,4 +14,4 @@ Explanation: This package's <code>debian/rules</code> file contains a
  even functionality.
  .
  Please remove the reference to <code>sanitize=+all</code>.
-See-Also: dpkg-buildflags(1), #895811
+See-Also: dpkg-buildflags(1), Bug#895811

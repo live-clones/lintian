@@ -6,4 +6,4 @@ Explanation: An entry in <code>debian/source/include-binaries</code> does not ex
  .
  The format for the file is described in the manual page for
  <code>dpkg-source</code>.
-See-Also: dpkg-source(1), #528001, https://stackoverflow.com/questions/21057015/debian-include-binaries-format
+See-Also: dpkg-source(1), Bug#528001, https://stackoverflow.com/questions/21057015/debian-include-binaries-format

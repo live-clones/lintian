@@ -12,4 +12,4 @@ Explanation: The changelog entry references a temporary security identifier,
  If a CVE has been allocated, please use that instead. Otherwise,
  please replace the TEMP identifier with a short description of the
  issue.
-See-Also: #787929, #807892
+See-Also: Bug#787929, Bug#807892

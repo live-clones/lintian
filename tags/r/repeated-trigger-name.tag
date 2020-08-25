@@ -15,4 +15,4 @@ Explanation: The package repeats the same trigger. There should be no reason to
  please use a Lintian override to state this.
  .
  Please remove any duplicate definitions.
-See-Also: deb-triggers(5), #698723
+See-Also: deb-triggers(5), Bug#698723

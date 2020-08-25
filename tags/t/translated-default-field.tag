@@ -17,4 +17,4 @@ Explanation: You should not mark as translatable "Default:" or "DefaultChoice:"
  Note that in the first case, Lintian ignores the comment unless it
  explicitly references translators and it is appears directly before
  the field in question.
-See-Also: po-debconf(7), #637881
+See-Also: po-debconf(7), Bug#637881

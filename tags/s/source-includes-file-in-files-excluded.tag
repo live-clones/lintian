@@ -9,4 +9,4 @@ Explanation: A file specified in the <code>Files-Excluded</code> field in
  not repacked as intended. Alternatively, the field is simply out of date.
  .
  mk-origtargz(1) is typically responsible for removing such files. Support
- in <code>git-buildpackage</code> is being tracked in #812721.
+ in <code>git-buildpackage</code> is being tracked in Bug#812721.

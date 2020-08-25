@@ -8,4 +8,4 @@ Explanation: The length of the specified field is too long.
  users.
  .
  Please reduce the number of characters.
-See-Also: #942493
+See-Also: Bug#942493

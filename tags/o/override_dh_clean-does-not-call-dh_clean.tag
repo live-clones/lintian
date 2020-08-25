@@ -8,4 +8,4 @@ Explanation: The <code>debian/rules</code> file for this package has an
  clean</code>.
  .
  Please add a call to <code>dh&lowbar;clean</code>.
-See-Also: #884419, #884815
+See-Also: Bug#884419, Bug#884815

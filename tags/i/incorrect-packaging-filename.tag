@@ -13,4 +13,4 @@ Explanation: Some packaging files obtain different names when they are copied
  users.
  .
  Please rename the file as indicated.
-See-Also: #429510, #946126, #946041
+See-Also: Bug#429510, Bug#946126, Bug#946041

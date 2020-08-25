@@ -8,4 +8,4 @@ Explanation: Errors were found in the <code>debian/po/POTFILES.in</code> file.
  rerun intltool-update.
  .
   [encoding: UTF-8]
-See-Also: #849912, #883653
+See-Also: Bug#849912, Bug#883653

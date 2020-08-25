@@ -7,4 +7,4 @@ Explanation: Either the specified Python 3.x package declares a dependency on a
  .
  This is likely a typo in <code>debian/control</code> or due to misconfigured
  calls to, for example, <code>dh&lowbar;installdocs --link-doc=PKG</code>.
-See-Also: #884692
+See-Also: Bug#884692

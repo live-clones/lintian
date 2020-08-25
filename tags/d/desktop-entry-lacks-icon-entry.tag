@@ -12,4 +12,4 @@ Explanation: This .desktop file does not contain an "Icon" entry.
  useful for checking the syntax of desktop entries.
 See-Also: https://specifications.freedesktop.org/desktop-entry-spec/latest/ar01s06.html,
  https://specifications.freedesktop.org/icon-theme-spec/icon-theme-spec-latest.html,
- #854132
+ Bug#854132

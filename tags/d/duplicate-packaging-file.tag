@@ -11,4 +11,4 @@ Explanation: Some packaging files obtain different names when they are copied
  a file with incorrect name. Please remove the file as indicated.
  .
  Please merge all relevant information into the surviving file.
-See-Also: #429510, #946126
+See-Also: Bug#429510, Bug#946126

@@ -14,5 +14,5 @@ Explanation: The indicated program run in a maintainer script has a prepended
  control of the installation path of the according program and that
  you won't forget to change this maintainer script, too, if you ever
  move that program around.
-See-Also: policy 6.1, devref 6.4, #769845, #807695,
+See-Also: policy 6.1, devref 6.4, Bug#769845, Bug#807695,
  https://lists.debian.org/debian-devel/2014/11/msg00044.html

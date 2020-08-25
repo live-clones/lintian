@@ -1,7 +1,7 @@
 Tag: package-contains-mime-file-outside-package-dir
 Severity: error
 Check: mimeinfo
-See-Also: #761649, /usr/share/doc/shared-mime-info/
+See-Also: Bug#761649, /usr/share/doc/shared-mime-info/
 Explanation: This package contains a file in a path reserved solely for
  mime cache file.
  .

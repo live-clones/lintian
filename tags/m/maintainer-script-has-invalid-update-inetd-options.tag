@@ -1,7 +1,7 @@
 Tag: maintainer-script-has-invalid-update-inetd-options
 Severity: warning
 Check: scripts
-See-Also: update-inetd(1), #909758, #909506
+See-Also: update-inetd(1), Bug#909758, Bug#909506
 Explanation: The specified maintainer script seems to call
  <code>update-inetd(1)</code> with an invalid option combination.
  .

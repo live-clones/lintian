@@ -6,4 +6,4 @@ Explanation: This auto-generated package (eg. <code>-dbgsym</code>) contains the
  .
  This may be due to the upstream build system miscalculating
  installation paths.
-See-Also: #958945
+See-Also: Bug#958945

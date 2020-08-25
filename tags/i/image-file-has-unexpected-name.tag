@@ -3,4 +3,4 @@ Severity: pedantic
 Check: images/filenames
 Explanation: An image file in this package has a name not generally
  associated with its format.
-See-Also: #717818
+See-Also: Bug#717818

@@ -14,4 +14,4 @@ See-Also:
  deb-symbols(5),
  dpkg-shlibdeps(1),
  https://www.debian.org/doc/manuals/maint-guide/advanced.en.html#librarysymbols,
- #944047
+ Bug#944047

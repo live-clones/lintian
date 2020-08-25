@@ -3,4 +3,4 @@ Severity: info
 Check: debian/changelog
 Explanation: The distribution in the latest Debian changelog entry indicates
  that this package was not intended to be released yet.
-See-Also: #873520
+See-Also: Bug#873520

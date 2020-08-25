@@ -17,4 +17,4 @@ Explanation: This development package (ie. from the <code>libdevel</code> sectio
  An alternative approach is to use <code>pkg-config(1)</code> or potentially
  splitting architecture-independent development tools into a separate
  package that can be marked <code>Multi-Arch: foreign</code>.
-See-Also: #794295, #794103
+See-Also: Bug#794295, Bug#794103

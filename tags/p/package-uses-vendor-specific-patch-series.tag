@@ -22,4 +22,4 @@ Explanation: The specified series file for patches is vendor-specific.
  .
  You should only see this tag in Debian or other distributions when 
  targeting an upload for Debian.
-See-Also: #904302, #922531, https://lists.debian.org/debian-devel-announce/2018/11/msg00004.html
+See-Also: Bug#904302, Bug#922531, https://lists.debian.org/debian-devel-announce/2018/11/msg00004.html

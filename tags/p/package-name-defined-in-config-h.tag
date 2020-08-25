@@ -6,4 +6,4 @@ Explanation: This package installs a header file named <code>config.h</code> tha
  packages using autoconf.
  .
  Please remove the file or rename the identifier.
-See-Also: #733598
+See-Also: Bug#733598

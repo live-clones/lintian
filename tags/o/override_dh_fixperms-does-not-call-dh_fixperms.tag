@@ -9,4 +9,4 @@ Explanation: The <code>debian/rules</code> file for this package has an
  process, rendering the package unreproducible.
  .
  Please add a call to <code>dh&lowbar;fixperms</code>.
-See-Also: #885909
+See-Also: Bug#885909

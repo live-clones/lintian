@@ -1,7 +1,7 @@
 Tag: program-not-linked-against-libc
 Severity: error
 Check: binaries
-See-Also: #698720
+See-Also: Bug#698720
 Explanation: The package installs a binary which is not dynamically linked
  against libc.
  .

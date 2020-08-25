@@ -7,4 +7,4 @@ Explanation: This package appears to be covered by version 2.x of the PHP licens
  .
  Note that PEAR modules are not a part of the PHP interpreter and cannot
  use this license.
-See-Also: https://ftp-master.debian.org/REJECT-FAQ.html, #616436
+See-Also: https://ftp-master.debian.org/REJECT-FAQ.html, Bug#616436

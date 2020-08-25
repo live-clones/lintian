@@ -8,4 +8,4 @@ Explanation: The target distribution in the most recent entry in this package's
  This may indicate a mistake in setting the distribution, an accidental
  upload to unstable of a package intended for experimental, or a mistake
  in invoking <code>sbuild(1)</code>.
-See-Also: #906155, sbuild(1)
+See-Also: Bug#906155, sbuild(1)

@@ -10,4 +10,4 @@ Explanation:
  Please move the source repository to a location in
  <code>https://salsa.debian.org/debian/</code> or <code>https://git.dgit.debian.org/</code>
  or update the specified VCS field if the information is incorrect.
-See-Also: #947671
+See-Also: Bug#947671

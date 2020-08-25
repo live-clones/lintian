@@ -13,4 +13,4 @@ Explanation: Although the package does not include any shared libraries, it does
  .
  Note this is sometimes triggered for packages with a private shared
  library due to a bug in Debhelper.
-See-Also: #204975, #633853
+See-Also: Bug#204975, Bug#633853

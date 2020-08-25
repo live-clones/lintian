@@ -12,4 +12,4 @@ Explanation: The package appear to be a Java library and depending on one
  If there is otherwise a valid reason for this dependency, please override
  the tag.
 See-Also: https://lists.debian.org/debian-devel-changes/2010/04/msg00774.html,
- #227587
+ Bug#227587

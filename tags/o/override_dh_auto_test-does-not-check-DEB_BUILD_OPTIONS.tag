@@ -25,5 +25,5 @@ Explanation: The <code>debian/rules</code> file for this package has an
   ENV=var dh&lowbar;auto&lowbar;test -- ARG=value
  .
  This check is not required in Debhelper compat level 13 or greater
- (see #568897).
+ (see Bug#568897).
 See-Also: policy 4.9.1, https://wiki.debian.org/BuildProfileSpec#Registered_profile_names

@@ -12,4 +12,4 @@ Explanation: This .desktop file does either not contain a "Keywords" entry or it
  The desktop-file-validate tool in the desktop-file-utils package is
  useful for checking the syntax of desktop entries.
 See-Also: https://specifications.freedesktop.org/desktop-entry-spec/latest/ar01s06.html,
- #693918, https://wiki.gnome.org/Initiatives/GnomeGoals/DesktopFileKeywords
+ Bug#693918, https://wiki.gnome.org/Initiatives/GnomeGoals/DesktopFileKeywords

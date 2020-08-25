@@ -8,4 +8,4 @@ Explanation: Each manual page in <code>/usr/share/man</code> should have a reaso
  For manual pages in sections 1 and 8, an executable (or a link to one) should
  exist. This check currently considers all installation packages created
  by the same sources, as long as they are present.
-See-Also: policy 12.1, #583125
+See-Also: policy 12.1, Bug#583125

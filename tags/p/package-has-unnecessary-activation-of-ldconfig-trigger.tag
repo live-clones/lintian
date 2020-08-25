@@ -7,4 +7,4 @@ Explanation: The package activates the ldconfig trigger even though no shared
  .
  Note this may be triggered by a bug in debhelper, that causes it to
  auto-generate an ldconfig trigger for packages that do not need it.
-See-Also: policy 8.1.1, #204975
+See-Also: policy 8.1.1, Bug#204975

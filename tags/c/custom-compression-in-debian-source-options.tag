@@ -20,4 +20,4 @@ Explanation: This package selects a custom compression level or algorithm
  make it harder to change the defauls on an archive-wide basis.
  .
  Some legitimate use cases trigger this tag. Please override it.
-See-Also: Bug#829100, Bug#906614, Bug##909696, dpkg-deb(1)
+See-Also: Bug#829100, Bug#906614, Bug#909696, dpkg-deb(1)

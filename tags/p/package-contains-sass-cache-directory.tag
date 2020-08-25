@@ -14,4 +14,4 @@ Explanation: This package appears to ship a <code>.sass-cache/</code> directory,
  .
    override&lowbar;dh&lowbar;install:
            dh&lowbar;install -X.sass-cache
-See-Also: https://reproducible-builds.org/, #920595
+See-Also: https://reproducible-builds.org/, Bug#920595

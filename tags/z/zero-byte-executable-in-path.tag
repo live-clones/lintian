@@ -6,4 +6,4 @@ Explanation: This package installs the specified empty executable file to the
  message when run.
  .
  This was likely caused by an error in the package build process.
-See-Also: #919341
+See-Also: Bug#919341

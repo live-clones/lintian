@@ -7,4 +7,4 @@ Explanation: The source tarball contains a prebuilt Parse::Yapp parser.
  an upstream bug if there is no sign that this was intended.
  .
  Please build the parser from source.
-See-Also: #921080
+See-Also: Bug#921080

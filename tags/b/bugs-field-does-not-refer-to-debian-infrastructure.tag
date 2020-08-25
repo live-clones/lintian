@@ -6,4 +6,4 @@ Explanation: The <code>debian/control</code> file contains a Bugs field that doe
  ".debian.org".
  .
  This is likely to make reportbug(1) unable to report bugs.
-See-Also: #740944
+See-Also: Bug#740944

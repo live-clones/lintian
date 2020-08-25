@@ -12,4 +12,4 @@ Explanation:
  More information is available here:
  .
      https://wiki.debian.org/Projects/DebSrc3.0
-See-Also: #884498, dpkg-source(1)
+See-Also: Bug#884498, dpkg-source(1)

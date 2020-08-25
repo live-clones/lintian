@@ -12,4 +12,4 @@ Explanation: The following file source files include material under a
  .
  In this case a solution is to use libicu and to remove this code
  by repacking.
-See-Also: #823100
+See-Also: Bug#823100

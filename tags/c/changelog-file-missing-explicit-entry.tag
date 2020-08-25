@@ -8,4 +8,4 @@ Explanation: The latest changelog file for this package specifies a version in
  This suggests that changes were merged into a single entry. This is
  suboptimal as it makes it more difficult for users to determine which
  upload fixed a particular bug.
-See-Also: devref 5.8.5.4, devref 5.11.2, devref 5.14.3, #916877
+See-Also: devref 5.8.5.4, devref 5.11.2, devref 5.14.3, Bug#916877

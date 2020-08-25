@@ -9,4 +9,4 @@ Explanation: The <code>Distribution</code> in the <code>.changes</code> file ind
  .
  This is an easy mistake to make when invoking "sbuild ... foo.dsc".
  Double-check the <code>-d</code> option if using sbuild in this way.
-See-Also: #542747, #529281
+See-Also: Bug#542747, Bug#529281

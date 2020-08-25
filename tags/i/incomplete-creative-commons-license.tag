@@ -20,4 +20,4 @@ Explanation: The package appears to be licensed under a Creative Commons
  be found here:
  .
   https://creativecommons.org/2014/01/07/plaintext-versions-of-creative-commons-4-0-licenses/
-See-Also: #903470, #795402
+See-Also: Bug#903470, Bug#795402

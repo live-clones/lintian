@@ -23,4 +23,4 @@ Explanation: The <code>debian/copyright</code> file mentions <code>Files-Exclude
  .
  Please include such a suffix in the changelog version number to avoid
  this warning.
-See-Also: #471537, https://www.debian.org/doc/manuals/developers-reference/best-pkging-practices.html
+See-Also: Bug#471537, https://www.debian.org/doc/manuals/developers-reference/best-pkging-practices.html

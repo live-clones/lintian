@@ -11,4 +11,4 @@ Explanation: The source tarball contains a waf binary. This file is a Python
  .
  You might want to follow these guidelines to obtain an unpacked waf:
  https://wiki.debian.org/UnpackWaf
-See-Also: https://wiki.debian.org/UnpackWaf, #654523
+See-Also: https://wiki.debian.org/UnpackWaf, Bug#654523

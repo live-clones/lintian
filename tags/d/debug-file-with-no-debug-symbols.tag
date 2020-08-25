@@ -1,7 +1,7 @@
 Tag: debug-file-with-no-debug-symbols
 Severity: warning
 Check: binaries
-See-Also: #668437
+See-Also: Bug#668437
 Explanation: The binary is installed as a detached "debug symbols" ELF file,
  but it does not appear to have debug information associated with it.
  .

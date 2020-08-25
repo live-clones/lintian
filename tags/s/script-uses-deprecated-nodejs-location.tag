@@ -11,4 +11,4 @@ Explanation: You used <code>/usr/bin/nodejs</code> or <code>/usr/bin/env nodejs<
  the rest of the Node.js ecosystem.
  .
  Please update your package to use the <code>node</code> variant.
-See-Also: #614907, #862051
+See-Also: Bug#614907, Bug#862051

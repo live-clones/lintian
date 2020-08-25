@@ -16,4 +16,4 @@ Explanation: The debhelper tools from autotools-dev has been replaced by the too
  <code>dh&lowbar;autotools-dev&lowbar;restoreconfig</code> are replaced by
  <code>dh&lowbar;clean</code>, so they can most likely just be removed without
  any further changes.
-See-Also: #878528
+See-Also: Bug#878528
