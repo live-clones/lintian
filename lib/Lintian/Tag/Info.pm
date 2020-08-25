@@ -25,7 +25,7 @@ use warnings;
 use utf8;
 
 use Carp qw(croak);
-use HTML::Entities;
+use HTML::HTML5::Entities;
 use List::MoreUtils qw(none);
 use Text::Markdown::Discount qw(markdown);
 use Text::Wrap;
