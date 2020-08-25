@@ -129,7 +129,7 @@ if ($tags) {
     @selected = $profile->enabled_tags
       unless @selected;
 
-    for my $name (sort @selected) {
+    for my $name (sort { lc($a) cmp lc($b) } @selected) {
 
         my $code = 'N';
         my $description = 'N:   Unknown tag.';
