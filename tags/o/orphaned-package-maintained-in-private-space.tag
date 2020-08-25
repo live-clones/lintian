@@ -3,7 +3,7 @@ Severity: warning
 Check: fields/vcs
 Explanation:
  This package is orphaned and the specified VCS field points to a private
- space in the *.debian.org infrastructure. The sources are probably not
+ space in the &ast;.debian.org infrastructure. The sources are probably not
  accessible to the Quality Assurance (QA) Team, which prepares uploads
  in the interim.
  .

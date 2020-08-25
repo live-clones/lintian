@@ -3,7 +3,7 @@ Severity: warning
 Check: files/empty-package
 Explanation: This binary package appears to be empty, and its description does
  not say that it's a metapackage or a transitional package. This is
- often due to problems with updating debhelper *.install files during
+ often due to problems with updating debhelper &ast;.install files during
  package renames or similar problems where installation rules don't put
  files in the correct place.
  .

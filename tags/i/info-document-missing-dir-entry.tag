@@ -8,7 +8,7 @@ Explanation: This info document has no directory entry. This is text between
  .
    @dircategory Software development
    @direntry
-   * foo: (foo).               Foo creator and editor
+   &ast; foo: (foo).               Foo creator and editor
    @end direntry
  .
  to the texinfo source so that the generated info file will contain an

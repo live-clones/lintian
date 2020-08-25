@@ -1,7 +1,7 @@
 Tag: vcs-field-uses-insecure-uri
 Severity: info
 Check: fields/vcs
-Explanation: The Vcs-* field uses an unencrypted transport protocol for the
+Explanation: The Vcs-&ast; field uses an unencrypted transport protocol for the
  URI. It is recommended to use a secure transport such as HTTPS for
  anonymous read-only access.
  .

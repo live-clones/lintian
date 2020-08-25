@@ -13,7 +13,7 @@ Explanation: The symbols file for this package does not contain a
  multiple times.
  .
  Note that the format of <code>deb-symbols(5)</code> files requires that the
- <code>* Build-Depends-Package:</code> line should start in column one of
+ <code>&ast; Build-Depends-Package:</code> line should start in column one of
  the file and not be indented to align with the symbols themselves.
  Please do not use the placeholder <code>&#35;PACKAGE&#35;</code>. The
  development package for your shared library must be stated explicitly.

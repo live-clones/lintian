@@ -11,4 +11,4 @@ Explanation: Lintian found a spelling error in a manual page. Lintian has a list
  please fix the error in the translations as well as the English text to
  avoid making the translations fuzzy. With gettext, for example, this
  means you should also fix the spelling mistake in the corresponding
- msgids in the *.po files.
+ msgids in the &ast;.po files.

@@ -2,7 +2,7 @@ Tag: file-in-root-and-usr
 Severity: error
 Check: usrmerge
 Explanation: The package ships two files with the same name installed both in
- /{bin,sbin,lib*}/ and /usr/{bin,sbin,lib*}/.
+ /{bin,sbin,lib&ast;}/ and /usr/{bin,sbin,lib&ast;}/.
  This is incompatible with the merged /usr directories scheme.
  .
  Packages with conflicting files must remove one of them if possible or

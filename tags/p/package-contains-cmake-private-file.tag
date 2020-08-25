@@ -6,7 +6,7 @@ Explanation: The package ships a file in a location reserved for <code>CMake</co
  .
  Libraries should not ship Find modules Config files. Config files should
  be installed in the unversioned path
- <code>usr/(lib/&lt;arch&gt;|lib|share)/cmake/&lt;name&gt;*/</code>
+ <code>usr/(lib/&lt;arch&gt;|lib|share)/cmake/&lt;name&gt;&ast;/</code>
  .
  When CMake Config files are installed in an unversioned path, your
  package will continue to work when a new version of CMake is uploaded.

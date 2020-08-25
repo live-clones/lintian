@@ -18,4 +18,4 @@ Explanation: The given package appears to be a shared library -dev package, but
  <code>${source:Version}</code> instead, is the right approach. The goal is to
  ensure that a new upstream version of the library package doesn't satisfy
  the -dev package dependency, since the minor version of the shared
- library may have changed, breaking the <code>*.so</code> links.
+ library may have changed, breaking the <code>&ast;.so</code> links.

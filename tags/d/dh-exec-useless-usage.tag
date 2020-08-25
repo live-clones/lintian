@@ -12,7 +12,7 @@ Explanation: The package uses dh-exec for things it is not needed for.
  This could be replaced with the following in most cases, dropping the
  need for dh-exec:
  .
-  usr/lib/*
+  usr/lib/&ast;
  .
  However, there may be other directories that match the wildcard,
  which one does not wish to install. In that case, this warning should

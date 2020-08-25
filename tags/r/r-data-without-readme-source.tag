@@ -2,7 +2,7 @@ Tag: r-data-without-readme-source
 Severity: error
 Check: cruft
 Explanation: Many modules packaged for the R Project for Statistical Computing contain
- data files with names as *.rda, *.Rda, *.rdata, *.Rdata, etc.
+ data files with names as &ast;.rda, &ast;.Rda, &ast;.rdata, &ast;.Rdata, etc.
  .
  When such files exist, the FTP masters expect them to be explained in
  debian/README.source, which this package is missing.

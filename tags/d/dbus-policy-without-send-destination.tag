@@ -2,7 +2,7 @@ Tag: dbus-policy-without-send-destination
 Severity: warning
 Check: desktop/dbus
 Explanation: The package contains D-Bus policy configuration that uses
- one of the <code>send&lowbar;*</code> conditions, but does not specify a
+ one of the <code>send&lowbar;&ast;</code> conditions, but does not specify a
  <code>send&lowbar;destination</code>, and is not specific to root.
  .
  Rules of the form

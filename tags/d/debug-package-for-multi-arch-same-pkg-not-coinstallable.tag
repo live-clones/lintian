@@ -16,4 +16,4 @@ Explanation: The debug package appear to be containing debug symbols for a
  by using:
  .
   readelf -n &lt;binary-elf&gt; | \
-      perl -ne 'print if s,^\s*Build ID:\s*(\S\S)(\S+),/usr/lib/debug/.build-id/$1/$2.debug,'
+      perl -ne 'print if s,^\s&ast;Build ID:\s&ast;(\S\S)(\S+),/usr/lib/debug/.build-id/$1/$2.debug,'

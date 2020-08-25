@@ -2,7 +2,7 @@ Tag: multiple-distributions-in-changes-file
 Severity: error
 Check: fields/distribution
 Explanation: You've specified more than one target distribution for your upload
- in the <code>*.changes</code> file, probably via the most recent entry in the
+ in the <code>&ast;.changes</code> file, probably via the most recent entry in the
  <code>debian/changelog</code> file.
  .
  Although this syntax is valid, it is not accepted by the Debian archive

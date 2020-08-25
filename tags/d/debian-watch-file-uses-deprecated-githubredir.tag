@@ -6,7 +6,7 @@ Explanation: The watch file specifies a githubredir.debian.net URL, which is dep
  Instead, use direct links to the tags page:
  .
   version=3
-  https://github.com/&lt;user&gt;/&lt;project&gt;/tags .*/(.*)\.tar\.gz
+  https://github.com/&lt;user&gt;/&lt;project&gt;/tags .&ast;/(.&ast;)\.tar\.gz
  .
  replacing <code>&lt;user&gt;</code> and <code>&lt;project&gt;</code> with the Github
  username and project respectively.

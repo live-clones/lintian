@@ -2,7 +2,7 @@ Tag: incorrect-packaging-filename
 Severity: warning
 Check: debian/filenames
 Explanation: Some packaging files obtain different names when they are copied
- from source to installation packages. Debhelper sometimes adds *.Debian
+ from source to installation packages. Debhelper sometimes adds &ast;.Debian
  extensions to NEWS, README and TODO files. That can be confusing.
  .
  Debhelper's behavior also depends on the filename.

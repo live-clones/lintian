@@ -1,7 +1,7 @@
 Tag: vcs-field-not-canonical
 Severity: info
 Check: fields/vcs
-Explanation: The VCS-* field contains an uncanonical URI. Please update to use
+Explanation: The VCS-&ast; field contains an uncanonical URI. Please update to use
  the current canonical URI instead. This reduces the network bandwidth used
  and makes debcheckout work independent of the port forwarding and
  redirections properly working.

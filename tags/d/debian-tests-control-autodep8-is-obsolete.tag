@@ -15,7 +15,7 @@ Explanation: The specified autopkgtest control file is considered obsolete.
  .
  When configured to run autodep8 tests, autopkgtest will run the
  additional tests and the autodep8 tests when <code>debian/control</code>
- has the proper <code>Testsuite: autopkgtest-*</code> in the source
+ has the proper <code>Testsuite: autopkgtest-&ast;</code> in the source
  headers.
  .
  Please merge the specified file into <code>debian/tests/control</code>.

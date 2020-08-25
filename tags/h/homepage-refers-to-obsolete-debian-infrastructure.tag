@@ -2,7 +2,7 @@ Tag: homepage-refers-to-obsolete-debian-infrastructure
 Severity: warning
 Check: fields/homepage
 Explanation: The <code>Homepage</code> field for this package points to an area
- within the *.debian.org infrastructure that has been deprecated.
+ within the &ast;.debian.org infrastructure that has been deprecated.
  .
  After 1st May 2018, the Alioth service became read-only in May 2018.
  Packages should migrate to website hosting on https://salsa.debian.org.

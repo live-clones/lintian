@@ -2,7 +2,7 @@ Tag: library-in-root-and-usr
 Severity: error
 Check: usrmerge
 Explanation: The package ships two files with the same name installed both in
- /lib*/ and /usr/lib*/ (or their subdirectories).
+ /lib&ast;/ and /usr/lib&ast;/ (or their subdirectories).
  This is not useful and is incompatible with the merged /usr directories
  scheme.
  .

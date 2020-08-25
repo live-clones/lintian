@@ -7,7 +7,7 @@ Explanation: The specified paragraph in the machine readable copyright file refe
   Files: filea
   Copyright: 2009, ...
  .
-  Files: *
+  Files: &ast;
   Copyright: 2010, ...
  .
  As the paragraphs is matched on a "last match wins" principle, all proceeding

@@ -11,4 +11,4 @@ Explanation: The Homepage field for this package points to an uncanonical Biocon
  .
  not:
  .
- https://www.bioconductor.org/packages/(release|devel|*)/bioc/html/foo.html
+ https://www.bioconductor.org/packages/(release|devel|&ast;)/bioc/html/foo.html

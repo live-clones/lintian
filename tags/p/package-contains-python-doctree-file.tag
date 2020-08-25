@@ -2,7 +2,7 @@ Tag: package-contains-python-doctree-file
 Severity: warning
 Check: files/names
 Explanation: This package appears to contain a pickled cache of reStructuredText
- (*.rst) documentation in a <code>.doctree</code> file.
+ (&ast;.rst) documentation in a <code>.doctree</code> file.
  .
  These are not needed to display the documentation correctly and as they can
  contain absolute build paths can affect the reproducibility of the package.
