@@ -41,7 +41,6 @@ use Getopt::Long ();
 use List::MoreUtils qw(all);
 use Path::Tiny;
 
-use Lintian::Data;
 use Lintian::IPC::Run3 qw(safe_qx);
 use Lintian::Profile;
 use Lintian::Util qw(version_from_changelog);
@@ -114,8 +113,6 @@ my @CONFIG_DIRS = grep { -d }
 my $profile = Lintian::Profile->new;
 $profile->load($profile_name, \@CONFIG_DIRS,
     { 'restricted-search-dirs' => \@RESTRICTED_CONFIG_DIRS });
-
-Lintian::Data->set_vendor($profile);
 
 if ($list_tags) {
     say for sort $profile->enabled_tags;

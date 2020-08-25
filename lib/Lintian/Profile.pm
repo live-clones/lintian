@@ -33,6 +33,7 @@ use Path::Tiny;
 use Dpkg::Vendor qw(get_current_vendor get_vendor_info);
 
 use Lintian::Check::Info;
+use Lintian::Data;
 use Lintian::Deb822::File;
 use Lintian::Tag::Info;
 
@@ -208,6 +209,8 @@ sub load {
     croak "Cannot find profile $name (in "
       . join(', ', map { "$_/profiles" } @$ipath).')'
       unless $profile;
+
+    Lintian::Data->set_vendor($self);
 
     # populate known tags and their check associations
     for my $tagroot ($self->_safe_include_path('tags')) {

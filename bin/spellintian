@@ -39,7 +39,6 @@ use File::Basename;
 use Getopt::Long ();
 use Path::Tiny;
 
-use Lintian::Data;
 use Lintian::IPC::Run3 qw(safe_qx);
 use Lintian::Spelling qw(check_spelling check_spelling_picky);
 use Lintian::Profile;
@@ -116,8 +115,6 @@ my @CONFIG_DIRS = grep { -d }
 my $profile = Lintian::Profile->new;
 $profile->load(undef, \@CONFIG_DIRS,
     { 'restricted-search-dirs' => \@RESTRICTED_CONFIG_DIRS });
-
-Lintian::Data->set_vendor($profile);
 
 my $exit_code = 0;
 
