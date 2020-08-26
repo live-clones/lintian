@@ -11,7 +11,7 @@ Explanation: The paragraph has a "License" and a "Copyright" field, but no
  is a <code>files paragraph</code>, it is missing the "Files" field.
  .
  Please note that while the "Files" field was optional in some cases
- in some of the earlier draft versions, it is mandatory in <i>all</i>
+ in some of the earlier draft versions, it is mandatory in *all*
  <code>files paragraphs</code> in the current specification.
  .
  Lintian will attempt to guess what you intended and continue based on

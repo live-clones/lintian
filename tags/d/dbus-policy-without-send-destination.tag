@@ -9,7 +9,7 @@ Explanation: The package contains D-Bus policy configuration that uses
  .
    &lt;allow send&lowbar;interface="com.example.MyInterface"/&gt;
  .
- allow messages with the given interface to be sent to <i>any</i>
+ allow messages with the given interface to be sent to *any*
  service, not just the one installing the rule, which is rarely
  what was intended.
  .

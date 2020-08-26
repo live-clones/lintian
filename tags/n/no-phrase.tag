@@ -5,7 +5,7 @@ Renamed-From:
  maintainer-name-missing
  changed-by-name-missing
 Explanation: The named contact includes an email address, but no name
- (which email folks call the <em>phrase</em>).
+ (which email folks call the *phrase*).
  .
  The contact information must contain both a name and a mail address.
 See-Also: policy 5.6.2,

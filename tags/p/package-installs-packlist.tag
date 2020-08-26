@@ -8,7 +8,7 @@ Explanation: Packages built using the perl MakeMaker package will have a file
  .
  They can be suppressed by adding the following to <code>debian/rules</code>:
  .
-   find debian/<i>pkg</i> -type f -name .packlist -delete
+   find debian/*pkg* -type f -name .packlist -delete
  .
  or by telling MakeMaker to use vendor install dirs; consult a recent
  version of Perl policy. Perl 5.6.0-12 or higher supports this.

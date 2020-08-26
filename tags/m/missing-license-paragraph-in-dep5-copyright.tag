@@ -6,7 +6,7 @@ Explanation: The <code>Files</code> paragraph in the machine readable copyright 
  exists.
  .
  Sometimes this tag appears because of incorrect ordering. Stand-alone
- <code>License</code> paragraphs must appear <em>after</em> all <code>Files</code>
+ <code>License</code> paragraphs must appear *after* all <code>Files</code>
  paragraphs.
 See-Also: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/,
  Bug#959067

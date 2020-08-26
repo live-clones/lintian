@@ -4,7 +4,7 @@ Check: languages/java
 See-Also: java-policy 2.2, java-policy 2.3
 Explanation: The classpath listed in some of the files references files outside
  of /usr/share, while all installed JAR files must be within
- /usr/share/java for libraries or /usr/share/<i>package</i> for JARs for
+ /usr/share/java for libraries or /usr/share/*package* for JARs for
  private use.
  .
  The rationale is that jar files are in almost all cases architecture

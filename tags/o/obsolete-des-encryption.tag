@@ -14,7 +14,7 @@ Explanation: The listed ELF binary appears to use a C library function that
   functions, it may be necessary to continue using DES under some
   circumstances (e.g. for protocol compatibility, or to retain the
   ability to decrypt old data on disk) but this should be done using
-  the DES functions in a modern cryptographic <em>library</em>
+  the DES functions in a modern cryptographic *library*
   (e.g. <code>libgcrypt</code>).
   .
   This is almost certainly an upstream bug, and should be addressed
@@ -23,6 +23,6 @@ Explanation: The listed ELF binary appears to use a C library function that
   A false positive for this check is possible if the binary expects the
   definition of <code>encrypt</code>, <code>encrypt&lowbar;r</code>, <code>setkey</code>,
   and/or <code>setkey&lowbar;r</code> to come from some shared library other than
-  <code>libcrypt.so</code>, <em>and</em> that shared library defines these
+  <code>libcrypt.so</code>, *and* that shared library defines these
   functions to do something other than perform DES encryption. If this
   is the case it is appropriate to override this tag.

@@ -3,7 +3,7 @@ Severity: error
 Check: languages/r/site-library
 Explanation: This package ships a site library for the <code>R</code>
  programming language package but does not declare the
- <code>R</code> API <code>r-api-<i>N</i></code> as a package
+ <code>R</code> API <code>r-api-*N*</code> as a package
  prerequisite.
  .
  With the dh sequencer, please use <code>--buildsystem=R</code> in

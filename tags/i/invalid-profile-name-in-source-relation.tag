@@ -14,5 +14,5 @@ Explanation: The restriction formula in the source relation includes an unknown 
  "noudeb",
  "stage1",
  "stage2"
- and "pkg.<i>srcpkg</i>.<i>anything</i>".
+ and "pkg.*srcpkg*.*anything*".
 See-Also: https://wiki.debian.org/BuildProfileSpec#Registered_profile_names
