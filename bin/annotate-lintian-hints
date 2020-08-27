@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 #
-# lintian-info -- transform lintian tags into descriptive text
+# annotate-lintian-hints -- transform lintian tags into descriptive text
 #
 # Copyright © 1998 Christian Schwarz and Richard Braakman
 # Copyright © 2013 Niels Thykier
@@ -38,17 +38,12 @@ use Cwd qw(getcwd realpath);
 use File::BaseDir qw(config_home config_files data_home);
 use File::Basename;
 use Getopt::Long ();
-use List::MoreUtils qw(all);
-use Path::Tiny;
 
-use Lintian::IPC::Run3 qw(safe_qx);
 use Lintian::Output::EWI;
 use Lintian::Profile;
-use Lintian::Util qw(version_from_changelog);
+use Lintian::Version qw(guess_version);
 
 use constant EMPTY => q{};
-use constant SPACE => q{ };
-use constant COLON => q{:};
 
 binmode(STDOUT, ':encoding(UTF-8)');
 
@@ -63,18 +58,14 @@ $ENV{LINTIAN_BASE} = realpath("$FindBin::RealBin/..")
 
 my $annotate;
 my @INCLUDE_DIRS;
-my $list_tags;
 my $profile_name;
-my $tags;
 my $user_dirs = 1;
 
 my %options = (
     'annotate|a' => \$annotate,
     'help|h' => \&show_help,
     'include-dir=s' => \@INCLUDE_DIRS,
-    'list-tags|l' => \$list_tags,
     'profile=s' => \$profile_name,
-    'tags|tag|t' => \$tags,
     'user-dirs!' => \$user_dirs,
     'version' => \&show_version,
 );
@@ -117,40 +108,6 @@ $profile->load($profile_name, \@CONFIG_DIRS,
 
 my $output = Lintian::Output::EWI->new;
 
-if ($list_tags) {
-    say for sort $profile->enabled_tags;
-    exit;
-}
-
-if ($tags) {
-
-    # show all tags when none were specified
-    my @selected = @ARGV;
-    @selected = $profile->enabled_tags
-      unless @selected;
-
-    for my $name (sort { lc($a) cmp lc($b) } @selected) {
-
-        my $code = 'N';
-        my $description = 'N:   Unknown tag.';
-
-        my $info = $profile->get_taginfo($name);
-        if (defined $info) {
-
-            $code = $info->code;
-            $description = $output->tag_description($info, 'N:   ');
-            chomp $description;
-        }
-
-        say $code . COLON . SPACE . $name;
-        say 'N:';
-        say $description;
-        say 'N:';
-    }
-
-    exit !all { defined } map { $profile->get_taginfo($_) } @selected;
-}
-
 # Matches something like:  (1:2.0-3) [arch1 arch2]
 # - captures the version and the architectures
 my $verarchre = qr,(?: \s* \(( [^)]++ )\) \s* \[ ( [^]]++ ) \]),xo;
@@ -171,40 +128,43 @@ my %already_displayed;
 # Otherwise, read input files or STDIN, watch for tags, and add
 # descriptions whenever we see one, can, and haven't already
 # explained that tag.  Strip off color and HTML sequences.
-while (<>) {
-    print;
-    chomp;
+for my $line (<STDIN>) {
+    print $line;
+    chomp $line;
 
     next
-      if /^\s*$/;
+      if $line =~ /^\s*$/;
 
-    s/\e[\[\d;]*m//g;
-    s/<span style=\"[^\"]+\">//g;
-    s,</span>,,g;
+    $line =~ s/\e[\[\d;]*m//g;
+    $line =~ s/<span style=\"[^\"]+\">//g;
+    $line =~ s,</span>,,g;
 
-    my $tag;
+    my $tag_name;
     if ($annotate) {
 
         next
-          unless m/^(?:                     # start optional part
+          unless $line =~ /^(?:                    # start optional part
                     (?:\S+)?                       # Optionally starts with package name
                     (?: \s*+ \[[^\]]+?\])?         # optionally followed by an [arch-list] (like in B-D)
                     (?: \s*+ $type_re)?            # optionally followed by the type
                   :\s++)?                          # end optional part
-                ([\-\.a-zA-Z_0-9]+ (?:\s.+)?)$/x; # <tag-name> [extra] -> $1
+                ([\-\.a-zA-Z_0-9]+ (?:\s.+)?)$/x;  # <tag-name> [extra] -> $1
+
         my $tagdata = $1;
-        ($tag, undef) = split / /, $tagdata, 2;
+        ($tag_name, undef) = split(/ /, $tagdata, 2);
 
     } else {
-        my @parts = split_tag($_);
-        next unless @parts;
-        $tag = $parts[5];
+        my @parts = split_tag($line);
+        next
+          unless @parts;
+
+        $tag_name = $parts[5];
     }
 
     next
-      if $already_displayed{$tag}++;
+      if $already_displayed{$tag_name}++;
 
-    my $info = $profile->get_taginfo($tag);
+    my $info = $profile->get_taginfo($tag_name);
     next
       unless $info;
 
@@ -215,68 +175,38 @@ while (<>) {
 
 exit;
 
-sub show_version {
-    my $version = $LINTIAN_VERSION // guess_version($ENV{LINTIAN_BASE});
-
-    say "lintian-info v$version";
-    exit;
-}
-
-sub guess_version {
-    my ($lintian_base) = @_;
-
-    my $guess = version_from_git($lintian_base);
-    $guess ||= version_from_changelog($lintian_base);
-
-    return $guess
-      if length $guess;
-
-    die 'Unable to determine the version automatically!?';
-}
-
-=item version_from_git
-
-=cut
-
-sub version_from_git {
-    my ($source_path) = @_;
-
-    my $git_path = "$source_path/.git";
-
-    return EMPTY
-      unless -d $git_path;
-
-    my $guess = safe_qx('git', "--git-dir=$git_path", 'describe');
-    chomp $guess;
-
-    return ($guess // EMPTY);
-}
-
 =item split_tag
 
 =cut
 
 sub split_tag {
-    my ($tag_input) = @_;
+    my ($line) = @_;
 
     return
-      unless $tag_input =~ /^${TAG_REGEX}$/;
+      unless $line =~ /^${TAG_REGEX}$/;
 
     my $pkg_type = $3 // 'binary';
 
     return ($1, $2, $pkg_type, $4, $5, $6, $7);
 }
 
+sub show_version {
+    my $version = $LINTIAN_VERSION // guess_version($ENV{LINTIAN_BASE});
+
+    die 'Unable to determine the version automatically!?'
+      unless length $version;
+
+    say "annotate-lintian-hints v$version";
+    exit;
+}
+
 sub show_help {
     print <<"EOT";
-Usage: lintian-info [log-file...] ...
-       lintian-info --annotate [overrides ...]
-       lintian-info --tags tag ...
+Usage: annotate-lintian-hints [log-file...] ...
+       annotate-lintian-hints --annotate [overrides ...]
 
 Options:
     -a, --annotate     display descriptions of tags in Lintian overrides
-    -l, --list-tags    list all tags Lintian knows about
-    -t, --tag, --tags  display tag descriptions
     --profile X        use vendor profile X to determine severities
     --include-dir DIR  check for Lintian data in DIR
     --[no-]user-dirs   whether to include profiles from user directories

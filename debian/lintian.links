@@ -1,4 +1,6 @@
 usr/share/lintian/bin/lintian usr/bin/lintian
-usr/share/lintian/bin/lintian-info usr/bin/lintian-info
+usr/share/lintian/bin/explain-lintian-tags usr/bin/explain-lintian-tags
+usr/share/lintian/bin/annotate-lintian-hints usr/bin/annotate-lintian-hints
+usr/share/lintian/bin/lintian-info usr/bin/annotate-lintian-hints
 usr/share/lintian/bin/spellintian usr/bin/spellintian
 usr/share/doc/lintian/lintian.rst usr/share/doc/lintian/lintian.txt

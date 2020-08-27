@@ -52,7 +52,7 @@ use Lintian::IPC::Run3 qw(safe_qx);
 use Lintian::Output::EWI;
 use Lintian::Pool;
 use Lintian::Profile;
-use Lintian::Util qw(version_from_changelog);
+use Lintian::Version qw(guess_version);
 
 use constant EMPTY => q{};
 use constant SPACE => q{ };
@@ -106,6 +106,8 @@ $ENV{LINTIAN_BASE} = realpath("$FindBin::RealBin/..")
   // die 'Cannot resolve LINTIAN_BASE';
 
 $ENV{LINTIAN_VERSION} = $LINTIAN_VERSION // guess_version($ENV{LINTIAN_BASE});
+die 'Unable to determine the version automatically!?'
+  unless length $ENV{LINTIAN_VERSION};
 
 if (my $coverage_arg = $ENV{LINTIAN_COVERAGE}) {
     my $p5opt = $ENV{PERL5OPT} // EMPTY;
@@ -760,36 +762,6 @@ retrigger_signal()
   if $received_signal;
 
 exit $exit_code;
-
-sub guess_version {
-    my ($lintian_base) = @_;
-
-    my $guess = version_from_git($lintian_base);
-    $guess ||= version_from_changelog($lintian_base);
-
-    return $guess
-      if length $guess;
-
-    die 'Unable to determine the version automatically!?';
-}
-
-=item version_from_git
-
-=cut
-
-sub version_from_git {
-    my ($source_path) = @_;
-
-    my $git_path = "$source_path/.git";
-
-    return EMPTY
-      unless -d $git_path;
-
-    my $guess = safe_qx('git', "--git-dir=$git_path", 'describe');
-    chomp $guess;
-
-    return ($guess // EMPTY);
-}
 
 =item parse_boolean (STR)
 
