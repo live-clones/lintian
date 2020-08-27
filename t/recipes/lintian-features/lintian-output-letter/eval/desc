@@ -1,5 +1,0 @@
-Testname: lintian-output-letter
-Options: --show-overrides
-Output-Format: letterqualifier
-Match-Strategy: literal
-Default-Lintian-Options: --pedantic --display-info --display-experimental

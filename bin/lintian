@@ -491,24 +491,12 @@ for my $var (@ENV_FROM_CONFIG) {
 my %output = map { split(/=/) } split(/,/, ($selected{'exp-output'} // EMPTY));
 for (keys %output) {
     if ($_ eq 'format') {
-        if ($output{$_} eq 'colons') {
-            require Lintian::Output::ColonSeparated;
-            $OUTPUT= Lintian::Output::ColonSeparated->new;
-        } elsif ($output{$_} eq 'letterqualifier') {
-            require Lintian::Output::LetterQualifier;
-            $OUTPUT= Lintian::Output::LetterQualifier->new;
-        } elsif ($output{$_} eq 'html') {
+        if ($output{$_} eq 'html') {
             require Lintian::Output::HTML;
             $OUTPUT = Lintian::Output::HTML->new;
-        } elsif ($output{$_} eq 'xml') {
-            require Lintian::Output::XML;
-            $OUTPUT = Lintian::Output::XML->new;
         } elsif ($output{$_} eq 'json') {
             require Lintian::Output::JSON;
             $OUTPUT = Lintian::Output::JSON->new;
-        } elsif ($output{$_} eq 'fullewi') {
-            require Lintian::Output::FullEWI;
-            $OUTPUT = Lintian::Output::FullEWI->new;
         } elsif ($output{$_} eq 'universal') {
             require Lintian::Output::Universal;
             $OUTPUT = Lintian::Output::Universal->new;

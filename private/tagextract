@@ -38,10 +38,6 @@ use List::Util qw(all);
 use Path::Tiny;
 
 use Test::Lintian::Output::EWI;
-use Test::Lintian::Output::FullEWI;
-use Test::Lintian::Output::LetterQualifier;
-use Test::Lintian::Output::ColonSeparated;
-use Test::Lintian::Output::XML;
 
 # options
 my $format;
@@ -83,14 +79,6 @@ sub to_universal {
 
     if ($format eq 'EWI') {
         return Test::Lintian::Output::EWI::to_universal($text);
-    }elsif ($format eq 'letterqualifier') {
-        return Test::Lintian::Output::LetterQualifier::to_universal($text);
-    }elsif ($format eq 'fullewi') {
-        return Test::Lintian::Output::FullEWI::to_universal($text);
-    }elsif ($format eq 'colons') {
-        return Test::Lintian::Output::ColonSeparated::to_universal($text);
-    }elsif ($format eq 'xml') {
-        return Test::Lintian::Output::XML::to_universal($text);
     }
 
     die "Unknown format: $format\n";

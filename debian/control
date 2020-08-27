@@ -74,7 +74,6 @@ Depends:
  libunicode-utf8-perl,
  liburi-perl,
  libxml-libxml-perl,
- libxml-writer-perl,
  libyaml-libyaml-perl,
  lzip | clzip,
  lzop,

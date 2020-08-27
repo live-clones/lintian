@@ -220,9 +220,6 @@ sub osc_hyperlink {
     return $start . $text . $end;
 }
 
-# Helper function to "print_tag" to decide the output format of the tag line.  Used by
-# the "FullEWI" subclass.
-#
 sub _format_pkg_info {
     my ($self, $processable, $tag_info, $override) = @_;
     my $code = $tag_info->code;
