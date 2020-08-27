@@ -23,6 +23,7 @@ use warnings;
 use utf8;
 use autodie;
 
+use Text::Markdown::Discount qw(markdown);
 use Text::Xslate;
 use Time::Duration;
 use Time::Moment;
@@ -189,6 +190,16 @@ sub taglist {
     }
 
     return \@tags;
+}
+
+=item tag_description
+
+=cut
+
+sub tag_description {
+    my ($self, $tag_info) = @_;
+
+    return markdown($tag_info->markdown_description);
 }
 
 =back

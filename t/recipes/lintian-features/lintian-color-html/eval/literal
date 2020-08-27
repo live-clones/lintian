@@ -1,4 +1,0 @@
-W: lintian-color-html: <span style="color: yellow">privacy-breach-generic</span> usr/share/doc/lintian-color-html/foo.xml [&lt;img src=&quot;http://1984.ow/bigbrotheriswatchingyou.png&quot; /&gt;] (http://1984.ow/bigbrotheriswatchingyou.png)
-I: lintian-color-html source: <span style="color: cyan">upstream-metadata-missing-bug-tracking</span>
-I: lintian-color-html source: <span style="color: cyan">upstream-metadata-missing-repository</span>
-X: lintian-color-html source: <span style="color: green">debian-watch-does-not-check-gpg-signature</span>

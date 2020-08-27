@@ -22,14 +22,16 @@ use v5.20;
 use warnings;
 use utf8;
 
-use HTML::Entities;
+use HTML::HTML5::Entities;
 use Term::ANSIColor ();
+use Text::Wrap;
 
 # for tty hyperlinks
 use constant OSC_HYPERLINK => qq{\033]8;;};
 use constant OSC_DONE => qq{\033\\};
 
 use constant SPACE => q{ };
+use constant NEWLINE => qq{\n};
 
 use Moo;
 use namespace::clean;
@@ -150,23 +152,16 @@ sub print_tag {
         $information = $self->_quote_print($msg)
           if $emitted_count >= $limit-1;
     }
-    if ($self->color && $self->html) {
-        my $escaped = encode_entities($tag_name);
-        $information = encode_entities($information);
-        $output .= qq(<span style="color: $tag_color">$escaped</span>);
 
+    my $text = $tag_name;
+    $text = Term::ANSIColor::colored($tag_name, $tag_color)
+      if $self->color;
+
+    if ($self->tty_hyperlinks && $self->color) {
+        my $target= 'https://lintian.debian.org/tags/' . $tag_name . '.html';
+        $output .= $self->osc_hyperlink($text, $target);
     } else {
-        my $text = $tag_name;
-        $text = Term::ANSIColor::colored($tag_name, $tag_color)
-          if $self->color;
-
-        if ($self->tty_hyperlinks && $self->color) {
-            my $target
-              = 'https://lintian.debian.org/tags/' . $tag_name . '.html';
-            $output .= $self->osc_hyperlink($text, $target);
-        } else {
-            $output .= $text;
-        }
+        $output .= $text;
     }
 
     if ($override && @{ $override->{comments} }) {
@@ -178,15 +173,8 @@ sub print_tag {
     say "$fpkg_info: $output$information";
 
     if ($self->showdescription && !$self->issued_tag($tag_info->name)) {
-        my $description;
-        if ($self->color && $self->html) {
-            $description = $tag_info->html_description;
-        } else {
-            $description = $tag_info->text_description('   ');
-        }
-
         say 'N:';
-        say "N: $_" for split(/\n/, $description);
+        print $self->tag_description($tag_info, 'N:   ');
         say 'N:';
     }
 
@@ -249,6 +237,86 @@ sub issued_tag {
     my ($self, $tag_name) = @_;
 
     return $self->issuedtags->{$tag_name}++ ? 1 : 0;
+}
+
+=item tag_description
+
+=cut
+
+sub tag_description {
+    my ($self, $tag_info, $indent) = @_;
+
+    my $plain_text = markdown_to_plain($tag_info->markdown_description);
+    my $indented = indent_and_wrap($plain_text, $indent);
+
+    return $indented;
+}
+
+=item indent_and_wrap
+
+=cut
+
+sub indent_and_wrap {
+    my ($text, $indent) = @_;
+
+    my @paragraphs = split(/\n{2,}/, $text);
+
+    my @indented;
+    for my $paragraph (@paragraphs) {
+
+        if ($paragraph =~ /^\s/) {
+
+            # do not wrap preformatted lines; indent only
+            my @lines = split(/\n/, $paragraph);
+            my $indented_paragraph= join(NEWLINE, map { $indent . $_ } @lines);
+
+            push(@indented, $indented_paragraph);
+
+        } else {
+            # reduce whitespace throughout, including newlines
+            $paragraph =~ s/\s+/ /g;
+
+            # trim beginning and end of each line
+            $paragraph =~ s/^\s+|\s+$//mg;
+
+            # do not wrap long words like urls, see #719769
+            local $Text::Wrap::huge = 'overflow';
+
+            my $wrapped_paragraph = wrap($indent, $indent, $paragraph);
+
+            push(@indented, $wrapped_paragraph);
+        }
+    }
+
+    my $formatted = join(NEWLINE . $indent . NEWLINE, @indented) . NEWLINE;
+
+    return $formatted;
+}
+
+=item markdown_to_plain
+
+=cut
+
+sub markdown_to_plain {
+    my ($markdown) = @_;
+
+    # use angular brackets for emphasis
+    $markdown =~ s{<i>|<em>}{&lt;}g;
+    $markdown =~ s{</i>|</em>}{&gt;}g;
+
+    # drop Markdown hyperlinks
+    $markdown =~ s{\[([^\]]+)\]\([^\)]+\)}{$1}g;
+
+    # drop all HTML tags except Markdown shorthand <$url>
+    $markdown =~ s{<(?![a-z]+://)[^>]+>}{}g;
+
+    # drop brackets around Markdown shorthand <$url>
+    $markdown =~ s{<([a-z]+://[^>]+)>}{$1}g;
+
+    # substitute HTML entities
+    my $plain = decode_entities($markdown);
+
+    return $plain;
 }
 
 =back

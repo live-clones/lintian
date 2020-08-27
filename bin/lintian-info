@@ -42,6 +42,7 @@ use List::MoreUtils qw(all);
 use Path::Tiny;
 
 use Lintian::IPC::Run3 qw(safe_qx);
+use Lintian::Output::EWI;
 use Lintian::Profile;
 use Lintian::Util qw(version_from_changelog);
 
@@ -114,6 +115,8 @@ my $profile = Lintian::Profile->new;
 $profile->load($profile_name, \@CONFIG_DIRS,
     { 'restricted-search-dirs' => \@RESTRICTED_CONFIG_DIRS });
 
+my $output = Lintian::Output::EWI->new;
+
 if ($list_tags) {
     say for sort $profile->enabled_tags;
     exit;
@@ -135,7 +138,7 @@ if ($tags) {
         if (defined $info) {
 
             $code = $info->code;
-            $description = $info->text_description('N:   ');
+            $description = $output->tag_description($info, 'N:   ');
             chomp $description;
         }
 
@@ -206,7 +209,7 @@ while (<>) {
       unless $info;
 
     print "N:\n";
-    print $info->text_description('N:   ');
+    print $output->tag_description($info, 'N:   ');
     print "N:\n";
 }
 

@@ -520,8 +520,8 @@ $OUTPUT->debug_msg(1,
   if @not_yet;
 $ENV{$_} = $config{$_} for @not_yet;
 
-die "The color value must be one of never, always, auto or html.\n"
-  unless (any { $selected{color} eq $_ } qw(never always auto html));
+die "The color value must be one of auto, always, or never.\n"
+  unless (any { $selected{color} eq $_ } qw(auto always never));
 
 if ($selected{color} eq 'never') {
     $selected{hyperlinks} //= 'off';
@@ -549,12 +549,8 @@ if ($selected{debug}) {
 $OUTPUT->verbosity($selected{verbose});
 $OUTPUT->debug($selected{debug});
 
-$OUTPUT->html(1)
-  if $selected{color} eq 'html';
-
 $OUTPUT->color(1)
   if $selected{color} eq 'always'
-  || $selected{color} eq 'html'
   || ($selected{color} eq 'auto'
     && -t *STDOUT);
 

@@ -25,10 +25,7 @@ use warnings;
 use utf8;
 
 use Carp qw(croak);
-use HTML::HTML5::Entities;
 use List::MoreUtils qw(none);
-use Text::Markdown::Discount qw(markdown);
-use Text::Wrap;
 
 use Lintian::Data;
 use Lintian::Deb822::File;
@@ -40,7 +37,6 @@ use constant COMMA => q{,};
 use constant LEFT_PARENTHESIS => q{(};
 use constant RIGHT_PARENTHESIS => q{)};
 
-use constant NEWLINE => qq{\n};
 use constant PARAGRAPH_BREAK => qq{\n\n};
 
 use Moo;
@@ -102,7 +98,7 @@ metadata elements or to format the tag description.
 
 =item explanation
 
-=item references
+=item markdown_see_also
 
 =item aliases
 
@@ -174,7 +170,7 @@ has explanation => (
     default => EMPTY
 );
 
-has references => (
+has markdown_see_also => (
     is => 'rw',
     coerce => sub { my ($arrayref) = @_; return ($arrayref // []); },
     default => sub { [] });
@@ -217,14 +213,14 @@ sub load {
 
     $self->explanation($fields->text('Explanation') || $fields->text('Info'));
 
-    my $references = $fields->value('See-Also') || $fields->value('Ref');
-    my @see_also = split(/,/, $references);
+    my @see_also
+      = split(/,/, $fields->value('See-Also') || $fields->value('Ref'));
 
     # trim both ends of each
     s/^\s+|\s+$//g for @see_also;
 
     my @markdown = map { markdown_citation($_) } @see_also;
-    $self->references(\@markdown);
+    $self->markdown_see_also(\@markdown);
 
     $self->aliases([$fields->trimmed_list('Renamed-From')]);
 
@@ -261,70 +257,6 @@ sub code {
     return $CODES{$self->effective_severity};
 }
 
-=item text_description
-
-=cut
-
-sub text_description {
-    my ($self, $indent) = @_;
-
-    my @paragraphs = split(/\n{2,}/, $self->markdown_description);
-
-    # use angular brackets for emphasis
-    s{<i>|<em>}{&lt;}g for @paragraphs;
-    s{</i>|</em>}{&gt;}g for @paragraphs;
-
-    # drop Markdown hyperlinks
-    s{\[([^\]]+)\]\([^\)]+\)}{$1}g for @paragraphs;
-
-    # drop all HTML tags except Markdown shorthand <$url>
-    s{<(?![a-z]+://)[^>]+>}{}g for @paragraphs;
-
-    # drop brackets around Markdown shorthand <$url>
-    s{<([a-z]+://[^>]+)>}{$1}g for @paragraphs;
-
-    my @wrapped;
-    for my $paragraph (@paragraphs) {
-
-        # substitute HTML entities
-        $paragraph = decode_entities($paragraph);
-
-        if ($paragraph =~ /^\s/) {
-
-            # do not wrap preformatted lines
-            my @lines = split(/\n/, $paragraph);
-
-            push(@wrapped, $indent . $_) for @lines;
-
-        } else {
-            # reduce whitespace throughout, including newlines
-            $paragraph =~ s/\s+/ /g;
-
-            # trim beginning and end of each line
-            $paragraph =~ s/^\s+|\s+$//mg;
-
-            # do not wrap long words like urls, see #719769
-            local $Text::Wrap::huge = 'overflow';
-
-            push(@wrapped, wrap($indent, $indent, $paragraph));
-        }
-    }
-
-    my $output = join(NEWLINE . $indent . NEWLINE, @wrapped) . NEWLINE;
-
-    return $output;
-}
-
-=item html_description
-
-=cut
-
-sub html_description {
-    my ($self) = @_;
-
-    return markdown($self->markdown_description);
-}
-
 =item markdown_description
 
 =cut
@@ -336,8 +268,9 @@ sub markdown_description {
 
     my @extras;
 
-    push(@extras, reference_statement(@{$self->references}))
-      if @{$self->references};
+    my $references = $self->markdown_reference_statement;
+    push(@extras, $references)
+      if length $references;
 
     push(@extras, 'Severity: '. $self->original_severity);
 
@@ -359,14 +292,16 @@ sub markdown_description {
     return $description;
 }
 
-=item reference_statement
+=item markdown_reference_statement
 
 =cut
 
-sub reference_statement {
-    my @references = @_;
+sub markdown_reference_statement {
+    my ($self) = @_;
 
-    return 'Additional references are not available.'
+    my @references = @{$self->markdown_see_also};
+
+    return EMPTY
       unless @references;
 
     # remove and save last element

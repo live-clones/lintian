@@ -39,6 +39,7 @@ use Unicode::UTF8 qw(encode_utf8);
 use lib "$ENV{'LINTIAN_BASE'}/lib";
 
 use Lintian::Deb822::File;
+use Lintian::Output::HTML;
 use Lintian::Profile;
 
 use constant EMPTY => q{};
@@ -126,12 +127,14 @@ for my $tagpath (@tagpaths) {
     ok($fields->value('Renamed-From') !~ m{,},
         "Old tag names for $tagname are not separated by commas");
 
+    my $html_output = Lintian::Output::HTML->new;
+
     my $taginfo = Lintian::Tag::Info->new;
     $taginfo->load($tagpath);
 
     my $html_description
       = "<!DOCTYPE html><head><title>$tagname</title></head><body>"
-      . $taginfo->html_description
+      . $html_output->tag_description($taginfo)
       . '</body>';
 
     my $utf8_description = encode_utf8($html_description);
