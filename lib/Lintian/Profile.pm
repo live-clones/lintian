@@ -263,7 +263,8 @@ sub load {
     for my $taginfo (values %{ $self->known_tags_by_name }) {
 
         my @taken
-          = grep { defined $self->known_aliases->{$_} } @{$taginfo->aliases};
+          = grep { defined $self->known_aliases->{$_} }
+          @{$taginfo->renamed_from};
 
         die 'These aliases of the tag '
           . $taginfo->name
@@ -271,7 +272,8 @@ sub load {
           . join(SPACE, @taken)
           if @taken;
 
-        $self->known_aliases->{$_} = $taginfo->name for @{$taginfo->aliases};
+        $self->known_aliases->{$_} = $taginfo->name
+          for @{$taginfo->renamed_from};
     }
 
     return $self;
@@ -584,7 +586,7 @@ sub _read_profile_section {
 
         croak
 "Classification tag $tag cannot take a severity (profile $profile, section $position"
-          if $taginfo->original_severity eq 'classification';
+          if $taginfo->visibility eq 'classification';
 
         $taginfo->effective_severity($severity)
           if length $severity;

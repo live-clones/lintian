@@ -34,7 +34,6 @@ use IPC::Run3;
 use List::Util qw(all);
 use Path::Tiny;
 use Test::More;
-use Unicode::UTF8 qw(encode_utf8);
 
 use lib "$ENV{'LINTIAN_BASE'}/lib";
 
@@ -44,6 +43,7 @@ use Lintian::Profile;
 
 use constant EMPTY => q{};
 use constant SPACE => q{ };
+use constant SLASH => q{/};
 
 my @tagpaths = sort File::Find::Rule->file()->name('*.tag')->in('tags');
 
@@ -95,22 +95,15 @@ for my $tagpath (@tagpaths) {
     is(path($tagpath)->basename,
         "$tagname.tag", "Tagfile for $tagname is named $tagname.tag");
 
-    # mandatory fields
-    ok($fields->exists($_), "Field $_ exists in $tagpath")for @mandatory;
-
-    # disallowed fields
-    ok(!$fields->exists($_), "Field $_ does not exist in $tagpath")
-      for @disallowed;
-
     my $checkname = $fields->value('Check');
 
     # tag is associated with a check
     ok(length $checkname, "Tag $tagname is associated with a check");
 
-    ok($profile->get_checkinfo($checkname),
-        "Tag $tagname is associated with a valid check");
-
     if ($fields->value('Name-Spaced') eq 'yes') {
+
+        $tagname = $checkname . SLASH . $tagname;
+
         # encapsulating directory is name of check
         my $subdir = path($tagpath)->parent->relative('tags');
         is($subdir, $checkname,
@@ -124,25 +117,43 @@ for my $tagpath (@tagpaths) {
             "Tag $tagname is in directory named '$firstletter'");
     }
 
+    # mandatory fields
+    ok($fields->exists($_), "Field $_ exists in $tagpath")for @mandatory;
+
+    # disallowed fields
+    ok(!$fields->exists($_), "Field $_ does not exist in $tagpath")
+      for @disallowed;
+
+    ok($profile->get_checkinfo($checkname),
+        "Tag $tagname is associated with a valid check");
+
     ok($fields->value('Renamed-From') !~ m{,},
         "Old tag names for $tagname are not separated by commas");
 
     my $html_output = Lintian::Output::HTML->new;
 
-    my $taginfo = Lintian::Tag::Info->new;
-    $taginfo->load($tagpath);
+    my $taginfo = $profile->get_taginfo($tagname);
+    BAIL_OUT("Tag $tagname was not loaded via profile")
+      unless defined $taginfo;
 
-    my $html_description
-      = "<!DOCTYPE html><head><title>$tagname</title></head><body>"
-      . $html_output->tag_description($taginfo)
-      . '</body>';
+    my $html_description;
+    open(my $fh, '>:encoding(UTF-8)', \$html_description);
+    select $fh;
 
-    my $utf8_description = encode_utf8($html_description);
+    print "<!DOCTYPE html><head><title>$tagname</title></head><body>";
+    $html_output->tag_description($taginfo);
+    say '</body>';
+
+    select *STDOUT;
+    close $fh;
+
+    print $html_description;
+
     my $tidy_out;
     my $tidy_err;
 
     my @tidy_command = qw(tidy -quiet);
-    run3(\@tidy_command, \$utf8_description, \$tidy_out, \$tidy_err);
+    run3(\@tidy_command, \$html_description, \$tidy_out, \$tidy_err);
 
     is($tidy_err, EMPTY,
         "No warnings from HTML Tidy for tag description in $tagname");

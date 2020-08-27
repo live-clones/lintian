@@ -41,6 +41,8 @@ use Getopt::Long ();
 use List::MoreUtils qw(any);
 
 use Lintian::Output::EWI;
+use Lintian::Output::HTML;
+use Lintian::Output::JSON;
 use Lintian::Profile;
 use Lintian::Version qw(guess_version);
 
@@ -60,6 +62,7 @@ if (my $coverage_arg = $ENV{'LINTIAN_COVERAGE'}) {
 $ENV{LINTIAN_BASE} = realpath("$FindBin::RealBin/..")
   // die 'Cannot resolve LINTIAN_BASE';
 
+my $format = 'ewi';
 my @INCLUDE_DIRS;
 my $list_tags;
 my $profile_name;
@@ -67,6 +70,7 @@ my $tags;
 my $user_dirs = 1;
 
 my %options = (
+    'format|f=s' => \$format,
     'help|h' => \&show_help,
     'include-dir=s' => \@INCLUDE_DIRS,
     'list-tags|l' => \$list_tags,
@@ -112,7 +116,21 @@ my $profile = Lintian::Profile->new;
 $profile->load($profile_name, \@CONFIG_DIRS,
     { 'restricted-search-dirs' => \@RESTRICTED_CONFIG_DIRS });
 
-my $output = Lintian::Output::EWI->new;
+my $output;
+
+$format = lc $format;
+if ($format eq 'ewi') {
+    $output = Lintian::Output::EWI->new;
+
+} elsif ($format eq 'json') {
+    $output = Lintian::Output::JSON->new;
+
+} elsif ($format eq 'html') {
+    $output = Lintian::Output::HTML->new;
+
+} else {
+    die "Invalid output format $format\n";
+}
 
 if ($list_tags) {
     say for sort $profile->enabled_tags;
@@ -124,24 +142,11 @@ my @selected = @ARGV;
 @selected = $profile->enabled_tags
   unless @selected;
 
-for my $name (sort { lc($a) cmp lc($b) } @selected) {
+my @available = grep { defined} map { $profile->get_taginfo($_) } @selected;
 
-    my $code = 'N';
-    my $description = 'N:   Unknown tag.';
+my @sorted = sort { lc($a->name) cmp lc($b->name) } @available;
 
-    my $info = $profile->get_taginfo($name);
-    if (defined $info) {
-
-        $code = $info->code;
-        $description = $output->tag_description($info, 'N:   ');
-        chomp $description;
-    }
-
-    say $code . COLON . SPACE . $name;
-    say 'N:';
-    say $description;
-    say 'N:';
-}
+$output->tag_description($_) for @sorted;
 
 exit any { !defined $profile->get_taginfo($_) } @selected;
 

@@ -31,6 +31,7 @@ use constant OSC_HYPERLINK => qq{\033]8;;};
 use constant OSC_DONE => qq{\033\\};
 
 use constant SPACE => q{ };
+use constant COLON => q{:};
 use constant NEWLINE => qq{\n};
 
 use Moo;
@@ -172,11 +173,8 @@ sub print_tag {
 
     say "$fpkg_info: $output$information";
 
-    if ($self->showdescription && !$self->issued_tag($tag_info->name)) {
-        say 'N:';
-        print $self->tag_description($tag_info, 'N:   ');
-        say 'N:';
-    }
+    $self->tag_description($tag_info)
+      if $self->showdescription && !$self->issued_tag($tag_info->name);
 
     return;
 }
@@ -244,12 +242,30 @@ sub issued_tag {
 =cut
 
 sub tag_description {
-    my ($self, $tag_info, $indent) = @_;
+    my ($self, $tag_info) = @_;
 
-    my $plain_text = markdown_to_plain($tag_info->markdown_description);
-    my $indented = indent_and_wrap($plain_text, $indent);
+    my $code = 'N';
+    my $description = 'N:   Unknown tag.';
 
-    return $indented;
+    if (defined $tag_info) {
+
+        $code = $tag_info->code;
+
+        my $plain_text = markdown_to_plain($tag_info->markdown_description);
+        $description = indent_and_wrap($plain_text, 'N:   ');
+
+        chomp $description;
+    }
+
+    my $output = 'N:' . NEWLINE;
+    $output .= $code . COLON . SPACE . $tag_info->name . NEWLINE;
+    $output .= 'N:' . NEWLINE;
+    $output .= $description . NEWLINE;
+    $output .= 'N:' . NEWLINE;
+
+    print $output;
+
+    return;
 }
 
 =item indent_and_wrap

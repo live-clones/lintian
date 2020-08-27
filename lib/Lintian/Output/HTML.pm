@@ -199,7 +199,12 @@ sub taglist {
 sub tag_description {
     my ($self, $tag_info) = @_;
 
-    return markdown($tag_info->markdown_description);
+    say '<p>Name: ' . $tag_info->name . '</p>';
+    say EMPTY;
+
+    print markdown($tag_info->markdown_description);
+
+    return;
 }
 
 =back

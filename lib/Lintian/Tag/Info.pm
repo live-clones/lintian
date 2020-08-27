@@ -84,7 +84,7 @@ metadata elements or to format the tag description.
 
 =item tag
 
-=item original_severity
+=item visibility
 
 =item effective_severity
 
@@ -98,9 +98,9 @@ metadata elements or to format the tag description.
 
 =item explanation
 
-=item markdown_see_also
+=item see_also
 
-=item aliases
+=item renamed_from
 
 =cut
 
@@ -110,7 +110,7 @@ has name => (
     default => EMPTY
 );
 
-has original_severity => (
+has visibility => (
     is => 'rw',
     lazy => 1,
     coerce => sub {
@@ -170,12 +170,12 @@ has explanation => (
     default => EMPTY
 );
 
-has markdown_see_also => (
+has see_also => (
     is => 'rw',
     coerce => sub { my ($arrayref) = @_; return ($arrayref // []); },
     default => sub { [] });
 
-has aliases => (
+has renamed_from => (
     is => 'rw',
     coerce => sub { my ($arrayref) = @_; return ($arrayref // []); },
     default => sub { [] });
@@ -208,7 +208,7 @@ sub load {
 
     $self->name($name);
 
-    $self->original_severity($fields->value('Severity'));
+    $self->visibility($fields->value('Severity'));
     $self->experimental($fields->value('Experimental') eq 'yes');
 
     $self->explanation($fields->text('Explanation') || $fields->text('Info'));
@@ -220,14 +220,14 @@ sub load {
     s/^\s+|\s+$//g for @see_also;
 
     my @markdown = map { markdown_citation($_) } @see_also;
-    $self->markdown_see_also(\@markdown);
+    $self->see_also(\@markdown);
 
-    $self->aliases([$fields->trimmed_list('Renamed-From')]);
+    $self->renamed_from([$fields->trimmed_list('Renamed-From')]);
 
     croak "No Tag field in $tagpath"
       unless length $self->name;
 
-    $self->effective_severity($self->original_severity);
+    $self->effective_severity($self->visibility);
 
     return;
 }
@@ -272,20 +272,20 @@ sub markdown_description {
     push(@extras, $references)
       if length $references;
 
-    push(@extras, 'Severity: '. $self->original_severity);
+    push(@extras, 'Severity: '. $self->visibility);
 
     push(@extras, 'Check: ' . $self->check)
       if length $self->check;
 
-    push(@extras, 'Renamed from: ' . join(SPACE, @{$self->aliases}))
-      if @{$self->aliases};
+    push(@extras, 'Renamed from: ' . join(SPACE, @{$self->renamed_from}))
+      if @{$self->renamed_from};
 
     push(@extras, 'This tag is experimental.')
       if $self->experimental;
 
     push(@extras,
         'This tag is a classification. There is no issue in your package.')
-      if $self->original_severity eq 'classification';
+      if $self->visibility eq 'classification';
 
     $description .= PARAGRAPH_BREAK . $_ for @extras;
 
@@ -299,7 +299,7 @@ sub markdown_description {
 sub markdown_reference_statement {
     my ($self) = @_;
 
-    my @references = @{$self->markdown_see_also};
+    my @references = @{$self->see_also};
 
     return EMPTY
       unless @references;

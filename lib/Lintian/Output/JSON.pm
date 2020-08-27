@@ -181,6 +181,53 @@ sub taglist {
     return \@tags;
 }
 
+=item tag_description
+
+=cut
+
+sub tag_description {
+    my ($self, $tag_info) = @_;
+
+    my %output;
+
+    $output{Name} = $tag_info->name;
+    $output{'Name-Spaced'} = $tag_info->name_spaced
+      if length $tag_info->name_spaced;
+
+    $output{Explanation} = $tag_info->explanation;
+    $output{'See-Also'} = $tag_info->see_also
+      if @{$tag_info->see_also};
+
+    $output{Check} = $tag_info->check;
+    $output{Visibility} = $tag_info->visibility;
+    $output{Experimental} = $tag_info->experimental
+      if length $tag_info->experimental;
+
+    $output{'Renamed-From'} = $tag_info->renamed_from
+      if @{$tag_info->renamed_from};
+
+    # convert to UTF-8 prior to encoding in JSON
+    my $encoder = JSON->new;
+    $encoder->canonical;
+    $encoder->utf8;
+    $encoder->pretty;
+
+    my $json = $encoder->encode(\%output);
+
+    # duplicate STDOUT
+    open(my $RAW, '>&', *STDOUT) or die 'Cannot dup STDOUT';
+
+    # avoid all PerlIO layers such as utf8
+    binmode($RAW, ':raw');
+
+    # output encoded JSON to the raw handle
+    print {$RAW} $json;
+
+    close $RAW;
+
+    return;
+}
+
 =back
 
 =cut
