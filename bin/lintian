@@ -69,8 +69,6 @@ my $hyperlinks_capable = $interactive && qx{env | fgrep -i gnome};
 binmode(*STDOUT, ':encoding(UTF-8)');
 binmode(*STDERR, ':encoding(UTF-8)');
 
-$0 = join(SPACE, $0, @ARGV);
-
 # Globally ignore SIGPIPE.  We'd rather deal with error returns from write
 # than randomly delivered signals.
 $SIG{PIPE} = 'IGNORE';
@@ -168,6 +166,9 @@ Getopt::Long::Configure('default', 'bundling',
 
 Getopt::Long::GetOptions(\%command_line, @getoptions)
   or die "error parsing options\n";
+
+my @basenames = map { path($_)->basename } @ARGV;
+$0 = join(SPACE, "$FindBin::RealBin/$FindBin::RealScript", @basenames);
 
 if (exists $command_line{'version'}) {
     say "Lintian v$ENV{LINTIAN_VERSION}";
