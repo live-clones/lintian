@@ -19,6 +19,7 @@ NoDisplay
 NotShowIn
 OnlyShowIn
 Path
+PrefersNonDefaultGPU
 StartupNotify
 StartupWMClass
 Terminal
