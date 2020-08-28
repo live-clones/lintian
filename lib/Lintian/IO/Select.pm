@@ -162,12 +162,12 @@ sub unpack_and_index_piped_tar {
 
     $select->add($numeric_stdout, $numeric_stderr);
 
-    my $named;
-    my $numeric;
+    my $named = EMPTY;
+    my $numeric = EMPTY;
 
-    my $produce_errors;
-    my $extract_errors;
-    my $named_errors;
+    my $produce_errors = EMPTY;
+    my $extract_errors = EMPTY;
+    my $named_errors = EMPTY;
 
     while (my @ready = $select->can_read) {
 
@@ -195,23 +195,18 @@ sub unpack_and_index_piped_tar {
                 print $numeric_stdin $buffer;
 
             } elsif ($handle == $named_stdout) {
-                $named //= EMPTY;
                 $named .= $buffer;
 
             } elsif ($handle == $numeric_stdout) {
-                $numeric //= EMPTY;
                 $numeric .= $buffer;
 
             } elsif ($handle == $produce_stderr) {
-                $produce_errors //= EMPTY;
                 $produce_errors .= $buffer;
 
             } elsif ($handle == $extract_stderr) {
-                $extract_errors //= EMPTY;
                 $extract_errors .= $buffer;
 
             } elsif ($handle == $named_stderr) {
-                $named_errors //= EMPTY;
                 $named_errors .= $buffer;
 
                 # } else {
