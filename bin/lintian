@@ -131,7 +131,7 @@ my @getoptions = qw(
   exp-output:s
   fail-on=s@
   ftp-master-rejects|F
-  help|h:s
+  help|h
   hide-overrides
   hyperlinks=s
   ignore-lintian-env
@@ -179,7 +179,7 @@ if (exists $command_line{'print-version'}) {
     exit;
 }
 
-show_help(undef, $command_line{help})
+show_help()
   if exists $command_line{help};
 
 $command_line{'show-overrides'} = 0
@@ -589,7 +589,9 @@ if ($#ARGV == -1
         push @ARGV, $file;
         $ok = 1;
     }
-    show_help() unless $ok;
+
+    show_help()
+      unless $ok;
 }
 
 if ($selected{debug}) {
@@ -1000,9 +1002,9 @@ sub interrupted {
 }
 
 sub show_help {
-    my (undef, $value) = @_;
 
     say "Lintian v$ENV{LINTIAN_VERSION}";
+
     print <<"EOT-EOT-EOT";
 Syntax: lintian [action] [options] [--] [packages] ...
 Actions:
@@ -1013,7 +1015,7 @@ Actions:
     --tags-from-file X        like --tags, but read list from file
     -X X, --dont-check-part X don\'t check certain aspects
 General options:
-    -h, --help                display short help text
+    -h, --help                display this help text
     --print-version           print unadorned version number and exit
     -q, --quiet               suppress all informational messages
     -v, --verbose             verbose messages
@@ -1037,52 +1039,19 @@ Behavior options:
     --hide-overrides          do not output tags that have been overridden (default)
     --suppress-tags T,...     don\'t show the specified tags
     --suppress-tags-from-file X don\'t show the tags listed in file X
-EOT-EOT-EOT
-    if ($value eq 'extended' || $value eq 'all') {
-        # Not a special option per se, but most people will probably
-        # not need it
-        print <<"EOT-EOT-EOT";
     --tag-display-limit X     Specify "tag per package" display limit
     --no-tag-display-limit    Disable "tag per package" display limit
                               (equivalent to --tag-display-limit=0)
-EOT-EOT-EOT
-    }
-
-    print <<"EOT-EOT-EOT";
 Configuration options:
     --cfg CONFIGFILE          read CONFIGFILE for configuration
     --no-cfg                  do not read any config files
     --ignore-lintian-env      ignore LINTIAN_* env variables
-    --include-dir DIR         include checks, libraries (etc.) from DIR (*)
+    --include-dir DIR         include checks, libraries (etc.) from DIR
     -j X, --jobs X            limit the number of parallel unpacking jobs to X
-    --[no-]user-dirs          whether to use files from user directories (*)
+    --[no-]user-dirs          whether to use files from user directories
+
+Some options were omitted. Please check the manual page for the complete list.
 EOT-EOT-EOT
-
-    if ($value eq 'extended' || $value eq 'all') {
-        print <<"EOT-EOT-EOT";
-Developer/Special usage options:
-    --allow-root              suppress lintian\'s warning when run as root
-    -d, --debug               turn Lintian\'s debug messages on (repeatable)
-    --keep-lab                keep lab after run
-    --packages-from-file  X   process the packages in a file (if "-" use stdin)
-    --perf-debug              turn on performance debugging
-    --perf-output X           send performance logging to file (or fd w. \&X)
-    --status-log X            send status logging to file (or fd w. \&X) [internal use only]
-EOT-EOT-EOT
-    }
-
-    print <<"EOT-EOT-EOT";
-
-Options marked with (*) should be the first options if given at all.
-EOT-EOT-EOT
-
-    unless ($value eq 'extended' || $value eq 'all') {
-        print <<"EOT-EOT-EOT";
-
-Note that some options have been omitted, use "--help=extended" to see them
-all.
-EOT-EOT-EOT
-    }
 
     exit;
 }
