@@ -111,6 +111,10 @@ sub visit_installed_files {
                   if $file->dirname =~ m{templates?(?:\.d)?/};
 
                 next
+                  if $file->basename =~ m{\.txt$}
+                  and $file->dirname =~ m{^usr/lib/python3/.*\.egg-info/};
+
+                next
                   if $file->basename =~ m{^README}xi
                   and $file->bytes =~ m{this directory}xi;
 
