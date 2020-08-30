@@ -24,6 +24,8 @@ use autodie;
 
 use Lintian::Index::Orig;
 
+use constant SLASH => q{/};
+
 use Moo::Role;
 use namespace::clean;
 
@@ -54,7 +56,12 @@ has orig => (
     is => 'rw',
     lazy => 1,
     default => sub {
-        return Lintian::Index::Orig->new;
+        my ($self) = @_;
+
+        my $index = Lintian::Index::Orig->new;
+        $index->basedir($self->basedir . SLASH . 'orig');
+
+        return $index;
     });
 
 =back

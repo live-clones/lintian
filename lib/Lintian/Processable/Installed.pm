@@ -27,6 +27,8 @@ use utf8;
 
 use Lintian::Index::Installed;
 
+use constant SLASH => q{/};
+
 use Moo::Role;
 use namespace::clean;
 
@@ -57,7 +59,12 @@ has installed => (
     is => 'rw',
     lazy => 1,
     default => sub {
-        return Lintian::Index::Installed->new;
+        my ($self) = @_;
+
+        my $index = Lintian::Index::Installed->new;
+        $index->basedir($self->basedir . SLASH . 'unpacked');
+
+        return $index;
     });
 
 =back

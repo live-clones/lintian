@@ -24,6 +24,8 @@ use autodie;
 
 use Lintian::Index::Control;
 
+use constant SLASH => q{/};
+
 use Moo::Role;
 use namespace::clean;
 
@@ -54,7 +56,12 @@ has control => (
     is => 'rw',
     lazy => 1,
     default => sub {
-        return Lintian::Index::Control->new;
+        my ($self) = @_;
+
+        my $index = Lintian::Index::Control->new;
+        $index->basedir($self->basedir . SLASH . 'control');
+
+        return $index;
     });
 
 =back

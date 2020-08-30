@@ -67,15 +67,12 @@ in the collections scripts used previously.
 =cut
 
 sub collect {
-    my ($self, $groupdir, $components) = @_;
+    my ($self, $processable_dir, $components) = @_;
 
     # source packages can be unpacked anywhere; no anchored roots
     $self->allow_empty(1);
 
-    my $basedir = path($groupdir)->child('orig')->stringify;
-    $self->basedir($basedir);
-
-    $self->create($groupdir, $components);
+    $self->create($processable_dir, $components);
     $self->load;
 
     return;
@@ -88,7 +85,7 @@ my %DECOMPRESS_COMMAND = (
 );
 
 sub create {
-    my ($self, $groupdir, $components) = @_;
+    my ($self, $processable_dir, $components) = @_;
 
     my %all;
     for my $tarball (sort keys %{$components}) {
@@ -103,12 +100,12 @@ sub create {
         die "Don't know how to decompress $tarball"
           unless $decompress;
 
-        my @command = (split(SPACE, $decompress), "$groupdir/$tarball");
+        my @command = (split(SPACE, $decompress), "$processable_dir/$tarball");
 
         my ($extract_errors, $index_errors)
           = $self->create_from_piped_tar(\@command, $component);
 
-        path("$groupdir/orig-index-errors")->append($index_errors)
+        path("$processable_dir/orig-index-errors")->append($index_errors)
           if length $index_errors;
 
         # produce composite index for multiple components

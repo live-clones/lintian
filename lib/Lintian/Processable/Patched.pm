@@ -26,6 +26,8 @@ use autodie;
 
 use Lintian::Index::Patched;
 
+use constant SLASH => q{/};
+
 use Moo::Role;
 use namespace::clean;
 
@@ -56,7 +58,12 @@ has patched => (
     is => 'rw',
     lazy => 1,
     default => sub {
-        return Lintian::Index::Patched->new;
+        my ($self) = @_;
+
+        my $index = Lintian::Index::Patched->new;
+        $index->basedir($self->basedir . SLASH . 'unpacked');
+
+        return $index;
     });
 
 =back
