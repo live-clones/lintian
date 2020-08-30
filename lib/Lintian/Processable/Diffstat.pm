@@ -64,7 +64,7 @@ sub add_diffstat {
     $noepoch =~ s/^\d://;
 
     my $diffname = $self->name . UNDERSCORE . $noepoch . '.diff.gz';
-    my $diffpath = path($self->groupdir)->child($diffname)->stringify;
+    my $diffpath = path($self->basedir)->child($diffname)->stringify;
     return
       unless -f $diffpath;
 
@@ -97,7 +97,7 @@ sub add_diffstat {
     $stdout =~ s/.*\Z//;
 
     # copy all lines except the last
-    path($self->groupdir)->child('diffstat')->spew($stdout);
+    path($self->basedir)->child('diffstat')->spew($stdout);
 
     return;
 }
@@ -114,7 +114,7 @@ empty file (this may be a device like /dev/null).
 sub diffstat {
     my ($self) = @_;
 
-    my $diffstat = path($self->groupdir)->child('diffstat')->stringify;
+    my $diffstat = path($self->basedir)->child('diffstat')->stringify;
 
     $diffstat = '/dev/null'
       unless -e $diffstat;

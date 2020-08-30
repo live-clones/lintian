@@ -84,7 +84,7 @@ sub source {
     my @allsigs = map { @{$signatures{$_}} } @origtar;
     for my $signature (@allsigs) {
 
-        my $path = $processable->groupdir . SLASH . $signature;
+        my $path = $processable->basedir . SLASH . $signature;
         my $contents = path($path)->slurp;
 
         if ($contents =~ /^-----BEGIN PGP ARMORED FILE-----/m) {

@@ -80,7 +80,7 @@ has changelog => (
             $dch = $file->unpacked_path;
 
         } else {
-            $dch = path($self->groupdir)->child('changelog')->stringify;
+            $dch = path($self->basedir)->child('changelog')->stringify;
 
             return
               unless -f $dch && !-l $dch;

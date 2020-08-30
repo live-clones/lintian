@@ -66,11 +66,11 @@ Lintian::Processable::Binary::Copyright collects copyright information.
 sub add_copyright {
     my ($self) = @_;
 
-    my $unpackedpath = path($self->groupdir)->child('unpacked')->stringify;
+    my $unpackedpath = path($self->basedir)->child('unpacked')->stringify;
     return
       unless -d $unpackedpath;
 
-    my $copyrightpath = path($self->groupdir)->child('copyright')->stringify;
+    my $copyrightpath = path($self->basedir)->child('copyright')->stringify;
     unlink($copyrightpath)
       if -e $copyrightpath;
 

@@ -121,7 +121,7 @@ Lintian::Deb822::Section with primary field values.
 
 Returns a reference to lab this Processable is in.
 
-=item $proc->groupdir
+=item $proc->basedir
 
 Returns the base directory of this package inside the lab.
 
@@ -185,28 +185,14 @@ has tainted => (is => 'rw', default => 0);
 has fields => (is => 'rw', default => sub { Lintian::Deb822::Section->new; });
 
 has pooldir => (is => 'rw', default => EMPTY);
-has groupdir => (
+has basedir => (
     is => 'rw',
     lazy => 1,
     default => sub {
         my ($self) = @_;
 
-        my $sorter_length = 1;
-
-        # use libX if starts with lib and fourth character is available
-        $sorter_length = 4
-          if $self->source =~ /^lib./;
-
-        my $sorter = substr($self->source, 0, $sorter_length);
-
         my $path
-          = $sorter
-          . SLASH
-          . $self->source
-          . SLASH
-          . $self->name
-          . UNDERSCORE
-          . $self->version;
+          = $self->source. SLASH. $self->name. UNDERSCORE. $self->version;
         $path .= UNDERSCORE . $self->architecture
           unless $self->type eq 'source';
         $path .= UNDERSCORE . $self->type;
@@ -217,9 +203,9 @@ has groupdir => (
         # colon can be a path separator
         $path =~ s/:/_/g;
 
-        my $groupdir = $self->pooldir . "/$path";
+        my $basedir = $self->pooldir . "/$path";
 
-        return $groupdir;
+        return $basedir;
     });
 
 has link_label => (is => 'rw', default => EMPTY);
@@ -255,8 +241,8 @@ value if successful.
 sub remove {
     my ($self) = @_;
 
-    path($self->groupdir)->remove_tree
-      if -e $self->groupdir;
+    path($self->basedir)->remove_tree
+      if -e $self->basedir;
 
     return;
 }
@@ -305,12 +291,12 @@ has link => (
         my ($self) = @_;
 
         croak 'Please set base directory for processable first'
-          unless length $self->groupdir;
+          unless length $self->basedir;
 
         croak 'Please set link label for processable first'
           unless length $self->link_label;
 
-        my $link = path($self->groupdir)->child($self->link_label)->stringify;
+        my $link = path($self->basedir)->child($self->link_label)->stringify;
 
         return $link;
     });

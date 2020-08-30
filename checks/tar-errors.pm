@@ -45,8 +45,8 @@ my @ERROR_LOGS = ('index-errors', 'unpacked-errors');
 sub source {
     my ($self) = @_;
 
-    my $groupdir = $self->processable->groupdir;
-    my @paths = grep { -e $_ && -s _ } map { "$groupdir/$_" } @ERROR_LOGS;
+    my $basedir = $self->processable->basedir;
+    my @paths = grep { -e $_ && -s _ } map { "$basedir/$_" } @ERROR_LOGS;
 
     for my $path (@paths) {
 

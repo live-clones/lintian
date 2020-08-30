@@ -163,7 +163,7 @@ sub binary {
     }
 
     my $dcopy
-      = path($self->processable->groupdir)->child('copyright')->stringify;
+      = path($self->processable->basedir)->child('copyright')->stringify;
 
     my $bytes = path($dcopy)->slurp;
 

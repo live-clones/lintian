@@ -206,8 +206,8 @@ sub process {
     my @processables = $self->get_processables;
     for my $processable (@processables) {
 
-        path($processable->groupdir)->mkpath
-          unless -e $processable->groupdir;
+        path($processable->basedir)->mkpath
+          unless -e $processable->basedir;
 
         symlink($processable->path, $processable->link)
           unless -l $processable->link;
@@ -239,7 +239,7 @@ sub process {
         my $declared_overrides;
 
         $OUTPUT->debug_msg(1,
-            'Base directory for group: ' . $processable->groupdir);
+            'Base directory for processable: ' . $processable->basedir);
 
         unless ($option->{'no-override'}) {
 
