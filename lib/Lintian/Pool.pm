@@ -246,23 +246,25 @@ sub process{
             1 while waitpid(-1, WNOHANG) > 0;
         }
 
-        # announce any left over processes, see commit 3bbcc3b
-        my $process_table = Proc::ProcessTable->new;
-        my @leftover= grep { $_->ppid == $$ } @{$process_table->table};
+        if ($option->{debug}) {
+            my $process_table = Proc::ProcessTable->new;
+            my @leftover= grep { $_->ppid == $$ } @{$process_table->table};
 
-        if (@leftover) {
-            warn "\nSome processes were left over (maybe unreaped):\n";
+            # announce left over processes, see commit 3bbcc3b
+            if (@leftover) {
+                warn "\nSome processes were left over (maybe unreaped):\n";
 
-            my $FORMAT = "    %-12s %-12s %-8s %-24s %s\n";
-            printf($FORMAT, 'PID', 'TTY', 'STATUS', 'START', 'COMMAND');
+                my $FORMAT = "    %-12s %-12s %-8s %-24s %s\n";
+                printf($FORMAT, 'PID', 'TTY', 'STATUS', 'START', 'COMMAND');
 
-            printf($FORMAT,
-                $_->pid,$_->ttydev,$_->state,scalar(localtime($_->start)),
-                $_->cmndline)
-              for @leftover;
+                printf($FORMAT,
+                    $_->pid,$_->ttydev,$_->state,scalar(localtime($_->start)),
+                    $_->cmndline)
+                  for @leftover;
 
-            $$exit_code_ref = 1;
-            die "Aborting.\n";
+                $$exit_code_ref = 1;
+                die "Aborting.\n";
+            }
         }
 
         # remove group files
