@@ -35,7 +35,6 @@ use namespace::clean;
 
 with
   'Lintian::Processable::Binary::Class',
-  'Lintian::Processable::Binary::Copyright',
   'Lintian::Processable::Binary::Relation',
   'Lintian::Processable::Changelog',
   'Lintian::Processable::Control',
