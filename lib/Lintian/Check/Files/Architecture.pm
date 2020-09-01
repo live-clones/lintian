@@ -70,6 +70,8 @@ sub visit_installed_files {
 
     $self->depends_on_architecture(1)
       if $item->is_file
+      && $item->size > 0
+      && $item->file_info !~ m/^very short file/
       && $item->file_info !~ m/\bASCII text\b/
       && $item->name !~ m{^usr/share/};
 

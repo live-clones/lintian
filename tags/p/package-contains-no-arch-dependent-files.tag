@@ -2,9 +2,8 @@ Tag: package-contains-no-arch-dependent-files
 Severity: info
 Check: files/architecture
 Experimental: yes
-Explanation: The package is not marked architecture all, but all the files it
- ships are installed in /usr/share.
+Explanation: All files in this package are architecture-independent,
+ but the package is not marked <code>Architecture: all</code>. 
  .
- Most likely this package should be marked architecture all, but there
- is a chance that the package is missing files.
+ The package should probably be marked <code>Architecture: all</code>.
 See-Also: policy 5.6.8

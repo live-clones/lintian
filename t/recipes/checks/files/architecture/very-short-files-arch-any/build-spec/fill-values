@@ -1,0 +1,4 @@
+Skeleton: upload-native
+Testname: very-short-files-arch-any
+Package-Architecture: any
+Description: No file magic available but marked architecture-dependent
