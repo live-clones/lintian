@@ -350,13 +350,13 @@ $selected{$_} = $command_line{$_} for keys %command_line;
 my @display_level;
 
 push(@display_level,['=', '>=', 'warning'])
-  if exists $selected{'default-display-level'};
+  if $selected{'default-display-level'};
 
 push(@display_level, ['+', '>=', 'info'])
-  if exists $selected{'display-info'};
+  if $selected{'display-info'};
 
 push(@display_level, ['+', '=', 'pedantic'])
-  if exists $selected{'pedantic'};
+  if $selected{'pedantic'};
 
 sub display_classificationtags {
     push(@display_level, ['+', '=', 'classification']);
