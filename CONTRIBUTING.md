@@ -147,48 +147,12 @@ is not ready for a release yet.
 
 ### Updating debian/changelog
 
-If you are not a committer, you are welcome to leave this out and let
-the committer write this bit for you.  It often makes easier for us to
-merge your changes as the changelog is notorious for merge conflicts.
+Please do not manually update the `debian/changelog` file. It is created
+automatically by `gbp-buildpackage` from commit messages.
 
-The general format is:
-
-    * checks/phppear.{desc,pm}:
-      + [JW] Fix typo.
-      + [NT] Apply patch from Jochen Sprickerhof to skip this check if the
-        package does not contain any php files.  (Closes: #805076)
-    * checks/testsuite.pm:
-      + [JW] Apply patch from Sean Whitton to recognise autopkgtest-pkg-elpa
-        as a valid value for the Testsuite field.  (Closes: #837801)
-
-    * data/files/php-libraries:
-      + [JW] Apply patch from Marcelo Jorge Vieira to update package name
-        for php-gettext.  (Closes: #837502)
-
-    * lib/Lintian/*.pm:
-      + [JW] Fix typos.
-    * lib/Lintian/Tags.pm:
-      + [JW, NT] Fix mojibake in UTF-8 encoded comments for overrides.
-        (Closes: #833052)
-
-Beyond the regular rules for Debian changelog files, the general
-guidelines are:
-
- * The message is prefixed with the initials of the committer(s). New
-   committers, please remember to add yourself to debian/copyright.
- * Changes are grouped by "root" folder ("checks", "data" and "lib" in
-   the example above).
- * The groups are sorted by the name of the "root" folder and separated
-   by a single line.
- * Inside a "root" folder, changes are grouped by files and sorted by
-   the ("earliest") file in the group.
- * Changes to the test suite and the "private" directory are generally
-   only documented if they have a "visible" effect (e.g. closes a
-   "FTBFS" bug).
- * If a change effects more than one "root" folder, they are repeated
-   for each of the related "root" folders.
- * Text after a period is followed by *two* spaces (except where it is
-   part of an abbreviation like "e.g.").
+However, please take time to write an effective first line of your commit
+message, ensuring that it will make the sense when read in a list of changes
+without any other context.
 
 ### Backport requirements
 
