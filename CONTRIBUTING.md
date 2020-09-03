@@ -1,13 +1,11 @@
-How to contribute to Lintian
-============================
+# How to contribute to Lintian
 
 This document is intended for prospective and existing contributors.
 
 The first section will cover how to get started for newcomers.  After
 that is a section on recommended practices and additional resources.
 
-Getting started
----------------
+## Getting started
 
 Please either checkout the repository from [salsa.debian.org][salsa]:
 
@@ -28,7 +26,7 @@ fields in the `debian/control` file.
 [salsa]: https://salsa.debian.org/
 [lintian-fork]: https://salsa.debian.org/lintian/lintian/forks/new
 
-#### API Docs, tutorials and the test suite documentation
+## API Docs, tutorials and the test suite documentation
 
 We also have some short tutorials in our API docs.  You can compile
 the API documentation via:
@@ -56,8 +54,7 @@ Lintian when it was last updated on the Lintian web site.
 
 [online-api-docs]: https://lintian.debian.org/library-api/index.html
 
-Making changes
---------------
+## Making changes
 
  * Make commits of logical units
  * Add a test for your change - especially if you introduce a new tag
@@ -81,8 +78,7 @@ For more on best practices on Git commit messages, please review
 
 [tbaggery-git-commit]: http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html
 
-Submitting changes
-------------------
+## Submitting changes
 
 Please prefer to submit your changes to Lintian by creating a
 [merge-request][merge-request] on [Salsa][salsa].
@@ -103,8 +99,7 @@ the `git format-patch` command.
 [merge-request]: https://salsa.debian.org/lintian/lintian/merge_requests
 [salsa]: https://salsa.debian.org/
 
-Data files
-----------
+## Data files
 
 The `data`  directory contains files loaded by the `Lintian::Data` module,
 specifically lists of keywords used in various Lintian checks. For all files in
@@ -118,12 +113,9 @@ Files should generally be organized into subdirectory by check or by general
 class of lists (for example, all lists related to `doc-base  files should go
 into a `doc-base` subdirectory).
 
-Recommended practices
-=====================
+## Recommended practices
 
-
-Code style dictated by perltidy and perlcritic
-----------------------------------------------
+### Code style dictated by perltidy and perlcritic
 
 For consistency, perltidy is used to normalize the style of the Perl
 code in Lintian.  This is enforced via tests and will be checked
@@ -144,8 +136,7 @@ boolean context (which is better done via the `any` sub from
 We have enabled enforcements of the rules, which lintian already
 follows and which made sense to lintian.
 
-The "master" branch is "always releasable"
-------------------------------------------
+### The "master" branch is "always releasable"
 
 Generally the "master" branch should kept in a state where it is always
 releasable.  This is an accepted practice by many other projects and
@@ -154,8 +145,7 @@ also helps us in case we suddenly need to do a release.
 You are always welcome to create topic branches for publishing code that
 is not ready for a release yet.
 
-Updating debian/changelog
--------------------------
+### Updating debian/changelog
 
 If you are not a committer, you are welcome to leave this out and let
 the committer write this bit for you.  It often makes easier for us to
@@ -200,8 +190,7 @@ guidelines are:
  * Text after a period is followed by *two* spaces (except where it is
    part of an abbreviation like "e.g.").
 
-Backport requirements
----------------------
+### Backport requirements
 
 There are some limits to which changes Lintian can accept as it needs
 to be backportable to the current Debian stable release.  As such,
@@ -218,8 +207,7 @@ There are several reasons for this requirement.  The two primary being:
 Accordingly, we have continuous integration job running on
 jenkins.debian.net to test this.
 
-Additional resources
-====================
+### Additional resources
 
  * perldoc [doc/tutorial/Lintian/Tutorial.pod](doc/tutorial/Lintian/Tutorial.pod)
  * perldoc [doc/README.developers](doc/README.developers)
