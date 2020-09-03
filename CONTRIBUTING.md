@@ -103,6 +103,21 @@ the `git format-patch` command.
 [merge-request]: https://salsa.debian.org/lintian/lintian/merge_requests
 [salsa]: https://salsa.debian.org/
 
+Data files
+----------
+
+The `data`  directory contains files loaded by the `Lintian::Data` module,
+specifically lists of keywords used in various Lintian checks. For all files in
+this directory, blank lines are ignored, as are lines beginning with `#`.
+
+For each list of keywords, please include in a comment the origin of the list,
+any information about how to resynchronize the list with that origin, and any
+special exceptions or caveats.
+
+Files should generally be organized into subdirectory by check or by general
+class of lists (for example, all lists related to `doc-base  files should go
+into a `doc-base` subdirectory).
+
 Recommended practices
 =====================
 
