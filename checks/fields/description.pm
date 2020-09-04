@@ -68,7 +68,7 @@ sub installable {
     my $full_description= $processable->fields->untrimmed_value('Description');
 
     $self->tag('odd-mark-in-description', 'comma not followed by whitespace')
-      if $full_description =~ /,\S/;
+      if $full_description =~ /,[^\s\d]/;
 
     $full_description =~ m/^([^\n]*)\n(.*)$/s;
     my ($synopsis, $extended) = ($1, $2);
