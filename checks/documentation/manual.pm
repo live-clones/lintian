@@ -281,7 +281,9 @@ sub visit_installed_files {
             local $ENV{LC_ALL} = 'C.UTF-8';
 
             local $ENV{MANROFFSEQ} = EMPTY;
-            local $ENV{MANWIDTH} = 80;
+
+            # set back to 80 when Bug#892423 is fixed in groff
+            local $ENV{MANWIDTH} = 120;
 
             my $stdout;
             my $stderr;
