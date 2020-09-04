@@ -298,7 +298,7 @@ sub source {
         my @command = ('msgfmt', '-o', '/dev/null', '--statistics',
             $po_path->unpacked_path);
 
-        run3(\@command, undef, undef, \$stats);
+        run3(\@command, \undef, \undef, \$stats);
 
         $self->tag('invalid-po-file', $po_path)
           if $?;

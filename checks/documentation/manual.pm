@@ -242,7 +242,7 @@ sub visit_installed_files {
             my $stdout;
             my $stderr;
 
-            run3(\@command, undef, \$stdout, \$stderr);
+            run3(\@command, \undef, \$stdout, \$stderr);
 
             my $exitcode = $?;
             my $status = ($exitcode >> 8);
@@ -295,7 +295,7 @@ sub visit_installed_files {
             my $savedir = getcwd;
             chdir($localdir);
 
-            run3(\@command, undef, \$stdout, \$stderr);
+            run3(\@command, \undef, \$stdout, \$stderr);
 
             my $exitcode = $?;
             my $status = ($exitcode >> 8);

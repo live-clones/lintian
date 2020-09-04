@@ -67,7 +67,7 @@ sub installable {
     my $stdout;
     my $stderr;
 
-    run3(\@command, undef, \$stdout, \$stderr);
+    run3(\@command, \undef, \$stdout, \$stderr);
 
     unless ($?) {
         my @members = split(/\n/, $stdout);

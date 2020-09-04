@@ -113,7 +113,7 @@ sub create {
     # ignore STDOUT; older versions are not completely quiet with -q
     my $unpack_error;
 
-    run3(\@unpack_command, undef, undef, \$unpack_error);
+    run3(\@unpack_command, \undef, \undef, \$unpack_error);
 
     my $status = ($? >> 8);
     if ($status) {

@@ -83,7 +83,7 @@ sub safe_qx {
     my $stdout;
     my $stderr;
 
-    run3(\@command, undef, \$stdout, \$stderr);
+    run3(\@command, \undef, \$stdout, \$stderr);
 
     my $exitcode = $?;
     my $status = ($exitcode >> 8);
