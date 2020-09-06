@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: patch-systems-number-of-patches
+Description: Test if the number of patches is counted correctly

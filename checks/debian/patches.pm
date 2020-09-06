@@ -60,6 +60,19 @@ sub source {
     $patch_series
       = $self->processable->patched->resolve_path('debian/patches/series');
 
+    # Count number of patches
+    my $num_patches = 0;
+    open(my $fd, '<', $patch_series->unpacked_path);
+    while (my $line = <$fd>) {
+        chomp $line;
+        # Remove comments
+        $line =~ s/(?:^|\s+)#.*$//;
+	$num_patches++
+          if $line =~ /(?:^|\s+)\S+.*$/;
+    }
+    close($fd);
+    $self->tag('number-of-patches', $num_patches);
+
     push(@patch_system, 'dpatch')
       if $build_deps->implies('dpatch');
 
