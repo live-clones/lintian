@@ -46,9 +46,6 @@ BEGIN {
     @EXPORT_OK = (qw(
           get_file_checksum
           get_file_digest
-          do_fork
-          run_cmd
-          copy_dir
           human_bytes
           open_gz
           perm2oct
@@ -71,13 +68,8 @@ use Carp qw(croak);
 use Cwd qw(abs_path);
 use Digest::MD5;
 use Digest::SHA;
-use Encode ();
-use Errno qw(ENOENT);
-use FileHandle;
 use List::MoreUtils qw(first_value);
 use Path::Tiny;
-use POSIX qw(sigprocmask SIG_BLOCK SIG_UNBLOCK SIG_SETMASK);
-use Scalar::Util qw(openhandle);
 use Unicode::UTF8 qw(valid_utf8);
 
 use Lintian::Deb822::File;
@@ -229,45 +221,6 @@ sub get_file_checksum {
     return $digest->hexdigest;
 }
 
-=item do_fork()
-
-Overrides fork to reset signal handlers etc. in the child.
-
-=cut
-
-sub do_fork() {
-    my ($pid, $fork_error);
-    my $orig_mask = POSIX::SigSet->new;
-    my $fork_mask = POSIX::SigSet->new;
-    $fork_mask->fillset;
-    sigprocmask(SIG_BLOCK, $fork_mask, $orig_mask)
-      or die("sigprocmask failed: $!\n");
-    $pid = CORE::fork();
-    $fork_error = $!;
-    if (defined($pid) and $pid == 0) {
-
-        for my $sig (keys(%SIG)) {
-            if (ref($SIG{$sig}) eq 'CODE') {
-                $SIG{$sig} = 'DEFAULT';
-            }
-        }
-    }
-    if (!sigprocmask(SIG_SETMASK, $orig_mask, undef)) {
-        # The child MUST NOT use die as the caller cannot distinguish
-        # the caller from the child via an exception.
-        my $sigproc_error = $!;
-        if (not defined($pid) or $pid != 0) {
-            die("sigprocmask failed (do_fork, parent): $sigproc_error\n");
-        }
-        print STDERR "sigprocmask failed (do_fork, child): $sigproc_error\n";
-        POSIX::_exit(255);
-    }
-    if (not defined($pid)) {
-        $! = $fork_error;
-    }
-    return $pid;
-}
-
 =item perm2oct(PERM)
 
 Translates PERM to an octal permission.  PERM should be a string describing
@@ -330,108 +283,6 @@ sub perm2oct {
     $OCTAL_LOOKUP{$text} = $octal;
 
     return $octal;
-}
-
-=item run_cmd([OPTS, ]COMMAND[, ARGS...])
-
-Executes the given C<COMMAND> with the (optional) arguments C<ARGS> and
-returns the status code as one would see it from a shell script.  Shell
-features cannot be used.
-
-OPTS, if given, is a hash reference with zero or more of the following key-value pairs:
-
-=over 4
-
-=item chdir
-
-The child process with chdir to the given directory before executing the command.
-
-=item in
-
-The STDIN of the child process will be reopened and read from the filename denoted by the value of this key.
-By default, STDIN will reopened to read from /dev/null.
-
-=item out
-
-The STDOUT of the child process will be reopened and write to filename denoted by the value of this key.
-By default, STDOUT is discarded.
-
-=item update-env-vars
-
-Each key/value pair defined in the hashref associated with B<update-env-vars> will be updated in the
-child processes's environment.  If a value is C<undef>, then the corresponding environment variable
-will be removed (if set).  Otherwise, the environment value will be set to that value.
-
-=back
-
-=cut
-
-sub run_cmd {
-    my (@cmd_args) = @_;
-    my ($opts, $pid);
-    if (ref($cmd_args[0]) eq 'HASH') {
-        $opts = shift(@cmd_args);
-    } else {
-        $opts = {};
-    }
-    $pid = do_fork();
-    if (not defined($pid)) {
-        # failed
-        die("fork failed: $!\n");
-    } elsif ($pid > 0) {
-        # parent
-        waitpid($pid, 0);
-        if ($?) {
-            my $exit_code = ($? >> 8) & 0xff;
-            my $signal = $? & 0x7f;
-            my $cmd = join(' ', @cmd_args);
-            if ($exit_code) {
-                die("Command $cmd returned: $exit_code\n");
-            } else {
-                my $signame = signal_number2name($signal);
-                die("Command $cmd received signal: $signame ($signal)\n");
-            }
-        }
-    } else {
-        # child
-        if (defined(my $env = $opts->{'update-env-vars'})) {
-            while (my ($k, $v) = each(%{$env})) {
-                if (defined($v)) {
-                    $ENV{$k} = $v;
-                } else {
-                    delete($ENV{$k});
-                }
-            }
-        }
-        if ($opts->{'in'}) {
-            open(STDIN, '<', $opts->{'in'});
-        } else {
-            open(STDIN, '<', '/dev/null');
-        }
-        if ($opts->{'out'}) {
-            open(STDOUT, '>', $opts->{'out'});
-        } else {
-            open(STDOUT, '>', '/dev/null');
-        }
-        chdir($opts->{'chdir'}) if $opts->{'chdir'};
-        # Avoid shell evaluation.
-        CORE::exec {$cmd_args[0]} @cmd_args
-          or die("Failed to exec '$_[0]': $!\n");
-    }
-    return 1;
-}
-
-=item copy_dir (ARGS)
-
-Convenient way of calling I<cp -a ARGS>.
-
-=cut
-
-sub copy_dir {
-    # --reflink=auto (coreutils >= 7.5).  On FS that support it,
-    # make a CoW copy of the data; otherwise fallback to a regular
-    # deep copy.
-    return run_cmd('cp', '-a', '--reflink=auto', '--', @_);
 }
 
 =item human_bytes(SIZE)
@@ -577,38 +428,6 @@ sub version_from_changelog {
       if @entries;
 
     return EMPTY;
-}
-
-=item signal_number2name(NUM)
-
-Given a number, returns the name of the signal (without leading
-"SIG").  Example:
-
-    signal_number2name(2) eq 'INT'
-
-=cut
-
-{
-    my @signame;
-
-    sub signal_number2name {
-        my ($number) = @_;
-        if (not @signame) {
-            require Config;
-            # Doubt this happens for Lintian, but the code might
-            # Cargo-cult-copied or copy-wasted into another project.
-            # Speaking of which, thanks to
-            #  http://www.ccsf.edu/Pub/Perl/perlipc/Signals.html
-            defined($Config::Config{sig_name})
-              or die "Signals not available\n";
-            my $i = 0;
-            for my $name (split(' ', $Config::Config{sig_name})) {
-                $signame[$i] = $name;
-                $i++;
-            }
-        }
-        return $signame[$number];
-    }
 }
 
 =item normalize_pkg_path(PATH)

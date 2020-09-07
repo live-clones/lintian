@@ -31,7 +31,6 @@ use IPC::Run3;
 use Try::Tiny;
 
 use Lintian::IPC::Run3 qw(safe_qx);
-use Lintian::Util qw(copy_dir);
 
 use constant EMPTY => q{};
 use constant NEWLINE => qq{\n};
@@ -184,7 +183,8 @@ sub source {
         mkdir($tempdir);
         # Copy the templates dir because intltool-update might
         # write to it.
-        copy_dir($d_templates->unpacked_path, $tempdir_templates)
+        safe_qx('cp', '-a', '--reflink=auto', '--',$d_templates->unpacked_path,
+            $tempdir_templates)
           if $d_templates;
 
         my $error;
