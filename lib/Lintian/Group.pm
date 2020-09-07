@@ -264,7 +264,7 @@ sub process {
                 unless ($current eq $tagname) {
 
                     $processable->tag('renamed-tag',
-                        "$tagname => $current at line "
+                        "$tagname => $current in line "
                           .$declared_overrides->{$tagname}{$_}{line})
                       for keys %{$declared_overrides->{$tagname}};
 
@@ -275,6 +275,19 @@ sub process {
 
                     delete $declared_overrides->{$tagname};
                 }
+            }
+
+            # complain about and filter out unknown tags in overrides
+            my @unknown_overrides = grep { !$self->profile->get_taginfo($_) }
+              keys %{$declared_overrides};
+            for my $tagname (@unknown_overrides) {
+
+                $processable->tag('malformed-override',
+                    "Unknown tag $tagname in line "
+                      . $declared_overrides->{$tagname}{$_}{line})
+                  for keys %{$declared_overrides->{$tagname}};
+
+                delete $declared_overrides->{$tagname};
             }
 
             # treat ignored overrides here

@@ -12,11 +12,6 @@
                      "severity" : "warning"
                   },
                   {
-                     "context" : "1.0+dsfg-1.1",
-                     "name" : "dfsg-version-misspelled",
-                     "severity" : "warning"
-                  },
-                  {
                      "name" : "format-3.0-but-debian-changes-patch",
                      "severity" : "warning"
                   },
@@ -65,6 +60,12 @@
                   {
                      "name" : "old-source-override-location",
                      "severity" : "pedantic"
+                  },
+                  {
+                     "context" : "1.0+dsfg-1.1",
+                     "name" : "dfsg-version-misspelled",
+                     "override" : "yes",
+                     "severity" : "warning"
                   }
                ]
             },

@@ -545,16 +545,6 @@ div.clear {
       </ul>
 
       <span class="tinycode" id="code-W">W</span>
-      <span class="tinytag"><a href="https://lintian.debian.org/tags/dfsg-version-misspelled.html">dfsg-version-misspelled</a></span>
-      <span class="tinycontext">1.0+dsfg-1.1</span>
-
-    </li>
-    <li class="tagitem">
-
-      <ul class="commentlist">
-      </ul>
-
-      <span class="tinycode" id="code-W">W</span>
       <span class="tinytag"><a href="https://lintian.debian.org/tags/format-3.0-but-debian-changes-patch.html">format-3.0-but-debian-changes-patch</a></span>
       <span class="tinycontext"></span>
 
@@ -657,6 +647,16 @@ div.clear {
       <span class="tinycode" id="code-P">P</span>
       <span class="tinytag"><a href="https://lintian.debian.org/tags/old-source-override-location.html">old-source-override-location</a></span>
       <span class="tinycontext"></span>
+
+    </li>
+    <li class="tagitem">
+
+      <ul class="commentlist">
+      </ul>
+
+      <span class="tinycode" id="code-O">O</span>
+      <span class="tinytag"><a href="https://lintian.debian.org/tags/dfsg-version-misspelled.html">dfsg-version-misspelled</a></span>
+      <span class="tinycontext">1.0+dsfg-1.1</span>
 
     </li>
 
