@@ -31,6 +31,7 @@ Enable-Tags-From-Check:
  debian/manual-pages,
  debian/not-installed,
  debian/patches,
+ debian/patches/count,
  debian/patches/dep3,
  debian/patches/dpatch,
  debian/patches/quilt,
