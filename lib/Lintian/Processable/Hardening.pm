@@ -61,7 +61,7 @@ sub hardening_info {
     return $self->{hardening_info}
       if exists $self->{hardening_info};
 
-    my $hardf = path($self->groupdir)->child('hardening-info')->stringify;
+    my $hardf = path($self->basedir)->child('hardening-info')->stringify;
 
     my %hardening_info;
 

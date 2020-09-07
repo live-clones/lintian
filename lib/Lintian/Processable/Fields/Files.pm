@@ -90,8 +90,6 @@ checksum.
 
 =back
 
-=item saved_files
-
 =cut
 
 has files => (

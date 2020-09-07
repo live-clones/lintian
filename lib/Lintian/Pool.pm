@@ -25,8 +25,7 @@ use warnings;
 use utf8;
 use autodie;
 
-use Carp qw(croak);
-use Cwd;
+use Cwd qw(getcwd);
 use List::MoreUtils qw(any);
 use Time::HiRes qw(gettimeofday tv_interval);
 use Path::Tiny;
@@ -34,10 +33,6 @@ use POSIX qw(:sys_wait_h);
 use Proc::ProcessTable;
 
 use Lintian::Group;
-use Lintian::Util;
-
-use constant EMPTY => q{};
-use constant SPACE => q{ };
 
 use Moo;
 use namespace::clean;
@@ -251,23 +246,25 @@ sub process{
             1 while waitpid(-1, WNOHANG) > 0;
         }
 
-        # announce any left over processes, see commit 3bbcc3b
-        my $process_table = Proc::ProcessTable->new;
-        my @leftover= grep { $_->ppid == $$ } @{$process_table->table};
+        if ($option->{debug}) {
+            my $process_table = Proc::ProcessTable->new;
+            my @leftover= grep { $_->ppid == $$ } @{$process_table->table};
 
-        if (@leftover) {
-            warn "\nSome processes were left over (maybe unreaped):\n";
+            # announce left over processes, see commit 3bbcc3b
+            if (@leftover) {
+                warn "\nSome processes were left over (maybe unreaped):\n";
 
-            my $FORMAT = "    %-12s %-12s %-8s %-24s %s\n";
-            printf($FORMAT, 'PID', 'TTY', 'STATUS', 'START', 'COMMAND');
+                my $FORMAT = "    %-12s %-12s %-8s %-24s %s\n";
+                printf($FORMAT, 'PID', 'TTY', 'STATUS', 'START', 'COMMAND');
 
-            printf($FORMAT,
-                $_->pid,$_->ttydev,$_->state,scalar(localtime($_->start)),
-                $_->cmndline)
-              for @leftover;
+                printf($FORMAT,
+                    $_->pid,$_->ttydev,$_->state,scalar(localtime($_->start)),
+                    $_->cmndline)
+                  for @leftover;
 
-            $$exit_code_ref = 1;
-            die "Aborting.\n";
+                $$exit_code_ref = 1;
+                die "Aborting.\n";
+            }
         }
 
         # remove group files

@@ -1,8 +1,0 @@
-Tag: package-contains-broken-symlink-wildcard
-Severity: warning
-Certainty: possible
-Check: files/symbolic-links/broken
-Info: The package contains a symlink with a target that
- appears to be a "failed" wildcard expansion. Furthermore
- the target does not exists in the package or any of its
- direct dependencies (built from the same source package).

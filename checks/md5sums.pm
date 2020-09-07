@@ -68,8 +68,7 @@ sub binary {
 
         # ignore if package contains no files
         return
-          if -z path($self->processable->groupdir)->child('md5sums')
-          ->stringify;
+          if -z path($self->processable->basedir)->child('md5sums')->stringify;
 
         $self->tag('no-md5sums-control-file')
           unless $self->only_conffiles;

@@ -59,20 +59,23 @@ our $MAX_CMI = 3;
 sub setup_installed_files {
     my ($self) = @_;
 
-    open(my $fd, '<',
-        path($self->processable->groupdir)->child('ar-info')->stringify);
-    while (my $line = <$fd>) {
-        chomp($line);
-        if ($line =~ /^(?:\.\/)?([^:]+): (.*)$/) {
-            my ($filename, $contents) = ($1, $2);
-            my $dirname = dirname($filename);
-            for my $entry (split m/ /, $contents) {
-                # Note: a .o may be legitimately in several different .a
-                $self->provided_o->{"$dirname/$entry"} = $filename;
-            }
+    for my $item ($self->processable->installed->sorted_list) {
+
+        my $ar_info = $item->ar_info;
+        next
+          unless scalar keys %{$ar_info};
+
+        # ends in a slash
+        my $dirname = $item->dirname;
+
+        for my $count (keys %{$ar_info}) {
+
+            my $member = $ar_info->{$count}{name};
+            # Note: a .o may be legitimately in several different .a
+            $self->provided_o->{"$dirname$member"} = $item->name
+              if length $member;
         }
     }
-    close($fd);
 
     # is it a library package?
     $self->_set_is_lib_package(1)

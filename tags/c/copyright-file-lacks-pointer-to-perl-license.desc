@@ -1,8 +1,0 @@
-Tag: copyright-file-lacks-pointer-to-perl-license
-Severity: error
-Certainty: possible
-Check: debian/copyright
-Ref: policy 12.5
-Info: If your package is released under the same terms as Perl itself,
- it should refer to the Artistic and GPL license files in the
- <tt>/usr/share/common-licenses</tt> directory.

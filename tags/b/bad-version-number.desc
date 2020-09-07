@@ -1,5 +1,0 @@
-Tag: bad-version-number
-Severity: error
-Check: fields/version
-Info: The version number fails one of the syntactic requirements of dpkg.
-Ref: policy 5.6.12

@@ -47,7 +47,8 @@ sub visit_patched_files {
       unless $item->is_file;
 
     return
-      if $item->name eq 'debian/patches/series';
+      if $item->name eq 'debian/patches/series'
+      || $item->name eq 'debian/patches/README';
 
     my $bytes = $item->bytes;
     return

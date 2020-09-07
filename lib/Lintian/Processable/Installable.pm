@@ -66,12 +66,12 @@ Native heuristics are only available in source packages.
 sub unpack {
     my ($self) = @_;
 
-    $self->installed->collect($self->groupdir);
+    $self->installed->collect($self->basedir);
 
     # cause parsing of concatenated data
     $self->objdump_info;
 
-    $self->control->collect($self->groupdir);
+    $self->control->collect($self->basedir);
 
     $self->add_changelog;
     $self->add_copyright;

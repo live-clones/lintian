@@ -129,18 +129,8 @@ sub issue_tags {
     my @sorted
       = reverse sort { order($a) cmp order($b) } @lines;
 
-    print { $self->stdout } $_ . NEWLINE for @sorted;
+    say $_ for @sorted;
 
-    return;
-}
-
-sub _message {
-    my ($self, @args) = @_;
-    return;
-}
-
-sub _warning {
-    my ($self, @args) = @_;
     return;
 }
 

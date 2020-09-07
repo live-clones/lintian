@@ -2,4 +2,4 @@ Testname: forwarded-not-needed
 Check: debian/patches/dep3
 Test-Against:
  patch-not-forwarded-upstream
-References: Bug#755153
+See-Also: Bug#755153

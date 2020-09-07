@@ -1,6 +1,0 @@
-Tag: missing-potfiles-in
-Severity: warning
-Check: debian/po-debconf
-Info: The required file <tt>POTFILES.in</tt> is missing from
- <tt>debian/po</tt>.
-Ref: po-debconf(7)

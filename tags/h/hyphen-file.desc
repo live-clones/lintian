@@ -1,8 +1,0 @@
-Tag: hyphen-file
-Severity: error
-Certainty: possible
-Check: files/names
-Info: The given file is literally installed as <tt>-</tt> (hyphen
- symbol). Normally this indicates a mistake in the package when
- attempting to write to standard output.
-Ref: #882638

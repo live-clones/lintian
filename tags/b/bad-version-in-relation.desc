@@ -1,6 +1,0 @@
-Tag: bad-version-in-relation
-Ref: policy 5.6.12
-Severity: error
-Check: fields/package-relations
-Info: The version number used in this relationship does not match the
- defined format of a version number.

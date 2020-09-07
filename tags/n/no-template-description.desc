@@ -1,5 +1,0 @@
-Tag: no-template-description
-Severity: error
-Check: debian/debconf
-Info: The templates file contains a template without a "Description:" field.
-Ref: debconf-spec 3, debconf-devel(7)

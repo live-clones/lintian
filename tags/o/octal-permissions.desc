@@ -1,5 +1,0 @@
-Tag: octal-permissions
-Severity: classification
-Check: files/permissions
-Info: The named file has the octal permissions shown.
-Ref: Bug#945869, Bug#796257

@@ -1,4 +1,0 @@
-Tag: no-template-name
-Severity: error
-Check: debian/debconf
-Info: The templates file contains a template without a "Template:" field.

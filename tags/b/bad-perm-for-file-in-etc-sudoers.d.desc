@@ -1,6 +1,0 @@
-Tag: bad-perm-for-file-in-etc-sudoers.d
-Severity: error
-Check: files/permissions
-Info: Files in /etc/sudoers.d/ must be 0440 or sudo will refuse to
- parse them.
-Ref: #588831, #576527

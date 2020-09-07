@@ -1,5 +1,0 @@
-Tag: config-file-reserved
-Severity: error
-Check: files/pam
-Info: This file is reserved by a specific package. Please email the
- maintainer of the package in question if you have questions.

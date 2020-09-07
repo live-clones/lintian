@@ -73,13 +73,11 @@ in the collections scripts used previously.
 =cut
 
 sub collect {
-    my ($self, $groupdir) = @_;
+    my ($self, $processable_dir) = @_;
 
     # source packages can be unpacked anywhere; no anchored roots
-    my $basedir = path($groupdir)->child('unpacked')->stringify;
-    $self->basedir($basedir);
 
-    $self->create($groupdir);
+    $self->create($processable_dir);
     $self->load;
 
     $self->add_md5sums;
@@ -94,7 +92,7 @@ sub collect {
 =cut
 
 sub create {
-    my ($self, $groupdir) = @_;
+    my ($self, $processable_dir) = @_;
 
     my $savedir = getcwd;
 
@@ -107,8 +105,10 @@ sub create {
     my $saved_umask = umask;
     umask 0000;
 
-    my @unpack_command = (qw(dpkg-source -q --no-check --extract),
-        "$groupdir/dsc", $self->basedir);
+    my @unpack_command = (
+        qw(dpkg-source -q --no-check --extract),
+        "$processable_dir/dsc", $self->basedir
+    );
 
     # ignore STDOUT; older versions are not completely quiet with -q
     my $unpack_error;
@@ -126,7 +126,7 @@ sub create {
 
     umask $saved_umask;
 
-    path("$groupdir/unpacked-errors")->append($unpack_error // EMPTY);
+    path("$processable_dir/unpacked-errors")->append($unpack_error // EMPTY);
 
     # chdir for index_src
     chdir($self->basedir);

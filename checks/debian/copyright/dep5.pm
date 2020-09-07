@@ -29,33 +29,29 @@ use autodie;
 
 use List::Compare;
 use List::MoreUtils qw(any all none uniq);
+use Text::Glob qw(match_glob);
 use XML::LibXML;
 
 use Lintian::Deb822::File;
 use Lintian::Relation::Version qw(versions_compare);
 
-use constant {
-    WC_TYPE_REGEX => 'REGEX',
-    WC_TYPE_FILE => 'FILE',
-    WC_TYPE_DESCENDANTS => 'DESCENDANTS',
-};
-
 use constant EMPTY => q{};
 use constant SPACE => q{ };
+use constant SLASH => q{/};
+use constant COLON => q{:};
 use constant ASTERISK => q{*};
 use constant LEFT_SQUARE => q{[};
 use constant RIGHT_SQUARE => q{]};
-use constant QUESTION_MARK => q{?};
-use constant BACKSLASH => q{\\};
 
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
 
-my $dep5_last_normative_change = '0+svn~166';
-my $dep5_last_overhaul         = '0+svn~148';
-my %dep5_renamed_fields        = (
+my $LAST_SIGNIFICANT_DEP5_CHANGE = '0+svn~166';
+my $LAST_DEP5_OVERHAUL = '0+svn~148';
+
+my %NEW_FIELD_NAMES        = (
     'Format-Specification' => 'Format',
     'Maintainer'           => 'Upstream-Contact',
     'Upstream-Maintainer'  => 'Upstream-Contact',
@@ -79,7 +75,7 @@ sub source {
     # another check complains about legacy encoding, if needed
     my @valid_utf8 = grep { $_->is_valid_utf8 } @files;
 
-    $self->check_dep5_copyright($_)for @valid_utf8;
+    $self->check_dep5_copyright($_) for @valid_utf8;
 
     return;
 }
@@ -211,7 +207,7 @@ sub check_dep5_copyright {
     } elsif ($version =~ /svn$/) {
         $self->tag('unversioned-copyright-format-uri', $uri);
 
-    } elsif (versions_compare($version, '<<', $dep5_last_normative_change)) {
+    } elsif (versions_compare($version, '<<', $LAST_SIGNIFICANT_DEP5_CHANGE)) {
         $self->tag('out-of-date-copyright-format-uri', $uri);
 
     } elsif ($uri =~ m,^http://www\.debian\.org/,) {
@@ -219,15 +215,7 @@ sub check_dep5_copyright {
     }
 
     return
-      if versions_compare($version, '<<', $dep5_last_overhaul);
-
-    $self->parse_dep5($copyright_file, $contents);
-
-    return;
-}
-
-sub parse_dep5 {
-    my ($self, $file, $contents) = @_;
+      if versions_compare($version, '<<', $LAST_DEP5_OVERHAUL);
 
     # probably DEP 5 format; let's try more checks
     my $deb822 = Lintian::Deb822::File->new;
@@ -239,7 +227,8 @@ sub parse_dep5 {
         chomp $@;
 
         $@ =~ s/^syntax error in //;
-        $self->tag('syntax-error-in-dep5-copyright', "$file: $@");
+        $self->tag('syntax-error-in-dep5-copyright',
+            $copyright_file->name . COLON . SPACE . $@);
 
         return;
     }
@@ -340,10 +329,12 @@ sub parse_dep5 {
         }
     }
 
-    for my $name (
-        grep { $_ ne 'public-domain' }
-        grep { @{$found_standalone{$_}} > 1 } keys %found_standalone
-    ) {
+    my @not_unique
+      = grep { @{$found_standalone{$_}} > 1 } keys %found_standalone;
+    for my $name (@not_unique) {
+
+        next
+          if $name eq 'public-domain';
 
         $self->tag('dep5-copyright-license-name-not-unique',
             $name,'(line ' . $_->position('License') . ')')
@@ -352,15 +343,14 @@ sub parse_dep5 {
 
     my ($header, @followers) = @sections;
 
-    my @obsolete = grep { $header->exists($_) } keys %dep5_renamed_fields;
-    for my $name (@obsolete) {
+    my @obsolete_fields = grep { $header->exists($_) } keys %NEW_FIELD_NAMES;
+    for my $old_name (@obsolete_fields) {
 
-        my $position = $header->position($name);
         $self->tag(
             'obsolete-field-in-dep5-copyright',
-            $name,
-            $dep5_renamed_fields{$name},
-            "(line $position)"
+            $old_name,
+            $NEW_FIELD_NAMES{$old_name},
+            '(line ' . $header->position($old_name) . ')'
         );
     }
 
@@ -370,32 +360,47 @@ sub parse_dep5 {
 
     unless ($self->processable->native) {
 
-        my @files = grep { $_->is_file } $self->processable->orig->sorted_list;
+        my @orig_files
+          = grep { $_->is_file } $self->processable->orig->sorted_list;
+        my @orig_names = map { $_->name } @orig_files;
 
         my @wildcards = $header->trimmed_list('Files-Excluded');
 
         for my $wildcard (@wildcards) {
 
-            my ($wc_value, $wc_type, $wildcard_error)
-              = parse_wildcard($wildcard);
+            my @offenders = escape_errors($wildcard);
+            $self->tag('invalid-escape-sequence-in-dep5-copyright', $_)
+              for @offenders;
 
-            if (defined $wildcard_error) {
-                $self->tag('invalid-escape-sequence-in-dep5-copyright',
-                    $wildcard_error);
-                next;
-            }
+            next
+              if @offenders;
 
             # also match dir/filename for Files-Excluded: dir
-            $wc_value = qr{^$wc_value(?:/|$)}
-              if $wc_type eq WC_TYPE_FILE;
+            unless ($wildcard =~ /\*/ || $wildcard =~ /\?/) {
 
-            for my $srcfile (@files) {
+                my $candidate = $wildcard;
+                $candidate .= SLASH
+                  unless $candidate =~ m{/$};
 
-                next
-                  if $srcfile =~ m{^(?:debian|\.pc)/};
+                my $item = $self->processable->orig->lookup($candidate);
 
-                $self->tag('source-includes-file-in-files-excluded', $srcfile)
-                  if $srcfile =~ qr{^$wc_value};
+                $wildcard = $candidate . ASTERISK
+                  if defined $item && $item->is_dir;
+            }
+
+            local $Text::Glob::strict_leading_dot = 0;
+            local $Text::Glob::strict_wildcard_slash = 0;
+
+            # disable Text::Glob character classes and alternations
+            my $dulled = $wildcard;
+            $dulled =~ s/([{}\[\]])/\\$1/g;
+
+            my @unwanted = match_glob($dulled, @orig_names);
+
+            for my $name (@unwanted) {
+
+                $self->tag('source-includes-file-in-files-excluded', $name)
+                  unless $name =~ m{^(?:debian|\.pc)/};
             }
         }
     }
@@ -435,34 +440,31 @@ sub parse_dep5 {
         $_->position
     ) for @unknown_sections;
 
-    my $index;
+    my @shipped_items;
+
     if ($self->processable->native) {
-        $index = $self->processable->patched;
+        @shipped_items = $self->processable->patched->sorted_list;
+
     } else {
-        $index = $self->processable->orig;
-    }
+        @shipped_items = $self->processable->orig->sorted_list;
 
-    my @allpaths = $index->sorted_list;
-
-    unless ($self->processable->native) {
-
-        # remove existing ./debian folder, if any
-        @allpaths = grep { $_ !~ m{^debian/} } @allpaths
+        # remove ./debian folder from orig, if any
+        @shipped_items = grep { $_ !~ m{^debian/} } @shipped_items
           if $self->processable->fields->value('Format') eq '3.0 (quilt)';
 
+        # add ./ debian folder from patched
         my $debian_dir = $self->processable->patched->resolve_path('debian/');
-        push(@allpaths, $debian_dir->descendants)
+        push(@shipped_items, $debian_dir->descendants)
           if $debian_dir;
     }
 
-    my @shippedfiles = sort map { $_->name } grep { $_->is_file } @allpaths;
+    my @shipped_names
+      = sort map { $_->name } grep { $_->is_file } @shipped_items;
 
-    my @licensefiles= grep { m,(^|/)(COPYING[^/]*|LICENSE)$, } @shippedfiles;
-    my @quiltfiles = grep { m,^\.pc/, } @shippedfiles;
+    my @license_names= grep { m,(^|/)(COPYING[^/]*|LICENSE)$, } @shipped_names;
+    my @quilt_names = grep { m,^\.pc/, } @shipped_names;
 
-    my %file_shipped = map { $_ => 1 } @shippedfiles;
-
-    my @names_with_comma = grep { /,/ } @allpaths;
+    my @names_with_comma = grep { /,/ } @shipped_names;
     my @fields_with_comma = grep { $_->value('Files') =~ /,/ } @followers;
 
     if (@fields_with_comma && !@names_with_comma) {
@@ -557,58 +559,40 @@ sub parse_dep5 {
 
         for my $wildcard (@wildcards) {
 
-            my ($wc_value, $wc_type, $wildcard_error)
-              = parse_wildcard($wildcard);
+            my @offenders = escape_errors($wildcard);
 
-            if (defined $wildcard_error) {
-                $self->tag('invalid-escape-sequence-in-dep5-copyright',
-                        substr($wildcard_error, 0, 2)
-                      . ' (paragraph at line '
-                      . $section->position
-                      . ')');
-                next;
-            }
+            $self->tag(
+                'invalid-escape-sequence-in-dep5-copyright',
+                $_. ' (paragraph at line '. $section->position. ')'
+            ) for @offenders;
 
-            my @covered_files;
+            next
+              if @offenders;
 
-            if ($wc_type eq WC_TYPE_FILE) {
-                @covered_files = ($wc_value)
-                  if $file_shipped{$wc_value};
+            local $Text::Glob::strict_leading_dot = 0;
+            local $Text::Glob::strict_wildcard_slash = 0;
 
-            } elsif ($wc_type eq WC_TYPE_DESCENDANTS) {
+            # disable Text::Glob character classes and alternations
+            my $dulled = $wildcard;
+            $dulled =~ s/([{}\[\]])/\\$1/g;
 
-                # special-case Files: *
-                if ($wc_value eq EMPTY) {
-                    @covered_files = @shippedfiles;
+            my @covered = match_glob($dulled, @shipped_names);
 
-                } elsif ($wc_value =~ /^debian\//) {
-                    my $parent= $self->processable->patched->lookup($wc_value);
-                    @covered_files= grep { $_->is_file }$parent->descendants
-                      if $parent;
-
-                } else {
-                    my $parent = $index->lookup($wc_value);
-                    @covered_files= grep { $_->is_file }$parent->descendants
-                      if $parent;
-                }
-
-            } else {
-                @covered_files = grep { $_ =~ $wc_value } @shippedfiles;
-            }
-
-            for my $file (@covered_files) {
-                $wildcards_same_section_by_file{$file} //= [];
-                push(@{$wildcards_same_section_by_file{$file}}, $wildcard);
+            for my $name (@covered) {
+                $wildcards_same_section_by_file{$name} //= [];
+                push(@{$wildcards_same_section_by_file{$name}}, $wildcard);
             }
         }
 
-        my @overwritten = grep { $wildcard_by_file{$_} }
+        my @overwritten = grep { length $wildcard_by_file{$_} }
           keys %wildcards_same_section_by_file;
-        for my $file (@overwritten) {
+
+        for my $name (@overwritten) {
 
             my $winning_wildcard
-              = @{$wildcards_same_section_by_file{$file}}[-1];
-            my $loosing_wildcard = $wildcard_by_file{$file};
+              = @{$wildcards_same_section_by_file{$name}}[-1];
+            my $loosing_wildcard = $wildcard_by_file{$name};
+
             my $winner_depth = ($winning_wildcard =~ tr{/}{});
             my $looser_depth = ($loosing_wildcard =~ tr{/}{});
 
@@ -631,7 +615,7 @@ sub parse_dep5 {
               . join(SPACE, @{$wildcards_same_section_by_file{$_}})
               . RIGHT_SQUARE,
             "for $_"
-        )for @overmatched_same_section;
+        ) for @overmatched_same_section;
 
         push(@redundant_wildcards,
             map { @{$wildcards_same_section_by_file{$_}} }
@@ -664,42 +648,49 @@ sub parse_dep5 {
             $self->tag(
                 'wildcard-matches-nothing-in-dep5-copyright',
                 "$wildcard (line " . $_->position('Files') . ')'
-            )for @{$sections_by_wildcard{$wildcard}};
+            ) for @{$sections_by_wildcard{$wildcard}};
         }
 
         my %sections_by_file;
-        for my $file (keys %wildcard_by_file) {
-            $sections_by_file{$file} //= [];
+        for my $name (keys %wildcard_by_file) {
+
+            $sections_by_file{$name} //= [];
+            my $wildcard = $wildcard_by_file{$name};
+
             push(
-                @{$sections_by_file{$file}},
-                @{$sections_by_wildcard{$wildcard_by_file{$file}}});
+                @{$sections_by_file{$name}},
+                @{$sections_by_wildcard{$wildcard}});
         }
 
         my %license_identifiers_by_file;
-        for my $file (keys %sections_by_file) {
-            $license_identifiers_by_file{$file} //= [];
+        for my $name (keys %sections_by_file) {
+
+            $license_identifiers_by_file{$name} //= [];
+
             push(
-                @{$license_identifiers_by_file{$file}},
+                @{$license_identifiers_by_file{$name}},
                 $license_identifier_by_section{$_->position}
-            )for @{$sections_by_file{$file}};
+            ) for @{$sections_by_file{$name}};
         }
 
         my @xml_searchspace = keys %license_identifiers_by_file;
 
-        # do not search Lintian's test suite for appstream metadata
+        # do not examine Lintian's test suite for appstream metadata
         @xml_searchspace = grep { $_ !~ m{t/} } @xml_searchspace
           if $self->processable->name eq 'lintian';
 
-        for my $srcfile (@xml_searchspace) {
+        for my $name (@xml_searchspace) {
+
             next
-              if $srcfile =~ '^\.pc/';
+              if $name =~ '^\.pc/';
+
             next
-              unless $srcfile =~ /\.xml$/;
+              unless $name =~ /\.xml$/;
 
             my $parser = XML::LibXML->new;
             $parser->set_option('no_network', 1);
 
-            my $file = $self->processable->patched->resolve_path($srcfile);
+            my $file = $self->processable->patched->resolve_path($name);
             my $doc = eval {$parser->parse_file($file->unpacked_path);};
             next
               unless $doc;
@@ -717,24 +708,23 @@ sub parse_dep5 {
             next
               unless $seen;
 
-            my @wanted = @{$license_identifiers_by_file{$srcfile}};
+            my @wanted = @{$license_identifiers_by_file{$name}};
             my @mismatched = grep { $_ ne $seen } @wanted;
 
             $self->tag('inconsistent-appstream-metadata-license',
-                $srcfile, "($seen != $_)")
+                $name, "($seen != $_)")
               for @mismatched;
         }
 
-        my @no_license_needed = (@quiltfiles, @licensefiles);
+        my @no_license_needed = (@quilt_names, @license_names);
         my $unlicensed_lc
-          = List::Compare->new(\@shippedfiles, \@no_license_needed);
+          = List::Compare->new(\@shipped_names, \@no_license_needed);
         my @license_needed = $unlicensed_lc->get_Lonly;
 
-        my @files_not_covered
+        my @not_covered
           = grep { !@{$sections_by_file{$_} // []} } @license_needed;
 
-        $self->tag('file-without-copyright-information',$_)
-          for @files_not_covered;
+        $self->tag('file-without-copyright-information',$_) for @not_covered;
 
         my @all_positions
           = map { $_->position }
@@ -760,6 +750,7 @@ sub parse_dep5 {
       for @missing_standalone;
 
     for my $name (grep { $_ ne 'public-domain' } @unused_standalone) {
+
         $self->tag('unused-license-paragraph-in-dep5-copyright',
             $name,'(line ' . $_->position('License') . ')')
           for @{$found_standalone{$name}};
@@ -774,103 +765,22 @@ sub parse_dep5 {
 
     # license files do not require their own entries in d/copyright.
     my $license_lc
-      = List::Compare->new(\@licensefiles, [keys %sections_by_wildcard]);
-    my @listedlicensefiles = $license_lc->get_intersection;
+      = List::Compare->new(\@license_names, [keys %sections_by_wildcard]);
+    my @listed_licences = $license_lc->get_intersection;
 
     $self->tag('license-file-listed-in-debian-copyright',$_)
-      for @listedlicensefiles;
+      for @listed_licences;
 
     return;
 }
 
-sub dequote_backslashes {
-    my ($string) = @_;
+sub escape_errors {
+    my ($escaped) = @_;
 
-    return ($string, undef)
-      if index($string, BACKSLASH) == -1;
+    my @sequences = ($escaped =~ m{\\.?}g);
+    my @illegal = grep { $_ !~ m{^\\[*?]$} } @sequences;
 
-    my $error;
-    eval {
-        $string =~ s{
-            ([^\\]+) |
-            (\\[\\]) |
-            (.+)
-        }{
-            if (defined $1) {
-                quotemeta($1);
-            } elsif (defined $2) {
-                $2;
-            } else {
-                $error = $3;
-                die;
-            }
-        }egx;
-    };
-
-    if ($@) {
-        return (undef, $error);
-    }
-
-    return ($string, undef);
-}
-
-sub parse_wildcard {
-    my ($regex_src) = @_;
-
-    return (EMPTY, WC_TYPE_DESCENDANTS, undef)
-      if $regex_src eq ASTERISK;
-
-    my $error;
-
-    if (index($regex_src, QUESTION_MARK) == -1) {
-
-        my $star_index = index($regex_src, ASTERISK);
-
-        if ($star_index == -1) {
-            # Regular file-match, dequote "\\" if any and stop here.
-            ($regex_src, $error) = dequote_backslashes($regex_src);
-
-            return ($regex_src, WC_TYPE_FILE, $error);
-        }
-
-        if ($star_index + 1 == length $regex_src
-            && substr($regex_src, -2) eq '/*') {
-            # Files: some-dir/*
-            $regex_src = substr($regex_src, 0, -1);
-
-            ($regex_src, $error) = dequote_backslashes($regex_src);
-
-            return ($regex_src, WC_TYPE_DESCENDANTS, $error);
-        }
-    }
-
-    eval {
-        $regex_src =~ s{
-            (\*) |
-            (\?) |
-            ([^*?\\]+) |
-            (\\[\\*?]) |
-            (.+)
-        }{
-            if (defined $1) {
-                '.*';
-            } elsif (defined $2) {
-                '.'
-            } elsif (defined $3) {
-                quotemeta($3);
-            } elsif (defined $4) {
-                $4;
-            } else {
-                $error = $5;
-                die;
-            }
-        }egx;
-    };
-    if ($@) {
-        return (undef, undef, $error);
-    } else {
-        return (qr/^(?:$regex_src)$/, WC_TYPE_REGEX, undef);
-    }
+    return @illegal;
 }
 
 1;

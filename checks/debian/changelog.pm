@@ -356,7 +356,7 @@ sub binary {
     # Check a NEWS.Debian file if we have one.  Save the parsed version of the
     # file for later checks against the changelog file.
     my $news;
-    my $dnews = path($processable->groupdir)->child('NEWS.Debian')->stringify;
+    my $dnews = path($processable->basedir)->child('NEWS.Debian')->stringify;
     if (-f $dnews) {
 
         my $bytes = path($dnews)->slurp;
@@ -489,7 +489,7 @@ sub binary {
         }
     }
 
-    my $dchpath = path($processable->groupdir)->child('changelog')->stringify;
+    my $dchpath = path($processable->basedir)->child('changelog')->stringify;
     # Everything below involves opening and reading the changelog file, so bail
     # with a warning at this point if all we have is a symlink.  Ubuntu permits
     # such symlinks, so their profile will suppress this tag.

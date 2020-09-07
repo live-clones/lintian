@@ -25,18 +25,12 @@ use warnings;
 use utf8;
 use autodie;
 
-use Cwd();
-use IPC::Run3;
 use List::MoreUtils qw(uniq);
 use Path::Tiny;
 
-use Lintian::Deb822::File;
-use Lintian::Index::Item;
-
 use constant EMPTY => q{};
-use constant COLON => q{:};
+use constant SPACE => q{ };
 use constant SLASH => q{/};
-use constant NEWLINE => qq{\n};
 
 use Moo;
 use namespace::clean;
@@ -73,65 +67,50 @@ in the collections scripts used previously.
 =cut
 
 sub collect {
-    my ($self, $groupdir, $components) = @_;
+    my ($self, $processable_dir, $components) = @_;
 
     # source packages can be unpacked anywhere; no anchored roots
     $self->allow_empty(1);
 
-    $self->create($groupdir, $components);
+    $self->create($processable_dir, $components);
     $self->load;
 
     return;
 }
 
+my %DECOMPRESS_COMMAND = (
+    'gz' => 'gzip --decompress --stdout',
+    'bz2' => 'bzip2 --decompress --stdout',
+    'xz' => 'xz --decompress --stdout',
+);
+
 sub create {
-    my ($self, $groupdir, $components) = @_;
+    my ($self, $processable_dir, $components) = @_;
 
     my %all;
     for my $tarball (sort keys %{$components}) {
 
         my $component = $components->{$tarball};
 
-        my @tar_options= (
-            '--list', '--verbose',
-            '--utc', '--full-time',
-            '--quoting-style=c','--file'
-        );
+        my ($extension) = ($tarball =~ /\.([^.]+)$/);
+        die "Source component $tarball has no file exension\n"
+          unless length $extension;
 
-        # may not be needed; modern tar recognizes lzma and xz
-        if ($tarball =~ /\.(lzma|xz)\z/) {
-            unshift @tar_options, "--$1";
-        }
+        my $decompress = $DECOMPRESS_COMMAND{lc $extension};
+        die "Don't know how to decompress $tarball"
+          unless $decompress;
 
-        my @tar = ('tar', @tar_options, "$groupdir/$tarball");
+        my @command = (split(SPACE, $decompress), "$processable_dir/$tarball");
 
-        my $stdout;
-        my $stderr;
+        my ($extract_errors, $index_errors)
+          = $self->create_from_piped_tar(\@command, $component);
 
-        run3(\@tar, undef, \$stdout, \$stderr);
+        path("$processable_dir/orig-index-errors")->append($index_errors)
+          if length $index_errors;
 
-        my $status = ($? >> 8);
-
-        path("$groupdir/orig-index-errors")->append($stderr // EMPTY);
-
-        if ($status) {
-            my $message= "Non-zero status $status from @tar";
-            $message .= COLON . NEWLINE . $stderr
-              if length $stderr;
-
-            die $message;
-        }
-
-        my @lines = split(/\n/, $stdout);
-
-        my %single;
-        for my $line (@lines) {
-
-            my $entry = Lintian::Index::Item->new;
-            $entry->init_from_tar_output($line);
-
-            $single{$entry->name} = $entry;
-        }
+        # produce composite index for multiple components
+        my %single = %{$self->catalog};
+        $self->catalog({});
 
         # remove base directory from output
         delete $single{''}

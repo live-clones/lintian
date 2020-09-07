@@ -1,5 +1,0 @@
-Tag: duplicate-contact
-Severity: warning
-Check: fields/mail-address
-Info: The contact appears more than once in the named field.
- The duplicate information should be removed.

@@ -1,5 +1,0 @@
-Tag: include
-Severity: classification
-Check: continuous-integration/salsa
-Name-Spaced: yes
-Info: Include directive in a Salsa CI specification.

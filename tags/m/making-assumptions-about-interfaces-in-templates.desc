@@ -1,9 +1,0 @@
-Tag: making-assumptions-about-interfaces-in-templates
-Severity: warning
-Certainty: possible
-Check: debian/debconf
-Info: Template text should not make reference to widgets belonging to
- some debconf interfaces. Sentences like "If you answer Yes..." have no
- meaning for users of graphical interfaces which use checkboxes for
- boolean questions.
-Ref: devref 6.5.2.4

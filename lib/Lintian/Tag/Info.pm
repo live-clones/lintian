@@ -29,12 +29,15 @@ use List::MoreUtils qw(none);
 
 use Lintian::Data;
 use Lintian::Deb822::File;
-use Lintian::Tag::TextUtil
-  qw(dtml_to_html dtml_to_text split_paragraphs wrap_paragraphs);
 
 use constant EMPTY => q{};
 use constant SPACE => q{ };
 use constant SLASH => q{/};
+use constant COMMA => q{,};
+use constant LEFT_PARENTHESIS => q{(};
+use constant RIGHT_PARENTHESIS => q{)};
+
+use constant PARAGRAPH_BREAK => qq{\n\n};
 
 use Moo;
 use namespace::clean;
@@ -42,17 +45,24 @@ use namespace::clean;
 # Ordered lists of severities, used for display level parsing.
 our @SEVERITIES= qw(classification pedantic info warning error);
 
-# The URL to a web man page service.  NAME is replaced by the man page
-# name and SECTION with the section to form a valid URL.  This is used
-# when formatting references to manual pages into HTML to provide a link
-# to the manual page.
-our $MANURL
-  = 'https://manpages.debian.org/cgi-bin/man.cgi?query=NAME&amp;sektion=SECTION';
-
-# Stores the parsed manual reference data.  Loaded the first time info()
-# is called.
+# loads the first time info is called
 our $MANUALS
   = Lintian::Data->new('output/manual-references', qr/::/,\&_load_manual_data);
+
+sub _load_manual_data {
+    my ($key, $rawvalue, $pval) = @_;
+
+    my ($section, $title, $url) = split m/::/, $rawvalue, 3;
+    my $ret;
+    if (not defined $pval) {
+        $ret = $pval = {};
+    }
+
+    $pval->{$section}{title} = $title;
+    $pval->{$section}{url} = $url;
+
+    return $ret;
+}
 
 =head1 NAME
 
@@ -74,7 +84,7 @@ metadata elements or to format the tag description.
 
 =item tag
 
-=item original_severity
+=item visibility
 
 =item effective_severity
 
@@ -86,11 +96,11 @@ metadata elements or to format the tag description.
 
 =item experimental
 
-=item info
+=item explanation
 
-=item references
+=item see_also
 
-=item aliases
+=item renamed_from
 
 =cut
 
@@ -100,7 +110,7 @@ has name => (
     default => EMPTY
 );
 
-has original_severity => (
+has visibility => (
     is => 'rw',
     lazy => 1,
     coerce => sub {
@@ -154,19 +164,18 @@ has experimental => (
     default => 0
 );
 
-has info => (
+has explanation => (
     is => 'rw',
     coerce => sub { my ($text) = @_; return ($text // EMPTY); },
     default => EMPTY
 );
 
-has references => (
+has see_also => (
     is => 'rw',
-    coerce => sub { my ($text) = @_; return ($text // EMPTY); },
-    default => EMPTY
-);
+    coerce => sub { my ($arrayref) = @_; return ($arrayref // []); },
+    default => sub { [] });
 
-has aliases => (
+has renamed_from => (
     is => 'rw',
     coerce => sub { my ($arrayref) = @_; return ($arrayref // []); },
     default => sub { [] });
@@ -199,18 +208,26 @@ sub load {
 
     $self->name($name);
 
-    $self->original_severity($fields->value('Severity'));
+    $self->visibility($fields->value('Severity'));
     $self->experimental($fields->value('Experimental') eq 'yes');
 
-    $self->info($fields->value('Info'));
-    $self->references($fields->value('Ref'));
+    $self->explanation($fields->text('Explanation') || $fields->text('Info'));
 
-    $self->aliases([$fields->trimmed_list('Renamed-From')]);
+    my @see_also
+      = split(/,/, $fields->value('See-Also') || $fields->value('Ref'));
+
+    # trim both ends of each
+    s/^\s+|\s+$//g for @see_also;
+
+    my @markdown = map { markdown_citation($_) } @see_also;
+    $self->see_also(\@markdown);
+
+    $self->renamed_from([$fields->trimmed_list('Renamed-From')]);
 
     croak "No Tag field in $tagpath"
       unless length $self->name;
 
-    $self->effective_severity($self->original_severity);
+    $self->effective_severity($self->visibility);
 
     return;
 }
@@ -240,147 +257,162 @@ sub code {
     return $CODES{$self->effective_severity};
 }
 
-=item description([FORMAT [, INDENT]])
-
-Returns the formatted description (the Info field) for a tag.  FORMAT must
-be either C<text> or C<html> and defaults to C<text> if no format is
-specified.  If C<text>, returns wrapped paragraphs formatted in plain text
-with a right margin matching the Text::Wrap default, preserving as
-verbatim paragraphs that begin with whitespace.  If C<html>, return
-paragraphs formatted in HTML.
-
-If INDENT is specified, the string INDENT is prepended to each line of the
-formatted output.
+=item markdown_description
 
 =cut
 
-# Parse manual reference data from the data file.
-sub _load_manual_data {
-    my ($key, $rawvalue, $pval) = @_;
-    my ($section, $title, $url) = split m/::/, $rawvalue, 3;
-    my $ret;
-    if (not defined $pval) {
-        $ret = $pval = {};
-    }
-    $pval->{$section}{title} = $title;
-    $pval->{$section}{url} = $url;
-    return $ret;
+sub markdown_description {
+    my ($self) = @_;
+
+    my $description = $self->explanation;
+
+    my @extras;
+
+    my $references = $self->markdown_reference_statement;
+    push(@extras, $references)
+      if length $references;
+
+    push(@extras, 'Severity: '. $self->visibility);
+
+    push(@extras, 'Check: ' . $self->check)
+      if length $self->check;
+
+    push(@extras, 'Renamed from: ' . join(SPACE, @{$self->renamed_from}))
+      if @{$self->renamed_from};
+
+    push(@extras, 'This tag is experimental.')
+      if $self->experimental;
+
+    push(@extras,
+        'This tag is a classification. There is no issue in your package.')
+      if $self->visibility eq 'classification';
+
+    $description .= PARAGRAPH_BREAK . $_ for @extras;
+
+    return $description;
 }
 
-# Format a reference to a manual in the HTML that Lintian uses internally
-# for tag descriptions and return the result.  Takes the name of the
-# manual and the name of the section.  Returns an empty string if the
-# argument isn't a known manual.
-sub _manual_reference {
-    my ($manual, $section) = @_;
-    return '' unless $MANUALS->known($manual);
+=item markdown_reference_statement
 
-    my $man = $MANUALS->value($manual);
-    # Start with the reference to the overall manual.
-    my $title = $man->{''}{title};
-    my $url   = $man->{''}{url};
-    my $text  = $url ? qq(<a href="$url">$title</a>) : $title;
+=cut
+
+sub markdown_reference_statement {
+    my ($self) = @_;
+
+    my @references = @{$self->see_also};
+
+    return EMPTY
+      unless @references;
+
+    # remove and save last element
+    my $last = pop @references;
+
+    my $text        = EMPTY;
+    my $oxfordcomma = (@references > 1 ? COMMA : EMPTY);
+    $text = join(', ', @references) . "$oxfordcomma and "
+      if @references;
+
+    $text .= $last;
+
+    return "Refer to $text for details.";
+}
+
+=item markdown_citation
+
+=cut
+
+sub markdown_citation {
+    my ($citation) = @_;
+
+    my $markdown;
+
+    if ($citation =~ /^([\w-]+)\s+(.+)$/) {
+        $markdown = markdown_from_manuals($1, $2);
+
+    } elsif ($citation =~ /^([\w.-]+)\((\d\w*)\)$/) {
+        my ($name, $section) = ($1, $2);
+        my $url
+          ="https://manpages.debian.org/cgi-bin/man.cgi?query=$name&amp;sektion=$section";
+        my $hyperlink = markdown_hyperlink($citation, $url);
+        $markdown = "the $hyperlink manual page";
+
+    } elsif ($citation =~ m{^(ftp|https?)://}) {
+        $markdown = markdown_hyperlink(undef, $citation);
+
+    } elsif ($citation =~ m{^/}) {
+        $markdown = markdown_hyperlink($citation, "file://$citation");
+
+    } elsif ($citation =~ m{^(?:Bug)?#(\d+)$}) {
+        my $bugnumber = $1;
+        $markdown
+          = markdown_hyperlink($citation,"https://bugs.debian.org/$bugnumber");
+    }
+
+    return $markdown // $citation;
+}
+
+=item markdown_from_manuals
+
+=cut
+
+sub markdown_from_manuals {
+    my ($volume, $section) = @_;
+
+    return EMPTY
+      unless $MANUALS->known($volume);
+
+    my $entry = $MANUALS->value($volume);
+
+    # start with the citation to the overall manual.
+    my $title = $entry->{''}{title};
+    my $url   = $entry->{''}{url};
+
+    my $markdown = markdown_hyperlink($title, $url);
+
+    return $markdown
+      unless length $section;
 
     # Add the section information, if present, and a direct link to that
     # section of the manual where possible.
-    if ($section and $section =~ /^[A-Z]+$/) {
-        $text .= " appendix $section";
-    } elsif ($section and $section =~ /^\d+$/) {
-        $text .= " chapter $section";
-    } elsif ($section and $section =~ /^[A-Z\d.]+$/) {
-        $text .= " section $section";
-    }
-    if ($section and exists $man->{$section}) {
-        my $sec_title = $man->{$section}{title};
-        my $sec_url   = $man->{$section}{url};
-        $text.=
-          $sec_url
-          ? qq[ (<a href="$sec_url">$sec_title</a>)]
-          : qq[ ($sec_title)];
+    if ($section =~ /^[A-Z]+$/) {
+        $markdown .= " appendix $section";
+
+    } elsif ($section =~ /^\d+$/) {
+        $markdown .= " chapter $section";
+
+    } elsif ($section =~ /^[A-Z\d.]+$/) {
+        $markdown .= " section $section";
     }
 
-    return $text;
+    return $markdown
+      unless exists $entry->{$section};
+
+    my $section_title = $entry->{$section}{title};
+    my $section_url   = $entry->{$section}{url};
+
+    $markdown
+      .= SPACE
+      . LEFT_PARENTHESIS
+      . markdown_hyperlink($section_title, $section_url)
+      . RIGHT_PARENTHESIS;
+
+    return $markdown;
 }
 
-# Format the contents of the Ref attribute of a tag.  Handles manual
-# references in the form <keyword> <section>, manpage references in the
-# form <manpage>(<section>), and URLs.
-sub _format_reference {
-    my ($field) = @_;
-    my @refs;
-    for my $ref (split(/,\s*/, $field)) {
-        my $text;
-        if ($ref =~ /^([\w-]+)\s+(.+)$/) {
-            $text = _manual_reference($1, $2);
-        } elsif ($ref =~ /^([\w.-]+)\((\d\w*)\)$/) {
-            my ($name, $section) = ($1, $2);
-            my $url = $MANURL;
-            $url =~ s/NAME/$name/g;
-            $url =~ s/SECTION/$section/g;
-            $text = qq(the <a href="$url">$ref</a> manual page);
-        } elsif ($ref =~ m,^(ftp|https?)://,) {
-            $text = qq(<a href="$ref">$ref</a>);
-        } elsif ($ref =~ m,^/,) {
-            $text = qq(<a href="file://$ref">$ref</a>);
-        } elsif ($ref =~ m,^#(\d+)$,) {
-            my $url = qq(https://bugs.debian.org/$1);
-            $text = qq(<a href="$url">$url</a>);
-        }
-        push(@refs, $text) if $text;
-    }
+=item markdown_hyperlink
 
-    # Now build an English list of the results with appropriate commas and
-    # conjunctions.
-    my $text = '';
-    if ($#refs >= 2) {
-        $text = join(', ', splice(@refs, 0, $#refs));
-        $text = "Refer to $text, and @refs for details.";
-    } elsif ($#refs >= 0) {
-        $text = 'Refer to ' . join(' and ', @refs) . ' for details.';
-    }
-    return $text;
-}
+=cut
 
-# Returns the formatted tag description.
-sub description {
-    my ($self, $format, $indent) = @_;
+sub markdown_hyperlink {
+    my ($text, $url) = @_;
 
-    $format //= 'text';
-    croak "unknown output format $format"
-      unless $format eq 'text' || $format eq 'html';
+    return $text
+      unless length $url;
 
-    # build tag description
-    my $info = $self->info;
+    return "<$url>"
+      unless length $text;
 
-    # remove leading spaces
-    $info =~ s/\n[ \t]/\n/g;
-
-    my @paragraphs = split_paragraphs($info);
-
-    push(@paragraphs, EMPTY, _format_reference($self->references))
-      if length $self->references;
-
-    push(@paragraphs, EMPTY,'Severity: '. $self->original_severity);
-
-    push(@paragraphs, EMPTY, 'Check: ' . $self->check)
-      if length $self->check;
-
-    push(@paragraphs,
-        EMPTY,
-'This tag is experimental. Please file a bug report if the tag seems wrong.'
-    )if $self->experimental;
-
-    push(@paragraphs,
-        EMPTY,
-        'This tag is a classification. There is no issue in your package.')
-      if $self->original_severity eq 'classification';
-
-    $indent //= EMPTY;
-
-    return wrap_paragraphs('HTML', $indent, dtml_to_html(@paragraphs))
-      if $format eq 'html';
-
-    return wrap_paragraphs($indent, dtml_to_text(@paragraphs));
+    return "[$text]($url)";
 }
 
 =back

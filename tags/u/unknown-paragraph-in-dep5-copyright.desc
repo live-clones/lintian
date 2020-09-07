@@ -1,7 +1,0 @@
-Tag: unknown-paragraph-in-dep5-copyright
-Severity: warning
-Certainty: possible
-Check: debian/copyright/dep5
-Ref: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
-Info: The machine-readable copyright file contains a paragraph that is neither
- a standalone license paragraph nor a files paragraph.

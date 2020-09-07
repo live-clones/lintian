@@ -1,5 +1,0 @@
-Tag: wrong-bug-number-in-closes
-Severity: warning
-Check: debian/changelog
-Info: Bug numbers can only contain digits.
-Ref: policy 4.4

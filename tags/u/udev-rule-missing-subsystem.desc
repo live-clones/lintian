@@ -1,9 +1,0 @@
-Tag: udev-rule-missing-subsystem
-Severity: warning
-Certainty: possible
-Check: udev
-Ref: https://wiki.debian.org/USB/GadgetSetup
-Info: The package matches vendor/product IDs without specifying
- subsystem. The vendor/product IDs are subsystem specific. Matching
- rules using those should specify subsystem too, for example by using
- SUBSYSTEM=="usb" at the start of the matching rule.

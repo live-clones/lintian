@@ -57,39 +57,39 @@ Lintian::Index::Ar binary symbol information.
 =cut
 
 sub add_ar {
-    my ($self, $groupdir) = @_;
-
-    my $basket = "$groupdir/ar-info";
-
-    unlink($basket)
-      if -e $basket;
+    my ($self) = @_;
 
     my $savedir = getcwd;
     chdir($self->basedir);
 
-    my @archives;
-    for my $file ($self->sorted_list) {
+    my @archives
+      = grep { $_->name =~ /\.a$/ && $_->is_regular_file } $self->sorted_list;
 
-        next
-          unless $file->is_regular_file && $file =~ m{ \. a \Z }xsm;
+    for my $archive (@archives) {
 
         # skip empty archives to avoid ar error message; happens in tests
         next
-          unless $file->size;
+          unless $archive->size;
+
+        my %ar_info;
 
     # fails silently for non-ar files (#934899); probably creates empty entries
     # in case of trouble, please try: "next if $?;" underneath it
-        my $output = safe_qx('ar', 't', $file);
-        my @contents = split(/\n/, $output);
+        my $output = safe_qx('ar', 't', $archive);
+        my @members = split(/\n/, $output);
 
-        my $line = $file . COLON;
-        $line .= SPACE . $_ for @contents;
-        push(@archives, $line);
+        my $count = 1;
+        for my $member (@members) {
+
+            # more info could be added with -v above
+            $ar_info{$count}{name} = $member;
+
+        } continue {
+            $count++;
+        }
+
+        $archive->ar_info(\%ar_info);
     }
-
-    my $string = EMPTY;
-    $string .= $_ . NEWLINE for @archives;
-    path($basket)->spew($string);
 
     chdir($savedir);
 

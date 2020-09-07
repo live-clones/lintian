@@ -1,4 +1,4 @@
 Testname: permissions-775
 Check: debian/rules
 Test-Against: debian-rules-not-executable
-References: Bug#945869, Bug#945869
+See-Also: Bug#945869, Bug#945869

@@ -1,7 +1,0 @@
-Tag: description-starts-with-package-name
-Severity: error
-Check: fields/description
-Info: The first line of the "Description:" should not start with the
- package name. For example, the package <tt>foo</tt> should not
- have a description like this: "foo is a program that...".
-Ref: policy 3.4.1

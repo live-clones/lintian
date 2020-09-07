@@ -1,5 +1,0 @@
-Tag: debconf-config-not-executable
-Severity: error
-Check: debian/debconf
-Info: The debconf "config" script in the package control area must be
- executable.

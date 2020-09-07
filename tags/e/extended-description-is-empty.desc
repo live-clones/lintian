@@ -1,6 +1,0 @@
-Tag: extended-description-is-empty
-Severity: error
-Check: fields/description
-Info: The extended description (the lines after the first line of the
- "Description:" field) is empty.
-Ref: policy 3.4

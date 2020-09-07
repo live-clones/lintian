@@ -1,6 +1,0 @@
-Tag: odd-permissions-on-shared-library
-Severity: warning
-Check: shared-libs
-Renamed-From: shlib-with-bad-permissions
-Info: Shared libraries should be mode 0644.
-Ref: policy 8.1

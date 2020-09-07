@@ -1,7 +1,0 @@
-Tag: override-file-in-wrong-package
-Severity: error
-Check: debian/lintian-overrides
-Info: This package includes Lintian overrides intended for another package.
- Lintian overrides should be put in a regular file named
- /usr/share/lintian/overrides/<tt>package</tt>
-Ref: lintian 2.4

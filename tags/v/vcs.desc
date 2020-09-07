@@ -1,5 +1,0 @@
-Tag: vcs
-Severity: classification
-Check: fields/vcs
-Info: The package uses the specified VCS (eg. "git") according to the
- <tt>debian/control</tt> file.

@@ -1,7 +1,0 @@
-Tag: ctrl-script
-Severity: classification
-Check: control-files
-Info: This package has one or more maintainer scripts (or other
- executable control files).
- .
- This flags any control file with the executable bit set.

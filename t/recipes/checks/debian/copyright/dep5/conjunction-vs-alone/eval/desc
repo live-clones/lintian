@@ -2,4 +2,4 @@ Testname: conjunction-vs-alone
 Check: debian/copyright/dep5
 Test-Against:
  dep5-copyright-license-name-not-unique
-References: Bug#801182
+See-Also: Bug#801182

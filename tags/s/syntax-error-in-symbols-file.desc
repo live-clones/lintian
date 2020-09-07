@@ -1,8 +1,0 @@
-Tag: syntax-error-in-symbols-file
-Severity: error
-Check: shared-libs
-Info: The symbols file contains an entry that does not follow the syntax
- rules for symbols files.
- .
- This may be due to the entry appearing out of sequence.
-Ref: deb-symbols(5)

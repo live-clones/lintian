@@ -1,8 +1,0 @@
-Tag: postinst-uses-db-input
-Severity: warning
-Certainty: possible
-Check: debian/debconf
-Info: It is generally not a good idea for postinst scripts to use debconf
- commands like <tt>db_input</tt>. Typically, they should restrict themselves
- to <tt>db_get</tt> to request previously acquired information, and have the
- config script do the actual prompting.

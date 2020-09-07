@@ -23,6 +23,7 @@ use warnings;
 use utf8;
 use autodie;
 
+use Text::Markdown::Discount qw(markdown);
 use Text::Xslate;
 use Time::Duration;
 use Time::Moment;
@@ -53,6 +54,18 @@ Provides standalone HTML tag output.
 =head1 INSTANCE METHODS
 
 =over 4
+
+=item BUILD
+
+=cut
+
+sub BUILD {
+    my ($self, $args) = @_;
+
+    $self->delimiter(EMPTY);
+
+    return;
+}
 
 =item issue_tags
 
@@ -155,8 +168,7 @@ sub taglist {
 
         $tag{name} = $input->info->name;
 
-        $tag{url}
-          = "https://lintian.debian.org/$lintian_version/tags/$tag{name}.html";
+        $tag{url} = "https://lintian.debian.org/tags/$tag{name}.html";
 
         $tag{context} = $input->context
           if length $input->context;
@@ -175,22 +187,23 @@ sub taglist {
             $tag{comments} = \@comments
               if @comments;
         }
-
-        $self->issuedtags->{$input->info->name}++;
     }
 
     return \@tags;
 }
 
-sub _delimiter {
-    return;
-}
+=item tag_description
 
-sub _print {
-    my ($self, $stream, $lead, @args) = @_;
-    $stream ||= $self->stderr;
-    my $output = $self->string($lead, @args);
-    print {$stream} $output;
+=cut
+
+sub tag_description {
+    my ($self, $tag_info) = @_;
+
+    say '<p>Name: ' . $tag_info->name . '</p>';
+    say EMPTY;
+
+    print markdown($tag_info->markdown_description);
+
     return;
 }
 

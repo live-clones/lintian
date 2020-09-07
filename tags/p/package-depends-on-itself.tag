@@ -1,0 +1,9 @@
+Tag: package-depends-on-itself
+Severity: warning
+Check: debian/control
+See-Also: policy 7.2
+Explanation: The given package declares a dependency on itself in its
+ <code>debian/control</code> stanza. Current versions of dpkg-gencontrol will
+ silently fix this problem by removing the dependency, but it may indicate
+ a more subtle bug (misspelling or cutting and pasting the wrong package
+ name).

@@ -1,2 +1,0 @@
-s/<lintian-version>\S+<\/lintian-version>/<lintian-version>VERSION<\/lintian-version>/
-s/<run-start>\S+<\/run-start>/<run-start>TIMESTAMP<\/run-start>/

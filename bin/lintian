@@ -46,14 +46,13 @@ use Path::Tiny;
 use POSIX qw(:sys_wait_h);
 use Unicode::UTF8 qw(valid_utf8 decode_utf8);
 
-use Lintian::Data;
 use Lintian::Deb822::Parser qw(parse_dpkg_control_string);
 use Lintian::Inspect::Changelog;
 use Lintian::IPC::Run3 qw(safe_qx);
-use Lintian::Output::Standard;
+use Lintian::Output::EWI;
 use Lintian::Pool;
 use Lintian::Profile;
-use Lintian::Util qw(version_from_changelog);
+use Lintian::Version qw(guess_version);
 
 use constant EMPTY => q{};
 use constant SPACE => q{ };
@@ -63,14 +62,12 @@ use constant SLASH => q{/};
 use constant NEWLINE => qq{\n};
 
 # only in GNOME; need original environment
-my $interactive = -t STDIN && (-t STDOUT || !(-f STDOUT || -c STDOUT));
+my $interactive = -t STDIN && (-t *STDOUT || !(-f *STDOUT || -c *STDOUT));
 my $hyperlinks_capable = $interactive && qx{env | fgrep -i gnome};
 
 # only do once; layers are additive
-binmode(STDOUT, ':encoding(UTF-8)');
-binmode(STDERR, ':encoding(UTF-8)');
-
-$0 = join(SPACE, $0, @ARGV);
+binmode(*STDOUT, ':encoding(UTF-8)');
+binmode(*STDERR, ':encoding(UTF-8)');
 
 # Globally ignore SIGPIPE.  We'd rather deal with error returns from write
 # than randomly delivered signals.
@@ -107,6 +104,8 @@ $ENV{LINTIAN_BASE} = realpath("$FindBin::RealBin/..")
   // die 'Cannot resolve LINTIAN_BASE';
 
 $ENV{LINTIAN_VERSION} = $LINTIAN_VERSION // guess_version($ENV{LINTIAN_BASE});
+die 'Unable to determine the version automatically!?'
+  unless length $ENV{LINTIAN_VERSION};
 
 if (my $coverage_arg = $ENV{LINTIAN_COVERAGE}) {
     my $p5opt = $ENV{PERL5OPT} // EMPTY;
@@ -130,7 +129,7 @@ my @getoptions = qw(
   exp-output:s
   fail-on=s@
   ftp-master-rejects|F
-  help|h:s
+  help|h
   hide-overrides
   hyperlinks=s
   ignore-lintian-env
@@ -168,6 +167,9 @@ Getopt::Long::Configure('default', 'bundling',
 Getopt::Long::GetOptions(\%command_line, @getoptions)
   or die "error parsing options\n";
 
+my @basenames = map { path($_)->basename } @ARGV;
+$0 = join(SPACE, "$FindBin::RealBin/$FindBin::RealScript", @basenames);
+
 if (exists $command_line{'version'}) {
     say "Lintian v$ENV{LINTIAN_VERSION}";
     exit;
@@ -178,7 +180,7 @@ if (exists $command_line{'print-version'}) {
     exit;
 }
 
-show_help(undef, $command_line{help})
+show_help()
   if exists $command_line{help};
 
 $command_line{'show-overrides'} = 0
@@ -348,13 +350,13 @@ $selected{$_} = $command_line{$_} for keys %command_line;
 my @display_level;
 
 push(@display_level,['=', '>=', 'warning'])
-  if exists $selected{'default-display-level'};
+  if $selected{'default-display-level'};
 
 push(@display_level, ['+', '>=', 'info'])
-  if exists $selected{'display-info'};
+  if $selected{'display-info'};
 
 push(@display_level, ['+', '=', 'pedantic'])
-  if exists $selected{'pedantic'};
+  if $selected{'pedantic'};
 
 sub display_classificationtags {
     push(@display_level, ['+', '=', 'classification']);
@@ -435,7 +437,7 @@ my @HELPER_DIRS = grep { -d } map { "$_/helpers" } @CONFIG_DIRS;
 $ENV{LINTIAN_HELPER_DIRS} = join(COLON, @HELPER_DIRS);
 
 my @CLOSE_AT_END;
-my $OUTPUT = Lintian::Output::Standard->new;
+my $OUTPUT = Lintian::Output::EWI->new;
 my $received_signal;
 my $exit_code = 0;
 my $STATUS_FD;
@@ -443,9 +445,7 @@ my $STATUS_FD;
 # root permissions?
 # check if effective UID is 0
 if ($> == 0 && !$selected{'allow-root'}) {
-    print STDERR join(q{ },
-        'warning: the authors of lintian do not',
-        "recommend running it with root privileges!\n");
+    warn "warning: running with root privileges is not recommended!\n";
 }
 
 if ($selected{'ignore-lintian-env'}) {
@@ -454,10 +454,10 @@ if ($selected{'ignore-lintian-env'}) {
 
 # option --all and packages specified at the same time?
 if ($selected{'packages-from-file'} && $#ARGV+1 > 0) {
-    print STDERR join(q{ },
-        'warning: option --packages-from-file',
-        "cannot be mixed with package parameters!\n");
-    print STDERR "(will ignore --packages-from-file option)\n";
+    warn
+"warning: option --packages-from-file cannot be mixed with package parameters!\n";
+    warn "(will ignore --packages-from-file option)\n";
+
     delete($selected{'packages-from-file'});
 }
 
@@ -494,24 +494,12 @@ for my $var (@ENV_FROM_CONFIG) {
 my %output = map { split(/=/) } split(/,/, ($selected{'exp-output'} // EMPTY));
 for (keys %output) {
     if ($_ eq 'format') {
-        if ($output{$_} eq 'colons') {
-            require Lintian::Output::ColonSeparated;
-            $OUTPUT= Lintian::Output::ColonSeparated->new;
-        } elsif ($output{$_} eq 'letterqualifier') {
-            require Lintian::Output::LetterQualifier;
-            $OUTPUT= Lintian::Output::LetterQualifier->new;
-        } elsif ($output{$_} eq 'html') {
+        if ($output{$_} eq 'html') {
             require Lintian::Output::HTML;
             $OUTPUT = Lintian::Output::HTML->new;
-        } elsif ($output{$_} eq 'xml') {
-            require Lintian::Output::XML;
-            $OUTPUT = Lintian::Output::XML->new;
         } elsif ($output{$_} eq 'json') {
             require Lintian::Output::JSON;
             $OUTPUT = Lintian::Output::JSON->new;
-        } elsif ($output{$_} eq 'fullewi') {
-            require Lintian::Output::FullEWI;
-            $OUTPUT = Lintian::Output::FullEWI->new;
         } elsif ($output{$_} eq 'universal') {
             require Lintian::Output::Universal;
             $OUTPUT = Lintian::Output::Universal->new;
@@ -535,8 +523,8 @@ $OUTPUT->debug_msg(1,
   if @not_yet;
 $ENV{$_} = $config{$_} for @not_yet;
 
-die "The color value must be one of never, always, auto or html.\n"
-  unless (any { $selected{color} eq $_ } qw(never always auto html));
+die "The color value must be one of auto, always, or never.\n"
+  unless (any { $selected{color} eq $_ } qw(auto always never));
 
 if ($selected{color} eq 'never') {
     $selected{hyperlinks} //= 'off';
@@ -549,7 +537,7 @@ die "The hyperlink value must be on or off\n"
 $selected{verbose} = -1
   if $selected{quiet};
 
-if ($selected{verbose} || !-t STDOUT) {
+if ($selected{verbose} || !-t *STDOUT) {
     $selected{'tag-display-limit'} //= 0;
 } else {
     $selected{'tag-display-limit'} //= 4;
@@ -561,10 +549,14 @@ if ($selected{debug}) {
     $SIG{__DIE__} = sub { Carp::confess(@_) };
 }
 
-$OUTPUT->verbosity_level($selected{verbose});
+$OUTPUT->verbosity($selected{verbose});
 $OUTPUT->debug($selected{debug});
 
-$OUTPUT->color($selected{color});
+$OUTPUT->color(1)
+  if $selected{color} eq 'always'
+  || ($selected{color} eq 'auto'
+    && -t *STDOUT);
+
 $OUTPUT->tty_hyperlinks($hyperlinks_capable&& $selected{hyperlinks} eq 'on');
 $OUTPUT->tag_display_limit($selected{'tag-display-limit'});
 $OUTPUT->showdescription($selected{info});
@@ -598,7 +590,9 @@ if ($#ARGV == -1
         push @ARGV, $file;
         $ok = 1;
     }
-    show_help() unless $ok;
+
+    show_help()
+      unless $ok;
 }
 
 if ($selected{debug}) {
@@ -626,8 +620,6 @@ my $PROFILE = Lintian::Profile->new;
 $PROFILE->load($selected{profile}, \@CONFIG_DIRS,
     { 'restricted-search-dirs' => \@RESTRICTED_CONFIG_DIRS });
 $OUTPUT->v_msg('Using profile ' . $PROFILE->name . '.');
-
-Lintian::Data->set_vendor($PROFILE);
 
 # if tags are listed explicitly (--tags) then show them even if
 # they are pedantic/experimental etc.  However, for --check-part
@@ -757,7 +749,7 @@ for my $path (@subjects) {
         $pool->add_group($group);
     };
     if ($@) {
-        print STDERR "Skipping $path: $@";
+        warn "Skipping $path: $@\n";
         $exit_code = 1;
     }
 }
@@ -773,36 +765,6 @@ retrigger_signal()
   if $received_signal;
 
 exit $exit_code;
-
-sub guess_version {
-    my ($lintian_base) = @_;
-
-    my $guess = version_from_git($lintian_base);
-    $guess ||= version_from_changelog($lintian_base);
-
-    return $guess
-      if length $guess;
-
-    die 'Unable to determine the version automatically!?';
-}
-
-=item version_from_git
-
-=cut
-
-sub version_from_git {
-    my ($source_path) = @_;
-
-    my $git_path = "$source_path/.git";
-
-    return EMPTY
-      unless -d $git_path;
-
-    my $guess = safe_qx('git', "--git-dir=$git_path", 'describe');
-    chomp $guess;
-
-    return ($guess // EMPTY);
-}
 
 =item parse_boolean (STR)
 
@@ -861,12 +823,12 @@ sub _find_changes {
     if (not $last) {
         my @errors = @{$changelog->errors};
         if (@errors) {
-            print STDERR "Cannot parse debian/changelog due to errors:\n";
+            warn "Cannot parse debian/changelog due to errors:\n";
             for my $error (@errors) {
-                print STDERR "$error->[2] (line $error->[1])\n";
+                warn "$error->[2] (line $error->[1])\n";
             }
         } else {
-            print STDERR "debian/changelog does not have any data?\n";
+            warn "debian/changelog does not have any data?\n";
         }
         exit 1;
     }
@@ -875,10 +837,9 @@ sub _find_changes {
     unless (defined $version && defined $source) {
         $version //= '<N/A>';
         $source //= '<N/A>';
-        print STDERR
-          "Cannot determine source and version from debian/changelog:\n";
-        print STDERR "Source: $source\n";
-        print STDERR "Version: $source\n";
+        warn "Cannot determine source and version from debian/changelog:\n";
+        warn "Source: $source\n";
+        warn "Version: $source\n";
         exit 1;
     }
     # remove the epoch
@@ -907,12 +868,14 @@ sub _find_changes {
             return $changes if -f $changes;
         }
     }
-    print STDERR "Cannot find changes file for ${source}/${version}, tried:\n";
-    for my $arch (@archs) {
-        print STDERR "  ${source}_${version}_${arch}.changes\n";
-    }
-    print STDERR " in the following dirs:\n";
-    print STDERR '  ', join("\n  ", @dirs), "\n";
+
+    warn"Cannot find changes file for ${source}/${version}, tried:\n";
+
+    warn "  ${source}_${version}_${_}.changes\n" for @archs;
+
+    warn " in the following dirs:\n";
+    warn '  ', join("\n  ", @dirs), "\n";
+
     exit 0;
 }
 
@@ -1015,7 +978,7 @@ sub END {
         if (my $err = $@) {
             # Don't use L::Output here as it might be (partly) cleaned
             # up.
-            print STDERR "warning: closing ${filename} failed: $err\n";
+            warn "warning: closing ${filename} failed: $err\n";
         }
     }
 }
@@ -1040,9 +1003,9 @@ sub interrupted {
 }
 
 sub show_help {
-    my (undef, $value) = @_;
 
     say "Lintian v$ENV{LINTIAN_VERSION}";
+
     print <<"EOT-EOT-EOT";
 Syntax: lintian [action] [options] [--] [packages] ...
 Actions:
@@ -1053,7 +1016,7 @@ Actions:
     --tags-from-file X        like --tags, but read list from file
     -X X, --dont-check-part X don\'t check certain aspects
 General options:
-    -h, --help                display short help text
+    -h, --help                display this help text
     --print-version           print unadorned version number and exit
     -q, --quiet               suppress all informational messages
     -v, --verbose             verbose messages
@@ -1077,52 +1040,19 @@ Behavior options:
     --hide-overrides          do not output tags that have been overridden (default)
     --suppress-tags T,...     don\'t show the specified tags
     --suppress-tags-from-file X don\'t show the tags listed in file X
-EOT-EOT-EOT
-    if ($value eq 'extended' || $value eq 'all') {
-        # Not a special option per se, but most people will probably
-        # not need it
-        print <<"EOT-EOT-EOT";
     --tag-display-limit X     Specify "tag per package" display limit
     --no-tag-display-limit    Disable "tag per package" display limit
                               (equivalent to --tag-display-limit=0)
-EOT-EOT-EOT
-    }
-
-    print <<"EOT-EOT-EOT";
 Configuration options:
     --cfg CONFIGFILE          read CONFIGFILE for configuration
     --no-cfg                  do not read any config files
     --ignore-lintian-env      ignore LINTIAN_* env variables
-    --include-dir DIR         include checks, libraries (etc.) from DIR (*)
+    --include-dir DIR         include checks, libraries (etc.) from DIR
     -j X, --jobs X            limit the number of parallel unpacking jobs to X
-    --[no-]user-dirs          whether to use files from user directories (*)
+    --[no-]user-dirs          whether to use files from user directories
+
+Some options were omitted. Please check the manual page for the complete list.
 EOT-EOT-EOT
-
-    if ($value eq 'extended' || $value eq 'all') {
-        print <<"EOT-EOT-EOT";
-Developer/Special usage options:
-    --allow-root              suppress lintian\'s warning when run as root
-    -d, --debug               turn Lintian\'s debug messages on (repeatable)
-    --keep-lab                keep lab after run
-    --packages-from-file  X   process the packages in a file (if "-" use stdin)
-    --perf-debug              turn on performance debugging
-    --perf-output X           send performance logging to file (or fd w. \&X)
-    --status-log X            send status logging to file (or fd w. \&X) [internal use only]
-EOT-EOT-EOT
-    }
-
-    print <<"EOT-EOT-EOT";
-
-Options marked with (*) should be the first options if given at all.
-EOT-EOT-EOT
-
-    unless ($value eq 'extended' || $value eq 'all') {
-        print <<"EOT-EOT-EOT";
-
-Note that some options have been omitted, use "--help=extended" to see them
-all.
-EOT-EOT-EOT
-    }
 
     exit;
 }

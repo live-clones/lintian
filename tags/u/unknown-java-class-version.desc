@@ -1,5 +1,0 @@
-Tag: unknown-java-class-version
-Severity: warning
-Check: languages/java
-Info: The package contains a Jar file with Java class files compiled for an
- unknown Java version. The class file may be corrupt.

@@ -57,11 +57,11 @@ Lintian::Processable::Overrides provides an interface to package data for overri
 sub add_overrides {
     my ($self) = @_;
 
-    my $unpackedpath = path($self->groupdir)->child('unpacked')->stringify;
+    my $unpackedpath = path($self->basedir)->child('unpacked')->stringify;
     die "No unpacked data in $unpackedpath"
       unless -d $unpackedpath;
 
-    my $overridepath = path($self->groupdir)->child('override')->stringify;
+    my $overridepath = path($self->basedir)->child('override')->stringify;
     unlink($overridepath)
       if -e $overridepath;
 
@@ -129,7 +129,7 @@ sub overrides {
     my @comments;
     my %previous;
 
-    my $path = path($self->groupdir)->child('override')->stringify;
+    my $path = path($self->basedir)->child('override')->stringify;
 
     return
       unless -f $path;

@@ -1,9 +1,0 @@
-Tag: unknown-trigger
-Severity: error
-Certainty: possible
-Check: triggers
-Info: The package has a trigger that Lintian does not recognise in its
- control file.
- .
- The package may be uninstallable if dpkg does not support the trigger.
-Ref: deb-triggers(5)

@@ -37,7 +37,7 @@ $CHECKS{lintian} = [];
 my %TAGS;
 
 # find all tags
-my @tagpaths = File::Find::Rule->file->name('*.desc')->in("$root/tags");
+my @tagpaths = File::Find::Rule->file->name('*.tag')->in("$root/tags");
 for my $desc (@tagpaths) {
     my @sections = read_dpkg_control($desc);
     BAIL_OUT("$desc does not have exactly one paragraph")

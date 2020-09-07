@@ -1,4 +1,0 @@
-Tag: ansi-escape
-Severity: warning
-Check: fields/terminal-control
-Info: A control field contains an ANSI terminal escape code.

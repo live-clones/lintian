@@ -1,7 +1,0 @@
-# Imported from pkg-perl-tools
-Tag: libmodule-build-perl-needs-to-be-in-build-depends
-Severity: error
-Check: fields/package-relations
-Experimental: yes
-Info: libmodule-build-perl needs to be in <tt>Build-Depends</tt>, not in
- Build-Depends-Indep, since it's used in the clean target.

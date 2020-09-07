@@ -1,4 +1,4 @@
 Testname: nmu-local-changelog
 Test-Against: malformed-debian-changelog-version
-References: Debian Bug#501523
+See-Also: Debian Bug#501523
 Check: debian/changelog

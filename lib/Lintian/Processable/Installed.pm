@@ -25,10 +25,9 @@ use warnings;
 use autodie;
 use utf8;
 
-use Path::Tiny;
-
 use Lintian::Index::Installed;
-use Lintian::Index::Item;
+
+use constant SLASH => q{/};
 
 use Moo::Role;
 use namespace::clean;
@@ -60,66 +59,13 @@ has installed => (
     is => 'rw',
     lazy => 1,
     default => sub {
-        return Lintian::Index::Installed->new;
+        my ($self) = @_;
+
+        my $index = Lintian::Index::Installed->new;
+        $index->basedir($self->basedir . SLASH . 'unpacked');
+
+        return $index;
     });
-
-=item index (FILE)
-
-Returns a L<path object|Lintian::Index::Item> to FILE in the package.  FILE
-must be relative to the root of the unpacked package and must be
-without leading slash (or "./").  If FILE is not in the package, it
-returns C<undef>.  If FILE is supposed to be a directory, it must be
-given with a trailing slash.  Example:
-
-  my $file = $info->index ("usr/bin/lintian");
-  my $dir = $info->index ("usr/bin/");
-
-To get a list of entries in the package, see L</sorted_index>.  To
-actually access the underlying file (e.g. the contents), use
-L</unpacked ([FILE])>.
-
-Note that the "root directory" (denoted by the empty string) will
-always be present, even if the underlying tarball omits it.
-
-=cut
-
-sub index {
-    my ($self, $file) = @_;
-
-    return $self->installed->lookup($file);
-}
-
-=item sorted_index
-
-Returns a sorted array of file names listed in the package.  The names
-will not have a leading slash (or "./") and can be passed to
-L</unpacked ([FILE])> or L</index (FILE)> as is.
-
-The array will not contain the entry for the "root" of the package.
-
-=cut
-
-sub sorted_index {
-    my ($self) = @_;
-
-    return $self->installed->sorted_list;
-}
-
-=item index_resolved_path(PATH)
-
-Resolve PATH (relative to the root of the package) and return the
-L<entry|Lintian::Index::Item> denoting the resolved path.
-
-The resolution is done using
-L<resolve_path|Lintian::Index::Item/resolve_path([PATH])>.
-
-=cut
-
-sub index_resolved_path {
-    my ($self, $path) = @_;
-
-    return $self->installed->resolve_path($path);
-}
 
 =back
 

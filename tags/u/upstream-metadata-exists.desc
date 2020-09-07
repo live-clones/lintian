@@ -1,5 +1,0 @@
-Tag: upstream-metadata-exists
-Severity: classification
-Check: debian/upstream/metadata
-Ref: https://dep-team.pages.debian.net/deps/dep12/
-Info: The sources comtain a DEP 12 metadata file.

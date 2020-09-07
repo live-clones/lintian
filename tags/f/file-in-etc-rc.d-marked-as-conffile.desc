@@ -1,5 +1,0 @@
-Tag: file-in-etc-rc.d-marked-as-conffile
-Severity: error
-Check: conffiles
-Ref: policy 9.3.3
-Info: The symbolic links in <tt>/etc/rc?.d</tt> may not be marked as conffiles.

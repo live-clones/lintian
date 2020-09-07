@@ -1,9 +1,0 @@
-Tag: embedded-pear-module
-Severity: warning
-Certainty: possible
-Check: languages/php/pear/embedded
-Experimental: yes
-Info: This package appears to contain an embedded copy of a PEAR module.
- Please depend on the respective PEAR package providing the module and
- make sure the library can be found by the scripts via the include_path.
-Ref: policy 4.13

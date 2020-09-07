@@ -1,7 +1,0 @@
-Tag: font-outside-font-dir
-Severity: info
-Certainty: possible
-Check: fonts
-Info: This package contains a TrueType, OpenType, or Type 1 fonts,
- but the package does not install this file under <tt>/usr/share/fonts/</tt>.
-Ref: https://wiki.debian.org/Fonts/PackagingPolicy

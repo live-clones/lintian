@@ -6,3 +6,4 @@ filenames (binary): package-contains-readme-for-other-platform-or-distro usr/sha
 filenames (binary): package-contains-documentation-outside-usr-share-doc usr/share/pixmaps/license.txt
 filenames (binary): package-contains-documentation-outside-usr-share-doc usr/share/menu/README
 filenames (binary): package-contains-documentation-outside-usr-share-doc usr/lib/menu/README
+filenames (binary): package-contains-documentation-outside-usr-share-doc usr/lib/ma-dir/perl/version/foo/.hg_archival.txt

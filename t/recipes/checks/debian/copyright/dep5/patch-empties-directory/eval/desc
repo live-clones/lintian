@@ -3,4 +3,4 @@ Check: debian/copyright/dep5
 Test-Against:
  wildcard-matches-nothing-in-dep5-copyright
  unused-file-paragraph-in-dep5-copyright
-References: Bug#844274
+See-Also: Bug#844274

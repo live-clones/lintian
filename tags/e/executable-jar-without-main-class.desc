@@ -1,5 +1,0 @@
-Tag: executable-jar-without-main-class
-Severity: error
-Check: languages/java
-Ref: java-policy 2.2
-Info: An executable JAR must have a Main-Class set in its manifest.

@@ -1,7 +1,0 @@
-Tag: package-uses-local-diversion
-Severity: error
-Check: scripts
-Ref: policy 3.9
-Info: The maintainer script calls dpkg-divert with <tt>--local</tt> or
- without <tt>--package</tt>. This option is reserved for local
- administrators and must never be used by a Debian package.

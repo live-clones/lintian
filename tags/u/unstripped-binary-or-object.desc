@@ -1,8 +1,0 @@
-Tag: unstripped-binary-or-object
-Severity: error
-Check: binaries
-Ref: policy 10.1, policy 10.2
-Info: The package installs an unstripped binary or object file.
- .
- Please note, that shared libraries have to be stripped with the
- <tt>--strip-unneeded</tt> option.

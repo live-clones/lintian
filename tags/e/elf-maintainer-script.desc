@@ -1,4 +1,0 @@
-Tag: elf-maintainer-script
-Severity: classification
-Check: scripts
-Info: The maintainer script is an ELF binary.

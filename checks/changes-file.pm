@@ -46,7 +46,7 @@ sub changes {
 
     my $files = $processable->files;
     my $path
-      = readlink(path($processable->groupdir)->child('changes')->stringify);
+      = readlink(path($processable->basedir)->child('changes')->stringify);
     my %num_checksums;
     $path =~ s#/[^/]+$##;
     foreach my $file (keys %$files) {

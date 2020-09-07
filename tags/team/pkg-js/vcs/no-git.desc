@@ -1,6 +1,0 @@
-Tag: no-git
-Severity: warning
-Check: team/pkg-js/vcs
-Name-Spaced: yes
-Info: All pkg-js maintained packages moved to git. This package
- still has a non-git Vcs-* header.

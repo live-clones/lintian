@@ -1,7 +1,0 @@
-Tag: bad-intended-distribution
-Severity: info
-Certainty: wild-guess
-Check: debian/changelog
-Experimental: yes
-Info: The last changelog entry implies this version is not for release.
-    Instead it should specify the distribution it is to be uploaded to.

@@ -1,7 +1,0 @@
-Tag: illegal-multi-arch-value
-Severity: error
-Check: fields/multi-arch
-Info: The package is architecture all and has the Multi-Arch same value.
- .
- This combination is not allowed by the Multi-Arch specification.
-Ref: https://wiki.ubuntu.com/MultiarchSpec

@@ -1,8 +1,0 @@
-Tag: file-without-copyright-information
-Severity: warning
-Certainty: possible
-Check: debian/copyright/dep5
-Ref: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
-Info: The source tree contains a file which was not matched by any of
- the <tt>Files</tt> paragraphs in debian/copyright. Either adjust existing
- wildcards to match that file or add a new <tt>Files</tt> paragraph.

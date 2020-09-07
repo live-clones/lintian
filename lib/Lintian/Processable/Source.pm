@@ -140,16 +140,16 @@ sub unpack {
     # pull in all related files for unpacking
     for my $basename (keys %{$self->files}) {
 
-        symlink("$parent/$basename", $self->groupdir . "/$basename")
+        symlink("$parent/$basename", $self->basedir . "/$basename")
           or die "cannot symlink file $basename: $!";
     }
 
-    $self->patched->collect($self->groupdir);
+    $self->patched->collect($self->basedir);
 
     $self->add_diffstat;
     $self->add_overrides;
 
-    $self->orig->collect($self->groupdir, $self->components)
+    $self->orig->collect($self->basedir, $self->components)
       unless $self->native;
 
     return;

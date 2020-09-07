@@ -67,23 +67,20 @@ in the collections scripts used previously.
 =cut
 
 sub collect {
-    my ($self, $groupdir) = @_;
+    my ($self, $processable_dir) = @_;
 
     # binary packages are anchored to the system root
     # allow absolute paths and symbolic links
     $self->anchored(1);
 
-    my $basedir = path($groupdir)->child('unpacked')->stringify;
-    $self->basedir($basedir);
-
-    my @command = (qw(dpkg-deb --fsys-tarfile), "$groupdir/deb");
+    my @command = (qw(dpkg-deb --fsys-tarfile), "$processable_dir/deb");
     my ($extract_errors, $index_errors)
       = $self->create_from_piped_tar(\@command);
 
     $self->load;
 
     $self->add_md5sums;
-    $self->add_ar($groupdir);
+    $self->add_ar;
 
     $self->add_fileinfo;
     $self->add_scripts;
@@ -91,10 +88,10 @@ sub collect {
     $self->add_strings;
     $self->add_java;
 
-    path("$groupdir/unpacked-errors")->spew_utf8($extract_errors)
+    path("$processable_dir/unpacked-errors")->spew_utf8($extract_errors)
       if length $extract_errors;
 
-    path("$groupdir/index-errors")->spew_utf8($index_errors)
+    path("$processable_dir/index-errors")->spew_utf8($index_errors)
       if length $index_errors;
 
     return;

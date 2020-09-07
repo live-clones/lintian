@@ -1,6 +1,0 @@
-Tag: appstream-metadata-in-legacy-location
-Severity: warning
-Check: appstream-metadata
-Ref: https://wiki.debian.org/AppStream/Guidelines
-Info: AppStream metadata file was found in /usr/share/appdata/. The
- AppStream XML files should be placed in /usr/share/metainfo/.

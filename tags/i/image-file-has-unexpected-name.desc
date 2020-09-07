@@ -1,6 +1,0 @@
-Tag: image-file-has-unexpected-name
-Severity: pedantic
-Check: images/filenames
-Info: An image file in this package has a name not generally
- associated with its format.
-Ref: #717818

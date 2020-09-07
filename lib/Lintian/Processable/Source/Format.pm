@@ -104,7 +104,7 @@ has native => (
         $version =~ s/^\d+://;
 
         my $diffname = $self->name . UNDERSCORE . "$version.diff.gz";
-        my $diffpath = path($self->groupdir)->child($diffname)->stringify;
+        my $diffpath = path($self->basedir)->child($diffname)->stringify;
 
         return 0
           if -f $diffpath;

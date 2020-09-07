@@ -1,0 +1,23 @@
+Tag: package-superseded-by-perl
+Severity: warning
+Check: fields/version
+Explanation: This package is also provided by one of the Perl core packages
+ (perl, perl-base, perl-modules), and the core version is at least
+ as new as this one.
+ .
+ The package should either be upgraded to a newer upstream version
+ or removed from the archive as unnecessary. In the removal case, any
+ versioned dependencies on this package must first be changed to include
+ the Perl core package (because versioned dependencies are not satisfied
+ by provided packages).
+ .
+ The recommended way to express the dependency without needless
+ complications on backporting packages is to use alternative dependencies.
+ The perl package should be the preferred alternative and the
+ versioned dependency a secondary one.
+ .
+ Example: perl (&gt;= 5.10.0) | libmodule-build-perl (&gt;= 0.26)
+ .
+ Running <code>cme fix dpkg -from control -filter Depends</code> should be able
+ to update these dependencies.
+See-Also: policy 7.5

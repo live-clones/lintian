@@ -1,0 +1,108 @@
+# Copyright © 2010 Niels Thykier
+# Copyright © 2017 Chris Lamb <lamby@debian.org>
+# Copyright © 2020 Felix Lechner
+#  - based on the work Richard Braakman and Christian
+#    Schwarz (copyrighted 1998).
+#
+# This manual page is free software.  It is distributed under the
+# terms of the GNU General Public License as published by the Free
+# Software Foundation; either version 2 of the License, or (at your
+# option) any later version.
+#
+# This manual page is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this manual page; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301
+# USA
+#
+
+=head1 NAME
+
+explain-lintian-tags - offer more information about Lintian's tags
+
+=head1 SYNOPSIS
+
+B<explain-lintian-tags> B<--tags> I<tag> ...
+
+=head1 DESCRIPTION
+
+The B<explain-lintian-tags> command explains the named tags given on
+the command line.
+
+=head1 OPTIONS
+
+=over 4
+
+=item B<-l>, B<--list-tags>
+
+List all tags Lintian knows about in sorted order.
+
+=item B<-h>, B<--help>
+
+Display usage information and exit.
+
+=item B<--include-dir> dir
+
+Use dir as an additional "Lintian root".  The directory is expected
+have a similar layout to the LINTIAN_BASE (if it exists), but does not
+need to be a full self-contained root.
+
+Unlike B<lintian>, B<explain-lintian-tags> will I<not> load any code from
+these additional directories.
+
+This option may appear more than once; each time adding an additional
+directory.
+
+=item B<--profile> prof
+
+Use the severities from the vendor profile prof when displaying tags.
+If the profile name does not contain a slash, the default profile for
+that vendor is chosen.
+
+If not specified, B<explain-lintian-tags> loads the best profile for the
+current vendor.
+
+Please Refer to the Lintian User Manual for the full documentation of
+profiles.
+
+=item B<-t>, B<--tag>, B<--tags>
+
+This option has no effect. It exists for historical reasons.
+
+=item B<--user-dirs>, B<--no-user-dirs>
+
+By default, B<lintian> will check I<$HOME> and I</etc> for files
+supplied by the user or the local sysadmin (e.g. profiles).  This
+default can be disabled (and re-enabled) by using B<--no-user-dirs>
+(and B<--user-dirs>, respectively).
+
+These option can appear multiple times, in which case the of them
+to appear determines the result.
+
+=back
+
+=head1 EXIT STATUS
+
+If any of the tags specified were not found in the specified profile
+(or in the default profile), this command returns with exit code 1.
+
+When all requested tags were found, it returns with exit code 0.
+
+=head1 SEE ALSO
+
+L<lintian(1)>
+
+=head1 AUTHORS
+
+Niels Thykier <niels@thykier.net>
+
+Richard Braakman <dark@xs4all.nl>
+
+Christian Schwarz <schwarz@monet.m.isar.de>
+
+=cut
+

@@ -1,3 +1,76 @@
+lintian (2.93.0) unstable; urgency=medium
+
+  [ Felix Lechner ]
+  * Process display options according to truth value, not presence.
+    (Closes: #969406)
+  * Only announce left over processes in debug mode, fixing autopkgtest
+    failures.
+  * Clean up profile code and drop {VENDOR} notation in profile names.
+  * Support newlines in file names. (Re: #929729)
+
+  [ Peter Pentchev ]
+  * Ignore *.txt files in Python egg-info directories.
+
+  [ Reiner Herrmann ]
+  * Add PrefersNonDefaultGPU to known-desktop-keys.
+
+ -- Chris Lamb <lamby@debian.org>  Thu, 03 Sep 2020 21:54:58 +0000
+
+lintian (2.92.0) unstable; urgency=medium
+
+  [ Felix Lechner ]
+  * Drop obsolete output formats ColonSeparated, FullEWI, LetterQualifier
+    and XML.
+  * Provide a Perl-native implementation to index and extract tar files in
+    parallel. (Closes: #968611)
+  * Reduce visibility level of redundant-globbing-patterns to pedantic.
+    (Closes: #967961)
+  * Reset file_info for TeX Font Metric files incorrectly categorized as gzip.
+    (Closes: #963589)
+  * Replace python2 with python3 in debian/tests/control. (Closes: #936952)
+  * Split bin/lintian-info into separate annotate-lintian-hints and
+    explain-lintian-tags.
+  * Drop Lintian version from tag URLs offered in "standalone" HTML mode.
+  * Use Text::Glob to match globbing patterns to file names in
+    debian/copyright.
+  * Remove IO::Async from Depends in debian/control and move to
+    debian/tests/control.
+
+  * Update tag description files:
+    - Rename file extensions from *.desc to *.tag.
+    - For friendlier field names, rename Info: to Explanation: and Ref: to
+      See-Also:
+    - Use Text::Markdown::Discount to facilitate Markdown content.
+    - Also decode HTML5 entities in plain output; add
+      libhtml-html5-entities-perl to debian/control.
+    - Replace underscores with the &lowbar; HTML5 entity.
+
+  [ Chris Lamb ]
+  * Don't emit patch-not-forwarded-upstream for README files under
+    debian/patches. (Closes: #968845)
+  * Update private/generate-tag-summary to reflect change of tag definition
+    filename extension change from .desc → .tag.
+
+  [ Dmitry Shachnev ]
+  * Refresh data/files/fonts using refresh-fonts-data script.
+
+ -- Chris Lamb <lamby@debian.org>  Fri, 28 Aug 2020 12:29:46 +0100
+
+lintian (2.91.0) unstable; urgency=medium
+
+  [ Felix Lechner ]
+  * Set most spelling-related tags to info or pedantic level and improve
+    line references for spelling errors in override files. (Re: #968416)
+  * Issue the repeated-path-segments tag only directories only.
+  * For the first time, unpack tarballs in orig index and use centralized
+    streaming unpacker.
+
+  [ Chris Lamb ]
+  * Clarify the grammar of the package-uses-old-debhelper-compat-version
+    tag.
+
+ -- Chris Lamb <lamby@debian.org>  Thu, 20 Aug 2020 21:20:00 +0000
+
 lintian (2.90.0~bpo10+1) buster-backports; urgency=medium
 
   * Rebuild for buster-backports.

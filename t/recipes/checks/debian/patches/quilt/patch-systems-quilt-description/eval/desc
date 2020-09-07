@@ -1,3 +1,3 @@
 Testname: patch-systems-quilt-description
-References: Debian Bug #498892
+See-Also: Debian Bug #498892
 Check: debian/patches/quilt

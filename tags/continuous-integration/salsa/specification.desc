@@ -1,5 +1,0 @@
-Tag: specification
-Severity: classification
-Check: continuous-integration/salsa
-Name-Spaced: yes
-Info: File name likely holding a Salsa CI specification.

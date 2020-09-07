@@ -2,5 +2,5 @@ Testname: combined-manpage
 Check: documentation/manual
 Test-Against:
  wrong-manual-section
-References:
+See-Also:
  Bug#962601

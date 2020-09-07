@@ -46,10 +46,10 @@ use constant EMPTY => q{};
 my @descpaths = File::Find::Rule->file()->name('desc')->in('t/recipes');
 
 # mandatory fields
-my @mandatory = qw();
+my @mandatory = qw(Testname);
 
 # disallowed fields
-my @disallowed = qw(test_for checks);
+my @disallowed = qw(Test-For Checks References Reference Ref);
 
 # tests per desc
 my $perfile = 6 + scalar @mandatory + scalar @disallowed;

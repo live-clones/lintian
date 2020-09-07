@@ -299,11 +299,16 @@ sub runner {
 
     my $okay = !(scalar @errors);
 
-    if($testcase->unfolded_value('Todo') eq 'yes') {
+    if ($testcase->exists('Todo')) {
+
+        my $explanation = $testcase->unfolded_value('Todo');
+        diag "TODO ($explanation)";
+
       TODO: {
-            local $TODO = 'Test marked as TODO.';
+            local $TODO = $explanation;
             ok($okay, 'Lintian passes for test marked TODO.');
         }
+
         return;
     }
 

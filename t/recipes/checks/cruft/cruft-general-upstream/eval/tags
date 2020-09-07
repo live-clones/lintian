@@ -7,8 +7,8 @@ cruft-general-upstream (source): source-contains-svn-commit-file svn-commit.tmp
 cruft-general-upstream (source): source-contains-svk-commit-file svk-commit444.tmp
 cruft-general-upstream (source): source-contains-prebuilt-windows-binary fake-win32-bin.exe
 cruft-general-upstream (source): source-contains-prebuilt-silverlight-object fakesilverlight.XAC
-cruft-general-upstream (source): source-contains-prebuilt-python-object fake.pyo
-cruft-general-upstream (source): source-contains-prebuilt-python-object fake.pyc
+cruft-general-upstream (source): source-contains-prebuilt-python-object __pycache__/fake.cpython-38.pyc
+cruft-general-upstream (source): source-contains-prebuilt-python-object __pycache__/fake.cpython-38.opt-1.pyc
 cruft-general-upstream (source): source-contains-prebuilt-ms-help-file fake-help-file.chm
 cruft-general-upstream (source): source-contains-prebuilt-javascript-object fake.min.js
 cruft-general-upstream (source): source-contains-prebuilt-flash-project fakeflasourced.fla

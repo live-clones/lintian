@@ -2,4 +2,4 @@ Testname: reuse-identifier-in-files
 Check: debian/copyright/dep5
 Test-Against:
  dep5-copyright-license-name-not-unique
-References: Bug#779676
+See-Also: Bug#779676

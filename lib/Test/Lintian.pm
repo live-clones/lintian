@@ -207,10 +207,10 @@ sub test_check_desc {
             );
         }
 
-        foreach my $tpara (@tagpara) {
+        for my $tpara (@tagpara) {
             my $tag = $tpara->{'Tag'}//'';
             my $severity = $tpara->{'Severity'}//'';
-            my $info = $tpara->{'Info'} // '';
+            my $explanation = $tpara->{'Explanation'} // '';
             my (@htmltags, %seen);
 
             $i++;
@@ -229,7 +229,7 @@ sub test_check_desc {
                 'Tag has valid severity')
               or $builder->diag("$cname: $tag severity: $severity\n");
 
-            # Info
+            # Explanation
             my $mistakes = 0;
             my $handler = sub {
                 my ($incorrect, $correct) = @_;
@@ -239,44 +239,48 @@ sub test_check_desc {
             };
             # FIXME: There are a couple of known false-positives that
             # breaks the test.
-            # check_spelling($info, $handler);
+            # check_spelling($explanation, $handler);
             $builder->is_eq($mistakes, 0,
                 "$content_type $cname: $tag has no spelling errors");
 
-            $builder->ok($info !~ /(?:^| )(?:[Ww]e|I)\b/,
-                'Tag info does not speak of "I", or "we"')
-              or $builder->diag("$content_type $cname: $tag\n");
+            $builder->ok(
+                $explanation !~ /(?:^| )(?:[Ww]e|I)\b/,
+                'Tag explanation does not speak of "I", or "we"'
+            )or $builder->diag("$content_type $cname: $tag\n");
 
             $builder->ok(
-                $info !~ /(\S\w)\. [^ ]/
+                $explanation !~ /(\S\w)\. [^ ]/
                   || $1 =~ '/^\.[ge]$/', # for 'e.g.'/'i.e.'
-                'Tag info uses two spaces after a full stop'
+                'Tag explanation uses two spaces after a full stop'
             ) or $builder->diag("$content_type $cname: $tag\n");
 
-            $builder->ok($info !~ /(\S\w\.   )/,
-                'Tag info uses only two spaces after a full stop')
+            $builder->ok($explanation !~ /(\S\w\.   )/,
+                'Tag explanation uses only two spaces after a full stop')
               or $builder->diag("$content_type $cname: $tag ($1)\n");
 
-            $builder->ok(valid_utf8($info),'Tag info must be written in UTF-8')
+            $builder->ok(valid_utf8($explanation),
+                'Tag explanation must be written in UTF-8')
               or $builder->diag("$content_type $cname: $tag\n");
 
-            # Check the tag info for unescaped <> or for unknown tags (which
-            # probably indicate the same thing).
-            while ($info =~ s,<([^\s>]+)(?:\s+href=\"[^\"]+\")?>.*?</\1>,,s) {
+            # Check the tag explanation for unescaped <> or for unknown tags
+            # (which probably indicate the same thing).
+            while (
+                $explanation=~ s,<([^\s>]+)(?:\s+href=\"[^\"]+\")?>.*?</\1>,,s)
+            {
                 push @htmltags, $1;
             }
             @htmltags
               = grep { !exists $known_html_tags{$_} && !$seen{$_}++ }@htmltags;
             $builder->is_eq(join(', ', @htmltags),
-                '', 'Tag info has no unknown html tags')
+                '', 'Tag explanation has no unknown html tags')
               or $builder->diag("$content_type $cname: $tag\n");
 
-            $builder->ok($info !~ /[<>]/,
-                'Tag info has no stray angle brackets')
+            $builder->ok($explanation !~ /[<>]/,
+                'Tag explanation has no stray angle brackets')
               or $builder->diag("$content_type $cname: $tag\n");
 
-            if ($tpara->{'Ref'}) {
-                my @issues = _check_reference($tpara->{'Ref'});
+            if ($tpara->{'See-Also'}) {
+                my @issues = _check_reference($tpara->{'See-Also'});
                 my $text = join("\n\t", @issues);
                 $builder->ok(!@issues, 'Proper references are used')
                   or $builder->diag("$content_type $cname: $tag\n\t$text");

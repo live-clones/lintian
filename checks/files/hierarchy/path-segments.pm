@@ -31,16 +31,20 @@ use namespace::clean;
 with 'Lintian::Check';
 
 sub visit_installed_files {
-    my ($self, $file) = @_;
+    my ($self, $item) = @_;
 
-    my @segments = split(m{/}, $file->dirname);
+    return
+      unless $item->is_dir;
 
-    # List::MoreUtils has 'duplicates' starting at 0.423
-    my %count;
-    $count{$_}++ for @segments;
-    my @repeated = grep { $count{$_} > 1 } keys %count;
+    my @segments = split(m{/}, $item->name);
+    return
+      unless @segments;
 
-    $self->tag('repeated-path-segment', $_, $file->name) for @repeated;
+    my $final = $segments[-1];
+    my $count = scalar grep { $final eq $_ } @segments;
+
+    $self->tag('repeated-path-segment', $final, $item->name)
+      if $count > 1;
 
     return;
 }

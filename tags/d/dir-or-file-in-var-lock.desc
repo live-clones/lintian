@@ -1,7 +1,0 @@
-Tag: dir-or-file-in-var-lock
-Severity: error
-Certainty: possible
-Check: files/hierarchy/standard
-Info: <tt>/var/lock</tt> may be a temporary filesystem, so any directories
- or files needed there must be created dynamically at boot time.
-Ref: policy 9.3.2

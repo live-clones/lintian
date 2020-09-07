@@ -57,7 +57,7 @@ sub installable {
     my $processable = $self->processable;
 
     # deb is a symlink.
-    my $deb = path($processable->groupdir)->child('deb')->stringify;
+    my $deb = path($processable->basedir)->child('deb')->stringify;
 
     # set to one when something is so bad that we can't continue
     my $failed;
@@ -227,7 +227,7 @@ sub installable {
 
     for my $file (keys %ERRORS) {
 
-        my $path = path($processable->groupdir)->child($file)->stringify;
+        my $path = path($processable->basedir)->child($file)->stringify;
         next
           unless -e $path && -s _;
 

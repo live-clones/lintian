@@ -1,3 +1,0 @@
-Testname: lintian-color-html
-Skeleton: upload-non-native
-Description: Test Lintian --color=html output escaping

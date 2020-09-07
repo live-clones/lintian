@@ -1,8 +1,0 @@
-Tag: possible-missing-colon-in-closes
-Severity: error
-Certainty: possible
-Check: debian/changelog
-Info: To close a bug in the Debian changelog, the word "closes" must be
- followed by a colon. This entry looked like it was intended to close a
- bug, but there's no colon after "closes".
-Ref: policy 4.4

@@ -1,5 +1,0 @@
-Testname: lintian-output-fullewi
-Skeleton: upload-non-native
-Version: 1.0+dsfg-1.1
-Package-Architecture: all
-Description: Test Lintian's 'fullewi' output format

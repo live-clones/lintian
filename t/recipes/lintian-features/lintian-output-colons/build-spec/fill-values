@@ -1,5 +1,0 @@
-Testname: lintian-output-colons
-Skeleton: upload-non-native
-Version: 1.0+dsfg-1.1
-Package-Architecture: all
-Description: Test Lintian colon-separated output format
