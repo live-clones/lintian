@@ -26,8 +26,6 @@ use warnings;
 use utf8;
 use autodie;
 
-use constant EMPTY => q{};
-
 use Moo::Role;
 use namespace::clean;
 
@@ -66,12 +64,15 @@ Native heuristics are only available in source packages.
 sub unpack {
     my ($self) = @_;
 
-    $self->installed->collect($self->basedir);
+    my $data_errors = $self->installed->collect($self->path);
+    $self->tag('unpack-message-for-deb-data', $_)for split(/\n/, $data_errors);
+
+    my $control_errors = $self->control->collect($self->path);
+    $self->tag('unpack-message-for-deb-control', $_)
+      for split(/\n/, $control_errors);
 
     # cause parsing of concatenated data
     $self->objdump_info;
-
-    $self->control->collect($self->basedir);
 
     $self->add_changelog;
     $self->add_copyright;

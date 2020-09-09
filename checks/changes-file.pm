@@ -41,15 +41,14 @@ my $KNOWN_DISTS = Lintian::Data->new('changes-file/known-dists');
 sub changes {
     my ($self) = @_;
 
-    my $processable = $self->processable;
     my $group = $self->group;
+    my $files = $self->processable->files;
 
-    my $files = $processable->files;
-    my $path
-      = readlink(path($processable->basedir)->child('changes')->stringify);
+    my $parentdir = path($self->processable->path)->parent->stringify;
+
     my %num_checksums;
-    $path =~ s#/[^/]+$##;
-    foreach my $file (keys %$files) {
+
+    for my $file (keys %{$files}) {
         my $file_info = $files->{$file};
 
         # check section
@@ -59,7 +58,7 @@ sub changes {
                 $file_info->{section});
         }
 
-        foreach my $alg (qw(Sha1 Sha256)) {
+        for my $alg (qw(Sha1 Sha256)) {
             my $checksum_info = $file_info->{checksums}{$alg};
             if (defined $checksum_info) {
                 if ($file_info->{size} != $checksum_info->{filesize}) {
@@ -70,17 +69,18 @@ sub changes {
             }
         }
 
-        # check size
-        my $filename = "$path/$file";
-        my $size = -s $filename;
+        # take from location near input file
+        my $filename = path($parentdir)->child($file)->stringify;
 
-        if ($size ne $file_info->{size}) {
+        # check size
+        my $size = -s $filename;
+        if ($size != $file_info->{size}) {
             $self->tag('file-size-mismatch-in-changes-file',
-                $file,$file_info->{size} . " != $size");
+                $file, $file_info->{size} . " != $size");
         }
 
         # check checksums
-        foreach my $alg (qw(Md5 Sha1 Sha256)) {
+        for my $alg (qw(Md5 Sha1 Sha256)) {
             next
               unless exists $file_info->{checksums}{$alg};
 
@@ -94,8 +94,8 @@ sub changes {
         }
     }
 
-    my %debs = map { m/^([^_]+)_/ => 1 } grep { m/\.deb$/ } keys %$files;
-    foreach my $pkg_name (keys %debs) {
+    my %debs = map { m/^([^_]+)_/ => 1 } grep { m/\.deb$/ } keys %{$files};
+    for my $pkg_name (keys %debs) {
         if ($pkg_name =~ m/^(.+)-dbgsym$/) {
             $self->tag('package-builds-dbg-and-dbgsym-variants',
                 "$1-{dbg,dbgsym}")
@@ -104,7 +104,7 @@ sub changes {
     }
 
     # Check that we have a consistent number of checksums and files
-    foreach my $alg (keys %num_checksums) {
+    for my $alg (keys %num_checksums) {
         my $seen = $num_checksums{$alg};
         my $expected = keys %{$files};
         $self->tag(

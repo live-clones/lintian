@@ -209,9 +209,6 @@ sub process {
         path($processable->basedir)->mkpath
           unless -e $processable->basedir;
 
-        symlink($processable->path, $processable->link)
-          unless -l $processable->link;
-
         if ($processable->can('unpack')) {
 
             my $unpack_start = [gettimeofday];

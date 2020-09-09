@@ -198,7 +198,6 @@ Enable-Tags-From-Check:
  scripts,
  shared-libs,
  systemd,
- tar-errors,
  team/pkg-js/deprecated,
  team/pkg-js/testsuite,
  team/pkg-js/vcs,

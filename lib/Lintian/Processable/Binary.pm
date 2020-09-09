@@ -88,9 +88,7 @@ sub init {
       unless -e $file;
 
     $self->path($file);
-
     $self->type('binary');
-    $self->link_label('deb');
 
     my $section = get_deb_info($self->path)
       or croak 'could not read control data in ' . $self->path . ": $!";

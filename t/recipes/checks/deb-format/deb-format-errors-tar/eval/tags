@@ -1,4 +1,0 @@
-deb-format-errors-tar (binary): tar-errors-from-data Removing leading `/' from member names
-deb-format-errors-tar (binary): tar-errors-from-data Removing leading `/' from member names
-deb-format-errors-tar (binary): data-tarball-compression-format gz
-deb-format-errors-tar (binary): control-tarball-compression-format gz

@@ -90,9 +90,7 @@ sub init {
       unless -e $file;
 
     $self->path($file);
-
     $self->type('source');
-    $self->link_label('dsc');
 
     my $primary = Lintian::Deb822::File->new;
     my @sections = $primary->read_file($self->path)
@@ -144,7 +142,9 @@ sub unpack {
           or die "cannot symlink file $basename: $!";
     }
 
-    $self->patched->collect($self->basedir);
+    my $patched_errors = $self->patched->collect($self->path);
+    $self->tag('unpack-message-for-source', $_)
+      for split(/\n/, $patched_errors);
 
     $self->add_diffstat;
     $self->add_overrides;

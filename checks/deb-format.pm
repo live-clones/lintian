@@ -38,31 +38,17 @@ use namespace::clean;
 
 with 'Lintian::Check';
 
-# The files that contain error messages from tar, which we'll check and issue
-# tags for if they contain something unexpected, and their corresponding tags.
-# - These files are created by bin-pkg-control, index and unpacked respectively
-our %ERRORS = (
-    'control-errors'       => 'tar-errors-from-control',
-    'control-index-errors' => 'tar-errors-from-control',
-    'index-errors'         => 'tar-errors-from-data',
-    'unpacked-errors'      => 'tar-errors-from-data'
-);
-
 my $EXTRA_MEMBERS = Lintian::Data->new('deb-format/extra-members');
 
 sub installable {
     my ($self) = @_;
 
-    my $type = $self->processable->type;
-    my $processable = $self->processable;
-
-    # deb is a symlink.
-    my $deb = path($processable->basedir)->child('deb')->stringify;
+    my $deb_path = $self->processable->path;
 
     # set to one when something is so bad that we can't continue
     my $failed;
 
-    my @command = ('ar', 't', $deb);
+    my @command = ('ar', 't', $deb_path);
 
     my $stdout;
     my $stderr;
@@ -177,7 +163,7 @@ sub installable {
                         "third (official) member $data_member",
                         'not data.tar.(gz|xz|bz2|lzma)'));
                 $failed = 1;
-            } elsif ($type eq 'udeb'
+            } elsif ($self->processable->type eq 'udeb'
                 && $data_member !~ m/^data\.tar\.[gx]z$/) {
                 $self->tag(
                     'udeb-uses-unsupported-compression-for-data-tarball');
@@ -210,7 +196,7 @@ sub installable {
     # supports a newer format but it's not permitted in the archive
     # yet.
     if (not defined($failed)) {
-        my $output = safe_qx('ar', 'p', $deb, 'debian-binary');
+        my $output = safe_qx('ar', 'p', $deb_path, 'debian-binary');
         if ($? != 0) {
             $self->tag('malformed-deb-archive',
                 'cannot read debian-binary member');
@@ -218,40 +204,6 @@ sub installable {
             my ($version) = split(m/\n/, $output);
             $self->tag('malformed-deb-archive', "version $version not 2.0");
         }
-    }
-
-    # If either control-errors or index-errors exist, tar produced
-    # error output when processing the package.  We want to report
-    # those as tags unless they're just tar noise that doesn't
-    # represent an actual problem.
-
-    for my $file (keys %ERRORS) {
-
-        my $path = path($processable->basedir)->child($file)->stringify;
-        next
-          unless -e $path && -s _;
-
-        open(my $fd, '<', $path);
-
-        while (my $line = <$fd>) {
-            chomp($line);
-            $line =~ s,^(?:[/\w]+/)?tar: ,,;
-
-            # Record size errors are harmless.  Ignore implausibly
-            # old timestamps in the data section since we already
-            # check for that elsewhere, but still warn for
-            # control.
-            next
-              if $line =~ /^Record size =/;
-
-            next
-              if $line =~ /implausibly old time stamp/
-              && $ERRORS{$file} eq 'tar-errors-from-data';
-
-            $self->tag($ERRORS{$file}, $line);
-        }
-
-        close $fd;
     }
 
     return;

@@ -63,7 +63,8 @@ my @known_missing = (qw(
       patch-system-but-direct-changes-in-diff
       quilt-series-references-non-existent-patch
       sphinxdoc-but-no-sphinxdoc-depends
-      tar-errors-from-control
+      unpack-message-for-deb-control
+      unpack-message-for-orig
       uses-deprecated-adttmp
       wrong-vcs-location-for-dpmt
       wrong-vcs-location-for-papt

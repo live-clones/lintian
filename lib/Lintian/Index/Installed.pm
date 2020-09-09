@@ -67,13 +67,13 @@ in the collections scripts used previously.
 =cut
 
 sub collect {
-    my ($self, $processable_dir) = @_;
+    my ($self, $deb_path) = @_;
 
     # binary packages are anchored to the system root
     # allow absolute paths and symbolic links
     $self->anchored(1);
 
-    my @command = (qw(dpkg-deb --fsys-tarfile), "$processable_dir/deb");
+    my @command = (qw(dpkg-deb --fsys-tarfile), $deb_path);
     my ($extract_errors, $index_errors)
       = $self->create_from_piped_tar(\@command);
 
@@ -88,13 +88,7 @@ sub collect {
     $self->add_strings;
     $self->add_java;
 
-    path("$processable_dir/unpacked-errors")->spew_utf8($extract_errors)
-      if length $extract_errors;
-
-    path("$processable_dir/index-errors")->spew_utf8($index_errors)
-      if length $index_errors;
-
-    return;
+    return $extract_errors . $index_errors;
 }
 
 =back

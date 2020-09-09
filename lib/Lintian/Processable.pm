@@ -69,41 +69,32 @@ together.
 =over 4
 
 =item name
-=item $proc->pkg_name
 
 Returns the name of the package.
 
 =item type
-=item $proc->pkg_type
 
 Returns the type of package (e.g. binary, source, udeb ...)
 
 =item $proc->version
-=item $proc->pkg_version
 
 Returns the version of the package.
 
 =item $proc->path
-=item $proc->pkg_path
 
 Returns the path to the packaged version of actual package.  This path
 is used in case the data needs to be extracted from the package.
 
-Note: This may return the path to a symlink to the package.
-
 =item $proc->architecture
-=item $proc->pkg_arch
 
 Returns the architecture(s) of the package. May return multiple values
 from changes processables.  For source processables it is "source".
 
 =item $proc->source
-=item $proc->pkg_src
 
 Returns the name of the source package.
 
 =item $proc->source_version
-=item $proc->pkg_src_version
 
 Returns the version of the source package.
 
@@ -125,17 +116,12 @@ Returns a reference to lab this Processable is in.
 
 Returns the base directory of this package inside the lab.
 
-=item link_label
-
-Returns a reference to the extra fields related to this entry.
-
 =cut
 
-has path => (alias => 'pkg_path', is => 'rw', default => EMPTY);
-has type => (alias => 'pkg_type', is => 'rw', default => EMPTY);
+has path => (is => 'rw', default => EMPTY);
+has type => (is => 'rw', default => EMPTY);
 
 has architecture => (
-    alias => 'pkg_arch',
     is => 'rw',
     coerce => sub {
         my ($value) = @_;
@@ -144,7 +130,6 @@ has architecture => (
     default => EMPTY
 );
 has name => (
-    alias => 'pkg_name',
     is => 'rw',
     coerce => sub {
         my ($value) = @_;
@@ -153,7 +138,6 @@ has name => (
     default => EMPTY
 );
 has source => (
-    alias => 'pkg_src',
     is => 'rw',
     coerce => sub {
         my ($value) = @_;
@@ -162,7 +146,6 @@ has source => (
     default => EMPTY
 );
 has source_version =>(
-    alias => 'pkg_src_version',
     is => 'rw',
     coerce => sub {
         my ($value) = @_;
@@ -171,7 +154,6 @@ has source_version =>(
     default => EMPTY
 );
 has version => (
-    alias => 'pkg_version',
     is => 'rw',
     coerce => sub {
         my ($value) = @_;
@@ -207,8 +189,6 @@ has basedir => (
 
         return $basedir;
     });
-
-has link_label => (is => 'rw', default => EMPTY);
 
 =item C<identifier>
 
@@ -278,33 +258,7 @@ sub clean_field {
     return $clean;
 }
 
-=item link
-
-Returns the link in the work area to the input data.
-
-=cut
-
-has link => (
-    is => 'rw',
-    lazy => 1,
-    default => sub {
-        my ($self) = @_;
-
-        croak 'Please set base directory for processable first'
-          unless length $self->basedir;
-
-        croak 'Please set link label for processable first'
-          unless length $self->link_label;
-
-        my $link = path($self->basedir)->child($self->link_label)->stringify;
-
-        return $link;
-    });
-
 =item guess_name
-
-Creates a link to the input file near where all files in that
-group will be unpacked and analyzed.
 
 =cut
 
