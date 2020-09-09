@@ -209,45 +209,45 @@ sub init_from_tar_output {
 
 =item bytes_match(REGEX)
 
-Returns true or false, depending on whether REGEX matches the
-file's byte contents.
+Returns the matched string if REGEX matches the file's byte contents,
+or EMPTY otherwise.
 
 =cut
 
 sub bytes_match {
     my ($self, $regex) = @_;
 
-    return 0
+    return EMPTY
       unless $self->is_file;
 
-    return 0
+    return EMPTY
       unless $self->is_open_ok;
 
-    return 1
+    return EMPTY
       unless length $regex;
 
     open(my $fd, '<:raw', $self->unpacked_path);
     my $sfd = Lintian::SlidingWindow->new($fd);
 
-    my $match = 0;
+    my $match;
     while (my $block = $sfd->readwindow) {
 
-        if ($block =~ /$regex/) {
+        if ($block =~ /($regex)/) {
 
-            $match = 1;
+            $match = $1;
             last;
         }
     }
 
     close $fd;
 
-    return $match;
+    return $match // EMPTY;
 }
 
 =item mentions_in_operation(REGEX)
 
-Returns true or false, depending on whether REGEX matches in
-a location that is likely an operation (vs text).
+Returns the matched string if REGEX matches in a file location
+that is likely an operation (vs text), or EMPTY otherwise.
 
 =cut
 
@@ -256,16 +256,15 @@ sub mentions_in_operation {
 
     # prefer strings(1) output (eg. for ELF) if we have it
     # may not work as expected on ELF due to ld's SHF_MERGE
-    if (length $self->strings) {
-        return 1
-          if $self->strings =~ /$regex/;
+    my $match;
+    if (length $self->strings && $self->strings =~ /($regex)/) {
+        $match = $1;
 
     } elsif ($self->is_script) {
-        return 1
-          if $self->bytes_match($regex);
+        $match = $self->bytes_match($regex);
     }
 
-    return 0;
+    return $match // EMPTY;
 }
 
 =item magic(COUNT)

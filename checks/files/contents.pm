@@ -88,15 +88,16 @@ sub check_item {
     unless ($self->processable->relation('all')->implies('sensible-utils')
         || $self->processable->source eq 'sensible-utils') {
 
-        $self->tag('missing-depends-on-sensible-utils', $item->name)
-          if $item->mentions_in_operation($SENSIBLE_REGEX);
+        my $sensible = $item->mentions_in_operation($SENSIBLE_REGEX);
+        $self->tag('missing-depends-on-sensible-utils', $sensible, $item->name)
+          if length $sensible;
     }
 
     unless ($self->processable->fields->value('Section') eq 'debian-installer'
         || any { $_ eq $self->processable->source } qw(base-files dpkg)) {
 
         $self->tag('uses-dpkg-database-directly', $item->name)
-          if $item->mentions_in_operation(qr{/var/lib/dpkg});
+          if length $item->mentions_in_operation(qr{/var/lib/dpkg});
     }
 
     # if we have a /usr/sbin/foo, check for references to /usr/bin/foo
@@ -108,7 +109,7 @@ sub check_item {
         my $correct = $switched_locations{$confused};
         $self->tag('bin-sbin-mismatch', $item->name,
             $confused . ARROW . $correct)
-          if $item->mentions_in_operation(
+          if length $item->mentions_in_operation(
             NON_WORD_BOUNDARY . quotemeta(SLASH . $confused) . WORD_BOUNDARY);
     }
 

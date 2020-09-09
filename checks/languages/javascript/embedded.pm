@@ -122,7 +122,8 @@ sub visit_installed_files {
           unless $file->name =~ /$JS_FILES{$provider}/;
 
         next
-          unless $file->bytes_match($JS_MAGIC{$provider});
+          if length $JS_MAGIC{$provider}
+          && !length $file->bytes_match($JS_MAGIC{$provider});
 
         $self->tag('embedded-javascript-library', $file->name,
             'please use', $provider);
