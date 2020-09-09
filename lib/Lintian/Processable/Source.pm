@@ -133,15 +133,6 @@ sub init {
 sub unpack {
     my ($self) = @_;
 
-    my $parent = path($self->path)->parent->stringify;
-
-    # pull in all related files for unpacking
-    for my $basename (keys %{$self->files}) {
-
-        symlink("$parent/$basename", $self->basedir . "/$basename")
-          or die "cannot symlink file $basename: $!";
-    }
-
     my $patched_errors = $self->patched->collect($self->path);
     $self->tag('unpack-message-for-source', $_)
       for split(/\n/, $patched_errors);

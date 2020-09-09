@@ -63,8 +63,9 @@ sub add_diffstat {
     # strip epoch
     $noepoch =~ s/^\d://;
 
+    # look for a format 1.0 diff.gz near the input file
     my $diffname = $self->name . UNDERSCORE . $noepoch . '.diff.gz';
-    my $diffpath = path($self->basedir)->child($diffname)->stringify;
+    my $diffpath = path($self->path)->parent->child($diffname)->stringify;
     return
       unless -f $diffpath;
 
