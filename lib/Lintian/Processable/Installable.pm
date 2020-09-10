@@ -76,7 +76,6 @@ sub unpack {
 
     $self->add_changelog;
     $self->add_copyright;
-    $self->add_overrides;
 
     return;
 }

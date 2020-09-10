@@ -138,7 +138,6 @@ sub unpack {
       for split(/\n/, $patched_errors);
 
     $self->add_diffstat;
-    $self->add_overrides;
 
     $self->orig->collect($self->basedir, $self->components)
       unless $self->native;
