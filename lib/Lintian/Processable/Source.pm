@@ -134,11 +134,16 @@ sub unpack {
     my ($self) = @_;
 
     my $patched_errors = $self->patched->collect($self->path);
+
     $self->tag('unpack-message-for-source', $_)
       for split(/\n/, $patched_errors);
 
-    $self->orig->collect($self->basedir, $self->components)
-      unless $self->native;
+    unless ($self->native) {
+        my $orig_errors
+          = $self->orig->collect($self->basedir, $self->components);
+
+        $self->tag('unpack-message-for-orig', $_)for split(/\n/, $orig_errors);
+    }
 
     return;
 }

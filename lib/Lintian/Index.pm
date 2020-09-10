@@ -85,7 +85,22 @@ Returns the base directory for file references.
 
 =cut
 
-has catalog => (is => 'rw', default => sub { {} });
+has catalog => (
+    is => 'rw',
+    default => sub {
+        my ($self) = @_;
+
+        # create an empty root
+        my $root = Lintian::Index::Item->new;
+
+        # associate with this index
+        $root->index($self);
+
+        my %catalog;
+        $catalog{''} = $root;
+
+        return \%catalog;
+    });
 has saved_sorted_list => (is => 'rw', default => sub { [] });
 
 has basedir => (
@@ -172,14 +187,9 @@ sub resolve_path {
 =cut
 
 sub create_from_piped_tar {
-    my ($self, $command, $subfolder) = @_;
+    my ($self, $command) = @_;
 
     my $extract_dir = $self->basedir;
-
-    if (length $subfolder) {
-        $extract_dir .= "/$subfolder";
-        path($extract_dir)->mkpath({ chmod => 0777 });
-    }
 
     my ($named, $numeric, $extract_errors, $index_errors)
       = unpack_and_index_piped_tar($command, $extract_dir);
@@ -402,9 +412,146 @@ sub load {
     }
 
     # make sure recorded names match hash keys
-    $all{$_}->name($_)for keys %all;
+    $all{$_}->name($_) for keys %all;
 
     $self->catalog(\%all);
+
+    return;
+}
+
+=item merge_in
+
+=cut
+
+sub merge_in {
+    my ($self, $other) = @_;
+
+    die 'Need same base directory ('
+      . $self->basedir . ' vs '
+      . $other->basedir . ')'
+      unless $self->basedir eq $other->basedir;
+
+    die 'Need same anchoring status'
+      unless $self->anchored == $other->anchored;
+
+    die 'Need same tolerance for empty index'
+      unless $self->allow_empty == $other->allow_empty;
+
+    # associate all new items with this index
+    $_->index($self) for values %{$other->catalog};
+
+    # do not transfer root
+    $self->catalog->{$_->name} = $_
+      for grep { $_->name ne EMPTY } values %{$other->catalog};
+
+    # add children that came from other root to current
+    my @other_childnames = keys %{$other->catalog->{''}->childnames};
+    for my $name (@other_childnames) {
+
+        $self->catalog->{''}->childnames->{$name} = $self->catalog->{$name};
+    }
+
+    # remove items from other index
+    $other->catalog({});
+
+    # unset other base directory
+    $other->basedir(EMPTY);
+
+    return;
+}
+
+=item drop_common_prefix
+
+=cut
+
+sub drop_common_prefix {
+    my ($self) = @_;
+
+    my @childnames = keys %{$self->catalog->{''}->childnames};
+
+    die 'Not exactly one top-level child'
+      unless @childnames == 1;
+
+    my $segment = $childnames[0];
+    die 'Common path segment has no length'
+      unless length $segment;
+
+    my $new_root = $self->lookup($segment . SLASH);
+    die 'New root is not a directory'
+      unless $new_root->is_dir;
+
+    my $prefix;
+    if ($self->anchored) {
+        $prefix = SLASH . $segment;
+    } else {
+        $prefix = $segment . SLASH;
+    }
+
+    my $regex = quotemeta($prefix);
+
+    delete $self->catalog->{''};
+
+    my %new_catalog;
+    for my $item (values %{$self->catalog}) {
+
+        # drop common prefix from name
+        my $new_name = $item->name;
+        $new_name =~ s{^$regex}{};
+        $item->name($new_name);
+
+        if (length $item->link) {
+
+            # drop common prefix from link target
+            my $new_link = $item->link;
+            $new_link =~ s{^$regex}{};
+            $item->link($new_link);
+        }
+
+        # unsure this works, but orig not anchored
+        $new_name = EMPTY
+          if $new_name eq SLASH && $self->anchored;
+
+        $new_catalog{$new_name} = $item;
+    }
+
+    $self->catalog(\%new_catalog);
+
+    # add dropped segment to base directory
+    $self->basedir($self->basedir . SLASH . $segment);
+
+    return;
+}
+
+=item drop_basedir_segment
+
+=cut
+
+sub drop_basedir_segment {
+    my ($self) = @_;
+
+    my $obsolete = path($self->basedir)->basename;
+    die 'Not enough segments in'
+      unless length $obsolete;
+
+    my $new_base_dir = path($self->basedir)->parent->stringify;
+    die 'Will not move contents to root'
+      if $new_base_dir eq SLASH;
+
+    die "Do not yet know how to rename repeating segment $obsolete"
+      if -e $self->basedir . SLASH . $obsolete;
+
+    # overwrite contents a level lower
+    for my $child (path($self->basedir)->children) {
+        my $old_name = $child->stringify;
+
+        # fix Perl unicode bug
+        utf8::downgrade $old_name;
+        system('mv', $old_name, $new_base_dir);
+    }
+
+    rmdir $self->basedir;
+
+    $self->basedir($new_base_dir);
 
     return;
 }

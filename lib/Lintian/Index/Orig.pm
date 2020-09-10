@@ -26,6 +26,7 @@ use utf8;
 use autodie;
 
 use List::MoreUtils qw(uniq);
+use List::UtilsBy qw(sort_by);
 use Path::Tiny;
 
 use constant EMPTY => q{};
@@ -66,31 +67,35 @@ in the collections scripts used previously.
 
 =cut
 
-sub collect {
-    my ($self, $processable_dir, $components) = @_;
-
-    # source packages can be unpacked anywhere; no anchored roots
-    $self->allow_empty(1);
-
-    $self->create($processable_dir, $components);
-    $self->load;
-
-    return;
-}
-
 my %DECOMPRESS_COMMAND = (
     'gz' => 'gzip --decompress --stdout',
     'bz2' => 'bzip2 --decompress --stdout',
     'xz' => 'xz --decompress --stdout',
 );
 
-sub create {
+sub collect {
     my ($self, $processable_dir, $components) = @_;
 
-    my %all;
-    for my $tarball (sort keys %{$components}) {
+    # source packages can be unpacked anywhere; no anchored roots
+    $self->allow_empty(1);
+
+    my $combined_errors = EMPTY;
+
+    # keep sort order; root is missing below otherwise
+    my @tarballs = sort_by { $components->{$_} } keys %{$components};
+
+    for my $tarball (@tarballs) {
 
         my $component = $components->{$tarball};
+
+        # so far, all archives with components had an extra level
+        my $component_dir = $self->basedir;
+
+        my $subindex = Lintian::Index::Orig->new;
+        $subindex->basedir($component_dir);
+
+        # source packages can be unpacked anywhere; no anchored roots
+        $subindex->allow_empty(1);
 
         my ($extension) = ($tarball =~ /\.([^.]+)$/);
         die "Source component $tarball has no file exension\n"
@@ -103,77 +108,54 @@ sub create {
         my @command = (split(SPACE, $decompress), "$processable_dir/$tarball");
 
         my ($extract_errors, $index_errors)
-          = $self->create_from_piped_tar(\@command, $component);
+          = $subindex->create_from_piped_tar(\@command);
 
-        path("$processable_dir/orig-index-errors")->append($index_errors)
-          if length $index_errors;
+        $combined_errors .= $extract_errors . $index_errors;
 
-        # produce composite index for multiple components
-        my %single = %{$self->catalog};
-        $self->catalog({});
+        # treat hard links like regular files
+        for my $item (values %{$subindex->catalog}) {
 
-        # remove base directory from output
-        delete $single{''}
-          if exists $single{''};
+            my $perm = $item->perm;
+            $perm =~ s/^h/-/;
+            $item->perm($perm);
+        }
 
-        # unwanted top-level common prefix
-        my $unwanted = EMPTY;
+        # removes root entry (''); do not use sorted_list
+        my @prefixes = grep { length } %{$subindex->catalog};
 
-        # find all top-level prefixes
-        my @prefixes = keys %single;
+        # keep top level prefixes
         s{^([^/]+).*$}{$1}s for @prefixes;
 
         # squash identical values
         my @unique = uniq @prefixes;
 
+        # unwanted top-level common prefix
+        my $unwanted = EMPTY;
+
         # check for a single common value
         if (@unique == 1) {
             my $common = $unique[0];
 
+            my $conflict = $subindex->lookup($common);
+
             # use only if there is no directory with that name
             $unwanted = $common
-              unless $single{$common} && $single{$common}->perm =~ /^d/;
+              unless defined $conflict && $conflict->perm =~ /^d/;
         }
+
+        # inserts missing directories; must occur afterwards
+        $subindex->load;
 
         # keep common prefix when equal to the source component
         unless ($unwanted eq $component) {
-
-            my %copy;
-            for my $name (keys %single) {
-
-                my $adjusted = $name;
-
-                # strip common prefix
-                $adjusted =~ s{^\Q$unwanted\E/+}{}
-                  if length $unwanted;
-
-                # add component name
-                $adjusted = $component . SLASH . $adjusted
-                  if length $component;
-
-                # change name of entry
-                $single{$name}->name($adjusted);
-
-                # store entry under new name
-                $copy{$adjusted} = $single{$name};
-            }
-
-            %single = %copy;
+            $subindex->drop_common_prefix;
+            $subindex->drop_basedir_segment;
         }
 
-        $all{$_} = $single{$_} for keys %single;
+        $self->merge_in($subindex);
     }
 
-    # treat hard links like regular files
-    for my $name (keys %all) {
-        my $perm = $all{$name}->perm;
-        $perm =~ s/^h/-/;
-        $all{$name}->perm($perm);
-    }
-
-    $self->catalog(\%all);
-
-    return;
+    return $combined_errors;
 }
 
 =back
