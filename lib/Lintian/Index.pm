@@ -39,6 +39,16 @@ use constant SLASH => q{/};
 use Moo::Role;
 use namespace::clean;
 
+with
+  'Lintian::Index::Ar',
+  'Lintian::Index::Control::Scripts',
+  'Lintian::Index::FileInfo',
+  'Lintian::Index::Java',
+  'Lintian::Index::Md5sums',
+  'Lintian::Index::Objdump',
+  'Lintian::Index::Scripts',
+  'Lintian::Index::Strings';
+
 my %FILE_CODE2LPATH_TYPE = (
     '-' => Lintian::Index::Item::TYPE_FILE| Lintian::Index::Item::OPEN_IS_OK,
     'h' => Lintian::Index::Item::TYPE_HARDLINK
@@ -415,6 +425,16 @@ sub load {
     $all{$_}->name($_) for keys %all;
 
     $self->catalog(\%all);
+
+    $self->add_md5sums;
+    $self->add_fileinfo;
+    $self->add_scripts;
+    $self->add_control;
+
+    $self->add_ar;
+    $self->add_java;
+    $self->add_objdump;
+    $self->add_strings;
 
     return;
 }

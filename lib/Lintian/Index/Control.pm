@@ -30,10 +30,7 @@ use Path::Tiny;
 use Moo;
 use namespace::clean;
 
-with 'Lintian::Index',
-  'Lintian::Index::Control::Scripts',
-  'Lintian::Index::FileInfo',
-  'Lintian::Index::Scripts';
+with 'Lintian::Index';
 
 =encoding utf-8
 
@@ -73,10 +70,6 @@ sub collect {
       = $self->create_from_piped_tar(\@command);
 
     $self->load;
-
-    $self->add_fileinfo;
-    $self->add_scripts;
-    $self->add_control;
 
     return $extract_errors . $index_errors;
 }

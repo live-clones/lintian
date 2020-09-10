@@ -30,14 +30,7 @@ use Path::Tiny;
 use Moo;
 use namespace::clean;
 
-with 'Lintian::Index',
-  'Lintian::Index::Ar',
-  'Lintian::Index::FileInfo',
-  'Lintian::Index::Java',
-  'Lintian::Index::Md5sums',
-  'Lintian::Index::Objdump',
-  'Lintian::Index::Scripts',
-  'Lintian::Index::Strings';
+with 'Lintian::Index';
 
 =encoding utf-8
 
@@ -78,15 +71,6 @@ sub collect {
       = $self->create_from_piped_tar(\@command);
 
     $self->load;
-
-    $self->add_md5sums;
-    $self->add_ar;
-
-    $self->add_fileinfo;
-    $self->add_scripts;
-    $self->add_objdump;
-    $self->add_strings;
-    $self->add_java;
 
     return $extract_errors . $index_errors;
 }

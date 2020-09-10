@@ -39,10 +39,7 @@ use constant NEWLINE => qq{\n};
 use Moo;
 use namespace::clean;
 
-with 'Lintian::Index',
-  'Lintian::Index::FileInfo',
-  'Lintian::Index::Java',
-  'Lintian::Index::Md5sums';
+with 'Lintian::Index';
 
 =encoding utf-8
 
@@ -78,10 +75,6 @@ sub collect {
 
     my $errors = $self->create($dsc_path);
     $self->load;
-
-    $self->add_md5sums;
-    $self->add_fileinfo;
-    $self->add_java;
 
     return $errors;
 }
