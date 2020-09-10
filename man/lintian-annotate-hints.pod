@@ -22,26 +22,26 @@
 
 =head1 NAME
 
-annotate-lintian-hints - give detailed information about Lintian's error tags
+lintian-annotate-hints - give detailed information about Lintian's error tags
 
 =head1 SYNOPSIS
 
-B<annotate-lintian-hints> [I<log-file>...]
+B<lintian-annotate-hints> [I<log-file>...]
 
 =head1 DESCRIPTION
 
-The B<annotate-lintian-hints> command parses the EWI output of the
+The B<lintian-annotate-hints> command parses the EWI output of the
 B<lintian> command and gives verbose information about the listed
 Lintian tags, or parses a Lintian override file and gives verbose
 information about the tags included.
 
 If no log-file is specified on the command line, this command expects
 its input on stdin. Thus, the output of B<lintian> can either be piped
-through B<annotate-lintian-hints> or a log file produced by B<lintian> can be
+through B<lintian-annotate-hints> or a log file produced by B<lintian> can be
 processed with this command.
 
   (Note, though, that the B<lintian> command has a command line option
-B<-i> to display the same results as B<annotate-lintian-hints>, so you
+B<-i> to display the same results as B<lintian-annotate-hints>, so you
 normally do not need to pipe the output of B<lintian> through this
 command to see the extra information.)
 
@@ -66,7 +66,7 @@ Use dir as an additional "Lintian root".  The directory is expected
 have a similar layout to the LINTIAN_BASE (if it exists), but does not
 need to be a full self-contained root.
 
-Unlike B<lintian>, B<annotate-lintian-hints> will I<not> load any code from
+Unlike B<lintian>, B<lintian-annotate-hints> will I<not> load any code from
 these additional directories.
 
 This option may appear more than once; each time adding an additional
