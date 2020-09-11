@@ -370,10 +370,10 @@ Format of override files
 The format of the overrides file is simple, it consists of one override
 per line (and may contain empty lines and comments, starting with a
 ``#``, on others): ``[[<package>][ <archlist>][ <type>]: ]<lintian-tag>[
-[*]<lintian-info>[*]]``. <package> is the package name;
+[*]<context>[*]]``. <package> is the package name;
 <archlist> is an architecture list (see Architecture specific overrides
 for more info); <type> is one of ``binary``, ``udeb`` and ``source``,
-and <lintian-info> is all additional information provided by Lintian
+and <context> is all additional information provided by Lintian
 except for the tag. What's inside brackets is optional and may be
 omitted if you want to match it all. An example file for a binary
 package would look like:
@@ -787,8 +787,8 @@ How Lintian works
 Lintian is divided into the following layers:
 
 *frontend*
-   the command line interface (currently, this layer consists of two
-   scripts, namely ``lintian`` and ``lintian-info``)
+   the command line interface (currently, this layer consists of the
+   ``lintian`` program.
 
 *checks*
    a set of modules that check different aspects of packages.
@@ -919,12 +919,12 @@ The fields in the tag description paragraph are:
    tags).
 
 *Info* (multiline, mandatory)
-   The description of the tag, which can be seen by using lintian-info
-   (etc.). The HTML tags "<tt>" and "<i>" may be used in the
-   description.
+   The tag descriptions can be found on Lintian's website
+   ("https://lintian.debian.org"). The description is in the standard
+   Markdown format.
 
    The symbols &, < and > must be escaped as &amp;, &lt; and &gt;
-   (respectively).
+   (respectively). Please also escape _ as &lowbar; and * as &ast;.
 
    Indented lines are considered "pre-formatted" and will not be line
    wrapped. These lines are still subject to the allowed HTML tags and
