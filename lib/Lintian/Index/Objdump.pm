@@ -66,16 +66,64 @@ sub add_objdump {
 
         # must be elf or static library
         next
-          unless $file->file_info =~ m/\bELF\b/
-          || ( $file->file_info =~ m/\bcurrent ar archive\b/
-            && $file->name =~ m/\.a$/);
+          unless $file->file_info =~ /\bELF\b/
+          || ( $file->file_info =~ /\bcurrent ar archive\b/
+            && $file->name =~ /\.a$/);
 
-        my @command = (qw{readelf -WltdVs}, $file->name);
-        my $output;
-        my $stderr;
+        my @command = (
+            qw{readelf --wide --segments --dynamic --section-details --symbols --version-info},
+            $file->name
+        );
+        my $combined;
 
-        run3(\@command, \undef, \$output, \$stderr);
-        my $parsed = parse_output($output . $stderr, $file->name);
+        run3(\@command, \undef, \$combined, \$combined);
+
+        # each object file in an archive gets its own File section
+        my @per_files = split(/^(File): (.*)$/m, $combined);
+        shift @per_files while @per_files && $per_files[0] ne 'File';
+
+        @per_files = ($combined)
+          unless @per_files;
+
+        # Special case - readelf will not prefix the output with "File:
+        # $name" if it only gets one ELF file argument, so act as if it did...
+        # (but it does "the right thing" if passed a static lib >.>)
+        #
+        # - In fact, if readelf always emitted that File: header, we could
+        #   simply use xargs directly on readelf and just parse its output
+        #   in the loop below.
+        if (@per_files == 1) {
+            unshift(@per_files, $file->name);
+            unshift(@per_files, 'File');
+        }
+
+        die "Parsed data from readelf is not a multiple of three for $file"
+          unless @per_files % 3 == 0;
+
+        my $parsed;
+        while (defined(my $fixed = shift @per_files)) {
+
+            die "Unknown output from readelf for $file"
+              unless $fixed eq 'File';
+
+            my $recorded_name = shift @per_files;
+            die "No file name from readelf for $file"
+              unless length $file;
+
+            my ($container, $member) = ($recorded_name =~ /^(.*)\(([^)]+)\)$/);
+
+            $container = $recorded_name
+              unless defined $container && defined $member;
+
+            die "Container not same as file name ($container vs $file)"
+              unless $container eq $file->name;
+
+            my $per_file = shift @per_files;
+            die "No readelf output for $recorded_name"
+              unless length $per_file;
+
+            $parsed .= parse_per_file($per_file, $recorded_name);
+        }
 
         $file->objdump($parsed);
     }
@@ -85,263 +133,240 @@ sub add_objdump {
     return;
 }
 
-=item parse_output
+=item parse_per_file
 
 =cut
 
-sub parse_output {
+sub parse_per_file {
     my ($from_readelf, $filename) = @_;
 
-    my (@sections, @symbol_versions);
-    my @dyn_symbols;
+    my @sections;
+    my @symbol_versions;
+    my @dynamic_symbols;
     my %program_headers;
-    my $bin;
     my $truncated = 0;
-    my $section = '';
-
-    # List of named sections, which are collected
-    my %COLLECT_SECTIONS = map { $_ => 1 } qw(
-      .comment
-      .note
-    );
-
-    my $COLLECT_SECTIONS_REGEX = qr/^\.z?debug_/;
+    my $section = EMPTY;
     my $static_lib_issues = 0;
 
-    my $parsed;
+    my $parsed .= "Filename: $filename\n";
+
     my @lines = split(/\n/, $from_readelf);
     while (defined(my $line = shift @lines)) {
 
-        chomp $line;
-
-        # Skip leading empty lines (readelf spits out an empty line before
-        # the first entry).
-        next if not $bin and not $line;
-
-        if (not $bin and $line !~ m/^File: ./o) {
-         # Special case - readelf will not prefix the output with "File:
-         # $name" if it only gets one ELF file argument, so act as if it did...
-         # (but it does "the right thing" if passed a static lib >.>)
-         #
-         # - In fact, if readelf always emitted that File: header, we could
-         #   simply use xargs directly on readelf and just parse its output
-         #   in the loop below.
-            $bin = $filename;
-            $parsed .= "Filename: $bin\n";
-
-        }
-
-        if ($line =~ m/^File: (.+)$/) {
-            my $file = $1;
-
-            $parsed
-              .= finish_file(\@sections, \@dyn_symbols, \@symbol_versions);
-
-            # Add a newline to end the current paragraph
-            $parsed .= "\n";
-
-            # reset variables
-            @sections = ();
-            @symbol_versions = ();
-            @dyn_symbols = ();
-            $truncated = 0;
-            $section = '';
-            %program_headers = ();
-            $bin = '';
-
-            $bin = $file;
-            $parsed .= "Filename: $bin\n";
-
-        } elsif ($line
-            =~ m/^readelf: Error: Reading (0x)?[0-9a-fA-F]+ bytes extends past end of file for section headers/
-            or $line
-            =~ m/^readelf: Error: Unable to read in 0x[0-9a-fA-F]+ bytes of/
-            or $line
-            =~ m/^readelf: Error: .*: Failed to read .*(?:magic number|file header)/
+        if ($line
+            =~ /^readelf: Error: Reading (0x)?[0-9a-fA-F]+ bytes extends past end of file for section headers/
+            || $line
+            =~ /^readelf: Error: Unable to read in 0x[0-9a-fA-F]+ bytes of/
+            || $line
+            =~ /^readelf: Error: .*: Failed to read .*(?:magic number|file header)/
         ) {
        # Various errors for corrupt / broken files.  Note, readelf may spit out
        # multiple errors per file, hence the "unless".
-            $parsed .= "Broken: yes\n" unless $truncated++;
+            $parsed .= "Broken: yes\n"
+              unless $truncated++;
+
             next;
-        } elsif ($line =~ m/^readelf: Error: Not an ELF file/) {
+
+        } elsif ($line =~ /^readelf: Error: Not an ELF file/) {
             # Some upstreams like to create valid ar archives with the ".a"
             # extensions and fill them with poems rather than object files.
             #
             # Possibly a reference to afl...
-            $static_lib_issues++ if $bin =~ m{\([^/\\)]++\)$};
+            $static_lib_issues++
+              if $filename =~ m{\([^/\\)]++\)$};
+
             next;
-        } elsif ($line =~ m/^Elf file type is (\S+)/) {
+
+        } elsif ($line =~ /^Elf file type is (\S+)/) {
             $parsed .= "Elf-Type: $1\n";
             next;
-        } elsif ($line =~ m/^Program Headers:/) {
+
+        } elsif ($line =~ /^Program Headers:/) {
             $section = 'PH';
             $parsed .= "Program-Headers:\n";
-        } elsif ($line =~ m/^Section Headers:/) {
+
+        } elsif ($line =~ /^Section Headers:/) {
             $section = 'SH';
             $parsed .= "Section-Headers:\n";
-        } elsif ($line =~ m/^Dynamic section at offset .*:/) {
+
+        } elsif ($line =~ /^Dynamic section at offset .*:/) {
             $section = 'DS';
             $parsed .= "Dynamic-Section:\n";
-        } elsif ($line =~ m/^Version symbols section /) {
-            $section = 'VS';
-        } elsif ($line =~ m/^Symbol table '.dynsym'/) {
-            $section = 'DS';
-        } elsif ($line =~ m/^Symbol table/) {
-            $section = '';
-        } elsif ($line =~ m/^\s*$/) {
-            $section = '';
-        } elsif ($line =~ m/^\s*(\S+)\s*(?:(?:\S+\s+){4})\S+\s(...)/
-            and $section eq 'PH') {
-            my ($header, $flags) = ($1, $2);
-            $header =~ s/^GNU_//g;
-            next if $header eq 'Type';
 
-            my $newflags = '';
-            my $redo = 0;
-            my $extra = '';
+        } elsif ($line =~ /^Version symbols section /) {
+            $section = 'VS';
+
+        } elsif ($line =~ /^Symbol table '.dynsym'/) {
+            $section = 'DS';
+
+        } elsif ($line =~ /^Symbol table/) {
+            $section = EMPTY;
+
+        } elsif ($line =~ /^\s*$/) {
+            $section = EMPTY;
+
+        } elsif ($line =~ /^\s*(\S+)\s*(?:(?:\S+\s+){4})\S+\s(...)/
+            and $section eq 'PH') {
+
+            my $header = $1;
+            my $flags = $2;
+
+            $header =~ s/^GNU_//g;
+
+            next
+              if $header eq 'Type';
+
+            my $extra = EMPTY;
+
+            my $newflags = EMPTY;
             $newflags .= ($flags =~ m/R/) ? 'r' : '-';
             $newflags .= ($flags =~ m/W/) ? 'w' : '-';
             $newflags .= ($flags =~ m/E/) ? 'x' : '-';
 
             $program_headers{$header} = $newflags;
 
-            if ($header eq 'INTERP') {
+            if ($header eq 'INTERP' && @lines) {
                 # Check if the next line is the "requesting an interpreter"
                 # (readelf appears to always emit on the next line if at all)
-                my $next = shift @lines;
-                if ($next =~ m,\[Requesting program interpreter:\s([^\]]+)\],){
+                my $next_line = $lines[0];
+
+                if ($next_line
+                    =~ m{\[Requesting program interpreter:\s([^\]]+)\]}){
+
                     $extra .= " interp=$1";
-                } else {
-                    # Nope, give it back
-                    $redo = 1;
-                    $line = $next;
+
+                    # discard line
+                    shift @lines;
                 }
             }
 
             $parsed .= "  $header flags=${newflags}$extra\n";
 
-            redo if $redo;
             next;
 
-        } elsif ($line =~ m/^\s*\[\s*(\d+)\] (\S+)(?:\s|\Z)/
-            and $section eq 'SH') {
+        } elsif ($line =~ /^\s*\[\s*(\d+)\] (\S+)(?:\s|\Z)/
+            && $section eq 'SH') {
+
             my $section = $2;
             $sections[$1] = $section;
+
             # We need sections as well (e.g. for incomplete stripping)
             $parsed .= " $section\n"
-              if exists($COLLECT_SECTIONS{$section})
-              or$section =~ $COLLECT_SECTIONS_REGEX;
+              if $section =~ /^(?:\.comment$|\.note$|\.z?debug_)/;
+
         } elsif ($line
-            =~ m/^\s*0x(?:[0-9A-F]+)\s+\((.*?)\)\s+([\x21-\x7f][\x20-\x7f]*)\Z/i
-            and $section eq 'DS') {
-            my ($type, $value) = ($1, $2);
+            =~ /^\s*0x(?:[0-9A-F]+)\s+\((.*?)\)\s+([\x21-\x7f][\x20-\x7f]*)\Z/i
+            && $section eq 'DS') {
+
+            my $type = $1;
+            my $value = $2;
+
             my $keep = 0;
 
             if ($type eq 'RPATH' or $type eq 'RUNPATH') {
-                $value =~ s/.*\[//;
+                $value =~ s/^.*\[//;
                 $value =~ s/\]\s*$//;
                 $keep = 1;
+
             } elsif ($type eq 'TEXTREL' or $type eq 'DEBUG') {
                 $keep = 1;
+
             } elsif ($type eq 'FLAGS_1') {
                 # Will contain "NOW" if the binary was built with -Wl,-z,now
-                $keep = 1;
                 $value =~ s/^Flags:\s*//i;
+                $keep = 1;
+
             } elsif (($type eq 'FLAGS' and $value =~ m/\bBIND_NOW\b/)
                 or $type eq 'BIND_NOW') {
+
                 # Variants of bindnow
                 $type = 'FLAGS_1';
                 $value = 'NOW';
                 $keep = 1;
             }
+
             $keep = 1
               if $value =~ s/^(?:Shared library|Library soname): \[(.*)\]/$1/;
-            $parsed .= "  $type   $value\n" if $keep;
+
+            $parsed .= "  $type   $value\n"
+              if $keep;
+
         } elsif (
-            $line =~ m/^\s*[0-9a-f]+: \s* \S+ \s* (?:\(\S+\))? (?:\s|\Z)/xi
-            and $section eq 'VS') {
-            while ($line =~ m/([0-9a-f]+h?)\s*(?:\((\S+)\))?(?:\s|\Z)/gci) {
-                my ($vernum, $verstring) = ($1, $2);
-                $verstring ||= '';
-                if ($vernum =~ m/h$/) {
-                    $verstring = "($verstring)";
-                }
-                push @symbol_versions, $verstring;
+            $line =~ /^\s*[0-9a-f]+: \s* \S+ \s* (?:\(\S+\))? (?:\s|\Z)/xi
+            && $section eq 'VS') {
+
+            while ($line =~ /([0-9a-f]+h?)\s*(?:\((\S+)\))?(?:\s|\Z)/gci) {
+                my $version_number = $1;
+                my $version_string = $2;
+
+                $version_string = "($version_string)"
+                  if $version_number =~ /h$/;
+
+                push(@symbol_versions, $version_string);
             }
+
         } elsif ($line
-            =~ m/^\s*(\d+):\s*[0-9a-f]+\s+\d+\s+(?:(?:\S+\s+){3})(?:\[.*\]\s+)?(\S+)\s+(.*)\Z/
-            and $section eq 'DS') {
+            =~ /^\s*(\d+):\s*[0-9a-f]+\s+\d+\s+(?:(?:\S+\s+){3})(?:\[.*\]\s+)?(\S+)\s+(.*)\Z/
+            && $section eq 'DS') {
+
            # We (sometimes) need to read the "Version symbols section" first to
            # use this data and readelf tends to print after this section, so
            # save for later.
-            push(@dyn_symbols, [$1, $2, $3]);
+            push(@dynamic_symbols, [$1, $2, $3]);
 
-        } elsif ($line =~ m/^There is no dynamic section in this file/
-            and exists $program_headers{DYNAMIC}) {
+        } elsif ($line =~ /^There is no dynamic section in this file/
+            && exists $program_headers{DYNAMIC}) {
+
             # The headers declare a dynamic section but it's
             # empty.
             $parsed .= "Bad-Dynamic-Table: Yes\n";
         }
     }
 
-    # Finish the last file
-    $parsed .= finish_file(\@sections, \@dyn_symbols, \@symbol_versions);
+    $parsed .= "Dynamic-Symbols:\n"
+      if @dynamic_symbols;
 
-    # Add a newline to end the current paragraph
-    $parsed .= "\n";
+    for my $dynamic_symbol (@dynamic_symbols) {
 
-    return $parsed;
-}
+        my ($symbol_number, $section, $symbol_name) = @{$dynamic_symbol};
+        my $symbol_version;
 
-=item finish_file
+        if ($symbol_name =~ /^(.*)@(.*) \(.*\)$/) {
+            $symbol_name = $1;
+            $symbol_version = $2;
 
-=cut
-
-sub finish_file {
-    my ($sections, $dyn_symbols, $symbol_versions) = @_;
-
-    return EMPTY
-      unless @{$dyn_symbols};
-
-    my $parsed .= "Dynamic-Symbols:\n";
-
-    for my $dynsym (@{$dyn_symbols}) {
-        my ($symnum, $seg, $sym) = @{$dynsym};
-        my $ver;
-
-        if ($sym =~ m/^(.*)@(.*) \(.*\)$/) {
-            $sym = $1;
-            $ver = $2;
-        } elsif (@{$symbol_versions} == 0) {
-            # No versioned symbols...
-            $ver = '';
         } else {
-            $ver = $symbol_versions->[$symnum];
+            $symbol_version = $symbol_versions[$symbol_number] // EMPTY;
 
-            if ($ver eq '*local*' or $ver eq '*global*') {
-                if ($seg eq 'UND') {
-                    $ver = '   ';
+            if ($symbol_version eq '*local*' || $symbol_version eq '*global*'){
+                if ($section eq 'UND') {
+                    $symbol_version = '   ';
                 } else {
-                    $ver = 'Base';
+                    $symbol_version = 'Base';
                 }
-            } elsif ($ver eq '()') {
-                $ver = '(Base)';
+
+            } elsif ($symbol_version eq '()') {
+                $symbol_version = '(Base)';
             }
         }
 
-        # Skip "nameless" symbols - happens once or twice
-        # for regular binaries.
-        next if $sym eq q{};
+        # happens once or twice for regular binaries
+        next
+          unless length $symbol_name;
 
-        if ($seg =~ m/^\d+$/ and defined $sections->[$seg]) {
-            $seg = $sections->[$seg];
-        }
+        # look up numbered section
+        $section = $sections[$section] // $section
+          if $section =~ /^\d+$/;
+
         # We only care about undefined symbols and symbols in
         # the .text segment.
-        next if $seg ne 'UND' and $seg ne '.text';
+        next
+          unless $section eq 'UND' || $section eq '.text';
 
-        $parsed .= " $seg $ver $sym\n";
+        $parsed .= " $section $symbol_version $symbol_name\n";
     }
+
+    $parsed .= "\n";
 
     return $parsed;
 }
