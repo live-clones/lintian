@@ -1,6 +1,8 @@
-Tag: diff-contains-git-control-dir
+Tag: debian-adds-git-control-dir
 Severity: warning
 Check: cruft
+Renamed-From:
+ diff-contains-git-control-dir
 Explanation: The Debian diff or native package contains files in a .git
  directory. These are usually artifacts of the revision control system
  used by the Debian maintainer and not useful in a diff or native package.

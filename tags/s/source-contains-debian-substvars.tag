@@ -1,6 +1,8 @@
-Tag: diff-contains-substvars
+Tag: source-contains-debian-substvars
 Severity: warning
 Check: cruft
+Renamed-From:
+ diff-contains-substvars
 Explanation: Lintian found a substvars file in the Debian diff for this source
  package. The debian/substvars (or debian/<code>package</code>.substvars) file
  is usually generated and modified dynamically by debian/rules targets, in

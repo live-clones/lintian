@@ -1,1 +1,2 @@
-
+cruft-general-test-suite (source): source-contains-prebuilt-binary t/hello
+cruft-general-test-suite (source): configure-generated-file-in-source tests/config.cache

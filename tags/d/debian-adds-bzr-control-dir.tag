@@ -1,7 +1,9 @@
-Tag: diff-contains-svn-control-dir
+Tag: debian-adds-bzr-control-dir
 Severity: warning
 Check: cruft
-Explanation: The Debian diff or native package contains files in an .svn
+Renamed-From:
+ diff-contains-bzr-control-dir
+Explanation: The Debian diff or native package contains files in a .bzr
  directory. These are usually artifacts of the revision control system
  used by the Debian maintainer and not useful in a diff or native package.
  <code>dpkg-source</code> will automatically exclude these if it is passed
