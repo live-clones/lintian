@@ -632,7 +632,6 @@ sub load_profile_for_test {
     $PROFILE->load($profname, [@inc, $ENV{'LINTIAN_BASE'}]);
 
     Lintian::Data->set_vendor($PROFILE);
-    $ENV{'LINTIAN_HELPER_DIRS'} = join(':', map { "$_/helpers" } @inc);
     $ENV{'LINTIAN_CONFIG_DIRS'} = join(':', @inc);
     return;
 }
