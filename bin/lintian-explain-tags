@@ -133,7 +133,7 @@ if ($format eq 'ewi') {
 }
 
 if ($list_tags) {
-    say for sort { lc($a->name) cmp lc($b->name) } $profile->enabled_tags;
+    say for sort { lc($a) cmp lc($b) } $profile->enabled_tags;
     exit;
 }
 

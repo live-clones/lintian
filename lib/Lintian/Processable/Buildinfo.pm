@@ -75,9 +75,7 @@ sub init {
       unless -e $file;
 
     $self->path($file);
-
     $self->type('buildinfo');
-    $self->link_label('buildinfo');
 
     my $primary = Lintian::Deb822::File->new;
     my @sections = $primary->read_file($self->path)

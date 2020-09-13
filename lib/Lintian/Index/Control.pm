@@ -63,12 +63,12 @@ in the collections scripts used previously.
 =cut
 
 sub collect {
-    my ($self, $processable_dir) = @_;
+    my ($self, $deb_path) = @_;
 
     # control files are not installed relative to the system root
     # disallow absolute paths and symbolic links
 
-    my @command = (qw(dpkg-deb --ctrl-tarfile), "$processable_dir/deb");
+    my @command = (qw(dpkg-deb --ctrl-tarfile), $deb_path);
     my ($extract_errors, $index_errors)
       = $self->create_from_piped_tar(\@command);
 
@@ -78,13 +78,7 @@ sub collect {
     $self->add_scripts;
     $self->add_control;
 
-    path("$processable_dir/control-errors")->spew_utf8($extract_errors)
-      if length $extract_errors;
-
-    path("$processable_dir/control-index-errors")->spew_utf8($index_errors)
-      if length $index_errors;
-
-    return;
+    return $extract_errors . $index_errors;
 }
 
 =back

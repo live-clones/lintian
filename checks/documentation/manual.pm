@@ -242,7 +242,7 @@ sub visit_installed_files {
             my $stdout;
             my $stderr;
 
-            run3(\@command, undef, \$stdout, \$stderr);
+            run3(\@command, \undef, \$stdout, \$stderr);
 
             my $exitcode = $?;
             my $status = ($exitcode >> 8);
@@ -281,7 +281,9 @@ sub visit_installed_files {
             local $ENV{LC_ALL} = 'C.UTF-8';
 
             local $ENV{MANROFFSEQ} = EMPTY;
-            local $ENV{MANWIDTH} = 80;
+
+            # set back to 80 when Bug#892423 is fixed in groff
+            local $ENV{MANWIDTH} = 120;
 
             my $stdout;
             my $stderr;
@@ -295,7 +297,7 @@ sub visit_installed_files {
             my $savedir = getcwd;
             chdir($localdir);
 
-            run3(\@command, undef, \$stdout, \$stderr);
+            run3(\@command, \undef, \$stdout, \$stderr);
 
             my $exitcode = $?;
             my $status = ($exitcode >> 8);

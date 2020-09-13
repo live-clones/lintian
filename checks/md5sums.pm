@@ -38,7 +38,7 @@ use namespace::clean;
 
 with 'Lintian::Check';
 
-has only_conffiles => (is => 'rwp', default => 1);
+has only_conffiles => (is => 'rw', default => 1);
 
 sub visit_installed_files {
     my ($self, $file) = @_;
@@ -52,7 +52,7 @@ sub visit_installed_files {
     return
       unless $file->is_regular_file;
 
-    $self->_set_only_conffiles(0)
+    $self->only_conffiles(0)
       unless $self->processable->is_conffile($file);
 
     return;
@@ -62,13 +62,11 @@ sub binary {
     my ($self) = @_;
 
     my $control = $self->processable->control->lookup('md5sums');
-
-    # Is there an md5sums control file?
-    unless ($control) {
+    unless (defined $control) {
 
         # ignore if package contains no files
         return
-          if -z path($self->processable->basedir)->child('md5sums')->stringify;
+          unless $self->processable->installed->sorted_list;
 
         $self->tag('no-md5sums-control-file')
           unless $self->only_conffiles;

@@ -1,2 +1,2 @@
-scripts (binary): missing-depends-on-sensible-utils usr/src/scripts/gccbug.dpatch
-scripts (binary): missing-depends-on-sensible-utils usr/share/scripts/gccbug.dpatch
+scripts (binary): missing-depends-on-sensible-utils sensible-editor usr/src/scripts/gccbug.dpatch
+scripts (binary): missing-depends-on-sensible-utils sensible-editor usr/share/scripts/gccbug.dpatch

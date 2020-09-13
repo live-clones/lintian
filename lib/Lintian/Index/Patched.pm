@@ -30,7 +30,6 @@ use IPC::Run3;
 use Path::Tiny;
 
 use Lintian::Index::Item;
-use Lintian::IPC::Run3 qw(safe_qx);
 
 use constant EMPTY => q{};
 use constant COLON => q{:};
@@ -73,18 +72,18 @@ in the collections scripts used previously.
 =cut
 
 sub collect {
-    my ($self, $processable_dir) = @_;
+    my ($self, $dsc_path) = @_;
 
     # source packages can be unpacked anywhere; no anchored roots
 
-    $self->create($processable_dir);
+    my $errors = $self->create($dsc_path);
     $self->load;
 
     $self->add_md5sums;
     $self->add_fileinfo;
     $self->add_java;
 
-    return;
+    return $errors;
 }
 
 =item create
@@ -92,7 +91,7 @@ sub collect {
 =cut
 
 sub create {
-    my ($self, $processable_dir) = @_;
+    my ($self, $dsc_path) = @_;
 
     my $savedir = getcwd;
 
@@ -105,35 +104,35 @@ sub create {
     my $saved_umask = umask;
     umask 0000;
 
-    my @unpack_command = (
-        qw(dpkg-source -q --no-check --extract),
-        "$processable_dir/dsc", $self->basedir
-    );
+    my @unpack_command
+      = (qw(dpkg-source -q --no-check --extract),$dsc_path, $self->basedir);
 
     # ignore STDOUT; older versions are not completely quiet with -q
-    my $unpack_error;
+    my $unpack_errors;
 
-    run3(\@unpack_command, undef, undef, \$unpack_error);
+    run3(\@unpack_command, \undef, \undef, \$unpack_errors);
 
     my $status = ($? >> 8);
     if ($status) {
         my $message = "Non-zero status $status from @unpack_command";
-        $message .= COLON . NEWLINE . $unpack_error
-          if length $unpack_error;
+        $message .= COLON . NEWLINE . $unpack_errors
+          if length $unpack_errors;
 
         die $message;
     }
 
     umask $saved_umask;
 
-    path("$processable_dir/unpacked-errors")->append($unpack_error // EMPTY);
-
     # chdir for index_src
     chdir($self->basedir);
 
     # get times in UTC
-    my $output
-      = safe_qx('env', 'TZ=UTC', 'find', '-printf', '%M %s %A+\0%p\0%l\0');
+    my @index_command
+      = ('env', 'TZ=UTC', 'find', '-printf', '%M %s %A+\0%p\0%l\0');
+    my $index_output;
+    my $index_errors;
+
+    run3(\@index_command, \undef, \$index_output, \$index_errors);
 
     my $permissionspattern = qr,\S{10},;
     my $sizepattern = qr,\d+,;
@@ -143,9 +142,9 @@ sub create {
 
     my %all;
 
-    $output =~ s/\0$//;
+    $index_output =~ s/\0$//;
 
-    my @lines = split(/\0/, $output, -1);
+    my @lines = split(/\0/, $index_output, -1);
     die 'Did not get a multiple of three lines from find.'
       unless @lines % 3 == 0;
 
@@ -188,11 +187,14 @@ sub create {
     $self->catalog(\%all);
 
     # fix permissions
-    safe_qx('chmod', '-R', 'u+rwX,o+rX,o-w', $self->basedir);
+    my @permissions_command= ('chmod', '-R', 'u+rwX,o+rX,o-w', $self->basedir);
+    my $permissions_errors;
+
+    run3(\@permissions_command, \undef, \undef, \$permissions_errors);
 
     chdir($savedir);
 
-    return;
+    return $unpack_errors . $index_errors . $permissions_errors;
 }
 
 =back

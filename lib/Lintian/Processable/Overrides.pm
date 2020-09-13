@@ -22,13 +22,15 @@ use warnings;
 use utf8;
 use autodie;
 
-use IO::Uncompress::Gunzip qw(gunzip $GunzipError);
+use IPC::Run3;
+use List::MoreUtils qw(none first_value);
 use Path::Tiny;
+use Unicode::UTF8 qw(valid_utf8 decode_utf8);
 
 use Lintian::Architecture qw(:all);
-use Lintian::Util qw($PKGNAME_REGEX is_ancestor_of);
 
 use constant EMPTY => q{};
+use constant SPACE => q{ };
 
 use Moo::Role;
 use namespace::clean;
@@ -50,188 +52,177 @@ Lintian::Processable::Overrides provides an interface to package data for overri
 
 =over 4
 
-=item add_overrides
+=item overrides
 
 =cut
 
-sub add_overrides {
-    my ($self) = @_;
+has overrides => (
+    is => 'rw',
+    lazy => 1,
+    default => sub {
+        my ($self) = @_;
 
-    my $unpackedpath = path($self->basedir)->child('unpacked')->stringify;
-    die "No unpacked data in $unpackedpath"
-      unless -d $unpackedpath;
+        my $index;
 
-    my $overridepath = path($self->basedir)->child('override')->stringify;
-    unlink($overridepath)
-      if -e $overridepath;
+        # pick the first
+        my @candidates;
+        if ($self->type eq 'source') {
 
-    # pick the first
-    my @candidates;
-    if ($self->type eq 'source') {
-        # prefer source/lintian-overrides to source.lintian-overrides
-        @candidates = ('debian/source/lintian-overrides',
-            'debian/source.lintian-overrides');
-    } else {
-        @candidates = ('usr/share/lintian/overrides/' . $self->name);
-    }
+            $index = $self->patched;
 
-    my $packageoverridepath;
-    for my $relative (@candidates) {
+            # prefer source/lintian-overrides to source.lintian-overrides
+            @candidates = (
+                'debian/source/lintian-overrides',
+                'debian/source.lintian-overrides'
+            );
 
-        my $candidate = "$unpackedpath/$relative";
-        if (-f $candidate) {
-            $packageoverridepath = $candidate;
+        } elsif ($self->type eq 'binary' || $self->type eq 'udeb') {
+            $index = $self->installed;
 
-        } elsif (-f "$candidate.gz") {
-            $packageoverridepath = "$candidate.gz";
+            @candidates = ('usr/share/lintian/overrides/' . $self->name);
+
+        } else {
+            return {};
         }
 
-        last
-          if $packageoverridepath;
-    }
+        @candidates = map { ($_, "$_.gz") } @candidates;
+        my $override_item
+          = first_value { defined } map { $index->lookup($_) } @candidates;
 
-    return
-      unless length $packageoverridepath;
+        return {}
+          unless defined $override_item;
 
-    return
-      unless is_ancestor_of($unpackedpath, $packageoverridepath);
+        my $contents;
+        if ($override_item->name =~ /\.gz$/) {
 
-    if ($packageoverridepath =~ /\.gz$/) {
-        gunzip($packageoverridepath => $overridepath)
-          or die "gunzip $packageoverridepath failed: $GunzipError";
+            my @command
+              = (qw{gzip --decompress --stdout}, $override_item->name);
+            my $bytes;
+            my $stderr;
 
-    } else {
-        link($packageoverridepath, $overridepath);
-    }
+            run3(\@command, \undef, \$bytes, \$stderr);
+            die "gunzip $override_item failed: $stderr"
+              if length $stderr;
 
-    return;
-}
+            $contents = decode_utf8($bytes)
+              if valid_utf8($bytes);
 
-=item overrides(OVERRIDE-FILE)
-
-Read OVERRIDE-FILE and add the overrides found there which match the
-metadata of the current file (package and type).  The overrides are added
-to the overrides hash in the info hash entry for the current file.
-
-file_start() must be called before this method.  This method throws an
-exception if there is no current file and calls fail() if the override
-file cannot be opened.
-
-=cut
-
-sub overrides {
-    my ($self) = @_;
-
-    my $package = $self->name;
-    my $architecture = $self->architecture;
-    my $type = $self->type;
-
-    my @comments;
-    my %previous;
-
-    my $path = path($self->basedir)->child('override')->stringify;
-
-    return
-      unless -f $path;
-
-    my %override_data;
-
-    open(my $fh, '<:encoding(UTF-8)', $path);
-
-  OVERRIDE:
-    while (my $line = <$fh>) {
-
-        my $processed = $line;
-
-        # trim both ends
-        $processed =~ s/^\s+|\s+$//g;
-
-        if ($processed eq EMPTY) {
-            # Throw away comments, as they are not attached to a tag
-            # also throw away the option of "carrying over" the last
-            # comment
-            @comments = ();
-            %previous = ();
-            next;
+        } else {
+            $contents = $override_item->decoded_utf8;
         }
 
-        if ($processed =~ /^#/) {
-            $processed =~ s/^# ?//;
-            push(@comments, $processed);
-            next;
-        }
+        return {}
+          unless length $contents;
 
-        $processed =~ s/\s+/ /g;
+        my %override_data;
+        my @comments;
+        my %previous;
 
-        # The override looks like the following:
-        # [[pkg-name] [arch-list] [pkg-type]:] <tag> [context]
-        # - Note we do a strict package name check here because
-        #   parsing overrides is a bit ambiguous (see #699628)
-        if (
-            $processed =~ m/\A (?:                   # start optional part
-                  (?:\Q$package\E)?                 # optionally starts with package name -> $1
-                  (?: \s*+ \[([^\]]+?)\])?          # optionally followed by an [arch-list] (like in B-D) -> $2
-                  (?:\s*+ ([a-z]+) \s*+ )?          # optionally followed by the type -> $3
-                :\s++)?                             # end optional part
-                ([\-\+\.a-zA-Z_0-9]+ (?:\s.+)?)     # <tag-name> [context] -> $4
-                   \Z/xsm
-        ) {
-            # Valid - so far at least
-            my ($archlist, $opkg_type, $tagdata)= ($1, $2, $3, $4);
+        my $position = 1;
 
-            my ($tagname, $context) = split(/ /, $tagdata, 2);
+        my @lines = split(/\n/, $contents);
+        for my $line (@lines) {
 
-            if ($opkg_type and $opkg_type ne $type) {
+            my $remaining = $line;
+
+            # trim both ends
+            $remaining =~ s/^\s+|\s+$//g;
+
+            if ($remaining eq EMPTY) {
+                # Throw away comments, as they are not attached to a tag
+                # also throw away the option of "carrying over" the last
+                # comment
+                @comments = ();
+                %previous = ();
+                next;
+            }
+
+            if ($remaining =~ /^#/) {
+                $remaining =~ s/^# ?//;
+                push(@comments, $remaining);
+                next;
+            }
+
+            # reduce white space
+            $remaining =~ s/\s+/ /g;
+
+            # [[pkg-name] [arch-list] [pkg-type]:] <tag> [context]
+            my $require_colon = 0;
+            my @architectures;
+
+            # strip package name, if present; require name
+            # parsing overrides is ambiguous (see #699628)
+            my $package = $self->name;
+            if ($remaining =~ s/^\Q$package\E(?=\s|:)//) {
+
+                # both spaces or colon were unmatched lookhead
+                $remaining =~ s/^\s+//;
+                $require_colon = 1;
+            }
+
+            # remove architecture list
+            if ($remaining =~ s/^\[([^\]]*)\](?=\s|:)//) {
+                @architectures = split(SPACE, $1);
+
+                # both spaces or colon were unmatched lookhead
+                $remaining =~ s/^\s+//;
+                $require_colon = 1;
+            }
+
+            # remove package type
+            my $type = $self->type;
+            if ($remaining =~ s/^\Q$type\E(?=\s|:)//) {
+
+                # both spaces or colon were unmatched lookhead
+                $remaining =~ s/^\s+//;
+                $require_colon = 1;
+            }
+
+            # require and remove colon when any package details are present
+            if ($require_colon && $remaining !~ s/^\s*:\s*//) {
                 $self->tag('malformed-override',
-"Override of $tagname for package type $opkg_type (expecting $type) at line $."
+                    "Expected a colon in line $position");
+                next;
+            }
+
+            my $hint = $remaining;
+
+            if (@architectures && $self->architecture eq 'all') {
+                $self->tag('malformed-override',
+                    "Architecture list for arch:all package in line $position"
                 );
                 next;
             }
 
-            if ($architecture eq 'all' && $archlist) {
+            # check for missing negations
+            my $negations = scalar grep { /^!/ } @architectures;
+            unless ($negations == @architectures || $negations == 0) {
                 $self->tag('malformed-override',
-"Architecture list for arch:all package at line $. (for tag $tagname)"
-                );
+                    "Inconsistent architecture negation in line $position");
                 next;
             }
 
-            if ($archlist) {
-                # parse and figure
-                my (@archs) = split(m/\s++/, $archlist);
-                my $negated = 0;
-                my $found = 0;
+            my @invalid = grep { !valid_wildcard($_) } @architectures;
+            $self->tag('malformed-override',
+                "Unknown architecture wildcard $_ in line $position")
+              for @invalid;
 
-                foreach my $a (@archs){
-                    $negated++ if $a =~ s/^!//;
-                    if (is_arch_wildcard($a)) {
-                        $found = 1
-                          if wildcard_includes_arch($a, $architecture);
-                    } elsif (is_arch($a)) {
-                        $found = 1 if $a eq $architecture;
-                    } else {
-                        $self->tag('malformed-override',
-"Unknown architecture \"$a\" at line $. (for tag $tagname)"
-                        );
-                        next OVERRIDE;
-                    }
-                }
+            next
+              if @invalid;
 
-                if ($negated > 0 && scalar @archs != $negated){
-                    # missing a ! somewhere
-                    $self->tag('malformed-override',
-"Inconsistent architecture negation at line $. (for tag $tagname)"
-                    );
-                    next;
-                }
+            # proceed when none specified
+            next
+              if @architectures
+              && none { wildcard_matches($_, $self->architecture) }
+            @architectures;
 
-                # missing wildcard checks and sanity checking archs $arch
-                if ($negated) {
-                    $found = $found ? 0 : 1;
-                }
+            my ($tagname, $context) = split(SPACE, $hint, 2);
 
-                next
-                  unless $found;
-            }
+            $self->tag('malformed-override',
+                "Cannot parse line $position: $line")
+              unless length $tagname;
+
+            $context //= EMPTY;
 
             if (($previous{tag} // EMPTY) eq $tagname
                 && !scalar @comments){
@@ -248,12 +239,8 @@ sub overrides {
             $current{tag} = $tagname;
 
             # record line number
-            $current{line} = $.;
+            $current{line} = $position;
 
-            # does not seem to be used anywhere
-            $current{arch} = 'any';
-
-            $context //= EMPTY;
             $current{context} = $context;
 
             if ($context =~ m/\*/) {
@@ -289,50 +276,12 @@ sub overrides {
 
             %previous = %current;
 
-        } else {
-            # We know this to be a bad override; check if it might be
-            # an override for a different package.
-            unless ($processed =~ m/^\Q$package\E[\s:\[]/) {
-                # So, we got an override that does not start with the
-                # package name - cases include:
-                #  1 <tag> ...
-                #  2 <tag> something: ...
-                #  3 <wrong-pkg> [archlist] <type>: <tag> ...
-                #  4 <wrong-pkg>: <tag> ...
-                #  5 <wrong-pkg> <type>: <tag> ...
-                #
-                # Case 2 and 5 are hard to distinguish from one another.
-
-                # First, remove the archlist if present (simplifies
-                # the next step)
-                $processed =~ s/([^:\[]+)?\[[^\]]+\]([^:]*):/$1 $2:/;
-                $processed =~ s/\s\s++/ /g;
-
-                if ($processed
-                    =~ m/^($PKGNAME_REGEX)?(?: (?:binary|changes|source|udeb))? ?:/
-                ) {
-                    my $opkg = $1;
-                    # Looks like a wrong package name - technically,
-                    # $opkg could be a tag if the tag information is
-                    # present, but it is very unlikely.
-                    $self->tag('malformed-override',
-"Possibly wrong package in override at line $. (got $opkg, expected $package)"
-                    );
-                    next;
-                }
-            }
-            # Nope, package name appears to match (or not present
-            # at all), not sure what the problem is so we just throw a
-            # generic parse error.
-
-            $self->tag('malformed-override', "Cannot parse line $.: $line");
+        } continue {
+            $position++;
         }
-    }
 
-    close($fh);
-
-    return \%override_data;
-}
+        return \%override_data;
+    });
 
 1;
 

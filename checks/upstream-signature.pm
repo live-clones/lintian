@@ -25,9 +25,6 @@ use warnings;
 use utf8;
 
 use Path::Tiny;
-use List::Util qw(none);
-
-use constant SLASH => q{/};
 
 use Moo;
 use namespace::clean;
@@ -39,21 +36,19 @@ my $SIGNING_KEY_FILENAMES = Lintian::Data->new('common/signing-key-filenames');
 sub source {
     my ($self) = @_;
 
-    my $processable = $self->processable;
-
     my @keynames = $SIGNING_KEY_FILENAMES->all;
     my @keypaths
-      = map { $processable->patched->resolve_path("debian/$_") } @keynames;
+      = map { $self->processable->patched->resolve_path("debian/$_") }
+      @keynames;
     my @keys = grep { $_ && $_->is_file } @keypaths;
 
     # in uscan's gittag mode,signature will never match
-    my $watch = $processable->patched->resolve_path('debian/watch');
+    my $watch = $self->processable->patched->resolve_path('debian/watch');
     my $gittag = $watch && $watch->bytes =~ /pgpmode=gittag/;
 
-    my @filenames = sort keys %{$processable->files};
-    my @origtar
-      = grep {$_ =~ m/^.*\.orig(?:-[A-Za-z\d-]+)?\.tar\./&& $_ !~ m/\.asc$/}
-      @filenames;
+    my @filenames = sort keys %{$self->processable->files};
+    my @origtar= grep { /^.*\.orig(?:-[A-Za-z\d-]+)?\.tar\./ }
+      grep { !/\.asc$/ }@filenames;
 
     my %signatures;
     for my $filename (@origtar) {
@@ -64,14 +59,14 @@ sub source {
         for my $tarball ($filename, $uncompressed) {
             my $signaturename = "$tarball.asc";
             push(@componentsigs, $signaturename)
-              if exists $processable->files->{$signaturename};
+              if exists $self->processable->files->{$signaturename};
         }
 
         $signatures{$filename} = \@componentsigs;
     }
 
     # orig tarballs should be signed if upstream's public key is present
-    unless (!@keys || $processable->repacked || $gittag) {
+    unless (!@keys || $self->processable->repacked || $gittag) {
 
         for my $filename (@origtar) {
 
@@ -80,12 +75,14 @@ sub source {
         }
     }
 
+    my $parentdir = path($self->processable->path)->parent->stringify;
+
     # check signatures
     my @allsigs = map { @{$signatures{$_}} } @origtar;
     for my $signature (@allsigs) {
 
-        my $path = $processable->basedir . SLASH . $signature;
-        my $contents = path($path)->slurp;
+        # take from location near input file
+        my $contents = path($parentdir)->child($signature)->slurp;
 
         if ($contents =~ /^-----BEGIN PGP ARMORED FILE-----/m) {
 

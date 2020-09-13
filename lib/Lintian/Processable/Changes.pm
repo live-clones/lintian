@@ -76,9 +76,7 @@ sub init {
       unless -e $file;
 
     $self->path($file);
-
     $self->type('changes');
-    $self->link_label('changes');
 
     # dpkg will include news items in national encoding
     my $bytes = path($self->path)->slurp;

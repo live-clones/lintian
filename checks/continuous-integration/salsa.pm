@@ -69,13 +69,23 @@ sub visit_patched_files {
     my @includes;
     for my $item (@items) {
 
-        my $type = reftype $item;
+        my $item_type = reftype $item;
 
-        if (!length $type) {
+        if (!length $item_type) {
             push(@includes, $item);
 
-        } elsif ($type eq 'ARRAY') {
-            push(@includes, @{$item});
+        } elsif ($item_type eq 'ARRAY') {
+            for my $element (@{$item}) {
+
+                my $element_type = reftype $element;
+                if (!length $element_type) {
+                    push(@includes, $element);
+
+                } elsif ($element_type eq 'HASH') {
+                    # new Gitlab style with desciptors
+                    push(@includes, $element->{file});
+                }
+            }
         }
     }
 

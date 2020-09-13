@@ -22,15 +22,15 @@
 
 =head1 NAME
 
-explain-lintian-tags - offer more information about Lintian's tags
+lintian-explain-tags - offer more information about Lintian's tags
 
 =head1 SYNOPSIS
 
-B<explain-lintian-tags> B<--tags> I<tag> ...
+B<lintian-explain-tags> B<--tags> I<tag> ...
 
 =head1 DESCRIPTION
 
-The B<explain-lintian-tags> command explains the named tags given on
+The B<lintian-explain-tags> command explains the named tags given on
 the command line.
 
 =head1 OPTIONS
@@ -51,7 +51,7 @@ Use dir as an additional "Lintian root".  The directory is expected
 have a similar layout to the LINTIAN_BASE (if it exists), but does not
 need to be a full self-contained root.
 
-Unlike B<lintian>, B<explain-lintian-tags> will I<not> load any code from
+Unlike B<lintian>, B<lintian-explain-tags> will I<not> load any code from
 these additional directories.
 
 This option may appear more than once; each time adding an additional
@@ -63,7 +63,7 @@ Use the severities from the vendor profile prof when displaying tags.
 If the profile name does not contain a slash, the default profile for
 that vendor is chosen.
 
-If not specified, B<explain-lintian-tags> loads the best profile for the
+If not specified, B<lintian-explain-tags> loads the best profile for the
 current vendor.
 
 Please Refer to the Lintian User Manual for the full documentation of

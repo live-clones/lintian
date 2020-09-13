@@ -17,8 +17,8 @@ my @POD_FILES = all_pod_files(
     "$dir/lib",
     "$dir/doc/tutorial",
     "$dir/man/lintian.pod",
-    "$dir/man/annotate-lintian-hints.pod",
-    "$dir/man/explain-lintian-tags.pod",
+    "$dir/man/lintian-annotate-hints.pod",
+    "$dir/man/lintian-explain-tags.pod",
 );
 
 all_pod_files_ok(@POD_FILES);

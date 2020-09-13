@@ -34,6 +34,8 @@ our (@EXPORT_OK, %EXPORT_TAGS);
       is_arch_or_wildcard
       expand_arch_wildcard
       wildcard_includes_arch
+      wildcard_matches
+      valid_wildcard
 ));
 
 %EXPORT_TAGS = (all => \@EXPORT_OK);
@@ -131,6 +133,7 @@ sub _parse_arch {
         $ALT_ARCH_NAMES{$short} = $archstr;
         $ALT_ARCH_NAMES{$long} = $archstr;
     }
+
     return 1;
 }
 
@@ -161,6 +164,7 @@ architecture wildcards (including "any") and unknown architectures.
 
 sub is_arch {
     my ($arch) = @_;
+
     return 0 if $arch eq 'any';
     return 1
       if $arch eq 'all'
@@ -230,9 +234,38 @@ sub wildcard_includes_arch {
     return exists $ARCH_WILDCARDS{$wc}{$arch} ? 1 : 0;
 }
 
+=item valid_wildcard
+
+=cut
+
+sub valid_wildcard {
+    my ($wildcard) = @_;
+
+    # strip any negative prefix
+    $wildcard =~ s/^!//;
+
+    return is_arch($wildcard) || is_arch_wildcard($wildcard);
+}
+
+=item wildcard_matches
+
+=cut
+
+sub wildcard_matches {
+    my ($wildcard, $architecture) = @_;
+
+    # look for negative prefix and strip
+    my $match_wanted = !($wildcard =~ s/^!//);
+
+    return $match_wanted
+      if $wildcard eq $architecture
+      || ( is_arch_wildcard($wildcard)
+        && wildcard_includes_arch($wildcard, $architecture));
+
+    return !$match_wanted;
+}
+
 =back
-
-
 
 =cut
 

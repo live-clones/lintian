@@ -74,7 +74,7 @@ my @want_nonfatal = uniq @{ $base->{nonfatal} // [] };
 my @known_tags;
 my %new_name;
 my $tagroot = "$ENV{LINTIAN_BASE}/tags";
-my @descfiles = File::Find::Rule->file()->name('*.desc')->in($tagroot);
+my @descfiles = File::Find::Rule->file()->name('*.tag')->in($tagroot);
 for my $tagpath (@descfiles) {
 
     my $deb822 = Lintian::Deb822::File->new;
