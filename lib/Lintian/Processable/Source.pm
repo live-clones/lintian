@@ -137,8 +137,6 @@ sub unpack {
     $self->tag('unpack-message-for-source', $_)
       for split(/\n/, $patched_errors);
 
-    $self->add_diffstat;
-
     $self->orig->collect($self->basedir, $self->components)
       unless $self->native;
 

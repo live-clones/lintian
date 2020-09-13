@@ -51,58 +51,6 @@ Lintian::Processable::Diffstat provides an interface to diffstat data.
 
 =over 4
 
-=item add_diffstat
-
-=cut
-
-sub add_diffstat {
-    my ($self) = @_;
-
-    my $noepoch = $self->fields->value('Version');
-
-    # strip epoch
-    $noepoch =~ s/^\d://;
-
-    # look for a format 1.0 diff.gz near the input file
-    my $diffname = $self->name . UNDERSCORE . $noepoch . '.diff.gz';
-    my $diffpath = path($self->path)->parent->child($diffname)->stringify;
-    return
-      unless -f $diffpath;
-
-    my @gunzip_command = ('gunzip', '--stdout', $diffpath);
-    my $gunzip_pid = open(my $from_gunzip, '-|', @gunzip_command)
-      or die "Cannot run @gunzip_command: $!";
-
-    my $stdout;
-    my $stderr;
-    my @diffstat_command = ('diffstat',  '-p1');
-    run3(\@diffstat_command, $from_gunzip, \$stdout, \$stderr);
-
-    my $status = ($? >> 8);
-    if ($status) {
-
-        my $message= "Non-zero status $status from @diffstat_command";
-        $message .= COLON . NEWLINE . $stderr
-          if length $stderr;
-
-        die $message;
-    }
-
-    close $from_gunzip
-      or warn "close failed for handle from @gunzip_command: $!";
-
-    waitpid($gunzip_pid, 0);
-
-    # remove summary in last line
-    chomp $stdout;
-    $stdout =~ s/.*\Z//;
-
-    # copy all lines except the last
-    path($self->basedir)->child('diffstat')->spew($stdout);
-
-    return;
-}
-
 =item diffstat
 
 Returns the path to diffstat output run on the Debian packaging diff
@@ -112,16 +60,74 @@ empty file (this may be a device like /dev/null).
 
 =cut
 
-sub diffstat {
-    my ($self) = @_;
+has diffstat => (
+    is => 'rw',
+    lazy => 1,
+    default => sub {
+        my ($self) = @_;
 
-    my $diffstat = path($self->basedir)->child('diffstat')->stringify;
+        my $noepoch = $self->fields->value('Version');
 
-    $diffstat = '/dev/null'
-      unless -e $diffstat;
+        # strip epoch
+        $noepoch =~ s/^\d://;
 
-    return $diffstat;
-}
+        # look for a format 1.0 diff.gz near the input file
+        my $diffname = $self->name . UNDERSCORE . $noepoch . '.diff.gz';
+        my $diffpath = path($self->path)->parent->child($diffname)->stringify;
+
+        return {}
+          unless -f $diffpath;
+
+        my @gunzip_command = ('gunzip', '--stdout', $diffpath);
+        my $gunzip_pid = open(my $from_gunzip, '-|', @gunzip_command)
+          or die "Cannot run @gunzip_command: $!";
+
+        my $stdout;
+        my $stderr;
+        my @diffstat_command = ('diffstat',  '-p1');
+        run3(\@diffstat_command, $from_gunzip, \$stdout, \$stderr);
+
+        my $status = ($? >> 8);
+        if ($status) {
+
+            my $message= "Non-zero status $status from @diffstat_command";
+            $message .= COLON . NEWLINE . $stderr
+              if length $stderr;
+
+            die $message;
+        }
+
+        close $from_gunzip
+          or warn "close failed for handle from @gunzip_command: $!";
+
+        waitpid($gunzip_pid, 0);
+
+        # remove summary in last line
+        chomp $stdout;
+        $stdout =~ s/.*\Z//;
+
+        my %diffstat;
+
+        my @lines = split(/\n/, $stdout);
+        for my $line (@lines) {
+
+            return
+              unless $line =~ s/\|\s+([^|]*)\s*$//;
+
+            my $stats = $1;
+            my $file = $line;
+
+            # trim both ends
+            $file =~ s/^\s+|\s+$//g;
+
+            die "syntax error in diffstat file: $line"
+              unless length $file;
+
+            $diffstat{$file} = $stats;
+        }
+
+        return \%diffstat;
+    });
 
 1;
 

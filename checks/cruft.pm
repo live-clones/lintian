@@ -384,33 +384,33 @@ sub source {
 sub check_diffstat {
     my ($self, $warned) = @_;
 
-    my $saw_file;
-    open(my $fd, '<', $self->processable->diffstat);
-    local $_;
-    while (<$fd>) {
-        my ($file) = (m,^\s+(.*?)\s+\|,)
-          or die "syntax error in diffstat file: $_";
-        $saw_file = 1;
+    my %diffstat = %{$self->processable->diffstat};
+
+    $self->tag('empty-debian-diff')
+      unless %diffstat;
+
+    for my $file (keys %{$self->processable->diffstat}) {
 
         # Check for CMake cache files.  These embed the source path and hence
         # will cause FTBFS on buildds, so they should never be touched in the
         # diff.
-        if (    $file =~ m,(?:^|/)CMakeCache.txt\z,
-            and $file !~ m,(?:^|/)debian/,){
-            $self->tag('diff-contains-cmake-cache-file', $file);
-        }
+        $self->tag('diff-contains-cmake-cache-file', $file)
+          if $file =~ m{(?:^|/)CMakeCache.txt\z}
+          && $file !~ m{(?:^|/)debian/};
 
         # For everything else, we only care about diffs that add files.  If
         # the file is being modified, that's not a problem with the diff and
         # we'll catch it later when we check the source.  This regex doesn't
         # catch only file adds, just any diff that doesn't remove lines from a
         # file, but it's a good guess.
-        next unless m,\|\s+\d+\s+\++$,;
+        next
+          unless $diffstat{$file} =~ /^\d+\s+\++$/;
 
         # diffstat output contains only files, but we consider the directory
         # checks to trigger if the diff adds any files in those directories.
-        my ($directory) = ($file =~ m,^(.*)/[^/]+$,);
-        if ($directory and not $warned->{$directory}) {
+        my ($directory) = ($file =~ m{^(.*)/[^/]+$});
+        if (defined $directory && !$warned->{$directory}) {
+
             for my $rule (@directory_checks) {
                 if ($directory =~ /$rule->[0]/) {
                     $self->tag("diff-contains-$rule->[1]", $directory);
@@ -428,15 +428,10 @@ sub check_diffstat {
         }
 
         # Additional special checks only for the diff, not the full source.
-        if ($file =~ m@^debian/(?:.+\.)?substvars$@) {
-            $self->tag('diff-contains-substvars', $file);
-        }
+        $self->tag('diff-contains-substvars', $file)
+          if $file =~ m{^debian/(?:.+\.)?substvars$};
     }
-    close($fd);
 
-    # If there was nothing in the diffstat output, there was nothing in the
-    # diff, which is probably a mistake.
-    $self->tag('empty-debian-diff') unless $saw_file;
     return;
 }
 
