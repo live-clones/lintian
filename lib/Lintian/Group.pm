@@ -196,41 +196,14 @@ Process group.
 sub process {
     my ($self, $ignored_overrides, $option, $OUTPUT)= @_;
 
-    $self->processing_start(gmtime->datetime . 'Z');
-
     my $groupname = $self->name;
     local $SIG{__WARN__} = sub { warn "Warning in group $groupname: $_[0]" };
 
+    $self->processing_start(gmtime->datetime . 'Z');
     $OUTPUT->v_msg('Starting on group ' . $self->name);
-
-    my @processables = $self->get_processables;
-    for my $processable (@processables) {
-
-        path($processable->basedir)->mkpath
-          unless -e $processable->basedir;
-
-        if ($processable->can('unpack')) {
-
-            my $unpack_start = [gettimeofday];
-            $OUTPUT->v_msg(
-                'Unpacking packages in processable ' . $processable->name);
-
-            $processable->unpack;
-
-            my $unpack_raw_res = tv_interval($unpack_start);
-            my $unpack_tres = sprintf('%.3fs', $unpack_raw_res);
-
-            $OUTPUT->debug_msg(1,
-                'Unpack of ' . $processable->name . " done ($unpack_tres)");
-            $OUTPUT->perf_log(
-                $self->name . ",total-processable-unpack,$unpack_raw_res");
-        }
-    }
-
-    my $success = 1;
-
     my $timer = [gettimeofday];
 
+    my $success = 1;
     for my $processable ($self->get_processables){
 
         my $declared_overrides;

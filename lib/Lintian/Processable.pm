@@ -170,6 +170,16 @@ has pooldir => (is => 'rw', default => EMPTY);
 has basedir => (
     is => 'rw',
     lazy => 1,
+    trigger => sub {
+        my ($self, $folder) = @_;
+
+        return
+          unless length $folder;
+
+        # create directory
+        path($folder)->mkpath
+          unless -e $folder;
+    },
     default => sub {
         my ($self) = @_;
 

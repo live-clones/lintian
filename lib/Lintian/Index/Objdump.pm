@@ -62,13 +62,15 @@ sub add_objdump {
     chdir($self->basedir);
 
     my @files = grep { $_->is_file } $self->sorted_list;
-    for my $file (@files) {
 
-        # must be elf or static library
-        next
-          unless $file->file_info =~ /\bELF\b/
-          || ( $file->file_info =~ /\bcurrent ar archive\b/
-            && $file->name =~ /\.a$/);
+    # must be ELF or static library
+    my @with_objects = grep {
+        $_->file_info =~ /\bELF\b/
+          || ( $_->file_info =~ /\bcurrent ar archive\b/
+            && $_->name =~ /\.a$/)
+    } @files;
+
+    for my $file (@with_objects) {
 
         my @command = (
             qw{readelf --wide --segments --dynamic --section-details --symbols --version-info},

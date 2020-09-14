@@ -39,7 +39,6 @@ with
   'Lintian::Processable::Changelog',
   'Lintian::Processable::Control',
   'Lintian::Processable::Control::Conffiles',
-  'Lintian::Processable::Installable',
   'Lintian::Processable::Installed',
   'Lintian::Processable::IsNonFree',
   'Lintian::Processable::Hardening',
