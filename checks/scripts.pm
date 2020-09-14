@@ -1123,15 +1123,6 @@ m,$LEADIN(?:/usr/bin/)?dpkg\s+--compare-versions\s+.*\b\Q$ver\E(?!\.)\b,
               if m/invoke-rc.d\b.*--skip-systemd-native\b/
               && !$pdepends->implies('init-system-helpers (>= 1.54~)');
 
-            my $depends = $processable->relation('Depends');
-            $self->tag(
-                'missing-versioned-depends-on-init-system-helpers',
-                "$file:$.",
-                "\"$1 $2\" needs init-system-helpers >= 1.50"
-              )
-              if m/(update-rc\.d)\b.*(defaults-disabled)\b/
-              && !$depends->implies('init-system-helpers (>= 1.50)');
-
             if (m,$LEADIN(?:/usr/sbin/)?dpkg-divert\s,
                 && !/--(?:help|list|truename|version)/) {
                 if (/--local/) {

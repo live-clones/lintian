@@ -1,3 +1,2 @@
-scripts-missing-versioned-depends-on-init-system-helpers-without (binary): missing-versioned-depends-on-init-system-helpers postinst:8 "update-rc.d defaults-disabled" needs init-system-helpers >= 1.50
 scripts-missing-versioned-depends-on-init-system-helpers-without (binary): maintainer-script-interpreter control/postinst /bin/sh
 scripts-missing-versioned-depends-on-init-system-helpers-with (binary): maintainer-script-interpreter control/postinst /bin/sh
