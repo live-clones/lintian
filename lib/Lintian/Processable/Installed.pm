@@ -25,7 +25,7 @@ use warnings;
 use autodie;
 use utf8;
 
-use Lintian::Index::Installed;
+use Lintian::Index;
 
 use constant SLASH => q{/};
 
@@ -61,8 +61,21 @@ has installed => (
     default => sub {
         my ($self) = @_;
 
-        my $index = Lintian::Index::Installed->new;
+        my $index = Lintian::Index->new;
         $index->basedir($self->basedir . SLASH . 'unpacked');
+
+        # binary packages are anchored to the system root
+        # allow absolute paths and symbolic links
+        $index->anchored(1);
+
+        my @command = (qw(dpkg-deb --fsys-tarfile), $self->path);
+        my ($extract_errors, $index_errors)
+          = $index->create_from_piped_tar(\@command);
+
+        $index->load;
+
+        $self->tag('unpack-message-for-deb-data', $_)
+          for split(/\n/, $extract_errors . $index_errors);
 
         return $index;
     });

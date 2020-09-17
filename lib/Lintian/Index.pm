@@ -36,7 +36,7 @@ use constant EMPTY => q{};
 use constant SPACE => q{ };
 use constant SLASH => q{/};
 
-use Moo::Role;
+use Moo;
 use namespace::clean;
 
 with

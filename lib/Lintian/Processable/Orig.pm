@@ -22,8 +22,14 @@ use warnings;
 use utf8;
 use autodie;
 
-use Lintian::Index::Orig;
+use List::MoreUtils qw(uniq);
+use List::UtilsBy qw(sort_by);
+use Path::Tiny;
 
+use Lintian::Index;
+
+use constant EMPTY => q{};
+use constant SPACE => q{ };
 use constant SLASH => q{/};
 
 use Moo::Role;
@@ -52,14 +58,107 @@ Returns the index for orig.tar.gz.
 
 =cut
 
+my %DECOMPRESS_COMMAND = (
+    'gz' => 'gzip --decompress --stdout',
+    'bz2' => 'bzip2 --decompress --stdout',
+    'xz' => 'xz --decompress --stdout',
+);
+
 has orig => (
     is => 'rw',
     lazy => 1,
     default => sub {
         my ($self) = @_;
 
-        my $index = Lintian::Index::Orig->new;
+        my $index = Lintian::Index->new;
         $index->basedir($self->basedir . SLASH . 'orig');
+
+        return $index
+          if $self->native;
+
+        # source packages can be unpacked anywhere; no anchored roots
+        $index->allow_empty(1);
+
+        my $combined_errors = EMPTY;
+
+        # keep sort order; root is missing below otherwise
+        my @tarballs
+          = sort_by { $self->components->{$_} } keys %{$self->components};
+
+        for my $tarball (@tarballs) {
+
+            my $component = $self->components->{$tarball};
+
+            # so far, all archives with components had an extra level
+            my $component_dir = $index->basedir;
+
+            my $subindex = Lintian::Index->new;
+            $subindex->basedir($component_dir);
+
+            # source packages can be unpacked anywhere; no anchored roots
+            $subindex->allow_empty(1);
+
+            my ($extension) = ($tarball =~ /\.([^.]+)$/);
+            die "Source component $tarball has no file exension\n"
+              unless length $extension;
+
+            my $decompress = $DECOMPRESS_COMMAND{lc $extension};
+            die "Don't know how to decompress $tarball"
+              unless $decompress;
+
+            my @command
+              = (split(SPACE, $decompress), $self->basedir . SLASH . $tarball);
+
+            my ($extract_errors, $index_errors)
+              = $subindex->create_from_piped_tar(\@command);
+
+            $combined_errors .= $extract_errors . $index_errors;
+
+            # treat hard links like regular files
+            for my $item (values %{$subindex->catalog}) {
+
+                my $perm = $item->perm;
+                $perm =~ s/^h/-/;
+                $item->perm($perm);
+            }
+
+            # removes root entry (''); do not use sorted_list
+            my @prefixes = grep { length } %{$subindex->catalog};
+
+            # keep top level prefixes
+            s{^([^/]+).*$}{$1}s for @prefixes;
+
+            # squash identical values
+            my @unique = uniq @prefixes;
+
+            # unwanted top-level common prefix
+            my $unwanted = EMPTY;
+
+            # check for a single common value
+            if (@unique == 1) {
+                my $common = $unique[0];
+
+                my $conflict = $subindex->lookup($common);
+
+                # use only if there is no directory with that name
+                $unwanted = $common
+                  unless defined $conflict && $conflict->perm =~ /^d/;
+            }
+
+            # inserts missing directories; must occur afterwards
+            $subindex->load;
+
+            # keep common prefix when equal to the source component
+            unless ($unwanted eq $component) {
+                $subindex->drop_common_prefix;
+                $subindex->drop_basedir_segment;
+            }
+
+            $index->merge_in($subindex);
+
+            $self->tag('unpack-message-for-orig', $_)
+              for split(/\n/, $combined_errors);
+        }
 
         return $index;
     });
