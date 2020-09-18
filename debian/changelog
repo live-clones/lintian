@@ -1,8 +1,40 @@
-lintian (2.94.0+git) UNRELEASED; urgency=medium
+lintian (2.95.0) unstable; urgency=medium
 
-  * WIP (generated at release time: please do not add entries below).
+  * Summary of tag changes:
+    + Added:
+      - no-debian-changes
+      - source-contains-cmake-cache-file
+      - source-contains-debian-substvars
+    + Removed:
+      - empty-debian-diff
+      - missing-versioned-depends-on-init-system-helpers
+    + Renamed:
+      - diff-contains-arch-control-dir -> debian-adds-arch-control-dir
+        (etc.)
 
- -- Chris Lamb <lamby@debian.org>  Fri, 11 Sep 2020 09:32:50 +0100
+  [ Chris Lamb ]
+  * Clarify which Vcs-* the vcs-field-not-canonical tag is being emitted
+    for, and update its long description to remove misleading messages.
+    (Closes: #970201)
+
+  [ Felix Lechner ]
+  * Remove the obsolete
+    scripts-missing-versioned-depends-on-init-system-helpers-without tag.
+    (Closes: #932378)
+  * Repurpose diff-contains-* tags to work on all Debian changes in other
+    formats.
+
+  [ Pino Toscano ]
+  * Also detect duplicate Debian menu files for games.
+
+  [ Sebastian Ramacher ]
+  * Mark libavresample-dev from ffmpeg as being obsolete in favour of
+    libswresample-dev.
+
+  [ Xavier Guimard ]
+  * Fix the search for pkg-js-tools tests.
+
+ -- Chris Lamb <lamby@debian.org>  Fri, 18 Sep 2020 09:46:19 +0000
 
 lintian (2.94.0) unstable; urgency=medium
 
