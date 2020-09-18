@@ -123,10 +123,10 @@ has orig => (
             }
 
             # removes root entry (''); do not use sorted_list
-            my @prefixes = grep { length } %{$subindex->catalog};
+            my @prefixes = grep { m{/} } %{$subindex->catalog};
 
             # keep top level prefixes
-            s{^([^/]+).*$}{$1}s for @prefixes;
+            s{^([^/]+)/.*$}{$1}s for @prefixes;
 
             # squash identical values
             my @unique = uniq @prefixes;
@@ -149,7 +149,7 @@ has orig => (
             $subindex->load;
 
             # keep common prefix when equal to the source component
-            unless ($unwanted eq $component) {
+            if ($unwanted ne $component) {
                 $subindex->drop_common_prefix;
                 $subindex->drop_basedir_segment;
             }
