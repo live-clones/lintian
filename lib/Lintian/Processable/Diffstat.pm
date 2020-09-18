@@ -111,8 +111,8 @@ has diffstat => (
         my @lines = split(/\n/, $stdout);
         for my $line (@lines) {
 
-            return
-              unless $line =~ s/\|\s+([^|]*)\s*$//;
+            next
+              unless $line =~ s/\|\s*([^|]*)\s*$//;
 
             my $stats = $1;
             my $file = $line;
