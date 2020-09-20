@@ -22,7 +22,7 @@ use warnings;
 use utf8;
 use autodie;
 
-use Lintian::Index::Control;
+use Lintian::Index;
 
 use constant SLASH => q{/};
 
@@ -58,8 +58,20 @@ has control => (
     default => sub {
         my ($self) = @_;
 
-        my $index = Lintian::Index::Control->new;
+        my $index = Lintian::Index->new;
         $index->basedir($self->basedir . SLASH . 'control');
+
+        # control files are not installed relative to the system root
+        # disallow absolute paths and symbolic links
+
+        my @command = (qw(dpkg-deb --ctrl-tarfile), $self->path);
+        my ($extract_errors, $index_errors)
+          = $index->create_from_piped_tar(\@command);
+
+        $index->load;
+
+        $self->tag('unpack-message-for-deb-control', $_)
+          for split(/\n/, $extract_errors . $index_errors);
 
         return $index;
     });

@@ -126,25 +126,6 @@ sub init {
     return;
 }
 
-=item unpack
-
-=cut
-
-sub unpack {
-    my ($self) = @_;
-
-    my $patched_errors = $self->patched->collect($self->path);
-    $self->tag('unpack-message-for-source', $_)
-      for split(/\n/, $patched_errors);
-
-    $self->add_diffstat;
-
-    $self->orig->collect($self->basedir, $self->components)
-      unless $self->native;
-
-    return;
-}
-
 =back
 
 =head1 AUTHOR

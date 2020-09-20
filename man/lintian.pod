@@ -227,7 +227,8 @@ Please specify both if you want both.
 
 Print explanatory information about each problem discovered in
 addition to the lintian error tags. To print a long tag description
-without running lintian, see L<lintian-info(1)>.
+without running lintian, see L<lintian-explain-tags(1)> or check
+the website at https://lintian.debian.org.
 
 This option overrides B<info> variable in the configuration file.
 
@@ -792,7 +793,7 @@ If you discover any other bugs in lintian, please contact the authors.
 
 =head1 SEE ALSO
 
-L<lintian-info(1)>, Lintian User Manual
+L<lintian-explain-tags(1)>, Lintian User Manual
 (/usr/share/doc/lintian/lintian.html)
 
 Packaging tools: L<debhelper(7)>, L<dh_make(8)>,

@@ -34,7 +34,7 @@ use autodie;
 
 use Carp qw(croak);
 use File::Basename qw(basename);
-use List::MoreUtils qw(any firstval);
+use List::MoreUtils qw(any first_value);
 use Path::Tiny;
 
 use Lintian::Data;
@@ -59,8 +59,6 @@ use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
-
-our $LIBTOOL = Lintian::Relation->new('libtool | dh-autoreconf');
 
 # load data for md5sums based check
 sub _md5sum_based_lintian_data {
@@ -315,7 +313,7 @@ my $GFDL_FRAGMENTS = Lintian::Data->new(
 
 # Directory checks.  These regexes match a directory that shouldn't be in the
 # source package and associate it with a tag (minus the leading
-# source-contains or diff-contains).  Note that only one of these regexes
+# source-contains or debian-adds).  Note that only one of these regexes
 # should trigger for any single directory.
 my @directory_checks = (
     [qr,^(.+/)?CVS/?$,        => 'cvs-control-dir'],
@@ -335,10 +333,8 @@ my @directory_checks = (
 
 # File checks.  These regexes match files that shouldn't be in the source
 # package and associate them with a tag (minus the leading source-contains or
-# diff-contains).  Note that only one of these regexes should trigger for any
-# given file.  If the third column is a true value, don't issue this tag
-# unless the file is included in the diff; it's too common in source packages
-# and not important enough to worry about.
+# debian-adds).  Note that only one of these regexes should trigger for any
+# given file.
 my @file_checks = (
     [qr,^(.+/)?svn-commit\.(.+\.)?tmp$, => 'svn-commit-file'],
     [qr,^(.+/)?svk-commit.+\.tmp$,      => 'svk-commit-file'],
@@ -346,424 +342,314 @@ my @file_checks = (
     [qr,^(.+/)?\.hgtags$,               => 'hg-tags-file'],
     [qr,^(.+/)?\.\#(.+?)\.\d+(\.\d+)*$, => 'cvs-conflict-copy'],
     [qr,^(.+/)?(.+?)\.(r[1-9]\d*)$,     => 'svn-conflict-file'],
-    [qr,\.(orig|rej)$,                  => 'patch-failure-file', 1],
-    [qr,((^|/)\.[^/]+\.swp|~)$,         => 'editor-backup-file', 1],
+    [qr,\.(orig|rej)$,                  => 'patch-failure-file'],
+    [qr,((^|/)[^/]+\.swp|~)$,           => 'editor-backup-file'],
 );
+
+# Check if the package build-depends on autotools-dev, automake,
+# or libtool.
+my $LIBTOOL = Lintian::Relation->new('libtool | dh-autoreconf');
+has libtool_in_build_depends => (
+    is => 'rw',
+    lazy => 1,
+    default => sub {
+        my ($self) = @_;
+
+        return $self->processable->relation('Build-Depends-All')
+          ->implies($LIBTOOL);
+    });
+
+has group_ships_examples => (
+    is => 'rw',
+    lazy => 1,
+    default => sub {
+        my ($self) = @_;
+
+        my @processables = $self->group->get_processables('binary');
+
+        # assume shipped examples if there is a package so named
+        return 1
+          if any { $_->name =~ m{-examples$} } @processables;
+
+        my @shipped = map { $_->installed->sorted_list } @processables;
+
+        # Check each package for a directory (or symlink) called "examples".
+        return 1
+          if any { m{^usr/share/doc/(.+/)?examples/?$} } @shipped;
+
+        return 0;
+    });
+
+sub visit_patched_files {
+    my ($self, $item) = @_;
+
+    my $banned = $NON_DISTRIBUTABLE_FILES->value($item->md5sum);
+    if (defined $banned) {
+        my $usualname = $banned->{'name'};
+        my $reason = $banned->{'reason'};
+        my $link = $banned->{'link'};
+
+        $self->tag(
+            'license-problem-md5sum-non-distributable-file',
+            $item->name, "usual name is $usualname.",
+            $reason, "See also $link."
+        );
+    }
+
+    my $nonfree = $NON_FREE_FILES->value($item->md5sum);
+    if (defined $nonfree) {
+        my $usualname = $nonfree->{'name'};
+        my $reason = $nonfree->{'reason'};
+        my $link = $nonfree->{'link'};
+
+        $self->tag(
+            'license-problem-md5sum-non-free-file',
+            $item->name, "usual name is $usualname.",
+            $reason, "See also $link."
+        );
+    }
+
+    # Check for CMake cache files.  These embed the source path and hence
+    # will cause FTBFS on buildds, so they should never be present
+    $self->tag('source-contains-cmake-cache-file', $item->name)
+      if $item->basename eq 'CMakeCache.txt';
+
+    $self->tag('source-contains-debian-substvars', $item->name)
+      if $item->name =~ m{^debian/(?:.+\.)?substvars$}s;
+
+    # check full text problem
+    $self->full_text_check($item)
+      if $item->is_file;
+
+    # waf is not allowed
+    if ($item->basename =~ /\bwaf$/) {
+        my $marker = 0;
+        open(my $fd, '<', $item->unpacked_path);
+        while (my $line = <$fd>) {
+            next unless $line =~ m/^#/;
+            if ($marker && $line =~ m/^#BZ[h0][0-9]/) {
+                $self->tag('source-contains-waf-binary', $item->name);
+                last;
+            }
+            $marker = 1 if $line =~ m/^#==>/;
+
+            # We could probably stop here, but just in case
+            $marker = 0 if $line =~ m/^#<==/;
+        }
+        close($fd);
+    }
+
+    # .chm files are usually generated by non-free software
+    if (   $item->basename =~ /\.chm$/i
+        && $item->file_info eq 'MS Windows HtmlHelp Data'
+        && $item->is_open_ok
+        && index($item->bytes, 'Halibut,') == -1) {
+        $self->tag('source-contains-prebuilt-ms-help-file', $item->name);
+    }
+
+    # Ensure we have a README.source for R data files
+    if (   $item->basename =~ m,\.(?:rda|Rda|rdata|Rdata|RData)$,
+        && $item->is_file
+        && $item->is_open_ok
+        && $item->file_info =~ /gzip compressed data/
+        && !$self->processable->patched->resolve_path('debian/README.source')){
+        my $fd = open_gz($item->unpacked_path);
+        read($fd, my $magic, 4);
+        close($fd);
+        $self->tag('r-data-without-readme-source', $item->name)
+          if $magic eq 'RDX2';
+    }
+
+    if (   $item->name =~ m,configure.(in|ac)$,
+        && $item->is_file
+        && $item->is_open_ok) {
+        open(my $fd, '<', $item->unpacked_path);
+        while (my $line = <$fd>) {
+            next if $line =~ m{^\s*dnl};
+            $self->tag('autotools-pkg-config-macro-not-cross-compilation-safe',
+                $item->name, "(line $.)")
+              if $line=~ m{AC_PATH_PROG\s*\([^,]+,\s*\[?pkg-config\]?\s*,};
+        }
+        close($fd);
+    }
+
+    # Lena Söderberg image
+    if ($item->basename =~ /\blenn?a\b/i) {
+        if(    $item->file_info =~ /\bimage\b/i
+            or $item->file_info =~ /^Matlab v\d+ mat/i
+            or $item->file_info =~ /\bbitmap\b/i
+            or $item->file_info =~ /^PDF Document\b/i
+            or $item->file_info =~ /^Postscript Document\b/i) {
+            $self->tag('license-problem-non-free-img-lenna', $item->name)
+              unless $LENNA_WHITELIST->known($item->md5sum);
+        }
+    }
+
+    # warn by file type
+    foreach my $tag_filetype ($WARN_FILE_TYPE->all) {
+        my $warn_data = $WARN_FILE_TYPE->value($tag_filetype);
+        my $regtype = $warn_data->{'regtype'};
+        if($item->file_info =~ m{$regtype}) {
+            my $regname = $warn_data->{'regname'};
+            if($item->name =~ m{$regname}) {
+                $self->tag($tag_filetype, $item->name);
+                if($warn_data->{'checkmissing'}) {
+                    my %hash;
+                    $hash{$_->[1]} = $_->[0]
+                      for @{$warn_data->{'transform'} // []};
+                    $self->tag('source-is-missing', $item->name)
+                      unless $self->find_source($item, \%hash);
+                }
+            }
+        }
+    }
+
+    # here we check old upstream specification
+    # debian/upstream should be a directory
+    if (   $item->name eq 'debian/upstream'
+        || $item->name eq 'debian/upstream-metadata.yaml') {
+        $self->tag('debian-upstream-obsolete-path', $item->name);
+    }
+
+    if (   $item->name eq 'debian/README.source'
+        && $item->is_file
+        && $item->is_open_ok) {
+        my $contents = $item->bytes;
+        if (
+            index($contents,
+                'You WILL either need to modify or delete this file') >= 0
+        ) {
+            $self->tag('readme-source-is-dh_make-template');
+        }
+    }
+
+    if (   $item->name =~ m{^debian/(README.source|copyright|rules|control)$}
+        && $item->is_file
+        && $item->is_open_ok) {
+        open(my $fd, '<', $item->unpacked_path);
+        while (my $line = <$fd>) {
+            next unless $line =~ m/(?<!")(FIX_?ME)(?!")/;
+            $self->tag('file-contains-fixme-placeholder',
+                $item->name . ":$. $1");
+        }
+    }
+
+    # Find mentioning of usr/lib/perl5 inside the packaging
+    if ($item->name =~ m{^debian/}) {
+        my $short = $item->basename;
+
+        # Skip symlinks and other nasty stuff as well as
+        # debian/changelog
+        if (   $short ne 'changelog'
+            && $item->name !~ m{^debian/patches/.*$}
+            && $item->name !~ m{^debian/(?:.+\.)?install$}
+            && $item->is_file
+            && $item->is_open_ok) {
+            my $contents = $item->bytes;
+
+            # ignore comments
+            $contents =~ s/#.*$//m;
+            if (index($contents, 'usr/lib/perl5') >= 0) {
+                $self->tag('mentions-deprecated-usr-lib-perl5-directory',
+                    $short);
+            }
+        }
+    }
+
+    $self->tag('source-contains-prebuilt-doxygen-documentation',$item->dirname)
+      if $item->basename =~ m{^doxygen.(?:png|sty)$}
+      and $self->processable->source ne 'doxygen';
+
+    # Tests of autotools files are a special case.  Ignore
+    # debian/config.cache as anyone doing that probably knows what
+    # they're doing and is using it as part of the build.
+    if ($item->basename =~ m{\A config.(?:cache|log|status) \Z}xsm) {
+        if ($item->dirname ne 'debian') {
+            $self->tag('configure-generated-file-in-source', $item->name);
+        }
+    }elsif ($item->basename eq 'ltconfig'
+        and not $self->libtool_in_build_depends) {
+        $self->tag('ancient-libtool', $item->name);
+    }elsif ($item->basename eq 'ltmain.sh'
+        and not $self->libtool_in_build_depends){
+        open(my $fd, '<', $item->unpacked_path);
+        while (<$fd>) {
+            if (/^VERSION=[\"\']?(1\.(\d)\.(\d+)(?:-(\d))?)/) {
+                my ($version, $major, $minor, $debian)=($1, $2, $3, $4);
+                if ($major < 5 or ($major == 5 and $minor < 2)) {
+                    $self->tag('ancient-libtool', $item->name, $version);
+                }elsif ($minor == 2 and (!$debian || $debian < 2)) {
+                    $self->tag('ancient-libtool', $item->name, $version);
+                }
+                last;
+            }
+        }
+        close($fd);
+    }
+
+    $self->tag('package-does-not-install-examples', $item)
+      if $item->basename eq 'examples'
+      && $item->dirname !~ m{(?:^|/)(?:vendor|third_party)/}
+      && !$self->group_ships_examples;
+
+    return;
+}
 
 sub source {
     my ($self) = @_;
 
-    my $processable = $self->processable;
+    my @added_by_debian;
+    my $prefix;
+    if ($self->processable->native) {
 
-    # Check if the package build-depends on autotools-dev, automake,
-    # or libtool.
-    my $ltinbd= $processable->relation('Build-Depends-All')->implies($LIBTOOL);
-    my %warned;
-    # Assume the package to be non-native if the field is not present.
-    # - while 1.0 is more likely in this case, Lintian will probably get
-    #   better results by checking debfiles/ rather than looking for a diffstat
-    #   that may not be present.
-    my $format = $processable->fields->value('Format') || '3.0 (quilt)';
+        @added_by_debian = $self->processable->patched->sorted_list;
+        $prefix = 'source-contains';
 
-    if ($format =~ /^\s*2\.0\s*\z/ or $format =~ /^\s*3\.0\s*\(quilt|git\)/) {
-        $self->check_debian_dir(\%warned);
-    }elsif (not $processable->native) {
-        $self->check_diffstat(\%warned);
+    } else {
+        my $patched = $self->processable->patched;
+        my $orig = $self->processable->orig;
+
+        @added_by_debian
+          = grep { !defined $orig->lookup($_->name) } $patched->sorted_list;
+
+        # remove root quilt control folder and all paths in it
+        # created when 3.0 (quilt) source packages are unpacked
+        @added_by_debian = grep { $_->name !~ m{^.pc/} } @added_by_debian
+          if $self->processable->source_format eq '3.0 (quilt)';
+
+        my @common_items
+          = grep { defined $orig->lookup($_->name) } $patched->sorted_list;
+        my @touched_by_debian
+          = grep { $_->md5sum ne $orig->lookup($_->name)->md5sum }
+          @common_items;
+
+        $self->tag('no-debian-changes')
+          unless @added_by_debian || @touched_by_debian;
+
+        $prefix = 'debian-adds';
     }
 
-    $self->find_cruft(\%warned, $ltinbd);
+    # ignore lintian test set; should use automatic loop in the future
+    @added_by_debian = grep { $_->name !~ m{^t/} } @added_by_debian
+      if $self->processable->source eq 'lintian';
 
-    return;
-}
+    my @directories = grep { $_->is_dir } @added_by_debian;
+    for my $directory (@directories) {
 
-# -----------------------------------
-
-# Check the diff for problems.  Record any files we warn about in $warned so
-# that we don't warn again when checking the full unpacked source.  Takes the
-# name of a file containing diffstat output.
-sub check_diffstat {
-    my ($self, $warned) = @_;
-
-    my $saw_file;
-    open(my $fd, '<', $self->processable->diffstat);
-    local $_;
-    while (<$fd>) {
-        my ($file) = (m,^\s+(.*?)\s+\|,)
-          or die "syntax error in diffstat file: $_";
-        $saw_file = 1;
-
-        # Check for CMake cache files.  These embed the source path and hence
-        # will cause FTBFS on buildds, so they should never be touched in the
-        # diff.
-        if (    $file =~ m,(?:^|/)CMakeCache.txt\z,
-            and $file !~ m,(?:^|/)debian/,){
-            $self->tag('diff-contains-cmake-cache-file', $file);
-        }
-
-        # For everything else, we only care about diffs that add files.  If
-        # the file is being modified, that's not a problem with the diff and
-        # we'll catch it later when we check the source.  This regex doesn't
-        # catch only file adds, just any diff that doesn't remove lines from a
-        # file, but it's a good guess.
-        next unless m,\|\s+\d+\s+\++$,;
-
-        # diffstat output contains only files, but we consider the directory
-        # checks to trigger if the diff adds any files in those directories.
-        my ($directory) = ($file =~ m,^(.*)/[^/]+$,);
-        if ($directory and not $warned->{$directory}) {
-            for my $rule (@directory_checks) {
-                if ($directory =~ /$rule->[0]/) {
-                    $self->tag("diff-contains-$rule->[1]", $directory);
-                    $warned->{$directory} = 1;
-                }
-            }
-        }
-
-        # Now the simpler file checks.
-        for my $rule (@file_checks) {
-            if ($file =~ /$rule->[0]/) {
-                $self->tag("diff-contains-$rule->[1]", $file);
-                $warned->{$file} = 1;
-            }
-        }
-
-        # Additional special checks only for the diff, not the full source.
-        if ($file =~ m@^debian/(?:.+\.)?substvars$@) {
-            $self->tag('diff-contains-substvars', $file);
-        }
+        my $rule = first_value { $directory->name =~ /$_->[0]/s }
+        @directory_checks;
+        $self->tag("${prefix}-$rule->[1]", $directory->name)
+          if defined $rule;
     }
-    close($fd);
 
-    # If there was nothing in the diffstat output, there was nothing in the
-    # diff, which is probably a mistake.
-    $self->tag('empty-debian-diff') unless $saw_file;
-    return;
-}
+    my @files = grep { $_->is_file } @added_by_debian;
+    for my $file (@files) {
 
-# Check the debian directory for problems.  This is used for Format: 2.0 and
-# 3.0 (quilt) packages where there is no Debian diff and hence no diffstat
-# output.  Record any files we warn about in $warned so that we don't warn
-# again when checking the full unpacked source.
-sub check_debian_dir {
-    my ($self, $warned) = @_;
-
-    my $processable = $self->processable;
-
-    my $droot = $processable->patched->resolve_path('debian/');
-    return if not $droot;
-
-    my @worklist = $droot->children;
-
-    # Check for unwanted directories and files.  This really
-    # duplicates the find_cruft function and we should find a way to
-    # combine them.
-
-  ENTRY:
-    while (my $entry = shift(@worklist)) {
-        my $name     = $entry->name;
-
-        if ($entry->is_dir) {
-            # Remove the trailing slash (historically we never
-            # included the slash for these tags and there is no
-            # particular reason to change that now).
-            $name     = substr($name,     0, -1);
-
-            for my $rule (@directory_checks) {
-                if ($name =~ /$rule->[0]/) {
-                    $self->tag("diff-contains-$rule->[1]", $name);
-                    $warned->{$name} = 1;
-                }
-            }
-            push(@worklist, $entry->children);
-        } else {
-
-            for my $rule (@file_checks) {
-                if ($name =~ /$rule->[0]/) {
-                    $self->tag("diff-contains-$rule->[1]", $entry);
-                    $warned->{$name} = 1;
-                }
-            }
-
-            # Additional special checks only for the diff, not the
-            # full source.
-            if ($name =~ m@^debian/(?:.+\.)?substvars$@o) {
-                $self->tag('diff-contains-substvars', $entry);
-            }
-        }
+        my $rule = first_value { $file->name =~ /$_->[0]/s } @file_checks;
+        $self->tag("${prefix}-$rule->[1]", $file->name)
+          if defined $rule;
     }
-    return;
-}
 
-# testset exception
-sub istestset {
-    my ($dirname) = @_;
-    return $dirname
-      =~ m{ (:?\A|/) t (?: est (?: s (?: et)?+ )?+ )?+ (?: \Z | /)}xsm;
-}
-
-# Check each file in the source package for problems.  By the time we get to
-# this point, we've already checked the diff and warned about anything added
-# there, so we only warn about things that weren't in the diff here.
-#
-# Report problems with native packages using the "diff-contains" rather than
-# "source-contains" tag.  The tag isn't entirely accurate, but it's better
-# than creating yet a third set of tags, and this gets the severity right.
-sub find_cruft {
-    my ($self, $warned, $ltinbd) = @_;
-
-    my $processable = $self->processable;
-
-    my $prefix = ($processable->native ? 'diff-contains' : 'source-contains');
-    my @worklist;
-    my $ships_examples = _ships_examples($self->group);
-
-    # start with the top-level dirs
-    push(@worklist, $processable->patched->lookup->children);
-
-  ENTRY:
-    while (my $entry = shift(@worklist)) {
-        my $name     = $entry->name;
-        my $basename = $entry->basename;
-        my $dirname = $entry->dirname;
-        my $file_info;
-        my $istestsetdir = istestset($dirname);
-
-        if ($entry->is_dir) {
-
-            # Remove the trailing slash (historically we never
-            # included the slash for these tags and there is no
-            # particular reason to change that now).
-            $name     = substr($name,     0, -1);
-
-            # Ignore the .pc directory and its contents, created as
-            # part of the unpacking of a 3.0 (quilt) source package.
-
-            # NB: this catches all .pc dirs (regardless of depth).  If you
-            # change that, please check we have a
-            # "source-contains-quilt-control-dir" tag.
-            next if $basename eq '.pc';
-
-            if (not $istestsetdir and not $warned->{$name}) {
-                for my $rule (@directory_checks) {
-                    if ($basename =~ /$rule->[0]/) {
-                        $self->tag("${prefix}-$rule->[1]", $name);
-
-                        # At most one rule will match
-                        last;
-                    }
-                }
-                $self->tag('package-does-not-install-examples', $entry)
-                  if $basename eq 'examples'
-                  and $dirname !~ m{(?:^|/)(?:vendor|third_party)/}
-                  and not $ships_examples;
-            }
-
-            push(@worklist, $entry->children);
-            next ENTRY;
-        }
-
-        # we just need normal files for the rest
-        next ENTRY unless $entry->is_file;
-        # avoid lintian testset
-        next ENTRY
-          if $self->processable->source eq 'lintian' && $istestsetdir;
-
-        # check non free file
-        my $md5sum = $processable->patched->lookup($name)->md5sum;
-        if(
-            $self->md5sum_based_check(
-                $name, $md5sum, $NON_DISTRIBUTABLE_FILES,
-                'license-problem-md5sum-non-distributable-file'
-            )
-        ) {
-            next ENTRY;
-        }
-        unless ($processable->is_non_free) {
-            $self->md5sum_based_check($name, $md5sum, $NON_FREE_FILES,
-                'license-problem-md5sum-non-free-file');
-        }
-
-        $file_info = $entry->file_info;
-
-        # check full text problem
-        $self->full_text_check($entry, $name, $basename,$dirname);
-
-        # waf is not allowed
-        if ($basename =~ /\bwaf$/) {
-            my $marker = 0;
-            open(my $fd, '<', $entry->unpacked_path);
-            while (my $line = <$fd>) {
-                next unless $line =~ m/^#/;
-                if ($marker && $line =~ m/^#BZ[h0][0-9]/) {
-                    $self->tag('source-contains-waf-binary', $name);
-                    last;
-                }
-                $marker = 1 if $line =~ m/^#==>/;
-
-                # We could probably stop here, but just in case
-                $marker = 0 if $line =~ m/^#<==/;
-            }
-            close($fd);
-        }
-
-        # .chm files are usually generated by non-free software
-        if (   $basename =~ /\.chm$/i
-            && $file_info eq 'MS Windows HtmlHelp Data'
-            && $entry->is_open_ok
-            && index($entry->bytes, 'Halibut,') == -1) {
-            $self->tag('source-contains-prebuilt-ms-help-file', $name);
-        }
-
-        # Ensure we have a README.source for R data files
-        if (   $basename =~ m,\.(?:rda|Rda|rdata|Rdata|RData)$,
-            && $entry->is_file
-            && $entry->is_open_ok
-            && $file_info =~ /gzip compressed data/
-            && !$processable->patched->resolve_path('debian/README.source')) {
-            my $fd = open_gz($entry->unpacked_path);
-            read($fd, my $magic, 4);
-            close($fd);
-            $self->tag('r-data-without-readme-source', $name)
-              if $magic eq 'RDX2';
-        }
-
-        if (   $name =~ m,configure.(in|ac)$,
-            && $entry->is_file
-            && $entry->is_open_ok) {
-            open(my $fd, '<', $entry->unpacked_path);
-            while (my $line = <$fd>) {
-                next if $line =~ m{^\s*dnl};
-                $self->tag(
-                    'autotools-pkg-config-macro-not-cross-compilation-safe',
-                    $name, "(line $.)")
-                  if $line=~ m{AC_PATH_PROG\s*\([^,]+,\s*\[?pkg-config\]?\s*,};
-            }
-            close($fd);
-        }
-
-        # Lena Söderberg image
-        if ($basename =~ /\blenn?a\b/i) {
-            if(    $file_info =~ /\bimage\b/i
-                or $file_info =~ /^Matlab v\d+ mat/i
-                or $file_info =~ /\bbitmap\b/i
-                or $file_info =~ /^PDF Document\b/i
-                or $file_info =~ /^Postscript Document\b/i) {
-                $self->tag('license-problem-non-free-img-lenna', $name)
-                  unless $LENNA_WHITELIST->known($md5sum);
-            }
-
-        }
-
-        next ENTRY if $istestsetdir;
-
-        # warn by file type
-        foreach my $tag_filetype ($WARN_FILE_TYPE->all) {
-            my $warn_data = $WARN_FILE_TYPE->value($tag_filetype);
-            my $regtype = $warn_data->{'regtype'};
-            if($file_info =~ m{$regtype}) {
-                my $regname = $warn_data->{'regname'};
-                if($name =~ m{$regname}) {
-                    $self->tag($tag_filetype, $name);
-                    if($warn_data->{'checkmissing'}) {
-                        my %hash;
-                        $hash{$_->[1]} = $_->[0]
-                          for @{$warn_data->{'transform'} // []};
-                        $self->tag('source-is-missing', $entry->name)
-                          unless $self->find_source($entry, \%hash);
-                    }
-                }
-            }
-        }
-
-        # here we check old upstream specification
-        # debian/upstream should be a directory
-        if (   $name eq 'debian/upstream'
-            || $name eq 'debian/upstream-metadata.yaml') {
-            $self->tag('debian-upstream-obsolete-path', $name);
-        }
-
-        if (   $name eq 'debian/README.source'
-            && $entry->is_file
-            && $entry->is_open_ok) {
-            my $contents = $entry->bytes;
-            if (
-                index($contents,
-                    'You WILL either need to modify or delete this file') >= 0
-            ) {
-                $self->tag('readme-source-is-dh_make-template');
-            }
-        }
-
-        if (   $name =~ m{^debian/(README.source|copyright|rules|control)$}
-            && $entry->is_file
-            && $entry->is_open_ok) {
-            open(my $fd, '<', $entry->unpacked_path);
-            while (my $line = <$fd>) {
-                next unless $line =~ m/(?<!")(FIX_?ME)(?!")/;
-                $self->tag('file-contains-fixme-placeholder', "$name:$. $1");
-            }
-        }
-
-        # Find mentioning of usr/lib/perl5 inside the packaging
-        if ($name =~ m{^debian/}) {
-            my $short = $entry->basename;
-
-            # Skip symlinks and other nasty stuff as well as
-            # debian/changelog
-            if (   $short ne 'changelog'
-                && $name !~ m{^debian/patches/.*$}
-                && $name !~ m{^debian/(?:.+\.)?install$}
-                && $entry->is_file
-                && $entry->is_open_ok) {
-                my $contents = $entry->bytes;
-
-                # ignore comments
-                $contents =~ s/#.*$//m;
-                if (index($contents, 'usr/lib/perl5') >= 0) {
-                    $self->tag('mentions-deprecated-usr-lib-perl5-directory',
-                        $short);
-                }
-            }
-        }
-
-        $self->tag('source-contains-prebuilt-doxygen-documentation', $dirname)
-          if $basename =~ m{^doxygen.(?:png|sty)$}
-          and $self->processable->source ne 'doxygen';
-
-        unless ($warned->{$name}) {
-            for my $rule (@file_checks) {
-                next if ($rule->[2] and not $processable->native);
-                if ($basename =~ /$rule->[0]/) {
-                    $self->tag("${prefix}-$rule->[1]", $name);
-                }
-            }
-        }
-
-        # Tests of autotools files are a special case.  Ignore
-        # debian/config.cache as anyone doing that probably knows what
-        # they're doing and is using it as part of the build.
-        if ($basename =~ m{\A config.(?:cache|log|status) \Z}xsm) {
-            if ($dirname ne 'debian') {
-                $self->tag('configure-generated-file-in-source', $name);
-            }
-        }elsif ($basename eq 'ltconfig' and not $ltinbd) {
-            $self->tag('ancient-libtool', $name);
-        }elsif ($basename eq 'ltmain.sh', and not $ltinbd) {
-            open(my $fd, '<', $entry->unpacked_path);
-            while (<$fd>) {
-                if (/^VERSION=[\"\']?(1\.(\d)\.(\d+)(?:-(\d))?)/) {
-                    my ($version, $major, $minor, $debian)=($1, $2, $3, $4);
-                    if ($major < 5 or ($major == 5 and $minor < 2)) {
-                        $self->tag('ancient-libtool', $name, $version);
-                    }elsif ($minor == 2 and (!$debian || $debian < 2)) {
-                        $self->tag('ancient-libtool', $name, $version);
-                    }
-                    last;
-                }
-            }
-            close($fd);
-        }
-    }
     return;
 }
 
@@ -845,7 +731,7 @@ sub find_source {
     my @found = grep { defined } @candidates;
 
     # careful with behavior around empty arrays
-    my $source = firstval { $_->name ne $file->name } @found;
+    my $source = first_value { $_->name ne $file->name } @found;
 
     return $source;
 }
@@ -854,28 +740,26 @@ sub find_source {
 # note that it does not replace licensecheck(1)
 # and is only used for autoreject by ftp-master
 sub full_text_check {
-    my ($self, $entry, $name, $basename, $dirname) = @_;
-
-    my $processable = $self->processable;
+    my ($self, $item) = @_;
 
     # license string in debian/changelog are probably just change
     # Ignore these strings in d/README.{Debian,source}.  If they
     # appear there it is probably just "file XXX got removed
     # because of license Y".
-    if (   $name eq 'debian/changelog'
-        or $name eq 'debian/README.Debian'
-        or $name eq 'debian/README.source') {
+    if (   $item->name eq 'debian/changelog'
+        or $item->name eq 'debian/README.Debian'
+        or $item->name eq 'debian/README.source') {
         return;
     }
 
-    open(my $fd, '<:raw', $entry->unpacked_path);
+    open(my $fd, '<:raw', $item->unpacked_path);
     # check only text files
     unless (-T $fd) {
         close($fd);
         return;
     }
 
-    my $ishtml = ($basename =~ m,\.(?:x?html?\d?|xht)$,i);
+    my $ishtml = ($item->basename =~ m,\.(?:x?html?\d?|xht)$,i);
     my $skiphtml = 0;
 
     # some js file comments are really really long
@@ -896,9 +780,10 @@ sub full_text_check {
         # permission to distribute those.
         if(
             $self->license_check(
-                $name,$basename,$NON_DISTRIBUTABLE_LICENSES,$block,
-                $blocknumber,\$cleanedblock,\%matchedkeyword,
-                \%licenseproblemhash
+                $item->name,$item->basename,
+                $NON_DISTRIBUTABLE_LICENSES,$block,
+                $blocknumber,\$cleanedblock,
+                \%matchedkeyword,\%licenseproblemhash
             )
         ){
             last BLOCK;
@@ -906,26 +791,24 @@ sub full_text_check {
 
         # Skip the rest of the license checks for non-free
         # sections.
-        if ($processable->is_non_free) {
+        if ($self->processable->is_non_free) {
             next BLOCK;
         }
 
-        $self->license_check($name,$basename,$NON_FREE_LICENSES,$block,
+        $self->license_check($item->name,$item->basename,$NON_FREE_LICENSES,
+            $block,
             $blocknumber,\$cleanedblock, \%matchedkeyword,
             \%licenseproblemhash);
 
         # check html
         if($ishtml && !$skiphtml) {
-            if(
-                $self->check_html_cruft($entry, $name,
-                    $basename,$dirname,$block,$blocknumber) < 0
-            ) {
+            if($self->check_html_cruft($item, $block,$blocknumber) < 0) {
                 $skiphtml = 1;
             }
         }
         # check only in block 0
         if($blocknumber == 0) {
-            $self->search_in_block0($entry, $name, $basename, $dirname,$block);
+            $self->search_in_block0($item, $block);
         }
     }
     close($fd);
@@ -934,7 +817,7 @@ sub full_text_check {
 
 # check javascript in html file
 sub check_html_cruft {
-    my ($self, $entry, $name,$basename,$dirname,$block,$blocknumber)=@_;
+    my ($self, $item, $block, $blocknumber) = @_;
 
     my $blockscript = $block;
     my $indexscript;
@@ -951,7 +834,7 @@ sub check_html_cruft {
                 !~ m,\$(?:doxygenversion|projectname|projectnumber|projectlogo)\b,
             ){
                 $self->tag('source-contains-prebuilt-doxygen-documentation',
-                    $entry);
+                    $item);
                 return -1;
             }
         }
@@ -967,7 +850,7 @@ sub check_html_cruft {
         # extract script
         if($blockscript =~ m,<script[^>]*?>(.*?)</script>,sm) {
             $blockscript = substr($blockscript,$+[0]);
-            if($self->check_js_script($entry,$name,$basename,$dirname,$1)) {
+            if($self->check_js_script($item, $1)) {
                 return 0;
             }
             next;
@@ -978,8 +861,7 @@ sub check_html_cruft {
         # then skip
         if($blockscript =~ m,\A<script[^>]*?>,sm) {
             $blockscript = substr($blockscript,$+[0]);
-            $self->check_js_script($entry,$name,$basename,$dirname,
-                $blockscript);
+            $self->check_js_script($item, $blockscript);
         }
         return 0;
     }
@@ -988,7 +870,7 @@ sub check_html_cruft {
 
 # check if js script is minified
 sub check_js_script {
-    my ($self, $entry, $name,$basename,$dirname,$lcscript) = @_;
+    my ($self, $item, $lcscript) = @_;
 
     my $firstline = EMPTY;
     foreach (split /\n/, $lcscript) {
@@ -1003,9 +885,10 @@ sub check_js_script {
         my $extract = $1;
         $extract =~ s/^\s+|\s+$//g;
         $self->tag('embedded-script-includes-copyright-statement',
-            $name,'extract of copyright statement:',$extract);
+            $item->name,'extract of copyright statement:',$extract);
     }
-    return $self->linelength_test($entry,$name,$basename,$dirname,$lcscript);
+
+    return $self->linelength_test($item, $lcscript);
 }
 
 # check if file is javascript but not minified
@@ -1021,36 +904,36 @@ sub _is_javascript_but_not_minified {
 
 # search something in block $0
 sub search_in_block0 {
-    my ($self, $entry, $name, $basename, $dirname, $block) = @_;
+    my ($self, $item, $block) = @_;
 
-    if(_is_javascript_but_not_minified($name)) {
+    if(_is_javascript_but_not_minified($item->name)) {
         # exception sphinx documentation
-        if($basename eq 'searchindex.js') {
+        if($item->basename eq 'searchindex.js') {
             if($block =~ m/\A\s*search\.setindex\s* \s* \(\s*\{/xms) {
                 $self->tag('source-contains-prebuilt-sphinx-documentation',
-                    $dirname);
+                    $item->dirname);
                 return;
             }
         }
-        if($basename eq 'search_index.js') {
+        if($item->basename eq 'search_index.js') {
             if($block =~ m/\A\s*var\s*search_index\s*=/xms) {
                 $self->tag('source-contains-prebuilt-pandoc-documentation',
-                    $dirname);
+                    $item->dirname);
                 return;
             }
         }
         # false positive in dx package at least
-        elsif($basename eq 'srchidx.js') {
+        elsif($item->basename eq 'srchidx.js') {
             if($block =~ m/\A\s*profiles \s* = \s* new \s* Array\s*\(/xms) {
                 return;
             }
         }
         # see #745152
         # Be robust check also .js
-        elsif($basename eq 'deployJava.js') {
+        elsif($item->basename eq 'deployJava.js') {
             if($block =~ m/(?:\A|\v)\s*var\s+deployJava\s*=\s*function/xmsi) {
-                $self->tag('source-is-missing', $entry->name)
-                  unless $self->find_source($entry,
+                $self->tag('source-is-missing', $item->name)
+                  unless $self->find_source($item,
                     {'.txt' => '(?i)\.js$', '' => EMPTY});
                 return;
             }
@@ -1066,7 +949,7 @@ sub search_in_block0 {
         }
 
         # now search hidden minified
-        $self->linelength_test($entry, $name, $basename, $dirname,$block);
+        $self->linelength_test($item, $block);
     }
     # search link rel header
     if(index($block,' rel="copyright" ') > -1) {
@@ -1079,7 +962,7 @@ sub search_in_block0 {
             foreach my $badcopyrighttag ($BAD_LINK_COPYRIGHT->all) {
                 my $regex =  $BAD_LINK_COPYRIGHT->value($badcopyrighttag);
                 if($copyrighttarget =~ m{$regex}) {
-                    $self->tag($badcopyrighttag, $name);
+                    $self->tag($badcopyrighttag, $item->name);
                     last;
                 }
             }
@@ -1090,17 +973,18 @@ sub search_in_block0 {
 
 # warn about prebuilt javascript and check missing source
 sub warn_prebuilt_javascript{
-    my ($self, $entry, $name, $basename, $dirname,$linelength,$cutoff) = @_;
+    my ($self, $item, $linelength,$cutoff) = @_;
 
     my $extratext
       =  'line length is '.int($linelength)." characters (>$cutoff)";
-    $self->tag('source-contains-prebuilt-javascript-object',$name,$extratext);
+    $self->tag('source-contains-prebuilt-javascript-object',
+        $item->name,$extratext);
     # Check for missing source.  It will check
     # for the source file in well known directories
-    if($basename =~ m,\.js$,i) {
-        $self->tag('source-is-missing', $entry->name, $extratext)
+    if ($item->basename =~ m{\.js$}i) {
+        $self->tag('source-is-missing', $item->name, $extratext)
           unless $self->find_source(
-            $entry,
+            $item,
             {
                 '.debug.js' => '(?i)\.js$',
                 '-debug.js' => '(?i)\.js$',
@@ -1108,8 +992,8 @@ sub warn_prebuilt_javascript{
             });
     } else  {
         # html file
-        $self->tag('source-is-missing', $entry->name, $extratext)
-          unless $self->find_source($entry, {'.fragment.js' => '$'});
+        $self->tag('source-is-missing', $item->name, $extratext)
+          unless $self->find_source($item, {'.fragment.js' => '$'});
     }
     return;
 }
@@ -1152,7 +1036,7 @@ sub _strip_c_comments {
 
 # detect browserified javascript (comment are removed here and code is stripped)
 sub detect_browserify {
-    my ($self, $entry, $name, $basename, $dirname, $block) = @_;
+    my ($self, $item, $block) = @_;
 
     $block =~ s,\n, ,msg;
     foreach my $browserifyregex ($BROWSERIFY_REGEX->all) {
@@ -1160,7 +1044,7 @@ sub detect_browserify {
         if($block =~ m{$regex}) {
             my $extra = (defined $1) ? 'code fragment:'.$1 : EMPTY;
             $self->tag('source-contains-browserified-javascript',
-                $name, $extra);
+                $item->name, $extra);
             last;
         }
     }
@@ -1169,7 +1053,7 @@ sub detect_browserify {
 
 # try to detect non human source based on line length
 sub linelength_test {
-    my ($self, $entry, $name, $basename, $dirname, $block) = @_;
+    my ($self, $item, $block) = @_;
 
     my $linelength = 0;
     my $line;
@@ -1181,7 +1065,7 @@ sub linelength_test {
     if($linelength) {
         $self->tag(
             'very-long-line-length-in-source-file',
-            $name,'line length is',
+            $item->name,'line length is',
             int($linelength),'characters (>'.VERY_LONG_LINE_LENGTH.')'
         );
         # clean up jslint craps line
@@ -1203,15 +1087,15 @@ sub linelength_test {
         $block =~ s/\n\Z//m;
 
         # detect browserification
-        $self->detect_browserify($entry, $name, $basename, $dirname, $block);
+        $self->detect_browserify($item, $block);
 
         # retry very long line length test now: likely minified
         ($linelength)
           = _linelength_test_maxlength($block,VERY_LONG_LINE_LENGTH);
 
         if($linelength) {
-            $self->warn_prebuilt_javascript($entry, $name, $basename,
-                $dirname,$linelength,VERY_LONG_LINE_LENGTH);
+            $self->warn_prebuilt_javascript($item, $linelength,
+                VERY_LONG_LINE_LENGTH);
             return 1;
         }
     }
@@ -1228,7 +1112,7 @@ sub linelength_test {
     $nextblock = $strip;
 
     # detect browserified
-    $self->detect_browserify($entry, $name, $basename, $dirname, $nextblock);
+    $self->detect_browserify($item, $nextblock);
 
     while(length($nextblock)) {
         # check line above > SAFE_LINE_LENGTH
@@ -1240,8 +1124,8 @@ sub linelength_test {
         }
         # compute number of ;
         if(($line =~ tr/;/;/) > 1) {
-            $self->warn_prebuilt_javascript($entry, $name, $basename,
-                $dirname,$linelength,SAFE_LINE_LENGTH);
+            $self->warn_prebuilt_javascript($item, $linelength,
+                SAFE_LINE_LENGTH);
             return 1;
         }
     }
@@ -1399,10 +1283,8 @@ sub php_source_whitelist {
         %matchedhash
     )= @_;
 
-    my $processable = $self->processable;
-
     my $copyright_path
-      = $processable->patched->resolve_path('debian/copyright');
+      = $self->processable->patched->resolve_path('debian/copyright');
     if (    $copyright_path
         and $copyright_path->bytes
         =~ m{^Source: https?://pecl.php.net/package/.*$}m) {
@@ -1555,22 +1437,6 @@ sub lc_block {
     return $_ = lc($_);
 }
 
-# check based on md5sums
-sub md5sum_based_check {
-    my ($self, $name, $md5sum, $data, $tag) = @_;
-    if (my $datavalue = $data->value($md5sum)) {
-        my $usualname= $datavalue->{'name'};
-        my $reason= $datavalue->{'reason'};
-        my $link= $datavalue->{'link'};
-        $self->tag($tag, $name,'usual name is',
-            "$usualname.", "$reason", "See also $link.");
-
-        # should be stripped so pass other test
-        return 1;
-    }
-    return 0;
-}
-
 # check bad license
 sub license_check {
     my (
@@ -1651,22 +1517,6 @@ sub license_check {
         }
     }
     return $ret;
-}
-
-sub _ships_examples {
-    my ($group) = @_;
-    my @procs = $group->get_processables('binary');
-    return 1 if not @procs;
-    foreach my $binpkg (@procs) {
-        my $name = $binpkg->name;
-        # If we have an -examples package, assume we ship examples.
-        return 1 if $name =~ m{-examples$};
-        my @files = $binpkg->installed->sorted_list;
-        # Check each package for a directory (or symlink) called "examples".
-        return 1
-          if any { m{^usr/share/doc/(.+/)?examples/?$} } @files;
-    }
-    return 0;
 }
 
 1;

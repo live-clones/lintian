@@ -120,3 +120,6 @@ dh-systemd => use debhelper (>= 9.20160709)
 # Adobe Flash
 mtasc
 libjs-swfobject
+
+# Deprecated in stretch
+libavresample-dev => libswresample-dev

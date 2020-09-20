@@ -1,6 +1,8 @@
-Tag: diff-contains-cvs-control-dir
+Tag: debian-adds-cvs-control-dir
 Severity: warning
 Check: cruft
+Renamed-From:
+ diff-contains-cvs-control-dir
 Explanation: The Debian diff or native package contains files in a CVS directory.
  These are usually artifacts of the revision control system used by the
  Debian maintainer and not useful in a diff or native package.

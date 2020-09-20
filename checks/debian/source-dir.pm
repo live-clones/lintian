@@ -65,7 +65,7 @@ sub source {
     }
     if ($format eq '1.0') {
         $format_extra .= ' ' if $format_extra;
-        if ($processable->diffstat) {
+        if (keys %{$processable->diffstat}) {
             $format_extra .= 'non-native';
         } else {
             $format_extra .= 'native';

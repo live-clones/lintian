@@ -102,8 +102,13 @@ sub source {
     if(     $seen_nodejs
         and not $override_test
         and not $seen_dh_dynamic) {
-        my $filename = 'debian/tests/pkg-js/test';
-        my $path = $processable->patched->resolve_path($filename);
+        my ($filename,$path);
+        # pkg-js-tools search build test in the following order
+        foreach (qw(debian/nodejs/test debian/tests/pkg-js/test)) {
+            $filename = $_;
+            $path = $processable->patched->resolve_path($filename);
+            last if $path;
+        }
         # Ensure test file contains something
         if ($path) {
             $self->tag('pkg-js-tools-test-is-empty', $filename)

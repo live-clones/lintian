@@ -12,7 +12,7 @@ This document aims to give an overview of the Lintian internals
 and is intended for people, who wants to develop or work on Lintian.
 
 For how to use Lintian, please refer to the (other) README, the manual
-pages lintian(1) and lintian-info(1) or the User Manual.
+page lintian(1) or the User Manual.
 
 =head1 DESCRIPTION
 

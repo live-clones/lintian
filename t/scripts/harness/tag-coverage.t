@@ -62,6 +62,7 @@ my @known_missing = (qw(
       patch-modifying-debian-files
       patch-system-but-direct-changes-in-diff
       quilt-series-references-non-existent-patch
+      source-contains-quilt-control-dir
       sphinxdoc-but-no-sphinxdoc-depends
       unpack-message-for-deb-control
       unpack-message-for-orig

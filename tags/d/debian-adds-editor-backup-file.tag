@@ -1,6 +1,8 @@
-Tag: diff-contains-editor-backup-file
+Tag: debian-adds-editor-backup-file
 Severity: warning
 Check: cruft
+Renamed-From:
+ diff-contains-editor-backup-file
 Explanation: The Debian diff or native package contains a file ending in
  <code>~</code> or of the form <code>.xxx.swp</code>, which is normally either an
  Emacs or vim backup file or a backup file created by programs such as

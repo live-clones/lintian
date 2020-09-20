@@ -417,6 +417,7 @@ sub verify_line {
 
     if (defined($command)) {
         $command =~ s@^(?:usr/)?s?bin/@@;
+        $command =~ s@^usr/games/@@;
         if ($desktop_cmds->{$command}) {
             $self->tag('command-in-menu-file-and-desktop-file',
                 $command,"${fullname}:${linecount}");

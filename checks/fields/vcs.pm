@@ -262,7 +262,7 @@ sub always {
                 &$canonify($canonicalized, $tag);
             }
 
-            $self->tag($tag, $parts[0], $canonicalized)
+            $self->tag($tag, $fieldname, $parts[0], $canonicalized)
               unless $canonicalized eq $parts[0];
         }
 

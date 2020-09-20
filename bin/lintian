@@ -432,10 +432,6 @@ my @CONFIG_DIRS = grep { -d }
   grep { length }
   map { realpath($_) } ($ENV{LINTIAN_BASE}, @{$selected{'include-dir'}});
 
-my @HELPER_DIRS = grep { -d } map { "$_/helpers" } @CONFIG_DIRS;
-
-$ENV{LINTIAN_HELPER_DIRS} = join(COLON, @HELPER_DIRS);
-
 my @CLOSE_AT_END;
 my $OUTPUT = Lintian::Output::EWI->new;
 my $received_signal;

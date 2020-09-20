@@ -1,6 +1,8 @@
-Tag: diff-contains-arch-control-dir
+Tag: debian-adds-arch-control-dir
 Severity: warning
 Check: cruft
+Renamed-From:
+ diff-contains-arch-control-dir
 Explanation: The Debian diff or native package contains files in an {arch} or
  .arch-ids directory or a directory starting with <code>,,</code> (used by baz
  for debugging traces). These are usually artifacts of the revision

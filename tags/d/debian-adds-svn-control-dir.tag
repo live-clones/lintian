@@ -1,7 +1,9 @@
-Tag: diff-contains-hg-control-dir
+Tag: debian-adds-svn-control-dir
 Severity: warning
 Check: cruft
-Explanation: The Debian diff or native package contains files in a .hg
+Renamed-From:
+ diff-contains-svn-control-dir
+Explanation: The Debian diff or native package contains files in an .svn
  directory. These are usually artifacts of the revision control system
  used by the Debian maintainer and not useful in a diff or native package.
  <code>dpkg-source</code> will automatically exclude these if it is passed

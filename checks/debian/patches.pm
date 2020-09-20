@@ -78,23 +78,8 @@ sub source {
           unless defined $readme;
     }
 
-    my @direct_changes;
-
-    my @lines = path($self->processable->diffstat)->lines_utf8({chomp => 1});
-    for my $line (@lines) {
-
-        my $file = $line;
-        $file =~ s{\s+\|.*$}{}s;
-
-        # trim both ends
-        $file =~ s/^\s+|\s+$//g;
-
-        die "syntax error in diffstat file: $line"
-          unless length $file;
-
-        push(@direct_changes, $file) unless $file =~ m{^debian/};
-    }
-
+    my @direct_changes
+      = grep { !m{^debian/} } keys %{$self->processable->diffstat};
     if (@direct_changes) {
 
         my $files = $direct_changes[0];

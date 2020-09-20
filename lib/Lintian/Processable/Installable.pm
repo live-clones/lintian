@@ -64,13 +64,6 @@ Native heuristics are only available in source packages.
 sub unpack {
     my ($self) = @_;
 
-    my $data_errors = $self->installed->collect($self->path);
-    $self->tag('unpack-message-for-deb-data', $_)for split(/\n/, $data_errors);
-
-    my $control_errors = $self->control->collect($self->path);
-    $self->tag('unpack-message-for-deb-control', $_)
-      for split(/\n/, $control_errors);
-
     # cause parsing of concatenated data
     $self->objdump_info;
 
