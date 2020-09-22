@@ -67,7 +67,6 @@ sub unpack {
     # cause parsing of concatenated data
     $self->objdump_info;
 
-    $self->add_changelog;
     $self->add_copyright;
 
     return;

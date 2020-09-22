@@ -34,7 +34,6 @@ use Moo;
 use namespace::clean;
 
 with
-  'Lintian::Processable::Binary::Changelog',
   'Lintian::Processable::Binary::Class',
   'Lintian::Processable::Binary::Copyright',
   'Lintian::Processable::Binary::Relation',
