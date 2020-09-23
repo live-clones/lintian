@@ -318,11 +318,11 @@ sub always {
 
         $self->tag('wrong-vcs-location-for-dpmt')
           if $maintainer =~ m{python-modules-team\@lists\.alioth\.debian\.org}
-          and $uri !~ m{salsa.debian.org/python-team/modules/.+};
+          and $uri !~ m{salsa.debian.org/python-team/packages/.+};
 
         $self->tag('wrong-vcs-location-for-papt')
           if $maintainer =~ m{python-apps-team\@lists\.alioth\.debian\.org}
-          and $uri !~ m{salsa.debian.org/python-team/applications/.+};
+          and $uri !~ m{salsa.debian.org/python-team/packages/.+};
     }
 
     $self->tag('vcs-fields-use-more-than-one-vcs',
