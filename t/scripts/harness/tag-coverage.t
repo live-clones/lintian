@@ -67,8 +67,8 @@ my @known_missing = (qw(
       unpack-message-for-deb-control
       unpack-message-for-orig
       uses-deprecated-adttmp
-      wrong-vcs-location-for-dpmt
-      wrong-vcs-location-for-papt
+      old-dpmt-vcs
+      old-papt-vcs
       ),
 
 # the following tags are not testable due to restrictions in reprotest
