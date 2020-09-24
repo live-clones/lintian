@@ -55,8 +55,8 @@ sub source {
       if $is_list && !$self->processable->fields->exists('Uploaders');
 
     $self->tag('papt-dmpt-merged')
-        if $maintainer =~ m{python-modules-team\@lists\.alioth\.debian\.org}
-        or $maintainer =~ m{python-apps-team\@lists\.alioth\.debian\.org};
+      if $maintainer =~ m{python-modules-team\@lists\.alioth\.debian\.org}
+      or $maintainer =~ m{python-apps-team\@lists\.alioth\.debian\.org};
 
     return;
 }
