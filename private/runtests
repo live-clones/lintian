@@ -559,13 +559,17 @@ if (-t STDOUT && !$unattended) {
       if @crashed;
 
     for my $absolutepath (@crashed) {
+
         my $scriptpath = abs2rel($absolutepath);
         my $workpath = dirname($scriptpath);
+        my $logpath = "$workpath/log";
+
+        next
+          unless -e $logpath;
 
         say EMPTY;
         say "Log for test $scriptpath:";
 
-        my $logpath = "$workpath/log";
         my $log = path($logpath)->slurp;
         print $log;
     }
