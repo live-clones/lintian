@@ -34,11 +34,10 @@ use POSIX qw(ENOENT);
 use Time::HiRes qw(gettimeofday tv_interval);
 use Time::Piece;
 
-use Lintian::Processable::Binary;
+use Lintian::Processable::Installable;
 use Lintian::Processable::Buildinfo;
 use Lintian::Processable::Changes;
 use Lintian::Processable::Source;
-use Lintian::Processable::Udeb;
 use Lintian::Util qw(human_bytes);
 
 use constant EMPTY => q{};
@@ -167,10 +166,12 @@ sub add_processable_from_file {
 
     } elsif ($file =~ /\.d?deb$/) {
         # in ubuntu, automatic dbgsym packages end with .ddeb
-        $processable = Lintian::Processable::Binary->new;
+        $processable = Lintian::Processable::Installable->new;
+        $processable->type('binary');
 
     } elsif ($file =~ /\.udeb$/) {
-        $processable = Lintian::Processable::Udeb->new;
+        $processable = Lintian::Processable::Installable->new;
+        $processable->type('udeb');
 
     } elsif ($file =~ /\.changes$/) {
         $processable = Lintian::Processable::Changes->new;

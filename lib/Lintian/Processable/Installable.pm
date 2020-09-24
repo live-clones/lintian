@@ -16,7 +16,7 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-package Lintian::Processable::Binary;
+package Lintian::Processable::Installable;
 
 use v5.20;
 use warnings;
@@ -34,8 +34,8 @@ use Moo;
 use namespace::clean;
 
 with
-  'Lintian::Processable::Binary::Class',
-  'Lintian::Processable::Binary::Relation',
+  'Lintian::Processable::Installable::Class',
+  'Lintian::Processable::Installable::Relation',
   'Lintian::Processable::Changelog',
   'Lintian::Processable::Control',
   'Lintian::Processable::Control::Conffiles',
@@ -50,18 +50,18 @@ with
 
 =head1 NAME
 
-Lintian::Processable::Binary -- A deb installation package Lintian can process
+Lintian::Processable::Installable -- An installation package Lintian can process
 
 =head1 SYNOPSIS
 
- use Lintian::Processable::Binary;
+ use Lintian::Processable::Installable;
 
- my $processable = Lintian::Processable::Binary->new;
+ my $processable = Lintian::Processable::Installable->new;
  $processable->init('path');
 
 =head1 DESCRIPTION
 
-This class represents a 'deb' file that Lintian can process. Objects
+This class represents a 'deb' or 'udeb' file that Lintian can process. Objects
 of this kind are often part of a L<Lintian::Group>, which
 represents all the files in a changes or buildinfo file.
 
@@ -85,7 +85,6 @@ sub init {
       unless -e $file;
 
     $self->path($file);
-    $self->type('binary');
 
     my $section = get_deb_info($self->path)
       or croak 'could not read control data in ' . $self->path . ": $!";

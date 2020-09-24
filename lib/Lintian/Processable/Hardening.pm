@@ -36,7 +36,6 @@ Lintian::Processable::Hardening - access to collected hardening data
 =head1 SYNOPSIS
 
     use Lintian::Processable;
-    my $processable = Lintian::Processable::Binary->new;
 
 =head1 DESCRIPTION
 

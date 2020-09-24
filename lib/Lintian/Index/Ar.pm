@@ -41,8 +41,7 @@ Lintian::Index::Ar - binary symbol information.
 
 =head1 SYNOPSIS
 
-    use Lintian::Processable;
-    my $processable = Lintian::Processable::Binary->new;
+    use Lintian::Index;
 
 =head1 DESCRIPTION
 

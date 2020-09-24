@@ -309,15 +309,13 @@ Substantial portions written by Russ Allbery <rra@debian.org> for Lintian.
 
 lintian(1)
 
-L<Lintian::Processable::Binary>
+L<Lintian::Processable::Installable>
 
 L<Lintian::Processable::Buildinfo>
 
 L<Lintian::Processable::Changes>,
 
 L<Lintian::Processable::Source>
-
-L<Lintian::Processable::Udeb>
 
 L<Lintian::Group>
 

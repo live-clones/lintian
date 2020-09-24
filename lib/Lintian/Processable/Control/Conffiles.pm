@@ -34,7 +34,6 @@ Lintian::Processable::Control::Conffiles - access to collected control data for 
 =head1 SYNOPSIS
 
     use Lintian::Processable;
-    my $processable = Lintian::Processable::Binary->new;
 
 =head1 DESCRIPTION
 

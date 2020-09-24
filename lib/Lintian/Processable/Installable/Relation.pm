@@ -1,5 +1,5 @@
 # -*- perl -*-
-# Lintian::Processable::Binary::Relation -- interface to binary package data collection
+# Lintian::Processable::Installable::Relation -- interface to binary package data collection
 
 # Copyright © 2008, 2009 Russ Allbery
 # Copyright © 2008 Frank Lichtenheld
@@ -19,7 +19,7 @@
 # You should have received a copy of the GNU General Public License along with
 # this program.  If not, see <http://www.gnu.org/licenses/>.
 
-package Lintian::Processable::Binary::Relation;
+package Lintian::Processable::Installable::Relation;
 
 use v5.20;
 use warnings;
@@ -35,16 +35,16 @@ use namespace::clean;
 
 =head1 NAME
 
-Lintian::Processable::Binary::Relation - Lintian interface to binary package data collection
+Lintian::Processable::Installable::Relation - Lintian interface to binary package data collection
 
 =head1 SYNOPSIS
 
     my ($name, $type, $dir) = ('foobar', 'binary', '/path/to/lab-entry');
-    my $collect = Lintian::Processable::Binary::Relation->new($name);
+    my $collect = Lintian::Processable::Installable::Relation->new($name);
 
 =head1 DESCRIPTION
 
-Lintian::Processable::Binary::Relation provides an interface to package data for binary
+Lintian::Processable::Installable::Relation provides an interface to package data for binary
 packages.  It implements data collection methods specific to binary
 packages.
 
