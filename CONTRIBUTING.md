@@ -26,6 +26,35 @@ fields in the `debian/control` file.
 [salsa]: https://salsa.debian.org/
 [lintian-fork]: https://salsa.debian.org/lintian/lintian/forks/new
 
+## Running the testsuite
+
+Before running the tests, you need to be build the test packages in a separate
+step:
+
+    $ private/build-test-packages
+
+You can then run the entire testsuite using:
+
+    $ private/runtests
+
+... but you can also run all the tests that use a particular tag using, for
+example:
+
+    $ private/runtests --onlyrun=tag:papt-dmpt-merged
+
+... or you can run of the tests associated with a particular "check" file. For
+example, if you have been modifying `checks/files/ieee-data.pm`, you can limit
+your test run to the related changes using:
+
+    $ private/runtests --onlyrun=check:files/ieee-data
+
+(Note the lack of `checks/` suffix and `.pm` suffix.)
+
+Lastly, you can test Perl formatting using:
+
+    $ private/runtests --onlyrun=suite:scripts
+
+
 ## API Docs, tutorials and the test suite documentation
 
 We also have some short tutorials in our API docs.  You can compile
@@ -53,30 +82,6 @@ current development version of Lintian.  Instead, it is the API of
 Lintian when it was last updated on the Lintian web site.
 
 [online-api-docs]: https://lintian.debian.org/library-api/index.html
-
-## Making changes
-
- * Make commits of logical units
- * Add a test for your change - especially if you introduce a new tag
-   (run with: `debian/rules runtests onlyrun=<testname>`)
- * Check the changes for style issues
-   (`debian/rules runtests onlyrun=suite:scripts`)
- * Check the changes against the test suite
-   (`debian/rules runtests`)
- * Please format the commit messages with a short synopsis and (optionally) a long description.
-
-An example commit message might be:
-
-    Add =encoding to the POD in Lintian::Collect
-
-    We use a UTF-8 section symbol, and the current version of Pod::Simple
-    therefore requires explicitly declaring the character set.`
-
-For more on best practices on Git commit messages, please review
-[A Note About Git Commit Messages][tbaggery-git-commit] for inspiration.
-
-
-[tbaggery-git-commit]: http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html
 
 ## Submitting changes
 
