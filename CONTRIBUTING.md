@@ -28,6 +28,8 @@ fields in the `debian/control` file.
 
 ## Running the testsuite
 
+You can find the packages needed to run the testsuite in `debian/tests/control`.
+
 Before running the tests, you need to be build the test packages in a separate
 step:
 
