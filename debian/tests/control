@@ -34,7 +34,6 @@ Depends:
  libtext-diff-perl,
  libtext-template-perl,
  mingw-w64-tools,
- pkg-js-tools,
  pkg-php-tools,
  python3,
  python3-dev,
