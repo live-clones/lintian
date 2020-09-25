@@ -1,0 +1,4 @@
+Skeleton: source-native
+Testname: python-modules-team
+Description: Maintained by Debian Python Modules Team (superseded by Debian Python Team)
+Author: Debian Python Modules Team <python-modules-team@lists.alioth.debian.org>

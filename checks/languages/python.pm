@@ -1,6 +1,7 @@
 # languages/python -- lintian check script -*- perl -*-
 #
 # Copyright © 2016 Chris Lamb
+# Copyright © 2020 Louis-Philippe Véronneau <pollo@debian.org>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -91,6 +92,11 @@ sub source {
     $self->tag('build-depends-on-python-sphinx-only')
       if $build_all->implies('python-sphinx')
       and not $build_all->implies('python3-sphinx');
+
+    my $maintainer = $self->processable->fields->value('Maintainer');
+    $self->tag('python-teams-merged', $maintainer)
+      if $maintainer =~ m{python-modules-team\@lists\.alioth\.debian\.org}
+      || $maintainer =~ m{python-apps-team\@lists\.alioth\.debian\.org};
 
     $self->tag(
         'alternatively-build-depends-on-python-sphinx-and-python3-sphinx')

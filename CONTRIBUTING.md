@@ -40,7 +40,7 @@ You can then run the entire testsuite using:
 ... but you can also run all the tests that use a particular tag using, for
 example:
 
-    $ private/runtests --onlyrun=tag:papt-dmpt-merged
+    $ private/runtests --onlyrun=tag:python-teams-merged
 
 ... or you can run of the tests associated with a particular "check" file. For
 example, if you have been modifying `checks/files/ieee-data.pm`, you can limit

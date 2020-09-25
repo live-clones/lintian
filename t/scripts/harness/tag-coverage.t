@@ -69,7 +69,6 @@ my @known_missing = (qw(
       uses-deprecated-adttmp
       old-dpmt-vcs
       old-papt-vcs
-      papt-dmpt-merged
       ),
 
 # the following tags are not testable due to restrictions in reprotest
