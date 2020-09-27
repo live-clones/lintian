@@ -38,6 +38,7 @@ use Unicode::UTF8 qw(valid_utf8 decode_utf8);
 use Lintian::Data ();
 use Lintian::Inspect::Changelog;
 use Lintian::Inspect::Changelog::Version;
+use Lintian::IPC::Run3 qw(safe_qx);
 use Lintian::Relation::Version qw(versions_gt);
 use Lintian::Spelling qw(check_spelling);
 
@@ -285,81 +286,77 @@ sub binary {
     my $processable = $self->processable;
     my $group = $self->group;
 
-    my $found_html = 0;
-    my $found_text = 0;
-    my ($native_pkg, $foreign_pkg, @doc_files);
+    my $is_symlink = 0;
+    my $native_pkg;
+    my $foreign_pkg;
+    my @doc_files;
 
     # skip packages which have a /usr/share/doc/$pkg -> foo symlink
+    my $docfile = $processable->installed->lookup("usr/share/doc/$pkg");
     return
-      if  $processable->installed->lookup("usr/share/doc/$pkg")
-      and $processable->installed->lookup("usr/share/doc/$pkg")->is_symlink;
+      if defined $docfile && $docfile->is_symlink;
 
-    if (my $docdir = $processable->installed->lookup("usr/share/doc/$pkg/")) {
-        for my $path ($docdir->children) {
-            my $basename = $path->basename;
+    # trailing slash in indicates a directory
+    my $docdir = $processable->installed->lookup("usr/share/doc/$pkg/");
+    @doc_files = grep { $_->is_file || $_->is_symlink } $docdir->children
+      if defined $docdir;
+    my @news_files
+      = grep { $_->basename =~ m{\A NEWS\.Debian (?:\.gz)? \Z}ixsm }@doc_files;
 
-            next unless $path->is_file or $path->is_symlink;
+    $self->tag('debian-news-file-not-compressed', $_->basename)
+      for grep { $_->basename !~ m{\.gz$} } @news_files;
 
-            push(@doc_files, $basename);
+    $self->tag('wrong-name-for-debian-news-file', $_->basename)
+      for grep { $_->basename =~ m{\.gz$} && $_->basename ne 'NEWS.Debian.gz' }
+      @news_files;
 
-            # Check a few things about the NEWS.Debian file.
-            if ($basename =~ m{\A NEWS\.Debian (?:\.gz)? \Z}ixsm) {
-                if ($basename !~ m{ \.gz \Z }xsm) {
-                    $self->tag('debian-news-file-not-compressed', $path->name);
-                } elsif ($basename ne 'NEWS.Debian.gz') {
-                    $self->tag('wrong-name-for-debian-news-file', $path->name);
-                }
-            }
+    my @changelog_files = grep {
+        $_->basename =~ m{\A changelog (?:\.html|\.Debian)? (?:\.gz)? \Z}xsm
+    } @doc_files;
 
-            # Check if changelog files are compressed with gzip -9.
-            # It's a bit of an open question here what we should do
-            # with a file named ChangeLog.  If there's also a
-            # changelog file, it might be a duplicate, or the packager
-            # may have installed NEWS as changelog intentionally.
-            next
-              unless $basename =~ m{\A changelog (?:\.html|\.Debian)?
-                                       (?:\.gz)? \Z}xsm;
+    # ubuntu permits symlinks; their profile suppresses the tag
+    $self->tag('debian-changelog-file-is-a-symlink', $_->basename)
+      for grep { $_->is_symlink } @changelog_files;
 
-            if ($basename !~ m{ \.gz \Z}xsm) {
-                $self->tag('changelog-file-not-compressed', $basename);
-            } else {
-                my $max_compressed = 0;
-                my $file_info = $path->file_info;
-                if ($path->is_symlink) {
-                    my $normalized = $path->link_normalized;
-                    if (length $normalized) {
-                        $file_info = $path->file_info;
-                    }
-                }
-                if (defined($file_info)) {
-                    if (index($file_info, 'max compression') != -1) {
-                        $max_compressed = 1;
-                    }
-                    if (not $max_compressed
-                        and index($file_info, 'gzip compressed') != -1) {
-                        $self->tag(
-                            'changelog-not-compressed-with-max-compression',
-                            $basename);
-                    }
-                }
-            }
+    $self->tag('changelog-file-not-compressed', $_->basename)
+      for grep { $_->basename !~ m{ \.gz \Z}xsm } @changelog_files;
 
-            if (   $basename eq 'changelog.html'
-                or $basename eq 'changelog.html.gz') {
-                $found_html = 1;
-            } elsif ($basename eq 'changelog' or $basename eq 'changelog.gz') {
-                $found_text = 1;
-            }
-        }
+    # Check if changelog files are compressed with gzip -9.
+    # It's a bit of an open question here what we should do
+    # with a file named ChangeLog.  If there's also a
+    # changelog file, it might be a duplicate, or the packager
+    # may have installed NEWS as changelog intentionally.
+    for my $path (@changelog_files) {
+
+        next
+          unless $path->basename =~ m{ \.gz \Z}xsm;
+
+        my $resolved = $path->resolve_path;
+        next
+          unless defined $resolved;
+
+        $self->tag('changelog-not-compressed-with-max-compression',
+            $path->basename)
+          unless $resolved->file_info =~ /max compression/;
     }
 
-    # Check a NEWS.Debian file if we have one.  Save the parsed version of the
-    # file for later checks against the changelog file.
-    my $news;
-    my $dnews = path($processable->basedir)->child('NEWS.Debian')->stringify;
-    if (-f $dnews) {
+    my $found_html = 0;
+    $found_html = 1
+      if any { $_->basename =~ /^changelog\.html(?:\.gz)?$/ } @changelog_files;
 
-        my $bytes = path($dnews)->slurp;
+    my $found_text = 0;
+    $found_text = 1
+      if any { $_->basename =~ /^changelog(?:\.gz)?$/ } @changelog_files;
+
+    my $packagepath = 'usr/share/doc/' . $self->processable->name;
+    my $packagenewspath
+      = $self->processable->installed->resolve_path(
+        "$packagepath/NEWS.Debian.gz");
+
+    my $news;
+    if (defined $packagenewspath && $packagenewspath->is_file) {
+
+        my $bytes = safe_qx('gunzip', '-c', $packagenewspath->unpacked_path);
 
         # another check complains about invalid encoding
         if (valid_utf8($bytes)) {
@@ -423,13 +420,13 @@ sub binary {
 
     if ($native_pkg) {
         # native Debian package
-        if (any { m/^changelog(?:\.gz)?$/} @doc_files) {
+        if (any { m/^changelog(?:\.gz)?$/} map { $_->basename } @doc_files) {
             # everything is fine
         } elsif (
             my $chg = first {
                 m/^changelog\.debian(?:\.gz)$/i;
             }
-            @doc_files
+            map { $_->basename } @doc_files
         ) {
             $self->tag('wrong-name-for-changelog-of-native-package',
                 "usr/share/doc/$pkg/$chg");
@@ -445,12 +442,15 @@ sub binary {
 
         # 1. check for upstream changelog
         my $found_upstream_text_changelog = 0;
-        if (any { m/^changelog(\.html)?(?:\.gz)?$/ } @doc_files) {
+        if (
+            any { m/^changelog(\.html)?(?:\.gz)?$/ }
+            map { $_->basename } @doc_files
+        ) {
             $found_upstream_text_changelog = 1 unless $1;
             # everything is fine
         } else {
             # search for changelogs with wrong file name
-            for (@doc_files) {
+            for (map { $_->basename } @doc_files) {
                 if (m/^change/i and not m/debian/i) {
                     $self->tag('wrong-name-for-upstream-changelog',
                         "usr/share/doc/$pkg/$_");
@@ -460,13 +460,16 @@ sub binary {
         }
 
         # 2. check for Debian changelog
-        if (any { m/^changelog\.Debian(?:\.gz)?$/ } @doc_files) {
+        if (
+            any { m/^changelog\.Debian(?:\.gz)?$/ }
+            map { $_->basename } @doc_files
+        ) {
             # everything is fine
         } elsif (
             my $chg = first {
                 m/^changelog\.debian(?:\.gz)?$/i;
             }
-            @doc_files
+            map { $_->basename } @doc_files
         ) {
             $self->tag('wrong-name-for-debian-changelog-file',
                 "usr/share/doc/$pkg/$chg");
@@ -489,25 +492,12 @@ sub binary {
         }
     }
 
-    my $dchpath = path($processable->basedir)->child('changelog')->stringify;
-    # Everything below involves opening and reading the changelog file, so bail
-    # with a warning at this point if all we have is a symlink.  Ubuntu permits
-    # such symlinks, so their profile will suppress this tag.
-    if (-l $dchpath) {
-        $self->tag('debian-changelog-file-is-a-symlink');
-        return;
-    }
-
-    # Bail at this point if the changelog file doesn't exist.  We will have
-    # already warned about this.
-    unless (-f $dchpath) {
-        return;
-    }
-
-    # check that changelog is UTF-8 encoded
-    my $bytes = path($dchpath)->slurp;
+    my $dchpath = $self->processable->changelog_path;
+    return
+      unless length $dchpath;
 
     # another check complains about invalid encoding
+    my $bytes = path($dchpath)->slurp;
     return
       unless valid_utf8($bytes);
 

@@ -38,8 +38,7 @@ Lintian::Index::Strings - strings in binary files.
 
 =head1 SYNOPSIS
 
-    use Lintian::Processable;
-    my $processable = Lintian::Processable::Binary->new;
+    use Lintian::Index;
 
 =head1 DESCRIPTION
 

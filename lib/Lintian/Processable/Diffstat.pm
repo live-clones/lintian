@@ -41,7 +41,6 @@ Lintian::Processable::Diffstat - access to collected diffstat data
 =head1 SYNOPSIS
 
     use Lintian::Processable;
-    my $processable = Lintian::Processable::Binary->new;
 
 =head1 DESCRIPTION
 

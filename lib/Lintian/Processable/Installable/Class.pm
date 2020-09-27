@@ -1,5 +1,5 @@
 # -*- perl -*-
-# Lintian::Processable::Binary::Class -- interface to binary package data collection
+# Lintian::Processable::Installable::Class -- interface to binary package data collection
 
 # Copyright © 2008, 2009 Russ Allbery
 # Copyright © 2008 Frank Lichtenheld
@@ -19,7 +19,7 @@
 # You should have received a copy of the GNU General Public License along with
 # this program.  If not, see <http://www.gnu.org/licenses/>.
 
-package Lintian::Processable::Binary::Class;
+package Lintian::Processable::Installable::Class;
 
 use v5.20;
 use warnings;
@@ -31,16 +31,16 @@ use namespace::clean;
 
 =head1 NAME
 
-Lintian::Processable::Binary::Class - Lintian interface to binary package data collection
+Lintian::Processable::Installable::Class - Lintian interface to binary package data collection
 
 =head1 SYNOPSIS
 
     my ($name, $type, $dir) = ('foobar', 'binary', '/path/to/lab-entry');
-    my $collect = Lintian::Processable::Binary::Class->new($name);
+    my $collect = Lintian::Processable::Installable::Class->new($name);
 
 =head1 DESCRIPTION
 
-Lintian::Processable::Binary::Class provides an interface to package data for binary
+Lintian::Processable::Installable::Class provides an interface to package data for binary
 packages.  It implements data collection methods specific to binary
 packages.
 

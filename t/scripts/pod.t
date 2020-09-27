@@ -5,21 +5,25 @@
 
 use strict;
 use warnings;
+
 use Test::More;
+
 plan skip_all => 'Not needed for coverage of Lintian'
   if $ENV{'LINTIAN_COVERAGE'};
+
 eval 'use Test::Pod 1.00';
-plan skip_all => 'Test::Pod 1.00 required for testing POD' if $@;
 
 my $dir = $ENV{'LINTIAN_BASE'} // '.';
 
-my @POD_FILES = all_pod_files(
+my @POD_SOURCES = grep { -e } (
     "$dir/lib",
     "$dir/doc/tutorial",
     "$dir/man/lintian.pod",
     "$dir/man/lintian-annotate-hints.pod",
     "$dir/man/lintian-explain-tags.pod",
 );
+
+my @POD_FILES = all_pod_files(@POD_SOURCES);
 
 all_pod_files_ok(@POD_FILES);
 

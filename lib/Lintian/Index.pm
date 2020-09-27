@@ -66,8 +66,7 @@ Lintian::Index - access to collected data about the upstream (orig) sources
 
 =head1 SYNOPSIS
 
-    use Lintian::Processable;
-    my $processable = Lintian::Processable::Binary->new;
+    use Lintian::Index;
 
 =head1 DESCRIPTION
 

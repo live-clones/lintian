@@ -1,6 +1,7 @@
 # copyright -- lintian check script -*- perl -*-
 
 # Copyright © 1998 Christian Schwarz
+# Copyright © 1998 Richard Braakman
 # Copyright © 2011 Jakub Wilk
 # Copyright © 2020 Felix Lechner
 #
@@ -33,6 +34,7 @@ use Unicode::UTF8 qw[valid_utf8 decode_utf8];
 
 use Lintian::Data;
 use Lintian::Deb822::Parser qw(parse_dpkg_control_string);
+use Lintian::IPC::Run3 qw(safe_qx);
 use Lintian::Spelling qw(check_spelling);
 
 use Moo;
@@ -85,9 +87,11 @@ sub source {
 sub binary {
     my ($self) = @_;
 
+    my $package = $self->processable->name;
+
     # looking up entry without slash first; index should not be so picky
-    my $doclink = $self->processable->installed->lookup(
-        'usr/share/doc/' . $self->processable->name);
+    my $doclink
+      = $self->processable->installed->lookup("usr/share/doc/$package");
     if ($doclink && $doclink->is_symlink) {
 
         # check if this symlink references a directory elsewhere
@@ -127,8 +131,9 @@ sub binary {
         return;
     }
 
-    my $docdir = $self->processable->installed->lookup(
-        'usr/share/doc/' . $self->processable->name . '/');
+    # now with a slash; indicates directory
+    my $docdir
+      = $self->processable->installed->lookup("usr/share/doc/$package/");
     unless ($docdir) {
         $self->tag('no-copyright-file');
         return;
@@ -157,15 +162,37 @@ sub binary {
 
         # #522827: special exception for perl for now
         $self->tag('no-copyright-file')
-          unless $self->processable->name eq 'perl';
+          unless $package eq 'perl';
 
         return;
     }
 
-    my $dcopy
-      = path($self->processable->basedir)->child('copyright')->stringify;
+    my $copyrigh_path;
 
-    my $bytes = path($dcopy)->slurp;
+    my $uncompressed
+      = $self->processable->installed->resolve_path(
+        "usr/share/doc/$package/copyright");
+    $copyrigh_path = $uncompressed->unpacked_path
+      if defined $uncompressed;
+
+    my $compressed
+      = $self->processable->installed->resolve_path(
+        "usr/share/doc/$package/copyright.gz");
+    if (defined $compressed) {
+
+        my $contents = safe_qx('gunzip', '-c', $compressed->unpacked_path);
+
+        my $extracted
+          = path($self->processable->basedir)->child('copyright')->stringify;
+        path($extracted)->spew($contents);
+
+        $copyrigh_path = $extracted;
+    }
+
+    return
+      unless length $copyrigh_path;
+
+    my $bytes = path($copyrigh_path)->slurp;
 
     # another check complains about invalid encoding
     return

@@ -46,7 +46,6 @@ Lintian::Processable::Patched - access to sources with Debian patches applied
 =head1 SYNOPSIS
 
     use Lintian::Processable;
-    my $processable = Lintian::Processable::Binary->new;
 
 =head1 DESCRIPTION
 

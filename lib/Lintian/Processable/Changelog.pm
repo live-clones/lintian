@@ -1,6 +1,7 @@
 # -*- perl -*- Lintian::Processable::Changelog -- access to collected changelog data
 #
-# Copyright © 2019 Felix Lechner
+# Copyright © 1998 Richard Braakman
+# Copyright © 2019-2020 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by the Free
@@ -22,10 +23,12 @@ use warnings;
 use utf8;
 use autodie;
 
+use File::Copy qw(copy);
+use List::MoreUtils qw(first_value);
 use Path::Tiny;
 use Unicode::UTF8 qw(valid_utf8 decode_utf8);
 
-use Lintian::Util qw(get_file_checksum);
+use Lintian::IPC::Run3 qw(safe_qx);
 
 use Moo::Role;
 use namespace::clean;
@@ -37,7 +40,6 @@ Lintian::Processable::Changelog - access to collected changelog data
 =head1 SYNOPSIS
 
     use Lintian::Processable;
-    my $processable = Lintian::Processable::Binary->new;
 
 =head1 DESCRIPTION
 
@@ -46,6 +48,90 @@ Lintian::Processable::Changelog provides an interface to changelog data.
 =head1 INSTANCE METHODS
 
 =over 4
+
+=item changelog_path
+
+=cut
+
+has changelog_path => (
+    is => 'rw',
+    lazy => 1,
+    default => sub {
+        my ($self) = @_;
+
+        if ($self->type eq 'source') {
+
+            my $file = $self->patched->resolve_path('debian/changelog');
+            return
+              unless $file && $file->is_open_ok;
+
+            return $file->unpacked_path;
+        }
+
+        # pick the first existing file
+        my @changelogfiles = (
+            'changelog.Debian.gz','changelog.Debian',
+            'changelog.debian.gz','changelog.debian',
+            'changelog.gz','changelog',
+        );
+
+        my $packagepath = 'usr/share/doc/' . $self->name;
+        my @candidatepaths = grep { defined }
+          map { $self->installed->lookup("$packagepath/$_") } @changelogfiles;
+        my $packagechangelogpath
+          = first_value { $_->is_file || length $_->link } @candidatepaths;
+
+        return
+          unless defined $packagechangelogpath;
+
+        # stop for dangling symbolic link
+        my $resolved = $packagechangelogpath->resolve_path;
+        return
+          unless defined $resolved;
+
+        my $changelogpath;
+        if ($packagechangelogpath->basename =~ /\.gz$/) {
+
+            my $contents = safe_qx('gunzip', '-c', $resolved->unpacked_path);
+
+            $changelogpath
+              = path($self->basedir)->child('changelog')->stringify;
+            path($changelogpath)->spew($contents);
+
+        } else {
+            $changelogpath = $resolved->unpacked_path;
+        }
+
+        if ($packagechangelogpath->basename !~ m/changelog\.debian/i) {
+
+            # Either this is a native package OR a non-native package where the
+            # debian changelog is missing.  checks/changelog is not too happy
+            # with the latter case, so check looks like a Debian changelog.
+            my @lines = path($changelogpath)->lines;
+            my $ok = 0;
+            for my $line (@lines) {
+                next if $line =~ /^\s*+$/;
+                # look for something like
+                # lintian (2.5.3) UNRELEASED; urgency=low
+                if ($line
+                    =~ /^\S+\s*\([^\)]+\)\s*(?:UNRELEASED|(?:[^ \t;]+\s*)+)\;/)
+                {
+                    $ok = 1;
+                }
+                last;
+            }
+            # Remove it if it not the Debian changelog.
+            unless ($ok) {
+                unlink $changelogpath;
+                undef $changelogpath;
+            }
+        }
+
+        return
+          unless defined $changelogpath;
+
+        return $changelogpath;
+    });
 
 =item changelog
 
@@ -69,22 +155,9 @@ has changelog => (
     default => sub {
         my ($self) = @_;
 
-        my $dch;
-
-        if ($self->type eq 'source') {
-            my $file = $self->patched->resolve_path('debian/changelog');
-
-            return
-              unless $file && $file->is_open_ok;
-
-            $dch = $file->unpacked_path;
-
-        } else {
-            $dch = path($self->basedir)->child('changelog')->stringify;
-
-            return
-              unless -f $dch && !-l $dch;
-        }
+        my $dch = $self->changelog_path;
+        return
+          unless $dch;
 
         my $bytes = path($dch)->slurp;
         return

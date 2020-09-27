@@ -4,6 +4,7 @@ data		  	usr/share/lintian
 lib	 		usr/share/lintian
 # the following line will be removed when libconfig-model-dpkg-perl stopped using Lintian::Data (see commit 818b3aad)
 lib/Lintian		usr/share/perl5
+.perlcriticrc		usr/share/lintian
 profiles		usr/share/lintian
 tags			usr/share/lintian
 templates		usr/share/lintian

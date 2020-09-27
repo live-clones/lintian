@@ -170,6 +170,16 @@ has pooldir => (is => 'rw', default => EMPTY);
 has basedir => (
     is => 'rw',
     lazy => 1,
+    trigger => sub {
+        my ($self, $folder) = @_;
+
+        return
+          unless length $folder;
+
+        # create directory
+        path($folder)->mkpath
+          unless -e $folder;
+    },
     default => sub {
         my ($self) = @_;
 
@@ -299,15 +309,13 @@ Substantial portions written by Russ Allbery <rra@debian.org> for Lintian.
 
 lintian(1)
 
-L<Lintian::Processable::Binary>
+L<Lintian::Processable::Installable>
 
 L<Lintian::Processable::Buildinfo>
 
 L<Lintian::Processable::Changes>,
 
 L<Lintian::Processable::Source>
-
-L<Lintian::Processable::Udeb>
 
 L<Lintian::Group>
 

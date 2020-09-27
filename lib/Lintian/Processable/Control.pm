@@ -36,7 +36,6 @@ Lintian::Processable::Control - access to collected control file data
 =head1 SYNOPSIS
 
     use Lintian::Processable;
-    my $processable = Lintian::Processable::Binary->new;
 
 =head1 DESCRIPTION
 

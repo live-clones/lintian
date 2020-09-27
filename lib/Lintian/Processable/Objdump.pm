@@ -38,7 +38,6 @@ Lintian::Processable::Objdump - access to collected binary object data
 =head1 SYNOPSIS
 
     use Lintian::Processable;
-    my $processable = Lintian::Processable::Binary->new;
 
 =head1 DESCRIPTION
 
@@ -56,130 +55,128 @@ only collected for ELF files.
 
 =cut
 
-sub objdump_info {
-    my ($self) = @_;
+has objdump_info => (
+    is => 'rw',
+    lazy => 1,
+    default => sub {
+        my ($self) = @_;
 
-    return $self->{objdump_info}
-      if exists $self->{objdump_info};
+        my @objdump = map { $_->objdump } $self->installed->sorted_list;
+        my $concatenated = join(EMPTY, @objdump);
 
-    my @objdump = map { $_->objdump } $self->installed->sorted_list;
-    my $concatenated = join(EMPTY, @objdump);
+        my @paragraphs = parse_dpkg_control_string($concatenated);
 
-    my @paragraphs = parse_dpkg_control_string($concatenated);
+        my %objdump_info;
+        local $_;
 
-    my %objdump_info;
-    local $_;
+        for my $paragraph (@paragraphs) {
 
-    for my $paragraph (@paragraphs) {
+            my %info;
 
-        my %info;
+            $info{'ERRORS'} = 1
+              if lc($paragraph->{'Broken'}//'no') eq 'yes';
 
-        $info{'ERRORS'} = 1
-          if lc($paragraph->{'Broken'}//'no') eq 'yes';
+            $info{'BAD-DYNAMIC-TABLE'} = 1
+              if lc($paragraph->{'Bad-Dynamic-Table'}//'no') eq 'yes';
 
-        $info{'BAD-DYNAMIC-TABLE'} = 1
-          if lc($paragraph->{'Bad-Dynamic-Table'}//'no') eq 'yes';
+            $info{'ELF-TYPE'} = $paragraph->{'Elf-Type'}
+              if defined $paragraph->{'Elf-Type'};
 
-        $info{'ELF-TYPE'} = $paragraph->{'Elf-Type'}
-          if defined $paragraph->{'Elf-Type'};
+            for my $symd (split m/\s*\n\s*/,
+                $paragraph->{'Dynamic-Symbols'}//EMPTY){
+                next
+                  unless length $symd;
 
-        for
-          my $symd (split m/\s*\n\s*/, $paragraph->{'Dynamic-Symbols'}//EMPTY){
-            next
-              unless length $symd;
-
-            if ($symd =~ m/^\s*(\S+)\s+(?:(\S+)\s+)?(\S+)$/){
-                # $ver is not always there
-                my ($sec, $ver, $sym) = ($1, $2, $3);
-                $ver //= EMPTY;
-                push @{ $info{'SYMBOLS'} }, [$sec, $ver, $sym];
+                if ($symd =~ m/^\s*(\S+)\s+(?:(\S+)\s+)?(\S+)$/){
+                    # $ver is not always there
+                    my ($sec, $ver, $sym) = ($1, $2, $3);
+                    $ver //= EMPTY;
+                    push @{ $info{'SYMBOLS'} }, [$sec, $ver, $sym];
+                }
             }
-        }
 
-        for my $section (split m/\s*\n\s*/,
-            $paragraph->{'Section-Headers'}//EMPTY){
-            next
-              unless length $section;
-            # NB: helpers/coll/objdump-info-helper discards most
-            # sections.  If you are missing a section name for a
-            # check, please update helpers/coll/objdump-info-helper to
-            # retrain the section name you need.
+            for my $section (split m/\s*\n\s*/,
+                $paragraph->{'Section-Headers'}//EMPTY){
+                next
+                  unless length $section;
+                # NB: helpers/coll/objdump-info-helper discards most
+                # sections.  If you are missing a section name for a
+                # check, please update helpers/coll/objdump-info-helper to
+                # retrain the section name you need.
 
-            # trim both ends
-            $section =~ s/^\s+|\s+$//g;
+                # trim both ends
+                $section =~ s/^\s+|\s+$//g;
 
-            $info{'SH'}{$section} = 1;
-        }
+                $info{'SH'}{$section} = 1;
+            }
 
-        for
-          my $data (split m/\s*\n\s*/, $paragraph->{'Program-Headers'}//EMPTY){
-            next
-              unless length $data;
+            for my $data (split m/\s*\n\s*/,
+                $paragraph->{'Program-Headers'}//EMPTY){
+                next
+                  unless length $data;
 
-            my ($header, @vals) = split m/\s++/, $data;
+                my ($header, @vals) = split m/\s++/, $data;
 
-            for my $extra (@vals) {
+                for my $extra (@vals) {
 
-                my ($opt, $val) = split m/=/, $extra;
-                if ($opt eq 'interp' and $header eq 'INTERP') {
-                    $info{'INTERP'} = $val;
+                    my ($opt, $val) = split m/=/, $extra;
+                    if ($opt eq 'interp' and $header eq 'INTERP') {
+                        $info{'INTERP'} = $val;
+
+                    } else {
+                        $info{'PH'}{$header}{$opt} = $val;
+                    }
+                }
+            }
+
+            for my $data (split m/\s*\n\s*/,
+                $paragraph->{'Dynamic-Section'}//EMPTY){
+                next
+                  unless length $data;
+
+                # Here we just need RPATH and NEEDS, so ignore the rest for now
+                my ($header, $val) = split(m/\s++/, $data, 2);
+                if ($header eq 'RPATH' or $header eq 'RUNPATH') {
+                    # RPATH is like PATH
+                    for my $rpathcomponent (split(/:/, $val // EMPTY)) {
+                        $info{$header}{$rpathcomponent} = 1;
+                    }
+
+                } elsif ($header eq 'NEEDED' or $header eq 'SONAME') {
+                    push @{ $info{$header} }, $val;
+
+                } elsif ($header eq 'TEXTREL' or $header eq 'DEBUG') {
+                    $info{$header} = 1;
+
+                } elsif ($header eq 'FLAGS_1') {
+                    for my $flag (split(m/\s++/, $val)) {
+                        $info{$header}{$flag} = 1;
+                    }
+                }
+            }
+
+            if ($paragraph->{'Filename'} =~ m,^(.+)\(([^/\)]+)\)$,) {
+
+                # object file in a static lib.
+                my ($lib, $obj) = ($1, $2);
+                my $libentry = $objdump_info{$lib};
+                if (not defined $libentry) {
+                    $libentry = {
+                        'filename' => $lib,
+                        'objects'  => [$obj],
+                    };
+                    $objdump_info{$lib} = $libentry;
 
                 } else {
-                    $info{'PH'}{$header}{$opt} = $val;
+                    push @{ $libentry->{'objects'} }, $obj;
                 }
             }
+
+            $objdump_info{$paragraph->{'Filename'}} = \%info;
         }
 
-        for
-          my $data (split m/\s*\n\s*/, $paragraph->{'Dynamic-Section'}//EMPTY){
-            next
-              unless length $data;
-
-            # Here we just need RPATH and NEEDS, so ignore the rest for now
-            my ($header, $val) = split(m/\s++/, $data, 2);
-            if ($header eq 'RPATH' or $header eq 'RUNPATH') {
-                # RPATH is like PATH
-                for my $rpathcomponent (split(/:/, $val // EMPTY)) {
-                    $info{$header}{$rpathcomponent} = 1;
-                }
-
-            } elsif ($header eq 'NEEDED' or $header eq 'SONAME') {
-                push @{ $info{$header} }, $val;
-
-            } elsif ($header eq 'TEXTREL' or $header eq 'DEBUG') {
-                $info{$header} = 1;
-
-            } elsif ($header eq 'FLAGS_1') {
-                for my $flag (split(m/\s++/, $val)) {
-                    $info{$header}{$flag} = 1;
-                }
-            }
-        }
-
-        if ($paragraph->{'Filename'} =~ m,^(.+)\(([^/\)]+)\)$,) {
-
-            # object file in a static lib.
-            my ($lib, $obj) = ($1, $2);
-            my $libentry = $objdump_info{$lib};
-            if (not defined $libentry) {
-                $libentry = {
-                    'filename' => $lib,
-                    'objects'  => [$obj],
-                };
-                $objdump_info{$lib} = $libentry;
-
-            } else {
-                push @{ $libentry->{'objects'} }, $obj;
-            }
-        }
-
-        $objdump_info{$paragraph->{'Filename'}} = \%info;
-    }
-
-    $self->{objdump_info} = \%objdump_info;
-
-    return $self->{objdump_info};
-}
+        return \%objdump_info;
+    });
 
 =back
 
