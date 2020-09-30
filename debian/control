@@ -3,8 +3,6 @@ Section: devel
 Priority: optional
 Maintainer: Debian Lintian Maintainers <lintian-maint@debian.org>
 Uploaders:
- Colin Watson <cjwatson@debian.org>,
- Russ Allbery <rra@debian.org>,
  Chris Lamb <lamby@debian.org>,
 Build-Depends:
  debhelper-compat (= 13),
