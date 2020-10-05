@@ -53,10 +53,6 @@ can find the Lintian User's Manual in:
     # or in txt format
     $ less /usr/share/doc/lintian/lintian.txt.gz
 
-Alternatively, Debian provides an on-line version of the manual on
-the [Lintian web site][online-manual].
-
-[online-manual]: https://lintian.debian.org/manual/index.html
 
 Compiling Lintian
 =================
