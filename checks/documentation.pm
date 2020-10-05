@@ -104,9 +104,13 @@ sub visit_installed_files {
                 # create overrides if we just allow them all to
                 # begin with.
                 next
-                  if $file->dirname =~ m{^usr/lib/R/site-library/};
+                  if $file->dirname eq 'usr/lib/R/site-library/';
 
-                # see #904852
+                # SNMP MIB files, see Bug#971427
+                next
+                  if $file->dirname eq 'usr/share/snmp/mibs/';
+
+                # see Bug#904852
                 next
                   if $file->dirname =~ m{templates?(?:\.d)?/};
 

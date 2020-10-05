@@ -1,0 +1,4 @@
+Skeleton: source-native
+Testname: python-applications-team
+Description: Maintained by Python Applications Packaging Team (superseded by Debian Python Team)
+Author: Python Applications Packaging Team <python-apps-team@lists.alioth.debian.org>

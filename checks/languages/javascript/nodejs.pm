@@ -80,6 +80,9 @@ sub source {
     open(my $rules_fd, '<', $drules->unpacked_path);
     my $command_prefix_pattern = qr/\s+[@+-]?(?:\S+=\S+\s+)*/;
     my ($seen_nodejs,$override_test,$seen_dh_dynamic);
+    my $bdepends = $processable->relation('Build-Depends-All');
+    $seen_nodejs = 1 if $bdepends->implies('dh-sequence-nodejs');
+
     while (<$rules_fd>) {
         # reconstitute splitted lines
         while (s,\\$,, and defined(my $cont = <$rules_fd>)) {

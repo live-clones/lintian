@@ -1,3 +1,33 @@
+lintian (2.97.0) unstable; urgency=medium
+
+  * Summary of tag changes:
+    + Renamed:
+      - papt-dmpt-merged -> python-teams-merged
+
+  [ Chris Lamb ]
+  * Relax checks around looking for the dh(1) sequencer by not looking for
+    the preceding "target:\n". (Closes: #970920)
+  * Add prominent and up-to-date information on how to run the
+    testsuite. (Closes: #923696)
+  * Drop Colin Watson and Russ Allbery from Uploaders (last upload 10+
+    years ago) with sincere thanks for their past efforts.
+  * Run wrap-and-sort -sa.
+
+  [ Louis-Philippe Véronnea ]
+  * Rename "papt-dpmt-merged" to "python-teams-merged".
+  * Document packages needed to run the testsuite.
+
+  [ Felix Lechner ]
+  * Exempt some SNMP MIB-related files from the
+    package-contains-documentation-outside-usr-share-doc tag.
+    (Closes: #971427)
+  * Amend/update documentation for first contributors.
+
+  [ Xavier Guimard ]
+  * Update NodeJS checks to accept "dh-sequence-nodejs".
+
+ -- Chris Lamb <lamby@debian.org>  Fri, 02 Oct 2020 09:00:30 +0000
+
 lintian (2.96.0~bpo10+1) buster-backports; urgency=medium
 
   * Rebuild for buster-backports.

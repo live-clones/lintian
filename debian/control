@@ -3,8 +3,6 @@ Section: devel
 Priority: optional
 Maintainer: Debian Lintian Maintainers <lintian-maint@debian.org>
 Uploaders:
- Colin Watson <cjwatson@debian.org>,
- Russ Allbery <rra@debian.org>,
  Chris Lamb <lamby@debian.org>,
 Build-Depends:
  debhelper-compat (= 13),
@@ -89,8 +87,8 @@ Suggests:
  libtext-template-perl,
 Breaks:
  funny-manpages (<< 1.3-5.1),
- pkg-perl-tools (<< 0.53),
  pkg-js-tools (<< 0.9.4),
+ pkg-perl-tools (<< 0.53),
 Replaces:
  funny-manpages (<< 1.3-5.1),
 Multi-Arch: foreign

@@ -7,80 +7,173 @@ that is a section on recommended practices and additional resources.
 
 ## Getting started
 
-Please either checkout the repository from [salsa.debian.org][salsa]:
+The best way to contribute code to Lintian is to submit merge requests
+on [salsa.debian.org][salsa]. First, create an account on Salsa if you
+do not have one. You need to configure at least one SSH key.
 
-    $ git clone https://salsa.debian.org/lintian/lintian.git
+The easiest way to file merge requests on Salsa is to fork our team
+repository into your private name space. That is done on the website.
+
+Then you should clone the forked version of Lintian from your private
+name space to your local machine. You can find the command for that
+under a blue button that says "Clone'. Choose the git protocol (not
+HTTPS).
+
+    $ git clone git@salsa.debian.org:${your-namespace}/lintian.git
     $ cd lintian
 
-Or create your own "fork" of repository [via the web interface][lintian-fork].
+Create a feature branch for your proposed changes.
 
-You will also need a number of dependencies. You can have apt install these for
-you via:
+    $ git checkout -b my-feature
 
-    $ cd lintian
+### Make Lintian better
+
+Now you can fix bugs or implement new checks.
+
+Please commit your changes with suitable explanations in the commit
+messages. You can find some examples with:
+
+    $ git log
+
+Please do not touch debian/changelog. We automatically update that
+file at release time from commit messages via `gbp-buildpackage`.
+
+The first line of your commit message is special. It should make sense
+without any context in a list of other, unrelated changes.
+
+### Tell us how to test your work
+
+All new tags require unit tests. Lintian's test suite will fail unless
+you provide tests for your proposed tags.
+
+There is a way to exempt your tag from testing, but please do not do
+so.
+
+Our test specifications have two parts. One declares how to build the
+test package. The other declares how to run Lintian on it.
+
+The build instructions are almost completely parameterized. In many
+cases, you will not need to copy or modify any templates. For each
+test, the build specifications are located in the file
+${recipe-dir}/build-spec/fill-values.
+
+A simple one might look like this:
+
+    Skeleton: upload-native
+    Testname: pdf-in-etc
+    Description: Ships a PDF file in /etc
+
+Such a package would probably be used to trigger a tag about
+documentation in a place other than /usr/share/doc. Please do not look
+for this test in the test suite; it is ficticious.
+
+For most tests, we run only the check being tested. That is why the
+tests are sorted according to the check to which they belong.
+
+Please name your tests after what they contain. Do not name them after
+the tag they are testing. Many tags use two or more tests to exercise
+subtle variations in the trigger conditions.
+
+The second part of each test describes how to run Lintian and which
+tags to expect. Evaluation specifications are located in the file
+${recipe-dir}/eval/desc.
+
+A simple evaluation specification might look like this:
+
+    Testname: pdf-in-etc
+    Check: documentation
+
+As noted, this will only run the specified check. It eliminates all
+nuisance tags, such as debian-watch-does-not-check-gpg-signature
+(unless you are working on the check debian/watch).
+
+Another file in that same directory shows the tags expected to be
+triggered. Only tags from the selected check will show up there.
+
+You should scrupulously examine that file to make sure your tags show
+up exactly the way you want, but you do not have to write it
+yourself. The test suite will do it for you during the interactive
+calibration in the next step.
+
+### Calibrate your tests
+
+To build the test package you probably have to install all test
+prerequisites from d/tests/control. Usually, that can be done with:
+
+    $ autopkgtest -B
+
+If anyhing else is missing, you may also have to install the build
+prerequisites. That can be done with:
+
     $ apt build-dep .
 
-Otherwise, the full list of dependencies are listed in the `Build-Depends*`
-fields in the `debian/control` file.
+Both of these commands have to be run with superuse privileges (root).
 
-[salsa]: https://salsa.debian.org/
-[lintian-fork]: https://salsa.debian.org/lintian/lintian/forks/new
+As you might imagine, Lintian comes with a large number of test
+packages. You have to build all of them locally. It takes time the
+first time around but is much faster in subsequent runs. You can build
+the test packages with:
 
-## API Docs, tutorials and the test suite documentation
+    $ private/build-test-packages
 
-We also have some short tutorials in our API docs.  You can compile
-the API documentation via:
+Now, please calibrate your tests. For the documenation check the
+command would be:
 
-    $ debian/rules api-doc
-    $ sensible-browser doc/api.html/index.html
+    $ private/runtests --onlyrun=check:documentation
 
-From there, you might want to start with "Lintian::Tutorial".  If you
-prefer to use perldoc (or want to improve the tutorials), you can find
-the source files for the tutorial in doc/tutorial.
+Make sure to select the check you are actually modifying.
 
-The tutorial briefly covers:
+The interactive calibration will add expected tags to your test
+specifications. In many cases, it is best to "accept all" and examine
+the changes in git. In complex cases, you can use git add -i to accept
+only the ones you need.
 
- * How to write a (Lintian) check
- * How to write a test case
- * How to use the test runner (efficiently)
+This is a crucial step. Please make sure the expected tags are
+meaningful. We also pay close attention to these tags when we look at
+your merge request.
 
-We are very happy to receive improvements to the tutorials or other
-documentation as well.
+### Run the full test suite
 
-There is also an online copy on the [Lintian web site][online-api-docs].
-Note that the online copy does not necessarily reflect the API of the
-current development version of Lintian.  Instead, it is the API of
-Lintian when it was last updated on the Lintian web site.
+Finally, please start the entire test suite. It will run a variety of
+style and consistency tests. The most common issue is that you have to
+run perltidy.
 
-[online-api-docs]: https://lintian.debian.org/library-api/index.html
+We configure perltidy in a special way. Please run it from the
+repository's base directory. Otherwise it will not find the custom
+configuration, and the test suite will not pass.
 
-## Making changes
+### Submit your merge request
 
- * Make commits of logical units
- * Add a test for your change - especially if you introduce a new tag
-   (run with: `debian/rules runtests onlyrun=<testname>`)
- * Check the changes for style issues
-   (`debian/rules runtests onlyrun=suite:scripts`)
- * Check the changes against the test suite
-   (`debian/rules runtests`)
- * Please format the commit messages with a short synopsis and (optionally) a long description.
+Finally, please push your changes to the Lintian repo in your own name
+space. You may end up doing that multiple times, It will eventually
+require the force switch.
 
-An example commit message might be:
+    $ git push -f
 
-    Add =encoding to the POD in Lintian::Collect
+That command will respond with the single most important message in
+this document. Salsa will ask you to create a merge request. Just
+click the link provided in the terminal.
 
-    We use a UTF-8 section symbol, and the current version of Pod::Simple
-    therefore requires explicitly declaring the character set.`
+Your browser will open a draft merge request. For a single commit, the
+text field is populated with your commit message. Otherwise, please
+explain the purpose of your commit series and hit "Submit".
 
-For more on best practices on Git commit messages, please review
-[A Note About Git Commit Messages][tbaggery-git-commit] for inspiration.
+The push command also started the standard CI pipeline on Salsa, which
+is very comprehensive. It builds Debian packages and runs autopkgtest,
+among many other jobs.
 
+We will generally not accept merge requests unless the CI pipeline
+passes sucessfully. You can see the status on Salsa in two places: in
+the MR and in your own repo. The pipeline takes about one hundred
+minutes.
 
-[tbaggery-git-commit]: http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html
+There is no need, however, to wait for Salsa CI pipeline before
+submitting your merge request. If you followed all the steps above, it
+will very likely pass.
 
-## Submitting changes
+## Other ways to submit changes
 
-Please prefer to submit your changes to Lintian by creating a
+Please make an effort to submit your changes to Lintian by creating a
 [merge-request][merge-request] on [Salsa][salsa].
 
 Alternatively, submit your changes to the Debian Bug Tracker by reporting
@@ -99,60 +192,16 @@ the `git format-patch` command.
 [merge-request]: https://salsa.debian.org/lintian/lintian/merge_requests
 [salsa]: https://salsa.debian.org/
 
-## Data files
-
-The `data`  directory contains files loaded by the `Lintian::Data` module,
-specifically lists of keywords used in various Lintian checks. For all files in
-this directory, blank lines are ignored, as are lines beginning with `#`.
-
-For each list of keywords, please include in a comment the origin of the list,
-any information about how to resynchronize the list with that origin, and any
-special exceptions or caveats.
-
-Files should generally be organized into subdirectory by check or by general
-class of lists (for example, all lists related to `doc-base  files should go
-into a `doc-base` subdirectory).
-
 ## Recommended practices
-
-### Code style dictated by perltidy and perlcritic
-
-For consistency, perltidy is used to normalize the style of the Perl
-code in Lintian.  This is enforced via tests and will be checked
-in all submissions.  In the cases where perltidy fails miserably,
-please format the piece manually and use a "no perltidy" rule.  As
-an example:
-
-    #<<< no perltidy
-    something
-    that perltidy should not touch
-    #>>>
-
-Beyond perltidy, we also use perlcritic to enforce some semantic
-rules.  An example rule being that we forbid the use of `grep` in
-boolean context (which is better done via the `any` sub from
-`List::Util`).
-
-We have enabled enforcements of the rules, which lintian already
-follows and which made sense to lintian.
 
 ### The "master" branch is "always releasable"
 
-Generally the "master" branch should kept in a state where it is always
-releasable.  This is an accepted practice by many other projects and
-also helps us in case we suddenly need to do a release.
+We try to keep the "master" branch in a clean state that is suitable
+for release at all times.
 
-You are always welcome to create topic branches for publishing code that
-is not ready for a release yet.
-
-### Updating debian/changelog
-
-Please do not manually update the `debian/changelog` file. It is created
-automatically by `gbp-buildpackage` from commit messages.
-
-However, please take time to write an effective first line of your commit
-message, ensuring that it will make the sense when read in a list of changes
-without any other context.
+For topic branches that are not yet suitable for release, please point
+us to your personal repository on Salsa or file a merge request with
+WIP: in the title.
 
 ### Backport requirements
 
