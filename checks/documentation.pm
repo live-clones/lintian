@@ -26,6 +26,8 @@ use warnings;
 use utf8;
 use autodie;
 
+use List::MoreUtils qw(any);
+
 use Lintian::Util qw(open_gz);
 
 use Moo;
@@ -33,9 +35,31 @@ use namespace::clean;
 
 with 'Lintian::Check';
 
-my $DOCUMENTATION_FILE_REGEX
-  = Lintian::Data->new('files/documentation-file-regex',
-    qr/~~~~~/,sub { return  qr/$_[0]/xi;});
+# a list of regex for detecting documentation file checked against basename (xi)
+my @DOCUMENTATION_FILE_REGEXES = qw{
+  \.docx?$
+  \.html?$
+  \.info$
+  \.latex$
+  \.markdown$
+  \.md$
+  \.odt$
+  \.pdf$
+  \.readme$
+  \.rmd$
+  \.rst$
+  \.rtf$
+  \.tex$
+  \.txt$
+  ^code[-_]of[-_]conduct$
+  ^contribut(?:e|ing)$
+  ^copyright$
+  ^licen[sc]es?$
+  ^howto$
+  ^patents?$
+  ^readme(?:\.?first|\.1st|\.debian|\.source)?$
+  ^todos?$
+};
 
 my $COMPRESS_FILE_EXTENSIONS
   = Lintian::Data->new('files/compressed-file-extensions',
@@ -90,44 +114,29 @@ sub visit_installed_files {
         $self->tag('compressed-documentation', $file->name);
     }
 
-    if(    $file->is_file
-        && $file->name !~ m,^etc/,
-        && $file->name !~ m,^usr/share/(?:doc|help)/,) {
+    if ($file->is_file) {
 
-        foreach my $taboo ($DOCUMENTATION_FILE_REGEX->all) {
+        unless (
+               $file->name =~ m{^etc/}
+            || $file->name =~ m{^usr/share/(?:doc|help)/}
+            # No need for dh-r packages to automatically
+            # create overrides if we just allow them all to
+            # begin with.
+            || $file->dirname =~ 'usr/lib/R/site-library/'
+            # SNMP MIB files, see Bug#971427
+            || $file->dirname eq 'usr/share/snmp/mibs/'
+            # see Bug#904852
+            || $file->dirname =~ m{templates?(?:\.d)?/}
+            || (   $file->basename =~ m{\.txt$}
+                && $file->dirname =~ m{^usr/lib/python3/.*\.egg-info/}s)
+            || (   $file->basename =~ m{^README}xi
+                && $file->bytes =~ m{this directory}xi)
+        ) {
 
-            my $regex = $DOCUMENTATION_FILE_REGEX->value($taboo);
-
-            if($file->basename =~ m{$regex}xi) {
-
-                # No need for dh-r packages to automatically
-                # create overrides if we just allow them all to
-                # begin with.
-                next
-                  if $file->dirname eq 'usr/lib/R/site-library/';
-
-                # SNMP MIB files, see Bug#971427
-                next
-                  if $file->dirname eq 'usr/share/snmp/mibs/';
-
-                # see Bug#904852
-                next
-                  if $file->dirname =~ m{templates?(?:\.d)?/};
-
-                next
-                  if $file->basename =~ m{\.txt$}
-                  and $file->dirname =~ m{^usr/lib/python3/.*\.egg-info/}s;
-
-                next
-                  if $file->basename =~ m{^README}xi
-                  and $file->bytes =~ m{this directory}xi;
-
-                $self->tag(
-                    'package-contains-documentation-outside-usr-share-doc',
-                    $file->name);
-
-                last;
-            }
+            $self->tag('package-contains-documentation-outside-usr-share-doc',
+                $file->name)
+              if any { $file->basename =~ m{$_}xi }
+            @DOCUMENTATION_FILE_REGEXES;
         }
     }
 
