@@ -11,6 +11,7 @@ dwz||debhelper | debhelper-compat | dh-sequence-dwz
 installinitramfs||debhelper | debhelper-compat | dh-sequence-installinitramfs
 gnome||gnome-pkg-tools | dh-sequence-gnome
 lv2config||lv2core
+nodejs||pkg-js-tools | dh-sequence-nodejs
 perl_dbi||libdbi-perl | dh-sequence-perl-dbi
 perl_imager||libimager-perl | dh-sequence-perl-imager
 pypy||dh-python | dh-sequence-pypy
