@@ -173,7 +173,9 @@ sub unpack_and_index_piped_tar {
         for my $handle (@ready) {
 
             my $buffer;
-            my $length = sysread($handle, $buffer, 4096 * TAR_RECORD_SIZE);
+
+            # using 4096 * TAR_RECORD_SIZE tripped up older kernels < 5.7
+            my $length = sysread($handle, $buffer, 4 * 1024 * 1024);
 
             die "Error from child: $!\n"
               unless defined $length;
