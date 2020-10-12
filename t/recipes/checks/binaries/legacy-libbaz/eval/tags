@@ -4,7 +4,11 @@ libbaz1-dev (binary): binary-has-unneeded-section usr/lib/ma-dir/perl/version/au
 libbaz1 (binary): unstripped-binary-or-object usr/lib/libfoo2.so.1.0.3b
 libbaz1 (binary): unstripped-binary-or-object usr/lib/libbaz3.so.1.0.3b
 libbaz1 (binary): unstripped-binary-or-object usr/lib/libbaz1.so.1.0.3b
+libbaz1 (binary): undeclared-elf-prerequisites usr/lib/ma-dir/perl/version/auto/Foo/Foo.so
+libbaz1 (binary): undeclared-elf-prerequisites usr/lib/libfoo2.so.1.0.3b
+libbaz1 (binary): undeclared-elf-prerequisites usr/lib/libbaz3.so.1.0.3b
+libbaz1 (binary): undeclared-elf-prerequisites usr/lib/libbaz1.so.1.0.3b
+libbaz1 (binary): undeclared-elf-prerequisites usr/lib/libbaz.so
 libbaz1 (binary): package-name-doesnt-match-sonames libbaz libbaz2-1.0 libbaz3-1
-libbaz1 (binary): missing-depends-line
 libbaz1 (binary): missing-dependency-on-perlapi
 libbaz1 (binary): binary-has-unneeded-section usr/lib/ma-dir/perl/version/auto/Foo/Foo.so .comment

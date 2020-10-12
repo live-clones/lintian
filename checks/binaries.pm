@@ -148,7 +148,7 @@ sub installable {
     my $needs_libcxx_file;
     my $needs_libc_count = 0;
     my $needs_libcxx_count = 0;
-    my $needs_depends_line = 0;
+    my %needs_depends;
     my $has_perl_lib = 0;
     my $has_php_ext = 0;
     my $uses_numpy_c_abi = 0;
@@ -615,7 +615,7 @@ sub installable {
             my $no_libc = 1;
             my $is_shared = 0;
             my @needed;
-            $needs_depends_line = 1;
+            $needs_depends{$file->name} = 1;
             $is_shared = 1 if $fileinfo =~ m/(shared object|pie executable)/;
             @needed = @{$objdump->{NEEDED}} if exists($objdump->{NEEDED});
             for my $lib (@needed) {
@@ -671,37 +671,37 @@ sub installable {
     my $depends = $processable->relation('strong');
 
     # Check for a libc dependency.
-    if ($needs_depends_line) {
-        if ($depends->empty) {
-            $self->tag('missing-depends-line');
-        } else {
-            if ($needs_libc && $pkg !~ /^libc[\d.]+(?:-|\z)/) {
-                # Match libcXX or libcXX-*, but not libc3p0.
-                my $re = qr/^\Q$needs_libc\E\b/;
-                if (!$depends->matches($re)) {
-                    my $others = '';
-                    $needs_libc_count--;
-                    if ($needs_libc_count > 0) {
-                        $others = " and $needs_libc_count others";
-                    }
-                    $self->tag('missing-dependency-on-libc',
-                        "needed by $needs_libc_file$others");
+    if ($depends->empty) {
+        $self->tag('undeclared-elf-prerequisites', $_)for keys %needs_depends;
+
+    } elsif (%needs_depends) {
+
+        if ($needs_libc && $pkg !~ /^libc[\d.]+(?:-|\z)/) {
+            # Match libcXX or libcXX-*, but not libc3p0.
+            my $re = qr/^\Q$needs_libc\E\b/;
+            if (!$depends->matches($re)) {
+                my $others = '';
+                $needs_libc_count--;
+                if ($needs_libc_count > 0) {
+                    $others = " and $needs_libc_count others";
                 }
+                $self->tag('missing-dependency-on-libc',
+                    "needed by $needs_libc_file$others");
             }
-            if ($needs_libcxx ne '') {
-                # Match libstdc++XX or libcstdc++XX-*
-                my $re = qr/^\Q$needs_libcxx\E\b/;
-                if (!$depends->matches($re)) {
-                    my $others = '';
-                    $needs_libcxx_count--;
-                    if ($needs_libcxx_count > 0) {
-                        $others = " and $needs_libcxx_count others";
-                    }
-                    $self->tag(
-                        'missing-dependency-on-libstdc++',
-                        "needed by $needs_libcxx_file$others"
-                    );
+        }
+        if ($needs_libcxx ne '') {
+            # Match libstdc++XX or libcstdc++XX-*
+            my $re = qr/^\Q$needs_libcxx\E\b/;
+            if (!$depends->matches($re)) {
+                my $others = '';
+                $needs_libcxx_count--;
+                if ($needs_libcxx_count > 0) {
+                    $others = " and $needs_libcxx_count others";
                 }
+                $self->tag(
+                    'missing-dependency-on-libstdc++',
+                    "needed by $needs_libcxx_file$others"
+                );
             }
         }
     }

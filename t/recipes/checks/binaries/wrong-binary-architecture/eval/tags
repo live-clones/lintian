@@ -1,4 +1,4 @@
 wrong-binary-architecture (binary): unstripped-binary-or-object usr/bin/foreign-binary
-wrong-binary-architecture (binary): missing-depends-line
+wrong-binary-architecture (binary): undeclared-elf-prerequisites usr/bin/foreign-binary
 wrong-binary-architecture (binary): hardening-no-bindnow usr/bin/foreign-binary
 wrong-binary-architecture (binary): binary-from-other-architecture usr/bin/foreign-binary
