@@ -1,8 +1,21 @@
-lintian (2.97.0+git) UNRELEASED; urgency=medium
+lintian (2.98.0) unstable; urgency=medium
 
-  * WIP (generated at release time: please do not add entries below).
+  * Summary of tag changes:
+    + Renamed
+      - missing-depends-line -> undeclared-elf-prerequisites
 
- -- Chris Lamb <lamby@debian.org>  Fri, 02 Oct 2020 10:05:19 +0100
+  [ Chris Lamb ]
+  * Drop reference to missing manual page.
+
+  [ Felix Lechner ]
+  * Allow out-of-place documentation for R packages. (Closes: #971740)
+  * Recognize virtual package dh-sequence-nodejs as an alternative to
+    pkg-js-tools. (Closes: #971656)
+  * Reduce read buffer size when duplicating tar stream. (Closes: #971895)
+  * Issue python-module-in-wrong-location only once for each module.
+  * Rename missing-depends-line to undeclared-elf-prerequisites.
+
+ -- Chris Lamb <lamby@debian.org>  Fri, 16 Oct 2020 11:12:52 +0000
 
 lintian (2.97.0) unstable; urgency=medium
 
