@@ -754,7 +754,9 @@ sub check_dch {
               (?:,\s*(?:bug)?\#?\s?\d+)*
               (?:,\s*(((?:bug)?\#?\s?\d*)[[:alpha:]]\w*))/ix
         ) {
-            $self->tag('wrong-bug-number-in-closes', "l$.:$1") if $2;
+            $self->tag('wrong-bug-number-in-closes', $1,
+                "in the installed changelog (line $.)")
+              if length $2;
         }
 
         if (/^(.*)Local\ variables:(.*)$/i) {

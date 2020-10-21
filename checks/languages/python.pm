@@ -32,6 +32,8 @@ use Lintian::Relation qw(:constants);
 use Lintian::Relation::Version qw(versions_lte);
 
 use constant EMPTY => q{};
+use constant SLASH => q{/};
+use constant ARROW => q{ -> };
 
 use Moo;
 use namespace::clean;
@@ -64,6 +66,8 @@ my $GENERIC_PYTHON_MODULES= Lintian::Data->new('files/generic-python-modules');
 
 my $VERSIONS = Lintian::Data->new('python/versions', qr/\s*=\s*/);
 my @VERSION_FIELDS = qw(X-Python-Version XS-Python-Version X-Python3-Version);
+
+has correct_location => (is => 'rw', default => sub { {} });
 
 sub source {
     my ($self) = @_;
@@ -331,65 +335,66 @@ sub visit_installed_files {
     if (
         $file->name =~ m{\A
                    (usr/lib/debug/)?
-                   usr/lib/python (\d+(?:\.\d+)?)/
-                   (site|dist)-packages/(.++)
-                   \Z}oxsm
+                   usr/lib/python(\d+(?:\.\d+)?)/
+                   ((?:site|dist)-packages)/(.+)
+                   \Z}xsm
     ){
-        my ($debug, $pyver, $loc, $rest) = ($1, $2, $3, $4);
-        my ($pmaj, $pmin) = split(m/\./, $pyver, 2);
-        my @correction;
+        my ($debug, $pyver, $actual_package_dir, $relative) = ($1, $2, $3, $4);
+        $debug //= EMPTY;
 
-        $pmin = 0
-          unless (defined $pmin);
-
-        $debug = ''
-          unless (defined $debug);
+        my ($pmaj, $pmin) = split(m{\.}, $pyver, 2);
+        $pmin //= 0;
 
         next
-          if ($pmaj < 2 or $pmaj > 3); # Not Python 2 or 3
+          if $pmaj < 2;
 
-        if ($pmaj == 2 and $pmin < 6){
-            # 2.4 and 2.5
-            if ($loc ne 'site') {
-                @correction = (
-                    "${debug}usr/lib/python${pyver}/$loc-packages/$rest",
-                    "${debug}usr/lib/python${pyver}/site-packages/$rest"
-                );
-            }
-        } elsif ($pmaj == 3){
-            # Python 3. Everything must be in python3/dist-... and
-            # not python3.X/<something>
-            if ($pyver ne '3' or $loc ne 'dist'){
-                # bad mojo
-                @correction = (
-                    "${debug}usr/lib/python${pyver}/$loc-packages/$rest",
-                    "${debug}usr/lib/python3/dist-packages/$rest"
-                );
-            }
-        } else {
-            # Python 2.6+
-            if ($loc ne 'dist') {
-                @correction = (
-                    "${debug}usr/lib/python${pyver}/$loc-packages/$rest",
-                    "${debug}usr/lib/python${pyver}/dist-packages/$rest"
-                );
-            }
-        }
+        my ($module_name) = ($relative =~ m{^([^/]+)});
 
-        $self->tag('python-module-in-wrong-location', @correction)
-          if @correction;
+        my $actual_python_libpath = "usr/lib/python$pyver/";
+        my $specified_python_libpath = "usr/lib/python$pmaj/";
+
+        # for python 2.X, folder was python2.X and not python2
+        $specified_python_libpath = $actual_python_libpath
+          if $pmaj < 3;
+
+        my $specified_package_dir = 'dist-packages';
+
+        # python 2.4 and 2.5
+        $specified_package_dir = 'site-packages'
+          if $pmaj == 2 && $pmin < 6;
+
+        my $actual_module_path
+          = $debug. $actual_python_libpath. "$actual_package_dir/$module_name";
+        my $specified_module_path
+          = $debug
+          . $specified_python_libpath
+          . "$specified_package_dir/$module_name";
+
+        $self->correct_location->{$actual_module_path} = $specified_module_path
+          unless $actual_module_path eq $specified_module_path;
 
         for my $regex ($GENERIC_PYTHON_MODULES->all) {
             $self->tag('python-module-has-overly-generic-name',
                 $file->name, "($1)")
-              if $rest =~ m,^($regex)(?:\.py|/__init__\.py)$,i;
+              if $relative =~ m,^($regex)(?:\.py|/__init__\.py)$,i;
         }
 
         $self->tag('unknown-file-in-python-module-directory', $file->name)
           if $file->is_file
-          and $rest eq $file->basename  # "top-level"
+          and $relative eq $file->basename  # "top-level"
           and not $ALLOWED_PYTHON_FILES->matches_any($file->basename, 'i');
     }
+
+    return;
+}
+
+sub breakdown_installed_files {
+    my ($self) = @_;
+
+    $self->tag(
+        'python-module-in-wrong-location',
+        $_ . ARROW . $self->correct_location->{$_}
+    )for keys %{$self->correct_location};
 
     return;
 }
