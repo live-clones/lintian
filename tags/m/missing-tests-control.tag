@@ -1,6 +1,8 @@
 Tag: missing-tests-control
 Severity: info
 Check: testsuite
+Renamed-From:
+ testsuite-autopkgtest-missing
 Explanation: The source package declares the generic <code>Testsuite: autopkgtest</code>
  field but provides no <code>debian/tests/control</code> file.
  .
