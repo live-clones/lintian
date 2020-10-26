@@ -1,5 +1,5 @@
 # This file is generated from private/refresh-debhelper-data.
-# It was generated on 2020-07-05 21:45
+# It was generated on 2020-10-20 00:43
 
 apache2-dev
 autotools-dev
@@ -13,6 +13,7 @@ dh-ada-library
 dh-apparmor
 dh-autoreconf
 dh-buildinfo
+dh-cmake
 dh-consoledata
 dh-di
 dh-dist-zilla
@@ -24,7 +25,6 @@ dh-linktree
 dh-lisp
 dh-lua
 dh-make
-dh-metainit
 dh-ocaml
 dh-octave
 dh-octave-autopkgtest
@@ -60,7 +60,6 @@ mozilla-devscripts
 pdl
 perl-openssl-defaults
 pidgin-dev
-pkg-components
 pkg-kde-tools
 pkg-php-tools
 postgresql-server-dev-all
@@ -68,7 +67,6 @@ ppp-dev
 pyppd
 python-numpy
 python-ply
-python2
 python3-numpy
 python3-ply
 python3-sip-dev

@@ -1,5 +1,5 @@
 # This file is generated from private/refresh-debhelper-data.
-# It was generated on 2020-07-05 21:45
+# It was generated on 2020-10-20 00:43
 
 acc=dh-acc
 ada_library=dh-ada-library
@@ -12,9 +12,11 @@ build_stamp=libdebhelper-perl
 buildinfo=dh-buildinfo
 cli=cli-common-dev
 cli_nant=cli-common-dev
+cmake=dh-cmake
 cme_upgrade=cme
-components=pkg-components
 config_package=config-package-dev
+cpack=dh-cmake
+ctest=dh-cmake
 d_i=dh-di
 dist_zilla=dh-dist-zilla
 dkms=dkms
@@ -49,6 +51,8 @@ perl6=dh-perl6
 perl_dbi=libdbi-perl
 perl_imager=libimager-perl
 perl_openssl=perl-openssl-defaults
+pgxs=postgresql-server-dev-all
+pgxs_loop=postgresql-server-dev-all
 php=dh-php
 phpcomposer=pkg-php-tools
 phppear=pkg-php-tools
@@ -56,7 +60,7 @@ pkgkde_symbolshelper=pkg-kde-tools
 ppp=ppp-dev
 pyppd=pyppd
 pypy=dh-python
-python2=python2
+python2=dh-python
 python3=dh-python
 python_support=libdebhelper-perl
 python_virtualenv=dh-virtualenv

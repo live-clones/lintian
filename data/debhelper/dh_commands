@@ -1,5 +1,5 @@
 # This file is generated from private/refresh-debhelper-data.
-# It was generated on 2020-07-05 21:45
+# It was generated on 2020-10-20 00:43
 #
 # If the script generates an insufficient/incorrect value for a
 # single item, please have a look at dh_commands-manual.
@@ -30,11 +30,21 @@ dh_clideps=cli-common-dev
 dh_clifixperms=cli-common-dev
 dh_cligacpolicy=cli-common-dev
 dh_clistrip=cli-common-dev
+dh_cmake_install=dh-cmake
 dh_cme_upgrade=cme
-dh_components=pkg-components
 dh_compress=debhelper | debhelper-compat
 dh_configpackage=config-package-dev
 dh_consoledata=dh-consoledata
+dh_cpack_generate=dh-cmake
+dh_cpack_install=dh-cmake
+dh_cpack_substvars=dh-cmake
+dh_ctest_build=dh-cmake
+dh_ctest_clean=dh-cmake
+dh_ctest_configure=dh-cmake
+dh_ctest_start=dh-cmake
+dh_ctest_submit=dh-cmake
+dh_ctest_test=dh-cmake
+dh_ctest_update=dh-cmake
 dh_di_kernel_gencontrol=dh-di
 dh_di_kernel_install=dh-di
 dh_di_numbers=dh-di
@@ -119,7 +129,6 @@ dh_makeclilibs=cli-common-dev
 dh_makefont=dh-make
 dh_makeshlibs=debhelper | debhelper-compat
 dh_md5sums=debhelper | debhelper-compat
-dh_metainit=dh-metainit
 dh_missing=debhelper | debhelper-compat
 dh_mkdocs=mkdocs
 dh_movefiles=debhelper | debhelper-compat
@@ -145,6 +154,7 @@ dh_perl=debhelper | debhelper-compat
 dh_perl_dbi=libdbi-perl
 dh_perl_imager=libimager-perl
 dh_perl_openssl=perl-openssl-defaults
+dh_pgxs_test=postgresql-server-dev-all
 dh_php=dh-php
 dh_phpcomposer=pkg-php-tools
 dh_phppear=pkg-php-tools
@@ -154,7 +164,7 @@ dh_prep=debhelper | debhelper-compat
 dh_pyppd=pyppd
 dh_pypy=dh-python
 dh_python-ply=python-ply
-dh_python2=python2
+dh_python2=dh-python
 dh_python3-ply=python3-ply
 dh_python3=dh-python
 dh_qmlcdeps=pkg-kde-tools
