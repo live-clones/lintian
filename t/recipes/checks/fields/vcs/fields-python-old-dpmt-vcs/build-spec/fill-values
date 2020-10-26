@@ -1,0 +1,4 @@
+Skeleton: source-native
+Testname: python-old-dpmt-vcs
+Author: Debian Python Modules Team <python-modules-team@lists.alioth.debian.org>
+Description: Test old DPMT VCS
