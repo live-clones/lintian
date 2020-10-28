@@ -406,7 +406,7 @@ sub source {
                 my $c = $compat;
                 $self->tag(
                     'declares-possibly-conflicting-debhelper-compat-versions',
-                    "rules=$level compat=${c}"
+                    "compat=${c} other=${level}"
                 );
             } else {
                 # this is not just to fill in the gap, but because debhelper

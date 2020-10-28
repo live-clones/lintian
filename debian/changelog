@@ -1,3 +1,23 @@
+lintian (2.99.0) unstable; urgency=medium
+
+  [ Chris Lamb ]
+  * Update the declares-possibly-conflicting-debhelper-compat-versions tag
+    as we could be specifying the level in debian/rules or debian/control.
+    (Closes: #972464)
+
+  [ Louis-Philippe Véronneau ]
+  * Bump severity of the script-uses-unversioned-python-in-shebang tag and
+    reword the warning message.
+
+  [ Felix Lechner ]
+  * Fix prefix detection for single orig tarball components that only have
+    one directory component.
+
+  [ Paul Wise ]
+  * Add several spelling corrections and sort the dictionary.
+
+ -- Chris Lamb <lamby@debian.org>  Fri, 23 Oct 2020 09:13:20 +0000
+
 lintian (2.98.0~bpo10+1) buster-backports; urgency=medium
 
   * Rebuild for buster-backports.

@@ -1,5 +1,5 @@
 debhelper-dh-compat (source): uses-debhelper-compat-file
 debhelper-dh-compat (source): package-uses-old-debhelper-compat-version 8
-debhelper-dh-compat (source): declares-possibly-conflicting-debhelper-compat-versions rules=8 compat=13
+debhelper-dh-compat (source): declares-possibly-conflicting-debhelper-compat-versions compat=13 other=8
 debhelper-dh-compat (source): debian-build-system dh
 debhelper-dh-compat (source): debhelper-compat-level 8

@@ -122,7 +122,7 @@ has orig => (
             }
 
             # removes root entry (''); do not use sorted_list
-            my @prefixes = grep { m{/} } %{$subindex->catalog};
+            my @prefixes = grep { length } keys %{$subindex->catalog};
 
             # keep top level prefixes
             s{^([^/]+)/.*$}{$1}s for @prefixes;
