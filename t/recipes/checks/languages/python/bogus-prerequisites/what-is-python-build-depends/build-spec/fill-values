@@ -1,0 +1,4 @@
+Testname: what-is-python-build-depends
+Skeleton: source-native
+Extra-Build-Depends: python-dev-is-python3
+Descriptions: Build-Depends on python-is-python3-dev

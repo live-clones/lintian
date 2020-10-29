@@ -176,6 +176,7 @@ Enable-Tags-From-Check:
  languages/php/pear,
  languages/php/pear/embedded,
  languages/python,
+ languages/python/bogus-prerequisites,
  languages/python/feedparser,
  languages/python/obsolete,
  languages/python/scripts,
