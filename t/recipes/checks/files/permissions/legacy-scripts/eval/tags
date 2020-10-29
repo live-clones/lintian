@@ -1,5 +1,4 @@
 scripts (source): octal-permissions scripts_6ds-1ubuntu0.5.10.1.dsc  777 tkfoo
-scripts (source): octal-permissions scripts_6ds-1ubuntu0.5.10.1.dsc  777 pyfoo
 scripts (source): octal-permissions scripts_6ds-1ubuntu0.5.10.1.dsc  777 gccbug.dpatch
 scripts (source): octal-permissions scripts_6ds-1ubuntu0.5.10.1.dsc  777 envfoo
 scripts (source): octal-permissions scripts_6ds-1ubuntu0.5.10.1.dsc  777 debian/upstream/
