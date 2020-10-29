@@ -9,7 +9,7 @@ Rules-Requires-Root: no
 Package: [% $source %]
 Architecture: [% $package_architecture %]
 Depends: ${shlibs:Depends}, ${misc:Depends},
- gawk:any, mawk:any, php5:any, python:any,
+ gawk:any, mawk:any, php5:any, python2:any, python3:any,
  ruby:any
 Description: [% $description %]
  This is a test package designed to exercise some feature or tag of

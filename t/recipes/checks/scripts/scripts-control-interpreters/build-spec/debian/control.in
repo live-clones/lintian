@@ -41,7 +41,7 @@ Description: [% $description %] (unknown)
 
 Package: [% $source %]-python
 Architecture: [% $package_architecture %]
-Depends: python, ${shlibs:Depends}, ${misc:Depends}
+Depends: python3, ${shlibs:Depends}, ${misc:Depends}
 Description: [% $description %] (Python)
  Python control interpreters with depends.
  .
@@ -52,7 +52,7 @@ Description: [% $description %] (Python)
 
 Package: [% $source %]-prepython
 Architecture: [% $package_architecture %]
-Pre-Depends: python
+Pre-Depends: python3
 Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: [% $description %] (Python preinst)
  Python control interpreters with pre-depends.

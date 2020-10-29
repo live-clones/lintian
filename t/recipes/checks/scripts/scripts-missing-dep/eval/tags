@@ -1,7 +1,8 @@
 scripts-missing-dep (binary): wish-script-but-no-wish-dep usr/bin/wish-script #!/usr/bin/wish
 scripts-missing-dep (binary): tclsh-script-but-no-tclsh-dep usr/bin/tclsh-script #!/usr/bin/tclsh
 scripts-missing-dep (binary): ruby-script-but-no-ruby-dep usr/bin/ruby-script #!/usr/bin/ruby
-scripts-missing-dep (binary): python-script-but-no-python-dep usr/bin/python-script #!/usr/bin/python
+scripts-missing-dep (binary): python3-script-but-no-python3-dep usr/bin/python3-script #!/usr/bin/python3
+scripts-missing-dep (binary): python2-script-but-no-python2-dep usr/bin/python2-script #!/usr/bin/python2
 scripts-missing-dep (binary): php-script-but-no-php-cli-dep usr/bin/php-script #!/usr/bin/php
 scripts-missing-dep (binary): mawk-script-but-no-mawk-dep usr/bin/mawk-script #!/usr/bin/mawk
 scripts-missing-dep (binary): maintainer-script-needs-depends-on-xfonts-utils postinst

@@ -1,18 +1,17 @@
 scripts (binary): wrong-path-for-interpreter usr/bin/rubyfoo (#!/bin/ruby1.8 != /usr/bin/ruby1.8)
 scripts (binary): wrong-path-for-interpreter usr/bin/lefty-foo (#!/usr/local/bin/lefty != /usr/bin/lefty)
 scripts (binary): unusual-interpreter usr/bin/suidperlfoo #!/usr/bin/suidperl
+scripts (binary): unusual-interpreter usr/bin/py3.Xfoo #!python3.7
 scripts (binary): shell-script-fails-syntax-check usr/bin/sh-broken
 scripts (binary): script-without-interpreter control/prerm
 scripts (binary): script-uses-bin-env usr/bin/envfoo
-scripts (binary): python-script-but-no-python-dep usr/bin/pyfoo #!python
-scripts (binary): python-script-but-no-python-dep usr/bin/py3.Xfoo #!python3.7
+scripts (binary): python3-script-but-no-python3-dep usr/bin/py3foo #!python3
 scripts (binary): php-script-with-unusual-interpreter usr/share/scripts/php7.0foo /usr/bin/php7.0
 scripts (binary): php-script-with-unusual-interpreter usr/share/scripts/php7.0envfoo php7.0
 scripts (binary): php-script-but-no-php-cli-dep usr/share/scripts/phpfoo #!/usr/bin/php
 scripts (binary): php-script-but-no-php-cli-dep usr/share/scripts/phpenvfoo #!php
 scripts (binary): php-script-but-no-php-cli-dep usr/share/scripts/php7.0foo #!/usr/bin/php7.0
 scripts (binary): php-script-but-no-php-cli-dep usr/share/scripts/php7.0envfoo #!php7.0
-scripts (binary): missing-dep-for-interpreter python3 => python3:any | python3-minimal:any (usr/bin/py3foo) #!python3
 scripts (binary): missing-dep-for-interpreter lefty => graphviz (usr/bin/lefty-foo) #!/usr/local/bin/lefty
 scripts (binary): missing-dep-for-interpreter jruby => jruby | jruby1.0 | jruby1.1 | jruby1.2 (usr/bin/jruby-broken) #!/usr/bin/jruby
 scripts (binary): maintainer-script-without-set-e postrm
