@@ -2,7 +2,6 @@ jquery*  usr/share/php
 mocha.* usr/share/javascript/mocha
 bootstrap-*  usr/share/php
 bootstrap.js  usr/share/xul-ext/lintian
-feedparser.py usr/share/php
 streams.php usr/share/php
 streams.php usr/share/php/pomo
 rss_parse.php usr/share/php
