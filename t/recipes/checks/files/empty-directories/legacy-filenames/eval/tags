@@ -1,4 +1,3 @@
-filenames (binary): package-contains-empty-directory usr/share/python-support/filenames/
 filenames (binary): package-contains-empty-directory usr/lib/ma-dir/perl/version/{arch}/
 filenames (binary): package-contains-empty-directory usr/lib/ma-dir/perl/version/CVS/
 filenames (binary): package-contains-empty-directory usr/lib/ma-dir/perl/version/.svn/

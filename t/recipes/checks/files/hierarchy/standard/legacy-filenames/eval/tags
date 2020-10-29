@@ -4,7 +4,6 @@ filenames (binary): subdir-in-usr-bin usr/bin/bin/
 filenames (binary): non-standard-toplevel-dir files/
 filenames (binary): file-in-unusual-dir files/svn-commit.tmp
 filenames (binary): file-in-unusual-dir files/svk-commitsEr9P.tmp
-filenames (binary): file-in-unusual-dir files/feedparser.py
 filenames (binary): file-in-unusual-dir files/Maelstrom Sound.mine
 filenames (binary): file-in-unusual-dir files/Maelstrom Sound
 filenames (binary): file-in-unusual-dir files/Maelstrom Sounce.r121
