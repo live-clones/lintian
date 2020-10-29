@@ -2,7 +2,7 @@ relations (source): virtual-package-depends-without-real-package-depends Build-D
 relations (source): package-has-a-duplicate-build-relation perl, perl (>= 5.0)
 relations (source): package-has-a-duplicate-build-relation foo (= 3) [!amd64 !i386], foo (<< 4) [!amd64 !i386]
 relations (source): ored-build-depends-on-obsolete-package Build-Depends-Indep: gs
-relations (source): mail-transport-agent-dependency-does-not-specify-default-mta Build-Depends: mail-transport-agent, libc6-dev, findutils, foo (= 3) [!amd64 !i386], bar, arch-test1 [i386], arch-test2 [!i386], quilt (>= 0.40), perl, python-all-dev
+relations (source): mail-transport-agent-dependency-does-not-specify-default-mta Build-Depends: mail-transport-agent, libc6-dev, findutils, foo (= 3) [!amd64 !i386], bar, arch-test1 [i386], arch-test2 [!i386], quilt (>= 0.40), perl, python3-all-dev
 relations (source): invalid-arch-string-in-source-relation test [Build-Conflicts: bar [alpha test]]
 relations (source): build-depends-on-python-dev-with-no-arch-any
 relations (source): build-depends-on-essential-package-without-using-version Build-Depends: findutils
