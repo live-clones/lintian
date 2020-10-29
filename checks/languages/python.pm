@@ -42,7 +42,7 @@ with 'Lintian::Check';
 
 my @FIELDS = qw(Depends Pre-Depends Recommends Suggests);
 my @IGNORE = qw(-dev$ -docs?$ -common$ -tools$);
-my @PYTHON2 = qw(python python2.7 python-dev);
+my @PYTHON2 = qw(python2 python2.7 python2-dev);
 my @PYTHON3 = qw(python3 python3-dev);
 
 my %DJANGO_PACKAGES = (
@@ -51,8 +51,7 @@ my %DJANGO_PACKAGES = (
 );
 
 my %REQUIRED_DEPENDS = (
-    'python2' =>
-      'python-minimal:any | python:any | python2-minimal:any | python2:any',
+    'python2' => 'python2-minimal:any | python2:any',
     'python3' => 'python3-minimal:any | python3:any',
 );
 
