@@ -1,5 +1,0 @@
-maintainer-scripts (binary): postrm-does-not-purge-debconf
-maintainer-scripts (binary): postinst-does-not-load-confmodule
-maintainer-scripts (binary): no-debconf-templates
-maintainer-scripts (binary): missing-debconf-dependency
-maintainer-scripts (binary): config-does-not-load-confmodule
