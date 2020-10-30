@@ -81,6 +81,10 @@ sub visit_files {
 
         my @items = $self->processable->$index->sorted_list;
 
+        # do not look inside quilt directory
+        @items = grep { $_->name !~ m{^\.pc/} } @items
+          if $index eq 'patched';
+
         # exclude Lintian's test suite from source scans
         @items = grep { $_->name !~ m{^t/} } @items
           if $self->processable->name eq 'lintian' && $index eq 'patched';
