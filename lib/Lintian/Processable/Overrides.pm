@@ -193,14 +193,6 @@ has overrides => (
                 next;
             }
 
-            # check for missing negations
-            my $negations = scalar grep { /^!/ } @architectures;
-            unless ($negations == @architectures || $negations == 0) {
-                $self->tag('malformed-override',
-                    "Inconsistent architecture negation in line $position");
-                next;
-            }
-
             my @invalid = grep { !valid_wildcard($_) } @architectures;
             $self->tag('malformed-override',
                 "Unknown architecture wildcard $_ in line $position")
@@ -209,11 +201,22 @@ has overrides => (
             next
               if @invalid;
 
+            # strip and count negations; confirm it's either all or none
+            my $negations = scalar grep { s/^!// } @architectures;
+            unless ($negations == @architectures || $negations == 0) {
+                $self->tag('malformed-override',
+                    "Inconsistent architecture negation in line $position");
+                next;
+            }
+
             # proceed when none specified
             next
               if @architectures
-              && none { wildcard_matches($_, $self->architecture) }
-            @architectures;
+              && (
+                $negations xor
+                none { wildcard_matches($_, $self->architecture) }
+                @architectures
+              );
 
             my ($tagname, $context) = split(SPACE, $hint, 2);
 
