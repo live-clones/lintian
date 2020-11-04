@@ -96,12 +96,6 @@ sub issue_tags {
 
         my %group_output;
         $group_output{'group-id'} = $group->name;
-        $group_output{'processing-start'} = $group->processing_start;
-        $group_output{'processing-end'} = $group->processing_end;
-
-        $group_output{'maintainer'}
-          = ($group->get_processables)[0]
-          ->fields->unfolded_value('Maintainer');
 
         push(@allgroups_output, \%group_output);
 
@@ -110,9 +104,11 @@ sub issue_tags {
 
         for my $processable (sort {$a->path cmp $b->path}
             $group->get_processables) {
+
             my %file_output;
             $file_output{path} = $processable->path;
             $file_output{tags} = $self->taglist($processable->tags);
+
             push(@allfiles_output, \%file_output);
         }
     }
@@ -122,6 +118,7 @@ sub issue_tags {
     $encoder->canonical;
     $encoder->utf8;
     $encoder->pretty;
+
     my $json = $encoder->encode(\%output);
 
     # duplicate STDOUT

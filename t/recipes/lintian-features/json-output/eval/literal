@@ -135,10 +135,7 @@
                "path" : "PATH",
                "tags" : []
             }
-         ],
-         "maintainer" : "Debian Lintian Maintainers <lintian-maint@debian.org>",
-         "processing-end" : "TIMESTAMP",
-         "processing-start" : "TIMESTAMP"
+         ]
       }
    ],
    "lintian-version" : "VERSION"
