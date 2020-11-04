@@ -58,7 +58,6 @@ my @known_missing = (qw(
       no-tests
       old-python-version-field
       old-source-override-location
-      package-is-team-maintained
       patch-modifying-debian-files
       patch-system-but-direct-changes-in-diff
       quilt-series-references-non-existent-patch
@@ -67,8 +66,6 @@ my @known_missing = (qw(
       unpack-message-for-deb-control
       unpack-message-for-orig
       uses-deprecated-adttmp
-      old-dpmt-vcs
-      old-papt-vcs
       ),
 
 # the following tags are not testable due to restrictions in reprotest

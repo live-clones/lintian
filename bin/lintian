@@ -189,18 +189,13 @@ $command_line{'show-overrides'} = 0
 $command_line{'tag-display-limit'} = 0
   if exists $command_line{'no-tag-display-limit'};
 
-my $LINTIAN_CFG = $command_line{cfg};
+my $xdg_config_file;
+my $dot_config_file;
 
-$LINTIAN_CFG ||= $ENV{LINTIAN_CFG}
-  if length $ENV{LINTIAN_CFG} && -f $ENV{LINTIAN_CFG};
-
-# only absolute paths, for use elsewhere
-my @RESTRICTED_CONFIG_DIRS;
+my $xdg_data_home;
+my $dot_data_home;
 
 unless ($command_line{'no-user-dirs'}) {
-
-    my $xdg_config_file;
-    my $xdg_data_home;
 
     if (length $ENV{HOME} || length $ENV{XDG_CONFIG_HOME}) {
 
@@ -208,25 +203,28 @@ unless ($command_line{'no-user-dirs'}) {
         $xdg_data_home = data_home('lintian');
     }
 
-    my $dot_config_file;
-    my $dot_data_home;
-
     if (length $ENV{HOME}) {
 
         $dot_config_file = "$ENV{HOME}/.lintianrc";
         $dot_data_home = "$ENV{HOME}/.lintian";
     }
 
-    $LINTIAN_CFG ||= first_value { length $_ && -f $_ }
-    ($xdg_config_file, $dot_config_file, '/etc/lintianrc');
-
     # make path absolute for use elsewhere
     $xdg_data_home = getcwd() . SLASH . $xdg_data_home
       if length $xdg_data_home && $xdg_data_home !~ m{^/};
-
-    @RESTRICTED_CONFIG_DIRS = grep { -d }
-      grep { length } ($xdg_data_home, $dot_data_home, '/etc/lintian');
 }
+
+my $LINTIAN_CFG = $command_line{cfg} // EMPTY;
+
+$LINTIAN_CFG ||= $ENV{LINTIAN_CFG}
+  if length $ENV{LINTIAN_CFG} && -f $ENV{LINTIAN_CFG};
+
+$LINTIAN_CFG ||= first_value { length $_ && -f $_ }
+($xdg_config_file, $dot_config_file, '/etc/lintianrc');
+
+# only absolute paths, for use elsewhere
+my @RESTRICTED_CONFIG_DIRS
+  = grep {length $_ && -d $_ }($xdg_data_home, $dot_data_home, '/etc/lintian');
 
 $LINTIAN_CFG = EMPTY
   if $command_line{'no-cfg'};

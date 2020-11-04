@@ -534,7 +534,7 @@ sub installable {
                 if ($base =~ /^php/) {
                     $self->tag('php-script-but-no-php-cli-dep',
                         $filename,"#!$interpreter");
-                } elsif ($base =~ /^(python|ruby|[mg]awk)$/) {
+                } elsif ($base =~ /^(python\d|ruby|[mg]awk)$/) {
                     $self->tag((
                         "$base-script-but-no-$base-dep",$filename,
                         "#!$interpreter"

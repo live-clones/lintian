@@ -1,3 +1,43 @@
+lintian (2.100.0) unstable; urgency=medium
+
+  * Summary of tag changes:
+    + Added:
+      - bogus-python-prerequisite
+      - python2-script-but-no-python2-dep
+      - python3-script-but-no-python3-dep
+    + Removed:
+      - python-script-but-no-python-dep
+
+  [ Felix Lechner ]
+  * Update guile versions that are considered valid installation
+    prerequisites. (Closes: #973335)
+  * Flag bogus Python prerequisites from what-is-python. (Closes: #973011)
+  * Fix architecture wildcard logic for override declarations.
+    (Closes: #972595)
+  * Recognize standard installation path for tcsh as /bin.
+    (Closes: #973367)
+  * Do not look into quilt's .pc/ folder during source scans.
+    (Closes: #971973)
+  * Provide a tag HTTP reference that does not change over time.
+    (Closes: #973334)
+  * Drop unversioned Python references from a number of scripts.
+  * Mark testsuite-autopkgtest-missing as the old name for
+    missing-tests-control. (Closes: #972844)
+
+  [ Louis-Philippe Véronneau ]
+  * Add missing tests for old-dpmt-vcs and old-papt-vcs (and also fix
+    package-is-team-maintained).
+  * Refresh debhelper data using private/refresh-debhelper-data.
+
+  [ Andrius Merkys ]
+  * Update data/fields/archive-sections to
+    https://metadata.ftp-master.debian.org/sections.822 (as of 2020-10-28).
+
+  [ Simon Quigley ]
+  * Add "hirsute" as a known Ubuntu distribution.
+
+ -- Chris Lamb <lamby@debian.org>  Fri, 30 Oct 2020 08:49:07 +0000
+
 lintian (2.99.0~bpo10+1) buster-backports; urgency=medium
 
   * Rebuild for buster-backports.

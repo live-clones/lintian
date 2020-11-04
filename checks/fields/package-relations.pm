@@ -94,8 +94,8 @@ our %DH_ADDONS_VALUES = map { $DH_ADDONS->value($_) => 1 } $DH_ADDONS->all;
 # architecture-dependent modules.  Used to check for unnecessary build
 # dependencies for architecture-independent source packages.
 our $PYTHON_DEV = join(' | ',
-    qw(python-dev python-all-dev python3-dev python3-all-dev),
-    map { "python$_-dev" } qw(2.7 3 3.4 3.5));
+    qw(python3-dev python3-all-dev),
+    map { "python$_-dev" } qw(2.7 3 3.7 3.8 3.9));
 
 our $OBSOLETE_PACKAGES
   = Lintian::Data->new('fields/obsolete-packages',qr/\s*=>\s*/);

@@ -211,9 +211,10 @@ sub always {
         }
     }
 
-    $self->tag('package-is-team-maintained', $team_email, $num_uploaders)
+    $self->tag('package-is-team-maintained', $team_email,
+        "(with $num_uploaders uploaders)")
       if $is_teammaintained;
-    $self->tag('package-is-co-maintained', $num_uploaders)
+    $self->tag('package-is-co-maintained', "(with $num_uploaders uploaders)")
       if $is_comaintained;
     $self->tag('package-is-maintained-by-individual')
       if $is_maintained_by_individual;
