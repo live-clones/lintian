@@ -181,30 +181,37 @@ sub taglist {
     return \@tags;
 }
 
-=item tag_description
+=item describe_tags
 
 =cut
 
-sub tag_description {
-    my ($self, $tag_info) = @_;
+sub describe_tags {
+    my ($self, @tag_infos) = @_;
 
-    my %output;
+    my @array;
 
-    $output{Name} = $tag_info->name;
-    $output{'Name-Spaced'} = $tag_info->name_spaced
-      if length $tag_info->name_spaced;
+    for my $tag_info (@tag_infos) {
 
-    $output{Explanation} = $tag_info->explanation;
-    $output{'See-Also'} = $tag_info->see_also
-      if @{$tag_info->see_also};
+        my %dictionary;
 
-    $output{Check} = $tag_info->check;
-    $output{Visibility} = $tag_info->visibility;
-    $output{Experimental} = $tag_info->experimental
-      if length $tag_info->experimental;
+        $dictionary{Name} = $tag_info->name;
+        $dictionary{'Name-Spaced'} = $tag_info->name_spaced
+          if length $tag_info->name_spaced;
 
-    $output{'Renamed-From'} = $tag_info->renamed_from
-      if @{$tag_info->renamed_from};
+        $dictionary{Explanation} = $tag_info->explanation;
+        $dictionary{'See-Also'} = $tag_info->see_also
+          if @{$tag_info->see_also};
+
+        $dictionary{Check} = $tag_info->check;
+        $dictionary{Visibility} = $tag_info->visibility;
+        $dictionary{Experimental} = $tag_info->experimental
+          if length $tag_info->experimental;
+
+        $dictionary{'Renamed-From'} = $tag_info->renamed_from
+          if @{$tag_info->renamed_from};
+
+        push(@array, \%dictionary);
+    }
 
     # convert to UTF-8 prior to encoding in JSON
     my $encoder = JSON->new;
@@ -212,7 +219,12 @@ sub tag_description {
     $encoder->utf8;
     $encoder->pretty;
 
-    my $json = $encoder->encode(\%output);
+    # encode single tags without array bracketing
+    my $object = \@array;
+    $object = $array[0]
+      if scalar @array == 1;
+
+    my $json = $encoder->encode($object);
 
     # duplicate STDOUT
     open(my $RAW, '>&', *STDOUT) or die 'Cannot dup STDOUT';

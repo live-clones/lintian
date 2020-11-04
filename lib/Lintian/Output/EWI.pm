@@ -173,7 +173,7 @@ sub print_tag {
 
     say "$fpkg_info: $output$information";
 
-    $self->tag_description($tag_info)
+    $self->describe_tags($tag_info)
       if $self->showdescription && !$self->issued_tag($tag_info->name);
 
     return;
@@ -237,33 +237,35 @@ sub issued_tag {
     return $self->issuedtags->{$tag_name}++ ? 1 : 0;
 }
 
-=item tag_description
+=item describe_tags
 
 =cut
 
-sub tag_description {
-    my ($self, $tag_info) = @_;
+sub describe_tags {
+    my ($self, @tag_infos) = @_;
 
-    my $code = 'N';
-    my $description = 'N:   Unknown tag.';
+    for my $tag_info (@tag_infos) {
+        my $code = 'N';
+        my $description = 'N:   Unknown tag.';
 
-    if (defined $tag_info) {
+        if (defined $tag_info) {
 
-        $code = $tag_info->code;
+            $code = $tag_info->code;
 
-        my $plain_text = markdown_to_plain($tag_info->markdown_description);
-        $description = indent_and_wrap($plain_text, 'N:   ');
+            my $plain_text= markdown_to_plain($tag_info->markdown_description);
+            $description = indent_and_wrap($plain_text, 'N:   ');
 
-        chomp $description;
+            chomp $description;
+        }
+
+        my $output = 'N:' . NEWLINE;
+        $output .= $code . COLON . SPACE . $tag_info->name . NEWLINE;
+        $output .= 'N:' . NEWLINE;
+        $output .= $description . NEWLINE;
+        $output .= 'N:' . NEWLINE;
+
+        print $output;
     }
-
-    my $output = 'N:' . NEWLINE;
-    $output .= $code . COLON . SPACE . $tag_info->name . NEWLINE;
-    $output .= 'N:' . NEWLINE;
-    $output .= $description . NEWLINE;
-    $output .= 'N:' . NEWLINE;
-
-    print $output;
 
     return;
 }

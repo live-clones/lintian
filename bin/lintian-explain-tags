@@ -146,7 +146,7 @@ my @available = grep { defined} map { $profile->get_taginfo($_) } @selected;
 
 my @sorted = sort { lc($a->name) cmp lc($b->name) } @available;
 
-$output->tag_description($_) for @sorted;
+$output->describe_tags(@sorted);
 
 exit any { !defined $profile->get_taginfo($_) } @selected;
 
