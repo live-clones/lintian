@@ -1,2 +1,1 @@
-repack-indicator-in-debian-revision (source): debian-watch-file-standard 2
 repack-indicator-in-debian-revision (source): debian-watch-does-not-check-gpg-signature

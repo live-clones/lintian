@@ -1,2 +1,3 @@
 unpack-srcpkg-dot-dir (source): upstream-metadata-missing-repository
 unpack-srcpkg-dot-dir (source): upstream-metadata-missing-bug-tracking
+unpack-srcpkg-dot-dir (source): missing-debian-watch-file-standard

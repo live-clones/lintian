@@ -26,6 +26,11 @@
                      "severity" : "info"
                   },
                   {
+                     "context" : "3",
+                     "name" : "older-debian-watch-file-standard",
+                     "severity" : "info"
+                  },
+                  {
                      "context" : "debian/patches/debian-changes-1.0+dsfg-1.1",
                      "name" : "patch-not-forwarded-upstream",
                      "severity" : "info"
