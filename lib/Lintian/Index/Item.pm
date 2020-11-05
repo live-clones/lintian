@@ -1166,41 +1166,35 @@ Returns a decoded, wide-character string if file contents are valid UTF-8.
 
 =cut
 
-has bytes => (
-    is => 'rw',
-    lazy => 1,
-    default => sub {
-        my ($self) = @_;
+sub bytes {
+    my ($self) = @_;
 
-        return EMPTY
-          unless $self->is_open_ok;
+    return EMPTY
+      unless $self->is_open_ok;
 
-        my $bytes = path($self->unpacked_path)->slurp;
+    my $bytes = path($self->unpacked_path)->slurp;
 
-        return $bytes;
-    });
-has is_valid_utf8 => (
-    is => 'rw',
-    lazy => 1,
-    default => sub {
-        my ($self) = @_;
+    return $bytes;
+}
 
-        return 0
-          unless defined $self->bytes;
+sub is_valid_utf8 {
+    my ($self) = @_;
 
-        return valid_utf8($self->bytes);
-    });
-has decoded_utf8 => (
-    is => 'rw',
-    lazy => 1,
-    default => sub {
-        my ($self) = @_;
+    my $bytes = $self->bytes;
+    return 0
+      unless defined $bytes;
 
-        return EMPTY
-          unless $self->is_valid_utf8;
+    return valid_utf8($bytes);
+}
 
-        return decode_utf8($self->bytes);
-    });
+sub decoded_utf8 {
+    my ($self) = @_;
+
+    return EMPTY
+      unless $self->is_valid_utf8;
+
+    return decode_utf8($self->bytes);
+}
 
 ### OVERLOADED OPERATORS ###
 
