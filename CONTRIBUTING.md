@@ -116,7 +116,7 @@ the test packages with:
 
     $ private/build-test-packages
 
-Now, please calibrate your tests. For the documenation check the
+Now, please calibrate your tests. For the documentation check the
 command would be:
 
     $ private/runtests --onlyrun=check:documentation
