@@ -105,7 +105,9 @@ for my $profile (@profilepaths) {
     }
 }
 
-cmp_ok($TAGS{$_}, '>', 0, "Tag $_ is covered by a profile. Maybe run private/generate-profiles ?")for sort keys %TAGS;
+cmp_ok($TAGS{$_}, '>', 0,
+    "Tag $_ is covered by a profile. Maybe run private/generate-profiles ?")
+  for sort keys %TAGS;
 
 $known_tests += keys %TAGS;
 
