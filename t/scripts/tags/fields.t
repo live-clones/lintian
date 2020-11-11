@@ -141,7 +141,7 @@ for my $tagpath (@tagpaths) {
     select $fh;
 
     print "<!DOCTYPE html><head><title>$tagname</title></head><body>";
-    $html_output->tag_description($taginfo);
+    $html_output->describe_tags($taginfo);
     say '</body>';
 
     select *STDOUT;

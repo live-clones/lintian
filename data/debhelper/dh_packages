@@ -1,5 +1,5 @@
 # This file is generated from private/refresh-debhelper-data.
-# It was generated on 2020-10-20 00:43
+# It was generated on 2020-11-01 03:16
 
 apache2-dev
 autotools-dev
@@ -65,7 +65,6 @@ pkg-php-tools
 postgresql-server-dev-all
 ppp-dev
 pyppd
-python-numpy
 python-ply
 python3-numpy
 python3-ply

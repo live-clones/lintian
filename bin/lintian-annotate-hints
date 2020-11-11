@@ -168,7 +168,7 @@ for my $line (<STDIN>) {
     next
       unless defined $tag_info;
 
-    $output->tag_description($tag_info);
+    $output->describe_tags($tag_info);
 }
 
 exit;

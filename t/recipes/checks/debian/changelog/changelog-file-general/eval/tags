@@ -9,6 +9,6 @@ changelog-file-general (binary): debian-changelog-line-too-long line 8
 changelog-file-general (binary): debian-changelog-line-too-long line 15
 changelog-file-general (binary): debian-changelog-file-contains-obsolete-user-emacs-settings
 changelog-file-general (binary): changelog-references-temp-security-identifier TEMP-1234567-abcdef
-changelog-file-general (binary): changelog-not-compressed-with-max-compression changelog.Debian.gz
+changelog-file-general (binary): changelog-not-compressed-with-max-compression usr/share/doc/changelog-file-general/changelog.Debian.gz
 changelog-file-general (binary): bogus-mail-host-in-debian-changelog unknown@unknown
 changelog-file-general (binary): bad-intended-distribution intended to experimental but uploaded to unstable

@@ -1,4 +1,3 @@
 two-upstream-components (source): debian-watch-upstream-component https://github.com/a/x2
 two-upstream-components (source): debian-watch-upstream-component https://github.com/a/x1/tags
-two-upstream-components (source): debian-watch-file-standard 4
 two-upstream-components (source): debian-watch-does-not-check-gpg-signature

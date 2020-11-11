@@ -192,17 +192,20 @@ sub taglist {
     return \@tags;
 }
 
-=item tag_description
+=item describe_tags
 
 =cut
 
-sub tag_description {
-    my ($self, $tag_info) = @_;
+sub describe_tags {
+    my ($self, @tag_infos) = @_;
 
-    say '<p>Name: ' . $tag_info->name . '</p>';
-    say EMPTY;
+    for my $tag_info (@tag_infos) {
 
-    print markdown($tag_info->markdown_description);
+        say '<p>Name: ' . $tag_info->name . '</p>';
+        say EMPTY;
+
+        print markdown($tag_info->markdown_description);
+    }
 
     return;
 }

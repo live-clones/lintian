@@ -1,3 +1,4 @@
+I: no-fail-on-info-by-default source: older-debian-watch-file-standard 3
 I: no-fail-on-info-by-default: spare-manual-page usr/share/man/man8/lsmod.8.gz
 I: no-fail-on-info-by-default source: upstream-metadata-missing-bug-tracking
 I: no-fail-on-info-by-default source: upstream-metadata-missing-repository

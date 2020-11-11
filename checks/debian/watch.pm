@@ -104,7 +104,6 @@ sub source {
     return
       unless length $contents;
 
-    my $versionpattern = qr/version\s*=\s*(\d+)/;
     my $standard;
 
     my @lines = split(/\n/, $contents);
@@ -112,33 +111,21 @@ sub source {
     # look for version
     my @actions;
     for my $line (@lines) {
+
         my ($here) = ($line =~ /^version\s*=\s*(\d+)\s*$/);
+        $standard = $here
+          if length $here;
 
-        if(defined $here) {
-            if (defined $standard) {
-                $self->tag('debian-watch-file-declares-multiple-versions',
-                    "$here vs $standard");
-                next;
-            }
-            $standard = $here;
-        } else {
-            push(@actions, $line);
-        }
+        push(@actions, $line)
+          unless length $here;
     }
 
-    unless (defined $standard) {
-        $self->tag('debian-watch-file-missing-version');
-        return;
-    }
-
-    $self->tag('debian-watch-file-standard', $standard);
-
-    $self->tag('debian-watch-file-unknown-version', $standard)
-      unless any { $standard == $_ } (2, 3, 4);
+    return
+      unless defined $standard;
 
     # version 1 too broken to check
     return
-      if $standard == 1;
+      if $standard < 2;
 
     # allow spaces for all watch file versions (#950250, #950277)
     my $separator = qr/\s*,\s*/;

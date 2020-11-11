@@ -1,5 +1,5 @@
 # This file is generated from private/refresh-debhelper-data.
-# It was generated on 2020-10-20 00:43
+# It was generated on 2020-11-01 03:16
 #
 # If the script generates an insufficient/incorrect value for a
 # single item, please have a look at dh_commands-manual.
@@ -134,7 +134,6 @@ dh_mkdocs=mkdocs
 dh_movefiles=debhelper | debhelper-compat
 dh_movelibkdeinit=pkg-kde-tools
 dh_numpy3=python3-numpy
-dh_numpy=python-numpy
 dh_ocaml=dh-ocaml
 dh_ocamlclean=dh-ocaml
 dh_ocamldoc=dh-ocaml

@@ -1,3 +1,0 @@
-version=3
-opts="mode=git, gitmode=shallow, pgpmode=gittag" \
-https://git.kernel.org/pub/scm/utils/kup/kup.git refs/tags/kup-(.*) debian

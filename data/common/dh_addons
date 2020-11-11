@@ -1,5 +1,5 @@
 # This file is generated from private/refresh-debhelper-data.
-# It was generated on 2020-10-20 00:43
+# It was generated on 2020-11-01 03:16
 
 acc=dh-acc
 ada_library=dh-ada-library
@@ -44,7 +44,6 @@ maven_repo_helper=maven-repo-helper
 mkdocs=mkdocs
 nodejs=pkg-js-tools
 numpy3=python3-numpy
-numpy=python-numpy
 ocaml=dh-ocaml
 octave=dh-octave
 perl6=dh-perl6

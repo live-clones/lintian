@@ -1,4 +1,4 @@
 filenames (source): odd-historical-debian-changelog-version 11 (for non-native)
-filenames (binary): wrong-name-for-debian-news-file news.debian.gz
-filenames (binary): debian-news-file-not-compressed NEWS.Debian
-filenames (binary): debian-changelog-file-is-a-symlink changelog.gz
+filenames (binary): wrong-name-for-debian-news-file usr/share/doc/filenames/news.debian.gz
+filenames (binary): debian-news-file-not-compressed usr/share/doc/filenames/NEWS.Debian
+filenames (binary): debian-changelog-file-is-a-symlink usr/share/doc/filenames/changelog.gz

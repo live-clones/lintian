@@ -47,6 +47,7 @@ Enable-Tags-From-Check:
  debian/upstream/signing-key,
  debian/version-substvars,
  debian/watch,
+ debian/watch/standard,
  desktop/dbus,
  desktop/gnome,
  desktop/gnome/gir,

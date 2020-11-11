@@ -19,7 +19,9 @@ dh_girepository||gobject-introspection | dh-sequence-gir
 dh_gnome||gnome-pkg-tools | dh-sequence-gnome
 dh_gnome_clean||gnome-pkg-tools | dh-sequence-gnome
 dh_lv2config||lv2core
+dh_make_pgxs||postgresql-server-dev-all | postgresql-all
 dh_nativejava||gcj-native-helper | default-jdk-builddep
+dh_pgxs_test||postgresql-server-dev-all | postgresql-all
 dh_python2||dh-python | dh-sequence-python2
 dh_python3||dh-python | dh-sequence-python3
 dh_sphinxdoc||sphinx | python-sphinx | python3-sphinx

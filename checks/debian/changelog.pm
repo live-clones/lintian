@@ -303,10 +303,10 @@ sub binary {
     my @news_files
       = grep { $_->basename =~ m{\A NEWS\.Debian (?:\.gz)? \Z}ixsm }@doc_files;
 
-    $self->tag('debian-news-file-not-compressed', $_->basename)
+    $self->tag('debian-news-file-not-compressed', $_->name)
       for grep { $_->basename !~ m{\.gz$} } @news_files;
 
-    $self->tag('wrong-name-for-debian-news-file', $_->basename)
+    $self->tag('wrong-name-for-debian-news-file', $_->name)
       for grep { $_->basename =~ m{\.gz$} && $_->basename ne 'NEWS.Debian.gz' }
       @news_files;
 
@@ -315,10 +315,10 @@ sub binary {
     } @doc_files;
 
     # ubuntu permits symlinks; their profile suppresses the tag
-    $self->tag('debian-changelog-file-is-a-symlink', $_->basename)
+    $self->tag('debian-changelog-file-is-a-symlink', $_->name)
       for grep { $_->is_symlink } @changelog_files;
 
-    $self->tag('changelog-file-not-compressed', $_->basename)
+    $self->tag('changelog-file-not-compressed', $_->name)
       for grep { $_->basename !~ m{ \.gz \Z}xsm } @changelog_files;
 
     # Check if changelog files are compressed with gzip -9.
@@ -335,8 +335,7 @@ sub binary {
         next
           unless defined $resolved;
 
-        $self->tag('changelog-not-compressed-with-max-compression',
-            $path->basename)
+        $self->tag('changelog-not-compressed-with-max-compression',$path->name)
           unless $resolved->file_info =~ /max compression/;
     }
 
