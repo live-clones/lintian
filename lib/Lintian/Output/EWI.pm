@@ -30,6 +30,7 @@ use Text::Wrap;
 use constant OSC_HYPERLINK => qq{\033]8;;};
 use constant OSC_DONE => qq{\033\\};
 
+use constant EMPTY => q{};
 use constant SPACE => q{ };
 use constant COLON => q{:};
 use constant NEWLINE => qq{\n};
@@ -129,25 +130,23 @@ sub print_tag {
     my ($self, $tag) = @_;
 
     my $tag_info = $tag->info;
-    my $information = $tag->context;
-    my $override = $tag->override;
-    my $processable = $tag->processable;
-
-    $information = ' ' . $self->_quote_print($information)
-      if $information ne '';
-    my $code = $tag_info->code;
-    my $tag_color = ($tag->override ? 'bright_black' : $self->{colors}{$code});
-    my $fpkg_info= $self->_format_pkg_info($processable, $tag_info, $override);
     my $tag_name = $tag_info->name;
-    my $limit = $self->tag_display_limit;
-    my $output;
+
+    my $information = $tag->context;
+    $information = SPACE . $self->_quote_print($information)
+      unless $information eq EMPTY;
 
     # Limit the output so people do not drown in tags.  Some tags are
     # insanely noisy (hi static-library-has-unneeded-section)
+    my $limit = $self->tag_display_limit;
     if ($limit) {
-        my $proc_id = $processable->identifier;
+
+        my $proc_id = $tag->processable->identifier;
         my $emitted_count= $self->proc_id2tag_count->{$proc_id}{$tag_name}++;
-        return if $emitted_count >= $limit;
+
+        return
+          if $emitted_count >= $limit;
+
         my $msg
           = ' ... use --no-tag-display-limit to see all (or pipe to a file/program)';
         $information = $self->_quote_print($msg)
@@ -155,9 +154,19 @@ sub print_tag {
     }
 
     my $text = $tag_name;
+
+    my $code = $tag_info->code;
+    $code = 'O' if defined $tag->override;
+
+    my $tag_color = $self->{colors}{$code};
+
+    # keep original color for tags marked experimental
+    $code = 'X' if $tag_info->experimental;
+
     $text = Term::ANSIColor::colored($tag_name, $tag_color)
       if $self->color;
 
+    my $output;
     if ($self->tty_hyperlinks && $self->color) {
         my $target= 'https://lintian.debian.org/tags/' . $tag_name . '.html';
         $output .= $self->osc_hyperlink($text, $target);
@@ -165,13 +174,25 @@ sub print_tag {
         $output .= $text;
     }
 
+    my $override = $tag->override;
     if ($override && @{ $override->{comments} }) {
-        for my $c (@{ $override->{comments} }) {
-            $self->msg($self->_quote_print($c));
-        }
+
+        $self->msg($self->_quote_print($_))for @{ $override->{comments} };
     }
 
-    say "$fpkg_info: $output$information";
+    my $type = EMPTY;
+    $type = SPACE . $tag->processable->type
+      unless $tag->processable->type eq 'binary';
+
+    say $code
+      . COLON
+      . SPACE
+      . $tag->processable->name
+      . $type
+      . COLON
+      . SPACE
+      . $output
+      . $information;
 
     $self->describe_tags($tag_info)
       if $self->showdescription && !$self->issued_tag($tag_info->name);
@@ -189,7 +210,9 @@ they allow non-ascii printables etc.
 
 sub _quote_print {
     my ($self, $string) = @_;
+
     $string =~ s/[^[:print:]]/?/g;
+
     return $string;
 }
 
@@ -204,16 +227,6 @@ sub osc_hyperlink {
     my $end = OSC_HYPERLINK . OSC_DONE;
 
     return $start . $text . $end;
-}
-
-sub _format_pkg_info {
-    my ($self, $processable, $tag_info, $override) = @_;
-    my $code = $tag_info->code;
-    $code = 'X' if $tag_info->experimental;
-    $code = 'O' if defined $override;
-    my $type = '';
-    $type = SPACE . $processable->type if $processable->type ne 'binary';
-    return "$code: " . $processable->name . $type;
 }
 
 =item issuedtags
