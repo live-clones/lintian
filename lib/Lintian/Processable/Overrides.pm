@@ -248,8 +248,8 @@ has overrides => (
             if ($context =~ m/\*/) {
                 # It is a pattern, pre-compute it
                 my $pattern = $context;
-                my $end = ''; # Trailing "match anything" (if any)
-                my $pat = ''; # The rest of the pattern
+                my $end = EMPTY; # Trailing "match anything" (if any)
+                my $pat = EMPTY; # The rest of the pattern
                  # Split does not help us if $pattern ends with *
                  # so we deal with that now
                 if ($pattern =~ s/\Q*\E+\z//){
@@ -259,7 +259,7 @@ has overrides => (
                 # Are there any * left (after the above)?
                 if ($pattern =~ m/\Q*\E/) {
                     # this works even if $text starts with a *, since
-                    # that is split as '', <text>
+                    # that is split as EMPTY, <text>
                     my @pargs = split(m/\Q*\E++/, $pattern);
                     $pat = join('.*', map { quotemeta($_) } @pargs);
                 } else {
@@ -274,6 +274,18 @@ has overrides => (
             @comments = ();
 
             $override_data{$tagname} //= {};
+
+            if (exists $override_data{$tagname}{$context}) {
+
+                my @lines
+                  = ($override_data{$tagname}{$context}{line}, $current{line});
+
+                $self->tag('duplicate-override-context', $tagname, 'lines',
+                    sort @lines);
+
+                next;
+            }
+
             $override_data{$tagname}{$context} = \%current;
 
             %previous = %current;

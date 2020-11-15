@@ -28,7 +28,7 @@ use Carp qw(croak);
 use Devel::Size qw(total_size);
 use File::Spec;
 use List::Compare;
-use List::MoreUtils qw(uniq firstval);
+use List::MoreUtils qw(none uniq firstval);
 use Path::Tiny;
 use POSIX qw(ENOENT);
 use Time::HiRes qw(gettimeofday tv_interval);
@@ -222,30 +222,51 @@ sub process {
             }
 
             my %alias = %{$self->profile->known_aliases};
+            my @renamed_overrides
+              = grep { length $alias{$_} } keys %{$declared_overrides};
 
             # treat renamed tags in overrides
-            for my $tagname (keys %{$declared_overrides}) {
+            for my $dated (@renamed_overrides) {
 
-                # use new name if tag was renamed
-                my $current = $alias{$tagname};
+                # get new name
+                my $modern = $alias{$dated};
 
-                next
-                  unless defined $current;
+                # make space for renamed override
+                $declared_overrides->{$modern} //= {};
 
-                unless ($current eq $tagname) {
+                for my $context (keys %{$declared_overrides->{$dated}}) {
 
+                    # alert user to new tag name
                     $processable->tag('renamed-tag',
-                        "$tagname => $current in line "
-                          .$declared_overrides->{$tagname}{$_}{line})
-                      for keys %{$declared_overrides->{$tagname}};
+                        "$dated => $modern in line "
+                          .$declared_overrides->{$dated}{$context}{line});
 
-                    $declared_overrides->{$current} //= {};
-                    $declared_overrides->{$current}{$_}
-                      = $declared_overrides->{$tagname}{$_}
-                      for keys %{$declared_overrides->{$tagname}};
+                    if (exists $declared_overrides->{$modern}{$context}) {
 
-                    delete $declared_overrides->{$tagname};
+                        my @lines = (
+                            $declared_overrides->{$dated}{$context}{line},
+                            $declared_overrides->{$modern}{$context}{line});
+                        $processable->tag('duplicate-override-context',
+                            $modern, 'lines', sort @lines);
+
+                        next;
+                    }
+
+                    # transfer context to current tag name
+                    $declared_overrides->{$modern}{$context}
+                      = $declared_overrides->{$dated}{$context};
+
+                    # remember old tagname
+                    $declared_overrides->{$modern}{$context}{'renamed-from'}
+                      = $dated;
+
+                    # remove the old override context
+                    delete $declared_overrides->{$dated}{$context};
                 }
+
+                # remove the alias override if there are no contexts left
+                delete $declared_overrides->{$dated}
+                  unless %{$declared_overrides->{$dated}};
             }
 
             # complain about and filter out unknown tags in overrides
@@ -325,23 +346,19 @@ sub process {
           @{$processable->tags};
         $processable->tags(\@enabled_tags);
 
+        my @indelible_tags
+          = qw(malformed-override unused-override mismatched-override renamed-tag duplicate-override-context);
         my %used_overrides;
 
         my @keep_tags;
         for my $tag (@{$processable->tags}) {
 
-            next
-              if $tag->name eq 'mismatched-override'
-              || $tag->name eq 'unused-override';
-
-            my $override;
-
             my $declared = $declared_overrides->{$tag->name};
-            if ($declared) {
+            if ($declared && none { $tag->name eq $_ } @indelible_tags) {
 
                 # do not use EMPTY; hash keys literal
                 # empty context in specification matches all
-                $override = $declared->{''};
+                my $override = $declared->{''};
 
                 # matches context exactly
                 $override = $declared->{$tag->context}
@@ -365,9 +382,9 @@ sub process {
                 # new hash keys are autovivified to 0
                 $used_overrides{$tag->name}{$override->{context}}++
                   if $override;
-            }
 
-            $tag->override($override);
+                $tag->override($override);
+            }
 
             push(@keep_tags, $tag);
         }
@@ -390,13 +407,18 @@ sub process {
             my @unused_contexts = $context_lc->get_Lonly;
 
             # cannot be overridden or suppressed
-            if ($otherwise_visible{$tagname}) {
-                $processable->tag('mismatched-override', $tagname, $_)
-                  for @unused_contexts;
+            my $condition = 'unused-override';
+            $condition = 'mismatched-override'
+              if $otherwise_visible{$tagname};
 
-            } else {
-                $processable->tag('unused-override', $tagname, $_)
-                  for @unused_contexts;
+            for my $context (@unused_contexts) {
+
+                # for renames, use the original name from overrides
+                my $original_name
+                  = $declared_overrides->{$tagname}{$context}{'renamed-from'}
+                  // $tagname;
+
+                $processable->tag($condition, $original_name, $context);
             }
         }
 
