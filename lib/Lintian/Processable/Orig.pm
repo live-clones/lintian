@@ -137,11 +137,12 @@ has orig => (
             if (@unique == 1) {
                 my $common = $unique[0];
 
+                # use only if there is no file with that name
                 my $conflict = $subindex->lookup($common);
 
-                # use only if there is no directory with that name
+                # cannot use Item->is_dir before Index->load
                 $unwanted = $common
-                  unless defined $conflict && $conflict->perm =~ /^d/;
+                  unless defined $conflict && $conflict->perm =~ /^[^d]/;
             }
 
             # inserts missing directories; must occur afterwards
